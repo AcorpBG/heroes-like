@@ -121,6 +121,7 @@ SUPPORTED_SPELL_PRIMARY_ROLES = {
     "assault_buff",
 }
 ARTIFACT_SCHEMA_ID = "artifact_taxonomy_v1"
+ARTIFACT_SOURCE_REWARD_SCHEMA_ID = "artifact_source_reward_v1"
 SUPPORTED_ARTIFACT_SLOTS = {"boots", "banner", "armor", "trinket"}
 ARTIFACT_SLOT_LIMITS = {"boots": 1, "banner": 1, "armor": 1, "trinket": 2}
 SUPPORTED_ARTIFACT_CLASSES = {"common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"}
@@ -155,6 +156,7 @@ SUPPORTED_ARTIFACT_SOURCE_TAGS = {
     "market",
     "objective",
 }
+SUPPORTED_ARTIFACT_REWARD_GUARD_TIERS = {"unguarded", "light", "standard", "heavy", "elite", "ambush"}
 SUPPORTED_ARTIFACT_BONUS_TYPES = {
     "stat",
     "resource_income",
@@ -7454,6 +7456,268 @@ def print_artifact_set_faction_report(report: dict) -> None:
         print(f"- set validation issues: {report['set_validation_issues']}")
 
 
+def source_record_guard_tier(record: dict) -> str:
+    for container_key in ("guard_expectation", "guard_profile"):
+        container = record.get(container_key, {})
+        if isinstance(container, dict):
+            tier = str(container.get("tier", container.get("risk_tier", ""))).strip()
+            if tier:
+                return tier
+    contract = record.get("guarded_reward_contract", {})
+    if isinstance(contract, dict):
+        tier = str(contract.get("reward_tier", "")).strip()
+        if tier:
+            return tier
+    return "unguarded"
+
+
+def source_record_reward_categories(record: dict) -> set[str]:
+    categories: set[str] = set()
+    for container_key in ("guarded_reward_contract", "reward_preview"):
+        container = record.get(container_key, {})
+        if isinstance(container, dict):
+            categories.update(string_list(container.get("reward_categories", [])))
+    if any(key in record for key in ("claim_recruits", "weekly_recruits", "neutral_roster", "dwelling_contract")):
+        categories.add("recruit")
+    family = str(record.get("family", ""))
+    if "response_profile" in record or family in {"repeatable_service", "faction_landmark"}:
+        categories.add("town_support")
+    return categories
+
+
+def source_record_tags(record: dict) -> set[str]:
+    tags = {
+        str(record.get(key, "")).strip()
+        for key in ("family", "primary_class", "batch006_role", "batch007_role")
+        if str(record.get(key, "")).strip()
+    }
+    for field in ("secondary_tags", "map_roles"):
+        tags.update(string_list(record.get(field, [])))
+    editor = record.get("editor_placement", {})
+    if isinstance(editor, dict) and str(editor.get("placement_role", "")).strip():
+        tags.add(str(editor.get("placement_role", "")).strip())
+    return tags
+
+
+def matching_artifact_source_contexts(table: dict, records: dict[str, dict], map_object_context: bool) -> list[str]:
+    family_key = "eligible_object_families" if map_object_context else "eligible_site_families"
+    eligible_families = set(string_list(table.get(family_key, [])))
+    required_tags = set(string_list(table.get("required_object_tags", []))) if map_object_context else set()
+    required_categories = set(string_list(table.get("required_reward_categories", [])))
+    guard_tiers = set(string_list(table.get("guard_tiers", [])))
+    matches: list[str] = []
+    for record_id, record in records.items():
+        if eligible_families and str(record.get("family", "")).strip() not in eligible_families:
+            continue
+        if required_tags and not required_tags.issubset(source_record_tags(record)):
+            continue
+        if required_categories and not required_categories.issubset(source_record_reward_categories(record)):
+            continue
+        if guard_tiers and source_record_guard_tier(record) not in guard_tiers:
+            continue
+        matches.append(record_id)
+    return matches
+
+
+def artifact_source_table_issues(
+    table: dict,
+    artifacts: dict[str, dict],
+    seen_table_ids: set[str],
+) -> list[str]:
+    issues: list[str] = []
+    table_id = str(table.get("id", "")).strip()
+    if not table_id:
+        issues.append("missing_table_id")
+    elif table_id in seen_table_ids:
+        issues.append("duplicate_table_id")
+    if str(table.get("schema", "")).strip() != ARTIFACT_SOURCE_REWARD_SCHEMA_ID:
+        issues.append("schema_mismatch")
+    source_tag = str(table.get("source_tag", "")).strip()
+    if source_tag not in SUPPORTED_ARTIFACT_SOURCE_TAGS:
+        issues.append("unsupported_source_tag")
+    if not str(table.get("reward_context", "")).strip():
+        issues.append("missing_reward_context")
+    if not string_list(table.get("eligible_object_families", [])) and not string_list(table.get("eligible_site_families", [])):
+        issues.append("missing_eligible_families")
+
+    guard_tiers = string_list(table.get("guard_tiers", []))
+    if not guard_tiers:
+        issues.append("missing_guard_tiers")
+    for guard_tier in guard_tiers:
+        if guard_tier not in SUPPORTED_ARTIFACT_REWARD_GUARD_TIERS:
+            issues.append(f"unsupported_guard_tier:{guard_tier}")
+    rarity_bands = string_list(table.get("rarity_bands", []))
+    if not rarity_bands:
+        issues.append("missing_rarity_bands")
+    for rarity in rarity_bands:
+        if rarity not in SUPPORTED_ARTIFACT_RARITIES:
+            issues.append(f"unsupported_rarity:{rarity}")
+
+    set_constraints = table.get("set_constraints", {})
+    allowed_set_ids: set[str] = set()
+    if isinstance(set_constraints, dict):
+        allowed_set_ids = set(string_list(set_constraints.get("allowed_set_ids", [])))
+        if int(set_constraints.get("piece_limit_per_table", -1)) < 0:
+            issues.append("missing_set_piece_limit")
+    else:
+        issues.append("missing_set_constraints")
+
+    faction_constraints = set(string_list(table.get("faction_constraints", [])))
+    artifact_ids = string_list(table.get("artifact_ids", []))
+    if not artifact_ids:
+        issues.append("missing_artifact_ids")
+    for artifact_id in artifact_ids:
+        artifact = artifacts.get(artifact_id)
+        if not isinstance(artifact, dict):
+            issues.append(f"unknown_artifact:{artifact_id}")
+            continue
+        if source_tag not in string_list(artifact.get("source_tags", [])):
+            issues.append(f"artifact_missing_source_tag:{artifact_id}")
+        if rarity_bands and str(artifact.get("rarity", "")).strip() not in rarity_bands:
+            issues.append(f"artifact_rarity_outside_table:{artifact_id}")
+        set_id = artifact_set_id(artifact)
+        if set_id and set_id not in allowed_set_ids:
+            issues.append(f"artifact_set_outside_table:{artifact_id}")
+        artifact_factions = set(string_list(artifact.get("faction_affinity", [])))
+        if artifact_factions and faction_constraints and not artifact_factions.intersection(faction_constraints):
+            issues.append(f"artifact_faction_outside_table:{artifact_id}")
+
+    runtime_policy = table.get("runtime_policy", {})
+    if not isinstance(runtime_policy, dict):
+        issues.append("missing_runtime_policy")
+    else:
+        if not bool(runtime_policy.get("metadata_only", False)):
+            issues.append("source_table_not_metadata_only")
+        for blocked_flag in ("live_drop_execution", "save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"):
+            if bool(runtime_policy.get(blocked_flag, False)):
+                issues.append(f"blocked_runtime_flag:{blocked_flag}")
+    return issues
+
+
+def build_artifact_source_reward_report() -> dict:
+    artifact_payload = load_json(CONTENT_DIR / "artifacts.json")
+    artifacts = items_index(artifact_payload)
+    tables = artifact_payload.get("source_reward_tables", [])
+    if not isinstance(tables, list):
+        tables = []
+    map_objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+    resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    report: dict = {
+        "ok": False,
+        "schema": ARTIFACT_SOURCE_REWARD_SCHEMA_ID,
+        "table_count": 0,
+        "table_ready_count": 0,
+        "artifact_count": len(artifacts),
+        "eligible_artifact_count": 0,
+        "artifact_reference_count": 0,
+        "source_tag_counts": {},
+        "rarity_band_counts": {},
+        "guard_tier_counts": {},
+        "object_family_counts": {},
+        "site_family_counts": {},
+        "map_object_context_match_count": 0,
+        "resource_site_context_match_count": 0,
+        "guarded_context_match_count": 0,
+        "table_validation_issues": [],
+        "table_reports": [],
+        "runtime_policy": {
+            "source_reward_metadata_authored": True,
+            "live_drop_execution": False,
+            "equipment_runtime_effects": False,
+            "save_version_bump": False,
+            "ai_valuation_behavior": False,
+            "rare_resource_activation": False,
+        },
+    }
+    seen_table_ids: set[str] = set()
+    eligible_artifact_ids: set[str] = set()
+    for table in tables:
+        if not isinstance(table, dict):
+            report["table_validation_issues"].append({"table_id": "", "issues": ["table_not_object"]})
+            continue
+        table_id = str(table.get("id", "")).strip()
+        issues = artifact_source_table_issues(table, artifacts, seen_table_ids)
+        if table_id:
+            seen_table_ids.add(table_id)
+        source_tag = str(table.get("source_tag", "")).strip()
+        increment_count(report["source_tag_counts"], source_tag)
+        for rarity in string_list(table.get("rarity_bands", [])):
+            increment_count(report["rarity_band_counts"], rarity)
+        for guard_tier in string_list(table.get("guard_tiers", [])):
+            increment_count(report["guard_tier_counts"], guard_tier)
+        for family in string_list(table.get("eligible_object_families", [])):
+            increment_count(report["object_family_counts"], family)
+        for family in string_list(table.get("eligible_site_families", [])):
+            increment_count(report["site_family_counts"], family)
+        for artifact_id in string_list(table.get("artifact_ids", [])):
+            report["artifact_reference_count"] += 1
+            if artifact_id in artifacts:
+                eligible_artifact_ids.add(artifact_id)
+
+        matching_objects = matching_artifact_source_contexts(table, map_objects, True)
+        matching_sites = matching_artifact_source_contexts(table, resource_sites, False)
+        report["map_object_context_match_count"] += len(matching_objects)
+        report["resource_site_context_match_count"] += len(matching_sites)
+        if source_tag in {"guarded_site", "battle_salvage"}:
+            report["guarded_context_match_count"] += len(matching_objects) + len(matching_sites)
+        if not matching_objects and not matching_sites:
+            issues.append("no_matching_map_or_site_context")
+
+        report["table_count"] += 1
+        if issues:
+            report["table_validation_issues"].append({"table_id": table_id, "issues": issues})
+        else:
+            report["table_ready_count"] += 1
+        policy = table.get("runtime_policy", {}) if isinstance(table.get("runtime_policy", {}), dict) else {}
+        report["table_reports"].append(
+            {
+                "table_id": table_id,
+                "source_tag": source_tag,
+                "reward_context": str(table.get("reward_context", "")),
+                "artifact_ids": string_list(table.get("artifact_ids", [])),
+                "rarity_bands": string_list(table.get("rarity_bands", [])),
+                "guard_tiers": string_list(table.get("guard_tiers", [])),
+                "matching_object_count": len(matching_objects),
+                "matching_site_count": len(matching_sites),
+                "runtime_policy": {
+                    "metadata_only": bool(policy.get("metadata_only", False)),
+                    "live_drop_execution": bool(policy.get("live_drop_execution", True)),
+                    "save_version_bump": bool(policy.get("save_version_bump", True)),
+                    "equipment_runtime_effects": bool(policy.get("equipment_runtime_effects", True)),
+                    "ai_valuation_behavior": bool(policy.get("ai_valuation_behavior", True)),
+                    "rare_resource_activation": bool(policy.get("rare_resource_activation", True)),
+                },
+            }
+        )
+    report["eligible_artifact_count"] = len(eligible_artifact_ids)
+    report["ok"] = (
+        report["table_count"] >= 5
+        and report["table_ready_count"] == report["table_count"]
+        and report["eligible_artifact_count"] == len(artifacts)
+        and report["map_object_context_match_count"] > 0
+        and report["resource_site_context_match_count"] > 0
+        and report["guarded_context_match_count"] > 0
+    )
+    return report
+
+
+def print_artifact_source_reward_report(report: dict) -> None:
+    print("ARTIFACT SOURCE REWARD REPORT")
+    print(f"- schema: {report['schema']}")
+    print(f"- tables: {report['table_ready_count']}/{report['table_count']} ready")
+    print(f"- eligible artifacts: {report['eligible_artifact_count']}/{report['artifact_count']}")
+    print(f"- source tags: {report['source_tag_counts']}")
+    print(f"- rarity bands: {report['rarity_band_counts']}")
+    print(f"- guard tiers: {report['guard_tier_counts']}")
+    print(f"- object families: {report['object_family_counts']}")
+    print(f"- site families: {report['site_family_counts']}")
+    print(f"- context matches: objects={report['map_object_context_match_count']}, sites={report['resource_site_context_match_count']}, guarded={report['guarded_context_match_count']}")
+    policy = report.get("runtime_policy", {})
+    print(f"- runtime policy: live_drop_execution={policy.get('live_drop_execution', True)}, save_version_bump={policy.get('save_version_bump', True)}, equipment_runtime_effects={policy.get('equipment_runtime_effects', True)}, ai_valuation_behavior={policy.get('ai_valuation_behavior', True)}, rare_resource_activation={policy.get('rare_resource_activation', True)}")
+    if report.get("table_validation_issues"):
+        print(f"- table validation issues: {report['table_validation_issues']}")
+
+
 def validate_content(errors: list[str]) -> None:
     required = discover_content_files(errors)
     expected_domains = {
@@ -7910,6 +8174,11 @@ def validate_content(errors: list[str]) -> None:
     ensure(int(artifact_set_report.get("set_count", 0)) >= 1, errors, "Artifact content must author at least one validated set")
     ensure(int(artifact_set_report.get("set_piece_count", 0)) >= 3, errors, "Artifact content must author at least three set pieces")
     ensure(int(artifact_set_report.get("faction_affinity_artifact_count", 0)) >= 3, errors, "Artifact content must author several faction-affinity artifacts")
+    artifact_source_report = build_artifact_source_reward_report()
+    ensure(bool(artifact_source_report.get("ok", False)), errors, f"Artifact source/reward report must pass: {artifact_source_report.get('table_validation_issues', [])}")
+    ensure(int(artifact_source_report.get("eligible_artifact_count", 0)) == len(artifacts), errors, "Artifact source/reward tables must cover every authored artifact")
+    ensure(not bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", True)), errors, "Artifact source/reward tables must not enable live drop execution")
+    ensure(not bool(artifact_source_report.get("runtime_policy", {}).get("save_version_bump", True)), errors, "Artifact source/reward tables must not require a save-version bump")
     ensure(ADVANCED_EMBERCOURT_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Embercourt building set authored")
     ensure(ADVANCED_MIRECLAW_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Mireclaw building set authored")
     ensure(ADVANCED_SUNVAULT_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Sunvault building set authored")
@@ -13378,6 +13647,8 @@ def main() -> int:
     parser.add_argument("--artifact-taxonomy-report-json", type=str, default="", help="Write the opt-in artifact taxonomy/schema report as JSON.")
     parser.add_argument("--artifact-set-faction-report", action="store_true", help="Print the opt-in artifact set/faction metadata report.")
     parser.add_argument("--artifact-set-faction-report-json", type=str, default="", help="Write the opt-in artifact set/faction metadata report as JSON.")
+    parser.add_argument("--artifact-source-reward-report", action="store_true", help="Print the opt-in artifact source/reward metadata report.")
+    parser.add_argument("--artifact-source-reward-report-json", type=str, default="", help="Write the opt-in artifact source/reward metadata report as JSON.")
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -13507,7 +13778,7 @@ def main() -> int:
     print("- staged rare-resource registry/report gates expose original rare resources without live costs, market buying, save migration, or production grants")
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks without rare-resource activation")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
-    print("- artifact content now includes bounded set metadata and faction affinities without source tables, set bonuses, save migration, or AI valuation behavior")
+    print("- artifact content now includes bounded set metadata, faction affinities, and source/reward metadata without live drop execution, set bonuses, save migration, or AI valuation behavior")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:
@@ -13562,6 +13833,14 @@ def main() -> int:
             print(f"- artifact set/faction report JSON written to {report_path}")
         if args.artifact_set_faction_report:
             print_artifact_set_faction_report(report)
+    if args.artifact_source_reward_report or args.artifact_source_reward_report_json:
+        report = build_artifact_source_reward_report()
+        if args.artifact_source_reward_report_json:
+            report_path = Path(args.artifact_source_reward_report_json)
+            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"- artifact source/reward report JSON written to {report_path}")
+        if args.artifact_source_reward_report:
+            print_artifact_source_reward_report(report)
     return 0
 
 

@@ -3,8 +3,10 @@ extends RefCounted
 
 const EQUIPMENT_SLOTS := ["boots", "banner", "armor", "trinket"]
 const ARTIFACT_SCHEMA_ID := "artifact_taxonomy_v1"
+const ARTIFACT_SOURCE_REWARD_SCHEMA_ID := "artifact_source_reward_v1"
 const ARTIFACT_CLASSES := ["common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"]
 const ARTIFACT_RARITIES := ["common", "uncommon", "rare", "epic", "legendary", "scenario"]
+const ARTIFACT_REWARD_GUARD_TIERS := ["unguarded", "light", "standard", "heavy", "elite", "ambush"]
 const ARTIFACT_ROLES := [
 	"economy",
 	"movement",
@@ -456,6 +458,144 @@ static func artifact_set_faction_report(artifact_records: Array = [], set_record
 			"ai_valuation_behavior": false,
 		},
 	}
+
+static func artifact_source_reward_report(
+	artifact_records: Array = [],
+	source_table_records: Array = [],
+	map_object_records: Array = [],
+	resource_site_records: Array = []
+) -> Dictionary:
+	var records := artifact_records
+	var tables := source_table_records
+	var map_objects := map_object_records
+	var resource_sites := resource_site_records
+	if records.is_empty() or tables.is_empty():
+		var raw := ContentService.load_json(ContentService.ARTIFACTS_PATH)
+		if records.is_empty():
+			var raw_items = raw.get("items", [])
+			if raw_items is Array:
+				records = raw_items
+		if tables.is_empty():
+			var raw_tables = raw.get("source_reward_tables", [])
+			if raw_tables is Array:
+				tables = raw_tables
+	if map_objects.is_empty():
+		var raw_map_objects = ContentService.load_json(ContentService.MAP_OBJECTS_PATH).get("items", [])
+		if raw_map_objects is Array:
+			map_objects = raw_map_objects
+	if resource_sites.is_empty():
+		var raw_resource_sites = ContentService.load_json(ContentService.RESOURCE_SITES_PATH).get("items", [])
+		if raw_resource_sites is Array:
+			resource_sites = raw_resource_sites
+
+	var artifact_by_id := {}
+	for artifact_value in records:
+		if not (artifact_value is Dictionary):
+			continue
+		var artifact: Dictionary = artifact_value
+		var artifact_id := String(artifact.get("id", "")).strip_edges()
+		if artifact_id != "":
+			artifact_by_id[artifact_id] = artifact
+
+	var report := {
+		"ok": true,
+		"schema_id": ARTIFACT_SOURCE_REWARD_SCHEMA_ID,
+		"table_count": 0,
+		"table_ready_count": 0,
+		"artifact_count": artifact_by_id.size(),
+		"eligible_artifact_count": 0,
+		"artifact_reference_count": 0,
+		"source_tag_counts": {},
+		"rarity_band_counts": {},
+		"guard_tier_counts": {},
+		"object_family_counts": {},
+		"site_family_counts": {},
+		"map_object_context_match_count": 0,
+		"resource_site_context_match_count": 0,
+		"guarded_context_match_count": 0,
+		"table_validation_issues": [],
+		"table_reports": [],
+		"runtime_policy": {
+			"source_reward_metadata_authored": true,
+			"live_drop_execution": false,
+			"equipment_runtime_effects": false,
+			"save_version_bump": false,
+			"ai_valuation_behavior": false,
+			"rare_resource_activation": false,
+		},
+	}
+	var source_tag_counts: Dictionary = report["source_tag_counts"]
+	var rarity_band_counts: Dictionary = report["rarity_band_counts"]
+	var guard_tier_counts: Dictionary = report["guard_tier_counts"]
+	var object_family_counts: Dictionary = report["object_family_counts"]
+	var site_family_counts: Dictionary = report["site_family_counts"]
+	var table_validation_issues: Array = report["table_validation_issues"]
+	var table_reports: Array = report["table_reports"]
+	var eligible_artifact_ids := []
+	var seen_table_ids := []
+
+	for table_value in tables:
+		if not (table_value is Dictionary):
+			table_validation_issues.append({"table_id": "", "issues": ["table_not_object"]})
+			continue
+		var table: Dictionary = table_value
+		var table_id := String(table.get("id", "")).strip_edges()
+		var issues := _artifact_source_table_validation_errors(table, artifact_by_id, seen_table_ids)
+		if table_id != "":
+			seen_table_ids.append(table_id)
+		var source_tag := String(table.get("source_tag", "")).strip_edges()
+		_increment_count(source_tag_counts, source_tag)
+		for rarity in _string_array(table.get("rarity_bands", [])):
+			_increment_count(rarity_band_counts, rarity)
+		for guard_tier in _string_array(table.get("guard_tiers", [])):
+			_increment_count(guard_tier_counts, guard_tier)
+		for family in _string_array(table.get("eligible_object_families", [])):
+			_increment_count(object_family_counts, family)
+		for family in _string_array(table.get("eligible_site_families", [])):
+			_increment_count(site_family_counts, family)
+		for artifact_id in _string_array(table.get("artifact_ids", [])):
+			report["artifact_reference_count"] = int(report.get("artifact_reference_count", 0)) + 1
+			if artifact_id in artifact_by_id and artifact_id not in eligible_artifact_ids:
+				eligible_artifact_ids.append(artifact_id)
+
+		var matching_objects := _matching_artifact_source_contexts(table, map_objects, true)
+		var matching_sites := _matching_artifact_source_contexts(table, resource_sites, false)
+		report["map_object_context_match_count"] = int(report.get("map_object_context_match_count", 0)) + matching_objects.size()
+		report["resource_site_context_match_count"] = int(report.get("resource_site_context_match_count", 0)) + matching_sites.size()
+		if "guarded_site" == source_tag or "battle_salvage" == source_tag:
+			report["guarded_context_match_count"] = int(report.get("guarded_context_match_count", 0)) + matching_objects.size() + matching_sites.size()
+		if matching_objects.is_empty() and matching_sites.is_empty():
+			issues.append("no_matching_map_or_site_context")
+
+		report["table_count"] = int(report.get("table_count", 0)) + 1
+		if issues.is_empty():
+			report["table_ready_count"] = int(report.get("table_ready_count", 0)) + 1
+		else:
+			table_validation_issues.append({"table_id": table_id, "issues": issues})
+		table_reports.append(
+			{
+				"table_id": table_id,
+				"source_tag": source_tag,
+				"reward_context": String(table.get("reward_context", "")),
+				"artifact_ids": _string_array(table.get("artifact_ids", [])),
+				"rarity_bands": _string_array(table.get("rarity_bands", [])),
+				"guard_tiers": _string_array(table.get("guard_tiers", [])),
+				"matching_object_count": matching_objects.size(),
+				"matching_site_count": matching_sites.size(),
+				"runtime_policy": _artifact_source_runtime_policy(table),
+			}
+		)
+
+	report["eligible_artifact_count"] = eligible_artifact_ids.size()
+	report["ok"] = (
+		int(report.get("table_count", 0)) >= 5
+		and int(report.get("table_ready_count", 0)) == int(report.get("table_count", 0))
+		and int(report.get("eligible_artifact_count", 0)) == artifact_by_id.size()
+		and int(report.get("map_object_context_match_count", 0)) > 0
+		and int(report.get("resource_site_context_match_count", 0)) > 0
+		and int(report.get("guarded_context_match_count", 0)) > 0
+	)
+	return report
 
 static func claim_artifact(
 	hero_state: Dictionary,
@@ -1273,6 +1413,187 @@ static func _artifact_taxonomy_payload(artifact: Dictionary) -> Dictionary:
 		"tradeoff": bool((artifact.get("risk", {}) if artifact.get("risk", {}) is Dictionary else {}).get("tradeoff", false)),
 		"ui_summary": _artifact_ui_summary(artifact),
 	}
+
+static func _artifact_source_table_validation_errors(table: Dictionary, artifact_by_id: Dictionary, seen_table_ids: Array) -> Array:
+	var issues := []
+	var table_id := String(table.get("id", "")).strip_edges()
+	if table_id == "":
+		issues.append("missing_table_id")
+	elif table_id in seen_table_ids:
+		issues.append("duplicate_table_id")
+	if String(table.get("schema", "")).strip_edges() != ARTIFACT_SOURCE_REWARD_SCHEMA_ID:
+		issues.append("schema_mismatch")
+	var source_tag := String(table.get("source_tag", "")).strip_edges()
+	if source_tag not in ARTIFACT_SOURCE_TAGS:
+		issues.append("unsupported_source_tag")
+	if String(table.get("reward_context", "")).strip_edges() == "":
+		issues.append("missing_reward_context")
+	var object_families := _string_array(table.get("eligible_object_families", []))
+	var site_families := _string_array(table.get("eligible_site_families", []))
+	if object_families.is_empty() and site_families.is_empty():
+		issues.append("missing_eligible_families")
+	var guard_tiers := _string_array(table.get("guard_tiers", []))
+	if guard_tiers.is_empty():
+		issues.append("missing_guard_tiers")
+	for guard_tier in guard_tiers:
+		if guard_tier not in ARTIFACT_REWARD_GUARD_TIERS:
+			issues.append("unsupported_guard_tier:%s" % guard_tier)
+	var rarity_bands := _string_array(table.get("rarity_bands", []))
+	if rarity_bands.is_empty():
+		issues.append("missing_rarity_bands")
+	for rarity in rarity_bands:
+		if rarity not in ARTIFACT_RARITIES:
+			issues.append("unsupported_rarity:%s" % rarity)
+
+	var set_constraints = table.get("set_constraints", {})
+	var allowed_set_ids := []
+	if set_constraints is Dictionary:
+		allowed_set_ids = _string_array(set_constraints.get("allowed_set_ids", []))
+		if int(set_constraints.get("piece_limit_per_table", -1)) < 0:
+			issues.append("missing_set_piece_limit")
+	else:
+		issues.append("missing_set_constraints")
+
+	var faction_constraints := _string_array(table.get("faction_constraints", []))
+	var artifact_ids := _string_array(table.get("artifact_ids", []))
+	if artifact_ids.is_empty():
+		issues.append("missing_artifact_ids")
+	for artifact_id in artifact_ids:
+		if artifact_id not in artifact_by_id:
+			issues.append("unknown_artifact:%s" % artifact_id)
+			continue
+		var artifact: Dictionary = artifact_by_id.get(artifact_id, {})
+		if source_tag not in _string_array(artifact.get("source_tags", [])):
+			issues.append("artifact_missing_source_tag:%s" % artifact_id)
+		var rarity := String(artifact.get("rarity", "")).strip_edges()
+		if rarity_bands.size() > 0 and rarity not in rarity_bands:
+			issues.append("artifact_rarity_outside_table:%s" % artifact_id)
+		var set_id := _artifact_set_id(artifact)
+		if set_id != "" and set_id not in allowed_set_ids:
+			issues.append("artifact_set_outside_table:%s" % artifact_id)
+		var artifact_factions := _string_array(artifact.get("faction_affinity", []))
+		if not artifact_factions.is_empty() and not faction_constraints.is_empty() and _array_intersection(artifact_factions, faction_constraints).is_empty():
+			issues.append("artifact_faction_outside_table:%s" % artifact_id)
+
+	var runtime_policy := _artifact_source_runtime_policy(table)
+	if not bool(runtime_policy.get("metadata_only", false)):
+		issues.append("source_table_not_metadata_only")
+	for blocked_flag in ["live_drop_execution", "save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"]:
+		if bool(runtime_policy.get(blocked_flag, false)):
+			issues.append("blocked_runtime_flag:%s" % blocked_flag)
+	return issues
+
+static func _artifact_source_runtime_policy(table: Dictionary) -> Dictionary:
+	var policy = table.get("runtime_policy", {})
+	if not (policy is Dictionary):
+		return {
+			"metadata_only": false,
+			"live_drop_execution": true,
+			"save_version_bump": true,
+			"equipment_runtime_effects": true,
+			"ai_valuation_behavior": true,
+			"rare_resource_activation": true,
+		}
+	return {
+		"metadata_only": bool(policy.get("metadata_only", false)),
+		"live_drop_execution": bool(policy.get("live_drop_execution", true)),
+		"save_version_bump": bool(policy.get("save_version_bump", true)),
+		"equipment_runtime_effects": bool(policy.get("equipment_runtime_effects", true)),
+		"ai_valuation_behavior": bool(policy.get("ai_valuation_behavior", true)),
+		"rare_resource_activation": bool(policy.get("rare_resource_activation", true)),
+	}
+
+static func _matching_artifact_source_contexts(table: Dictionary, records: Array, map_object_context: bool) -> Array:
+	var matches := []
+	var family_key := "eligible_object_families" if map_object_context else "eligible_site_families"
+	var eligible_families := _string_array(table.get(family_key, []))
+	var required_tags := _string_array(table.get("required_object_tags", [])) if map_object_context else []
+	var required_categories := _string_array(table.get("required_reward_categories", []))
+	var guard_tiers := _string_array(table.get("guard_tiers", []))
+	for record_value in records:
+		if not (record_value is Dictionary):
+			continue
+		var record: Dictionary = record_value
+		if not eligible_families.is_empty() and String(record.get("family", "")).strip_edges() not in eligible_families:
+			continue
+		if not _source_record_has_required_tags(record, required_tags):
+			continue
+		if not _source_record_has_required_categories(record, required_categories):
+			continue
+		var guard_tier := _source_record_guard_tier(record)
+		if not guard_tiers.is_empty() and guard_tier not in guard_tiers:
+			continue
+		matches.append(String(record.get("id", "")))
+	return matches
+
+static func _source_record_has_required_tags(record: Dictionary, required_tags: Array) -> bool:
+	if required_tags.is_empty():
+		return true
+	var tags := []
+	for field in ["family", "primary_class", "batch006_role", "batch007_role"]:
+		var value := String(record.get(field, "")).strip_edges()
+		if value != "" and value not in tags:
+			tags.append(value)
+	for field in ["secondary_tags", "map_roles"]:
+		for tag in _string_array(record.get(field, [])):
+			if tag not in tags:
+				tags.append(tag)
+	var editor = record.get("editor_placement", {})
+	if editor is Dictionary:
+		var placement_role := String(editor.get("placement_role", "")).strip_edges()
+		if placement_role != "" and placement_role not in tags:
+			tags.append(placement_role)
+	for required_tag in required_tags:
+		if required_tag not in tags:
+			return false
+	return true
+
+static func _source_record_has_required_categories(record: Dictionary, required_categories: Array) -> bool:
+	if required_categories.is_empty():
+		return true
+	var categories := _source_record_reward_categories(record)
+	for required_category in required_categories:
+		if required_category not in categories:
+			return false
+	return true
+
+static func _source_record_reward_categories(record: Dictionary) -> Array:
+	var categories := []
+	for container_key in ["guarded_reward_contract", "reward_preview"]:
+		var container = record.get(container_key, {})
+		if not (container is Dictionary):
+			continue
+		for category in _string_array(container.get("reward_categories", [])):
+			if category not in categories:
+				categories.append(category)
+	if record.has("claim_recruits") or record.has("weekly_recruits") or record.has("neutral_roster") or record.has("dwelling_contract"):
+		if "recruit" not in categories:
+			categories.append("recruit")
+	if record.has("response_profile") or String(record.get("family", "")) == "repeatable_service" or String(record.get("family", "")) == "faction_landmark":
+		if "town_support" not in categories:
+			categories.append("town_support")
+	return categories
+
+static func _source_record_guard_tier(record: Dictionary) -> String:
+	for container_key in ["guard_expectation", "guard_profile"]:
+		var container = record.get(container_key, {})
+		if container is Dictionary:
+			var tier := String(container.get("tier", container.get("risk_tier", ""))).strip_edges()
+			if tier != "":
+				return tier
+	var contract = record.get("guarded_reward_contract", {})
+	if contract is Dictionary:
+		var reward_tier := String(contract.get("reward_tier", "")).strip_edges()
+		if reward_tier != "":
+			return reward_tier
+	return "unguarded"
+
+static func _array_intersection(left: Array, right: Array) -> Array:
+	var result := []
+	for item in left:
+		if item in right and item not in result:
+			result.append(item)
+	return result
 
 static func _artifact_taxonomy_validation_errors(artifact: Dictionary) -> Array:
 	var errors := []

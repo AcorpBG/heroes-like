@@ -76,7 +76,7 @@ func _run() -> void:
 		"source_tag_counts": report.get("source_tag_counts", {}),
 		"runtime_policy": policy,
 		"caveats": [
-			"This report proves additive artifact taxonomy/schema metadata and ArtifactRules report helpers only; set bonuses, source tables, runtime equipment migration, AI valuation behavior, save migration, and rare-resource activation remain outside this slice.",
+			"This report proves additive artifact taxonomy/schema metadata and ArtifactRules report helpers only; set bonuses, live source execution, runtime equipment migration, AI valuation behavior, save migration, and rare-resource activation remain outside this slice.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])

@@ -9,7 +9,7 @@
         "artifact_waymark_compass",
         "artifact_milepost_lantern"
       ],
-      "source_hint": "Region reward chain or guarded road caches; source tables are not active in this slice.",
+      "source_hint": "Region reward chain or guarded road caches; current source tables author metadata only and do not execute live drops.",
       "piece_thresholds": [
         {
           "count": 2,
@@ -24,6 +24,290 @@
         "set_bonuses_active": false,
         "source_reward_tables_active": false,
         "derived_from_equipped_pieces": true
+      }
+    }
+  ],
+  "source_reward_tables": [
+    {
+      "id": "artifact_source_pickup_caches_common",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "pickup",
+      "reward_context": "small_pickup_cache",
+      "eligible_object_families": [
+        "pickup"
+      ],
+      "eligible_site_families": [
+        "one_shot_pickup"
+      ],
+      "required_object_tags": [
+        "small_reward"
+      ],
+      "required_reward_categories": [],
+      "guard_tiers": [
+        "unguarded",
+        "light"
+      ],
+      "rarity_bands": [
+        "common"
+      ],
+      "artifact_ids": [
+        "artifact_trailsinger_boots"
+      ],
+      "faction_constraints": [],
+      "set_constraints": {
+        "allowed_set_ids": [
+          "set_wayfarer_compact"
+        ],
+        "piece_limit_per_table": 1
+      },
+      "runtime_policy": {
+        "metadata_only": true,
+        "live_drop_execution": false,
+        "save_version_bump": false,
+        "equipment_runtime_effects": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": false
+      }
+    },
+    {
+      "id": "artifact_source_guarded_sites_standard",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "guarded_site",
+      "reward_context": "guarded_reward_site",
+      "eligible_object_families": [
+        "guarded_reward_site"
+      ],
+      "eligible_site_families": [
+        "guarded_reward_site"
+      ],
+      "required_object_tags": [
+        "guarded_reward"
+      ],
+      "required_reward_categories": [
+        "artifact"
+      ],
+      "guard_tiers": [
+        "standard",
+        "heavy"
+      ],
+      "rarity_bands": [
+        "common",
+        "uncommon",
+        "rare"
+      ],
+      "artifact_ids": [
+        "artifact_quarry_tally_rod",
+        "artifact_warcrest_pennon",
+        "artifact_bastion_gorget",
+        "artifact_waymark_compass",
+        "artifact_milepost_lantern",
+        "artifact_tollstone_ring",
+        "artifact_mudglass_beads",
+        "artifact_choir_tuning_fork",
+        "artifact_living_bridge_knot",
+        "artifact_pressure_gauge_reliquary",
+        "artifact_black_sail_compass"
+      ],
+      "faction_constraints": [],
+      "set_constraints": {
+        "allowed_set_ids": [
+          "set_wayfarer_compact"
+        ],
+        "piece_limit_per_table": 2
+      },
+      "runtime_policy": {
+        "metadata_only": true,
+        "live_drop_execution": false,
+        "save_version_bump": false,
+        "equipment_runtime_effects": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": false
+      }
+    },
+    {
+      "id": "artifact_source_shrine_accord_rare",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "shrine",
+      "reward_context": "accord_shrine_reward",
+      "eligible_object_families": [
+        "shrine"
+      ],
+      "eligible_site_families": [
+        "shrine",
+        "frontier_shrine"
+      ],
+      "required_object_tags": [
+        "spell_access"
+      ],
+      "required_reward_categories": [],
+      "guard_tiers": [
+        "unguarded",
+        "light",
+        "standard"
+      ],
+      "rarity_bands": [
+        "rare"
+      ],
+      "artifact_ids": [
+        "artifact_mudglass_beads",
+        "artifact_choir_tuning_fork"
+      ],
+      "faction_constraints": [
+        "faction_mireclaw",
+        "faction_sunvault"
+      ],
+      "set_constraints": {
+        "allowed_set_ids": [],
+        "piece_limit_per_table": 0
+      },
+      "runtime_policy": {
+        "metadata_only": true,
+        "live_drop_execution": false,
+        "save_version_bump": false,
+        "equipment_runtime_effects": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": false
+      }
+    },
+    {
+      "id": "artifact_source_dwelling_support_rare",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "dwelling",
+      "reward_context": "neutral_dwelling_claim_support",
+      "eligible_object_families": [
+        "neutral_dwelling"
+      ],
+      "eligible_site_families": [
+        "neutral_dwelling"
+      ],
+      "required_object_tags": [
+        "neutral_recruit_source"
+      ],
+      "required_reward_categories": [
+        "recruit"
+      ],
+      "guard_tiers": [
+        "standard",
+        "heavy",
+        "elite"
+      ],
+      "rarity_bands": [
+        "rare"
+      ],
+      "artifact_ids": [
+        "artifact_living_bridge_knot"
+      ],
+      "faction_constraints": [
+        "faction_thornwake"
+      ],
+      "set_constraints": {
+        "allowed_set_ids": [],
+        "piece_limit_per_table": 0
+      },
+      "runtime_policy": {
+        "metadata_only": true,
+        "live_drop_execution": false,
+        "save_version_bump": false,
+        "equipment_runtime_effects": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": false
+      }
+    },
+    {
+      "id": "artifact_source_town_landmark_services",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "town",
+      "reward_context": "town_or_faction_landmark_service",
+      "eligible_object_families": [
+        "faction_landmark",
+        "repeatable_service"
+      ],
+      "eligible_site_families": [
+        "faction_landmark",
+        "repeatable_service"
+      ],
+      "required_object_tags": [
+        "town_support"
+      ],
+      "required_reward_categories": [
+        "town_support"
+      ],
+      "guard_tiers": [
+        "unguarded",
+        "standard",
+        "heavy"
+      ],
+      "rarity_bands": [
+        "common",
+        "uncommon",
+        "rare"
+      ],
+      "artifact_ids": [
+        "artifact_quarry_tally_rod",
+        "artifact_bastion_gorget",
+        "artifact_tollstone_ring",
+        "artifact_pressure_gauge_reliquary"
+      ],
+      "faction_constraints": [
+        "faction_embercourt",
+        "faction_brasshollow"
+      ],
+      "set_constraints": {
+        "allowed_set_ids": [],
+        "piece_limit_per_table": 0
+      },
+      "runtime_policy": {
+        "metadata_only": true,
+        "live_drop_execution": false,
+        "save_version_bump": false,
+        "equipment_runtime_effects": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": false
+      }
+    },
+    {
+      "id": "artifact_source_battle_salvage_heavy",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "battle_salvage",
+      "reward_context": "guarded_encounter_salvage",
+      "eligible_object_families": [
+        "guarded_reward_site"
+      ],
+      "eligible_site_families": [
+        "guarded_reward_site"
+      ],
+      "required_object_tags": [
+        "guarded_reward"
+      ],
+      "required_reward_categories": [
+        "artifact"
+      ],
+      "guard_tiers": [
+        "heavy",
+        "elite"
+      ],
+      "rarity_bands": [
+        "uncommon",
+        "rare"
+      ],
+      "artifact_ids": [
+        "artifact_warcrest_pennon",
+        "artifact_black_sail_compass"
+      ],
+      "faction_constraints": [
+        "faction_veilmourn"
+      ],
+      "set_constraints": {
+        "allowed_set_ids": [],
+        "piece_limit_per_table": 0
+      },
+      "runtime_policy": {
+        "metadata_only": true,
+        "live_drop_execution": false,
+        "save_version_bump": false,
+        "equipment_runtime_effects": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": false
       }
     }
   ],

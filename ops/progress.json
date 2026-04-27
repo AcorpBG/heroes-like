@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "artifact-sets-faction-specific-content-10184",
-  "currentSliceTitle": "Artifact Sets And Faction-Specific Content",
+  "currentSliceId": "artifact-source-reward-rules-10184",
+  "currentSliceTitle": "Artifact Source And Reward Rules",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed bounded Wayfarer Compact set metadata, six faction-affinity artifact records, ArtifactRules report helpers, validator support, focused Godot report, and implementation report. Validation passed: canonical wood alias scan no matches; python3 tests/validate_repo.py; python3 tests/validate_repo.py --artifact-taxonomy-report --artifact-set-faction-report; godot4 artifact_taxonomy_schema_report; godot4 artifact_set_faction_content_report; ops/progress JSON check; git diff --check.",
+  "currentSliceNotes": "Completed bounded artifact source/reward tables, ArtifactRules report helpers, validator support, focused Godot report, and implementation report. Source/reward metadata connects all authored artifacts to map object/site reward contexts without live drop execution, equipment runtime effects, save migration, rare-resource activation, or AI valuation behavior. Validation passed: canonical wood alias scan no matches; python3 tests/validate_repo.py; python3 tests/validate_repo.py --artifact-taxonomy-report --artifact-set-faction-report --artifact-source-reward-report; godot4 artifact_taxonomy_schema_report; godot4 artifact_set_faction_content_report; godot4 artifact_source_reward_report; ops/progress JSON check; progress status/next; git diff --check.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T21:31:08Z",
+  "updatedAt": "2026-04-27T22:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1604,7 +1604,7 @@
       "id": "artifact-source-reward-rules-10184",
       "title": "Artifact Source And Reward Rules",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "artifact-system-foundation-implementation-10184",
@@ -1628,7 +1628,11 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T22:00:00Z",
+      "startedAt": "2026-04-27T22:00:00Z",
+      "completedAt": "2026-04-27T22:35:00Z",
+      "notes": "Completed bounded artifact source/reward metadata and report-hook implementation. Evidence: content/artifacts.json source_reward_tables; ArtifactRules.artifact_source_reward_report; tests/validate_repo.py --artifact-source-reward-report; tests/artifact_source_reward_report.gd; docs/artifact-source-reward-rules-report.md. Runtime boundaries preserved: no live drop execution, equipment effects, save migration, rare-resource activation, or AI valuation behavior."
     },
     {
       "id": "artifact-equip-runtime-effects-10184",
@@ -3404,23 +3408,23 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "artifact-source-reward-rules-10184",
-      "title": "Artifact Source And Reward Rules",
+      "id": "artifact-equip-runtime-effects-10184",
+      "title": "Artifact Equip Surface And Runtime Effects",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "artifact-system-foundation-implementation-10184",
       "source": "PLAN.md P2.6 Artifact System Foundation Implementation",
       "sourceDocs": [
         "docs/artifact-system-expansion-foundation.md",
-        "docs/overworld-object-taxonomy-density.md",
-        "docs/overworld-content-bible.md"
+        "docs/magic-system-expansion-foundation.md",
+        "docs/economy-overhaul-foundation.md"
       ],
       "implementationTargets": [
-        "reward/source tables",
-        "map object/site reward hooks",
-        "validation fixtures/reports"
+        "hero equipment/inventory surfaces",
+        "scripts/core/ArtifactRules.gd",
+        "battle/adventure/economy/spell integration points"
       ],
-      "notes": "Next P2.6 child after bounded set/faction content. Keep runtime equipment effects and AI valuation behavior for later artifact children."
+      "notes": "Next P2.6 child after bounded source/reward metadata. Keep scope bounded; do not add save migration, rare-resource activation, broad UI overhaul, or AI valuation behavior unless explicitly selected by this slice."
     }
   ],
   "stoppedOrPausedTasks": [

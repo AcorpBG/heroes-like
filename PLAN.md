@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.5 magic implementation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic children are now implemented, with remaining artifact foundation work moving to P2.6.
 
-Selected next implementation candidate after the bounded magic/artifact/economy integration slice: `artifact-taxonomy-schema-implementation-10184`.
+Selected next implementation candidate after bounded artifact source/reward metadata: `artifact-equip-runtime-effects-10184`.
 
 ## Slice Status Model
 
@@ -1451,6 +1451,11 @@ implementationTargets:
 - reward/source tables
 - map object/site reward hooks
 - validation/report fixtures
+
+implementationEvidence:
+- `docs/artifact-source-reward-rules-report.md`
+- `tests/artifact_source_reward_report.gd`
+- `tests/validate_repo.py --artifact-source-reward-report`
 
 ### P2 Child: Artifact Equip Surface And Runtime Effects
 
