@@ -597,6 +597,82 @@ static func artifact_source_reward_report(
 	)
 	return report
 
+static func artifact_equip_runtime_report(hero_state: Dictionary) -> Dictionary:
+	var hero := ensure_hero_artifacts(hero_state.duplicate(true))
+	var artifacts = hero.get("artifacts", {})
+	var equipped = artifacts.get("equipped", {})
+	var inventory = artifacts.get("inventory", [])
+	var bonuses := aggregate_bonuses(hero)
+	var equipped_artifacts := []
+	for slot in EQUIPMENT_SLOTS:
+		var artifact_id := String(equipped.get(slot, ""))
+		if artifact_id == "":
+			continue
+		equipped_artifacts.append(
+			{
+				"slot": slot,
+				"name": artifact_name(artifact_id),
+				"effect_summary": artifact_effect_summary(artifact_id),
+				"impact_summary": describe_single_artifact_impact(artifact_id),
+			}
+		)
+
+	var spell_modifiers = bonuses.get("spell_modifiers", [])
+	var daily_income := _common_resource_delta(bonuses.get("daily_income", {}))
+	var rare_income := _rare_resource_delta(bonuses.get("daily_income", {}))
+	var live_contexts := {
+		"equipment_management": owned_artifact_ids(hero).size() > 0,
+		"adventure_movement": int(bonuses.get("overworld_movement", 0)) != 0,
+		"adventure_scouting": int(bonuses.get("scouting_radius", 0)) != 0,
+		"battle_command": (
+			int(bonuses.get("battle_attack", 0)) != 0
+			or int(bonuses.get("battle_defense", 0)) != 0
+			or int(bonuses.get("battle_initiative", 0)) != 0
+		),
+		"daily_common_income": not daily_income.is_empty(),
+		"spell_modifiers": spell_modifiers is Array and not spell_modifiers.is_empty(),
+	}
+
+	return {
+		"ok": equipped_artifacts.size() > 0 and rare_income.is_empty(),
+		"schema_status": "artifact_equip_runtime_effects_loaded",
+		"equipped_slot_count": equipped_artifacts.size(),
+		"inventory_artifact_count": inventory.size() if inventory is Array else 0,
+		"equipped_artifacts": equipped_artifacts,
+		"management_action_count": get_management_actions(hero).size(),
+		"aggregate_bonuses": {
+			"overworld_movement": int(bonuses.get("overworld_movement", 0)),
+			"scouting_radius": int(bonuses.get("scouting_radius", 0)),
+			"battle_attack": int(bonuses.get("battle_attack", 0)),
+			"battle_defense": int(bonuses.get("battle_defense", 0)),
+			"battle_initiative": int(bonuses.get("battle_initiative", 0)),
+			"daily_common_income": daily_income,
+			"spell_modifier_count": spell_modifiers.size() if spell_modifiers is Array else 0,
+		},
+		"live_contexts": live_contexts,
+		"slot_surface": {
+			"active_slots": EQUIPMENT_SLOTS.duplicate(),
+			"active_trinket_slots": 1,
+			"target_trinket_slots": int(SLOT_LIMITS.get("trinket", 1)),
+			"second_trinket_slot_live": false,
+		},
+		"not_live_contexts": [
+			"set_bonus_activation",
+			"second_trinket_equipment_slot",
+			"source_reward_drop_execution",
+			"rare_resource_income",
+			"ai_valuation_behavior",
+		],
+		"runtime_policy": {
+			"save_version_bump": false,
+			"source_reward_execution": false,
+			"set_bonuses_active": false,
+			"ai_valuation_behavior": false,
+			"rare_resource_activation": false,
+			"broad_ui_overhaul": false,
+		},
+	}
+
 static func claim_artifact(
 	hero_state: Dictionary,
 	artifact_id: String,
@@ -1309,6 +1385,29 @@ static func _resource_impact_parts(value: Variant) -> Array:
 		if amount > 0:
 			parts.append("%d %s/day" % [amount, key])
 	return parts
+
+static func _common_resource_delta(value: Variant) -> Dictionary:
+	var result := {}
+	if not (value is Dictionary):
+		return result
+	for key in ["gold", "wood", "ore"]:
+		var amount := int(value.get(key, 0))
+		if amount != 0:
+			result[key] = amount
+	return result
+
+static func _rare_resource_delta(value: Variant) -> Dictionary:
+	var result := {}
+	if not (value is Dictionary):
+		return result
+	for key_value in value.keys():
+		var key := String(key_value)
+		if key in ["gold", "wood", "ore"]:
+			continue
+		var amount := int(value.get(key, 0))
+		if amount != 0:
+			result[key] = amount
+	return result
 
 static func _artifact_set_id(artifact: Dictionary) -> String:
 	for key in ["set_id", "artifact_set_id", "set"]:

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "artifact-source-reward-rules-10184",
-  "currentSliceTitle": "Artifact Source And Reward Rules",
+  "currentSliceId": "artifact-equip-runtime-effects-10184",
+  "currentSliceTitle": "Artifact Equip Surface And Runtime Effects",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed bounded artifact source/reward tables, ArtifactRules report helpers, validator support, focused Godot report, and implementation report. Source/reward metadata connects all authored artifacts to map object/site reward contexts without live drop execution, equipment runtime effects, save migration, rare-resource activation, or AI valuation behavior. Validation passed: canonical wood alias scan no matches; python3 tests/validate_repo.py; python3 tests/validate_repo.py --artifact-taxonomy-report --artifact-set-faction-report --artifact-source-reward-report; godot4 artifact_taxonomy_schema_report; godot4 artifact_set_faction_content_report; godot4 artifact_source_reward_report; ops/progress JSON check; progress status/next; git diff --check.",
+  "currentSliceNotes": "Completed bounded artifact equip/runtime effect proof. Evidence: ArtifactRules.artifact_equip_runtime_report, tests/artifact_equip_runtime_effects_report.gd, docs/artifact-equip-runtime-effects-report.md, and PLAN evidence entry. Equipped artifacts now have public-safe report coverage proving current equipment management plus movement/scouting, battle command, daily common-resource income, and supported spell modifier runtime hooks. Boundaries preserved: no save migration, source/drop execution changes, set bonus activation, AI valuation behavior, rare-resource activation, or broad UI overhaul.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T22:35:00Z",
+  "updatedAt": "2026-04-27T23:25:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -451,7 +451,7 @@
       "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
       "title": "Hero Task-State Save-Normalizer Preservation Report",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "classification": "phase2_child_implementation_slice",
       "sourceDocs": [
         "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
@@ -1662,7 +1662,11 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T23:25:00Z",
+      "startedAt": "2026-04-27T23:00:00Z",
+      "completedAt": "2026-04-27T23:25:00Z",
+      "notes": "Completed bounded artifact equip/runtime effect proof. Evidence: ArtifactRules.artifact_equip_runtime_report, tests/artifact_equip_runtime_effects_report.gd, docs/artifact-equip-runtime-effects-report.md, and PLAN evidence entry. Focused report proves equipped artifacts affect current management, HeroCommandRules movement/scouting, BattleRules command payload, OverworldRules daily common-resource income, and SpellRules Trailglyph modifiers. Current one-trinket live slot boundary is reported truthfully; second trinket target remains not live. Validation passed: canonical wood alias scan no matches; python3 tests/validate_repo.py; python3 tests/validate_repo.py --artifact-taxonomy-report --artifact-set-faction-report --artifact-source-reward-report; godot4 artifact_equip_runtime_effects_report; artifact_taxonomy_schema_report; artifact_set_faction_content_report; artifact_source_reward_report; magic_artifact_economy_integration_report; economy_capture_income_expansion_report; ops/progress JSON check; progress status/next; git diff --check."
     },
     {
       "id": "artifact-ai-valuation-10184",
@@ -3408,23 +3412,23 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "artifact-equip-runtime-effects-10184",
-      "title": "Artifact Equip Surface And Runtime Effects",
+      "id": "artifact-ai-valuation-10184",
+      "title": "Artifact AI Valuation",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "artifact-system-foundation-implementation-10184",
       "source": "PLAN.md P2.6 Artifact System Foundation Implementation",
       "sourceDocs": [
         "docs/artifact-system-expansion-foundation.md",
-        "docs/magic-system-expansion-foundation.md",
-        "docs/economy-overhaul-foundation.md"
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-pressure-expansion-plan.md"
       ],
       "implementationTargets": [
-        "hero equipment/inventory surfaces",
-        "scripts/core/ArtifactRules.gd",
-        "battle/adventure/economy/spell integration points"
+        "AI valuation/report helpers",
+        "strategic AI report fixtures",
+        "public-output leak checks"
       ],
-      "notes": "Next P2.6 child after bounded source/reward metadata. Keep scope bounded; do not add save migration, rare-resource activation, broad UI overhaul, or AI valuation behavior unless explicitly selected by this slice."
+      "notes": "Next P2.6 child after bounded artifact equip/runtime proof. Keep scope bounded; add report/helper valuation evidence without introducing hidden player-facing score fields, broad AI behavior changes, save migration, rare-resource activation, source/drop execution changes, or set bonus activation."
     }
   ],
   "stoppedOrPausedTasks": [
