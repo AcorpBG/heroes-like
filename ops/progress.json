@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "neutral-encounter-object-migration-expansion-10184",
-  "currentSliceTitle": "Neutral Encounter Object Migration Expansion",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "P2.4 neutral encounter object migration expansion in progress: inspect prior bundle/report evidence first; migrate a bounded next encounter object set with validation while preserving shape-mask/pathing semantics.",
+  "currentSliceId": "overworld-object-ai-valuation-route-effects-10184",
+  "currentSliceTitle": "Overworld Object AI Valuation And Route Effects",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Next actionable P2.4 child after neutral encounter bundle 002 completion: connect selected object metadata to AI valuation, route effects, or scenario-authoring decisions without broad renderer/save/resource migration.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T15:41:28Z",
+  "updatedAt": "2026-04-27T15:49:56Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -251,7 +251,8 @@
         "docs/neutral-encounter-additive-validator-report-plan.md",
         "docs/neutral-encounter-representation-bundle-001-plan.md",
         "docs/neutral-encounter-first-class-object-migration-plan.md",
-        "docs/neutral-encounter-first-class-object-bundle-001-plan.md"
+        "docs/neutral-encounter-first-class-object-bundle-001-plan.md",
+        "docs/neutral-encounter-first-class-object-bundle-002-expansion-report.md"
       ],
       "implementationTargets": [
         "content/map_objects.json",
@@ -260,8 +261,8 @@
         "map editor object tooling",
         "validator/report fixtures"
       ],
-      "evidence": "Safe metadata and three neutral encounter object-backed placements exist with validator/report support, but broad runtime/pathing/renderer/editor/save adoption is intentionally deferred.",
-      "notes": "No broad warning cleanup, body_tiles, approach offsets, pathing, renderer sprite ingestion, or save adoption without explicit sub-slices.",
+      "evidence": "Safe metadata, bounded pathing/occupancy adoption for Brightwood Sawmill, and six neutral encounter object-backed placements exist with validator/report support. Broad renderer/editor/save adoption is intentionally deferred.",
+      "notes": "No broad warning cleanup, renderer sprite ingestion, neutral encounter runtime pathing adoption, or save adoption without explicit sub-slices.",
       "sliceType": "parent",
       "childSliceIds": [
         "overworld-object-runtime-metadata-adoption-10184",
@@ -1015,14 +1016,15 @@
       "id": "neutral-encounter-object-migration-expansion-10184",
       "title": "Neutral Encounter Object Migration Expansion",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
       "purpose": "Extend first-class neutral encounter object migration beyond the first three authored records only when it improves runtime/tooling value.",
       "sourceDocs": [
         "docs/neutral-encounter-first-class-object-migration-plan.md",
-        "docs/neutral-encounter-first-class-object-bundle-001-report-review.md"
+        "docs/neutral-encounter-first-class-object-bundle-001-report-review.md",
+        "docs/neutral-encounter-first-class-object-bundle-002-expansion-report.md"
       ],
       "implementationTargets": [
         "content/map_objects.json",
@@ -1039,9 +1041,17 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T15:41:28Z",
+      "completionEvidence": [
+        "Added neutral_encounter_first_class_object_bundle_002 for river_pass_reed_totemists, causeway_levee_cutters, and stonewake_reed_totemists.",
+        "content/map_objects.json now has three additional first-class neutral encounter objects with separate footprint, body_tiles, and approach metadata.",
+        "content/scenarios.json now links the three selected scenario objective encounters through object_id, object_placement_id, encounter_ref, legacy_scenario_encounter_ref, guard_link, and authored bundle metadata.",
+        "tests/validate_repo.py validates declared bundle-002 object-backed placement links, scenario objective guard resolution, and shape-mask-friendly object metadata.",
+        "docs/neutral-encounter-first-class-object-bundle-002-expansion-report.md records report deltas and deferred boundaries."
+      ],
+      "updatedAt": "2026-04-27T15:49:56Z",
       "startedAt": "2026-04-27T15:41:28Z",
-      "notes": "worker started for P2.4 neutral encounter object migration expansion: inspect prior bundle/report evidence first, then migrate a bounded next encounter object set with validation; preserve shape-mask/pathing semantics"
+      "notes": "Completed bounded bundle-002 expansion: three Reed Totemist objective placements are first-class object-backed records with scenario objective guard links, editor/taxonomy metadata, and separate footprint/body_tiles/approach metadata. Runtime encounter behavior, neutral pathing adoption, renderer, save migration, rare resources, and resource ids remain unchanged.",
+      "completedAt": "2026-04-27T15:49:56Z"
     },
     {
       "id": "overworld-object-ai-valuation-route-effects-10184",
@@ -2823,20 +2833,20 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "neutral-encounter-object-migration-expansion-10184",
-      "title": "Neutral Encounter Object Migration Expansion",
-      "status": "in_progress",
+      "id": "overworld-object-ai-valuation-route-effects-10184",
+      "title": "Overworld Object AI Valuation And Route Effects",
+      "status": "pending",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
       "sourceDocs": [
-        "docs/neutral-encounter-first-class-object-migration-plan.md",
-        "docs/neutral-encounter-first-class-object-bundle-001-report-review.md"
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/strategic-ai-foundation.md"
       ],
       "implementationTargets": [
-        "content/map_objects.json",
-        "content/scenarios.json",
-        "neutral encounter report validation"
+        "AI valuation/report helpers",
+        "route-effect helpers when selected",
+        "public leak checks"
       ],
-      "notes": "worker started for P2.4 neutral encounter object migration expansion: inspect prior bundle/report evidence first, then migrate a bounded next encounter object set with validation; preserve shape-mask/pathing semantics",
+      "notes": "Next actionable P2.4 child after neutral encounter bundle 002 completion: connect selected object metadata to AI valuation, route effects, or scenario-authoring decisions without broad renderer/save/resource migration.",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation"
