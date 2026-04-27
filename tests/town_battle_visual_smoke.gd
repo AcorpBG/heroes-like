@@ -265,6 +265,9 @@ func _run_battle_smoke() -> bool:
 	if not _assert_battle_ability_status_action_consequence_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_battle_stack_check_cue_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_battle_objective_check_cue_contract(shell):
 		get_tree().quit(1)
 		return false
@@ -1744,6 +1747,44 @@ func _assert_battle_ability_status_action_consequence_contract(shell: Node) -> b
 	for leak_token in ["final_priority", "debug_reason", "score", "ai_score", "weight"]:
 		if active_text.contains(leak_token) or button_tooltips.contains(leak_token) or order_button_text.contains(leak_token) or manual_cue_text.contains(leak_token) or target_handoff_text.contains(leak_token) or confirmation_text.contains(leak_token) or roster_text.contains(leak_token):
 			push_error("Battle smoke: battle consequence UI leaked internal token %s." % leak_token)
+			return false
+	return true
+
+func _assert_battle_stack_check_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: shell is missing stack-check validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var stack_check: Dictionary = snapshot.get("stack_check", {}) if snapshot.get("stack_check", {}) is Dictionary else {}
+	var stack_text := "\n".join([
+		String(stack_check.get("visible_text", "")),
+		String(stack_check.get("tooltip_text", "")),
+		String(stack_check.get("active", "")),
+		String(stack_check.get("side", "")),
+		String(stack_check.get("role", "")),
+		String(stack_check.get("status", "")),
+		String(stack_check.get("target_range", "")),
+		String(stack_check.get("readiness", "")),
+		String(stack_check.get("order", "")),
+		String(stack_check.get("next_step", "")),
+		String(snapshot.get("stack_check_visible_text", "")),
+		String(snapshot.get("stack_check_tooltip_text", "")),
+		String(snapshot.get("active_visible_text", "")),
+		String(snapshot.get("active_tooltip_text", "")),
+	])
+	for token in ["Stack check:", "Stack Check", "Active:", "Role:", "Status pressure:", "Target/range:", "Readiness:", "Current order:", "Next practical action:", "Inspection:", "does not spend an action"]:
+		if not stack_text.contains(token):
+			push_error("Battle smoke: stack-check cue lost %s clarity: %s." % [token, stack_text])
+			return false
+	if String(stack_check.get("active", "")) == "" or String(stack_check.get("role", "")) == "" or String(stack_check.get("next_step", "")) == "":
+		push_error("Battle smoke: stack-check payload is missing active, role, or next-step context: %s." % stack_check)
+		return false
+	if not String(snapshot.get("active_visible_text", "")).contains("Stack check:"):
+		push_error("Battle smoke: stack-check cue is not visible in the active stack rail: %s." % stack_text)
+		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if stack_text.contains(leak_token):
+			push_error("Battle smoke: stack-check cue leaked internal token %s: %s." % [leak_token, stack_text])
 			return false
 	return true
 

@@ -402,7 +402,20 @@ func _refresh() -> void:
 			String(initiative_handoff.get("tooltip_text", "")),
 			initiative_track,
 		])
-	_set_compact_label(_active_label, BattleRules.describe_active_context(_session), 3)
+	var active_stack_check := _battle_stack_check_cue_surface()
+	var active_context := BattleRules.describe_active_context(_session)
+	if active_stack_check.is_empty():
+		_set_compact_label(_active_label, active_context, 3)
+	else:
+		_set_compact_label(
+			_active_label,
+			"%s\n%s" % [String(active_stack_check.get("visible_text", "")), active_context],
+			3
+		)
+		_active_label.tooltip_text = _join_tooltip_sections([
+			String(active_stack_check.get("tooltip_text", "")),
+			active_context,
+		])
 	_set_compact_label(_target_label, BattleRules.describe_target_context(_session), 3)
 	_set_compact_label(_spell_label, BattleRules.describe_spellbook(_session), 3)
 	_set_compact_label(_effect_label, BattleRules.describe_effect_board(_session), 3)
@@ -648,6 +661,83 @@ func _battle_target_cycle_focus_label(target_stack: Dictionary) -> String:
 		name = String(target_stack.get("battle_id", "target")).strip_edges()
 	return _short_text(name, 28)
 
+func _battle_stack_check_cue_surface() -> Dictionary:
+	if _session == null or _session.battle.is_empty():
+		return {}
+	var active_stack := BattleRules.get_active_stack(_session.battle)
+	var consequence := BattleRules.active_consequence_payload(_session)
+	var action_surface := BattleRules.get_action_surface(_session)
+	var active_name := String(consequence.get("active_stack_name", "")).strip_edges()
+	if active_name == "" and not active_stack.is_empty():
+		active_name = String(active_stack.get("name", active_stack.get("battle_id", "active stack"))).strip_edges()
+	if active_name == "":
+		active_name = "no active stack"
+	var active_side := String(consequence.get("active_side", active_stack.get("side", ""))).strip_edges()
+	var side_label := _battle_initiative_side_label(active_side)
+	var role_line := String(consequence.get("active_ability_role", "Role: no active stack.")).strip_edges()
+	var status_line := String(consequence.get("status_pressure", "Status pressure: none.")).strip_edges()
+	var range_line := String(consequence.get("target_range", "Target/range: no target.")).strip_edges()
+	var readiness := "Ready"
+	var preferred_action_id := String(consequence.get("preferred_action_id", "")).strip_edges()
+	var order_line := "no ready order"
+	var next_step := "Choose the next legal battle order."
+	if active_stack.is_empty():
+		readiness = "Waiting"
+		next_step = "Wait for battle resolution."
+	elif active_side != "player":
+		readiness = "Locked"
+		next_step = "Wait for command to return."
+	else:
+		if preferred_action_id == "":
+			preferred_action_id = _battle_first_ready_order_id(action_surface)
+		if preferred_action_id != "":
+			var preferred_action: Dictionary = action_surface.get(preferred_action_id, {}) if action_surface.get(preferred_action_id, {}) is Dictionary else {}
+			var preferred_label := String(preferred_action.get("label", preferred_action_id.capitalize())).strip_edges()
+			var preferred_readiness := _battle_order_readiness_label(preferred_action)
+			order_line = "%s%s" % [
+				preferred_label,
+				" (%s)" % preferred_readiness if preferred_readiness != "" else "",
+			]
+			next_step = String(preferred_action.get("confirmation", preferred_action.get("consequence", ""))).strip_edges()
+			if next_step == "":
+				next_step = "Confirm %s or inspect another ready order." % preferred_label
+		else:
+			readiness = "Check"
+			next_step = "Retarget, move, or use Defend if the line is stuck."
+	var visible := "Stack check: %s; %s." % [
+		_short_text(active_name, 30),
+		_short_text(_strip_sentence(next_step).trim_suffix("."), 44),
+	]
+	var tooltip := "Stack Check\n- Active: %s [%s]\n- %s\n- %s\n- %s\n- Readiness: %s\n- Current order: %s\n- Next practical action: %s\n- Inspection: checking this cue does not spend an action or advance initiative." % [
+		active_name,
+		side_label,
+		role_line,
+		status_line,
+		range_line,
+		readiness,
+		order_line,
+		next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"active": active_name,
+		"side": side_label,
+		"role": role_line,
+		"status": status_line,
+		"target_range": range_line,
+		"readiness": readiness,
+		"order": order_line,
+		"next_step": next_step,
+	}
+
+func _battle_first_ready_order_id(action_surface: Dictionary) -> String:
+	for action_id in ["shoot", "strike", "advance", "defend"]:
+		var action: Dictionary = action_surface.get(action_id, {}) if action_surface.get(action_id, {}) is Dictionary else {}
+		if not action.is_empty() and not bool(action.get("disabled", false)):
+			return action_id
+	return ""
+
 func _battle_initiative_handoff_surface() -> Dictionary:
 	if _session == null or _session.battle.is_empty():
 		return {}
@@ -823,6 +913,7 @@ func validation_snapshot() -> Dictionary:
 	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
+	var stack_check := _battle_stack_check_cue_surface()
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
 	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
 		dispatch_text = _tactical_briefing_text
@@ -881,6 +972,11 @@ func validation_snapshot() -> Dictionary:
 		"action_guidance": BattleRules.describe_action_surface(_session),
 		"visible_action_guidance": _action_guide.text,
 		"target_context": BattleRules.describe_target_context(_session),
+		"stack_check": stack_check,
+		"stack_check_visible_text": String(stack_check.get("visible_text", "")),
+		"stack_check_tooltip_text": String(stack_check.get("tooltip_text", "")),
+		"active_visible_text": _active_label.text,
+		"active_tooltip_text": _active_label.tooltip_text,
 		"initiative_handoff": _battle_initiative_handoff_surface(),
 		"initiative_handoff_visible_text": String(_battle_initiative_handoff_surface().get("visible_text", "")),
 		"initiative_handoff_tooltip_text": _initiative_label.tooltip_text,
