@@ -10,6 +10,14 @@
     "playback_runtime": false,
     "broad_ui_polish": false
   },
+  "preference_policy": {
+    "schema_id": "animation_playback_preference_policy_v1",
+    "normal": "use authored animation state and catalog playback/blocking policy",
+    "reduced_motion": "replace motion-heavy visuals with reduced_motion_tag fallback, suppress camera/loop/large-motion expectations, and keep compact audio placeholders only",
+    "fast_mode": "replace routine visuals with fast_mode_tag fallback, shorten duration budgets, keep ordering, and relax blocking policies for resolved events",
+    "combined": "use reduced_motion_tag for visual selection and fast-mode timing/blocking for resolved event playback",
+    "troop_object_required": true
+  },
   "required_surfaces": [
     "battle",
     "overworld",

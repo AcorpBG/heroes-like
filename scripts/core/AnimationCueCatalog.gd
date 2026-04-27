@@ -3,6 +3,11 @@ extends RefCounted
 
 const CATALOG_PATH := "res://content/animation_event_cues.json"
 const SCHEMA_ID := "animation_event_cue_catalog_v1"
+const PREFERENCE_POLICY_SCHEMA_ID := "animation_playback_preference_policy_v1"
+const MODE_NORMAL := "normal"
+const MODE_REDUCED_MOTION := "reduced_motion"
+const MODE_FAST := "fast"
+const MODE_REDUCED_MOTION_FAST := "reduced_motion_fast"
 const REQUIRED_SURFACES := ["battle", "overworld", "town", "spell", "artifact", "ui"]
 const REQUIRED_FIELDS := [
 	"event_id",
@@ -20,6 +25,21 @@ const REQUIRED_FIELDS := [
 	"producer_refs",
 ]
 const FALLBACK_FIELDS := ["reduced_motion_tag", "fast_mode_tag"]
+const REPRESENTATIVE_POLICY_EVENTS := [
+	"battle_unit_move",
+	"battle_unit_melee_attack",
+	"battle_unit_hit",
+	"battle_unit_death",
+	"overworld_object_visited",
+	"overworld_object_captured",
+	"overworld_object_depleted",
+	"overworld_route_blocked",
+	"overworld_object_ambient",
+	"town_building_built",
+	"spell_cast_battle",
+	"artifact_equipped",
+	"ui_invalid_action",
+]
 
 static func load_catalog() -> Dictionary:
 	return ContentService.load_json(CATALOG_PATH)
@@ -174,20 +194,256 @@ static func cue_for_event(event_id: String, mode: String = "normal", catalog: Di
 	for entry_value in _entries(source):
 		if entry_value is Dictionary and String(entry_value.get("event_id", "")) == normalized_event_id:
 			var result: Dictionary = entry_value.duplicate(true)
-			var fallbacks: Dictionary = result.get("fallbacks", {}) if result.get("fallbacks", {}) is Dictionary else {}
-			match mode:
-				"reduced_motion":
-					result["selected_fallback_tag"] = String(fallbacks.get("reduced_motion_tag", ""))
-				"fast":
-					result["selected_fallback_tag"] = String(fallbacks.get("fast_mode_tag", ""))
-				_:
-					result["selected_fallback_tag"] = ""
+			var policy := cue_playback_policy_for_event(normalized_event_id, _preferences_from_mode(mode), source)
+			result["selected_fallback_tag"] = String(policy.get("selected_fallback_tag", ""))
+			result["selected_mode"] = String(policy.get("mode", MODE_NORMAL))
+			result["selected_animation_state"] = String(policy.get("selected_animation_state", result.get("animation_state", "")))
+			result["selected_playback_policy"] = String(policy.get("selected_playback_policy", result.get("playback_policy", "")))
+			result["selected_blocking_policy"] = String(policy.get("selected_blocking_policy", result.get("blocking_policy", "")))
 			return result
 	return {}
+
+static func normalize_animation_preferences(preferences: Dictionary = {}) -> Dictionary:
+	var accessibility: Dictionary = preferences.get("accessibility", {}) if preferences.get("accessibility", {}) is Dictionary else {}
+	var gameplay: Dictionary = preferences.get("gameplay", {}) if preferences.get("gameplay", {}) is Dictionary else {}
+	var animation: Dictionary = preferences.get("animation", {}) if preferences.get("animation", {}) is Dictionary else {}
+	var reduced_motion := bool(preferences.get("reduced_motion", preferences.get("reduce_motion", accessibility.get("reduce_motion", accessibility.get("reduced_motion", false)))))
+	var fast_mode := bool(preferences.get("fast_mode", preferences.get("fast_resolution", gameplay.get("fast_mode", animation.get("fast_mode", false)))))
+	var mode_hint := String(preferences.get("mode", preferences.get("speed_mode", ""))).strip_edges()
+	match mode_hint:
+		MODE_REDUCED_MOTION:
+			reduced_motion = true
+			fast_mode = false
+		MODE_FAST, "fast_mode":
+			fast_mode = true
+			reduced_motion = false
+		MODE_REDUCED_MOTION_FAST, "combined":
+			reduced_motion = true
+			fast_mode = true
+		MODE_NORMAL:
+			reduced_motion = false
+			fast_mode = false
+
+	var mode := MODE_NORMAL
+	if reduced_motion and fast_mode:
+		mode = MODE_REDUCED_MOTION_FAST
+	elif reduced_motion:
+		mode = MODE_REDUCED_MOTION
+	elif fast_mode:
+		mode = MODE_FAST
+
+	return {
+		"schema_id": PREFERENCE_POLICY_SCHEMA_ID,
+		"mode": mode,
+		"reduced_motion": reduced_motion,
+		"fast_mode": fast_mode,
+		"visual_fallback_preference": "reduced_motion_tag" if reduced_motion else ("fast_mode_tag" if fast_mode else "animation_state"),
+		"timing_preference": MODE_FAST if fast_mode else MODE_NORMAL,
+		"combined_policy": "reduced_motion_visual_fast_timing" if reduced_motion and fast_mode else "single_preference",
+		"duration_scale": 0.35 if fast_mode else 1.0,
+		"max_duration_ms": 180 if fast_mode else (260 if reduced_motion else 700),
+		"allows_large_motion": not reduced_motion,
+		"allows_camera_motion": not reduced_motion,
+		"allows_loop_motion": not reduced_motion,
+		"allows_strong_flash": not reduced_motion,
+		"audio_policy": "placeholder_cues_allowed_no_final_import",
+	}
+
+static func cue_playback_policy_for_event(event_id: String, preferences: Dictionary = {}, catalog: Dictionary = {}) -> Dictionary:
+	var entry := _entry_for_event(event_id, catalog if not catalog.is_empty() else load_catalog())
+	if entry.is_empty():
+		return {}
+	return _cue_playback_policy_for_entry(entry, normalize_animation_preferences(preferences))
+
+static func animation_preference_policy_report(catalog: Dictionary = {}) -> Dictionary:
+	var source := catalog if not catalog.is_empty() else load_catalog()
+	var catalog_report := event_cue_catalog_report(source)
+	var errors := []
+	if not bool(catalog_report.get("ok", false)):
+		errors.append_array(catalog_report.get("errors", []))
+
+	var preference_cases := {
+		MODE_NORMAL: {},
+		MODE_REDUCED_MOTION: {"reduced_motion": true},
+		MODE_FAST: {"fast_mode": true},
+		MODE_REDUCED_MOTION_FAST: {"reduced_motion": true, "fast_mode": true},
+	}
+	var selected_cases := {}
+	var covered_surfaces := {}
+	var covered_subjects := {}
+	var reduced_motion_policy_count := 0
+	var fast_mode_policy_count := 0
+	var combined_policy_count := 0
+	var troop_policy_count := 0
+	var object_policy_count := 0
+
+	for event_id in REPRESENTATIVE_POLICY_EVENTS:
+		var entry := _entry_for_event(event_id, source)
+		if entry.is_empty():
+			errors.append("Policy report missing representative event %s." % event_id)
+			continue
+		var event_cases := {}
+		for mode in preference_cases.keys():
+			var selected := _cue_playback_policy_for_entry(entry, normalize_animation_preferences(preference_cases[mode]))
+			event_cases[mode] = _public_policy_case(selected)
+			if String(mode) == MODE_REDUCED_MOTION and String(selected.get("selected_fallback_tag", "")) == String(entry.get("fallbacks", {}).get("reduced_motion_tag", "")):
+				reduced_motion_policy_count += 1
+			if String(mode) == MODE_FAST and String(selected.get("selected_fallback_tag", "")) == String(entry.get("fallbacks", {}).get("fast_mode_tag", "")):
+				fast_mode_policy_count += 1
+			if String(mode) == MODE_REDUCED_MOTION_FAST and String(selected.get("selected_fallback_tag", "")) == String(entry.get("fallbacks", {}).get("reduced_motion_tag", "")) and String(selected.get("timing_preference", "")) == MODE_FAST:
+				combined_policy_count += 1
+		selected_cases[event_id] = event_cases
+		_increment(covered_surfaces, String(entry.get("surface", "")))
+		_increment(covered_subjects, String(entry.get("subject_kind", "")))
+		if String(entry.get("subject_kind", "")) == "troop_stack":
+			troop_policy_count += 1
+		if String(entry.get("subject_kind", "")) == "map_object":
+			object_policy_count += 1
+
+	if troop_policy_count < 4:
+		errors.append("Policy report must cover multiple battle troop cues.")
+	if object_policy_count < 4:
+		errors.append("Policy report must cover multiple overworld map object cues.")
+	for surface in REQUIRED_SURFACES:
+		if int(covered_surfaces.get(surface, 0)) <= 0:
+			errors.append("Policy report must cover surface %s." % surface)
+	var representative_count := REPRESENTATIVE_POLICY_EVENTS.size()
+	if reduced_motion_policy_count != representative_count:
+		errors.append("Reduced-motion policy did not select reduced fallbacks for every representative cue.")
+	if fast_mode_policy_count != representative_count:
+		errors.append("Fast-mode policy did not select fast fallbacks for every representative cue.")
+	if combined_policy_count != representative_count:
+		errors.append("Combined reduced-motion/fast policy must use reduced visual fallback with fast timing.")
+
+	var runtime_policy: Dictionary = source.get("runtime_policy", {}) if source.get("runtime_policy", {}) is Dictionary else {}
+	var public_payload := {
+		"schema_id": PREFERENCE_POLICY_SCHEMA_ID,
+		"schema_status": "animation_preference_policy_validated",
+		"representative_event_count": representative_count,
+		"covered_surfaces": covered_surfaces,
+		"covered_subjects": covered_subjects,
+		"reduced_motion_policy_count": reduced_motion_policy_count,
+		"fast_mode_policy_count": fast_mode_policy_count,
+		"combined_policy_count": combined_policy_count,
+		"runtime_policy": runtime_policy,
+		"selected_cases": selected_cases,
+		"errors": errors,
+	}
+	return {
+		"ok": errors.is_empty(),
+		"schema_id": PREFERENCE_POLICY_SCHEMA_ID,
+		"schema_status": "animation_preference_policy_validated",
+		"representative_event_count": representative_count,
+		"covered_surfaces": covered_surfaces,
+		"covered_subjects": covered_subjects,
+		"troop_policy_count": troop_policy_count,
+		"object_policy_count": object_policy_count,
+		"reduced_motion_policy_count": reduced_motion_policy_count,
+		"fast_mode_policy_count": fast_mode_policy_count,
+		"combined_policy_count": combined_policy_count,
+		"runtime_policy": runtime_policy,
+		"selected_cases": selected_cases,
+		"errors": errors,
+		"public_payload": public_payload,
+	}
 
 static func _entries(catalog: Dictionary) -> Array:
 	var entries = catalog.get("entries", [])
 	return entries if entries is Array else []
+
+static func _entry_for_event(event_id: String, catalog: Dictionary) -> Dictionary:
+	var normalized_event_id := String(event_id).strip_edges()
+	if normalized_event_id == "":
+		return {}
+	for entry_value in _entries(catalog):
+		if entry_value is Dictionary and String(entry_value.get("event_id", "")) == normalized_event_id:
+			return entry_value
+	return {}
+
+static func _cue_playback_policy_for_entry(entry: Dictionary, preferences: Dictionary) -> Dictionary:
+	var fallbacks: Dictionary = entry.get("fallbacks", {}) if entry.get("fallbacks", {}) is Dictionary else {}
+	var reduced_motion := bool(preferences.get("reduced_motion", false))
+	var fast_mode := bool(preferences.get("fast_mode", false))
+	var selected_fallback_tag := ""
+	var selected_animation_state := String(entry.get("animation_state", ""))
+	var visual_policy := "authored_animation_state"
+	if reduced_motion:
+		selected_fallback_tag = String(fallbacks.get("reduced_motion_tag", ""))
+		selected_animation_state = selected_fallback_tag
+		visual_policy = "reduced_motion_fallback"
+	elif fast_mode:
+		selected_fallback_tag = String(fallbacks.get("fast_mode_tag", ""))
+		selected_animation_state = selected_fallback_tag
+		visual_policy = "fast_mode_fallback"
+
+	var selected_blocking_policy := String(entry.get("blocking_policy", ""))
+	if fast_mode and selected_blocking_policy in ["input_blocking_timeout", "inherits_source"]:
+		selected_blocking_policy = "nonblocking_fast_resolve"
+	elif reduced_motion and selected_blocking_policy == "input_blocking_timeout":
+		selected_blocking_policy = "nonblocking_reduced_motion"
+
+	var selected_vfx_ids := _string_array(entry.get("vfx_cue_ids", []))
+	var selected_audio_ids := _string_array(entry.get("audio_cue_ids", []))
+	if reduced_motion:
+		selected_vfx_ids = [selected_fallback_tag] if selected_fallback_tag != "" else []
+	elif fast_mode:
+		selected_vfx_ids = [selected_fallback_tag] if selected_fallback_tag != "" else []
+
+	return {
+		"schema_id": PREFERENCE_POLICY_SCHEMA_ID,
+		"mode": String(preferences.get("mode", MODE_NORMAL)),
+		"event_id": String(entry.get("event_id", "")),
+		"cue_id": String(entry.get("cue_id", "")),
+		"surface": String(entry.get("surface", "")),
+		"subject_kind": String(entry.get("subject_kind", "")),
+		"animation_state_family": String(entry.get("animation_state_family", "")),
+		"base_animation_state": String(entry.get("animation_state", "")),
+		"selected_animation_state": selected_animation_state,
+		"selected_fallback_tag": selected_fallback_tag,
+		"selected_visual_policy": visual_policy,
+		"selected_playback_policy": "fast_resolve" if fast_mode else String(entry.get("playback_policy", "")),
+		"selected_blocking_policy": selected_blocking_policy,
+		"skippable": true if fast_mode else bool(entry.get("skippable", false)),
+		"duration_scale": float(preferences.get("duration_scale", 1.0)),
+		"max_duration_ms": int(preferences.get("max_duration_ms", 700)),
+		"allows_large_motion": bool(preferences.get("allows_large_motion", true)),
+		"allows_camera_motion": bool(preferences.get("allows_camera_motion", true)),
+		"allows_loop_motion": bool(preferences.get("allows_loop_motion", true)),
+		"allows_strong_flash": bool(preferences.get("allows_strong_flash", true)),
+		"audio_policy": String(preferences.get("audio_policy", "")),
+		"timing_preference": String(preferences.get("timing_preference", MODE_NORMAL)),
+		"combined_policy": String(preferences.get("combined_policy", "single_preference")),
+		"selected_vfx_cue_ids": selected_vfx_ids,
+		"selected_audio_cue_ids": selected_audio_ids,
+		"validation_tags": _string_array(entry.get("validation_tags", [])),
+	}
+
+static func _public_policy_case(policy: Dictionary) -> Dictionary:
+	return {
+		"event_id": String(policy.get("event_id", "")),
+		"surface": String(policy.get("surface", "")),
+		"subject_kind": String(policy.get("subject_kind", "")),
+		"mode": String(policy.get("mode", MODE_NORMAL)),
+		"selected_animation_state": String(policy.get("selected_animation_state", "")),
+		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+		"selected_playback_policy": String(policy.get("selected_playback_policy", "")),
+		"selected_blocking_policy": String(policy.get("selected_blocking_policy", "")),
+		"timing_preference": String(policy.get("timing_preference", MODE_NORMAL)),
+		"combined_policy": String(policy.get("combined_policy", "")),
+		"max_duration_ms": int(policy.get("max_duration_ms", 0)),
+	}
+
+static func _preferences_from_mode(mode: String) -> Dictionary:
+	match String(mode).strip_edges():
+		MODE_REDUCED_MOTION:
+			return {"reduced_motion": true}
+		MODE_FAST, "fast_mode":
+			return {"fast_mode": true}
+		MODE_REDUCED_MOTION_FAST, "combined":
+			return {"reduced_motion": true, "fast_mode": true}
+		_:
+			return {}
 
 static func _required_representative_events() -> Array:
 	return [
