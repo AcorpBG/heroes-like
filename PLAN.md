@@ -438,7 +438,7 @@ sliceEvidence:
 completionCriteria:
 - Object/encounter metadata supports real placement, tooling, AI, renderer, or scenario-authoring decisions.
 - Remaining legacy/direct placements are intentionally tracked as compatibility warnings until selected.
-- Corrective P2.4 object-content work uses `docs/phase2-4-object-implementation-backlog.md` before forward P2.5 implementation resumes.
+- Corrective P2.4 object-content work uses the expanded `docs/phase2-4-object-implementation-backlog.md` target of about 372 authored map objects, including about 200 non-interactable decorations/blockers, before forward P2.5 implementation resumes.
 
 nonGoals:
 - No broad warning-count cleanup as an end in itself.
@@ -466,7 +466,7 @@ baselineChecks:
 - `git diff --check`
 
 sliceEvidence:
-- Backlog states current repo object counts, extracted source scale evidence, target Aurelion Reach categories, and first corrective implementation batches.
+- Backlog states current repo object counts, extracted source scale evidence, target Aurelion Reach categories, a 200-object decoration/blocker foundation target, and first corrective implementation batches.
 
 completionCriteria:
 - The missing P2.4 object-content backlog exists and P2.5 is paused behind corrective P2.4 object implementation.
@@ -480,7 +480,7 @@ nonGoals:
 
 id: `overworld-object-content-batch-001-core-density-pickups-10184`
 phase: `phase-2-deep-production-foundation`
-purpose: Start the missing broad object-content implementation with core decorations, blockers, and pickup vocabulary.
+purpose: Start the missing broad object-content implementation with core decorations, blockers, and pickup vocabulary without claiming full decoration density.
 
 sourceDocs:
 - `docs/phase2-4-object-implementation-backlog.md`
@@ -497,16 +497,110 @@ baselineChecks:
 - `git diff --check`
 
 sliceEvidence:
-- About 30 new or normalized object definitions cover non-blocking decorations, blocking or edge-blocker decorations, common raw resource pickups, and staged rare-resource pickups.
+- About 30 new or normalized object definitions cover the first 20 non-blocking/blocking/edge-blocker decorations, common raw resource pickups, and staged rare-resource pickups.
 
 completionCriteria:
 - Batch 001 objects distinguish visual footprint, blocking body tiles where relevant, passability, interaction/approach expectations, and biome/region variants.
 - Rare-resource objects remain staged metadata only.
+- Follow-up decoration batches remain pending unless the 200-object decoration/blocker target is actually implemented and validated.
 
 nonGoals:
 - No rare-resource live economy activation.
 - No renderer sprite import.
 - No broad scenario placement migration.
+
+#### P2.4c Corrective Decoration Batch 001b
+
+id: `overworld-object-content-batch-001b-biome-scenic-decoration-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Expand passable scenic decoration coverage across the 9 biomes after Batch 001 starts the core density work.
+
+sourceDocs:
+- `docs/phase2-4-object-implementation-backlog.md`
+- `docs/overworld-object-taxonomy-density.md`
+
+implementationTargets:
+- `content/map_objects.json`
+- Object validator/report fixtures as needed.
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+sliceEvidence:
+- About 60 new or normalized non-interactable passable scenic definitions cover all 9 biomes with small and medium footprint families.
+
+completionCriteria:
+- Scenic decorations remain non-interactable and distinguish visual footprint from empty or minimal body masks.
+- Every biome has usable passable scenic scatter for route dressing and negative-space density.
+
+nonGoals:
+- No interactable object implementation.
+- No renderer sprite import.
+- No broad pathing or scenario migration.
+
+#### P2.4d Corrective Decoration Batch 001c
+
+id: `overworld-object-content-batch-001c-biome-blockers-edge-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Expand biome-specific blocking decorations and edge blockers with explicit non-square footprint/body-mask contracts.
+
+sourceDocs:
+- `docs/phase2-4-object-implementation-backlog.md`
+- `docs/overworld-object-taxonomy-density.md`
+
+implementationTargets:
+- `content/map_objects.json`
+- Object validator/report fixtures as needed.
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+sliceEvidence:
+- About 70 new or normalized non-interactable blocking and edge-blocker definitions cover rocks, trees, cliffs, shrubs, water edges, ruins, debris, scatter blockers, and route edges across biomes.
+
+completionCriteria:
+- Blocking and edge-blocker decorations define explicit `body_tiles`; visual footprints are not treated as implied blocking rectangles.
+- Non-square footprint families from 1x2 through 4x4 are represented where appropriate.
+
+nonGoals:
+- No route-effect runtime adoption.
+- No interactable object implementation.
+- No renderer sprite import.
+
+#### P2.4e Corrective Decoration Batch 001d
+
+id: `overworld-object-content-batch-001d-large-footprint-coverage-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Close decoration/blocker biome coverage gaps and add sparse large-footprint blockers toward the 200-object foundation target.
+
+sourceDocs:
+- `docs/phase2-4-object-implementation-backlog.md`
+- `docs/overworld-object-taxonomy-density.md`
+
+implementationTargets:
+- `content/map_objects.json`
+- Object validator/report fixtures as needed.
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+sliceEvidence:
+- About 48 new or normalized decoration/blocker definitions close remaining biome coverage and include appropriate 5x2, 5x3, 6x3, 6x4, and 6x6 large-footprint families.
+
+completionCriteria:
+- The decoration/blocker category is near the 200-object target with all 9 biomes represented.
+- Large silhouettes use partial masks where appropriate and remain non-interactable.
+
+nonGoals:
+- No decorative interactables or hidden rewards.
+- No pathing, renderer, save, economy, or scenario migration beyond metadata validation.
+- No HoMM-scale 500+ decoration breadth in P2.4.
 
 ### P2.5 Magic System Foundation Implementation
 
