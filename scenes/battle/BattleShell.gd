@@ -452,6 +452,7 @@ func _refresh_action_buttons() -> void:
 	_apply_action_surface(_defend_button, surface.get("defend", {}), true)
 	_apply_action_surface(_retreat_button, surface.get("retreat", {}))
 	_apply_action_surface(_surrender_button, surface.get("surrender", {}))
+	_append_battle_exit_order_cues(surface)
 
 	var target_name := String(target_stack.get("name", "No target"))
 	_strike_button.tooltip_text = "%s Target: %s." % [_strike_button.tooltip_text, target_name] if player_turn and not target_stack.is_empty() else _strike_button.tooltip_text
@@ -468,6 +469,69 @@ func _apply_action_surface(button: Button, action: Dictionary, show_order_cue: b
 			_battle_order_button_tooltip(action),
 		])
 	_style_action_button(button, true, 112.0)
+
+func _append_battle_exit_order_cues(action_surface: Dictionary) -> void:
+	var exit_cue := _battle_exit_order_cue_surface(action_surface)
+	if exit_cue.is_empty():
+		return
+	var retreat_cue := String(exit_cue.get("retreat_tooltip", "")).strip_edges()
+	if retreat_cue != "":
+		_retreat_button.tooltip_text = _join_tooltip_sections([
+			_retreat_button.tooltip_text,
+			retreat_cue,
+		])
+	var surrender_cue := String(exit_cue.get("surrender_tooltip", "")).strip_edges()
+	if surrender_cue != "":
+		_surrender_button.tooltip_text = _join_tooltip_sections([
+			_surrender_button.tooltip_text,
+			surrender_cue,
+		])
+
+func _battle_exit_order_cue_surface(action_surface: Dictionary) -> Dictionary:
+	var retreat: Dictionary = action_surface.get("retreat", {}) if action_surface.get("retreat", {}) is Dictionary else {}
+	var surrender: Dictionary = action_surface.get("surrender", {}) if action_surface.get("surrender", {}) is Dictionary else {}
+	if retreat.is_empty() and surrender.is_empty():
+		return {}
+	var retreat_state := _battle_exit_order_state(retreat)
+	var surrender_state := _battle_exit_order_state(surrender)
+	var route_line := "Route: resolving either exit order leaves this battle and returns to the field after the outcome handoff."
+	var save_line := "Save: use Save Battle first to preserve this exact tactical state."
+	return {
+		"visible_text": "Exit cue: Retreat %s; Surrender %s." % [retreat_state, surrender_state],
+		"route": route_line,
+		"save": save_line,
+		"retreat_state": retreat_state,
+		"surrender_state": surrender_state,
+		"retreat_tooltip": _battle_exit_order_tooltip("Retreat", retreat, route_line, save_line),
+		"surrender_tooltip": _battle_exit_order_tooltip("Surrender", surrender, route_line, save_line),
+	}
+
+func _battle_exit_order_state(action: Dictionary) -> String:
+	if action.is_empty():
+		return "unavailable"
+	return "ready" if not bool(action.get("disabled", true)) else "blocked"
+
+func _battle_exit_order_tooltip(label: String, action: Dictionary, route_line: String, save_line: String) -> String:
+	if action.is_empty():
+		return ""
+	var readiness := String(action.get("readiness", "")).strip_edges()
+	var summary := String(action.get("summary", "")).strip_edges()
+	var consequence := String(action.get("consequence", "")).strip_edges()
+	var confirmation := String(action.get("confirmation", "")).strip_edges()
+	var lines := [
+		"Exit cue: %s is an army-wide battle exit order." % label,
+	]
+	if readiness != "":
+		lines.append("Readiness: %s." % readiness)
+	if summary != "":
+		lines.append("Result: %s" % summary)
+	if consequence != "":
+		lines.append("Consequence: %s" % consequence)
+	if confirmation != "":
+		lines.append("Confirm: %s" % confirmation)
+	lines.append(route_line)
+	lines.append(save_line)
+	return "\n".join(lines)
 
 func _configure_save_slot_picker() -> void:
 	_save_slot_picker.clear()
@@ -598,10 +662,15 @@ func validation_snapshot() -> Dictionary:
 		"strike_text": _strike_button.text,
 		"shoot_text": _shoot_button.text,
 		"defend_text": _defend_button.text,
+		"retreat_text": _retreat_button.text,
+		"surrender_text": _surrender_button.text,
 		"advance_tooltip": _advance_button.tooltip_text,
 		"strike_tooltip": _strike_button.tooltip_text,
 		"shoot_tooltip": _shoot_button.tooltip_text,
 		"defend_tooltip": _defend_button.tooltip_text,
+		"retreat_tooltip": _retreat_button.tooltip_text,
+		"surrender_tooltip": _surrender_button.tooltip_text,
+		"battle_exit_order_cues": _battle_exit_order_cue_surface(action_surface),
 		"battle_order_button_surfaces": _battle_order_button_surfaces(),
 		"player_stack_count": player_roster.size(),
 		"enemy_stack_count": enemy_roster.size(),

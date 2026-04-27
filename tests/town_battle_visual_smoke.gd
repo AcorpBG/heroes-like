@@ -230,6 +230,9 @@ func _run_battle_smoke() -> bool:
 	if not _assert_battle_ability_status_action_consequence_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_battle_exit_order_cue_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_active_return_handoff_contract(shell, "Battle", "Menu: Battle"):
 		get_tree().quit(1)
 		return false
@@ -1178,6 +1181,39 @@ func _assert_battle_ability_status_action_consequence_contract(shell: Node) -> b
 	for leak_token in ["final_priority", "debug_reason", "score", "ai_score", "weight"]:
 		if active_text.contains(leak_token) or button_tooltips.contains(leak_token) or order_button_text.contains(leak_token) or manual_cue_text.contains(leak_token) or target_handoff_text.contains(leak_token) or confirmation_text.contains(leak_token) or roster_text.contains(leak_token):
 			push_error("Battle smoke: battle consequence UI leaked internal token %s." % leak_token)
+			return false
+	return true
+
+func _assert_battle_exit_order_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: shell is missing exit-order cue validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var exit_cues: Dictionary = snapshot.get("battle_exit_order_cues", {}) if snapshot.get("battle_exit_order_cues", {}) is Dictionary else {}
+	var exit_text := "\n".join([
+		String(exit_cues.get("visible_text", "")),
+		String(exit_cues.get("route", "")),
+		String(exit_cues.get("save", "")),
+		String(exit_cues.get("retreat_tooltip", "")),
+		String(exit_cues.get("surrender_tooltip", "")),
+		String(snapshot.get("retreat_text", "")),
+		String(snapshot.get("surrender_text", "")),
+		String(snapshot.get("retreat_tooltip", "")),
+		String(snapshot.get("surrender_tooltip", "")),
+	])
+	for token in ["Exit cue:", "Retreat", "Surrender", "army-wide battle exit order", "Route:", "returns to the field", "Save Battle first"]:
+		if not exit_text.contains(token):
+			push_error("Battle smoke: battle exit-order cue lost %s clarity: %s." % [token, exit_text])
+			return false
+	if String(exit_cues.get("retreat_state", "")) == "" or String(exit_cues.get("surrender_state", "")) == "":
+		push_error("Battle smoke: exit-order cue is missing retreat/surrender readiness states: %s." % exit_cues)
+		return false
+	if not String(snapshot.get("retreat_tooltip", "")).contains("Exit cue:") or not String(snapshot.get("surrender_tooltip", "")).contains("Exit cue:"):
+		push_error("Battle smoke: live retreat/surrender button tooltips do not carry the exit-order cue: %s." % exit_text)
+		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if exit_text.contains(leak_token):
+			push_error("Battle smoke: battle exit-order cue leaked internal token %s: %s." % [leak_token, exit_text])
 			return false
 	return true
 
