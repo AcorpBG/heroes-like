@@ -3982,11 +3982,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: completed compact town command-tab readiness cues using existing town action catalogs.
+Current target: completed compact main-menu save command tooltip cues using existing save summaries.
 
 Done means:
-- The live town management tab labels expose compact ready-action counts for Build, Muster, Spells, Trade, and Log.
-- The town tab strip tooltip summarizes tab readiness and the selected tab's action focus.
-- Focused town/battle smoke coverage proves tab labels, tooltip context, and no internal score/debug leaks.
+- The main-menu war ledger save rows expose compact command tooltips that explain row selection, continuity, play check, resume handoff, and the selected load action.
+- The selected save load button tooltip explains that it acts on the selected save row and reuses existing save resume/play-check details.
+- Focused main-menu/outcome smoke coverage proves row and load tooltip context plus no internal score/debug leaks.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, renderer/generated asset import, campaign progression semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.

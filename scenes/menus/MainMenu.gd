@@ -525,6 +525,7 @@ func _rebuild_save_browser() -> void:
 		if _summary_key(summary) == latest_key and SaveService.can_load_summary(summary):
 			label = "%s | Latest" % label
 		_save_list.add_item(label)
+		_save_list.set_item_tooltip(index, _save_browser_row_tooltip(summary))
 		if _summary_key(summary) == _selected_save_key:
 			selected_index = index
 
@@ -545,7 +546,7 @@ func _refresh_selected_save() -> void:
 		_set_compact_label(_save_details_label, "No loadable expeditions are stored.", 3, 84)
 		_load_selected_button.text = "Load Save"
 		_load_selected_button.disabled = true
-		_load_selected_button.tooltip_text = "Select a loadable save to resume it."
+		_load_selected_button.tooltip_text = _selected_save_command_tooltip(summary)
 		return
 
 	var next_play_action := SaveService.describe_summary_next_play_action(summary)
@@ -561,7 +562,35 @@ func _refresh_selected_save() -> void:
 	_set_compact_label(_save_details_label, details, 6, 88)
 	_load_selected_button.text = SaveService.load_action_label(summary)
 	_load_selected_button.disabled = not SaveService.can_load_summary(summary)
-	_load_selected_button.tooltip_text = SaveService.load_action_tooltip(summary)
+	_load_selected_button.tooltip_text = _selected_save_command_tooltip(summary)
+
+func _save_browser_row_tooltip(summary: Dictionary) -> String:
+	if summary.is_empty():
+		return "Command cue: select a save row to inspect its resume target before loading."
+	var lines := [
+		"Command cue: selecting this row only changes the inspected save.",
+		SaveService.describe_slot_continuity_cue(summary),
+		SaveService.describe_summary_play_check(summary),
+		SaveService.describe_summary_resume_handoff(summary),
+	]
+	if SaveService.can_load_summary(summary):
+		lines.append("Load Selected: %s opens this saved state." % SaveService.load_action_label(summary))
+	else:
+		lines.append("Load Selected: unavailable until a loadable save row is selected.")
+	return _join_nonempty_lines(lines)
+
+func _selected_save_command_tooltip(summary: Dictionary) -> String:
+	if summary.is_empty():
+		return "Command cue: select a loadable save row before loading."
+	var lines := [
+		"Command cue: %s acts on the selected save row only." % SaveService.load_action_label(summary),
+		SaveService.describe_summary_play_check(summary),
+		SaveService.describe_summary_resume_handoff(summary),
+	]
+	var load_tooltip := SaveService.load_action_tooltip(summary).strip_edges()
+	if load_tooltip != "":
+		lines.append(load_tooltip)
+	return _join_nonempty_lines(lines)
 
 func _default_selected_save_index() -> int:
 	var latest_key := _summary_key(SaveService.latest_loadable_summary())
@@ -583,6 +612,14 @@ func _summary_key(summary: Dictionary) -> String:
 	if summary.is_empty():
 		return ""
 	return "%s:%s" % [String(summary.get("slot_type", "")), String(summary.get("slot_id", ""))]
+
+func _join_nonempty_lines(lines: Array) -> String:
+	var clean_lines := []
+	for line in lines:
+		var text := String(line).strip_edges()
+		if text != "":
+			clean_lines.append(text)
+	return "\n".join(clean_lines)
 
 func _configure_difficulty_picker() -> void:
 	_difficulty_picker.clear()
@@ -838,6 +875,7 @@ func validation_snapshot() -> Dictionary:
 		"latest_resume_handoff": SaveService.describe_summary_resume_handoff(latest_summary),
 		"selected_save_resume_handoff": SaveService.describe_summary_resume_handoff(selected_save_summary),
 		"save_browser_items": _save_browser_item_labels(),
+		"save_browser_item_tooltips": _save_browser_item_tooltips(),
 		"save_details": _save_details_label.text,
 		"save_details_full": _save_details_label.tooltip_text,
 		"save_pulse": _build_save_pulse(),
@@ -847,6 +885,7 @@ func validation_snapshot() -> Dictionary:
 		"continue_enabled": bool(latest_continue.get("enabled", false)),
 		"load_selected_text": _load_selected_button.text,
 		"load_selected_tooltip": _load_selected_button.tooltip_text,
+		"selected_save_command_tooltip": _selected_save_command_tooltip(selected_save_summary),
 		"load_selected_enabled": not _load_selected_button.disabled,
 		"settings_summary": _settings_summary_label.text,
 		"settings_summary_full": _settings_summary_label.tooltip_text,
@@ -889,6 +928,12 @@ func _save_browser_item_labels() -> Array:
 	for index in range(_save_list.get_item_count()):
 		labels.append(_save_list.get_item_text(index))
 	return labels
+
+func _save_browser_item_tooltips() -> Array:
+	var tooltips := []
+	for index in range(_save_list.get_item_count()):
+		tooltips.append(_save_list.get_item_tooltip(index))
+	return tooltips
 
 func _help_browser_item_labels() -> Array:
 	var labels := []
