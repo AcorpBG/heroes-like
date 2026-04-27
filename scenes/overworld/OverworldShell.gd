@@ -823,7 +823,12 @@ func _refresh_primary_action_button(action: Dictionary) -> void:
 	var summary := String(action.get("summary", ""))
 	if summary == "":
 		summary = "Commit %s." % String(action.get("label", "the primary order")).to_lower()
-	_primary_action_button.tooltip_text = "%s\nPress Enter or Space to commit this order." % summary
+	var commit_check := _primary_order_commit_check_surface(action)
+	_primary_action_button.tooltip_text = _join_tooltip_sections([
+		summary,
+		String(commit_check.get("tooltip_text", "")),
+		"Press Enter or Space to commit this order.",
+	])
 
 func _activate_primary_action() -> bool:
 	var action := _current_primary_action()
@@ -834,6 +839,83 @@ func _activate_primary_action() -> bool:
 		return false
 	_on_context_action_pressed(action_id)
 	return true
+
+func _primary_order_commit_check_surface(action: Dictionary = {}) -> Dictionary:
+	var primary_action := action
+	if primary_action.is_empty():
+		primary_action = _current_primary_action()
+	if primary_action.is_empty():
+		return {}
+	var label := String(primary_action.get("label", "Primary order")).strip_edges()
+	if label == "":
+		label = "Primary order"
+	var action_id := String(primary_action.get("id", "")).strip_edges()
+	var route_value: Variant = primary_action.get("route_decision", {})
+	var route_decision: Dictionary = route_value if route_value is Dictionary else {}
+	if route_decision.is_empty():
+		route_decision = _selected_route_decision_surface()
+	var destination := String(route_decision.get("destination", _selected_tile_destination_name())).strip_edges()
+	if destination == "":
+		destination = "selected context" if _selected_tile != OverworldRules.hero_position(_session) else "current tile"
+	var movement = _session.overworld.get("movement", {})
+	var movement_line := "Move %d/%d" % [
+		int(movement.get("current", 0)),
+		int(movement.get("max", movement.get("current", 0))),
+	]
+	var readiness := "ready"
+	var affected := destination
+	var why := String(primary_action.get("summary", "")).strip_edges()
+	var next_step := "Press Enter or Space to commit %s." % label
+	if not route_decision.is_empty():
+		readiness = _route_decision_status_label(route_decision)
+		var route_movement := String(_route_target_handoff_surface(route_decision).get("movement_line", "")).strip_edges()
+		if route_movement != "":
+			movement_line = route_movement
+		var brief := _route_decision_brief(route_decision)
+		affected = String(brief.get("affected", affected)).strip_edges()
+		why = String(brief.get("why_it_matters", why)).strip_edges()
+		next_step = String(brief.get("next_step", next_step)).strip_edges()
+	if why == "":
+		why = "This order changes the next field commitment."
+	var confirmation := "Enter/Space commits this order from the primary button."
+	if bool(primary_action.get("disabled", false)):
+		confirmation = "This order is unavailable; inspect the selected context or choose another route."
+	elif action_id in ["advance_route", "march_selected"]:
+		confirmation = "Enter/Space spends the next movement step on this route."
+	elif action_id == "enter_battle":
+		confirmation = "Enter/Space opens the battle handoff for this encounter."
+	elif action_id == "visit_town":
+		confirmation = "Enter/Space enters the town without ending the day."
+	elif action_id == "collect_resource":
+		confirmation = "Enter/Space resolves the site order and updates the field state."
+	elif action_id == "collect_artifact":
+		confirmation = "Enter/Space recovers the artifact for the active commander."
+	var tooltip := "Primary Order Check\n- Commit: %s\n- Target: %s\n- Readiness: %s | %s\n- Affected: %s\n- Why it matters: %s\n- Next: %s\n- Confirmation: %s" % [
+		label,
+		destination,
+		readiness,
+		movement_line,
+		affected,
+		why,
+		next_step,
+		confirmation,
+	]
+	return {
+		"visible_text": "Order check: %s | %s | %s" % [
+			_short_action_label(label, 18),
+			_short_action_label(destination, 18),
+			readiness,
+		],
+		"tooltip_text": tooltip,
+		"commit_label": label,
+		"target": destination,
+		"readiness": readiness,
+		"movement_line": movement_line,
+		"affected": affected,
+		"why_it_matters": why,
+		"next_step": next_step,
+		"confirmation": confirmation,
+	}
 
 func _selected_tile_movement_action() -> Dictionary:
 	if not _tile_in_bounds(_selected_tile):
@@ -2767,6 +2849,7 @@ func validation_snapshot() -> Dictionary:
 	var primary_action := _current_primary_action()
 	var route_decision := _selected_route_decision_surface()
 	var route_target_handoff := _route_target_handoff_surface(route_decision)
+	var primary_order_commit_check := _primary_order_commit_check_surface(primary_action)
 	var field_readiness := _field_readiness_surface()
 	var end_turn_check := _end_turn_confirmation_surface(field_readiness)
 	var event_feed := _event_feed_surface()
@@ -2854,6 +2937,8 @@ func validation_snapshot() -> Dictionary:
 		"primary_action": _validation_action_payload(primary_action),
 		"primary_action_button_text": _primary_action_button.text,
 		"primary_action_button_disabled": _primary_action_button.disabled,
+		"primary_action_button_tooltip_text": _primary_action_button.tooltip_text,
+		"primary_order_commit_check": primary_order_commit_check,
 		"context_action_ids": _validation_context_action_ids(),
 		"spell_actions": _validation_spell_action_payloads(),
 		"artifact_text": _artifact_label.text,

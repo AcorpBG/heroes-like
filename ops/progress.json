@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T00:50:32Z",
+  "updatedAt": "2026-04-27T00:58:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "outcome-resolution-handoff-cue-10184",
-  "currentSliceTitle": "Surface compact outcome resolution handoff cue",
+  "currentSliceId": "overworld-primary-order-commit-check-10184",
+  "currentSliceTitle": "Surface compact overworld primary order commit check",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact visible outcome resolution handoff cue using the existing outcome model/actions and save surface so players can see the resolved state, primary follow-up action, and save/menu preservation behavior before routing away. The outcome action status, action tooltips, validation snapshot, and outcome Field Manual now carry the handoff, and focused menu/outcome smoke asserts the visible/tooltip cue plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact visible primary-order commit check on the overworld action button using existing route, movement, and readiness surfaces so players can see what Enter/Space commits, what target/readiness it uses, and why the order matters before acting. Focused overworld smoke asserts the button tooltip/validation cue plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1978,6 +1978,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T00:44:00Z",
       "completedAt": "2026-04-27T00:50:32Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "overworld-primary-order-commit-check-10184",
+      "title": "Surface compact overworld primary order commit check",
+      "status": "completed",
+      "startedAt": "2026-04-27T00:51:00Z",
+      "completedAt": "2026-04-27T00:58:00Z",
       "difficulty": "small"
     }
   ],
