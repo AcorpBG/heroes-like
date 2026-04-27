@@ -1,0 +1,372 @@
+# heroes-like (working title)
+
+Task: #10184
+
+Reality reset date: 2026-04-16
+
+## Vision
+Create a full-featured, commercially credible, turn-based fantasy strategy game inspired by the exploration, army management, town growth, map control, and tactical combat loop of Heroes of Might and Magic II, while being legally and creatively its own thing.
+
+That long-term goal remains intact. The project should still grow toward a shippable strategy game with original factions, heroes, units, buildings, spells, map objects, campaigns, AI opponents, save/load, settings, packaging, and a repeatable content pipeline.
+
+The current state is not that product. A manual play audit showed that the game is not close to HoMM2/3 parity and is not honestly playable as a complete game. Existing systems, screens, authored content, validators, and routed harnesses are useful foundations, but their presence must not be treated as proof of a coherent player experience.
+
+## Current Reality
+- This is a prototype / pre-alpha codebase with many production-minded systems started.
+- The live client does not yet prove that a real player can start, understand, play, win, lose, save, resume, and finish a scenario without developer knowledge.
+- Several docs previously implied completion, release-facing polish, or broad content readiness. Those claims are no longer accepted unless verified by manual play in the live client.
+- HoMM2-class breadth and HoMM3-class breadth are future product horizons, not current milestones.
+- The first product milestone was one manually completable scenario rather than a full campaign package, and AcOrP reported that River Pass manual gate passed on 2026-04-18.
+- With River Pass manually cleared, the current product direction is not shallow post-River-Pass polish. The last week proved the basic fantasy strategy concept, but it also exposed that the project lacks core production depth: world identity, faction identity, art direction, economy pressure, object density, magic, artifacts, animation, and strategic AI are not yet deep enough to carry campaign or skirmish production.
+- Existing six-faction records, Ninefold Confluence, terrain/editor work, and presentation passes are useful scaffolds and evidence surfaces. They are not enough by themselves. The active work must deepen the world/content/systems foundation before broad maps, final screen polish, battle-screen polish, or full game-loop polish become the center of effort.
+
+## Delivery Strategy
+The project now advances through explicit proof gates:
+
+1. Prototype / pre-alpha reality
+   - Stop using fake-complete language.
+   - Keep architecture decisions only where they still help the product.
+   - Maintain a parity ledger that separates implemented code, live-player usability, content breadth, and tested acceptance.
+
+2. One manually completable scenario
+   - Make River Pass completable end-to-end by a real player in the live client.
+   - The scenario must include meaningful overworld movement, town use, recruitment, at least one battle path, save/resume, victory, defeat, and outcome routing.
+   - This is the first truth source for whether the game is playable.
+
+3. Deep production foundation
+   - Build the world story, faction identities, concept-art pipeline, economy model, overworld object taxonomy, magic, artifacts, animation requirements, and strategic AI plan before treating more maps or screen polish as the main path.
+   - Use Heroes 2 / Heroes 3 and upcoming Oden Era direction as scale, readability, and strategic-density inspiration only. Do not copy names, assets, maps, faction identities, unit art, music, or text.
+   - Require design and art-direction evidence before implementation/deep polish for major factions, towns, units, buildings, heroes, map objects, spells, and artifacts.
+
+4. Playable alpha baseline
+   - Expand from one scenario to a small, coherent alpha only after the foundation is deep enough to support it.
+   - At least two factions must be deeply proven through world fit, economy, town development, units, heroes, spells, artifacts, overworld placement, AI behavior, save/load, and manual play.
+   - Town, battle, overworld, and front-end UX must be usable without debug interpretation.
+   - Units, spells, artifacts, map objects, and scenario content must be deep enough to sustain repeated play.
+
+5. HoMM2-class breadth
+   - Build a broad fantasy strategy package at roughly the systemic breadth expected from the Heroes II era: multiple original factions, towns, unit tiers, spells, artifacts, neutral sites, handcrafted maps, campaign structure, and reliable AI.
+   - This is not just more data. It requires battle, town, overworld, AI, save/load, and UX loops to hold up under breadth.
+
+6. HoMM3-class breadth
+   - After HoMM2-class breadth is stable, expand toward the richer strategic and content density associated with Heroes III: deeper faction variety, more objects, artifacts, magic, hero growth, map scripting, campaign complexity, AI pressure, and polish.
+   - This is a late production horizon, not a near-term promise.
+
+## Product Pillars
+1. Original world identity: clear premise, tone, geography, history, conflicts, visual language, and non-derivative fantasy texture.
+2. Asymmetric faction identity: each faction needs world-grounded backstory, town feel, economy preferences, hero identity, unit ladder logic, battlefield role mix, and unique strategic pressure.
+3. Adventure map exploration with discovery, route planning, visible risk, object density, resource pressure, mine/site capture, neutral encounters, and meaningful map control.
+4. Tactical turn-based battles with readable unit roles, terrain pressure, hero influence, expanded spells, artifact interactions, animation clarity, morale-style momentum, and meaningful outcomes.
+5. Town development, recruitment, multi-resource gating, faction-biased costs, strategic expansion, defense, and recovery.
+6. Strong single-player experience first: strategic AI turns, handcrafted scenarios, skirmish, campaign framework, save/load, difficulty, and onboarding.
+7. Production-ready foundations: data-driven content, concept-art-backed direction, deterministic rules where useful, validation, logging hooks, packaging, settings, and practical mod-friendly boundaries.
+
+## Current Non-Goals
+- Claiming release readiness.
+- Claiming HoMM2/HoMM3 parity before live-client manual play proves the underlying loops.
+- Treating broad campaign content, six-faction scaffolds, or large scenario breadth as playable before alpha-scope manual play proves the loops.
+- Hiding playability gaps behind dashboards, validators, smoke tests, or authored data volume.
+- Direct recreation of copyrighted names, assets, maps, factions, unit art, music, or text.
+- Multiplayer-first architecture.
+
+## Engine and Stack Decision
+Decision date: 2026-04-14
+
+The project is locked to the Godot 4 stable series for the first production foundation and early vertical slices.
+
+Stack choice:
+- engine: Godot 4, 2D-first rendering and UI
+- gameplay language: GDScript
+- authored content: JSON files checked into `content/`
+- runtime saves: JSON snapshots and campaign progression profiles under `user://saves/`
+
+Rationale:
+- Godot 4 supports fast iteration for a strategy game built around scene composition, UI-heavy flows, and toolable content.
+- GDScript keeps gameplay code editor-native while the simulation architecture continues to settle.
+- JSON content keeps factions, units, heroes, scenarios, encounters, towns, spells, artifacts, and campaign metadata diffable and reviewable.
+- If native performance hotspots emerge later, GDExtension can be added surgically without replacing the baseline stack.
+
+## Architecture Kept
+These decisions remain directionally valid and should be preserved unless a future manual-play or implementation finding proves they block the product:
+
+- App layer: boot scene plus autoload services for content loading, scene routing, save/load, settings, campaign progression, and active session state.
+- Domain layer: core rule scripts own overworld state, tactical battle state, town state, hero command, artifacts, spells, objectives, enemy turns, AI decisions, serialization, and content validation.
+- Presentation layer: menu, overworld, town, battle, and outcome scenes render state and issue intents back into domain rules. Scene controllers should stay thin.
+- Data boundary: authored content is immutable at runtime and referenced by stable ids; save data stores mutable session state plus content references.
+- Save/load boundary: snapshots are versioned and should preserve scenario progress, hero state, resources, day, battle or town return context, resolved encounters, and campaign progression where applicable.
+- Determinism stance: rules should avoid hidden frame-timing dependencies so repeatable tests, replay tooling, and live-client diagnosis remain feasible.
+- Screen composition stance: scenic or play surfaces are primary. Detailed information belongs in compact rails, command bands, tabs, contextual popouts, or secondary overlays instead of covering the game with text panels.
+
+## Core Rule Ownership
+The current split across `scripts/core/` is still the right shape:
+- `ScenarioFactory.gd` for scenario bootstrap.
+- `OverworldRules.gd` for adventure map state, movement, site resolution, day advancement, economy ticks, fog/scouting, town ownership, and strategic summaries.
+- `BattleRules.gd` for battle payloads, initiative, stack actions, spells/status integration, battle exits, and post-battle sync.
+- `BattleAiRules.gd` for tactical enemy decisions.
+- `TownRules.gd` for build, recruit, study, garrison, market, defense, and town-summary rules.
+- `HeroCommandRules.gd` and `HeroProgressionRules.gd` for roster, active hero, transfer, recruitment, progression, and carryover-safe hero state.
+- `ArtifactRules.gd` for duplicate-safe artifact ownership, equipment, swaps, rewards, and pickups.
+- `SpellRules.gd` for spellbook and spell-effect resolution.
+- `ScenarioRules.gd` and `ScenarioScriptRules.gd` for objectives, victory/defeat, scenario hooks, authored events, and outcome shaping.
+- `CampaignRules.gd` and `CampaignProgression.gd` for campaign unlocks, completion records, and carryover.
+- `EnemyTurnRules.gd` and `EnemyAdventureRules.gd` for hostile economy, raid planning, commander lifecycle, target selection, and strategic contestation.
+- `DifficultyRules.gd` for difficulty tuning.
+
+The reset does not require deleting these systems. It requires proving which of them work together in player-facing flow.
+
+## Data Domains
+The authored content boundary remains split into JSON domains under `content/`:
+- `factions.json`
+- `heroes.json`
+- `units.json`
+- `army_groups.json`
+- `towns.json`
+- `buildings.json`
+- `resource_sites.json`
+- `biomes.json`
+- `map_objects.json`
+- `neutral_dwellings.json`
+- `artifacts.json`
+- `spells.json`
+- `encounters.json`
+- `scenarios.json`
+- `campaigns.json`
+
+Near-term content work now shifts from proving River Pass completion to using that passed gate responsibly: deepen the world, faction, art-direction, economy, object, magic, artifact, animation, and strategic-AI foundations before calling current faction records, broad scenarios, or polished screens production-ready.
+
+## Deep Foundation Direction
+Decision date: 2026-04-25
+
+The active product direction is a deep production-foundation phase, not a final polish pass on the current scaffolds. The next work should document and then implement foundations in this order:
+
+1. World story and worldbuilding: richer premise, tone, geography, conflicts, history, and visual identity.
+2. Faction identity: original factions with distinct backstory, town identity, economy, heroes, units, and strategic style. Heroes 3 may inform the expected breadth and clarity, but not the creative substance.
+3. Concept art pipeline using image generation: required art-direction studies for world mood, each faction, towns, units, town buildings, and heroes before deep implementation or polish.
+4. Economy overhaul: move beyond gold, ore, and wood toward multiple resources, faction resource preferences, mines/resource sites, economy pressure, town-development costs, collection routes, and capture loops.
+5. Overworld object taxonomy and density: classify objects as decoration/non-interactable, interactable buildings/sites, and overworld neutral unit encounters; use HoMM3 map-editor/object scale as inspiration only. The current object vocabulary is not dense enough for the target game.
+6. Magic system expansion: schools/categories, faction interactions, unit interactions, economy and artifact hooks, tactical combat roles, and adventure-map roles.
+7. Artifact system expansion: many more artifacts, unique sets, spell interactions, faction-specific interactions, and build/progression implications.
+8. Animation systems: units, heroes, towns, map objects, UI feedback, battle readability, and state-change clarity.
+9. Strategic AI: computer-controlled heroes and towns need real turns, economy, recruiting/building, movement, objective play, and pressure.
+10. Campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI depth, and full game-loop polish come after the foundations above are deep enough to support them.
+
+This direction supersedes the narrower post-River-Pass alpha content/presentation polish framing. River Pass remains important proof history, and existing renderer/editor/content slices remain useful, but scaffolds are not production depth.
+
+## Content Direction Note
+Decision date: 2026-04-18
+
+The target broad faction set is six original, asymmetric factions defined first in `docs/factions-content-bible.md`. The first implementation slice now carries those factions as real scaffold records across faction metadata, unit ladders, hero concepts, signature buildings, and seed towns where needed. This remains content infrastructure, not playability proof. Future JSON and runtime work must preserve the no-commons and no-shared-template constraints: factions need distinct fantasy, mechanics, town identity, hero identity, economy, map pressure, battle style, and unit ladder feel. A faction should not be called fully playable until its scenario placement, AI fronts, town play, battle tuning, save/load behavior, and manual play notes exist.
+
+The next companion design source is `docs/overworld-content-bible.md`. It defines the adventure-map grammar needed to support that faction breadth: biome families, pickup sites, flaggable economy, dwellings, shrines, guarded reward sites, scouting structures, blockers, transit objects, and faction landmarks. The game should move toward richer overworld object vocabulary through explicit content families and biome logic, not by sprinkling random flavor nodes on otherwise empty maps.
+
+Implementation note date: 2026-04-18
+
+The first overworld-content foundation slice now implements that direction as real content domains and runtime hooks: `content/biomes.json`, `content/map_objects.json`, expanded `resource_sites.json` families, ContentService validation/loading, authored biome terrain labels/passability, and expanded overworld site-family context/action handling. This is a foundation for future scenario placement, not proof of broad adventure-map playability.
+
+Implementation note date: 2026-04-18
+
+The first neutral dwelling/unit slice adds `content/neutral_dwellings.json` as a small canonical family layer tying neutral recruit sites, neutral units, map-object silhouettes, guard army groups, and neutral encounters together. Neutral units are authored with `affiliation: "neutral"` and no faction id, so they can appear in recruit sources and battles without becoming a seventh faction ladder or inheriting six-faction doctrine bonuses. This is a first neutral-content slice, not a complete neutral ecology.
+
+Implementation note date: 2026-04-18
+
+The neutral dwelling breadth slice expands that family layer to 25 authored neutral dwelling families with matching neutral units, neutral-scoped site definitions, map objects, guard army groups, and neutral encounters. This records content breadth only: the added families are internally linked and validator-enforced, but they are not yet scenario-placed, balanced, or manually play-proven.
+
+Implementation note date: 2026-04-18
+
+The first large scenario breadth placement slice adds `ninefold-confluence` as an explicitly 64x64 skirmish map that places all six faction scaffolds, all nine biome families, all 25 neutral dwelling families, and the newer overworld site families supported by the current scenario schema. This is authored breadth and loading coverage only: it is not a balance pass, a route proof, or a manual-play claim.
+
+Implementation note date: 2026-04-20
+
+The overworld terrain presentation no longer treats generated per-tile sampled painterly textures as the primary terrain model. The first replacement slice adds `content/terrain_grammar.json` and `content/terrain_layers.json` as the authored boundary for readable base terrain, biome/edge transition metadata, and structural road overlays. `OverworldMapView` now renders grammar-driven terrain fills, deterministic strategic detail patterns, edge-transition masks, and road connectors; existing object sprite mappings and procedural object fallbacks remain active. This is an autotile-ready foundation and first readable placeholder presentation, not final terrain art or a movement-cost/pathfinding rewrite.
+
+Implementation note date: 2026-04-20
+
+The first real authored overworld terrain tile-art slice now sits on top of that grammar boundary. `art/overworld/runtime/terrain_tiles/` contains checked-in 64x64 PNG base tile variants for grass/plains, forest, mire/swamp, and hills/ridge/highland, plus directional biome-edge overlays and structural dirt-road connector pieces. `content/terrain_grammar.json` references those assets, and `OverworldMapView` loads and draws the tile-art pieces first while retaining grammar color/pattern and procedural road fallbacks for unsliced terrain or missing assets. This is still a narrow first art slice: water/coast, badlands, ash/lava, snow/frost, cavern/underway, object footprints, and road movement rules remain future work.
+
+Implementation note date: 2026-04-20
+
+The first tile-art slice was corrected to use the previously generated terrain source images as its visual basis instead of synthetic local pixel drawing. `tools/build_overworld_terrain_tiles.py` now cuts and adapts the generated grasslands, forest, mire, and highland source sheets into the same checked-in 64x64 runtime base, edge, and road overlay paths. Road overlays are narrower and source-material based, biome edge overlays are compact feathered source strips, and object sprite mappings/fallbacks were left unchanged. This remains a terrain presentation correction, not a full biome-art expansion beyond the families already in scope.
+
+Implementation note date: 2026-04-20
+
+AcOrP rejected the generated-source terrain tiling direction as the wrong primary model. That source-derived pass is superseded: overworld terrain now treats `original_quiet_tile_bank` as the primary base model. The terrain grammar and structural road layer remain, but `tools/build_overworld_terrain_tiles.py` builds original low-noise biome base variants, jagged directional transition overlays, and connection-aware dirt-road pieces from local procedural palettes instead of cropping generated painterly sheets. Generated terrain imagery may inform color or macro mood only; it is deprecated as literal per-cell base art. This is a production-direction correction for grass/plains, forest, mire/swamp, hills/ridge/highland, and dirt-road overlays, not a full final terrain atlas.
+
+Implementation note date: 2026-04-20
+
+The first grounded overworld marker correction replaces generic dark circular contrast plates as the primary marker support. `OverworldMapView` now draws towns, sites, artifacts, encounters, mapped object sprites, and the active hero over terrain-tinted oval footprint anchors with contact shadows and small ground tie marks; mapped sprites use a soft offset sprite shadow instead of a circular badge outline. The contract remains that selection/focus, remembered objects, roads, fog, tactical framing, panning, pathing, and object sprite mappings/fallbacks must stay readable and stable. This is a marker presentation correction, not final object/town art.
+
+Implementation note date: 2026-04-20
+
+The next overworld object presentation slice moves the renderer from grounded markers toward object-first placement. `OverworldMapView` now uses authored map-object footprints from `content/map_objects.json` as presentation scale hints for resource sites, applies footprint-scaled sprite settlement and foreground ground-lip occlusion cues, and replaces several procedural fallback symbols with compact family-specific world silhouettes for dwellings, mines, scouting structures, guarded ruins, transit objects, shrines, pickups, artifacts, encounters, towns, and the active hero. This is a rendering-direction nudge only: footprints do not yet change movement, blocking, visit targets, or true multi-tile occupancy, and authored object/town art remains future work.
+
+Implementation note date: 2026-04-20
+
+The town-specific overworld grounding has been corrected after visual feedback that the 3x2 town presentation was reading as an object on a staged base. Towns no longer use the shared filled placement bed, base ellipse, directional cast shadow, base occlusion pads, or upper-mass shadow/backdrop treatment. They still present as 3x2 world objects with the authored town coordinate as the bottom-middle approach/visit tile, using only sparse non-entry footprint cues and a restrained entry approach cue. This is a town presentation correction only: resource sites, artifacts, encounters, hero markers, movement, pathing, town interaction, save data, battle routing, and true occupancy remain unchanged.
+
+Implementation note date: 2026-04-20
+
+AcOrP's follow-up screenshot feedback supersedes the sparse town footprint/entry cue model above for visible rendering. Towns still keep the 3x2 presentation model and the authored bottom-middle approach/visit tile in metadata, but `OverworldMapView` no longer renders non-entry footprint helper glyphs, entry aprons/wedges, gate cue marks, helper circles, or similar editor-looking overlays around towns. This is a presentation-only correction: movement, pathing, save/load, town visit logic, town ownership, roads, hero rendering, mapped sprite grounding, terrain, and gameplay rules are unchanged.
+
+Implementation note date: 2026-04-20
+
+The active-hero overworld presence has been corrected without rolling back the shared object renderer. `OverworldMapView` now draws the visible hero through a hero-specific placed-figure path with compact foot-contact shadow, boot-level occlusion, terrain scuffs, and the existing tile focus/selection ring for clarity, rather than using the shared filled footprint bed, base ellipse, marker ring, or upper-mass backdrop. This is a visual/presentation correction only: hero movement, pathing, fog, save/load, battle routing, town logic, hero rules, and object rendering for non-hero families are unchanged.
+
+Implementation note date: 2026-04-20
+
+The AcOrP-priority base terrain and road correction keeps `original_quiet_tile_bank`, authored autotile layers, runtime 64x64 PNGs, jagged edge overlays, and structural `road_dirt` overlays as the active contract, but rebuilds the covered original terrain bank with deterministic multi-scale ground grain and more visible terrain-specific detail. The road overlay PNGs are now softer rutted dirt beds with muted earth colors, organic center masks, grit, rut lines, and slight connector wobble so road tiles read less like stamped bright UI strokes. This is a presentation/art-pipeline correction for grass/plains, forest, mire/swamp, hills/ridge/highland, and dirt-road overlays only: pathing, fog, save/load, object logic, town/hero/site presentation, road movement costs, and unsliced terrain families are unchanged.
+
+Implementation note date: 2026-04-20
+
+The follow-up AcOrP terrain feedback correction keeps the same authored terrain grammar and structural road system, but narrows the covered tile bank and renderer behavior where the previous pass still read poorly. Grass and plains now use a closer shared grasslands palette with lower-contrast generated texture and low-frequency patch variant selection, edge overlays are rebuilt as softer feathered jagged intrusions instead of hard border strips, and road center caps are connection-aware so straight segments no longer stamp a center blob on every road tile while real bends and intersections still get a single joint cap. This remains a terrain/road presentation correction only: gameplay/pathing/fog/save/object/town/hero/site logic and road movement rules are unchanged.
+
+Implementation note date: 2026-04-20
+
+The AcOrP visible-terrain seam correction removes the explicit per-tile black grid rectangle from explored overworld terrain. `OverworldMapView` now keeps unexplored hidden tiles on their wireframe treatment, but explored terrain only draws a limited fog-boundary hint where it touches unexplored ground; selection/current-tile rings, route lines, roads, and object markers remain the readability layer on mapped ground. This is a presentation-only correction: gameplay, pathing, fog state, save data, object/town/hero/site logic, terrain palettes, and road rules are unchanged.
+
+Implementation note date: 2026-04-20
+
+The procedural fallback path for overworld resource sites, artifacts, and unresolved encounters has been narrowed away from staged marker supports. Fallback objects no longer draw through the shared marker plate, rear upper-mass backdrop, or foreground ground-lip/base-pad path; they now use family-specific material tinting, thin terrain contact disturbance, localized contact shadows, and small contact marks while mapped sprites retain their existing footprint-scaled settlement model. This is a presentation-only correction: terrain, roads, visible seam behavior, towns, hero presence, movement, pathing, fog, save/load, battle, town, resource-site, artifact, and encounter gameplay logic are unchanged.
+
+Implementation note date: 2026-04-20
+
+Diagonal dirt-road presentation now uses ordered terrain-layer path connections instead of connecting every neighboring road tile by raw adjacency. `OverworldMapView` merges connection directions from the authored road tile order, which suppresses accidental diagonal links beside diagonal-to-cardinal turns, and the road tile builder now emits full-tile NE/SW and NW/SE diagonal straight pieces. This is a presentation-only road tiling correction: movement/pathing costs, fog, save/load, battle, town logic, object logic, mapped sprite grounding, base terrain palettes, border softening, center-cap suppression, and explored seam suppression are unchanged.
+
+Implementation note date: 2026-04-20
+
+AcOrP clarified that the deeper target is HoMM3-style adjacency-built road topology rather than ordered centerline strokes. The ordered-path diagonal-road assumption above is superseded for presentation: `OverworldMapView` now rebuilds dirt-road connections from adjacent same-type road tiles, keeps vertical runs on the tile centerline, moves horizontal runs to a lower tile-edge lane, and composes turns/intersections from those neighboring road pieces. The terrain grammar and runtime road PNGs document and support that lane model. This remains a visual/presentation-only correction: movement/pathing costs, fog, save/load, battle, town logic, object logic, mapped sprite grounding, base terrain palettes, border softening, center-cap suppression, and explored seam suppression are unchanged.
+
+Implementation note date: 2026-04-21
+
+The current terrain-art direction includes a narrow Rubberduck OpenGameArt feel test without changing the terrain renderer contract. `tools/build_overworld_terrain_tiles.py` now can unwrap selected local Rubberduck 128x64 isometric diamond cells into the existing checked-in 64x64 runtime tile paths for grass, plains, and forest surfaces, with matching grasslands/forest edge overlays. Mire/swamp, hills/ridge/highland, and dirt roads remain on the prior original quiet procedural tile bank because the available pack does not cleanly support those families. This is a terrain-surface feel test only: projection/layout, pathing/gameplay, save format, map editor schema, road topology, object/town art, and town 3x2 occupancy/pathing are unchanged.
+
+Implementation note date: 2026-04-21
+
+The active terrain renderer prototype now supersedes the Rubberduck/original quiet feel-test path locally. `tools/build_overworld_terrain_tiles.py` stages extracted HoMM3 DEF terrain and road frames from the local task artifact into ignored runtime PNGs under `art/overworld/runtime/homm3_local_prototype/`, and `content/terrain_grammar.json` declares explicit lookup tables for terrain-family frames, dirt/sand bridge-base resolution, water shoreline selection, and 4-neighbor dirt-road overlays. `OverworldMapView` uses those tables for both live overworld and map-editor preview while preserving the logical square-grid map, current editor data model, gameplay/pathing, save format, object/town rendering, and town occupancy/pathing. This is local reference/prototype work only: the extracted HoMM3 frames are not shippable or redistributable assets, and the lookup tables are explicit prototype tables rather than a claim of recovering the original executable's exact hidden table.
+
+Planning note date: 2026-04-21
+
+The next terrain renderer rewrite should follow `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/terrain-renderer-rewrite-plan.md` rather than extending the current prototype shortcuts in place. That plan is source-driven from the reconstruction artifacts and separates land receiver-family lookup, bridge material selection, special water shoreline handling, special rock/void handling, stamp footprint/repaint-order behavior, and provisional unknowns. It also requires live overworld and map-editor preview parity through the shared `OverworldMapView` validation path. This note is planning only: no renderer code, terrain grammar runtime behavior, tests, assets, gameplay/pathing, save format, or editor schema changed in this pass.
+
+Implementation note date: 2026-04-21
+
+The first terrain renderer rewrite groundwork slice now makes the HoMM3 local prototype contract explicit in `content/terrain_grammar.json` and `OverworldMapView` validation payloads. Atlas roles, source-level frame blocks, direct bridge-material contacts, routed bridge rules, special water shoreline handling, special rock/void handling, base/decor sand handling, and provisional fallback policies are data rather than hidden renderer assumptions. The map editor preview and live overworld continue to share `OverworldMapView`; gameplay/pathing, save format, editor schema, object/town rendering, road overlay contract, and local-reference asset boundaries are unchanged. This is still not a recovered original lookup table or shippable terrain art.
+
+Implementation note date: 2026-04-21
+
+The next HoMM3 terrain renderer rewrite slice adds an explicit bridge material resolver ahead of terrain frame lookup. `content/terrain_grammar.json` now names direct material contacts, preferred bridge-class routes, grass/swamp routed-through-dirt behavior, and the unresolved subterranean fallback as data. `OverworldMapView` consumes that resolver for both live overworld and map-editor preview payloads, reporting bridge class, source kind, source level, rule id, target frame block, resolver model, and provisional status before selecting the existing local-reference frame tables. This is still local-reference renderer architecture only: gameplay/pathing, fog, panning, selection, save format, object rendering, road overlays, editor schema, shippable art, and full land stamp/restamp behavior are unchanged.
+
+Implementation note date: 2026-04-20
+
+The mapped overworld sprite path for resource-site, artifact, and unresolved encounter assets has now been corrected away from the shared support-stack composition. Mapped sprites no longer draw the filled marker plate, broad terrain quieting bed, upper-mass backdrop wash, vertical mass shadow, duplicate offset sprite shadow, foreground ground lip, or base occlusion pads; they use localized contact disturbance and compact contact shadows instead. Towns remain on the dedicated no-helper-cue town path, and procedural fallbacks remain on their existing no-plate fallback grounding. This is presentation-only: movement, pathing, fog, roads, terrain, save/load, battle, town, resource-site, artifact, and encounter gameplay logic are unchanged.
+
+Implementation note date: 2026-04-20
+
+The first in-project map editor slice uses an in-game dev/editor shell rather than a Godot editor plugin. `scenes/editor/MapEditorShell.tscn` loads an authored scenario through the existing `ScenarioFactory` into an in-memory mutable working copy, reveals that copy for editing, and previews it through the same `OverworldMapView` renderer used by live overworld play. The initial tools are deliberately narrow: terrain painting from the authored terrain grammar, dirt-road toggle editing through the existing terrain-layer road structure, hero-start repositioning for quick iteration, and tile/object inspection for towns, resource sites, artifacts, encounters, roads, and terrain. "Play Copy" routes the current working copy into the normal overworld shell through `SessionState` and `AppRouter` without writing authored content. This is a first iteration tool, not a full external map editor, content exporter, or scenario schema redesign.
+
+Implementation note date: 2026-04-20
+
+The next map editor slice extends that same in-memory working-copy contract to overworld object placements. `MapEditorShell` now has a compact object palette for the current authored placement families that live play already consumes: towns, resource sites, artifacts, and encounters. Placement and removal tools mutate only the runtime working-copy arrays, generate unique editor placement ids, and build town/resource/artifact/encounter records in the existing runtime shapes; authored scenario JSON remains untouched unless a future export/writeback slice is deliberately scoped. This is placement iteration support, not a full object editor, undo system, occupancy/pathing rewrite, owner/difficulty authoring pass, or content-pipeline writer.
+
+Implementation note date: 2026-04-20
+
+The Play Copy loop now preserves the editor working-copy launch snapshot in memory so map testing can return to the editor without rebuilding from authored JSON. `MapEditorShell` stores its mutable runtime scenario copy through `SessionState`, launches the normal overworld shell on a duplicate of that copy, and `AppRouter` routes editor-origin play sessions back into `MapEditorShell` through the existing active-play return path. The return model is explicit: the editor restores the launch snapshot, not the fully mutated live play state from the test run. Authored content remains immutable, runtime save format is unchanged, no editor-only scenario schema was added, and town 3x2 occupancy/pathing remains future work.
+
+Implementation note date: 2026-04-20
+
+The map editor working-copy contract now includes a narrow in-memory property editor for selected overworld objects. `MapEditorShell` can mutate only existing runtime fields for the supported object families: town `owner`, encounter `difficulty`, and resource/artifact node `collected` state with the existing collection metadata fields. Tile inspection and validation snapshots expose structured editable-property details, live preview reads the changed working-copy state immediately, and Play Copy launches the normal overworld shell on those edits. Authored scenario JSON remains immutable, runtime save format is unchanged, no editor-only schema was introduced, and town 3x2 occupancy/pathing remains future work.
+
+Implementation note date: 2026-04-20
+
+The map editor working-copy contract now supports relocating existing runtime object placements without rebuilding them. `MapEditorShell` adds a thin Move Object tool and validation hook for towns, resource nodes, artifact nodes, and encounters; moves mutate only the existing in-memory runtime array item `x`/`y` fields while preserving placement id, content id, owner, difficulty, collected state, collection metadata, combat seed, and other runtime fields. Tile inspection, validation snapshots, live preview, and Play Copy all read the moved placement state naturally. Authored scenario JSON remains immutable, runtime save format is unchanged, no parallel editor schema was added, and town 3x2 occupancy/pathing remains future work.
+
+Implementation note date: 2026-04-20
+
+The map editor working-copy contract now supports duplicating existing runtime object placements without rebuilding them from palette defaults. `MapEditorShell` adds a thin Duplicate Object tool and validation hook for towns, resource nodes, artifact nodes, and encounters; duplicates deep-copy the source in-memory runtime placement, preserve content id, owner, difficulty, collected state, collection metadata, combat seed, and other existing placement fields, then assign a fresh unique editor placement id plus the new `x`/`y` destination. Tile inspection, validation snapshots, live preview, and Play Copy all read the duplicated state naturally. Authored scenario JSON remains immutable, runtime save format is unchanged, no parallel editor schema was added, and town 3x2 occupancy/pathing remains future work.
+
+Implementation note date: 2026-04-20
+
+The map editor working-copy contract now includes selected-tile restoration from the authored scenario baseline. `MapEditorShell` reads a fresh authored baseline session through `ScenarioFactory`, then restores only the selected coordinate's terrain id, road presence, supported town/resource/artifact/encounter placement state, and relevant hero-start consistency into the active in-memory editor working copy. Working-copy-only supported objects on that tile are removed, moved authored placements are returned by placement id, and unrelated working-copy edits remain intact. Authored scenario JSON remains immutable, runtime save format is unchanged, no bulk reset/export path was added, and town 3x2 occupancy/pathing remains future work.
+
+Implementation note date: 2026-04-20
+
+The map editor working-copy contract now includes a compact terrain flood-fill command. `MapEditorShell` fills only the in-memory runtime map array by taking the selected tile's current terrain id as the source region and replacing the cardinally contiguous matching region with the active terrain id from the existing terrain grammar picker. Differing terrain ids bound the fill, matching active terrain produces a clean no-op, and the same `OverworldMapView` preview path immediately shows the edited terrain and neighbor-aware transitions. Authored scenario JSON remains immutable, runtime save format is unchanged, no terrain schema/export path was added, and projection, pathing/gameplay, and town 3x2 occupancy/pathing remain unchanged.
+
+Implementation note date: 2026-04-20
+
+The map editor working-copy contract now includes a compact terrain-line command for faster terrain shaping. `MapEditorShell` can set a terrain-line start tile and then paint a deterministic Manhattan L line, horizontal first and then vertical, to the chosen end tile using the active terrain id from the existing terrain grammar picker. The command mutates only the in-memory runtime map array, and the same `OverworldMapView` preview path immediately reads the painted terrain and neighbor-aware transitions. Authored scenario JSON remains immutable, runtime save format is unchanged, no terrain schema/export path was added, and projection, pathing/gameplay, and town 3x2 occupancy/pathing remain unchanged.
+
+Implementation note date: 2026-04-20
+
+The map editor working-copy contract now includes a compact terrain-rectangle command for faster biome blockouts. `MapEditorShell` can set one terrain-rectangle corner tile and then paint the inclusive axis-aligned rectangle to the chosen opposite corner using the active terrain id from the existing terrain grammar picker. The command mutates only the in-memory runtime map array, and the same `OverworldMapView` preview path immediately reads the painted terrain and neighbor-aware transitions. Authored scenario JSON remains immutable, runtime save format is unchanged, no terrain schema/export path was added, and projection, pathing/gameplay, and town 3x2 occupancy/pathing remain unchanged.
+
+Implementation note date: 2026-04-20
+
+The map editor working-copy contract now includes a compact road-path command for faster road layout experiments. `MapEditorShell` can set a road-path start tile and then apply a deterministic Manhattan L path, horizontal first and then vertical, to the chosen end tile. The command uses toggle semantics: all-road paths remove those working-copy road memberships, while mixed/no-road paths add missing tiles to the existing editor dirt-road terrain layer. Authored scenario JSON remains immutable, runtime save format is unchanged, no road schema/export path was added, and projection, gameplay pathing, road movement costs, and town 3x2 occupancy/pathing remain unchanged.
+
+Implementation note date: 2026-04-20
+
+The overworld terrain transition contract now treats neighboring terrain relationships as the source of visible transitions. `OverworldMapView` builds an explicit 8-neighbor transition payload for each explored tile, suppresses seams inside the same terrain group, applies higher-priority neighboring terrain as cardinal intrusion edges on lower-priority receiver tiles, and adds diagonal corner hints when a higher-priority neighbor only touches by corner. Existing grammar edge art is reused from the selected source terrain, with procedural strips and corner wedges as honest fallbacks. The map editor preview reads the same renderer and validation payloads, so painted terrain immediately exposes neighbor-aware edge and corner transition metadata. This is presentation-only: logical map coordinates, pathing, save data, editor schema, object placement systems, and town footprint/pathing semantics are unchanged.
+
+Implementation note date: 2026-04-21
+
+The map editor base-terrain picker now uses a curated HoMM3-style family option contract instead of exposing the full authored terrain grammar. `content/terrain_grammar.json` declares `editor_base_terrain_options` for Water, Snow, Grass, Sand, Dirt, Lava, Swamp, and Rock/None, and `MapEditorShell` builds its picker from that list while validation exposes the option ids, labels, HoMM3 families, atlases, and hidden authored logical ids. Existing scenario data and renderer compatibility keep the richer logical ids such as forest, mire, hills, ridge, ash, frost, coast, and shore; they are hidden from the base picker and continue to render through the active HoMM3 local prototype family mapping. This is an editor option-surface correction only, not a terrain migration, map rewrite, save-format change, gameplay/pathing change, or removal of internal logical terrain ids.
+
+Implementation note date: 2026-04-21
+
+The HoMM3 local terrain prototype now routes full receiver land-family transitions through a shared, data-driven stamp-table contract instead of per-family receiver-centered mask shortcuts. `content/terrain_grammar.json` declares provisional source-anchored dirt and sand stamp tables for full receiver atlases, keeps the source-visible mixed-junction frame ranges `00_40..00_48` and `00_77..00_78` reserved/unresolved, and includes the `rougtl` rough terrain family in the local staging contract. `OverworldMapView` resolves bridge material first, then selects full receiver land frames from the stamp table while exposing table id, source direction/offset, selected frame, transform/flip status, source levels, and mixed-junction reservation metadata through the shared live/editor validation payload. Water shoreline handling, rock/void handling, dirt/sand reduced receiver behavior, roads, gameplay/pathing, fog, panning, selection, save data, and object logic remain outside this renderer slice.
+
+Implementation note date: 2026-04-22
+
+The in-project map editor now owns terrain writes through a core HoMM3-style placement module instead of treating HoMM3 behavior as preview metadata only. `scripts/core/TerrainPlacementRules.gd` maps authored logical terrain ids to HoMM3 terrain owners, applies the recovered paint-order, owner queue/rewrite, and final-normalization model, and returns validation payloads for changed owner cells and settled owner-map classification. `MapEditorShell` routes single paint, flood fill, terrain line, and terrain rectangle tools through that module before refreshing the same `OverworldMapView` preview used by live overworld scenes. This keeps terrain mutation and rendering parity explicit while leaving roads, gameplay/pathing, save schema, object/town logic, authored scenario JSON, and export/writeback tooling unchanged.
+
+Implementation note date: 2026-04-22
+
+The active HoMM3 local terrain visual-selection path now uses the accepted web prototype's settled-owner relation-class and recovered row-bucket lookup instead of the older receiver-stamp/corner heuristic branches. `TerrainPlacementRules.gd` owns the relation ring, class correction probes, normal/dirt/sand/water/rock row tables, special full-row selection, deterministic frame hashing, selected flags, and relation-grid diagnostics. `OverworldMapView` consumes that payload for both live overworld and map-editor preview, while legacy full-receiver stamp metadata remains reference-only and cleared from active frame selection. The existing HoMM3 owner queue and final-normalization terrain placement path remains the mutation source; roads, towns, objects, pathing, save schema, editor object tools, and shippable original-art replacement are unchanged.
+
+Implementation note date: 2026-04-22
+
+The accepted web prototype's direct water/rock contact truth signal is now preserved in the active Godot selector path. `TerrainPlacementRules.visual_selection_payload` detects adjacent water and rock cells, marks the relation-class frame result as an explicit unresolved fallback, and keeps the selected placeholder frame, relation ring, class, row group, and flags inspectable. `OverworldMapView` exposes that signal in live and editor validation payloads. This is a narrow diagnostic/parity correction only, not a water shoreline rewrite, rock/void topology rewrite, terrain-art replacement, gameplay/pathing change, save-format change, or claim of whole HoMM3 terrain parity.
+
+Planning note date: 2026-04-26
+
+First-class neutral encounter object migration is now bounded by `docs/neutral-encounter-first-class-object-migration-plan.md`. Direct scenario encounter placements remain the current authority for `placement_id`, `encounter_id`, coordinates, difficulty, combat seed, field objectives, and save/objective compatibility until a later object-backed migration slice is explicitly declared. Future first-class neutral encounter records should separate reusable object definitions from scenario-local object placements, preserving links back to existing placement ids, encounter ids, guard targets, resource-site/object/town targets, and authored metadata bundle ids. This is documentation/planning only: no production object records, runtime encounter behavior, pathing, renderer, editor, AI, save behavior, generated PNG import, or asset import changed.
+
+## Repository Structure
+- `content/`: authored gameplay domains.
+- `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.
+- `scripts/autoload/`: cross-cutting services with minimal UI knowledge.
+- `scripts/core/`: gameplay state, rules, and serialization helpers.
+- `scripts/ui/`: scene controllers for menus and shells.
+- `tests/`: simulation, content validation, smoke, and live-client validation coverage.
+- `ops/`: planning and progress tracking.
+- `docs/`: design notes, wireframes, and process records.
+
+## Near-Term Product Target
+River Pass was the first playable proof target and AcOrP reported that manual gate passed on 2026-04-18. The near-term target now is the deep production foundation that makes a later playable alpha credible.
+
+The foundation should establish:
+- a richer original world premise, tone, geography, conflicts, history, and visual identity
+- unique world-grounded faction identities rather than shared scaffolds
+- an image-generation concept art pipeline for world mood, factions, towns, units, town buildings, and heroes before deep implementation or polish
+- a multi-resource economy plan with faction preferences, mines/sites, pressure, costs, collection routes, and capture loops
+- an overworld object taxonomy with enough decoration, interactable sites/buildings, and neutral encounters to support world density
+- expanded magic and artifact systems with faction, unit, economy, spell, and progression interactions
+- animation-system requirements for units, heroes, towns, map objects, UI feedback, and battle readability
+- strategic AI requirements for computer-controlled hero and town turns, economy, recruiting/building, movement, objectives, and pressure
+- a clear rule that campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI depth, and full-loop polish resume after these foundations are deep enough
+
+Until this is true, the project remains pre-alpha regardless of how much content, renderer work, or validation coverage exists.
+
+## Release Bar
+A release-ready v1 should eventually include:
+- original world, factions, heroes, units, buildings, spells, artifacts, map objects, and campaign content
+- stable adventure map loop
+- stable tactical combat loop
+- usable town/economy/recruitment loop
+- campaign and skirmish support
+- usable AI for world and battle play
+- save/load reliability across normal player behavior
+- settings, audio, UX polish, onboarding, packaging, and QA workflow
+- repeatable content authoring and validation
+
+This is a future bar. The repository should not describe itself as release-ready until manual play, automated validation, and content completeness all support that claim.
