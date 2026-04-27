@@ -396,9 +396,14 @@ func _refresh_campaign_browser() -> void:
 		_start_chapter_button.tooltip_text = "Select a chapter to start or replay it."
 		return
 
+	var chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id)
+	var chapter_check := _campaign_chapter_check_payload(chapter_action, primary_action)
 	_set_compact_label(
 		_chapter_details_label,
-		CampaignProgression.chapter_details(_selected_campaign_id, _selected_campaign_scenario_id),
+		_chapter_details_with_campaign_check(
+			CampaignProgression.chapter_details(_selected_campaign_id, _selected_campaign_scenario_id),
+			chapter_check
+		),
 		4,
 		86
 	)
@@ -415,10 +420,75 @@ func _refresh_campaign_browser() -> void:
 		86
 	)
 
-	var chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id)
 	_start_chapter_button.text = String(chapter_action.get("label", "Start Chapter"))
 	_start_chapter_button.disabled = bool(chapter_action.get("disabled", false))
-	_start_chapter_button.tooltip_text = String(chapter_action.get("summary", ""))
+	_start_chapter_button.tooltip_text = _join_nonempty_lines([
+		String(chapter_check.get("tooltip_text", "")),
+		String(chapter_action.get("summary", "")),
+	])
+
+func _campaign_chapter_check_payload(chapter_action: Dictionary, primary_action: Dictionary) -> Dictionary:
+	if chapter_action.is_empty():
+		return {
+			"text": "Campaign check: select a chapter before starting a campaign expedition.",
+			"tooltip_text": "Campaign Chapter Check\n- Selection: none.\n- Next: select an authored chapter before starting a campaign expedition.\n- Scope: campaign board only; no expedition save or campaign progress changes.",
+		}
+
+	var chapter_label := String(chapter_action.get("label", "Chapter"))
+	var primary_label := String(primary_action.get("label", "primary campaign action"))
+	var selected_scenario_id := String(chapter_action.get("scenario_id", ""))
+	var primary_scenario_id := String(primary_action.get("scenario_id", ""))
+	var disabled := bool(chapter_action.get("disabled", false))
+	var relation := "selected chapter is separate from the primary campaign action"
+	if disabled:
+		relation = "selected chapter is locked or unavailable"
+	elif selected_scenario_id != "" and selected_scenario_id == primary_scenario_id:
+		relation = "selected chapter matches the primary campaign action"
+	elif chapter_label.begins_with("Replay"):
+		relation = "selected chapter is a replay of recorded campaign progress"
+	elif chapter_label.begins_with("Retry"):
+		relation = "selected chapter retries a recorded setback"
+
+	var action_note := "starting stays unavailable"
+	if not disabled:
+		if chapter_label.begins_with("Replay"):
+			action_note = "replay starts fresh and keeps recorded progress"
+		elif chapter_label.begins_with("Retry"):
+			action_note = "retry starts fresh until victory updates progress"
+		elif selected_scenario_id != "" and selected_scenario_id == primary_scenario_id:
+			action_note = "victory can advance the campaign path"
+		else:
+			action_note = "starts with campaign context without loading a save"
+
+	var launch_handoff := String(chapter_action.get("launch_handoff", "")).strip_edges()
+	var action_consequence := String(chapter_action.get("action_consequence", "")).strip_edges()
+	return {
+		"text": "Campaign check: %s; %s." % [relation, action_note],
+		"tooltip_text": _join_nonempty_lines([
+			"Campaign Chapter Check",
+			"- Selection: %s." % chapter_label,
+			"- Primary action: %s." % primary_label,
+			"- State: %s." % relation,
+			"- Next: %s." % action_note,
+			"- Handoff: %s" % launch_handoff if launch_handoff != "" else "",
+			"- Consequence: %s" % action_consequence if action_consequence != "" else "",
+			"- Scope: campaign board only; pressing a start action creates a fresh Campaign expedition and does not load or overwrite an expedition save.",
+		]),
+		"relation": relation,
+		"action_note": action_note,
+	}
+
+func _chapter_details_with_campaign_check(details: String, chapter_check: Dictionary) -> String:
+	var check_text := String(chapter_check.get("text", "")).strip_edges()
+	if check_text == "":
+		return details
+	var lines := details.split("\n", false)
+	if lines.is_empty():
+		return check_text
+	var merged := [String(lines[0]), check_text]
+	for index in range(1, lines.size()):
+		merged.append(String(lines[index]))
+	return "\n".join(merged)
 
 func _rebuild_help_browser() -> void:
 	_help_entries = SettingsService.build_help_topics()
@@ -888,6 +958,7 @@ func _close_stage_dock_tooltip() -> String:
 func validation_snapshot() -> Dictionary:
 	var primary_campaign_action := CampaignProgression.primary_campaign_action(_selected_campaign_id)
 	var selected_chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id)
+	var campaign_chapter_check := _campaign_chapter_check_payload(selected_chapter_action, primary_campaign_action)
 	var selected_skirmish_setup := ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
 	var selected_save_summary := _selected_summary()
 	var latest_continue := _latest_continue_surface()
@@ -910,6 +981,9 @@ func validation_snapshot() -> Dictionary:
 		"selected_campaign_scenario_id": _selected_campaign_scenario_id,
 		"primary_campaign_action": primary_campaign_action.duplicate(true),
 		"selected_chapter_action": selected_chapter_action.duplicate(true),
+		"campaign_chapter_check": campaign_chapter_check.duplicate(true),
+		"campaign_chapter_check_text": String(campaign_chapter_check.get("text", "")),
+		"campaign_chapter_check_tooltip": String(campaign_chapter_check.get("tooltip_text", "")),
 		"campaign_primary_text": _campaign_primary_button.text,
 		"campaign_primary_tooltip": _campaign_primary_button.tooltip_text,
 		"start_chapter_text": _start_chapter_button.text,
