@@ -306,11 +306,16 @@ func _refresh_save_slot_picker() -> void:
 	var summary: Dictionary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
 	var latest_context := String(surface.get("latest_context", "Latest ready save: none."))
 	var save_check := String(surface.get("save_check", ""))
+	var save_handoff := String(surface.get("save_handoff", ""))
+	var save_handoff_brief := String(surface.get("save_handoff_brief", ""))
 	var return_handoff := String(surface.get("return_handoff", ""))
 	var current_save_recap := String(surface.get("current_save_recap", ""))
-	_save_status_label.text = latest_context if return_handoff == "" else "%s\n%s" % [latest_context, return_handoff]
+	_save_status_label.visible = save_handoff_brief != ""
+	_save_status_label.text = save_handoff_brief if save_handoff_brief != "" else latest_context
 	var current_context := String(surface.get("current_context", ""))
 	var save_tooltip_lines := [latest_context]
+	if save_handoff != "":
+		save_tooltip_lines.append(save_handoff)
 	if save_check != "":
 		save_tooltip_lines.append(save_check)
 	if return_handoff != "":
@@ -323,10 +328,11 @@ func _refresh_save_slot_picker() -> void:
 	_save_status_label.tooltip_text = "\n".join(save_tooltip_lines)
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = String(surface.get("save_button_label", "Save Town"))
-	_save_button.tooltip_text = "%s\n%s" % [
+	_save_button.tooltip_text = _join_tooltip_sections([
 		String(surface.get("save_button_tooltip", "Save the active town visit safely.")),
+		save_handoff,
 		save_check,
-	]
+	])
 	var departure := TownRules.town_departure_confirmation(_session)
 	_leave_button.text = String(departure.get("button_label", "Leave"))
 	_leave_button.tooltip_text = String(departure.get("tooltip_text", "Return to the overworld without leaving the current expedition."))
@@ -408,6 +414,10 @@ func validation_snapshot() -> Dictionary:
 		"leave_button_text": _leave_button.text,
 		"leave_button_tooltip_text": _leave_button.tooltip_text,
 		"save_surface": AppRouter.active_save_surface(),
+		"save_handoff_visible_text": _save_status_label.text,
+		"save_handoff_visible": _save_status_label.visible,
+		"save_button_text": _save_button.text,
+		"save_button_tooltip_text": _save_button.tooltip_text,
 		"save_status_visible_text": _save_status_label.text,
 		"save_status_tooltip_text": _save_status_label.tooltip_text,
 		"visible_consequence_text": _event_label.text,
