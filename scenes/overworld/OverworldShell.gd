@@ -537,7 +537,13 @@ func _refresh() -> void:
 		1
 	)
 	var specialty_text := OverworldRules.describe_specialties(_session)
-	_set_rail_text(_specialty_label, specialty_text, _rail_prefixed_summary("Spec", specialty_text), 1)
+	var specialty_check := _specialty_check_surface()
+	_set_rail_text(
+		_specialty_label,
+		_join_tooltip_sections([specialty_text, String(specialty_check.get("tooltip_text", ""))]),
+		String(specialty_check.get("visible_text", _rail_prefixed_summary("Spec", specialty_text))),
+		1
+	)
 	var spell_text := OverworldRules.describe_spellbook(_session, SpellRules.CONTEXT_OVERWORLD)
 	var spell_check := _spell_check_surface()
 	_set_rail_text(
@@ -1069,6 +1075,124 @@ func _cached_specialty_actions() -> Array:
 	if not _refresh_cache.has("specialty_actions"):
 		_refresh_cache["specialty_actions"] = OverworldRules.get_specialty_actions(_session)
 	return _refresh_cache["specialty_actions"]
+
+func _specialty_check_surface() -> Dictionary:
+	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+	var active_name := String(hero.get("name", "Commander")).strip_edges()
+	if active_name == "":
+		active_name = "Commander"
+	var movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
+	var movement_line := "Move %d/%d" % [
+		int(movement.get("current", 0)),
+		int(movement.get("max", movement.get("current", 0))),
+	]
+	var build_summary := HeroProgressionRules.brief_summary(hero)
+	var pending_count := HeroProgressionRules.pending_choices_remaining(hero)
+	var actions: Array = _cached_specialty_actions()
+	if pending_count <= 0 or actions.is_empty():
+		var visible := "Specialty check: no pick | %s | %s" % [
+			_short_action_label(build_summary, 22),
+			movement_line,
+		]
+		var tooltip := "Specialty Check\n- Active: %s\n- Current build: %s\n- Readiness: no pending specialty pick.\n- Movement: %s\n- Next practical action: keep resolving field goals; a new specialty pick appears after a level gain.\n- State change: inspection alone does not change the commander build, spend movement, or end the day." % [
+			active_name,
+			build_summary,
+			movement_line,
+		]
+		return {
+			"visible_text": visible,
+			"tooltip_text": tooltip,
+			"active_name": active_name,
+			"build_summary": build_summary,
+			"pending_count": 0,
+			"option_count": 0,
+			"readiness": "no pending specialty pick",
+			"movement_line": movement_line,
+			"next_step": "Keep resolving field goals until a level gain offers a specialty pick.",
+		}
+
+	var pending_choice := HeroProgressionRules.current_pending_choice(hero)
+	var option_summary := HeroProgressionRules.pending_choice_summary(pending_choice)
+	var first_action: Dictionary = {}
+	for action_value in actions:
+		if action_value is Dictionary:
+			first_action = action_value
+			break
+	var first_label := _specialty_action_choice_label(first_action)
+	var readiness := "%d pick%s ready" % [pending_count, "" if pending_count == 1 else "s"]
+	var next_step := "Open Command and choose %s for the waiting level-up pick." % first_label
+	var visible := "Specialty check: %s | %s | %s" % [
+		readiness,
+		_short_action_label(option_summary, 22),
+		movement_line,
+	]
+	var tooltip := "Specialty Check\n- Active: %s\n- Current build: %s\n- Readiness: %s at Level %d.\n- Options: %s\n- Movement: %s\n- Next practical action: %s\n- State change: choosing a specialty updates the commander build; inspection alone changes nothing." % [
+		active_name,
+		build_summary,
+		readiness,
+		int(pending_choice.get("level", int(hero.get("level", 1)))),
+		option_summary if option_summary != "" else "specialty options are waiting",
+		movement_line,
+		next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"active_name": active_name,
+		"build_summary": build_summary,
+		"pending_count": pending_count,
+		"option_count": actions.size(),
+		"readiness": readiness,
+		"options": option_summary,
+		"movement_line": movement_line,
+		"next_step": next_step,
+		"level": int(pending_choice.get("level", int(hero.get("level", 1)))),
+	}
+
+func _specialty_action_check_surface(action: Dictionary) -> Dictionary:
+	if action.is_empty():
+		return {}
+	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+	var active_name := String(hero.get("name", "Commander")).strip_edges()
+	if active_name == "":
+		active_name = "Commander"
+	var label := _specialty_action_choice_label(action)
+	var summary := String(action.get("summary", "")).strip_edges()
+	var effect := _specialty_action_effect_text(action)
+	var readiness := "pick ready" if not bool(action.get("disabled", false)) else "blocked"
+	var next_step := "Select this specialty to apply it to %s." % active_name
+	if bool(action.get("disabled", false)):
+		next_step = "Resolve the listed blocker before choosing this specialty."
+	var tooltip := "Specialty Pick Check\n- Choice: %s\n- Readiness: %s\n- Current build: %s\n- Effect: %s\n- Next practical action: %s\n- State change: choosing this specialty updates the commander build; inspection alone changes nothing." % [
+		label,
+		readiness,
+		HeroProgressionRules.brief_summary(hero),
+		effect,
+		next_step,
+	]
+	return {
+		"tooltip_text": tooltip,
+		"choice_label": label,
+		"readiness": readiness,
+		"summary": summary,
+		"effect": effect,
+		"next_step": next_step,
+	}
+
+func _specialty_action_choice_label(action: Dictionary) -> String:
+	var label := String(action.get("label", "Choose Specialty")).strip_edges()
+	if label.begins_with("Choose "):
+		label = label.trim_prefix("Choose ").strip_edges()
+	return label if label != "" else "Specialty"
+
+func _specialty_action_effect_text(action: Dictionary) -> String:
+	var summary := String(action.get("summary", "")).strip_edges()
+	if summary == "":
+		return "Applies the selected specialty bonus."
+	var separator := summary.find("|")
+	if separator >= 0 and separator + 1 < summary.length():
+		return summary.substr(separator + 1).strip_edges()
+	return summary
 
 func _cached_artifact_actions() -> Array:
 	if not _refresh_cache.has("artifact_actions"):
@@ -2243,7 +2367,9 @@ func _rebuild_specialty_actions() -> void:
 
 	var actions = _cached_specialty_actions()
 	if actions.is_empty():
-		_specialty_actions.add_child(_make_placeholder_label("No specialty pick"))
+		var placeholder := _make_placeholder_label("Specialty check: none")
+		placeholder.tooltip_text = String(_specialty_check_surface().get("tooltip_text", "No specialty pick."))
+		_specialty_actions.add_child(placeholder)
 		return
 
 	for action in actions:
@@ -2252,7 +2378,11 @@ func _rebuild_specialty_actions() -> void:
 		var button = Button.new()
 		button.text = String(action.get("label", action.get("id", "Choose Specialty")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		var specialty_check := _specialty_action_check_surface(action)
+		button.tooltip_text = _join_tooltip_sections([
+			String(action.get("summary", "")),
+			String(specialty_check.get("tooltip_text", "")),
+		])
 		_style_rail_action_button(button)
 		button.pressed.connect(_on_specialty_action_pressed.bind(String(action.get("id", ""))))
 		_specialty_actions.add_child(button)
@@ -3403,6 +3533,7 @@ func validation_snapshot() -> Dictionary:
 	var drawer_handoff := _drawer_handoff_surfaces(field_readiness)
 	var status_forecast := _status_forecast_surface()
 	var command_check := _command_check_surface()
+	var specialty_check := _specialty_check_surface()
 	var spell_check := _spell_check_surface()
 	return {
 		"scene_path": scene_file_path,
@@ -3450,6 +3581,14 @@ func validation_snapshot() -> Dictionary:
 		"army_text": OverworldRules.describe_army(_session),
 		"army_visible_text": _army_label.text,
 		"army_tooltip_text": _army_label.tooltip_text,
+		"specialty_text": OverworldRules.describe_specialties(_session),
+		"specialty_visible_text": _specialty_label.text,
+		"specialty_tooltip_text": _specialty_label.tooltip_text,
+		"specialty_check": specialty_check,
+		"specialty_check_visible_text": String(specialty_check.get("visible_text", "")),
+		"specialty_check_tooltip_text": String(specialty_check.get("tooltip_text", "")),
+		"specialty_actions": _validation_specialty_action_payloads(),
+		"specialty_action_surfaces": _validation_control_surfaces(_specialty_actions),
 		"spellbook_text": OverworldRules.describe_spellbook(_session, SpellRules.CONTEXT_OVERWORLD),
 		"spellbook_visible_text": _spell_label.text,
 		"spellbook_tooltip_text": _spell_label.tooltip_text,
@@ -3797,6 +3936,44 @@ func validation_cast_overworld_spell(spell_id: String) -> Dictionary:
 		"mana_after": mana_after,
 		"scenario_status": _session.scenario_status,
 		"message": _last_message,
+		"action_feedback": _validation_action_feedback(),
+		"post_action_recap": _last_action_recap.duplicate(true),
+	}
+
+func validation_perform_specialty_action(action_id: String) -> Dictionary:
+	var action_ids := []
+	for action in _cached_specialty_actions():
+		if not (action is Dictionary):
+			continue
+		action_ids.append(String(action.get("id", "")))
+	if action_id not in action_ids:
+		return {
+			"ok": false,
+			"action_id": action_id,
+			"specialty_action_ids": action_ids,
+			"message": "The requested specialty action is not available on the live overworld shell.",
+		}
+	var before_state := {
+		"specialties": _validation_string_array(_session.overworld.get("hero", {}).get("specialties", [])),
+		"pending_specialty_choices": _duplicate_array(_session.overworld.get("hero", {}).get("pending_specialty_choices", [])),
+	}
+	_on_specialty_action_pressed(action_id)
+	var after_state := {
+		"specialties": _validation_string_array(_session.overworld.get("hero", {}).get("specialties", [])),
+		"pending_specialty_choices": _duplicate_array(_session.overworld.get("hero", {}).get("pending_specialty_choices", [])),
+	}
+	var changed := JSON.stringify(before_state) != JSON.stringify(after_state)
+	return {
+		"ok": changed,
+		"action_id": action_id,
+		"specialty_action_ids": action_ids,
+		"state_changed": changed,
+		"before": before_state,
+		"after": after_state,
+		"message": _last_message,
+		"specialty_text": _specialty_label.text,
+		"specialty_tooltip_text": _specialty_label.tooltip_text,
+		"specialty_actions": _validation_specialty_action_payloads(),
 		"action_feedback": _validation_action_feedback(),
 		"post_action_recap": _last_action_recap.duplicate(true),
 	}
@@ -4332,6 +4509,18 @@ func _validation_spell_action_payloads() -> Array:
 		payload["invalid_reason"] = String(action.get("invalid_reason", ""))
 		payload["spell_check"] = spell_check
 		payload["spell_check_tooltip_text"] = String(spell_check.get("tooltip_text", ""))
+		payloads.append(payload)
+	return payloads
+
+func _validation_specialty_action_payloads() -> Array:
+	var payloads := []
+	for action in OverworldRules.get_specialty_actions(_session):
+		if not (action is Dictionary):
+			continue
+		var payload := _validation_action_payload(action)
+		var specialty_check := _specialty_action_check_surface(action)
+		payload["specialty_check"] = specialty_check
+		payload["specialty_check_tooltip_text"] = String(specialty_check.get("tooltip_text", ""))
 		payloads.append(payload)
 	return payloads
 

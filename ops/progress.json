@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T09:24:00Z",
+  "updatedAt": "2026-04-27T09:46:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-spell-check-cue-10184",
-  "currentSliceTitle": "Surface compact overworld spell check cue",
+  "currentSliceId": "overworld-specialty-check-cue-10184",
+  "currentSliceTitle": "Surface compact overworld specialty check cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact player-facing overworld Spell check cue using existing spellbook, mana, movement, and field spell action payloads only. The live spellbook rail now shows blocked/ready field-spell state, and command-drawer spell controls carry matching cast-check handoff tooltips. UI clarity only; no mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact player-facing overworld Specialty check cue using existing hero progression, pending specialty choices, movement, and specialty action payloads only. The live specialty rail now shows no-pick/pick-ready state, and command-drawer specialty controls carry matching pick-check handoff tooltips. UI clarity only; no mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2216,6 +2216,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T09:00:00Z",
       "completedAt": "2026-04-27T09:24:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "overworld-specialty-check-cue-10184",
+      "title": "Surface compact overworld specialty check cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T09:32:00Z",
+      "completedAt": "2026-04-27T09:46:00Z",
       "difficulty": "small"
     }
   ],
