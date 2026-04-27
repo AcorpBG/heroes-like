@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/magic_battle_spell_behavior_report.gd" id="1"]
+
+[node name="MagicBattleSpellBehaviorReport" type="Node"]
+script = ExtResource("1")

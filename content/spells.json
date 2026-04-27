@@ -33,6 +33,8 @@
         "type": "damage_enemy",
         "base_damage": 18,
         "power_scale": 8,
+        "wounded_threshold_ratio": 0.5,
+        "wounded_bonus_damage": 10,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Staggered",
@@ -251,19 +253,19 @@
       "school_id": "lens",
       "tier": 1,
       "accord_family": "prism_ward",
-      "primary_role": "ally_defense",
-      "role_categories": ["buff"],
+      "primary_role": "countermagic_ward",
+      "role_categories": ["buff", "countermagic"],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
       "description": "Facet wards lock around the acting stack, hardening the line and preserving its rhythm.",
       "effect": {
-        "type": "defense_buff",
-        "amount": 4,
+        "type": "cleanse_ally",
+        "amount": 3,
         "duration_rounds": 2,
+        "cleanse_effect_ids": ["status_harried", "status_staggered"],
         "modifiers": {
-          "defense": 4,
-          "initiative": 1,
+          "defense": 3,
           "cohesion": 2
         }
       }
@@ -325,23 +327,21 @@
       "school_id": "root",
       "tier": 1,
       "accord_family": "briar_bind",
-      "primary_role": "control_damage",
-      "role_categories": ["damage", "control", "debuff"],
+      "primary_role": "control_enemy",
+      "role_categories": ["control", "debuff"],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "enemy_selected",
       "description": "Root-script thorns lash a chosen stack and pull its formation out of rhythm.",
       "effect": {
-        "type": "damage_enemy",
-        "base_damage": 16,
-        "power_scale": 7,
+        "type": "control_enemy",
         "status_effect": {
-          "effect_id": "status_staggered",
+          "effect_id": "status_rooted",
           "label": "Root-Bound",
           "duration_rounds": 2,
           "modifiers": {
-            "initiative": -2,
-            "cohesion": -1
+            "initiative": -3,
+            "cohesion": -2
           }
         }
       }
@@ -352,20 +352,21 @@
       "school_id": "root",
       "tier": 1,
       "accord_family": "graft_mend",
-      "primary_role": "ally_defense",
+      "primary_role": "ally_recovery",
       "role_categories": ["buff", "recovery"],
       "context": "battle",
       "mana_cost": 4,
       "target_mode": "ally_active",
       "description": "Living splints and seedglass resin harden the acting stack for a long exchange.",
       "effect": {
-        "type": "defense_buff",
-        "amount": 4,
+        "type": "recover_ally",
+        "base_restore": 16,
+        "power_scale": 5,
+        "amount": 2,
         "duration_rounds": 2,
         "modifiers": {
-          "defense": 4,
-          "cohesion": 2,
-          "initiative": 1
+          "defense": 2,
+          "cohesion": 2
         }
       }
     },
