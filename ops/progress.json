@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-content-batch-001-core-density-pickups-10184",
-  "currentSliceTitle": "Overworld Object Content Batch 001 Core Density And Pickups",
+  "currentSliceId": "overworld-object-content-batch-001b-biome-scenic-decoration-10184",
+  "currentSliceTitle": "Overworld Object Content Batch 001b Biome Scenic Decoration",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "P2.5 is paused by owner correction. Start corrective P2.4 object implementation with Batch 001 from docs/phase2-4-object-implementation-backlog.md; decoration density continues through pending 001b/001c/001d batches and broad object content is not complete until implemented and validated.",
+  "currentSliceNotes": "Corrective P2.4 Batch 001 is completed. P2.5 remains paused; next corrective P2.4 slice is decoration expansion 001b.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T17:52:45Z",
+  "updatedAt": "2026-04-27T18:16:41Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1178,7 +1178,7 @@
       "id": "overworld-object-content-batch-001-core-density-pickups-10184",
       "title": "Overworld Object Content Batch 001 Core Density And Pickups",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
@@ -1205,7 +1205,10 @@
         "Rare-resource objects remain staged metadata only.",
         "Follow-up decoration batches remain pending unless the 200-object decoration/blocker target is actually implemented and validated."
       ],
-      "notes": "Selected next P2.4 corrective implementation slice. Do not resume P2.5 until corrective object content starts or the owner explicitly overrides the stop."
+      "notes": "Completed corrective P2.4 Batch 001: 30 object definitions implemented (12 passable scenic decorations, 8 blocker/edge decorations with body_tiles, 6 live common gold/wood/ore pickups, 4 staged rare-resource report-only pickups). P2.5 remains paused; next corrective P2.4 slice is decoration expansion 001b.",
+      "updatedAt": "2026-04-27T18:16:41Z",
+      "startedAt": "2026-04-27T18:09:40Z",
+      "completedAt": "2026-04-27T18:16:41Z"
     },
     {
       "id": "overworld-object-content-batch-001b-biome-scenic-decoration-10184",
@@ -3059,8 +3062,8 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "overworld-object-content-batch-001-core-density-pickups-10184",
-      "title": "Overworld Object Content Batch 001 Core Density And Pickups",
+      "id": "overworld-object-content-batch-001b-biome-scenic-decoration-10184",
+      "title": "Overworld Object Content Batch 001b Biome Scenic Decoration",
       "status": "pending",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
       "sourceDocs": [
@@ -3069,10 +3072,9 @@
       ],
       "implementationTargets": [
         "content/map_objects.json",
-        "content/resource_sites.json only if linked pickup site records are required",
         "object validator/report fixtures as needed"
       ],
-      "notes": "selected by owner correction; start corrective P2.4 object content before resuming P2.5; decoration density continues through pending 001b/001c/001d batches",
+      "notes": "next corrective P2.4 decoration expansion after completed Batch 001; P2.5 remains paused",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation"

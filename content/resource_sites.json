@@ -1525,6 +1525,31 @@
       "rewards": {"wood": 1, "ore": 1},
       "action_label": "Trade at Caravanserai",
       "service_summary": "Caravans exchange coin for mixed construction lots on a weekly cycle."
+    },
+    {
+      "id": "site_road_writ_purse",
+      "name": "Road Writ Purse",
+      "rewards": {"gold": 250}
+    },
+    {
+      "id": "site_split_wood_pile",
+      "name": "Split Wood Pile",
+      "rewards": {"wood": 2}
+    },
+    {
+      "id": "site_quarry_chip_hod",
+      "name": "Quarry Chip Hod",
+      "rewards": {"ore": 2}
+    },
+    {
+      "id": "site_payroll_casket",
+      "name": "Payroll Casket",
+      "rewards": {"gold": 420, "ore": 1}
+    },
+    {
+      "id": "site_millroad_plank_stack",
+      "name": "Millroad Plank Stack",
+      "rewards": {"wood": 1, "gold": 120}
     }
   ]
 }

@@ -894,6 +894,7 @@ OVERWORLD_OBJECT_FAMILY_TAGS = {
     "faction_landmark": {"faction_pressure", "world_lore"},
     "neutral_encounter": {"neutral_encounter"},
 }
+OVERWORLD_OBJECT_CONTENT_BATCH_001_ID = "overworld-object-content-batch-001-core-density-pickups-10184"
 OVERWORLD_OBJECT_PASSABILITY_CLASSES = {
     "passable_visit_on_enter",
     "passable_scenic",
@@ -2901,6 +2902,108 @@ def build_overworld_object_editor_authoring_section(
     return section
 
 
+def build_overworld_object_content_batch_001_section(map_objects: dict[str, dict], resource_sites: dict[str, dict]) -> dict:
+    batch_objects = {
+        object_id: obj
+        for object_id, obj in map_objects.items()
+        if str(obj.get("content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_001_ID
+    }
+    section = {
+        "batch_id": OVERWORLD_OBJECT_CONTENT_BATCH_001_ID,
+        "object_count": len(batch_objects),
+        "passable_scenic_decoration_count": 0,
+        "blocking_or_edge_decoration_count": 0,
+        "common_live_pickup_count": 0,
+        "staged_rare_pickup_count": 0,
+        "footprints": {},
+        "biome_ids": [],
+        "staged_rare_resource_ids": [],
+        "common_live_resource_ids": [],
+        "errors": [],
+        "warnings": [],
+    }
+
+    def add_error(message: str) -> None:
+        if message not in section["errors"]:
+            section["errors"].append(message)
+
+    def add_warning(message: str) -> None:
+        if message not in section["warnings"]:
+            section["warnings"].append(message)
+
+    for object_id, obj in sorted(batch_objects.items()):
+        primary_class = str(obj.get("primary_class", infer_overworld_object_primary_class(obj, resource_sites.get(str(obj.get("resource_site_id", ""))))))
+        passability_class = str(obj.get("passability_class", infer_overworld_object_passability_class(obj)))
+        family = str(obj.get("family", ""))
+        footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
+        footprint_key = f"{int(footprint.get('width', 0))}x{int(footprint.get('height', 0))}"
+        increment_count(section["footprints"], footprint_key)
+        for biome_id in obj.get("biome_ids", []) if isinstance(obj.get("biome_ids", []), list) else []:
+            append_unique(section["biome_ids"], str(biome_id))
+        forbidden_wood_alias = "tim" + "ber"
+        if forbidden_wood_alias in str(obj.get("name", "")).lower() or forbidden_wood_alias in object_id.lower():
+            add_error(f"{object_id}: Batch 001 must keep wood canonical and avoid non-canonical wood aliases")
+        if primary_class == "decoration":
+            if bool(obj.get("visitable", False)):
+                add_error(f"{object_id}: decoration objects must remain non-interactable")
+            if passability_class == "passable_scenic":
+                section["passable_scenic_decoration_count"] += 1
+                body_tiles = obj.get("body_tiles", [])
+                if body_tiles not in ([], None):
+                    add_warning(f"{object_id}: passable scenic decoration authors non-empty body_tiles")
+            elif passability_class in {"blocking_non_visitable", "edge_blocker"}:
+                section["blocking_or_edge_decoration_count"] += 1
+                body_tiles = obj.get("body_tiles", [])
+                if not isinstance(body_tiles, list) or not body_tiles:
+                    add_error(f"{object_id}: blocking/edge decoration must author explicit body_tiles")
+        if primary_class == "pickup":
+            staged = obj.get("staged_resource_pickup", {})
+            site_id = str(obj.get("resource_site_id", ""))
+            if isinstance(staged, dict) and staged:
+                section["staged_rare_pickup_count"] += 1
+                resource_id = str(staged.get("resource_id", ""))
+                append_unique(section["staged_rare_resource_ids"], resource_id)
+                if resource_id not in ECONOMY_RARE_RESOURCE_IDS:
+                    add_error(f"{object_id}: staged rare pickup uses unsupported rare resource {resource_id}")
+                if bool(staged.get("live_reward", True)):
+                    add_error(f"{object_id}: staged rare pickup must not be a live reward")
+                if not bool(staged.get("report_only", False)) or str(staged.get("activation_status", "")) != "staged_report_only":
+                    add_error(f"{object_id}: staged rare pickup must remain report-only/staged")
+                if site_id:
+                    add_error(f"{object_id}: staged rare pickup must not link to live resource_sites rewards")
+                if bool(obj.get("visitable", False)):
+                    add_error(f"{object_id}: staged rare pickup must not be live visitable")
+            elif site_id:
+                site = resource_sites.get(site_id, {})
+                rewards = site.get("rewards", {}) if isinstance(site.get("rewards", {}), dict) else {}
+                reward_ids = {str(resource_id) for resource_id, amount in rewards.items() if int(amount) > 0}
+                if reward_ids and reward_ids.issubset(ECONOMY_STOCKPILE_RESOURCE_IDS):
+                    section["common_live_pickup_count"] += 1
+                    for resource_id in sorted(reward_ids):
+                        append_unique(section["common_live_resource_ids"], resource_id)
+                elif reward_ids.intersection(ECONOMY_RARE_RESOURCE_IDS):
+                    add_error(f"{object_id}: live pickup must not grant staged rare resources")
+    section["footprints"] = sorted_counts(section["footprints"])
+    section["biome_ids"] = sorted(section["biome_ids"])
+    section["common_live_resource_ids"] = sorted(section["common_live_resource_ids"])
+    section["staged_rare_resource_ids"] = sorted(section["staged_rare_resource_ids"])
+    if batch_objects:
+        if len(batch_objects) < 30:
+            add_error("Batch 001 must author about 30 object definitions")
+        if section["passable_scenic_decoration_count"] < 12:
+            add_error("Batch 001 must include at least 12 passable scenic decorations")
+        if section["blocking_or_edge_decoration_count"] < 8:
+            add_error("Batch 001 must include at least 8 blocking or edge-blocker decorations")
+        if section["common_live_pickup_count"] < 6:
+            add_error("Batch 001 must include at least 6 live common pickups")
+        if section["staged_rare_pickup_count"] < 4:
+            add_error("Batch 001 must include at least 4 staged rare-resource pickups")
+        for resource_id in ("gold", "wood", "ore"):
+            if resource_id not in section["common_live_resource_ids"]:
+                add_error(f"Batch 001 live common pickups must include {resource_id}")
+    return section
+
+
 def build_overworld_object_report() -> dict:
     payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("map_objects", "resource_sites", "scenarios", "encounters", "army_groups", "factions")}
     map_objects = items_index(payloads["map_objects"])
@@ -2974,6 +3077,7 @@ def build_overworld_object_report() -> dict:
         },
         "guard_reward": {},
         "ownership_capture": {},
+        "content_batches": {},
         "ai_editor_implications": {
             "requires_future_body_tile_validation": [],
             "requires_future_approach_validation": [],
@@ -2992,6 +3096,7 @@ def build_overworld_object_report() -> dict:
         encounter_placements,
         object_ids_by_site_id,
     )
+    report["content_batches"]["batch_001_core_density_pickups"] = build_overworld_object_content_batch_001_section(map_objects, resource_sites)
     report["ai_editor_implications"]["visible_neutral_encounter_records_present"] = any(
         infer_overworld_object_primary_class(obj, resource_sites.get(str(obj.get("resource_site_id", "")))) == "neutral_encounter"
         for obj in map_objects.values()
@@ -3184,6 +3289,9 @@ def build_overworld_object_report() -> dict:
     report["route_effect_authoring"]["selected_transit_object_ids"] = sorted(report["route_effect_authoring"]["selected_transit_object_ids"])
     if not report["ai_editor_implications"]["visible_neutral_encounter_records_present"]:
         add_overworld_object_report_warning(report, "no first-class neutral_encounter map object records exist yet; visible encounter placement remains scenario encounter data")
+    for batch_error in report.get("content_batches", {}).get("batch_001_core_density_pickups", {}).get("errors", []):
+        if batch_error not in report["errors"]:
+            report["errors"].append(batch_error)
     add_overworld_object_report_warning(report, "unmigrated production map_objects.json records remain legacy-compatible; inferred primary_class and tags are report-only outside declared migrated bundles")
     add_overworld_object_report_warning(report, "body_tiles and approach metadata remain warnings for unmigrated objects; pathing adoption is bounded to authored representative masks")
     return report
@@ -3230,6 +3338,12 @@ def print_overworld_object_report(report: dict) -> None:
     print(f"- runtime behavior adopted: {route_effect_authoring.get('runtime_behavior_adopted', False)}")
     print(f"- runtime adoption: {report['compatibility_adapters']['runtime_adoption']}; pathing occupancy adoption={report['compatibility_adapters']['pathing_occupancy_adoption']}")
     print(f"- runtime adopted safe fields: {', '.join(report['compatibility_adapters'].get('runtime_adopted_safe_fields', []))}")
+    batch = report.get("content_batches", {}).get("batch_001_core_density_pickups", {})
+    if batch:
+        print("Content Batch 001:")
+        print(f"- objects: {batch.get('object_count', 0)}; scenic={batch.get('passable_scenic_decoration_count', 0)}; blocking_or_edge={batch.get('blocking_or_edge_decoration_count', 0)}")
+        print(f"- live common pickups={batch.get('common_live_pickup_count', 0)} resources={','.join(batch.get('common_live_resource_ids', []))}; staged rare pickups={batch.get('staged_rare_pickup_count', 0)}")
+        print(f"- staged rare resources: {','.join(batch.get('staged_rare_resource_ids', []))}; errors={len(batch.get('errors', []))}; warnings={len(batch.get('warnings', []))}")
     print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
 
 
@@ -8606,6 +8720,15 @@ def validate_overworld_object_route_effect_authoring(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"Route-effect authoring report doc is missing required boundary text: {required_text}")
 
 
+def validate_overworld_object_content_batch_001(errors: list[str]) -> None:
+    report = build_overworld_object_report()
+    batch = report.get("content_batches", {}).get("batch_001_core_density_pickups", {})
+    if not batch or int(batch.get("object_count", 0)) <= 0:
+        return
+    for batch_error in batch.get("errors", []):
+        fail(errors, f"Overworld object Batch 001: {batch_error}")
+
+
 def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_ART_MANIFEST_PATH,
@@ -10398,6 +10521,7 @@ def main() -> int:
     validate_overworld_content_foundation(errors)
     validate_overworld_object_ai_valuation_route_effects(errors)
     validate_overworld_object_route_effect_authoring(errors)
+    validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_six_faction_biome_scenario_breadth(errors)
