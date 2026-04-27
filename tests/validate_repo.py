@@ -7034,12 +7034,48 @@ def validate_campaigns(errors: list[str], campaigns: dict[str, dict], scenarios:
     ensure(RELEASE_PLAYER_FACTIONS.issubset(campaign_starting_factions), errors, "Campaign starts must cover all release player factions")
 
 
-def artifact_taxonomy_issues(artifact_id: str, artifact: dict, factions: dict[str, dict]) -> list[str]:
+def artifact_set_id(artifact: dict) -> str:
+    for key in ("set_id", "artifact_set_id", "set"):
+        value = artifact.get(key, "")
+        if isinstance(value, dict):
+            nested_id = str(value.get("id", "")).strip()
+            if nested_id:
+                return nested_id
+        label = str(value).strip()
+        if label:
+            return label
+    validation_tags = artifact.get("validation_tags", {})
+    if isinstance(validation_tags, dict):
+        return str(validation_tags.get("set_id", "")).strip()
+    return ""
+
+
+def artifact_sets_index(payload: dict) -> dict[str, dict]:
+    sets = payload.get("sets", [])
+    if not isinstance(sets, list):
+        return {}
+    indexed: dict[str, dict] = {}
+    for artifact_set in sets:
+        if not isinstance(artifact_set, dict):
+            continue
+        set_id = str(artifact_set.get("id", "")).strip()
+        if set_id:
+            indexed[set_id] = artifact_set
+    return indexed
+
+
+def artifact_taxonomy_issues(
+    artifact_id: str,
+    artifact: dict,
+    factions: dict[str, dict],
+    artifact_sets: dict[str, dict] | None = None,
+) -> list[str]:
     issues: list[str] = []
     slot = str(artifact.get("slot", "")).strip()
     if slot not in SUPPORTED_ARTIFACT_SLOTS:
         issues.append("unsupported_slot")
-    if str(artifact.get("artifact_class", "")).strip() not in SUPPORTED_ARTIFACT_CLASSES:
+    artifact_class = str(artifact.get("artifact_class", "")).strip()
+    if artifact_class not in SUPPORTED_ARTIFACT_CLASSES:
         issues.append("unsupported_artifact_class")
     if str(artifact.get("rarity", "")).strip() not in SUPPORTED_ARTIFACT_RARITIES:
         issues.append("unsupported_rarity")
@@ -7057,9 +7093,20 @@ def artifact_taxonomy_issues(artifact_id: str, artifact: dict, factions: dict[st
     if accord_affinity not in SUPPORTED_ARTIFACT_ACCORD_AFFINITIES:
         issues.append("unsupported_accord_affinity")
 
-    for faction_id in string_list(artifact.get("faction_affinity", [])):
+    faction_affinity = string_list(artifact.get("faction_affinity", []))
+    if artifact_class == "faction" and not faction_affinity:
+        issues.append("missing_faction_affinity")
+    for faction_id in faction_affinity:
         if faction_id not in factions:
             issues.append(f"missing_faction_affinity:{faction_id}")
+
+    set_id = artifact_set_id(artifact)
+    if artifact_class == "set_piece" and not set_id:
+        issues.append("missing_set_id")
+    if set_id and artifact_class != "set_piece":
+        issues.append("set_id_on_non_set_piece")
+    if artifact_sets is not None and set_id and set_id not in artifact_sets:
+        issues.append(f"unknown_set_id:{set_id}")
 
     source_tags = string_list(artifact.get("source_tags", []))
     if not source_tags:
@@ -7169,11 +7216,13 @@ def artifact_taxonomy_issues(artifact_id: str, artifact: dict, factions: dict[st
 
 
 def build_artifact_taxonomy_report() -> dict:
-    artifacts = items_index(load_json(CONTENT_DIR / "artifacts.json"))
+    artifact_payload = load_json(CONTENT_DIR / "artifacts.json")
+    artifacts = items_index(artifact_payload)
+    artifact_sets = artifact_sets_index(artifact_payload)
     factions = items_index(load_json(CONTENT_DIR / "factions.json"))
     report: dict = {
         "schema": ARTIFACT_SCHEMA_ID,
-        "mode": "additive_artifact_taxonomy_schema",
+        "mode": "additive_artifact_taxonomy_sets_faction_schema",
         "artifact_count": len(artifacts),
         "complete_taxonomy_count": 0,
         "slot_counts": {},
@@ -7182,6 +7231,11 @@ def build_artifact_taxonomy_report() -> dict:
         "family_counts": {},
         "role_counts": {},
         "source_tag_counts": {},
+        "faction_affinity_counts": {},
+        "set_piece_counts": {},
+        "set_count": 0,
+        "set_piece_count": 0,
+        "faction_affinity_artifact_count": 0,
         "equip_constraint_count": 0,
         "bonus_metadata_count": 0,
         "risk_metadata_count": 0,
@@ -7189,15 +7243,18 @@ def build_artifact_taxonomy_report() -> dict:
         "ai_hint_count": 0,
         "curse_tradeoff_counts": {"cursed": 0, "tradeoff": 0},
         "unsupported_records": [],
+        "set_validation_issues": [],
+        "set_reports": [],
         "runtime_policy": {
             "save_version_bump": False,
             "equipment_runtime_migration": False,
             "source_reward_tables_active": False,
             "rare_resource_activation": False,
+            "set_bonuses_active": False,
         },
     }
     for artifact_id, artifact in artifacts.items():
-        issues = artifact_taxonomy_issues(artifact_id, artifact, factions)
+        issues = artifact_taxonomy_issues(artifact_id, artifact, factions, artifact_sets)
         if not issues:
             report["complete_taxonomy_count"] += 1
         else:
@@ -7214,6 +7271,15 @@ def build_artifact_taxonomy_report() -> dict:
             report["role_counts"][role] = report["role_counts"].get(role, 0) + 1
         for source_tag in string_list(artifact.get("source_tags", [])):
             report["source_tag_counts"][source_tag] = report["source_tag_counts"].get(source_tag, 0) + 1
+        faction_affinity = string_list(artifact.get("faction_affinity", []))
+        if faction_affinity:
+            report["faction_affinity_artifact_count"] += 1
+        for faction_id in faction_affinity:
+            report["faction_affinity_counts"][faction_id] = report["faction_affinity_counts"].get(faction_id, 0) + 1
+        set_id = artifact_set_id(artifact)
+        if set_id:
+            report["set_piece_count"] += 1
+            report["set_piece_counts"][set_id] = report["set_piece_counts"].get(set_id, 0) + 1
         if isinstance(artifact.get("equip_constraints", {}), dict):
             report["equip_constraint_count"] += 1
         if isinstance(artifact.get("bonus_metadata", []), list) and artifact.get("bonus_metadata", []):
@@ -7229,7 +7295,15 @@ def build_artifact_taxonomy_report() -> dict:
             report["ui_summary_count"] += 1
         if isinstance(artifact.get("ai_hints", {}), dict) and string_list(artifact.get("ai_hints", {}).get("value_drivers", [])):
             report["ai_hint_count"] += 1
-    report["ok"] = report["artifact_count"] > 0 and report["complete_taxonomy_count"] == report["artifact_count"]
+    set_report = build_artifact_set_faction_report(artifacts, artifact_sets)
+    report["set_count"] = int(set_report.get("set_count", 0))
+    report["set_validation_issues"] = set_report.get("set_validation_issues", [])
+    report["set_reports"] = set_report.get("set_reports", [])
+    report["ok"] = (
+        report["artifact_count"] > 0
+        and report["complete_taxonomy_count"] == report["artifact_count"]
+        and bool(set_report.get("ok", False))
+    )
     return report
 
 
@@ -7243,10 +7317,141 @@ def print_artifact_taxonomy_report(report: dict) -> None:
     print(f"- classes: {report['class_counts']}")
     print(f"- roles: {report['role_counts']}")
     print(f"- source tags: {report['source_tag_counts']}")
+    print(f"- sets: {report['set_count']} sets; pieces: {report['set_piece_counts']}")
+    print(f"- faction affinities: {report['faction_affinity_counts']}")
     policy = report.get("runtime_policy", {})
-    print(f"- runtime policy: save_version_bump={policy.get('save_version_bump', True)}, source_reward_tables_active={policy.get('source_reward_tables_active', True)}, rare_resource_activation={policy.get('rare_resource_activation', True)}")
+    print(f"- runtime policy: save_version_bump={policy.get('save_version_bump', True)}, source_reward_tables_active={policy.get('source_reward_tables_active', True)}, set_bonuses_active={policy.get('set_bonuses_active', True)}, rare_resource_activation={policy.get('rare_resource_activation', True)}")
     if report.get("unsupported_records"):
         print(f"- unsupported records: {report['unsupported_records']}")
+    if report.get("set_validation_issues"):
+        print(f"- set validation issues: {report['set_validation_issues']}")
+
+
+def build_artifact_set_faction_report(
+    artifacts: dict[str, dict] | None = None,
+    artifact_sets: dict[str, dict] | None = None,
+) -> dict:
+    if artifacts is None or artifact_sets is None:
+        artifact_payload = load_json(CONTENT_DIR / "artifacts.json")
+        artifacts = items_index(artifact_payload)
+        artifact_sets = artifact_sets_index(artifact_payload)
+
+    set_validation_issues: list[dict | str] = []
+    set_reports: list[dict] = []
+    set_piece_counts: dict[str, int] = {}
+    faction_affinity_counts: dict[str, int] = {}
+    faction_affinity_artifact_count = 0
+    set_piece_count = 0
+
+    for artifact_id, artifact in artifacts.items():
+        faction_affinity = string_list(artifact.get("faction_affinity", []))
+        if faction_affinity:
+            faction_affinity_artifact_count += 1
+        for faction_id in faction_affinity:
+            faction_affinity_counts[faction_id] = faction_affinity_counts.get(faction_id, 0) + 1
+        set_id = artifact_set_id(artifact)
+        if set_id:
+            set_piece_count += 1
+            set_piece_counts[set_id] = set_piece_counts.get(set_id, 0) + 1
+            if set_id not in artifact_sets:
+                set_validation_issues.append({"artifact_id": artifact_id, "issues": [f"unknown_set_id:{set_id}"]})
+
+    for set_id, artifact_set in artifact_sets.items():
+        piece_ids = string_list(artifact_set.get("piece_ids", []))
+        slot_counts: dict[str, int] = {}
+        missing_pieces: list[str] = []
+        mismatched_pieces: list[str] = []
+        for piece_id in piece_ids:
+            piece = artifacts.get(piece_id)
+            if not isinstance(piece, dict):
+                missing_pieces.append(piece_id)
+                continue
+            slot = str(piece.get("slot", "")).strip()
+            slot_counts[slot] = slot_counts.get(slot, 0) + 1
+            if artifact_set_id(piece) != set_id:
+                mismatched_pieces.append(piece_id)
+        slot_conflicts = [
+            f"{slot}:{count}"
+            for slot, count in sorted(slot_counts.items())
+            if count > ARTIFACT_SLOT_LIMITS.get(slot, 1)
+        ]
+        runtime_policy = artifact_set.get("runtime_policy", {})
+        set_bonuses_active = True
+        source_reward_tables_active = True
+        if isinstance(runtime_policy, dict):
+            set_bonuses_active = bool(runtime_policy.get("set_bonuses_active", True))
+            source_reward_tables_active = bool(runtime_policy.get("source_reward_tables_active", True))
+
+        issues: list[str] = []
+        if len(piece_ids) < 3 or len(piece_ids) > 5:
+            issues.append("piece_count_outside_3_to_5")
+        if not str(artifact_set.get("source_hint", "")).strip():
+            issues.append("missing_source_hint")
+        if not isinstance(artifact_set.get("piece_thresholds", []), list) or not artifact_set.get("piece_thresholds", []):
+            issues.append("missing_piece_thresholds")
+        if missing_pieces:
+            issues.append(f"missing_pieces:{','.join(missing_pieces)}")
+        if mismatched_pieces:
+            issues.append(f"piece_set_mismatch:{','.join(mismatched_pieces)}")
+        if slot_conflicts:
+            issues.append(f"slot_conflicts:{','.join(slot_conflicts)}")
+        if set_bonuses_active:
+            issues.append("set_bonuses_active")
+        if source_reward_tables_active:
+            issues.append("source_reward_tables_active")
+        if issues:
+            set_validation_issues.append({"set_id": set_id, "issues": issues})
+
+        set_reports.append(
+            {
+                "set_id": set_id,
+                "name": str(artifact_set.get("name", set_id)),
+                "piece_count": len(piece_ids),
+                "piece_ids": piece_ids,
+                "slot_counts": slot_counts,
+                "runtime_policy": {
+                    "set_bonuses_active": set_bonuses_active,
+                    "source_reward_tables_active": source_reward_tables_active,
+                },
+            }
+        )
+
+    return {
+        "ok": (
+            len(artifact_sets) >= 1
+            and set_piece_count >= 3
+            and faction_affinity_artifact_count >= 3
+            and not set_validation_issues
+        ),
+        "schema": ARTIFACT_SCHEMA_ID,
+        "set_count": len(artifact_sets),
+        "set_piece_count": set_piece_count,
+        "set_piece_counts": set_piece_counts,
+        "faction_affinity_artifact_count": faction_affinity_artifact_count,
+        "faction_affinity_counts": faction_affinity_counts,
+        "set_validation_issues": set_validation_issues,
+        "set_reports": set_reports,
+        "runtime_policy": {
+            "save_version_bump": False,
+            "equipment_runtime_migration": False,
+            "source_reward_tables_active": False,
+            "rare_resource_activation": False,
+            "set_bonuses_active": False,
+            "ai_valuation_behavior": False,
+        },
+    }
+
+
+def print_artifact_set_faction_report(report: dict) -> None:
+    print("ARTIFACT SET FACTION REPORT")
+    print(f"- schema: {report['schema']}")
+    print(f"- sets: {report['set_count']} sets; pieces: {report['set_piece_counts']}")
+    print(f"- faction affinities: {report['faction_affinity_counts']}")
+    print(f"- set reports: {report['set_reports']}")
+    policy = report.get("runtime_policy", {})
+    print(f"- runtime policy: save_version_bump={policy.get('save_version_bump', True)}, source_reward_tables_active={policy.get('source_reward_tables_active', True)}, set_bonuses_active={policy.get('set_bonuses_active', True)}, ai_valuation_behavior={policy.get('ai_valuation_behavior', True)}, rare_resource_activation={policy.get('rare_resource_activation', True)}")
+    if report.get("set_validation_issues"):
+        print(f"- set validation issues: {report['set_validation_issues']}")
 
 
 def validate_content(errors: list[str]) -> None:
@@ -7293,6 +7498,7 @@ def validate_content(errors: list[str]) -> None:
     map_objects = items_index(payloads["map_objects"])
     neutral_dwellings = items_index(payloads["neutral_dwellings"])
     artifacts = items_index(payloads["artifacts"])
+    artifact_sets = artifact_sets_index(payloads["artifacts"])
     spells = items_index(payloads["spells"])
     encounters = items_index(payloads["encounters"])
     scenarios = items_index(payloads["scenarios"])
@@ -7689,7 +7895,7 @@ def validate_content(errors: list[str]) -> None:
         ensure(slot in SUPPORTED_ARTIFACT_SLOTS, errors, f"Artifact {artifact_id} uses unsupported slot {slot}")
         bonuses = artifact.get("bonuses", {})
         ensure(isinstance(bonuses, dict) and bool(bonuses), errors, f"Artifact {artifact_id} must define at least one bonus")
-        taxonomy_issues = artifact_taxonomy_issues(artifact_id, artifact, factions)
+        taxonomy_issues = artifact_taxonomy_issues(artifact_id, artifact, factions, artifact_sets)
         ensure(not taxonomy_issues, errors, f"Artifact {artifact_id} has incomplete taxonomy metadata: {taxonomy_issues}")
     ensure(
         any(int((artifact.get("bonuses", {}) if isinstance(artifact.get("bonuses", {}), dict) else {}).get("scouting_radius", 0)) > 0 for artifact in artifacts.values()),
@@ -7699,6 +7905,11 @@ def validate_content(errors: list[str]) -> None:
     artifact_report = build_artifact_taxonomy_report()
     ensure(bool(artifact_report.get("ok", False)), errors, f"Artifact taxonomy report must pass for all authored artifacts: {artifact_report.get('unsupported_records', [])}")
     ensure(int(artifact_report.get("complete_taxonomy_count", 0)) == len(artifacts), errors, "Artifact taxonomy report must cover every authored artifact")
+    artifact_set_report = build_artifact_set_faction_report(artifacts, artifact_sets)
+    ensure(bool(artifact_set_report.get("ok", False)), errors, f"Artifact set/faction report must pass: {artifact_set_report.get('set_validation_issues', [])}")
+    ensure(int(artifact_set_report.get("set_count", 0)) >= 1, errors, "Artifact content must author at least one validated set")
+    ensure(int(artifact_set_report.get("set_piece_count", 0)) >= 3, errors, "Artifact content must author at least three set pieces")
+    ensure(int(artifact_set_report.get("faction_affinity_artifact_count", 0)) >= 3, errors, "Artifact content must author several faction-affinity artifacts")
     ensure(ADVANCED_EMBERCOURT_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Embercourt building set authored")
     ensure(ADVANCED_MIRECLAW_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Mireclaw building set authored")
     ensure(ADVANCED_SUNVAULT_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Sunvault building set authored")
@@ -13165,6 +13376,8 @@ def main() -> int:
     parser.add_argument("--strict-neutral-encounter-fixtures", action="store_true", help="Validate isolated strict neutral encounter schema fixtures.")
     parser.add_argument("--artifact-taxonomy-report", action="store_true", help="Print the opt-in artifact taxonomy/schema report.")
     parser.add_argument("--artifact-taxonomy-report-json", type=str, default="", help="Write the opt-in artifact taxonomy/schema report as JSON.")
+    parser.add_argument("--artifact-set-faction-report", action="store_true", help="Print the opt-in artifact set/faction metadata report.")
+    parser.add_argument("--artifact-set-faction-report-json", type=str, default="", help="Write the opt-in artifact set/faction metadata report as JSON.")
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -13294,6 +13507,7 @@ def main() -> int:
     print("- staged rare-resource registry/report gates expose original rare resources without live costs, market buying, save migration, or production grants")
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks without rare-resource activation")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
+    print("- artifact content now includes bounded set metadata and faction affinities without source tables, set bonuses, save migration, or AI valuation behavior")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:
@@ -13340,6 +13554,14 @@ def main() -> int:
             print(f"- artifact taxonomy report JSON written to {report_path}")
         if args.artifact_taxonomy_report:
             print_artifact_taxonomy_report(report)
+    if args.artifact_set_faction_report or args.artifact_set_faction_report_json:
+        report = build_artifact_set_faction_report()
+        if args.artifact_set_faction_report_json:
+            report_path = Path(args.artifact_set_faction_report_json)
+            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"- artifact set/faction report JSON written to {report_path}")
+        if args.artifact_set_faction_report:
+            print_artifact_set_faction_report(report)
     return 0
 
 

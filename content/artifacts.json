@@ -1,10 +1,38 @@
 {
+  "sets": [
+    {
+      "id": "set_wayfarer_compact",
+      "name": "Wayfarer Compact",
+      "identity": "Neutral exploration gear for scouts who stitch old roads, waymarks, and safe camps into one route plan.",
+      "piece_ids": [
+        "artifact_trailsinger_boots",
+        "artifact_waymark_compass",
+        "artifact_milepost_lantern"
+      ],
+      "source_hint": "Region reward chain or guarded road caches; source tables are not active in this slice.",
+      "piece_thresholds": [
+        {
+          "count": 2,
+          "summary": "Metadata-only route-readiness bonus for future set UI and reward planning."
+        },
+        {
+          "count": 3,
+          "summary": "Metadata-only compact completion hook for future encounter preview rules."
+        }
+      ],
+      "runtime_policy": {
+        "set_bonuses_active": false,
+        "source_reward_tables_active": false,
+        "derived_from_equipped_pieces": true
+      }
+    }
+  ],
   "items": [
     {
       "id": "artifact_trailsinger_boots",
       "name": "Trailsinger Boots",
       "slot": "boots",
-      "artifact_class": "common",
+      "artifact_class": "set_piece",
       "rarity": "common",
       "family": "roadfinder_gear",
       "roles": [
@@ -17,7 +45,8 @@
       "source_tags": [
         "pickup",
         "guarded_site",
-        "artifact_cache"
+        "artifact_cache",
+        "set_chain"
       ],
       "equip_constraints": {
         "slot_limit": 1,
@@ -84,7 +113,7 @@
       "validation_tags": {
         "schema": "artifact_taxonomy_v1",
         "save_behavior": "content_reference_only",
-        "set_id": "",
+        "set_id": "set_wayfarer_compact",
         "mutual_exclusions": [],
         "stack_rule": "unique_per_hero"
       },
@@ -343,6 +372,722 @@
       "description": "Layered bronze plate forged for siege marshals. It steadies the front under punishing blows.",
       "bonuses": {
         "battle_defense": 2
+      }
+    },
+    {
+      "id": "artifact_waymark_compass",
+      "name": "Waymark Compass",
+      "slot": "trinket",
+      "artifact_class": "set_piece",
+      "rarity": "uncommon",
+      "family": "roadfinder_gear",
+      "roles": [
+        "scouting",
+        "route",
+        "progression"
+      ],
+      "accord_affinity": "neutral",
+      "faction_affinity": [],
+      "source_tags": [
+        "guarded_site",
+        "artifact_cache",
+        "set_chain"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "scouting_radius",
+          "public_summary": "Extends route scouting."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Wayfarer Compact trinket for route scouting and set progress.",
+        "icon_id": "artifact_compass_placeholder",
+        "effect_tags": [
+          "scouting",
+          "route",
+          "set"
+        ],
+        "comparison_priority": [
+          "scouting_radius",
+          "set_progress"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "scouting_reach",
+          "route_preview",
+          "set_progress"
+        ],
+        "preferred_hero_roles": [
+          "scout",
+          "carrier"
+        ],
+        "preferred_faction_ids": [],
+        "combo_tags": [
+          "road",
+          "wayfarer",
+          "set"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "set_wayfarer_compact",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A low brass compass whose needle settles only after nearby stones, camps, and old mile cuts agree.",
+      "bonuses": {
+        "scouting_radius": 2
+      }
+    },
+    {
+      "id": "artifact_milepost_lantern",
+      "name": "Milepost Lantern",
+      "slot": "trinket",
+      "artifact_class": "set_piece",
+      "rarity": "uncommon",
+      "family": "roadfinder_gear",
+      "roles": [
+        "movement",
+        "scouting",
+        "route"
+      ],
+      "accord_affinity": "beacon",
+      "faction_affinity": [],
+      "source_tags": [
+        "guarded_site",
+        "artifact_cache",
+        "set_chain"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "overworld_movement",
+          "public_summary": "Improves field movement."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "scouting_radius",
+          "public_summary": "Extends nearby scouting."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Wayfarer Compact lantern for movement, short scouting, and set progress.",
+        "icon_id": "artifact_lantern_placeholder",
+        "effect_tags": [
+          "movement",
+          "scouting",
+          "set"
+        ],
+        "comparison_priority": [
+          "overworld_movement",
+          "scouting_radius",
+          "set_progress"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "route_tempo",
+          "nearby_scouting",
+          "set_progress"
+        ],
+        "preferred_hero_roles": [
+          "scout",
+          "magic"
+        ],
+        "preferred_faction_ids": [],
+        "combo_tags": [
+          "road",
+          "beacon",
+          "set"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "set_wayfarer_compact",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A hooded lantern with mile cuts around its rim. It turns camp light into a practical marching line.",
+      "bonuses": {
+        "overworld_movement": 1,
+        "scouting_radius": 1
+      }
+    },
+    {
+      "id": "artifact_tollstone_ring",
+      "name": "Tollstone Ring",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "rare",
+      "family": "tollstone_rings",
+      "roles": [
+        "economy",
+        "route",
+        "town_support"
+      ],
+      "accord_affinity": "beacon",
+      "faction_affinity": [
+        "faction_embercourt"
+      ],
+      "source_tags": [
+        "guarded_site",
+        "town",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "gold",
+            "wood"
+          ],
+          "cadence": "daily",
+          "public_summary": "Adds daily common-resource income from public route work."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Embercourt-aligned toll ring for road income and town support.",
+        "icon_id": "artifact_tollstone_ring_placeholder",
+        "effect_tags": [
+          "economy",
+          "route",
+          "embercourt"
+        ],
+        "comparison_priority": [
+          "daily_income",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "road_income",
+          "wood_shortage",
+          "town_build_support"
+        ],
+        "preferred_hero_roles": [
+          "governor",
+          "carrier"
+        ],
+        "preferred_faction_ids": [
+          "faction_embercourt"
+        ],
+        "combo_tags": [
+          "road",
+          "toll",
+          "beacon"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A river-worn oath ring used to tally bridge dues and keep repair crews paid before the road forgets its charter.",
+      "bonuses": {
+        "daily_income": {
+          "gold": 80,
+          "wood": 1
+        }
+      }
+    },
+    {
+      "id": "artifact_mudglass_beads",
+      "name": "Mudglass Beads",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "rare",
+      "family": "mudglass_beads",
+      "roles": [
+        "combat",
+        "morale",
+        "magic"
+      ],
+      "accord_affinity": "mire",
+      "faction_affinity": [
+        "faction_mireclaw"
+      ],
+      "source_tags": [
+        "guarded_site",
+        "shrine",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_attack",
+          "public_summary": "Improves attack command."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_initiative",
+          "public_summary": "Improves initiative command."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Mireclaw-aligned bead string for harrying tempo and attack command.",
+        "icon_id": "artifact_mudglass_beads_placeholder",
+        "effect_tags": [
+          "combat",
+          "initiative",
+          "mireclaw"
+        ],
+        "comparison_priority": [
+          "battle_attack",
+          "battle_initiative",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_attack",
+          "initiative_tempo",
+          "wounded_prey_setup"
+        ],
+        "preferred_hero_roles": [
+          "might",
+          "raider"
+        ],
+        "preferred_faction_ids": [
+          "faction_mireclaw"
+        ],
+        "combo_tags": [
+          "mire",
+          "harry",
+          "wounded_prey"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "Opaque beads hardened in blackwater channels. They click like teeth when a wounded route is ready to close.",
+      "bonuses": {
+        "battle_attack": 1,
+        "battle_initiative": 1
+      }
+    },
+    {
+      "id": "artifact_choir_tuning_fork",
+      "name": "Choir Tuning Fork",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "rare",
+      "family": "choir_tuning_forks",
+      "roles": [
+        "magic",
+        "scouting",
+        "resistance"
+      ],
+      "accord_affinity": "lens",
+      "faction_affinity": [
+        "faction_sunvault"
+      ],
+      "source_tags": [
+        "guarded_site",
+        "shrine",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "scouting_radius",
+          "public_summary": "Extends calibrated scouting."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_defense",
+          "public_summary": "Improves defensive command."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Sunvault-aligned tuning tool for calibrated sight and defensive command.",
+        "icon_id": "artifact_tuning_fork_placeholder",
+        "effect_tags": [
+          "scouting",
+          "defense",
+          "sunvault"
+        ],
+        "comparison_priority": [
+          "scouting_radius",
+          "battle_defense",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "calibrated_scouting",
+          "frontline_survival",
+          "lens_spell_support"
+        ],
+        "preferred_hero_roles": [
+          "magic",
+          "defender"
+        ],
+        "preferred_faction_ids": [
+          "faction_sunvault"
+        ],
+        "combo_tags": [
+          "lens",
+          "calibration",
+          "relay"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A split crystal fork that steadies relay crews by pitch instead of command. In silence it points toward glare.",
+      "bonuses": {
+        "scouting_radius": 1,
+        "battle_defense": 1
+      }
+    },
+    {
+      "id": "artifact_living_bridge_knot",
+      "name": "Living Bridge Knot",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "rare",
+      "family": "living_bridge_knots",
+      "roles": [
+        "movement",
+        "route",
+        "recruitment"
+      ],
+      "accord_affinity": "root",
+      "faction_affinity": [
+        "faction_thornwake"
+      ],
+      "source_tags": [
+        "guarded_site",
+        "dwelling",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "overworld_movement",
+          "public_summary": "Improves field movement."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "wood"
+          ],
+          "cadence": "daily",
+          "public_summary": "Adds daily wood from careful graft tending."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Thornwake-aligned graft knot for living routes and wood support.",
+        "icon_id": "artifact_living_knot_placeholder",
+        "effect_tags": [
+          "movement",
+          "wood",
+          "thornwake"
+        ],
+        "comparison_priority": [
+          "overworld_movement",
+          "daily_income",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "root_route_tempo",
+          "wood_shortage",
+          "recovery_loop_support"
+        ],
+        "preferred_hero_roles": [
+          "scout",
+          "governor"
+        ],
+        "preferred_faction_ids": [
+          "faction_thornwake"
+        ],
+        "combo_tags": [
+          "root",
+          "living_route",
+          "renewal"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A thumb-sized knot of patient bridgewood, bound with pilgrim thread and still deciding which road deserves shade.",
+      "bonuses": {
+        "overworld_movement": 1,
+        "daily_income": {
+          "wood": 1
+        }
+      }
+    },
+    {
+      "id": "artifact_pressure_gauge_reliquary",
+      "name": "Pressure Gauge Reliquary",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "rare",
+      "family": "pressure_gauge_reliquaries",
+      "roles": [
+        "defense",
+        "combat",
+        "magic"
+      ],
+      "accord_affinity": "furnace",
+      "faction_affinity": [
+        "faction_brasshollow"
+      ],
+      "source_tags": [
+        "guarded_site",
+        "town",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_defense",
+          "public_summary": "Improves defensive command."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_initiative",
+          "public_summary": "Improves pressure-window timing."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Brasshollow-aligned gauge relic for armor timing and command tempo.",
+        "icon_id": "artifact_pressure_gauge_placeholder",
+        "effect_tags": [
+          "defense",
+          "initiative",
+          "brasshollow"
+        ],
+        "comparison_priority": [
+          "battle_defense",
+          "battle_initiative",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_survival",
+          "initiative_tempo",
+          "furnace_risk_support"
+        ],
+        "preferred_hero_roles": [
+          "defender",
+          "might"
+        ],
+        "preferred_faction_ids": [
+          "faction_brasshollow"
+        ],
+        "combo_tags": [
+          "furnace",
+          "pressure",
+          "repair"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A sealed gauge carried like a chapel icon. Its needle climbs before armor crews admit the heat is dangerous.",
+      "bonuses": {
+        "battle_defense": 1,
+        "battle_initiative": 1
+      }
+    },
+    {
+      "id": "artifact_black_sail_compass",
+      "name": "Black-Sail Compass",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "rare",
+      "family": "black_sail_compasses",
+      "roles": [
+        "scouting",
+        "route",
+        "reward_modifier"
+      ],
+      "accord_affinity": "veil",
+      "faction_affinity": [
+        "faction_veilmourn"
+      ],
+      "source_tags": [
+        "guarded_site",
+        "battle_salvage",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "scouting_radius",
+          "public_summary": "Extends fog-route scouting."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Veilmourn-aligned compass for fog scouting and salvage-route reads.",
+        "icon_id": "artifact_black_sail_compass_placeholder",
+        "effect_tags": [
+          "scouting",
+          "route",
+          "veilmourn"
+        ],
+        "comparison_priority": [
+          "scouting_radius",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "fog_route_scouting",
+          "salvage_reward_read",
+          "hidden_site_reveal"
+        ],
+        "preferred_hero_roles": [
+          "scout",
+          "raider"
+        ],
+        "preferred_faction_ids": [
+          "faction_veilmourn"
+        ],
+        "combo_tags": [
+          "veil",
+          "salvage",
+          "fog_route"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A lacquered ship compass that refuses north but remembers which fog bank last hid a wreck.",
+      "bonuses": {
+        "scouting_radius": 2
       }
     }
   ]
