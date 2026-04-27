@@ -133,11 +133,18 @@ func _refresh_save_surface() -> void:
 	var save_check := String(surface.get("save_check", "")).strip_edges()
 	var play_check := String(surface.get("play_check", "")).strip_edges()
 	var return_handoff := String(surface.get("return_handoff", "")).strip_edges()
-	var visible_save_text := save_check if save_check != "" else (current_save_recap if current_save_recap != "" else latest_context)
+	var slot_check := _outcome_slot_check(surface, summary)
+	var slot_check_text := String(slot_check.get("visible_text", "")).strip_edges()
+	var visible_save_text := _join_tooltip_sections([
+		slot_check_text,
+		save_check if save_check != "" else (current_save_recap if current_save_recap != "" else latest_context),
+	])
 	_set_compact_label(_save_status_label, visible_save_text, 3)
 	var return_cue := _outcome_return_cue_text(surface)
 	_set_compact_label(_return_cue_label, return_cue, 2, 108)
 	var save_tooltip_lines := [latest_context]
+	if String(slot_check.get("tooltip_text", "")).strip_edges() != "":
+		save_tooltip_lines.append(String(slot_check.get("tooltip_text", "")))
 	if save_check != "":
 		save_tooltip_lines.append(save_check)
 	if play_check != "":
@@ -162,6 +169,7 @@ func _refresh_save_surface() -> void:
 	_save_button.text = String(surface.get("save_button_label", "Save Outcome"))
 	_save_button.tooltip_text = _join_tooltip_sections([
 		String(surface.get("save_button_tooltip", "Save the current outcome safely.")),
+		String(slot_check.get("tooltip_text", "")),
 		save_check,
 		return_handoff,
 	])
@@ -273,6 +281,9 @@ func validation_snapshot() -> Dictionary:
 		"menu_button_tooltip": _menu_button.tooltip_text,
 		"return_cue": _return_cue_label.text,
 		"return_cue_tooltip": _return_cue_label.tooltip_text,
+		"outcome_slot_check": _outcome_slot_check(save_surface),
+		"outcome_slot_check_text": String(_outcome_slot_check(save_surface).get("visible_text", "")),
+		"outcome_slot_check_tooltip": String(_outcome_slot_check(save_surface).get("tooltip_text", "")),
 		"outcome_guide_visible": _guide_panel.visible,
 		"outcome_guide_button": _guide_button.text,
 		"outcome_guide_tooltip": _guide_button.tooltip_text,
@@ -472,6 +483,52 @@ func _outcome_follow_up_check(surface: Dictionary = {}) -> Dictionary:
 		"return_effect": return_effect,
 	}
 
+func _outcome_slot_check(surface: Dictionary = {}, summary_override: Dictionary = {}) -> Dictionary:
+	var selected_slot := int(surface.get("selected_slot", SaveService.get_selected_manual_slot()))
+	var summary := summary_override
+	if summary.is_empty():
+		var summary_value: Variant = surface.get("slot_summary", SaveService.inspect_manual_slot(selected_slot))
+		summary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
+	var save_label := String(surface.get("save_button_label", "Save Outcome")).strip_edges()
+	if save_label == "":
+		save_label = "Save Outcome"
+	var current_context := String(surface.get("current_context", "")).strip_edges()
+	if current_context == "":
+		current_context = "this outcome review"
+	var slot_label := "Manual %d" % selected_slot
+	var slot_state := "empty slot"
+	var overwrite_line := "Save Outcome writes %s into %s." % [current_context, slot_label]
+	var existing_resume := SaveService.describe_resume_brief(summary)
+	if SaveService.can_load_summary(summary):
+		slot_state = "will overwrite %s" % SaveService.describe_resume_brief(summary)
+		overwrite_line = "%s replaces the selected %s snapshot with %s." % [
+			save_label,
+			slot_label,
+			current_context,
+		]
+	elif String(summary.get("validity", "")) == "missing":
+		slot_state = "empty slot"
+		overwrite_line = "%s writes %s into empty %s." % [save_label, current_context, slot_label]
+	elif not summary.is_empty() and String(summary.get("status_text", "")).strip_edges() != "":
+		slot_state = "blocked slot: %s" % String(summary.get("status_text", "")).strip_edges()
+		overwrite_line = "%s attempts to write a fresh outcome snapshot into %s." % [save_label, slot_label]
+	if existing_resume == "":
+		existing_resume = String(summary.get("status_text", "No save selected."))
+	var visible := "Slot check: %s | %s" % [slot_label, slot_state]
+	var tooltip := "Outcome Slot Check\n- Selected slot: %s.\n- Current slot: %s\n- Saving now: %s\n- Resume after save: Continue Latest and Load Selected can review this outcome from the saved slot.\n- Scope: changing the slot selection or reading this check does not save, route, or change campaign progression." % [
+		slot_label,
+		existing_resume,
+		overwrite_line,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"selected_slot": selected_slot,
+		"slot_state": slot_state,
+		"current_slot": existing_resume,
+		"save_effect": overwrite_line,
+	}
+
 func _primary_outcome_action_label() -> String:
 	var actions = _model.get("actions", [])
 	if not (actions is Array):
@@ -597,6 +654,7 @@ func _build_outcome_guide_text() -> String:
 	var resolution_handoff := _outcome_resolution_handoff_text()
 	var save_surface := AppRouter.active_save_surface()
 	var follow_up_check := _outcome_follow_up_check(save_surface)
+	var slot_check := _outcome_slot_check(save_surface)
 	var save_check := String(save_surface.get("save_check", "")).strip_edges()
 	var play_check := String(save_surface.get("play_check", "")).strip_edges()
 	var return_handoff := String(save_surface.get("return_handoff", "")).strip_edges()
@@ -606,6 +664,8 @@ func _build_outcome_guide_text() -> String:
 		lines.append(next_play_action)
 	if String(follow_up_check.get("tooltip_text", "")).strip_edges() != "":
 		lines.append(String(follow_up_check.get("tooltip_text", "")).strip_edges())
+	if String(slot_check.get("tooltip_text", "")).strip_edges() != "":
+		lines.append(String(slot_check.get("tooltip_text", "")).strip_edges())
 	if resolution_handoff != "":
 		lines.append(resolution_handoff)
 	if post_result_handoff != "":

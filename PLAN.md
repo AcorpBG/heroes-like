@@ -137,7 +137,25 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The completed active slice is compact outcome follow-up check clarity, with focused smoke assertions but still without production JSON migration, campaign progression semantic changes, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
+- The completed active slice is compact outcome manual slot check clarity, with focused smoke assertions but still without production JSON migration, campaign progression semantic changes, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
+
+## Completed Implementation Slice: Outcome Manual Slot Check Cue
+Status: completed on 2026-04-27 as compact player-facing outcome UI polish.
+
+Purpose:
+- Help a manual player tell whether Save Outcome writes into an empty manual slot or overwrites a selected saved expedition before pressing the outcome save action.
+- Reuse the current outcome save surface, selected manual slot summary, and save/load tooltip payloads instead of changing save schema, campaign progression, or outcome routing.
+
+Delivered:
+- Added a compact `Slot check:` surface in `scenes/results/ScenarioOutcomeShell.gd`.
+- The outcome save rail, save status tooltip, save button tooltip, and Field Manual now carry selected-slot and saving-now context.
+- Added focused smoke coverage in `tests/menu_outcome_visual_smoke.gd`, including visible-cue and no-score-leak assertions.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/menu_outcome_visual_smoke.tscn`.
+
+Limits:
+- This is UI/readability polish only. It does not change mechanics, balance, campaign progression semantics, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, or broad dashboard composition.
 
 ## Completed Implementation Slice: Outcome Follow-up Check Cue
 Status: completed on 2026-04-27 as compact player-facing outcome UI polish.
