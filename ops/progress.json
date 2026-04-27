@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "world-faction-mechanics-identity-hooks-10184",
-  "currentSliceTitle": "Faction Mechanics Identity Hooks",
+  "currentSliceId": "faction-town-unit-asymmetry-content-10184",
+  "currentSliceTitle": "Faction Town And Unit Asymmetry",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed P2.1 child implementation: verified existing AI faction-personality evidence, then added faction resource_value_weights and resource_affinity_value scoring to EnemyAdventureRules.resource_pressure_report so authored faction economy identity changes AI resource target priorities without save-version changes.",
+  "currentSliceNotes": "Completed P2.1 child: legacy Embercourt/Mireclaw/Sunvault seed towns now expose their six-faction signature building chains and direct ladder recruit growth/discount hooks; focused faction_town_unit_asymmetry_report proves six unique unit, building, hero, and seed-town fingerprints without save-version changes.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T12:47:46Z",
+  "updatedAt": "2026-04-27T12:55:07Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -543,7 +543,7 @@
       "id": "faction-town-unit-asymmetry-content-10184",
       "title": "Faction Town And Unit Asymmetry",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "world-faction-identity-implementation-bridge-10184",
@@ -559,15 +559,20 @@
         "validation/report fixtures for selected content"
       ],
       "baselineChecks": [
+        "python3 tests/faction_town_unit_asymmetry_report.py",
         "python3 tests/validate_repo.py",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "tests/faction_town_unit_asymmetry_report.py proves all six seed towns expose faction signature building chains, direct ladder recruit hooks, unique unit ladder fingerprints, unique signature building category fingerprints, and five-might/five-magic hero identity rosters."
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T12:55:07Z",
+      "startedAt": "2026-04-27T12:50:13Z",
+      "notes": "Completed P2.1 child: legacy Embercourt/Mireclaw/Sunvault seed towns now expose their six-faction signature building chains and direct ladder recruit growth/discount hooks; focused faction_town_unit_asymmetry_report proves six unique unit, building, hero, and seed-town fingerprints without save-version changes.",
+      "completedAt": "2026-04-27T12:55:07Z"
     },
     {
       "id": "faction-scenario-placement-ai-pressure-10184",
@@ -2246,6 +2251,44 @@
           "evidence": "Passed python3 tests/validate_repo.py; GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/ai_faction_personality_evidence_report.tscn; python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json.txt; git diff --check."
         }
       ]
+    },
+    {
+      "id": "faction-town-unit-asymmetry-content-10184",
+      "system": "world and faction town/unit/hero asymmetry",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "faction-town-unit-asymmetry-content-10184"
+      ],
+      "sourceRefs": [
+        "docs/worldbuilding-foundation.md",
+        "docs/factions-content-bible.md",
+        "content/towns.json",
+        "content/factions.json",
+        "content/units.json",
+        "content/heroes.json",
+        "content/buildings.json",
+        "tests/faction_town_unit_asymmetry_report.py"
+      ],
+      "entries": [
+        {
+          "id": "seed-town-signature-building-chain-10184",
+          "title": "Carry six-faction signature building chains into seed towns",
+          "status": "completed",
+          "evidence": "Highwater Keep, Nightglass Redoubt, and Prismhearth now expose their faction-specific seven-building signature chains while retaining legacy release-scenario buildings; all six seed towns now have signature buildings that unlock exactly their seven-unit faction ladders."
+        },
+        {
+          "id": "seed-town-ladder-recruit-hooks-10184",
+          "title": "Add direct seed-town recruit hooks for faction ladders",
+          "status": "completed",
+          "evidence": "Embercourt, Mireclaw, and Sunvault seed-town recruitment profiles now include direct growth and discount hooks for at least three six-faction ladder units; new-faction seed towns already carried at least two ladder hooks."
+        },
+        {
+          "id": "faction-town-unit-asymmetry-validation-10184",
+          "title": "Validate faction town, unit, hero, and roster asymmetry",
+          "status": "completed",
+          "evidence": "python3 tests/faction_town_unit_asymmetry_report.py passed with six unique unit ladder, signature building category, hero archetype, and seed-town economy fingerprints; python3 tests/validate_repo.py passed."
+        }
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -2676,7 +2719,26 @@
       ]
     }
   ],
-  "actionableNextTasks": [],
+  "actionableNextTasks": [
+    {
+      "id": "faction-scenario-placement-ai-pressure-10184",
+      "title": "Faction Scenario Placement And AI Pressure",
+      "status": "pending",
+      "parentSliceId": "world-faction-identity-implementation-bridge-10184",
+      "sourceDocs": [
+        "docs/factions-content-bible.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scenario placement hooks",
+        "strategic AI pressure reports",
+        "player-readable faction pressure surfaces when selected"
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "source": "PLAN.md Phase 2 Operational Child Slices / P2.1"
+    }
+  ],
   "stoppedOrPausedTasks": [
     {
       "id": "overworld-artifact-check-cue-10184",
