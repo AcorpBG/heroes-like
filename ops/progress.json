@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "magic-battle-spell-behavior-expansion-10184",
-  "currentSliceTitle": "Magic Battle Spell Behavior Expansion",
+  "currentSliceId": "overworld-object-content-batch-001-core-density-pickups-10184",
+  "currentSliceTitle": "Overworld Object Content Batch 001 Core Density And Pickups",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Paused by owner after completing magic-spell-school-category-schema-10184 so P2.4 can be reviewed before continuing P2.5.",
+  "currentSliceNotes": "P2.5 is paused by owner correction. Start corrective P2.4 object implementation from docs/phase2-4-object-implementation-backlog.md; do not mark broad object content complete until implemented and validated.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T16:26:02Z",
+  "updatedAt": "2026-04-27T16:57:45Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -239,14 +239,15 @@
       "id": "overworld-object-encounter-foundation-implementation-10184",
       "title": "Overworld Object And Neutral Encounter Foundation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "completed",
-      "classification": "parent_foundation_completed_children_completed",
+      "status": "in_progress",
+      "classification": "parent_track_in_progress_selected_child_pending",
       "sourceDocs": [
         "docs/overworld-content-bible.md",
         "docs/overworld-object-taxonomy-density.md",
         "docs/overworld-object-schema-migration-plan.md",
         "docs/overworld-object-safe-additive-schema-plan.md",
         "docs/overworld-object-report-review-001.md",
+        "docs/phase2-4-object-implementation-backlog.md",
         "docs/neutral-encounter-representation-plan.md",
         "docs/neutral-encounter-additive-validator-report-plan.md",
         "docs/neutral-encounter-representation-bundle-001-plan.md",
@@ -261,8 +262,8 @@
         "map editor object tooling",
         "validator/report fixtures"
       ],
-      "evidence": "Safe metadata, editor authoring validation, bounded pathing/occupancy adoption for Brightwood Sawmill, six neutral encounter object-backed placements, object-backed AI valuation, and selected transit route-effect authoring validation exist with validator/report support. Broad renderer/save/runtime route-effect adoption is intentionally deferred.",
-      "notes": "Completed P2.4 child sequence through route-effect authoring validation. No broad warning cleanup, renderer sprite ingestion, save adoption, rare-resource activation, or broad runtime route-effect migration was performed.",
+      "evidence": "Safe metadata, editor authoring validation, bounded pathing/occupancy adoption for Brightwood Sawmill, six neutral encounter object-backed placements, object-backed AI valuation, and selected transit route-effect authoring validation exist with validator/report support. Owner correction on 2026-04-27 found this insufficient for P2.4 because broad object families/types were not implemented.",
+      "notes": "P2.4 remains active for corrective object-content implementation. Use docs/phase2-4-object-implementation-backlog.md before resuming P2.5. Do not mark object content complete from scaffolding/report work alone.",
       "sliceType": "parent",
       "childSliceIds": [
         "overworld-object-runtime-metadata-adoption-10184",
@@ -270,7 +271,9 @@
         "overworld-object-pathing-occupancy-adoption-10184",
         "neutral-encounter-object-migration-expansion-10184",
         "overworld-object-ai-valuation-route-effects-10184",
-        "overworld-object-route-effect-authoring-validation-10184"
+        "overworld-object-route-effect-authoring-validation-10184",
+        "overworld-object-corrective-backlog-10184",
+        "overworld-object-content-batch-001-core-density-pickups-10184"
       ],
       "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
       "docsReadyEvidenceIds": [
@@ -283,8 +286,7 @@
       "reportOnlyEvidenceIds": [
         "overworld-neutral-reports"
       ],
-      "updatedAt": "2026-04-27T16:25:00Z",
-      "completedAt": "2026-04-27T16:25:00Z"
+      "updatedAt": "2026-04-27T16:57:45Z"
     },
     {
       "id": "magic-system-foundation-implementation-10184",
@@ -1100,7 +1102,7 @@
       "id": "overworld-object-route-effect-authoring-validation-10184",
       "title": "Overworld Object Route Effect Authoring Validation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
@@ -1131,6 +1133,75 @@
       "notes": "Completed selected route/transit authoring validation: ferry stage and rope lift now carry metadata-only route_effect contracts with separate body_tiles and linked approach endpoints; validator/report coverage enforces route tags, conditional passability/cadence, endpoint consistency, common-resource toll policy, and no public score/debug token leaks. No broad pathing, renderer, save, resource, or AI migration.",
       "startedAt": "2026-04-27T16:05:27Z",
       "completedAt": "2026-04-27T16:25:00Z"
+    },
+    {
+      "id": "overworld-object-corrective-backlog-10184",
+      "title": "Overworld Object Corrective Backlog",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "sliceType": "child",
+      "classification": "documentation_governance",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "purpose": "Record the missing broad P2.4 object-content backlog after owner correction.",
+      "sourceDocs": [
+        "docs/phase2-4-object-implementation-backlog.md",
+        "docs/overworld-object-taxonomy-density.md",
+        "HoMM3 extracted editor object data under /root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/"
+      ],
+      "implementationTargets": [
+        "docs/phase2-4-object-implementation-backlog.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json.txt",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py next /root/dev/heroes-like",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "docs/phase2-4-object-implementation-backlog.md states current repo object counts, HoMM3 extracted source scale evidence, target Aurelion Reach categories, and first corrective implementation batches."
+      ],
+      "completionCriteria": [
+        "The missing P2.4 object-content backlog exists and P2.5 is paused behind corrective P2.4 object implementation.",
+        "No object content implementation is marked completed by this planning slice."
+      ],
+      "updatedAt": "2026-04-27T16:57:45Z",
+      "startedAt": "2026-04-27T16:57:45Z",
+      "completedAt": "2026-04-27T16:57:45Z",
+      "notes": "Documentation-only corrective backlog slice. It does not implement objects or complete broad P2.4 content."
+    },
+    {
+      "id": "overworld-object-content-batch-001-core-density-pickups-10184",
+      "title": "Overworld Object Content Batch 001 Core Density And Pickups",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "purpose": "Start the missing broad object-content implementation with core decorations, blockers, and pickup vocabulary.",
+      "sourceDocs": [
+        "docs/phase2-4-object-implementation-backlog.md",
+        "docs/overworld-object-taxonomy-density.md"
+      ],
+      "implementationTargets": [
+        "content/map_objects.json",
+        "content/resource_sites.json only if linked pickup site records are required",
+        "object validator/report fixtures as needed"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --overworld-object-report",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "About 30 new or normalized object definitions cover non-blocking decorations, blocking or edge-blocker decorations, common raw resource pickups, and staged rare-resource pickups."
+      ],
+      "completionCriteria": [
+        "Batch 001 objects distinguish visual footprint, blocking body tiles where relevant, passability, interaction/approach expectations, and biome/region variants.",
+        "Rare-resource objects remain staged metadata only."
+      ],
+      "notes": "Selected next P2.4 corrective implementation slice. Do not resume P2.5 until corrective object content starts or the owner explicitly overrides the stop."
     },
     {
       "id": "magic-spell-school-category-schema-10184",
@@ -1168,7 +1239,7 @@
       "id": "magic-battle-spell-behavior-expansion-10184",
       "title": "Magic Battle Spell Behavior Expansion",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "paused",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "magic-system-foundation-implementation-10184",
@@ -1190,9 +1261,10 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T16:26:02Z",
+      "updatedAt": "2026-04-27T16:57:45Z",
       "startedAt": "2026-04-27T16:23:53Z",
-      "notes": "paused by owner after tidy-pine so P2.4 can be reviewed before continuing P2.5; do not start this slice until review is complete"
+      "deferredReason": "Paused by owner correction until corrective P2.4 object implementation backlog/content work is addressed.",
+      "notes": "Do not start this P2.5 slice until the corrective P2.4 object-content batch is implemented or the owner explicitly resumes P2.5."
     },
     {
       "id": "magic-adventure-map-spell-hooks-10184",
@@ -2890,24 +2962,34 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "magic-battle-spell-behavior-expansion-10184",
-      "title": "Magic Battle Spell Behavior Expansion",
+      "id": "overworld-object-content-batch-001-core-density-pickups-10184",
+      "title": "Overworld Object Content Batch 001 Core Density And Pickups",
       "status": "pending",
-      "parentSliceId": "magic-system-foundation-implementation-10184",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
       "sourceDocs": [
-        "docs/magic-system-expansion-foundation.md"
+        "docs/phase2-4-object-implementation-backlog.md",
+        "docs/overworld-object-taxonomy-density.md"
       ],
       "implementationTargets": [
-        "battle spell hooks",
-        "battle smoke/report fixtures"
+        "content/map_objects.json",
+        "content/resource_sites.json only if linked pickup site records are required",
+        "object validator/report fixtures as needed"
       ],
-      "notes": "paused by owner after tidy-pine so P2.4 can be reviewed before continuing P2.5; do not start this slice until review is complete",
+      "notes": "selected by owner correction; start corrective P2.4 object content before resuming P2.5",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
-      "source": "PLAN.md P2.5 Magic System Foundation Implementation"
+      "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation"
     }
   ],
   "stoppedOrPausedTasks": [
+    {
+      "id": "magic-battle-spell-behavior-expansion-10184",
+      "title": "Magic Battle Spell Behavior Expansion",
+      "status": "paused",
+      "classification": "paused_by_owner_correction",
+      "source": "PLAN.md P2.5 Magic System Foundation Implementation",
+      "notes": "Paused until corrective P2.4 object-content work from docs/phase2-4-object-implementation-backlog.md is addressed or the owner explicitly resumes P2.5."
+    },
     {
       "id": "overworld-artifact-check-cue-10184",
       "title": "Overworld Artifact Check Cue",

@@ -411,6 +411,7 @@ sourceDocs:
 - `docs/overworld-object-schema-migration-plan.md`
 - `docs/overworld-object-safe-additive-schema-plan.md`
 - `docs/overworld-object-report-review-001.md`
+- `docs/phase2-4-object-implementation-backlog.md`
 - `docs/neutral-encounter-representation-plan.md`
 - `docs/neutral-encounter-additive-validator-report-plan.md`
 - `docs/neutral-encounter-representation-bundle-001-plan.md`
@@ -437,10 +438,75 @@ sliceEvidence:
 completionCriteria:
 - Object/encounter metadata supports real placement, tooling, AI, renderer, or scenario-authoring decisions.
 - Remaining legacy/direct placements are intentionally tracked as compatibility warnings until selected.
+- Corrective P2.4 object-content work uses `docs/phase2-4-object-implementation-backlog.md` before forward P2.5 implementation resumes.
 
 nonGoals:
 - No broad warning-count cleanup as an end in itself.
 - No pathing/body-tile/approach/renderer/save adoption without explicit sub-slices.
+
+#### P2.4a Corrective Object Implementation Backlog
+
+id: `overworld-object-corrective-backlog-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Record the missing broad P2.4 object-content backlog after owner correction.
+
+sourceDocs:
+- `docs/phase2-4-object-implementation-backlog.md`
+- `docs/overworld-object-taxonomy-density.md`
+- HoMM3 extracted editor object data under `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/`
+
+implementationTargets:
+- `docs/phase2-4-object-implementation-backlog.md`
+- `PLAN.md`
+- `ops/progress.json`
+
+baselineChecks:
+- `python3 -m json.tool ops/progress.json`
+- progress helper status and next commands.
+- `git diff --check`
+
+sliceEvidence:
+- Backlog states current repo object counts, extracted source scale evidence, target Aurelion Reach categories, and first corrective implementation batches.
+
+completionCriteria:
+- The missing P2.4 object-content backlog exists and P2.5 is paused behind corrective P2.4 object implementation.
+- No object content implementation is marked completed by this planning slice.
+
+nonGoals:
+- Do not implement new objects in this slice.
+- Do not change runtime/pathing/renderer/save/economy behavior.
+
+#### P2.4b Corrective Object Content Batch 001
+
+id: `overworld-object-content-batch-001-core-density-pickups-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Start the missing broad object-content implementation with core decorations, blockers, and pickup vocabulary.
+
+sourceDocs:
+- `docs/phase2-4-object-implementation-backlog.md`
+- `docs/overworld-object-taxonomy-density.md`
+
+implementationTargets:
+- `content/map_objects.json`
+- `content/resource_sites.json` only if linked pickup site records are required.
+- Object validator/report fixtures as needed.
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+sliceEvidence:
+- About 30 new or normalized object definitions cover non-blocking decorations, blocking or edge-blocker decorations, common raw resource pickups, and staged rare-resource pickups.
+
+completionCriteria:
+- Batch 001 objects distinguish visual footprint, blocking body tiles where relevant, passability, interaction/approach expectations, and biome/region variants.
+- Rare-resource objects remain staged metadata only.
+
+nonGoals:
+- No rare-resource live economy activation.
+- No renderer sprite import.
+- No broad scenario placement migration.
 
 ### P2.5 Magic System Foundation Implementation
 
