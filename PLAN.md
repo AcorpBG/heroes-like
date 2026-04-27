@@ -773,6 +773,7 @@ purpose: Continue corrective P2.4 object content with faction landmarks, scenari
 sourceDocs:
 - `docs/phase2-4-object-implementation-backlog.md`
 - `docs/overworld-object-taxonomy-density.md`
+- `docs/overworld-object-content-batch-007-landmarks-objectives-state-variants-report.md`
 
 implementationTargets:
 - `content/map_objects.json`
