@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
-  "currentSliceTitle": "Hero Task-State Save-Normalizer Preservation Report",
+  "currentSliceId": "strategic-ai-public-event-log-boundary-10184",
+  "currentSliceTitle": "Strategic AI Public Event Log Boundary",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented report-only hero task-state normalizer preservation proof. EnemyTurnRules now preserves sanitized optional hero_task_state only when explicitly present; focused Godot report covers old-save absence, valid/empty boards, malformed records, unknown field isolation, SaveService boundary, commander roster continuity, and SAVE_VERSION 9.",
+  "currentSliceNotes": "Implemented derived bounded public AI event log helpers and focused report evidence. No durable event log, save migration, SAVE_VERSION bump, live hero task adoption, coefficient tuning, UI dashboard, terrain/editor, economy rebalance, or resource activation.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T23:05:29Z",
+  "updatedAt": "2026-04-27T23:13:58Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1991,14 +1991,15 @@
       "id": "strategic-ai-public-event-log-boundary-10184",
       "title": "Strategic AI Public Event Log Boundary",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "strategic-ai-foundation-continuation-10184",
       "purpose": "Decide whether compact AI events stay derived/ephemeral or require a durable event log.",
       "sourceDocs": [
         "docs/strategic-ai-event-surfacing-plan.md",
-        "docs/strategic-ai-event-surfacing-report-gate-review.md"
+        "docs/strategic-ai-event-surfacing-report-gate-review.md",
+        "docs/strategic-ai-public-event-log-boundary-report.md"
       ],
       "implementationTargets": [
         "derived event/report helpers",
@@ -2013,6 +2014,17 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ],
+      "updatedAt": "2026-04-27T23:13:58Z",
+      "startedAt": "2026-04-27T23:08:51Z",
+      "notes": "Implemented derived bounded public AI event log helpers and focused report evidence. No durable event log, save migration, SAVE_VERSION bump, live hero task adoption, coefficient tuning, UI dashboard, terrain/editor, economy rebalance, or resource activation.",
+      "completedAt": "2026-04-27T23:13:58Z",
+      "implementationEvidence": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "tests/ai_public_event_log_boundary_report.gd",
+        "tests/ai_public_event_log_boundary_report.tscn",
+        "docs/strategic-ai-public-event-log-boundary-report.md"
       ]
     },
     {
@@ -3495,22 +3507,22 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "strategic-ai-public-event-log-boundary-10184",
-      "title": "Strategic AI Public Event Log Boundary",
+      "id": "strategic-ai-economy-pressure-followup-10184",
+      "title": "Strategic AI Economy Pressure Follow-Up",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "strategic-ai-foundation-continuation-10184",
       "source": "PLAN.md P2.8 Strategic AI Foundation Continuation",
       "sourceDocs": [
-        "docs/strategic-ai-event-surfacing-plan.md",
-        "docs/strategic-ai-event-surfacing-report-gate-review.md"
+        "docs/strategic-ai-economy-pressure-slice-plan.md",
+        "docs/strategic-ai-economy-pressure-report-gate-review.md"
       ],
       "implementationTargets": [
-        "derived event/report helpers",
-        "save boundary docs/tests if durability is selected"
+        "scripts/core/EnemyAdventureRules.gd",
+        "focused AI report fixtures"
       ],
-      "notes": "Next P2.8 child after the hero task-state normalizer preservation report. Keep live AI task adoption, save migration, durable event logs, and broad AI rewrites deferred unless this boundary explicitly selects them.",
-      "updatedAt": "2026-04-27T23:05:29Z"
+      "notes": "Next P2.8 child after the public event log boundary. Continue economy/site pressure only when a report or manual gate identifies a concrete defect; keep broad AI rewrites, save migration, durable logs, and resource/economy migrations deferred unless explicitly selected.",
+      "updatedAt": "2026-04-27T23:14:23Z"
     }
   ],
   "stoppedOrPausedTasks": [

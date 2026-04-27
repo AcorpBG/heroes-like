@@ -2431,32 +2431,7 @@ static func describe_enemy_activity(events_value: Variant, limit: int = 4) -> St
 	return " | ".join(lines)
 
 static func _compact_enemy_activity_events(events_value: Variant, limit: int = 6) -> Array:
-	var compact := []
-	if not (events_value is Array):
-		return compact
-	for event_value in events_value:
-		if not (event_value is Dictionary):
-			continue
-		var event: Dictionary = event_value
-		if not _enemy_activity_event_is_player_facing(event):
-			continue
-		compact.append(
-			{
-				"event_type": String(event.get("event_type", "")),
-				"day": int(event.get("day", 0)),
-				"faction_label": String(event.get("faction_label", "")),
-				"actor_label": String(event.get("actor_label", "")),
-				"target_kind": String(event.get("target_kind", "")),
-				"target_label": String(event.get("target_label", "")),
-				"visibility": String(event.get("visibility", "")),
-				"public_importance": String(event.get("public_importance", "")),
-				"public_reason": String(event.get("public_reason", "")),
-				"summary": _enemy_activity_public_text(String(event.get("summary", ""))),
-			}
-		)
-		if compact.size() >= max(1, limit):
-			break
-	return compact
+	return _enemy_adventure_rules().ai_public_event_log(events_value, limit)
 
 static func _enemy_activity_event_is_player_facing(event: Dictionary) -> bool:
 	var event_type := String(event.get("event_type", ""))
