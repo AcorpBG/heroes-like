@@ -22,9 +22,9 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-Current tactical objective: continue Phase 2 in category order after P2.6 artifact foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic children and P2.6 artifact children are now implemented, with animation/event cue foundation work moving to P2.7.
+Current tactical objective: continue Phase 2 in category order after P2.6 artifact foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic children and P2.6 artifact children are implemented, with P2.7 animation/event cue foundation work now active.
 
-Selected next implementation candidate after bounded artifact AI valuation: `animation-event-cue-catalog-contract-10184`.
+Selected next implementation candidate after the bounded event/cue catalog contract: `animation-reduced-motion-fast-mode-policy-10184`.
 
 ## Slice Status Model
 
