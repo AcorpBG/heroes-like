@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T08:20:30Z",
+  "updatedAt": "2026-04-27T08:38:44Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "main-menu-continue-check-cue-10184",
-  "currentSliceTitle": "Surface compact main-menu Continue check cue",
+  "currentSliceId": "progress-plan-reconciliation-10184",
+  "currentSliceTitle": "Reconcile progress tracker after UI cue drift audit",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact visible main-menu Continue check cue using existing latest-save, resume target, first-view footer, Load tooltip, and validation snapshot surfaces only. The first-view footer now states what Continue Latest will open, the Load tooltip carries the same resume boundary, and focused smoke coverage checks visible cue, tooltip, snapshot payload, and no internal score/debug field exposure. UI clarity only; no routing semantics, save schema/version, campaign progression semantic changes, content migration, durable logs, AI behavior, renderer import, or pathing/body-tile adoption.",
+  "currentSliceNotes": "Completed reconciliation after docs/progress-implementation-audit-2026-04-27.md found recent weakly anchored UI cue drift. Stopped overworld-artifact-check-cue-10184, preserved its WIP as docs/stopped-overworld-artifact-cue-wip-2026-04-27.patch, and removed it from live code/state. Broad NextActions are now tracked as guardrails; the next actionable implementation slice is strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184 from docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -992,6 +992,9 @@
             "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
             "title": "Implement report-only hero task-state save-normalizer preservation proof",
             "status": "pending",
+            "recommendedByReconciliation": true,
+            "planningDoc": "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
+            "notes": "Next actionable implementation slice after reconciliation; report-only normalizer preservation proof.",
             "blockedOptions": [
                 "hero_task_state_schema_writes_now",
                 "save_migration_now",
@@ -2420,8 +2423,73 @@
       "startedAt": "2026-04-27T08:18:28Z",
       "completedAt": "2026-04-27T08:20:30Z",
       "difficulty": "small"
+    },
+    {
+      "id": "progress-implementation-audit-2026-04-27-10184",
+      "title": "Audit progress implementation reality and plan alignment",
+      "status": "completed",
+      "startedAt": "2026-04-27T08:00:00Z",
+      "completedAt": "2026-04-27T08:20:00Z",
+      "auditReport": "docs/progress-implementation-audit-2026-04-27.md",
+      "decision": "reconciliation-before-more-implementation",
+      "difficulty": "medium"
+    },
+    {
+      "id": "overworld-artifact-check-cue-10184",
+      "title": "Surface compact overworld Artifact check cue",
+      "status": "superseded",
+      "startedAt": "2026-04-27T08:25:14Z",
+      "completedAt": "2026-04-27T08:38:44Z",
+      "decision": "stopped-after-progress-audit",
+      "supersededBy": "progress-plan-reconciliation-10184",
+      "evidencePatch": "docs/stopped-overworld-artifact-cue-wip-2026-04-27.patch",
+      "notes": "Stopped WIP only. Not completed, not validated as gameplay or UI, and removed from live code/state after preserving patch evidence.",
+      "difficulty": "small"
+    },
+    {
+      "id": "progress-plan-reconciliation-10184",
+      "title": "Reconcile PLAN.md and ops/progress.json after UI cue drift audit",
+      "status": "completed",
+      "startedAt": "2026-04-27T08:38:44Z",
+      "completedAt": "2026-04-27T08:38:44Z",
+      "auditReport": "docs/progress-implementation-audit-2026-04-27.md",
+      "evidencePatch": "docs/stopped-overworld-artifact-cue-wip-2026-04-27.patch",
+      "decision": "ui-cue-stream-paused-next-ai-normalizer-report-implementation",
+      "recommendedNextSlice": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+      "planningDoc": "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
+      "notes": "Reconciliation-only slice. No gameplay code, scenes, tests, content JSON, save format, or production data changes beyond removing the stopped WIP from live code/state.",
+      "difficulty": "medium"
     }
   ],
+  "actionableNextTasks": [
+    {
+      "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+      "title": "Implement report-only hero task-state save-normalizer preservation proof",
+      "status": "pending",
+      "source": "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
+      "notes": "Current selected next worker task after reconciliation."
+    },
+    {
+      "id": "strategic-ai-hero-task-state-save-normalizer-preservation-gate-review-10184",
+      "title": "Review normalizer preservation report output and choose the next AI decision",
+      "status": "pending_after_implementation",
+      "source": "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md"
+    }
+  ],
+  "stoppedOrPausedTasks": [
+    {
+      "id": "overworld-artifact-check-cue-10184",
+      "status": "superseded",
+      "evidencePatch": "docs/stopped-overworld-artifact-cue-wip-2026-04-27.patch",
+      "notes": "Stopped WIP preserved as evidence only; do not continue without a direct source-doc anchored task."
+    },
+    {
+      "id": "ad-hoc-compact-ui-cue-stream-10184",
+      "status": "paused",
+      "notes": "Paused until a later plan or source document selects a bounded cue as the current worker task."
+    }
+  ],
+  "nextActionGuardrailNote": "The nextActions list below is retained as broad guardrails. Current worker tasks are listed in actionableNextTasks.",
   "nextActions": [
     "Use docs/concept-art-pipeline.md as a required art-direction gate before economy-related resource-site, mine, artifact, faction town, or map-object visuals move into implementation.",
     "Use docs/overworld-object-taxonomy-density.md as the object taxonomy and density source before object JSON migration, broad object placement, map-editor object expansion, or final object art.",
@@ -2433,7 +2501,7 @@
     "Use docs/concept-art-implementation-briefs.md as the first implementation-brief source for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes while AcOrP curation remains open.",
     "Use docs/overworld-object-schema-migration-plan.md, docs/overworld-object-safe-additive-schema-plan.md, docs/neutral-encounter-representation-plan.md, docs/neutral-encounter-representation-bundle-001-plan.md, docs/neutral-encounter-representation-bundle-001-report-review.md, docs/neutral-encounter-first-class-object-migration-plan.md, and docs/neutral-encounter-first-class-object-bundle-001-plan.md as the planning contracts before broader object JSON migration, map placement, renderer sprite ingestion, true footprint/pathing adoption, or runtime asset import.",
     "Use docs/strategic-ai-event-surfacing-report-gate-review.md as the current AI surfacing gate result: compact public assignment, pressure, seizure, contest, threat, and dispatch reason output passes; score tables stay report/debug-only; manual live-client signal-yard enemy-turn review is deferred until broader AI expansion affects live turn readability.",
-        "Use docs/strategic-ai-pressure-expansion-plan.md, docs/strategic-ai-town-governor-pressure-report-gate-review.md, docs/strategic-ai-faction-personality-pressure-plan.md, docs/strategic-ai-faction-personality-evidence-report.md, docs/strategic-ai-strategy-config-audit-plan.md, docs/strategic-ai-strategy-config-audit-report.md, docs/strategic-ai-capture-countercapture-defense-proof-plan.md, docs/strategic-ai-capture-countercapture-defense-proof-report.md, docs/strategic-ai-glassroad-defense-proof-plan.md, docs/strategic-ai-glassroad-defense-proof-report.md, docs/strategic-ai-commander-role-state-plan.md, docs/strategic-ai-commander-role-report-fixture-plan.md, docs/strategic-ai-minimal-commander-role-state-schema-plan.md, docs/strategic-ai-commander-role-report-implementation-plan.md, docs/strategic-ai-commander-role-report-implementation-report.md, docs/strategic-ai-commander-role-report-gate-review.md, docs/strategic-ai-commander-role-adoption-sequencing-plan.md, docs/strategic-ai-commander-role-live-turn-transcript-report-plan.md, docs/strategic-ai-commander-role-live-turn-transcript-report-implementation-report.md, docs/strategic-ai-commander-role-live-turn-transcript-report-gate-review.md, docs/strategic-ai-hero-task-state-boundary-plan.md, docs/strategic-ai-hero-task-state-report-fixture-plan.md, docs/strategic-ai-hero-task-state-report-implementation-report.md, and docs/strategic-ai-hero-task-state-report-gate-review.md as the current AI planning/evidence contracts: the next slice is planning-only strategic AI hero task-state adoption sequencing before live role behavior, schema writes, durable event logs, full AI hero task-state implementation, defense-specific durable state, coefficient tuning, or broad rewrites.",
+    "Use docs/strategic-ai-pressure-expansion-plan.md, docs/strategic-ai-town-governor-pressure-report-gate-review.md, docs/strategic-ai-faction-personality-pressure-plan.md, docs/strategic-ai-faction-personality-evidence-report.md, docs/strategic-ai-strategy-config-audit-plan.md, docs/strategic-ai-strategy-config-audit-report.md, docs/strategic-ai-capture-countercapture-defense-proof-plan.md, docs/strategic-ai-capture-countercapture-defense-proof-report.md, docs/strategic-ai-glassroad-defense-proof-plan.md, docs/strategic-ai-glassroad-defense-proof-report.md, docs/strategic-ai-commander-role-state-plan.md, docs/strategic-ai-commander-role-report-fixture-plan.md, docs/strategic-ai-minimal-commander-role-state-schema-plan.md, docs/strategic-ai-commander-role-report-implementation-plan.md, docs/strategic-ai-commander-role-report-implementation-report.md, docs/strategic-ai-commander-role-report-gate-review.md, docs/strategic-ai-commander-role-adoption-sequencing-plan.md, docs/strategic-ai-commander-role-live-turn-transcript-report-plan.md, docs/strategic-ai-commander-role-live-turn-transcript-report-implementation-report.md, docs/strategic-ai-commander-role-live-turn-transcript-report-gate-review.md, docs/strategic-ai-hero-task-state-boundary-plan.md, docs/strategic-ai-hero-task-state-report-fixture-plan.md, docs/strategic-ai-hero-task-state-report-implementation-report.md, docs/strategic-ai-hero-task-state-report-gate-review.md, docs/strategic-ai-hero-task-state-adoption-sequencing-plan.md, and docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md as AI planning/evidence guardrails: the selected actionable next slice is strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184 before live role behavior, schema writes, save migration, durable event logs, full AI hero task-state implementation, defense-specific durable state, coefficient tuning, or broad rewrites.",
     "Keep neutral encounter metadata migration paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
     "Only after foundation depth and reviewed art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
