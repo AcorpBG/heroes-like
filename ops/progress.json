@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T07:34:00Z",
+  "updatedAt": "2026-04-27T07:50:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "outcome-post-result-handoff-cue-10184",
-  "currentSliceTitle": "Surface compact outcome post-result handoff cue",
+  "currentSliceId": "town-trade-readiness-cue-10184",
+  "currentSliceTitle": "Surface compact town Trade readiness cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact player-facing outcome post-result handoff cue that clarifies what a resolved result does next: campaign progression versus self-contained skirmish state, save review continuity, and fresh retry/next-chapter starts. The cue is visible in the outcome action rail, action tooltips, Field Manual, and validation snapshot with focused menu/outcome smoke coverage. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantic changes, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact player-facing town Trade/Exchange readiness cue using existing market actions and quote payloads only. The live market label and tooltip now clarify ready exchange orders, blocked exchange orders, or absent market state, with focused town/battle smoke coverage. UI clarity only; no economy mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2176,6 +2176,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T07:24:00Z",
       "completedAt": "2026-04-27T07:34:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "town-trade-readiness-cue-10184",
+      "title": "Surface compact town Trade readiness cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T07:40:00Z",
+      "completedAt": "2026-04-27T07:50:00Z",
       "difficulty": "small"
     }
   ],
