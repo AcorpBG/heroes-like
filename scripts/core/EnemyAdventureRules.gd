@@ -64,6 +64,35 @@ const COMMANDER_ROLE_PUBLIC_EVENT_KEYS := [
 	"debug_reason",
 	"state_policy",
 ]
+const AI_PUBLIC_EVENT_LOG_KEYS := [
+	"day",
+	"event_type",
+	"faction_id",
+	"faction_label",
+	"actor_label",
+	"target_kind",
+	"target_id",
+	"target_label",
+	"visibility",
+	"public_importance",
+	"summary",
+	"reason_codes",
+	"public_reason",
+]
+const AI_PUBLIC_EVENT_LOG_TYPES := [
+	"ai_target_assigned",
+	"ai_pressure_summary",
+	"ai_site_seized",
+	"ai_site_contested",
+	"ai_town_built",
+	"ai_town_recruited",
+	"ai_garrison_reinforced",
+	"ai_raid_reinforced",
+	"ai_commander_rebuilt",
+	"ai_commander_role_observed",
+	"ai_raid_moved",
+	"ai_raid_arrived",
+]
 const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
 	"base_value",
 	"persistent_income_value",
@@ -109,6 +138,62 @@ const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
 	"fixture_threatened_by_player_front",
 	"fixture_recently_secured",
 	"fixture_recent_pressure_count",
+]
+const AI_PUBLIC_EVENT_LOG_BLOCKED_TOKENS := [
+	"event_id",
+	"sequence",
+	"target_x",
+	"target_y",
+	"from_x",
+	"from_y",
+	"to_x",
+	"to_y",
+	"phase_id",
+	"state_policy",
+	"debug_reason",
+	"target_debug_reason",
+	"score_ref",
+	"score",
+	"base_value",
+	"persistent_income_value",
+	"recruit_value",
+	"scarcity_value",
+	"denial_value",
+	"route_pressure_value",
+	"town_enablement_value",
+	"resource_affinity_value",
+	"weighted_claim_value",
+	"weighted_income_value",
+	"objective_value",
+	"faction_bias",
+	"travel_cost",
+	"guard_cost",
+	"assignment_penalty",
+	"object_metadata_value",
+	"object_route_pressure_value",
+	"priority_without_object_metadata",
+	"priority_with_object_metadata",
+	"final_priority",
+	"final_score",
+	"income_value",
+	"growth_value",
+	"pressure_value",
+	"category_bonus",
+	"garrison_score",
+	"raid_score",
+	"resource_score_breakdown",
+	"resource_breakdown",
+	"priority_table",
+	"breakdown",
+	"target_memory",
+	"commander_role_state",
+	"hero_task_state",
+	"fixture_state",
+	"internal",
+	"saved",
+	"durable",
+	"migration",
+	"SAVE_VERSION",
 ]
 const COMMANDER_ROLE_TURN_NO_OP_REASONS := [
 	"target_unchanged",
@@ -3663,6 +3748,132 @@ static func commander_role_public_leak_check(public_surfaces: Variant) -> Dictio
 		"blocked_public_tokens": blocked,
 	}
 
+static func ai_public_event_log(events_value: Variant, limit: int = 6) -> Array:
+	var public_events := []
+	if not (events_value is Array):
+		return public_events
+	for event_value in events_value:
+		if not (event_value is Dictionary):
+			continue
+		var event: Dictionary = event_value
+		var public_event := ai_public_event_log_entry(event)
+		if public_event.is_empty():
+			continue
+		var leak_check := ai_public_event_log_leak_check([public_event])
+		if not bool(leak_check.get("ok", false)):
+			continue
+		public_events.append(public_event)
+		if public_events.size() >= max(1, limit):
+			break
+	return public_events
+
+static func ai_public_event_log_entry(event: Dictionary) -> Dictionary:
+	var event_type := String(event.get("event_type", ""))
+	if event_type not in AI_PUBLIC_EVENT_LOG_TYPES:
+		return {}
+	var visibility := String(event.get("visibility", ""))
+	if visibility == "hidden_debug":
+		return {}
+	var reason_codes: Array = _normalize_string_array(event.get("reason_codes", []))
+	var public_reason := _public_event_log_text(String(event.get("public_reason", "")))
+	if public_reason == "":
+		public_reason = _public_event_log_text(_public_reason_from_codes(reason_codes))
+	var faction_label := _public_event_log_text(String(event.get("faction_label", event.get("faction_id", ""))))
+	var actor_label := _public_event_log_text(String(event.get("actor_label", "")))
+	var target_label := _public_event_log_text(String(event.get("target_label", event.get("target_id", ""))))
+	var summary := _public_event_log_text(String(event.get("summary", "")))
+	if summary == "":
+		summary = _public_event_log_text(
+			_ai_event_summary(
+				event_type,
+				faction_label,
+				actor_label,
+				target_label,
+				public_reason
+			)
+		)
+	if summary == "" and target_label == "":
+		return {}
+	return {
+		"day": int(event.get("day", 0)),
+		"event_type": event_type,
+		"faction_id": _public_event_log_text(String(event.get("faction_id", ""))),
+		"faction_label": faction_label,
+		"actor_label": actor_label,
+		"target_kind": _public_event_log_text(String(event.get("target_kind", ""))),
+		"target_id": _public_event_log_text(String(event.get("target_id", ""))),
+		"target_label": target_label,
+		"visibility": visibility,
+		"public_importance": _public_event_log_text(String(event.get("public_importance", "low"))),
+		"summary": summary,
+		"reason_codes": reason_codes,
+		"public_reason": public_reason,
+	}
+
+static func ai_public_event_log_boundary_report(events_value: Variant, limit: int = 6) -> Dictionary:
+	var source_count := 0
+	if events_value is Array:
+		source_count = events_value.size()
+	var public_events := ai_public_event_log(events_value, limit)
+	var leak_check := ai_public_event_log_leak_check(public_events)
+	var meaningful_count := 0
+	for event_value in public_events:
+		if not (event_value is Dictionary):
+			continue
+		var event: Dictionary = event_value
+		if String(event.get("event_type", "")) != "" and String(event.get("summary", "")) != "" and not _normalize_string_array(event.get("reason_codes", [])).is_empty():
+			meaningful_count += 1
+	return {
+		"ok": bool(leak_check.get("ok", false)) and meaningful_count == public_events.size(),
+		"boundary_id": "strategic-ai-public-event-log-boundary-10184",
+		"source_event_count": source_count,
+		"public_event_count": public_events.size(),
+		"meaningful_public_event_count": meaningful_count,
+		"limit": max(1, limit),
+		"storage_policy": "derived_ephemeral_report_only",
+		"durable_log_selected": false,
+		"save_migration_required": false,
+		"allowed_public_key_count": AI_PUBLIC_EVENT_LOG_KEYS.size(),
+		"blocked_token_count": AI_PUBLIC_EVENT_LOG_BLOCKED_TOKENS.size(),
+		"leak_check": leak_check,
+		"public_events": public_events,
+	}
+
+static func ai_public_event_log_leak_check(public_surfaces: Variant) -> Dictionary:
+	var stack := [public_surfaces]
+	var checked_events := 0
+	while not stack.is_empty():
+		var value = stack.pop_back()
+		if value is Array:
+			for item in value:
+				stack.append(item)
+			continue
+		if value is Dictionary:
+			if String(value.get("event_type", "")) != "":
+				checked_events += 1
+				for key in value.keys():
+					if String(key) not in AI_PUBLIC_EVENT_LOG_KEYS:
+						return {"ok": false, "error": "%s leaked public-log key %s" % [value.get("event_type", "event"), key]}
+			var text := JSON.stringify(value)
+			for token in AI_PUBLIC_EVENT_LOG_BLOCKED_TOKENS:
+				if text.contains(String(token)):
+					return {"ok": false, "error": "%s leaked blocked public-log token %s" % [value.get("event_type", "event"), token]}
+			for nested_key in value.keys():
+				var nested = value[nested_key]
+				if nested is Array or nested is Dictionary:
+					stack.append(nested)
+			continue
+		var value_text := String(value)
+		for token in AI_PUBLIC_EVENT_LOG_BLOCKED_TOKENS:
+			if value_text.contains(String(token)):
+				return {"ok": false, "error": "public log leaked token %s" % String(token)}
+	return {
+		"ok": true,
+		"checked_events": checked_events,
+		"allowed_public_key_count": AI_PUBLIC_EVENT_LOG_KEYS.size(),
+		"blocked_token_count": AI_PUBLIC_EVENT_LOG_BLOCKED_TOKENS.size(),
+	}
+
 static func ai_target_assignment_event(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -4177,6 +4388,15 @@ static func _public_reason_from_codes(reason_codes: Array) -> String:
 	if "commander_memory" in codes:
 		return "known commander focus"
 	return ""
+
+static func _public_event_log_text(text: String) -> String:
+	var output := text.strip_edges().replace("\n", " ")
+	while output.find("  ") >= 0:
+		output = output.replace("  ", " ")
+	for token in AI_PUBLIC_EVENT_LOG_BLOCKED_TOKENS:
+		if output.contains(String(token)):
+			return ""
+	return output
 
 static func commander_role_turn_snapshot(
 	session: SessionStateStoreScript.SessionData,
