@@ -169,7 +169,14 @@ OVERWORLD_FOUNDATION_SITE_FAMILIES = {
     "transit_object",
     "repeatable_service",
 }
-SUPPORTED_RESOURCE_SITE_FAMILIES = LOGISTICS_SITE_FAMILIES | OVERWORLD_FOUNDATION_SITE_FAMILIES | {"one_shot_pickup", "staged_resource_front", "support_producer"}
+SUPPORTED_RESOURCE_SITE_FAMILIES = LOGISTICS_SITE_FAMILIES | OVERWORLD_FOUNDATION_SITE_FAMILIES | {
+    "one_shot_pickup",
+    "staged_resource_front",
+    "support_producer",
+    "shrine",
+    "sign_waypoint",
+    "scenario_objective",
+}
 SUPPORTED_MAP_OBJECT_FAMILIES = {
     "pickup",
     "mine",
@@ -185,6 +192,8 @@ SUPPORTED_MAP_OBJECT_FAMILIES = {
     "faction_landmark",
     "staged_resource_front",
     "support_producer",
+    "sign_waypoint",
+    "scenario_objective",
 }
 SIX_FACTION_BIOME_BREADTH_SCENARIO_ID = "ninefold-confluence"
 SIX_FACTION_BIOME_BREADTH_REQUIRED_SITE_FAMILIES = LOGISTICS_SITE_FAMILIES | OVERWORLD_FOUNDATION_SITE_FAMILIES | {"one_shot_pickup"}
@@ -887,6 +896,8 @@ OVERWORLD_OBJECT_FAMILY_PRIMARY_CLASS = {
     "neutral_encounter": "neutral_encounter",
     "staged_resource_front": "persistent_economy_site",
     "support_producer": "persistent_economy_site",
+    "sign_waypoint": "interactable_site",
+    "scenario_objective": "scenario_objective",
 }
 OVERWORLD_OBJECT_FAMILY_TAGS = {
     "pickup": {"small_reward", "route_pacing"},
@@ -903,12 +914,15 @@ OVERWORLD_OBJECT_FAMILY_TAGS = {
     "neutral_encounter": {"neutral_encounter"},
     "staged_resource_front": {"resource_front", "rare_resource_front", "counter_capture_target"},
     "support_producer": {"support_producer", "town_support", "counter_capture_target"},
+    "sign_waypoint": {"world_lore", "road_control"},
+    "scenario_objective": {"scenario_objective", "world_lore"},
 }
 OVERWORLD_OBJECT_CONTENT_BATCH_001_ID = "overworld-object-content-batch-001-core-density-pickups-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_001B_ID = "overworld-object-content-batch-001b-biome-scenic-decoration-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_001C_ID = "overworld-object-content-batch-001c-biome-blockers-edge-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_001D_ID = "overworld-object-content-batch-001d-large-footprint-coverage-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_002_ID = "overworld-object-content-batch-002-mines-resource-fronts-10184"
+OVERWORLD_OBJECT_CONTENT_BATCH_003_ID = "overworld-object-content-batch-003-services-shrines-signs-events-10184"
 OVERWORLD_OBJECT_PASSABILITY_CLASSES = {
     "passable_visit_on_enter",
     "passable_scenic",
@@ -3666,6 +3680,256 @@ def build_overworld_object_content_batch_002_section(map_objects: dict[str, dict
     return section
 
 
+def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict], resource_sites: dict[str, dict], biomes: dict[str, dict]) -> dict:
+    batch_objects = {
+        object_id: obj
+        for object_id, obj in map_objects.items()
+        if str(obj.get("content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_003_ID
+        or str(obj.get("normalized_content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_003_ID
+    }
+    role_contract_keys = {
+        "repeatable_service": "service_contract",
+        "shrine_progression": "shrine_contract",
+        "scouting_info": "scouting_contract",
+        "sign_waypoint": "sign_contract",
+        "route_lock": "route_lock_contract",
+        "objective_event": "objective_event_contract",
+    }
+    expected_role_counts = {
+        "repeatable_service": 6,
+        "shrine_progression": 6,
+        "scouting_info": 5,
+        "sign_waypoint": 5,
+        "route_lock": 3,
+        "objective_event": 3,
+    }
+    section = {
+        "batch_id": OVERWORLD_OBJECT_CONTENT_BATCH_003_ID,
+        "object_count": len(batch_objects),
+        "role_counts": {},
+        "cadence_counts": {},
+        "footprints": {},
+        "biome_counts": {},
+        "shape_contract_ready_count": 0,
+        "linked_resource_site_count": 0,
+        "metadata_only_boundary_count": 0,
+        "route_lock_metadata_count": 0,
+        "no_live_reward_activation_count": 0,
+        "errors": [],
+        "warnings": [],
+    }
+
+    def add_error(message: str) -> None:
+        if message not in section["errors"]:
+            section["errors"].append(message)
+
+    def live_resource_ids(site: dict) -> set[str]:
+        ids: set[str] = set()
+        for field in ("rewards", "claim_rewards", "control_income", "service_cost"):
+            values = site.get(field, {})
+            if isinstance(values, dict):
+                ids.update(str(resource_id) for resource_id in values.keys())
+        outputs = site.get("resource_outputs", [])
+        if isinstance(outputs, list):
+            for output in outputs:
+                if isinstance(output, dict) and str(output.get("resource_id", "")):
+                    ids.add(str(output.get("resource_id", "")))
+        response_cost = site.get("response_profile", {}).get("resource_cost", {}) if isinstance(site.get("response_profile", {}), dict) else {}
+        if isinstance(response_cost, dict):
+            ids.update(str(resource_id) for resource_id in response_cost.keys())
+        route_toll = site.get("route_effect", {}).get("toll_resources", {}) if isinstance(site.get("route_effect", {}), dict) else {}
+        if isinstance(route_toll, dict):
+            ids.update(str(resource_id) for resource_id in route_toll.keys())
+        return ids
+
+    def metadata_boundary_is_safe(payload: dict) -> bool:
+        boundary = payload.get("runtime_boundary", {}) if isinstance(payload.get("runtime_boundary", {}), dict) else {}
+        return (
+            str(boundary.get("status", "")) == "metadata_only"
+            and not bool(boundary.get("live_reward_grants", True))
+            and not bool(boundary.get("save_payload_required", True))
+            and not bool(boundary.get("renderer_sprite_required", True))
+            and not bool(boundary.get("pathing_runtime_adopted", True))
+            and not bool(boundary.get("route_effect_runtime_adopted", True))
+            and not bool(boundary.get("rare_resource_activation", True))
+        )
+
+    def check_body_and_approach(object_id: str, obj: dict, width: int, height: int) -> bool:
+        body_tiles = obj.get("body_tiles", [])
+        approach = obj.get("approach", {}) if isinstance(obj.get("approach", {}), dict) else {}
+        visit_offsets = approach.get("visit_offsets", []) if isinstance(approach.get("visit_offsets", []), list) else []
+        ready = True
+        if not isinstance(body_tiles, list) or not body_tiles:
+            add_error(f"{object_id}: Batch 003 objects must author non-empty body_tiles")
+            ready = False
+        if not isinstance(obj.get("approach", {}), dict) or not visit_offsets:
+            add_error(f"{object_id}: Batch 003 objects must author approach.visit_offsets")
+            ready = False
+        seen_body_tiles: set[str] = set()
+        for tile in body_tiles if isinstance(body_tiles, list) else []:
+            if not isinstance(tile, dict):
+                add_error(f"{object_id}: body_tiles entries must be dictionaries")
+                ready = False
+                continue
+            x = int(tile.get("x", -999))
+            y = int(tile.get("y", -999))
+            if x < 0 or y < 0 or x >= width or y >= height:
+                add_error(f"{object_id}: body tile {x},{y} is outside footprint")
+                ready = False
+            tile_key = f"{x},{y}"
+            if tile_key in seen_body_tiles:
+                add_error(f"{object_id}: body tile {tile_key} is duplicated")
+                ready = False
+            seen_body_tiles.add(tile_key)
+        seen_visit_offsets: set[str] = set()
+        for tile in visit_offsets:
+            if not isinstance(tile, dict):
+                add_error(f"{object_id}: approach.visit_offsets entries must be dictionaries")
+                ready = False
+                continue
+            x = int(tile.get("x", -999))
+            y = int(tile.get("y", -999))
+            adjacent = (x == -1 and 0 <= y < height) or (x == width and 0 <= y < height) or (y == -1 and 0 <= x < width) or (y == height and 0 <= x < width)
+            inside = 0 <= x < width and 0 <= y < height
+            if not adjacent and not inside:
+                add_error(f"{object_id}: approach tile {x},{y} must be inside or adjacent to footprint")
+                ready = False
+            tile_key = f"{x},{y}"
+            if tile_key in seen_visit_offsets:
+                add_error(f"{object_id}: approach tile {tile_key} is duplicated")
+                ready = False
+            seen_visit_offsets.add(tile_key)
+        if seen_body_tiles.intersection(seen_visit_offsets) and str(approach.get("mode", "")) != "enter":
+            add_error(f"{object_id}: body_tiles must not overlap approach.visit_offsets for adjacent visits")
+            ready = False
+        if str(approach.get("mode", "")) not in {"adjacent", "enter", "linked_endpoint"}:
+            add_error(f"{object_id}: approach.mode must be adjacent, enter, or linked_endpoint")
+            ready = False
+        return ready
+
+    for object_id, obj in sorted(batch_objects.items()):
+        role = str(obj.get("batch003_role", ""))
+        site_id = str(obj.get("resource_site_id", ""))
+        site = resource_sites.get(site_id, {}) if site_id else {}
+        footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
+        width = int(footprint.get("width", 0))
+        height = int(footprint.get("height", 0))
+        footprint_key = f"{width}x{height}"
+        increment_count(section["role_counts"], role)
+        increment_count(section["footprints"], footprint_key)
+        interaction = obj.get("interaction", {}) if isinstance(obj.get("interaction", {}), dict) else {}
+        increment_count(section["cadence_counts"], str(interaction.get("cadence", "")))
+        for biome_id in obj.get("biome_ids", []) if isinstance(obj.get("biome_ids", []), list) else []:
+            increment_count(section["biome_counts"], str(biome_id))
+
+        forbidden_wood_alias = "tim" + "ber"
+        text_key = json.dumps({"object": obj, "site": site}, sort_keys=True).lower()
+        if forbidden_wood_alias in text_key:
+            add_error(f"{object_id}: Batch 003 must keep wood canonical and avoid non-canonical wood aliases")
+        if role not in role_contract_keys:
+            add_error(f"{object_id}: Batch 003 object must author a supported batch003_role")
+        if not site_id or site_id not in resource_sites:
+            add_error(f"{object_id}: Batch 003 object must link an existing resource_site_id")
+        else:
+            section["linked_resource_site_count"] += 1
+            if str(site.get("content_batch_id", "")) != OVERWORLD_OBJECT_CONTENT_BATCH_003_ID and str(site.get("normalized_content_batch_id", "")) != OVERWORLD_OBJECT_CONTENT_BATCH_003_ID:
+                add_error(f"{object_id}: linked site {site_id} must carry Batch 003 content metadata")
+            contract_key = role_contract_keys.get(role, "")
+            if contract_key and (not isinstance(obj.get(contract_key, {}), dict) or not isinstance(site.get(contract_key, {}), dict)):
+                add_error(f"{object_id}: Batch 003 {role} must author {contract_key} on object and linked site")
+        if width <= 0 or height <= 0:
+            add_error(f"{object_id}: Batch 003 footprint dimensions must be positive")
+        if str(footprint.get("anchor", "")) not in OVERWORLD_OBJECT_FOOTPRINT_ANCHORS:
+            add_error(f"{object_id}: Batch 003 footprint.anchor is missing or unsupported")
+        if str(footprint.get("tier", "")) not in OVERWORLD_OBJECT_FOOTPRINT_TIERS:
+            add_error(f"{object_id}: Batch 003 footprint.tier is missing or unsupported")
+        if str(obj.get("passability_class", "")) not in {"blocking_visitable", "conditional_pass", "passable_visit_on_enter"}:
+            add_error(f"{object_id}: Batch 003 passability must be visitable or conditional-pass metadata")
+        if not bool(obj.get("visitable", False)):
+            add_error(f"{object_id}: Batch 003 objects must set visitable=true")
+        if check_body_and_approach(object_id, obj, width, height):
+            section["shape_contract_ready_count"] += 1
+        if not isinstance(obj.get("guard_expectation", {}), dict) or not obj.get("guard_expectation", {}):
+            add_error(f"{object_id}: Batch 003 objects must author guard_expectation metadata")
+        if not isinstance(obj.get("ai_hints", {}), dict) or not obj.get("ai_hints", {}):
+            add_error(f"{object_id}: Batch 003 objects must author ai_hints")
+        if not isinstance(obj.get("editor_placement", {}), dict) or not obj.get("editor_placement", {}):
+            add_error(f"{object_id}: Batch 003 objects must author editor_placement")
+        if str(interaction.get("cadence", "")) not in {"one_time", "repeatable_daily", "repeatable_weekly", "cooldown_days", "persistent_control", "conditional", "scenario_scripted"}:
+            add_error(f"{object_id}: Batch 003 interaction cadence is missing or unsupported")
+        if metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site):
+            section["metadata_only_boundary_count"] += 1
+        else:
+            add_error(f"{object_id}: Batch 003 object and site must keep explicit metadata-only runtime boundaries")
+
+        live_ids = live_resource_ids(site)
+        if live_ids.intersection(ECONOMY_RARE_RESOURCE_IDS):
+            add_error(f"{object_id}: Batch 003 must not activate rare resources in live site fields")
+        if any(field in site for field in ("rewards", "claim_rewards", "control_income", "resource_outputs")):
+            add_error(f"{object_id}: Batch 003 service/shrine/sign/event sites must not add live reward or income fields")
+        else:
+            section["no_live_reward_activation_count"] += 1
+        if "market_profile" in site or "exchange_rates" in site:
+            add_error(f"{object_id}: Batch 003 must not activate market profiles or exchange rates")
+
+        if role == "route_lock":
+            route_effect = obj.get("route_effect", {}) if isinstance(obj.get("route_effect", {}), dict) else {}
+            boundary = obj.get("route_effect_boundary", {}) if isinstance(obj.get("route_effect_boundary", {}), dict) else {}
+            if not route_effect:
+                add_error(f"{object_id}: route locks must author route_effect metadata")
+            if str(boundary.get("status", "")) != "metadata_only" or bool(boundary.get("runtime_behavior_adopted", True)):
+                add_error(f"{object_id}: route locks must keep route_effect runtime adoption disabled")
+            if str(route_effect.get("effect_type", "")) not in {"scenario_gate", "repair_unlock", "conditional_pass"}:
+                add_error(f"{object_id}: route lock route_effect type must stay a metadata-safe lock type")
+            if not isinstance(route_effect.get("blocked_state_ids", []), list) or not route_effect.get("blocked_state_ids", []):
+                add_error(f"{object_id}: route locks must define blocked_state_ids")
+            toll_resources = route_effect.get("toll_resources", {})
+            if not isinstance(toll_resources, dict) or set(str(resource_id) for resource_id in toll_resources.keys()).intersection(ECONOMY_RARE_RESOURCE_IDS):
+                add_error(f"{object_id}: route locks must not use rare-resource toll metadata")
+            for public_key in ("public_reason", "public_summary", "display_name"):
+                if public_key in route_effect:
+                    public_text = str(route_effect.get(public_key, ""))
+                    for token in OVERWORLD_OBJECT_PUBLIC_ROUTE_LEAK_TOKENS:
+                        if token in public_text:
+                            add_error(f"{object_id}: route_effect.{public_key} leaks internal token {token}")
+            section["route_lock_metadata_count"] += 1
+        if role == "repeatable_service" and (not bool(site.get("repeatable", False)) or int(site.get("visit_cooldown_days", 0)) <= 0):
+            add_error(f"{object_id}: repeatable services must define repeatable site cooldown metadata")
+        if role == "scouting_info" and int(site.get("vision_radius", 0)) <= 0:
+            add_error(f"{object_id}: scouting/info objects must define vision_radius metadata")
+
+    section["role_counts"] = sorted_counts(section["role_counts"])
+    section["cadence_counts"] = sorted_counts(section["cadence_counts"])
+    section["footprints"] = sorted_counts(section["footprints"])
+    section["biome_counts"] = dict(sorted(section["biome_counts"].items()))
+    if batch_objects:
+        if len(batch_objects) != 28:
+            add_error("Batch 003 must contain exactly 28 service/shrine/sign/event object definitions")
+        for role, expected_count in expected_role_counts.items():
+            if int(section["role_counts"].get(role, 0)) != expected_count:
+                add_error(f"Batch 003 must include {expected_count} {role} objects")
+        if section["linked_resource_site_count"] != len(batch_objects):
+            add_error("Batch 003 objects must all link resource-site records")
+        if section["shape_contract_ready_count"] != len(batch_objects):
+            add_error("Batch 003 objects must all pass footprint/body/approach contract checks")
+        if section["metadata_only_boundary_count"] != len(batch_objects):
+            add_error("Batch 003 objects and sites must all remain metadata-only runtime contracts")
+        if section["no_live_reward_activation_count"] != len(batch_objects):
+            add_error("Batch 003 must not add live reward, income, or production fields")
+        if section["route_lock_metadata_count"] != expected_role_counts["route_lock"]:
+            add_error("Batch 003 route locks must all carry safe route-effect metadata")
+        for cadence in ("cooldown_days", "one_time", "repeatable_weekly", "persistent_control", "repeatable_daily", "conditional", "scenario_scripted"):
+            if cadence not in section["cadence_counts"]:
+                add_error(f"Batch 003 must cover interaction cadence {cadence}")
+        for biome_id in sorted(biomes.keys()):
+            if int(section["biome_counts"].get(biome_id, 0)) < 2:
+                add_error(f"Batch 003 must include at least 2 service/shrine/sign/event definitions for {biome_id}")
+        for footprint_key in ("1x1", "1x2", "2x1", "2x2"):
+            if footprint_key not in section["footprints"]:
+                add_error(f"Batch 003 must cover footprint {footprint_key}")
+    return section
+
+
 def build_overworld_object_report() -> dict:
     payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("map_objects", "resource_sites", "scenarios", "encounters", "army_groups", "factions", "biomes")}
     map_objects = items_index(payloads["map_objects"])
@@ -3764,6 +4028,7 @@ def build_overworld_object_report() -> dict:
     report["content_batches"]["batch_001c_biome_blockers_edge"] = build_overworld_object_content_batch_001c_section(map_objects, biomes)
     report["content_batches"]["batch_001d_large_footprint_coverage"] = build_overworld_object_content_batch_001d_section(map_objects, biomes)
     report["content_batches"]["batch_002_mines_resource_fronts"] = build_overworld_object_content_batch_002_section(map_objects, resource_sites, biomes)
+    report["content_batches"]["batch_003_services_shrines_signs_events"] = build_overworld_object_content_batch_003_section(map_objects, resource_sites, biomes)
     report["ai_editor_implications"]["visible_neutral_encounter_records_present"] = any(
         infer_overworld_object_primary_class(obj, resource_sites.get(str(obj.get("resource_site_id", "")))) == "neutral_encounter"
         for obj in map_objects.values()
@@ -3971,6 +4236,9 @@ def build_overworld_object_report() -> dict:
     for batch_error in report.get("content_batches", {}).get("batch_002_mines_resource_fronts", {}).get("errors", []):
         if batch_error not in report["errors"]:
             report["errors"].append(batch_error)
+    for batch_error in report.get("content_batches", {}).get("batch_003_services_shrines_signs_events", {}).get("errors", []):
+        if batch_error not in report["errors"]:
+            report["errors"].append(batch_error)
     add_overworld_object_report_warning(report, "unmigrated production map_objects.json records remain legacy-compatible; inferred primary_class and tags are report-only outside declared migrated bundles")
     add_overworld_object_report_warning(report, "body_tiles and approach metadata remain warnings for unmigrated objects; pathing adoption is bounded to authored representative masks")
     return report
@@ -4048,6 +4316,14 @@ def print_overworld_object_report(report: dict) -> None:
         print(f"- live common resources={','.join(batch_002.get('common_live_resource_ids', []))}; staged rare resources={','.join(batch_002.get('staged_rare_resource_ids', []))}")
         print(f"- shape contracts={batch_002.get('shape_contract_ready_count', 0)}; biomes covered={len(batch_002.get('biome_counts', {}))}; footprints={','.join(batch_002.get('footprints', {}).keys())}")
         print(f"- errors={len(batch_002.get('errors', []))}; warnings={len(batch_002.get('warnings', []))}")
+    batch_003 = report.get("content_batches", {}).get("batch_003_services_shrines_signs_events", {})
+    if batch_003:
+        print("Content Batch 003:")
+        role_counts = batch_003.get("role_counts", {})
+        print(f"- objects: {batch_003.get('object_count', 0)}; services={role_counts.get('repeatable_service', 0)}; shrines={role_counts.get('shrine_progression', 0)}; scouting={role_counts.get('scouting_info', 0)}; signs={role_counts.get('sign_waypoint', 0)}; locks={role_counts.get('route_lock', 0)}; events={role_counts.get('objective_event', 0)}")
+        print(f"- shape contracts={batch_003.get('shape_contract_ready_count', 0)}; metadata-only boundaries={batch_003.get('metadata_only_boundary_count', 0)}; route locks={batch_003.get('route_lock_metadata_count', 0)}")
+        print(f"- cadences={','.join(batch_003.get('cadence_counts', {}).keys())}; biomes covered={len(batch_003.get('biome_counts', {}))}; footprints={','.join(batch_003.get('footprints', {}).keys())}")
+        print(f"- errors={len(batch_003.get('errors', []))}; warnings={len(batch_003.get('warnings', []))}")
     print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
 
 
@@ -9481,6 +9757,25 @@ def validate_overworld_object_content_batch_001(errors: list[str]) -> None:
                 "`wood` remains canonical",
             ):
                 ensure(required_text in doc_text, errors, f"Overworld object Batch 001d report doc is missing required boundary text: {required_text}")
+    batch_003 = report.get("content_batches", {}).get("batch_003_services_shrines_signs_events", {})
+    if batch_003 and int(batch_003.get("object_count", 0)) > 0:
+        for batch_error in batch_003.get("errors", []):
+            fail(errors, f"Overworld object Batch 003: {batch_error}")
+        docs_path = ROOT / "docs" / "overworld-object-content-batch-003-services-shrines-signs-events-report.md"
+        ensure(docs_path.exists(), errors, "Missing overworld object Batch 003 implementation report doc")
+        if docs_path.exists():
+            doc_text = docs_path.read_text(encoding="utf-8")
+            for required_text in (
+                "Status: implementation evidence.",
+                "28 Batch 003 map objects",
+                "metadata-only",
+                "No route-effect runtime adoption",
+                "No renderer sprite import",
+                "No save migration",
+                "No rare-resource activation",
+                "`wood` remains canonical",
+            ):
+                ensure(required_text in doc_text, errors, f"Overworld object Batch 003 report doc is missing required boundary text: {required_text}")
 
 
 def validate_overworld_art_asset_slice(errors: list[str]) -> None:

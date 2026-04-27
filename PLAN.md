@@ -670,6 +670,38 @@ nonGoals:
 - No renderer sprite import, pathing runtime migration, scenario placement migration, or broad UI work.
 - No activation of rare-resource costs, markets, save payloads, or inventory.
 
+#### P2.4h Corrective Transit, Coast, And Route Control Batch 004
+
+id: `overworld-object-content-batch-004-transit-coast-route-control-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Continue corrective P2.4 object content with transit endpoints, coast/harbor route objects, route-control gates, and linked endpoint contracts after Batch 003 services/signs/events.
+
+sourceDocs:
+- `docs/phase2-4-object-implementation-backlog.md`
+- `docs/overworld-object-taxonomy-density.md`
+
+implementationTargets:
+- `content/map_objects.json`
+- `content/resource_sites.json`
+- Object validator/report coverage as needed.
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+sliceEvidence:
+- About 24 transit/coast/route-control definitions cover two-way transit, one-way transit, route locks, harbor/coast objects, and selected existing ferry/lift normalization while preserving staged route-effect boundaries.
+
+completionCriteria:
+- Objects define explicit footprint, body, linked endpoint or approach metadata, interaction cadence, route-effect contracts, guard/event expectations, and biome/coast applicability as appropriate.
+- Transit, coast, and route-control objects remain metadata/content implementation only unless existing runtime behavior already supports the linked site family.
+
+nonGoals:
+- No full ship movement system.
+- No broad runtime route-effect migration, pathing runtime migration, renderer sprite import, scenario placement migration, or save migration.
+- No rare-resource costs, markets, save payloads, inventory, or broad economy rebalance.
+
 ### P2.5 Magic System Foundation Implementation
 
 id: `magic-system-foundation-implementation-10184`

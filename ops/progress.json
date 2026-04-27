@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-content-batch-002-mines-resource-fronts-10184",
-  "currentSliceTitle": "Overworld Object Content Batch 002 Mines And Resource Fronts",
+  "currentSliceId": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+  "currentSliceTitle": "Overworld Object Content Batch 003 Services Shrines Signs And Events",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed Batch 002 mines/resource-front/support-producer content with validation coverage; P2.5 remains paused.",
+  "currentSliceNotes": "Completed Batch 003 services/shrines/scouting/signs/route-locks/objective-marker content with validator/report coverage; next corrective P2.4 category is Batch 004 transit/coast/route control; P2.5 remains paused.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T19:05:17Z",
+  "updatedAt": "2026-04-27T19:30:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -2319,7 +2319,7 @@
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
-      "status": "pending",
+      "status": "completed",
       "purpose": "Continue corrective P2.4 object content with services, shrines, scouting/info objects, signs, waypoints, route locks, and event/objective markers after Batch 002 resource fronts.",
       "sourceDocs": [
         "docs/phase2-4-object-implementation-backlog.md",
@@ -2347,8 +2347,48 @@
         "No renderer sprite import, pathing runtime migration, scenario placement migration, or broad UI work.",
         "No activation of rare-resource costs, markets, save payloads, or inventory."
       ],
-      "notes": "next corrective P2.4 services/shrines/signs/events Batch 003 after completed Batch 002; P2.5 remains paused",
-      "updatedAt": "2026-04-27T19:05:17Z"
+      "notes": "Completed Batch 003: 28 service/shrine/scouting/sign/route-lock/objective-event map objects plus 28 linked resource-site metadata contracts, validator/report coverage, implementation report, and clean validation. P2.5 remains paused.",
+      "updatedAt": "2026-04-27T19:30:00Z",
+      "startedAt": "2026-04-27T19:05:17Z",
+      "completedAt": "2026-04-27T19:30:00Z"
+    },
+    {
+      "id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "title": "Overworld Object Content Batch 004 Transit Coast And Route Control",
+      "phase": "phase-2-deep-production-foundation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "status": "pending",
+      "purpose": "Continue corrective P2.4 object content with transit endpoints, coast/harbor route objects, route-control gates, and linked endpoint contracts after Batch 003 services/signs/events.",
+      "sourceDocs": [
+        "docs/phase2-4-object-implementation-backlog.md",
+        "docs/overworld-object-taxonomy-density.md"
+      ],
+      "implementationTargets": [
+        "content/map_objects.json",
+        "content/resource_sites.json",
+        "object validator/report coverage as needed"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --overworld-object-report",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "About 24 transit/coast/route-control definitions cover two-way transit, one-way transit, route locks, harbor/coast objects, and selected existing ferry/lift normalization while preserving staged route-effect boundaries."
+      ],
+      "completionCriteria": [
+        "Objects define explicit footprint, body, linked endpoint or approach metadata, interaction cadence, route-effect contracts, guard/event expectations, and biome/coast applicability as appropriate.",
+        "Transit, coast, and route-control objects remain metadata/content implementation only unless existing runtime behavior already supports the linked site family."
+      ],
+      "nonGoals": [
+        "No full ship movement system.",
+        "No broad runtime route-effect migration, pathing runtime migration, renderer sprite import, scenario placement migration, or save migration.",
+        "No rare-resource costs, markets, save payloads, inventory, or broad economy rebalance."
+      ],
+      "notes": "Next corrective P2.4 category after completed Batch 003; P2.5 remains paused.",
+      "updatedAt": "2026-04-27T19:30:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -3151,8 +3191,8 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
-      "title": "Overworld Object Content Batch 003 Services Shrines Signs And Events",
+      "id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "title": "Overworld Object Content Batch 004 Transit Coast And Route Control",
       "phase": "phase-2-deep-production-foundation",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
@@ -3167,7 +3207,7 @@
         "content/resource_sites.json",
         "object validator/report coverage as needed"
       ],
-      "notes": "next corrective P2.4 services/shrines/signs/events Batch 003 after completed Batch 002; P2.5 remains paused"
+      "notes": "Next corrective P2.4 transit/coast/route-control Batch 004 after completed Batch 003; P2.5 remains paused."
     }
   ],
   "stoppedOrPausedTasks": [

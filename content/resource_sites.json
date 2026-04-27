@@ -3071,6 +3071,696 @@
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
       }
+    },
+    {
+      "id": "site_wayfarer_menders_tent",
+      "name": "Wayfarer Menders Tent",
+      "family": "repeatable_service",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "repeatable_service",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "service_contract": {
+        "service_kind": "recovery_support",
+        "planned_effect": "retinue recovery relief",
+        "planned_service_cost": {
+          "gold": 120
+        },
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 7
+    },
+    {
+      "id": "site_courier_change_post",
+      "name": "Courier Change Post",
+      "family": "repeatable_service",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "repeatable_service",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "service_contract": {
+        "service_kind": "movement_readiness",
+        "planned_effect": "fresh mounts and route notes",
+        "planned_service_cost": {
+          "gold": 100
+        },
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 7
+    },
+    {
+      "id": "site_contract_scribe_booth",
+      "name": "Contract Scribe Booth",
+      "family": "repeatable_service",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "repeatable_service",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "service_contract": {
+        "service_kind": "contract_review",
+        "planned_effect": "route obligation reminder",
+        "planned_service_cost": {
+          "gold": 80
+        },
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 7
+    },
+    {
+      "id": "site_reedboat_supply_stand",
+      "name": "Reedboat Supply Stand",
+      "family": "repeatable_service",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "repeatable_service",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "service_contract": {
+        "service_kind": "marsh_resupply",
+        "planned_effect": "safe reed-channel supplies",
+        "planned_service_cost": {
+          "gold": 110,
+          "wood": 1
+        },
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 7
+    },
+    {
+      "id": "site_ash_cooler_kitchen",
+      "name": "Ash Cooler Kitchen",
+      "family": "repeatable_service",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "repeatable_service",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "service_contract": {
+        "service_kind": "heat_recovery",
+        "planned_effect": "heat-route readiness relief",
+        "planned_service_cost": {
+          "gold": 100,
+          "ore": 1
+        },
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 7
+    },
+    {
+      "id": "site_lens_calibration_cart",
+      "name": "Lens Calibration Cart",
+      "family": "repeatable_service",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "repeatable_service",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "service_contract": {
+        "service_kind": "survey_alignment",
+        "planned_effect": "temporary scouting clarity contract",
+        "planned_service_cost": {
+          "gold": 130
+        },
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 7
+    },
+    {
+      "id": "site_oath_ember_shrine",
+      "name": "Oath Ember Shrine",
+      "family": "shrine",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "shrine_progression",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "planned_bonus": "command resolve lesson",
+        "cadence": "one_time",
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "site_reedscript_vow_shrine",
+      "name": "Reedscript Vow Shrine",
+      "family": "shrine",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "shrine_progression",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "shrine_contract": {
+        "shrine_kind": "route_vow",
+        "planned_bonus": "marked marsh path lesson",
+        "cadence": "one_time",
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "site_prism_measure_shrine",
+      "name": "Prism Measure Shrine",
+      "family": "shrine",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "shrine_progression",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "shrine_contract": {
+        "shrine_kind": "survey_measure",
+        "planned_bonus": "range and sightline lesson",
+        "cadence": "one_time",
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "site_root_accord_ring",
+      "name": "Root Accord Ring",
+      "family": "shrine",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "shrine_progression",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "shrine_contract": {
+        "shrine_kind": "accord_renewal",
+        "planned_bonus": "weekly renewal marker",
+        "cadence": "repeatable_weekly",
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 7
+    },
+    {
+      "id": "site_furnace_oath_marker",
+      "name": "Furnace Oath Marker",
+      "family": "shrine",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "shrine_progression",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "shrine_contract": {
+        "shrine_kind": "work_oath",
+        "planned_bonus": "weekly equipment discipline marker",
+        "cadence": "repeatable_weekly",
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 7
+    },
+    {
+      "id": "site_tide_bell_shrine",
+      "name": "Tide Bell Shrine",
+      "family": "shrine",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "shrine_progression",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "shrine_contract": {
+        "shrine_kind": "bell_watch",
+        "planned_bonus": "weekly fog-lane warning marker",
+        "cadence": "repeatable_weekly",
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 7
+    },
+    {
+      "id": "site_hilltop_signal_nest",
+      "name": "Hilltop Signal Nest",
+      "family": "scouting_structure",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "scouting_info",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "scouting_contract": {
+        "scouting_kind": "watch_fire",
+        "planned_reveal_radius": 4,
+        "metadata_only": true
+      },
+      "persistent_control": true,
+      "vision_radius": 4
+    },
+    {
+      "id": "site_marsh_listener_post",
+      "name": "Marsh Listener Post",
+      "family": "scouting_structure",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "scouting_info",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "scouting_contract": {
+        "scouting_kind": "sounder_post",
+        "planned_reveal_radius": 3,
+        "metadata_only": true
+      },
+      "persistent_control": true,
+      "vision_radius": 3
+    },
+    {
+      "id": "site_prism_survey_frame",
+      "name": "Prism Survey Frame",
+      "family": "scouting_structure",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "scouting_info",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "scouting_contract": {
+        "scouting_kind": "lens_frame",
+        "planned_reveal_radius": 5,
+        "metadata_only": true
+      },
+      "persistent_control": true,
+      "vision_radius": 5
+    },
+    {
+      "id": "site_underway_echo_well",
+      "name": "Underway Echo Well",
+      "family": "scouting_structure",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "scouting_info",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "scouting_contract": {
+        "scouting_kind": "echo_survey",
+        "planned_reveal_radius": 3,
+        "metadata_only": true
+      },
+      "persistent_control": true,
+      "vision_radius": 3
+    },
+    {
+      "id": "site_coast_bell_watch",
+      "name": "Coast Bell Watch",
+      "family": "scouting_structure",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "scouting_info",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "scouting_contract": {
+        "scouting_kind": "coast_watch",
+        "planned_reveal_radius": 5,
+        "metadata_only": true
+      },
+      "persistent_control": true,
+      "vision_radius": 5
+    },
+    {
+      "id": "site_mile_writ_sign",
+      "name": "Mile Writ Sign",
+      "family": "sign_waypoint",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "sign_waypoint",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "sign_contract": {
+        "sign_kind": "road_writ",
+        "route_hint_category": "distance_and_toll_law",
+        "player_text_key": "sign.mile_writ",
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 1
+    },
+    {
+      "id": "site_reed_knot_waypost",
+      "name": "Reed Knot Waypost",
+      "family": "sign_waypoint",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "sign_waypoint",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "sign_contract": {
+        "sign_kind": "reed_knot",
+        "route_hint_category": "safe_channel_marker",
+        "player_text_key": "sign.reed_knot",
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 1
+    },
+    {
+      "id": "site_switchback_cairn",
+      "name": "Switchback Cairn",
+      "family": "sign_waypoint",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "sign_waypoint",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "sign_contract": {
+        "sign_kind": "stone_cairn",
+        "route_hint_category": "ridge_switchback_marker",
+        "player_text_key": "sign.switchback_cairn",
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 1
+    },
+    {
+      "id": "site_ash_road_marker",
+      "name": "Ash Road Marker",
+      "family": "sign_waypoint",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "sign_waypoint",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "sign_contract": {
+        "sign_kind": "ash_route_marker",
+        "route_hint_category": "heat_safe_lane",
+        "player_text_key": "sign.ash_road_marker",
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 1
+    },
+    {
+      "id": "site_underway_chalk_index",
+      "name": "Underway Chalk Index",
+      "family": "sign_waypoint",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "sign_waypoint",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "sign_contract": {
+        "sign_kind": "chalk_index",
+        "route_hint_category": "underway_junction_marker",
+        "player_text_key": "sign.underway_chalk_index",
+        "metadata_only": true
+      },
+      "repeatable": true,
+      "visit_cooldown_days": 1
+    },
+    {
+      "id": "site_toll_chain_court",
+      "name": "Toll Chain Court",
+      "family": "transit_object",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "route_lock",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "route_lock_contract": {
+        "lock_kind": "scenario_gate",
+        "blocked_state_ids": [
+          "gate_closed",
+          "toll_unpaid"
+        ],
+        "metadata_only": true
+      },
+      "transit_profile": {
+        "mode": "scenario_gate",
+        "route_role": "route_lock",
+        "requires_repair": false,
+        "paired_link_required": false,
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "site_root_lease_gate",
+      "name": "Root Lease Gate",
+      "family": "transit_object",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "route_lock",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "route_lock_contract": {
+        "lock_kind": "scenario_gate",
+        "blocked_state_ids": [
+          "lease_unread",
+          "root_gate_closed"
+        ],
+        "metadata_only": true
+      },
+      "transit_profile": {
+        "mode": "scenario_gate",
+        "route_role": "route_lock",
+        "requires_repair": false,
+        "paired_link_required": false,
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "site_pressure_rail_stop",
+      "name": "Pressure Rail Stop",
+      "family": "transit_object",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "route_lock",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "route_lock_contract": {
+        "lock_kind": "repair_unlock",
+        "blocked_state_ids": [
+          "rail_stop_locked",
+          "pressure_low"
+        ],
+        "metadata_only": true
+      },
+      "transit_profile": {
+        "mode": "scenario_gate",
+        "route_role": "route_lock",
+        "requires_repair": true,
+        "paired_link_required": false,
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "site_campaign_muster_seal",
+      "name": "Campaign Muster Seal",
+      "family": "scenario_objective",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "objective_event",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "objective_event_contract": {
+        "objective_kind": "muster_objective",
+        "event_expectation": "scenario script may reference this marker later",
+        "metadata_only": true,
+        "live_objective_runtime": false
+      }
+    },
+    {
+      "id": "site_broken_accord_marker",
+      "name": "Broken Accord Marker",
+      "family": "scenario_objective",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "objective_event",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "objective_event_contract": {
+        "objective_kind": "accord_event",
+        "event_expectation": "scenario script may reference this marker later",
+        "metadata_only": true,
+        "live_objective_runtime": false
+      }
+    },
+    {
+      "id": "site_scenario_witness_stone",
+      "name": "Scenario Witness Stone",
+      "family": "scenario_objective",
+      "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
+      "batch003_role": "objective_event",
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
+      "objective_event_contract": {
+        "objective_kind": "witness_marker",
+        "event_expectation": "scenario script may reference this marker later",
+        "metadata_only": true,
+        "live_objective_runtime": false
+      }
     }
   ]
 }
