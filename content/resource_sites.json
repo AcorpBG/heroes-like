@@ -9570,6 +9570,924 @@
         "scenario_placement_migration": false
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
+    },
+    {
+      "id": "site_ember_signal_brazier",
+      "name": "Ember Signal Brazier",
+      "family": "faction_landmark",
+      "persistent_control": true,
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_embercourt",
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_ember_signal_brazier",
+        "resource_site_id": "site_ember_signal_brazier",
+        "landmark_role": "ember_signal_identity",
+        "faction_id": "faction_embercourt",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.ember_signal_brazier",
+        "public_summary": "Signal fire landmark for Embercourt road influence.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_bog_drum_totem",
+      "name": "Bog Drum Totem",
+      "family": "faction_landmark",
+      "persistent_control": true,
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_mireclaw",
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_bog_drum_totem",
+        "resource_site_id": "site_bog_drum_totem",
+        "landmark_role": "mire_ambush_identity",
+        "faction_id": "faction_mireclaw",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.bog_drum_totem",
+        "public_summary": "Drum marker for Mireclaw pressure near wet lanes.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_prism_relay_lens",
+      "name": "Prism Relay Lens",
+      "family": "faction_landmark",
+      "persistent_control": true,
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_sunvault",
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_prism_relay_lens",
+        "resource_site_id": "site_prism_relay_lens",
+        "landmark_role": "sunvault_sightline_identity",
+        "faction_id": "faction_sunvault",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.prism_relay_lens",
+        "public_summary": "Lens landmark for Sunvault relay sightlines.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_thornwake_graft_arch",
+      "name": "Thornwake Graft Arch",
+      "family": "faction_landmark",
+      "persistent_control": true,
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_thornwake",
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_thornwake_graft_arch",
+        "resource_site_id": "site_thornwake_graft_arch",
+        "landmark_role": "living_route_identity",
+        "faction_id": "faction_thornwake",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.thornwake_graft_arch",
+        "public_summary": "Living arch that marks Thornwake-managed paths.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_brasshollow_gauge_shrine",
+      "name": "Brasshollow Gauge Shrine",
+      "family": "faction_landmark",
+      "persistent_control": true,
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_brasshollow",
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_brasshollow_gauge_shrine",
+        "resource_site_id": "site_brasshollow_gauge_shrine",
+        "landmark_role": "industrial_contract_identity",
+        "faction_id": "faction_brasshollow",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.brasshollow_gauge_shrine",
+        "public_summary": "Gauge shrine for Brasshollow claim and repair culture.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_veilmourn_bell_mast",
+      "name": "Veilmourn Bell Mast",
+      "family": "faction_landmark",
+      "persistent_control": true,
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_veilmourn",
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_veilmourn_bell_mast",
+        "resource_site_id": "site_veilmourn_bell_mast",
+        "landmark_role": "fog_warning_identity",
+        "faction_id": "faction_veilmourn",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.veilmourn_bell_mast",
+        "public_summary": "Bell mast that marks Veilmourn salvage lanes.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_granary_lock_exchange",
+      "name": "Granary Lock Exchange",
+      "family": "faction_landmark",
+      "persistent_control": true,
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_embercourt",
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_granary_lock_exchange",
+        "resource_site_id": "site_granary_lock_exchange",
+        "landmark_role": "civic_economy_identity",
+        "faction_id": "faction_embercourt",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.granary_lock_exchange",
+        "public_summary": "Roadside exchange showing Embercourt civic supply reach.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_blackwater_shrine_marker",
+      "name": "Blackwater Shrine Marker",
+      "family": "faction_landmark",
+      "persistent_control": true,
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_mireclaw",
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_blackwater_shrine_marker",
+        "resource_site_id": "site_blackwater_shrine_marker",
+        "landmark_role": "mire_service_identity",
+        "faction_id": "faction_mireclaw",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.blackwater_shrine_marker",
+        "public_summary": "Low shrine marker for Mireclaw blackwater influence.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_prism_yard_standard",
+      "name": "Prism Yard Standard",
+      "family": "faction_landmark",
+      "persistent_control": true,
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_sunvault",
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_prism_yard_standard",
+        "resource_site_id": "site_prism_yard_standard",
+        "landmark_role": "crystal_yard_identity",
+        "faction_id": "faction_sunvault",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.prism_yard_standard",
+        "public_summary": "Sunvault standard for crystal-yard influence.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_broken_treaty_stone",
+      "name": "Broken Treaty Stone",
+      "family": "scenario_objective",
+      "batch007_role": "scenario_objective",
+      "guarded": true,
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_broken_treaty_stone",
+        "resource_site_id": "site_broken_treaty_stone",
+        "objective_kind": "treaty_marker",
+        "scenario_state_keys": [
+          "inactive",
+          "attuned",
+          "broken",
+          "resolved"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": true,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.broken_treaty_stone",
+        "public_summary": "Treaty marker for scenario-controlled accord objectives.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_sealed_causeway_lever",
+      "name": "Sealed Causeway Lever",
+      "family": "scenario_objective",
+      "batch007_role": "scenario_objective",
+      "guarded": false,
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_sealed_causeway_lever",
+        "resource_site_id": "site_sealed_causeway_lever",
+        "objective_kind": "route_release",
+        "scenario_state_keys": [
+          "sealed",
+          "armed",
+          "opened",
+          "jammed"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": false,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.sealed_causeway_lever",
+        "public_summary": "Compact lever frame for scenario causeway state.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_mirror_anchor_frame",
+      "name": "Mirror Anchor Frame",
+      "family": "scenario_objective",
+      "batch007_role": "scenario_objective",
+      "guarded": true,
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_mirror_anchor_frame",
+        "resource_site_id": "site_mirror_anchor_frame",
+        "objective_kind": "anchor_alignment",
+        "scenario_state_keys": [
+          "dormant",
+          "aligned",
+          "fractured",
+          "secured"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": true,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.mirror_anchor_frame",
+        "public_summary": "Old Measure anchor frame for scenario alignment goals.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_crownless_standard",
+      "name": "Crownless Standard",
+      "family": "scenario_objective",
+      "batch007_role": "scenario_objective",
+      "guarded": true,
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_crownless_standard",
+        "resource_site_id": "site_crownless_standard",
+        "objective_kind": "banner_claim",
+        "scenario_state_keys": [
+          "fallen",
+          "raised",
+          "captured",
+          "contested"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": true,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.crownless_standard",
+        "public_summary": "Claimable standard for scenario control goals.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_drowned_toll_bell",
+      "name": "Drowned Toll Bell",
+      "family": "scenario_objective",
+      "batch007_role": "scenario_objective",
+      "guarded": true,
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_drowned_toll_bell",
+        "resource_site_id": "site_drowned_toll_bell",
+        "objective_kind": "flood_toll",
+        "scenario_state_keys": [
+          "silent",
+          "rung",
+          "claimed",
+          "sundered"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": true,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.drowned_toll_bell",
+        "public_summary": "Bell objective for wet-route scenario gates.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_orchard_writ_seal",
+      "name": "Orchard Writ Seal",
+      "family": "scenario_objective",
+      "batch007_role": "scenario_objective",
+      "guarded": false,
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_orchard_writ_seal",
+        "resource_site_id": "site_orchard_writ_seal",
+        "objective_kind": "charter_writ",
+        "scenario_state_keys": [
+          "sealed",
+          "read",
+          "claimed",
+          "voided"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": false,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.orchard_writ_seal",
+        "public_summary": "Small writ seal for orchard-law scenario steps.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_brass_oath_wheel",
+      "name": "Brass Oath Wheel",
+      "family": "scenario_objective",
+      "batch007_role": "scenario_objective",
+      "guarded": true,
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_brass_oath_wheel",
+        "resource_site_id": "site_brass_oath_wheel",
+        "objective_kind": "contract_wheel",
+        "scenario_state_keys": [
+          "locked",
+          "turned",
+          "claimed",
+          "disabled"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": true,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.brass_oath_wheel",
+        "public_summary": "Contract wheel for scenario-controlled industrial objectives.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_burned_signal_brazier",
+      "name": "Burned Signal Brazier",
+      "family": "scenario_objective",
+      "batch007_role": "state_variant",
+      "state_variant_contract": {
+        "contract_id": "state_variant_contract_burned_signal_brazier",
+        "resource_site_id": "site_burned_signal_brazier",
+        "base_object_id": "object_ember_signal_brazier",
+        "base_object_family": "faction_landmark",
+        "variant_state": "damaged",
+        "state_visual_rule": "broken brazier bowl and dark signal coals",
+        "metadata_only": true,
+        "runtime_state_adopted": false,
+        "renderer_swap_required": false,
+        "save_payload_required": false,
+        "duplicates_base_runtime": false
+      },
+      "public_text": {
+        "display_name_key": "state.burned_signal_brazier",
+        "public_summary": "Damaged-state marker for an Embercourt signal landmark.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_repaired_ferry_stage_claimed",
+      "name": "Claimed Ferry Stage",
+      "family": "scenario_objective",
+      "batch007_role": "state_variant",
+      "state_variant_contract": {
+        "contract_id": "state_variant_contract_repaired_ferry_stage_claimed",
+        "resource_site_id": "site_repaired_ferry_stage_claimed",
+        "base_object_id": "object_repaired_ferry_stage",
+        "base_object_family": "transit_object",
+        "variant_state": "captured",
+        "state_visual_rule": "raised claim lamps and tightened ferry chain",
+        "metadata_only": true,
+        "runtime_state_adopted": false,
+        "renderer_swap_required": false,
+        "save_payload_required": false,
+        "duplicates_base_runtime": false
+      },
+      "public_text": {
+        "display_name_key": "state.claimed_ferry_stage",
+        "public_summary": "Captured-state marker for ferry route ownership.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_claimed_quarry_head",
+      "name": "Claimed Quarry Head",
+      "family": "scenario_objective",
+      "batch007_role": "state_variant",
+      "state_variant_contract": {
+        "contract_id": "state_variant_contract_claimed_quarry_head",
+        "resource_site_id": "site_claimed_quarry_head",
+        "base_object_id": "object_ridge_quarry",
+        "base_object_family": "mine",
+        "variant_state": "claimed",
+        "state_visual_rule": "fresh claim stakes and restarted hoist line",
+        "metadata_only": true,
+        "runtime_state_adopted": false,
+        "renderer_swap_required": false,
+        "save_payload_required": false,
+        "duplicates_base_runtime": false
+      },
+      "public_text": {
+        "display_name_key": "state.claimed_quarry_head",
+        "public_summary": "Claimed-state marker for quarry control.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "site_withered_rootgate_marker",
+      "name": "Withered Rootgate Marker",
+      "family": "scenario_objective",
+      "batch007_role": "state_variant",
+      "state_variant_contract": {
+        "contract_id": "state_variant_contract_withered_rootgate_marker",
+        "resource_site_id": "site_withered_rootgate_marker",
+        "base_object_id": "object_root_pass_arch",
+        "base_object_family": "transit_object",
+        "variant_state": "damaged",
+        "state_visual_rule": "wilted root arch and slack path thorns",
+        "metadata_only": true,
+        "runtime_state_adopted": false,
+        "renderer_swap_required": false,
+        "save_payload_required": false,
+        "duplicates_base_runtime": false
+      },
+      "public_text": {
+        "display_name_key": "state.withered_rootgate_marker",
+        "public_summary": "Damaged-state marker for living route gates.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
     }
   ]
 }

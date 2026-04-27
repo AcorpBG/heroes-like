@@ -4258,8 +4258,11 @@
       "primary_class": "faction_landmark",
       "secondary_tags": [
         "faction_pressure",
-        "world_lore"
+        "world_lore",
+        "counter_capture_target"
       ],
+      "resource_site_id": "site_ember_signal_brazier",
+      "batch007_role": "faction_landmark",
       "faction_id": "faction_embercourt",
       "biome_ids": [
         "biome_grasslands",
@@ -4272,28 +4275,131 @@
         "anchor": "bottom_center",
         "tier": "micro"
       },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
       "passable": false,
-      "visitable": false,
+      "visitable": true,
       "map_roles": [
         "faction_landmark",
-        "route_identity"
+        "faction_pressure",
+        "ember_signal_identity"
       ],
-      "passability_class": "blocking_non_visitable",
+      "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "none",
+        "cadence": "persistent_control",
         "remains_after_visit": true,
-        "state_after_visit": "unchanged",
+        "state_after_visit": "claimed",
         "requires_ownership": false,
         "requires_guard_clear": false,
-        "supports_revisit": false,
+        "supports_revisit": true,
         "cooldown_days": 0,
-        "refresh_rule": "none"
-      }
+        "refresh_rule": "persistent_state"
+      },
+      "ownership": {
+        "capture_model": "capturable",
+        "default_owner": "faction_embercourt",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_ember_signal_brazier",
+        "resource_site_id": "site_ember_signal_brazier",
+        "landmark_role": "ember_signal_identity",
+        "faction_id": "faction_embercourt",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.ember_signal_brazier",
+        "public_summary": "Signal fire landmark for Embercourt road influence.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_landmark_idle_placeholder",
+        "object_landmark_capture_state_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "town_influence",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "standard",
+        "placement_role": "ember_signal_identity",
+        "faction_pressure_hint": "faction_embercourt",
+        "defense_priority": "medium"
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
     },
     {
       "id": "object_bog_drum_totem",
       "name": "Bog Drum Totem",
       "family": "faction_landmark",
+      "schema_version": 1,
+      "primary_class": "faction_landmark",
+      "secondary_tags": [
+        "faction_pressure",
+        "world_lore",
+        "counter_capture_target"
+      ],
+      "resource_site_id": "site_bog_drum_totem",
+      "batch007_role": "faction_landmark",
       "faction_id": "faction_mireclaw",
       "biome_ids": [
         "biome_mire_fen",
@@ -4302,19 +4408,135 @@
       ],
       "footprint": {
         "width": 1,
-        "height": 1
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
       },
       "passable": false,
-      "visitable": false,
+      "visitable": true,
       "map_roles": [
         "faction_landmark",
-        "threat_identity"
-      ]
+        "faction_pressure",
+        "mire_ambush_identity"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "claimed",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "persistent_state"
+      },
+      "ownership": {
+        "capture_model": "capturable",
+        "default_owner": "faction_mireclaw",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_bog_drum_totem",
+        "resource_site_id": "site_bog_drum_totem",
+        "landmark_role": "mire_ambush_identity",
+        "faction_id": "faction_mireclaw",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.bog_drum_totem",
+        "public_summary": "Drum marker for Mireclaw pressure near wet lanes.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_landmark_idle_placeholder",
+        "object_landmark_capture_state_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "town_influence",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "standard",
+        "placement_role": "mire_ambush_identity",
+        "faction_pressure_hint": "faction_mireclaw",
+        "defense_priority": "medium"
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
     },
     {
       "id": "object_prism_relay_lens",
       "name": "Prism Relay Lens",
       "family": "faction_landmark",
+      "schema_version": 1,
+      "primary_class": "faction_landmark",
+      "secondary_tags": [
+        "faction_pressure",
+        "world_lore",
+        "counter_capture_target"
+      ],
+      "resource_site_id": "site_prism_relay_lens",
+      "batch007_role": "faction_landmark",
       "faction_id": "faction_sunvault",
       "biome_ids": [
         "biome_grasslands",
@@ -4323,14 +4545,121 @@
       ],
       "footprint": {
         "width": 1,
-        "height": 1
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
       },
       "passable": false,
-      "visitable": false,
+      "visitable": true,
       "map_roles": [
         "faction_landmark",
-        "scouting_identity"
-      ]
+        "faction_pressure",
+        "sunvault_sightline_identity"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "claimed",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "persistent_state"
+      },
+      "ownership": {
+        "capture_model": "capturable",
+        "default_owner": "faction_sunvault",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_prism_relay_lens",
+        "resource_site_id": "site_prism_relay_lens",
+        "landmark_role": "sunvault_sightline_identity",
+        "faction_id": "faction_sunvault",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.prism_relay_lens",
+        "public_summary": "Lens landmark for Sunvault relay sightlines.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_landmark_idle_placeholder",
+        "object_landmark_capture_state_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "town_influence",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "standard",
+        "placement_role": "sunvault_sightline_identity",
+        "faction_pressure_hint": "faction_sunvault",
+        "defense_priority": "medium"
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
     },
     {
       "id": "object_neutral_encounter_river_pass_ghoul_grove_stack",
@@ -36487,6 +36816,2518 @@
         "avoid_until_strength": "heavy"
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
+    },
+    {
+      "id": "object_thornwake_graft_arch",
+      "name": "Thornwake Graft Arch",
+      "family": "faction_landmark",
+      "schema_version": 1,
+      "primary_class": "faction_landmark",
+      "secondary_tags": [
+        "faction_pressure",
+        "world_lore",
+        "counter_capture_target"
+      ],
+      "resource_site_id": "site_thornwake_graft_arch",
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_thornwake",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_grasslands",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_landmark",
+        "faction_pressure",
+        "living_route_identity"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "claimed",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "persistent_state"
+      },
+      "ownership": {
+        "capture_model": "capturable",
+        "default_owner": "faction_thornwake",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_thornwake_graft_arch",
+        "resource_site_id": "site_thornwake_graft_arch",
+        "landmark_role": "living_route_identity",
+        "faction_id": "faction_thornwake",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.thornwake_graft_arch",
+        "public_summary": "Living arch that marks Thornwake-managed paths.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_landmark_idle_placeholder",
+        "object_landmark_capture_state_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "town_influence",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "standard",
+        "placement_role": "living_route_identity",
+        "faction_pressure_hint": "faction_thornwake",
+        "defense_priority": "medium"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_brasshollow_gauge_shrine",
+      "name": "Brasshollow Gauge Shrine",
+      "family": "faction_landmark",
+      "schema_version": 1,
+      "primary_class": "faction_landmark",
+      "secondary_tags": [
+        "faction_pressure",
+        "world_lore",
+        "counter_capture_target"
+      ],
+      "resource_site_id": "site_brasshollow_gauge_shrine",
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_brasshollow",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 2
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_landmark",
+        "faction_pressure",
+        "industrial_contract_identity"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "claimed",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "persistent_state"
+      },
+      "ownership": {
+        "capture_model": "capturable",
+        "default_owner": "faction_brasshollow",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_brasshollow_gauge_shrine",
+        "resource_site_id": "site_brasshollow_gauge_shrine",
+        "landmark_role": "industrial_contract_identity",
+        "faction_id": "faction_brasshollow",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.brasshollow_gauge_shrine",
+        "public_summary": "Gauge shrine for Brasshollow claim and repair culture.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_landmark_idle_placeholder",
+        "object_landmark_capture_state_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "town_influence",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "standard",
+        "placement_role": "industrial_contract_identity",
+        "faction_pressure_hint": "faction_brasshollow",
+        "defense_priority": "medium"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_veilmourn_bell_mast",
+      "name": "Veilmourn Bell Mast",
+      "family": "faction_landmark",
+      "schema_version": 1,
+      "primary_class": "faction_landmark",
+      "secondary_tags": [
+        "faction_pressure",
+        "world_lore",
+        "counter_capture_target"
+      ],
+      "resource_site_id": "site_veilmourn_bell_mast",
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_veilmourn",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_mire_fen",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_landmark",
+        "faction_pressure",
+        "fog_warning_identity"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "claimed",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "persistent_state"
+      },
+      "ownership": {
+        "capture_model": "capturable",
+        "default_owner": "faction_veilmourn",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_veilmourn_bell_mast",
+        "resource_site_id": "site_veilmourn_bell_mast",
+        "landmark_role": "fog_warning_identity",
+        "faction_id": "faction_veilmourn",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.veilmourn_bell_mast",
+        "public_summary": "Bell mast that marks Veilmourn salvage lanes.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_landmark_idle_placeholder",
+        "object_landmark_capture_state_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "town_influence",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "standard",
+        "placement_role": "fog_warning_identity",
+        "faction_pressure_hint": "faction_veilmourn",
+        "defense_priority": "medium"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_granary_lock_exchange",
+      "name": "Granary Lock Exchange",
+      "family": "faction_landmark",
+      "schema_version": 1,
+      "primary_class": "faction_landmark",
+      "secondary_tags": [
+        "faction_pressure",
+        "world_lore",
+        "counter_capture_target"
+      ],
+      "resource_site_id": "site_granary_lock_exchange",
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_embercourt",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_rough_badlands",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 3,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "large"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 2
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_landmark",
+        "faction_pressure",
+        "civic_economy_identity"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "claimed",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "persistent_state"
+      },
+      "ownership": {
+        "capture_model": "capturable",
+        "default_owner": "faction_embercourt",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_granary_lock_exchange",
+        "resource_site_id": "site_granary_lock_exchange",
+        "landmark_role": "civic_economy_identity",
+        "faction_id": "faction_embercourt",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.granary_lock_exchange",
+        "public_summary": "Roadside exchange showing Embercourt civic supply reach.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_landmark_idle_placeholder",
+        "object_landmark_capture_state_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "town_influence",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "standard",
+        "placement_role": "civic_economy_identity",
+        "faction_pressure_hint": "faction_embercourt",
+        "defense_priority": "medium"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_blackwater_shrine_marker",
+      "name": "Blackwater Shrine Marker",
+      "family": "faction_landmark",
+      "schema_version": 1,
+      "primary_class": "faction_landmark",
+      "secondary_tags": [
+        "faction_pressure",
+        "world_lore",
+        "counter_capture_target"
+      ],
+      "resource_site_id": "site_blackwater_shrine_marker",
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_mireclaw",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_subterranean_underways",
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_landmark",
+        "faction_pressure",
+        "mire_service_identity"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "claimed",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "persistent_state"
+      },
+      "ownership": {
+        "capture_model": "capturable",
+        "default_owner": "faction_mireclaw",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_blackwater_shrine_marker",
+        "resource_site_id": "site_blackwater_shrine_marker",
+        "landmark_role": "mire_service_identity",
+        "faction_id": "faction_mireclaw",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.blackwater_shrine_marker",
+        "public_summary": "Low shrine marker for Mireclaw blackwater influence.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_landmark_idle_placeholder",
+        "object_landmark_capture_state_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "town_influence",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "standard",
+        "placement_role": "mire_service_identity",
+        "faction_pressure_hint": "faction_mireclaw",
+        "defense_priority": "medium"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_prism_yard_standard",
+      "name": "Prism Yard Standard",
+      "family": "faction_landmark",
+      "schema_version": 1,
+      "primary_class": "faction_landmark",
+      "secondary_tags": [
+        "faction_pressure",
+        "world_lore",
+        "counter_capture_target"
+      ],
+      "resource_site_id": "site_prism_yard_standard",
+      "batch007_role": "faction_landmark",
+      "faction_id": "faction_sunvault",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_snow_frost_marches",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "faction_landmark",
+        "faction_pressure",
+        "crystal_yard_identity"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "claimed",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "persistent_state"
+      },
+      "ownership": {
+        "capture_model": "capturable",
+        "default_owner": "faction_sunvault",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "faction_landmark_contract": {
+        "contract_id": "landmark_contract_prism_yard_standard",
+        "resource_site_id": "site_prism_yard_standard",
+        "landmark_role": "crystal_yard_identity",
+        "faction_id": "faction_sunvault",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged"
+        ],
+        "ownership_state_metadata_only": true,
+        "runtime_capture_adopted": false,
+        "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
+      },
+      "public_text": {
+        "display_name_key": "landmark.prism_yard_standard",
+        "public_summary": "Sunvault standard for crystal-yard influence.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_landmark_idle_placeholder",
+        "object_landmark_capture_state_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "town_influence",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "standard",
+        "placement_role": "crystal_yard_identity",
+        "faction_pressure_hint": "faction_sunvault",
+        "defense_priority": "medium"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_broken_treaty_stone",
+      "name": "Broken Treaty Stone",
+      "family": "scenario_objective",
+      "schema_version": 1,
+      "primary_class": "scenario_objective",
+      "secondary_tags": [
+        "scenario_objective",
+        "world_lore"
+      ],
+      "resource_site_id": "site_broken_treaty_stone",
+      "batch007_role": "scenario_objective",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 2
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "scenario_objective",
+        "treaty_marker"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "scenario_scripted",
+        "remains_after_visit": true,
+        "state_after_visit": "scenario_state",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "scenario"
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "objective approach and any guard marker must remain readable before visit",
+        "metadata_only": true,
+        "runtime_guard_resolution_adopted": false
+      },
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_broken_treaty_stone",
+        "resource_site_id": "site_broken_treaty_stone",
+        "objective_kind": "treaty_marker",
+        "scenario_state_keys": [
+          "inactive",
+          "attuned",
+          "broken",
+          "resolved"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": true,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.broken_treaty_stone",
+        "public_summary": "Treaty marker for scenario-controlled accord objectives.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_objective_idle_placeholder",
+        "object_objective_state_change_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "scenario_objective",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": false
+      },
+      "ai_hints": {
+        "strategic_value": 6,
+        "risk_tier": "standard",
+        "placement_role": "treaty_marker",
+        "objective_priority": "scenario_controlled"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_sealed_causeway_lever",
+      "name": "Sealed Causeway Lever",
+      "family": "scenario_objective",
+      "schema_version": 1,
+      "primary_class": "scenario_objective",
+      "secondary_tags": [
+        "scenario_objective",
+        "world_lore"
+      ],
+      "resource_site_id": "site_sealed_causeway_lever",
+      "batch007_role": "scenario_objective",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "scenario_objective",
+        "route_release"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "scenario_scripted",
+        "remains_after_visit": true,
+        "state_after_visit": "scenario_state",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "scenario"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "objective approach and any guard marker must remain readable before visit",
+        "metadata_only": true,
+        "runtime_guard_resolution_adopted": false
+      },
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_sealed_causeway_lever",
+        "resource_site_id": "site_sealed_causeway_lever",
+        "objective_kind": "route_release",
+        "scenario_state_keys": [
+          "sealed",
+          "armed",
+          "opened",
+          "jammed"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": false,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.sealed_causeway_lever",
+        "public_summary": "Compact lever frame for scenario causeway state.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_objective_idle_placeholder",
+        "object_objective_state_change_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "scenario_objective",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 3,
+        "risk_tier": "light",
+        "placement_role": "route_release",
+        "objective_priority": "scenario_controlled"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_mirror_anchor_frame",
+      "name": "Mirror Anchor Frame",
+      "family": "scenario_objective",
+      "schema_version": 1,
+      "primary_class": "scenario_objective",
+      "secondary_tags": [
+        "scenario_objective",
+        "world_lore"
+      ],
+      "resource_site_id": "site_mirror_anchor_frame",
+      "batch007_role": "scenario_objective",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_coast_archipelago",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 3,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 3
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "scenario_objective",
+        "anchor_alignment"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "scenario_scripted",
+        "remains_after_visit": true,
+        "state_after_visit": "scenario_state",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "scenario"
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "objective approach and any guard marker must remain readable before visit",
+        "metadata_only": true,
+        "runtime_guard_resolution_adopted": false
+      },
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_mirror_anchor_frame",
+        "resource_site_id": "site_mirror_anchor_frame",
+        "objective_kind": "anchor_alignment",
+        "scenario_state_keys": [
+          "dormant",
+          "aligned",
+          "fractured",
+          "secured"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": true,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.mirror_anchor_frame",
+        "public_summary": "Old Measure anchor frame for scenario alignment goals.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_objective_idle_placeholder",
+        "object_objective_state_change_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "scenario_objective",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": false
+      },
+      "ai_hints": {
+        "strategic_value": 6,
+        "risk_tier": "heavy",
+        "placement_role": "anchor_alignment",
+        "objective_priority": "scenario_controlled"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_crownless_standard",
+      "name": "Crownless Standard",
+      "family": "scenario_objective",
+      "schema_version": 1,
+      "primary_class": "scenario_objective",
+      "secondary_tags": [
+        "scenario_objective",
+        "world_lore"
+      ],
+      "resource_site_id": "site_crownless_standard",
+      "batch007_role": "scenario_objective",
+      "biome_ids": [
+        "biome_rough_badlands",
+        "biome_grasslands",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 2
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "scenario_objective",
+        "banner_claim"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "scenario_scripted",
+        "remains_after_visit": true,
+        "state_after_visit": "scenario_state",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "scenario"
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "objective approach and any guard marker must remain readable before visit",
+        "metadata_only": true,
+        "runtime_guard_resolution_adopted": false
+      },
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_crownless_standard",
+        "resource_site_id": "site_crownless_standard",
+        "objective_kind": "banner_claim",
+        "scenario_state_keys": [
+          "fallen",
+          "raised",
+          "captured",
+          "contested"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": true,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.crownless_standard",
+        "public_summary": "Claimable standard for scenario control goals.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_objective_idle_placeholder",
+        "object_objective_state_change_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "scenario_objective",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": false
+      },
+      "ai_hints": {
+        "strategic_value": 6,
+        "risk_tier": "standard",
+        "placement_role": "banner_claim",
+        "objective_priority": "scenario_controlled"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_drowned_toll_bell",
+      "name": "Drowned Toll Bell",
+      "family": "scenario_objective",
+      "schema_version": 1,
+      "primary_class": "scenario_objective",
+      "secondary_tags": [
+        "scenario_objective",
+        "world_lore"
+      ],
+      "resource_site_id": "site_drowned_toll_bell",
+      "batch007_role": "scenario_objective",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "west"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "scenario_objective",
+        "flood_toll"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "scenario_scripted",
+        "remains_after_visit": true,
+        "state_after_visit": "scenario_state",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "scenario"
+      },
+      "guard_expectation": {
+        "tier": "ambush_uncertain",
+        "visible_cue": "objective approach and any guard marker must remain readable before visit",
+        "metadata_only": true,
+        "runtime_guard_resolution_adopted": false
+      },
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_drowned_toll_bell",
+        "resource_site_id": "site_drowned_toll_bell",
+        "objective_kind": "flood_toll",
+        "scenario_state_keys": [
+          "silent",
+          "rung",
+          "claimed",
+          "sundered"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": true,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.drowned_toll_bell",
+        "public_summary": "Bell objective for wet-route scenario gates.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_objective_idle_placeholder",
+        "object_objective_state_change_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "scenario_objective",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 6,
+        "risk_tier": "ambush_uncertain",
+        "placement_role": "flood_toll",
+        "objective_priority": "scenario_controlled"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_orchard_writ_seal",
+      "name": "Orchard Writ Seal",
+      "family": "scenario_objective",
+      "schema_version": 1,
+      "primary_class": "scenario_objective",
+      "secondary_tags": [
+        "scenario_objective",
+        "world_lore"
+      ],
+      "resource_site_id": "site_orchard_writ_seal",
+      "batch007_role": "scenario_objective",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_grasslands",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "scenario_objective",
+        "charter_writ"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "scenario_scripted",
+        "remains_after_visit": true,
+        "state_after_visit": "scenario_state",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "scenario"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "objective approach and any guard marker must remain readable before visit",
+        "metadata_only": true,
+        "runtime_guard_resolution_adopted": false
+      },
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_orchard_writ_seal",
+        "resource_site_id": "site_orchard_writ_seal",
+        "objective_kind": "charter_writ",
+        "scenario_state_keys": [
+          "sealed",
+          "read",
+          "claimed",
+          "voided"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": false,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.orchard_writ_seal",
+        "public_summary": "Small writ seal for orchard-law scenario steps.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_objective_idle_placeholder",
+        "object_objective_state_change_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "scenario_objective",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": false
+      },
+      "ai_hints": {
+        "strategic_value": 3,
+        "risk_tier": "light",
+        "placement_role": "charter_writ",
+        "objective_priority": "scenario_controlled"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_brass_oath_wheel",
+      "name": "Brass Oath Wheel",
+      "family": "scenario_objective",
+      "schema_version": 1,
+      "primary_class": "scenario_objective",
+      "secondary_tags": [
+        "scenario_objective",
+        "world_lore"
+      ],
+      "resource_site_id": "site_brass_oath_wheel",
+      "batch007_role": "scenario_objective",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "scenario_objective",
+        "contract_wheel"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "scenario_scripted",
+        "remains_after_visit": true,
+        "state_after_visit": "scenario_state",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "scenario"
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "objective approach and any guard marker must remain readable before visit",
+        "metadata_only": true,
+        "runtime_guard_resolution_adopted": false
+      },
+      "scenario_objective_contract": {
+        "contract_id": "objective_contract_brass_oath_wheel",
+        "resource_site_id": "site_brass_oath_wheel",
+        "objective_kind": "contract_wheel",
+        "scenario_state_keys": [
+          "locked",
+          "turned",
+          "claimed",
+          "disabled"
+        ],
+        "requires_scenario_script": true,
+        "guarded_objective_metadata": true,
+        "metadata_only": true,
+        "broad_objective_runtime_migration": false,
+        "scenario_placement_migration": false,
+        "save_payload_required": false,
+        "public_text_panel_required": false
+      },
+      "public_text": {
+        "display_name_key": "objective.brass_oath_wheel",
+        "public_summary": "Contract wheel for scenario-controlled industrial objectives.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_objective_idle_placeholder",
+        "object_objective_state_change_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "scenario_objective",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": false
+      },
+      "ai_hints": {
+        "strategic_value": 6,
+        "risk_tier": "standard",
+        "placement_role": "contract_wheel",
+        "objective_priority": "scenario_controlled"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_burned_signal_brazier",
+      "name": "Burned Signal Brazier",
+      "family": "scenario_objective",
+      "schema_version": 1,
+      "primary_class": "scenario_objective",
+      "secondary_tags": [
+        "scenario_objective",
+        "world_lore",
+        "counter_capture_target"
+      ],
+      "resource_site_id": "site_burned_signal_brazier",
+      "batch007_role": "state_variant",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_highland_ridge",
+        "biome_ash_lava_wastes"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "scenario_objective",
+        "state_variant",
+        "damaged"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "scenario_scripted",
+        "remains_after_visit": true,
+        "state_after_visit": "scenario_state",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "scenario"
+      },
+      "ownership": {
+        "capture_model": "scenario_controlled",
+        "default_owner": "neutral",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged",
+          "disabled",
+          "repaired"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "state_variant_contract": {
+        "contract_id": "state_variant_contract_burned_signal_brazier",
+        "resource_site_id": "site_burned_signal_brazier",
+        "base_object_id": "object_ember_signal_brazier",
+        "base_object_family": "faction_landmark",
+        "variant_state": "damaged",
+        "state_visual_rule": "broken brazier bowl and dark signal coals",
+        "metadata_only": true,
+        "runtime_state_adopted": false,
+        "renderer_swap_required": false,
+        "save_payload_required": false,
+        "duplicates_base_runtime": false
+      },
+      "public_text": {
+        "display_name_key": "state.burned_signal_brazier",
+        "public_summary": "Damaged-state marker for an Embercourt signal landmark.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_state_variant_idle_placeholder",
+        "object_state_variant_change_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "scenario_objective",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": false
+      },
+      "ai_hints": {
+        "strategic_value": 5,
+        "risk_tier": "standard",
+        "placement_role": "damaged_state_variant",
+        "state_target_object_id": "object_ember_signal_brazier"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_repaired_ferry_stage_claimed",
+      "name": "Claimed Ferry Stage",
+      "family": "scenario_objective",
+      "schema_version": 1,
+      "primary_class": "scenario_objective",
+      "secondary_tags": [
+        "scenario_objective",
+        "world_lore",
+        "counter_capture_target"
+      ],
+      "resource_site_id": "site_repaired_ferry_stage_claimed",
+      "batch007_role": "state_variant",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "scenario_objective",
+        "state_variant",
+        "captured"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "scenario_scripted",
+        "remains_after_visit": true,
+        "state_after_visit": "scenario_state",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "scenario"
+      },
+      "ownership": {
+        "capture_model": "scenario_controlled",
+        "default_owner": "neutral",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged",
+          "disabled",
+          "repaired"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "state_variant_contract": {
+        "contract_id": "state_variant_contract_repaired_ferry_stage_claimed",
+        "resource_site_id": "site_repaired_ferry_stage_claimed",
+        "base_object_id": "object_repaired_ferry_stage",
+        "base_object_family": "transit_object",
+        "variant_state": "captured",
+        "state_visual_rule": "raised claim lamps and tightened ferry chain",
+        "metadata_only": true,
+        "runtime_state_adopted": false,
+        "renderer_swap_required": false,
+        "save_payload_required": false,
+        "duplicates_base_runtime": false
+      },
+      "public_text": {
+        "display_name_key": "state.claimed_ferry_stage",
+        "public_summary": "Captured-state marker for ferry route ownership.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_state_variant_idle_placeholder",
+        "object_state_variant_change_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "scenario_objective",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 5,
+        "risk_tier": "standard",
+        "placement_role": "captured_state_variant",
+        "state_target_object_id": "object_repaired_ferry_stage"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_claimed_quarry_head",
+      "name": "Claimed Quarry Head",
+      "family": "scenario_objective",
+      "schema_version": 1,
+      "primary_class": "scenario_objective",
+      "secondary_tags": [
+        "scenario_objective",
+        "world_lore",
+        "counter_capture_target"
+      ],
+      "resource_site_id": "site_claimed_quarry_head",
+      "batch007_role": "state_variant",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_rough_badlands",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 2
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "scenario_objective",
+        "state_variant",
+        "claimed"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "scenario_scripted",
+        "remains_after_visit": true,
+        "state_after_visit": "scenario_state",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "scenario"
+      },
+      "ownership": {
+        "capture_model": "scenario_controlled",
+        "default_owner": "neutral",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged",
+          "disabled",
+          "repaired"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "state_variant_contract": {
+        "contract_id": "state_variant_contract_claimed_quarry_head",
+        "resource_site_id": "site_claimed_quarry_head",
+        "base_object_id": "object_ridge_quarry",
+        "base_object_family": "mine",
+        "variant_state": "claimed",
+        "state_visual_rule": "fresh claim stakes and restarted hoist line",
+        "metadata_only": true,
+        "runtime_state_adopted": false,
+        "renderer_swap_required": false,
+        "save_payload_required": false,
+        "duplicates_base_runtime": false
+      },
+      "public_text": {
+        "display_name_key": "state.claimed_quarry_head",
+        "public_summary": "Claimed-state marker for quarry control.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_state_variant_idle_placeholder",
+        "object_state_variant_change_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "scenario_objective",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": false
+      },
+      "ai_hints": {
+        "strategic_value": 5,
+        "risk_tier": "standard",
+        "placement_role": "claimed_state_variant",
+        "state_target_object_id": "object_ridge_quarry"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+    },
+    {
+      "id": "object_withered_rootgate_marker",
+      "name": "Withered Rootgate Marker",
+      "family": "scenario_objective",
+      "schema_version": 1,
+      "primary_class": "scenario_objective",
+      "secondary_tags": [
+        "scenario_objective",
+        "world_lore",
+        "counter_capture_target"
+      ],
+      "resource_site_id": "site_withered_rootgate_marker",
+      "batch007_role": "state_variant",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "scenario_objective",
+        "state_variant",
+        "damaged"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "scenario_scripted",
+        "remains_after_visit": true,
+        "state_after_visit": "scenario_state",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "scenario"
+      },
+      "ownership": {
+        "capture_model": "scenario_controlled",
+        "default_owner": "neutral",
+        "supported_states": [
+          "neutral",
+          "owned",
+          "captured",
+          "damaged",
+          "disabled",
+          "repaired"
+        ],
+        "state_metadata_only": true,
+        "runtime_capture_adopted": false
+      },
+      "state_variant_contract": {
+        "contract_id": "state_variant_contract_withered_rootgate_marker",
+        "resource_site_id": "site_withered_rootgate_marker",
+        "base_object_id": "object_root_pass_arch",
+        "base_object_family": "transit_object",
+        "variant_state": "damaged",
+        "state_visual_rule": "wilted root arch and slack path thorns",
+        "metadata_only": true,
+        "runtime_state_adopted": false,
+        "renderer_swap_required": false,
+        "save_payload_required": false,
+        "duplicates_base_runtime": false
+      },
+      "public_text": {
+        "display_name_key": "state.withered_rootgate_marker",
+        "public_summary": "Damaged-state marker for living route gates.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "objective_runtime_adopted": false,
+        "broad_objective_runtime_migration": false,
+        "state_variant_runtime_adopted": false,
+        "ownership_capture_runtime_adopted": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": false,
+        "public_text_panel_required": false
+      },
+      "animation_cues": [
+        "object_batch007_state_variant_idle_placeholder",
+        "object_state_variant_change_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "scenario_objective",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_route_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 5,
+        "risk_tier": "standard",
+        "placement_role": "damaged_state_variant",
+        "state_target_object_id": "object_root_pass_arch"
+      },
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
     }
   ]
 }
