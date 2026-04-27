@@ -773,6 +773,7 @@ func _rebuild_skirmish_browser() -> void:
 	for index in range(_skirmish_entries.size()):
 		var entry = _skirmish_entries[index]
 		_skirmish_list.add_item(String(entry.get("label", entry.get("scenario_id", "Scenario"))))
+		_skirmish_list.set_item_tooltip(index, _skirmish_front_row_tooltip(entry))
 		if String(entry.get("scenario_id", "")) == _selected_skirmish_id:
 			selected_index = index
 
@@ -809,6 +810,7 @@ func _refresh_skirmish_setup() -> void:
 		_start_skirmish_button.tooltip_text = "This scenario cannot be launched as a skirmish."
 		return
 
+	var front_check := _skirmish_front_check_payload(setup)
 	var recommended_difficulty := String(setup.get("recommended_difficulty", ScenarioSelectRulesScript.default_difficulty_id()))
 	var difficulty_lines := [
 		ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty),
@@ -818,17 +820,66 @@ func _refresh_skirmish_setup() -> void:
 		difficulty_lines.append("Recommended: %s." % String(setup.get("recommended_difficulty_label", "")))
 	_set_compact_label(_difficulty_summary_label, _join_nonempty_lines(difficulty_lines), 3, 82)
 
-	_set_compact_label(_setup_summary_label, String(setup.get("setup_summary", "")), 3, 84)
+	_set_compact_label(
+		_setup_summary_label,
+		_join_nonempty_lines([
+			String(front_check.get("visible_text", "")),
+			String(setup.get("setup_summary", "")),
+		]),
+		3,
+		84
+	)
 	_set_compact_label(_skirmish_commander_preview_label, String(setup.get("commander_preview", "Commander preview unavailable.")), 4, 84)
 	_set_compact_label(_skirmish_operational_board_label, String(setup.get("operational_board", "Operational board unavailable.")), 4, 84)
 	_start_skirmish_button.disabled = false
 	_start_skirmish_button.text = "Launch Skirmish"
-	_start_skirmish_button.tooltip_text = String(setup.get("action_tooltip", setup.get("launch_preview", ""))).strip_edges()
+	_start_skirmish_button.tooltip_text = _join_nonempty_lines([
+		String(front_check.get("tooltip_text", "")),
+		String(setup.get("action_tooltip", setup.get("launch_preview", ""))).strip_edges(),
+	])
 	if _start_skirmish_button.tooltip_text == "":
 		_start_skirmish_button.tooltip_text = "Launch %s at %s difficulty." % [
 			String(setup.get("scenario_name", _selected_skirmish_id)),
 			String(setup.get("difficulty_label", ScenarioSelectRulesScript.difficulty_label(_selected_difficulty))),
 		]
+
+func _skirmish_front_check_payload(setup: Dictionary) -> Dictionary:
+	if setup.is_empty():
+		return {
+			"visible_text": "Skirmish front check: select a front before launching.",
+			"tooltip_text": "Skirmish Front Check\n- Selection: none.\n- Launch target: unavailable until a skirmish front is selected.\n- State change: no campaign progress or expedition save changes.",
+		}
+	var scenario_name := String(setup.get("scenario_name", _selected_skirmish_id))
+	var difficulty_label := String(setup.get("difficulty_label", ScenarioSelectRulesScript.difficulty_label(_selected_difficulty)))
+	var launch_handoff := String(setup.get("launch_handoff", "")).strip_edges()
+	var front_context := String(setup.get("front_context", "")).strip_edges()
+	var action_consequence := String(setup.get("action_consequence", "")).strip_edges()
+	return {
+		"visible_text": "Skirmish front check: %s is the Launch Skirmish target; selection changes preview only." % scenario_name,
+		"tooltip_text": _join_nonempty_lines([
+			"Skirmish Front Check",
+			"- Selected front: %s." % scenario_name,
+			"- Launch target: Launch Skirmish starts this front as a fresh Skirmish expedition on Day 1 at %s difficulty." % difficulty_label,
+			"- Selection: changing front rows updates briefing, commander preview, operational board, and launch target only.",
+			"- Handoff: %s" % launch_handoff if launch_handoff != "" else "",
+			"- Front context: %s" % front_context if front_context != "" else "",
+			"- Action boundary: %s" % action_consequence if action_consequence != "" else "",
+			"- Not changed: campaign progress, latest save, and manual save slots stay unchanged until Launch Skirmish creates a fresh run.",
+		]),
+		"scenario_name": scenario_name,
+		"difficulty_label": difficulty_label,
+	}
+
+func _skirmish_front_row_tooltip(entry: Dictionary) -> String:
+	if entry.is_empty():
+		return "Front cue: select a skirmish front to inspect its launch target."
+	var scenario_label := String(entry.get("label", entry.get("scenario_id", "Front")))
+	var summary := String(entry.get("summary", "")).strip_edges()
+	return _join_nonempty_lines([
+		"Front cue: selecting %s changes the inspected skirmish front only." % scenario_label,
+		"Launch Skirmish uses the selected front and chosen difficulty; campaign progress and expedition saves stay unchanged until launch.",
+		summary,
+	])
 
 func _selected_skirmish_entry() -> Dictionary:
 	for entry in _skirmish_entries:
@@ -960,6 +1011,7 @@ func validation_snapshot() -> Dictionary:
 	var selected_chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id)
 	var campaign_chapter_check := _campaign_chapter_check_payload(selected_chapter_action, primary_campaign_action)
 	var selected_skirmish_setup := ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
+	var skirmish_front_check := _skirmish_front_check_payload(selected_skirmish_setup)
 	var selected_save_summary := _selected_summary()
 	var latest_continue := _latest_continue_surface()
 	var latest_summary := SaveService.latest_loadable_summary()
@@ -1013,12 +1065,16 @@ func validation_snapshot() -> Dictionary:
 		"selected_skirmish_id": _selected_skirmish_id,
 		"selected_difficulty": _selected_difficulty,
 		"selected_skirmish_setup": selected_skirmish_setup.duplicate(true),
+		"skirmish_front_check": skirmish_front_check.duplicate(true),
+		"skirmish_front_check_text": String(skirmish_front_check.get("visible_text", "")),
+		"skirmish_front_check_tooltip": String(skirmish_front_check.get("tooltip_text", "")),
 		"skirmish_details": _skirmish_details_label.text,
 		"skirmish_details_full": _skirmish_details_label.tooltip_text,
 		"skirmish_setup": _setup_summary_label.text,
 		"skirmish_setup_full": _setup_summary_label.tooltip_text,
 		"skirmish_commander_preview": _skirmish_commander_preview_label.text,
 		"skirmish_commander_preview_full": _skirmish_commander_preview_label.tooltip_text,
+		"skirmish_browser_item_tooltips": _skirmish_browser_item_tooltips(),
 		"difficulty_summary": _difficulty_summary_label.text,
 		"difficulty_summary_full": _difficulty_summary_label.tooltip_text,
 		"start_skirmish_text": _start_skirmish_button.text,
@@ -1105,6 +1161,12 @@ func _help_browser_item_tooltips() -> Array:
 	var tooltips := []
 	for index in range(_help_list.get_item_count()):
 		tooltips.append(_help_list.get_item_tooltip(index))
+	return tooltips
+
+func _skirmish_browser_item_tooltips() -> Array:
+	var tooltips := []
+	for index in range(_skirmish_list.get_item_count()):
+		tooltips.append(_skirmish_list.get_item_tooltip(index))
 	return tooltips
 
 func _picker_item_labels(picker: OptionButton) -> Array:
