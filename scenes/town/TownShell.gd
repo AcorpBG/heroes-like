@@ -287,7 +287,16 @@ func _refresh() -> void:
 		String(transfer_readiness.get("tooltip_text", "")),
 		TownRules.describe_transfer(_session),
 	])
-	_set_compact_label(_response_label, TownRules.describe_responses(_session), 2)
+	var response_readiness := _response_readiness_surface()
+	var response_text := _join_tooltip_sections([
+		String(response_readiness.get("visible_text", "")),
+		TownRules.describe_responses(_session),
+	])
+	_set_compact_label(_response_label, response_text, 2)
+	_response_label.tooltip_text = _join_tooltip_sections([
+		String(response_readiness.get("tooltip_text", "")),
+		TownRules.describe_responses(_session),
+	])
 	var study_readiness := _study_readiness_surface()
 	var study_text := _join_tooltip_sections([
 		String(study_readiness.get("visible_text", "")),
@@ -411,6 +420,7 @@ func validation_snapshot() -> Dictionary:
 	var study_readiness := _study_readiness_surface()
 	var hire_readiness := _hire_readiness_surface()
 	var artifact_readiness := _artifact_readiness_surface()
+	var response_readiness := _response_readiness_surface()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -478,6 +488,13 @@ func validation_snapshot() -> Dictionary:
 		"transfer_readiness_visible_text": String(transfer_readiness.get("visible_text", "")),
 		"transfer_readiness_tooltip_text": String(transfer_readiness.get("tooltip_text", "")),
 		"transfer_actions": _duplicate_action_array(TownRules.get_transfer_actions(_session)),
+		"response_text": TownRules.describe_responses(_session),
+		"response_visible_text": _response_label.text,
+		"response_tooltip_text": _response_label.tooltip_text,
+		"response_readiness": response_readiness,
+		"response_readiness_visible_text": String(response_readiness.get("visible_text", "")),
+		"response_readiness_tooltip_text": String(response_readiness.get("tooltip_text", "")),
+		"response_actions": _duplicate_action_array(TownRules.get_response_actions(_session)),
 		"artifact_text": TownRules.describe_artifacts(_session),
 		"artifact_visible_text": _artifact_label.text,
 		"artifact_tooltip_text": _artifact_label.tooltip_text,
@@ -1617,6 +1634,139 @@ func _transfer_readiness_surface() -> Dictionary:
 		"total_count": total_orders,
 		"best_order": label,
 		"route": route,
+		"readiness": readiness,
+		"why_it_matters": impact,
+		"next_step": next_step,
+	}
+
+func _response_readiness_surface() -> Dictionary:
+	var actions := TownRules.get_response_actions(_session)
+	var panel_text := TownRules.describe_responses(_session)
+	var movement = _session.overworld.get("movement", {})
+	var move_current := int(movement.get("current", 0))
+	var move_max := int(movement.get("max", move_current))
+	var ready_orders := 0
+	var blocked_orders := 0
+	var market_orders := 0
+	var movement_blocked_orders := 0
+	var resource_blocked_orders := 0
+	var selected_action := {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if bool(action.get("disabled", false)):
+			blocked_orders += 1
+			if bool(action.get("market_coverable", false)):
+				market_orders += 1
+			if bool(action.get("movement_blocked", false)):
+				movement_blocked_orders += 1
+			if bool(action.get("resource_blocked", false)):
+				resource_blocked_orders += 1
+			if selected_action.is_empty():
+				selected_action = action
+			continue
+		ready_orders += 1
+		if selected_action.is_empty() or bool(selected_action.get("disabled", false)):
+			selected_action = action
+
+	var total_orders := ready_orders + blocked_orders
+	var state_line := "no immediate response order is open"
+	var visible := "Response check: no route order"
+	if ready_orders > 0:
+		state_line = "Ready now: %d response order%s" % [ready_orders, "" if ready_orders == 1 else "s"]
+		visible = "Response check: Ready x%d/%d | Move %d/%d" % [
+			ready_orders,
+			total_orders,
+			move_current,
+			move_max,
+		]
+	elif market_orders > 0:
+		state_line = "Trade path: %d response order%s can be unlocked through Exchange" % [
+			market_orders,
+			"" if market_orders == 1 else "s",
+		]
+		visible = "Response check: Trade unlocks x%d/%d" % [market_orders, total_orders]
+	elif movement_blocked_orders > 0:
+		state_line = "Blocked: %d response order%s need more commander movement" % [
+			movement_blocked_orders,
+			"" if movement_blocked_orders == 1 else "s",
+		]
+		visible = "Response check: Move blocked x%d" % movement_blocked_orders
+	elif resource_blocked_orders > 0:
+		state_line = "Blocked: %d response order%s need more stores" % [
+			resource_blocked_orders,
+			"" if resource_blocked_orders == 1 else "s",
+		]
+		visible = "Response check: Store blocked x%d" % resource_blocked_orders
+	elif blocked_orders > 0:
+		state_line = "Blocked: %d response order%s waiting on town state" % [
+			blocked_orders,
+			"" if blocked_orders == 1 else "s",
+		]
+		visible = "Response check: Blocked x0/%d" % blocked_orders
+	elif panel_text.find("Active route orders:") >= 0:
+		state_line = "active response order already protects a linked route"
+		visible = "Response check: active route order"
+	elif panel_text.find("Threat lanes:") >= 0 or panel_text.find("Denied routes:") >= 0:
+		state_line = "route pressure is visible, but no town response order is ready"
+		visible = "Response check: watch route pressure"
+	elif panel_text.find("Recovery steady") >= 0:
+		state_line = "recovery is steady and no route order is currently open"
+
+	var label := "No response order"
+	var readiness := state_line
+	var impact := "Response orders spend commander movement and town stores to steady linked routes, recovery, or threatened economy lines."
+	var next_step := "Use the field route or end town orders when no response order is open."
+	if not selected_action.is_empty():
+		label = String(selected_action.get("button_label", selected_action.get("label", "Response order"))).strip_edges()
+		if label == "":
+			label = "Response order"
+		readiness = _town_action_button_readiness(selected_action, "response")
+		impact = _town_action_button_impact(selected_action, "response")
+		next_step = _town_action_button_next_step(
+			selected_action,
+			"response",
+			label,
+			_town_action_surface_label("response"),
+			readiness
+		)
+	elif panel_text.find("Threat lanes:") >= 0 or panel_text.find("Denied routes:") >= 0:
+		next_step = "Leave town to reclaim denied sites or intercept the threat lane."
+	elif panel_text.find("Active route orders:") >= 0:
+		next_step = "Keep the active response in place, then review town orders or leave."
+
+	var tooltip_lines := [
+		"Response Readiness",
+		"- Orders: %d ready, %d blocked, %d listed" % [
+			ready_orders,
+			blocked_orders,
+			total_orders,
+		],
+		"- Movement: %d/%d before response orders" % [move_current, move_max],
+		"- %s" % state_line,
+		"- Best order: %s" % label,
+		"- Readiness: %s" % readiness,
+		"- Why it matters: %s" % impact,
+		"- Next practical action: %s" % next_step,
+	]
+	if market_orders > 0:
+		tooltip_lines.append("- Exchange path: %d response order%s need Trade first" % [
+			market_orders,
+			"" if market_orders == 1 else "s",
+		])
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"ready_order_count": ready_orders,
+		"blocked_order_count": blocked_orders,
+		"listed_order_count": total_orders,
+		"market_order_count": market_orders,
+		"movement_blocked_count": movement_blocked_orders,
+		"resource_blocked_count": resource_blocked_orders,
+		"movement_current": move_current,
+		"movement_max": move_max,
+		"best_order_label": label,
 		"readiness": readiness,
 		"why_it_matters": impact,
 		"next_step": next_step,
