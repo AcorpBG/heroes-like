@@ -81,6 +81,9 @@ func _run() -> void:
 		return
 	if not _assert_editor_terrain_option_contract(shell, snapshot):
 		return
+	var paint_check_snapshot: Dictionary = shell.call("validation_set_tool", "terrain")
+	if not _assert_editor_terrain_paint_check(paint_check_snapshot, ["Paint check:", "Terrain Paint Check", "Brush Grass", "single tile 10,10", "Readiness:", "Scope: in-memory working copy only", "no authored file or campaign progress is written"]):
+		return
 
 	var paint_result: Dictionary = shell.call("validation_paint_terrain", 2, 2, "forest")
 	var paint_render_cache := _render_cache_metrics(paint_result)
@@ -99,6 +102,8 @@ func _run() -> void:
 	if not _assert_editor_play_readiness_gate(paint_result, true, ["Play gate:", "smoke-test this working copy", "Objectives", "Warnings 0", "Hero 23,26", "Objects"]):
 		return
 	if not _assert_editor_restore_tile_cue(paint_result, true, ["Tile reset:", "2,2", "differs in terrain", "returns this tile to authored baseline", "Play Copy"]):
+		return
+	if not _assert_editor_terrain_paint_check(paint_result, ["Paint check:", "Terrain Paint Check", "single tile 2,2", "Changes:", "Scope: in-memory working copy only"]):
 		return
 	if not _assert_editor_menu_return_cue(paint_result, true, ["Menu return:", "Main menu", "unsaved editor edits are discarded", "Use Play Copy before leaving"]):
 		return
@@ -2722,6 +2727,58 @@ func _assert_editor_active_tool_cue(result: Dictionary, expected_tool: String, f
 	]:
 		if leak_text.find(forbidden) >= 0:
 			_fail("Map editor smoke: active tool cue leaked internal score field %s: %s." % [forbidden, leak_text])
+			return false
+	return true
+
+func _assert_editor_terrain_paint_check(result: Dictionary, fragments: Array) -> bool:
+	var cue: Dictionary = result.get("terrain_paint_check", {})
+	var text := String(cue.get("text", ""))
+	var tooltip := String(cue.get("tooltip", ""))
+	var visible_status := String(result.get("visible_status_full", result.get("visible_status_text", "")))
+	var picker_tooltip := String(result.get("terrain_picker_tooltip", ""))
+	var map_tooltip := String(result.get("map_tooltip", ""))
+	if cue.is_empty() or text == "":
+		_fail("Map editor smoke: terrain paint check cue was not exposed: %s." % result)
+		return false
+	if String(cue.get("scope", "")) != "working_copy_only":
+		_fail("Map editor smoke: terrain paint check cue did not declare working-copy scope: %s." % cue)
+		return false
+	for key in ["text", "tooltip", "terrain_id", "terrain_label", "scope_text", "readiness", "next_step", "scope"]:
+		if String(cue.get(key, "")) == "":
+			_fail("Map editor smoke: terrain paint check cue missed structured key %s: %s." % [key, cue])
+			return false
+	var combined := "%s\n%s\n%s\n%s\n%s" % [text, tooltip, visible_status, picker_tooltip, map_tooltip]
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected != "" and combined.find(expected) < 0:
+			_fail("Map editor smoke: terrain paint check cue missed '%s': %s." % [expected, combined])
+			return false
+	if visible_status.find("Paint check:") < 0:
+		_fail("Map editor smoke: visible editor status did not carry terrain paint check cue: %s." % visible_status)
+		return false
+	if picker_tooltip.find("Terrain Paint Check") < 0:
+		_fail("Map editor smoke: terrain picker tooltip did not carry terrain paint check: %s." % picker_tooltip)
+		return false
+	if map_tooltip.find("Terrain Paint Check") < 0:
+		_fail("Map editor smoke: map tooltip did not carry terrain paint check: %s." % map_tooltip)
+		return false
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if combined.find(forbidden) >= 0:
+			_fail("Map editor smoke: terrain paint check leaked internal score field %s: %s." % [forbidden, combined])
 			return false
 	return true
 

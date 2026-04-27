@@ -1218,6 +1218,119 @@ func _editor_placement_action_cue_payload() -> Dictionary:
 		"scope": "working_copy_only",
 	}
 
+func _editor_terrain_paint_check_payload(tool: String = "") -> Dictionary:
+	var tool_id := _tool if tool == "" else tool
+	if not (tool_id in [TOOL_TERRAIN, TOOL_TERRAIN_LINE, TOOL_TERRAIN_RECTANGLE]):
+		return {}
+	if _session == null:
+		var empty_text := "Paint check: load a scenario working copy before terrain painting."
+		return {
+			"text": empty_text,
+			"tooltip": empty_text,
+			"state": "empty",
+			"scope": "working_copy_only",
+		}
+	var terrain_id := _selected_terrain_id
+	var terrain_label := _terrain_label_for_id(terrain_id)
+	var target_tile := _terrain_paint_preview_tile(tool_id)
+	var target_label := "%d,%d" % [target_tile.x, target_tile.y]
+	var current_id := _terrain_at(target_tile) if _tile_in_bounds(target_tile) else ""
+	var current_label := _terrain_label_for_id(current_id) if current_id != "" else "none"
+	var scope := ""
+	var readiness := ""
+	var next_step := ""
+	var affected_count := 1
+	var changed_count := 0
+	match tool_id:
+		TOOL_TERRAIN:
+			changed_count = 1 if current_id != terrain_id else 0
+			scope = "single tile %s" % target_label
+			readiness = "ready to repaint" if changed_count > 0 else "no terrain change"
+			next_step = "click %s to paint %s" % [target_label, terrain_label] if changed_count > 0 else "choose another tile or brush before painting"
+		TOOL_TERRAIN_LINE:
+			if _has_pending_terrain_line_start():
+				var line_tiles := _terrain_line_tiles(_pending_terrain_line_start, target_tile)
+				affected_count = line_tiles.size()
+				changed_count = _terrain_changed_tile_count(line_tiles, terrain_id)
+				scope = "line %d,%d to %s (%d tile%s)" % [
+					_pending_terrain_line_start.x,
+					_pending_terrain_line_start.y,
+					target_label,
+					affected_count,
+					"" if affected_count == 1 else "s",
+				]
+				readiness = "ready x%d/%d" % [changed_count, affected_count] if changed_count > 0 else "no terrain change"
+				next_step = "click %s to paint the terrain line" % target_label if changed_count > 0 else "choose another endpoint or brush before applying the line"
+			else:
+				affected_count = 0
+				scope = "line start at %s" % target_label
+				readiness = "pick line start"
+				next_step = "click the first line tile"
+		TOOL_TERRAIN_RECTANGLE:
+			if _has_pending_terrain_rectangle_corner():
+				var rectangle_tiles := _terrain_rectangle_tiles(_pending_terrain_rectangle_corner, target_tile)
+				affected_count = rectangle_tiles.size()
+				changed_count = _terrain_changed_tile_count(rectangle_tiles, terrain_id)
+				scope = "rectangle %d,%d to %s (%d tile%s)" % [
+					_pending_terrain_rectangle_corner.x,
+					_pending_terrain_rectangle_corner.y,
+					target_label,
+					affected_count,
+					"" if affected_count == 1 else "s",
+				]
+				readiness = "ready x%d/%d" % [changed_count, affected_count] if changed_count > 0 else "no terrain change"
+				next_step = "click %s to paint the terrain rectangle" % target_label if changed_count > 0 else "choose another corner or brush before applying the rectangle"
+			else:
+				affected_count = 0
+				scope = "rectangle corner at %s" % target_label
+				readiness = "pick rectangle corner"
+				next_step = "click the first rectangle corner"
+	var text := "Paint check: %s | Brush %s | %s; next: %s." % [
+		readiness.capitalize(),
+		terrain_label,
+		scope,
+		next_step,
+	]
+	var tooltip := "Terrain Paint Check\n- Brush: %s.\n- Target: %s.\n- Current terrain: %s.\n- Readiness: %s.\n- Changes: %d/%d tile%s.\n- Next: %s.\n- Scope: in-memory working copy only; no authored file or campaign progress is written." % [
+		terrain_label,
+		scope,
+		current_label,
+		readiness,
+		changed_count,
+		affected_count,
+		"" if affected_count == 1 else "s",
+		next_step,
+	]
+	return {
+		"text": text,
+		"tooltip": tooltip,
+		"tool": tool_id,
+		"terrain_id": terrain_id,
+		"terrain_label": terrain_label,
+		"target_tile": {"x": target_tile.x, "y": target_tile.y},
+		"current_terrain_id": current_id,
+		"current_terrain_label": current_label,
+		"scope_text": scope,
+		"readiness": readiness,
+		"next_step": next_step,
+		"affected_count": affected_count,
+		"changed_count": changed_count,
+		"scope": "working_copy_only",
+	}
+
+func _terrain_paint_preview_tile(tool: String) -> Vector2i:
+	if _tile_in_bounds(_hovered_tile):
+		return _hovered_tile
+	return _selected_tile
+
+func _terrain_changed_tile_count(tiles: Array, terrain_id: String) -> int:
+	var changed_count := 0
+	for tile_value in tiles:
+		var tile: Vector2i = tile_value
+		if _tile_in_bounds(tile) and _terrain_at(tile) != terrain_id:
+			changed_count += 1
+	return changed_count
+
 func _set_object_authoring_recap(
 	action: String,
 	changed: bool,
@@ -2565,6 +2678,7 @@ func _refresh_state() -> void:
 	_sync_play_handoff_surface()
 	_sync_menu_return_surface()
 	_sync_restore_tile_surface()
+	_sync_terrain_paint_surface()
 	_sync_preview()
 	_refresh_labels()
 
@@ -2620,6 +2734,12 @@ func _sync_restore_tile_surface() -> void:
 	_restore_tile_button.text = String(cue.get("button_label", "Restore Tile"))
 	_restore_tile_button.tooltip_text = String(cue.get("tooltip", "Restore the selected tile from the authored baseline."))
 
+func _sync_terrain_paint_surface() -> void:
+	if _terrain_picker == null:
+		return
+	var cue := _editor_terrain_paint_check_payload()
+	_terrain_picker.tooltip_text = String(cue.get("tooltip", "Choose the active terrain brush for editor painting."))
+
 func _sync_object_taxonomy_summary() -> void:
 	if _object_taxonomy_summary_label == null:
 		return
@@ -2638,6 +2758,10 @@ func _sync_preview() -> void:
 	var map_data: Array = _session.overworld.get("map", [])
 	_map_view.set_map_state(_session, map_data, map_size, _selected_tile)
 	var tooltip_sections := [String(_editor_active_tool_cue_payload().get("tooltip", ""))]
+	if _tool in [TOOL_TERRAIN, TOOL_TERRAIN_LINE, TOOL_TERRAIN_RECTANGLE]:
+		var terrain_paint_tooltip := String(_editor_terrain_paint_check_payload().get("tooltip", "")).strip_edges()
+		if terrain_paint_tooltip != "":
+			tooltip_sections.append(terrain_paint_tooltip)
 	if _tool == TOOL_PLACE_OBJECT:
 		var placement_action := String(_editor_placement_action_cue_payload().get("tooltip_text", "")).strip_edges()
 		if placement_action != "":
@@ -2718,6 +2842,10 @@ func _refresh_labels() -> void:
 	var active_tool_text := String(_editor_active_tool_cue_payload().get("text", "")).strip_edges()
 	if active_tool_text != "":
 		status_lines.append(active_tool_text)
+	if _tool in [TOOL_TERRAIN, TOOL_TERRAIN_LINE, TOOL_TERRAIN_RECTANGLE]:
+		var terrain_paint_text := String(_editor_terrain_paint_check_payload().get("text", "")).strip_edges()
+		if terrain_paint_text != "":
+			status_lines.append(terrain_paint_text)
 	var restore_tile_text := String(_editor_restore_tile_cue_payload().get("text", "")).strip_edges()
 	if restore_tile_text != "":
 		status_lines.append(restore_tile_text)
@@ -2796,7 +2924,9 @@ func _select_tool(tool: String) -> void:
 	if _tool != TOOL_ROAD_PATH:
 		_pending_road_path_start = Vector2i(-1, -1)
 	_sync_tool_buttons()
+	_sync_terrain_paint_surface()
 	_sync_object_taxonomy_summary()
+	_sync_preview()
 	_refresh_labels()
 
 func _sync_tool_buttons() -> void:
@@ -2820,6 +2950,10 @@ func _sync_tool_buttons() -> void:
 			continue
 		button.button_pressed = tool_id == _tool
 		var tooltip := String(_editor_active_tool_cue_payload(String(tool_id)).get("tooltip", _tool_label(String(tool_id))))
+		if tool_id in [TOOL_TERRAIN, TOOL_TERRAIN_LINE, TOOL_TERRAIN_RECTANGLE]:
+			var terrain_check := String(_editor_terrain_paint_check_payload(String(tool_id)).get("tooltip", "")).strip_edges()
+			if terrain_check != "":
+				tooltip = "%s\n%s" % [tooltip, terrain_check]
 		if tool_id == TOOL_PLACE_OBJECT:
 			var placement_action := String(_editor_placement_action_cue_payload().get("tooltip_text", "")).strip_edges()
 			if placement_action != "":
@@ -2918,6 +3052,11 @@ func _on_map_tile_hovered(tile: Vector2i) -> void:
 	_hovered_tile = tile
 	if _tool == TOOL_PLACE_OBJECT:
 		_sync_object_taxonomy_summary()
+		_sync_tool_buttons()
+		_sync_preview()
+		_refresh_labels()
+	elif _tool in [TOOL_TERRAIN, TOOL_TERRAIN_LINE, TOOL_TERRAIN_RECTANGLE]:
+		_sync_terrain_paint_surface()
 		_sync_tool_buttons()
 		_sync_preview()
 		_refresh_labels()
@@ -5758,6 +5897,10 @@ func validation_snapshot() -> Dictionary:
 		"restore_tile_cue_text": String(_editor_restore_tile_cue_payload().get("text", "")),
 		"restore_tile_button_text": _restore_tile_button.text if _restore_tile_button != null else "",
 		"restore_tile_button_tooltip": _restore_tile_button.tooltip_text if _restore_tile_button != null else "",
+		"terrain_paint_check": _editor_terrain_paint_check_payload(),
+		"terrain_paint_check_text": String(_editor_terrain_paint_check_payload().get("text", "")),
+		"terrain_paint_check_tooltip": String(_editor_terrain_paint_check_payload().get("tooltip", "")),
+		"terrain_picker_tooltip": _terrain_picker.tooltip_text if _terrain_picker != null else "",
 		"active_tool_cue": _editor_active_tool_cue_payload(),
 		"active_tool_cue_text": String(_editor_active_tool_cue_payload().get("text", "")),
 		"active_tool_cue_tooltip": String(_editor_active_tool_cue_payload().get("tooltip", "")),
