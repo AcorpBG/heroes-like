@@ -983,7 +983,17 @@ static func cast_overworld_spell(session: SessionStateStoreScript.SessionData, s
 
 	session.overworld["hero"] = result.get("hero", hero)
 	session.overworld["movement"] = result.get("movement", movement)
-	return _finalize_action_result(session, true, String(result.get("message", "")))
+	return _attach_post_action_recap(
+		_finalize_action_result(session, true, String(result.get("message", ""))),
+		session,
+		"spell",
+		{
+			"spell_id": String(result.get("spell_id", spell_id)),
+			"spell_name": String(result.get("spell_name", spell_id)),
+			"target_contract": result.get("target_contract", {}),
+			"consequence_preview": result.get("consequence_preview", {}),
+		}
+	)
 
 static func equip_artifact(session: SessionStateStoreScript.SessionData, artifact_id: String) -> Dictionary:
 	normalize_overworld_state(session)
@@ -9377,6 +9387,8 @@ static func _build_post_action_recap(
 			return _artifact_post_action_recap(session, context, message)
 		"site_response":
 			return _site_response_post_action_recap(session, context, message)
+		"spell":
+			return _spell_post_action_recap(session, context, message)
 		"town_capture":
 			return _town_capture_post_action_recap(session, context, message)
 		_:
@@ -9508,6 +9520,37 @@ static func _site_response_post_action_recap(
 		"Response orders turn site control into route security%s before enemy pressure resolves." % ("" if impact_summary == "" else " and %s" % impact_summary),
 		_post_action_next_step(session),
 		"%s response active | %s" % [site_name, _short_player_text(impact_summary, 46)]
+	)
+
+static func _spell_post_action_recap(
+	session: SessionStateStoreScript.SessionData,
+	context: Dictionary,
+	message: String
+) -> Dictionary:
+	var spell_name := String(context.get("spell_name", "Field spell"))
+	var target_contract: Dictionary = context.get("target_contract", {}) if context.get("target_contract", {}) is Dictionary else {}
+	var consequence_preview: Dictionary = context.get("consequence_preview", {}) if context.get("consequence_preview", {}) is Dictionary else {}
+	var movement = session.overworld.get("movement", {})
+	var happened := _first_sentence_or_default(message, "%s resolved." % spell_name)
+	var target_text := String(target_contract.get("public_text", "Active hero was the target."))
+	var consequence_text := String(consequence_preview.get("public_text", "Field state changed."))
+	var affected := "%s | %s | Move %d/%d" % [
+		target_text,
+		consequence_text,
+		int(movement.get("current", 0)),
+		int(movement.get("max", 0)),
+	]
+	return _post_action_recap_payload(
+		"spell",
+		happened,
+		affected,
+		"Field magic converts mana into bounded route tempo without changing resources, sites, or scouting unless a later spell contract explicitly says so.",
+		_post_action_next_step(session),
+		"%s cast | Move %d/%d" % [
+			spell_name,
+			int(movement.get("current", 0)),
+			int(movement.get("max", 0)),
+		]
 	)
 
 static func _town_capture_post_action_recap(

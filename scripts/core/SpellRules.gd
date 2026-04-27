@@ -349,6 +349,170 @@ static func battle_spell_behavior_report(spells: Array) -> Dictionary:
 		"records": records,
 	}
 
+static func adventure_spell_behavior(spell: Dictionary) -> Dictionary:
+	if spell.is_empty() or String(spell.get("context", "")) != CONTEXT_OVERWORLD:
+		return {}
+	var effect = spell.get("effect", {})
+	if not (effect is Dictionary):
+		return {}
+	var effect_type := String(effect.get("type", ""))
+	var hooks := []
+	var resolution_type := ""
+	var target_policy := ""
+	var public_effect := ""
+	match effect_type:
+		"restore_movement":
+			resolution_type = "movement_restore"
+			target_policy = "self_hero_movement_gap"
+			hooks.append("overworld_movement_restore")
+			hooks.append("mana_spend")
+			hooks.append("movement_clamp")
+			public_effect = "active hero movement recovery"
+		_:
+			resolution_type = "unsupported"
+			target_policy = "unsupported"
+			public_effect = "unsupported adventure effect"
+	return {
+		"spell_id": String(spell.get("id", "")),
+		"name": String(spell.get("name", "")),
+		"school_id": spell_school_id(spell),
+		"tier": spell_tier(spell),
+		"primary_role": spell_primary_role(spell),
+		"role_categories": spell_role_categories(spell),
+		"effect_type": effect_type,
+		"target_mode": String(spell.get("target_mode", "")),
+		"target_policy": target_policy,
+		"resolution_type": resolution_type,
+		"runtime_hooks": hooks,
+		"public_effect": public_effect,
+		"map_mutation": "movement_only" if effect_type == "restore_movement" else "none",
+	}
+
+static func adventure_spell_target_contract(hero_state: Dictionary, movement_state: Dictionary, spell: Variant) -> Dictionary:
+	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
+	var spell_dict: Dictionary = spell if spell is Dictionary else ContentService.get_spell(String(spell))
+	if spell_dict.is_empty():
+		return {
+			"ok": false,
+			"spell_id": String(spell),
+			"spell_name": "Unknown spell",
+			"target_kind": "none",
+			"target_requirement": "Known overworld spell",
+			"selectable": false,
+			"blocked_reason": "That spell is not known.",
+			"public_text": "That spell is not known.",
+		}
+	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell_dict.get("mana_cost", 0)))
+	var validation := validate_overworld_spell(hero, movement_state, spell_dict)
+	var target_requirement := _overworld_target_requirement(spell_dict)
+	var public_text := "%s targets the active hero; %s." % [
+		String(spell_dict.get("name", "Spell")),
+		target_requirement,
+	]
+	return {
+		"ok": bool(validation.get("ok", false)),
+		"spell_id": String(spell_dict.get("id", "")),
+		"spell_name": String(spell_dict.get("name", "Spell")),
+		"target_kind": "self_hero" if String(spell_dict.get("target_mode", "self")) == "self" else "unsupported",
+		"target_mode": String(spell_dict.get("target_mode", "")),
+		"target_requirement": target_requirement,
+		"selectable": bool(validation.get("ok", false)),
+		"blocked_reason": "" if bool(validation.get("ok", false)) else String(validation.get("message", "cannot cast now")),
+		"mana_cost": mana_cost,
+		"movement_current": int(movement_state.get("current", 0)),
+		"movement_max": int(movement_state.get("max", 0)),
+		"public_text": public_text,
+	}
+
+static func adventure_spell_consequence_preview(hero_state: Dictionary, movement_state: Dictionary, spell: Variant) -> Dictionary:
+	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
+	var spell_dict: Dictionary = spell if spell is Dictionary else ContentService.get_spell(String(spell))
+	if spell_dict.is_empty():
+		return {
+			"ok": false,
+			"spell_id": String(spell),
+			"spell_name": "Unknown spell",
+			"public_text": "That spell has no supported adventure consequence.",
+		}
+	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell_dict.get("mana_cost", 0)))
+	var effect = spell_dict.get("effect", {})
+	var effect_type := String(effect.get("type", "")) if effect is Dictionary else ""
+	var preview := _movement_restore_preview(movement_state, spell_dict)
+	var supported := String(spell_dict.get("context", "")) == CONTEXT_OVERWORLD and effect_type == "restore_movement"
+	var public_text := ""
+	if supported:
+		public_text = "%s restores %d movement now, capped at %d, and spends %d mana." % [
+			String(spell_dict.get("name", "Spell")),
+			int(preview.get("restored", 0)),
+			int(preview.get("movement_max", 0)),
+			mana_cost,
+		]
+	else:
+		public_text = "That spell has no supported adventure consequence."
+	return {
+		"ok": supported,
+		"spell_id": String(spell_dict.get("id", "")),
+		"spell_name": String(spell_dict.get("name", "Spell")),
+		"effect_type": effect_type,
+		"movement_before": int(preview.get("movement_before", int(movement_state.get("current", 0)))),
+		"movement_after": int(preview.get("movement_after", int(movement_state.get("current", 0)))),
+		"movement_restored": int(preview.get("restored", 0)),
+		"movement_max": int(preview.get("movement_max", int(movement_state.get("max", 0)))),
+		"mana_cost": mana_cost,
+		"public_text": public_text,
+		"changes_fog": false,
+		"changes_site_state": false,
+		"changes_resources": false,
+	}
+
+static func adventure_spell_behavior_report(spells: Array) -> Dictionary:
+	var errors := []
+	var records := []
+	var effect_type_counts := {}
+	var hook_counts := {}
+	var target_policy_counts := {}
+	for spell_value in spells:
+		if not (spell_value is Dictionary):
+			continue
+		var spell: Dictionary = spell_value
+		if String(spell.get("context", "")) != CONTEXT_OVERWORLD:
+			continue
+		var record := adventure_spell_behavior(spell)
+		if record.is_empty():
+			errors.append("Adventure spell %s did not produce behavior metadata." % String(spell.get("id", "")))
+			continue
+		records.append(record)
+		_increment_count(effect_type_counts, String(record.get("effect_type", "")))
+		_increment_count(target_policy_counts, String(record.get("target_policy", "")))
+		for hook in record.get("runtime_hooks", []):
+			_increment_count(hook_counts, String(hook))
+		if String(record.get("resolution_type", "")) == "unsupported":
+			errors.append("Adventure spell %s has unsupported behavior." % String(record.get("spell_id", "")))
+		if String(record.get("target_mode", "")) != "self":
+			errors.append("Adventure spell %s uses an unsupported target mode." % String(record.get("spell_id", "")))
+	for required_hook in ["overworld_movement_restore", "mana_spend", "movement_clamp"]:
+		if int(hook_counts.get(required_hook, 0)) <= 0:
+			errors.append("Missing adventure spell runtime hook %s." % required_hook)
+	if int(effect_type_counts.get("restore_movement", 0)) <= 0:
+		errors.append("Missing adventure spell restore_movement behavior.")
+	if int(target_policy_counts.get("self_hero_movement_gap", 0)) <= 0:
+		errors.append("Missing self-hero movement-gap target policy.")
+	for record in records:
+		var encoded := JSON.stringify(record).to_lower()
+		for leak_token in ["debug", "score", "internal"]:
+			if encoded.contains(leak_token):
+				errors.append("Adventure spell behavior record for %s leaks %s." % [String(record.get("spell_id", "")), leak_token])
+	return {
+		"ok": errors.is_empty(),
+		"schema_status": "adventure_spell_behavior_hooks_loaded",
+		"adventure_spell_count": records.size(),
+		"effect_type_counts": effect_type_counts,
+		"target_policy_counts": target_policy_counts,
+		"runtime_hook_counts": hook_counts,
+		"errors": errors,
+		"records": records,
+	}
+
 static func describe_spell_inspection_line(hero_state: Dictionary, spell: Dictionary, context_state: Dictionary = {}) -> String:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
@@ -610,6 +774,8 @@ static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictio
 		var summary := _overworld_spell_action_summary(movement_state, spell, validation, mana_cost)
 		var category := spell_category_label(spell)
 		var effect_summary := _overworld_spell_effect_summary(spell, movement_state)
+		var target_contract := adventure_spell_target_contract(hero, movement_state, spell)
+		var consequence_preview := adventure_spell_consequence_preview(hero, movement_state, spell)
 		var readiness := "Ready" if bool(validation.get("ok", false)) else "Blocked: %s" % String(validation.get("message", "cannot cast now"))
 		var mana_current := int(hero.get("spellbook", {}).get("mana", {}).get("current", 0))
 		var mana_shortfall: int = max(0, mana_cost - mana_current)
@@ -628,6 +794,7 @@ static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictio
 				"best_use": why_cast,
 				"target": _target_mode_label(String(spell.get("target_mode", "self"))),
 				"target_requirement": _overworld_target_requirement(spell),
+				"target_contract": target_contract,
 				"mana_state": "Mana %d/%d, need %d" % [
 					mana_current,
 					int(hero.get("spellbook", {}).get("mana", {}).get("max", mana_current)),
@@ -636,6 +803,7 @@ static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictio
 				"mana_ready": mana_shortfall <= 0,
 				"mana_shortfall": mana_shortfall,
 				"consequence": effect_summary,
+				"consequence_preview": consequence_preview,
 				"why_cast": why_cast,
 				"availability": "ready" if bool(validation.get("ok", false)) else "blocked",
 				"invalid_reason": String(validation.get("message", "")) if not bool(validation.get("ok", false)) else "",
@@ -660,16 +828,20 @@ static func cast_overworld_spell(hero_state: Dictionary, movement_state: Diction
 	var effect = spell.get("effect", {})
 	match String(effect.get("type", "")):
 		"restore_movement":
-			var amount := int(max(1, int(effect.get("amount", 0))))
-			var current := int(movement.get("current", 0))
-			var max_movement := int(movement.get("max", 0))
-			var restored: int = min(amount, max(0, max_movement - current))
-			movement["current"] = min(max_movement, current + restored)
+			var preview := adventure_spell_consequence_preview(hero, movement, spell)
+			var target_contract := adventure_spell_target_contract(hero, movement, spell)
+			var current := int(preview.get("movement_before", movement.get("current", 0)))
+			var restored := int(preview.get("movement_restored", 0))
+			movement["current"] = int(preview.get("movement_after", movement.get("current", 0)))
 			hero = _consume_mana(hero, mana_cost)
 			return {
 				"ok": true,
 				"hero": hero,
 				"movement": movement,
+				"spell_id": spell_id,
+				"spell_name": String(spell.get("name", spell_id)),
+				"target_contract": target_contract,
+				"consequence_preview": preview,
 				"message": "%s restores %d movement (%d -> %d) and spends %d mana." % [
 					String(spell.get("name", spell_id)),
 					restored,
@@ -819,6 +991,8 @@ static func validate_overworld_spell(hero_state: Dictionary, movement_state: Dic
 	var effect = spell_dict.get("effect", {})
 	match String(effect.get("type", "")):
 		"restore_movement":
+			if String(spell_dict.get("target_mode", "self")) != "self":
+				return {"ok": false, "message": "That field spell target is not supported yet."}
 			if int(movement_state.get("current", 0)) >= int(movement_state.get("max", 0)):
 				return {"ok": false, "message": "Movement is already full."}
 			return {"ok": true}
@@ -1169,16 +1343,34 @@ static func _overworld_spell_readability_line(
 		_best_use_line(spell, movement_state),
 	]
 
+static func _movement_restore_preview(movement_state: Dictionary, spell: Dictionary) -> Dictionary:
+	var effect = spell.get("effect", {})
+	if not (effect is Dictionary) or String(effect.get("type", "")) != "restore_movement":
+		return {
+			"movement_before": int(movement_state.get("current", 0)),
+			"movement_after": int(movement_state.get("current", 0)),
+			"movement_max": int(movement_state.get("max", 0)),
+			"restored": 0,
+		}
+	var amount: int = max(1, int(effect.get("amount", 0)))
+	var current := int(movement_state.get("current", 0))
+	var max_movement := int(movement_state.get("max", 0))
+	var restored: int = min(amount, max(0, max_movement - current))
+	return {
+		"movement_before": current,
+		"movement_after": min(max_movement, current + restored),
+		"movement_max": max_movement,
+		"restored": restored,
+	}
+
 static func _overworld_spell_effect_summary(spell: Dictionary, movement_state: Dictionary) -> String:
 	var effect = spell.get("effect", {})
 	match String(effect.get("type", "")):
 		"restore_movement":
+			var preview := _movement_restore_preview(movement_state, spell)
 			var amount: int = max(1, int(effect.get("amount", 0)))
-			var current := int(movement_state.get("current", 0))
-			var max_movement := int(movement_state.get("max", 0))
-			var available_room: int = max(0, max_movement - current)
-			if available_room > 0:
-				return "Restores up to %d movement; %d can fit now" % [amount, min(amount, available_room)]
+			if int(preview.get("restored", 0)) > 0:
+				return "Restores up to %d movement; %d can fit now" % [amount, int(preview.get("restored", 0))]
 			return "Restores up to %d movement" % amount
 		_:
 			return "No supported overworld effect"
