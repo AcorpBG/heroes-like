@@ -393,7 +393,7 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 
 static func collect_active_resource(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state(session)
-	var node_result := _find_resource_node_at(session)
+	var node_result := _find_context_resource_node(session)
 	if int(node_result.get("index", -1)) < 0:
 		return {"ok": false, "message": "No resource site here."}
 
@@ -1120,6 +1120,52 @@ static func derive_map_size(session: SessionStateStoreScript.SessionData) -> Vec
 		width_from_map = map_data[0].size()
 	return Vector2i(max(width_from_map, 1), max(height_from_map, 1))
 
+static func overworld_object_placement_pathing_surface(
+	session: SessionStateStoreScript.SessionData,
+	placement_id: String
+) -> Dictionary:
+	if session == null or placement_id == "":
+		return {}
+	var node_result := _find_resource_node_by_placement(session, placement_id)
+	var node: Dictionary = node_result.get("node", {})
+	if int(node_result.get("index", -1)) < 0 or node.is_empty():
+		return {}
+	var map_object := _map_object_for_resource_node(node)
+	if map_object.is_empty():
+		return {}
+	var body_tiles := _map_object_world_body_tiles(map_object, node)
+	var interaction_tiles := _map_object_world_interaction_tiles(map_object, node)
+	var footprint: Dictionary = map_object.get("footprint", {}) if map_object.get("footprint", {}) is Dictionary else {}
+	var width: int = maxi(1, int(footprint.get("width", 1)))
+	var height: int = maxi(1, int(footprint.get("height", 1)))
+	var origin := _map_object_footprint_origin(map_object, node)
+	var body_payload := []
+	for tile in body_tiles:
+		body_payload.append(_tile_payload(tile))
+	var interaction_payload := []
+	for tile in interaction_tiles:
+		interaction_payload.append(_tile_payload(tile))
+	return {
+		"placement_id": placement_id,
+		"site_id": String(node.get("site_id", "")),
+		"object_id": String(map_object.get("id", "")),
+		"footprint": {
+			"width": width,
+			"height": height,
+			"anchor": String(footprint.get("anchor", "bottom_center")),
+			"origin": _tile_payload(origin),
+			"visual_tile_count": width * height,
+		},
+		"body_tiles": body_payload,
+		"interaction_tiles": interaction_payload,
+		"body_tile_count": body_payload.size(),
+		"interaction_tile_count": interaction_payload.size(),
+		"uses_authored_body_tiles": map_object.get("body_tiles", []) is Array and not map_object.get("body_tiles", []).is_empty(),
+		"uses_authored_approach": map_object.get("approach", {}) is Dictionary and not map_object.get("approach", {}).is_empty(),
+		"blocks_body_tiles": _map_object_blocks_body_tiles(map_object),
+		"blocks_visual_footprint_rectangle": false,
+	}
+
 static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
 	var map_data = session.overworld.get("map", [])
 	if y < 0 or not (map_data is Array) or y >= map_data.size():
@@ -1130,8 +1176,95 @@ static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int
 	var terrain_id := String(row[x])
 	var biome := ContentService.get_biome_for_terrain(terrain_id)
 	if not biome.is_empty() and biome.has("passable"):
-		return not bool(biome.get("passable", true))
-	return terrain_id == "water"
+		if not bool(biome.get("passable", true)):
+			return true
+	elif terrain_id == "water":
+		return true
+	return _tile_blocked_by_resource_object(session, Vector2i(x, y))
+
+static func _tile_blocked_by_resource_object(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
+	if session == null:
+		return false
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var map_object := _map_object_for_resource_node(node)
+		if map_object.is_empty() or not _map_object_blocks_body_tiles(map_object):
+			continue
+		for body_tile in _map_object_world_body_tiles(map_object, node):
+			if body_tile == tile:
+				return true
+	return false
+
+static func _map_object_for_resource_node(node: Dictionary) -> Dictionary:
+	return ContentService.get_map_object_for_resource_site(String(node.get("site_id", "")))
+
+static func _map_object_blocks_body_tiles(map_object: Dictionary) -> bool:
+	var body_tiles = map_object.get("body_tiles", [])
+	if not (body_tiles is Array) or body_tiles.is_empty():
+		return false
+	var passability_class := String(map_object.get("passability_class", ""))
+	if passability_class in ["passable_visit_on_enter", "passable_scenic"]:
+		return false
+	if passability_class in ["blocking_visitable", "blocking_non_visitable", "edge_blocker", "conditional_pass", "town_blocking", "neutral_stack_blocking"]:
+		return true
+	return not bool(map_object.get("passable", true))
+
+static func _map_object_world_body_tiles(map_object: Dictionary, placement: Dictionary) -> Array:
+	var tiles := []
+	var origin := _map_object_footprint_origin(map_object, placement)
+	var body_tiles = map_object.get("body_tiles", [])
+	if not (body_tiles is Array):
+		return tiles
+	for body_value in body_tiles:
+		if not (body_value is Dictionary):
+			continue
+		tiles.append(origin + Vector2i(int(body_value.get("x", 0)), int(body_value.get("y", 0))))
+	return tiles
+
+static func _map_object_world_interaction_tiles(map_object: Dictionary, placement: Dictionary) -> Array:
+	var tiles := []
+	var origin := _map_object_footprint_origin(map_object, placement)
+	var approach: Dictionary = map_object.get("approach", {}) if map_object.get("approach", {}) is Dictionary else {}
+	var offsets = approach.get("visit_offsets", [])
+	if offsets is Array and not offsets.is_empty():
+		for offset_value in offsets:
+			if not (offset_value is Dictionary):
+				continue
+			tiles.append(origin + Vector2i(int(offset_value.get("x", 0)), int(offset_value.get("y", 0))))
+		return tiles
+	return [Vector2i(int(placement.get("x", 0)), int(placement.get("y", 0)))]
+
+static func _map_object_footprint_origin(map_object: Dictionary, placement: Dictionary) -> Vector2i:
+	var footprint: Dictionary = map_object.get("footprint", {}) if map_object.get("footprint", {}) is Dictionary else {}
+	var width: int = maxi(1, int(footprint.get("width", 1)))
+	var height: int = maxi(1, int(footprint.get("height", 1)))
+	var anchor := String(footprint.get("anchor", "bottom_center"))
+	var anchor_tile := Vector2i(int(placement.get("x", 0)), int(placement.get("y", 0)))
+	match anchor:
+		"top_left":
+			return anchor_tile
+		"center":
+			return anchor_tile - Vector2i(int(width / 2), int(height / 2))
+		"bottom_left":
+			return anchor_tile - Vector2i(0, height - 1)
+		"bottom_right":
+			return anchor_tile - Vector2i(width - 1, height - 1)
+		_:
+			return anchor_tile - Vector2i(int(width / 2), height - 1)
+
+static func _resource_node_matches_interaction_tile(node: Dictionary, tile: Vector2i) -> bool:
+	var map_object := _map_object_for_resource_node(node)
+	if map_object.is_empty():
+		return _position_matches(node, tile)
+	for interaction_tile in _map_object_world_interaction_tiles(map_object, node):
+		if interaction_tile == tile:
+			return true
+	return false
+
+static func _tile_payload(tile: Vector2i) -> Dictionary:
+	return {"x": tile.x, "y": tile.y}
 
 static func terrain_profile_at(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
 	var terrain_id := _terrain_id_at(session, x, y)
@@ -3651,11 +3784,22 @@ static func _find_resource_node_at(session: SessionStateStoreScript.SessionData)
 static func _find_context_resource_node(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var node_result := _find_resource_node_at(session)
 	if int(node_result.get("index", -1)) < 0:
+		node_result = _find_resource_node_interaction_at(session)
+	if int(node_result.get("index", -1)) < 0:
 		return {"index": -1, "node": {}}
 	var node = node_result.get("node", {})
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 	if _resource_site_is_persistent(site) or not bool(node.get("collected", false)):
 		return node_result
+	return {"index": -1, "node": {}}
+
+static func _find_resource_node_interaction_at(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var pos := hero_position(session)
+	var nodes = session.overworld.get("resource_nodes", [])
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if node is Dictionary and _resource_node_matches_interaction_tile(node, pos):
+			return {"index": index, "node": node}
 	return {"index": -1, "node": {}}
 
 static func _find_resource_node_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:

@@ -2646,11 +2646,11 @@ def build_overworld_object_report() -> dict:
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "mode": "compatibility_report",
         "compatibility_adapters": {
-            "runtime_adoption": "classification_reporting_safe_metadata",
-            "runtime_adopted_safe_fields": ["primary_class", "secondary_tags", "interaction.cadence"],
-            "runtime_deferred_fields": ["body_tiles", "approach", "passability_class", "route_effect", "renderer_hint_id", "ai_hints", "save_state"],
-            "production_json_migration": "safe_metadata_bundle_001_safe_fields_only",
-            "pathing_occupancy_adoption": False,
+            "runtime_adoption": "classification_reporting_safe_metadata_and_bounded_shape_masks",
+            "runtime_adopted_safe_fields": ["primary_class", "secondary_tags", "interaction.cadence", "body_tiles", "approach.visit_offsets", "passability_class"],
+            "runtime_deferred_fields": ["route_effect", "renderer_hint_id", "ai_hints", "save_state"],
+            "production_json_migration": "safe_metadata_bundle_001_plus_one_representative_shape_mask",
+            "pathing_occupancy_adoption": "bounded_resource_object_body_and_interaction_masks",
             "renderer_sprite_ingestion": False,
             "ai_behavior_switch": False,
             "report_normalization": "authored_safe_fields_when_present_else_inferred",
@@ -2887,7 +2887,7 @@ def build_overworld_object_report() -> dict:
     if not report["ai_editor_implications"]["visible_neutral_encounter_records_present"]:
         add_overworld_object_report_warning(report, "no first-class neutral_encounter map object records exist yet; visible encounter placement remains scenario encounter data")
     add_overworld_object_report_warning(report, "unmigrated production map_objects.json records remain legacy-compatible; inferred primary_class and tags are report-only outside declared migrated bundles")
-    add_overworld_object_report_warning(report, "body_tiles and approach metadata are warnings only until editor/pathing adoption is explicitly approved")
+    add_overworld_object_report_warning(report, "body_tiles and approach metadata remain warnings for unmigrated objects; pathing adoption is bounded to authored representative masks")
     return report
 
 
