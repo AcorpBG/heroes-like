@@ -39,6 +39,20 @@ Rules:
 - Animation must have reduced-motion and fast-resolution modes from the start of implementation planning.
 - Runtime saves store gameplay state, not transient animation progress. Resuming a save should enter a stable state and may replay only safe entry cues.
 
+## P2.7 Implementation Scope
+
+P2.7 implementation scope is not an abstract cue-polish stream. Its first contracts must directly serve battle troop sprite animation and overworld map object animation.
+
+Required P2.7 contract surfaces:
+
+- Battle troop sprite animation states: idle, ready/active, move, melee/ranged attack, cast/support, hit/stagger, death/rout, status applied/loop/expired, defend/brace, retreat/surrender, and outcome return where selected.
+- Overworld map object animation states: idle, active/focused, visited, depleted, captured/owned, blocked, guarded, route-open, route-closed, refreshed, and low-cost ambient loops where appropriate for the object class.
+- Event/cue catalog bridge: resolved gameplay event ids map to animation states, playback policy, VFX/audio cue ids, reduced-motion/fast-mode fallbacks, blocking/skippable behavior, and validation tags.
+- Accessibility and speed policy: reduced-motion and fast-mode variants apply to troop and object animation playback, not only UI hover/press feedback.
+- Validation: smoke/report output must prove event ids, animation state mappings, fallback coverage, and absence of ad hoc dashboard or public debug output used to explain the animation layer.
+
+Final sprite/art production, broad renderer asset import, and production VFX/audio remain later bounded work unless a later slice explicitly selects them.
+
 ## Target Animation Surfaces
 
 Animation must cover these surfaces before production polish can depend on it:

@@ -379,12 +379,14 @@
         "docs/screen-wireframes.md"
       ],
       "implementationTargets": [
-        "animation/event cue catalog",
-        "reduced-motion and fast-mode policy",
+        "battle troop sprite animation state contracts for idle/ready/move/attack/hit/death/cast/status/defend/retreat-style states",
+        "overworld map object animation state contracts for idle/active/visited/depleted/captured/blocked/guarded/route-open/route-closed/ambient-loop states where appropriate",
+        "event/cue catalog mapping resolved gameplay event ids to animation playback, VFX/audio ids, fallbacks, blocking policy, and validation tags",
+        "reduced-motion and fast-mode policy for troop/object animation playback",
         "selected battle/town/overworld/object/UI state-change hooks"
       ],
-      "evidence": "Several compact UI cue surfaces exist, but event/cue ids, playback policy, reduced-motion/fast-mode contract, and animation pipeline contracts are not implemented as the foundation slice.",
-      "notes": "No final VFX/audio or ad hoc screen polish.",
+      "evidence": "Several compact UI cue surfaces exist, but battle troop sprite animation contracts, overworld object animation contracts, event/cue ids, playback policy, reduced-motion/fast-mode contract, and animation pipeline contracts are not implemented as the foundation slice.",
+      "notes": "No final VFX/audio, final sprite/art production, renderer asset import, or ad hoc screen polish. Cue catalog work must bridge resolved gameplay events to troop/object animation playback, not UI text polish.",
       "sliceType": "parent",
       "childSliceIds": [
         "animation-event-cue-catalog-contract-10184",
@@ -1671,13 +1673,14 @@
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
-      "purpose": "Define and implement an event/cue id catalog before more screen cue polish.",
+      "purpose": "Define and implement an event/cue id catalog that bridges resolved gameplay events to troop/object animation playback before more screen cue polish.",
       "sourceDocs": [
         "docs/animation-systems-foundation.md",
         "docs/screen-wireframes.md"
       ],
       "implementationTargets": [
-        "event/cue catalog",
+        "event/cue catalog for resolved battle, overworld, town, spell, artifact, and UI events",
+        "mappings from event ids to animation states, playback policy, VFX/audio ids, reduced-motion/fast-mode fallbacks, and validation tags",
         "validation/report hooks"
       ],
       "baselineChecks": [
@@ -1699,12 +1702,13 @@
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
-      "purpose": "Implement reduced-motion and fast-mode behavior for selected event playback.",
+      "purpose": "Implement reduced-motion and fast-mode behavior for selected troop, object, and event playback.",
       "sourceDocs": [
         "docs/animation-systems-foundation.md"
       ],
       "implementationTargets": [
         "animation settings/policy helpers",
+        "troop/object animation fallback policy",
         "smoke coverage for selected surfaces"
       ],
       "baselineChecks": [
@@ -1720,18 +1724,19 @@
     },
     {
       "id": "animation-battle-cue-hook-vertical-slice-10184",
-      "title": "Animation Battle Cue Hook Vertical Slice",
+      "title": "Animation Battle Troop Sprite State Contracts",
       "phase": "phase-2-deep-production-foundation",
       "status": "pending",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
-      "purpose": "Prove one battle event/cue path through the catalog, playback policy, and validation.",
+      "purpose": "Prove battle troop sprite animation state contracts through the catalog, playback policy, and validation.",
       "sourceDocs": [
         "docs/animation-systems-foundation.md"
       ],
       "implementationTargets": [
-        "battle cue hooks",
+        "battle troop sprite state taxonomy covering idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style states",
+        "battle event-to-animation-state mappings for at least one vertical path",
         "battle scene smoke/report coverage"
       ],
       "baselineChecks": [
@@ -1747,19 +1752,21 @@
     },
     {
       "id": "animation-overworld-town-object-cue-hooks-10184",
-      "title": "Animation Overworld/Town/Object Cue Hooks",
+      "title": "Animation Overworld Object State Contracts",
       "phase": "phase-2-deep-production-foundation",
       "status": "pending",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
-      "purpose": "Prove selected overworld, town, or object event cues without broad UI cue drift.",
+      "purpose": "Prove overworld map object animation state contracts without broad UI cue drift.",
       "sourceDocs": [
         "docs/animation-systems-foundation.md",
         "docs/screen-wireframes.md"
       ],
       "implementationTargets": [
-        "overworld/town/object cue hooks",
+        "overworld map object state taxonomy covering idle, active, visited, depleted, captured, blocked, guarded, route-open, route-closed, and looping ambient states where appropriate",
+        "overworld object event-to-animation-state mappings for selected object classes",
+        "town hooks only where they share the selected event/cue contract",
         "focused smoke/report coverage"
       ],
       "baselineChecks": [
@@ -1781,12 +1788,14 @@
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
-      "purpose": "Add validation for event ids, playback policy, and no dashboard-style public output.",
+      "purpose": "Add validation for event ids, troop/object animation state mappings, playback policy, and no dashboard-style public output.",
       "sourceDocs": [
         "docs/animation-systems-foundation.md"
       ],
       "implementationTargets": [
         "animation/event smoke harness",
+        "event id to animation state mapping checks",
+        "reduced-motion and fast-mode fallback checks",
         "report fixtures"
       ],
       "baselineChecks": [
