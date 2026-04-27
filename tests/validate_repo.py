@@ -86,6 +86,9 @@ ANIMATION_VALIDATION_SMOKE_REPORT_DOC_PATH = ROOT / "docs" / "animation-validati
 AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.gd"
 AI_HERO_TASK_NORMALIZER_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.tscn"
 AI_HERO_TASK_NORMALIZER_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-report.md"
+AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_live_adoption_gate_report.gd"
+AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_live_adoption_gate_report.tscn"
+AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-live-hero-task-adoption-gate-report.md"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -12914,6 +12917,61 @@ def validate_ai_hero_task_state_normalizer_preservation(errors: list[str]) -> No
             ensure(required_text in doc_text, errors, f"AI hero task-state normalizer report doc is missing required boundary text: {required_text}")
 
 
+def validate_ai_hero_task_live_adoption_gate(errors: list[str]) -> None:
+    for path in (
+        AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCRIPT_PATH,
+        AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCENE_PATH,
+        AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI hero task live adoption gate file: {path.relative_to(ROOT)}")
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    for required_token in (
+        "func ai_hero_task_live_adoption_gate_report",
+        "func ai_hero_task_live_adoption_gate_public_leak_check",
+        "AI_HERO_TASK_LIVE_ADOPTION_GATE_REPORT",
+        "live_hero_task_adoption_gate_report_only",
+        "no_live_hero_task_behavior_adoption",
+        "no_hero_task_state_write_no_save_migration",
+        "task_schema_writer",
+        "route_actor_execution",
+        "save_resume_live_tasks",
+        "manual_pacing_review",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing live adoption gate token: {required_token}")
+    if AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "AI_HERO_TASK_LIVE_ADOPTION_GATE_REPORT",
+            "AI_HERO_TASK_STATE_BOUNDARY_REPORT",
+            "AI_HERO_TASK_STATE_NORMALIZER_PRESERVATION_REPORT",
+            "AI_COMMANDER_ROLE_ADOPTION_BOUNDARY_REPORT",
+            "live_hero_task_adoption_gate_report_only",
+            "no_live_hero_task_behavior_adoption",
+            "no_hero_task_state_write_no_save_migration",
+            "task_schema_writer",
+            "live_target_selection",
+            "route_actor_execution",
+            "save_resume_live_tasks",
+            "manual_pacing_review",
+            "durable_event_log",
+        ):
+            ensure(required_token in report_text, errors, f"AI hero task live adoption gate report is missing token: {required_token}")
+    if AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH.exists():
+        doc_text = AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Status: implementation evidence.",
+            "AI_HERO_TASK_LIVE_ADOPTION_GATE_REPORT",
+            "does not adopt live hero task behavior",
+            "No save migration",
+            "SAVE_VERSION",
+            "`wood` remains canonical",
+            "live target selection",
+            "route and actor execution",
+            "save/resume proof",
+        ):
+            ensure(required_text in doc_text, errors, f"AI hero task live adoption gate doc is missing required boundary text: {required_text}")
+
+
 def validate_overworld_object_route_effect_authoring(errors: list[str]) -> None:
     docs_path = ROOT / "docs" / "overworld-object-route-effect-authoring-validation-report.md"
     ensure(docs_path.exists(), errors, "Missing overworld object route-effect authoring validation report doc")
@@ -14923,6 +14981,7 @@ def main() -> int:
     validate_overworld_content_foundation(errors)
     validate_overworld_object_ai_valuation_route_effects(errors)
     validate_ai_hero_task_state_normalizer_preservation(errors)
+    validate_ai_hero_task_live_adoption_gate(errors)
     validate_overworld_object_route_effect_authoring(errors)
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)

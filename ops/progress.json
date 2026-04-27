@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-commander-role-adoption-boundary-10184",
-  "currentSliceTitle": "Strategic AI Commander Role Adoption Boundary",
+  "currentSliceId": "strategic-ai-live-hero-task-adoption-10184",
+  "currentSliceTitle": "Strategic AI Live Hero Task Adoption",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed report/helper adoption boundary evidence for commander-role signals. Report-only surfaces are ready; live commander-role behavior, role continuity writes, save migration, durable event history, and full AI hero task execution remain deferred.",
+  "currentSliceNotes": "Completed the final P2.8 live hero task adoption gate as report-only deferral evidence. Candidate task reports, optional normalizer preservation, and commander-role boundary evidence are ready only as reports; live target selection, route/actor execution, save/schema writes, save migration, durable event history, and executable hero task state remain deferred.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T23:50:00Z",
+  "updatedAt": "2026-04-27T23:59:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -419,8 +419,8 @@
       "id": "strategic-ai-foundation-continuation-10184",
       "title": "Strategic AI Foundation Continuation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
-      "classification": "parent_track_in_progress_selected_child_pending",
+      "status": "completed",
+      "classification": "parent_foundation_completed_children_completed",
       "sourceDocs": [
         "docs/strategic-ai-foundation.md",
         "docs/strategic-ai-economy-pressure-slice-plan.md",
@@ -436,8 +436,8 @@
         "focused AI report scenes under tests/",
         "implementation report docs when selected"
       ],
-      "evidence": "EnemyAdventureRules and EnemyTurnRules have real report-backed AI foundations. The current selected sub-slice is the pending hero task-state normalizer preservation report.",
-      "notes": "No broad AI rewrite, live task producer, schema writes, save migration, durable logs, coefficient tuning, production JSON, pathing/renderer/editor, or UI changes without explicit selection.",
+      "evidence": "EnemyAdventureRules and EnemyTurnRules have real report-backed AI foundations. P2.8 children now cover economy pressure follow-up, public event log boundary, commander-role adoption boundary, hero task-state normalizer preservation, and the live hero task adoption gate.",
+      "notes": "P2.8 is closed as bounded strategic AI foundation evidence. Live task producer behavior, schema writes, save migration, durable logs, coefficient tuning, production JSON, pathing/renderer/editor, and UI changes remain deferred without later explicit selection.",
       "sliceType": "parent",
       "childSliceIds": [
         "strategic-ai-economy-pressure-followup-10184",
@@ -451,11 +451,18 @@
         "strategic-ai-docs"
       ],
       "completedImplementationEvidenceIds": [
-        "strategic-ai-report-harness-implementation-history"
+        "strategic-ai-report-harness-implementation-history",
+        "strategic-ai-economy-pressure-followup-10184",
+        "strategic-ai-public-event-log-boundary-10184",
+        "strategic-ai-commander-role-adoption-boundary-10184",
+        "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+        "strategic-ai-live-hero-task-adoption-10184"
       ],
       "reportOnlyEvidenceIds": [
         "strategic-ai-gate-reports"
-      ]
+      ],
+      "updatedAt": "2026-04-27T23:59:00Z",
+      "completedAt": "2026-04-27T23:59:00Z"
     },
     {
       "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
@@ -1986,7 +1993,7 @@
       "id": "strategic-ai-live-hero-task-adoption-10184",
       "title": "Strategic AI Live Hero Task Adoption",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "strategic-ai-foundation-continuation-10184",
@@ -2005,11 +2012,21 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "EnemyAdventureRules.ai_hero_task_live_adoption_gate_report(...) maps passed task boundary, normalizer preservation, and commander-role boundary signals into an explicit report-only live adoption gate.",
+        "tests/ai_hero_task_live_adoption_gate_report.gd/.tscn asserts report-only ready surfaces and deferred live behavior/save/schema prerequisites.",
+        "docs/strategic-ai-live-hero-task-adoption-gate-report.md records the completion decision and deferred surfaces."
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "validation": [
+        "python3 tests/validate_repo.py",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_hero_task_live_adoption_gate_report.tscn",
+        "git diff --check"
+      ],
+      "notes": "Completed as a bounded live-adoption gate/deferral proof. Candidate task reports, optional normalizer preservation, and commander-role boundary evidence are report-only ready; live target selection, route/actor execution, executable task save/resume, schema writes, save migration, durable event history, and public UI task surfaces remain deferred. No live behavior, save/schema, production JSON, resource/economy, terrain/editor, random map, renderer/animation, or UI polish changes were made.",
+      "updatedAt": "2026-04-27T23:59:00Z",
+      "completedAt": "2026-04-27T23:59:00Z"
     },
     {
       "id": "strategic-ai-public-event-log-boundary-10184",
@@ -3531,23 +3548,22 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "strategic-ai-live-hero-task-adoption-10184",
-      "title": "Strategic AI Live Hero Task Adoption",
+      "id": "terrain-editor-terrain-placement-contract-10184",
+      "title": "Terrain Editor Placement Contract",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
-      "parentSliceId": "strategic-ai-foundation-continuation-10184",
-      "source": "PLAN.md P2.8 Strategic AI Foundation Continuation",
+      "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
+      "source": "PLAN.md P2.9 Terrain, Renderer, And Editor Tooling Foundation",
       "sourceDocs": [
-        "docs/strategic-ai-hero-task-state-adoption-sequencing-plan.md",
-        "docs/strategic-ai-hero-task-state-boundary-plan.md"
+        "docs/screen-wireframes.md",
+        "docs/progress-implementation-audit-2026-04-27.md"
       ],
       "implementationTargets": [
-        "scripts/core/EnemyAdventureRules.gd",
-        "scripts/core/EnemyTurnRules.gd",
-        "focused AI report/smoke coverage"
+        "terrain placement rules",
+        "editor smoke coverage"
       ],
-      "notes": "Next remaining P2.8 child after commander-role boundary completion. This remains pending and requires its own explicit implementation gate before any live AI hero task behavior, save/schema writes, durable logs, or broad AI rewrite.",
-      "updatedAt": "2026-04-27T23:50:00Z"
+      "notes": "Next Phase 2 category after P2.8 strategic AI closeout. Do not start terrain/editor work from the live hero task adoption gate slice.",
+      "updatedAt": "2026-04-27T23:59:00Z"
     }
   ],
   "stoppedOrPausedTasks": [
