@@ -678,6 +678,689 @@ nonGoals:
 - No broad content migration hidden inside generator work.
 - No generated map use in campaign/alpha until validated by later slices.
 
+## Phase 2 Operational Child Slices
+
+These child slices decompose the broad Phase 2 parent tracks above for operational tracking. They are not archive imports. They are the current executable units that future workers should select from when a parent is too broad.
+
+### P2 Child: Faction Mechanics Identity Hooks
+
+id: `world-faction-mechanics-identity-hooks-10184`
+parentSliceId: `world-faction-identity-implementation-bridge-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement the first faction identity hooks that affect real player or AI decisions.
+
+sourceDocs:
+- `docs/worldbuilding-foundation.md`
+- `docs/factions-content-bible.md`
+
+implementationTargets:
+- `content/factions.json`
+- `content/heroes.json`
+- `content/units.json`
+- faction-specific rule hooks selected by the worker
+
+### P2 Child: Faction Town And Unit Asymmetry
+
+id: `faction-town-unit-asymmetry-content-10184`
+parentSliceId: `world-faction-identity-implementation-bridge-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Carry identity into town, building, unit, hero, and recruitable roster differences.
+
+sourceDocs:
+- `docs/factions-content-bible.md`
+- `docs/worldbuilding-foundation.md`
+
+implementationTargets:
+- `content/towns.json`
+- `content/units.json`
+- `content/heroes.json`
+- validation/report fixtures for selected content
+
+### P2 Child: Faction Scenario Placement And AI Pressure
+
+id: `faction-scenario-placement-ai-pressure-10184`
+parentSliceId: `world-faction-identity-implementation-bridge-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Prove faction identity through scenario placement, map pressure, or AI valuation.
+
+sourceDocs:
+- `docs/factions-content-bible.md`
+- `docs/strategic-ai-foundation.md`
+
+implementationTargets:
+- scenario placement hooks
+- strategic AI pressure reports
+- player-readable faction pressure surfaces when selected
+
+### P2 Child: Concept-Art Decision Register
+
+id: `concept-art-decision-register-10184`
+parentSliceId: `concept-art-curation-gate-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Record accepted, rejected, and deferred concept directions before implementation.
+
+sourceDocs:
+- `docs/concept-art-pipeline.md`
+- `docs/concept-art-batch-001-review.md`
+- `docs/concept-art-batch-002-review.md`
+- `docs/concept-art-batch-003-review.md`
+- `docs/concept-art-batch-004-review.md`
+- `docs/concept-art-batch-005-review.md`
+
+implementationTargets:
+- curation/status doc or brief update only
+
+### P2 Child: Concept-Art Implementation Brief Selection
+
+id: `concept-art-implementation-brief-selection-10184`
+parentSliceId: `concept-art-curation-gate-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Select one concept-art implementation brief track for later runtime/content work.
+
+sourceDocs:
+- `docs/concept-art-implementation-briefs.md`
+
+implementationTargets:
+- selected implementation brief update
+- follow-up implementation slice reference
+
+### P2 Child: Concept-Art Asset Ingestion Boundary
+
+id: `concept-art-asset-ingestion-boundary-10184`
+parentSliceId: `concept-art-curation-gate-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Define the approval, source, import, and rollback boundary before any generated PNG enters runtime assets.
+
+sourceDocs:
+- `docs/concept-art-pipeline.md`
+- `docs/concept-art-implementation-briefs.md`
+
+implementationTargets:
+- asset ingestion plan or explicit deferral note
+
+### P2 Child: Economy Resource Registry Policy
+
+id: `economy-resource-registry-policy-10184`
+parentSliceId: `economy-resource-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Decide and implement the first safe resource registry policy without unsafe save/content migration.
+
+sourceDocs:
+- `docs/economy-overhaul-foundation.md`
+- `docs/economy-resource-schema-migration-plan.md`
+- `docs/economy-resource-additive-schema-validator-plan.md`
+
+implementationTargets:
+- resource registry helpers or explicit policy doc
+- validator/report fixtures
+
+### P2 Child: Economy Wood/Timber Compatibility Decision
+
+id: `economy-wood-timber-compatibility-decision-10184`
+parentSliceId: `economy-resource-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Resolve the `wood`/`timber` compatibility path before broader resource migration.
+
+sourceDocs:
+- `docs/economy-resource-schema-migration-plan.md`
+- `docs/economy-resource-additive-schema-validator-plan.md`
+
+implementationTargets:
+- compatibility adapter/report
+- docs or tests proving old ids remain safe
+
+### P2 Child: Economy Rare Resource Activation
+
+id: `economy-rare-resource-activation-10184`
+parentSliceId: `economy-resource-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Stage rare-resource activation behind explicit rules, UI, content, and save compatibility gates.
+
+sourceDocs:
+- `docs/economy-overhaul-foundation.md`
+- `docs/economy-resource-schema-migration-plan.md`
+
+implementationTargets:
+- economy rules
+- resource-site content
+- UI/report validation for selected resources
+
+### P2 Child: Economy Market And Faction Costs
+
+id: `economy-market-faction-costs-10184`
+parentSliceId: `economy-resource-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement bounded market caps or faction-biased cost hooks only after resource policy is clear.
+
+sourceDocs:
+- `docs/economy-overhaul-foundation.md`
+- `docs/factions-content-bible.md`
+
+implementationTargets:
+- town economy rules
+- market/cost content
+- focused reports or smoke coverage
+
+### P2 Child: Economy Capture Income Loop Expansion
+
+id: `economy-capture-income-loop-expansion-10184`
+parentSliceId: `economy-resource-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Expand the narrow Riverwatch signal-yard proof into a selected live economy loop.
+
+sourceDocs:
+- `docs/economy-capture-resource-loop-proof-plan.md`
+- `docs/economy-capture-resource-loop-live-proof-report.md`
+- `docs/economy-capture-resource-loop-manual-gate-review.md`
+
+implementationTargets:
+- economy rule helpers
+- resource-site capture/production report
+- live proof or manual gate evidence
+
+### P2 Child: Overworld Runtime Metadata Adoption
+
+id: `overworld-object-runtime-metadata-adoption-10184`
+parentSliceId: `overworld-object-encounter-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Move selected object metadata from compatibility/report fields into runtime behavior.
+
+sourceDocs:
+- `docs/overworld-object-safe-additive-schema-plan.md`
+- `docs/overworld-object-schema-migration-plan.md`
+
+implementationTargets:
+- `content/map_objects.json`
+- runtime object rules/helpers
+- focused validation
+
+### P2 Child: Overworld Editor Authoring Validation
+
+id: `overworld-object-editor-authoring-validation-10184`
+parentSliceId: `overworld-object-encounter-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Make object taxonomy useful in editor authoring and validation without broad runtime migration.
+
+sourceDocs:
+- `docs/overworld-object-taxonomy-density.md`
+- `docs/overworld-object-report-review-001.md`
+
+implementationTargets:
+- map editor object tooling
+- validator/report fixtures
+
+### P2 Child: Overworld Pathing And Occupancy Adoption
+
+id: `overworld-object-pathing-occupancy-adoption-10184`
+parentSliceId: `overworld-object-encounter-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Adopt body tiles, approach offsets, passability, and occupancy only through a bounded pathing slice.
+
+sourceDocs:
+- `docs/overworld-object-schema-migration-plan.md`
+- `docs/neutral-encounter-first-class-object-migration-plan.md`
+
+implementationTargets:
+- pathing/occupancy rules
+- object metadata
+- scenario smoke/report validation
+
+### P2 Child: Neutral Encounter Object Migration Expansion
+
+id: `neutral-encounter-object-migration-expansion-10184`
+parentSliceId: `overworld-object-encounter-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Extend first-class neutral encounter object migration beyond the first three authored records only when it improves runtime/tooling value.
+
+sourceDocs:
+- `docs/neutral-encounter-first-class-object-migration-plan.md`
+- `docs/neutral-encounter-first-class-object-bundle-001-report-review.md`
+
+implementationTargets:
+- `content/map_objects.json`
+- `content/scenarios.json`
+- neutral encounter report validation
+
+### P2 Child: Overworld Object AI Valuation And Route Effects
+
+id: `overworld-object-ai-valuation-route-effects-10184`
+parentSliceId: `overworld-object-encounter-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Connect selected object metadata to AI valuation, route effects, or scenario-authoring decisions.
+
+sourceDocs:
+- `docs/overworld-object-taxonomy-density.md`
+- `docs/strategic-ai-foundation.md`
+
+implementationTargets:
+- AI valuation/report helpers
+- route-effect helpers when selected
+- public leak checks
+
+### P2 Child: Magic Spell School And Category Schema
+
+id: `magic-spell-school-category-schema-10184`
+parentSliceId: `magic-system-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement selected spell school/category/tier metadata and validation.
+
+sourceDocs:
+- `docs/magic-system-expansion-foundation.md`
+
+implementationTargets:
+- `content/spells.json`
+- `scripts/core/SpellRules.gd`
+- validation fixtures/reports
+
+### P2 Child: Magic Battle Spell Behavior Expansion
+
+id: `magic-battle-spell-behavior-expansion-10184`
+parentSliceId: `magic-system-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Expand selected tactical spell behavior with focused battle validation.
+
+sourceDocs:
+- `docs/magic-system-expansion-foundation.md`
+
+implementationTargets:
+- battle spell hooks
+- battle smoke/report fixtures
+
+### P2 Child: Magic Adventure Map Spell Hooks
+
+id: `magic-adventure-map-spell-hooks-10184`
+parentSliceId: `magic-system-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement selected adventure-map magic behavior and targeting.
+
+sourceDocs:
+- `docs/magic-system-expansion-foundation.md`
+- `docs/overworld-content-bible.md`
+
+implementationTargets:
+- overworld spell hooks
+- target/consequence reports
+- UI surface only when selected
+
+### P2 Child: Magic AI Valuation And Casting Hooks
+
+id: `magic-ai-valuation-casting-hooks-10184`
+parentSliceId: `magic-system-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add bounded AI valuation/casting evidence for selected spell roles without broad AI rewrite.
+
+sourceDocs:
+- `docs/magic-system-expansion-foundation.md`
+- `docs/strategic-ai-foundation.md`
+
+implementationTargets:
+- AI valuation/report helpers
+- spell casting decision fixtures
+
+### P2 Child: Magic Artifact And Economy Integration
+
+id: `magic-artifact-economy-integration-10184`
+parentSliceId: `magic-system-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement selected magic interactions with artifacts, towns, or resources after their parent policies are clear.
+
+sourceDocs:
+- `docs/magic-system-expansion-foundation.md`
+- `docs/artifact-system-expansion-foundation.md`
+- `docs/economy-overhaul-foundation.md`
+
+implementationTargets:
+- spell/artifact/economy hooks
+- focused reports/smoke coverage
+
+### P2 Child: Artifact Taxonomy And Schema
+
+id: `artifact-taxonomy-schema-implementation-10184`
+parentSliceId: `artifact-system-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Define and validate slots, rarity, families, sets, faction affinity, source tags, equip restrictions, and effect metadata.
+
+sourceDocs:
+- `docs/artifact-system-expansion-foundation.md`
+
+implementationTargets:
+- `content/artifacts.json`
+- `scripts/core/ArtifactRules.gd`
+- artifact validation/report fixtures
+
+### P2 Child: Artifact Sets And Faction-Specific Content
+
+id: `artifact-sets-faction-specific-content-10184`
+parentSliceId: `artifact-system-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Author the first meaningful artifact set/family and faction-specific artifact content beyond placeholders.
+
+sourceDocs:
+- `docs/artifact-system-expansion-foundation.md`
+- `docs/factions-content-bible.md`
+- `docs/worldbuilding-foundation.md`
+
+implementationTargets:
+- artifact content records
+- faction affinity/set metadata
+- validation fixtures/reports
+
+### P2 Child: Artifact Source And Reward Rules
+
+id: `artifact-source-reward-rules-10184`
+parentSliceId: `artifact-system-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Connect artifacts to map rewards, guarded sites, treasure classes, rarity/source constraints, and later random-map constraints.
+
+sourceDocs:
+- `docs/artifact-system-expansion-foundation.md`
+- `docs/overworld-object-taxonomy-density.md`
+- `docs/overworld-content-bible.md`
+
+implementationTargets:
+- reward/source tables
+- map object/site reward hooks
+- validation/report fixtures
+
+### P2 Child: Artifact Equip Surface And Runtime Effects
+
+id: `artifact-equip-runtime-effects-10184`
+parentSliceId: `artifact-system-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Make equipped artifacts affect live hero, adventure, battle, economy, or spell rules through bounded hooks.
+
+sourceDocs:
+- `docs/artifact-system-expansion-foundation.md`
+- `docs/magic-system-expansion-foundation.md`
+- `docs/economy-overhaul-foundation.md`
+
+implementationTargets:
+- hero equipment/inventory surfaces
+- `scripts/core/ArtifactRules.gd`
+- battle/adventure/economy/spell integration points
+
+### P2 Child: Artifact AI Valuation
+
+id: `artifact-ai-valuation-10184`
+parentSliceId: `artifact-system-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Teach strategic AI/reporting to value artifact rewards without leaking internal score fields.
+
+sourceDocs:
+- `docs/artifact-system-expansion-foundation.md`
+- `docs/strategic-ai-foundation.md`
+- `docs/strategic-ai-pressure-expansion-plan.md`
+
+implementationTargets:
+- AI valuation/report helpers
+- strategic AI report fixtures
+- public-output leak checks
+
+### P2 Child: Animation Event Cue Catalog Contract
+
+id: `animation-event-cue-catalog-contract-10184`
+parentSliceId: `animation-event-cue-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Define and implement an event/cue id catalog before more screen cue polish.
+
+sourceDocs:
+- `docs/animation-systems-foundation.md`
+- `docs/screen-wireframes.md`
+
+implementationTargets:
+- event/cue catalog
+- validation/report hooks
+
+### P2 Child: Animation Reduced-Motion And Fast-Mode Policy
+
+id: `animation-reduced-motion-fast-mode-policy-10184`
+parentSliceId: `animation-event-cue-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement reduced-motion and fast-mode behavior for selected event playback.
+
+sourceDocs:
+- `docs/animation-systems-foundation.md`
+
+implementationTargets:
+- animation settings/policy helpers
+- smoke coverage for selected surfaces
+
+### P2 Child: Animation Battle Cue Hook Vertical Slice
+
+id: `animation-battle-cue-hook-vertical-slice-10184`
+parentSliceId: `animation-event-cue-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Prove one battle event/cue path through the catalog, playback policy, and validation.
+
+sourceDocs:
+- `docs/animation-systems-foundation.md`
+
+implementationTargets:
+- battle cue hooks
+- battle scene smoke/report coverage
+
+### P2 Child: Animation Overworld/Town/Object Cue Hooks
+
+id: `animation-overworld-town-object-cue-hooks-10184`
+parentSliceId: `animation-event-cue-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Prove selected overworld, town, or object event cues without broad UI cue drift.
+
+sourceDocs:
+- `docs/animation-systems-foundation.md`
+- `docs/screen-wireframes.md`
+
+implementationTargets:
+- overworld/town/object cue hooks
+- focused smoke/report coverage
+
+### P2 Child: Animation Validation Smoke Harness
+
+id: `animation-validation-smoke-harness-10184`
+parentSliceId: `animation-event-cue-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add validation for event ids, playback policy, and no dashboard-style public output.
+
+sourceDocs:
+- `docs/animation-systems-foundation.md`
+
+implementationTargets:
+- animation/event smoke harness
+- report fixtures
+
+### P2 Child: Strategic AI Economy Pressure Follow-Up
+
+id: `strategic-ai-economy-pressure-followup-10184`
+parentSliceId: `strategic-ai-foundation-continuation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Continue economy/site pressure only when a report or manual gate identifies a concrete defect.
+
+sourceDocs:
+- `docs/strategic-ai-economy-pressure-slice-plan.md`
+- `docs/strategic-ai-economy-pressure-report-gate-review.md`
+
+implementationTargets:
+- `scripts/core/EnemyAdventureRules.gd`
+- focused AI report fixtures
+
+### P2 Child: Strategic AI Commander Role Adoption Boundary
+
+id: `strategic-ai-commander-role-adoption-boundary-10184`
+parentSliceId: `strategic-ai-foundation-continuation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Convert commander-role report findings into adoption boundaries without live behavior or save schema changes unless explicitly selected.
+
+sourceDocs:
+- `docs/strategic-ai-commander-role-adoption-sequencing-plan.md`
+- `docs/strategic-ai-commander-role-live-turn-transcript-report-gate-review.md`
+
+implementationTargets:
+- AI report helpers
+- adoption plan or explicit deferral evidence
+
+### P2 Child: Strategic AI Live Hero Task Adoption
+
+id: `strategic-ai-live-hero-task-adoption-10184`
+parentSliceId: `strategic-ai-foundation-continuation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement live AI hero task-state behavior only after report-only normalizer preservation and schema boundaries pass.
+
+sourceDocs:
+- `docs/strategic-ai-hero-task-state-adoption-sequencing-plan.md`
+- `docs/strategic-ai-hero-task-state-boundary-plan.md`
+
+implementationTargets:
+- `scripts/core/EnemyAdventureRules.gd`
+- `scripts/core/EnemyTurnRules.gd`
+- focused AI report/smoke coverage
+
+### P2 Child: Strategic AI Public Event Log Boundary
+
+id: `strategic-ai-public-event-log-boundary-10184`
+parentSliceId: `strategic-ai-foundation-continuation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Decide whether compact AI events stay derived/ephemeral or require a durable event log.
+
+sourceDocs:
+- `docs/strategic-ai-event-surfacing-plan.md`
+- `docs/strategic-ai-event-surfacing-report-gate-review.md`
+
+implementationTargets:
+- derived event/report helpers
+- save boundary docs/tests if durability is selected
+
+### P2 Child: Terrain Editor Placement Contract
+
+id: `terrain-editor-terrain-placement-contract-10184`
+parentSliceId: `terrain-editor-tooling-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Keep terrain placement and restamp behavior explicit for scenario iteration.
+
+sourceDocs:
+- `docs/screen-wireframes.md`
+- `docs/progress-implementation-audit-2026-04-27.md`
+
+implementationTargets:
+- terrain placement rules
+- editor smoke coverage
+
+### P2 Child: Terrain Renderer Transition Validation
+
+id: `terrain-editor-renderer-transition-validation-10184`
+parentSliceId: `terrain-editor-tooling-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Validate selected terrain/renderer transitions without treating prototype art as shippable.
+
+sourceDocs:
+- `docs/screen-wireframes.md`
+- archived terrain/editor plan and progress entries
+
+implementationTargets:
+- terrain grammar/layers
+- overworld visual smoke/report coverage
+
+### P2 Child: Terrain Editor Object Authoring Adoption
+
+id: `terrain-editor-object-authoring-adoption-10184`
+parentSliceId: `terrain-editor-tooling-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Connect object taxonomy and placement metadata to editor authoring only when selected.
+
+sourceDocs:
+- `docs/overworld-object-taxonomy-density.md`
+- `docs/screen-wireframes.md`
+
+implementationTargets:
+- `scenes/editor/MapEditorShell.gd`
+- editor validation/export tooling
+
+### P2 Child: Terrain Editor Scenario Export Validation
+
+id: `terrain-editor-scenario-export-validation-10184`
+parentSliceId: `terrain-editor-tooling-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Prove editor output can support scenario iteration through validation/export gates.
+
+sourceDocs:
+- `docs/screen-wireframes.md`
+- future editor/export requirements if created
+
+implementationTargets:
+- editor export tooling
+- scenario validation smoke/report coverage
+
+### P2 Child: Random Map Requirements Doc
+
+id: `random-map-requirements-doc-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Create the missing random-map requirements document before implementation.
+
+sourceDocs:
+- `project.md`
+- future random-map requirements doc
+
+implementationTargets:
+- future random-map requirements doc
+
+### P2 Child: Random Map Seeded Generator Core
+
+id: `random-map-seeded-generator-core-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement deterministic seeded generation primitives after requirements exist.
+
+sourceDocs:
+- future random-map requirements doc
+
+implementationTargets:
+- deterministic map-generation rules/helpers
+- seed determinism checks
+
+### P2 Child: Random Map Terrain/Town/Road Constraints
+
+id: `random-map-terrain-town-road-constraints-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Generate terrain, town, road, and route constraints suitable for scenario prototypes.
+
+sourceDocs:
+- future random-map requirements doc
+- terrain/editor docs
+
+implementationTargets:
+- map generator constraints
+- generator report validation
+
+### P2 Child: Random Map Resource/Encounter Fairness Report
+
+id: `random-map-resource-encounter-fairness-report-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Validate resource, encounter, guard, and objective fairness in generated maps.
+
+sourceDocs:
+- future random-map requirements doc
+- economy, object, and strategic AI docs
+
+implementationTargets:
+- generator validation/report harness
+- fairness checks
+
+### P2 Child: Random Map Scenario Load Smoke
+
+id: `random-map-scenario-load-smoke-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Prove generated prototype maps can load through the scenario pipeline once runtime integration is selected.
+
+sourceDocs:
+- future random-map requirements doc
+
+implementationTargets:
+- generated prototype scenario smoke
+- load/report validation
+
 ## Phase 3 - Headless AI Agent Balance Harness
 
 Goal: run scenarios, AI turns, economy loops, battles, and balance checks without graphics.

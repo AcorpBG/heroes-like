@@ -1,0 +1,2689 @@
+{
+  "project": "heroes-like",
+  "taskId": "10184",
+  "status": "in_progress",
+  "currentPhase": "phase-2-deep-production-foundation",
+  "currentSliceId": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+  "currentSliceTitle": "Hero Task-State Save-Normalizer Preservation Report",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Selected next pending child implementation candidate after progress architecture reconciliation. Scope remains report-only AI normalizer preservation; no live task producer, save migration, SAVE_VERSION bump, production JSON edit, pathing, renderer/editor, or UI work.",
+  "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task.",
+  "updatedAt": "2026-04-27T12:25:00Z",
+  "statusTaxonomy": {
+    "validStatuses": [
+      "pending",
+      "in_progress",
+      "blocked",
+      "completed",
+      "docs_ready",
+      "superseded",
+      "paused",
+      "pending_after_implementation"
+    ],
+    "classificationRules": {
+      "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
+      "docs_ready": "Source docs, plans, or reports exist, but the implementation slice is not complete.",
+      "paused": "Deliberately stopped or deferred until a future explicit slice or owner decision selects it.",
+      "superseded": "Replaced by a later accepted plan, slice, or implementation path; preserved as evidence only.",
+      "pending_after_implementation": "Follow-up review that should wait for the named implementation output."
+    },
+    "invalidArchivedSemantics": {
+      "report_only": "Encoded as status docs_ready with classification report_only when the helper status set requires valid statuses.",
+      "deferred": "Encoded as status paused with deferredReason when the helper status set requires valid statuses."
+    }
+  },
+  "reconciledHistorySummary": {
+    "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27.",
+    "archiveRole": "archive/document-reset-2026-04-27 is evidence/history only, not the active worker queue.",
+    "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
+    "activeQueueRule": "plannedSlices contains current executable parent and child slices only; archived worker spam stays in evidence/history arrays."
+  },
+  "plannedSlices": [
+    {
+      "id": "document-model-reset-10184",
+      "title": "Document Model Reset",
+      "phase": "phase-0-prototype-reality-and-governance",
+      "status": "completed",
+      "classification": "documentation_governance",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/progress-implementation-audit-2026-04-27.md",
+        "archive/document-reset-2026-04-27/project.md",
+        "archive/document-reset-2026-04-27/PLAN.md",
+        "archive/document-reset-2026-04-27/progress.json"
+      ],
+      "implementationTargets": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "completionEvidence": [
+        "Commit 23937d4 reset project.md into a concise strategic charter.",
+        "Commits 1d68487 and 0686892 created and reconciled PLAN.md as the tactical implementation plan.",
+        "Current project.md and PLAN.md define distinct strategic, tactical, docs, and progress-tracker roles."
+      ],
+      "notes": "No gameplay implementation was performed by this governance slice."
+    },
+    {
+      "id": "progress-tracker-regeneration-10184",
+      "title": "Progress Tracker Regeneration",
+      "phase": "phase-0-prototype-reality-and-governance",
+      "status": "completed",
+      "classification": "tracker_governance",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "archive/document-reset-2026-04-27/progress.json",
+        "docs/progress-implementation-audit-2026-04-27.md"
+      ],
+      "implementationTargets": [
+        "ops/progress.json"
+      ],
+      "completionEvidence": [
+        "Tracker regenerated with every PLAN.md slice id exactly once in plannedSlices.",
+        "Archived progress history was summarized rather than imported wholesale.",
+        "Validation commands for json.tool, progress.py status, progress.py next, progress.py sync-plan --dry-run, and git diff --check passed on 2026-04-27."
+      ],
+      "notes": "This slice is complete only for tracker regeneration; it does not complete any gameplay/system/content implementation slice."
+    },
+    {
+      "id": "river-pass-proof-preservation-10184",
+      "title": "River Pass Proof Preservation",
+      "phase": "phase-1-manual-scenario-proof",
+      "status": "completed",
+      "classification": "historical_implementation_evidence",
+      "sourceDocs": [
+        "archive/document-reset-2026-04-27/PLAN.md",
+        "archive/document-reset-2026-04-27/progress.json",
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "progress metadata only"
+      ],
+      "completionEvidence": [
+        "Archived history records River Pass launch, objective, town, battle, save/resume, outcome, victory/defeat, and clean manual completion proof.",
+        "Current project.md and PLAN.md explicitly prevent using that proof to claim alpha or product breadth."
+      ],
+      "notes": "Historical proof only; no new River Pass work is selected here."
+    },
+    {
+      "id": "world-faction-identity-implementation-bridge-10184",
+      "title": "World And Faction Identity Implementation Bridge",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "docs_ready",
+      "classification": "parent_foundation_docs_ready_children_pending",
+      "sourceDocs": [
+        "docs/worldbuilding-foundation.md",
+        "docs/factions-content-bible.md",
+        "docs/concept-art-implementation-briefs.md",
+        "docs/progress-implementation-audit-2026-04-27.md"
+      ],
+      "implementationTargets": [
+        "content/factions.json",
+        "content/heroes.json",
+        "content/units.json",
+        "content/towns.json",
+        "scenario placement hooks",
+        "faction-specific AI/economy hooks"
+      ],
+      "evidence": "Six faction records and broad content scaffolds exist, but the slice requires at least two factions to affect real player or AI decisions beyond shared templates.",
+      "notes": "Do not mark completed for design docs or raw JSON breadth.",
+      "sliceType": "parent",
+      "childSliceIds": [
+        "world-faction-mechanics-identity-hooks-10184",
+        "faction-town-unit-asymmetry-content-10184",
+        "faction-scenario-placement-ai-pressure-10184"
+      ],
+      "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
+      "docsReadyEvidenceIds": [
+        "world-faction-docs",
+        "concept-art-docs"
+      ],
+      "completedImplementationEvidenceIds": [],
+      "reportOnlyEvidenceIds": []
+    },
+    {
+      "id": "concept-art-curation-gate-10184",
+      "title": "Concept-Art Curation Gate",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "paused",
+      "classification": "parent_gate_paused_children_pending",
+      "sourceDocs": [
+        "docs/concept-art-pipeline.md",
+        "docs/concept-art-batch-001-review.md",
+        "docs/concept-art-batch-002-review.md",
+        "docs/concept-art-batch-003-review.md",
+        "docs/concept-art-batch-004-review.md",
+        "docs/concept-art-batch-005-review.md",
+        "docs/concept-art-implementation-briefs.md"
+      ],
+      "implementationTargets": [
+        "curation/status document or brief update only unless an explicit asset implementation slice follows"
+      ],
+      "deferredReason": "Batch review docs and implementation briefs exist, but accepted/rejected/deferred study decisions are not selected as the current worker task.",
+      "notes": "No runtime asset import or renderer replacement.",
+      "sliceType": "parent",
+      "childSliceIds": [
+        "concept-art-decision-register-10184",
+        "concept-art-implementation-brief-selection-10184",
+        "concept-art-asset-ingestion-boundary-10184"
+      ],
+      "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
+      "docsReadyEvidenceIds": [
+        "concept-art-docs"
+      ],
+      "completedImplementationEvidenceIds": [],
+      "reportOnlyEvidenceIds": []
+    },
+    {
+      "id": "economy-resource-foundation-implementation-10184",
+      "title": "Economy Resource Foundation Implementation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "docs_ready",
+      "classification": "parent_foundation_docs_ready_children_pending",
+      "sourceDocs": [
+        "docs/economy-overhaul-foundation.md",
+        "docs/economy-resource-schema-migration-plan.md",
+        "docs/economy-resource-additive-schema-validator-plan.md",
+        "docs/economy-capture-resource-loop-proof-plan.md",
+        "docs/economy-capture-resource-loop-live-proof-report.md",
+        "docs/economy-capture-resource-loop-manual-gate-review.md"
+      ],
+      "implementationTargets": [
+        "economy rule helpers",
+        "resource-site capture/production reports",
+        "optional resource registry only by sub-slice",
+        "town cost/recruitment/market behavior only by explicit migration sub-slice"
+      ],
+      "evidence": "Current live economy uses gold, wood, and ore, and a narrow River Pass signal-yard proof exists. Full resource registry, wood/timber decision, rare-resource activation, market caps, and faction-biased costs remain pending.",
+      "notes": "No SAVE_VERSION bump, rare-resource activation, market overhaul, or broad rebalance without explicit approval.",
+      "sliceType": "parent",
+      "childSliceIds": [
+        "economy-resource-registry-policy-10184",
+        "economy-wood-timber-compatibility-decision-10184",
+        "economy-rare-resource-activation-10184",
+        "economy-market-faction-costs-10184",
+        "economy-capture-income-loop-expansion-10184"
+      ],
+      "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
+      "docsReadyEvidenceIds": [
+        "economy-docs"
+      ],
+      "completedImplementationEvidenceIds": [
+        "economy-resource-implementation-history"
+      ],
+      "reportOnlyEvidenceIds": [
+        "economy-resource-reports"
+      ]
+    },
+    {
+      "id": "overworld-object-encounter-foundation-implementation-10184",
+      "title": "Overworld Object And Neutral Encounter Foundation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "docs_ready",
+      "classification": "parent_foundation_docs_ready_partial_metadata_children_pending",
+      "sourceDocs": [
+        "docs/overworld-content-bible.md",
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/overworld-object-schema-migration-plan.md",
+        "docs/overworld-object-safe-additive-schema-plan.md",
+        "docs/overworld-object-report-review-001.md",
+        "docs/neutral-encounter-representation-plan.md",
+        "docs/neutral-encounter-additive-validator-report-plan.md",
+        "docs/neutral-encounter-representation-bundle-001-plan.md",
+        "docs/neutral-encounter-first-class-object-migration-plan.md",
+        "docs/neutral-encounter-first-class-object-bundle-001-plan.md"
+      ],
+      "implementationTargets": [
+        "content/map_objects.json",
+        "content/resource_sites.json",
+        "content/scenarios.json placement metadata",
+        "map editor object tooling",
+        "validator/report fixtures"
+      ],
+      "evidence": "Safe metadata and three neutral encounter object-backed placements exist with validator/report support, but broad runtime/pathing/renderer/editor/save adoption is intentionally deferred.",
+      "notes": "No broad warning cleanup, body_tiles, approach offsets, pathing, renderer sprite ingestion, or save adoption without explicit sub-slices.",
+      "sliceType": "parent",
+      "childSliceIds": [
+        "overworld-object-runtime-metadata-adoption-10184",
+        "overworld-object-editor-authoring-validation-10184",
+        "overworld-object-pathing-occupancy-adoption-10184",
+        "neutral-encounter-object-migration-expansion-10184",
+        "overworld-object-ai-valuation-route-effects-10184"
+      ],
+      "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
+      "docsReadyEvidenceIds": [
+        "overworld-object-docs",
+        "neutral-encounter-docs"
+      ],
+      "completedImplementationEvidenceIds": [
+        "overworld-object-neutral-implementation-history"
+      ],
+      "reportOnlyEvidenceIds": [
+        "overworld-neutral-reports"
+      ]
+    },
+    {
+      "id": "magic-system-foundation-implementation-10184",
+      "title": "Magic System Foundation Implementation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "docs_ready",
+      "classification": "parent_foundation_docs_ready_children_pending",
+      "sourceDocs": [
+        "docs/magic-system-expansion-foundation.md"
+      ],
+      "implementationTargets": [
+        "content/spells.json",
+        "scripts/core/SpellRules.gd",
+        "battle spell hooks",
+        "adventure spell hooks",
+        "validation fixtures/reports"
+      ],
+      "evidence": "Current spells and SpellRules exist, but expanded schools/categories/tiers, adventure-map magic, AI casting heuristics, and validation fixtures remain unimplemented.",
+      "notes": "UI-only cues are not magic-system implementation.",
+      "sliceType": "parent",
+      "childSliceIds": [
+        "magic-spell-school-category-schema-10184",
+        "magic-battle-spell-behavior-expansion-10184",
+        "magic-adventure-map-spell-hooks-10184",
+        "magic-ai-valuation-casting-hooks-10184",
+        "magic-artifact-economy-integration-10184"
+      ],
+      "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
+      "docsReadyEvidenceIds": [
+        "magic-artifact-animation-docs"
+      ],
+      "completedImplementationEvidenceIds": [],
+      "reportOnlyEvidenceIds": []
+    },
+    {
+      "id": "artifact-system-foundation-implementation-10184",
+      "title": "Artifact System Foundation Implementation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "docs_ready",
+      "classification": "parent_foundation_docs_ready_children_pending",
+      "sourceDocs": [
+        "docs/artifact-system-expansion-foundation.md"
+      ],
+      "implementationTargets": [
+        "content/artifacts.json",
+        "scripts/core/ArtifactRules.gd",
+        "artifact set/family/faction metadata",
+        "reward/source tables",
+        "hero equipment/inventory surfaces",
+        "spell/economy/battle/adventure hooks",
+        "validation fixtures/reports"
+      ],
+      "evidence": "ArtifactRules and current artifact records exist, but AcOrP's requested full artifact system—multiple artifacts, sets/families, faction-specific artifacts, source/reward rules, equip surfaces, runtime effects, and AI valuation—requires child implementation slices.",
+      "notes": "Do not reduce artifact work to an overworld cue. Cue polish is not artifact-system implementation.",
+      "childSliceIds": [
+        "artifact-taxonomy-schema-implementation-10184",
+        "artifact-sets-faction-specific-content-10184",
+        "artifact-source-reward-rules-10184",
+        "artifact-equip-runtime-effects-10184",
+        "artifact-ai-valuation-10184"
+      ],
+      "sliceType": "parent",
+      "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
+      "docsReadyEvidenceIds": [
+        "magic-artifact-animation-docs"
+      ],
+      "completedImplementationEvidenceIds": [],
+      "reportOnlyEvidenceIds": []
+    },
+    {
+      "id": "animation-event-cue-foundation-implementation-10184",
+      "title": "Animation And Event Cue Foundation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "docs_ready",
+      "classification": "parent_foundation_docs_ready_contract_children_pending",
+      "sourceDocs": [
+        "docs/animation-systems-foundation.md",
+        "docs/screen-wireframes.md"
+      ],
+      "implementationTargets": [
+        "animation/event cue catalog",
+        "reduced-motion and fast-mode policy",
+        "selected battle/town/overworld/object/UI state-change hooks"
+      ],
+      "evidence": "Several compact UI cue surfaces exist, but event/cue ids, playback policy, reduced-motion/fast-mode contract, and animation pipeline contracts are not implemented as the foundation slice.",
+      "notes": "No final VFX/audio or ad hoc screen polish.",
+      "sliceType": "parent",
+      "childSliceIds": [
+        "animation-event-cue-catalog-contract-10184",
+        "animation-reduced-motion-fast-mode-policy-10184",
+        "animation-battle-cue-hook-vertical-slice-10184",
+        "animation-overworld-town-object-cue-hooks-10184",
+        "animation-validation-smoke-harness-10184"
+      ],
+      "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
+      "docsReadyEvidenceIds": [
+        "magic-artifact-animation-docs"
+      ],
+      "completedImplementationEvidenceIds": [],
+      "reportOnlyEvidenceIds": []
+    },
+    {
+      "id": "strategic-ai-foundation-continuation-10184",
+      "title": "Strategic AI Foundation Continuation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "in_progress",
+      "classification": "parent_track_in_progress_selected_child_pending",
+      "sourceDocs": [
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-economy-pressure-slice-plan.md",
+        "docs/strategic-ai-event-surfacing-plan.md",
+        "docs/strategic-ai-pressure-expansion-plan.md",
+        "docs/strategic-ai-hero-task-state-boundary-plan.md",
+        "docs/strategic-ai-hero-task-state-report-fixture-plan.md",
+        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "focused AI report scenes under tests/",
+        "implementation report docs when selected"
+      ],
+      "evidence": "EnemyAdventureRules and EnemyTurnRules have real report-backed AI foundations. The current selected sub-slice is the pending hero task-state normalizer preservation report.",
+      "notes": "No broad AI rewrite, live task producer, schema writes, save migration, durable logs, coefficient tuning, production JSON, pathing/renderer/editor, or UI changes without explicit selection.",
+      "sliceType": "parent",
+      "childSliceIds": [
+        "strategic-ai-economy-pressure-followup-10184",
+        "strategic-ai-commander-role-adoption-boundary-10184",
+        "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+        "strategic-ai-live-hero-task-adoption-10184",
+        "strategic-ai-public-event-log-boundary-10184"
+      ],
+      "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
+      "docsReadyEvidenceIds": [
+        "strategic-ai-docs"
+      ],
+      "completedImplementationEvidenceIds": [
+        "strategic-ai-report-harness-implementation-history"
+      ],
+      "reportOnlyEvidenceIds": [
+        "strategic-ai-gate-reports"
+      ]
+    },
+    {
+      "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+      "title": "Hero Task-State Save-Normalizer Preservation Report",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "classification": "selected_next_report_only_implementation_child",
+      "sourceDocs": [
+        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
+        "docs/strategic-ai-hero-task-state-report-gate-review.md",
+        "docs/strategic-ai-hero-task-state-boundary-plan.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_state_normalizer_preservation_report.gd",
+        "tests/ai_hero_task_state_normalizer_preservation_report.tscn",
+        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-report.md"
+      ],
+      "validation": [
+        "python3 tests/validate_repo.py",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_hero_task_state_normalizer_preservation_report.tscn",
+        "git diff --check"
+      ],
+      "notes": "Not complete in current code: no normalizer preservation report scene exists, and EnemyTurnRules.normalize_enemy_states currently rebuilds known fields without hero_task_state preservation.",
+      "sliceType": "child",
+      "parentSliceId": "strategic-ai-foundation-continuation-10184"
+    },
+    {
+      "id": "terrain-editor-tooling-foundation-implementation-10184",
+      "title": "Terrain, Renderer, And Editor Tooling Foundation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "docs_ready",
+      "classification": "parent_foundation_docs_ready_implemented_history_children_pending",
+      "sourceDocs": [
+        "docs/screen-wireframes.md",
+        "docs/progress-implementation-audit-2026-04-27.md",
+        "archive/document-reset-2026-04-27/PLAN.md",
+        "archive/document-reset-2026-04-27/progress.json"
+      ],
+      "implementationTargets": [
+        "content/terrain_grammar.json",
+        "content/terrain_layers.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "scenes/editor/MapEditorShell.gd",
+        "editor validation/export tooling"
+      ],
+      "evidence": "Terrain grammar/layers, shared renderer/editor preview paths, TerrainPlacementRules, and map editor smoke coverage exist. The stale homm3-editor-restamp-behavior id is superseded, and local reference/prototype terrain is not shippable art.",
+      "notes": "Future terrain/editor work should use this foundation slice or a specific sub-slice.",
+      "sliceType": "parent",
+      "childSliceIds": [
+        "terrain-editor-terrain-placement-contract-10184",
+        "terrain-editor-renderer-transition-validation-10184",
+        "terrain-editor-object-authoring-adoption-10184",
+        "terrain-editor-scenario-export-validation-10184"
+      ],
+      "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
+      "docsReadyEvidenceIds": [
+        "terrain-editor-history"
+      ],
+      "completedImplementationEvidenceIds": [
+        "terrain-editor-renderer-implementation-history"
+      ],
+      "reportOnlyEvidenceIds": [
+        "terrain-editor-history"
+      ]
+    },
+    {
+      "id": "random-map-generator-foundation-10184",
+      "title": "Random Map Generator Foundation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "classification": "parent_foundation_missing_requirements_children_pending",
+      "sourceDocs": [
+        "project.md",
+        "future random-map requirements doc"
+      ],
+      "implementationTargets": [
+        "deterministic map-generation rules/helpers",
+        "terrain/town/road/resource/encounter/guard/objective/fairness constraints",
+        "generator validation/report harness",
+        "Phase 3 headless harness integration path"
+      ],
+      "notes": "No finished skirmish RMG claim or broad content migration.",
+      "sliceType": "parent",
+      "childSliceIds": [
+        "random-map-requirements-doc-10184",
+        "random-map-seeded-generator-core-10184",
+        "random-map-terrain-town-road-constraints-10184",
+        "random-map-resource-encounter-fairness-report-10184",
+        "random-map-scenario-load-smoke-10184"
+      ],
+      "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
+      "docsReadyEvidenceIds": [],
+      "completedImplementationEvidenceIds": [],
+      "reportOnlyEvidenceIds": [],
+      "missingDoc": "Random map generator requirements doc is not present yet; random-map-requirements-doc-10184 must resolve this before implementation children proceed."
+    },
+    {
+      "id": "world-faction-mechanics-identity-hooks-10184",
+      "title": "Faction Mechanics Identity Hooks",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "world-faction-identity-implementation-bridge-10184",
+      "purpose": "Implement the first faction identity hooks that affect real player or AI decisions.",
+      "sourceDocs": [
+        "docs/worldbuilding-foundation.md",
+        "docs/factions-content-bible.md"
+      ],
+      "implementationTargets": [
+        "content/factions.json",
+        "content/heroes.json",
+        "content/units.json",
+        "faction-specific rule hooks selected by the worker"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "faction-town-unit-asymmetry-content-10184",
+      "title": "Faction Town And Unit Asymmetry",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "world-faction-identity-implementation-bridge-10184",
+      "purpose": "Carry identity into town, building, unit, hero, and recruitable roster differences.",
+      "sourceDocs": [
+        "docs/factions-content-bible.md",
+        "docs/worldbuilding-foundation.md"
+      ],
+      "implementationTargets": [
+        "content/towns.json",
+        "content/units.json",
+        "content/heroes.json",
+        "validation/report fixtures for selected content"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "faction-scenario-placement-ai-pressure-10184",
+      "title": "Faction Scenario Placement And AI Pressure",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "world-faction-identity-implementation-bridge-10184",
+      "purpose": "Prove faction identity through scenario placement, map pressure, or AI valuation.",
+      "sourceDocs": [
+        "docs/factions-content-bible.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "scenario placement hooks",
+        "strategic AI pressure reports",
+        "player-readable faction pressure surfaces when selected"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "concept-art-decision-register-10184",
+      "title": "Concept-Art Decision Register",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "concept-art-curation-gate-10184",
+      "purpose": "Record accepted, rejected, and deferred concept directions before implementation.",
+      "sourceDocs": [
+        "docs/concept-art-pipeline.md",
+        "docs/concept-art-batch-001-review.md",
+        "docs/concept-art-batch-002-review.md",
+        "docs/concept-art-batch-003-review.md",
+        "docs/concept-art-batch-004-review.md",
+        "docs/concept-art-batch-005-review.md"
+      ],
+      "implementationTargets": [
+        "curation/status doc or brief update only"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "concept-art-implementation-brief-selection-10184",
+      "title": "Concept-Art Implementation Brief Selection",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "concept-art-curation-gate-10184",
+      "purpose": "Select one concept-art implementation brief track for later runtime/content work.",
+      "sourceDocs": [
+        "docs/concept-art-implementation-briefs.md"
+      ],
+      "implementationTargets": [
+        "selected implementation brief update",
+        "follow-up implementation slice reference"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "concept-art-asset-ingestion-boundary-10184",
+      "title": "Concept-Art Asset Ingestion Boundary",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "paused",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "concept-art-curation-gate-10184",
+      "purpose": "Define the approval, source, import, and rollback boundary before any generated PNG enters runtime assets.",
+      "sourceDocs": [
+        "docs/concept-art-pipeline.md",
+        "docs/concept-art-implementation-briefs.md"
+      ],
+      "implementationTargets": [
+        "asset ingestion plan or explicit deferral note"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ],
+      "deferredReason": "Runtime asset ingestion requires explicit approval after concept-art curation."
+    },
+    {
+      "id": "economy-resource-registry-policy-10184",
+      "title": "Economy Resource Registry Policy",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "economy-resource-foundation-implementation-10184",
+      "purpose": "Decide and implement the first safe resource registry policy without unsafe save/content migration.",
+      "sourceDocs": [
+        "docs/economy-overhaul-foundation.md",
+        "docs/economy-resource-schema-migration-plan.md",
+        "docs/economy-resource-additive-schema-validator-plan.md"
+      ],
+      "implementationTargets": [
+        "resource registry helpers or explicit policy doc",
+        "validator/report fixtures"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "economy-wood-timber-compatibility-decision-10184",
+      "title": "Economy Wood/Timber Compatibility Decision",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "economy-resource-foundation-implementation-10184",
+      "purpose": "Resolve the `wood`/`timber` compatibility path before broader resource migration.",
+      "sourceDocs": [
+        "docs/economy-resource-schema-migration-plan.md",
+        "docs/economy-resource-additive-schema-validator-plan.md"
+      ],
+      "implementationTargets": [
+        "compatibility adapter/report",
+        "docs or tests proving old ids remain safe"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "economy-rare-resource-activation-10184",
+      "title": "Economy Rare Resource Activation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "economy-resource-foundation-implementation-10184",
+      "purpose": "Stage rare-resource activation behind explicit rules, UI, content, and save compatibility gates.",
+      "sourceDocs": [
+        "docs/economy-overhaul-foundation.md",
+        "docs/economy-resource-schema-migration-plan.md"
+      ],
+      "implementationTargets": [
+        "economy rules",
+        "resource-site content",
+        "UI/report validation for selected resources"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "economy-market-faction-costs-10184",
+      "title": "Economy Market And Faction Costs",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "economy-resource-foundation-implementation-10184",
+      "purpose": "Implement bounded market caps or faction-biased cost hooks only after resource policy is clear.",
+      "sourceDocs": [
+        "docs/economy-overhaul-foundation.md",
+        "docs/factions-content-bible.md"
+      ],
+      "implementationTargets": [
+        "town economy rules",
+        "market/cost content",
+        "focused reports or smoke coverage"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "economy-capture-income-loop-expansion-10184",
+      "title": "Economy Capture Income Loop Expansion",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "economy-resource-foundation-implementation-10184",
+      "purpose": "Expand the narrow Riverwatch signal-yard proof into a selected live economy loop.",
+      "sourceDocs": [
+        "docs/economy-capture-resource-loop-proof-plan.md",
+        "docs/economy-capture-resource-loop-live-proof-report.md",
+        "docs/economy-capture-resource-loop-manual-gate-review.md"
+      ],
+      "implementationTargets": [
+        "economy rule helpers",
+        "resource-site capture/production report",
+        "live proof or manual gate evidence"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "overworld-object-runtime-metadata-adoption-10184",
+      "title": "Overworld Runtime Metadata Adoption",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "purpose": "Move selected object metadata from compatibility/report fields into runtime behavior.",
+      "sourceDocs": [
+        "docs/overworld-object-safe-additive-schema-plan.md",
+        "docs/overworld-object-schema-migration-plan.md"
+      ],
+      "implementationTargets": [
+        "content/map_objects.json",
+        "runtime object rules/helpers",
+        "focused validation"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "overworld-object-editor-authoring-validation-10184",
+      "title": "Overworld Editor Authoring Validation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "purpose": "Make object taxonomy useful in editor authoring and validation without broad runtime migration.",
+      "sourceDocs": [
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/overworld-object-report-review-001.md"
+      ],
+      "implementationTargets": [
+        "map editor object tooling",
+        "validator/report fixtures"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "overworld-object-pathing-occupancy-adoption-10184",
+      "title": "Overworld Pathing And Occupancy Adoption",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "purpose": "Adopt body tiles, approach offsets, passability, and occupancy only through a bounded pathing slice.",
+      "sourceDocs": [
+        "docs/overworld-object-schema-migration-plan.md",
+        "docs/neutral-encounter-first-class-object-migration-plan.md"
+      ],
+      "implementationTargets": [
+        "pathing/occupancy rules",
+        "object metadata",
+        "scenario smoke/report validation"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "neutral-encounter-object-migration-expansion-10184",
+      "title": "Neutral Encounter Object Migration Expansion",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "purpose": "Extend first-class neutral encounter object migration beyond the first three authored records only when it improves runtime/tooling value.",
+      "sourceDocs": [
+        "docs/neutral-encounter-first-class-object-migration-plan.md",
+        "docs/neutral-encounter-first-class-object-bundle-001-report-review.md"
+      ],
+      "implementationTargets": [
+        "content/map_objects.json",
+        "content/scenarios.json",
+        "neutral encounter report validation"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "overworld-object-ai-valuation-route-effects-10184",
+      "title": "Overworld Object AI Valuation And Route Effects",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "purpose": "Connect selected object metadata to AI valuation, route effects, or scenario-authoring decisions.",
+      "sourceDocs": [
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "AI valuation/report helpers",
+        "route-effect helpers when selected",
+        "public leak checks"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "magic-spell-school-category-schema-10184",
+      "title": "Magic Spell School And Category Schema",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "magic-system-foundation-implementation-10184",
+      "purpose": "Implement selected spell school/category/tier metadata and validation.",
+      "sourceDocs": [
+        "docs/magic-system-expansion-foundation.md"
+      ],
+      "implementationTargets": [
+        "content/spells.json",
+        "scripts/core/SpellRules.gd",
+        "validation fixtures/reports"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "magic-battle-spell-behavior-expansion-10184",
+      "title": "Magic Battle Spell Behavior Expansion",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "magic-system-foundation-implementation-10184",
+      "purpose": "Expand selected tactical spell behavior with focused battle validation.",
+      "sourceDocs": [
+        "docs/magic-system-expansion-foundation.md"
+      ],
+      "implementationTargets": [
+        "battle spell hooks",
+        "battle smoke/report fixtures"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "magic-adventure-map-spell-hooks-10184",
+      "title": "Magic Adventure Map Spell Hooks",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "magic-system-foundation-implementation-10184",
+      "purpose": "Implement selected adventure-map magic behavior and targeting.",
+      "sourceDocs": [
+        "docs/magic-system-expansion-foundation.md",
+        "docs/overworld-content-bible.md"
+      ],
+      "implementationTargets": [
+        "overworld spell hooks",
+        "target/consequence reports",
+        "UI surface only when selected"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "magic-ai-valuation-casting-hooks-10184",
+      "title": "Magic AI Valuation And Casting Hooks",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "magic-system-foundation-implementation-10184",
+      "purpose": "Add bounded AI valuation/casting evidence for selected spell roles without broad AI rewrite.",
+      "sourceDocs": [
+        "docs/magic-system-expansion-foundation.md",
+        "docs/strategic-ai-foundation.md"
+      ],
+      "implementationTargets": [
+        "AI valuation/report helpers",
+        "spell casting decision fixtures"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "magic-artifact-economy-integration-10184",
+      "title": "Magic Artifact And Economy Integration",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "magic-system-foundation-implementation-10184",
+      "purpose": "Implement selected magic interactions with artifacts, towns, or resources after their parent policies are clear.",
+      "sourceDocs": [
+        "docs/magic-system-expansion-foundation.md",
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/economy-overhaul-foundation.md"
+      ],
+      "implementationTargets": [
+        "spell/artifact/economy hooks",
+        "focused reports/smoke coverage"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "artifact-taxonomy-schema-implementation-10184",
+      "title": "Artifact Taxonomy And Schema",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "artifact-system-foundation-implementation-10184",
+      "purpose": "Define and validate slots, rarity, families, sets, faction affinity, source tags, equip restrictions, and effect metadata.",
+      "sourceDocs": [
+        "docs/artifact-system-expansion-foundation.md"
+      ],
+      "implementationTargets": [
+        "content/artifacts.json",
+        "scripts/core/ArtifactRules.gd",
+        "artifact validation/report fixtures"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "artifact-sets-faction-specific-content-10184",
+      "title": "Artifact Sets And Faction-Specific Content",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "artifact-system-foundation-implementation-10184",
+      "purpose": "Author the first meaningful artifact set/family and faction-specific artifact content beyond placeholders.",
+      "sourceDocs": [
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/factions-content-bible.md",
+        "docs/worldbuilding-foundation.md"
+      ],
+      "implementationTargets": [
+        "artifact content records",
+        "faction affinity/set metadata",
+        "validation fixtures/reports"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "artifact-source-reward-rules-10184",
+      "title": "Artifact Source And Reward Rules",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "artifact-system-foundation-implementation-10184",
+      "purpose": "Connect artifacts to map rewards, guarded sites, treasure classes, rarity/source constraints, and later random-map constraints.",
+      "sourceDocs": [
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/overworld-content-bible.md"
+      ],
+      "implementationTargets": [
+        "reward/source tables",
+        "map object/site reward hooks",
+        "validation/report fixtures"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "artifact-equip-runtime-effects-10184",
+      "title": "Artifact Equip Surface And Runtime Effects",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "artifact-system-foundation-implementation-10184",
+      "purpose": "Make equipped artifacts affect live hero, adventure, battle, economy, or spell rules through bounded hooks.",
+      "sourceDocs": [
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/magic-system-expansion-foundation.md",
+        "docs/economy-overhaul-foundation.md"
+      ],
+      "implementationTargets": [
+        "hero equipment/inventory surfaces",
+        "scripts/core/ArtifactRules.gd",
+        "battle/adventure/economy/spell integration points"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "artifact-ai-valuation-10184",
+      "title": "Artifact AI Valuation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "artifact-system-foundation-implementation-10184",
+      "purpose": "Teach strategic AI/reporting to value artifact rewards without leaking internal score fields.",
+      "sourceDocs": [
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-pressure-expansion-plan.md"
+      ],
+      "implementationTargets": [
+        "AI valuation/report helpers",
+        "strategic AI report fixtures",
+        "public-output leak checks"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "animation-event-cue-catalog-contract-10184",
+      "title": "Animation Event Cue Catalog Contract",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "animation-event-cue-foundation-implementation-10184",
+      "purpose": "Define and implement an event/cue id catalog before more screen cue polish.",
+      "sourceDocs": [
+        "docs/animation-systems-foundation.md",
+        "docs/screen-wireframes.md"
+      ],
+      "implementationTargets": [
+        "event/cue catalog",
+        "validation/report hooks"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "animation-reduced-motion-fast-mode-policy-10184",
+      "title": "Animation Reduced-Motion And Fast-Mode Policy",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "animation-event-cue-foundation-implementation-10184",
+      "purpose": "Implement reduced-motion and fast-mode behavior for selected event playback.",
+      "sourceDocs": [
+        "docs/animation-systems-foundation.md"
+      ],
+      "implementationTargets": [
+        "animation settings/policy helpers",
+        "smoke coverage for selected surfaces"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "animation-battle-cue-hook-vertical-slice-10184",
+      "title": "Animation Battle Cue Hook Vertical Slice",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "animation-event-cue-foundation-implementation-10184",
+      "purpose": "Prove one battle event/cue path through the catalog, playback policy, and validation.",
+      "sourceDocs": [
+        "docs/animation-systems-foundation.md"
+      ],
+      "implementationTargets": [
+        "battle cue hooks",
+        "battle scene smoke/report coverage"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "animation-overworld-town-object-cue-hooks-10184",
+      "title": "Animation Overworld/Town/Object Cue Hooks",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "animation-event-cue-foundation-implementation-10184",
+      "purpose": "Prove selected overworld, town, or object event cues without broad UI cue drift.",
+      "sourceDocs": [
+        "docs/animation-systems-foundation.md",
+        "docs/screen-wireframes.md"
+      ],
+      "implementationTargets": [
+        "overworld/town/object cue hooks",
+        "focused smoke/report coverage"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "animation-validation-smoke-harness-10184",
+      "title": "Animation Validation Smoke Harness",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "animation-event-cue-foundation-implementation-10184",
+      "purpose": "Add validation for event ids, playback policy, and no dashboard-style public output.",
+      "sourceDocs": [
+        "docs/animation-systems-foundation.md"
+      ],
+      "implementationTargets": [
+        "animation/event smoke harness",
+        "report fixtures"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "strategic-ai-economy-pressure-followup-10184",
+      "title": "Strategic AI Economy Pressure Follow-Up",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "strategic-ai-foundation-continuation-10184",
+      "purpose": "Continue economy/site pressure only when a report or manual gate identifies a concrete defect.",
+      "sourceDocs": [
+        "docs/strategic-ai-economy-pressure-slice-plan.md",
+        "docs/strategic-ai-economy-pressure-report-gate-review.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "focused AI report fixtures"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "strategic-ai-commander-role-adoption-boundary-10184",
+      "title": "Strategic AI Commander Role Adoption Boundary",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "strategic-ai-foundation-continuation-10184",
+      "purpose": "Convert commander-role report findings into adoption boundaries without live behavior or save schema changes unless explicitly selected.",
+      "sourceDocs": [
+        "docs/strategic-ai-commander-role-adoption-sequencing-plan.md",
+        "docs/strategic-ai-commander-role-live-turn-transcript-report-gate-review.md"
+      ],
+      "implementationTargets": [
+        "AI report helpers",
+        "adoption plan or explicit deferral evidence"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "strategic-ai-live-hero-task-adoption-10184",
+      "title": "Strategic AI Live Hero Task Adoption",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "strategic-ai-foundation-continuation-10184",
+      "purpose": "Implement live AI hero task-state behavior only after report-only normalizer preservation and schema boundaries pass.",
+      "sourceDocs": [
+        "docs/strategic-ai-hero-task-state-adoption-sequencing-plan.md",
+        "docs/strategic-ai-hero-task-state-boundary-plan.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "focused AI report/smoke coverage"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "strategic-ai-public-event-log-boundary-10184",
+      "title": "Strategic AI Public Event Log Boundary",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "strategic-ai-foundation-continuation-10184",
+      "purpose": "Decide whether compact AI events stay derived/ephemeral or require a durable event log.",
+      "sourceDocs": [
+        "docs/strategic-ai-event-surfacing-plan.md",
+        "docs/strategic-ai-event-surfacing-report-gate-review.md"
+      ],
+      "implementationTargets": [
+        "derived event/report helpers",
+        "save boundary docs/tests if durability is selected"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "terrain-editor-terrain-placement-contract-10184",
+      "title": "Terrain Editor Placement Contract",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
+      "purpose": "Keep terrain placement and restamp behavior explicit for scenario iteration.",
+      "sourceDocs": [
+        "docs/screen-wireframes.md",
+        "docs/progress-implementation-audit-2026-04-27.md"
+      ],
+      "implementationTargets": [
+        "terrain placement rules",
+        "editor smoke coverage"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "terrain-editor-renderer-transition-validation-10184",
+      "title": "Terrain Renderer Transition Validation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
+      "purpose": "Validate selected terrain/renderer transitions without treating prototype art as shippable.",
+      "sourceDocs": [
+        "docs/screen-wireframes.md",
+        "archived terrain/editor plan and progress entries"
+      ],
+      "implementationTargets": [
+        "terrain grammar/layers",
+        "overworld visual smoke/report coverage"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "terrain-editor-object-authoring-adoption-10184",
+      "title": "Terrain Editor Object Authoring Adoption",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
+      "purpose": "Connect object taxonomy and placement metadata to editor authoring only when selected.",
+      "sourceDocs": [
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/screen-wireframes.md"
+      ],
+      "implementationTargets": [
+        "scenes/editor/MapEditorShell.gd",
+        "editor validation/export tooling"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "terrain-editor-scenario-export-validation-10184",
+      "title": "Terrain Editor Scenario Export Validation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
+      "purpose": "Prove editor output can support scenario iteration through validation/export gates.",
+      "sourceDocs": [
+        "docs/screen-wireframes.md",
+        "future editor/export requirements if created"
+      ],
+      "implementationTargets": [
+        "editor export tooling",
+        "scenario validation smoke/report coverage"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ]
+    },
+    {
+      "id": "random-map-requirements-doc-10184",
+      "title": "Random Map Requirements Doc",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "missing_requirements_doc_child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "purpose": "Create the missing random-map requirements document before implementation.",
+      "sourceDocs": [
+        "project.md",
+        "future random-map requirements doc"
+      ],
+      "implementationTargets": [
+        "future random-map requirements doc"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ],
+      "missingDoc": "Random map generator requirements doc is not present yet; random-map-requirements-doc-10184 must resolve this before implementation children proceed."
+    },
+    {
+      "id": "random-map-seeded-generator-core-10184",
+      "title": "Random Map Seeded Generator Core",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending_after_implementation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "purpose": "Implement deterministic seeded generation primitives after requirements exist.",
+      "sourceDocs": [
+        "future random-map requirements doc"
+      ],
+      "implementationTargets": [
+        "deterministic map-generation rules/helpers",
+        "seed determinism checks"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ],
+      "missingDoc": "Random map generator requirements doc is not present yet; random-map-requirements-doc-10184 must resolve this before implementation children proceed.",
+      "blockedBy": "random-map-requirements-doc-10184"
+    },
+    {
+      "id": "random-map-terrain-town-road-constraints-10184",
+      "title": "Random Map Terrain/Town/Road Constraints",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending_after_implementation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "purpose": "Generate terrain, town, road, and route constraints suitable for scenario prototypes.",
+      "sourceDocs": [
+        "future random-map requirements doc",
+        "terrain/editor docs"
+      ],
+      "implementationTargets": [
+        "map generator constraints",
+        "generator report validation"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ],
+      "missingDoc": "Random map generator requirements doc is not present yet; random-map-requirements-doc-10184 must resolve this before implementation children proceed.",
+      "blockedBy": "random-map-requirements-doc-10184"
+    },
+    {
+      "id": "random-map-resource-encounter-fairness-report-10184",
+      "title": "Random Map Resource/Encounter Fairness Report",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending_after_implementation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "purpose": "Validate resource, encounter, guard, and objective fairness in generated maps.",
+      "sourceDocs": [
+        "future random-map requirements doc",
+        "economy, object, and strategic AI docs"
+      ],
+      "implementationTargets": [
+        "generator validation/report harness",
+        "fairness checks"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ],
+      "missingDoc": "Random map generator requirements doc is not present yet; random-map-requirements-doc-10184 must resolve this before implementation children proceed.",
+      "blockedBy": "random-map-requirements-doc-10184"
+    },
+    {
+      "id": "random-map-scenario-load-smoke-10184",
+      "title": "Random Map Scenario Load Smoke",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending_after_implementation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "purpose": "Prove generated prototype maps can load through the scenario pipeline once runtime integration is selected.",
+      "sourceDocs": [
+        "future random-map requirements doc"
+      ],
+      "implementationTargets": [
+        "generated prototype scenario smoke",
+        "load/report validation"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ],
+      "missingDoc": "Random map generator requirements doc is not present yet; random-map-requirements-doc-10184 must resolve this before implementation children proceed.",
+      "blockedBy": "random-map-requirements-doc-10184"
+    },
+    {
+      "id": "headless-agent-simulation-harness-10184",
+      "title": "Headless Simulation Harness",
+      "phase": "phase-3-headless-ai-agent-balance-harness",
+      "status": "pending",
+      "classification": "future_phase",
+      "sourceDocs": [
+        "project.md",
+        "future harness requirements doc",
+        "completed Phase 2 outputs"
+      ],
+      "implementationTargets": [
+        "headless scenario runner",
+        "AI turn runner",
+        "economy loop runner",
+        "battle resolver/sampler",
+        "structured report output"
+      ],
+      "notes": "Do not replace manual play gates."
+    },
+    {
+      "id": "balance-regression-report-suite-10184",
+      "title": "Balance And Regression Report Suite",
+      "phase": "phase-3-headless-ai-agent-balance-harness",
+      "status": "pending",
+      "classification": "future_phase",
+      "sourceDocs": [
+        "Phase 3 harness requirements",
+        "Phase 2 economy/object/AI/random-map docs and reports"
+      ],
+      "implementationTargets": [
+        "faction balance reports",
+        "economy pressure reports",
+        "scenario viability reports",
+        "battle outcome distribution reports",
+        "AI objective pressure reports",
+        "save/replay stability reports"
+      ],
+      "notes": "No automatic tuning loop until reporting is trusted."
+    },
+    {
+      "id": "playable-alpha-scenario-set-10184",
+      "title": "Alpha Scenario Set",
+      "phase": "phase-4-playable-alpha-baseline",
+      "status": "pending",
+      "classification": "future_phase",
+      "sourceDocs": [
+        "completed Phase 2 outputs",
+        "Phase 3 harness reports",
+        "future scenario/campaign requirements"
+      ],
+      "implementationTargets": [
+        "multiple scenarios/skirmish setups",
+        "at least two meaningfully playable factions",
+        "save/load and outcome loops",
+        "AI pressure and economy viability"
+      ],
+      "notes": "No alpha claim based on content breadth alone."
+    },
+    {
+      "id": "playable-alpha-ux-onboarding-10184",
+      "title": "Alpha UX And Onboarding Pass",
+      "phase": "phase-4-playable-alpha-baseline",
+      "status": "pending",
+      "classification": "future_phase",
+      "sourceDocs": [
+        "docs/screen-wireframes.md",
+        "manual play findings from alpha scenario set"
+      ],
+      "implementationTargets": [
+        "main menu",
+        "overworld",
+        "town",
+        "battle",
+        "outcome",
+        "save/load",
+        "help/onboarding surfaces"
+      ],
+      "notes": "No panel-heavy dashboard composition or unprioritized cue stream."
+    },
+    {
+      "id": "production-alpha-content-expansion-10184",
+      "title": "Production Alpha Content Expansion",
+      "phase": "phase-5-production-alpha-layer",
+      "status": "pending",
+      "classification": "future_phase",
+      "sourceDocs": [
+        "completed Phase 2-4 outputs",
+        "future production-alpha content requirements"
+      ],
+      "implementationTargets": [
+        "more factions/content through established systems",
+        "campaign/skirmish expansion",
+        "difficulty and AI stability"
+      ],
+      "notes": "No content dump that bypasses validation or live-flow proof."
+    },
+    {
+      "id": "production-alpha-packaging-settings-performance-10184",
+      "title": "Packaging, Settings, Accessibility, And Performance Baseline",
+      "phase": "phase-5-production-alpha-layer",
+      "status": "pending",
+      "classification": "future_phase",
+      "sourceDocs": [
+        "future packaging/settings/accessibility/performance requirements"
+      ],
+      "implementationTargets": [
+        "packaging path",
+        "settings/accessibility baseline",
+        "performance budgets and checks"
+      ],
+      "notes": "No release claim."
+    },
+    {
+      "id": "broad-production-faction-content-breadth-10184",
+      "title": "Broad Faction And Content Breadth",
+      "phase": "phase-6-broad-production-breadth",
+      "status": "pending",
+      "classification": "future_phase",
+      "sourceDocs": [
+        "completed foundation/alpha docs",
+        "future production requirements"
+      ],
+      "implementationTargets": [
+        "multiple original factions",
+        "towns",
+        "unit ladders",
+        "spells",
+        "artifacts",
+        "neutral sites",
+        "handcrafted maps",
+        "campaign structure",
+        "reliable AI"
+      ],
+      "notes": "No parity claim based on raw record counts."
+    },
+    {
+      "id": "broad-production-map-campaign-replayability-10184",
+      "title": "Broad Map, Campaign, And Replayability Breadth",
+      "phase": "phase-6-broad-production-breadth",
+      "status": "pending",
+      "classification": "future_phase",
+      "sourceDocs": [
+        "completed RMG, harness, alpha, and production content outputs"
+      ],
+      "implementationTargets": [
+        "handcrafted maps",
+        "random-map/skirmish replayability",
+        "campaign complexity",
+        "strategic pressure and polish"
+      ],
+      "notes": "No late breadth work before foundational systems are validated."
+    }
+  ],
+  "completedImplementationEvidence": [
+    {
+      "id": "river-pass-manual-proof-history",
+      "system": "manual scenario proof",
+      "phase": "phase-1-manual-scenario-proof",
+      "sourceRefs": [
+        "archive/document-reset-2026-04-27/progress.json",
+        "archive/document-reset-2026-04-27/PLAN.md"
+      ],
+      "mappedPlannedSliceIds": [
+        "river-pass-proof-preservation-10184"
+      ],
+      "entries": [
+        {
+          "id": "river-pass-launch-and-objective-recovery",
+          "title": "Fix launch, objective, opening guidance, and overworld readability blockers",
+          "status": "completed",
+          "evidence": "Live River Pass launch and objective path recovered."
+        },
+        {
+          "id": "river-pass-town-ui-recovery",
+          "title": "Recover owned-town usability",
+          "status": "completed",
+          "evidence": "Recruitment, recovery, garrison, and return routing made usable for manual proof."
+        },
+        {
+          "id": "river-pass-battle-ui-recovery",
+          "title": "Recover battle usability",
+          "status": "completed",
+          "evidence": "Turn clarity, legal actions, targeting, enemy turns, and resolution recovered."
+        },
+        {
+          "id": "river-pass-save-resume-proof",
+          "title": "Prove save/resume from overworld, town, and battle",
+          "status": "completed",
+          "evidence": "Save/resume proved along the real scenario path."
+        },
+        {
+          "id": "river-pass-outcome-proof",
+          "title": "Prove victory and defeat outcome routing",
+          "status": "completed",
+          "evidence": "Victory/defeat routing plus restart/menu return behavior proved."
+        },
+        {
+          "id": "river-pass-clean-manual-completion",
+          "title": "Complete River Pass manually from a clean profile",
+          "status": "completed",
+          "evidence": "Historical manual completion evidence; not a product breadth claim."
+        }
+      ]
+    },
+    {
+      "id": "economy-resource-implementation-history",
+      "system": "economy/resources",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "economy-resource-foundation-implementation-10184",
+        "economy-capture-income-loop-expansion-10184"
+      ],
+      "sourceRefs": [
+        "archive/document-reset-2026-04-27/progress.json",
+        "docs/economy-capture-resource-loop-live-proof-report.md"
+      ],
+      "entries": [
+        {
+          "id": "economy-resource-additive-validator-report-scaffolding-10184",
+          "title": "Implement additive resource validator/report scaffolding",
+          "status": "completed",
+          "evidence": "Opt-in report/fixture scaffolding in tests/validate_repo.py with isolated economy resource fixtures."
+        },
+        {
+          "id": "economy-capture-resource-loop-live-slice-10184",
+          "title": "Implement selected minimal economy capture/resource loop proof path",
+          "status": "completed",
+          "evidence": "Riverwatch signal-yard path proved using current gold/wood/ore systems without broad migration."
+        },
+        {
+          "id": "economy-capture-resource-loop-manual-gate-10184",
+          "title": "Manual verify economy capture/resource loop proof",
+          "status": "completed",
+          "evidence": "Manual gate review recorded current-system proof and limits."
+        }
+      ]
+    },
+    {
+      "id": "overworld-object-neutral-implementation-history",
+      "system": "overworld objects and neutral encounters",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "overworld-object-encounter-foundation-implementation-10184",
+        "overworld-object-editor-authoring-validation-10184",
+        "neutral-encounter-object-migration-expansion-10184"
+      ],
+      "sourceRefs": [
+        "archive/document-reset-2026-04-27/progress.json",
+        "docs/overworld-object-report-review-001.md",
+        "docs/neutral-encounter-first-class-object-bundle-001-report-review.md"
+      ],
+      "entries": [
+        {
+          "id": "overworld-object-additive-validator-report-scaffolding-10184",
+          "title": "Implement additive overworld object validator/report scaffolding",
+          "status": "completed",
+          "evidence": "Opt-in object schema report/fixture scaffolding implemented."
+        },
+        {
+          "id": "overworld-object-safe-additive-schema-implementation-10184",
+          "title": "Implement safe metadata bundle 001",
+          "status": "completed",
+          "evidence": "Runtime-inactive safe metadata added to eight production object ids."
+        },
+        {
+          "id": "neutral-encounter-additive-validator-report-scaffolding-10184",
+          "title": "Implement neutral encounter report and fixture scaffolding",
+          "status": "completed",
+          "evidence": "Opt-in neutral encounter report/fixture support added."
+        },
+        {
+          "id": "neutral-encounter-representation-bundle-implementation-10184",
+          "title": "Implement metadata-only neutral encounter representation bundle 001",
+          "status": "completed",
+          "evidence": "Three authored scenario encounter placements received representation metadata."
+        },
+        {
+          "id": "neutral-encounter-first-class-object-bundle-implementation-10184",
+          "title": "Implement first-class neutral encounter object bundle 001",
+          "status": "completed",
+          "evidence": "Three object-backed records added while legacy runtime direct placements remained authoritative."
+        },
+        {
+          "id": "map-editor-object-taxonomy-usability-10184",
+          "title": "Surface object taxonomy metadata in map editor UI",
+          "status": "completed",
+          "evidence": "Editor/tooling UI surfaces object class, cadence, passability, links, neutral encounter role/risk, and guard links."
+        }
+      ]
+    },
+    {
+      "id": "strategic-ai-report-harness-implementation-history",
+      "system": "strategic AI report-backed implementation",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "strategic-ai-foundation-continuation-10184",
+        "strategic-ai-economy-pressure-followup-10184",
+        "strategic-ai-commander-role-adoption-boundary-10184"
+      ],
+      "sourceRefs": [
+        "archive/document-reset-2026-04-27/progress.json",
+        "docs/strategic-ai-*.md"
+      ],
+      "entries": [
+        {
+          "id": "strategic-ai-economy-pressure-implementation-10184",
+          "title": "Implement first narrow strategic AI economy pressure target",
+          "status": "completed",
+          "evidence": "EnemyAdventureRules resource target score breakdown/report helpers prove signal-yard site valuation."
+        },
+        {
+          "id": "strategic-ai-event-surfacing-implementation-10184",
+          "title": "Implement compact strategic AI event and threat reason surfacing",
+          "status": "completed",
+          "evidence": "Derived public event records and compact reasons implemented without score leaks."
+        },
+        {
+          "id": "strategic-ai-town-governor-pressure-report-implementation-10184",
+          "title": "Implement report-only town governor pressure surfacing",
+          "status": "completed",
+          "evidence": "EnemyTurnRules exposes behavior-neutral town governor reports and compact derived events."
+        },
+        {
+          "id": "strategic-ai-commander-role-report-implementation-10184",
+          "title": "Implement commander-role state report helpers",
+          "status": "completed",
+          "evidence": "Report helpers and focused Godot coverage added while schema/live behavior stayed deferred."
+        },
+        {
+          "id": "strategic-ai-commander-role-live-turn-transcript-report-implementation-10184",
+          "title": "Implement behavior-neutral commander-role live-turn transcript/report surfacing",
+          "status": "completed",
+          "evidence": "Derived transcript report observes existing enemy turns without behavior changes."
+        },
+        {
+          "id": "strategic-ai-hero-task-state-report-implementation-10184",
+          "title": "Implement strategic AI hero task-state boundary report",
+          "status": "completed",
+          "evidence": "Derived candidate task helpers and report coverage implemented; tasks remain unsaved and behavior-neutral."
+        }
+      ]
+    },
+    {
+      "id": "terrain-editor-renderer-implementation-history",
+      "system": "terrain, renderer, editor",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "terrain-editor-tooling-foundation-implementation-10184",
+        "terrain-editor-terrain-placement-contract-10184",
+        "terrain-editor-renderer-transition-validation-10184"
+      ],
+      "sourceRefs": [
+        "archive/document-reset-2026-04-27/progress.json",
+        "archive/document-reset-2026-04-27/PLAN.md"
+      ],
+      "entries": [
+        {
+          "id": "overworld-terrain-foundation-10184",
+          "title": "Replace sampled terrain textures with authored terrain grammar foundation",
+          "status": "completed",
+          "evidence": "Terrain grammar foundation exists for later map presentation work."
+        },
+        {
+          "id": "map-editor-shell-10184",
+          "title": "Start thin in-game map editor shell",
+          "status": "completed",
+          "evidence": "Editor shell foundation exists for live scenario iteration."
+        },
+        {
+          "id": "map-editor-placement-editing-10184",
+          "title": "Add in-memory overworld object placement editing",
+          "status": "completed",
+          "evidence": "Editor can edit object placements in working copy."
+        },
+        {
+          "id": "map-editor-road-path-10184",
+          "title": "Paint compact road paths in map editor working copy",
+          "status": "completed",
+          "evidence": "Road path authoring foundation exists."
+        },
+        {
+          "id": "homm3-editor-terrain-placement-10184",
+          "title": "Port HoMM3 terrain ownership queue placement into map editor",
+          "status": "completed",
+          "evidence": "Later terrain placement work supersedes stale restamp queue item."
+        },
+        {
+          "id": "homm3-web-prototype-godot-selection-parity-10184",
+          "title": "Replace Godot HoMM3 terrain visual selection with accepted web relation-class parity",
+          "status": "completed",
+          "evidence": "Renderer validation parity preserved in later terrain work."
+        }
+      ]
+    },
+    {
+      "id": "ui-readability-implementation-history",
+      "system": "compact UI/readability implementation history",
+      "phase": "phase-2-deep-production-foundation",
+      "sourceRefs": [
+        "archive/document-reset-2026-04-27/progress.json",
+        "docs/progress-implementation-audit-2026-04-27.md"
+      ],
+      "entries": [
+        {
+          "id": "overworld-object-economy-ui-integration-10184",
+          "title": "Surface overworld object taxonomy and economy-site metadata in live gameplay UI",
+          "status": "completed",
+          "evidence": "Player-facing UI/readability work completed, but does not complete object/economy foundations."
+        },
+        {
+          "id": "artifact-reward-visibility-ui-10184",
+          "title": "Surface artifact reward and equipment effects in live overworld UI",
+          "status": "completed",
+          "evidence": "UI/readability evidence only; artifact system remains pending through artifact parent/children."
+        },
+        {
+          "id": "hero-inventory-equipment-decision-clarity-10184",
+          "title": "Surface hero inventory and equipment decision clarity",
+          "status": "completed",
+          "evidence": "UI clarity completed, not artifact runtime taxonomy/source completion."
+        },
+        {
+          "id": "spellbook-magic-inspection-clarity-10184",
+          "title": "Surface practical spellbook and magic inspection clarity",
+          "status": "completed",
+          "evidence": "UI clarity completed, not expanded magic system completion."
+        },
+        {
+          "id": "overworld-field-readiness-recap-ui-10184",
+          "title": "Surface compact overworld field readiness recap",
+          "status": "completed",
+          "evidence": "Live UI readiness line implemented; audit later paused unanchored cue stream."
+        },
+        {
+          "id": "menu-save-play-check-10184",
+          "title": "Surface compact play-check summary from save and loop payloads",
+          "status": "completed",
+          "evidence": "Main menu save/play readiness UI implemented; not a gameplay foundation completion claim."
+        }
+      ]
+    }
+  ],
+  "docsReadyEvidence": [
+    {
+      "id": "world-faction-docs",
+      "system": "world and factions",
+      "sourceRefs": [
+        "docs/worldbuilding-foundation.md",
+        "docs/factions-content-bible.md"
+      ],
+      "entries": [
+        {
+          "id": "world-story-worldbuilding-foundation-10184",
+          "title": "Define richer world premise, tone, geography, conflicts, history, and visual identity",
+          "status": "completed",
+          "evidence": "Design foundation only."
+        },
+        {
+          "id": "faction-identity-foundation-10184",
+          "title": "Redefine each faction as a unique world-grounded identity",
+          "status": "completed",
+          "evidence": "Design/content bible only."
+        },
+        {
+          "id": "six-faction-content-scaffold",
+          "title": "Start six-faction implementation with JSON content scaffolds",
+          "status": "completed",
+          "evidence": "Useful content scaffold, not enough for Phase 2 parent completion."
+        }
+      ]
+    },
+    {
+      "id": "concept-art-docs",
+      "system": "concept art",
+      "sourceRefs": [
+        "docs/concept-art-pipeline.md",
+        "docs/concept-art-batch-001-review.md",
+        "docs/concept-art-batch-005-review.md",
+        "docs/concept-art-implementation-briefs.md"
+      ],
+      "entries": [
+        {
+          "id": "concept-art-pipeline-imagegen-10184",
+          "title": "Establish image-generation concept art pipeline",
+          "status": "completed",
+          "evidence": "Pipeline doc only."
+        },
+        {
+          "id": "concept-art-generation-execution-10184",
+          "title": "Generate first concept-art studies externally",
+          "status": "completed",
+          "evidence": "External PNG evidence, not runtime assets."
+        },
+        {
+          "id": "concept-art-implementation-brief-prep-10184",
+          "title": "Prepare implementation briefs for selected directions",
+          "status": "completed",
+          "evidence": "Briefs exist; final acceptance/ingestion remains pending."
+        }
+      ]
+    },
+    {
+      "id": "economy-docs",
+      "system": "economy/resources",
+      "sourceRefs": [
+        "docs/economy-overhaul-foundation.md",
+        "docs/economy-resource-schema-migration-plan.md",
+        "docs/economy-resource-additive-schema-validator-plan.md"
+      ],
+      "entries": [
+        {
+          "id": "economy-overhaul-foundation-10184",
+          "title": "Plan multi-resource economy and pressure model",
+          "status": "completed",
+          "evidence": "Planning/design foundation only."
+        },
+        {
+          "id": "economy-resource-schema-migration-planning-10184",
+          "title": "Plan economy/resource schema migration",
+          "status": "completed",
+          "evidence": "Migration plan only."
+        },
+        {
+          "id": "economy-resource-additive-schema-validator-planning-10184",
+          "title": "Plan additive resource schema fields and reports",
+          "status": "completed",
+          "evidence": "Planning source for validator/report implementation."
+        }
+      ]
+    },
+    {
+      "id": "overworld-object-docs",
+      "system": "overworld object taxonomy",
+      "sourceRefs": [
+        "docs/overworld-content-bible.md",
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/overworld-object-schema-migration-plan.md",
+        "docs/overworld-object-safe-additive-schema-plan.md"
+      ],
+      "entries": [
+        {
+          "id": "overworld-object-taxonomy-density-10184",
+          "title": "Plan overworld object taxonomy and density",
+          "status": "completed",
+          "evidence": "Design foundation only."
+        },
+        {
+          "id": "overworld-object-schema-migration-planning-10184",
+          "title": "Plan overworld object schema migration",
+          "status": "completed",
+          "evidence": "Migration plan only."
+        },
+        {
+          "id": "overworld-object-safe-additive-schema-planning-10184",
+          "title": "Plan safe additive object schema fields",
+          "status": "completed",
+          "evidence": "Planning source for safe metadata bundle."
+        }
+      ]
+    },
+    {
+      "id": "neutral-encounter-docs",
+      "system": "neutral encounters",
+      "sourceRefs": [
+        "docs/neutral-encounter-representation-plan.md",
+        "docs/neutral-encounter-first-class-object-migration-plan.md"
+      ],
+      "entries": [
+        {
+          "id": "neutral-encounter-representation-planning-10184",
+          "title": "Plan first-class visible neutral encounter representation",
+          "status": "completed",
+          "evidence": "Planning only."
+        },
+        {
+          "id": "neutral-encounter-first-class-object-planning-10184",
+          "title": "Plan first-class neutral encounter object migration boundary",
+          "status": "completed",
+          "evidence": "Planning only."
+        },
+        {
+          "id": "neutral-encounter-first-class-object-bundle-planning-10184",
+          "title": "Plan tiny first-class neutral encounter object bundle",
+          "status": "completed",
+          "evidence": "Planning source for three-record metadata bundle."
+        }
+      ]
+    },
+    {
+      "id": "magic-artifact-animation-docs",
+      "system": "magic, artifacts, animation",
+      "sourceRefs": [
+        "docs/magic-system-expansion-foundation.md",
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/animation-systems-foundation.md"
+      ],
+      "entries": [
+        {
+          "id": "magic-system-expansion-foundation-10184",
+          "title": "Plan expanded magic schools/categories and roles",
+          "status": "completed",
+          "evidence": "Design foundation only."
+        },
+        {
+          "id": "artifact-system-expansion-foundation-10184",
+          "title": "Plan artifact taxonomy, sets, hooks, sources, AI, UI, save/schema",
+          "status": "completed",
+          "evidence": "Design foundation only; artifact implementation remains pending."
+        },
+        {
+          "id": "animation-systems-foundation-10184",
+          "title": "Plan animation systems and event cue foundations",
+          "status": "completed",
+          "evidence": "Design foundation only."
+        }
+      ]
+    },
+    {
+      "id": "strategic-ai-docs",
+      "system": "strategic AI",
+      "sourceRefs": [
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md"
+      ],
+      "entries": [
+        {
+          "id": "strategic-ai-foundation-10184",
+          "title": "Plan strategic AI foundation",
+          "status": "completed",
+          "evidence": "Design foundation only."
+        },
+        {
+          "id": "strategic-ai-hero-task-state-boundary-planning-10184",
+          "title": "Plan AI hero task-state boundary",
+          "status": "completed",
+          "evidence": "Planning only."
+        },
+        {
+          "id": "strategic-ai-hero-task-state-save-normalizer-preservation-planning-10184",
+          "title": "Plan report-only save-normalizer preservation proof",
+          "status": "completed",
+          "evidence": "Planning source for current selected child."
+        }
+      ]
+    }
+  ],
+  "reportOnlyEvidence": [
+    {
+      "id": "economy-resource-reports",
+      "system": "economy/resources",
+      "sourceRefs": [
+        "docs/economy-capture-resource-loop-live-proof-report.md",
+        "docs/economy-capture-resource-loop-manual-gate-review.md"
+      ],
+      "entries": [
+        {
+          "id": "economy-capture-resource-loop-live-slice-10184",
+          "title": "Riverwatch signal-yard economy proof",
+          "status": "completed",
+          "evidence": "Narrow current-system proof, not full economy overhaul."
+        },
+        {
+          "id": "economy-capture-resource-loop-manual-gate-10184",
+          "title": "Manual economy gate review",
+          "status": "completed",
+          "evidence": "Manual/report evidence, not broader implementation completion."
+        }
+      ]
+    },
+    {
+      "id": "overworld-neutral-reports",
+      "system": "overworld objects and neutral encounters",
+      "sourceRefs": [
+        "docs/overworld-object-report-review-001.md",
+        "docs/neutral-encounter-report-review-001.md",
+        "docs/neutral-encounter-first-class-object-bundle-001-report-review.md"
+      ],
+      "entries": [
+        {
+          "id": "overworld-object-additive-report-review-10184",
+          "title": "Review additive overworld object report output",
+          "status": "completed",
+          "evidence": "Report showed compatibility warnings and zero errors."
+        },
+        {
+          "id": "neutral-encounter-additive-report-review-10184",
+          "title": "Review additive neutral encounter report output",
+          "status": "completed",
+          "evidence": "Report showed direct placement compatibility warnings and zero errors."
+        },
+        {
+          "id": "neutral-encounter-first-class-object-bundle-report-review-10184",
+          "title": "Review first-class neutral encounter object bundle 001 report",
+          "status": "completed",
+          "evidence": "Report confirmed three object-backed placements and remaining compatibility warnings."
+        }
+      ]
+    },
+    {
+      "id": "strategic-ai-gate-reports",
+      "system": "strategic AI gate reviews",
+      "sourceRefs": [
+        "docs/strategic-ai-*-gate-review.md",
+        "docs/strategic-ai-*-report.md"
+      ],
+      "entries": [
+        {
+          "id": "strategic-ai-economy-pressure-report-gate-10184",
+          "title": "Review strategic AI economy pressure report",
+          "status": "completed",
+          "evidence": "Gate passed; no coefficient tuning selected."
+        },
+        {
+          "id": "strategic-ai-event-surfacing-report-gate-10184",
+          "title": "Review compact AI event/threat reason output",
+          "status": "completed",
+          "evidence": "Gate passed; public output avoids score-table leaks."
+        },
+        {
+          "id": "strategic-ai-town-governor-pressure-report-gate-10184",
+          "title": "Review town governor pressure report output",
+          "status": "completed",
+          "evidence": "Gate passed; live-client gate deferred until later visible pacing change."
+        },
+        {
+          "id": "strategic-ai-commander-role-report-gate-review-10184",
+          "title": "Review commander-role state report output",
+          "status": "completed",
+          "evidence": "Gate passed; schema/live behavior remain deferred."
+        },
+        {
+          "id": "strategic-ai-commander-role-live-turn-transcript-report-gate-review-10184",
+          "title": "Review commander-role live-turn transcript report output",
+          "status": "completed",
+          "evidence": "Gate passed; observe-existing-turn policy maintained."
+        },
+        {
+          "id": "strategic-ai-hero-task-state-report-gate-review-10184",
+          "title": "Review AI hero task-state boundary report output",
+          "status": "completed",
+          "evidence": "Gate passed; current selected next proof is save-normalizer preservation."
+        }
+      ]
+    },
+    {
+      "id": "audit-and-reconciliation-reports",
+      "system": "progress governance reports",
+      "sourceRefs": [
+        "docs/progress-implementation-audit-2026-04-27.md"
+      ],
+      "entries": [
+        {
+          "id": "progress-implementation-audit-2026-04-27-10184",
+          "title": "Audit progress implementation reality and plan alignment",
+          "status": "completed",
+          "evidence": "Audit found weakly anchored UI cue drift and stopped artifact cue WIP."
+        },
+        {
+          "id": "progress-plan-reconciliation-10184",
+          "title": "Reconcile PLAN.md and progress after UI cue drift audit",
+          "status": "completed",
+          "evidence": "Prior reconciliation reset current next candidate and guardrails; this tracker now further decomposes Phase 2."
+        }
+      ]
+    }
+  ],
+  "stoppedWorkerEvidence": [
+    {
+      "id": "overworld-artifact-check-cue-10184",
+      "title": "Overworld Artifact Check Cue",
+      "status": "paused",
+      "stoppedState": "worker_stopped_due_to_workflow_reset_not_task_cancelled",
+      "sourceRefs": [
+        "archive/document-reset-2026-04-27/progress.json",
+        "docs/progress-implementation-audit-2026-04-27.md",
+        "docs/stopped-overworld-artifact-cue-wip-2026-04-27.patch"
+      ],
+      "replacementPlannedSliceIds": [
+        "artifact-system-foundation-implementation-10184",
+        "artifact-taxonomy-schema-implementation-10184",
+        "artifact-source-reward-rules-10184",
+        "artifact-equip-runtime-effects-10184"
+      ],
+      "evidence": "Stopped WIP cue patch is preserved as patch evidence only. Artifact system remains pending through artifact parent and child implementation slices."
+    },
+    {
+      "id": "ad-hoc-compact-ui-cue-stream-10184",
+      "title": "Ad Hoc Compact UI Cue Stream",
+      "status": "paused",
+      "stoppedState": "paused_until_source_doc_selects_bounded_ui_slice",
+      "sourceRefs": [
+        "docs/progress-implementation-audit-2026-04-27.md"
+      ],
+      "replacementPlannedSliceIds": [
+        "animation-event-cue-foundation-implementation-10184",
+        "animation-event-cue-catalog-contract-10184"
+      ],
+      "evidence": "Recent cue stream must not substitute for mechanics, content migration, AI behavior, tooling, or event contracts."
+    },
+    {
+      "id": "homm3-editor-restamp-behavior-10184",
+      "title": "HoMM3 Editor Terrain Restamp Behavior",
+      "status": "superseded",
+      "stoppedState": "stale_archived_item_reconciled_not_active_queue",
+      "sourceRefs": [
+        "archive/document-reset-2026-04-27/progress.json",
+        "archive/document-reset-2026-04-27/PLAN.md",
+        "docs/progress-implementation-audit-2026-04-27.md"
+      ],
+      "replacementPlannedSliceIds": [
+        "terrain-editor-tooling-foundation-implementation-10184",
+        "terrain-editor-terrain-placement-contract-10184"
+      ],
+      "evidence": "Archived tracker left this id pending, but later completed HoMM3 terrain/editor placement and parity work supersede the stale standalone item."
+    }
+  ],
+  "deferredRiskRegister": [
+    {
+      "id": "asset-import-renderer-sprite-ingestion",
+      "status": "paused",
+      "risk": "Runtime asset import and renderer sprite ingestion require explicit curation/asset-ingestion slices.",
+      "ownerSliceIds": [
+        "concept-art-asset-ingestion-boundary-10184"
+      ]
+    },
+    {
+      "id": "save-migration-save-version-bump",
+      "status": "paused",
+      "risk": "Save migration and SAVE_VERSION changes require explicit migration slices and old-save fixtures.",
+      "ownerSliceIds": [
+        "strategic-ai-live-hero-task-adoption-10184",
+        "economy-resource-registry-policy-10184"
+      ]
+    },
+    {
+      "id": "pathing-body-tile-approach-adoption",
+      "status": "paused",
+      "risk": "Pathing/body tile/approach adoption must stay behind an object/pathing slice.",
+      "ownerSliceIds": [
+        "overworld-object-pathing-occupancy-adoption-10184"
+      ]
+    },
+    {
+      "id": "rare-resource-market-overhaul-production-json",
+      "status": "paused",
+      "risk": "Rare resources, market overhaul, and broad production JSON migration require staged economy decisions.",
+      "ownerSliceIds": [
+        "economy-rare-resource-activation-10184",
+        "economy-market-faction-costs-10184"
+      ]
+    },
+    {
+      "id": "live-ai-task-state-and-broad-ai-rewrite",
+      "status": "paused",
+      "risk": "Live AI task adoption and broad AI rewrite remain deferred behind report-only normalizer preservation and schema boundaries.",
+      "ownerSliceIds": [
+        "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+        "strategic-ai-live-hero-task-adoption-10184"
+      ]
+    },
+    {
+      "id": "random-map-generator-missing-requirements",
+      "status": "blocked",
+      "risk": "RMG implementation has no requirements document yet; generator children must wait for requirements.",
+      "ownerSliceIds": [
+        "random-map-requirements-doc-10184",
+        "random-map-generator-foundation-10184"
+      ]
+    }
+  ],
+  "actionableNextTasks": [
+    {
+      "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+      "title": "Hero Task-State Save-Normalizer Preservation Report",
+      "status": "pending",
+      "parentSliceId": "strategic-ai-foundation-continuation-10184",
+      "source": "PLAN.md P2.8a",
+      "docs": [
+        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
+        "docs/strategic-ai-hero-task-state-report-gate-review.md",
+        "docs/strategic-ai-hero-task-state-boundary-plan.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_state_normalizer_preservation_report.gd",
+        "tests/ai_hero_task_state_normalizer_preservation_report.tscn",
+        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-report.md"
+      ],
+      "validation": [
+        "python3 tests/validate_repo.py",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_hero_task_state_normalizer_preservation_report.tscn",
+        "git diff --check"
+      ],
+      "notes": "Selected next real worker task. Keep it report-only and preserve old-save absence semantics."
+    }
+  ],
+  "stoppedOrPausedTasks": [
+    {
+      "id": "overworld-artifact-check-cue-10184",
+      "title": "Overworld Artifact Check Cue",
+      "status": "paused",
+      "classification": "worker_stopped_due_to_workflow_reset_not_task_cancelled",
+      "source": "archive/document-reset-2026-04-27/progress.json, docs/progress-implementation-audit-2026-04-27.md, docs/stopped-overworld-artifact-cue-wip-2026-04-27.patch",
+      "notes": "Stopped WIP cue patch is preserved as patch evidence only. Artifact system remains pending through artifact parent and child implementation slices."
+    },
+    {
+      "id": "ad-hoc-compact-ui-cue-stream-10184",
+      "title": "Ad Hoc Compact UI Cue Stream",
+      "status": "paused",
+      "classification": "paused_until_source_doc_selects_bounded_ui_slice",
+      "source": "docs/progress-implementation-audit-2026-04-27.md",
+      "notes": "Recent cue stream must not substitute for mechanics, content migration, AI behavior, tooling, or event contracts."
+    },
+    {
+      "id": "homm3-editor-restamp-behavior-10184",
+      "title": "HoMM3 Editor Terrain Restamp Behavior",
+      "status": "superseded",
+      "classification": "stale_archived_item_reconciled_not_active_queue",
+      "source": "archive/document-reset-2026-04-27/progress.json, archive/document-reset-2026-04-27/PLAN.md, docs/progress-implementation-audit-2026-04-27.md",
+      "notes": "Archived tracker left this id pending, but later completed HoMM3 terrain/editor placement and parity work supersede the stale standalone item."
+    }
+  ]
+}
