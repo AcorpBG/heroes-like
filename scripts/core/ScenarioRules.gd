@@ -271,6 +271,7 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 			"carryover_summary": "",
 			"aftermath_summary": "",
 			"journal_summary": "",
+			"post_result_handoff_summary": "Post-result handoff: no resolved scenario is active.",
 			"action_cue_summary": "Action cue: return to the menu and choose a campaign, skirmish, save, or guide entry.",
 			"actions": [{"id": "return_to_menu", "label": "Return to Menu", "summary": "Return to the main menu.", "disabled": false}],
 		}
@@ -298,6 +299,7 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 		"next_step_summary": "",
 		"next_play_action_summary": "",
 		"continuity_choice_summary": "",
+		"post_result_handoff_summary": "",
 		"action_cue_summary": "",
 		"actions": [],
 	}
@@ -339,6 +341,7 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 		model["continuity_choice_summary"] = _skirmish_outcome_continuity_choice_line(session)
 		model["actions"] = _build_skirmish_outcome_actions(session)
 	model["actions"] = _decorate_outcome_actions(session, scenario, model["actions"])
+	model["post_result_handoff_summary"] = _outcome_post_result_handoff_line(session, scenario, model["actions"])
 	model["action_cue_summary"] = _outcome_action_cue_line(session, scenario, model["actions"])
 	return model
 
@@ -453,6 +456,45 @@ static func _outcome_action_cue_line(session: SessionStateStoreScript.SessionDat
 	if session.scenario_status == "victory":
 		return "Action cue: save first; Return to Menu keeps this outcome resumable, while Retry Skirmish starts fresh."
 	return "Action cue: save first; Retry Skirmish starts fresh, while Return to Menu keeps this outcome resumable."
+
+static func _outcome_post_result_handoff_line(session: SessionStateStoreScript.SessionData, scenario: Dictionary, actions: Array) -> String:
+	var launch_mode := SessionStateStoreScript.normalize_launch_mode(session.launch_mode)
+	var save_label := "Save Outcome"
+	if launch_mode == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
+		var primary_label := _first_enabled_outcome_action_label(actions, "return_to_menu")
+		if session.scenario_status == "victory":
+			var next_chapter := _next_campaign_chapter_label(session, scenario)
+			if next_chapter != "":
+				var start_label := primary_label if primary_label != "" else "Start %s" % next_chapter
+				return "Post-result handoff: campaign progression is already recorded in the profile; %s keeps this review, and %s begins a fresh campaign chapter from that record." % [
+					save_label,
+					start_label,
+				]
+			return "Post-result handoff: campaign progression is already recorded in the profile; %s keeps this review, and Return to Menu opens the campaign board for replay or another arc." % save_label
+		var retry_label := primary_label if primary_label != "" else "Retry Chapter"
+		return "Post-result handoff: defeat is review-only for campaign progression; %s keeps this review, and %s starts the chapter fresh without banking carryover." % [
+			save_label,
+			retry_label,
+		]
+	var retry_label := _first_enabled_outcome_action_label(actions, "return_to_menu")
+	if retry_label == "":
+		retry_label = "Retry Skirmish"
+	return "Post-result handoff: this skirmish result is review-only; %s keeps this outcome review, %s starts a fresh run, and campaign progression stays unchanged." % [
+		save_label,
+		retry_label,
+	]
+
+static func _first_enabled_outcome_action_label(actions: Array, excluded_id: String = "") -> String:
+	for action in actions:
+		if not (action is Dictionary) or bool(action.get("disabled", false)):
+			continue
+		var action_id := String(action.get("id", ""))
+		if excluded_id != "" and action_id == excluded_id:
+			continue
+		var label := String(action.get("label", "")).strip_edges()
+		if label != "":
+			return label
+	return ""
 
 static func _skirmish_outcome_continuity_choice_line(session: SessionStateStoreScript.SessionData) -> String:
 	if session.scenario_status == "victory":

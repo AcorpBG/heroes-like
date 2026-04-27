@@ -624,6 +624,7 @@ func _run_outcome_smoke() -> bool:
 			String(snapshot.get("next_step_summary", "")),
 			String(snapshot.get("outcome_resolution_handoff", "")),
 			String(snapshot.get("continuity_choice_summary", "")),
+			String(snapshot.get("post_result_handoff_summary", "")),
 			String(snapshot.get("next_play_action_summary", "")),
 			String(snapshot.get("action_cue_summary", "")),
 			String(snapshot.get("actions_hint", "")),
@@ -641,7 +642,7 @@ func _run_outcome_smoke() -> bool:
 			String(snapshot.get("return_handoff", "")),
 			String(snapshot.get("current_save_recap", "")),
 		],
-		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "self-contained", "retry starts fresh", "Next play action:", "Action cue:", "save first", "Return to Menu", "Retry Skirmish", "starts fresh", "resumable", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
+		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "self-contained", "retry starts fresh", "Post-result handoff:", "review-only", "Save Outcome", "campaign progression stays unchanged", "Next play action:", "Action cue:", "save first", "Return to Menu", "Retry Skirmish", "starts fresh", "resumable", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
 	):
 		return false
 	if not _assert_no_score_leak(
@@ -649,6 +650,7 @@ func _run_outcome_smoke() -> bool:
 		[
 			String(snapshot.get("outcome_resolution_handoff", "")),
 			String(snapshot.get("continuity_choice_summary", "")),
+			String(snapshot.get("post_result_handoff_summary", "")),
 			String(snapshot.get("action_cue_summary", "")),
 			String(snapshot.get("actions_hint", "")),
 			String(snapshot.get("actions_hint_tooltip", "")),
@@ -697,6 +699,7 @@ func _run_outcome_smoke() -> bool:
 			String(campaign_snapshot.get("carryover_summary", "")),
 			String(campaign_snapshot.get("outcome_resolution_handoff", "")),
 			String(campaign_snapshot.get("continuity_choice_summary", "")),
+			String(campaign_snapshot.get("post_result_handoff_summary", "")),
 			String(campaign_snapshot.get("action_cue_summary", "")),
 			String(campaign_snapshot.get("actions_hint", "")),
 			String(campaign_snapshot.get("actions_hint_tooltip", "")),
@@ -712,7 +715,7 @@ func _run_outcome_smoke() -> bool:
 			String(campaign_snapshot.get("play_check", "")),
 			String(campaign_snapshot.get("return_handoff", "")),
 		],
-		["Campaign progress", "Next chapter unlocked:", "This victory exports:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu", "Action cue:", "save first", "continue", "campaign board", "Replays this chapter fresh", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:"]
+		["Campaign progress", "Next chapter unlocked:", "This victory exports:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu", "Post-result handoff:", "campaign progression is already recorded", "Save Outcome", "fresh campaign chapter", "Action cue:", "save first", "continue", "campaign board", "Replays this chapter fresh", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:"]
 	):
 		return false
 	if not _assert_no_score_leak(
@@ -720,6 +723,7 @@ func _run_outcome_smoke() -> bool:
 		[
 			String(campaign_snapshot.get("outcome_resolution_handoff", "")),
 			String(campaign_snapshot.get("continuity_choice_summary", "")),
+			String(campaign_snapshot.get("post_result_handoff_summary", "")),
 			String(campaign_snapshot.get("action_cue_summary", "")),
 			String(campaign_snapshot.get("actions_hint", "")),
 			String(campaign_snapshot.get("actions_hint_tooltip", "")),
@@ -772,7 +776,7 @@ func _assert_outcome_field_manual_contract(shell: Node, label: String) -> bool:
 			String(guide_snapshot.get("outcome_guide_tooltip", "")),
 			String(guide_snapshot.get("outcome_guide_full", guide_snapshot.get("outcome_guide", ""))),
 		],
-		["Hide Guide", "Hide the outcome Field Manual", "Outcome", "resolved expedition checkpoint", "Save check:", "Play check:", "Return handoff:", "Guide handoff:", "same outcome actions"]
+		["Hide Guide", "Hide the outcome Field Manual", "Outcome", "resolved expedition checkpoint", "Post-result handoff:", "Save check:", "Play check:", "Return handoff:", "Guide handoff:", "same outcome actions"]
 	):
 		return false
 	if not _assert_no_score_leak(

@@ -69,6 +69,7 @@ func _refresh() -> void:
 	var next_step_summary := String(_model.get("next_step_summary", ""))
 	var next_play_action_summary := String(_model.get("next_play_action_summary", ""))
 	var continuity_choice_summary := String(_model.get("continuity_choice_summary", ""))
+	var post_result_handoff := String(_model.get("post_result_handoff_summary", ""))
 	var action_cue_summary := String(_model.get("action_cue_summary", ""))
 	var resolution_handoff := _outcome_resolution_handoff_text()
 	var action_status_lines := []
@@ -76,10 +77,15 @@ func _refresh() -> void:
 		action_status_lines.append(next_step_summary)
 	if resolution_handoff != "":
 		action_status_lines.append(resolution_handoff)
+	if post_result_handoff != "":
+		action_status_lines.append(post_result_handoff)
 	if continuity_choice_summary != "":
 		action_status_lines.append(continuity_choice_summary)
 	if next_play_action_summary != "":
 		action_status_lines.append(next_play_action_summary)
+	var visible_action_hint := action_cue_summary
+	if post_result_handoff != "":
+		visible_action_hint = "%s\n%s" % [post_result_handoff, action_cue_summary] if action_cue_summary != "" else post_result_handoff
 	var action_status_text := "\n".join(action_status_lines)
 	_set_compact_label(
 		_action_status_label,
@@ -88,7 +94,7 @@ func _refresh() -> void:
 	)
 	_set_compact_label(
 		_actions_hint_label,
-		action_cue_summary if action_cue_summary != "" else "Action cue: choose the follow-up action that matches the saved outcome you want to keep.",
+		visible_action_hint if visible_action_hint != "" else "Action cue: choose the follow-up action that matches the saved outcome you want to keep.",
 		3
 	)
 	_actions_hint_label.tooltip_text = "\n".join(action_status_lines + [action_cue_summary]).strip_edges()
@@ -240,6 +246,7 @@ func validation_snapshot() -> Dictionary:
 		"next_step_summary": String(_model.get("next_step_summary", "")),
 		"outcome_resolution_handoff": _outcome_resolution_handoff_text(),
 		"continuity_choice_summary": String(_model.get("continuity_choice_summary", "")),
+		"post_result_handoff_summary": String(_model.get("post_result_handoff_summary", "")),
 		"next_play_action_summary": String(_model.get("next_play_action_summary", "")),
 		"action_cue_summary": String(_model.get("action_cue_summary", "")),
 		"actions_hint": _actions_hint_label.text,
@@ -437,6 +444,7 @@ func _outcome_action_tooltip(action: Dictionary) -> String:
 	return _join_tooltip_sections([
 		String(action.get("summary", "")),
 		_outcome_resolution_handoff_text(),
+		String(_model.get("post_result_handoff_summary", "")),
 	])
 
 func _outcome_action_tooltip_snapshot() -> Array:
@@ -510,6 +518,7 @@ func _build_outcome_guide_text() -> String:
 	var continuity_choice := String(_model.get("continuity_choice_summary", "")).strip_edges()
 	var next_play_action := String(_model.get("next_play_action_summary", "")).strip_edges()
 	var action_cue := String(_model.get("action_cue_summary", "")).strip_edges()
+	var post_result_handoff := String(_model.get("post_result_handoff_summary", "")).strip_edges()
 	var resolution_handoff := _outcome_resolution_handoff_text()
 	var save_surface := AppRouter.active_save_surface()
 	var save_check := String(save_surface.get("save_check", "")).strip_edges()
@@ -521,6 +530,8 @@ func _build_outcome_guide_text() -> String:
 		lines.append(next_play_action)
 	if resolution_handoff != "":
 		lines.append(resolution_handoff)
+	if post_result_handoff != "":
+		lines.append(post_result_handoff)
 	if action_cue != "":
 		lines.append(action_cue)
 	if save_check != "":
