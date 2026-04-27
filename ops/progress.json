@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T08:34:00Z",
+  "updatedAt": "2026-04-27T08:52:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-artifact-readiness-cue-10184",
-  "currentSliceTitle": "Surface compact town artifact readiness cue",
+  "currentSliceId": "overworld-command-check-cue-10184",
+  "currentSliceTitle": "Surface compact overworld command check cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact player-facing town Artifacts readiness cue using existing artifact equipment, pack, collection, and management action payloads only. The live Artifacts label and tooltip now clarify loadout slots, pack count, collection progress, ready gear orders, best order, and next practical action, with focused town/battle smoke coverage. UI clarity only; no artifact mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact player-facing overworld Command check cue using existing active hero, reserve roster, movement, and switch action payloads only. The live command roster rail now shows solo/switch readiness and movement context, and command-drawer hero switch controls carry matching handoff tooltips. UI clarity only; no mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2200,6 +2200,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T08:20:00Z",
       "completedAt": "2026-04-27T08:34:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "overworld-command-check-cue-10184",
+      "title": "Surface compact overworld command check cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T08:40:00Z",
+      "completedAt": "2026-04-27T08:52:00Z",
       "difficulty": "small"
     }
   ],

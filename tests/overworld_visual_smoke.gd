@@ -49,6 +49,8 @@ func _run() -> void:
 		return
 	if not _assert_hero_identity_progression_contract(shell):
 		return
+	if not _assert_overworld_command_check_cue_contract(shell):
+		return
 	if not _assert_route_decision_clarity_contract(shell):
 		return
 	if not _assert_route_target_handoff_contract(shell):
@@ -120,6 +122,80 @@ func _assert_hero_identity_progression_contract(shell: Node) -> bool:
 		["Lyra Emberwell", "Embercourt League", "Fast scouting caster", "Lv1", "XP 0/250", "Wayfinder I", "Move", "Scout", "Army"]
 	):
 		return false
+	return true
+
+func _assert_overworld_command_check_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Overworld smoke: shell is missing command-check validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var solo_snapshot: Dictionary = shell.call("validation_snapshot")
+	var solo_text := "\n".join([
+		String(solo_snapshot.get("command_check_visible_text", "")),
+		String(solo_snapshot.get("command_check_tooltip_text", "")),
+		String(solo_snapshot.get("heroes_visible_text", "")),
+		String(solo_snapshot.get("heroes_tooltip_text", "")),
+	])
+	if not _assert_text_contains_all(
+		"overworld solo command check cue",
+		[solo_text],
+		["Command check:", "Command Check", "Lyra Emberwell", "Solo command", "No reserve switch", "Next practical action:", "does not spend movement or end the day"]
+	):
+		return false
+	if not _assert_no_ai_score_leak("overworld solo command check cue", solo_text):
+		return false
+
+	var original_hero = session.overworld.get("hero", {}).duplicate(true)
+	var original_player_heroes = session.overworld.get("player_heroes", []).duplicate(true)
+	var original_active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	var original_hero_position = session.overworld.get("hero_position", {}).duplicate(true)
+	var original_movement = session.overworld.get("movement", {}).duplicate(true)
+	var original_army = session.overworld.get("army", {}).duplicate(true)
+	var reserve_template := ContentService.get_hero("hero_caelen")
+	var reserve_hero := HeroCommandRules.build_hero_from_template(
+		reserve_template,
+		{"x": 2, "y": 2},
+		{"id": "command_check_reserve_army", "name": "Command Check Reserve", "stacks": []},
+		session
+	)
+	reserve_hero["is_primary"] = false
+	var heroes: Array = session.overworld.get("player_heroes", []).duplicate(true)
+	heroes.append(reserve_hero)
+	session.overworld["player_heroes"] = heroes
+	session.overworld["active_hero_id"] = original_active_hero_id
+	HeroCommandRules.normalize_session(session)
+	shell.call("_refresh")
+	var reserve_snapshot: Dictionary = shell.call("validation_snapshot")
+	var action_surfaces := []
+	for surface in (reserve_snapshot.get("hero_action_surfaces", []) if reserve_snapshot.get("hero_action_surfaces", []) is Array else []):
+		if surface is Dictionary:
+			action_surfaces.append("%s\n%s" % [String(surface.get("text", "")), String(surface.get("tooltip", ""))])
+	var reserve_text := "\n".join([
+		String(reserve_snapshot.get("command_check_visible_text", "")),
+		String(reserve_snapshot.get("command_check_tooltip_text", "")),
+		String(reserve_snapshot.get("heroes_visible_text", "")),
+		String(reserve_snapshot.get("heroes_tooltip_text", "")),
+		"\n".join(action_surfaces),
+	])
+	if not _assert_text_contains_all(
+		"overworld reserve command check cue",
+		[reserve_text],
+		["Command check:", "Command Check", "2 commanders", "1 reserve", "reserve ready", "Switch ready:", "Caelen", "Open Command", "Command Switch Check", "Target:", "Readiness:", "switch ready", "State change:"]
+	):
+		return false
+	if not _assert_no_ai_score_leak("overworld reserve command check cue", reserve_text):
+		return false
+
+	session.overworld["hero"] = original_hero
+	session.overworld["player_heroes"] = original_player_heroes
+	session.overworld["active_hero_id"] = original_active_hero_id
+	session.overworld["hero_position"] = original_hero_position
+	session.overworld["movement"] = original_movement
+	session.overworld["army"] = original_army
+	HeroCommandRules.normalize_session(session)
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
 	return true
 
 func _assert_render_cache_split(shell: Node) -> bool:
