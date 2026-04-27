@@ -1,0 +1,223 @@
+diff --git a/ops/progress.json b/ops/progress.json
+index 4c1713a..fe4c74f 100644
+--- a/ops/progress.json
++++ b/ops/progress.json
+@@ -1,13 +1,13 @@
+ {
+   "taskId": 10184,
+   "project": "heroes-like",
+-  "updatedAt": "2026-04-27T08:20:30Z",
++  "updatedAt": "2026-04-27T08:25:14Z",
+   "status": "in_progress",
+   "currentPhase": "phase-2-deep-production-foundation",
+-  "currentSliceId": "main-menu-continue-check-cue-10184",
+-  "currentSliceTitle": "Surface compact main-menu Continue check cue",
+-  "currentSliceStatus": "completed",
+-  "currentSliceNotes": "Implemented a compact visible main-menu Continue check cue using existing latest-save, resume target, first-view footer, Load tooltip, and validation snapshot surfaces only. The first-view footer now states what Continue Latest will open, the Load tooltip carries the same resume boundary, and focused smoke coverage checks visible cue, tooltip, snapshot payload, and no internal score/debug field exposure. UI clarity only; no routing semantics, save schema/version, campaign progression semantic changes, content migration, durable logs, AI behavior, renderer import, or pathing/body-tile adoption.",
++  "currentSliceId": "overworld-artifact-check-cue-10184",
++  "currentSliceTitle": "Surface compact overworld Artifact check cue",
++  "currentSliceStatus": "in_progress",
++  "currentSliceNotes": "Started a compact visible overworld Artifact check cue for the command rail and artifact order tooltips using existing hero artifact/loadout and management action data only. Targeting UI clarity and focused smoke coverage only; no mechanics, balance, save schema/version, production JSON migration, durable logs, AI behavior, renderer import, or pathing/body-tile adoption.",
+   "realityAssessment": {
+     "classification": "prototype_pre_alpha",
+     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
+@@ -2420,6 +2420,13 @@
+       "startedAt": "2026-04-27T08:18:28Z",
+       "completedAt": "2026-04-27T08:20:30Z",
+       "difficulty": "small"
++    },
++    {
++      "id": "overworld-artifact-check-cue-10184",
++      "title": "Surface compact overworld Artifact check cue",
++      "status": "in_progress",
++      "startedAt": "2026-04-27T08:25:14Z",
++      "difficulty": "small"
+     }
+   ],
+   "nextActions": [
+diff --git a/scenes/overworld/OverworldShell.gd b/scenes/overworld/OverworldShell.gd
+index 1ce9328..b8d14f5 100644
+--- a/scenes/overworld/OverworldShell.gd
++++ b/scenes/overworld/OverworldShell.gd
+@@ -553,7 +553,13 @@ func _refresh() -> void:
+ 		1
+ 	)
+ 	var artifact_text := OverworldRules.describe_artifacts(_session)
+-	_set_rail_text(_artifact_label, artifact_text, _rail_prefixed_summary("Gear", artifact_text), 1)
++	var artifact_check := _artifact_check_surface()
++	_set_rail_text(
++		_artifact_label,
++		_join_tooltip_sections([artifact_text, String(artifact_check.get("tooltip_text", ""))]),
++		String(artifact_check.get("visible_text", _rail_prefixed_summary("Gear", artifact_text))),
++		1
++	)
+ 	var command_risk_surface := {}
+ 	if _active_drawer == "frontier":
+ 		command_risk_surface = _refresh_frontier_drawer()
+@@ -1199,6 +1205,123 @@ func _cached_artifact_actions() -> Array:
+ 		_refresh_cache["artifact_actions"] = OverworldRules.get_artifact_actions(_session)
+ 	return _refresh_cache["artifact_actions"]
+ 
++func _artifact_check_surface() -> Dictionary:
++	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
++	var active_name := String(hero.get("name", "Commander")).strip_edges()
++	if active_name == "":
++		active_name = "Commander"
++	var artifacts := ArtifactRules.normalize_hero_artifacts(hero.get("artifacts", {}))
++	var equipped: Dictionary = artifacts.get("equipped", {}) if artifacts.get("equipped", {}) is Dictionary else {}
++	var inventory: Array = artifacts.get("inventory", []) if artifacts.get("inventory", []) is Array else []
++	var equipped_count := 0
++	for slot in ArtifactRules.EQUIPMENT_SLOTS:
++		if String(equipped.get(slot, "")) != "":
++			equipped_count += 1
++	var pack_count := inventory.size()
++	var owned_count := ArtifactRules.owned_artifact_ids(hero).size()
++	var actions: Array = _cached_artifact_actions()
++	var ready_count := 0
++	var first_action: Dictionary = {}
++	for action_value in actions:
++		if not (action_value is Dictionary):
++			continue
++		if first_action.is_empty():
++			first_action = action_value
++		if not bool(action_value.get("disabled", false)):
++			ready_count += 1
++	var collection := ArtifactRules.describe_collection_summary(hero)
++	if owned_count <= 0:
++		var empty_visible := "Artifact check: no relics | Loadout 0/%d | Pack 0" % ArtifactRules.EQUIPMENT_SLOTS.size()
++		var empty_tooltip := "Artifact Check\n- Active: %s\n- Loadout: 0/%d equipped; Pack 0.\n- %s\n- Readiness: no artifact orders.\n- Next practical action: recover relics in the field, then use Command to review loadout choices.\n- State change: inspection alone does not change artifacts, spend movement, or end the day." % [
++			active_name,
++			ArtifactRules.EQUIPMENT_SLOTS.size(),
++			collection,
++		]
++		return {
++			"visible_text": empty_visible,
++			"tooltip_text": empty_tooltip,
++			"active_name": active_name,
++			"equipped_count": equipped_count,
++			"pack_count": pack_count,
++			"owned_count": owned_count,
++			"ready_count": 0,
++			"readiness": "no artifact orders",
++			"next_step": "Recover relics in the field, then review loadout choices from Command.",
++		}
++
++	var readiness := "Ready x%d/%d" % [ready_count, actions.size()] if ready_count > 0 else "No ready orders"
++	var first_label := String(first_action.get("label", "Review loadout")).strip_edges()
++	if first_label == "":
++		first_label = "Review loadout"
++	var next_step := "Open Command and use %s to adjust the active loadout." % first_label if ready_count > 0 else "Keep the current loadout or recover another relic before changing gear."
++	var visible := "Artifact check: %s | Loadout %d/%d | Pack %d" % [
++		readiness,
++		equipped_count,
++		ArtifactRules.EQUIPMENT_SLOTS.size(),
++		pack_count,
++	]
++	var tooltip := "Artifact Check\n- Active: %s\n- Loadout: %d/%d equipped; Pack %d.\n- %s\n- Readiness: %s.\n- Best order: %s\n- Gear impact: %s\n- Next practical action: %s\n- State change: artifact orders update the hero loadout; inspection alone does not spend movement or end the day." % [
++		active_name,
++		equipped_count,
++		ArtifactRules.EQUIPMENT_SLOTS.size(),
++		pack_count,
++		collection,
++		readiness,
++		first_label,
++		ArtifactRules.describe_impact_summary(hero).trim_prefix("Gear impact: "),
++		next_step,
++	]
++	return {
++		"visible_text": visible,
++		"tooltip_text": tooltip,
++		"active_name": active_name,
++		"equipped_count": equipped_count,
++		"pack_count": pack_count,
++		"owned_count": owned_count,
++		"ready_count": ready_count,
++		"readiness": readiness,
++		"best_order": first_label,
++		"gear_impact": ArtifactRules.describe_impact_summary(hero),
++		"next_step": next_step,
++	}
++
++func _artifact_action_check_surface(action: Dictionary) -> Dictionary:
++	if action.is_empty():
++		return {}
++	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
++	var artifacts := ArtifactRules.normalize_hero_artifacts(hero.get("artifacts", {}))
++	var equipped: Dictionary = artifacts.get("equipped", {}) if artifacts.get("equipped", {}) is Dictionary else {}
++	var inventory: Array = artifacts.get("inventory", []) if artifacts.get("inventory", []) is Array else []
++	var equipped_count := 0
++	for slot in ArtifactRules.EQUIPMENT_SLOTS:
++		if String(equipped.get(slot, "")) != "":
++			equipped_count += 1
++	var label := String(action.get("label", "Artifact order")).strip_edges()
++	if label == "":
++		label = "Artifact order"
++	var readiness := "loadout ready" if not bool(action.get("disabled", false)) else "blocked"
++	var summary := String(action.get("summary", "")).strip_edges()
++	var effect := summary if summary != "" else "Updates the active hero's artifact loadout."
++	var next_step := "Select this order to update the active hero loadout."
++	if bool(action.get("disabled", false)):
++		next_step = "Resolve the listed blocker before changing this artifact slot."
++	var tooltip := "Artifact Order Check\n- Order: %s\n- Readiness: %s\n- Current loadout: %d/%d equipped; Pack %d.\n- Effect: %s\n- Next practical action: %s\n- State change: selecting this order updates hero artifacts; inspection alone does not spend movement or end the day." % [
++		label,
++		readiness,
++		equipped_count,
++		ArtifactRules.EQUIPMENT_SLOTS.size(),
++		inventory.size(),
++		effect,
++		next_step,
++	]
++	return {
++		"tooltip_text": tooltip,
++		"order_label": label,
++		"readiness": readiness,
++		"effect": effect,
++		"next_step": next_step,
++	}
++
+ func _cached_active_context() -> Dictionary:
+ 	if not _refresh_cache.has("active_context"):
+ 		_refresh_cache["active_context"] = OverworldRules.get_active_context(_session)
+@@ -2356,7 +2479,10 @@ func _rebuild_artifact_actions() -> void:
+ 		var button = Button.new()
+ 		button.text = String(action.get("label", action.get("id", "Action")))
+ 		button.disabled = bool(action.get("disabled", false))
+-		button.tooltip_text = String(action.get("summary", ""))
++		button.tooltip_text = _join_tooltip_sections([
++			String(action.get("summary", "")),
++			String(_artifact_action_check_surface(action).get("tooltip_text", "")),
++		])
+ 		_style_rail_action_button(button)
+ 		button.pressed.connect(_on_artifact_action_pressed.bind(String(action.get("id", ""))))
+ 		_artifact_actions.add_child(button)
+@@ -3535,6 +3661,7 @@ func validation_snapshot() -> Dictionary:
+ 	var command_check := _command_check_surface()
+ 	var specialty_check := _specialty_check_surface()
+ 	var spell_check := _spell_check_surface()
++	var artifact_check := _artifact_check_surface()
+ 	return {
+ 		"scene_path": scene_file_path,
+ 		"scenario_id": _session.scenario_id,
+@@ -3651,6 +3778,9 @@ func validation_snapshot() -> Dictionary:
+ 		"spell_actions": _validation_spell_action_payloads(),
+ 		"artifact_text": _artifact_label.text,
+ 		"artifact_tooltip_text": _artifact_label.tooltip_text,
++		"artifact_check": artifact_check,
++		"artifact_check_visible_text": String(artifact_check.get("visible_text", "")),
++		"artifact_check_tooltip_text": String(artifact_check.get("tooltip_text", "")),
+ 		"artifact_actions": _validation_artifact_action_payloads(),
+ 		"active_town": active_town,
+ 		"selected_town": selected_town,
+@@ -4529,7 +4659,11 @@ func _validation_artifact_action_payloads() -> Array:
+ 	for action in OverworldRules.get_artifact_actions(_session):
+ 		if not (action is Dictionary):
+ 			continue
+-		payloads.append(_validation_action_payload(action))
++		var payload := _validation_action_payload(action)
++		var artifact_check := _artifact_action_check_surface(action)
++		payload["artifact_check"] = artifact_check
++		payload["artifact_check_tooltip_text"] = String(artifact_check.get("tooltip_text", ""))
++		payloads.append(payload)
+ 	return payloads
+ 
+ func _validation_action_payload(action: Dictionary) -> Dictionary:
