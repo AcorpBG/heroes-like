@@ -1142,6 +1142,70 @@
         "strategic_value": 5,
         "risk_tier": "standard",
         "placement_role": "route_shortcut"
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "two_way_transit",
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "paired route approaches are readable before visit",
+        "event_expectation": "existing transit metadata normalized for Batch 004"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_repaired_ferry_stage",
+        "endpoint_group_id": "ninefold_mire_ferry_stage",
+        "directionality": "two_way",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "coast_crossing",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "coast_applicability": {
+        "coast_role": "ferry_stage_crossing",
+        "requires_coast_adjacency": true,
+        "land_approach_required": true,
+        "water_endpoint_reserved": true,
+        "allowed_coast_contexts": [
+          "river_mouth",
+          "marsh_channel",
+          "shore"
+        ],
+        "full_ship_movement_system_adopted": false,
+        "metadata_only": true
       }
     },
     {
@@ -1253,6 +1317,57 @@
         "strategic_value": 5,
         "risk_tier": "standard",
         "placement_role": "vertical_shortcut"
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "two_way_transit",
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "paired route approaches are readable before visit",
+        "event_expectation": "existing transit metadata normalized for Batch 004"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_rope_lift",
+        "endpoint_group_id": "ninefold_ridge_rope_lift",
+        "directionality": "two_way",
+        "entry_offsets": [
+          {
+            "x": 0,
+            "y": -1
+          },
+          {
+            "x": 0,
+            "y": 2
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 0,
+            "y": -1
+          },
+          {
+            "x": 0,
+            "y": 2
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "vertical_land_shortcut",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
       }
     },
     {
@@ -22189,6 +22304,3994 @@
         "event_expectation": "scenario script may reference this marker later",
         "metadata_only": true,
         "live_objective_runtime": false
+      }
+    },
+    {
+      "id": "object_root_pass_arch",
+      "name": "Root Pass Arch",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract"
+      ],
+      "resource_site_id": "site_root_pass_arch",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "two_way_transit",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "transit_lane",
+        "forest_shortcut",
+        "route_control"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 5,
+        "risk_tier": "standard",
+        "placement_role": "two_way_transit"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_root_pass_arch",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": -1,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "root arch awaits scenario authorization",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "walking_green_root_pass"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_root_pass_arch",
+        "endpoint_group_id": "walking_green_root_pass",
+        "directionality": "two_way",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_pressure_rail_switch",
+      "name": "Pressure Rail Switch",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract"
+      ],
+      "resource_site_id": "site_pressure_rail_switch",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "two_way_transit",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 3,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "transit_lane",
+        "rail_shortcut",
+        "route_control"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 6,
+        "risk_tier": "standard",
+        "placement_role": "two_way_transit"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_pressure_rail_switch",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": -1,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "rail switch awaits pressure crews",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "underway_pressure_rail_switch"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_pressure_rail_switch",
+        "endpoint_group_id": "underway_pressure_rail_switch",
+        "directionality": "two_way",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 0
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_mirror_stair_turn",
+      "name": "Mirror Stair Turn",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract"
+      ],
+      "resource_site_id": "site_mirror_stair_turn",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "two_way_transit",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "north",
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": -1
+          },
+          {
+            "x": 1,
+            "y": 2
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": -1
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "transit_lane",
+        "ruin_bypass",
+        "route_control"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 7,
+        "risk_tier": "heavy",
+        "placement_role": "two_way_transit"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_mirror_stair_turn",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": -1,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "mirror stair awaits scenario authorization",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "ninefold_mirror_stair_turn"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_mirror_stair_turn",
+        "endpoint_group_id": "ninefold_mirror_stair_turn",
+        "directionality": "two_way",
+        "entry_offsets": [
+          {
+            "x": 1,
+            "y": -1
+          },
+          {
+            "x": 1,
+            "y": 2
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": -1
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_basalt_undergate",
+      "name": "Basalt Undergate",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract"
+      ],
+      "resource_site_id": "site_basalt_undergate",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "two_way_transit",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_ash_lava_wastes"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "large"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "north",
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": -1
+          },
+          {
+            "x": 1,
+            "y": 3
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 1,
+            "y": 3
+          },
+          {
+            "x": 1,
+            "y": -1
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "vertical_transit",
+        "subterranean_gate",
+        "route_control"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 7,
+        "risk_tier": "heavy",
+        "placement_role": "two_way_transit"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_basalt_undergate",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": -1,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "basalt undergate awaits scenario authorization",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "basalt_undergate_pair"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_basalt_undergate",
+        "endpoint_group_id": "basalt_undergate_pair",
+        "directionality": "two_way",
+        "entry_offsets": [
+          {
+            "x": 1,
+            "y": -1
+          },
+          {
+            "x": 1,
+            "y": 3
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 1,
+            "y": 3
+          },
+          {
+            "x": 1,
+            "y": -1
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_ridge_wind_chute",
+      "name": "Ridge Wind Chute",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract"
+      ],
+      "resource_site_id": "site_ridge_wind_chute",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "one_way_transit",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "north",
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": -1
+          },
+          {
+            "x": 0,
+            "y": 2
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 0,
+            "y": 2
+          },
+          {
+            "x": 0,
+            "y": -1
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "one_way_transit",
+        "route_shortcut",
+        "exit_safety"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "one_way_transit"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_ridge_wind_chute",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": -2,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "wind chute marks a one-way descent contract",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "ridge_wind_chute_drop"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_ridge_wind_chute",
+        "endpoint_group_id": "ridge_wind_chute_drop",
+        "directionality": "one_way",
+        "entry_offsets": [
+          {
+            "x": 0,
+            "y": -1
+          },
+          {
+            "x": 0,
+            "y": 2
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 0,
+            "y": 2
+          },
+          {
+            "x": 0,
+            "y": -1
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "high_to_low",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_slipgate_mirror",
+      "name": "Slipgate Mirror",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract"
+      ],
+      "resource_site_id": "site_slipgate_mirror",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "one_way_transit",
+      "biome_ids": [
+        "biome_rough_badlands",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "one_way_transit",
+        "ruin_bypass",
+        "exit_safety"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 5,
+        "risk_tier": "standard",
+        "placement_role": "one_way_transit"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_slipgate_mirror",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": -1,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "slipgate mirror awaits scenario authorization",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "slipgate_mirror_exit"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_slipgate_mirror",
+        "endpoint_group_id": "slipgate_mirror_exit",
+        "directionality": "one_way",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 0
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_spillway_drop_marker",
+      "name": "Spillway Drop Marker",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract"
+      ],
+      "resource_site_id": "site_spillway_drop_marker",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "one_way_transit",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "one_way_transit",
+        "water_edge_route",
+        "exit_safety"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "one_way_transit"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_spillway_drop_marker",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": -1,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "spillway marker records a one-way downstream contract",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "floodplain_spillway_drop"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_spillway_drop_marker",
+        "endpoint_group_id": "floodplain_spillway_drop",
+        "directionality": "one_way",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_tide_bore_marker",
+      "name": "Tide Bore Marker",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "coast_route",
+        "harbor_route"
+      ],
+      "resource_site_id": "site_tide_bore_marker",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "one_way_transit",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "one_way_transit",
+        "coast_route",
+        "exit_safety"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true,
+        "requires_coast_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 5,
+        "risk_tier": "standard",
+        "placement_role": "one_way_transit"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_tide_bore_marker",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": -1,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "tide bore marker reserves a coast one-way contract",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "veil_tide_bore_marker"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_tide_bore_marker",
+        "endpoint_group_id": "veil_tide_bore_marker",
+        "directionality": "one_way",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "coast_applicability": {
+        "coast_role": "one_way_tide_route",
+        "requires_coast_adjacency": true,
+        "land_approach_required": true,
+        "water_endpoint_reserved": true,
+        "allowed_coast_contexts": [
+          "shore",
+          "harbor",
+          "river_mouth"
+        ],
+        "full_ship_movement_system_adopted": false,
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "object_charter_bar_gate",
+      "name": "Charter Bar Gate",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "blocked_route"
+      ],
+      "resource_site_id": "site_charter_bar_gate",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "route_lock",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 3,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "route_lock",
+        "road_control",
+        "conditional_route"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 5,
+        "risk_tier": "standard",
+        "placement_role": "route_lock"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_charter_bar_gate",
+        "effect_type": "scenario_gate",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "charter_bar_closed",
+          "writ_missing"
+        ],
+        "public_reason": "charter bar awaits route authorization",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_charter_bar_gate",
+        "endpoint_group_id": "batch004_charter_bar_gate",
+        "directionality": "conditional_lock",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 0
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "route_lock_contract": {
+        "lock_kind": "scenario_gate",
+        "blocked_state_ids": [
+          "charter_bar_closed",
+          "writ_missing"
+        ],
+        "unlock_requirement": "scenario_charter_or_writ",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_thorn_seal_gate",
+      "name": "Thorn Seal Gate",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "blocked_route"
+      ],
+      "resource_site_id": "site_thorn_seal_gate",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "route_lock",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "route_lock",
+        "forest_gate",
+        "conditional_route"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 6,
+        "risk_tier": "heavy",
+        "placement_role": "route_lock"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_thorn_seal_gate",
+        "effect_type": "scenario_gate",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "thorn_seal_closed",
+          "oath_unmet"
+        ],
+        "public_reason": "thorn seal awaits scenario authorization",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_thorn_seal_gate",
+        "endpoint_group_id": "batch004_thorn_seal_gate",
+        "directionality": "conditional_lock",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "route_lock_contract": {
+        "lock_kind": "scenario_gate",
+        "blocked_state_ids": [
+          "thorn_seal_closed",
+          "oath_unmet"
+        ],
+        "unlock_requirement": "scenario_oath_or_event",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_brass_toll_arch",
+      "name": "Brass Toll Arch",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "blocked_route"
+      ],
+      "resource_site_id": "site_brass_toll_arch",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "route_lock",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "route_lock",
+        "toll_route",
+        "conditional_route"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 5,
+        "risk_tier": "standard",
+        "placement_role": "route_lock"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_brass_toll_arch",
+        "effect_type": "toll",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {
+          "gold": 0
+        },
+        "blocked_state_ids": [
+          "toll_arch_closed",
+          "permit_absent"
+        ],
+        "public_reason": "brass toll arch records a common-resource toll contract",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_brass_toll_arch",
+        "endpoint_group_id": "batch004_brass_toll_arch",
+        "directionality": "conditional_lock",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "route_lock_contract": {
+        "lock_kind": "toll_gate",
+        "blocked_state_ids": [
+          "toll_arch_closed",
+          "permit_absent"
+        ],
+        "unlock_requirement": "scenario_permit_or_payment",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_reef_chain_boom",
+      "name": "Reef Chain Boom",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "blocked_route",
+        "coast_route",
+        "harbor_route"
+      ],
+      "resource_site_id": "site_reef_chain_boom",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "route_lock",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 3,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "route_lock",
+        "coast_route",
+        "conditional_route"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true,
+        "requires_coast_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 6,
+        "risk_tier": "heavy",
+        "placement_role": "route_lock"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_reef_chain_boom",
+        "effect_type": "scenario_gate",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "reef_chain_drawn",
+          "harbor_clearance_missing"
+        ],
+        "public_reason": "reef chain awaits harbor clearance",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_reef_chain_boom",
+        "endpoint_group_id": "batch004_reef_chain_boom",
+        "directionality": "conditional_lock",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 0
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "route_lock_contract": {
+        "lock_kind": "coast_chain_gate",
+        "blocked_state_ids": [
+          "reef_chain_drawn",
+          "harbor_clearance_missing"
+        ],
+        "unlock_requirement": "scenario_harbor_clearance",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "coast_applicability": {
+        "coast_role": "coast_route_lock",
+        "requires_coast_adjacency": true,
+        "land_approach_required": true,
+        "water_endpoint_reserved": true,
+        "allowed_coast_contexts": [
+          "shore",
+          "harbor",
+          "river_mouth"
+        ],
+        "full_ship_movement_system_adopted": false,
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "object_frost_toll_bar",
+      "name": "Frost Toll Bar",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "blocked_route"
+      ],
+      "resource_site_id": "site_frost_toll_bar",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "route_lock",
+      "biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "route_lock",
+        "supply_lane",
+        "conditional_route"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "standard",
+        "placement_role": "route_lock"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_frost_toll_bar",
+        "effect_type": "scenario_gate",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "frost_bar_closed",
+          "winter_pass_unmarked"
+        ],
+        "public_reason": "frost toll bar awaits winter pass authorization",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_frost_toll_bar",
+        "endpoint_group_id": "batch004_frost_toll_bar",
+        "directionality": "conditional_lock",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "route_lock_contract": {
+        "lock_kind": "scenario_gate",
+        "blocked_state_ids": [
+          "frost_bar_closed",
+          "winter_pass_unmarked"
+        ],
+        "unlock_requirement": "scenario_winter_pass",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_ash_sluice_lock",
+      "name": "Ash Sluice Lock",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "blocked_route"
+      ],
+      "resource_site_id": "site_ash_sluice_lock",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "route_lock",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "north",
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": -1
+          },
+          {
+            "x": 1,
+            "y": 2
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": -1
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "route_lock",
+        "repair_unlock",
+        "conditional_route"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 6,
+        "risk_tier": "heavy",
+        "placement_role": "route_lock"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_ash_sluice_lock",
+        "effect_type": "repair_unlock",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "ash_sluice_jammed",
+          "heat_lane_closed"
+        ],
+        "public_reason": "ash sluice awaits repair authorization",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_ash_sluice_lock",
+        "endpoint_group_id": "batch004_ash_sluice_lock",
+        "directionality": "conditional_lock",
+        "entry_offsets": [
+          {
+            "x": 1,
+            "y": -1
+          },
+          {
+            "x": 1,
+            "y": 2
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": -1
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "route_lock_contract": {
+        "lock_kind": "repair_unlock",
+        "blocked_state_ids": [
+          "ash_sluice_jammed",
+          "heat_lane_closed"
+        ],
+        "unlock_requirement": "scenario_repair_or_event",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_veil_skiffyard",
+      "name": "Veil Skiffyard",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "coast_route",
+        "harbor_route"
+      ],
+      "resource_site_id": "site_veil_skiffyard",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "coast_harbor",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 3,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "large"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 3,
+            "y": 1
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "coast_route",
+        "harbor_service",
+        "route_control"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true,
+        "requires_coast_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 6,
+        "risk_tier": "standard",
+        "placement_role": "coast_harbor"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_veil_skiffyard",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "skiffyard reserves coast route service metadata",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "veil_skiffyard_route"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_veil_skiffyard",
+        "endpoint_group_id": "veil_skiffyard_route",
+        "directionality": "coast_route",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 3,
+            "y": 1
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "coast_applicability": {
+        "coast_role": "skiffyard_route_service",
+        "requires_coast_adjacency": true,
+        "land_approach_required": true,
+        "water_endpoint_reserved": true,
+        "allowed_coast_contexts": [
+          "shore",
+          "harbor",
+          "river_mouth"
+        ],
+        "full_ship_movement_system_adopted": false,
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "object_harbor_pilot_post",
+      "name": "Harbor Pilot Post",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "coast_route",
+        "harbor_route"
+      ],
+      "resource_site_id": "site_harbor_pilot_post",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "coast_harbor",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "coast_route",
+        "harbor_service",
+        "scouting_lane"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_coast_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 5,
+        "risk_tier": "light",
+        "placement_role": "coast_harbor"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_harbor_pilot_post",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "harbor pilot post reserves shore approach metadata",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "harbor_pilot_post_route"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_harbor_pilot_post",
+        "endpoint_group_id": "harbor_pilot_post_route",
+        "directionality": "coast_route",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "coast_applicability": {
+        "coast_role": "pilot_route_service",
+        "requires_coast_adjacency": true,
+        "land_approach_required": true,
+        "water_endpoint_reserved": true,
+        "allowed_coast_contexts": [
+          "shore",
+          "harbor",
+          "river_mouth"
+        ],
+        "full_ship_movement_system_adopted": false,
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "object_bell_buoy_station",
+      "name": "Bell Buoy Station",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "coast_route",
+        "harbor_route"
+      ],
+      "resource_site_id": "site_bell_buoy_station",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "coast_harbor",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "north",
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": -1
+          },
+          {
+            "x": 0,
+            "y": 2
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 0,
+            "y": 2
+          },
+          {
+            "x": 0,
+            "y": -1
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "coast_route",
+        "route_marker",
+        "sightline"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "unguarded",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_coast_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 3,
+        "risk_tier": "unguarded",
+        "placement_role": "coast_harbor"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_bell_buoy_station",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "bell buoy station reserves safe-channel metadata",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "bell_buoy_station_route"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_bell_buoy_station",
+        "endpoint_group_id": "bell_buoy_station_route",
+        "directionality": "coast_route",
+        "entry_offsets": [
+          {
+            "x": 0,
+            "y": -1
+          },
+          {
+            "x": 0,
+            "y": 2
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 0,
+            "y": 2
+          },
+          {
+            "x": 0,
+            "y": -1
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "coast_applicability": {
+        "coast_role": "safe_channel_marker",
+        "requires_coast_adjacency": true,
+        "land_approach_required": true,
+        "water_endpoint_reserved": true,
+        "allowed_coast_contexts": [
+          "shore",
+          "harbor",
+          "river_mouth"
+        ],
+        "full_ship_movement_system_adopted": false,
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "object_wreck_quay",
+      "name": "Wreck Quay",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "coast_route",
+        "harbor_route"
+      ],
+      "resource_site_id": "site_wreck_quay",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "coast_harbor",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 3,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "large"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 3,
+            "y": 1
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "coast_route",
+        "salvage_lane",
+        "route_control"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true,
+        "requires_coast_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 6,
+        "risk_tier": "heavy",
+        "placement_role": "coast_harbor"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_wreck_quay",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "wreck quay reserves land and water endpoint metadata",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "wreck_quay_route"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_wreck_quay",
+        "endpoint_group_id": "wreck_quay_route",
+        "directionality": "coast_route",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 3,
+            "y": 1
+          },
+          {
+            "x": -1,
+            "y": 1
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "coast_applicability": {
+        "coast_role": "salvage_route_service",
+        "requires_coast_adjacency": true,
+        "land_approach_required": true,
+        "water_endpoint_reserved": true,
+        "allowed_coast_contexts": [
+          "shore",
+          "harbor",
+          "river_mouth"
+        ],
+        "full_ship_movement_system_adopted": false,
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "object_tide_chain_mooring",
+      "name": "Tide Chain Mooring",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "coast_route",
+        "harbor_route"
+      ],
+      "resource_site_id": "site_tide_chain_mooring",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "coast_harbor",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "coast_route",
+        "harbor_service",
+        "conditional_route"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": true,
+        "warn_if_hiding_target": true,
+        "requires_coast_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 5,
+        "risk_tier": "standard",
+        "placement_role": "coast_harbor"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_tide_chain_mooring",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "tide chain mooring reserves coast service metadata",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "tide_chain_mooring_route"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_tide_chain_mooring",
+        "endpoint_group_id": "tide_chain_mooring_route",
+        "directionality": "coast_route",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "coast_applicability": {
+        "coast_role": "mooring_route_service",
+        "requires_coast_adjacency": true,
+        "land_approach_required": true,
+        "water_endpoint_reserved": true,
+        "allowed_coast_contexts": [
+          "shore",
+          "harbor",
+          "river_mouth"
+        ],
+        "full_ship_movement_system_adopted": false,
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "object_marsh_skiff_shelf",
+      "name": "Marsh Skiff Shelf",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract",
+        "coast_route",
+        "harbor_route"
+      ],
+      "resource_site_id": "site_marsh_skiff_shelf",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "coast_harbor",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "coast_route",
+        "mire_shortcut",
+        "route_control"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true,
+        "requires_coast_adjacency": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "coast_harbor"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_marsh_skiff_shelf",
+        "effect_type": "linked_endpoint",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "marsh skiff shelf reserves mire-coast endpoint metadata",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "linked_endpoint_group_id": "marsh_skiff_shelf_route"
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_marsh_skiff_shelf",
+        "endpoint_group_id": "marsh_skiff_shelf_route",
+        "directionality": "coast_route",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      },
+      "coast_applicability": {
+        "coast_role": "mire_skiff_route_service",
+        "requires_coast_adjacency": true,
+        "land_approach_required": true,
+        "water_endpoint_reserved": true,
+        "allowed_coast_contexts": [
+          "shore",
+          "harbor",
+          "river_mouth"
+        ],
+        "full_ship_movement_system_adopted": false,
+        "metadata_only": true
+      }
+    },
+    {
+      "id": "object_mileward_route_post",
+      "name": "Mileward Route Post",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract"
+      ],
+      "resource_site_id": "site_mileward_route_post",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "route_waypoint",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_highland_ridge",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "route_marker",
+        "road_control",
+        "transit_lane"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "unguarded",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 3,
+        "risk_tier": "unguarded",
+        "placement_role": "route_waypoint"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_mileward_route_post",
+        "effect_type": "movement_discount",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "mileward post records route-marker metadata",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_mileward_route_post",
+        "endpoint_group_id": "mileward_route_post_marker",
+        "directionality": "two_way",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 0
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "object_road_oath_stone",
+      "name": "Road Oath Stone",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "road_control",
+        "conditional_route",
+        "route_contract"
+      ],
+      "resource_site_id": "site_road_oath_stone",
+      "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+      "batch004_role": "route_waypoint",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "small"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "linked_endpoint",
+        "primary_sides": [
+          "west",
+          "east"
+        ],
+        "visit_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ]
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "route_marker",
+        "road_control",
+        "transit_lane"
+      ],
+      "passability_class": "conditional_pass",
+      "interaction": {
+        "cadence": "conditional",
+        "remains_after_visit": true,
+        "state_after_visit": "opened",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "route_state"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "route approach and control point are readable before visit",
+        "event_expectation": "metadata contract only"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "live_reward_grants": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "ship_movement_runtime_adopted": false
+      },
+      "animation_cues": [
+        "object_batch004_transit_idle_placeholder",
+        "object_route_contract_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 2,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true,
+        "requires_road_adjacency": true,
+        "requires_guard_space": false,
+        "warn_if_hiding_target": true
+      },
+      "ai_hints": {
+        "strategic_value": 3,
+        "risk_tier": "light",
+        "placement_role": "route_waypoint"
+      },
+      "route_effect": {
+        "effect_id": "route_effect_road_oath_stone",
+        "effect_type": "movement_discount",
+        "requires_visit": true,
+        "requires_owner": false,
+        "movement_cost_delta": 0,
+        "toll_resources": {},
+        "blocked_state_ids": [
+          "closed",
+          "unmapped"
+        ],
+        "public_reason": "road oath stone records route-marker metadata",
+        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+      },
+      "route_effect_boundary": {
+        "status": "metadata_only",
+        "runtime_behavior_adopted": false,
+        "public_output_safe": true
+      },
+      "linked_endpoint_contract": {
+        "contract_id": "endpoint_contract_road_oath_stone",
+        "endpoint_group_id": "road_oath_stone_marker",
+        "directionality": "two_way",
+        "entry_offsets": [
+          {
+            "x": -1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          }
+        ],
+        "exit_offsets": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": 0
+          }
+        ],
+        "requires_exit_safety": true,
+        "approach_role": "land_to_land",
+        "metadata_only": true,
+        "runtime_route_effect_adopted": false
       }
     }
   ]

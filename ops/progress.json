@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
-  "currentSliceTitle": "Overworld Object Content Batch 003 Services Shrines Signs And Events",
+  "currentSliceId": "overworld-object-content-batch-004-transit-coast-route-control-10184",
+  "currentSliceTitle": "Overworld Object Content Batch 004 Transit Coast And Route Control",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed Batch 003 services/shrines/scouting/signs/route-locks/objective-marker content with validator/report coverage; next corrective P2.4 category is Batch 004 transit/coast/route control; P2.5 remains paused.",
+  "currentSliceNotes": "Completed Batch 004 transit/coast/route-control content and validation; next corrective P2.4 category is Batch 005 dwellings/guarded dwellings; P2.5 remains paused.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T19:30:00Z",
+  "updatedAt": "2026-04-27T19:29:21Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -2359,7 +2359,7 @@
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
-      "status": "pending",
+      "status": "completed",
       "purpose": "Continue corrective P2.4 object content with transit endpoints, coast/harbor route objects, route-control gates, and linked endpoint contracts after Batch 003 services/signs/events.",
       "sourceDocs": [
         "docs/phase2-4-object-implementation-backlog.md",
@@ -2387,8 +2387,47 @@
         "No broad runtime route-effect migration, pathing runtime migration, renderer sprite import, scenario placement migration, or save migration.",
         "No rare-resource costs, markets, save payloads, inventory, or broad economy rebalance."
       ],
-      "notes": "Next corrective P2.4 category after completed Batch 003; P2.5 remains paused.",
-      "updatedAt": "2026-04-27T19:30:00Z"
+      "notes": "Completed Batch 004: 24 transit/coast/route-control map objects including 22 new linked site/object contracts and 2 existing ferry/lift normalizations, validator/report coverage, implementation report, and clean validation. P2.5 remains paused.",
+      "updatedAt": "2026-04-27T19:29:21Z",
+      "completedAt": "2026-04-27T19:29:21Z",
+      "startedAt": "2026-04-27T19:29:21Z"
+    },
+    {
+      "id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "title": "Overworld Object Content Batch 005 Dwellings And Guarded Dwellings",
+      "phase": "phase-2-deep-production-foundation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "status": "pending",
+      "purpose": "Continue corrective P2.4 object content by normalizing existing neutral dwellings and adding guarded high-value dwelling variants after Batch 004 transit/coast/route-control work.",
+      "sourceDocs": [
+        "docs/phase2-4-object-implementation-backlog.md",
+        "docs/overworld-object-taxonomy-density.md"
+      ],
+      "implementationTargets": [
+        "content/map_objects.json",
+        "content/resource_sites.json",
+        "object validator/report coverage as needed"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --overworld-object-report",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Dwellings and guarded dwellings author explicit footprint, body, approach, recruit/guard expectations, biome applicability, and metadata boundaries."
+      ],
+      "completionCriteria": [
+        "Existing and new dwelling objects define clear shape, approach, interaction cadence, linked site, guard, roster, editor, and AI metadata as appropriate.",
+        "Guarded dwelling variants remain content/metadata implementation unless current runtime already supports their linked site family."
+      ],
+      "nonGoals": [
+        "No broad dwelling runtime migration, recruitment UI overhaul, scenario placement migration, save migration, renderer sprite import, or economy rebalance.",
+        "No P2.5 magic implementation."
+      ],
+      "notes": "Next corrective P2.4 category after completed Batch 004; P2.5 remains paused.",
+      "updatedAt": "2026-04-27T19:29:21Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -3191,8 +3230,8 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
-      "title": "Overworld Object Content Batch 004 Transit Coast And Route Control",
+      "id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "title": "Overworld Object Content Batch 005 Dwellings And Guarded Dwellings",
       "phase": "phase-2-deep-production-foundation",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
@@ -3207,7 +3246,7 @@
         "content/resource_sites.json",
         "object validator/report coverage as needed"
       ],
-      "notes": "Next corrective P2.4 transit/coast/route-control Batch 004 after completed Batch 003; P2.5 remains paused."
+      "notes": "Next corrective P2.4 dwellings/guarded-dwellings Batch 005 after completed Batch 004; P2.5 remains paused."
     }
   ],
   "stoppedOrPausedTasks": [

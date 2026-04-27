@@ -702,6 +702,37 @@ nonGoals:
 - No broad runtime route-effect migration, pathing runtime migration, renderer sprite import, scenario placement migration, or save migration.
 - No rare-resource costs, markets, save payloads, inventory, or broad economy rebalance.
 
+#### P2.4i Corrective Dwellings And Guarded Dwellings Batch 005
+
+id: `overworld-object-content-batch-005-dwellings-guarded-dwellings-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Continue corrective P2.4 object content by normalizing existing neutral dwellings and adding guarded high-value dwelling variants after Batch 004 transit/coast/route-control work.
+
+sourceDocs:
+- `docs/phase2-4-object-implementation-backlog.md`
+- `docs/overworld-object-taxonomy-density.md`
+
+implementationTargets:
+- `content/map_objects.json`
+- `content/resource_sites.json`
+- Object validator/report coverage as needed.
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+sliceEvidence:
+- Dwellings and guarded dwellings author explicit footprint, body, approach, recruit/guard expectations, biome applicability, and metadata boundaries.
+
+completionCriteria:
+- Existing and new dwelling objects define clear shape, approach, interaction cadence, linked site, guard, roster, editor, and AI metadata as appropriate.
+- Guarded dwelling variants remain content/metadata implementation unless current runtime already supports their linked site family.
+
+nonGoals:
+- No broad dwelling runtime migration, recruitment UI overhaul, scenario placement migration, save migration, renderer sprite import, or economy rebalance.
+- No P2.5 magic implementation.
+
 ### P2.5 Magic System Foundation Implementation
 
 id: `magic-system-foundation-implementation-10184`
