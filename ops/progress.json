@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-content-batch-001b-biome-scenic-decoration-10184",
-  "currentSliceTitle": "Overworld Object Content Batch 001b Biome Scenic Decoration",
+  "currentSliceId": "overworld-object-content-batch-001c-biome-blockers-edge-10184",
+  "currentSliceTitle": "Overworld Object Content Batch 001c Biome Blockers And Edge Blockers",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed corrective P2.4 Batch 001b with 60 passable scenic decoration map_objects across all 9 biomes, validator/report coverage, and implementation report. P2.5 remains paused; next corrective P2.4 slice is 001c blockers/edge blockers.",
+  "currentSliceNotes": "Batch 001c completed with validated blocker/edge-blocker content; next corrective P2.4 slice is Batch 001d large-footprint coverage. P2.5 remains paused.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T18:31:01Z",
+  "updatedAt": "2026-04-27T18:40:47Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -342,7 +342,7 @@
         "spell/economy/battle/adventure hooks",
         "validation fixtures/reports"
       ],
-      "evidence": "ArtifactRules and current artifact records exist, but AcOrP's requested full artifact system—multiple artifacts, sets/families, faction-specific artifacts, source/reward rules, equip surfaces, runtime effects, and AI valuation—requires child implementation slices.",
+      "evidence": "ArtifactRules and current artifact records exist, but AcOrP's requested full artifact system\u2014multiple artifacts, sets/families, faction-specific artifacts, source/reward rules, equip surfaces, runtime effects, and AI valuation\u2014requires child implementation slices.",
       "notes": "Do not reduce artifact work to an overworld cue. Cue polish is not artifact-system implementation.",
       "childSliceIds": [
         "artifact-taxonomy-schema-implementation-10184",
@@ -1248,7 +1248,7 @@
       "id": "overworld-object-content-batch-001c-biome-blockers-edge-10184",
       "title": "Overworld Object Content Batch 001c Biome Blockers And Edge Blockers",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
@@ -1273,7 +1273,10 @@
         "Blocking and edge-blocker decorations define explicit body_tiles; visual footprints are not treated as implied blocking rectangles.",
         "Non-square footprint families from 1x2 through 4x4 are represented where appropriate."
       ],
-      "notes": "Pending follow-up decoration batch. Do not mark complete until object JSON and validation evidence exist."
+      "notes": "Completed Batch 001c with 70 non-interactable blocker/edge-blocker map objects, validator/report coverage, implementation report doc, and clean validation.",
+      "updatedAt": "2026-04-27T18:40:09Z",
+      "startedAt": "2026-04-27T18:34:24Z",
+      "completedAt": "2026-04-27T18:40:09Z"
     },
     {
       "id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
@@ -3065,8 +3068,8 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "overworld-object-content-batch-001c-biome-blockers-edge-10184",
-      "title": "Overworld Object Content Batch 001c Biome Blockers And Edge Blockers",
+      "id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "title": "Overworld Object Content Batch 001d Large Footprint Coverage",
       "status": "pending",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
       "sourceDocs": [
@@ -3077,10 +3080,10 @@
         "content/map_objects.json",
         "object validator/report fixtures as needed"
       ],
-      "notes": "next corrective P2.4 blocker and edge-blocker expansion after completed Batch 001b; P2.5 remains paused",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
-      "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation"
+      "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation",
+      "notes": "next corrective P2.4 large-footprint decoration/blocker coverage after completed Batch 001c; P2.5 remains paused"
     }
   ],
   "stoppedOrPausedTasks": [
