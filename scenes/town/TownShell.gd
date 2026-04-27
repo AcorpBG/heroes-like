@@ -267,7 +267,16 @@ func _refresh() -> void:
 		String(muster_readiness.get("tooltip_text", "")),
 		TownRules.describe_recruitment(_session),
 	])
-	_set_compact_label(_tavern_label, TownRules.describe_tavern(_session), 2)
+	var hire_readiness := _hire_readiness_surface()
+	var tavern_text := _join_tooltip_sections([
+		String(hire_readiness.get("visible_text", "")),
+		TownRules.describe_tavern(_session),
+	])
+	_set_compact_label(_tavern_label, tavern_text, 2)
+	_tavern_label.tooltip_text = _join_tooltip_sections([
+		String(hire_readiness.get("tooltip_text", "")),
+		TownRules.describe_tavern(_session),
+	])
 	_set_compact_label(_transfer_label, TownRules.describe_transfer(_session), 2)
 	_set_compact_label(_response_label, TownRules.describe_responses(_session), 2)
 	var study_readiness := _study_readiness_surface()
@@ -390,6 +399,7 @@ func validation_snapshot() -> Dictionary:
 	var market_readiness := _market_readiness_surface()
 	var muster_readiness := _muster_readiness_surface()
 	var study_readiness := _study_readiness_surface()
+	var hire_readiness := _hire_readiness_surface()
 	var artifact_readiness := _artifact_readiness_surface()
 	return {
 		"scene_path": scene_file_path,
@@ -445,6 +455,12 @@ func validation_snapshot() -> Dictionary:
 		"spellbook_text": OverworldRules.describe_spellbook(_session),
 		"spellbook_visible_text": _spellbook_label.text,
 		"spellbook_tooltip_text": _spellbook_label.tooltip_text,
+		"tavern_text": TownRules.describe_tavern(_session),
+		"tavern_visible_text": _tavern_label.text,
+		"tavern_tooltip_text": _tavern_label.tooltip_text,
+		"hire_readiness": hire_readiness,
+		"hire_readiness_visible_text": String(hire_readiness.get("visible_text", "")),
+		"hire_readiness_tooltip_text": String(hire_readiness.get("tooltip_text", "")),
 		"artifact_text": TownRules.describe_artifacts(_session),
 		"artifact_visible_text": _artifact_label.text,
 		"artifact_tooltip_text": _artifact_label.tooltip_text,
@@ -1419,6 +1435,99 @@ func _muster_readiness_surface() -> Dictionary:
 		"best_order_direct_count": best_direct,
 		"best_order_market_count": best_market_count,
 		"cap_line": cap_line,
+		"readiness": readiness,
+		"why_it_matters": impact,
+		"next_step": next_step,
+	}
+
+func _hire_readiness_surface() -> Dictionary:
+	var actions := TownRules.get_tavern_actions(_session)
+	var ready_orders := 0
+	var blocked_orders := 0
+	var best_ready := {}
+	var best_blocked := {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if bool(action.get("disabled", false)):
+			blocked_orders += 1
+			if best_blocked.is_empty():
+				best_blocked = action
+			continue
+		ready_orders += 1
+		if best_ready.is_empty():
+			best_ready = action
+
+	var heroes = _session.overworld.get("player_heroes", [])
+	var roster_count: int = heroes.size() if heroes is Array else 0
+	var selected_action := best_ready
+	var state_line := "no hire orders listed"
+	var visible := "Hire check: no hires"
+	var tavern_text := TownRules.describe_tavern(_session)
+	if ready_orders > 0:
+		state_line = "Ready now: %d commander hire%s" % [ready_orders, "" if ready_orders == 1 else "s"]
+		visible = "Hire check: Ready x%d/%d | roster %d" % [ready_orders, actions.size(), roster_count]
+	elif blocked_orders > 0:
+		selected_action = best_blocked
+		state_line = "Blocked: %d commander hire%s waiting on current stores" % [
+			blocked_orders,
+			"" if blocked_orders == 1 else "s",
+		]
+		visible = "Hire check: Blocked x0/%d | roster %d" % [blocked_orders, roster_count]
+	elif tavern_text.find("Build ") >= 0:
+		state_line = "Wayfarers Hall required before hiring"
+		visible = "Hire check: build hall first"
+	elif tavern_text.find("roster is already full") >= 0:
+		state_line = "command roster is already full"
+		visible = "Hire check: roster full"
+	elif tavern_text.find("No additional commanders") >= 0 or tavern_text.find("No commanders") >= 0:
+		state_line = "no additional commanders are currently available"
+		visible = "Hire check: no commanders listed"
+
+	var label := "No hire order"
+	var readiness := state_line
+	var impact := "Hiring adds another field commander before leaving town."
+	var next_step := "Build a Wayfarers Hall, review the roster, or leave when command is settled."
+	if not selected_action.is_empty():
+		label = String(selected_action.get("button_label", selected_action.get("label", "Hire order"))).strip_edges()
+		readiness = _town_action_button_readiness(selected_action, "tavern")
+		impact = _town_action_button_impact(selected_action, "tavern")
+		next_step = _town_action_button_next_step(
+			selected_action,
+			"tavern",
+			label,
+			_town_action_surface_label("tavern"),
+			readiness
+		)
+	elif state_line == "command roster is already full":
+		next_step = "Switch commanders or transfer troops; no additional hire can join this roster."
+	elif state_line == "no additional commanders are currently available":
+		next_step = "Keep the current command roster or return after new commanders become available."
+
+	var tooltip_lines := [
+		"Hire Readiness",
+		"- Roster: %d commander%s stationed or traveling" % [roster_count, "" if roster_count == 1 else "s"],
+		"- Hire orders: %d ready, %d blocked, %d listed" % [
+			ready_orders,
+			blocked_orders,
+			actions.size(),
+		],
+		"- Current stores: %s" % TownRules._describe_resources(_session.overworld.get("resources", {})),
+		"- %s" % state_line,
+		"- Best hire: %s" % label,
+		"- Readiness: %s" % readiness,
+		"- Why it matters: %s" % impact,
+		"- Next practical action: %s" % next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"roster_count": roster_count,
+		"ready_order_count": ready_orders,
+		"blocked_order_count": blocked_orders,
+		"listed_order_count": actions.size(),
+		"best_order_label": label,
 		"readiness": readiness,
 		"why_it_matters": impact,
 		"next_step": next_step,

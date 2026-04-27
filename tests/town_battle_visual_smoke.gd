@@ -89,6 +89,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_muster_readiness_cue(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_hire_readiness_cue(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_action_button_command_cues(shell):
 		get_tree().quit(1)
 		return false
@@ -534,6 +537,53 @@ func _assert_town_muster_readiness_cue(shell: Node) -> bool:
 	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if text.contains(leak_token):
 			push_error("Town smoke: muster readiness cue leaked internal token %s: %s." % [leak_token, text])
+			return false
+	return true
+
+func _assert_town_hire_readiness_cue(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_action_catalog"):
+		push_error("Town smoke: shell is missing hire-readiness validation hooks.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var readiness: Dictionary = snapshot.get("hire_readiness", {}) if snapshot.get("hire_readiness", {}) is Dictionary else {}
+	var catalog: Dictionary = shell.call("validation_action_catalog")
+	var tavern_actions: Array = catalog.get("tavern", []) if catalog.get("tavern", []) is Array else []
+	var cue_text := "\n".join([
+		String(snapshot.get("hire_readiness_visible_text", "")),
+		String(snapshot.get("hire_readiness_tooltip_text", "")),
+		String(snapshot.get("tavern_visible_text", "")),
+		String(snapshot.get("tavern_tooltip_text", "")),
+		String(readiness.get("best_order_label", "")),
+		String(readiness.get("readiness", "")),
+		String(readiness.get("why_it_matters", "")),
+		String(readiness.get("next_step", "")),
+	])
+	for token in ["Hire check:", "Hire Readiness", "Roster:", "Hire orders:", "Current stores:", "Best hire:", "Readiness:", "Why it matters:", "Next practical action:"]:
+		if not cue_text.contains(token):
+			push_error("Town smoke: hire readiness cue lost %s clarity: %s." % [token, cue_text])
+			return false
+	if int(readiness.get("listed_order_count", -1)) != tavern_actions.size() or int(readiness.get("ready_order_count", -1)) < 0 or int(readiness.get("blocked_order_count", -1)) < 0:
+		push_error("Town smoke: hire readiness counts do not match visible tavern actions: readiness=%s actions=%s." % [readiness, tavern_actions])
+		return false
+	if int(readiness.get("roster_count", -1)) <= 0:
+		push_error("Town smoke: hire readiness cue did not expose the current command roster count: %s." % readiness)
+		return false
+	if not (
+		cue_text.contains("Ready")
+		or cue_text.contains("Blocked")
+		or cue_text.contains("build hall")
+		or cue_text.contains("roster full")
+		or cue_text.contains("no commanders")
+		or cue_text.contains("no hires")
+	):
+		push_error("Town smoke: hire readiness cue does not explain ready, blocked, missing-hall, full-roster, or empty state: %s." % readiness)
+		return false
+	if not String(snapshot.get("tavern_visible_text", "")).contains("Hire check:"):
+		push_error("Town smoke: hire readiness cue is not visible in the tavern label: %s." % snapshot)
+		return false
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if cue_text.contains(leak_token):
+			push_error("Town smoke: hire readiness cue leaked internal token %s: %s." % [leak_token, cue_text])
 			return false
 	return true
 
