@@ -5,10 +5,10 @@
   "currentPhase": "phase-2-deep-production-foundation",
   "currentSliceId": "magic-battle-spell-behavior-expansion-10184",
   "currentSliceTitle": "Magic Battle Spell Behavior Expansion",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Selected next P2.5 child after completing magic-spell-school-category-schema-10184. Next work should expand selected tactical spell behavior with focused battle validation, without broad rebalance, save migration, AI rewrite, or UI-only implementation claims.",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Paused by owner after completing magic-spell-school-category-schema-10184 so P2.4 can be reviewed before continuing P2.5.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T16:23:53Z",
+  "updatedAt": "2026-04-27T16:26:02Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1168,7 +1168,7 @@
       "id": "magic-battle-spell-behavior-expansion-10184",
       "title": "Magic Battle Spell Behavior Expansion",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "pending",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "magic-system-foundation-implementation-10184",
@@ -1190,9 +1190,9 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T16:23:53Z",
+      "updatedAt": "2026-04-27T16:26:02Z",
       "startedAt": "2026-04-27T16:23:53Z",
-      "notes": "Selected next P2.5 child after completing magic-spell-school-category-schema-10184. Next work should expand selected tactical spell behavior with focused battle validation, without broad rebalance, save migration, AI rewrite, or UI-only implementation claims."
+      "notes": "paused by owner after tidy-pine so P2.4 can be reviewed before continuing P2.5; do not start this slice until review is complete"
     },
     {
       "id": "magic-adventure-map-spell-hooks-10184",
@@ -2892,7 +2892,7 @@
     {
       "id": "magic-battle-spell-behavior-expansion-10184",
       "title": "Magic Battle Spell Behavior Expansion",
-      "status": "in_progress",
+      "status": "pending",
       "parentSliceId": "magic-system-foundation-implementation-10184",
       "sourceDocs": [
         "docs/magic-system-expansion-foundation.md"
@@ -2901,7 +2901,7 @@
         "battle spell hooks",
         "battle smoke/report fixtures"
       ],
-      "notes": "Selected next P2.5 child after completing magic-spell-school-category-schema-10184. Next work should expand selected tactical spell behavior with focused battle validation, without broad rebalance, save migration, AI rewrite, or UI-only implementation claims.",
+      "notes": "paused by owner after tidy-pine so P2.4 can be reviewed before continuing P2.5; do not start this slice until review is complete",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.5 Magic System Foundation Implementation"
