@@ -262,12 +262,18 @@
         "growth_bonus": {
           "unit_river_guard": 1,
           "unit_ember_archer": 1,
-          "unit_citadel_pikeward": 1
+          "unit_citadel_pikeward": 1,
+          "unit_embercourt_fordhook_cadets": 1,
+          "unit_embercourt_lantern_sappers": 1,
+          "unit_embercourt_bargebow_crews": 1
         },
         "cost_discount_percent": {
           "unit_river_guard": 5,
           "unit_ember_archer": 4,
-          "unit_citadel_pikeward": 4
+          "unit_citadel_pikeward": 4,
+          "unit_embercourt_fordhook_cadets": 4,
+          "unit_embercourt_lantern_sappers": 4,
+          "unit_embercourt_bargebow_crews": 3
         }
       },
       "starting_building_ids": [
@@ -285,6 +291,13 @@
         "building_signal_citadel",
         "building_citadel_pikehall",
         "building_charter_bastion",
+        "building_embercourt_granary_lock_exchange",
+        "building_embercourt_tollstone_weir",
+        "building_embercourt_bargebow_slip",
+        "building_embercourt_oath_pikehall",
+        "building_embercourt_beacon_court",
+        "building_embercourt_drake_sluice",
+        "building_embercourt_charter_bastion",
         "building_lantern_archive",
         "building_starseer_annex"
       ],
@@ -519,12 +532,18 @@
         "growth_bonus": {
           "unit_bog_brute": 1,
           "unit_blackbranch_cutthroat": 1,
-          "unit_gorefen_ripper": 1
+          "unit_gorefen_ripper": 1,
+          "unit_mireclaw_reedsnare_kin": 1,
+          "unit_mireclaw_mudglass_slingers": 1,
+          "unit_mireclaw_bogplate_maulers": 1
         },
         "cost_discount_percent": {
           "unit_bog_brute": 4,
           "unit_blackbranch_cutthroat": 4,
-          "unit_gorefen_ripper": 4
+          "unit_gorefen_ripper": 4,
+          "unit_mireclaw_reedsnare_kin": 4,
+          "unit_mireclaw_mudglass_slingers": 4,
+          "unit_mireclaw_bogplate_maulers": 3
         }
       },
       "starting_building_ids": [
@@ -544,6 +563,13 @@
         "building_floodtide_forge",
         "building_gorefen_ring",
         "building_nightglass_dominion",
+        "building_mireclaw_blackbranch_den",
+        "building_mireclaw_chainboom_ferry",
+        "building_mireclaw_war_drum_circle",
+        "building_mireclaw_sporewake_shrine",
+        "building_mireclaw_floodtide_forge",
+        "building_mireclaw_nightglass_dominion",
+        "building_mireclaw_antler_pit",
         "building_starseer_annex"
       ],
       "spell_library": [
@@ -597,7 +623,7 @@
       },
       "economy": {
         "base_income": {
-          "gold": 95,
+          "gold": 100,
           "ore": 1
         },
         "pressure_bonus": 1,
@@ -614,11 +640,17 @@
         "readiness_bonus": 4,
         "growth_bonus": {
           "unit_shard_guard": 1,
-          "unit_prism_adept": 1
+          "unit_prism_adept": 1,
+          "unit_sunvault_shard_wardens": 1,
+          "unit_sunvault_prism_adepts": 1,
+          "unit_sunvault_mirror_duelists": 1
         },
         "cost_discount_percent": {
           "unit_shard_guard": 5,
-          "unit_prism_adept": 4
+          "unit_prism_adept": 4,
+          "unit_sunvault_shard_wardens": 4,
+          "unit_sunvault_prism_adepts": 4,
+          "unit_sunvault_mirror_duelists": 3
         }
       },
       "starting_building_ids": [
@@ -636,6 +668,13 @@
         "building_harmonic_cloister",
         "building_aurora_spire",
         "building_daybreak_matrix",
+        "building_sunvault_shard_yard",
+        "building_sunvault_lens_gallery",
+        "building_sunvault_mirror_forge",
+        "building_sunvault_harmonic_cloister",
+        "building_sunvault_zenith_observatory",
+        "building_sunvault_aurora_spire",
+        "building_sunvault_daybreak_matrix",
         "building_lantern_archive",
         "building_starseer_annex"
       ],
