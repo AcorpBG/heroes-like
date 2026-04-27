@@ -539,7 +539,13 @@ func _refresh() -> void:
 	var specialty_text := OverworldRules.describe_specialties(_session)
 	_set_rail_text(_specialty_label, specialty_text, _rail_prefixed_summary("Spec", specialty_text), 1)
 	var spell_text := OverworldRules.describe_spellbook(_session, SpellRules.CONTEXT_OVERWORLD)
-	_set_rail_text(_spell_label, spell_text, OverworldRules.describe_spellbook_rail(_session, SpellRules.CONTEXT_OVERWORLD), 1)
+	var spell_check := _spell_check_surface()
+	_set_rail_text(
+		_spell_label,
+		_join_tooltip_sections([spell_text, String(spell_check.get("tooltip_text", ""))]),
+		String(spell_check.get("visible_text", OverworldRules.describe_spellbook_rail(_session, SpellRules.CONTEXT_OVERWORLD))),
+		1
+	)
 	var artifact_text := OverworldRules.describe_artifacts(_session)
 	_set_rail_text(_artifact_label, artifact_text, _rail_prefixed_summary("Gear", artifact_text), 1)
 	var command_risk_surface := {}
@@ -915,6 +921,149 @@ func _cached_spell_actions() -> Array:
 	if not _refresh_cache.has("spell_actions"):
 		_refresh_cache["spell_actions"] = OverworldRules.get_spell_actions(_session)
 	return _refresh_cache["spell_actions"]
+
+func _spell_check_surface() -> Dictionary:
+	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+	var spellbook: Dictionary = hero.get("spellbook", {}) if hero.get("spellbook", {}) is Dictionary else {}
+	var mana: Dictionary = spellbook.get("mana", {}) if spellbook.get("mana", {}) is Dictionary else {}
+	var mana_line := "Mana %d/%d" % [
+		int(mana.get("current", 0)),
+		int(mana.get("max", mana.get("current", 0))),
+	]
+	var movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
+	var movement_line := "Move %d/%d" % [
+		int(movement.get("current", 0)),
+		int(movement.get("max", movement.get("current", 0))),
+	]
+	var actions: Array = _cached_spell_actions()
+	if actions.is_empty():
+		return {
+			"visible_text": "Spell check: no field spell | %s" % mana_line,
+			"tooltip_text": "Spell Check\n- Spellbook: no known field spell.\n- Mana: %s\n- Movement: %s\n- Next practical action: use map orders; no field spell can be cast from this command drawer." % [
+				mana_line,
+				movement_line,
+			],
+			"readiness": "no field spell",
+			"mana_line": mana_line,
+			"movement_line": movement_line,
+			"ready_count": 0,
+			"spell_count": 0,
+		}
+
+	var ready_count := 0
+	var blocked_count := 0
+	var best_action: Dictionary = {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if not bool(action.get("disabled", false)):
+			ready_count += 1
+			if best_action.is_empty():
+				best_action = action
+		else:
+			blocked_count += 1
+			if best_action.is_empty():
+				best_action = action
+	if best_action.is_empty():
+		best_action = actions[0] if actions[0] is Dictionary else {}
+	var spell_name := _spell_action_name(best_action)
+	var readiness := "Ready x%d/%d" % [ready_count, actions.size()] if ready_count > 0 else "Blocked x0/%d" % actions.size()
+	var action_readiness := String(best_action.get("readiness", readiness)).strip_edges()
+	if action_readiness == "":
+		action_readiness = readiness
+	var next_step := "Open Command and cast %s when route tempo matters." % spell_name
+	if ready_count <= 0:
+		var invalid_reason := String(best_action.get("invalid_reason", "")).strip_edges()
+		if invalid_reason == "":
+			invalid_reason = action_readiness
+		next_step = "Resolve %s before casting %s." % [invalid_reason.to_lower(), spell_name]
+	var tooltip := "Spell Check\n- Mana: %s\n- Movement: %s\n- Field spells: %d ready, %d blocked.\n- Best spell: %s\n- Readiness: %s\n- Target: %s\n- Effect: %s\n- Best use: %s\n- Next practical action: %s" % [
+		mana_line,
+		movement_line,
+		ready_count,
+		blocked_count,
+		spell_name,
+		action_readiness,
+		String(best_action.get("target_requirement", best_action.get("target", "No map target"))),
+		String(best_action.get("effect", "No effect summary available.")),
+		String(best_action.get("best_use", "Use when the field state supports it.")),
+		next_step,
+	]
+	return {
+		"visible_text": "Spell check: %s | %s | %s" % [
+			readiness,
+			_short_action_label(spell_name, 18),
+			movement_line,
+		],
+		"tooltip_text": tooltip,
+		"readiness": readiness,
+		"action_readiness": action_readiness,
+		"best_spell": spell_name,
+		"ready_count": ready_count,
+		"blocked_count": blocked_count,
+		"spell_count": actions.size(),
+		"mana_line": mana_line,
+		"movement_line": movement_line,
+		"next_step": next_step,
+	}
+
+func _spell_action_check_surface(action: Dictionary) -> Dictionary:
+	if action.is_empty():
+		return {}
+	var spell_name := _spell_action_name(action)
+	var readiness := String(action.get("readiness", "")).strip_edges()
+	if readiness == "":
+		readiness = "Ready" if not bool(action.get("disabled", false)) else "Blocked"
+	var mana_line := String(action.get("mana_state", "")).strip_edges()
+	if mana_line == "":
+		mana_line = String(_spell_check_surface().get("mana_line", "Mana unavailable"))
+	var target := String(action.get("target_requirement", action.get("target", "No map target"))).strip_edges()
+	if target == "":
+		target = "No map target"
+	var effect := String(action.get("effect", action.get("consequence", ""))).strip_edges()
+	if effect == "":
+		effect = "No effect summary available."
+	var why_cast := String(action.get("why_cast", action.get("best_use", ""))).strip_edges()
+	if why_cast == "":
+		why_cast = "Use when the field state supports it."
+	var next_step := "Cast now from Command when the field order needs this effect."
+	if bool(action.get("disabled", false)):
+		var invalid_reason := String(action.get("invalid_reason", "")).strip_edges()
+		if invalid_reason == "":
+			invalid_reason = readiness
+		next_step = "Resolve %s before casting." % invalid_reason.to_lower()
+	var tooltip := "Spell Cast Check\n- Spell: %s\n- Readiness: %s\n- Mana: %s\n- Target: %s\n- Effect: %s\n- Why cast: %s\n- Next practical action: %s\n- State change: casting spends mana and updates the field state; inspection alone changes nothing." % [
+		spell_name,
+		readiness,
+		mana_line,
+		target,
+		effect,
+		why_cast,
+		next_step,
+	]
+	return {
+		"tooltip_text": tooltip,
+		"spell_name": spell_name,
+		"readiness": readiness,
+		"mana_line": mana_line,
+		"target": target,
+		"effect": effect,
+		"why_cast": why_cast,
+		"next_step": next_step,
+	}
+
+func _spell_action_name(action: Dictionary) -> String:
+	var spell_name := String(action.get("spell_name", "")).strip_edges()
+	if spell_name != "":
+		return spell_name
+	var label := String(action.get("label", "Field spell")).strip_edges()
+	if label.begins_with("Cast "):
+		label = label.trim_prefix("Cast ").strip_edges()
+	var cost_start := label.find(" (")
+	if cost_start >= 0:
+		label = label.left(cost_start).strip_edges()
+	return label if label != "" else "Field spell"
 
 func _cached_specialty_actions() -> Array:
 	if not _refresh_cache.has("specialty_actions"):
@@ -2114,7 +2263,9 @@ func _rebuild_spell_actions() -> void:
 
 	var actions = _cached_spell_actions()
 	if actions.is_empty():
-		_spell_actions.add_child(_make_placeholder_label("No field spell"))
+		var placeholder := _make_placeholder_label("Spell check: none")
+		placeholder.tooltip_text = String(_spell_check_surface().get("tooltip_text", "No field spell."))
+		_spell_actions.add_child(placeholder)
 		return
 
 	for action in actions:
@@ -2123,7 +2274,11 @@ func _rebuild_spell_actions() -> void:
 		var button = Button.new()
 		button.text = String(action.get("label", action.get("id", "Action")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		var spell_check := _spell_action_check_surface(action)
+		button.tooltip_text = _join_tooltip_sections([
+			String(action.get("summary", "")),
+			String(spell_check.get("tooltip_text", "")),
+		])
 		_style_rail_action_button(button)
 		button.pressed.connect(_on_spell_action_pressed.bind(String(action.get("id", ""))))
 		_spell_actions.add_child(button)
@@ -3248,6 +3403,7 @@ func validation_snapshot() -> Dictionary:
 	var drawer_handoff := _drawer_handoff_surfaces(field_readiness)
 	var status_forecast := _status_forecast_surface()
 	var command_check := _command_check_surface()
+	var spell_check := _spell_check_surface()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -3298,6 +3454,10 @@ func validation_snapshot() -> Dictionary:
 		"spellbook_visible_text": _spell_label.text,
 		"spellbook_tooltip_text": _spell_label.tooltip_text,
 		"spellbook_rail_text": OverworldRules.describe_spellbook_rail(_session, SpellRules.CONTEXT_OVERWORLD),
+		"spell_check": spell_check,
+		"spell_check_visible_text": String(spell_check.get("visible_text", "")),
+		"spell_check_tooltip_text": String(spell_check.get("tooltip_text", "")),
+		"spell_action_surfaces": _validation_control_surfaces(_spell_actions),
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
 		"event_feed": event_feed,
@@ -4155,6 +4315,7 @@ func _validation_spell_action_payloads() -> Array:
 		if not (action is Dictionary):
 			continue
 		var payload := _validation_action_payload(action)
+		var spell_check := _spell_action_check_surface(action)
 		payload["cost"] = int(action.get("cost", 0))
 		payload["category"] = String(action.get("category", ""))
 		payload["effect"] = String(action.get("effect", ""))
@@ -4169,6 +4330,8 @@ func _validation_spell_action_payloads() -> Array:
 		payload["why_cast"] = String(action.get("why_cast", ""))
 		payload["availability"] = String(action.get("availability", ""))
 		payload["invalid_reason"] = String(action.get("invalid_reason", ""))
+		payload["spell_check"] = spell_check
+		payload["spell_check_tooltip_text"] = String(spell_check.get("tooltip_text", ""))
 		payloads.append(payload)
 	return payloads
 

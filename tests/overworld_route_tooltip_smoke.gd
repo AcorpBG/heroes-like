@@ -61,6 +61,8 @@ func _run() -> void:
 		return
 	if not _assert_town_entry_handoff_cue(shell):
 		return
+	if not await _assert_overworld_spell_check_cue(shell):
+		return
 	get_tree().quit(0)
 
 func _assert_town_entry_handoff_cue(shell: Node) -> bool:
@@ -118,6 +120,98 @@ func _assert_town_entry_handoff_cue(shell: Node) -> bool:
 	if not _assert_no_ai_score_leak("Town entry handoff smoke", joined):
 		return false
 	return true
+
+func _assert_overworld_spell_check_cue(shell: Node) -> bool:
+	var session = SessionState.ensure_active_session()
+	var movement: Dictionary = session.overworld.get("movement", {})
+	movement["current"] = int(movement.get("max", movement.get("current", 0)))
+	session.overworld["movement"] = movement
+	shell.call("_refresh")
+
+	var full_snapshot: Dictionary = shell.call("validation_snapshot")
+	var full_spell_action := _action_by_id(full_snapshot.get("spell_actions", []), "cast_spell:spell_waystride")
+	var full_text := _spell_surface_text(full_snapshot, full_spell_action)
+	if full_spell_action.is_empty() or not bool(full_spell_action.get("disabled", false)):
+		_fail("Overworld spell check smoke: full movement should block Waystride.", full_snapshot)
+		return false
+	if not _assert_text_contains_all(
+		"Overworld spell blocked check smoke",
+		full_text,
+		[
+			"Spell check:",
+			"Spell Check",
+			"Blocked x0/1",
+			"Waystride",
+			"Mana",
+			"Movement",
+			"Best spell:",
+			"Next practical action:",
+			"Spell Cast Check",
+			"State change: casting spends mana",
+		]
+	):
+		return false
+	if not _assert_no_ai_score_leak("Overworld spell blocked check smoke", full_text):
+		return false
+
+	var start := OverworldRules.hero_position(session)
+	var safe_step: Vector2i = shell.call("_first_validation_safe_step", start)
+	if safe_step.x < 0:
+		_fail("Overworld spell check smoke: could not find a safe step.", full_snapshot)
+		return false
+	shell.call("validation_select_tile", safe_step.x, safe_step.y)
+	var move_result: Dictionary = shell.call("validation_perform_primary_action")
+	await get_tree().process_frame
+	if not bool(move_result.get("ok", false)):
+		_fail("Overworld spell check smoke: movement setup failed.", move_result)
+		return false
+	var ready_snapshot: Dictionary = shell.call("validation_snapshot")
+	var ready_spell_action := _action_by_id(ready_snapshot.get("spell_actions", []), "cast_spell:spell_waystride")
+	var ready_text := _spell_surface_text(ready_snapshot, ready_spell_action)
+	if ready_spell_action.is_empty() or bool(ready_spell_action.get("disabled", false)):
+		_fail("Overworld spell check smoke: spent movement should ready Waystride.", ready_snapshot)
+		return false
+	if not _assert_text_contains_all(
+		"Overworld spell ready check smoke",
+		ready_text,
+		[
+			"Spell check:",
+			"Spell Check",
+			"Ready x1/1",
+			"Waystride",
+			"Mana",
+			"Movement",
+			"Best spell:",
+			"Next practical action:",
+			"Spell Cast Check",
+			"Cast now",
+			"State change: casting spends mana",
+		]
+	):
+		return false
+	if not _assert_no_ai_score_leak("Overworld spell ready check smoke", ready_text):
+		return false
+	return true
+
+func _spell_surface_text(snapshot: Dictionary, spell_action: Dictionary) -> String:
+	var action_surfaces := []
+	for surface in (snapshot.get("spell_action_surfaces", []) if snapshot.get("spell_action_surfaces", []) is Array else []):
+		if surface is Dictionary:
+			action_surfaces.append("%s\n%s" % [String(surface.get("text", "")), String(surface.get("tooltip", ""))])
+	return "\n".join([
+		String(snapshot.get("spell_check_visible_text", "")),
+		String(snapshot.get("spell_check_tooltip_text", "")),
+		String(spell_action.get("spell_check_tooltip_text", "")),
+		"\n".join(action_surfaces),
+	])
+
+func _action_by_id(actions: Variant, action_id: String) -> Dictionary:
+	if not (actions is Array):
+		return {}
+	for action in actions:
+		if action is Dictionary and String(action.get("id", "")) == action_id:
+			return action
+	return {}
 
 func _set_active_hero_position(session, tile: Vector2i) -> void:
 	session.overworld["hero_position"] = {"x": tile.x, "y": tile.y}
