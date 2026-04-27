@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T00:18:39Z",
+  "updatedAt": "2026-04-27T00:30:40Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-drawer-handoff-cues-10184",
-  "currentSliceTitle": "Surface compact overworld command/frontier drawer handoff cues",
+  "currentSliceId": "main-menu-help-handoff-cues-10184",
+  "currentSliceTitle": "Surface compact main-menu Field Manual handoff cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact visible overworld Command and Frontier drawer handoff cues using current hero/action/objective/threat/readiness surfaces only. The drawer buttons now show closed/open handoff states, tooltips clarify inspection-only behavior and commit boundaries, close controls explain the return to selected-tile context, and focused overworld smoke asserts the rendered cues plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented compact visible main-menu Field Manual/help handoff cues using existing SettingsService help topics and MainMenu secondary-board flow only. The help intro/details now expose a Help handoff line, topic rows clarify inspection-only selection, contextual Guide/Back tooltips explain return and non-mutating behavior, and focused menu/outcome smoke asserts the rendered cues plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1946,6 +1946,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T00:11:04Z",
       "completedAt": "2026-04-27T00:18:39Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "main-menu-help-handoff-cues-10184",
+      "title": "Surface compact main-menu Field Manual handoff cues",
+      "status": "completed",
+      "startedAt": "2026-04-27T00:27:16Z",
+      "completedAt": "2026-04-27T00:30:40Z",
       "difficulty": "small"
     }
   ],
