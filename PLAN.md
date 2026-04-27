@@ -1431,6 +1431,10 @@ implementationTargets:
 - faction affinity/set metadata
 - validation fixtures/reports
 
+implementationEvidence:
+- `docs/artifact-sets-faction-specific-content-report.md`
+- `tests/artifact_set_faction_content_report.gd`
+
 ### P2 Child: Artifact Source And Reward Rules
 
 id: `artifact-source-reward-rules-10184`

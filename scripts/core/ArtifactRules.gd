@@ -195,13 +195,17 @@ static func artifact_taxonomy_summary(artifact_id: String) -> String:
 		", ".join(role_labels) if not role_labels.is_empty() else "Role pending",
 	]
 
-static func artifact_schema_report(artifact_records: Array = []) -> Dictionary:
+static func artifact_schema_report(artifact_records: Array = [], set_records: Array = []) -> Dictionary:
 	var records := artifact_records
+	var sets := set_records
 	if records.is_empty():
 		var raw := ContentService.load_json(ContentService.ARTIFACTS_PATH)
 		var raw_items = raw.get("items", [])
 		if raw_items is Array:
 			records = raw_items
+		var raw_sets = raw.get("sets", [])
+		if raw_sets is Array:
+			sets = raw_sets
 
 	var report := {
 		"ok": true,
@@ -220,14 +224,22 @@ static func artifact_schema_report(artifact_records: Array = []) -> Dictionary:
 		"family_counts": {},
 		"role_counts": {},
 		"source_tag_counts": {},
+		"faction_affinity_counts": {},
+		"set_piece_counts": {},
+		"set_count": 0,
+		"set_piece_count": 0,
+		"faction_affinity_artifact_count": 0,
 		"curse_tradeoff_counts": {"cursed": 0, "tradeoff": 0},
 		"unsupported_records": [],
-		"content_scope": "existing_artifact_records_only",
+		"set_validation_issues": [],
+		"set_reports": [],
+		"content_scope": "artifact_taxonomy_sets_and_faction_affinities",
 		"runtime_policy": {
 			"save_version_bump": false,
 			"equipment_runtime_migration": false,
 			"source_reward_tables_active": false,
 			"rare_resource_activation": false,
+			"set_bonuses_active": false,
 		},
 	}
 	var slot_counts: Dictionary = report["slot_counts"]
@@ -236,6 +248,8 @@ static func artifact_schema_report(artifact_records: Array = []) -> Dictionary:
 	var family_counts: Dictionary = report["family_counts"]
 	var role_counts: Dictionary = report["role_counts"]
 	var source_tag_counts: Dictionary = report["source_tag_counts"]
+	var faction_affinity_counts: Dictionary = report["faction_affinity_counts"]
+	var set_piece_counts: Dictionary = report["set_piece_counts"]
 	var curse_tradeoff_counts: Dictionary = report["curse_tradeoff_counts"]
 	var unsupported_records: Array = report["unsupported_records"]
 
@@ -255,6 +269,14 @@ static func artifact_schema_report(artifact_records: Array = []) -> Dictionary:
 			_increment_count(role_counts, role)
 		for source_tag in _string_array(artifact.get("source_tags", [])):
 			_increment_count(source_tag_counts, source_tag)
+		for faction_id in _string_array(artifact.get("faction_affinity", [])):
+			_increment_count(faction_affinity_counts, faction_id)
+		if not _string_array(artifact.get("faction_affinity", [])).is_empty():
+			report["faction_affinity_artifact_count"] = int(report.get("faction_affinity_artifact_count", 0)) + 1
+		var set_id := _artifact_set_id(artifact)
+		if set_id != "":
+			_increment_count(set_piece_counts, set_id)
+			report["set_piece_count"] = int(report.get("set_piece_count", 0)) + 1
 
 		var errors := _artifact_taxonomy_validation_errors(artifact)
 		if errors.is_empty():
@@ -280,8 +302,160 @@ static func artifact_schema_report(artifact_records: Array = []) -> Dictionary:
 			if bool(risk.get("tradeoff", false)):
 				curse_tradeoff_counts["tradeoff"] = int(curse_tradeoff_counts.get("tradeoff", 0)) + 1
 
-	report["ok"] = int(report.get("artifact_count", 0)) > 0 and int(report.get("complete_taxonomy_count", 0)) == int(report.get("artifact_count", 0))
+	var set_report := artifact_set_faction_report(records, sets)
+	report["set_count"] = int(set_report.get("set_count", 0))
+	report["set_validation_issues"] = set_report.get("set_validation_issues", [])
+	report["set_reports"] = set_report.get("set_reports", [])
+	report["ok"] = (
+		int(report.get("artifact_count", 0)) > 0
+		and int(report.get("complete_taxonomy_count", 0)) == int(report.get("artifact_count", 0))
+		and bool(set_report.get("ok", false))
+	)
 	return report
+
+static func artifact_set_faction_report(artifact_records: Array = [], set_records: Array = []) -> Dictionary:
+	var records := artifact_records
+	var sets := set_records
+	if records.is_empty() or sets.is_empty():
+		var raw := ContentService.load_json(ContentService.ARTIFACTS_PATH)
+		if records.is_empty():
+			var raw_items = raw.get("items", [])
+			if raw_items is Array:
+				records = raw_items
+		if sets.is_empty():
+			var raw_sets = raw.get("sets", [])
+			if raw_sets is Array:
+				sets = raw_sets
+
+	var artifact_by_id := {}
+	for artifact_value in records:
+		if not (artifact_value is Dictionary):
+			continue
+		var artifact: Dictionary = artifact_value
+		var artifact_id := String(artifact.get("id", "")).strip_edges()
+		if artifact_id != "":
+			artifact_by_id[artifact_id] = artifact
+
+	var set_ids := []
+	var set_reports := []
+	var set_validation_issues := []
+	for set_value in sets:
+		if not (set_value is Dictionary):
+			set_validation_issues.append("set_record_not_object")
+			continue
+		var artifact_set: Dictionary = set_value
+		var set_id := String(artifact_set.get("id", "")).strip_edges()
+		if set_id == "":
+			set_validation_issues.append("set_missing_id")
+			continue
+		if set_id in set_ids:
+			set_validation_issues.append("duplicate_set_id:%s" % set_id)
+			continue
+		set_ids.append(set_id)
+		var piece_ids := _string_array(artifact_set.get("piece_ids", []))
+		var slot_counts := {}
+		var missing_pieces := []
+		var mismatched_pieces := []
+		for piece_id in piece_ids:
+			var piece: Dictionary = artifact_by_id.get(piece_id, {})
+			if piece.is_empty():
+				missing_pieces.append(piece_id)
+				continue
+			_increment_count(slot_counts, String(piece.get("slot", "")))
+			if _artifact_set_id(piece) != set_id:
+				mismatched_pieces.append(piece_id)
+		var slot_conflicts := []
+		for slot in slot_counts.keys():
+			if int(slot_counts.get(slot, 0)) > int(SLOT_LIMITS.get(slot, 1)):
+				slot_conflicts.append("%s:%d" % [slot, int(slot_counts.get(slot, 0))])
+		var set_policy = artifact_set.get("runtime_policy", {})
+		var set_bonuses_active := true
+		var source_tables_active := true
+		if set_policy is Dictionary:
+			set_bonuses_active = bool(set_policy.get("set_bonuses_active", true))
+			source_tables_active = bool(set_policy.get("source_reward_tables_active", true))
+		var set_issues := []
+		if piece_ids.size() < 3 or piece_ids.size() > 5:
+			set_issues.append("piece_count_outside_3_to_5")
+		if String(artifact_set.get("source_hint", "")).strip_edges() == "":
+			set_issues.append("missing_source_hint")
+		if not (artifact_set.get("piece_thresholds", []) is Array) or artifact_set.get("piece_thresholds", []).is_empty():
+			set_issues.append("missing_piece_thresholds")
+		if not missing_pieces.is_empty():
+			set_issues.append("missing_pieces:%s" % ",".join(missing_pieces))
+		if not mismatched_pieces.is_empty():
+			set_issues.append("piece_set_mismatch:%s" % ",".join(mismatched_pieces))
+		if not slot_conflicts.is_empty():
+			set_issues.append("slot_conflicts:%s" % ",".join(slot_conflicts))
+		if set_bonuses_active:
+			set_issues.append("set_bonuses_active")
+		if source_tables_active:
+			set_issues.append("source_reward_tables_active")
+		if not set_issues.is_empty():
+			set_validation_issues.append({"set_id": set_id, "issues": set_issues})
+		set_reports.append(
+			{
+				"set_id": set_id,
+				"name": String(artifact_set.get("name", set_id)),
+				"piece_count": piece_ids.size(),
+				"piece_ids": piece_ids,
+				"slot_counts": slot_counts,
+				"runtime_policy": {
+					"set_bonuses_active": set_bonuses_active,
+					"source_reward_tables_active": source_tables_active,
+				},
+			}
+		)
+
+	var faction_affinity_counts := {}
+	var set_piece_counts := {}
+	var faction_affinity_artifact_count := 0
+	var set_piece_count := 0
+	for artifact_value in records:
+		if not (artifact_value is Dictionary):
+			continue
+		var artifact: Dictionary = artifact_value
+		var faction_ids := _string_array(artifact.get("faction_affinity", []))
+		if not faction_ids.is_empty():
+			faction_affinity_artifact_count += 1
+		for faction_id in faction_ids:
+			_increment_count(faction_affinity_counts, faction_id)
+		var set_id := _artifact_set_id(artifact)
+		if set_id != "":
+			set_piece_count += 1
+			_increment_count(set_piece_counts, set_id)
+			if set_id not in set_ids:
+				set_validation_issues.append(
+					{
+						"artifact_id": String(artifact.get("id", "")),
+						"issues": ["unknown_set_id:%s" % set_id],
+					}
+				)
+
+	return {
+		"ok": (
+			set_ids.size() >= 1
+			and set_piece_count >= 3
+			and faction_affinity_artifact_count >= 3
+			and set_validation_issues.is_empty()
+		),
+		"schema_id": ARTIFACT_SCHEMA_ID,
+		"set_count": set_ids.size(),
+		"set_piece_count": set_piece_count,
+		"set_piece_counts": set_piece_counts,
+		"faction_affinity_artifact_count": faction_affinity_artifact_count,
+		"faction_affinity_counts": faction_affinity_counts,
+		"set_validation_issues": set_validation_issues,
+		"set_reports": set_reports,
+		"runtime_policy": {
+			"save_version_bump": false,
+			"equipment_runtime_migration": false,
+			"source_reward_tables_active": false,
+			"rare_resource_activation": false,
+			"set_bonuses_active": false,
+			"ai_valuation_behavior": false,
+		},
+	}
 
 static func claim_artifact(
 	hero_state: Dictionary,
@@ -1006,6 +1180,9 @@ static func _artifact_set_id(artifact: Dictionary) -> String:
 		var label := String(value).strip_edges()
 		if label != "":
 			return label
+	var validation_tags = artifact.get("validation_tags", {})
+	if validation_tags is Dictionary:
+		return String(validation_tags.get("set_id", "")).strip_edges()
 	return ""
 
 static func _artifact_spell_modifier_records(artifact: Dictionary, artifact_id: String) -> Array:
@@ -1108,6 +1285,10 @@ static func _artifact_taxonomy_validation_errors(artifact: Dictionary) -> Array:
 	var artifact_class := String(artifact.get("artifact_class", "")).strip_edges()
 	if artifact_class not in ARTIFACT_CLASSES:
 		errors.append("unsupported_artifact_class")
+	if artifact_class == "faction" and _string_array(artifact.get("faction_affinity", [])).is_empty():
+		errors.append("missing_faction_affinity")
+	if artifact_class == "set_piece" and _artifact_set_id(artifact) == "":
+		errors.append("missing_set_id")
 	var rarity := String(artifact.get("rarity", "")).strip_edges()
 	if rarity not in ARTIFACT_RARITIES:
 		errors.append("unsupported_rarity")

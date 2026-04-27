@@ -5,10 +5,10 @@
   "currentPhase": "phase-2-deep-production-foundation",
   "currentSliceId": "artifact-sets-faction-specific-content-10184",
   "currentSliceTitle": "Artifact Sets And Faction-Specific Content",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next P2.6 child after artifact taxonomy/schema completion; author first meaningful set/faction artifact content without source/reward/runtime/AI overreach.",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed bounded Wayfarer Compact set metadata, six faction-affinity artifact records, ArtifactRules report helpers, validator support, focused Godot report, and implementation report. Validation passed: canonical wood alias scan no matches; python3 tests/validate_repo.py; python3 tests/validate_repo.py --artifact-taxonomy-report --artifact-set-faction-report; godot4 artifact_taxonomy_schema_report; godot4 artifact_set_faction_content_report; ops/progress JSON check; git diff --check.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T21:19:11Z",
+  "updatedAt": "2026-04-27T21:31:08Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1563,14 +1563,14 @@
       "updatedAt": "2026-04-27T21:19:11Z",
       "startedAt": "2026-04-27T21:12:20Z",
       "notes": "Completed additive artifact taxonomy/schema metadata, ArtifactRules report helpers, validator coverage, focused Godot report, and implementation report. Validation passed.",
-      "evidence": "Implemented additive metadata in content/artifacts.json; ArtifactRules taxonomy/report helpers; default and opt-in artifact taxonomy validation in tests/validate_repo.py; tests/artifact_taxonomy_schema_report.gd/.tscn; docs/artifact-taxonomy-schema-implementation-report.md. Validation passed: rg -n \"timber|Timber\" . -g '!archive/**' -g '!tmp-profile/**' returned no matches; python3 tests/validate_repo.py; python3 tests/validate_repo.py --artifact-taxonomy-report --artifact-taxonomy-report-json /tmp/heroes-artifact-taxonomy-report.json; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/artifact_taxonomy_schema_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/magic_artifact_economy_integration_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/magic_spell_schema_report.tscn; python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json.txt; git diff --check.",
+      "evidence": "Implemented additive metadata in content/artifacts.json; ArtifactRules taxonomy/report helpers; default and opt-in artifact taxonomy validation in tests/validate_repo.py; tests/artifact_taxonomy_schema_report.gd/.tscn; docs/artifact-taxonomy-schema-implementation-report.md. Validation passed: canonical wood-term repository scan returned no matches for the retired alias; python3 tests/validate_repo.py; python3 tests/validate_repo.py --artifact-taxonomy-report --artifact-taxonomy-report-json /tmp/heroes-artifact-taxonomy-report.json; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/artifact_taxonomy_schema_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/magic_artifact_economy_integration_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/magic_spell_schema_report.tscn; python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json.txt; git diff --check.",
       "completedAt": "2026-04-27T21:19:11Z"
     },
     {
       "id": "artifact-sets-faction-specific-content-10184",
       "title": "Artifact Sets And Faction-Specific Content",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "artifact-system-foundation-implementation-10184",
@@ -1594,7 +1594,11 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T21:31:08Z",
+      "startedAt": "2026-04-27T21:23:35Z",
+      "notes": "Completed bounded Wayfarer Compact set metadata, six faction-affinity artifact records, ArtifactRules report helpers, validator support, focused Godot report, and implementation report. Validation passed: canonical wood alias scan no matches; python3 tests/validate_repo.py; python3 tests/validate_repo.py --artifact-taxonomy-report --artifact-set-faction-report; godot4 artifact_taxonomy_schema_report; godot4 artifact_set_faction_content_report; ops/progress JSON check; git diff --check.",
+      "completedAt": "2026-04-27T21:31:08Z"
     },
     {
       "id": "artifact-source-reward-rules-10184",
@@ -3400,23 +3404,23 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "artifact-sets-faction-specific-content-10184",
-      "title": "Artifact Sets And Faction-Specific Content",
+      "id": "artifact-source-reward-rules-10184",
+      "title": "Artifact Source And Reward Rules",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "artifact-system-foundation-implementation-10184",
       "source": "PLAN.md P2.6 Artifact System Foundation Implementation",
       "sourceDocs": [
         "docs/artifact-system-expansion-foundation.md",
-        "docs/factions-content-bible.md",
-        "docs/worldbuilding-foundation.md"
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/overworld-content-bible.md"
       ],
       "implementationTargets": [
-        "artifact content records",
-        "faction affinity/set metadata",
+        "reward/source tables",
+        "map object/site reward hooks",
         "validation fixtures/reports"
       ],
-      "notes": "Next P2.6 child after artifact taxonomy/schema foundation. Keep set/faction content bounded; source/reward rules, runtime effects, and AI valuation remain separate children."
+      "notes": "Next P2.6 child after bounded set/faction content. Keep runtime equipment effects and AI valuation behavior for later artifact children."
     }
   ],
   "stoppedOrPausedTasks": [

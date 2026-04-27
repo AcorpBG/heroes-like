@@ -12,8 +12,8 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail("Artifact taxonomy report failed: %s" % report)
 		return
-	if int(report.get("artifact_count", 0)) != 4:
-		_fail("Expected four existing artifact records in this bounded slice: %s" % report)
+	if int(report.get("artifact_count", 0)) != 12:
+		_fail("Expected twelve authored artifact records after the bounded set/faction slice: %s" % report)
 		return
 	if int(report.get("complete_taxonomy_count", 0)) != int(report.get("artifact_count", 0)):
 		_fail("Not every artifact has complete taxonomy metadata: %s" % report)
@@ -30,13 +30,23 @@ func _run() -> void:
 		return
 	if not _assert_report_count(report, "class_counts", "crafted", 3):
 		return
+	if not _assert_report_count(report, "class_counts", "set_piece", 3):
+		return
+	if not _assert_report_count(report, "class_counts", "faction", 6):
+		return
 	if not _assert_report_count(report, "role_counts", "economy", 1):
 		return
 	if not _assert_report_count(report, "source_tag_counts", "guarded_site", 4):
 		return
+	if int(report.get("set_count", 0)) < 1 or int(report.get("set_piece_count", 0)) < 3:
+		_fail("Artifact taxonomy report did not include bounded set metadata: %s" % report)
+		return
+	if int(report.get("faction_affinity_artifact_count", 0)) < 6:
+		_fail("Artifact taxonomy report did not include six faction-affinity artifacts: %s" % report)
+		return
 
 	var boots_taxonomy := ArtifactRules.artifact_taxonomy("artifact_trailsinger_boots")
-	if String(boots_taxonomy.get("rarity", "")) != "common" or String(boots_taxonomy.get("family", "")) != "roadfinder_gear":
+	if String(boots_taxonomy.get("rarity", "")) != "common" or String(boots_taxonomy.get("family", "")) != "roadfinder_gear" or String(boots_taxonomy.get("set_id", "")) != "set_wayfarer_compact":
 		_fail("Trailsinger Boots taxonomy did not load from ArtifactRules: %s" % boots_taxonomy)
 		return
 	var boots_summary := ArtifactRules.describe_artifact_short("artifact_trailsinger_boots")
@@ -44,7 +54,7 @@ func _run() -> void:
 		_fail("Artifact short description did not expose compact taxonomy: %s" % boots_summary)
 		return
 	var policy: Dictionary = report.get("runtime_policy", {}) if report.get("runtime_policy", {}) is Dictionary else {}
-	if bool(policy.get("save_version_bump", true)) or bool(policy.get("source_reward_tables_active", true)) or bool(policy.get("rare_resource_activation", true)):
+	if bool(policy.get("save_version_bump", true)) or bool(policy.get("source_reward_tables_active", true)) or bool(policy.get("set_bonuses_active", true)) or bool(policy.get("rare_resource_activation", true)):
 		_fail("Artifact taxonomy report crossed slice runtime boundaries: %s" % policy)
 		return
 	if not _assert_public_payload("artifact report", report):
