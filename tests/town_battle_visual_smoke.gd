@@ -22,6 +22,7 @@ func _run_town_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	_move_active_hero_to_town(session, active_town)
+	_seed_town_artifact_readiness_fixture(session)
 	SessionState.set_active_session(session)
 
 	var shell = load("res://scenes/town/TownShell.tscn").instantiate()
@@ -62,6 +63,9 @@ func _run_town_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	if not _assert_town_study_readiness_cue(shell):
+		get_tree().quit(1)
+		return false
+	if not _assert_town_artifact_readiness_cue(shell):
 		get_tree().quit(1)
 		return false
 	if not _assert_town_build_recruit_next_step_contract(shell):
@@ -756,6 +760,40 @@ func _assert_town_study_readiness_cue(shell: Node) -> bool:
 			return false
 	return true
 
+func _assert_town_artifact_readiness_cue(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_action_catalog"):
+		push_error("Town smoke: shell is missing artifact-readiness validation hooks.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var readiness: Dictionary = snapshot.get("artifact_readiness", {}) if snapshot.get("artifact_readiness", {}) is Dictionary else {}
+	var catalog: Dictionary = shell.call("validation_action_catalog")
+	var artifact_actions: Array = catalog.get("artifact", []) if catalog.get("artifact", []) is Array else []
+	var cue_text := "\n".join([
+		String(snapshot.get("artifact_visible_text", "")),
+		String(snapshot.get("artifact_tooltip_text", "")),
+		String(snapshot.get("artifact_readiness_visible_text", "")),
+		String(snapshot.get("artifact_readiness_tooltip_text", "")),
+		JSON.stringify(readiness),
+	])
+	for token in ["Gear check:", "Gear Readiness", "Loadout:", "Collection:", "Gear orders:", "Best order:", "Readiness:", "Why it matters:", "Next practical action:"]:
+		if not cue_text.contains(token):
+			push_error("Town smoke: artifact readiness cue lost %s clarity: %s." % [token, cue_text])
+			return false
+	if int(readiness.get("ready_order_count", -1)) <= 0 or int(readiness.get("listed_order_count", -1)) != artifact_actions.size():
+		push_error("Town smoke: artifact readiness counts do not match visible artifact orders: readiness=%s actions=%s." % [readiness, artifact_actions])
+		return false
+	if int(readiness.get("pack_count", -1)) <= 0 or int(readiness.get("owned_count", -1)) <= 0:
+		push_error("Town smoke: artifact readiness did not expose owned pack state: %s." % readiness)
+		return false
+	if not cue_text.contains("Equip Trailsinger Boots") or not cue_text.contains("Ready now"):
+		push_error("Town smoke: artifact readiness cue did not name the ready gear order: %s." % cue_text)
+		return false
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if cue_text.contains(leak_token):
+			push_error("Town smoke: artifact readiness cue leaked internal token %s: %s." % [leak_token, cue_text])
+			return false
+	return true
+
 func _assert_battle_stack_inspection_contract(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot"):
 		push_error("Battle smoke: battle shell does not expose validation snapshot.")
@@ -856,6 +894,25 @@ func _move_active_hero_to_town(session, town: Dictionary) -> void:
 		var hero = heroes[index]
 		if hero is Dictionary and String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
 			hero["position"] = position.duplicate(true)
+			heroes[index] = hero
+	session.overworld["player_heroes"] = heroes
+
+func _seed_town_artifact_readiness_fixture(session) -> void:
+	var artifact_id := "artifact_trailsinger_boots"
+	var active_hero = session.overworld.get("hero", {})
+	if active_hero is Dictionary:
+		var artifacts := ArtifactRules.normalize_hero_artifacts(active_hero.get("artifacts", {}))
+		var inventory: Array = artifacts.get("inventory", []) if artifacts.get("inventory", []) is Array else []
+		if artifact_id not in inventory:
+			inventory.append(artifact_id)
+		artifacts["inventory"] = inventory
+		active_hero["artifacts"] = ArtifactRules.normalize_hero_artifacts(artifacts)
+		session.overworld["hero"] = active_hero
+	var heroes = session.overworld.get("player_heroes", [])
+	for index in range(heroes.size()):
+		var hero = heroes[index]
+		if hero is Dictionary and String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
+			hero["artifacts"] = session.overworld.get("hero", {}).get("artifacts", {})
 			heroes[index] = hero
 	session.overworld["player_heroes"] = heroes
 

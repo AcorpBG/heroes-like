@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T08:10:00Z",
+  "updatedAt": "2026-04-27T08:34:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-study-readiness-cue-10184",
-  "currentSliceTitle": "Surface compact town Study readiness cue",
+  "currentSliceId": "town-artifact-readiness-cue-10184",
+  "currentSliceTitle": "Surface compact town artifact readiness cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact player-facing town Study readiness cue using existing spell learning actions and spellbook payloads only. The live Study label and tooltip now clarify archive tier, known/learnable catalog counts, best learnable order, and next practical action, with focused town/battle smoke coverage. UI clarity only; no magic mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact player-facing town Artifacts readiness cue using existing artifact equipment, pack, collection, and management action payloads only. The live Artifacts label and tooltip now clarify loadout slots, pack count, collection progress, ready gear orders, best order, and next practical action, with focused town/battle smoke coverage. UI clarity only; no artifact mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2192,6 +2192,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T08:00:00Z",
       "completedAt": "2026-04-27T08:10:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "town-artifact-readiness-cue-10184",
+      "title": "Surface compact town artifact readiness cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T08:20:00Z",
+      "completedAt": "2026-04-27T08:34:00Z",
       "difficulty": "small"
     }
   ],
