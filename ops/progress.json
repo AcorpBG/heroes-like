@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "animation-reduced-motion-fast-mode-policy-10184",
-  "currentSliceTitle": "Animation Reduced-Motion And Fast-Mode Policy",
+  "currentSliceId": "animation-battle-cue-hook-vertical-slice-10184",
+  "currentSliceTitle": "Animation Battle Troop Sprite State Contracts",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next P2.7 child after the event/cue catalog contract. Keep scope to applying reduced-motion and fast-mode behavior/policy to selected troop/object/event playback; no final assets, renderer pipeline, save migration, or broad UI polish.",
+  "currentSliceNotes": "Next P2.7 child after reduced-motion/fast-mode policy. Prove battle troop sprite state contracts through the catalog, playback policy, and focused validation without final assets, renderer pipeline, save migration, or broad UI polish.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T22:17:14Z",
+  "updatedAt": "2026-04-27T22:26:01Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1744,7 +1744,7 @@
       "id": "animation-reduced-motion-fast-mode-policy-10184",
       "title": "Animation Reduced-Motion And Fast-Mode Policy",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
@@ -1759,14 +1759,24 @@
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --animation-policy-report --animation-cue-catalog-report",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/animation_reduced_motion_fast_mode_policy_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/animation_event_cue_catalog_report.tscn",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "Implemented AnimationCueCatalog preference normalization and cue_playback_policy_for_event helpers for normal, reduced-motion, fast, and combined settings.",
+        "Added SettingsService.animation_preferences as a settings-shaped handoff without save migration or settings-version bump.",
+        "Added animation_playback_preference_policy_v1 metadata to content/animation_event_cues.json.",
+        "Focused report coverage proves selected battle troop and overworld map-object cues choose correct reduced-motion, fast-mode, and combined fallbacks, with representative town, spell, artifact, and UI coverage."
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T22:26:01Z",
+      "startedAt": "2026-04-27T22:17:14Z",
+      "completedAt": "2026-04-27T22:26:01Z",
+      "notes": "Completed bounded reduced-motion and fast-mode cue policy helpers. Evidence covers troop/object/event fallback selection under normal, reduced-motion, fast, and combined preferences while preserving boundaries: no save migration, no final sprite/VFX/audio import, no renderer asset pipeline work, no playback runtime, no broad UI polish, no terrain/editor work, no rare-resource activation, and wood remains canonical."
     },
     {
       "id": "animation-battle-cue-hook-vertical-slice-10184",
@@ -2993,6 +3003,29 @@
           "evidence": "Implemented bounded adventure-map spell hook expansion: SpellRules adventure behavior metadata/report, safe self-hero target contracts, movement consequence previews with clamp/mana spend evidence, OverworldRules spell post-action recap, focused MAGIC_ADVENTURE_SPELL_HOOKS_REPORT, docs evidence, and validator coverage. Validation passed: wood alias scan no matches; python3 tests/validate_repo.py; godot4 --headless --path /root/dev/heroes-like tests/magic_adventure_spell_hooks_report.tscn; godot4 --headless --path /root/dev/heroes-like tests/magic_spell_schema_report.tscn; godot4 --headless --path /root/dev/heroes-like tests/magic_battle_spell_behavior_report.tscn."
         }
       ]
+    },
+    {
+      "id": "animation-reduced-motion-fast-mode-policy-10184",
+      "system": "animation/event cue preference policy",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "animation-reduced-motion-fast-mode-policy-10184"
+      ],
+      "sourceRefs": [
+        "docs/animation-systems-foundation.md",
+        "docs/animation-reduced-motion-fast-mode-policy-report.md",
+        "content/animation_event_cues.json",
+        "scripts/core/AnimationCueCatalog.gd",
+        "tests/animation_reduced_motion_fast_mode_policy_report.gd"
+      ],
+      "entries": [
+        {
+          "id": "animation-preference-policy-helpers-10184",
+          "title": "Implement bounded reduced-motion and fast-mode cue policy helpers",
+          "status": "completed",
+          "evidence": "AnimationCueCatalog now normalizes settings-shaped preferences and selects cue playback policy for normal, reduced-motion, fast, and combined modes. Focused report coverage proves battle troop, overworld map-object, town, spell, artifact, and UI representative cues select the expected fallback behavior without playback runtime, renderer pipeline, final asset import, save migration, or public debug output."
+        }
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -3425,8 +3458,8 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "animation-reduced-motion-fast-mode-policy-10184",
-      "title": "Animation Reduced-Motion And Fast-Mode Policy",
+      "id": "animation-battle-cue-hook-vertical-slice-10184",
+      "title": "Animation Battle Troop Sprite State Contracts",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
@@ -3435,11 +3468,11 @@
         "docs/animation-systems-foundation.md"
       ],
       "implementationTargets": [
-        "animation settings/policy helpers",
-        "troop/object animation fallback policy",
-        "smoke coverage for selected surfaces"
+        "battle troop sprite state taxonomy covering idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style states",
+        "battle event-to-animation-state mappings for at least one vertical path",
+        "battle scene smoke/report coverage"
       ],
-      "notes": "Next P2.7 child after the event/cue catalog contract. Keep scope to applying reduced-motion and fast-mode behavior/policy to selected troop/object/event playback; no final assets, renderer pipeline, save migration, or broad UI polish."
+      "notes": "Next P2.7 child after reduced-motion/fast-mode policy. Keep scope to battle troop sprite state contracts through catalog/policy/report evidence; no final assets, renderer pipeline, save migration, or broad UI polish."
     }
   ],
   "stoppedOrPausedTasks": [

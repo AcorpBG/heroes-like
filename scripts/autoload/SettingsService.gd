@@ -231,6 +231,20 @@ func large_ui_text_enabled() -> bool:
 func reduced_motion_enabled() -> bool:
 	return bool(ensure_settings().get("accessibility", {}).get("reduce_motion", false))
 
+func animation_preferences(overrides: Dictionary = {}) -> Dictionary:
+	var reduced_motion := reduced_motion_enabled()
+	if overrides.has("reduced_motion") or overrides.has("reduce_motion"):
+		reduced_motion = bool(overrides.get("reduced_motion", overrides.get("reduce_motion", reduced_motion)))
+	var fast_mode := bool(overrides.get("fast_mode", false))
+	return {
+		"accessibility": {
+			"reduce_motion": reduced_motion,
+		},
+		"animation": {
+			"fast_mode": fast_mode,
+		},
+	}
+
 func set_master_volume_percent(value: int) -> void:
 	ensure_settings()
 	settings["audio"]["master_volume_percent"] = clampi(value, 0, 100)

@@ -71,6 +71,9 @@ ANIMATION_EVENT_CUES_PATH = CONTENT_DIR / "animation_event_cues.json"
 ANIMATION_EVENT_CUE_REPORT_SCRIPT_PATH = ROOT / "tests" / "animation_event_cue_catalog_report.gd"
 ANIMATION_EVENT_CUE_REPORT_SCENE_PATH = ROOT / "tests" / "animation_event_cue_catalog_report.tscn"
 ANIMATION_EVENT_CUE_REPORT_DOC_PATH = ROOT / "docs" / "animation-event-cue-catalog-contract-report.md"
+ANIMATION_POLICY_REPORT_SCRIPT_PATH = ROOT / "tests" / "animation_reduced_motion_fast_mode_policy_report.gd"
+ANIMATION_POLICY_REPORT_SCENE_PATH = ROOT / "tests" / "animation_reduced_motion_fast_mode_policy_report.tscn"
+ANIMATION_POLICY_REPORT_DOC_PATH = ROOT / "docs" / "animation-reduced-motion-fast-mode-policy-report.md"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -128,6 +131,7 @@ SUPPORTED_SPELL_PRIMARY_ROLES = {
 ARTIFACT_SCHEMA_ID = "artifact_taxonomy_v1"
 ARTIFACT_SOURCE_REWARD_SCHEMA_ID = "artifact_source_reward_v1"
 ANIMATION_EVENT_CUE_SCHEMA_ID = "animation_event_cue_catalog_v1"
+ANIMATION_PREFERENCE_POLICY_SCHEMA_ID = "animation_playback_preference_policy_v1"
 ANIMATION_EVENT_CUE_REQUIRED_SURFACES = {"battle", "overworld", "town", "spell", "artifact", "ui"}
 ANIMATION_EVENT_CUE_REQUIRED_FIELDS = {
     "event_id",
@@ -164,6 +168,21 @@ ANIMATION_EVENT_CUE_REPRESENTATIVE_EVENTS = {
     "spell_cast_battle",
     "spell_effect_damage",
     "artifact_acquired",
+    "artifact_equipped",
+    "ui_invalid_action",
+}
+ANIMATION_POLICY_REPRESENTATIVE_EVENTS = {
+    "battle_unit_move",
+    "battle_unit_melee_attack",
+    "battle_unit_hit",
+    "battle_unit_death",
+    "overworld_object_visited",
+    "overworld_object_captured",
+    "overworld_object_depleted",
+    "overworld_route_blocked",
+    "overworld_object_ambient",
+    "town_building_built",
+    "spell_cast_battle",
     "artifact_equipped",
     "ui_invalid_action",
 }
@@ -7918,6 +7937,187 @@ def print_animation_event_cue_catalog_report(report: dict) -> None:
         print(f"- errors: {report['errors']}")
 
 
+def normalize_animation_preferences_for_report(preferences: dict | None = None) -> dict:
+    preferences = preferences or {}
+    accessibility = preferences.get("accessibility", {})
+    if not isinstance(accessibility, dict):
+        accessibility = {}
+    animation = preferences.get("animation", {})
+    if not isinstance(animation, dict):
+        animation = {}
+    gameplay = preferences.get("gameplay", {})
+    if not isinstance(gameplay, dict):
+        gameplay = {}
+    reduced_motion = bool(preferences.get("reduced_motion", preferences.get("reduce_motion", accessibility.get("reduce_motion", accessibility.get("reduced_motion", False)))))
+    fast_mode = bool(preferences.get("fast_mode", preferences.get("fast_resolution", gameplay.get("fast_mode", animation.get("fast_mode", False)))))
+    mode_hint = str(preferences.get("mode", preferences.get("speed_mode", ""))).strip()
+    if mode_hint == "reduced_motion":
+        reduced_motion = True
+        fast_mode = False
+    elif mode_hint in {"fast", "fast_mode"}:
+        reduced_motion = False
+        fast_mode = True
+    elif mode_hint in {"reduced_motion_fast", "combined"}:
+        reduced_motion = True
+        fast_mode = True
+    elif mode_hint == "normal":
+        reduced_motion = False
+        fast_mode = False
+    mode = "normal"
+    if reduced_motion and fast_mode:
+        mode = "reduced_motion_fast"
+    elif reduced_motion:
+        mode = "reduced_motion"
+    elif fast_mode:
+        mode = "fast"
+    return {
+        "schema_id": ANIMATION_PREFERENCE_POLICY_SCHEMA_ID,
+        "mode": mode,
+        "reduced_motion": reduced_motion,
+        "fast_mode": fast_mode,
+        "timing_preference": "fast" if fast_mode else "normal",
+        "combined_policy": "reduced_motion_visual_fast_timing" if reduced_motion and fast_mode else "single_preference",
+        "max_duration_ms": 180 if fast_mode else (260 if reduced_motion else 700),
+    }
+
+
+def select_animation_policy_case(entry: dict, preferences: dict) -> dict:
+    normalized = normalize_animation_preferences_for_report(preferences)
+    fallbacks = entry.get("fallbacks", {})
+    if not isinstance(fallbacks, dict):
+        fallbacks = {}
+    selected_fallback = ""
+    selected_state = str(entry.get("animation_state", ""))
+    visual_policy = "authored_animation_state"
+    if normalized["reduced_motion"]:
+        selected_fallback = str(fallbacks.get("reduced_motion_tag", "")).strip()
+        selected_state = selected_fallback
+        visual_policy = "reduced_motion_fallback"
+    elif normalized["fast_mode"]:
+        selected_fallback = str(fallbacks.get("fast_mode_tag", "")).strip()
+        selected_state = selected_fallback
+        visual_policy = "fast_mode_fallback"
+    selected_blocking = str(entry.get("blocking_policy", ""))
+    if normalized["fast_mode"] and selected_blocking in {"input_blocking_timeout", "inherits_source"}:
+        selected_blocking = "nonblocking_fast_resolve"
+    elif normalized["reduced_motion"] and selected_blocking == "input_blocking_timeout":
+        selected_blocking = "nonblocking_reduced_motion"
+    return {
+        "event_id": str(entry.get("event_id", "")),
+        "surface": str(entry.get("surface", "")),
+        "subject_kind": str(entry.get("subject_kind", "")),
+        "mode": normalized["mode"],
+        "selected_animation_state": selected_state,
+        "selected_fallback_tag": selected_fallback,
+        "selected_visual_policy": visual_policy,
+        "selected_playback_policy": "fast_resolve" if normalized["fast_mode"] else str(entry.get("playback_policy", "")),
+        "selected_blocking_policy": selected_blocking,
+        "timing_preference": normalized["timing_preference"],
+        "combined_policy": normalized["combined_policy"],
+        "max_duration_ms": normalized["max_duration_ms"],
+    }
+
+
+def build_animation_preference_policy_report() -> dict:
+    raw = load_json(ANIMATION_EVENT_CUES_PATH)
+    entries = raw.get("entries", [])
+    if not isinstance(entries, list):
+        entries = []
+    by_event = {str(entry.get("event_id", "")): entry for entry in entries if isinstance(entry, dict)}
+    errors: list[str] = []
+    preference_cases = {
+        "normal": {},
+        "reduced_motion": {"reduced_motion": True},
+        "fast": {"fast_mode": True},
+        "reduced_motion_fast": {"reduced_motion": True, "fast_mode": True},
+    }
+    selected_cases: dict[str, dict] = {}
+    covered_surfaces: dict[str, int] = {}
+    covered_subjects: dict[str, int] = {}
+    reduced_count = 0
+    fast_count = 0
+    combined_count = 0
+    troop_count = 0
+    object_count = 0
+
+    preference_policy = raw.get("preference_policy", {})
+    if not isinstance(preference_policy, dict):
+        errors.append("preference_policy must be a dictionary")
+    elif str(preference_policy.get("schema_id", "")) != ANIMATION_PREFERENCE_POLICY_SCHEMA_ID:
+        errors.append(f"preference_policy.schema_id must be {ANIMATION_PREFERENCE_POLICY_SCHEMA_ID}")
+
+    for event_id in sorted(ANIMATION_POLICY_REPRESENTATIVE_EVENTS):
+        entry = by_event.get(event_id)
+        if not isinstance(entry, dict):
+            errors.append(f"missing representative policy event {event_id}")
+            continue
+        event_cases = {}
+        fallbacks = entry.get("fallbacks", {})
+        if not isinstance(fallbacks, dict):
+            fallbacks = {}
+        for mode, preferences in preference_cases.items():
+            selected = select_animation_policy_case(entry, preferences)
+            event_cases[mode] = selected
+            if mode == "reduced_motion" and selected["selected_fallback_tag"] == str(fallbacks.get("reduced_motion_tag", "")).strip():
+                reduced_count += 1
+            if mode == "fast" and selected["selected_fallback_tag"] == str(fallbacks.get("fast_mode_tag", "")).strip():
+                fast_count += 1
+            if mode == "reduced_motion_fast" and selected["selected_fallback_tag"] == str(fallbacks.get("reduced_motion_tag", "")).strip() and selected["timing_preference"] == "fast":
+                combined_count += 1
+        selected_cases[event_id] = event_cases
+        increment_count(covered_surfaces, str(entry.get("surface", "")) or "<empty>")
+        subject = str(entry.get("subject_kind", "")) or "<empty>"
+        increment_count(covered_subjects, subject)
+        if subject == "troop_stack":
+            troop_count += 1
+        if subject == "map_object":
+            object_count += 1
+
+    for surface in sorted(ANIMATION_EVENT_CUE_REQUIRED_SURFACES):
+        if int(covered_surfaces.get(surface, 0)) <= 0:
+            errors.append(f"missing policy surface coverage for {surface}")
+    representative_count = len(ANIMATION_POLICY_REPRESENTATIVE_EVENTS)
+    if troop_count < 4:
+        errors.append("policy report must cover at least four battle troop cues")
+    if object_count < 4:
+        errors.append("policy report must cover at least four overworld map-object cues")
+    if reduced_count != representative_count:
+        errors.append("reduced-motion policy fallback selection is incomplete")
+    if fast_count != representative_count:
+        errors.append("fast-mode policy fallback selection is incomplete")
+    if combined_count != representative_count:
+        errors.append("combined policy must use reduced-motion visuals with fast timing")
+
+    return {
+        "ok": not errors,
+        "schema": ANIMATION_PREFERENCE_POLICY_SCHEMA_ID,
+        "mode": "cue_playback_preference_policy",
+        "representative_event_count": representative_count,
+        "covered_surfaces": covered_surfaces,
+        "covered_subjects": covered_subjects,
+        "troop_policy_count": troop_count,
+        "object_policy_count": object_count,
+        "reduced_motion_policy_count": reduced_count,
+        "fast_mode_policy_count": fast_count,
+        "combined_policy_count": combined_count,
+        "selected_cases": selected_cases,
+        "runtime_policy": raw.get("runtime_policy", {}) if isinstance(raw.get("runtime_policy", {}), dict) else {},
+        "errors": errors,
+    }
+
+
+def print_animation_preference_policy_report(report: dict) -> None:
+    print("ANIMATION REDUCED-MOTION FAST-MODE POLICY REPORT")
+    print(f"- schema: {report['schema']}")
+    print(f"- mode: {report['mode']}")
+    print(f"- representative events: {report['representative_event_count']}")
+    print(f"- surfaces: {report['covered_surfaces']}")
+    print(f"- subjects: {report['covered_subjects']}")
+    print(f"- policy counts: reduced={report['reduced_motion_policy_count']}, fast={report['fast_mode_policy_count']}, combined={report['combined_policy_count']}")
+    if report.get("errors"):
+        print(f"- errors: {report['errors']}")
+
+
 def validate_animation_event_cue_catalog(errors: list[str]) -> None:
     for path in (
         ANIMATION_EVENT_CUES_PATH,
@@ -7950,6 +8150,49 @@ def validate_animation_event_cue_catalog(errors: list[str]) -> None:
             "`wood` remains canonical",
         ):
             ensure(required_text in doc_text, errors, f"Animation cue catalog report doc is missing required boundary text: {required_text}")
+
+    validate_animation_reduced_motion_fast_mode_policy(errors)
+
+
+def validate_animation_reduced_motion_fast_mode_policy(errors: list[str]) -> None:
+    for path in (
+        ANIMATION_POLICY_REPORT_SCRIPT_PATH,
+        ANIMATION_POLICY_REPORT_SCENE_PATH,
+        ANIMATION_POLICY_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing animation reduced-motion/fast-mode policy slice file: {path.relative_to(ROOT)}")
+    rules_text = ANIMATION_CUE_CATALOG_RULES_PATH.read_text(encoding="utf-8") if ANIMATION_CUE_CATALOG_RULES_PATH.exists() else ""
+    settings_text = SETTINGS_SERVICE_PATH.read_text(encoding="utf-8") if SETTINGS_SERVICE_PATH.exists() else ""
+    for required_token in (
+        "func normalize_animation_preferences",
+        "func cue_playback_policy_for_event",
+        "func animation_preference_policy_report",
+        "reduced_motion_visual_fast_timing",
+        "nonblocking_fast_resolve",
+    ):
+        ensure(required_token in rules_text, errors, f"AnimationCueCatalog.gd is missing policy helper token: {required_token}")
+    ensure("func animation_preferences" in settings_text, errors, "SettingsService.gd must expose animation_preferences for cue policy helpers")
+    report = build_animation_preference_policy_report()
+    for error in report.get("errors", []):
+        fail(errors, f"Animation reduced-motion/fast-mode policy: {error}")
+    ensure(int(report.get("troop_policy_count", 0)) >= 4, errors, "Animation policy must cover selected battle troop cues")
+    ensure(int(report.get("object_policy_count", 0)) >= 4, errors, "Animation policy must cover selected overworld object cues")
+    if ANIMATION_POLICY_REPORT_DOC_PATH.exists():
+        doc_text = ANIMATION_POLICY_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Status: implementation evidence.",
+            "animation_playback_preference_policy_v1",
+            "battle troop",
+            "overworld map object",
+            "reduced-motion",
+            "fast-mode",
+            "combined",
+            "No save migration",
+            "No final sprite, VFX, or audio import",
+            "No renderer asset pipeline work",
+            "`wood` remains canonical",
+        ):
+            ensure(required_text in doc_text, errors, f"Animation reduced-motion/fast-mode policy report doc is missing required boundary text: {required_text}")
 
 
 def validate_content(errors: list[str]) -> None:
@@ -13885,6 +14128,8 @@ def main() -> int:
     parser.add_argument("--artifact-source-reward-report-json", type=str, default="", help="Write the opt-in artifact source/reward metadata report as JSON.")
     parser.add_argument("--animation-cue-catalog-report", action="store_true", help="Print the opt-in animation event/cue catalog contract report.")
     parser.add_argument("--animation-cue-catalog-report-json", type=str, default="", help="Write the opt-in animation event/cue catalog contract report as JSON.")
+    parser.add_argument("--animation-policy-report", action="store_true", help="Print the opt-in animation reduced-motion/fast-mode policy report.")
+    parser.add_argument("--animation-policy-report-json", type=str, default="", help="Write the opt-in animation reduced-motion/fast-mode policy report as JSON.")
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -14017,6 +14262,7 @@ def main() -> int:
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
     print("- artifact content now includes bounded set metadata, faction affinities, and source/reward metadata without live drop execution, set bonuses, save migration, or AI valuation behavior")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
+    print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:
@@ -14087,6 +14333,14 @@ def main() -> int:
             print(f"- animation cue catalog report JSON written to {report_path}")
         if args.animation_cue_catalog_report:
             print_animation_event_cue_catalog_report(report)
+    if args.animation_policy_report or args.animation_policy_report_json:
+        report = build_animation_preference_policy_report()
+        if args.animation_policy_report_json:
+            report_path = Path(args.animation_policy_report_json)
+            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"- animation policy report JSON written to {report_path}")
+        if args.animation_policy_report:
+            print_animation_preference_policy_report(report)
     return 0
 
 

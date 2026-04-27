@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.6 artifact foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic children and P2.6 artifact children are implemented, with P2.7 animation/event cue foundation work now active.
 
-Selected next implementation candidate after the bounded event/cue catalog contract: `animation-reduced-motion-fast-mode-policy-10184`.
+Selected next implementation candidate after the bounded reduced-motion/fast-mode policy helper slice: `animation-battle-cue-hook-vertical-slice-10184`.
 
 ## Slice Status Model
 
@@ -1531,6 +1531,11 @@ implementationTargets:
 - animation settings/policy helpers
 - troop/object animation fallback policy
 - smoke coverage for selected surfaces
+
+implementationEvidence:
+- `docs/animation-reduced-motion-fast-mode-policy-report.md`
+- `tests/animation_reduced_motion_fast_mode_policy_report.gd`
+- `AnimationCueCatalog.animation_preference_policy_report(...)`
 
 ### P2 Child: Animation Battle Troop Sprite State Contracts
 
