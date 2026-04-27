@@ -2548,6 +2548,28 @@ static func _spell_timing_action_score(
 			var effect_id = String(status_effect.get("effect_id", status_effect.get("status_id", "")))
 			if effect_id != "" and not target.is_empty() and not SpellRulesScript.has_effect_id(target, battle, effect_id):
 				score += 1.5
+		"control_enemy":
+			score = 3.5
+			if not target.is_empty():
+				score += 1.5
+				if _stack_cohesion_total(target, battle) <= 5:
+					score += 1.0
+			var control_effect = effect.get("status_effect", {})
+			var control_effect_id = String(control_effect.get("effect_id", control_effect.get("status_id", "")))
+			if control_effect_id != "" and not target.is_empty() and not SpellRulesScript.has_effect_id(target, battle, control_effect_id):
+				score += 2.0
+		"recover_ally":
+			score = 2.5
+			if _health_ratio(active_stack) <= 0.65:
+				score += 3.0
+			if _stack_cohesion_total(active_stack, battle) <= 5:
+				score += 1.0
+		"cleanse_ally":
+			score = 2.5
+			if SpellRulesScript.has_any_effect_ids(active_stack, battle, effect.get("cleanse_effect_ids", [])):
+				score += 4.0
+			if _stack_cohesion_total(active_stack, battle) <= 5:
+				score += 1.0
 		"defense_buff":
 			score = 2.0
 			if _stack_cohesion_total(active_stack, battle) <= 5:
@@ -4684,6 +4706,43 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 				String(resolution.get("target_battle_id", "")),
 				resolution.get("effect", {})
 			)
+		"recover_effect":
+			var recovered := _restore_stack_health(
+				session.battle,
+				String(resolution.get("target_battle_id", "")),
+				int(resolution.get("recovery_amount", 0))
+			)
+			if recovered > 0:
+				message += " %s recovers %d health." % [
+					_stack_label(_get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))),
+					recovered,
+				]
+			var recovery_effect = resolution.get("effect", {})
+			if recovery_effect is Dictionary and not recovery_effect.is_empty():
+				_apply_stack_effect(
+					session.battle,
+					String(resolution.get("target_battle_id", "")),
+					recovery_effect
+				)
+		"cleanse_effect":
+			var cleansed := _cleanse_stack_effects(
+				session.battle,
+				String(resolution.get("target_battle_id", "")),
+				resolution.get("cleanse_effect_ids", [])
+			)
+			if cleansed > 0:
+				message += " %s sheds %d pressure effect%s." % [
+					_stack_label(_get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))),
+					cleansed,
+					"" if cleansed == 1 else "s",
+				]
+			var cleanse_effect = resolution.get("effect", {})
+			if cleanse_effect is Dictionary and not cleanse_effect.is_empty():
+				_apply_stack_effect(
+					session.battle,
+					String(resolution.get("target_battle_id", "")),
+					cleanse_effect
+				)
 		_:
 			return {"ok": false, "message": "Unsupported spell resolution.", "state": "invalid"}
 	var post_damage_effect = resolution.get("post_damage_effect", {})
@@ -5260,6 +5319,43 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 				String(resolution.get("target_battle_id", "")),
 				resolution.get("effect", {})
 			)
+		"recover_effect":
+			var recovered := _restore_stack_health(
+				session.battle,
+				String(resolution.get("target_battle_id", "")),
+				int(resolution.get("recovery_amount", 0))
+			)
+			if recovered > 0:
+				message += " %s recovers %d health." % [
+					_stack_label(_get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))),
+					recovered,
+				]
+			var recovery_effect = resolution.get("effect", {})
+			if recovery_effect is Dictionary and not recovery_effect.is_empty():
+				_apply_stack_effect(
+					session.battle,
+					String(resolution.get("target_battle_id", "")),
+					recovery_effect
+				)
+		"cleanse_effect":
+			var cleansed := _cleanse_stack_effects(
+				session.battle,
+				String(resolution.get("target_battle_id", "")),
+				resolution.get("cleanse_effect_ids", [])
+			)
+			if cleansed > 0:
+				message += " %s sheds %d pressure effect%s." % [
+					_stack_label(_get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))),
+					cleansed,
+					"" if cleansed == 1 else "s",
+				]
+			var cleanse_effect = resolution.get("effect", {})
+			if cleanse_effect is Dictionary and not cleanse_effect.is_empty():
+				_apply_stack_effect(
+					session.battle,
+					String(resolution.get("target_battle_id", "")),
+					cleanse_effect
+				)
 		_:
 			return {"ok": false, "message": "Unsupported spell resolution.", "state": "invalid"}
 	var post_damage_effect = resolution.get("post_damage_effect", {})
@@ -7364,6 +7460,26 @@ static func _apply_damage_to_stack(battle: Dictionary, battle_id: String, damage
 	battle["stacks"] = stacks
 	_sync_occupied_hexes(battle)
 
+static func _restore_stack_health(battle: Dictionary, battle_id: String, amount: int) -> int:
+	var restored := 0
+	var stacks = battle.get("stacks", [])
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or String(stack.get("battle_id", "")) != battle_id:
+			continue
+		var current_health: int = max(0, int(stack.get("total_health", 0)))
+		var unit_hp: int = max(1, int(stack.get("unit_hp", 1)))
+		var current_alive: int = max(1, _alive_count(stack))
+		var max_recoverable_health: int = max(current_health, current_alive * unit_hp)
+		var updated_health: int = min(max_recoverable_health, current_health + max(0, amount))
+		restored = max(0, updated_health - current_health)
+		stack["total_health"] = updated_health
+		stacks[index] = stack
+		break
+	battle["stacks"] = stacks
+	_sync_occupied_hexes(battle)
+	return restored
+
 static func _consume_retaliation(battle: Dictionary, battle_id: String) -> void:
 	var stacks = battle.get("stacks", [])
 	for index in range(stacks.size()):
@@ -7486,6 +7602,34 @@ static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_pa
 		stacks[index] = stack
 		break
 	battle["stacks"] = stacks
+
+static func _cleanse_stack_effects(battle: Dictionary, battle_id: String, effect_ids: Variant) -> int:
+	var cleanse_ids := []
+	if effect_ids is Array:
+		for effect_id in effect_ids:
+			var normalized_id := String(effect_id)
+			if normalized_id != "" and normalized_id not in cleanse_ids:
+				cleanse_ids.append(normalized_id)
+	if cleanse_ids.is_empty():
+		return 0
+	var removed := 0
+	var stacks = battle.get("stacks", [])
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or String(stack.get("battle_id", "")) != battle_id:
+			continue
+		stack = SpellRulesScript.normalize_stack_effects(stack)
+		var effects = stack.get("effects", [])
+		for effect_index in range(effects.size() - 1, -1, -1):
+			var effect = effects[effect_index]
+			if effect is Dictionary and String(effect.get("effect_id", "")) in cleanse_ids:
+				effects.remove_at(effect_index)
+				removed += 1
+		stack["effects"] = effects
+		stacks[index] = stack
+		break
+	battle["stacks"] = stacks
+	return removed
 
 static func _can_make_melee_attack(stack: Dictionary, battle: Dictionary, target: Dictionary = {}) -> bool:
 	if stack.is_empty() or _alive_count(stack) <= 0:

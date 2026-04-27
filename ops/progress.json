@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "magic-battle-spell-behavior-expansion-10184",
-  "currentSliceTitle": "Magic Battle Spell Behavior Expansion",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Selected next P2.5 magic child after P2.4 corrective object-content Batches 001 through 007 closed the P2.4 parent. Queue correction only; no P2.5 implementation started in this closeout worker.",
+  "currentSliceId": "magic-adventure-map-spell-hooks-10184",
+  "currentSliceTitle": "Magic Adventure Map Spell Hooks",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Next P2.5 child selected after completing magic-battle-spell-behavior-expansion-10184. No adventure-map spell implementation has started.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T20:22:24Z",
+  "updatedAt": "2026-04-27T20:35:03Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1399,7 +1399,7 @@
       "id": "magic-battle-spell-behavior-expansion-10184",
       "title": "Magic Battle Spell Behavior Expansion",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "magic-system-foundation-implementation-10184",
@@ -1421,9 +1421,11 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T20:22:24Z",
+      "updatedAt": "2026-04-27T20:35:03Z",
       "startedAt": "2026-04-27T16:23:53Z",
-      "notes": "Selected as the next P2.5 implementation child after corrective P2.4 object-content Batches 001 through 007 closed the P2.4 parent. This closeout worker did not start or complete implementation."
+      "notes": "Completed a real battle behavior slice, not docs-only: selected spells now resolve distinct priority damage, control, recovery, and countermagic effects through existing spell and battle hooks. No save migration, rare-resource activation, artifact integration, adventure-map magic, animation work, or broad UI rewrite.",
+      "completedAt": "2026-04-27T20:35:03Z",
+      "evidence": "Implemented bounded battle spell behavior expansion: SpellRules battle behavior helpers/report, Cinder Burst wounded priority bonus, Briar Bind control status, Graft Mend recovery+ward, Prism Bastion cleanse+ward, BattleRules recovery/cleanse hooks, BattleAiRules recognition, focused MAGIC_BATTLE_SPELL_BEHAVIOR_REPORT, docs evidence, and validator coverage. Validation passed: wood alias scan no matches; python3 tests/validate_repo.py; godot4 --headless --path /root/dev/heroes-like tests/magic_battle_spell_behavior_report.tscn; godot4 --headless --path /root/dev/heroes-like tests/magic_spell_schema_report.tscn."
     },
     {
       "id": "magic-adventure-map-spell-hooks-10184",
@@ -1452,7 +1454,9 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T20:35:03Z",
+      "notes": "Selected next P2.5 child after battle spell behavior expansion; implementation not started."
     },
     {
       "id": "magic-ai-valuation-casting-hooks-10184",
@@ -2885,6 +2889,30 @@
           "evidence": "python3 tests/faction_town_unit_asymmetry_report.py passed with six unique unit ladder, signature building category, hero archetype, and seed-town economy fingerprints; python3 tests/validate_repo.py passed."
         }
       ]
+    },
+    {
+      "id": "magic-battle-spell-behavior-expansion-10184",
+      "system": "magic battle spell behavior expansion",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "magic-battle-spell-behavior-expansion-10184"
+      ],
+      "sourceRefs": [
+        "docs/magic-system-expansion-foundation.md",
+        "docs/magic-battle-spell-behavior-expansion-report.md",
+        "content/spells.json",
+        "scripts/core/SpellRules.gd",
+        "scripts/core/BattleRules.gd",
+        "tests/magic_battle_spell_behavior_report.gd"
+      ],
+      "entries": [
+        {
+          "id": "magic-battle-behavior-runtime-hooks-10184",
+          "title": "Implement bounded battle spell behavior runtime hooks",
+          "status": "completed",
+          "evidence": "Implemented bounded battle spell behavior expansion: SpellRules battle behavior helpers/report, Cinder Burst wounded priority bonus, Briar Bind control status, Graft Mend recovery+ward, Prism Bastion cleanse+ward, BattleRules recovery/cleanse hooks, BattleAiRules recognition, focused MAGIC_BATTLE_SPELL_BEHAVIOR_REPORT, docs evidence, and validator coverage. Validation passed: wood alias scan no matches; python3 tests/validate_repo.py; godot4 --headless --path /root/dev/heroes-like tests/magic_battle_spell_behavior_report.tscn; godot4 --headless --path /root/dev/heroes-like tests/magic_spell_schema_report.tscn."
+        }
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -3317,20 +3345,22 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "magic-battle-spell-behavior-expansion-10184",
-      "title": "Magic Battle Spell Behavior Expansion",
-      "status": "in_progress",
+      "id": "magic-adventure-map-spell-hooks-10184",
+      "title": "Magic Adventure Map Spell Hooks",
+      "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "magic-system-foundation-implementation-10184",
       "source": "PLAN.md P2.5 Magic System Foundation Implementation",
       "sourceDocs": [
-        "docs/magic-system-expansion-foundation.md"
+        "docs/magic-system-expansion-foundation.md",
+        "docs/overworld-content-bible.md"
       ],
       "implementationTargets": [
-        "battle spell hooks",
-        "battle smoke/report fixtures"
+        "overworld spell hooks",
+        "target/consequence reports",
+        "UI surface only when selected"
       ],
-      "notes": "Selected next P2.5 child after corrective P2.4 object-content closeout. Implementation remains to be done by the next worker."
+      "notes": "Selected next P2.5 child after battle spell behavior expansion; implementation not started."
     }
   ],
   "stoppedOrPausedTasks": [

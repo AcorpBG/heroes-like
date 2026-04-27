@@ -112,8 +112,11 @@ SUPPORTED_SPELL_PRIMARY_ROLES = {
     "priority_damage",
     "harry_damage",
     "control_damage",
+    "control_enemy",
     "isolation_damage",
     "ally_defense",
+    "ally_recovery",
+    "countermagic_ward",
     "tempo_buff",
     "assault_buff",
 }
@@ -7472,6 +7475,10 @@ def validate_content(errors: list[str]) -> None:
             ensure("damage" in normalized_role_categories, errors, f"Spell {spell_id} damage_enemy effect must include damage role category")
             ensure(int(effect.get("base_damage", 0)) > 0, errors, f"Spell {spell_id} must define base_damage > 0")
             ensure(int(effect.get("power_scale", -1)) >= 0, errors, f"Spell {spell_id} must define power_scale >= 0")
+            if "wounded_bonus_damage" in effect:
+                ensure(int(effect.get("wounded_bonus_damage", 0)) > 0, errors, f"Spell {spell_id} wounded_bonus_damage must be > 0 when present")
+                threshold = float(effect.get("wounded_threshold_ratio", 0))
+                ensure(0 < threshold <= 1, errors, f"Spell {spell_id} wounded_threshold_ratio must be in (0, 1]")
             status_effect = effect.get("status_effect", {})
             if "status_effect" in effect:
                 ensure(isinstance(status_effect, dict) and bool(status_effect), errors, f"Spell {spell_id} status_effect must be a non-empty dictionary when present")
@@ -7488,6 +7495,33 @@ def validate_content(errors: list[str]) -> None:
             modifiers = effect.get("modifiers", {})
             if "modifiers" in effect:
                 ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Spell {spell_id} modifiers must be a non-empty dictionary when present")
+        elif effect_type == "control_enemy":
+            ensure(context == "battle", errors, f"Spell {spell_id} control_enemy effect must use battle context")
+            ensure("control" in normalized_role_categories, errors, f"Spell {spell_id} control_enemy effect must include control role category")
+            status_effect = effect.get("status_effect", {})
+            ensure(isinstance(status_effect, dict) and bool(status_effect), errors, f"Spell {spell_id} control_enemy must define status_effect")
+            if isinstance(status_effect, dict):
+                ensure(bool(str(status_effect.get("effect_id", status_effect.get("status_id", "")))), errors, f"Spell {spell_id} control_enemy status_effect must define effect_id")
+                ensure(int(status_effect.get("duration_rounds", 0)) > 0, errors, f"Spell {spell_id} control_enemy status_effect must define duration_rounds > 0")
+                modifiers = status_effect.get("modifiers", {})
+                ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Spell {spell_id} control_enemy status_effect must define modifiers")
+        elif effect_type == "recover_ally":
+            ensure(context == "battle", errors, f"Spell {spell_id} recover_ally effect must use battle context")
+            ensure("recovery" in normalized_role_categories, errors, f"Spell {spell_id} recover_ally effect must include recovery role category")
+            ensure(int(effect.get("base_restore", effect.get("amount", 0))) > 0, errors, f"Spell {spell_id} must define recovery amount > 0")
+            ensure(int(effect.get("duration_rounds", 0)) > 0, errors, f"Spell {spell_id} must define duration_rounds > 0")
+            modifiers = effect.get("modifiers", {})
+            if "modifiers" in effect:
+                ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Spell {spell_id} modifiers must be a non-empty dictionary when present")
+        elif effect_type == "cleanse_ally":
+            ensure(context == "battle", errors, f"Spell {spell_id} cleanse_ally effect must use battle context")
+            ensure("countermagic" in normalized_role_categories, errors, f"Spell {spell_id} cleanse_ally effect must include countermagic role category")
+            cleanse_effect_ids = effect.get("cleanse_effect_ids", [])
+            ensure(isinstance(cleanse_effect_ids, list) and bool(cleanse_effect_ids), errors, f"Spell {spell_id} must define cleanse_effect_ids")
+            ensure(int(effect.get("duration_rounds", 0)) > 0, errors, f"Spell {spell_id} must define duration_rounds > 0")
+            modifiers = effect.get("modifiers", {})
+            if "modifiers" in effect:
+                ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Spell {spell_id} modifiers must be a non-empty dictionary when present")
         else:
             fail(errors, f"Spell {spell_id} uses unsupported effect type {effect_type}")
 
@@ -7499,6 +7533,7 @@ def validate_content(errors: list[str]) -> None:
     cinder_burst = spells.get("spell_cinder_burst", {}).get("effect", {})
     ensure(str(cinder_burst.get("status_effect", {}).get("effect_id", "")) == "status_staggered", errors, "Cinder Burst must keep its staggered spell payoff authored")
     ensure(int(cinder_burst.get("status_effect", {}).get("modifiers", {}).get("cohesion", 0)) < 0, errors, "Cinder Burst must keep a cohesion-pressure rider on stagger")
+    ensure(int(cinder_burst.get("wounded_bonus_damage", 0)) > 0, errors, "Cinder Burst must keep its wounded-target priority damage bonus")
     coal_rain = spells.get("spell_coal_rain", {}).get("effect", {})
     ensure(str(coal_rain.get("status_effect", {}).get("effect_id", "")) == "status_harried", errors, "Coal Rain must keep its harried spell payoff authored")
     ensure(int(coal_rain.get("status_effect", {}).get("modifiers", {}).get("cohesion", 0)) < 0, errors, "Coal Rain must keep a cohesion-break rider on harried targets")
@@ -7516,7 +7551,8 @@ def validate_content(errors: list[str]) -> None:
     ensure(str(spells.get("spell_bloodwake_drum", {}).get("effect", {}).get("type", "")) == "attack_buff", errors, "Bloodwake Drum must keep its attack_buff identity authored")
     ensure(int(spells.get("spell_bloodwake_drum", {}).get("effect", {}).get("modifiers", {}).get("initiative", 0)) > 0, errors, "Bloodwake Drum must keep an initiative rider for Mireclaw collapse tempo")
     ensure(int(spells.get("spell_bloodwake_drum", {}).get("effect", {}).get("modifiers", {}).get("momentum", 0)) > 0, errors, "Bloodwake Drum must keep a momentum rider for Mireclaw collapse tempo")
-    ensure(str(spells.get("spell_prism_bastion", {}).get("effect", {}).get("type", "")) == "defense_buff", errors, "Prism Bastion must keep its defense_buff identity authored")
+    ensure(str(spells.get("spell_prism_bastion", {}).get("effect", {}).get("type", "")) == "cleanse_ally", errors, "Prism Bastion must keep its cleanse_ally countermagic identity authored")
+    ensure("status_harried" in [str(effect_id) for effect_id in spells.get("spell_prism_bastion", {}).get("effect", {}).get("cleanse_effect_ids", [])], errors, "Prism Bastion must cleanse harried pressure")
     ensure(int(spells.get("spell_prism_bastion", {}).get("effect", {}).get("modifiers", {}).get("cohesion", 0)) > 0, errors, "Prism Bastion must keep a cohesion rider for Sunvault array support")
     ensure(str(spells.get("spell_resonant_chorus", {}).get("effect", {}).get("type", "")) == "initiative_buff", errors, "Resonant Chorus must keep its initiative_buff identity authored")
     ensure(int(spells.get("spell_resonant_chorus", {}).get("effect", {}).get("modifiers", {}).get("momentum", 0)) > 0, errors, "Resonant Chorus must keep a momentum rider for Sunvault tempo")

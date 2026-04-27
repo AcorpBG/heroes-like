@@ -442,7 +442,7 @@ static func _best_spell_action(
 			continue
 		var effect = spell.get("effect", {})
 		match String(effect.get("type", "")):
-			"damage_enemy":
+			"damage_enemy", "control_enemy":
 				for target in targets:
 					if not (target is Dictionary):
 						continue
@@ -465,7 +465,7 @@ static func _best_spell_action(
 					}
 					if _candidate_beats(candidate, best):
 						best = candidate
-			"defense_buff":
+			"defense_buff", "recover_ally", "cleanse_ally":
 				if _spell_buff_already_active(active_stack, battle, spell):
 					continue
 				var validation := SpellRulesScript.validate_battle_spell(

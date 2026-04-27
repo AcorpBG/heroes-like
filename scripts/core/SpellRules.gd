@@ -12,8 +12,11 @@ const SPELL_PRIMARY_ROLES := [
 	"priority_damage",
 	"harry_damage",
 	"control_damage",
+	"control_enemy",
 	"isolation_damage",
 	"ally_defense",
+	"ally_recovery",
+	"countermagic_ward",
 	"tempo_buff",
 	"assault_buff",
 ]
@@ -246,6 +249,106 @@ static func spell_schema_report(spells: Array) -> Dictionary:
 		"records": records,
 	}
 
+static func battle_spell_behavior(spell: Dictionary) -> Dictionary:
+	if spell.is_empty() or String(spell.get("context", "")) != CONTEXT_BATTLE:
+		return {}
+	var effect = spell.get("effect", {})
+	if not (effect is Dictionary):
+		return {}
+	var effect_type := String(effect.get("type", ""))
+	var hooks := []
+	var resolution_type := ""
+	var public_effect := ""
+	match effect_type:
+		"damage_enemy":
+			resolution_type = "damage"
+			hooks.append("battle_damage")
+			var status_effect = effect.get("status_effect", {})
+			if status_effect is Dictionary and not status_effect.is_empty():
+				hooks.append("battle_status_effect")
+			if int(effect.get("wounded_bonus_damage", 0)) > 0:
+				hooks.append("wounded_priority_bonus")
+			public_effect = "enemy damage"
+		"control_enemy":
+			resolution_type = "effect"
+			hooks.append("enemy_status_control")
+			public_effect = "enemy control status"
+		"recover_ally":
+			resolution_type = "recover_effect"
+			hooks.append("ally_health_recovery")
+			if not battle_spell_modifiers(spell).is_empty():
+				hooks.append("ally_status_effect")
+			public_effect = "ally recovery and ward"
+		"cleanse_ally":
+			resolution_type = "cleanse_effect"
+			hooks.append("ally_status_cleanse")
+			if not battle_spell_modifiers(spell).is_empty():
+				hooks.append("ally_status_effect")
+			public_effect = "ally cleanse and ward"
+		"defense_buff", "initiative_buff", "attack_buff":
+			resolution_type = "effect"
+			hooks.append("ally_status_effect")
+			public_effect = "ally modifier effect"
+		_:
+			resolution_type = "unsupported"
+			public_effect = "unsupported battle effect"
+	return {
+		"spell_id": String(spell.get("id", "")),
+		"name": String(spell.get("name", "")),
+		"school_id": spell_school_id(spell),
+		"tier": spell_tier(spell),
+		"primary_role": spell_primary_role(spell),
+		"role_categories": spell_role_categories(spell),
+		"effect_type": effect_type,
+		"target_mode": String(spell.get("target_mode", "")),
+		"resolution_type": resolution_type,
+		"runtime_hooks": hooks,
+		"public_effect": public_effect,
+	}
+
+static func battle_spell_behavior_report(spells: Array) -> Dictionary:
+	var errors := []
+	var records := []
+	var effect_type_counts := {}
+	var role_counts := {}
+	var hook_counts := {}
+	for spell_value in spells:
+		if not (spell_value is Dictionary):
+			continue
+		var spell: Dictionary = spell_value
+		if String(spell.get("context", "")) != CONTEXT_BATTLE:
+			continue
+		var record := battle_spell_behavior(spell)
+		if record.is_empty():
+			errors.append("Battle spell %s did not produce behavior metadata." % String(spell.get("id", "")))
+			continue
+		records.append(record)
+		_increment_count(effect_type_counts, String(record.get("effect_type", "")))
+		_increment_count(role_counts, String(record.get("primary_role", "")))
+		for hook in record.get("runtime_hooks", []):
+			_increment_count(hook_counts, String(hook))
+	for required_effect_type in ["damage_enemy", "control_enemy", "recover_ally", "cleanse_ally"]:
+		if int(effect_type_counts.get(required_effect_type, 0)) <= 0:
+			errors.append("Missing battle spell behavior effect type %s." % required_effect_type)
+	for required_hook in ["battle_damage", "enemy_status_control", "ally_health_recovery", "ally_status_cleanse"]:
+		if int(hook_counts.get(required_hook, 0)) <= 0:
+			errors.append("Missing battle spell runtime hook %s." % required_hook)
+	for record in records:
+		for key in record.keys():
+			var normalized_key := String(key).to_lower()
+			if normalized_key.contains("debug") or normalized_key.contains("score") or normalized_key.contains("internal"):
+				errors.append("Battle spell behavior record for %s leaks non-public key %s." % [String(record.get("spell_id", "")), key])
+	return {
+		"ok": errors.is_empty(),
+		"schema_status": "battle_spell_behavior_hooks_loaded",
+		"battle_spell_count": records.size(),
+		"effect_type_counts": effect_type_counts,
+		"role_counts": role_counts,
+		"runtime_hook_counts": hook_counts,
+		"errors": errors,
+		"records": records,
+	}
+
 static func describe_spell_inspection_line(hero_state: Dictionary, spell: Dictionary, context_state: Dictionary = {}) -> String:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
@@ -390,8 +493,7 @@ static func _battle_spell_effect_summary(
 	var effect = spell.get("effect", {})
 	match String(effect.get("type", "")):
 		"damage_enemy":
-			var power := int(hero_state.get("command", {}).get("power", 0))
-			var damage := int(max(1, int(effect.get("base_damage", 0)) + (max(0, power) * int(effect.get("power_scale", 0)))))
+			var damage := _battle_spell_damage(hero_state, spell, target_stack)
 			var target_label := String(target_stack.get("name", "selected enemy"))
 			var summary := "%d damage to %s" % [damage, target_label]
 			var status_effect: Dictionary = effect.get("status_effect", {})
@@ -400,7 +502,40 @@ static func _battle_spell_effect_summary(
 					String(status_effect.get("label", "effect")),
 					max(1, int(status_effect.get("duration_rounds", 1))),
 				]
+			if _wounded_bonus_applies(effect, target_stack):
+				summary += "; wounded target bonus"
 			return summary
+		"control_enemy":
+			var status_effect: Dictionary = effect.get("status_effect", {})
+			return "applies %s to %s for %d rounds" % [
+				String(status_effect.get("label", "control")),
+				String(target_stack.get("name", "selected enemy")),
+				max(1, int(status_effect.get("duration_rounds", 1))),
+			]
+		"recover_ally":
+			var target_label := String(active_stack.get("name", "active stack"))
+			var recovery_amount := _battle_spell_recovery_amount(hero_state, spell)
+			var summary := "restores up to %d health to %s" % [recovery_amount, target_label]
+			var modifiers := battle_spell_modifiers(spell)
+			if not modifiers.is_empty():
+				summary += "; %s for %d rounds" % [
+					_modifier_summary(modifiers),
+					max(1, int(effect.get("duration_rounds", 1))),
+				]
+			return summary
+		"cleanse_ally":
+			var cleanse_labels := _cleanse_labels(effect)
+			var cleanse_summary := "cleanses %s from %s" % [
+				", ".join(cleanse_labels) if not cleanse_labels.is_empty() else "battle pressure",
+				String(active_stack.get("name", "active stack")),
+			]
+			var cleanse_modifiers := battle_spell_modifiers(spell)
+			if not cleanse_modifiers.is_empty():
+				cleanse_summary += "; %s for %d rounds" % [
+					_modifier_summary(cleanse_modifiers),
+					max(1, int(effect.get("duration_rounds", 1))),
+				]
+			return cleanse_summary
 		"defense_buff", "initiative_buff", "attack_buff":
 			var target_label := String(active_stack.get("name", "active stack"))
 			return "%s to %s for %d rounds" % [
@@ -429,6 +564,12 @@ static func _best_use_line(
 		"damage_enemy":
 			var damage_timing := battle_spell_timing_summary({}, context, active_stack, target_stack, spell)
 			return damage_timing.trim_prefix("Best ").trim_suffix(".") if damage_timing != "" else "soften the selected enemy before a trade"
+		"control_enemy":
+			return "pin the selected enemy before it can convert tempo"
+		"recover_ally":
+			return "stabilize a wounded active stack before the next exchange"
+		"cleanse_ally":
+			return "clear harry or stagger pressure before committing the stack"
 		"defense_buff":
 			var defense_timing := battle_spell_timing_summary({}, context, active_stack, target_stack, spell)
 			return defense_timing.trim_prefix("Best ").trim_suffix(".") if defense_timing != "" else "hold the stack that must absorb the reply"
@@ -598,8 +739,7 @@ static func resolve_battle_spell(
 	var caster_name := String(hero.get("name", "The hero"))
 	match effect_type:
 		"damage_enemy":
-			var power := int(hero.get("command", {}).get("power", 0))
-			var damage := int(max(1, int(effect.get("base_damage", 0)) + (max(0, power) * int(effect.get("power_scale", 0)))))
+			var damage := _battle_spell_damage(hero, spell, target_stack)
 			return {
 				"ok": true,
 				"hero": hero,
@@ -613,6 +753,35 @@ static func resolve_battle_spell(
 					String(target_stack.get("name", "the enemy")),
 					damage,
 				],
+			}
+		"control_enemy":
+			return {
+				"ok": true,
+				"hero": hero,
+				"resolution_type": "effect",
+				"target_battle_id": String(target_stack.get("battle_id", "")),
+				"effect": _status_effect_from_spell_effect(spell, battle),
+				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(target_stack.get("name", "the enemy"))],
+			}
+		"recover_ally":
+			return {
+				"ok": true,
+				"hero": hero,
+				"resolution_type": "recover_effect",
+				"target_battle_id": String(active_stack.get("battle_id", "")),
+				"recovery_amount": _battle_spell_recovery_amount(hero, spell),
+				"effect": _effect_payload(spell, effect, battle) if not battle_spell_modifiers(spell).is_empty() else {},
+				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(active_stack.get("name", "the line"))],
+			}
+		"cleanse_ally":
+			return {
+				"ok": true,
+				"hero": hero,
+				"resolution_type": "cleanse_effect",
+				"target_battle_id": String(active_stack.get("battle_id", "")),
+				"cleanse_effect_ids": _normalize_string_array(effect.get("cleanse_effect_ids", [])),
+				"effect": _effect_payload(spell, effect, battle) if not battle_spell_modifiers(spell).is_empty() else {},
+				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(active_stack.get("name", "the line"))],
 			}
 		"defense_buff":
 			return {
@@ -680,6 +849,21 @@ static func validate_battle_spell(
 		"damage_enemy":
 			if target_stack.is_empty() or String(target_stack.get("side", "")) == acting_side:
 				return {"ok": false, "message": "Select an enemy target first."}
+			return {"ok": true}
+		"control_enemy":
+			if target_stack.is_empty() or String(target_stack.get("side", "")) == acting_side:
+				return {"ok": false, "message": "Select an enemy target first."}
+			if _status_effect_from_spell_effect(spell_dict, battle).is_empty():
+				return {"ok": false, "message": "That control spell has no authored status effect."}
+			return {"ok": true}
+		"recover_ally":
+			return {"ok": true}
+		"cleanse_ally":
+			var cleanse_effect_ids := _normalize_string_array(effect.get("cleanse_effect_ids", []))
+			if cleanse_effect_ids.is_empty():
+				return {"ok": false, "message": "That cleanse spell has no authored cleanse target."}
+			if not has_any_effect_ids(active_stack, battle, cleanse_effect_ids) and battle_spell_modifiers(spell_dict).is_empty():
+				return {"ok": false, "message": "No matching battle pressure is active on this stack."}
 			return {"ok": true}
 		"defense_buff", "initiative_buff", "attack_buff":
 			return {"ok": true}
@@ -776,6 +960,10 @@ static func battle_spell_modifiers(spell: Dictionary) -> Dictionary:
 			return _spell_effect_modifiers(effect, "initiative", int(effect.get("amount", 0)))
 		"attack_buff":
 			return _spell_effect_modifiers(effect, "attack", int(effect.get("amount", 0)))
+		"recover_ally":
+			return _spell_effect_modifiers(effect, "defense", int(effect.get("amount", 0)))
+		"cleanse_ally":
+			return _spell_effect_modifiers(effect, "defense", int(effect.get("amount", 0)))
 		_:
 			return {}
 
@@ -802,8 +990,7 @@ static func _battle_spell_action_summary(
 	var effect = spell.get("effect", {})
 	match String(effect.get("type", "")):
 		"damage_enemy":
-			var power := int(hero_state.get("command", {}).get("power", 0))
-			var damage := int(max(1, int(effect.get("base_damage", 0)) + (max(0, power) * int(effect.get("power_scale", 0)))))
+			var damage := _battle_spell_damage(hero_state, spell, target_stack)
 			var summary := "Projected %d damage to %s." % [
 				damage,
 				String(target_stack.get("name", "the selected enemy")),
@@ -817,6 +1004,44 @@ static func _battle_spell_action_summary(
 			if timing_hint != "":
 				summary += " Timing: %s" % timing_hint
 			return summary
+		"control_enemy":
+			var control_effect: Dictionary = effect.get("status_effect", {})
+			var summary := "Apply %s to %s for %d rounds." % [
+				String(control_effect.get("label", "control")),
+				String(target_stack.get("name", "the selected enemy")),
+				max(1, int(control_effect.get("duration_rounds", 1))),
+			]
+			if timing_hint != "":
+				summary += " Timing: %s" % timing_hint
+			return summary
+		"recover_ally":
+			var recovery_summary := "Restore up to %d health to %s." % [
+				_battle_spell_recovery_amount(hero_state, spell),
+				String(active_stack.get("name", "the active stack")),
+			]
+			var recovery_modifiers := battle_spell_modifiers(spell)
+			if not recovery_modifiers.is_empty():
+				recovery_summary += " Grant %s for %d rounds." % [
+					_modifier_summary(recovery_modifiers),
+					max(1, int(effect.get("duration_rounds", 1))),
+				]
+			if timing_hint != "":
+				recovery_summary += " Timing: %s" % timing_hint
+			return recovery_summary
+		"cleanse_ally":
+			var cleanse_summary := "Cleanse %s from %s." % [
+				", ".join(_cleanse_labels(effect)),
+				String(active_stack.get("name", "the active stack")),
+			]
+			var cleanse_modifiers := battle_spell_modifiers(spell)
+			if not cleanse_modifiers.is_empty():
+				cleanse_summary += " Grant %s for %d rounds." % [
+					_modifier_summary(cleanse_modifiers),
+					max(1, int(effect.get("duration_rounds", 1))),
+				]
+			if timing_hint != "":
+				cleanse_summary += " Timing: %s" % timing_hint
+			return cleanse_summary
 		"defense_buff":
 			var summary := "Grant %s to %s for %d rounds." % [
 				_modifier_summary(battle_spell_modifiers(spell)),
@@ -864,6 +1089,18 @@ static func battle_spell_timing_summary(
 			if bool(active_stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0:
 				return "Best while range still buys a clean spell strike."
 			return "Best when the selected target must lose tempo immediately."
+		"control_enemy":
+			if not target_stack.is_empty() and _health_ratio(target_stack) > 0.5:
+				return "Best before a healthy threat converts its next action."
+			return "Best to pin the selected enemy before a follow-up trade."
+		"recover_ally":
+			if _health_ratio(active_stack) <= 0.65:
+				return "Best when the acting stack is wounded enough to lose bodies next exchange."
+			return "Best when the stack must hold while keeping its current bodies alive."
+		"cleanse_ally":
+			if has_any_effect_ids(active_stack, battle, _normalize_string_array(effect.get("cleanse_effect_ids", []))):
+				return "Best before the cleansed stack spends its next attack or defense window."
+			return "Best when harry or stagger pressure would waste the active stack's order."
 		"defense_buff":
 			if has_any_effect_ids(active_stack, battle, ["status_harried", "status_staggered"]):
 				return "Best when the acting stack is already pressured and has to survive the reply."
@@ -1018,6 +1255,21 @@ static func _validate_spell_schema_record(
 			errors.append("Spell %s damage metadata must use battle context." % spell_id)
 		if "damage" not in role_categories:
 			errors.append("Spell %s damage metadata must include damage role category." % spell_id)
+	elif String(effect_type) == "control_enemy":
+		if context != CONTEXT_BATTLE:
+			errors.append("Spell %s control metadata must use battle context." % spell_id)
+		if "control" not in role_categories:
+			errors.append("Spell %s control metadata must include control role category." % spell_id)
+	elif String(effect_type) == "recover_ally":
+		if context != CONTEXT_BATTLE:
+			errors.append("Spell %s recovery metadata must use battle context." % spell_id)
+		if "recovery" not in role_categories:
+			errors.append("Spell %s recovery metadata must include recovery role category." % spell_id)
+	elif String(effect_type) == "cleanse_ally":
+		if context != CONTEXT_BATTLE:
+			errors.append("Spell %s cleanse metadata must use battle context." % spell_id)
+		if "countermagic" not in role_categories:
+			errors.append("Spell %s cleanse metadata must include countermagic role category." % spell_id)
 	elif String(effect_type) in ["defense_buff", "initiative_buff", "attack_buff"]:
 		if context != CONTEXT_BATTLE:
 			errors.append("Spell %s buff metadata must use battle context." % spell_id)
@@ -1105,6 +1357,40 @@ static func _status_effect_from_spell_effect(spell: Dictionary, battle: Dictiona
 		"spell",
 		String(spell.get("id", ""))
 	)
+
+static func _battle_spell_damage(hero_state: Dictionary, spell: Dictionary, target_stack: Dictionary) -> int:
+	var effect = spell.get("effect", {})
+	var power := int(hero_state.get("command", {}).get("power", 0))
+	var damage := int(max(1, int(effect.get("base_damage", 0)) + (max(0, power) * int(effect.get("power_scale", 0)))))
+	if _wounded_bonus_applies(effect, target_stack):
+		damage += max(0, int(effect.get("wounded_bonus_damage", 0)))
+	return damage
+
+static func _wounded_bonus_applies(effect: Dictionary, target_stack: Dictionary) -> bool:
+	if target_stack.is_empty():
+		return false
+	var bonus_damage := int(effect.get("wounded_bonus_damage", 0))
+	if bonus_damage <= 0:
+		return false
+	var threshold := clampf(float(effect.get("wounded_threshold_ratio", 0.5)), 0.0, 1.0)
+	return _health_ratio(target_stack) <= threshold
+
+static func _battle_spell_recovery_amount(hero_state: Dictionary, spell: Dictionary) -> int:
+	var effect = spell.get("effect", {})
+	var power: int = max(0, int(hero_state.get("command", {}).get("power", 0)))
+	return max(1, int(effect.get("base_restore", effect.get("amount", 0))) + (power * int(effect.get("power_scale", 0))))
+
+static func _cleanse_labels(effect: Dictionary) -> Array:
+	var labels := []
+	for effect_id in _normalize_string_array(effect.get("cleanse_effect_ids", [])):
+		match effect_id:
+			"status_harried":
+				labels.append("Harried")
+			"status_staggered":
+				labels.append("Staggered")
+			_:
+				labels.append(effect_id.replace("status_", "").replace("_", " ").capitalize())
+	return labels
 
 static func _modifier_summary(modifiers: Dictionary) -> String:
 	if modifiers.is_empty():

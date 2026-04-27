@@ -994,6 +994,23 @@ func _validate_spell(spell: Dictionary) -> void:
 				push_warning("Spell %s must define buff amount > 0." % spell_id)
 			if int(effect.get("duration_rounds", 0)) <= 0:
 				push_warning("Spell %s must define duration_rounds > 0." % spell_id)
+		"control_enemy":
+			var status_effect = effect.get("status_effect", {})
+			if not (status_effect is Dictionary) or String(status_effect.get("effect_id", "")) == "":
+				push_warning("Spell %s must define control status_effect.effect_id." % spell_id)
+			if int(status_effect.get("duration_rounds", 0)) <= 0:
+				push_warning("Spell %s must define control duration_rounds > 0." % spell_id)
+		"recover_ally":
+			if int(effect.get("base_restore", effect.get("amount", 0))) <= 0:
+				push_warning("Spell %s must define recovery amount > 0." % spell_id)
+			if int(effect.get("duration_rounds", 0)) <= 0:
+				push_warning("Spell %s must define duration_rounds > 0." % spell_id)
+		"cleanse_ally":
+			var cleanse_effect_ids = effect.get("cleanse_effect_ids", [])
+			if not (cleanse_effect_ids is Array) or cleanse_effect_ids.is_empty():
+				push_warning("Spell %s must define cleanse_effect_ids." % spell_id)
+			if int(effect.get("duration_rounds", 0)) <= 0:
+				push_warning("Spell %s must define duration_rounds > 0." % spell_id)
 		_:
 			push_warning("Spell %s uses unsupported effect type %s." % [spell_id, String(effect.get("type", ""))])
 
