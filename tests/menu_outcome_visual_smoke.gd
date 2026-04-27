@@ -301,26 +301,44 @@ func _run_main_menu_smoke() -> bool:
 	var save_browser_item_texts := []
 	for item_label in (save_snapshot.get("save_browser_items", []) if save_snapshot.get("save_browser_items", []) is Array else []):
 		save_browser_item_texts.append(String(item_label))
+	var save_browser_item_tooltips := []
+	for item_tooltip in (save_snapshot.get("save_browser_item_tooltips", []) if save_snapshot.get("save_browser_item_tooltips", []) is Array else []):
+		save_browser_item_tooltips.append(String(item_tooltip))
 	if not _assert_text_contains_all(
 		"Main menu selected save details",
 		[
 			String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
 			String(save_snapshot.get("load_selected_tooltip", "")),
+			String(save_snapshot.get("selected_save_command_tooltip", "")),
 			String(save_snapshot.get("selected_save_play_check", "")),
 			String(save_snapshot.get("selected_save_resume_handoff", "")),
 			String(save_snapshot.get("selected_save_browser_cue", "")),
 			"\n".join(save_browser_item_texts),
+			"\n".join(save_browser_item_tooltips),
 		],
-		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Overworld Resume", "Cue:", "->", "Play check:", "Resume handoff:", "opens Overworld", "preserved", "Saved state:", "What changed:", "Resume state:", "Next decision:", "Next play action:", "Action:", "Continuity:", "Current objective:", "Risk watch:", "Progress Recap", "Current progress:", "Next step:"]
+		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Overworld Resume", "Command cue:", "selected save row", "Load Selected:", "Cue:", "->", "Play check:", "Resume handoff:", "opens Overworld", "preserved", "Saved state:", "What changed:", "Resume state:", "Next decision:", "Next play action:", "Action:", "Continuity:", "Current objective:", "Risk watch:", "Progress Recap", "Current progress:", "Next step:"]
+	):
+		return false
+	if not _assert_text_contains_all(
+		"Main menu save command tooltip cues",
+		[
+			String(save_snapshot.get("load_selected_tooltip", "")),
+			String(save_snapshot.get("selected_save_command_tooltip", "")),
+			"\n".join(save_browser_item_tooltips),
+		],
+		["Command cue:", "selecting this row only changes", "Load Selected:", "Resume Expedition", "Play check:", "Resume handoff:"]
 	):
 		return false
 	if not _assert_no_score_leak(
 		"Main menu save play check",
 		[
 			String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
+			String(save_snapshot.get("load_selected_tooltip", "")),
+			String(save_snapshot.get("selected_save_command_tooltip", "")),
 			String(save_snapshot.get("selected_save_play_check", "")),
 			String(save_snapshot.get("selected_save_browser_cue", "")),
 			"\n".join(save_browser_item_texts),
+			"\n".join(save_browser_item_tooltips),
 			String(save_snapshot.get("selected_save_resume_handoff", "")),
 		]
 	):

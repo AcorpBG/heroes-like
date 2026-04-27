@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T00:03:13Z",
+  "updatedAt": "2026-04-27T00:08:10Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-action-button-command-cues-10184",
-  "currentSliceTitle": "Surface compact town action button command cues",
+  "currentSliceId": "main-menu-save-command-tooltips-10184",
+  "currentSliceTitle": "Surface compact main-menu save command tooltip cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact visible town action button command cues on existing live town order buttons using current action payloads only. Tooltips now include Command cue lines with readiness, surface, impact, and next-step guidance, and focused town/battle smoke asserts the rendered cues plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented compact visible save-browser command tooltip cues on the existing main-menu war ledger using current save summaries only. Save rows now explain selection-only behavior, continuity, play check, resume handoff, and selected-load result; the selected load button now states that it acts on the selected row. Focused main-menu/outcome smoke asserts the rendered cues plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1930,6 +1930,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T23:54:18Z",
       "completedAt": "2026-04-26T23:56:36Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "main-menu-save-command-tooltips-10184",
+      "title": "Surface compact main-menu save command tooltip cues",
+      "status": "completed",
+      "startedAt": "2026-04-27T00:06:02Z",
+      "completedAt": "2026-04-27T00:08:10Z",
       "difficulty": "small"
     }
   ],
