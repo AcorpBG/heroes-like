@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T00:36:58Z",
+  "updatedAt": "2026-04-27T00:40:48Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "outcome-menu-return-cue-10184",
-  "currentSliceTitle": "Surface compact outcome menu return cue",
+  "currentSliceId": "main-menu-settings-handoff-cue-10184",
+  "currentSliceTitle": "Surface compact main-menu settings handoff cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact visible outcome save-panel return cue using existing AppRouter/SaveService save surface data so the player can see that Menu autosaves the outcome and Continue Latest can review it later without opening a guide or relying on hover-only text. Focused menu/outcome smoke asserts the cue and no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact visible main-menu Settings board handoff cue using the existing settings persistence contract so players can see that presentation/audio/readability changes apply immediately, persist to device config, and leave campaign progress plus expedition saves untouched. The Settings label and Close tooltip now carry the handoff, and focused menu/outcome smoke asserts the visible/tooltip cue plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1962,6 +1962,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T00:33:06Z",
       "completedAt": "2026-04-27T00:36:58Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "main-menu-settings-handoff-cue-10184",
+      "title": "Surface compact main-menu settings handoff cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T00:38:11Z",
+      "completedAt": "2026-04-27T00:40:48Z",
       "difficulty": "small"
     }
   ],

@@ -417,6 +417,16 @@ func _run_main_menu_smoke() -> bool:
 
 	var settings_snapshot: Dictionary = shell.call("validation_snapshot")
 	var resolution_ids := _resolution_ids_from_snapshot(settings_snapshot)
+	if not _assert_text_contains_all(
+		"Main menu settings handoff cue",
+		[
+			String(settings_snapshot.get("settings_handoff_text", "")),
+			String(settings_snapshot.get("settings_handoff_tooltip", "")),
+			String(settings_snapshot.get("close_stage_dock_tooltip", "")),
+		],
+		["Settings handoff:", "changes apply now", "Settings Handoff", "presentation, sound, and readability", "device config", "campaign progress", "expedition saves", "Close:", "scenic first view"]
+	):
+		return false
 	for expected_id in ["1280x720", "1600x900", "1920x1080", "2560x1440"]:
 		if not resolution_ids.has(expected_id):
 			push_error("Main menu smoke: settings resolution picker omitted %s: %s." % [expected_id, resolution_ids])
@@ -441,11 +451,14 @@ func _run_main_menu_smoke() -> bool:
 		[
 			settings_summary,
 			String(settings_snapshot.get("settings_persistence_check", "")),
+			String(settings_snapshot.get("settings_handoff_text", "")),
+			String(settings_snapshot.get("settings_handoff_tooltip", "")),
+			String(settings_snapshot.get("close_stage_dock_tooltip", "")),
 			String(settings_snapshot.get("presentation_resolution_tooltip", "")),
 			String(settings_snapshot.get("master_volume_tooltip", "")),
 			String(settings_snapshot.get("large_text_tooltip", "")),
 		],
-		["Settings check:", "applies immediately", "stored in device config", "campaign progress", "expedition saves stay unchanged"]
+		["Settings check:", "applies immediately", "stored in device config", "campaign progress", "expedition saves stay unchanged", "Settings handoff:", "Settings Handoff", "Close:"]
 	):
 		if original_resolution != "1600x900":
 			shell.call("validation_select_resolution", original_resolution)
@@ -455,6 +468,9 @@ func _run_main_menu_smoke() -> bool:
 		[
 			settings_summary,
 			String(settings_snapshot.get("settings_persistence_check", "")),
+			String(settings_snapshot.get("settings_handoff_text", "")),
+			String(settings_snapshot.get("settings_handoff_tooltip", "")),
+			String(settings_snapshot.get("close_stage_dock_tooltip", "")),
 			String(settings_snapshot.get("presentation_resolution_tooltip", "")),
 			String(settings_snapshot.get("master_volume_tooltip", "")),
 			String(settings_snapshot.get("large_text_tooltip", "")),
