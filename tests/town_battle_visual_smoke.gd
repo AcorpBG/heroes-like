@@ -70,6 +70,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_command_tab_readiness_cues(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_muster_readiness_cue(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_action_button_command_cues(shell):
 		get_tree().quit(1)
 		return false
@@ -355,6 +358,43 @@ func _assert_town_action_button_command_cues(shell: Node) -> bool:
 	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if all_text.contains(leak_token):
 			push_error("Town smoke: action-button command cue leaked internal token %s: %s." % [leak_token, all_text])
+			return false
+	return true
+
+func _assert_town_muster_readiness_cue(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: shell does not expose muster-readiness validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var readiness: Dictionary = snapshot.get("muster_readiness", {}) if snapshot.get("muster_readiness", {}) is Dictionary else {}
+	var text := "\n".join([
+		String(snapshot.get("muster_readiness_visible_text", "")),
+		String(snapshot.get("muster_readiness_tooltip_text", "")),
+		String(snapshot.get("recruit_visible_text", "")),
+		String(snapshot.get("recruit_tooltip_text", "")),
+		String(readiness.get("best_order_label", "")),
+		String(readiness.get("readiness", "")),
+		String(readiness.get("why_it_matters", "")),
+		String(readiness.get("next_step", "")),
+	])
+	for token in ["Muster check:", "Muster Readiness", "Town reserve:", "Best order:", "Readiness:", "Why it matters:", "Next practical action:", "Recruit Reserves"]:
+		if not text.contains(token):
+			push_error("Town smoke: muster readiness cue lost %s clarity: %s." % [token, text])
+			return false
+	if int(readiness.get("reserve_total", -1)) < 0 or int(readiness.get("ready_order_count", -1)) < 0:
+		push_error("Town smoke: muster readiness cue did not expose stable visible counts: %s." % readiness)
+		return false
+	if (
+		int(readiness.get("ready_units", 0)) <= 0
+		and int(readiness.get("market_units", 0)) <= 0
+		and int(readiness.get("blocked_reserve", 0)) <= 0
+		and not String(readiness.get("visible_text", "")).contains("no recruits waiting")
+	):
+		push_error("Town smoke: muster readiness cue does not explain ready, trade, blocked, or empty state: %s." % readiness)
+		return false
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if text.contains(leak_token):
+			push_error("Town smoke: muster readiness cue leaked internal token %s: %s." % [leak_token, text])
 			return false
 	return true
 

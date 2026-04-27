@@ -238,7 +238,16 @@ func _refresh() -> void:
 	_set_compact_label(_pressure_label, TownRules.describe_threats(_session), 4)
 	_set_compact_label(_building_label, TownRules.describe_buildings(_session), 2)
 	_set_compact_label(_market_label, TownRules.describe_market(_session), 2)
-	_set_compact_label(_recruit_label, TownRules.describe_recruitment(_session), 2)
+	var muster_readiness := _muster_readiness_surface()
+	var recruit_text := _join_tooltip_sections([
+		String(muster_readiness.get("visible_text", "")),
+		TownRules.describe_recruitment(_session),
+	])
+	_set_compact_label(_recruit_label, recruit_text, 2)
+	_recruit_label.tooltip_text = _join_tooltip_sections([
+		String(muster_readiness.get("tooltip_text", "")),
+		TownRules.describe_recruitment(_session),
+	])
 	_set_compact_label(_tavern_label, TownRules.describe_tavern(_session), 2)
 	_set_compact_label(_transfer_label, TownRules.describe_transfer(_session), 2)
 	_set_compact_label(_response_label, TownRules.describe_responses(_session), 2)
@@ -334,6 +343,7 @@ func validation_snapshot() -> Dictionary:
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
 	var town_context_surface := _town_action_context_surface(dispatch_text)
 	var tab_readiness := _management_tab_readiness_payload()
+	var muster_readiness := _muster_readiness_surface()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -363,6 +373,10 @@ func validation_snapshot() -> Dictionary:
 		"defense_visible_text": _defense_label.text,
 		"recruit_text": TownRules.describe_recruitment(_session),
 		"recruit_visible_text": _recruit_label.text,
+		"recruit_tooltip_text": _recruit_label.tooltip_text,
+		"muster_readiness": muster_readiness,
+		"muster_readiness_visible_text": String(muster_readiness.get("visible_text", "")),
+		"muster_readiness_tooltip_text": String(muster_readiness.get("tooltip_text", "")),
 		"study_text": TownRules.describe_spell_access(_session),
 		"study_visible_text": _study_label.text,
 		"study_tooltip_text": _study_label.tooltip_text,
@@ -910,6 +924,129 @@ func _button_tooltips(container: Container) -> Array:
 				"disabled": child.disabled,
 			})
 	return tooltips
+
+func _muster_readiness_surface() -> Dictionary:
+	var actions := TownRules.get_recruit_actions(_session)
+	var town := TownRules.get_active_town(_session)
+	var reserve_total := 0
+	var ready_units := 0
+	var market_units := 0
+	var blocked_reserve := 0
+	var ready_orders := 0
+	var market_orders := 0
+	var blocked_orders := 0
+	var best_ready := {}
+	var best_market := {}
+	var best_blocked := {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		var available := int(action.get("available_count", 0))
+		var direct_count := int(action.get("direct_affordable_count", 0))
+		var market_count := int(action.get("market_affordable_count", 0))
+		reserve_total += max(0, available)
+		if direct_count > 0:
+			ready_orders += 1
+			ready_units += direct_count
+			if best_ready.is_empty() or direct_count > int(best_ready.get("direct_affordable_count", 0)):
+				best_ready = action
+			continue
+		if market_count > 0:
+			market_orders += 1
+			market_units += market_count
+			if best_market.is_empty() or market_count > int(best_market.get("market_affordable_count", 0)):
+				best_market = action
+			continue
+		if available > 0:
+			blocked_orders += 1
+			blocked_reserve += available
+			if best_blocked.is_empty() or available > int(best_blocked.get("available_count", 0)):
+				best_blocked = action
+
+	var selected_action := best_ready
+	var state_line := "no recruits waiting"
+	var visible := "Muster check: no recruits waiting"
+	if ready_units > 0:
+		state_line = "Ready now: %d recruit%s across %d order%s" % [
+			ready_units,
+			"" if ready_units == 1 else "s",
+			ready_orders,
+			"" if ready_orders == 1 else "s",
+		]
+		visible = "Muster check: Ready x%d | %d order%s" % [
+			ready_units,
+			ready_orders,
+			"" if ready_orders == 1 else "s",
+		]
+	elif market_units > 0:
+		selected_action = best_market
+		state_line = "Trade path: %d recruit%s can be unlocked through Exchange" % [
+			market_units,
+			"" if market_units == 1 else "s",
+		]
+		visible = "Muster check: Trade unlocks x%d" % market_units
+	elif blocked_reserve > 0:
+		selected_action = best_blocked
+		state_line = "Blocked: %d recruit%s waiting on stores or prerequisites" % [
+			blocked_reserve,
+			"" if blocked_reserve == 1 else "s",
+		]
+		visible = "Muster check: Blocked x%d waiting" % blocked_reserve
+	elif not actions.is_empty() and actions[0] is Dictionary:
+		selected_action = actions[0]
+
+	var label := "No recruit order"
+	var readiness := state_line
+	var impact := "Muster timing shapes field army strength before leaving town."
+	var next_step := "Review another town order or leave when the muster plan is set."
+	if not selected_action.is_empty():
+		label = String(selected_action.get("button_label", selected_action.get("label", "Recruit order"))).strip_edges()
+		readiness = _town_action_button_readiness(selected_action, "recruit")
+		impact = _town_action_button_impact(selected_action, "recruit")
+		next_step = _town_action_button_next_step(
+			selected_action,
+			"recruit",
+			label,
+			_town_action_surface_label("recruit"),
+			readiness
+		)
+	var weekly_line := ""
+	if not town.is_empty():
+		weekly_line = "Weekly reserve: %s on Day %d" % [
+			TownRules._describe_recruit_delta(OverworldRules.town_weekly_growth(town, _session)),
+			OverworldRules.next_weekly_growth_day(_session.day),
+		]
+	var tooltip_lines := [
+		"Muster Readiness",
+		"- Town reserve: %d waiting across %d order%s" % [
+			reserve_total,
+			actions.size(),
+			"" if actions.size() == 1 else "s",
+		],
+		"- %s" % state_line,
+	]
+	if weekly_line != "":
+		tooltip_lines.append("- %s" % weekly_line)
+	tooltip_lines.append("- Best order: %s" % label)
+	tooltip_lines.append("- Readiness: %s" % readiness)
+	tooltip_lines.append("- Why it matters: %s" % impact)
+	tooltip_lines.append("- Next practical action: %s" % next_step)
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"reserve_total": reserve_total,
+		"ready_units": ready_units,
+		"market_units": market_units,
+		"blocked_reserve": blocked_reserve,
+		"ready_order_count": ready_orders,
+		"market_order_count": market_orders,
+		"blocked_order_count": blocked_orders,
+		"best_order_label": label,
+		"readiness": readiness,
+		"why_it_matters": impact,
+		"next_step": next_step,
+	}
 
 func _record_town_action_result(
 	lane: String,
