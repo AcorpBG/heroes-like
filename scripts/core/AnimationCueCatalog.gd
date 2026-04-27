@@ -4,6 +4,7 @@ extends RefCounted
 const CATALOG_PATH := "res://content/animation_event_cues.json"
 const SCHEMA_ID := "animation_event_cue_catalog_v1"
 const PREFERENCE_POLICY_SCHEMA_ID := "animation_playback_preference_policy_v1"
+const VALIDATION_SMOKE_HARNESS_SCHEMA_ID := "animation_validation_smoke_harness_v1"
 const MODE_NORMAL := "normal"
 const MODE_REDUCED_MOTION := "reduced_motion"
 const MODE_FAST := "fast"
@@ -90,6 +91,30 @@ const REPRESENTATIVE_POLICY_EVENTS := [
 	"artifact_equipped",
 	"ui_invalid_action",
 ]
+const VALIDATION_SMOKE_REPRESENTATIVE_EVENTS := {
+	"battle": ["battle_unit_move", "battle_unit_melee_attack", "battle_unit_death"],
+	"overworld": ["overworld_object_captured", "overworld_object_guarded", "overworld_route_open"],
+	"town": ["town_captured", "town_building_built"],
+	"spell": ["spell_cast_battle", "spell_effect_damage"],
+	"artifact": ["artifact_acquired", "artifact_equipped"],
+	"ui": ["ui_invalid_action", "ui_resource_delta"],
+}
+const VALIDATION_SMOKE_EXPECTED_STATE_FAMILIES := {
+	"battle_unit_move": "move",
+	"battle_unit_melee_attack": "attack",
+	"battle_unit_death": "death",
+	"overworld_object_captured": "captured",
+	"overworld_object_guarded": "guarded",
+	"overworld_route_open": "route-open",
+	"town_captured": "captured",
+	"town_building_built": "construction",
+	"spell_cast_battle": "spell_cast",
+	"spell_effect_damage": "spell_effect",
+	"artifact_acquired": "pickup",
+	"artifact_equipped": "equip",
+	"ui_invalid_action": "microinteraction",
+	"ui_resource_delta": "microinteraction",
+}
 
 static func load_catalog() -> Dictionary:
 	return ContentService.load_json(CATALOG_PATH)
@@ -639,9 +664,144 @@ static func overworld_object_state_contract_report(catalog: Dictionary = {}) -> 
 		"public_payload": public_payload,
 	}
 
+static func animation_validation_smoke_harness_report(catalog: Dictionary = {}) -> Dictionary:
+	var source := catalog if not catalog.is_empty() else load_catalog()
+	var catalog_report := event_cue_catalog_report(source)
+	var policy_report := animation_preference_policy_report(source)
+	var battle_report := battle_troop_sprite_state_contract_report(source)
+	var overworld_report := overworld_object_state_contract_report(source)
+	var errors := []
+	var individual_reports := {
+		"catalog": _public_report_status(catalog_report),
+		"policy": _public_report_status(policy_report),
+		"battle_troop": _public_report_status(battle_report),
+		"overworld_object": _public_report_status(overworld_report),
+	}
+	for report_name in individual_reports.keys():
+		var report_status: Dictionary = individual_reports.get(report_name, {})
+		if not bool(report_status.get("ok", false)):
+			errors.append("Animation smoke harness dependency report failed: %s." % report_name)
+
+	var runtime_policy: Dictionary = source.get("runtime_policy", {}) if source.get("runtime_policy", {}) is Dictionary else {}
+	for blocked_policy in ["save_version_bump", "final_sprite_import", "final_vfx_import", "final_audio_import", "renderer_asset_pipeline", "playback_runtime", "broad_ui_polish"]:
+		if bool(runtime_policy.get(blocked_policy, true)):
+			errors.append("Runtime policy must keep %s disabled for the smoke harness." % blocked_policy)
+
+	for payload_pair in [
+		["catalog", catalog_report.get("public_payload", {})],
+		["policy", policy_report.get("public_payload", {})],
+		["battle_troop", battle_report.get("public_payload", {})],
+		["overworld_object", overworld_report.get("public_payload", {})],
+	]:
+		if _public_payload_has_leak(payload_pair[1]):
+			errors.append("%s public payload leaked a blocked public token." % String(payload_pair[0]))
+
+	var event_policy_matrix := {}
+	var surface_counts := {}
+	var mode_counts := {
+		MODE_NORMAL: 0,
+		MODE_REDUCED_MOTION: 0,
+		MODE_FAST: 0,
+		MODE_REDUCED_MOTION_FAST: 0,
+	}
+	var representative_event_count := 0
+	for surface in VALIDATION_SMOKE_REPRESENTATIVE_EVENTS.keys():
+		var surface_events := {}
+		for event_id in VALIDATION_SMOKE_REPRESENTATIVE_EVENTS.get(surface, []):
+			var entry := _entry_for_event(String(event_id), source)
+			if entry.is_empty():
+				errors.append("Animation smoke harness missing representative event %s." % event_id)
+				continue
+			representative_event_count += 1
+			_increment(surface_counts, String(entry.get("surface", "")))
+			if String(entry.get("surface", "")) != String(surface):
+				errors.append("%s must use smoke surface %s." % [event_id, surface])
+			var expected_family := String(VALIDATION_SMOKE_EXPECTED_STATE_FAMILIES.get(event_id, ""))
+			if expected_family != "" and String(entry.get("animation_state_family", "")) != expected_family:
+				errors.append("%s must map to state family %s." % [event_id, expected_family])
+			var fallbacks: Dictionary = entry.get("fallbacks", {}) if entry.get("fallbacks", {}) is Dictionary else {}
+			var cases := {}
+			for mode in [MODE_NORMAL, MODE_REDUCED_MOTION, MODE_FAST, MODE_REDUCED_MOTION_FAST]:
+				var policy := _cue_playback_policy_for_entry(entry, normalize_animation_preferences(_preferences_from_mode(mode)))
+				cases[mode] = _public_policy_case(policy)
+				mode_counts[mode] = int(mode_counts.get(mode, 0)) + 1
+				if String(policy.get("selected_animation_state", "")).strip_edges() == "":
+					errors.append("%s produced an empty selected animation state in %s mode." % [event_id, mode])
+			var normal_case: Dictionary = cases.get(MODE_NORMAL, {})
+			var reduced_case: Dictionary = cases.get(MODE_REDUCED_MOTION, {})
+			var fast_case: Dictionary = cases.get(MODE_FAST, {})
+			var combined_case: Dictionary = cases.get(MODE_REDUCED_MOTION_FAST, {})
+			if String(normal_case.get("selected_animation_state", "")) != String(entry.get("animation_state", "")):
+				errors.append("%s normal mode must keep the authored animation state." % event_id)
+			if String(reduced_case.get("selected_fallback_tag", "")) != String(fallbacks.get("reduced_motion_tag", "")):
+				errors.append("%s reduced-motion mode must select the reduced fallback." % event_id)
+			if String(fast_case.get("selected_fallback_tag", "")) != String(fallbacks.get("fast_mode_tag", "")) or String(fast_case.get("selected_playback_policy", "")) != "fast_resolve":
+				errors.append("%s fast mode must select the fast fallback and fast_resolve playback." % event_id)
+			if String(combined_case.get("selected_fallback_tag", "")) != String(fallbacks.get("reduced_motion_tag", "")) or String(combined_case.get("timing_preference", "")) != MODE_FAST:
+				errors.append("%s combined mode must use reduced visuals with fast timing." % event_id)
+			surface_events[event_id] = {
+				"surface": String(entry.get("surface", "")),
+				"subject_kind": String(entry.get("subject_kind", "")),
+				"state_family": String(entry.get("animation_state_family", "")),
+				"animation_state": String(entry.get("animation_state", "")),
+				"policy_cases": cases,
+			}
+		event_policy_matrix[surface] = surface_events
+
+	for surface in REQUIRED_SURFACES:
+		if int(surface_counts.get(surface, 0)) <= 0:
+			errors.append("Animation smoke harness must cover surface %s." % surface)
+	var expected_policy_case_count := representative_event_count
+	for mode in [MODE_NORMAL, MODE_REDUCED_MOTION, MODE_FAST, MODE_REDUCED_MOTION_FAST]:
+		if int(mode_counts.get(mode, 0)) != expected_policy_case_count:
+			errors.append("Animation smoke harness must resolve every representative event in %s mode." % mode)
+
+	var public_payload := {
+		"schema_id": VALIDATION_SMOKE_HARNESS_SCHEMA_ID,
+		"schema_status": "animation_validation_smoke_harness_validated",
+		"individual_reports": individual_reports,
+		"representative_event_count": representative_event_count,
+		"surface_counts": surface_counts,
+		"mode_counts": mode_counts,
+		"event_policy_matrix": event_policy_matrix,
+		"runtime_policy": runtime_policy,
+		"errors": errors,
+	}
+	if _public_payload_has_leak(public_payload):
+		errors.append("Animation smoke harness public payload leaked a blocked public token.")
+		public_payload["errors"] = errors
+	return {
+		"ok": errors.is_empty(),
+		"schema_id": VALIDATION_SMOKE_HARNESS_SCHEMA_ID,
+		"schema_status": "animation_validation_smoke_harness_validated",
+		"individual_reports": individual_reports,
+		"representative_event_count": representative_event_count,
+		"surface_counts": surface_counts,
+		"mode_counts": mode_counts,
+		"event_policy_matrix": event_policy_matrix,
+		"runtime_policy": runtime_policy,
+		"errors": errors,
+		"public_payload": public_payload,
+	}
+
 static func _entries(catalog: Dictionary) -> Array:
 	var entries = catalog.get("entries", [])
 	return entries if entries is Array else []
+
+static func _public_report_status(report: Dictionary) -> Dictionary:
+	return {
+		"ok": bool(report.get("ok", false)),
+		"schema_id": String(report.get("schema_id", report.get("schema", ""))),
+		"schema_status": String(report.get("schema_status", "")),
+		"error_count": (report.get("errors", []) as Array).size() if report.get("errors", []) is Array else 0,
+	}
+
+static func _public_payload_has_leak(payload: Variant) -> bool:
+	var surface_text := JSON.stringify(payload).to_lower()
+	for leak_token in ["debug", "score", "internal"]:
+		if surface_text.contains(leak_token):
+			return true
+	return false
 
 static func _entry_for_event(event_id: String, catalog: Dictionary) -> Dictionary:
 	var normalized_event_id := String(event_id).strip_edges()

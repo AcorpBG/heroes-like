@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "animation-validation-smoke-harness-10184",
-  "currentSliceTitle": "Animation Validation Smoke Harness",
+  "currentSliceId": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+  "currentSliceTitle": "Hero Task-State Save-Normalizer Preservation Report",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next P2.7 child after overworld object state contracts. Keep scope to validation/report harness coverage for existing catalog, policy, battle troop, and overworld object contracts; no final assets, renderer pipeline, save migration, broad UI polish, or P2.9 terrain/editor work.",
+  "currentSliceNotes": "Next selected Phase 2 category after P2.7 closeout. Inspect prior strategic AI reports and docs before implementation; do not start P2.9 terrain/editor here, and keep save migration/live task adoption/broad AI rewrite out of scope unless explicitly selected.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T22:46:26Z",
+  "updatedAt": "2026-04-27T22:54:40Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -377,8 +377,8 @@
       "id": "animation-event-cue-foundation-implementation-10184",
       "title": "Animation And Event Cue Foundation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "docs_ready",
-      "classification": "parent_foundation_docs_ready_contract_children_pending",
+      "status": "completed",
+      "classification": "parent_foundation_completed_children_completed",
       "sourceDocs": [
         "docs/animation-systems-foundation.md",
         "docs/screen-wireframes.md"
@@ -390,8 +390,8 @@
         "reduced-motion and fast-mode policy for troop/object animation playback",
         "selected battle/town/overworld/object/UI state-change hooks"
       ],
-      "evidence": "Several compact UI cue surfaces exist, but battle troop sprite animation contracts, overworld object animation contracts, event/cue ids, playback policy, reduced-motion/fast-mode contract, and animation pipeline contracts are not implemented as the foundation slice.",
-      "notes": "No final VFX/audio, final sprite/art production, renderer asset import, or ad hoc screen polish. Cue catalog work must bridge resolved gameplay events to troop/object animation playback, not UI text polish.",
+      "evidence": "P2.7 child slices now implement the bounded animation/event cue foundation: event/cue catalog contract, reduced-motion and fast-mode policy, battle troop sprite state contracts, overworld object state contracts, and the consolidated validation smoke harness.",
+      "notes": "Completed P2.7 Animation And Event Cue Foundation child set: event/cue catalog contract, reduced-motion and fast-mode policy, battle troop sprite state contracts, overworld object state contracts, and final validation smoke harness are all implemented with focused reports and validation. Remaining production animation work stays future-scoped: no final sprite/VFX/audio import, renderer asset pipeline, playback runtime, save migration, broad UI polish, or P2.9 terrain/editor work.",
       "sliceType": "parent",
       "childSliceIds": [
         "animation-event-cue-catalog-contract-10184",
@@ -404,8 +404,16 @@
       "docsReadyEvidenceIds": [
         "magic-artifact-animation-docs"
       ],
-      "completedImplementationEvidenceIds": [],
-      "reportOnlyEvidenceIds": []
+      "completedImplementationEvidenceIds": [
+        "animation-event-cue-catalog-contract-10184",
+        "animation-reduced-motion-fast-mode-policy-10184",
+        "animation-battle-cue-hook-vertical-slice-10184",
+        "animation-overworld-town-object-cue-hooks-10184",
+        "animation-validation-smoke-harness-10184"
+      ],
+      "reportOnlyEvidenceIds": [],
+      "updatedAt": "2026-04-27T22:54:40Z",
+      "completedAt": "2026-04-27T22:54:40Z"
     },
     {
       "id": "strategic-ai-foundation-continuation-10184",
@@ -471,9 +479,10 @@
         "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_hero_task_state_normalizer_preservation_report.tscn",
         "git diff --check"
       ],
-      "notes": "Still valid pending strategic AI child slice, but no longer selected next after correcting Phase 2 ordering semantics.",
+      "notes": "Next selected Phase 2 category after P2.7 closeout. Inspect prior strategic AI reports and docs before implementation; do not start P2.9 terrain/editor here, and keep save migration/live task adoption/broad AI rewrite out of scope unless explicitly selected.",
       "sliceType": "child",
-      "parentSliceId": "strategic-ai-foundation-continuation-10184"
+      "parentSliceId": "strategic-ai-foundation-continuation-10184",
+      "updatedAt": "2026-04-27T22:54:40Z"
     },
     {
       "id": "terrain-editor-tooling-foundation-implementation-10184",
@@ -1855,7 +1864,7 @@
       "id": "animation-validation-smoke-harness-10184",
       "title": "Animation Validation Smoke Harness",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
@@ -1874,10 +1883,22 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "Implemented AnimationCueCatalog.animation_validation_smoke_harness_report(...) as a consolidated cross-report smoke harness.",
+        "Added tests/animation_validation_smoke_harness_report.gd/.tscn and tests/validate_repo.py --animation-validation-smoke-report coverage.",
+        "Recorded implementation evidence in docs/animation-validation-smoke-harness-report.md."
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+      ],
+      "updatedAt": "2026-04-27T22:54:40Z",
+      "completedAt": "2026-04-27T22:54:40Z",
+      "notes": "Completed bounded animation validation smoke harness. Evidence: AnimationCueCatalog.animation_validation_smoke_harness_report, tests/animation_validation_smoke_harness_report.gd/.tscn, docs/animation-validation-smoke-harness-report.md, and tests/validate_repo.py --animation-validation-smoke-report. Harness reuses catalog, policy, battle troop, and overworld object reports; proves representative battle/overworld/town/spell/artifact/UI event mappings across normal, reduced-motion, fast, and combined policies; scans public payloads for debug/score/internal leaks; and keeps save migration, final asset imports, renderer pipeline, playback runtime, broad UI polish, P2.9 terrain/editor, rare resources, economy rebalance, random maps, scenario migration, and AI rewrite out of scope.",
+      "implementationEvidence": [
+        "scripts/core/AnimationCueCatalog.gd",
+        "tests/animation_validation_smoke_harness_report.gd",
+        "tests/animation_validation_smoke_harness_report.tscn",
+        "docs/animation-validation-smoke-harness-report.md",
+        "tests/validate_repo.py"
       ]
     },
     {
@@ -3473,22 +3494,24 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "animation-validation-smoke-harness-10184",
-      "title": "Animation Validation Smoke Harness",
+      "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+      "title": "Hero Task-State Save-Normalizer Preservation Report",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
-      "parentSliceId": "animation-event-cue-foundation-implementation-10184",
-      "source": "PLAN.md P2.7 Animation And Event Cue Foundation",
+      "parentSliceId": "strategic-ai-foundation-continuation-10184",
+      "source": "PLAN.md P2.8 Strategic AI Foundation Continuation",
       "sourceDocs": [
-        "docs/animation-systems-foundation.md"
+        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
+        "docs/strategic-ai-hero-task-state-report-gate-review.md",
+        "docs/strategic-ai-hero-task-state-boundary-plan.md"
       ],
       "implementationTargets": [
-        "animation/event smoke harness",
-        "event id to animation state mapping checks",
-        "reduced-motion and fast-mode fallback checks",
-        "report fixtures"
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_state_normalizer_preservation_report.gd",
+        "tests/ai_hero_task_state_normalizer_preservation_report.tscn",
+        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-report.md"
       ],
-      "notes": "Next P2.7 child after overworld object state contracts. Keep scope to validation/report harness coverage for existing catalog, policy, battle troop, and overworld object contracts; no final assets, renderer pipeline, save migration, broad UI polish, or P2.9 terrain/editor work."
+      "notes": "Next selected Phase 2 category after P2.7 closeout. Inspect prior strategic AI reports and docs before implementation; do not start P2.9 terrain/editor here, and keep save migration/live task adoption/broad AI rewrite out of scope unless explicitly selected."
     }
   ],
   "stoppedOrPausedTasks": [
