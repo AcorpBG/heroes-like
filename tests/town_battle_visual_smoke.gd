@@ -92,6 +92,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_hire_readiness_cue(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_transfer_readiness_cue(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_action_button_command_cues(shell):
 		get_tree().quit(1)
 		return false
@@ -584,6 +587,52 @@ func _assert_town_hire_readiness_cue(shell: Node) -> bool:
 	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if cue_text.contains(leak_token):
 			push_error("Town smoke: hire readiness cue leaked internal token %s: %s." % [leak_token, cue_text])
+			return false
+	return true
+
+func _assert_town_transfer_readiness_cue(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: shell does not expose transfer-readiness validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var readiness: Dictionary = snapshot.get("transfer_readiness", {}) if snapshot.get("transfer_readiness", {}) is Dictionary else {}
+	var action_lines := []
+	for action in (snapshot.get("transfer_actions", []) if snapshot.get("transfer_actions", []) is Array else []):
+		if action is Dictionary:
+			action_lines.append("%s %s" % [String(action.get("label", "")), String(action.get("summary", ""))])
+	var cue_text := "\n".join([
+		String(snapshot.get("transfer_readiness_visible_text", "")),
+		String(snapshot.get("transfer_readiness_tooltip_text", "")),
+		String(snapshot.get("transfer_visible_text", "")),
+		String(snapshot.get("transfer_tooltip_text", "")),
+		String(snapshot.get("transfer_text", "")),
+		String(readiness.get("best_order", "")),
+		String(readiness.get("route", "")),
+		String(readiness.get("readiness", "")),
+		String(readiness.get("why_it_matters", "")),
+		String(readiness.get("next_step", "")),
+		"\n".join(action_lines),
+	])
+	for token in ["Transfer check:", "Transfer Check", "Orders:", "Best order:", "Route:", "Readiness:", "Why it matters:", "Next practical action:"]:
+		if not cue_text.contains(token):
+			push_error("Town smoke: transfer readiness cue lost %s clarity: %s." % [token, cue_text])
+			return false
+	if not String(snapshot.get("transfer_visible_text", "")).contains("Transfer check:"):
+		push_error("Town smoke: transfer readiness cue is not visible in the Transfer panel: %s." % snapshot)
+		return false
+	if int(readiness.get("total_count", 0)) <= 0 or int(readiness.get("ready_count", 0)) <= 0:
+		push_error("Town smoke: transfer readiness cue did not expose ready transfer orders: %s." % readiness)
+		return false
+	if not cue_text.contains("Garrison") or cue_text.find("->") < 0:
+		push_error("Town smoke: transfer readiness cue did not name the live transfer route: %s." % cue_text)
+		return false
+	for key in ["visible_text", "tooltip_text", "best_order", "route", "readiness", "why_it_matters", "next_step"]:
+		if String(readiness.get(key, "")) == "":
+			push_error("Town smoke: transfer readiness cue is missing structured %s: %s." % [key, readiness])
+			return false
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if cue_text.contains(leak_token):
+			push_error("Town smoke: transfer readiness cue leaked internal token %s: %s." % [leak_token, cue_text])
 			return false
 	return true
 
