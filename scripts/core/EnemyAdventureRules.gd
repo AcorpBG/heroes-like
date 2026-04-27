@@ -80,6 +80,10 @@ const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
 	"travel_cost",
 	"guard_cost",
 	"assignment_penalty",
+	"object_metadata_value",
+	"object_route_pressure_value",
+	"priority_without_object_metadata",
+	"priority_with_object_metadata",
 	"final_priority",
 	"final_score",
 	"income_value",
@@ -2436,6 +2440,16 @@ static func _append_encounter_candidate(
 	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles)
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var objective_anchor = _encounter_is_objective_anchor(session, encounter)
+	var object_breakdown := neutral_encounter_object_valuation_breakdown(session, config, encounter, origin_pos, faction_id)
+	var reason_codes: Array = _normalize_string_array(object_breakdown.get("reason_codes", []))
+	if reason_codes.is_empty():
+		reason_codes = _default_reason_codes_for_target("encounter", placement_id, {"objective_anchor": objective_anchor})
+	var public_reason := String(object_breakdown.get("public_reason", ""))
+	if public_reason == "":
+		public_reason = _public_reason_from_codes(reason_codes)
+	var public_importance := String(object_breakdown.get("public_importance", _default_public_importance("encounter", reason_codes)))
+	var debug_reason := String(object_breakdown.get("debug_reason", "neutral encounter pressure"))
+	var metadata_priority := int(object_breakdown.get("object_metadata_value", 0))
 	candidates.append(
 		{
 			"target_kind": "encounter",
@@ -2453,11 +2467,15 @@ static func _append_encounter_candidate(
 					faction_id,
 					"encounter",
 					placement_id,
-					priority,
+					priority + metadata_priority,
 					"",
 					objective_anchor
 				) - _assignment_penalty(session, "encounter", placement_id)
 			),
+			"target_debug_reason": debug_reason,
+			"target_reason_codes": reason_codes,
+			"target_public_reason": public_reason,
+			"target_public_importance": public_importance,
 		}
 	)
 
@@ -2802,6 +2820,230 @@ static func resource_pressure_report(
 		"origin": {"x": origin_pos.x, "y": origin_pos.y},
 		"target_count": targets.size(),
 		"targets": targets,
+	}
+
+static func neutral_encounter_object_route_pressure_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	origin: Dictionary,
+	faction_id: String = "",
+	limit: int = 0
+) -> Dictionary:
+	var resolved_faction_id := faction_id
+	if resolved_faction_id == "":
+		resolved_faction_id = String(config.get("faction_id", ""))
+	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
+	var targets := []
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var breakdown := neutral_encounter_object_valuation_breakdown(
+			session,
+			config,
+			encounter_value,
+			origin_pos,
+			resolved_faction_id
+		)
+		if breakdown.is_empty() or not bool(breakdown.get("object_backed", false)):
+			continue
+		targets.append(breakdown)
+	targets.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a.get("priority_with_object_metadata", 0)) == int(b.get("priority_with_object_metadata", 0)):
+			if int(a.get("travel_cost", 0)) == int(b.get("travel_cost", 0)):
+				return String(a.get("placement_id", "")) < String(b.get("placement_id", ""))
+			return int(a.get("travel_cost", 0)) < int(b.get("travel_cost", 0))
+		return int(a.get("priority_with_object_metadata", 0)) > int(b.get("priority_with_object_metadata", 0))
+	)
+	if limit > 0 and targets.size() > limit:
+		targets = targets.slice(0, limit)
+	return {
+		"schema": "neutral_encounter_object_route_pressure_report_v1",
+		"mode": "tooling_report_internal_values_allowed",
+		"scenario_id": String(session.scenario_id),
+		"faction_id": resolved_faction_id,
+		"origin": {"x": origin_pos.x, "y": origin_pos.y},
+		"target_count": targets.size(),
+		"targets": targets,
+	}
+
+static func neutral_encounter_object_valuation_breakdown(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	encounter: Variant,
+	origin_pos: Vector2i,
+	faction_id: String = ""
+) -> Dictionary:
+	if not (encounter is Dictionary):
+		return {}
+	var placement_id := String(encounter.get("placement_id", ""))
+	var resolved_faction_id := faction_id
+	if resolved_faction_id == "":
+		resolved_faction_id = String(config.get("faction_id", ""))
+	var object_id := String(encounter.get("object_id", ""))
+	var object_record := ContentService.get_map_object(object_id) if object_id != "" else {}
+	var object_backed := object_id != "" and not object_record.is_empty()
+	var neutral_metadata: Dictionary = encounter.get("neutral_encounter", {}) if encounter.get("neutral_encounter", {}) is Dictionary else {}
+	if neutral_metadata.is_empty() and object_record.get("neutral_encounter", {}) is Dictionary:
+		neutral_metadata = object_record.get("neutral_encounter", {})
+	var object_neutral_metadata: Dictionary = object_record.get("neutral_encounter", {}) if object_record.get("neutral_encounter", {}) is Dictionary else {}
+	var guard_link: Dictionary = encounter.get("guard_link", {}) if encounter.get("guard_link", {}) is Dictionary else {}
+	if guard_link.is_empty() and neutral_metadata.get("guard_link", {}) is Dictionary:
+		guard_link = neutral_metadata.get("guard_link", {})
+	var ai_hints: Dictionary = neutral_metadata.get("ai_hints", {}) if neutral_metadata.get("ai_hints", {}) is Dictionary else {}
+	if ai_hints.is_empty() and object_neutral_metadata.get("ai_hints", {}) is Dictionary:
+		ai_hints = object_neutral_metadata.get("ai_hints", {})
+	if ai_hints.is_empty() and object_record.get("ai_hints", {}) is Dictionary:
+		ai_hints = object_record.get("ai_hints", {})
+	var passability: Dictionary = neutral_metadata.get("passability", {}) if neutral_metadata.get("passability", {}) is Dictionary else {}
+	var passability_class := String(object_record.get("passability_class", passability.get("passability_class", "")))
+	var secondary_tags := _normalize_string_array(object_record.get("secondary_tags", neutral_metadata.get("secondary_tags", [])))
+	if secondary_tags.is_empty():
+		secondary_tags = _normalize_string_array(neutral_metadata.get("secondary_tags", []))
+	var representation: Dictionary = neutral_metadata.get("representation", {}) if neutral_metadata.get("representation", {}) is Dictionary else {}
+	var target_tile := Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
+	var staging_tiles := _encounter_staging_tiles(session, encounter)
+	var goal_distance := _path_distance(session, origin_pos, staging_tiles, "")
+	var objective_anchor := _encounter_is_objective_anchor(session, encounter)
+	var baseline_priority := _encounter_target_priority(session, encounter)
+	var route_pressure_value := 0
+	var guard_target_value := 0
+	var clearance_value := 0
+	var passability_value := 0
+	var shape_mask_value := 0
+	var reason_codes := ["site_contested"]
+	var debug_parts := []
+
+	if bool(ai_hints.get("path_blocking", false)):
+		route_pressure_value += 18
+		debug_parts.append("path-blocking hint")
+	clearance_value += max(0, int(ai_hints.get("neutral_clearance_value", 0))) * 10
+	guard_target_value += max(0, int(ai_hints.get("guard_target_value_hint", 0))) * 14
+	match String(ai_hints.get("avoid_until_strength", "")):
+		"light_guard":
+			clearance_value += 6
+		"standard_guard":
+			clearance_value += 14
+		"heavy_guard":
+			clearance_value += 26
+		"elite_guard":
+			clearance_value += 38
+
+	for tag in secondary_tags:
+		match String(tag):
+			"route_block":
+				route_pressure_value += 34
+			"route_pressure":
+				route_pressure_value += 22
+			"scenario_objective_guard":
+				guard_target_value += 38
+			"guarded_reward":
+				guard_target_value += 24
+			"neutral_dwelling_watch":
+				guard_target_value += 18
+			"mire_pressure":
+				route_pressure_value += 8
+			"visible_army":
+				route_pressure_value += 6
+
+	if passability_class == "neutral_stack_blocking":
+		passability_value += 20
+	if bool(passability.get("blocks_route_until_cleared", false)):
+		route_pressure_value += 20
+
+	match String(guard_link.get("guard_role", "")):
+		"route_block":
+			route_pressure_value += 55
+			debug_parts.append("route-block guard link")
+		"guards_resource_node":
+			guard_target_value += 48
+			debug_parts.append("resource-node guard link")
+		"guards_scenario_objective":
+			guard_target_value += 58
+			debug_parts.append("scenario-objective guard link")
+		"guards_reward":
+			guard_target_value += 34
+		"guards_object":
+			guard_target_value += 28
+	if bool(guard_link.get("blocks_approach", false)):
+		route_pressure_value += 14
+	if bool(guard_link.get("clear_required_for_target", false)):
+		guard_target_value += 18
+	if String(guard_link.get("target_kind", "")) == "route":
+		route_pressure_value += 20
+	if objective_anchor or String(guard_link.get("target_kind", "")) == "scenario_objective":
+		guard_target_value += 34
+		if "objective_front" not in reason_codes:
+			reason_codes.append("objective_front")
+	if route_pressure_value > 0 and "route_pressure" not in reason_codes:
+		reason_codes.append("route_pressure")
+
+	var footprint: Dictionary = object_record.get("footprint", {}) if object_record.get("footprint", {}) is Dictionary else {}
+	var body_tiles: Array = object_record.get("body_tiles", []) if object_record.get("body_tiles", []) is Array else []
+	var approach: Dictionary = object_record.get("approach", {}) if object_record.get("approach", {}) is Dictionary else {}
+	var visit_offsets: Array = approach.get("visit_offsets", []) if approach.get("visit_offsets", []) is Array else []
+	if not body_tiles.is_empty() and not visit_offsets.is_empty():
+		shape_mask_value += 8
+	var object_metadata_value := int(min(175.0, float(route_pressure_value + guard_target_value + clearance_value + passability_value + shape_mask_value)))
+	var priority_without_object_metadata: int = max(
+		0,
+		_weighted_priority(config, resolved_faction_id, "encounter", placement_id, baseline_priority, "", objective_anchor)
+		- _assignment_penalty(session, "encounter", placement_id)
+	)
+	var priority_with_object_metadata: int = max(
+		0,
+		_weighted_priority(config, resolved_faction_id, "encounter", placement_id, baseline_priority + object_metadata_value, "", objective_anchor)
+		- _assignment_penalty(session, "encounter", placement_id)
+	)
+	if debug_parts.is_empty() and object_backed:
+		debug_parts.append("object-backed neutral encounter metadata")
+	var public_reason := _public_reason_from_codes(reason_codes)
+	var public_importance := _default_public_importance("encounter", reason_codes)
+	if "objective_front" in reason_codes:
+		public_importance = "high"
+	return {
+		"target_kind": "encounter",
+		"placement_id": placement_id,
+		"encounter_id": String(encounter.get("encounter_id", encounter.get("id", ""))),
+		"object_id": object_id,
+		"object_backed": object_backed,
+		"object_placement_id": String(encounter.get("object_placement_id", "")),
+		"authored_bundle_id": String(encounter.get("authored_metadata", {}).get("bundle_id", "")) if encounter.get("authored_metadata", {}) is Dictionary else "",
+		"target_label": String(ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", "")))).get("name", placement_id)),
+		"target_x": target_tile.x,
+		"target_y": target_tile.y,
+		"goal_distance": goal_distance,
+		"travel_cost": max(0, goal_distance - 1),
+		"representation_mode": String(representation.get("mode", "")),
+		"passability_class": passability_class,
+		"secondary_tags": secondary_tags,
+		"guard_role": String(guard_link.get("guard_role", "")),
+		"guard_target_kind": String(guard_link.get("target_kind", "")),
+		"guard_target_id": String(guard_link.get("target_id", "")),
+		"path_blocking": bool(ai_hints.get("path_blocking", false)),
+		"avoid_until_strength": String(ai_hints.get("avoid_until_strength", "")),
+		"route_effect_status": "report_only_object_metadata",
+		"object_route_pressure_value": route_pressure_value,
+		"guard_target_value": guard_target_value,
+		"clearance_value": clearance_value,
+		"passability_value": passability_value,
+		"shape_mask_value": shape_mask_value,
+		"object_metadata_value": object_metadata_value if object_backed else 0,
+		"priority_without_object_metadata": priority_without_object_metadata,
+		"priority_with_object_metadata": priority_with_object_metadata,
+		"reason_codes": reason_codes,
+		"public_reason": public_reason,
+		"public_importance": public_importance,
+		"debug_reason": "; ".join(debug_parts),
+		"shape_mask_contract": {
+			"visual_footprint": {
+				"width": int(footprint.get("width", 0)),
+				"height": int(footprint.get("height", 0)),
+				"anchor": String(footprint.get("anchor", "")),
+			},
+			"body_tile_count": body_tiles.size(),
+			"approach_visit_offset_count": visit_offsets.size(),
+			"body_tiles_separate_from_approach": not body_tiles.is_empty() and not visit_offsets.is_empty(),
+		},
 	}
 
 static func commander_role_front_id(scenario_id: String, target_kind: String, target_id: String) -> String:

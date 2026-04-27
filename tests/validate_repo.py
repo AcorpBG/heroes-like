@@ -8264,6 +8264,55 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
     ensure(runtime_metadata_report_script.exists(), errors, "Missing overworld object runtime metadata report script")
 
 
+def validate_overworld_object_ai_valuation_route_effects(errors: list[str]) -> None:
+    required_paths = (
+        ENEMY_ADVENTURE_RULES_PATH,
+        ROOT / "tests" / "ai_overworld_object_valuation_route_effects_report.gd",
+        ROOT / "tests" / "ai_overworld_object_valuation_route_effects_report.tscn",
+        ROOT / "docs" / "overworld-object-ai-valuation-route-effects-report.md",
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing overworld object AI valuation route-effects file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func neutral_encounter_object_route_pressure_report",
+        "func neutral_encounter_object_valuation_breakdown",
+        '"object_metadata_value"',
+        '"priority_without_object_metadata"',
+        '"priority_with_object_metadata"',
+        '"route_effect_status"',
+        '"shape_mask_contract"',
+        '"body_tiles_separate_from_approach"',
+        "target_public_reason",
+        "commander_role_public_leak_check",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing overworld object AI valuation token: {required_token}")
+
+    report_text = (ROOT / "tests" / "ai_overworld_object_valuation_route_effects_report.gd").read_text(encoding="utf-8")
+    for required_token in (
+        "AI_OVERWORLD_OBJECT_VALUATION_ROUTE_EFFECTS_REPORT",
+        "river_pass_reed_totemists",
+        "river_pass_hollow_mire",
+        "commander_role_public_leak_check",
+        "body_tiles_separate_from_approach",
+        "SCORE_LEAK_TOKENS",
+    ):
+        ensure(required_token in report_text, errors, f"AI overworld object valuation report is missing token: {required_token}")
+
+    doc_text = (ROOT / "docs" / "overworld-object-ai-valuation-route-effects-report.md").read_text(encoding="utf-8")
+    for required_text in (
+        "Status: implementation evidence.",
+        "No renderer import",
+        "No save migration",
+        "`wood` remains canonical",
+        "Internal scores stay report/tooling-only",
+    ):
+        ensure(required_text in doc_text, errors, f"Overworld object AI valuation report doc is missing required boundary text: {required_text}")
+
+
 def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_ART_MANIFEST_PATH,
@@ -10054,6 +10103,7 @@ def main() -> int:
     validate_overworld_logistics_sites(errors)
     validate_overworld_route_security_escort(errors)
     validate_overworld_content_foundation(errors)
+    validate_overworld_object_ai_valuation_route_effects(errors)
     validate_overworld_art_asset_slice(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_six_faction_biome_scenario_breadth(errors)
