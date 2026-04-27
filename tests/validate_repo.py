@@ -787,6 +787,29 @@ OVERWORLD_OBJECT_PASSABILITY_CLASSES = {
     "town_blocking",
     "neutral_stack_blocking",
 }
+OVERWORLD_OBJECT_EDITOR_DENSITY_REGION_SIZE = 16
+OVERWORLD_OBJECT_EDITOR_DENSITY_BANDS = {
+    "sparse_wild",
+    "standard_adventure",
+    "contested_economy",
+    "ruin_reward_pocket",
+    "town_influence",
+    "guard_or_encounter",
+}
+OVERWORLD_OBJECT_EDITOR_PLACEMENT_MODES = {
+    "palette_object",
+    "resource_site_object",
+    "scenario_encounter_overlay",
+    "scenario_objective",
+}
+OVERWORLD_OBJECT_EDITOR_BOOL_KEYS = {
+    "allows_adjacent_visitable",
+    "requires_road_adjacency",
+    "requires_approach_clearance",
+    "requires_guard_space",
+    "requires_clear_adjacent_target",
+    "warn_if_hiding_target",
+}
 OVERWORLD_OBJECT_APPROACH_MODES = {"enter", "adjacent", "pass_through", "linked_endpoint", "none"}
 OVERWORLD_OBJECT_APPROACH_SIDES = {"north", "east", "south", "west"}
 OVERWORLD_OBJECT_FOOTPRINT_ANCHORS = {"bottom_center", "center", "top_left", "bottom_left", "bottom_right"}
@@ -2343,6 +2366,270 @@ def collect_overworld_object_scenario_encounter_placements(scenarios: dict[str, 
     return placements
 
 
+def scenario_map_dimensions(scenario: dict) -> tuple[int, int]:
+    raw_map = scenario.get("map", {})
+    if isinstance(raw_map, dict):
+        return int(raw_map.get("width", 0)), int(raw_map.get("height", 0))
+    if isinstance(raw_map, list):
+        height = len(raw_map)
+        width = len(raw_map[0]) if height > 0 and isinstance(raw_map[0], list) else 0
+        return width, height
+    return 0, 0
+
+
+def object_editor_metadata(obj: dict) -> dict:
+    editor_placement = obj.get("editor_placement", {})
+    if isinstance(editor_placement, dict) and editor_placement:
+        return {"source": "map_object.editor_placement", "metadata": editor_placement}
+    neutral_metadata = obj.get("neutral_encounter", {})
+    if isinstance(neutral_metadata, dict):
+        nested_editor_placement = neutral_metadata.get("editor_placement", {})
+        if isinstance(nested_editor_placement, dict) and nested_editor_placement:
+            return {"source": "neutral_encounter.editor_placement", "metadata": nested_editor_placement}
+    return {"source": "", "metadata": {}}
+
+
+def object_missing_editor_authoring_fields(obj: dict) -> list[str]:
+    missing: list[str] = []
+    footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
+    for key in ("schema_version", "primary_class", "secondary_tags", "passability_class", "interaction"):
+        if key not in obj:
+            missing.append(key)
+    if "anchor" not in footprint:
+        missing.append("footprint.anchor")
+    if "tier" not in footprint:
+        missing.append("footprint.tier")
+    if not object_editor_metadata(obj)["metadata"]:
+        missing.append("editor_placement")
+    return missing
+
+
+def editor_authoring_primary_class_bucket(primary_class: str) -> str:
+    if primary_class in {"neutral_encounter", "guarded_reward_site"}:
+        return "guard_or_encounter"
+    if primary_class in {"persistent_economy_site", "transit_route_object", "faction_landmark"}:
+        return "strategic_site"
+    if primary_class in {"interactable_site", "neutral_dwelling"}:
+        return "visitable_site"
+    return primary_class
+
+
+def build_overworld_object_editor_authoring_section(
+    map_objects: dict[str, dict],
+    resource_sites: dict[str, dict],
+    scenarios: dict[str, dict],
+    site_placements: dict[str, dict],
+    encounter_placements: dict[str, dict],
+    object_ids_by_site_id: dict[str, str],
+) -> dict:
+    section = {
+        "schema": "overworld_object_editor_authoring_report_v1",
+        "mode": "report_only_no_runtime_effect",
+        "region_size": OVERWORLD_OBJECT_EDITOR_DENSITY_REGION_SIZE,
+        "palette_groups": {},
+        "metadata_readiness": {
+            "taxonomy_ready_count": 0,
+            "editor_metadata_present_count": 0,
+            "top_level_editor_placement_count": 0,
+            "nested_neutral_editor_placement_count": 0,
+            "objects_missing_editor_authoring_fields": {},
+            "missing_field_counts": {},
+            "role_mismatches": [],
+            "unsupported_map_role_tags": [],
+        },
+        "density_diagnostics": {
+            "scenario_regions": {},
+            "regions_requiring_review": [],
+            "empty_regions": [],
+            "unlinked_placed_resource_sites": [],
+        },
+    }
+
+    object_scenario_counts: dict[str, int] = {object_id: 0 for object_id in map_objects.keys()}
+    for site_id, placement_entry in site_placements.items():
+        object_id = object_ids_by_site_id.get(site_id, "")
+        if object_id:
+            object_scenario_counts[object_id] = int(object_scenario_counts.get(object_id, 0)) + int(placement_entry.get("count", 0))
+    for scenario in scenarios.values():
+        for encounter in scenario.get("encounters", []):
+            if not isinstance(encounter, dict):
+                continue
+            object_id = str(encounter.get("object_id", ""))
+            if object_id:
+                object_scenario_counts[object_id] = int(object_scenario_counts.get(object_id, 0)) + 1
+
+    for object_id, obj in sorted(map_objects.items()):
+        site_id = str(obj.get("resource_site_id", ""))
+        site = resource_sites.get(site_id) if site_id else None
+        primary_class = infer_overworld_object_primary_class(obj, site)
+        family = str(obj.get("family", ""))
+        group = section["palette_groups"].setdefault(
+            primary_class,
+            {
+                "primary_class": primary_class,
+                "count": 0,
+                "families": {},
+                "object_ids": [],
+                "scenario_placement_count": 0,
+                "editor_metadata_present_count": 0,
+            },
+        )
+        group["count"] += 1
+        append_unique(group["object_ids"], object_id)
+        increment_count(group["families"], family)
+        group["scenario_placement_count"] += int(object_scenario_counts.get(object_id, 0))
+        editor_metadata = object_editor_metadata(obj)
+        if editor_metadata["metadata"]:
+            group["editor_metadata_present_count"] += 1
+
+        missing_fields = object_missing_editor_authoring_fields(obj)
+        if not missing_fields:
+            section["metadata_readiness"]["taxonomy_ready_count"] += 1
+        else:
+            section["metadata_readiness"]["objects_missing_editor_authoring_fields"][object_id] = missing_fields
+            for field in missing_fields:
+                increment_count(section["metadata_readiness"]["missing_field_counts"], field)
+        if editor_metadata["source"] == "map_object.editor_placement":
+            section["metadata_readiness"]["top_level_editor_placement_count"] += 1
+            section["metadata_readiness"]["editor_metadata_present_count"] += 1
+        elif editor_metadata["source"] == "neutral_encounter.editor_placement":
+            section["metadata_readiness"]["nested_neutral_editor_placement_count"] += 1
+            section["metadata_readiness"]["editor_metadata_present_count"] += 1
+
+        authored_primary_class = str(obj.get("primary_class", ""))
+        if authored_primary_class and authored_primary_class != primary_class:
+            section["metadata_readiness"]["role_mismatches"].append(
+                {"object_id": object_id, "authored_primary_class": authored_primary_class, "inferred_primary_class": primary_class}
+            )
+        for role in obj.get("map_roles", []) if isinstance(obj.get("map_roles", []), list) else []:
+            role_key = str(role)
+            if role_key and role_key not in OVERWORLD_OBJECT_SECONDARY_TAGS:
+                section["metadata_readiness"]["unsupported_map_role_tags"].append({"object_id": object_id, "role": role_key})
+
+    for primary_class, group in section["palette_groups"].items():
+        group["families"] = sorted_counts(group["families"])
+        group["object_ids"] = sorted(group["object_ids"])
+    section["palette_groups"] = {key: section["palette_groups"][key] for key in sorted(section["palette_groups"].keys())}
+    section["metadata_readiness"]["missing_field_counts"] = sorted_counts(section["metadata_readiness"]["missing_field_counts"])
+    section["metadata_readiness"]["role_mismatches"] = sorted(section["metadata_readiness"]["role_mismatches"], key=lambda item: item["object_id"])
+    section["metadata_readiness"]["unsupported_map_role_tags"] = sorted(section["metadata_readiness"]["unsupported_map_role_tags"], key=lambda item: (item["object_id"], item["role"]))
+
+    def add_density_placement(region: dict, placement: dict, primary_class: str, source: str, object_id: str = "", site_id: str = "") -> None:
+        region["placement_count"] += 1
+        increment_count(region["primary_class_counts"], primary_class)
+        increment_count(region["authoring_bucket_counts"], editor_authoring_primary_class_bucket(primary_class))
+        if not object_id and source == "resource_site":
+            region["placed_without_map_object_count"] += 1
+        region["placements"].append(
+            {
+                "placement_id": str(placement.get("placement_id", "")),
+                "source": source,
+                "object_id": object_id,
+                "site_id": site_id,
+                "primary_class": primary_class,
+                "x": int(placement.get("x", 0)),
+                "y": int(placement.get("y", 0)),
+            }
+        )
+
+    for scenario_id, scenario in sorted(scenarios.items()):
+        width, height = scenario_map_dimensions(scenario)
+        regions_x = max(1, (width + OVERWORLD_OBJECT_EDITOR_DENSITY_REGION_SIZE - 1) // OVERWORLD_OBJECT_EDITOR_DENSITY_REGION_SIZE)
+        regions_y = max(1, (height + OVERWORLD_OBJECT_EDITOR_DENSITY_REGION_SIZE - 1) // OVERWORLD_OBJECT_EDITOR_DENSITY_REGION_SIZE)
+        scenario_entry = {
+            "scenario_id": scenario_id,
+            "map_width": width,
+            "map_height": height,
+            "regions_x": regions_x,
+            "regions_y": regions_y,
+            "regions": {},
+        }
+        for ry in range(regions_y):
+            for rx in range(regions_x):
+                key = f"{rx},{ry}"
+                scenario_entry["regions"][key] = {
+                    "region": {"x": rx, "y": ry},
+                    "placement_count": 0,
+                    "primary_class_counts": {},
+                    "authoring_bucket_counts": {},
+                    "placed_without_map_object_count": 0,
+                    "placements": [],
+                    "warnings": [],
+                }
+
+        for node in scenario.get("resource_nodes", []):
+            if not isinstance(node, dict):
+                continue
+            site_id = str(node.get("site_id", ""))
+            object_id = object_ids_by_site_id.get(site_id, "")
+            obj = map_objects.get(object_id, {}) if object_id else {}
+            site = resource_sites.get(site_id)
+            primary_class = infer_overworld_object_primary_class(obj, site)
+            rx = max(0, min(regions_x - 1, int(node.get("x", 0)) // OVERWORLD_OBJECT_EDITOR_DENSITY_REGION_SIZE))
+            ry = max(0, min(regions_y - 1, int(node.get("y", 0)) // OVERWORLD_OBJECT_EDITOR_DENSITY_REGION_SIZE))
+            add_density_placement(scenario_entry["regions"][f"{rx},{ry}"], node, primary_class, "resource_site", object_id, site_id)
+            if not object_id:
+                append_unique_dict(
+                    section["density_diagnostics"]["unlinked_placed_resource_sites"],
+                    {"scenario_id": scenario_id, "placement_id": str(node.get("placement_id", "")), "site_id": site_id},
+                )
+
+        for node in scenario.get("encounters", []):
+            if not isinstance(node, dict):
+                continue
+            object_id = str(node.get("object_id", ""))
+            obj = map_objects.get(object_id, {}) if object_id else {}
+            primary_class = str(node.get("primary_class", ""))
+            if not primary_class:
+                primary_class = infer_overworld_object_primary_class(obj, None) if obj else "neutral_encounter"
+            rx = max(0, min(regions_x - 1, int(node.get("x", 0)) // OVERWORLD_OBJECT_EDITOR_DENSITY_REGION_SIZE))
+            ry = max(0, min(regions_y - 1, int(node.get("y", 0)) // OVERWORLD_OBJECT_EDITOR_DENSITY_REGION_SIZE))
+            add_density_placement(scenario_entry["regions"][f"{rx},{ry}"], node, primary_class, "encounter", object_id, "")
+
+        for key, region in scenario_entry["regions"].items():
+            bucket_counts = region["authoring_bucket_counts"]
+            if region["placement_count"] == 0:
+                section["density_diagnostics"]["empty_regions"].append({"scenario_id": scenario_id, "region": region["region"]})
+            if region["placement_count"] > 16:
+                region["warnings"].append("authoring density review: more than 16 non-decoration placements in one 16x16 region")
+            if int(bucket_counts.get("pickup", 0)) > 7:
+                region["warnings"].append("authoring density review: pickup count exceeds the standard adventure band")
+            if int(bucket_counts.get("guard_or_encounter", 0)) > 6:
+                region["warnings"].append("authoring density review: guard/encounter count exceeds the ruin/reward pocket band")
+            if int(bucket_counts.get("strategic_site", 0)) + int(bucket_counts.get("visitable_site", 0)) > 10:
+                region["warnings"].append("authoring density review: strategic/visitable object count may crowd approach reads")
+            if region["placed_without_map_object_count"] > 0:
+                region["warnings"].append("authoring metadata gap: placed resource sites in this region lack map_object links")
+            if region["warnings"]:
+                section["density_diagnostics"]["regions_requiring_review"].append(
+                    {
+                        "scenario_id": scenario_id,
+                        "region": region["region"],
+                        "placement_count": region["placement_count"],
+                        "primary_class_counts": sorted_counts(region["primary_class_counts"]),
+                        "warnings": region["warnings"],
+                    }
+                )
+            region["primary_class_counts"] = sorted_counts(region["primary_class_counts"])
+            region["authoring_bucket_counts"] = sorted_counts(region["authoring_bucket_counts"])
+            region["placements"] = sorted(region["placements"], key=lambda item: (item["y"], item["x"], item["placement_id"]))
+        section["density_diagnostics"]["scenario_regions"][scenario_id] = scenario_entry
+
+    section["density_diagnostics"]["empty_regions"] = sorted(
+        section["density_diagnostics"]["empty_regions"],
+        key=lambda item: (item["scenario_id"], item["region"]["y"], item["region"]["x"]),
+    )
+    section["density_diagnostics"]["regions_requiring_review"] = sorted(
+        section["density_diagnostics"]["regions_requiring_review"],
+        key=lambda item: (item["scenario_id"], item["region"]["y"], item["region"]["x"]),
+    )
+    section["density_diagnostics"]["unlinked_placed_resource_sites"] = sorted(
+        section["density_diagnostics"]["unlinked_placed_resource_sites"],
+        key=lambda item: (item["scenario_id"], item["placement_id"], item["site_id"]),
+    )
+    return section
+
+
 def build_overworld_object_report() -> dict:
     payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("map_objects", "resource_sites", "scenarios", "encounters", "army_groups", "factions")}
     map_objects = items_index(payloads["map_objects"])
@@ -2415,6 +2702,14 @@ def build_overworld_object_report() -> dict:
         "warnings": [],
         "errors": [],
     }
+    report["editor_authoring"] = build_overworld_object_editor_authoring_section(
+        map_objects,
+        resource_sites,
+        scenarios,
+        site_placements,
+        encounter_placements,
+        object_ids_by_site_id,
+    )
     report["ai_editor_implications"]["visible_neutral_encounter_records_present"] = any(
         infer_overworld_object_primary_class(obj, resource_sites.get(str(obj.get("resource_site_id", "")))) == "neutral_encounter"
         for obj in map_objects.values()
@@ -2623,6 +2918,14 @@ def print_overworld_object_report(report: dict) -> None:
     print(f"- linked resource sites: {report['resource_site_links']['linked_object_count']}; placed sites without object link: {len(report['scenario_reality']['placed_site_ids_without_map_object'])}")
     print(f"- guarded/reward links: {len(report['guard_reward'])}; ownership/capture hints: {len(report['ownership_capture'])}; transit warnings: {sum(len(item.get('warnings', [])) for item in report['route_transit'].values())}")
     print(f"- first-class neutral encounter objects: {report['ai_editor_implications']['visible_neutral_encounter_records_present']}")
+    editor_authoring = report.get("editor_authoring", {})
+    readiness = editor_authoring.get("metadata_readiness", {})
+    density = editor_authoring.get("density_diagnostics", {})
+    print("Editor authoring:")
+    print(f"- palette groups: {len(editor_authoring.get('palette_groups', {}))}; taxonomy ready objects: {readiness.get('taxonomy_ready_count', 0)}; editor metadata present: {readiness.get('editor_metadata_present_count', 0)}")
+    print(f"- top-level editor placement: {readiness.get('top_level_editor_placement_count', 0)}; nested neutral editor placement: {readiness.get('nested_neutral_editor_placement_count', 0)}")
+    print(f"- role mismatches: {len(readiness.get('role_mismatches', []))}; unsupported map-role tags: {len(readiness.get('unsupported_map_role_tags', []))}")
+    print(f"- density regions requiring review: {len(density.get('regions_requiring_review', []))}; unlinked placed resource sites: {len(density.get('unlinked_placed_resource_sites', []))}")
     print(f"- runtime adoption: {report['compatibility_adapters']['runtime_adoption']}; pathing occupancy adoption={report['compatibility_adapters']['pathing_occupancy_adoption']}")
     print(f"- runtime adopted safe fields: {', '.join(report['compatibility_adapters'].get('runtime_adopted_safe_fields', []))}")
     print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
@@ -2729,6 +3032,20 @@ def validate_strict_overworld_object_fixtures() -> tuple[list[str], list[str]]:
         editor_placement = obj.get("editor_placement", {})
         if not isinstance(editor_placement, dict) or not editor_placement:
             local_errors.append(f"{object_id} must define editor_placement metadata in strict fixtures")
+        else:
+            density_band = str(editor_placement.get("density_band", editor_placement.get("density_bucket", "")))
+            if density_band not in OVERWORLD_OBJECT_EDITOR_DENSITY_BANDS:
+                local_errors.append(f"{object_id} editor_placement must define a supported density_band or density_bucket")
+            if "minimum_lane_clearance" in editor_placement:
+                minimum_lane_clearance = editor_placement.get("minimum_lane_clearance")
+                if type(minimum_lane_clearance) is not int or minimum_lane_clearance < 0:
+                    local_errors.append(f"{object_id} editor_placement.minimum_lane_clearance must be a non-negative integer")
+            placement_mode = str(editor_placement.get("placement_mode", ""))
+            if placement_mode and placement_mode not in OVERWORLD_OBJECT_EDITOR_PLACEMENT_MODES:
+                local_errors.append(f"{object_id} editor_placement.placement_mode is unsupported")
+            for bool_key in OVERWORLD_OBJECT_EDITOR_BOOL_KEYS:
+                if bool_key in editor_placement and type(editor_placement.get(bool_key)) is not bool:
+                    local_errors.append(f"{object_id} editor_placement.{bool_key} must be boolean")
         ai_hints = obj.get("ai_hints", {})
         if primary_class != "decoration" and (not isinstance(ai_hints, dict) or not ai_hints):
             local_errors.append(f"{object_id} non-decoration object must define ai_hints in strict fixtures")

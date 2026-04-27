@@ -274,6 +274,20 @@
         "ai_hints": {"strategic_value": 5}
       },
       {
+        "id": "bad_editor_placement_missing_density_band",
+        "family": "pickup",
+        "primary_class": "pickup",
+        "secondary_tags": ["small_reward"],
+        "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"},
+        "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+        "passability_class": "passable_visit_on_enter",
+        "interaction": {"cadence": "one_time"},
+        "approach": {"mode": "enter", "primary_sides": [], "visit_offsets": [{"x": 0, "y": 0}]},
+        "animation_cues": ["object_pickup_glint_placeholder"],
+        "editor_placement": {"minimum_lane_clearance": 1},
+        "ai_hints": {"strategic_value": 1}
+      },
+      {
         "id": "bad_transit_missing_route_effect",
         "family": "transit_object",
         "primary_class": "transit_route_object",
