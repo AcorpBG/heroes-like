@@ -729,18 +729,19 @@ func _promote_selected_owned_town_action(actions: Array) -> Array:
 func _selected_owned_town_visit_action() -> Dictionary:
 	if not _is_selected_owned_town_visit_target():
 		return {}
-	var town := _town_at(_selected_tile.x, _selected_tile.y)
 	var town_name := _selected_tile_destination_name()
 	if town_name == "":
 		town_name = "this town"
+	var handoff := _town_entry_handoff_surface()
+	var handoff_summary := String(handoff.get("summary_text", "")).strip_edges()
 	return {
 		"id": "visit_town",
 		"label": "Visit Town",
-		"summary": "Enter %s now to review construction, recruitment, market, and recovery orders. The field hero stays at %d,%d." % [
+		"summary": "Enter %s now to review construction, recruitment, market, and recovery orders. %s" % [
 			town_name,
-			OverworldRules.hero_position(_session).x,
-			OverworldRules.hero_position(_session).y,
+			handoff_summary,
 		],
+		"town_entry_handoff": handoff,
 	}
 
 func _is_selected_owned_town_visit_target() -> bool:
@@ -750,6 +751,38 @@ func _is_selected_owned_town_visit_target() -> bool:
 		return false
 	var town := _town_at(_selected_tile.x, _selected_tile.y)
 	return not town.is_empty() and String(town.get("owner", "neutral")) == "player"
+
+func _town_entry_handoff_surface() -> Dictionary:
+	if not _is_selected_owned_town_visit_target():
+		return {}
+	var town_name := _selected_tile_destination_name()
+	if town_name == "":
+		town_name = "this town"
+	var hero_pos := OverworldRules.hero_position(_session)
+	var movement = _session.overworld.get("movement", {})
+	var movement_line := "Move %d/%d" % [
+		int(movement.get("current", 0)),
+		int(movement.get("max", movement.get("current", 0))),
+	]
+	var field_position := "%d,%d" % [hero_pos.x, hero_pos.y]
+	var summary := "Leave returns to the field at %s with %s; the day does not advance." % [
+		field_position,
+		movement_line,
+	]
+	var tooltip := "Town Entry Handoff\n- Enter: Visit Town opens %s management.\n- Field position: active hero remains at %s.\n- Movement: %s is preserved until spent on field movement.\n- Return: Leave returns to the overworld; the day does not advance.\n- State change: town inspection is safe until a town command is committed." % [
+		town_name,
+		field_position,
+		movement_line,
+	]
+	return {
+		"visible_text": "Town handoff: %s | Leave returns field" % _short_action_label(town_name, 20),
+		"tooltip_text": tooltip,
+		"summary_text": summary,
+		"town_name": town_name,
+		"field_position": field_position,
+		"movement_line": movement_line,
+		"return_order": "Leave",
+	}
 
 func _current_primary_action() -> Dictionary:
 	if _refresh_cache.has("primary_action"):
@@ -826,6 +859,7 @@ func _refresh_primary_action_button(action: Dictionary) -> void:
 	var commit_check := _primary_order_commit_check_surface(action)
 	_primary_action_button.tooltip_text = _join_tooltip_sections([
 		summary,
+		String(_town_entry_handoff_surface().get("tooltip_text", "")),
 		String(commit_check.get("tooltip_text", "")),
 		"Press Enter or Space to commit this order.",
 	])
@@ -1955,6 +1989,7 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 	var route_decision := _selected_route_decision_surface()
 	var route_line := _route_decision_line(route_decision)
 	var route_target_handoff := _route_target_handoff_surface(route_decision)
+	var town_entry_handoff := _town_entry_handoff_surface()
 	var forecast := OverworldRules.describe_end_turn_forecast_compact(_session)
 	var visible_next := _short_text(next_step.trim_suffix("."), 44)
 	var visible := "Ready: %s | %s" % [visible_next, movement_line]
@@ -1963,6 +1998,12 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 		visible = "Ready: %s | %s" % [
 			visible_next,
 			_short_text(route_target_visible.trim_prefix("Route target: "), 36),
+		]
+	var town_entry_visible := String(town_entry_handoff.get("visible_text", "")).strip_edges()
+	if town_entry_visible != "":
+		visible = "Ready: %s | %s" % [
+			visible_next,
+			_short_text(town_entry_visible.trim_prefix("Town handoff: "), 36),
 		]
 	var tooltip_lines := [
 		"Field Readiness",
@@ -1973,6 +2014,9 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 	var route_target_tooltip := String(route_target_handoff.get("tooltip_text", "")).strip_edges()
 	if route_target_tooltip != "":
 		tooltip_lines.append(route_target_tooltip)
+	var town_entry_tooltip := String(town_entry_handoff.get("tooltip_text", "")).strip_edges()
+	if town_entry_tooltip != "":
+		tooltip_lines.append(town_entry_tooltip)
 	if route_line != "":
 		tooltip_lines.append("- %s" % route_line)
 	if forecast != "":
@@ -1985,6 +2029,7 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 		"primary_order": primary_line,
 		"route_line": route_line,
 		"route_target_handoff": route_target_handoff,
+		"town_entry_handoff": town_entry_handoff,
 		"movement_line": movement_line,
 		"end_turn_forecast": forecast,
 	}
@@ -2212,7 +2257,14 @@ func _rail_tile_text() -> String:
 	if not town.is_empty():
 		var town_line := "Town: %s" % _selected_tile_destination_name()
 		var owner := String(town.get("owner", "neutral")).capitalize()
-		return "%s\n%s\n%s%s" % [town_line, route_line, "Owner %s | %s" % [owner, terrain], "" if action_hint == "" else " | %s" % action_hint]
+		var handoff := String(_town_entry_handoff_surface().get("visible_text", "")).strip_edges()
+		return "%s\n%s\n%s%s%s" % [
+			town_line,
+			route_line,
+			"Owner %s | %s" % [owner, terrain],
+			"" if action_hint == "" else " | %s" % action_hint,
+			"" if handoff == "" else "\n%s" % handoff,
+		]
 
 	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
 	if not node.is_empty():
@@ -2888,6 +2940,7 @@ func validation_snapshot() -> Dictionary:
 	var primary_action := _current_primary_action()
 	var route_decision := _selected_route_decision_surface()
 	var route_target_handoff := _route_target_handoff_surface(route_decision)
+	var town_entry_handoff := _town_entry_handoff_surface()
 	var primary_order_commit_check := _primary_order_commit_check_surface(primary_action)
 	var field_readiness := _field_readiness_surface()
 	var end_turn_check := _end_turn_confirmation_surface(field_readiness)
@@ -2973,6 +3026,9 @@ func validation_snapshot() -> Dictionary:
 		"route_target_handoff": route_target_handoff,
 		"route_target_handoff_visible_text": String(route_target_handoff.get("visible_text", "")),
 		"route_target_handoff_tooltip_text": String(route_target_handoff.get("tooltip_text", "")),
+		"town_entry_handoff": town_entry_handoff,
+		"town_entry_handoff_visible_text": String(town_entry_handoff.get("visible_text", "")),
+		"town_entry_handoff_tooltip_text": String(town_entry_handoff.get("tooltip_text", "")),
 		"selected_tile_rail_text": _rail_tile_text(),
 		"map_tooltip": _map_tooltip_text(),
 		"active_context_type": String(active_context.get("type", "")),
@@ -3798,6 +3854,8 @@ func _validation_action_payload(action: Dictionary) -> Dictionary:
 	}
 	if action.get("route_decision", {}) is Dictionary:
 		payload["route_decision"] = action.get("route_decision", {})
+	if action.get("town_entry_handoff", {}) is Dictionary:
+		payload["town_entry_handoff"] = action.get("town_entry_handoff", {})
 	return payload
 
 func _validation_context_action_signature() -> Dictionary:

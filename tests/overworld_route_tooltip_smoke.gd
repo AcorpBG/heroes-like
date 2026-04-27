@@ -59,7 +59,65 @@ func _run() -> void:
 		return
 	if not _assert_no_ai_score_leak("Route tooltip smoke", joined):
 		return
+	if not _assert_town_entry_handoff_cue(shell):
+		return
 	get_tree().quit(0)
+
+func _assert_town_entry_handoff_cue(shell: Node) -> bool:
+	var session = SessionState.ensure_active_session()
+	_set_active_hero_position(session, Vector2i(1, 2))
+	var movement: Dictionary = session.overworld.get("movement", {})
+	movement["current"] = int(movement.get("max", movement.get("current", 0)))
+	session.overworld["movement"] = movement
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+
+	var snapshot: Dictionary = shell.call("validation_select_tile", 0, 2)
+	var handoff: Dictionary = snapshot.get("town_entry_handoff", {})
+	var readiness: Dictionary = snapshot.get("field_readiness", {})
+	var readiness_handoff: Dictionary = readiness.get("town_entry_handoff", {})
+	var primary_action: Dictionary = snapshot.get("primary_action", {})
+	var action_handoff: Dictionary = primary_action.get("town_entry_handoff", {}) if primary_action.get("town_entry_handoff", {}) is Dictionary else {}
+	var joined := "\n".join([
+		String(snapshot.get("primary_action_button_text", "")),
+		String(snapshot.get("primary_action_button_tooltip_text", "")),
+		String(snapshot.get("selected_tile_rail_text", "")),
+		String(snapshot.get("town_entry_handoff_visible_text", "")),
+		String(snapshot.get("town_entry_handoff_tooltip_text", "")),
+		String(handoff.get("visible_text", "")),
+		String(handoff.get("tooltip_text", "")),
+		String(handoff.get("summary_text", "")),
+		String(readiness.get("visible_text", "")),
+		String(readiness.get("tooltip_text", "")),
+		String(readiness_handoff.get("visible_text", "")),
+		String(readiness_handoff.get("tooltip_text", "")),
+		String(primary_action.get("summary", "")),
+		String(action_handoff.get("tooltip_text", "")),
+	])
+	if String(snapshot.get("primary_action_id", "")) != "visit_town":
+		_fail("Town entry handoff smoke: selected town should expose Visit Town.", snapshot)
+		return false
+	if not _assert_text_contains_all(
+		"Town entry handoff smoke",
+		joined,
+		[
+			"Visit Town [Enter]",
+			"Town handoff:",
+			"Town Entry Handoff",
+			"Enter: Visit Town opens Riverwatch Hold management.",
+			"Field position: active hero remains at 1,2.",
+			"Movement: Move",
+			"Return: Leave returns to the overworld; the day does not advance.",
+			"State change:",
+			"Leave returns to the field at 1,2",
+			"Primary Order Check",
+			"Enter/Space enters the town without ending the day",
+		]
+	):
+		return false
+	if not _assert_no_ai_score_leak("Town entry handoff smoke", joined):
+		return false
+	return true
 
 func _set_active_hero_position(session, tile: Vector2i) -> void:
 	session.overworld["hero_position"] = {"x": tile.x, "y": tile.y}
