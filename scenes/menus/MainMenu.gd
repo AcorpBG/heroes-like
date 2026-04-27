@@ -933,6 +933,7 @@ func _build_save_pulse() -> String:
 
 func _build_footer_expedition_summary() -> String:
 	var lines := [ScenarioSelectRulesScript.build_current_session_summary(SessionState.ensure_active_session())]
+	lines.append(String(_continue_check_surface().get("visible_text", "")))
 	lines.append(String(_quit_check_surface().get("visible_text", "")))
 	var latest_summary := SaveService.latest_loadable_summary()
 	if SaveService.can_load_summary(latest_summary):
@@ -1002,6 +1003,27 @@ func _quit_check_surface() -> Dictionary:
 		"tooltip_text": tooltip,
 	}
 
+func _continue_check_surface() -> Dictionary:
+	var latest_summary := SaveService.latest_loadable_summary()
+	if not SaveService.can_load_summary(latest_summary):
+		return {
+			"visible_text": "Continue check: no loadable resume point yet.",
+			"tooltip_text": "Continue Check\n- Resume point: none loadable.\n- Next: start Campaign or Skirmish, then save or autosave to create a Continue Latest target.\n- Inspection: reading this cue does not start, load, save, or change campaign progression.",
+		}
+	var resume_label := SaveService.describe_resume_brief(latest_summary)
+	var play_check := SaveService.describe_summary_play_check(latest_summary)
+	var resume_handoff := SaveService.describe_summary_resume_handoff(latest_summary)
+	var visible := "Continue check: Continue Latest opens %s." % resume_label
+	var tooltip := "Continue Check\n- Action: Continue Latest loads %s.\n- %s\n- %s\n- Inspection: reading this cue or opening the menu does not load, save, route, or change campaign progression." % [
+		resume_label,
+		play_check,
+		resume_handoff,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+	}
+
 func _settings_handoff_surface() -> Dictionary:
 	var visible := "Settings handoff: changes apply now; close returns to the scenic menu."
 	var tooltip := "Settings Handoff\n- Applies: presentation, sound, and readability changes take effect immediately.\n- Saved to: device config.\n- Not changed: campaign progress and expedition saves.\n- Close: returns to the scenic first view with these settings still active."
@@ -1029,6 +1051,7 @@ func validation_snapshot() -> Dictionary:
 	var latest_continue := _latest_continue_surface()
 	var latest_summary := SaveService.latest_loadable_summary()
 	var quit_check := _quit_check_surface()
+	var continue_check := _continue_check_surface()
 	return {
 		"scene_path": scene_file_path,
 		"stage_dock_visible": _stage_dock_panel.visible,
@@ -1098,6 +1121,9 @@ func validation_snapshot() -> Dictionary:
 		"latest_save_summary": latest_summary,
 		"selected_save_summary": selected_save_summary.duplicate(true),
 		"latest_play_check": SaveService.describe_summary_play_check(latest_summary),
+		"continue_check": continue_check.duplicate(true),
+		"continue_check_text": String(continue_check.get("visible_text", "")),
+		"continue_check_tooltip": String(continue_check.get("tooltip_text", "")),
 		"selected_save_play_check": SaveService.describe_summary_play_check(selected_save_summary),
 		"selected_save_browser_cue": SaveService.describe_slot_continuity_cue(selected_save_summary),
 		"latest_resume_handoff": SaveService.describe_summary_resume_handoff(latest_summary),
@@ -1420,9 +1446,11 @@ func _first_view_load_tooltip() -> String:
 		"Command cue: Load opens the war ledger; loading only happens after Load Selected.",
 	]
 	if SaveService.can_load_summary(latest_summary):
+		lines.append(String(_continue_check_surface().get("tooltip_text", "")))
 		lines.append(SaveService.describe_summary_play_check(latest_summary))
 		lines.append(SaveService.describe_summary_resume_handoff(latest_summary))
 	else:
+		lines.append(String(_continue_check_surface().get("tooltip_text", "")))
 		lines.append("No loadable save is available; start Campaign or Skirmish to create a resume point.")
 	return "\n".join(lines)
 
