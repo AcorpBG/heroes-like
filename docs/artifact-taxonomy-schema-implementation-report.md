@@ -19,7 +19,7 @@ Implemented a bounded additive artifact taxonomy/schema foundation for the four 
 - No `SAVE_VERSION` bump.
 - No save payload migration.
 - No full artifact set behavior.
-- No artifact source/reward table activation.
+- No live artifact source/reward execution.
 - No runtime equipment slot overhaul.
 - No AI valuation behavior.
 - No rare-resource activation or economy rebalance.

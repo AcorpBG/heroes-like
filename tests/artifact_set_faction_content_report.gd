@@ -81,7 +81,7 @@ func _run() -> void:
 		"faction_affinity_counts": faction_counts,
 		"runtime_policy": policy,
 		"caveats": [
-			"This report proves bounded artifact set and faction-affinity content metadata only; source tables, equip-time set bonuses, save migration, AI valuation behavior, and rare-resource activation remain outside this slice.",
+			"This report proves bounded artifact set and faction-affinity content metadata only; live source execution, equip-time set bonuses, save migration, AI valuation behavior, and rare-resource activation remain outside this slice.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])

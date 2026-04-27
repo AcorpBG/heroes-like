@@ -17,7 +17,7 @@ Implemented bounded artifact set and faction-affinity content on top of the arti
 ## Boundaries
 
 - No `SAVE_VERSION` bump.
-- No source/reward distribution tables.
+- No live source/reward execution.
 - No runtime set bonuses or equipment effect changes beyond existing safe stat/common-resource metadata.
 - No AI valuation behavior.
 - No rare-resource activation, market migration, economy rebalance, or scenario migration.
