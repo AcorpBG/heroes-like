@@ -7,6 +7,12 @@
         "kind": "pickup",
         "resources": {"gold": 120, "wood": 1},
         "stockpile": true
+      },
+      {
+        "id": "valid_staged_rare_report_resource",
+        "kind": "report_only_source_fixture",
+        "resources": {"aetherglass": 1},
+        "stockpile": true
       }
     ],
     "sites": [
@@ -60,23 +66,48 @@
         "repeatable": true,
         "visit_cooldown_days": 7,
         "service_cost": {"gold": 50}
+      },
+      {
+        "id": "fixture_guarded_aetherglass_orchard_source",
+        "family": "mine",
+        "persistent_control": true,
+        "guarded": true,
+        "claim_rewards": {"aetherglass": 1},
+        "resource_outputs": [
+          {
+            "resource_id": "aetherglass",
+            "cadence": "weekly",
+            "amount": 1,
+            "requires_owner": true,
+            "starts_after_claim": true,
+            "cap_per_week": 1
+          }
+        ],
+        "capture_profile": {
+          "capture_model": "capturable",
+          "counter_capture_value": 7,
+          "pillage_policy": "limited_stock",
+          "damaged_state_policy": "temporary_output_pause",
+          "retake_recovery_days": 3
+        }
       }
     ],
     "market_profiles": [
       {
         "id": "fixture_common_weekly_market",
+        "normal_market": true,
         "refresh_cadence": "weekly",
         "buy_caps": {"wood": 6, "ore": 6},
         "sell_caps": {"wood": 8, "ore": 8},
-        "restricted_buy_resource_ids": ["aetherglass", "verdant_grafts", "brass_scrip", "memory_salt"]
+        "restricted_buy_resource_ids": ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
       }
     ],
     "faction_preferences": [
       {
         "id": "fixture_embercourt_preferences",
         "policy": "advisory",
-        "primary": ["gold", "wood"],
-        "secondary": ["ore"],
+        "primary": ["gold", "wood", "embergrain"],
+        "secondary": ["ore", "aetherglass"],
         "awkward": ["experience"]
       }
     ],
