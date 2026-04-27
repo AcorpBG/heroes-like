@@ -252,6 +252,9 @@ func _run_battle_smoke() -> bool:
 	if not _assert_battle_target_cycle_cue_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_battle_initiative_handoff_cue_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_battle_command_tab_readiness_cues(shell):
 		get_tree().quit(1)
 		return false
@@ -1509,6 +1512,43 @@ func _assert_battle_target_cycle_cue_contract(shell: Node) -> bool:
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if cycle_text.contains(leak_token):
 			push_error("Battle smoke: target-cycle cue leaked internal token %s: %s." % [leak_token, cycle_text])
+			return false
+	return true
+
+func _assert_battle_initiative_handoff_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: shell is missing initiative-handoff validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var handoff: Dictionary = snapshot.get("initiative_handoff", {}) if snapshot.get("initiative_handoff", {}) is Dictionary else {}
+	var handoff_text := "\n".join([
+		String(handoff.get("visible_text", "")),
+		String(handoff.get("tooltip_text", "")),
+		String(handoff.get("current_stack", "")),
+		String(handoff.get("current_side", "")),
+		String(handoff.get("next_stack", "")),
+		String(handoff.get("next_side", "")),
+		String(handoff.get("handoff", "")),
+		String(snapshot.get("initiative_handoff_visible_text", "")),
+		String(snapshot.get("initiative_handoff_tooltip_text", "")),
+		String(snapshot.get("initiative_visible_text", "")),
+	])
+	for token in ["Initiative cue:", "Now:", "Next:", "Initiative Handoff", "Round:", "Current:", "Handoff:", "Player input:"]:
+		if not handoff_text.contains(token):
+			push_error("Battle smoke: initiative handoff cue lost %s clarity: %s." % [token, handoff_text])
+			return false
+	if String(handoff.get("current_stack", "")) == "" or String(handoff.get("next_stack", "")) == "":
+		push_error("Battle smoke: initiative handoff cue is missing current or next stack labels: %s." % handoff)
+		return false
+	if int(handoff.get("round", 0)) <= 0 or int(handoff.get("next_round", 0)) <= 0:
+		push_error("Battle smoke: initiative handoff cue is missing stable round timing: %s." % handoff)
+		return false
+	if not String(snapshot.get("initiative_visible_text", "")).contains("Initiative cue:"):
+		push_error("Battle smoke: initiative handoff cue is not visible in the initiative rail: %s." % handoff_text)
+		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if handoff_text.contains(leak_token):
+			push_error("Battle smoke: initiative handoff cue leaked internal token %s: %s." % [leak_token, handoff_text])
 			return false
 	return true
 

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T06:20:00Z",
+  "updatedAt": "2026-04-27T06:35:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "map-editor-scenario-switch-handoff-10184",
-  "currentSliceTitle": "Surface compact map-editor scenario-switch handoff cue",
+  "currentSliceId": "battle-initiative-handoff-cue-10184",
+  "currentSliceTitle": "Surface compact battle initiative handoff cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact tooling-facing cue for the existing map-editor scenario picker so switching scenarios makes the clean/dirty working-copy replacement consequence visible before choosing another scenario. The cue is exposed in the scenario picker tooltip, editor status surface, validation snapshot, and focused map-editor smoke for clean and dirty states. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact player-facing cue on the existing battle initiative rail so the live battle screen states the current acting stack, next queued stack, side handoff, and round timing. The cue is visible in the initiative rail, carried in tooltip detail, and covered by focused battle/town smoke. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2136,6 +2136,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T06:10:00Z",
       "completedAt": "2026-04-27T06:20:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "battle-initiative-handoff-cue-10184",
+      "title": "Surface compact battle initiative handoff cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T06:25:00Z",
+      "completedAt": "2026-04-27T06:35:00Z",
       "difficulty": "small"
     }
   ],
