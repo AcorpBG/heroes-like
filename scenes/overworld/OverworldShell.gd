@@ -99,6 +99,7 @@ var _refresh_cache: Dictionary = {}
 var _action_feedback: Dictionary = {}
 var _action_feedback_sequence := 0
 var _action_feedback_tween: Tween = null
+var _field_return_handoff: Dictionary = {}
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -119,8 +120,16 @@ func _ready() -> void:
 	var return_notice := String(_session.flags.get("return_notice", ""))
 	if return_notice != "":
 		_session.flags.erase("return_notice")
-	_last_message = _battle_return_notice(return_notice)
-	if _last_message != "" and _last_message != return_notice:
+	var town_return_handoff := _consume_town_return_handoff()
+	if not town_return_handoff.is_empty():
+		_field_return_handoff = town_return_handoff
+		_last_message = String(town_return_handoff.get("visible_text", "Returned to the field."))
+		var recap := _duplicate_dictionary(town_return_handoff.get("post_action_recap", {}))
+		_last_action_recap = recap
+		_record_action_feedback("town", _last_message, "", recap)
+	else:
+		_last_message = _battle_return_notice(return_notice)
+	if _last_message != "" and _last_message != return_notice and town_return_handoff.is_empty():
 		_record_action_feedback("battle", _last_message)
 	var command_briefing_text = OverworldRules.consume_command_briefing(_session)
 	if command_briefing_text != "":
@@ -1613,6 +1622,42 @@ func _battle_return_notice(fallback: String) -> String:
 		return " ".join(lines)
 	return fallback
 
+func _consume_town_return_handoff() -> Dictionary:
+	if _session == null:
+		return {}
+	var handoff_value: Variant = _session.flags.get("town_return_handoff", {})
+	if not (handoff_value is Dictionary):
+		return {}
+	var handoff: Dictionary = handoff_value
+	_session.flags.erase("town_return_handoff")
+	if handoff.is_empty():
+		return {}
+	var visible := String(handoff.get("visible_text", "")).strip_edges()
+	if visible == "":
+		visible = "Town return: back on the field."
+		handoff["visible_text"] = visible
+	var tooltip := String(handoff.get("tooltip_text", "")).strip_edges()
+	if tooltip == "":
+		tooltip = "Town Return Handoff\n- Returned to the overworld without advancing the day."
+		handoff["tooltip_text"] = tooltip
+	var recap := _duplicate_dictionary(handoff.get("post_action_recap", {}))
+	if recap.is_empty():
+		var next_step := String(handoff.get("next_step", "Select the next destination or end the turn when field orders are spent."))
+		recap = {
+			"happened": visible,
+			"affected": "%s | %s" % [
+				String(handoff.get("town_name", "Town")),
+				String(handoff.get("movement_line", "field movement")),
+			],
+			"why_it_matters": "Leaving town returns control to overworld field orders.",
+			"next_step": next_step,
+			"cue_text": visible,
+			"tooltip_text": tooltip,
+			"text": "After town: %s Next: %s" % [visible, next_step],
+		}
+		handoff["post_action_recap"] = recap
+	return handoff.duplicate(true)
+
 func _battle_return_handoff_summary(report: Dictionary) -> String:
 	var affected := _battle_handoff_affected(report)
 	var why := _battle_handoff_why(report)
@@ -2999,6 +3044,9 @@ func validation_snapshot() -> Dictionary:
 		"event_feed": event_feed,
 		"action_context": action_context,
 		"field_readiness": field_readiness,
+		"field_return_handoff": _field_return_handoff.duplicate(true),
+		"field_return_handoff_visible_text": String(_field_return_handoff.get("visible_text", "")),
+		"field_return_handoff_tooltip_text": String(_field_return_handoff.get("tooltip_text", "")),
 		"post_action_recap": _last_action_recap.duplicate(true),
 		"objective_brief_visible_text": _objective_brief_label.text,
 		"objective_brief_tooltip_text": _objective_brief_label.tooltip_text,

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T04:38:00Z",
+  "updatedAt": "2026-04-27T04:58:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-town-entry-handoff-cue-10184",
-  "currentSliceTitle": "Surface compact overworld town entry handoff cue",
+  "currentSliceId": "town-to-field-return-cue-10184",
+  "currentSliceTitle": "Surface compact town-to-field return cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact player-facing overworld cue for the selected owned-town Visit Town order. The primary order tooltip, selected-town rail, field readiness payload, and validation snapshot now clarify that entering town opens management without ending the day and Leave returns to the field position with current movement intact. Focused overworld route/town-entry smoke asserts the visible cue plus no internal score/debug leaks. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact player-facing town-to-field return cue. The town Leave flow now seeds a transient return handoff, and the overworld consumes it into the cue chip, event rail, action-context recap, and validation snapshot so the player sees the returned town, field position, day, movement, and next practical action after leaving town. Focused town/battle smoke and overworld visual smoke assert the visible cue plus no internal score/debug leaks. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2088,6 +2088,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T04:26:00Z",
       "completedAt": "2026-04-27T04:38:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "town-to-field-return-cue-10184",
+      "title": "Surface compact town-to-field return cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T04:45:00Z",
+      "completedAt": "2026-04-27T04:58:00Z",
       "difficulty": "small"
     }
   ],

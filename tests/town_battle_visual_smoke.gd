@@ -86,8 +86,15 @@ func _run_town_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 
+	var town_return_handoff: Dictionary = shell.call("validation_prepare_town_return_handoff")
+	if not _assert_town_return_handoff_payload(town_return_handoff):
+		get_tree().quit(1)
+		return false
 	shell.queue_free()
 	await get_tree().process_frame
+	if not await _assert_overworld_town_return_handoff(session, town_return_handoff):
+		get_tree().quit(1)
+		return false
 	return true
 
 func _run_battle_smoke() -> bool:
@@ -1000,6 +1007,76 @@ func _assert_town_departure_confirmation_contract(shell: Node) -> bool:
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights"]:
 		if departure_text.contains(leak_token):
 			push_error("Town smoke: departure confirmation leaked internal strategy token %s: %s." % [leak_token, departure_text])
+			return false
+	return true
+
+func _assert_town_return_handoff_payload(handoff: Dictionary) -> bool:
+	var handoff_text := "\n".join([
+		String(handoff.get("visible_text", "")),
+		String(handoff.get("tooltip_text", "")),
+		String(handoff.get("town_name", "")),
+		String(handoff.get("field_position", "")),
+		String(handoff.get("movement_line", "")),
+		String(handoff.get("next_step", "")),
+		JSON.stringify(handoff.get("post_action_recap", {})),
+	])
+	for token in ["Town return:", "Town Return Handoff", "Returned:", "Field position:", "Movement:", "Day:", "Next practical action:", "Riverwatch Hold", "Move"]:
+		if not handoff_text.contains(token):
+			push_error("Town smoke: town return handoff payload lost %s clarity: %s." % [token, handoff_text])
+			return false
+	var recap: Dictionary = handoff.get("post_action_recap", {}) if handoff.get("post_action_recap", {}) is Dictionary else {}
+	for key in ["happened", "affected", "why_it_matters", "next_step", "cue_text", "tooltip_text"]:
+		if String(recap.get(key, "")) == "":
+			push_error("Town smoke: town return handoff recap is missing structured %s: %s." % [key, recap])
+			return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if handoff_text.contains(leak_token):
+			push_error("Town smoke: town return handoff leaked internal strategy token %s: %s." % [leak_token, handoff_text])
+			return false
+	return true
+
+func _assert_overworld_town_return_handoff(session, handoff_seed: Dictionary) -> bool:
+	session.game_state = "overworld"
+	OverworldRules.clear_active_town_visit(session)
+	session.flags["town_return_handoff"] = handoff_seed.duplicate(true)
+	SessionState.set_active_session(session)
+	var overworld_shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(overworld_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not overworld_shell.has_method("validation_snapshot"):
+		push_error("Town smoke: overworld shell does not expose validation snapshot for town return handoff.")
+		overworld_shell.queue_free()
+		await get_tree().process_frame
+		return false
+	var snapshot: Dictionary = overworld_shell.call("validation_snapshot")
+	var handoff: Dictionary = snapshot.get("field_return_handoff", {}) if snapshot.get("field_return_handoff", {}) is Dictionary else {}
+	var feedback: Dictionary = snapshot.get("action_feedback", {}) if snapshot.get("action_feedback", {}) is Dictionary else {}
+	var return_text := "\n".join([
+		String(snapshot.get("field_return_handoff_visible_text", "")),
+		String(snapshot.get("field_return_handoff_tooltip_text", "")),
+		String(snapshot.get("event_visible_text", "")),
+		String(snapshot.get("event_tooltip_text", "")),
+		String(snapshot.get("map_cue_text", "")),
+		String(snapshot.get("map_cue_tooltip_text", "")),
+		String(feedback.get("full_text", feedback.get("text", ""))),
+		JSON.stringify(handoff),
+	])
+	overworld_shell.queue_free()
+	await get_tree().process_frame
+	for token in ["Town return:", "Town Return Handoff", "Returned:", "Field position:", "Movement:", "Day:", "Next practical action:", "Current Turn Context", "Riverwatch Hold", "Move"]:
+		if not return_text.contains(token):
+			push_error("Town smoke: overworld town-return cue lost %s clarity: %s." % [token, return_text])
+			return false
+	if String(feedback.get("kind", "")) != "town":
+		push_error("Town smoke: town return handoff did not surface as town action feedback: %s." % snapshot)
+		return false
+	if not String(snapshot.get("map_cue_text", "")).contains("Town:"):
+		push_error("Town smoke: map cue did not visibly surface the town return handoff: %s." % snapshot)
+		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if return_text.contains(leak_token):
+			push_error("Town smoke: overworld town-return cue leaked internal token %s." % leak_token)
 			return false
 	return true
 
