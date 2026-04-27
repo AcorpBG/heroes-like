@@ -1344,55 +1344,181 @@
       "id": "site_brightwood_sawmill",
       "name": "Brightwood Sawmill",
       "family": "mine",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {"wood": 2, "gold": 120},
-      "control_income": {"wood": 1},
-      "town_support": {"growth_bonus_percent": 4},
+      "claim_rewards": {
+        "wood": 2,
+        "gold": 120
+      },
+      "control_income": {
+        "wood": 1
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "wood",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 6,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": [
+          "resource_front",
+          "road_control"
+        ],
+        "reward_tone": "common-resource control"
+      },
+      "town_support": {
+        "growth_bonus_percent": 4
+      },
       "response_profile": {
         "action_label": "Secure Wood Road",
         "summary": "Foresters and escorts keep the mill road open for reserve wagons.",
         "movement_cost": 3,
-        "resource_cost": {"gold": 90},
+        "resource_cost": {
+          "gold": 100
+        },
         "watch_days": 3,
         "readiness_bonus": 1,
-        "recovery_relief": 1
-      }
+        "pressure_guard_bonus": 1
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184"
     },
     {
       "id": "site_ridge_quarry",
       "name": "Ridge Quarry",
       "family": "mine",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {"ore": 2, "gold": 100},
-      "control_income": {"ore": 1},
-      "town_support": {"quality_bonus": 1},
+      "claim_rewards": {
+        "ore": 2,
+        "gold": 100
+      },
+      "control_income": {
+        "ore": 1
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "ore",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 6,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": [
+          "resource_front",
+          "road_control"
+        ],
+        "reward_tone": "common-resource control"
+      },
+      "town_support": {
+        "quality_bonus": 1
+      },
       "response_profile": {
         "action_label": "Guard Quarry Road",
         "summary": "Quarry crews fortify the switchback so ore carts can keep moving.",
         "movement_cost": 3,
-        "resource_cost": {"gold": 100, "wood": 1},
+        "resource_cost": {
+          "gold": 100
+        },
         "watch_days": 3,
-        "quality_bonus": 1,
+        "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184"
     },
     {
       "id": "site_marsh_peat_yard",
       "name": "Marsh Peat Yard",
       "family": "mine",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {"wood": 1, "gold": 140},
-      "control_income": {"gold": 35},
-      "town_support": {"recovery_relief": 1},
+      "claim_rewards": {
+        "wood": 1,
+        "gold": 140
+      },
+      "control_income": {
+        "gold": 35
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "gold",
+          "cadence": "daily",
+          "amount": 35,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 5,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": [
+          "resource_front",
+          "road_control"
+        ],
+        "reward_tone": "common-resource control"
+      },
+      "town_support": {
+        "recovery_relief": 1
+      },
       "response_profile": {
         "action_label": "Mark Sluice Road",
         "summary": "Peat crews stake the reed road and reopen a safer recovery line.",
         "movement_cost": 3,
-        "resource_cost": {"gold": 90, "wood": 1},
+        "resource_cost": {
+          "gold": 100
+        },
         "watch_days": 3,
         "readiness_bonus": 1,
-        "recovery_relief": 1
-      }
+        "pressure_guard_bonus": 1
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184"
     },
     {
       "id": "site_watchtower_beacon",
@@ -1519,10 +1645,47 @@
       "id": "site_market_caravanserai",
       "name": "Market Caravanserai",
       "family": "repeatable_service",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "normalized_content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "repeatable": true,
       "visit_cooldown_days": 7,
-      "service_cost": {"gold": 180},
-      "rewards": {"wood": 1, "ore": 1},
+      "service_cost": {
+        "gold": 180
+      },
+      "rewards": {
+        "wood": 1,
+        "ore": 1
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "wood",
+          "cadence": "service_refresh",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "ore",
+          "cadence": "service_refresh",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "service_refresh_profile": {
+        "refresh_cadence": "weekly",
+        "common_resource_only": true,
+        "rare_resource_exchange_enabled": false
+      },
+      "town_support": {
+        "recovery_relief": 1
+      },
       "action_label": "Trade at Caravanserai",
       "service_summary": "Caravans exchange coin for mixed construction lots on a weekly cycle."
     },
@@ -1550,6 +1713,1364 @@
       "id": "site_millroad_plank_stack",
       "name": "Millroad Plank Stack",
       "rewards": {"wood": 1, "gold": 120}
+    },
+    {
+      "id": "site_greenbough_wood_yard",
+      "name": "Greenbough Wood Yard",
+      "family": "mine",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "wood": 2,
+        "gold": 90
+      },
+      "control_income": {
+        "wood": 1
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "wood",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 5,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": [
+          "resource_front",
+          "road_control"
+        ],
+        "reward_tone": "common-resource control"
+      },
+      "town_support": {
+        "growth_bonus_percent": 3
+      },
+      "response_profile": {
+        "action_label": "Post Yard Watch",
+        "summary": "Woodcutters mark a defended forest road for steady beam wagons.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_floodplain_sluice_camp",
+      "name": "Floodplain Sluice Camp",
+      "family": "mine",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 180
+      },
+      "control_income": {
+        "gold": 30
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "gold",
+          "cadence": "daily",
+          "amount": 30,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 5,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": [
+          "resource_front",
+          "road_control"
+        ],
+        "reward_tone": "common-resource control"
+      },
+      "town_support": {
+        "readiness_bonus": 1
+      },
+      "response_profile": {
+        "action_label": "Stake Sluice Camp",
+        "summary": "Sluice crews keep the floodplain pay channel open under escort.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_ironstep_ore_pit",
+      "name": "Ironstep Ore Pit",
+      "family": "mine",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "ore": 2,
+        "gold": 80
+      },
+      "control_income": {
+        "ore": 1
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "ore",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 5,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": [
+          "resource_front",
+          "road_control"
+        ],
+        "reward_tone": "common-resource control"
+      },
+      "town_support": {
+        "quality_bonus": 1
+      },
+      "response_profile": {
+        "action_label": "Shore Pit Road",
+        "summary": "Pit crews brace the switchback and keep ore carts moving.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_reef_coin_assay",
+      "name": "Reef Coin Assay",
+      "family": "mine",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 220
+      },
+      "control_income": {
+        "gold": 35
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "gold",
+          "cadence": "daily",
+          "amount": 35,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 5,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": [
+          "resource_front",
+          "road_control"
+        ],
+        "reward_tone": "common-resource control"
+      },
+      "town_support": {
+        "readiness_bonus": 1
+      },
+      "response_profile": {
+        "action_label": "Seal Assay Ledger",
+        "summary": "Assayers tally reef salvage and guard the coastal pay chest.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_cinder_ore_face",
+      "name": "Cinder Ore Face",
+      "family": "mine",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "ore": 2,
+        "gold": 90
+      },
+      "control_income": {
+        "ore": 1
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "ore",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 5,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": [
+          "resource_front",
+          "road_control"
+        ],
+        "reward_tone": "common-resource control"
+      },
+      "town_support": {
+        "quality_bonus": 1
+      },
+      "response_profile": {
+        "action_label": "Cool Ore Face",
+        "summary": "Cinder crews shutter hot seams and reopen the ore road.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_frostwood_cutting_yard",
+      "name": "Frostwood Cutting Yard",
+      "family": "mine",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "wood": 2,
+        "gold": 90
+      },
+      "control_income": {
+        "wood": 1
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "wood",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 5,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": [
+          "resource_front",
+          "road_control"
+        ],
+        "reward_tone": "common-resource control"
+      },
+      "town_support": {
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Mark Frostwood Road",
+        "summary": "Cutters flag a snow-safe haul route for seasoned whitewood beams.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_aetherglass_lens_house",
+      "name": "Aetherglass Lens House",
+      "family": "staged_resource_front",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "staged_resource_outputs": [
+        {
+          "resource_id": "aetherglass",
+          "cadence": "daily",
+          "planned_amount": 1,
+          "activation_status": "staged_report_only",
+          "report_only": true,
+          "live_reward": false,
+          "source_site_family": "aetherglass_lens_house"
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 7,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 3,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "resource_front",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "heavy",
+        "encounter_palette_tags": [
+          "rare_resource_front",
+          "counter_capture_target"
+        ],
+        "reward_tone": "staged aetherglass source, report-only"
+      },
+      "town_support": {
+        "future_resource_front": true
+      },
+      "response_profile": {
+        "action_label": "Survey Front",
+        "summary": "Surveyors record a future rare-resource source without adding it to live stockpiles.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_sunfall_aetherglass_yard",
+      "name": "Sunfall Aetherglass Yard",
+      "family": "staged_resource_front",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "staged_resource_outputs": [
+        {
+          "resource_id": "aetherglass",
+          "cadence": "daily",
+          "planned_amount": 1,
+          "activation_status": "staged_report_only",
+          "report_only": true,
+          "live_reward": false,
+          "source_site_family": "aetherglass_lens_house"
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 7,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 3,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "resource_front",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "heavy",
+        "encounter_palette_tags": [
+          "rare_resource_front",
+          "counter_capture_target"
+        ],
+        "reward_tone": "staged aetherglass source, report-only"
+      },
+      "town_support": {
+        "future_resource_front": true
+      },
+      "response_profile": {
+        "action_label": "Survey Front",
+        "summary": "Surveyors record a future rare-resource source without adding it to live stockpiles.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_embergrain_warm_granary",
+      "name": "Embergrain Warm Granary",
+      "family": "staged_resource_front",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "staged_resource_outputs": [
+        {
+          "resource_id": "embergrain",
+          "cadence": "daily",
+          "planned_amount": 1,
+          "activation_status": "staged_report_only",
+          "report_only": true,
+          "live_reward": false,
+          "source_site_family": "embergrain_granary"
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 7,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 3,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "resource_front",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "heavy",
+        "encounter_palette_tags": [
+          "rare_resource_front",
+          "counter_capture_target"
+        ],
+        "reward_tone": "staged embergrain source, report-only"
+      },
+      "town_support": {
+        "future_resource_front": true
+      },
+      "response_profile": {
+        "action_label": "Survey Front",
+        "summary": "Surveyors record a future rare-resource source without adding it to live stockpiles.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_charcoal_embergrain_store",
+      "name": "Charcoal Embergrain Store",
+      "family": "staged_resource_front",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "staged_resource_outputs": [
+        {
+          "resource_id": "embergrain",
+          "cadence": "daily",
+          "planned_amount": 1,
+          "activation_status": "staged_report_only",
+          "report_only": true,
+          "live_reward": false,
+          "source_site_family": "embergrain_granary"
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 7,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 3,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "resource_front",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "heavy",
+        "encounter_palette_tags": [
+          "rare_resource_front",
+          "counter_capture_target"
+        ],
+        "reward_tone": "staged embergrain source, report-only"
+      },
+      "town_support": {
+        "future_resource_front": true
+      },
+      "response_profile": {
+        "action_label": "Survey Front",
+        "summary": "Surveyors record a future rare-resource source without adding it to live stockpiles.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_peatwax_reed_yard",
+      "name": "Peatwax Reed Yard",
+      "family": "staged_resource_front",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "staged_resource_outputs": [
+        {
+          "resource_id": "peatwax",
+          "cadence": "daily",
+          "planned_amount": 1,
+          "activation_status": "staged_report_only",
+          "report_only": true,
+          "live_reward": false,
+          "source_site_family": "peatwax_yard"
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 7,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 3,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "resource_front",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "heavy",
+        "encounter_palette_tags": [
+          "rare_resource_front",
+          "counter_capture_target"
+        ],
+        "reward_tone": "staged peatwax source, report-only"
+      },
+      "town_support": {
+        "future_resource_front": true
+      },
+      "response_profile": {
+        "action_label": "Survey Front",
+        "summary": "Surveyors record a future rare-resource source without adding it to live stockpiles.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_verdant_graft_nursery",
+      "name": "Verdant Graft Nursery",
+      "family": "staged_resource_front",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "staged_resource_outputs": [
+        {
+          "resource_id": "verdant_grafts",
+          "cadence": "daily",
+          "planned_amount": 1,
+          "activation_status": "staged_report_only",
+          "report_only": true,
+          "live_reward": false,
+          "source_site_family": "graft_nursery"
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 7,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 3,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "resource_front",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "heavy",
+        "encounter_palette_tags": [
+          "rare_resource_front",
+          "counter_capture_target"
+        ],
+        "reward_tone": "staged verdant_grafts source, report-only"
+      },
+      "town_support": {
+        "future_resource_front": true
+      },
+      "response_profile": {
+        "action_label": "Survey Front",
+        "summary": "Surveyors record a future rare-resource source without adding it to live stockpiles.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_brass_scrip_mint",
+      "name": "Brass Scrip Mint",
+      "family": "staged_resource_front",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "staged_resource_outputs": [
+        {
+          "resource_id": "brass_scrip",
+          "cadence": "daily",
+          "planned_amount": 1,
+          "activation_status": "staged_report_only",
+          "report_only": true,
+          "live_reward": false,
+          "source_site_family": "brass_scrip_mint"
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 7,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 3,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "resource_front",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "heavy",
+        "encounter_palette_tags": [
+          "rare_resource_front",
+          "counter_capture_target"
+        ],
+        "reward_tone": "staged brass_scrip source, report-only"
+      },
+      "town_support": {
+        "future_resource_front": true
+      },
+      "response_profile": {
+        "action_label": "Survey Front",
+        "summary": "Surveyors record a future rare-resource source without adding it to live stockpiles.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_underway_brass_scrip_press",
+      "name": "Underway Brass Scrip Press",
+      "family": "staged_resource_front",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "staged_resource_outputs": [
+        {
+          "resource_id": "brass_scrip",
+          "cadence": "daily",
+          "planned_amount": 1,
+          "activation_status": "staged_report_only",
+          "report_only": true,
+          "live_reward": false,
+          "source_site_family": "brass_scrip_mint"
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 7,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 3,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "resource_front",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "heavy",
+        "encounter_palette_tags": [
+          "rare_resource_front",
+          "counter_capture_target"
+        ],
+        "reward_tone": "staged brass_scrip source, report-only"
+      },
+      "town_support": {
+        "future_resource_front": true
+      },
+      "response_profile": {
+        "action_label": "Survey Front",
+        "summary": "Surveyors record a future rare-resource source without adding it to live stockpiles.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_memory_salt_pan",
+      "name": "Memory-Salt Pan",
+      "family": "staged_resource_front",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "staged_resource_outputs": [
+        {
+          "resource_id": "memory_salt",
+          "cadence": "daily",
+          "planned_amount": 1,
+          "activation_status": "staged_report_only",
+          "report_only": true,
+          "live_reward": false,
+          "source_site_family": "memory_salt_pan"
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 7,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 3,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "resource_front",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "heavy",
+        "encounter_palette_tags": [
+          "rare_resource_front",
+          "counter_capture_target"
+        ],
+        "reward_tone": "staged memory_salt source, report-only"
+      },
+      "town_support": {
+        "future_resource_front": true
+      },
+      "response_profile": {
+        "action_label": "Survey Front",
+        "summary": "Surveyors record a future rare-resource source without adding it to live stockpiles.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_wind_press",
+      "name": "Wind Press",
+      "family": "support_producer",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90
+      },
+      "control_income": {
+        "gold": 25
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "gold",
+          "cadence": "daily",
+          "amount": 25,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 4,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "town_support",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "light",
+        "encounter_palette_tags": [
+          "support_producer",
+          "town_influence"
+        ],
+        "reward_tone": "support and common-resource throughput"
+      },
+      "town_support": {
+        "readiness_bonus": 1
+      },
+      "response_profile": {
+        "action_label": "Prime Wind Press",
+        "summary": "Press crews keep relay canvas, rope, and messenger seals ready.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "quality_bonus": 0,
+        "recovery_relief": 0
+      }
+    },
+    {
+      "id": "site_saw_chain",
+      "name": "Saw Chain",
+      "family": "support_producer",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90
+      },
+      "control_income": {
+        "wood": 1
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "wood",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 4,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "town_support",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "light",
+        "encounter_palette_tags": [
+          "support_producer",
+          "town_influence"
+        ],
+        "reward_tone": "support and common-resource throughput"
+      },
+      "town_support": {
+        "growth_bonus_percent": 4
+      },
+      "response_profile": {
+        "action_label": "Secure Saw Chain",
+        "summary": "Linked saw crews keep controlled yards supplied with straight-cut beams.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 0,
+        "quality_bonus": 0,
+        "recovery_relief": 0
+      }
+    },
+    {
+      "id": "site_tide_kiln",
+      "name": "Tide Kiln",
+      "family": "support_producer",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90
+      },
+      "control_income": {
+        "gold": 20
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "gold",
+          "cadence": "daily",
+          "amount": 20,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 4,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "town_support",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "light",
+        "encounter_palette_tags": [
+          "support_producer",
+          "town_influence"
+        ],
+        "reward_tone": "support and common-resource throughput"
+      },
+      "town_support": {
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Light Tide Kiln",
+        "summary": "Kiln tenders dry coastal stores and keep return routes serviceable.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 0,
+        "quality_bonus": 0,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_orchard_levy_post",
+      "name": "Orchard Levy Post",
+      "family": "support_producer",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90
+      },
+      "control_income": {
+        "gold": 20
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "gold",
+          "cadence": "daily",
+          "amount": 20,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 4,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "town_support",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "light",
+        "encounter_palette_tags": [
+          "support_producer",
+          "town_influence"
+        ],
+        "reward_tone": "support and common-resource throughput"
+      },
+      "town_support": {
+        "readiness_bonus": 1,
+        "growth_bonus_percent": 3
+      },
+      "response_profile": {
+        "action_label": "Muster Orchard Levy",
+        "summary": "Local levy clerks rotate orchard watch crews and wagon teams.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "quality_bonus": 0,
+        "recovery_relief": 0
+      }
+    },
+    {
+      "id": "site_smelter_annex",
+      "name": "Smelter Annex",
+      "family": "support_producer",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90
+      },
+      "control_income": {
+        "ore": 1
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "ore",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 4,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "town_support",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "light",
+        "encounter_palette_tags": [
+          "support_producer",
+          "town_influence"
+        ],
+        "reward_tone": "support and common-resource throughput"
+      },
+      "town_support": {
+        "quality_bonus": 1
+      },
+      "response_profile": {
+        "action_label": "Fire Smelter Annex",
+        "summary": "Annex crews sort usable bloom and reinforce armor stores.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 0,
+        "quality_bonus": 1,
+        "recovery_relief": 0
+      }
+    },
+    {
+      "id": "site_charter_countinghouse",
+      "name": "Charter Countinghouse",
+      "family": "support_producer",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90
+      },
+      "control_income": {
+        "gold": 35
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "gold",
+          "cadence": "daily",
+          "amount": 35,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 4,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "town_support",
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "light",
+        "encounter_palette_tags": [
+          "support_producer",
+          "town_influence"
+        ],
+        "reward_tone": "support and common-resource throughput"
+      },
+      "town_support": {
+        "readiness_bonus": 1,
+        "quality_bonus": 1
+      },
+      "response_profile": {
+        "action_label": "Audit Countinghouse",
+        "summary": "Charter clerks stabilize payrolls and pressure-road contracts.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "quality_bonus": 1,
+        "recovery_relief": 0
+      }
+    },
+    {
+      "id": "site_badlands_coin_sluice",
+      "name": "Badlands Coin Sluice",
+      "family": "mine",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 210
+      },
+      "control_income": {
+        "gold": 35
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "gold",
+          "cadence": "daily",
+          "amount": 35,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 5,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": [
+          "resource_front",
+          "road_control"
+        ],
+        "reward_tone": "common-resource control"
+      },
+      "town_support": {
+        "readiness_bonus": 1
+      },
+      "response_profile": {
+        "action_label": "Post Sluice Guards",
+        "summary": "Crews sort dust and toll coin under a guarded badlands awning.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_underway_ore_counterfort",
+      "name": "Underway Ore Counterfort",
+      "family": "mine",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "ore": 2,
+        "gold": 90
+      },
+      "control_income": {
+        "ore": 1
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "ore",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 5,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": [
+          "resource_front",
+          "road_control"
+        ],
+        "reward_tone": "common-resource control"
+      },
+      "town_support": {
+        "quality_bonus": 1
+      },
+      "response_profile": {
+        "action_label": "Brace Counterfort",
+        "summary": "Underway crews shore the ore face and guard cart lifts.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_grassland_plank_grove",
+      "name": "Grassland Plank Grove",
+      "family": "mine",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "persistent_control": true,
+      "claim_rewards": {
+        "wood": 2,
+        "gold": 80
+      },
+      "control_income": {
+        "wood": 1
+      },
+      "resource_outputs": [
+        {
+          "resource_id": "wood",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
+      ],
+      "capture_profile": {
+        "capture_model": "capturable",
+        "counter_capture_value": 5,
+        "pillage_policy": "limited_stock",
+        "damaged_state_policy": "temporary_output_pause",
+        "retake_recovery_days": 2,
+        "defense_investment_ids": [],
+        "route_dependency_tags": [
+          "road_control"
+        ]
+      },
+      "guard_profile": {
+        "threat": "standard",
+        "encounter_palette_tags": [
+          "resource_front",
+          "road_control"
+        ],
+        "reward_tone": "common-resource control"
+      },
+      "town_support": {
+        "growth_bonus_percent": 3
+      },
+      "response_profile": {
+        "action_label": "Mark Plank Grove",
+        "summary": "Planters and cutters maintain a short-haul beam grove near the road.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 100
+        },
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
     }
   ]
 }
