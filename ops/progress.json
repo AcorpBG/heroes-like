@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "economy-capture-income-loop-expansion-10184",
-  "currentSliceTitle": "Economy Capture Income Loop Expansion",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Final P2.3 child in progress: inspect prior live proof first, then expand selected capture/income loop using gold/wood/ore only.",
+  "currentSliceId": "overworld-object-runtime-metadata-adoption-10184",
+  "currentSliceTitle": "Overworld Runtime Metadata Adoption",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Next actionable P2.4 child after completing the P2.3 economy resource foundation parent.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T14:18:06Z",
+  "updatedAt": "2026-04-27T14:26:40Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -192,7 +192,7 @@
       "id": "economy-resource-foundation-implementation-10184",
       "title": "Economy Resource Foundation Implementation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "parent_foundation_docs_ready_children_pending",
       "sourceDocs": [
         "docs/economy-overhaul-foundation.md",
@@ -200,7 +200,8 @@
         "docs/economy-resource-additive-schema-validator-plan.md",
         "docs/economy-capture-resource-loop-proof-plan.md",
         "docs/economy-capture-resource-loop-live-proof-report.md",
-        "docs/economy-capture-resource-loop-manual-gate-review.md"
+        "docs/economy-capture-resource-loop-manual-gate-review.md",
+        "docs/economy-capture-income-loop-expansion-report.md"
       ],
       "implementationTargets": [
         "economy rule helpers",
@@ -208,8 +209,8 @@
         "optional resource registry only by sub-slice",
         "town cost/recruitment/market behavior only by explicit migration sub-slice"
       ],
-      "evidence": "Current live economy uses gold, wood, and ore, and a narrow River Pass signal-yard proof exists. The first registry policy and wood canonical cleanup are implemented as report/validator proof. Rare-resource activation, market caps, faction-biased costs, and capture-income expansion remain pending.",
-      "notes": "P2.3 selected after P2.2 curation reached paused asset-ingestion boundary; process remaining P2.3 children in order before later Phase 2 parents",
+      "evidence": "P2.3 is complete through five bounded children: resource registry policy, wood canonical cleanup, staged rare-resource gates, bounded market/faction-cost reporting, and Glassroad capture/income live-rule expansion. Current live economy still uses gold, wood, and ore; rare resources remain staged/report-only.",
+      "notes": "Completed P2.3 parent after all five children completed: registry policy, wood canonical cleanup, staged rare-resource report gates, bounded market/faction-cost evidence, and Glassroad capture/income expansion live-rule report. Next actionable track is P2.4 overworld object and neutral encounter foundation.",
       "sliceType": "parent",
       "childSliceIds": [
         "economy-resource-registry-policy-10184",
@@ -230,8 +231,9 @@
       "reportOnlyEvidenceIds": [
         "economy-resource-reports"
       ],
-      "updatedAt": "2026-04-27T13:31:45Z",
-      "startedAt": "2026-04-27T13:21:32Z"
+      "updatedAt": "2026-04-27T14:26:40Z",
+      "startedAt": "2026-04-27T13:21:32Z",
+      "completedAt": "2026-04-27T14:26:40Z"
     },
     {
       "id": "overworld-object-encounter-foundation-implementation-10184",
@@ -874,7 +876,7 @@
       "id": "economy-capture-income-loop-expansion-10184",
       "title": "Economy Capture Income Loop Expansion",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "economy-resource-foundation-implementation-10184",
@@ -882,7 +884,8 @@
       "sourceDocs": [
         "docs/economy-capture-resource-loop-proof-plan.md",
         "docs/economy-capture-resource-loop-live-proof-report.md",
-        "docs/economy-capture-resource-loop-manual-gate-review.md"
+        "docs/economy-capture-resource-loop-manual-gate-review.md",
+        "docs/economy-capture-income-loop-expansion-report.md"
       ],
       "implementationTargets": [
         "economy rule helpers",
@@ -891,17 +894,19 @@
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/economy_capture_income_expansion_report.tscn",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "tests/economy_capture_income_expansion_report.gd/.tscn proves the Glassroad relay/lens-house capture-income loop through live rules: site claims, 25 then 70 gold field-site income, current wood/ore/cache pickups, Halo Spire Market Square build, Prism Adept recruitment, and SaveService save/resume signature preservation."
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T14:18:06Z",
+      "updatedAt": "2026-04-27T14:26:40Z",
       "startedAt": "2026-04-27T14:18:06Z",
-      "notes": "worker started for final P2.3 child: inspect prior capture/income proof first, then expand one live capture/income loop using current gold/wood/ore without staged rare-resource activation"
+      "notes": "Completed final P2.3 child with focused Glassroad capture/income live-rule report: Prism Watch Relay and Lens House are claimed through OverworldRules, day-advance income is asserted at 25 then 70 gold, wood/ore/cache pickups stay on current resources, Halo Spire Market Square build and Prism Adept recruit are exercised, and SaveService save/resume preserves day, resources, controlled sites, town build/recruits, army, game state, scenario status, and SAVE_VERSION 9. Rare resources remain staged/report-only; no save migration, SAVE_VERSION bump, market migration, hidden grants, or broad rebalance.",
+      "completedAt": "2026-04-27T14:26:40Z"
     },
     {
       "id": "overworld-object-runtime-metadata-adoption-10184",
@@ -2798,24 +2803,23 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "economy-capture-income-loop-expansion-10184",
-      "title": "Economy Capture Income Loop Expansion",
-      "status": "in_progress",
-      "parentSliceId": "economy-resource-foundation-implementation-10184",
+      "id": "overworld-object-runtime-metadata-adoption-10184",
+      "title": "Overworld Runtime Metadata Adoption",
+      "status": "pending",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
       "sourceDocs": [
-        "docs/economy-capture-resource-loop-proof-plan.md",
-        "docs/economy-capture-resource-loop-live-proof-report.md",
-        "docs/economy-capture-resource-loop-manual-gate-review.md"
+        "docs/overworld-object-safe-additive-schema-plan.md",
+        "docs/overworld-object-schema-migration-plan.md"
       ],
       "implementationTargets": [
-        "economy rule helpers",
-        "resource-site capture/production report",
-        "live proof or manual gate evidence"
+        "content/map_objects.json",
+        "runtime object rules/helpers",
+        "focused validation"
       ],
-      "notes": "worker started for final P2.3 child: inspect prior capture/income proof first, then expand one live capture/income loop using current gold/wood/ore without staged rare-resource activation",
+      "notes": "Next actionable P2.4 child after completing P2.3. Do not adopt broad pathing/body-tile/approach/renderer/save behavior without this bounded slice selecting exact runtime metadata.",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
-      "source": "PLAN.md P2.3 Economy Resource Foundation Implementation"
+      "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation"
     }
   ],
   "stoppedOrPausedTasks": [

@@ -59,6 +59,9 @@ RUN_LIVE_FLOW_HARNESS_PATH = ROOT / "tests" / "run_live_flow_harness.py"
 ECONOMY_RESOURCE_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "economy_resource_schema"
 ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "resource_registry.json"
 ECONOMY_RESOURCE_STRICT_CASES_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "strict_cases.json"
+ECONOMY_CAPTURE_INCOME_REPORT_SCRIPT_PATH = ROOT / "tests" / "economy_capture_income_expansion_report.gd"
+ECONOMY_CAPTURE_INCOME_REPORT_SCENE_PATH = ROOT / "tests" / "economy_capture_income_expansion_report.tscn"
+ECONOMY_CAPTURE_INCOME_REPORT_DOC_PATH = ROOT / "docs" / "economy-capture-income-loop-expansion-report.md"
 OVERWORLD_OBJECT_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "overworld_object_schema"
 OVERWORLD_OBJECT_STRICT_CASES_PATH = OVERWORLD_OBJECT_FIXTURE_DIR / "strict_cases.json"
 NEUTRAL_ENCOUNTER_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "neutral_encounter_schema"
@@ -2007,6 +2010,62 @@ def validate_market_faction_cost_policy(errors: list[str]) -> None:
         ensure(case.get("resource_ids_preserved", False) is True, errors, f"{case_id} must preserve resource ids rather than creating hidden grants")
         ensure(case.get("live_resource_ids_only", False) is True, errors, f"{case_id} must use only live stockpile resources")
         ensure(case.get("rare_resource_ids_used", []) == [], errors, f"{case_id} must not use staged rare resources")
+
+
+def validate_economy_capture_income_loop_expansion(errors: list[str]) -> None:
+    ensure(ECONOMY_CAPTURE_INCOME_REPORT_SCRIPT_PATH.exists(), errors, "Economy capture/income expansion report script is missing")
+    ensure(ECONOMY_CAPTURE_INCOME_REPORT_SCENE_PATH.exists(), errors, "Economy capture/income expansion report scene is missing")
+    ensure(ECONOMY_CAPTURE_INCOME_REPORT_DOC_PATH.exists(), errors, "Economy capture/income expansion report doc is missing")
+    if not ECONOMY_CAPTURE_INCOME_REPORT_SCRIPT_PATH.exists():
+        return
+
+    script_text = ECONOMY_CAPTURE_INCOME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = ECONOMY_CAPTURE_INCOME_REPORT_SCENE_PATH.read_text(encoding="utf-8") if ECONOMY_CAPTURE_INCOME_REPORT_SCENE_PATH.exists() else ""
+    doc_text = ECONOMY_CAPTURE_INCOME_REPORT_DOC_PATH.read_text(encoding="utf-8") if ECONOMY_CAPTURE_INCOME_REPORT_DOC_PATH.exists() else ""
+    resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    scenario = scenarios.get("glassroad-sundering", {})
+
+    for required_token in (
+        'const SCENARIO_ID := "glassroad-sundering"',
+        'const RELAY_SITE := "glassroad_watch_relay"',
+        'const LENS_HOUSE_SITE := "glassroad_lens_house"',
+        'const STOCKPILE_KEYS := ["gold", "wood", "ore"]',
+        "OverworldRules.collect_active_resource",
+        "OverworldRules.end_turn",
+        "OverworldRules.build_in_active_town",
+        "OverworldRules.recruit_in_active_town",
+        "SaveService.save_runtime_manual_session",
+        "SaveService.restore_manual_session",
+        "ECONOMY_CAPTURE_INCOME_EXPANSION_REPORT",
+    ):
+        ensure(required_token in script_text, errors, f"Economy capture/income expansion report is missing token {required_token}")
+    ensure("res://tests/economy_capture_income_expansion_report.gd" in scene_text, errors, "Economy capture/income expansion scene must load its report script")
+    ensure("rare resources remain staged/report-only" in doc_text.lower(), errors, "Economy capture/income expansion report must keep rare resources staged/report-only")
+    ensure("`wood` remains canonical" in doc_text, errors, "Economy capture/income expansion report must record wood as canonical")
+    ensure("No `SAVE_VERSION` bump" in doc_text, errors, "Economy capture/income expansion report must reject save-version bump scope")
+
+    placement_ids = {
+        str(node.get("placement_id", "")): str(node.get("site_id", ""))
+        for node in scenario.get("resource_nodes", [])
+        if isinstance(node, dict)
+    }
+    ensure(placement_ids.get("glassroad_watch_relay", "") == "site_prism_watch_relay", errors, "Glassroad relay proof must remain tied to site_prism_watch_relay")
+    ensure(placement_ids.get("glassroad_lens_house", "") == "site_lens_house", errors, "Glassroad lens-house proof must remain tied to site_lens_house")
+    ensure(placement_ids.get("glassroad_wood", "") == "site_wood_wagon", errors, "Glassroad proof must keep the current wood pickup")
+    ensure(placement_ids.get("glassroad_ore", "") == "site_ore_crates", errors, "Glassroad proof must keep the current ore pickup")
+    ensure(placement_ids.get("market_cache", "") == "site_waystone_cache", errors, "Glassroad proof must keep the current gold cache")
+
+    relay = resource_sites.get("site_prism_watch_relay", {})
+    lens_house = resource_sites.get("site_lens_house", {})
+    ensure(relay.get("control_income", {}).get("gold", 0) == 25, errors, "Prism Watch Relay must keep 25 gold daily control income for the expansion proof")
+    ensure(lens_house.get("control_income", {}).get("gold", 0) == 45, errors, "Lens House must keep 45 gold daily control income for the expansion proof")
+    for site_id in ("site_prism_watch_relay", "site_lens_house", "site_wood_wagon", "site_ore_crates", "site_waystone_cache"):
+        site = resource_sites.get(site_id, {})
+        for field_name in ("rewards", "claim_rewards", "control_income", "service_cost"):
+            payload = site.get(field_name, {})
+            if isinstance(payload, dict):
+                ensure(set(payload.keys()).issubset(set(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS) | {"experience"}), errors, f"{site_id}.{field_name} must stay within current resources for the expansion proof")
 
 
 def print_market_faction_cost_report(report: dict) -> None:
@@ -9442,6 +9501,7 @@ def main() -> int:
     validate_economy_wood_canonical_policy(errors)
     validate_economy_rare_resource_activation_policy(errors)
     validate_market_faction_cost_policy(errors)
+    validate_economy_capture_income_loop_expansion(errors)
     strict_fixture_warnings: list[str] = []
     if args.strict_economy_resource_fixtures:
         strict_fixture_errors, strict_fixture_warnings = validate_strict_economy_resource_fixtures()
@@ -9516,6 +9576,7 @@ def main() -> int:
     print("- economy/resource policy keeps wood as the canonical live save id, rejects target aliases, and preserves old-save wood payloads without a save-version bump")
     print("- staged rare-resource registry/report gates expose original rare resources without live costs, market buying, save migration, or production grants")
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks without rare-resource activation")
+    print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:
