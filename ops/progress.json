@@ -5,10 +5,10 @@
   "currentPhase": "phase-2-deep-production-foundation",
   "currentSliceId": "economy-market-faction-costs-10184",
   "currentSliceTitle": "Economy Market And Faction Costs",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next P2.3 child after staged rare-resource activation: implement bounded market caps or faction-biased cost hooks only if source paths, UI display, save state, AI behavior, and normal-market restrictions are explicitly supported.",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "P2.3 market/faction costs in progress: inspect prior evidence first; implement bounded market caps or faction-biased cost hooks only where resource/source/UI/save/AI gates are supported.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T14:06:29Z",
+  "updatedAt": "2026-04-27T14:09:27Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -838,7 +838,7 @@
       "id": "economy-market-faction-costs-10184",
       "title": "Economy Market And Faction Costs",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "in_progress",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "economy-resource-foundation-implementation-10184",
@@ -862,7 +862,10 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T14:09:27Z",
+      "startedAt": "2026-04-27T14:09:27Z",
+      "notes": "worker started for P2.3 market/faction costs: inspect prior economy/town/faction work first, then implement bounded market caps or faction-biased cost hooks only where gates are supported"
     },
     {
       "id": "economy-capture-income-loop-expansion-10184",
@@ -2783,7 +2786,7 @@
     {
       "id": "economy-market-faction-costs-10184",
       "title": "Economy Market And Faction Costs",
-      "status": "pending",
+      "status": "in_progress",
       "parentSliceId": "economy-resource-foundation-implementation-10184",
       "sourceDocs": [
         "docs/economy-overhaul-foundation.md",
@@ -2795,7 +2798,7 @@
         "market/cost content",
         "focused reports or smoke coverage"
       ],
-      "notes": "Next P2.3 child after staged rare-resource activation: implement bounded market caps or faction-biased cost hooks only if source paths, UI display, save state, AI behavior, and normal-market restrictions are explicitly supported.",
+      "notes": "worker started for P2.3 market/faction costs: inspect prior economy/town/faction work first, then implement bounded market caps or faction-biased cost hooks only where gates are supported",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.3 Economy Resource Foundation Implementation"
