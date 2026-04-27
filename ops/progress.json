@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-pathing-occupancy-adoption-10184",
-  "currentSliceTitle": "Overworld Pathing And Occupancy Adoption",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Adopted bounded shape-aware body_tiles plus approach.visit_offsets for representative Brightwood Sawmill resource object; runtime pathing blocks authored body mask only, keeps interaction tile pathable/visitable, and focused Godot report proves non-rectangular occupancy without renderer/save/resource migration.",
+  "currentSliceId": "neutral-encounter-object-migration-expansion-10184",
+  "currentSliceTitle": "Neutral Encounter Object Migration Expansion",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "P2.4 neutral encounter object migration expansion in progress: inspect prior bundle/report evidence first; migrate a bounded next encounter object set with validation while preserving shape-mask/pathing semantics.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T15:39:00Z",
+  "updatedAt": "2026-04-27T15:41:28Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1015,7 +1015,7 @@
       "id": "neutral-encounter-object-migration-expansion-10184",
       "title": "Neutral Encounter Object Migration Expansion",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "in_progress",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
@@ -1038,7 +1038,10 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T15:41:28Z",
+      "startedAt": "2026-04-27T15:41:28Z",
+      "notes": "worker started for P2.4 neutral encounter object migration expansion: inspect prior bundle/report evidence first, then migrate a bounded next encounter object set with validation; preserve shape-mask/pathing semantics"
     },
     {
       "id": "overworld-object-ai-valuation-route-effects-10184",
@@ -2822,7 +2825,7 @@
     {
       "id": "neutral-encounter-object-migration-expansion-10184",
       "title": "Neutral Encounter Object Migration Expansion",
-      "status": "pending",
+      "status": "in_progress",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
       "sourceDocs": [
         "docs/neutral-encounter-first-class-object-migration-plan.md",
@@ -2833,6 +2836,7 @@
         "content/scenarios.json",
         "neutral encounter report validation"
       ],
+      "notes": "worker started for P2.4 neutral encounter object migration expansion: inspect prior bundle/report evidence first, then migrate a bounded next encounter object set with validation; preserve shape-mask/pathing semantics",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation"
