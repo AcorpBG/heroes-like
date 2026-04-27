@@ -2359,7 +2359,9 @@ def build_overworld_object_report() -> dict:
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "mode": "compatibility_report",
         "compatibility_adapters": {
-            "runtime_adoption": "not_active",
+            "runtime_adoption": "classification_reporting_safe_metadata",
+            "runtime_adopted_safe_fields": ["primary_class", "secondary_tags", "interaction.cadence"],
+            "runtime_deferred_fields": ["body_tiles", "approach", "passability_class", "route_effect", "renderer_hint_id", "ai_hints", "save_state"],
             "production_json_migration": "safe_metadata_bundle_001_safe_fields_only",
             "pathing_occupancy_adoption": False,
             "renderer_sprite_ingestion": False,
@@ -2622,6 +2624,7 @@ def print_overworld_object_report(report: dict) -> None:
     print(f"- guarded/reward links: {len(report['guard_reward'])}; ownership/capture hints: {len(report['ownership_capture'])}; transit warnings: {sum(len(item.get('warnings', [])) for item in report['route_transit'].values())}")
     print(f"- first-class neutral encounter objects: {report['ai_editor_implications']['visible_neutral_encounter_records_present']}")
     print(f"- runtime adoption: {report['compatibility_adapters']['runtime_adoption']}; pathing occupancy adoption={report['compatibility_adapters']['pathing_occupancy_adoption']}")
+    print(f"- runtime adopted safe fields: {', '.join(report['compatibility_adapters'].get('runtime_adopted_safe_fields', []))}")
     print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
 
 
@@ -7682,6 +7685,10 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
         "ContentService.get_biome_for_terrain",
         "func _resource_site_is_repeatable",
         "func _resource_site_visit_cost",
+        "func describe_resource_site_interaction_surface",
+        'map_object.get("primary_class"',
+        'map_object.get("secondary_tags"',
+        'map_object.get("interaction"',
         '"mine"',
         '"scouting_structure"',
         '"guarded_reward_site"',
@@ -7692,6 +7699,10 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
 
     scenario_rules_text = SCENARIO_RULES_PATH.read_text(encoding="utf-8")
     ensure("ContentService.get_biome_for_terrain" in scenario_rules_text, errors, "ScenarioRules.gd must label scenario terrain through authored biomes")
+    runtime_metadata_report_scene = ROOT / "tests" / "overworld_object_runtime_metadata_report.tscn"
+    runtime_metadata_report_script = ROOT / "tests" / "overworld_object_runtime_metadata_report.gd"
+    ensure(runtime_metadata_report_scene.exists(), errors, "Missing overworld object runtime metadata report scene")
+    ensure(runtime_metadata_report_script.exists(), errors, "Missing overworld object runtime metadata report script")
 
 
 def validate_overworld_art_asset_slice(errors: list[str]) -> None:
