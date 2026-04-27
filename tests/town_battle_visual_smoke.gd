@@ -486,16 +486,29 @@ func _assert_town_muster_readiness_cue(shell: Node) -> bool:
 		String(snapshot.get("recruit_visible_text", "")),
 		String(snapshot.get("recruit_tooltip_text", "")),
 		String(readiness.get("best_order_label", "")),
+		String(readiness.get("cap_line", "")),
 		String(readiness.get("readiness", "")),
 		String(readiness.get("why_it_matters", "")),
 		String(readiness.get("next_step", "")),
 	])
-	for token in ["Muster check:", "Muster Readiness", "Town reserve:", "Best order:", "Readiness:", "Why it matters:", "Next practical action:", "Recruit Reserves"]:
+	for token in ["Muster check:", "Muster Readiness", "Town reserve:", "Best order:", "Best cap:", "Readiness:", "Why it matters:", "Next practical action:", "Recruit Reserves"]:
 		if not text.contains(token):
 			push_error("Town smoke: muster readiness cue lost %s clarity: %s." % [token, text])
 			return false
 	if int(readiness.get("reserve_total", -1)) < 0 or int(readiness.get("ready_order_count", -1)) < 0:
 		push_error("Town smoke: muster readiness cue did not expose stable visible counts: %s." % readiness)
+		return false
+	if int(readiness.get("best_order_available_count", -1)) < 0 or int(readiness.get("best_order_direct_count", -1)) < 0 or int(readiness.get("best_order_market_count", -1)) < 0:
+		push_error("Town smoke: muster cap cue did not expose stable selected-order counts: %s." % readiness)
+		return false
+	if not (
+		text.contains("can field")
+		or text.contains("can unlock")
+		or text.contains("stores field 0")
+		or text.contains("No recruit stack")
+		or text.contains("no reserve waiting")
+	):
+		push_error("Town smoke: muster cap cue does not explain fieldable versus waiting reserves: %s." % readiness)
 		return false
 	if (
 		int(readiness.get("ready_units", 0)) <= 0

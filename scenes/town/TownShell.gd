@@ -1097,8 +1097,9 @@ func _muster_readiness_surface() -> Dictionary:
 			ready_orders,
 			"" if ready_orders == 1 else "s",
 		]
-		visible = "Muster check: Ready x%d | %d order%s" % [
+		visible = "Muster check: Ready x%d/%d | %d order%s" % [
 			ready_units,
+			reserve_total,
 			ready_orders,
 			"" if ready_orders == 1 else "s",
 		]
@@ -1108,14 +1109,14 @@ func _muster_readiness_surface() -> Dictionary:
 			market_units,
 			"" if market_units == 1 else "s",
 		]
-		visible = "Muster check: Trade unlocks x%d" % market_units
+		visible = "Muster check: Trade unlocks x%d/%d" % [market_units, reserve_total]
 	elif blocked_reserve > 0:
 		selected_action = best_blocked
 		state_line = "Blocked: %d recruit%s waiting on stores or prerequisites" % [
 			blocked_reserve,
 			"" if blocked_reserve == 1 else "s",
 		]
-		visible = "Muster check: Blocked x%d waiting" % blocked_reserve
+		visible = "Muster check: Blocked x0/%d waiting" % blocked_reserve
 	elif not actions.is_empty() and actions[0] is Dictionary:
 		selected_action = actions[0]
 
@@ -1123,10 +1124,36 @@ func _muster_readiness_surface() -> Dictionary:
 	var readiness := state_line
 	var impact := "Muster timing shapes field army strength before leaving town."
 	var next_step := "Review another town order or leave when the muster plan is set."
+	var cap_line := "No recruit stack is waiting in reserve."
+	var best_available := 0
+	var best_direct := 0
+	var best_market_count := 0
 	if not selected_action.is_empty():
 		label = String(selected_action.get("button_label", selected_action.get("label", "Recruit order"))).strip_edges()
 		readiness = _town_action_button_readiness(selected_action, "recruit")
 		impact = _town_action_button_impact(selected_action, "recruit")
+		best_available = max(0, int(selected_action.get("available_count", 0)))
+		best_direct = max(0, int(selected_action.get("direct_affordable_count", 0)))
+		best_market_count = max(0, int(selected_action.get("market_affordable_count", 0)))
+		var stack_label := _short_text(label.trim_prefix("Recruit "), 32)
+		if best_direct > 0:
+			cap_line = "%s can field %d of %d now; %d stay in reserve." % [
+				stack_label,
+				best_direct,
+				best_available,
+				max(0, best_available - best_direct),
+			]
+		elif best_market_count > 0:
+			cap_line = "%s can unlock %d of %d through Exchange; %d still wait." % [
+				stack_label,
+				best_market_count,
+				best_available,
+				max(0, best_available - best_market_count),
+			]
+		elif best_available > 0:
+			cap_line = "%s has %d waiting; stores field 0 now." % [stack_label, best_available]
+		else:
+			cap_line = "%s has no reserve waiting; next levy refills later." % stack_label
 		next_step = _town_action_button_next_step(
 			selected_action,
 			"recruit",
@@ -1152,6 +1179,7 @@ func _muster_readiness_surface() -> Dictionary:
 	if weekly_line != "":
 		tooltip_lines.append("- %s" % weekly_line)
 	tooltip_lines.append("- Best order: %s" % label)
+	tooltip_lines.append("- Best cap: %s" % cap_line)
 	tooltip_lines.append("- Readiness: %s" % readiness)
 	tooltip_lines.append("- Why it matters: %s" % impact)
 	tooltip_lines.append("- Next practical action: %s" % next_step)
@@ -1166,6 +1194,10 @@ func _muster_readiness_surface() -> Dictionary:
 		"market_order_count": market_orders,
 		"blocked_order_count": blocked_orders,
 		"best_order_label": label,
+		"best_order_available_count": best_available,
+		"best_order_direct_count": best_direct,
+		"best_order_market_count": best_market_count,
+		"cap_line": cap_line,
 		"readiness": readiness,
 		"why_it_matters": impact,
 		"next_step": next_step,
