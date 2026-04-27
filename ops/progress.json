@@ -5,10 +5,10 @@
   "currentPhase": "phase-2-deep-production-foundation",
   "currentSliceId": "magic-spell-school-category-schema-10184",
   "currentSliceTitle": "Magic Spell School And Category Schema",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "P2.4 completed. Next actionable P2.5 child is the selected magic spell school/category schema slice.",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "P2.5 magic spell school/category schema in progress: inspect prior magic docs/content/runtime first; implement selected spell school/category/tier metadata and validation without treating UI cues as implementation.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T16:25:00Z",
+  "updatedAt": "2026-04-27T16:16:23Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1136,7 +1136,7 @@
       "id": "magic-spell-school-category-schema-10184",
       "title": "Magic Spell School And Category Schema",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "in_progress",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "magic-system-foundation-implementation-10184",
@@ -1158,7 +1158,10 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T16:16:23Z",
+      "startedAt": "2026-04-27T16:16:23Z",
+      "notes": "worker started for P2.5 magic spell school/category schema: inspect prior magic docs/content/runtime first, then implement selected spell school/category/tier metadata and validation without treating UI cues as implementation"
     },
     {
       "id": "magic-battle-spell-behavior-expansion-10184",
@@ -2885,7 +2888,7 @@
     {
       "id": "magic-spell-school-category-schema-10184",
       "title": "Magic Spell School And Category Schema",
-      "status": "pending",
+      "status": "in_progress",
       "parentSliceId": "magic-system-foundation-implementation-10184",
       "sourceDocs": [
         "docs/magic-system-expansion-foundation.md"
@@ -2895,7 +2898,7 @@
         "scripts/core/SpellRules.gd",
         "validation fixtures/reports"
       ],
-      "notes": "P2.5 next actionable child after P2.4 completion: implement selected spell school/category/tier metadata and validation without treating UI cues as magic-system implementation.",
+      "notes": "worker started for P2.5 magic spell school/category schema: inspect prior magic docs/content/runtime first, then implement selected spell school/category/tier metadata and validation without treating UI cues as implementation",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.5 Magic System Foundation Implementation"
