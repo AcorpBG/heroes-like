@@ -87,13 +87,15 @@ Use this evidence only for scale and category seriousness. Do not copy exact nam
 
 ## Corrective Target
 
-Target by the end of corrective P2.4: 220 authored `map_objects` total, including existing objects migrated/normalized where appropriate. This means about 171 net additions or replacements beyond the current 49. The target is intentionally much smaller than the extracted HoMM3 editor list, but large enough to support real map density and object variety.
+Target by the end of corrective P2.4: 372 authored `map_objects` total, including existing objects migrated/normalized where appropriate. This means about 323 net additions or replacements beyond the current 49. The target is still far below the HoMM3-scale object vocabulary, but it is large enough to support real map density, terrain readability, and production map authoring.
+
+The largest correction is decorations and blockers. The prior 48-object target undercounted a category that must carry most of the visible terrain language. A foundation target of 200 decorations/blockers is defensible because Aurelion Reach currently has 9 biomes; about 20-22 non-interactable scenic/blocking objects per biome already implies roughly 180-198 definitions before cross-biome transition pieces, roadsides, shores, cliffs, and large blockers are considered. HoMM3's roughly 533 decoration/blocker scale is a warning and inspiration for category seriousness, not a target to copy.
 
 Target category mix:
 
 | Category | Target total | Current rough count | Corrective need |
 | --- | ---: | ---: | --- |
-| Decorations and blockers | 48 | 2 | Add blocking and non-blocking scenic families across regions. |
+| Decorations and blockers | 200 | 2 | Add blocking, non-blocking scenic, large-footprint, and edge-blocker families across all 9 biomes. |
 | Raw resources, pickups, and caches | 30 | 2 | Add common resources, staged rare-resource pickups, map clues, and guarded variants. |
 | Mines and permanent resource buildings | 24 | 3 | Add common-resource mines and rare-resource fronts without activating rare economy costs. |
 | Services, shrines, scouting, signs, and events | 28 | 6 | Add repeatable services, spell/progression sites, reveal sites, signs, and event markers. |
@@ -101,7 +103,7 @@ Target category mix:
 | Dwellings and guarded dwellings | 28 | 25 | Normalize existing dwellings and add guarded high-value dwellings. |
 | Guarded reward sites and hostile reward pockets | 22 | 8 including encounters | Add ruins, vaults, banks, lairs, guarded resource pockets, and elite sites. |
 | Faction landmarks and scenario objectives | 20 | 3 | Add faction identity anchors, objective frames, and state variants. |
-| Total | 220 | 49 | Broad but still sliceable. |
+| Total | 372 | 49 | Broad but still sliceable. |
 
 Density goals:
 
@@ -125,20 +127,58 @@ Every new or normalized object should distinguish:
 
 ### Decorations And Blockers
 
-Target: 48 total definitions.
-Priority: P0/P1 because density and path readability need non-interactable vocabulary before map production.
+Target: 200 total definitions.
+Priority: P0/P1 because density, route readability, biome identity, and path blocking need non-interactable vocabulary before map production.
 
-| Subcategory | Target | Example original families | Footprints | Blocking and interaction | Biome/region variants |
-| --- | ---: | --- | --- | --- | --- |
-| Non-blocking decoration | 24 | ash pennants, reed mats, lens glints, orchard markers, slag chips, bell ropes, shell drifts, memory-salt flecks | 1x1, 2x1, 2x2 scatter | `passable_scenic`, no interaction, no rewards | Emberflow, Drowned Marches, Glass Uplands, Walking Green, Brass Deeps, Veil Coast |
-| Blocking decoration | 16 | lockwall slabs, chainboom wrecks, lens shard ridges, root knots, slag berms, wreck ribs, shardfall blocks | 2x1, 2x2, 3x1, 3x2, 3x3, non-square | `blocking_non_visitable`; body mask may be partial/non-rectangular; no interaction | Region-specific blockers and neutral ruin sets |
-| Edge blockers | 8 | levee lips, reef shelves, root fences, rail embankments, cliff teeth | 2x1, 3x1, 4x1, L-shaped masks | `edge_blocker`; blocks lane edge without covering route center; no interaction | River, coast, forest, mountain, industrial routes |
+Decorative objects are strictly non-interactable. They never grant rewards, open dialogs, trigger visits, recruit units, produce resources, or serve as hidden interactables. They split into:
 
-Implementation expectations:
+- `passable_scenic`: non-blocking visual detail. The hero may move through the object footprint unless another placed object or terrain rule blocks the tile.
+- `blocking_non_visitable`: non-interactable blockers such as rocks, trees, cliff chunks, wreck ribs, root knots, ice slabs, slag walls, and ruin fragments.
+- `edge_blocker`: non-interactable blockers that shape a route edge, shoreline, cliff lip, wall edge, reef shelf, embankment, or forest boundary without filling the whole visible silhouette.
 
-- Split decorations into blocking and non-blocking explicitly.
-- Decorations are non-interactable by rule.
-- Large scenic sets should include negative-space variants so map authors do not fill every tile with object silhouettes.
+The visual footprint is not the blocking footprint. A 4x3 tree canopy may block only a 2x2 trunk/root mask; a 6x4 cliff silhouette may block an irregular 6x2 back edge; a 3x2 reed mat may be fully passable; a 2x1 fallen beam may block only one tile. Validators and editor reports should treat `footprint`, `body_tiles`, passability, and edge intent as separate facts.
+
+Foundation mix:
+
+| Subcategory | Target | Purpose |
+| --- | ---: | --- |
+| Passable scenic scatter and dressing | 72 | Low-risk density, negative-space texture, small route flavor. |
+| Blocking terrain objects | 78 | Rocks, trees, cliffs, wreckage, ruins, ice, slag, roots, and other real path shapers. |
+| Edge blockers and transition masks | 38 | Shorelines, cliffs, reefs, route shoulders, wall edges, forest lips, and biome transition seams. |
+| Large silhouette anchors | 12 | 5x2, 5x3, 6x3, 6x4, and 6x6 blockers or partial blockers used sparingly for memorable map structure. |
+
+Biome-by-biome foundation plan:
+
+| Biome | Planned count | Planned families and examples | Footprint emphasis |
+| --- | ---: | --- | --- |
+| Grasslands / Emberflow Basin | 22 | river stones, levee lips, toll-road grass tufts, orchard windfall, old fence rails, floodplain shrubs, millstone debris, waterlogged ruin blocks, reed scatter, road-edge posts | 1x1 scatter; 1x2/2x1 fence and reed strips; 2x2 shrubs; 3x1 levees; 3x2 ruin blocks; 4x1 road shoulders |
+| Deep Forest / Walking Green | 24 | root knots, grafted trunk clusters, pilgrim moss stones, thorn screens, fallen boughs, hollow stumps, green shrine debris, living-road edge roots, canopy shadows, seed husk scatter | 1x1 seed scatter; 1x2/2x1 roots; 2x2 trunks; 2x3/3x2 bough clusters; 3x3 tree masses; 4x2/4x3 forest lips; 5x3 elder-root blockers |
+| Mire Fen / Drowned Marches | 24 | reed mats, peat cuts, drum-island stones, mudglass shards, half-sunk carts, drowned fence lines, bog cypress knees, blackwater pools, rotted causeway ribs, warning-bell debris | 1x1 reeds; 1x3/3x1 causeway ribs; 2x2 pools; 2x3 reed islands; 3x2 cart wrecks; 3x3 bog trees; 4x2 water edges; 5x2 peat shelves |
+| Highland Ridge | 22 | scree fans, ridge teeth, cairn scatter, wind-carved shrubs, broken switchback stones, cliff lips, old rope-post debris, slate shelves, talus pockets, storm cairns | 1x1 rocks; 1x2/2x1 ledges; 2x2 boulders; 2x4/4x2 shelves; 3x1 ridge teeth; 3x3 rock knots; 4x3 cliff blocks; 6x3 cliff bands |
+| Coast Archipelago / Veil Coast | 24 | shell drifts, bell-buoy wreckage, reef shelves, saltgrass, black-sail ribs, tide-pool stones, mirror shoal shards, wreck planks, drowned quay blocks, obituary-vault rubble | 1x1 shells; 1x4/4x1 tide lines; 2x1 planks; 2x2 tide pools; 2x3 wreck ribs; 3x2 quay rubble; 4x2 reefs; 5x3 shoals; 6x4 wreck silhouettes |
+| Rough Badlands | 20 | redstone fins, dry gullies, thornbrush, cracked road slabs, dust cairns, broken survey stakes, sunken cart axles, shardfall rubble, dry-well stones, ridge-edge teeth | 1x1 chips; 1x3/3x1 cracks; 2x2 thornbrush; 2x4 gullies; 3x2 rubble; 3x3 fins; 4x3 ledge blockers; 5x2 escarpments |
+| Ash Lava Wastes | 22 | ash pennants, clinker stones, cooled lava ropes, ember cracks, slag berms, furnace scree, burned timber, smoke-black ruin walls, cinder drifts, heat-glass fragments | 1x1 cinders; 1x2 cracks; 2x1 burned beams; 2x2 slag; 2x3/3x2 lava ropes; 3x3 clinker blocks; 4x2 berms; 6x3 slag walls |
+| Subterranean Underways / Brass Deeps | 22 | pressure-rail sleepers, pump-house rubble, brass pipe nests, quarry blocks, glow fungus, soot banners, support struts, rail embankments, mine spoil, undergate stones | 1x1 fungus/chips; 1x4/4x1 rails; 2x1 pipe runs; 2x2 quarry blocks; 2x3 struts; 3x2 spoil piles; 4x3 embankments; 6x4 chamber blockers |
+| Snow Frost Marches | 20 | frost shrubs, blue ice plates, snow-buried stones, rime fences, windbreak logs, old sled wrecks, frozen pool shelves, storm cairns, icefall teeth, whitewood trunks | 1x1 rime scatter; 1x2/2x1 fences; 1x3 ice teeth; 2x2 shrubs/rocks; 2x4 ice shelves; 3x2 sled wrecks; 3x3 whitewood trunks; 4x4 ice blocks; 6x6 icefall anchors |
+
+Footprint tiers:
+
+| Tier | Footprints | Use |
+| --- | --- | --- |
+| Small scatter | 1x1, 1x2, 2x1 | Frequent passable scenic, small blockers, lane seasoning, shoulder detail. |
+| Medium clusters | 1x3, 1x4, 2x2, 2x3, 2x4, 3x1, 3x2 | Common route shaping, tree/rock clusters, causeways, wreck strips, reeds, rails, shelves. |
+| Large blockers | 3x3, 3x4, 4x1, 4x2, 4x3, 4x4 | Chokepoint edges, forest lips, cliffs, shoreline shelves, ruins, large boulders. |
+| Landmark blockers | 5x2, 5x3, 6x3, 6x4, 6x6 | Sparse anchors for cliff walls, icefalls, wreck fields, elder roots, cavern walls, and dramatic edge blockers. |
+
+Body-mask rules:
+
+- `passable_scenic` defaults to empty `body_tiles`; any exception must be explicit and justified by a different passability class.
+- `blocking_non_visitable` must define `body_tiles`; never infer a full rectangle from `footprint`.
+- `edge_blocker` must declare which edge or lane side it protects, and its `body_tiles` should avoid accidental route-center closure unless the object is intentionally a wall.
+- Non-square footprints are required for rocks, trees, blockers, rails, cliffs, reefs, water edges, and wreckage. Do not collapse this category into 2x2 stamps.
+- Large silhouettes need partial masks when appropriate, so art can overhang playable tiles without making routes unreadable.
+- Paired scenic/blocking variants are allowed only when ids and classes make passability clear, for example a passable reed mat versus a blocking reed island.
+- Negative-space variants are part of the target. Map authors need low-silhouette scatter as well as tall blockers, or dense maps will become visually noisy.
 
 ### Raw Resources, Pickups, And Caches
 
@@ -276,6 +316,7 @@ Scope:
 - Add 8 blocking or edge-blocker decorations.
 - Add 6 common raw resource pickups for `gold`, `wood`, and `ore`.
 - Add 4 staged rare-resource pickups with report-only/staged metadata.
+- Treat the 20 decoration/blocker definitions as the first foundation pass only, not the full density target.
 
 Likely files touched:
 
@@ -297,6 +338,96 @@ Non-goals:
 - No renderer sprite import.
 - No scenario placement migration beyond tiny fixture/proof placement if required by validation.
 - No pathing adoption beyond validating authored metadata.
+- No claim that decoration/blocker density is complete.
+
+### Batch 001b: Biome Scenic Decoration Expansion
+
+Target additions/normalizations: 60 decoration/blocker objects.
+
+Scope:
+
+- Add passable scenic scatter across all 9 biomes, favoring 1x1, 1x2, 2x1, 1x3, 3x1, 2x2, and 2x3 footprints.
+- Add low-blocking or no-blocking shrubs, reeds, stones, shell drifts, ash/cinder scatter, fungus, frost scrub, and road/shore/forest dressing.
+- Ensure every biome has at least 5-7 non-interactable passable scenic definitions after this batch.
+- Add paired negative-space variants so map authors can create dense-looking areas without filling every tile with blockers.
+
+Likely files touched:
+
+- `content/map_objects.json`
+- Object validator/report fixtures if passability, footprint tiers, or biome coverage checks expand.
+- A short implementation report doc after validation.
+
+Validation required:
+
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+Non-goals:
+
+- No interactable objects.
+- No new resource, shrine, dwelling, reward, transit, or objective behavior.
+- No renderer sprite import.
+- No broad pathing adoption beyond authored body-mask validation.
+
+### Batch 001c: Biome Blocking And Edge-Blocker Expansion
+
+Target additions/normalizations: 70 decoration/blocker objects.
+
+Scope:
+
+- Add biome-specific blocking rocks, trees, cliff lips, reed islands, reef shelves, wreck ribs, root walls, slag berms, ice blocks, quarry chunks, and ruin/debris blockers.
+- Cover non-square footprints from 1x2 through 4x4, including 2x3, 2x4, 3x2, 3x4, 4x2, and 4x3 variants.
+- Add edge blockers for route shoulders, water edges, forest boundaries, cliff edges, rail embankments, reefs, and biome transitions.
+- Ensure blockers define explicit `body_tiles` and never rely on visual rectangles as implied blocking masks.
+
+Likely files touched:
+
+- `content/map_objects.json`
+- Object validator/report fixtures if body-mask or edge-blocker validation expands.
+- A short implementation report doc after validation.
+
+Validation required:
+
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+Non-goals:
+
+- No interactable object implementation.
+- No route-effect runtime adoption.
+- No editor enforcement beyond structural validation unless a focused validator fixture requires it.
+- No renderer sprite import.
+
+### Batch 001d: Large Footprint Decoration And Coverage Closure
+
+Target additions/normalizations: 48 decoration/blocker objects.
+
+Scope:
+
+- Fill remaining biome coverage gaps toward the 200 decoration/blocker target.
+- Add sparse large silhouette anchors with 5x2, 5x3, 6x3, 6x4, and 6x6 footprints where appropriate.
+- Add large but partially masked cliff bands, elder roots, wreck fields, cavern walls, icefalls, lava/slag walls, and shoreline shelves.
+- Add cross-biome transition objects only when they support real map authoring, such as grass-to-ridge scree, marsh-to-coast reeds, ash-to-badlands clinker, and forest-to-highland root shelves.
+
+Likely files touched:
+
+- `content/map_objects.json`
+- Object validator/report fixtures if large-footprint limits or coverage summaries expand.
+- A short implementation report doc after validation.
+
+Validation required:
+
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+Non-goals:
+
+- No decorative interactables or hidden rewards.
+- No pathing, renderer, save, or scenario migration beyond metadata validation.
+- No attempt to reach HoMM-scale 500+ decoration breadth in P2.4.
 
 ### Batch 002: Mines And Resource Fronts
 
@@ -504,10 +635,10 @@ Deferred to later explicit slices:
 
 Corrective P2.4 should be considered complete only when:
 
-- The repo has a broad authored object vocabulary near the 220-object target or the owner accepts a revised target.
+- The repo has a broad authored object vocabulary near the 372-object target or the owner accepts a revised target.
 - Major categories above have actual `map_objects` entries, not only docs.
 - New objects distinguish visual footprint, blocking `body_tiles`, and approach/interaction tiles.
-- Decorations are split into blocking and non-blocking non-interactable objects.
+- Decorations are split into blocking, non-blocking scenic, and edge-blocker non-interactable objects, with broad biome coverage near the 200-object decoration/blocker target.
 - Current resources remain compatible: live `gold`, `wood`, `ore`; staged rare resources remain staged unless a later economy slice activates them.
 - Validator/report coverage proves the authored metadata is structurally usable.
 - P2.5 resumes only after the owner accepts the P2.4 corrective content baseline or explicitly overrides the stop.
