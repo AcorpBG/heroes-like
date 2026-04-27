@@ -127,14 +127,26 @@ Tracks:
 - magic and artifact systems;
 - animation/event cue foundations;
 - strategic AI foundations;
-- terrain/editor/tooling foundations.
+- terrain/editor/tooling foundations;
+- random map generator foundations for scenario prototyping, balance harness input, and later skirmish replayability.
 
 Exit criteria:
 - Key systems have implemented, validated, player-facing or tooling-facing slices.
 - Requirement docs are connected to implementation slices in PLAN/progress tracking.
 - At least two factions have enough identity, economy, unit/town/magic/artifact hooks, placement, and AI pressure to support alpha planning.
+- A random map generator foundation exists for controlled prototype maps, with validation hooks and constraints suitable for the later headless balance harness.
 
-### Phase 3 — Playable Alpha Baseline
+### Phase 3 — Headless AI Agent Balance Harness
+
+Goal: create a non-graphical agent/test harness that can run scenarios, AI turns, economy loops, battles, and balance checks faster than manual UI play.
+
+Exit criteria:
+- Headless agents can execute core game loops through domain rules without depending on scene graphics.
+- The harness can run repeated simulations for scenario viability, economy pressure, AI behavior, battle outcomes, faction balance, and regression detection.
+- Reports expose actionable balance and rules failures without becoming player-facing UI or replacing manual play.
+- Save/load and deterministic replay boundaries are tested through the harness where practical.
+
+### Phase 4 — Playable Alpha Baseline
 
 Goal: a small coherent alpha that can be played repeatedly without developer interpretation.
 
@@ -144,7 +156,7 @@ Exit criteria:
 - Town, battle, overworld, save/load, AI, economy, and UI loops hold together under repeated play.
 - Major UX surfaces are understandable without debug/report panels.
 
-### Phase 4 — Production Alpha Layer
+### Phase 5 — Production Alpha Layer
 
 Goal: expand alpha into a production-shaped game slice.
 
@@ -153,21 +165,15 @@ Exit criteria:
 - Campaign/skirmish flow, difficulty, AI, balance, and content pipeline are stable enough for broader production.
 - Packaging/settings/accessibility/performance requirements are known and tracked.
 
-### Phase 5 — HoMM2-Class Breadth
+### Phase 6 — Broad Production Breadth
 
-Goal: broad original fantasy strategy package comparable in systemic breadth to the Heroes II era.
+Goal: expand into a broad original fantasy strategy package with the systemic breadth, density, and replayability expected from classic Heroes-style strategy games.
 
 Exit criteria:
 - Multiple original factions, towns, unit ladders, spells, artifacts, neutral sites, handcrafted maps, campaign structure, and reliable AI.
-- Breadth is supported by working loops, not just authored data.
-
-### Phase 6 — HoMM3-Class Breadth
-
-Goal: richer strategic density and content variety after HoMM2-class breadth is stable.
-
-Exit criteria:
-- Deeper faction variety, object density, artifacts, magic, hero growth, map scripting, campaigns, AI pressure, and polish.
-- Late production horizon only; not a near-term claim.
+- Deeper faction variety, object density, hero growth, map scripting, strategic pressure, and polish are supported by working loops.
+- Breadth is implemented through playable systems and validated content pipelines, not just authored data volume.
+- This is a late production horizon, not a near-term claim.
 
 ## Current Strategic Focus
 
