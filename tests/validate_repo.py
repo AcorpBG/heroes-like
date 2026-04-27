@@ -925,6 +925,7 @@ OVERWORLD_OBJECT_CONTENT_BATCH_002_ID = "overworld-object-content-batch-002-mine
 OVERWORLD_OBJECT_CONTENT_BATCH_003_ID = "overworld-object-content-batch-003-services-shrines-signs-events-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_004_ID = "overworld-object-content-batch-004-transit-coast-route-control-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_005_ID = "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184"
+OVERWORLD_OBJECT_CONTENT_BATCH_006_ID = "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
 OVERWORLD_OBJECT_PASSABILITY_CLASSES = {
     "passable_visit_on_enter",
     "passable_scenic",
@@ -4495,6 +4496,309 @@ def build_overworld_object_content_batch_005_section(
     return section
 
 
+def build_overworld_object_content_batch_006_section(
+    map_objects: dict[str, dict],
+    resource_sites: dict[str, dict],
+    biomes: dict[str, dict],
+    army_groups: dict[str, dict],
+    encounters: dict[str, dict],
+) -> dict:
+    batch_objects = {
+        object_id: obj
+        for object_id, obj in map_objects.items()
+        if str(obj.get("content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_006_ID
+        or str(obj.get("normalized_content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_006_ID
+    }
+    batch_sites = {
+        site_id: site
+        for site_id, site in resource_sites.items()
+        if str(site.get("content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_006_ID
+        or str(site.get("normalized_content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_006_ID
+    }
+    expected_role_counts = {
+        "minor_guarded_reward": 8,
+        "major_guarded_reward": 8,
+        "creature_bank_like": 8,
+        "guarded_route_reward_hybrid": 8,
+    }
+    reward_categories = {"resource", "artifact", "spell", "recruit", "scouting", "route", "town_support", "objective"}
+    section = {
+        "batch_id": OVERWORLD_OBJECT_CONTENT_BATCH_006_ID,
+        "object_count": len(batch_objects),
+        "site_count": len(batch_sites),
+        "role_counts": {},
+        "reward_category_counts": {},
+        "risk_tier_counts": {},
+        "footprints": {},
+        "biome_counts": {},
+        "shape_contract_ready_count": 0,
+        "linked_resource_site_count": 0,
+        "linked_site_contract_count": 0,
+        "guard_link_count": 0,
+        "guard_contract_ready_count": 0,
+        "reward_contract_ready_count": 0,
+        "route_hybrid_count": 0,
+        "metadata_only_boundary_count": 0,
+        "no_rare_resource_activation_count": 0,
+        "normalized_existing_count": 0,
+        "errors": [],
+        "warnings": [],
+    }
+
+    def add_error(message: str) -> None:
+        if message not in section["errors"]:
+            section["errors"].append(message)
+
+    def live_resource_ids(site: dict, obj: dict) -> set[str]:
+        ids: set[str] = set()
+        for payload in (site, obj):
+            for field in ("rewards", "claim_rewards", "control_income", "service_cost"):
+                values = payload.get(field, {})
+                if isinstance(values, dict):
+                    ids.update(str(resource_id) for resource_id in values.keys())
+            response_cost = payload.get("response_profile", {}).get("resource_cost", {}) if isinstance(payload.get("response_profile", {}), dict) else {}
+            if isinstance(response_cost, dict):
+                ids.update(str(resource_id) for resource_id in response_cost.keys())
+        return ids
+
+    def metadata_boundary_is_safe(payload: dict) -> bool:
+        boundary = payload.get("runtime_boundary", {}) if isinstance(payload.get("runtime_boundary", {}), dict) else {}
+        return (
+            str(boundary.get("status", "")) == "metadata_only"
+            and not bool(boundary.get("live_reward_grants", True))
+            and not bool(boundary.get("broad_reward_runtime_migration", True))
+            and not bool(boundary.get("guard_resolution_runtime_adopted", True))
+            and not bool(boundary.get("neutral_encounter_migration", True))
+            and not bool(boundary.get("save_payload_required", True))
+            and not bool(boundary.get("renderer_sprite_required", True))
+            and not bool(boundary.get("pathing_runtime_adopted", True))
+            and not bool(boundary.get("route_effect_runtime_adopted", True))
+            and not bool(boundary.get("rare_resource_activation", True))
+            and not bool(boundary.get("market_changes", True))
+            and not bool(boundary.get("scenario_placement_migration", True))
+        )
+
+    def check_body_and_approach(object_id: str, obj: dict, width: int, height: int) -> bool:
+        body_tiles = obj.get("body_tiles", [])
+        approach = obj.get("approach", {}) if isinstance(obj.get("approach", {}), dict) else {}
+        visit_offsets = approach.get("visit_offsets", []) if isinstance(approach.get("visit_offsets", []), list) else []
+        ready = True
+        if not isinstance(body_tiles, list) or not body_tiles:
+            add_error(f"{object_id}: Batch 006 objects must author non-empty body_tiles")
+            ready = False
+        if not isinstance(obj.get("approach", {}), dict) or not visit_offsets:
+            add_error(f"{object_id}: Batch 006 objects must author approach.visit_offsets")
+            ready = False
+        seen_body_tiles: set[str] = set()
+        for tile in body_tiles if isinstance(body_tiles, list) else []:
+            if not isinstance(tile, dict):
+                add_error(f"{object_id}: body_tiles entries must be dictionaries")
+                ready = False
+                continue
+            x = int(tile.get("x", -999))
+            y = int(tile.get("y", -999))
+            if x < 0 or y < 0 or x >= width or y >= height:
+                add_error(f"{object_id}: body tile {x},{y} is outside footprint")
+                ready = False
+            tile_key = f"{x},{y}"
+            if tile_key in seen_body_tiles:
+                add_error(f"{object_id}: body tile {tile_key} is duplicated")
+                ready = False
+            seen_body_tiles.add(tile_key)
+        seen_visit_offsets: set[str] = set()
+        for tile in visit_offsets:
+            if not isinstance(tile, dict):
+                add_error(f"{object_id}: approach.visit_offsets entries must be dictionaries")
+                ready = False
+                continue
+            x = int(tile.get("x", -999))
+            y = int(tile.get("y", -999))
+            adjacent = (x == -1 and 0 <= y < height) or (x == width and 0 <= y < height) or (y == -1 and 0 <= x < width) or (y == height and 0 <= x < width)
+            if not adjacent:
+                add_error(f"{object_id}: approach tile {x},{y} must be adjacent to footprint")
+                ready = False
+            tile_key = f"{x},{y}"
+            if tile_key in seen_visit_offsets:
+                add_error(f"{object_id}: approach tile {tile_key} is duplicated")
+                ready = False
+            seen_visit_offsets.add(tile_key)
+        if seen_body_tiles.intersection(seen_visit_offsets):
+            add_error(f"{object_id}: body_tiles must not overlap approach.visit_offsets")
+            ready = False
+        if str(approach.get("mode", "")) != "adjacent":
+            add_error(f"{object_id}: Batch 006 approach.mode must be adjacent")
+            ready = False
+        return ready
+
+    def guard_ready(object_id: str, guard: dict, guard_link: dict, site_guard: dict) -> bool:
+        ready = True
+        guard_group_id = str(guard.get("guard_army_group_id", ""))
+        guard_encounter_id = str(guard.get("guard_encounter_id", ""))
+        if guard_group_id not in army_groups:
+            add_error(f"{object_id}: Batch 006 guard army group {guard_group_id} is missing")
+            ready = False
+        if guard_encounter_id not in encounters:
+            add_error(f"{object_id}: Batch 006 guard encounter {guard_encounter_id} is missing")
+            ready = False
+        if guard_encounter_id in encounters and str(encounters[guard_encounter_id].get("affiliation", "")) != "neutral":
+            add_error(f"{object_id}: Batch 006 guard encounter must remain neutral")
+            ready = False
+        if guard_link:
+            if str(guard_link.get("guard_role", "")) != "guards_object" or str(guard_link.get("target_kind", "")) != "map_object":
+                add_error(f"{object_id}: Batch 006 guard_link must keep the guarded map-object class explicit")
+                ready = False
+            if str(guard_link.get("target_id", "")) != object_id or not bool(guard_link.get("clear_required_for_target", False)):
+                add_error(f"{object_id}: Batch 006 guard_link must target the guarded object and require clearance")
+                ready = False
+            if not bool(guard_link.get("metadata_only", False)) or bool(guard_link.get("runtime_guard_resolution_adopted", True)):
+                add_error(f"{object_id}: Batch 006 guard_link must remain metadata-only")
+                ready = False
+        else:
+            add_error(f"{object_id}: Batch 006 objects must author guard_link metadata")
+            ready = False
+        if str(site_guard.get("guard_army_group_id", "")) != guard_group_id or str(site_guard.get("guard_encounter_id", "")) != guard_encounter_id:
+            add_error(f"{object_id}: Batch 006 site guard_profile must match object guard expectation")
+            ready = False
+        if not bool(site_guard.get("metadata_only", False)) or bool(site_guard.get("runtime_guard_resolution_adopted", True)):
+            add_error(f"{object_id}: Batch 006 site guard_profile must remain metadata-only")
+            ready = False
+        return ready
+
+    for object_id, obj in sorted(batch_objects.items()):
+        role = str(obj.get("batch006_role", ""))
+        site_id = str(obj.get("resource_site_id", ""))
+        site = resource_sites.get(site_id, {}) if site_id else {}
+        footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
+        width = int(footprint.get("width", 0))
+        height = int(footprint.get("height", 0))
+        increment_count(section["role_counts"], role)
+        increment_count(section["footprints"], f"{width}x{height}")
+        for biome_id in obj.get("biome_ids", []) if isinstance(obj.get("biome_ids", []), list) else []:
+            increment_count(section["biome_counts"], str(biome_id))
+        if str(obj.get("normalized_content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_006_ID:
+            section["normalized_existing_count"] += 1
+
+        forbidden_wood_alias = "tim" + "ber"
+        text_key = json.dumps({"object": obj, "site": site}, sort_keys=True).lower()
+        if forbidden_wood_alias in text_key:
+            add_error(f"{object_id}: Batch 006 must keep wood canonical and avoid non-canonical wood aliases")
+        if role not in expected_role_counts:
+            add_error(f"{object_id}: Batch 006 object must author a supported batch006_role")
+        if str(obj.get("family", "")) != "guarded_reward_site" or str(obj.get("primary_class", "")) != "guarded_reward_site":
+            add_error(f"{object_id}: Batch 006 objects must keep guarded_reward_site as the explicit class")
+        if not site_id or site_id not in resource_sites:
+            add_error(f"{object_id}: Batch 006 object must link an existing resource_site_id")
+        else:
+            section["linked_resource_site_count"] += 1
+            if str(site.get("family", "")) != "guarded_reward_site":
+                add_error(f"{object_id}: linked site {site_id} must use guarded_reward_site family")
+            if str(site.get("content_batch_id", "")) != OVERWORLD_OBJECT_CONTENT_BATCH_006_ID and str(site.get("normalized_content_batch_id", "")) != OVERWORLD_OBJECT_CONTENT_BATCH_006_ID:
+                add_error(f"{object_id}: linked site {site_id} must carry Batch 006 content metadata")
+        if width <= 0 or height <= 0:
+            add_error(f"{object_id}: Batch 006 footprint dimensions must be positive")
+        if str(footprint.get("anchor", "")) not in OVERWORLD_OBJECT_FOOTPRINT_ANCHORS:
+            add_error(f"{object_id}: Batch 006 footprint.anchor is missing or unsupported")
+        if str(footprint.get("tier", "")) not in OVERWORLD_OBJECT_FOOTPRINT_TIERS:
+            add_error(f"{object_id}: Batch 006 footprint.tier is missing or unsupported")
+        if str(obj.get("passability_class", "")) != "blocking_visitable":
+            add_error(f"{object_id}: Batch 006 guarded reward objects must use blocking_visitable")
+        interaction = obj.get("interaction", {}) if isinstance(obj.get("interaction", {}), dict) else {}
+        if str(interaction.get("cadence", "")) not in {"one_time", "fight_first_one_time", "conditional"}:
+            add_error(f"{object_id}: Batch 006 interaction cadence is missing or unsupported")
+        if not bool(interaction.get("requires_guard_clear", False)):
+            add_error(f"{object_id}: Batch 006 interaction must require guard clearance")
+        if check_body_and_approach(object_id, obj, width, height):
+            section["shape_contract_ready_count"] += 1
+
+        contract = obj.get("guarded_reward_contract", {}) if isinstance(obj.get("guarded_reward_contract", {}), dict) else {}
+        site_contract = site.get("guarded_reward_contract", {}) if isinstance(site.get("guarded_reward_contract", {}), dict) else {}
+        if contract and site_contract and str(contract.get("resource_site_id", "")) == site_id and str(site_contract.get("resource_site_id", "")) == site_id:
+            section["linked_site_contract_count"] += 1
+        else:
+            add_error(f"{object_id}: Batch 006 object and site must author matching guarded_reward_contract metadata")
+        categories = contract.get("reward_categories", [])
+        if isinstance(categories, list) and categories:
+            for category in categories:
+                category_id = str(category)
+                increment_count(section["reward_category_counts"], category_id)
+                if category_id not in reward_categories:
+                    add_error(f"{object_id}: Batch 006 reward category {category_id} is unsupported")
+        else:
+            add_error(f"{object_id}: Batch 006 must declare reward categories")
+        if contract and bool(contract.get("metadata_only_guard_contract", False)) and not bool(contract.get("runtime_guard_resolution_adopted", True)) and not bool(contract.get("broad_reward_runtime_migration", True)):
+            section["reward_contract_ready_count"] += 1
+        else:
+            add_error(f"{object_id}: Batch 006 guarded_reward_contract must remain metadata-only")
+        if bool(contract.get("route_hybrid", False)):
+            section["route_hybrid_count"] += 1
+        if role == "guarded_route_reward_hybrid" and not bool(contract.get("route_hybrid", False)):
+            add_error(f"{object_id}: Batch 006 route/reward hybrids must declare route_hybrid=true")
+
+        guard = obj.get("guard_expectation", {}) if isinstance(obj.get("guard_expectation", {}), dict) else {}
+        guard_link = obj.get("guard_link", {}) if isinstance(obj.get("guard_link", {}), dict) else {}
+        site_guard = site.get("guard_profile", {}) if isinstance(site.get("guard_profile", {}), dict) else {}
+        risk_tier = str(guard.get("tier", ""))
+        increment_count(section["risk_tier_counts"], risk_tier)
+        if risk_tier not in NEUTRAL_ENCOUNTER_RISK_TIERS:
+            add_error(f"{object_id}: Batch 006 guard tier is missing or unsupported")
+        if guard_ready(object_id, guard, guard_link, site_guard):
+            section["guard_contract_ready_count"] += 1
+        if guard_link:
+            section["guard_link_count"] += 1
+
+        rewards = site.get("rewards", site.get("claim_rewards", {}))
+        if not bool(site.get("guarded", False)) or not isinstance(rewards, dict) or not rewards:
+            add_error(f"{object_id}: Batch 006 linked site must be guarded and define resource/experience rewards")
+        if not isinstance(obj.get("reward_preview", {}), dict) or not isinstance(site.get("reward_preview", {}), dict):
+            add_error(f"{object_id}: Batch 006 object and site must author reward_preview metadata")
+        if not isinstance(obj.get("ai_hints", {}), dict) or not obj.get("ai_hints", {}):
+            add_error(f"{object_id}: Batch 006 objects must author ai_hints")
+        if not isinstance(obj.get("editor_placement", {}), dict) or not obj.get("editor_placement", {}):
+            add_error(f"{object_id}: Batch 006 objects must author editor_placement")
+        if metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site):
+            section["metadata_only_boundary_count"] += 1
+        else:
+            add_error(f"{object_id}: Batch 006 object and site must keep explicit metadata-only runtime boundaries")
+        if live_resource_ids(site, obj).intersection(ECONOMY_RARE_RESOURCE_IDS):
+            add_error(f"{object_id}: Batch 006 must not activate rare resources in live site fields")
+        else:
+            section["no_rare_resource_activation_count"] += 1
+
+    section["role_counts"] = sorted_counts(section["role_counts"])
+    section["reward_category_counts"] = sorted_counts(section["reward_category_counts"])
+    section["risk_tier_counts"] = sorted_counts(section["risk_tier_counts"])
+    section["footprints"] = sorted_counts(section["footprints"])
+    section["biome_counts"] = dict(sorted(section["biome_counts"].items()))
+    if batch_objects:
+        if len(batch_objects) != 32:
+            add_error("Batch 006 must contain exactly 32 guarded reward and elite site object definitions")
+        if len(batch_sites) != 32:
+            add_error("Batch 006 must carry matching metadata on exactly 32 linked guarded reward resource-site records")
+        for role, expected_count in expected_role_counts.items():
+            if int(section["role_counts"].get(role, 0)) != expected_count:
+                add_error(f"Batch 006 must include {expected_count} {role} objects")
+        for counter_key in ("linked_resource_site_count", "shape_contract_ready_count", "linked_site_contract_count", "guard_link_count", "guard_contract_ready_count", "reward_contract_ready_count", "metadata_only_boundary_count", "no_rare_resource_activation_count"):
+            if int(section[counter_key]) != len(batch_objects):
+                add_error(f"Batch 006 {counter_key} must match object count")
+        if section["normalized_existing_count"] != 2:
+            add_error("Batch 006 must normalize the two existing guarded reward site records")
+        if section["route_hybrid_count"] != expected_role_counts["guarded_route_reward_hybrid"]:
+            add_error("Batch 006 guarded route/reward hybrids must all declare route_hybrid contracts")
+        for category in ("resource", "artifact", "spell", "recruit", "scouting", "route", "town_support", "objective"):
+            if category not in section["reward_category_counts"]:
+                add_error(f"Batch 006 must cover reward category {category}")
+        for risk_tier in ("light", "standard", "heavy", "elite"):
+            if risk_tier not in section["risk_tier_counts"]:
+                add_error(f"Batch 006 must cover guard risk tier {risk_tier}")
+        for biome_id in sorted(biomes.keys()):
+            if int(section["biome_counts"].get(biome_id, 0)) < 4:
+                add_error(f"Batch 006 must include at least 4 guarded reward definitions for {biome_id}")
+        for footprint_key in ("2x1", "2x2", "2x3", "3x1", "3x2", "3x3", "4x2", "4x3"):
+            if footprint_key not in section["footprints"]:
+                add_error(f"Batch 006 must cover footprint {footprint_key}")
+    return section
+
+
 def build_overworld_object_report() -> dict:
     payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("map_objects", "resource_sites", "scenarios", "encounters", "army_groups", "factions", "biomes", "neutral_dwellings")}
     map_objects = items_index(payloads["map_objects"])
@@ -4597,6 +4901,7 @@ def build_overworld_object_report() -> dict:
     report["content_batches"]["batch_003_services_shrines_signs_events"] = build_overworld_object_content_batch_003_section(map_objects, resource_sites, biomes)
     report["content_batches"]["batch_004_transit_coast_route_control"] = build_overworld_object_content_batch_004_section(map_objects, resource_sites, biomes)
     report["content_batches"]["batch_005_dwellings_guarded_dwellings"] = build_overworld_object_content_batch_005_section(map_objects, resource_sites, biomes, neutral_dwellings, army_groups, encounters)
+    report["content_batches"]["batch_006_guarded_rewards_elite_sites"] = build_overworld_object_content_batch_006_section(map_objects, resource_sites, biomes, army_groups, encounters)
     report["ai_editor_implications"]["visible_neutral_encounter_records_present"] = any(
         infer_overworld_object_primary_class(obj, resource_sites.get(str(obj.get("resource_site_id", "")))) == "neutral_encounter"
         for obj in map_objects.values()
@@ -4813,6 +5118,9 @@ def build_overworld_object_report() -> dict:
     for batch_error in report.get("content_batches", {}).get("batch_005_dwellings_guarded_dwellings", {}).get("errors", []):
         if batch_error not in report["errors"]:
             report["errors"].append(batch_error)
+    for batch_error in report.get("content_batches", {}).get("batch_006_guarded_rewards_elite_sites", {}).get("errors", []):
+        if batch_error not in report["errors"]:
+            report["errors"].append(batch_error)
     add_overworld_object_report_warning(report, "unmigrated production map_objects.json records remain legacy-compatible; inferred primary_class and tags are report-only outside declared migrated bundles")
     add_overworld_object_report_warning(report, "body_tiles and approach metadata remain warnings for unmigrated objects; pathing adoption is bounded to authored representative masks")
     return report
@@ -4914,6 +5222,14 @@ def print_overworld_object_report(report: dict) -> None:
         print(f"- shape contracts={batch_005.get('shape_contract_ready_count', 0)}; linked site contracts={batch_005.get('linked_site_contract_count', 0)}; roster contracts={batch_005.get('roster_contract_ready_count', 0)}; guard contracts={batch_005.get('guard_contract_ready_count', 0)}")
         print(f"- biomes covered={len(batch_005.get('biome_counts', {}))}; footprints={','.join(batch_005.get('footprints', {}).keys())}; guarded variants={batch_005.get('guarded_variant_count', 0)}")
         print(f"- metadata-only boundaries={batch_005.get('metadata_only_boundary_count', 0)}; no rare-resource activation={batch_005.get('no_rare_resource_activation_count', 0)}; errors={len(batch_005.get('errors', []))}; warnings={len(batch_005.get('warnings', []))}")
+    batch_006 = report.get("content_batches", {}).get("batch_006_guarded_rewards_elite_sites", {})
+    if batch_006:
+        print("Content Batch 006:")
+        role_counts = batch_006.get("role_counts", {})
+        print(f"- objects: {batch_006.get('object_count', 0)}; sites={batch_006.get('site_count', 0)}; minor={role_counts.get('minor_guarded_reward', 0)}; major={role_counts.get('major_guarded_reward', 0)}; banks={role_counts.get('creature_bank_like', 0)}; route_hybrids={role_counts.get('guarded_route_reward_hybrid', 0)}")
+        print(f"- shape contracts={batch_006.get('shape_contract_ready_count', 0)}; linked site contracts={batch_006.get('linked_site_contract_count', 0)}; guard links={batch_006.get('guard_link_count', 0)}; guard contracts={batch_006.get('guard_contract_ready_count', 0)}")
+        print(f"- biomes covered={len(batch_006.get('biome_counts', {}))}; footprints={','.join(batch_006.get('footprints', {}).keys())}; reward categories={','.join(batch_006.get('reward_category_counts', {}).keys())}")
+        print(f"- metadata-only boundaries={batch_006.get('metadata_only_boundary_count', 0)}; no rare-resource activation={batch_006.get('no_rare_resource_activation_count', 0)}; errors={len(batch_006.get('errors', []))}; warnings={len(batch_006.get('warnings', []))}")
     print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
 
 
@@ -10411,6 +10727,29 @@ def validate_overworld_object_content_batch_001(errors: list[str]) -> None:
                 "`wood` remains canonical",
             ):
                 ensure(required_text in doc_text, errors, f"Overworld object Batch 005 report doc is missing required boundary text: {required_text}")
+    batch_006 = report.get("content_batches", {}).get("batch_006_guarded_rewards_elite_sites", {})
+    if batch_006 and int(batch_006.get("object_count", 0)) > 0:
+        for batch_error in batch_006.get("errors", []):
+            fail(errors, f"Overworld object Batch 006: {batch_error}")
+        docs_path = ROOT / "docs" / "overworld-object-content-batch-006-guarded-rewards-elite-sites-report.md"
+        ensure(docs_path.exists(), errors, "Missing overworld object Batch 006 implementation report doc")
+        if docs_path.exists():
+            doc_text = docs_path.read_text(encoding="utf-8")
+            for required_text in (
+                "Status: implementation evidence.",
+                "32 Batch 006 map objects",
+                "369 map objects",
+                "165 resource sites",
+                "metadata-only",
+                "guarded route/reward hybrids",
+                "No neutral encounter migration",
+                "No broad reward runtime migration",
+                "No renderer sprite import",
+                "No save migration",
+                "No rare-resource activation",
+                "`wood` remains canonical",
+            ):
+                ensure(required_text in doc_text, errors, f"Overworld object Batch 006 report doc is missing required boundary text: {required_text}")
 
 
 def validate_overworld_art_asset_slice(errors: list[str]) -> None:

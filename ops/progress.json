@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
-  "currentSliceTitle": "Overworld Object Content Batch 005 Dwellings And Guarded Dwellings",
+  "currentSliceId": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184",
+  "currentSliceTitle": "Overworld Object Content Batch 006 Guarded Rewards And Elite Sites",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed Batch 005 dwelling normalization and guarded-dwelling content with validator/report coverage; next corrective P2.4 category is Batch 006 guarded rewards and elite sites; P2.5 remains paused.",
+  "currentSliceNotes": "Completed Batch 006 guarded rewards and elite sites metadata/content with 32 object/site contracts, validator/report coverage, and P2.5 still paused.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T19:40:45Z",
+  "updatedAt": "2026-04-27T19:56:59Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -2439,7 +2439,7 @@
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
-      "status": "pending",
+      "status": "completed",
       "purpose": "Continue corrective P2.4 object content with guarded reward sites, hostile reward pockets, and elite site contracts after Batch 005 dwellings.",
       "sourceDocs": [
         "docs/phase2-4-object-implementation-backlog.md",
@@ -2466,8 +2466,46 @@
         "No neutral encounter migration, broad reward runtime migration, scenario placement migration, save migration, renderer sprite import, rare-resource activation, market changes, or economy rebalance.",
         "No P2.5 magic implementation."
       ],
-      "notes": "Next corrective P2.4 category after completed Batch 005; P2.5 remains paused.",
-      "updatedAt": "2026-04-27T19:40:45Z"
+      "notes": "Completed Batch 006 guarded reward and elite site metadata; validation passed.",
+      "updatedAt": "2026-04-27T19:56:05Z",
+      "startedAt": "2026-04-27T19:46:55Z",
+      "completedAt": "2026-04-27T19:55:30Z"
+    },
+    {
+      "id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "title": "Overworld Object Content Batch 007 Landmarks Objectives And State Variants",
+      "phase": "phase-2-deep-production-foundation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "status": "pending",
+      "purpose": "Continue corrective P2.4 object content with faction landmarks, scenario objective object families, and damaged/captured state variant metadata after Batch 006 guarded rewards.",
+      "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation",
+      "sourceDocs": [
+        "docs/phase2-4-object-implementation-backlog.md",
+        "docs/overworld-object-taxonomy-density.md"
+      ],
+      "implementationTargets": [
+        "content/map_objects.json",
+        "content/resource_sites.json",
+        "object validator/report coverage as needed"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --overworld-object-report",
+        "git diff --check"
+      ],
+      "sliceEvidence": "Faction landmark, scenario objective, and state-variant objects author explicit role, footprint/body/approach contracts where visitable, biome/faction applicability, editor placement, AI hints, and metadata-only runtime boundaries.",
+      "completionCriteria": [
+        "Batch 007 covers the backlog landmark/objective/state-variant category without using map text panels as the main implementation.",
+        "Runtime behavior remains metadata/content implementation unless current systems already support the linked object/site family."
+      ],
+      "nonGoals": [
+        "No broad objective runtime migration, scenario placement migration, save migration, renderer sprite import, rare-resource activation, market changes, UI inventory, or economy rebalance.",
+        "No P2.5 magic implementation."
+      ],
+      "notes": "Next corrective P2.4 category after completed Batch 006; P2.5 remains paused.",
+      "updatedAt": "2026-04-27T19:56:59Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -3270,8 +3308,8 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184",
-      "title": "Overworld Object Content Batch 006 Guarded Rewards And Elite Sites",
+      "id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "title": "Overworld Object Content Batch 007 Landmarks Objectives And State Variants",
       "phase": "phase-2-deep-production-foundation",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
@@ -3286,7 +3324,7 @@
         "content/resource_sites.json",
         "object validator/report coverage as needed"
       ],
-      "notes": "Next corrective P2.4 guarded rewards and elite sites Batch 006 after completed Batch 005; P2.5 remains paused."
+      "notes": "Next corrective P2.4 category after completed Batch 006; P2.5 remains paused."
     }
   ],
   "stoppedOrPausedTasks": [
