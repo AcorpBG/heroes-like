@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T02:38:49Z",
+  "updatedAt": "2026-04-27T02:49:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "editor-restore-tile-baseline-cue-10184",
-  "currentSliceTitle": "Surface compact map-editor restore-tile baseline cues",
+  "currentSliceId": "battle-target-cycle-cue-10184",
+  "currentSliceTitle": "Surface compact battle target-cycle cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact visible map-editor Restore Tile baseline cues using existing editor working-copy and authored-baseline session systems only. The Restore Tile button now shows clean/changed state, tooltip detail compares current versus authored terrain/roads/hero/object counts, and the editor status surfaces whether the selected tile already matches or will be reset. Focused map-editor smoke asserts clean, changed, and post-restore cues plus no internal score/debug leaks. UI/tooling clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented compact visible battle target-cycle cues using existing active stack, selected target, legal-target, and enemy roster state only. The Prev/Next target controls now show the current target position, their tooltips explain focus, scope, readiness, and cycle direction, and focused battle smoke asserts the visible cue plus no internal score/debug leaks. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2056,6 +2056,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T02:30:15Z",
       "completedAt": "2026-04-27T02:38:49Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "battle-target-cycle-cue-10184",
+      "title": "Surface compact battle target-cycle cues",
+      "status": "completed",
+      "startedAt": "2026-04-27T02:41:59Z",
+      "completedAt": "2026-04-27T02:49:00Z",
       "difficulty": "small"
     }
   ],

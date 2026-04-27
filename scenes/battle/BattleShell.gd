@@ -436,15 +436,18 @@ func _refresh_action_buttons() -> void:
 	var surface := BattleRules.get_action_surface(_session)
 	var legal_target_ids := BattleRules.legal_attack_target_ids_for_active_stack(_session.battle)
 	var cycle_target_count := legal_target_ids.size() if not legal_target_ids.is_empty() else enemy_lines.size()
+	var cycle_cue := _battle_target_cycle_cue_surface(player_turn, active_stack, target_stack, legal_target_ids, enemy_lines.size())
 
+	_prev_target_button.text = String(cycle_cue.get("prev_label", "Prev"))
+	_next_target_button.text = String(cycle_cue.get("next_label", "Next"))
 	_prev_target_button.disabled = not player_turn or cycle_target_count <= 1
 	_next_target_button.disabled = not player_turn or cycle_target_count <= 1
 	if not player_turn:
-		_prev_target_button.tooltip_text = "Input locked: it is not the player's turn."
-		_next_target_button.tooltip_text = "Input locked: it is not the player's turn."
+		_prev_target_button.tooltip_text = String(cycle_cue.get("prev_tooltip", "Input locked: it is not the player's turn."))
+		_next_target_button.tooltip_text = String(cycle_cue.get("next_tooltip", "Input locked: it is not the player's turn."))
 	else:
-		_prev_target_button.tooltip_text = "Cycle focus to the previous legal enemy target." if not legal_target_ids.is_empty() else "Cycle focus to the previous enemy stack."
-		_next_target_button.tooltip_text = "Cycle focus to the next legal enemy target." if not legal_target_ids.is_empty() else "Cycle focus to the next enemy stack."
+		_prev_target_button.tooltip_text = String(cycle_cue.get("prev_tooltip", "Cycle focus to the previous enemy target."))
+		_next_target_button.tooltip_text = String(cycle_cue.get("next_tooltip", "Cycle focus to the next enemy target."))
 
 	_apply_action_surface(_advance_button, surface.get("advance", {}), true)
 	_apply_action_surface(_strike_button, surface.get("strike", {}), true)
@@ -532,6 +535,110 @@ func _battle_exit_order_tooltip(label: String, action: Dictionary, route_line: S
 	lines.append(route_line)
 	lines.append(save_line)
 	return "\n".join(lines)
+
+func _battle_target_cycle_cue_surface(
+	player_turn: bool,
+	active_stack: Dictionary,
+	target_stack: Dictionary,
+	legal_target_ids: Array,
+	enemy_count: int
+) -> Dictionary:
+	var target_ids := legal_target_ids.duplicate()
+	var scope := "legal targets"
+	if target_ids.is_empty():
+		target_ids = _living_enemy_target_ids()
+		scope = "enemy stacks"
+	var target_count := target_ids.size()
+	if target_count <= 0 and enemy_count > 0:
+		target_count = enemy_count
+	var selected_id := String(target_stack.get("battle_id", ""))
+	var target_index := target_ids.find(selected_id)
+	if target_index < 0 and target_count > 0:
+		target_index = 0
+	var position_text := "%d/%d" % [target_index + 1, target_count] if target_count > 0 else "0/0"
+	var focus := _battle_target_cycle_focus_label(target_stack)
+	var active_name := String(active_stack.get("name", "current stack")).strip_edges()
+	var state := "Ready"
+	if not player_turn:
+		state = "Locked"
+	elif target_count <= 1:
+		state = "Single"
+	elif legal_target_ids.is_empty():
+		state = "Check"
+	var visible := "Target cycle: %s %s (%s)." % [focus, position_text, state]
+	var tooltip := _battle_target_cycle_tooltip(
+		focus,
+		position_text,
+		scope,
+		active_name,
+		state,
+		player_turn,
+		target_count
+	)
+	return {
+		"visible_text": visible,
+		"focus": focus,
+		"position": position_text,
+		"scope": scope,
+		"state": state,
+		"target_count": target_count,
+		"prev_label": "Prev %s" % position_text,
+		"next_label": "Next %s" % position_text,
+		"prev_tooltip": tooltip,
+		"next_tooltip": tooltip,
+	}
+
+func _battle_target_cycle_tooltip(
+	focus: String,
+	position_text: String,
+	scope: String,
+	active_name: String,
+	state: String,
+	player_turn: bool,
+	target_count: int
+) -> String:
+	var previous_step := "Previous target in the current %s list." % scope
+	var next_step := "Next target in the current %s list." % scope
+	if not player_turn:
+		previous_step = "Input locked until the player stack acts."
+		next_step = previous_step
+	elif target_count <= 1:
+		previous_step = "Only one target is available from this stack."
+		next_step = previous_step
+	return "Target cycle:\n- Focus: %s\n- Position: %s\n- Scope: %s\n- Active stack: %s\n- State: %s\n- Prev: %s\n- Next: %s" % [
+		focus,
+		position_text,
+		scope,
+		active_name if active_name != "" else "current stack",
+		state,
+		previous_step,
+		next_step,
+	]
+
+func _battle_target_cycle_focus_label(target_stack: Dictionary) -> String:
+	if target_stack.is_empty():
+		return "no target"
+	var name := String(target_stack.get("name", "")).strip_edges()
+	if name == "":
+		name = String(target_stack.get("battle_id", "target")).strip_edges()
+	return _short_text(name, 28)
+
+func _living_enemy_target_ids() -> Array:
+	var ids := []
+	if _session == null or _session.battle.is_empty():
+		return ids
+	for stack_value in _session.battle.get("stacks", []):
+		if not (stack_value is Dictionary):
+			continue
+		var stack: Dictionary = stack_value
+		if String(stack.get("side", "")) != "enemy":
+			continue
+		if int(stack.get("count", 0)) <= 0 or int(stack.get("total_health", 0)) <= 0:
+			continue
+		var battle_id := String(stack.get("battle_id", "")).strip_edges()
+		if battle_id != "":
+			ids.append(battle_id)
+	return ids
 
 func _configure_save_slot_picker() -> void:
 	_save_slot_picker.clear()
@@ -638,6 +745,17 @@ func validation_snapshot() -> Dictionary:
 		"target_handoff": target_handoff,
 		"target_handoff_visible_text": String(target_handoff.get("visible_text", "")),
 		"target_handoff_tooltip_text": String(target_handoff.get("tooltip_text", "")),
+		"target_cycle_cue": _battle_target_cycle_cue_surface(
+			String(active_stack.get("side", "")) == "player",
+			active_stack,
+			target_stack,
+			BattleRules.legal_attack_target_ids_for_active_stack(_session.battle),
+			enemy_roster.size()
+		),
+		"prev_target_text": _prev_target_button.text,
+		"next_target_text": _next_target_button.text,
+		"prev_target_tooltip": _prev_target_button.tooltip_text,
+		"next_target_tooltip": _next_target_button.tooltip_text,
 		"action_surface": action_surface,
 		"action_confirmation": action_confirmation,
 		"action_confirmation_text": String(action_confirmation.get("visible_text", "")),

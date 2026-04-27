@@ -239,6 +239,9 @@ func _run_battle_smoke() -> bool:
 	if not _assert_battle_exit_order_cue_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_battle_target_cycle_cue_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_active_return_handoff_contract(shell, "Battle", "Menu: Battle"):
 		get_tree().quit(1)
 		return false
@@ -1284,6 +1287,41 @@ func _assert_battle_exit_order_cue_contract(shell: Node) -> bool:
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if exit_text.contains(leak_token):
 			push_error("Battle smoke: battle exit-order cue leaked internal token %s: %s." % [leak_token, exit_text])
+			return false
+	return true
+
+func _assert_battle_target_cycle_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: shell is missing target-cycle cue validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var cycle: Dictionary = snapshot.get("target_cycle_cue", {}) if snapshot.get("target_cycle_cue", {}) is Dictionary else {}
+	var cycle_text := "\n".join([
+		String(cycle.get("visible_text", "")),
+		String(cycle.get("focus", "")),
+		String(cycle.get("position", "")),
+		String(cycle.get("scope", "")),
+		String(cycle.get("state", "")),
+		String(cycle.get("prev_tooltip", "")),
+		String(cycle.get("next_tooltip", "")),
+		String(snapshot.get("prev_target_text", "")),
+		String(snapshot.get("next_target_text", "")),
+		String(snapshot.get("prev_target_tooltip", "")),
+		String(snapshot.get("next_target_tooltip", "")),
+	])
+	for token in ["Target cycle:", "Focus:", "Position:", "Scope:", "State:", "Prev:", "Next:"]:
+		if not cycle_text.contains(token):
+			push_error("Battle smoke: target-cycle cue lost %s clarity: %s." % [token, cycle_text])
+			return false
+	if not String(snapshot.get("prev_target_text", "")).contains("/") or not String(snapshot.get("next_target_text", "")).contains("/"):
+		push_error("Battle smoke: target-cycle position is not visible on Prev/Next controls: %s." % cycle_text)
+		return false
+	if int(cycle.get("target_count", 0)) <= 0 or String(cycle.get("position", "")) == "0/0":
+		push_error("Battle smoke: target-cycle cue did not expose a usable target count: %s." % cycle)
+		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if cycle_text.contains(leak_token):
+			push_error("Battle smoke: target-cycle cue leaked internal token %s: %s." % [leak_token, cycle_text])
 			return false
 	return true
 
