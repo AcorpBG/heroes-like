@@ -626,11 +626,14 @@ func _run_outcome_smoke() -> bool:
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	if not _assert_outcome_field_manual_contract(shell, "Outcome skirmish Field Manual"):
 		return false
+	var follow_up_check: Dictionary = snapshot.get("outcome_follow_up_check", {}) if snapshot.get("outcome_follow_up_check", {}) is Dictionary else {}
 	var action_payload_text := _joined_action_payload_text(snapshot)
 	var action_tooltip_text := _joined_action_tooltip_text(snapshot)
 	if not _assert_text_contains_all(
 		"Outcome progress and next-step recap",
 		[
+			String(follow_up_check.get("visible_text", "")),
+			String(follow_up_check.get("tooltip_text", "")),
 			String(snapshot.get("progression_summary", "")),
 			String(snapshot.get("next_step_summary", "")),
 			String(snapshot.get("outcome_resolution_handoff", "")),
@@ -653,12 +656,14 @@ func _run_outcome_smoke() -> bool:
 			String(snapshot.get("return_handoff", "")),
 			String(snapshot.get("current_save_recap", "")),
 		],
-		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "self-contained", "retry starts fresh", "Post-result handoff:", "review-only", "Save Outcome", "campaign progression stays unchanged", "Next play action:", "Action cue:", "save first", "Return to Menu", "Retry Skirmish", "starts fresh", "resumable", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
+		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Follow-up check:", "Outcome Follow-up Check", "Primary follow-up:", "Retry Skirmish starts a fresh skirmish expedition", "Save first:", "Return keeps review", "State change:", "Inspection:", "does not save, route, or change campaign progression", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "self-contained", "retry starts fresh", "Post-result handoff:", "review-only", "Save Outcome", "campaign progression stays unchanged", "Next play action:", "Action cue:", "save first", "Return to Menu", "Retry Skirmish", "starts fresh", "resumable", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
 	):
 		return false
 	if not _assert_no_score_leak(
 		"Outcome skirmish continuity choice",
 		[
+			String(follow_up_check.get("visible_text", "")),
+			String(follow_up_check.get("tooltip_text", "")),
 			String(snapshot.get("outcome_resolution_handoff", "")),
 			String(snapshot.get("continuity_choice_summary", "")),
 			String(snapshot.get("post_result_handoff_summary", "")),
@@ -700,11 +705,14 @@ func _run_outcome_smoke() -> bool:
 	var campaign_snapshot: Dictionary = campaign_shell.call("validation_snapshot")
 	if not _assert_outcome_field_manual_contract(campaign_shell, "Outcome campaign Field Manual"):
 		return false
+	var campaign_follow_up_check: Dictionary = campaign_snapshot.get("outcome_follow_up_check", {}) if campaign_snapshot.get("outcome_follow_up_check", {}) is Dictionary else {}
 	var campaign_action_payload_text := _joined_action_payload_text(campaign_snapshot)
 	var campaign_action_tooltip_text := _joined_action_tooltip_text(campaign_snapshot)
 	if not _assert_text_contains_all(
 		"Outcome campaign continuity choice",
 		[
+			String(campaign_follow_up_check.get("visible_text", "")),
+			String(campaign_follow_up_check.get("tooltip_text", "")),
 			String(campaign_snapshot.get("progression_summary", "")),
 			String(campaign_snapshot.get("campaign_arc_summary", "")),
 			String(campaign_snapshot.get("carryover_summary", "")),
@@ -726,12 +734,14 @@ func _run_outcome_smoke() -> bool:
 			String(campaign_snapshot.get("play_check", "")),
 			String(campaign_snapshot.get("return_handoff", "")),
 		],
-		["Campaign progress", "Next chapter unlocked:", "This victory exports:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu", "Post-result handoff:", "campaign progression is already recorded", "Save Outcome", "fresh campaign chapter", "Action cue:", "save first", "continue", "campaign board", "Replays this chapter fresh", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:"]
+		["Campaign progress", "Next chapter unlocked:", "This victory exports:", "Follow-up check:", "Outcome Follow-up Check", "Primary follow-up:", "starts a fresh campaign chapter from recorded campaign progress", "Save first:", "Return keeps review", "State change:", "Inspection:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu", "Post-result handoff:", "campaign progression is already recorded", "Save Outcome", "fresh campaign chapter", "Action cue:", "save first", "continue", "campaign board", "Replays this chapter fresh", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:"]
 	):
 		return false
 	if not _assert_no_score_leak(
 		"Outcome campaign continuity choice",
 		[
+			String(campaign_follow_up_check.get("visible_text", "")),
+			String(campaign_follow_up_check.get("tooltip_text", "")),
 			String(campaign_snapshot.get("outcome_resolution_handoff", "")),
 			String(campaign_snapshot.get("continuity_choice_summary", "")),
 			String(campaign_snapshot.get("post_result_handoff_summary", "")),
