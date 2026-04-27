@@ -174,29 +174,36 @@ func _run_main_menu_smoke() -> bool:
 	shell.call("validation_open_campaign_stage")
 	var campaign_snapshot: Dictionary = shell.call("validation_snapshot")
 	var selected_chapter_action: Dictionary = campaign_snapshot.get("selected_chapter_action", {}) if campaign_snapshot.get("selected_chapter_action", {}) is Dictionary else {}
+	var campaign_chapter_check: Dictionary = campaign_snapshot.get("campaign_chapter_check", {}) if campaign_snapshot.get("campaign_chapter_check", {}) is Dictionary else {}
 	if not _assert_text_contains_all(
 		"Main menu campaign launch preview",
 		[
 			String(campaign_snapshot.get("chapter_details_full", campaign_snapshot.get("chapter_details", ""))),
 			String(selected_chapter_action.get("summary", "")),
+			String(campaign_chapter_check.get("text", "")),
+			String(campaign_chapter_check.get("tooltip_text", "")),
+			String(campaign_snapshot.get("campaign_chapter_check_text", "")),
+			String(campaign_snapshot.get("campaign_chapter_check_tooltip", "")),
 			String(selected_chapter_action.get("launch_handoff", "")),
 			String(campaign_snapshot.get("start_chapter_tooltip", "")),
 			String(campaign_snapshot.get("campaign_commander_preview_full", campaign_snapshot.get("campaign_commander_preview", ""))),
 			String(campaign_snapshot.get("campaign_operational_board_full", campaign_snapshot.get("campaign_operational_board", ""))),
 		],
-		["Chapter position:", "Campaign framing:", "Continuity:", "Readiness watch:", "Launch handoff:", "starts Day 1 in Campaign mode", "Action consequence:", "Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Economy:", "Pressure:", "Spellbook", "Gear impact:", "Collection:", "Field Route", "Battle Strike", "Cost", "Use:"]
+		["Campaign check:", "Campaign Chapter Check", "selected chapter matches the primary campaign action", "victory can advance the campaign path", "Chapter position:", "Campaign framing:", "Continuity:", "Readiness watch:", "Launch handoff:", "starts Day 1 in Campaign mode", "Action consequence:", "Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Economy:", "Pressure:", "Spellbook", "Gear impact:", "Collection:", "Field Route", "Battle Strike", "Cost", "Use:"]
 	):
 		return false
 	if not _assert_text_contains_all(
 		"Main menu visible campaign launch handoff",
 		[String(campaign_snapshot.get("chapter_details", ""))],
-		["Launch handoff:", "starts Day 1 in Campaign mode"]
+		["Campaign check:", "Launch handoff:", "starts Day 1 in Campaign mode"]
 	):
 		return false
 	if not _assert_no_score_leak(
 		"Main menu campaign launch handoff",
 		[
 			String(selected_chapter_action.get("launch_handoff", "")),
+			String(campaign_chapter_check.get("text", "")),
+			String(campaign_chapter_check.get("tooltip_text", "")),
 			String(campaign_snapshot.get("chapter_details_full", campaign_snapshot.get("chapter_details", ""))),
 			String(campaign_snapshot.get("start_chapter_tooltip", "")),
 		]

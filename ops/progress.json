@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T11:58:00Z",
+  "updatedAt": "2026-04-27T12:18:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "main-menu-skirmish-difficulty-check-cue-10184",
-  "currentSliceTitle": "Surface compact main-menu skirmish difficulty check cue",
+  "currentSliceId": "main-menu-campaign-chapter-check-cue-10184",
+  "currentSliceTitle": "Surface compact main-menu campaign chapter check cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact visible main-menu skirmish difficulty check cue using the existing skirmish setup, recommended difficulty, launch preview, and difficulty consequence surfaces only. The Skirmish board now shows whether the selected difficulty matches the recommended front pace, includes the same cue in launch tooltips, and has focused smoke coverage for visible text, structured payload, and no-score-leak behavior. UI clarity only; no mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, renderer asset import, pathing/body-tile adoption, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact visible main-menu campaign chapter check cue using the existing selected chapter, primary campaign action, launch handoff, continuity, readiness, and action consequence surfaces only. The Campaign board now shows whether the selected chapter matches the primary campaign action, carries the same check into Start Chapter tooltips, and has focused smoke coverage for visible text, structured payload, and no-score-leak behavior. UI clarity only; no campaign progression semantics, mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, renderer asset import, pathing/body-tile adoption, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2272,6 +2272,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T11:45:00Z",
       "completedAt": "2026-04-27T11:58:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "main-menu-campaign-chapter-check-cue-10184",
+      "title": "Surface compact main-menu campaign chapter check cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T12:05:00Z",
+      "completedAt": "2026-04-27T12:18:00Z",
       "difficulty": "small"
     }
   ],

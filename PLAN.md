@@ -137,7 +137,25 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The completed active slice is compact battle Objective check clarity, with focused smoke assertions but still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
+- The completed active slice is compact main-menu Campaign chapter check clarity, with focused smoke assertions but still without production JSON migration, campaign progression semantic changes, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
+
+## Completed Implementation Slice: Main-Menu Campaign Chapter Check Cue
+Status: completed on 2026-04-27 as compact player-facing main-menu UI polish.
+
+Purpose:
+- Help a manual player tell whether the selected campaign chapter is the primary campaign push, replay, retry, or blocked selection before pressing Start Chapter.
+- Reuse existing campaign chapter action, primary action, launch handoff, continuity, readiness, and action consequence payloads instead of changing campaign progression semantics.
+
+Delivered:
+- Added a compact `Campaign check:` payload in `scenes/menus/MainMenu.gd`.
+- The Campaign board now shows the check in selected chapter details and carries the same check into Start Chapter tooltips.
+- Added focused smoke coverage in `tests/menu_outcome_visual_smoke.gd`, including visible-cue and no-score-leak assertions.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/menu_outcome_visual_smoke.tscn`.
+
+Limits:
+- This is UI/readability polish only. It does not change mechanics, balance, campaign progression semantics, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, or broad dashboard composition.
 
 ## Completed Implementation Slice: Battle Objective Check Cue
 Status: completed on 2026-04-27 as compact player-facing battle UI polish.
