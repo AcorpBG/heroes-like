@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T04:58:00Z",
+  "updatedAt": "2026-04-27T05:10:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-to-field-return-cue-10184",
-  "currentSliceTitle": "Surface compact town-to-field return cue",
+  "currentSliceId": "map-editor-selected-validation-focus-10184",
+  "currentSliceTitle": "Surface compact map-editor selected validation focus",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact player-facing town-to-field return cue. The town Leave flow now seeds a transient return handoff, and the overworld consumes it into the cue chip, event rail, action-context recap, and validation snapshot so the player sees the returned town, field position, day, movement, and next practical action after leaving town. Focused town/battle smoke and overworld visual smoke assert the visible cue plus no internal score/debug leaks. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact tooling-facing selected validation focus cue in the map editor. The scenario validation tooltip and status surface now show selected-tile objective, guard, route, reward, and enemy-focus link context when the selected tile has authoring dependencies, and focused map-editor smoke asserts the visible cue plus no internal score/debug leaks. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2096,6 +2096,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T04:45:00Z",
       "completedAt": "2026-04-27T04:58:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "map-editor-selected-validation-focus-10184",
+      "title": "Surface compact map-editor selected validation focus",
+      "status": "completed",
+      "startedAt": "2026-04-27T05:00:00Z",
+      "completedAt": "2026-04-27T05:10:00Z",
       "difficulty": "small"
     }
   ],
