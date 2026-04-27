@@ -347,6 +347,44 @@
       "producer_refs": ["OverworldRules.tile_is_blocked", "OverworldRules.perform_context_action"]
     },
     {
+      "event_id": "overworld_object_idle",
+      "cue_id": "cue_overworld_object_idle",
+      "surface": "overworld",
+      "subject_kind": "map_object",
+      "animation_state_family": "idle",
+      "animation_state": "object_idle_ready",
+      "playback_policy": "ambient_low_frequency",
+      "blocking_policy": "never_blocks_input",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_object_idle"],
+      "audio_cue_ids": ["audio_placeholder_object_ambient_soft"],
+      "fallbacks": {
+        "reduced_motion_tag": "static_object_pose",
+        "fast_mode_tag": "object_idle_snap"
+      },
+      "validation_tags": ["overworld", "object_state", "idle", "map_object_taxonomy"],
+      "producer_refs": ["OverworldMapView._draw_object_sprite", "content/map_objects.json"]
+    },
+    {
+      "event_id": "overworld_object_active",
+      "cue_id": "cue_overworld_object_active",
+      "surface": "overworld",
+      "subject_kind": "map_object",
+      "animation_state_family": "active",
+      "animation_state": "context_focus_active",
+      "playback_policy": "context_visible_only",
+      "blocking_policy": "never_blocks_input",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_object_focus_ring"],
+      "audio_cue_ids": ["audio_placeholder_object_focus"],
+      "fallbacks": {
+        "reduced_motion_tag": "focus_outline_static",
+        "fast_mode_tag": "focus_outline_snap"
+      },
+      "validation_tags": ["overworld", "object_state", "active", "focus", "map_object_taxonomy"],
+      "producer_refs": ["OverworldRules.get_active_context", "OverworldRules.describe_resource_site_surface"]
+    },
+    {
       "event_id": "overworld_object_visited",
       "cue_id": "cue_overworld_object_visited",
       "surface": "overworld",
@@ -404,11 +442,49 @@
       "producer_refs": ["OverworldRules.collect_active_resource", "OverworldRules.collect_active_artifact"]
     },
     {
+      "event_id": "overworld_object_blocked",
+      "cue_id": "cue_overworld_object_blocked",
+      "surface": "overworld",
+      "subject_kind": "map_object",
+      "animation_state_family": "blocked",
+      "animation_state": "object_blocks_route",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_object_blocked_marker"],
+      "audio_cue_ids": ["audio_placeholder_blocked_object"],
+      "fallbacks": {
+        "reduced_motion_tag": "blocked_object_icon",
+        "fast_mode_tag": "blocked_object_flash"
+      },
+      "validation_tags": ["overworld", "object_state", "blocked", "resolved_event", "map_object_taxonomy"],
+      "producer_refs": ["OverworldRules.tile_is_blocked", "OverworldRules.overworld_object_placement_pathing_surface"]
+    },
+    {
+      "event_id": "overworld_object_guarded",
+      "cue_id": "cue_overworld_object_guarded",
+      "surface": "overworld",
+      "subject_kind": "resource_site",
+      "animation_state_family": "guarded",
+      "animation_state": "guard_warning_hold",
+      "playback_policy": "context_visible_only",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_guard_warning"],
+      "audio_cue_ids": ["audio_placeholder_guard_warning"],
+      "fallbacks": {
+        "reduced_motion_tag": "guard_badge_static",
+        "fast_mode_tag": "guard_badge_flash"
+      },
+      "validation_tags": ["overworld", "object_state", "guarded", "resolved_event", "resource_site", "map_object_taxonomy"],
+      "producer_refs": ["OverworldRules.describe_resource_site_control_inspection", "OverworldRules.describe_encounter_guard_link_surface"]
+    },
+    {
       "event_id": "overworld_route_open",
       "cue_id": "cue_overworld_route_open",
       "surface": "overworld",
       "subject_kind": "map_object",
-      "animation_state_family": "route",
+      "animation_state_family": "route-open",
       "animation_state": "route_open",
       "playback_policy": "queue_resolved",
       "blocking_policy": "nonblocking",
@@ -419,7 +495,7 @@
         "reduced_motion_tag": "route_open_icon",
         "fast_mode_tag": "route_open_snap"
       },
-      "validation_tags": ["overworld", "object_state", "route_open", "resolved_event"],
+      "validation_tags": ["overworld", "object_state", "route-open", "route_open", "resolved_event"],
       "producer_refs": ["OverworldRules.apply_resource_site_disruption", "OverworldRules.perform_town_response_action"]
     },
     {
@@ -427,7 +503,7 @@
       "cue_id": "cue_overworld_route_closed",
       "surface": "overworld",
       "subject_kind": "map_object",
-      "animation_state_family": "route",
+      "animation_state_family": "route-closed",
       "animation_state": "route_closed",
       "playback_policy": "queue_resolved",
       "blocking_policy": "nonblocking",
@@ -438,7 +514,7 @@
         "reduced_motion_tag": "route_closed_icon",
         "fast_mode_tag": "route_closed_snap"
       },
-      "validation_tags": ["overworld", "object_state", "route_closed", "resolved_event"],
+      "validation_tags": ["overworld", "object_state", "route-closed", "route_closed", "resolved_event"],
       "producer_refs": ["EnemyTurnRules.resolve_enemy_turn", "OverworldRules.describe_route_interception_surface"]
     },
     {
@@ -446,7 +522,7 @@
       "cue_id": "cue_overworld_object_ambient",
       "surface": "overworld",
       "subject_kind": "map_object",
-      "animation_state_family": "ambient",
+      "animation_state_family": "ambient-loop",
       "animation_state": "low_cost_idle_loop",
       "playback_policy": "ambient_loop_visible_only",
       "blocking_policy": "never_blocks_input",
@@ -457,8 +533,27 @@
         "reduced_motion_tag": "static_object_pose",
         "fast_mode_tag": "static_object_pose"
       },
-      "validation_tags": ["overworld", "object_state", "ambient", "reduced_motion_loop"],
+      "validation_tags": ["overworld", "object_state", "ambient-loop", "ambient", "reduced_motion_loop"],
       "producer_refs": ["OverworldMapView.object_fallback_draw", "content/map_objects.json"]
+    },
+    {
+      "event_id": "town_captured",
+      "cue_id": "cue_town_captured",
+      "surface": "town",
+      "subject_kind": "town",
+      "animation_state_family": "captured",
+      "animation_state": "town_ownership_capture",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_town_capture_banner"],
+      "audio_cue_ids": ["audio_placeholder_town_capture"],
+      "fallbacks": {
+        "reduced_motion_tag": "town_owner_badge_swap",
+        "fast_mode_tag": "town_capture_badge_snap"
+      },
+      "validation_tags": ["town", "object_state", "captured", "resolved_event"],
+      "producer_refs": ["OverworldRules._town_capture_post_action_recap", "TownRules.can_visit_active_town"]
     },
     {
       "event_id": "town_building_built",

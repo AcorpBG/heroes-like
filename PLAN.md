@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.6 artifact foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic children and P2.6 artifact children are implemented, with P2.7 animation/event cue foundation work now active.
 
-Selected next implementation candidate after the bounded reduced-motion/fast-mode policy helper slice: `animation-battle-cue-hook-vertical-slice-10184`.
+Selected next implementation candidate after the overworld object state contract slice: `animation-validation-smoke-harness-10184`.
 
 ## Slice Status Model
 
@@ -1573,6 +1573,11 @@ implementationTargets:
 - overworld object event-to-animation-state mappings for selected object classes
 - town hooks only where they share the selected event/cue contract
 - focused smoke/report coverage
+
+implementationEvidence:
+- `docs/animation-overworld-object-state-contract-report.md`
+- `tests/animation_overworld_object_state_contract_report.gd`
+- `AnimationCueCatalog.overworld_object_state_contract_report(...)`
 
 ### P2 Child: Animation Validation Smoke Harness
 

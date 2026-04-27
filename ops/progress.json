@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "animation-overworld-town-object-cue-hooks-10184",
-  "currentSliceTitle": "Animation Overworld Object State Contracts",
+  "currentSliceId": "animation-validation-smoke-harness-10184",
+  "currentSliceTitle": "Animation Validation Smoke Harness",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next P2.7 child after completing battle troop sprite state contracts. Keep scope to overworld map object animation state contracts; no final asset import, renderer pipeline, save migration, broad UI polish, or terrain/editor work.",
+  "currentSliceNotes": "Next P2.7 child after overworld object state contracts. Keep scope to validation/report harness coverage for existing catalog, policy, battle troop, and overworld object contracts; no final assets, renderer pipeline, save migration, broad UI polish, or P2.9 terrain/editor work.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T22:35:18Z",
+  "updatedAt": "2026-04-27T22:46:26Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -354,7 +354,7 @@
         "spell/economy/battle/adventure hooks",
         "validation fixtures/reports"
       ],
-      "evidence": "ArtifactRules and current artifact records exist, but AcOrP's requested full artifact system\u2014multiple artifacts, sets/families, faction-specific artifacts, source/reward rules, equip surfaces, runtime effects, and AI valuation\u2014requires child implementation slices.",
+      "evidence": "ArtifactRules and current artifact records exist, but AcOrP's requested full artifact system - multiple artifacts, sets/families, faction-specific artifacts, source/reward rules, equip surfaces, runtime effects, and AI valuation - requires child implementation slices.",
       "notes": "Completed P2.6 Artifact System Foundation child set through artifact taxonomy/schema, set/faction content, source/reward metadata, equip/runtime effects, and bounded artifact AI valuation. Remaining artifact work beyond these bounded slices stays future-scoped; next category in phase order is P2.7 animation/event cue foundation.",
       "childSliceIds": [
         "artifact-taxonomy-schema-implementation-10184",
@@ -1813,7 +1813,7 @@
       "id": "animation-overworld-town-object-cue-hooks-10184",
       "title": "Animation Overworld Object State Contracts",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
@@ -1837,7 +1837,19 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T22:45:46Z",
+      "startedAt": "2026-04-27T22:38:40Z",
+      "completedAt": "2026-04-27T22:45:46Z",
+      "implementationEvidence": [
+        "content/animation_event_cues.json",
+        "scripts/core/AnimationCueCatalog.gd",
+        "tests/animation_overworld_object_state_contract_report.gd",
+        "tests/animation_overworld_object_state_contract_report.tscn",
+        "docs/animation-overworld-object-state-contract-report.md",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Implemented overworld object state contract report covering idle/active/visited/depleted/captured/blocked/guarded/route-open/route-closed/ambient-loop families, reduced-motion/fast-mode cue policy, map_object/resource_site coverage, and a shared town capture hook without playback runtime, asset import, save migration, or UI polish."
     },
     {
       "id": "animation-validation-smoke-harness-10184",
@@ -3461,23 +3473,22 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "animation-overworld-town-object-cue-hooks-10184",
-      "title": "Animation Overworld Object State Contracts",
+      "id": "animation-validation-smoke-harness-10184",
+      "title": "Animation Validation Smoke Harness",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
       "source": "PLAN.md P2.7 Animation And Event Cue Foundation",
       "sourceDocs": [
-        "docs/animation-systems-foundation.md",
-        "docs/screen-wireframes.md"
+        "docs/animation-systems-foundation.md"
       ],
       "implementationTargets": [
-        "overworld map object state taxonomy covering idle, active, visited, depleted, captured, blocked, guarded, route-open, route-closed, and looping ambient states where appropriate",
-        "overworld object event-to-animation-state mappings for selected object classes",
-        "town hooks only where they share the selected event/cue contract",
-        "focused smoke/report coverage"
+        "animation/event smoke harness",
+        "event id to animation state mapping checks",
+        "reduced-motion and fast-mode fallback checks",
+        "report fixtures"
       ],
-      "notes": "Next P2.7 child after battle troop sprite state contracts. Keep scope to overworld object state contracts through catalog/policy/report evidence; no final assets, renderer pipeline, save migration, broad UI polish, or P2.9 terrain/editor work."
+      "notes": "Next P2.7 child after overworld object state contracts. Keep scope to validation/report harness coverage for existing catalog, policy, battle troop, and overworld object contracts; no final assets, renderer pipeline, save migration, broad UI polish, or P2.9 terrain/editor work."
     }
   ],
   "stoppedOrPausedTasks": [
