@@ -366,6 +366,7 @@ func _refresh() -> void:
 	_rebuild_spell_actions()
 	_refresh_action_buttons()
 	_refresh_save_slot_picker()
+	_refresh_battle_tab_cues()
 
 	_header_label.text = BattleRules.describe_header(_session)
 	FrontierVisualKit.set_compact_label(_status_label, BattleRules.describe_status(_session), 1, 62, false)
@@ -780,6 +781,10 @@ func validation_snapshot() -> Dictionary:
 		"battle_action_context": action_context_surface,
 		"battle_action_context_text": String(action_context_surface.get("visible_text", "")),
 		"battle_action_context_tooltip_text": String(action_context_surface.get("tooltip_text", "")),
+		"battle_tab_readiness": _battle_tab_readiness_payload(),
+		"battle_tab_titles": _battle_tab_titles(),
+		"battle_tab_readiness_tooltip_text": _battle_tabs.tooltip_text,
+		"battle_active_tab": _battle_tabs.current_tab,
 		"post_action_recap": _last_action_recap_payload.duplicate(true),
 		"post_action_recap_text": _last_action_recap_text,
 		"event_visible_text": _event_label.text,
@@ -1264,6 +1269,161 @@ func _battle_order_button_surfaces() -> Array:
 			"disabled": button.disabled,
 		})
 	return surfaces
+
+func _refresh_battle_tab_cues() -> void:
+	var payload := _battle_tab_readiness_payload()
+	var tabs: Array = payload.get("tabs", [])
+	for index in range(min(_battle_tabs.get_tab_count(), tabs.size())):
+		var tab: Dictionary = tabs[index]
+		_battle_tabs.set_tab_title(index, String(tab.get("title", "")))
+	_battle_tabs.tooltip_text = String(payload.get("tooltip_text", ""))
+
+func _battle_tab_readiness_payload() -> Dictionary:
+	var action_surface := BattleRules.get_action_surface(_session)
+	var active_stack := BattleRules.get_active_stack(_session.battle)
+	var target_stack := BattleRules.get_selected_target(_session.battle)
+	var selected_legality := BattleRules.selected_target_legality(_session.battle)
+	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
+	var spell_actions := BattleRules.get_spell_actions(_session)
+	var order_actions := _battle_core_order_actions(action_surface)
+	var focus_ready := 0
+	var focus_total := 0
+	if not target_stack.is_empty():
+		focus_total = 1
+		if bool(selected_legality.get("attackable", false)):
+			focus_ready = 1
+	var active_side := String(active_stack.get("side", ""))
+	var timing_ready := 1 if active_side == "player" else 0
+	var timing_total := 1 if not active_stack.is_empty() else 0
+	var tabs := [
+		_battle_tab_readiness_entry("Order", order_actions, "stack orders", _battle_order_tab_focus(order_actions)),
+		_battle_tab_readiness_entry_from_counts(
+			"Focus",
+			focus_ready,
+			focus_total,
+			"selected target",
+			_battle_focus_tab_focus(target_stack, selected_legality, target_handoff)
+		),
+		_battle_tab_readiness_entry("Spells", spell_actions, "battle spells", _battle_spell_tab_focus(spell_actions)),
+		_battle_tab_readiness_entry_from_counts(
+			"Timing",
+			timing_ready,
+			timing_total,
+			"turn timing",
+			_battle_timing_tab_focus(active_stack)
+		),
+	]
+	var selected_index := clampi(_battle_tabs.current_tab, 0, max(0, tabs.size() - 1))
+	var selected: Dictionary = tabs[selected_index] if selected_index < tabs.size() else {}
+	var tooltip_lines := ["Battle command tabs:"]
+	for tab in tabs:
+		tooltip_lines.append("- %s" % String(tab.get("summary", "")))
+	if not selected.is_empty():
+		tooltip_lines.append("Selected: %s" % String(selected.get("focus", "")))
+	return {
+		"tabs": tabs,
+		"selected_tab": selected.duplicate(true),
+		"tooltip_text": "\n".join(tooltip_lines),
+	}
+
+func _battle_core_order_actions(action_surface: Dictionary) -> Array:
+	var actions := []
+	for action_id in ["advance", "strike", "shoot", "defend"]:
+		var action_value: Variant = action_surface.get(action_id, {})
+		if action_value is Dictionary:
+			actions.append((action_value as Dictionary).duplicate(true))
+	return actions
+
+func _battle_tab_readiness_entry(base_title: String, actions: Variant, noun: String, focus_detail: String) -> Dictionary:
+	var total := 0
+	var ready := 0
+	if actions is Array:
+		for action in actions:
+			if not (action is Dictionary):
+				continue
+			total += 1
+			if not bool(action.get("disabled", false)):
+				ready += 1
+	return _battle_tab_readiness_entry_from_counts(base_title, ready, total, noun, focus_detail)
+
+func _battle_tab_readiness_entry_from_counts(
+	base_title: String,
+	ready: int,
+	total: int,
+	noun: String,
+	focus_detail: String
+) -> Dictionary:
+	var title := base_title
+	if ready > 0:
+		title = "%s %d" % [base_title, ready]
+	var summary := "%s: %d ready of %d %s" % [base_title, ready, total, noun]
+	var focus := "%s has %d ready %s." % [
+		base_title,
+		ready,
+		noun,
+	]
+	if ready <= 0 and total > 0:
+		focus = "%s has %d blocked or waiting %s." % [
+			base_title,
+			total,
+			noun,
+		]
+	elif total <= 0:
+		focus = "%s has no listed %s." % [base_title, noun]
+	if focus_detail.strip_edges() != "":
+		focus = "%s %s" % [focus, focus_detail.strip_edges()]
+	return {
+		"base_title": base_title,
+		"title": title,
+		"ready_count": ready,
+		"total_count": total,
+		"summary": summary,
+		"focus": focus,
+	}
+
+func _battle_order_tab_focus(order_actions: Array) -> String:
+	var ready_labels := []
+	for action in order_actions:
+		if not (action is Dictionary) or bool(action.get("disabled", false)):
+			continue
+		var label := String(action.get("label", "")).strip_edges()
+		if label != "":
+			ready_labels.append(label)
+	if ready_labels.is_empty():
+		return "Use the visible order buttons to inspect why orders are blocked."
+	return "Ready: %s." % ", ".join(ready_labels.slice(0, min(3, ready_labels.size())))
+
+func _battle_focus_tab_focus(target_stack: Dictionary, selected_legality: Dictionary, target_handoff: Dictionary) -> String:
+	var target_name := String(target_stack.get("name", "")).strip_edges()
+	if target_name == "":
+		target_name = "No target selected"
+	var state := "attackable" if bool(selected_legality.get("attackable", false)) else "not attackable"
+	var cue := String(target_handoff.get("visible_text", "")).strip_edges()
+	if cue == "":
+		cue = BattleRules.describe_target_context(_session)
+	return "Target: %s (%s). %s" % [_short_text(target_name, 28), state, _short_text(cue, 72)]
+
+func _battle_spell_tab_focus(spell_actions: Array) -> String:
+	if spell_actions.is_empty():
+		return "No battle spell buttons are available for the current commander window."
+	for action in spell_actions:
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			return "Ready spell: %s." % String(action.get("label", action.get("id", "Spell")))
+	return "Spell buttons are present but blocked by mana, timing, or target rules."
+
+func _battle_timing_tab_focus(active_stack: Dictionary) -> String:
+	var active_name := String(active_stack.get("name", "")).strip_edges()
+	if active_name == "":
+		return "No active stack is ready in the current timing window."
+	var side := String(active_stack.get("side", "")).strip_edges()
+	var side_label := "player" if side == "player" else "enemy"
+	return "%s acts in the current %s timing window." % [_short_text(active_name, 28), side_label]
+
+func _battle_tab_titles() -> Array:
+	var titles := []
+	for index in range(_battle_tabs.get_tab_count()):
+		titles.append(_battle_tabs.get_tab_title(index))
+	return titles
 
 func _strip_sentence(text: String) -> String:
 	var cleaned := text.strip_edges().replace("\n", " ")

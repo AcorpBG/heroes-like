@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T05:10:00Z",
+  "updatedAt": "2026-04-27T05:25:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "map-editor-selected-validation-focus-10184",
-  "currentSliceTitle": "Surface compact map-editor selected validation focus",
+  "currentSliceId": "battle-command-tab-readiness-cues-10184",
+  "currentSliceTitle": "Surface compact battle command-tab readiness cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact tooling-facing selected validation focus cue in the map editor. The scenario validation tooltip and status surface now show selected-tile objective, guard, route, reward, and enemy-focus link context when the selected tile has authoring dependencies, and focused map-editor smoke asserts the visible cue plus no internal score/debug leaks. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact player-facing battle command-tab readiness cue. The battle sidebar tabs now show ready counts for Order, Focus, Spells, and Timing where applicable, the tab tooltip explains each tab and selected-tab focus, and focused town/battle smoke asserts the visible cue plus no internal score/debug leaks. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2104,6 +2104,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T05:00:00Z",
       "completedAt": "2026-04-27T05:10:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "battle-command-tab-readiness-cues-10184",
+      "title": "Surface compact battle command-tab readiness cues",
+      "status": "completed",
+      "startedAt": "2026-04-27T05:15:00Z",
+      "completedAt": "2026-04-27T05:25:00Z",
       "difficulty": "small"
     }
   ],
