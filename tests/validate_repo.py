@@ -77,6 +77,9 @@ ANIMATION_POLICY_REPORT_DOC_PATH = ROOT / "docs" / "animation-reduced-motion-fas
 ANIMATION_BATTLE_TROOP_REPORT_SCRIPT_PATH = ROOT / "tests" / "animation_battle_troop_state_contract_report.gd"
 ANIMATION_BATTLE_TROOP_REPORT_SCENE_PATH = ROOT / "tests" / "animation_battle_troop_state_contract_report.tscn"
 ANIMATION_BATTLE_TROOP_REPORT_DOC_PATH = ROOT / "docs" / "animation-battle-troop-state-contract-report.md"
+ANIMATION_OVERWORLD_OBJECT_REPORT_SCRIPT_PATH = ROOT / "tests" / "animation_overworld_object_state_contract_report.gd"
+ANIMATION_OVERWORLD_OBJECT_REPORT_SCENE_PATH = ROOT / "tests" / "animation_overworld_object_state_contract_report.tscn"
+ANIMATION_OVERWORLD_OBJECT_REPORT_DOC_PATH = ROOT / "docs" / "animation-overworld-object-state-contract-report.md"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -136,6 +139,7 @@ ARTIFACT_SOURCE_REWARD_SCHEMA_ID = "artifact_source_reward_v1"
 ANIMATION_EVENT_CUE_SCHEMA_ID = "animation_event_cue_catalog_v1"
 ANIMATION_PREFERENCE_POLICY_SCHEMA_ID = "animation_playback_preference_policy_v1"
 ANIMATION_BATTLE_TROOP_STATE_CONTRACT_SCHEMA_ID = "battle_troop_sprite_state_contract_v1"
+ANIMATION_OVERWORLD_OBJECT_STATE_CONTRACT_SCHEMA_ID = "overworld_object_state_contract_v1"
 ANIMATION_EVENT_CUE_REQUIRED_SURFACES = {"battle", "overworld", "town", "spell", "artifact", "ui"}
 ANIMATION_EVENT_CUE_REQUIRED_FIELDS = {
     "event_id",
@@ -166,10 +170,13 @@ ANIMATION_EVENT_CUE_REPRESENTATIVE_EVENTS = {
     "overworld_object_visited",
     "overworld_object_captured",
     "overworld_object_depleted",
+    "overworld_object_blocked",
+    "overworld_object_guarded",
     "overworld_route_blocked",
     "overworld_route_open",
     "overworld_route_closed",
     "overworld_object_ambient",
+    "town_captured",
     "town_building_built",
     "town_units_recruited",
     "spell_cast_battle",
@@ -201,6 +208,30 @@ ANIMATION_BATTLE_TROOP_REPRESENTATIVE_EVENTS = {
     "status": "battle_status_applied",
     "defend": "battle_unit_defend",
     "retreat": "battle_unit_retreat",
+}
+ANIMATION_OVERWORLD_OBJECT_REQUIRED_STATE_FAMILIES = {
+    "idle",
+    "active",
+    "visited",
+    "depleted",
+    "captured",
+    "blocked",
+    "guarded",
+    "route-open",
+    "route-closed",
+    "ambient-loop",
+}
+ANIMATION_OVERWORLD_OBJECT_REPRESENTATIVE_EVENTS = {
+    "idle": "overworld_object_idle",
+    "active": "overworld_object_active",
+    "visited": "overworld_object_visited",
+    "depleted": "overworld_object_depleted",
+    "captured": "overworld_object_captured",
+    "blocked": "overworld_object_blocked",
+    "guarded": "overworld_object_guarded",
+    "route-open": "overworld_route_open",
+    "route-closed": "overworld_route_closed",
+    "ambient-loop": "overworld_object_ambient",
 }
 ANIMATION_POLICY_REPRESENTATIVE_EVENTS = {
     "battle_unit_move",
@@ -7931,6 +7962,9 @@ def build_animation_event_cue_catalog_report() -> dict:
         errors.append("every cue entry must include reduced-motion and fast-mode fallbacks")
     if int(state_family_counts.get("move", 0)) <= 0 or int(state_family_counts.get("captured", 0)) <= 0:
         errors.append("catalog must include battle move and overworld capture state families")
+    for required_overworld_family in ("route-open", "route-closed", "ambient-loop"):
+        if int(state_family_counts.get(required_overworld_family, 0)) <= 0:
+            errors.append(f"catalog must include overworld object state family {required_overworld_family}")
 
     return {
         "ok": not errors,
@@ -8246,6 +8280,182 @@ def build_animation_battle_troop_state_contract_report() -> dict:
     }
 
 
+def animation_overworld_object_required_tags(family: str) -> set[str]:
+    tags = {"overworld", "object_state", family}
+    if family not in {"idle", "active", "ambient-loop"}:
+        tags.add("resolved_event")
+    if family == "ambient-loop":
+        tags.add("reduced_motion_loop")
+    return tags
+
+
+def animation_overworld_object_content_context() -> dict:
+    map_objects = load_json(CONTENT_DIR / "map_objects.json")
+    resource_sites = load_json(CONTENT_DIR / "resource_sites.json")
+    object_items = map_objects.get("items", []) if isinstance(map_objects, dict) else []
+    site_items = resource_sites.get("items", []) if isinstance(resource_sites, dict) else []
+    object_class_counts: dict[str, int] = {}
+    linked_resource_site_count = 0
+    guarded_site_count = 0
+    persistent_site_count = 0
+    repeatable_site_count = 0
+    for obj in object_items:
+        if not isinstance(obj, dict):
+            continue
+        family = str(obj.get("family", "")).strip() or "<empty>"
+        increment_count(object_class_counts, family)
+        if str(obj.get("resource_site_id", "")).strip():
+            linked_resource_site_count += 1
+    for site in site_items:
+        if not isinstance(site, dict):
+            continue
+        if bool(site.get("guarded", False)):
+            guarded_site_count += 1
+        control_income = site.get("control_income", {})
+        if not isinstance(control_income, dict):
+            control_income = {}
+        if bool(site.get("persistent", False)) or bool(control_income):
+            persistent_site_count += 1
+        if bool(site.get("repeatable", False)) or int(site.get("refresh_days", 0) or 0) > 0:
+            repeatable_site_count += 1
+    return {
+        "object_class_counts": object_class_counts,
+        "linked_resource_site_count": linked_resource_site_count,
+        "guarded_site_count": guarded_site_count,
+        "persistent_site_count": persistent_site_count,
+        "repeatable_site_count": repeatable_site_count,
+    }
+
+
+def build_animation_overworld_object_state_contract_report() -> dict:
+    raw = load_json(ANIMATION_EVENT_CUES_PATH)
+    entries = raw.get("entries", [])
+    if not isinstance(entries, list):
+        entries = []
+    catalog_report = build_animation_event_cue_catalog_report()
+    errors: list[str] = list(catalog_report.get("errors", []))
+    by_event = {str(entry.get("event_id", "")): entry for entry in entries if isinstance(entry, dict)}
+    object_entries = [
+        entry for entry in entries
+        if isinstance(entry, dict)
+        and str(entry.get("surface", "")) == "overworld"
+        and str(entry.get("subject_kind", "")) in {"map_object", "resource_site", "route"}
+    ]
+    town_shared_entries = [
+        entry for entry in entries
+        if isinstance(entry, dict)
+        and str(entry.get("surface", "")) == "town"
+        and str(entry.get("subject_kind", "")) == "town"
+        and str(entry.get("animation_state_family", "")) in {"captured", "visited"}
+    ]
+    state_family_counts: dict[str, int] = {}
+    subject_counts: dict[str, int] = {}
+    fallback_counts = {"reduced_motion": 0, "fast_mode": 0}
+    producer_ref_count = 0
+    representative_events: dict[str, str] = {}
+    policy_cases: dict[str, dict] = {}
+
+    for entry in object_entries:
+        increment_count(state_family_counts, str(entry.get("animation_state_family", "")) or "<empty>")
+        subject = str(entry.get("subject_kind", "")) or "<empty>"
+        increment_count(subject_counts, subject)
+        fallbacks = entry.get("fallbacks", {})
+        if not isinstance(fallbacks, dict):
+            fallbacks = {}
+        if str(fallbacks.get("reduced_motion_tag", "")).strip():
+            fallback_counts["reduced_motion"] += 1
+        if str(fallbacks.get("fast_mode_tag", "")).strip():
+            fallback_counts["fast_mode"] += 1
+        producer_ref_count += len(string_list(entry.get("producer_refs", [])))
+
+    for family, event_id in sorted(ANIMATION_OVERWORLD_OBJECT_REPRESENTATIVE_EVENTS.items()):
+        entry = by_event.get(event_id)
+        if not isinstance(entry, dict):
+            errors.append(f"overworld object family {family} missing representative event {event_id}")
+            continue
+        representative_events[family] = event_id
+        if str(entry.get("surface", "")) != "overworld":
+            errors.append(f"{event_id} must use overworld surface")
+        if str(entry.get("subject_kind", "")) not in {"map_object", "resource_site", "route"}:
+            errors.append(f"{event_id} must use map_object, resource_site, or route subject_kind")
+        if str(entry.get("animation_state_family", "")) != family:
+            errors.append(f"{event_id} must map to state family {family}")
+        tags = set(string_list(entry.get("validation_tags", [])))
+        for required_tag in sorted(animation_overworld_object_required_tags(family)):
+            if required_tag not in tags:
+                errors.append(f"{event_id} missing validation tag {required_tag}")
+        if not string_list(entry.get("producer_refs", [])):
+            errors.append(f"{event_id} must define producer refs")
+        fallbacks = entry.get("fallbacks", {})
+        if not isinstance(fallbacks, dict):
+            fallbacks = {}
+        reduced_fallback = str(fallbacks.get("reduced_motion_tag", "")).strip()
+        fast_fallback = str(fallbacks.get("fast_mode_tag", "")).strip()
+        if not reduced_fallback:
+            errors.append(f"{event_id} missing reduced-motion fallback")
+        if not fast_fallback:
+            errors.append(f"{event_id} missing fast-mode fallback")
+        if not bool(entry.get("skippable", False)):
+            errors.append(f"{event_id} must remain skippable")
+
+        event_cases = {
+            "normal": select_animation_policy_case(entry, {}),
+            "reduced_motion": select_animation_policy_case(entry, {"reduced_motion": True}),
+            "fast": select_animation_policy_case(entry, {"fast_mode": True}),
+            "reduced_motion_fast": select_animation_policy_case(entry, {"reduced_motion": True, "fast_mode": True}),
+        }
+        if event_cases["reduced_motion"]["selected_fallback_tag"] != reduced_fallback:
+            errors.append(f"{event_id} reduced-motion policy did not select reduced fallback")
+        if event_cases["fast"]["selected_fallback_tag"] != fast_fallback:
+            errors.append(f"{event_id} fast-mode policy did not select fast fallback")
+        if event_cases["reduced_motion_fast"]["selected_fallback_tag"] != reduced_fallback or event_cases["reduced_motion_fast"]["timing_preference"] != "fast":
+            errors.append(f"{event_id} combined policy must use reduced visuals with fast timing")
+        policy_cases[event_id] = event_cases
+
+    for family in sorted(ANIMATION_OVERWORLD_OBJECT_REQUIRED_STATE_FAMILIES):
+        if int(state_family_counts.get(family, 0)) <= 0:
+            errors.append(f"missing overworld object state family {family}")
+    for subject in ("map_object", "resource_site"):
+        if int(subject_counts.get(subject, 0)) <= 0:
+            errors.append(f"missing overworld object subject_kind {subject}")
+    if not town_shared_entries:
+        errors.append("missing shared town object-state hook")
+    if fallback_counts["reduced_motion"] != len(object_entries) or fallback_counts["fast_mode"] != len(object_entries):
+        errors.append("overworld object entries must all define reduced-motion and fast-mode fallbacks")
+
+    content_context = animation_overworld_object_content_context()
+    content_classes = content_context.get("object_class_counts", {})
+    if not isinstance(content_classes, dict):
+        content_classes = {}
+    for object_class in ("pickup", "mine", "neutral_dwelling", "guarded_reward_site", "transit_object", "blocker", "faction_landmark"):
+        if int(content_classes.get(object_class, 0)) <= 0:
+            errors.append(f"missing object content class {object_class}")
+    if int(content_context.get("guarded_site_count", 0)) <= 0:
+        errors.append("content context must include guarded resource sites")
+    if int(content_context.get("persistent_site_count", 0)) <= 0:
+        errors.append("content context must include persistent resource sites")
+    if int(content_context.get("repeatable_site_count", 0)) <= 0:
+        errors.append("content context must include repeatable resource sites")
+
+    return {
+        "ok": not errors,
+        "schema": ANIMATION_OVERWORLD_OBJECT_STATE_CONTRACT_SCHEMA_ID,
+        "mode": "overworld_object_event_to_state_contract",
+        "required_state_families": sorted(ANIMATION_OVERWORLD_OBJECT_REQUIRED_STATE_FAMILIES),
+        "representative_events": representative_events,
+        "overworld_object_entry_count": len(object_entries),
+        "town_shared_entry_count": len(town_shared_entries),
+        "state_family_counts": state_family_counts,
+        "subject_counts": subject_counts,
+        "fallback_counts": fallback_counts,
+        "producer_ref_count": producer_ref_count,
+        "content_context": content_context,
+        "policy_cases": policy_cases,
+        "runtime_policy": raw.get("runtime_policy", {}) if isinstance(raw.get("runtime_policy", {}), dict) else {},
+        "errors": errors,
+    }
+
+
 def print_animation_battle_troop_state_contract_report(report: dict) -> None:
     print("ANIMATION BATTLE TROOP STATE CONTRACT REPORT")
     print(f"- schema: {report['schema']}")
@@ -8254,6 +8464,22 @@ def print_animation_battle_troop_state_contract_report(report: dict) -> None:
     print(f"- required families: {report['required_state_families']}")
     print(f"- representative events: {report['representative_events']}")
     print(f"- state families: {report['state_family_counts']}")
+    print(f"- fallbacks: {report['fallback_counts']}")
+    print(f"- producer refs: {report['producer_ref_count']}")
+    if report.get("errors"):
+        print(f"- errors: {report['errors']}")
+
+
+def print_animation_overworld_object_state_contract_report(report: dict) -> None:
+    print("ANIMATION OVERWORLD OBJECT STATE CONTRACT REPORT")
+    print(f"- schema: {report['schema']}")
+    print(f"- mode: {report['mode']}")
+    print(f"- overworld object entries: {report['overworld_object_entry_count']}")
+    print(f"- shared town entries: {report['town_shared_entry_count']}")
+    print(f"- required families: {report['required_state_families']}")
+    print(f"- representative events: {report['representative_events']}")
+    print(f"- state families: {report['state_family_counts']}")
+    print(f"- subjects: {report['subject_counts']}")
     print(f"- fallbacks: {report['fallback_counts']}")
     print(f"- producer refs: {report['producer_ref_count']}")
     if report.get("errors"):
@@ -8295,6 +8521,7 @@ def validate_animation_event_cue_catalog(errors: list[str]) -> None:
 
     validate_animation_reduced_motion_fast_mode_policy(errors)
     validate_animation_battle_troop_state_contract(errors)
+    validate_animation_overworld_object_state_contract(errors)
 
 
 def validate_animation_reduced_motion_fast_mode_policy(errors: list[str]) -> None:
@@ -8381,6 +8608,53 @@ def validate_animation_battle_troop_state_contract(errors: list[str]) -> None:
             "`wood` remains canonical",
         ):
             ensure(required_text in doc_text, errors, f"Animation battle troop state contract report doc is missing required text: {required_text}")
+
+
+def validate_animation_overworld_object_state_contract(errors: list[str]) -> None:
+    for path in (
+        ANIMATION_OVERWORLD_OBJECT_REPORT_SCRIPT_PATH,
+        ANIMATION_OVERWORLD_OBJECT_REPORT_SCENE_PATH,
+        ANIMATION_OVERWORLD_OBJECT_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing animation overworld object state contract slice file: {path.relative_to(ROOT)}")
+    rules_text = ANIMATION_CUE_CATALOG_RULES_PATH.read_text(encoding="utf-8") if ANIMATION_CUE_CATALOG_RULES_PATH.exists() else ""
+    for required_token in (
+        "OVERWORLD_OBJECT_STATE_CONTRACT_SCHEMA_ID",
+        "OVERWORLD_OBJECT_REQUIRED_STATE_FAMILIES",
+        "OVERWORLD_OBJECT_REPRESENTATIVE_EVENTS",
+        "func overworld_object_state_contract_report",
+        "overworld_object_idle",
+        "overworld_object_guarded",
+        "town_captured",
+    ):
+        ensure(required_token in rules_text, errors, f"AnimationCueCatalog.gd is missing overworld object contract token: {required_token}")
+    report = build_animation_overworld_object_state_contract_report()
+    for error in report.get("errors", []):
+        fail(errors, f"Animation overworld object state contract: {error}")
+    ensure(int(report.get("overworld_object_entry_count", 0)) >= 10, errors, "Animation overworld object contract must cover at least ten object cue entries")
+    ensure(int(report.get("producer_ref_count", 0)) >= 10, errors, "Animation overworld object contract must validate producer refs")
+    ensure(int(report.get("town_shared_entry_count", 0)) >= 1, errors, "Animation overworld object contract must include a shared town state hook")
+    if ANIMATION_OVERWORLD_OBJECT_REPORT_DOC_PATH.exists():
+        doc_text = ANIMATION_OVERWORLD_OBJECT_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Status: implementation evidence.",
+            "overworld_object_state_contract_v1",
+            "idle",
+            "active",
+            "visited",
+            "depleted",
+            "captured",
+            "blocked",
+            "guarded",
+            "route-open",
+            "route-closed",
+            "ambient-loop",
+            "No save migration",
+            "No final sprite, VFX, or audio import",
+            "No renderer asset pipeline work",
+            "`wood` remains canonical",
+        ):
+            ensure(required_text in doc_text, errors, f"Animation overworld object state contract report doc is missing required text: {required_text}")
 
 
 def validate_content(errors: list[str]) -> None:
@@ -14320,6 +14594,8 @@ def main() -> int:
     parser.add_argument("--animation-policy-report-json", type=str, default="", help="Write the opt-in animation reduced-motion/fast-mode policy report as JSON.")
     parser.add_argument("--animation-battle-troop-contract-report", action="store_true", help="Print the opt-in battle troop sprite state contract report.")
     parser.add_argument("--animation-battle-troop-contract-report-json", type=str, default="", help="Write the opt-in battle troop sprite state contract report as JSON.")
+    parser.add_argument("--animation-overworld-object-contract-report", action="store_true", help="Print the opt-in overworld object state contract report.")
+    parser.add_argument("--animation-overworld-object-contract-report-json", type=str, default="", help="Write the opt-in overworld object state contract report as JSON.")
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -14454,6 +14730,7 @@ def main() -> int:
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
     print("- animation battle troop sprite state contracts now cover idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style cue families")
+    print("- animation overworld object state contracts now cover idle, active, visited, depleted, captured, blocked, guarded, route-open, route-closed, and ambient-loop cue families")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:
@@ -14540,6 +14817,14 @@ def main() -> int:
             print(f"- animation battle troop contract report JSON written to {report_path}")
         if args.animation_battle_troop_contract_report:
             print_animation_battle_troop_state_contract_report(report)
+    if args.animation_overworld_object_contract_report or args.animation_overworld_object_contract_report_json:
+        report = build_animation_overworld_object_state_contract_report()
+        if args.animation_overworld_object_contract_report_json:
+            report_path = Path(args.animation_overworld_object_contract_report_json)
+            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"- animation overworld object contract report JSON written to {report_path}")
+        if args.animation_overworld_object_contract_report:
+            print_animation_overworld_object_state_contract_report(report)
     return 0
 
 

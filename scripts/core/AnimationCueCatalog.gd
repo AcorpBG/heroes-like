@@ -10,6 +10,7 @@ const MODE_FAST := "fast"
 const MODE_REDUCED_MOTION_FAST := "reduced_motion_fast"
 const REQUIRED_SURFACES := ["battle", "overworld", "town", "spell", "artifact", "ui"]
 const BATTLE_TROOP_STATE_CONTRACT_SCHEMA_ID := "battle_troop_sprite_state_contract_v1"
+const OVERWORLD_OBJECT_STATE_CONTRACT_SCHEMA_ID := "overworld_object_state_contract_v1"
 const BATTLE_TROOP_REQUIRED_STATE_FAMILIES := [
 	"idle",
 	"ready",
@@ -22,6 +23,18 @@ const BATTLE_TROOP_REQUIRED_STATE_FAMILIES := [
 	"defend",
 	"retreat",
 ]
+const OVERWORLD_OBJECT_REQUIRED_STATE_FAMILIES := [
+	"idle",
+	"active",
+	"visited",
+	"depleted",
+	"captured",
+	"blocked",
+	"guarded",
+	"route-open",
+	"route-closed",
+	"ambient-loop",
+]
 const BATTLE_TROOP_REPRESENTATIVE_EVENTS := {
 	"idle": "battle_stack_idle",
 	"ready": "battle_stack_ready",
@@ -33,6 +46,18 @@ const BATTLE_TROOP_REPRESENTATIVE_EVENTS := {
 	"status": "battle_status_applied",
 	"defend": "battle_unit_defend",
 	"retreat": "battle_unit_retreat",
+}
+const OVERWORLD_OBJECT_REPRESENTATIVE_EVENTS := {
+	"idle": "overworld_object_idle",
+	"active": "overworld_object_active",
+	"visited": "overworld_object_visited",
+	"depleted": "overworld_object_depleted",
+	"captured": "overworld_object_captured",
+	"blocked": "overworld_object_blocked",
+	"guarded": "overworld_object_guarded",
+	"route-open": "overworld_route_open",
+	"route-closed": "overworld_route_closed",
+	"ambient-loop": "overworld_object_ambient",
 }
 const REQUIRED_FIELDS := [
 	"event_id",
@@ -480,6 +505,140 @@ static func battle_troop_sprite_state_contract_report(catalog: Dictionary = {}) 
 		"public_payload": public_payload,
 	}
 
+static func overworld_object_state_contract_report(catalog: Dictionary = {}) -> Dictionary:
+	var source := catalog if not catalog.is_empty() else load_catalog()
+	var catalog_report := event_cue_catalog_report(source)
+	var errors := []
+	if not bool(catalog_report.get("ok", false)):
+		errors.append_array(catalog_report.get("errors", []))
+
+	var object_entries := []
+	var town_shared_entries := []
+	var family_counts := {}
+	var subject_counts := {}
+	var representative_events := {}
+	var representative_policy_cases := {}
+	var producer_ref_count := 0
+	var fallback_counts := {"reduced_motion": 0, "fast_mode": 0}
+
+	for entry_value in _entries(source):
+		if not (entry_value is Dictionary):
+			continue
+		var entry: Dictionary = entry_value
+		var surface := String(entry.get("surface", ""))
+		var subject := String(entry.get("subject_kind", ""))
+		var family := String(entry.get("animation_state_family", ""))
+		if surface == "overworld" and subject in ["map_object", "resource_site", "route"]:
+			object_entries.append(entry)
+			_increment(family_counts, family)
+			_increment(subject_counts, subject)
+			var producer_refs := _string_array(entry.get("producer_refs", []))
+			producer_ref_count += producer_refs.size()
+			var fallbacks: Dictionary = entry.get("fallbacks", {}) if entry.get("fallbacks", {}) is Dictionary else {}
+			if String(fallbacks.get("reduced_motion_tag", "")).strip_edges() != "":
+				fallback_counts["reduced_motion"] = int(fallback_counts.get("reduced_motion", 0)) + 1
+			if String(fallbacks.get("fast_mode_tag", "")).strip_edges() != "":
+				fallback_counts["fast_mode"] = int(fallback_counts.get("fast_mode", 0)) + 1
+		elif surface == "town" and subject == "town" and family in ["captured", "visited"]:
+			town_shared_entries.append(entry)
+
+	for family in OVERWORLD_OBJECT_REQUIRED_STATE_FAMILIES:
+		var event_id := String(OVERWORLD_OBJECT_REPRESENTATIVE_EVENTS.get(family, ""))
+		var entry := _entry_for_event(event_id, source)
+		if entry.is_empty():
+			errors.append("Overworld object state family %s missing representative event %s." % [family, event_id])
+			continue
+		if String(entry.get("surface", "")) != "overworld":
+			errors.append("%s must use overworld surface." % event_id)
+		var subject_kind := String(entry.get("subject_kind", ""))
+		if subject_kind not in ["map_object", "resource_site", "route"]:
+			errors.append("%s must use map_object, resource_site, or route subject_kind." % event_id)
+		if String(entry.get("animation_state_family", "")) != family:
+			errors.append("%s must map to state family %s." % [event_id, family])
+		var tags := _string_array(entry.get("validation_tags", []))
+		for required_tag in _overworld_object_required_tags_for_family(family):
+			if required_tag not in tags:
+				errors.append("%s missing validation tag %s." % [event_id, required_tag])
+		if _string_array(entry.get("producer_refs", [])).is_empty():
+			errors.append("%s must define overworld producer_refs." % event_id)
+		var fallbacks: Dictionary = entry.get("fallbacks", {}) if entry.get("fallbacks", {}) is Dictionary else {}
+		if String(fallbacks.get("reduced_motion_tag", "")).strip_edges() == "":
+			errors.append("%s missing reduced-motion fallback tag." % event_id)
+		if String(fallbacks.get("fast_mode_tag", "")).strip_edges() == "":
+			errors.append("%s missing fast-mode fallback tag." % event_id)
+		if not bool(entry.get("skippable", false)):
+			errors.append("%s must stay skippable until playback runtime adoption." % event_id)
+		representative_events[family] = event_id
+
+		var policy_cases := {}
+		for mode in [MODE_NORMAL, MODE_REDUCED_MOTION, MODE_FAST, MODE_REDUCED_MOTION_FAST]:
+			var policy := _cue_playback_policy_for_entry(entry, normalize_animation_preferences(_preferences_from_mode(mode)))
+			policy_cases[mode] = _public_policy_case(policy)
+			if String(policy.get("selected_animation_state", "")).strip_edges() == "":
+				errors.append("%s produced an empty selected animation state for %s mode." % [event_id, mode])
+		var reduced_policy: Dictionary = policy_cases.get(MODE_REDUCED_MOTION, {})
+		var fast_policy: Dictionary = policy_cases.get(MODE_FAST, {})
+		var combined_policy: Dictionary = policy_cases.get(MODE_REDUCED_MOTION_FAST, {})
+		if String(reduced_policy.get("selected_fallback_tag", "")) != String(fallbacks.get("reduced_motion_tag", "")):
+			errors.append("%s reduced-motion policy did not select the reduced fallback." % event_id)
+		if String(fast_policy.get("selected_fallback_tag", "")) != String(fallbacks.get("fast_mode_tag", "")):
+			errors.append("%s fast-mode policy did not select the fast fallback." % event_id)
+		if String(combined_policy.get("selected_fallback_tag", "")) != String(fallbacks.get("reduced_motion_tag", "")) or String(combined_policy.get("timing_preference", "")) != MODE_FAST:
+			errors.append("%s combined policy must use reduced visuals with fast timing." % event_id)
+		representative_policy_cases[event_id] = policy_cases
+
+	for family in OVERWORLD_OBJECT_REQUIRED_STATE_FAMILIES:
+		if int(family_counts.get(family, 0)) <= 0:
+			errors.append("Overworld object catalog has no entries for required state family %s." % family)
+	for subject in ["map_object", "resource_site"]:
+		if int(subject_counts.get(subject, 0)) <= 0:
+			errors.append("Overworld object contract must include subject_kind %s." % subject)
+	if town_shared_entries.is_empty():
+		errors.append("Overworld object contract must include a shared town object-state hook.")
+	if fallback_counts["reduced_motion"] != object_entries.size() or fallback_counts["fast_mode"] != object_entries.size():
+		errors.append("Overworld object entries must all define reduced-motion and fast-mode fallbacks.")
+
+	var content_context := _overworld_object_content_context_report()
+	var content_classes: Dictionary = content_context.get("object_class_counts", {})
+	for required_class in ["pickup", "mine", "neutral_dwelling", "guarded_reward_site", "transit_object", "blocker", "faction_landmark"]:
+		if int(content_classes.get(required_class, 0)) <= 0:
+			errors.append("Overworld object content is missing representative class %s." % required_class)
+
+	var public_payload := {
+		"schema_id": OVERWORLD_OBJECT_STATE_CONTRACT_SCHEMA_ID,
+		"schema_status": "overworld_object_state_contract_validated",
+		"required_state_families": OVERWORLD_OBJECT_REQUIRED_STATE_FAMILIES,
+		"representative_events": representative_events,
+		"overworld_object_entry_count": object_entries.size(),
+		"town_shared_entry_count": town_shared_entries.size(),
+		"state_family_counts": family_counts,
+		"subject_counts": subject_counts,
+		"fallback_counts": fallback_counts,
+		"producer_ref_count": producer_ref_count,
+		"content_context": content_context,
+		"policy_cases": representative_policy_cases,
+		"runtime_policy": source.get("runtime_policy", {}) if source.get("runtime_policy", {}) is Dictionary else {},
+		"errors": errors,
+	}
+	return {
+		"ok": errors.is_empty(),
+		"schema_id": OVERWORLD_OBJECT_STATE_CONTRACT_SCHEMA_ID,
+		"schema_status": "overworld_object_state_contract_validated",
+		"required_state_families": OVERWORLD_OBJECT_REQUIRED_STATE_FAMILIES,
+		"representative_events": representative_events,
+		"overworld_object_entry_count": object_entries.size(),
+		"town_shared_entry_count": town_shared_entries.size(),
+		"state_family_counts": family_counts,
+		"subject_counts": subject_counts,
+		"fallback_counts": fallback_counts,
+		"producer_ref_count": producer_ref_count,
+		"content_context": content_context,
+		"policy_cases": representative_policy_cases,
+		"runtime_policy": source.get("runtime_policy", {}) if source.get("runtime_policy", {}) is Dictionary else {},
+		"errors": errors,
+		"public_payload": public_payload,
+	}
+
 static func _entries(catalog: Dictionary) -> Array:
 	var entries = catalog.get("entries", [])
 	return entries if entries is Array else []
@@ -593,10 +752,13 @@ static func _required_representative_events() -> Array:
 		"overworld_object_visited",
 		"overworld_object_captured",
 		"overworld_object_depleted",
+		"overworld_object_blocked",
+		"overworld_object_guarded",
 		"overworld_route_blocked",
 		"overworld_route_open",
 		"overworld_route_closed",
 		"overworld_object_ambient",
+		"town_captured",
 		"town_building_built",
 		"town_units_recruited",
 		"spell_cast_battle",
@@ -605,6 +767,57 @@ static func _required_representative_events() -> Array:
 		"artifact_equipped",
 		"ui_invalid_action",
 	]
+
+static func _overworld_object_required_tags_for_family(family: String) -> Array:
+	var tags := ["overworld", "object_state", String(family)]
+	if family != "idle" and family != "active" and family != "ambient-loop":
+		tags.append("resolved_event")
+	if family == "ambient-loop":
+		tags.append("reduced_motion_loop")
+	return tags
+
+static func _overworld_object_content_context_report() -> Dictionary:
+	var map_objects := ContentService.load_json("res://content/map_objects.json")
+	var resource_sites := ContentService.load_json("res://content/resource_sites.json")
+	var object_class_counts := {}
+	var linked_resource_site_count := 0
+	var guarded_site_count := 0
+	var persistent_site_count := 0
+	var repeatable_site_count := 0
+	for object_value in _items_from_content(map_objects):
+		if not (object_value is Dictionary):
+			continue
+		var object: Dictionary = object_value
+		var family := String(object.get("family", "")).strip_edges()
+		_increment(object_class_counts, family)
+		if String(object.get("resource_site_id", "")).strip_edges() != "":
+			linked_resource_site_count += 1
+	for site_value in _items_from_content(resource_sites):
+		if not (site_value is Dictionary):
+			continue
+		var site: Dictionary = site_value
+		var control_income: Dictionary = site.get("control_income", {}) if site.get("control_income", {}) is Dictionary else {}
+		if bool(site.get("guarded", false)):
+			guarded_site_count += 1
+		if bool(site.get("persistent", false)) or not control_income.is_empty():
+			persistent_site_count += 1
+		if bool(site.get("repeatable", false)) or int(site.get("refresh_days", 0)) > 0:
+			repeatable_site_count += 1
+	return {
+		"object_class_counts": object_class_counts,
+		"linked_resource_site_count": linked_resource_site_count,
+		"guarded_site_count": guarded_site_count,
+		"persistent_site_count": persistent_site_count,
+		"repeatable_site_count": repeatable_site_count,
+	}
+
+static func _items_from_content(content: Variant) -> Array:
+	if content is Array:
+		return content
+	if content is Dictionary:
+		var items = content.get("items", [])
+		return items if items is Array else []
+	return []
 
 static func _string_array(value: Variant) -> Array:
 	var result := []

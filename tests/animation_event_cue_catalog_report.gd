@@ -27,7 +27,7 @@ func _run() -> void:
 		_fail("Fast-mode fallback coverage is incomplete: %s" % report)
 		return
 	var state_family_counts: Dictionary = report.get("state_family_counts", {}) if report.get("state_family_counts", {}) is Dictionary else {}
-	for family in ["move", "attack", "hit", "death", "status", "defend", "captured", "depleted", "route", "ambient"]:
+	for family in ["move", "attack", "hit", "death", "status", "defend", "captured", "depleted", "route-open", "route-closed", "ambient-loop"]:
 		if int(state_family_counts.get(family, 0)) <= 0:
 			_fail("Missing required state family %s: %s" % [family, report])
 			return
