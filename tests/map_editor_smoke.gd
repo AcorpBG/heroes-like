@@ -47,6 +47,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_scenario_validation_check(snapshot, true, ["Scenario check:", "Scenario Validation", "Ninefold Confluence", "Objectives", "Warnings 0", "Hero 23,26", "Objects", "Play Copy can smoke-test this working copy", "no authored file or campaign progress is written"]):
 		return
+	if not _assert_editor_scenario_switch_handoff(snapshot, false, ["Scenario switch:", "Ninefold Confluence", "clean working copy", "choosing another scenario replaces this in-memory working copy", "Scenario Switch", "choose another scenario to load its authored baseline", "no authored file or campaign progress is written"]):
+		return
 	if not _assert_editor_selected_validation_focus(snapshot, ["Validation focus:", "23,26", "ninefold_embercourt_survey_camp", "objectives 1", "enemy focus", "Selected Validation Focus", "selected tile in the editor working copy only", "Play Copy"]):
 		return
 	if not _assert_editor_menu_return_cue(snapshot, false, ["Menu return:", "Main menu", "no editor edits need preserving", "no authored file or campaign progress is written"]):
@@ -97,6 +99,8 @@ func _run() -> void:
 	if not _assert_editor_restore_tile_cue(paint_result, true, ["Tile reset:", "2,2", "differs in terrain", "returns this tile to authored baseline", "Play Copy"]):
 		return
 	if not _assert_editor_menu_return_cue(paint_result, true, ["Menu return:", "Main menu", "unsaved editor edits are discarded", "Use Play Copy before leaving"]):
+		return
+	if not _assert_editor_scenario_switch_handoff(paint_result, true, ["Scenario switch:", "Ninefold Confluence", "dirty working copy", "choosing another scenario replaces this in-memory working copy", "Scenario Switch", "use Play Copy for a smoke pass or keep editing before switching", "no authored file or campaign progress is written"]):
 		return
 	var paint_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 2)
 	var terrain_presentation: Dictionary = paint_presentation.get("terrain_presentation", {})
@@ -2465,6 +2469,57 @@ func _assert_editor_scenario_validation_check(result: Dictionary, expected_ready
 	]:
 		if combined.find(forbidden) >= 0:
 			_fail("Map editor smoke: scenario validation check leaked internal score field %s: %s." % [forbidden, combined])
+			return false
+	return true
+
+func _assert_editor_scenario_switch_handoff(result: Dictionary, expected_dirty: bool, fragments: Array) -> bool:
+	var handoff: Dictionary = result.get("scenario_switch_handoff", {})
+	var text := String(handoff.get("text", ""))
+	var tooltip := String(handoff.get("tooltip", ""))
+	var picker_tooltip := String(result.get("scenario_picker_tooltip", ""))
+	var visible_status := String(result.get("visible_status_full", result.get("visible_status_text", "")))
+	if handoff.is_empty() or text == "":
+		_fail("Map editor smoke: scenario switch handoff was not exposed: %s." % result)
+		return false
+	if bool(handoff.get("dirty", not expected_dirty)) != expected_dirty:
+		_fail("Map editor smoke: scenario switch handoff dirty state mismatch: %s." % handoff)
+		return false
+	if String(handoff.get("scope", "")) != "scenario_picker_working_copy_replace":
+		_fail("Map editor smoke: scenario switch handoff did not declare working-copy replace scope: %s." % handoff)
+		return false
+	var expected_state := "dirty" if expected_dirty else "clean"
+	if String(handoff.get("state", "")) != expected_state:
+		_fail("Map editor smoke: scenario switch handoff reported wrong state: %s." % handoff)
+		return false
+	var combined := "%s\n%s\n%s\n%s" % [text, tooltip, picker_tooltip, visible_status]
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected != "" and combined.find(expected) < 0:
+			_fail("Map editor smoke: scenario switch handoff missed '%s': %s." % [expected, combined])
+			return false
+	if picker_tooltip.find("Scenario Switch") < 0:
+		_fail("Map editor smoke: scenario picker tooltip did not carry scenario-switch handoff: %s." % picker_tooltip)
+		return false
+	if visible_status.find("Scenario switch:") < 0:
+		_fail("Map editor smoke: visible editor status did not carry scenario-switch handoff: %s." % visible_status)
+		return false
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if combined.find(forbidden) >= 0:
+			_fail("Map editor smoke: scenario switch handoff leaked internal score field %s: %s." % [forbidden, combined])
 			return false
 	return true
 

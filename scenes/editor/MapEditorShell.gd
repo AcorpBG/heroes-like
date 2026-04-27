@@ -2593,6 +2593,9 @@ func _sync_scenario_validation_surface() -> void:
 		return
 	var check := _editor_scenario_validation_check_payload()
 	var tooltip_lines := [String(check.get("tooltip", "Load a scenario working copy to review editor validation."))]
+	var switch_handoff := String(_editor_scenario_switch_handoff_payload().get("tooltip", "")).strip_edges()
+	if switch_handoff != "":
+		tooltip_lines.append(switch_handoff)
 	var focus_tooltip := String(_editor_selected_validation_focus_payload().get("tooltip", "")).strip_edges()
 	if focus_tooltip != "":
 		tooltip_lines.append(focus_tooltip)
@@ -2697,6 +2700,9 @@ func _refresh_labels() -> void:
 			_pending_road_path_start.y,
 		]
 	var status_lines := [state_line]
+	var scenario_switch_text := String(_editor_scenario_switch_handoff_payload().get("text", "")).strip_edges()
+	if scenario_switch_text != "":
+		status_lines.append(scenario_switch_text)
 	var scenario_check_text := String(_editor_scenario_validation_check_payload().get("text", "")).strip_edges()
 	if scenario_check_text != "":
 		status_lines.append(scenario_check_text)
@@ -4526,6 +4532,49 @@ func _editor_scenario_validation_check_payload() -> Dictionary:
 		"scope": "editor_working_copy_only",
 	}
 
+func _editor_scenario_switch_handoff_payload() -> Dictionary:
+	if _session == null:
+		return {
+			"text": "",
+			"tooltip": "Load a scenario working copy before switching scenarios.",
+			"state": "no_working_copy",
+			"dirty": false,
+			"scope": "scenario_picker_working_copy_replace",
+		}
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario_name := String(scenario.get("name", _session.scenario_id))
+	var state := "dirty" if _dirty else "clean"
+	var consequence := "choosing another scenario replaces this in-memory working copy"
+	var next_step := "choose another scenario to load its authored baseline"
+	if _dirty:
+		next_step = "use Play Copy for a smoke pass or keep editing before switching"
+	var write_context := "no authored file or campaign progress is written"
+	var text := "Scenario switch: %s | %s working copy; %s." % [
+		scenario_name,
+		state,
+		consequence,
+	]
+	var tooltip := "Scenario Switch\n- Current: %s.\n- State: %s working copy.\n- Consequence: %s.\n- Next: %s.\n- Scope: %s." % [
+		scenario_name,
+		state,
+		consequence,
+		next_step,
+		write_context,
+	]
+	return {
+		"text": text,
+		"tooltip": tooltip,
+		"state": state,
+		"dirty": _dirty,
+		"scenario_id": _session.scenario_id,
+		"scenario_name": scenario_name,
+		"consequence": consequence,
+		"next_step": next_step,
+		"write_context": write_context,
+		"scenario_count": _scenario_entries.size(),
+		"scope": "scenario_picker_working_copy_replace",
+	}
+
 func _editor_selected_validation_focus_payload() -> Dictionary:
 	if _session == null or not _tile_in_bounds(_selected_tile):
 		return {
@@ -5619,6 +5668,9 @@ func validation_snapshot() -> Dictionary:
 		"visible_status_full": _status_label.tooltip_text if _status_label != null else "",
 		"scenario_validation_check": _editor_scenario_validation_check_payload(),
 		"scenario_validation_check_text": String(_editor_scenario_validation_check_payload().get("text", "")),
+		"scenario_switch_handoff": _editor_scenario_switch_handoff_payload(),
+		"scenario_switch_handoff_text": String(_editor_scenario_switch_handoff_payload().get("text", "")),
+		"scenario_switch_handoff_tooltip": String(_editor_scenario_switch_handoff_payload().get("tooltip", "")),
 		"selected_validation_focus": _editor_selected_validation_focus_payload(),
 		"selected_validation_focus_text": String(_editor_selected_validation_focus_payload().get("text", "")),
 		"selected_validation_focus_tooltip": String(_editor_selected_validation_focus_payload().get("tooltip", "")),
