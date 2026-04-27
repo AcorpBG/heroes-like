@@ -863,15 +863,17 @@ nonGoals:
 
 id: `animation-event-cue-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
-purpose: Establish event/cue contracts for readable state changes before final visual polish.
+purpose: Establish battle troop sprite animation and overworld map object animation contracts, with event/cue ids bridging resolved gameplay events to playback before final visual polish.
 
 sourceDocs:
 - `docs/animation-systems-foundation.md`
 - `docs/screen-wireframes.md`
 
 implementationTargets:
-- Animation/event cue catalog.
-- Reduced-motion and fast-mode policy.
+- Battle troop sprite animation state taxonomy and playback contracts for idle/ready/move/attack/hit/death/cast/status/defend/retreat-style states.
+- Overworld map object animation state taxonomy and playback contracts for idle/active/visited/depleted/captured/blocked/guarded/route-open/route-closed/ambient-loop states where appropriate.
+- Event/cue catalog mapping resolved gameplay event ids to animation state playback, VFX/audio ids, fallbacks, blocking policy, and validation tags.
+- Reduced-motion and fast-mode policy for troop/object animation playback, not only UI microinteractions.
 - Battle, town, overworld, object, and UI state-change hooks as selected.
 
 baselineChecks:
@@ -879,15 +881,18 @@ baselineChecks:
 - Focused scene smoke for touched surfaces.
 
 sliceEvidence:
-- Report or smoke proves selected event ids, playback policy, and reduced-motion/fast-mode behavior.
+- Report or smoke proves selected event ids, troop/object animation state mappings, playback policy, and reduced-motion/fast-mode behavior.
+- Validation shows no ad hoc dashboard/public debug output is introduced to explain animation state.
 
 completionCriteria:
-- Event/cue ids and playback policy exist as implementation contracts.
+- Event/cue ids and playback policy exist as implementation contracts for troop sprite states and overworld object states.
+- The cue catalog serves resolved gameplay events and animation playback, not UI text polish.
 - Selected state changes become more readable without panel-heavy dashboard composition.
 
 nonGoals:
 - No final VFX/audio requirement.
 - No broad screen polish without event contract work.
+- No final sprite/art production or renderer asset import; keep those as later bounded slices.
 
 ### P2.8 Strategic AI Foundation Continuation
 
@@ -1482,14 +1487,15 @@ implementationTargets:
 id: `animation-event-cue-catalog-contract-10184`
 parentSliceId: `animation-event-cue-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
-purpose: Define and implement an event/cue id catalog before more screen cue polish.
+purpose: Define and implement an event/cue id catalog that bridges resolved gameplay events to troop/object animation playback before more screen cue polish.
 
 sourceDocs:
 - `docs/animation-systems-foundation.md`
 - `docs/screen-wireframes.md`
 
 implementationTargets:
-- event/cue catalog
+- event/cue catalog for resolved battle, overworld, town, spell, artifact, and UI events
+- mappings from event ids to animation states, playback policy, VFX/audio ids, reduced-motion/fast-mode fallbacks, and validation tags
 - validation/report hooks
 
 ### P2 Child: Animation Reduced-Motion And Fast-Mode Policy
@@ -1497,42 +1503,46 @@ implementationTargets:
 id: `animation-reduced-motion-fast-mode-policy-10184`
 parentSliceId: `animation-event-cue-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
-purpose: Implement reduced-motion and fast-mode behavior for selected event playback.
+purpose: Implement reduced-motion and fast-mode behavior for selected troop, object, and event playback.
 
 sourceDocs:
 - `docs/animation-systems-foundation.md`
 
 implementationTargets:
 - animation settings/policy helpers
+- troop/object animation fallback policy
 - smoke coverage for selected surfaces
 
-### P2 Child: Animation Battle Cue Hook Vertical Slice
+### P2 Child: Animation Battle Troop Sprite State Contracts
 
 id: `animation-battle-cue-hook-vertical-slice-10184`
 parentSliceId: `animation-event-cue-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
-purpose: Prove one battle event/cue path through the catalog, playback policy, and validation.
+purpose: Prove battle troop sprite animation state contracts through the catalog, playback policy, and validation.
 
 sourceDocs:
 - `docs/animation-systems-foundation.md`
 
 implementationTargets:
-- battle cue hooks
+- battle troop sprite state taxonomy covering idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style states
+- battle event-to-animation-state mappings for at least one vertical path
 - battle scene smoke/report coverage
 
-### P2 Child: Animation Overworld/Town/Object Cue Hooks
+### P2 Child: Animation Overworld Object State Contracts
 
 id: `animation-overworld-town-object-cue-hooks-10184`
 parentSliceId: `animation-event-cue-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
-purpose: Prove selected overworld, town, or object event cues without broad UI cue drift.
+purpose: Prove overworld map object animation state contracts without broad UI cue drift.
 
 sourceDocs:
 - `docs/animation-systems-foundation.md`
 - `docs/screen-wireframes.md`
 
 implementationTargets:
-- overworld/town/object cue hooks
+- overworld map object state taxonomy covering idle, active, visited, depleted, captured, blocked, guarded, route-open, route-closed, and looping ambient states where appropriate
+- overworld object event-to-animation-state mappings for selected object classes
+- town hooks only where they share the selected event/cue contract
 - focused smoke/report coverage
 
 ### P2 Child: Animation Validation Smoke Harness
@@ -1540,13 +1550,15 @@ implementationTargets:
 id: `animation-validation-smoke-harness-10184`
 parentSliceId: `animation-event-cue-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
-purpose: Add validation for event ids, playback policy, and no dashboard-style public output.
+purpose: Add validation for event ids, troop/object animation state mappings, playback policy, and no dashboard-style public output.
 
 sourceDocs:
 - `docs/animation-systems-foundation.md`
 
 implementationTargets:
 - animation/event smoke harness
+- event id to animation state mapping checks
+- reduced-motion and fast-mode fallback checks
 - report fixtures
 
 ### P2 Child: Strategic AI Economy Pressure Follow-Up
