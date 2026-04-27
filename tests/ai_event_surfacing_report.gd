@@ -225,13 +225,13 @@ func _assert_event(event: Dictionary, event_type: String, target_id: String, req
 	_assert_event_compact(event_type, event)
 
 func _assert_event_compact(label: String, event: Dictionary) -> void:
-	for key in ["base_value", "persistent_income_value", "recruit_value", "scarcity_value", "denial_value", "route_pressure_value", "town_enablement_value", "objective_value", "faction_bias", "travel_cost", "guard_cost", "assignment_penalty", "final_priority"]:
+	for key in ["base_value", "persistent_income_value", "recruit_value", "scarcity_value", "denial_value", "route_pressure_value", "town_enablement_value", "resource_affinity_value", "weighted_claim_value", "weighted_income_value", "objective_value", "faction_bias", "travel_cost", "guard_cost", "assignment_penalty", "final_priority"]:
 		if event.has(key):
 			_fail("%s leaked score key %s" % [label, key])
 			return
 
 func _assert_no_score_leak(label: String, text: String) -> void:
-	for needle in ["base_value", "persistent_income_value", "final_priority", "assignment_penalty", "route_pressure_value", "denial_value"]:
+	for needle in ["base_value", "persistent_income_value", "resource_affinity_value", "weighted_claim_value", "weighted_income_value", "final_priority", "assignment_penalty", "route_pressure_value", "denial_value"]:
 		if text.contains(needle):
 			_fail("%s leaked score token %s" % [label, needle])
 			return

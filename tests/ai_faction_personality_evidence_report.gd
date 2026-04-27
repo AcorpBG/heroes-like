@@ -9,6 +9,9 @@ const LEAK_KEYS := [
 	"raid_score",
 	"base_value",
 	"persistent_income_value",
+	"resource_affinity_value",
+	"weighted_claim_value",
+	"weighted_income_value",
 	"assignment_penalty",
 	"final_priority",
 ]
@@ -40,6 +43,27 @@ const FACTION_CASES := [
 	},
 ]
 
+const RESOURCE_AFFINITY_CASES := [
+	{
+		"case_id": "thornwake_wood_affinity",
+		"faction_id": "faction_thornwake",
+		"scenario_id": "ninefold-confluence",
+		"origin": {"x": 16, "y": 50},
+		"preferred_target_id": "brightwood_sawmill",
+		"comparison_target_id": "ridge_quarry",
+		"preferred_resource": "wood",
+	},
+	{
+		"case_id": "brasshollow_ore_affinity",
+		"faction_id": "faction_brasshollow",
+		"scenario_id": "ninefold-confluence",
+		"origin": {"x": 9, "y": 36},
+		"preferred_target_id": "ridge_quarry",
+		"comparison_target_id": "brightwood_sawmill",
+		"preferred_resource": "ore",
+	},
+]
+
 const TREASURY := {"gold": 7200, "wood": 12, "ore": 12}
 
 var _failed := false
@@ -54,16 +78,24 @@ func _run() -> void:
 		if case_report.is_empty():
 			return
 		cases.append(case_report)
+	var resource_affinity_cases := []
+	for affinity_config in RESOURCE_AFFINITY_CASES:
+		var affinity_report := _run_resource_affinity_case(affinity_config)
+		if affinity_report.is_empty():
+			return
+		resource_affinity_cases.append(affinity_report)
 
 	var payload := {
 		"ok": true,
 		"report_marker": "AI_FACTION_PERSONALITY_EVIDENCE_REPORT",
 		"cases": cases,
+		"resource_affinity_cases": resource_affinity_cases,
 		"shared_vocabulary": [
 			"target_preferences",
 			"pressure_summary",
 			"town_build_reason",
 			"recruitment_destination",
+			"resource_affinity",
 			"garrison_priority",
 			"raid_priority",
 			"commander_rebuild_priority",
@@ -181,6 +213,55 @@ func _run_governor_case(case_config: Dictionary, governor_case_id: String) -> Di
 		"public_events": public_events,
 	}
 
+func _run_resource_affinity_case(case_config: Dictionary) -> Dictionary:
+	var scenario_id := String(case_config.get("scenario_id", ""))
+	var faction_id := String(case_config.get("faction_id", ""))
+	var preferred_target_id := String(case_config.get("preferred_target_id", ""))
+	var comparison_target_id := String(case_config.get("comparison_target_id", ""))
+	var origin: Dictionary = case_config.get("origin", {})
+	var session = _base_session(scenario_id)
+	var config := _enemy_config(scenario_id, faction_id)
+	if config.is_empty():
+		return {}
+	var weighted_report := EnemyAdventureRules.resource_pressure_report(session, config, origin, faction_id, 0)
+	var neutral_config := _neutral_resource_affinity_config(config)
+	var neutral_report := EnemyAdventureRules.resource_pressure_report(session, neutral_config, origin, faction_id, 0)
+	var preferred := _target_by_placement(weighted_report.get("targets", []), preferred_target_id)
+	var neutral_preferred := _target_by_placement(neutral_report.get("targets", []), preferred_target_id)
+	var comparison := _target_by_placement(weighted_report.get("targets", []), comparison_target_id)
+	if preferred.is_empty() or neutral_preferred.is_empty() or comparison.is_empty():
+		_fail("%s missing affinity target(s)" % String(case_config.get("case_id", "")))
+		return {}
+	if int(preferred.get("resource_affinity_value", 0)) <= 0:
+		_fail("%s did not add resource affinity value for %s" % [case_config.get("case_id", ""), preferred_target_id])
+		return {}
+	if int(preferred.get("final_priority", 0)) <= int(neutral_preferred.get("final_priority", 0)):
+		_fail("%s affinity did not raise %s priority above neutral weights" % [case_config.get("case_id", ""), preferred_target_id])
+		return {}
+	var preferred_resource := String(case_config.get("preferred_resource", ""))
+	var strategy := EnemyAdventureRules.enemy_strategy(config, faction_id)
+	var resource_weights: Dictionary = strategy.get("resource_value_weights", {})
+	if float(resource_weights.get(preferred_resource, 1.0)) <= 1.0:
+		_fail("%s missing authored preferred resource weight" % case_config.get("case_id", ""))
+		return {}
+	return {
+		"case_id": String(case_config.get("case_id", "")),
+		"scenario_id": scenario_id,
+		"faction_id": faction_id,
+		"faction_label": String(ContentService.get_faction(faction_id).get("name", faction_id)),
+		"origin": origin,
+		"preferred_resource": preferred_resource,
+		"preferred_target": _resource_affinity_snapshot(preferred, weighted_report.get("targets", [])),
+		"neutral_preferred_target": _resource_affinity_snapshot(neutral_preferred, neutral_report.get("targets", [])),
+		"comparison_target": _resource_affinity_snapshot(comparison, weighted_report.get("targets", [])),
+		"strategy_resource_value_weights": resource_weights,
+		"case_pass_criteria": [
+			"Authored faction resource_value_weights are merged into EnemyAdventureRules.enemy_strategy.",
+			"The preferred target receives a positive resource_affinity_value in the same resource_pressure_report used by AI target selection.",
+			"Neutralized resource weights lower the same target priority, proving the identity hook affects the decision score.",
+		],
+	}
+
 func _base_session(scenario_id: String):
 	var session = ScenarioFactory.create_session(
 		scenario_id,
@@ -196,6 +277,7 @@ func _strategy_snapshot(strategy: Dictionary) -> Dictionary:
 		"build_category_weights": strategy.get("build_category_weights", {}),
 		"build_value_weights": strategy.get("build_value_weights", {}),
 		"raid_target_weights": strategy.get("raid_target_weights", {}),
+		"resource_value_weights": strategy.get("resource_value_weights", {}),
 		"site_family_weights": strategy.get("site_family_weights", {}),
 		"reinforcement": strategy.get("reinforcement", {}),
 		"raid": strategy.get("raid", {}),
@@ -296,6 +378,7 @@ func _top_resource_targets(targets: Array, limit: int) -> Array:
 				"target_label": String(target.get("target_label", "")),
 				"controller_id": String(target.get("controller_id", "")),
 				"player_controlled": bool(target.get("player_controlled", false)),
+				"resource_affinity_value": int(target.get("resource_affinity_value", 0)),
 				"final_priority": int(target.get("final_priority", 0)),
 				"reason_codes": target.get("reason_codes", []),
 				"public_reason": String(target.get("public_reason", "")),
@@ -304,6 +387,51 @@ func _top_resource_targets(targets: Array, limit: int) -> Array:
 		)
 		if result.size() >= limit:
 			break
+	return result
+
+func _target_by_placement(targets: Array, placement_id: String) -> Dictionary:
+	for target in targets:
+		if target is Dictionary and String(target.get("placement_id", "")) == placement_id:
+			return target
+	return {}
+
+func _target_rank(targets: Array, placement_id: String) -> int:
+	for index in range(targets.size()):
+		var target = targets[index]
+		if target is Dictionary and String(target.get("placement_id", "")) == placement_id:
+			return index + 1
+	return -1
+
+func _resource_affinity_snapshot(target: Dictionary, targets: Array) -> Dictionary:
+	var placement_id := String(target.get("placement_id", ""))
+	return {
+		"placement_id": placement_id,
+		"site_id": String(target.get("site_id", "")),
+		"site_family": String(target.get("site_family", "")),
+		"target_label": String(target.get("target_label", "")),
+		"rank": _target_rank(targets, placement_id),
+		"base_value": int(target.get("base_value", 0)),
+		"persistent_income_value": int(target.get("persistent_income_value", 0)),
+		"resource_affinity_value": int(target.get("resource_affinity_value", 0)),
+		"weighted_claim_value": int(target.get("weighted_claim_value", 0)),
+		"weighted_income_value": int(target.get("weighted_income_value", 0)),
+		"final_priority": int(target.get("final_priority", 0)),
+		"public_reason": String(target.get("public_reason", "")),
+		"reason_codes": target.get("reason_codes", []),
+	}
+
+func _neutral_resource_affinity_config(config: Dictionary) -> Dictionary:
+	var result := config.duplicate(true)
+	var overrides := {}
+	if result.get("strategy_overrides", {}) is Dictionary:
+		overrides = result.get("strategy_overrides", {}).duplicate(true)
+	overrides["resource_value_weights"] = {
+		"gold": 1.0,
+		"wood": 1.0,
+		"ore": 1.0,
+		"experience": 1.0,
+	}
+	result["strategy_overrides"] = overrides
 	return result
 
 func _set_resource_controller(session, placement_id: String, faction_id: String) -> void:

@@ -361,6 +361,7 @@ ENEMY_STRATEGY_KEYS = {
     "build_category_weights": {"civic", "dwelling", "economy", "support", "magic"},
     "build_value_weights": {"income", "growth", "quality", "readiness", "pressure"},
     "raid_target_weights": {"town", "resource", "artifact", "encounter", "hero"},
+    "resource_value_weights": {"gold", "wood", "ore", "experience"},
     "site_family_weights": LOGISTICS_SITE_FAMILIES,
     "reinforcement": {"garrison_bias", "raid_bias", "ranged_weight", "melee_weight", "low_tier_weight", "high_tier_weight"},
     "raid": {"threshold_scale", "max_active_bonus", "pressure_commitment_scale", "objective_weight", "town_siege_weight", "site_denial_weight", "hero_hunt_weight"},

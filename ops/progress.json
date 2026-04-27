@@ -5,10 +5,10 @@
   "currentPhase": "phase-2-deep-production-foundation",
   "currentSliceId": "world-faction-mechanics-identity-hooks-10184",
   "currentSliceTitle": "Faction Mechanics Identity Hooks",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "Selected next after correction: begin Phase 2 implementation from P2.1 faction identity hooks; docs-ready does not mean previous P2 tracks completed.",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed P2.1 child implementation: verified existing AI faction-personality evidence, then added faction resource_value_weights and resource_affinity_value scoring to EnemyAdventureRules.resource_pressure_report so authored faction economy identity changes AI resource target priorities without save-version changes.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T12:27:26Z",
+  "updatedAt": "2026-04-27T12:47:46Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -506,7 +506,7 @@
       "id": "world-faction-mechanics-identity-hooks-10184",
       "title": "Faction Mechanics Identity Hooks",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "world-faction-identity-implementation-bridge-10184",
@@ -526,13 +526,18 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "Existing tests/ai_faction_personality_evidence_report.gd already proved Embercourt and Mireclaw enemy_strategy affects target, town build, recruitment destination, and compact public AI events.",
+        "New resource_value_weights in content/factions.json feed EnemyAdventureRules.resource_target_score_breakdown via resource_affinity_value, weighted_claim_value, and weighted_income_value.",
+        "Focused report passed: GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/ai_faction_personality_evidence_report.tscn; Thornwake wood and Brasshollow ore cases show positive affinity and lower priority under neutralized weights.",
+        "Validation passed: python3 tests/validate_repo.py; python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json.txt; git diff --check."
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T12:27:26Z",
-      "notes": "Corrected selected next slice after document reset: Phase 2 tracks are not sequentially completed; start with P2.1 child faction mechanics identity hooks instead of inherited P2.8a AI normalizer momentum."
+      "updatedAt": "2026-04-27T12:47:46Z",
+      "notes": "Completed P2.1 child implementation: verified existing AI faction-personality evidence, then added faction resource_value_weights and resource_affinity_value scoring to EnemyAdventureRules.resource_pressure_report so authored faction economy identity changes AI resource target priorities without save-version changes.",
+      "startedAt": "2026-04-27T12:38:11Z",
+      "completedAt": "2026-04-27T12:47:46Z"
     },
     {
       "id": "faction-town-unit-asymmetry-content-10184",
@@ -2206,6 +2211,41 @@
           "evidence": "Main menu save/play readiness UI implemented; not a gameplay foundation completion claim."
         }
       ]
+    },
+    {
+      "id": "world-faction-mechanics-identity-hooks-10184",
+      "system": "world and faction identity mechanics hooks",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "world-faction-mechanics-identity-hooks-10184"
+      ],
+      "sourceRefs": [
+        "docs/worldbuilding-foundation.md",
+        "docs/factions-content-bible.md",
+        "tests/ai_faction_personality_evidence_report.gd",
+        "content/factions.json",
+        "scripts/core/EnemyAdventureRules.gd"
+      ],
+      "entries": [
+        {
+          "id": "preexisting-ai-personality-report-evidence-10184",
+          "title": "Preserve existing AI faction-personality decision evidence",
+          "status": "completed",
+          "evidence": "Existing ai_faction_personality_evidence_report cases prove Embercourt and Mireclaw enemy_strategy affects resource targeting, town build selection, recruitment destination, and compact public AI events; this was verified as implementation evidence, not just JSON breadth."
+        },
+        {
+          "id": "faction-resource-affinity-ai-target-hook-10184",
+          "title": "Implement faction resource-affinity AI target scoring",
+          "status": "completed",
+          "evidence": "content/factions.json now authors resource_value_weights; EnemyAdventureRules.resource_pressure_report applies weighted resource values and resource_affinity_value to AI resource target priorities. Focused report validates Thornwake wood and Brasshollow ore affinity cases against neutralized weights."
+        },
+        {
+          "id": "faction-resource-affinity-validation-10184",
+          "title": "Validate faction mechanics identity hook",
+          "status": "completed",
+          "evidence": "Passed python3 tests/validate_repo.py; GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/ai_faction_personality_evidence_report.tscn; python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json.txt; git diff --check."
+        }
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -2636,28 +2676,7 @@
       ]
     }
   ],
-  "actionableNextTasks": [
-    {
-      "id": "world-faction-mechanics-identity-hooks-10184",
-      "title": "Faction Mechanics Identity Hooks",
-      "status": "pending",
-      "parentSliceId": "world-faction-identity-implementation-bridge-10184",
-      "sourceDocs": [
-        "docs/worldbuilding-foundation.md",
-        "docs/factions-content-bible.md"
-      ],
-      "implementationTargets": [
-        "content/factions.json",
-        "content/heroes.json",
-        "content/units.json",
-        "faction-specific rule hooks selected by the worker"
-      ],
-      "notes": "Selected next after correction: begin Phase 2 implementation from P2.1 faction identity hooks; docs-ready does not mean previous P2 tracks completed.",
-      "phase": "phase-2-deep-production-foundation",
-      "classification": "phase2_child_implementation_slice",
-      "source": "PLAN.md Phase 2 Operational Child Slices / P2.1"
-    }
-  ],
+  "actionableNextTasks": [],
   "stoppedOrPausedTasks": [
     {
       "id": "overworld-artifact-check-cue-10184",
