@@ -1474,6 +1474,11 @@ implementationTargets:
 - `scripts/core/ArtifactRules.gd`
 - battle/adventure/economy/spell integration points
 
+implementationEvidence:
+- `docs/artifact-equip-runtime-effects-report.md`
+- `tests/artifact_equip_runtime_effects_report.gd`
+- `ArtifactRules.artifact_equip_runtime_report(...)`
+
 ### P2 Child: Artifact AI Valuation
 
 id: `artifact-ai-valuation-10184`
