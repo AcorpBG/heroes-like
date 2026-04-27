@@ -733,6 +733,37 @@ nonGoals:
 - No broad dwelling runtime migration, recruitment UI overhaul, scenario placement migration, save migration, renderer sprite import, or economy rebalance.
 - No P2.5 magic implementation.
 
+#### P2.4j Corrective Guarded Rewards And Elite Sites Batch 006
+
+id: `overworld-object-content-batch-006-guarded-rewards-elite-sites-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Continue corrective P2.4 object content with guarded reward sites, hostile reward pockets, and elite site contracts after Batch 005 dwellings.
+
+sourceDocs:
+- `docs/phase2-4-object-implementation-backlog.md`
+- `docs/overworld-object-taxonomy-density.md`
+
+implementationTargets:
+- `content/map_objects.json`
+- `content/resource_sites.json`
+- Object validator/report coverage as needed.
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+sliceEvidence:
+- Guarded reward and elite site objects author explicit footprint, body, approach, visible guard, reward category, linked site, biome applicability, editor, AI, and metadata boundary contracts.
+
+completionCriteria:
+- Minor guarded rewards, major guarded rewards, and guarded route/reward hybrids define clear risk/reward and guard-link expectations without obscuring the guarded object's class.
+- Guarded reward variants remain content/metadata implementation unless current runtime already supports their linked site family.
+
+nonGoals:
+- No neutral encounter migration, broad reward runtime migration, scenario placement migration, save migration, renderer sprite import, rare-resource activation, market changes, or economy rebalance.
+- No P2.5 magic implementation.
+
 ### P2.5 Magic System Foundation Implementation
 
 id: `magic-system-foundation-implementation-10184`

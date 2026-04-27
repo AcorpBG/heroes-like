@@ -72,7 +72,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 2
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_free_company_yard",
+        "neutral_dwelling_family_id": "neutral_dwelling_roadward_lodge",
+        "resource_site_id": "site_free_company_yard",
+        "roster_unit_ids": [
+          "unit_neutral_roadwardens",
+          "unit_neutral_hearthbow_carriers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_roadward_lodge_watch",
+        "guard_encounter_id": "encounter_roadward_lodge_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_riverwatch_free_company_yard",
@@ -148,7 +185,44 @@
         "quality_bonus": 1,
         "readiness_bonus": 2,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_fenhound_kennels",
+        "neutral_dwelling_family_id": "neutral_dwelling_fenhound_kennels",
+        "resource_site_id": "site_fenhound_kennels",
+        "roster_unit_ids": [
+          "unit_neutral_fenhound_runners",
+          "unit_neutral_mossglass_sentinels"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_fenhound_kennel_watch",
+        "guard_encounter_id": "encounter_fenhound_kennel_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_cliffhawk_roost",
@@ -196,7 +270,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_cliffhawk_roost",
+        "neutral_dwelling_family_id": "neutral_dwelling_cliffhawk_roost",
+        "resource_site_id": "site_cliffhawk_roost",
+        "roster_unit_ids": [
+          "unit_neutral_cliffhawk_wardens",
+          "unit_neutral_windglass_slingers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_cliffhawk_roost_watch",
+        "guard_encounter_id": "encounter_cliffhawk_roost_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_reedbarge_mooring",
@@ -244,7 +355,44 @@
         "quality_bonus": 1,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_reedbarge_mooring",
+        "neutral_dwelling_family_id": "neutral_dwelling_reedbarge_mooring",
+        "resource_site_id": "site_reedbarge_mooring",
+        "roster_unit_ids": [
+          "unit_neutral_reedbarge_poles",
+          "unit_neutral_lanternet_throwers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_reedbarge_mooring_watch",
+        "guard_encounter_id": "encounter_reedbarge_mooring_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_glowcap_croft",
@@ -292,7 +440,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_glowcap_croft",
+        "neutral_dwelling_family_id": "neutral_dwelling_glowcap_croft",
+        "resource_site_id": "site_glowcap_croft",
+        "roster_unit_ids": [
+          "unit_neutral_glowcap_bulwarks",
+          "unit_neutral_sporelamp_tossers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_glowcap_croft_watch",
+        "guard_encounter_id": "encounter_glowcap_croft_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_dustjack_yard",
@@ -340,7 +525,44 @@
         "quality_bonus": 1,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_dustjack_yard",
+        "neutral_dwelling_family_id": "neutral_dwelling_dustjack_yard",
+        "resource_site_id": "site_dustjack_yard",
+        "roster_unit_ids": [
+          "unit_neutral_dustjack_blades",
+          "unit_neutral_scrapbow_teams"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_dustjack_yard_watch",
+        "guard_encounter_id": "encounter_dustjack_yard_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_cinder_kiln",
@@ -388,7 +610,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_cinder_kiln",
+        "neutral_dwelling_family_id": "neutral_dwelling_cinder_kiln",
+        "resource_site_id": "site_cinder_kiln",
+        "roster_unit_ids": [
+          "unit_neutral_kilnward_mallets",
+          "unit_neutral_cinderpot_hurlers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_cinder_kiln_watch",
+        "guard_encounter_id": "encounter_cinder_kiln_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_frostbeacon_bothy",
@@ -436,7 +695,44 @@
         "quality_bonus": 1,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_frostbeacon_bothy",
+        "neutral_dwelling_family_id": "neutral_dwelling_frostbeacon_bothy",
+        "resource_site_id": "site_frostbeacon_bothy",
+        "roster_unit_ids": [
+          "unit_neutral_frostbeacon_pikes",
+          "unit_neutral_snowglass_markers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_frostbeacon_bothy_watch",
+        "guard_encounter_id": "encounter_frostbeacon_bothy_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_orchard_levy",
@@ -484,7 +780,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_orchard_levy",
+        "neutral_dwelling_family_id": "neutral_dwelling_orchard_levy",
+        "resource_site_id": "site_orchard_levy",
+        "roster_unit_ids": [
+          "unit_neutral_orchard_halberds",
+          "unit_neutral_millstone_slingers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_orchard_levy_watch",
+        "guard_encounter_id": "encounter_orchard_levy_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_bramble_hedge",
@@ -532,7 +865,44 @@
         "quality_bonus": 1,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_bramble_hedge",
+        "neutral_dwelling_family_id": "neutral_dwelling_bramble_hedge",
+        "resource_site_id": "site_bramble_hedge",
+        "roster_unit_ids": [
+          "unit_neutral_hedgehook_watch",
+          "unit_neutral_thornbow_scouts"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_bramble_hedge_watch",
+        "guard_encounter_id": "encounter_bramble_hedge_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_tidepool_skiffyard",
@@ -580,7 +950,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_tidepool_skiffyard",
+        "neutral_dwelling_family_id": "neutral_dwelling_tidepool_skiffyard",
+        "resource_site_id": "site_tidepool_skiffyard",
+        "roster_unit_ids": [
+          "unit_neutral_tidepool_cutters",
+          "unit_neutral_reefbolt_crews"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_tidepool_skiffyard_watch",
+        "guard_encounter_id": "encounter_tidepool_skiffyard_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_switchback_hostel",
@@ -628,7 +1035,44 @@
         "quality_bonus": 1,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_switchback_hostel",
+        "neutral_dwelling_family_id": "neutral_dwelling_switchback_hostel",
+        "resource_site_id": "site_switchback_hostel",
+        "roster_unit_ids": [
+          "unit_neutral_switchback_pikes",
+          "unit_neutral_cairnshield_porters"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_switchback_hostel_watch",
+        "guard_encounter_id": "encounter_switchback_hostel_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_saltpan_camp",
@@ -676,7 +1120,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_saltpan_camp",
+        "neutral_dwelling_family_id": "neutral_dwelling_saltpan_camp",
+        "resource_site_id": "site_saltpan_camp",
+        "roster_unit_ids": [
+          "unit_neutral_saltpan_bucklers",
+          "unit_neutral_suncrack_throwers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_saltpan_camp_watch",
+        "guard_encounter_id": "encounter_saltpan_camp_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_crystal_sump",
@@ -724,7 +1205,44 @@
         "quality_bonus": 1,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_crystal_sump",
+        "neutral_dwelling_family_id": "neutral_dwelling_crystal_sump",
+        "resource_site_id": "site_crystal_sump",
+        "roster_unit_ids": [
+          "unit_neutral_sumpstone_guards",
+          "unit_neutral_echodart_casts"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_crystal_sump_watch",
+        "guard_encounter_id": "encounter_crystal_sump_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_icehook_trapper_lodge",
@@ -772,7 +1290,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_icehook_trapper_lodge",
+        "neutral_dwelling_family_id": "neutral_dwelling_icehook_trapper_lodge",
+        "resource_site_id": "site_icehook_trapper_lodge",
+        "roster_unit_ids": [
+          "unit_neutral_icehook_trappers",
+          "unit_neutral_whitepike_keepers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_icehook_trapper_lodge_watch",
+        "guard_encounter_id": "encounter_icehook_trapper_lodge_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_obsidian_scar",
@@ -820,7 +1375,44 @@
         "quality_bonus": 1,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_obsidian_scar",
+        "neutral_dwelling_family_id": "neutral_dwelling_obsidian_scar",
+        "resource_site_id": "site_obsidian_scar",
+        "roster_unit_ids": [
+          "unit_neutral_scarshield_veterans",
+          "unit_neutral_ashdart_stalkers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_obsidian_scar_watch",
+        "guard_encounter_id": "encounter_obsidian_scar_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_greenbranch_copse",
@@ -868,7 +1460,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_greenbranch_copse",
+        "neutral_dwelling_family_id": "neutral_dwelling_greenbranch_copse",
+        "resource_site_id": "site_greenbranch_copse",
+        "roster_unit_ids": [
+          "unit_neutral_greenbranch_cudgels",
+          "unit_neutral_sapwhistle_callers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_greenbranch_copse_watch",
+        "guard_encounter_id": "encounter_greenbranch_copse_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_harbor_pilot_house",
@@ -916,7 +1545,44 @@
         "quality_bonus": 1,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_harbor_pilot_house",
+        "neutral_dwelling_family_id": "neutral_dwelling_harbor_pilot_house",
+        "resource_site_id": "site_harbor_pilot_house",
+        "roster_unit_ids": [
+          "unit_neutral_harbor_polearms",
+          "unit_neutral_flaremast_crews"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_harbor_pilot_house_watch",
+        "guard_encounter_id": "encounter_harbor_pilot_house_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_kite_signal_eyrie",
@@ -964,7 +1630,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_kite_signal_eyrie",
+        "neutral_dwelling_family_id": "neutral_dwelling_kite_signal_eyrie",
+        "resource_site_id": "site_kite_signal_eyrie",
+        "roster_unit_ids": [
+          "unit_neutral_kitehook_runners",
+          "unit_neutral_ridgeflare_shots"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_kite_signal_eyrie_watch",
+        "guard_encounter_id": "encounter_kite_signal_eyrie_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_lantern_warren",
@@ -1012,7 +1715,44 @@
         "quality_bonus": 1,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_lantern_warren",
+        "neutral_dwelling_family_id": "neutral_dwelling_lantern_warren",
+        "resource_site_id": "site_lantern_warren",
+        "roster_unit_ids": [
+          "unit_neutral_tunnel_lanterns",
+          "unit_neutral_glimmercap_needlers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_lantern_warren_watch",
+        "guard_encounter_id": "encounter_lantern_warren_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_bogbell_croft",
@@ -1060,7 +1800,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_bogbell_croft",
+        "neutral_dwelling_family_id": "neutral_dwelling_bogbell_croft",
+        "resource_site_id": "site_bogbell_croft",
+        "roster_unit_ids": [
+          "unit_neutral_bogbell_mauls",
+          "unit_neutral_peatflare_jarriers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_bogbell_croft_watch",
+        "guard_encounter_id": "encounter_bogbell_croft_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_milestone_arsenal",
@@ -1108,7 +1885,44 @@
         "quality_bonus": 1,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_milestone_arsenal",
+        "neutral_dwelling_family_id": "neutral_dwelling_milestone_arsenal",
+        "resource_site_id": "site_milestone_arsenal",
+        "roster_unit_ids": [
+          "unit_neutral_milestone_bucklers",
+          "unit_neutral_cartbow_tenders"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_milestone_arsenal_watch",
+        "guard_encounter_id": "encounter_milestone_arsenal_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_frostwharf_house",
@@ -1156,7 +1970,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_frostwharf_house",
+        "neutral_dwelling_family_id": "neutral_dwelling_frostwharf_house",
+        "resource_site_id": "site_frostwharf_house",
+        "roster_unit_ids": [
+          "unit_neutral_frostwharf_cutters",
+          "unit_neutral_lanternskate_throwers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_frostwharf_house_watch",
+        "guard_encounter_id": "encounter_frostwharf_house_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_charcoal_burners",
@@ -1204,7 +2055,44 @@
         "quality_bonus": 1,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_charcoal_burners",
+        "neutral_dwelling_family_id": "neutral_dwelling_charcoal_burners",
+        "resource_site_id": "site_charcoal_burners",
+        "roster_unit_ids": [
+          "unit_neutral_charcoal_mauls",
+          "unit_neutral_emberpack_lobbers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_charcoal_burners_watch",
+        "guard_encounter_id": "encounter_charcoal_burners_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_basalt_gatehouse",
@@ -1252,7 +2140,44 @@
         "quality_bonus": 2,
         "readiness_bonus": 1,
         "recovery_relief": 1
-      }
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_basalt_gatehouse",
+        "neutral_dwelling_family_id": "neutral_dwelling_basalt_gatehouse",
+        "resource_site_id": "site_basalt_gatehouse",
+        "roster_unit_ids": [
+          "unit_neutral_basalt_wardens",
+          "unit_neutral_tunnelmark_bolters"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_basalt_gatehouse_watch",
+        "guard_encounter_id": "encounter_basalt_gatehouse_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "normalized_content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "existing_dwelling_normalization"
     },
     {
       "id": "site_lens_house",
@@ -5536,6 +6461,694 @@
         "metadata_only": true,
         "runtime_route_effect_adopted": false
       }
+    },
+    {
+      "id": "site_salt_skirmisher_pier",
+      "name": "Salt Skirmisher Pier",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_saltpan_camp",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 70
+      },
+      "control_income": {
+        "gold": 25
+      },
+      "claim_recruits": {
+        "unit_neutral_saltpan_bucklers": 2,
+        "unit_neutral_suncrack_throwers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_saltpan_bucklers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_saltpan_bucklers": 2,
+          "unit_neutral_suncrack_throwers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_saltpan_bucklers": 1
+        },
+        "guard_army_group_id": "army_neutral_saltpan_camp_watch",
+        "guard_encounter_id": "encounter_saltpan_camp_watch"
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "A briny pier where shield crews and suncrack throwers hire out to caravan captains.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_salt_skirmisher_pier",
+        "neutral_dwelling_family_id": "neutral_dwelling_saltpan_camp",
+        "resource_site_id": "site_salt_skirmisher_pier",
+        "roster_unit_ids": [
+          "unit_neutral_saltpan_bucklers",
+          "unit_neutral_suncrack_throwers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_saltpan_camp_watch",
+        "guard_encounter_id": "encounter_saltpan_camp_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "new_basic_dwelling"
+    },
+    {
+      "id": "site_rootwatch_hollow",
+      "name": "Rootwatch Hollow",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_greenbranch_copse",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 65
+      },
+      "control_income": {
+        "gold": 25
+      },
+      "claim_recruits": {
+        "unit_neutral_greenbranch_cudgels": 3,
+        "unit_neutral_sapwhistle_callers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_greenbranch_cudgels": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_greenbranch_cudgels": 3,
+          "unit_neutral_sapwhistle_callers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_greenbranch_cudgels": 1
+        },
+        "guard_army_group_id": "army_neutral_greenbranch_copse_watch",
+        "guard_encounter_id": "encounter_greenbranch_copse_watch"
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "A root-bound hollow that musters cudgel watches and sapwhistle callers for forest roads.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_rootwatch_hollow",
+        "neutral_dwelling_family_id": "neutral_dwelling_greenbranch_copse",
+        "resource_site_id": "site_rootwatch_hollow",
+        "roster_unit_ids": [
+          "unit_neutral_greenbranch_cudgels",
+          "unit_neutral_sapwhistle_callers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_greenbranch_copse_watch",
+        "guard_encounter_id": "encounter_greenbranch_copse_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "new_basic_dwelling"
+    },
+    {
+      "id": "site_ember_cart_yard",
+      "name": "Ember Cart Yard",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_charcoal_burners",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 75
+      },
+      "control_income": {
+        "gold": 30
+      },
+      "claim_recruits": {
+        "unit_neutral_charcoal_mauls": 2,
+        "unit_neutral_emberpack_lobbers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_charcoal_mauls": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_charcoal_mauls": 2,
+          "unit_neutral_emberpack_lobbers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_charcoal_mauls": 1
+        },
+        "guard_army_group_id": "army_neutral_charcoal_burners_watch",
+        "guard_encounter_id": "encounter_charcoal_burners_watch"
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "A soot-dark cart yard where burner crews sell hard labor and emberpack support.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_ember_cart_yard",
+        "neutral_dwelling_family_id": "neutral_dwelling_charcoal_burners",
+        "resource_site_id": "site_ember_cart_yard",
+        "roster_unit_ids": [
+          "unit_neutral_charcoal_mauls",
+          "unit_neutral_emberpack_lobbers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_charcoal_burners_watch",
+        "guard_encounter_id": "encounter_charcoal_burners_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "new_basic_dwelling"
+    },
+    {
+      "id": "site_prism_outrider_post",
+      "name": "Prism Outrider Post",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_kite_signal_eyrie",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 80
+      },
+      "control_income": {
+        "gold": 30
+      },
+      "claim_recruits": {
+        "unit_neutral_kitehook_runners": 2,
+        "unit_neutral_ridgeflare_shots": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_kitehook_runners": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_kitehook_runners": 2,
+          "unit_neutral_ridgeflare_shots": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_kitehook_runners": 1
+        },
+        "guard_army_group_id": "army_neutral_kite_signal_eyrie_watch",
+        "guard_encounter_id": "encounter_kite_signal_eyrie_watch"
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "A ridge post where kitehook runners and ridgeflare shots watch glass roads and snow lines.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_prism_outrider_post",
+        "neutral_dwelling_family_id": "neutral_dwelling_kite_signal_eyrie",
+        "resource_site_id": "site_prism_outrider_post",
+        "roster_unit_ids": [
+          "unit_neutral_kitehook_runners",
+          "unit_neutral_ridgeflare_shots"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": false,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": false
+      },
+      "guard_expectation": {
+        "tier": "standard",
+        "visible_cue": "local watch metadata identifies expected dwelling defenders",
+        "guard_army_group_id": "army_neutral_kite_signal_eyrie_watch",
+        "guard_encounter_id": "encounter_kite_signal_eyrie_watch",
+        "clear_required_for_recruitment": false,
+        "blocks_approach": false,
+        "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "new_basic_dwelling"
+    },
+    {
+      "id": "site_storm_rook_eyrie",
+      "name": "Storm Rook Eyrie",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_cliffhawk_roost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 130
+      },
+      "control_income": {
+        "gold": 45
+      },
+      "claim_recruits": {
+        "unit_neutral_cliffhawk_wardens": 4,
+        "unit_neutral_windglass_slingers": 2
+      },
+      "weekly_recruits": {
+        "unit_neutral_cliffhawk_wardens": 2
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_cliffhawk_wardens": 4,
+          "unit_neutral_windglass_slingers": 2
+        },
+        "weekly_recruits": {
+          "unit_neutral_cliffhawk_wardens": 2
+        },
+        "guard_army_group_id": "army_neutral_cliffhawk_roost_watch",
+        "guard_encounter_id": "encounter_cliffhawk_roost_watch"
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "A storm-scoured rookery that offers stronger cliffhawk contracts after its watch is cleared.",
+        "movement_cost": 5,
+        "resource_cost": {
+          "gold": 220
+        },
+        "watch_days": 4,
+        "quality_bonus": 3,
+        "readiness_bonus": 2,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_storm_rook_eyrie",
+        "neutral_dwelling_family_id": "neutral_dwelling_cliffhawk_roost",
+        "resource_site_id": "site_storm_rook_eyrie",
+        "roster_unit_ids": [
+          "unit_neutral_cliffhawk_wardens",
+          "unit_neutral_windglass_slingers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": true,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "visible dwelling watch or guarded entrance before recruitment",
+        "guard_army_group_id": "army_neutral_cliffhawk_roost_watch",
+        "guard_encounter_id": "encounter_cliffhawk_roost_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "guarded dwelling remains content metadata until placed with an encounter contract"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": false
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "heavy",
+        "guard_army_group_id": "army_neutral_cliffhawk_roost_watch",
+        "guard_encounter_id": "encounter_cliffhawk_roost_watch",
+        "visible_cue": "guarded entrance and watch camp metadata must be visible before visit",
+        "metadata_only": true,
+        "runtime_guard_resolution_adopted": false
+      },
+      "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "guarded_high_value_dwelling"
+    },
+    {
+      "id": "site_mirror_bound_barracks",
+      "name": "Mirror-Bound Barracks",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_crystal_sump",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 140
+      },
+      "control_income": {
+        "gold": 50
+      },
+      "claim_recruits": {
+        "unit_neutral_sumpstone_guards": 3,
+        "unit_neutral_echodart_casts": 2
+      },
+      "weekly_recruits": {
+        "unit_neutral_sumpstone_guards": 1,
+        "unit_neutral_echodart_casts": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_sumpstone_guards": 3,
+          "unit_neutral_echodart_casts": 2
+        },
+        "weekly_recruits": {
+          "unit_neutral_sumpstone_guards": 1,
+          "unit_neutral_echodart_casts": 1
+        },
+        "guard_army_group_id": "army_neutral_crystal_sump_watch",
+        "guard_encounter_id": "encounter_crystal_sump_watch"
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "A mirrored drill hall where sumpstone guards and echodart casts answer only after the gate watch yields.",
+        "movement_cost": 5,
+        "resource_cost": {
+          "gold": 220
+        },
+        "watch_days": 4,
+        "quality_bonus": 3,
+        "readiness_bonus": 2,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_mirror_bound_barracks",
+        "neutral_dwelling_family_id": "neutral_dwelling_crystal_sump",
+        "resource_site_id": "site_mirror_bound_barracks",
+        "roster_unit_ids": [
+          "unit_neutral_sumpstone_guards",
+          "unit_neutral_echodart_casts"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": true,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "visible dwelling watch or guarded entrance before recruitment",
+        "guard_army_group_id": "army_neutral_crystal_sump_watch",
+        "guard_encounter_id": "encounter_crystal_sump_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "guarded dwelling remains content metadata until placed with an encounter contract"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": false
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "heavy",
+        "guard_army_group_id": "army_neutral_crystal_sump_watch",
+        "guard_encounter_id": "encounter_crystal_sump_watch",
+        "visible_cue": "guarded entrance and watch camp metadata must be visible before visit",
+        "metadata_only": true,
+        "runtime_guard_resolution_adopted": false
+      },
+      "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "guarded_high_value_dwelling"
+    },
+    {
+      "id": "site_furnace_oath_yard",
+      "name": "Furnace Oath Yard",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_cinder_kiln",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 150
+      },
+      "control_income": {
+        "gold": 50
+      },
+      "claim_recruits": {
+        "unit_neutral_kilnward_mallets": 4,
+        "unit_neutral_cinderpot_hurlers": 2
+      },
+      "weekly_recruits": {
+        "unit_neutral_kilnward_mallets": 2
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_kilnward_mallets": 4,
+          "unit_neutral_cinderpot_hurlers": 2
+        },
+        "weekly_recruits": {
+          "unit_neutral_kilnward_mallets": 2
+        },
+        "guard_army_group_id": "army_neutral_cinder_kiln_watch",
+        "guard_encounter_id": "encounter_cinder_kiln_watch"
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "An oath yard of furnace-brick and chain where kilnward crews sign on after a visible guard fight.",
+        "movement_cost": 5,
+        "resource_cost": {
+          "gold": 220
+        },
+        "watch_days": 4,
+        "quality_bonus": 3,
+        "readiness_bonus": 2,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_furnace_oath_yard",
+        "neutral_dwelling_family_id": "neutral_dwelling_cinder_kiln",
+        "resource_site_id": "site_furnace_oath_yard",
+        "roster_unit_ids": [
+          "unit_neutral_kilnward_mallets",
+          "unit_neutral_cinderpot_hurlers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": true,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "heavy",
+        "visible_cue": "visible dwelling watch or guarded entrance before recruitment",
+        "guard_army_group_id": "army_neutral_cinder_kiln_watch",
+        "guard_encounter_id": "encounter_cinder_kiln_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "guarded dwelling remains content metadata until placed with an encounter contract"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": false
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "heavy",
+        "guard_army_group_id": "army_neutral_cinder_kiln_watch",
+        "guard_encounter_id": "encounter_cinder_kiln_watch",
+        "visible_cue": "guarded entrance and watch camp metadata must be visible before visit",
+        "metadata_only": true,
+        "runtime_guard_resolution_adopted": false
+      },
+      "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "guarded_high_value_dwelling"
+    },
+    {
+      "id": "site_drowned_crown_hall",
+      "name": "Drowned Crown Hall",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_tidepool_skiffyard",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 180
+      },
+      "control_income": {
+        "gold": 55
+      },
+      "claim_recruits": {
+        "unit_neutral_tidepool_cutters": 4,
+        "unit_neutral_reefbolt_crews": 2
+      },
+      "weekly_recruits": {
+        "unit_neutral_tidepool_cutters": 2,
+        "unit_neutral_reefbolt_crews": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_tidepool_cutters": 4,
+          "unit_neutral_reefbolt_crews": 2
+        },
+        "weekly_recruits": {
+          "unit_neutral_tidepool_cutters": 2,
+          "unit_neutral_reefbolt_crews": 1
+        },
+        "guard_army_group_id": "army_neutral_tidepool_skiffyard_watch",
+        "guard_encounter_id": "encounter_tidepool_skiffyard_watch"
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "A tide-locked hall that grants stronger skiffyard contracts only after its crown watch is beaten back.",
+        "movement_cost": 5,
+        "resource_cost": {
+          "gold": 220
+        },
+        "watch_days": 4,
+        "quality_bonus": 3,
+        "readiness_bonus": 2,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_drowned_crown_hall",
+        "neutral_dwelling_family_id": "neutral_dwelling_tidepool_skiffyard",
+        "resource_site_id": "site_drowned_crown_hall",
+        "roster_unit_ids": [
+          "unit_neutral_tidepool_cutters",
+          "unit_neutral_reefbolt_crews"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": true,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "visible dwelling watch or guarded entrance before recruitment",
+        "guard_army_group_id": "army_neutral_tidepool_skiffyard_watch",
+        "guard_encounter_id": "encounter_tidepool_skiffyard_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "guarded dwelling remains content metadata until placed with an encounter contract"
+      },
+      "runtime_boundary": {
+        "status": "metadata_only",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": false,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "guard_resolution_runtime_adopted": false
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "elite",
+        "guard_army_group_id": "army_neutral_tidepool_skiffyard_watch",
+        "guard_encounter_id": "encounter_tidepool_skiffyard_watch",
+        "visible_cue": "guarded entrance and watch camp metadata must be visible before visit",
+        "metadata_only": true,
+        "runtime_guard_resolution_adopted": false
+      },
+      "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+      "batch005_role": "guarded_high_value_dwelling"
     }
   ]
 }
