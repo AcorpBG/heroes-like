@@ -5,7 +5,8 @@ This repository is for a full-production, release-bound fantasy strategy game in
 ## Read first
 - `project.md`
 - `PLAN.md`
-- `ops/progress.json`
+
+Do not load all of `ops/progress.json` by default. It is an operations tracker, not onboarding context. Use the heroes-progress workflow/helper to query the current implementation status and selected next slice when needed. If available, run: `python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like`.
 
 ## Planning document roles
 - `project.md` is the strategic project document. It defines the game, phases, engine/script/content rules, architecture principles, and durable implementation constraints. Keep it concise and stable. Do not use it as a progress log, implementation diary, or place for near-term note piles.
