@@ -68,6 +68,12 @@
           "encounter": 0.9,
           "hero": 0.8
         },
+        "resource_value_weights": {
+          "gold": 1.1,
+          "wood": 1.15,
+          "ore": 0.95,
+          "experience": 1.0
+        },
         "site_family_weights": {
           "neutral_dwelling": 0.85,
           "faction_outpost": 1.35,
@@ -222,6 +228,12 @@
           "artifact": 0.95,
           "encounter": 1.15,
           "hero": 1.25
+        },
+        "resource_value_weights": {
+          "gold": 1.05,
+          "wood": 1.2,
+          "ore": 0.9,
+          "experience": 1.0
         },
         "site_family_weights": {
           "neutral_dwelling": 1.4,
@@ -382,6 +394,12 @@
           "encounter": 1.05,
           "hero": 0.8
         },
+        "resource_value_weights": {
+          "gold": 1.0,
+          "wood": 0.9,
+          "ore": 1.25,
+          "experience": 1.15
+        },
         "site_family_weights": {
           "neutral_dwelling": 0.9,
           "faction_outpost": 1.4,
@@ -524,6 +542,12 @@
           "encounter": 1.2,
           "hero": 0.75
         },
+        "resource_value_weights": {
+          "gold": 0.95,
+          "wood": 1.35,
+          "ore": 0.85,
+          "experience": 1.05
+        },
         "site_family_weights": {
           "neutral_dwelling": 1.25,
           "faction_outpost": 1.15,
@@ -665,6 +689,12 @@
           "encounter": 0.85,
           "hero": 0.65
         },
+        "resource_value_weights": {
+          "gold": 1.0,
+          "wood": 0.85,
+          "ore": 1.4,
+          "experience": 0.95
+        },
         "site_family_weights": {
           "neutral_dwelling": 0.8,
           "faction_outpost": 1.4,
@@ -804,6 +834,12 @@
           "artifact": 1.35,
           "encounter": 1.05,
           "hero": 1.3
+        },
+        "resource_value_weights": {
+          "gold": 1.2,
+          "wood": 1.05,
+          "ore": 0.9,
+          "experience": 1.1
         },
         "site_family_weights": {
           "neutral_dwelling": 0.9,

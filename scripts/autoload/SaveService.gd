@@ -1435,6 +1435,9 @@ func _contains_blocked_debug_token(text: String) -> bool:
 	for token in [
 		"final_priority",
 		"base_value",
+		"resource_affinity_value",
+		"weighted_claim_value",
+		"weighted_income_value",
 		"assignment_penalty",
 		"final_score",
 		"income_value",

@@ -72,6 +72,9 @@ const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
 	"denial_value",
 	"route_pressure_value",
 	"town_enablement_value",
+	"resource_affinity_value",
+	"weighted_claim_value",
+	"weighted_income_value",
 	"objective_value",
 	"faction_bias",
 	"travel_cost",
@@ -156,6 +159,9 @@ const AI_HERO_TASK_PUBLIC_EVENT_KEYS := [
 ]
 const AI_HERO_TASK_BLOCKED_PUBLIC_TOKENS := [
 	"resource_score_breakdown",
+	"resource_affinity_value",
+	"weighted_claim_value",
+	"weighted_income_value",
 	"final_priority",
 	"debug_reason",
 	"target_debug_reason",
@@ -3271,6 +3277,9 @@ static func resource_target_score_breakdown(
 	var goal_distance := _path_distance(session, origin_pos, [target_tile], "")
 	var claim_value := _target_resource_value(_resource_site_claim_rewards(site))
 	var income_value := _target_resource_value(site.get("control_income", {}))
+	var strategy := enemy_strategy(config, resolved_faction_id)
+	var weighted_claim_value := _target_resource_value_for_strategy(_resource_site_claim_rewards(site), strategy)
+	var weighted_income_value := _target_resource_value_for_strategy(site.get("control_income", {}), strategy)
 	var claim_recruit_value := _recruit_payload_value(site.get("claim_recruits", {}))
 	var weekly_recruit_value := _recruit_payload_value(site.get("weekly_recruits", {}))
 	var recruit_payload_value := claim_recruit_value + weekly_recruit_value
@@ -3285,6 +3294,7 @@ static func resource_target_score_breakdown(
 	var denial_value := 0
 	var route_pressure_value := 0
 	var town_enablement_value := 0
+	var resource_affinity_value := 0
 	var objective_value := 0
 	var faction_bias := 0
 	var travel_cost := 0
@@ -3294,12 +3304,12 @@ static func resource_target_score_breakdown(
 	var debug_reason := "not contestable"
 
 	if contestable and goal_distance < 9999:
-		base_value = 85 + int(min(45.0, float(claim_value) / 150.0))
-		persistent_income_value = int(min(45.0, float(income_value * 4) / 8.0)) if persistent else 0
+		base_value = 85 + int(min(45.0, float(weighted_claim_value) / 150.0))
+		persistent_income_value = int(min(45.0, float(weighted_income_value * 4) / 8.0)) if persistent else 0
 		recruit_value = int(min(70.0, float(recruit_payload_value) / 40.0))
 		scarcity_value = _resource_scarcity_value(session, _resource_site_claim_rewards(site))
 		if player_controlled and persistent:
-			denial_value = 45 + int(min(35.0, float(income_value * 4) / 20.0)) + int(min(40.0, float(recruit_payload_value) / 80.0))
+			denial_value = 45 + int(min(35.0, float(weighted_income_value * 4) / 20.0)) + int(min(40.0, float(recruit_payload_value) / 80.0))
 		if player_controlled and int(node.get("response_until_day", 0)) >= int(session.day):
 			denial_value += 20 + (max(1, int(node.get("response_security_rating", 0))) * 6)
 		var delivery_value := _recruit_payload_value(node.get("delivery_manifest", {}))
@@ -3307,6 +3317,7 @@ static func resource_target_score_breakdown(
 			denial_value += 28 + int(min(95.0, float(delivery_value) / 10.0))
 		route_pressure_value = _resource_route_pressure_value(site)
 		town_enablement_value = _linked_player_town_bonus(session, node)
+		resource_affinity_value = _resource_affinity_value(claim_value, income_value, weighted_claim_value, weighted_income_value)
 		objective_value = _objective_proximity_bonus(session, target_tile.x, target_tile.y)
 		var target_weight := strategy_target_weight(config, resolved_faction_id, "resource", placement_id, site_family, false)
 		faction_bias = priority_target_bonus(config, placement_id) + int(round(max(0.0, target_weight - 1.0) * 50.0))
@@ -3322,6 +3333,7 @@ static func resource_target_score_breakdown(
 			+ denial_value
 			+ route_pressure_value
 			+ town_enablement_value
+			+ resource_affinity_value
 			+ objective_value
 			+ faction_bias
 			- travel_cost
@@ -3350,6 +3362,9 @@ static func resource_target_score_breakdown(
 		"denial_value": denial_value,
 		"route_pressure_value": route_pressure_value,
 		"town_enablement_value": town_enablement_value,
+		"resource_affinity_value": resource_affinity_value,
+		"weighted_claim_value": weighted_claim_value,
+		"weighted_income_value": weighted_income_value,
 		"objective_value": objective_value,
 		"faction_bias": faction_bias,
 		"travel_cost": travel_cost,
@@ -5283,6 +5298,22 @@ static func _target_resource_value(rewards: Variant) -> int:
 		return 0
 	return max(0, int(rewards.get("gold", 0))) + (max(0, int(rewards.get("wood", 0))) * 350) + (max(0, int(rewards.get("ore", 0))) * 350) + max(0, int(rewards.get("experience", 0)))
 
+static func _target_resource_value_for_strategy(rewards: Variant, strategy: Dictionary) -> int:
+	if not (rewards is Dictionary):
+		return 0
+	var weights: Dictionary = strategy.get("resource_value_weights", {})
+	var total := 0.0
+	total += float(max(0, int(rewards.get("gold", 0)))) * float(weights.get("gold", 1.0))
+	total += float(max(0, int(rewards.get("wood", 0))) * 350) * float(weights.get("wood", 1.0))
+	total += float(max(0, int(rewards.get("ore", 0))) * 350) * float(weights.get("ore", 1.0))
+	total += float(max(0, int(rewards.get("experience", 0)))) * float(weights.get("experience", 1.0))
+	return max(0, int(round(total)))
+
+static func _resource_affinity_value(claim_value: int, income_value: int, weighted_claim_value: int, weighted_income_value: int) -> int:
+	var claim_delta: int = max(0, weighted_claim_value - claim_value)
+	var income_delta: int = max(0, weighted_income_value - income_value)
+	return int(min(70.0, (float(claim_delta) / 35.0) + (float(income_delta) / 18.0)))
+
 static func _objective_proximity_bonus(session: SessionStateStoreScript.SessionData, x: int, y: int) -> int:
 	var best_distance = 9999
 	for town in session.overworld.get("towns", []):
@@ -5969,6 +6000,12 @@ static func _default_enemy_strategy() -> Dictionary:
 			"artifact": 1.0,
 			"encounter": 1.0,
 			"hero": 1.0,
+		},
+		"resource_value_weights": {
+			"gold": 1.0,
+			"wood": 1.0,
+			"ore": 1.0,
+			"experience": 1.0,
 		},
 		"site_family_weights": {
 			"neutral_dwelling": 1.0,
