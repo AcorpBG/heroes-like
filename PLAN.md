@@ -522,6 +522,7 @@ sourceDocs:
 implementationTargets:
 - `content/map_objects.json`
 - Object validator/report fixtures as needed.
+- `docs/overworld-object-content-batch-001b-biome-scenic-decoration-report.md`
 
 baselineChecks:
 - `python3 tests/validate_repo.py`
