@@ -71,10 +71,15 @@ func _refresh() -> void:
 	var continuity_choice_summary := String(_model.get("continuity_choice_summary", ""))
 	var post_result_handoff := String(_model.get("post_result_handoff_summary", ""))
 	var action_cue_summary := String(_model.get("action_cue_summary", ""))
+	var follow_up_check := _outcome_follow_up_check(AppRouter.active_save_surface())
+	var follow_up_visible := String(follow_up_check.get("visible_text", ""))
+	var follow_up_tooltip := String(follow_up_check.get("tooltip_text", ""))
 	var resolution_handoff := _outcome_resolution_handoff_text()
 	var action_status_lines := []
 	if next_step_summary != "":
 		action_status_lines.append(next_step_summary)
+	if follow_up_visible != "":
+		action_status_lines.append(follow_up_visible)
 	if resolution_handoff != "":
 		action_status_lines.append(resolution_handoff)
 	if post_result_handoff != "":
@@ -84,8 +89,12 @@ func _refresh() -> void:
 	if next_play_action_summary != "":
 		action_status_lines.append(next_play_action_summary)
 	var visible_action_hint := action_cue_summary
+	if follow_up_visible != "":
+		visible_action_hint = "%s\n%s" % [follow_up_visible, visible_action_hint] if visible_action_hint != "" else follow_up_visible
 	if post_result_handoff != "":
 		visible_action_hint = "%s\n%s" % [post_result_handoff, action_cue_summary] if action_cue_summary != "" else post_result_handoff
+		if follow_up_visible != "":
+			visible_action_hint = "%s\n%s" % [follow_up_visible, visible_action_hint]
 	var action_status_text := "\n".join(action_status_lines)
 	_set_compact_label(
 		_action_status_label,
@@ -97,7 +106,7 @@ func _refresh() -> void:
 		visible_action_hint if visible_action_hint != "" else "Action cue: choose the follow-up action that matches the saved outcome you want to keep.",
 		3
 	)
-	_actions_hint_label.tooltip_text = "\n".join(action_status_lines + [action_cue_summary]).strip_edges()
+	_actions_hint_label.tooltip_text = "\n".join(action_status_lines + [follow_up_tooltip, action_cue_summary]).strip_edges()
 	_refresh_guide_surface()
 	_rebuild_actions()
 
@@ -247,6 +256,7 @@ func validation_snapshot() -> Dictionary:
 		"outcome_resolution_handoff": _outcome_resolution_handoff_text(),
 		"continuity_choice_summary": String(_model.get("continuity_choice_summary", "")),
 		"post_result_handoff_summary": String(_model.get("post_result_handoff_summary", "")),
+		"outcome_follow_up_check": _outcome_follow_up_check(save_surface),
 		"next_play_action_summary": String(_model.get("next_play_action_summary", "")),
 		"action_cue_summary": String(_model.get("action_cue_summary", "")),
 		"actions_hint": _actions_hint_label.text,
@@ -424,6 +434,44 @@ func _outcome_resolution_handoff_text() -> String:
 		]
 	return "Outcome handoff: %s recorded; Return to Menu keeps this outcome resumable from Continue Latest." % status_text.capitalize()
 
+func _outcome_follow_up_check(surface: Dictionary = {}) -> Dictionary:
+	var status_text := String(_session.scenario_status).replace("_", " ").strip_edges()
+	if status_text == "":
+		status_text = "outcome"
+	var status_label := status_text.capitalize()
+	var launch_mode := SessionStateStore.normalize_launch_mode(_session.launch_mode)
+	var primary_label := _primary_outcome_action_label()
+	var primary_action_id := _primary_outcome_action_id()
+	if primary_label == "":
+		primary_label = "Return to Menu"
+	var save_label := String(surface.get("save_button_label", "Save Outcome")).strip_edges()
+	if save_label == "":
+		save_label = "Save Outcome"
+	var return_line := _outcome_return_cue_text(surface)
+	var primary_effect := _outcome_primary_follow_up_effect(primary_action_id, primary_label, launch_mode)
+	var save_effect := "%s keeps this review available from the selected manual slot." % save_label
+	var return_effect := "Return to Menu keeps Continue Latest pointed at this outcome review."
+	if return_line != "":
+		return_effect = return_line.replace("Return cue:", "").strip_edges()
+	var visible := "Follow-up check: %s | %s | Return keeps review" % [
+		primary_label,
+		"save first" if primary_action_id != "return_to_menu" else "menu route",
+	]
+	var tooltip := "Outcome Follow-up Check\n- Result: %s recorded.\n- Primary follow-up: %s.\n- Save first: %s\n- Return: %s\n- State change: pressing a follow-up starts fresh play or routes to the menu; it does not rewrite the resolved result.\n- Inspection: reading this check does not save, route, or change campaign progression." % [
+		status_label,
+		primary_effect,
+		save_effect,
+		return_effect,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"primary_label": primary_label,
+		"primary_action_id": primary_action_id,
+		"save_label": save_label,
+		"return_effect": return_effect,
+	}
+
 func _primary_outcome_action_label() -> String:
 	var actions = _model.get("actions", [])
 	if not (actions is Array):
@@ -440,9 +488,36 @@ func _primary_outcome_action_label() -> String:
 				return label
 	return ""
 
+func _primary_outcome_action_id() -> String:
+	var actions = _model.get("actions", [])
+	if not (actions is Array):
+		return ""
+	for action in actions:
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			var action_id := String(action.get("id", ""))
+			if action_id != "" and action_id != "return_to_menu":
+				return action_id
+	for action in actions:
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			return String(action.get("id", ""))
+	return ""
+
+func _outcome_primary_follow_up_effect(action_id: String, label: String, launch_mode: String) -> String:
+	if action_id.begins_with("campaign_start:"):
+		if launch_mode == SessionStateStore.LAUNCH_MODE_CAMPAIGN:
+			return "%s starts a fresh campaign chapter from recorded campaign progress" % label
+		return "%s starts a fresh campaign expedition" % label
+	if action_id.begins_with("skirmish_start:"):
+		return "%s starts a fresh skirmish expedition" % label
+	if action_id == "" or action_id == "return_to_menu":
+		return "%s opens the menu and keeps the outcome review resumable" % label
+	return "%s follows the resolved outcome action" % label
+
 func _outcome_action_tooltip(action: Dictionary) -> String:
+	var follow_up_check := _outcome_follow_up_check(AppRouter.active_save_surface())
 	return _join_tooltip_sections([
 		String(action.get("summary", "")),
+		String(follow_up_check.get("tooltip_text", "")),
 		_outcome_resolution_handoff_text(),
 		String(_model.get("post_result_handoff_summary", "")),
 	])
@@ -521,6 +596,7 @@ func _build_outcome_guide_text() -> String:
 	var post_result_handoff := String(_model.get("post_result_handoff_summary", "")).strip_edges()
 	var resolution_handoff := _outcome_resolution_handoff_text()
 	var save_surface := AppRouter.active_save_surface()
+	var follow_up_check := _outcome_follow_up_check(save_surface)
 	var save_check := String(save_surface.get("save_check", "")).strip_edges()
 	var play_check := String(save_surface.get("play_check", "")).strip_edges()
 	var return_handoff := String(save_surface.get("return_handoff", "")).strip_edges()
@@ -528,6 +604,8 @@ func _build_outcome_guide_text() -> String:
 		lines.append(continuity_choice)
 	if next_play_action != "":
 		lines.append(next_play_action)
+	if String(follow_up_check.get("tooltip_text", "")).strip_edges() != "":
+		lines.append(String(follow_up_check.get("tooltip_text", "")).strip_edges())
 	if resolution_handoff != "":
 		lines.append(resolution_handoff)
 	if post_result_handoff != "":
