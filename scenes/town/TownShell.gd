@@ -277,7 +277,16 @@ func _refresh() -> void:
 		String(hire_readiness.get("tooltip_text", "")),
 		TownRules.describe_tavern(_session),
 	])
-	_set_compact_label(_transfer_label, TownRules.describe_transfer(_session), 2)
+	var transfer_readiness := _transfer_readiness_surface()
+	var transfer_text := _join_tooltip_sections([
+		String(transfer_readiness.get("visible_text", "")),
+		TownRules.describe_transfer(_session),
+	])
+	_set_compact_label(_transfer_label, transfer_text, 2)
+	_transfer_label.tooltip_text = _join_tooltip_sections([
+		String(transfer_readiness.get("tooltip_text", "")),
+		TownRules.describe_transfer(_session),
+	])
 	_set_compact_label(_response_label, TownRules.describe_responses(_session), 2)
 	var study_readiness := _study_readiness_surface()
 	var study_text := _join_tooltip_sections([
@@ -398,6 +407,7 @@ func validation_snapshot() -> Dictionary:
 	var build_readiness := _build_readiness_surface()
 	var market_readiness := _market_readiness_surface()
 	var muster_readiness := _muster_readiness_surface()
+	var transfer_readiness := _transfer_readiness_surface()
 	var study_readiness := _study_readiness_surface()
 	var hire_readiness := _hire_readiness_surface()
 	var artifact_readiness := _artifact_readiness_surface()
@@ -461,6 +471,13 @@ func validation_snapshot() -> Dictionary:
 		"hire_readiness": hire_readiness,
 		"hire_readiness_visible_text": String(hire_readiness.get("visible_text", "")),
 		"hire_readiness_tooltip_text": String(hire_readiness.get("tooltip_text", "")),
+		"transfer_text": TownRules.describe_transfer(_session),
+		"transfer_visible_text": _transfer_label.text,
+		"transfer_tooltip_text": _transfer_label.tooltip_text,
+		"transfer_readiness": transfer_readiness,
+		"transfer_readiness_visible_text": String(transfer_readiness.get("visible_text", "")),
+		"transfer_readiness_tooltip_text": String(transfer_readiness.get("tooltip_text", "")),
+		"transfer_actions": _duplicate_action_array(TownRules.get_transfer_actions(_session)),
 		"artifact_text": TownRules.describe_artifacts(_session),
 		"artifact_visible_text": _artifact_label.text,
 		"artifact_tooltip_text": _artifact_label.tooltip_text,
@@ -1528,6 +1545,78 @@ func _hire_readiness_surface() -> Dictionary:
 		"blocked_order_count": blocked_orders,
 		"listed_order_count": actions.size(),
 		"best_order_label": label,
+		"readiness": readiness,
+		"why_it_matters": impact,
+		"next_step": next_step,
+	}
+
+func _transfer_readiness_surface() -> Dictionary:
+	var actions := TownRules.get_transfer_actions(_session)
+	var transfer_text := TownRules.describe_transfer(_session)
+	var ready_orders := 0
+	var blocked_orders := 0
+	var selected_action := {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if bool(action.get("disabled", false)):
+			blocked_orders += 1
+			if selected_action.is_empty():
+				selected_action = action
+			continue
+		ready_orders += 1
+		if selected_action.is_empty():
+			selected_action = action
+
+	var total_orders := ready_orders + blocked_orders
+	var visible := "Transfer check: no moves ready"
+	if ready_orders > 0:
+		visible = "Transfer check: Ready x%d/%d" % [ready_orders, total_orders]
+	elif blocked_orders > 0:
+		visible = "Transfer check: Blocked x0/%d" % blocked_orders
+	elif transfer_text.contains("No active town"):
+		visible = "Transfer check: no active town"
+
+	var label := "No transfer order"
+	var route := "No garrison and stationed-hero route is ready."
+	var readiness := "Needs a garrison and stationed hero in this town"
+	var impact := "Keeps town defense and field army assignments visible before leaving."
+	var next_step := "Use this panel after another commander is stationed here, or leave with current stacks."
+	if not selected_action.is_empty():
+		label = String(selected_action.get("button_label", selected_action.get("label", "Transfer order"))).strip_edges()
+		if label == "":
+			label = "Transfer order"
+		route = String(selected_action.get("summary", "")).strip_edges()
+		if route == "":
+			route = "Move a stack between town holders."
+		readiness = _town_action_button_readiness(selected_action, "transfer")
+		impact = _town_action_button_impact(selected_action, "transfer")
+		next_step = _town_action_button_next_step(
+			selected_action,
+			"transfer",
+			label,
+			_town_action_surface_label("transfer"),
+			readiness
+		)
+
+	var tooltip_lines := [
+		"Transfer Check",
+		"- Orders: %d ready of %d" % [ready_orders, total_orders],
+		"- Best order: %s" % label,
+		"- Route: %s" % route,
+		"- Readiness: %s" % readiness,
+		"- Why it matters: %s" % impact,
+		"- Next practical action: %s" % next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"ready_count": ready_orders,
+		"blocked_count": blocked_orders,
+		"total_count": total_orders,
+		"best_order": label,
+		"route": route,
 		"readiness": readiness,
 		"why_it_matters": impact,
 		"next_step": next_step,
