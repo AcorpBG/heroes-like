@@ -1025,6 +1025,10 @@ func _object_palette_guidance_text(payload: Dictionary, guidance: Dictionary) ->
 		if tag_summary != "":
 			lines.append("Tags %s" % tag_summary)
 	var preview := _selected_object_placement_preview_payload(_placement_preview_tile())
+	var preview_check := _editor_object_preview_check_payload()
+	var preview_check_text := String(preview_check.get("text", "")).strip_edges()
+	if preview_check_text != "":
+		lines.append(preview_check_text)
 	var preview_text := String(preview.get("text", "")).strip_edges()
 	if preview_text != "":
 		for raw_line in preview_text.split("\n"):
@@ -1092,6 +1096,87 @@ func _selected_object_placement_preview_payload(tile: Vector2i) -> Dictionary:
 		"authoring_consequence": consequence,
 		"guidance": guidance,
 		"text": "\n".join(text_lines),
+	}
+
+func _editor_object_preview_check_payload() -> Dictionary:
+	if _session == null:
+		return {}
+	var preview := _selected_object_placement_preview_payload(_placement_preview_tile())
+	if preview.is_empty():
+		return {}
+	var target_tile: Dictionary = preview.get("target_tile", {})
+	var tile := Vector2i(
+		int(target_tile.get("x", _selected_tile.x)),
+		int(target_tile.get("y", _selected_tile.y))
+	)
+	var target_label := "%d,%d" % [tile.x, tile.y]
+	var family := String(preview.get("family", _selected_object_family))
+	var family_label := _object_family_label(family)
+	var content_id := String(preview.get("content_id", _selected_object_content_id))
+	var content_label := _selected_object_content_label()
+	if content_label == "":
+		content_label = content_id
+	var can_place := bool(preview.get("can_place", false))
+	var readiness := "ready" if can_place else "blocked"
+	var occupied_label := _first_placement_label_at_tile(tile)
+	var occupancy := "empty target" if occupied_label == "" else "occupied by %s" % occupied_label
+	var blocked_reason := String(preview.get("blocked_reason", "")).strip_edges()
+	var density_warning := String(preview.get("density_warning", "")).strip_edges()
+	var dependency_warning := String(preview.get("dependency_warning", "")).strip_edges()
+	var consequence := String(preview.get("authoring_consequence", "")).strip_edges()
+	var watch := blocked_reason
+	if watch == "":
+		watch = dependency_warning
+	if watch == "":
+		watch = density_warning
+	if watch == "":
+		watch = "no blocker on the current preview tile"
+	var next_step := "click %s to place, then use Play Copy for a smoke pass" % target_label
+	if not can_place:
+		next_step = "choose another tile or remove the blocker before placing"
+	var guidance = preview.get("guidance", {})
+	if not (guidance is Dictionary):
+		guidance = {}
+	var density_line := "local %d in 16x16; target %s" % [
+		int(guidance.get("local_density_count", 0)),
+		String(guidance.get("density_target", "")),
+	]
+	var visible_text := "Object preview check: %s %s at %s is %s; %s; next: %s." % [
+		family_label,
+		content_label,
+		target_label,
+		readiness,
+		occupancy,
+		next_step,
+	]
+	var tooltip := "Object Preview Check\n- Target: %s %s at %s.\n- Preview: %s; %s.\n- Role: %s.\n- Density: %s.\n- Watch: %s.\n- Consequence: %s.\n- Next: %s.\n- Scope: in-memory working copy only; no authored file or campaign progress is written." % [
+		family_label,
+		content_label,
+		target_label,
+		readiness,
+		occupancy,
+		String(preview.get("placement_role", "")),
+		density_line,
+		watch,
+		consequence if consequence != "" else "adds the selected object to this editor working copy",
+		next_step,
+	]
+	return {
+		"text": visible_text,
+		"tooltip": tooltip,
+		"target_tile": {"x": tile.x, "y": tile.y},
+		"family": family,
+		"content_id": content_id,
+		"content_label": content_label,
+		"can_place": can_place,
+		"readiness": readiness,
+		"occupancy": occupancy,
+		"watch": watch,
+		"consequence": consequence,
+		"next_step": next_step,
+		"placement_role": String(preview.get("placement_role", "")),
+		"density": density_line,
+		"scope": "working_copy_only",
 	}
 
 func _editor_acceptance_cue_payload() -> Dictionary:
@@ -2868,6 +2953,9 @@ func _sync_preview() -> void:
 		if road_check_tooltip != "":
 			tooltip_sections.append(road_check_tooltip)
 	if _tool == TOOL_PLACE_OBJECT:
+		var object_preview_check := String(_editor_object_preview_check_payload().get("tooltip", "")).strip_edges()
+		if object_preview_check != "":
+			tooltip_sections.append(object_preview_check)
 		var placement_action := String(_editor_placement_action_cue_payload().get("tooltip_text", "")).strip_edges()
 		if placement_action != "":
 			tooltip_sections.append(placement_action)
@@ -2959,6 +3047,9 @@ func _refresh_labels() -> void:
 	if restore_tile_text != "":
 		status_lines.append(restore_tile_text)
 	if _tool == TOOL_PLACE_OBJECT:
+		var object_preview_check_text := String(_editor_object_preview_check_payload().get("text", "")).strip_edges()
+		if object_preview_check_text != "":
+			status_lines.append(object_preview_check_text)
 		var placement_action_text := String(_editor_placement_action_cue_payload().get("text", "")).strip_edges()
 		if placement_action_text != "":
 			status_lines.append(placement_action_text)
@@ -3068,6 +3159,9 @@ func _sync_tool_buttons() -> void:
 			if road_check != "":
 				tooltip = "%s\n%s" % [tooltip, road_check]
 		if tool_id == TOOL_PLACE_OBJECT:
+			var object_preview_check := String(_editor_object_preview_check_payload().get("tooltip", "")).strip_edges()
+			if object_preview_check != "":
+				tooltip = "%s\n%s" % [tooltip, object_preview_check]
 			var placement_action := String(_editor_placement_action_cue_payload().get("tooltip_text", "")).strip_edges()
 			if placement_action != "":
 				tooltip = "%s\n%s" % [tooltip, placement_action]
@@ -6021,6 +6115,9 @@ func validation_snapshot() -> Dictionary:
 		"active_tool_cue_text": String(_editor_active_tool_cue_payload().get("text", "")),
 		"active_tool_cue_tooltip": String(_editor_active_tool_cue_payload().get("tooltip", "")),
 		"map_tooltip": _map_view.tooltip_text if _map_view != null else "",
+		"object_preview_check": _editor_object_preview_check_payload(),
+		"object_preview_check_text": String(_editor_object_preview_check_payload().get("text", "")),
+		"object_preview_check_tooltip": String(_editor_object_preview_check_payload().get("tooltip", "")),
 		"placement_action_cue": _editor_placement_action_cue_payload(),
 		"placement_action_cue_text": String(_editor_placement_action_cue_payload().get("text", "")),
 		"placement_action_cue_tooltip": String(_editor_placement_action_cue_payload().get("tooltip_text", "")),

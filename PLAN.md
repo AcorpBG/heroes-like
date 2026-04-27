@@ -4036,11 +4036,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: compact map-editor export intent cue using the existing scenario validation, working-copy dirty state, and Play Copy handoff surfaces.
+Current target: compact map-editor Object preview check cue using the existing object palette, selected/hovered tile, placement preview, occupancy, density, dependency, and Play Copy handoff surfaces.
 
 Done means:
-- The map editor status makes clean/dirty export intent visible for the active working copy.
-- The scenario picker tooltip explains that Play Copy is the smoke-test handoff before any future authored export and that no authored file or campaign progress is written.
-- Focused map-editor smoke coverage proves the visible cue, tooltip cue, clean/dirty states, and no internal score/debug leaks.
+- The map editor status makes the selected object preview outcome visible before placement.
+- The object palette and map tooltip explain target tile, readiness, blocker or dependency watch, consequence, and working-copy scope.
+- Focused map-editor smoke coverage proves ready and blocked preview cue text plus no internal score/debug leaks.
 - No export writer, mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, renderer/generated asset import, campaign progression semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.

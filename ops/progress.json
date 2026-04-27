@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T11:02:00Z",
+  "updatedAt": "2026-04-27T11:20:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "editor-road-check-cue-10184",
-  "currentSliceTitle": "Surface compact editor Road check cue",
+  "currentSliceId": "editor-object-preview-check-cue-10184",
+  "currentSliceTitle": "Surface compact editor Object preview check cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact visible map-editor Road check cue using the existing road toggle/path tools, selected/hovered tile, pending path start, and current road-layer helpers only. The live editor status, map tooltip, and road tool tooltips now show target scope, current road layers, readiness, action, change count, next step, and working-copy scope, with focused smoke coverage asserting visible cue text plus no-score-leak behavior. UI/tooling clarity only; no mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, renderer asset import, pathing/body-tile adoption, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact visible map-editor Object preview check cue using the existing object palette, selected/hovered tile, placement preview, occupancy, density, dependency, and Play Copy handoff surfaces only. The live editor status, object palette tooltip, map tooltip, and Place Object tooltip now show target tile, readiness, occupancy/blocker state, density watch, consequence, next step, and working-copy scope, with focused smoke coverage asserting ready and blocked cue text plus no-score-leak behavior. UI/tooling clarity only; no mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, renderer asset import, pathing/body-tile adoption, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2248,6 +2248,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T10:44:00Z",
       "completedAt": "2026-04-27T11:02:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "editor-object-preview-check-cue-10184",
+      "title": "Surface compact editor Object preview check cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T11:04:00Z",
+      "completedAt": "2026-04-27T11:20:00Z",
       "difficulty": "small"
     }
   ],

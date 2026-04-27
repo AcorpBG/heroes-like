@@ -2230,6 +2230,8 @@ func _assert_object_placement_preview_surfaces(shell) -> bool:
 			return false
 	if not _assert_editor_acceptance_cue(preview_result, "placement_preview", ["Cue:", "Click 5,4", "site_timber_wagon", "then"]):
 		return false
+	if not _assert_editor_object_preview_check(preview_result, true, ["Object preview check:", "Resource", "Timber Wagon", "5,4", "ready", "empty target", "Play Copy", "working copy"]):
+		return false
 	if not _assert_editor_placement_action_cue(preview_result, true, ["Placement action:", "Resource", "Timber Wagon", "5,4", "ready", "Play Copy", "working copy"]):
 		return false
 
@@ -2256,6 +2258,8 @@ func _assert_object_placement_preview_surfaces(shell) -> bool:
 		_fail("Map editor smoke: occupied-tile placement preview did not warn before placement: preview=%s result=%s." % [blocked_preview, blocked_preview_result])
 		return false
 	if not _assert_editor_acceptance_cue(blocked_preview_result, "placement_preview", ["Cue:", "Pick another tile", "Tile already has"]):
+		return false
+	if not _assert_editor_object_preview_check(blocked_preview_result, false, ["Object preview check:", "Town", "Riverwatch", "23,26", "blocked", "occupied by", "choose another tile", "Tile already has"]):
 		return false
 	if not _assert_editor_placement_action_cue(blocked_preview_result, false, ["Placement action:", "Town", "Riverwatch", "23,26", "blocked", "choose another tile", "Tile already has"]):
 		return false
@@ -2374,6 +2378,65 @@ func _assert_editor_placement_action_cue(result: Dictionary, expected_can_place:
 	]:
 		if combined.find(forbidden) >= 0:
 			_fail("Map editor smoke: placement action cue leaked internal score field %s: %s." % [forbidden, combined])
+			return false
+	return true
+
+func _assert_editor_object_preview_check(result: Dictionary, expected_can_place: bool, fragments: Array) -> bool:
+	var cue: Dictionary = result.get("object_preview_check", {})
+	var text := String(cue.get("text", ""))
+	var tooltip := String(cue.get("tooltip", ""))
+	var status := String(result.get("visible_status_full", result.get("visible_status_text", "")))
+	var palette_text := String(result.get("selected_object_palette_text", ""))
+	var place_tooltip := String(result.get("place_object_tooltip", ""))
+	var map_tooltip := String(result.get("map_tooltip", ""))
+	if cue.is_empty() or text == "":
+		_fail("Map editor smoke: object preview check was not exposed: %s." % result)
+		return false
+	if bool(cue.get("can_place", not expected_can_place)) != expected_can_place:
+		_fail("Map editor smoke: object preview check can_place mismatch: %s." % cue)
+		return false
+	if String(cue.get("scope", "")) != "working_copy_only":
+		_fail("Map editor smoke: object preview check did not declare working-copy scope: %s." % cue)
+		return false
+	for key in ["text", "tooltip", "readiness", "occupancy", "watch", "next_step", "scope"]:
+		if String(cue.get(key, "")) == "":
+			_fail("Map editor smoke: object preview check missed structured key %s: %s." % [key, cue])
+			return false
+	var combined := "%s\n%s\n%s\n%s\n%s\n%s" % [text, tooltip, status, palette_text, place_tooltip, map_tooltip]
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected != "" and combined.find(expected) < 0:
+			_fail("Map editor smoke: object preview check missed '%s': %s." % [expected, combined])
+			return false
+	if status.find("Object preview check:") < 0:
+		_fail("Map editor smoke: visible editor status did not carry object preview check: %s." % status)
+		return false
+	if palette_text.find("Object preview check:") < 0:
+		_fail("Map editor smoke: object palette text did not carry object preview check: %s." % palette_text)
+		return false
+	if place_tooltip.find("Object Preview Check") < 0:
+		_fail("Map editor smoke: Place Object tooltip did not carry object preview check: %s." % place_tooltip)
+		return false
+	if map_tooltip.find("Object Preview Check") < 0:
+		_fail("Map editor smoke: map tooltip did not carry object preview check: %s." % map_tooltip)
+		return false
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if combined.find(forbidden) >= 0:
+			_fail("Map editor smoke: object preview check leaked internal score field %s: %s." % [forbidden, combined])
 			return false
 	return true
 
