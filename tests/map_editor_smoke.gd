@@ -51,6 +51,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_selected_property_handoff(snapshot, "town", ["Selection handoff:", "Town", "Owner", "Apply Properties", "working copy"]):
 		return
+	if not _assert_editor_restore_tile_cue(snapshot, false, ["Tile reset:", "23,26", "already matches authored baseline", "Restore Tile", "no-op check"]):
+		return
 	var initial_render_cache := _render_cache_metrics(snapshot)
 	if initial_render_cache.is_empty():
 		_fail("Map editor smoke: reused overworld map view did not expose render-cache metrics: %s." % snapshot)
@@ -87,6 +89,8 @@ func _run() -> void:
 	if not _assert_editor_play_handoff(paint_result, true, ["Play handoff:", "edited in-memory working copy", "return restores the editor launch snapshot"]):
 		return
 	if not _assert_editor_play_readiness_gate(paint_result, true, ["Play gate:", "smoke-test this working copy", "Objectives", "Warnings 0", "Hero 23,26", "Objects"]):
+		return
+	if not _assert_editor_restore_tile_cue(paint_result, true, ["Tile reset:", "2,2", "differs in terrain", "returns this tile to authored baseline", "Play Copy"]):
 		return
 	if not _assert_editor_menu_return_cue(paint_result, true, ["Menu return:", "Main menu", "unsaved editor edits are discarded", "Use Play Copy before leaving"]):
 		return
@@ -1780,6 +1784,8 @@ func _assert_selected_tile_restore(shell) -> bool:
 	):
 		_fail("Map editor smoke: restore did not return an empty tile to authored terrain/no-road/no-object state: %s." % empty_restore)
 		return false
+	if not _assert_editor_restore_tile_cue(empty_restore, false, ["Tile reset:", "6,6", "already matches authored baseline", "Restore Tile", "no-op check"]):
+		return false
 
 	var removed_authored_road: Dictionary = shell.call("validation_toggle_road", 23, 24)
 	if not bool(removed_authored_road.get("ok", false)) or bool(removed_authored_road.get("tile_inspection", {}).get("road", true)):
@@ -2402,6 +2408,56 @@ func _assert_editor_play_readiness_gate(result: Dictionary, expected_ready: bool
 	]:
 		if leak_text.find(forbidden) >= 0:
 			_fail("Map editor smoke: editor Play Copy readiness gate leaked internal score field %s: %s." % [forbidden, leak_text])
+			return false
+	return true
+
+func _assert_editor_restore_tile_cue(result: Dictionary, expected_changed: bool, fragments: Array) -> bool:
+	var cue: Dictionary = result.get("restore_tile_cue", {})
+	var text := String(cue.get("text", ""))
+	var tooltip := String(result.get("restore_tile_button_tooltip", ""))
+	var button_text := String(result.get("restore_tile_button_text", ""))
+	var visible_status := String(result.get("visible_status_full", result.get("visible_status_text", "")))
+	if cue.is_empty() or text == "":
+		_fail("Map editor smoke: editor Restore Tile cue was not exposed: %s." % result)
+		return false
+	if bool(cue.get("changed", not expected_changed)) != expected_changed:
+		_fail("Map editor smoke: editor Restore Tile cue changed state mismatch: %s." % cue)
+		return false
+	if String(cue.get("scope", "")) != "selected_tile_working_copy_only":
+		_fail("Map editor smoke: editor Restore Tile cue did not declare selected-tile working-copy scope: %s." % cue)
+		return false
+	if expected_changed and button_text.find("Changed") < 0:
+		_fail("Map editor smoke: changed Restore Tile button did not flag changed state: %s." % result)
+		return false
+	if not expected_changed and button_text.find("Clean") < 0:
+		_fail("Map editor smoke: clean Restore Tile button did not flag clean state: %s." % result)
+		return false
+	var combined := "%s\n%s\n%s\n%s" % [text, tooltip, button_text, visible_status]
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected != "" and combined.find(expected) < 0:
+			_fail("Map editor smoke: editor Restore Tile cue missed '%s': %s." % [expected, combined])
+			return false
+	if visible_status.find("Tile reset:") < 0:
+		_fail("Map editor smoke: visible editor status did not carry Restore Tile cue: %s." % visible_status)
+		return false
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if combined.find(forbidden) >= 0:
+			_fail("Map editor smoke: editor Restore Tile cue leaked internal score field %s: %s." % [forbidden, combined])
 			return false
 	return true
 
