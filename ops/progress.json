@@ -5,10 +5,10 @@
   "currentPhase": "phase-2-deep-production-foundation",
   "currentSliceId": "overworld-object-pathing-occupancy-adoption-10184",
   "currentSliceTitle": "Overworld Pathing And Occupancy Adoption",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "next P2.4 child after editor-authoring validation; keep pending until a worker explicitly selects bounded pathing/occupancy adoption",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Owner selected Option C: HoMM-style multi-tile objects with separate sprite footprint, blocking body_tiles, and yellow interaction/approach tiles. Implement bounded shape-aware pathing/occupancy adoption; avoid rectangular blocking, renderer/save migration, and broad content migration.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T14:45:11Z",
+  "updatedAt": "2026-04-27T15:27:49Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -982,7 +982,7 @@
       "id": "overworld-object-pathing-occupancy-adoption-10184",
       "title": "Overworld Pathing And Occupancy Adoption",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "in_progress",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
@@ -1005,7 +1005,10 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T15:27:49Z",
+      "startedAt": "2026-04-27T15:27:49Z",
+      "notes": "owner selected Option C: adopt body_tiles plus approach/interaction masks in HoMM-style shape-aware form; sprite footprint is not rectangular blocking, blocking and interaction tiles are separate masks"
     },
     {
       "id": "neutral-encounter-object-migration-expansion-10184",
@@ -2818,7 +2821,7 @@
     {
       "id": "overworld-object-pathing-occupancy-adoption-10184",
       "title": "Overworld Pathing And Occupancy Adoption",
-      "status": "pending",
+      "status": "in_progress",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
       "sourceDocs": [
         "docs/overworld-object-schema-migration-plan.md",
@@ -2829,7 +2832,7 @@
         "object metadata",
         "scenario smoke/report validation"
       ],
-      "notes": "next P2.4 child after editor-authoring validation; do not start without explicitly selecting a bounded pathing/body_tiles/approach adoption scope",
+      "notes": "owner selected Option C: adopt body_tiles plus approach/interaction masks in HoMM-style shape-aware form; sprite footprint is not rectangular blocking, blocking and interaction tiles are separate masks",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation"
