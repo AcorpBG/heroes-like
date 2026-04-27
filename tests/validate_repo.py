@@ -120,6 +120,51 @@ SUPPORTED_SPELL_PRIMARY_ROLES = {
     "tempo_buff",
     "assault_buff",
 }
+ARTIFACT_SCHEMA_ID = "artifact_taxonomy_v1"
+SUPPORTED_ARTIFACT_SLOTS = {"boots", "banner", "armor", "trinket"}
+ARTIFACT_SLOT_LIMITS = {"boots": 1, "banner": 1, "armor": 1, "trinket": 2}
+SUPPORTED_ARTIFACT_CLASSES = {"common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"}
+SUPPORTED_ARTIFACT_RARITIES = {"common", "uncommon", "rare", "epic", "legendary", "scenario"}
+SUPPORTED_ARTIFACT_ROLES = {
+    "economy",
+    "movement",
+    "scouting",
+    "combat",
+    "defense",
+    "morale",
+    "magic",
+    "resistance",
+    "recruitment",
+    "town_support",
+    "route",
+    "reward_modifier",
+    "progression",
+    "objective",
+}
+SUPPORTED_ARTIFACT_ACCORD_AFFINITIES = {"beacon", "mire", "lens", "root", "furnace", "veil", "old_measure", "neutral", "none"}
+SUPPORTED_ARTIFACT_SOURCE_TAGS = {
+    "pickup",
+    "guarded_site",
+    "shrine",
+    "dwelling",
+    "artifact_cache",
+    "town",
+    "battle_salvage",
+    "campaign",
+    "set_chain",
+    "market",
+    "objective",
+}
+SUPPORTED_ARTIFACT_BONUS_TYPES = {
+    "stat",
+    "resource_income",
+    "spell_modifier",
+    "site_modifier",
+    "town_modifier",
+    "unit_tag_modifier",
+    "adventure_effect",
+    "tradeoff",
+}
 VALID_SPECIALTY_IDS = {"wayfinder", "ledgerkeeper", "spellwright", "drillmaster", "armsmaster", "mustercaptain", "borderwarden"}
 RELEASE_PLAYER_FACTIONS = {"faction_embercourt", "faction_mireclaw", "faction_sunvault"}
 SIX_FACTION_BIBLE_IDS = {
@@ -1087,6 +1132,14 @@ def append_unique(values: list[str], value: str) -> None:
 def append_unique_dict(values: list[dict], item: dict) -> None:
     if item not in values:
         values.append(item)
+
+
+def string_list(value: object) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    if isinstance(value, str) and value.strip():
+        return [value.strip()]
+    return []
 
 
 def resource_display_name(resource_id: str, registry_items: dict[str, dict] | None = None) -> str:
@@ -6981,6 +7034,221 @@ def validate_campaigns(errors: list[str], campaigns: dict[str, dict], scenarios:
     ensure(RELEASE_PLAYER_FACTIONS.issubset(campaign_starting_factions), errors, "Campaign starts must cover all release player factions")
 
 
+def artifact_taxonomy_issues(artifact_id: str, artifact: dict, factions: dict[str, dict]) -> list[str]:
+    issues: list[str] = []
+    slot = str(artifact.get("slot", "")).strip()
+    if slot not in SUPPORTED_ARTIFACT_SLOTS:
+        issues.append("unsupported_slot")
+    if str(artifact.get("artifact_class", "")).strip() not in SUPPORTED_ARTIFACT_CLASSES:
+        issues.append("unsupported_artifact_class")
+    if str(artifact.get("rarity", "")).strip() not in SUPPORTED_ARTIFACT_RARITIES:
+        issues.append("unsupported_rarity")
+    if not str(artifact.get("family", "")).strip():
+        issues.append("missing_family")
+
+    roles = string_list(artifact.get("roles", []))
+    if not roles:
+        issues.append("missing_roles")
+    for role in roles:
+        if role not in SUPPORTED_ARTIFACT_ROLES:
+            issues.append(f"unsupported_role:{role}")
+
+    accord_affinity = str(artifact.get("accord_affinity", "")).strip()
+    if accord_affinity not in SUPPORTED_ARTIFACT_ACCORD_AFFINITIES:
+        issues.append("unsupported_accord_affinity")
+
+    for faction_id in string_list(artifact.get("faction_affinity", [])):
+        if faction_id not in factions:
+            issues.append(f"missing_faction_affinity:{faction_id}")
+
+    source_tags = string_list(artifact.get("source_tags", []))
+    if not source_tags:
+        issues.append("missing_source_tags")
+    for source_tag in source_tags:
+        if source_tag not in SUPPORTED_ARTIFACT_SOURCE_TAGS:
+            issues.append(f"unsupported_source_tag:{source_tag}")
+
+    equip_constraints = artifact.get("equip_constraints", {})
+    if not isinstance(equip_constraints, dict):
+        issues.append("missing_equip_constraints")
+    else:
+        if int(equip_constraints.get("slot_limit", 0)) != ARTIFACT_SLOT_LIMITS.get(slot, 1):
+            issues.append("slot_limit_mismatch")
+        if "unique_per_hero" not in equip_constraints:
+            issues.append("missing_unique_per_hero")
+        if not isinstance(equip_constraints.get("allowed_faction_ids", []), list):
+            issues.append("allowed_faction_ids_not_list")
+        for faction_id in string_list(equip_constraints.get("allowed_faction_ids", [])):
+            if faction_id not in factions:
+                issues.append(f"missing_allowed_faction:{faction_id}")
+        if not isinstance(equip_constraints.get("required_tags", []), list):
+            issues.append("required_tags_not_list")
+
+    bonus_metadata = artifact.get("bonus_metadata", [])
+    if not isinstance(bonus_metadata, list) or not bonus_metadata:
+        issues.append("missing_bonus_metadata")
+    else:
+        for index, entry in enumerate(bonus_metadata):
+            if not isinstance(entry, dict):
+                issues.append(f"bonus_metadata_{index}_not_object")
+                continue
+            if str(entry.get("bonus_type", "")).strip() not in SUPPORTED_ARTIFACT_BONUS_TYPES:
+                issues.append(f"unsupported_bonus_type:{entry.get('bonus_type')}")
+            if not str(entry.get("scope", "")).strip():
+                issues.append(f"missing_bonus_scope:{index}")
+            if not str(entry.get("public_summary", "")).strip():
+                issues.append(f"missing_bonus_public_summary:{index}")
+
+    risk = artifact.get("risk", {})
+    if not isinstance(risk, dict):
+        issues.append("missing_risk")
+    else:
+        if "cursed" not in risk:
+            issues.append("missing_cursed_flag")
+        if "tradeoff" not in risk:
+            issues.append("missing_tradeoff_flag")
+        if not isinstance(risk.get("warning_tags", []), list):
+            issues.append("warning_tags_not_list")
+
+    ui = artifact.get("ui", {})
+    if not isinstance(ui, dict):
+        issues.append("missing_ui")
+    else:
+        if not str(ui.get("summary", "")).strip():
+            issues.append("missing_ui_summary")
+        if not str(ui.get("icon_id", "")).strip():
+            issues.append("missing_icon_id")
+        if not isinstance(ui.get("effect_tags", []), list) or not string_list(ui.get("effect_tags", [])):
+            issues.append("missing_ui_effect_tags")
+        if not isinstance(ui.get("comparison_priority", []), list) or not string_list(ui.get("comparison_priority", [])):
+            issues.append("missing_comparison_priority")
+
+    ai_hints = artifact.get("ai_hints", {})
+    if not isinstance(ai_hints, dict):
+        issues.append("missing_ai_hints")
+    else:
+        if not string_list(ai_hints.get("value_drivers", [])):
+            issues.append("missing_value_drivers")
+        if not string_list(ai_hints.get("preferred_hero_roles", [])):
+            issues.append("missing_preferred_hero_roles")
+        if not isinstance(ai_hints.get("preferred_faction_ids", []), list):
+            issues.append("preferred_faction_ids_not_list")
+        for faction_id in string_list(ai_hints.get("preferred_faction_ids", [])):
+            if faction_id not in factions:
+                issues.append(f"missing_hint_faction:{faction_id}")
+        if not isinstance(ai_hints.get("combo_tags", []), list):
+            issues.append("combo_tags_not_list")
+
+    validation_tags = artifact.get("validation_tags", {})
+    if not isinstance(validation_tags, dict):
+        issues.append("missing_validation_tags")
+    else:
+        if str(validation_tags.get("schema", "")).strip() != ARTIFACT_SCHEMA_ID:
+            issues.append("schema_tag_mismatch")
+        if not str(validation_tags.get("save_behavior", "")).strip():
+            issues.append("missing_save_behavior")
+        if not isinstance(validation_tags.get("mutual_exclusions", []), list):
+            issues.append("mutual_exclusions_not_list")
+        if not str(validation_tags.get("stack_rule", "")).strip():
+            issues.append("missing_stack_rule")
+
+    public_payload = json.dumps(
+        {
+            "name": artifact.get("name", ""),
+            "description": artifact.get("description", ""),
+            "ui": artifact.get("ui", {}),
+            "bonus_metadata": artifact.get("bonus_metadata", []),
+            "risk": artifact.get("risk", {}),
+        },
+        sort_keys=True,
+    ).lower()
+    for token in ("debug", "internal", "score"):
+        if token in public_payload:
+            issues.append(f"public_text_leaks_{token}")
+    return issues
+
+
+def build_artifact_taxonomy_report() -> dict:
+    artifacts = items_index(load_json(CONTENT_DIR / "artifacts.json"))
+    factions = items_index(load_json(CONTENT_DIR / "factions.json"))
+    report: dict = {
+        "schema": ARTIFACT_SCHEMA_ID,
+        "mode": "additive_artifact_taxonomy_schema",
+        "artifact_count": len(artifacts),
+        "complete_taxonomy_count": 0,
+        "slot_counts": {},
+        "rarity_counts": {},
+        "class_counts": {},
+        "family_counts": {},
+        "role_counts": {},
+        "source_tag_counts": {},
+        "equip_constraint_count": 0,
+        "bonus_metadata_count": 0,
+        "risk_metadata_count": 0,
+        "ui_summary_count": 0,
+        "ai_hint_count": 0,
+        "curse_tradeoff_counts": {"cursed": 0, "tradeoff": 0},
+        "unsupported_records": [],
+        "runtime_policy": {
+            "save_version_bump": False,
+            "equipment_runtime_migration": False,
+            "source_reward_tables_active": False,
+            "rare_resource_activation": False,
+        },
+    }
+    for artifact_id, artifact in artifacts.items():
+        issues = artifact_taxonomy_issues(artifact_id, artifact, factions)
+        if not issues:
+            report["complete_taxonomy_count"] += 1
+        else:
+            report["unsupported_records"].append({"artifact_id": artifact_id, "issues": issues})
+        for field, bucket_name in (
+            ("slot", "slot_counts"),
+            ("rarity", "rarity_counts"),
+            ("artifact_class", "class_counts"),
+            ("family", "family_counts"),
+        ):
+            key = str(artifact.get(field, "")).strip() or "none"
+            report[bucket_name][key] = report[bucket_name].get(key, 0) + 1
+        for role in string_list(artifact.get("roles", [])):
+            report["role_counts"][role] = report["role_counts"].get(role, 0) + 1
+        for source_tag in string_list(artifact.get("source_tags", [])):
+            report["source_tag_counts"][source_tag] = report["source_tag_counts"].get(source_tag, 0) + 1
+        if isinstance(artifact.get("equip_constraints", {}), dict):
+            report["equip_constraint_count"] += 1
+        if isinstance(artifact.get("bonus_metadata", []), list) and artifact.get("bonus_metadata", []):
+            report["bonus_metadata_count"] += 1
+        risk = artifact.get("risk", {})
+        if isinstance(risk, dict) and "cursed" in risk and "tradeoff" in risk:
+            report["risk_metadata_count"] += 1
+            if bool(risk.get("cursed", False)):
+                report["curse_tradeoff_counts"]["cursed"] += 1
+            if bool(risk.get("tradeoff", False)):
+                report["curse_tradeoff_counts"]["tradeoff"] += 1
+        if isinstance(artifact.get("ui", {}), dict) and str(artifact.get("ui", {}).get("summary", "")).strip():
+            report["ui_summary_count"] += 1
+        if isinstance(artifact.get("ai_hints", {}), dict) and string_list(artifact.get("ai_hints", {}).get("value_drivers", [])):
+            report["ai_hint_count"] += 1
+    report["ok"] = report["artifact_count"] > 0 and report["complete_taxonomy_count"] == report["artifact_count"]
+    return report
+
+
+def print_artifact_taxonomy_report(report: dict) -> None:
+    print("ARTIFACT TAXONOMY REPORT")
+    print(f"- schema: {report['schema']}")
+    print(f"- mode: {report['mode']}")
+    print(f"- artifacts: {report['complete_taxonomy_count']}/{report['artifact_count']} complete")
+    print(f"- slots: {report['slot_counts']}")
+    print(f"- rarities: {report['rarity_counts']}")
+    print(f"- classes: {report['class_counts']}")
+    print(f"- roles: {report['role_counts']}")
+    print(f"- source tags: {report['source_tag_counts']}")
+    policy = report.get("runtime_policy", {})
+    print(f"- runtime policy: save_version_bump={policy.get('save_version_bump', True)}, source_reward_tables_active={policy.get('source_reward_tables_active', True)}, rare_resource_activation={policy.get('rare_resource_activation', True)}")
+    if report.get("unsupported_records"):
+        print(f"- unsupported records: {report['unsupported_records']}")
+
+
 def validate_content(errors: list[str]) -> None:
     required = discover_content_files(errors)
     expected_domains = {
@@ -7418,14 +7686,19 @@ def validate_content(errors: list[str]) -> None:
 
     for artifact_id, artifact in artifacts.items():
         slot = str(artifact.get("slot", ""))
-        ensure(slot in {"boots", "banner", "armor", "trinket"}, errors, f"Artifact {artifact_id} uses unsupported slot {slot}")
+        ensure(slot in SUPPORTED_ARTIFACT_SLOTS, errors, f"Artifact {artifact_id} uses unsupported slot {slot}")
         bonuses = artifact.get("bonuses", {})
         ensure(isinstance(bonuses, dict) and bool(bonuses), errors, f"Artifact {artifact_id} must define at least one bonus")
+        taxonomy_issues = artifact_taxonomy_issues(artifact_id, artifact, factions)
+        ensure(not taxonomy_issues, errors, f"Artifact {artifact_id} has incomplete taxonomy metadata: {taxonomy_issues}")
     ensure(
         any(int((artifact.get("bonuses", {}) if isinstance(artifact.get("bonuses", {}), dict) else {}).get("scouting_radius", 0)) > 0 for artifact in artifacts.values()),
         errors,
         "At least one authored artifact must provide a scouting_radius bonus for the fog-of-war slice",
     )
+    artifact_report = build_artifact_taxonomy_report()
+    ensure(bool(artifact_report.get("ok", False)), errors, f"Artifact taxonomy report must pass for all authored artifacts: {artifact_report.get('unsupported_records', [])}")
+    ensure(int(artifact_report.get("complete_taxonomy_count", 0)) == len(artifacts), errors, "Artifact taxonomy report must cover every authored artifact")
     ensure(ADVANCED_EMBERCOURT_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Embercourt building set authored")
     ensure(ADVANCED_MIRECLAW_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Mireclaw building set authored")
     ensure(ADVANCED_SUNVAULT_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Sunvault building set authored")
@@ -12890,6 +13163,8 @@ def main() -> int:
     parser.add_argument("--neutral-encounter-report", action="store_true", help="Print the opt-in neutral encounter compatibility report.")
     parser.add_argument("--neutral-encounter-report-json", type=str, default="", help="Write the opt-in neutral encounter compatibility report as JSON.")
     parser.add_argument("--strict-neutral-encounter-fixtures", action="store_true", help="Validate isolated strict neutral encounter schema fixtures.")
+    parser.add_argument("--artifact-taxonomy-report", action="store_true", help="Print the opt-in artifact taxonomy/schema report.")
+    parser.add_argument("--artifact-taxonomy-report-json", type=str, default="", help="Write the opt-in artifact taxonomy/schema report as JSON.")
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -13057,6 +13332,14 @@ def main() -> int:
             print(f"- neutral encounter report JSON written to {report_path}")
         if args.neutral_encounter_report:
             print_neutral_encounter_report(report)
+    if args.artifact_taxonomy_report or args.artifact_taxonomy_report_json:
+        report = build_artifact_taxonomy_report()
+        if args.artifact_taxonomy_report_json:
+            report_path = Path(args.artifact_taxonomy_report_json)
+            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"- artifact taxonomy report JSON written to {report_path}")
+        if args.artifact_taxonomy_report:
+            print_artifact_taxonomy_report(report)
     return 0
 
 
