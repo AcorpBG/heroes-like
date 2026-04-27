@@ -247,7 +247,16 @@ func _refresh() -> void:
 		String(build_readiness.get("tooltip_text", "")),
 		TownRules.describe_buildings(_session),
 	])
-	_set_compact_label(_market_label, TownRules.describe_market(_session), 2)
+	var market_readiness := _market_readiness_surface()
+	var market_text := _join_tooltip_sections([
+		String(market_readiness.get("visible_text", "")),
+		TownRules.describe_market(_session),
+	])
+	_set_compact_label(_market_label, market_text, 2)
+	_market_label.tooltip_text = _join_tooltip_sections([
+		String(market_readiness.get("tooltip_text", "")),
+		TownRules.describe_market(_session),
+	])
 	var muster_readiness := _muster_readiness_surface()
 	var recruit_text := _join_tooltip_sections([
 		String(muster_readiness.get("visible_text", "")),
@@ -360,6 +369,7 @@ func validation_snapshot() -> Dictionary:
 	var town_context_surface := _town_action_context_surface(dispatch_text)
 	var tab_readiness := _management_tab_readiness_payload()
 	var build_readiness := _build_readiness_surface()
+	var market_readiness := _market_readiness_surface()
 	var muster_readiness := _muster_readiness_surface()
 	return {
 		"scene_path": scene_file_path,
@@ -394,6 +404,12 @@ func validation_snapshot() -> Dictionary:
 		"build_readiness": build_readiness,
 		"build_readiness_visible_text": String(build_readiness.get("visible_text", "")),
 		"build_readiness_tooltip_text": String(build_readiness.get("tooltip_text", "")),
+		"market_text": TownRules.describe_market(_session),
+		"market_visible_text": _market_label.text,
+		"market_tooltip_text": _market_label.tooltip_text,
+		"market_readiness": market_readiness,
+		"market_readiness_visible_text": String(market_readiness.get("visible_text", "")),
+		"market_readiness_tooltip_text": String(market_readiness.get("tooltip_text", "")),
 		"recruit_text": TownRules.describe_recruitment(_session),
 		"recruit_visible_text": _recruit_label.text,
 		"recruit_tooltip_text": _recruit_label.tooltip_text,
@@ -850,6 +866,8 @@ func _town_action_button_cue_text(action: Dictionary, lane: String) -> String:
 
 func _town_action_button_readiness(action: Dictionary, lane: String) -> String:
 	if bool(action.get("disabled", false)):
+		if lane == "market":
+			return "Blocked by current stores"
 		return String(action.get("disabled_reason", "Blocked by current town state")).strip_edges()
 	if lane == "build":
 		if bool(action.get("direct_affordable", false)):
@@ -1042,6 +1060,86 @@ func _build_readiness_surface() -> Dictionary:
 		"ready_order_count": ready_orders,
 		"market_order_count": market_orders,
 		"blocked_order_count": blocked_orders,
+		"best_order_label": label,
+		"readiness": readiness,
+		"why_it_matters": impact,
+		"next_step": next_step,
+	}
+
+func _market_readiness_surface() -> Dictionary:
+	var actions := TownRules.get_market_actions(_session)
+	var ready_orders := 0
+	var blocked_orders := 0
+	var best_ready := {}
+	var best_blocked := {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if bool(action.get("disabled", false)):
+			blocked_orders += 1
+			if best_blocked.is_empty():
+				best_blocked = action
+			continue
+		ready_orders += 1
+		if best_ready.is_empty():
+			best_ready = action
+
+	var selected_action := best_ready
+	var state_line := "no exchange orders listed"
+	var visible := "Trade check: no exchange orders"
+	if ready_orders > 0:
+		state_line = "Ready now: %d exchange order%s" % [ready_orders, "" if ready_orders == 1 else "s"]
+		visible = "Trade check: Ready x%d/%d" % [ready_orders, actions.size()]
+	elif blocked_orders > 0:
+		selected_action = best_blocked
+		state_line = "Blocked: %d exchange order%s waiting on stores" % [
+			blocked_orders,
+			"" if blocked_orders == 1 else "s",
+		]
+		visible = "Trade check: Blocked x0/%d" % blocked_orders
+
+	var label := "No exchange order"
+	var readiness := state_line
+	var impact := "Exchange timing converts spare stock into the resource needed for build or muster orders."
+	var next_step := "Build a market before using Trade orders, or return to Build and Muster planning."
+	if not selected_action.is_empty():
+		label = String(selected_action.get("button_label", selected_action.get("label", "Exchange order"))).strip_edges()
+		readiness = _town_action_button_readiness(selected_action, "market")
+		impact = _town_action_button_impact(selected_action, "market")
+		next_step = _town_action_button_next_step(
+			selected_action,
+			"market",
+			label,
+			_town_action_surface_label("market"),
+			readiness
+		)
+	elif actions.is_empty():
+		var market_text := TownRules.describe_market(_session)
+		if market_text.find("No market square") >= 0:
+			state_line = "No market square is built here"
+			readiness = state_line
+			visible = "Trade check: no market"
+
+	var tooltip_lines := [
+		"Trade Readiness",
+		"- Exchange orders: %d ready, %d blocked, %d listed" % [
+			ready_orders,
+			blocked_orders,
+			actions.size(),
+		],
+		"- %s" % state_line,
+		"- Best order: %s" % label,
+		"- Readiness: %s" % readiness,
+		"- Why it matters: %s" % impact,
+		"- Next practical action: %s" % next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"ready_order_count": ready_orders,
+		"blocked_order_count": blocked_orders,
+		"listed_order_count": actions.size(),
 		"best_order_label": label,
 		"readiness": readiness,
 		"why_it_matters": impact,
