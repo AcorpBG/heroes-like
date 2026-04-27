@@ -70,9 +70,12 @@ func _refresh() -> void:
 	var next_play_action_summary := String(_model.get("next_play_action_summary", ""))
 	var continuity_choice_summary := String(_model.get("continuity_choice_summary", ""))
 	var action_cue_summary := String(_model.get("action_cue_summary", ""))
+	var resolution_handoff := _outcome_resolution_handoff_text()
 	var action_status_lines := []
 	if next_step_summary != "":
 		action_status_lines.append(next_step_summary)
+	if resolution_handoff != "":
+		action_status_lines.append(resolution_handoff)
 	if continuity_choice_summary != "":
 		action_status_lines.append(continuity_choice_summary)
 	if next_play_action_summary != "":
@@ -168,7 +171,7 @@ func _rebuild_actions() -> void:
 		var button := Button.new()
 		button.text = String(action.get("label", action.get("id", "Action")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		button.tooltip_text = _outcome_action_tooltip(action)
 		FrontierVisualKit.apply_button(button, "primary", 172.0, 36.0)
 		button.pressed.connect(_on_action_pressed.bind(String(action.get("id", ""))))
 		_actions_bar.add_child(button)
@@ -235,6 +238,7 @@ func validation_snapshot() -> Dictionary:
 		"aftermath_summary": String(_model.get("aftermath_summary", "")),
 		"journal_summary": String(_model.get("journal_summary", "")),
 		"next_step_summary": String(_model.get("next_step_summary", "")),
+		"outcome_resolution_handoff": _outcome_resolution_handoff_text(),
 		"continuity_choice_summary": String(_model.get("continuity_choice_summary", "")),
 		"next_play_action_summary": String(_model.get("next_play_action_summary", "")),
 		"action_cue_summary": String(_model.get("action_cue_summary", "")),
@@ -242,6 +246,7 @@ func validation_snapshot() -> Dictionary:
 		"actions_hint_tooltip": _actions_hint_label.tooltip_text,
 		"action_status": _action_status_label.text,
 		"action_ids": action_ids,
+		"action_tooltips": _outcome_action_tooltip_snapshot(),
 		"actions": action_payloads,
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 		"save_surface": save_surface,
@@ -392,6 +397,58 @@ func _outcome_return_cue_text(surface: Dictionary) -> String:
 		return return_handoff.replace("Return handoff:", "Return cue:")
 	return "Return cue: Menu refreshes autosave before opening the main menu."
 
+func _outcome_resolution_handoff_text() -> String:
+	var status_text := String(_session.scenario_status).replace("_", " ").strip_edges()
+	if status_text == "":
+		status_text = "outcome"
+	var primary_label := _primary_outcome_action_label()
+	var launch_mode := SessionStateStore.normalize_launch_mode(_session.launch_mode)
+	if launch_mode == SessionStateStore.LAUNCH_MODE_CAMPAIGN:
+		if primary_label != "" and primary_label != "Return to Menu":
+			return "Outcome handoff: %s recorded; %s is the primary follow-up for this result path, while Return to Menu keeps outcome review resumable." % [
+				status_text.capitalize(),
+				primary_label,
+			]
+		return "Outcome handoff: %s recorded; Return to Menu keeps this campaign result available from Continue Latest." % status_text.capitalize()
+	if primary_label != "" and primary_label != "Return to Menu":
+		return "Outcome handoff: %s recorded; %s is the primary follow-up and starts fresh, while Return to Menu keeps this outcome resumable." % [
+			status_text.capitalize(),
+			primary_label,
+		]
+	return "Outcome handoff: %s recorded; Return to Menu keeps this outcome resumable from Continue Latest." % status_text.capitalize()
+
+func _primary_outcome_action_label() -> String:
+	var actions = _model.get("actions", [])
+	if not (actions is Array):
+		return ""
+	for action in actions:
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			var action_id := String(action.get("id", ""))
+			if action_id != "" and action_id != "return_to_menu":
+				return String(action.get("label", action_id)).strip_edges()
+	for action in actions:
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			var label := String(action.get("label", action.get("id", ""))).strip_edges()
+			if label != "":
+				return label
+	return ""
+
+func _outcome_action_tooltip(action: Dictionary) -> String:
+	return _join_tooltip_sections([
+		String(action.get("summary", "")),
+		_outcome_resolution_handoff_text(),
+	])
+
+func _outcome_action_tooltip_snapshot() -> Array:
+	var tooltips := []
+	for child in _actions_bar.get_children():
+		if child is Button:
+			tooltips.append({
+				"label": String((child as Button).text),
+				"tooltip": String((child as Button).tooltip_text),
+			})
+	return tooltips
+
 func _apply_visual_theme() -> void:
 	var panel_tones := {
 		"Banner": "banner",
@@ -453,6 +510,7 @@ func _build_outcome_guide_text() -> String:
 	var continuity_choice := String(_model.get("continuity_choice_summary", "")).strip_edges()
 	var next_play_action := String(_model.get("next_play_action_summary", "")).strip_edges()
 	var action_cue := String(_model.get("action_cue_summary", "")).strip_edges()
+	var resolution_handoff := _outcome_resolution_handoff_text()
 	var save_surface := AppRouter.active_save_surface()
 	var save_check := String(save_surface.get("save_check", "")).strip_edges()
 	var play_check := String(save_surface.get("play_check", "")).strip_edges()
@@ -461,6 +519,8 @@ func _build_outcome_guide_text() -> String:
 		lines.append(continuity_choice)
 	if next_play_action != "":
 		lines.append(next_play_action)
+	if resolution_handoff != "":
+		lines.append(resolution_handoff)
 	if action_cue != "":
 		lines.append(action_cue)
 	if save_check != "":
