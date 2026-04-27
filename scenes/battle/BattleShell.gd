@@ -458,7 +458,20 @@ func _refresh() -> void:
 			String(status_check.get("tooltip_text", "")),
 			effect_board,
 		])
-	_set_compact_label(_timing_label, BattleRules.describe_spell_timing_board(_session), 3)
+	var spell_timing_board := BattleRules.describe_spell_timing_board(_session)
+	var timing_check := _battle_timing_check_cue_surface(spell_timing_board)
+	if timing_check.is_empty():
+		_set_compact_label(_timing_label, spell_timing_board, 3)
+	else:
+		_set_compact_label(
+			_timing_label,
+			"%s\n%s" % [String(timing_check.get("visible_text", "")), spell_timing_board],
+			3
+		)
+		_timing_label.tooltip_text = _join_tooltip_sections([
+			String(timing_check.get("tooltip_text", "")),
+			spell_timing_board,
+		])
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
 	var position_check := _battle_position_check_cue_surface()
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
@@ -1142,6 +1155,106 @@ func _battle_stack_active_effect_count(stack: Dictionary, battle: Dictionary) ->
 			count += 1
 	return count
 
+func _battle_timing_check_cue_surface(timing_board: String = "") -> Dictionary:
+	if _session == null or _session.battle.is_empty():
+		return {
+			"visible_text": "Timing check: no battle is loaded.",
+			"tooltip_text": "Battle Timing Check\n- No battle is loaded.",
+			"readiness": "unavailable",
+		}
+	var battle := _session.battle
+	var active_stack := BattleRules.get_active_stack(battle)
+	var selected_target := BattleRules.get_selected_target(battle)
+	var active_label := _battle_position_stack_label(active_stack)
+	var target_label := _battle_position_stack_label(selected_target)
+	var board_text := timing_board.strip_edges()
+	if board_text == "":
+		board_text = BattleRules.describe_spell_timing_board(_session)
+	var spell_window := _battle_timing_board_line_with_prefix(board_text, "Spell window:")
+	var support_payoff := _battle_timing_board_line_with_prefix(board_text, "Support payoff:")
+	var protection_need := _battle_timing_board_line_with_prefix(board_text, "Protection need:")
+	var burst_risk := _battle_timing_board_line_with_prefix(board_text, "Burst risk:")
+	var enemy_initiative := _battle_timing_board_line_with_prefix(board_text, "Enemy initiative:")
+	var enemy_spell_pressure := _battle_timing_board_line_with_prefix(board_text, "Enemy spell pressure:")
+	var incoming_burst := _battle_timing_board_line_with_prefix(board_text, "Incoming burst:")
+	var ready_spell := _battle_first_ready_spell_action()
+	var ready_spell_label := String(ready_spell.get("label", "")).strip_edges()
+	var action_surface := BattleRules.get_action_surface(_session)
+	var first_order_id := _battle_first_ready_order_id(action_surface)
+	var first_order: Dictionary = action_surface.get(first_order_id, {}) if action_surface.get(first_order_id, {}) is Dictionary else {}
+	var first_order_label := String(first_order.get("label", first_order_id.capitalize())).strip_edges()
+	var readiness := "Review"
+	var next_step := "Review the timing rail before spending the current stack order."
+	if active_stack.is_empty():
+		readiness = "Waiting"
+		next_step = "Wait for battle resolution."
+	elif String(active_stack.get("side", "")) != "player":
+		readiness = "Locked"
+		next_step = "Wait for command to return, then recheck spell and order timing."
+	elif ready_spell_label != "":
+		readiness = "Cast"
+		next_step = "Cast %s now if it improves this exchange, or keep mana and use a stack order." % ready_spell_label
+	elif spell_window.to_lower().contains("cast this round") or spell_window.to_lower().contains("unit timing"):
+		readiness = "Order"
+		next_step = "Use the best ready stack order; the commander spell window is not the main lever now."
+	elif first_order_label != "":
+		readiness = "Order"
+		next_step = "Use %s or Defend after checking burst and protection needs." % first_order_label
+	else:
+		readiness = "Hold"
+		next_step = "Retarget, reposition, or Defend until a better timing window opens."
+	var primary_window := spell_window
+	if primary_window == "":
+		primary_window = enemy_initiative if enemy_initiative != "" else "Timing board did not expose a spell window."
+	var burst_line := burst_risk
+	if burst_line == "":
+		burst_line = incoming_burst if incoming_burst != "" else "Burst risk unavailable."
+	var visible := "Timing check: %s; %s" % [
+		readiness,
+		_short_text(_strip_sentence(next_step).trim_suffix("."), 58),
+	]
+	var tooltip := "Battle Timing Check\n- Active stack: %s\n- Selected target: %s\n- Spell window: %s\n- Support payoff: %s\n- Protection need: %s\n- Burst risk: %s\n- Enemy pressure: %s\n- Readiness: %s\n- Next practical action: %s\n- Inspection: checking this cue does not spend an action, cast, move, or advance initiative." % [
+		active_label,
+		target_label,
+		primary_window,
+		support_payoff if support_payoff != "" else "No support payoff line in this timing window.",
+		protection_need if protection_need != "" else "No protection need line in this timing window.",
+		burst_line,
+		enemy_spell_pressure if enemy_spell_pressure != "" else "No enemy spell pressure line in this timing window.",
+		readiness,
+		next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"active": active_label,
+		"target": target_label,
+		"spell_window": primary_window,
+		"support_payoff": support_payoff,
+		"protection_need": protection_need,
+		"burst_risk": burst_line,
+		"enemy_pressure": enemy_spell_pressure,
+		"ready_spell": ready_spell_label,
+		"ready_order": first_order_label,
+		"readiness": readiness,
+		"next_step": next_step,
+	}
+
+func _battle_timing_board_line_with_prefix(board_text: String, prefix: String) -> String:
+	for raw_line in board_text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line.begins_with("- "):
+			line = line.substr(2).strip_edges()
+		if line.begins_with(prefix):
+			return line
+	return ""
+
+func _battle_first_ready_spell_action() -> Dictionary:
+	for action in BattleRules.get_spell_actions(_session):
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			return (action as Dictionary).duplicate(true)
+	return {}
+
 func _battle_first_ready_order_id(action_surface: Dictionary) -> String:
 	for action_id in ["shoot", "strike", "advance", "defend"]:
 		var action: Dictionary = action_surface.get(action_id, {}) if action_surface.get(action_id, {}) is Dictionary else {}
@@ -1335,6 +1448,8 @@ func validation_snapshot() -> Dictionary:
 	var position_check := _battle_position_check_cue_surface()
 	var engagement_check := _battle_engagement_check_cue_surface()
 	var status_check := _battle_status_check_cue_surface()
+	var spell_timing_board := BattleRules.describe_spell_timing_board(_session)
+	var timing_check := _battle_timing_check_cue_surface(spell_timing_board)
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
 	var stack_check := _battle_stack_check_cue_surface()
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
@@ -1414,6 +1529,9 @@ func validation_snapshot() -> Dictionary:
 		"status_check_tooltip_text": String(status_check.get("tooltip_text", "")),
 		"effect_visible_text": _effect_label.text,
 		"effect_tooltip_text": _effect_label.tooltip_text,
+		"timing_check": timing_check,
+		"timing_check_visible_text": String(timing_check.get("visible_text", "")),
+		"timing_check_tooltip_text": String(timing_check.get("tooltip_text", "")),
 		"stack_check": stack_check,
 		"stack_check_visible_text": String(stack_check.get("visible_text", "")),
 		"stack_check_tooltip_text": String(stack_check.get("tooltip_text", "")),
@@ -1466,7 +1584,7 @@ func validation_snapshot() -> Dictionary:
 		"spellbook_tooltip_text": _spell_label.tooltip_text,
 		"spell_actions": _duplicate_action_array(BattleRules.get_spell_actions(_session)),
 		"spell_action_button_surfaces": _spell_action_button_surfaces(),
-		"spell_timing_text": BattleRules.describe_spell_timing_board(_session),
+		"spell_timing_text": spell_timing_board,
 		"spell_timing_visible_text": _timing_label.text,
 		"spell_timing_tooltip_text": _timing_label.tooltip_text,
 		"enemy_commander_text": BattleRules.describe_commander_summary(_session, "enemy"),
