@@ -43,6 +43,25 @@
   ],
   "entries": [
     {
+      "event_id": "battle_stack_idle",
+      "cue_id": "cue_battle_stack_idle",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "idle",
+      "animation_state": "idle_hold",
+      "playback_policy": "ambient_low_frequency",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_idle_shadow"],
+      "audio_cue_ids": ["audio_placeholder_idle_soft"],
+      "fallbacks": {
+        "reduced_motion_tag": "static_idle_pose",
+        "fast_mode_tag": "idle_pose_snap"
+      },
+      "validation_tags": ["battle", "troop_state", "idle", "resolved_event"],
+      "producer_refs": ["BattleRules.create_battle_payload", "BattleRules.normalize_battle_state"]
+    },
+    {
       "event_id": "battle_stack_ready",
       "cue_id": "cue_battle_stack_ready",
       "surface": "battle",
@@ -250,6 +269,44 @@
       },
       "validation_tags": ["battle", "troop_state", "retaliation", "resolved_event"],
       "producer_refs": ["BattleRules._can_make_retaliation", "BattleRules._resolve_attack"]
+    },
+    {
+      "event_id": "battle_unit_retreat",
+      "cue_id": "cue_battle_unit_retreat",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "retreat",
+      "animation_state": "retreat_withdraw_column",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_withdraw_path"],
+      "audio_cue_ids": ["audio_placeholder_retreat_order"],
+      "fallbacks": {
+        "reduced_motion_tag": "withdraw_icon_static",
+        "fast_mode_tag": "withdraw_icon_flash"
+      },
+      "validation_tags": ["battle", "troop_state", "retreat", "resolved_event"],
+      "producer_refs": ["BattleRules.action_id:retreat", "BattleRules._finalize_retreat"]
+    },
+    {
+      "event_id": "battle_unit_surrender",
+      "cue_id": "cue_battle_unit_surrender",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "retreat",
+      "animation_state": "surrender_stand_down",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_surrender_marker"],
+      "audio_cue_ids": ["audio_placeholder_surrender_order"],
+      "fallbacks": {
+        "reduced_motion_tag": "surrender_icon_static",
+        "fast_mode_tag": "surrender_icon_flash"
+      },
+      "validation_tags": ["battle", "troop_state", "retreat", "surrender", "resolved_event"],
+      "producer_refs": ["BattleRules.action_id:surrender", "BattleRules._finalize_surrender"]
     },
     {
       "event_id": "overworld_hero_move",

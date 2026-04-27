@@ -74,6 +74,9 @@ ANIMATION_EVENT_CUE_REPORT_DOC_PATH = ROOT / "docs" / "animation-event-cue-catal
 ANIMATION_POLICY_REPORT_SCRIPT_PATH = ROOT / "tests" / "animation_reduced_motion_fast_mode_policy_report.gd"
 ANIMATION_POLICY_REPORT_SCENE_PATH = ROOT / "tests" / "animation_reduced_motion_fast_mode_policy_report.tscn"
 ANIMATION_POLICY_REPORT_DOC_PATH = ROOT / "docs" / "animation-reduced-motion-fast-mode-policy-report.md"
+ANIMATION_BATTLE_TROOP_REPORT_SCRIPT_PATH = ROOT / "tests" / "animation_battle_troop_state_contract_report.gd"
+ANIMATION_BATTLE_TROOP_REPORT_SCENE_PATH = ROOT / "tests" / "animation_battle_troop_state_contract_report.tscn"
+ANIMATION_BATTLE_TROOP_REPORT_DOC_PATH = ROOT / "docs" / "animation-battle-troop-state-contract-report.md"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -132,6 +135,7 @@ ARTIFACT_SCHEMA_ID = "artifact_taxonomy_v1"
 ARTIFACT_SOURCE_REWARD_SCHEMA_ID = "artifact_source_reward_v1"
 ANIMATION_EVENT_CUE_SCHEMA_ID = "animation_event_cue_catalog_v1"
 ANIMATION_PREFERENCE_POLICY_SCHEMA_ID = "animation_playback_preference_policy_v1"
+ANIMATION_BATTLE_TROOP_STATE_CONTRACT_SCHEMA_ID = "battle_troop_sprite_state_contract_v1"
 ANIMATION_EVENT_CUE_REQUIRED_SURFACES = {"battle", "overworld", "town", "spell", "artifact", "ui"}
 ANIMATION_EVENT_CUE_REQUIRED_FIELDS = {
     "event_id",
@@ -149,6 +153,8 @@ ANIMATION_EVENT_CUE_REQUIRED_FIELDS = {
     "producer_refs",
 }
 ANIMATION_EVENT_CUE_REPRESENTATIVE_EVENTS = {
+    "battle_stack_idle",
+    "battle_stack_ready",
     "battle_unit_move",
     "battle_unit_melee_attack",
     "battle_unit_hit",
@@ -156,6 +162,7 @@ ANIMATION_EVENT_CUE_REPRESENTATIVE_EVENTS = {
     "battle_unit_cast",
     "battle_status_applied",
     "battle_unit_defend",
+    "battle_unit_retreat",
     "overworld_object_visited",
     "overworld_object_captured",
     "overworld_object_depleted",
@@ -170,6 +177,30 @@ ANIMATION_EVENT_CUE_REPRESENTATIVE_EVENTS = {
     "artifact_acquired",
     "artifact_equipped",
     "ui_invalid_action",
+}
+ANIMATION_BATTLE_TROOP_REQUIRED_STATE_FAMILIES = {
+    "idle",
+    "ready",
+    "move",
+    "attack",
+    "hit",
+    "death",
+    "cast",
+    "status",
+    "defend",
+    "retreat",
+}
+ANIMATION_BATTLE_TROOP_REPRESENTATIVE_EVENTS = {
+    "idle": "battle_stack_idle",
+    "ready": "battle_stack_ready",
+    "move": "battle_unit_move",
+    "attack": "battle_unit_melee_attack",
+    "hit": "battle_unit_hit",
+    "death": "battle_unit_death",
+    "cast": "battle_unit_cast",
+    "status": "battle_status_applied",
+    "defend": "battle_unit_defend",
+    "retreat": "battle_unit_retreat",
 }
 ANIMATION_POLICY_REPRESENTATIVE_EVENTS = {
     "battle_unit_move",
@@ -8118,6 +8149,117 @@ def print_animation_preference_policy_report(report: dict) -> None:
         print(f"- errors: {report['errors']}")
 
 
+def build_animation_battle_troop_state_contract_report() -> dict:
+    raw = load_json(ANIMATION_EVENT_CUES_PATH)
+    entries = raw.get("entries", [])
+    if not isinstance(entries, list):
+        entries = []
+    catalog_report = build_animation_event_cue_catalog_report()
+    errors: list[str] = list(catalog_report.get("errors", []))
+    by_event = {str(entry.get("event_id", "")): entry for entry in entries if isinstance(entry, dict)}
+    battle_entries = [
+        entry for entry in entries
+        if isinstance(entry, dict)
+        and str(entry.get("surface", "")) == "battle"
+        and str(entry.get("subject_kind", "")) == "troop_stack"
+    ]
+    state_family_counts: dict[str, int] = {}
+    fallback_counts = {"reduced_motion": 0, "fast_mode": 0}
+    producer_ref_count = 0
+    representative_events: dict[str, str] = {}
+    policy_cases: dict[str, dict] = {}
+
+    for entry in battle_entries:
+        increment_count(state_family_counts, str(entry.get("animation_state_family", "")) or "<empty>")
+        fallbacks = entry.get("fallbacks", {})
+        if not isinstance(fallbacks, dict):
+            fallbacks = {}
+        if str(fallbacks.get("reduced_motion_tag", "")).strip():
+            fallback_counts["reduced_motion"] += 1
+        if str(fallbacks.get("fast_mode_tag", "")).strip():
+            fallback_counts["fast_mode"] += 1
+        producer_ref_count += len(string_list(entry.get("producer_refs", [])))
+
+    for family, event_id in sorted(ANIMATION_BATTLE_TROOP_REPRESENTATIVE_EVENTS.items()):
+        entry = by_event.get(event_id)
+        if not isinstance(entry, dict):
+            errors.append(f"battle troop family {family} missing representative event {event_id}")
+            continue
+        representative_events[family] = event_id
+        if str(entry.get("surface", "")) != "battle":
+            errors.append(f"{event_id} must use battle surface")
+        if str(entry.get("subject_kind", "")) != "troop_stack":
+            errors.append(f"{event_id} must use troop_stack subject_kind")
+        if str(entry.get("animation_state_family", "")) != family:
+            errors.append(f"{event_id} must map to state family {family}")
+        tags = set(string_list(entry.get("validation_tags", [])))
+        for required_tag in ("battle", "troop_state", "resolved_event"):
+            if required_tag not in tags:
+                errors.append(f"{event_id} missing validation tag {required_tag}")
+        if not string_list(entry.get("producer_refs", [])):
+            errors.append(f"{event_id} must define producer refs")
+        fallbacks = entry.get("fallbacks", {})
+        if not isinstance(fallbacks, dict):
+            fallbacks = {}
+        reduced_fallback = str(fallbacks.get("reduced_motion_tag", "")).strip()
+        fast_fallback = str(fallbacks.get("fast_mode_tag", "")).strip()
+        if not reduced_fallback:
+            errors.append(f"{event_id} missing reduced-motion fallback")
+        if not fast_fallback:
+            errors.append(f"{event_id} missing fast-mode fallback")
+        if not bool(entry.get("skippable", False)):
+            errors.append(f"{event_id} must remain skippable")
+
+        event_cases = {
+            "normal": select_animation_policy_case(entry, {}),
+            "reduced_motion": select_animation_policy_case(entry, {"reduced_motion": True}),
+            "fast": select_animation_policy_case(entry, {"fast_mode": True}),
+            "reduced_motion_fast": select_animation_policy_case(entry, {"reduced_motion": True, "fast_mode": True}),
+        }
+        if event_cases["reduced_motion"]["selected_fallback_tag"] != reduced_fallback:
+            errors.append(f"{event_id} reduced-motion policy did not select reduced fallback")
+        if event_cases["fast"]["selected_fallback_tag"] != fast_fallback:
+            errors.append(f"{event_id} fast-mode policy did not select fast fallback")
+        if event_cases["reduced_motion_fast"]["selected_fallback_tag"] != reduced_fallback or event_cases["reduced_motion_fast"]["timing_preference"] != "fast":
+            errors.append(f"{event_id} combined policy must use reduced visuals with fast timing")
+        policy_cases[event_id] = event_cases
+
+    for family in sorted(ANIMATION_BATTLE_TROOP_REQUIRED_STATE_FAMILIES):
+        if int(state_family_counts.get(family, 0)) <= 0:
+            errors.append(f"missing battle troop state family {family}")
+    if fallback_counts["reduced_motion"] != len(battle_entries) or fallback_counts["fast_mode"] != len(battle_entries):
+        errors.append("battle troop entries must all define reduced-motion and fast-mode fallbacks")
+
+    return {
+        "ok": not errors,
+        "schema": ANIMATION_BATTLE_TROOP_STATE_CONTRACT_SCHEMA_ID,
+        "mode": "battle_troop_event_to_sprite_state_contract",
+        "required_state_families": sorted(ANIMATION_BATTLE_TROOP_REQUIRED_STATE_FAMILIES),
+        "representative_events": representative_events,
+        "battle_troop_entry_count": len(battle_entries),
+        "state_family_counts": state_family_counts,
+        "fallback_counts": fallback_counts,
+        "producer_ref_count": producer_ref_count,
+        "policy_cases": policy_cases,
+        "runtime_policy": raw.get("runtime_policy", {}) if isinstance(raw.get("runtime_policy", {}), dict) else {},
+        "errors": errors,
+    }
+
+
+def print_animation_battle_troop_state_contract_report(report: dict) -> None:
+    print("ANIMATION BATTLE TROOP STATE CONTRACT REPORT")
+    print(f"- schema: {report['schema']}")
+    print(f"- mode: {report['mode']}")
+    print(f"- battle troop entries: {report['battle_troop_entry_count']}")
+    print(f"- required families: {report['required_state_families']}")
+    print(f"- representative events: {report['representative_events']}")
+    print(f"- state families: {report['state_family_counts']}")
+    print(f"- fallbacks: {report['fallback_counts']}")
+    print(f"- producer refs: {report['producer_ref_count']}")
+    if report.get("errors"):
+        print(f"- errors: {report['errors']}")
+
+
 def validate_animation_event_cue_catalog(errors: list[str]) -> None:
     for path in (
         ANIMATION_EVENT_CUES_PATH,
@@ -8152,6 +8294,7 @@ def validate_animation_event_cue_catalog(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"Animation cue catalog report doc is missing required boundary text: {required_text}")
 
     validate_animation_reduced_motion_fast_mode_policy(errors)
+    validate_animation_battle_troop_state_contract(errors)
 
 
 def validate_animation_reduced_motion_fast_mode_policy(errors: list[str]) -> None:
@@ -8193,6 +8336,51 @@ def validate_animation_reduced_motion_fast_mode_policy(errors: list[str]) -> Non
             "`wood` remains canonical",
         ):
             ensure(required_text in doc_text, errors, f"Animation reduced-motion/fast-mode policy report doc is missing required boundary text: {required_text}")
+
+
+def validate_animation_battle_troop_state_contract(errors: list[str]) -> None:
+    for path in (
+        ANIMATION_BATTLE_TROOP_REPORT_SCRIPT_PATH,
+        ANIMATION_BATTLE_TROOP_REPORT_SCENE_PATH,
+        ANIMATION_BATTLE_TROOP_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing animation battle troop state contract slice file: {path.relative_to(ROOT)}")
+    rules_text = ANIMATION_CUE_CATALOG_RULES_PATH.read_text(encoding="utf-8") if ANIMATION_CUE_CATALOG_RULES_PATH.exists() else ""
+    for required_token in (
+        "BATTLE_TROOP_STATE_CONTRACT_SCHEMA_ID",
+        "BATTLE_TROOP_REQUIRED_STATE_FAMILIES",
+        "BATTLE_TROOP_REPRESENTATIVE_EVENTS",
+        "func battle_troop_sprite_state_contract_report",
+        "battle_stack_idle",
+        "battle_unit_retreat",
+    ):
+        ensure(required_token in rules_text, errors, f"AnimationCueCatalog.gd is missing battle troop contract token: {required_token}")
+    report = build_animation_battle_troop_state_contract_report()
+    for error in report.get("errors", []):
+        fail(errors, f"Animation battle troop state contract: {error}")
+    ensure(int(report.get("battle_troop_entry_count", 0)) >= 10, errors, "Animation battle troop contract must cover at least ten troop cue entries")
+    ensure(int(report.get("producer_ref_count", 0)) >= 10, errors, "Animation battle troop contract must validate producer refs")
+    if ANIMATION_BATTLE_TROOP_REPORT_DOC_PATH.exists():
+        doc_text = ANIMATION_BATTLE_TROOP_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Status: implementation evidence.",
+            "battle_troop_sprite_state_contract_v1",
+            "idle",
+            "ready",
+            "move",
+            "attack",
+            "hit",
+            "death",
+            "cast",
+            "status",
+            "defend",
+            "retreat",
+            "No save migration",
+            "No final sprite, VFX, or audio import",
+            "No renderer asset pipeline work",
+            "`wood` remains canonical",
+        ):
+            ensure(required_text in doc_text, errors, f"Animation battle troop state contract report doc is missing required text: {required_text}")
 
 
 def validate_content(errors: list[str]) -> None:
@@ -14130,6 +14318,8 @@ def main() -> int:
     parser.add_argument("--animation-cue-catalog-report-json", type=str, default="", help="Write the opt-in animation event/cue catalog contract report as JSON.")
     parser.add_argument("--animation-policy-report", action="store_true", help="Print the opt-in animation reduced-motion/fast-mode policy report.")
     parser.add_argument("--animation-policy-report-json", type=str, default="", help="Write the opt-in animation reduced-motion/fast-mode policy report as JSON.")
+    parser.add_argument("--animation-battle-troop-contract-report", action="store_true", help="Print the opt-in battle troop sprite state contract report.")
+    parser.add_argument("--animation-battle-troop-contract-report-json", type=str, default="", help="Write the opt-in battle troop sprite state contract report as JSON.")
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -14263,6 +14453,7 @@ def main() -> int:
     print("- artifact content now includes bounded set metadata, faction affinities, and source/reward metadata without live drop execution, set bonuses, save migration, or AI valuation behavior")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
+    print("- animation battle troop sprite state contracts now cover idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style cue families")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:
@@ -14341,6 +14532,14 @@ def main() -> int:
             print(f"- animation policy report JSON written to {report_path}")
         if args.animation_policy_report:
             print_animation_preference_policy_report(report)
+    if args.animation_battle_troop_contract_report or args.animation_battle_troop_contract_report_json:
+        report = build_animation_battle_troop_state_contract_report()
+        if args.animation_battle_troop_contract_report_json:
+            report_path = Path(args.animation_battle_troop_contract_report_json)
+            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"- animation battle troop contract report JSON written to {report_path}")
+        if args.animation_battle_troop_contract_report:
+            print_animation_battle_troop_state_contract_report(report)
     return 0
 
 

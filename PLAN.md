@@ -1552,6 +1552,11 @@ implementationTargets:
 - battle event-to-animation-state mappings for at least one vertical path
 - battle scene smoke/report coverage
 
+implementationEvidence:
+- `docs/animation-battle-troop-state-contract-report.md`
+- `tests/animation_battle_troop_state_contract_report.gd`
+- `AnimationCueCatalog.battle_troop_sprite_state_contract_report(...)`
+
 ### P2 Child: Animation Overworld Object State Contracts
 
 id: `animation-overworld-town-object-cue-hooks-10184`

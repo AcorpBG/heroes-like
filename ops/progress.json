@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "animation-battle-cue-hook-vertical-slice-10184",
-  "currentSliceTitle": "Animation Battle Troop Sprite State Contracts",
+  "currentSliceId": "animation-overworld-town-object-cue-hooks-10184",
+  "currentSliceTitle": "Animation Overworld Object State Contracts",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next P2.7 child after reduced-motion/fast-mode policy. Prove battle troop sprite state contracts through the catalog, playback policy, and focused validation without final assets, renderer pipeline, save migration, or broad UI polish.",
+  "currentSliceNotes": "Next P2.7 child after completing battle troop sprite state contracts. Keep scope to overworld map object animation state contracts; no final asset import, renderer pipeline, save migration, broad UI polish, or terrain/editor work.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T22:26:01Z",
+  "updatedAt": "2026-04-27T22:35:18Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1782,7 +1782,7 @@
       "id": "animation-battle-cue-hook-vertical-slice-10184",
       "title": "Animation Battle Troop Sprite State Contracts",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
@@ -1804,7 +1804,10 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T22:34:50Z",
+      "completedAt": "2026-04-27T22:34:50Z",
+      "notes": "Implemented battle troop sprite state contract report covering idle/ready/move/attack/hit/death/cast/status/defend/retreat families via AnimationCueCatalog, content cue entries, focused Godot report, docs, and validate_repo hooks."
     },
     {
       "id": "animation-overworld-town-object-cue-hooks-10184",
@@ -3458,21 +3461,23 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "animation-battle-cue-hook-vertical-slice-10184",
-      "title": "Animation Battle Troop Sprite State Contracts",
+      "id": "animation-overworld-town-object-cue-hooks-10184",
+      "title": "Animation Overworld Object State Contracts",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
       "source": "PLAN.md P2.7 Animation And Event Cue Foundation",
       "sourceDocs": [
-        "docs/animation-systems-foundation.md"
+        "docs/animation-systems-foundation.md",
+        "docs/screen-wireframes.md"
       ],
       "implementationTargets": [
-        "battle troop sprite state taxonomy covering idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style states",
-        "battle event-to-animation-state mappings for at least one vertical path",
-        "battle scene smoke/report coverage"
+        "overworld map object state taxonomy covering idle, active, visited, depleted, captured, blocked, guarded, route-open, route-closed, and looping ambient states where appropriate",
+        "overworld object event-to-animation-state mappings for selected object classes",
+        "town hooks only where they share the selected event/cue contract",
+        "focused smoke/report coverage"
       ],
-      "notes": "Next P2.7 child after reduced-motion/fast-mode policy. Keep scope to battle troop sprite state contracts through catalog/policy/report evidence; no final assets, renderer pipeline, save migration, or broad UI polish."
+      "notes": "Next P2.7 child after battle troop sprite state contracts. Keep scope to overworld object state contracts through catalog/policy/report evidence; no final assets, renderer pipeline, save migration, broad UI polish, or P2.9 terrain/editor work."
     }
   ],
   "stoppedOrPausedTasks": [

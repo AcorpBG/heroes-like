@@ -9,6 +9,31 @@ const MODE_REDUCED_MOTION := "reduced_motion"
 const MODE_FAST := "fast"
 const MODE_REDUCED_MOTION_FAST := "reduced_motion_fast"
 const REQUIRED_SURFACES := ["battle", "overworld", "town", "spell", "artifact", "ui"]
+const BATTLE_TROOP_STATE_CONTRACT_SCHEMA_ID := "battle_troop_sprite_state_contract_v1"
+const BATTLE_TROOP_REQUIRED_STATE_FAMILIES := [
+	"idle",
+	"ready",
+	"move",
+	"attack",
+	"hit",
+	"death",
+	"cast",
+	"status",
+	"defend",
+	"retreat",
+]
+const BATTLE_TROOP_REPRESENTATIVE_EVENTS := {
+	"idle": "battle_stack_idle",
+	"ready": "battle_stack_ready",
+	"move": "battle_unit_move",
+	"attack": "battle_unit_melee_attack",
+	"hit": "battle_unit_hit",
+	"death": "battle_unit_death",
+	"cast": "battle_unit_cast",
+	"status": "battle_status_applied",
+	"defend": "battle_unit_defend",
+	"retreat": "battle_unit_retreat",
+}
 const REQUIRED_FIELDS := [
 	"event_id",
 	"cue_id",
@@ -347,6 +372,114 @@ static func animation_preference_policy_report(catalog: Dictionary = {}) -> Dict
 		"public_payload": public_payload,
 	}
 
+static func battle_troop_sprite_state_contract_report(catalog: Dictionary = {}) -> Dictionary:
+	var source := catalog if not catalog.is_empty() else load_catalog()
+	var catalog_report := event_cue_catalog_report(source)
+	var errors := []
+	if not bool(catalog_report.get("ok", false)):
+		errors.append_array(catalog_report.get("errors", []))
+
+	var battle_entries := []
+	var family_counts := {}
+	var representative_events := {}
+	var representative_policy_cases := {}
+	var producer_ref_count := 0
+	var fallback_counts := {"reduced_motion": 0, "fast_mode": 0}
+
+	for entry_value in _entries(source):
+		if not (entry_value is Dictionary):
+			continue
+		var entry: Dictionary = entry_value
+		if String(entry.get("surface", "")) != "battle" or String(entry.get("subject_kind", "")) != "troop_stack":
+			continue
+		battle_entries.append(entry)
+		var state_family := String(entry.get("animation_state_family", ""))
+		_increment(family_counts, state_family)
+		var producer_refs := _string_array(entry.get("producer_refs", []))
+		producer_ref_count += producer_refs.size()
+		var fallbacks: Dictionary = entry.get("fallbacks", {}) if entry.get("fallbacks", {}) is Dictionary else {}
+		if String(fallbacks.get("reduced_motion_tag", "")).strip_edges() != "":
+			fallback_counts["reduced_motion"] = int(fallback_counts.get("reduced_motion", 0)) + 1
+		if String(fallbacks.get("fast_mode_tag", "")).strip_edges() != "":
+			fallback_counts["fast_mode"] = int(fallback_counts.get("fast_mode", 0)) + 1
+
+	for family in BATTLE_TROOP_REQUIRED_STATE_FAMILIES:
+		var event_id := String(BATTLE_TROOP_REPRESENTATIVE_EVENTS.get(family, ""))
+		var entry := _entry_for_event(event_id, source)
+		if entry.is_empty():
+			errors.append("Battle troop state family %s missing representative event %s." % [family, event_id])
+			continue
+		if String(entry.get("surface", "")) != "battle":
+			errors.append("%s must use battle surface." % event_id)
+		if String(entry.get("subject_kind", "")) != "troop_stack":
+			errors.append("%s must use troop_stack subject_kind." % event_id)
+		if String(entry.get("animation_state_family", "")) != family:
+			errors.append("%s must map to state family %s." % [event_id, family])
+		var tags := _string_array(entry.get("validation_tags", []))
+		for required_tag in ["battle", "troop_state", "resolved_event"]:
+			if required_tag not in tags:
+				errors.append("%s missing validation tag %s." % [event_id, required_tag])
+		if _string_array(entry.get("producer_refs", [])).is_empty():
+			errors.append("%s must define battle producer_refs." % event_id)
+		var fallbacks: Dictionary = entry.get("fallbacks", {}) if entry.get("fallbacks", {}) is Dictionary else {}
+		if String(fallbacks.get("reduced_motion_tag", "")).strip_edges() == "":
+			errors.append("%s missing reduced-motion fallback tag." % event_id)
+		if String(fallbacks.get("fast_mode_tag", "")).strip_edges() == "":
+			errors.append("%s missing fast-mode fallback tag." % event_id)
+		if not bool(entry.get("skippable", false)):
+			errors.append("%s must stay skippable until playback runtime adoption." % event_id)
+		representative_events[family] = event_id
+
+		var policy_cases := {}
+		for mode in [MODE_NORMAL, MODE_REDUCED_MOTION, MODE_FAST, MODE_REDUCED_MOTION_FAST]:
+			var policy := _cue_playback_policy_for_entry(entry, normalize_animation_preferences(_preferences_from_mode(mode)))
+			policy_cases[mode] = _public_policy_case(policy)
+			if String(policy.get("selected_animation_state", "")).strip_edges() == "":
+				errors.append("%s produced an empty selected animation state for %s mode." % [event_id, mode])
+		var reduced_policy: Dictionary = policy_cases.get(MODE_REDUCED_MOTION, {})
+		var fast_policy: Dictionary = policy_cases.get(MODE_FAST, {})
+		var combined_policy: Dictionary = policy_cases.get(MODE_REDUCED_MOTION_FAST, {})
+		if String(reduced_policy.get("selected_fallback_tag", "")) != String(fallbacks.get("reduced_motion_tag", "")):
+			errors.append("%s reduced-motion policy did not select the reduced fallback." % event_id)
+		if String(fast_policy.get("selected_fallback_tag", "")) != String(fallbacks.get("fast_mode_tag", "")):
+			errors.append("%s fast-mode policy did not select the fast fallback." % event_id)
+		if String(combined_policy.get("selected_fallback_tag", "")) != String(fallbacks.get("reduced_motion_tag", "")) or String(combined_policy.get("timing_preference", "")) != MODE_FAST:
+			errors.append("%s combined policy must use reduced visuals with fast timing." % event_id)
+		representative_policy_cases[event_id] = policy_cases
+
+	for family in BATTLE_TROOP_REQUIRED_STATE_FAMILIES:
+		if int(family_counts.get(family, 0)) <= 0:
+			errors.append("Battle troop catalog has no entries for required state family %s." % family)
+
+	var public_payload := {
+		"schema_id": BATTLE_TROOP_STATE_CONTRACT_SCHEMA_ID,
+		"schema_status": "battle_troop_sprite_state_contract_validated",
+		"required_state_families": BATTLE_TROOP_REQUIRED_STATE_FAMILIES,
+		"representative_events": representative_events,
+		"battle_troop_entry_count": battle_entries.size(),
+		"state_family_counts": family_counts,
+		"fallback_counts": fallback_counts,
+		"producer_ref_count": producer_ref_count,
+		"policy_cases": representative_policy_cases,
+		"runtime_policy": source.get("runtime_policy", {}) if source.get("runtime_policy", {}) is Dictionary else {},
+		"errors": errors,
+	}
+	return {
+		"ok": errors.is_empty(),
+		"schema_id": BATTLE_TROOP_STATE_CONTRACT_SCHEMA_ID,
+		"schema_status": "battle_troop_sprite_state_contract_validated",
+		"required_state_families": BATTLE_TROOP_REQUIRED_STATE_FAMILIES,
+		"representative_events": representative_events,
+		"battle_troop_entry_count": battle_entries.size(),
+		"state_family_counts": family_counts,
+		"fallback_counts": fallback_counts,
+		"producer_ref_count": producer_ref_count,
+		"policy_cases": representative_policy_cases,
+		"runtime_policy": source.get("runtime_policy", {}) if source.get("runtime_policy", {}) is Dictionary else {},
+		"errors": errors,
+		"public_payload": public_payload,
+	}
+
 static func _entries(catalog: Dictionary) -> Array:
 	var entries = catalog.get("entries", [])
 	return entries if entries is Array else []
@@ -447,6 +580,8 @@ static func _preferences_from_mode(mode: String) -> Dictionary:
 
 static func _required_representative_events() -> Array:
 	return [
+		"battle_stack_idle",
+		"battle_stack_ready",
 		"battle_unit_move",
 		"battle_unit_melee_attack",
 		"battle_unit_hit",
@@ -454,6 +589,7 @@ static func _required_representative_events() -> Array:
 		"battle_unit_cast",
 		"battle_status_applied",
 		"battle_unit_defend",
+		"battle_unit_retreat",
 		"overworld_object_visited",
 		"overworld_object_captured",
 		"overworld_object_depleted",
