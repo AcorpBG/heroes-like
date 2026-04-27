@@ -49,6 +49,8 @@ func _run() -> void:
 		return
 	if not _assert_route_target_handoff_contract(shell):
 		return
+	if not _assert_primary_order_commit_check_contract(shell):
+		return
 	if not _assert_hover_order_cue_contract(shell):
 		return
 	if not _assert_artifact_reward_visibility_contract(shell):
@@ -1102,6 +1104,79 @@ func _assert_route_target_handoff_contract(shell: Node) -> bool:
 	):
 		return false
 	if not _assert_no_ai_score_leak("overworld route target handoff", joined):
+		return false
+
+	session.overworld["fog"] = original_fog
+	session.overworld["hero"] = original_hero
+	session.overworld["player_heroes"] = original_player_heroes
+	session.overworld["hero_position"] = original_hero_position
+	session.overworld["movement"] = original_movement
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+	return true
+
+func _assert_primary_order_commit_check_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_select_tile") or not shell.has_method("validation_snapshot"):
+		push_error("Overworld smoke: shell is missing primary-order commit-check validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var original_fog = session.overworld.get("fog", {}).duplicate(true)
+	var original_hero_position = session.overworld.get("hero_position", {}).duplicate(true)
+	var original_hero = session.overworld.get("hero", {}).duplicate(true)
+	var original_player_heroes = session.overworld.get("player_heroes", []).duplicate(true)
+	var original_movement = session.overworld.get("movement", {}).duplicate(true)
+
+	_set_active_hero_position(session, Vector2i(1, 2))
+	var movement: Dictionary = session.overworld.get("movement", {})
+	movement["current"] = int(movement.get("max", movement.get("current", 0)))
+	session.overworld["movement"] = movement
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+
+	var snapshot: Dictionary = shell.call("validation_select_tile", 1, 0)
+	var commit_check: Dictionary = snapshot.get("primary_order_commit_check", {})
+	var joined := "\n".join([
+		String(snapshot.get("primary_action_button_text", "")),
+		String(snapshot.get("primary_action_button_tooltip_text", "")),
+		String(commit_check.get("visible_text", "")),
+		String(commit_check.get("tooltip_text", "")),
+		String(commit_check.get("commit_label", "")),
+		String(commit_check.get("target", "")),
+		String(commit_check.get("readiness", "")),
+		String(commit_check.get("movement_line", "")),
+		String(commit_check.get("affected", "")),
+		String(commit_check.get("why_it_matters", "")),
+		String(commit_check.get("next_step", "")),
+		String(commit_check.get("confirmation", "")),
+	])
+	if String(snapshot.get("primary_action_id", "")) != "advance_route":
+		push_error("Overworld smoke: primary order commit check did not inspect an Advance Route order. snapshot=%s" % snapshot)
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"overworld primary order commit check",
+		[joined],
+		[
+			"Advance to Site [Enter]",
+			"Primary Order Check",
+			"Commit:",
+			"Advance to Site",
+			"Target:",
+			"Timber Wagon",
+			"Readiness:",
+			"reachable today",
+			"Affected:",
+			"Why it matters:",
+			"Next:",
+			"Confirmation:",
+			"Enter/Space spends the next movement step on this route",
+			"Press Enter or Space to commit this order.",
+			"Move",
+		]
+	):
+		return false
+	if not _assert_no_ai_score_leak("overworld primary order commit check", joined):
 		return false
 
 	session.overworld["fog"] = original_fog
