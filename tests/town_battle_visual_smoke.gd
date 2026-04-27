@@ -43,6 +43,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_production_overview(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_build_readiness_cue(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_faction_identity_contract(shell):
 		get_tree().quit(1)
 		return false
@@ -974,6 +977,46 @@ func _assert_town_build_recruit_next_step_contract(shell: Node) -> bool:
 	for leak_token in ["build_category_weights", "final_score", "debug_reason", "raid_target_weights"]:
 		if overview.contains(leak_token):
 			push_error("Town smoke: next-step recommendation leaked internal strategy token %s: %s." % [leak_token, overview])
+			return false
+	return true
+
+func _assert_town_build_readiness_cue(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: shell is missing build-readiness validation hooks.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var readiness: Dictionary = snapshot.get("build_readiness", {}) if snapshot.get("build_readiness", {}) is Dictionary else {}
+	var text := "\n".join([
+		String(snapshot.get("build_readiness_visible_text", "")),
+		String(snapshot.get("build_readiness_tooltip_text", "")),
+		String(snapshot.get("build_visible_text", "")),
+		String(snapshot.get("build_tooltip_text", "")),
+		String(readiness.get("best_order_label", "")),
+		String(readiness.get("readiness", "")),
+		String(readiness.get("why_it_matters", "")),
+		String(readiness.get("next_step", "")),
+	])
+	for token in ["Build check:", "Build Readiness", "Town works:", "Best order:", "Readiness:", "Why it matters:", "Next practical action:", "Construction Ledger"]:
+		if not text.contains(token):
+			push_error("Town smoke: build readiness cue lost %s clarity: %s." % [token, text])
+			return false
+	if int(readiness.get("open_order_count", -1)) < 0 or int(readiness.get("built_count", -1)) < 0:
+		push_error("Town smoke: build readiness cue did not expose stable visible counts: %s." % readiness)
+		return false
+	if not (
+		text.contains("Ready")
+		or text.contains("Trade")
+		or text.contains("Blocked")
+		or text.contains("no open")
+	):
+		push_error("Town smoke: build readiness cue does not explain ready, trade, blocked, or empty state: %s." % readiness)
+		return false
+	if not String(snapshot.get("build_visible_text", "")).contains("Build check:"):
+		push_error("Town smoke: build readiness cue is not visible in the construction label: %s." % snapshot)
+		return false
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if text.contains(leak_token):
+			push_error("Town smoke: build readiness cue leaked internal token %s: %s." % [leak_token, text])
 			return false
 	return true
 

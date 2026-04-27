@@ -237,7 +237,16 @@ func _refresh() -> void:
 	_set_compact_label(_town_label, TownRules.describe_summary(_session), 5)
 	_set_compact_label(_defense_label, TownRules.describe_defense(_session), 4)
 	_set_compact_label(_pressure_label, TownRules.describe_threats(_session), 4)
-	_set_compact_label(_building_label, TownRules.describe_buildings(_session), 2)
+	var build_readiness := _build_readiness_surface()
+	var build_text := _join_tooltip_sections([
+		String(build_readiness.get("visible_text", "")),
+		TownRules.describe_buildings(_session),
+	])
+	_set_compact_label(_building_label, build_text, 2)
+	_building_label.tooltip_text = _join_tooltip_sections([
+		String(build_readiness.get("tooltip_text", "")),
+		TownRules.describe_buildings(_session),
+	])
 	_set_compact_label(_market_label, TownRules.describe_market(_session), 2)
 	var muster_readiness := _muster_readiness_surface()
 	var recruit_text := _join_tooltip_sections([
@@ -350,6 +359,7 @@ func validation_snapshot() -> Dictionary:
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
 	var town_context_surface := _town_action_context_surface(dispatch_text)
 	var tab_readiness := _management_tab_readiness_payload()
+	var build_readiness := _build_readiness_surface()
 	var muster_readiness := _muster_readiness_surface()
 	return {
 		"scene_path": scene_file_path,
@@ -378,6 +388,12 @@ func validation_snapshot() -> Dictionary:
 		"army_visible_text": _army_label.text,
 		"defense_text": TownRules.describe_defense(_session),
 		"defense_visible_text": _defense_label.text,
+		"build_text": TownRules.describe_buildings(_session),
+		"build_visible_text": _building_label.text,
+		"build_tooltip_text": _building_label.tooltip_text,
+		"build_readiness": build_readiness,
+		"build_readiness_visible_text": String(build_readiness.get("visible_text", "")),
+		"build_readiness_tooltip_text": String(build_readiness.get("tooltip_text", "")),
 		"recruit_text": TownRules.describe_recruitment(_session),
 		"recruit_visible_text": _recruit_label.text,
 		"recruit_tooltip_text": _recruit_label.tooltip_text,
@@ -938,6 +954,99 @@ func _button_tooltips(container: Container) -> Array:
 				"disabled": child.disabled,
 			})
 	return tooltips
+
+func _build_readiness_surface() -> Dictionary:
+	var actions := TownRules.get_build_actions(_session)
+	var town := TownRules.get_active_town(_session)
+	var built_buildings := _normalize_string_array(town.get("built_buildings", []))
+	var ready_orders := 0
+	var market_orders := 0
+	var blocked_orders := 0
+	var best_ready := {}
+	var best_market := {}
+	var best_blocked := {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if bool(action.get("direct_affordable", false)):
+			ready_orders += 1
+			if best_ready.is_empty():
+				best_ready = action
+			continue
+		if bool(action.get("market_coverable", false)):
+			market_orders += 1
+			if best_market.is_empty():
+				best_market = action
+			continue
+		blocked_orders += 1
+		if best_blocked.is_empty():
+			best_blocked = action
+
+	var selected_action := best_ready
+	var state_line := "no open construction orders"
+	var visible := "Build check: no open orders"
+	if ready_orders > 0:
+		state_line = "Ready now: %d construction order%s" % [ready_orders, "" if ready_orders == 1 else "s"]
+		visible = "Build check: Ready x%d | %d built" % [ready_orders, built_buildings.size()]
+	elif market_orders > 0:
+		selected_action = best_market
+		state_line = "Trade path: %d construction order%s can be unlocked through Exchange" % [
+			market_orders,
+			"" if market_orders == 1 else "s",
+		]
+		visible = "Build check: Trade unlocks x%d" % market_orders
+	elif blocked_orders > 0:
+		selected_action = best_blocked
+		state_line = "Blocked: %d construction order%s waiting on stores or prerequisites" % [
+			blocked_orders,
+			"" if blocked_orders == 1 else "s",
+		]
+		visible = "Build check: Blocked x%d waiting" % blocked_orders
+	elif not actions.is_empty() and actions[0] is Dictionary:
+		selected_action = actions[0]
+
+	var label := "No build order"
+	var readiness := state_line
+	var impact := "Construction timing shapes town income, defenses, and future muster options."
+	var next_step := "Review another town order or leave when the build plan is set."
+	if not selected_action.is_empty():
+		label = String(selected_action.get("button_label", selected_action.get("label", "Build order"))).strip_edges()
+		readiness = _town_action_button_readiness(selected_action, "build")
+		impact = _town_action_button_impact(selected_action, "build")
+		next_step = _town_action_button_next_step(
+			selected_action,
+			"build",
+			label,
+			_town_action_surface_label("build"),
+			readiness
+		)
+	var tooltip_lines := [
+		"Build Readiness",
+		"- Town works: %d built, %d open order%s" % [
+			built_buildings.size(),
+			actions.size(),
+			"" if actions.size() == 1 else "s",
+		],
+		"- %s" % state_line,
+		"- Best order: %s" % label,
+		"- Readiness: %s" % readiness,
+		"- Why it matters: %s" % impact,
+		"- Next practical action: %s" % next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"built_count": built_buildings.size(),
+		"open_order_count": actions.size(),
+		"ready_order_count": ready_orders,
+		"market_order_count": market_orders,
+		"blocked_order_count": blocked_orders,
+		"best_order_label": label,
+		"readiness": readiness,
+		"why_it_matters": impact,
+		"next_step": next_step,
+	}
 
 func _muster_readiness_surface() -> Dictionary:
 	var actions := TownRules.get_recruit_actions(_session)

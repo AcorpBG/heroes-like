@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T05:45:00Z",
+  "updatedAt": "2026-04-27T06:05:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-route-next-step-cue-10184",
-  "currentSliceTitle": "Surface compact overworld route next-step cue",
+  "currentSliceId": "town-build-readiness-cue-10184",
+  "currentSliceTitle": "Surface compact town build-readiness cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact player-facing overworld route next-step cue. Selected route decisions now name the immediate next tile and terrain, route target/readiness tooltips carry the same step cue, and focused overworld smoke asserts the visible cue plus no internal score/debug leaks. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact player-facing town construction readiness cue on the existing Build surface. The Build panel now exposes ready, exchange-coverable, blocked, and empty construction states with a best-order next step, and focused town/battle smoke asserts the visible cue plus no internal score/debug leaks. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2120,6 +2120,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T05:30:00Z",
       "completedAt": "2026-04-27T05:45:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "town-build-readiness-cue-10184",
+      "title": "Surface compact town build-readiness cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T05:50:00Z",
+      "completedAt": "2026-04-27T06:05:00Z",
       "difficulty": "small"
     }
   ],
