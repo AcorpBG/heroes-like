@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T13:26:00Z",
+  "updatedAt": "2026-04-27T13:44:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-defense-check-cue-10184",
-  "currentSliceTitle": "Surface compact town defense check cue",
+  "currentSliceId": "battle-engagement-check-cue-10184",
+  "currentSliceTitle": "Surface compact battle engagement check cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact visible town Defense check cue using existing town battle readiness, occupation/front state, garrison posture, and frontier threat text only. The town command overview now shows current defense readiness without consuming another sidebar row, and focused smoke coverage asserts visible text, tooltip context, readiness counts, and no-score-leak behavior. UI clarity only; no mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, renderer import, pathing/body-tile adoption, or internal score/debug field exposure.",
+  "currentSliceNotes": "Implemented a compact visible battle Engagement check cue on the target rail using existing selected target, action surface, and active consequence payloads only. The cue summarizes selected target, order readiness, consequence preview, target/range, and next practical action, with focused smoke coverage for visible text, payload fields, and no-score-leak behavior. UI clarity only; no mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, renderer import, pathing/body-tile adoption, or internal score/debug field exposure.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2347,6 +2347,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T13:12:00Z",
       "completedAt": "2026-04-27T13:26:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "battle-engagement-check-cue-10184",
+      "title": "Surface compact battle engagement check cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T13:32:00Z",
+      "completedAt": "2026-04-27T13:44:00Z",
       "difficulty": "small"
     }
   ],

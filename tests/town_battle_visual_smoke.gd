@@ -274,6 +274,9 @@ func _run_battle_smoke() -> bool:
 	if not _assert_battle_position_check_cue_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_battle_engagement_check_cue_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_battle_objective_check_cue_contract(shell):
 		get_tree().quit(1)
 		return false
@@ -1865,6 +1868,47 @@ func _assert_battle_position_check_cue_contract(shell: Node) -> bool:
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if position_text.contains(leak_token):
 			push_error("Battle smoke: position-check cue leaked internal token %s: %s." % [leak_token, position_text])
+			return false
+	return true
+
+func _assert_battle_engagement_check_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: shell is missing engagement-check validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var engagement_check: Dictionary = snapshot.get("engagement_check", {}) if snapshot.get("engagement_check", {}) is Dictionary else {}
+	var engagement_text := "\n".join([
+		String(engagement_check.get("visible_text", "")),
+		String(engagement_check.get("tooltip_text", "")),
+		String(engagement_check.get("active", "")),
+		String(engagement_check.get("target", "")),
+		String(engagement_check.get("order", "")),
+		String(engagement_check.get("readiness", "")),
+		String(engagement_check.get("order_readiness", "")),
+		String(engagement_check.get("target_range", "")),
+		String(engagement_check.get("consequence_preview", "")),
+		String(engagement_check.get("next_step", "")),
+		String(snapshot.get("engagement_check_visible_text", "")),
+		String(snapshot.get("engagement_check_tooltip_text", "")),
+		String(snapshot.get("target_visible_text", "")),
+		String(snapshot.get("target_tooltip_text", "")),
+	])
+	for token in ["Engagement check:", "Battle Engagement Check", "Active stack:", "Selected target:", "Order readiness:", "Target/range:", "Consequence preview:", "Next practical action:", "Inspection:", "does not attack"]:
+		if not engagement_text.contains(token):
+			push_error("Battle smoke: engagement-check cue lost %s clarity: %s." % [token, engagement_text])
+			return false
+	if String(engagement_check.get("active", "")) == "" or String(engagement_check.get("target", "")) == "" or String(engagement_check.get("next_step", "")) == "":
+		push_error("Battle smoke: engagement-check payload is missing active, target, or next-step context: %s." % engagement_check)
+		return false
+	if String(engagement_check.get("consequence_preview", "")) == "":
+		push_error("Battle smoke: engagement-check payload is missing consequence preview context: %s." % engagement_check)
+		return false
+	if not String(snapshot.get("target_visible_text", "")).contains("Engagement check:"):
+		push_error("Battle smoke: engagement-check cue is not visible in the target rail: %s." % snapshot)
+		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if engagement_text.contains(leak_token):
+			push_error("Battle smoke: engagement-check cue leaked internal token %s: %s." % [leak_token, engagement_text])
 			return false
 	return true
 
