@@ -613,6 +613,7 @@ sourceDocs:
 - `docs/phase2-4-object-implementation-backlog.md`
 - `docs/overworld-object-taxonomy-density.md`
 - `docs/economy-resource-schema-migration-plan.md`
+- `docs/overworld-object-content-batch-002-mines-resource-fronts-report.md`
 
 implementationTargets:
 - `content/map_objects.json`
@@ -636,6 +637,38 @@ nonGoals:
 - No save migration or `SAVE_VERSION` bump.
 - No market changes.
 - No rare-resource costs, stockpile grants, UI inventory activation, or broad economy rebalance.
+
+#### P2.4g Corrective Services, Shrines, Signs, And Events Batch 003
+
+id: `overworld-object-content-batch-003-services-shrines-signs-events-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Continue corrective P2.4 object content with repeatable services, shrines, scouting/info objects, signs, waypoints, route locks, and event/objective markers after Batch 002 resource fronts.
+
+sourceDocs:
+- `docs/phase2-4-object-implementation-backlog.md`
+- `docs/overworld-object-taxonomy-density.md`
+
+implementationTargets:
+- `content/map_objects.json`
+- `content/resource_sites.json`
+- Object validator/report coverage as needed.
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+sliceEvidence:
+- About 28 new or normalized service/shrine/sign/event definitions cover route decisions beyond resources while preserving screen-composition and staged-metadata boundaries.
+
+completionCriteria:
+- Objects define explicit footprint, body, approach, interaction cadence, guard/event expectations, and biome metadata as appropriate.
+- Services, shrines, signs, waypoints, and event markers remain metadata/content implementation only unless existing runtime behavior already supports the linked site family.
+
+nonGoals:
+- No save migration or `SAVE_VERSION` bump.
+- No renderer sprite import, pathing runtime migration, scenario placement migration, or broad UI work.
+- No activation of rare-resource costs, markets, save payloads, or inventory.
 
 ### P2.5 Magic System Foundation Implementation
 

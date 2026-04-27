@@ -169,7 +169,7 @@ OVERWORLD_FOUNDATION_SITE_FAMILIES = {
     "transit_object",
     "repeatable_service",
 }
-SUPPORTED_RESOURCE_SITE_FAMILIES = LOGISTICS_SITE_FAMILIES | OVERWORLD_FOUNDATION_SITE_FAMILIES | {"one_shot_pickup"}
+SUPPORTED_RESOURCE_SITE_FAMILIES = LOGISTICS_SITE_FAMILIES | OVERWORLD_FOUNDATION_SITE_FAMILIES | {"one_shot_pickup", "staged_resource_front", "support_producer"}
 SUPPORTED_MAP_OBJECT_FAMILIES = {
     "pickup",
     "mine",
@@ -183,9 +183,11 @@ SUPPORTED_MAP_OBJECT_FAMILIES = {
     "blocker",
     "decoration",
     "faction_landmark",
+    "staged_resource_front",
+    "support_producer",
 }
 SIX_FACTION_BIOME_BREADTH_SCENARIO_ID = "ninefold-confluence"
-SIX_FACTION_BIOME_BREADTH_REQUIRED_SITE_FAMILIES = SUPPORTED_RESOURCE_SITE_FAMILIES
+SIX_FACTION_BIOME_BREADTH_REQUIRED_SITE_FAMILIES = LOGISTICS_SITE_FAMILIES | OVERWORLD_FOUNDATION_SITE_FAMILIES | {"one_shot_pickup"}
 OVERWORLD_FOUNDATION_RESOURCE_SITE_IDS = {
     "site_brightwood_sawmill",
     "site_ridge_quarry",
@@ -862,6 +864,10 @@ OVERWORLD_OBJECT_SECONDARY_TAGS = {
     "route_pressure",
     "route_block",
     "mire_pressure",
+    "common_resource_front",
+    "rare_resource_front",
+    "staged_report_only",
+    "support_producer",
     "neutral_dwelling_watch",
     "scenario_objective_guard",
     "neutral_encounter",
@@ -879,6 +885,8 @@ OVERWORLD_OBJECT_FAMILY_PRIMARY_CLASS = {
     "decoration": "decoration",
     "faction_landmark": "faction_landmark",
     "neutral_encounter": "neutral_encounter",
+    "staged_resource_front": "persistent_economy_site",
+    "support_producer": "persistent_economy_site",
 }
 OVERWORLD_OBJECT_FAMILY_TAGS = {
     "pickup": {"small_reward", "route_pacing"},
@@ -893,11 +901,14 @@ OVERWORLD_OBJECT_FAMILY_TAGS = {
     "decoration": {"world_lore"},
     "faction_landmark": {"faction_pressure", "world_lore"},
     "neutral_encounter": {"neutral_encounter"},
+    "staged_resource_front": {"resource_front", "rare_resource_front", "counter_capture_target"},
+    "support_producer": {"support_producer", "town_support", "counter_capture_target"},
 }
 OVERWORLD_OBJECT_CONTENT_BATCH_001_ID = "overworld-object-content-batch-001-core-density-pickups-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_001B_ID = "overworld-object-content-batch-001b-biome-scenic-decoration-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_001C_ID = "overworld-object-content-batch-001c-biome-blockers-edge-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_001D_ID = "overworld-object-content-batch-001d-large-footprint-coverage-10184"
+OVERWORLD_OBJECT_CONTENT_BATCH_002_ID = "overworld-object-content-batch-002-mines-resource-fronts-10184"
 OVERWORLD_OBJECT_PASSABILITY_CLASSES = {
     "passable_visit_on_enter",
     "passable_scenic",
@@ -1558,6 +1569,7 @@ def build_economy_resource_report() -> dict:
         "capture": {},
         "market_caps": {},
         "rare_resources": {},
+        "staged_resource_fronts": {},
         "ui_report": {},
         "activation_gates": {
             "rules": "staged_report_only",
@@ -1625,6 +1637,46 @@ def build_economy_resource_report() -> dict:
         record_economy_resource_dict(report, registry_items, site.get("claim_rewards", {}), "resource_sites", site_id, "claim_rewards", "site_rewards", "persistent_sites" if bool(site.get("persistent_control", False)) else "pickups")
         record_economy_resource_dict(report, registry_items, site.get("control_income", {}), "resource_sites", site_id, "control_income", "site_income", "persistent_sites")
         record_economy_resource_dict(report, registry_items, site.get("service_cost", {}), "resource_sites", site_id, "service_cost", "service_cost", "repeatable_services")
+        staged_outputs = site.get("staged_resource_outputs", [])
+        if isinstance(staged_outputs, list) and staged_outputs:
+            front_entry = {
+                "site_id": site_id,
+                "family": str(site.get("family", "")),
+                "content_batch_id": str(site.get("content_batch_id", "")),
+                "outputs": [],
+                "live_reward_fields_clear": not any(
+                    isinstance(site.get(field, {}), dict)
+                    and set(str(resource_id) for resource_id in site.get(field, {}).keys()).intersection(ECONOMY_RARE_RESOURCE_IDS)
+                    for field in ("rewards", "claim_rewards", "control_income", "service_cost")
+                ),
+                "response_cost_clear": True,
+                "warnings": [],
+            }
+            response_cost = site.get("response_profile", {}).get("resource_cost", {}) if isinstance(site.get("response_profile", {}), dict) else {}
+            if isinstance(response_cost, dict) and set(str(resource_id) for resource_id in response_cost.keys()).intersection(ECONOMY_RARE_RESOURCE_IDS):
+                front_entry["response_cost_clear"] = False
+                front_entry["warnings"].append("staged rare-resource front uses a rare id in response_profile.resource_cost")
+            for output in staged_outputs:
+                if not isinstance(output, dict):
+                    front_entry["warnings"].append("staged_resource_outputs contains a non-dict output")
+                    continue
+                resource_id = str(output.get("resource_id", ""))
+                front_entry["outputs"].append(
+                    {
+                        "resource_id": resource_id,
+                        "activation_status": str(output.get("activation_status", "")),
+                        "report_only": bool(output.get("report_only", False)),
+                        "live_reward": bool(output.get("live_reward", True)),
+                        "planned_amount": int(output.get("planned_amount", 0)),
+                    }
+                )
+                if resource_id not in ECONOMY_RARE_RESOURCE_IDS:
+                    front_entry["warnings"].append(f"staged_resource_outputs uses unsupported rare resource {resource_id}")
+                if str(output.get("activation_status", "")) != "staged_report_only" or not bool(output.get("report_only", False)) or bool(output.get("live_reward", True)):
+                    front_entry["warnings"].append(f"staged output {resource_id} is not report-only")
+            for warning in front_entry["warnings"]:
+                add_economy_report_warning(report, f"{site_id}: {warning}")
+            report["staged_resource_fronts"][site_id] = front_entry
         if isinstance(site.get("response_profile", {}), dict):
             record_economy_resource_dict(report, registry_items, site.get("response_profile", {}).get("resource_cost", {}), "resource_sites", site_id, "response_profile.resource_cost", "service_cost", "repeatable_services")
         infer_economy_site_cadence(report, registry_items, site_id, site)
@@ -1800,6 +1852,17 @@ def print_economy_resource_report(report: dict) -> None:
             f"activation={rare.get('activation_status', '')}; production_occurrences={rare.get('production_occurrences', 0)}; "
             f"normal_market_buying={rare.get('normal_market_buying_enabled', False)}"
         )
+    staged_fronts = report.get("staged_resource_fronts", {})
+    staged_front_resource_ids = sorted(
+        {
+            str(output.get("resource_id", ""))
+            for front in staged_fronts.values()
+            for output in front.get("outputs", [])
+            if str(output.get("resource_id", ""))
+        }
+    )
+    print("Staged rare-resource fronts:")
+    print(f"- fronts={len(staged_fronts)}; resources={','.join(staged_front_resource_ids)}")
     print("Compatibility adapters:")
     print(f"- runtime adoption: {report['compatibility_adapters']['runtime_adoption']}; save rewrite={report['compatibility_adapters']['save_rewrite']}")
     print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
@@ -3382,6 +3445,227 @@ def build_overworld_object_content_batch_001d_section(map_objects: dict[str, dic
     return section
 
 
+def build_overworld_object_content_batch_002_section(map_objects: dict[str, dict], resource_sites: dict[str, dict], biomes: dict[str, dict]) -> dict:
+    batch_objects = {
+        object_id: obj
+        for object_id, obj in map_objects.items()
+        if str(obj.get("content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_002_ID
+        or str(obj.get("normalized_content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_002_ID
+    }
+    section = {
+        "batch_id": OVERWORLD_OBJECT_CONTENT_BATCH_002_ID,
+        "object_count": len(batch_objects),
+        "common_mine_count": 0,
+        "rare_resource_front_count": 0,
+        "support_producer_count": 0,
+        "normalized_resource_object_count": 0,
+        "footprints": {},
+        "biome_counts": {},
+        "common_live_resource_ids": [],
+        "staged_rare_resource_ids": [],
+        "shape_contract_ready_count": 0,
+        "linked_resource_site_count": 0,
+        "staged_front_report_only_count": 0,
+        "errors": [],
+        "warnings": [],
+    }
+
+    def add_error(message: str) -> None:
+        if message not in section["errors"]:
+            section["errors"].append(message)
+
+    def add_warning(message: str) -> None:
+        if message not in section["warnings"]:
+            section["warnings"].append(message)
+
+    def live_resource_ids(site: dict) -> set[str]:
+        ids: set[str] = set()
+        for field in ("rewards", "claim_rewards", "control_income", "service_cost"):
+            values = site.get(field, {})
+            if isinstance(values, dict):
+                ids.update(str(resource_id) for resource_id in values.keys())
+        response_cost = site.get("response_profile", {}).get("resource_cost", {}) if isinstance(site.get("response_profile", {}), dict) else {}
+        if isinstance(response_cost, dict):
+            ids.update(str(resource_id) for resource_id in response_cost.keys())
+        return ids
+
+    def check_body_and_approach(object_id: str, obj: dict, width: int, height: int) -> bool:
+        body_tiles = obj.get("body_tiles", [])
+        approach = obj.get("approach", {}) if isinstance(obj.get("approach", {}), dict) else {}
+        visit_offsets = approach.get("visit_offsets", []) if isinstance(approach.get("visit_offsets", []), list) else []
+        ready = True
+        if not isinstance(body_tiles, list) or not body_tiles:
+            add_error(f"{object_id}: Batch 002 objects must author non-empty body_tiles")
+            ready = False
+        if not isinstance(obj.get("approach", {}), dict) or not visit_offsets:
+            add_error(f"{object_id}: Batch 002 objects must author approach.visit_offsets")
+            ready = False
+        seen_body_tiles: set[str] = set()
+        for tile in body_tiles if isinstance(body_tiles, list) else []:
+            if not isinstance(tile, dict):
+                add_error(f"{object_id}: body_tiles entries must be dictionaries")
+                ready = False
+                continue
+            x = int(tile.get("x", -999))
+            y = int(tile.get("y", -999))
+            if x < 0 or y < 0 or x >= width or y >= height:
+                add_error(f"{object_id}: body tile {x},{y} is outside footprint")
+                ready = False
+            tile_key = f"{x},{y}"
+            if tile_key in seen_body_tiles:
+                add_error(f"{object_id}: body tile {tile_key} is duplicated")
+                ready = False
+            seen_body_tiles.add(tile_key)
+        seen_visit_offsets: set[str] = set()
+        for tile in visit_offsets:
+            if not isinstance(tile, dict):
+                add_error(f"{object_id}: approach.visit_offsets entries must be dictionaries")
+                ready = False
+                continue
+            x = int(tile.get("x", -999))
+            y = int(tile.get("y", -999))
+            adjacent = (x == -1 and 0 <= y < height) or (x == width and 0 <= y < height) or (y == -1 and 0 <= x < width) or (y == height and 0 <= x < width)
+            inside = 0 <= x < width and 0 <= y < height
+            if not adjacent and not inside:
+                add_error(f"{object_id}: approach tile {x},{y} must be inside or adjacent to footprint")
+                ready = False
+            tile_key = f"{x},{y}"
+            if tile_key in seen_visit_offsets:
+                add_error(f"{object_id}: approach tile {tile_key} is duplicated")
+                ready = False
+            seen_visit_offsets.add(tile_key)
+        if seen_body_tiles.intersection(seen_visit_offsets):
+            add_error(f"{object_id}: body_tiles must not overlap approach.visit_offsets")
+            ready = False
+        if str(approach.get("mode", "")) not in {"adjacent", "enter"}:
+            add_error(f"{object_id}: approach.mode must be adjacent or enter")
+            ready = False
+        return ready
+
+    for object_id, obj in sorted(batch_objects.items()):
+        role = str(obj.get("batch002_role", ""))
+        site_id = str(obj.get("resource_site_id", ""))
+        site = resource_sites.get(site_id, {}) if site_id else {}
+        footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
+        width = int(footprint.get("width", 0))
+        height = int(footprint.get("height", 0))
+        footprint_key = f"{width}x{height}"
+        increment_count(section["footprints"], footprint_key)
+        for biome_id in obj.get("biome_ids", []) if isinstance(obj.get("biome_ids", []), list) else []:
+            increment_count(section["biome_counts"], str(biome_id))
+        forbidden_wood_alias = "tim" + "ber"
+        text_key = f"{object_id} {obj.get('name', '')} {site_id} {site.get('name', '')}".lower()
+        if forbidden_wood_alias in text_key:
+            add_error(f"{object_id}: Batch 002 must keep wood canonical and avoid non-canonical wood aliases")
+        if role == "common_mine":
+            section["common_mine_count"] += 1
+        elif role == "rare_resource_front":
+            section["rare_resource_front_count"] += 1
+        elif role == "support_producer":
+            section["support_producer_count"] += 1
+        elif role == "normalized_resource_object":
+            section["normalized_resource_object_count"] += 1
+        else:
+            add_error(f"{object_id}: Batch 002 object must author a supported batch002_role")
+        if not site_id or site_id not in resource_sites:
+            add_error(f"{object_id}: Batch 002 object must link an existing resource_site_id")
+        else:
+            section["linked_resource_site_count"] += 1
+            if str(site.get("content_batch_id", "")) != OVERWORLD_OBJECT_CONTENT_BATCH_002_ID and str(site.get("normalized_content_batch_id", "")) != OVERWORLD_OBJECT_CONTENT_BATCH_002_ID:
+                add_error(f"{object_id}: linked site {site_id} must carry Batch 002 content metadata")
+        if width <= 0 or height <= 0:
+            add_error(f"{object_id}: Batch 002 footprint dimensions must be positive")
+        if str(footprint.get("anchor", "")) not in OVERWORLD_OBJECT_FOOTPRINT_ANCHORS:
+            add_error(f"{object_id}: Batch 002 footprint.anchor is missing or unsupported")
+        if str(footprint.get("tier", "")) not in OVERWORLD_OBJECT_FOOTPRINT_TIERS:
+            add_error(f"{object_id}: Batch 002 footprint.tier is missing or unsupported")
+        if str(obj.get("passability_class", "")) != "blocking_visitable":
+            add_error(f"{object_id}: Batch 002 objects must use blocking_visitable")
+        if bool(obj.get("passable", True)):
+            add_error(f"{object_id}: Batch 002 objects must set passable=false")
+        if not bool(obj.get("visitable", False)):
+            add_error(f"{object_id}: Batch 002 objects must set visitable=true")
+        if check_body_and_approach(object_id, obj, width, height):
+            section["shape_contract_ready_count"] += 1
+        if not isinstance(obj.get("ai_hints", {}), dict) or not obj.get("ai_hints", {}):
+            add_error(f"{object_id}: Batch 002 objects must author ai_hints")
+        if not isinstance(obj.get("editor_placement", {}), dict) or not obj.get("editor_placement", {}):
+            add_error(f"{object_id}: Batch 002 objects must author editor_placement")
+        if not isinstance(obj.get("interaction", {}), dict) or str(obj.get("interaction", {}).get("cadence", "")) not in {"persistent_control", "cooldown_days"}:
+            add_error(f"{object_id}: Batch 002 objects must author persistent/control or cooldown interaction metadata")
+
+        live_ids = live_resource_ids(site)
+        if live_ids.intersection(ECONOMY_RARE_RESOURCE_IDS):
+            add_error(f"{object_id}: staged rare resources must not appear in live reward, income, service, or response-cost fields")
+        for resource_id in sorted(live_ids.intersection(ECONOMY_STOCKPILE_RESOURCE_IDS)):
+            append_unique(section["common_live_resource_ids"], resource_id)
+        if role in {"common_mine", "support_producer"}:
+            resource_outputs = site.get("resource_outputs", [])
+            if not isinstance(resource_outputs, list) or not resource_outputs:
+                add_error(f"{object_id}: live mine/support producer site must author resource_outputs")
+            if not isinstance(site.get("capture_profile", {}), dict) or not site.get("capture_profile", {}):
+                add_error(f"{object_id}: live mine/support producer site must author capture_profile")
+        if role == "rare_resource_front":
+            staged_object = obj.get("staged_resource_front", {}) if isinstance(obj.get("staged_resource_front", {}), dict) else {}
+            staged_outputs = site.get("staged_resource_outputs", []) if isinstance(site.get("staged_resource_outputs", []), list) else []
+            if not staged_object:
+                add_error(f"{object_id}: rare-resource front must author staged_resource_front metadata")
+            resource_id = str(staged_object.get("resource_id", ""))
+            if resource_id:
+                append_unique(section["staged_rare_resource_ids"], resource_id)
+            if resource_id not in ECONOMY_RARE_RESOURCE_IDS:
+                add_error(f"{object_id}: rare-resource front uses unsupported rare resource {resource_id}")
+            if str(staged_object.get("activation_status", "")) != "staged_report_only" or not bool(staged_object.get("report_only", False)) or bool(staged_object.get("live_reward", True)):
+                add_error(f"{object_id}: rare-resource front object metadata must remain staged/report-only")
+            if not staged_outputs:
+                add_error(f"{object_id}: rare-resource front site must author staged_resource_outputs")
+            else:
+                for output in staged_outputs:
+                    output_resource_id = str(output.get("resource_id", "")) if isinstance(output, dict) else ""
+                    if output_resource_id:
+                        append_unique(section["staged_rare_resource_ids"], output_resource_id)
+                    if output_resource_id not in ECONOMY_RARE_RESOURCE_IDS:
+                        add_error(f"{object_id}: staged_resource_outputs uses unsupported rare resource {output_resource_id}")
+                    if not isinstance(output, dict) or str(output.get("activation_status", "")) != "staged_report_only" or not bool(output.get("report_only", False)) or bool(output.get("live_reward", True)):
+                        add_error(f"{object_id}: staged_resource_outputs must remain report-only and non-live")
+                section["staged_front_report_only_count"] += 1
+            if not isinstance(site.get("guard_profile", {}), dict) or not site.get("guard_profile", {}):
+                add_error(f"{object_id}: rare-resource front must author guard_profile expectation metadata")
+
+    section["footprints"] = sorted_counts(section["footprints"])
+    section["biome_counts"] = dict(sorted(section["biome_counts"].items()))
+    section["common_live_resource_ids"] = sorted(section["common_live_resource_ids"])
+    section["staged_rare_resource_ids"] = sorted(section["staged_rare_resource_ids"])
+    if batch_objects:
+        if len(batch_objects) != 28:
+            add_error("Batch 002 must contain exactly 28 new or normalized object definitions")
+        if section["common_mine_count"] < 9:
+            add_error("Batch 002 must include at least 9 common live-resource mines/fronts")
+        if section["rare_resource_front_count"] != 9:
+            add_error("Batch 002 must include 9 staged rare-resource fronts")
+        if section["support_producer_count"] != 6:
+            add_error("Batch 002 must include 6 support producer buildings")
+        if section["normalized_resource_object_count"] < 1:
+            add_error("Batch 002 must include selected existing resource-object normalization")
+        if section["linked_resource_site_count"] != len(batch_objects):
+            add_error("Batch 002 objects must all link resource-site records")
+        if section["shape_contract_ready_count"] != len(batch_objects):
+            add_error("Batch 002 objects must all pass footprint/body/approach contract checks")
+        for resource_id in ("gold", "wood", "ore"):
+            if resource_id not in section["common_live_resource_ids"]:
+                add_error(f"Batch 002 common live resources must include {resource_id}")
+        for resource_id in ECONOMY_STAGED_RARE_RESOURCE_IDS:
+            if resource_id not in section["staged_rare_resource_ids"]:
+                add_error(f"Batch 002 staged rare fronts must include {resource_id}")
+        for footprint_key in ("2x2", "2x3", "3x2", "3x3"):
+            if footprint_key not in section["footprints"]:
+                add_error(f"Batch 002 must cover footprint {footprint_key}")
+        for biome_id in sorted(biomes.keys()):
+            if int(section["biome_counts"].get(biome_id, 0)) < 2:
+                add_error(f"Batch 002 must include at least 2 mine/resource-front/support definitions for {biome_id}")
+    return section
+
+
 def build_overworld_object_report() -> dict:
     payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("map_objects", "resource_sites", "scenarios", "encounters", "army_groups", "factions", "biomes")}
     map_objects = items_index(payloads["map_objects"])
@@ -3479,6 +3763,7 @@ def build_overworld_object_report() -> dict:
     report["content_batches"]["batch_001b_biome_scenic_decoration"] = build_overworld_object_content_batch_001b_section(map_objects, biomes)
     report["content_batches"]["batch_001c_biome_blockers_edge"] = build_overworld_object_content_batch_001c_section(map_objects, biomes)
     report["content_batches"]["batch_001d_large_footprint_coverage"] = build_overworld_object_content_batch_001d_section(map_objects, biomes)
+    report["content_batches"]["batch_002_mines_resource_fronts"] = build_overworld_object_content_batch_002_section(map_objects, resource_sites, biomes)
     report["ai_editor_implications"]["visible_neutral_encounter_records_present"] = any(
         infer_overworld_object_primary_class(obj, resource_sites.get(str(obj.get("resource_site_id", "")))) == "neutral_encounter"
         for obj in map_objects.values()
@@ -3683,6 +3968,9 @@ def build_overworld_object_report() -> dict:
     for batch_error in report.get("content_batches", {}).get("batch_001d_large_footprint_coverage", {}).get("errors", []):
         if batch_error not in report["errors"]:
             report["errors"].append(batch_error)
+    for batch_error in report.get("content_batches", {}).get("batch_002_mines_resource_fronts", {}).get("errors", []):
+        if batch_error not in report["errors"]:
+            report["errors"].append(batch_error)
     add_overworld_object_report_warning(report, "unmigrated production map_objects.json records remain legacy-compatible; inferred primary_class and tags are report-only outside declared migrated bundles")
     add_overworld_object_report_warning(report, "body_tiles and approach metadata remain warnings for unmigrated objects; pathing adoption is bounded to authored representative masks")
     return report
@@ -3753,6 +4041,13 @@ def print_overworld_object_report(report: dict) -> None:
         print(f"- objects: {batch_001d.get('object_count', 0)}; scenic={batch_001d.get('passable_scenic_count', 0)}; blocking={batch_001d.get('blocking_non_visitable_count', 0)}; edge={batch_001d.get('edge_blocker_count', 0)}; partial_masks={batch_001d.get('partial_body_mask_count', 0)}")
         print(f"- decoration/blocker total={batch_001d.get('decoration_or_blocker_total_count', 0)}; biomes covered={len(batch_001d.get('biome_counts', {}))}; footprints={','.join(batch_001d.get('footprints', {}).keys())}")
         print(f"- edge intents={len(batch_001d.get('edge_intents', []))}; errors={len(batch_001d.get('errors', []))}; warnings={len(batch_001d.get('warnings', []))}")
+    batch_002 = report.get("content_batches", {}).get("batch_002_mines_resource_fronts", {})
+    if batch_002:
+        print("Content Batch 002:")
+        print(f"- objects: {batch_002.get('object_count', 0)}; common={batch_002.get('common_mine_count', 0)}; rare={batch_002.get('rare_resource_front_count', 0)}; support={batch_002.get('support_producer_count', 0)}; normalized={batch_002.get('normalized_resource_object_count', 0)}")
+        print(f"- live common resources={','.join(batch_002.get('common_live_resource_ids', []))}; staged rare resources={','.join(batch_002.get('staged_rare_resource_ids', []))}")
+        print(f"- shape contracts={batch_002.get('shape_contract_ready_count', 0)}; biomes covered={len(batch_002.get('biome_counts', {}))}; footprints={','.join(batch_002.get('footprints', {}).keys())}")
+        print(f"- errors={len(batch_002.get('errors', []))}; warnings={len(batch_002.get('warnings', []))}")
     print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
 
 
