@@ -2592,7 +2592,11 @@ func _sync_scenario_validation_surface() -> void:
 	if _scenario_picker == null:
 		return
 	var check := _editor_scenario_validation_check_payload()
-	_scenario_picker.tooltip_text = String(check.get("tooltip", "Load a scenario working copy to review editor validation."))
+	var tooltip_lines := [String(check.get("tooltip", "Load a scenario working copy to review editor validation."))]
+	var focus_tooltip := String(_editor_selected_validation_focus_payload().get("tooltip", "")).strip_edges()
+	if focus_tooltip != "":
+		tooltip_lines.append(focus_tooltip)
+	_scenario_picker.tooltip_text = "\n".join(tooltip_lines)
 
 func _sync_menu_return_surface() -> void:
 	if _menu_button == null:
@@ -2696,6 +2700,9 @@ func _refresh_labels() -> void:
 	var scenario_check_text := String(_editor_scenario_validation_check_payload().get("text", "")).strip_edges()
 	if scenario_check_text != "":
 		status_lines.append(scenario_check_text)
+	var selected_validation_focus_text := String(_editor_selected_validation_focus_payload().get("text", "")).strip_edges()
+	if selected_validation_focus_text != "":
+		status_lines.append(selected_validation_focus_text)
 	var active_tool_text := String(_editor_active_tool_cue_payload().get("text", "")).strip_edges()
 	if active_tool_text != "":
 		status_lines.append(active_tool_text)
@@ -4519,6 +4526,132 @@ func _editor_scenario_validation_check_payload() -> Dictionary:
 		"scope": "editor_working_copy_only",
 	}
 
+func _editor_selected_validation_focus_payload() -> Dictionary:
+	if _session == null or not _tile_in_bounds(_selected_tile):
+		return {
+			"text": "",
+			"tooltip": "",
+			"state": "no_selection",
+			"scope": "selected_tile_validation_focus",
+		}
+	var details := []
+	for detail in _object_details_at(_selected_tile, false):
+		if detail is Dictionary:
+			details.append(detail)
+	if details.is_empty():
+		return {
+			"text": "",
+			"tooltip": "",
+			"state": "empty_tile",
+			"scope": "selected_tile_validation_focus",
+			"tile": {"x": _selected_tile.x, "y": _selected_tile.y},
+		}
+	var counts := _selected_validation_focus_counts(details)
+	var total_links := int(counts.get("objective", 0)) + int(counts.get("guard", 0)) + int(counts.get("route", 0)) + int(counts.get("reward", 0)) + int(counts.get("enemy_focus", 0))
+	if total_links <= 0 and int(counts.get("warning", 0)) <= 0:
+		return {
+			"text": "",
+			"tooltip": "",
+			"state": "unlinked_selection",
+			"scope": "selected_tile_validation_focus",
+			"tile": {"x": _selected_tile.x, "y": _selected_tile.y},
+			"object_count": details.size(),
+		}
+	var object_labels := []
+	var warnings := []
+	for detail in details:
+		if not (detail is Dictionary):
+			continue
+		var label := _object_recap_label(detail)
+		if label != "" and label not in object_labels:
+			object_labels.append(label)
+		var dependencies = detail.get("authoring_dependencies", {})
+		if dependencies is Dictionary:
+			for warning in dependencies.get("warnings", []):
+				var warning_text := String(warning).strip_edges()
+				if warning_text != "" and warning_text not in warnings:
+					warnings.append(warning_text)
+	var summary := _selected_validation_focus_summary(counts)
+	var selected_label := _compact_join_limited(object_labels, 2)
+	var first_warning := String(warnings[0]).strip_edges() if not warnings.is_empty() else ""
+	var next_step := "recheck linked objectives, guards, rewards, routes, and enemy focus before Play Copy"
+	if first_warning != "":
+		next_step = "resolve or accept the selected warning before Play Copy"
+	var text := "Validation focus: %d,%d %s | %s; next: %s." % [
+		_selected_tile.x,
+		_selected_tile.y,
+		selected_label,
+		summary,
+		next_step,
+	]
+	var tooltip := "Selected Validation Focus\n- Tile: %d,%d.\n- Selection: %s.\n- Links: %s.\n- Next: %s.\n- Scope: selected tile in the editor working copy only; no authored file or campaign progress is written." % [
+		_selected_tile.x,
+		_selected_tile.y,
+		selected_label,
+		summary,
+		next_step,
+	]
+	if first_warning != "":
+		tooltip = "%s\n- First warning: %s" % [tooltip, first_warning]
+	return {
+		"text": text,
+		"tooltip": tooltip,
+		"state": "review",
+		"ready": first_warning == "",
+		"scope": "selected_tile_validation_focus",
+		"tile": {"x": _selected_tile.x, "y": _selected_tile.y},
+		"object_labels": object_labels,
+		"summary": summary,
+		"objective_link_count": int(counts.get("objective", 0)),
+		"guard_link_count": int(counts.get("guard", 0)),
+		"route_link_count": int(counts.get("route", 0)),
+		"reward_link_count": int(counts.get("reward", 0)),
+		"enemy_focus_link_count": int(counts.get("enemy_focus", 0)),
+		"warning_count": int(counts.get("warning", 0)),
+		"first_warning": first_warning,
+		"next_step": next_step,
+	}
+
+func _selected_validation_focus_counts(details: Array) -> Dictionary:
+	var counts := {
+		"objective": 0,
+		"guard": 0,
+		"route": 0,
+		"reward": 0,
+		"enemy_focus": 0,
+		"warning": 0,
+	}
+	for detail in details:
+		if not (detail is Dictionary):
+			continue
+		var dependencies = detail.get("authoring_dependencies", {})
+		if not (dependencies is Dictionary):
+			continue
+		counts["objective"] = int(counts.get("objective", 0)) + dependencies.get("objective_links", []).size()
+		counts["guard"] = int(counts.get("guard", 0)) + dependencies.get("guard_links", []).size()
+		counts["route"] = int(counts.get("route", 0)) + dependencies.get("route_links", []).size()
+		counts["reward"] = int(counts.get("reward", 0)) + dependencies.get("reward_links", []).size()
+		counts["enemy_focus"] = int(counts.get("enemy_focus", 0)) + dependencies.get("enemy_focus_links", []).size()
+		counts["warning"] = int(counts.get("warning", 0)) + dependencies.get("warnings", []).size()
+	return counts
+
+func _selected_validation_focus_summary(counts: Dictionary) -> String:
+	var parts := []
+	var labels := {
+		"objective": "objectives",
+		"guard": "guards",
+		"route": "routes",
+		"reward": "rewards",
+		"enemy_focus": "enemy focus",
+		"warning": "warnings",
+	}
+	for key in ["objective", "guard", "route", "reward", "enemy_focus", "warning"]:
+		var count := int(counts.get(key, 0))
+		if count <= 0:
+			continue
+		parts.append("%s %d" % [String(labels.get(key, key)), count])
+	return " | ".join(parts) if not parts.is_empty() else "no selected authoring links"
+
 func _editor_play_handoff_payload() -> Dictionary:
 	if _session == null:
 		return {
@@ -5486,6 +5619,9 @@ func validation_snapshot() -> Dictionary:
 		"visible_status_full": _status_label.tooltip_text if _status_label != null else "",
 		"scenario_validation_check": _editor_scenario_validation_check_payload(),
 		"scenario_validation_check_text": String(_editor_scenario_validation_check_payload().get("text", "")),
+		"selected_validation_focus": _editor_selected_validation_focus_payload(),
+		"selected_validation_focus_text": String(_editor_selected_validation_focus_payload().get("text", "")),
+		"selected_validation_focus_tooltip": String(_editor_selected_validation_focus_payload().get("tooltip", "")),
 		"scenario_picker_tooltip": _scenario_picker.tooltip_text if _scenario_picker != null else "",
 		"play_readiness_gate": _editor_play_readiness_gate_payload(),
 		"play_readiness_gate_text": String(_editor_play_readiness_gate_payload().get("text", "")),

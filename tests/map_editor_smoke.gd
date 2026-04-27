@@ -47,6 +47,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_scenario_validation_check(snapshot, true, ["Scenario check:", "Scenario Validation", "Ninefold Confluence", "Objectives", "Warnings 0", "Hero 23,26", "Objects", "Play Copy can smoke-test this working copy", "no authored file or campaign progress is written"]):
 		return
+	if not _assert_editor_selected_validation_focus(snapshot, ["Validation focus:", "23,26", "ninefold_embercourt_survey_camp", "objectives 1", "enemy focus", "Selected Validation Focus", "selected tile in the editor working copy only", "Play Copy"]):
+		return
 	if not _assert_editor_menu_return_cue(snapshot, false, ["Menu return:", "Main menu", "no editor edits need preserving", "no authored file or campaign progress is written"]):
 		return
 	if not _assert_editor_active_tool_cue(snapshot, "inspect", ["Tool cue:", "Inspect map content", "next:", "click a tile", "Selected 23,26"]):
@@ -2463,6 +2465,53 @@ func _assert_editor_scenario_validation_check(result: Dictionary, expected_ready
 	]:
 		if combined.find(forbidden) >= 0:
 			_fail("Map editor smoke: scenario validation check leaked internal score field %s: %s." % [forbidden, combined])
+			return false
+	return true
+
+func _assert_editor_selected_validation_focus(result: Dictionary, fragments: Array) -> bool:
+	var focus: Dictionary = result.get("selected_validation_focus", {})
+	var text := String(focus.get("text", ""))
+	var tooltip := String(focus.get("tooltip", ""))
+	var picker_tooltip := String(result.get("scenario_picker_tooltip", ""))
+	var visible_status := String(result.get("visible_status_full", result.get("visible_status_text", "")))
+	if focus.is_empty() or text == "":
+		_fail("Map editor smoke: selected validation focus was not exposed: %s." % result)
+		return false
+	if String(focus.get("scope", "")) != "selected_tile_validation_focus":
+		_fail("Map editor smoke: selected validation focus did not declare selected-tile scope: %s." % focus)
+		return false
+	if int(focus.get("objective_link_count", 0)) <= 0 or int(focus.get("enemy_focus_link_count", 0)) <= 0:
+		_fail("Map editor smoke: selected validation focus did not count linked objective/enemy-focus context: %s." % focus)
+		return false
+	var combined := "%s\n%s\n%s\n%s" % [text, tooltip, picker_tooltip, visible_status]
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected != "" and combined.find(expected) < 0:
+			_fail("Map editor smoke: selected validation focus missed '%s': %s." % [expected, combined])
+			return false
+	if picker_tooltip.find("Selected Validation Focus") < 0:
+		_fail("Map editor smoke: scenario picker tooltip did not carry selected validation focus: %s." % picker_tooltip)
+		return false
+	if visible_status.find("Validation focus:") < 0:
+		_fail("Map editor smoke: visible editor status did not carry selected validation focus: %s." % visible_status)
+		return false
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if combined.find(forbidden) >= 0:
+			_fail("Map editor smoke: selected validation focus leaked internal score field %s: %s." % [forbidden, combined])
 			return false
 	return true
 
