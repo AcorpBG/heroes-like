@@ -165,6 +165,7 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 	var objective_stakes := _skirmish_objective_stakes(scenario)
 	var readiness_summary := _skirmish_readiness_summary(commander_preview, operational_board)
 	var difficulty_consequence := _skirmish_difficulty_consequence(normalized_difficulty, recommended_difficulty)
+	var difficulty_check := describe_skirmish_difficulty_check(normalized_difficulty, recommended_difficulty)
 	var action_consequence := _skirmish_action_consequence(normalized_difficulty)
 	var launch_handoff := _skirmish_launch_handoff(
 		scenario,
@@ -176,7 +177,7 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 	var setup_lines := []
 	setup_lines.append(launch_handoff)
 	setup_lines.append(launch_preview)
-	for context_line in [front_context, objective_stakes, readiness_summary, difficulty_consequence]:
+	for context_line in [front_context, objective_stakes, readiness_summary, difficulty_check, difficulty_consequence]:
 		if String(context_line) != "":
 			setup_lines.append(String(context_line))
 	var briefing_summary: String = ScenarioRulesScript.describe_scenario_briefing(scenario_id)
@@ -207,7 +208,7 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 	setup_lines.append(action_consequence)
 
 	var action_tooltip_lines := [launch_preview, launch_handoff]
-	for action_line in [front_context, readiness_summary, difficulty_consequence, action_consequence]:
+	for action_line in [front_context, readiness_summary, difficulty_check, difficulty_consequence, action_consequence]:
 		if String(action_line) != "":
 			action_tooltip_lines.append(String(action_line))
 
@@ -226,6 +227,7 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 		"front_context": front_context,
 		"objective_stakes": objective_stakes,
 		"readiness_summary": readiness_summary,
+		"difficulty_check": difficulty_check,
 		"difficulty_consequence": difficulty_consequence,
 		"action_consequence": action_consequence,
 		"action_tooltip": "\n".join(action_tooltip_lines),
@@ -486,6 +488,18 @@ static func _skirmish_difficulty_consequence(difficulty_id: String, recommended_
 		difficulty_label(difficulty_id),
 		difficulty_text.to_lower(),
 		recommendation,
+	]
+
+static func describe_skirmish_difficulty_check(difficulty_id: String, recommended_difficulty: String) -> String:
+	var normalized_difficulty := normalize_difficulty(difficulty_id)
+	var normalized_recommendation := normalize_difficulty(recommended_difficulty)
+	var selected_label := difficulty_label(normalized_difficulty)
+	var recommended_label := difficulty_label(normalized_recommendation)
+	if normalized_difficulty == normalized_recommendation:
+		return "Difficulty check: %s matches the recommended front pace; launch keeps the expected opening pressure." % selected_label
+	return "Difficulty check: %s differs from recommended %s; review the pressure change before launching." % [
+		selected_label,
+		recommended_label,
 	]
 
 static func _skirmish_action_consequence(difficulty_id: String) -> String:

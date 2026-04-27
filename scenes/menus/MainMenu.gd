@@ -740,16 +740,13 @@ func _refresh_skirmish_setup() -> void:
 		return
 
 	var recommended_difficulty := String(setup.get("recommended_difficulty", ScenarioSelectRulesScript.default_difficulty_id()))
+	var difficulty_lines := [
+		ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty),
+		String(setup.get("difficulty_check", "")).strip_edges(),
+	]
 	if recommended_difficulty != _selected_difficulty:
-		_set_compact_label(
-			_difficulty_summary_label,
-			"%s\nRecommended: %s." % [
-				ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty),
-				String(setup.get("recommended_difficulty_label", "")),
-			],
-			3,
-			82
-		)
+		difficulty_lines.append("Recommended: %s." % String(setup.get("recommended_difficulty_label", "")))
+	_set_compact_label(_difficulty_summary_label, _join_nonempty_lines(difficulty_lines), 3, 82)
 
 	_set_compact_label(_setup_summary_label, String(setup.get("setup_summary", "")), 3, 84)
 	_set_compact_label(_skirmish_commander_preview_label, String(setup.get("commander_preview", "Commander preview unavailable.")), 4, 84)
