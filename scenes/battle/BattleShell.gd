@@ -660,11 +660,23 @@ func _refresh_save_slot_picker() -> void:
 	var summary: Dictionary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
 	var latest_context := String(surface.get("latest_context", "Latest ready save: none."))
 	var save_check := String(surface.get("save_check", ""))
+	var save_handoff := String(surface.get("save_handoff", ""))
+	var save_handoff_brief := String(surface.get("save_handoff_brief", ""))
 	var return_handoff := String(surface.get("return_handoff", ""))
 	var current_save_recap := String(surface.get("current_save_recap", ""))
-	_system_body_label.text = latest_context if return_handoff == "" else "%s\n%s" % [latest_context, return_handoff]
+	var status_lines := []
+	if save_handoff_brief != "":
+		status_lines.append(save_handoff_brief)
+	if latest_context != "":
+		status_lines.append(latest_context)
+	if status_lines.is_empty() and return_handoff != "":
+		status_lines.append(return_handoff)
+	_system_body_label.visible = not status_lines.is_empty()
+	_system_body_label.text = "\n".join(status_lines.slice(0, min(2, status_lines.size())))
 	var current_context := String(surface.get("current_context", ""))
 	var save_tooltip_lines := [latest_context]
+	if save_handoff != "":
+		save_tooltip_lines.append(save_handoff)
 	if save_check != "":
 		save_tooltip_lines.append(save_check)
 	if return_handoff != "":
@@ -677,10 +689,11 @@ func _refresh_save_slot_picker() -> void:
 	_system_body_label.tooltip_text = "\n".join(save_tooltip_lines)
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = String(surface.get("save_button_label", "Save Battle"))
-	_save_button.tooltip_text = "%s\n%s" % [
+	_save_button.tooltip_text = _join_tooltip_sections([
 		String(surface.get("save_button_tooltip", "Save the active battle safely.")),
 		save_check,
-	]
+		save_handoff,
+	])
 	_menu_button.text = String(surface.get("menu_button_label", "Return to Menu"))
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
@@ -811,6 +824,10 @@ func validation_snapshot() -> Dictionary:
 		"battle_board": _battle_board_view.validation_hex_layout_summary() if _battle_board_view.has_method("validation_hex_layout_summary") else {},
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 		"save_surface": AppRouter.active_save_surface(),
+		"save_handoff_visible_text": _system_body_label.text,
+		"save_handoff_visible": _system_body_label.visible,
+		"save_button_text": _save_button.text,
+		"save_button_tooltip_text": _save_button.tooltip_text,
 		"save_status_visible_text": _system_body_label.text,
 		"save_status_tooltip_text": _system_body_label.tooltip_text,
 	}

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T02:49:00Z",
+  "updatedAt": "2026-04-27T03:25:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "battle-target-cycle-cue-10184",
-  "currentSliceTitle": "Surface compact battle target-cycle cues",
+  "currentSliceId": "battle-save-handoff-cue-10184",
+  "currentSliceTitle": "Surface compact battle save handoff cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact visible battle target-cycle cues using existing active stack, selected target, legal-target, and enemy roster state only. The Prev/Next target controls now show the current target position, their tooltips explain focus, scope, readiness, and cycle direction, and focused battle smoke asserts the visible cue plus no internal score/debug leaks. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact visible battle footer save-handoff cue using existing SaveService save-handoff payloads only. The battle save/status footer now shows where Save Battle writes and what Load Selected resumes, Save Battle tooltips carry the full handoff, and focused town/battle smoke asserts the visible cue plus no internal score/debug leaks. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
