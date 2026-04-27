@@ -270,7 +270,16 @@ func _refresh() -> void:
 	_set_compact_label(_tavern_label, TownRules.describe_tavern(_session), 2)
 	_set_compact_label(_transfer_label, TownRules.describe_transfer(_session), 2)
 	_set_compact_label(_response_label, TownRules.describe_responses(_session), 2)
-	_set_compact_label(_study_label, TownRules.describe_spell_access(_session), 2)
+	var study_readiness := _study_readiness_surface()
+	var study_text := _join_tooltip_sections([
+		String(study_readiness.get("visible_text", "")),
+		TownRules.describe_spell_access(_session),
+	])
+	_set_compact_label(_study_label, study_text, 2)
+	_study_label.tooltip_text = _join_tooltip_sections([
+		String(study_readiness.get("tooltip_text", "")),
+		TownRules.describe_spell_access(_session),
+	])
 	_set_compact_label(_spellbook_label, OverworldRules.describe_spellbook(_session), 2)
 	_set_compact_label(_artifact_label, TownRules.describe_artifacts(_session), 2)
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
@@ -371,6 +380,7 @@ func validation_snapshot() -> Dictionary:
 	var build_readiness := _build_readiness_surface()
 	var market_readiness := _market_readiness_surface()
 	var muster_readiness := _muster_readiness_surface()
+	var study_readiness := _study_readiness_surface()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -419,6 +429,9 @@ func validation_snapshot() -> Dictionary:
 		"study_text": TownRules.describe_spell_access(_session),
 		"study_visible_text": _study_label.text,
 		"study_tooltip_text": _study_label.tooltip_text,
+		"study_readiness": study_readiness,
+		"study_readiness_visible_text": String(study_readiness.get("visible_text", "")),
+		"study_readiness_tooltip_text": String(study_readiness.get("tooltip_text", "")),
 		"spellbook_text": OverworldRules.describe_spellbook(_session),
 		"spellbook_visible_text": _spellbook_label.text,
 		"spellbook_tooltip_text": _spellbook_label.tooltip_text,
@@ -1140,6 +1153,103 @@ func _market_readiness_surface() -> Dictionary:
 		"ready_order_count": ready_orders,
 		"blocked_order_count": blocked_orders,
 		"listed_order_count": actions.size(),
+		"best_order_label": label,
+		"readiness": readiness,
+		"why_it_matters": impact,
+		"next_step": next_step,
+	}
+
+func _study_readiness_surface() -> Dictionary:
+	var town := TownRules.get_active_town(_session)
+	var actions := TownRules.get_spell_learning_actions(_session)
+	var hero_value: Variant = _session.overworld.get("hero", {})
+	var hero: Dictionary = hero_value if hero_value is Dictionary else {}
+	var tier := TownRules.current_spell_tier(town) if not town.is_empty() else 0
+	var accessible_count := 0
+	var known_count := 0
+	if not town.is_empty():
+		for spell_id_value in TownRules.accessible_spell_ids(town):
+			var spell_id := String(spell_id_value)
+			if spell_id == "":
+				continue
+			accessible_count += 1
+			if SpellRules.knows_spell(hero, spell_id):
+				known_count += 1
+
+	var ready_orders := 0
+	var blocked_orders := 0
+	var best_ready := {}
+	var best_blocked := {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if bool(action.get("disabled", false)):
+			blocked_orders += 1
+			if best_blocked.is_empty():
+				best_blocked = action
+			continue
+		ready_orders += 1
+		if best_ready.is_empty():
+			best_ready = action
+
+	var selected_action := best_ready
+	var state_line := "no archive halls are standing"
+	var visible := "Study check: no archive"
+	if tier > 0:
+		state_line = "no uncatalogued spells remain for this hero"
+		visible = "Study check: learned %d/%d" % [known_count, accessible_count]
+	if ready_orders > 0:
+		state_line = "Ready now: %d spell%s can be learned" % [ready_orders, "" if ready_orders == 1 else "s"]
+		visible = "Study check: Ready x%d/%d" % [ready_orders, max(accessible_count, ready_orders)]
+	elif blocked_orders > 0:
+		selected_action = best_blocked
+		state_line = "Blocked: %d spell stud%s waiting on town or hero state" % [
+			blocked_orders,
+			"y" if blocked_orders == 1 else "ies",
+		]
+		visible = "Study check: Blocked x0/%d" % blocked_orders
+
+	var label := "No spell study order"
+	var readiness := state_line
+	var impact := "Spell study expands the hero's field and battle options before leaving town."
+	var next_step := "Build archive halls, review the spellbook, or leave when study is settled."
+	if not selected_action.is_empty():
+		label = String(selected_action.get("button_label", selected_action.get("label", "Spell study order"))).strip_edges()
+		readiness = _town_action_button_readiness(selected_action, "study")
+		impact = _town_action_button_impact(selected_action, "study")
+		next_step = _town_action_button_next_step(
+			selected_action,
+			"study",
+			label,
+			_town_action_surface_label("study"),
+			readiness
+		)
+	elif tier > 0:
+		next_step = "Review the spellbook or leave when town orders are set."
+
+	var tooltip_lines := [
+		"Study Readiness",
+		"- Archive tier: %d" % tier,
+		"- Catalog: %d known, %d learnable, %d accessible" % [
+			known_count,
+			ready_orders,
+			accessible_count,
+		],
+		"- %s" % state_line,
+		"- Best order: %s" % label,
+		"- Readiness: %s" % readiness,
+		"- Why it matters: %s" % impact,
+		"- Next practical action: %s" % next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"archive_tier": tier,
+		"accessible_count": accessible_count,
+		"known_count": known_count,
+		"ready_order_count": ready_orders,
+		"blocked_order_count": blocked_orders,
 		"best_order_label": label,
 		"readiness": readiness,
 		"why_it_matters": impact,

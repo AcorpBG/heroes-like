@@ -61,6 +61,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_magic_inspection_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_study_readiness_cue(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_build_recruit_next_step_contract(shell):
 		get_tree().quit(1)
 		return false
@@ -716,6 +719,42 @@ func _assert_town_magic_inspection_contract(shell: Node) -> bool:
 				return true
 	push_error("Town smoke: study actions do not expose compact category/cost/effect/use payloads: %s." % study_actions)
 	return false
+
+func _assert_town_study_readiness_cue(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_action_catalog"):
+		push_error("Town smoke: shell is missing study-readiness validation hooks.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var readiness: Dictionary = snapshot.get("study_readiness", {}) if snapshot.get("study_readiness", {}) is Dictionary else {}
+	var catalog: Dictionary = shell.call("validation_action_catalog")
+	var study_actions: Array = catalog.get("study", []) if catalog.get("study", []) is Array else []
+	var cue_text := "\n".join([
+		String(snapshot.get("study_visible_text", "")),
+		String(snapshot.get("study_tooltip_text", "")),
+		String(snapshot.get("study_readiness_visible_text", "")),
+		String(snapshot.get("study_readiness_tooltip_text", "")),
+		JSON.stringify(readiness),
+	])
+	for token in ["Study check:", "Study Readiness", "Archive tier:", "Catalog:", "Best order:", "Readiness:", "Why it matters:", "Next practical action:"]:
+		if not cue_text.contains(token):
+			push_error("Town smoke: study readiness cue lost %s clarity: %s." % [token, cue_text])
+			return false
+	var ready_count := int(readiness.get("ready_order_count", -1))
+	var accessible_count := int(readiness.get("accessible_count", -1))
+	if ready_count != study_actions.size():
+		push_error("Town smoke: study readiness count does not match visible study actions: readiness=%s actions=%s." % [readiness, study_actions])
+		return false
+	if accessible_count < ready_count:
+		push_error("Town smoke: study readiness accessible count is smaller than learnable actions: readiness=%s." % readiness)
+		return false
+	if ready_count > 0 and not cue_text.contains("Learn "):
+		push_error("Town smoke: study readiness cue did not name a learnable spell order: %s." % cue_text)
+		return false
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if cue_text.contains(leak_token):
+			push_error("Town smoke: study readiness cue leaked internal token %s: %s." % [leak_token, cue_text])
+			return false
+	return true
 
 func _assert_battle_stack_inspection_contract(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot"):
