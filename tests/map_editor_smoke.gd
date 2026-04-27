@@ -45,6 +45,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_play_readiness_gate(snapshot, true, ["Play gate:", "smoke-test this working copy", "Objectives", "Warnings 0", "Hero", "Objects"]):
 		return
+	if not _assert_editor_scenario_validation_check(snapshot, true, ["Scenario check:", "Scenario Validation", "Ninefold Confluence", "Objectives", "Warnings 0", "Hero 23,26", "Objects", "Play Copy can smoke-test this working copy", "no authored file or campaign progress is written"]):
+		return
 	if not _assert_editor_menu_return_cue(snapshot, false, ["Menu return:", "Main menu", "no editor edits need preserving", "no authored file or campaign progress is written"]):
 		return
 	if not _assert_editor_active_tool_cue(snapshot, "inspect", ["Tool cue:", "Inspect map content", "next:", "click a tile", "Selected 23,26"]):
@@ -2408,6 +2410,59 @@ func _assert_editor_play_readiness_gate(result: Dictionary, expected_ready: bool
 	]:
 		if leak_text.find(forbidden) >= 0:
 			_fail("Map editor smoke: editor Play Copy readiness gate leaked internal score field %s: %s." % [forbidden, leak_text])
+			return false
+	return true
+
+func _assert_editor_scenario_validation_check(result: Dictionary, expected_ready: bool, fragments: Array) -> bool:
+	var check: Dictionary = result.get("scenario_validation_check", {})
+	var text := String(check.get("text", ""))
+	var tooltip := String(check.get("tooltip", ""))
+	var picker_tooltip := String(result.get("scenario_picker_tooltip", ""))
+	var visible_status := String(result.get("visible_status_full", result.get("visible_status_text", "")))
+	if check.is_empty() or text == "":
+		_fail("Map editor smoke: editor scenario validation check was not exposed: %s." % result)
+		return false
+	if bool(check.get("ready", not expected_ready)) != expected_ready:
+		_fail("Map editor smoke: scenario validation check ready state mismatch: %s." % check)
+		return false
+	if String(check.get("scope", "")) != "editor_working_copy_only":
+		_fail("Map editor smoke: scenario validation check did not declare editor working-copy scope: %s." % check)
+		return false
+	if int(check.get("covered_objective_anchor_count", 0)) <= 0 or int(check.get("objective_anchor_count", 0)) <= 0:
+		_fail("Map editor smoke: scenario validation check did not count objective anchors: %s." % check)
+		return false
+	if int(check.get("missing_objective_anchor_count", -1)) != 0 or int(check.get("warning_count", -1)) != 0:
+		_fail("Map editor smoke: scenario validation check raised unexpected warnings for the default fixture: %s." % check)
+		return false
+	var combined := "%s\n%s\n%s\n%s" % [text, tooltip, picker_tooltip, visible_status]
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected != "" and combined.find(expected) < 0:
+			_fail("Map editor smoke: scenario validation check missed '%s': %s." % [expected, combined])
+			return false
+	if picker_tooltip.find("Scenario Validation") < 0:
+		_fail("Map editor smoke: scenario picker tooltip did not carry the validation check: %s." % picker_tooltip)
+		return false
+	if visible_status.find("Scenario check:") < 0:
+		_fail("Map editor smoke: visible editor status did not carry the scenario validation check: %s." % visible_status)
+		return false
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if combined.find(forbidden) >= 0:
+			_fail("Map editor smoke: scenario validation check leaked internal score field %s: %s." % [forbidden, combined])
 			return false
 	return true
 

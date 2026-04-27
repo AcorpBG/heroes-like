@@ -2561,6 +2561,7 @@ func _refresh_state() -> void:
 	_sync_tool_buttons()
 	_sync_property_controls()
 	_sync_object_taxonomy_summary()
+	_sync_scenario_validation_surface()
 	_sync_play_handoff_surface()
 	_sync_menu_return_surface()
 	_sync_restore_tile_surface()
@@ -2586,6 +2587,12 @@ func _sync_play_handoff_surface() -> void:
 	if return_tooltip != "":
 		tooltip_lines.append(return_tooltip)
 	_play_button.tooltip_text = "\n".join(tooltip_lines) if not tooltip_lines.is_empty() else "Load a scenario working copy before play-testing it."
+
+func _sync_scenario_validation_surface() -> void:
+	if _scenario_picker == null:
+		return
+	var check := _editor_scenario_validation_check_payload()
+	_scenario_picker.tooltip_text = String(check.get("tooltip", "Load a scenario working copy to review editor validation."))
 
 func _sync_menu_return_surface() -> void:
 	if _menu_button == null:
@@ -2686,6 +2693,9 @@ func _refresh_labels() -> void:
 			_pending_road_path_start.y,
 		]
 	var status_lines := [state_line]
+	var scenario_check_text := String(_editor_scenario_validation_check_payload().get("text", "")).strip_edges()
+	if scenario_check_text != "":
+		status_lines.append(scenario_check_text)
 	var active_tool_text := String(_editor_active_tool_cue_payload().get("text", "")).strip_edges()
 	if active_tool_text != "":
 		status_lines.append(active_tool_text)
@@ -4449,6 +4459,66 @@ func _editor_play_readiness_gate_payload() -> Dictionary:
 		"object_count": _placement_count(),
 	}
 
+func _editor_scenario_validation_check_payload() -> Dictionary:
+	if _session == null:
+		return {
+			"text": "",
+			"tooltip": "Load a scenario working copy to review editor validation.",
+			"state": "no_working_copy",
+			"ready": false,
+		}
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario_name := String(scenario.get("name", _session.scenario_id))
+	var validation := _scenario_authoring_validation_payload()
+	var warning_count := int(validation.get("warning_count", 0))
+	var covered_count := int(validation.get("covered_objective_anchor_count", 0))
+	var objective_count := int(validation.get("objective_anchors", []).size())
+	var missing_count := int(validation.get("missing_objective_anchor_count", 0))
+	var hero_position := OverworldRules.hero_position(_session)
+	var ready := warning_count == 0 and missing_count == 0
+	var state := "ready" if ready else "review"
+	var next_step := "Play Copy can smoke-test this working copy" if ready else "review authoring warnings before Play Copy"
+	var text := "Scenario check: %s | Objectives %d/%d covered | Warnings %d | Hero %d,%d | Objects %d." % [
+		next_step,
+		covered_count,
+		objective_count,
+		warning_count,
+		hero_position.x,
+		hero_position.y,
+		_placement_count(),
+	]
+	var warnings: Array = validation.get("warnings", [])
+	var first_warning := String(warnings[0]).strip_edges() if not warnings.is_empty() else ""
+	var tooltip := "Scenario Validation\n- Scenario: %s.\n- State: %s.\n- Current check: Objectives %d/%d covered; warnings %d.\n- Hero start: %d,%d.\n- Objects: %d.\n- Next: %s.\n- Scope: editor working copy only; no authored file or campaign progress is written." % [
+		scenario_name,
+		state.capitalize(),
+		covered_count,
+		objective_count,
+		warning_count,
+		hero_position.x,
+		hero_position.y,
+		_placement_count(),
+		next_step,
+	]
+	if first_warning != "":
+		tooltip = "%s\n- First warning: %s" % [tooltip, first_warning]
+	return {
+		"text": text,
+		"tooltip": tooltip,
+		"state": state,
+		"ready": ready,
+		"scenario_id": _session.scenario_id,
+		"scenario_name": scenario_name,
+		"covered_objective_anchor_count": covered_count,
+		"objective_anchor_count": objective_count,
+		"missing_objective_anchor_count": missing_count,
+		"warning_count": warning_count,
+		"first_warning": first_warning,
+		"hero_position": {"x": hero_position.x, "y": hero_position.y},
+		"object_count": _placement_count(),
+		"scope": "editor_working_copy_only",
+	}
+
 func _editor_play_handoff_payload() -> Dictionary:
 	if _session == null:
 		return {
@@ -5414,6 +5484,9 @@ func validation_snapshot() -> Dictionary:
 		"status_text": _last_message,
 		"visible_status_text": _status_label.text if _status_label != null else "",
 		"visible_status_full": _status_label.tooltip_text if _status_label != null else "",
+		"scenario_validation_check": _editor_scenario_validation_check_payload(),
+		"scenario_validation_check_text": String(_editor_scenario_validation_check_payload().get("text", "")),
+		"scenario_picker_tooltip": _scenario_picker.tooltip_text if _scenario_picker != null else "",
 		"play_readiness_gate": _editor_play_readiness_gate_payload(),
 		"play_readiness_gate_text": String(_editor_play_readiness_gate_payload().get("text", "")),
 		"play_handoff": _editor_play_handoff_payload(),
