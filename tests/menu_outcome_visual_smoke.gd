@@ -128,7 +128,22 @@ func _run_main_menu_smoke() -> bool:
 			String(first_view_tooltips.get("Editor", "")),
 			String(first_view_tooltips.get("Quit", "")),
 		],
-		["Command cue:", "Campaign opens", "Skirmish opens", "Load opens", "Load Selected", "Play check:", "Resume handoff:", "Settings opens", "device config", "Editor opens", "Play Copy", "Quit closes", "Quit Check", "Resume point:"]
+		["Command cue:", "Campaign opens", "Skirmish opens", "Load opens", "Load Selected", "Continue Check", "Play check:", "Resume handoff:", "Settings opens", "device config", "Editor opens", "Play Copy", "Quit closes", "Quit Check", "Resume point:"]
+	):
+		return false
+	var continue_check: Dictionary = first_view_snapshot.get("continue_check", {}) if first_view_snapshot.get("continue_check", {}) is Dictionary else {}
+	if not _assert_text_contains_all(
+		"Main menu Continue check cue",
+		[
+			String(first_view_snapshot.get("continue_check_text", "")),
+			String(first_view_snapshot.get("continue_check_tooltip", "")),
+			String(continue_check.get("visible_text", "")),
+			String(continue_check.get("tooltip_text", "")),
+			String(first_view_tooltips.get("Load", "")),
+			String(first_view_snapshot.get("active_expedition", "")),
+			String(first_view_snapshot.get("active_expedition_full", "")),
+		],
+		["Continue check:", "Continue Latest opens", "Continue Check", "Action:", "loads", "Play check:", "Resume handoff:", "Inspection:", "does not load, save, route, or change campaign progression"]
 	):
 		return false
 	var quit_check: Dictionary = first_view_snapshot.get("quit_check", {}) if first_view_snapshot.get("quit_check", {}) is Dictionary else {}
@@ -155,7 +170,7 @@ func _run_main_menu_smoke() -> bool:
 	if not _assert_text_contains_all(
 		"Main menu footer latest save target",
 		[String(first_view_snapshot.get("active_expedition_full", first_view_snapshot.get("active_expedition", "")))],
-		["Latest save", "Skirmish", "River Pass", "Day", "Overworld", "Play check:", "Resume handoff:"]
+		["Continue check:", "Continue Latest opens", "Latest save", "Skirmish", "River Pass", "Day", "Overworld", "Play check:", "Resume handoff:"]
 	):
 		return false
 	if not _assert_no_score_leak(
@@ -165,6 +180,8 @@ func _run_main_menu_smoke() -> bool:
 			String(first_view_snapshot.get("active_expedition_full", first_view_snapshot.get("active_expedition", ""))),
 			String(first_view_snapshot.get("latest_play_check", "")),
 			String(first_view_snapshot.get("latest_resume_handoff", "")),
+			String(first_view_snapshot.get("continue_check_text", "")),
+			String(first_view_snapshot.get("continue_check_tooltip", "")),
 			String(first_view_snapshot.get("quit_check_text", "")),
 			String(first_view_snapshot.get("quit_check_tooltip", "")),
 			"\n".join(first_view_tooltips.values()),

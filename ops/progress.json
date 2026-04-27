@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T08:15:24Z",
+  "updatedAt": "2026-04-27T08:20:30Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "main-menu-quit-check-cue-10184",
-  "currentSliceTitle": "Surface compact main-menu Quit check cue",
+  "currentSliceId": "main-menu-continue-check-cue-10184",
+  "currentSliceTitle": "Surface compact main-menu Continue check cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact visible main-menu Quit check cue using the existing first-view command, footer expedition pocket, tooltip, and validation snapshot surfaces only. The first-view footer now surfaces quit consequence and save-first resume guidance, the Quit command tooltip carries the same boundary detail, and focused smoke coverage checks visible cue, tooltip, snapshot payload, and no internal score/debug field exposure. UI clarity only; no routing semantics, save schema/version, campaign progression semantic changes, content migration, durable logs, AI behavior, renderer import, or pathing/body-tile adoption.",
+  "currentSliceNotes": "Implemented a compact visible main-menu Continue check cue using existing latest-save, resume target, first-view footer, Load tooltip, and validation snapshot surfaces only. The first-view footer now states what Continue Latest will open, the Load tooltip carries the same resume boundary, and focused smoke coverage checks visible cue, tooltip, snapshot payload, and no internal score/debug field exposure. UI clarity only; no routing semantics, save schema/version, campaign progression semantic changes, content migration, durable logs, AI behavior, renderer import, or pathing/body-tile adoption.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2411,6 +2411,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T08:11:36Z",
       "completedAt": "2026-04-27T08:15:24Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "main-menu-continue-check-cue-10184",
+      "title": "Surface compact main-menu Continue check cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T08:18:28Z",
+      "completedAt": "2026-04-27T08:20:30Z",
       "difficulty": "small"
     }
   ],
