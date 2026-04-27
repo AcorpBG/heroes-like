@@ -27,6 +27,8 @@ func _run() -> void:
 		return
 	if not _assert_field_readiness_recap_contract(shell):
 		return
+	if not _assert_status_forecast_cue_contract(shell):
+		return
 	if not _assert_end_turn_readiness_confirmation_contract(shell):
 		return
 	if not _assert_drawer_handoff_cue_contract(shell):
@@ -328,6 +330,42 @@ func _assert_end_turn_readiness_confirmation_contract(shell: Node) -> bool:
 	):
 		return false
 	if not _assert_no_ai_score_leak("overworld end-turn readiness confirmation", joined):
+		return false
+	return true
+
+func _assert_status_forecast_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Overworld smoke: shell is missing status forecast validation hooks.")
+		get_tree().quit(1)
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var surface: Dictionary = snapshot.get("status_forecast", {}) if snapshot.get("status_forecast", {}) is Dictionary else {}
+	var joined := "\n".join([
+		String(snapshot.get("status_visible_text", "")),
+		String(snapshot.get("status_tooltip_text", "")),
+		String(surface.get("visible_text", "")),
+		String(surface.get("tooltip_text", "")),
+		String(surface.get("current_status", "")),
+		String(surface.get("forecast", "")),
+		String(surface.get("forecast_compact", "")),
+	])
+	if not _assert_text_contains_all(
+		"overworld status forecast cue",
+		[joined],
+		[
+			"Week 1 Day 1",
+			"Move",
+			"Next: Day",
+			"Status Forecast",
+			"Current:",
+			"Next day:",
+			"Next day: Day",
+			"income",
+			"move resets",
+		]
+	):
+		return false
+	if not _assert_no_ai_score_leak("overworld status forecast cue", joined):
 		return false
 	return true
 
