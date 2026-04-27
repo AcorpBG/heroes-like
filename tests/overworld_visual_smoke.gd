@@ -51,6 +51,8 @@ func _run() -> void:
 		return
 	if not _assert_overworld_command_check_cue_contract(shell):
 		return
+	if not _assert_overworld_specialty_check_cue_contract(shell):
+		return
 	if not _assert_route_decision_clarity_contract(shell):
 		return
 	if not _assert_route_target_handoff_contract(shell):
@@ -193,6 +195,92 @@ func _assert_overworld_command_check_cue_contract(shell: Node) -> bool:
 	session.overworld["hero_position"] = original_hero_position
 	session.overworld["movement"] = original_movement
 	session.overworld["army"] = original_army
+	HeroCommandRules.normalize_session(session)
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+	return true
+
+func _assert_overworld_specialty_check_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_perform_specialty_action"):
+		push_error("Overworld smoke: shell is missing specialty-check validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var original_hero = session.overworld.get("hero", {}).duplicate(true)
+	var original_player_heroes = session.overworld.get("player_heroes", []).duplicate(true)
+	var original_movement = session.overworld.get("movement", {}).duplicate(true)
+
+	var idle_snapshot: Dictionary = shell.call("validation_snapshot")
+	var idle_text := "\n".join([
+		String(idle_snapshot.get("specialty_check_visible_text", "")),
+		String(idle_snapshot.get("specialty_check_tooltip_text", "")),
+		String(idle_snapshot.get("specialty_visible_text", "")),
+		String(idle_snapshot.get("specialty_tooltip_text", "")),
+	])
+	if not _assert_text_contains_all(
+		"overworld idle specialty check cue",
+		[idle_text],
+		["Specialty check:", "Specialty Check", "no pending specialty pick", "Current build:", "Next practical action:", "inspection alone does not change"]
+	):
+		return false
+	if not _assert_no_ai_score_leak("overworld idle specialty check cue", idle_text):
+		return false
+
+	var hero: Dictionary = session.overworld.get("hero", {}).duplicate(true)
+	hero["level"] = 2
+	hero["pending_specialty_choices"] = [
+		{"level": 2, "options": ["spellwright", "drillmaster", "borderwarden"]},
+	]
+	session.overworld["hero"] = hero
+	HeroCommandRules.commit_active_hero(session)
+	shell.call("_refresh")
+
+	var ready_snapshot: Dictionary = shell.call("validation_snapshot")
+	var spellwright_action := _validation_action_by_id(ready_snapshot.get("specialty_actions", []), "choose_specialty:spellwright")
+	if spellwright_action.is_empty():
+		push_error("Overworld smoke: pending specialty choice did not expose Spellwright action. snapshot=%s" % ready_snapshot)
+		get_tree().quit(1)
+		return false
+	var action_surfaces := []
+	for surface in (ready_snapshot.get("specialty_action_surfaces", []) if ready_snapshot.get("specialty_action_surfaces", []) is Array else []):
+		if surface is Dictionary:
+			action_surfaces.append("%s\n%s" % [String(surface.get("text", "")), String(surface.get("tooltip", ""))])
+	var ready_text := "\n".join([
+		String(ready_snapshot.get("specialty_check_visible_text", "")),
+		String(ready_snapshot.get("specialty_check_tooltip_text", "")),
+		String(ready_snapshot.get("specialty_visible_text", "")),
+		String(ready_snapshot.get("specialty_tooltip_text", "")),
+		String(spellwright_action.get("label", "")),
+		String(spellwright_action.get("summary", "")),
+		String(spellwright_action.get("specialty_check_tooltip_text", "")),
+		"\n".join(action_surfaces),
+	])
+	if not _assert_text_contains_all(
+		"overworld pending specialty check cue",
+		[ready_text],
+		["Specialty check:", "Specialty Check", "1 pick ready", "Spellwright", "Drillmaster", "Border Warden", "Level 2", "Specialty Pick Check", "Choice:", "Readiness:", "pick ready", "Effect:", "State change:"]
+	):
+		return false
+	if not _assert_no_ai_score_leak("overworld pending specialty check cue", ready_text):
+		return false
+
+	var choose_result: Dictionary = shell.call("validation_perform_specialty_action", "choose_specialty:spellwright")
+	if not bool(choose_result.get("ok", false)):
+		push_error("Overworld smoke: live specialty choice did not update the commander build. result=%s" % choose_result)
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"overworld specialty choice feedback",
+		[String(choose_result.get("message", "")), String(choose_result.get("specialty_tooltip_text", ""))],
+		["adopts Spellwright", "Spellwright", "Current build", "no pending specialty pick"]
+	):
+		return false
+	if not _assert_action_feedback("specialty choice feedback cue", shell.call("validation_snapshot"), "hero", ["Hero:", "Spellwright"]):
+		return false
+
+	session.overworld["hero"] = original_hero
+	session.overworld["player_heroes"] = original_player_heroes
+	session.overworld["movement"] = original_movement
 	HeroCommandRules.normalize_session(session)
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
