@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "faction-town-unit-asymmetry-content-10184",
-  "currentSliceTitle": "Faction Town And Unit Asymmetry",
+  "currentSliceId": "world-faction-identity-implementation-bridge-10184",
+  "currentSliceTitle": "World And Faction Identity Implementation Bridge",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed P2.1 child: legacy Embercourt/Mireclaw/Sunvault seed towns now expose their six-faction signature building chains and direct ladder recruit growth/discount hooks; focused faction_town_unit_asymmetry_report proves six unique unit, building, hero, and seed-town fingerprints without save-version changes.",
+  "currentSliceNotes": "Completed P2.1 parent after explicit child verification: world-faction-mechanics-identity-hooks-10184, faction-town-unit-asymmetry-content-10184, and faction-scenario-placement-ai-pressure-10184 are all completed in plannedSlices; implementation evidence covers mechanics/resource affinity, town/unit asymmetry, scenario placement, and AI pressure for multiple factions.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T12:55:07Z",
+  "updatedAt": "2026-04-27T13:02:35Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -111,8 +111,8 @@
       "id": "world-faction-identity-implementation-bridge-10184",
       "title": "World And Faction Identity Implementation Bridge",
       "phase": "phase-2-deep-production-foundation",
-      "status": "docs_ready",
-      "classification": "parent_foundation_docs_ready_children_pending",
+      "status": "completed",
+      "classification": "parent_foundation_completed_children_completed",
       "sourceDocs": [
         "docs/worldbuilding-foundation.md",
         "docs/factions-content-bible.md",
@@ -127,8 +127,8 @@
         "scenario placement hooks",
         "faction-specific AI/economy hooks"
       ],
-      "evidence": "Six faction records and broad content scaffolds exist, but the slice requires at least two factions to affect real player or AI decisions beyond shared templates.",
-      "notes": "Do not mark completed for design docs or raw JSON breadth.",
+      "evidence": "P2.1 child implementation now proves faction mechanics/resource affinity, town and unit asymmetry, and scenario placement plus AI pressure for multiple factions beyond shared templates.",
+      "notes": "Completed P2.1 parent after explicit child verification in plannedSlices: world-faction-mechanics-identity-hooks-10184, faction-town-unit-asymmetry-content-10184, and faction-scenario-placement-ai-pressure-10184 are all completed.",
       "sliceType": "parent",
       "childSliceIds": [
         "world-faction-mechanics-identity-hooks-10184",
@@ -140,8 +140,14 @@
         "world-faction-docs",
         "concept-art-docs"
       ],
-      "completedImplementationEvidenceIds": [],
-      "reportOnlyEvidenceIds": []
+      "completedImplementationEvidenceIds": [
+        "world-faction-mechanics-identity-hooks-10184",
+        "faction-town-unit-asymmetry-content-10184",
+        "faction-scenario-placement-ai-pressure-10184"
+      ],
+      "reportOnlyEvidenceIds": [],
+      "updatedAt": "2026-04-27T13:02:35Z",
+      "completedAt": "2026-04-27T13:02:35Z"
     },
     {
       "id": "concept-art-curation-gate-10184",
@@ -578,7 +584,7 @@
       "id": "faction-scenario-placement-ai-pressure-10184",
       "title": "Faction Scenario Placement And AI Pressure",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "world-faction-identity-implementation-bridge-10184",
@@ -593,15 +599,20 @@
         "player-readable faction pressure surfaces when selected"
       ],
       "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . tests/faction_scenario_ai_pressure_report.tscn",
         "python3 tests/validate_repo.py",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "tests/faction_scenario_ai_pressure_report.gd proves Prismhearth Watch uses Mireclaw AI pressure, Glassroad Sundering uses direct Embercourt charter-front pressure, Ninefold Confluence includes Mireclaw but not Embercourt as an enemy faction, and compact AI pressure/assignment events do not leak score-table fields."
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T13:02:04Z",
+      "startedAt": "2026-04-27T12:57:55Z",
+      "notes": "Completed P2.1 child: added and ran tests/faction_scenario_ai_pressure_report.tscn to prove Prismhearth uses Mireclaw pressure, Glassroad uses direct Embercourt charter-front pressure, and Ninefold includes Mireclaw but not Embercourt enemy pressure; compact AI pressure/assignment events passed leak checks.",
+      "completedAt": "2026-04-27T13:02:04Z"
     },
     {
       "id": "concept-art-decision-register-10184",
@@ -2721,22 +2732,25 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "faction-scenario-placement-ai-pressure-10184",
-      "title": "Faction Scenario Placement And AI Pressure",
+      "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+      "title": "Hero Task-State Save-Normalizer Preservation Report",
       "status": "pending",
-      "parentSliceId": "world-faction-identity-implementation-bridge-10184",
+      "parentSliceId": "strategic-ai-foundation-continuation-10184",
       "sourceDocs": [
-        "docs/factions-content-bible.md",
-        "docs/strategic-ai-foundation.md"
+        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
+        "docs/strategic-ai-hero-task-state-report-gate-review.md",
+        "docs/strategic-ai-hero-task-state-boundary-plan.md"
       ],
       "implementationTargets": [
-        "scenario placement hooks",
-        "strategic AI pressure reports",
-        "player-readable faction pressure surfaces when selected"
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_state_normalizer_preservation_report.gd",
+        "tests/ai_hero_task_state_normalizer_preservation_report.tscn",
+        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-report.md"
       ],
+      "notes": "Selected next implementation candidate after completing P2.1 parent; preserve old-save absence and normalize only explicitly present synthetic hero task state without SAVE_VERSION changes.",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
-      "source": "PLAN.md Phase 2 Operational Child Slices / P2.1"
+      "source": "PLAN.md P2.8a / selected next implementation candidate"
     }
   ],
   "stoppedOrPausedTasks": [
