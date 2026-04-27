@@ -275,16 +275,18 @@ func _run_main_menu_smoke() -> bool:
 		"Main menu skirmish launch preview",
 		[
 			String(skirmish_snapshot.get("skirmish_setup_full", skirmish_snapshot.get("skirmish_setup", ""))),
+			String(skirmish_snapshot.get("difficulty_summary_full", skirmish_snapshot.get("difficulty_summary", ""))),
 			String(skirmish_snapshot.get("start_skirmish_tooltip", "")),
 			String(skirmish_snapshot.get("skirmish_commander_preview_full", skirmish_snapshot.get("skirmish_commander_preview", ""))),
 			String(selected_skirmish_setup.get("launch_handoff", "")),
 			String(selected_skirmish_setup.get("front_context", "")),
 			String(selected_skirmish_setup.get("objective_stakes", "")),
 			String(selected_skirmish_setup.get("readiness_summary", "")),
+			String(selected_skirmish_setup.get("difficulty_check", "")),
 			String(selected_skirmish_setup.get("difficulty_consequence", "")),
 			String(selected_skirmish_setup.get("action_consequence", "")),
 		],
-		["Launch Preview", "Launch handoff:", "fresh Skirmish expedition on Day 1", "Skirmish", "Warlord", "River Pass", "Front context:", "Objective stakes:", "Readiness watch:", "Difficulty consequence:", "Action consequence:", "fresh Skirmish expedition", "does not change campaign progression", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Gear impact:", "Collection:", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
+		["Launch Preview", "Launch handoff:", "fresh Skirmish expedition on Day 1", "Skirmish", "Warlord", "River Pass", "Front context:", "Objective stakes:", "Readiness watch:", "Difficulty check:", "Warlord differs from recommended Captain", "Difficulty consequence:", "Action consequence:", "fresh Skirmish expedition", "does not change campaign progression", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Gear impact:", "Collection:", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
 	):
 		return false
 	if not _assert_text_contains_all(
@@ -297,6 +299,8 @@ func _run_main_menu_smoke() -> bool:
 		"Main menu skirmish launch handoff",
 		[
 			String(selected_skirmish_setup.get("launch_handoff", "")),
+			String(selected_skirmish_setup.get("difficulty_check", "")),
+			String(skirmish_snapshot.get("difficulty_summary_full", skirmish_snapshot.get("difficulty_summary", ""))),
 			String(skirmish_snapshot.get("skirmish_setup_full", skirmish_snapshot.get("skirmish_setup", ""))),
 			String(skirmish_snapshot.get("start_skirmish_tooltip", "")),
 		]
