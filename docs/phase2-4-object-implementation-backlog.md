@@ -157,7 +157,7 @@ Biome-by-biome foundation plan:
 | Highland Ridge | 22 | scree fans, ridge teeth, cairn scatter, wind-carved shrubs, broken switchback stones, cliff lips, old rope-post debris, slate shelves, talus pockets, storm cairns | 1x1 rocks; 1x2/2x1 ledges; 2x2 boulders; 2x4/4x2 shelves; 3x1 ridge teeth; 3x3 rock knots; 4x3 cliff blocks; 6x3 cliff bands |
 | Coast Archipelago / Veil Coast | 24 | shell drifts, bell-buoy wreckage, reef shelves, saltgrass, black-sail ribs, tide-pool stones, mirror shoal shards, wreck planks, drowned quay blocks, obituary-vault rubble | 1x1 shells; 1x4/4x1 tide lines; 2x1 planks; 2x2 tide pools; 2x3 wreck ribs; 3x2 quay rubble; 4x2 reefs; 5x3 shoals; 6x4 wreck silhouettes |
 | Rough Badlands | 20 | redstone fins, dry gullies, thornbrush, cracked road slabs, dust cairns, broken survey stakes, sunken cart axles, shardfall rubble, dry-well stones, ridge-edge teeth | 1x1 chips; 1x3/3x1 cracks; 2x2 thornbrush; 2x4 gullies; 3x2 rubble; 3x3 fins; 4x3 ledge blockers; 5x2 escarpments |
-| Ash Lava Wastes | 22 | ash pennants, clinker stones, cooled lava ropes, ember cracks, slag berms, furnace scree, burned timber, smoke-black ruin walls, cinder drifts, heat-glass fragments | 1x1 cinders; 1x2 cracks; 2x1 burned beams; 2x2 slag; 2x3/3x2 lava ropes; 3x3 clinker blocks; 4x2 berms; 6x3 slag walls |
+| Ash Lava Wastes | 22 | ash pennants, clinker stones, cooled lava ropes, ember cracks, slag berms, furnace scree, charred beams, smoke-black ruin walls, cinder drifts, heat-glass fragments | 1x1 cinders; 1x2 cracks; 2x1 burned beams; 2x2 slag; 2x3/3x2 lava ropes; 3x3 clinker blocks; 4x2 berms; 6x3 slag walls |
 | Subterranean Underways / Brass Deeps | 22 | pressure-rail sleepers, pump-house rubble, brass pipe nests, quarry blocks, glow fungus, soot banners, support struts, rail embankments, mine spoil, undergate stones | 1x1 fungus/chips; 1x4/4x1 rails; 2x1 pipe runs; 2x2 quarry blocks; 2x3 struts; 3x2 spoil piles; 4x3 embankments; 6x4 chamber blockers |
 | Snow Frost Marches | 20 | frost shrubs, blue ice plates, snow-buried stones, rime fences, windbreak logs, old sled wrecks, frozen pool shelves, storm cairns, icefall teeth, whitewood trunks | 1x1 rime scatter; 1x2/2x1 fences; 1x3 ice teeth; 2x2 shrubs/rocks; 2x4 ice shelves; 3x2 sled wrecks; 3x3 whitewood trunks; 4x4 ice blocks; 6x6 icefall anchors |
 
@@ -187,7 +187,7 @@ Priority: P0 because current pickup variety is the clearest P2.4 content gap.
 
 | Subcategory | Target | Example original families | Footprints | Blocking and interaction | Biome/region variants |
 | --- | ---: | --- | --- | --- | --- |
-| Common raw resource stacks | 9 | coin purses, timber bundles, ore hods, payroll caskets, split-log piles, quarry chips | 1x1 | `passable_visit_on_enter`; collect on enter; removed after visit | All regions, road/wild variants |
+| Common raw resource stacks | 9 | coin purses, wood bundles, ore hods, payroll caskets, split-log piles, quarry chips | 1x1 | `passable_visit_on_enter`; collect on enter; removed after visit | All regions, road/wild variants |
 | Staged rare-resource pickups | 9 | aetherglass splinters, embergrain sacks, peatwax tapers, verdant graft cuttings, brass scrip packets, memory-salt jars | 1x1 | collect only through staged/report-safe metadata until rare resources are activated; no live costs | Resource-native regions |
 | Caches and map clues | 8 | road writ cache, survey tube, marsh marker bundle, lens case, orchard ration basket, salvage gauge case | 1x1, 2x1 | one-time; may reveal nearby route/site in later phases | Roads, frontiers, ruin pockets |
 | Guarded small pickups | 4 | toll coffer, wreck strongbox, sealed seed chest, slag paybox | 1x1, 2x1 | visible guard link; reward after encounter; removed or spent state after visit | Contested economy and ruin pockets |
@@ -205,7 +205,7 @@ Priority: P0/P1 because resource-front density is core strategy.
 
 | Subcategory | Target | Example original families | Footprints | Blocking and interaction | Biome/region variants |
 | --- | ---: | --- | --- | --- | --- |
-| Common mines | 9 | timber yard, quarry face, sluice camp, coin assay, ridge pit, marsh cut | 2x2, 2x3, 3x2 | `blocking_visitable`; body mask covers worksite; approach at gate/road; persistent owner/control | Grassland, forest, ridge, marsh, badland |
+| Common mines | 9 | wood yard, quarry face, sluice camp, coin assay, ridge pit, marsh cut | 2x2, 2x3, 3x2 | `blocking_visitable`; body mask covers worksite; approach at gate/road; persistent owner/control | Grassland, forest, ridge, marsh, badland |
 | Rare-resource fronts | 9 | aetherglass lens house, embergrain granary, peatwax yard, graft nursery, brass scrip mint, memory-salt pan | 2x2, 2x3, 3x3 | blocking visitable; staged output metadata; likely guarded; no live rare economy until later | Native rare-resource regions |
 | Permanent support producers | 6 | wind press, saw chain, tide kiln, orchard levy post, smelter annex, charter countinghouse | 2x1, 2x2, 3x2 | owned/capturable or claimable; weekly/daily support; visible approach side | Town influence and contested economy bands |
 
