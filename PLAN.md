@@ -975,6 +975,7 @@ nonGoals:
 
 id: `terrain-editor-tooling-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
+status: `completed_foundation_with_export_followup`
 purpose: Keep map presentation and editor tooling usable for scenario iteration without mistaking prototypes for final art.
 
 sourceDocs:
@@ -985,25 +986,35 @@ sourceDocs:
 implementationTargets:
 - `content/terrain_grammar.json`
 - `content/terrain_layers.json`
+- `scripts/core/TerrainPlacementRules.gd`
 - `scenes/overworld/OverworldMapView.gd`
 - `scenes/editor/MapEditorShell.gd`
 - editor validation/export tooling.
 
+currentState:
+- The active web-editor/prototype terrain behavior is no longer a separate live web implementation; its accepted placement, relation-class selection, bridge/material projection, and final-normalization contracts are now represented in Godot through `TerrainPlacementRules.gd` constants and helpers.
+- `MapEditorShell.gd` uses those shared rules for single-tile terrain paint, fill, line, rectangle, road, restamp inspection, object authoring, working-copy launch, and export-intent cues.
+- `OverworldMapView.gd` uses the same terrain rule source for overworld presentation, so editor placement and renderer transition selection are no longer separate conceptual tracks.
+- Scenario export remains intentionally bounded to working-copy/export-intent validation; it does not yet write authored scenario files or campaign progress.
+
 baselineChecks:
 - `python3 tests/validate_repo.py`
-- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_editor_smoke.tscn` when editor behavior changes.
-- relevant overworld visual smoke when renderer behavior changes.
+- `godot4 --headless --path /root/dev/heroes-like res://tests/map_editor_smoke.tscn` when editor behavior changes.
+- `godot4 --headless --path /root/dev/heroes-like res://tests/overworld_visual_smoke.tscn` or focused equivalent when renderer behavior changes.
 
 sliceEvidence:
-- Map editor smoke proves selected editor/tooling behavior.
-- Overworld visual smoke proves selected map presentation behavior.
+- `scripts/core/TerrainPlacementRules.gd` declares the accepted web-prototype-derived placement and visual-selection models used by Godot.
+- `tests/map_editor_smoke.gd` proves selected editor/tooling behavior, including terrain placement/restamp, object authoring, working-copy launch, and export-intent boundaries.
+- `tests/overworld_visual_smoke.gd` and `tools/build_overworld_terrain_tiles.py` cover selected map presentation and generated terrain tile expectations.
 
 completionCriteria:
-- Editor/tooling supports real scenario iteration.
+- Editor/tooling supports real scenario iteration through Godot working copies, terrain tools, object tools, renderer-aligned terrain presentation, and smoke-tested launch/export-intent cues.
 - Stale `homm3-editor-restamp-behavior-10184` is completed, superseded, or re-scoped in tracker regeneration.
+- Remaining authored-file export work is tracked by the scenario-export child instead of blocking the implemented foundation.
 
 nonGoals:
 - No use of local reference/prototype terrain as shippable art.
+- No claim that export-intent validation is the same as durable authored scenario writeback.
 - No broad pathing/occupancy or renderer asset migration without explicit slice.
 
 ### P2.10 Random Map Generator Foundation
@@ -1688,21 +1699,33 @@ implementationEvidence:
 id: `terrain-editor-terrain-placement-contract-10184`
 parentSliceId: `terrain-editor-tooling-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
+status: `completed`
 purpose: Keep terrain placement and restamp behavior explicit for scenario iteration.
 
 sourceDocs:
 - `docs/screen-wireframes.md`
 - `docs/progress-implementation-audit-2026-04-27.md`
+- archived web-editor/prototype terrain behavior and accepted HoMM3 reconstruction reports.
 
 implementationTargets:
-- terrain placement rules
-- editor smoke coverage
+- `scripts/core/TerrainPlacementRules.gd`
+- `scenes/editor/MapEditorShell.gd`
+- `tests/map_editor_smoke.gd`
+
+implementationEvidence:
+- `TerrainPlacementRules.gd` is the canonical Godot port of the accepted web-editor/prototype placement model, including owner queue rewrite/final normalization, relation-class row lookup, cardinal material projection, bridge-class resolution, and local reference/prototype source labels.
+- `MapEditorShell.gd` exposes terrain paint, fill, line, rectangle, road, direct seed, tile presentation, and restamp validation helpers against that shared rule source.
+- `tests/map_editor_smoke.gd` covers terrain placement/restamp and editor-facing rule payloads.
+
+remainingScope:
+- Future terrain UX or pathing/occupancy changes should be separate slices; the placement/restamp contract itself is no longer pending.
 
 ### P2 Child: Terrain Renderer Transition Validation
 
 id: `terrain-editor-renderer-transition-validation-10184`
 parentSliceId: `terrain-editor-tooling-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
+status: `completed`
 purpose: Validate selected terrain/renderer transitions without treating prototype art as shippable.
 
 sourceDocs:
@@ -1710,14 +1733,27 @@ sourceDocs:
 - archived terrain/editor plan and progress entries
 
 implementationTargets:
-- terrain grammar/layers
-- overworld visual smoke/report coverage
+- `content/terrain_grammar.json`
+- `content/terrain_layers.json`
+- `scripts/core/TerrainPlacementRules.gd`
+- `scenes/overworld/OverworldMapView.gd`
+- `tests/overworld_visual_smoke.gd`
+- `tools/build_overworld_terrain_tiles.py`
+
+implementationEvidence:
+- `OverworldMapView.gd` uses the shared terrain placement/selection rule source also used by the editor.
+- `content/terrain_grammar.json` and `content/terrain_layers.json` provide authored terrain/layer data for runtime presentation.
+- Visual smoke/report tooling validates selected terrain presentation without treating local reference/prototype tiles as shippable art.
+
+remainingScope:
+- Production art import, broad renderer asset migration, and final map readability polish remain future explicit slices.
 
 ### P2 Child: Terrain Editor Object Authoring Adoption
 
 id: `terrain-editor-object-authoring-adoption-10184`
 parentSliceId: `terrain-editor-tooling-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
+status: `completed`
 purpose: Connect object taxonomy and placement metadata to editor authoring only when selected.
 
 sourceDocs:
@@ -1726,13 +1762,21 @@ sourceDocs:
 
 implementationTargets:
 - `scenes/editor/MapEditorShell.gd`
-- editor validation/export tooling
+- `tests/map_editor_smoke.gd`
+
+implementationEvidence:
+- `MapEditorShell.gd` now surfaces object taxonomy, placement guidance, density/dependency context, placement consequence text, object place/remove/move/duplicate/retheme flows, selected-property editing, and stable-placement warnings.
+- Focused editor smoke coverage exercises the selected object-authoring and editor payload boundaries.
+
+remainingScope:
+- Durable production JSON migration, body-tile/pathing adoption, and renderer sprite ingestion remain out of scope unless selected by a new slice.
 
 ### P2 Child: Terrain Editor Scenario Export Validation
 
 id: `terrain-editor-scenario-export-validation-10184`
 parentSliceId: `terrain-editor-tooling-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
+status: `pending_after_foundation`
 purpose: Prove editor output can support scenario iteration through validation/export gates.
 
 sourceDocs:
@@ -1740,8 +1784,16 @@ sourceDocs:
 - future editor/export requirements if created
 
 implementationTargets:
-- editor export tooling
+- editor export-intent tooling
 - scenario validation smoke/report coverage
+- future authored scenario writeback/export contract if selected
+
+currentEvidence:
+- `MapEditorShell.gd` exposes working-copy launch and export-intent payloads.
+- `tests/map_editor_smoke.gd` asserts clean/dirty export-intent state, objective-anchor coverage, no internal score leaks, and that no authored file or campaign progress is written.
+
+remainingScope:
+- This child is intentionally not complete until the project decides whether to add durable authored scenario export/writeback. Current Godot behavior supports scenario iteration by working-copy launch and validation only.
 
 ### P2 Child: Random Map Requirements Doc
 

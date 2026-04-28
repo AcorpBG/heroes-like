@@ -8,7 +8,7 @@
   "currentSliceStatus": "completed",
   "currentSliceNotes": "Completed the final P2.8 live hero task adoption gate as report-only deferral evidence. Candidate task reports, optional normalizer preservation, and commander-role boundary evidence are ready only as reports; live target selection, route/actor execution, save/schema writes, save migration, durable event history, and executable hero task state remain deferred.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T23:59:00Z",
+  "updatedAt": "2026-04-28T07:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -496,8 +496,8 @@
       "id": "terrain-editor-tooling-foundation-implementation-10184",
       "title": "Terrain, Renderer, And Editor Tooling Foundation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "docs_ready",
-      "classification": "parent_foundation_docs_ready_implemented_history_children_pending",
+      "status": "completed",
+      "classification": "parent_foundation_completed_children_mostly_completed_export_followup",
       "sourceDocs": [
         "docs/screen-wireframes.md",
         "docs/progress-implementation-audit-2026-04-27.md",
@@ -507,12 +507,13 @@
       "implementationTargets": [
         "content/terrain_grammar.json",
         "content/terrain_layers.json",
+        "scripts/core/TerrainPlacementRules.gd",
         "scenes/overworld/OverworldMapView.gd",
         "scenes/editor/MapEditorShell.gd",
-        "editor validation/export tooling"
+        "editor validation/export-intent tooling"
       ],
-      "evidence": "Terrain grammar/layers, shared renderer/editor preview paths, TerrainPlacementRules, and map editor smoke coverage exist. The stale homm3-editor-restamp-behavior id is superseded, and local reference/prototype terrain is not shippable art.",
-      "notes": "Future terrain/editor work should use this foundation slice or a specific sub-slice.",
+      "evidence": "Reconciled 2026-04-28: accepted web-editor/prototype terrain placement and visual-selection behavior is now represented in Godot through TerrainPlacementRules.gd and consumed by MapEditorShell.gd plus OverworldMapView.gd. Editor terrain tools, renderer-aligned transition selection, object authoring, working-copy launch, and export-intent boundaries have smoke/validation coverage. Durable authored scenario export/writeback remains a child follow-up, not a foundation blocker.",
+      "notes": "P2.9 foundation is implemented in Godot. Do not track the web prototype as a separate active implementation; use it as provenance for TerrainPlacementRules. Scenario export remains bounded to working-copy/export-intent validation until a durable writeback slice is selected.",
       "sliceType": "parent",
       "childSliceIds": [
         "terrain-editor-terrain-placement-contract-10184",
@@ -520,7 +521,7 @@
         "terrain-editor-object-authoring-adoption-10184",
         "terrain-editor-scenario-export-validation-10184"
       ],
-      "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
+      "aggregateStatusNote": "Parent is completed for the Godot terrain/editor foundation; child slices carry remaining export/writeback follow-up state.",
       "docsReadyEvidenceIds": [
         "terrain-editor-history"
       ],
@@ -2072,7 +2073,7 @@
       "id": "terrain-editor-terrain-placement-contract-10184",
       "title": "Terrain Editor Placement Contract",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
@@ -2082,103 +2083,130 @@
         "docs/progress-implementation-audit-2026-04-27.md"
       ],
       "implementationTargets": [
-        "terrain placement rules",
-        "editor smoke coverage"
+        "scripts/core/TerrainPlacementRules.gd",
+        "scenes/editor/MapEditorShell.gd",
+        "tests/map_editor_smoke.gd"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "TerrainPlacementRules.gd shared model constants and helpers",
+        "MapEditorShell.gd validation terrain/restamp helpers",
+        "tests/map_editor_smoke.gd terrain placement/restamp coverage"
       ],
       "completionCriteria": [
-        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+        "Placement/restamp behavior is explicit in the shared Godot terrain rule source.",
+        "Editor terrain tools exercise the shared rule source through validation/smoke coverage.",
+        "Future terrain UX/pathing polish is split into separate slices instead of keeping this contract pending."
+      ],
+      "evidence": "TerrainPlacementRules.gd is the canonical Godot port of the accepted web-editor/prototype placement contract, including owner queue rewrite/final normalization, relation-class selection, bridge/material projection, and local reference/prototype source labels. MapEditorShell.gd exposes terrain paint/fill/line/rectangle/road/restamp validation helpers; map_editor_smoke covers the editor-facing contract."
     },
     {
       "id": "terrain-editor-renderer-transition-validation-10184",
       "title": "Terrain Renderer Transition Validation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
       "purpose": "Validate selected terrain/renderer transitions without treating prototype art as shippable.",
       "sourceDocs": [
         "docs/screen-wireframes.md",
-        "archived terrain/editor plan and progress entries"
+        "archived terrain/editor plan and progress entries",
+        "docs/progress-implementation-audit-2026-04-27.md"
       ],
       "implementationTargets": [
-        "terrain grammar/layers",
-        "overworld visual smoke/report coverage"
+        "content/terrain_grammar.json",
+        "content/terrain_layers.json",
+        "scripts/core/TerrainPlacementRules.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tools/build_overworld_terrain_tiles.py"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "OverworldMapView.gd consumes the shared terrain rule source",
+        "terrain grammar/layers content exists",
+        "overworld visual smoke/report tooling validates selected presentation behavior"
       ],
       "completionCriteria": [
-        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+        "Editor and renderer no longer carry separate terrain-selection concepts.",
+        "Selected transition/presentation behavior is covered without claiming prototype/local reference art is final."
+      ],
+      "evidence": "Renderer transition selection is aligned with the same TerrainPlacementRules.gd source used by the editor, with terrain grammar/layer content and overworld visual smoke/report tooling covering selected presentation behavior while keeping prototype art non-shippable."
     },
     {
       "id": "terrain-editor-object-authoring-adoption-10184",
       "title": "Terrain Editor Object Authoring Adoption",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
       "purpose": "Connect object taxonomy and placement metadata to editor authoring only when selected.",
       "sourceDocs": [
         "docs/overworld-object-taxonomy-density.md",
-        "docs/screen-wireframes.md"
+        "docs/screen-wireframes.md",
+        "docs/progress-implementation-audit-2026-04-27.md"
       ],
       "implementationTargets": [
         "scenes/editor/MapEditorShell.gd",
-        "editor validation/export tooling"
+        "tests/map_editor_smoke.gd"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "MapEditorShell.gd object taxonomy and placement guidance payloads",
+        "MapEditorShell.gd place/remove/move/duplicate/retheme/property editing flows",
+        "tests/map_editor_smoke.gd object-authoring coverage"
       ],
       "completionCriteria": [
-        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+        "Object taxonomy and placement metadata are visible in editor authoring.",
+        "Durable JSON migration, body-tile/pathing adoption, and renderer sprite ingestion remain separate future scopes."
+      ],
+      "evidence": "MapEditorShell.gd surfaces object taxonomy, placement guidance, density/dependency context, placement consequence text, place/remove/move/duplicate/retheme flows, selected-property editing, and stable-placement warnings; map_editor_smoke covers selected editor payload boundaries."
     },
     {
       "id": "terrain-editor-scenario-export-validation-10184",
       "title": "Terrain Editor Scenario Export Validation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "pending_after_implementation",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
       "purpose": "Prove editor output can support scenario iteration through validation/export gates.",
       "sourceDocs": [
         "docs/screen-wireframes.md",
-        "future editor/export requirements if created"
+        "future editor/export requirements if created",
+        "docs/progress-implementation-audit-2026-04-27.md"
       ],
       "implementationTargets": [
-        "editor export tooling",
-        "scenario validation smoke/report coverage"
+        "editor export-intent tooling",
+        "scenario validation smoke/report coverage",
+        "future authored scenario writeback/export contract if selected"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "MapEditorShell.gd working-copy launch and export-intent payloads",
+        "tests/map_editor_smoke.gd clean/dirty export-intent assertions",
+        "explicit no-authored-file/no-campaign-progress boundary"
       ],
       "completionCriteria": [
-        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+        "Decide whether durable authored scenario export/writeback is in scope.",
+        "If selected, implement and validate authored scenario writeback/export gates.",
+        "Until then, keep this child pending_after_implementation rather than treating export-intent cues as full export completion."
+      ],
+      "evidence": "Current Godot editor supports scenario iteration through working-copy launch and export-intent validation only. MapEditorShell.gd exposes export-intent payloads and map_editor_smoke asserts clean/dirty state, objective anchor coverage, no internal score leaks, and that no authored file or campaign progress is written."
     },
     {
       "id": "random-map-requirements-doc-10184",
@@ -2875,16 +2903,19 @@
     },
     {
       "id": "terrain-editor-renderer-implementation-history",
-      "system": "terrain, renderer, editor",
+      "system": "terrain, renderer, editor, and imported web-prototype placement model",
       "phase": "phase-2-deep-production-foundation",
       "mappedPlannedSliceIds": [
         "terrain-editor-tooling-foundation-implementation-10184",
         "terrain-editor-terrain-placement-contract-10184",
-        "terrain-editor-renderer-transition-validation-10184"
+        "terrain-editor-renderer-transition-validation-10184",
+        "terrain-editor-object-authoring-adoption-10184"
       ],
       "sourceRefs": [
         "archive/document-reset-2026-04-27/progress.json",
-        "archive/document-reset-2026-04-27/PLAN.md"
+        "archive/document-reset-2026-04-27/PLAN.md",
+        "docs/progress-implementation-audit-2026-04-27.md",
+        "PLAN.md"
       ],
       "entries": [
         {
@@ -2922,6 +2953,24 @@
           "title": "Replace Godot HoMM3 terrain visual selection with accepted web relation-class parity",
           "status": "completed",
           "evidence": "Renderer validation parity preserved in later terrain work."
+        },
+        {
+          "id": "terrain-placement-rules-web-prototype-godot-port-10184",
+          "title": "Represent accepted web-editor/prototype terrain placement and visual selection in Godot rules",
+          "status": "completed",
+          "evidence": "TerrainPlacementRules.gd declares the accepted placement, visual selection, projection, bridge/material, and local reference/prototype model labels consumed by editor and renderer code."
+        },
+        {
+          "id": "map-editor-object-authoring-adoption-10184",
+          "title": "Adopt object taxonomy and placement guidance in map editor authoring",
+          "status": "completed",
+          "evidence": "MapEditorShell.gd surfaces taxonomy, placement guidance, density/dependency context, object mutations, and stable-placement warnings with focused editor smoke coverage."
+        },
+        {
+          "id": "map-editor-export-intent-boundary-10184",
+          "title": "Expose scenario export intent without durable authored writeback",
+          "status": "completed_boundary_only",
+          "evidence": "MapEditorShell.gd and map_editor_smoke prove working-copy launch/export-intent cues and explicitly state no authored file or campaign progress is written."
         }
       ]
     },
@@ -3544,26 +3593,40 @@
         "random-map-requirements-doc-10184",
         "random-map-generator-foundation-10184"
       ]
+    },
+    {
+      "id": "terrain-editor-authored-scenario-export-writeback-10184",
+      "title": "Terrain editor authored scenario export/writeback is not implemented",
+      "status": "deferred_followup",
+      "sourceRefs": [
+        "PLAN.md",
+        "scenes/editor/MapEditorShell.gd",
+        "tests/map_editor_smoke.gd"
+      ],
+      "replacementPlannedSliceIds": [
+        "terrain-editor-scenario-export-validation-10184"
+      ],
+      "evidence": "Current editor export behavior is an export-intent/working-copy validation boundary. It supports scenario iteration and smoke launch, but deliberately does not write authored scenario files or campaign progress."
     }
   ],
   "actionableNextTasks": [
     {
-      "id": "terrain-editor-terrain-placement-contract-10184",
-      "title": "Terrain Editor Placement Contract",
-      "status": "pending",
-      "classification": "phase2_child_implementation_slice",
+      "id": "terrain-editor-scenario-export-validation-10184",
+      "title": "Terrain Editor Scenario Export Validation",
+      "status": "pending_after_implementation",
       "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
       "source": "PLAN.md P2.9 Terrain, Renderer, And Editor Tooling Foundation",
       "sourceDocs": [
         "docs/screen-wireframes.md",
+        "future editor/export requirements if created",
         "docs/progress-implementation-audit-2026-04-27.md"
       ],
       "implementationTargets": [
-        "terrain placement rules",
-        "editor smoke coverage"
+        "editor export-intent tooling",
+        "scenario validation smoke/report coverage",
+        "future authored scenario writeback/export contract if selected"
       ],
-      "notes": "Next Phase 2 category after P2.8 strategic AI closeout. Do not start terrain/editor work from the live hero task adoption gate slice.",
-      "updatedAt": "2026-04-27T23:59:00Z"
+      "notes": "Only remaining P2.9 child after 2026-04-28 reconciliation. Current Godot editor has working-copy launch/export-intent validation; durable authored scenario export/writeback is not implemented and should only proceed if selected."
     }
   ],
   "stoppedOrPausedTasks": [
