@@ -47,7 +47,9 @@ func _run() -> void:
 		return
 	if not _assert_editor_scenario_validation_check(snapshot, true, ["Scenario check:", "Scenario Validation", "Ninefold Confluence", "Objectives", "Warnings 0", "Hero 23,26", "Objects", "Play Copy can smoke-test this working copy", "no authored file or campaign progress is written"]):
 		return
-	if not _assert_editor_export_intent(snapshot, false, ["Export intent:", "Editor Export Intent", "Ninefold Confluence", "clean working copy", "Play Copy can smoke-test this working copy", "future authored export", "no authored file or campaign progress is written"]):
+	if not _assert_editor_export_intent(snapshot, false, ["Export intent:", "Editor Export Intent", "Ninefold Confluence", "clean working copy", "validated authored draft", "future authored export", "no authored file or campaign progress is written"]):
+		return
+	if not _assert_authored_scenario_export_contract(shell.call("validation_authored_scenario_export_contract"), false, [], ["map", "start", "towns", "resource_nodes", "artifact_nodes", "encounters", "terrain_layers"]):
 		return
 	if not _assert_editor_scenario_switch_handoff(snapshot, false, ["Scenario switch:", "Ninefold Confluence", "clean working copy", "choosing another scenario replaces this in-memory working copy", "Scenario Switch", "choose another scenario to load its authored baseline", "no authored file or campaign progress is written"]):
 		return
@@ -109,7 +111,9 @@ func _run() -> void:
 		return
 	if not _assert_editor_scenario_switch_handoff(paint_result, true, ["Scenario switch:", "Ninefold Confluence", "dirty working copy", "choosing another scenario replaces this in-memory working copy", "Scenario Switch", "use Play Copy for a smoke pass or keep editing before switching", "no authored file or campaign progress is written"]):
 		return
-	if not _assert_editor_export_intent(paint_result, true, ["Export intent:", "Editor Export Intent", "Ninefold Confluence", "dirty working copy", "Play Copy can smoke-test this working copy", "future authored export", "no authored file or campaign progress is written"]):
+	if not _assert_editor_export_intent(paint_result, true, ["Export intent:", "Editor Export Intent", "Ninefold Confluence", "dirty working copy", "validated authored draft", "future authored export", "no authored file or campaign progress is written"]):
+		return
+	if not _assert_authored_scenario_export_contract(shell.call("validation_authored_scenario_export_contract"), true, ["map"], ["map", "start", "towns", "resource_nodes", "artifact_nodes", "encounters", "terrain_layers"]):
 		return
 	var paint_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 2)
 	var terrain_presentation: Dictionary = paint_presentation.get("terrain_presentation", {})
@@ -162,6 +166,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_active_tool_cue(hero_result, "hero_start", ["Tool cue:", "Move the playable hero start", "next:", "new starting tile", "Current hero start 3,3"]):
 		return
+	if not _assert_authored_scenario_export_contract(shell.call("validation_authored_scenario_export_contract"), true, ["map", "start"], ["map", "start", "towns", "resource_nodes", "artifact_nodes", "encounters", "terrain_layers"]):
+		return
 
 	if not _assert_selected_tile_restore(shell):
 		return
@@ -208,6 +214,9 @@ func _run() -> void:
 	if not _exercise_object_placement(shell, "artifact", "artifact_trailsinger_boots", Vector2i(6, 4), "has_artifact"):
 		return
 	if not _exercise_object_placement(shell, "encounter", "encounter_mire_raid", Vector2i(7, 4), "has_visible_encounter"):
+		return
+	var export_contract_result: Dictionary = shell.call("validation_authored_scenario_export_contract")
+	if not _assert_authored_scenario_export_contract(export_contract_result, true, ["map", "start", "towns", "resource_nodes", "artifact_nodes", "encounters"], ["map", "start", "towns", "resource_nodes", "artifact_nodes", "encounters", "terrain_layers"]):
 		return
 	if not await _assert_play_copy_round_trip(shell):
 		return
@@ -2605,6 +2614,78 @@ func _assert_editor_export_intent(result: Dictionary, expected_dirty: bool, frag
 		if combined.find(forbidden) >= 0:
 			_fail("Map editor smoke: editor export intent leaked internal score field %s: %s." % [forbidden, combined])
 			return false
+	return true
+
+func _assert_authored_scenario_export_contract(result: Dictionary, expected_dirty: bool, required_changed_domains: Array, required_draft_domains: Array) -> bool:
+	var contract: Dictionary = result.get("authored_scenario_export_contract", {})
+	if contract.is_empty() and result.has("contract_id"):
+		contract = result
+	if contract.is_empty():
+		_fail("Map editor smoke: authored scenario export contract was not exposed.")
+		return false
+	if String(contract.get("contract_id", "")) != "editor_authored_scenario_export_contract_v1":
+		_fail("Map editor smoke: authored scenario export contract id mismatch: %s." % String(contract.get("contract_id", "")))
+		return false
+	if not bool(contract.get("ok", false)) or not bool(contract.get("ready", false)):
+		_fail("Map editor smoke: authored scenario export contract was not ready for the default fixture: blockers=%s." % [contract.get("blockers", [])])
+		return false
+	if bool(contract.get("dirty", not expected_dirty)) != expected_dirty:
+		_fail("Map editor smoke: authored scenario export contract dirty state mismatch: expected=%s actual=%s." % [expected_dirty, contract.get("dirty", null)])
+		return false
+	if bool(contract.get("writeback_allowed", true)) or bool(contract.get("writeback_supported", true)):
+		_fail("Map editor smoke: authored scenario export contract pretended writeback is enabled.")
+		return false
+	if String(contract.get("writeback_state", "")) != "validated_draft_only":
+		_fail("Map editor smoke: authored scenario export contract did not keep writeback in validated-draft-only mode: %s." % String(contract.get("writeback_state", "")))
+		return false
+	if String(contract.get("write_context", "")).find("no authored file or campaign progress is written") < 0:
+		_fail("Map editor smoke: authored scenario export contract did not preserve the no-write boundary: %s." % String(contract.get("write_context", "")))
+		return false
+	if int(contract.get("blocker_count", -1)) != 0:
+		_fail("Map editor smoke: authored scenario export contract had unexpected blockers: %s." % [contract.get("blockers", [])])
+		return false
+	var target_paths: Array = contract.get("target_paths", [])
+	for target_path in ["res://content/scenarios.json", "res://content/terrain_layers.json"]:
+		if target_path not in target_paths:
+			_fail("Map editor smoke: authored scenario export contract missed target path %s: %s." % [target_path, target_paths])
+			return false
+	var changed_domains: Array = contract.get("changed_domains", [])
+	for domain in required_changed_domains:
+		var expected := String(domain)
+		if expected not in changed_domains:
+			_fail("Map editor smoke: authored scenario export contract missed changed domain %s: %s." % [expected, changed_domains])
+			return false
+	var draft: Dictionary = contract.get("draft", {})
+	var scenario_record: Dictionary = draft.get("scenario_record", {})
+	var terrain_layers_record: Dictionary = draft.get("terrain_layers_record", {})
+	if scenario_record.is_empty() or terrain_layers_record.is_empty():
+		_fail("Map editor smoke: authored scenario export contract did not include draft records.")
+		return false
+	if String(scenario_record.get("id", "")) != SCENARIO_ID or String(terrain_layers_record.get("id", "")) != SCENARIO_ID:
+		_fail("Map editor smoke: authored scenario export draft ids were not stable: scenario=%s terrain=%s." % [String(scenario_record.get("id", "")), String(terrain_layers_record.get("id", ""))])
+		return false
+	if String(terrain_layers_record.get("terrain_layer_status", "")) != "foundation_authored":
+		_fail("Map editor smoke: authored terrain-layer export did not normalize to foundation_authored: %s." % String(terrain_layers_record.get("terrain_layer_status", "")))
+		return false
+	for domain in required_draft_domains:
+		var key := String(domain)
+		var has_domain := (not terrain_layers_record.is_empty()) if key == "terrain_layers" else scenario_record.has(key)
+		if not has_domain:
+			_fail("Map editor smoke: authored scenario export draft missed domain %s." % key)
+			return false
+	var start: Dictionary = scenario_record.get("start", {})
+	if expected_dirty and required_changed_domains.has("start"):
+		if int(start.get("x", -1)) != 3 or int(start.get("y", -1)) != 3:
+			_fail("Map editor smoke: authored scenario export draft did not carry edited hero start: %s." % start)
+			return false
+	if required_changed_domains.has("map"):
+		var map_rows: Array = scenario_record.get("map", [])
+		if map_rows.size() <= 2 or not (map_rows[2] is Array) or String(map_rows[2][2]) != "forest":
+			_fail("Map editor smoke: authored scenario export draft did not carry edited terrain at 2,2.")
+			return false
+	if String(contract.get("draft_signature", "")).strip_edges() == "":
+		_fail("Map editor smoke: authored scenario export contract did not produce a deterministic draft signature.")
+		return false
 	return true
 
 func _assert_editor_scenario_switch_handoff(result: Dictionary, expected_dirty: bool, fragments: Array) -> bool:

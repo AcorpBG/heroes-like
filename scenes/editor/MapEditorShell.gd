@@ -8,6 +8,7 @@ const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacement
 const DEFAULT_SCENARIO_ID := "ninefold-confluence"
 const DEFAULT_TERRAIN_ID := "grass"
 const EDITOR_ROAD_LAYER_ID := "editor_working_road"
+const SCENARIO_EXPORT_CONTRACT_ID := "editor_authored_scenario_export_contract_v1"
 const EDITOR_ROAD_OVERLAY_ID := "road_dirt"
 const TERRAIN_LINE_RULE_ID := "manhattan_l_horizontal_then_vertical"
 const TERRAIN_LINE_RULE_LABEL := "Manhattan L line, horizontal first, then vertical"
@@ -4895,16 +4896,16 @@ func _editor_export_intent_payload() -> Dictionary:
 		}
 	var scenario := ContentService.get_scenario(_session.scenario_id)
 	var scenario_name := String(scenario.get("name", _session.scenario_id))
-	var validation := _scenario_authoring_validation_payload()
-	var warning_count := int(validation.get("warning_count", 0))
-	var missing_count := int(validation.get("missing_objective_anchor_count", 0))
-	var covered_count := int(validation.get("covered_objective_anchor_count", 0))
-	var objective_count := int(validation.get("objective_anchors", []).size())
+	var export_contract := _authored_scenario_export_contract_payload(false)
+	var warning_count := int(export_contract.get("warning_count", 0))
+	var missing_count := int(export_contract.get("missing_objective_anchor_count", 0))
+	var covered_count := int(export_contract.get("covered_objective_anchor_count", 0))
+	var objective_count := int(export_contract.get("objective_anchor_count", 0))
 	var hero_position := OverworldRules.hero_position(_session)
-	var ready := warning_count == 0 and missing_count == 0
+	var ready := bool(export_contract.get("ready", false)) and missing_count == 0
 	var state := "dirty" if _dirty else "clean"
-	var next_step := "Play Copy can smoke-test this working copy" if ready else "review warnings before Play Copy"
-	var write_context := "no authored file or campaign progress is written"
+	var next_step := "validated authored draft is ready for a future writeback gate" if ready else "review blockers before authored export"
+	var write_context := String(export_contract.get("write_context", "validated draft only; no authored file or campaign progress is written"))
 	var text := "Export intent: %s | %s working copy; %s before future authored export; %s." % [
 		scenario_name,
 		state,
@@ -4940,7 +4941,362 @@ func _editor_export_intent_payload() -> Dictionary:
 		"hero_position": {"x": hero_position.x, "y": hero_position.y},
 		"object_count": _placement_count(),
 		"scope": "editor_working_copy_export_intent",
+		"export_contract": export_contract,
 	}
+
+func _authored_scenario_export_contract_payload(include_draft: bool = true) -> Dictionary:
+	if _session == null:
+		return {
+			"ok": false,
+			"ready": false,
+			"contract_id": SCENARIO_EXPORT_CONTRACT_ID,
+			"state": "no_working_copy",
+			"writeback_allowed": false,
+			"writeback_supported": false,
+			"writeback_state": "disabled_no_working_copy",
+			"write_context": "validated draft only; no authored file or campaign progress is written",
+			"blockers": ["No editor working copy is loaded."],
+		}
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	if scenario.is_empty():
+		return {
+			"ok": false,
+			"ready": false,
+			"contract_id": SCENARIO_EXPORT_CONTRACT_ID,
+			"state": "missing_scenario",
+			"scenario_id": _session.scenario_id,
+			"writeback_allowed": false,
+			"writeback_supported": false,
+			"writeback_state": "disabled_missing_scenario",
+			"write_context": "validated draft only; no authored file or campaign progress is written",
+			"blockers": ["Authored scenario %s could not be loaded." % _session.scenario_id],
+		}
+
+	var validation := _scenario_authoring_validation_payload()
+	var blockers := []
+	for warning in validation.get("warnings", []):
+		var warning_text := String(warning).strip_edges()
+		if warning_text != "":
+			blockers.append(warning_text)
+	if not include_draft:
+		return {
+			"ok": blockers.is_empty(),
+			"ready": blockers.is_empty(),
+			"contract_id": SCENARIO_EXPORT_CONTRACT_ID,
+			"state": "summary_ready" if blockers.is_empty() else "blocked",
+			"scenario_id": _session.scenario_id,
+			"scenario_name": String(scenario.get("name", _session.scenario_id)),
+			"dirty": _dirty,
+			"changed": _dirty,
+			"target_paths": ["res://content/scenarios.json", "res://content/terrain_layers.json"],
+			"writeback_allowed": false,
+			"writeback_supported": false,
+			"writeback_state": "validated_draft_only",
+			"write_context": "validated draft only; no authored file or campaign progress is written",
+			"blockers": blockers,
+			"blocker_count": blockers.size(),
+			"warning_count": int(validation.get("warning_count", 0)),
+			"covered_objective_anchor_count": int(validation.get("covered_objective_anchor_count", 0)),
+			"objective_anchor_count": int(validation.get("objective_anchors", []).size()),
+			"missing_objective_anchor_count": int(validation.get("missing_objective_anchor_count", 0)),
+			"export_scope": "authored_scenario_and_terrain_layers_draft",
+		}
+
+	var scenario_record := _export_scenario_record_from_working_copy(scenario)
+	var terrain_layers_record := _export_terrain_layers_record_from_working_copy()
+	for blocker in _validate_export_scenario_record(scenario_record):
+		blockers.append(blocker)
+	for blocker in _validate_export_terrain_layers_record(terrain_layers_record):
+		blockers.append(blocker)
+	var baseline_session = _authored_baseline_session()
+	var baseline_scenario_record := _export_scenario_record_from_session(scenario, baseline_session) if baseline_session != null else scenario
+	var baseline_terrain_layers_record := _export_terrain_layers_record_from_layers(ContentService.get_terrain_layers_for_scenario(_session.scenario_id))
+	var changed_domains := _export_changed_domains(baseline_scenario_record, baseline_terrain_layers_record, scenario_record, terrain_layers_record)
+	var draft := {
+		"scenario_record": scenario_record,
+		"terrain_layers_record": terrain_layers_record,
+	}
+	var draft_signature := _export_draft_signature(scenario_record, terrain_layers_record, changed_domains)
+	return {
+		"ok": blockers.is_empty(),
+		"ready": blockers.is_empty(),
+		"contract_id": SCENARIO_EXPORT_CONTRACT_ID,
+		"state": "validated_draft" if blockers.is_empty() else "blocked",
+		"scenario_id": _session.scenario_id,
+		"scenario_name": String(scenario.get("name", _session.scenario_id)),
+		"dirty": _dirty,
+		"changed": not changed_domains.is_empty(),
+		"changed_domains": changed_domains,
+		"target_paths": ["res://content/scenarios.json", "res://content/terrain_layers.json"],
+		"writeback_allowed": false,
+		"writeback_supported": false,
+		"writeback_state": "validated_draft_only",
+		"write_context": "validated draft only; no authored file or campaign progress is written",
+		"blockers": blockers,
+		"blocker_count": blockers.size(),
+		"warning_count": int(validation.get("warning_count", 0)),
+		"covered_objective_anchor_count": int(validation.get("covered_objective_anchor_count", 0)),
+		"objective_anchor_count": int(validation.get("objective_anchors", []).size()),
+		"missing_objective_anchor_count": int(validation.get("missing_objective_anchor_count", 0)),
+		"draft": draft,
+		"scenario_record": scenario_record,
+		"terrain_layers_record": terrain_layers_record,
+		"draft_signature": draft_signature,
+		"draft_signature_hash": hash(draft_signature),
+		"export_scope": "authored_scenario_and_terrain_layers_draft",
+	}
+
+func _export_draft_signature(scenario_record: Dictionary, terrain_layers_record: Dictionary, changed_domains: Array) -> String:
+	var map_rows = scenario_record.get("map", [])
+	var map_height: int = map_rows.size() if map_rows is Array else 0
+	var map_width := 0
+	if map_height > 0 and map_rows[0] is Array:
+		map_width = map_rows[0].size()
+	var start: Dictionary = scenario_record.get("start", {})
+	var changed_labels := []
+	for domain in changed_domains:
+		changed_labels.append(String(domain))
+	return "%s|%dx%d|start=%d,%d|towns=%d|resources=%d|artifacts=%d|encounters=%d|roads=%d|changed=%s" % [
+		String(scenario_record.get("id", "")),
+		map_width,
+		map_height,
+		int(start.get("x", -1)),
+		int(start.get("y", -1)),
+		scenario_record.get("towns", []).size(),
+		scenario_record.get("resource_nodes", []).size(),
+		scenario_record.get("artifact_nodes", []).size(),
+		scenario_record.get("encounters", []).size(),
+		terrain_layers_record.get("roads", []).size(),
+		",".join(changed_labels),
+	]
+
+func _export_scenario_record_from_working_copy(baseline_scenario: Dictionary) -> Dictionary:
+	return _export_scenario_record_from_session(baseline_scenario, _session)
+
+func _export_scenario_record_from_session(baseline_scenario: Dictionary, session) -> Dictionary:
+	var record := baseline_scenario.duplicate(true)
+	if session == null:
+		return record
+	record["map"] = _normalized_export_map(session.overworld.get("map", []))
+	var hero_position := OverworldRules.hero_position(session)
+	record["start"] = {"x": hero_position.x, "y": hero_position.y}
+	record["towns"] = _normalized_export_placements(OBJECT_FAMILY_TOWN, session.overworld.get("towns", []))
+	record["resource_nodes"] = _normalized_export_placements(OBJECT_FAMILY_RESOURCE, session.overworld.get("resource_nodes", []))
+	record["artifact_nodes"] = _normalized_export_placements(OBJECT_FAMILY_ARTIFACT, session.overworld.get("artifact_nodes", []))
+	record["encounters"] = _normalized_export_placements(OBJECT_FAMILY_ENCOUNTER, session.overworld.get("encounters", []))
+	return record
+
+func _export_terrain_layers_record_from_working_copy() -> Dictionary:
+	var layers := _terrain_layers()
+	return _export_terrain_layers_record_from_layers(layers)
+
+func _export_terrain_layers_record_from_layers(layers: Dictionary) -> Dictionary:
+	var record := {
+		"id": _session.scenario_id,
+		"terrain_layer_status": "foundation_authored",
+		"roads": _normalized_export_roads(layers.get("roads", [])),
+	}
+	return record
+
+func _normalized_export_map(map_value: Variant) -> Array:
+	var rows := []
+	if not (map_value is Array):
+		return rows
+	for row_value in map_value:
+		var row := []
+		if row_value is Array:
+			for terrain_value in row_value:
+				row.append(String(terrain_value))
+		rows.append(row)
+	return rows
+
+func _normalized_export_roads(roads_value: Variant) -> Array:
+	var roads := []
+	if not (roads_value is Array):
+		return roads
+	for road_value in roads_value:
+		if not (road_value is Dictionary):
+			continue
+		var road: Dictionary = road_value
+		var record := {
+			"id": String(road.get("id", EDITOR_ROAD_LAYER_ID)),
+			"overlay_id": String(road.get("overlay_id", "road_dirt")),
+			"role": String(road.get("role", "editor_working_copy")),
+			"tiles": _normalized_export_positions(road.get("tiles", [])),
+		}
+		roads.append(record)
+	return roads
+
+func _normalized_export_positions(values: Variant) -> Array:
+	var positions := []
+	if not (values is Array):
+		return positions
+	for value in values:
+		if value is Dictionary:
+			positions.append({"x": int(value.get("x", 0)), "y": int(value.get("y", 0))})
+	return positions
+
+func _normalized_export_placements(family: String, placements_value: Variant) -> Array:
+	var records := []
+	if not (placements_value is Array):
+		return records
+	for placement_value in placements_value:
+		if not (placement_value is Dictionary):
+			continue
+		var placement: Dictionary = placement_value
+		var record := {
+			"placement_id": String(placement.get("placement_id", "")),
+			"x": int(placement.get("x", 0)),
+			"y": int(placement.get("y", 0)),
+		}
+		match family:
+			OBJECT_FAMILY_TOWN:
+				record["town_id"] = String(placement.get("town_id", ""))
+				record["owner"] = String(placement.get("owner", "neutral"))
+				_copy_optional_dict(record, placement, "recovery")
+				_copy_optional_dict(record, placement, "front")
+				_copy_optional_dict(record, placement, "occupation")
+			OBJECT_FAMILY_RESOURCE:
+				record["site_id"] = String(placement.get("site_id", ""))
+				_copy_optional_bool(record, placement, "collected")
+				_copy_optional_string(record, placement, "collected_by_faction_id")
+				_copy_optional_positive_int(record, placement, "collected_day")
+				_copy_optional_string(record, placement, "response_origin")
+				_copy_optional_string(record, placement, "response_source_town_id")
+				_copy_optional_positive_int(record, placement, "response_last_day")
+				_copy_optional_positive_int(record, placement, "response_until_day")
+			OBJECT_FAMILY_ARTIFACT:
+				record["artifact_id"] = String(placement.get("artifact_id", ""))
+				_copy_optional_bool(record, placement, "collected")
+				_copy_optional_string(record, placement, "collected_by_faction_id")
+				_copy_optional_positive_int(record, placement, "collected_day")
+			OBJECT_FAMILY_ENCOUNTER:
+				record["encounter_id"] = String(placement.get("encounter_id", ""))
+				_copy_optional_string(record, placement, "difficulty")
+				_copy_optional_positive_int(record, placement, "combat_seed")
+				_copy_optional_string(record, placement, "object_id")
+				_copy_optional_string(record, placement, "object_placement_id")
+				_copy_optional_string(record, placement, "encounter_ref")
+				_copy_optional_string(record, placement, "legacy_scenario_encounter_ref")
+				_copy_optional_dict(record, placement, "guard_link")
+				_copy_optional_dict(record, placement, "authored_bundle")
+		records.append(record)
+	return records
+
+func _copy_optional_dict(target: Dictionary, source: Dictionary, key: String) -> void:
+	var value = source.get(key, {})
+	if value is Dictionary and not value.is_empty():
+		target[key] = value.duplicate(true)
+
+func _copy_optional_string(target: Dictionary, source: Dictionary, key: String) -> void:
+	var raw_value = source.get(key, "")
+	if raw_value == null:
+		return
+	var value := str(raw_value).strip_edges()
+	if value != "":
+		target[key] = value
+
+func _copy_optional_bool(target: Dictionary, source: Dictionary, key: String) -> void:
+	if bool(source.get(key, false)):
+		target[key] = true
+
+func _copy_optional_positive_int(target: Dictionary, source: Dictionary, key: String) -> void:
+	var value := int(source.get(key, 0))
+	if value > 0:
+		target[key] = value
+
+func _export_changed_domains(baseline_scenario: Dictionary, baseline_layers: Dictionary, scenario_record: Dictionary, terrain_layers_record: Dictionary) -> Array:
+	var domains := []
+	for key in ["map", "start", "towns", "resource_nodes", "artifact_nodes", "encounters"]:
+		if baseline_scenario.get(key, null) != scenario_record.get(key, null):
+			domains.append(key)
+	if baseline_layers != terrain_layers_record:
+		domains.append("terrain_layers")
+	return domains
+
+func _validate_export_scenario_record(record: Dictionary) -> Array:
+	var blockers := []
+	if String(record.get("id", "")).strip_edges() == "":
+		blockers.append("Scenario export draft is missing an id.")
+	var map_size := OverworldRules.derive_map_size(_session)
+	var map_data = record.get("map", [])
+	if not (map_data is Array) or map_data.size() != map_size.y:
+		blockers.append("Scenario export draft map height does not match %d." % map_size.y)
+	else:
+		var authored_ids := _authored_terrain_ids()
+		for y in range(map_data.size()):
+			var row = map_data[y]
+			if not (row is Array) or row.size() != map_size.x:
+				blockers.append("Scenario export draft map row %d width does not match %d." % [y, map_size.x])
+				continue
+			for x in range(row.size()):
+				var terrain_id := String(row[x])
+				if terrain_id not in authored_ids:
+					blockers.append("Scenario export draft has unknown terrain id %s at %d,%d." % [terrain_id, x, y])
+	var start = record.get("start", {})
+	if not (start is Dictionary) or not _tile_in_bounds(Vector2i(int(start.get("x", -1)), int(start.get("y", -1)))):
+		blockers.append("Scenario export draft hero start is outside the map.")
+	var placement_ids := {}
+	for family in [OBJECT_FAMILY_TOWN, OBJECT_FAMILY_RESOURCE, OBJECT_FAMILY_ARTIFACT, OBJECT_FAMILY_ENCOUNTER]:
+		var placements = record.get(_placement_array_key(family), [])
+		if not (placements is Array):
+			blockers.append("Scenario export draft %s is not an array." % _placement_array_key(family))
+			continue
+		for placement_value in placements:
+			if not (placement_value is Dictionary):
+				blockers.append("Scenario export draft %s contains a non-dictionary placement." % _placement_array_key(family))
+				continue
+			var placement: Dictionary = placement_value
+			var placement_id := String(placement.get("placement_id", "")).strip_edges()
+			if placement_id == "":
+				blockers.append("Scenario export draft %s placement is missing placement_id." % _placement_array_key(family))
+			elif placement_ids.has(placement_id):
+				blockers.append("Scenario export draft repeats placement_id %s." % placement_id)
+			else:
+				placement_ids[placement_id] = true
+			var tile := Vector2i(int(placement.get("x", -1)), int(placement.get("y", -1)))
+			if not _tile_in_bounds(tile):
+				blockers.append("Scenario export draft placement %s is outside the map." % placement_id)
+			var content_id := String(placement.get(_placement_content_key(family), "")).strip_edges()
+			if content_id == "" or _object_content_lookup(family, content_id).is_empty():
+				blockers.append("Scenario export draft placement %s references missing %s content %s." % [placement_id, _object_family_label(family), content_id])
+	return blockers
+
+func _validate_export_terrain_layers_record(record: Dictionary) -> Array:
+	var blockers := []
+	if String(record.get("id", "")).strip_edges() != _session.scenario_id:
+		blockers.append("Terrain-layer export draft id must match scenario %s." % _session.scenario_id)
+	var roads = record.get("roads", [])
+	if not (roads is Array):
+		return ["Terrain-layer export draft roads must be an array."]
+	var map_size := OverworldRules.derive_map_size(_session)
+	var road_ids := {}
+	for road_value in roads:
+		if not (road_value is Dictionary):
+			blockers.append("Terrain-layer export draft contains a non-dictionary road.")
+			continue
+		var road: Dictionary = road_value
+		var road_id := String(road.get("id", "")).strip_edges()
+		if road_id == "":
+			blockers.append("Terrain-layer export draft road is missing an id.")
+		elif road_ids.has(road_id):
+			blockers.append("Terrain-layer export draft repeats road id %s." % road_id)
+		else:
+			road_ids[road_id] = true
+		if String(road.get("overlay_id", "")).strip_edges() == "":
+			blockers.append("Terrain-layer export draft road %s is missing overlay_id." % road_id)
+		var tiles = road.get("tiles", [])
+		if not (tiles is Array):
+			blockers.append("Terrain-layer export draft road %s tiles must be an array." % road_id)
+			continue
+		for tile_value in tiles:
+			if not (tile_value is Dictionary):
+				blockers.append("Terrain-layer export draft road %s has a non-dictionary tile." % road_id)
+				continue
+			var tile := Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1)))
+			if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+				blockers.append("Terrain-layer export draft road %s has out-of-bounds tile %d,%d." % [road_id, tile.x, tile.y])
+	return blockers
 
 func _editor_scenario_switch_handoff_payload() -> Dictionary:
 	if _session == null:
@@ -6081,6 +6437,7 @@ func validation_snapshot() -> Dictionary:
 		"export_intent": _editor_export_intent_payload(),
 		"export_intent_text": String(_editor_export_intent_payload().get("text", "")),
 		"export_intent_tooltip": String(_editor_export_intent_payload().get("tooltip", "")),
+		"authored_scenario_export_contract": _authored_scenario_export_contract_payload(false),
 		"scenario_switch_handoff": _editor_scenario_switch_handoff_payload(),
 		"scenario_switch_handoff_text": String(_editor_scenario_switch_handoff_payload().get("text", "")),
 		"scenario_switch_handoff_tooltip": String(_editor_scenario_switch_handoff_payload().get("tooltip", "")),
@@ -6833,6 +7190,9 @@ func validation_launch_working_copy() -> Dictionary:
 		"launch_readiness_gate": launch_readiness_gate,
 		"launch_handoff": launch_handoff,
 	}
+
+func validation_authored_scenario_export_contract() -> Dictionary:
+	return _authored_scenario_export_contract_payload(true)
 
 func _tile_inspection_payload(tile: Vector2i) -> Dictionary:
 	if _session == null or not _tile_in_bounds(tile):

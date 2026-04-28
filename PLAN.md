@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Selected next implementation candidate: `terrain-editor-terrain-placement-contract-10184` under P2.9 terrain/editor tooling. Do not start P2.9 from P2.8 closeout work.
+Selected implementation slice: `terrain-editor-scenario-export-validation-10184` under P2.9 terrain/editor tooling. Keep durable authored file writeback separate from validated draft/export-contract work unless explicitly selected.
 
 ## Slice Status Model
 
@@ -995,7 +995,7 @@ currentState:
 - The active web-editor/prototype terrain behavior is no longer a separate live web implementation; its accepted placement, relation-class selection, bridge/material projection, and final-normalization contracts are now represented in Godot through `TerrainPlacementRules.gd` constants and helpers.
 - `MapEditorShell.gd` uses those shared rules for single-tile terrain paint, fill, line, rectangle, road, restamp inspection, object authoring, working-copy launch, and export-intent cues.
 - `OverworldMapView.gd` uses the same terrain rule source for overworld presentation, so editor placement and renderer transition selection are no longer separate conceptual tracks.
-- Scenario export remains intentionally bounded to working-copy/export-intent validation; it does not yet write authored scenario files or campaign progress.
+- Scenario export now includes a validated authored scenario/terrain-layer draft contract for edited working-copy data; it still does not write authored scenario files or campaign progress.
 
 baselineChecks:
 - `python3 tests/validate_repo.py`
@@ -1776,7 +1776,7 @@ remainingScope:
 id: `terrain-editor-scenario-export-validation-10184`
 parentSliceId: `terrain-editor-tooling-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
-status: `pending_after_foundation`
+status: `completed_validation_contract_no_writeback`
 purpose: Prove editor output can support scenario iteration through validation/export gates.
 
 sourceDocs:
@@ -1786,14 +1786,17 @@ sourceDocs:
 implementationTargets:
 - editor export-intent tooling
 - scenario validation smoke/report coverage
-- future authored scenario writeback/export contract if selected
+- authored scenario/terrain-layer draft export contract validation
+- future durable authored file writeback/export if selected
 
 currentEvidence:
 - `MapEditorShell.gd` exposes working-copy launch and export-intent payloads.
 - `tests/map_editor_smoke.gd` asserts clean/dirty export-intent state, objective-anchor coverage, no internal score leaks, and that no authored file or campaign progress is written.
+- `MapEditorShell.gd` exposes `validation_authored_scenario_export_contract()` with an authored scenario/terrain-layer draft, changed-domain detection, target path declaration, blocker reporting, and explicit `validated_draft_only` no-writeback state.
+- `tests/map_editor_scenario_export_contract_report.gd` proves clean drafts stay unchanged and seeded terrain/start/resource edits appear in the draft contract without enabling writeback.
 
 remainingScope:
-- This child is intentionally not complete until the project decides whether to add durable authored scenario export/writeback. Current Godot behavior supports scenario iteration by working-copy launch and validation only.
+- Durable authored JSON file writeback remains future explicit work. This child validates export intent and authored draft shape only; it does not complete a full editor product or write production content files.
 
 ### P2 Child: Random Map Requirements Doc
 
