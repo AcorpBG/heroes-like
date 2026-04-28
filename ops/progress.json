@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-live-hero-task-adoption-10184",
-  "currentSliceTitle": "Strategic AI Live Hero Task Adoption",
+  "currentSliceId": "terrain-editor-scenario-export-validation-10184",
+  "currentSliceTitle": "Terrain Editor Scenario Export Validation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the final P2.8 live hero task adoption gate as report-only deferral evidence. Candidate task reports, optional normalizer preservation, and commander-role boundary evidence are ready only as reports; live target selection, route/actor execution, save/schema writes, save migration, durable event history, and executable hero task state remain deferred.",
+  "currentSliceNotes": "Implemented validated authored scenario/terrain-layer draft export contract with explicit no-writeback boundary.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-28T07:55:00Z",
+  "updatedAt": "2026-04-28T12:34:39Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -2177,7 +2177,7 @@
       "id": "terrain-editor-scenario-export-validation-10184",
       "title": "Terrain Editor Scenario Export Validation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending_after_implementation",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
@@ -2190,23 +2190,31 @@
       "implementationTargets": [
         "editor export-intent tooling",
         "scenario validation smoke/report coverage",
-        "future authored scenario writeback/export contract if selected"
+        "authored scenario/terrain-layer draft export contract validation",
+        "future durable authored file writeback/export if selected"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
-        "git diff --check"
+        "git diff --check",
+        "godot4 --headless --path /root/dev/heroes-like res://tests/map_editor_scenario_export_contract_report.tscn"
       ],
       "sliceEvidence": [
         "MapEditorShell.gd working-copy launch and export-intent payloads",
         "tests/map_editor_smoke.gd clean/dirty export-intent assertions",
+        "MapEditorShell.gd validation_authored_scenario_export_contract() draft contract with changed-domain and blocker reporting",
+        "tests/map_editor_scenario_export_contract_report.gd validates clean and edited authored scenario/terrain-layer draft contracts",
         "explicit no-authored-file/no-campaign-progress boundary"
       ],
       "completionCriteria": [
-        "Decide whether durable authored scenario export/writeback is in scope.",
-        "If selected, implement and validate authored scenario writeback/export gates.",
-        "Until then, keep this child pending_after_implementation rather than treating export-intent cues as full export completion."
+        "Authored scenario export validation returns draft records for scenario and terrain-layer targets.",
+        "Changed-domain detection distinguishes clean authored baseline from edited terrain/start/object data.",
+        "Writeback remains disabled and explicitly reported as validated_draft_only until a future durable writer slice is selected."
       ],
-      "evidence": "Current Godot editor supports scenario iteration through working-copy launch and export-intent validation only. MapEditorShell.gd exposes export-intent payloads and map_editor_smoke asserts clean/dirty state, objective anchor coverage, no internal score leaks, and that no authored file or campaign progress is written."
+      "evidence": "MapEditorShell.gd now exposes a validated authored scenario/terrain-layer draft contract with target paths, blockers, changed domains, deterministic draft signature, and explicit no-writeback state. map_editor_scenario_export_contract_report proves clean baseline and edited terrain/start/resource draft behavior without writing authored files or campaign progress.",
+      "updatedAt": "2026-04-28T12:34:39Z",
+      "startedAt": "2026-04-28T12:09:06Z",
+      "completedAt": "2026-04-28T12:34:39Z",
+      "notes": "Completed bounded export validation contract only. Durable authored JSON writeback remains a deferred explicit follow-up. Focused contract report passes; broader map_editor_smoke timed out in the existing preview refresh path after terrain mutation, so it was not used as completion evidence."
     },
     {
       "id": "random-map-requirements-doc-10184",
@@ -3606,14 +3614,14 @@
       "replacementPlannedSliceIds": [
         "terrain-editor-scenario-export-validation-10184"
       ],
-      "evidence": "Current editor export behavior is an export-intent/working-copy validation boundary. It supports scenario iteration and smoke launch, but deliberately does not write authored scenario files or campaign progress."
+      "evidence": "Current editor export behavior includes validated authored scenario/terrain-layer draft contracts and working-copy validation, but deliberately does not write authored scenario files or campaign progress."
     }
   ],
   "actionableNextTasks": [
     {
       "id": "terrain-editor-scenario-export-validation-10184",
       "title": "Terrain Editor Scenario Export Validation",
-      "status": "pending_after_implementation",
+      "status": "completed",
       "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
       "source": "PLAN.md P2.9 Terrain, Renderer, And Editor Tooling Foundation",
       "sourceDocs": [
@@ -3624,9 +3632,10 @@
       "implementationTargets": [
         "editor export-intent tooling",
         "scenario validation smoke/report coverage",
-        "future authored scenario writeback/export contract if selected"
+        "authored scenario/terrain-layer draft export contract validation",
+        "future durable authored file writeback/export if selected"
       ],
-      "notes": "Only remaining P2.9 child after 2026-04-28 reconciliation. Current Godot editor has working-copy launch/export-intent validation; durable authored scenario export/writeback is not implemented and should only proceed if selected."
+      "notes": "Completed bounded authored draft validation contract. Durable authored scenario export/writeback is still not implemented and should only proceed as a future selected slice."
     }
   ],
   "stoppedOrPausedTasks": [
