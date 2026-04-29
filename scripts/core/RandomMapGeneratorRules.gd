@@ -65,6 +65,16 @@ const TERRAIN_MOVEMENT_COST := {
 	"ridge": 2,
 	"water": 999,
 }
+const SUPPORT_RESOURCE_VALUE_BY_SITE := {
+	"site_wood_wagon": {"gold": 0, "wood": 4, "ore": 0},
+	"site_ore_crates": {"gold": 0, "wood": 0, "ore": 4},
+	"site_waystone_cache": {"gold": 900, "wood": 0, "ore": 0},
+}
+const EARLY_RESOURCE_MINIMUMS := {"gold": 600, "wood": 4, "ore": 4}
+const ROUTE_DISTANCE_WARNING_SPREAD := 10
+const ROUTE_DISTANCE_FAIL_SPREAD := 20
+const PRESSURE_WARNING_SPREAD := 900
+const PRESSURE_FAIL_SPREAD := 1800
 
 class DeterministicRng:
 	var _state := 1
@@ -111,6 +121,11 @@ static func generate(input_config: Dictionary) -> Dictionary:
 	phases.append(_phase_record("route_road_constraint_writeout", {
 		"road_segment_count": int(constraints.get("road_network", {}).get("road_segments", []).size()),
 		"required_reachability": String(constraints.get("route_reachability_proof", {}).get("status", "unknown")),
+	}))
+	phases.append(_phase_record("resource_encounter_fairness_report", {
+		"status": String(constraints.get("fairness_report", {}).get("status", "unknown")),
+		"start_count": int(constraints.get("fairness_report", {}).get("early_resource_support", {}).get("per_start", []).size()),
+		"guard_route_count": int(constraints.get("fairness_report", {}).get("guard_pressure", {}).get("route_guards", []).size()),
 	}))
 
 	var scenario_record := _build_scenario_record(normalized, terrain_rows, placements, constraints)
@@ -174,6 +189,24 @@ static func seed_determinism_report(input_config: Dictionary) -> Dictionary:
 			"unordered_dictionary_iteration",
 		],
 	}
+
+static func resource_encounter_fairness_report(generated_map: Dictionary) -> Dictionary:
+	var staging: Dictionary = generated_map.get("staging", {})
+	var scenario: Dictionary = generated_map.get("scenario_record", {})
+	var placements := {
+		"object_placements": staging.get("object_placements", []),
+		"towns": scenario.get("towns", []),
+		"resource_nodes": scenario.get("resource_nodes", []),
+		"encounters": scenario.get("encounters", []),
+	}
+	return _fairness_report_payload(
+		generated_map.get("metadata", {}),
+		staging.get("zones", []),
+		placements,
+		staging.get("route_graph", {}),
+		staging.get("route_reachability_proof", {}),
+		scenario.get("objectives", {})
+	)
 
 static func normalize_config(input_config: Dictionary) -> Dictionary:
 	var generator_version := String(input_config.get("generator_version", GENERATOR_VERSION)).strip_edges()
@@ -245,6 +278,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	var town_start_constraints: Dictionary = staging.get("town_start_constraints", {})
 	var road_network: Dictionary = staging.get("road_network", {})
 	var reachability: Dictionary = staging.get("route_reachability_proof", {})
+	var fairness_report: Dictionary = staging.get("fairness_report", {})
 	if terrain_constraints.is_empty():
 		failures.append("terrain constraints payload missing")
 	if String(terrain_constraints.get("coherence_model", "")) == "":
@@ -271,11 +305,18 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	if String(reachability.get("status", "")) != "pass":
 		failures.append("required route reachability proof failed")
 	_validate_road_paths(road_network, terrain_rows, staging.get("object_placements", []), failures)
+	if String(fairness_report.get("schema_id", "")) != "random_map_resource_encounter_fairness_report_v1":
+		failures.append("resource/encounter fairness report missing")
+	else:
+		if String(fairness_report.get("status", "")) == "fail":
+			failures.append("resource/encounter fairness report failed")
+		for fairness_warning in fairness_report.get("warnings", []):
+			warnings.append(String(fairness_warning))
 	var phase_names := []
 	for phase in generated_map.get("phase_pipeline", []):
 		if phase is Dictionary:
 			phase_names.append(String(phase.get("phase", "")))
-	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "object_placement_staging", "route_road_constraint_writeout"]:
+	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "object_placement_staging", "route_road_constraint_writeout", "resource_encounter_fairness_report"]:
 		if required_phase not in phase_names:
 			failures.append("missing generation phase %s" % required_phase)
 	if scenario.get("towns", []).is_empty():
@@ -294,6 +335,8 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 		"route_edge_count": int(route_graph.get("edges", []).size()),
 		"road_segment_count": int(road_network.get("road_segments", []).size()),
 		"required_reachability_status": String(reachability.get("status", "")),
+		"fairness_status": String(fairness_report.get("status", "")),
+		"fairness_summary": fairness_report.get("summary", {}),
 	}
 
 static func _build_runtime_template(normalized: Dictionary) -> Dictionary:
@@ -536,6 +579,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 			"town_starts": constraints.get("town_start_constraints", {}),
 			"roads": constraints.get("road_network", {}),
 			"reachability": constraints.get("route_reachability_proof", {}),
+			"fairness": constraints.get("fairness_report", {}),
 		},
 	}
 
@@ -565,6 +609,7 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"road_network": constraints.get("road_network", {}),
 		"route_reachability_proof": constraints.get("route_reachability_proof", {}),
 		"route_graph": constraints.get("route_graph", _route_graph_payload(template.get("links", []), seeds)),
+		"fairness_report": constraints.get("fairness_report", {}),
 		"object_placements": placements.get("object_placements", []),
 		"metadata": _metadata(normalized),
 		"editable_grid_model": "terrain_owner_grid_rows_plus_separate_object_placement_arrays",
@@ -575,12 +620,14 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 	var occupied := _occupied_body_lookup(placements.get("object_placements", []))
 	var route_build := _build_route_and_road_payload(links, seeds, placements, terrain_rows, occupied)
 	var town_start_constraints := _town_start_constraints_payload(zones, placements, route_build.get("route_graph", {}), route_build.get("route_reachability_proof", {}))
+	var fairness_report := _fairness_report_payload(normalized, zones, placements, route_build.get("route_graph", {}), route_build.get("route_reachability_proof", {}))
 	return {
 		"terrain_constraints": terrain_constraints,
 		"town_start_constraints": town_start_constraints,
 		"road_network": route_build.get("road_network", {}),
 		"route_graph": route_build.get("route_graph", _route_graph_payload(links, seeds)),
 		"route_reachability_proof": route_build.get("route_reachability_proof", {}),
+		"fairness_report": fairness_report,
 		"metadata": _metadata(normalized),
 	}
 
@@ -770,6 +817,315 @@ static func _town_start_constraints_payload(zones: Array, placements: Dictionary
 		"player_starts": starts,
 		"required_primary_town_count": towns.size(),
 		"reachability_status": String(proof.get("status", "")),
+	}
+
+static func _fairness_report_payload(normalized: Dictionary, zones: Array, placements: Dictionary, route_graph: Dictionary, proof: Dictionary, objectives: Dictionary = {}) -> Dictionary:
+	var early_support := _early_resource_support_payload(placements, route_graph)
+	var contested_fronts := _contested_front_distribution_payload(placements, route_graph)
+	var guard_pressure := _guard_pressure_payload(route_graph)
+	var distance_comparisons := _travel_distance_comparisons_payload(placements, route_graph)
+	var objective_pressure := _objective_reward_pressure_payload(objectives, route_graph)
+	var failures := []
+	var warnings := []
+	for section in [early_support, contested_fronts, guard_pressure, distance_comparisons, objective_pressure]:
+		if String(section.get("status", "")) == "fail":
+			failures.append_array(section.get("failures", []))
+		elif String(section.get("status", "")) == "warning":
+			warnings.append_array(section.get("warnings", []))
+	var status := "pass"
+	if not failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {
+		"schema_id": "random_map_resource_encounter_fairness_report_v1",
+		"status": status,
+		"metadata": {
+			"generator_version": String(normalized.get("generator_version", normalized.get("generator_version", GENERATOR_VERSION))),
+			"normalized_seed": String(normalized.get("seed", normalized.get("normalized_seed", ""))),
+			"profile_id": String(normalized.get("profile", {}).get("id", normalized.get("profile_id", ""))) if normalized.get("profile", {}) is Dictionary else "",
+			"route_reachability_status": String(proof.get("status", "")),
+			"zone_count": zones.size(),
+		},
+		"summary": {
+			"early_resource_status": String(early_support.get("status", "")),
+			"contested_front_status": String(contested_fronts.get("status", "")),
+			"guard_pressure_status": String(guard_pressure.get("status", "")),
+			"travel_distance_status": String(distance_comparisons.get("status", "")),
+			"objective_pressure_status": String(objective_pressure.get("status", "")),
+		},
+		"early_resource_support": early_support,
+		"contested_front_distribution": contested_fronts,
+		"guarded_reward_risk": guard_pressure.get("guarded_reward_risk", {}),
+		"guard_pressure": guard_pressure,
+		"travel_distance_comparisons": distance_comparisons,
+		"objective_reward_pressure": objective_pressure,
+		"failures": failures,
+		"warnings": warnings,
+		"classification_model": "pass_warning_fail_report_only_no_runtime_adoption",
+	}
+
+static func _early_resource_support_payload(placements: Dictionary, route_graph: Dictionary) -> Dictionary:
+	var towns: Array = placements.get("towns", [])
+	var resources_by_zone := _resources_by_zone(placements.get("resource_nodes", []))
+	var resource_edges_by_town := _resource_route_edges_by_town(route_graph.get("edges", []))
+	var per_start := []
+	var failures := []
+	var warnings := []
+	for town in towns:
+		if not (town is Dictionary):
+			continue
+		var zone_id := String(town.get("zone_id", ""))
+		var totals := {"gold": 0, "wood": 0, "ore": 0}
+		var resource_records := []
+		for resource in resources_by_zone.get(zone_id, []):
+			if not (resource is Dictionary):
+				continue
+			var site_id := String(resource.get("site_id", ""))
+			var value: Dictionary = SUPPORT_RESOURCE_VALUE_BY_SITE.get(site_id, {})
+			for key in ["gold", "wood", "ore"]:
+				totals[key] = int(totals.get(key, 0)) + int(value.get(key, 0))
+			resource_records.append({
+				"placement_id": String(resource.get("placement_id", "")),
+				"site_id": site_id,
+				"purpose": _resource_support_purpose(site_id),
+				"value": _sorted_dict(value),
+			})
+		var missing := []
+		for key in ["gold", "wood", "ore"]:
+			if int(totals.get(key, 0)) < int(EARLY_RESOURCE_MINIMUMS.get(key, 0)):
+				missing.append(key)
+		var route_lengths := []
+		for edge in resource_edges_by_town.get(String(town.get("placement_id", "")), []):
+			if edge is Dictionary and bool(edge.get("path_found", false)):
+				route_lengths.append(int(edge.get("path_length", 0)))
+		var route_status := _spread_status(route_lengths, ROUTE_DISTANCE_WARNING_SPREAD, ROUTE_DISTANCE_FAIL_SPREAD)
+		var status := "pass"
+		if not missing.is_empty() or resource_records.size() < SUPPORT_RESOURCE_SITES.size():
+			status = "fail"
+			failures.append("start %s missing early support resources: %s" % [String(town.get("placement_id", "")), ",".join(missing)])
+		elif route_status == "warning":
+			status = "warning"
+			warnings.append("start %s early support route distances are uneven" % String(town.get("placement_id", "")))
+		per_start.append({
+			"player_slot": int(town.get("player_slot", 0)),
+			"zone_id": zone_id,
+			"primary_town_placement_id": String(town.get("placement_id", "")),
+			"minimums": _sorted_dict(EARLY_RESOURCE_MINIMUMS),
+			"totals": _sorted_dict(totals),
+			"resources": resource_records,
+			"resource_route_lengths": route_lengths,
+			"route_distance_status": route_status,
+			"status": status,
+		})
+	var status := "pass"
+	if not failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {"status": status, "per_start": per_start, "failures": failures, "warnings": warnings}
+
+static func _contested_front_distribution_payload(placements: Dictionary, route_graph: Dictionary) -> Dictionary:
+	var start_zones := _start_zones_from_towns(placements.get("towns", []))
+	var records := []
+	var distances := []
+	var pressure_values := []
+	var failures := []
+	var warnings := []
+	for zone_id in start_zones:
+		var edges := _edges_for_zone_and_role(route_graph.get("edges", []), String(zone_id), "contest_route")
+		var route_count := 0
+		var shortest := 0
+		var pressure := 0
+		for edge in edges:
+			if not (edge is Dictionary):
+				continue
+			if bool(edge.get("path_found", false)):
+				route_count += 1
+				var length := int(edge.get("path_length", 0))
+				shortest = length if shortest == 0 else min(shortest, length)
+				distances.append(length)
+				pressure += _effective_guard_pressure(edge)
+		pressure_values.append(pressure)
+		if route_count < 1:
+			failures.append("start zone %s has no contest route front" % String(zone_id))
+		records.append({
+			"zone_id": String(zone_id),
+			"contest_route_count": route_count,
+			"nearest_contest_route_distance": shortest,
+			"contest_guard_pressure": pressure,
+		})
+	var distance_status := _spread_status(distances, ROUTE_DISTANCE_WARNING_SPREAD, ROUTE_DISTANCE_FAIL_SPREAD)
+	var pressure_status := _spread_status(pressure_values, PRESSURE_WARNING_SPREAD, PRESSURE_FAIL_SPREAD)
+	if distance_status == "warning":
+		warnings.append("contest route distances exceed warning spread")
+	elif distance_status == "fail":
+		failures.append("contest route distances exceed fail spread")
+	if pressure_status == "warning":
+		warnings.append("contest guard pressure exceeds warning spread")
+	elif pressure_status == "fail":
+		failures.append("contest guard pressure exceeds fail spread")
+	var status := "pass"
+	if not failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {
+		"status": status,
+		"resource_front_model": "contest_routes_until_contested_resource_sites_exist",
+		"per_start": records,
+		"distance_spread": _spread_summary(distances),
+		"guard_pressure_spread": _spread_summary(pressure_values),
+		"failures": failures,
+		"warnings": warnings,
+	}
+
+static func _guard_pressure_payload(route_graph: Dictionary) -> Dictionary:
+	var route_guards := []
+	var reward_risk := []
+	var pressure_by_start := {}
+	var failures := []
+	var warnings := []
+	for edge in route_graph.get("edges", []):
+		if not (edge is Dictionary):
+			continue
+		var role := String(edge.get("role", ""))
+		if role not in ["contest_route", "early_reward_route", "reward_to_junction"]:
+			continue
+		var guard_class := _guard_risk_class(edge)
+		var pressure := _effective_guard_pressure(edge)
+		var record := {
+			"edge_id": String(edge.get("id", "")),
+			"from": String(edge.get("from", "")),
+			"to": String(edge.get("to", "")),
+			"role": role,
+			"path_length": int(edge.get("path_length", 0)),
+			"raw_guard_value": int(edge.get("guard_value", 0)),
+			"effective_guard_pressure": pressure,
+			"risk_class": guard_class,
+			"wide_suppresses_normal_guard": bool(edge.get("wide", false)),
+			"border_guard_special_mode": bool(edge.get("border_guard", false)),
+			"connectivity_classification": String(edge.get("connectivity_classification", "")),
+		}
+		route_guards.append(record)
+		if role in ["early_reward_route", "reward_to_junction"]:
+			reward_risk.append(record)
+		for endpoint_key in ["from", "to"]:
+			var endpoint := String(edge.get(endpoint_key, ""))
+			if endpoint.begins_with("start_"):
+				pressure_by_start[endpoint] = int(pressure_by_start.get(endpoint, 0)) + pressure
+	if route_guards.is_empty():
+		failures.append("no route guard pressure records available")
+	var pressure_values := []
+	for key in _sorted_keys(pressure_by_start):
+		pressure_values.append(int(pressure_by_start[key]))
+	var pressure_status := _spread_status(pressure_values, PRESSURE_WARNING_SPREAD, PRESSURE_FAIL_SPREAD)
+	if pressure_status == "warning":
+		warnings.append("route guard pressure exceeds warning spread")
+	elif pressure_status == "fail":
+		failures.append("route guard pressure exceeds fail spread")
+	var status := "pass"
+	if not failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {
+		"status": status,
+		"connection_payload_semantics": route_graph.get("connection_payload_semantics", {}),
+		"route_guards": route_guards,
+		"pressure_by_start_zone": _sorted_dict(pressure_by_start),
+		"pressure_spread": _spread_summary(pressure_values),
+		"guarded_reward_risk": {
+			"status": "pass" if not reward_risk.is_empty() else "warning",
+			"risk_classes": reward_risk,
+			"model": "guard_value_distance_and_connection_semantics",
+		},
+		"failures": failures,
+		"warnings": warnings,
+	}
+
+static func _travel_distance_comparisons_payload(placements: Dictionary, route_graph: Dictionary) -> Dictionary:
+	var resources_by_town := _resource_route_edges_by_town(route_graph.get("edges", []))
+	var records := []
+	var town_to_resource_maxes := []
+	var contest_distances := []
+	var failures := []
+	var warnings := []
+	for town in placements.get("towns", []):
+		if not (town is Dictionary):
+			continue
+		var town_id := String(town.get("placement_id", ""))
+		var zone_id := String(town.get("zone_id", ""))
+		var resource_lengths := []
+		for edge in resources_by_town.get(town_id, []):
+			if edge is Dictionary and bool(edge.get("path_found", false)):
+				resource_lengths.append(int(edge.get("path_length", 0)))
+		var contest_edges := _edges_for_zone_and_role(route_graph.get("edges", []), zone_id, "contest_route")
+		var nearest_contest := 0
+		for edge in contest_edges:
+			if edge is Dictionary and bool(edge.get("path_found", false)):
+				var length := int(edge.get("path_length", 0))
+				nearest_contest = length if nearest_contest == 0 else min(nearest_contest, length)
+		var max_resource := _max_int(resource_lengths)
+		town_to_resource_maxes.append(max_resource)
+		if nearest_contest > 0:
+			contest_distances.append(nearest_contest)
+		records.append({
+			"player_slot": int(town.get("player_slot", 0)),
+			"zone_id": zone_id,
+			"start_contract": "primary_town_anchor_until_hero_start_generation_exists",
+			"start_to_primary_town_distance": 0,
+			"town_to_resource_route_lengths": resource_lengths,
+			"max_town_to_resource_distance": max_resource,
+			"nearest_contest_route_distance": nearest_contest,
+		})
+	var resource_status := _spread_status(town_to_resource_maxes, ROUTE_DISTANCE_WARNING_SPREAD, ROUTE_DISTANCE_FAIL_SPREAD)
+	var contest_status := _spread_status(contest_distances, ROUTE_DISTANCE_WARNING_SPREAD, ROUTE_DISTANCE_FAIL_SPREAD)
+	if resource_status == "warning":
+		warnings.append("town-to-resource route distance spread exceeds warning threshold")
+	elif resource_status == "fail":
+		failures.append("town-to-resource route distance spread exceeds fail threshold")
+	if contest_status == "warning":
+		warnings.append("contest route distance spread exceeds warning threshold")
+	elif contest_status == "fail":
+		failures.append("contest route distance spread exceeds fail threshold")
+	var status := "pass"
+	if not failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {
+		"status": status,
+		"per_start": records,
+		"town_to_resource_distance_spread": _spread_summary(town_to_resource_maxes),
+		"contest_route_distance_spread": _spread_summary(contest_distances),
+		"failures": failures,
+		"warnings": warnings,
+	}
+
+static func _objective_reward_pressure_payload(objectives: Dictionary, route_graph: Dictionary) -> Dictionary:
+	var objective_count := 0
+	if objectives.has("victory") and objectives.get("victory", []) is Array:
+		objective_count += objectives.get("victory", []).size()
+	if objectives.has("defeat") and objectives.get("defeat", []) is Array:
+		objective_count += objectives.get("defeat", []).size()
+	if objective_count == 0:
+		return {
+			"status": "pass",
+			"supported": false,
+			"objective_count": 0,
+			"model": "no_generated_objective_pressure_until_supported_objectives_exist",
+			"failures": [],
+			"warnings": [],
+		}
+	return {
+		"status": "warning",
+		"supported": true,
+		"objective_count": objective_count,
+		"route_edge_count": route_graph.get("edges", []).size(),
+		"model": "placeholder_requires_objective_route_links_in_later_slice",
+		"failures": [],
+		"warnings": ["generated objectives exist but objective-route pressure links are not staged"],
 	}
 
 static func _metadata(normalized: Dictionary) -> Dictionary:
@@ -1163,6 +1519,108 @@ static func _support_resource_count_for_zone(resource_nodes: Array, zone_id: Str
 		if resource is Dictionary and String(resource.get("zone_id", "")) == zone_id:
 			count += 1
 	return count
+
+static func _resources_by_zone(resource_nodes: Array) -> Dictionary:
+	var result := {}
+	for resource in resource_nodes:
+		if not (resource is Dictionary):
+			continue
+		var zone_id := String(resource.get("zone_id", ""))
+		if not result.has(zone_id):
+			result[zone_id] = []
+		result[zone_id].append(resource)
+	return result
+
+static func _start_zones_from_towns(towns: Array) -> Array:
+	var result := []
+	for town in towns:
+		if town is Dictionary:
+			var zone_id := String(town.get("zone_id", ""))
+			if zone_id != "" and zone_id not in result:
+				result.append(zone_id)
+	result.sort()
+	return result
+
+static func _resource_route_edges_by_town(edges: Array) -> Dictionary:
+	var result := {}
+	for edge in edges:
+		if not (edge is Dictionary) or String(edge.get("role", "")) != "required_start_economy_route":
+			continue
+		var town_id := String(edge.get("from", ""))
+		if not result.has(town_id):
+			result[town_id] = []
+		result[town_id].append(edge)
+	return result
+
+static func _edges_for_zone_and_role(edges: Array, zone_id: String, role: String) -> Array:
+	var result := []
+	for edge in edges:
+		if not (edge is Dictionary):
+			continue
+		if String(edge.get("role", "")) != role:
+			continue
+		if String(edge.get("from", "")) == zone_id or String(edge.get("to", "")) == zone_id:
+			result.append(edge)
+	return result
+
+static func _resource_support_purpose(site_id: String) -> String:
+	match site_id:
+		"site_wood_wagon":
+			return "early_wood_support"
+		"site_ore_crates":
+			return "early_ore_support"
+		"site_waystone_cache":
+			return "early_gold_support"
+		_:
+			return "unknown_resource_support"
+
+static func _guard_risk_class(edge: Dictionary) -> String:
+	if bool(edge.get("border_guard", false)):
+		return "special_border_guard"
+	if bool(edge.get("wide", false)):
+		return "wide_unguarded_normal_guard_suppressed"
+	var guard_value := int(edge.get("guard_value", 0))
+	if guard_value <= 0:
+		return "unguarded"
+	if guard_value <= 200:
+		return "low"
+	if guard_value <= 700:
+		return "medium"
+	return "high"
+
+static func _effective_guard_pressure(edge: Dictionary) -> int:
+	if bool(edge.get("wide", false)):
+		return 0
+	var value := int(edge.get("guard_value", 0))
+	if bool(edge.get("border_guard", false)):
+		value += 500
+	return value
+
+static func _spread_status(values: Array, warning_threshold: int, fail_threshold: int) -> String:
+	if values.size() <= 1:
+		return "pass"
+	var spread := int(_spread_summary(values).get("spread", 0))
+	if spread > fail_threshold:
+		return "fail"
+	if spread > warning_threshold:
+		return "warning"
+	return "pass"
+
+static func _spread_summary(values: Array) -> Dictionary:
+	if values.is_empty():
+		return {"count": 0, "min": 0, "max": 0, "spread": 0}
+	var minimum := int(values[0])
+	var maximum := int(values[0])
+	for value in values:
+		minimum = min(minimum, int(value))
+		maximum = max(maximum, int(value))
+	return {"count": values.size(), "min": minimum, "max": maximum, "spread": maximum - minimum}
+
+static func _max_int(values: Array) -> int:
+	var result := 0
+	for value in values:
+		result = max(result, int(value))
+	return result
 
 static func _cardinal_offsets() -> Array:
 	return [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1)]
