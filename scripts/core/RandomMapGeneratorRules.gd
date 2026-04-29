@@ -15,6 +15,8 @@ const TERRAIN_TRANSIT_SCHEMA_ID := "random_map_terrain_transit_semantics_v1"
 const TERRAIN_TRANSIT_REPORT_SCHEMA_ID := "random_map_terrain_transit_semantics_report_v1"
 const CONNECTION_GUARD_MATERIALIZATION_SCHEMA_ID := "random_map_connection_guard_materialization_v1"
 const CONNECTION_GUARD_MATERIALIZATION_REPORT_SCHEMA_ID := "random_map_connection_guard_materialization_report_v1"
+const MONSTER_REWARD_BANDS_SCHEMA_ID := "random_map_monster_reward_bands_v1"
+const MONSTER_REWARD_BANDS_REPORT_SCHEMA_ID := "random_map_monster_reward_bands_report_v1"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
 const HASH_MODULUS := 4294967296
@@ -126,6 +128,56 @@ const ROUTE_DISTANCE_WARNING_SPREAD := 10
 const ROUTE_DISTANCE_FAIL_SPREAD := 20
 const PRESSURE_WARNING_SPREAD := 900
 const PRESSURE_FAIL_SPREAD := 1800
+const MONSTER_STRENGTH_PROFILE_MODE := {
+	"core_low": 2,
+	"core_normal": 3,
+	"core_high": 4,
+	"weak": 2,
+	"normal": 3,
+	"strong": 4,
+}
+const MONSTER_UNIT_POOL_BY_FACTION := {
+	"neutral": [
+		{"unit_id": "unit_neutral_roadwardens", "tier": 1, "role": "road_guard"},
+		{"unit_id": "unit_neutral_hearthbow_carriers", "tier": 2, "role": "ranged_guard"},
+		{"unit_id": "unit_neutral_mossglass_sentinels", "tier": 3, "role": "sentinel_guard"},
+	],
+	"faction_embercourt": [
+		{"unit_id": "unit_river_guard", "tier": 1, "role": "line_guard"},
+		{"unit_id": "unit_ember_archer", "tier": 2, "role": "ranged_guard"},
+		{"unit_id": "unit_citadel_pikeward", "tier": 3, "role": "elite_guard"},
+	],
+	"faction_mireclaw": [
+		{"unit_id": "unit_blackbranch_cutthroat", "tier": 1, "role": "raider_guard"},
+		{"unit_id": "unit_bog_brute", "tier": 2, "role": "brute_guard"},
+		{"unit_id": "unit_gorefen_ripper", "tier": 3, "role": "elite_guard"},
+	],
+	"faction_sunvault": [
+		{"unit_id": "unit_shard_guard", "tier": 1, "role": "line_guard"},
+		{"unit_id": "unit_prism_adept", "tier": 2, "role": "caster_guard"},
+		{"unit_id": "unit_aurora_ballista", "tier": 3, "role": "siege_guard"},
+	],
+	"faction_thornwake": [
+		{"unit_id": "unit_thornwake_seedcutters", "tier": 1, "role": "skirmish_guard"},
+		{"unit_id": "unit_thornwake_thornwhip_carriers", "tier": 2, "role": "control_guard"},
+		{"unit_id": "unit_thornwake_sporeglass_menders", "tier": 3, "role": "support_guard"},
+	],
+}
+const ORIGINAL_RESOURCE_CATEGORY_ORDER := [
+	{"index": 0, "original_category_id": "timber", "source_equivalent": "wood", "mine_family_id": "sawmill", "guard_base_value": 1500},
+	{"index": 1, "original_category_id": "quicksilver", "source_equivalent": "mercury", "mine_family_id": "alchemist_lab", "guard_base_value": 3500},
+	{"index": 2, "original_category_id": "ore", "source_equivalent": "ore", "mine_family_id": "ore_pit", "guard_base_value": 1500},
+	{"index": 3, "original_category_id": "ember_salt", "source_equivalent": "sulfur", "mine_family_id": "sulfur_dune_equivalent", "guard_base_value": 3500},
+	{"index": 4, "original_category_id": "lens_crystal", "source_equivalent": "crystal", "mine_family_id": "crystal_cavern_equivalent", "guard_base_value": 3500},
+	{"index": 5, "original_category_id": "cut_gems", "source_equivalent": "gems", "mine_family_id": "gem_pond_equivalent", "guard_base_value": 3500},
+	{"index": 6, "original_category_id": "gold", "source_equivalent": "gold", "mine_family_id": "gold_mine", "guard_base_value": 7000},
+]
+const REWARD_BAND_CANDIDATES := [
+	{"reward_category": "resource_cache", "object_family_id": "reward_cache_small", "object_id": "object_waystone_cache", "value": 450, "weight": 5, "categories": ["timber", "ore", "gold"]},
+	{"reward_category": "guarded_cache", "object_family_id": "guarded_reward_cache", "object_id": "object_wood_wagon", "value": 800, "weight": 4, "categories": ["timber", "ore"]},
+	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_waymark_compass", "value": 1400, "weight": 2, "categories": ["gold", "lens_crystal", "cut_gems"]},
+	{"reward_category": "spell_access", "object_family_id": "spell_shrine", "object_id": "spell_beacon_path", "value": 1700, "weight": 1, "categories": ["quicksilver", "ember_salt", "lens_crystal"]},
+]
 
 class DeterministicRng:
 	var _state := 1
@@ -189,6 +241,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 
 	var constraints := _build_constraint_payload(normalized, zones, template.get("links", []), seeds, zone_grid, terrain_rows, placements, zone_layout, terrain_transit)
 	phases.append(_phase_record("connection_guard_materialization", _connection_guard_materialization_phase_summary(constraints.get("connection_guard_materialization", {}))))
+	phases.append(_phase_record("monster_reward_bands", _monster_reward_bands_phase_summary(constraints.get("monster_reward_bands", {}))))
 	phases.append(_phase_record("route_road_constraint_writeout", {
 		"road_segment_count": int(constraints.get("road_network", {}).get("road_segments", []).size()),
 		"required_reachability": String(constraints.get("route_reachability_proof", {}).get("status", "unknown")),
@@ -198,6 +251,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 		"start_count": int(constraints.get("fairness_report", {}).get("early_resource_support", {}).get("per_start", []).size()),
 		"guard_route_count": int(constraints.get("fairness_report", {}).get("guard_pressure", {}).get("route_guards", []).size()),
 		"materialized_connection_guard_count": int(constraints.get("connection_guard_materialization", {}).get("summary", {}).get("materialized_record_count", 0)),
+		"monster_reward_record_count": int(constraints.get("monster_reward_bands", {}).get("summary", {}).get("record_count", 0)),
 	}))
 
 	var scenario_record := _build_scenario_record(normalized, terrain_rows, placements, constraints)
@@ -504,6 +558,42 @@ static func connection_guard_materialization_report(input_config: Dictionary) ->
 		},
 	}
 
+static func monster_reward_bands_report(input_config: Dictionary) -> Dictionary:
+	var first := generate(input_config)
+	var second := generate(input_config)
+	var changed_seed_config := input_config.duplicate(true)
+	changed_seed_config["seed"] = "%s:changed" % String(input_config.get("seed", "0"))
+	var changed_seed := generate(changed_seed_config)
+	var first_payload: Dictionary = first.get("generated_map", {})
+	var second_payload: Dictionary = second.get("generated_map", {})
+	var changed_payload: Dictionary = changed_seed.get("generated_map", {})
+	var first_bands: Dictionary = first_payload.get("staging", {}).get("monster_reward_bands", {})
+	var second_bands: Dictionary = second_payload.get("staging", {}).get("monster_reward_bands", {})
+	var changed_bands: Dictionary = changed_payload.get("staging", {}).get("monster_reward_bands", {})
+	var same_signature := String(first_bands.get("monster_reward_bands_signature", "")) == String(second_bands.get("monster_reward_bands_signature", ""))
+	var changed_seed_changes_signature := String(first_bands.get("monster_reward_bands_signature", "")) != String(changed_bands.get("monster_reward_bands_signature", ""))
+	var validation := _monster_reward_bands_validation(first_bands, first_payload)
+	var ok := not first_payload.is_empty() and not second_payload.is_empty() and same_signature and changed_seed_changes_signature and bool(validation.get("ok", false))
+	return {
+		"ok": ok,
+		"schema_id": MONSTER_REWARD_BANDS_REPORT_SCHEMA_ID,
+		"stable_signature": String(first_payload.get("stable_signature", "")),
+		"changed_seed_signature": String(changed_payload.get("stable_signature", "")),
+		"monster_reward_bands_signature": String(first_bands.get("monster_reward_bands_signature", "")),
+		"changed_seed_monster_reward_bands_signature": String(changed_bands.get("monster_reward_bands_signature", "")),
+		"same_input_monster_reward_bands_signature_equivalent": same_signature,
+		"changed_seed_changes_monster_reward_bands_signature": changed_seed_changes_signature,
+		"monster_reward_bands": first_bands,
+		"changed_seed_monster_reward_bands": changed_bands,
+		"monster_reward_bands_validation": validation,
+		"payload_validation": first.get("report", {}),
+		"no_ui_save_writeback_claim": {
+			"campaign_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("campaign", true)),
+			"skirmish_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("skirmish", true)),
+			"write_policy": String(first_payload.get("write_policy", "")),
+		},
+	}
+
 static func resource_encounter_fairness_report(generated_map: Dictionary) -> Dictionary:
 	var staging: Dictionary = generated_map.get("staging", {})
 	var scenario: Dictionary = generated_map.get("scenario_record", {})
@@ -619,6 +709,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	var reachability: Dictionary = staging.get("route_reachability_proof", {})
 	var fairness_report: Dictionary = staging.get("fairness_report", {})
 	var connection_guard_materialization: Dictionary = staging.get("connection_guard_materialization", {})
+	var monster_reward_bands: Dictionary = staging.get("monster_reward_bands", {})
 	if terrain_constraints.is_empty():
 		failures.append("terrain constraints payload missing")
 	if String(terrain_constraints.get("coherence_model", "")) == "":
@@ -669,6 +760,12 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 			failures.append("connection guard materialization: %s" % String(failure))
 	for warning in guard_materialization_validation.get("warnings", []):
 		warnings.append("connection guard materialization: %s" % String(warning))
+	var monster_reward_validation := _monster_reward_bands_validation(monster_reward_bands, generated_map)
+	if not bool(monster_reward_validation.get("ok", false)):
+		for failure in monster_reward_validation.get("failures", []):
+			failures.append("monster reward bands: %s" % String(failure))
+	for warning in monster_reward_validation.get("warnings", []):
+		warnings.append("monster reward bands: %s" % String(warning))
 	if String(fairness_report.get("schema_id", "")) != "random_map_resource_encounter_fairness_report_v1":
 		failures.append("resource/encounter fairness report missing")
 	else:
@@ -680,7 +777,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	for phase in generated_map.get("phase_pipeline", []):
 		if phase is Dictionary:
 			phase_names.append(String(phase.get("phase", "")))
-	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "connection_guard_materialization", "route_road_constraint_writeout", "resource_encounter_fairness_report"]:
+	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "connection_guard_materialization", "monster_reward_bands", "route_road_constraint_writeout", "resource_encounter_fairness_report"]:
 		if required_phase not in phase_names:
 			failures.append("missing generation phase %s" % required_phase)
 	if scenario.get("towns", []).is_empty():
@@ -700,6 +797,8 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 		"road_segment_count": int(road_network.get("road_segments", []).size()),
 		"connection_guard_materialization_status": String(connection_guard_materialization.get("status", "")),
 		"connection_guard_materialization_summary": connection_guard_materialization.get("summary", {}),
+		"monster_reward_bands_status": String(monster_reward_bands.get("status", "")),
+		"monster_reward_bands_summary": monster_reward_bands.get("summary", {}),
 		"required_reachability_status": String(reachability.get("status", "")),
 		"fairness_status": String(fairness_report.get("status", "")),
 		"fairness_summary": fairness_report.get("summary", {}),
@@ -1288,6 +1387,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 			"terrain": constraints.get("terrain_constraints", {}),
 			"terrain_transit": constraints.get("terrain_transit_semantics", {}),
 			"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
+			"monster_reward_bands": constraints.get("monster_reward_bands", {}),
 			"town_starts": constraints.get("town_start_constraints", {}),
 			"roads": constraints.get("road_network", {}),
 			"reachability": constraints.get("route_reachability_proof", {}),
@@ -1326,6 +1426,7 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"terrain_constraints": constraints.get("terrain_constraints", {}),
 		"terrain_transit_semantics": constraints.get("terrain_transit_semantics", {}),
 		"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
+		"monster_reward_bands": constraints.get("monster_reward_bands", {}),
 		"town_start_constraints": constraints.get("town_start_constraints", {}),
 		"road_network": constraints.get("road_network", {}),
 		"route_reachability_proof": constraints.get("route_reachability_proof", {}),
@@ -1351,6 +1452,9 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 	)
 	route_graph["connection_guard_materialization"] = connection_guard_materialization
 	route_graph["connection_guard_materialization_summary"] = connection_guard_materialization.get("summary", {})
+	var monster_reward_bands := _build_monster_reward_bands(normalized, zones, connection_guard_materialization, route_graph, placements, terrain_transit)
+	route_graph["monster_reward_bands"] = monster_reward_bands
+	route_graph["monster_reward_bands_summary"] = monster_reward_bands.get("summary", {})
 	var town_start_constraints := _town_start_constraints_payload(zones, placements, route_graph, route_build.get("route_reachability_proof", {}))
 	var fairness_report := _fairness_report_payload(normalized, zones, placements, route_graph, route_build.get("route_reachability_proof", {}))
 	return {
@@ -1358,6 +1462,7 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		"terrain_constraints": terrain_constraints,
 		"terrain_transit_semantics": terrain_transit,
 		"connection_guard_materialization": connection_guard_materialization,
+		"monster_reward_bands": monster_reward_bands,
 		"town_start_constraints": town_start_constraints,
 		"road_network": route_build.get("road_network", {}),
 		"route_graph": route_graph,
@@ -1529,6 +1634,664 @@ static func _build_connection_guard_materialization(links: Array, route_graph: D
 		"diagnostics": diagnostics,
 	}))
 	return payload
+
+static func _build_monster_reward_bands(normalized: Dictionary, zones: Array, materialization: Dictionary, route_graph: Dictionary, placements: Dictionary, terrain_transit: Dictionary) -> Dictionary:
+	var zones_by_id := _zones_by_id(zones)
+	var edges_by_id := _route_edges_by_id(route_graph.get("edges", []))
+	var diagnostics := []
+	var guard_stack_records := []
+	var reward_band_records := []
+	var records := []
+	for guard_record in materialization.get("materialized_records", []):
+		if not (guard_record is Dictionary):
+			diagnostics.append(_monster_reward_diagnostic("", "", "invalid_materialized_guard_record", "connection guard materialization record is not a dictionary"))
+			continue
+		var route_edge_id := String(guard_record.get("route_edge_id", ""))
+		var edge: Dictionary = edges_by_id.get(route_edge_id, {})
+		if edge.is_empty():
+			diagnostics.append(_monster_reward_diagnostic(String(guard_record.get("id", "")), route_edge_id, "missing_route_edge", "guard record could not be matched to a route edge"))
+		var zone_context := _monster_reward_zone_context(guard_record, edge, zones_by_id)
+		var guard_stack := _guard_stack_record_for_materialized_guard(normalized, guard_record, edge, zone_context, diagnostics)
+		var reward_band := _reward_band_record_for_materialized_guard(normalized, guard_record, edge, zone_context, guard_stack, diagnostics)
+		var category_links := _guard_reward_category_links(zone_context, guard_stack, reward_band)
+		var record_id := "monster_reward_%s" % String(guard_record.get("id", "record"))
+		var record := {
+			"id": record_id,
+			"connection_guard_materialization_id": String(guard_record.get("id", "")),
+			"route_edge_id": route_edge_id,
+			"record_type": "monster_reward_band",
+			"guard_record_type": String(guard_record.get("record_type", "")),
+			"source_materialization_state": String(guard_record.get("materialization_state", "")),
+			"zone_context": zone_context,
+			"guard_stack_record": guard_stack,
+			"reward_band_record": reward_band,
+			"seven_category_links": category_links,
+			"special_unlock_semantics": _special_unlock_semantics_for_guard(guard_record, reward_band),
+			"terrain_context": _monster_reward_terrain_context(edge, terrain_transit, zone_context),
+			"scenario_reference_policy": "records_are_referenced_by_route_edges_object_placements_encounters_and_generated_constraints",
+			"writeout_state": "structured_staged_records_no_final_object_or_save_writeout",
+		}
+		guard_stack_records.append(guard_stack)
+		reward_band_records.append(reward_band)
+		records.append(record)
+		_attach_monster_reward_id_to_edge(edge, record_id)
+		guard_record["monster_reward_band_ids"] = [record_id]
+		guard_record["guard_stack_record_id"] = String(guard_stack.get("id", ""))
+		guard_record["reward_band_record_id"] = String(reward_band.get("id", ""))
+	_annotate_monster_reward_references(records, placements)
+	var seven_categories := _seven_category_semantics_payload(zones, records)
+	var status := "pass"
+	if records.is_empty() and int(materialization.get("summary", {}).get("materialized_record_count", 0)) > 0:
+		status = "fail"
+	elif not diagnostics.is_empty():
+		status = "warning"
+	var payload := {
+		"schema_id": MONSTER_REWARD_BANDS_SCHEMA_ID,
+		"status": status,
+		"selection_policy": "deterministic_original_guard_stack_and_reward_band_records_from_connection_materialization",
+		"strength_policy": "route_guard_value_plus_local_and_global_monster_strength_modes_preserved_as_explicit_fields",
+		"reward_policy": "eligible_template_treasure_bands_first_route_context_fallback_when_unavailable",
+		"monster_reward_records": records,
+		"guard_stack_records": guard_stack_records,
+		"reward_band_records": reward_band_records,
+		"seven_category_semantics": seven_categories,
+		"wide_suppression_context": {
+			"wide_suppression_count": materialization.get("wide_suppressions", []).size(),
+			"wide_suppressions": materialization.get("wide_suppressions", []),
+			"policy": "wide_connections_preserve_category_context_but_do_not_create_normal_guard_stack_records",
+		},
+		"diagnostics": diagnostics,
+		"summary": {
+			"record_count": records.size(),
+			"guard_stack_count": guard_stack_records.size(),
+			"reward_band_count": reward_band_records.size(),
+			"normal_guard_record_count": _count_monster_reward_records_by_guard_type(records, "normal_route_guard"),
+			"special_guard_record_count": _count_monster_reward_records_by_guard_type(records, "special_guard_gate"),
+			"seven_category_zone_count": seven_categories.get("zones", []).size(),
+			"diagnostic_count": diagnostics.size(),
+		},
+		"deferred": [
+			"final_guard_object_stack_writeout",
+			"final_reward_object_placement",
+			"artifact_spell_skill_reward_pool_finalization",
+			"mine_placement_from_seven_category_requirements",
+			"skirmish_ui_save_replay_adoption",
+		],
+	}
+	payload["monster_reward_bands_signature"] = _hash32_hex(_stable_stringify({
+		"monster_reward_records": records,
+		"seven_category_semantics": seven_categories,
+		"diagnostics": diagnostics,
+	}))
+	return payload
+
+static func _zones_by_id(zones: Array) -> Dictionary:
+	var result := {}
+	for zone in zones:
+		if zone is Dictionary:
+			result[String(zone.get("id", ""))] = zone
+	return result
+
+static func _route_edges_by_id(edges: Array) -> Dictionary:
+	var result := {}
+	for edge in edges:
+		if edge is Dictionary:
+			result[String(edge.get("id", ""))] = edge
+	return result
+
+static func _monster_reward_zone_context(guard_record: Dictionary, edge: Dictionary, zones_by_id: Dictionary) -> Dictionary:
+	var from_zone_id := String(guard_record.get("from", edge.get("from", "")))
+	var to_zone_id := String(guard_record.get("to", edge.get("to", "")))
+	var from_zone: Dictionary = zones_by_id.get(from_zone_id, {})
+	var to_zone: Dictionary = zones_by_id.get(to_zone_id, {})
+	var primary_zone := from_zone
+	var primary_zone_id := from_zone_id
+	if String(edge.get("role", "")) in ["early_reward_route", "reward_to_junction"] and not to_zone.is_empty():
+		primary_zone = to_zone
+		primary_zone_id = to_zone_id
+	if primary_zone.is_empty() and not to_zone.is_empty():
+		primary_zone = to_zone
+		primary_zone_id = to_zone_id
+	return {
+		"primary_zone_id": primary_zone_id,
+		"from_zone_id": from_zone_id,
+		"to_zone_id": to_zone_id,
+		"from_faction_id": String(from_zone.get("faction_id", "")),
+		"to_faction_id": String(to_zone.get("faction_id", "")),
+		"primary_faction_id": String(primary_zone.get("faction_id", "")),
+		"primary_player_slot": primary_zone.get("player_slot", null),
+		"primary_player_type": String(primary_zone.get("player_type", "neutral")),
+		"terrain_id": String(primary_zone.get("terrain_id", "")),
+		"biome_id": _biome_for_terrain(String(primary_zone.get("terrain_id", "grass"))),
+		"monster_policy": primary_zone.get("catalog_metadata", {}).get("monster_policy", {}),
+		"treasure_bands": primary_zone.get("catalog_metadata", {}).get("treasure_bands", []),
+		"mine_requirements": primary_zone.get("catalog_metadata", {}).get("mine_requirements", {}),
+		"resource_category_requirements": primary_zone.get("catalog_metadata", {}).get("resource_category_requirements", {}),
+	}
+
+static func _guard_stack_record_for_materialized_guard(normalized: Dictionary, guard_record: Dictionary, edge: Dictionary, zone_context: Dictionary, diagnostics: Array) -> Dictionary:
+	var materialization_id := String(guard_record.get("id", ""))
+	var policy: Dictionary = zone_context.get("monster_policy", {}) if zone_context.get("monster_policy", {}) is Dictionary else {}
+	if policy.is_empty():
+		diagnostics.append(_monster_reward_diagnostic(materialization_id, String(guard_record.get("route_edge_id", "")), "missing_monster_policy", "zone did not expose monster_policy; default neutral pool used"))
+	var local_mode := _local_monster_strength_mode(String(policy.get("strength", "avg")))
+	var global_mode := _global_monster_strength_mode(String(normalized.get("profile", {}).get("guard_strength_profile", "core_low")))
+	var effective_mode := clampi(local_mode + global_mode - 3, 0, 5) if local_mode > 0 else 0
+	var raw_guard_value := int(guard_record.get("guard_value", edge.get("guard_value", 0)))
+	var base_value := raw_guard_value
+	if String(guard_record.get("record_type", "")) == "special_guard_gate":
+		base_value = max(500, raw_guard_value)
+	var scaled_value := _scaled_monster_guard_value(base_value, effective_mode)
+	var effective_value: int = max(raw_guard_value, scaled_value)
+	if String(guard_record.get("record_type", "")) == "special_guard_gate":
+		effective_value = max(effective_value, 500)
+	var faction_pool := _monster_faction_pool(policy, zone_context, diagnostics, materialization_id, String(guard_record.get("route_edge_id", "")))
+	var faction_index := _stable_choice_index(faction_pool.size(), "%s:%s:monster_faction" % [String(normalized.get("seed", "")), materialization_id])
+	var selected_faction := String(faction_pool[faction_index]) if not faction_pool.is_empty() else "neutral"
+	var candidates: Array = MONSTER_UNIT_POOL_BY_FACTION.get(selected_faction, MONSTER_UNIT_POOL_BY_FACTION.get("neutral", []))
+	if candidates.is_empty():
+		diagnostics.append(_monster_reward_diagnostic(materialization_id, String(guard_record.get("route_edge_id", "")), "missing_monster_content_pool", "selected faction %s has no guard unit pool; neutral fallback used" % selected_faction))
+		candidates = MONSTER_UNIT_POOL_BY_FACTION.get("neutral", [])
+	var strength_class := _guard_strength_class_from_value(effective_value)
+	var tier_min := _minimum_tier_for_strength_class(strength_class)
+	var tier_candidates := []
+	for candidate in candidates:
+		if candidate is Dictionary and int(candidate.get("tier", 1)) >= tier_min:
+			tier_candidates.append(candidate)
+	if tier_candidates.is_empty():
+		tier_candidates = candidates
+	var selected_candidate: Dictionary = tier_candidates[_stable_choice_index(tier_candidates.size(), "%s:%s:monster_unit" % [String(normalized.get("seed", "")), materialization_id])] if not tier_candidates.is_empty() else {}
+	var quantity_range := _guard_quantity_range(effective_value, int(selected_candidate.get("tier", 1)))
+	return {
+		"id": "guard_stack_%s" % materialization_id,
+		"source_materialization_id": materialization_id,
+		"route_edge_id": String(guard_record.get("route_edge_id", "")),
+		"monster_category_id": "%s_%s" % [selected_faction, strength_class],
+		"selected_faction_id": selected_faction,
+		"candidate_faction_ids": faction_pool,
+		"match_to_town_applied": bool(policy.get("match_to_town", false)) and String(zone_context.get("primary_faction_id", "")) != "",
+		"local_strength_mode": local_mode,
+		"global_strength_mode": global_mode,
+		"effective_strength_mode": effective_mode,
+		"raw_guard_value": raw_guard_value,
+		"scaled_guard_value": scaled_value,
+		"effective_guard_value": effective_value,
+		"strength_class": strength_class,
+		"selected_unit_id": String(selected_candidate.get("unit_id", "")),
+		"selected_unit_tier": int(selected_candidate.get("tier", 1)),
+		"selected_unit_role": String(selected_candidate.get("role", "")),
+		"quantity_range": quantity_range,
+		"stack_value_range": {"min": max(0, int(floor(float(effective_value) * 0.8))), "max": max(effective_value, int(ceil(float(effective_value) * 1.2)))},
+		"selection_signature": _hash32_hex(_stable_stringify({"seed": String(normalized.get("seed", "")), "materialization_id": materialization_id, "faction": selected_faction, "unit": selected_candidate})),
+		"content_ref_state": "original_unit_id_selected" if String(selected_candidate.get("unit_id", "")) != "" else "deferred_missing_unit_ref",
+	}
+
+static func _monster_faction_pool(policy: Dictionary, zone_context: Dictionary, diagnostics: Array, materialization_id: String, route_edge_id: String) -> Array:
+	var primary_faction := String(zone_context.get("primary_faction_id", ""))
+	if bool(policy.get("match_to_town", false)) and primary_faction != "":
+		return [primary_faction]
+	var allowed := _normalized_string_array(policy.get("allowed_faction_ids", []), ["neutral"])
+	var result := []
+	for faction_id in allowed:
+		var text := String(faction_id)
+		if text == "":
+			continue
+		if text == "neutral" or MONSTER_UNIT_POOL_BY_FACTION.has(text):
+			if text not in result:
+				result.append(text)
+		else:
+			diagnostics.append(_monster_reward_diagnostic(materialization_id, route_edge_id, "unsupported_monster_faction_ref", "monster faction %s has no current original guard pool" % text))
+	if result.is_empty():
+		result.append("neutral")
+	return result
+
+static func _reward_band_record_for_materialized_guard(normalized: Dictionary, guard_record: Dictionary, edge: Dictionary, zone_context: Dictionary, guard_stack: Dictionary, diagnostics: Array) -> Dictionary:
+	var materialization_id := String(guard_record.get("id", ""))
+	var eligible_bands := _eligible_treasure_bands(zone_context.get("treasure_bands", []))
+	var source := "template_treasure_band"
+	if eligible_bands.is_empty():
+		source = "route_context_fallback"
+		eligible_bands = [_fallback_reward_band_for_guard(guard_record, edge)]
+		diagnostics.append(_monster_reward_diagnostic(materialization_id, String(guard_record.get("route_edge_id", "")), "missing_eligible_treasure_band", "zone had no eligible treasure band; route context fallback used"))
+	var band := _weighted_band_choice(eligible_bands, "%s:%s:reward_band" % [String(normalized.get("seed", "")), materialization_id])
+	var category_link := _select_reward_resource_category(zone_context, band, guard_stack, normalized, materialization_id)
+	var candidate := _reward_candidate_for_band(band, category_link, normalized, materialization_id, diagnostics, String(guard_record.get("route_edge_id", "")))
+	var low := int(band.get("low", 0))
+	var high := int(band.get("high", low))
+	return {
+		"id": "reward_band_%s" % materialization_id,
+		"source_materialization_id": materialization_id,
+		"route_edge_id": String(guard_record.get("route_edge_id", "")),
+		"source": source,
+		"selected_band": {"low": low, "high": high, "density": int(band.get("density", 0))},
+		"risk_class": String(guard_stack.get("strength_class", "")),
+		"value_range": {"min": low, "max": high},
+		"selected_reward_category_id": String(candidate.get("reward_category", "resource_cache")),
+		"selected_reward_object_id": String(candidate.get("object_id", "")),
+		"selected_reward_family_id": String(candidate.get("object_family_id", "")),
+		"selected_resource_category_id": String(category_link.get("original_category_id", "")),
+		"category_link": category_link,
+		"candidate_value": int(candidate.get("value", 0)),
+		"selection_signature": _hash32_hex(_stable_stringify({"seed": String(normalized.get("seed", "")), "materialization_id": materialization_id, "band": band, "candidate": candidate, "category": category_link})),
+		"content_ref_state": "original_reward_ref_selected" if String(candidate.get("object_id", "")) != "" else "deferred_missing_reward_ref",
+		"deferred_reward_materialization": [
+			"final_reward_object_placement",
+			"artifact_spell_skill_reward_pool_finalization" if String(candidate.get("reward_category", "")) in ["artifact", "spell_access"] else "none",
+		],
+	}
+
+static func _eligible_treasure_bands(bands: Variant) -> Array:
+	var result := []
+	if not (bands is Array):
+		return result
+	for band in bands:
+		if not (band is Dictionary):
+			continue
+		if int(band.get("low", 0)) >= 100 and int(band.get("density", 0)) > 0:
+			result.append({"low": int(band.get("low", 0)), "high": int(band.get("high", band.get("low", 0))), "density": int(band.get("density", 0))})
+	return result
+
+static func _fallback_reward_band_for_guard(guard_record: Dictionary, edge: Dictionary) -> Dictionary:
+	var pressure: int = max(int(guard_record.get("guard_value", 0)), _effective_guard_pressure(edge))
+	if pressure <= 200:
+		return {"low": 100, "high": 450, "density": 1}
+	if pressure <= 700:
+		return {"low": 450, "high": 1100, "density": 1}
+	return {"low": 900, "high": 2200, "density": 1}
+
+static func _weighted_band_choice(bands: Array, seed_text: String) -> Dictionary:
+	if bands.is_empty():
+		return {"low": 100, "high": 450, "density": 1}
+	var total := 0
+	for band in bands:
+		if band is Dictionary:
+			total += max(1, int(band.get("density", 1)))
+	var cursor := int(_hash32_int(seed_text) % max(1, total))
+	for band in bands:
+		if not (band is Dictionary):
+			continue
+		cursor -= max(1, int(band.get("density", 1)))
+		if cursor < 0:
+			return band
+	return bands[0]
+
+static func _select_reward_resource_category(zone_context: Dictionary, band: Dictionary, guard_stack: Dictionary, normalized: Dictionary, materialization_id: String) -> Dictionary:
+	var weighted := []
+	var requirements: Dictionary = zone_context.get("resource_category_requirements", {}) if zone_context.get("resource_category_requirements", {}) is Dictionary else {}
+	var minimums: Dictionary = requirements.get("minimum_by_category", {}) if requirements.get("minimum_by_category", {}) is Dictionary else {}
+	var densities: Dictionary = requirements.get("density_by_category", {}) if requirements.get("density_by_category", {}) is Dictionary else {}
+	for category in ORIGINAL_RESOURCE_CATEGORY_ORDER:
+		var category_id := String(category.get("original_category_id", ""))
+		var weight := int(minimums.get(category_id, 0)) * 3 + int(densities.get(category_id, 0))
+		if weight > 0:
+			weighted.append({"category": category, "weight": weight})
+	if weighted.is_empty():
+		for category in ORIGINAL_RESOURCE_CATEGORY_ORDER:
+			weighted.append({"category": category, "weight": 1})
+	var total := 0
+	for item in weighted:
+		total += max(1, int(item.get("weight", 1)))
+	var cursor := int(_hash32_int("%s:%s:%s:%s" % [String(normalized.get("seed", "")), materialization_id, _stable_stringify(band), String(guard_stack.get("selected_faction_id", ""))]) % max(1, total))
+	var selected: Dictionary = weighted[0].get("category", {})
+	for item in weighted:
+		cursor -= max(1, int(item.get("weight", 1)))
+		if cursor < 0:
+			selected = item.get("category", {})
+			break
+	return selected.duplicate(true)
+
+static func _reward_candidate_for_band(band: Dictionary, category_link: Dictionary, normalized: Dictionary, materialization_id: String, diagnostics: Array, route_edge_id: String) -> Dictionary:
+	var low := int(band.get("low", 0))
+	var high := int(band.get("high", low))
+	var category_id := String(category_link.get("original_category_id", ""))
+	var candidates := []
+	for candidate in REWARD_BAND_CANDIDATES:
+		if not (candidate is Dictionary):
+			continue
+		if int(candidate.get("value", 0)) < low or int(candidate.get("value", 0)) > high:
+			continue
+		if category_id not in candidate.get("categories", []):
+			continue
+		candidates.append(candidate)
+	if candidates.is_empty():
+		for candidate in REWARD_BAND_CANDIDATES:
+			if candidate is Dictionary and int(candidate.get("value", 0)) >= low and int(candidate.get("value", 0)) <= high:
+				candidates.append(candidate)
+	if candidates.is_empty():
+		diagnostics.append(_monster_reward_diagnostic(materialization_id, route_edge_id, "reward_candidate_range_exhausted", "no reward candidate matched value range %d..%d; nearest staged placeholder used" % [low, high]))
+		return REWARD_BAND_CANDIDATES[0]
+	var total := 0
+	for candidate in candidates:
+		total += max(1, int(candidate.get("weight", 1)))
+	var cursor := int(_hash32_int("%s:%s:reward_candidate" % [String(normalized.get("seed", "")), materialization_id]) % max(1, total))
+	for candidate in candidates:
+		cursor -= max(1, int(candidate.get("weight", 1)))
+		if cursor < 0:
+			return candidate
+	return candidates[0]
+
+static func _guard_reward_category_links(zone_context: Dictionary, guard_stack: Dictionary, reward_band: Dictionary) -> Dictionary:
+	var category_id := String(reward_band.get("selected_resource_category_id", ""))
+	var category_record := _resource_category_record(category_id)
+	return {
+		"primary_resource_category_id": category_id,
+		"source_equivalent": String(category_record.get("source_equivalent", "")),
+		"category_index": int(category_record.get("index", -1)),
+		"mine_family_id": String(category_record.get("mine_family_id", "")),
+		"mine_requirement_context": _zone_category_requirement_record(zone_context, category_id),
+		"guard_category_id": String(guard_stack.get("monster_category_id", "")),
+		"reward_category_id": String(reward_band.get("selected_reward_category_id", "")),
+		"link_state": "guard_reward_category_link_staged_mine_placement_downstream",
+	}
+
+static func _resource_category_record(category_id: String) -> Dictionary:
+	for category in ORIGINAL_RESOURCE_CATEGORY_ORDER:
+		if String(category.get("original_category_id", "")) == category_id:
+			return category
+	return {}
+
+static func _zone_category_requirement_record(zone_context: Dictionary, category_id: String) -> Dictionary:
+	var requirements: Dictionary = zone_context.get("resource_category_requirements", {}) if zone_context.get("resource_category_requirements", {}) is Dictionary else {}
+	var mine_requirements: Dictionary = zone_context.get("mine_requirements", {}) if zone_context.get("mine_requirements", {}) is Dictionary else {}
+	var minimums: Dictionary = requirements.get("minimum_by_category", {}) if requirements.get("minimum_by_category", {}) is Dictionary else {}
+	var densities: Dictionary = requirements.get("density_by_category", {}) if requirements.get("density_by_category", {}) is Dictionary else {}
+	var mine_minimums: Dictionary = mine_requirements.get("minimum_by_category", {}) if mine_requirements.get("minimum_by_category", {}) is Dictionary else {}
+	var mine_densities: Dictionary = mine_requirements.get("density_by_category", {}) if mine_requirements.get("density_by_category", {}) is Dictionary else {}
+	return {
+		"resource_minimum": int(minimums.get(category_id, 0)),
+		"resource_density": int(densities.get(category_id, 0)),
+		"mine_minimum": int(mine_minimums.get(category_id, 0)),
+		"mine_density": int(mine_densities.get(category_id, 0)),
+	}
+
+static func _special_unlock_semantics_for_guard(guard_record: Dictionary, reward_band: Dictionary) -> Dictionary:
+	if String(guard_record.get("record_type", "")) != "special_guard_gate":
+		return {"unlock_required": false, "state": "normal_guard_no_special_unlock"}
+	var unlock: Dictionary = guard_record.get("required_unlock_metadata", {}) if guard_record.get("required_unlock_metadata", {}) is Dictionary else {}
+	return {
+		"unlock_required": bool(unlock.get("unlock_required", true)),
+		"unlock_model": String(unlock.get("unlock_model", "border_guard_gate_or_key_placeholder")),
+		"subtype_placeholder": int(unlock.get("subtype_placeholder", 0)),
+		"key_reward_placeholder": {
+			"reward_band_record_id": String(reward_band.get("id", "")),
+			"reward_category_id": String(reward_band.get("selected_reward_category_id", "")),
+			"materialization_state": "key_or_unlock_reward_placeholder_deferred",
+		},
+	}
+
+static func _monster_reward_terrain_context(edge: Dictionary, terrain_transit: Dictionary, zone_context: Dictionary) -> Dictionary:
+	return {
+		"terrain_id": String(zone_context.get("terrain_id", "")),
+		"biome_id": String(zone_context.get("biome_id", "")),
+		"route_transit_semantics": edge.get("transit_semantics", {}),
+		"terrain_transit_signature": String(terrain_transit.get("terrain_transit_signature", "")),
+	}
+
+static func _seven_category_semantics_payload(zones: Array, records: Array) -> Dictionary:
+	var zones_payload := []
+	for zone in zones:
+		if not (zone is Dictionary):
+			continue
+		var context := {
+			"resource_category_requirements": zone.get("catalog_metadata", {}).get("resource_category_requirements", {}),
+			"mine_requirements": zone.get("catalog_metadata", {}).get("mine_requirements", {}),
+		}
+		var categories := []
+		for category in ORIGINAL_RESOURCE_CATEGORY_ORDER:
+			var category_id := String(category.get("original_category_id", ""))
+			var category_payload: Dictionary = category.duplicate(true)
+			category_payload["requirements"] = _zone_category_requirement_record(context, category_id)
+			categories.append(category_payload)
+		zones_payload.append({
+			"zone_id": String(zone.get("id", "")),
+			"role": String(zone.get("role", "")),
+			"owner_slot": zone.get("owner_slot", null),
+			"player_slot": zone.get("player_slot", null),
+			"faction_id": String(zone.get("faction_id", "")),
+			"categories": categories,
+		})
+	var record_links := []
+	for record in records:
+		if record is Dictionary:
+			record_links.append({
+				"monster_reward_record_id": String(record.get("id", "")),
+				"route_edge_id": String(record.get("route_edge_id", "")),
+				"primary_resource_category_id": String(record.get("seven_category_links", {}).get("primary_resource_category_id", "")),
+				"guard_category_id": String(record.get("seven_category_links", {}).get("guard_category_id", "")),
+				"reward_category_id": String(record.get("seven_category_links", {}).get("reward_category_id", "")),
+			})
+	return {
+		"schema_id": "random_map_original_seven_resource_categories_v1",
+		"category_order": ORIGINAL_RESOURCE_CATEGORY_ORDER,
+		"zones": zones_payload,
+		"guard_reward_category_links": record_links,
+		"downstream_state": "mine_resource_placement_consumes_categories_in_later_slice",
+	}
+
+static func _annotate_monster_reward_references(records: Array, placements: Dictionary) -> void:
+	var by_route := {}
+	for record in records:
+		if record is Dictionary:
+			var route_edge_id := String(record.get("route_edge_id", ""))
+			if not by_route.has(route_edge_id):
+				by_route[route_edge_id] = []
+			by_route[route_edge_id].append(record)
+	for placement in placements.get("object_placements", []):
+		if not (placement is Dictionary):
+			continue
+		var route_id := String(placement.get("route_edge_id", ""))
+		if route_id == "" or not by_route.has(route_id):
+			continue
+		placement["monster_reward_band_ids"] = _monster_reward_ids(by_route[route_id])
+		placement["guard_stack_record_ids"] = _guard_stack_ids(by_route[route_id])
+		placement["reward_band_record_ids"] = _reward_band_ids(by_route[route_id])
+	for encounter in placements.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		var route_id := String(encounter.get("route_edge_id", ""))
+		if route_id == "" or not by_route.has(route_id):
+			continue
+		encounter["monster_reward_band_ids"] = _monster_reward_ids(by_route[route_id])
+		encounter["guard_stack_record_ids"] = _guard_stack_ids(by_route[route_id])
+		encounter["reward_band_record_ids"] = _reward_band_ids(by_route[route_id])
+		var first_record: Dictionary = by_route[route_id][0]
+		encounter["generated_guard_stack"] = first_record.get("guard_stack_record", {})
+		encounter["generated_reward_band"] = first_record.get("reward_band_record", {})
+
+static func _monster_reward_ids(records: Array) -> Array:
+	var result := []
+	for record in records:
+		if record is Dictionary:
+			result.append(String(record.get("id", "")))
+	return result
+
+static func _guard_stack_ids(records: Array) -> Array:
+	var result := []
+	for record in records:
+		if record is Dictionary:
+			result.append(String(record.get("guard_stack_record", {}).get("id", "")))
+	return result
+
+static func _reward_band_ids(records: Array) -> Array:
+	var result := []
+	for record in records:
+		if record is Dictionary:
+			result.append(String(record.get("reward_band_record", {}).get("id", "")))
+	return result
+
+static func _attach_monster_reward_id_to_edge(edge: Dictionary, record_id: String) -> void:
+	var ids: Array = edge.get("monster_reward_band_ids", [])
+	if record_id not in ids:
+		ids.append(record_id)
+	edge["monster_reward_band_ids"] = ids
+
+static func _count_monster_reward_records_by_guard_type(records: Array, guard_type: String) -> int:
+	var count := 0
+	for record in records:
+		if record is Dictionary and String(record.get("guard_record_type", "")) == guard_type:
+			count += 1
+	return count
+
+static func _monster_reward_diagnostic(materialization_id: String, route_edge_id: String, reason: String, message: String) -> Dictionary:
+	return {
+		"source_materialization_id": materialization_id,
+		"route_edge_id": route_edge_id,
+		"reason": reason,
+		"message": message,
+		"retryable": false,
+	}
+
+static func _local_monster_strength_mode(value: String) -> int:
+	match value.strip_edges().to_lower():
+		"n", "none", "0":
+			return 0
+		"w", "weak", "2":
+			return 2
+		"s", "strong", "4":
+			return 4
+		"a", "avg", "average", "normal", "3":
+			return 3
+		_:
+			return 3
+
+static func _global_monster_strength_mode(value: String) -> int:
+	var key := value.strip_edges().to_lower()
+	if key == "random":
+		return 3
+	return int(MONSTER_STRENGTH_PROFILE_MODE.get(key, 3))
+
+static func _scaled_monster_guard_value(base_value: int, mode: int) -> int:
+	var thresholds_1 := [50000, 2500, 1500, 1000, 500, 0]
+	var thresholds_2 := [50000, 7500, 7500, 7500, 5000, 5000]
+	var slopes_1 := [0, 2, 3, 4, 6, 6]
+	var slopes_2 := [0, 2, 3, 4, 4, 6]
+	var clamped_mode := clampi(mode, 0, 5)
+	var value := 0
+	if base_value > int(thresholds_1[clamped_mode]):
+		value += int((base_value - int(thresholds_1[clamped_mode])) * int(slopes_1[clamped_mode]) / 4)
+	if base_value > int(thresholds_2[clamped_mode]):
+		value += int((base_value - int(thresholds_2[clamped_mode])) * int(slopes_2[clamped_mode]) / 4)
+	if value < 2000:
+		return 0
+	return value
+
+static func _guard_strength_class_from_value(value: int) -> String:
+	if value <= 0:
+		return "none"
+	if value <= 200:
+		return "low"
+	if value <= 700:
+		return "medium"
+	if value <= 1800:
+		return "high"
+	return "elite"
+
+static func _minimum_tier_for_strength_class(strength_class: String) -> int:
+	match strength_class:
+		"medium":
+			return 2
+		"high", "elite":
+			return 3
+		_:
+			return 1
+
+static func _guard_quantity_range(value: int, tier: int) -> Dictionary:
+	var divisor: int = max(60, tier * 90)
+	var base: int = max(1, int(ceil(float(max(1, value)) / float(divisor))))
+	return {"min": max(1, int(floor(float(base) * 0.75))), "max": max(1, int(ceil(float(base) * 1.25)))}
+
+static func _monster_reward_bands_phase_summary(payload: Dictionary) -> Dictionary:
+	return {
+		"schema_id": String(payload.get("schema_id", "")),
+		"status": String(payload.get("status", "")),
+		"signature": String(payload.get("monster_reward_bands_signature", "")),
+		"record_count": int(payload.get("summary", {}).get("record_count", 0)),
+		"guard_stack_count": int(payload.get("summary", {}).get("guard_stack_count", 0)),
+		"reward_band_count": int(payload.get("summary", {}).get("reward_band_count", 0)),
+		"special_guard_record_count": int(payload.get("summary", {}).get("special_guard_record_count", 0)),
+		"diagnostic_count": int(payload.get("summary", {}).get("diagnostic_count", 0)),
+	}
+
+static func _monster_reward_bands_validation(payload: Dictionary, generated_map: Dictionary = {}) -> Dictionary:
+	var failures := []
+	var warnings := []
+	if String(payload.get("schema_id", "")) != MONSTER_REWARD_BANDS_SCHEMA_ID:
+		failures.append("monster reward bands schema mismatch")
+	if String(payload.get("monster_reward_bands_signature", "")) == "":
+		failures.append("monster reward bands signature missing")
+	if int(payload.get("summary", {}).get("record_count", 0)) <= 0:
+		failures.append("no monster reward records were produced")
+	var has_normal := false
+	var has_special := false
+	for record in payload.get("monster_reward_records", []):
+		if not (record is Dictionary):
+			failures.append("monster reward record is not a dictionary")
+			continue
+		var guard_stack: Dictionary = record.get("guard_stack_record", {}) if record.get("guard_stack_record", {}) is Dictionary else {}
+		var reward_band: Dictionary = record.get("reward_band_record", {}) if record.get("reward_band_record", {}) is Dictionary else {}
+		if String(record.get("guard_record_type", "")) == "normal_route_guard":
+			has_normal = true
+		if String(record.get("guard_record_type", "")) == "special_guard_gate":
+			has_special = true
+		if String(guard_stack.get("selected_unit_id", "")) == "" or String(guard_stack.get("strength_class", "")) == "":
+			failures.append("guard stack %s missed selected unit or strength class" % String(guard_stack.get("id", "")))
+		if String(reward_band.get("selected_reward_category_id", "")) == "" or int(reward_band.get("value_range", {}).get("max", 0)) < int(reward_band.get("value_range", {}).get("min", 0)):
+			failures.append("reward band %s missed category or valid value range" % String(reward_band.get("id", "")))
+		if record.get("seven_category_links", {}).is_empty():
+			failures.append("monster reward record %s missed seven-category link metadata" % String(record.get("id", "")))
+		if String(record.get("guard_record_type", "")) == "special_guard_gate" and not bool(record.get("special_unlock_semantics", {}).get("unlock_required", false)):
+			failures.append("special guard record %s missed unlock semantics" % String(record.get("id", "")))
+	if not has_normal:
+		failures.append("normal route guards did not produce monster reward records")
+	var expected_special_count := 0
+	if not generated_map.is_empty():
+		expected_special_count = int(generated_map.get("staging", {}).get("connection_guard_materialization", {}).get("summary", {}).get("expected_special_guard_gate_count", 0))
+	else:
+		expected_special_count = int(payload.get("summary", {}).get("special_guard_record_count", 0))
+	if expected_special_count > 0 and not has_special:
+		failures.append("special guard gates did not produce monster reward records")
+	if payload.get("seven_category_semantics", {}).get("zones", []).is_empty():
+		failures.append("seven-category zone semantics missing")
+	for diagnostic in payload.get("diagnostics", []):
+		if diagnostic is Dictionary:
+			warnings.append("%s:%s" % [String(diagnostic.get("route_edge_id", "")), String(diagnostic.get("reason", ""))])
+	if not generated_map.is_empty():
+		var ids := {}
+		for record in payload.get("monster_reward_records", []):
+			if record is Dictionary:
+				ids[String(record.get("id", ""))] = true
+		var route_ref_count := 0
+		for edge in generated_map.get("staging", {}).get("route_graph", {}).get("edges", []):
+			if not (edge is Dictionary):
+				continue
+			for id_value in edge.get("monster_reward_band_ids", []):
+				if not ids.has(String(id_value)):
+					failures.append("route edge %s referenced unknown monster reward id %s" % [String(edge.get("id", "")), String(id_value)])
+				route_ref_count += 1
+		if route_ref_count <= 0:
+			failures.append("route graph did not reference monster reward records")
+		var placement_ref_count := 0
+		for placement in generated_map.get("staging", {}).get("object_placements", []):
+			if placement is Dictionary:
+				placement_ref_count += placement.get("monster_reward_band_ids", []).size()
+		for encounter in generated_map.get("scenario_record", {}).get("encounters", []):
+			if encounter is Dictionary:
+				placement_ref_count += encounter.get("monster_reward_band_ids", []).size()
+		if placement_ref_count <= 0:
+			failures.append("object placements or encounters did not reference monster reward records")
+		if generated_map.get("scenario_record", {}).get("generated_constraints", {}).get("monster_reward_bands", {}).is_empty():
+			failures.append("scenario generated_constraints missed monster reward bands")
+		var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
+		if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", false)) or bool(scenario.get("selection", {}).get("availability", {}).get("skirmish", false)):
+			failures.append("monster reward bands adopted generated map into campaign/skirmish")
+		if generated_map.has("save_adoption") or scenario.has("alpha_parity_claim"):
+			failures.append("monster reward bands exposed save/writeback/parity claim")
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+		"warnings": warnings,
+	}
 
 static func _connection_guard_source_link(edge_id: String, index: int, link: Dictionary, edge: Dictionary) -> Dictionary:
 	return {
@@ -2074,6 +2837,7 @@ static func _guard_pressure_payload(route_graph: Dictionary) -> Dictionary:
 			"wide_suppresses_normal_guard": bool(edge.get("wide", false)),
 			"border_guard_special_mode": bool(edge.get("border_guard", false)),
 			"connection_guard_materialization_ids": edge.get("connection_guard_materialization_ids", []),
+			"monster_reward_band_ids": edge.get("monster_reward_band_ids", []),
 			"connectivity_classification": String(edge.get("connectivity_classification", "")),
 		}
 		route_guards.append(record)
@@ -2102,6 +2866,7 @@ static func _guard_pressure_payload(route_graph: Dictionary) -> Dictionary:
 		"status": status,
 		"connection_payload_semantics": route_graph.get("connection_payload_semantics", {}),
 		"connection_guard_materialization_summary": route_graph.get("connection_guard_materialization_summary", {}),
+		"monster_reward_bands_summary": route_graph.get("monster_reward_bands_summary", {}),
 		"route_guards": route_guards,
 		"pressure_by_start_zone": _sorted_dict(pressure_by_start),
 		"pressure_spread": _spread_summary(pressure_values),
