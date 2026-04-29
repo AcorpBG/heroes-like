@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-town-mine-dwelling-placement-10184",
-  "currentSliceTitle": "Random Map Town Mine Dwelling Placement",
+  "currentSliceId": "random-map-validation-batch-retry-10184",
+  "currentSliceTitle": "Random Map Validation Batch Retry",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed deterministic town/start, mine/resource-producer, and dwelling/recruitment-site placement payloads with footprint-aware predicates, fairness metrics, deterministic signature checks, and focused Godot report coverage. No authored writeback, campaign adoption, or parity/alpha claim.",
+  "currentSliceNotes": "Completed deterministic validation batch/retry harness with curated fixtures for land, islands/water, underground/deferred transit, special guard/border/wide semantics, skirmish provenance identity, and town/mine/dwelling placement. Report preserves expected current-foundation failures and original retry failures without authored writeback, campaign adoption, or parity/alpha claim.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T12:24:40Z",
+  "updatedAt": "2026-04-29T12:44:59Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -2980,7 +2980,7 @@
       "id": "random-map-validation-batch-retry-10184",
       "title": "Random Map Validation Batch Retry",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "parentSliceId": "random-map-generator-foundation-10184",
       "classification": "phase2_child_implementation_slice",
@@ -2991,9 +2991,10 @@
         "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md"
       ],
       "implementationTargets": [
-        "batch generator report command",
-        "retry/failure policy",
-        "deterministic regression fixtures"
+        "RandomMapGeneratorRules.validation_batch_retry_report(...)",
+        "tests/fixtures/random_map_validation_batch_cases.json",
+        "tests/random_map_validation_batch_retry_report.gd",
+        "retry/failure policy and deterministic regression signatures"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
@@ -3001,19 +3002,22 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Batch tests cover representative small/medium/large, water, underground, wide-link, border-guard, and multi-player templates across fixed seeds.",
-        "Failures include phase, template, zone/link/object ids, coordinates when applicable, retry count, and actionable reason.",
-        "CI can reject bad generation without requiring renderer/editor state."
+        "Batch fixtures cover land, islands/water, underground/deferred transit, special border-guard and wide-link semantics, skirmish provenance identity shape, and town/mine/dwelling placement across fixed seeds/configs.",
+        "The report records per-attempt validation status, phase status summaries, stable output identity signatures, failure summaries, bounded retry decisions, original failure preservation, and same-input/changed-seed batch signatures.",
+        "Expected current-foundation failures for unsupported or not-yet-viable parity cases remain structured negative evidence instead of being hidden or relabeled as parity success.",
+        "Focused Godot report proves determinism, bounded retry metadata, required phase statuses for successful generated cases, no authored content writeback, no campaign/skirmish runtime adoption, and no parity/alpha claim."
       ],
       "completionCriteria": [
         "Implementation and validation satisfy this slice without claiming full HoMM3-style RMG parity unless all downstream parity gates are complete."
       ],
       "nonGoals": [
-        "No player-facing UI adoption."
+        "No authored content/campaign writeback, player-facing UI adoption, save migration, full HoMM3 RMG parity claim, or alpha completion claim."
       ],
-      "notes": "Queued by random-map-homm3-parity-gap-audit-10184 as part of the continuous RMG parity implementation path.",
+      "notes": "Completed deterministic validation batch/retry harness with curated representative fixtures. Validation passed: python3 tests/validate_repo.py, all tests/random_map_*.tscn Godot scenes including random_map_validation_batch_retry_report, python3 -m json.tool ops/progress.json, git diff --check, and progress status/next helpers.",
       "createdAt": "2026-04-29T09:40:00Z",
-      "updatedAt": "2026-04-29T09:40:00Z"
+      "updatedAt": "2026-04-29T12:44:59Z",
+      "startedAt": "2026-04-29T12:28:52Z",
+      "completedAt": "2026-04-29T12:44:59Z"
     },
     {
       "id": "random-map-skirmish-ui-save-replay-10184",

@@ -25,11 +25,30 @@ const ROADS_RIVERS_WRITEOUT_SCHEMA_ID := "random_map_roads_rivers_writeout_v1"
 const ROADS_RIVERS_WRITEOUT_REPORT_SCHEMA_ID := "random_map_roads_rivers_writeout_report_v1"
 const TOWN_MINE_DWELLING_PLACEMENT_SCHEMA_ID := "random_map_town_mine_dwelling_placement_v1"
 const TOWN_MINE_DWELLING_PLACEMENT_REPORT_SCHEMA_ID := "random_map_town_mine_dwelling_placement_report_v1"
+const VALIDATION_BATCH_RETRY_REPORT_SCHEMA_ID := "random_map_validation_batch_retry_report_v1"
 const GENERATED_MAP_SERIALIZATION_SCHEMA_ID := "generated_random_map_serialization_record_v1"
+const VALIDATION_BATCH_FIXTURE_PATH := "res://tests/fixtures/random_map_validation_batch_cases.json"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
 const HASH_MODULUS := 4294967296
 const HEX_DIGITS := "0123456789abcdef"
+const REQUIRED_VALIDATION_BATCH_PHASES := [
+	"template_profile",
+	"runtime_zone_graph",
+	"zone_seed_layout",
+	"terrain_owner_grid",
+	"terrain_biome_coherence",
+	"terrain_transit_semantics",
+	"object_placement_staging",
+	"connection_guard_materialization",
+	"monster_reward_bands",
+	"town_mine_dwelling_placement",
+	"decoration_density_pass",
+	"object_footprint_catalog",
+	"route_road_constraint_writeout",
+	"roads_rivers_writeout",
+	"resource_encounter_fairness_report",
+]
 
 const DEFAULT_FACTIONS := [
 	"faction_embercourt",
@@ -934,6 +953,47 @@ static func roads_rivers_writeout_report(input_config: Dictionary) -> Dictionary
 			"campaign_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("campaign", true)),
 			"skirmish_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("skirmish", true)),
 			"write_policy": String(first_payload.get("write_policy", "")),
+		},
+	}
+
+static func validation_batch_retry_report(input_config: Dictionary = {}) -> Dictionary:
+	var cases := _validation_batch_cases(input_config)
+	var first := _validation_batch_run(cases, input_config)
+	var second := _validation_batch_run(cases, input_config)
+	var changed := _validation_batch_run(_validation_batch_changed_cases(cases), input_config)
+	var same_batch_signature := String(first.get("batch_signature", "")) == String(second.get("batch_signature", ""))
+	var changed_case_changes_signature := String(first.get("batch_signature", "")) != String(changed.get("batch_signature", ""))
+	var required_case_tags := ["land", "islands_water", "underground_deferred_transit", "special_guard_border_wide", "skirmish_provenance", "town_mine_dwelling"]
+	var tag_coverage := _validation_batch_tag_coverage(first.get("case_results", []), required_case_tags)
+	var ok := bool(first.get("ok", false)) and bool(second.get("ok", false)) and same_batch_signature and changed_case_changes_signature and bool(tag_coverage.get("ok", false))
+	return {
+		"ok": ok,
+		"schema_id": VALIDATION_BATCH_RETRY_REPORT_SCHEMA_ID,
+		"generator_version": GENERATOR_VERSION,
+		"fixture_source": String(input_config.get("fixture_path", VALIDATION_BATCH_FIXTURE_PATH)),
+		"case_count": cases.size(),
+		"summary": first.get("summary", {}),
+		"batch_signature": String(first.get("batch_signature", "")),
+		"repeated_batch_signature": String(second.get("batch_signature", "")),
+		"changed_batch_signature": String(changed.get("batch_signature", "")),
+		"same_input_batch_signature_equivalent": same_batch_signature,
+		"changed_case_changes_batch_signature": changed_case_changes_signature,
+		"required_case_tag_coverage": tag_coverage,
+		"case_results": first.get("case_results", []),
+		"determinism_sources_excluded": [
+			"runtime_clock",
+			"filesystem_order",
+			"renderer_state",
+			"editor_state",
+			"authored_content_writeback",
+			"campaign_progression_state",
+		],
+		"artifact_write_policy": "report_artifacts_only_under_tests_tmp_or_tmp_when_callers_choose_to_write",
+		"adoption_boundaries": {
+			"authored_content_writeback": false,
+			"campaign_adoption": false,
+			"skirmish_runtime_adoption": false,
+			"alpha_or_parity_claim": false,
 		},
 	}
 
@@ -6781,6 +6841,342 @@ static func _point_in_array(points: Array, point: Dictionary) -> bool:
 		if existing is Dictionary and _point_key(int(existing.get("x", 0)), int(existing.get("y", 0))) == key:
 			return true
 	return false
+
+static func _validation_batch_cases(input_config: Dictionary) -> Array:
+	if input_config.get("cases", []) is Array and not input_config.get("cases", []).is_empty():
+		return input_config.get("cases", []).duplicate(true)
+	var fixture_path := String(input_config.get("fixture_path", VALIDATION_BATCH_FIXTURE_PATH))
+	if FileAccess.file_exists(fixture_path):
+		var file := FileAccess.open(fixture_path, FileAccess.READ)
+		if file != null:
+			var parsed = JSON.parse_string(file.get_as_text())
+			if parsed is Dictionary and parsed.get("cases", []) is Array:
+				return parsed.get("cases", []).duplicate(true)
+	return _default_validation_batch_cases()
+
+static func _default_validation_batch_cases() -> Array:
+	return [
+		{
+			"id": "default_land_frontier_spokes",
+			"tags": ["land", "town_mine_dwelling"],
+			"config": {
+				"generator_version": GENERATOR_VERSION,
+				"seed": "validation-batch-default-land",
+				"size": {"preset": "validation_batch_land", "width": 30, "height": 22, "water_mode": "land", "level_count": 1},
+				"player_constraints": {"human_count": 1, "computer_count": 2},
+				"profile": {"id": "frontier_spokes_profile_v1", "template_id": "frontier_spokes_v1", "guard_strength_profile": "core_low"},
+			},
+		},
+		{
+			"id": "default_border_gate_retry",
+			"tags": ["special_guard_border_wide", "retry_policy"],
+			"expect_initial_failure": true,
+			"config": {
+				"generator_version": GENERATOR_VERSION,
+				"seed": "validation-batch-default-retry",
+				"size": {"preset": "validation_batch_retry", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
+				"player_constraints": {"human_count": 1, "computer_count": 2},
+				"profile": {"id": "missing_profile_for_retry", "template_id": "missing_template_for_retry"},
+			},
+			"retry_policy": {
+				"max_attempts": 2,
+				"mode": "config_fallback_seed_salt",
+				"fallback_config": {
+					"generator_version": GENERATOR_VERSION,
+					"seed": "validation-batch-default-retry",
+					"size": {"preset": "validation_batch_retry", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
+					"player_constraints": {"human_count": 1, "computer_count": 2},
+					"profile": {"id": "border_gate_compact_profile_v1", "template_id": "border_gate_compact_v1", "guard_strength_profile": "core_low"},
+				},
+			},
+		},
+	]
+
+static func _validation_batch_run(cases: Array, input_config: Dictionary) -> Dictionary:
+	var case_results := []
+	var summary := {
+		"case_count": cases.size(),
+		"successful_case_count": 0,
+		"validation_pass_case_count": 0,
+		"expected_validation_fail_case_count": 0,
+		"pass_without_retry_count": 0,
+		"pass_after_retry_count": 0,
+		"failed_case_count": 0,
+		"original_failure_count": 0,
+		"bounded_retry_case_count": 0,
+	}
+	var ok := true
+	for case_value in cases:
+		var case_record: Dictionary = case_value if case_value is Dictionary else {}
+		var case_result := _validation_batch_case_result(case_record)
+		case_results.append(case_result)
+		if bool(case_result.get("ok", false)):
+			summary["successful_case_count"] = int(summary.get("successful_case_count", 0)) + 1
+			if String(case_result.get("final_status", "")) == "pass_after_retry":
+				summary["pass_after_retry_count"] = int(summary.get("pass_after_retry_count", 0)) + 1
+				summary["validation_pass_case_count"] = int(summary.get("validation_pass_case_count", 0)) + 1
+			elif String(case_result.get("final_status", "")) == "expected_fail":
+				summary["expected_validation_fail_case_count"] = int(summary.get("expected_validation_fail_case_count", 0)) + 1
+			else:
+				summary["pass_without_retry_count"] = int(summary.get("pass_without_retry_count", 0)) + 1
+				summary["validation_pass_case_count"] = int(summary.get("validation_pass_case_count", 0)) + 1
+		else:
+			summary["failed_case_count"] = int(summary.get("failed_case_count", 0)) + 1
+			ok = false
+		var original_summary: Dictionary = case_result.get("original_failure_summary", {}) if case_result.get("original_failure_summary", {}) is Dictionary else {}
+		if not original_summary.is_empty():
+			summary["original_failure_count"] = int(summary.get("original_failure_count", 0)) + 1
+		if bool(case_result.get("retry_policy", {}).get("bounded", false)):
+			summary["bounded_retry_case_count"] = int(summary.get("bounded_retry_case_count", 0)) + 1
+	if bool(input_config.get("require_retry_evidence", true)) and int(summary.get("original_failure_count", 0)) <= 0:
+		ok = false
+	return {
+		"ok": ok,
+		"summary": summary,
+		"case_results": case_results,
+		"batch_signature": _hash32_hex(_stable_stringify({
+			"schema_id": VALIDATION_BATCH_RETRY_REPORT_SCHEMA_ID,
+			"generator_version": GENERATOR_VERSION,
+			"cases": case_results,
+			"summary": summary,
+		})),
+	}
+
+static func _validation_batch_case_result(case_record: Dictionary) -> Dictionary:
+	var retry_policy: Dictionary = case_record.get("retry_policy", {}) if case_record.get("retry_policy", {}) is Dictionary else {}
+	var max_attempts := clampi(int(retry_policy.get("max_attempts", 1)), 1, 5)
+	var attempts := []
+	var final_identity := {}
+	var final_phase_statuses := []
+	var final_failure_summary := {}
+	var final_ok := false
+	var final_generation_ok := false
+	var original_failure_summary := {}
+	for attempt_index in range(max_attempts):
+		var config := _validation_batch_attempt_config(case_record, attempt_index)
+		var generation := generate(config)
+		var attempt_record := _validation_batch_attempt_record(case_record, config, generation, attempt_index + 1, max_attempts)
+		attempts.append(attempt_record)
+		if attempt_index == 0 and not bool(generation.get("ok", false)):
+			original_failure_summary = attempt_record.get("failure_summary", {})
+		final_identity = attempt_record.get("deterministic_output_identity", {})
+		final_phase_statuses = attempt_record.get("phase_statuses", [])
+		final_failure_summary = attempt_record.get("failure_summary", {})
+		if bool(generation.get("ok", false)):
+			final_generation_ok = true
+			break
+	var expected_initial_failure := bool(case_record.get("expect_initial_failure", false))
+	var expected_final_status := String(case_record.get("expected_final_status", "pass"))
+	var expected_failure_satisfied := not expected_initial_failure or not original_failure_summary.is_empty()
+	var final_status := "fail"
+	if final_generation_ok and attempts.size() == 1:
+		final_status = "pass"
+	elif final_generation_ok:
+		final_status = "pass_after_retry"
+	elif expected_final_status == "fail" and not final_failure_summary.is_empty():
+		final_status = "expected_fail"
+	var required_phases_present := _validation_batch_required_phases_present(final_phase_statuses) if String(final_identity.get("stable_signature", "")) != "" else false
+	if final_generation_ok and expected_final_status == "pass":
+		final_ok = expected_failure_satisfied and required_phases_present
+	elif expected_final_status == "fail":
+		final_ok = not final_failure_summary.is_empty() and (required_phases_present or String(final_identity.get("stable_signature", "")) == "") and expected_failure_satisfied
+	var case_ok := final_ok
+	return {
+		"ok": case_ok,
+		"id": String(case_record.get("id", "")),
+		"description": String(case_record.get("description", "")),
+		"tags": case_record.get("tags", []),
+		"final_status": final_status,
+		"expected_final_status": expected_final_status,
+		"validation_passed": final_generation_ok,
+		"attempt_count": attempts.size(),
+		"retry_count": max(0, attempts.size() - 1),
+		"retry_policy": {
+			"bounded": max_attempts <= 5,
+			"max_attempts": max_attempts,
+			"mode": String(retry_policy.get("mode", "none")),
+			"uses_config_fallback": retry_policy.get("fallback_config", {}) is Dictionary and not retry_policy.get("fallback_config", {}).is_empty(),
+			"uses_seed_salt": String(retry_policy.get("mode", "")).find("seed_salt") >= 0,
+			"does_not_hide_original_failure": original_failure_summary.is_empty() == false or not expected_initial_failure,
+		},
+		"original_failure_summary": original_failure_summary,
+		"required_phase_statuses_present": required_phases_present,
+		"phase_statuses": final_phase_statuses,
+		"deterministic_output_identity": final_identity,
+		"attempts": attempts,
+	}
+
+static func _validation_batch_attempt_config(case_record: Dictionary, attempt_index: int) -> Dictionary:
+	var retry_policy: Dictionary = case_record.get("retry_policy", {}) if case_record.get("retry_policy", {}) is Dictionary else {}
+	var config: Dictionary = case_record.get("config", {}) if case_record.get("config", {}) is Dictionary else {}
+	if attempt_index > 0 and retry_policy.get("fallback_config", {}) is Dictionary and not retry_policy.get("fallback_config", {}).is_empty():
+		config = retry_policy.get("fallback_config", {})
+	config = config.duplicate(true)
+	if attempt_index > 0 and String(retry_policy.get("mode", "")).find("seed_salt") >= 0:
+		config["seed"] = "%s:retry_%d" % [String(config.get("seed", "0")), attempt_index]
+	return config
+
+static func _validation_batch_attempt_record(case_record: Dictionary, config: Dictionary, generation: Dictionary, attempt_number: int, max_attempts: int) -> Dictionary:
+	var payload: Dictionary = generation.get("generated_map", {}) if generation.get("generated_map", {}) is Dictionary else {}
+	var report: Dictionary = generation.get("report", {}) if generation.get("report", {}) is Dictionary else {}
+	var normalized := normalize_config(config)
+	var phase_statuses := _validation_batch_phase_statuses(payload)
+	var failure_summary := _validation_batch_failure_summary(report)
+	var ok := bool(generation.get("ok", false))
+	var will_retry := not ok and attempt_number < max_attempts
+	return {
+		"attempt": attempt_number,
+		"seed": String(normalized.get("seed", "")),
+		"template_id": String(normalized.get("template_id", "")),
+		"profile_id": String(normalized.get("profile", {}).get("id", "")),
+		"ok": ok,
+		"validation_status": String(report.get("status", "pass" if ok else "fail")),
+		"stable_signature": String(payload.get("stable_signature", "")),
+		"deterministic_output_identity": _validation_batch_output_identity(payload, normalized, report),
+		"phase_statuses": phase_statuses,
+		"failure_summary": failure_summary,
+		"retryable_failure": not ok,
+		"retry_decision": {
+			"will_retry": will_retry,
+			"bounded_attempt": attempt_number < max_attempts,
+			"reason": "retry_policy_has_remaining_attempt" if will_retry else ("accepted_valid_generation" if ok else "attempt_limit_reached"),
+			"next_attempt": attempt_number + 1 if will_retry else 0,
+		},
+		"attempt_signature": _hash32_hex(_stable_stringify({
+			"case_id": String(case_record.get("id", "")),
+			"attempt": attempt_number,
+			"identity": _validation_batch_output_identity(payload, normalized, report),
+			"failure_summary": failure_summary,
+			"phase_statuses": phase_statuses,
+		})),
+	}
+
+static func _validation_batch_output_identity(payload: Dictionary, normalized: Dictionary, report: Dictionary) -> Dictionary:
+	var scenario: Dictionary = payload.get("scenario_record", {}) if payload.get("scenario_record", {}) is Dictionary else {}
+	var metadata: Dictionary = payload.get("metadata", {}) if payload.get("metadata", {}) is Dictionary else {}
+	var profile: Dictionary = metadata.get("profile", normalized.get("profile", {})) if metadata.get("profile", normalized.get("profile", {})) is Dictionary else {}
+	var identity := {
+		"scenario_id": String(scenario.get("id", "")),
+		"stable_signature": String(payload.get("stable_signature", "")),
+		"normalized_seed": String(metadata.get("normalized_seed", normalized.get("seed", ""))),
+		"generator_version": String(metadata.get("generator_version", GENERATOR_VERSION)),
+		"template_id": String(metadata.get("template_id", normalized.get("template_id", ""))),
+		"profile_id": String(profile.get("id", "")),
+		"content_manifest_fingerprint": String(metadata.get("content_manifest_fingerprint", normalized.get("content_manifest_fingerprint", ""))),
+		"validation_status": String(report.get("status", "")),
+	}
+	identity["identity_signature"] = _hash32_hex(_stable_stringify(identity))
+	return identity
+
+static func _validation_batch_phase_statuses(payload: Dictionary) -> Array:
+	var observed := {}
+	for phase in payload.get("phase_pipeline", []):
+		if phase is Dictionary:
+			var phase_name := String(phase.get("phase", ""))
+			var summary: Dictionary = phase.get("summary", {}) if phase.get("summary", {}) is Dictionary else {}
+			observed[phase_name] = _validation_batch_compact_phase_summary(phase_name, summary)
+	var statuses := []
+	for required_phase in REQUIRED_VALIDATION_BATCH_PHASES:
+		statuses.append({
+			"phase": String(required_phase),
+			"status": "pass" if observed.has(String(required_phase)) else "missing",
+			"summary": observed.get(String(required_phase), {}),
+		})
+	return statuses
+
+static func _validation_batch_compact_phase_summary(phase_name: String, summary: Dictionary) -> Dictionary:
+	if phase_name == "template_profile":
+		var selection: Dictionary = summary.get("selection", {}) if summary.get("selection", {}) is Dictionary else {}
+		var player_assignment: Dictionary = summary.get("player_assignment", {}) if summary.get("player_assignment", {}) is Dictionary else {}
+		return {
+			"template_id": String(summary.get("template_id", "")),
+			"profile_id": String(summary.get("profile_id", "")),
+			"source": String(summary.get("source", "")),
+			"zone_count": int(summary.get("zone_count", 0)),
+			"link_count": int(summary.get("link_count", 0)),
+			"selection_source": String(selection.get("source", "")),
+			"selection_rejected": bool(selection.get("rejected", false)),
+			"player_count": int(player_assignment.get("player_count", 0)),
+			"human_count": int(player_assignment.get("human_count", 0)),
+			"computer_count": int(player_assignment.get("computer_count", 0)),
+		}
+	var compact := {}
+	for key in _sorted_keys(summary):
+		var value = summary[key]
+		if value is Dictionary or value is Array:
+			continue
+		compact[key] = value
+	return compact
+
+static func _validation_batch_failure_summary(report: Dictionary) -> Dictionary:
+	if bool(report.get("ok", false)) or String(report.get("status", "")) == "pass":
+		return {}
+	var failures: Array = report.get("failures", []) if report.get("failures", []) is Array else []
+	var phase := "template_selection" if String(report.get("schema_id", "")) == TEMPLATE_SELECTION_REJECTION_SCHEMA_ID else "payload_validation"
+	if not failures.is_empty():
+		var first_failure := String(failures[0])
+		var colon := first_failure.find(":")
+		if colon > 0:
+			phase = first_failure.substr(0, colon).strip_edges().replace(" ", "_")
+	return {
+		"status": String(report.get("status", "fail")),
+		"phase": phase,
+		"failure_code": String(report.get("failure_code", "")),
+		"failure_count": int(report.get("failure_count", failures.size())),
+		"failures": failures.slice(0, min(8, failures.size())),
+		"template_selection": report.get("template_selection", {}),
+	}
+
+static func _validation_batch_required_phases_present(phase_statuses: Array) -> bool:
+	var present := {}
+	for status in phase_statuses:
+		if status is Dictionary and String(status.get("status", "")) == "pass":
+			present[String(status.get("phase", ""))] = true
+	for required_phase in REQUIRED_VALIDATION_BATCH_PHASES:
+		if not present.has(String(required_phase)):
+			return false
+	return true
+
+static func _validation_batch_changed_cases(cases: Array) -> Array:
+	var changed := cases.duplicate(true)
+	for index in range(changed.size()):
+		if not (changed[index] is Dictionary):
+			continue
+		changed[index] = _validation_batch_case_with_seed_suffix(changed[index], "changed")
+	return changed
+
+static func _validation_batch_case_with_seed_suffix(case_record: Dictionary, suffix: String) -> Dictionary:
+	var result := case_record.duplicate(true)
+	if result.get("config", {}) is Dictionary:
+		var config: Dictionary = result.get("config", {}).duplicate(true)
+		config["seed"] = "%s:%s" % [String(config.get("seed", "0")), suffix]
+		result["config"] = config
+	var retry_policy: Dictionary = result.get("retry_policy", {}) if result.get("retry_policy", {}) is Dictionary else {}
+	if retry_policy.get("fallback_config", {}) is Dictionary:
+		var policy := retry_policy.duplicate(true)
+		var fallback: Dictionary = policy.get("fallback_config", {}).duplicate(true)
+		fallback["seed"] = "%s:%s" % [String(fallback.get("seed", "0")), suffix]
+		policy["fallback_config"] = fallback
+		result["retry_policy"] = policy
+	return result
+
+static func _validation_batch_tag_coverage(case_results: Array, required_tags: Array) -> Dictionary:
+	var covered := {}
+	for case_result in case_results:
+		if not (case_result is Dictionary) or not bool(case_result.get("ok", false)):
+			continue
+		for tag in case_result.get("tags", []):
+			covered[String(tag)] = true
+	var missing := []
+	for tag in required_tags:
+		if not covered.has(String(tag)):
+			missing.append(String(tag))
+	return {
+		"ok": missing.is_empty(),
+		"required_tags": required_tags,
+		"covered_tags": _sorted_keys(covered),
+		"missing_tags": missing,
+	}
 
 static func _load_template_catalog() -> Dictionary:
 	if not FileAccess.file_exists(TEMPLATE_CATALOG_PATH):

@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Recently completed implementation slice: `random-map-roads-rivers-writeout-10184`, following `random-map-decoration-density-pass-10184`, `random-map-monster-reward-bands-10184`, and `random-map-connection-guard-materialization-10184`. Current selected slice: `random-map-skirmish-ui-save-replay-10184`. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated maps through controlled setup/session/report boundaries only; they are not HoMM3 RMG parity, campaign adoption, authored writeback, or alpha completion.
+Recently completed implementation slice: `random-map-skirmish-ui-save-replay-10184`, following `random-map-roads-rivers-writeout-10184`, `random-map-decoration-density-pass-10184`, `random-map-monster-reward-bands-10184`, and `random-map-connection-guard-materialization-10184`. Current selected slice: `random-map-validation-batch-retry-10184`. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated maps through controlled setup/session/report boundaries only; they are not HoMM3 RMG parity, campaign adoption, authored writeback, or alpha completion.
 
 ## Slice Status Model
 
@@ -2256,17 +2256,19 @@ sourceDocs:
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
 
 implementationTargets:
-- batch generator report command
-- retry/failure policy
-- deterministic regression fixtures
+- `RandomMapGeneratorRules.validation_batch_retry_report(...)`
+- `tests/fixtures/random_map_validation_batch_cases.json`
+- `tests/random_map_validation_batch_retry_report.gd`
+- retry/failure policy and deterministic regression signatures
 
 sliceEvidence:
-- Batch tests cover representative small/medium/large, water, underground, wide-link, border-guard, and multi-player templates across fixed seeds.
-- Failures include phase, template, zone/link/object ids, coordinates when applicable, retry count, and actionable reason.
-- CI can reject bad generation without requiring renderer/editor state.
+- Batch fixtures cover land, islands/water, underground/deferred transit, special border-guard and wide-link semantics, skirmish provenance identity shape, and town/mine/dwelling placement across fixed seeds/configs.
+- The report records per-attempt validation status, phase status summaries, stable output identity signatures, failure summaries, bounded retry decisions, original failure preservation, and same-input/changed-seed batch signatures.
+- Expected current-foundation failures for unsupported or not-yet-viable parity cases remain structured negative evidence instead of being hidden or relabeled as parity success.
+- Focused Godot report proves determinism, bounded retry metadata, required phase statuses for successful generated cases, no authored content writeback, no campaign/skirmish runtime adoption, and no parity/alpha claim.
 
 nonGoals:
-- No player-facing UI adoption.
+- No authored content/campaign writeback, player-facing UI adoption, save migration, full HoMM3 RMG parity claim, or alpha completion claim.
 
 ### P2 Child: Random Map Skirmish UI Save Replay
 
