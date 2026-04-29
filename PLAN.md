@@ -1851,6 +1851,11 @@ implementationTargets:
 - map generator constraints
 - generator report validation
 
+sliceEvidence:
+- `RandomMapGeneratorRules.gd` now emits terrain/passability/biome constraint payloads, town/start viability metadata, object body/approach pathing metadata, staged road overlay segments/stubs, route connectivity classifications, and required reachability proof while preserving the staged no-write/no-campaign/no-skirmish boundary.
+- `tests/random_map_terrain_town_road_constraints_report.gd` proves viable primary towns/starts, expansion and contest routes, road paths avoiding blocked terrain/object bodies, guarded/full connectivity classification, reachability proof, and deterministic output.
+- Parent random-map foundation remains open for resource/encounter fairness and scenario-load smoke child slices.
+
 ### P2 Child: Random Map Resource/Encounter Fairness Report
 
 id: `random-map-resource-encounter-fairness-report-10184`
