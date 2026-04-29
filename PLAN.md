@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Recently completed implementation slice: `random-map-monster-reward-bands-10184`, following `random-map-connection-guard-materialization-10184`. Continue next to `random-map-decoration-density-pass-10184`. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated drafts through the scenario/domain load boundary only; they are not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, or alpha completion.
+Recently completed implementation slice: `random-map-decoration-density-pass-10184`, following `random-map-monster-reward-bands-10184` and `random-map-connection-guard-materialization-10184`. Current selected slice: `random-map-roads-rivers-writeout-10184`. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated drafts through staged serialization/report boundaries only; they are not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, authored writeback, or alpha completion.
 
 ## Slice Status Model
 
@@ -2233,12 +2233,13 @@ implementationTargets:
 - round-trip validation reports
 
 sliceEvidence:
-- Roads and rivers are stored as overlay payloads and can be serialized/round-tripped through the project map structure.
-- Generated file/export boundaries are explicit and do not silently write campaign/authored content.
-- Serialized output preserves terrain, overlays, object definitions, object instances, provenance, and validation status.
+- Structured road overlay tiles/segments derive from route graph paths and passability, include deterministic road class/type/art metadata, and avoid generated object footprint body tiles.
+- River/water/coast overlay metadata is derived from water/coast semantics when requested; land profiles expose an explicit no-river/no-water state, while water transit, ferry/bridge, and final river tile writeout remain deferred.
+- Generated map serialization records terrain layers, overlay layers, footprint-backed object definitions/instances, template/profile/seed/generator provenance, validation status, deferred boundary metadata, and stable round-trip signatures.
+- Focused Godot report proves road coverage for required routes, island water/coast candidates or explicit land no-river state, JSON-safe round-trip stability/key counts, and no campaign/skirmish UI/save/writeback/parity claim.
 
 nonGoals:
-- No player-facing random-map setup UI or save migration.
+- No authored content writeback, campaign/skirmish UI adoption, save migration, final road/river autotile byte packing, or HoMM3 RMG parity/alpha completion claim.
 
 ### P2 Child: Random Map Validation Batch Retry
 
