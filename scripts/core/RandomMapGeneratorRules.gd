@@ -17,6 +17,8 @@ const CONNECTION_GUARD_MATERIALIZATION_SCHEMA_ID := "random_map_connection_guard
 const CONNECTION_GUARD_MATERIALIZATION_REPORT_SCHEMA_ID := "random_map_connection_guard_materialization_report_v1"
 const MONSTER_REWARD_BANDS_SCHEMA_ID := "random_map_monster_reward_bands_v1"
 const MONSTER_REWARD_BANDS_REPORT_SCHEMA_ID := "random_map_monster_reward_bands_report_v1"
+const DECORATION_DENSITY_PASS_SCHEMA_ID := "random_map_decoration_density_pass_v1"
+const DECORATION_DENSITY_PASS_REPORT_SCHEMA_ID := "random_map_decoration_density_pass_report_v1"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
 const HASH_MODULUS := 4294967296
@@ -178,6 +180,19 @@ const REWARD_BAND_CANDIDATES := [
 	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_waymark_compass", "value": 1400, "weight": 2, "categories": ["gold", "lens_crystal", "cut_gems"]},
 	{"reward_category": "spell_access", "object_family_id": "spell_shrine", "object_id": "spell_beacon_path", "value": 1700, "weight": 1, "categories": ["quicksilver", "ember_salt", "lens_crystal"]},
 ]
+const DECORATION_OBJECT_FAMILIES := [
+	{"family_id": "decor_grass_windgrass_tufts", "display_name": "Windgrass Tufts", "role": "decor", "terrain_ids": ["grass", "plains"], "biome_ids": ["biome_grasslands"], "weight": 5, "blocks_movement": true},
+	{"family_id": "decor_grass_saffron_bloom_patch", "display_name": "Saffron Bloom Patch", "role": "decor", "terrain_ids": ["grass", "plains"], "biome_ids": ["biome_grasslands"], "weight": 3, "blocks_movement": true},
+	{"family_id": "obstacle_forest_fallen_silverlog", "display_name": "Fallen Silverlog", "role": "obstacle", "terrain_ids": ["forest"], "biome_ids": ["biome_deep_forest"], "weight": 5, "blocks_movement": true},
+	{"family_id": "decor_forest_moonfern_bank", "display_name": "Moonfern Bank", "role": "decor", "terrain_ids": ["forest"], "biome_ids": ["biome_deep_forest"], "weight": 3, "blocks_movement": true},
+	{"family_id": "obstacle_mire_sinkroot_cluster", "display_name": "Sinkroot Cluster", "role": "obstacle", "terrain_ids": ["swamp", "mire"], "biome_ids": ["biome_mire_fen"], "weight": 5, "blocks_movement": true},
+	{"family_id": "decor_mire_glowmoss_hummock", "display_name": "Glowmoss Hummock", "role": "decor", "terrain_ids": ["swamp", "mire"], "biome_ids": ["biome_mire_fen"], "weight": 3, "blocks_movement": true},
+	{"family_id": "obstacle_highland_slate_outcrop", "display_name": "Slate Outcrop", "role": "obstacle", "terrain_ids": ["highland", "hills", "ridge"], "biome_ids": ["biome_highland_ridge"], "weight": 5, "blocks_movement": true},
+	{"family_id": "decor_highland_heather_cairn", "display_name": "Heather Cairn", "role": "decor", "terrain_ids": ["highland", "hills", "ridge"], "biome_ids": ["biome_highland_ridge"], "weight": 3, "blocks_movement": true},
+	{"family_id": "obstacle_rough_suncracked_stone", "display_name": "Suncracked Stone", "role": "obstacle", "terrain_ids": ["badlands", "wastes", "ash", "lava"], "biome_ids": ["biome_rough_badlands", "biome_ash_lava_wastes"], "weight": 4, "blocks_movement": true},
+	{"family_id": "decor_snow_icegrass_ridge", "display_name": "Icegrass Ridge", "role": "decor", "terrain_ids": ["snow", "frost"], "biome_ids": ["biome_snow_frost_marches"], "weight": 4, "blocks_movement": true},
+	{"family_id": "obstacle_cavern_glasscap_stalagmites", "display_name": "Glasscap Stalagmites", "role": "obstacle", "terrain_ids": ["cavern", "underway"], "biome_ids": ["biome_subterranean_underways"], "weight": 4, "blocks_movement": true},
+]
 
 class DeterministicRng:
 	var _state := 1
@@ -242,6 +257,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 	var constraints := _build_constraint_payload(normalized, zones, template.get("links", []), seeds, zone_grid, terrain_rows, placements, zone_layout, terrain_transit)
 	phases.append(_phase_record("connection_guard_materialization", _connection_guard_materialization_phase_summary(constraints.get("connection_guard_materialization", {}))))
 	phases.append(_phase_record("monster_reward_bands", _monster_reward_bands_phase_summary(constraints.get("monster_reward_bands", {}))))
+	phases.append(_phase_record("decoration_density_pass", _decoration_density_phase_summary(constraints.get("decoration_density_pass", {}))))
 	phases.append(_phase_record("route_road_constraint_writeout", {
 		"road_segment_count": int(constraints.get("road_network", {}).get("road_segments", []).size()),
 		"required_reachability": String(constraints.get("route_reachability_proof", {}).get("status", "unknown")),
@@ -252,6 +268,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 		"guard_route_count": int(constraints.get("fairness_report", {}).get("guard_pressure", {}).get("route_guards", []).size()),
 		"materialized_connection_guard_count": int(constraints.get("connection_guard_materialization", {}).get("summary", {}).get("materialized_record_count", 0)),
 		"monster_reward_record_count": int(constraints.get("monster_reward_bands", {}).get("summary", {}).get("record_count", 0)),
+		"decoration_record_count": int(constraints.get("decoration_density_pass", {}).get("summary", {}).get("record_count", 0)),
 	}))
 
 	var scenario_record := _build_scenario_record(normalized, terrain_rows, placements, constraints)
@@ -594,6 +611,44 @@ static func monster_reward_bands_report(input_config: Dictionary) -> Dictionary:
 		},
 	}
 
+static func decoration_density_report(input_config: Dictionary) -> Dictionary:
+	var first := generate(input_config)
+	var second := generate(input_config)
+	var changed_seed_config := input_config.duplicate(true)
+	changed_seed_config["seed"] = "%s:changed" % String(input_config.get("seed", "0"))
+	var changed_seed := generate(changed_seed_config)
+	var first_payload: Dictionary = first.get("generated_map", {})
+	var second_payload: Dictionary = second.get("generated_map", {})
+	var changed_payload: Dictionary = changed_seed.get("generated_map", {})
+	var first_density: Dictionary = first_payload.get("staging", {}).get("decoration_density_pass", {})
+	var second_density: Dictionary = second_payload.get("staging", {}).get("decoration_density_pass", {})
+	var changed_density: Dictionary = changed_payload.get("staging", {}).get("decoration_density_pass", {})
+	var same_signature := String(first_density.get("decoration_density_signature", "")) == String(second_density.get("decoration_density_signature", ""))
+	var changed_seed_changes_signature := String(first_density.get("decoration_density_signature", "")) != String(changed_density.get("decoration_density_signature", ""))
+	var validation := _decoration_density_validation(first_density, first_payload)
+	var can_change := int(first_density.get("summary", {}).get("effective_target_total", 0)) > 0
+	var ok := not first_payload.is_empty() and not second_payload.is_empty() and same_signature and (changed_seed_changes_signature or not can_change) and bool(validation.get("ok", false))
+	return {
+		"ok": ok,
+		"schema_id": DECORATION_DENSITY_PASS_REPORT_SCHEMA_ID,
+		"stable_signature": String(first_payload.get("stable_signature", "")),
+		"changed_seed_signature": String(changed_payload.get("stable_signature", "")),
+		"decoration_density_signature": String(first_density.get("decoration_density_signature", "")),
+		"changed_seed_decoration_density_signature": String(changed_density.get("decoration_density_signature", "")),
+		"same_input_decoration_density_signature_equivalent": same_signature,
+		"changed_seed_changes_decoration_density_signature": changed_seed_changes_signature,
+		"changed_seed_change_required": can_change,
+		"decoration_density_pass": first_density,
+		"changed_seed_decoration_density_pass": changed_density,
+		"decoration_density_validation": validation,
+		"payload_validation": first.get("report", {}),
+		"no_ui_save_writeback_claim": {
+			"campaign_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("campaign", true)),
+			"skirmish_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("skirmish", true)),
+			"write_policy": String(first_payload.get("write_policy", "")),
+		},
+	}
+
 static func resource_encounter_fairness_report(generated_map: Dictionary) -> Dictionary:
 	var staging: Dictionary = generated_map.get("staging", {})
 	var scenario: Dictionary = generated_map.get("scenario_record", {})
@@ -710,6 +765,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	var fairness_report: Dictionary = staging.get("fairness_report", {})
 	var connection_guard_materialization: Dictionary = staging.get("connection_guard_materialization", {})
 	var monster_reward_bands: Dictionary = staging.get("monster_reward_bands", {})
+	var decoration_density: Dictionary = staging.get("decoration_density_pass", {})
 	if terrain_constraints.is_empty():
 		failures.append("terrain constraints payload missing")
 	if String(terrain_constraints.get("coherence_model", "")) == "":
@@ -766,6 +822,12 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 			failures.append("monster reward bands: %s" % String(failure))
 	for warning in monster_reward_validation.get("warnings", []):
 		warnings.append("monster reward bands: %s" % String(warning))
+	var decoration_validation := _decoration_density_validation(decoration_density, generated_map)
+	if not bool(decoration_validation.get("ok", false)):
+		for failure in decoration_validation.get("failures", []):
+			failures.append("decoration density pass: %s" % String(failure))
+	for warning in decoration_validation.get("warnings", []):
+		warnings.append("decoration density pass: %s" % String(warning))
 	if String(fairness_report.get("schema_id", "")) != "random_map_resource_encounter_fairness_report_v1":
 		failures.append("resource/encounter fairness report missing")
 	else:
@@ -777,7 +839,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	for phase in generated_map.get("phase_pipeline", []):
 		if phase is Dictionary:
 			phase_names.append(String(phase.get("phase", "")))
-	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "connection_guard_materialization", "monster_reward_bands", "route_road_constraint_writeout", "resource_encounter_fairness_report"]:
+	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "connection_guard_materialization", "monster_reward_bands", "decoration_density_pass", "route_road_constraint_writeout", "resource_encounter_fairness_report"]:
 		if required_phase not in phase_names:
 			failures.append("missing generation phase %s" % required_phase)
 	if scenario.get("towns", []).is_empty():
@@ -799,6 +861,8 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 		"connection_guard_materialization_summary": connection_guard_materialization.get("summary", {}),
 		"monster_reward_bands_status": String(monster_reward_bands.get("status", "")),
 		"monster_reward_bands_summary": monster_reward_bands.get("summary", {}),
+		"decoration_density_status": String(decoration_density.get("status", "")),
+		"decoration_density_summary": decoration_density.get("summary", {}),
 		"required_reachability_status": String(reachability.get("status", "")),
 		"fairness_status": String(fairness_report.get("status", "")),
 		"fairness_summary": fairness_report.get("summary", {}),
@@ -1388,6 +1452,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 			"terrain_transit": constraints.get("terrain_transit_semantics", {}),
 			"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 			"monster_reward_bands": constraints.get("monster_reward_bands", {}),
+			"decoration_density_pass": constraints.get("decoration_density_pass", {}),
 			"town_starts": constraints.get("town_start_constraints", {}),
 			"roads": constraints.get("road_network", {}),
 			"reachability": constraints.get("route_reachability_proof", {}),
@@ -1427,6 +1492,8 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"terrain_transit_semantics": constraints.get("terrain_transit_semantics", {}),
 		"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 		"monster_reward_bands": constraints.get("monster_reward_bands", {}),
+		"decoration_density_pass": constraints.get("decoration_density_pass", {}),
+		"decorative_object_staging": constraints.get("decoration_density_pass", {}).get("decoration_records", []),
 		"town_start_constraints": constraints.get("town_start_constraints", {}),
 		"road_network": constraints.get("road_network", {}),
 		"route_reachability_proof": constraints.get("route_reachability_proof", {}),
@@ -1455,6 +1522,18 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 	var monster_reward_bands := _build_monster_reward_bands(normalized, zones, connection_guard_materialization, route_graph, placements, terrain_transit)
 	route_graph["monster_reward_bands"] = monster_reward_bands
 	route_graph["monster_reward_bands_summary"] = monster_reward_bands.get("summary", {})
+	var decoration_density := _build_decoration_density_pass(
+		normalized,
+		zones,
+		zone_layout,
+		terrain_rows,
+		placements,
+		terrain_transit,
+		route_graph,
+		route_build.get("road_network", {}),
+		route_build.get("route_reachability_proof", {}),
+		monster_reward_bands
+	)
 	var town_start_constraints := _town_start_constraints_payload(zones, placements, route_graph, route_build.get("route_reachability_proof", {}))
 	var fairness_report := _fairness_report_payload(normalized, zones, placements, route_graph, route_build.get("route_reachability_proof", {}))
 	return {
@@ -1463,6 +1542,7 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		"terrain_transit_semantics": terrain_transit,
 		"connection_guard_materialization": connection_guard_materialization,
 		"monster_reward_bands": monster_reward_bands,
+		"decoration_density_pass": decoration_density,
 		"town_start_constraints": town_start_constraints,
 		"road_network": route_build.get("road_network", {}),
 		"route_graph": route_graph,
@@ -1725,12 +1805,501 @@ static func _build_monster_reward_bands(normalized: Dictionary, zones: Array, ma
 	}))
 	return payload
 
+static func _build_decoration_density_pass(normalized: Dictionary, zones: Array, zone_layout: Dictionary, terrain_rows: Array, placements: Dictionary, terrain_transit: Dictionary, route_graph: Dictionary, road_network: Dictionary, reachability: Dictionary, monster_reward_bands: Dictionary) -> Dictionary:
+	var occupied := _occupied_body_lookup(placements.get("object_placements", []))
+	var exclusion := _decoration_exclusion_lookup(placements, route_graph, road_network, zone_layout, monster_reward_bands)
+	var footprints_by_zone := _surface_footprints_by_zone(zone_layout)
+	var reward_context_by_zone := _monster_reward_context_by_zone(monster_reward_bands)
+	var zone_targets := []
+	var records := []
+	var diagnostics := []
+	var staged_occupied := occupied.duplicate()
+	var seed_text := String(normalized.get("seed", ""))
+	for zone in zones:
+		if not (zone is Dictionary):
+			continue
+		var zone_id := String(zone.get("id", ""))
+		var footprint: Dictionary = footprints_by_zone.get(zone_id, {})
+		var cells: Array = footprint.get("cells", [])
+		var terrain_id := String(zone.get("terrain_id", "grass"))
+		var biome_id := _biome_for_terrain(terrain_id)
+		var reward_context: Dictionary = reward_context_by_zone.get(zone_id, {})
+		var raw_target := _decoration_density_target(zone, cells.size(), terrain_id, reward_context)
+		var candidates := _decoration_candidates_for_zone(zone_id, cells, terrain_rows, occupied, exclusion, terrain_id, biome_id, seed_text)
+		var effective_target: int = min(raw_target, candidates.size())
+		var tolerance: int = _decoration_density_tolerance(raw_target)
+		var selected := []
+		var cursor := 0
+		while selected.size() < effective_target and cursor < candidates.size():
+			var candidate: Dictionary = candidates[cursor]
+			cursor += 1
+			var key := _point_key(int(candidate.get("x", 0)), int(candidate.get("y", 0)))
+			if staged_occupied.has(key):
+				continue
+			var family: Dictionary = _decoration_family_for_cell(terrain_id, biome_id, seed_text, zone_id, int(candidate.get("x", 0)), int(candidate.get("y", 0)), selected.size())
+			if family.is_empty():
+				diagnostics.append(_decoration_diagnostic(zone_id, "missing_family", "no terrain-biased original decoration family resolved for %s" % terrain_id, true))
+				continue
+			var record_id := "decor_%s_%03d" % [zone_id, records.size() + 1]
+			var point := _point_dict(int(candidate.get("x", 0)), int(candidate.get("y", 0)))
+			var record := {
+				"id": record_id,
+				"placement_id": record_id,
+				"kind": "decorative_obstacle",
+				"zone_id": zone_id,
+				"x": int(point.get("x", 0)),
+				"y": int(point.get("y", 0)),
+				"body_tiles": [point],
+				"blocking_body": bool(family.get("blocks_movement", true)),
+				"visit_tile": {},
+				"approach_tiles": [],
+				"family_id": String(family.get("family_id", "")),
+				"display_name": String(family.get("display_name", "")),
+				"family_role": String(family.get("role", "")),
+				"terrain_id": terrain_id,
+				"biome_id": biome_id,
+				"terrain_bias": {
+					"terrain_ids": family.get("terrain_ids", []),
+					"biome_ids": family.get("biome_ids", []),
+					"selected_from_known_original_family_ids": true,
+				},
+				"density_context": {
+					"zone_base_size": int(zone.get("base_size", 0)),
+					"zone_role": String(zone.get("role", "")),
+					"target": raw_target,
+					"effective_target": effective_target,
+					"reward_context": reward_context,
+				},
+				"placement_scores": candidate.get("scores", {}),
+				"exclusion_policy": "excluded_from_towns_resources_guards_rewards_roads_corridor_required_cells_and_existing_object_bodies",
+				"path_safety_state": "validated_after_staging",
+				"writeout_state": "staged_decoration_record_no_final_object_sprite_or_map_writeout",
+			}
+			records.append(record)
+			selected.append(record)
+			if bool(family.get("blocks_movement", true)):
+				staged_occupied[key] = record_id
+		if selected.size() < effective_target:
+			diagnostics.append(_decoration_diagnostic(zone_id, "density_target_underfilled", "zone selected %d of effective target %d" % [selected.size(), effective_target], true))
+		zone_targets.append({
+			"zone_id": zone_id,
+			"role": String(zone.get("role", "")),
+			"terrain_id": terrain_id,
+			"biome_id": biome_id,
+			"base_size": int(zone.get("base_size", 0)),
+			"footprint_cell_count": cells.size(),
+			"eligible_cell_count": candidates.size(),
+			"raw_target": raw_target,
+			"effective_target": effective_target,
+			"placed_count": selected.size(),
+			"tolerance": tolerance,
+			"within_tolerance": abs(selected.size() - effective_target) <= tolerance,
+			"capacity_limited": raw_target > candidates.size(),
+			"monster_reward_context": reward_context,
+			"family_ids_selected": _decoration_family_ids(selected),
+		})
+	var path_validation := _decoration_path_safety_validation(records, route_graph, terrain_rows, occupied, reachability)
+	var density_validation := _decoration_density_target_validation(zone_targets)
+	var status := "pass"
+	if not bool(path_validation.get("ok", false)) or not bool(density_validation.get("ok", false)):
+		status = "fail"
+	elif not diagnostics.is_empty():
+		status = "warning"
+	var payload := {
+		"schema_id": DECORATION_DENSITY_PASS_SCHEMA_ID,
+		"status": status,
+		"placement_policy": "terrain_biome_biased_obstacle_filler_after_major_objects_guards_rewards_and_roads",
+		"density_policy": "zone_base_size_role_terrain_and_monster_reward_context_targets_with_capacity_adjustment",
+		"known_original_family_ids": _decoration_known_family_ids(),
+		"family_catalog": DECORATION_OBJECT_FAMILIES,
+		"zone_density_targets": zone_targets,
+		"decoration_records": records,
+		"exclusion_summary": {
+			"excluded_cell_count": exclusion.size(),
+			"excluded_sources": ["existing_object_bodies", "existing_object_approaches", "towns", "resources", "route_guards", "special_guards", "reward_route_anchors", "roads", "corridor_required_cells"],
+		},
+		"path_safety_validation": path_validation,
+		"density_validation": density_validation,
+		"terrain_transit_signature": String(terrain_transit.get("terrain_transit_signature", "")),
+		"route_reachability_status_before_decoration": String(reachability.get("status", "")),
+		"monster_reward_bands_signature": String(monster_reward_bands.get("monster_reward_bands_signature", "")),
+		"diagnostics": diagnostics,
+		"summary": {
+			"zone_count": zone_targets.size(),
+			"record_count": records.size(),
+			"raw_target_total": _decoration_sum_zone_targets(zone_targets, "raw_target"),
+			"effective_target_total": _decoration_sum_zone_targets(zone_targets, "effective_target"),
+			"placed_total": _decoration_sum_zone_targets(zone_targets, "placed_count"),
+			"density_target_failures": density_validation.get("failures", []).size(),
+			"path_safety_status": String(path_validation.get("status", "")),
+			"diagnostic_count": diagnostics.size(),
+		},
+		"deferred": [
+			"final_object_footprint_catalog_writeout",
+			"renderer_art_asset_selection",
+			"terrain_adjacency_overlap_score_tables",
+			"durable_map_serialization",
+			"skirmish_ui_save_replay_adoption",
+		],
+	}
+	payload["decoration_density_signature"] = _hash32_hex(_stable_stringify({
+		"zone_density_targets": zone_targets,
+		"decoration_records": records,
+		"path_safety_validation": path_validation,
+		"density_validation": density_validation,
+		"diagnostics": diagnostics,
+	}))
+	return payload
+
 static func _zones_by_id(zones: Array) -> Dictionary:
 	var result := {}
 	for zone in zones:
 		if zone is Dictionary:
 			result[String(zone.get("id", ""))] = zone
 	return result
+
+static func _surface_footprints_by_zone(zone_layout: Dictionary) -> Dictionary:
+	var result := {}
+	var levels: Array = zone_layout.get("levels", [])
+	for level in levels:
+		if not (level is Dictionary) or int(level.get("level_index", 0)) != 0:
+			continue
+		for footprint in level.get("zone_footprints", []):
+			if footprint is Dictionary:
+				result[String(footprint.get("zone_id", ""))] = footprint
+		break
+	return result
+
+static func _decoration_exclusion_lookup(placements: Dictionary, route_graph: Dictionary, road_network: Dictionary, zone_layout: Dictionary, monster_reward_bands: Dictionary) -> Dictionary:
+	var exclusion := {}
+	for placement in placements.get("object_placements", []):
+		if not (placement is Dictionary):
+			continue
+		for body in placement.get("body_tiles", []):
+			if body is Dictionary:
+				exclusion[_point_key(int(body.get("x", 0)), int(body.get("y", 0)))] = "existing_object_body"
+		for approach in placement.get("approach_tiles", []):
+			if approach is Dictionary:
+				exclusion[_point_key(int(approach.get("x", 0)), int(approach.get("y", 0)))] = "existing_object_approach"
+	for segment in road_network.get("road_segments", []):
+		if not (segment is Dictionary):
+			continue
+		for cell in segment.get("cells", []):
+			if cell is Dictionary:
+				exclusion[_point_key(int(cell.get("x", 0)), int(cell.get("y", 0)))] = "road_segment"
+	for candidate in zone_layout.get("corridor_candidates", []):
+		if not (candidate is Dictionary) or int(candidate.get("level_index", 0)) != 0:
+			continue
+		for cell in candidate.get("candidate_cells", []):
+			if cell is Dictionary:
+				exclusion[_point_key(int(cell.get("x", 0)), int(cell.get("y", 0)))] = "corridor_required_cell"
+	for edge in route_graph.get("edges", []):
+		if not (edge is Dictionary):
+			continue
+		for point_key in ["from_anchor", "to_anchor", "route_cell_anchor_candidate"]:
+			var point: Dictionary = edge.get(point_key, {}) if edge.get(point_key, {}) is Dictionary else {}
+			if not point.is_empty():
+				exclusion[_point_key(int(point.get("x", 0)), int(point.get("y", 0)))] = "route_anchor"
+	for record in monster_reward_bands.get("monster_reward_records", []):
+		if record is Dictionary:
+			var reward_route_id := String(record.get("route_edge_id", ""))
+			for edge in route_graph.get("edges", []):
+				if edge is Dictionary and String(edge.get("id", "")) == reward_route_id:
+					var anchor: Dictionary = edge.get("route_cell_anchor_candidate", {}) if edge.get("route_cell_anchor_candidate", {}) is Dictionary else {}
+					if not anchor.is_empty():
+						exclusion[_point_key(int(anchor.get("x", 0)), int(anchor.get("y", 0)))] = "monster_reward_route_anchor"
+					break
+	return exclusion
+
+static func _monster_reward_context_by_zone(monster_reward_bands: Dictionary) -> Dictionary:
+	var result := {}
+	for record in monster_reward_bands.get("monster_reward_records", []):
+		if not (record is Dictionary):
+			continue
+		var zone_context: Dictionary = record.get("zone_context", {}) if record.get("zone_context", {}) is Dictionary else {}
+		var zone_id := String(zone_context.get("primary_zone_id", ""))
+		if zone_id == "":
+			continue
+		if not result.has(zone_id):
+			result[zone_id] = {"record_count": 0, "normal_guard_count": 0, "special_guard_count": 0, "reward_value_total": 0, "reward_categories": []}
+		var context: Dictionary = result[zone_id]
+		context["record_count"] = int(context.get("record_count", 0)) + 1
+		if String(record.get("guard_record_type", "")) == "normal_route_guard":
+			context["normal_guard_count"] = int(context.get("normal_guard_count", 0)) + 1
+		if String(record.get("guard_record_type", "")) == "special_guard_gate":
+			context["special_guard_count"] = int(context.get("special_guard_count", 0)) + 1
+		var reward: Dictionary = record.get("reward_band_record", {}) if record.get("reward_band_record", {}) is Dictionary else {}
+		context["reward_value_total"] = int(context.get("reward_value_total", 0)) + int(reward.get("candidate_value", 0))
+		var reward_category := String(reward.get("selected_reward_category_id", ""))
+		var categories: Array = context.get("reward_categories", [])
+		if reward_category != "" and reward_category not in categories:
+			categories.append(reward_category)
+			categories.sort()
+		context["reward_categories"] = categories
+	return result
+
+static func _decoration_density_target(zone: Dictionary, cell_count: int, terrain_id: String, reward_context: Dictionary) -> int:
+	if cell_count <= 0 or not _terrain_is_passable(terrain_id):
+		return 0
+	var role := String(zone.get("role", "treasure"))
+	var ratio := 0.055
+	if role.contains("start"):
+		ratio = 0.04
+	elif role == "treasure":
+		ratio = 0.085
+	elif role == "junction":
+		ratio = 0.06
+	match terrain_id:
+		"forest", "swamp", "mire", "highland", "hills", "ridge":
+			ratio += 0.015
+		"plains":
+			ratio -= 0.005
+	var reward_bonus: int = min(2, int(reward_context.get("record_count", 0)))
+	var target: int = int(round(float(cell_count) * ratio)) + reward_bonus
+	return clampi(target, 0, max(0, int(ceil(float(cell_count) * 0.16))))
+
+static func _decoration_density_tolerance(target: int) -> int:
+	return max(1, int(ceil(float(max(1, target)) * 0.25)))
+
+static func _decoration_candidates_for_zone(zone_id: String, cells: Array, terrain_rows: Array, occupied: Dictionary, exclusion: Dictionary, terrain_id: String, biome_id: String, seed_text: String) -> Array:
+	var candidates := []
+	if not _terrain_is_passable(terrain_id):
+		return candidates
+	for cell in cells:
+		if not (cell is Dictionary):
+			continue
+		var x := int(cell.get("x", -1))
+		var y := int(cell.get("y", -1))
+		var key := _point_key(x, y)
+		if occupied.has(key) or exclusion.has(key):
+			continue
+		if not _point_in_rows(terrain_rows, x, y) or not _terrain_cell_is_passable(terrain_rows, x, y):
+			continue
+		var scores := _decoration_candidate_scores(x, y, terrain_rows, occupied, exclusion, terrain_id, biome_id, seed_text, zone_id)
+		if int(scores.get("hard_reject_score", 0)) <= -5000:
+			continue
+		candidates.append({"x": x, "y": y, "scores": scores, "sort_key": _decoration_candidate_sort_key(scores, seed_text, zone_id, x, y)})
+	candidates.sort_custom(Callable(RandomMapGeneratorRules, "_compare_decoration_candidate"))
+	return candidates
+
+static func _decoration_candidate_scores(x: int, y: int, terrain_rows: Array, occupied: Dictionary, exclusion: Dictionary, terrain_id: String, biome_id: String, seed_text: String, zone_id: String) -> Dictionary:
+	var hard_reject := 0
+	if not _terrain_is_passable(terrain_id):
+		hard_reject = -5000
+	var adjacent_object_count := 0
+	var adjacent_reserved_count := 0
+	var adjacent_same_terrain_count := 0
+	for offset in _cardinal_offsets():
+		var nx := x + int(offset.x)
+		var ny := y + int(offset.y)
+		var key := _point_key(nx, ny)
+		if occupied.has(key):
+			adjacent_object_count += 1
+		if exclusion.has(key):
+			adjacent_reserved_count += 1
+		if _point_in_rows(terrain_rows, nx, ny) and String(terrain_rows[ny][nx]) == terrain_id:
+			adjacent_same_terrain_count += 1
+	var terrain_score := 20 if not _decoration_families_for_terrain(terrain_id, biome_id).is_empty() else -5000
+	var adjacency_score := adjacent_same_terrain_count * 3 - adjacent_object_count * 2 - adjacent_reserved_count
+	var overlap_score := 12 if not occupied.has(_point_key(x, y)) and not exclusion.has(_point_key(x, y)) else -5000
+	var jitter := int(_hash32_int("%s:%s:%d,%d:decor_jitter" % [seed_text, zone_id, x, y]) % 17)
+	return {
+		"hard_reject_score": min(hard_reject, terrain_score, overlap_score),
+		"terrain_score": terrain_score,
+		"adjacency_score": adjacency_score,
+		"overlap_score": overlap_score,
+		"seed_jitter_score": jitter,
+		"total": terrain_score + adjacency_score + overlap_score + jitter,
+	}
+
+static func _decoration_candidate_sort_key(scores: Dictionary, seed_text: String, zone_id: String, x: int, y: int) -> String:
+	var total := int(scores.get("total", 0))
+	var jitter := int(_hash32_int("%s:%s:%d,%d:decor_order" % [seed_text, zone_id, x, y]) % 100000)
+	return "%09d:%05d:%03d:%03d" % [999999999 - total, jitter, y, x]
+
+static func _compare_decoration_candidate(a: Dictionary, b: Dictionary) -> bool:
+	return String(a.get("sort_key", "")) < String(b.get("sort_key", ""))
+
+static func _decoration_family_for_cell(terrain_id: String, biome_id: String, seed_text: String, zone_id: String, x: int, y: int, ordinal: int) -> Dictionary:
+	var families := _decoration_families_for_terrain(terrain_id, biome_id)
+	if families.is_empty():
+		return {}
+	var total := 0
+	for family in families:
+		total += max(1, int(family.get("weight", 1)))
+	var cursor := int(_hash32_int("%s:%s:%d,%d:%d:decor_family" % [seed_text, zone_id, x, y, ordinal]) % max(1, total))
+	for family in families:
+		cursor -= max(1, int(family.get("weight", 1)))
+		if cursor < 0:
+			return family
+	return families[0]
+
+static func _decoration_families_for_terrain(terrain_id: String, biome_id: String) -> Array:
+	var result := []
+	for family in DECORATION_OBJECT_FAMILIES:
+		if not (family is Dictionary):
+			continue
+		if terrain_id in family.get("terrain_ids", []) or biome_id in family.get("biome_ids", []):
+			result.append(family)
+	if result.is_empty() and terrain_id in ["grass", "plains"]:
+		for family in DECORATION_OBJECT_FAMILIES:
+			if family is Dictionary and "biome_grasslands" in family.get("biome_ids", []):
+				result.append(family)
+	return result
+
+static func _decoration_known_family_ids() -> Array:
+	var result := []
+	for family in DECORATION_OBJECT_FAMILIES:
+		if family is Dictionary:
+			result.append(String(family.get("family_id", "")))
+	result.sort()
+	return result
+
+static func _decoration_family_ids(records: Array) -> Array:
+	var result := []
+	for record in records:
+		if record is Dictionary:
+			var family_id := String(record.get("family_id", ""))
+			if family_id != "" and family_id not in result:
+				result.append(family_id)
+	result.sort()
+	return result
+
+static func _decoration_sum_zone_targets(zone_targets: Array, key: String) -> int:
+	var total := 0
+	for target in zone_targets:
+		if target is Dictionary:
+			total += int(target.get(key, 0))
+	return total
+
+static func _decoration_density_target_validation(zone_targets: Array) -> Dictionary:
+	var failures := []
+	var warnings := []
+	for target in zone_targets:
+		if not (target is Dictionary):
+			failures.append("non-dictionary zone density target")
+			continue
+		var zone_id := String(target.get("zone_id", ""))
+		var effective_target := int(target.get("effective_target", 0))
+		var placed := int(target.get("placed_count", 0))
+		var tolerance := int(target.get("tolerance", 0))
+		if abs(placed - effective_target) > tolerance:
+			failures.append("zone %s placed %d outside effective target %d tolerance %d" % [zone_id, placed, effective_target, tolerance])
+		if bool(target.get("capacity_limited", false)):
+			warnings.append("zone %s decoration target was capacity limited by exclusions" % zone_id)
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+		"warnings": warnings,
+	}
+
+static func _decoration_path_safety_validation(records: Array, route_graph: Dictionary, terrain_rows: Array, occupied: Dictionary, reachability: Dictionary) -> Dictionary:
+	var failures := []
+	var warnings := []
+	var decorated_occupied := occupied.duplicate()
+	for record in records:
+		if not (record is Dictionary):
+			failures.append("non-dictionary decoration record")
+			continue
+		for body in record.get("body_tiles", []):
+			if body is Dictionary:
+				decorated_occupied[_point_key(int(body.get("x", 0)), int(body.get("y", 0)))] = String(record.get("id", ""))
+	if String(reachability.get("status", "")) != "pass":
+		failures.append("required route reachability was not pass before decoration")
+	for edge in route_graph.get("edges", []):
+		if not (edge is Dictionary) or not bool(edge.get("required", false)):
+			continue
+		var from_anchor: Dictionary = edge.get("from_anchor", {}) if edge.get("from_anchor", {}) is Dictionary else {}
+		var to_anchor: Dictionary = edge.get("to_anchor", {}) if edge.get("to_anchor", {}) is Dictionary else {}
+		var path := _find_passable_path(from_anchor, to_anchor, terrain_rows, decorated_occupied)
+		if path.is_empty():
+			failures.append("required route %s became blocked by staged decoration" % String(edge.get("id", "")))
+	for record in records:
+		if not (record is Dictionary):
+			continue
+		if String(record.get("family_id", "")) not in _decoration_known_family_ids():
+			failures.append("decoration %s used unknown family id %s" % [String(record.get("id", "")), String(record.get("family_id", ""))])
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+		"warnings": warnings,
+		"checked_required_route_count": _required_route_count(route_graph.get("edges", [])),
+		"checked_decoration_record_count": records.size(),
+	}
+
+static func _required_route_count(edges: Array) -> int:
+	var count := 0
+	for edge in edges:
+		if edge is Dictionary and bool(edge.get("required", false)):
+			count += 1
+	return count
+
+static func _decoration_diagnostic(zone_id: String, reason: String, message: String, retryable: bool) -> Dictionary:
+	return {
+		"zone_id": zone_id,
+		"reason": reason,
+		"message": message,
+		"retryable": retryable,
+	}
+
+static func _decoration_density_phase_summary(payload: Dictionary) -> Dictionary:
+	return {
+		"schema_id": String(payload.get("schema_id", "")),
+		"status": String(payload.get("status", "")),
+		"signature": String(payload.get("decoration_density_signature", "")),
+		"record_count": int(payload.get("summary", {}).get("record_count", 0)),
+		"effective_target_total": int(payload.get("summary", {}).get("effective_target_total", 0)),
+		"path_safety_status": String(payload.get("summary", {}).get("path_safety_status", "")),
+		"diagnostic_count": int(payload.get("summary", {}).get("diagnostic_count", 0)),
+	}
+
+static func _decoration_density_validation(payload: Dictionary, generated_map: Dictionary = {}) -> Dictionary:
+	var failures := []
+	var warnings := []
+	if String(payload.get("schema_id", "")) != DECORATION_DENSITY_PASS_SCHEMA_ID:
+		failures.append("decoration density schema mismatch")
+	if String(payload.get("decoration_density_signature", "")) == "":
+		failures.append("decoration density signature missing")
+	var known_ids: Array = payload.get("known_original_family_ids", [])
+	if known_ids.is_empty():
+		failures.append("known original decoration family ids missing")
+	for record in payload.get("decoration_records", []):
+		if not (record is Dictionary):
+			failures.append("decoration record is not a dictionary")
+			continue
+		if String(record.get("family_id", "")) not in known_ids:
+			failures.append("decoration record %s used unknown original family id %s" % [String(record.get("id", "")), String(record.get("family_id", ""))])
+		if record.get("body_tiles", []).is_empty():
+			failures.append("decoration record %s missed body tile" % String(record.get("id", "")))
+	var density_validation: Dictionary = payload.get("density_validation", {}) if payload.get("density_validation", {}) is Dictionary else {}
+	if not bool(density_validation.get("ok", false)):
+		failures.append_array(density_validation.get("failures", []))
+	warnings.append_array(density_validation.get("warnings", []))
+	var path_validation: Dictionary = payload.get("path_safety_validation", {}) if payload.get("path_safety_validation", {}) is Dictionary else {}
+	if not bool(path_validation.get("ok", false)):
+		failures.append_array(path_validation.get("failures", []))
+	warnings.append_array(path_validation.get("warnings", []))
+	if int(payload.get("summary", {}).get("record_count", 0)) <= 0:
+		failures.append("no decoration records were produced")
+	if not generated_map.is_empty():
+		var generated_constraints: Dictionary = generated_map.get("scenario_record", {}).get("generated_constraints", {}) if generated_map.get("scenario_record", {}).get("generated_constraints", {}) is Dictionary else {}
+		if generated_constraints.get("decoration_density_pass", {}).is_empty():
+			failures.append("scenario generated_constraints missed decoration density pass")
+		if generated_map.get("staging", {}).get("decorative_object_staging", []).is_empty():
+			failures.append("staging missed decorative object records for downstream consumers")
+		var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
+		if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", false)) or bool(scenario.get("selection", {}).get("availability", {}).get("skirmish", false)):
+			failures.append("decoration density adopted generated map into campaign/skirmish")
+		if generated_map.has("save_adoption") or scenario.has("save_adoption") or scenario.has("alpha_parity_claim"):
+			failures.append("decoration density exposed save/writeback/parity claim")
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+		"warnings": warnings,
+	}
 
 static func _route_edges_by_id(edges: Array) -> Dictionary:
 	var result := {}
