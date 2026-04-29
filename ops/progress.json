@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-seeded-generator-core-10184",
-  "currentSliceTitle": "Random Map Seeded Generator Core",
+  "currentSliceId": "random-map-terrain-town-road-constraints-10184",
+  "currentSliceTitle": "Random Map Terrain/Town/Road Constraints",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented deterministic seeded generator core payload primitives and focused seed determinism report; terrain/town/road constraints, fairness suite, scenario load smoke, UI, writeback, and adoption remain pending child slices.",
+  "currentSliceNotes": "Implemented deterministic terrain/town/start/road constraints on the seeded RMG payload: biome/passability summaries, pathing metadata and approaches, staged road overlay segments/stubs, route connectivity classifications, and required reachability proof. Parent random-map foundation remains open for fairness and scenario-load child slices.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T08:22:00Z",
+  "updatedAt": "2026-04-29T08:10:28Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -771,10 +771,14 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "RandomMapGeneratorRules.gd emits terrain/passability/biome constraints, object body/approach pathing metadata, town/start viability constraints, staged road overlay segments/stubs, route connectivity classifications, and required reachability proof while preserving staged no-write boundaries.",
+        "tests/random_map_terrain_town_road_constraints_report.gd validates viable starts, primary town approaches, expansion and contest routes, guarded/full route classification, road paths avoiding blocked terrain/object bodies, and deterministic output.",
+        "Existing random_map_seeded_generator_core_report.tscn remains compatible with the stricter payload contract."
       ],
       "completionCriteria": [
-        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+        "Generated payloads expose terrain/town/start/road constraints suitable for scenario prototypes.",
+        "Focused Godot report and baseline validation pass.",
+        "Parent random-map foundation remains open for resource/encounter fairness and scenario-load smoke child slices."
       ],
       "updatedAt": "2026-04-27T13:18:49Z",
       "deferredReason": "Runtime asset ingestion remains paused after brief-track selection. No generated PNG, derivative processed asset, source art import, runtime registration, renderer hookup, or final art approval is authorized until a later explicit boundary defines provenance requirements, approval authority, import location, rollback rules, and validation.",
@@ -2304,7 +2308,7 @@
       "id": "random-map-terrain-town-road-constraints-10184",
       "title": "Random Map Terrain/Town/Road Constraints",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "random-map-generator-foundation-10184",
@@ -2327,7 +2331,10 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "notes": "Implementation not started."
+      "notes": "Implemented deterministic terrain/town/start/road constraints on the seeded RMG payload: biome/passability summaries, pathing metadata and approaches, staged road overlay segments/stubs, route connectivity classifications, and required reachability proof. Parent random-map foundation remains open for fairness and scenario-load child slices.",
+      "updatedAt": "2026-04-29T08:10:28Z",
+      "startedAt": "2026-04-29T07:58:14Z",
+      "completedAt": "2026-04-29T08:10:28Z"
     },
     {
       "id": "random-map-resource-encounter-fairness-report-10184",
@@ -3663,24 +3670,7 @@
       "evidence": "Current editor export behavior includes validated authored scenario/terrain-layer draft contracts and working-copy validation, but deliberately does not write authored scenario files or campaign progress."
     }
   ],
-  "actionableNextTasks": [
-    {
-      "id": "random-map-terrain-town-road-constraints-10184",
-      "title": "Random Map Terrain/Town/Road Constraints",
-      "status": "pending",
-      "parentSliceId": "random-map-generator-foundation-10184",
-      "source": "PLAN.md P2.10 Random Map Generator Foundation",
-      "sourceDocs": [
-        "docs/random-map-generator-foundation.md",
-        "terrain/editor docs"
-      ],
-      "implementationTargets": [
-        "map generator constraints",
-        "generator report validation"
-      ],
-      "notes": "Seeded generator core is complete; next child should add terrain/town/road constraints without claiming finished skirmish RMG."
-    }
-  ],
+  "actionableNextTasks": [],
   "stoppedOrPausedTasks": [
     {
       "id": "overworld-artifact-check-cue-10184",
