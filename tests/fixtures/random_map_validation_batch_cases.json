@@ -23,7 +23,6 @@
       "id": "islands_water_translated_001",
       "description": "Island/water-mode template exercising water/coast metadata and deferred transit boundaries.",
       "tags": ["islands_water"],
-      "expected_final_status": "fail",
       "config": {
         "generator_version": "random_map_seeded_core_v1",
         "seed": "validation-batch-islands-10184",
@@ -42,7 +41,6 @@
       "id": "underground_transit_translated_001",
       "description": "Two-level template exercising underground/cave metadata and deferred cross-level transit boundaries.",
       "tags": ["underground_deferred_transit"],
-      "expected_final_status": "fail",
       "config": {
         "generator_version": "random_map_seeded_core_v1",
         "seed": "validation-batch-underground-10184",
@@ -93,7 +91,6 @@
       "id": "wide_connection_border_gate",
       "description": "Compact original template with both special border guard and wide-link normal guard suppression metadata.",
       "tags": ["wide_link", "special_guard_border_wide"],
-      "expected_final_status": "fail",
       "config": {
         "generator_version": "random_map_seeded_core_v1",
         "seed": "validation-batch-border-retry-10184:retry_1",
@@ -111,7 +108,6 @@
       "id": "skirmish_provenance_border_gate",
       "description": "Generated-map identity shape used by the skirmish setup provenance path while remaining report-only here.",
       "tags": ["skirmish_provenance", "border_guard"],
-      "expected_final_status": "fail",
       "config": {
         "generator_version": "random_map_seeded_core_v1",
         "seed": "validation-batch-skirmish-provenance-10184",

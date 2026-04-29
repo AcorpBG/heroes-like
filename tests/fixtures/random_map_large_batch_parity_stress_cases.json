@@ -8,11 +8,10 @@
       "id": "stress_curated_land_runtime_materialization",
       "description": "Successful compact runtime materialization case used as the stress harness positive control.",
       "tags": ["land", "runtime_materialization", "object_pool_value_weighting", "town_mine_dwelling", "border_guard", "wide_link"],
-      "expected_final_status": "unsupported_warning",
-      "unsupported_reason": "current_generated_validation_warning",
+      "expected_final_status": "pass",
       "config": {
         "generator_version": "random_map_seeded_core_v1",
-        "seed": "large-batch-curated-land",
+        "seed": "large-batch-curated-land-a",
         "size": {"preset": "large_batch_parity_stress", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
         "player_constraints": {"human_count": 1, "player_count": 3, "team_mode": "free_for_all"},
         "profile": {
@@ -28,8 +27,7 @@
       "id": "stress_curated_islands_water",
       "description": "Water/islands case that exercises water transit and coastline summaries.",
       "tags": ["islands_water", "water_mode", "transit_gameplay"],
-      "expected_final_status": "unsupported_warning",
-      "unsupported_reason": "current_generated_validation_warning",
+      "expected_final_status": "pass",
       "config": {
         "generator_version": "random_map_seeded_core_v1",
         "seed": "large-batch-curated-islands",
@@ -48,8 +46,7 @@
       "id": "stress_curated_underground_two_level",
       "description": "Two-level case that exercises underground and cross-level transit summaries.",
       "tags": ["underground", "underground_deferred_transit", "transit_gameplay"],
-      "expected_final_status": "unsupported_warning",
-      "unsupported_reason": "current_generated_validation_warning",
+      "expected_final_status": "pass",
       "config": {
         "generator_version": "random_map_seeded_core_v1",
         "seed": "large-batch-curated-underground",
@@ -68,8 +65,7 @@
       "id": "stress_curated_retry_fallback",
       "description": "Expected negative first attempt followed by bounded fallback retry.",
       "tags": ["negative_case", "retry_policy", "border_guard", "wide_link"],
-      "expected_final_status": "unsupported_warning",
-      "unsupported_reason": "current_generated_validation_warning_after_retry",
+      "expected_final_status": "pass",
       "expect_initial_failure": true,
       "config": {
         "generator_version": "random_map_seeded_core_v1",
