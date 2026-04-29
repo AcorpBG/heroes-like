@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Selected implementation slice: `random-map-homm3-parity-gap-audit-10184` after P2.10 random map generator foundation closeout. P2.10 foundation proves deterministic catalog-backed generated drafts through the scenario/domain load boundary only; it is not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, or alpha completion.
+Selected implementation slice: `random-map-template-catalog-import-10184` after the HoMM3-parity gap audit. P2.10 foundation proves deterministic catalog-backed generated drafts through the scenario/domain load boundary only; it is not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, or alpha completion.
 
 ## Slice Status Model
 
@@ -1952,6 +1952,7 @@ purpose: Convert the clarified long-term HoMM3 random-map parity target into an 
 sourceDocs:
 - `project.md`
 - `docs/random-map-generator-foundation.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
 - completed P2.10 random-map reports and smoke evidence
 
 implementationTargets:
@@ -1967,6 +1968,302 @@ sliceEvidence:
 nonGoals:
 - No claim that P2.10 completes HoMM3 RMG parity.
 - No player-facing random-map menu, skirmish adoption, campaign adoption, save migration, or durable generated-map writeback.
+
+### P2 Child: Random Map Template Catalog Import
+
+id: `random-map-template-catalog-import-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Expand the random-map template schema and catalog pipeline so it can represent the full extracted HoMM3 RMG template grammar in original-game ids without losing functional fields.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `docs/random-map-generator-foundation.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-summary.csv`
+
+implementationTargets:
+- `content/random_map_template_catalog.json`
+- random-map catalog schema/loading validation
+- template grammar report coverage
+
+sliceEvidence:
+- Catalog can represent all 53 extracted template records as original-game template ids/profiles or importer fixtures.
+- Zone/link field preservation covers size score, player filters, roles, owner slots, town/castle controls, same-type flags, faction/terrain/monster masks, seven mine categories, treasure bands, guard value, wide, and border-guard fields.
+- Grammar report proves catalog breadth/counts and rejects duplicate/invalid zones, links, resource keys, terrain ids, and faction ids.
+
+nonGoals:
+- No zone layout, object placement, skirmish adoption, save migration, UI, or parity-complete claim.
+
+### P2 Child: Random Map Template Filtering And Assignment
+
+id: `random-map-template-filtering-assignment-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement HoMM3-style template candidate filtering, capacity checks, owner-slot assignment, team/free-for-all metadata, and runtime faction selection for original content.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md`
+
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- filtering/assignment report tests
+
+sliceEvidence:
+- Template filtering uses size score, water mode, human count, total player count, and zone/link availability.
+- Candidate capacity rejects templates without enough human and total player starts.
+- Runtime zones preserve source ids, role, owner slot, chosen owner/player, team metadata, faction/town choice, terrain policy, monster policy, mine arrays, treasure bands, and link payloads.
+
+nonGoals:
+- No final footprint layout, object placement, skirmish UI, or generated writeback.
+
+### P2 Child: Random Map Zone Layout Water And Underground
+
+id: `random-map-zone-layout-water-underground-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Build deterministic runtime zone footprint layout with scaled areas, multi-level allocation, water/island policy, and explicit corridor candidates.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md`
+
+implementationTargets:
+- runtime zone graph/layout helpers
+- zone layout validation report
+
+sliceEvidence:
+- Zone areas scale from template base sizes within configured tolerance.
+- Starts are separated, links have corridor candidates, and zone footprints support surface/underground/water modes.
+- Validation reports disconnected, undersized, impossible, or unsupported template/layout failures with zone/link ids.
+
+nonGoals:
+- No object-density pass, final road/river writeout, skirmish adoption, or parity-complete claim.
+
+### P2 Child: Random Map Terrain And Transit Semantics
+
+id: `random-map-terrain-transit-semantics-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement terrain palette choice, terrain normalization, underground/cave handling, water/coast rules, and transit-object route semantics.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-web-map-editor/`
+
+implementationTargets:
+- terrain generation/normalization rules
+- transit route validation
+- terrain report tests
+
+sliceEvidence:
+- Terrain ids are chosen from zone faction/terrain constraints and normalized for readable boundaries.
+- Underground/cave, water/coast, transit objects, bridges/ferries/gates, and required route unlocks are represented in staging and reports.
+- Required starts, towns, mines, objectives, and exits remain reachable or explicitly gated by reported transit.
+
+nonGoals:
+- No final serialized map writeout or player-facing random-map menu.
+
+### P2 Child: Random Map Object Footprint Catalog
+
+id: `random-map-object-footprint-catalog-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add original object metadata, footprints, action/passability masks, placement predicates, and object limit validation for RMG placement.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md`
+
+implementationTargets:
+- object placement metadata content
+- placement predicates
+- object footprint validation tests
+
+sliceEvidence:
+- Objects cannot stamp out of bounds, over blocked bodies, onto invalid terrain, or onto invalid visit/action tiles.
+- Object type limits, biome/terrain masks, footprint bodies, approach tiles, and purpose metadata are validated before later placement slices consume them.
+
+nonGoals:
+- No broad town/mine/reward placement in this slice beyond fixtures needed to validate predicates.
+
+### P2 Child: Random Map Town Mine Dwelling Placement
+
+id: `random-map-town-mine-dwelling-placement-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement template-driven town/castle minimums and densities, neutral same-type behavior, seven mine categories, adjacent resources, and neutral dwellings.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md`
+
+implementationTargets:
+- town/mine/dwelling placement rules
+- placement and fairness reports
+
+sliceEvidence:
+- Player and neutral town/castle minimums and densities are attempted by zone rule.
+- Neutral same-type placement reuses zone town/faction choice where required.
+- Seven mine/resource categories place required mines, density extras, adjacent resources, and near-start wood/ore bias where configured.
+
+nonGoals:
+- No reward bands, decoration filler, final writeout, or skirmish UI.
+
+### P2 Child: Random Map Connection Guard Materialization
+
+id: `random-map-connection-guard-materialization-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Materialize normal route guards, special border-guard equivalents, wide-guard suppression, and connection failure diagnostics.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-special-guards-and-wide.md`
+
+implementationTargets:
+- connection guard placement rules
+- route guard validation tests
+
+sliceEvidence:
+- Normal link values produce scaled guard placements when positive.
+- Wide links suppress normal guards while preserving connection geometry.
+- Border-guard links produce original-game special guard/gate equivalents even when normal value is zero.
+- Failures report link id/endpoints, reason, and retryability.
+
+nonGoals:
+- No reward bands, decoration filler, skirmish adoption, or parity-complete claim.
+
+### P2 Child: Random Map Monster Reward Bands
+
+id: `random-map-monster-reward-bands-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement monster faction masks, local/global strength scaling, treasure bands, reward objects, and artifact/spell/skill equivalents for original content.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+
+implementationTargets:
+- monster/guard selection rules
+- reward object placement rules
+- risk/reward validation reports
+
+sliceEvidence:
+- Monster candidate pools honor match-to-town and allowed faction masks.
+- Strength modes scale guard pressure from zone/link/reward values.
+- Treasure bands place original reward objects, artifacts, spells, or skill equivalents through allowlists and report risk/reward balance.
+
+nonGoals:
+- No final map serialization or player-facing generated-map menu.
+
+### P2 Child: Random Map Decoration Density Pass
+
+id: `random-map-decoration-density-pass-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement terrain-biased decorative obstacle filler and object density scoring without blocking required paths.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+
+implementationTargets:
+- decoration/obstacle placement rules
+- density validation report
+
+sliceEvidence:
+- Decoration choices use terrain, adjacency, overlap, biome, and density scoring.
+- Filler respects passability, visit tiles, roads, required routes, object bodies, and per-zone density budgets.
+- Reports distinguish visual-density warnings from hard gameplay blockers.
+
+nonGoals:
+- No skirmish runtime adoption or generated file writeback.
+
+### P2 Child: Random Map Roads Rivers Writeout
+
+id: `random-map-roads-rivers-writeout-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement road/river overlays, generated map serialization, round-trip validation, and generated file/export boundaries.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-web-map-editor/`
+
+implementationTargets:
+- road/river overlay generation
+- generated scenario/map serializer
+- round-trip validation reports
+
+sliceEvidence:
+- Roads and rivers are stored as overlay payloads and can be serialized/round-tripped through the project map structure.
+- Generated file/export boundaries are explicit and do not silently write campaign/authored content.
+- Serialized output preserves terrain, overlays, object definitions, object instances, provenance, and validation status.
+
+nonGoals:
+- No player-facing random-map setup UI or save migration.
+
+### P2 Child: Random Map Validation Batch Retry
+
+id: `random-map-validation-batch-retry-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add batch generation, retry/failure policy, deterministic regression checksums, and CI-friendly parity reports.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
+
+implementationTargets:
+- batch generator report command
+- retry/failure policy
+- deterministic regression fixtures
+
+sliceEvidence:
+- Batch tests cover representative small/medium/large, water, underground, wide-link, border-guard, and multi-player templates across fixed seeds.
+- Failures include phase, template, zone/link/object ids, coordinates when applicable, retry count, and actionable reason.
+- CI can reject bad generation without requiring renderer/editor state.
+
+nonGoals:
+- No player-facing UI adoption.
+
+### P2 Child: Random Map Skirmish UI Save Replay
+
+id: `random-map-skirmish-ui-save-replay-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Adopt validated generated maps into skirmish setup, UI, save/load, replay seed provenance, and player-facing retry/error flow.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `docs/random-map-generator-foundation.md`
+
+implementationTargets:
+- random-map skirmish setup flow
+- save/load generated map provenance
+- replay seed/config metadata
+- player-facing validation/retry handling
+
+sliceEvidence:
+- Skirmish setup can generate and launch validated maps from seed/template/profile/player settings.
+- Saves and replays preserve seed, generator version, template/profile ids, content manifest provenance, retry count, and generated-map identity.
+- UI exposes compact setup/failure flow without dumping debug reports onto scenic screens.
+
+nonGoals:
+- No campaign adoption unless a later explicit campaign-randomization slice is planned.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 
