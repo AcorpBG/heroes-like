@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
-  "currentSliceTitle": "Random Map Final HoMM3-Parity Re-Gate Audit",
+  "currentSliceId": "random-map-size-class-parity-correction-10184",
+  "currentSliceTitle": "Random Map Size Class Parity Correction",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed strict final RMG parity re-gate. Result: HoMM3-style RMG functional parity is met for generated skirmish/session use, with accepted original-game non-parity boundaries for oversized templates, disconnected source graphs, campaign/writeback exclusion, save-version policy, and creative translation. No alpha, campaign, release, broad production, or byte-clone claim.",
-  "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. The Phase 2 RMG parity re-gate is complete for generated skirmish/session use. Preserve completed non-RMG and future-phase evidence, but do not continue campaign/faction/broad production work from it, and do not treat the RMG re-gate as alpha, campaign, release, asset-parity, or byte-clone completion.",
-  "updatedAt": "2026-04-29T19:16:54Z",
+  "currentSliceNotes": "Completed RMG-only player-facing size-class correction. HoMM3-style source classes are explicit, Small 36x36 materializes honestly, and Medium/Large/Extra Large are visible but unavailable/rejected under the current 64x48x2 runtime cap without hidden downscale. No campaign, faction, broad production, alpha, or release claim.",
+  "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. The Phase 2 RMG size-class correction is complete for generated skirmish/session use. Preserve completed non-RMG/future-phase evidence, but do not continue campaign/faction/broad production work from it, and do not treat RMG parity as alpha, campaign, release, asset-parity, or byte-clone completion.",
+  "updatedAt": "2026-04-29T20:17:56Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -569,6 +569,7 @@
         "random-map-roads-rivers-writeout-10184",
         "random-map-scenario-load-smoke-10184",
         "random-map-seeded-generator-core-10184",
+        "random-map-size-class-parity-correction-10184",
         "random-map-skirmish-ui-save-replay-10184",
         "random-map-template-catalog-grammar-10184",
         "random-map-template-catalog-import-10184",
@@ -3560,6 +3561,79 @@
       "notes": "Completed strict final RMG parity re-gate. Result: HoMM3-style RMG functional parity is met for generated skirmish/session use, with accepted original-game non-parity boundaries for oversized templates, disconnected source graphs, campaign/writeback exclusion, save-version policy, and creative translation. No alpha, campaign, release, broad production, or byte-clone claim.",
       "startedAt": "2026-04-29T19:07:15Z",
       "completedAt": "2026-04-29T19:16:54Z"
+    },
+    {
+      "id": "random-map-size-class-parity-correction-10184",
+      "title": "Random Map Size Class Parity Correction",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Correct the player-facing RMG size model so HoMM3-style size classes are explicit inputs separate from template/profile selection, with honest original-runtime cap handling.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-final-homm3-parity-regate-audit.md",
+        "docs/random-map-size-class-translation.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "focused RMG report tests that prove UI visibility and honest size provenance",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "/root/.local/bin/godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_large_batch_parity_stress_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_final_writeout_export_save_schema_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_playable_materialization_runtime_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Player-facing generated-map setup exposes Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144 as map-size classes separate from template/profile controls.",
+        "Generated config, metadata, provenance, replay metadata, and validation carry selected size-class source dimensions and runtime materialization policy.",
+        "Runtime materialization remains honest under the current 64x48x2 cap: Small can materialize at its source dimensions, while larger classes are blocked or marked unavailable with a visible rationale instead of hidden downscaling.",
+        "Focused reports prove size options are visible, generated Small maps carry honest 36x36 provenance, and oversized class attempts fail before launch without session/save/campaign/authored writeback."
+      ],
+      "completionCriteria": [
+        "RMG setup no longer hides map size solely inside template cards.",
+        "No validation, report, UI text, save/replay provenance, or audit note presents clamped 64x48 output as a full 72/108/144 HoMM3-style map.",
+        "Required RMG validation gates pass."
+      ],
+      "nonGoals": [
+        "No campaign, faction, broad content, future-phase, or alpha/release readiness work.",
+        "No runtime clamp lift unless full validation can honestly pass.",
+        "No authored JSON writeback or generated campaign adoption."
+      ],
+      "validationEvidence": [
+        "python3 tests/validate_repo.py passed.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn passed; report exposed size_class_id=homm3_small, label Small 36x36, all four HoMM3-style size options, honest Small provenance, and oversized Medium 72x72 rejection under the 64x48 cap.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_large_batch_parity_stress_report.tscn passed; case_count=58, validation_pass_case_count=42, materialized_validation_pass_count=42, hard_blocker_count=0.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_final_writeout_export_save_schema_report.tscn passed; final tile stream/export/save provenance remained valid.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_playable_materialization_runtime_report.tscn passed using explicit homm3_small player-facing config; materialized terrain rows=36 with stable save/replay boundary.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ],
+      "completionResult": [
+        "Player-facing generated-map setup no longer hides map size solely inside template cards.",
+        "Generated config, metadata, identity, provenance, replay metadata, and validation carry source size class and materialized runtime size separately.",
+        "No UI/report/provenance path presents capped 64x48 output as full Medium/Large/Extra Large source size; oversized classes are visible but blocked until runtime support is lifted and validated."
+      ],
+      "createdAt": "2026-04-29T20:00:00Z",
+      "updatedAt": "2026-04-29T20:17:56Z",
+      "startedAt": "2026-04-29T20:00:00Z",
+      "completedAt": "2026-04-29T20:17:56Z",
+      "notes": "Completed scoped RMG size-class correction after parity miss: size classes are explicit and runtime-cap handling is visible."
     },
     {
       "id": "headless-agent-simulation-harness-10184",

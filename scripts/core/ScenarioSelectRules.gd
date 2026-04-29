@@ -33,8 +33,6 @@ const RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS := [
 		"id": "border_gate_compact_v1",
 		"label": "Border Gate Compact",
 		"profile_id": "border_gate_compact_profile_v1",
-		"width": 26,
-		"height": 18,
 		"player_count": 3,
 		"water_modes": ["land"],
 		"supports_underground": false,
@@ -43,8 +41,6 @@ const RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS := [
 		"id": "frontier_spokes_v1",
 		"label": "Frontier Spokes",
 		"profile_id": "frontier_spokes_profile_v1",
-		"width": 30,
-		"height": 22,
 		"player_count": 3,
 		"water_modes": ["land"],
 		"supports_underground": false,
@@ -53,8 +49,6 @@ const RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS := [
 		"id": "translated_rmg_template_001_v1",
 		"label": "Translated Islands",
 		"profile_id": "translated_rmg_profile_001_v1",
-		"width": 36,
-		"height": 30,
 		"player_count": 4,
 		"water_modes": ["land", "islands"],
 		"supports_underground": true,
@@ -84,6 +78,49 @@ const RANDOM_MAP_PLAYER_PROFILE_OPTIONS := [
 	},
 ]
 const RANDOM_MAP_PLAYER_COUNT_OPTIONS := [2, 3, 4]
+const RANDOM_MAP_RUNTIME_SIZE_CAP := {"width": 64, "height": 48, "level_count": 2}
+const RANDOM_MAP_SIZE_OPTIONS := [
+	{
+		"id": "homm3_small",
+		"label": "Small 36x36",
+		"source_model": "homm3_classic_size_class",
+		"source_width": 36,
+		"source_height": 36,
+		"materialization_available": true,
+		"runtime_policy": "materialize_at_source_size_within_current_64x48x2_cap",
+		"rationale": "Small fits the current original runtime cap.",
+	},
+	{
+		"id": "homm3_medium",
+		"label": "Medium 72x72",
+		"source_model": "homm3_classic_size_class",
+		"source_width": 72,
+		"source_height": 72,
+		"materialization_available": false,
+		"runtime_policy": "blocked_source_size_exceeds_current_64x48x2_cap",
+		"rationale": "Medium exceeds the current 64x48 materialized runtime cap, so it is visible but unavailable until the cap is lifted and validated.",
+	},
+	{
+		"id": "homm3_large",
+		"label": "Large 108x108",
+		"source_model": "homm3_classic_size_class",
+		"source_width": 108,
+		"source_height": 108,
+		"materialization_available": false,
+		"runtime_policy": "blocked_source_size_exceeds_current_64x48x2_cap",
+		"rationale": "Large exceeds the current 64x48 materialized runtime cap, so it is visible but unavailable until the cap is lifted and validated.",
+	},
+	{
+		"id": "homm3_extra_large",
+		"label": "Extra Large 144x144",
+		"source_model": "homm3_classic_size_class",
+		"source_width": 144,
+		"source_height": 144,
+		"materialization_available": false,
+		"runtime_policy": "blocked_source_size_exceeds_current_64x48x2_cap",
+		"rationale": "Extra Large exceeds the current 64x48 materialized runtime cap, so it is visible but unavailable until the cap is lifted and validated.",
+	},
+]
 const RANDOM_MAP_WATER_OPTIONS := [
 	{"id": "land", "label": "Land"},
 	{"id": "islands", "label": "Islands"},
@@ -307,10 +344,12 @@ static func random_map_player_setup_options() -> Dictionary:
 	return {
 		"templates": RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS.duplicate(true),
 		"profiles": RANDOM_MAP_PLAYER_PROFILE_OPTIONS.duplicate(true),
+		"size_classes": RANDOM_MAP_SIZE_OPTIONS.duplicate(true),
 		"player_counts": RANDOM_MAP_PLAYER_COUNT_OPTIONS.duplicate(true),
 		"water_modes": RANDOM_MAP_WATER_OPTIONS.duplicate(true),
 		"retry_policy": RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"default_seed": "aurelion-random-skirmish-10184",
+		"default_size_class_id": "homm3_small",
 		"default_template_id": "border_gate_compact_v1",
 		"default_profile_id": "border_gate_compact_profile_v1",
 		"default_player_count": 3,
@@ -324,24 +363,43 @@ static func build_random_map_player_config(
 	profile_id: String,
 	player_count: int,
 	water_mode: String,
-	underground_enabled: bool
+	underground_enabled: bool,
+	size_class_id: String = "homm3_small"
 ) -> Dictionary:
-	var template_option := _random_map_template_option(template_id)
+	var size_option := _random_map_size_option(size_class_id)
 	var profile_option := _random_map_profile_option(profile_id)
-	var width := int(template_option.get("width", 26))
-	var height := int(template_option.get("height", 18))
+	var source_width := int(size_option.get("source_width", 36))
+	var source_height := int(size_option.get("source_height", 36))
 	var normalized_player_count := clampi(player_count, 2, 4)
 	var normalized_water_mode := "islands" if water_mode == "islands" else "land"
 	var level_count := 2 if underground_enabled else 1
+	var materialization_available := bool(size_option.get("materialization_available", false))
+	var runtime_policy_status := String(size_option.get("runtime_policy", "blocked_source_size_exceeds_current_64x48x2_cap"))
+	if materialization_available and level_count <= int(RANDOM_MAP_RUNTIME_SIZE_CAP.get("level_count", 2)):
+		runtime_policy_status = "materialize_at_source_size_within_current_64x48x2_cap"
 	return {
 		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
 		"seed": seed,
 		"size": {
 			"preset": "player_facing_skirmish_setup",
-			"width": width,
-			"height": height,
+			"size_class_id": String(size_option.get("id", "homm3_small")),
+			"size_class_label": String(size_option.get("label", "Small 36x36")),
+			"source_model": String(size_option.get("source_model", "homm3_classic_size_class")),
+			"source_width": source_width,
+			"source_height": source_height,
+			"requested_width": source_width,
+			"requested_height": source_height,
+			"width": source_width,
+			"height": source_height,
 			"water_mode": normalized_water_mode,
 			"level_count": level_count,
+			"runtime_size_cap": RANDOM_MAP_RUNTIME_SIZE_CAP.duplicate(true),
+			"runtime_size_policy": {
+				"status": runtime_policy_status,
+				"materialization_available": materialization_available,
+				"rationale": String(size_option.get("rationale", "")),
+				"hidden_downscale": false,
+			},
 		},
 		"player_constraints": {
 			"human_count": 1,
@@ -601,6 +659,15 @@ static func _random_map_template_option(template_id: String) -> Dictionary:
 			return option.duplicate(true)
 	return RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS[0].duplicate(true)
 
+static func _random_map_size_option(size_class_id: String) -> Dictionary:
+	for option in RANDOM_MAP_SIZE_OPTIONS:
+		if String(option.get("id", "")) == size_class_id:
+			return option.duplicate(true)
+	return RANDOM_MAP_SIZE_OPTIONS[0].duplicate(true)
+
+static func random_map_size_class_label(size_class_id: String) -> String:
+	return String(_random_map_size_option(size_class_id).get("label", "Small 36x36"))
+
 static func _random_map_profile_option(profile_id: String) -> Dictionary:
 	for option in RANDOM_MAP_PLAYER_PROFILE_OPTIONS:
 		if String(option.get("id", "")) == profile_id:
@@ -717,6 +784,10 @@ static func _random_map_generated_identity(payload: Dictionary) -> Dictionary:
 		"generator_version": String(metadata.get("generator_version", "")),
 		"template_id": String(metadata.get("template_id", "")),
 		"profile_id": String(profile.get("id", "")),
+		"size_class_id": String(metadata.get("size_policy", {}).get("size_class_id", "")),
+		"size_class_label": String(metadata.get("size_policy", {}).get("size_class_label", "")),
+		"source_size": metadata.get("size_policy", {}).get("source_size", {}),
+		"materialized_size": metadata.get("size_policy", {}).get("materialized_size", {}),
 		"normalized_seed": String(metadata.get("normalized_seed", "")),
 		"content_manifest_fingerprint": String(metadata.get("content_manifest_fingerprint", "")),
 	}
@@ -755,6 +826,7 @@ static func _random_map_provenance(input_config: Dictionary, payload: Dictionary
 			"player_constraints": metadata.get("player_constraints", {}),
 			"player_assignment": metadata.get("player_assignment", {}),
 		},
+		"size_class": metadata.get("size_policy", {}),
 		"content_manifest_fingerprint": String(metadata.get("content_manifest_fingerprint", "")),
 		"generated_identity": _random_map_generated_identity(payload),
 		"materialization": RandomMapGeneratorRulesScript.runtime_materialization_identity(payload),
@@ -786,6 +858,9 @@ static func _random_map_replay_metadata(provenance: Dictionary, identity: Dictio
 
 static func _random_map_setup_summary(scenario: Dictionary, metadata: Dictionary, report: Dictionary, retry_status: Dictionary, difficulty_id: String) -> String:
 	var map_size: Dictionary = scenario.get("map_size", {}) if scenario.get("map_size", {}) is Dictionary else {}
+	var size_policy: Dictionary = metadata.get("size_policy", {}) if metadata.get("size_policy", {}) is Dictionary else {}
+	var source_size: Dictionary = size_policy.get("source_size", {}) if size_policy.get("source_size", {}) is Dictionary else {}
+	var runtime_policy: Dictionary = size_policy.get("runtime_size_policy", {}) if size_policy.get("runtime_size_policy", {}) is Dictionary else {}
 	return "\n".join([
 		"Generated Skirmish setup",
 		"Seed %s | Template %s | Profile %s" % [
@@ -793,10 +868,17 @@ static func _random_map_setup_summary(scenario: Dictionary, metadata: Dictionary
 			String(metadata.get("template_id", "")),
 			String(metadata.get("profile", {}).get("id", "")),
 		],
-		"Map %dx%d | Difficulty %s" % [
+		"Size %s source %dx%d | Runtime %dx%d | Difficulty %s" % [
+			String(size_policy.get("size_class_label", "Custom")),
+			int(source_size.get("width", map_size.get("width", 0))),
+			int(source_size.get("height", map_size.get("height", 0))),
 			int(map_size.get("width", 0)),
 			int(map_size.get("height", 0)),
 			difficulty_label(difficulty_id),
+		],
+		"Size policy: %s | hidden downscale %s" % [
+			String(runtime_policy.get("status", "")),
+			"yes" if bool(runtime_policy.get("hidden_downscale", false)) else "no",
 		],
 		"Validation %s | Attempts %d | Retries %d" % [
 			String(report.get("status", "")),

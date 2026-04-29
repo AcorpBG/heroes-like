@@ -9,6 +9,7 @@ const TEMPLATE_CATALOG_PATH := "res://content/random_map_template_catalog.json"
 const TEMPLATE_CATALOG_SCHEMA_ID := "aurelion_random_map_template_catalog_v2"
 const TEMPLATE_CATALOG_REPORT_SCHEMA_ID := "random_map_template_catalog_grammar_report_v2"
 const TEMPLATE_SELECTION_REJECTION_SCHEMA_ID := "random_map_template_selection_rejection_v1"
+const RUNTIME_SIZE_POLICY_REJECTION_SCHEMA_ID := "random_map_runtime_size_policy_rejection_v1"
 const ZONE_LAYOUT_SCHEMA_ID := "random_map_zone_layout_v1"
 const ZONE_LAYOUT_REPORT_SCHEMA_ID := "random_map_zone_layout_water_underground_report_v1"
 const TERRAIN_TRANSIT_SCHEMA_ID := "random_map_terrain_transit_semantics_v1"
@@ -439,6 +440,8 @@ class DeterministicRng:
 
 static func generate(input_config: Dictionary) -> Dictionary:
 	var normalized := normalize_config(input_config)
+	if not bool(normalized.get("size", {}).get("runtime_size_policy", {}).get("materialization_available", true)):
+		return _runtime_size_policy_rejection_result(normalized)
 	if bool(normalized.get("template_selection", {}).get("rejected", false)):
 		return _template_selection_rejection_result(normalized)
 	var rng := DeterministicRng.new(_positive_seed(_stable_stringify(_generation_seed_payload(normalized))))
@@ -1378,6 +1381,18 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 		failures.append("generated payload lost generated export no-write boundary")
 	if String(metadata.get("generator_version", "")) == "" or String(metadata.get("normalized_seed", "")) == "":
 		failures.append("metadata must include normalized seed and generator version")
+	var size_policy: Dictionary = metadata.get("size_policy", {}) if metadata.get("size_policy", {}) is Dictionary else {}
+	if size_policy.is_empty():
+		failures.append("metadata must include explicit size policy")
+	else:
+		var runtime_policy: Dictionary = size_policy.get("runtime_size_policy", {}) if size_policy.get("runtime_size_policy", {}) is Dictionary else {}
+		var materialized_size: Dictionary = size_policy.get("materialized_size", {}) if size_policy.get("materialized_size", {}) is Dictionary else {}
+		if not bool(runtime_policy.get("materialization_available", true)):
+			failures.append("payload materialized despite unavailable runtime size policy")
+		if bool(runtime_policy.get("hidden_downscale", true)):
+			failures.append("runtime size policy must not permit hidden downscale")
+		if int(materialized_size.get("width", width)) != width or int(materialized_size.get("height", height)) != height:
+			failures.append("materialized size policy does not match scenario map size")
 	if terrain_rows.size() != height:
 		failures.append("terrain row count %d did not match height %d" % [terrain_rows.size(), height])
 	for y in range(terrain_rows.size()):
@@ -7112,11 +7127,31 @@ static func _objective_reward_pressure_payload(objectives: Dictionary, route_gra
 
 static func _metadata(normalized: Dictionary) -> Dictionary:
 	var selected_template: Dictionary = normalized.get("template", {}) if normalized.get("template", {}) is Dictionary else {}
+	var size: Dictionary = normalized.get("size", {}) if normalized.get("size", {}) is Dictionary else {}
 	return {
 		"generator_version": String(normalized.get("generator_version", GENERATOR_VERSION)),
 		"normalized_seed": String(normalized.get("seed", "0")),
 		"profile": normalized.get("profile", {}),
 		"size": normalized.get("size", {}),
+		"size_policy": {
+			"source": "explicit_size_class_or_custom_runtime_size",
+			"size_class_id": String(size.get("size_class_id", "")),
+			"size_class_label": String(size.get("size_class_label", "")),
+			"source_model": String(size.get("source_model", "")),
+			"source_size": {
+				"width": int(size.get("source_width", size.get("width", 0))),
+				"height": int(size.get("source_height", size.get("height", 0))),
+				"level_count": int(size.get("requested_level_count", size.get("level_count", 1))),
+			},
+			"materialized_size": {
+				"width": int(size.get("width", 0)),
+				"height": int(size.get("height", 0)),
+				"level_count": int(size.get("level_count", 1)),
+			},
+			"runtime_size_cap": size.get("runtime_size_cap", {}),
+			"runtime_size_policy": size.get("runtime_size_policy", {}),
+			"template_profile_dimension_source": "template_profile_does_not_define_player_facing_map_size",
+		},
 		"player_constraints": normalized.get("player_constraints", {}),
 		"player_assignment": normalized.get("player_assignment", {}),
 		"content_manifest_fingerprint": String(normalized.get("content_manifest_fingerprint", "")),
@@ -7146,6 +7181,37 @@ static func _metadata(normalized: Dictionary) -> Dictionary:
 			"roads_staged_as_overlay_payloads_before_durable_tile_writeout",
 			"explicit_no_authored_content_write_boundary",
 		],
+	}
+
+static func _runtime_size_policy_rejection_result(normalized: Dictionary) -> Dictionary:
+	var size: Dictionary = normalized.get("size", {}) if normalized.get("size", {}) is Dictionary else {}
+	var policy: Dictionary = size.get("runtime_size_policy", {}) if size.get("runtime_size_policy", {}) is Dictionary else {}
+	var source_size: Dictionary = policy.get("source_size", {}) if policy.get("source_size", {}) is Dictionary else {}
+	var materialized_size: Dictionary = policy.get("materialized_size", {}) if policy.get("materialized_size", {}) is Dictionary else {}
+	var failure := "size class %s source %dx%dx%d exceeds current runtime cap; no hidden downscale to %dx%dx%d is allowed" % [
+		String(size.get("size_class_label", size.get("size_class_id", "custom"))),
+		int(source_size.get("width", size.get("source_width", 0))),
+		int(source_size.get("height", size.get("source_height", 0))),
+		int(source_size.get("level_count", size.get("requested_level_count", 1))),
+		int(materialized_size.get("width", size.get("width", 0))),
+		int(materialized_size.get("height", size.get("height", 0))),
+		int(materialized_size.get("level_count", size.get("level_count", 1))),
+	]
+	var report := {
+		"ok": false,
+		"status": "fail",
+		"schema_id": RUNTIME_SIZE_POLICY_REJECTION_SCHEMA_ID,
+		"failure_code": "runtime_size_policy_blocked",
+		"failures": [failure],
+		"size_policy": _metadata(normalized).get("size_policy", {}),
+		"metadata": _metadata(normalized),
+		"template_selection": normalized.get("template_selection", {}),
+		"fallback_policy": "oversized_source_size_classes_fail_before_generation_instead_of_silent_runtime_downscale",
+	}
+	return {
+		"ok": false,
+		"generated_map": {},
+		"report": report,
 	}
 
 static func _template_selection_rejection_result(normalized: Dictionary) -> Dictionary:
@@ -9960,9 +10026,9 @@ static func _link_has_expanded_grammar_fields(link: Dictionary) -> bool:
 	return link.has("wide") and link.has("border_guard")
 
 static func _map_size_score(size: Dictionary) -> int:
-	var width := int(size.get("width", 16))
-	var height := int(size.get("height", 12))
-	var level_count := int(size.get("level_count", 1))
+	var width := int(size.get("source_width", size.get("requested_width", size.get("width", 16))))
+	var height := int(size.get("source_height", size.get("requested_height", size.get("height", 12))))
+	var level_count := int(size.get("requested_level_count", size.get("level_count", 1)))
 	return max(1, int((width * height * max(1, level_count)) / 0x510))
 
 static func _template_map_size_score(template: Dictionary, size: Dictionary) -> int:
@@ -10142,6 +10208,12 @@ static func _normalize_size(size_value: Variant) -> Dictionary:
 	var height := 12
 	var water_mode := "land"
 	var level_count := 1
+	var size_class_id := ""
+	var size_class_label := ""
+	var source_model := "custom_runtime_dimensions"
+	var source_width := 0
+	var source_height := 0
+	var requested_level_count := 1
 	if size_value is String:
 		preset = String(size_value).strip_edges().to_lower()
 		match preset:
@@ -10155,13 +10227,60 @@ static func _normalize_size(size_value: Variant) -> Dictionary:
 				preset = "small"
 	elif size_value is Dictionary:
 		preset = String(size_value.get("preset", "custom")).strip_edges().to_lower()
-		width = int(size_value.get("width", width))
-		height = int(size_value.get("height", height))
+		size_class_id = String(size_value.get("size_class_id", size_value.get("class_id", ""))).strip_edges()
+		size_class_label = String(size_value.get("size_class_label", "")).strip_edges()
+		source_model = String(size_value.get("source_model", source_model)).strip_edges()
+		source_width = int(size_value.get("source_width", size_value.get("requested_width", size_value.get("width", width))))
+		source_height = int(size_value.get("source_height", size_value.get("requested_height", size_value.get("height", height))))
+		width = source_width
+		height = source_height
 		water_mode = _normalize_water_mode(size_value.get("water_mode", size_value.get("water", water_mode)))
-		level_count = clampi(int(size_value.get("level_count", size_value.get("levels", level_count))), 1, 2)
-	width = clampi(width, 8, 64)
-	height = clampi(height, 8, 48)
-	return {"preset": preset, "width": width, "height": height, "water_mode": water_mode, "level_count": level_count, "underground": level_count > 1}
+		requested_level_count = clampi(int(size_value.get("level_count", size_value.get("levels", level_count))), 1, 2)
+		level_count = requested_level_count
+	if source_width <= 0:
+		source_width = width
+	if source_height <= 0:
+		source_height = height
+	if size_class_label == "" and size_class_id != "":
+		size_class_label = size_class_id.replace("_", " ").capitalize()
+	var materialized_width := clampi(source_width, 8, 64)
+	var materialized_height := clampi(source_height, 8, 48)
+	var materialized_level_count := clampi(requested_level_count, 1, 2)
+	var exceeds_cap := source_width != materialized_width or source_height != materialized_height or requested_level_count != materialized_level_count
+	var provided_policy: Dictionary = size_value.get("runtime_size_policy", {}) if size_value is Dictionary and size_value.get("runtime_size_policy", {}) is Dictionary else {}
+	var materialization_available := bool(provided_policy.get("materialization_available", not exceeds_cap))
+	if exceeds_cap:
+		materialization_available = false
+	var status := String(provided_policy.get("status", "materialize_at_requested_size_within_current_64x48x2_cap" if materialization_available else "blocked_source_size_exceeds_current_64x48x2_cap"))
+	var rationale := String(provided_policy.get("rationale", ""))
+	if not materialization_available and rationale == "":
+		rationale = "Requested source size %dx%dx%d exceeds the current original runtime cap of 64x48x2; hidden downscaling is not allowed." % [source_width, source_height, requested_level_count]
+	return {
+		"preset": preset,
+		"size_class_id": size_class_id,
+		"size_class_label": size_class_label,
+		"source_model": source_model,
+		"source_width": source_width,
+		"source_height": source_height,
+		"requested_width": source_width,
+		"requested_height": source_height,
+		"requested_level_count": requested_level_count,
+		"width": materialized_width,
+		"height": materialized_height,
+		"water_mode": water_mode,
+		"level_count": materialized_level_count,
+		"underground": materialized_level_count > 1,
+		"runtime_size_cap": {"width": 64, "height": 48, "level_count": 2},
+		"runtime_size_policy": {
+			"status": status,
+			"materialization_available": materialization_available,
+			"source_size": {"width": source_width, "height": source_height, "level_count": requested_level_count},
+			"materialized_size": {"width": materialized_width, "height": materialized_height, "level_count": materialized_level_count},
+			"cap": {"width": 64, "height": 48, "level_count": 2},
+			"hidden_downscale": false,
+			"rationale": rationale,
+		},
+	}
 
 static func _normalize_player_constraints(value: Variant) -> Dictionary:
 	var human_count := 1

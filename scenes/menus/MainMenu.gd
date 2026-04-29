@@ -70,6 +70,7 @@ const TAB_HELP_TOPIC := {
 @onready var _difficulty_summary_label: Label = %DifficultySummary
 @onready var _setup_summary_label: Label = %SetupSummary
 @onready var _generated_seed_edit: LineEdit = %GeneratedSeed
+@onready var _generated_size_picker: OptionButton = %GeneratedSizePicker
 @onready var _generated_template_picker: OptionButton = %GeneratedTemplatePicker
 @onready var _generated_profile_picker: OptionButton = %GeneratedProfilePicker
 @onready var _generated_player_count_picker: OptionButton = %GeneratedPlayerCountPicker
@@ -108,6 +109,7 @@ var _skirmish_entries: Array = []
 var _selected_skirmish_id := ""
 var _selected_difficulty: String = ScenarioSelectRulesScript.default_difficulty_id()
 var _generated_seed := ""
+var _generated_size_class_id := ""
 var _generated_template_id := ""
 var _generated_profile_id := ""
 var _generated_player_count := 3
@@ -277,6 +279,12 @@ func _on_start_skirmish_pressed() -> void:
 
 func _on_generated_seed_changed(new_text: String) -> void:
 	_generated_seed = new_text.strip_edges()
+	_refresh_generated_random_map_setup()
+
+func _on_generated_size_selected(index: int) -> void:
+	if index < 0 or index >= _generated_size_picker.get_item_count():
+		return
+	_generated_size_class_id = String(_generated_size_picker.get_item_metadata(index))
 	_refresh_generated_random_map_setup()
 
 func _on_generated_template_selected(index: int) -> void:
@@ -851,6 +859,8 @@ func _configure_generated_random_map_controls() -> void:
 	var options := ScenarioSelectRulesScript.random_map_player_setup_options()
 	if _generated_seed == "":
 		_generated_seed = String(options.get("default_seed", "aurelion-random-skirmish-10184"))
+	if _generated_size_class_id == "":
+		_generated_size_class_id = String(options.get("default_size_class_id", "homm3_small"))
 	if _generated_template_id == "":
 		_generated_template_id = String(options.get("default_template_id", "border_gate_compact_v1"))
 	if _generated_profile_id == "":
@@ -862,6 +872,7 @@ func _configure_generated_random_map_controls() -> void:
 	_generated_seed_edit.text = _generated_seed
 	_generated_seed_edit.tooltip_text = "Seed: same seed and setup recreate the same generated map identity."
 
+	_rebuild_generated_option_picker(_generated_size_picker, options.get("size_classes", []), _generated_size_class_id, "size")
 	_rebuild_generated_option_picker(_generated_template_picker, options.get("templates", []), _generated_template_id, "template")
 	_rebuild_generated_option_picker(_generated_profile_picker, options.get("profiles", []), _generated_profile_id, "profile")
 
@@ -1003,8 +1014,9 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 			int(retry.get("attempt_count", 1)),
 			int(retry.get("retry_count", 0)),
 		]
-		provenance_text = "Seed %s | Template %s | Profile %s | Players %d | Water %s | Underground %s" % [
+		provenance_text = "Seed %s | Size %s | Template %s | Profile %s | Players %d | Water %s | Underground %s" % [
 			String(setup.get("normalized_seed", "")),
+			ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
 			String(setup.get("template_id", "")),
 			String(setup.get("profile_id", "")),
 			_generated_player_count,
@@ -1043,6 +1055,8 @@ func _generated_random_map_preview_setup() -> Dictionary:
 		"difficulty_label": ScenarioSelectRulesScript.difficulty_label(_selected_difficulty),
 		"scenario_id": "",
 		"scenario_name": "Generated Skirmish",
+		"size_class_id": _generated_size_class_id,
+		"size_class_label": ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
 		"template_id": _generated_template_id,
 		"profile_id": _generated_profile_id,
 		"normalized_seed": seed,
@@ -1074,7 +1088,8 @@ func _generated_random_map_config() -> Dictionary:
 		_generated_profile_id,
 		_generated_player_count,
 		_generated_water_mode,
-		_generated_underground
+		_generated_underground,
+		_generated_size_class_id
 	)
 
 func _select_generated_picker_metadata(picker: OptionButton, metadata: String) -> bool:
@@ -1479,12 +1494,15 @@ func _skirmish_browser_item_tooltips() -> Array:
 func _generated_random_map_control_snapshot() -> Dictionary:
 	return {
 		"seed": _generated_seed,
+		"size_class_id": _generated_size_class_id,
+		"size_class_label": ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
 		"template_id": _generated_template_id,
 		"profile_id": _generated_profile_id,
 		"player_count": _generated_player_count,
 		"water_mode": _generated_water_mode,
 		"underground": _generated_underground,
 		"retry_policy": ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
+		"size_options": _picker_item_labels(_generated_size_picker),
 		"template_options": _picker_item_labels(_generated_template_picker),
 		"profile_options": _picker_item_labels(_generated_profile_picker),
 		"player_count_options": _picker_item_labels(_generated_player_count_picker),
@@ -1570,6 +1588,15 @@ func validation_select_generated_template(template_id: String) -> bool:
 			continue
 		_generated_template_picker.select(index)
 		_on_generated_template_selected(index)
+		return true
+	return false
+
+func validation_select_generated_size_class(size_class_id: String) -> bool:
+	for index in range(_generated_size_picker.get_item_count()):
+		if String(_generated_size_picker.get_item_metadata(index)) != size_class_id:
+			continue
+		_generated_size_picker.select(index)
+		_on_generated_size_selected(index)
 		return true
 	return false
 
