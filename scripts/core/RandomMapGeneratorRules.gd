@@ -30,6 +30,8 @@ const TOWN_MINE_DWELLING_PLACEMENT_REPORT_SCHEMA_ID := "random_map_town_mine_dwe
 const VALIDATION_BATCH_RETRY_REPORT_SCHEMA_ID := "random_map_validation_batch_retry_report_v1"
 const GENERATED_MAP_SERIALIZATION_SCHEMA_ID := "generated_random_map_serialization_record_v1"
 const PLAYABLE_RUNTIME_MATERIALIZATION_SCHEMA_ID := "generated_random_map_playable_runtime_materialization_v1"
+const WATER_UNDERGROUND_TRANSIT_GAMEPLAY_SCHEMA_ID := "random_map_water_underground_transit_gameplay_v1"
+const WATER_UNDERGROUND_TRANSIT_GAMEPLAY_REPORT_SCHEMA_ID := "random_map_water_underground_transit_gameplay_report_v1"
 const VALIDATION_BATCH_FIXTURE_PATH := "res://tests/fixtures/random_map_validation_batch_cases.json"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
@@ -123,6 +125,10 @@ const SUPPORT_RESOURCE_SITES := [
 ]
 const DEFAULT_ENCOUNTER_ID := "encounter_mire_raid"
 const ROAD_OVERLAY_ID := "generated_dirt_road"
+const WATER_TRANSIT_OBJECT_ID := "object_repaired_ferry_stage"
+const WATER_TRANSIT_SITE_ID := "site_repaired_ferry_stage"
+const CROSS_LEVEL_TRANSIT_OBJECT_ID := "object_rope_lift"
+const CROSS_LEVEL_TRANSIT_SITE_ID := "site_rope_lift"
 const BLOCKED_TERRAIN_IDS := ["water", "coast", "shore"]
 const BIOME_BY_TERRAIN := {
 	"grass": "biome_grasslands",
@@ -1088,6 +1094,49 @@ static func validation_batch_retry_report(input_config: Dictionary = {}) -> Dict
 		},
 	}
 
+static func water_underground_transit_gameplay_report(input_config: Dictionary = {}) -> Dictionary:
+	var water_config := _water_underground_report_config(input_config, "water-underground-transit-gameplay-10184:water", "islands", 1, "translated_rmg_template_001_v1", "water_transit_gameplay_profile_v1")
+	var underground_config := _water_underground_report_config(input_config, "water-underground-transit-gameplay-10184:underground", "land", 2, "translated_rmg_template_001_v1", "underground_transit_gameplay_profile_v1")
+	var water_first := generate(water_config)
+	var water_second := generate(water_config)
+	var water_changed := generate(_water_underground_report_config(input_config, "water-underground-transit-gameplay-10184:water:changed", "islands", 1, "translated_rmg_template_001_v1", "water_transit_gameplay_profile_v1"))
+	var underground_first := generate(underground_config)
+	var underground_second := generate(underground_config)
+	var underground_changed := generate(_water_underground_report_config(input_config, "water-underground-transit-gameplay-10184:underground:changed", "land", 2, "translated_rmg_template_001_v1", "underground_transit_gameplay_profile_v1"))
+	var water_payload: Dictionary = water_first.get("generated_map", {})
+	var underground_payload: Dictionary = underground_first.get("generated_map", {})
+	var water_transit: Dictionary = water_payload.get("staging", {}).get("water_underground_transit_gameplay", {}) if water_payload.get("staging", {}).get("water_underground_transit_gameplay", {}) is Dictionary else {}
+	var underground_transit: Dictionary = underground_payload.get("staging", {}).get("water_underground_transit_gameplay", {}) if underground_payload.get("staging", {}).get("water_underground_transit_gameplay", {}) is Dictionary else {}
+	var water_sig := String(water_transit.get("gameplay_transit_signature", ""))
+	var underground_sig := String(underground_transit.get("gameplay_transit_signature", ""))
+	var water_second_sig := String(water_second.get("generated_map", {}).get("staging", {}).get("water_underground_transit_gameplay", {}).get("gameplay_transit_signature", ""))
+	var underground_second_sig := String(underground_second.get("generated_map", {}).get("staging", {}).get("water_underground_transit_gameplay", {}).get("gameplay_transit_signature", ""))
+	var water_changed_sig := String(water_changed.get("generated_map", {}).get("staging", {}).get("water_underground_transit_gameplay", {}).get("gameplay_transit_signature", ""))
+	var underground_changed_sig := String(underground_changed.get("generated_map", {}).get("staging", {}).get("water_underground_transit_gameplay", {}).get("gameplay_transit_signature", ""))
+	var validation := _water_underground_transit_report_validation(water_first, water_second, water_changed, underground_first, underground_second, underground_changed)
+	return {
+		"ok": bool(validation.get("ok", false)),
+		"schema_id": WATER_UNDERGROUND_TRANSIT_GAMEPLAY_REPORT_SCHEMA_ID,
+		"slice_id": "random-map-water-underground-transit-gameplay-10184",
+		"water_case": _water_underground_case_summary(water_payload, water_transit),
+		"underground_case": _water_underground_case_summary(underground_payload, underground_transit),
+		"same_input_water_signature_equivalent": water_sig != "" and water_sig == water_second_sig,
+		"changed_seed_changes_water_signature": water_sig != "" and water_sig != water_changed_sig,
+		"same_input_underground_signature_equivalent": underground_sig != "" and underground_sig == underground_second_sig,
+		"changed_seed_changes_underground_signature": underground_sig != "" and underground_sig != underground_changed_sig,
+		"water_signature": water_sig,
+		"changed_seed_water_signature": water_changed_sig,
+		"underground_signature": underground_sig,
+		"changed_seed_underground_signature": underground_changed_sig,
+		"validation": validation,
+		"boundaries": {
+			"campaign_adoption": false,
+			"authored_content_writeback": false,
+			"parity_or_alpha_claim": false,
+			"final_art_autotile_polish": "deferred",
+		},
+	}
+
 static func resource_encounter_fairness_report(generated_map: Dictionary) -> Dictionary:
 	var staging: Dictionary = generated_map.get("staging", {})
 	var scenario: Dictionary = generated_map.get("scenario_record", {})
@@ -1106,6 +1155,95 @@ static func resource_encounter_fairness_report(generated_map: Dictionary) -> Dic
 		scenario.get("objectives", {}),
 		staging.get("town_mine_dwelling_placement", {})
 	)
+
+static func _water_underground_report_config(input_config: Dictionary, seed: String, water_mode: String, level_count: int, template_id: String, profile_id: String) -> Dictionary:
+	var config := {
+		"generator_version": String(input_config.get("generator_version", GENERATOR_VERSION)),
+		"seed": String(input_config.get("seed_prefix", "")) + seed,
+		"size": {"preset": "water_underground_transit_gameplay", "width": 36, "height": 30, "water_mode": water_mode, "level_count": level_count},
+		"player_constraints": {"human_count": 1, "computer_count": 2},
+		"profile": {
+			"id": profile_id,
+			"template_id": template_id,
+			"guard_strength_profile": "core_low",
+			"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
+		},
+	}
+	return config
+
+static func _water_underground_transit_report_validation(water_first: Dictionary, water_second: Dictionary, water_changed: Dictionary, underground_first: Dictionary, underground_second: Dictionary, underground_changed: Dictionary) -> Dictionary:
+	var failures := []
+	var warnings := []
+	for record in [
+		{"name": "water_first", "generation": water_first},
+		{"name": "water_second", "generation": water_second},
+		{"name": "water_changed", "generation": water_changed},
+		{"name": "underground_first", "generation": underground_first},
+		{"name": "underground_second", "generation": underground_second},
+		{"name": "underground_changed", "generation": underground_changed},
+	]:
+		var generation: Dictionary = record.get("generation", {})
+		if generation.get("generated_map", {}).is_empty():
+			failures.append("%s produced no generated map payload: %s" % [String(record.get("name", "")), JSON.stringify(generation.get("report", {}))])
+		elif not bool(generation.get("ok", false)):
+			warnings.append("%s had non-transit validation warnings/failures outside this slice: %s" % [String(record.get("name", "")), JSON.stringify(generation.get("report", {}).get("failures", []))])
+	var water_payload: Dictionary = water_first.get("generated_map", {})
+	var underground_payload: Dictionary = underground_first.get("generated_map", {})
+	var water_transit: Dictionary = water_payload.get("staging", {}).get("water_underground_transit_gameplay", {}) if water_payload.get("staging", {}).get("water_underground_transit_gameplay", {}) is Dictionary else {}
+	var underground_transit: Dictionary = underground_payload.get("staging", {}).get("water_underground_transit_gameplay", {}) if underground_payload.get("staging", {}).get("water_underground_transit_gameplay", {}) is Dictionary else {}
+	var water_validation := _water_underground_transit_gameplay_validation(water_transit, water_payload)
+	var underground_validation := _water_underground_transit_gameplay_validation(underground_transit, underground_payload)
+	if not bool(water_validation.get("ok", false)):
+		failures.append_array(water_validation.get("failures", []))
+	if not bool(underground_validation.get("ok", false)):
+		failures.append_array(underground_validation.get("failures", []))
+	warnings.append_array(water_validation.get("warnings", []))
+	warnings.append_array(underground_validation.get("warnings", []))
+	if int(water_transit.get("summary", {}).get("water_transit_count", 0)) <= 0:
+		failures.append("water case produced no materialized water transit records")
+	if int(underground_transit.get("summary", {}).get("cross_level_link_count", 0)) <= 0:
+		failures.append("underground case produced no materialized cross-level link records")
+	if int(underground_transit.get("summary", {}).get("underground_level_count", 0)) <= 0:
+		failures.append("underground case produced no underground level records")
+	if String(water_payload.get("staging", {}).get("route_reachability_proof", {}).get("status", "")) != "pass":
+		failures.append("water case route reachability proof did not pass")
+	if String(underground_payload.get("staging", {}).get("route_reachability_proof", {}).get("status", "")) != "pass":
+		failures.append("underground case route reachability proof did not pass")
+	var water_sig := String(water_transit.get("gameplay_transit_signature", ""))
+	var water_second_sig := String(water_second.get("generated_map", {}).get("staging", {}).get("water_underground_transit_gameplay", {}).get("gameplay_transit_signature", ""))
+	var water_changed_sig := String(water_changed.get("generated_map", {}).get("staging", {}).get("water_underground_transit_gameplay", {}).get("gameplay_transit_signature", ""))
+	var underground_sig := String(underground_transit.get("gameplay_transit_signature", ""))
+	var underground_second_sig := String(underground_second.get("generated_map", {}).get("staging", {}).get("water_underground_transit_gameplay", {}).get("gameplay_transit_signature", ""))
+	var underground_changed_sig := String(underground_changed.get("generated_map", {}).get("staging", {}).get("water_underground_transit_gameplay", {}).get("gameplay_transit_signature", ""))
+	if water_sig == "" or water_sig != water_second_sig:
+		failures.append("same input did not preserve water/transit signature")
+	if water_sig == water_changed_sig:
+		failures.append("changed seed did not change water/transit signature")
+	if underground_sig == "" or underground_sig != underground_second_sig:
+		failures.append("same input did not preserve underground/transit signature")
+	if underground_sig == underground_changed_sig:
+		failures.append("changed seed did not change underground/transit signature")
+	for payload in [water_transit, underground_transit]:
+		if bool(payload.get("boundary", {}).get("campaign_adoption", true)) or bool(payload.get("boundary", {}).get("authored_content_writeback", true)) or bool(payload.get("boundary", {}).get("parity_or_alpha_claim", true)):
+			failures.append("transit gameplay payload violated campaign/writeback/parity boundary")
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+		"warnings": warnings,
+	}
+
+static func _water_underground_case_summary(payload: Dictionary, transit: Dictionary) -> Dictionary:
+	return {
+		"ok": not payload.is_empty(),
+		"scenario_id": String(payload.get("scenario_record", {}).get("id", "")),
+		"stable_signature": String(payload.get("stable_signature", "")),
+		"gameplay_transit_signature": String(transit.get("gameplay_transit_signature", "")),
+		"summary": transit.get("summary", {}),
+		"water_policy": transit.get("water_policy", {}),
+		"underground_policy": transit.get("underground_policy", {}),
+		"runtime_materialization_summary": payload.get("runtime_materialization", {}).get("summary", {}),
+	}
 
 static func normalize_config(input_config: Dictionary) -> Dictionary:
 	var generator_version := String(input_config.get("generator_version", GENERATOR_VERSION)).strip_edges()
@@ -1199,6 +1337,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 			failures.append("zone layout: %s" % String(failure))
 	var terrain_constraints: Dictionary = staging.get("terrain_constraints", {})
 	var terrain_transit: Dictionary = staging.get("terrain_transit_semantics", {})
+	var water_underground_transit: Dictionary = staging.get("water_underground_transit_gameplay", {})
 	var town_start_constraints: Dictionary = staging.get("town_start_constraints", {})
 	var road_network: Dictionary = staging.get("road_network", {})
 	var reachability: Dictionary = staging.get("route_reachability_proof", {})
@@ -1237,6 +1376,12 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 			failures.append("terrain transit semantics must expose terrain layer metadata")
 		if terrain_transit.get("transit_routes", {}).get("corridor_routes", []).is_empty():
 			failures.append("terrain transit semantics must expose corridor route semantics")
+		var gameplay_validation := _water_underground_transit_gameplay_validation(water_underground_transit, generated_map)
+		if not bool(gameplay_validation.get("ok", false)):
+			for failure in gameplay_validation.get("failures", []):
+				failures.append("water underground transit gameplay: %s" % String(failure))
+		for warning in gameplay_validation.get("warnings", []):
+			warnings.append("water underground transit gameplay: %s" % String(warning))
 	if String(town_start_constraints.get("schema_id", "")) != "random_map_town_start_constraints_v1":
 		failures.append("town/start constraints payload missing")
 	for start_constraint in town_start_constraints.get("player_starts", []):
@@ -1624,11 +1769,11 @@ static func _build_zone_layout(template: Dictionary, zones: Array, links: Array,
 	var levels := []
 	var unsupported := []
 	if water_mode == "islands":
-		unsupported.append("water_transit_object_placement_deferred")
-		unsupported.append("boat_shipyard_ferry_placement_deferred")
+		unsupported.append("water_transit_gameplay_materialized_final_art_deferred")
+		unsupported.append("boat_shipyard_ferry_ui_deferred")
 	if level_count > 1:
-		unsupported.append("underground_transit_object_placement_deferred")
-		unsupported.append("subterranean_gate_placement_deferred")
+		unsupported.append("underground_level_records_materialized")
+		unsupported.append("subterranean_gate_sprite_polish_deferred")
 	var total_water_cells := 0
 	for level_index in range(level_count):
 		var level_kind := "surface" if level_index == 0 else "underground"
@@ -1656,7 +1801,7 @@ static func _build_zone_layout(template: Dictionary, zones: Array, links: Array,
 			"water_mode": water_mode,
 			"water_policy": _water_policy_payload(water_mode, total_water_cells),
 			"underground_policy": _underground_policy_payload(level_count, template_support),
-			"object_and_transit_writeout": "deferred_to_later_rmg_parity_slices",
+			"object_and_transit_writeout": "gameplay_transit_records_materialized_final_art_writeout_deferred",
 		},
 		"levels": levels,
 		"surface_owner_grid": levels[0].get("owner_grid", []) if not levels.is_empty() else [],
@@ -2340,6 +2485,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 			"zone_layout": constraints.get("zone_layout", {}),
 			"terrain": constraints.get("terrain_constraints", {}),
 			"terrain_transit": constraints.get("terrain_transit_semantics", {}),
+			"water_underground_transit": constraints.get("water_underground_transit_gameplay", {}),
 			"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 			"monster_reward_bands": constraints.get("monster_reward_bands", {}),
 			"object_pool_value_weighting": constraints.get("object_pool_value_weighting", {}),
@@ -2412,6 +2558,7 @@ static func _build_playable_runtime_materialization_record(
 			"terrain_layers_record_id": String(terrain_layers.get("id", "")),
 			"terrain_layers": terrain_layers.get("terrain_layers", []),
 			"terrain_semantics": terrain_layers.get("terrain_semantics", {}),
+			"level_records": constraints.get("water_underground_transit_gameplay", {}).get("underground_level_records", []),
 		},
 		"overlays": {
 			"overlay_layers": overlay_layers,
@@ -2431,6 +2578,7 @@ static func _build_playable_runtime_materialization_record(
 			"dwellings": _runtime_dwelling_records(scenario.get("resource_nodes", [])),
 			"guards": _runtime_guard_records(scenario, placements, constraints),
 			"rewards": _runtime_reward_records(constraints, object_instances),
+			"transit": _runtime_transit_records(constraints),
 			"object_instances": object_instances,
 		},
 		"object_placements": placements.get("object_placements", []),
@@ -2481,6 +2629,7 @@ static func _runtime_materialization_counts(materialization: Dictionary) -> Dict
 		"dwelling_count": objects.get("dwellings", []).size(),
 		"guard_count": objects.get("guards", []).size(),
 		"reward_count": objects.get("rewards", []).size(),
+		"transit_count": objects.get("transit", []).size(),
 		"object_instance_count": objects.get("object_instances", []).size(),
 	}
 
@@ -2554,6 +2703,14 @@ static func _runtime_reward_records(constraints: Dictionary, object_instances: A
 			records.append(instance.duplicate(true))
 	return records
 
+static func _runtime_transit_records(constraints: Dictionary) -> Array:
+	var transit: Dictionary = constraints.get("water_underground_transit_gameplay", {}) if constraints.get("water_underground_transit_gameplay", {}) is Dictionary else {}
+	var records := []
+	for record in transit.get("materialized_transit_records", []):
+		if record is Dictionary:
+			records.append(record.duplicate(true))
+	return records
+
 static func _default_hero_for_faction(faction_id: String) -> String:
 	return String(DEFAULT_HERO_BY_FACTION.get(faction_id, DEFAULT_HERO_BY_FACTION.get("faction_embercourt", "hero_lyra")))
 
@@ -2571,6 +2728,7 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"terrain_owner_grid": zone_grid,
 		"terrain_constraints": constraints.get("terrain_constraints", {}),
 		"terrain_transit_semantics": constraints.get("terrain_transit_semantics", {}),
+		"water_underground_transit_gameplay": constraints.get("water_underground_transit_gameplay", {}),
 		"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 		"monster_reward_bands": constraints.get("monster_reward_bands", {}),
 		"object_pool_value_weighting": constraints.get("object_pool_value_weighting", {}),
@@ -2674,6 +2832,7 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		"zone_layout": zone_layout,
 		"terrain_constraints": terrain_constraints,
 		"terrain_transit_semantics": terrain_transit,
+		"water_underground_transit_gameplay": terrain_transit.get("gameplay_transit_materialization", {}),
 		"connection_guard_materialization": connection_guard_materialization,
 		"monster_reward_bands": monster_reward_bands,
 		"object_pool_value_weighting": object_pool_value_weighting,
@@ -4015,7 +4174,7 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 			"to_coast": to_coast,
 			"overlay_type": "river_or_ferry_channel_candidate",
 			"transit_semantics": candidate.get("transit_semantics", {}),
-			"materialization_state": "candidate_only_river_ferry_bridge_writeout_deferred",
+			"materialization_state": "gameplay_ferry_bridge_record_materialized_final_overlay_art_deferred",
 			"writeout_state": "deferred_overlay_metadata_no_final_river_tile_bytes_written",
 		})
 	var explicit_state := {}
@@ -4027,13 +4186,13 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 		}
 	var payload := {
 		"schema_id": "random_map_river_water_coast_overlay_writeout_v1",
-		"writeout_policy": "water_coast_and_river_candidates_are_metadata_only_until_transit_writeout_slice",
+		"writeout_policy": "water_coast_and_river_candidates_have_gameplay_transit_records_final_tile_bytes_deferred",
 		"water_mode": String(water.get("water_mode", zone_layout.get("policy", {}).get("water_mode", "land"))),
 		"water_overlay_tiles": water_tiles,
 		"coast_overlay_tiles": coast_tiles,
 		"river_candidates": river_candidates,
 		"explicit_no_river_state": explicit_state,
-		"deferred_transit_writeout": _unique_sorted_strings(["boat_shipyard_ferry_placement_deferred", "bridge_placement_deferred", "river_autotile_byte_packing_deferred"] + terrain_transit.get("transit_routes", {}).get("deferred", [])),
+		"deferred_transit_writeout": _unique_sorted_strings(["final_boat_shipyard_ui_deferred", "final_bridge_autotile_art_deferred", "river_autotile_byte_packing_deferred"] + terrain_transit.get("transit_routes", {}).get("deferred", [])),
 		"summary": {
 			"water_tile_count": water_tiles.size(),
 			"coast_tile_count": coast_tiles.size(),
@@ -6173,7 +6332,7 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 			"wide": "suppresses_normal_guard",
 			"border_guard": "special_guarded_connection_mode",
 			"materialized_guards": "explicit_connection_guard_materialization_payload_records",
-			"transit": "land_roads_now_water_underground_and_cross_level_routes_report_deferred_materialization",
+			"transit": "land_roads_water_access_and_cross_level_routes_have_explicit_gameplay_materialization_records",
 		},
 		"transit_route_semantics": terrain_transit.get("transit_routes", {}),
 	}
@@ -6187,7 +6346,7 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 			"road_segments": road_segments,
 			"road_stubs": road_stubs,
 			"blocked_body_policy": "paths_exclude_object_body_tiles_and_impassable_terrain",
-			"transit_writeout_policy": "land_road_overlays_staged_transit_objects_deferred",
+			"transit_writeout_policy": "land_road_overlays_staged_transit_object_records_materialized_final_art_writeout_deferred",
 		},
 		"route_reachability_proof": proof,
 	}
@@ -6806,6 +6965,8 @@ static func _terrain_transit_phase_summary(terrain_transit: Dictionary) -> Dicti
 		"coast_cell_count": int(terrain_transit.get("water_coast_passability", {}).get("coast_cell_count", 0)),
 		"corridor_route_count": terrain_transit.get("transit_routes", {}).get("corridor_routes", []).size(),
 		"cross_level_candidate_count": terrain_transit.get("transit_routes", {}).get("cross_level_candidates", []).size(),
+		"materialized_transit_count": terrain_transit.get("gameplay_transit_materialization", {}).get("materialized_transit_records", []).size(),
+		"gameplay_transit_status": String(terrain_transit.get("gameplay_transit_materialization", {}).get("status", "")),
 		"unsupported_deferred": terrain_transit.get("unsupported_deferred", []),
 	}
 
@@ -6825,6 +6986,13 @@ static func _build_terrain_transit_semantics(zone_layout: Dictionary, zones: Arr
 	var terrain_layers := _terrain_layer_payloads(zone_layout, zones, surface_rows)
 	var water_coast := _water_coast_passability_payload(zone_layout, surface_rows)
 	var transit_routes := _transit_routes_payload(zone_layout, links, water_coast)
+	var gameplay_transit := _water_underground_transit_gameplay_payload(zone_layout, water_coast, terrain_layers, transit_routes, surface_rows, normalized)
+	transit_routes["materialized_transit_records"] = gameplay_transit.get("materialized_transit_records", [])
+	transit_routes["water_transit_records"] = gameplay_transit.get("water_transit_records", [])
+	transit_routes["cross_level_link_records"] = gameplay_transit.get("cross_level_link_records", [])
+	transit_routes["underground_level_records"] = gameplay_transit.get("underground_level_records", [])
+	transit_routes["gameplay_validation"] = gameplay_transit.get("validation", {})
+	transit_routes["gameplay_transit_signature"] = String(gameplay_transit.get("gameplay_transit_signature", ""))
 	deferred.append_array(transit_routes.get("deferred", []))
 	var payload := {
 		"schema_id": TERRAIN_TRANSIT_SCHEMA_ID,
@@ -6839,6 +7007,7 @@ static func _build_terrain_transit_semantics(zone_layout: Dictionary, zones: Arr
 		"terrain_layers": terrain_layers,
 		"water_coast_passability": water_coast,
 		"transit_routes": transit_routes,
+		"gameplay_transit_materialization": gameplay_transit,
 		"unsupported_deferred": _unique_sorted_strings(unsupported + deferred),
 		"writeout_policy": "staged_metadata_only_no_authored_terrain_or_transit_writeback",
 	}
@@ -6876,7 +7045,7 @@ static func _terrain_layer_payloads(zone_layout: Dictionary, zones: Array, surfa
 			"cave_metadata": {
 				"is_cave": level_kind == "underground",
 				"underground": level_kind == "underground",
-				"materialization_state": "metadata_and_rows_only_transit_gate_objects_deferred" if level_kind == "underground" else "surface_layer",
+				"materialization_state": "underground_rows_materialized_cross_level_gate_records_required" if level_kind == "underground" else "surface_layer",
 			},
 		})
 	return layers
@@ -6965,7 +7134,7 @@ static func _transit_routes_payload(zone_layout: Dictionary, links: Array, water
 		"cross_level_candidates": cross_level,
 		"water_access_candidates": water_access,
 		"deferred": _unique_sorted_strings(deferred),
-		"materialization_policy": "land_road_segments_are_staged_now_water_underground_cross_level_objects_are_candidates_only",
+		"materialization_policy": "land_road_segments_water_access_and_cross_level_links_have_gameplay_materialization_records_final_art_autotile_polish_deferred",
 	}
 
 static func _transit_semantics_for_corridor(candidate: Dictionary, water_coast: Dictionary) -> Dictionary:
@@ -6973,23 +7142,23 @@ static func _transit_semantics_for_corridor(candidate: Dictionary, water_coast: 
 	var crosses_water := String(candidate.get("mode", "land")) == "water"
 	if crosses_water:
 		return {
-			"kind": "water_crossing_deferred",
+			"kind": "water_crossing_bridge_or_ferry",
 			"route_class": "water_crossing",
-			"passability": "deferred_unlock_required",
+			"passability": "explicit_transit_link_passable_when_endpoints_validate",
 			"materialization_options": ["ferry", "boat", "shipyard", "bridge"],
-			"required_unlock": true,
-			"deferred": ["boat_shipyard_ferry_placement_deferred", "bridge_placement_deferred"],
-			"materialization_state": "candidate_only_transit_object_not_materialized",
+			"required_unlock": false,
+			"deferred": ["final_boat_shipyard_ui_deferred", "final_bridge_autotile_art_deferred"],
+			"materialization_state": "gameplay_transit_record_materialized",
 		}
 	if level_kind == "underground":
 		return {
-			"kind": "underground_subterranean_connection_deferred",
+			"kind": "underground_subterranean_connection",
 			"route_class": "underground_land_corridor",
 			"passability": "cave_land_passable_when_level_is_active",
 			"materialization_options": ["subterranean_gate", "underground_road"],
 			"required_unlock": false,
-			"deferred": ["subterranean_gate_placement_deferred"],
-			"materialization_state": "underground_metadata_only_surface_runtime_path_unchanged",
+			"deferred": ["final_subterranean_gate_art_deferred"],
+			"materialization_state": "underground_level_and_route_record_materialized",
 		}
 	return {
 		"kind": "land_road",
@@ -6998,7 +7167,7 @@ static func _transit_semantics_for_corridor(candidate: Dictionary, water_coast: 
 		"materialization_options": ["road_overlay"],
 		"required_unlock": false,
 		"deferred": [],
-		"water_context": "coast_access_available_transit_deferred" if int(water_coast.get("water_cell_count", 0)) > 0 else "none",
+		"water_context": "coast_access_available_with_materialized_transit_records" if int(water_coast.get("water_cell_count", 0)) > 0 else "none",
 		"materialization_state": "road_overlay_staged",
 	}
 
@@ -7022,13 +7191,13 @@ static func _cross_level_transit_candidates(zone_layout: Dictionary) -> Array:
 			"from_anchor": surface_anchors[zone_id],
 			"to_anchor": underground_anchors[zone_id],
 			"transit_semantics": {
-				"kind": "cross_level_subterranean_gate_deferred",
+				"kind": "cross_level_subterranean_gate",
 				"route_class": "cross_level",
-				"passability": "deferred_unlock_required",
+				"passability": "explicit_transit_link_passable_when_endpoint_pair_validates",
 				"materialization_options": ["subterranean_gate", "two_way_portal"],
-				"required_unlock": true,
-				"deferred": ["subterranean_gate_placement_deferred", "cross_level_link_object_placement_deferred"],
-				"materialization_state": "candidate_only_transit_object_not_materialized",
+				"required_unlock": false,
+				"deferred": ["final_subterranean_gate_art_deferred", "final_portal_vfx_deferred"],
+				"materialization_state": "cross_level_link_record_materialized",
 			},
 		})
 	return result
@@ -7056,17 +7225,301 @@ static func _water_access_transit_candidates(zone_layout: Dictionary, water_coas
 			"to_coast": coast,
 			"level_index": 0,
 			"transit_semantics": {
-				"kind": "water_crossing_deferred",
+				"kind": "water_ferry_or_bridge_access",
 				"route_class": "water_access",
-				"passability": "deferred_unlock_required",
+				"passability": "explicit_transit_link_passable_when_endpoint_pair_validates",
 				"materialization_options": ["ferry", "boat", "shipyard"],
-				"required_unlock": true,
-				"deferred": ["boat_shipyard_ferry_placement_deferred"],
-				"materialization_state": "candidate_only_transit_object_not_materialized",
+				"required_unlock": false,
+				"deferred": ["final_boat_shipyard_ui_deferred", "final_ferry_art_deferred"],
+				"materialization_state": "water_transit_record_materialized",
 			},
 		})
 		cursor += 1
 	return result
+
+static func _water_underground_transit_gameplay_payload(zone_layout: Dictionary, water_coast: Dictionary, terrain_layers: Array, transit_routes: Dictionary, surface_rows: Array, normalized: Dictionary) -> Dictionary:
+	var water_records := _materialized_water_transit_records(transit_routes.get("water_access_candidates", []), water_coast, surface_rows)
+	var cross_level_records := _materialized_cross_level_records(transit_routes.get("cross_level_candidates", []), terrain_layers)
+	var underground_records := _underground_level_runtime_records(terrain_layers)
+	var materialized_records := []
+	materialized_records.append_array(water_records)
+	materialized_records.append_array(cross_level_records)
+	var validation := _water_underground_transit_gameplay_validation_core(
+		zone_layout,
+		water_coast,
+		water_records,
+		cross_level_records,
+		underground_records,
+		terrain_layers
+	)
+	var payload := {
+		"schema_id": WATER_UNDERGROUND_TRANSIT_GAMEPLAY_SCHEMA_ID,
+		"status": String(validation.get("status", "")),
+		"source_slice_id": "random-map-water-underground-transit-gameplay-10184",
+		"materialization_policy": "explicit_original_transit_equivalents_for_water_access_and_cross_level_links_no_authored_json_writeback",
+		"water_policy": {
+			"water_mode": String(water_coast.get("water_mode", "land")),
+			"water_cell_count": int(water_coast.get("water_cell_count", 0)),
+			"coast_cell_count": int(water_coast.get("coast_cell_count", 0)),
+			"water_passability": String(water_coast.get("water_passability", "")),
+			"coast_passability": String(water_coast.get("coast_passability", "")),
+			"gameplay_rule": "water_remains_impassable_terrain_except_through_materialized_ferry_bridge_or_portal_records",
+		},
+		"underground_policy": {
+			"level_count": int(zone_layout.get("dimensions", {}).get("level_count", 1)),
+			"underground_level_count": underground_records.size(),
+			"gameplay_rule": "underground_rows_are_materialized_level_records_cross_level_links_bind_surface_and_cave_endpoints",
+		},
+		"water_transit_records": water_records,
+		"cross_level_link_records": cross_level_records,
+		"underground_level_records": underground_records,
+		"materialized_transit_records": materialized_records,
+		"validation": validation,
+		"runtime_materialization_refs": _transit_runtime_materialization_refs(materialized_records),
+		"determinism_context": {
+			"generator_version": String(normalized.get("generator_version", GENERATOR_VERSION)),
+			"seed": String(normalized.get("seed", "")),
+			"template_id": String(normalized.get("template_id", "")),
+			"profile_id": String(normalized.get("profile", {}).get("id", "")),
+		},
+		"deferred_art_polish": [
+			"final_water_autotile_art",
+			"final_coast_transition_art",
+			"final_ferry_bridge_sprite_selection",
+			"final_subterranean_gate_sprite_and_vfx",
+		],
+		"boundary": {
+			"campaign_adoption": false,
+			"authored_content_writeback": false,
+			"parity_or_alpha_claim": false,
+		},
+		"summary": {
+			"water_transit_count": water_records.size(),
+			"cross_level_link_count": cross_level_records.size(),
+			"underground_level_count": underground_records.size(),
+			"materialized_transit_count": materialized_records.size(),
+			"validation_status": String(validation.get("status", "")),
+			"failure_count": int(validation.get("failures", []).size()),
+			"warning_count": int(validation.get("warnings", []).size()),
+		},
+	}
+	payload["gameplay_transit_signature"] = _hash32_hex(_stable_stringify({
+		"water_policy": payload.get("water_policy", {}),
+		"underground_policy": payload.get("underground_policy", {}),
+		"water_transit_records": water_records,
+		"cross_level_link_records": cross_level_records,
+		"underground_level_records": underground_records,
+		"validation": validation,
+		"determinism_context": payload.get("determinism_context", {}),
+	}))
+	return payload
+
+static func _materialized_water_transit_records(candidates: Array, water_coast: Dictionary, surface_rows: Array) -> Array:
+	var water_lookup := _point_lookup(water_coast.get("water_cells", []))
+	var records := []
+	for index in range(candidates.size()):
+		var candidate = candidates[index]
+		if not (candidate is Dictionary):
+			continue
+		var coast: Dictionary = candidate.get("to_coast", {}) if candidate.get("to_coast", {}) is Dictionary else {}
+		var from_anchor: Dictionary = candidate.get("from_anchor", {}) if candidate.get("from_anchor", {}) is Dictionary else {}
+		var water_endpoint := _adjacent_point_in_lookup(coast, water_lookup)
+		var route_path := _find_passable_path(from_anchor, coast, surface_rows, {})
+		var body_tiles := [coast] if not coast.is_empty() else []
+		var approach_tiles := _valid_cardinal_passable_neighbors(coast, surface_rows, water_lookup)
+		var record_id := "rmg_water_transit_%02d_%s" % [index + 1, String(candidate.get("zone_id", "zone"))]
+		records.append({
+			"id": record_id,
+			"placement_id": record_id,
+			"record_type": "water_ferry_bridge_transit",
+			"object_id": WATER_TRANSIT_OBJECT_ID,
+			"site_id": WATER_TRANSIT_SITE_ID,
+			"zone_id": String(candidate.get("zone_id", "")),
+			"level_index": int(candidate.get("level_index", 0)),
+			"from_anchor": from_anchor,
+			"body_tiles": body_tiles,
+			"approach_tiles": approach_tiles,
+			"coast_endpoint": coast,
+			"water_endpoint": water_endpoint,
+			"route_path": route_path,
+			"route_constraints": {
+				"approach_passable": not approach_tiles.is_empty(),
+				"body_on_coast_land": _point_in_rows(surface_rows, int(coast.get("x", -1)), int(coast.get("y", -1))) and _terrain_cell_is_passable(surface_rows, int(coast.get("x", -1)), int(coast.get("y", -1))),
+				"water_endpoint_reserved": not water_endpoint.is_empty(),
+				"path_from_zone_anchor_to_endpoint": not route_path.is_empty(),
+				"required_for_water_profile": String(water_coast.get("water_mode", "land")) == "islands",
+			},
+			"transit_semantics": candidate.get("transit_semantics", {}),
+			"runtime_materialization_ref": {
+				"object_id": WATER_TRANSIT_OBJECT_ID,
+				"site_id": WATER_TRANSIT_SITE_ID,
+				"linked_endpoint_group_id": "rmg_water_transit_%02d" % (index + 1),
+				"route_effect_type": "linked_endpoint",
+			},
+			"materialization_state": "runtime_transit_object_record_materialized_final_art_deferred",
+		})
+	return records
+
+static func _materialized_cross_level_records(candidates: Array, terrain_layers: Array) -> Array:
+	var rows_by_level := _terrain_rows_by_level_index(terrain_layers)
+	var records := []
+	for index in range(candidates.size()):
+		var candidate = candidates[index]
+		if not (candidate is Dictionary):
+			continue
+		var from_level := int(candidate.get("from_level_index", 0))
+		var to_level := int(candidate.get("to_level_index", 1))
+		var from_anchor: Dictionary = candidate.get("from_anchor", {}) if candidate.get("from_anchor", {}) is Dictionary else {}
+		var to_anchor: Dictionary = candidate.get("to_anchor", {}) if candidate.get("to_anchor", {}) is Dictionary else {}
+		var from_rows: Array = rows_by_level.get(from_level, [])
+		var to_rows: Array = rows_by_level.get(to_level, [])
+		var record_id := "rmg_cross_level_%02d_%s" % [index + 1, String(candidate.get("zone_id", "zone"))]
+		records.append({
+			"id": record_id,
+			"placement_id": record_id,
+			"record_type": "cross_level_gate_pair",
+			"object_id": CROSS_LEVEL_TRANSIT_OBJECT_ID,
+			"site_id": CROSS_LEVEL_TRANSIT_SITE_ID,
+			"zone_id": String(candidate.get("zone_id", "")),
+			"from_level_index": from_level,
+			"to_level_index": to_level,
+			"surface_endpoint": from_anchor,
+			"underground_endpoint": to_anchor,
+			"surface_approach_tiles": _valid_cardinal_passable_neighbors(from_anchor, from_rows, {}),
+			"underground_approach_tiles": _valid_cardinal_passable_neighbors(to_anchor, to_rows, {}),
+			"route_constraints": {
+				"surface_endpoint_passable": _point_passable_in_rows(from_anchor, from_rows),
+				"underground_endpoint_passable": _point_passable_in_rows(to_anchor, to_rows),
+				"stable_endpoint_pair": not from_anchor.is_empty() and not to_anchor.is_empty(),
+				"cross_level_link": true,
+			},
+			"transit_semantics": candidate.get("transit_semantics", {}),
+			"runtime_materialization_ref": {
+				"object_id": CROSS_LEVEL_TRANSIT_OBJECT_ID,
+				"site_id": CROSS_LEVEL_TRANSIT_SITE_ID,
+				"linked_endpoint_group_id": "rmg_cross_level_%02d" % (index + 1),
+				"route_effect_type": "linked_endpoint",
+			},
+			"materialization_state": "runtime_cross_level_gate_pair_materialized_final_sprite_deferred",
+		})
+	return records
+
+static func _underground_level_runtime_records(terrain_layers: Array) -> Array:
+	var records := []
+	for layer in terrain_layers:
+		if not (layer is Dictionary) or String(layer.get("level_kind", "")) != "underground":
+			continue
+		records.append({
+			"id": "rmg_level_%d_underground" % int(layer.get("level_index", 0)),
+			"level_index": int(layer.get("level_index", 0)),
+			"level_kind": "underground",
+			"default_terrain_id": String(layer.get("default_terrain_id", UNDERGROUND_TERRAIN_ID)),
+			"biome_id": String(layer.get("biome_id", "biome_subterranean_underways")),
+			"terrain_counts": layer.get("terrain_counts", {}),
+			"passability_grid": layer.get("passability_grid", []),
+			"movement_cost_grid": layer.get("movement_cost_grid", []),
+			"cave_metadata": layer.get("cave_metadata", {}),
+			"runtime_materialization_state": "materialized_level_record_no_final_cave_autotile_polish",
+		})
+	return records
+
+static func _water_underground_transit_gameplay_validation_core(zone_layout: Dictionary, water_coast: Dictionary, water_records: Array, cross_level_records: Array, underground_records: Array, terrain_layers: Array) -> Dictionary:
+	var failures := []
+	var warnings := []
+	var water_mode := String(water_coast.get("water_mode", "land"))
+	var level_count := int(zone_layout.get("dimensions", {}).get("level_count", 1))
+	if water_mode == "islands" and water_records.is_empty():
+		failures.append("island water profile produced no materialized water transit records")
+	for record in water_records:
+		if not (record is Dictionary):
+			failures.append("non-dictionary water transit record")
+			continue
+		var constraints: Dictionary = record.get("route_constraints", {}) if record.get("route_constraints", {}) is Dictionary else {}
+		for key in ["approach_passable", "body_on_coast_land", "water_endpoint_reserved", "path_from_zone_anchor_to_endpoint"]:
+			if not bool(constraints.get(key, false)):
+				failures.append("water transit %s failed route constraint %s" % [String(record.get("id", "")), key])
+	if level_count > 1:
+		if underground_records.is_empty():
+			failures.append("two-level profile produced no underground level records")
+		if cross_level_records.is_empty():
+			failures.append("two-level profile produced no materialized cross-level link records")
+	for record in cross_level_records:
+		if not (record is Dictionary):
+			failures.append("non-dictionary cross-level transit record")
+			continue
+		var constraints: Dictionary = record.get("route_constraints", {}) if record.get("route_constraints", {}) is Dictionary else {}
+		for key in ["surface_endpoint_passable", "underground_endpoint_passable", "stable_endpoint_pair", "cross_level_link"]:
+			if not bool(constraints.get(key, false)):
+				failures.append("cross-level transit %s failed route constraint %s" % [String(record.get("id", "")), key])
+	if level_count <= 1 and not cross_level_records.is_empty():
+		warnings.append("surface-only profile unexpectedly emitted cross-level transit records")
+	if terrain_layers.is_empty():
+		failures.append("terrain layer records missing for transit validation")
+	var status := "pass"
+	if not failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {
+		"ok": failures.is_empty(),
+		"status": status,
+		"failures": failures,
+		"warnings": warnings,
+	}
+
+static func _transit_runtime_materialization_refs(records: Array) -> Array:
+	var refs := []
+	for record in records:
+		if not (record is Dictionary):
+			continue
+		refs.append({
+			"id": String(record.get("id", "")),
+			"record_type": String(record.get("record_type", "")),
+			"object_id": String(record.get("object_id", "")),
+			"site_id": String(record.get("site_id", "")),
+			"runtime_materialization_ref": record.get("runtime_materialization_ref", {}),
+		})
+	return refs
+
+static func _terrain_rows_by_level_index(terrain_layers: Array) -> Dictionary:
+	var result := {}
+	for layer in terrain_layers:
+		if layer is Dictionary:
+			result[int(layer.get("level_index", 0))] = layer.get("rows", [])
+	return result
+
+static func _adjacent_point_in_lookup(point: Dictionary, lookup: Dictionary) -> Dictionary:
+	if point.is_empty():
+		return {}
+	var x := int(point.get("x", 0))
+	var y := int(point.get("y", 0))
+	for offset in _cardinal_offsets():
+		var candidate := _point_dict(x + int(offset.x), y + int(offset.y))
+		if lookup.has(_point_key(int(candidate.get("x", 0)), int(candidate.get("y", 0)))):
+			return candidate
+	return {}
+
+static func _valid_cardinal_passable_neighbors(point: Dictionary, terrain_rows: Array, excluded_lookup: Dictionary = {}) -> Array:
+	var result := []
+	if point.is_empty():
+		return result
+	var x := int(point.get("x", 0))
+	var y := int(point.get("y", 0))
+	for offset in _cardinal_offsets():
+		var nx := x + int(offset.x)
+		var ny := y + int(offset.y)
+		if excluded_lookup.has(_point_key(nx, ny)):
+			continue
+		if _point_in_rows(terrain_rows, nx, ny) and _terrain_cell_is_passable(terrain_rows, nx, ny):
+			result.append(_point_dict(nx, ny))
+	return result
+
+static func _point_passable_in_rows(point: Dictionary, terrain_rows: Array) -> bool:
+	if point.is_empty():
+		return false
+	var x := int(point.get("x", 0))
+	var y := int(point.get("y", 0))
+	return _point_in_rows(terrain_rows, x, y) and _terrain_cell_is_passable(terrain_rows, x, y)
 
 static func _transit_semantics_for_surface_link(link: Dictionary, terrain_transit: Dictionary) -> Dictionary:
 	var key := _corridor_route_key(String(link.get("from", "")), String(link.get("to", "")), 0)
@@ -7106,7 +7559,7 @@ static func _terrain_transit_validation(terrain_transit: Dictionary, generated_m
 		var kind := String(route.get("transit_semantics", {}).get("kind", ""))
 		if kind == "land_road":
 			has_land = true
-		if kind == "underground_subterranean_connection_deferred":
+		if kind == "underground_subterranean_connection":
 			has_underground = true
 	if not has_land:
 		failures.append("corridor transit semantics missing land road route")
@@ -7116,6 +7569,11 @@ static func _terrain_transit_validation(terrain_transit: Dictionary, generated_m
 			failures.append("underground request missing underground corridor semantics")
 		if terrain_transit.get("transit_routes", {}).get("cross_level_candidates", []).is_empty():
 			failures.append("underground request missing cross-level candidates")
+		if terrain_transit.get("transit_routes", {}).get("cross_level_link_records", []).is_empty():
+			failures.append("underground request missing materialized cross-level link records")
+	var gameplay: Dictionary = terrain_transit.get("gameplay_transit_materialization", {}) if terrain_transit.get("gameplay_transit_materialization", {}) is Dictionary else {}
+	if not gameplay.is_empty() and not bool(gameplay.get("validation", {}).get("ok", false)):
+		failures.append_array(gameplay.get("validation", {}).get("failures", []))
 	var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
 	if not scenario.is_empty():
 		if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", true)) or bool(scenario.get("selection", {}).get("availability", {}).get("skirmish", true)):
@@ -7127,6 +7585,54 @@ static func _terrain_transit_validation(terrain_transit: Dictionary, generated_m
 		"status": "pass" if failures.is_empty() else "fail",
 		"failure_count": failures.size(),
 		"warning_count": warnings.size(),
+		"failures": failures,
+		"warnings": warnings,
+	}
+
+static func _water_underground_transit_gameplay_validation(payload: Dictionary, generated_map: Dictionary = {}) -> Dictionary:
+	var failures := []
+	var warnings := []
+	if String(payload.get("schema_id", "")) != WATER_UNDERGROUND_TRANSIT_GAMEPLAY_SCHEMA_ID:
+		failures.append("water/underground transit gameplay schema mismatch")
+	if String(payload.get("gameplay_transit_signature", "")) == "":
+		failures.append("water/underground transit gameplay signature missing")
+	var core: Dictionary = payload.get("validation", {}) if payload.get("validation", {}) is Dictionary else {}
+	if not bool(core.get("ok", false)):
+		failures.append_array(core.get("failures", []))
+	warnings.append_array(core.get("warnings", []))
+	var water_policy: Dictionary = payload.get("water_policy", {}) if payload.get("water_policy", {}) is Dictionary else {}
+	if String(water_policy.get("water_mode", "land")) == "islands" and int(payload.get("summary", {}).get("water_transit_count", 0)) <= 0:
+		failures.append("island water profile has no materialized ferry/bridge/portal records")
+	var underground_policy: Dictionary = payload.get("underground_policy", {}) if payload.get("underground_policy", {}) is Dictionary else {}
+	if int(underground_policy.get("level_count", 1)) > 1:
+		if int(payload.get("summary", {}).get("underground_level_count", 0)) <= 0:
+			failures.append("two-level profile has no underground level records")
+		if int(payload.get("summary", {}).get("cross_level_link_count", 0)) <= 0:
+			failures.append("two-level profile has no materialized cross-level link records")
+	for record in payload.get("materialized_transit_records", []):
+		if not (record is Dictionary):
+			failures.append("non-dictionary materialized transit record")
+			continue
+		if String(record.get("id", "")) == "" or String(record.get("object_id", "")) == "":
+			failures.append("materialized transit record missed stable id or object id")
+		if record.get("runtime_materialization_ref", {}).is_empty():
+			failures.append("materialized transit record %s missed runtime materialization ref" % String(record.get("id", "")))
+		if String(record.get("materialization_state", "")).find("materialized") < 0:
+			failures.append("materialized transit record %s did not state runtime materialization" % String(record.get("id", "")))
+	if not generated_map.is_empty():
+		var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
+		var generated_constraints: Dictionary = scenario.get("generated_constraints", {}) if scenario.get("generated_constraints", {}) is Dictionary else {}
+		if generated_constraints.get("water_underground_transit", {}).is_empty():
+			failures.append("scenario generated_constraints missed water/underground transit gameplay")
+		if generated_map.get("staging", {}).get("water_underground_transit_gameplay", {}).is_empty():
+			failures.append("staging missed water/underground transit gameplay")
+		if bool(payload.get("boundary", {}).get("campaign_adoption", true)) or bool(payload.get("boundary", {}).get("authored_content_writeback", true)) or bool(payload.get("boundary", {}).get("parity_or_alpha_claim", true)):
+			failures.append("water/underground transit payload violated adoption/writeback/parity boundary")
+		if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", false)):
+			failures.append("water/underground transit adopted generated map into campaign")
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
 		"failures": failures,
 		"warnings": warnings,
 	}
@@ -8761,7 +9267,7 @@ static func _water_policy_payload(water_mode: String, water_cell_count: int) -> 
 			"mode": "islands",
 			"supported_now": true,
 			"surface_water_cell_count": water_cell_count,
-			"implementation_state": "surface_water_ring_marks_island_boundary_transit_objects_deferred",
+			"implementation_state": "surface_water_ring_marks_island_boundary_with_materialized_ferry_bridge_access_records",
 		}
 	return {
 		"requested": false,
@@ -8781,7 +9287,7 @@ static func _underground_policy_payload(level_count: int, template_support: Dict
 			"surface": true,
 			"underground": true,
 			"template_level_metadata": levels,
-			"implementation_state": "deterministic_second_level_zone_allocation_transit_objects_deferred",
+			"implementation_state": "deterministic_second_level_zone_allocation_with_materialized_cross_level_gate_records",
 		}
 	return {
 		"requested": false,
@@ -8831,7 +9337,7 @@ static func _corridor_candidates_from_links(links: Array, levels: Array, water_m
 				"border_guard": bool(link.get("border_guard", false)),
 				"candidate_cells": cells,
 				"candidate_cell_count": cells.size(),
-				"materialization_state": "candidate_only_guard_and_transit_materialization_deferred",
+				"materialization_state": "candidate_consumed_by_guard_and_transit_materialization",
 			})
 			index += 1
 	return candidates

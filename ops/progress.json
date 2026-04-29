@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-object-pool-value-weighting-10184",
-  "currentSliceTitle": "Random Map Object Pool Value Weighting Completeness",
+  "currentSliceId": "random-map-water-underground-transit-gameplay-10184",
+  "currentSliceTitle": "Random Map Water Underground Transit Gameplay Equivalents",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed explicit RMG object candidate pool/value weighting payload and report. Evidence: validate_repo, object_pool report, playable materialization runtime report, validation batch retry report, json tool, git diff --check.",
+  "currentSliceNotes": "Completed Phase 2 RMG water/underground/transit gameplay-equivalent slice. Evidence: focused water/underground transit report passes with island water materialized transit records, underground level records, cross-level link records, runtime transit materialization refs, stable same-input signatures, changed-seed signature changes, and no campaign/writeback/parity claim; existing playable materialization, object-pool, and validation-batch reports remain passing.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Current continuation is Phase 2 RMG parity only. Preserve completed non-RMG and future-phase evidence, but do not continue campaign/faction/broad production work from it. P2.10 foundation and completed RMG staging/report slices are not HoMM3 RMG parity.",
-  "updatedAt": "2026-04-29T15:46:47Z",
+  "updatedAt": "2026-04-29T16:04:08Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -3140,7 +3140,7 @@
       "id": "random-map-water-underground-transit-gameplay-10184",
       "title": "Random Map Water Underground Transit Gameplay Equivalents",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "parentSliceId": "random-map-generator-foundation-10184",
       "classification": "phase2_child_implementation_slice",
@@ -3176,7 +3176,11 @@
         "No campaign adoption, broad content expansion, final visual autotiling polish, or parity completion claim."
       ],
       "createdAt": "2026-04-29T15:04:37Z",
-      "updatedAt": "2026-04-29T15:04:37Z"
+      "updatedAt": "2026-04-29T16:04:08Z",
+      "startedAt": "2026-04-29T15:50:09Z",
+      "notes": "Completed Phase 2 RMG water/underground/transit gameplay-equivalent slice. Evidence: focused water/underground transit report passes with island water materialized transit records, underground level records, cross-level link records, runtime transit materialization refs, stable same-input signatures, changed-seed signature changes, and no campaign/writeback/parity claim; existing playable materialization, object-pool, and validation-batch reports remain passing.",
+      "evidence": "Implemented RandomMapGeneratorRules water/underground transit gameplay payloads and runtime materialization records. Focused report random_map_water_underground_transit_gameplay_report passes with island water transit_count 4, underground cross_level_link_count 8, underground_level_count 1, stable same-input signatures, changed-seed water/underground signature changes, scenario/staging/runtime materialization references, and explicit no campaign/writeback/parity claim. Validation passed: python3 tests/validate_repo.py; godot --headless focused water/underground report; playable materialization runtime report; object-pool value weighting report; validation batch retry report; ops/progress.json json.tool; git diff --check.",
+      "completedAt": "2026-04-29T16:04:08Z"
     },
     {
       "id": "random-map-object-pool-value-weighting-10184",
