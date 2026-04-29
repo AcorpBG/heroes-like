@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-terrain-town-road-constraints-10184",
-  "currentSliceTitle": "Random Map Terrain/Town/Road Constraints",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented deterministic terrain/town/start/road constraints on the seeded RMG payload: biome/passability summaries, pathing metadata and approaches, staged road overlay segments/stubs, route connectivity classifications, and required reachability proof. Parent random-map foundation remains open for fairness and scenario-load child slices.",
+  "currentSliceId": "concept-art-curation-gate-10184",
+  "currentSliceTitle": "Concept-Art Curation Gate",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Preserved existing parent status; unrelated to random-map fairness slice.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T08:10:28Z",
+  "updatedAt": "2026-04-29T08:20:52Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -169,7 +169,7 @@
         "curation/status document or brief update only unless an explicit asset implementation slice follows"
       ],
       "deferredReason": "Final asset approval and runtime ingestion remain deferred until the remaining P2.2 asset-ingestion boundary is explicitly resolved.",
-      "notes": "P2.2 selected after P2.1 completion; concept-art-decision-register-10184 completed as documentation/curation governance; concept-art-implementation-brief-selection-10184 selected Embercourt Town And Object Direction as the single follow-up implementation brief track. The P2.2 parent remains in progress because the asset-ingestion boundary child is still paused.",
+      "notes": "Preserved existing parent status; unrelated to random-map fairness slice.",
       "sliceType": "parent",
       "childSliceIds": [
         "concept-art-decision-register-10184",
@@ -185,7 +185,7 @@
         "concept-art-implementation-brief-selection-10184"
       ],
       "reportOnlyEvidenceIds": [],
-      "updatedAt": "2026-04-27T13:18:49Z",
+      "updatedAt": "2026-04-29T08:20:52Z",
       "startedAt": "2026-04-27T13:11:32Z"
     },
     {
@@ -548,7 +548,7 @@
         "generator validation/report harness",
         "Phase 3 headless harness integration path"
       ],
-      "notes": "Requirements doc and seeded generator core child are complete. Terrain/town/road constraints, fairness reporting, and scenario load smoke children remain pending; no finished skirmish RMG claim.",
+      "notes": "Requirements doc, seeded generator core, terrain/town/road constraints, and resource/encounter fairness report children are complete. Scenario load smoke remains pending; no finished skirmish RMG claim.",
       "sliceType": "parent",
       "childSliceIds": [
         "random-map-requirements-doc-10184",
@@ -807,7 +807,9 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "RandomMapGeneratorRules.gd emits staged random_map_resource_encounter_fairness_report_v1 metrics for early gold/wood/ore support, contested/front distribution, guarded reward and route guard risk classes, wide/border guard route-pressure semantics, objective-pressure placeholder status, and start/resource/contest-route distance comparisons.",
+        "tests/random_map_resource_encounter_fairness_report.gd proves happy-path generated fairness is pass/warning rather than fail and synthetic warning/fail profiles classify correctly.",
+        "Validation passed: python3 tests/validate_repo.py; godot4 seeded core report; godot4 terrain/town/road constraints report; godot4 resource/encounter fairness report; python3 -m json.tool ops/progress.json; git diff --check."
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
@@ -2340,7 +2342,7 @@
       "id": "random-map-resource-encounter-fairness-report-10184",
       "title": "Random Map Resource/Encounter Fairness Report",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "in_progress",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "random-map-generator-foundation-10184",
@@ -2363,7 +2365,10 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "notes": "Implementation not started."
+      "notes": "Implemented report/tooling-only resource and encounter fairness metrics without scenario-load adoption, generated-map UI, durable authored writeback, campaign/skirmish integration, save migration, or finished skirmish RMG claim. Parent random-map foundation remains open for scenario-load smoke.",
+      "updatedAt": "2026-04-29T08:18:27Z",
+      "startedAt": "2026-04-29T08:12:15Z",
+      "completedAt": "2026-04-29T08:18:27Z"
     },
     {
       "id": "random-map-scenario-load-smoke-10184",

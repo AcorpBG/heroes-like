@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Selected implementation slice: `random-map-seeded-generator-core-10184` under P2.10 random map generator foundation. Keep this to deterministic generated payload primitives and seed determinism proof; terrain/town/road constraints, fairness reports, scenario load smoke, UI, writeback, and campaign/skirmish adoption remain separate child slices.
+Selected implementation slice: `random-map-resource-encounter-fairness-report-10184` under P2.10 random map generator foundation. Keep this to report/tooling-only resource, encounter, guard, route-pressure, and travel-distance fairness validation; scenario load smoke, UI, writeback, and campaign/skirmish adoption remain separate child slices.
 
 ## Slice Status Model
 
@@ -1870,6 +1870,11 @@ sourceDocs:
 implementationTargets:
 - generator validation/report harness
 - fairness checks
+
+sliceEvidence:
+- `RandomMapGeneratorRules.gd` now emits a staged `random_map_resource_encounter_fairness_report_v1` payload with early gold/wood/ore support, contest-front distribution, guarded reward/route guard risk classes, wide/border guard route-pressure semantics, objective-pressure placeholder status, and start-to-town/resource/contest-route distance comparisons.
+- `tests/random_map_resource_encounter_fairness_report.gd` proves the happy-path generated profile is pass/warning rather than fail, and synthetic warning/fail cases are classified by the report layer.
+- Parent random-map foundation remains open for the scenario-load smoke child slice; this does not adopt generated maps into scenario selection, campaign, skirmish, save migration, UI, or durable authored writeback.
 
 ### P2 Child: Random Map Scenario Load Smoke
 
