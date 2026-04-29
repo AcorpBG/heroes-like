@@ -3,6 +3,7 @@ extends RefCounted
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
+const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 static var ScenarioRulesScript: Variant = load("res://scripts/core/ScenarioRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
@@ -253,6 +254,96 @@ static func start_skirmish_session(scenario_id: String, difficulty_id: String) -
 	SessionState.active_session = session
 	return session
 
+static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty_id: String = "normal") -> Dictionary:
+	var normalized_difficulty := normalize_difficulty(difficulty_id)
+	var generator = RandomMapGeneratorRulesScript.new()
+	var generated: Dictionary = generator.generate(input_config)
+	var report: Dictionary = generated.get("report", {}) if generated.get("report", {}) is Dictionary else {}
+	var payload: Dictionary = generated.get("generated_map", {}) if generated.get("generated_map", {}) is Dictionary else {}
+	var retry_status := _random_map_retry_status(generated, report)
+	if not bool(generated.get("ok", false)) or payload.is_empty():
+		return {
+			"ok": false,
+			"setup_kind": "generated_random_map_skirmish",
+			"launch_mode": SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
+			"difficulty": normalized_difficulty,
+			"validation": report,
+			"retry_status": retry_status,
+			"failure_handoff": _random_map_failure_handoff(report, retry_status),
+			"campaign_adoption": false,
+			"alpha_parity_claim": false,
+		}
+
+	var scenario: Dictionary = payload.get("scenario_record", {})
+	var metadata: Dictionary = payload.get("metadata", {})
+	var profile: Dictionary = metadata.get("profile", {}) if metadata.get("profile", {}) is Dictionary else {}
+	var identity := _random_map_generated_identity(payload)
+	var provenance := _random_map_provenance(input_config, payload, report, retry_status)
+	var setup_summary := _random_map_setup_summary(scenario, metadata, report, retry_status, normalized_difficulty)
+	return {
+		"ok": true,
+		"setup_kind": "generated_random_map_skirmish",
+		"launch_mode": SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
+		"difficulty": normalized_difficulty,
+		"difficulty_label": difficulty_label(normalized_difficulty),
+		"generated_map": payload,
+		"scenario_id": String(identity.get("scenario_id", "")),
+		"scenario_name": String(scenario.get("name", identity.get("scenario_id", ""))),
+		"template_id": String(identity.get("template_id", "")),
+		"profile_id": String(profile.get("id", "")),
+		"normalized_seed": String(identity.get("normalized_seed", "")),
+		"content_manifest_fingerprint": String(identity.get("content_manifest_fingerprint", "")),
+		"generated_identity": identity,
+		"validation": report,
+		"retry_status": retry_status,
+		"provenance": provenance,
+		"replay_metadata": _random_map_replay_metadata(provenance, identity, retry_status),
+		"setup_summary": setup_summary,
+		"launch_handoff": "Launch handoff: generated Skirmish starts a fresh Day 1 expedition from validated seed/config provenance; campaign progress and authored content stay unchanged.",
+		"failure_handoff": "Generation validated for launch; retry metadata is preserved for save/replay inspection.",
+		"campaign_adoption": false,
+		"alpha_parity_claim": false,
+	}
+
+static func start_random_map_skirmish_session(input_config: Dictionary, difficulty_id: String = "normal") -> SessionStateStoreScript.SessionData:
+	var setup := build_random_map_skirmish_setup(input_config, difficulty_id)
+	if not bool(setup.get("ok", false)):
+		push_warning(String(setup.get("failure_handoff", "Generated skirmish setup failed validation.")))
+		return SessionStateStoreScript.new_session_data()
+
+	var payload: Dictionary = setup.get("generated_map", {})
+	var session := ScenarioFactoryScript.create_generated_skirmish_session(
+		payload,
+		String(setup.get("difficulty", default_difficulty_id())),
+		{
+			"provenance": setup.get("provenance", {}),
+			"replay_metadata": setup.get("replay_metadata", {}),
+			"validation": setup.get("validation", {}),
+			"retry_status": setup.get("retry_status", {}),
+			"generated_identity": setup.get("generated_identity", {}),
+			"boundary": {
+				"authored_content_writeback": false,
+				"campaign_adoption": false,
+				"skirmish_browser_authored_listing": false,
+				"alpha_parity_claim": false,
+			},
+		}
+	)
+	if session.scenario_id == "":
+		return session
+	session.flags["generated_random_map_provenance"] = setup.get("provenance", {})
+	session.flags["generated_random_map_replay_metadata"] = setup.get("replay_metadata", {})
+	session.flags["generated_random_map_validation"] = setup.get("validation", {})
+	session.flags["generated_random_map_retry_status"] = setup.get("retry_status", {})
+	session.flags["generated_random_map_boundary"]["adoption_path"] = "skirmish_session_only_no_authored_browser_or_campaign"
+	session.overworld["generated_random_map_provenance"] = setup.get("provenance", {})
+	session.overworld["generated_random_map_replay_metadata"] = setup.get("replay_metadata", {})
+	session.overworld["generated_random_map_validation"] = setup.get("validation", {})
+	session.overworld["generated_random_map_retry_status"] = setup.get("retry_status", {})
+	OverworldRulesScript.normalize_overworld_state(session)
+	SessionState.active_session = session
+	return session
+
 static func describe_scenario_commander_preview(
 	scenario_id: String,
 	difficulty_id: String = "normal",
@@ -302,6 +393,106 @@ static func describe_session_commander_preview(session: SessionStateStoreScript.
 	if front_preview != "":
 		lines.append(front_preview)
 	return "\n".join(lines)
+
+static func _random_map_retry_status(generated: Dictionary, report: Dictionary) -> Dictionary:
+	var ok := bool(generated.get("ok", false))
+	return {
+		"policy": "single_validated_attempt_no_automatic_retry_in_this_slice",
+		"attempt_count": 1,
+		"retry_count": 0,
+		"status": "pass" if ok else "failed_before_launch",
+		"validation_status": String(report.get("status", "pass" if ok else "fail")),
+		"failure_count": int(report.get("failure_count", 0)),
+		"warning_count": int(report.get("warning_count", 0)),
+	}
+
+static func _random_map_failure_handoff(report: Dictionary, retry_status: Dictionary) -> String:
+	return "Generated Skirmish blocked: validation %s after %d attempt(s), retry count %d; no session, save, campaign, or authored content write occurred." % [
+		String(report.get("status", "fail")),
+		int(retry_status.get("attempt_count", 1)),
+		int(retry_status.get("retry_count", 0)),
+	]
+
+static func _random_map_generated_identity(payload: Dictionary) -> Dictionary:
+	var scenario: Dictionary = payload.get("scenario_record", {}) if payload.get("scenario_record", {}) is Dictionary else {}
+	var metadata: Dictionary = payload.get("metadata", {}) if payload.get("metadata", {}) is Dictionary else {}
+	var profile: Dictionary = metadata.get("profile", {}) if metadata.get("profile", {}) is Dictionary else {}
+	return {
+		"scenario_id": String(scenario.get("id", "")),
+		"stable_signature": String(payload.get("stable_signature", "")),
+		"generator_version": String(metadata.get("generator_version", "")),
+		"template_id": String(metadata.get("template_id", "")),
+		"profile_id": String(profile.get("id", "")),
+		"normalized_seed": String(metadata.get("normalized_seed", "")),
+		"content_manifest_fingerprint": String(metadata.get("content_manifest_fingerprint", "")),
+	}
+
+static func _random_map_provenance(input_config: Dictionary, payload: Dictionary, report: Dictionary, retry_status: Dictionary) -> Dictionary:
+	var normalized := RandomMapGeneratorRulesScript.normalize_config(input_config)
+	var metadata: Dictionary = payload.get("metadata", {}) if payload.get("metadata", {}) is Dictionary else {}
+	var profile: Dictionary = metadata.get("profile", {}) if metadata.get("profile", {}) is Dictionary else {}
+	return {
+		"schema_id": "generated_random_map_skirmish_provenance_v1",
+		"source": "random_map_skirmish_setup",
+		"generator_config": {
+			"generator_version": String(normalized.get("generator_version", RandomMapGeneratorRulesScript.GENERATOR_VERSION)),
+			"seed": String(normalized.get("seed", "0")),
+			"size": normalized.get("size", {}),
+			"player_constraints": normalized.get("player_constraints", {}),
+			"profile": profile,
+		},
+		"generator_version": String(metadata.get("generator_version", "")),
+		"normalized_seed": String(metadata.get("normalized_seed", "")),
+		"template_id": String(metadata.get("template_id", "")),
+		"profile_id": String(profile.get("id", "")),
+		"player_settings": {
+			"player_constraints": metadata.get("player_constraints", {}),
+			"player_assignment": metadata.get("player_assignment", {}),
+		},
+		"content_manifest_fingerprint": String(metadata.get("content_manifest_fingerprint", "")),
+		"generated_identity": _random_map_generated_identity(payload),
+		"validation_status": String(report.get("status", "")),
+		"retry_status": retry_status,
+		"save_schema_status": "staged_metadata_preserved_without_save_version_bump",
+		"replay_status": "seed_config_identity_metadata_preserved_no_input_stream_replay_yet",
+		"write_policy": String(payload.get("write_policy", "")),
+		"authored_content_writeback": false,
+		"campaign_adoption": false,
+		"alpha_parity_claim": false,
+	}
+
+static func _random_map_replay_metadata(provenance: Dictionary, identity: Dictionary, retry_status: Dictionary) -> Dictionary:
+	return {
+		"schema_id": "generated_random_map_replay_seed_record_v1",
+		"source": "skirmish_random_map_seed_config",
+		"generator_config": provenance.get("generator_config", {}),
+		"generated_identity": identity,
+		"retry_status": retry_status,
+		"content_manifest_fingerprint": String(provenance.get("content_manifest_fingerprint", "")),
+		"replay_boundary": "seed_config_identity_only_no_full_input_stream_replay_in_this_slice",
+	}
+
+static func _random_map_setup_summary(scenario: Dictionary, metadata: Dictionary, report: Dictionary, retry_status: Dictionary, difficulty_id: String) -> String:
+	var map_size: Dictionary = scenario.get("map_size", {}) if scenario.get("map_size", {}) is Dictionary else {}
+	return "\n".join([
+		"Generated Skirmish setup",
+		"Seed %s | Template %s | Profile %s" % [
+			String(metadata.get("normalized_seed", "")),
+			String(metadata.get("template_id", "")),
+			String(metadata.get("profile", {}).get("id", "")),
+		],
+		"Map %dx%d | Difficulty %s" % [
+			int(map_size.get("width", 0)),
+			int(map_size.get("height", 0)),
+			difficulty_label(difficulty_id),
+		],
+		"Validation %s | Attempts %d | Retries %d" % [
+			String(report.get("status", "")),
+			int(retry_status.get("attempt_count", 1)),
+			int(retry_status.get("retry_count", 0)),
+		],
+		"Boundary: Skirmish session only; no campaign adoption, authored JSON writeback, or alpha/parity claim.",
+	])
 
 static func _scenario_items() -> Array:
 	return ContentService.load_json(ContentService.SCENARIOS_PATH).get("items", [])

@@ -74,6 +74,38 @@ static func create_generated_draft_session(
 	generated_map: Dictionary,
 	difficulty: String = "normal"
 ) -> SessionStateStoreScript.SessionData:
+	return _create_generated_registered_session(
+		generated_map,
+		difficulty,
+		SessionStateStoreScript.LAUNCH_MODE_GENERATED_DRAFT,
+		{
+			"generated_random_map_draft": true,
+			"generated_random_map_source": "generated_draft_smoke",
+		}
+	)
+
+static func create_generated_skirmish_session(
+	generated_map: Dictionary,
+	difficulty: String = "normal",
+	setup_record: Dictionary = {}
+) -> SessionStateStoreScript.SessionData:
+	return _create_generated_registered_session(
+		generated_map,
+		difficulty,
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
+		{
+			"generated_random_map": true,
+			"generated_random_map_source": "skirmish_setup",
+			"generated_random_map_setup": setup_record.duplicate(true),
+		}
+	)
+
+static func _create_generated_registered_session(
+	generated_map: Dictionary,
+	difficulty: String,
+	launch_mode: String,
+	extra_flags: Dictionary
+) -> SessionStateStoreScript.SessionData:
 	var scenario: Dictionary = generated_map.get("scenario_record", {})
 	var terrain_layers: Dictionary = generated_map.get("terrain_layers_record", {})
 	var registration: Dictionary = ContentService.register_generated_scenario_draft(scenario, terrain_layers)
@@ -82,14 +114,16 @@ static func create_generated_draft_session(
 		return SessionStateStoreScript.new_session_data()
 
 	var scenario_id := String(scenario.get("id", ""))
-	var session := create_session(scenario_id, difficulty, SessionStateStoreScript.LAUNCH_MODE_GENERATED_DRAFT)
+	var session := create_session(scenario_id, difficulty, launch_mode)
 	if session.scenario_id == "":
 		return session
 
 	var metadata: Dictionary = generated_map.get("metadata", {})
 	var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
-	session.flags["generated_random_map_draft"] = true
+	for key in extra_flags.keys():
+		session.flags[String(key)] = extra_flags[key]
 	session.flags["generated_random_map_metadata"] = metadata.duplicate(true)
+	session.flags["generated_random_map_identity"] = _generated_identity(generated_map)
 	session.flags["generated_random_map_boundary"] = {
 		"write_policy": String(generated_map.get("write_policy", "")),
 		"registry_write_policy": String(registration.get("write_policy", "")),
@@ -97,8 +131,23 @@ static func create_generated_draft_session(
 		"availability": selection.get("availability", {}),
 	}
 	session.overworld["generated_random_map_metadata"] = metadata.duplicate(true)
+	session.overworld["generated_random_map_identity"] = _generated_identity(generated_map)
 	session.overworld["generated_terrain_layers_record_id"] = String(terrain_layers.get("id", ""))
 	return session
+
+static func _generated_identity(generated_map: Dictionary) -> Dictionary:
+	var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
+	var metadata: Dictionary = generated_map.get("metadata", {}) if generated_map.get("metadata", {}) is Dictionary else {}
+	var profile: Dictionary = metadata.get("profile", {}) if metadata.get("profile", {}) is Dictionary else {}
+	return {
+		"scenario_id": String(scenario.get("id", "")),
+		"stable_signature": String(generated_map.get("stable_signature", "")),
+		"generator_version": String(metadata.get("generator_version", "")),
+		"template_id": String(metadata.get("template_id", "")),
+		"profile_id": String(profile.get("id", "")),
+		"normalized_seed": String(metadata.get("normalized_seed", "")),
+		"content_manifest_fingerprint": String(metadata.get("content_manifest_fingerprint", "")),
+	}
 
 static func _build_hero_state(hero_template: Dictionary) -> Dictionary:
 	var command = hero_template.get("command", {})

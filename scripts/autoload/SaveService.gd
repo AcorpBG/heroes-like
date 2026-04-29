@@ -3,6 +3,7 @@ extends Node
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
+const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
@@ -771,6 +772,15 @@ func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> D
 			"warnings": [],
 		}
 
+	var warnings = structure_report.get("warnings", [])
+	if not (warnings is Array):
+		warnings = []
+	var generated_registration := _ensure_generated_random_map_scenario_registered(normalized)
+	if bool(generated_registration.get("registered", false)):
+		warnings.append(String(generated_registration.get("message", "Generated random-map scenario was restored from saved provenance.")))
+	elif generated_registration.has("ok") and not bool(generated_registration.get("ok", false)):
+		warnings.append(String(generated_registration.get("message", "Generated random-map provenance could not be restored.")))
+
 	var scenario := ContentService.get_scenario(scenario_id)
 	if scenario.is_empty():
 		return {
@@ -791,9 +801,6 @@ func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> D
 
 	OverworldRulesScript.normalize_overworld_state_bridge(session)
 
-	var warnings = structure_report.get("warnings", [])
-	if not (warnings is Array):
-		warnings = []
 	var validity := String(structure_report.get("validity", "ok"))
 	if source_save_version < SessionStateStoreScript.SAVE_VERSION:
 		if validity == "ok":
@@ -854,6 +861,56 @@ func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> D
 		"warnings": warnings,
 		"session": session,
 		"resume_target": resume_target,
+	}
+
+func _ensure_generated_random_map_scenario_registered(normalized_payload: Dictionary) -> Dictionary:
+	var scenario_id := String(normalized_payload.get("scenario_id", ""))
+	if scenario_id == "" or not ContentService.get_scenario(scenario_id).is_empty():
+		return {"ok": true, "registered": false}
+	if String(normalized_payload.get("launch_mode", "")) != SessionStateStoreScript.LAUNCH_MODE_SKIRMISH:
+		return {}
+	var flags = normalized_payload.get("flags", {})
+	if not (flags is Dictionary) or not bool(flags.get("generated_random_map", false)):
+		return {}
+	var provenance: Dictionary = flags.get("generated_random_map_provenance", {}) if flags.get("generated_random_map_provenance", {}) is Dictionary else {}
+	if provenance.is_empty():
+		var setup: Dictionary = flags.get("generated_random_map_setup", {}) if flags.get("generated_random_map_setup", {}) is Dictionary else {}
+		provenance = setup.get("provenance", {}) if setup.get("provenance", {}) is Dictionary else {}
+	var config: Dictionary = provenance.get("generator_config", {}) if provenance.get("generator_config", {}) is Dictionary else {}
+	if config.is_empty():
+		return {"ok": false, "registered": false, "message": "Generated random-map save is missing regeneration config provenance."}
+
+	var generated: Dictionary = RandomMapGeneratorRulesScript.generate(config)
+	if not bool(generated.get("ok", false)):
+		return {"ok": false, "registered": false, "message": "Generated random-map save regeneration failed validation."}
+	var payload: Dictionary = generated.get("generated_map", {}) if generated.get("generated_map", {}) is Dictionary else {}
+	var scenario: Dictionary = payload.get("scenario_record", {}) if payload.get("scenario_record", {}) is Dictionary else {}
+	if String(scenario.get("id", "")) != scenario_id:
+		return {
+			"ok": false,
+			"registered": false,
+			"message": "Generated random-map save regenerated scenario id %s but expected %s." % [String(scenario.get("id", "")), scenario_id],
+		}
+
+	var identity: Dictionary = provenance.get("generated_identity", {}) if provenance.get("generated_identity", {}) is Dictionary else {}
+	var expected_signature := String(identity.get("stable_signature", ""))
+	if expected_signature != "" and String(payload.get("stable_signature", "")) != expected_signature:
+		return {"ok": false, "registered": false, "message": "Generated random-map save identity signature no longer matches saved provenance."}
+
+	var registration: Dictionary = ContentService.register_generated_scenario_draft(
+		scenario,
+		payload.get("terrain_layers_record", {}) if payload.get("terrain_layers_record", {}) is Dictionary else {}
+	)
+	if not bool(registration.get("ok", false)):
+		return {
+			"ok": false,
+			"registered": false,
+			"message": "Generated random-map save could not register regenerated scenario: %s" % String(registration.get("message", "")),
+		}
+	return {
+		"ok": true,
+		"registered": true,
+		"message": "Generated random-map scenario restored from saved seed/config provenance.",
 	}
 
 func _populate_summary_from_payload(summary: Dictionary, payload: Dictionary) -> Dictionary:
