@@ -2452,7 +2452,7 @@ nonGoals:
 
 auditResult:
 - `docs/random-map-final-homm3-parity-gate-audit.md` concludes RMG parity is not met.
-- The parent RMG parity queue remains open because player-facing random-map setup/retry UX remains pending and the final parity audit has not been rerun after all queued Phase 2 RMG child slices.
+- The parent RMG parity queue remains open until a strict final re-gate audit is rerun after the queued Phase 2 RMG implementation follow-ups.
 
 ### P2 Child: Random Map Translated Template Runtime Sweep
 
@@ -2537,6 +2537,41 @@ sliceEvidence:
 
 nonGoals:
 - No campaign UI, broad menu redesign, or final art polish beyond the generated-map setup flow.
+
+completionResult:
+- Player-facing Skirmish setup now exposes generated seed, template, profile, player count, water mode, and underground controls through normal menu UI boundaries.
+- Validation failures and bounded retry exhaustion are visible in the setup/launch surface, while valid launch handoff creates generated Skirmish sessions with provenance and retry status.
+- No campaign adoption, authored JSON writeback, broad/future-phase work, or parity/alpha claim.
+
+### P2 Child: Random Map Final HoMM3-Parity Re-Gate Audit
+
+id: `random-map-final-homm3-parity-regate-audit-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Strictly rerun the RMG parity gate after the queued implementation follow-up slices have completed, and record an evidence-backed yes/no decision without hidden implementation.
+
+sourceDocs:
+- `docs/random-map-final-homm3-parity-gate-audit.md`
+- `docs/random-map-generator-foundation.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
+- all completed Phase 2 RMG implementation reports and smoke evidence
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
+
+implementationTargets:
+- updated final parity gate audit document under `docs/`
+- `PLAN.md`
+- `ops/progress.json`
+- optional focused final parity report scene only if the audit needs an executable evidence gap closed
+
+sliceEvidence:
+- The audit rechecks broad translated-template materialization, final writeout/export/save-schema/replay closure, player-facing setup/retry UX, water/underground/transit, object/value weighting, batch reliability, and campaign/writeback exclusion boundaries.
+- Every parity row is marked implemented, partially implemented with explicit blocker, or intentionally non-parity with accepted original-game rationale.
+- No RMG parity, alpha, campaign, faction breadth, broad production, or release claim is made unless the strict audit evidence supports it.
+
+nonGoals:
+- No hidden implementation beyond audit-only evidence updates unless a focused report is explicitly required.
+- No campaign adoption, authored JSON writeback, broad production content, faction breadth, alpha claim, or automatic parity claim.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 

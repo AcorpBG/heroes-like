@@ -28,6 +28,70 @@ const DIFFICULTY_OPTIONS := [
 		"summary": "Reduced movement and income, faster raids, and enemy-favored combat momentum.",
 	},
 ]
+const RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS := [
+	{
+		"id": "border_gate_compact_v1",
+		"label": "Border Gate Compact",
+		"profile_id": "border_gate_compact_profile_v1",
+		"width": 26,
+		"height": 18,
+		"player_count": 3,
+		"water_modes": ["land"],
+		"supports_underground": false,
+	},
+	{
+		"id": "frontier_spokes_v1",
+		"label": "Frontier Spokes",
+		"profile_id": "frontier_spokes_profile_v1",
+		"width": 30,
+		"height": 22,
+		"player_count": 3,
+		"water_modes": ["land"],
+		"supports_underground": false,
+	},
+	{
+		"id": "translated_rmg_template_001_v1",
+		"label": "Translated Islands",
+		"profile_id": "translated_rmg_profile_001_v1",
+		"width": 36,
+		"height": 30,
+		"player_count": 4,
+		"water_modes": ["land", "islands"],
+		"supports_underground": true,
+	},
+]
+const RANDOM_MAP_PLAYER_PROFILE_OPTIONS := [
+	{
+		"id": "border_gate_compact_profile_v1",
+		"label": "Border Gate",
+		"template_id": "border_gate_compact_v1",
+		"guard_strength_profile": "core_low",
+		"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
+	},
+	{
+		"id": "frontier_spokes_profile_v1",
+		"label": "Frontier Spokes",
+		"template_id": "frontier_spokes_v1",
+		"guard_strength_profile": "core_low",
+		"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
+	},
+	{
+		"id": "translated_rmg_profile_001_v1",
+		"label": "Translated Parity",
+		"template_id": "translated_rmg_template_001_v1",
+		"guard_strength_profile": "core_low",
+		"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"],
+	},
+]
+const RANDOM_MAP_PLAYER_COUNT_OPTIONS := [2, 3, 4]
+const RANDOM_MAP_WATER_OPTIONS := [
+	{"id": "land", "label": "Land"},
+	{"id": "islands", "label": "Islands"},
+]
+const RANDOM_MAP_PLAYER_RETRY_POLICY := {
+	"max_attempts": 2,
+	"mode": "seed_salt",
+}
 
 static func _campaign_rules():
 	return load("res://scripts/core/CampaignRules.gd")
@@ -239,6 +303,60 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 		"operational_board": operational_board,
 	}
 
+static func random_map_player_setup_options() -> Dictionary:
+	return {
+		"templates": RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS.duplicate(true),
+		"profiles": RANDOM_MAP_PLAYER_PROFILE_OPTIONS.duplicate(true),
+		"player_counts": RANDOM_MAP_PLAYER_COUNT_OPTIONS.duplicate(true),
+		"water_modes": RANDOM_MAP_WATER_OPTIONS.duplicate(true),
+		"retry_policy": RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
+		"default_seed": "aurelion-random-skirmish-10184",
+		"default_template_id": "border_gate_compact_v1",
+		"default_profile_id": "border_gate_compact_profile_v1",
+		"default_player_count": 3,
+		"default_water_mode": "land",
+		"default_underground": false,
+	}
+
+static func build_random_map_player_config(
+	seed: String,
+	template_id: String,
+	profile_id: String,
+	player_count: int,
+	water_mode: String,
+	underground_enabled: bool
+) -> Dictionary:
+	var template_option := _random_map_template_option(template_id)
+	var profile_option := _random_map_profile_option(profile_id)
+	var width := int(template_option.get("width", 26))
+	var height := int(template_option.get("height", 18))
+	var normalized_player_count := clampi(player_count, 2, 4)
+	var normalized_water_mode := "islands" if water_mode == "islands" else "land"
+	var level_count := 2 if underground_enabled else 1
+	return {
+		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
+		"seed": seed,
+		"size": {
+			"preset": "player_facing_skirmish_setup",
+			"width": width,
+			"height": height,
+			"water_mode": normalized_water_mode,
+			"level_count": level_count,
+		},
+		"player_constraints": {
+			"human_count": 1,
+			"player_count": normalized_player_count,
+			"computer_count": max(1, normalized_player_count - 1),
+			"team_mode": "free_for_all",
+		},
+		"profile": {
+			"id": String(profile_option.get("id", profile_id)),
+			"template_id": template_id,
+			"guard_strength_profile": String(profile_option.get("guard_strength_profile", "core_low")),
+			"faction_ids": profile_option.get("faction_ids", []),
+		},
+	}
+
 static func start_skirmish_session(scenario_id: String, difficulty_id: String) -> SessionStateStoreScript.SessionData:
 	var setup := build_skirmish_setup(scenario_id, difficulty_id)
 	if setup.is_empty():
@@ -253,6 +371,63 @@ static func start_skirmish_session(scenario_id: String, difficulty_id: String) -
 	OverworldRulesScript.normalize_overworld_state(session)
 	SessionState.active_session = session
 	return session
+
+static func build_random_map_skirmish_setup_with_retry(
+	input_config: Dictionary,
+	difficulty_id: String = "normal",
+	retry_policy: Dictionary = {}
+) -> Dictionary:
+	var policy := _random_map_retry_policy(retry_policy)
+	var max_attempts := int(policy.get("max_attempts", 1))
+	var attempts := []
+	var final_setup := {}
+	for attempt_index in range(max_attempts):
+		var attempt_config := _random_map_retry_attempt_config(input_config, attempt_index, policy)
+		var attempt_setup := build_random_map_skirmish_setup(attempt_config, difficulty_id)
+		var attempt_record := _random_map_setup_attempt_record(attempt_setup, attempt_config, attempt_index + 1, max_attempts)
+		attempts.append(attempt_record)
+		if bool(attempt_setup.get("ok", false)):
+			final_setup = attempt_setup
+			break
+
+	if not final_setup.is_empty():
+		var retry_status := _random_map_retry_status_from_attempts(attempts, true, policy)
+		final_setup["retry_status"] = retry_status
+		final_setup["retry_attempts"] = attempts
+		final_setup["failure_handoff"] = "Generation validated for launch after %d attempt(s); retry details are visible in setup and preserved in save/replay metadata." % int(retry_status.get("attempt_count", 1))
+		final_setup["setup_summary"] = _random_map_setup_summary(
+			final_setup.get("generated_map", {}).get("scenario_record", {}),
+			final_setup.get("generated_map", {}).get("metadata", {}),
+			final_setup.get("validation", {}),
+			retry_status,
+			String(final_setup.get("difficulty", difficulty_id))
+		)
+		var provenance: Dictionary = final_setup.get("provenance", {}) if final_setup.get("provenance", {}) is Dictionary else {}
+		provenance["retry_status"] = retry_status
+		provenance["retry_attempts"] = attempts
+		final_setup["provenance"] = provenance
+		var replay: Dictionary = final_setup.get("replay_metadata", {}) if final_setup.get("replay_metadata", {}) is Dictionary else {}
+		replay["retry_status"] = retry_status
+		final_setup["replay_metadata"] = replay
+		return final_setup
+
+	var retry_status := _random_map_retry_status_from_attempts(attempts, false, policy)
+	var last_attempt: Dictionary = attempts[attempts.size() - 1] if not attempts.is_empty() else {}
+	var last_validation: Dictionary = last_attempt.get("validation", {}) if last_attempt.get("validation", {}) is Dictionary else {}
+	return {
+		"ok": false,
+		"setup_kind": "generated_random_map_skirmish",
+		"launch_mode": SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
+		"difficulty": normalize_difficulty(difficulty_id),
+		"difficulty_label": difficulty_label(difficulty_id),
+		"validation": last_validation,
+		"retry_status": retry_status,
+		"retry_attempts": attempts,
+		"failure_handoff": _random_map_failure_handoff(last_validation, retry_status),
+		"setup_summary": _random_map_failure_setup_summary(last_validation, retry_status, attempts),
+		"campaign_adoption": false,
+		"alpha_parity_claim": false,
+	}
 
 static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty_id: String = "normal") -> Dictionary:
 	var normalized_difficulty := normalize_difficulty(difficulty_id)
@@ -307,6 +482,20 @@ static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty
 
 static func start_random_map_skirmish_session(input_config: Dictionary, difficulty_id: String = "normal") -> SessionStateStoreScript.SessionData:
 	var setup := build_random_map_skirmish_setup(input_config, difficulty_id)
+	return _start_random_map_skirmish_session_from_setup(setup)
+
+static func start_random_map_skirmish_session_with_retry(
+	input_config: Dictionary,
+	difficulty_id: String = "normal",
+	retry_policy: Dictionary = {}
+) -> SessionStateStoreScript.SessionData:
+	var setup := build_random_map_skirmish_setup_with_retry(input_config, difficulty_id, retry_policy)
+	return _start_random_map_skirmish_session_from_setup(setup)
+
+static func start_random_map_skirmish_session_from_setup(setup: Dictionary) -> SessionStateStoreScript.SessionData:
+	return _start_random_map_skirmish_session_from_setup(setup)
+
+static func _start_random_map_skirmish_session_from_setup(setup: Dictionary) -> SessionStateStoreScript.SessionData:
 	if not bool(setup.get("ok", false)):
 		push_warning(String(setup.get("failure_handoff", "Generated skirmish setup failed validation.")))
 		return SessionStateStoreScript.new_session_data()
@@ -406,12 +595,112 @@ static func _random_map_retry_status(generated: Dictionary, report: Dictionary) 
 		"warning_count": int(report.get("warning_count", 0)),
 	}
 
+static func _random_map_template_option(template_id: String) -> Dictionary:
+	for option in RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS:
+		if String(option.get("id", "")) == template_id:
+			return option.duplicate(true)
+	return RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS[0].duplicate(true)
+
+static func _random_map_profile_option(profile_id: String) -> Dictionary:
+	for option in RANDOM_MAP_PLAYER_PROFILE_OPTIONS:
+		if String(option.get("id", "")) == profile_id:
+			return option.duplicate(true)
+	return RANDOM_MAP_PLAYER_PROFILE_OPTIONS[0].duplicate(true)
+
+static func _random_map_retry_policy(retry_policy: Dictionary) -> Dictionary:
+	var policy := RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true)
+	for key in retry_policy.keys():
+		policy[key] = retry_policy[key]
+	policy["max_attempts"] = clampi(int(policy.get("max_attempts", 1)), 1, 5)
+	if String(policy.get("mode", "")) == "":
+		policy["mode"] = "none"
+	return policy
+
+static func _random_map_retry_attempt_config(input_config: Dictionary, attempt_index: int, retry_policy: Dictionary) -> Dictionary:
+	var config := input_config.duplicate(true)
+	if attempt_index > 0 and retry_policy.get("fallback_config", {}) is Dictionary and not retry_policy.get("fallback_config", {}).is_empty():
+		config = retry_policy.get("fallback_config", {}).duplicate(true)
+	if attempt_index > 0 and String(retry_policy.get("mode", "")).find("seed_salt") >= 0:
+		config["seed"] = "%s:retry_%d" % [String(config.get("seed", "0")), attempt_index]
+	return config
+
+static func _random_map_setup_attempt_record(
+	setup: Dictionary,
+	input_config: Dictionary,
+	attempt_number: int,
+	max_attempts: int
+) -> Dictionary:
+	var ok := bool(setup.get("ok", false))
+	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
+	var normalized := RandomMapGeneratorRulesScript.normalize_config(input_config)
+	var retryable := not ok and attempt_number < max_attempts
+	return {
+		"attempt": attempt_number,
+		"max_attempts": max_attempts,
+		"ok": ok,
+		"seed": String(normalized.get("seed", "")),
+		"template_id": String(normalized.get("template_id", "")),
+		"profile_id": String(normalized.get("profile", {}).get("id", "")),
+		"scenario_id": String(setup.get("scenario_id", "")),
+		"validation_status": String(validation.get("status", "pass" if ok else "fail")),
+		"failure_count": int(validation.get("failure_count", 0)),
+		"warning_count": int(validation.get("warning_count", 0)),
+		"validation": validation,
+		"retry_decision": {
+			"will_retry": retryable,
+			"reason": "retry_policy_has_remaining_attempt" if retryable else ("accepted_valid_generation" if ok else "attempt_limit_reached"),
+			"next_attempt": attempt_number + 1 if retryable else 0,
+		},
+	}
+
+static func _random_map_retry_status_from_attempts(attempts: Array, ok: bool, retry_policy: Dictionary) -> Dictionary:
+	var status := "pass"
+	if ok and attempts.size() > 1:
+		status = "pass_after_retry"
+	elif not ok:
+		status = "failed_before_launch"
+	var validation_status := "pass" if ok else "fail"
+	if not attempts.is_empty():
+		validation_status = String(attempts[attempts.size() - 1].get("validation_status", validation_status))
+	return {
+		"policy": "bounded_player_setup_retry_visible",
+		"attempt_count": attempts.size(),
+		"retry_count": max(0, attempts.size() - 1),
+		"max_attempts": int(retry_policy.get("max_attempts", attempts.size())),
+		"mode": String(retry_policy.get("mode", "none")),
+		"status": status,
+		"validation_status": validation_status,
+		"failure_count": int(attempts[attempts.size() - 1].get("failure_count", 0)) if not attempts.is_empty() else 0,
+		"warning_count": int(attempts[attempts.size() - 1].get("warning_count", 0)) if not attempts.is_empty() else 0,
+	}
+
 static func _random_map_failure_handoff(report: Dictionary, retry_status: Dictionary) -> String:
 	return "Generated Skirmish blocked: validation %s after %d attempt(s), retry count %d; no session, save, campaign, or authored content write occurred." % [
 		String(report.get("status", "fail")),
 		int(retry_status.get("attempt_count", 1)),
 		int(retry_status.get("retry_count", 0)),
 	]
+
+static func _random_map_failure_setup_summary(report: Dictionary, retry_status: Dictionary, attempts: Array) -> String:
+	var lines := [
+		"Generated Skirmish setup blocked",
+		"Validation %s | Attempts %d/%d | Retries %d" % [
+			String(report.get("status", "fail")),
+			int(retry_status.get("attempt_count", 0)),
+			int(retry_status.get("max_attempts", retry_status.get("attempt_count", 0))),
+			int(retry_status.get("retry_count", 0)),
+		],
+	]
+	for failure in report.get("failures", []):
+		if lines.size() >= 5:
+			break
+		lines.append("Failure: %s" % String(failure))
+	if attempts.size() > 0:
+		var last_attempt: Dictionary = attempts[attempts.size() - 1] if attempts[attempts.size() - 1] is Dictionary else {}
+		var retry_decision: Dictionary = last_attempt.get("retry_decision", {}) if last_attempt.get("retry_decision", {}) is Dictionary else {}
+		lines.append("Retry decision: %s." % String(retry_decision.get("reason", "attempt_limit_reached")))
+	lines.append("Boundary: no session, save, campaign adoption, authored JSON writeback, or alpha/parity claim.")
+	return "\n".join(lines)
 
 static func _random_map_generated_identity(payload: Dictionary) -> Dictionary:
 	var scenario: Dictionary = payload.get("scenario_record", {}) if payload.get("scenario_record", {}) is Dictionary else {}

@@ -69,6 +69,15 @@ const TAB_HELP_TOPIC := {
 @onready var _difficulty_picker: OptionButton = %DifficultyPicker
 @onready var _difficulty_summary_label: Label = %DifficultySummary
 @onready var _setup_summary_label: Label = %SetupSummary
+@onready var _generated_seed_edit: LineEdit = %GeneratedSeed
+@onready var _generated_template_picker: OptionButton = %GeneratedTemplatePicker
+@onready var _generated_profile_picker: OptionButton = %GeneratedProfilePicker
+@onready var _generated_player_count_picker: OptionButton = %GeneratedPlayerCountPicker
+@onready var _generated_water_picker: OptionButton = %GeneratedWaterPicker
+@onready var _generated_underground_toggle: CheckButton = %GeneratedUndergroundToggle
+@onready var _generated_status_label: Label = %GeneratedMapStatus
+@onready var _generated_provenance_label: Label = %GeneratedMapProvenance
+@onready var _start_generated_skirmish_button: Button = %StartGeneratedSkirmish
 @onready var _skirmish_commander_preview_label: Label = %SkirmishCommanderPreview
 @onready var _skirmish_operational_board_label: Label = %SkirmishOperationalBoard
 @onready var _start_skirmish_button: Button = %StartSkirmish
@@ -98,6 +107,13 @@ var _selected_campaign_scenario_id := ""
 var _skirmish_entries: Array = []
 var _selected_skirmish_id := ""
 var _selected_difficulty: String = ScenarioSelectRulesScript.default_difficulty_id()
+var _generated_seed := ""
+var _generated_template_id := ""
+var _generated_profile_id := ""
+var _generated_player_count := 3
+var _generated_water_mode := "land"
+var _generated_underground := false
+var _generated_last_setup := {}
 var _help_entries: Array = []
 var _selected_help_topic_id := ""
 var _last_context_tab := TAB_CAMPAIGN
@@ -117,8 +133,10 @@ func _refresh_menu() -> void:
 	_rebuild_save_browser()
 	_rebuild_campaign_browser()
 	_configure_difficulty_picker()
+	_configure_generated_random_map_controls()
 	_rebuild_skirmish_browser()
 	_refresh_skirmish_setup()
+	_refresh_generated_random_map_setup()
 	_rebuild_help_browser()
 	_refresh_settings_panel()
 	_refresh_stage_dock_header()
@@ -245,6 +263,7 @@ func _on_difficulty_selected(index: int) -> void:
 	var metadata = _difficulty_picker.get_item_metadata(index)
 	_selected_difficulty = ScenarioSelectRulesScript.normalize_difficulty(metadata)
 	_refresh_skirmish_setup()
+	_refresh_generated_random_map_setup()
 
 func _on_start_skirmish_pressed() -> void:
 	if _start_skirmish_button.disabled:
@@ -252,6 +271,69 @@ func _on_start_skirmish_pressed() -> void:
 	var session := ScenarioSelectRulesScript.start_skirmish_session(_selected_skirmish_id, _selected_difficulty)
 	if session.scenario_id == "":
 		_refresh_menu()
+		return
+	_refresh_menu()
+	AppRouter.go_to_overworld()
+
+func _on_generated_seed_changed(new_text: String) -> void:
+	_generated_seed = new_text.strip_edges()
+	_refresh_generated_random_map_setup()
+
+func _on_generated_template_selected(index: int) -> void:
+	if index < 0 or index >= _generated_template_picker.get_item_count():
+		return
+	_generated_template_id = String(_generated_template_picker.get_item_metadata(index))
+	for option in ScenarioSelectRulesScript.random_map_player_setup_options().get("templates", []):
+		if option is Dictionary and String(option.get("id", "")) == _generated_template_id:
+			_generated_profile_id = String(option.get("profile_id", _generated_profile_id))
+			_select_generated_picker_metadata(_generated_profile_picker, _generated_profile_id)
+			break
+	_refresh_generated_random_map_setup()
+
+func _on_generated_profile_selected(index: int) -> void:
+	if index < 0 or index >= _generated_profile_picker.get_item_count():
+		return
+	_generated_profile_id = String(_generated_profile_picker.get_item_metadata(index))
+	_refresh_generated_random_map_setup()
+
+func _on_generated_player_count_selected(index: int) -> void:
+	if index < 0 or index >= _generated_player_count_picker.get_item_count():
+		return
+	_generated_player_count = int(_generated_player_count_picker.get_item_metadata(index))
+	_refresh_generated_random_map_setup()
+
+func _on_generated_water_selected(index: int) -> void:
+	if index < 0 or index >= _generated_water_picker.get_item_count():
+		return
+	_generated_water_mode = String(_generated_water_picker.get_item_metadata(index))
+	if _generated_water_mode == "islands" and _generated_underground:
+		_generated_underground = false
+		_generated_underground_toggle.button_pressed = false
+	_refresh_generated_random_map_setup()
+
+func _on_generated_underground_toggled(enabled: bool) -> void:
+	_generated_underground = enabled
+	if _generated_underground and _generated_water_mode == "islands":
+		_generated_water_mode = "land"
+		_select_generated_picker_metadata(_generated_water_picker, _generated_water_mode)
+	_refresh_generated_random_map_setup()
+
+func _on_start_generated_skirmish_pressed() -> void:
+	if _start_generated_skirmish_button.disabled:
+		return
+	var config := _generated_random_map_config()
+	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		config,
+		_selected_difficulty,
+		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
+	)
+	_generated_last_setup = setup.duplicate(true)
+	if not bool(setup.get("ok", false)):
+		_apply_generated_random_map_setup_surface(setup)
+		return
+	var session := ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
+	if session.scenario_id == "":
+		_apply_generated_random_map_setup_surface(setup)
 		return
 	_refresh_menu()
 	AppRouter.go_to_overworld()
@@ -765,6 +847,69 @@ func _configure_difficulty_picker() -> void:
 	if selected_index >= 0:
 		_difficulty_picker.select(selected_index)
 
+func _configure_generated_random_map_controls() -> void:
+	var options := ScenarioSelectRulesScript.random_map_player_setup_options()
+	if _generated_seed == "":
+		_generated_seed = String(options.get("default_seed", "aurelion-random-skirmish-10184"))
+	if _generated_template_id == "":
+		_generated_template_id = String(options.get("default_template_id", "border_gate_compact_v1"))
+	if _generated_profile_id == "":
+		_generated_profile_id = String(options.get("default_profile_id", "border_gate_compact_profile_v1"))
+	if _generated_player_count <= 0:
+		_generated_player_count = int(options.get("default_player_count", 3))
+	if _generated_water_mode == "":
+		_generated_water_mode = String(options.get("default_water_mode", "land"))
+	_generated_seed_edit.text = _generated_seed
+	_generated_seed_edit.tooltip_text = "Seed: same seed and setup recreate the same generated map identity."
+
+	_rebuild_generated_option_picker(_generated_template_picker, options.get("templates", []), _generated_template_id, "template")
+	_rebuild_generated_option_picker(_generated_profile_picker, options.get("profiles", []), _generated_profile_id, "profile")
+
+	_generated_player_count_picker.clear()
+	var player_selected := -1
+	for index in range(options.get("player_counts", []).size()):
+		var player_count := int(options.get("player_counts", [])[index])
+		_generated_player_count_picker.add_item("%d players" % player_count, index)
+		_generated_player_count_picker.set_item_metadata(index, player_count)
+		if player_count == _generated_player_count:
+			player_selected = index
+	if player_selected >= 0:
+		_generated_player_count_picker.select(player_selected)
+	_generated_player_count_picker.tooltip_text = "Player count: one human start plus generated opponents."
+
+	_generated_water_picker.clear()
+	var water_selected := -1
+	for index in range(options.get("water_modes", []).size()):
+		var water_option = options.get("water_modes", [])[index]
+		if not (water_option is Dictionary):
+			continue
+		_generated_water_picker.add_item(String(water_option.get("label", water_option.get("id", "Water"))), index)
+		_generated_water_picker.set_item_metadata(index, String(water_option.get("id", "land")))
+		if String(water_option.get("id", "land")) == _generated_water_mode:
+			water_selected = index
+	if water_selected >= 0:
+		_generated_water_picker.select(water_selected)
+	_generated_water_picker.tooltip_text = "Water: land or islands generation policy."
+
+	_generated_underground_toggle.button_pressed = _generated_underground
+	_generated_underground_toggle.tooltip_text = "Underground: include a second generated level when supported by the selected template."
+
+func _rebuild_generated_option_picker(picker: OptionButton, options: Array, selected_id: String, label_key: String) -> void:
+	picker.clear()
+	var selected_index := -1
+	for index in range(options.size()):
+		var option = options[index]
+		if not (option is Dictionary):
+			continue
+		var option_id := String(option.get("id", ""))
+		picker.add_item(String(option.get("label", option_id)), index)
+		picker.set_item_metadata(index, option_id)
+		if option_id == selected_id:
+			selected_index = index
+	if selected_index >= 0:
+		picker.select(selected_index)
+	picker.tooltip_text = "%s: generated map setup provenance records this id." % label_key.capitalize()
+
 func _rebuild_skirmish_browser() -> void:
 	_skirmish_entries = ScenarioSelectRulesScript.build_skirmish_browser_entries()
 	_skirmish_list.clear()
@@ -842,6 +987,103 @@ func _refresh_skirmish_setup() -> void:
 			String(setup.get("scenario_name", _selected_skirmish_id)),
 			String(setup.get("difficulty_label", ScenarioSelectRulesScript.difficulty_label(_selected_difficulty))),
 		]
+
+func _refresh_generated_random_map_setup() -> void:
+	var setup := _generated_random_map_preview_setup()
+	_generated_last_setup = setup.duplicate(true)
+	_apply_generated_random_map_setup_surface(setup)
+
+func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
+	var retry: Dictionary = setup.get("retry_status", {}) if setup.get("retry_status", {}) is Dictionary else {}
+	var status_text := ""
+	var provenance_text := ""
+	if bool(setup.get("ok", false)):
+		status_text = "Generated validation %s | %d attempt(s), %d retry." % [
+			String(retry.get("validation_status", "pass")),
+			int(retry.get("attempt_count", 1)),
+			int(retry.get("retry_count", 0)),
+		]
+		provenance_text = "Seed %s | Template %s | Profile %s | Players %d | Water %s | Underground %s" % [
+			String(setup.get("normalized_seed", "")),
+			String(setup.get("template_id", "")),
+			String(setup.get("profile_id", "")),
+			_generated_player_count,
+			_generated_water_mode,
+			"on" if _generated_underground else "off",
+		]
+		_start_generated_skirmish_button.disabled = false
+		_start_generated_skirmish_button.tooltip_text = _join_nonempty_lines([
+			String(setup.get("launch_handoff", "")),
+			String(setup.get("failure_handoff", "")),
+			String(setup.get("setup_summary", "")),
+		])
+	else:
+		status_text = "Generated validation blocked | %d attempt(s), %d retry." % [
+			int(retry.get("attempt_count", 0)),
+			int(retry.get("retry_count", 0)),
+		]
+		provenance_text = String(setup.get("failure_handoff", "Generated setup failed validation."))
+		_start_generated_skirmish_button.disabled = true
+		_start_generated_skirmish_button.tooltip_text = _join_nonempty_lines([
+			String(setup.get("failure_handoff", "")),
+			String(setup.get("setup_summary", "")),
+		])
+	_set_compact_label(_generated_status_label, status_text, 2, 72)
+	_set_compact_label(_generated_provenance_label, provenance_text, 2, 118)
+
+func _generated_random_map_preview_setup() -> Dictionary:
+	var seed := _generated_seed.strip_edges()
+	if seed == "":
+		seed = String(ScenarioSelectRulesScript.random_map_player_setup_options().get("default_seed", "aurelion-random-skirmish-10184"))
+	return {
+		"ok": true,
+		"setup_kind": "generated_random_map_skirmish",
+		"launch_mode": SessionState.LAUNCH_MODE_SKIRMISH,
+		"difficulty": _selected_difficulty,
+		"difficulty_label": ScenarioSelectRulesScript.difficulty_label(_selected_difficulty),
+		"scenario_id": "",
+		"scenario_name": "Generated Skirmish",
+		"template_id": _generated_template_id,
+		"profile_id": _generated_profile_id,
+		"normalized_seed": seed,
+		"retry_status": {
+			"policy": "bounded_player_setup_retry_visible",
+			"attempt_count": 0,
+			"retry_count": 0,
+			"max_attempts": int(ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.get("max_attempts", 2)),
+			"mode": String(ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.get("mode", "seed_salt")),
+			"status": "configured_pending_launch_validation",
+			"validation_status": "pending_launch_validation",
+			"failure_count": 0,
+			"warning_count": 0,
+		},
+		"setup_summary": "Generated Skirmish setup configured; launch validates the map with bounded retry before creating a session.",
+		"launch_handoff": "Launch handoff: validate generated Skirmish from seed/config provenance with bounded retry, then start a fresh Day 1 Skirmish expedition only if validation passes.",
+		"failure_handoff": "Validation failures stay in this setup surface; no session, save, campaign progress, or authored content changes occur when generation is blocked.",
+		"campaign_adoption": false,
+		"alpha_parity_claim": false,
+	}
+
+func _generated_random_map_config() -> Dictionary:
+	var seed := _generated_seed.strip_edges()
+	if seed == "":
+		seed = String(ScenarioSelectRulesScript.random_map_player_setup_options().get("default_seed", "aurelion-random-skirmish-10184"))
+	return ScenarioSelectRulesScript.build_random_map_player_config(
+		seed,
+		_generated_template_id,
+		_generated_profile_id,
+		_generated_player_count,
+		_generated_water_mode,
+		_generated_underground
+	)
+
+func _select_generated_picker_metadata(picker: OptionButton, metadata: String) -> bool:
+	for index in range(picker.get_item_count()):
+		if String(picker.get_item_metadata(index)) != metadata:
+			continue
+		picker.select(index)
+		return true
+	return false
 
 func _skirmish_front_check_payload(setup: Dictionary) -> Dictionary:
 	if setup.is_empty():
@@ -1109,6 +1351,15 @@ func validation_snapshot() -> Dictionary:
 		"skirmish_details_full": _skirmish_details_label.tooltip_text,
 		"skirmish_setup": _setup_summary_label.text,
 		"skirmish_setup_full": _setup_summary_label.tooltip_text,
+		"generated_random_map_controls": _generated_random_map_control_snapshot(),
+		"generated_random_map_setup": _generated_last_setup.duplicate(true),
+		"generated_random_map_status": _generated_status_label.text,
+		"generated_random_map_status_full": _generated_status_label.tooltip_text,
+		"generated_random_map_provenance": _generated_provenance_label.text,
+		"generated_random_map_provenance_full": _generated_provenance_label.tooltip_text,
+		"start_generated_skirmish_text": _start_generated_skirmish_button.text,
+		"start_generated_skirmish_tooltip": _start_generated_skirmish_button.tooltip_text,
+		"start_generated_skirmish_enabled": not _start_generated_skirmish_button.disabled,
 		"skirmish_commander_preview": _skirmish_commander_preview_label.text,
 		"skirmish_commander_preview_full": _skirmish_commander_preview_label.tooltip_text,
 		"skirmish_browser_item_tooltips": _skirmish_browser_item_tooltips(),
@@ -1165,6 +1416,19 @@ func validation_snapshot() -> Dictionary:
 		"active_expedition_full": _active_expedition_label.tooltip_text,
 	}
 
+func validation_generated_random_map_snapshot() -> Dictionary:
+	return {
+		"controls": _generated_random_map_control_snapshot(),
+		"setup": _generated_last_setup.duplicate(true),
+		"status": _generated_status_label.text,
+		"status_full": _generated_status_label.tooltip_text,
+		"provenance": _generated_provenance_label.text,
+		"provenance_full": _generated_provenance_label.tooltip_text,
+		"start_text": _start_generated_skirmish_button.text,
+		"start_tooltip": _start_generated_skirmish_button.tooltip_text,
+		"start_enabled": not _start_generated_skirmish_button.disabled,
+	}
+
 func _first_view_command_labels() -> Array:
 	var labels := []
 	for button in [_open_campaign_button, _open_skirmish_button, _open_saves_button, _open_settings_button, _open_editor_button, _quit_button]:
@@ -1211,6 +1475,21 @@ func _skirmish_browser_item_tooltips() -> Array:
 	for index in range(_skirmish_list.get_item_count()):
 		tooltips.append(_skirmish_list.get_item_tooltip(index))
 	return tooltips
+
+func _generated_random_map_control_snapshot() -> Dictionary:
+	return {
+		"seed": _generated_seed,
+		"template_id": _generated_template_id,
+		"profile_id": _generated_profile_id,
+		"player_count": _generated_player_count,
+		"water_mode": _generated_water_mode,
+		"underground": _generated_underground,
+		"retry_policy": ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
+		"template_options": _picker_item_labels(_generated_template_picker),
+		"profile_options": _picker_item_labels(_generated_profile_picker),
+		"player_count_options": _picker_item_labels(_generated_player_count_picker),
+		"water_options": _picker_item_labels(_generated_water_picker),
+	}
 
 func _picker_item_labels(picker: OptionButton) -> Array:
 	var labels := []
@@ -1279,6 +1558,90 @@ func validation_set_difficulty(difficulty_id: String) -> bool:
 		_on_difficulty_selected(index)
 		return true
 	return false
+
+func validation_set_generated_seed(seed: String) -> bool:
+	_generated_seed_edit.text = seed
+	_on_generated_seed_changed(seed)
+	return _generated_seed == seed.strip_edges()
+
+func validation_select_generated_template(template_id: String) -> bool:
+	for index in range(_generated_template_picker.get_item_count()):
+		if String(_generated_template_picker.get_item_metadata(index)) != template_id:
+			continue
+		_generated_template_picker.select(index)
+		_on_generated_template_selected(index)
+		return true
+	return false
+
+func validation_select_generated_profile(profile_id: String) -> bool:
+	for index in range(_generated_profile_picker.get_item_count()):
+		if String(_generated_profile_picker.get_item_metadata(index)) != profile_id:
+			continue
+		_generated_profile_picker.select(index)
+		_on_generated_profile_selected(index)
+		return true
+	return false
+
+func validation_select_generated_player_count(player_count: int) -> bool:
+	for index in range(_generated_player_count_picker.get_item_count()):
+		if int(_generated_player_count_picker.get_item_metadata(index)) != player_count:
+			continue
+		_generated_player_count_picker.select(index)
+		_on_generated_player_count_selected(index)
+		return true
+	return false
+
+func validation_select_generated_water_mode(water_mode: String) -> bool:
+	for index in range(_generated_water_picker.get_item_count()):
+		if String(_generated_water_picker.get_item_metadata(index)) != water_mode:
+			continue
+		_generated_water_picker.select(index)
+		_on_generated_water_selected(index)
+		return true
+	return false
+
+func validation_set_generated_underground(enabled: bool) -> bool:
+	_generated_underground_toggle.button_pressed = enabled
+	_on_generated_underground_toggled(enabled)
+	return _generated_underground == enabled
+
+func validation_force_generated_random_map_config(config: Dictionary) -> Dictionary:
+	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		config,
+		_selected_difficulty,
+		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
+	)
+	_generated_last_setup = setup.duplicate(true)
+	_set_compact_label(_generated_status_label, String(setup.get("setup_summary", setup.get("failure_handoff", ""))), 2, 92)
+	_set_compact_label(_generated_provenance_label, String(setup.get("failure_handoff", setup.get("setup_summary", ""))), 2, 118)
+	_start_generated_skirmish_button.disabled = not bool(setup.get("ok", false))
+	return setup
+
+func validation_start_generated_skirmish() -> Dictionary:
+	var requested_setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		_generated_random_map_config(),
+		_selected_difficulty,
+		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
+	)
+	_generated_last_setup = requested_setup.duplicate(true)
+	if bool(requested_setup.get("ok", false)):
+		ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(requested_setup)
+	else:
+		_apply_generated_random_map_setup_surface(requested_setup)
+	var active_session := SessionState.ensure_active_session()
+	return {
+		"requested_scenario_id": String(requested_setup.get("scenario_id", "")),
+		"requested_seed": String(requested_setup.get("normalized_seed", "")),
+		"started": bool(requested_setup.get("ok", false))
+			and active_session.scenario_id == String(requested_setup.get("scenario_id", ""))
+			and active_session.launch_mode == SessionState.LAUNCH_MODE_SKIRMISH
+			and bool(active_session.flags.get("generated_random_map", false)),
+		"active_scenario_id": active_session.scenario_id,
+		"active_launch_mode": active_session.launch_mode,
+		"active_generated_random_map": bool(active_session.flags.get("generated_random_map", false)),
+		"active_retry_status": active_session.flags.get("generated_random_map_retry_status", {}),
+		"active_provenance": active_session.flags.get("generated_random_map_provenance", {}),
+	}
 
 func validation_select_resolution(resolution_id: String) -> bool:
 	validation_open_settings_stage()
@@ -1509,6 +1872,7 @@ func _apply_visual_theme() -> void:
 		"OperationalBoardPanel": "smoke",
 		"JournalPanel": "smoke",
 		"DifficultyPanel": "smoke",
+		"GeneratedMapPanel": "smoke",
 		"SkirmishListPanel": "smoke",
 		"SkirmishBriefPanel": "smoke",
 		"SkirmishCommanderPanel": "smoke",
@@ -1534,14 +1898,23 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 188.0, 40.0, 14)
+	FrontierVisualKit.apply_button(_start_generated_skirmish_button, "primary", 176.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_load_selected_button, "primary", 184.0, 38.0, 14)
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
 
-	for picker in [_difficulty_picker, _presentation_mode_picker, _resolution_picker]:
+	for picker in [
+		_difficulty_picker,
+		_generated_template_picker,
+		_generated_profile_picker,
+		_generated_player_count_picker,
+		_generated_water_picker,
+		_presentation_mode_picker,
+		_resolution_picker,
+	]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
 
-	for toggle in [_large_text_toggle, _reduce_motion_toggle]:
+	for toggle in [_generated_underground_toggle, _large_text_toggle, _reduce_motion_toggle]:
 		FrontierVisualKit.apply_button(toggle, "secondary", 180.0, 34.0, 13)
 
 	for slider in [_master_volume_slider, _music_volume_slider]:
