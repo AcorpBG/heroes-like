@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: recover the Phase 2 RMG workstream and continue only HoMM3-style random-map-generation parity work translated into original Aurelion Reach systems. Completed non-RMG future-phase evidence remains preserved in progress history, but it is not the active continuation path and must not drive the next slice.
 
-Recently completed evidence includes the P2.10 random-map foundation queue, early follow-up RMG staging/report slices, playable materialization/runtime evidence, water/underground/transit gameplay evidence, Phase 3 report foundations, and two pulled-forward broad-production increments. Those completions do not prove RMG parity. Current selected slice: `random-map-large-batch-parity-stress-10184`, focused on deterministic large-batch stress coverage across translated template families, sizes, player counts, water/underground axes, retry diagnostics, and expected unsupported/negative cases. P2.10 remains a foundation, not HoMM3 RMG parity, authored campaign adoption, alpha completion, or broad production completion.
+Recently completed evidence includes the P2.10 random-map foundation queue, early follow-up RMG staging/report slices, playable materialization/runtime evidence, water/underground/transit gameplay evidence, object-pool/value weighting evidence, large-batch parity stress evidence, Phase 3 report foundations, and two pulled-forward broad-production increments. Those completions do not prove RMG parity. The final parity gate audit `random-map-final-homm3-parity-gate-audit-10184` found that RMG parity is not met: broad translated-template materialization, final writeout/export/save-schema closure, and player-facing setup/retry UX remain RMG-only blockers. P2.10 remains a foundation, not HoMM3 RMG parity, authored campaign adoption, alpha completion, or broad production completion.
 
 ## Slice Status Model
 
@@ -2430,6 +2430,7 @@ purpose: Re-audit RMG against the extracted HoMM3 functional model after impleme
 sourceDocs:
 - `docs/random-map-generator-foundation.md`
 - `docs/random-map-homm3-parity-gap-audit.md`
+- `docs/random-map-final-homm3-parity-gate-audit.md`
 - all RMG implementation reports and smoke evidence
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
@@ -2448,6 +2449,90 @@ sliceEvidence:
 nonGoals:
 - No implementation hidden inside the audit.
 - No alpha, campaign, broad production, or release claim.
+
+auditResult:
+- `docs/random-map-final-homm3-parity-gate-audit.md` concludes RMG parity is not met.
+- The parent RMG parity queue remains open because large-batch evidence still includes metadata-only translated-template cases, unsupported warnings, deferred final art/autotile/writeout/save/schema boundaries, and no completed player-facing random-map setup/retry UX.
+
+### P2 Child: Random Map Translated Template Runtime Sweep
+
+id: `random-map-translated-template-runtime-sweep-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Convert translated-template large-batch coverage from metadata-only/unsupported evidence into materialized generated maps where parity is intended, with explicit accepted non-parity decisions only where original-game constraints require them.
+
+sourceDocs:
+- `docs/random-map-final-homm3-parity-gate-audit.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-summary.csv`
+
+implementationTargets:
+- translated-template generation policy
+- large-batch fixture/status handling
+- runtime materialization coverage for translated template families
+- unsupported-warning remediation diagnostics
+
+sliceEvidence:
+- Translated-template sweep cases no longer pass only through metadata-only coverage when parity is intended.
+- Unsupported-warning cases are either materialized and validated or explicitly recorded as accepted original-game non-parity with rationale.
+- Large-batch report separates true validation-pass materializations from intentionally non-parity families.
+
+nonGoals:
+- No campaign work, faction breadth work, broad content expansion, or parity claim.
+
+### P2 Child: Random Map Final Writeout Export Save Schema
+
+id: `random-map-final-writeout-export-save-schema-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Close the final RMG parity gaps in tile/object/road/river writeout, generated export/round-trip, save-schema provenance, and replay contract.
+
+sourceDocs:
+- `docs/random-map-final-homm3-parity-gate-audit.md`
+- `docs/random-map-generator-foundation.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+
+implementationTargets:
+- final terrain/road/river/object writeout
+- generated map export and round-trip validation
+- save-schema/provenance versioning
+- replay contract beyond seed/config identity
+
+sliceEvidence:
+- Generated maps can be exported and round-tripped without relying on staged-only metadata.
+- Roads, rivers, terrain bytes, object instances, and multi-tile bodies have durable writeout evidence.
+- Save/replay provenance is versioned and validated without campaign or authored JSON adoption.
+
+nonGoals:
+- No campaign adoption, authored production content writeback, or broad production content work.
+
+### P2 Child: Random Map Player-Facing Setup Retry UX
+
+id: `random-map-player-facing-setup-retry-ux-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement real player-facing random-map setup, validation failure, and retry UX for generated skirmish maps while preserving campaign/writeback boundaries.
+
+sourceDocs:
+- `docs/random-map-final-homm3-parity-gate-audit.md`
+- `docs/random-map-generator-foundation.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
+
+implementationTargets:
+- random-map skirmish setup controls
+- retry/failure presentation
+- generated skirmish launch handoff
+- provenance display without debug-dashboard overload
+
+sliceEvidence:
+- A player can configure a generated skirmish map through live UI instead of report-only plumbing.
+- Validation failures and retry outcomes are visible and actionable.
+- UI preserves no campaign adoption, no authored content writeback, and no alpha/parity claim.
+
+nonGoals:
+- No campaign UI, broad menu redesign, or final art polish beyond the generated-map setup flow.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 

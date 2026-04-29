@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-large-batch-parity-stress-10184",
-  "currentSliceTitle": "Random Map Large Batch Parity Stress Harness",
+  "currentSliceId": "random-map-final-homm3-parity-gate-audit-10184",
+  "currentSliceTitle": "Random Map Final HoMM3-Parity Gate Audit",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented large deterministic RMG parity stress harness and fixture corpus: 58 cases, all 53 translated templates/topology families represented, water/islands, underground, wide-link, border-guard, retry-policy, object-pool/materialization/gameplay evidence tags, expected negative coverage, stable batch/phase/materialized signatures, unsupported warnings separated from hard blockers. Validation passed: tests/validate_repo.py; random_map_large_batch_parity_stress_report.tscn; random_map_water_underground_transit_gameplay_report.tscn; random_map_playable_materialization_runtime_report.tscn; random_map_object_pool_value_weighting_report.tscn; random_map_validation_batch_retry_report.tscn; json.tool ops/progress.json; git diff --check.",
+  "currentSliceNotes": "Final RMG parity gate audit completed in docs/random-map-final-homm3-parity-gate-audit.md. Result: RMG parity is not met. The parent parity queue remains open because translated-template coverage is largely metadata-only/unsupported, final writeout/export/save-schema/replay are incomplete, and real player-facing setup/retry UX is not complete.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Current continuation is Phase 2 RMG parity only. Preserve completed non-RMG and future-phase evidence, but do not continue campaign/faction/broad production work from it. P2.10 foundation and completed RMG staging/report slices are not HoMM3 RMG parity.",
-  "updatedAt": "2026-04-29T16:30:49Z",
+  "updatedAt": "2026-04-29T16:40:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -548,17 +548,19 @@
         "generator validation/report harness",
         "Phase 3 headless harness integration path"
       ],
-      "notes": "P2.10 foundation-stage evidence remains completed, but the RMG parity workstream is reopened/extended. Completed foundation children and early follow-up RMG staging/report slices do not prove HoMM3-style RMG parity. Active continuation is the RMG-only parity recovery queue starting with playable generated-map materialization/runtime integration.",
+      "notes": "P2.10 foundation-stage evidence remains completed, but the RMG parity workstream remains open. Final gate audit docs/random-map-final-homm3-parity-gate-audit.md found RMG parity is not met because broad translated-template materialization, final writeout/export/save-schema/replay closure, and player-facing setup/retry UX remain RMG-only blockers.",
       "sliceType": "parent",
       "childSliceIds": [
         "random-map-connection-guard-materialization-10184",
         "random-map-decoration-density-pass-10184",
         "random-map-final-homm3-parity-gate-audit-10184",
+        "random-map-final-writeout-export-save-schema-10184",
         "random-map-homm3-parity-gap-audit-10184",
         "random-map-large-batch-parity-stress-10184",
         "random-map-monster-reward-bands-10184",
         "random-map-object-footprint-catalog-10184",
         "random-map-object-pool-value-weighting-10184",
+        "random-map-player-facing-setup-retry-ux-10184",
         "random-map-playable-materialization-runtime-integration-10184",
         "random-map-requirements-doc-10184",
         "random-map-resource-encounter-fairness-report-10184",
@@ -572,6 +574,7 @@
         "random-map-terrain-town-road-constraints-10184",
         "random-map-terrain-transit-semantics-10184",
         "random-map-town-mine-dwelling-placement-10184",
+        "random-map-translated-template-runtime-sweep-10184",
         "random-map-validation-batch-retry-10184",
         "random-map-water-underground-transit-gameplay-10184",
         "random-map-zone-layout-water-underground-10184"
@@ -3276,7 +3279,7 @@
       "id": "random-map-final-homm3-parity-gate-audit-10184",
       "title": "Random Map Final HoMM3-Parity Gate Audit",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending_after_implementation",
+      "status": "completed",
       "sliceType": "child",
       "parentSliceId": "random-map-generator-foundation-10184",
       "classification": "phase2_child_implementation_slice",
@@ -3284,6 +3287,7 @@
       "sourceDocs": [
         "docs/random-map-generator-foundation.md",
         "docs/random-map-homm3-parity-gap-audit.md",
+        "docs/random-map-final-homm3-parity-gate-audit.md",
         "all RMG implementation reports and smoke evidence",
         "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
         "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md"
@@ -3303,7 +3307,16 @@
       "sliceEvidence": [
         "Every gap matrix row is marked implemented, partially implemented with explicit blocker, or intentionally non-parity with accepted original-game rationale.",
         "The audit verifies template breadth, runtime grammar consumption, playable materialization, water/underground/transit, object pools/value weighting, batch reliability, UI/save/replay, and campaign exclusion/writeback boundaries.",
-        "P2.10/RMG parity is not marked complete unless all required implementation and validation gates pass."
+        "P2.10/RMG parity is not marked complete because required gates remain partial, blocked, metadata-only, unsupported, deferred, or unproven.",
+        "Queued RMG-only follow-up slices for translated-template runtime materialization, final writeout/export/save-schema/replay closure, and player-facing setup/retry UX."
+      ],
+      "validationEvidence": [
+        "docs/random-map-final-homm3-parity-gate-audit.md created with final gate decision: RMG parity is not met.",
+        "random_map_large_batch_parity_stress_report.tscn passed as diagnostic report with case_count=58, metadata_only_count=38, unsupported_warning_count=19, validation_pass_case_count=0, hard_blocker_count=0.",
+        "random_map_water_underground_transit_gameplay_report.tscn passed with final_art_autotile_polish deferred.",
+        "random_map_playable_materialization_runtime_report.tscn passed with compact skirmish materialization and seed/config identity replay boundary only.",
+        "random_map_object_pool_value_weighting_report.tscn passed for compact object-pool/value weighting evidence.",
+        "random_map_validation_batch_retry_report.tscn passed with validation_pass_case_count=2 and expected_validation_fail_case_count=4."
       ],
       "completionCriteria": [
         "The final gate gives an evidence-backed yes/no parity decision and keeps incomplete domains open as implementation slices."
@@ -3313,8 +3326,135 @@
         "No alpha, campaign, broad production, or release claim."
       ],
       "createdAt": "2026-04-29T15:04:37Z",
-      "updatedAt": "2026-04-29T15:04:37Z",
-      "notes": "Run only after playable materialization, water/underground/transit, object-pool/value weighting, and large-batch parity stress slices have implementation evidence."
+      "updatedAt": "2026-04-29T16:40:30Z",
+      "notes": "Completed final RMG parity gate audit. Result: parity not met. Large-batch evidence is diagnostic-success only with 38 metadata-only translated-template cases, 19 unsupported-warning cases, and 0 validation-pass cases. Water/underground, playable materialization, object-pool/value weighting, and validation retry reports pass for focused cases but do not close broad parity, final writeout/export/save-schema/replay, or player-facing setup/retry UX. Parent RMG parity queue remains open.",
+      "startedAt": "2026-04-29T16:36:06Z",
+      "completedAt": "2026-04-29T16:40:30Z"
+    },
+    {
+      "id": "random-map-translated-template-runtime-sweep-10184",
+      "title": "Random Map Translated Template Runtime Sweep",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Convert translated-template large-batch coverage from metadata-only/unsupported evidence into materialized generated maps where parity is intended, with explicit accepted non-parity decisions only where original-game constraints require them.",
+      "sourceDocs": [
+        "docs/random-map-final-homm3-parity-gate-audit.md",
+        "docs/random-map-homm3-parity-gap-audit.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-summary.csv"
+      ],
+      "implementationTargets": [
+        "translated-template generation policy",
+        "large-batch fixture/status handling",
+        "runtime materialization coverage for translated template families",
+        "unsupported-warning remediation diagnostics"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "focused translated-template runtime sweep report",
+        "random_map_large_batch_parity_stress_report.tscn",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Translated-template sweep cases no longer pass only through metadata-only coverage when parity is intended.",
+        "Unsupported-warning cases are either materialized and validated or explicitly recorded as accepted original-game non-parity with rationale.",
+        "Large-batch report separates true validation-pass materializations from intentionally non-parity families."
+      ],
+      "completionCriteria": [
+        "Broad translated-template materialization no longer relies on metadata-only coverage or unsupported-warning success for parity-intended families."
+      ],
+      "nonGoals": [
+        "No campaign work, faction breadth work, broad content expansion, or parity claim."
+      ],
+      "createdAt": "2026-04-29T16:40:30Z",
+      "updatedAt": "2026-04-29T16:40:30Z",
+      "notes": "Queued by final RMG parity gate audit because large-batch evidence had 38 metadata-only cases, 19 unsupported-warning cases, and 0 validation-pass cases."
+    },
+    {
+      "id": "random-map-final-writeout-export-save-schema-10184",
+      "title": "Random Map Final Writeout Export Save Schema",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Close the final RMG parity gaps in tile/object/road/river writeout, generated export/round-trip, save-schema provenance, and replay contract.",
+      "sourceDocs": [
+        "docs/random-map-final-homm3-parity-gate-audit.md",
+        "docs/random-map-generator-foundation.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md"
+      ],
+      "implementationTargets": [
+        "final terrain/road/river/object writeout",
+        "generated map export and round-trip validation",
+        "save-schema/provenance versioning",
+        "replay contract beyond seed/config identity"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "focused final writeout/export/save-schema report",
+        "random_map_playable_materialization_runtime_report.tscn",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Generated maps can be exported and round-tripped without relying on staged-only metadata.",
+        "Roads, rivers, terrain bytes, object instances, and multi-tile bodies have durable writeout evidence.",
+        "Save/replay provenance is versioned and validated without campaign or authored JSON adoption."
+      ],
+      "completionCriteria": [
+        "Final generated-map writeout/export/save-schema/replay boundaries are implemented and validated without campaign writeback."
+      ],
+      "nonGoals": [
+        "No campaign adoption, authored production content writeback, or broad production content work."
+      ],
+      "createdAt": "2026-04-29T16:40:30Z",
+      "updatedAt": "2026-04-29T16:40:30Z",
+      "notes": "Queued by final RMG parity gate audit because roads/rivers/writeout and save/replay evidence remains staged, deferred, or seed/config identity only."
+    },
+    {
+      "id": "random-map-player-facing-setup-retry-ux-10184",
+      "title": "Random Map Player-Facing Setup Retry UX",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Implement real player-facing random-map setup, validation failure, and retry UX for generated skirmish maps while preserving campaign/writeback boundaries.",
+      "sourceDocs": [
+        "docs/random-map-final-homm3-parity-gate-audit.md",
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-homm3-parity-gap-audit.md"
+      ],
+      "implementationTargets": [
+        "random-map skirmish setup controls",
+        "retry/failure presentation",
+        "generated skirmish launch handoff",
+        "provenance display without debug-dashboard overload"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "focused random-map setup/retry UX report or smoke",
+        "random_map_validation_batch_retry_report.tscn",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "A player can configure a generated skirmish map through live UI instead of report-only plumbing.",
+        "Validation failures and retry outcomes are visible and actionable.",
+        "UI preserves no campaign adoption, no authored content writeback, and no alpha/parity claim."
+      ],
+      "completionCriteria": [
+        "Generated-map setup and retry behavior are available through player-facing skirmish UI without turning the main menu into a debug/report dashboard."
+      ],
+      "nonGoals": [
+        "No campaign UI, broad menu redesign, or final art polish beyond the generated-map setup flow."
+      ],
+      "createdAt": "2026-04-29T16:40:30Z",
+      "updatedAt": "2026-04-29T16:40:30Z",
+      "notes": "Queued by final RMG parity gate audit because current setup/retry evidence is report/rules/session plumbing, not completed player-facing UX."
     },
     {
       "id": "headless-agent-simulation-harness-10184",
