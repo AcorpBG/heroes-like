@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Recently completed implementation slice: `random-map-connection-guard-materialization-10184`, following `random-map-terrain-transit-semantics-10184`. Continue next to `random-map-monster-reward-bands-10184`. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated drafts through the scenario/domain load boundary only; they are not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, or alpha completion.
+Recently completed implementation slice: `random-map-monster-reward-bands-10184`, following `random-map-connection-guard-materialization-10184`. Continue next to `random-map-decoration-density-pass-10184`. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated drafts through the scenario/domain load boundary only; they are not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, or alpha completion.
 
 ## Slice Status Model
 
@@ -2182,9 +2182,11 @@ sliceEvidence:
 - Monster candidate pools honor match-to-town and allowed faction masks.
 - Strength modes scale guard pressure from zone/link/reward values.
 - Treasure bands place original reward objects, artifacts, spells, or skill equivalents through allowlists and report risk/reward balance.
+- Current slice consumes staged connection guard materialization records into structured monster/reward band staging, route/object/encounter references, seven resource-category links, diagnostics, and deterministic signatures only.
 
 nonGoals:
 - No final map serialization or player-facing generated-map menu.
+- No campaign/skirmish UI adoption, save/writeback migration, finished HoMM3 RMG parity claim, or alpha completion claim.
 
 ### P2 Child: Random Map Decoration Density Pass
 
