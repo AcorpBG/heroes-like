@@ -2207,9 +2207,11 @@ sliceEvidence:
 - Decoration choices use terrain, adjacency, overlap, biome, and density scoring.
 - Filler respects passability, visit tiles, roads, required routes, object bodies, and per-zone density budgets.
 - Reports distinguish visual-density warnings from hard gameplay blockers.
+- Current slice produces a structured `decoration_density_pass` staging payload with deterministic terrain-biased original family ids, zone density targets, route-safety validation, renderer/writeout deferrals, and scenario `generated_constraints` references only.
 
 nonGoals:
 - No skirmish runtime adoption or generated file writeback.
+- No renderer/art finalization, authored content write, save adoption, HoMM3 RMG parity claim, or alpha completion claim.
 
 ### P2 Child: Random Map Roads Rivers Writeout
 
