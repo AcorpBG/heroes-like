@@ -171,8 +171,14 @@ func _assert_save_replay_payload(payload: Dictionary, setup: Dictionary) -> bool
 	if String(provenance.get("save_schema_status", "")).find("without_save_version_bump") < 0:
 		_fail("Save provenance did not expose staged/deferred schema status: %s" % JSON.stringify(provenance))
 		return false
-	if replay.get("generator_config", {}).is_empty() or String(replay.get("replay_boundary", "")).find("seed_config_identity") < 0:
-		_fail("Replay metadata missed seed/config identity boundary: %s" % JSON.stringify(replay))
+	if replay.get("generator_config", {}).is_empty() or String(replay.get("replay_boundary", "")).find("seed_config_identity") < 0 or String(replay.get("replay_boundary", "")).find("export_stream") < 0:
+		_fail("Replay metadata missed seed/config export-stream boundary: %s" % JSON.stringify(replay))
+		return false
+	if String(provenance.get("schema_id", "")) != "generated_random_map_skirmish_provenance_v2" or int(provenance.get("provenance_contract_version", 0)) < 2:
+		_fail("Saved provenance missed versioned schema contract: %s" % JSON.stringify(provenance))
+		return false
+	if provenance.get("generated_export", {}).is_empty() or replay.get("generated_export", {}).is_empty():
+		_fail("Saved provenance/replay missed generated export signatures: %s / %s" % [JSON.stringify(provenance), JSON.stringify(replay)])
 		return false
 	if String(retry.get("status", "")) != "pass" or int(retry.get("retry_count", -1)) != 0:
 		_fail("Saved retry status missing or invalid: %s" % JSON.stringify(retry))

@@ -417,10 +417,14 @@ static func _random_map_generated_identity(payload: Dictionary) -> Dictionary:
 	var scenario: Dictionary = payload.get("scenario_record", {}) if payload.get("scenario_record", {}) is Dictionary else {}
 	var metadata: Dictionary = payload.get("metadata", {}) if payload.get("metadata", {}) is Dictionary else {}
 	var profile: Dictionary = metadata.get("profile", {}) if metadata.get("profile", {}) is Dictionary else {}
+	var generated_export: Dictionary = payload.get("generated_export", {}) if payload.get("generated_export", {}) is Dictionary else {}
 	return {
 		"scenario_id": String(scenario.get("id", "")),
 		"stable_signature": String(payload.get("stable_signature", "")),
 		"materialized_map_signature": String(payload.get("runtime_materialization", {}).get("materialized_map_signature", "")),
+		"generated_export_signature": String(generated_export.get("round_trip_signature", "")),
+		"tile_stream_signature": String(generated_export.get("tile_stream_signature", "")),
+		"object_writeout_signature": String(generated_export.get("object_writeout_signature", "")),
 		"generator_version": String(metadata.get("generator_version", "")),
 		"template_id": String(metadata.get("template_id", "")),
 		"profile_id": String(profile.get("id", "")),
@@ -432,8 +436,20 @@ static func _random_map_provenance(input_config: Dictionary, payload: Dictionary
 	var normalized := RandomMapGeneratorRulesScript.normalize_config(input_config)
 	var metadata: Dictionary = payload.get("metadata", {}) if payload.get("metadata", {}) is Dictionary else {}
 	var profile: Dictionary = metadata.get("profile", {}) if metadata.get("profile", {}) is Dictionary else {}
+	var generated_export: Dictionary = payload.get("generated_export", {}) if payload.get("generated_export", {}) is Dictionary else {}
+	var export_contract := {
+		"schema_id": String(generated_export.get("schema_id", "")),
+		"export_schema_id": String(generated_export.get("export_schema_id", "")),
+		"round_trip_signature": String(generated_export.get("round_trip_signature", "")),
+		"tile_stream_signature": String(generated_export.get("tile_stream_signature", "")),
+		"object_writeout_signature": String(generated_export.get("object_writeout_signature", "")),
+		"terrain_tile_count": generated_export.get("final_tile_stream", []).size(),
+		"object_writeout_count": generated_export.get("object_writeout_records", []).size(),
+		"round_trip_without_staging_metadata": bool(generated_export.get("writeout_completeness", {}).get("round_trip_without_staging_metadata", false)),
+	}
 	return {
-		"schema_id": "generated_random_map_skirmish_provenance_v1",
+		"schema_id": "generated_random_map_skirmish_provenance_v2",
+		"provenance_contract_version": 2,
 		"source": "random_map_skirmish_setup",
 		"generator_config": {
 			"generator_version": String(normalized.get("generator_version", RandomMapGeneratorRulesScript.GENERATOR_VERSION)),
@@ -453,10 +469,12 @@ static func _random_map_provenance(input_config: Dictionary, payload: Dictionary
 		"content_manifest_fingerprint": String(metadata.get("content_manifest_fingerprint", "")),
 		"generated_identity": _random_map_generated_identity(payload),
 		"materialization": RandomMapGeneratorRulesScript.runtime_materialization_identity(payload),
+		"generated_export": export_contract,
 		"validation_status": String(report.get("status", "")),
 		"retry_status": retry_status,
-		"save_schema_status": "runtime_materialization_signature_preserved_without_save_version_bump",
-		"replay_status": "seed_config_and_materialized_map_identity_preserved_no_input_stream_replay_yet",
+		"save_schema_status": "versioned_generated_random_map_provenance_v2_without_save_version_bump_no_global_bump",
+		"save_version": int(SessionStateStoreScript.SAVE_VERSION),
+		"replay_status": "seed_config_identity_export_stream_and_materialized_map_signature_preserved",
 		"write_policy": String(payload.get("write_policy", "")),
 		"authored_content_writeback": false,
 		"campaign_adoption": false,
@@ -465,14 +483,16 @@ static func _random_map_provenance(input_config: Dictionary, payload: Dictionary
 
 static func _random_map_replay_metadata(provenance: Dictionary, identity: Dictionary, retry_status: Dictionary) -> Dictionary:
 	return {
-		"schema_id": "generated_random_map_replay_seed_record_v1",
-		"source": "skirmish_random_map_seed_config",
+		"schema_id": "generated_random_map_replay_contract_v2",
+		"replay_contract_version": 2,
+		"source": "skirmish_random_map_seed_config_export_stream",
 		"generator_config": provenance.get("generator_config", {}),
 		"generated_identity": identity,
 		"materialization": provenance.get("materialization", {}),
+		"generated_export": provenance.get("generated_export", {}),
 		"retry_status": retry_status,
 		"content_manifest_fingerprint": String(provenance.get("content_manifest_fingerprint", "")),
-		"replay_boundary": "seed_config_identity_and_materialized_map_signature_only_no_full_input_stream_replay_in_this_slice",
+		"replay_boundary": "versioned_seed_config_identity_export_stream_and_materialized_map_signature_contract",
 	}
 
 static func _random_map_setup_summary(scenario: Dictionary, metadata: Dictionary, report: Dictionary, retry_status: Dictionary, difficulty_id: String) -> String:

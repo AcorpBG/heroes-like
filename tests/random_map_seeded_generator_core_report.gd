@@ -67,7 +67,7 @@ func _assert_payload_boundary(payload: Dictionary) -> bool:
 	if String(payload.get("schema_id", "")) != RandomMapGeneratorRulesScript.PAYLOAD_SCHEMA_ID:
 		_fail("Generated payload schema mismatch.")
 		return false
-	if String(payload.get("write_policy", "")) != "staged_payload_only_no_authored_content_write":
+	if String(payload.get("write_policy", "")) != "generated_export_record_no_authored_content_write":
 		_fail("Generated payload lost no-write staging boundary.")
 		return false
 	var metadata: Dictionary = payload.get("metadata", {})

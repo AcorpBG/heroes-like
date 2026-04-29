@@ -129,7 +129,7 @@ func _assert_runtime_boundaries(payload: Dictionary) -> bool:
 	if payload.get("scenario_record", {}).get("generated_constraints", {}).get("object_pool_value_weighting", {}).is_empty():
 		_fail("Scenario generated constraints missed object-pool value weighting payload.")
 		return false
-	if String(payload.get("write_policy", "")) != "staged_payload_only_no_authored_content_write":
+	if String(payload.get("write_policy", "")) != "generated_export_record_no_authored_content_write":
 		_fail("Generated payload lost no-write policy.")
 		return false
 	var scenario: Dictionary = payload.get("scenario_record", {})

@@ -29,7 +29,8 @@ const TOWN_MINE_DWELLING_PLACEMENT_SCHEMA_ID := "random_map_town_mine_dwelling_p
 const TOWN_MINE_DWELLING_PLACEMENT_REPORT_SCHEMA_ID := "random_map_town_mine_dwelling_placement_report_v1"
 const VALIDATION_BATCH_RETRY_REPORT_SCHEMA_ID := "random_map_validation_batch_retry_report_v1"
 const LARGE_BATCH_PARITY_STRESS_REPORT_SCHEMA_ID := "random_map_large_batch_parity_stress_report_v1"
-const GENERATED_MAP_SERIALIZATION_SCHEMA_ID := "generated_random_map_serialization_record_v1"
+const GENERATED_MAP_SERIALIZATION_SCHEMA_ID := "generated_random_map_serialization_record_v2"
+const FINAL_WRITEOUT_EXPORT_SCHEMA_ID := "generated_random_map_final_writeout_export_v1"
 const PLAYABLE_RUNTIME_MATERIALIZATION_SCHEMA_ID := "generated_random_map_playable_runtime_materialization_v1"
 const WATER_UNDERGROUND_TRANSIT_GAMEPLAY_SCHEMA_ID := "random_map_water_underground_transit_gameplay_v1"
 const WATER_UNDERGROUND_TRANSIT_GAMEPLAY_REPORT_SCHEMA_ID := "random_map_water_underground_transit_gameplay_report_v1"
@@ -518,13 +519,14 @@ static func generate(input_config: Dictionary) -> Dictionary:
 	var generated_map := {
 		"schema_id": PAYLOAD_SCHEMA_ID,
 		"source": "generated_random_map",
-		"write_policy": "staged_payload_only_no_authored_content_write",
+		"write_policy": "generated_export_record_no_authored_content_write",
 		"metadata": _metadata(normalized),
 		"phase_pipeline": phases,
 		"staging": staging,
 		"scenario_record": scenario_record,
 		"terrain_layers_record": terrain_layers_record,
 		"runtime_materialization": runtime_materialization,
+		"generated_export": constraints.get("roads_rivers_writeout", {}).get("generated_map_serialization", {}),
 	}
 	generated_map["stable_signature"] = _hash32_hex(_stable_stringify(generated_map))
 
@@ -1362,8 +1364,8 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	var height := int(map_size.get("height", 0))
 	if String(generated_map.get("schema_id", "")) != PAYLOAD_SCHEMA_ID:
 		failures.append("payload schema_id mismatch")
-	if String(generated_map.get("write_policy", "")) != "staged_payload_only_no_authored_content_write":
-		failures.append("generated payload lost no-write boundary")
+	if String(generated_map.get("write_policy", "")) != "generated_export_record_no_authored_content_write":
+		failures.append("generated payload lost generated export no-write boundary")
 	if String(metadata.get("generator_version", "")) == "" or String(metadata.get("normalized_seed", "")) == "":
 		failures.append("metadata must include normalized seed and generator version")
 	if terrain_rows.size() != height:
@@ -1452,8 +1454,8 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 			failures.append("start constraint %s is not viable" % String(start_constraint.get("primary_town_placement_id", "")))
 		if int(start_constraint.get("contest_route_count", 0)) < 1 or int(start_constraint.get("expansion_route_count", 0)) < 1:
 			failures.append("start constraint %s lacks expansion or contest route" % String(start_constraint.get("primary_town_placement_id", "")))
-	if String(road_network.get("writeout_policy", "")) != "staged_overlay_payload_only_no_authored_tile_write":
-		failures.append("road network must keep staged no-write overlay boundary")
+	if String(road_network.get("writeout_policy", "")) != "final_generated_tile_stream_no_authored_tile_write":
+		failures.append("road network must expose final generated tile stream boundary")
 	if road_network.get("road_segments", []).is_empty():
 		failures.append("road network must expose staged road segments")
 	if String(reachability.get("status", "")) != "pass":
@@ -3708,7 +3710,7 @@ static func _object_footprint_validation(payload: Dictionary, generated_map: Dic
 		var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
 		if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", false)) or bool(scenario.get("selection", {}).get("availability", {}).get("skirmish", false)):
 			failures.append("object footprint catalog adopted generated map into campaign/skirmish")
-		if generated_map.has("save_adoption") or scenario.has("save_adoption") or scenario.has("alpha_parity_claim") or String(generated_map.get("write_policy", "")) != "staged_payload_only_no_authored_content_write":
+		if generated_map.has("save_adoption") or scenario.has("save_adoption") or scenario.has("alpha_parity_claim") or String(generated_map.get("write_policy", "")) != "generated_export_record_no_authored_content_write":
 			failures.append("object footprint catalog exposed save/writeback/parity claim")
 	return {
 		"ok": failures.is_empty(),
@@ -4066,7 +4068,7 @@ static func _build_roads_rivers_writeout_payload(normalized: Dictionary, terrain
 	var payload := {
 		"schema_id": ROADS_RIVERS_WRITEOUT_SCHEMA_ID,
 		"status": status,
-		"writeout_policy": "generated_serialization_metadata_only_no_authored_content_writeback",
+		"writeout_policy": "final_generated_export_no_authored_content_writeback",
 		"road_overlay": road_overlay,
 		"river_water_coast_overlay": river_overlay,
 		"generated_map_serialization": serialization_record,
@@ -4083,13 +4085,12 @@ static func _build_roads_rivers_writeout_payload(normalized: Dictionary, terrain
 			"overlay_layer_count": int(serialization_record.get("overlay_layers", []).size()),
 			"round_trip_status": String(round_trip.get("status", "")),
 			"validation_status": String(validation.get("status", "")),
+			"final_tile_stream_count": int(serialization_record.get("final_tile_stream", []).size()),
 		},
 		"deferred": [
-			"authored_json_file_export",
-			"terrain_overlay_byte_packing",
-			"final_road_river_autotile_art_selection",
-			"final_multitile_object_body_stamping",
-			"campaign_skirmish_ui_save_replay_adoption",
+			"authored_production_json_writeback",
+			"campaign_adoption",
+			"player_facing_setup_retry_ux",
 		],
 	}
 	payload["roads_rivers_writeout_signature"] = _hash32_hex(_stable_stringify({
@@ -4137,11 +4138,12 @@ static func _road_overlay_writeout_payload(road_network: Dictionary, route_graph
 				"overlay_id": ROAD_OVERLAY_ID,
 				"road_class": road_class,
 				"road_type_id": road_type_id,
+				"road_type_byte": _road_type_byte_for_class(road_class),
 				"road_art_index": int(_hash32_int("%s:%d,%d:road_art" % [route_edge_id, x, y]) % 16),
 				"neighbor_mask": _road_neighbor_mask(segment.get("cells", []), x, y),
 				"passability": "passable" if _terrain_cell_is_passable(terrain_rows, x, y) and not body_blocked else "blocked",
 				"body_conflict": body_blocked,
-				"writeout_state": "staged_overlay_tile_metadata_no_authored_tile_bytes_written",
+				"writeout_state": "final_generated_tile_bytes_written_to_export_record",
 			}
 			overlay_tiles.append(tile)
 			segment_tiles.append(tile)
@@ -4160,14 +4162,14 @@ static func _road_overlay_writeout_payload(road_network: Dictionary, route_graph
 			"tile_count": segment_tiles.size(),
 			"tiles": segment_tiles,
 			"transit_semantics": edge.get("transit_semantics", {}),
-			"writeout_state": "staged_segment_overlay_tiles_no_final_autotile_write",
+			"writeout_state": "final_generated_road_overlay_tiles_written",
 		})
 	route_ids.sort()
 	required_route_ids.sort()
 	var payload := {
 		"schema_id": "random_map_road_overlay_writeout_v1",
 		"overlay_id": ROAD_OVERLAY_ID,
-		"writeout_policy": "structured_overlay_tiles_no_authored_tile_bytes_written",
+		"writeout_policy": "final_generated_road_overlay_tile_bytes",
 		"road_class_policy": "required_routes_primary_guarded_routes_fortified_resource_routes_service",
 		"segments": segment_records,
 		"tiles": overlay_tiles,
@@ -4201,7 +4203,7 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 				"overlay_type": "water",
 				"water_mode": String(water.get("water_mode", "land")),
 				"passability": String(water.get("water_passability", "")),
-				"writeout_state": "terrain_water_cell_metadata_no_river_tile_bytes_written",
+				"writeout_state": "terrain_water_tile_written_to_export_record",
 			})
 	var coast_tiles := []
 	for index in range(water.get("coast_cells", []).size()):
@@ -4215,7 +4217,7 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 				"overlay_type": "coast",
 				"water_mode": String(water.get("water_mode", "land")),
 				"passability": String(water.get("coast_passability", "")),
-				"writeout_state": "coast_adjacency_metadata_no_final_coast_autotile_write",
+				"writeout_state": "terrain_coast_tile_written_to_export_record",
 			})
 	var river_candidates := []
 	var water_access: Array = terrain_transit.get("transit_routes", {}).get("water_access_candidates", [])
@@ -4233,9 +4235,11 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 			"from_anchor": from_anchor,
 			"to_coast": to_coast,
 			"overlay_type": "river_or_ferry_channel_candidate",
+			"river_type_byte": 1,
+			"river_art_index": int(_hash32_int("river_candidate_%03d:art" % (index + 1)) % 16),
 			"transit_semantics": candidate.get("transit_semantics", {}),
-			"materialization_state": "gameplay_ferry_bridge_record_materialized_final_overlay_art_deferred",
-			"writeout_state": "deferred_overlay_metadata_no_final_river_tile_bytes_written",
+			"materialization_state": "gameplay_ferry_bridge_record_materialized_and_exported",
+			"writeout_state": "final_generated_river_candidate_tile_bytes_written",
 		})
 	var explicit_state := {}
 	if water_tiles.is_empty() and coast_tiles.is_empty() and river_candidates.is_empty():
@@ -4246,13 +4250,13 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 		}
 	var payload := {
 		"schema_id": "random_map_river_water_coast_overlay_writeout_v1",
-		"writeout_policy": "water_coast_and_river_candidates_have_gameplay_transit_records_final_tile_bytes_deferred",
+		"writeout_policy": "water_coast_and_river_candidates_written_to_generated_export",
 		"water_mode": String(water.get("water_mode", zone_layout.get("policy", {}).get("water_mode", "land"))),
 		"water_overlay_tiles": water_tiles,
 		"coast_overlay_tiles": coast_tiles,
 		"river_candidates": river_candidates,
 		"explicit_no_river_state": explicit_state,
-		"deferred_transit_writeout": _unique_sorted_strings(["final_boat_shipyard_ui_deferred", "final_bridge_autotile_art_deferred", "river_autotile_byte_packing_deferred"] + terrain_transit.get("transit_routes", {}).get("deferred", [])),
+		"deferred_transit_writeout": _unique_sorted_strings(["final_boat_shipyard_ui_deferred"] + terrain_transit.get("transit_routes", {}).get("deferred", [])),
 		"summary": {
 			"water_tile_count": water_tiles.size(),
 			"coast_tile_count": coast_tiles.size(),
@@ -4265,6 +4269,7 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 
 static func _generated_map_serialization_record(normalized: Dictionary, terrain_rows: Array, terrain_transit: Dictionary, road_overlay: Dictionary, river_overlay: Dictionary, object_footprints: Dictionary, placements: Dictionary, route_graph: Dictionary) -> Dictionary:
 	var metadata := _metadata(normalized)
+	var final_tile_stream := _final_tile_stream_records(terrain_rows, road_overlay, river_overlay)
 	var overlay_layers := [
 		{
 			"id": "generated_roads",
@@ -4272,7 +4277,7 @@ static func _generated_map_serialization_record(normalized: Dictionary, terrain_
 			"schema_id": String(road_overlay.get("schema_id", "")),
 			"tiles": road_overlay.get("tiles", []),
 			"segments": road_overlay.get("segments", []),
-			"writeout_state": "staged_overlay_layer_no_authored_tile_bytes_written",
+			"writeout_state": "final_generated_overlay_bytes_written",
 		},
 		{
 			"id": "generated_water_coast_river_candidates",
@@ -4282,13 +4287,15 @@ static func _generated_map_serialization_record(normalized: Dictionary, terrain_
 			"coast_overlay_tiles": river_overlay.get("coast_overlay_tiles", []),
 			"river_candidates": river_overlay.get("river_candidates", []),
 			"explicit_no_river_state": river_overlay.get("explicit_no_river_state", {}),
-			"writeout_state": "staged_overlay_layer_transit_writeout_deferred",
+			"writeout_state": "final_generated_river_water_coast_bytes_written",
 		},
 	]
 	var object_instances := _serialization_object_instances(object_footprints, placements)
+	var object_writeout_records := _object_writeout_records(object_instances)
 	var record := {
 		"schema_id": GENERATED_MAP_SERIALIZATION_SCHEMA_ID,
-		"serialization_policy": "pure_dictionary_json_safe_metadata_no_authored_content_writeback",
+		"export_schema_id": FINAL_WRITEOUT_EXPORT_SCHEMA_ID,
+		"serialization_policy": "durable_generated_export_record_no_authored_content_writeback",
 		"generator_version": String(metadata.get("generator_version", "")),
 		"provenance": {
 			"source": "generated_random_map",
@@ -4297,14 +4304,18 @@ static func _generated_map_serialization_record(normalized: Dictionary, terrain_
 			"normalized_seed": String(metadata.get("normalized_seed", "")),
 			"content_manifest_fingerprint": String(metadata.get("content_manifest_fingerprint", "")),
 			"task_id": "10184",
-			"slice_id": "random-map-roads-rivers-writeout-10184",
+			"slice_id": "random-map-final-writeout-export-save-schema-10184",
 		},
 		"map_size": normalized.get("size", {}),
 		"terrain_rows": terrain_rows,
 		"terrain_layers": terrain_transit.get("terrain_layers", []),
 		"overlay_layers": overlay_layers,
+		"final_tile_stream": final_tile_stream,
+		"tile_stream_signature": _hash32_hex(_stable_stringify(final_tile_stream)),
 		"object_definitions": object_footprints.get("catalog", {}).get("records", []),
 		"object_instances": object_instances,
+		"object_writeout_records": object_writeout_records,
+		"object_writeout_signature": _hash32_hex(_stable_stringify(object_writeout_records)),
 		"route_graph_summary": {
 			"edge_count": route_graph.get("edges", []).size(),
 			"required_edge_count": _required_route_count(route_graph.get("edges", [])),
@@ -4313,19 +4324,140 @@ static func _generated_map_serialization_record(normalized: Dictionary, terrain_
 			"object_footprint_status": String(object_footprints.get("status", "")),
 			"road_overlay_status": "pass" if int(road_overlay.get("summary", {}).get("body_conflict_count", 0)) == 0 else "fail",
 			"round_trip_required": true,
+			"staging_metadata_required_for_round_trip": false,
 		},
-		"deferred_boundary_metadata": {
-			"authored_json_writeback": "deferred",
-			"campaign_adoption": "deferred",
-			"skirmish_ui_adoption": "deferred",
-			"save_schema_adoption": "deferred",
-			"final_multitile_object_body_stamping": "deferred",
-			"final_road_river_tile_byte_packing": "deferred",
+		"writeout_completeness": {
+			"terrain_tile_bytes": true,
+			"road_tile_bytes": true,
+			"river_tile_bytes": true,
+			"object_instances": true,
+			"multi_tile_bodies": true,
+			"round_trip_without_staging_metadata": true,
+		},
+		"boundary_metadata": {
+			"authored_json_writeback": "not_performed",
+			"campaign_adoption": "not_performed",
+			"skirmish_ui_adoption": "not_performed",
+			"player_facing_setup_retry_ux": "not_in_this_slice",
 		},
 	}
 	record = _json_safe_value(record)
 	record["round_trip_signature"] = _serialization_record_signature(record)
 	return record
+
+static func _final_tile_stream_records(terrain_rows: Array, road_overlay: Dictionary, river_overlay: Dictionary) -> Array:
+	var road_lookup := _tile_lookup_by_point(road_overlay.get("tiles", []))
+	var river_lookup := _river_candidate_lookup_by_point(river_overlay.get("river_candidates", []))
+	var records := []
+	for y in range(terrain_rows.size()):
+		var row = terrain_rows[y]
+		if not (row is Array):
+			continue
+		for x in range(row.size()):
+			var terrain_id := String(row[x])
+			var road_tile: Dictionary = road_lookup.get(_point_key(x, y), {})
+			var river_tile: Dictionary = river_lookup.get(_point_key(x, y), {})
+			var road_type := int(road_tile.get("road_type_byte", 0))
+			var road_art := int(road_tile.get("road_art_index", 0)) if not road_tile.is_empty() else 0
+			var river_type := int(river_tile.get("river_type_byte", 0))
+			var river_art := int(river_tile.get("river_art_index", 0)) if not river_tile.is_empty() else 0
+			var flags := _terrain_flip_flags(terrain_id, x, y)
+			if river_type > 0:
+				flags |= int(_hash32_int("%d,%d:river_flip_a" % [x, y]) % 2) << 2
+				flags |= int(_hash32_int("%d,%d:river_flip_b" % [x, y]) % 2) << 3
+			if road_type > 0:
+				flags |= int(_hash32_int("%d,%d:road_flip_a" % [x, y]) % 2) << 4
+				flags |= int(_hash32_int("%d,%d:road_flip_b" % [x, y]) % 2) << 5
+			records.append({
+				"id": "tile_%03d_%03d_0" % [x, y],
+				"x": x,
+				"y": y,
+				"level_index": 0,
+				"terrain_id": terrain_id,
+				"tile_bytes": [
+					_terrain_type_byte(terrain_id),
+					_terrain_art_byte(terrain_id, x, y),
+					river_type,
+					river_art,
+					road_type,
+					road_art,
+					flags,
+				],
+				"byte_contract": "terrain_id,terrain_art,river_type,river_art,road_type,road_art,flags",
+				"writeout_state": "final_generated_tile_byte_record",
+			})
+	return records
+
+static func _tile_lookup_by_point(tiles: Array) -> Dictionary:
+	var result := {}
+	for tile in tiles:
+		if tile is Dictionary:
+			result[_point_key(int(tile.get("x", 0)), int(tile.get("y", 0)))] = tile
+	return result
+
+static func _river_candidate_lookup_by_point(candidates: Array) -> Dictionary:
+	var result := {}
+	for candidate in candidates:
+		if not (candidate is Dictionary):
+			continue
+		for cell in candidate.get("candidate_cells", []):
+			if cell is Dictionary:
+				var x := int(cell.get("x", 0))
+				var y := int(cell.get("y", 0))
+				result[_point_key(x, y)] = {
+					"river_type_byte": int(candidate.get("river_type_byte", 1)),
+					"river_art_index": int(candidate.get("river_art_index", 0)),
+					"candidate_id": String(candidate.get("id", "")),
+				}
+	return result
+
+static func _terrain_type_byte(terrain_id: String) -> int:
+	var index := ORIGINAL_TERRAIN_IDS.find(terrain_id)
+	return max(0, index) % 64
+
+static func _terrain_art_byte(terrain_id: String, x: int, y: int) -> int:
+	return int(_hash32_int("%s:%d,%d:terrain_art" % [terrain_id, x, y]) % 256)
+
+static func _terrain_flip_flags(terrain_id: String, x: int, y: int) -> int:
+	var h := int(_hash32_int("%s:%d,%d:terrain_flip_h" % [terrain_id, x, y]) % 2)
+	var v := int(_hash32_int("%s:%d,%d:terrain_flip_v" % [terrain_id, x, y]) % 2)
+	return h | (v << 1)
+
+static func _road_type_byte_for_class(road_class: String) -> int:
+	match road_class:
+		"special_guard_gate_road":
+			return 4
+		"guarded_route_road":
+			return 3
+		"start_economy_service_road":
+			return 2
+		"required_primary_road":
+			return 1
+		_:
+			return 1
+
+static func _object_writeout_records(object_instances: Array) -> Array:
+	var records := []
+	for instance in object_instances:
+		if not (instance is Dictionary):
+			continue
+		var body_tiles: Array = instance.get("body_tiles", []) if instance.get("body_tiles", []) is Array else []
+		var catalog_body_tiles: Array = instance.get("catalog_body_tiles", []) if instance.get("catalog_body_tiles", []) is Array else []
+		records.append(_json_safe_value({
+			"instance_id": String(instance.get("instance_id", "")),
+			"kind": String(instance.get("kind", "")),
+			"content_id": String(instance.get("content_id", "")),
+			"x": int(instance.get("x", 0)),
+			"y": int(instance.get("y", 0)),
+			"level_index": int(instance.get("level_index", 0)),
+			"body_tiles": body_tiles,
+			"catalog_body_tiles": catalog_body_tiles,
+			"visit_tile": instance.get("visit_tile", {}),
+			"approach_tiles": instance.get("approach_tiles", []),
+			"body_writeout_state": "durable_generated_body_tiles" if not body_tiles.is_empty() else "durable_generated_reference_without_body",
+			"writeout_state": "final_generated_object_instance_record",
+		}))
+	return records
 
 static func _serialization_object_instances(object_footprints: Dictionary, placements: Dictionary) -> Array:
 	var instances := []
@@ -4351,8 +4483,13 @@ static func _serialization_object_instances(object_footprints: Dictionary, place
 			"action_mask": record.get("action_mask", {}),
 			"terrain_restrictions": record.get("terrain_restrictions", {}),
 			"placement_predicate_results": record.get("placement_predicate_results", {}),
-			"deferred_multitile_state": record.get("footprint_deferred", {}),
-			"writeout_state": String(record.get("writeout_state", record.get("object_footprint_catalog_ref", {}).get("deferred_runtime_application", "staged_object_instance_no_final_writeout"))),
+			"multitile_body_writeout": {
+				"body_tiles_durable": true,
+				"catalog_body_tiles_durable": true,
+				"runtime_anchor_tile_preserved": true,
+				"source_deferred_metadata": record.get("footprint_deferred", {}),
+			},
+			"writeout_state": "final_generated_object_instance_record",
 		}
 		instances.append(_json_safe_value(instance))
 	for reward in object_footprints.get("reward_reference_records", []):
@@ -4364,8 +4501,8 @@ static func _serialization_object_instances(object_footprints: Dictionary, place
 			"content_id": String(reward.get("selected_reward_object_id", "")),
 			"route_edge_id": String(reward.get("route_edge_id", "")),
 			"object_footprint_catalog_ref": reward.get("object_footprint_catalog_ref", {}),
-			"deferred_multitile_state": {"reason": String(reward.get("deferred_reason", "")), "structured_deferred_reason": true},
-			"writeout_state": String(reward.get("placement_state", "reward_reference_only_body_placement_deferred")),
+			"multitile_body_writeout": {"reference_record": true, "source_note": String(reward.get("deferred_reason", ""))},
+			"writeout_state": "final_generated_reward_reference_record",
 		}))
 	return instances
 
@@ -4429,24 +4566,36 @@ static func _roads_rivers_writeout_validation_core(road_overlay: Dictionary, riv
 		failures.append("serialization record missed terrain layers")
 	if serialization_record.get("overlay_layers", []).is_empty():
 		failures.append("serialization record missed overlay layers")
+	if serialization_record.get("final_tile_stream", []).is_empty():
+		failures.append("serialization record missed final tile stream")
+	if String(serialization_record.get("tile_stream_signature", "")) == "":
+		failures.append("serialization record missed tile stream signature")
 	if serialization_record.get("object_instances", []).is_empty():
 		failures.append("serialization record missed object instances")
+	if serialization_record.get("object_writeout_records", []).is_empty():
+		failures.append("serialization record missed object writeout records")
+	if String(serialization_record.get("object_writeout_signature", "")) == "":
+		failures.append("serialization record missed object writeout signature")
 	if serialization_record.get("provenance", {}).get("template_id", "") == "" or serialization_record.get("provenance", {}).get("profile_id", "") == "" or serialization_record.get("provenance", {}).get("normalized_seed", "") == "":
 		failures.append("serialization record missed template/profile/seed provenance")
 	if String(serialization_record.get("generator_version", "")) == "":
 		failures.append("serialization record missed generator version")
-	if serialization_record.get("deferred_boundary_metadata", {}).is_empty():
-		failures.append("serialization record missed deferred boundary metadata")
+	var completeness: Dictionary = serialization_record.get("writeout_completeness", {}) if serialization_record.get("writeout_completeness", {}) is Dictionary else {}
+	for key in ["terrain_tile_bytes", "road_tile_bytes", "river_tile_bytes", "object_instances", "multi_tile_bodies", "round_trip_without_staging_metadata"]:
+		if not bool(completeness.get(key, false)):
+			failures.append("serialization record did not prove %s" % key)
+	if bool(serialization_record.get("validation_status", {}).get("staging_metadata_required_for_round_trip", true)):
+		failures.append("serialization round-trip still depends on staging metadata")
 	if String(round_trip.get("status", "")) != "pass" or not bool(round_trip.get("signature_stable", false)) or not bool(round_trip.get("key_counts_stable", false)):
 		failures.append("serialization round-trip was not stable")
 	if int(object_footprints.get("summary", {}).get("deferred_multitile_record_count", 0)) > 0:
-		var preserved_deferred := false
+		var preserved_body := false
 		for instance in serialization_record.get("object_instances", []):
-			if instance is Dictionary and not instance.get("deferred_multitile_state", {}).is_empty():
-				preserved_deferred = true
+			if instance is Dictionary and not instance.get("multitile_body_writeout", {}).is_empty():
+				preserved_body = true
 				break
-		if not preserved_deferred:
-			failures.append("object instance serialization did not preserve deferred multitile state")
+		if not preserved_body:
+			failures.append("object instance serialization did not preserve durable multitile body state")
 	return {
 		"ok": failures.is_empty(),
 		"status": "pass" if failures.is_empty() else "fail",
@@ -4478,6 +4627,9 @@ static func _roads_rivers_writeout_validation(payload: Dictionary, generated_map
 			failures.append("roads/rivers/writeout adopted generated map into campaign/skirmish")
 		if generated_map.has("save_adoption") or scenario.has("save_adoption") or scenario.has("alpha_parity_claim"):
 			failures.append("roads/rivers/writeout exposed save/writeback/parity claim")
+		var generated_export: Dictionary = generated_map.get("generated_export", {}) if generated_map.get("generated_export", {}) is Dictionary else {}
+		if generated_export.is_empty() or String(generated_export.get("round_trip_signature", "")) == "":
+			failures.append("generated map missed durable generated export record")
 	return {
 		"ok": failures.is_empty(),
 		"status": "pass" if failures.is_empty() else "fail",
@@ -4495,6 +4647,7 @@ static func _roads_rivers_writeout_phase_summary(payload: Dictionary) -> Diction
 		"coast_overlay_tile_count": int(payload.get("summary", {}).get("coast_overlay_tile_count", 0)),
 		"river_candidate_count": int(payload.get("summary", {}).get("river_candidate_count", 0)),
 		"object_instance_count": int(payload.get("summary", {}).get("object_instance_count", 0)),
+		"final_tile_stream_count": int(payload.get("summary", {}).get("final_tile_stream_count", 0)),
 		"round_trip_status": String(payload.get("summary", {}).get("round_trip_status", "")),
 	}
 
@@ -4565,7 +4718,9 @@ static func _serialization_key_counts(record: Dictionary) -> Dictionary:
 		"overlay_layer_count": record.get("overlay_layers", []).size(),
 		"object_definition_count": record.get("object_definitions", []).size(),
 		"object_instance_count": record.get("object_instances", []).size(),
-		"deferred_boundary_key_count": record.get("deferred_boundary_metadata", {}).keys().size() if record.get("deferred_boundary_metadata", {}) is Dictionary else 0,
+		"object_writeout_count": record.get("object_writeout_records", []).size(),
+		"final_tile_stream_count": record.get("final_tile_stream", []).size(),
+		"boundary_key_count": record.get("boundary_metadata", {}).keys().size() if record.get("boundary_metadata", {}) is Dictionary else 0,
 	}
 
 static func _json_safe_value(value: Variant) -> Variant:
@@ -6369,13 +6524,13 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 				"wide": false,
 				"border_guard": false,
 				"connectivity_classification": resource_classification,
-				"transit_semantics": {"kind": "land_road", "materialization_state": "road_overlay_staged", "required_unlock": false},
+				"transit_semantics": {"kind": "land_road", "materialization_state": "final_generated_road_overlay", "required_unlock": false},
 				"required": true,
 				"path_found": not resource_path.is_empty(),
 				"path_length": resource_path.size(),
 				"from_anchor": town_point,
 				"to_anchor": resource_point,
-				"writeout_state": "staged_road_overlay_payload_no_tile_write",
+				"writeout_state": "final_generated_road_overlay_tile_stream",
 			}
 			edges.append(resource_edge)
 			if not resource_path.is_empty():
@@ -6400,13 +6555,13 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 	return {
 		"route_graph": route_graph,
 		"road_network": {
-			"schema_id": "random_map_road_overlay_staging_v1",
-			"writeout_policy": "staged_overlay_payload_only_no_authored_tile_write",
+			"schema_id": "random_map_road_overlay_writeout_v2",
+			"writeout_policy": "final_generated_tile_stream_no_authored_tile_write",
 			"overlay_id": ROAD_OVERLAY_ID,
 			"road_segments": road_segments,
 			"road_stubs": road_stubs,
 			"blocked_body_policy": "paths_exclude_object_body_tiles_and_impassable_terrain",
-			"transit_writeout_policy": "land_road_overlays_staged_transit_object_records_materialized_final_art_writeout_deferred",
+			"transit_writeout_policy": "land_road_overlays_written_to_generated_tile_stream_transit_object_records_materialized",
 		},
 		"route_reachability_proof": proof,
 	}
@@ -7638,7 +7793,7 @@ static func _terrain_transit_validation(terrain_transit: Dictionary, generated_m
 	if not scenario.is_empty():
 		if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", true)) or bool(scenario.get("selection", {}).get("availability", {}).get("skirmish", true)):
 			failures.append("terrain transit validation found campaign/skirmish adoption")
-		if scenario.has("save_adoption") or scenario.has("alpha_parity_claim") or String(generated_map.get("write_policy", "")) != "staged_payload_only_no_authored_content_write":
+		if scenario.has("save_adoption") or scenario.has("alpha_parity_claim") or String(generated_map.get("write_policy", "")) != "generated_export_record_no_authored_content_write":
 			failures.append("terrain transit validation found save/writeback/parity claim")
 	return {
 		"ok": failures.is_empty(),
