@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Recently completed implementation slice: `random-map-decoration-density-pass-10184`, following `random-map-monster-reward-bands-10184` and `random-map-connection-guard-materialization-10184`. Current selected slice: `random-map-roads-rivers-writeout-10184`. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated drafts through staged serialization/report boundaries only; they are not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, authored writeback, or alpha completion.
+Recently completed implementation slice: `random-map-roads-rivers-writeout-10184`, following `random-map-decoration-density-pass-10184`, `random-map-monster-reward-bands-10184`, and `random-map-connection-guard-materialization-10184`. Current selected slice: `random-map-skirmish-ui-save-replay-10184`. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated maps through controlled setup/session/report boundaries only; they are not HoMM3 RMG parity, campaign adoption, authored writeback, or alpha completion.
 
 ## Slice Status Model
 
@@ -2285,10 +2285,12 @@ implementationTargets:
 sliceEvidence:
 - Skirmish setup can generate and launch validated maps from seed/template/profile/player settings.
 - Saves and replays preserve seed, generator version, template/profile ids, content manifest provenance, retry count, and generated-map identity.
-- UI exposes compact setup/failure flow without dumping debug reports onto scenic screens.
+- Current slice exposes compact setup/failure flow as setup/domain metadata and report evidence; no scenic screen is turned into a debug/report panel.
+- Generated maps remain absent from authored scenario/campaign JSON and authored skirmish browser lists while launching through an explicit skirmish session boundary.
 
 nonGoals:
 - No campaign adoption unless a later explicit campaign-randomization slice is planned.
+- No finished HoMM3 RMG parity, alpha completion, authored JSON writeback, or broad save-schema migration claim.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 
