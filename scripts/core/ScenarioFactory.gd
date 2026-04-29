@@ -70,6 +70,36 @@ static func create_session(
 	session.flags = {}
 	return session
 
+static func create_generated_draft_session(
+	generated_map: Dictionary,
+	difficulty: String = "normal"
+) -> SessionStateStoreScript.SessionData:
+	var scenario: Dictionary = generated_map.get("scenario_record", {})
+	var terrain_layers: Dictionary = generated_map.get("terrain_layers_record", {})
+	var registration: Dictionary = ContentService.register_generated_scenario_draft(scenario, terrain_layers)
+	if not bool(registration.get("ok", false)):
+		push_error("Unable to register generated scenario draft: %s" % String(registration.get("message", "")))
+		return SessionStateStoreScript.new_session_data()
+
+	var scenario_id := String(scenario.get("id", ""))
+	var session := create_session(scenario_id, difficulty, SessionStateStoreScript.LAUNCH_MODE_GENERATED_DRAFT)
+	if session.scenario_id == "":
+		return session
+
+	var metadata: Dictionary = generated_map.get("metadata", {})
+	var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
+	session.flags["generated_random_map_draft"] = true
+	session.flags["generated_random_map_metadata"] = metadata.duplicate(true)
+	session.flags["generated_random_map_boundary"] = {
+		"write_policy": String(generated_map.get("write_policy", "")),
+		"registry_write_policy": String(registration.get("write_policy", "")),
+		"menu_policy": String(registration.get("menu_policy", "")),
+		"availability": selection.get("availability", {}),
+	}
+	session.overworld["generated_random_map_metadata"] = metadata.duplicate(true)
+	session.overworld["generated_terrain_layers_record_id"] = String(terrain_layers.get("id", ""))
+	return session
+
 static func _build_hero_state(hero_template: Dictionary) -> Dictionary:
 	var command = hero_template.get("command", {})
 	return HeroProgressionRulesScript.ensure_hero_progression(

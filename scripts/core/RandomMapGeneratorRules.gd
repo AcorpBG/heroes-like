@@ -694,6 +694,15 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 		start = {"x": int(towns[0].get("x", 0)), "y": int(towns[0].get("y", 0))}
 	var scenario_id := "generated_%s_%s" % [String(profile.get("id", "seeded_core")), _hash32_hex(_stable_stringify(metadata))]
 	var faction_ids: Array = profile.get("faction_ids", [])
+	var victory_objectives := []
+	if not towns.is_empty() and towns[0] is Dictionary:
+		victory_objectives.append({
+			"id": "generated_primary_town_held",
+			"type": "town_owned_by_player",
+			"placement_id": String(towns[0].get("placement_id", "")),
+			"label": "Hold the generated starting town",
+			"generated_support": "ScenarioRules.town_owned_by_player",
+		})
 	return {
 		"id": scenario_id,
 		"name": "Generated Prototype %s" % String(profile.get("label", "Seeded Core")),
@@ -722,7 +731,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 		"objectives": {
 			"victory_text": "Generated prototype objective completed.",
 			"defeat_text": "Generated prototype objective failed.",
-			"victory": [],
+			"victory": victory_objectives,
 			"defeat": [],
 		},
 		"script_hooks": [],
@@ -1257,11 +1266,23 @@ static func _travel_distance_comparisons_payload(placements: Dictionary, route_g
 	}
 
 static func _objective_reward_pressure_payload(objectives: Dictionary, route_graph: Dictionary) -> Dictionary:
-	var objective_count := 0
-	if objectives.has("victory") and objectives.get("victory", []) is Array:
-		objective_count += objectives.get("victory", []).size()
-	if objectives.has("defeat") and objectives.get("defeat", []) is Array:
-		objective_count += objectives.get("defeat", []).size()
+	var objective_records := []
+	for bucket in ["victory", "defeat"]:
+		if not (objectives.get(bucket, []) is Array):
+			continue
+		for objective in objectives.get(bucket, []):
+			if not (objective is Dictionary):
+				continue
+			var objective_type := String(objective.get("type", ""))
+			var supported := objective_type in ["town_owned_by_player", "town_not_owned_by_player", "encounter_resolved", "day_at_least", "flag_true", "session_flag_equals", "hook_fired"]
+			objective_records.append({
+				"id": String(objective.get("id", "")),
+				"bucket": bucket,
+				"type": objective_type,
+				"supported_by_domain_rules": supported,
+				"generated_support": String(objective.get("generated_support", "")),
+			})
+	var objective_count := objective_records.size()
 	if objective_count == 0:
 		return {
 			"status": "pass",
@@ -1271,14 +1292,30 @@ static func _objective_reward_pressure_payload(objectives: Dictionary, route_gra
 			"failures": [],
 			"warnings": [],
 		}
+	var unsupported := []
+	for record in objective_records:
+		if record is Dictionary and not bool(record.get("supported_by_domain_rules", false)):
+			unsupported.append(String(record.get("id", "")))
+	if unsupported.is_empty():
+		return {
+			"status": "pass",
+			"supported": true,
+			"objective_count": objective_count,
+			"objectives": objective_records,
+			"route_edge_count": route_graph.get("edges", []).size(),
+			"model": "generated_objectives_use_supported_scenario_rules",
+			"failures": [],
+			"warnings": [],
+		}
 	return {
-		"status": "warning",
-		"supported": true,
+		"status": "fail",
+		"supported": false,
 		"objective_count": objective_count,
+		"objectives": objective_records,
 		"route_edge_count": route_graph.get("edges", []).size(),
-		"model": "placeholder_requires_objective_route_links_in_later_slice",
-		"failures": [],
-		"warnings": ["generated objectives exist but objective-route pressure links are not staged"],
+		"model": "generated_objectives_must_use_supported_scenario_rules",
+		"failures": ["unsupported generated objective ids: %s" % ",".join(unsupported)],
+		"warnings": [],
 	}
 
 static func _metadata(normalized: Dictionary) -> Dictionary:

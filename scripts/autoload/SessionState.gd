@@ -7,7 +7,8 @@ const SUPPORTED_GAME_STATES := ["overworld", "town", "battle", "outcome"]
 const SUPPORTED_SCENARIO_STATUSES := ["in_progress", "victory", "defeat"]
 const LAUNCH_MODE_CAMPAIGN := "campaign"
 const LAUNCH_MODE_SKIRMISH := "skirmish"
-const SUPPORTED_LAUNCH_MODES := [LAUNCH_MODE_CAMPAIGN, LAUNCH_MODE_SKIRMISH]
+const LAUNCH_MODE_GENERATED_DRAFT := "generated_draft"
+const SUPPORTED_LAUNCH_MODES := [LAUNCH_MODE_CAMPAIGN, LAUNCH_MODE_SKIRMISH, LAUNCH_MODE_GENERATED_DRAFT]
 
 var active_session: SessionStateStoreScript.SessionData = null
 var editor_working_copy_session: SessionStateStoreScript.SessionData = null

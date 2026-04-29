@@ -368,8 +368,9 @@ static func perform_outcome_action(session: SessionStateStoreScript.SessionData,
 static func _complete_session(session: SessionStateStoreScript.SessionData, status: String, summary: String) -> Dictionary:
 	session.scenario_status = status
 	session.scenario_summary = summary
-	session.flags["campaign"] = status
+	session.flags["scenario_result"] = status
 	if SessionStateStoreScript.normalize_launch_mode(session.launch_mode) == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
+		session.flags["campaign"] = status
 		CampaignProgression.record_session_completion(session)
 	return {"status": status, "message": summary}
 
