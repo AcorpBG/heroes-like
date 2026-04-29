@@ -18,6 +18,8 @@ River Pass has served as proof that a basic manual-play loop can work, but that 
 
 The current strategic need is to turn the foundation into a coherent strategy game through planned implementation slices, not by accumulating disconnected docs, reports, or UI cue polish.
 
+Random map generation is not complete for alpha purposes until it reaches full HoMM3-style random-map-generation functional parity translated into this original game: template breadth, zone graph semantics, object density, guards, rewards, roads, validation, runtime adoption, and replay boundaries must all work through original content and systems.
+
 ## Document Model
 
 - `project.md` is this strategic charter. It defines the product, phases, architecture rules, and durable constraints.
