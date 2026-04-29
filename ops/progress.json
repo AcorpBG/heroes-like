@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "terrain-editor-scenario-export-validation-10184",
-  "currentSliceTitle": "Terrain Editor Scenario Export Validation",
+  "currentSliceId": "random-map-requirements-doc-10184",
+  "currentSliceTitle": "Random Map Requirements Doc",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented validated authored scenario/terrain-layer draft export contract with explicit no-writeback boundary.",
+  "currentSliceNotes": "Created docs/random-map-generator-foundation.md and updated PLAN/progress references; generator implementation children remain pending.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-28T12:34:39Z",
+  "updatedAt": "2026-04-29T07:39:59Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -537,10 +537,10 @@
       "title": "Random Map Generator Foundation",
       "phase": "phase-2-deep-production-foundation",
       "status": "pending",
-      "classification": "parent_foundation_missing_requirements_children_pending",
+      "classification": "parent_foundation_docs_ready_children_pending",
       "sourceDocs": [
         "project.md",
-        "future random-map requirements doc"
+        "docs/random-map-generator-foundation.md"
       ],
       "implementationTargets": [
         "deterministic map-generation rules/helpers",
@@ -548,7 +548,7 @@
         "generator validation/report harness",
         "Phase 3 headless harness integration path"
       ],
-      "notes": "No finished skirmish RMG claim or broad content migration.",
+      "notes": "Requirements doc exists. No finished skirmish RMG claim, parent completion, or broad content migration.",
       "sliceType": "parent",
       "childSliceIds": [
         "random-map-requirements-doc-10184",
@@ -558,10 +558,12 @@
         "random-map-scenario-load-smoke-10184"
       ],
       "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
-      "docsReadyEvidenceIds": [],
+      "docsReadyEvidenceIds": [
+        "random-map-requirements-doc-10184"
+      ],
       "completedImplementationEvidenceIds": [],
       "reportOnlyEvidenceIds": [],
-      "missingDoc": "Random map generator requirements doc is not present yet; random-map-requirements-doc-10184 must resolve this before implementation children proceed."
+      "updatedAt": "2026-04-29T07:39:59Z"
     },
     {
       "id": "world-faction-mechanics-identity-hooks-10184",
@@ -2220,41 +2222,49 @@
       "id": "random-map-requirements-doc-10184",
       "title": "Random Map Requirements Doc",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
-      "classification": "missing_requirements_doc_child",
+      "classification": "requirements_doc_child_completed",
       "parentSliceId": "random-map-generator-foundation-10184",
       "purpose": "Create the missing random-map requirements document before implementation.",
       "sourceDocs": [
         "project.md",
-        "future random-map requirements doc"
+        "docs/random-map-generator-foundation.md"
       ],
       "implementationTargets": [
-        "future random-map requirements doc"
+        "docs/random-map-generator-foundation.md"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "docs/random-map-generator-foundation.md defines deterministic seed reproducibility, generated scenario/schema boundaries, terrain/biome constraints, start/town placement, roads/connectivity, resources/objects/encounters/objectives, fairness reporting, validation harness expectations, Phase 3 balance-harness path, and explicit non-goals."
       ],
       "completionCriteria": [
-        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+        "The random-map requirements document exists and PLAN/progress references no longer point at a missing future doc."
       ],
-      "missingDoc": "Random map generator requirements doc is not present yet; random-map-requirements-doc-10184 must resolve this before implementation children proceed."
+      "completionEvidence": [
+        "Created docs/random-map-generator-foundation.md.",
+        "Updated PLAN.md random-map source-doc references to docs/random-map-generator-foundation.md.",
+        "Parent random-map-generator-foundation-10184 remains pending; implementation child slices remain pending and uncompleted."
+      ],
+      "updatedAt": "2026-04-29T07:39:59Z",
+      "startedAt": "2026-04-29T07:38:04Z",
+      "completedAt": "2026-04-29T07:39:59Z",
+      "notes": "Documentation-only requirements slice completed; no generator code implemented."
     },
     {
       "id": "random-map-seeded-generator-core-10184",
       "title": "Random Map Seeded Generator Core",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending_after_implementation",
+      "status": "pending",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "random-map-generator-foundation-10184",
       "purpose": "Implement deterministic seeded generation primitives after requirements exist.",
       "sourceDocs": [
-        "future random-map requirements doc"
+        "docs/random-map-generator-foundation.md"
       ],
       "implementationTargets": [
         "deterministic map-generation rules/helpers",
@@ -2270,20 +2280,19 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "missingDoc": "Random map generator requirements doc is not present yet; random-map-requirements-doc-10184 must resolve this before implementation children proceed.",
-      "blockedBy": "random-map-requirements-doc-10184"
+      "notes": "Implementation not started."
     },
     {
       "id": "random-map-terrain-town-road-constraints-10184",
       "title": "Random Map Terrain/Town/Road Constraints",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending_after_implementation",
+      "status": "pending",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "random-map-generator-foundation-10184",
       "purpose": "Generate terrain, town, road, and route constraints suitable for scenario prototypes.",
       "sourceDocs": [
-        "future random-map requirements doc",
+        "docs/random-map-generator-foundation.md",
         "terrain/editor docs"
       ],
       "implementationTargets": [
@@ -2300,20 +2309,19 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "missingDoc": "Random map generator requirements doc is not present yet; random-map-requirements-doc-10184 must resolve this before implementation children proceed.",
-      "blockedBy": "random-map-requirements-doc-10184"
+      "notes": "Implementation not started."
     },
     {
       "id": "random-map-resource-encounter-fairness-report-10184",
       "title": "Random Map Resource/Encounter Fairness Report",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending_after_implementation",
+      "status": "pending",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "random-map-generator-foundation-10184",
       "purpose": "Validate resource, encounter, guard, and objective fairness in generated maps.",
       "sourceDocs": [
-        "future random-map requirements doc",
+        "docs/random-map-generator-foundation.md",
         "economy, object, and strategic AI docs"
       ],
       "implementationTargets": [
@@ -2330,20 +2338,19 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "missingDoc": "Random map generator requirements doc is not present yet; random-map-requirements-doc-10184 must resolve this before implementation children proceed.",
-      "blockedBy": "random-map-requirements-doc-10184"
+      "notes": "Implementation not started."
     },
     {
       "id": "random-map-scenario-load-smoke-10184",
       "title": "Random Map Scenario Load Smoke",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending_after_implementation",
+      "status": "pending",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "random-map-generator-foundation-10184",
       "purpose": "Prove generated prototype maps can load through the scenario pipeline once runtime integration is selected.",
       "sourceDocs": [
-        "future random-map requirements doc"
+        "docs/random-map-generator-foundation.md"
       ],
       "implementationTargets": [
         "generated prototype scenario smoke",
@@ -2359,8 +2366,7 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "missingDoc": "Random map generator requirements doc is not present yet; random-map-requirements-doc-10184 must resolve this before implementation children proceed.",
-      "blockedBy": "random-map-requirements-doc-10184"
+      "notes": "Implementation not started."
     },
     {
       "id": "headless-agent-simulation-harness-10184",
@@ -3595,8 +3601,8 @@
     },
     {
       "id": "random-map-generator-missing-requirements",
-      "status": "blocked",
-      "risk": "RMG implementation has no requirements document yet; generator children must wait for requirements.",
+      "status": "completed",
+      "risk": "Resolved by docs/random-map-generator-foundation.md; generator implementation children remain pending and uncompleted.",
       "ownerSliceIds": [
         "random-map-requirements-doc-10184",
         "random-map-generator-foundation-10184"
@@ -3619,23 +3625,19 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "terrain-editor-scenario-export-validation-10184",
-      "title": "Terrain Editor Scenario Export Validation",
-      "status": "completed",
-      "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
-      "source": "PLAN.md P2.9 Terrain, Renderer, And Editor Tooling Foundation",
+      "id": "random-map-seeded-generator-core-10184",
+      "title": "Random Map Seeded Generator Core",
+      "status": "pending",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "source": "PLAN.md P2.10 Random Map Generator Foundation",
       "sourceDocs": [
-        "docs/screen-wireframes.md",
-        "future editor/export requirements if created",
-        "docs/progress-implementation-audit-2026-04-27.md"
+        "docs/random-map-generator-foundation.md"
       ],
       "implementationTargets": [
-        "editor export-intent tooling",
-        "scenario validation smoke/report coverage",
-        "authored scenario/terrain-layer draft export contract validation",
-        "future durable authored file writeback/export if selected"
+        "deterministic map-generation rules/helpers",
+        "seed determinism checks"
       ],
-      "notes": "Completed bounded authored draft validation contract. Durable authored scenario export/writeback is still not implemented and should only proceed as a future selected slice."
+      "notes": "Requirements doc is complete; implementation has not started."
     }
   ],
   "stoppedOrPausedTasks": [
