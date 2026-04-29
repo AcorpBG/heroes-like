@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-playable-materialization-runtime-integration-10184",
-  "currentSliceTitle": "Random Map Playable Materialization Runtime Integration",
+  "currentSliceId": "random-map-object-pool-value-weighting-10184",
+  "currentSliceTitle": "Random Map Object Pool Value Weighting Completeness",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed runtime playable materialization integration. Evidence: generated maps now emit a concrete runtime_materialization payload/signature; ScenarioFactory and OverworldRules carry it through transient registry/session bootstrap; SaveService/ScenarioSelect preserve materialized-map identity in save/replay provenance; focused report random_map_playable_materialization_runtime_report proves launch, movement, save/restore, deterministic same input and changed seed/profile signatures, and no authored campaign/scenario writeback. Validation: validate_repo, focused report, skirmish save/replay, validation batch retry, scenario load smoke, roads/rivers writeout, json tool, diff check.",
+  "currentSliceNotes": "Completed explicit RMG object candidate pool/value weighting payload and report. Evidence: validate_repo, object_pool report, playable materialization runtime report, validation batch retry report, json tool, git diff --check.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Current continuation is Phase 2 RMG parity only. Preserve completed non-RMG and future-phase evidence, but do not continue campaign/faction/broad production work from it. P2.10 foundation and completed RMG staging/report slices are not HoMM3 RMG parity.",
-  "updatedAt": "2026-04-29T15:23:21Z",
+  "updatedAt": "2026-04-29T15:46:47Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -3182,7 +3182,7 @@
       "id": "random-map-object-pool-value-weighting-10184",
       "title": "Random Map Object Pool Value Weighting Completeness",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "parentSliceId": "random-map-generator-foundation-10184",
       "classification": "phase2_child_implementation_slice",
@@ -3219,7 +3219,10 @@
         "No final RMG parity claim until runtime, batch, UI/save/replay, and final parity gates pass."
       ],
       "createdAt": "2026-04-29T15:04:37Z",
-      "updatedAt": "2026-04-29T15:04:37Z"
+      "updatedAt": "2026-04-29T15:46:47Z",
+      "startedAt": "2026-04-29T15:28:32Z",
+      "notes": "Completed explicit RMG object candidate pool/value weighting payload and report. Evidence: validate_repo, object_pool report, playable materialization runtime report, validation batch retry report, json tool, git diff --check.",
+      "completedAt": "2026-04-29T15:46:47Z"
     },
     {
       "id": "random-map-large-batch-parity-stress-10184",

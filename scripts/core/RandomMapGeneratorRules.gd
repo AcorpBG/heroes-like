@@ -17,6 +17,8 @@ const CONNECTION_GUARD_MATERIALIZATION_SCHEMA_ID := "random_map_connection_guard
 const CONNECTION_GUARD_MATERIALIZATION_REPORT_SCHEMA_ID := "random_map_connection_guard_materialization_report_v1"
 const MONSTER_REWARD_BANDS_SCHEMA_ID := "random_map_monster_reward_bands_v1"
 const MONSTER_REWARD_BANDS_REPORT_SCHEMA_ID := "random_map_monster_reward_bands_report_v1"
+const OBJECT_POOL_VALUE_WEIGHTING_SCHEMA_ID := "random_map_object_pool_value_weighting_v1"
+const OBJECT_POOL_VALUE_WEIGHTING_REPORT_SCHEMA_ID := "random_map_object_pool_value_weighting_report_v1"
 const DECORATION_DENSITY_PASS_SCHEMA_ID := "random_map_decoration_density_pass_v1"
 const DECORATION_DENSITY_PASS_REPORT_SCHEMA_ID := "random_map_decoration_density_pass_report_v1"
 const OBJECT_FOOTPRINT_CATALOG_SCHEMA_ID := "random_map_object_footprint_catalog_v1"
@@ -43,6 +45,7 @@ const REQUIRED_VALIDATION_BATCH_PHASES := [
 	"object_placement_staging",
 	"connection_guard_materialization",
 	"monster_reward_bands",
+	"object_pool_value_weighting",
 	"town_mine_dwelling_placement",
 	"decoration_density_pass",
 	"object_footprint_catalog",
@@ -235,10 +238,13 @@ const DWELLING_SITE_CANDIDATES := [
 	{"site_id": "site_cliffhawk_roost", "object_id": "object_cliffhawk_roost", "neutral_dwelling_family_id": "neutral_dwelling_cliffhawk_roost", "biome_ids": ["biome_highland_ridge", "biome_grasslands"], "guard_pressure": "low"},
 ]
 const REWARD_BAND_CANDIDATES := [
-	{"reward_category": "resource_cache", "object_family_id": "reward_cache_small", "object_id": "object_waystone_cache", "value": 450, "weight": 5, "categories": ["timber", "ore", "gold"]},
-	{"reward_category": "guarded_cache", "object_family_id": "guarded_reward_cache", "object_id": "object_wood_wagon", "value": 800, "weight": 4, "categories": ["timber", "ore"]},
-	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_waymark_compass", "value": 1400, "weight": 2, "categories": ["gold", "lens_crystal", "cut_gems"]},
-	{"reward_category": "spell_access", "object_family_id": "spell_shrine", "object_id": "spell_beacon_path", "value": 1700, "weight": 1, "categories": ["quicksilver", "ember_salt", "lens_crystal"]},
+	{"reward_category": "resource_cache", "object_family_id": "reward_cache_small", "object_id": "object_waystone_cache", "site_id": "site_waystone_cache", "value": 450, "weight": 5, "categories": ["timber", "ore", "gold"], "guarded_policy": "unguarded_or_light_guard"},
+	{"reward_category": "build_resource_cache", "object_family_id": "reward_cache_small", "object_id": "object_ore_crates", "site_id": "site_ore_crates", "value": 650, "weight": 4, "categories": ["ore", "timber"], "guarded_policy": "unguarded_or_light_guard"},
+	{"reward_category": "guarded_cache", "object_family_id": "guarded_reward_cache", "object_id": "object_wood_wagon", "site_id": "site_wood_wagon", "value": 800, "weight": 4, "categories": ["timber", "ore"], "guarded_policy": "guarded_preferred"},
+	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "value": 1200, "weight": 2, "categories": ["timber", "gold"], "guarded_policy": "guarded_preferred"},
+	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_waymark_compass", "artifact_id": "artifact_waymark_compass", "value": 1400, "weight": 2, "categories": ["gold", "lens_crystal", "cut_gems"], "guarded_policy": "guarded_preferred"},
+	{"reward_category": "spell_access", "object_family_id": "spell_shrine", "object_id": "spell_beacon_path", "spell_id": "spell_beacon_path", "value": 1700, "weight": 1, "categories": ["quicksilver", "ember_salt", "lens_crystal"], "guarded_policy": "guarded_preferred"},
+	{"reward_category": "skill_equivalent", "object_family_id": "skill_shrine", "object_id": "object_reedscript_vow_shrine", "site_id": "site_reedscript_vow_shrine", "skill_equivalent_id": "route_vow_shrine_contract", "value": 1300, "weight": 2, "categories": ["timber", "ore", "quicksilver"], "guarded_policy": "guarded_or_frontier"},
 ]
 const DECORATION_OBJECT_FAMILIES := [
 	{"family_id": "decor_grass_windgrass_tufts", "display_name": "Windgrass Tufts", "role": "decor", "terrain_ids": ["grass", "plains"], "biome_ids": ["biome_grasslands"], "weight": 5, "blocks_movement": true},
@@ -330,8 +336,8 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"family_id": "reward_object",
 		"display_name": "Generated Reward Object",
 		"placement_kinds": ["reward_reference"],
-		"family_ids": ["reward_cache_small", "guarded_reward_cache", "artifact_cache", "spell_shrine"],
-		"object_ids": ["object_waystone_cache", "object_wood_wagon", "artifact_waymark_compass", "spell_beacon_path"],
+		"family_ids": ["reward_cache_small", "guarded_reward_cache", "artifact_cache", "spell_shrine", "skill_shrine"],
+		"object_ids": ["object_waystone_cache", "object_wood_wagon", "object_ore_crates", "artifact_trailsinger_boots", "artifact_waymark_compass", "spell_beacon_path", "object_reedscript_vow_shrine"],
 		"footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},
 		"body_mask": [{"x": 0, "y": 0}],
 		"runtime_body_mask": [{"x": 0, "y": 0}],
@@ -467,6 +473,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 	var constraints := _build_constraint_payload(normalized, zones, template.get("links", []), seeds, zone_grid, terrain_rows, placements, zone_layout, terrain_transit)
 	phases.append(_phase_record("connection_guard_materialization", _connection_guard_materialization_phase_summary(constraints.get("connection_guard_materialization", {}))))
 	phases.append(_phase_record("monster_reward_bands", _monster_reward_bands_phase_summary(constraints.get("monster_reward_bands", {}))))
+	phases.append(_phase_record("object_pool_value_weighting", _object_pool_value_weighting_phase_summary(constraints.get("object_pool_value_weighting", {}))))
 	phases.append(_phase_record("town_mine_dwelling_placement", _town_mine_dwelling_phase_summary(constraints.get("town_mine_dwelling_placement", {}))))
 	phases.append(_phase_record("decoration_density_pass", _decoration_density_phase_summary(constraints.get("decoration_density_pass", {}))))
 	phases.append(_phase_record("object_footprint_catalog", _object_footprint_phase_summary(constraints.get("object_footprint_catalog", {}))))
@@ -837,6 +844,62 @@ static func monster_reward_bands_report(input_config: Dictionary) -> Dictionary:
 		},
 	}
 
+static func object_pool_value_weighting_report(input_config: Dictionary) -> Dictionary:
+	var first := generate(input_config)
+	var second := generate(input_config)
+	var changed_seed_config := input_config.duplicate(true)
+	changed_seed_config["seed"] = "%s:object_pool_delta" % String(input_config.get("seed", "0"))
+	var changed_seed := generate(changed_seed_config)
+	var changed_profile_config := _object_pool_report_variation_config(input_config)
+	var changed_profile := generate(changed_profile_config)
+	var first_payload: Dictionary = first.get("generated_map", {})
+	var second_payload: Dictionary = second.get("generated_map", {})
+	var changed_payload: Dictionary = changed_seed.get("generated_map", {})
+	var changed_profile_payload: Dictionary = changed_profile.get("generated_map", {})
+	var first_pool: Dictionary = first_payload.get("staging", {}).get("object_pool_value_weighting", {})
+	var second_pool: Dictionary = second_payload.get("staging", {}).get("object_pool_value_weighting", {})
+	var changed_pool: Dictionary = changed_payload.get("staging", {}).get("object_pool_value_weighting", {})
+	var changed_profile_pool: Dictionary = changed_profile_payload.get("staging", {}).get("object_pool_value_weighting", {})
+	var same_signature := String(first_pool.get("object_pool_value_weighting_signature", "")) == String(second_pool.get("object_pool_value_weighting_signature", ""))
+	var changed_seed_changes_signature := String(first_pool.get("object_pool_value_weighting_signature", "")) != String(changed_pool.get("object_pool_value_weighting_signature", ""))
+	var changed_profile_changes_signature := String(first_pool.get("object_pool_value_weighting_signature", "")) != String(changed_profile_pool.get("object_pool_value_weighting_signature", ""))
+	var validation := _object_pool_value_weighting_validation(first_pool, first_payload)
+	var ok := bool(first.get("ok", false)) and bool(second.get("ok", false)) and bool(changed_profile.get("ok", false)) and not changed_pool.is_empty() and same_signature and changed_seed_changes_signature and changed_profile_changes_signature and bool(validation.get("ok", false))
+	return {
+		"ok": ok,
+		"schema_id": OBJECT_POOL_VALUE_WEIGHTING_REPORT_SCHEMA_ID,
+		"stable_signature": String(first_payload.get("stable_signature", "")),
+		"changed_seed_signature": String(changed_payload.get("stable_signature", "")),
+		"changed_profile_signature": String(changed_profile_payload.get("stable_signature", "")),
+		"object_pool_value_weighting_signature": String(first_pool.get("object_pool_value_weighting_signature", "")),
+		"changed_seed_object_pool_value_weighting_signature": String(changed_pool.get("object_pool_value_weighting_signature", "")),
+		"changed_profile_object_pool_value_weighting_signature": String(changed_profile_pool.get("object_pool_value_weighting_signature", "")),
+		"same_input_object_pool_value_weighting_signature_equivalent": same_signature,
+		"changed_seed_changes_object_pool_value_weighting_signature": changed_seed_changes_signature,
+		"changed_profile_changes_object_pool_value_weighting_signature": changed_profile_changes_signature,
+		"generation_validation_ok": {
+			"first": bool(first.get("ok", false)),
+			"second": bool(second.get("ok", false)),
+			"changed_seed_payload_present": not changed_pool.is_empty(),
+			"changed_profile": bool(changed_profile.get("ok", false)),
+		},
+		"object_pool_value_weighting": first_pool,
+		"changed_seed_object_pool_value_weighting": changed_pool,
+		"changed_profile_object_pool_value_weighting": changed_profile_pool,
+		"object_pool_value_weighting_validation": validation,
+		"batch_examples": [
+			_object_pool_batch_example(first_payload, first_pool),
+			_object_pool_batch_example(changed_payload, changed_pool),
+			_object_pool_batch_example(changed_profile_payload, changed_profile_pool),
+		],
+		"payload_validation": first.get("report", {}),
+		"no_ui_save_writeback_claim": {
+			"campaign_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("campaign", true)),
+			"skirmish_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("skirmish", true)),
+			"write_policy": String(first_payload.get("write_policy", "")),
+		},
+	}
+
 static func decoration_density_report(input_config: Dictionary) -> Dictionary:
 	var first := generate(input_config)
 	var second := generate(input_config)
@@ -1142,6 +1205,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	var fairness_report: Dictionary = staging.get("fairness_report", {})
 	var connection_guard_materialization: Dictionary = staging.get("connection_guard_materialization", {})
 	var monster_reward_bands: Dictionary = staging.get("monster_reward_bands", {})
+	var object_pool_value_weighting: Dictionary = staging.get("object_pool_value_weighting", {})
 	var town_mine_dwelling: Dictionary = staging.get("town_mine_dwelling_placement", {})
 	var decoration_density: Dictionary = staging.get("decoration_density_pass", {})
 	var object_footprints: Dictionary = staging.get("object_footprint_catalog", {})
@@ -1202,6 +1266,12 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 			failures.append("monster reward bands: %s" % String(failure))
 	for warning in monster_reward_validation.get("warnings", []):
 		warnings.append("monster reward bands: %s" % String(warning))
+	var object_pool_validation := _object_pool_value_weighting_validation(object_pool_value_weighting, generated_map)
+	if not bool(object_pool_validation.get("ok", false)):
+		for failure in object_pool_validation.get("failures", []):
+			failures.append("object pool value weighting: %s" % String(failure))
+	for warning in object_pool_validation.get("warnings", []):
+		warnings.append("object pool value weighting: %s" % String(warning))
 	var town_mine_dwelling_validation := _town_mine_dwelling_validation(town_mine_dwelling, generated_map)
 	if not bool(town_mine_dwelling_validation.get("ok", false)):
 		for failure in town_mine_dwelling_validation.get("failures", []):
@@ -1237,7 +1307,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	for phase in generated_map.get("phase_pipeline", []):
 		if phase is Dictionary:
 			phase_names.append(String(phase.get("phase", "")))
-	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "connection_guard_materialization", "monster_reward_bands", "town_mine_dwelling_placement", "decoration_density_pass", "object_footprint_catalog", "route_road_constraint_writeout", "roads_rivers_writeout", "resource_encounter_fairness_report"]:
+	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "connection_guard_materialization", "monster_reward_bands", "object_pool_value_weighting", "town_mine_dwelling_placement", "decoration_density_pass", "object_footprint_catalog", "route_road_constraint_writeout", "roads_rivers_writeout", "resource_encounter_fairness_report"]:
 		if required_phase not in phase_names:
 			failures.append("missing generation phase %s" % required_phase)
 	if scenario.get("towns", []).is_empty():
@@ -1259,6 +1329,8 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 		"connection_guard_materialization_summary": connection_guard_materialization.get("summary", {}),
 		"monster_reward_bands_status": String(monster_reward_bands.get("status", "")),
 		"monster_reward_bands_summary": monster_reward_bands.get("summary", {}),
+		"object_pool_value_weighting_status": String(object_pool_value_weighting.get("status", "")),
+		"object_pool_value_weighting_summary": object_pool_value_weighting.get("summary", {}),
 		"town_mine_dwelling_status": String(town_mine_dwelling.get("status", "")),
 		"town_mine_dwelling_summary": town_mine_dwelling.get("summary", {}),
 		"decoration_density_status": String(decoration_density.get("status", "")),
@@ -2270,6 +2342,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 			"terrain_transit": constraints.get("terrain_transit_semantics", {}),
 			"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 			"monster_reward_bands": constraints.get("monster_reward_bands", {}),
+			"object_pool_value_weighting": constraints.get("object_pool_value_weighting", {}),
 			"town_mine_dwelling_placement": constraints.get("town_mine_dwelling_placement", {}),
 			"decoration_density_pass": constraints.get("decoration_density_pass", {}),
 			"object_footprint_catalog": constraints.get("object_footprint_catalog", {}),
@@ -2500,6 +2573,7 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"terrain_transit_semantics": constraints.get("terrain_transit_semantics", {}),
 		"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 		"monster_reward_bands": constraints.get("monster_reward_bands", {}),
+		"object_pool_value_weighting": constraints.get("object_pool_value_weighting", {}),
 		"town_mine_dwelling_placement": constraints.get("town_mine_dwelling_placement", {}),
 		"decoration_density_pass": constraints.get("decoration_density_pass", {}),
 		"object_footprint_catalog": constraints.get("object_footprint_catalog", {}),
@@ -2533,6 +2607,16 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 	var monster_reward_bands := _build_monster_reward_bands(normalized, zones, connection_guard_materialization, route_graph, placements, terrain_transit)
 	route_graph["monster_reward_bands"] = monster_reward_bands
 	route_graph["monster_reward_bands_summary"] = monster_reward_bands.get("summary", {})
+	var object_pool_value_weighting := _build_object_pool_value_weighting_payload(
+		normalized,
+		zones,
+		placements,
+		monster_reward_bands,
+		{},
+		{},
+		terrain_rows,
+		route_graph
+	)
 	var town_mine_dwelling := _build_town_mine_dwelling_placement_payload(
 		normalized,
 		zones,
@@ -2575,6 +2659,16 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		route_build.get("road_network", {}),
 		decoration_density
 	)
+	object_pool_value_weighting = _build_object_pool_value_weighting_payload(
+		normalized,
+		zones,
+		placements,
+		monster_reward_bands,
+		town_mine_dwelling,
+		decoration_density,
+		terrain_rows,
+		route_graph
+	)
 	var fairness_report := _fairness_report_payload(normalized, zones, placements, route_graph, route_build.get("route_reachability_proof", {}), {}, town_mine_dwelling)
 	return {
 		"zone_layout": zone_layout,
@@ -2582,6 +2676,7 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		"terrain_transit_semantics": terrain_transit,
 		"connection_guard_materialization": connection_guard_materialization,
 		"monster_reward_bands": monster_reward_bands,
+		"object_pool_value_weighting": object_pool_value_weighting,
 		"town_mine_dwelling_placement": town_mine_dwelling,
 		"decoration_density_pass": decoration_density,
 		"object_footprint_catalog": object_footprints,
@@ -4764,9 +4859,15 @@ static func _reward_band_record_for_materialized_guard(normalized: Dictionary, g
 		"selected_reward_category_id": String(candidate.get("reward_category", "resource_cache")),
 		"selected_reward_object_id": String(candidate.get("object_id", "")),
 		"selected_reward_family_id": String(candidate.get("object_family_id", "")),
+		"artifact_id": String(candidate.get("artifact_id", "")),
+		"spell_id": String(candidate.get("spell_id", "")),
+		"skill_equivalent_id": String(candidate.get("skill_equivalent_id", "")),
+		"site_id": String(candidate.get("site_id", "")),
 		"selected_resource_category_id": String(category_link.get("original_category_id", "")),
 		"category_link": category_link,
 		"candidate_value": int(candidate.get("value", 0)),
+		"candidate_weight": int(candidate.get("weight", 1)),
+		"guarded_policy": String(candidate.get("guarded_policy", "")),
 		"selection_signature": _hash32_hex(_stable_stringify({"seed": String(normalized.get("seed", "")), "materialization_id": materialization_id, "band": band, "candidate": candidate, "category": category_link})),
 		"content_ref_state": "original_reward_ref_selected" if String(candidate.get("object_id", "")) != "" else "deferred_missing_reward_ref",
 		"object_footprint_catalog_ref": _object_footprint_ref_for_reward_candidate(candidate),
@@ -5187,6 +5288,583 @@ static func _monster_reward_bands_validation(payload: Dictionary, generated_map:
 		"status": "pass" if failures.is_empty() else "fail",
 		"failures": failures,
 		"warnings": warnings,
+	}
+
+static func _build_object_pool_value_weighting_payload(normalized: Dictionary, zones: Array, placements: Dictionary, monster_reward_bands: Dictionary, town_mine_dwelling: Dictionary, decoration_density: Dictionary, terrain_rows: Array, route_graph: Dictionary) -> Dictionary:
+	var selected_records := []
+	for reward in monster_reward_bands.get("reward_band_records", []):
+		if reward is Dictionary:
+			selected_records.append(_object_pool_selected_reward_record(reward, monster_reward_bands, zones))
+	for mine in town_mine_dwelling.get("mine_resource_producer_records", []):
+		if mine is Dictionary:
+			selected_records.append(_object_pool_selected_mine_record(mine))
+	for dwelling in town_mine_dwelling.get("dwelling_recruitment_site_records", []):
+		if dwelling is Dictionary:
+			selected_records.append(_object_pool_selected_dwelling_record(dwelling))
+	for decor in decoration_density.get("decoration_records", []):
+		if decor is Dictionary:
+			selected_records.append(_object_pool_selected_decoration_record(decor))
+	var catalog := _object_pool_candidate_pool_catalog()
+	var limit_validation := _object_pool_limit_validation(selected_records)
+	var band_diagnostics := _object_pool_band_diagnostics(monster_reward_bands)
+	var fairness := _object_pool_fairness_deltas(selected_records, zones)
+	var validation := _object_pool_value_weighting_validation_core(selected_records, catalog, limit_validation, fairness, monster_reward_bands, town_mine_dwelling, decoration_density, terrain_rows, route_graph)
+	var status := "pass"
+	if not bool(validation.get("ok", false)):
+		status = "fail"
+	elif not band_diagnostics.get("warnings", []).is_empty():
+		status = "warning"
+	var payload := {
+		"schema_id": OBJECT_POOL_VALUE_WEIGHTING_SCHEMA_ID,
+		"status": status,
+		"selection_policy": "explicit_original_content_candidate_pools_weighted_by_zone_role_biome_template_metadata_guard_policy_reward_band_and_object_limits",
+		"candidate_pool_catalog": catalog,
+		"selected_candidates": selected_records,
+		"object_counts": _object_pool_counts(selected_records),
+		"value_totals": _object_pool_value_totals(selected_records),
+		"band_diagnostics": band_diagnostics,
+		"limit_validation": limit_validation,
+		"fairness_deltas": fairness,
+		"route_reference_count": route_graph.get("edges", []).size(),
+		"generated_runtime_consumption": "selected_weighted_objects_remain_in_staging_scenario_constraints_and_runtime_materialization_without_authored_json_writeback",
+		"validation": validation,
+		"summary": {
+			"selected_candidate_count": selected_records.size(),
+			"candidate_pool_count": catalog.get("pools", []).size(),
+			"reward_candidate_count": _object_pool_count_by_kind(selected_records, "reward"),
+			"mine_candidate_count": _object_pool_count_by_kind(selected_records, "mine"),
+			"dwelling_candidate_count": _object_pool_count_by_kind(selected_records, "neutral_dwelling"),
+			"decoration_candidate_count": _object_pool_count_by_kind(selected_records, "decorative_obstacle"),
+			"total_selected_value": int(_object_pool_value_totals(selected_records).get("total", 0)),
+			"exhausted_band_count": band_diagnostics.get("exhausted_bands", []).size(),
+			"fallback_choice_count": band_diagnostics.get("fallback_choices", []).size(),
+			"limit_violation_count": limit_validation.get("violations", []).size(),
+			"player_value_spread": int(fairness.get("player_value_delta", {}).get("spread", 0)),
+			"validation_status": String(validation.get("status", "")),
+		},
+		"deferred": [
+			"final_reward_object_body_writeout",
+			"live_artifact_spell_skill_reward_execution",
+			"large_batch_parity_stress",
+			"skirmish_ui_save_replay_adoption",
+			"parity_or_alpha_completion_claim",
+		],
+	}
+	payload["object_pool_value_weighting_signature"] = _hash32_hex(_stable_stringify({
+		"candidate_pool_catalog_signature": catalog.get("pool_catalog_signature", ""),
+		"selected_candidates": selected_records,
+		"object_counts": payload.get("object_counts", {}),
+		"value_totals": payload.get("value_totals", {}),
+		"band_diagnostics": band_diagnostics,
+		"limit_validation": limit_validation,
+		"fairness_deltas": fairness,
+	}))
+	return payload
+
+static func _object_pool_candidate_pool_catalog() -> Dictionary:
+	var pools := [
+		{
+			"pool_id": "reward_value_bands",
+			"kind": "reward",
+			"source": "REWARD_BAND_CANDIDATES",
+			"candidate_count": REWARD_BAND_CANDIDATES.size(),
+			"weighting_fields": ["value", "weight", "categories", "guarded_policy", "reward_category"],
+			"candidate_records": _reward_pool_candidate_records(),
+		},
+		{
+			"pool_id": "seven_category_mines",
+			"kind": "mine",
+			"source": "ORIGINAL_RESOURCE_CATEGORY_ORDER + MINE_SITE_BY_ORIGINAL_CATEGORY",
+			"candidate_count": ORIGINAL_RESOURCE_CATEGORY_ORDER.size(),
+			"weighting_fields": ["minimum_by_category", "density_by_category", "guard_base_value", "source_equivalent"],
+			"candidate_records": _mine_pool_candidate_records(),
+		},
+		{
+			"pool_id": "neutral_dwelling_recruitment",
+			"kind": "neutral_dwelling",
+			"source": "DWELLING_SITE_CANDIDATES",
+			"candidate_count": DWELLING_SITE_CANDIDATES.size(),
+			"weighting_fields": ["biome_ids", "guard_pressure", "zone_role"],
+			"candidate_records": DWELLING_SITE_CANDIDATES.duplicate(true),
+		},
+		{
+			"pool_id": "terrain_biased_decoration",
+			"kind": "decorative_obstacle",
+			"source": "DECORATION_OBJECT_FAMILIES",
+			"candidate_count": DECORATION_OBJECT_FAMILIES.size(),
+			"weighting_fields": ["terrain_ids", "biome_ids", "weight", "adjacency_score", "overlap_score"],
+			"candidate_records": DECORATION_OBJECT_FAMILIES.duplicate(true),
+		},
+	]
+	var catalog := {
+		"schema_id": "random_map_object_candidate_pool_catalog_v1",
+		"pools": pools,
+		"object_limits": _object_pool_limit_table(),
+		"artifact_spell_skill_equivalents": _object_pool_artifact_spell_skill_equivalents(),
+		"source_model": "HoMM3_RMG_value_banded_object_selection_translated_to_original_content_ids",
+	}
+	catalog["pool_catalog_signature"] = _hash32_hex(_stable_stringify(catalog))
+	return catalog
+
+static func _reward_pool_candidate_records() -> Array:
+	var result := []
+	for candidate in REWARD_BAND_CANDIDATES:
+		if not (candidate is Dictionary):
+			continue
+		var record: Dictionary = candidate.duplicate(true)
+		record["candidate_id"] = "reward_%s_%s" % [String(candidate.get("reward_category", "")), String(candidate.get("object_id", ""))]
+		record["value_band_class"] = _object_pool_value_band_class(int(candidate.get("value", 0)))
+		result.append(record)
+	return result
+
+static func _mine_pool_candidate_records() -> Array:
+	var result := []
+	for category in ORIGINAL_RESOURCE_CATEGORY_ORDER:
+		if not (category is Dictionary):
+			continue
+		var category_id := String(category.get("original_category_id", ""))
+		var mine: Dictionary = MINE_SITE_BY_ORIGINAL_CATEGORY.get(category_id, {})
+		var record: Dictionary = category.duplicate(true)
+		record["candidate_id"] = "mine_%s" % category_id
+		record["site_id"] = String(mine.get("site_id", ""))
+		record["object_id"] = String(mine.get("object_id", ""))
+		record["resource_id"] = String(mine.get("resource_id", ""))
+		record["value_band_class"] = _object_pool_value_band_class(int(category.get("guard_base_value", 0)))
+		result.append(record)
+	return result
+
+static func _object_pool_artifact_spell_skill_equivalents() -> Dictionary:
+	var artifact_ids := []
+	var spell_ids := []
+	var skill_equivalent_ids := []
+	for candidate in REWARD_BAND_CANDIDATES:
+		if not (candidate is Dictionary):
+			continue
+		if String(candidate.get("artifact_id", "")) != "":
+			artifact_ids.append(String(candidate.get("artifact_id", "")))
+		if String(candidate.get("spell_id", "")) != "":
+			spell_ids.append(String(candidate.get("spell_id", "")))
+		if String(candidate.get("skill_equivalent_id", "")) != "":
+			skill_equivalent_ids.append(String(candidate.get("skill_equivalent_id", "")))
+	return {
+		"artifact_ids": _unique_sorted_strings(artifact_ids),
+		"spell_ids": _unique_sorted_strings(spell_ids),
+		"skill_equivalent_ids": _unique_sorted_strings(skill_equivalent_ids),
+	}
+
+static func _object_pool_selected_reward_record(reward: Dictionary, monster_reward_bands: Dictionary, zones: Array) -> Dictionary:
+	var zone_id := _object_pool_zone_id_for_route(String(reward.get("route_edge_id", "")), monster_reward_bands, zones)
+	var category := String(reward.get("selected_reward_category_id", ""))
+	var value := int(reward.get("candidate_value", 0))
+	return {
+		"selection_id": String(reward.get("id", "")),
+		"kind": "reward",
+		"pool_id": "reward_value_bands",
+		"zone_id": zone_id,
+		"zone_role": _object_pool_zone_role(zone_id, zones),
+		"terrain_id": _object_pool_zone_terrain(zone_id, zones),
+		"biome_id": _biome_for_terrain(_object_pool_zone_terrain(zone_id, zones)),
+		"route_edge_id": String(reward.get("route_edge_id", "")),
+		"content_id": String(reward.get("selected_reward_object_id", "")),
+		"object_id": String(reward.get("selected_reward_object_id", "")),
+		"family_id": String(reward.get("selected_reward_family_id", "")),
+		"artifact_id": String(reward.get("artifact_id", "")),
+		"spell_id": String(reward.get("spell_id", "")),
+		"skill_equivalent_id": String(reward.get("skill_equivalent_id", "")),
+		"reward_category": category,
+		"resource_category_id": String(reward.get("selected_resource_category_id", "")),
+		"value": value,
+		"weight": int(reward.get("candidate_weight", 1)),
+		"value_band": reward.get("selected_band", {}),
+		"guarded_policy": String(reward.get("guarded_policy", "")),
+		"guarded": true,
+		"fallback": String(reward.get("source", "")) != "template_treasure_band",
+		"limit_kind": "reward_reference",
+		"selected_from_explicit_pool": true,
+	}
+
+static func _object_pool_selected_mine_record(mine: Dictionary) -> Dictionary:
+	var value := int(mine.get("guard_pressure", {}).get("base_value", 0))
+	return {
+		"selection_id": String(mine.get("placement_id", "")),
+		"kind": "mine",
+		"pool_id": "seven_category_mines",
+		"zone_id": String(mine.get("zone_id", "")),
+		"zone_role": String(mine.get("zone_role", "")),
+		"content_id": String(mine.get("object_id", mine.get("site_id", ""))),
+		"object_id": String(mine.get("object_id", "")),
+		"site_id": String(mine.get("site_id", "")),
+		"family_id": String(mine.get("family_id", "")),
+		"resource_category_id": String(mine.get("original_resource_category_id", "")),
+		"resource_id": String(mine.get("resource_id", "")),
+		"value": value,
+		"weight": max(1, int(mine.get("minimum_requirement", 0)) * 3 + int(mine.get("density_requirement", 0))),
+		"guarded": bool(mine.get("guard_pressure", {}).get("guarded", false)),
+		"terrain_id": String(mine.get("footprint_action_metadata", {}).get("placement_predicate_results", {}).get("terrain_id", "")),
+		"biome_id": _biome_for_terrain(String(mine.get("footprint_action_metadata", {}).get("placement_predicate_results", {}).get("terrain_id", "grass"))),
+		"limit_kind": "mine",
+		"selected_from_explicit_pool": true,
+	}
+
+static func _object_pool_selected_dwelling_record(dwelling: Dictionary) -> Dictionary:
+	var pressure := String(dwelling.get("guard_pressure", "medium"))
+	var value := 900 if pressure == "low" else 1300 if pressure == "medium" else 1800
+	return {
+		"selection_id": String(dwelling.get("placement_id", "")),
+		"kind": "neutral_dwelling",
+		"pool_id": "neutral_dwelling_recruitment",
+		"zone_id": String(dwelling.get("zone_id", "")),
+		"zone_role": String(dwelling.get("zone_role", "")),
+		"content_id": String(dwelling.get("object_id", dwelling.get("site_id", ""))),
+		"object_id": String(dwelling.get("object_id", "")),
+		"site_id": String(dwelling.get("site_id", "")),
+		"family_id": String(dwelling.get("family_id", "")),
+		"neutral_dwelling_family_id": String(dwelling.get("neutral_dwelling_family_id", "")),
+		"value": value,
+		"weight": 2 if pressure == "low" else 3 if pressure == "medium" else 1,
+		"guarded": pressure != "low",
+		"guarded_policy": pressure,
+		"terrain_id": String(dwelling.get("footprint_action_metadata", {}).get("placement_predicate_results", {}).get("terrain_id", "")),
+		"biome_id": _biome_for_terrain(String(dwelling.get("footprint_action_metadata", {}).get("placement_predicate_results", {}).get("terrain_id", "grass"))),
+		"limit_kind": "neutral_dwelling",
+		"selected_from_explicit_pool": true,
+	}
+
+static func _object_pool_selected_decoration_record(decor: Dictionary) -> Dictionary:
+	return {
+		"selection_id": String(decor.get("id", decor.get("placement_id", ""))),
+		"kind": "decorative_obstacle",
+		"pool_id": "terrain_biased_decoration",
+		"zone_id": String(decor.get("zone_id", "")),
+		"zone_role": String(decor.get("density_context", {}).get("zone_role", "")),
+		"content_id": String(decor.get("family_id", "")),
+		"family_id": String(decor.get("family_id", "")),
+		"value": 0,
+		"weight": int(decor.get("placement_scores", {}).get("weight", 1)),
+		"guarded": false,
+		"terrain_id": String(decor.get("terrain_id", "")),
+		"biome_id": String(decor.get("biome_id", "")),
+		"limit_kind": "decorative_obstacle",
+		"selected_from_explicit_pool": true,
+	}
+
+static func _object_pool_zone_id_for_route(route_edge_id: String, monster_reward_bands: Dictionary, zones: Array) -> String:
+	for record in monster_reward_bands.get("monster_reward_records", []):
+		if record is Dictionary and String(record.get("route_edge_id", "")) == route_edge_id:
+			return String(record.get("zone_context", {}).get("primary_zone_id", ""))
+	return String(zones[0].get("id", "")) if not zones.is_empty() and zones[0] is Dictionary else ""
+
+static func _object_pool_zone_role(zone_id: String, zones: Array) -> String:
+	for zone in zones:
+		if zone is Dictionary and String(zone.get("id", "")) == zone_id:
+			return String(zone.get("role", ""))
+	return ""
+
+static func _object_pool_zone_terrain(zone_id: String, zones: Array) -> String:
+	for zone in zones:
+		if zone is Dictionary and String(zone.get("id", "")) == zone_id:
+			return String(zone.get("terrain_id", "grass"))
+	return "grass"
+
+static func _object_pool_limit_table() -> Dictionary:
+	var table := {}
+	for catalog in OBJECT_FOOTPRINT_CATALOG:
+		if not (catalog is Dictionary):
+			continue
+		var limit: Dictionary = catalog.get("object_limit", {}) if catalog.get("object_limit", {}) is Dictionary else {}
+		for kind in catalog.get("placement_kinds", []):
+			table[String(kind)] = {
+				"catalog_id": String(catalog.get("id", "")),
+				"per_zone": int(limit.get("per_zone", 999999)),
+				"global": int(limit.get("global", 999999)),
+			}
+	return table
+
+static func _object_pool_limit_validation(selected_records: Array) -> Dictionary:
+	var limits := _object_pool_limit_table()
+	var global_counts := {}
+	var zone_counts := {}
+	var violations := []
+	for record in selected_records:
+		if not (record is Dictionary):
+			continue
+		var limit_kind := String(record.get("limit_kind", record.get("kind", "")))
+		global_counts[limit_kind] = int(global_counts.get(limit_kind, 0)) + 1
+		var zone_key := "%s|%s" % [String(record.get("zone_id", "")), limit_kind]
+		zone_counts[zone_key] = int(zone_counts.get(zone_key, 0)) + 1
+	for kind in _sorted_keys(global_counts):
+		var limit: Dictionary = limits.get(kind, {}) if limits.get(kind, {}) is Dictionary else {}
+		if int(global_counts.get(kind, 0)) > int(limit.get("global", 999999)):
+			violations.append("global limit exceeded for %s: %d > %d" % [kind, int(global_counts.get(kind, 0)), int(limit.get("global", 999999))])
+	for zone_key in _sorted_keys(zone_counts):
+		var pieces := String(zone_key).split("|")
+		var kind := pieces[1] if pieces.size() > 1 else String(zone_key)
+		var limit: Dictionary = limits.get(kind, {}) if limits.get(kind, {}) is Dictionary else {}
+		if int(zone_counts.get(zone_key, 0)) > int(limit.get("per_zone", 999999)):
+			violations.append("per-zone limit exceeded for %s: %d > %d" % [zone_key, int(zone_counts.get(zone_key, 0)), int(limit.get("per_zone", 999999))])
+	return {
+		"ok": violations.is_empty(),
+		"status": "pass" if violations.is_empty() else "fail",
+		"limits": limits,
+		"global_counts": _sorted_dict(global_counts),
+		"zone_counts": _sorted_dict(zone_counts),
+		"violations": violations,
+	}
+
+static func _object_pool_band_diagnostics(monster_reward_bands: Dictionary) -> Dictionary:
+	var exhausted := []
+	var fallbacks := []
+	var warnings := []
+	for diagnostic in monster_reward_bands.get("diagnostics", []):
+		if not (diagnostic is Dictionary):
+			continue
+		var reason := String(diagnostic.get("reason", ""))
+		if reason.find("exhausted") >= 0:
+			exhausted.append(diagnostic)
+		if reason.find("fallback") >= 0 or reason.find("missing_eligible_treasure_band") >= 0:
+			fallbacks.append(diagnostic)
+		warnings.append("%s:%s" % [String(diagnostic.get("route_edge_id", "")), reason])
+	for reward in monster_reward_bands.get("reward_band_records", []):
+		if reward is Dictionary and String(reward.get("source", "")) != "template_treasure_band":
+			fallbacks.append({
+				"route_edge_id": String(reward.get("route_edge_id", "")),
+				"reason": "reward_band_source_fallback",
+				"selected_band": reward.get("selected_band", {}),
+				"selected_reward_category_id": String(reward.get("selected_reward_category_id", "")),
+			})
+	return {
+		"exhausted_bands": exhausted,
+		"fallback_choices": fallbacks,
+		"warnings": warnings,
+	}
+
+static func _object_pool_counts(selected_records: Array) -> Dictionary:
+	var by_kind := {}
+	var by_pool := {}
+	var by_zone := {}
+	var by_reward_category := {}
+	for record in selected_records:
+		if not (record is Dictionary):
+			continue
+		var kind := String(record.get("kind", ""))
+		var pool := String(record.get("pool_id", ""))
+		var zone := String(record.get("zone_id", ""))
+		by_kind[kind] = int(by_kind.get(kind, 0)) + 1
+		by_pool[pool] = int(by_pool.get(pool, 0)) + 1
+		by_zone[zone] = int(by_zone.get(zone, 0)) + 1
+		if kind == "reward":
+			var category := String(record.get("reward_category", ""))
+			by_reward_category[category] = int(by_reward_category.get(category, 0)) + 1
+	return {
+		"by_kind": _sorted_dict(by_kind),
+		"by_pool": _sorted_dict(by_pool),
+		"by_zone": _sorted_dict(by_zone),
+		"by_reward_category": _sorted_dict(by_reward_category),
+	}
+
+static func _object_pool_value_totals(selected_records: Array) -> Dictionary:
+	var total := 0
+	var by_kind := {}
+	var by_zone := {}
+	for record in selected_records:
+		if not (record is Dictionary):
+			continue
+		var value := int(record.get("value", 0))
+		total += value
+		var kind := String(record.get("kind", ""))
+		var zone := String(record.get("zone_id", ""))
+		by_kind[kind] = int(by_kind.get(kind, 0)) + value
+		by_zone[zone] = int(by_zone.get(zone, 0)) + value
+	return {
+		"total": total,
+		"by_kind": _sorted_dict(by_kind),
+		"by_zone": _sorted_dict(by_zone),
+	}
+
+static func _object_pool_fairness_deltas(selected_records: Array, zones: Array) -> Dictionary:
+	var zone_owner := {}
+	var zone_role := {}
+	for zone in zones:
+		if zone is Dictionary:
+			zone_owner[String(zone.get("id", ""))] = zone.get("player_slot", null)
+			zone_role[String(zone.get("id", ""))] = String(zone.get("role", ""))
+	var player_totals := {}
+	var zone_totals := {}
+	var zone_role_totals := {}
+	for record in selected_records:
+		if not (record is Dictionary):
+			continue
+		var zone_id := String(record.get("zone_id", ""))
+		var value := int(record.get("value", 0))
+		zone_totals[zone_id] = int(zone_totals.get(zone_id, 0)) + value
+		var role := String(zone_role.get(zone_id, String(record.get("zone_role", ""))))
+		zone_role_totals[role] = int(zone_role_totals.get(role, 0)) + value
+		var owner = zone_owner.get(zone_id, null)
+		if owner != null and int(owner) > 0:
+			var player_key := "player_%d" % int(owner)
+			player_totals[player_key] = int(player_totals.get(player_key, 0)) + value
+	return {
+		"player_value_totals": _sorted_dict(player_totals),
+		"player_value_delta": _value_spread_record(player_totals),
+		"zone_value_totals": _sorted_dict(zone_totals),
+		"zone_value_delta": _value_spread_record(zone_totals),
+		"zone_role_value_totals": _sorted_dict(zone_role_totals),
+	}
+
+static func _value_spread_record(values: Dictionary) -> Dictionary:
+	if values.is_empty():
+		return {"min": 0, "max": 0, "spread": 0, "count": 0}
+	var min_value := 999999999
+	var max_value := -999999999
+	for key in values.keys():
+		var value := int(values[key])
+		min_value = min(min_value, value)
+		max_value = max(max_value, value)
+	return {"min": min_value, "max": max_value, "spread": max_value - min_value, "count": values.size()}
+
+static func _object_pool_value_weighting_validation_core(selected_records: Array, catalog: Dictionary, limit_validation: Dictionary, fairness: Dictionary, monster_reward_bands: Dictionary, town_mine_dwelling: Dictionary, decoration_density: Dictionary, terrain_rows: Array, route_graph: Dictionary) -> Dictionary:
+	var failures := []
+	var warnings := []
+	if selected_records.is_empty():
+		failures.append("no weighted object candidates were selected")
+	var pools: Array = catalog.get("pools", []) if catalog.get("pools", []) is Array else []
+	if pools.size() < 4:
+		failures.append("candidate pool catalog missed required reward/mine/dwelling/decoration pools")
+	var pool_ids := {}
+	for pool in pools:
+		if pool is Dictionary:
+			pool_ids[String(pool.get("pool_id", ""))] = true
+	for required_pool in ["reward_value_bands", "seven_category_mines", "neutral_dwelling_recruitment", "terrain_biased_decoration"]:
+		if not pool_ids.has(required_pool):
+			failures.append("candidate pool %s missing" % required_pool)
+	var equivalents: Dictionary = catalog.get("artifact_spell_skill_equivalents", {}) if catalog.get("artifact_spell_skill_equivalents", {}) is Dictionary else {}
+	for key in ["artifact_ids", "spell_ids", "skill_equivalent_ids"]:
+		if equivalents.get(key, []).is_empty():
+			failures.append("candidate pool catalog missed %s coverage" % key)
+	for record in selected_records:
+		if not (record is Dictionary):
+			failures.append("selected object pool record is not a dictionary")
+			continue
+		if String(record.get("content_id", "")) == "" or String(record.get("pool_id", "")) == "":
+			failures.append("selected record missed content id or pool id: %s" % JSON.stringify(record))
+		if not bool(record.get("selected_from_explicit_pool", false)):
+			failures.append("selected record did not declare explicit-pool selection: %s" % String(record.get("selection_id", "")))
+		if String(record.get("kind", "")) != "decorative_obstacle" and int(record.get("value", 0)) <= 0:
+			failures.append("selected non-decoration record missed positive value: %s" % String(record.get("selection_id", "")))
+		if String(record.get("terrain_id", "")) == "" and String(record.get("kind", "")) in ["mine", "neutral_dwelling", "decorative_obstacle"]:
+			failures.append("selected terrain-aware record missed terrain id: %s" % String(record.get("selection_id", "")))
+	if not bool(limit_validation.get("ok", false)):
+		failures.append_array(limit_validation.get("violations", []))
+	if monster_reward_bands.get("reward_band_records", []).is_empty():
+		failures.append("reward band records missing from object pool weighting")
+	if town_mine_dwelling.get("mine_resource_producer_records", []).is_empty():
+		failures.append("mine records missing from object pool weighting")
+	if town_mine_dwelling.get("dwelling_recruitment_site_records", []).is_empty():
+		failures.append("dwelling records missing from object pool weighting")
+	if decoration_density.get("decoration_records", []).is_empty():
+		failures.append("decoration records missing from object pool weighting")
+	if route_graph.get("edges", []).is_empty():
+		failures.append("route graph missing for object pool weighting")
+	if terrain_rows.is_empty():
+		failures.append("terrain rows missing for object pool weighting")
+	if int(fairness.get("zone_value_delta", {}).get("count", 0)) <= 0:
+		warnings.append("zone value fairness delta had no measured zones")
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+		"warnings": warnings,
+	}
+
+static func _object_pool_value_weighting_phase_summary(payload: Dictionary) -> Dictionary:
+	return {
+		"schema_id": String(payload.get("schema_id", "")),
+		"status": String(payload.get("status", "")),
+		"signature": String(payload.get("object_pool_value_weighting_signature", "")),
+		"selected_candidate_count": int(payload.get("summary", {}).get("selected_candidate_count", 0)),
+		"total_selected_value": int(payload.get("summary", {}).get("total_selected_value", 0)),
+		"fallback_choice_count": int(payload.get("summary", {}).get("fallback_choice_count", 0)),
+		"limit_violation_count": int(payload.get("summary", {}).get("limit_violation_count", 0)),
+		"player_value_spread": int(payload.get("summary", {}).get("player_value_spread", 0)),
+	}
+
+static func _object_pool_value_weighting_validation(payload: Dictionary, generated_map: Dictionary = {}) -> Dictionary:
+	var failures := []
+	var warnings := []
+	if String(payload.get("schema_id", "")) != OBJECT_POOL_VALUE_WEIGHTING_SCHEMA_ID:
+		failures.append("object pool value weighting schema mismatch")
+	if String(payload.get("object_pool_value_weighting_signature", "")) == "":
+		failures.append("object pool value weighting signature missing")
+	var validation: Dictionary = payload.get("validation", {}) if payload.get("validation", {}) is Dictionary else {}
+	if not bool(validation.get("ok", false)):
+		failures.append_array(validation.get("failures", []))
+	warnings.append_array(validation.get("warnings", []))
+	var summary: Dictionary = payload.get("summary", {}) if payload.get("summary", {}) is Dictionary else {}
+	if int(summary.get("selected_candidate_count", 0)) <= 0:
+		failures.append("object pool value weighting selected no candidates")
+	if int(summary.get("reward_candidate_count", 0)) <= 0 or int(summary.get("mine_candidate_count", 0)) <= 0 or int(summary.get("dwelling_candidate_count", 0)) <= 0 or int(summary.get("decoration_candidate_count", 0)) <= 0:
+		failures.append("object pool value weighting missed one or more required selected candidate families")
+	if payload.get("candidate_pool_catalog", {}).get("artifact_spell_skill_equivalents", {}).get("artifact_ids", []).is_empty():
+		failures.append("artifact equivalent pool empty")
+	if payload.get("candidate_pool_catalog", {}).get("artifact_spell_skill_equivalents", {}).get("spell_ids", []).is_empty():
+		failures.append("spell equivalent pool empty")
+	if payload.get("candidate_pool_catalog", {}).get("artifact_spell_skill_equivalents", {}).get("skill_equivalent_ids", []).is_empty():
+		failures.append("skill equivalent pool empty")
+	if not bool(payload.get("limit_validation", {}).get("ok", false)):
+		failures.append("object pool limit validation failed")
+	if generated_map.get("scenario_record", {}).get("generated_constraints", {}).get("object_pool_value_weighting", {}).is_empty() and not generated_map.is_empty():
+		failures.append("scenario generated_constraints missed object pool value weighting")
+	if not generated_map.is_empty():
+		var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
+		if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", false)) or bool(scenario.get("selection", {}).get("availability", {}).get("skirmish", false)):
+			failures.append("object pool value weighting adopted generated map into campaign/skirmish")
+		if generated_map.has("authored_content_writeback") or generated_map.has("save_adoption") or scenario.has("alpha_parity_claim"):
+			failures.append("object pool value weighting exposed authored writeback/save/parity claim")
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+		"warnings": warnings,
+	}
+
+static func _object_pool_value_band_class(value: int) -> String:
+	if value < 700:
+		return "low"
+	if value < 1300:
+		return "medium"
+	if value < 2000:
+		return "high"
+	return "elite"
+
+static func _object_pool_count_by_kind(records: Array, kind: String) -> int:
+	var count := 0
+	for record in records:
+		if record is Dictionary and String(record.get("kind", "")) == kind:
+			count += 1
+	return count
+
+static func _object_pool_report_variation_config(input_config: Dictionary) -> Dictionary:
+	var config := input_config.duplicate(true)
+	config["seed"] = "%s:profile_variation" % String(input_config.get("seed", "0"))
+	config["size"] = {"preset": "object_pool_value_weighting_variation", "width": 26, "height": 18, "water_mode": "land", "level_count": 1}
+	config["profile"] = {
+		"id": "border_gate_compact_profile_v1",
+		"template_id": "border_gate_compact_v1",
+		"guard_strength_profile": "core_low",
+	}
+	return config
+
+static func _object_pool_batch_example(payload: Dictionary, pool: Dictionary) -> Dictionary:
+	var metadata: Dictionary = payload.get("metadata", {}) if payload.get("metadata", {}) is Dictionary else {}
+	var profile: Dictionary = metadata.get("profile", {}) if metadata.get("profile", {}) is Dictionary else {}
+	return {
+		"seed": String(metadata.get("normalized_seed", "")),
+		"template_id": String(metadata.get("template_id", "")),
+		"profile_id": String(profile.get("id", "")),
+		"stable_signature": String(payload.get("stable_signature", "")),
+		"object_pool_signature": String(pool.get("object_pool_value_weighting_signature", "")),
+		"object_counts": pool.get("object_counts", {}),
+		"value_totals": pool.get("value_totals", {}),
 	}
 
 static func _connection_guard_source_link(edge_id: String, index: int, link: Dictionary, edge: Dictionary) -> Dictionary:
