@@ -9,6 +9,8 @@ const TEMPLATE_CATALOG_PATH := "res://content/random_map_template_catalog.json"
 const TEMPLATE_CATALOG_SCHEMA_ID := "aurelion_random_map_template_catalog_v2"
 const TEMPLATE_CATALOG_REPORT_SCHEMA_ID := "random_map_template_catalog_grammar_report_v2"
 const TEMPLATE_SELECTION_REJECTION_SCHEMA_ID := "random_map_template_selection_rejection_v1"
+const ZONE_LAYOUT_SCHEMA_ID := "random_map_zone_layout_v1"
+const ZONE_LAYOUT_REPORT_SCHEMA_ID := "random_map_zone_layout_water_underground_report_v1"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
 const HASH_MODULUS := 4294967296
@@ -125,16 +127,20 @@ static func generate(input_config: Dictionary) -> Dictionary:
 	var seeds := _place_zone_seeds(zones, normalized, rng)
 	phases.append(_phase_record("zone_seed_layout", {"seed_count": seeds.size()}))
 
-	var zone_grid := _assign_cells_to_zones(zones, seeds, normalized)
-	phases.append(_phase_record("terrain_owner_grid", {"width": int(normalized.get("size", {}).get("width", 0)), "height": int(normalized.get("size", {}).get("height", 0))}))
+	var zone_layout := _build_zone_layout(template, zones, template.get("links", []), seeds, normalized, rng)
+	phases.append(_phase_record("zone_footprint_layout", _zone_layout_phase_summary(zone_layout)))
 
-	var terrain_rows := _terrain_rows_from_zone_grid(zone_grid, zones)
+	var zone_grid: Array = zone_layout.get("surface_owner_grid", [])
+	_update_zone_geometry(zones, zone_grid)
+	phases.append(_phase_record("terrain_owner_grid", {"width": int(normalized.get("size", {}).get("width", 0)), "height": int(normalized.get("size", {}).get("height", 0)), "source": "zone_layout_surface_owner_grid"}))
+
+	var terrain_rows := _terrain_rows_from_zone_layout(zone_layout, zones)
 	phases.append(_phase_record("terrain_biome_coherence", _terrain_phase_summary(terrain_rows, zones)))
 
 	var placements := _place_generated_objects(zones, template.get("links", []), seeds, zone_grid, terrain_rows, normalized, rng)
 	phases.append(_phase_record("object_placement_staging", _placement_counts(placements.get("object_placements", []))))
 
-	var constraints := _build_constraint_payload(normalized, zones, template.get("links", []), seeds, zone_grid, terrain_rows, placements)
+	var constraints := _build_constraint_payload(normalized, zones, template.get("links", []), seeds, zone_grid, terrain_rows, placements, zone_layout)
 	phases.append(_phase_record("route_road_constraint_writeout", {
 		"road_segment_count": int(constraints.get("road_network", {}).get("road_segments", []).size()),
 		"required_reachability": String(constraints.get("route_reachability_proof", {}).get("status", "unknown")),
@@ -147,7 +153,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 
 	var scenario_record := _build_scenario_record(normalized, terrain_rows, placements, constraints)
 	var terrain_layers_record := _build_terrain_layers_record(normalized, constraints)
-	var staging := _build_staging_payload(normalized, template, zones, seeds, zone_grid, placements, constraints)
+	var staging := _build_staging_payload(normalized, template, zones, seeds, zone_grid, placements, constraints, zone_layout)
 
 	var generated_map := {
 		"schema_id": PAYLOAD_SCHEMA_ID,
@@ -339,6 +345,45 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 		"failures": failures,
 	}
 
+static func zone_layout_report(input_config: Dictionary) -> Dictionary:
+	var first := generate(input_config)
+	var second := generate(input_config)
+	var changed_seed_config := input_config.duplicate(true)
+	changed_seed_config["seed"] = "%s:changed" % String(input_config.get("seed", "0"))
+	var changed_seed := generate(changed_seed_config)
+	var first_payload: Dictionary = first.get("generated_map", {})
+	var second_payload: Dictionary = second.get("generated_map", {})
+	var changed_payload: Dictionary = changed_seed.get("generated_map", {})
+	var first_layout: Dictionary = first_payload.get("staging", {}).get("zone_layout", {})
+	var second_layout: Dictionary = second_payload.get("staging", {}).get("zone_layout", {})
+	var changed_layout: Dictionary = changed_payload.get("staging", {}).get("zone_layout", {})
+	var same_signature := String(first_payload.get("stable_signature", "")) == String(second_payload.get("stable_signature", ""))
+	var changed_seed_changes_signature := String(first_payload.get("stable_signature", "")) != String(changed_payload.get("stable_signature", ""))
+	var same_layout_signature := String(first_layout.get("layout_signature", "")) == String(second_layout.get("layout_signature", ""))
+	var changed_seed_changes_layout_signature := String(first_layout.get("layout_signature", "")) != String(changed_layout.get("layout_signature", ""))
+	var layout_validation := _zone_layout_validation(first_layout, first_payload)
+	var ok := not first_payload.is_empty() and not second_payload.is_empty() and same_signature and changed_seed_changes_signature and same_layout_signature and changed_seed_changes_layout_signature and bool(layout_validation.get("ok", false))
+	return {
+		"ok": ok,
+		"schema_id": ZONE_LAYOUT_REPORT_SCHEMA_ID,
+		"stable_signature": String(first_payload.get("stable_signature", "")),
+		"changed_seed_signature": String(changed_payload.get("stable_signature", "")),
+		"same_input_signature_equivalent": same_signature,
+		"changed_seed_changes_signature": changed_seed_changes_signature,
+		"layout_signature": String(first_layout.get("layout_signature", "")),
+		"changed_seed_layout_signature": String(changed_layout.get("layout_signature", "")),
+		"same_input_layout_signature_equivalent": same_layout_signature,
+		"changed_seed_changes_layout_signature": changed_seed_changes_layout_signature,
+		"zone_layout": first_layout,
+		"layout_validation": layout_validation,
+		"payload_validation": first.get("report", {}),
+		"no_ui_save_writeback_claim": {
+			"campaign_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("campaign", true)),
+			"skirmish_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("skirmish", true)),
+			"write_policy": String(first_payload.get("write_policy", "")),
+		},
+	}
+
 static func resource_encounter_fairness_report(generated_map: Dictionary) -> Dictionary:
 	var staging: Dictionary = generated_map.get("staging", {})
 	var scenario: Dictionary = generated_map.get("scenario_record", {})
@@ -440,8 +485,13 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 		if x < 0 or y < 0 or x >= width or y >= height:
 			failures.append("placement %s is out of bounds" % placement_id)
 	var route_graph: Dictionary = staging.get("route_graph", {})
+	var zone_layout: Dictionary = staging.get("zone_layout", {})
 	if route_graph.get("edges", []).is_empty():
 		failures.append("route graph must expose at least one generated edge")
+	var zone_layout_validation := _zone_layout_validation(zone_layout, generated_map)
+	if not bool(zone_layout_validation.get("ok", false)):
+		for failure in zone_layout_validation.get("failures", []):
+			failures.append("zone layout: %s" % String(failure))
 	var terrain_constraints: Dictionary = staging.get("terrain_constraints", {})
 	var town_start_constraints: Dictionary = staging.get("town_start_constraints", {})
 	var road_network: Dictionary = staging.get("road_network", {})
@@ -505,6 +555,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 		"required_reachability_status": String(reachability.get("status", "")),
 		"fairness_status": String(fairness_report.get("status", "")),
 		"fairness_summary": fairness_report.get("summary", {}),
+		"zone_layout_status": String(zone_layout_validation.get("status", "")),
 	}
 
 static func _build_runtime_template(normalized: Dictionary) -> Dictionary:
@@ -733,6 +784,161 @@ static func _assign_cells_to_zones(zones: Array, seeds: Dictionary, normalized: 
 	_update_zone_geometry(zones, zone_grid)
 	return zone_grid
 
+static func _build_zone_layout(template: Dictionary, zones: Array, links: Array, seeds: Dictionary, normalized: Dictionary, rng: DeterministicRng) -> Dictionary:
+	var size: Dictionary = normalized.get("size", {})
+	var width := int(size.get("width", 16))
+	var height := int(size.get("height", 12))
+	var level_count := int(size.get("level_count", 1))
+	var water_mode := String(size.get("water_mode", "land"))
+	var template_support: Dictionary = template.get("map_support", {}) if template.get("map_support", {}) is Dictionary else {}
+	var levels := []
+	var unsupported := []
+	if water_mode == "islands":
+		unsupported.append("water_transit_object_placement_deferred")
+		unsupported.append("boat_shipyard_ferry_placement_deferred")
+	if level_count > 1:
+		unsupported.append("underground_transit_object_placement_deferred")
+		unsupported.append("subterranean_gate_placement_deferred")
+	var total_water_cells := 0
+	for level_index in range(level_count):
+		var level_kind := "surface" if level_index == 0 else "underground"
+		var level_seeds := _seeds_for_layout_level(seeds, width, height, level_index)
+		var water_cells := _water_cells_for_level(width, height, water_mode, level_index)
+		total_water_cells += water_cells.size()
+		var allocation := _allocate_zone_level_cells(zones, level_seeds, water_cells, width, height)
+		levels.append({
+			"level_index": level_index,
+			"kind": level_kind,
+			"owner_grid": allocation.get("owner_grid", []),
+			"zone_footprints": allocation.get("zone_footprints", []),
+			"anchor_points": allocation.get("anchor_points", {}),
+			"water_cells": water_cells,
+			"water_cell_count": water_cells.size(),
+			"water_mode": water_mode,
+			"allocation_model": "base_size_weighted_quota_fill_from_deterministic_zone_seeds",
+		})
+	var layout := {
+		"schema_id": ZONE_LAYOUT_SCHEMA_ID,
+		"template_id": String(template.get("id", TEMPLATE_ID)),
+		"dimensions": {"width": width, "height": height, "level_count": level_count},
+		"policy": {
+			"zone_area_model": "template_base_size_proportional_targets",
+			"water_mode": water_mode,
+			"water_policy": _water_policy_payload(water_mode, total_water_cells),
+			"underground_policy": _underground_policy_payload(level_count, template_support),
+			"object_and_transit_writeout": "deferred_to_later_rmg_parity_slices",
+		},
+		"levels": levels,
+		"surface_owner_grid": levels[0].get("owner_grid", []) if not levels.is_empty() else [],
+		"surface_water_cells": levels[0].get("water_cells", []) if not levels.is_empty() else [],
+		"corridor_candidates": _corridor_candidates_from_links(links, levels, water_mode),
+		"template_link_count": links.size(),
+		"unsupported_runtime_features": unsupported,
+		"next_slice_metadata": {
+			"terrain_transit": "random-map-terrain-transit-semantics-10184",
+			"object_footprints": "random-map-object-footprint-catalog-10184",
+			"guard_materialization": "random-map-connection-guard-materialization-10184",
+		},
+	}
+	layout["layout_signature"] = _hash32_hex(_stable_stringify({
+		"template_id": layout.get("template_id", ""),
+		"dimensions": layout.get("dimensions", {}),
+		"policy": layout.get("policy", {}),
+		"levels": layout.get("levels", []),
+		"corridor_candidates": layout.get("corridor_candidates", []),
+	}))
+	return layout
+
+static func _allocate_zone_level_cells(zones: Array, seeds: Dictionary, water_cells: Array, width: int, height: int) -> Dictionary:
+	var zone_ids := []
+	var base_sizes := {}
+	for zone in zones:
+		if not (zone is Dictionary):
+			continue
+		var zone_id := String(zone.get("id", ""))
+		if zone_id == "":
+			continue
+		zone_ids.append(zone_id)
+		base_sizes[zone_id] = max(1, int(zone.get("base_size", 1)))
+	zone_ids.sort()
+	var targets := _zone_area_targets(zone_ids, base_sizes, width * height)
+	var assigned := {}
+	var counts := {}
+	for zone_id in zone_ids:
+		counts[zone_id] = 0
+		var seed: Dictionary = seeds.get(zone_id, {})
+		var sx := clampi(int(seed.get("x", 0)), 0, max(0, width - 1))
+		var sy := clampi(int(seed.get("y", 0)), 0, max(0, height - 1))
+		var seed_key := _point_key(sx, sy)
+		if not assigned.has(seed_key):
+			assigned[seed_key] = zone_id
+			counts[zone_id] = int(counts.get(zone_id, 0)) + 1
+	for zone_id in zone_ids:
+		var candidates := []
+		var seed: Dictionary = seeds.get(zone_id, {})
+		for y in range(height):
+			for x in range(width):
+				var key := _point_key(x, y)
+				if assigned.has(key):
+					continue
+				candidates.append({
+					"x": x,
+					"y": y,
+					"sort_key": _layout_candidate_sort_key(x, y, seed, water_cells),
+				})
+		candidates.sort_custom(Callable(RandomMapGeneratorRules, "_compare_layout_candidate"))
+		var cursor := 0
+		while int(counts.get(zone_id, 0)) < int(targets.get(zone_id, 0)) and cursor < candidates.size():
+			var candidate: Dictionary = candidates[cursor]
+			cursor += 1
+			var candidate_key := _point_key(int(candidate.get("x", 0)), int(candidate.get("y", 0)))
+			if assigned.has(candidate_key):
+				continue
+			assigned[candidate_key] = zone_id
+			counts[zone_id] = int(counts.get(zone_id, 0)) + 1
+	for y in range(height):
+		for x in range(width):
+			var key := _point_key(x, y)
+			if assigned.has(key):
+				continue
+			var nearest := _nearest_zone_id(x, y, _zones_by_sorted_ids(zones, zone_ids), seeds)
+			assigned[key] = nearest
+			counts[nearest] = int(counts.get(nearest, 0)) + 1
+	var owner_grid := []
+	var water_lookup := _point_lookup(water_cells)
+	var cells_by_zone := {}
+	for zone_id in zone_ids:
+		cells_by_zone[zone_id] = []
+	for y in range(height):
+		var row := []
+		for x in range(width):
+			var zone_id := String(assigned.get(_point_key(x, y), zone_ids[0] if not zone_ids.is_empty() else ""))
+			row.append(zone_id)
+			if cells_by_zone.has(zone_id):
+				cells_by_zone[zone_id].append({
+					"x": x,
+					"y": y,
+					"surface": "water" if water_lookup.has(_point_key(x, y)) else "land",
+				})
+		owner_grid.append(row)
+	var footprints := []
+	for zone_id in zone_ids:
+		var cells: Array = cells_by_zone.get(zone_id, [])
+		footprints.append({
+			"zone_id": zone_id,
+			"base_size": int(base_sizes.get(zone_id, 1)),
+			"target_cell_count": int(targets.get(zone_id, 0)),
+			"cell_count": cells.size(),
+			"bounds": _bounds_for_cells(cells),
+			"anchor": seeds.get(zone_id, {}),
+			"cells": cells,
+		})
+	return {
+		"owner_grid": owner_grid,
+		"zone_footprints": footprints,
+		"anchor_points": _sorted_point_dict(seeds),
+	}
+
 static func _place_generated_objects(zones: Array, links: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, normalized: Dictionary, rng: DeterministicRng) -> Dictionary:
 	var profile: Dictionary = normalized.get("profile", {})
 	var town_ids: Array = profile.get("town_ids", [])
@@ -863,6 +1069,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 		"enemy_factions": [],
 		"generated_player_assignment": normalized.get("player_assignment", {}),
 		"generated_constraints": {
+			"zone_layout": constraints.get("zone_layout", {}),
 			"terrain": constraints.get("terrain_constraints", {}),
 			"town_starts": constraints.get("town_start_constraints", {}),
 			"roads": constraints.get("road_network", {}),
@@ -885,11 +1092,12 @@ static func _build_terrain_layers_record(normalized: Dictionary, constraints: Di
 		"deferred": ["durable_road_tile_writeout", "river_overlay_writeout"],
 	}
 
-static func _build_staging_payload(normalized: Dictionary, template: Dictionary, zones: Array, seeds: Dictionary, zone_grid: Array, placements: Dictionary, constraints: Dictionary) -> Dictionary:
+static func _build_staging_payload(normalized: Dictionary, template: Dictionary, zones: Array, seeds: Dictionary, zone_grid: Array, placements: Dictionary, constraints: Dictionary, zone_layout: Dictionary) -> Dictionary:
 	return {
 		"staging_schema": "random_map_generation_staging_v1",
 		"template": template,
 		"zones": _zones_for_payload(zones),
+		"zone_layout": zone_layout,
 		"player_assignment": normalized.get("player_assignment", {}),
 		"zone_seed_points": _sorted_point_dict(seeds),
 		"terrain_owner_grid": zone_grid,
@@ -902,15 +1110,17 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"object_placements": placements.get("object_placements", []),
 		"metadata": _metadata(normalized),
 		"editable_grid_model": "terrain_owner_grid_rows_plus_separate_object_placement_arrays",
+		"terrain_owner_grid_source": "zone_layout_surface_owner_grid",
 	}
 
-static func _build_constraint_payload(normalized: Dictionary, zones: Array, links: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, placements: Dictionary) -> Dictionary:
+static func _build_constraint_payload(normalized: Dictionary, zones: Array, links: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, placements: Dictionary, zone_layout: Dictionary) -> Dictionary:
 	var terrain_constraints := _terrain_constraints_payload(terrain_rows, zone_grid, zones)
 	var occupied := _occupied_body_lookup(placements.get("object_placements", []))
 	var route_build := _build_route_and_road_payload(links, seeds, placements, terrain_rows, occupied)
 	var town_start_constraints := _town_start_constraints_payload(zones, placements, route_build.get("route_graph", {}), route_build.get("route_reachability_proof", {}))
 	var fairness_report := _fairness_report_payload(normalized, zones, placements, route_build.get("route_graph", {}), route_build.get("route_reachability_proof", {}))
 	return {
+		"zone_layout": zone_layout,
 		"terrain_constraints": terrain_constraints,
 		"town_start_constraints": town_start_constraints,
 		"road_network": route_build.get("road_network", {}),
@@ -985,14 +1195,16 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 		var path := _find_passable_path(from_point, to_point, terrain_rows, occupied)
 		var classification := _route_classification(link, not path.is_empty())
 		var edge_id := "edge_%02d_%s_%s" % [edge_index, from_zone, to_zone]
-		var required := String(link.get("role", "")) in ["contest_route", "early_reward_route", "reward_to_junction"]
+		var role := String(link.get("role", ""))
+		var required := role in ["contest_route", "early_reward_route", "reward_to_junction", "template_connection"]
 		var edge := {
 			"id": edge_id,
 			"from": from_zone,
 			"to": to_zone,
 			"from_node": String(from_node.get("id", from_zone)),
 			"to_node": String(to_node.get("id", to_zone)),
-			"role": String(link.get("role", "")),
+			"role": role,
+			"layout_contract_roles": _layout_contract_roles_for_route(role),
 			"guard_value": int(link.get("guard_value", 0)),
 			"guard": link.get("guard", {}),
 			"wide": bool(link.get("wide", false)),
@@ -1283,7 +1495,7 @@ static func _guard_pressure_payload(route_graph: Dictionary) -> Dictionary:
 		if not (edge is Dictionary):
 			continue
 		var role := String(edge.get("role", ""))
-		if role not in ["contest_route", "early_reward_route", "reward_to_junction"]:
+		if not _route_has_layout_contract_role(edge, "guarded_route"):
 			continue
 		var guard_class := _guard_risk_class(edge)
 		var pressure := _effective_guard_pressure(edge)
@@ -1301,7 +1513,7 @@ static func _guard_pressure_payload(route_graph: Dictionary) -> Dictionary:
 			"connectivity_classification": String(edge.get("connectivity_classification", "")),
 		}
 		route_guards.append(record)
-		if role in ["early_reward_route", "reward_to_junction"]:
+		if _route_has_layout_contract_role(edge, "reward_route"):
 			reward_risk.append(record)
 		for endpoint_key in ["from", "to"]:
 			var endpoint := String(edge.get(endpoint_key, ""))
@@ -1872,6 +2084,8 @@ static func _route_counts_by_zone(edges: Array) -> Dictionary:
 				counts[zone_id] = {}
 			var role := String(edge.get("role", "route"))
 			counts[zone_id][role] = int(counts[zone_id].get(role, 0)) + 1
+			for contract_role in edge.get("layout_contract_roles", []):
+				counts[zone_id][String(contract_role)] = int(counts[zone_id].get(String(contract_role), 0)) + 1
 	return counts
 
 static func _support_resource_count_for_zone(resource_nodes: Array, zone_id: String) -> int:
@@ -1918,11 +2132,30 @@ static func _edges_for_zone_and_role(edges: Array, zone_id: String, role: String
 	for edge in edges:
 		if not (edge is Dictionary):
 			continue
-		if String(edge.get("role", "")) != role:
+		if String(edge.get("role", "")) != role and String(role) not in edge.get("layout_contract_roles", []):
 			continue
 		if String(edge.get("from", "")) == zone_id or String(edge.get("to", "")) == zone_id:
 			result.append(edge)
 	return result
+
+static func _layout_contract_roles_for_route(role: String) -> Array:
+	match role:
+		"contest_route":
+			return ["contest_route", "guarded_route"]
+		"early_reward_route", "reward_to_junction":
+			return ["early_reward_route", "reward_route", "guarded_route"]
+		"template_connection":
+			return ["contest_route", "early_reward_route", "reward_route", "guarded_route"]
+		_:
+			return []
+
+static func _route_has_layout_contract_role(edge: Dictionary, role: String) -> bool:
+	if String(edge.get("role", "")) == role:
+		return true
+	for contract_role in edge.get("layout_contract_roles", []):
+		if String(contract_role) == role:
+			return true
+	return false
 
 static func _resource_support_purpose(site_id: String) -> String:
 	match site_id:
@@ -2563,6 +2796,25 @@ static func _normalized_string_array(value: Variant, fallback: Array) -> Array:
 		result = fallback.duplicate()
 	return result
 
+static func _terrain_rows_from_zone_layout(zone_layout: Dictionary, zones: Array) -> Array:
+	var zone_grid: Array = zone_layout.get("surface_owner_grid", [])
+	var water_lookup := _point_lookup(zone_layout.get("surface_water_cells", []))
+	var zone_terrain := {}
+	for zone in zones:
+		if zone is Dictionary:
+			zone_terrain[String(zone.get("id", ""))] = String(zone.get("terrain_id", "grass"))
+	var rows := []
+	for y in range(zone_grid.size()):
+		var source_row: Array = zone_grid[y]
+		var row := []
+		for x in range(source_row.size()):
+			if water_lookup.has(_point_key(x, y)):
+				row.append("water")
+			else:
+				row.append(String(zone_terrain.get(String(source_row[x]), "grass")))
+		rows.append(row)
+	return rows
+
 static func _terrain_rows_from_zone_grid(zone_grid: Array, zones: Array) -> Array:
 	var zone_terrain := {}
 	for zone in zones:
@@ -2576,6 +2828,305 @@ static func _terrain_rows_from_zone_grid(zone_grid: Array, zones: Array) -> Arra
 			row.append(String(zone_terrain.get(String(zone_id_value), "grass")))
 		rows.append(row)
 	return rows
+
+static func _zone_area_targets(zone_ids: Array, base_sizes: Dictionary, total_cells: int) -> Dictionary:
+	var targets := {}
+	if zone_ids.is_empty():
+		return targets
+	var base_total := 0
+	for zone_id in zone_ids:
+		base_total += max(1, int(base_sizes.get(String(zone_id), 1)))
+	var remainders := []
+	var assigned := 0
+	for zone_id_value in zone_ids:
+		var zone_id := String(zone_id_value)
+		var raw := float(total_cells) * float(max(1, int(base_sizes.get(zone_id, 1)))) / float(max(1, base_total))
+		var target: int = max(1, int(floor(raw))) if total_cells >= zone_ids.size() else 0
+		targets[zone_id] = target
+		assigned += target
+		remainders.append({"zone_id": zone_id, "remainder": raw - floor(raw)})
+	remainders.sort_custom(Callable(RandomMapGeneratorRules, "_compare_area_remainder"))
+	var difference := total_cells - assigned
+	var cursor := 0
+	while difference > 0 and not remainders.is_empty():
+		var record: Dictionary = remainders[cursor % remainders.size()]
+		var zone_id := String(record.get("zone_id", ""))
+		targets[zone_id] = int(targets.get(zone_id, 0)) + 1
+		difference -= 1
+		cursor += 1
+	while difference < 0 and not remainders.is_empty():
+		var record: Dictionary = remainders[remainders.size() - 1 - (cursor % remainders.size())]
+		var zone_id := String(record.get("zone_id", ""))
+		if int(targets.get(zone_id, 0)) > 1:
+			targets[zone_id] = int(targets.get(zone_id, 0)) - 1
+			difference += 1
+		cursor += 1
+		if cursor > remainders.size() * 4:
+			break
+	return targets
+
+static func _compare_area_remainder(a: Dictionary, b: Dictionary) -> bool:
+	var left := float(a.get("remainder", 0.0))
+	var right := float(b.get("remainder", 0.0))
+	if is_equal_approx(left, right):
+		return String(a.get("zone_id", "")) < String(b.get("zone_id", ""))
+	return left > right
+
+static func _layout_candidate_sort_key(x: int, y: int, seed: Dictionary, water_cells: Array) -> String:
+	var dx := x - int(seed.get("x", 0))
+	var dy := y - int(seed.get("y", 0))
+	var water_penalty := 200000 if _point_lookup(water_cells).has(_point_key(x, y)) else 0
+	var score := dx * dx + dy * dy + water_penalty
+	return "%09d:%03d:%03d" % [score, y, x]
+
+static func _compare_layout_candidate(a: Dictionary, b: Dictionary) -> bool:
+	return String(a.get("sort_key", "")) < String(b.get("sort_key", ""))
+
+static func _zones_by_sorted_ids(zones: Array, zone_ids: Array) -> Array:
+	var by_id := {}
+	for zone in zones:
+		if zone is Dictionary:
+			by_id[String(zone.get("id", ""))] = zone
+	var result := []
+	for zone_id in zone_ids:
+		if by_id.has(String(zone_id)):
+			result.append(by_id[String(zone_id)])
+	return result
+
+static func _seeds_for_layout_level(seeds: Dictionary, width: int, height: int, level_index: int) -> Dictionary:
+	if level_index <= 0:
+		return seeds.duplicate(true)
+	var result := {}
+	for zone_id in _sorted_keys(seeds):
+		var seed: Dictionary = seeds[zone_id]
+		var x := clampi(width - 1 - int(seed.get("x", 0)), 1, max(1, width - 2))
+		var y := clampi(height - 1 - int(seed.get("y", 0)), 1, max(1, height - 2))
+		result[String(zone_id)] = _point_dict(x, y)
+	return _resolve_seed_collisions(result, width, height)
+
+static func _water_cells_for_level(width: int, height: int, water_mode: String, level_index: int) -> Array:
+	var cells := []
+	if water_mode != "islands" or level_index != 0:
+		return cells
+	for y in range(height):
+		for x in range(width):
+			if x == 0 or y == 0 or x == width - 1 or y == height - 1:
+				cells.append(_point_dict(x, y))
+	return cells
+
+static func _water_policy_payload(water_mode: String, water_cell_count: int) -> Dictionary:
+	if water_mode == "islands":
+		return {
+			"requested": true,
+			"mode": "islands",
+			"supported_now": true,
+			"surface_water_cell_count": water_cell_count,
+			"implementation_state": "surface_water_ring_marks_island_boundary_transit_objects_deferred",
+		}
+	return {
+		"requested": false,
+		"mode": "land",
+		"supported_now": true,
+		"surface_water_cell_count": 0,
+		"implementation_state": "land_only",
+	}
+
+static func _underground_policy_payload(level_count: int, template_support: Dictionary) -> Dictionary:
+	var levels: Dictionary = template_support.get("levels", {}) if template_support.get("levels", {}) is Dictionary else {}
+	if level_count > 1:
+		return {
+			"requested": true,
+			"supported_now": true,
+			"level_count": level_count,
+			"surface": true,
+			"underground": true,
+			"template_level_metadata": levels,
+			"implementation_state": "deterministic_second_level_zone_allocation_transit_objects_deferred",
+		}
+	return {
+		"requested": false,
+		"supported_now": true,
+		"level_count": 1,
+		"surface": true,
+		"underground": false,
+		"template_level_metadata": levels,
+		"implementation_state": "surface_only",
+	}
+
+static func _corridor_candidates_from_links(links: Array, levels: Array, water_mode: String) -> Array:
+	var candidates := []
+	var index := 1
+	for link in links:
+		if not (link is Dictionary):
+			continue
+		for level in levels:
+			if not (level is Dictionary):
+				continue
+			var anchors: Dictionary = level.get("anchor_points", {})
+			var from_zone := String(link.get("from", ""))
+			var to_zone := String(link.get("to", ""))
+			var from_anchor: Dictionary = anchors.get(from_zone, {})
+			var to_anchor: Dictionary = anchors.get(to_zone, {})
+			var cells := _straight_corridor_cells(from_anchor, to_anchor)
+			var water_lookup := _point_lookup(level.get("water_cells", []))
+			var crosses_water := false
+			for cell in cells:
+				if cell is Dictionary and water_lookup.has(_point_key(int(cell.get("x", 0)), int(cell.get("y", 0)))):
+					crosses_water = true
+					break
+			candidates.append({
+				"id": "corridor_%03d_%s_%s_l%d" % [index, from_zone, to_zone, int(level.get("level_index", 0))],
+				"from": from_zone,
+				"to": to_zone,
+				"from_anchor": from_anchor,
+				"to_anchor": to_anchor,
+				"level_index": int(level.get("level_index", 0)),
+				"level_kind": String(level.get("kind", "surface")),
+				"mode": "water" if crosses_water else "land",
+				"water_policy_mode": water_mode,
+				"intended_connection_class": _route_classification(link, true),
+				"role": String(link.get("role", "")),
+				"guard_value": int(link.get("guard_value", 0)),
+				"wide": bool(link.get("wide", false)),
+				"border_guard": bool(link.get("border_guard", false)),
+				"candidate_cells": cells,
+				"candidate_cell_count": cells.size(),
+				"materialization_state": "candidate_only_guard_and_transit_materialization_deferred",
+			})
+			index += 1
+	return candidates
+
+static func _straight_corridor_cells(from_anchor: Dictionary, to_anchor: Dictionary) -> Array:
+	if from_anchor.is_empty() or to_anchor.is_empty():
+		return []
+	var cells := []
+	var x := int(from_anchor.get("x", 0))
+	var y := int(from_anchor.get("y", 0))
+	var goal_x := int(to_anchor.get("x", 0))
+	var goal_y := int(to_anchor.get("y", 0))
+	var step_x := 1 if goal_x >= x else -1
+	while x != goal_x:
+		cells.append(_point_dict(x, y))
+		x += step_x
+	var step_y := 1 if goal_y >= y else -1
+	while y != goal_y:
+		cells.append(_point_dict(x, y))
+		y += step_y
+	cells.append(_point_dict(goal_x, goal_y))
+	return cells
+
+static func _bounds_for_cells(cells: Array) -> Dictionary:
+	if cells.is_empty():
+		return {}
+	var min_x := 999999
+	var min_y := 999999
+	var max_x := -1
+	var max_y := -1
+	for cell in cells:
+		if not (cell is Dictionary):
+			continue
+		var x := int(cell.get("x", 0))
+		var y := int(cell.get("y", 0))
+		min_x = min(min_x, x)
+		min_y = min(min_y, y)
+		max_x = max(max_x, x)
+		max_y = max(max_y, y)
+	return {"min_x": min_x, "min_y": min_y, "max_x": max_x, "max_y": max_y}
+
+static func _point_lookup(points: Array) -> Dictionary:
+	var result := {}
+	for point in points:
+		if point is Dictionary:
+			result[_point_key(int(point.get("x", 0)), int(point.get("y", 0)))] = true
+	return result
+
+static func _zone_layout_phase_summary(zone_layout: Dictionary) -> Dictionary:
+	return {
+		"schema_id": String(zone_layout.get("schema_id", "")),
+		"level_count": int(zone_layout.get("dimensions", {}).get("level_count", 0)),
+		"water_mode": String(zone_layout.get("policy", {}).get("water_mode", "")),
+		"surface_water_cell_count": int(zone_layout.get("policy", {}).get("water_policy", {}).get("surface_water_cell_count", 0)),
+		"corridor_candidate_count": zone_layout.get("corridor_candidates", []).size(),
+		"unsupported_runtime_features": zone_layout.get("unsupported_runtime_features", []),
+	}
+
+static func _zone_layout_validation(zone_layout: Dictionary, generated_map: Dictionary = {}) -> Dictionary:
+	var failures := []
+	var warnings := []
+	if String(zone_layout.get("schema_id", "")) != ZONE_LAYOUT_SCHEMA_ID:
+		failures.append("zone layout schema mismatch")
+	var dimensions: Dictionary = zone_layout.get("dimensions", {}) if zone_layout.get("dimensions", {}) is Dictionary else {}
+	var width := int(dimensions.get("width", 0))
+	var height := int(dimensions.get("height", 0))
+	var level_count := int(dimensions.get("level_count", 0))
+	var levels: Array = zone_layout.get("levels", [])
+	if width <= 0 or height <= 0 or levels.size() != level_count:
+		failures.append("zone layout dimensions/level count mismatch")
+	var water_mode := String(zone_layout.get("policy", {}).get("water_mode", "land"))
+	var total_link_count := int(zone_layout.get("template_link_count", 0))
+	if zone_layout.get("corridor_candidates", []).size() < total_link_count * max(1, level_count):
+		failures.append("corridor candidates do not cover template links on each generated level")
+	for level in levels:
+		if not (level is Dictionary):
+			failures.append("non-dictionary level layout")
+			continue
+		var owner_grid: Array = level.get("owner_grid", [])
+		if owner_grid.size() != height:
+			failures.append("level %d owner grid height mismatch" % int(level.get("level_index", 0)))
+		var grid_cells := {}
+		for y in range(owner_grid.size()):
+			var row: Array = owner_grid[y]
+			if row.size() != width:
+				failures.append("level %d owner grid row %d width mismatch" % [int(level.get("level_index", 0)), y])
+			for x in range(row.size()):
+				grid_cells[_point_key(x, y)] = String(row[x])
+		if grid_cells.size() != width * height:
+			failures.append("level %d owner grid does not cover every cell" % int(level.get("level_index", 0)))
+		var footprint_cells := {}
+		var footprint_total := 0
+		for footprint in level.get("zone_footprints", []):
+			if not (footprint is Dictionary):
+				failures.append("level %d has non-dictionary footprint" % int(level.get("level_index", 0)))
+				continue
+			var zone_id := String(footprint.get("zone_id", ""))
+			var cells: Array = footprint.get("cells", [])
+			footprint_total += cells.size()
+			if cells.size() != int(footprint.get("cell_count", 0)):
+				failures.append("footprint %s cell_count mismatch" % zone_id)
+			var target := int(footprint.get("target_cell_count", 0))
+			var tolerance: int = max(2, int(ceil(float(width * height) * 0.03)))
+			if abs(cells.size() - target) > tolerance:
+				failures.append("footprint %s area %d outside target %d tolerance %d" % [zone_id, cells.size(), target, tolerance])
+			for cell in cells:
+				if not (cell is Dictionary):
+					failures.append("footprint %s has non-dictionary cell" % zone_id)
+					continue
+				var key := _point_key(int(cell.get("x", -1)), int(cell.get("y", -1)))
+				if footprint_cells.has(key):
+					failures.append("cell %s assigned to multiple footprints" % key)
+				footprint_cells[key] = zone_id
+				if String(grid_cells.get(key, "")) != zone_id:
+					failures.append("cell %s footprint/grid zone mismatch" % key)
+		if footprint_total != width * height:
+			failures.append("level %d footprints cover %d cells instead of %d" % [int(level.get("level_index", 0)), footprint_total, width * height])
+	if water_mode == "islands" and int(zone_layout.get("policy", {}).get("water_policy", {}).get("surface_water_cell_count", 0)) <= 0:
+		failures.append("island water mode requested but no water cells were recorded")
+	if water_mode == "land" and int(zone_layout.get("policy", {}).get("water_policy", {}).get("surface_water_cell_count", 0)) != 0:
+		failures.append("land water mode unexpectedly recorded water cells")
+	var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
+	if not scenario.is_empty():
+		if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", true)) or bool(scenario.get("selection", {}).get("availability", {}).get("skirmish", true)):
+			failures.append("zone layout validation found campaign/skirmish adoption")
+		if scenario.has("save_adoption") or scenario.has("alpha_parity_claim"):
+			failures.append("zone layout validation found save/parity claim")
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failure_count": failures.size(),
+		"warning_count": warnings.size(),
+		"failures": failures,
+		"warnings": warnings,
+	}
 
 static func _nearest_zone_id(x: int, y: int, zones: Array, seeds: Dictionary) -> String:
 	var best_id := String(zones[0].get("id", "")) if not zones.is_empty() and zones[0] is Dictionary else ""

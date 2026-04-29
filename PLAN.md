@@ -2043,13 +2043,18 @@ sourceDocs:
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md`
 
 implementationTargets:
-- runtime zone graph/layout helpers
-- zone layout validation report
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_zone_layout_water_underground_report.gd`
+- `tests/random_map_zone_layout_water_underground_report.tscn`
+- current `tests/random_map_*` report scenes
 
 sliceEvidence:
-- Zone areas scale from template base sizes within configured tolerance.
-- Starts are separated, links have corridor candidates, and zone footprints support surface/underground/water modes.
-- Validation reports disconnected, undersized, impossible, or unsupported template/layout failures with zone/link ids.
+- Added `random_map_zone_layout_v1` staging payloads with per-level zone footprints, bounds, anchor points, owner grids, surface water cells, and base-size proportional target counts.
+- Surface terrain generation now derives from the structured zone layout owner grid while preserving current scenario-load, road, route, and fairness behavior.
+- Water/island requests create explicit water policy metadata and deterministic surface water cells; transit, boat, ferry, and shipyard placement remain deferred through unsupported/next-slice metadata.
+- Underground requests create deterministic second-level allocation and level metadata when the selected template supports it; unsupported template level requests return structured template-selection rejection metadata.
+- Corridor candidates are produced from catalog links on every generated level with endpoints, land/water mode, intended connection class, and deferred materialization state.
+- `tests/random_map_zone_layout_water_underground_report.tscn`, all current `tests/random_map_*` Godot reports, `python3 tests/validate_repo.py`, `python3 -m json.tool ops/progress.json`, and `git diff --check` pass; no skirmish UI/save/writeback or parity/alpha claim is made.
 
 nonGoals:
 - No object-density pass, final road/river writeout, skirmish adoption, or parity-complete claim.
