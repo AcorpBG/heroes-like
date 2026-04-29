@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "concept-art-curation-gate-10184",
-  "currentSliceTitle": "Concept-Art Curation Gate",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Preserved existing parent status; unrelated to random-map fairness slice.",
+  "currentSliceId": "random-map-template-catalog-grammar-10184",
+  "currentSliceTitle": "Random Map Template Catalog/Grammar Parity Groundwork",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed RMG child slice: data-driven original template catalog and grammar groundwork landed before scenario-load smoke. No campaign/skirmish/UI/writeback/save adoption or finished alpha/RMG parity claim.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T08:20:52Z",
+  "updatedAt": "2026-04-29T08:47:29Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -548,22 +548,25 @@
         "generator validation/report harness",
         "Phase 3 headless harness integration path"
       ],
-      "notes": "Requirements doc, seeded generator core, terrain/town/road constraints, and resource/encounter fairness report children are complete. Scenario load smoke remains pending; no finished skirmish RMG claim.",
+      "notes": "Requirements doc, seeded generator core, terrain/town/road constraints, resource/encounter fairness report, and template catalog/grammar children are complete. Scenario-load smoke remains pending; no finished skirmish RMG claim.",
       "sliceType": "parent",
       "childSliceIds": [
         "random-map-requirements-doc-10184",
         "random-map-seeded-generator-core-10184",
         "random-map-terrain-town-road-constraints-10184",
         "random-map-resource-encounter-fairness-report-10184",
+        "random-map-template-catalog-grammar-10184",
         "random-map-scenario-load-smoke-10184"
       ],
       "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
       "docsReadyEvidenceIds": [
         "random-map-requirements-doc-10184"
       ],
-      "completedImplementationEvidenceIds": [],
+      "completedImplementationEvidenceIds": [
+        "random-map-template-catalog-grammar-10184"
+      ],
       "reportOnlyEvidenceIds": [],
-      "updatedAt": "2026-04-29T08:22:00Z"
+      "updatedAt": "2026-04-29T08:47:29Z"
     },
     {
       "id": "world-faction-mechanics-identity-hooks-10184",
@@ -2342,7 +2345,7 @@
       "id": "random-map-resource-encounter-fairness-report-10184",
       "title": "Random Map Resource/Encounter Fairness Report",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "random-map-generator-foundation-10184",
@@ -2369,6 +2372,70 @@
       "updatedAt": "2026-04-29T08:18:27Z",
       "startedAt": "2026-04-29T08:12:15Z",
       "completedAt": "2026-04-29T08:18:27Z"
+    },
+    {
+      "id": "random-map-template-catalog-grammar-10184",
+      "title": "Random Map Template Catalog/Grammar Parity Groundwork",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "purpose": "Replace the hardcoded one-profile runtime template with the first data-driven HoMM3-style template catalog and grammar layer, translated into original Aurelion Reach content.",
+      "sourceDocs": [
+        "docs/random-map-generator-foundation.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-summary.csv",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-special-guards-and-wide.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-web-map-editor/"
+      ],
+      "implementationTargets": [
+        "content/random_map_template_catalog.json",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_template_catalog_grammar_report.gd",
+        "tests/random_map_template_catalog_grammar_report.tscn",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "godot4 --headless --path /root/dev/heroes-like res://tests/random_map_seeded_generator_core_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like res://tests/random_map_terrain_town_road_constraints_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like res://tests/random_map_resource_encounter_fairness_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like res://tests/random_map_template_catalog_grammar_report.tscn",
+        "python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json-check.txt",
+        "git diff --check",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like"
+      ],
+      "sliceEvidence": [
+        "Catalog fixture contains multiple original templates/profiles with zones, links, player/size filters, zone roles, owner/start metadata, terrain/faction constraints, guard values, and wide/border-guard flags.",
+        "Generator selection preserves selected template/profile ids through metadata, staging, and phase pipeline output.",
+        "Focused report proves same seed plus same template is deterministic and changing template id changes the payload.",
+        "Focused report proves catalog zone/link records and special connection semantics survive into route and fairness outputs."
+      ],
+      "completionCriteria": [
+        "The hardcoded runtime spoke profile is fallback/default only; data-driven catalog selection is the normal template path.",
+        "Focused Godot report and baseline validation pass without scenario-load, campaign/skirmish, UI, save migration, or durable writeback adoption."
+      ],
+      "nonGoals": [
+        "No scenario-load smoke.",
+        "No campaign or skirmish adoption.",
+        "No UI, durable authored writeback, save migration, broad object placement, or finished alpha/RMG parity claim."
+      ],
+      "notes": "Implemented the first original template catalog/grammar layer before random-map scenario-load smoke. Catalog selection now replaces the hardcoded spoke profile as the normal path, with the old runtime spoke remaining fallback/default only. Validated without campaign/skirmish/UI/writeback/save adoption or finished alpha/RMG parity claim.",
+      "updatedAt": "2026-04-29T08:47:29Z",
+      "startedAt": "2026-04-29T08:32:00Z",
+      "completedAt": "2026-04-29T08:47:29Z"
     },
     {
       "id": "random-map-scenario-load-smoke-10184",
