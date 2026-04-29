@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-skirmish-ui-save-replay-10184",
-  "currentSliceTitle": "Random Map Skirmish UI Save Replay",
+  "currentSliceId": "random-map-town-mine-dwelling-placement-10184",
+  "currentSliceTitle": "Random Map Town Mine Dwelling Placement",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed controlled random-map skirmish setup/session adoption: ScenarioSelectRules now validates generated maps from seed/config/template/profile/player settings, launches them through skirmish sessions with provenance, replay seed/config metadata, retry/validation status, generated identity, and no authored campaign/skirmish browser writeback; SaveService can regenerate/register transient generated scenarios from saved provenance.",
+  "currentSliceNotes": "Completed deterministic town/start, mine/resource-producer, and dwelling/recruitment-site placement payloads with footprint-aware predicates, fairness metrics, deterministic signature checks, and focused Godot report coverage. No authored writeback, campaign adoption, or parity/alpha claim.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T11:53:44Z",
+  "updatedAt": "2026-04-29T12:24:40Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -2761,7 +2761,7 @@
       "id": "random-map-town-mine-dwelling-placement-10184",
       "title": "Random Map Town Mine Dwelling Placement",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "parentSliceId": "random-map-generator-foundation-10184",
       "classification": "phase2_child_implementation_slice",
@@ -2773,28 +2773,36 @@
         "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md"
       ],
       "implementationTargets": [
-        "town/mine/dwelling placement rules",
-        "placement and fairness reports"
+        "scripts/core/RandomMapGeneratorRules.gd structured town/mine/dwelling placement payloads",
+        "tests/random_map_town_mine_dwelling_placement_report.gd focused deterministic placement/fairness report"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
-        "focused Godot report for the slice",
-        "git diff --check"
+        "all tests/random_map_*.tscn Godot reports",
+        "tests/random_map_town_mine_dwelling_placement_report.tscn",
+        "python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json-check.txt",
+        "git diff --check",
+        "heroes-progress status/next helper"
       ],
       "sliceEvidence": [
-        "Player and neutral town/castle minimums and densities are attempted by zone rule.",
-        "Neutral same-type placement reuses zone town/faction choice where required.",
-        "Seven mine/resource categories place required mines, density extras, adjacent resources, and near-start wood/ore bias where configured."
+        "Player start town records preserve owner, faction/town assignment, same-type policy metadata, zone role, footprint/action/passability metadata, and staged no-writeback provenance.",
+        "Neutral same-type placement reuses nearest runtime zone faction/town choice where required by template metadata.",
+        "Seven mine/resource categories place original-game mine/resource-producer records with zone/player fairness metadata, guard/frontier classification, and adjacent resource staging.",
+        "Neutral dwelling/recruitment-site records use original content categories tied to zone role, owner, guard pressure, and reward/monster band context.",
+        "Placement predicates consume the object footprint catalog and avoid road, guard, decor, reserved route-corridor, body, water, and terrain conflicts.",
+        "Fairness reporting covers per-player core economy producer support, starting-town support, contested objective pressure markers, same-seed signature stability, and changed-seed variation."
       ],
       "completionCriteria": [
         "Implementation and validation satisfy this slice without claiming full HoMM3-style RMG parity unless all downstream parity gates are complete."
       ],
       "nonGoals": [
-        "No reward bands, decoration filler, final writeout, or skirmish UI."
+        "No final authored map writeout, campaign content adoption, save-schema migration, or HoMM3 RMG parity/alpha completion claim."
       ],
-      "notes": "Queued by random-map-homm3-parity-gap-audit-10184 as part of the continuous RMG parity implementation path.",
+      "notes": "Completed deterministic town/start, mine/resource-producer, and dwelling/recruitment-site placement payloads with footprint-aware predicates, fairness metrics, deterministic signature checks, and focused Godot report coverage. No authored writeback, campaign adoption, or parity/alpha claim.",
       "createdAt": "2026-04-29T09:40:00Z",
-      "updatedAt": "2026-04-29T09:40:00Z"
+      "updatedAt": "2026-04-29T12:24:40Z",
+      "startedAt": "2026-04-29T11:58:38Z",
+      "completedAt": "2026-04-29T12:24:40Z"
     },
     {
       "id": "random-map-connection-guard-materialization-10184",
@@ -3881,6 +3889,31 @@
           "title": "Implement deterministic seeded random-map payload primitives and determinism report",
           "status": "completed",
           "evidence": "Added RandomMapGeneratorRules deterministic seed normalization, fixed-seed PRNG, staged template/profile zone graph, editable terrain-owner grid, route graph, separate town/resource/encounter placement arrays, scenario-like no-write draft payload, stable signature generation, payload validation, and RANDOM_MAP_SEEDED_GENERATOR_CORE_REPORT proof. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path /root/dev/heroes-like res://tests/random_map_seeded_generator_core_report.tscn; python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json-check.txt; git diff --check."
+        }
+      ]
+    },
+    {
+      "id": "random-map-town-mine-dwelling-placement-10184",
+      "system": "random map town mine dwelling placement",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "random-map-town-mine-dwelling-placement-10184"
+      ],
+      "sourceRefs": [
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-homm3-parity-gap-audit.md",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_town_mine_dwelling_placement_report.gd",
+        "tests/random_map_skirmish_ui_save_replay_report.gd",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md"
+      ],
+      "entries": [
+        {
+          "id": "random-map-town-mine-dwelling-placement-implementation-10184",
+          "title": "Implement deterministic town, mine, and dwelling placement payloads and fairness reporting",
+          "status": "completed",
+          "evidence": "Implemented RandomMapGeneratorRules town/start placement records with owner, faction/town assignment, same-type semantics, zone role, footprint/action/passability metadata; mine/resource-producer records using seven original resource categories with guard/frontier/adjacent-resource metadata; dwelling/recruitment-site records tied to zone role, owner, guard pressure, and reward/monster band context; route-corridor-aware placement predicates; core economy producer fairness and contested objective pressure markers; deterministic signature checks. Added RANDOM_MAP_TOWN_MINE_DWELLING_PLACEMENT_REPORT and preserved generated skirmish provenance/no authored writeback boundaries. Validation passed: python3 tests/validate_repo.py; all tests/random_map_*.tscn Godot reports; python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json-check.txt; git diff --check; heroes-progress status/next helper."
         }
       ]
     }

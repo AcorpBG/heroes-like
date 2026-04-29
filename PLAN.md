@@ -2125,16 +2125,19 @@ sourceDocs:
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md`
 
 implementationTargets:
-- town/mine/dwelling placement rules
-- placement and fairness reports
+- `scripts/core/RandomMapGeneratorRules.gd` structured town/mine/dwelling placement payloads
+- `tests/random_map_town_mine_dwelling_placement_report.gd` focused deterministic placement/fairness report
 
 sliceEvidence:
-- Player and neutral town/castle minimums and densities are attempted by zone rule.
-- Neutral same-type placement reuses zone town/faction choice where required.
-- Seven mine/resource categories place required mines, density extras, adjacent resources, and near-start wood/ore bias where configured.
+- Player start town records preserve owner, faction/town assignment, same-type policy metadata, zone role, footprint/action/passability metadata, and staged no-writeback provenance.
+- Neutral same-type placement reuses nearest runtime zone faction/town choice where required by template metadata.
+- Seven mine/resource categories place original-game mine/resource-producer records with zone/player fairness metadata, guard/frontier classification, and adjacent resource staging.
+- Neutral dwelling/recruitment-site records use original content categories tied to zone role, owner, guard pressure, and reward/monster band context.
+- Placement predicates consume the object footprint catalog and avoid road, guard, decor, reserved route-corridor, body, water, and terrain conflicts.
+- Fairness reporting covers per-player core economy producer support, starting-town support, contested objective pressure markers, same-seed signature stability, and changed-seed variation.
 
 nonGoals:
-- No reward bands, decoration filler, final writeout, or skirmish UI.
+- No final authored map writeout, campaign content adoption, save-schema migration, or HoMM3 RMG parity/alpha completion claim.
 
 ### P2 Child: Random Map Connection Guard Materialization
 
