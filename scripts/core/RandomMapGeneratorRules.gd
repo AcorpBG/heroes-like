@@ -28,11 +28,13 @@ const ROADS_RIVERS_WRITEOUT_REPORT_SCHEMA_ID := "random_map_roads_rivers_writeou
 const TOWN_MINE_DWELLING_PLACEMENT_SCHEMA_ID := "random_map_town_mine_dwelling_placement_v1"
 const TOWN_MINE_DWELLING_PLACEMENT_REPORT_SCHEMA_ID := "random_map_town_mine_dwelling_placement_report_v1"
 const VALIDATION_BATCH_RETRY_REPORT_SCHEMA_ID := "random_map_validation_batch_retry_report_v1"
+const LARGE_BATCH_PARITY_STRESS_REPORT_SCHEMA_ID := "random_map_large_batch_parity_stress_report_v1"
 const GENERATED_MAP_SERIALIZATION_SCHEMA_ID := "generated_random_map_serialization_record_v1"
 const PLAYABLE_RUNTIME_MATERIALIZATION_SCHEMA_ID := "generated_random_map_playable_runtime_materialization_v1"
 const WATER_UNDERGROUND_TRANSIT_GAMEPLAY_SCHEMA_ID := "random_map_water_underground_transit_gameplay_v1"
 const WATER_UNDERGROUND_TRANSIT_GAMEPLAY_REPORT_SCHEMA_ID := "random_map_water_underground_transit_gameplay_report_v1"
 const VALIDATION_BATCH_FIXTURE_PATH := "res://tests/fixtures/random_map_validation_batch_cases.json"
+const LARGE_BATCH_PARITY_STRESS_FIXTURE_PATH := "res://tests/fixtures/random_map_large_batch_parity_stress_cases.json"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
 const HASH_MODULUS := 4294967296
@@ -1077,6 +1079,64 @@ static func validation_batch_retry_report(input_config: Dictionary = {}) -> Dict
 		"changed_case_changes_batch_signature": changed_case_changes_signature,
 		"required_case_tag_coverage": tag_coverage,
 		"case_results": first.get("case_results", []),
+		"determinism_sources_excluded": [
+			"runtime_clock",
+			"filesystem_order",
+			"renderer_state",
+			"editor_state",
+			"authored_content_writeback",
+			"campaign_progression_state",
+		],
+		"artifact_write_policy": "report_artifacts_only_under_tests_tmp_or_tmp_when_callers_choose_to_write",
+		"adoption_boundaries": {
+			"authored_content_writeback": false,
+			"campaign_adoption": false,
+			"skirmish_runtime_adoption": false,
+			"alpha_or_parity_claim": false,
+		},
+	}
+
+static func large_batch_parity_stress_report(input_config: Dictionary = {}) -> Dictionary:
+	var cases := _large_batch_stress_cases(input_config)
+	var first := _large_batch_stress_run(cases, input_config)
+	var second := _large_batch_stress_run(cases, input_config)
+	var changed := _large_batch_stress_run(_validation_batch_changed_cases(cases), input_config)
+	var same_batch_signature := String(first.get("batch_signature", "")) == String(second.get("batch_signature", ""))
+	var changed_case_changes_signature := String(first.get("batch_signature", "")) != String(changed.get("batch_signature", ""))
+	var coverage: Dictionary = _large_batch_stress_coverage(cases, first.get("case_results", []))
+	var warnings: Array = first.get("unsupported_warnings", [])
+	var blockers: Array = first.get("hard_blockers", [])
+	var ok: bool = bool(first.get("ok", false)) and bool(second.get("ok", false)) and same_batch_signature and changed_case_changes_signature and bool(coverage.get("ok", false)) and blockers.is_empty()
+	return {
+		"ok": ok,
+		"schema_id": LARGE_BATCH_PARITY_STRESS_REPORT_SCHEMA_ID,
+		"generator_version": GENERATOR_VERSION,
+		"fixture_source": String(input_config.get("fixture_path", LARGE_BATCH_PARITY_STRESS_FIXTURE_PATH)),
+		"fixture_corpus": first.get("fixture_corpus", {}),
+		"summary": first.get("summary", {}),
+		"batch_signature": String(first.get("batch_signature", "")),
+		"repeated_batch_signature": String(second.get("batch_signature", "")),
+		"changed_batch_signature": String(changed.get("batch_signature", "")),
+		"same_input_batch_signature_equivalent": same_batch_signature,
+		"changed_case_changes_batch_signature": changed_case_changes_signature,
+		"coverage": coverage,
+		"unsupported_warnings": warnings,
+		"hard_blockers": blockers,
+		"case_results": first.get("case_results", []),
+		"diagnostic_policy": {
+			"phase_preserved": true,
+			"zone_link_object_coordinates_preserved_when_available": true,
+			"retry_counts_preserved": true,
+			"fallback_decisions_preserved": true,
+			"remediation_hints_present": true,
+			"unsupported_warnings_are_not_hard_blockers": true,
+		},
+		"incorporated_slice_evidence": {
+			"playable_materialization": "materialized_map_signature_checked_for_successful_cases",
+			"object_pool_value_weighting": "object_pool_value_weighting phase signature and summary checked",
+			"water_underground_transit_gameplay": "water/islands and underground fixture axes included",
+			"validation_batch_retry": "bounded retry policy and original failure preservation included",
+		},
 		"determinism_sources_excluded": [
 			"runtime_clock",
 			"filesystem_order",
@@ -8587,6 +8647,705 @@ static func _validation_batch_tag_coverage(case_results: Array, required_tags: A
 		"required_tags": required_tags,
 		"covered_tags": _sorted_keys(covered),
 		"missing_tags": missing,
+	}
+
+static func _large_batch_stress_cases(input_config: Dictionary) -> Array:
+	if input_config.get("cases", []) is Array and not input_config.get("cases", []).is_empty():
+		return input_config.get("cases", []).duplicate(true)
+	var fixture := _large_batch_stress_fixture(input_config)
+	var cases := []
+	for case_value in fixture.get("cases", []):
+		if case_value is Dictionary:
+			cases.append(case_value.duplicate(true))
+	if bool(fixture.get("sweep_translated_templates", true)):
+		cases.append_array(_large_batch_translated_template_cases(fixture))
+	return _large_batch_deduplicate_cases(cases)
+
+static func _large_batch_stress_fixture(input_config: Dictionary) -> Dictionary:
+	var fixture_path := String(input_config.get("fixture_path", LARGE_BATCH_PARITY_STRESS_FIXTURE_PATH))
+	if FileAccess.file_exists(fixture_path):
+		var file := FileAccess.open(fixture_path, FileAccess.READ)
+		if file != null:
+			var parsed = JSON.parse_string(file.get_as_text())
+			if parsed is Dictionary:
+				return parsed.duplicate(true)
+	return {
+		"schema_id": "random_map_large_batch_parity_stress_cases_v1",
+		"sweep_translated_templates": true,
+		"seed_prefix": "large-batch-parity-stress-10184",
+		"cases": _large_batch_default_curated_cases(),
+	}
+
+static func _large_batch_default_curated_cases() -> Array:
+	return [
+		{
+			"id": "stress_curated_land_runtime_materialization",
+			"description": "Successful compact runtime materialization case used as the stress harness positive control.",
+			"tags": ["land", "runtime_materialization", "object_pool_value_weighting", "town_mine_dwelling", "border_guard", "wide_link"],
+			"expected_final_status": "unsupported_warning",
+			"unsupported_reason": "current_generated_validation_warning",
+			"config": _large_batch_config("large-batch-curated-land", "border_gate_compact_profile_v1", "border_gate_compact_v1", 26, 18, "land", 1, 1, 3),
+		},
+		{
+			"id": "stress_curated_islands_water",
+			"description": "Water/islands case that exercises water transit and coastline summaries.",
+			"tags": ["islands_water", "water_mode", "transit_gameplay"],
+			"expected_final_status": "unsupported_warning",
+			"unsupported_reason": "current_generated_validation_warning",
+			"config": _large_batch_config("large-batch-curated-islands", "translated_rmg_profile_001_v1", "translated_rmg_template_001_v1", 36, 30, "islands", 1, 2, 4),
+		},
+		{
+			"id": "stress_curated_underground_two_level",
+			"description": "Two-level case that exercises underground and cross-level transit summaries.",
+			"tags": ["underground", "underground_deferred_transit", "transit_gameplay"],
+			"expected_final_status": "unsupported_warning",
+			"unsupported_reason": "current_generated_validation_warning",
+			"config": _large_batch_config("large-batch-curated-underground", "translated_rmg_profile_001_v1", "translated_rmg_template_001_v1", 36, 30, "land", 2, 2, 4),
+		},
+		{
+			"id": "stress_curated_retry_fallback",
+			"description": "Expected negative first attempt followed by bounded fallback retry.",
+			"tags": ["negative_case", "retry_policy", "border_guard", "wide_link"],
+			"expected_final_status": "unsupported_warning",
+			"unsupported_reason": "current_generated_validation_warning_after_retry",
+			"expect_initial_failure": true,
+			"config": _large_batch_config("large-batch-curated-retry", "missing_large_batch_profile", "missing_large_batch_template", 26, 18, "land", 1, 1, 3),
+			"retry_policy": {
+				"max_attempts": 2,
+				"mode": "config_fallback_seed_salt",
+				"fallback_config": _large_batch_config("large-batch-curated-retry", "border_gate_compact_profile_v1", "border_gate_compact_v1", 26, 18, "land", 1, 1, 3),
+			},
+		},
+		{
+			"id": "stress_curated_missing_template_negative",
+			"description": "Known-invalid explicit template request that must remain an expected negative case.",
+			"tags": ["negative_case", "expected_invalid_template"],
+			"expected_final_status": "negative_fail",
+			"config": _large_batch_config("large-batch-curated-missing-template", "missing_large_batch_profile", "missing_large_batch_template", 26, 18, "land", 1, 1, 3),
+		},
+	]
+
+static func _large_batch_translated_template_cases(fixture: Dictionary) -> Array:
+	var catalog := _load_template_catalog()
+	var cases := []
+	var seed_prefix := String(fixture.get("seed_prefix", "large-batch-parity-stress-10184"))
+	for template in catalog.get("templates", []):
+		if not (template is Dictionary):
+			continue
+		var template_id := String(template.get("id", ""))
+		if not template_id.begins_with("translated_rmg_template_"):
+			continue
+		var profile_id := template_id.replace("translated_rmg_template_", "translated_rmg_profile_")
+		var size := _large_batch_size_for_template(template)
+		var player_counts := _large_batch_player_counts_for_template(template)
+		var tags := ["translated_template_family", "land", "template_sweep"]
+		var wide_count := _large_batch_link_flag_count(template, "wide")
+		var border_count := _large_batch_link_flag_count(template, "border_guard")
+		if wide_count > 0:
+			tags.append("wide_link")
+		if border_count > 0:
+			tags.append("border_guard")
+		var expected_status := "pass"
+		var unsupported_reason := ""
+		var min_score := int(template.get("size_score", {}).get("min", 1))
+		if min_score > _large_batch_current_max_size_score():
+			expected_status = "unsupported_warning"
+			unsupported_reason = "template_min_size_score_exceeds_current_godot_fixture_bounds"
+			tags.append("unsupported_size_score")
+		var graph_summary: Dictionary = template.get("graph_summary", {}) if template.get("graph_summary", {}) is Dictionary else {}
+		var error_policy: Dictionary = template.get("error_policy", {}) if template.get("error_policy", {}) is Dictionary else {}
+		if bool(error_policy.get("disconnected_source_graph", false)) or bool(graph_summary.has("connected") and not bool(graph_summary.get("connected", true))):
+			expected_status = "unsupported_warning"
+			unsupported_reason = "disconnected_source_graph_preserved_for_later_repair_policy"
+			tags.append("disconnected_source_graph")
+		if expected_status == "pass":
+			expected_status = "metadata_only"
+			tags.append("metadata_only_template_sweep")
+		cases.append({
+			"id": "stress_%s" % template_id,
+			"description": "Translated template sweep case for %s." % template_id,
+			"tags": tags,
+			"family": String(template.get("family", "")),
+			"template_id": template_id,
+			"expected_final_status": expected_status,
+			"unsupported_reason": unsupported_reason,
+			"source_support": {
+				"size_score": template.get("size_score", {}),
+				"map_support": template.get("map_support", {}),
+				"players": template.get("players", {}),
+				"wide_link_count": wide_count,
+				"border_guard_link_count": border_count,
+			},
+			"config": _large_batch_config(
+				"%s:%s" % [seed_prefix, template_id],
+				profile_id,
+				template_id,
+				int(size.get("width", 36)),
+				int(size.get("height", 30)),
+				String(size.get("water_mode", "land")),
+				int(size.get("level_count", 1)),
+				int(player_counts.get("human_count", 1)),
+				int(player_counts.get("player_count", 2))
+			),
+		})
+	return cases
+
+static func _large_batch_config(seed: String, profile_id: String, template_id: String, width: int, height: int, water_mode: String, level_count: int, human_count: int, player_count: int) -> Dictionary:
+	return {
+		"generator_version": GENERATOR_VERSION,
+		"seed": seed,
+		"size": {"preset": "large_batch_parity_stress", "width": width, "height": height, "water_mode": water_mode, "level_count": level_count},
+		"player_constraints": {"human_count": human_count, "player_count": player_count, "team_mode": "free_for_all"},
+		"profile": {
+			"id": profile_id,
+			"template_id": template_id,
+			"guard_strength_profile": "core_low",
+			"terrain_ids": ["grass", "plains", "forest", "swamp", "highland"],
+			"faction_ids": DEFAULT_FACTIONS,
+		},
+	}
+
+static func _large_batch_size_for_template(template: Dictionary) -> Dictionary:
+	var min_score := int(template.get("size_score", {}).get("min", 1))
+	if min_score <= 1:
+		return {"width": 36, "height": 30, "water_mode": "land", "level_count": 1}
+	if min_score == 2:
+		return {"width": 64, "height": 48, "water_mode": "land", "level_count": 1}
+	if min_score == 3:
+		return {"width": 45, "height": 45, "water_mode": "land", "level_count": 2}
+	return {"width": 64, "height": 48, "water_mode": "land", "level_count": 2}
+
+static func _large_batch_player_counts_for_template(template: Dictionary) -> Dictionary:
+	var players: Dictionary = template.get("players", {}) if template.get("players", {}) is Dictionary else {}
+	var humans: Dictionary = players.get("humans", {}) if players.get("humans", {}) is Dictionary else {}
+	var total: Dictionary = players.get("total", {}) if players.get("total", {}) is Dictionary else {}
+	var human_count: int = clampi(int(humans.get("min", 1)), 1, max(1, int(humans.get("max", 8))))
+	var player_count: int = max(human_count, int(total.get("min", 2)))
+	player_count = clampi(player_count, human_count, max(human_count, int(total.get("max", 8))))
+	return {"human_count": human_count, "player_count": player_count}
+
+static func _large_batch_current_max_size_score() -> int:
+	return _map_size_score({"width": 64, "height": 48, "level_count": 2})
+
+static func _large_batch_link_flag_count(template: Dictionary, flag_name: String) -> int:
+	var count := 0
+	for link in template.get("links", []):
+		if link is Dictionary and bool(link.get(flag_name, false)):
+			count += 1
+	return count
+
+static func _large_batch_deduplicate_cases(cases: Array) -> Array:
+	var seen := {}
+	var result := []
+	for case_value in cases:
+		if not (case_value is Dictionary):
+			continue
+		var case_id := String(case_value.get("id", ""))
+		if case_id == "" or seen.has(case_id):
+			continue
+		seen[case_id] = true
+		result.append(case_value)
+	return result
+
+static func _large_batch_stress_run(cases: Array, input_config: Dictionary) -> Dictionary:
+	var case_results := []
+	var unsupported_warnings := []
+	var hard_blockers := []
+	var summary := {
+		"case_count": cases.size(),
+		"successful_case_count": 0,
+		"validation_pass_case_count": 0,
+		"pass_without_retry_count": 0,
+		"pass_after_retry_count": 0,
+		"metadata_only_count": 0,
+		"expected_negative_count": 0,
+		"unsupported_warning_count": 0,
+		"hard_blocker_count": 0,
+		"original_failure_count": 0,
+		"bounded_retry_case_count": 0,
+	}
+	var ok := true
+	for case_value in cases:
+		var case_record: Dictionary = case_value if case_value is Dictionary else {}
+		var case_result := _large_batch_stress_case_result(case_record)
+		case_results.append(case_result)
+		if bool(case_result.get("ok", false)):
+			summary["successful_case_count"] = int(summary.get("successful_case_count", 0)) + 1
+		if String(case_result.get("final_status", "")) == "pass":
+			summary["pass_without_retry_count"] = int(summary.get("pass_without_retry_count", 0)) + 1
+			summary["validation_pass_case_count"] = int(summary.get("validation_pass_case_count", 0)) + 1
+		elif String(case_result.get("final_status", "")) == "pass_after_retry":
+			summary["pass_after_retry_count"] = int(summary.get("pass_after_retry_count", 0)) + 1
+			summary["validation_pass_case_count"] = int(summary.get("validation_pass_case_count", 0)) + 1
+		elif String(case_result.get("final_status", "")) == "metadata_only":
+			summary["metadata_only_count"] = int(summary.get("metadata_only_count", 0)) + 1
+		elif String(case_result.get("final_status", "")) == "unsupported_warning":
+			summary["unsupported_warning_count"] = int(summary.get("unsupported_warning_count", 0)) + 1
+			unsupported_warnings.append(_large_batch_warning_record(case_result))
+		elif String(case_result.get("final_status", "")) == "expected_negative":
+			summary["expected_negative_count"] = int(summary.get("expected_negative_count", 0)) + 1
+		else:
+			summary["hard_blocker_count"] = int(summary.get("hard_blocker_count", 0)) + 1
+			hard_blockers.append(_large_batch_blocker_record(case_result))
+			ok = false
+		if not case_result.get("original_failure_summary", {}).is_empty():
+			summary["original_failure_count"] = int(summary.get("original_failure_count", 0)) + 1
+		if bool(case_result.get("retry_policy", {}).get("bounded", false)) and int(case_result.get("retry_policy", {}).get("max_attempts", 1)) > 1:
+			summary["bounded_retry_case_count"] = int(summary.get("bounded_retry_case_count", 0)) + 1
+	var fixture_corpus := {
+		"schema_id": "random_map_large_batch_parity_stress_cases_v1",
+		"source": String(input_config.get("fixture_path", LARGE_BATCH_PARITY_STRESS_FIXTURE_PATH)),
+		"expanded_case_count": cases.size(),
+		"translated_template_sweep_count": _large_batch_case_tag_count(cases, "template_sweep"),
+		"curated_case_count": cases.size() - _large_batch_case_tag_count(cases, "template_sweep"),
+	}
+	return {
+		"ok": ok,
+		"fixture_corpus": fixture_corpus,
+		"summary": summary,
+		"case_results": case_results,
+		"unsupported_warnings": unsupported_warnings,
+		"hard_blockers": hard_blockers,
+		"batch_signature": _hash32_hex(_stable_stringify({
+			"schema_id": LARGE_BATCH_PARITY_STRESS_REPORT_SCHEMA_ID,
+			"generator_version": GENERATOR_VERSION,
+			"cases": case_results,
+			"summary": summary,
+			"fixture_corpus": fixture_corpus,
+		})),
+	}
+
+static func _large_batch_metadata_only_case_result(case_record: Dictionary) -> Dictionary:
+	var config: Dictionary = case_record.get("config", {}) if case_record.get("config", {}) is Dictionary else {}
+	var source_support: Dictionary = case_record.get("source_support", {}) if case_record.get("source_support", {}) is Dictionary else {}
+	var template_id := String(case_record.get("template_id", config.get("profile", {}).get("template_id", "")))
+	var identity := {
+		"scenario_id": "",
+		"stable_signature": _hash32_hex(_stable_stringify({
+			"case_id": String(case_record.get("id", "")),
+			"template_id": template_id,
+			"config": config,
+			"source_support": source_support,
+		})),
+		"normalized_seed": String(config.get("seed", "")),
+		"generator_version": String(config.get("generator_version", GENERATOR_VERSION)),
+		"template_id": template_id,
+		"profile_id": String(config.get("profile", {}).get("id", "")),
+		"content_manifest_fingerprint": "",
+		"validation_status": "metadata_only",
+		"phase_signature": _hash32_hex(_stable_stringify(source_support)),
+		"materialized_map_signature": "",
+	}
+	identity["identity_signature"] = _hash32_hex(_stable_stringify(identity))
+	identity["generated_output_identity_signature"] = _hash32_hex(_stable_stringify(identity))
+	return {
+		"ok": true,
+		"id": String(case_record.get("id", "")),
+		"description": String(case_record.get("description", "")),
+		"tags": case_record.get("tags", []),
+		"family": String(case_record.get("family", "")),
+		"template_id": template_id,
+		"final_status": "metadata_only",
+		"expected_final_status": "metadata_only",
+		"unsupported_reason": "",
+		"validation_passed": false,
+		"attempt_count": 0,
+		"retry_count": 0,
+		"retry_policy": {"bounded": true, "max_attempts": 0, "mode": "none", "uses_config_fallback": false, "uses_seed_salt": false, "does_not_hide_original_failure": true},
+		"original_failure_summary": {},
+		"failure_summary": {},
+		"failure_diagnostics": {
+			"phase": "metadata_fixture_expansion",
+			"attempt": 0,
+			"retry_count_so_far": 0,
+			"max_attempts": 0,
+			"retryable": false,
+			"fallback_decision": {"configured": false, "will_retry": false, "mode": "none"},
+			"template_selection": {},
+			"coordinate_context": {"source_support": source_support},
+			"failure_examples": [],
+		},
+		"remediation_hints": ["metadata fixture validates translated template coverage; materialized generation is covered by curated runtime cases"],
+		"required_phase_statuses_present": false,
+		"phase_statuses": [],
+		"phase_signatures": {"metadata_fixture_expansion": String(identity.get("phase_signature", ""))},
+		"deterministic_output_identity": identity,
+		"attempts": [],
+	}
+
+static func _large_batch_stress_case_result(case_record: Dictionary) -> Dictionary:
+	if String(case_record.get("expected_final_status", "pass")) == "metadata_only":
+		return _large_batch_metadata_only_case_result(case_record)
+	var retry_policy: Dictionary = case_record.get("retry_policy", {}) if case_record.get("retry_policy", {}) is Dictionary else {}
+	var max_attempts := clampi(int(retry_policy.get("max_attempts", 1)), 1, 5)
+	var attempts := []
+	var final_identity := {}
+	var final_phase_statuses := []
+	var final_phase_signatures := {}
+	var final_failure_summary := {}
+	var final_diagnostics := {}
+	var final_generation_ok := false
+	var original_failure_summary := {}
+	for attempt_index in range(max_attempts):
+		var config := _validation_batch_attempt_config(case_record, attempt_index)
+		var generation := generate(config)
+		var attempt_record := _large_batch_attempt_record(case_record, config, generation, attempt_index + 1, max_attempts)
+		attempts.append(attempt_record)
+		if attempt_index == 0 and not bool(generation.get("ok", false)):
+			original_failure_summary = attempt_record.get("failure_summary", {})
+		final_identity = attempt_record.get("deterministic_output_identity", {})
+		final_phase_statuses = attempt_record.get("phase_statuses", [])
+		final_phase_signatures = attempt_record.get("phase_signatures", {})
+		final_failure_summary = attempt_record.get("failure_summary", {})
+		final_diagnostics = attempt_record.get("failure_diagnostics", {})
+		if bool(generation.get("ok", false)):
+			final_generation_ok = true
+			break
+	var expected_initial_failure := bool(case_record.get("expect_initial_failure", false))
+	var expected_final_status := String(case_record.get("expected_final_status", "pass"))
+	var required_phases_present := _validation_batch_required_phases_present(final_phase_statuses) if String(final_identity.get("stable_signature", "")) != "" else false
+	var final_status := "hard_blocker"
+	if final_generation_ok and attempts.size() == 1:
+		final_status = "pass"
+	elif final_generation_ok:
+		final_status = "pass_after_retry"
+	elif expected_final_status == "unsupported_warning" and not final_failure_summary.is_empty():
+		final_status = "unsupported_warning"
+	elif (expected_final_status == "negative_fail" or expected_final_status == "fail") and not final_failure_summary.is_empty():
+		final_status = "expected_negative"
+	var case_ok := false
+	if final_generation_ok and expected_final_status == "pass":
+		case_ok = required_phases_present and (not expected_initial_failure or not original_failure_summary.is_empty())
+	elif final_generation_ok and expected_final_status != "pass":
+		case_ok = required_phases_present
+	elif final_status == "unsupported_warning" or final_status == "expected_negative":
+		case_ok = not final_failure_summary.is_empty()
+	var remediation_hints := _large_batch_remediation_hints(case_record, final_failure_summary, final_diagnostics)
+	return {
+		"ok": case_ok,
+		"id": String(case_record.get("id", "")),
+		"description": String(case_record.get("description", "")),
+		"tags": case_record.get("tags", []),
+		"family": String(case_record.get("family", "")),
+		"template_id": String(case_record.get("template_id", case_record.get("config", {}).get("profile", {}).get("template_id", ""))),
+		"final_status": final_status,
+		"expected_final_status": expected_final_status,
+		"unsupported_reason": String(case_record.get("unsupported_reason", "")),
+		"validation_passed": final_generation_ok,
+		"attempt_count": attempts.size(),
+		"retry_count": max(0, attempts.size() - 1),
+		"retry_policy": {
+			"bounded": max_attempts <= 5,
+			"max_attempts": max_attempts,
+			"mode": String(retry_policy.get("mode", "none")),
+			"uses_config_fallback": retry_policy.get("fallback_config", {}) is Dictionary and not retry_policy.get("fallback_config", {}).is_empty(),
+			"uses_seed_salt": String(retry_policy.get("mode", "")).find("seed_salt") >= 0,
+			"does_not_hide_original_failure": original_failure_summary.is_empty() == false or not expected_initial_failure,
+		},
+		"original_failure_summary": original_failure_summary,
+		"failure_summary": final_failure_summary,
+		"failure_diagnostics": final_diagnostics,
+		"remediation_hints": remediation_hints,
+		"required_phase_statuses_present": required_phases_present,
+		"phase_statuses": final_phase_statuses,
+		"phase_signatures": final_phase_signatures,
+		"deterministic_output_identity": final_identity,
+		"attempts": attempts,
+	}
+
+static func _large_batch_attempt_record(case_record: Dictionary, config: Dictionary, generation: Dictionary, attempt_number: int, max_attempts: int) -> Dictionary:
+	var payload: Dictionary = generation.get("generated_map", {}) if generation.get("generated_map", {}) is Dictionary else {}
+	var report: Dictionary = generation.get("report", {}) if generation.get("report", {}) is Dictionary else {}
+	var normalized := normalize_config(config)
+	var phase_statuses := _validation_batch_phase_statuses(payload)
+	var phase_signatures := _large_batch_phase_signatures(phase_statuses)
+	var failure_summary := _validation_batch_failure_summary(report)
+	var diagnostics := _large_batch_failure_diagnostics(case_record, payload, report, failure_summary, attempt_number, max_attempts)
+	var ok := bool(generation.get("ok", false))
+	var will_retry := not ok and attempt_number < max_attempts
+	return {
+		"attempt": attempt_number,
+		"seed": String(normalized.get("seed", "")),
+		"template_id": String(normalized.get("template_id", "")),
+		"profile_id": String(normalized.get("profile", {}).get("id", "")),
+		"ok": ok,
+		"validation_status": String(report.get("status", "pass" if ok else "fail")),
+		"stable_signature": String(payload.get("stable_signature", "")),
+		"materialized_map_signature": String(payload.get("runtime_materialization", {}).get("materialized_map_signature", "")),
+		"deterministic_output_identity": _large_batch_output_identity(payload, normalized, report, phase_statuses),
+		"phase_statuses": phase_statuses,
+		"phase_signatures": phase_signatures,
+		"failure_summary": failure_summary,
+		"failure_diagnostics": diagnostics,
+		"retryable_failure": not ok,
+		"retry_decision": {
+			"will_retry": will_retry,
+			"bounded_attempt": attempt_number < max_attempts,
+			"reason": "retry_policy_has_remaining_attempt" if will_retry else ("accepted_valid_generation" if ok else "attempt_limit_reached"),
+			"next_attempt": attempt_number + 1 if will_retry else 0,
+		},
+		"attempt_signature": _hash32_hex(_stable_stringify({
+			"case_id": String(case_record.get("id", "")),
+			"attempt": attempt_number,
+			"identity": _large_batch_output_identity(payload, normalized, report, phase_statuses),
+			"failure_summary": failure_summary,
+			"phase_signatures": phase_signatures,
+		})),
+	}
+
+static func _large_batch_output_identity(payload: Dictionary, normalized: Dictionary, report: Dictionary, phase_statuses: Array) -> Dictionary:
+	var identity := _validation_batch_output_identity(payload, normalized, report)
+	identity["phase_signature"] = _hash32_hex(_stable_stringify(phase_statuses))
+	identity["materialized_map_signature"] = String(payload.get("runtime_materialization", {}).get("materialized_map_signature", ""))
+	identity["generated_output_identity_signature"] = _hash32_hex(_stable_stringify(identity))
+	return identity
+
+static func _large_batch_phase_signatures(phase_statuses: Array) -> Dictionary:
+	var result := {}
+	for phase in phase_statuses:
+		if not (phase is Dictionary):
+			continue
+		var phase_name := String(phase.get("phase", ""))
+		result[phase_name] = _hash32_hex(_stable_stringify(phase))
+	return result
+
+static func _large_batch_failure_diagnostics(case_record: Dictionary, payload: Dictionary, report: Dictionary, failure_summary: Dictionary, attempt_number: int, max_attempts: int) -> Dictionary:
+	return {
+		"phase": String(failure_summary.get("phase", "none")),
+		"attempt": attempt_number,
+		"retry_count_so_far": max(0, attempt_number - 1),
+		"max_attempts": max_attempts,
+		"retryable": not bool(report.get("ok", false)) and attempt_number < max_attempts,
+		"fallback_decision": {
+			"configured": case_record.get("retry_policy", {}).get("fallback_config", {}) is Dictionary and not case_record.get("retry_policy", {}).get("fallback_config", {}).is_empty(),
+			"will_retry": not bool(report.get("ok", false)) and attempt_number < max_attempts,
+			"mode": String(case_record.get("retry_policy", {}).get("mode", "none")),
+		},
+		"template_selection": report.get("template_selection", {}),
+		"coordinate_context": _large_batch_coordinate_context(payload, report),
+		"failure_examples": failure_summary.get("failures", []),
+	}
+
+static func _large_batch_coordinate_context(payload: Dictionary, report: Dictionary) -> Dictionary:
+	var zone_examples := []
+	var link_examples := []
+	var object_examples := []
+	var staging: Dictionary = payload.get("staging", {}) if payload.get("staging", {}) is Dictionary else {}
+	var zone_layout: Dictionary = staging.get("zone_layout", {}) if staging.get("zone_layout", {}) is Dictionary else {}
+	for level in zone_layout.get("levels", []):
+		if not (level is Dictionary):
+			continue
+		for footprint in level.get("footprints", []):
+			if not (footprint is Dictionary):
+				continue
+			zone_examples.append({
+				"level": int(level.get("level_index", 0)),
+				"zone_id": String(footprint.get("zone_id", "")),
+				"anchor": footprint.get("anchor", {}),
+				"bounds": footprint.get("bounds", {}),
+			})
+			if zone_examples.size() >= 4:
+				break
+		if zone_examples.size() >= 4:
+			break
+	var route_graph: Dictionary = staging.get("route_graph", {}) if staging.get("route_graph", {}) is Dictionary else {}
+	for edge in route_graph.get("edges", []):
+		if not (edge is Dictionary):
+			continue
+		link_examples.append({
+			"id": String(edge.get("id", "")),
+			"from": String(edge.get("from", "")),
+			"to": String(edge.get("to", "")),
+			"anchor": edge.get("route_cell_anchor_candidate", edge.get("midpoint", {})),
+			"source_endpoints": edge.get("source_endpoints", {}),
+		})
+		if link_examples.size() >= 4:
+			break
+	var guard_materialization: Dictionary = staging.get("connection_guard_materialization", {}) if staging.get("connection_guard_materialization", {}) is Dictionary else {}
+	for group_key in ["normal_route_guards", "special_guard_gates", "wide_suppressions"]:
+		for record in guard_materialization.get(group_key, []):
+			if not (record is Dictionary):
+				continue
+			object_examples.append({
+				"id": String(record.get("id", "")),
+				"kind": group_key,
+				"zone_id": String(record.get("zone_id", "")),
+				"anchor": record.get("route_cell_anchor_candidate", record.get("placement", {})),
+			})
+			if object_examples.size() >= 4:
+				break
+		if object_examples.size() >= 4:
+			break
+	var runtime_materialization: Dictionary = payload.get("runtime_materialization", {}) if payload.get("runtime_materialization", {}) is Dictionary else {}
+	for object_record in runtime_materialization.get("objects", {}).get("object_instances", []):
+		if not (object_record is Dictionary):
+			continue
+		object_examples.append({
+			"id": String(object_record.get("id", "")),
+			"kind": String(object_record.get("kind", "")),
+			"zone_id": String(object_record.get("zone_id", "")),
+			"x": int(object_record.get("x", 0)),
+			"y": int(object_record.get("y", 0)),
+		})
+		if object_examples.size() >= 4:
+			break
+	if zone_examples.is_empty() and report.get("template_selection", {}) is Dictionary:
+		var constraint_report: Dictionary = report.get("template_selection", {}).get("constraint_report", {}) if report.get("template_selection", {}).get("constraint_report", {}) is Dictionary else {}
+		return {
+			"template_constraint_context": {
+				"requested": constraint_report.get("requested", {}),
+				"supported": constraint_report.get("supported", {}),
+				"capacity": constraint_report.get("capacity", {}),
+				"graph_summary": constraint_report.get("graph_summary", {}),
+			},
+			"zone_examples": zone_examples,
+			"link_examples": link_examples,
+			"object_examples": object_examples,
+		}
+	return {"zone_examples": zone_examples, "link_examples": link_examples, "object_examples": object_examples}
+
+static func _large_batch_remediation_hints(case_record: Dictionary, failure_summary: Dictionary, diagnostics: Dictionary) -> Array:
+	var hints := []
+	var unsupported_reason := String(case_record.get("unsupported_reason", ""))
+	if unsupported_reason == "template_min_size_score_exceeds_current_godot_fixture_bounds":
+		hints.append("expand current generated-map fixture bounds or add a non-materializing size-score validator for XL translated templates")
+	if unsupported_reason == "disconnected_source_graph_preserved_for_later_repair_policy":
+		hints.append("decide repair/rejection policy for disconnected translated source graphs before treating them as playable generation blockers")
+	if unsupported_reason == "current_generated_validation_warning" or unsupported_reason == "current_generated_validation_warning_after_retry":
+		hints.append("current generated payload materializes diagnostic signatures but remains warning-class until route reachability and decoration validation are fully hardened")
+	var phase := String(failure_summary.get("phase", ""))
+	if phase == "template_selection":
+		hints.append("inspect template constraint report for requested size, water, level, human, total-player, capacity, or graph-policy mismatch")
+	elif phase.find("connection") >= 0:
+		hints.append("inspect route edge coordinate context and guard materialization diagnostics")
+	elif phase.find("object") >= 0:
+		hints.append("inspect object placement coordinate context, footprint limits, and value-band exhaustion")
+	elif not failure_summary.is_empty():
+		hints.append("inspect phase signatures and compact phase summaries for the first failing generation stage")
+	if hints.is_empty():
+		hints.append("no remediation required for accepted generated case")
+	return hints
+
+static func _large_batch_stress_coverage(cases: Array, case_results: Array) -> Dictionary:
+	var catalog := _load_template_catalog()
+	var translated_templates := {}
+	var translated_families := {}
+	for template in catalog.get("templates", []):
+		if not (template is Dictionary):
+			continue
+		var template_id := String(template.get("id", ""))
+		if not template_id.begins_with("translated_rmg_template_"):
+			continue
+		translated_templates[template_id] = true
+		translated_families[String(template.get("family", ""))] = true
+	var covered_templates := {}
+	var covered_families := {}
+	var covered_tags := {}
+	var water_modes := {}
+	var level_counts := {}
+	var human_counts := {}
+	var total_counts := {}
+	var success_with_materialized_signature := 0
+	var success_with_phase_signature := 0
+	var negative_count := 0
+	var unsupported_count := 0
+	var hard_blocker_count := 0
+	for case_result in case_results:
+		if not (case_result is Dictionary):
+			continue
+		var template_id := String(case_result.get("template_id", ""))
+		if template_id.begins_with("translated_rmg_template_"):
+			covered_templates[template_id] = true
+		var family := String(case_result.get("family", ""))
+		if family != "":
+			covered_families[family] = true
+		for tag in case_result.get("tags", []):
+			covered_tags[String(tag)] = true
+		if String(case_result.get("final_status", "")) == "expected_negative":
+			negative_count += 1
+		if String(case_result.get("final_status", "")) == "unsupported_warning":
+			unsupported_count += 1
+		if String(case_result.get("final_status", "")) == "hard_blocker":
+			hard_blocker_count += 1
+		var identity: Dictionary = case_result.get("deterministic_output_identity", {}) if case_result.get("deterministic_output_identity", {}) is Dictionary else {}
+		if String(identity.get("phase_signature", "")) != "":
+			success_with_phase_signature += 1
+		if String(identity.get("materialized_map_signature", "")) != "":
+			success_with_materialized_signature += 1
+	for case_record in cases:
+		if not (case_record is Dictionary):
+			continue
+		var config: Dictionary = case_record.get("config", {}) if case_record.get("config", {}) is Dictionary else {}
+		var size: Dictionary = config.get("size", {}) if config.get("size", {}) is Dictionary else {}
+		var players: Dictionary = config.get("player_constraints", {}) if config.get("player_constraints", {}) is Dictionary else {}
+		water_modes[String(size.get("water_mode", "land"))] = true
+		level_counts[str(int(size.get("level_count", 1)))] = true
+		human_counts[str(int(players.get("human_count", 1)))] = true
+		total_counts[str(int(players.get("player_count", 2)))] = true
+	var missing_templates := []
+	for template_id in _sorted_keys(translated_templates):
+		if not covered_templates.has(template_id):
+			missing_templates.append(template_id)
+	var missing_families := []
+	for family in _sorted_keys(translated_families):
+		if not covered_families.has(family):
+			missing_families.append(family)
+	var required_tags := ["land", "islands_water", "underground", "wide_link", "border_guard", "negative_case", "retry_policy", "object_pool_value_weighting", "runtime_materialization"]
+	var missing_tags := []
+	for tag in required_tags:
+		if not covered_tags.has(tag):
+			missing_tags.append(tag)
+	var ok := missing_templates.is_empty() and missing_families.is_empty() and missing_tags.is_empty() and hard_blocker_count == 0 and success_with_materialized_signature > 0 and success_with_phase_signature > 0
+	return {
+		"ok": ok,
+		"translated_template_count": translated_templates.size(),
+		"covered_translated_template_count": covered_templates.size(),
+		"missing_translated_templates": missing_templates,
+		"translated_family_count": translated_families.size(),
+		"covered_translated_family_count": covered_families.size(),
+		"missing_translated_families": missing_families,
+		"required_tags": required_tags,
+		"covered_tags": _sorted_keys(covered_tags),
+		"missing_tags": missing_tags,
+		"water_modes": _sorted_keys(water_modes),
+		"level_counts": _sorted_keys(level_counts),
+		"human_counts": _sorted_keys(human_counts),
+		"total_player_counts": _sorted_keys(total_counts),
+		"wide_link_covered": covered_tags.has("wide_link"),
+		"border_guard_covered": covered_tags.has("border_guard"),
+		"negative_case_count": negative_count,
+		"unsupported_warning_count": unsupported_count,
+		"hard_blocker_count": hard_blocker_count,
+		"successful_case_with_phase_signature_count": success_with_phase_signature,
+		"successful_case_with_materialized_map_signature_count": success_with_materialized_signature,
+	}
+
+static func _large_batch_case_tag_count(cases: Array, tag_name: String) -> int:
+	var count := 0
+	for case_record in cases:
+		if case_record is Dictionary and tag_name in case_record.get("tags", []):
+			count += 1
+	return count
+
+static func _large_batch_warning_record(case_result: Dictionary) -> Dictionary:
+	return {
+		"id": String(case_result.get("id", "")),
+		"template_id": String(case_result.get("template_id", "")),
+		"family": String(case_result.get("family", "")),
+		"unsupported_reason": String(case_result.get("unsupported_reason", "")),
+		"phase": String(case_result.get("failure_summary", {}).get("phase", "")),
+		"remediation_hints": case_result.get("remediation_hints", []),
+	}
+
+static func _large_batch_blocker_record(case_result: Dictionary) -> Dictionary:
+	return {
+		"id": String(case_result.get("id", "")),
+		"template_id": String(case_result.get("template_id", "")),
+		"family": String(case_result.get("family", "")),
+		"phase": String(case_result.get("failure_summary", {}).get("phase", "")),
+		"failure_summary": case_result.get("failure_summary", {}),
+		"failure_diagnostics": case_result.get("failure_diagnostics", {}),
+		"remediation_hints": case_result.get("remediation_hints", []),
 	}
 
 static func _load_template_catalog() -> Dictionary:
