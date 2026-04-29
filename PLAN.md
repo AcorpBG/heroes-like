@@ -1025,7 +1025,7 @@ purpose: Add a deterministic random map generator foundation for scenario protot
 
 sourceDocs:
 - `project.md`
-- future random-map requirements doc when created.
+- `docs/random-map-generator-foundation.md`
 - economy, object, terrain/editor, faction, and AI docs as dependencies.
 
 implementationTargets:
@@ -1807,10 +1807,10 @@ purpose: Create the missing random-map requirements document before implementati
 
 sourceDocs:
 - `project.md`
-- future random-map requirements doc
+- `docs/random-map-generator-foundation.md`
 
 implementationTargets:
-- future random-map requirements doc
+- `docs/random-map-generator-foundation.md`
 
 ### P2 Child: Random Map Seeded Generator Core
 
@@ -1820,7 +1820,7 @@ phase: `phase-2-deep-production-foundation`
 purpose: Implement deterministic seeded generation primitives after requirements exist.
 
 sourceDocs:
-- future random-map requirements doc
+- `docs/random-map-generator-foundation.md`
 
 implementationTargets:
 - deterministic map-generation rules/helpers
@@ -1834,7 +1834,7 @@ phase: `phase-2-deep-production-foundation`
 purpose: Generate terrain, town, road, and route constraints suitable for scenario prototypes.
 
 sourceDocs:
-- future random-map requirements doc
+- `docs/random-map-generator-foundation.md`
 - terrain/editor docs
 
 implementationTargets:
@@ -1849,7 +1849,7 @@ phase: `phase-2-deep-production-foundation`
 purpose: Validate resource, encounter, guard, and objective fairness in generated maps.
 
 sourceDocs:
-- future random-map requirements doc
+- `docs/random-map-generator-foundation.md`
 - economy, object, and strategic AI docs
 
 implementationTargets:
@@ -1864,7 +1864,7 @@ phase: `phase-2-deep-production-foundation`
 purpose: Prove generated prototype maps can load through the scenario pipeline once runtime integration is selected.
 
 sourceDocs:
-- future random-map requirements doc
+- `docs/random-map-generator-foundation.md`
 
 implementationTargets:
 - generated prototype scenario smoke
