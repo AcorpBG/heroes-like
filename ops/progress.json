@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "headless-agent-simulation-harness-10184",
-  "currentSliceTitle": "Headless Simulation Harness",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed deterministic headless simulation harness foundation: core report API and Godot report scene cover scenario/session turn loop, AI pressure tick, economy delta, deterministic battle sample, save/provenance restore, and generated skirmish boundary evidence without replacing manual play gates.",
-  "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T14:36:40Z",
+  "currentSliceId": "random-map-playable-materialization-runtime-integration-10184",
+  "currentSliceTitle": "Random Map Playable Materialization Runtime Integration",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Recovery correction: next active work is RMG-only. Implement real playable generated-map materialization/runtime integration beyond staged report payloads: generated scenario/map runtime registry, launch/session bootstrap, overworld state adoption, save/load and replay provenance, deterministic materialized-map signatures, and no authored campaign JSON writeback or P2.10 parity claim.",
+  "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Current continuation is Phase 2 RMG parity only. Preserve completed non-RMG and future-phase evidence, but do not continue campaign/faction/broad production work from it. P2.10 foundation and completed RMG staging/report slices are not HoMM3 RMG parity.",
+  "updatedAt": "2026-04-29T15:04:37Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -36,7 +36,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27.",
     "archiveRole": "archive/document-reset-2026-04-27 is evidence/history only, not the active worker queue.",
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
-    "activeQueueRule": "plannedSlices contains current executable parent and child slices only; archived worker spam stays in evidence/history arrays."
+    "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
     {
@@ -536,8 +536,8 @@
       "id": "random-map-generator-foundation-10184",
       "title": "Random Map Generator Foundation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "completed",
-      "classification": "parent_foundation_completed_children_completed",
+      "status": "in_progress",
+      "classification": "parent_foundation_completed_parity_queue_open",
       "sourceDocs": [
         "project.md",
         "docs/random-map-generator-foundation.md"
@@ -548,15 +548,33 @@
         "generator validation/report harness",
         "Phase 3 headless harness integration path"
       ],
-      "notes": "P2.10 foundation stage complete: requirements, seeded core, terrain/town/road constraints, resource/encounter fairness, template catalog/grammar, and generated scenario-load smoke are implemented and validated. This is not HoMM3 RMG parity, full random-map alpha readiness, skirmish adoption, UI adoption, save migration, or durable generated-map writeback.",
+      "notes": "P2.10 foundation-stage evidence remains completed, but the RMG parity workstream is reopened/extended. Completed foundation children and early follow-up RMG staging/report slices do not prove HoMM3-style RMG parity. Active continuation is the RMG-only parity recovery queue starting with playable generated-map materialization/runtime integration.",
       "sliceType": "parent",
       "childSliceIds": [
+        "random-map-connection-guard-materialization-10184",
+        "random-map-decoration-density-pass-10184",
+        "random-map-final-homm3-parity-gate-audit-10184",
+        "random-map-homm3-parity-gap-audit-10184",
+        "random-map-large-batch-parity-stress-10184",
+        "random-map-monster-reward-bands-10184",
+        "random-map-object-footprint-catalog-10184",
+        "random-map-object-pool-value-weighting-10184",
+        "random-map-playable-materialization-runtime-integration-10184",
         "random-map-requirements-doc-10184",
-        "random-map-seeded-generator-core-10184",
-        "random-map-terrain-town-road-constraints-10184",
         "random-map-resource-encounter-fairness-report-10184",
+        "random-map-roads-rivers-writeout-10184",
+        "random-map-scenario-load-smoke-10184",
+        "random-map-seeded-generator-core-10184",
+        "random-map-skirmish-ui-save-replay-10184",
         "random-map-template-catalog-grammar-10184",
-        "random-map-scenario-load-smoke-10184"
+        "random-map-template-catalog-import-10184",
+        "random-map-template-filtering-assignment-10184",
+        "random-map-terrain-town-road-constraints-10184",
+        "random-map-terrain-transit-semantics-10184",
+        "random-map-town-mine-dwelling-placement-10184",
+        "random-map-validation-batch-retry-10184",
+        "random-map-water-underground-transit-gameplay-10184",
+        "random-map-zone-layout-water-underground-10184"
       ],
       "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
       "docsReadyEvidenceIds": [
@@ -570,7 +588,7 @@
         "random-map-scenario-load-smoke-10184"
       ],
       "reportOnlyEvidenceIds": [],
-      "updatedAt": "2026-04-29T09:02:24Z",
+      "updatedAt": "2026-04-29T15:04:37Z",
       "completedAt": "2026-04-29T09:02:24Z"
     },
     {
@@ -2528,7 +2546,8 @@
         "PLAN.md now includes ordered follow-on implementation slices from template catalog import through skirmish/UI/save/replay adoption.",
         "ops/progress.json marks this audit complete and selects random-map-template-catalog-import-10184 as the next pending slice."
       ],
-      "completedAt": "2026-04-29T09:40:00Z"
+      "completedAt": "2026-04-29T09:40:00Z",
+      "parentSliceId": "random-map-generator-foundation-10184"
     },
     {
       "id": "random-map-template-catalog-import-10184",
@@ -3063,6 +3082,230 @@
       "completedAt": "2026-04-29T11:53:44Z"
     },
     {
+      "id": "random-map-playable-materialization-runtime-integration-10184",
+      "title": "Random Map Playable Materialization Runtime Integration",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Turn validated generated-map output from staged/report payloads into actual playable generated scenario/map structures used by runtime launch, session bootstrap, overworld rules, save/load provenance, and replay identity.",
+      "sourceDocs": [
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-homm3-parity-gap-audit.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-web-map-editor/"
+      ],
+      "implementationTargets": [
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "scripts/core/ScenarioFactory.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/SessionStateStore.gd",
+        "scripts/autoload/SaveService.gd",
+        "focused runtime/playable materialization report or smoke scene under tests/",
+        "generated-map runtime registry/launch contract without authored campaign JSON writeback"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "focused Godot runtime/playable materialization report or smoke scene",
+        "all current tests/random_map_*.tscn reports affected by runtime adoption",
+        "python3 -m json.tool ops/progress.json",
+        "progress helper status and next commands",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "A generated map is materialized as a concrete scenario/map payload consumed by normal scenario/session bootstrap, not only a staged report structure.",
+        "Materialized terrain layers, overlays, towns, heroes/starts, resources, mines, dwellings, guards, rewards, objectives, and generated constraints survive launch into OverworldRules state with stable placement ids and content references.",
+        "Save/load and replay metadata preserve seed, generator version, template/profile ids, content fingerprint, retry/validation status, generated scenario identity, and materialized-map signature without making generated maps authored campaign records.",
+        "Deterministic same-input generation produces the same materialized-map signature and changed seed/profile changes it.",
+        "Focused validation proves runtime launch, one bounded overworld interaction path, save/restore, replay provenance, and no authored writeback or parity/alpha claim."
+      ],
+      "completionCriteria": [
+        "Generated maps can launch and save/restore as playable runtime scenario/map structures through normal domain rules while preserving generated provenance and excluding authored campaign writeback.",
+        "The slice leaves remaining HoMM3 RMG parity gaps explicit for follow-up slices."
+      ],
+      "nonGoals": [
+        "No campaign adoption, broad faction/content work, final asset polish, or authored production scenario migration.",
+        "No claim that this completes HoMM3 RMG parity; water/underground/transit completeness, object density completeness, large batch reliability, and final parity audit remain follow-up slices."
+      ],
+      "notes": "Highest-value recovery slice because current evidence still relies on staged/generated-report payloads and controlled setup boundaries rather than real playable generated-map materialization.",
+      "createdAt": "2026-04-29T15:04:37Z",
+      "updatedAt": "2026-04-29T15:04:37Z"
+    },
+    {
+      "id": "random-map-water-underground-transit-gameplay-10184",
+      "title": "Random Map Water Underground Transit Gameplay Equivalents",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Complete gameplay-equivalent handling for water, coast, islands, underground levels, cross-level links, bridges/ferries/portals/gates, and transit validation in playable generated maps.",
+      "sourceDocs": [
+        "docs/random-map-homm3-parity-gap-audit.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-web-map-editor/"
+      ],
+      "implementationTargets": [
+        "runtime terrain/water/underground generation rules",
+        "transit object/materialization rules",
+        "route/pathing validation for cross-water and cross-level generated maps",
+        "focused water/underground/transit gameplay report or smoke scene"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "focused water/underground/transit gameplay report or smoke scene",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Island/water profiles produce reachable playable maps using explicit original-game transit equivalents rather than impassable-water metadata only.",
+        "Underground-capable templates produce linked surface/underground regions with reachable required starts, towns, objectives, and economy sites.",
+        "Transit objects/routes are materialized into runtime map state with approach/body/pathing validation and deterministic provenance.",
+        "Negative cases produce structured generation failures with retryability and phase diagnostics."
+      ],
+      "completionCriteria": [
+        "Supported water, island, underground, and cross-level generated maps are playable through runtime rules with explicit transit materialization and validation."
+      ],
+      "nonGoals": [
+        "No campaign adoption, broad content expansion, final visual autotiling polish, or parity completion claim."
+      ],
+      "createdAt": "2026-04-29T15:04:37Z",
+      "updatedAt": "2026-04-29T15:04:37Z"
+    },
+    {
+      "id": "random-map-object-pool-value-weighting-10184",
+      "title": "Random Map Object Pool Value Weighting Completeness",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Fill the remaining parity gap in object-pool loading, value-banded selection, per-zone/global limits, terrain/adjacency scoring, rewards, artifacts/spells/skills equivalents, and density completeness using original content ids.",
+      "sourceDocs": [
+        "docs/random-map-homm3-parity-gap-audit.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md"
+      ],
+      "implementationTargets": [
+        "RMG object candidate pool and weighting tables using existing original content ids",
+        "value-band, reward, artifact, spell/skill-equivalent, dwelling, and mine selection rules",
+        "per-zone/global object limit validation",
+        "focused object-pool/value weighting report or smoke scene"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "focused object-pool/value weighting report or smoke scene",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Generated maps use broad original object pools instead of repeated placeholder families, with value bands and risk/reward classes driving selection.",
+        "Mines, dwellings, guarded rewards, artifacts/spell-like rewards, and decorative objects obey footprint, terrain, approach, route-safety, per-zone, and global limits.",
+        "Reports expose object counts, value totals, exhausted bands, fallback choices, and player/zone fairness deltas.",
+        "Batch examples prove deterministic same-seed object signatures and changed-seed variation across multiple templates."
+      ],
+      "completionCriteria": [
+        "Object placement uses complete enough original pools, weighting, limits, rewards, and density validation to support playable generated maps without sparse placeholder behavior."
+      ],
+      "nonGoals": [
+        "No new faction/campaign/content-breadth push beyond object ids required for RMG placement.",
+        "No final RMG parity claim until runtime, batch, UI/save/replay, and final parity gates pass."
+      ],
+      "createdAt": "2026-04-29T15:04:37Z",
+      "updatedAt": "2026-04-29T15:04:37Z"
+    },
+    {
+      "id": "random-map-large-batch-parity-stress-10184",
+      "title": "Random Map Large Batch Parity Stress Harness",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending_after_implementation",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Promote representative validation batches into a large deterministic parity stress harness across template families, sizes, players, water modes, underground modes, seeds, and expected negative cases.",
+      "sourceDocs": [
+        "docs/random-map-homm3-parity-gap-audit.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-summary.csv"
+      ],
+      "implementationTargets": [
+        "expanded random-map batch fixture corpus",
+        "deterministic checksum/signature reporter",
+        "phase-by-phase failure diagnostics and retry policy",
+        "CI-suitable focused stress report that can run headless"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "focused large-batch parity stress report",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Stress fixtures cover all translated template families, supported size/player ranges, water/island cases, underground cases, wide links, border guards, and known-invalid negative cases.",
+        "Same inputs produce stable phase signatures, materialized-map signatures, and generated-output identity across repeated runs.",
+        "Failures preserve original phase, zone/link/object coordinates where available, retry count, fallback decisions, and remediation hints.",
+        "The harness separates current unsupported warnings from hard parity blockers."
+      ],
+      "completionCriteria": [
+        "Large deterministic RMG batches expose reliability and parity failures by phase without hiding unsupported cases or advancing non-RMG work."
+      ],
+      "nonGoals": [
+        "No automatic tuning, player-facing UI, campaign adoption, or broad production content work."
+      ],
+      "createdAt": "2026-04-29T15:04:37Z",
+      "updatedAt": "2026-04-29T15:04:37Z",
+      "notes": "Run after playable materialization and the remaining gameplay/object parity implementation slices provide runtime evidence to stress."
+    },
+    {
+      "id": "random-map-final-homm3-parity-gate-audit-10184",
+      "title": "Random Map Final HoMM3-Parity Gate Audit",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending_after_implementation",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Re-audit RMG against the extracted HoMM3 functional model after implementation slices complete, and gate any claim of RMG parity.",
+      "sourceDocs": [
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-homm3-parity-gap-audit.md",
+        "all RMG implementation reports and smoke evidence",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md"
+      ],
+      "implementationTargets": [
+        "updated parity gate report under docs/",
+        "PLAN.md",
+        "ops/progress.json",
+        "optional focused final parity report scene if required by the completed implementation surface"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py when implementation evidence is touched",
+        "all relevant RMG reports/smokes from completed parity slices",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Every gap matrix row is marked implemented, partially implemented with explicit blocker, or intentionally non-parity with accepted original-game rationale.",
+        "The audit verifies template breadth, runtime grammar consumption, playable materialization, water/underground/transit, object pools/value weighting, batch reliability, UI/save/replay, and campaign exclusion/writeback boundaries.",
+        "P2.10/RMG parity is not marked complete unless all required implementation and validation gates pass."
+      ],
+      "completionCriteria": [
+        "The final gate gives an evidence-backed yes/no parity decision and keeps incomplete domains open as implementation slices."
+      ],
+      "nonGoals": [
+        "No implementation hidden inside the audit.",
+        "No alpha, campaign, broad production, or release claim."
+      ],
+      "createdAt": "2026-04-29T15:04:37Z",
+      "updatedAt": "2026-04-29T15:04:37Z",
+      "notes": "Run only after playable materialization, water/underground/transit, object-pool/value weighting, and large-batch parity stress slices have implementation evidence."
+    },
+    {
       "id": "headless-agent-simulation-harness-10184",
       "title": "Headless Simulation Harness",
       "phase": "phase-3-headless-ai-agent-balance-harness",
@@ -3160,7 +3403,7 @@
       "id": "playable-alpha-scenario-set-10184",
       "title": "Alpha Scenario Set",
       "phase": "phase-4-playable-alpha-baseline",
-      "status": "pending",
+      "status": "paused",
       "classification": "future_phase",
       "sourceDocs": [
         "completed Phase 2 outputs",
@@ -3173,13 +3416,14 @@
         "save/load and outcome loops",
         "AI pressure and economy viability"
       ],
-      "notes": "No alpha claim based on content breadth alone."
+      "notes": "No alpha claim based on content breadth alone. Current recovery queue is RMG-only until explicit owner direction changes it.",
+      "pausedReason": "Paused during RMG parity recovery; not part of the current active queue. Preserve as future-phase planning only."
     },
     {
       "id": "playable-alpha-ux-onboarding-10184",
       "title": "Alpha UX And Onboarding Pass",
       "phase": "phase-4-playable-alpha-baseline",
-      "status": "pending",
+      "status": "paused",
       "classification": "future_phase",
       "sourceDocs": [
         "docs/screen-wireframes.md",
@@ -3194,13 +3438,14 @@
         "save/load",
         "help/onboarding surfaces"
       ],
-      "notes": "No panel-heavy dashboard composition or unprioritized cue stream."
+      "notes": "No panel-heavy dashboard composition or unprioritized cue stream. Current recovery queue is RMG-only until explicit owner direction changes it.",
+      "pausedReason": "Paused during RMG parity recovery; not part of the current active queue. Preserve as future-phase planning only."
     },
     {
       "id": "production-alpha-content-expansion-10184",
       "title": "Production Alpha Content Expansion",
       "phase": "phase-5-production-alpha-layer",
-      "status": "pending",
+      "status": "paused",
       "classification": "future_phase",
       "sourceDocs": [
         "completed Phase 2-4 outputs",
@@ -3211,13 +3456,14 @@
         "campaign/skirmish expansion",
         "difficulty and AI stability"
       ],
-      "notes": "No content dump that bypasses validation or live-flow proof."
+      "notes": "No content dump that bypasses validation or live-flow proof. Current recovery queue is RMG-only until explicit owner direction changes it.",
+      "pausedReason": "Paused during RMG parity recovery; not part of the current active queue. Preserve as future-phase planning only."
     },
     {
       "id": "production-alpha-packaging-settings-performance-10184",
       "title": "Packaging, Settings, Accessibility, And Performance Baseline",
       "phase": "phase-5-production-alpha-layer",
-      "status": "pending",
+      "status": "paused",
       "classification": "future_phase",
       "sourceDocs": [
         "future packaging/settings/accessibility/performance requirements"
@@ -3227,7 +3473,8 @@
         "settings/accessibility baseline",
         "performance budgets and checks"
       ],
-      "notes": "No release claim."
+      "notes": "No release claim. Current recovery queue is RMG-only until explicit owner direction changes it.",
+      "pausedReason": "Paused during RMG parity recovery; not part of the current active queue. Preserve as future-phase planning only."
     },
     {
       "id": "broad-production-faction-content-breadth-10184",

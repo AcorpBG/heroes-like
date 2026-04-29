@@ -22,9 +22,9 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
+Current tactical objective: recover the Phase 2 RMG workstream and continue only HoMM3-style random-map-generation parity work translated into original Aurelion Reach systems. Completed non-RMG future-phase evidence remains preserved in progress history, but it is not the active continuation path and must not drive the next slice.
 
-Recently completed implementation slice: `broad-production-map-campaign-replayability-10184`, following `broad-production-faction-content-breadth-10184`, `balance-regression-report-suite-10184`, `random-map-validation-batch-retry-10184`, `random-map-skirmish-ui-save-replay-10184`, `random-map-roads-rivers-writeout-10184`, `random-map-decoration-density-pass-10184`, `random-map-monster-reward-bands-10184`, and `random-map-connection-guard-materialization-10184`. Current selected slice: `headless-agent-simulation-harness-10184` as a deterministic report/harness foundation for scenario boot, AI pressure, economy, battle sampling, save/replay stability, and generated-map provenance boundaries. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated maps through controlled setup/session/report boundaries only; they are not HoMM3 RMG parity, authored campaign adoption, authored writeback, or alpha completion. Phase 3 report surfaces are harness foundations only; they are not automatic tuning, manual-play replacement, parity completion, or an alpha claim.
+Recently completed evidence includes the P2.10 random-map foundation queue, early follow-up RMG staging/report slices, Phase 3 report foundations, and two pulled-forward broad-production increments. Those completions do not prove RMG parity. Current selected slice: `random-map-playable-materialization-runtime-integration-10184`, focused on replacing staged/generated-report payload proof with real playable generated-map materialization through runtime scenario/map structures, launch/session bootstrap, save/replay provenance, and deterministic round-trip validation. P2.10 remains a foundation, not HoMM3 RMG parity, authored campaign adoption, alpha completion, or broad production completion.
 
 ## Slice Status Model
 
@@ -1946,6 +1946,7 @@ nonGoals:
 ### P2 Child: Random Map HoMM3-Parity Gap Audit
 
 id: `random-map-homm3-parity-gap-audit-10184`
+parentSliceId: `random-map-generator-foundation-10184`
 phase: `phase-2-deep-production-foundation`
 purpose: Convert the clarified long-term HoMM3 random-map parity target into an original-game gap matrix and next executable implementation slices after the foundation proof.
 
@@ -2296,6 +2297,157 @@ sliceEvidence:
 nonGoals:
 - No campaign adoption unless a later explicit campaign-randomization slice is planned.
 - No finished HoMM3 RMG parity, alpha completion, authored JSON writeback, or broad save-schema migration claim.
+
+### P2 Child: Random Map Playable Materialization Runtime Integration
+
+id: `random-map-playable-materialization-runtime-integration-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Turn validated generated-map output from staged/report payloads into actual playable generated scenario/map structures used by runtime launch, session bootstrap, overworld rules, save/load provenance, and replay identity.
+
+sourceDocs:
+- `docs/random-map-generator-foundation.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-web-map-editor/`
+
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `scripts/core/ScenarioFactory.gd`
+- `scripts/core/OverworldRules.gd`
+- `scripts/core/SessionStateStore.gd`
+- `scripts/autoload/SaveService.gd`
+- focused runtime/playable materialization report or smoke scene under `tests/`
+- generated-map runtime registry/launch contract, without authored campaign JSON writeback
+
+sliceEvidence:
+- A generated map is materialized as a concrete scenario/map payload consumed by normal scenario/session bootstrap, not only a staged report structure.
+- Materialized terrain layers, overlays, towns, heroes/starts, resources, mines, dwellings, guards, rewards, objectives, and generated constraints survive launch into `OverworldRules` state with stable placement ids and content references.
+- Save/load and replay metadata preserve seed, generator version, template/profile ids, content fingerprint, retry/validation status, generated scenario identity, and materialized-map signature without making generated maps authored campaign records.
+- Deterministic same-input generation produces the same materialized-map signature and changed seed/profile changes it.
+- Focused validation proves runtime launch, one bounded overworld interaction path, save/restore, replay provenance, and no authored writeback or parity/alpha claim.
+
+nonGoals:
+- No campaign adoption, broad faction/content work, final asset polish, or authored production scenario migration.
+- No claim that this completes HoMM3 RMG parity; water/underground/transit completeness, object density completeness, large batch reliability, and final parity audit remain follow-up slices.
+
+### P2 Child: Random Map Water Underground Transit Gameplay Equivalents
+
+id: `random-map-water-underground-transit-gameplay-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Complete gameplay-equivalent handling for water, coast, islands, underground levels, cross-level links, bridges/ferries/portals/gates, and transit validation in playable generated maps.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-web-map-editor/`
+
+implementationTargets:
+- runtime terrain/water/underground generation rules
+- transit object/materialization rules
+- route/pathing validation for cross-water and cross-level generated maps
+- focused water/underground/transit gameplay report or smoke scene
+
+sliceEvidence:
+- Island/water profiles produce reachable playable maps using explicit original-game transit equivalents rather than impassable-water metadata only.
+- Underground-capable templates produce linked surface/underground regions with reachable required starts, towns, objectives, and economy sites.
+- Transit objects/routes are materialized into runtime map state with approach/body/pathing validation and deterministic provenance.
+- Negative cases produce structured generation failures with retryability and phase diagnostics.
+
+nonGoals:
+- No campaign adoption, broad content expansion, final visual autotiling polish, or parity completion claim.
+
+### P2 Child: Random Map Object Pool Value Weighting Completeness
+
+id: `random-map-object-pool-value-weighting-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Fill the remaining parity gap in object-pool loading, value-banded selection, per-zone/global limits, terrain/adjacency scoring, rewards, artifacts/spells/skills equivalents, and density completeness using original content ids.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md`
+
+implementationTargets:
+- RMG object candidate pool and weighting tables using existing original content ids
+- value-band, reward, artifact, spell/skill-equivalent, dwelling, and mine selection rules
+- per-zone/global object limit validation
+- focused object-pool/value weighting report or smoke scene
+
+sliceEvidence:
+- Generated maps use broad original object pools instead of repeated placeholder families, with value bands and risk/reward classes driving selection.
+- Mines, dwellings, guarded rewards, artifacts/spell-like rewards, and decorative objects obey footprint, terrain, approach, route-safety, per-zone, and global limits.
+- Reports expose object counts, value totals, exhausted bands, fallback choices, and player/zone fairness deltas.
+- Batch examples prove deterministic same-seed object signatures and changed-seed variation across multiple templates.
+
+nonGoals:
+- No new faction/campaign/content-breadth push beyond object ids required for RMG placement.
+- No final RMG parity claim until runtime, batch, UI/save/replay, and final parity gates pass.
+
+### P2 Child: Random Map Large Batch Parity Stress Harness
+
+id: `random-map-large-batch-parity-stress-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Promote representative validation batches into a large deterministic parity stress harness across template families, sizes, players, water modes, underground modes, seeds, and expected negative cases.
+
+sourceDocs:
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-summary.csv`
+
+implementationTargets:
+- expanded random-map batch fixture corpus
+- deterministic checksum/signature reporter
+- phase-by-phase failure diagnostics and retry policy
+- CI-suitable focused stress report that can run headless
+
+sliceEvidence:
+- Stress fixtures cover all translated template families, supported size/player ranges, water/island cases, underground cases, wide links, border guards, and known-invalid negative cases.
+- Same inputs produce stable phase signatures, materialized-map signatures, and generated-output identity across repeated runs.
+- Failures preserve original phase, zone/link/object coordinates where available, retry count, fallback decisions, and remediation hints.
+- The harness separates current unsupported warnings from hard parity blockers.
+
+nonGoals:
+- No automatic tuning, player-facing UI, campaign adoption, or broad production content work.
+
+### P2 Child: Random Map Final HoMM3-Parity Gate Audit
+
+id: `random-map-final-homm3-parity-gate-audit-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Re-audit RMG against the extracted HoMM3 functional model after implementation slices complete, and gate any claim of RMG parity.
+
+sourceDocs:
+- `docs/random-map-generator-foundation.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
+- all RMG implementation reports and smoke evidence
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
+
+implementationTargets:
+- updated parity gate report under `docs/`
+- `PLAN.md`
+- `ops/progress.json`
+- optional focused final parity report scene if required by the completed implementation surface
+
+sliceEvidence:
+- Every gap matrix row is marked implemented, partially implemented with explicit blocker, or intentionally non-parity with accepted original-game rationale.
+- The audit verifies template breadth, runtime grammar consumption, playable materialization, water/underground/transit, object pools/value weighting, batch reliability, UI/save/replay, and campaign exclusion/writeback boundaries.
+- P2.10/RMG parity is not marked complete unless all required implementation and validation gates pass.
+
+nonGoals:
+- No implementation hidden inside the audit.
+- No alpha, campaign, broad production, or release claim.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 
