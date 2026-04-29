@@ -26,11 +26,18 @@ func _run() -> void:
 	if not bool(catalog_report.get("ok", false)):
 		_fail("Catalog report failed: %s" % JSON.stringify(catalog_report))
 		return
+	if not _assert_import_breadth(catalog_report):
+		return
+	if not _assert_catalog_label_policy(catalog_report):
+		return
 	if int(catalog_report.get("template_count", 0)) < 2 or int(catalog_report.get("profile_count", 0)) < 2:
 		_fail("Catalog must expose multiple template and profile records: %s" % JSON.stringify(catalog_report))
 		return
 	if String(catalog_report.get("selected_template_id", "")) != "border_gate_compact_v1":
 		_fail("Catalog selection did not preserve requested template id: %s" % JSON.stringify(catalog_report))
+		return
+	if String(catalog_report.get("selection_source", "")) != "content_catalog":
+		_fail("Explicit catalog generation used fallback selection: %s" % JSON.stringify(catalog_report))
 		return
 
 	var first: Dictionary = generator.generate(base_config)
@@ -55,12 +62,15 @@ func _run() -> void:
 		return
 	if not _assert_special_connection_semantics(payload):
 		return
+	if not _assert_expanded_fields_survive(payload):
+		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"catalog": {
 			"template_count": catalog_report.get("template_count", 0),
 			"profile_count": catalog_report.get("profile_count", 0),
+			"translated_import_counts": catalog_report.get("translated_import_counts", {}),
 			"selected_template_id": catalog_report.get("selected_template_id", ""),
 		},
 		"stable_signature": payload.get("stable_signature", ""),
@@ -71,6 +81,58 @@ func _run() -> void:
 		"fairness_guard_pressure": payload.get("staging", {}).get("fairness_report", {}).get("guard_pressure", {}),
 	})])
 	get_tree().quit(0)
+
+func _assert_import_breadth(catalog_report: Dictionary) -> bool:
+	var source_summary: Dictionary = catalog_report.get("source_catalog_summary", {})
+	var translated_counts: Dictionary = catalog_report.get("translated_import_counts", {})
+	var expected := {
+		"template_count": 53,
+		"zone_count": 646,
+		"connection_count": 869,
+		"wide_link_count": 21,
+		"border_guard_link_count": 8,
+	}
+	for key in expected.keys():
+		if int(source_summary.get(key, -1)) != int(expected[key]):
+			_fail("Source catalog summary missed expected %s: %s" % [key, JSON.stringify(source_summary)])
+			return false
+	if int(translated_counts.get("template_count", -1)) != 53:
+		_fail("Translated import template count did not match source breadth: %s" % JSON.stringify(translated_counts))
+		return false
+	if int(translated_counts.get("zone_count", -1)) != 646:
+		_fail("Translated import zone count did not match source breadth: %s" % JSON.stringify(translated_counts))
+		return false
+	if int(translated_counts.get("link_count", -1)) != 869:
+		_fail("Translated import link count did not match source breadth: %s" % JSON.stringify(translated_counts))
+		return false
+	if int(translated_counts.get("wide_link_count", -1)) != 21 or int(translated_counts.get("border_guard_link_count", -1)) != 8:
+		_fail("Translated import special link counts did not match source breadth: %s" % JSON.stringify(translated_counts))
+		return false
+	var coverage: Dictionary = source_summary.get("field_coverage", {})
+	for required_field in ["mine_density", "minimum_mines", "treasure_bands", "monster_match_to_town", "same_town_type"]:
+		if required_field not in coverage.get("zone_fields", []):
+			_fail("Source field coverage missed zone field %s: %s" % [required_field, JSON.stringify(coverage)])
+			return false
+	for required_link_field in ["wide", "border_guard", "player_filter", "value"]:
+		if required_link_field not in coverage.get("link_fields", []):
+			_fail("Source field coverage missed link field %s: %s" % [required_link_field, JSON.stringify(coverage)])
+			return false
+	return true
+
+func _assert_catalog_label_policy(catalog_report: Dictionary) -> bool:
+	var source_summary: Dictionary = catalog_report.get("source_catalog_summary", {})
+	if String(source_summary.get("creative_name_policy", "")) != "source_names_are_not_retained_in_original_catalog_labels":
+		_fail("Catalog did not report the no-source-label policy: %s" % JSON.stringify(source_summary))
+		return false
+	for summary in catalog_report.get("template_summaries", []):
+		if not (summary is Dictionary):
+			continue
+		var id_text := String(summary.get("id", ""))
+		var label := String(summary.get("label", ""))
+		if id_text.begins_with("translated_rmg_template_") and not label.begins_with("Translated RMG Template "):
+			_fail("Translated template label is not procedural/original: %s" % JSON.stringify(summary))
+			return false
+	return true
 
 func _assert_template_metadata(payload: Dictionary, expected_template_id: String) -> bool:
 	var metadata: Dictionary = payload.get("metadata", {})
@@ -115,6 +177,45 @@ func _assert_catalog_graph(payload: Dictionary) -> bool:
 		if not found:
 			_fail("Catalog link did not survive into route graph: %s" % JSON.stringify(link))
 			return false
+	return true
+
+func _assert_expanded_fields_survive(payload: Dictionary) -> bool:
+	var metadata: Dictionary = payload.get("metadata", {})
+	var grammar: Dictionary = metadata.get("template_grammar_preservation", {})
+	if String(grammar.get("runtime_policy", "")) == "":
+		_fail("Payload metadata did not expose expanded grammar preservation policy: %s" % JSON.stringify(metadata))
+		return false
+	if grammar.get("unsupported_runtime_fields", []).is_empty():
+		_fail("Payload metadata did not expose unsupported/unconsumed grammar fields: %s" % JSON.stringify(grammar))
+		return false
+	var template: Dictionary = payload.get("staging", {}).get("template", {})
+	if template.get("unsupported_runtime_fields", []).is_empty() or String(template.get("unconsumed_field_policy", "")) == "":
+		_fail("Runtime staging template dropped unsupported grammar metadata: %s" % JSON.stringify(template))
+		return false
+	if template.get("map_support", {}).is_empty() or template.get("players", {}).is_empty():
+		_fail("Runtime staging template dropped size/water/levels or player-range metadata: %s" % JSON.stringify(template))
+		return false
+	var found_zone_metadata := false
+	for zone in payload.get("staging", {}).get("zones", []):
+		if not (zone is Dictionary):
+			continue
+		var catalog_metadata: Dictionary = zone.get("catalog_metadata", {})
+		if not catalog_metadata.get("mine_requirements", {}).is_empty() and not catalog_metadata.get("treasure_bands", []).is_empty() and not catalog_metadata.get("monster_policy", {}).is_empty():
+			found_zone_metadata = true
+			break
+	if not found_zone_metadata:
+		_fail("Runtime zones dropped expanded mine/treasure/monster metadata.")
+		return false
+	var found_link_metadata := false
+	for edge in payload.get("staging", {}).get("route_graph", {}).get("edges", []):
+		if not (edge is Dictionary):
+			continue
+		if edge.has("guard") and edge.has("player_filter") and edge.has("special_payload") and edge.has("unsupported_runtime_fields"):
+			found_link_metadata = true
+			break
+	if not found_link_metadata:
+		_fail("Route graph dropped expanded link guard/player/special metadata.")
+		return false
 	return true
 
 func _assert_special_connection_semantics(payload: Dictionary) -> bool:

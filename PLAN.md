@@ -1985,13 +1985,18 @@ sourceDocs:
 
 implementationTargets:
 - `content/random_map_template_catalog.json`
+- `content/random_map_template_import_summary.json`
+- `scripts/tools/import_random_map_template_catalog.py`
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_template_catalog_grammar_report.gd`
 - random-map catalog schema/loading validation
 - template grammar report coverage
 
 sliceEvidence:
-- Catalog can represent all 53 extracted template records as original-game template ids/profiles or importer fixtures.
-- Zone/link field preservation covers size score, player filters, roles, owner slots, town/castle controls, same-type flags, faction/terrain/monster masks, seven mine categories, treasure bands, guard value, wide, and border-guard fields.
-- Grammar report proves catalog breadth/counts and rejects duplicate/invalid zones, links, resource keys, terrain ids, and faction ids.
+- Importer and catalog summary preserve the extracted catalog breadth as sanitized original records: 53 source templates, 646 zones, 869 links, 21 wide links, and 8 border-guard links.
+- Catalog schema now carries size/water/level support metadata, player ranges, zone type/owner/fixed-player fields, town/castle controls, same-type flags, original faction/terrain/monster masks, seven resource categories, treasure bands, guard values, wide/border/special payloads, and disconnected/error policy metadata.
+- Runtime loading preserves expanded fields in template, zone, link, report, and generated-payload metadata while explicitly listing unsupported/unconsumed grammar fields for downstream slices.
+- Grammar report proves source breadth counts, multiple original runtime profiles/templates, explicit catalog selection without fallback, expanded field preservation, and no retained source creative names in translated catalog labels.
 
 nonGoals:
 - No zone layout, object placement, skirmish adoption, save migration, UI, or parity-complete claim.

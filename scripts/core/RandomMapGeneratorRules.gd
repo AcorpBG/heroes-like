@@ -6,8 +6,8 @@ const PAYLOAD_SCHEMA_ID := "generated_random_map_payload_v1"
 const REPORT_SCHEMA_ID := "random_map_seed_determinism_report_v1"
 const TEMPLATE_ID := "aurelion_seeded_spoke_profile_v1"
 const TEMPLATE_CATALOG_PATH := "res://content/random_map_template_catalog.json"
-const TEMPLATE_CATALOG_SCHEMA_ID := "aurelion_random_map_template_catalog_v1"
-const TEMPLATE_CATALOG_REPORT_SCHEMA_ID := "random_map_template_catalog_grammar_report_v1"
+const TEMPLATE_CATALOG_SCHEMA_ID := "aurelion_random_map_template_catalog_v2"
+const TEMPLATE_CATALOG_REPORT_SCHEMA_ID := "random_map_template_catalog_grammar_report_v2"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
 const HASH_MODULUS := 4294967296
@@ -109,6 +109,9 @@ static func generate(input_config: Dictionary) -> Dictionary:
 		"source": String(template.get("source", "")),
 		"zone_count": template.get("zones", []).size(),
 		"link_count": template.get("links", []).size(),
+		"grammar_metadata": template.get("grammar_metadata", {}),
+		"unsupported_runtime_fields": template.get("unsupported_runtime_fields", []),
+		"unconsumed_field_policy": String(template.get("unconsumed_field_policy", "")),
 	}))
 
 	var zones := _build_runtime_zones(template, normalized, rng)
@@ -204,10 +207,18 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 	var catalog := _load_template_catalog()
 	var templates: Array = catalog.get("templates", [])
 	var profiles: Array = catalog.get("profiles", [])
+	var source_summary: Dictionary = catalog.get("source_catalog_summary", {}) if catalog.get("source_catalog_summary", {}) is Dictionary else {}
+	var runtime_policy: Dictionary = catalog.get("runtime_consumption_policy", {}) if catalog.get("runtime_consumption_policy", {}) is Dictionary else {}
 	var selected_template: Dictionary = normalized.get("template", {})
 	var template_summaries := []
 	var profile_summaries := []
 	var failures := []
+	var imported_template_count := 0
+	var imported_zone_count := 0
+	var imported_link_count := 0
+	var imported_wide_link_count := 0
+	var imported_border_guard_link_count := 0
+	var templates_with_expanded_fields := 0
 	for template in templates:
 		if not (template is Dictionary):
 			failures.append("catalog contains a non-dictionary template")
@@ -215,6 +226,8 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 		var zone_ids := {}
 		var wide_count := 0
 		var border_count := 0
+		var expanded_zone_field_count := 0
+		var expanded_link_field_count := 0
 		for zone in template.get("zones", []):
 			if not (zone is Dictionary):
 				failures.append("template %s contains a non-dictionary zone" % String(template.get("id", "")))
@@ -223,6 +236,8 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 			if zone_id == "" or zone_ids.has(zone_id):
 				failures.append("template %s has missing or duplicate zone id %s" % [String(template.get("id", "")), zone_id])
 			zone_ids[zone_id] = true
+			if _zone_has_expanded_grammar_fields(zone):
+				expanded_zone_field_count += 1
 		for link in template.get("links", []):
 			if not (link is Dictionary):
 				failures.append("template %s contains a non-dictionary link" % String(template.get("id", "")))
@@ -233,6 +248,17 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 				wide_count += 1
 			if bool(link.get("border_guard", false)):
 				border_count += 1
+			if _link_has_expanded_grammar_fields(link):
+				expanded_link_field_count += 1
+		var import_provenance: Dictionary = template.get("import_provenance", {}) if template.get("import_provenance", {}) is Dictionary else {}
+		if bool(import_provenance.get("source_name_retained", true)) == false:
+			imported_template_count += 1
+			imported_zone_count += template.get("zones", []).size()
+			imported_link_count += template.get("links", []).size()
+			imported_wide_link_count += wide_count
+			imported_border_guard_link_count += border_count
+		if expanded_zone_field_count > 0 and expanded_link_field_count > 0:
+			templates_with_expanded_fields += 1
 		template_summaries.append({
 			"id": String(template.get("id", "")),
 			"label": String(template.get("label", "")),
@@ -241,6 +267,10 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 			"link_count": template.get("links", []).size(),
 			"wide_link_count": wide_count,
 			"border_guard_link_count": border_count,
+			"expanded_zone_field_count": expanded_zone_field_count,
+			"expanded_link_field_count": expanded_link_field_count,
+			"unsupported_runtime_fields": template.get("unsupported_runtime_fields", []),
+			"grammar_metadata": template.get("grammar_metadata", {}),
 			"supports_requested_constraints": _template_matches_constraints(template, normalized.get("size", {}), normalized.get("player_constraints", {})),
 		})
 	for profile in profiles:
@@ -261,6 +291,24 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 		failures.append("template catalog schema mismatch")
 	if selected_template.is_empty():
 		failures.append("no template selected for requested constraints")
+	if int(source_summary.get("template_count", 0)) != 53:
+		failures.append("source catalog summary must preserve 53 extracted templates")
+	if int(source_summary.get("zone_count", 0)) != 646:
+		failures.append("source catalog summary must preserve 646 extracted zones")
+	if int(source_summary.get("connection_count", 0)) != 869:
+		failures.append("source catalog summary must preserve 869 extracted links")
+	if int(source_summary.get("wide_link_count", 0)) != 21:
+		failures.append("source catalog summary must preserve 21 wide links")
+	if int(source_summary.get("border_guard_link_count", 0)) != 8:
+		failures.append("source catalog summary must preserve 8 border-guard links")
+	if imported_template_count != int(source_summary.get("template_count", 0)):
+		failures.append("translated import record count does not match source summary")
+	if imported_zone_count != int(source_summary.get("zone_count", 0)):
+		failures.append("translated import zone count does not match source summary")
+	if imported_link_count != int(source_summary.get("connection_count", 0)):
+		failures.append("translated import link count does not match source summary")
+	if templates_with_expanded_fields < 4:
+		failures.append("catalog must expose expanded grammar fields across original and imported templates")
 	return {
 		"ok": failures.is_empty(),
 		"schema_id": TEMPLATE_CATALOG_REPORT_SCHEMA_ID,
@@ -268,6 +316,16 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 		"catalog_path": TEMPLATE_CATALOG_PATH,
 		"template_count": templates.size(),
 		"profile_count": profiles.size(),
+		"source_catalog_summary": source_summary,
+		"translated_import_counts": {
+			"template_count": imported_template_count,
+			"zone_count": imported_zone_count,
+			"link_count": imported_link_count,
+			"wide_link_count": imported_wide_link_count,
+			"border_guard_link_count": imported_border_guard_link_count,
+		},
+		"runtime_consumption_policy": runtime_policy,
+		"templates_with_expanded_fields": templates_with_expanded_fields,
 		"selected_template_id": String(normalized.get("template_id", "")),
 		"selected_profile_id": String(normalized.get("profile", {}).get("id", "")),
 		"selection_source": String(normalized.get("template_selection", {}).get("source", "")),
@@ -476,6 +534,24 @@ static func _runtime_template_from_catalog(template: Dictionary) -> Dictionary:
 		if not (zone is Dictionary):
 			continue
 		var terrain: Dictionary = zone.get("terrain", {}) if zone.get("terrain", {}) is Dictionary else {}
+		var catalog_metadata := {
+			"role": String(zone.get("role", "treasure")),
+			"type": String(zone.get("type", zone.get("role", "treasure"))),
+			"owner_slot": zone.get("owner_slot", null),
+			"ownership": zone.get("ownership", {}),
+			"player_filter": zone.get("player_filter", {}),
+			"player_towns": zone.get("player_towns", {}),
+			"neutral_towns": zone.get("neutral_towns", {}),
+			"same_town_type": bool(zone.get("same_town_type", false)),
+			"town_policy": zone.get("town_policy", {}),
+			"mine_requirements": zone.get("mine_requirements", {}),
+			"resource_category_requirements": zone.get("resource_category_requirements", {}),
+			"treasure_bands": zone.get("treasure_bands", []),
+			"monster_policy": zone.get("monster_policy", {}),
+			"terrain": terrain,
+			"unsupported_runtime_fields": zone.get("unsupported_runtime_fields", []),
+			"start_contract": "primary_town_anchor" if zone.get("owner_slot", null) != null else "neutral_zone",
+		}
 		zones.append({
 			"id": String(zone.get("id", "")),
 			"role": String(zone.get("role", "treasure")),
@@ -484,11 +560,7 @@ static func _runtime_template_from_catalog(template: Dictionary) -> Dictionary:
 			"terrain_match_to_faction": bool(terrain.get("match_to_faction", zone.get("terrain_match_to_faction", false))),
 			"allowed_terrain_ids": _normalized_string_array(terrain.get("allowed", []), []),
 			"allowed_faction_ids": _normalized_string_array(zone.get("allowed_faction_ids", []), []),
-			"catalog_metadata": {
-				"role": String(zone.get("role", "treasure")),
-				"owner_slot": zone.get("owner_slot", null),
-				"start_contract": "primary_town_anchor" if zone.get("owner_slot", null) != null else "neutral_zone",
-			},
+			"catalog_metadata": catalog_metadata,
 		})
 	var links := []
 	for link in template.get("links", []):
@@ -499,9 +571,13 @@ static func _runtime_template_from_catalog(template: Dictionary) -> Dictionary:
 			"to": String(link.get("to", "")),
 			"role": String(link.get("role", "route")),
 			"guard_value": int(link.get("guard_value", link.get("value", 0))),
+			"guard": link.get("guard", {}),
 			"wide": bool(link.get("wide", false)),
 			"border_guard": bool(link.get("border_guard", false)),
 			"special_connection": bool(link.get("wide", false)) or bool(link.get("border_guard", false)),
+			"player_filter": link.get("player_filter", {}),
+			"special_payload": link.get("special_payload", {}),
+			"unsupported_runtime_fields": link.get("unsupported_runtime_fields", []),
 		})
 	return {
 		"id": String(template.get("id", TEMPLATE_ID)),
@@ -509,6 +585,17 @@ static func _runtime_template_from_catalog(template: Dictionary) -> Dictionary:
 		"source": "content_catalog",
 		"model": "staged_template_profile_graph",
 		"family": String(template.get("family", "")),
+		"size_score": template.get("size_score", {}),
+		"map_support": template.get("map_support", {}),
+		"players": template.get("players", {}),
+		"terrain_constraints": template.get("terrain_constraints", {}),
+		"faction_constraints": template.get("faction_constraints", {}),
+		"graph_summary": template.get("graph_summary", {}),
+		"error_policy": template.get("error_policy", {}),
+		"import_provenance": template.get("import_provenance", {}),
+		"grammar_metadata": template.get("grammar_metadata", {}),
+		"unsupported_runtime_fields": template.get("unsupported_runtime_fields", []),
+		"unconsumed_field_policy": "preserved_in_runtime_template_and_report_metadata",
 		"zones": zones,
 		"links": links,
 	}
@@ -538,6 +625,7 @@ static func _build_runtime_zones(template: Dictionary, normalized: Dictionary, r
 			"anchor": {},
 			"bounds": {},
 			"cell_count": 0,
+			"catalog_metadata": zone_record.get("catalog_metadata", {}),
 		})
 	return zones
 
@@ -867,8 +955,12 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 			"to_node": String(to_node.get("id", to_zone)),
 			"role": String(link.get("role", "")),
 			"guard_value": int(link.get("guard_value", 0)),
+			"guard": link.get("guard", {}),
 			"wide": bool(link.get("wide", false)),
 			"border_guard": bool(link.get("border_guard", false)),
+			"player_filter": link.get("player_filter", {}),
+			"special_payload": link.get("special_payload", {}),
+			"unsupported_runtime_fields": link.get("unsupported_runtime_fields", []),
 			"connectivity_classification": classification,
 			"required": required,
 			"path_found": not path.is_empty(),
@@ -1319,6 +1411,7 @@ static func _objective_reward_pressure_payload(objectives: Dictionary, route_gra
 	}
 
 static func _metadata(normalized: Dictionary) -> Dictionary:
+	var selected_template: Dictionary = normalized.get("template", {}) if normalized.get("template", {}) is Dictionary else {}
 	return {
 		"generator_version": String(normalized.get("generator_version", GENERATOR_VERSION)),
 		"normalized_seed": String(normalized.get("seed", "0")),
@@ -1331,6 +1424,13 @@ static func _metadata(normalized: Dictionary) -> Dictionary:
 			"source": String(normalized.get("template_selection", {}).get("source", "")),
 			"requested_template_id": String(normalized.get("template_selection", {}).get("requested_template_id", "")),
 			"requested_profile_id": String(normalized.get("template_selection", {}).get("requested_profile_id", "")),
+		},
+		"template_grammar_preservation": {
+			"catalog_schema_id": TEMPLATE_CATALOG_SCHEMA_ID,
+			"template_id": String(selected_template.get("id", "")),
+			"grammar_metadata": selected_template.get("grammar_metadata", {}),
+			"unsupported_runtime_fields": selected_template.get("unsupported_runtime_fields", []),
+			"runtime_policy": "expanded_catalog_fields_are_preserved_until_downstream_parity_slices_consume_them",
 		},
 		"source_lessons": [
 			"staged_template_profile_pipeline",
@@ -1353,8 +1453,12 @@ static func _route_graph_payload(links: Array, seeds: Dictionary) -> Dictionary:
 			"to": String(link.get("to", "")),
 			"role": String(link.get("role", "")),
 			"guard_value": int(link.get("guard_value", 0)),
+			"guard": link.get("guard", {}),
 			"wide": bool(link.get("wide", false)),
 			"border_guard": bool(link.get("border_guard", false)),
+			"player_filter": link.get("player_filter", {}),
+			"special_payload": link.get("special_payload", {}),
+			"unsupported_runtime_fields": link.get("unsupported_runtime_fields", []),
 			"from_anchor": seeds.get(String(link.get("from", "")), {}),
 			"to_anchor": seeds.get(String(link.get("to", "")), {}),
 			"writeout_state": "graph_only_roads_deferred",
@@ -1985,6 +2089,18 @@ static func _template_matches_constraints(template: Dictionary, size: Dictionary
 			total_start_count += 1
 	return human_start_count >= human_count and total_start_count >= player_count
 
+static func _zone_has_expanded_grammar_fields(zone: Dictionary) -> bool:
+	for key in ["player_filter", "ownership", "player_towns", "neutral_towns", "town_policy", "mine_requirements", "resource_category_requirements", "treasure_bands", "monster_policy"]:
+		if not zone.has(key):
+			return false
+	return true
+
+static func _link_has_expanded_grammar_fields(link: Dictionary) -> bool:
+	for key in ["player_filter", "guard", "special_payload", "unsupported_runtime_fields"]:
+		if not link.has(key):
+			return false
+	return link.has("wide") and link.has("border_guard")
+
 static func _map_size_score(size: Dictionary) -> int:
 	var width := int(size.get("width", 16))
 	var height := int(size.get("height", 12))
@@ -2164,6 +2280,7 @@ static func _zones_for_payload(zones: Array) -> Array:
 				"base_size": int(zone.get("base_size", 0)),
 				"bounds": zone.get("bounds", {}),
 				"cell_count": int(zone.get("cell_count", 0)),
+				"catalog_metadata": zone.get("catalog_metadata", {}),
 			})
 	return payload
 

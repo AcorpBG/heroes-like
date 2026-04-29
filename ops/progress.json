@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-template-catalog-import-10184",
-  "currentSliceTitle": "Random Map Template Catalog Import",
+  "currentSliceId": "random-map-template-filtering-assignment-10184",
+  "currentSliceTitle": "Random Map Template Filtering And Assignment",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next actionable RMG parity implementation slice after the HoMM3-parity gap audit; expand the template schema/catalog so downstream parity work has full grammar coverage.",
+  "currentSliceNotes": "Next RMG parity slice after catalog import: consume expanded template grammar for size/water/player filtering, capacity checks, owner assignment, and faction selection without adopting UI/save/skirmish.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T09:40:00Z",
+  "updatedAt": "2026-04-29T09:27:36Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -2534,7 +2534,7 @@
       "id": "random-map-template-catalog-import-10184",
       "title": "Random Map Template Catalog Import",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "parentSliceId": "random-map-generator-foundation-10184",
       "classification": "phase2_child_implementation_slice",
@@ -2548,6 +2548,10 @@
       ],
       "implementationTargets": [
         "content/random_map_template_catalog.json",
+        "content/random_map_template_import_summary.json",
+        "scripts/tools/import_random_map_template_catalog.py",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_template_catalog_grammar_report.gd",
         "random-map catalog schema/loading validation",
         "template grammar report coverage"
       ],
@@ -2557,9 +2561,10 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Catalog can represent all 53 extracted template records as original-game template ids/profiles or importer fixtures.",
-        "Zone/link field preservation covers size score, player filters, roles, owner slots, town/castle controls, same-type flags, faction/terrain/monster masks, seven mine categories, treasure bands, guard value, wide, and border-guard fields.",
-        "Grammar report proves catalog breadth/counts and rejects duplicate/invalid zones, links, resource keys, terrain ids, and faction ids."
+        "Importer and catalog summary preserve the extracted catalog breadth as sanitized original records: 53 source templates, 646 zones, 869 links, 21 wide links, and 8 border-guard links.",
+        "Catalog schema carries size/water/level support metadata, player ranges, zone type/owner/fixed-player fields, town/castle controls, same-type flags, original faction/terrain/monster masks, seven resource categories, treasure bands, guard values, wide/border/special payloads, and disconnected/error policy metadata.",
+        "Runtime loading preserves expanded fields in template, zone, link, report, and generated-payload metadata while explicitly listing unsupported/unconsumed grammar fields for downstream slices.",
+        "Grammar report proves source breadth counts, multiple original runtime profiles/templates, explicit catalog selection without fallback, expanded field preservation, and no retained source creative names in translated catalog labels."
       ],
       "completionCriteria": [
         "Implementation and validation satisfy this slice without claiming full HoMM3-style RMG parity unless all downstream parity gates are complete."
@@ -2567,9 +2572,11 @@
       "nonGoals": [
         "No zone layout, object placement, skirmish adoption, save migration, UI, or parity-complete claim."
       ],
-      "notes": "Queued by random-map-homm3-parity-gap-audit-10184 as part of the continuous RMG parity implementation path.",
+      "notes": "Implemented sanitized RMG template catalog import/schema proof: 53 extracted templates, 646 zones, 869 links, 21 wide, 8 border-guard represented as original records; runtime/report metadata preserves expanded fields and unsupported consumers explicitly.",
       "createdAt": "2026-04-29T09:40:00Z",
-      "updatedAt": "2026-04-29T09:40:00Z"
+      "updatedAt": "2026-04-29T09:27:25Z",
+      "startedAt": "2026-04-29T09:16:23Z",
+      "completedAt": "2026-04-29T09:27:25Z"
     },
     {
       "id": "random-map-template-filtering-assignment-10184",
@@ -2607,9 +2614,9 @@
       "nonGoals": [
         "No final footprint layout, object placement, skirmish UI, or generated writeback."
       ],
-      "notes": "Queued by random-map-homm3-parity-gap-audit-10184 as part of the continuous RMG parity implementation path.",
+      "notes": "Next RMG parity slice after catalog import: consume expanded template grammar for size/water/player filtering, capacity checks, owner assignment, and faction selection without adopting UI/save/skirmish.",
       "createdAt": "2026-04-29T09:40:00Z",
-      "updatedAt": "2026-04-29T09:40:00Z"
+      "updatedAt": "2026-04-29T09:27:36Z"
     },
     {
       "id": "random-map-zone-layout-water-underground-10184",
@@ -4289,10 +4296,10 @@
   ],
   "actionableNextTasks": [
     {
-      "title": "Random Map Template Catalog Import",
+      "title": "Random Map Template Filtering And Assignment",
       "status": "pending",
-      "reason": "First implementation dependency after the parity audit; downstream RMG parity work needs complete template grammar/catalog representation.",
-      "id": "random-map-template-catalog-import-10184"
+      "reason": "Next dependency after catalog import; downstream RMG parity work needs the expanded grammar consumed for size/water/player filtering, capacity checks, owner slots, and faction assignment.",
+      "id": "random-map-template-filtering-assignment-10184"
     }
   ],
   "stoppedOrPausedTasks": [
