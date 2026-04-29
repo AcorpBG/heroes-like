@@ -5,10 +5,10 @@
   "currentPhase": "phase-2-deep-production-foundation",
   "currentSliceId": "random-map-zone-layout-water-underground-10184",
   "currentSliceTitle": "Random Map Zone Layout Water And Underground",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next dependency after template filtering and assignment; implement deterministic zone footprints, water/island policy, underground support, and corridor candidates without claiming parity completion.",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed deterministic zone layout groundwork: random_map_zone_layout_v1 payloads, base-size proportional footprints, water/island metadata and cells, underground level metadata/rejection behavior, catalog-link corridor candidates, and deferred transit/object parity metadata.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T10:15:00Z",
+  "updatedAt": "2026-04-29T10:16:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -2628,7 +2628,7 @@
       "id": "random-map-zone-layout-water-underground-10184",
       "title": "Random Map Zone Layout Water And Underground",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "parentSliceId": "random-map-generator-foundation-10184",
       "classification": "phase2_child_implementation_slice",
@@ -2640,8 +2640,10 @@
         "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md"
       ],
       "implementationTargets": [
-        "runtime zone graph/layout helpers",
-        "zone layout validation report"
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_zone_layout_water_underground_report.gd",
+        "tests/random_map_zone_layout_water_underground_report.tscn",
+        "current tests/random_map_* report scenes"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
@@ -2649,9 +2651,13 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Zone areas scale from template base sizes within configured tolerance.",
-        "Starts are separated, links have corridor candidates, and zone footprints support surface/underground/water modes.",
-        "Validation reports disconnected, undersized, impossible, or unsupported template/layout failures with zone/link ids."
+        "RandomMapGeneratorRules now emits random_map_zone_layout_v1 staging payloads with per-level zone footprints, bounds, anchor points, owner grids, surface water cells, and base-size proportional target counts.",
+        "Generated terrain rows and scenario constraints derive from the structured surface zone layout while preserving current scenario-load, road, route, and fairness report behavior.",
+        "Water/island requests create explicit water policy metadata and deterministic surface water cells; transit, boat, ferry, and shipyard placement remain deferred through unsupported/next-slice metadata.",
+        "Underground requests create deterministic second-level allocation and level metadata when the selected template supports it; unsupported template level requests return structured template-selection rejection metadata.",
+        "Corridor candidates are produced from catalog links on every generated level with endpoints, land/water mode, intended connection class, and deferred materialization state.",
+        "tests/random_map_zone_layout_water_underground_report.tscn plus all current tests/random_map_* Godot reports pass, including deterministic signature, changed seed/water/level mode signatures, base_size coverage, water metadata/cells, underground metadata/rejection, catalog-link corridor candidates, and no skirmish UI/save/writeback/parity claim.",
+        "python3 tests/validate_repo.py, python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json-check.txt, git diff --check, and the progress status helper pass."
       ],
       "completionCriteria": [
         "Implementation and validation satisfy this slice without claiming full HoMM3-style RMG parity unless all downstream parity gates are complete."
@@ -2659,9 +2665,11 @@
       "nonGoals": [
         "No object-density pass, final road/river writeout, skirmish adoption, or parity-complete claim."
       ],
-      "notes": "Queued by random-map-homm3-parity-gap-audit-10184 as part of the continuous RMG parity implementation path.",
+      "notes": "Completed deterministic zone footprint/layout groundwork for catalog templates. This remains a parity groundwork slice only: object density, final roads/rivers, transit-object placement, water transport, skirmish adoption, save migration, and parity/alpha completion are deferred.",
       "createdAt": "2026-04-29T09:40:00Z",
-      "updatedAt": "2026-04-29T09:40:00Z"
+      "updatedAt": "2026-04-29T10:16:00Z",
+      "startedAt": "2026-04-29T09:50:20Z",
+      "completedAt": "2026-04-29T10:16:00Z"
     },
     {
       "id": "random-map-terrain-transit-semantics-10184",
@@ -4302,10 +4310,10 @@
   ],
   "actionableNextTasks": [
     {
-      "title": "Random Map Zone Layout Water And Underground",
+      "title": "Random Map Terrain And Transit Semantics",
       "status": "pending",
-      "reason": "Next dependency after template filtering and assignment; downstream RMG parity work needs deterministic zone footprints, water/island policy, underground support, and corridor candidates.",
-      "id": "random-map-zone-layout-water-underground-10184"
+      "reason": "Next dependency after deterministic zone layout; downstream RMG parity work needs terrain palette normalization, underground/cave handling, water/coast rules, and transit-object route semantics.",
+      "id": "random-map-terrain-transit-semantics-10184"
     }
   ],
   "stoppedOrPausedTasks": [
