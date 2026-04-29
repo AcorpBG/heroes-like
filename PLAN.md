@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Selected implementation slice: `random-map-template-catalog-import-10184` after the HoMM3-parity gap audit. P2.10 foundation proves deterministic catalog-backed generated drafts through the scenario/domain load boundary only; it is not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, or alpha completion.
+Selected implementation slice: `random-map-zone-layout-water-underground-10184` after completing `random-map-template-filtering-assignment-10184`. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated drafts through the scenario/domain load boundary only; they are not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, or alpha completion.
 
 ## Slice Status Model
 
@@ -2016,15 +2016,19 @@ sourceDocs:
 
 implementationTargets:
 - `scripts/core/RandomMapGeneratorRules.gd`
-- filtering/assignment report tests
+- `tests/random_map_template_filtering_assignment_report.gd`
+- `tests/random_map_template_filtering_assignment_report.tscn`
+- current `tests/random_map_*` report scenes
 
 sliceEvidence:
-- Template filtering uses size score, water mode, human count, total player count, and zone/link availability.
-- Candidate capacity rejects templates without enough human and total player starts.
-- Runtime zones preserve source ids, role, owner slot, chosen owner/player, team metadata, faction/town choice, terrain policy, monster policy, mine arrays, treasure bands, and link payloads.
+- Template filtering uses map size score, water mode, level count, human count, total player count, supported config ranges, start capacity, zone/link availability, and explicit error/disconnected policy metadata.
+- Explicit invalid catalog template/profile requests now return structured `random_map_template_selection_rejection_v1` metadata instead of silently falling back to the built-in template.
+- Fixed owner slots map deterministically to player slots with explicit human/computer capacity checks, seeded imported-template faction selection, and free-for-all team metadata.
+- Runtime zones and generated scenario records expose player slot, player type, faction, town, team, and assignment metadata while preserving existing catalog-template, scenario-load, route, and fairness behavior.
+- `tests/random_map_template_filtering_assignment_report.tscn` and all current `tests/random_map_*` Godot reports pass; no campaign/skirmish UI/save adoption or parity/alpha claim is made.
 
 nonGoals:
-- No final footprint layout, object placement, skirmish UI, or generated writeback.
+- No final footprint layout, water/underground layout parity, skirmish UI, campaign adoption, save migration, generated writeback, or parity/alpha completion claim.
 
 ### P2 Child: Random Map Zone Layout Water And Underground
 

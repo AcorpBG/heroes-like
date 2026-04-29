@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-template-filtering-assignment-10184",
-  "currentSliceTitle": "Random Map Template Filtering And Assignment",
+  "currentSliceId": "random-map-zone-layout-water-underground-10184",
+  "currentSliceTitle": "Random Map Zone Layout Water And Underground",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next RMG parity slice after catalog import: consume expanded template grammar for size/water/player filtering, capacity checks, owner assignment, and faction selection without adopting UI/save/skirmish.",
+  "currentSliceNotes": "Next dependency after template filtering and assignment; implement deterministic zone footprints, water/island policy, underground support, and corridor candidates without claiming parity completion.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T09:27:36Z",
+  "updatedAt": "2026-04-29T10:15:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -2582,7 +2582,7 @@
       "id": "random-map-template-filtering-assignment-10184",
       "title": "Random Map Template Filtering And Assignment",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "parentSliceId": "random-map-generator-foundation-10184",
       "classification": "phase2_child_implementation_slice",
@@ -2596,7 +2596,9 @@
       ],
       "implementationTargets": [
         "scripts/core/RandomMapGeneratorRules.gd",
-        "filtering/assignment report tests"
+        "tests/random_map_template_filtering_assignment_report.gd",
+        "tests/random_map_template_filtering_assignment_report.tscn",
+        "current tests/random_map_* report scenes"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
@@ -2604,19 +2606,23 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Template filtering uses size score, water mode, human count, total player count, and zone/link availability.",
-        "Candidate capacity rejects templates without enough human and total player starts.",
-        "Runtime zones preserve source ids, role, owner slot, chosen owner/player, team metadata, faction/town choice, terrain policy, monster policy, mine arrays, treasure bands, and link payloads."
+        "Template filtering uses map size score, water mode, level count, human count, total player count, supported config ranges, start capacity, zone/link availability, and explicit error/disconnected policy metadata.",
+        "Explicit invalid catalog template/profile requests return structured random_map_template_selection_rejection_v1 metadata instead of silently falling back to the built-in template.",
+        "Fixed owner slots map deterministically to player slots with explicit human/computer capacity checks, seeded imported-template faction selection, and free-for-all team metadata.",
+        "Runtime zones and generated scenario records expose player slot, player type, faction, town, team, and assignment metadata while preserving existing catalog-template, scenario-load, route, and fairness behavior.",
+        "tests/random_map_template_filtering_assignment_report.tscn and all current tests/random_map_* Godot reports pass; no campaign/skirmish UI/save adoption or parity/alpha claim is made."
       ],
       "completionCriteria": [
         "Implementation and validation satisfy this slice without claiming full HoMM3-style RMG parity unless all downstream parity gates are complete."
       ],
       "nonGoals": [
-        "No final footprint layout, object placement, skirmish UI, or generated writeback."
+        "No final footprint layout, water/underground layout parity, skirmish UI, campaign adoption, save migration, generated writeback, or parity/alpha completion claim."
       ],
-      "notes": "Next RMG parity slice after catalog import: consume expanded template grammar for size/water/player filtering, capacity checks, owner assignment, and faction selection without adopting UI/save/skirmish.",
+      "notes": "Implemented expanded grammar consumption for size/water/level/player filtering, capacity checks, explicit rejection metadata, fixed owner slots, deterministic faction assignment, and FFA team metadata.",
       "createdAt": "2026-04-29T09:40:00Z",
-      "updatedAt": "2026-04-29T09:27:36Z"
+      "updatedAt": "2026-04-29T10:15:00Z",
+      "startedAt": "2026-04-29T09:29:27Z",
+      "completedAt": "2026-04-29T10:15:00Z"
     },
     {
       "id": "random-map-zone-layout-water-underground-10184",
@@ -4296,10 +4302,10 @@
   ],
   "actionableNextTasks": [
     {
-      "title": "Random Map Template Filtering And Assignment",
+      "title": "Random Map Zone Layout Water And Underground",
       "status": "pending",
-      "reason": "Next dependency after catalog import; downstream RMG parity work needs the expanded grammar consumed for size/water/player filtering, capacity checks, owner slots, and faction assignment.",
-      "id": "random-map-template-filtering-assignment-10184"
+      "reason": "Next dependency after template filtering and assignment; downstream RMG parity work needs deterministic zone footprints, water/island policy, underground support, and corridor candidates.",
+      "id": "random-map-zone-layout-water-underground-10184"
     }
   ],
   "stoppedOrPausedTasks": [
