@@ -23,6 +23,8 @@ const OBJECT_FOOTPRINT_CATALOG_SCHEMA_ID := "random_map_object_footprint_catalog
 const OBJECT_FOOTPRINT_REPORT_SCHEMA_ID := "random_map_object_footprint_catalog_report_v1"
 const ROADS_RIVERS_WRITEOUT_SCHEMA_ID := "random_map_roads_rivers_writeout_v1"
 const ROADS_RIVERS_WRITEOUT_REPORT_SCHEMA_ID := "random_map_roads_rivers_writeout_report_v1"
+const TOWN_MINE_DWELLING_PLACEMENT_SCHEMA_ID := "random_map_town_mine_dwelling_placement_v1"
+const TOWN_MINE_DWELLING_PLACEMENT_REPORT_SCHEMA_ID := "random_map_town_mine_dwelling_placement_report_v1"
 const GENERATED_MAP_SERIALIZATION_SCHEMA_ID := "generated_random_map_serialization_record_v1"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
@@ -179,6 +181,23 @@ const ORIGINAL_RESOURCE_CATEGORY_ORDER := [
 	{"index": 5, "original_category_id": "cut_gems", "source_equivalent": "gems", "mine_family_id": "gem_pond_equivalent", "guard_base_value": 3500},
 	{"index": 6, "original_category_id": "gold", "source_equivalent": "gold", "mine_family_id": "gold_mine", "guard_base_value": 7000},
 ]
+const MINE_SITE_BY_ORIGINAL_CATEGORY := {
+	"timber": {"site_id": "site_brightwood_sawmill", "object_id": "object_brightwood_sawmill", "resource_id": "wood", "family_id": "sawmill", "resource_object_id": "object_wood_wagon"},
+	"quicksilver": {"site_id": "site_marsh_peat_yard", "object_id": "object_marsh_peat_yard", "resource_id": "gold", "family_id": "alchemist_lab", "resource_object_id": "object_waystone_cache"},
+	"ore": {"site_id": "site_ridge_quarry", "object_id": "object_ridge_quarry", "resource_id": "ore", "family_id": "ore_pit", "resource_object_id": "object_wood_wagon"},
+	"ember_salt": {"site_id": "site_floodplain_sluice_camp", "object_id": "object_floodplain_sluice_camp", "resource_id": "gold", "family_id": "sulfur_dune_equivalent", "resource_object_id": "object_waystone_cache"},
+	"lens_crystal": {"site_id": "site_reef_coin_assay", "object_id": "object_reef_coin_assay", "resource_id": "gold", "family_id": "crystal_cavern_equivalent", "resource_object_id": "object_waystone_cache"},
+	"cut_gems": {"site_id": "site_badlands_coin_sluice", "object_id": "object_badlands_coin_sluice", "resource_id": "gold", "family_id": "gem_pond_equivalent", "resource_object_id": "object_waystone_cache"},
+	"gold": {"site_id": "site_reef_coin_assay", "object_id": "object_reef_coin_assay", "resource_id": "gold", "family_id": "gold_mine", "resource_object_id": "object_waystone_cache"},
+}
+const DWELLING_SITE_CANDIDATES := [
+	{"site_id": "site_bogbell_croft", "object_id": "object_bogbell_croft", "neutral_dwelling_family_id": "neutral_dwelling_bogbell_croft", "biome_ids": ["biome_mire_fen", "biome_deep_forest"], "guard_pressure": "low"},
+	{"site_id": "site_greenbranch_copse", "object_id": "object_greenbranch_copse", "neutral_dwelling_family_id": "neutral_dwelling_greenbranch_copse", "biome_ids": ["biome_deep_forest", "biome_grasslands"], "guard_pressure": "medium"},
+	{"site_id": "site_crystal_sump", "object_id": "object_crystal_sump", "neutral_dwelling_family_id": "neutral_dwelling_crystal_sump", "biome_ids": ["biome_subterranean_underways", "biome_highland_ridge"], "guard_pressure": "medium"},
+	{"site_id": "site_kite_signal_eyrie", "object_id": "object_kite_signal_eyrie", "neutral_dwelling_family_id": "neutral_dwelling_kite_signal_eyrie", "biome_ids": ["biome_highland_ridge", "biome_coast_archipelago"], "guard_pressure": "medium"},
+	{"site_id": "site_saltpan_camp", "object_id": "object_saltpan_camp", "neutral_dwelling_family_id": "neutral_dwelling_saltpan_camp", "biome_ids": ["biome_rough_badlands", "biome_coast_archipelago"], "guard_pressure": "high"},
+	{"site_id": "site_cliffhawk_roost", "object_id": "object_cliffhawk_roost", "neutral_dwelling_family_id": "neutral_dwelling_cliffhawk_roost", "biome_ids": ["biome_highland_ridge", "biome_grasslands"], "guard_pressure": "low"},
+]
 const REWARD_BAND_CANDIDATES := [
 	{"reward_category": "resource_cache", "object_family_id": "reward_cache_small", "object_id": "object_waystone_cache", "value": 450, "weight": 5, "categories": ["timber", "ore", "gold"]},
 	{"reward_category": "guarded_cache", "object_family_id": "guarded_reward_cache", "object_id": "object_wood_wagon", "value": 800, "weight": 4, "categories": ["timber", "ore"]},
@@ -293,9 +312,9 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"id": "rmg_mine_placeholder",
 		"family_id": "resource_mine_placeholder",
 		"display_name": "Generated Mine Placeholder",
-		"placement_kinds": ["mine_placeholder"],
+		"placement_kinds": ["mine_placeholder", "mine"],
 		"family_ids": ["sawmill", "ore_pit", "gold_mine", "alchemist_lab", "sulfur_dune_equivalent", "crystal_cavern_equivalent", "gem_pond_equivalent"],
-		"object_ids": ["mine_sawmill_placeholder", "mine_ore_pit_placeholder", "mine_gold_mine_placeholder", "mine_alchemist_lab_placeholder", "mine_ember_salt_placeholder", "mine_lens_crystal_placeholder", "mine_cut_gems_placeholder"],
+		"object_ids": ["mine_sawmill_placeholder", "mine_ore_pit_placeholder", "mine_gold_mine_placeholder", "mine_alchemist_lab_placeholder", "mine_ember_salt_placeholder", "mine_lens_crystal_placeholder", "mine_cut_gems_placeholder", "object_brightwood_sawmill", "object_ridge_quarry", "object_marsh_peat_yard", "object_floodplain_sluice_camp", "object_reef_coin_assay", "object_badlands_coin_sluice"],
 		"footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
 		"runtime_footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "anchor_tile"},
 		"body_mask": [{"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": -1, "y": 0}, {"x": 0, "y": 0}],
@@ -308,6 +327,26 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "adjacent_resource_staging_space"],
 		"object_limit": {"per_zone": 7, "global": 128},
 		"deferred_runtime_application": "template_driven_mine_placement_deferred_to_town_mine_dwelling_slice",
+	},
+	{
+		"id": "rmg_neutral_dwelling_site",
+		"family_id": "neutral_dwelling",
+		"display_name": "Generated Neutral Dwelling",
+		"placement_kinds": ["neutral_dwelling"],
+		"family_ids": ["neutral_dwelling"],
+		"object_ids": ["object_bogbell_croft", "object_greenbranch_copse", "object_crystal_sump", "object_kite_signal_eyrie", "object_saltpan_camp", "object_cliffhawk_roost"],
+		"footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
+		"runtime_footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "anchor_tile"},
+		"body_mask": [{"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": -1, "y": 0}, {"x": 0, "y": 0}],
+		"runtime_body_mask": [{"x": 0, "y": 0}],
+		"visit_mask": [{"x": 0, "y": 1}, {"x": 1, "y": 0}],
+		"approach_mask": [{"x": 0, "y": 1}, {"x": 1, "y": 0}, {"x": -1, "y": 1}],
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"action_mask": {"visitable": true, "trigger": "neutral_dwelling_recruitment", "visit_tile_required": true, "interaction_cadence": "persistent_weekly"},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "visit_or_approach_passable", "zone_role_and_reward_context"],
+		"object_limit": {"per_zone": 2, "global": 32},
+		"deferred_runtime_application": "neutral_dwelling_site_is_staged_as_resource_node_until_final_object_writeout",
 	},
 	{
 		"id": "rmg_decorative_obstacle_anchor",
@@ -392,6 +431,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 	var constraints := _build_constraint_payload(normalized, zones, template.get("links", []), seeds, zone_grid, terrain_rows, placements, zone_layout, terrain_transit)
 	phases.append(_phase_record("connection_guard_materialization", _connection_guard_materialization_phase_summary(constraints.get("connection_guard_materialization", {}))))
 	phases.append(_phase_record("monster_reward_bands", _monster_reward_bands_phase_summary(constraints.get("monster_reward_bands", {}))))
+	phases.append(_phase_record("town_mine_dwelling_placement", _town_mine_dwelling_phase_summary(constraints.get("town_mine_dwelling_placement", {}))))
 	phases.append(_phase_record("decoration_density_pass", _decoration_density_phase_summary(constraints.get("decoration_density_pass", {}))))
 	phases.append(_phase_record("object_footprint_catalog", _object_footprint_phase_summary(constraints.get("object_footprint_catalog", {}))))
 	phases.append(_phase_record("route_road_constraint_writeout", {
@@ -405,6 +445,8 @@ static func generate(input_config: Dictionary) -> Dictionary:
 		"guard_route_count": int(constraints.get("fairness_report", {}).get("guard_pressure", {}).get("route_guards", []).size()),
 		"materialized_connection_guard_count": int(constraints.get("connection_guard_materialization", {}).get("summary", {}).get("materialized_record_count", 0)),
 		"monster_reward_record_count": int(constraints.get("monster_reward_bands", {}).get("summary", {}).get("record_count", 0)),
+		"mine_count": int(constraints.get("town_mine_dwelling_placement", {}).get("summary", {}).get("mine_count", 0)),
+		"dwelling_count": int(constraints.get("town_mine_dwelling_placement", {}).get("summary", {}).get("dwelling_count", 0)),
 		"decoration_record_count": int(constraints.get("decoration_density_pass", {}).get("summary", {}).get("record_count", 0)),
 	}))
 
@@ -822,6 +864,43 @@ static func object_footprint_report(input_config: Dictionary) -> Dictionary:
 		},
 	}
 
+static func town_mine_dwelling_placement_report(input_config: Dictionary) -> Dictionary:
+	var first := generate(input_config)
+	var second := generate(input_config)
+	var changed_seed_config := input_config.duplicate(true)
+	changed_seed_config["seed"] = "%s:changed" % String(input_config.get("seed", "0"))
+	var changed_seed := generate(changed_seed_config)
+	var first_payload: Dictionary = first.get("generated_map", {})
+	var second_payload: Dictionary = second.get("generated_map", {})
+	var changed_payload: Dictionary = changed_seed.get("generated_map", {})
+	var first_records: Dictionary = first_payload.get("staging", {}).get("town_mine_dwelling_placement", {})
+	var second_records: Dictionary = second_payload.get("staging", {}).get("town_mine_dwelling_placement", {})
+	var changed_records: Dictionary = changed_payload.get("staging", {}).get("town_mine_dwelling_placement", {})
+	var same_signature := String(first_records.get("town_mine_dwelling_signature", "")) == String(second_records.get("town_mine_dwelling_signature", ""))
+	var changed_seed_changes_signature := String(first_records.get("town_mine_dwelling_signature", "")) != String(changed_records.get("town_mine_dwelling_signature", ""))
+	var validation := _town_mine_dwelling_validation(first_records, first_payload)
+	var ok := bool(first.get("ok", false)) and bool(second.get("ok", false)) and bool(changed_seed.get("ok", false)) and not first_payload.is_empty() and not second_payload.is_empty() and same_signature and changed_seed_changes_signature and bool(validation.get("ok", false))
+	return {
+		"ok": ok,
+		"schema_id": TOWN_MINE_DWELLING_PLACEMENT_REPORT_SCHEMA_ID,
+		"stable_signature": String(first_payload.get("stable_signature", "")),
+		"changed_seed_signature": String(changed_payload.get("stable_signature", "")),
+		"town_mine_dwelling_signature": String(first_records.get("town_mine_dwelling_signature", "")),
+		"changed_seed_town_mine_dwelling_signature": String(changed_records.get("town_mine_dwelling_signature", "")),
+		"same_input_town_mine_dwelling_signature_equivalent": same_signature,
+		"changed_seed_changes_town_mine_dwelling_signature": changed_seed_changes_signature,
+		"town_mine_dwelling_placement": first_records,
+		"changed_seed_town_mine_dwelling_placement": changed_records,
+		"town_mine_dwelling_validation": validation,
+		"fairness": first_payload.get("staging", {}).get("fairness_report", {}),
+		"payload_validation": first.get("report", {}),
+		"no_ui_save_writeback_claim": {
+			"campaign_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("campaign", true)),
+			"skirmish_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("skirmish", true)),
+			"write_policy": String(first_payload.get("write_policy", "")),
+		},
+	}
+
 static func roads_rivers_writeout_report(input_config: Dictionary) -> Dictionary:
 	var first := generate(input_config)
 	var second := generate(input_config)
@@ -873,7 +952,8 @@ static func resource_encounter_fairness_report(generated_map: Dictionary) -> Dic
 		placements,
 		staging.get("route_graph", {}),
 		staging.get("route_reachability_proof", {}),
-		scenario.get("objectives", {})
+		scenario.get("objectives", {}),
+		staging.get("town_mine_dwelling_placement", {})
 	)
 
 static func normalize_config(input_config: Dictionary) -> Dictionary:
@@ -974,6 +1054,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	var fairness_report: Dictionary = staging.get("fairness_report", {})
 	var connection_guard_materialization: Dictionary = staging.get("connection_guard_materialization", {})
 	var monster_reward_bands: Dictionary = staging.get("monster_reward_bands", {})
+	var town_mine_dwelling: Dictionary = staging.get("town_mine_dwelling_placement", {})
 	var decoration_density: Dictionary = staging.get("decoration_density_pass", {})
 	var object_footprints: Dictionary = staging.get("object_footprint_catalog", {})
 	var roads_rivers_writeout: Dictionary = staging.get("roads_rivers_writeout", {})
@@ -1033,6 +1114,12 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 			failures.append("monster reward bands: %s" % String(failure))
 	for warning in monster_reward_validation.get("warnings", []):
 		warnings.append("monster reward bands: %s" % String(warning))
+	var town_mine_dwelling_validation := _town_mine_dwelling_validation(town_mine_dwelling, generated_map)
+	if not bool(town_mine_dwelling_validation.get("ok", false)):
+		for failure in town_mine_dwelling_validation.get("failures", []):
+			failures.append("town mine dwelling placement: %s" % String(failure))
+	for warning in town_mine_dwelling_validation.get("warnings", []):
+		warnings.append("town mine dwelling placement: %s" % String(warning))
 	var decoration_validation := _decoration_density_validation(decoration_density, generated_map)
 	if not bool(decoration_validation.get("ok", false)):
 		for failure in decoration_validation.get("failures", []):
@@ -1062,7 +1149,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	for phase in generated_map.get("phase_pipeline", []):
 		if phase is Dictionary:
 			phase_names.append(String(phase.get("phase", "")))
-	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "connection_guard_materialization", "monster_reward_bands", "decoration_density_pass", "object_footprint_catalog", "route_road_constraint_writeout", "roads_rivers_writeout", "resource_encounter_fairness_report"]:
+	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "connection_guard_materialization", "monster_reward_bands", "town_mine_dwelling_placement", "decoration_density_pass", "object_footprint_catalog", "route_road_constraint_writeout", "roads_rivers_writeout", "resource_encounter_fairness_report"]:
 		if required_phase not in phase_names:
 			failures.append("missing generation phase %s" % required_phase)
 	if scenario.get("towns", []).is_empty():
@@ -1084,6 +1171,8 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 		"connection_guard_materialization_summary": connection_guard_materialization.get("summary", {}),
 		"monster_reward_bands_status": String(monster_reward_bands.get("status", "")),
 		"monster_reward_bands_summary": monster_reward_bands.get("summary", {}),
+		"town_mine_dwelling_status": String(town_mine_dwelling.get("status", "")),
+		"town_mine_dwelling_summary": town_mine_dwelling.get("summary", {}),
 		"decoration_density_status": String(decoration_density.get("status", "")),
 		"decoration_density_summary": decoration_density.get("summary", {}),
 		"object_footprint_status": String(object_footprints.get("status", "")),
@@ -1540,11 +1629,11 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 		var player_type := String(zone.get("player_type", "computer"))
 		var owner := "player" if player_type == "human" and player_slot == 1 else "enemy"
 		var faction_id := String(zone.get("faction_id", ""))
-		var town_id := String(town_ids[player_index % town_ids.size()])
+		var town_id := String(town_ids[player_index % town_ids.size()]) if not town_ids.is_empty() else String(DEFAULT_TOWN_BY_FACTION.get(faction_id, "town_riverwatch"))
 		var placement_id := "rmg_town_p%d" % (player_index + 1)
-		var town := {"placement_id": placement_id, "town_id": town_id, "faction_id": faction_id, "player_slot": player_slot, "player_type": player_type, "team_id": String(zone.get("team_id", "")), "x": int(point.get("x", 0)), "y": int(point.get("y", 0)), "owner": owner}
+		var town := {"placement_id": placement_id, "town_id": town_id, "faction_id": faction_id, "player_slot": player_slot, "player_type": player_type, "team_id": String(zone.get("team_id", "")), "zone_id": String(zone.get("id", "")), "zone_role": String(zone.get("role", "")), "x": int(point.get("x", 0)), "y": int(point.get("y", 0)), "owner": owner, "town_assignment_semantics": "owned_start_uses_player_assignment_town"}
 		towns.append(town)
-		placements.append(_object_placement(placement_id, "town", faction_id, String(zone.get("id", "")), point, {"town_id": town_id, "owner": owner, "player_slot": player_slot, "player_type": player_type, "team_id": String(zone.get("team_id", "")), "purpose": "player_start"}))
+		placements.append(_object_placement(placement_id, "town", faction_id, String(zone.get("id", "")), point, {"town_id": town_id, "owner": owner, "player_slot": player_slot, "player_type": player_type, "team_id": String(zone.get("team_id", "")), "purpose": "player_start", "zone_role": String(zone.get("role", "")), "town_assignment_semantics": "owned_start_uses_player_assignment_town", "same_type_semantics": "owned_zone_player_assignment_not_neutral_same_type"}))
 		_mark_occupied(occupied, point)
 		for resource_index in range(SUPPORT_RESOURCE_SITES.size()):
 			var resource: Dictionary = SUPPORT_RESOURCE_SITES[resource_index]
@@ -1564,6 +1653,13 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 			placements.append(_object_placement(resource_placement_id, "resource_site", faction_id, String(zone.get("id", "")), support_point, {"site_id": String(resource.get("site_id", "")), "purpose": String(resource.get("purpose", ""))}))
 			_mark_occupied(occupied, support_point)
 		player_index += 1
+	var route_reserved := _reserved_route_corridor_lookup(links, seeds, zone_grid, terrain_rows)
+	for zone in zones:
+		if not (zone is Dictionary):
+			continue
+		_place_neutral_town_for_zone(zone, zones, seeds, zone_grid, terrain_rows, occupied, route_reserved, towns, placements, rng)
+		_place_mines_for_zone(zone, seeds, zone_grid, terrain_rows, occupied, route_reserved, resource_nodes, placements, rng)
+		_place_dwelling_for_zone(zone, seeds, zone_grid, terrain_rows, occupied, route_reserved, resource_nodes, placements, rng)
 	for index in range(links.size()):
 		var link: Dictionary = links[index]
 		if bool(link.get("wide", false)):
@@ -1615,6 +1711,400 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 		"towns": towns,
 		"resource_nodes": resource_nodes,
 		"encounters": encounters,
+	}
+
+static func _reserved_route_corridor_lookup(links: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array) -> Dictionary:
+	var reserved := {}
+	for link in links:
+		if not (link is Dictionary):
+			continue
+		var from_seed: Dictionary = seeds.get(String(link.get("from", "")), {})
+		var to_seed: Dictionary = seeds.get(String(link.get("to", "")), {})
+		if from_seed.is_empty() or to_seed.is_empty():
+			continue
+		var x0 := int(from_seed.get("x", 0))
+		var y0 := int(from_seed.get("y", 0))
+		var x1 := int(to_seed.get("x", 0))
+		var y1 := int(to_seed.get("y", 0))
+		var steps: int = max(abs(x1 - x0), abs(y1 - y0))
+		if steps <= 0:
+			continue
+		for step in range(steps + 1):
+			var t := float(step) / float(steps)
+			var x := int(round(lerpf(float(x0), float(x1), t)))
+			var y := int(round(lerpf(float(y0), float(y1), t)))
+			if not _point_in_rows(terrain_rows, x, y):
+				continue
+			if not _terrain_cell_is_passable(terrain_rows, x, y):
+				continue
+			if String(_zone_at_point(zone_grid, _point_dict(x, y))) == "":
+				continue
+			reserved[_point_key(x, y)] = true
+	return reserved
+
+static func _place_neutral_town_for_zone(zone: Dictionary, zones: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary, towns: Array, placements: Array, rng: DeterministicRng) -> void:
+	if zone.get("player_slot", null) != null:
+		return
+	var target_count := _neutral_town_target_count(zone)
+	if target_count <= 0:
+		return
+	var zone_id := String(zone.get("id", ""))
+	var seed: Dictionary = seeds.get(zone_id, {})
+	var town_choice := _neutral_town_choice_for_zone(zone, zones, seeds)
+	for index in range(target_count):
+		var point := _nearest_free_cell_for_catalog("town", String(town_choice.get("faction_id", "")), String(town_choice.get("town_id", "")), int(seed.get("x", 0)) + index, int(seed.get("y", 0)) + index, zone_id, zone_grid, terrain_rows, occupied, rng, reserved)
+		if point.is_empty():
+			continue
+		var placement_id := "rmg_neutral_town_%s_%02d" % [zone_id, index + 1]
+		var faction_id := String(town_choice.get("faction_id", ""))
+		var town_id := String(town_choice.get("town_id", ""))
+		towns.append({
+			"placement_id": placement_id,
+			"town_id": town_id,
+			"faction_id": faction_id,
+			"player_slot": 0,
+			"player_type": "neutral",
+			"team_id": "",
+			"zone_id": zone_id,
+			"zone_role": String(zone.get("role", "")),
+			"x": int(point.get("x", 0)),
+			"y": int(point.get("y", 0)),
+			"owner": "neutral",
+			"town_assignment_semantics": String(town_choice.get("town_assignment_semantics", "")),
+			"same_type_source_zone_id": String(town_choice.get("same_type_source_zone_id", "")),
+		})
+		placements.append(_object_placement(placement_id, "town", faction_id, zone_id, point, {
+			"town_id": town_id,
+			"owner": "neutral",
+			"player_slot": 0,
+			"player_type": "neutral",
+			"team_id": "",
+			"purpose": "neutral_same_type_town" if bool(town_choice.get("same_type", false)) else "neutral_town",
+			"zone_role": String(zone.get("role", "")),
+			"town_assignment_semantics": String(town_choice.get("town_assignment_semantics", "")),
+			"same_type_semantics": String(town_choice.get("same_type_semantics", "")),
+			"same_type_source_zone_id": String(town_choice.get("same_type_source_zone_id", "")),
+		}))
+		_mark_occupied(occupied, point)
+
+static func _place_mines_for_zone(zone: Dictionary, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary, resource_nodes: Array, placements: Array, rng: DeterministicRng) -> void:
+	var zone_id := String(zone.get("id", ""))
+	var seed: Dictionary = seeds.get(zone_id, {})
+	var requirements: Dictionary = _zone_resource_requirements(zone)
+	var minimums: Dictionary = requirements.get("minimum_by_category", {})
+	var densities: Dictionary = requirements.get("density_by_category", {})
+	var ordinal := 0
+	for category_record in ORIGINAL_RESOURCE_CATEGORY_ORDER:
+		if not (category_record is Dictionary):
+			continue
+		var category_id := String(category_record.get("original_category_id", ""))
+		var target_count := int(minimums.get(category_id, 0)) + _density_extra_count(zone, category_id, int(densities.get(category_id, 0)))
+		for category_index in range(target_count):
+			var mine_record: Dictionary = MINE_SITE_BY_ORIGINAL_CATEGORY.get(category_id, {})
+			if mine_record.is_empty():
+				continue
+			var anchor_offset := _mine_anchor_offset(category_id, ordinal, bool(zone.get("player_slot", null) != null))
+			var point := _nearest_free_cell_for_catalog("mine", String(mine_record.get("family_id", "")), String(mine_record.get("object_id", "")), int(seed.get("x", 0)) + int(anchor_offset.x), int(seed.get("y", 0)) + int(anchor_offset.y), zone_id, zone_grid, terrain_rows, occupied, rng, reserved)
+			if point.is_empty():
+				continue
+			var placement_id := "rmg_mine_%s_%s_%02d" % [zone_id, category_id, category_index + 1]
+			var owner := _zone_owner_label(zone)
+			var mine_payload := {
+				"site_id": String(mine_record.get("site_id", "")),
+				"object_id": String(mine_record.get("object_id", "")),
+				"family_id": String(mine_record.get("family_id", "")),
+				"purpose": _mine_purpose_for_zone(zone, category_id, category_index),
+				"owner": owner,
+				"player_slot": int(zone.get("player_slot", 0)) if zone.get("player_slot", null) != null else 0,
+				"player_type": String(zone.get("player_type", "neutral")),
+				"team_id": String(zone.get("team_id", "")),
+				"zone_role": String(zone.get("role", "")),
+				"original_resource_category_id": category_id,
+				"source_equivalent": String(category_record.get("source_equivalent", "")),
+				"resource_id": String(mine_record.get("resource_id", "")),
+				"mine_family_id": String(category_record.get("mine_family_id", mine_record.get("family_id", ""))),
+				"guard_base_value": int(category_record.get("guard_base_value", 0)),
+				"guard_pressure": _mine_guard_pressure(zone, category_record),
+				"frontier_metadata": _mine_frontier_metadata(zone, category_id),
+				"adjacent_resource_metadata": _adjacent_resource_metadata(mine_record, category_id),
+				"seven_category_index": int(category_record.get("index", 0)),
+				"minimum_requirement": int(minimums.get(category_id, 0)),
+				"density_requirement": int(densities.get(category_id, 0)),
+				"writeout_state": "staged_mine_resource_node_no_authored_content_writeback",
+			}
+			placements.append(_object_placement(placement_id, "mine", String(zone.get("faction_id", "")), zone_id, point, mine_payload))
+			resource_nodes.append(_resource_node_from_placement(placement_id, mine_payload, point, zone_id))
+			_mark_occupied(occupied, point)
+			ordinal += 1
+
+static func _place_dwelling_for_zone(zone: Dictionary, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary, resource_nodes: Array, placements: Array, rng: DeterministicRng) -> void:
+	if not _zone_should_place_dwelling(zone):
+		return
+	var zone_id := String(zone.get("id", ""))
+	var seed: Dictionary = seeds.get(zone_id, {})
+	var dwelling := _dwelling_candidate_for_zone(zone)
+	if dwelling.is_empty():
+		return
+	var point := _nearest_free_cell_for_catalog("neutral_dwelling", "neutral_dwelling", String(dwelling.get("object_id", "")), int(seed.get("x", 0)) - 2, int(seed.get("y", 0)) + 2, zone_id, zone_grid, terrain_rows, occupied, rng, reserved)
+	if point.is_empty():
+		return
+	var placement_id := "rmg_dwelling_%s" % zone_id
+	var owner := _zone_owner_label(zone)
+	var payload := {
+		"site_id": String(dwelling.get("site_id", "")),
+		"object_id": String(dwelling.get("object_id", "")),
+		"family_id": "neutral_dwelling",
+		"neutral_dwelling_family_id": String(dwelling.get("neutral_dwelling_family_id", "")),
+		"purpose": "start_recruitment_support" if String(zone.get("role", "")).contains("start") else "frontier_recruitment_site",
+		"owner": owner,
+		"player_slot": int(zone.get("player_slot", 0)) if zone.get("player_slot", null) != null else 0,
+		"player_type": String(zone.get("player_type", "neutral")),
+		"team_id": String(zone.get("team_id", "")),
+		"zone_role": String(zone.get("role", "")),
+		"guard_pressure": String(dwelling.get("guard_pressure", "medium")),
+		"reward_context": _zone_reward_band_context(zone),
+		"monster_band_context": _zone_monster_band_context(zone),
+		"recruitment_site_category": "neutral_weekly_muster",
+		"writeout_state": "staged_neutral_dwelling_resource_node_no_authored_content_writeback",
+	}
+	placements.append(_object_placement(placement_id, "neutral_dwelling", String(zone.get("faction_id", "")), zone_id, point, payload))
+	resource_nodes.append(_resource_node_from_placement(placement_id, payload, point, zone_id))
+	_mark_occupied(occupied, point)
+
+static func _nearest_free_cell_for_catalog(kind: String, family_id: String, object_id: String, x: int, y: int, preferred_zone_id: Variant, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, rng: DeterministicRng, reserved: Dictionary = {}) -> Dictionary:
+	var height := zone_grid.size()
+	var width: int = zone_grid[0].size() if height > 0 and zone_grid[0] is Array else 0
+	x = clampi(x, 0, max(0, width - 1))
+	y = clampi(y, 0, max(0, height - 1))
+	var probe := {"kind": kind, "family_id": family_id, "object_id": object_id, "x": x, "y": y}
+	var catalog := _object_footprint_catalog_record_for_placement(probe)
+	for radius in range(max(width, height) + 1):
+		var candidates := []
+		for dy in range(-radius, radius + 1):
+			for dx in range(-radius, radius + 1):
+				if max(abs(dx), abs(dy)) != radius:
+					continue
+				var cx := x + dx
+				var cy := y + dy
+				if not _placement_candidate_satisfies_catalog(cx, cy, preferred_zone_id, zone_grid, terrain_rows, occupied, catalog, reserved):
+					continue
+				candidates.append({"x": cx, "y": cy})
+		if not candidates.is_empty():
+			return candidates[rng.next_index(candidates.size())]
+	return {}
+
+static func _placement_candidate_satisfies_catalog(x: int, y: int, preferred_zone_id: Variant, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, catalog: Dictionary, reserved: Dictionary = {}) -> bool:
+	if not _point_in_rows(terrain_rows, x, y):
+		return false
+	if not _terrain_cell_is_passable(terrain_rows, x, y):
+		return false
+	if preferred_zone_id != null and String(_zone_at_point(zone_grid, _point_dict(x, y))) != String(preferred_zone_id):
+		return false
+	var point := _point_dict(x, y)
+	var runtime_body := _runtime_body_tiles_for_catalog(point, catalog)
+	for body in runtime_body:
+		if not (body is Dictionary):
+			return false
+		var bx := int(body.get("x", 0))
+		var by := int(body.get("y", 0))
+		if not _point_in_rows(terrain_rows, bx, by):
+			return false
+		if occupied.has(_point_key(bx, by)) or reserved.has(_point_key(bx, by)):
+			return false
+		if not _terrain_cell_is_passable(terrain_rows, bx, by):
+			return false
+	var terrain_id := String(terrain_rows[y][x])
+	if not catalog.is_empty() and not _object_catalog_allows_terrain(catalog, terrain_id):
+		return false
+	var approaches := _approach_tiles_for_catalog(point, String(preferred_zone_id) if preferred_zone_id != null else "", zone_grid, terrain_rows, occupied, catalog, runtime_body)
+	if bool(catalog.get("action_mask", {}).get("visit_tile_required", false)) and approaches.is_empty():
+		return false
+	return true
+
+static func _neutral_town_target_count(zone: Dictionary) -> int:
+	if _zone_role_is_route_connector(zone):
+		return 0
+	var metadata: Dictionary = zone.get("catalog_metadata", {}) if zone.get("catalog_metadata", {}) is Dictionary else {}
+	var neutral_towns: Dictionary = metadata.get("neutral_towns", {}) if metadata.get("neutral_towns", {}) is Dictionary else {}
+	var explicit_count := int(neutral_towns.get("min_towns", 0)) + int(neutral_towns.get("min_castles", 0))
+	var density_count := 1 if int(neutral_towns.get("town_density", 0)) + int(neutral_towns.get("castle_density", 0)) >= 5 else 0
+	if explicit_count + density_count > 0:
+		return min(2, explicit_count + density_count)
+	if bool(metadata.get("same_town_type", false)) and String(zone.get("role", "")) == "treasure":
+		return 1
+	return 0
+
+static func _neutral_town_choice_for_zone(zone: Dictionary, zones: Array, seeds: Dictionary) -> Dictionary:
+	var metadata: Dictionary = zone.get("catalog_metadata", {}) if zone.get("catalog_metadata", {}) is Dictionary else {}
+	var same_type := bool(metadata.get("same_town_type", false)) or bool(metadata.get("town_policy", {}).get("same_type", false))
+	if same_type:
+		var source_zone := _nearest_owned_zone(zone, zones, seeds)
+		var source_faction := String(source_zone.get("faction_id", "faction_embercourt"))
+		return {
+			"same_type": true,
+			"faction_id": source_faction,
+			"town_id": String(DEFAULT_TOWN_BY_FACTION.get(source_faction, "town_riverwatch")),
+			"same_type_source_zone_id": String(source_zone.get("id", "")),
+			"town_assignment_semantics": "neutral_same_type_reuses_nearest_runtime_zone_faction_choice",
+			"same_type_semantics": "source_zone_choice_reused_for_neutral_town_when_same_type_flag_is_present",
+		}
+	var allowed: Array = metadata.get("town_policy", {}).get("allowed_faction_ids", []) if metadata.get("town_policy", {}) is Dictionary else []
+	var faction_id := String(allowed[0]) if not allowed.is_empty() else "faction_embercourt"
+	return {
+		"same_type": false,
+		"faction_id": faction_id,
+		"town_id": String(DEFAULT_TOWN_BY_FACTION.get(faction_id, "town_riverwatch")),
+		"same_type_source_zone_id": "",
+		"town_assignment_semantics": "neutral_town_uses_allowed_original_faction_pool",
+		"same_type_semantics": "same_type_flag_not_requested",
+	}
+
+static func _nearest_owned_zone(zone: Dictionary, zones: Array, seeds: Dictionary) -> Dictionary:
+	var zone_seed: Dictionary = seeds.get(String(zone.get("id", "")), {})
+	var best := {}
+	var best_distance := 999999
+	for candidate in zones:
+		if not (candidate is Dictionary) or candidate.get("player_slot", null) == null:
+			continue
+		var candidate_seed: Dictionary = seeds.get(String(candidate.get("id", "")), {})
+		var distance: int = abs(int(zone_seed.get("x", 0)) - int(candidate_seed.get("x", 0))) + abs(int(zone_seed.get("y", 0)) - int(candidate_seed.get("y", 0)))
+		if best.is_empty() or distance < best_distance or (distance == best_distance and String(candidate.get("id", "")) < String(best.get("id", ""))):
+			best = candidate
+			best_distance = distance
+	return best if not best.is_empty() else {"id": "", "faction_id": "faction_embercourt"}
+
+static func _zone_resource_requirements(zone: Dictionary) -> Dictionary:
+	if _zone_role_is_route_connector(zone):
+		return {"minimum_by_category": {}, "density_by_category": {}}
+	var metadata: Dictionary = zone.get("catalog_metadata", {}) if zone.get("catalog_metadata", {}) is Dictionary else {}
+	var requirements: Dictionary = metadata.get("mine_requirements", {}) if metadata.get("mine_requirements", {}) is Dictionary else {}
+	if requirements.is_empty():
+		requirements = metadata.get("resource_category_requirements", {}) if metadata.get("resource_category_requirements", {}) is Dictionary else {}
+	if requirements.is_empty():
+		if String(zone.get("role", "")).contains("start"):
+			requirements = {"minimum_by_category": {"timber": 1, "ore": 1}, "density_by_category": {}}
+		else:
+			requirements = {"minimum_by_category": {}, "density_by_category": {}}
+	return requirements
+
+static func _density_extra_count(zone: Dictionary, category_id: String, density: int) -> int:
+	if density <= 0:
+		return 0
+	var role := String(zone.get("role", ""))
+	var threshold := 4 if role.contains("start") else 3
+	return clampi(int(floor(float(density) / float(threshold))), 0, 2)
+
+static func _mine_anchor_offset(category_id: String, ordinal: int, owned_zone: bool) -> Vector2i:
+	var near_bias := category_id in ["timber", "ore"] and owned_zone
+	var radius := 3 if near_bias else 5
+	var offsets := [Vector2i(radius, 0), Vector2i(0, radius), Vector2i(-radius, 0), Vector2i(0, -radius), Vector2i(radius, radius), Vector2i(-radius, radius), Vector2i(radius, -radius)]
+	return offsets[ordinal % offsets.size()]
+
+static func _zone_owner_label(zone: Dictionary) -> String:
+	if zone.get("player_slot", null) == null:
+		return "neutral"
+	var player_type := String(zone.get("player_type", "computer"))
+	if player_type == "human" and int(zone.get("player_slot", 0)) == 1:
+		return "player"
+	return "enemy"
+
+static func _mine_purpose_for_zone(zone: Dictionary, category_id: String, index: int) -> String:
+	if String(zone.get("role", "")).contains("start") and category_id in ["timber", "ore"]:
+		return "near_start_core_economy_producer"
+	if String(zone.get("role", "")).contains("start"):
+		return "starting_zone_resource_producer"
+	if index == 0:
+		return "zone_minimum_resource_producer"
+	return "density_resource_producer"
+
+static func _mine_guard_pressure(zone: Dictionary, category_record: Dictionary) -> Dictionary:
+	var role := String(zone.get("role", ""))
+	var base_value := int(category_record.get("guard_base_value", 0))
+	var guarded := not role.contains("start") or base_value >= 3500
+	return {
+		"guarded": guarded,
+		"pressure_class": "unguarded_start_core" if not guarded else _guard_strength_class_from_value(base_value),
+		"base_value": base_value,
+		"profile_reason": "near_start_wood_ore_bias" if role.contains("start") and String(category_record.get("original_category_id", "")) in ["timber", "ore"] else "category_base_guard_value",
+	}
+
+static func _mine_frontier_metadata(zone: Dictionary, category_id: String) -> Dictionary:
+	var role := String(zone.get("role", ""))
+	var classification := "owned_start_support" if role.contains("start") else "contested_frontier" if role == "treasure" else "neutral_frontier"
+	return {
+		"classification": classification,
+		"contested": role == "treasure",
+		"frontier": not role.contains("start"),
+		"core_economy": category_id in ["timber", "ore", "gold"],
+	}
+
+static func _adjacent_resource_metadata(mine_record: Dictionary, category_id: String) -> Dictionary:
+	return {
+		"staged": true,
+		"resource_object_id": String(mine_record.get("resource_object_id", "")),
+		"resource_id": String(mine_record.get("resource_id", "")),
+		"original_category_id": category_id,
+		"placement_state": "adjacent_resource_metadata_only_until_final_object_writeout",
+	}
+
+static func _zone_should_place_dwelling(zone: Dictionary) -> bool:
+	if _zone_role_is_route_connector(zone):
+		return false
+	var role := String(zone.get("role", ""))
+	if role == "treasure":
+		return true
+	return role.contains("start")
+
+static func _zone_role_is_route_connector(zone: Dictionary) -> bool:
+	var role := String(zone.get("role", ""))
+	return role == "junction" or role.contains("gate") or role.contains("border") or role.contains("connector") or role.contains("crossing")
+
+static func _dwelling_candidate_for_zone(zone: Dictionary) -> Dictionary:
+	var biome_id := _biome_for_terrain(String(zone.get("terrain_id", "grass")))
+	var fallback := {}
+	for candidate in DWELLING_SITE_CANDIDATES:
+		if not (candidate is Dictionary):
+			continue
+		if fallback.is_empty():
+			fallback = candidate
+		if biome_id in candidate.get("biome_ids", []):
+			return candidate
+	return fallback
+
+static func _zone_reward_band_context(zone: Dictionary) -> Dictionary:
+	var metadata: Dictionary = zone.get("catalog_metadata", {}) if zone.get("catalog_metadata", {}) is Dictionary else {}
+	var bands: Array = metadata.get("treasure_bands", [])
+	return {
+		"band_count": bands.size(),
+		"bands": bands,
+		"zone_role": String(zone.get("role", "")),
+	}
+
+static func _zone_monster_band_context(zone: Dictionary) -> Dictionary:
+	var metadata: Dictionary = zone.get("catalog_metadata", {}) if zone.get("catalog_metadata", {}) is Dictionary else {}
+	var monster_policy: Dictionary = metadata.get("monster_policy", {}) if metadata.get("monster_policy", {}) is Dictionary else {}
+	return {
+		"strength": String(monster_policy.get("strength", "avg")),
+		"match_to_town": bool(monster_policy.get("match_to_town", false)),
+		"allowed_faction_ids": monster_policy.get("allowed_faction_ids", []),
+	}
+
+static func _resource_node_from_placement(placement_id: String, payload: Dictionary, point: Dictionary, zone_id: String) -> Dictionary:
+	return {
+		"placement_id": placement_id,
+		"site_id": String(payload.get("site_id", "")),
+		"object_id": String(payload.get("object_id", "")),
+		"x": int(point.get("x", 0)),
+		"y": int(point.get("y", 0)),
+		"zone_id": zone_id,
+		"owner": String(payload.get("owner", "neutral")),
+		"player_slot": int(payload.get("player_slot", 0)),
+		"kind": String(payload.get("purpose", "")),
+		"generated_kind": String(payload.get("recruitment_site_category", "mine")),
+		"original_resource_category_id": String(payload.get("original_resource_category_id", "")),
+		"resource_id": String(payload.get("resource_id", "")),
+		"neutral_dwelling_family_id": String(payload.get("neutral_dwelling_family_id", "")),
+		"guard_pressure": payload.get("guard_pressure", {}),
 	}
 
 static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, placements: Dictionary, constraints: Dictionary) -> Dictionary:
@@ -1679,6 +2169,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 			"terrain_transit": constraints.get("terrain_transit_semantics", {}),
 			"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 			"monster_reward_bands": constraints.get("monster_reward_bands", {}),
+			"town_mine_dwelling_placement": constraints.get("town_mine_dwelling_placement", {}),
 			"decoration_density_pass": constraints.get("decoration_density_pass", {}),
 			"object_footprint_catalog": constraints.get("object_footprint_catalog", {}),
 			"roads_rivers_writeout": constraints.get("roads_rivers_writeout", {}),
@@ -1722,6 +2213,7 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"terrain_transit_semantics": constraints.get("terrain_transit_semantics", {}),
 		"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 		"monster_reward_bands": constraints.get("monster_reward_bands", {}),
+		"town_mine_dwelling_placement": constraints.get("town_mine_dwelling_placement", {}),
 		"decoration_density_pass": constraints.get("decoration_density_pass", {}),
 		"object_footprint_catalog": constraints.get("object_footprint_catalog", {}),
 		"decorative_object_staging": constraints.get("decoration_density_pass", {}).get("decoration_records", []),
@@ -1754,6 +2246,15 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 	var monster_reward_bands := _build_monster_reward_bands(normalized, zones, connection_guard_materialization, route_graph, placements, terrain_transit)
 	route_graph["monster_reward_bands"] = monster_reward_bands
 	route_graph["monster_reward_bands_summary"] = monster_reward_bands.get("summary", {})
+	var town_mine_dwelling := _build_town_mine_dwelling_placement_payload(
+		normalized,
+		zones,
+		placements,
+		terrain_rows,
+		route_graph,
+		route_build.get("road_network", {}),
+		{}
+	)
 	var decoration_density := _build_decoration_density_pass(
 		normalized,
 		zones,
@@ -1766,7 +2267,7 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		route_build.get("route_reachability_proof", {}),
 		monster_reward_bands
 	)
-	var object_footprints := _build_object_footprint_payload(placements, decoration_density, monster_reward_bands, terrain_rows, route_graph, route_build.get("road_network", {}), route_build.get("route_reachability_proof", {}))
+	var object_footprints := _build_object_footprint_payload(normalized, placements, decoration_density, monster_reward_bands, terrain_rows, route_graph, route_build.get("road_network", {}), route_build.get("route_reachability_proof", {}))
 	var roads_rivers_writeout := _build_roads_rivers_writeout_payload(
 		normalized,
 		terrain_rows,
@@ -1778,13 +2279,23 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		placements
 	)
 	var town_start_constraints := _town_start_constraints_payload(zones, placements, route_graph, route_build.get("route_reachability_proof", {}))
-	var fairness_report := _fairness_report_payload(normalized, zones, placements, route_graph, route_build.get("route_reachability_proof", {}))
+	town_mine_dwelling = _build_town_mine_dwelling_placement_payload(
+		normalized,
+		zones,
+		placements,
+		terrain_rows,
+		route_graph,
+		route_build.get("road_network", {}),
+		decoration_density
+	)
+	var fairness_report := _fairness_report_payload(normalized, zones, placements, route_graph, route_build.get("route_reachability_proof", {}), {}, town_mine_dwelling)
 	return {
 		"zone_layout": zone_layout,
 		"terrain_constraints": terrain_constraints,
 		"terrain_transit_semantics": terrain_transit,
 		"connection_guard_materialization": connection_guard_materialization,
 		"monster_reward_bands": monster_reward_bands,
+		"town_mine_dwelling_placement": town_mine_dwelling,
 		"decoration_density_pass": decoration_density,
 		"object_footprint_catalog": object_footprints,
 		"roads_rivers_writeout": roads_rivers_writeout,
@@ -2197,7 +2708,7 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 	}))
 	return payload
 
-static func _build_object_footprint_payload(placements: Dictionary, decoration_density: Dictionary, monster_reward_bands: Dictionary, terrain_rows: Array, route_graph: Dictionary, road_network: Dictionary, reachability: Dictionary) -> Dictionary:
+static func _build_object_footprint_payload(normalized: Dictionary, placements: Dictionary, decoration_density: Dictionary, monster_reward_bands: Dictionary, terrain_rows: Array, route_graph: Dictionary, road_network: Dictionary, reachability: Dictionary) -> Dictionary:
 	var object_records := []
 	for placement in placements.get("object_placements", []):
 		if placement is Dictionary:
@@ -2229,6 +2740,11 @@ static func _build_object_footprint_payload(placements: Dictionary, decoration_d
 	var payload := {
 		"schema_id": OBJECT_FOOTPRINT_CATALOG_SCHEMA_ID,
 		"status": status,
+		"identity_context": {
+			"generator_version": String(normalized.get("generator_version", GENERATOR_VERSION)),
+			"seed": String(normalized.get("seed", "")),
+			"template_id": String(normalized.get("template_id", "")),
+		},
 		"catalog": catalog_payload,
 		"object_records": object_records,
 		"reward_reference_records": reward_reference_records,
@@ -2259,6 +2775,7 @@ static func _build_object_footprint_payload(placements: Dictionary, decoration_d
 		},
 	}
 	payload["object_footprint_signature"] = _hash32_hex(_stable_stringify({
+		"identity_context": payload.get("identity_context", {}),
 		"object_records": object_records,
 		"reward_reference_records": reward_reference_records,
 		"validation": validation,
@@ -2598,6 +3115,345 @@ static func _object_footprint_validation(payload: Dictionary, generated_map: Dic
 		"failures": failures,
 		"warnings": warnings,
 	}
+
+static func _build_town_mine_dwelling_placement_payload(normalized: Dictionary, zones: Array, placements: Dictionary, terrain_rows: Array, route_graph: Dictionary, road_network: Dictionary, decoration_density: Dictionary) -> Dictionary:
+	var town_records := []
+	var mine_records := []
+	var dwelling_records := []
+	var attempts := []
+	var placement_by_id := {}
+	for placement in placements.get("object_placements", []):
+		if placement is Dictionary:
+			placement_by_id[String(placement.get("placement_id", ""))] = placement
+	for zone in zones:
+		if not (zone is Dictionary):
+			continue
+		attempts.append(_town_mine_dwelling_attempt_record(zone, placements.get("object_placements", [])))
+	for town in placements.get("towns", []):
+		if not (town is Dictionary):
+			continue
+		var source: Dictionary = placement_by_id.get(String(town.get("placement_id", "")), {})
+		town_records.append(_town_placement_record(town, source))
+	for resource in placements.get("resource_nodes", []):
+		if not (resource is Dictionary):
+			continue
+		var source: Dictionary = placement_by_id.get(String(resource.get("placement_id", "")), {})
+		match String(source.get("kind", "")):
+			"mine":
+				mine_records.append(_mine_placement_record(resource, source))
+			"neutral_dwelling":
+				dwelling_records.append(_dwelling_placement_record(resource, source))
+	var validation := _town_mine_dwelling_validation_core(town_records, mine_records, dwelling_records, route_graph, road_network, decoration_density, terrain_rows)
+	var status := "pass" if bool(validation.get("ok", false)) else "fail"
+	var payload := {
+		"schema_id": TOWN_MINE_DWELLING_PLACEMENT_SCHEMA_ID,
+		"status": status,
+		"placement_policy": "template_zone_rules_place_owned_towns_neutral_same_type_towns_seven_category_mines_and_neutral_dwellings",
+		"source_model": "HoMM3_RMG_structure_translated_to_original_content_ids_and_categories",
+		"town_start_records": town_records,
+		"mine_resource_producer_records": mine_records,
+		"dwelling_recruitment_site_records": dwelling_records,
+		"zone_rule_attempts": attempts,
+		"validation": validation,
+		"fairness_inputs": {
+			"core_resource_categories": ["timber", "ore", "gold"],
+			"seven_category_order": ORIGINAL_RESOURCE_CATEGORY_ORDER,
+			"start_support_contract": "owned_start_zones_require_primary_town_and_core_economy_producer_access",
+		},
+		"writeout_state": "structured_placement_payload_no_authored_content_writeback_no_parity_claim",
+		"summary": {
+			"town_count": town_records.size(),
+			"mine_count": mine_records.size(),
+			"dwelling_count": dwelling_records.size(),
+			"zone_attempt_count": attempts.size(),
+			"same_type_neutral_town_count": _count_records_with_value(town_records, "same_type_semantics", "source_zone_choice_reused_for_neutral_town_when_same_type_flag_is_present"),
+			"core_category_mine_count": _count_core_category_mines(mine_records),
+			"validation_status": String(validation.get("status", "")),
+			"conflict_count": validation.get("conflicts", []).size(),
+		},
+		"deferred": [
+			"final_multitile_body_stamping",
+			"final_mine_adjacent_resource_object_writeout",
+			"neutral_dwelling_runtime_recruitment_ui_adoption",
+			"campaign_authored_writeback",
+			"parity_or_alpha_completion_claim",
+		],
+	}
+	payload["town_mine_dwelling_signature"] = _hash32_hex(_stable_stringify({
+		"town_start_records": town_records,
+		"mine_resource_producer_records": mine_records,
+		"dwelling_recruitment_site_records": dwelling_records,
+		"zone_rule_attempts": attempts,
+		"validation": validation,
+	}))
+	return payload
+
+static func _town_mine_dwelling_attempt_record(zone: Dictionary, object_placements: Array) -> Dictionary:
+	var zone_id := String(zone.get("id", ""))
+	var metadata: Dictionary = zone.get("catalog_metadata", {}) if zone.get("catalog_metadata", {}) is Dictionary else {}
+	var player_towns: Dictionary = metadata.get("player_towns", {}) if metadata.get("player_towns", {}) is Dictionary else {}
+	var neutral_towns: Dictionary = metadata.get("neutral_towns", {}) if metadata.get("neutral_towns", {}) is Dictionary else {}
+	var requirements := _zone_resource_requirements(zone)
+	var placed_counts := {"town": 0, "mine": 0, "neutral_dwelling": 0}
+	for placement in object_placements:
+		if placement is Dictionary and String(placement.get("zone_id", "")) == zone_id:
+			var kind := String(placement.get("kind", ""))
+			if placed_counts.has(kind):
+				placed_counts[kind] = int(placed_counts.get(kind, 0)) + 1
+	return {
+		"zone_id": zone_id,
+		"zone_role": String(zone.get("role", "")),
+		"owner_slot": zone.get("owner_slot", null),
+		"player_slot": zone.get("player_slot", null),
+		"player_type": String(zone.get("player_type", "neutral")),
+		"same_town_type": bool(metadata.get("same_town_type", false)),
+		"player_town_rule": player_towns,
+		"neutral_town_rule": neutral_towns,
+		"mine_requirements": requirements,
+		"dwelling_rule": {"attempted": _zone_should_place_dwelling(zone), "policy": "one_original_neutral_recruitment_site_per_zone_role_when_capacity_allows"},
+		"placed_counts": placed_counts,
+	}
+
+static func _town_placement_record(town: Dictionary, source: Dictionary) -> Dictionary:
+	return {
+		"placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"faction_id": String(town.get("faction_id", "")),
+		"owner": String(town.get("owner", "")),
+		"player_slot": int(town.get("player_slot", 0)),
+		"player_type": String(town.get("player_type", "neutral")),
+		"team_id": String(town.get("team_id", "")),
+		"zone_id": String(town.get("zone_id", "")),
+		"zone_role": String(town.get("zone_role", "")),
+		"x": int(town.get("x", 0)),
+		"y": int(town.get("y", 0)),
+		"body_tiles": town.get("body_tiles", []),
+		"approach_tiles": town.get("approach_tiles", []),
+		"visit_tile": town.get("visit_tile", {}),
+		"pathing_status": String(town.get("pathing_status", "")),
+		"footprint_action_metadata": _placement_footprint_action_metadata(town),
+		"town_assignment_semantics": String(town.get("town_assignment_semantics", source.get("town_assignment_semantics", ""))),
+		"same_type_semantics": String(source.get("same_type_semantics", "")),
+		"same_type_source_zone_id": String(town.get("same_type_source_zone_id", source.get("same_type_source_zone_id", ""))),
+		"start_contract": "primary_town_start_support" if int(town.get("player_slot", 0)) > 0 else "neutral_town_objective_or_expansion",
+		"writeout_state": "staged_town_record_no_authored_content_writeback",
+	}
+
+static func _mine_placement_record(resource: Dictionary, source: Dictionary) -> Dictionary:
+	return {
+		"placement_id": String(resource.get("placement_id", "")),
+		"site_id": String(resource.get("site_id", "")),
+		"object_id": String(source.get("object_id", "")),
+		"family_id": String(source.get("family_id", "")),
+		"owner": String(source.get("owner", "neutral")),
+		"player_slot": int(source.get("player_slot", 0)),
+		"player_type": String(source.get("player_type", "neutral")),
+		"team_id": String(source.get("team_id", "")),
+		"zone_id": String(resource.get("zone_id", "")),
+		"zone_role": String(source.get("zone_role", "")),
+		"x": int(resource.get("x", 0)),
+		"y": int(resource.get("y", 0)),
+		"body_tiles": resource.get("body_tiles", []),
+		"approach_tiles": resource.get("approach_tiles", []),
+		"visit_tile": resource.get("visit_tile", {}),
+		"pathing_status": String(resource.get("pathing_status", "")),
+		"footprint_action_metadata": _placement_footprint_action_metadata(resource),
+		"original_resource_category_id": String(source.get("original_resource_category_id", "")),
+		"source_equivalent": String(source.get("source_equivalent", "")),
+		"resource_id": String(source.get("resource_id", "")),
+		"mine_family_id": String(source.get("mine_family_id", "")),
+		"seven_category_index": int(source.get("seven_category_index", 0)),
+		"minimum_requirement": int(source.get("minimum_requirement", 0)),
+		"density_requirement": int(source.get("density_requirement", 0)),
+		"guard_pressure": source.get("guard_pressure", {}),
+		"frontier_metadata": source.get("frontier_metadata", {}),
+		"adjacent_resource_metadata": source.get("adjacent_resource_metadata", {}),
+		"writeout_state": String(source.get("writeout_state", "")),
+	}
+
+static func _dwelling_placement_record(resource: Dictionary, source: Dictionary) -> Dictionary:
+	return {
+		"placement_id": String(resource.get("placement_id", "")),
+		"site_id": String(resource.get("site_id", "")),
+		"object_id": String(source.get("object_id", "")),
+		"family_id": String(source.get("family_id", "")),
+		"neutral_dwelling_family_id": String(source.get("neutral_dwelling_family_id", "")),
+		"owner": String(source.get("owner", "neutral")),
+		"player_slot": int(source.get("player_slot", 0)),
+		"player_type": String(source.get("player_type", "neutral")),
+		"team_id": String(source.get("team_id", "")),
+		"zone_id": String(resource.get("zone_id", "")),
+		"zone_role": String(source.get("zone_role", "")),
+		"x": int(resource.get("x", 0)),
+		"y": int(resource.get("y", 0)),
+		"body_tiles": resource.get("body_tiles", []),
+		"approach_tiles": resource.get("approach_tiles", []),
+		"visit_tile": resource.get("visit_tile", {}),
+		"pathing_status": String(resource.get("pathing_status", "")),
+		"footprint_action_metadata": _placement_footprint_action_metadata(resource),
+		"recruitment_site_category": String(source.get("recruitment_site_category", "")),
+		"guard_pressure": String(source.get("guard_pressure", "")),
+		"reward_context": source.get("reward_context", {}),
+		"monster_band_context": source.get("monster_band_context", {}),
+		"writeout_state": String(source.get("writeout_state", "")),
+	}
+
+static func _placement_footprint_action_metadata(record: Dictionary) -> Dictionary:
+	return {
+		"object_footprint_catalog_ref": record.get("object_footprint_catalog_ref", {}),
+		"footprint": record.get("footprint", {}),
+		"runtime_footprint": record.get("runtime_footprint", {}),
+		"body_mask": record.get("body_mask", []),
+		"runtime_body_mask": record.get("runtime_body_mask", []),
+		"visit_mask": record.get("visit_mask", []),
+		"approach_mask": record.get("approach_mask", []),
+		"passability_mask": record.get("passability_mask", {}),
+		"action_mask": record.get("action_mask", {}),
+		"terrain_restrictions": record.get("terrain_restrictions", {}),
+		"placement_predicates": record.get("placement_predicates", []),
+		"placement_predicate_results": record.get("placement_predicate_results", {}),
+	}
+
+static func _town_mine_dwelling_validation_core(town_records: Array, mine_records: Array, dwelling_records: Array, route_graph: Dictionary, road_network: Dictionary, decoration_density: Dictionary, terrain_rows: Array) -> Dictionary:
+	var failures := []
+	var warnings := []
+	var conflicts := []
+	if town_records.is_empty():
+		failures.append("no town/start placement records")
+	if mine_records.is_empty():
+		failures.append("no mine/resource producer placement records")
+	if dwelling_records.is_empty():
+		failures.append("no dwelling/recruitment site placement records")
+	var body_lookup := {}
+	for bucket in [town_records, mine_records, dwelling_records]:
+		for record in bucket:
+			if not (record is Dictionary):
+				failures.append("non-dictionary town/mine/dwelling record")
+				continue
+			var placement_id := String(record.get("placement_id", ""))
+			if String(record.get("pathing_status", "")) != "pass":
+				failures.append("%s does not have pass pathing metadata" % placement_id)
+			var meta: Dictionary = record.get("footprint_action_metadata", {}) if record.get("footprint_action_metadata", {}) is Dictionary else {}
+			if String(meta.get("object_footprint_catalog_ref", {}).get("status", "")) != "catalog_record_applied":
+				failures.append("%s missing applied object footprint catalog metadata" % placement_id)
+			var predicates: Dictionary = meta.get("placement_predicate_results", {}) if meta.get("placement_predicate_results", {}) is Dictionary else {}
+			for key in ["in_bounds", "terrain_allowed", "visit_or_approach_passable"]:
+				if not bool(predicates.get(key, false)):
+					failures.append("%s failed placement predicate %s" % [placement_id, key])
+			for body in record.get("body_tiles", []):
+				if not (body is Dictionary):
+					failures.append("%s has invalid body tile" % placement_id)
+					continue
+				var x := int(body.get("x", 0))
+				var y := int(body.get("y", 0))
+				var key := _point_key(x, y)
+				if body_lookup.has(key):
+					conflicts.append("%s overlaps %s at %s" % [placement_id, String(body_lookup[key]), key])
+				body_lookup[key] = placement_id
+				if not _point_in_rows(terrain_rows, x, y) or not _terrain_cell_is_passable(terrain_rows, x, y):
+					failures.append("%s body is on blocked terrain at %s" % [placement_id, key])
+	for segment in road_network.get("road_segments", []):
+		if not (segment is Dictionary):
+			continue
+		for cell in segment.get("cells", []):
+			if cell is Dictionary:
+				var key := _point_key(int(cell.get("x", 0)), int(cell.get("y", 0)))
+				if body_lookup.has(key):
+					conflicts.append("road segment %s crosses %s at %s" % [String(segment.get("route_edge_id", "")), String(body_lookup[key]), key])
+	for decor in decoration_density.get("decoration_records", []):
+		if not (decor is Dictionary):
+			continue
+		for body in decor.get("body_tiles", []):
+			if body is Dictionary:
+				var key := _point_key(int(body.get("x", 0)), int(body.get("y", 0)))
+				if body_lookup.has(key):
+					conflicts.append("decoration %s overlaps %s at %s" % [String(decor.get("placement_id", decor.get("id", ""))), String(body_lookup[key]), key])
+	if conflicts.size() > 0:
+		failures.append_array(conflicts)
+	var same_type_count := _count_records_with_value(town_records, "same_type_semantics", "source_zone_choice_reused_for_neutral_town_when_same_type_flag_is_present")
+	if same_type_count <= 0:
+		warnings.append("no neutral same-type town was placed for this seed/template")
+	var seven_categories := {}
+	for mine in mine_records:
+		if mine is Dictionary:
+			seven_categories[String(mine.get("original_resource_category_id", ""))] = true
+	for required_category in ["timber", "ore"]:
+		if not seven_categories.has(required_category):
+			failures.append("core mine category %s was not placed" % required_category)
+	var status := "pass"
+	if not failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {
+		"ok": failures.is_empty(),
+		"status": status,
+		"failures": failures,
+		"warnings": warnings,
+		"conflicts": conflicts,
+		"route_edge_count": route_graph.get("edges", []).size(),
+		"road_segment_count": road_network.get("road_segments", []).size(),
+		"decoration_record_count": decoration_density.get("decoration_records", []).size(),
+		"placed_resource_categories": _sorted_keys(seven_categories),
+	}
+
+static func _town_mine_dwelling_validation(payload: Dictionary, generated_map: Dictionary = {}) -> Dictionary:
+	var failures := []
+	var warnings := []
+	if String(payload.get("schema_id", "")) != TOWN_MINE_DWELLING_PLACEMENT_SCHEMA_ID:
+		failures.append("town/mine/dwelling placement schema mismatch")
+	if String(payload.get("town_mine_dwelling_signature", "")) == "":
+		failures.append("town/mine/dwelling placement signature missing")
+	var core: Dictionary = payload.get("validation", {}) if payload.get("validation", {}) is Dictionary else {}
+	if not bool(core.get("ok", false)):
+		failures.append_array(core.get("failures", []))
+	warnings.append_array(core.get("warnings", []))
+	if int(payload.get("summary", {}).get("town_count", 0)) <= 0:
+		failures.append("town/mine/dwelling payload has no towns")
+	if int(payload.get("summary", {}).get("mine_count", 0)) <= 0:
+		failures.append("town/mine/dwelling payload has no mines")
+	if int(payload.get("summary", {}).get("dwelling_count", 0)) <= 0:
+		failures.append("town/mine/dwelling payload has no dwellings")
+	if generated_map.get("scenario_record", {}).get("generated_constraints", {}).get("town_mine_dwelling_placement", {}).is_empty() and not generated_map.is_empty():
+		failures.append("scenario generated_constraints missed town/mine/dwelling placement")
+	if not generated_map.is_empty():
+		var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
+		if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", false)):
+			failures.append("town/mine/dwelling placement adopted generated map into campaign")
+		if generated_map.has("authored_content_writeback") or scenario.has("alpha_parity_claim"):
+			failures.append("town/mine/dwelling placement exposed authored writeback or parity claim")
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+		"warnings": warnings,
+	}
+
+static func _town_mine_dwelling_phase_summary(payload: Dictionary) -> Dictionary:
+	return {
+		"schema_id": String(payload.get("schema_id", "")),
+		"status": String(payload.get("status", "")),
+		"signature": String(payload.get("town_mine_dwelling_signature", "")),
+		"town_count": int(payload.get("summary", {}).get("town_count", 0)),
+		"mine_count": int(payload.get("summary", {}).get("mine_count", 0)),
+		"dwelling_count": int(payload.get("summary", {}).get("dwelling_count", 0)),
+		"same_type_neutral_town_count": int(payload.get("summary", {}).get("same_type_neutral_town_count", 0)),
+		"core_category_mine_count": int(payload.get("summary", {}).get("core_category_mine_count", 0)),
+	}
+
+static func _count_records_with_value(records: Array, key: String, expected: String) -> int:
+	var count := 0
+	for record in records:
+		if record is Dictionary and String(record.get(key, "")) == expected:
+			count += 1
+	return count
+
+static func _count_core_category_mines(records: Array) -> int:
+	var count := 0
+	for record in records:
+		if record is Dictionary and String(record.get("original_resource_category_id", "")) in ["timber", "ore", "gold"]:
+			count += 1
+	return count
 
 static func _build_roads_rivers_writeout_payload(normalized: Dictionary, terrain_rows: Array, zone_layout: Dictionary, terrain_transit: Dictionary, road_network: Dictionary, route_graph: Dictionary, object_footprints: Dictionary, placements: Dictionary) -> Dictionary:
 	var road_overlay := _road_overlay_writeout_payload(road_network, route_graph, terrain_rows, object_footprints)
@@ -4374,10 +5230,14 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 static func _town_start_constraints_payload(zones: Array, placements: Dictionary, route_graph: Dictionary, proof: Dictionary) -> Dictionary:
 	var route_counts := _route_counts_by_zone(route_graph.get("edges", []))
 	var starts := []
+	var player_town_count := 0
 	var towns: Array = placements.get("towns", [])
 	for town in towns:
 		if not (town is Dictionary):
 			continue
+		if int(town.get("player_slot", 0)) <= 0:
+			continue
+		player_town_count += 1
 		var zone_id := String(town.get("zone_id", ""))
 		var counts: Dictionary = route_counts.get(zone_id, {})
 		var approach_tiles: Array = town.get("approach_tiles", [])
@@ -4402,19 +5262,21 @@ static func _town_start_constraints_payload(zones: Array, placements: Dictionary
 		"schema_id": "random_map_town_start_constraints_v1",
 		"townless_start_profile": false,
 		"player_starts": starts,
-		"required_primary_town_count": towns.size(),
+		"required_primary_town_count": player_town_count,
 		"reachability_status": String(proof.get("status", "")),
 	}
 
-static func _fairness_report_payload(normalized: Dictionary, zones: Array, placements: Dictionary, route_graph: Dictionary, proof: Dictionary, objectives: Dictionary = {}) -> Dictionary:
+static func _fairness_report_payload(normalized: Dictionary, zones: Array, placements: Dictionary, route_graph: Dictionary, proof: Dictionary, objectives: Dictionary = {}, town_mine_dwelling: Dictionary = {}) -> Dictionary:
 	var early_support := _early_resource_support_payload(placements, route_graph)
 	var contested_fronts := _contested_front_distribution_payload(placements, route_graph)
 	var guard_pressure := _guard_pressure_payload(route_graph)
 	var distance_comparisons := _travel_distance_comparisons_payload(placements, route_graph)
 	var objective_pressure := _objective_reward_pressure_payload(objectives, route_graph)
+	var producer_access := _core_economy_producer_access_payload(placements, route_graph, town_mine_dwelling)
+	var contested_markers := _contested_objective_pressure_markers(town_mine_dwelling, guard_pressure, contested_fronts)
 	var failures := []
 	var warnings := []
-	for section in [early_support, contested_fronts, guard_pressure, distance_comparisons, objective_pressure]:
+	for section in [early_support, contested_fronts, guard_pressure, distance_comparisons, objective_pressure, producer_access, contested_markers]:
 		if String(section.get("status", "")) == "fail":
 			failures.append_array(section.get("failures", []))
 		elif String(section.get("status", "")) == "warning":
@@ -4440,9 +5302,13 @@ static func _fairness_report_payload(normalized: Dictionary, zones: Array, place
 			"guard_pressure_status": String(guard_pressure.get("status", "")),
 			"travel_distance_status": String(distance_comparisons.get("status", "")),
 			"objective_pressure_status": String(objective_pressure.get("status", "")),
+			"core_economy_producer_status": String(producer_access.get("status", "")),
+			"contested_objective_pressure_status": String(contested_markers.get("status", "")),
 		},
 		"early_resource_support": early_support,
+		"core_economy_producer_access": producer_access,
 		"contested_front_distribution": contested_fronts,
+		"contested_objective_pressure_markers": contested_markers,
 		"guarded_reward_risk": guard_pressure.get("guarded_reward_risk", {}),
 		"guard_pressure": guard_pressure,
 		"travel_distance_comparisons": distance_comparisons,
@@ -4450,6 +5316,128 @@ static func _fairness_report_payload(normalized: Dictionary, zones: Array, place
 		"failures": failures,
 		"warnings": warnings,
 		"classification_model": "pass_warning_fail_report_only_no_runtime_adoption",
+	}
+
+static func _core_economy_producer_access_payload(placements: Dictionary, route_graph: Dictionary, town_mine_dwelling: Dictionary) -> Dictionary:
+	var mines_by_zone := {}
+	for mine in town_mine_dwelling.get("mine_resource_producer_records", []):
+		if not (mine is Dictionary):
+			continue
+		var zone_id := String(mine.get("zone_id", ""))
+		if not mines_by_zone.has(zone_id):
+			mines_by_zone[zone_id] = []
+		mines_by_zone[zone_id].append(mine)
+	var route_edges := _resource_route_edges_by_town(route_graph.get("edges", []))
+	var per_player := []
+	var failures := []
+	var warnings := []
+	for town in placements.get("towns", []):
+		if not (town is Dictionary):
+			continue
+		var player_slot := int(town.get("player_slot", 0))
+		if player_slot <= 0:
+			continue
+		var zone_id := String(town.get("zone_id", ""))
+		var categories := {}
+		var mine_records := []
+		for mine in mines_by_zone.get(zone_id, []):
+			if not (mine is Dictionary):
+				continue
+			var category := String(mine.get("original_resource_category_id", ""))
+			categories[category] = true
+			mine_records.append({
+				"placement_id": String(mine.get("placement_id", "")),
+				"category": category,
+				"site_id": String(mine.get("site_id", "")),
+				"frontier_metadata": mine.get("frontier_metadata", {}),
+				"guard_pressure": mine.get("guard_pressure", {}),
+			})
+		var missing := []
+		for required in ["timber", "ore"]:
+			if not categories.has(required):
+				missing.append(required)
+		var route_lengths := []
+		for edge in route_edges.get(String(town.get("placement_id", "")), []):
+			if edge is Dictionary and bool(edge.get("path_found", false)):
+				route_lengths.append(int(edge.get("path_length", 0)))
+		var status := "pass"
+		if not missing.is_empty():
+			status = "fail"
+			failures.append("player %d lacks core mine categories %s" % [player_slot, ",".join(missing)])
+		elif route_lengths.is_empty():
+			status = "warning"
+			warnings.append("player %d has core mines but no measured producer route" % player_slot)
+		per_player.append({
+			"player_slot": player_slot,
+			"zone_id": zone_id,
+			"primary_town_placement_id": String(town.get("placement_id", "")),
+			"required_core_categories": ["timber", "ore"],
+			"present_categories": _sorted_keys(categories),
+			"mine_records": mine_records,
+			"producer_route_lengths": route_lengths,
+			"starting_town_supported": missing.is_empty(),
+			"status": status,
+		})
+	var status := "pass"
+	if not failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {
+		"status": status,
+		"per_player": per_player,
+		"failures": failures,
+		"warnings": warnings,
+		"model": "per_player_start_zone_core_timber_ore_mine_access_plus_route_lengths",
+	}
+
+static func _contested_objective_pressure_markers(town_mine_dwelling: Dictionary, guard_pressure: Dictionary, contested_fronts: Dictionary) -> Dictionary:
+	var markers := []
+	var failures := []
+	var warnings := []
+	for mine in town_mine_dwelling.get("mine_resource_producer_records", []):
+		if not (mine is Dictionary):
+			continue
+		var frontier: Dictionary = mine.get("frontier_metadata", {}) if mine.get("frontier_metadata", {}) is Dictionary else {}
+		if bool(frontier.get("contested", false)) or bool(frontier.get("frontier", false)):
+			markers.append({
+				"placement_id": String(mine.get("placement_id", "")),
+				"kind": "mine",
+				"zone_id": String(mine.get("zone_id", "")),
+				"category": String(mine.get("original_resource_category_id", "")),
+				"pressure": mine.get("guard_pressure", {}),
+				"classification": String(frontier.get("classification", "")),
+			})
+	for dwelling in town_mine_dwelling.get("dwelling_recruitment_site_records", []):
+		if not (dwelling is Dictionary):
+			continue
+		if String(dwelling.get("zone_role", "")) in ["treasure", "junction"]:
+			markers.append({
+				"placement_id": String(dwelling.get("placement_id", "")),
+				"kind": "neutral_dwelling",
+				"zone_id": String(dwelling.get("zone_id", "")),
+				"pressure": String(dwelling.get("guard_pressure", "")),
+				"classification": "frontier_recruitment_pressure",
+			})
+	if markers.is_empty():
+		warnings.append("no contested mine or dwelling pressure markers")
+	var guarded_routes: int = guard_pressure.get("route_guards", []).size()
+	var contest_routes: int = contested_fronts.get("per_start", []).size()
+	if guarded_routes <= 0 or contest_routes <= 0:
+		failures.append("contested pressure markers lack guarded route or contest front context")
+	var status := "pass"
+	if not failures.is_empty():
+		status = "fail"
+	elif not warnings.is_empty():
+		status = "warning"
+	return {
+		"status": status,
+		"markers": markers,
+		"guarded_route_count": guarded_routes,
+		"contest_front_count": contest_routes,
+		"failures": failures,
+		"warnings": warnings,
+		"model": "frontier_mines_dwellings_plus_guarded_route_pressure",
 	}
 
 static func _early_resource_support_payload(placements: Dictionary, route_graph: Dictionary) -> Dictionary:
@@ -4461,6 +5449,8 @@ static func _early_resource_support_payload(placements: Dictionary, route_graph:
 	var warnings := []
 	for town in towns:
 		if not (town is Dictionary):
+			continue
+		if int(town.get("player_slot", 0)) <= 0:
 			continue
 		var zone_id := String(town.get("zone_id", ""))
 		var totals := {"gold": 0, "wood": 0, "ore": 0}
@@ -5372,8 +6362,9 @@ static func _route_nodes_payload(seeds: Dictionary, placements: Dictionary) -> D
 			continue
 		var placement_id := String(placement.get("placement_id", ""))
 		var kind := String(placement.get("kind", ""))
-		if kind not in ["town", "resource_site", "route_guard"]:
+		if kind not in ["town", "resource_site", "mine", "neutral_dwelling", "route_guard"]:
 			continue
+		var required_node := kind == "resource_site" or (kind in ["town", "mine", "neutral_dwelling"] and int(placement.get("player_slot", 0)) > 0)
 		var node_id := "node_%s" % placement_id
 		nodes[node_id] = {
 			"id": node_id,
@@ -5382,7 +6373,7 @@ static func _route_nodes_payload(seeds: Dictionary, placements: Dictionary) -> D
 			"zone_id": String(placement.get("zone_id", "")),
 			"point": _first_approach_or_body(placement),
 			"body_tiles": placement.get("body_tiles", []),
-			"required": kind in ["town", "resource_site"],
+			"required": required_node,
 		}
 	return nodes
 
@@ -5583,7 +6574,7 @@ static func _resources_by_zone(resource_nodes: Array) -> Dictionary:
 static func _start_zones_from_towns(towns: Array) -> Array:
 	var result := []
 	for town in towns:
-		if town is Dictionary:
+		if town is Dictionary and int(town.get("player_slot", 0)) > 0:
 			var zone_id := String(town.get("zone_id", ""))
 			if zone_id != "" and zone_id not in result:
 				result.append(zone_id)
