@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "broad-production-map-campaign-replayability-10184",
-  "currentSliceTitle": "Broad Map, Campaign, And Replayability Breadth",
+  "currentSliceId": "headless-agent-simulation-harness-10184",
+  "currentSliceTitle": "Headless Simulation Harness",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed narrow map/campaign/replayability increment: campaign_ninefold_survey now links Ironbridge Stand, Glassfen Breakers, and Ninefold Confluence into a three-chapter recorded/replayable campaign docket, with Mireford Skirmish preserving authored skirmish-only breadth and report coverage proving campaign/skirmish/generated boundaries without alpha/parity/production claim.",
+  "currentSliceNotes": "Completed deterministic headless simulation harness foundation: core report API and Godot report scene cover scenario/session turn loop, AI pressure tick, economy delta, deterministic battle sample, save/provenance restore, and generated skirmish boundary evidence without replacing manual play gates.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T14:17:54Z",
+  "updatedAt": "2026-04-29T14:36:40Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -3066,21 +3066,47 @@
       "id": "headless-agent-simulation-harness-10184",
       "title": "Headless Simulation Harness",
       "phase": "phase-3-headless-ai-agent-balance-harness",
-      "status": "pending",
+      "status": "completed",
       "classification": "future_phase",
       "sourceDocs": [
         "project.md",
-        "future harness requirements doc",
-        "completed Phase 2 outputs"
+        "PLAN.md",
+        "completed Phase 2 economy/object/AI/random-map outputs",
+        "existing scenario/session/save/replay and battle report scenes"
       ],
       "implementationTargets": [
-        "headless scenario runner",
-        "AI turn runner",
-        "economy loop runner",
-        "battle resolver/sampler",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/headless_simulation_harness_report.gd",
+        "tests/headless_simulation_harness_report.tscn",
+        "curated authored scenario/session boot and bounded turn-loop runner",
+        "strategic AI pressure/tick evidence through existing AI rules",
+        "economy resource-delta runner",
+        "battle resolver/autoplay sampler",
+        "save/replay/provenance restore checks",
+        "generated random-map/skirmish provenance boundary checks",
         "structured report output"
       ],
-      "notes": "Do not replace manual play gates."
+      "sliceEvidence": [
+        "HeadlessSimulationHarnessRules.build_report returns headless_simulation_harness_report_v1 with required subsystem cases, status counts, deterministic case signatures, and a harness signature.",
+        "tests/headless_simulation_harness_report.tscn asserts schema, required subsystem signatures, report-only policy, and honest warning/deferred evidence.",
+        "Default report covers River Pass session boot/turn loop, strategic AI pressure tick, economy resource delta, deterministic battle sample, authored/generated save provenance restore, and generated skirmish boundary preservation.",
+        "Battle distribution remains warning evidence because this is a narrow foundation sample, not a full Phase 3 runner or manual play replacement."
+      ],
+      "validationEvidence": [
+        "python3 tests/validate_repo.py passed.",
+        "all current tests/random_map_*.tscn passed.",
+        "tests/balance_regression_report_suite.tscn passed.",
+        "tests/faction_content_breadth_report.tscn passed.",
+        "tests/map_campaign_replayability_breadth_report.tscn passed.",
+        "tests/headless_simulation_harness_report.tscn passed.",
+        "python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json-check.txt passed.",
+        "git diff --check passed.",
+        "progress.py status and progress.py next passed; the progress_status.py shim is a shell wrapper and fails under direct python3 invocation."
+      ],
+      "notes": "Completed deterministic headless simulation harness foundation with report-only boundaries and no alpha/parity/manual-play replacement claim.",
+      "updatedAt": "2026-04-29T14:36:40Z",
+      "startedAt": "2026-04-29T14:22:51Z",
+      "completedAt": "2026-04-29T14:36:40Z"
     },
     {
       "id": "balance-regression-report-suite-10184",
