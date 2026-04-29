@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Selected implementation slice: `random-map-zone-layout-water-underground-10184` after completing `random-map-template-filtering-assignment-10184`. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated drafts through the scenario/domain load boundary only; they are not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, or alpha completion.
+Recently completed implementation slice: `random-map-terrain-transit-semantics-10184` after `random-map-zone-layout-water-underground-10184`. Select the next P2.10 RMG child from the progress helper before starting new implementation. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated drafts through the scenario/domain load boundary only; they are not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, or alpha completion.
 
 ## Slice Status Model
 
@@ -2072,17 +2072,19 @@ sourceDocs:
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-web-map-editor/`
 
 implementationTargets:
-- terrain generation/normalization rules
-- transit route validation
-- terrain report tests
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_terrain_transit_semantics_report.gd`
+- `tests/random_map_terrain_transit_semantics_report.tscn`
+- current `tests/random_map_*` report scenes
 
 sliceEvidence:
-- Terrain ids are chosen from zone faction/terrain constraints and normalized for readable boundaries.
-- Underground/cave, water/coast, transit objects, bridges/ferries/gates, and required route unlocks are represented in staging and reports.
-- Required starts, towns, mines, objectives, and exits remain reachable or explicitly gated by reported transit.
+- Terrain palette normalization records each zone's source terrain candidates, faction/catalog/profile selection source, normalized original terrain id, biome, passability, deterministic fallback, and explicit unsupported/deferred ids.
+- Surface scenario rows remain compatible while terrain-layer staging records surface and underground/cave layer rows, water/coast classification, passability metadata, and unsupported/deferred terrain semantics without authored writeback.
+- Corridor candidates and route graph edges expose structured transit semantics for land roads, water crossings with deferred ferry/boat/shipyard materialization, underground/subterranean routes, and cross-level gate candidates.
+- Focused terrain/transit report proves deterministic signatures, known-terrain normalization or explicit unsupported states, water/coast passability metadata, underground/cave metadata, route classification coverage, and no campaign/skirmish UI/save/writeback/parity claim.
 
 nonGoals:
-- No final serialized map writeout or player-facing random-map menu.
+- No final serialized map writeout, player-facing random-map menu, save migration, skirmish adoption, or parity/alpha completion claim.
 
 ### P2 Child: Random Map Object Footprint Catalog
 

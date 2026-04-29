@@ -11,6 +11,8 @@ const TEMPLATE_CATALOG_REPORT_SCHEMA_ID := "random_map_template_catalog_grammar_
 const TEMPLATE_SELECTION_REJECTION_SCHEMA_ID := "random_map_template_selection_rejection_v1"
 const ZONE_LAYOUT_SCHEMA_ID := "random_map_zone_layout_v1"
 const ZONE_LAYOUT_REPORT_SCHEMA_ID := "random_map_zone_layout_water_underground_report_v1"
+const TERRAIN_TRANSIT_SCHEMA_ID := "random_map_terrain_transit_semantics_v1"
+const TERRAIN_TRANSIT_REPORT_SCHEMA_ID := "random_map_terrain_transit_semantics_report_v1"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
 const HASH_MODULUS := 4294967296
@@ -39,6 +41,29 @@ const TERRAIN_BY_FACTION := {
 	"faction_veilmourn": "water",
 }
 const CORE_TERRAIN_POOL := ["grass", "plains", "forest", "swamp", "highland"]
+const ORIGINAL_TERRAIN_IDS := [
+	"grass",
+	"plains",
+	"forest",
+	"swamp",
+	"mire",
+	"highland",
+	"hills",
+	"ridge",
+	"badlands",
+	"wastes",
+	"ash",
+	"lava",
+	"snow",
+	"frost",
+	"water",
+	"coast",
+	"shore",
+	"cavern",
+	"underway",
+]
+const SURFACE_SCENARIO_TERRAIN_IDS := ["grass", "plains", "forest", "swamp", "highland", "water"]
+const UNDERGROUND_TERRAIN_ID := "cavern"
 const SUPPORT_RESOURCE_SITES := [
 	{"purpose": "start_support_wood", "site_id": "site_wood_wagon", "offset": Vector2i(2, 0)},
 	{"purpose": "start_support_ore", "site_id": "site_ore_crates", "offset": Vector2i(0, 2)},
@@ -46,7 +71,7 @@ const SUPPORT_RESOURCE_SITES := [
 ]
 const DEFAULT_ENCOUNTER_ID := "encounter_mire_raid"
 const ROAD_OVERLAY_ID := "generated_dirt_road"
-const BLOCKED_TERRAIN_IDS := ["water"]
+const BLOCKED_TERRAIN_IDS := ["water", "coast", "shore"]
 const BIOME_BY_TERRAIN := {
 	"grass": "biome_grasslands",
 	"plains": "biome_grasslands",
@@ -56,9 +81,17 @@ const BIOME_BY_TERRAIN := {
 	"highland": "biome_highland_ridge",
 	"hills": "biome_highland_ridge",
 	"ridge": "biome_highland_ridge",
+	"badlands": "biome_rough_badlands",
+	"wastes": "biome_rough_badlands",
+	"ash": "biome_ash_lava_wastes",
+	"lava": "biome_ash_lava_wastes",
+	"snow": "biome_snow_frost_marches",
+	"frost": "biome_snow_frost_marches",
 	"water": "biome_coast_archipelago",
 	"coast": "biome_coast_archipelago",
 	"shore": "biome_coast_archipelago",
+	"cavern": "biome_subterranean_underways",
+	"underway": "biome_subterranean_underways",
 }
 const TERRAIN_MOVEMENT_COST := {
 	"grass": 1,
@@ -69,7 +102,17 @@ const TERRAIN_MOVEMENT_COST := {
 	"highland": 2,
 	"hills": 2,
 	"ridge": 2,
+	"badlands": 2,
+	"wastes": 2,
+	"ash": 3,
+	"lava": 3,
+	"snow": 2,
+	"frost": 2,
 	"water": 999,
+	"coast": 999,
+	"shore": 999,
+	"cavern": 2,
+	"underway": 2,
 }
 const SUPPORT_RESOURCE_VALUE_BY_SITE := {
 	"site_wood_wagon": {"gold": 0, "wood": 4, "ore": 0},
@@ -135,12 +178,14 @@ static func generate(input_config: Dictionary) -> Dictionary:
 	phases.append(_phase_record("terrain_owner_grid", {"width": int(normalized.get("size", {}).get("width", 0)), "height": int(normalized.get("size", {}).get("height", 0)), "source": "zone_layout_surface_owner_grid"}))
 
 	var terrain_rows := _terrain_rows_from_zone_layout(zone_layout, zones)
+	var terrain_transit := _build_terrain_transit_semantics(zone_layout, zones, template.get("links", []), terrain_rows, normalized)
 	phases.append(_phase_record("terrain_biome_coherence", _terrain_phase_summary(terrain_rows, zones)))
+	phases.append(_phase_record("terrain_transit_semantics", _terrain_transit_phase_summary(terrain_transit)))
 
 	var placements := _place_generated_objects(zones, template.get("links", []), seeds, zone_grid, terrain_rows, normalized, rng)
 	phases.append(_phase_record("object_placement_staging", _placement_counts(placements.get("object_placements", []))))
 
-	var constraints := _build_constraint_payload(normalized, zones, template.get("links", []), seeds, zone_grid, terrain_rows, placements, zone_layout)
+	var constraints := _build_constraint_payload(normalized, zones, template.get("links", []), seeds, zone_grid, terrain_rows, placements, zone_layout, terrain_transit)
 	phases.append(_phase_record("route_road_constraint_writeout", {
 		"road_segment_count": int(constraints.get("road_network", {}).get("road_segments", []).size()),
 		"required_reachability": String(constraints.get("route_reachability_proof", {}).get("status", "unknown")),
@@ -384,6 +429,41 @@ static func zone_layout_report(input_config: Dictionary) -> Dictionary:
 		},
 	}
 
+static func terrain_transit_report(input_config: Dictionary) -> Dictionary:
+	var first := generate(input_config)
+	var second := generate(input_config)
+	var changed_seed_config := input_config.duplicate(true)
+	changed_seed_config["seed"] = "%s:changed" % String(input_config.get("seed", "0"))
+	var changed_seed := generate(changed_seed_config)
+	var first_payload: Dictionary = first.get("generated_map", {})
+	var second_payload: Dictionary = second.get("generated_map", {})
+	var changed_payload: Dictionary = changed_seed.get("generated_map", {})
+	var first_semantics: Dictionary = first_payload.get("staging", {}).get("terrain_transit_semantics", {})
+	var second_semantics: Dictionary = second_payload.get("staging", {}).get("terrain_transit_semantics", {})
+	var changed_semantics: Dictionary = changed_payload.get("staging", {}).get("terrain_transit_semantics", {})
+	var same_signature := String(first_semantics.get("terrain_transit_signature", "")) == String(second_semantics.get("terrain_transit_signature", ""))
+	var changed_seed_changes_signature := String(first_semantics.get("terrain_transit_signature", "")) != String(changed_semantics.get("terrain_transit_signature", ""))
+	var validation := _terrain_transit_validation(first_semantics, first_payload)
+	var ok := not first_payload.is_empty() and not second_payload.is_empty() and same_signature and changed_seed_changes_signature and bool(validation.get("ok", false))
+	return {
+		"ok": ok,
+		"schema_id": TERRAIN_TRANSIT_REPORT_SCHEMA_ID,
+		"stable_signature": String(first_payload.get("stable_signature", "")),
+		"changed_seed_signature": String(changed_payload.get("stable_signature", "")),
+		"terrain_transit_signature": String(first_semantics.get("terrain_transit_signature", "")),
+		"changed_seed_terrain_transit_signature": String(changed_semantics.get("terrain_transit_signature", "")),
+		"same_input_terrain_transit_signature_equivalent": same_signature,
+		"changed_seed_changes_terrain_transit_signature": changed_seed_changes_signature,
+		"terrain_transit_semantics": first_semantics,
+		"terrain_transit_validation": validation,
+		"payload_validation": first.get("report", {}),
+		"no_ui_save_writeback_claim": {
+			"campaign_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("campaign", true)),
+			"skirmish_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("skirmish", true)),
+			"write_policy": String(first_payload.get("write_policy", "")),
+		},
+	}
+
 static func resource_encounter_fairness_report(generated_map: Dictionary) -> Dictionary:
 	var staging: Dictionary = generated_map.get("staging", {})
 	var scenario: Dictionary = generated_map.get("scenario_record", {})
@@ -493,6 +573,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 		for failure in zone_layout_validation.get("failures", []):
 			failures.append("zone layout: %s" % String(failure))
 	var terrain_constraints: Dictionary = staging.get("terrain_constraints", {})
+	var terrain_transit: Dictionary = staging.get("terrain_transit_semantics", {})
 	var town_start_constraints: Dictionary = staging.get("town_start_constraints", {})
 	var road_network: Dictionary = staging.get("road_network", {})
 	var reachability: Dictionary = staging.get("route_reachability_proof", {})
@@ -506,6 +587,24 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	for zone_summary in terrain_constraints.get("zone_biome_summary", []):
 		if zone_summary is Dictionary and String(zone_summary.get("role", "")).contains("start") and not bool(zone_summary.get("passable", false)):
 			failures.append("start zone %s uses impassable terrain" % String(zone_summary.get("zone_id", "")))
+	if String(terrain_transit.get("schema_id", "")) != TERRAIN_TRANSIT_SCHEMA_ID:
+		failures.append("terrain transit semantics payload missing")
+	else:
+		if String(terrain_transit.get("terrain_transit_signature", "")) == "":
+			failures.append("terrain transit semantics must expose deterministic signature")
+		var normalization: Dictionary = terrain_transit.get("terrain_normalization", {})
+		for zone_palette in normalization.get("zone_palettes", []):
+			if not (zone_palette is Dictionary):
+				failures.append("terrain normalization contains non-dictionary zone palette")
+				continue
+			var terrain_id := String(zone_palette.get("normalized_terrain_id", ""))
+			var explicit_issue: bool = not zone_palette.get("unsupported_terrain_ids", []).is_empty() or not zone_palette.get("deferred_terrain_ids", []).is_empty()
+			if not _terrain_is_known_original(terrain_id) and not explicit_issue:
+				failures.append("terrain normalization for zone %s produced unknown terrain %s without explicit unsupported/deferred metadata" % [String(zone_palette.get("zone_id", "")), terrain_id])
+		if terrain_transit.get("terrain_layers", []).is_empty():
+			failures.append("terrain transit semantics must expose terrain layer metadata")
+		if terrain_transit.get("transit_routes", {}).get("corridor_routes", []).is_empty():
+			failures.append("terrain transit semantics must expose corridor route semantics")
 	if String(town_start_constraints.get("schema_id", "")) != "random_map_town_start_constraints_v1":
 		failures.append("town/start constraints payload missing")
 	for start_constraint in town_start_constraints.get("player_starts", []):
@@ -534,7 +633,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	for phase in generated_map.get("phase_pipeline", []):
 		if phase is Dictionary:
 			phase_names.append(String(phase.get("phase", "")))
-	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "object_placement_staging", "route_road_constraint_writeout", "resource_encounter_fairness_report"]:
+	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "route_road_constraint_writeout", "resource_encounter_fairness_report"]:
 		if required_phase not in phase_names:
 			failures.append("missing generation phase %s" % required_phase)
 	if scenario.get("towns", []).is_empty():
@@ -694,7 +793,7 @@ static func _build_runtime_zones(template: Dictionary, normalized: Dictionary, r
 			team_id = "team_%02d" % int(player_slot)
 			if not faction_ids.is_empty():
 				faction_id = String(faction_ids[(int(owner_slot) - 1) % faction_ids.size()])
-		var terrain_id := _zone_terrain(zone_record, faction_id, terrain_ids, rng)
+		var terrain_palette := _zone_terrain_palette_record(zone_record, faction_id, terrain_ids, rng)
 		zones.append({
 			"id": String(zone_record.get("id", "")),
 			"source_id": String(zone_record.get("id", "")),
@@ -704,7 +803,8 @@ static func _build_runtime_zones(template: Dictionary, normalized: Dictionary, r
 			"player_type": player_type,
 			"team_id": team_id,
 			"faction_id": faction_id,
-			"terrain_id": terrain_id,
+			"terrain_id": String(terrain_palette.get("normalized_terrain_id", "grass")),
+			"terrain_palette": terrain_palette,
 			"base_size": int(zone_record.get("base_size", 1)),
 			"anchor": {},
 			"bounds": {},
@@ -714,27 +814,69 @@ static func _build_runtime_zones(template: Dictionary, normalized: Dictionary, r
 	return zones
 
 static func _zone_terrain(zone_record: Dictionary, faction_id: String, terrain_ids: Array, rng: DeterministicRng) -> String:
-	if bool(zone_record.get("terrain_match_to_faction", false)) and TERRAIN_BY_FACTION.has(faction_id):
-		var matched := String(TERRAIN_BY_FACTION.get(faction_id))
-		if matched in terrain_ids and _terrain_is_passable(matched):
-			return matched
+	return String(_zone_terrain_palette_record(zone_record, faction_id, terrain_ids, rng).get("normalized_terrain_id", "grass"))
+
+static func _zone_terrain_palette_record(zone_record: Dictionary, faction_id: String, terrain_ids: Array, rng: DeterministicRng) -> Dictionary:
+	var zone_id := String(zone_record.get("id", ""))
+	var profile_terrain_ids := _normalized_string_array(terrain_ids, CORE_TERRAIN_POOL)
 	var zone_allowed: Array = zone_record.get("allowed_terrain_ids", [])
+	var unsupported := _unsupported_terrain_ids(profile_terrain_ids)
+	unsupported.append_array(_unsupported_terrain_ids(zone_allowed))
+	var faction_terrain := ""
+	if bool(zone_record.get("terrain_match_to_faction", false)) and TERRAIN_BY_FACTION.has(faction_id):
+		faction_terrain = String(TERRAIN_BY_FACTION.get(faction_id))
+		if not _terrain_is_known_original(faction_terrain) and faction_terrain not in unsupported:
+			unsupported.append(faction_terrain)
+	var selected := ""
+	var source := ""
+	if faction_terrain != "" and faction_terrain in profile_terrain_ids and _terrain_is_passable(faction_terrain):
+		selected = faction_terrain
+		source = "faction_match_profile_palette"
 	var filtered_allowed := []
 	for zone_terrain_id in zone_allowed:
 		var candidate := String(zone_terrain_id)
 		if candidate in terrain_ids and _terrain_is_passable(candidate):
 			filtered_allowed.append(candidate)
-	if not filtered_allowed.is_empty():
-		return String(filtered_allowed[rng.next_index(filtered_allowed.size())])
-	if terrain_ids.is_empty():
-		return "grass"
-	var passable_choices := []
-	for terrain_id in terrain_ids:
-		if _terrain_is_passable(String(terrain_id)):
-			passable_choices.append(String(terrain_id))
-	if not passable_choices.is_empty():
-		return String(passable_choices[rng.next_index(passable_choices.size())])
-	return "grass"
+	if selected == "" and not filtered_allowed.is_empty():
+		selected = String(filtered_allowed[rng.next_index(filtered_allowed.size())])
+		source = "catalog_allowed_profile_intersection"
+	if selected == "":
+		var catalog_passable := _passable_known_terrain_ids(zone_allowed)
+		if not catalog_passable.is_empty():
+			selected = String(catalog_passable[rng.next_index(catalog_passable.size())])
+			source = "catalog_allowed_known_fallback"
+	if selected == "":
+		var passable_choices := _passable_known_terrain_ids(profile_terrain_ids)
+		if not passable_choices.is_empty():
+			selected = String(passable_choices[rng.next_index(passable_choices.size())])
+			source = "profile_palette_known_fallback"
+	if selected == "":
+		var fallback_pool := CORE_TERRAIN_POOL.duplicate()
+		selected = String(fallback_pool[_stable_choice_index(fallback_pool.size(), "%s:%s:%s" % [zone_id, faction_id, _stable_stringify(profile_terrain_ids)])])
+		source = "deterministic_core_fallback"
+	var normalized := _normalize_terrain_id_for_generated_rows(selected)
+	var deferred := []
+	if selected != normalized:
+		deferred.append(selected)
+	unsupported = _unique_sorted_strings(unsupported)
+	return {
+		"zone_id": zone_id,
+		"faction_id": faction_id,
+		"terrain_match_to_faction": bool(zone_record.get("terrain_match_to_faction", false)),
+		"profile_terrain_ids": profile_terrain_ids,
+		"catalog_allowed_terrain_ids": _normalized_string_array(zone_allowed, []),
+		"faction_terrain_id": faction_terrain,
+		"selected_terrain_id": selected,
+		"normalized_terrain_id": normalized,
+		"original_terrain_id": normalized,
+		"biome_id": _biome_for_terrain(normalized),
+		"passable": _terrain_is_passable(normalized),
+		"selection_source": source,
+		"fallback_used": source.ends_with("_fallback") or source == "deterministic_core_fallback",
+		"unsupported_terrain_ids": unsupported,
+		"deferred_terrain_ids": _unique_sorted_strings(deferred),
+		"deferred_reason": "terrain_row_writeout_uses_surface_supported_equivalent" if not deferred.is_empty() else "",
+	}
 
 static func _place_zone_seeds(zones: Array, normalized: Dictionary, rng: DeterministicRng) -> Dictionary:
 	var size: Dictionary = normalized.get("size", {})
@@ -1071,6 +1213,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 		"generated_constraints": {
 			"zone_layout": constraints.get("zone_layout", {}),
 			"terrain": constraints.get("terrain_constraints", {}),
+			"terrain_transit": constraints.get("terrain_transit_semantics", {}),
 			"town_starts": constraints.get("town_start_constraints", {}),
 			"roads": constraints.get("road_network", {}),
 			"reachability": constraints.get("route_reachability_proof", {}),
@@ -1082,14 +1225,19 @@ static func _build_terrain_layers_record(normalized: Dictionary, constraints: Di
 	var profile: Dictionary = normalized.get("profile", {})
 	var metadata := _metadata(normalized)
 	var road_network: Dictionary = constraints.get("road_network", {})
+	var terrain_transit: Dictionary = constraints.get("terrain_transit_semantics", {})
 	return {
 		"id": "generated_layers_%s_%s" % [String(profile.get("id", "seeded_core")), _hash32_hex(_stable_stringify(metadata))],
 		"terrain_layer_status": "generated_staged_draft",
 		"generated_metadata": metadata,
+		"terrain_semantics": terrain_transit,
+		"terrain_layers": terrain_transit.get("terrain_layers", []),
+		"water_coast_passability": terrain_transit.get("water_coast_passability", {}),
+		"transit_routes": terrain_transit.get("transit_routes", {}),
 		"roads": road_network.get("road_segments", []),
 		"road_stubs": road_network.get("road_stubs", []),
 		"route_graph_stub": constraints.get("route_graph", {}),
-		"deferred": ["durable_road_tile_writeout", "river_overlay_writeout"],
+		"deferred": _unique_sorted_strings(["durable_road_tile_writeout", "river_overlay_writeout"] + terrain_transit.get("unsupported_deferred", [])),
 	}
 
 static func _build_staging_payload(normalized: Dictionary, template: Dictionary, zones: Array, seeds: Dictionary, zone_grid: Array, placements: Dictionary, constraints: Dictionary, zone_layout: Dictionary) -> Dictionary:
@@ -1102,6 +1250,7 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"zone_seed_points": _sorted_point_dict(seeds),
 		"terrain_owner_grid": zone_grid,
 		"terrain_constraints": constraints.get("terrain_constraints", {}),
+		"terrain_transit_semantics": constraints.get("terrain_transit_semantics", {}),
 		"town_start_constraints": constraints.get("town_start_constraints", {}),
 		"road_network": constraints.get("road_network", {}),
 		"route_reachability_proof": constraints.get("route_reachability_proof", {}),
@@ -1113,15 +1262,16 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"terrain_owner_grid_source": "zone_layout_surface_owner_grid",
 	}
 
-static func _build_constraint_payload(normalized: Dictionary, zones: Array, links: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, placements: Dictionary, zone_layout: Dictionary) -> Dictionary:
-	var terrain_constraints := _terrain_constraints_payload(terrain_rows, zone_grid, zones)
+static func _build_constraint_payload(normalized: Dictionary, zones: Array, links: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, placements: Dictionary, zone_layout: Dictionary, terrain_transit: Dictionary) -> Dictionary:
+	var terrain_constraints := _terrain_constraints_payload(terrain_rows, zone_grid, zones, terrain_transit)
 	var occupied := _occupied_body_lookup(placements.get("object_placements", []))
-	var route_build := _build_route_and_road_payload(links, seeds, placements, terrain_rows, occupied)
+	var route_build := _build_route_and_road_payload(links, seeds, placements, terrain_rows, occupied, terrain_transit)
 	var town_start_constraints := _town_start_constraints_payload(zones, placements, route_build.get("route_graph", {}), route_build.get("route_reachability_proof", {}))
 	var fairness_report := _fairness_report_payload(normalized, zones, placements, route_build.get("route_graph", {}), route_build.get("route_reachability_proof", {}))
 	return {
 		"zone_layout": zone_layout,
 		"terrain_constraints": terrain_constraints,
+		"terrain_transit_semantics": terrain_transit,
 		"town_start_constraints": town_start_constraints,
 		"road_network": route_build.get("road_network", {}),
 		"route_graph": route_build.get("route_graph", _route_graph_payload(links, seeds)),
@@ -1130,25 +1280,29 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		"metadata": _metadata(normalized),
 	}
 
-static func _terrain_constraints_payload(terrain_rows: Array, zone_grid: Array, zones: Array) -> Dictionary:
+static func _terrain_constraints_payload(terrain_rows: Array, zone_grid: Array, zones: Array, terrain_transit: Dictionary = {}) -> Dictionary:
 	var passability_rows := []
 	var biome_rows := []
+	var movement_cost_rows := []
 	var terrain_counts := {}
 	var blocked_cells := []
 	for y in range(terrain_rows.size()):
 		var terrain_row: Array = terrain_rows[y]
 		var pass_row := []
 		var biome_row := []
+		var cost_row := []
 		for x in range(terrain_row.size()):
 			var terrain_id := String(terrain_row[x])
 			var passable := _terrain_is_passable(terrain_id)
 			pass_row.append(passable)
 			biome_row.append(_biome_for_terrain(terrain_id))
+			cost_row.append(_terrain_movement_cost(terrain_id))
 			terrain_counts[terrain_id] = int(terrain_counts.get(terrain_id, 0)) + 1
 			if not passable:
 				blocked_cells.append(_point_dict(x, y))
 		passability_rows.append(pass_row)
 		biome_rows.append(biome_row)
+		movement_cost_rows.append(cost_row)
 	var zone_summaries := []
 	for zone in zones:
 		if not (zone is Dictionary):
@@ -1159,6 +1313,7 @@ static func _terrain_constraints_payload(terrain_rows: Array, zone_grid: Array, 
 			"role": String(zone.get("role", "")),
 			"biome_id": _biome_for_terrain(terrain_id),
 			"terrain_id": terrain_id,
+			"terrain_palette": zone.get("terrain_palette", {}),
 			"passable": _terrain_is_passable(terrain_id),
 			"cell_count": int(zone.get("cell_count", 0)),
 			"bounds": zone.get("bounds", {}),
@@ -1169,13 +1324,16 @@ static func _terrain_constraints_payload(terrain_rows: Array, zone_grid: Array, 
 		"passability_source": "content_biome_passable_semantics_collapsed_for_generated_payload",
 		"passability_grid": passability_rows,
 		"biome_grid": biome_rows,
+		"movement_cost_grid": movement_cost_rows,
 		"blocked_cells": blocked_cells,
 		"terrain_counts": _sorted_dict(terrain_counts),
 		"region_count_by_terrain": _terrain_region_counts(terrain_rows),
 		"zone_biome_summary": zone_summaries,
+		"terrain_transit_signature": String(terrain_transit.get("terrain_transit_signature", "")),
+		"water_coast_passability": terrain_transit.get("water_coast_passability", {}),
 	}
 
-static func _build_route_and_road_payload(links: Array, seeds: Dictionary, placements: Dictionary, terrain_rows: Array, occupied: Dictionary) -> Dictionary:
+static func _build_route_and_road_payload(links: Array, seeds: Dictionary, placements: Dictionary, terrain_rows: Array, occupied: Dictionary, terrain_transit: Dictionary = {}) -> Dictionary:
 	var object_by_zone := _object_placements_by_zone_and_kind(placements.get("object_placements", []))
 	var route_nodes := _route_nodes_payload(seeds, placements)
 	var road_segments := []
@@ -1194,6 +1352,7 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 		var to_point: Dictionary = to_node.get("point", seeds.get(to_zone, {}))
 		var path := _find_passable_path(from_point, to_point, terrain_rows, occupied)
 		var classification := _route_classification(link, not path.is_empty())
+		var transit_semantics := _transit_semantics_for_surface_link(link, terrain_transit)
 		var edge_id := "edge_%02d_%s_%s" % [edge_index, from_zone, to_zone]
 		var role := String(link.get("role", ""))
 		var required := role in ["contest_route", "early_reward_route", "reward_to_junction", "template_connection"]
@@ -1213,6 +1372,7 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 			"special_payload": link.get("special_payload", {}),
 			"unsupported_runtime_fields": link.get("unsupported_runtime_fields", []),
 			"connectivity_classification": classification,
+			"transit_semantics": transit_semantics,
 			"required": required,
 			"path_found": not path.is_empty(),
 			"path_length": path.size(),
@@ -1252,6 +1412,7 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 				"wide": false,
 				"border_guard": false,
 				"connectivity_classification": resource_classification,
+				"transit_semantics": {"kind": "land_road", "materialization_state": "road_overlay_staged", "required_unlock": false},
 				"required": true,
 				"path_found": not resource_path.is_empty(),
 				"path_length": resource_path.size(),
@@ -1273,7 +1434,9 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 			"value": "normal_guard_value",
 			"wide": "suppresses_normal_guard",
 			"border_guard": "special_guarded_connection_mode",
+			"transit": "land_roads_now_water_underground_and_cross_level_routes_report_deferred_materialization",
 		},
+		"transit_route_semantics": terrain_transit.get("transit_routes", {}),
 	}
 	var proof := _reachability_proof(route_nodes, edges, adjacency)
 	return {
@@ -1285,6 +1448,7 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 			"road_segments": road_segments,
 			"road_stubs": road_stubs,
 			"blocked_body_policy": "paths_exclude_object_body_tiles_and_impassable_terrain",
+			"transit_writeout_policy": "land_road_overlays_staged_transit_objects_deferred",
 		},
 		"route_reachability_proof": proof,
 	}
@@ -1752,6 +1916,340 @@ static func _terrain_phase_summary(terrain_rows: Array, zones: Array) -> Diction
 		"blocked_terrain_ids": BLOCKED_TERRAIN_IDS,
 	}
 
+static func _terrain_transit_phase_summary(terrain_transit: Dictionary) -> Dictionary:
+	return {
+		"schema_id": String(terrain_transit.get("schema_id", "")),
+		"signature": String(terrain_transit.get("terrain_transit_signature", "")),
+		"zone_palette_count": terrain_transit.get("terrain_normalization", {}).get("zone_palettes", []).size(),
+		"terrain_layer_count": terrain_transit.get("terrain_layers", []).size(),
+		"coast_cell_count": int(terrain_transit.get("water_coast_passability", {}).get("coast_cell_count", 0)),
+		"corridor_route_count": terrain_transit.get("transit_routes", {}).get("corridor_routes", []).size(),
+		"cross_level_candidate_count": terrain_transit.get("transit_routes", {}).get("cross_level_candidates", []).size(),
+		"unsupported_deferred": terrain_transit.get("unsupported_deferred", []),
+	}
+
+static func _build_terrain_transit_semantics(zone_layout: Dictionary, zones: Array, links: Array, surface_rows: Array, normalized: Dictionary) -> Dictionary:
+	var zone_palettes := []
+	var unsupported := []
+	var deferred := []
+	for zone in zones:
+		if not (zone is Dictionary):
+			continue
+		var palette: Dictionary = zone.get("terrain_palette", {}) if zone.get("terrain_palette", {}) is Dictionary else {}
+		if palette.is_empty():
+			palette = _zone_terrain_palette_record(zone, String(zone.get("faction_id", "")), normalized.get("profile", {}).get("terrain_ids", CORE_TERRAIN_POOL), DeterministicRng.new(_positive_seed(String(zone.get("id", "")))))
+		zone_palettes.append(palette)
+		unsupported.append_array(palette.get("unsupported_terrain_ids", []))
+		deferred.append_array(palette.get("deferred_terrain_ids", []))
+	var terrain_layers := _terrain_layer_payloads(zone_layout, zones, surface_rows)
+	var water_coast := _water_coast_passability_payload(zone_layout, surface_rows)
+	var transit_routes := _transit_routes_payload(zone_layout, links, water_coast)
+	deferred.append_array(transit_routes.get("deferred", []))
+	var payload := {
+		"schema_id": TERRAIN_TRANSIT_SCHEMA_ID,
+		"normalization_policy": "zone_palette_to_known_original_terrain_or_explicit_unsupported_deferred_state",
+		"terrain_normalization": {
+			"known_original_terrain_ids": ORIGINAL_TERRAIN_IDS,
+			"surface_scenario_terrain_ids": SURFACE_SCENARIO_TERRAIN_IDS,
+			"zone_palettes": zone_palettes,
+			"unsupported_terrain_ids": _unique_sorted_strings(unsupported),
+			"deferred_terrain_ids": _unique_sorted_strings(deferred),
+		},
+		"terrain_layers": terrain_layers,
+		"water_coast_passability": water_coast,
+		"transit_routes": transit_routes,
+		"unsupported_deferred": _unique_sorted_strings(unsupported + deferred),
+		"writeout_policy": "staged_metadata_only_no_authored_terrain_or_transit_writeback",
+	}
+	payload["terrain_transit_signature"] = _hash32_hex(_stable_stringify({
+		"terrain_normalization": payload.get("terrain_normalization", {}),
+		"terrain_layers": payload.get("terrain_layers", []),
+		"water_coast_passability": payload.get("water_coast_passability", {}),
+		"transit_routes": payload.get("transit_routes", {}),
+	}))
+	return payload
+
+static func _terrain_layer_payloads(zone_layout: Dictionary, zones: Array, surface_rows: Array) -> Array:
+	var layers := []
+	var levels: Array = zone_layout.get("levels", [])
+	var zone_terrain := {}
+	for zone in zones:
+		if zone is Dictionary:
+			zone_terrain[String(zone.get("id", ""))] = String(zone.get("terrain_id", "grass"))
+	for level in levels:
+		if not (level is Dictionary):
+			continue
+		var level_index := int(level.get("level_index", 0))
+		var level_kind := String(level.get("kind", "surface"))
+		var rows := surface_rows.duplicate(true) if level_index == 0 else _terrain_rows_for_level(level, zone_terrain, true)
+		layers.append({
+			"level_index": level_index,
+			"level_kind": level_kind,
+			"terrain_model": "surface_owner_grid_rows" if level_index == 0 else "underground_cave_rows_from_level_owner_grid",
+			"default_terrain_id": UNDERGROUND_TERRAIN_ID if level_kind == "underground" else "",
+			"biome_id": "biome_subterranean_underways" if level_kind == "underground" else "",
+			"rows": rows,
+			"terrain_counts": _terrain_counts(rows),
+			"passability_grid": _passability_rows(rows),
+			"movement_cost_grid": _movement_cost_rows(rows),
+			"cave_metadata": {
+				"is_cave": level_kind == "underground",
+				"underground": level_kind == "underground",
+				"materialization_state": "metadata_and_rows_only_transit_gate_objects_deferred" if level_kind == "underground" else "surface_layer",
+			},
+		})
+	return layers
+
+static func _terrain_rows_for_level(level: Dictionary, zone_terrain: Dictionary, underground: bool) -> Array:
+	var owner_grid: Array = level.get("owner_grid", [])
+	var water_lookup := _point_lookup(level.get("water_cells", []))
+	var rows := []
+	for y in range(owner_grid.size()):
+		var source_row: Array = owner_grid[y]
+		var row := []
+		for x in range(source_row.size()):
+			if water_lookup.has(_point_key(x, y)):
+				row.append("water")
+			elif underground:
+				row.append(UNDERGROUND_TERRAIN_ID)
+			else:
+				row.append(String(zone_terrain.get(String(source_row[x]), "grass")))
+		rows.append(row)
+	return rows
+
+static func _water_coast_passability_payload(zone_layout: Dictionary, surface_rows: Array) -> Dictionary:
+	var water_cells: Array = zone_layout.get("surface_water_cells", [])
+	var water_lookup := _point_lookup(water_cells)
+	var coast_lookup := {}
+	var classification_rows := []
+	var passability_rows := []
+	var movement_cost_rows := []
+	for y in range(surface_rows.size()):
+		var source_row: Array = surface_rows[y]
+		var class_row := []
+		var pass_row := []
+		var cost_row := []
+		for x in range(source_row.size()):
+			var terrain_id := String(source_row[x])
+			var classification := "water" if water_lookup.has(_point_key(x, y)) else "land"
+			if classification == "land" and _adjacent_to_lookup(x, y, water_lookup):
+				classification = "coast_land"
+				coast_lookup[_point_key(x, y)] = true
+			class_row.append(classification)
+			pass_row.append(_terrain_is_passable(terrain_id))
+			cost_row.append(_terrain_movement_cost(terrain_id))
+		classification_rows.append(class_row)
+		passability_rows.append(pass_row)
+		movement_cost_rows.append(cost_row)
+	return {
+		"schema_id": "random_map_water_coast_passability_v1",
+		"water_mode": String(zone_layout.get("policy", {}).get("water_mode", "land")),
+		"water_cell_count": water_cells.size(),
+		"coast_cell_count": coast_lookup.size(),
+		"water_cells": water_cells,
+		"coast_cells": _points_from_lookup(coast_lookup),
+		"classification_rows": classification_rows,
+		"passability_grid": passability_rows,
+		"movement_cost_grid": movement_cost_rows,
+		"water_passability": "impassable_until_explicit_boat_ferry_shipyard_or_bridge_transit_materializes",
+		"coast_passability": "land_cells_adjacent_to_water_remain_passable_approach_candidates",
+	}
+
+static func _transit_routes_payload(zone_layout: Dictionary, links: Array, water_coast: Dictionary) -> Dictionary:
+	var corridor_routes := []
+	var by_key := {}
+	var deferred := []
+	for candidate in zone_layout.get("corridor_candidates", []):
+		if not (candidate is Dictionary):
+			continue
+		var semantics := _transit_semantics_for_corridor(candidate, water_coast)
+		var record: Dictionary = candidate.duplicate(true)
+		record["transit_semantics"] = semantics
+		record["route_key"] = _corridor_route_key(String(candidate.get("from", "")), String(candidate.get("to", "")), int(candidate.get("level_index", 0)))
+		corridor_routes.append(record)
+		by_key[String(record.get("route_key", ""))] = semantics
+		by_key[_corridor_route_key(String(candidate.get("to", "")), String(candidate.get("from", "")), int(candidate.get("level_index", 0)))] = semantics
+		deferred.append_array(semantics.get("deferred", []))
+	var cross_level := _cross_level_transit_candidates(zone_layout)
+	for candidate in cross_level:
+		if candidate is Dictionary:
+			deferred.append_array(candidate.get("transit_semantics", {}).get("deferred", []))
+	var water_access := _water_access_transit_candidates(zone_layout, water_coast)
+	for candidate in water_access:
+		if candidate is Dictionary:
+			deferred.append_array(candidate.get("transit_semantics", {}).get("deferred", []))
+	return {
+		"corridor_routes": corridor_routes,
+		"by_route_key": by_key,
+		"cross_level_candidates": cross_level,
+		"water_access_candidates": water_access,
+		"deferred": _unique_sorted_strings(deferred),
+		"materialization_policy": "land_road_segments_are_staged_now_water_underground_cross_level_objects_are_candidates_only",
+	}
+
+static func _transit_semantics_for_corridor(candidate: Dictionary, water_coast: Dictionary) -> Dictionary:
+	var level_kind := String(candidate.get("level_kind", "surface"))
+	var crosses_water := String(candidate.get("mode", "land")) == "water"
+	if crosses_water:
+		return {
+			"kind": "water_crossing_deferred",
+			"route_class": "water_crossing",
+			"passability": "deferred_unlock_required",
+			"materialization_options": ["ferry", "boat", "shipyard", "bridge"],
+			"required_unlock": true,
+			"deferred": ["boat_shipyard_ferry_placement_deferred", "bridge_placement_deferred"],
+			"materialization_state": "candidate_only_transit_object_not_materialized",
+		}
+	if level_kind == "underground":
+		return {
+			"kind": "underground_subterranean_connection_deferred",
+			"route_class": "underground_land_corridor",
+			"passability": "cave_land_passable_when_level_is_active",
+			"materialization_options": ["subterranean_gate", "underground_road"],
+			"required_unlock": false,
+			"deferred": ["subterranean_gate_placement_deferred"],
+			"materialization_state": "underground_metadata_only_surface_runtime_path_unchanged",
+		}
+	return {
+		"kind": "land_road",
+		"route_class": "surface_land",
+		"passability": "passable_now",
+		"materialization_options": ["road_overlay"],
+		"required_unlock": false,
+		"deferred": [],
+		"water_context": "coast_access_available_transit_deferred" if int(water_coast.get("water_cell_count", 0)) > 0 else "none",
+		"materialization_state": "road_overlay_staged",
+	}
+
+static func _cross_level_transit_candidates(zone_layout: Dictionary) -> Array:
+	var levels: Array = zone_layout.get("levels", [])
+	if levels.size() < 2:
+		return []
+	var surface: Dictionary = levels[0]
+	var underground: Dictionary = levels[1]
+	var surface_anchors: Dictionary = surface.get("anchor_points", {})
+	var underground_anchors: Dictionary = underground.get("anchor_points", {})
+	var result := []
+	for zone_id in _sorted_keys(surface_anchors):
+		if not underground_anchors.has(zone_id):
+			continue
+		result.append({
+			"id": "cross_level_%s_surface_underground" % String(zone_id),
+			"zone_id": String(zone_id),
+			"from_level_index": int(surface.get("level_index", 0)),
+			"to_level_index": int(underground.get("level_index", 1)),
+			"from_anchor": surface_anchors[zone_id],
+			"to_anchor": underground_anchors[zone_id],
+			"transit_semantics": {
+				"kind": "cross_level_subterranean_gate_deferred",
+				"route_class": "cross_level",
+				"passability": "deferred_unlock_required",
+				"materialization_options": ["subterranean_gate", "two_way_portal"],
+				"required_unlock": true,
+				"deferred": ["subterranean_gate_placement_deferred", "cross_level_link_object_placement_deferred"],
+				"materialization_state": "candidate_only_transit_object_not_materialized",
+			},
+		})
+	return result
+
+static func _water_access_transit_candidates(zone_layout: Dictionary, water_coast: Dictionary) -> Array:
+	if int(water_coast.get("water_cell_count", 0)) <= 0:
+		return []
+	var coast_cells: Array = water_coast.get("coast_cells", [])
+	if coast_cells.is_empty():
+		return []
+	var levels: Array = zone_layout.get("levels", [])
+	if levels.is_empty() or not (levels[0] is Dictionary):
+		return []
+	var anchors: Dictionary = levels[0].get("anchor_points", {})
+	var result := []
+	var cursor := 0
+	for zone_id in _sorted_keys(anchors):
+		if cursor >= min(4, coast_cells.size()):
+			break
+		var coast: Dictionary = coast_cells[cursor]
+		result.append({
+			"id": "water_access_%s_%02d" % [String(zone_id), cursor + 1],
+			"zone_id": String(zone_id),
+			"from_anchor": anchors[zone_id],
+			"to_coast": coast,
+			"level_index": 0,
+			"transit_semantics": {
+				"kind": "water_crossing_deferred",
+				"route_class": "water_access",
+				"passability": "deferred_unlock_required",
+				"materialization_options": ["ferry", "boat", "shipyard"],
+				"required_unlock": true,
+				"deferred": ["boat_shipyard_ferry_placement_deferred"],
+				"materialization_state": "candidate_only_transit_object_not_materialized",
+			},
+		})
+		cursor += 1
+	return result
+
+static func _transit_semantics_for_surface_link(link: Dictionary, terrain_transit: Dictionary) -> Dictionary:
+	var key := _corridor_route_key(String(link.get("from", "")), String(link.get("to", "")), 0)
+	var by_key: Dictionary = terrain_transit.get("transit_routes", {}).get("by_route_key", {})
+	if by_key.has(key):
+		return by_key[key]
+	return {"kind": "land_road", "route_class": "surface_land", "passability": "passable_now", "materialization_state": "road_overlay_staged", "required_unlock": false, "deferred": []}
+
+static func _corridor_route_key(from_zone: String, to_zone: String, level_index: int) -> String:
+	return "%s->%s@%d" % [from_zone, to_zone, level_index]
+
+static func _terrain_transit_validation(terrain_transit: Dictionary, generated_map: Dictionary = {}) -> Dictionary:
+	var failures := []
+	var warnings := []
+	if String(terrain_transit.get("schema_id", "")) != TERRAIN_TRANSIT_SCHEMA_ID:
+		failures.append("terrain transit schema mismatch")
+	if String(terrain_transit.get("terrain_transit_signature", "")) == "":
+		failures.append("terrain transit signature missing")
+	for palette in terrain_transit.get("terrain_normalization", {}).get("zone_palettes", []):
+		if not (palette is Dictionary):
+			failures.append("non-dictionary terrain palette")
+			continue
+		var normalized := String(palette.get("normalized_terrain_id", ""))
+		if not _terrain_is_known_original(normalized):
+			failures.append("zone %s normalized to unknown terrain %s" % [String(palette.get("zone_id", "")), normalized])
+	var water: Dictionary = terrain_transit.get("water_coast_passability", {})
+	if String(water.get("water_mode", "land")) == "islands":
+		if int(water.get("water_cell_count", 0)) <= 0:
+			failures.append("islands water mode missing water cells")
+		if int(water.get("coast_cell_count", 0)) <= 0:
+			failures.append("islands water mode missing coast cells")
+	var has_land := false
+	var has_underground := false
+	for route in terrain_transit.get("transit_routes", {}).get("corridor_routes", []):
+		if not (route is Dictionary):
+			continue
+		var kind := String(route.get("transit_semantics", {}).get("kind", ""))
+		if kind == "land_road":
+			has_land = true
+		if kind == "underground_subterranean_connection_deferred":
+			has_underground = true
+	if not has_land:
+		failures.append("corridor transit semantics missing land road route")
+	var level_count := int(generated_map.get("staging", {}).get("zone_layout", {}).get("dimensions", {}).get("level_count", 1))
+	if level_count > 1:
+		if not has_underground:
+			failures.append("underground request missing underground corridor semantics")
+		if terrain_transit.get("transit_routes", {}).get("cross_level_candidates", []).is_empty():
+			failures.append("underground request missing cross-level candidates")
+	var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
+	if not scenario.is_empty():
+		if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", true)) or bool(scenario.get("selection", {}).get("availability", {}).get("skirmish", true)):
+			failures.append("terrain transit validation found campaign/skirmish adoption")
+		if scenario.has("save_adoption") or scenario.has("alpha_parity_claim") or String(generated_map.get("write_policy", "")) != "staged_payload_only_no_authored_content_write":
+			failures.append("terrain transit validation found save/writeback/parity claim")
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failure_count": failures.size(),
+		"warning_count": warnings.size(),
+		"failures": failures,
+		"warnings": warnings,
+	}
+
 static func _validate_road_paths(road_network: Dictionary, terrain_rows: Array, object_placements: Array, failures: Array) -> void:
 	var occupied := _occupied_body_lookup(object_placements)
 	for segment in road_network.get("road_segments", []):
@@ -1968,6 +2466,7 @@ static func _road_segment_payload(edge_id: String, path: Array, classification: 
 		"cells": path,
 		"cell_count": path.size(),
 		"connectivity_classification": classification,
+		"transit_semantics": edge.get("transit_semantics", {}),
 		"role": String(edge.get("role", "")),
 		"writeout_state": "staged_overlay_no_tile_bytes_written",
 	}
@@ -2220,7 +2719,81 @@ static func _cardinal_offsets() -> Array:
 	return [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1)]
 
 static func _terrain_is_passable(terrain_id: String) -> bool:
-	return terrain_id not in BLOCKED_TERRAIN_IDS
+	return _terrain_is_known_original(terrain_id) and terrain_id not in BLOCKED_TERRAIN_IDS
+
+static func _terrain_is_known_original(terrain_id: String) -> bool:
+	return String(terrain_id) in ORIGINAL_TERRAIN_IDS
+
+static func _normalize_terrain_id_for_generated_rows(terrain_id: String) -> String:
+	var normalized := String(terrain_id)
+	if normalized in SURFACE_SCENARIO_TERRAIN_IDS:
+		return normalized
+	match normalized:
+		"mire":
+			return "swamp"
+		"hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway":
+			return "highland"
+		"coast", "shore":
+			return "water"
+		_:
+			return "grass" if not _terrain_is_known_original(normalized) else normalized
+
+static func _terrain_movement_cost(terrain_id: String) -> int:
+	return int(TERRAIN_MOVEMENT_COST.get(String(terrain_id), 999))
+
+static func _unsupported_terrain_ids(terrain_ids: Array) -> Array:
+	var result := []
+	for terrain_id in terrain_ids:
+		var text := String(terrain_id)
+		if text != "" and not _terrain_is_known_original(text) and text not in result:
+			result.append(text)
+	result.sort()
+	return result
+
+static func _passable_known_terrain_ids(terrain_ids: Array) -> Array:
+	var result := []
+	for terrain_id in terrain_ids:
+		var text := String(terrain_id)
+		if text != "" and _terrain_is_passable(text) and text not in result:
+			result.append(text)
+	return result
+
+static func _unique_sorted_strings(values: Array) -> Array:
+	var seen := {}
+	for value in values:
+		var text := String(value)
+		if text != "":
+			seen[text] = true
+	return _sorted_keys(seen)
+
+static func _terrain_counts(terrain_rows: Array) -> Dictionary:
+	var counts := {}
+	for row_value in terrain_rows:
+		var row: Array = row_value
+		for terrain_id in row:
+			var key := String(terrain_id)
+			counts[key] = int(counts.get(key, 0)) + 1
+	return _sorted_dict(counts)
+
+static func _passability_rows(terrain_rows: Array) -> Array:
+	var rows := []
+	for row_value in terrain_rows:
+		var source_row: Array = row_value
+		var row := []
+		for terrain_id in source_row:
+			row.append(_terrain_is_passable(String(terrain_id)))
+		rows.append(row)
+	return rows
+
+static func _movement_cost_rows(terrain_rows: Array) -> Array:
+	var rows := []
+	for row_value in terrain_rows:
+		var source_row: Array = row_value
+		var row := []
+		for terrain_id in source_row:
+			row.append(_terrain_movement_cost(String(terrain_id)))
+		rows.append(row)
+	return rows
 
 static func _terrain_cell_is_passable(terrain_rows: Array, x: int, y: int) -> bool:
 	if not _point_in_rows(terrain_rows, x, y):
@@ -3040,6 +3613,21 @@ static func _point_lookup(points: Array) -> Dictionary:
 			result[_point_key(int(point.get("x", 0)), int(point.get("y", 0)))] = true
 	return result
 
+static func _adjacent_to_lookup(x: int, y: int, lookup: Dictionary) -> bool:
+	for offset in _cardinal_offsets():
+		if lookup.has(_point_key(x + int(offset.x), y + int(offset.y))):
+			return true
+	return false
+
+static func _points_from_lookup(lookup: Dictionary) -> Array:
+	var result := []
+	for key in _sorted_keys(lookup):
+		var parts := String(key).split(",")
+		if parts.size() != 2:
+			continue
+		result.append(_point_dict(int(parts[0]), int(parts[1])))
+	return result
+
 static func _zone_layout_phase_summary(zone_layout: Dictionary) -> Dictionary:
 	return {
 		"schema_id": String(zone_layout.get("schema_id", "")),
@@ -3181,6 +3769,7 @@ static func _zones_for_payload(zones: Array) -> Array:
 				"team_id": String(zone.get("team_id", "")),
 				"faction_id": String(zone.get("faction_id", "")),
 				"terrain_id": String(zone.get("terrain_id", "")),
+				"terrain_palette": zone.get("terrain_palette", {}),
 				"base_size": int(zone.get("base_size", 0)),
 				"bounds": zone.get("bounds", {}),
 				"cell_count": int(zone.get("cell_count", 0)),
