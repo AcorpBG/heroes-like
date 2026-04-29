@@ -26,6 +26,8 @@ func _run() -> void:
 			"water_modes": report.get("coverage", {}).get("water_modes", []),
 			"level_counts": report.get("coverage", {}).get("level_counts", []),
 			"unsupported_warning_count": report.get("coverage", {}).get("unsupported_warning_count", 0),
+			"accepted_non_parity_count": report.get("coverage", {}).get("accepted_non_parity_count", 0),
+			"translated_parity_materialized_validation_pass_count": report.get("coverage", {}).get("translated_parity_materialized_validation_pass_count", 0),
 		},
 		"batch_signature": report.get("batch_signature", ""),
 		"changed_batch_signature": report.get("changed_batch_signature", ""),
@@ -52,8 +54,17 @@ func _assert_report(report: Dictionary) -> bool:
 	if int(summary.get("hard_blocker_count", -1)) != 0:
 		_fail("Stress report exposed hard blockers instead of accepted unsupported warnings: %s" % JSON.stringify(report.get("hard_blockers", [])))
 		return false
-	if int(summary.get("unsupported_warning_count", 0)) <= 0 or int(summary.get("expected_negative_count", 0)) <= 0:
-		_fail("Stress report missed unsupported warning or expected negative evidence: %s" % JSON.stringify(summary))
+	if int(summary.get("metadata_only_count", -1)) != 0 or int(summary.get("translated_metadata_only_count", -1)) != 0:
+		_fail("Stress report still used metadata-only translated-template coverage: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("unsupported_warning_count", -1)) != 0:
+		_fail("Stress report still uses unsupported-warning success instead of validation-pass or accepted non-parity outcomes: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("validation_pass_case_count", 0)) <= 0 or int(summary.get("materialized_validation_pass_count", 0)) != int(summary.get("validation_pass_case_count", 0)):
+		_fail("Stress report missed true materialized validation-pass evidence: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("accepted_non_parity_count", 0)) <= 0 or int(summary.get("expected_negative_count", 0)) <= 0:
+		_fail("Stress report missed accepted non-parity or expected negative evidence: %s" % JSON.stringify(summary))
 		return false
 	if int(summary.get("bounded_retry_case_count", 0)) <= 0 or int(summary.get("original_failure_count", 0)) <= 0:
 		_fail("Stress report missed bounded retry/original failure evidence: %s" % JSON.stringify(summary))
@@ -71,6 +82,15 @@ func _assert_coverage(report: Dictionary) -> bool:
 	if int(coverage.get("translated_family_count", 0)) <= 0 or int(coverage.get("covered_translated_family_count", 0)) != int(coverage.get("translated_family_count", 0)):
 		_fail("Stress fixtures did not cover all translated topology families: %s" % JSON.stringify(coverage))
 		return false
+	if int(coverage.get("translated_metadata_only_count", -1)) != 0:
+		_fail("Translated-template sweep still has metadata-only coverage: %s" % JSON.stringify(coverage))
+		return false
+	if int(coverage.get("translated_parity_intended_case_count", 0)) <= 0 or int(coverage.get("translated_parity_materialized_validation_pass_count", 0)) != int(coverage.get("translated_parity_intended_case_count", 0)):
+		_fail("Parity-intended translated templates did not all materialize and validation-pass: %s" % JSON.stringify(coverage))
+		return false
+	if int(coverage.get("accepted_non_parity_count", 0)) <= 0:
+		_fail("Stress coverage missed explicitly accepted non-parity translated families: %s" % JSON.stringify(coverage))
+		return false
 	for tag in ["land", "islands_water", "underground", "wide_link", "border_guard", "negative_case", "retry_policy", "object_pool_value_weighting", "runtime_materialization"]:
 		if tag not in coverage.get("covered_tags", []):
 			_fail("Stress fixtures missed tag %s: %s" % [tag, JSON.stringify(coverage)])
@@ -86,7 +106,8 @@ func _assert_coverage(report: Dictionary) -> bool:
 func _assert_determinism_and_diagnostics(report: Dictionary) -> bool:
 	var saw_materialized_identity := false
 	var saw_phase_identity := false
-	var saw_unsupported_warning := false
+	var saw_validation_pass_materialization := false
+	var saw_accepted_non_parity := false
 	var saw_negative := false
 	var saw_retry := false
 	for case_result in report.get("case_results", []):
@@ -104,14 +125,26 @@ func _assert_determinism_and_diagnostics(report: Dictionary) -> bool:
 			saw_phase_identity = true
 		if String(identity.get("materialized_map_signature", "")) != "":
 			saw_materialized_identity = true
+		if String(case_result.get("final_status", "")) == "pass" or String(case_result.get("final_status", "")) == "pass_after_retry":
+			if String(identity.get("materialized_map_signature", "")) == "" or not bool(case_result.get("validation_passed", false)):
+				_fail("Validation-pass case missed materialized-map proof: %s" % JSON.stringify(case_result))
+				return false
+			saw_validation_pass_materialization = true
 		var diagnostics: Dictionary = case_result.get("failure_diagnostics", {})
 		if String(case_result.get("final_status", "")) == "unsupported_warning":
-			saw_unsupported_warning = true
+			_fail("Unsupported-warning case was not remediated into validation-pass or accepted non-parity: %s" % JSON.stringify(case_result))
+			return false
+		if String(case_result.get("final_status", "")) == "accepted_non_parity":
+			saw_accepted_non_parity = true
+			var decision: Dictionary = case_result.get("accepted_non_parity", {}) if case_result.get("accepted_non_parity", {}) is Dictionary else {}
+			if String(decision.get("rationale", "")) == "" or String(decision.get("original_game_constraint", "")) == "":
+				_fail("Accepted non-parity case missed rationale or original-game constraint: %s" % JSON.stringify(case_result))
+				return false
 			if String(diagnostics.get("phase", "")) == "" or case_result.get("remediation_hints", []).is_empty():
-				_fail("Unsupported warning missed phase diagnostics or remediation hints: %s" % JSON.stringify(case_result))
+				_fail("Accepted non-parity case missed phase diagnostics or remediation hints: %s" % JSON.stringify(case_result))
 				return false
 			if diagnostics.get("coordinate_context", {}).is_empty():
-				_fail("Unsupported warning missed coordinate or constraint context: %s" % JSON.stringify(case_result))
+				_fail("Accepted non-parity case missed coordinate or constraint context: %s" % JSON.stringify(case_result))
 				return false
 		if String(case_result.get("final_status", "")) == "expected_negative":
 			saw_negative = true
@@ -126,7 +159,7 @@ func _assert_determinism_and_diagnostics(report: Dictionary) -> bool:
 			if not bool(case_result.get("retry_policy", {}).get("does_not_hide_original_failure", false)):
 				_fail("Retry policy did not preserve original failure evidence: %s" % JSON.stringify(case_result))
 				return false
-	if not (saw_materialized_identity and saw_phase_identity and saw_unsupported_warning and saw_negative and saw_retry):
+	if not (saw_materialized_identity and saw_phase_identity and saw_validation_pass_materialization and saw_accepted_non_parity and saw_negative and saw_retry):
 		_fail("Stress report missed required identity/diagnostic categories.")
 		return false
 	return true

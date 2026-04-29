@@ -2452,7 +2452,7 @@ nonGoals:
 
 auditResult:
 - `docs/random-map-final-homm3-parity-gate-audit.md` concludes RMG parity is not met.
-- The parent RMG parity queue remains open because large-batch evidence still includes metadata-only translated-template cases, unsupported warnings, deferred final art/autotile/writeout/save/schema boundaries, and no completed player-facing random-map setup/retry UX.
+- The parent RMG parity queue remains open because player-facing random-map setup/retry UX remains pending and the final parity audit has not been rerun after all queued Phase 2 RMG child slices.
 
 ### P2 Child: Random Map Translated Template Runtime Sweep
 
@@ -2477,6 +2477,10 @@ sliceEvidence:
 - Translated-template sweep cases no longer pass only through metadata-only coverage when parity is intended.
 - Unsupported-warning cases are either materialized and validated or explicitly recorded as accepted original-game non-parity with rationale.
 - Large-batch report separates true validation-pass materializations from intentionally non-parity families.
+
+completionResult:
+- Large-batch stress evidence reports 58 cases with 42 materialized validation-pass cases, 15 accepted non-parity decisions, 1 expected negative, 0 metadata-only cases, 0 unsupported warnings, and 0 hard blockers.
+- All 38 parity-intended translated-template sweep cases materialize and validation-pass; accepted non-parity cases remain limited to explicit source-template size/disconnected-graph constraints.
 
 nonGoals:
 - No campaign work, faction breadth work, broad content expansion, or parity claim.
