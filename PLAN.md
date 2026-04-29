@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Recently completed implementation slice: `balance-regression-report-suite-10184`, following `random-map-validation-batch-retry-10184`, `random-map-skirmish-ui-save-replay-10184`, `random-map-roads-rivers-writeout-10184`, `random-map-decoration-density-pass-10184`, `random-map-monster-reward-bands-10184`, and `random-map-connection-guard-materialization-10184`. Current selected slice status: completed. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated maps through controlled setup/session/report boundaries only; they are not HoMM3 RMG parity, campaign adoption, authored writeback, or alpha completion. The balance/regression suite is the first report-only Phase 3 foundation surface pulled forward to aggregate existing deterministic evidence; it is not automatic tuning, parity completion, or an alpha claim.
+Recently completed implementation slice: `balance-regression-report-suite-10184`, following `random-map-validation-batch-retry-10184`, `random-map-skirmish-ui-save-replay-10184`, `random-map-roads-rivers-writeout-10184`, `random-map-decoration-density-pass-10184`, `random-map-monster-reward-bands-10184`, and `random-map-connection-guard-materialization-10184`. Current selected slice: `broad-production-faction-content-breadth-10184` as a narrow pulled-forward content increment, not a broad production completion claim. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated maps through controlled setup/session/report boundaries only; they are not HoMM3 RMG parity, campaign adoption, authored writeback, or alpha completion. The balance/regression suite is the first report-only Phase 3 foundation surface pulled forward to aggregate existing deterministic evidence; it is not automatic tuning, parity completion, or an alpha claim.
 
 ## Slice Status Model
 
@@ -2523,7 +2523,7 @@ baselineChecks:
 - Full validation/smoke/harness suite.
 
 sliceEvidence:
-- Broad content works through live play, headless reports, and content validation.
+- For the pulled-forward first increment, content breadth is visible through ContentService validation, focused faction-content reports, the balance/regression suite, authored scenario pressure hooks, and existing RMG/save smoke paths.
 
 completionCriteria:
 - Breadth is implemented through playable systems and validated pipelines.

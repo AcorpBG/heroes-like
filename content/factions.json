@@ -572,7 +572,8 @@
         }
       },
       "town_ids": [
-        "town_thornwake_graftroot_caravan"
+        "town_thornwake_graftroot_caravan",
+        "town_thornwake_rootgate_nursery"
       ],
       "hero_ids": [
         "hero_thornwake_ardren_briarmarshal",
@@ -626,9 +627,9 @@
       },
       "content_status": {
         "six_faction_loop": "scaffold_started",
-        "playability": "content_scaffold_not_playable",
+        "playability": "prototype_report_integrated_partial_scaffold",
         "manual_play": "not_verified_for_six_faction_bundle",
-        "scenario_integration": "not_started"
+        "scenario_integration": "ninefold_pressure_integrated_with_secondary_town_template"
       }
     },
     {
@@ -719,7 +720,8 @@
         }
       },
       "town_ids": [
-        "town_brasshollow_orevein_gantry"
+        "town_brasshollow_orevein_gantry",
+        "town_brasshollow_clauseworks_depot"
       ],
       "hero_ids": [
         "hero_brasshollow_marka_ironclause",
@@ -773,9 +775,9 @@
       },
       "content_status": {
         "six_faction_loop": "scaffold_started",
-        "playability": "content_scaffold_not_playable",
+        "playability": "prototype_report_integrated_partial_scaffold",
         "manual_play": "not_verified_for_six_faction_bundle",
-        "scenario_integration": "not_started"
+        "scenario_integration": "ninefold_pressure_integrated_with_secondary_town_template"
       }
     },
     {
@@ -865,7 +867,8 @@
         }
       },
       "town_ids": [
-        "town_veilmourn_bellwake_harbor"
+        "town_veilmourn_bellwake_harbor",
+        "town_veilmourn_fogchart_mooring"
       ],
       "hero_ids": [
         "hero_veilmourn_ivara_blacktide",
@@ -919,9 +922,9 @@
       },
       "content_status": {
         "six_faction_loop": "scaffold_started",
-        "playability": "content_scaffold_not_playable",
+        "playability": "prototype_report_integrated_partial_scaffold",
         "manual_play": "not_verified_for_six_faction_bundle",
-        "scenario_integration": "not_started"
+        "scenario_integration": "ninefold_pressure_integrated_with_secondary_town_template"
       }
     }
   ]

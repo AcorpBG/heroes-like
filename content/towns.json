@@ -1058,6 +1058,272 @@
         }
       ],
       "content_status": "six_faction_seed_town_not_scenario_integrated"
+    },
+    {
+      "id": "town_thornwake_rootgate_nursery",
+      "name": "Rootgate Nursery",
+      "faction_id": "faction_thornwake",
+      "identity_summary": "A rooted toll nursery that hardens living roads, grows recovery yards, and feeds Thornwake border claims.",
+      "strategic_role": "support_growth",
+      "strategic_summary": "Rootgate Nursery turns contested roads into slow recovery ground for Concord wardens and bramble escorts.",
+      "logistics_plan": {
+        "support_radius": 5,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 2,
+        "vulnerability_summary": "The nursery depends on nearby copses and bramble hedges; losing those sites leaves the root road thin."
+      },
+      "economy": {
+        "base_income": {
+          "gold": 70,
+          "wood": 2
+        },
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "economy": {
+            "gold": 18,
+            "wood": 1
+          },
+          "dwelling": {
+            "gold": 18
+          },
+          "support": {
+            "gold": 16
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 2,
+        "growth_bonus": {
+          "unit_thornwake_seedcutters": 2,
+          "unit_thornwake_sporeglass_menders": 1
+        },
+        "cost_discount_percent": {
+          "unit_thornwake_seedcutters": 6,
+          "unit_thornwake_sporeglass_menders": 4
+        }
+      },
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_thornwake_seed_vault",
+        "building_thornwake_sporeglass_hothouse"
+      ],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_thornwake_bramble_toll",
+        "building_thornwake_barkmantle_run",
+        "building_thornwake_pilgrim_orchard",
+        "building_thornwake_graftworks",
+        "building_thornwake_worldroot_gate"
+      ],
+      "spell_library": [
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_briar_bind",
+            "spell_graft_mend"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_trailglyph",
+            "spell_stone_veil"
+          ]
+        }
+      ],
+      "garrison": [
+        {
+          "unit_id": "unit_thornwake_seedcutters",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_thornwake_sporeglass_menders",
+          "count": 2
+        }
+      ],
+      "content_status": "breadth_secondary_town_ninefold_compatible"
+    },
+    {
+      "id": "town_brasshollow_clauseworks_depot",
+      "name": "Clauseworks Depot",
+      "faction_id": "faction_brasshollow",
+      "identity_summary": "A railhead depot where ore clauses, rivet kennels, and furnace pavises protect Combine extraction claims.",
+      "strategic_role": "ore_pressure",
+      "strategic_summary": "Clauseworks Depot converts ridge quarries into stubborn contract lines and measured siege pressure.",
+      "logistics_plan": {
+        "support_radius": 5,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 1,
+        "vulnerability_summary": "The depot is rich in ore but slow to replace crews if the quarry and gatehouse routes are cut."
+      },
+      "economy": {
+        "base_income": {
+          "gold": 85,
+          "ore": 2
+        },
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "economy": {
+            "gold": 30,
+            "ore": 1
+          },
+          "support": {
+            "gold": 24
+          },
+          "dwelling": {
+            "gold": 12
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 4,
+        "growth_bonus": {
+          "unit_brasshollow_rivet_hounds": 1,
+          "unit_brasshollow_furnace_pavis_teams": 1
+        },
+        "cost_discount_percent": {
+          "unit_brasshollow_rivet_hounds": 5,
+          "unit_brasshollow_furnace_pavis_teams": 4
+        }
+      },
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_brasshollow_ore_tithe_office",
+        "building_brasshollow_rivet_kennels"
+      ],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_brasshollow_pavis_foundry",
+        "building_brasshollow_boiler_cathedral",
+        "building_brasshollow_pressure_rail",
+        "building_brasshollow_crucible_dock",
+        "building_brasshollow_titan_charter_hall"
+      ],
+      "spell_library": [
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_heat_rite",
+            "spell_pressure_clause"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_stone_veil",
+            "spell_bulwark_litany"
+          ]
+        }
+      ],
+      "garrison": [
+        {
+          "unit_id": "unit_brasshollow_scrip_haulers",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_brasshollow_furnace_pavis_teams",
+          "count": 2
+        }
+      ],
+      "content_status": "breadth_secondary_town_ninefold_compatible"
+    },
+    {
+      "id": "town_veilmourn_fogchart_mooring",
+      "name": "Fogchart Mooring",
+      "faction_id": "faction_veilmourn",
+      "identity_summary": "A hidden bell mooring that trades salvage charts, mourner lanterns, and black-sail escorts for sudden map reach.",
+      "strategic_role": "salvage_pressure",
+      "strategic_summary": "Fogchart Mooring gives Veilmourn a compact forward harbor for scouting, salvage income, and raiding crews.",
+      "logistics_plan": {
+        "support_radius": 5,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 1,
+        "vulnerability_summary": "The mooring needs pilot houses and lighthouses nearby; without them its fog routes collapse into a thin garrison."
+      },
+      "economy": {
+        "base_income": {
+          "gold": 72,
+          "wood": 1
+        },
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "economy": {
+            "gold": 20
+          },
+          "magic": {
+            "gold": 22
+          },
+          "support": {
+            "gold": 16
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 2,
+        "growth_bonus": {
+          "unit_veilmourn_bellwake_oars": 1,
+          "unit_veilmourn_maskglass_corsairs": 1
+        },
+        "cost_discount_percent": {
+          "unit_veilmourn_bellwake_oars": 6,
+          "unit_veilmourn_maskglass_corsairs": 4
+        }
+      },
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_veilmourn_bell_harbor",
+        "building_veilmourn_ransom_exchange"
+      ],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_veilmourn_mirror_drydock",
+        "building_veilmourn_harpoon_gantry",
+        "building_veilmourn_obituary_vault",
+        "building_veilmourn_mistgate_slip",
+        "building_veilmourn_leviathan_sounding"
+      ],
+      "spell_library": [
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_fogwake_step",
+            "spell_obituary_mark"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_trailglyph",
+            "spell_coal_rain"
+          ]
+        }
+      ],
+      "garrison": [
+        {
+          "unit_id": "unit_veilmourn_bellwake_oars",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_veilmourn_maskglass_corsairs",
+          "count": 2
+        }
+      ],
+      "content_status": "breadth_secondary_town_ninefold_compatible"
     }
   ]
 }

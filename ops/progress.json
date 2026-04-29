@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "balance-regression-report-suite-10184",
-  "currentSliceTitle": "Balance And Regression Report Suite",
+  "currentSliceId": "broad-production-faction-content-breadth-10184",
+  "currentSliceTitle": "Broad Faction And Content Breadth",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed report-only balance/regression suite foundation: BalanceRegressionReportRules plus Godot report scene cover faction/content, economy/RMG/scenario viability, narrow battle sampling warning, AI objective pressure, and save/replay stability with deterministic signatures. Validation passed: validate_repo, all random_map_*.tscn, relevant AI/economy reports, balance_regression_report_suite, json.tool, git diff --check, and progress status/next.",
+  "currentSliceNotes": "Completed the first pulled-forward content breadth increment: added secondary Thornwake, Brasshollow, and Veilmourn town templates wired through faction metadata, existing unit/hero/spell/artifact/economy hooks, and focused breadth reporting without alpha/parity/content-count claims.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T13:17:54Z",
+  "updatedAt": "2026-04-29T13:50:31Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -153,7 +153,7 @@
       "id": "concept-art-curation-gate-10184",
       "title": "Concept-Art Curation Gate",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "parent_foundation_completed_children_completed",
       "sourceDocs": [
         "docs/concept-art-pipeline.md",
@@ -3207,7 +3207,7 @@
       "id": "broad-production-faction-content-breadth-10184",
       "title": "Broad Faction And Content Breadth",
       "phase": "phase-6-broad-production-breadth",
-      "status": "pending",
+      "status": "completed",
       "classification": "future_phase",
       "sourceDocs": [
         "completed foundation/alpha docs",
@@ -3224,7 +3224,15 @@
         "campaign structure",
         "reliable AI"
       ],
-      "notes": "No parity claim based on raw record counts."
+      "completionEvidence": [
+        "Added secondary town templates for Thornwake, Brasshollow, and Veilmourn with matching faction metadata, economy income, recruitment/garrison, building, and spell-library hooks.",
+        "Added tests/faction_content_breadth_report.tscn to prove ContentService load/schema visibility, faction-town-unit-hero-economy connections, Ninefold pressure/neutral-site compatibility, and balance regression breadth without alpha/parity claims.",
+        "Balance regression faction snapshot now reports 15 towns while preserving the existing warning-only battle sample status."
+      ],
+      "notes": "Small coherent breadth increment only; no alpha, parity, or production-readiness claim.",
+      "updatedAt": "2026-04-29T13:50:31Z",
+      "startedAt": "2026-04-29T13:22:27Z",
+      "completedAt": "2026-04-29T13:50:31Z"
     },
     {
       "id": "broad-production-map-campaign-replayability-10184",

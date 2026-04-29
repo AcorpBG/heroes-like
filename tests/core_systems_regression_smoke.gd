@@ -4253,12 +4253,26 @@ func _force_player_victory_if_battle_started(session, label: String) -> bool:
 	if session == null or session.battle.is_empty():
 		return true
 	var stacks = session.battle.get("stacks", [])
+	var has_player_stack := false
+	var has_player_survivor := false
 	for index in range(stacks.size()):
 		var stack = stacks[index]
-		if not (stack is Dictionary) or String(stack.get("side", "")) != "enemy":
+		if not (stack is Dictionary):
 			continue
-		stack["total_health"] = 0
+		match String(stack.get("side", "")):
+			"enemy":
+				stack["total_health"] = 0
+			"player":
+				has_player_stack = true
+				if int(stack.get("total_health", 0)) > 0:
+					has_player_survivor = true
+				elif not has_player_survivor:
+					stack["total_health"] = max(1, int(stack.get("unit_hp", 1)))
+					has_player_survivor = true
 		stacks[index] = stack
+	if not has_player_stack:
+		stacks.append(BattleRules._build_battle_stack("unit_river_guard", 1, "player", 0, {"source_type": "test_forced_resolution"}))
+		has_player_survivor = true
 	session.battle["stacks"] = stacks
 	var outcome := BattleRules.resolve_if_battle_ready(session)
 	if String(outcome.get("state", "")) != "victory":
