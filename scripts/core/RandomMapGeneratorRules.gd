@@ -19,6 +19,8 @@ const MONSTER_REWARD_BANDS_SCHEMA_ID := "random_map_monster_reward_bands_v1"
 const MONSTER_REWARD_BANDS_REPORT_SCHEMA_ID := "random_map_monster_reward_bands_report_v1"
 const DECORATION_DENSITY_PASS_SCHEMA_ID := "random_map_decoration_density_pass_v1"
 const DECORATION_DENSITY_PASS_REPORT_SCHEMA_ID := "random_map_decoration_density_pass_report_v1"
+const OBJECT_FOOTPRINT_CATALOG_SCHEMA_ID := "random_map_object_footprint_catalog_v1"
+const OBJECT_FOOTPRINT_REPORT_SCHEMA_ID := "random_map_object_footprint_catalog_report_v1"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
 const HASH_MODULUS := 4294967296
@@ -193,6 +195,136 @@ const DECORATION_OBJECT_FAMILIES := [
 	{"family_id": "decor_snow_icegrass_ridge", "display_name": "Icegrass Ridge", "role": "decor", "terrain_ids": ["snow", "frost"], "biome_ids": ["biome_snow_frost_marches"], "weight": 4, "blocks_movement": true},
 	{"family_id": "obstacle_cavern_glasscap_stalagmites", "display_name": "Glasscap Stalagmites", "role": "obstacle", "terrain_ids": ["cavern", "underway"], "biome_ids": ["biome_subterranean_underways"], "weight": 4, "blocks_movement": true},
 ]
+const OBJECT_FOOTPRINT_CATALOG := [
+	{
+		"id": "rmg_primary_town_anchor",
+		"family_id": "town_primary",
+		"display_name": "Generated Primary Town",
+		"placement_kinds": ["town"],
+		"object_ids": ["town_riverwatch", "town_duskfen", "town_prismhearth", "town_thornwake_graftroot_caravan", "town_brasshollow_orevein_gantry", "town_veilmourn_bellwake_harbor"],
+		"footprint": {"width": 3, "height": 2, "anchor": "bottom_center", "tier": "large"},
+		"runtime_footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "anchor_tile"},
+		"body_mask": [{"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": 1, "y": -1}, {"x": -1, "y": 0}, {"x": 0, "y": 0}, {"x": 1, "y": 0}],
+		"runtime_body_mask": [{"x": 0, "y": 0}],
+		"visit_mask": [{"x": 1, "y": 0}],
+		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}, {"x": 2, "y": 0}],
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"action_mask": {"visitable": true, "trigger": "town_entry", "visit_tile_required": true, "interaction_cadence": "repeatable"},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "visit_or_approach_passable", "zone_preferred"],
+		"object_limit": {"per_zone": 1, "global": 8},
+		"deferred_runtime_application": "full_3x2_town_body_reserved_for_later_multitile_placement_slice",
+	},
+	{
+		"id": "rmg_start_resource_site",
+		"family_id": "resource_pickup_site",
+		"display_name": "Generated Start Resource Site",
+		"placement_kinds": ["resource_site"],
+		"object_ids": ["site_wood_wagon", "site_ore_crates", "site_waystone_cache", "object_wood_wagon", "object_waystone_cache"],
+		"footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},
+		"body_mask": [{"x": 0, "y": 0}],
+		"runtime_body_mask": [{"x": 0, "y": 0}],
+		"visit_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
+		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"action_mask": {"visitable": true, "trigger": "resource_collect", "visit_tile_required": true, "interaction_cadence": "one_time"},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "visit_or_approach_passable", "start_support_radius"],
+		"object_limit": {"per_zone": 6, "global": 64},
+	},
+	{
+		"id": "rmg_route_guard_stack",
+		"family_id": "route_guard",
+		"display_name": "Generated Route Guard",
+		"placement_kinds": ["route_guard"],
+		"object_ids": ["encounter_mire_raid"],
+		"footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},
+		"body_mask": [{"x": 0, "y": 0}],
+		"runtime_body_mask": [{"x": 0, "y": 0}],
+		"visit_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
+		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"action_mask": {"visitable": true, "trigger": "neutral_guard_battle", "visit_tile_required": true, "interaction_cadence": "one_time"},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "route_anchor_adjacent", "visit_or_approach_passable"],
+		"object_limit": {"per_zone": 16, "global": 128},
+	},
+	{
+		"id": "rmg_special_border_gate",
+		"family_id": "special_guard_gate",
+		"display_name": "Generated Special Guard Gate",
+		"placement_kinds": ["special_guard_gate"],
+		"object_ids": ["border_guard_gate_placeholder"],
+		"footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},
+		"body_mask": [{"x": 0, "y": 0}],
+		"runtime_body_mask": [{"x": 0, "y": 0}],
+		"visit_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
+		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"action_mask": {"visitable": true, "trigger": "special_guard_unlock_then_battle", "visit_tile_required": true, "interaction_cadence": "gated"},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "route_anchor_adjacent", "special_unlock_metadata_present"],
+		"object_limit": {"per_zone": 8, "global": 64},
+		"deferred_runtime_application": "final_key_gate_object_writeout_deferred",
+	},
+	{
+		"id": "rmg_reward_object_placeholder",
+		"family_id": "reward_object",
+		"display_name": "Generated Reward Object",
+		"placement_kinds": ["reward_reference"],
+		"family_ids": ["reward_cache_small", "guarded_reward_cache", "artifact_cache", "spell_shrine"],
+		"object_ids": ["object_waystone_cache", "object_wood_wagon", "artifact_waymark_compass", "spell_beacon_path"],
+		"footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},
+		"body_mask": [{"x": 0, "y": 0}],
+		"runtime_body_mask": [{"x": 0, "y": 0}],
+		"visit_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
+		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"action_mask": {"visitable": true, "trigger": "reward_claim", "visit_tile_required": true, "interaction_cadence": "one_time"},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"placement_predicates": ["catalog_reference_present", "terrain_allowed_at_route_context", "deferred_reward_body_no_overlap_pending"],
+		"object_limit": {"per_zone": 16, "global": 128},
+		"deferred_runtime_application": "reward_object_body_placement_deferred_to_reward_materialization_slice",
+	},
+	{
+		"id": "rmg_mine_placeholder",
+		"family_id": "resource_mine_placeholder",
+		"display_name": "Generated Mine Placeholder",
+		"placement_kinds": ["mine_placeholder"],
+		"family_ids": ["sawmill", "ore_pit", "gold_mine", "alchemist_lab", "sulfur_dune_equivalent", "crystal_cavern_equivalent", "gem_pond_equivalent"],
+		"object_ids": ["mine_sawmill_placeholder", "mine_ore_pit_placeholder", "mine_gold_mine_placeholder", "mine_alchemist_lab_placeholder", "mine_ember_salt_placeholder", "mine_lens_crystal_placeholder", "mine_cut_gems_placeholder"],
+		"footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
+		"runtime_footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "anchor_tile"},
+		"body_mask": [{"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": -1, "y": 0}, {"x": 0, "y": 0}],
+		"runtime_body_mask": [{"x": 0, "y": 0}],
+		"visit_mask": [{"x": 0, "y": 1}, {"x": 1, "y": 0}],
+		"approach_mask": [{"x": 0, "y": 1}, {"x": 1, "y": 0}, {"x": -1, "y": 1}],
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"action_mask": {"visitable": true, "trigger": "mine_capture", "visit_tile_required": true, "interaction_cadence": "capture_then_daily"},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "adjacent_resource_staging_space"],
+		"object_limit": {"per_zone": 7, "global": 128},
+		"deferred_runtime_application": "template_driven_mine_placement_deferred_to_town_mine_dwelling_slice",
+	},
+	{
+		"id": "rmg_decorative_obstacle_anchor",
+		"family_id": "decorative_obstacle",
+		"display_name": "Generated Decorative Obstacle",
+		"placement_kinds": ["decorative_obstacle"],
+		"family_ids": ["decor_grass_windgrass_tufts", "decor_grass_saffron_bloom_patch", "obstacle_forest_fallen_silverlog", "decor_forest_moonfern_bank", "obstacle_mire_sinkroot_cluster", "decor_mire_glowmoss_hummock", "obstacle_highland_slate_outcrop", "decor_highland_heather_cairn", "obstacle_rough_suncracked_stone", "decor_snow_icegrass_ridge", "obstacle_cavern_glasscap_stalagmites"],
+		"footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},
+		"body_mask": [{"x": 0, "y": 0}],
+		"runtime_body_mask": [{"x": 0, "y": 0}],
+		"visit_mask": [],
+		"approach_mask": [],
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "approach_tiles_passable": false, "road_may_cross_body": false},
+		"action_mask": {"visitable": false, "trigger": "none", "visit_tile_required": false, "interaction_cadence": "none"},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "not_on_required_route", "not_on_approach"],
+		"object_limit": {"per_zone": 64, "global": 512},
+		"links_to_decoration_family_catalog": true,
+	},
+]
 
 class DeterministicRng:
 	var _state := 1
@@ -258,6 +390,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 	phases.append(_phase_record("connection_guard_materialization", _connection_guard_materialization_phase_summary(constraints.get("connection_guard_materialization", {}))))
 	phases.append(_phase_record("monster_reward_bands", _monster_reward_bands_phase_summary(constraints.get("monster_reward_bands", {}))))
 	phases.append(_phase_record("decoration_density_pass", _decoration_density_phase_summary(constraints.get("decoration_density_pass", {}))))
+	phases.append(_phase_record("object_footprint_catalog", _object_footprint_phase_summary(constraints.get("object_footprint_catalog", {}))))
 	phases.append(_phase_record("route_road_constraint_writeout", {
 		"road_segment_count": int(constraints.get("road_network", {}).get("road_segments", []).size()),
 		"required_reachability": String(constraints.get("route_reachability_proof", {}).get("status", "unknown")),
@@ -649,6 +782,42 @@ static func decoration_density_report(input_config: Dictionary) -> Dictionary:
 		},
 	}
 
+static func object_footprint_report(input_config: Dictionary) -> Dictionary:
+	var first := generate(input_config)
+	var second := generate(input_config)
+	var changed_seed_config := input_config.duplicate(true)
+	changed_seed_config["seed"] = "%s:changed" % String(input_config.get("seed", "0"))
+	var changed_seed := generate(changed_seed_config)
+	var first_payload: Dictionary = first.get("generated_map", {})
+	var second_payload: Dictionary = second.get("generated_map", {})
+	var changed_payload: Dictionary = changed_seed.get("generated_map", {})
+	var first_footprints: Dictionary = first_payload.get("staging", {}).get("object_footprint_catalog", {})
+	var second_footprints: Dictionary = second_payload.get("staging", {}).get("object_footprint_catalog", {})
+	var changed_footprints: Dictionary = changed_payload.get("staging", {}).get("object_footprint_catalog", {})
+	var same_signature := String(first_footprints.get("object_footprint_signature", "")) == String(second_footprints.get("object_footprint_signature", ""))
+	var changed_seed_changes_signature := String(first_footprints.get("object_footprint_signature", "")) != String(changed_footprints.get("object_footprint_signature", ""))
+	var validation := _object_footprint_validation(first_footprints, first_payload)
+	var ok := bool(first.get("ok", false)) and bool(second.get("ok", false)) and bool(changed_seed.get("ok", false)) and not first_payload.is_empty() and not second_payload.is_empty() and same_signature and changed_seed_changes_signature and bool(validation.get("ok", false))
+	return {
+		"ok": ok,
+		"schema_id": OBJECT_FOOTPRINT_REPORT_SCHEMA_ID,
+		"stable_signature": String(first_payload.get("stable_signature", "")),
+		"changed_seed_signature": String(changed_payload.get("stable_signature", "")),
+		"object_footprint_signature": String(first_footprints.get("object_footprint_signature", "")),
+		"changed_seed_object_footprint_signature": String(changed_footprints.get("object_footprint_signature", "")),
+		"same_input_object_footprint_signature_equivalent": same_signature,
+		"changed_seed_changes_object_footprint_signature": changed_seed_changes_signature,
+		"object_footprint_catalog": first_footprints,
+		"changed_seed_object_footprint_catalog": changed_footprints,
+		"object_footprint_validation": validation,
+		"payload_validation": first.get("report", {}),
+		"no_ui_save_writeback_claim": {
+			"campaign_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("campaign", true)),
+			"skirmish_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("skirmish", true)),
+			"write_policy": String(first_payload.get("write_policy", "")),
+		},
+	}
+
 static func resource_encounter_fairness_report(generated_map: Dictionary) -> Dictionary:
 	var staging: Dictionary = generated_map.get("staging", {})
 	var scenario: Dictionary = generated_map.get("scenario_record", {})
@@ -766,6 +935,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	var connection_guard_materialization: Dictionary = staging.get("connection_guard_materialization", {})
 	var monster_reward_bands: Dictionary = staging.get("monster_reward_bands", {})
 	var decoration_density: Dictionary = staging.get("decoration_density_pass", {})
+	var object_footprints: Dictionary = staging.get("object_footprint_catalog", {})
 	if terrain_constraints.is_empty():
 		failures.append("terrain constraints payload missing")
 	if String(terrain_constraints.get("coherence_model", "")) == "":
@@ -828,6 +998,12 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 			failures.append("decoration density pass: %s" % String(failure))
 	for warning in decoration_validation.get("warnings", []):
 		warnings.append("decoration density pass: %s" % String(warning))
+	var object_footprint_validation := _object_footprint_validation(object_footprints, generated_map)
+	if not bool(object_footprint_validation.get("ok", false)):
+		for failure in object_footprint_validation.get("failures", []):
+			failures.append("object footprint catalog: %s" % String(failure))
+	for warning in object_footprint_validation.get("warnings", []):
+		warnings.append("object footprint catalog: %s" % String(warning))
 	if String(fairness_report.get("schema_id", "")) != "random_map_resource_encounter_fairness_report_v1":
 		failures.append("resource/encounter fairness report missing")
 	else:
@@ -839,7 +1015,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	for phase in generated_map.get("phase_pipeline", []):
 		if phase is Dictionary:
 			phase_names.append(String(phase.get("phase", "")))
-	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "connection_guard_materialization", "monster_reward_bands", "decoration_density_pass", "route_road_constraint_writeout", "resource_encounter_fairness_report"]:
+	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "connection_guard_materialization", "monster_reward_bands", "decoration_density_pass", "object_footprint_catalog", "route_road_constraint_writeout", "resource_encounter_fairness_report"]:
 		if required_phase not in phase_names:
 			failures.append("missing generation phase %s" % required_phase)
 	if scenario.get("towns", []).is_empty():
@@ -863,6 +1039,8 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 		"monster_reward_bands_summary": monster_reward_bands.get("summary", {}),
 		"decoration_density_status": String(decoration_density.get("status", "")),
 		"decoration_density_summary": decoration_density.get("summary", {}),
+		"object_footprint_status": String(object_footprints.get("status", "")),
+		"object_footprint_summary": object_footprints.get("summary", {}),
 		"required_reachability_status": String(reachability.get("status", "")),
 		"fairness_status": String(fairness_report.get("status", "")),
 		"fairness_summary": fairness_report.get("summary", {}),
@@ -1453,6 +1631,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 			"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 			"monster_reward_bands": constraints.get("monster_reward_bands", {}),
 			"decoration_density_pass": constraints.get("decoration_density_pass", {}),
+			"object_footprint_catalog": constraints.get("object_footprint_catalog", {}),
 			"town_starts": constraints.get("town_start_constraints", {}),
 			"roads": constraints.get("road_network", {}),
 			"reachability": constraints.get("route_reachability_proof", {}),
@@ -1493,6 +1672,7 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 		"monster_reward_bands": constraints.get("monster_reward_bands", {}),
 		"decoration_density_pass": constraints.get("decoration_density_pass", {}),
+		"object_footprint_catalog": constraints.get("object_footprint_catalog", {}),
 		"decorative_object_staging": constraints.get("decoration_density_pass", {}).get("decoration_records", []),
 		"town_start_constraints": constraints.get("town_start_constraints", {}),
 		"road_network": constraints.get("road_network", {}),
@@ -1534,6 +1714,7 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		route_build.get("route_reachability_proof", {}),
 		monster_reward_bands
 	)
+	var object_footprints := _build_object_footprint_payload(placements, decoration_density, monster_reward_bands, terrain_rows, route_graph, route_build.get("road_network", {}), route_build.get("route_reachability_proof", {}))
 	var town_start_constraints := _town_start_constraints_payload(zones, placements, route_graph, route_build.get("route_reachability_proof", {}))
 	var fairness_report := _fairness_report_payload(normalized, zones, placements, route_graph, route_build.get("route_reachability_proof", {}))
 	return {
@@ -1543,6 +1724,7 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		"connection_guard_materialization": connection_guard_materialization,
 		"monster_reward_bands": monster_reward_bands,
 		"decoration_density_pass": decoration_density,
+		"object_footprint_catalog": object_footprints,
 		"town_start_constraints": town_start_constraints,
 		"road_network": route_build.get("road_network", {}),
 		"route_graph": route_graph,
@@ -1875,6 +2057,7 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 				"path_safety_state": "validated_after_staging",
 				"writeout_state": "staged_decoration_record_no_final_object_sprite_or_map_writeout",
 			}
+			_apply_object_footprint_metadata(record, terrain_rows, staged_occupied)
 			records.append(record)
 			selected.append(record)
 			if bool(family.get("blocks_movement", true)):
@@ -1950,6 +2133,408 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 		"diagnostics": diagnostics,
 	}))
 	return payload
+
+static func _build_object_footprint_payload(placements: Dictionary, decoration_density: Dictionary, monster_reward_bands: Dictionary, terrain_rows: Array, route_graph: Dictionary, road_network: Dictionary, reachability: Dictionary) -> Dictionary:
+	var object_records := []
+	for placement in placements.get("object_placements", []):
+		if placement is Dictionary:
+			object_records.append(placement)
+	for record in decoration_density.get("decoration_records", []):
+		if record is Dictionary:
+			object_records.append(record)
+	var reward_reference_records := []
+	for reward in monster_reward_bands.get("reward_band_records", []):
+		if not (reward is Dictionary):
+			continue
+		var catalog_ref: Dictionary = reward.get("object_footprint_catalog_ref", {}) if reward.get("object_footprint_catalog_ref", {}) is Dictionary else _object_footprint_ref_for_reward_candidate({
+			"object_id": String(reward.get("selected_reward_object_id", "")),
+			"object_family_id": String(reward.get("selected_reward_family_id", "")),
+		})
+		reward["object_footprint_catalog_ref"] = catalog_ref
+		reward_reference_records.append({
+			"id": String(reward.get("id", "")),
+			"route_edge_id": String(reward.get("route_edge_id", "")),
+			"selected_reward_object_id": String(reward.get("selected_reward_object_id", "")),
+			"selected_reward_family_id": String(reward.get("selected_reward_family_id", "")),
+			"object_footprint_catalog_ref": catalog_ref,
+			"placement_state": "reward_reference_only_body_placement_deferred",
+			"deferred_reason": String(catalog_ref.get("deferred_runtime_application", "reward_object_body_placement_deferred_to_reward_materialization_slice")),
+		})
+	var validation := _object_footprint_validation_core(object_records, reward_reference_records, terrain_rows, route_graph, road_network, reachability)
+	var status := "pass" if bool(validation.get("ok", false)) else "fail"
+	var catalog_payload := _object_footprint_catalog_payload()
+	var payload := {
+		"schema_id": OBJECT_FOOTPRINT_CATALOG_SCHEMA_ID,
+		"status": status,
+		"catalog": catalog_payload,
+		"object_records": object_records,
+		"reward_reference_records": reward_reference_records,
+		"validation": validation,
+		"coverage": {
+			"object_placement_count": placements.get("object_placements", []).size(),
+			"decoration_record_count": decoration_density.get("decoration_records", []).size(),
+			"reward_reference_count": reward_reference_records.size(),
+			"catalog_record_count": catalog_payload.get("records", []).size(),
+			"deferred_multitile_record_count": _object_footprint_deferred_record_count(object_records),
+		},
+		"writeout_state": "structured_footprint_action_passability_metadata_only_no_final_object_definition_or_map_writeout",
+		"deferred": [
+			"full_multitile_body_stamping_for_large_towns_and_mines",
+			"final_object_definition_instance_serialization",
+			"renderer_art_asset_selection",
+			"skirmish_ui_save_replay_adoption",
+		],
+		"summary": {
+			"object_record_count": object_records.size(),
+			"reward_reference_count": reward_reference_records.size(),
+			"catalog_record_count": catalog_payload.get("records", []).size(),
+			"missing_catalog_count": validation.get("missing_catalog_ids", []).size(),
+			"body_overlap_count": validation.get("body_overlap_failures", []).size(),
+			"required_route_check_status": String(validation.get("required_route_check_status", "")),
+			"terrain_restriction_failure_count": validation.get("terrain_restriction_failures", []).size(),
+			"deferred_multitile_record_count": _object_footprint_deferred_record_count(object_records),
+		},
+	}
+	payload["object_footprint_signature"] = _hash32_hex(_stable_stringify({
+		"object_records": object_records,
+		"reward_reference_records": reward_reference_records,
+		"validation": validation,
+	}))
+	return payload
+
+static func _object_footprint_catalog_payload() -> Dictionary:
+	return {
+		"schema_id": OBJECT_FOOTPRINT_CATALOG_SCHEMA_ID,
+		"source_model": "original_rmg_object_metadata_translated_from_footprint_action_passability_evidence",
+		"records": OBJECT_FOOTPRINT_CATALOG,
+		"generated_placement_kinds": _object_footprint_generated_placement_kinds(),
+		"decoration_family_ids": _decoration_known_family_ids(),
+		"resource_category_placeholders": ORIGINAL_RESOURCE_CATEGORY_ORDER,
+		"runtime_policy": {
+			"current_body_application": "catalog_runtime_body_mask_used_for_collision_and_pathing",
+			"large_multitile_bodies": "catalog_body_mask_preserved_intended_body_runtime_application_deferred_where_not_safe_to_stamp_yet",
+			"writeout": "no_final_object_definition_or_instance_serialization_in_this_slice",
+		},
+	}
+
+static func _object_footprint_generated_placement_kinds() -> Array:
+	var result := []
+	for record in OBJECT_FOOTPRINT_CATALOG:
+		if not (record is Dictionary):
+			continue
+		for kind in record.get("placement_kinds", []):
+			if String(kind) not in result:
+				result.append(String(kind))
+	result.sort()
+	return result
+
+static func _apply_object_footprint_metadata(record: Dictionary, terrain_rows: Array, occupied: Dictionary = {}) -> void:
+	var catalog := _object_footprint_catalog_record_for_placement(record)
+	var point := _point_dict(int(record.get("x", 0)), int(record.get("y", 0)))
+	if catalog.is_empty():
+		record["object_footprint_catalog_ref"] = {
+			"status": "deferred_missing_catalog_record",
+			"reason": "no_catalog_match_for_generated_object_record",
+			"placement_kind": String(record.get("kind", "")),
+			"family_id": String(record.get("family_id", "")),
+			"object_id": _object_record_content_id(record),
+		}
+		record["footprint_deferred"] = {"reason": "missing_catalog_record", "structured_deferred_reason": true}
+		return
+	var body_tiles := _runtime_body_tiles_for_catalog(point, catalog)
+	var terrain_id := String(record.get("terrain_id", ""))
+	if terrain_id == "" and _point_in_rows(terrain_rows, int(point.get("x", 0)), int(point.get("y", 0))):
+		terrain_id = String(terrain_rows[int(point.get("y", 0))][int(point.get("x", 0))])
+	var deferred_reason := String(catalog.get("deferred_runtime_application", ""))
+	record["object_footprint_catalog_ref"] = {
+		"catalog_id": String(catalog.get("id", "")),
+		"family_id": String(catalog.get("family_id", "")),
+		"status": "catalog_record_applied",
+		"deferred_runtime_application": deferred_reason,
+	}
+	record["footprint"] = catalog.get("footprint", {})
+	record["runtime_footprint"] = catalog.get("runtime_footprint", catalog.get("footprint", {}))
+	record["body_mask"] = catalog.get("body_mask", [])
+	record["runtime_body_mask"] = catalog.get("runtime_body_mask", catalog.get("body_mask", []))
+	record["catalog_body_tiles"] = _relative_mask_to_tiles(point, catalog.get("body_mask", []))
+	record["body_tiles"] = body_tiles
+	record["visit_mask"] = catalog.get("visit_mask", [])
+	record["approach_mask"] = catalog.get("approach_mask", [])
+	record["passability_mask"] = catalog.get("passability_mask", {})
+	record["action_mask"] = catalog.get("action_mask", {})
+	record["terrain_restrictions"] = catalog.get("terrain_restrictions", {})
+	record["placement_predicates"] = catalog.get("placement_predicates", [])
+	record["placement_predicate_results"] = _placement_predicate_results(record, catalog, terrain_rows, occupied)
+	if deferred_reason != "":
+		record["footprint_deferred"] = {
+			"reason": deferred_reason,
+			"catalog_body_tile_count": record.get("catalog_body_tiles", []).size(),
+			"runtime_body_tile_count": body_tiles.size(),
+			"structured_deferred_reason": true,
+		}
+
+static func _object_footprint_catalog_record_for_placement(record: Dictionary) -> Dictionary:
+	var kind := String(record.get("kind", ""))
+	var object_id := _object_record_content_id(record)
+	var family_id := String(record.get("family_id", record.get("selected_reward_family_id", "")))
+	for catalog in OBJECT_FOOTPRINT_CATALOG:
+		if not (catalog is Dictionary):
+			continue
+		if kind != "" and kind in catalog.get("placement_kinds", []):
+			if _catalog_matches_object_or_family(catalog, object_id, family_id):
+				return catalog
+			if object_id == "" and family_id == "":
+				return catalog
+	for catalog in OBJECT_FOOTPRINT_CATALOG:
+		if not (catalog is Dictionary):
+			continue
+		if family_id != "" and family_id in catalog.get("family_ids", []):
+			return catalog
+		if object_id != "" and object_id in catalog.get("object_ids", []):
+			return catalog
+	return {}
+
+static func _catalog_matches_object_or_family(catalog: Dictionary, object_id: String, family_id: String) -> bool:
+	if object_id == "" and family_id == "":
+		return true
+	if object_id != "" and object_id in catalog.get("object_ids", []):
+		return true
+	if family_id != "" and (family_id == String(catalog.get("family_id", "")) or family_id in catalog.get("family_ids", [])):
+		return true
+	return false
+
+static func _object_record_content_id(record: Dictionary) -> String:
+	for key in ["town_id", "site_id", "encounter_id", "special_guard_type", "selected_reward_object_id", "object_id"]:
+		if String(record.get(key, "")) != "":
+			return String(record.get(key, ""))
+	return ""
+
+static func _object_footprint_ref_for_reward_candidate(candidate: Dictionary) -> Dictionary:
+	var probe := {
+		"kind": "reward_reference",
+		"selected_reward_object_id": String(candidate.get("object_id", "")),
+		"selected_reward_family_id": String(candidate.get("object_family_id", "")),
+	}
+	var catalog := _object_footprint_catalog_record_for_placement(probe)
+	if catalog.is_empty():
+		return {
+			"status": "deferred_missing_catalog_record",
+			"reason": "reward_candidate_has_no_catalog_match",
+			"object_id": String(candidate.get("object_id", "")),
+			"family_id": String(candidate.get("object_family_id", "")),
+		}
+	return {
+		"catalog_id": String(catalog.get("id", "")),
+		"family_id": String(catalog.get("family_id", "")),
+		"status": "catalog_record_applied",
+		"deferred_runtime_application": String(catalog.get("deferred_runtime_application", "")),
+	}
+
+static func _runtime_body_tiles_for_catalog(point: Dictionary, catalog: Dictionary) -> Array:
+	if catalog.is_empty():
+		return [point]
+	return _relative_mask_to_tiles(point, catalog.get("runtime_body_mask", catalog.get("body_mask", [{"x": 0, "y": 0}])))
+
+static func _relative_mask_to_tiles(point: Dictionary, mask: Array) -> Array:
+	var result := []
+	var anchor_x := int(point.get("x", 0))
+	var anchor_y := int(point.get("y", 0))
+	for offset in mask:
+		if offset is Dictionary:
+			result.append(_point_dict(anchor_x + int(offset.get("x", 0)), anchor_y + int(offset.get("y", 0))))
+	if result.is_empty():
+		result.append(point)
+	return result
+
+static func _placement_predicate_results(record: Dictionary, catalog: Dictionary, terrain_rows: Array, occupied: Dictionary) -> Dictionary:
+	var point := _point_dict(int(record.get("x", 0)), int(record.get("y", 0)))
+	var body_tiles := _runtime_body_tiles_for_catalog(point, catalog)
+	var in_bounds := true
+	for body in body_tiles:
+		if body is Dictionary and not _point_in_rows(terrain_rows, int(body.get("x", 0)), int(body.get("y", 0))):
+			in_bounds = false
+	var terrain_id := String(record.get("terrain_id", ""))
+	if terrain_id == "" and _point_in_rows(terrain_rows, int(point.get("x", 0)), int(point.get("y", 0))):
+		terrain_id = String(terrain_rows[int(point.get("y", 0))][int(point.get("x", 0))])
+	var terrain_ok := _object_catalog_allows_terrain(catalog, terrain_id)
+	var has_visit_or_not_required: bool = not bool(catalog.get("action_mask", {}).get("visit_tile_required", false)) or not record.get("approach_tiles", []).is_empty() or not catalog.get("visit_mask", []).is_empty()
+	return {
+		"in_bounds": in_bounds,
+		"terrain_allowed": terrain_ok,
+		"runtime_body_mask_present": not catalog.get("runtime_body_mask", catalog.get("body_mask", [])).is_empty(),
+		"body_mask_present": not catalog.get("body_mask", []).is_empty(),
+		"passability_mask_present": not catalog.get("passability_mask", {}).is_empty(),
+		"action_mask_present": not catalog.get("action_mask", {}).is_empty(),
+		"visit_or_approach_passable": has_visit_or_not_required,
+		"terrain_id": terrain_id,
+	}
+
+static func _object_catalog_allows_terrain(catalog: Dictionary, terrain_id: String) -> bool:
+	if terrain_id == "":
+		return false
+	var restrictions: Dictionary = catalog.get("terrain_restrictions", {}) if catalog.get("terrain_restrictions", {}) is Dictionary else {}
+	if terrain_id in restrictions.get("blocked_terrain_ids", []):
+		return false
+	var allowed: Array = restrictions.get("allowed_terrain_ids", [])
+	return allowed.is_empty() or terrain_id in allowed
+
+static func _object_footprint_validation_core(object_records: Array, reward_reference_records: Array, terrain_rows: Array, route_graph: Dictionary, road_network: Dictionary, reachability: Dictionary) -> Dictionary:
+	var failures := []
+	var warnings := []
+	var missing_catalog_ids := []
+	var terrain_failures := []
+	var mask_failures := []
+	var body_overlap_failures := []
+	var occupied := {}
+	for record in object_records:
+		if not (record is Dictionary):
+			failures.append("non-dictionary object footprint record")
+			continue
+		var placement_id := String(record.get("placement_id", record.get("id", "")))
+		var ref: Dictionary = record.get("object_footprint_catalog_ref", {}) if record.get("object_footprint_catalog_ref", {}) is Dictionary else {}
+		if String(ref.get("status", "")) != "catalog_record_applied":
+			missing_catalog_ids.append(placement_id)
+			continue
+		for key in ["body_mask", "runtime_body_mask", "visit_mask", "approach_mask", "passability_mask", "action_mask", "terrain_restrictions", "placement_predicates"]:
+			if not record.has(key):
+				mask_failures.append("%s missing %s" % [placement_id, key])
+				continue
+			var value = record.get(key, [] if key.ends_with("mask") or key == "placement_predicates" else {})
+			if key not in ["visit_mask", "approach_mask"] and ((value is Array and value.is_empty()) or (value is Dictionary and value.is_empty())):
+				mask_failures.append("%s missing %s" % [placement_id, key])
+		var predicates: Dictionary = record.get("placement_predicate_results", {}) if record.get("placement_predicate_results", {}) is Dictionary else {}
+		if not bool(predicates.get("in_bounds", false)):
+			failures.append("%s footprint body leaves map bounds" % placement_id)
+		if not bool(predicates.get("terrain_allowed", false)):
+			terrain_failures.append("%s terrain %s violates catalog restrictions" % [placement_id, String(predicates.get("terrain_id", ""))])
+		for body in record.get("body_tiles", []):
+			if not (body is Dictionary):
+				failures.append("%s has non-dictionary body tile" % placement_id)
+				continue
+			var key := _point_key(int(body.get("x", 0)), int(body.get("y", 0)))
+			if occupied.has(key):
+				body_overlap_failures.append("%s overlaps %s at %s" % [placement_id, String(occupied[key]), key])
+			occupied[key] = placement_id
+	for reward_ref in reward_reference_records:
+		if not (reward_ref is Dictionary):
+			failures.append("non-dictionary reward footprint reference")
+			continue
+		var ref: Dictionary = reward_ref.get("object_footprint_catalog_ref", {}) if reward_ref.get("object_footprint_catalog_ref", {}) is Dictionary else {}
+		if String(ref.get("status", "")) != "catalog_record_applied":
+			missing_catalog_ids.append(String(reward_ref.get("id", "")))
+	var route_failures := _object_footprint_route_failures(route_graph, terrain_rows, occupied, reachability)
+	failures.append_array(mask_failures)
+	failures.append_array(terrain_failures)
+	failures.append_array(body_overlap_failures)
+	failures.append_array(route_failures)
+	for segment in road_network.get("road_segments", []):
+		if not (segment is Dictionary):
+			continue
+		for cell in segment.get("cells", []):
+			if cell is Dictionary:
+				var key := _point_key(int(cell.get("x", 0)), int(cell.get("y", 0)))
+				if occupied.has(key):
+					failures.append("road segment %s crosses footprint body %s at %s" % [String(segment.get("route_edge_id", "")), String(occupied[key]), key])
+	if not missing_catalog_ids.is_empty():
+		failures.append("missing catalog records for %s" % ", ".join(missing_catalog_ids))
+	var required_route_status := "pass" if route_failures.is_empty() and String(reachability.get("status", "")) == "pass" else "fail"
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+		"warnings": warnings,
+		"missing_catalog_ids": missing_catalog_ids,
+		"mask_failures": mask_failures,
+		"terrain_restriction_failures": terrain_failures,
+		"body_overlap_failures": body_overlap_failures,
+		"route_failures": route_failures,
+		"required_route_check_status": required_route_status,
+		"checked_object_record_count": object_records.size(),
+		"checked_reward_reference_count": reward_reference_records.size(),
+	}
+
+static func _object_footprint_route_failures(route_graph: Dictionary, terrain_rows: Array, occupied: Dictionary, reachability: Dictionary) -> Array:
+	var failures := []
+	if String(reachability.get("status", "")) != "pass":
+		failures.append("required route reachability was not pass before footprint validation")
+	for edge in route_graph.get("edges", []):
+		if not (edge is Dictionary) or not bool(edge.get("required", false)):
+			continue
+		var from_anchor: Dictionary = edge.get("from_anchor", {}) if edge.get("from_anchor", {}) is Dictionary else {}
+		var to_anchor: Dictionary = edge.get("to_anchor", {}) if edge.get("to_anchor", {}) is Dictionary else {}
+		var path := _find_passable_path(from_anchor, to_anchor, terrain_rows, occupied)
+		if path.is_empty():
+			failures.append("required route %s is blocked under footprint body occupancy" % String(edge.get("id", "")))
+	return failures
+
+static func _object_footprint_deferred_record_count(records: Array) -> int:
+	var count := 0
+	for record in records:
+		if record is Dictionary and not record.get("footprint_deferred", {}).is_empty():
+			count += 1
+	return count
+
+static func _object_footprint_phase_summary(payload: Dictionary) -> Dictionary:
+	return {
+		"schema_id": String(payload.get("schema_id", "")),
+		"status": String(payload.get("status", "")),
+		"signature": String(payload.get("object_footprint_signature", "")),
+		"object_record_count": int(payload.get("summary", {}).get("object_record_count", 0)),
+		"reward_reference_count": int(payload.get("summary", {}).get("reward_reference_count", 0)),
+		"missing_catalog_count": int(payload.get("summary", {}).get("missing_catalog_count", 0)),
+		"body_overlap_count": int(payload.get("summary", {}).get("body_overlap_count", 0)),
+		"required_route_check_status": String(payload.get("summary", {}).get("required_route_check_status", "")),
+		"deferred_multitile_record_count": int(payload.get("summary", {}).get("deferred_multitile_record_count", 0)),
+	}
+
+static func _object_footprint_validation(payload: Dictionary, generated_map: Dictionary = {}) -> Dictionary:
+	var failures := []
+	var warnings := []
+	if String(payload.get("schema_id", "")) != OBJECT_FOOTPRINT_CATALOG_SCHEMA_ID:
+		failures.append("object footprint catalog schema mismatch")
+	if String(payload.get("object_footprint_signature", "")) == "":
+		failures.append("object footprint signature missing")
+	var catalog: Dictionary = payload.get("catalog", {}) if payload.get("catalog", {}) is Dictionary else {}
+	if String(catalog.get("schema_id", "")) != OBJECT_FOOTPRINT_CATALOG_SCHEMA_ID:
+		failures.append("object footprint embedded catalog schema mismatch")
+	if catalog.get("records", []).is_empty():
+		failures.append("object footprint catalog has no records")
+	for catalog_record in catalog.get("records", []):
+		if not (catalog_record is Dictionary):
+			failures.append("catalog contains non-dictionary record")
+			continue
+		for key in ["footprint", "body_mask", "runtime_body_mask", "visit_mask", "approach_mask", "passability_mask", "action_mask", "terrain_restrictions", "placement_predicates"]:
+			if not catalog_record.has(key):
+				failures.append("catalog record %s missing %s" % [String(catalog_record.get("id", "")), key])
+				continue
+			var value = catalog_record.get(key, [] if key in ["body_mask", "runtime_body_mask", "placement_predicates"] else {})
+			if key not in ["visit_mask", "approach_mask"] and ((value is Array and value.is_empty()) or (value is Dictionary and value.is_empty())):
+				failures.append("catalog record %s missing %s" % [String(catalog_record.get("id", "")), key])
+	var core_validation: Dictionary = payload.get("validation", {}) if payload.get("validation", {}) is Dictionary else {}
+	if not bool(core_validation.get("ok", false)):
+		failures.append_array(core_validation.get("failures", []))
+	warnings.append_array(core_validation.get("warnings", []))
+	if int(payload.get("summary", {}).get("object_record_count", 0)) <= 0:
+		failures.append("object footprint payload has no object records")
+	if int(payload.get("summary", {}).get("reward_reference_count", 0)) <= 0:
+		failures.append("object footprint payload has no reward references")
+	if not generated_map.is_empty():
+		var generated_constraints: Dictionary = generated_map.get("scenario_record", {}).get("generated_constraints", {}) if generated_map.get("scenario_record", {}).get("generated_constraints", {}) is Dictionary else {}
+		if generated_constraints.get("object_footprint_catalog", {}).is_empty():
+			failures.append("scenario generated_constraints missed object footprint catalog")
+		if generated_map.get("staging", {}).get("object_footprint_catalog", {}).is_empty():
+			failures.append("staging missed object footprint catalog")
+		var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
+		if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", false)) or bool(scenario.get("selection", {}).get("availability", {}).get("skirmish", false)):
+			failures.append("object footprint catalog adopted generated map into campaign/skirmish")
+		if generated_map.has("save_adoption") or scenario.has("save_adoption") or scenario.has("alpha_parity_claim") or String(generated_map.get("write_policy", "")) != "staged_payload_only_no_authored_content_write":
+			failures.append("object footprint catalog exposed save/writeback/parity claim")
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+		"warnings": warnings,
+	}
 
 static func _zones_by_id(zones: Array) -> Dictionary:
 	var result := {}
@@ -2443,6 +3028,7 @@ static func _reward_band_record_for_materialized_guard(normalized: Dictionary, g
 		"candidate_value": int(candidate.get("value", 0)),
 		"selection_signature": _hash32_hex(_stable_stringify({"seed": String(normalized.get("seed", "")), "materialization_id": materialization_id, "band": band, "candidate": candidate, "category": category_link})),
 		"content_ref_state": "original_reward_ref_selected" if String(candidate.get("object_id", "")) != "" else "deferred_missing_reward_ref",
+		"object_footprint_catalog_ref": _object_footprint_ref_for_reward_candidate(candidate),
 		"deferred_reward_materialization": [
 			"final_reward_object_placement",
 			"artifact_spell_skill_reward_pool_finalization" if String(candidate.get("reward_category", "")) in ["artifact", "spell_access"] else "none",
@@ -2932,6 +3518,9 @@ static func _placement_candidate_for_route(candidates: Array, expected_kind: Str
 			"body_tiles": placement.get("body_tiles", []),
 			"approach_tiles": placement.get("approach_tiles", []),
 			"pathing_status": String(placement.get("pathing_status", "")),
+			"object_footprint_catalog_ref": placement.get("object_footprint_catalog_ref", {}),
+			"passability_mask": placement.get("passability_mask", {}),
+			"action_mask": placement.get("action_mask", {}),
 		}
 	return {}
 
@@ -4061,18 +4650,47 @@ static func _annotate_pathing_metadata(object_placements: Array, towns: Array, r
 static func _apply_pathing_metadata(placement: Dictionary, zone_grid: Array, terrain_rows: Array, occupied: Dictionary) -> void:
 	var point := _point_dict(int(placement.get("x", 0)), int(placement.get("y", 0)))
 	var zone_id := String(placement.get("zone_id", _zone_at_point(zone_grid, point)))
-	var approaches := _approach_tiles_for_point(point, zone_id, zone_grid, terrain_rows, occupied)
+	var catalog := _object_footprint_catalog_record_for_placement(placement)
+	var runtime_body := _runtime_body_tiles_for_catalog(point, catalog)
+	var approaches := _approach_tiles_for_catalog(point, zone_id, zone_grid, terrain_rows, occupied, catalog, runtime_body)
 	placement["zone_id"] = zone_id
-	placement["body_tiles"] = [point]
-	placement["blocking_body"] = true
+	placement["body_tiles"] = runtime_body
+	placement["blocking_body"] = bool(catalog.get("passability_mask", {}).get("body_blocks_movement", true)) if not catalog.is_empty() else true
 	placement["approach_tiles"] = approaches
 	placement["visit_tile"] = approaches[0] if not approaches.is_empty() else point
 	placement["pathing_status"] = "pass" if not approaches.is_empty() else "blocked_no_approach"
+	_apply_object_footprint_metadata(placement, terrain_rows, occupied)
 
 static func _copy_shared_placement_metadata(target: Dictionary, source: Dictionary) -> void:
-	for key in ["zone_id", "faction_id", "body_tiles", "blocking_body", "approach_tiles", "visit_tile", "pathing_status", "player_slot", "player_type", "team_id"]:
+	for key in ["zone_id", "faction_id", "body_tiles", "blocking_body", "approach_tiles", "visit_tile", "pathing_status", "player_slot", "player_type", "team_id", "object_footprint_catalog_ref", "footprint", "runtime_footprint", "body_mask", "runtime_body_mask", "visit_mask", "approach_mask", "passability_mask", "action_mask", "terrain_restrictions", "placement_predicates", "placement_predicate_results", "footprint_deferred"]:
 		if source.has(key):
 			target[key] = source[key]
+
+static func _approach_tiles_for_catalog(point: Dictionary, preferred_zone_id: String, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, catalog: Dictionary, runtime_body: Array) -> Array:
+	if catalog.is_empty():
+		return _approach_tiles_for_point(point, preferred_zone_id, zone_grid, terrain_rows, occupied)
+	var result := []
+	var body_lookup := _point_lookup(runtime_body)
+	for offset in catalog.get("approach_mask", []):
+		if not (offset is Dictionary):
+			continue
+		var nx: int = int(point.get("x", 0)) + int(offset.get("x", 0))
+		var ny: int = int(point.get("y", 0)) + int(offset.get("y", 0))
+		if not _point_in_rows(terrain_rows, nx, ny):
+			continue
+		var key := _point_key(nx, ny)
+		if body_lookup.has(key) or occupied.has(key):
+			continue
+		if not _terrain_cell_is_passable(terrain_rows, nx, ny):
+			continue
+		if preferred_zone_id != "" and _zone_at_point(zone_grid, _point_dict(nx, ny)) != preferred_zone_id:
+			continue
+		result.append(_point_dict(nx, ny))
+	if result.size() < 2:
+		for fallback in _approach_tiles_for_point(point, preferred_zone_id, zone_grid, terrain_rows, occupied):
+			if fallback is Dictionary and not _point_in_array(result, fallback):
+				result.append(fallback)
+	return result
 
 static func _approach_tiles_for_point(point: Dictionary, preferred_zone_id: String, zone_grid: Array, terrain_rows: Array, occupied: Dictionary) -> Array:
 	var result := []

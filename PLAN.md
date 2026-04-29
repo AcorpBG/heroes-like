@@ -2102,13 +2102,15 @@ implementationTargets:
 - object placement metadata content
 - placement predicates
 - object footprint validation tests
+- generator-local object footprint catalog payload and staged-object annotations
 
 sliceEvidence:
-- Objects cannot stamp out of bounds, over blocked bodies, onto invalid terrain, or onto invalid visit/action tiles.
-- Object type limits, biome/terrain masks, footprint bodies, approach tiles, and purpose metadata are validated before later placement slices consume them.
+- Generated towns, start resources, route guards, special gates, reward references, mine placeholders, and decorative obstacles resolve to original object footprint catalog records or structured deferred metadata.
+- Body, runtime body, visit/action, approach, passability, terrain restriction, and placement predicate metadata is attached to staged object/decor/reward records before later placement/writeout slices consume them.
+- Footprint validation proves no runtime body overlaps, required routes remain passable, terrain restrictions are checked, and same-seed/changed-seed footprint signatures behave deterministically.
 
 nonGoals:
-- No broad town/mine/reward placement in this slice beyond fixtures needed to validate predicates.
+- No broad town/mine/reward placement, final multi-tile body stamping, serialized map writeout, player-facing random-map UI, save migration, or parity/alpha completion claim.
 
 ### P2 Child: Random Map Town Mine Dwelling Placement
 
