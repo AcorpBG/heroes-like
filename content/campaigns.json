@@ -406,6 +406,108 @@
           }
         }
       ]
+    },
+    {
+      "id": "campaign_ninefold_survey",
+      "name": "Ninefold Survey Docket",
+      "description": "Mira Flintmere and Caelen Ashgrove turn two compact Embercourt fronts into a surveyed road toward the Ninefold Confluence, carrying recorded victories into the current broad authored map.",
+      "summary": "A three-chapter authored campaign docket that links existing skirmish maps into campaign selection, carryover, completion, and replay flow.",
+      "region": "Highwater to Ninefold Confluence",
+      "arc_goal": "Secure the ironbridge line, break the Glassfen relay screen, and then chart the full confluence without treating the breadth map as broad completion.",
+      "completion_title": "Survey Road Charted",
+      "completion_summary": "The ironbridge, Glassfen, and confluence records form a replayable Embercourt survey docket while keeping this as a narrow breadth increment.",
+      "starting_scenario_id": "ironbridge-stand",
+      "scenarios": [
+        {
+          "scenario_id": "ironbridge-stand",
+          "label": "Chapter I: Ironbridge Stand",
+          "description": "Turn Highwater's bridgehead into a clean advance, retake Murkward Ford, and keep the marsh raiders off the road.",
+          "chapter_index": 1,
+          "chapter_title": "Hold the Ironbridge",
+          "status_hint": "Open the survey road by securing the ford and breaking the first Mireclaw raider screen.",
+          "carryover_summary": "Exports Mira's hero growth, spellbook, relics, half the recovered stores, and bridgehead flags into the Glassfen push.",
+          "briefing": "Mira Flintmere must turn the bridgehead into a stable road before the survey writ can move east.",
+          "intel": "Ford reavers and silt hunters are using Murkward as a raider gate; if they keep the ford loose, no survey column reaches the Glassfen intact.",
+          "stakes": "Claim Murkward and the column gains a road; fail and Highwater remains pinned behind the bridge.",
+          "aftermath_victory": "The ironbridge line holds, the ford is reclaimed, and the survey column can advance toward the relay fields.",
+          "aftermath_defeat": "Murkward remains a raider gate and the survey road collapses back to Highwater.",
+          "journal_victory": "Mira held the ironbridge line and opened the first leg of the survey road.",
+          "journal_defeat": "Mira failed to secure the ironbridge road.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.5,
+            "resource_caps": {"gold": 1200, "wood": 3, "ore": 3},
+            "flag_ids": ["ford_reavers_broken", "silt_hunters_broken"]
+          }
+        },
+        {
+          "scenario_id": "glassfen-breakers",
+          "label": "Chapter II: Glassfen Breakers",
+          "description": "Break the Sunvault relay screens, seize Prismhearth, and keep the survey road from becoming a battery line.",
+          "chapter_index": 2,
+          "chapter_title": "Break the Glassfen",
+          "status_hint": "Convert the ironbridge win into a relay-field advance.",
+          "carryover_summary": "Imports the Ironbridge bundle and exports Caelen's Glassfen record for the confluence survey.",
+          "briefing": "Caelen Ashgrove advances through the Glassfen with the bridgehead stores behind him and Prismhearth ahead.",
+          "intel": "Relay pickets and the Aurora Battery are synchronizing the field; a slow push lets Sunvault turn every road into prepared fire.",
+          "stakes": "Break Prismhearth and the confluence road opens; fail and the survey writ dies under the relay arrays.",
+          "aftermath_victory": "The Glassfen relay line breaks and the final confluence survey can assemble from a recorded road.",
+          "aftermath_defeat": "Prismhearth holds, severing the survey road before it reaches the confluence.",
+          "journal_victory": "Caelen broke the Glassfen arrays and carried the road toward the confluence.",
+          "journal_defeat": "Caelen failed to break the Glassfen front.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "ironbridge-stand", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "ironbridge-stand", "flag": "ford_reavers_broken"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "ironbridge-stand",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.5,
+            "resource_caps": {"gold": 1500, "wood": 4, "ore": 4},
+            "flag_ids": ["relay_pickets_broken", "aurora_battery_broken"]
+          }
+        },
+        {
+          "scenario_id": "ninefold-confluence",
+          "label": "Chapter III: Ninefold Confluence",
+          "description": "Chart the full confluence, break the Basalt Gatehouse custodians, and force the five rival frontier towns into the Embercourt survey compact.",
+          "chapter_index": 3,
+          "chapter_title": "Chart the Confluence",
+          "status_hint": "Use this authored breadth map as a campaign-recorded survey and replay target, not as a broad completion claim.",
+          "carryover_summary": "Imports the Glassfen bundle and resolves the survey docket finale.",
+          "briefing": "Mira Flintmere has one survey writ and too many claimants. Establish the central camp, read the faction fronts, and decide which rival town falls first.",
+          "intel": "Mireclaw drums, Sunvault relays, Thornwake graft roads, Brasshollow contract routes, and Veilmourn fog harbors are all active around the survey line.",
+          "stakes": "A completed survey gives Embercourt a recorded route through the confluence; failure leaves the map split into rival claims.",
+          "aftermath_victory": "The confluence is charted under Embercourt seal and the campaign docket can be replayed from the recorded chapter.",
+          "aftermath_defeat": "The survey camp fails to hold the center and the rival claims remain unresolved.",
+          "journal_victory": "Mira charted the Ninefold Confluence and forced every rival town into the survey compact.",
+          "journal_defeat": "Mira failed to hold the confluence survey line.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "glassfen-breakers", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "glassfen-breakers", "flag": "relay_pickets_broken"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "glassfen-breakers",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          }
+        }
+      ]
     }
   ]
 }
