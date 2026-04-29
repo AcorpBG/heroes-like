@@ -50,7 +50,7 @@ func _run() -> void:
 
 	var repeated_setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(config, "normal")
 	var changed_seed_setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(_config("skirmish-ui-save-replay-10184:changed", "border_gate_compact_profile_v1"), "normal")
-	var changed_profile_setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(_config("skirmish-ui-save-replay-10184", "border_gate_compact_profile_v1_changed"), "normal")
+	var changed_profile_setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(_config("skirmish-ui-save-replay-10184", "frontier_spokes_profile_v1"), "normal")
 	if not _assert_materialization_determinism(setup, repeated_setup, changed_seed_setup, changed_profile_setup):
 		return
 
@@ -69,18 +69,16 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _config(seed: String, profile_id: String) -> Dictionary:
-	return {
-		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
-		"seed": seed,
-		"size": {"preset": "playable_materialization_runtime", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
-		"player_constraints": {"human_count": 1, "computer_count": 2},
-		"profile": {
-			"id": profile_id,
-			"template_id": "border_gate_compact_v1",
-			"guard_strength_profile": "core_low",
-			"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
-		},
-	}
+	var template_id := "frontier_spokes_v1" if profile_id == "frontier_spokes_profile_v1" else "border_gate_compact_v1"
+	return ScenarioSelectRulesScript.build_random_map_player_config(
+		seed,
+		template_id,
+		profile_id,
+		3,
+		"land",
+		false,
+		"homm3_small"
+	)
 
 func _assert_setup_materialization(setup: Dictionary) -> bool:
 	if not bool(setup.get("ok", false)):

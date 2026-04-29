@@ -22,9 +22,9 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-Current tactical objective: close the Phase 2 RMG workstream after the strict HoMM3-style random-map-generation parity re-gate, translated into original Aurelion Reach systems. Completed non-RMG future-phase evidence remains preserved in progress history, but it is not the active continuation path and must not drive follow-up work.
+Current tactical objective: keep the Phase 2 RMG workstream honest after the strict HoMM3-style random-map-generation parity re-gate, translated into original Aurelion Reach systems. The active correction is an RMG-only map-size parity repair: player-facing generated-map setup must expose HoMM3-style size classes separately from template/profile choices, and runtime materialization must clearly report the current original-game cap instead of silently downscaling oversized classes. Completed non-RMG future-phase evidence remains preserved in progress history, but it is not the active continuation path and must not drive follow-up work.
 
-Recently completed RMG evidence includes the P2.10 random-map foundation queue, translated-template runtime sweep, final writeout/export/save-schema closure, player-facing setup/retry UX, playable materialization/runtime evidence, water/underground/transit gameplay evidence, object-pool/value weighting evidence, and large-batch parity stress evidence. The re-gate audit `random-map-final-homm3-parity-regate-audit-10184` concludes that HoMM3-style RMG functional parity is met for generated skirmish/session use with explicit accepted original-game translations. This is not authored campaign adoption, playable alpha completion, release readiness, broad faction/content completion, asset parity, or byte-level HoMM3 map-format cloning.
+Recently completed RMG evidence includes the P2.10 random-map foundation queue, translated-template runtime sweep, final writeout/export/save-schema closure, player-facing setup/retry UX, playable materialization/runtime evidence, water/underground/transit gameplay evidence, object-pool/value weighting evidence, and large-batch parity stress evidence. The re-gate audit `random-map-final-homm3-parity-regate-audit-10184` concluded that HoMM3-style RMG functional parity was met for generated skirmish/session use with explicit accepted original-game translations, but `random-map-size-class-parity-correction-10184` narrows and repairs that claim for the player-facing size model: Small 36x36 is currently materializable, while Medium 72x72, Large 108x108, and Extra Large 144x144 must be visible as source classes but blocked or unavailable until the runtime supports them honestly. This is not authored campaign adoption, playable alpha completion, release readiness, broad faction/content completion, asset parity, or byte-level HoMM3 map-format cloning.
 
 ## Slice Status Model
 
@@ -2581,6 +2581,54 @@ completionResult:
 - Player-facing setup/retry evidence proves live generated-map skirmish controls, visible bounded retry/failure UX, generated skirmish launch handoff, and no broad menu/debug-dashboard overload.
 - Accepted non-parity decisions are limited to original-game translations and runtime policy boundaries: current materialized map size cap, disconnected source graph repair policy, campaign/writeback exclusion, no global save-version bump for versioned generated-map provenance, and creative/original-content translation.
 - This result does not claim playable alpha, campaign readiness, release readiness, broad production completion, faction breadth completion, asset parity, or byte-level HoMM3 map-format cloning.
+
+### P2 Child: Random Map Size Class Parity Correction
+
+id: `random-map-size-class-parity-correction-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Correct the player-facing RMG size model so HoMM3-style size classes are explicit inputs separate from template/profile selection, with honest original-runtime cap handling.
+
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-generator-foundation.md`
+- `docs/random-map-final-homm3-parity-regate-audit.md`
+- `docs/random-map-size-class-translation.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
+
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `scenes/menus/MainMenu.gd`
+- `scenes/menus/MainMenu.tscn`
+- focused RMG report tests that prove UI visibility and honest size provenance
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- Player-facing generated-map setup exposes Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144 as map-size classes separate from template/profile controls.
+- Generated config, metadata, provenance, replay metadata, and validation carry selected size-class source dimensions and runtime materialization policy.
+- Runtime materialization remains honest under the current `64x48x2` cap: Small can materialize at its source dimensions, while larger classes are blocked or marked unavailable with a visible rationale instead of hidden downscaling.
+- Focused reports prove size options are visible, generated Small maps carry honest 36x36 provenance, and oversized class attempts fail before launch without session/save/campaign/authored writeback.
+
+completionCriteria:
+- RMG setup no longer hides map size solely inside template cards.
+- No validation, report, UI text, save/replay provenance, or audit note presents clamped 64x48 output as a full 72/108/144 HoMM3-style map.
+- Required RMG validation gates pass.
+
+nonGoals:
+- No campaign, faction, broad content, future-phase, or alpha/release readiness work.
+- No runtime clamp lift unless full validation can honestly pass.
+- No authored JSON writeback or generated campaign adoption.
+
+completionResult:
+- Player-facing RMG setup now exposes explicit HoMM3-style size classes separate from template/profile choices: Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144.
+- Generated config, generated identity, provenance, replay metadata, and validation retain source size class, materialized size, runtime cap, and hidden-downscale status.
+- Current original runtime policy is honest: Small 36x36 materializes at source size; Medium/Large/Extra Large are visible but unavailable/rejected under the `64x48x2` cap until that cap is lifted and validated.
+- Validation evidence passed for repo validation, player setup/retry UX, large-batch parity stress, final writeout/export/save schema, playable materialization runtime, progress JSON parsing, and diff whitespace checks.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 

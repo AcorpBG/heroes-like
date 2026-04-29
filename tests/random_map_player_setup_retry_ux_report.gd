@@ -20,6 +20,9 @@ func _run() -> void:
 	if not bool(shell.call("validation_set_generated_seed", "player-facing-setup-retry-ux-10184")):
 		_fail("Seed control hook did not update generated setup.")
 		return
+	if not bool(shell.call("validation_select_generated_size_class", "homm3_small")):
+		_fail("Size-class control hook did not select Small.")
+		return
 	if not bool(shell.call("validation_select_generated_template", "border_gate_compact_v1")):
 		_fail("Template control hook did not select compact template.")
 		return
@@ -43,8 +46,12 @@ func _run() -> void:
 	var failure_setup: Dictionary = shell.call("validation_force_generated_random_map_config", _invalid_config())
 	if not _assert_failure_surface(shell, failure_setup):
 		return
+	var oversized_setup: Dictionary = shell.call("validation_force_generated_random_map_config", _oversized_config())
+	if not _assert_oversized_size_surface(shell, oversized_setup):
+		return
 
 	shell.call("validation_set_generated_seed", "player-facing-setup-retry-ux-10184")
+	shell.call("validation_select_generated_size_class", "homm3_small")
 	shell.call("validation_select_generated_template", "border_gate_compact_v1")
 	shell.call("validation_select_generated_profile", "border_gate_compact_profile_v1")
 	shell.call("validation_select_generated_player_count", 3)
@@ -81,6 +88,7 @@ func _assert_hooks(shell: Node) -> bool:
 	for method_name in [
 		"validation_open_skirmish_stage",
 		"validation_set_generated_seed",
+		"validation_select_generated_size_class",
 		"validation_select_generated_template",
 		"validation_select_generated_profile",
 		"validation_select_generated_player_count",
@@ -97,12 +105,15 @@ func _assert_hooks(shell: Node) -> bool:
 
 func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 	var controls: Dictionary = snapshot.get("controls", {}) if snapshot.get("controls", {}) is Dictionary else {}
-	for key in ["seed", "template_id", "profile_id", "player_count", "water_mode", "underground", "retry_policy"]:
+	for key in ["seed", "size_class_id", "size_class_label", "template_id", "profile_id", "player_count", "water_mode", "underground", "retry_policy"]:
 		if not controls.has(key):
 			_fail("Generated setup controls missed %s: %s" % [key, JSON.stringify(controls)])
 			return false
 	if String(controls.get("seed", "")) != "player-facing-setup-retry-ux-10184":
 		_fail("Generated seed control did not persist in snapshot.")
+		return false
+	if String(controls.get("size_class_id", "")) != "homm3_small" or String(controls.get("size_class_label", "")) != "Small 36x36":
+		_fail("Generated size-class control did not persist in snapshot: %s" % JSON.stringify(controls))
 		return false
 	if String(controls.get("template_id", "")) != "border_gate_compact_v1" or String(controls.get("profile_id", "")) != "border_gate_compact_profile_v1":
 		_fail("Generated template/profile controls did not persist in snapshot: %s" % JSON.stringify(controls))
@@ -114,6 +125,11 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 	if "Islands" not in water_options:
 		_fail("Generated water option list did not expose islands mode: %s" % JSON.stringify(water_options))
 		return false
+	var size_options: Array = controls.get("size_options", []) if controls.get("size_options", []) is Array else []
+	for size_label in ["Small 36x36", "Medium 72x72", "Large 108x108", "Extra Large 144x144"]:
+		if size_label not in size_options:
+			_fail("Generated size option list did not expose %s: %s" % [size_label, JSON.stringify(size_options)])
+			return false
 	var template_options: Array = controls.get("template_options", []) if controls.get("template_options", []) is Array else []
 	var profile_options: Array = controls.get("profile_options", []) if controls.get("profile_options", []) is Array else []
 	if "Translated Islands" not in template_options or "Translated Parity" not in profile_options:
@@ -132,7 +148,7 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 		String(snapshot.get("provenance_full", "")),
 		String(snapshot.get("start_tooltip", "")),
 	])
-	for token in ["Generated validation", "Seed", "Template", "Profile", "Players", "Water", "Underground", "Launch handoff", "campaign progress", "authored content"]:
+	for token in ["Generated validation", "Seed", "Size", "Small 36x36", "Template", "Profile", "Players", "Water", "Underground", "Launch handoff", "campaign progress", "authored content"]:
 		if combined_text.find(token) < 0:
 			_fail("Generated setup visible/provenance text missed token %s: %s" % [token, combined_text])
 			return false
@@ -165,6 +181,33 @@ func _assert_failure_surface(shell: Node, setup: Dictionary) -> bool:
 			return false
 	return true
 
+func _assert_oversized_size_surface(shell: Node, setup: Dictionary) -> bool:
+	if bool(setup.get("ok", false)):
+		_fail("Oversized generated size class unexpectedly passed validation.")
+		return false
+	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
+	if String(validation.get("schema_id", "")) != RandomMapGeneratorRulesScript.RUNTIME_SIZE_POLICY_REJECTION_SCHEMA_ID:
+		_fail("Oversized size class did not fail through runtime size policy: %s" % JSON.stringify(validation))
+		return false
+	var size_policy: Dictionary = validation.get("size_policy", {}) if validation.get("size_policy", {}) is Dictionary else {}
+	var source_size: Dictionary = size_policy.get("source_size", {}) if size_policy.get("source_size", {}) is Dictionary else {}
+	var materialized_size: Dictionary = size_policy.get("materialized_size", {}) if size_policy.get("materialized_size", {}) is Dictionary else {}
+	var runtime_policy: Dictionary = size_policy.get("runtime_size_policy", {}) if size_policy.get("runtime_size_policy", {}) is Dictionary else {}
+	if String(size_policy.get("size_class_id", "")) != "homm3_medium" or int(source_size.get("width", 0)) != 72 or int(source_size.get("height", 0)) != 72:
+		_fail("Oversized validation missed Medium 72x72 source provenance: %s" % JSON.stringify(size_policy))
+		return false
+	if bool(runtime_policy.get("materialization_available", true)) or bool(runtime_policy.get("hidden_downscale", true)):
+		_fail("Oversized validation did not explicitly block hidden downscale: %s" % JSON.stringify(size_policy))
+		return false
+	if int(materialized_size.get("width", 0)) != 64 or int(materialized_size.get("height", 0)) != 48:
+		_fail("Oversized validation did not report the current runtime cap materialized bound: %s" % JSON.stringify(size_policy))
+		return false
+	var snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
+	if bool(snapshot.get("start_enabled", true)):
+		_fail("Generated launch button stayed enabled after forced oversized size failure.")
+		return false
+	return true
+
 func _assert_session_boundary(launch_result: Dictionary) -> bool:
 	if String(launch_result.get("active_launch_mode", "")) != SessionState.LAUNCH_MODE_SKIRMISH:
 		_fail("Generated UI launch left skirmish launch mode: %s" % JSON.stringify(launch_result))
@@ -177,6 +220,16 @@ func _assert_session_boundary(launch_result: Dictionary) -> bool:
 	if bool(provenance.get("campaign_adoption", true)) or bool(provenance.get("authored_content_writeback", true)) or bool(provenance.get("alpha_parity_claim", true)):
 		_fail("Generated UI launch provenance crossed forbidden boundary: %s" % JSON.stringify(provenance))
 		return false
+	var size_class: Dictionary = provenance.get("size_class", {}) if provenance.get("size_class", {}) is Dictionary else {}
+	var source_size: Dictionary = size_class.get("source_size", {}) if size_class.get("source_size", {}) is Dictionary else {}
+	var materialized_size: Dictionary = size_class.get("materialized_size", {}) if size_class.get("materialized_size", {}) is Dictionary else {}
+	var runtime_policy: Dictionary = size_class.get("runtime_size_policy", {}) if size_class.get("runtime_size_policy", {}) is Dictionary else {}
+	if String(size_class.get("size_class_id", "")) != "homm3_small" or int(source_size.get("width", 0)) != 36 or int(source_size.get("height", 0)) != 36:
+		_fail("Generated UI launch provenance missed HoMM3 Small source size: %s" % JSON.stringify(size_class))
+		return false
+	if int(materialized_size.get("width", 0)) != 36 or int(materialized_size.get("height", 0)) != 36 or not bool(runtime_policy.get("materialization_available", false)) or bool(runtime_policy.get("hidden_downscale", true)):
+		_fail("Generated UI launch provenance did not honestly materialize Small without hidden downscale: %s" % JSON.stringify(size_class))
+		return false
 	return true
 
 func _invalid_config() -> Dictionary:
@@ -187,6 +240,17 @@ func _invalid_config() -> Dictionary:
 		"player_constraints": {"human_count": 1, "player_count": 3, "team_mode": "free_for_all"},
 		"profile": {"id": "border_gate_compact_profile_v1", "template_id": "border_gate_compact_v1"},
 	}
+
+func _oversized_config() -> Dictionary:
+	return ScenarioSelectRulesScript.build_random_map_player_config(
+		"player-facing-setup-retry-ux-10184-medium",
+		"border_gate_compact_v1",
+		"border_gate_compact_profile_v1",
+		3,
+		"land",
+		false,
+		"homm3_medium"
+	)
 
 func _assert_no_authored_writeback(scenario_id: String, phase: String) -> bool:
 	if scenario_id == "":
