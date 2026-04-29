@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Recently completed implementation slice: `random-map-terrain-transit-semantics-10184` after `random-map-zone-layout-water-underground-10184`. Select the next P2.10 RMG child from the progress helper before starting new implementation. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated drafts through the scenario/domain load boundary only; they are not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, or alpha completion.
+Recently completed implementation slice: `random-map-connection-guard-materialization-10184`, following `random-map-terrain-transit-semantics-10184`. Continue next to `random-map-monster-reward-bands-10184`. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated drafts through the scenario/domain load boundary only; they are not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, or alpha completion.
 
 ## Slice Status Model
 
@@ -2147,11 +2147,13 @@ sourceDocs:
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-special-guards-and-wide.md`
 
 implementationTargets:
-- connection guard placement rules
-- route guard validation tests
+- `scripts/core/RandomMapGeneratorRules.gd`
+- connection guard placement/materialization rules
+- route, scenario constraint, and fairness report integration
+- focused Godot connection guard materialization report
 
 sliceEvidence:
-- Normal link values produce scaled guard placements when positive.
+- Normal link values produce explicit staged guard materialization records when positive.
 - Wide links suppress normal guards while preserving connection geometry.
 - Border-guard links produce original-game special guard/gate equivalents even when normal value is zero.
 - Failures report link id/endpoints, reason, and retryability.

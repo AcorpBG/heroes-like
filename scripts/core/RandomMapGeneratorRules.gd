@@ -13,6 +13,8 @@ const ZONE_LAYOUT_SCHEMA_ID := "random_map_zone_layout_v1"
 const ZONE_LAYOUT_REPORT_SCHEMA_ID := "random_map_zone_layout_water_underground_report_v1"
 const TERRAIN_TRANSIT_SCHEMA_ID := "random_map_terrain_transit_semantics_v1"
 const TERRAIN_TRANSIT_REPORT_SCHEMA_ID := "random_map_terrain_transit_semantics_report_v1"
+const CONNECTION_GUARD_MATERIALIZATION_SCHEMA_ID := "random_map_connection_guard_materialization_v1"
+const CONNECTION_GUARD_MATERIALIZATION_REPORT_SCHEMA_ID := "random_map_connection_guard_materialization_report_v1"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
 const HASH_MODULUS := 4294967296
@@ -186,6 +188,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 	phases.append(_phase_record("object_placement_staging", _placement_counts(placements.get("object_placements", []))))
 
 	var constraints := _build_constraint_payload(normalized, zones, template.get("links", []), seeds, zone_grid, terrain_rows, placements, zone_layout, terrain_transit)
+	phases.append(_phase_record("connection_guard_materialization", _connection_guard_materialization_phase_summary(constraints.get("connection_guard_materialization", {}))))
 	phases.append(_phase_record("route_road_constraint_writeout", {
 		"road_segment_count": int(constraints.get("road_network", {}).get("road_segments", []).size()),
 		"required_reachability": String(constraints.get("route_reachability_proof", {}).get("status", "unknown")),
@@ -194,6 +197,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 		"status": String(constraints.get("fairness_report", {}).get("status", "unknown")),
 		"start_count": int(constraints.get("fairness_report", {}).get("early_resource_support", {}).get("per_start", []).size()),
 		"guard_route_count": int(constraints.get("fairness_report", {}).get("guard_pressure", {}).get("route_guards", []).size()),
+		"materialized_connection_guard_count": int(constraints.get("connection_guard_materialization", {}).get("summary", {}).get("materialized_record_count", 0)),
 	}))
 
 	var scenario_record := _build_scenario_record(normalized, terrain_rows, placements, constraints)
@@ -464,6 +468,42 @@ static func terrain_transit_report(input_config: Dictionary) -> Dictionary:
 		},
 	}
 
+static func connection_guard_materialization_report(input_config: Dictionary) -> Dictionary:
+	var first := generate(input_config)
+	var second := generate(input_config)
+	var changed_seed_config := input_config.duplicate(true)
+	changed_seed_config["seed"] = "%s:changed" % String(input_config.get("seed", "0"))
+	var changed_seed := generate(changed_seed_config)
+	var first_payload: Dictionary = first.get("generated_map", {})
+	var second_payload: Dictionary = second.get("generated_map", {})
+	var changed_payload: Dictionary = changed_seed.get("generated_map", {})
+	var first_guards: Dictionary = first_payload.get("staging", {}).get("connection_guard_materialization", {})
+	var second_guards: Dictionary = second_payload.get("staging", {}).get("connection_guard_materialization", {})
+	var changed_guards: Dictionary = changed_payload.get("staging", {}).get("connection_guard_materialization", {})
+	var same_signature := String(first_guards.get("connection_guard_materialization_signature", "")) == String(second_guards.get("connection_guard_materialization_signature", ""))
+	var changed_seed_changes_signature := String(first_guards.get("connection_guard_materialization_signature", "")) != String(changed_guards.get("connection_guard_materialization_signature", ""))
+	var validation := _connection_guard_materialization_validation(first_guards, first_payload)
+	var ok := not first_payload.is_empty() and not second_payload.is_empty() and same_signature and bool(validation.get("ok", false))
+	return {
+		"ok": ok,
+		"schema_id": CONNECTION_GUARD_MATERIALIZATION_REPORT_SCHEMA_ID,
+		"stable_signature": String(first_payload.get("stable_signature", "")),
+		"changed_seed_signature": String(changed_payload.get("stable_signature", "")),
+		"connection_guard_materialization_signature": String(first_guards.get("connection_guard_materialization_signature", "")),
+		"changed_seed_connection_guard_materialization_signature": String(changed_guards.get("connection_guard_materialization_signature", "")),
+		"same_input_connection_guard_materialization_signature_equivalent": same_signature,
+		"changed_seed_changes_connection_guard_materialization_signature": changed_seed_changes_signature,
+		"connection_guard_materialization": first_guards,
+		"changed_seed_connection_guard_materialization": changed_guards,
+		"connection_guard_materialization_validation": validation,
+		"payload_validation": first.get("report", {}),
+		"no_ui_save_writeback_claim": {
+			"campaign_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("campaign", true)),
+			"skirmish_available": bool(first_payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("skirmish", true)),
+			"write_policy": String(first_payload.get("write_policy", "")),
+		},
+	}
+
 static func resource_encounter_fairness_report(generated_map: Dictionary) -> Dictionary:
 	var staging: Dictionary = generated_map.get("staging", {})
 	var scenario: Dictionary = generated_map.get("scenario_record", {})
@@ -578,6 +618,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	var road_network: Dictionary = staging.get("road_network", {})
 	var reachability: Dictionary = staging.get("route_reachability_proof", {})
 	var fairness_report: Dictionary = staging.get("fairness_report", {})
+	var connection_guard_materialization: Dictionary = staging.get("connection_guard_materialization", {})
 	if terrain_constraints.is_empty():
 		failures.append("terrain constraints payload missing")
 	if String(terrain_constraints.get("coherence_model", "")) == "":
@@ -622,6 +663,12 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	if String(reachability.get("status", "")) != "pass":
 		failures.append("required route reachability proof failed")
 	_validate_road_paths(road_network, terrain_rows, staging.get("object_placements", []), failures)
+	var guard_materialization_validation := _connection_guard_materialization_validation(connection_guard_materialization, generated_map)
+	if not bool(guard_materialization_validation.get("ok", false)):
+		for failure in guard_materialization_validation.get("failures", []):
+			failures.append("connection guard materialization: %s" % String(failure))
+	for warning in guard_materialization_validation.get("warnings", []):
+		warnings.append("connection guard materialization: %s" % String(warning))
 	if String(fairness_report.get("schema_id", "")) != "random_map_resource_encounter_fairness_report_v1":
 		failures.append("resource/encounter fairness report missing")
 	else:
@@ -633,7 +680,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	for phase in generated_map.get("phase_pipeline", []):
 		if phase is Dictionary:
 			phase_names.append(String(phase.get("phase", "")))
-	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "route_road_constraint_writeout", "resource_encounter_fairness_report"]:
+	for required_phase in ["template_profile", "runtime_zone_graph", "zone_seed_layout", "terrain_owner_grid", "terrain_biome_coherence", "terrain_transit_semantics", "object_placement_staging", "connection_guard_materialization", "route_road_constraint_writeout", "resource_encounter_fairness_report"]:
 		if required_phase not in phase_names:
 			failures.append("missing generation phase %s" % required_phase)
 	if scenario.get("towns", []).is_empty():
@@ -651,6 +698,8 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 		"placement_counts": _placement_counts(staging.get("object_placements", [])),
 		"route_edge_count": int(route_graph.get("edges", []).size()),
 		"road_segment_count": int(road_network.get("road_segments", []).size()),
+		"connection_guard_materialization_status": String(connection_guard_materialization.get("status", "")),
+		"connection_guard_materialization_summary": connection_guard_materialization.get("summary", {}),
 		"required_reachability_status": String(reachability.get("status", "")),
 		"fairness_status": String(fairness_report.get("status", "")),
 		"fairness_summary": fairness_report.get("summary", {}),
@@ -1127,6 +1176,10 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 		player_index += 1
 	for index in range(links.size()):
 		var link: Dictionary = links[index]
+		if bool(link.get("wide", false)):
+			continue
+		if int(link.get("guard_value", 0)) <= 0 and not bool(link.get("border_guard", false)):
+			continue
 		var from_seed: Dictionary = seeds.get(String(link.get("from", "")), {})
 		var to_seed: Dictionary = seeds.get(String(link.get("to", "")), {})
 		if from_seed.is_empty() or to_seed.is_empty():
@@ -1142,9 +1195,29 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 		)
 		if guard_point.is_empty():
 			continue
-		var encounter_placement_id := "rmg_link_guard_%02d" % (index + 1)
-		encounters.append({"placement_id": encounter_placement_id, "encounter_id": String(profile.get("encounter_id", DEFAULT_ENCOUNTER_ID)), "x": int(guard_point.get("x", 0)), "y": int(guard_point.get("y", 0)), "difficulty": "generated_core"})
-		placements.append(_object_placement(encounter_placement_id, "route_guard", "", _zone_at_point(zone_grid, guard_point), guard_point, {"encounter_id": String(profile.get("encounter_id", DEFAULT_ENCOUNTER_ID)), "purpose": String(link.get("role", "route")), "guard_value": int(link.get("guard_value", 0)), "wide": bool(link.get("wide", false)), "border_guard": bool(link.get("border_guard", false))}))
+		var edge_id := _route_edge_id(index + 1, String(link.get("from", "")), String(link.get("to", "")))
+		if bool(link.get("border_guard", false)):
+			var special_placement_id := "rmg_special_gate_%02d" % (index + 1)
+			placements.append(_object_placement(special_placement_id, "special_guard_gate", "", _zone_at_point(zone_grid, guard_point), guard_point, {
+				"purpose": String(link.get("role", "route")),
+				"route_edge_id": edge_id,
+				"guard_value": int(link.get("guard_value", 0)),
+				"special_guard_type": "border_guard_gate_placeholder",
+				"special_payload": link.get("special_payload", {}),
+				"wide": false,
+				"border_guard": true,
+			}))
+		else:
+			var encounter_placement_id := "rmg_link_guard_%02d" % (index + 1)
+			encounters.append({"placement_id": encounter_placement_id, "encounter_id": String(profile.get("encounter_id", DEFAULT_ENCOUNTER_ID)), "x": int(guard_point.get("x", 0)), "y": int(guard_point.get("y", 0)), "difficulty": "generated_core", "route_edge_id": edge_id})
+			placements.append(_object_placement(encounter_placement_id, "route_guard", "", _zone_at_point(zone_grid, guard_point), guard_point, {
+				"encounter_id": String(profile.get("encounter_id", DEFAULT_ENCOUNTER_ID)),
+				"purpose": String(link.get("role", "route")),
+				"route_edge_id": edge_id,
+				"guard_value": int(link.get("guard_value", 0)),
+				"wide": false,
+				"border_guard": false,
+			}))
 		_mark_occupied(occupied, guard_point)
 	_annotate_pathing_metadata(placements, towns, resource_nodes, encounters, zone_grid, terrain_rows, occupied)
 	return {
@@ -1214,6 +1287,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 			"zone_layout": constraints.get("zone_layout", {}),
 			"terrain": constraints.get("terrain_constraints", {}),
 			"terrain_transit": constraints.get("terrain_transit_semantics", {}),
+			"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 			"town_starts": constraints.get("town_start_constraints", {}),
 			"roads": constraints.get("road_network", {}),
 			"reachability": constraints.get("route_reachability_proof", {}),
@@ -1251,6 +1325,7 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"terrain_owner_grid": zone_grid,
 		"terrain_constraints": constraints.get("terrain_constraints", {}),
 		"terrain_transit_semantics": constraints.get("terrain_transit_semantics", {}),
+		"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 		"town_start_constraints": constraints.get("town_start_constraints", {}),
 		"road_network": constraints.get("road_network", {}),
 		"route_reachability_proof": constraints.get("route_reachability_proof", {}),
@@ -1266,18 +1341,338 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 	var terrain_constraints := _terrain_constraints_payload(terrain_rows, zone_grid, zones, terrain_transit)
 	var occupied := _occupied_body_lookup(placements.get("object_placements", []))
 	var route_build := _build_route_and_road_payload(links, seeds, placements, terrain_rows, occupied, terrain_transit)
-	var town_start_constraints := _town_start_constraints_payload(zones, placements, route_build.get("route_graph", {}), route_build.get("route_reachability_proof", {}))
-	var fairness_report := _fairness_report_payload(normalized, zones, placements, route_build.get("route_graph", {}), route_build.get("route_reachability_proof", {}))
+	var route_graph: Dictionary = route_build.get("route_graph", _route_graph_payload(links, seeds))
+	var connection_guard_materialization := _build_connection_guard_materialization(
+		links,
+		route_graph,
+		route_build.get("road_network", {}),
+		placements,
+		terrain_transit
+	)
+	route_graph["connection_guard_materialization"] = connection_guard_materialization
+	route_graph["connection_guard_materialization_summary"] = connection_guard_materialization.get("summary", {})
+	var town_start_constraints := _town_start_constraints_payload(zones, placements, route_graph, route_build.get("route_reachability_proof", {}))
+	var fairness_report := _fairness_report_payload(normalized, zones, placements, route_graph, route_build.get("route_reachability_proof", {}))
 	return {
 		"zone_layout": zone_layout,
 		"terrain_constraints": terrain_constraints,
 		"terrain_transit_semantics": terrain_transit,
+		"connection_guard_materialization": connection_guard_materialization,
 		"town_start_constraints": town_start_constraints,
 		"road_network": route_build.get("road_network", {}),
-		"route_graph": route_build.get("route_graph", _route_graph_payload(links, seeds)),
+		"route_graph": route_graph,
 		"route_reachability_proof": route_build.get("route_reachability_proof", {}),
 		"fairness_report": fairness_report,
 		"metadata": _metadata(normalized),
+	}
+
+static func _build_connection_guard_materialization(links: Array, route_graph: Dictionary, road_network: Dictionary, placements: Dictionary, terrain_transit: Dictionary) -> Dictionary:
+	var edges_by_id := {}
+	for edge in route_graph.get("edges", []):
+		if edge is Dictionary:
+			edges_by_id[String(edge.get("id", ""))] = edge
+	var placements_by_route := _placements_by_route_edge(placements.get("object_placements", []))
+	var road_cells_by_route := _road_cells_by_route_edge(road_network.get("road_segments", []))
+	var normal_route_guards := []
+	var wide_suppressions := []
+	var special_guards := []
+	var diagnostics := []
+	var expected_normal_guard_count := 0
+	var expected_wide_suppression_count := 0
+	var expected_special_guard_count := 0
+	for index in range(links.size()):
+		var link = links[index]
+		if not (link is Dictionary):
+			diagnostics.append(_connection_guard_diagnostic("link_%02d" % (index + 1), "", "", "invalid_link_payload", true, "template link is not a dictionary"))
+			continue
+		var from_zone := String(link.get("from", ""))
+		var to_zone := String(link.get("to", ""))
+		var edge_id := _route_edge_id(index + 1, from_zone, to_zone)
+		var edge: Dictionary = edges_by_id.get(edge_id, {})
+		var source_link := _connection_guard_source_link(edge_id, index + 1, link, edge)
+		if edge.is_empty():
+			diagnostics.append(_connection_guard_diagnostic(edge_id, from_zone, to_zone, "route_edge_missing", false, "template link did not produce a route graph edge"))
+			continue
+		var transit_semantics: Dictionary = edge.get("transit_semantics", _transit_semantics_for_surface_link(link, terrain_transit))
+		var anchor_candidate: Dictionary = edge.get("route_cell_anchor_candidate", {})
+		if anchor_candidate.is_empty():
+			anchor_candidate = _route_anchor_candidate(road_cells_by_route.get(edge_id, []), edge.get("from_anchor", {}), edge.get("to_anchor", {}))
+		if not bool(edge.get("path_found", false)):
+			diagnostics.append(_connection_guard_diagnostic(edge_id, from_zone, to_zone, "route_path_missing", true, "route graph edge has no passable path for guard placement"))
+		if bool(link.get("wide", false)):
+			expected_wide_suppression_count += 1
+			var suppression_id := "conn_guard_%02d_wide_suppression" % (index + 1)
+			var suppression := {
+				"id": suppression_id,
+				"record_type": "wide_normal_guard_suppression",
+				"source_link": source_link,
+				"route_edge_id": edge_id,
+				"from": from_zone,
+				"to": to_zone,
+				"role": String(link.get("role", "")),
+				"guard_value": int(link.get("guard_value", 0)),
+				"normal_guard_materialized": false,
+				"suppression_reason": "wide_link_suppresses_normal_guard_materialization",
+				"wide_semantics": link.get("special_payload", {}),
+				"route_classification": String(edge.get("connectivity_classification", "")),
+				"route_cell_anchor_candidate": anchor_candidate,
+				"transit_semantics": transit_semantics,
+				"materialization_state": "wide_connection_preserved_normal_guard_not_materialized",
+			}
+			_attach_materialization_id_to_edge(edge, suppression_id)
+			wide_suppressions.append(suppression)
+			continue
+		if bool(link.get("border_guard", false)):
+			expected_special_guard_count += 1
+			var special_id := "conn_guard_%02d_special_gate" % (index + 1)
+			var special_placement := _placement_candidate_for_route(placements_by_route.get(edge_id, []), "special_guard_gate")
+			var special_record := {
+				"id": special_id,
+				"record_type": "special_guard_gate",
+				"source_link": source_link,
+				"route_edge_id": edge_id,
+				"from": from_zone,
+				"to": to_zone,
+				"role": String(link.get("role", "")),
+				"guard_value": int(link.get("guard_value", 0)),
+				"normal_guard_materialized": false,
+				"special_guard_materialized": true,
+				"special_guard_type": "border_guard_gate_placeholder",
+				"payload_semantics": link.get("special_payload", {}),
+				"required_unlock_metadata": {
+					"unlock_required": true,
+					"unlock_model": "border_guard_gate_or_key_placeholder",
+					"subtype_placeholder": index % 8,
+					"key_or_unlock_object_materialization": "deferred_to_monster_reward_bands_or_transit_slice",
+				},
+				"route_classification": String(edge.get("connectivity_classification", "")),
+				"route_cell_anchor_candidate": anchor_candidate,
+				"placement_candidate": special_placement,
+				"transit_semantics": transit_semantics,
+				"materialization_state": "staged_special_gate_placeholder_no_final_object_writeout",
+				"downstream_consumer": "random-map-monster-reward-bands-10184",
+			}
+			_attach_materialization_id_to_edge(edge, special_id)
+			special_guards.append(special_record)
+			if anchor_candidate.is_empty():
+				diagnostics.append(_connection_guard_diagnostic(edge_id, from_zone, to_zone, "special_guard_anchor_missing", true, "border/special guard could not resolve a route anchor candidate"))
+			continue
+		var guard_value := int(link.get("guard_value", 0))
+		if guard_value <= 0:
+			continue
+		expected_normal_guard_count += 1
+		var normal_id := "conn_guard_%02d_normal" % (index + 1)
+		var normal_placement := _placement_candidate_for_route(placements_by_route.get(edge_id, []), "route_guard")
+		var normal_record := {
+			"id": normal_id,
+			"record_type": "normal_route_guard",
+			"source_link": source_link,
+			"route_edge_id": edge_id,
+			"from": from_zone,
+			"to": to_zone,
+			"role": String(link.get("role", "")),
+			"guard_value": guard_value,
+			"effective_guard_pressure": _effective_guard_pressure(edge),
+			"normal_guard_materialized": true,
+			"route_classification": String(edge.get("connectivity_classification", "")),
+			"route_cell_anchor_candidate": anchor_candidate,
+			"placement_candidate": normal_placement,
+			"monster_category_placeholder": {
+				"state": "downstream_monster_selection_pending",
+				"category": "connection_route_guard",
+				"strength_source": "template_link_guard_value",
+			},
+			"reward_category_placeholder": {
+				"state": "downstream_reward_selection_pending",
+				"category": "guarded_route_reward_context",
+			},
+			"transit_semantics": transit_semantics,
+			"materialization_state": "staged_normal_guard_placeholder",
+			"downstream_consumer": "random-map-monster-reward-bands-10184",
+		}
+		_attach_materialization_id_to_edge(edge, normal_id)
+		normal_route_guards.append(normal_record)
+		if anchor_candidate.is_empty():
+			diagnostics.append(_connection_guard_diagnostic(edge_id, from_zone, to_zone, "normal_guard_anchor_missing", true, "normal guard could not resolve a route anchor candidate"))
+	var materialized_records := normal_route_guards + special_guards
+	var payload := {
+		"schema_id": CONNECTION_GUARD_MATERIALIZATION_SCHEMA_ID,
+		"status": "warning" if not diagnostics.is_empty() else "pass",
+		"materialization_policy": "normal_guards_and_special_gate_placeholders_staged_no_final_monster_reward_selection",
+		"connection_payload_semantics": route_graph.get("connection_payload_semantics", {}),
+		"normal_route_guards": normal_route_guards,
+		"special_guard_gates": special_guards,
+		"wide_suppressions": wide_suppressions,
+		"materialized_records": materialized_records,
+		"diagnostics": diagnostics,
+		"summary": {
+			"expected_normal_guard_count": expected_normal_guard_count,
+			"expected_special_guard_gate_count": expected_special_guard_count,
+			"expected_wide_suppression_count": expected_wide_suppression_count,
+			"normal_guard_count": normal_route_guards.size(),
+			"special_guard_gate_count": special_guards.size(),
+			"wide_suppression_count": wide_suppressions.size(),
+			"materialized_record_count": materialized_records.size(),
+			"diagnostic_count": diagnostics.size(),
+		},
+		"deferred": [
+			"final_monster_stack_selection",
+			"reward_band_selection",
+			"durable_object_writeout",
+			"skirmish_ui_save_replay_adoption",
+		],
+	}
+	payload["connection_guard_materialization_signature"] = _hash32_hex(_stable_stringify({
+		"normal_route_guards": normal_route_guards,
+		"special_guard_gates": special_guards,
+		"wide_suppressions": wide_suppressions,
+		"diagnostics": diagnostics,
+	}))
+	return payload
+
+static func _connection_guard_source_link(edge_id: String, index: int, link: Dictionary, edge: Dictionary) -> Dictionary:
+	return {
+		"id": edge_id,
+		"index": index,
+		"from": String(link.get("from", "")),
+		"to": String(link.get("to", "")),
+		"role": String(link.get("role", "")),
+		"guard_value": int(link.get("guard_value", 0)),
+		"wide": bool(link.get("wide", false)),
+		"border_guard": bool(link.get("border_guard", false)),
+		"route_classification": String(edge.get("connectivity_classification", "")),
+		"source_endpoints": link.get("source_endpoints", {}),
+		"grammar_source": link.get("grammar_source", {}),
+	}
+
+static func _connection_guard_diagnostic(edge_id: String, from_zone: String, to_zone: String, reason: String, retryable: bool, message: String) -> Dictionary:
+	return {
+		"route_edge_id": edge_id,
+		"from": from_zone,
+		"to": to_zone,
+		"reason": reason,
+		"retryable": retryable,
+		"message": message,
+	}
+
+static func _attach_materialization_id_to_edge(edge: Dictionary, record_id: String) -> void:
+	var ids: Array = edge.get("connection_guard_materialization_ids", [])
+	if record_id not in ids:
+		ids.append(record_id)
+	edge["connection_guard_materialization_ids"] = ids
+
+static func _placements_by_route_edge(object_placements: Array) -> Dictionary:
+	var result := {}
+	for placement in object_placements:
+		if not (placement is Dictionary):
+			continue
+		var route_edge_id := String(placement.get("route_edge_id", ""))
+		if route_edge_id == "":
+			continue
+		if not result.has(route_edge_id):
+			result[route_edge_id] = []
+		result[route_edge_id].append(placement)
+	return result
+
+static func _road_cells_by_route_edge(road_segments: Array) -> Dictionary:
+	var result := {}
+	for segment in road_segments:
+		if not (segment is Dictionary):
+			continue
+		var route_edge_id := String(segment.get("route_edge_id", ""))
+		if route_edge_id == "":
+			continue
+		result[route_edge_id] = segment.get("cells", [])
+	return result
+
+static func _placement_candidate_for_route(candidates: Array, expected_kind: String) -> Dictionary:
+	for placement in candidates:
+		if not (placement is Dictionary):
+			continue
+		if expected_kind != "" and String(placement.get("kind", "")) != expected_kind:
+			continue
+		return {
+			"placement_id": String(placement.get("placement_id", "")),
+			"kind": String(placement.get("kind", "")),
+			"zone_id": String(placement.get("zone_id", "")),
+			"x": int(placement.get("x", 0)),
+			"y": int(placement.get("y", 0)),
+			"body_tiles": placement.get("body_tiles", []),
+			"approach_tiles": placement.get("approach_tiles", []),
+			"pathing_status": String(placement.get("pathing_status", "")),
+		}
+	return {}
+
+static func _connection_guard_materialization_phase_summary(materialization: Dictionary) -> Dictionary:
+	return {
+		"schema_id": String(materialization.get("schema_id", "")),
+		"status": String(materialization.get("status", "")),
+		"signature": String(materialization.get("connection_guard_materialization_signature", "")),
+		"normal_guard_count": int(materialization.get("summary", {}).get("normal_guard_count", 0)),
+		"special_guard_gate_count": int(materialization.get("summary", {}).get("special_guard_gate_count", 0)),
+		"wide_suppression_count": int(materialization.get("summary", {}).get("wide_suppression_count", 0)),
+		"diagnostic_count": int(materialization.get("summary", {}).get("diagnostic_count", 0)),
+	}
+
+static func _connection_guard_materialization_validation(materialization: Dictionary, generated_map: Dictionary = {}) -> Dictionary:
+	var failures := []
+	var warnings := []
+	if String(materialization.get("schema_id", "")) != CONNECTION_GUARD_MATERIALIZATION_SCHEMA_ID:
+		failures.append("connection guard materialization schema mismatch")
+	if String(materialization.get("connection_guard_materialization_signature", "")) == "":
+		failures.append("connection guard materialization signature missing")
+	var summary: Dictionary = materialization.get("summary", {})
+	if int(summary.get("expected_normal_guard_count", 0)) + int(summary.get("expected_special_guard_gate_count", 0)) > 0 and materialization.get("materialized_records", []).is_empty():
+		failures.append("no materialized normal or special connection guard records")
+	if int(summary.get("expected_normal_guard_count", 0)) > 0 and materialization.get("normal_route_guards", []).is_empty():
+		failures.append("normal guarded links produced no materialized records")
+	if int(summary.get("expected_wide_suppression_count", 0)) > 0 and materialization.get("wide_suppressions", []).is_empty():
+		failures.append("wide links produced no suppression records")
+	if int(summary.get("expected_special_guard_gate_count", 0)) > 0 and materialization.get("special_guard_gates", []).is_empty():
+		failures.append("border/special links produced no special gate records")
+	for record in materialization.get("normal_route_guards", []):
+		if not (record is Dictionary):
+			failures.append("normal guard record is not a dictionary")
+			continue
+		if int(record.get("guard_value", 0)) <= 0:
+			failures.append("normal guard %s has no positive guard value" % String(record.get("id", "")))
+		if bool(record.get("source_link", {}).get("wide", false)) or bool(record.get("source_link", {}).get("border_guard", false)):
+			failures.append("normal guard %s was materialized from wide or border link" % String(record.get("id", "")))
+		if record.get("route_cell_anchor_candidate", {}).is_empty():
+			failures.append("normal guard %s missing route anchor candidate" % String(record.get("id", "")))
+		if record.get("monster_category_placeholder", {}).is_empty() or record.get("reward_category_placeholder", {}).is_empty():
+			failures.append("normal guard %s missed downstream monster/reward placeholders" % String(record.get("id", "")))
+	for record in materialization.get("wide_suppressions", []):
+		if not (record is Dictionary):
+			failures.append("wide suppression record is not a dictionary")
+			continue
+		if bool(record.get("normal_guard_materialized", true)):
+			failures.append("wide suppression %s still materialized a normal guard" % String(record.get("id", "")))
+		if String(record.get("suppression_reason", "")) == "":
+			failures.append("wide suppression %s missed reason" % String(record.get("id", "")))
+	for record in materialization.get("special_guard_gates", []):
+		if not (record is Dictionary):
+			failures.append("special guard record is not a dictionary")
+			continue
+		if String(record.get("special_guard_type", "")) == "":
+			failures.append("special guard %s missed special type" % String(record.get("id", "")))
+		if not bool(record.get("required_unlock_metadata", {}).get("unlock_required", false)):
+			failures.append("special guard %s missed required unlock metadata" % String(record.get("id", "")))
+		if record.get("route_cell_anchor_candidate", {}).is_empty():
+			failures.append("special guard %s missing route anchor candidate" % String(record.get("id", "")))
+	for diagnostic in materialization.get("diagnostics", []):
+		if diagnostic is Dictionary:
+			warnings.append("%s:%s" % [String(diagnostic.get("route_edge_id", "")), String(diagnostic.get("reason", ""))])
+	var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
+	if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", false)) or bool(scenario.get("selection", {}).get("availability", {}).get("skirmish", false)):
+		failures.append("connection guard materialization adopted generated map into campaign/skirmish")
+	if generated_map.has("save_adoption") or scenario.has("alpha_parity_claim"):
+		failures.append("connection guard materialization exposed save/writeback/parity claim")
+	return {
+		"ok": failures.is_empty(),
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+		"warnings": warnings,
 	}
 
 static func _terrain_constraints_payload(terrain_rows: Array, zone_grid: Array, zones: Array, terrain_transit: Dictionary = {}) -> Dictionary:
@@ -1353,9 +1748,10 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 		var path := _find_passable_path(from_point, to_point, terrain_rows, occupied)
 		var classification := _route_classification(link, not path.is_empty())
 		var transit_semantics := _transit_semantics_for_surface_link(link, terrain_transit)
-		var edge_id := "edge_%02d_%s_%s" % [edge_index, from_zone, to_zone]
+		var edge_id := _route_edge_id(edge_index, from_zone, to_zone)
 		var role := String(link.get("role", ""))
 		var required := role in ["contest_route", "early_reward_route", "reward_to_junction", "template_connection"]
+		var route_anchor_candidate := _route_anchor_candidate(path, from_point, to_point)
 		var edge := {
 			"id": edge_id,
 			"from": from_zone,
@@ -1378,6 +1774,8 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 			"path_length": path.size(),
 			"from_anchor": from_point,
 			"to_anchor": to_point,
+			"route_cell_anchor_candidate": route_anchor_candidate,
+			"connection_guard_materialization_ids": [],
 			"writeout_state": "staged_road_overlay_payload_no_tile_write",
 		}
 		edges.append(edge)
@@ -1434,6 +1832,7 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 			"value": "normal_guard_value",
 			"wide": "suppresses_normal_guard",
 			"border_guard": "special_guarded_connection_mode",
+			"materialized_guards": "explicit_connection_guard_materialization_payload_records",
 			"transit": "land_roads_now_water_underground_and_cross_level_routes_report_deferred_materialization",
 		},
 		"transit_route_semantics": terrain_transit.get("transit_routes", {}),
@@ -1674,6 +2073,7 @@ static func _guard_pressure_payload(route_graph: Dictionary) -> Dictionary:
 			"risk_class": guard_class,
 			"wide_suppresses_normal_guard": bool(edge.get("wide", false)),
 			"border_guard_special_mode": bool(edge.get("border_guard", false)),
+			"connection_guard_materialization_ids": edge.get("connection_guard_materialization_ids", []),
 			"connectivity_classification": String(edge.get("connectivity_classification", "")),
 		}
 		route_guards.append(record)
@@ -1701,6 +2101,7 @@ static func _guard_pressure_payload(route_graph: Dictionary) -> Dictionary:
 	return {
 		"status": status,
 		"connection_payload_semantics": route_graph.get("connection_payload_semantics", {}),
+		"connection_guard_materialization_summary": route_graph.get("connection_guard_materialization_summary", {}),
 		"route_guards": route_guards,
 		"pressure_by_start_zone": _sorted_dict(pressure_by_start),
 		"pressure_spread": _spread_summary(pressure_values),
@@ -1885,10 +2286,12 @@ static func _route_graph_payload(links: Array, seeds: Dictionary) -> Dictionary:
 	var edges := []
 	for index in range(links.size()):
 		var link: Dictionary = links[index]
+		var from_zone := String(link.get("from", ""))
+		var to_zone := String(link.get("to", ""))
 		edges.append({
-			"id": "edge_%02d_%s_%s" % [index + 1, String(link.get("from", "")), String(link.get("to", ""))],
-			"from": String(link.get("from", "")),
-			"to": String(link.get("to", "")),
+			"id": _route_edge_id(index + 1, from_zone, to_zone),
+			"from": from_zone,
+			"to": to_zone,
 			"role": String(link.get("role", "")),
 			"guard_value": int(link.get("guard_value", 0)),
 			"guard": link.get("guard", {}),
@@ -1899,6 +2302,8 @@ static func _route_graph_payload(links: Array, seeds: Dictionary) -> Dictionary:
 			"unsupported_runtime_fields": link.get("unsupported_runtime_fields", []),
 			"from_anchor": seeds.get(String(link.get("from", "")), {}),
 			"to_anchor": seeds.get(String(link.get("to", "")), {}),
+			"route_cell_anchor_candidate": _route_anchor_candidate([], seeds.get(from_zone, {}), seeds.get(to_zone, {})),
+			"connection_guard_materialization_ids": [],
 			"writeout_state": "graph_only_roads_deferred",
 		})
 	return {"nodes": _sorted_point_dict(seeds), "edges": edges}
@@ -2457,6 +2862,26 @@ static func _route_classification(link: Dictionary, path_found: bool) -> String:
 	if int(link.get("guard_value", 0)) > 0:
 		return "guarded_connectivity"
 	return "full_connectivity"
+
+static func _route_edge_id(index: int, from_zone: String, to_zone: String) -> String:
+	return "edge_%02d_%s_%s" % [index, from_zone, to_zone]
+
+static func _route_anchor_candidate(path: Array, from_anchor: Dictionary, to_anchor: Dictionary) -> Dictionary:
+	if not path.is_empty():
+		var midpoint = path[int(floor(float(path.size() - 1) * 0.5))]
+		if midpoint is Dictionary:
+			return {
+				"x": int(midpoint.get("x", 0)),
+				"y": int(midpoint.get("y", 0)),
+				"source": "route_path_midpoint",
+			}
+	if not from_anchor.is_empty() and not to_anchor.is_empty():
+		return {
+			"x": int(round((int(from_anchor.get("x", 0)) + int(to_anchor.get("x", 0))) * 0.5)),
+			"y": int(round((int(from_anchor.get("y", 0)) + int(to_anchor.get("y", 0))) * 0.5)),
+			"source": "anchor_midpoint_fallback",
+		}
+	return {}
 
 static func _road_segment_payload(edge_id: String, path: Array, classification: String, edge: Dictionary) -> Dictionary:
 	return {
