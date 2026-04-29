@@ -8,6 +8,8 @@ const LAUNCH_MODE_CAMPAIGN := "campaign"
 const LAUNCH_MODE_SKIRMISH := "skirmish"
 const LAUNCH_MODE_GENERATED_DRAFT := "generated_draft"
 const SUPPORTED_LAUNCH_MODES := [LAUNCH_MODE_CAMPAIGN, LAUNCH_MODE_SKIRMISH, LAUNCH_MODE_GENERATED_DRAFT]
+const GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG := "generated_random_map_materialization"
+const GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY := "generated_map_runtime_materialization"
 
 class SessionData:
 	const SAVE_VERSION := 9
@@ -17,6 +19,8 @@ class SessionData:
 	const LAUNCH_MODE_SKIRMISH := "skirmish"
 	const LAUNCH_MODE_GENERATED_DRAFT := "generated_draft"
 	const SUPPORTED_LAUNCH_MODES := [LAUNCH_MODE_CAMPAIGN, LAUNCH_MODE_SKIRMISH, LAUNCH_MODE_GENERATED_DRAFT]
+	const GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG := "generated_random_map_materialization"
+	const GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY := "generated_map_runtime_materialization"
 
 	var save_version: int = SAVE_VERSION
 	var session_id: String = ""

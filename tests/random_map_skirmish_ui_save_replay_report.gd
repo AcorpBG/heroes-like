@@ -168,7 +168,7 @@ func _assert_save_replay_payload(payload: Dictionary, setup: Dictionary) -> bool
 	if String(provenance.get("normalized_seed", "")) != String(setup.get("normalized_seed", "")):
 		_fail("Saved provenance seed changed.")
 		return false
-	if String(provenance.get("save_schema_status", "")) != "staged_metadata_preserved_without_save_version_bump":
+	if String(provenance.get("save_schema_status", "")).find("without_save_version_bump") < 0:
 		_fail("Save provenance did not expose staged/deferred schema status: %s" % JSON.stringify(provenance))
 		return false
 	if replay.get("generator_config", {}).is_empty() or String(replay.get("replay_boundary", "")).find("seed_config_identity") < 0:

@@ -9,6 +9,7 @@ const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
 const ScenarioScriptRulesScript = preload("res://scripts/core/ScenarioScriptRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 
 static func create_session(
 	scenario_id: String,
@@ -120,18 +121,24 @@ static func _create_generated_registered_session(
 
 	var metadata: Dictionary = generated_map.get("metadata", {})
 	var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
+	var runtime_materialization := RandomMapGeneratorRulesScript.runtime_materialization_for_generated_map(generated_map)
+	var materialization_identity := RandomMapGeneratorRulesScript.runtime_materialization_identity(generated_map)
 	for key in extra_flags.keys():
 		session.flags[String(key)] = extra_flags[key]
 	session.flags["generated_random_map_metadata"] = metadata.duplicate(true)
 	session.flags["generated_random_map_identity"] = _generated_identity(generated_map)
+	session.flags[SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG] = materialization_identity.duplicate(true)
 	session.flags["generated_random_map_boundary"] = {
 		"write_policy": String(generated_map.get("write_policy", "")),
 		"registry_write_policy": String(registration.get("write_policy", "")),
 		"menu_policy": String(registration.get("menu_policy", "")),
 		"availability": selection.get("availability", {}),
+		"runtime_materialization_policy": String(runtime_materialization.get("materialization_policy", "")),
 	}
 	session.overworld["generated_random_map_metadata"] = metadata.duplicate(true)
 	session.overworld["generated_random_map_identity"] = _generated_identity(generated_map)
+	session.overworld[SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG] = materialization_identity.duplicate(true)
+	session.overworld[SessionStateStoreScript.GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY] = runtime_materialization.duplicate(true)
 	session.overworld["generated_terrain_layers_record_id"] = String(terrain_layers.get("id", ""))
 	return session
 
@@ -142,6 +149,7 @@ static func _generated_identity(generated_map: Dictionary) -> Dictionary:
 	return {
 		"scenario_id": String(scenario.get("id", "")),
 		"stable_signature": String(generated_map.get("stable_signature", "")),
+		"materialized_map_signature": String(generated_map.get("runtime_materialization", {}).get("materialized_map_signature", "")),
 		"generator_version": String(metadata.get("generator_version", "")),
 		"template_id": String(metadata.get("template_id", "")),
 		"profile_id": String(profile.get("id", "")),

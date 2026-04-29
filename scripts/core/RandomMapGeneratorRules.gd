@@ -27,6 +27,7 @@ const TOWN_MINE_DWELLING_PLACEMENT_SCHEMA_ID := "random_map_town_mine_dwelling_p
 const TOWN_MINE_DWELLING_PLACEMENT_REPORT_SCHEMA_ID := "random_map_town_mine_dwelling_placement_report_v1"
 const VALIDATION_BATCH_RETRY_REPORT_SCHEMA_ID := "random_map_validation_batch_retry_report_v1"
 const GENERATED_MAP_SERIALIZATION_SCHEMA_ID := "generated_random_map_serialization_record_v1"
+const PLAYABLE_RUNTIME_MATERIALIZATION_SCHEMA_ID := "generated_random_map_playable_runtime_materialization_v1"
 const VALIDATION_BATCH_FIXTURE_PATH := "res://tests/fixtures/random_map_validation_batch_cases.json"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
@@ -63,6 +64,22 @@ const DEFAULT_TOWN_BY_FACTION := {
 	"faction_thornwake": "town_thornwake_graftroot_caravan",
 	"faction_brasshollow": "town_brasshollow_orevein_gantry",
 	"faction_veilmourn": "town_veilmourn_bellwake_harbor",
+}
+const DEFAULT_HERO_BY_FACTION := {
+	"faction_embercourt": "hero_lyra",
+	"faction_mireclaw": "hero_vaska",
+	"faction_sunvault": "hero_solera",
+	"faction_thornwake": "hero_thornwake_ardren_briarmarshal",
+	"faction_brasshollow": "hero_brasshollow_marka_ironclause",
+	"faction_veilmourn": "hero_veilmourn_ivara_blacktide",
+}
+const DEFAULT_ARMY_BY_FACTION := {
+	"faction_embercourt": "army_emberwell_vanguard",
+	"faction_mireclaw": "army_blackbranch_raiders",
+	"faction_sunvault": "army_prismarch_vanguard",
+	"faction_thornwake": "army_graftroot_wardens",
+	"faction_brasshollow": "army_orevein_exactors",
+	"faction_veilmourn": "army_bellwake_privateers",
 }
 const TERRAIN_BY_FACTION := {
 	"faction_embercourt": "grass",
@@ -472,6 +489,16 @@ static func generate(input_config: Dictionary) -> Dictionary:
 	var scenario_record := _build_scenario_record(normalized, terrain_rows, placements, constraints)
 	var terrain_layers_record := _build_terrain_layers_record(normalized, constraints)
 	var staging := _build_staging_payload(normalized, template, zones, seeds, zone_grid, placements, constraints, zone_layout)
+	var runtime_materialization := _build_playable_runtime_materialization_record(
+		normalized,
+		scenario_record,
+		terrain_layers_record,
+		placements,
+		constraints,
+		phases
+	)
+	scenario_record["generated_runtime_materialization"] = _runtime_materialization_summary(runtime_materialization)
+	terrain_layers_record["runtime_materialization_signature"] = String(runtime_materialization.get("materialized_map_signature", ""))
 
 	var generated_map := {
 		"schema_id": PAYLOAD_SCHEMA_ID,
@@ -482,6 +509,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 		"staging": staging,
 		"scenario_record": scenario_record,
 		"terrain_layers_record": terrain_layers_record,
+		"runtime_materialization": runtime_materialization,
 	}
 	generated_map["stable_signature"] = _hash32_hex(_stable_stringify(generated_map))
 
@@ -2178,6 +2206,9 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 		start = {"x": int(towns[0].get("x", 0)), "y": int(towns[0].get("y", 0))}
 	var scenario_id := "generated_%s_%s" % [String(profile.get("id", "seeded_core")), _hash32_hex(_stable_stringify(metadata))]
 	var faction_ids: Array = profile.get("faction_ids", [])
+	var player_faction_id := String(faction_ids[0]) if not faction_ids.is_empty() else "faction_embercourt"
+	var player_hero_id := _default_hero_for_faction(player_faction_id)
+	var player_army_id := _default_army_for_faction(player_faction_id)
 	var victory_objectives := []
 	if not towns.is_empty() and towns[0] is Dictionary:
 		victory_objectives.append({
@@ -2203,13 +2234,23 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 			"availability": {"campaign": false, "skirmish": false},
 		},
 		"map_size": {"width": int(size.get("width", 0)), "height": int(size.get("height", 0))},
-		"player_faction_id": String(faction_ids[0]) if not faction_ids.is_empty() else "faction_embercourt",
-		"player_army_id": "",
-		"hero_id": "",
+		"player_faction_id": player_faction_id,
+		"player_army_id": player_army_id,
+		"hero_id": player_hero_id,
 		"starting_resources": {"gold": 1500, "wood": 4, "ore": 3},
 		"map": terrain_rows,
 		"start": start,
-		"hero_starts": [],
+		"hero_starts": [player_hero_id],
+		"generated_hero_starts": [
+			{
+				"placement_id": "rmg_hero_start_p1",
+				"hero_id": player_hero_id,
+				"x": int(start.get("x", 0)),
+				"y": int(start.get("y", 0)),
+				"owner": "player",
+				"source": "generated_start_contract",
+			}
+		],
 		"towns": placements.get("towns", []),
 		"resource_nodes": placements.get("resource_nodes", []),
 		"artifact_nodes": [],
@@ -2259,6 +2300,192 @@ static func _build_terrain_layers_record(normalized: Dictionary, constraints: Di
 		"route_graph_stub": constraints.get("route_graph", {}),
 		"deferred": _unique_sorted_strings(["authored_terrain_json_writeback", "campaign_skirmish_save_adoption"] + constraints.get("roads_rivers_writeout", {}).get("deferred", []) + terrain_transit.get("unsupported_deferred", [])),
 	}
+
+static func runtime_materialization_for_generated_map(generated_map: Dictionary) -> Dictionary:
+	var materialization: Dictionary = generated_map.get("runtime_materialization", {}) if generated_map.get("runtime_materialization", {}) is Dictionary else {}
+	return materialization.duplicate(true) if not materialization.is_empty() else {}
+
+static func runtime_materialization_identity(generated_map: Dictionary) -> Dictionary:
+	var materialization := runtime_materialization_for_generated_map(generated_map)
+	return _runtime_materialization_summary(materialization)
+
+static func _build_playable_runtime_materialization_record(
+	normalized: Dictionary,
+	scenario: Dictionary,
+	terrain_layers: Dictionary,
+	placements: Dictionary,
+	constraints: Dictionary,
+	phases: Array
+) -> Dictionary:
+	var metadata := _metadata(normalized)
+	var serialization: Dictionary = constraints.get("roads_rivers_writeout", {}).get("generated_map_serialization", {}) if constraints.get("roads_rivers_writeout", {}).get("generated_map_serialization", {}) is Dictionary else {}
+	var object_instances: Array = serialization.get("object_instances", []) if serialization.get("object_instances", []) is Array else []
+	var overlay_layers: Array = serialization.get("overlay_layers", []) if serialization.get("overlay_layers", []) is Array else []
+	var terrain_rows: Array = scenario.get("map", []) if scenario.get("map", []) is Array else []
+	var materialized := {
+		"schema_id": PLAYABLE_RUNTIME_MATERIALIZATION_SCHEMA_ID,
+		"materialization_policy": "runtime_registry_session_bootstrap_no_authored_json_writeback",
+		"source_slice_id": "random-map-playable-materialization-runtime-integration-10184",
+		"scenario_id": String(scenario.get("id", "")),
+		"generated": true,
+		"generator_version": String(metadata.get("generator_version", "")),
+		"template_id": String(metadata.get("template_id", "")),
+		"profile_id": String(metadata.get("profile", {}).get("id", "")),
+		"normalized_seed": String(metadata.get("normalized_seed", "")),
+		"content_manifest_fingerprint": String(metadata.get("content_manifest_fingerprint", "")),
+		"map_size": scenario.get("map_size", {}),
+		"terrain": {
+			"rows": terrain_rows,
+			"terrain_layers_record_id": String(terrain_layers.get("id", "")),
+			"terrain_layers": terrain_layers.get("terrain_layers", []),
+			"terrain_semantics": terrain_layers.get("terrain_semantics", {}),
+		},
+		"overlays": {
+			"overlay_layers": overlay_layers,
+			"roads": terrain_layers.get("roads", []),
+			"road_stubs": terrain_layers.get("road_stubs", []),
+			"route_graph_stub": terrain_layers.get("route_graph_stub", {}),
+		},
+		"starts": {
+			"scenario_start": scenario.get("start", {}),
+			"hero_starts": scenario.get("generated_hero_starts", []),
+			"player_slots": scenario.get("players", []),
+		},
+		"objects": {
+			"towns": scenario.get("towns", []),
+			"resources": _runtime_resource_records(scenario.get("resource_nodes", [])),
+			"mines": _runtime_mine_records(scenario.get("resource_nodes", [])),
+			"dwellings": _runtime_dwelling_records(scenario.get("resource_nodes", [])),
+			"guards": _runtime_guard_records(scenario, placements, constraints),
+			"rewards": _runtime_reward_records(constraints, object_instances),
+			"object_instances": object_instances,
+		},
+		"object_placements": placements.get("object_placements", []),
+		"objectives": scenario.get("objectives", {}),
+		"generated_constraints": scenario.get("generated_constraints", {}),
+		"validation": {
+			"phase_statuses": _runtime_phase_statuses(phases),
+			"retry_status": "single_attempt_validation_report_required_before_runtime_launch",
+			"writeback_status": "memory_registry_only",
+		},
+		"boundary": {
+			"authored_content_writeback": false,
+			"campaign_record": false,
+			"authored_skirmish_browser_record": false,
+			"parity_or_alpha_claim": false,
+		},
+	}
+	materialized = _json_safe_value(materialized)
+	materialized["materialized_map_signature"] = _hash32_hex(_stable_stringify(materialized))
+	materialized["summary"] = _runtime_materialization_counts(materialized)
+	return materialized
+
+static func _runtime_materialization_summary(materialization: Dictionary) -> Dictionary:
+	if materialization.is_empty():
+		return {}
+	return {
+		"schema_id": String(materialization.get("schema_id", "")),
+		"scenario_id": String(materialization.get("scenario_id", "")),
+		"materialized_map_signature": String(materialization.get("materialized_map_signature", "")),
+		"generator_version": String(materialization.get("generator_version", "")),
+		"template_id": String(materialization.get("template_id", "")),
+		"profile_id": String(materialization.get("profile_id", "")),
+		"normalized_seed": String(materialization.get("normalized_seed", "")),
+		"content_manifest_fingerprint": String(materialization.get("content_manifest_fingerprint", "")),
+		"summary": materialization.get("summary", {}),
+		"boundary": materialization.get("boundary", {}),
+	}
+
+static func _runtime_materialization_counts(materialization: Dictionary) -> Dictionary:
+	var objects: Dictionary = materialization.get("objects", {}) if materialization.get("objects", {}) is Dictionary else {}
+	var overlays: Dictionary = materialization.get("overlays", {}) if materialization.get("overlays", {}) is Dictionary else {}
+	return {
+		"terrain_row_count": materialization.get("terrain", {}).get("rows", []).size(),
+		"overlay_layer_count": overlays.get("overlay_layers", []).size(),
+		"town_count": objects.get("towns", []).size(),
+		"resource_count": objects.get("resources", []).size(),
+		"mine_count": objects.get("mines", []).size(),
+		"dwelling_count": objects.get("dwellings", []).size(),
+		"guard_count": objects.get("guards", []).size(),
+		"reward_count": objects.get("rewards", []).size(),
+		"object_instance_count": objects.get("object_instances", []).size(),
+	}
+
+static func _runtime_phase_statuses(phases: Array) -> Array:
+	var statuses := []
+	for phase in phases:
+		if not (phase is Dictionary):
+			continue
+		statuses.append({
+			"name": String(phase.get("name", "")),
+			"status": String(phase.get("status", "pass")),
+			"summary": phase.get("summary", {}),
+		})
+	return statuses
+
+static func _runtime_resource_records(nodes: Variant) -> Array:
+	var filtered := []
+	if not (nodes is Array):
+		return filtered
+	for node in nodes:
+		if not (node is Dictionary):
+			continue
+		if String(node.get("original_resource_category_id", "")) == "" and String(node.get("neutral_dwelling_family_id", "")) == "":
+			filtered.append(node.duplicate(true))
+	return filtered
+
+static func _runtime_mine_records(nodes: Variant) -> Array:
+	var filtered := []
+	if not (nodes is Array):
+		return filtered
+	for node in nodes:
+		if node is Dictionary and String(node.get("original_resource_category_id", "")) != "":
+			filtered.append(node.duplicate(true))
+	return filtered
+
+static func _runtime_dwelling_records(nodes: Variant) -> Array:
+	var filtered := []
+	if not (nodes is Array):
+		return filtered
+	for node in nodes:
+		if node is Dictionary and String(node.get("neutral_dwelling_family_id", "")) != "":
+			filtered.append(node.duplicate(true))
+	return filtered
+
+static func _runtime_guard_records(scenario: Dictionary, placements: Dictionary, constraints: Dictionary) -> Array:
+	var records := []
+	for encounter in scenario.get("encounters", []):
+		if encounter is Dictionary:
+			var record: Dictionary = encounter.duplicate(true)
+			record["guard_kind"] = "encounter_route_guard"
+			records.append(record)
+	for placement in placements.get("object_placements", []):
+		if placement is Dictionary and String(placement.get("kind", "")) == "special_guard_gate":
+			var special: Dictionary = placement.duplicate(true)
+			special["guard_kind"] = "special_guard_gate"
+			records.append(special)
+	for materialized in constraints.get("connection_guard_materialization", {}).get("materialized_records", []):
+		if materialized is Dictionary:
+			var materialized_record: Dictionary = materialized.duplicate(true)
+			materialized_record["guard_kind"] = "connection_guard_materialization"
+			records.append(materialized_record)
+	return records
+
+static func _runtime_reward_records(constraints: Dictionary, object_instances: Array) -> Array:
+	var records := []
+	for record in constraints.get("monster_reward_bands", {}).get("records", []):
+		if record is Dictionary:
+			records.append(record.duplicate(true))
+	for instance in object_instances:
+		if instance is Dictionary and String(instance.get("kind", "")) == "reward_reference":
+			records.append(instance.duplicate(true))
+	return records
+
+static func _default_hero_for_faction(faction_id: String) -> String:
+	return String(DEFAULT_HERO_BY_FACTION.get(faction_id, DEFAULT_HERO_BY_FACTION.get("faction_embercourt", "hero_lyra")))
+
+static func _default_army_for_faction(faction_id: String) -> String:
+	return String(DEFAULT_ARMY_BY_FACTION.get(faction_id, DEFAULT_ARMY_BY_FACTION.get("faction_embercourt", "army_emberwell_vanguard")))
 
 static func _build_staging_payload(normalized: Dictionary, template: Dictionary, zones: Array, seeds: Dictionary, zone_grid: Array, placements: Dictionary, constraints: Dictionary, zone_layout: Dictionary) -> Dictionary:
 	return {
