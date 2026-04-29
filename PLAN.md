@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Recently completed implementation slice: `random-map-skirmish-ui-save-replay-10184`, following `random-map-roads-rivers-writeout-10184`, `random-map-decoration-density-pass-10184`, `random-map-monster-reward-bands-10184`, and `random-map-connection-guard-materialization-10184`. Current selected slice: `random-map-validation-batch-retry-10184`. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated maps through controlled setup/session/report boundaries only; they are not HoMM3 RMG parity, campaign adoption, authored writeback, or alpha completion.
+Recently completed implementation slice: `balance-regression-report-suite-10184`, following `random-map-validation-batch-retry-10184`, `random-map-skirmish-ui-save-replay-10184`, `random-map-roads-rivers-writeout-10184`, `random-map-decoration-density-pass-10184`, `random-map-monster-reward-bands-10184`, and `random-map-connection-guard-materialization-10184`. Current selected slice status: completed. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated maps through controlled setup/session/report boundaries only; they are not HoMM3 RMG parity, campaign adoption, authored writeback, or alpha completion. The balance/regression suite is the first report-only Phase 3 foundation surface pulled forward to aggregate existing deterministic evidence; it is not automatic tuning, parity completion, or an alpha claim.
 
 ## Slice Status Model
 
@@ -2339,28 +2339,44 @@ nonGoals:
 
 id: `balance-regression-report-suite-10184`
 phase: `phase-3-headless-ai-agent-balance-harness`
-purpose: Turn headless simulation into actionable balance and regression signals.
+purpose: Establish the first trusted report-only balance/regression suite using existing deterministic domain rules.
 
 sourceDocs:
 - Phase 3 harness requirements.
 - Phase 2 economy/object/AI/random-map docs and reports.
+- Completed economy, strategic AI, scenario, random-map, save/replay, and battle report scenes.
 
 implementationTargets:
-- Reports for faction balance, economy pressure, scenario viability, battle outcome distribution, AI objective pressure, and save/replay stability.
+- `scripts/core/BalanceRegressionReportRules.gd`
+- `tests/balance_regression_report_suite.gd`
+- `tests/balance_regression_report_suite.tscn`
+- Aggregated sections for faction/content balance, economy pressure/resource viability, scenario viability, battle outcome distribution, AI objective pressure, and save/replay stability.
 
 baselineChecks:
-- Report command exits cleanly.
-- Report schema checks pass.
+- `python3 tests/validate_repo.py`
+- all relevant existing Godot reports, including `tests/random_map_*.tscn`
+- `godot4 --headless --path /root/dev/heroes-like tests/balance_regression_report_suite.tscn`
+- `python3 -m json.tool ops/progress.json`
+- `git diff --check`
+- progress helper status/next commands.
 
 sliceEvidence:
-- Repeated run stability is demonstrated.
-- Output is documented and usable by implementation workers.
+- `BalanceRegressionReportRules.build_report(...)` returns `balance_regression_report_suite_v1` with pass/warning/deferred section statuses, deterministic section signatures, and a suite signature.
+- Faction/content balance snapshot summarizes current original faction, hero, town, unit, tier, role, growth, cost, and economy signals without dumping full content records.
+- Economy pressure/resource viability combines authored scenario live-resource support with a deterministic generated-map fairness sample.
+- Scenario viability checks all authored scenarios plus a generated-safe scenario session boundary through the existing scenario factory and RMG transient registry.
+- Battle outcome distribution performs a bounded deterministic autoplay sample through current battle rules and marks the sample narrow as warning evidence until the full Phase 3 runner exists.
+- AI objective pressure samples existing strategic AI resource-pressure, target-choice, and town-governor report helpers.
+- Save/replay stability checks authored session payload normalization/restore and generated-map seed/config provenance restore without save migration or disk-save requirements.
 
 completionCriteria:
-- Balance harness can guide content/system tuning before playable-alpha expansion.
+- The report suite is deterministic, report-only, and validates through the requested repo/Godot/random-map checks.
+- Unsupported or immature surfaces are represented as warning/deferred evidence, not fake pass results.
+- The suite can guide later tuning and deeper Phase 3 simulation work without changing gameplay balance.
 
 nonGoals:
-- No automatic tuning loop until reporting is trusted.
+- No automatic tuning loop.
+- No runtime balance changes, authored content writeback, save-version bump, production-readiness claim, alpha claim, or HoMM3 parity claim.
 
 ## Phase 4 - Playable Alpha Baseline
 

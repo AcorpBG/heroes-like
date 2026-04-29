@@ -7724,7 +7724,11 @@ static func _goal_tiles_from_raid(session: SessionStateStoreScript.SessionData, 
 static func _next_step_toward(session: SessionStateStoreScript.SessionData, start: Vector2i, goal_tiles: Array, ignore_placement_id: String) -> Vector2i:
 	if goal_tiles.is_empty():
 		return start
-	var blocked = _occupied_tiles(session, ignore_placement_id)
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	var encounter_blocked = _occupied_tiles(session, ignore_placement_id)
+	var resource_blocked = _resource_body_blocked_tiles(session, ignore_placement_id)
+	var terrain_blocked = _impassable_terrain_tiles(session)
+	var goal_lookup := _tile_lookup(goal_tiles)
 	var visited = {}
 	var queue = [start]
 	var parents = {}
@@ -7742,7 +7746,7 @@ static func _next_step_toward(session: SessionStateStoreScript.SessionData, star
 			var key = _pos_key(next)
 			if visited.has(key):
 				continue
-			if _position_blocked(session, next, goal_tiles, blocked):
+			if _position_blocked(next, goal_lookup, encounter_blocked, resource_blocked, terrain_blocked, map_size):
 				continue
 			visited[key] = true
 			parents[key] = current
@@ -7761,7 +7765,11 @@ static func _path_distance(session: SessionStateStoreScript.SessionData, start: 
 		return 9999
 	if start in goal_tiles:
 		return 0
-	var blocked = _occupied_tiles(session, ignore_placement_id)
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	var encounter_blocked = _occupied_tiles(session, ignore_placement_id)
+	var resource_blocked = _resource_body_blocked_tiles(session, ignore_placement_id)
+	var terrain_blocked = _impassable_terrain_tiles(session)
+	var goal_lookup := _tile_lookup(goal_tiles)
 	var visited = {}
 	var queue = [{"pos": start, "distance": 0}]
 	visited[_pos_key(start)] = true
@@ -7775,13 +7783,20 @@ static func _path_distance(session: SessionStateStoreScript.SessionData, start: 
 			var key = _pos_key(next)
 			if visited.has(key):
 				continue
-			if _position_blocked(session, next, goal_tiles, blocked):
+			if _position_blocked(next, goal_lookup, encounter_blocked, resource_blocked, terrain_blocked, map_size):
 				continue
 			if next in goal_tiles:
 				return distance + 1
 			visited[key] = true
 			queue.append({"pos": next, "distance": distance + 1})
 	return 9999
+
+static func _tile_lookup(tiles: Array) -> Dictionary:
+	var lookup = {}
+	for tile in tiles:
+		if tile is Vector2i:
+			lookup[_pos_key(tile)] = true
+	return lookup
 
 static func _occupied_tiles(session: SessionStateStoreScript.SessionData, ignore_placement_id: String) -> Dictionary:
 	var occupied = {}
@@ -7797,15 +7812,60 @@ static func _occupied_tiles(session: SessionStateStoreScript.SessionData, ignore
 		occupied[_pos_key(Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))))] = true
 	return occupied
 
-static func _position_blocked(session: SessionStateStoreScript.SessionData, pos: Vector2i, goal_tiles: Array, blocked: Dictionary) -> bool:
-	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+static func _resource_body_blocked_tiles(session: SessionStateStoreScript.SessionData, ignore_placement_id: String) -> Dictionary:
+	var blocked = {}
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var placement_id := String(node.get("placement_id", ""))
+		if placement_id == "" or placement_id == ignore_placement_id:
+			continue
+		var surface: Dictionary = OverworldRulesScript.overworld_object_placement_pathing_surface(session, placement_id)
+		if surface.is_empty() or not bool(surface.get("blocks_body_tiles", false)):
+			continue
+		for tile_value in surface.get("body_tiles", []):
+			if tile_value is Dictionary:
+				blocked[_pos_key(Vector2i(int(tile_value.get("x", 0)), int(tile_value.get("y", 0))))] = true
+	return blocked
+
+static func _impassable_terrain_tiles(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var blocked = {}
+	var map_data = session.overworld.get("map", [])
+	if not (map_data is Array):
+		return blocked
+	for y in range(map_data.size()):
+		var row = map_data[y]
+		if not (row is Array):
+			continue
+		for x in range(row.size()):
+			var terrain_id := String(row[x])
+			var biome := ContentService.get_biome_for_terrain(terrain_id)
+			var impassable := false
+			if not biome.is_empty() and biome.has("passable"):
+				impassable = not bool(biome.get("passable", true))
+			elif terrain_id == "water":
+				impassable = true
+			if impassable:
+				blocked[_pos_key(Vector2i(x, y))] = true
+	return blocked
+
+static func _position_blocked(
+	pos: Vector2i,
+	goal_lookup: Dictionary,
+	encounter_blocked: Dictionary,
+	resource_blocked: Dictionary,
+	terrain_blocked: Dictionary,
+	map_size: Vector2i
+) -> bool:
 	if pos.x < 0 or pos.y < 0 or pos.x >= map_size.x or pos.y >= map_size.y:
 		return true
-	if pos in goal_tiles:
-		return blocked.has(_pos_key(pos))
-	if OverworldRulesScript.tile_is_blocked(session, pos.x, pos.y):
+	var key := _pos_key(pos)
+	if goal_lookup.has(key):
+		return encounter_blocked.has(key)
+	if terrain_blocked.has(key):
 		return true
-	return blocked.has(_pos_key(pos))
+	return encounter_blocked.has(key) or resource_blocked.has(key)
 
 static func _refresh_target(session: SessionStateStoreScript.SessionData, raid: Dictionary) -> Dictionary:
 	var origin = Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))

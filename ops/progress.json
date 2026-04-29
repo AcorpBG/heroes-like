@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-validation-batch-retry-10184",
-  "currentSliceTitle": "Random Map Validation Batch Retry",
+  "currentSliceId": "balance-regression-report-suite-10184",
+  "currentSliceTitle": "Balance And Regression Report Suite",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed deterministic validation batch/retry harness with curated fixtures for land, islands/water, underground/deferred transit, special guard/border/wide semantics, skirmish provenance identity, and town/mine/dwelling placement. Report preserves expected current-foundation failures and original retry failures without authored writeback, campaign adoption, or parity/alpha claim.",
+  "currentSliceNotes": "Completed report-only balance/regression suite foundation: BalanceRegressionReportRules plus Godot report scene cover faction/content, economy/RMG/scenario viability, narrow battle sampling warning, AI objective pressure, and save/replay stability with deterministic signatures. Validation passed: validate_repo, all random_map_*.tscn, relevant AI/economy reports, balance_regression_report_suite, json.tool, git diff --check, and progress status/next.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T12:44:59Z",
+  "updatedAt": "2026-04-29T13:17:54Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -3086,21 +3086,49 @@
       "id": "balance-regression-report-suite-10184",
       "title": "Balance And Regression Report Suite",
       "phase": "phase-3-headless-ai-agent-balance-harness",
-      "status": "pending",
+      "status": "completed",
       "classification": "future_phase",
       "sourceDocs": [
         "Phase 3 harness requirements",
-        "Phase 2 economy/object/AI/random-map docs and reports"
+        "Phase 2 economy/object/AI/random-map docs and reports",
+        "completed economy, strategic AI, scenario, random-map, save/replay, and battle report scenes"
       ],
       "implementationTargets": [
-        "faction balance reports",
-        "economy pressure reports",
-        "scenario viability reports",
-        "battle outcome distribution reports",
-        "AI objective pressure reports",
-        "save/replay stability reports"
+        "scripts/core/BalanceRegressionReportRules.gd",
+        "tests/balance_regression_report_suite.gd",
+        "tests/balance_regression_report_suite.tscn",
+        "faction/content balance snapshot report",
+        "economy pressure/resource viability report",
+        "scenario viability report",
+        "battle outcome distribution report",
+        "AI objective pressure report",
+        "save/replay stability report"
       ],
-      "notes": "No automatic tuning loop until reporting is trusted."
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "relevant existing Godot reports plus all tests/random_map_*.tscn",
+        "godot4 --headless --path /root/dev/heroes-like tests/balance_regression_report_suite.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check",
+        "progress status/next helper"
+      ],
+      "sliceEvidence": [
+        "BalanceRegressionReportRules.build_report(...) returns balance_regression_report_suite_v1 with pass/warning/deferred section statuses and deterministic section/suite signatures.",
+        "The suite aggregates faction/content balance, economy pressure/resource viability, scenario viability, battle outcome distribution, AI objective pressure, and save/replay stability using existing systems.",
+        "The battle section is intentionally warning-scoped until the full Phase 3 headless runner exists.",
+        "Report policy forbids automatic tuning, runtime balance changes, authored content writeback, save migration, alpha claims, and parity claims."
+      ],
+      "completionCriteria": [
+        "The report suite is deterministic, report-only, validates cleanly, and represents immature surfaces as warning/deferred evidence instead of fake pass results."
+      ],
+      "nonGoals": [
+        "No automatic tuning loop.",
+        "No runtime balance changes, authored content writeback, save-version bump, production-readiness claim, alpha claim, or HoMM3 parity claim."
+      ],
+      "notes": "Completed report-only balance/regression suite foundation: BalanceRegressionReportRules plus Godot report scene cover faction/content, economy/RMG/scenario viability, narrow battle sampling warning, AI objective pressure, and save/replay stability with deterministic signatures. Validation passed: validate_repo, all random_map_*.tscn, relevant AI/economy reports, balance_regression_report_suite, json.tool, git diff --check, and progress status/next.",
+      "updatedAt": "2026-04-29T13:17:54Z",
+      "startedAt": "2026-04-29T12:51:04Z",
+      "completedAt": "2026-04-29T13:17:54Z"
     },
     {
       "id": "playable-alpha-scenario-set-10184",
