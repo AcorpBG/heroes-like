@@ -136,9 +136,9 @@ func _assert_water_overlay_metadata(writeout: Dictionary) -> bool:
 		_fail("Water config missed deferred river/water transit candidates: %s" % JSON.stringify(river))
 		return false
 	for candidate in river.get("river_candidates", []):
-		if candidate is Dictionary and String(candidate.get("writeout_state", "")).find("deferred") >= 0:
+		if candidate is Dictionary and String(candidate.get("writeout_state", "")) == "final_generated_river_candidate_tile_bytes_written":
 			return true
-	_fail("River/water candidates did not preserve deferred writeout metadata.")
+	_fail("River/water candidates did not preserve final generated writeout metadata.")
 	return false
 
 func _assert_serialization(payload: Dictionary, writeout: Dictionary) -> bool:
@@ -149,6 +149,12 @@ func _assert_serialization(payload: Dictionary, writeout: Dictionary) -> bool:
 	if serialization.get("terrain_layers", []).is_empty() or serialization.get("overlay_layers", []).is_empty() or serialization.get("object_instances", []).is_empty():
 		_fail("Serialization missed terrain, overlays, or objects: %s" % JSON.stringify(serialization))
 		return false
+	if serialization.get("final_tile_stream", []).is_empty() or serialization.get("object_writeout_records", []).is_empty():
+		_fail("Serialization missed final tile stream or object writeout records: %s" % JSON.stringify(serialization))
+		return false
+	if String(serialization.get("tile_stream_signature", "")) == "" or String(serialization.get("object_writeout_signature", "")) == "":
+		_fail("Serialization missed durable writeout signatures: %s" % JSON.stringify(serialization))
+		return false
 	var provenance: Dictionary = serialization.get("provenance", {})
 	for key in ["template_id", "profile_id", "normalized_seed", "content_manifest_fingerprint"]:
 		if String(provenance.get(key, "")) == "":
@@ -157,16 +163,21 @@ func _assert_serialization(payload: Dictionary, writeout: Dictionary) -> bool:
 	if String(serialization.get("generator_version", "")) == "":
 		_fail("Serialization missed generator version.")
 		return false
-	if serialization.get("deferred_boundary_metadata", {}).is_empty():
-		_fail("Serialization missed deferred boundary metadata.")
+	var completeness: Dictionary = serialization.get("writeout_completeness", {}) if serialization.get("writeout_completeness", {}) is Dictionary else {}
+	for key in ["terrain_tile_bytes", "road_tile_bytes", "river_tile_bytes", "object_instances", "multi_tile_bodies", "round_trip_without_staging_metadata"]:
+		if not bool(completeness.get(key, false)):
+			_fail("Serialization missed writeout completeness key %s: %s" % [key, JSON.stringify(completeness)])
+			return false
+	if bool(serialization.get("validation_status", {}).get("staging_metadata_required_for_round_trip", true)):
+		_fail("Serialization still requires staging metadata for round-trip.")
 		return false
-	var saw_deferred_instance := false
+	var saw_body_instance := false
 	for instance in serialization.get("object_instances", []):
-		if instance is Dictionary and not instance.get("deferred_multitile_state", {}).is_empty():
-			saw_deferred_instance = true
+		if instance is Dictionary and not instance.get("multitile_body_writeout", {}).is_empty():
+			saw_body_instance = true
 			break
-	if not saw_deferred_instance:
-		_fail("Object instance serialization did not preserve deferred multi-tile/writeout state.")
+	if not saw_body_instance:
+		_fail("Object instance serialization did not preserve durable multi-tile/writeout state.")
 		return false
 	var round_trip: Dictionary = writeout.get("round_trip_validation", {})
 	if String(round_trip.get("status", "")) != "pass" or not bool(round_trip.get("signature_stable", false)) or not bool(round_trip.get("key_counts_stable", false)):
@@ -181,8 +192,8 @@ func _assert_payload_boundaries(payload: Dictionary) -> bool:
 	if payload.is_empty():
 		_fail("Expected generated payload.")
 		return false
-	if String(payload.get("write_policy", "")) != "staged_payload_only_no_authored_content_write":
-		_fail("Generated payload lost staged no-write policy.")
+	if String(payload.get("write_policy", "")) != "generated_export_record_no_authored_content_write":
+		_fail("Generated payload lost generated export no-write policy.")
 		return false
 	var scenario: Dictionary = payload.get("scenario_record", {})
 	if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", true)) or bool(scenario.get("selection", {}).get("availability", {}).get("skirmish", true)):

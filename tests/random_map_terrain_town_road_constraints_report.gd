@@ -64,8 +64,8 @@ func _run() -> void:
 			_fail("Start missed expansion or contest route metadata: %s" % JSON.stringify(start))
 			return
 
-	if String(roads.get("writeout_policy", "")) != "staged_overlay_payload_only_no_authored_tile_write":
-		_fail("Road payload lost staged no-write boundary.")
+	if String(roads.get("writeout_policy", "")) != "final_generated_tile_stream_no_authored_tile_write":
+		_fail("Road payload lost final generated tile-stream boundary.")
 		return
 	if roads.get("road_segments", []).is_empty() or roads.get("road_stubs", []).is_empty():
 		_fail("Road payload missed segments or stubs.")

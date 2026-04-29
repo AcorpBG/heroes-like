@@ -111,7 +111,7 @@ func _assert_layout_payload(payload: Dictionary, expected_water_mode: String, ex
 	if bool(scenario.get("selection", {}).get("availability", {}).get("campaign", true)) or bool(scenario.get("selection", {}).get("availability", {}).get("skirmish", true)):
 		_fail("Zone layout slice adopted generated maps into campaign/skirmish UI.")
 		return false
-	if scenario.has("save_adoption") or scenario.has("alpha_parity_claim") or String(payload.get("write_policy", "")) != "staged_payload_only_no_authored_content_write":
+	if scenario.has("save_adoption") or scenario.has("alpha_parity_claim") or String(payload.get("write_policy", "")) != "generated_export_record_no_authored_content_write":
 		_fail("Zone layout slice exposed save/writeback/parity claim metadata.")
 		return false
 	return true

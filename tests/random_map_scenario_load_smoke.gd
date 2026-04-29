@@ -141,7 +141,7 @@ func _assert_generated_boundary(session: SessionStateStoreScript.SessionData, pa
 		_fail("Generated draft session did not carry generated boundary flag.")
 		return false
 	var boundary: Dictionary = session.flags.get("generated_random_map_boundary", {})
-	if String(boundary.get("write_policy", "")) != "staged_payload_only_no_authored_content_write":
+	if String(boundary.get("write_policy", "")) != "generated_export_record_no_authored_content_write":
 		_fail("Generated draft session lost staged no-write payload policy: %s." % JSON.stringify(boundary))
 		return false
 	if String(boundary.get("registry_write_policy", "")) != "memory_only_no_authored_json_write":

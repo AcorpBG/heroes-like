@@ -215,7 +215,7 @@ func _assert_fairness(fairness: Dictionary) -> bool:
 	return true
 
 func _assert_generated_boundaries(payload: Dictionary) -> bool:
-	if String(payload.get("write_policy", "")) != "staged_payload_only_no_authored_content_write":
+	if String(payload.get("write_policy", "")) != "generated_export_record_no_authored_content_write":
 		_fail("Generated payload write policy changed: %s" % String(payload.get("write_policy", "")))
 		return false
 	if bool(payload.get("scenario_record", {}).get("selection", {}).get("availability", {}).get("campaign", true)):

@@ -139,7 +139,7 @@ func _assert_references(payload: Dictionary, bands: Dictionary) -> bool:
 	return true
 
 func _assert_payload_boundaries(payload: Dictionary) -> bool:
-	if String(payload.get("write_policy", "")) != "staged_payload_only_no_authored_content_write":
+	if String(payload.get("write_policy", "")) != "generated_export_record_no_authored_content_write":
 		_fail("Generated payload lost staged no-write policy.")
 		return false
 	var scenario: Dictionary = payload.get("scenario_record", {})
