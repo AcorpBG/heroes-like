@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-object-footprint-catalog-10184",
-  "currentSliceTitle": "Random Map Object Footprint Catalog",
+  "currentSliceId": "random-map-roads-rivers-writeout-10184",
+  "currentSliceTitle": "Random Map Roads Rivers Writeout",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed object footprint catalog groundwork: generated towns/resources/guards/special gates/reward refs/mine placeholders/decor now resolve to structured footprint/action/passability catalog metadata or explicit deferrals, with focused validation for masks, terrain restrictions, body overlaps, required route passability, and deterministic signatures.",
+  "currentSliceNotes": "Completed roads/rivers/writeout groundwork: RandomMapGeneratorRules now emits structured road overlay tiles from required route graph paths, water/coast/river candidate metadata or explicit land no-river state, generated map serialization records with terrain/overlay/object/provenance/deferred-boundary metadata, and JSON-safe round-trip signature/key-count validation without authored writeback, UI, save adoption, or parity claim.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T11:27:44Z",
+  "updatedAt": "2026-04-29T11:40:51Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -2926,7 +2926,7 @@
       "id": "random-map-roads-rivers-writeout-10184",
       "title": "Random Map Roads Rivers Writeout",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "parentSliceId": "random-map-generator-foundation-10184",
       "classification": "phase2_child_implementation_slice",
@@ -2938,6 +2938,9 @@
         "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-web-map-editor/"
       ],
       "implementationTargets": [
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_roads_rivers_writeout_report.gd",
+        "tests/random_map_roads_rivers_writeout_report.tscn",
         "road/river overlay generation",
         "generated scenario/map serializer",
         "round-trip validation reports"
@@ -2948,19 +2951,22 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Roads and rivers are stored as overlay payloads and can be serialized/round-tripped through the project map structure.",
-        "Generated file/export boundaries are explicit and do not silently write campaign/authored content.",
-        "Serialized output preserves terrain, overlays, object definitions, object instances, provenance, and validation status."
+        "Road overlay tiles and segments derive from route graph paths and passability, carry deterministic road class/type/art metadata, and avoid generated footprint body tiles.",
+        "River/water/coast overlay metadata is derived from water/coast semantics for island profiles, while land profiles expose an explicit no-river/no-water state and deferred transit/writeout metadata.",
+        "Generated serialization records preserve terrain layers, overlay layers, object definitions, footprint-backed object instances, template/profile/seed/generator provenance, validation status, deferred boundary metadata, and stable JSON-safe round-trip signatures/key counts.",
+        "Focused Godot report validates required-route road coverage, island water/coast candidates or explicit land no-river state, round-trip stability, and no campaign/skirmish UI/save/writeback/parity claim."
       ],
       "completionCriteria": [
         "Implementation and validation satisfy this slice without claiming full HoMM3-style RMG parity unless all downstream parity gates are complete."
       ],
       "nonGoals": [
-        "No player-facing random-map setup UI or save migration."
+        "No authored content writeback, campaign/skirmish UI adoption, save migration, final road/river autotile byte packing, or HoMM3 RMG parity/alpha completion claim."
       ],
-      "notes": "Queued by random-map-homm3-parity-gap-audit-10184 as part of the continuous RMG parity implementation path.",
+      "notes": "Completed roads/rivers/writeout groundwork: structured road overlay tiles, water/coast/river candidate or no-river metadata, generated map serialization records, and JSON-safe round-trip validation. Validation passed: python3 tests/validate_repo.py, all current random_map Godot reports including random_map_roads_rivers_writeout_report, python3 -m json.tool ops/progress.json, git diff --check, and progress status helper.",
       "createdAt": "2026-04-29T09:40:00Z",
-      "updatedAt": "2026-04-29T09:40:00Z"
+      "updatedAt": "2026-04-29T11:40:51Z",
+      "startedAt": "2026-04-29T11:30:39Z",
+      "completedAt": "2026-04-29T11:40:51Z"
     },
     {
       "id": "random-map-validation-batch-retry-10184",
