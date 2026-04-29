@@ -22,9 +22,9 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-Current tactical objective: recover the Phase 2 RMG workstream and continue only HoMM3-style random-map-generation parity work translated into original Aurelion Reach systems. Completed non-RMG future-phase evidence remains preserved in progress history, but it is not the active continuation path and must not drive the next slice.
+Current tactical objective: close the Phase 2 RMG workstream after the strict HoMM3-style random-map-generation parity re-gate, translated into original Aurelion Reach systems. Completed non-RMG future-phase evidence remains preserved in progress history, but it is not the active continuation path and must not drive follow-up work.
 
-Recently completed evidence includes the P2.10 random-map foundation queue, early follow-up RMG staging/report slices, playable materialization/runtime evidence, water/underground/transit gameplay evidence, object-pool/value weighting evidence, large-batch parity stress evidence, Phase 3 report foundations, and two pulled-forward broad-production increments. Those completions do not prove RMG parity. The final parity gate audit `random-map-final-homm3-parity-gate-audit-10184` found that RMG parity is not met: broad translated-template materialization, final writeout/export/save-schema closure, and player-facing setup/retry UX remain RMG-only blockers. P2.10 remains a foundation, not HoMM3 RMG parity, authored campaign adoption, alpha completion, or broad production completion.
+Recently completed RMG evidence includes the P2.10 random-map foundation queue, translated-template runtime sweep, final writeout/export/save-schema closure, player-facing setup/retry UX, playable materialization/runtime evidence, water/underground/transit gameplay evidence, object-pool/value weighting evidence, and large-batch parity stress evidence. The re-gate audit `random-map-final-homm3-parity-regate-audit-10184` concludes that HoMM3-style RMG functional parity is met for generated skirmish/session use with explicit accepted original-game translations. This is not authored campaign adoption, playable alpha completion, release readiness, broad faction/content completion, asset parity, or byte-level HoMM3 map-format cloning.
 
 ## Slice Status Model
 
@@ -2552,6 +2552,7 @@ purpose: Strictly rerun the RMG parity gate after the queued implementation foll
 
 sourceDocs:
 - `docs/random-map-final-homm3-parity-gate-audit.md`
+- `docs/random-map-final-homm3-parity-regate-audit.md`
 - `docs/random-map-generator-foundation.md`
 - `docs/random-map-homm3-parity-gap-audit.md`
 - all completed Phase 2 RMG implementation reports and smoke evidence
@@ -2572,6 +2573,14 @@ sliceEvidence:
 nonGoals:
 - No hidden implementation beyond audit-only evidence updates unless a focused report is explicitly required.
 - No campaign adoption, authored JSON writeback, broad production content, faction breadth, alpha claim, or automatic parity claim.
+
+completionResult:
+- `docs/random-map-final-homm3-parity-regate-audit.md` concludes that HoMM3-style RMG functional parity is met for generated skirmish/session use.
+- Fresh large-batch stress evidence reports 58 cases, 42 materialized validation-pass cases, 38 parity-intended translated-template materialized validation-pass cases, 15 accepted original-game non-parity decisions, 1 expected negative, 0 metadata-only cases, 0 unsupported warnings, and 0 hard blockers.
+- Final writeout/export/save-schema evidence proves standalone generated exports, 468 final tile records, 78 object writeout records, v2 generated-map provenance, export-stream replay contract, save/restore, and tampered export rejection without campaign or authored JSON writeback.
+- Player-facing setup/retry evidence proves live generated-map skirmish controls, visible bounded retry/failure UX, generated skirmish launch handoff, and no broad menu/debug-dashboard overload.
+- Accepted non-parity decisions are limited to original-game translations and runtime policy boundaries: current materialized map size cap, disconnected source graph repair policy, campaign/writeback exclusion, no global save-version bump for versioned generated-map provenance, and creative/original-content translation.
+- This result does not claim playable alpha, campaign readiness, release readiness, broad production completion, faction breadth completion, asset parity, or byte-level HoMM3 map-format cloning.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 
