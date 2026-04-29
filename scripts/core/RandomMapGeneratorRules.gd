@@ -5,6 +5,9 @@ const GENERATOR_VERSION := "random_map_seeded_core_v1"
 const PAYLOAD_SCHEMA_ID := "generated_random_map_payload_v1"
 const REPORT_SCHEMA_ID := "random_map_seed_determinism_report_v1"
 const TEMPLATE_ID := "aurelion_seeded_spoke_profile_v1"
+const TEMPLATE_CATALOG_PATH := "res://content/random_map_template_catalog.json"
+const TEMPLATE_CATALOG_SCHEMA_ID := "aurelion_random_map_template_catalog_v1"
+const TEMPLATE_CATALOG_REPORT_SCHEMA_ID := "random_map_template_catalog_grammar_report_v1"
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
 const HASH_MODULUS := 4294967296
@@ -96,11 +99,17 @@ class DeterministicRng:
 
 static func generate(input_config: Dictionary) -> Dictionary:
 	var normalized := normalize_config(input_config)
-	var rng := DeterministicRng.new(_positive_seed(_stable_stringify(normalized)))
+	var rng := DeterministicRng.new(_positive_seed(_stable_stringify(_generation_seed_payload(normalized))))
 	var phases := []
 
 	var template := _build_runtime_template(normalized)
-	phases.append(_phase_record("template_profile", template))
+	phases.append(_phase_record("template_profile", {
+		"template_id": String(template.get("id", "")),
+		"profile_id": String(normalized.get("profile", {}).get("id", "")),
+		"source": String(template.get("source", "")),
+		"zone_count": template.get("zones", []).size(),
+		"link_count": template.get("links", []).size(),
+	}))
 
 	var zones := _build_runtime_zones(template, normalized, rng)
 	phases.append(_phase_record("runtime_zone_graph", {"zone_count": zones.size(), "link_count": template.get("links", []).size()}))
@@ -190,6 +199,83 @@ static func seed_determinism_report(input_config: Dictionary) -> Dictionary:
 		],
 	}
 
+static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary:
+	var normalized := normalize_config(input_config)
+	var catalog := _load_template_catalog()
+	var templates: Array = catalog.get("templates", [])
+	var profiles: Array = catalog.get("profiles", [])
+	var selected_template: Dictionary = normalized.get("template", {})
+	var template_summaries := []
+	var profile_summaries := []
+	var failures := []
+	for template in templates:
+		if not (template is Dictionary):
+			failures.append("catalog contains a non-dictionary template")
+			continue
+		var zone_ids := {}
+		var wide_count := 0
+		var border_count := 0
+		for zone in template.get("zones", []):
+			if not (zone is Dictionary):
+				failures.append("template %s contains a non-dictionary zone" % String(template.get("id", "")))
+				continue
+			var zone_id := String(zone.get("id", ""))
+			if zone_id == "" or zone_ids.has(zone_id):
+				failures.append("template %s has missing or duplicate zone id %s" % [String(template.get("id", "")), zone_id])
+			zone_ids[zone_id] = true
+		for link in template.get("links", []):
+			if not (link is Dictionary):
+				failures.append("template %s contains a non-dictionary link" % String(template.get("id", "")))
+				continue
+			if not zone_ids.has(String(link.get("from", ""))) or not zone_ids.has(String(link.get("to", ""))):
+				failures.append("template %s has a link with invalid endpoints" % String(template.get("id", "")))
+			if bool(link.get("wide", false)):
+				wide_count += 1
+			if bool(link.get("border_guard", false)):
+				border_count += 1
+		template_summaries.append({
+			"id": String(template.get("id", "")),
+			"label": String(template.get("label", "")),
+			"family": String(template.get("family", "")),
+			"zone_count": template.get("zones", []).size(),
+			"link_count": template.get("links", []).size(),
+			"wide_link_count": wide_count,
+			"border_guard_link_count": border_count,
+			"supports_requested_constraints": _template_matches_constraints(template, normalized.get("size", {}), normalized.get("player_constraints", {})),
+		})
+	for profile in profiles:
+		if not (profile is Dictionary):
+			failures.append("catalog contains a non-dictionary profile")
+			continue
+		profile_summaries.append({
+			"id": String(profile.get("id", "")),
+			"template_id": String(profile.get("template_id", "")),
+			"terrain_ids": profile.get("terrain_ids", []),
+			"faction_ids": profile.get("faction_ids", []),
+		})
+	if templates.size() < 2:
+		failures.append("template catalog must contain multiple templates")
+	if profiles.size() < 2:
+		failures.append("template catalog must contain multiple profiles")
+	if String(catalog.get("schema_id", "")) != TEMPLATE_CATALOG_SCHEMA_ID:
+		failures.append("template catalog schema mismatch")
+	if selected_template.is_empty():
+		failures.append("no template selected for requested constraints")
+	return {
+		"ok": failures.is_empty(),
+		"schema_id": TEMPLATE_CATALOG_REPORT_SCHEMA_ID,
+		"catalog_schema_id": String(catalog.get("schema_id", "")),
+		"catalog_path": TEMPLATE_CATALOG_PATH,
+		"template_count": templates.size(),
+		"profile_count": profiles.size(),
+		"selected_template_id": String(normalized.get("template_id", "")),
+		"selected_profile_id": String(normalized.get("profile", {}).get("id", "")),
+		"selection_source": String(normalized.get("template_selection", {}).get("source", "")),
+		"template_summaries": template_summaries,
+		"profile_summaries": profile_summaries,
+		"failures": failures,
+	}
+
 static func resource_encounter_fairness_report(generated_map: Dictionary) -> Dictionary:
 	var staging: Dictionary = generated_map.get("staging", {})
 	var scenario: Dictionary = generated_map.get("scenario_record", {})
@@ -218,7 +304,12 @@ static func normalize_config(input_config: Dictionary) -> Dictionary:
 	var size := _normalize_size(input_config.get("size", input_config.get("map_size", "small")))
 	var player_constraints := _normalize_player_constraints(input_config.get("player_constraints", input_config.get("players", {})))
 	var profile := _normalize_profile(input_config.get("profile", {}), player_constraints)
+	var template_selection := _select_template_profile(input_config, size, player_constraints, normalized_seed, profile)
+	var template: Dictionary = template_selection.get("template", {})
+	profile = _merge_profile_with_catalog(profile, template_selection.get("profile", {}), player_constraints)
 	var content_manifest := {
+		"template_id": String(template.get("id", TEMPLATE_ID)),
+		"template_source": String(template_selection.get("source", "")),
 		"faction_ids": profile.get("faction_ids", []),
 		"town_ids": profile.get("town_ids", []),
 		"resource_site_ids": profile.get("resource_site_ids", []),
@@ -231,6 +322,9 @@ static func normalize_config(input_config: Dictionary) -> Dictionary:
 		"size": size,
 		"player_constraints": player_constraints,
 		"profile": profile,
+		"template_id": String(template.get("id", TEMPLATE_ID)),
+		"template": template,
+		"template_selection": template_selection,
 		"content_manifest_fingerprint": _hash32_hex(_stable_stringify(content_manifest)),
 	}
 
@@ -340,6 +434,12 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 	}
 
 static func _build_runtime_template(normalized: Dictionary) -> Dictionary:
+	var selected_template: Dictionary = normalized.get("template", {})
+	if not selected_template.is_empty():
+		return _runtime_template_from_catalog(selected_template)
+	return _fallback_runtime_template(normalized)
+
+static func _fallback_runtime_template(normalized: Dictionary) -> Dictionary:
 	var player_count := int(normalized.get("player_constraints", {}).get("player_count", 2))
 	var zones := []
 	for index in range(player_count):
@@ -363,7 +463,52 @@ static func _build_runtime_template(normalized: Dictionary) -> Dictionary:
 		links.append({"from": "reward_%d" % (index + 1), "to": "junction_1", "role": "reward_to_junction", "guard_value": 300, "wide": index == 0, "border_guard": false})
 	return {
 		"id": TEMPLATE_ID,
+		"label": "Aurelion Seeded Spoke Fallback",
+		"source": "built_in_fallback",
 		"model": "staged_template_profile_graph",
+		"zones": zones,
+		"links": links,
+	}
+
+static func _runtime_template_from_catalog(template: Dictionary) -> Dictionary:
+	var zones := []
+	for zone in template.get("zones", []):
+		if not (zone is Dictionary):
+			continue
+		var terrain: Dictionary = zone.get("terrain", {}) if zone.get("terrain", {}) is Dictionary else {}
+		zones.append({
+			"id": String(zone.get("id", "")),
+			"role": String(zone.get("role", "treasure")),
+			"base_size": int(zone.get("base_size", 1)),
+			"owner_slot": zone.get("owner_slot", null),
+			"terrain_match_to_faction": bool(terrain.get("match_to_faction", zone.get("terrain_match_to_faction", false))),
+			"allowed_terrain_ids": _normalized_string_array(terrain.get("allowed", []), []),
+			"allowed_faction_ids": _normalized_string_array(zone.get("allowed_faction_ids", []), []),
+			"catalog_metadata": {
+				"role": String(zone.get("role", "treasure")),
+				"owner_slot": zone.get("owner_slot", null),
+				"start_contract": "primary_town_anchor" if zone.get("owner_slot", null) != null else "neutral_zone",
+			},
+		})
+	var links := []
+	for link in template.get("links", []):
+		if not (link is Dictionary):
+			continue
+		links.append({
+			"from": String(link.get("from", "")),
+			"to": String(link.get("to", "")),
+			"role": String(link.get("role", "route")),
+			"guard_value": int(link.get("guard_value", link.get("value", 0))),
+			"wide": bool(link.get("wide", false)),
+			"border_guard": bool(link.get("border_guard", false)),
+			"special_connection": bool(link.get("wide", false)) or bool(link.get("border_guard", false)),
+		})
+	return {
+		"id": String(template.get("id", TEMPLATE_ID)),
+		"label": String(template.get("label", "")),
+		"source": "content_catalog",
+		"model": "staged_template_profile_graph",
+		"family": String(template.get("family", "")),
 		"zones": zones,
 		"links": links,
 	}
@@ -401,6 +546,14 @@ static func _zone_terrain(zone_record: Dictionary, faction_id: String, terrain_i
 		var matched := String(TERRAIN_BY_FACTION.get(faction_id))
 		if matched in terrain_ids and _terrain_is_passable(matched):
 			return matched
+	var zone_allowed: Array = zone_record.get("allowed_terrain_ids", [])
+	var filtered_allowed := []
+	for zone_terrain_id in zone_allowed:
+		var candidate := String(zone_terrain_id)
+		if candidate in terrain_ids and _terrain_is_passable(candidate):
+			filtered_allowed.append(candidate)
+	if not filtered_allowed.is_empty():
+		return String(filtered_allowed[rng.next_index(filtered_allowed.size())])
 	if terrain_ids.is_empty():
 		return "grass"
 	var passable_choices := []
@@ -1136,7 +1289,12 @@ static func _metadata(normalized: Dictionary) -> Dictionary:
 		"size": normalized.get("size", {}),
 		"player_constraints": normalized.get("player_constraints", {}),
 		"content_manifest_fingerprint": String(normalized.get("content_manifest_fingerprint", "")),
-		"template_id": TEMPLATE_ID,
+		"template_id": String(normalized.get("template_id", TEMPLATE_ID)),
+		"template_selection": {
+			"source": String(normalized.get("template_selection", {}).get("source", "")),
+			"requested_template_id": String(normalized.get("template_selection", {}).get("requested_template_id", "")),
+			"requested_profile_id": String(normalized.get("template_selection", {}).get("requested_profile_id", "")),
+		},
 		"source_lessons": [
 			"staged_template_profile_pipeline",
 			"runtime_zone_connection_graph",
@@ -1649,6 +1807,184 @@ static func _point_in_array(points: Array, point: Dictionary) -> bool:
 			return true
 	return false
 
+static func _load_template_catalog() -> Dictionary:
+	if not FileAccess.file_exists(TEMPLATE_CATALOG_PATH):
+		return {"schema_id": "", "profiles": [], "templates": []}
+	var file := FileAccess.open(TEMPLATE_CATALOG_PATH, FileAccess.READ)
+	if file == null:
+		return {"schema_id": "", "profiles": [], "templates": []}
+	var parsed = JSON.parse_string(file.get_as_text())
+	if not (parsed is Dictionary):
+		return {"schema_id": "", "profiles": [], "templates": []}
+	return parsed
+
+static func _generation_seed_payload(normalized: Dictionary) -> Dictionary:
+	var profile: Dictionary = normalized.get("profile", {}).duplicate(true)
+	if String(profile.get("template_id", "")).strip_edges() == "":
+		profile.erase("template_id")
+	var manifest := {
+		"faction_ids": profile.get("faction_ids", []),
+		"town_ids": profile.get("town_ids", []),
+		"resource_site_ids": profile.get("resource_site_ids", []),
+		"encounter_ids": [String(profile.get("encounter_id", DEFAULT_ENCOUNTER_ID))],
+		"terrain_ids": profile.get("terrain_ids", []),
+	}
+	var payload := {
+		"generator_version": String(normalized.get("generator_version", GENERATOR_VERSION)),
+		"seed": String(normalized.get("seed", "0")),
+		"size": normalized.get("size", {}),
+		"player_constraints": normalized.get("player_constraints", {}),
+		"profile": profile,
+		"content_manifest_fingerprint": _hash32_hex(_stable_stringify(manifest)),
+	}
+	if String(normalized.get("template_selection", {}).get("source", "")) == "content_catalog":
+		payload["template_id"] = String(normalized.get("template_id", TEMPLATE_ID))
+	return payload
+
+static func _select_template_profile(input_config: Dictionary, size: Dictionary, player_constraints: Dictionary, seed: String, input_profile: Dictionary) -> Dictionary:
+	var catalog := _load_template_catalog()
+	var templates: Array = catalog.get("templates", [])
+	var profiles: Array = catalog.get("profiles", [])
+	var requested_template_id := String(input_config.get("template_id", input_profile.get("template_id", ""))).strip_edges()
+	var requested_profile_id := String(input_profile.get("id", "")).strip_edges()
+	var profile_by_id := {}
+	var profile_by_template := {}
+	for profile in profiles:
+		if not (profile is Dictionary):
+			continue
+		var profile_id := String(profile.get("id", ""))
+		var profile_template_id := String(profile.get("template_id", ""))
+		if profile_id != "":
+			profile_by_id[profile_id] = profile
+		if profile_template_id != "" and not profile_by_template.has(profile_template_id):
+			profile_by_template[profile_template_id] = profile
+	if requested_template_id == "" and requested_profile_id != "" and not profile_by_id.has(requested_profile_id):
+		return {
+			"template": {},
+			"profile": {},
+			"source": "built_in_fallback_unknown_explicit_profile",
+			"requested_template_id": requested_template_id,
+			"requested_profile_id": requested_profile_id,
+		}
+	var template_candidates := []
+	for template in templates:
+		if not (template is Dictionary):
+			continue
+		if requested_template_id != "" and String(template.get("id", "")) != requested_template_id:
+			continue
+		if requested_template_id == "" and profile_by_id.has(requested_profile_id) and String(template.get("id", "")) != String(profile_by_id[requested_profile_id].get("template_id", "")):
+			continue
+		if not _template_matches_constraints(template, size, player_constraints):
+			continue
+		template_candidates.append(template)
+	var source := "content_catalog"
+	if template_candidates.is_empty() and requested_template_id == "" and profile_by_id.has(requested_profile_id):
+		var profile_template_id := String(profile_by_id[requested_profile_id].get("template_id", ""))
+		for template in templates:
+			if template is Dictionary and String(template.get("id", "")) == profile_template_id:
+				template_candidates.append(template)
+				break
+	if template_candidates.is_empty() and requested_template_id != "":
+		source = "built_in_fallback_requested_template_unavailable"
+		return {
+			"template": {},
+			"profile": {},
+			"source": source,
+			"requested_template_id": requested_template_id,
+			"requested_profile_id": requested_profile_id,
+		}
+	if template_candidates.is_empty():
+		source = "built_in_fallback_no_catalog_match"
+		return {
+			"template": {},
+			"profile": {},
+			"source": source,
+			"requested_template_id": requested_template_id,
+			"requested_profile_id": requested_profile_id,
+		}
+	template_candidates.sort_custom(Callable(RandomMapGeneratorRules, "_compare_template_id"))
+	var selected_index := 0
+	if requested_template_id == "" and not profile_by_id.has(requested_profile_id):
+		selected_index = _stable_choice_index(template_candidates.size(), "%s:%s:%s" % [seed, String(size.get("preset", "")), _stable_stringify(player_constraints)])
+	var selected_template: Dictionary = template_candidates[selected_index]
+	var selected_profile: Dictionary = {}
+	if profile_by_id.has(requested_profile_id) and String(profile_by_id[requested_profile_id].get("template_id", "")) == String(selected_template.get("id", "")):
+		selected_profile = profile_by_id[requested_profile_id]
+	elif profile_by_template.has(String(selected_template.get("id", ""))):
+		selected_profile = profile_by_template[String(selected_template.get("id", ""))]
+	return {
+		"template": selected_template,
+		"profile": selected_profile,
+		"source": source,
+		"requested_template_id": requested_template_id,
+		"requested_profile_id": requested_profile_id,
+		"candidate_count": template_candidates.size(),
+	}
+
+static func _template_matches_constraints(template: Dictionary, size: Dictionary, player_constraints: Dictionary) -> bool:
+	var size_score: Dictionary = template.get("size_score", {}) if template.get("size_score", {}) is Dictionary else {}
+	var score := _map_size_score(size)
+	if score < int(size_score.get("min", 1)) or score > int(size_score.get("max", 999999)):
+		return false
+	var players: Dictionary = template.get("players", {}) if template.get("players", {}) is Dictionary else {}
+	var humans: Dictionary = players.get("humans", {}) if players.get("humans", {}) is Dictionary else {}
+	var total: Dictionary = players.get("total", {}) if players.get("total", {}) is Dictionary else {}
+	var human_count := int(player_constraints.get("human_count", 1))
+	var player_count := int(player_constraints.get("player_count", 2))
+	if human_count < int(humans.get("min", 1)) or human_count > int(humans.get("max", 8)):
+		return false
+	if player_count < int(total.get("min", 2)) or player_count > int(total.get("max", 8)):
+		return false
+	var human_start_count := 0
+	var total_start_count := 0
+	for zone in template.get("zones", []):
+		if not (zone is Dictionary):
+			continue
+		var role := String(zone.get("role", ""))
+		if role == "human_start":
+			human_start_count += 1
+			total_start_count += 1
+		elif role == "computer_start":
+			total_start_count += 1
+	return human_start_count >= human_count and total_start_count >= player_count
+
+static func _map_size_score(size: Dictionary) -> int:
+	var width := int(size.get("width", 16))
+	var height := int(size.get("height", 12))
+	return max(1, int((width * height) / 0x510))
+
+static func _stable_choice_index(size: int, seed_text: String) -> int:
+	if size <= 0:
+		return 0
+	return int(_hash32_int(seed_text) % size)
+
+static func _merge_profile_with_catalog(input_profile: Dictionary, catalog_profile: Dictionary, player_constraints: Dictionary) -> Dictionary:
+	var merged := input_profile.duplicate(true)
+	for key in ["label", "terrain_ids", "faction_ids", "encounter_id", "guard_strength_profile", "template_id"]:
+		if not merged.has(key) and catalog_profile.has(key):
+			merged[key] = catalog_profile[key]
+	var terrain_ids := _normalized_string_array(merged.get("terrain_ids", CORE_TERRAIN_POOL), CORE_TERRAIN_POOL)
+	var faction_ids := _normalized_string_array(merged.get("faction_ids", DEFAULT_FACTIONS), DEFAULT_FACTIONS)
+	while faction_ids.size() < int(player_constraints.get("player_count", 2)):
+		faction_ids.append(DEFAULT_FACTIONS[faction_ids.size() % DEFAULT_FACTIONS.size()])
+	var town_ids := []
+	for faction_id in faction_ids:
+		town_ids.append(String(DEFAULT_TOWN_BY_FACTION.get(String(faction_id), "town_riverwatch")))
+	var resource_site_ids := []
+	for resource in SUPPORT_RESOURCE_SITES:
+		resource_site_ids.append(String(resource.get("site_id", "")))
+	merged["terrain_ids"] = terrain_ids
+	merged["faction_ids"] = faction_ids.slice(0, int(player_constraints.get("player_count", 2)))
+	merged["town_ids"] = town_ids.slice(0, int(player_constraints.get("player_count", 2)))
+	merged["resource_site_ids"] = resource_site_ids
+	merged["encounter_id"] = String(merged.get("encounter_id", DEFAULT_ENCOUNTER_ID))
+	merged["guard_strength_profile"] = String(merged.get("guard_strength_profile", "core_low"))
+	merged["template_family"] = String(merged.get("template_family", catalog_profile.get("template_family", "content_catalog_template_graph")))
+	return merged
+
+static func _compare_template_id(a: Dictionary, b: Dictionary) -> bool:
+	return String(a.get("id", "")) < String(b.get("id", ""))
+
 static func _normalize_size(size_value: Variant) -> Dictionary:
 	var preset := "small"
 	var width := 16
@@ -1702,6 +2038,7 @@ static func _normalize_profile(value: Variant, player_constraints: Dictionary) -
 	return {
 		"id": profile_id,
 		"label": String(profile.get("label", "Seeded Core Frontier")).strip_edges(),
+		"template_id": String(profile.get("template_id", "")).strip_edges(),
 		"template_family": "zone_connection_spoke",
 		"terrain_ids": terrain_ids,
 		"faction_ids": faction_ids.slice(0, int(player_constraints.get("player_count", 2))),

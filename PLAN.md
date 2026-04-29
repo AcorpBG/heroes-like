@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Selected implementation slice: `random-map-resource-encounter-fairness-report-10184` under P2.10 random map generator foundation. Keep this to report/tooling-only resource, encounter, guard, route-pressure, and travel-distance fairness validation; scenario load smoke, UI, writeback, and campaign/skirmish adoption remain separate child slices.
+Selected implementation slice: `random-map-template-catalog-grammar-10184` under P2.10 random map generator foundation. Keep this to HoMM3-style template catalog/grammar parity groundwork for the original game: data-driven profiles, filtered zones/links, owner/start metadata, terrain/faction constraints, guard values, and wide/border-guard connection semantics. Scenario load smoke, UI, writeback, and campaign/skirmish adoption remain separate child slices.
 
 ## Slice Status Model
 
@@ -1874,7 +1874,48 @@ implementationTargets:
 sliceEvidence:
 - `RandomMapGeneratorRules.gd` now emits a staged `random_map_resource_encounter_fairness_report_v1` payload with early gold/wood/ore support, contest-front distribution, guarded reward/route guard risk classes, wide/border guard route-pressure semantics, objective-pressure placeholder status, and start-to-town/resource/contest-route distance comparisons.
 - `tests/random_map_resource_encounter_fairness_report.gd` proves the happy-path generated profile is pass/warning rather than fail, and synthetic warning/fail cases are classified by the report layer.
-- Parent random-map foundation remains open for the scenario-load smoke child slice; this does not adopt generated maps into scenario selection, campaign, skirmish, save migration, UI, or durable authored writeback.
+- Parent random-map foundation remains open for the template-catalog/grammar and scenario-load smoke child slices; this does not adopt generated maps into scenario selection, campaign, skirmish, save migration, UI, or durable authored writeback.
+
+### P2 Child: Random Map Template Catalog/Grammar Parity Groundwork
+
+id: `random-map-template-catalog-grammar-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Replace the hardcoded one-profile runtime template with the first data-driven HoMM3-style template catalog and grammar layer, translated into original Aurelion Reach content.
+
+sourceDocs:
+- `docs/random-map-generator-foundation.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-summary.csv`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-special-guards-and-wide.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-web-map-editor/`
+
+implementationTargets:
+- `content/random_map_template_catalog.json`
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_template_catalog_grammar_report.gd`
+- `tests/random_map_template_catalog_grammar_report.tscn`
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- Catalog fixture contains multiple original templates/profiles with zones, links, player/size filters, zone roles, owner/start metadata, terrain/faction constraints, guard values, and wide/border-guard flags.
+- Generator selection preserves selected template/profile ids through metadata, staging, and phase pipeline output.
+- Focused report proves same seed plus same template is deterministic and changing template id changes the payload.
+- Focused report proves catalog zone/link records and special connection semantics survive into route and fairness outputs.
+
+nonGoals:
+- No scenario-load smoke, campaign/skirmish adoption, UI, durable writeback, save migration, broad object placement, or finished alpha/RMG parity claim.
 
 ### P2 Child: Random Map Scenario Load Smoke
 

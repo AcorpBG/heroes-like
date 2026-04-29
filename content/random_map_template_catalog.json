@@ -1,0 +1,124 @@
+{
+  "schema_id": "aurelion_random_map_template_catalog_v1",
+  "source_model": "original_catalog_preserving_homm3_style_template_grammar_only",
+  "profiles": [
+    {
+      "id": "frontier_spokes_profile_v1",
+      "label": "Frontier Spokes",
+      "template_id": "frontier_spokes_v1",
+      "guard_strength_profile": "core_low",
+      "terrain_ids": ["grass", "plains", "forest", "swamp", "highland"],
+      "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"],
+      "encounter_id": "encounter_mire_raid"
+    },
+    {
+      "id": "border_gate_compact_profile_v1",
+      "label": "Border Gate Compact",
+      "template_id": "border_gate_compact_v1",
+      "guard_strength_profile": "core_low",
+      "terrain_ids": ["grass", "forest", "swamp", "highland"],
+      "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
+      "encounter_id": "encounter_mire_raid"
+    },
+    {
+      "id": "four_corners_ring_profile_v1",
+      "label": "Four Corners Ring",
+      "template_id": "four_corners_ring_v1",
+      "guard_strength_profile": "core_low",
+      "terrain_ids": ["grass", "plains", "forest", "swamp", "highland"],
+      "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"],
+      "encounter_id": "encounter_mire_raid"
+    }
+  ],
+  "templates": [
+    {
+      "id": "frontier_spokes_v1",
+      "label": "Frontier Spokes",
+      "family": "zone_connection_spoke",
+      "size_score": {"min": 1, "max": 32},
+      "players": {"humans": {"min": 1, "max": 1}, "total": {"min": 3, "max": 3}},
+      "terrain_constraints": {"allowed": ["grass", "plains", "forest", "swamp", "highland"], "match_start_to_faction": true},
+      "faction_constraints": {"allowed": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"]},
+      "zones": [
+        {"id": "start_1", "role": "human_start", "base_size": 18, "owner_slot": 1, "terrain": {"match_to_faction": true}},
+        {"id": "start_2", "role": "computer_start", "base_size": 18, "owner_slot": 2, "terrain": {"match_to_faction": true}},
+        {"id": "start_3", "role": "computer_start", "base_size": 18, "owner_slot": 3, "terrain": {"match_to_faction": true}},
+        {"id": "junction_1", "role": "junction", "base_size": 10, "owner_slot": null, "terrain": {"allowed": ["plains", "grass"]}},
+        {"id": "reward_1", "role": "treasure", "base_size": 8, "owner_slot": null, "terrain": {"allowed": ["forest", "grass"]}},
+        {"id": "reward_2", "role": "treasure", "base_size": 8, "owner_slot": null, "terrain": {"allowed": ["highland", "plains"]}},
+        {"id": "reward_3", "role": "treasure", "base_size": 8, "owner_slot": null, "terrain": {"allowed": ["swamp", "forest"]}}
+      ],
+      "links": [
+        {"from": "start_1", "to": "junction_1", "role": "contest_route", "guard_value": 600, "wide": false, "border_guard": false},
+        {"from": "start_2", "to": "junction_1", "role": "contest_route", "guard_value": 600, "wide": false, "border_guard": false},
+        {"from": "start_3", "to": "junction_1", "role": "contest_route", "guard_value": 600, "wide": false, "border_guard": false},
+        {"from": "start_1", "to": "reward_1", "role": "early_reward_route", "guard_value": 150, "wide": false, "border_guard": false},
+        {"from": "start_2", "to": "reward_2", "role": "early_reward_route", "guard_value": 150, "wide": false, "border_guard": false},
+        {"from": "start_3", "to": "reward_3", "role": "early_reward_route", "guard_value": 150, "wide": false, "border_guard": false},
+        {"from": "reward_1", "to": "junction_1", "role": "reward_to_junction", "guard_value": 300, "wide": true, "border_guard": false},
+        {"from": "reward_2", "to": "junction_1", "role": "reward_to_junction", "guard_value": 300, "wide": false, "border_guard": false},
+        {"from": "reward_3", "to": "junction_1", "role": "reward_to_junction", "guard_value": 300, "wide": false, "border_guard": false}
+      ]
+    },
+    {
+      "id": "border_gate_compact_v1",
+      "label": "Border Gate Compact",
+      "family": "zone_connection_border_gate",
+      "size_score": {"min": 1, "max": 32},
+      "players": {"humans": {"min": 1, "max": 1}, "total": {"min": 3, "max": 3}},
+      "terrain_constraints": {"allowed": ["grass", "forest", "swamp", "highland"], "match_start_to_faction": true},
+      "faction_constraints": {"allowed": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"]},
+      "zones": [
+        {"id": "start_1", "role": "human_start", "base_size": 20, "owner_slot": 1, "terrain": {"match_to_faction": true}},
+        {"id": "start_2", "role": "computer_start", "base_size": 20, "owner_slot": 2, "terrain": {"match_to_faction": true}},
+        {"id": "start_3", "role": "computer_start", "base_size": 20, "owner_slot": 3, "terrain": {"match_to_faction": true}},
+        {"id": "gate_1", "role": "junction", "base_size": 9, "owner_slot": null, "terrain": {"allowed": ["highland", "plains"]}},
+        {"id": "relic_1", "role": "treasure", "base_size": 7, "owner_slot": null, "terrain": {"allowed": ["forest", "grass"]}},
+        {"id": "relic_2", "role": "treasure", "base_size": 7, "owner_slot": null, "terrain": {"allowed": ["swamp", "forest"]}},
+        {"id": "relic_3", "role": "treasure", "base_size": 7, "owner_slot": null, "terrain": {"allowed": ["highland", "grass"]}}
+      ],
+      "links": [
+        {"from": "start_1", "to": "gate_1", "role": "contest_route", "guard_value": 500, "wide": false, "border_guard": true},
+        {"from": "start_2", "to": "gate_1", "role": "contest_route", "guard_value": 500, "wide": false, "border_guard": false},
+        {"from": "start_3", "to": "gate_1", "role": "contest_route", "guard_value": 500, "wide": false, "border_guard": false},
+        {"from": "start_1", "to": "relic_1", "role": "early_reward_route", "guard_value": 150, "wide": false, "border_guard": false},
+        {"from": "start_2", "to": "relic_2", "role": "early_reward_route", "guard_value": 150, "wide": false, "border_guard": false},
+        {"from": "start_3", "to": "relic_3", "role": "early_reward_route", "guard_value": 150, "wide": false, "border_guard": false},
+        {"from": "relic_1", "to": "gate_1", "role": "reward_to_junction", "guard_value": 0, "wide": true, "border_guard": false},
+        {"from": "relic_2", "to": "gate_1", "role": "reward_to_junction", "guard_value": 300, "wide": false, "border_guard": false},
+        {"from": "relic_3", "to": "gate_1", "role": "reward_to_junction", "guard_value": 300, "wide": false, "border_guard": false}
+      ]
+    },
+    {
+      "id": "four_corners_ring_v1",
+      "label": "Four Corners Ring",
+      "family": "zone_connection_ring",
+      "size_score": {"min": 1, "max": 32},
+      "players": {"humans": {"min": 1, "max": 1}, "total": {"min": 4, "max": 4}},
+      "terrain_constraints": {"allowed": ["grass", "plains", "forest", "swamp", "highland"], "match_start_to_faction": true},
+      "faction_constraints": {"allowed": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"]},
+      "zones": [
+        {"id": "start_1", "role": "human_start", "base_size": 17, "owner_slot": 1, "terrain": {"match_to_faction": true}},
+        {"id": "start_2", "role": "computer_start", "base_size": 17, "owner_slot": 2, "terrain": {"match_to_faction": true}},
+        {"id": "start_3", "role": "computer_start", "base_size": 17, "owner_slot": 3, "terrain": {"match_to_faction": true}},
+        {"id": "start_4", "role": "computer_start", "base_size": 17, "owner_slot": 4, "terrain": {"match_to_faction": true}},
+        {"id": "north_cache", "role": "treasure", "base_size": 8, "owner_slot": null, "terrain": {"allowed": ["forest", "grass"]}},
+        {"id": "south_cache", "role": "treasure", "base_size": 8, "owner_slot": null, "terrain": {"allowed": ["highland", "plains"]}},
+        {"id": "east_cache", "role": "treasure", "base_size": 8, "owner_slot": null, "terrain": {"allowed": ["swamp", "forest"]}},
+        {"id": "west_cache", "role": "treasure", "base_size": 8, "owner_slot": null, "terrain": {"allowed": ["grass", "plains"]}}
+      ],
+      "links": [
+        {"from": "start_1", "to": "north_cache", "role": "contest_route", "guard_value": 450, "wide": false, "border_guard": false},
+        {"from": "start_2", "to": "east_cache", "role": "contest_route", "guard_value": 450, "wide": false, "border_guard": false},
+        {"from": "start_3", "to": "south_cache", "role": "contest_route", "guard_value": 450, "wide": false, "border_guard": false},
+        {"from": "start_4", "to": "west_cache", "role": "contest_route", "guard_value": 450, "wide": false, "border_guard": false},
+        {"from": "start_1", "to": "west_cache", "role": "early_reward_route", "guard_value": 150, "wide": false, "border_guard": false},
+        {"from": "start_2", "to": "north_cache", "role": "early_reward_route", "guard_value": 150, "wide": false, "border_guard": false},
+        {"from": "start_3", "to": "east_cache", "role": "early_reward_route", "guard_value": 150, "wide": false, "border_guard": false},
+        {"from": "start_4", "to": "south_cache", "role": "early_reward_route", "guard_value": 150, "wide": false, "border_guard": false},
+        {"from": "north_cache", "to": "east_cache", "role": "reward_to_junction", "guard_value": 0, "wide": true, "border_guard": false},
+        {"from": "south_cache", "to": "west_cache", "role": "reward_to_junction", "guard_value": 300, "wide": false, "border_guard": true}
+      ]
+    }
+  ]
+}
