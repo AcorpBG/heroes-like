@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Recently completed implementation slice: `broad-production-faction-content-breadth-10184`, following `balance-regression-report-suite-10184`, `random-map-validation-batch-retry-10184`, `random-map-skirmish-ui-save-replay-10184`, `random-map-roads-rivers-writeout-10184`, `random-map-decoration-density-pass-10184`, `random-map-monster-reward-bands-10184`, and `random-map-connection-guard-materialization-10184`. Current selected slice: `broad-production-map-campaign-replayability-10184` as a narrow pulled-forward map/campaign/replayability increment, not a broad production completion claim. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated maps through controlled setup/session/report boundaries only; they are not HoMM3 RMG parity, authored campaign adoption, authored writeback, or alpha completion. The balance/regression suite is the first report-only Phase 3 foundation surface pulled forward to aggregate existing deterministic evidence; it is not automatic tuning, parity completion, or an alpha claim.
+Recently completed implementation slice: `broad-production-map-campaign-replayability-10184`, following `broad-production-faction-content-breadth-10184`, `balance-regression-report-suite-10184`, `random-map-validation-batch-retry-10184`, `random-map-skirmish-ui-save-replay-10184`, `random-map-roads-rivers-writeout-10184`, `random-map-decoration-density-pass-10184`, `random-map-monster-reward-bands-10184`, and `random-map-connection-guard-materialization-10184`. Current selected slice: `headless-agent-simulation-harness-10184` as a deterministic report/harness foundation for scenario boot, AI pressure, economy, battle sampling, save/replay stability, and generated-map provenance boundaries. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated maps through controlled setup/session/report boundaries only; they are not HoMM3 RMG parity, authored campaign adoption, authored writeback, or alpha completion. Phase 3 report surfaces are harness foundations only; they are not automatic tuning, manual-play replacement, parity completion, or an alpha claim.
 
 ## Slice Status Model
 
@@ -2309,31 +2309,45 @@ purpose: Execute core loops through domain rules faster than manual UI play.
 
 sourceDocs:
 - `project.md`
-- future harness requirements doc.
-- Phase 2 economy/object/AI/random-map outputs.
+- Existing Phase 2 economy/object/AI/random-map outputs.
+- Existing scenario/session/save/replay and battle report scenes.
 
 implementationTargets:
-- Headless scenario runner.
-- AI turn runner.
-- Economy loop runner.
-- Battle resolver/sampler.
-- Structured report output.
+- `scripts/core/HeadlessSimulationHarnessRules.gd`
+- `tests/headless_simulation_harness_report.gd`
+- `tests/headless_simulation_harness_report.tscn`
+- Curated authored scenario/session boot and bounded turn-loop runner.
+- Strategic AI pressure/tick evidence through existing AI rules.
+- Economy resource-delta runner.
+- Battle resolver/autoplay sampler.
+- Save/replay/provenance restore checks and structured report output.
 
 baselineChecks:
-- Harness command exits cleanly.
+- `godot4 --headless --path /root/dev/heroes-like tests/headless_simulation_harness_report.tscn`
 - `python3 tests/validate_repo.py`
+- all current `tests/random_map_*.tscn`
+- `tests/balance_regression_report_suite.tscn`
+- `tests/faction_content_breadth_report.tscn`
+- `tests/map_campaign_replayability_breadth_report.tscn`
+- `python3 -m json.tool ops/progress.json`
+- `git diff --check`
+- progress helper status/next commands.
 
 sliceEvidence:
-- Deterministic seeded runs are reproducible.
-- Repeated simulation report exposes scenario viability, economy pressure, AI behavior, battle outcomes, and failure summaries.
+- `HeadlessSimulationHarnessRules.build_report(...)` returns `headless_simulation_harness_report_v1` with required subsystem cases, status counts, deterministic case signatures, and a harness signature.
+- The report covers authored scenario/session boot and bounded turn-loop viability, strategic AI pressure/tick evidence, economy resource delta, deterministic battle sampling, save/provenance restore checks, and generated random-map/skirmish provenance boundaries.
+- Immature or narrow surfaces, especially battle distribution sampling, are warning/deferred evidence rather than fake pass results.
+- The report policy explicitly rejects manual-play replacement, automatic tuning, runtime balance changes, authored writeback, generated campaign adoption, and alpha/parity claims.
 
 completionCriteria:
-- Headless agents can execute core loops through domain rules without scene graphics.
-- Reports identify invalid maps, impossible economies, runaway AI, battle imbalance, and regression failures.
+- The curated headless harness executes core loops through domain rules without scene graphics.
+- Reports expose structured pass/warning/deferred signatures per subsystem and can guide later deeper Phase 3 simulation work.
+- Unsupported or immature surfaces remain honest warnings/deferred evidence.
 
 nonGoals:
 - Do not replace manual play gates.
 - Do not make reports player-facing UI.
+- Do not claim alpha/parity/production readiness or tune live balance from the report.
 
 ### P3.2 Balance And Regression Report Suite
 
