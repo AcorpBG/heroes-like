@@ -21,12 +21,18 @@ const SPELLS_PATH := "%s/spells.json" % CONTENT_DIR
 const CAMPAIGNS_PATH := "%s/campaigns.json" % CONTENT_DIR
 
 var _cache: Dictionary = {}
+var _generated_scenario_drafts: Dictionary = {}
+var _generated_terrain_layer_drafts: Dictionary = {}
 
 func _ready() -> void:
 	_validate_content()
 
 func clear_cache() -> void:
 	_cache.clear()
+
+func clear_generated_scenario_drafts() -> void:
+	_generated_scenario_drafts.clear()
+	_generated_terrain_layer_drafts.clear()
 
 func load_json(path: String) -> Dictionary:
 	if path in _cache:
@@ -106,7 +112,10 @@ func get_terrain_grammar() -> Dictionary:
 
 func get_terrain_layers_for_scenario(scenario_id: String) -> Dictionary:
 	var layers := get_content_by_id(TERRAIN_LAYERS_PATH, scenario_id)
-	return layers.duplicate(true) if not layers.is_empty() else {}
+	if not layers.is_empty():
+		return layers.duplicate(true)
+	var draft: Dictionary = _generated_terrain_layer_drafts.get(scenario_id, {})
+	return draft.duplicate(true) if not draft.is_empty() else {}
 
 func get_biome_for_terrain(terrain_id: String) -> Dictionary:
 	var normalized_terrain := String(terrain_id)
@@ -152,7 +161,53 @@ func get_campaign(id: String) -> Dictionary:
 	return get_content_by_id(CAMPAIGNS_PATH, id)
 
 func get_scenario(id: String) -> Dictionary:
-	return get_content_by_id(SCENARIOS_PATH, id)
+	var authored := get_authored_scenario(id)
+	if not authored.is_empty():
+		return authored
+	var draft: Dictionary = _generated_scenario_drafts.get(id, {})
+	return draft.duplicate(true) if not draft.is_empty() else {}
+
+func get_authored_scenario(id: String) -> Dictionary:
+	var scenario := get_content_by_id(SCENARIOS_PATH, id)
+	return scenario.duplicate(true) if not scenario.is_empty() else {}
+
+func has_authored_scenario(id: String) -> bool:
+	return not get_authored_scenario(id).is_empty()
+
+func has_generated_scenario_draft(id: String) -> bool:
+	return _generated_scenario_drafts.has(id)
+
+func register_generated_scenario_draft(scenario_record: Dictionary, terrain_layers_record: Dictionary) -> Dictionary:
+	var scenario_id := String(scenario_record.get("id", "")).strip_edges()
+	if scenario_id == "":
+		return {"ok": false, "message": "Generated scenario draft is missing an id."}
+	if has_authored_scenario(scenario_id):
+		return {"ok": false, "message": "Generated scenario id collides with authored content: %s." % scenario_id}
+	if not bool(scenario_record.get("generated", false)):
+		return {"ok": false, "message": "Generated scenario draft must mark generated=true."}
+	var selection: Dictionary = scenario_record.get("selection", {}) if scenario_record.get("selection", {}) is Dictionary else {}
+	var availability: Dictionary = selection.get("availability", {}) if selection.get("availability", {}) is Dictionary else {}
+	if bool(availability.get("campaign", false)) or bool(availability.get("skirmish", false)):
+		return {"ok": false, "message": "Generated scenario draft must not be campaign or skirmish selectable."}
+
+	var scenario_copy: Dictionary = scenario_record.duplicate(true)
+	scenario_copy["draft_source"] = "generated_random_map_transient_registry"
+	_generated_scenario_drafts[scenario_id] = scenario_copy
+
+	var terrain_copy: Dictionary = terrain_layers_record.duplicate(true)
+	terrain_copy["scenario_id"] = scenario_id
+	terrain_copy["draft_source"] = "generated_random_map_transient_registry"
+	_generated_terrain_layer_drafts[scenario_id] = terrain_copy
+	return {
+		"ok": true,
+		"scenario_id": scenario_id,
+		"write_policy": "memory_only_no_authored_json_write",
+		"menu_policy": "not_returned_by_authored_scenario_lists",
+	}
+
+func unregister_generated_scenario_draft(id: String) -> void:
+	_generated_scenario_drafts.erase(id)
+	_generated_terrain_layer_drafts.erase(id)
 
 func get_encounter(id: String) -> Dictionary:
 	return get_content_by_id(ENCOUNTERS_PATH, id)

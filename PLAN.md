@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Selected implementation slice: `random-map-template-catalog-grammar-10184` under P2.10 random map generator foundation. Keep this to HoMM3-style template catalog/grammar parity groundwork for the original game: data-driven profiles, filtered zones/links, owner/start metadata, terrain/faction constraints, guard values, and wide/border-guard connection semantics. Scenario load smoke, UI, writeback, and campaign/skirmish adoption remain separate child slices.
+Selected implementation slice: `random-map-homm3-parity-gap-audit-10184` after P2.10 random map generator foundation closeout. P2.10 foundation proves deterministic catalog-backed generated drafts through the scenario/domain load boundary only; it is not HoMM3 RMG parity, skirmish adoption, UI adoption, save migration, or alpha completion.
 
 ## Slice Status Model
 
@@ -1042,13 +1042,16 @@ sliceEvidence:
 - Seed determinism checks pass.
 - Generated map validity checks prove minimum viability constraints.
 - Scenario load smoke proves generated prototype maps load once runtime integration is selected.
+- Foundation-stage generated drafts remain transient, no-write, and unavailable to campaign/skirmish selection.
 
 completionCriteria:
 - Controlled prototype maps can be generated reproducibly.
 - Generated maps satisfy minimum constraints for later simulation and balance testing.
+- Foundation-stage generated maps can enter supported scenario/domain bootstrap and objective-evaluation paths without authored JSON writeback or player-facing adoption.
 
 nonGoals:
 - No claim of finished skirmish RMG.
+- No claim of HoMM3 random-map parity, full random-map alpha readiness, or complete skirmish replayability.
 - No broad content migration hidden inside generator work.
 - No generated map use in campaign/alpha until validated by later slices.
 
@@ -1930,6 +1933,40 @@ sourceDocs:
 implementationTargets:
 - generated prototype scenario smoke
 - load/report validation
+
+sliceEvidence:
+- Generated catalog-backed payloads use an explicit `content/random_map_template_catalog.json` profile/template rather than fallback runtime templates.
+- A transient generated-draft registration path feeds generated scenario and terrain-layer records into normal `ScenarioFactory`, `OverworldRules`, `ScenarioRules`, and `ScenarioScriptRules` lookup/evaluation boundaries.
+- Focused smoke proves generated scenario ids stay absent from authored content before and after load, generated drafts stay no-write/no-menu/no-campaign/no-skirmish, and scenario/session map, terrain layers, towns, resources, encounters, content refs, objective evaluation, and template provenance survive bootstrap.
+
+nonGoals:
+- No authored scenario or terrain-layer JSON writeback.
+- No campaign/skirmish browser availability, save migration, player-facing random-map UI, or finished RMG/alpha parity claim.
+
+### P2 Child: Random Map HoMM3-Parity Gap Audit
+
+id: `random-map-homm3-parity-gap-audit-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Convert the clarified long-term HoMM3 random-map parity target into an original-game gap matrix and next executable implementation slices after the foundation proof.
+
+sourceDocs:
+- `project.md`
+- `docs/random-map-generator-foundation.md`
+- completed P2.10 random-map reports and smoke evidence
+
+implementationTargets:
+- parity gap audit/report
+- follow-on random-map implementation slice queue
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- Audit separates foundation-complete evidence from missing parity domains such as rich template libraries, underground/water/transit semantics, object density, dwellings, mines, guarded rewards, roads, player/team setups, win conditions, validation batches, and skirmish/runtime adoption.
+- Follow-on slices are queued without relabeling P2.10 as HoMM3 parity or alpha done.
+
+nonGoals:
+- No claim that P2.10 completes HoMM3 RMG parity.
+- No player-facing random-map menu, skirmish adoption, campaign adoption, save migration, or durable generated-map writeback.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 

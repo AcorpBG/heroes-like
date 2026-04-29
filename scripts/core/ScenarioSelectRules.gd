@@ -65,7 +65,10 @@ static func difficulty_summary(difficulty_id: String) -> String:
 	return ""
 
 static func launch_mode_label(launch_mode: String) -> String:
-	return "Skirmish" if SessionStateStoreScript.normalize_launch_mode(launch_mode) == SessionStateStoreScript.LAUNCH_MODE_SKIRMISH else "Campaign"
+	var normalized_mode := SessionStateStoreScript.normalize_launch_mode(launch_mode)
+	if normalized_mode == SessionStateStoreScript.LAUNCH_MODE_GENERATED_DRAFT:
+		return "Generated Draft"
+	return "Skirmish" if normalized_mode == SessionStateStoreScript.LAUNCH_MODE_SKIRMISH else "Campaign"
 
 static func availability_label(availability: Dictionary) -> String:
 	var campaign_enabled := bool(availability.get("campaign", false))

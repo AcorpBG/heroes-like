@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-template-catalog-grammar-10184",
-  "currentSliceTitle": "Random Map Template Catalog/Grammar Parity Groundwork",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed RMG child slice: data-driven original template catalog and grammar groundwork landed before scenario-load smoke. No campaign/skirmish/UI/writeback/save adoption or finished alpha/RMG parity claim.",
+  "currentSliceId": "random-map-homm3-parity-gap-audit-10184",
+  "currentSliceTitle": "Random Map HoMM3-Parity Gap Audit",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Queued after P2.10 foundation-stage completion; next work is to map full HoMM3-style RMG parity gaps into original-game implementation slices without claiming parity or adopting generated maps into player-facing runtime.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T08:47:29Z",
+  "updatedAt": "2026-04-29T09:02:24Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -536,8 +536,8 @@
       "id": "random-map-generator-foundation-10184",
       "title": "Random Map Generator Foundation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
-      "classification": "parent_foundation_docs_ready_children_pending",
+      "status": "completed",
+      "classification": "parent_foundation_completed_children_completed",
       "sourceDocs": [
         "project.md",
         "docs/random-map-generator-foundation.md"
@@ -548,7 +548,7 @@
         "generator validation/report harness",
         "Phase 3 headless harness integration path"
       ],
-      "notes": "Requirements doc, seeded generator core, terrain/town/road constraints, resource/encounter fairness report, and template catalog/grammar children are complete. Scenario-load smoke remains pending; no finished skirmish RMG claim.",
+      "notes": "P2.10 foundation stage complete: requirements, seeded core, terrain/town/road constraints, resource/encounter fairness, template catalog/grammar, and generated scenario-load smoke are implemented and validated. This is not HoMM3 RMG parity, full random-map alpha readiness, skirmish adoption, UI adoption, save migration, or durable generated-map writeback.",
       "sliceType": "parent",
       "childSliceIds": [
         "random-map-requirements-doc-10184",
@@ -563,10 +563,15 @@
         "random-map-requirements-doc-10184"
       ],
       "completedImplementationEvidenceIds": [
-        "random-map-template-catalog-grammar-10184"
+        "random-map-seeded-generator-core-10184",
+        "random-map-terrain-town-road-constraints-10184",
+        "random-map-resource-encounter-fairness-report-10184",
+        "random-map-template-catalog-grammar-10184",
+        "random-map-scenario-load-smoke-10184"
       ],
       "reportOnlyEvidenceIds": [],
-      "updatedAt": "2026-04-29T08:47:29Z"
+      "updatedAt": "2026-04-29T09:02:24Z",
+      "completedAt": "2026-04-29T09:02:24Z"
     },
     {
       "id": "world-faction-mechanics-identity-hooks-10184",
@@ -2441,7 +2446,7 @@
       "id": "random-map-scenario-load-smoke-10184",
       "title": "Random Map Scenario Load Smoke",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "random-map-generator-foundation-10184",
@@ -2450,20 +2455,69 @@
         "docs/random-map-generator-foundation.md"
       ],
       "implementationTargets": [
-        "generated prototype scenario smoke",
-        "load/report validation"
+        "scripts/autoload/ContentService.gd transient generated-draft registry",
+        "scripts/core/ScenarioFactory.gd generated draft session bootstrap",
+        "scripts/core/RandomMapGeneratorRules.gd supported generated objective payload",
+        "tests/random_map_scenario_load_smoke.gd",
+        "tests/random_map_scenario_load_smoke.tscn"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "Focused Godot smoke uses RandomMapGeneratorRules with explicit border_gate_compact_profile_v1 / border_gate_compact_v1 catalog selection.",
+        "Generated scenario id remains absent from authored scenarios.json before load, after load, and after transient cleanup.",
+        "Generated draft loads through ScenarioFactory, OverworldRules, ScenarioRules, and ScenarioScriptRules-compatible ContentService lookup without authored JSON writeback.",
+        "Smoke proves map rows, map_size, terrain layers, towns, resource_nodes, encounters, content refs, generated template provenance, and ScenarioRules objective evaluation.",
+        "Generated draft stays generated_draft launch mode, no-write, not in campaign content, not in skirmish browser, and not campaign/skirmish selectable."
       ],
       "completionCriteria": [
-        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+        "Generated catalog-backed prototype scenario payload loads through supported generated-draft scenario/domain boundary.",
+        "No durable authored content, campaign/skirmish selection, save migration, random-map UI, or alpha/parity claim is introduced."
       ],
-      "notes": "Implementation not started."
+      "notes": "Completed generated-draft scenario load smoke. This proves a catalog-backed prototype payload can enter normal scenario/domain bootstrap and objective evaluation through a transient no-write boundary only; it is not campaign/skirmish/UI/save adoption or HoMM3 RMG parity.",
+      "updatedAt": "2026-04-29T09:02:24Z",
+      "startedAt": "2026-04-29T08:51:34Z",
+      "completedAt": "2026-04-29T09:02:24Z"
+    },
+    {
+      "id": "random-map-homm3-parity-gap-audit-10184",
+      "title": "Random Map HoMM3-Parity Gap Audit",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Convert the clarified long-term HoMM3 random-map parity target into an original-game gap matrix and next executable implementation slices after the foundation proof.",
+      "sourceDocs": [
+        "project.md",
+        "docs/random-map-generator-foundation.md",
+        "completed P2.10 random-map reports and smoke evidence"
+      ],
+      "implementationTargets": [
+        "parity gap audit/report",
+        "follow-on random-map implementation slice queue",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json"
+      ],
+      "sliceEvidence": [
+        "Audit separates foundation-complete evidence from missing parity domains such as rich template libraries, underground/water/transit semantics, object density, dwellings, mines, guarded rewards, roads, player/team setups, win conditions, validation batches, and skirmish/runtime adoption.",
+        "Follow-on slices are queued without relabeling P2.10 as HoMM3 parity or alpha done."
+      ],
+      "completionCriteria": [
+        "Parity gaps and next implementation slices are explicit without changing runtime adoption boundaries."
+      ],
+      "nonGoals": [
+        "No claim that P2.10 completes HoMM3 RMG parity.",
+        "No player-facing random-map menu, skirmish adoption, campaign adoption, save migration, or durable generated-map writeback."
+      ],
+      "notes": "Queued after P2.10 foundation closeout because AcOrP clarified that RMG is not alpha/done until full HoMM3-style random-map parity is reached in original-game terms.",
+      "createdAt": "2026-04-29T09:02:24Z",
+      "updatedAt": "2026-04-29T09:02:24Z"
     },
     {
       "id": "headless-agent-simulation-harness-10184",
