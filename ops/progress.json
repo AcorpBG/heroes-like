@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-requirements-doc-10184",
-  "currentSliceTitle": "Random Map Requirements Doc",
+  "currentSliceId": "random-map-seeded-generator-core-10184",
+  "currentSliceTitle": "Random Map Seeded Generator Core",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Created docs/random-map-generator-foundation.md and updated PLAN/progress references; generator implementation children remain pending.",
+  "currentSliceNotes": "Implemented deterministic seeded generator core payload primitives and focused seed determinism report; terrain/town/road constraints, fairness suite, scenario load smoke, UI, writeback, and adoption remain pending child slices.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T07:39:59Z",
+  "updatedAt": "2026-04-29T08:22:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -548,7 +548,7 @@
         "generator validation/report harness",
         "Phase 3 headless harness integration path"
       ],
-      "notes": "Requirements doc exists. No finished skirmish RMG claim, parent completion, or broad content migration.",
+      "notes": "Requirements doc and seeded generator core child are complete. Terrain/town/road constraints, fairness reporting, and scenario load smoke children remain pending; no finished skirmish RMG claim.",
       "sliceType": "parent",
       "childSliceIds": [
         "random-map-requirements-doc-10184",
@@ -563,7 +563,7 @@
       ],
       "completedImplementationEvidenceIds": [],
       "reportOnlyEvidenceIds": [],
-      "updatedAt": "2026-04-29T07:39:59Z"
+      "updatedAt": "2026-04-29T08:22:00Z"
     },
     {
       "id": "world-faction-mechanics-identity-hooks-10184",
@@ -2258,29 +2258,47 @@
       "id": "random-map-seeded-generator-core-10184",
       "title": "Random Map Seeded Generator Core",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "random-map-generator-foundation-10184",
       "purpose": "Implement deterministic seeded generation primitives after requirements exist.",
       "sourceDocs": [
-        "docs/random-map-generator-foundation.md"
+        "docs/random-map-generator-foundation.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-web-map-editor/"
       ],
       "implementationTargets": [
-        "deterministic map-generation rules/helpers",
-        "seed determinism checks"
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_seeded_generator_core_report.gd",
+        "tests/random_map_seeded_generator_core_report.tscn",
+        "docs/random-map-generator-foundation.md",
+        "PLAN.md"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
-        "git diff --check"
+        "godot4 --headless --path /root/dev/heroes-like res://tests/random_map_seeded_generator_core_report.tscn",
+        "python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json-check.txt",
+        "git diff --check",
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "RandomMapGeneratorRules.gd emits a staged generated-map payload with normalized seed/version/profile/size/player metadata, deterministic phase pipeline, route graph, terrain-owner grid, separate town/resource/encounter placements, and a scenario-like draft behind a no-write/non-campaign/non-skirmish boundary.",
+        "random_map_seeded_generator_core_report proves same inputs produce the same stable payload signature and changed seeds change the signature.",
+        "Focused payload validation passes with zero failures for the seed determinism report fixture."
       ],
       "completionCriteria": [
-        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+        "Deterministic seeded generation primitives exist in core GDScript without runtime clocks, filesystem order, renderer/editor state, unordered dictionary iteration, production content writes, UI adoption, or scenario load claims.",
+        "Focused Godot report and baseline validation pass."
       ],
-      "notes": "Implementation not started."
+      "notes": "Completed deterministic seeded generator core only. Later random-map terrain/town/road constraints, fairness reports, scenario load smoke, UI, writeback, and campaign/skirmish adoption remain pending.",
+      "updatedAt": "2026-04-29T08:22:00Z",
+      "startedAt": "2026-04-29T07:43:17Z",
+      "completedAt": "2026-04-29T08:22:00Z"
     },
     {
       "id": "random-map-terrain-town-road-constraints-10184",
@@ -3179,6 +3197,28 @@
           "evidence": "AnimationCueCatalog now normalizes settings-shaped preferences and selects cue playback policy for normal, reduced-motion, fast, and combined modes. Focused report coverage proves battle troop, overworld map-object, town, spell, artifact, and UI representative cues select the expected fallback behavior without playback runtime, renderer pipeline, final asset import, save migration, or public debug output."
         }
       ]
+    },
+    {
+      "id": "random-map-seeded-generator-core-10184",
+      "system": "random map seeded generator core",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "random-map-seeded-generator-core-10184"
+      ],
+      "sourceRefs": [
+        "docs/random-map-generator-foundation.md",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_seeded_generator_core_report.gd",
+        "PLAN.md"
+      ],
+      "entries": [
+        {
+          "id": "random-map-seeded-generator-core-implementation-10184",
+          "title": "Implement deterministic seeded random-map payload primitives and determinism report",
+          "status": "completed",
+          "evidence": "Added RandomMapGeneratorRules deterministic seed normalization, fixed-seed PRNG, staged template/profile zone graph, editable terrain-owner grid, route graph, separate town/resource/encounter placement arrays, scenario-like no-write draft payload, stable signature generation, payload validation, and RANDOM_MAP_SEEDED_GENERATOR_CORE_REPORT proof. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path /root/dev/heroes-like res://tests/random_map_seeded_generator_core_report.tscn; python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json-check.txt; git diff --check."
+        }
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -3625,19 +3665,20 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "random-map-seeded-generator-core-10184",
-      "title": "Random Map Seeded Generator Core",
+      "id": "random-map-terrain-town-road-constraints-10184",
+      "title": "Random Map Terrain/Town/Road Constraints",
       "status": "pending",
       "parentSliceId": "random-map-generator-foundation-10184",
       "source": "PLAN.md P2.10 Random Map Generator Foundation",
       "sourceDocs": [
-        "docs/random-map-generator-foundation.md"
+        "docs/random-map-generator-foundation.md",
+        "terrain/editor docs"
       ],
       "implementationTargets": [
-        "deterministic map-generation rules/helpers",
-        "seed determinism checks"
+        "map generator constraints",
+        "generator report validation"
       ],
-      "notes": "Requirements doc is complete; implementation has not started."
+      "notes": "Seeded generator core is complete; next child should add terrain/town/road constraints without claiming finished skirmish RMG."
     }
   ],
   "stoppedOrPausedTasks": [

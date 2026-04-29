@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Selected implementation slice: `terrain-editor-scenario-export-validation-10184` under P2.9 terrain/editor tooling. Keep durable authored file writeback separate from validated draft/export-contract work unless explicitly selected.
+Selected implementation slice: `random-map-seeded-generator-core-10184` under P2.10 random map generator foundation. Keep this to deterministic generated payload primitives and seed determinism proof; terrain/town/road constraints, fairness reports, scenario load smoke, UI, writeback, and campaign/skirmish adoption remain separate child slices.
 
 ## Slice Status Model
 
@@ -1821,10 +1821,20 @@ purpose: Implement deterministic seeded generation primitives after requirements
 
 sourceDocs:
 - `docs/random-map-generator-foundation.md`
+- HoMM3 RMG reverse-engineering and web editor prototype artifacts under `/root/.openclaw/workspace/tasks/10184/artifacts/`, translated into original architecture only.
 
 implementationTargets:
-- deterministic map-generation rules/helpers
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_seeded_generator_core_report.gd`
+- `tests/random_map_seeded_generator_core_report.tscn`
+- deterministic generated-map staging payload and scenario-like draft
 - seed determinism checks
+
+sliceEvidence:
+- Same normalized seed/version/profile/size/player inputs produce the same stable generated payload signature.
+- Changed seed changes the generated payload signature.
+- Generated payload exposes normalized seed/version/profile metadata, phase pipeline, route graph, editable terrain-owner grid, and separate town/resource/encounter placement arrays.
+- Generated scenario-like payload stays behind a no-write, non-campaign, non-skirmish draft boundary.
 
 ### P2 Child: Random Map Terrain/Town/Road Constraints
 
