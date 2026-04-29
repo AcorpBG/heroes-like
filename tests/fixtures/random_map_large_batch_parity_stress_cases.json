@@ -1,0 +1,113 @@
+{
+  "schema_id": "random_map_large_batch_parity_stress_cases_v1",
+  "purpose": "Expanded deterministic RMG stress fixture corpus for Phase 2 parity validation reports only.",
+  "sweep_translated_templates": true,
+  "seed_prefix": "large-batch-parity-stress-10184",
+  "cases": [
+    {
+      "id": "stress_curated_land_runtime_materialization",
+      "description": "Successful compact runtime materialization case used as the stress harness positive control.",
+      "tags": ["land", "runtime_materialization", "object_pool_value_weighting", "town_mine_dwelling", "border_guard", "wide_link"],
+      "expected_final_status": "unsupported_warning",
+      "unsupported_reason": "current_generated_validation_warning",
+      "config": {
+        "generator_version": "random_map_seeded_core_v1",
+        "seed": "large-batch-curated-land",
+        "size": {"preset": "large_batch_parity_stress", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
+        "player_constraints": {"human_count": 1, "player_count": 3, "team_mode": "free_for_all"},
+        "profile": {
+          "id": "border_gate_compact_profile_v1",
+          "template_id": "border_gate_compact_v1",
+          "guard_strength_profile": "core_low",
+          "terrain_ids": ["grass", "plains", "forest", "swamp", "highland"],
+          "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"]
+        }
+      }
+    },
+    {
+      "id": "stress_curated_islands_water",
+      "description": "Water/islands case that exercises water transit and coastline summaries.",
+      "tags": ["islands_water", "water_mode", "transit_gameplay"],
+      "expected_final_status": "unsupported_warning",
+      "unsupported_reason": "current_generated_validation_warning",
+      "config": {
+        "generator_version": "random_map_seeded_core_v1",
+        "seed": "large-batch-curated-islands",
+        "size": {"preset": "large_batch_parity_stress", "width": 36, "height": 30, "water_mode": "islands", "level_count": 1},
+        "player_constraints": {"human_count": 2, "player_count": 4, "team_mode": "free_for_all"},
+        "profile": {
+          "id": "translated_rmg_profile_001_v1",
+          "template_id": "translated_rmg_template_001_v1",
+          "guard_strength_profile": "core_low",
+          "terrain_ids": ["grass", "plains", "forest", "swamp", "highland"],
+          "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"]
+        }
+      }
+    },
+    {
+      "id": "stress_curated_underground_two_level",
+      "description": "Two-level case that exercises underground and cross-level transit summaries.",
+      "tags": ["underground", "underground_deferred_transit", "transit_gameplay"],
+      "expected_final_status": "unsupported_warning",
+      "unsupported_reason": "current_generated_validation_warning",
+      "config": {
+        "generator_version": "random_map_seeded_core_v1",
+        "seed": "large-batch-curated-underground",
+        "size": {"preset": "large_batch_parity_stress", "width": 36, "height": 30, "water_mode": "land", "level_count": 2},
+        "player_constraints": {"human_count": 2, "player_count": 4, "team_mode": "free_for_all"},
+        "profile": {
+          "id": "translated_rmg_profile_001_v1",
+          "template_id": "translated_rmg_template_001_v1",
+          "guard_strength_profile": "core_low",
+          "terrain_ids": ["grass", "plains", "forest", "swamp", "highland"],
+          "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"]
+        }
+      }
+    },
+    {
+      "id": "stress_curated_retry_fallback",
+      "description": "Expected negative first attempt followed by bounded fallback retry.",
+      "tags": ["negative_case", "retry_policy", "border_guard", "wide_link"],
+      "expected_final_status": "unsupported_warning",
+      "unsupported_reason": "current_generated_validation_warning_after_retry",
+      "expect_initial_failure": true,
+      "config": {
+        "generator_version": "random_map_seeded_core_v1",
+        "seed": "large-batch-curated-retry",
+        "size": {"preset": "large_batch_parity_stress", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
+        "player_constraints": {"human_count": 1, "player_count": 3, "team_mode": "free_for_all"},
+        "profile": {"id": "missing_large_batch_profile", "template_id": "missing_large_batch_template"}
+      },
+      "retry_policy": {
+        "max_attempts": 2,
+        "mode": "config_fallback_seed_salt",
+        "fallback_config": {
+          "generator_version": "random_map_seeded_core_v1",
+          "seed": "large-batch-curated-retry",
+          "size": {"preset": "large_batch_parity_stress", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
+          "player_constraints": {"human_count": 1, "player_count": 3, "team_mode": "free_for_all"},
+          "profile": {
+            "id": "border_gate_compact_profile_v1",
+            "template_id": "border_gate_compact_v1",
+            "guard_strength_profile": "core_low",
+            "terrain_ids": ["grass", "plains", "forest", "swamp", "highland"],
+            "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"]
+          }
+        }
+      }
+    },
+    {
+      "id": "stress_curated_missing_template_negative",
+      "description": "Known-invalid explicit template request that must remain an expected negative case.",
+      "tags": ["negative_case", "expected_invalid_template"],
+      "expected_final_status": "negative_fail",
+      "config": {
+        "generator_version": "random_map_seeded_core_v1",
+        "seed": "large-batch-curated-missing-template",
+        "size": {"preset": "large_batch_parity_stress", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
+        "player_constraints": {"human_count": 1, "player_count": 3, "team_mode": "free_for_all"},
+        "profile": {"id": "missing_large_batch_profile", "template_id": "missing_large_batch_template"}
+      }
+    }
+  ]
+}

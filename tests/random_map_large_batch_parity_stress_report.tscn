@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/random_map_large_batch_parity_stress_report.gd" id="1"]
+
+[node name="RandomMapLargeBatchParityStressReport" type="Node"]
+script = ExtResource("1")
