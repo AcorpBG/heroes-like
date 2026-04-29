@@ -138,13 +138,13 @@ func _assert_water_semantics(semantics: Dictionary) -> bool:
 		return false
 	var found_water_access := false
 	for candidate in semantics.get("transit_routes", {}).get("water_access_candidates", []):
-		if candidate is Dictionary and String(candidate.get("transit_semantics", {}).get("kind", "")) == "water_crossing_deferred":
+		if candidate is Dictionary and String(candidate.get("transit_semantics", {}).get("kind", "")) == "water_ferry_or_bridge_access":
 			found_water_access = true
 			if "ferry" not in candidate.get("transit_semantics", {}).get("materialization_options", []):
 				_fail("Water transit candidate missed ferry/boat/shipyard options: %s" % JSON.stringify(candidate))
 				return false
 	if not found_water_access:
-		_fail("Island water mode did not produce deferred water transit candidates.")
+		_fail("Island water mode did not produce materialized water transit candidates.")
 		return false
 	return true
 
@@ -171,7 +171,7 @@ func _assert_land_and_underground_routes(semantics: Dictionary) -> bool:
 	for route in semantics.get("transit_routes", {}).get("corridor_routes", []):
 		if route is Dictionary:
 			kinds[String(route.get("transit_semantics", {}).get("kind", ""))] = true
-	if not kinds.has("land_road") or not kinds.has("underground_subterranean_connection_deferred"):
+	if not kinds.has("land_road") or not kinds.has("underground_subterranean_connection"):
 		_fail("Corridor route semantics missed land or underground classifications: %s" % JSON.stringify(kinds))
 		return false
 	return true
