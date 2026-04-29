@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "broad-production-faction-content-breadth-10184",
-  "currentSliceTitle": "Broad Faction And Content Breadth",
+  "currentSliceId": "broad-production-map-campaign-replayability-10184",
+  "currentSliceTitle": "Broad Map, Campaign, And Replayability Breadth",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the first pulled-forward content breadth increment: added secondary Thornwake, Brasshollow, and Veilmourn town templates wired through faction metadata, existing unit/hero/spell/artifact/economy hooks, and focused breadth reporting without alpha/parity/content-count claims.",
+  "currentSliceNotes": "Completed narrow map/campaign/replayability increment: campaign_ninefold_survey now links Ironbridge Stand, Glassfen Breakers, and Ninefold Confluence into a three-chapter recorded/replayable campaign docket, with Mireford Skirmish preserving authored skirmish-only breadth and report coverage proving campaign/skirmish/generated boundaries without alpha/parity/production claim.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-29T13:50:31Z",
+  "updatedAt": "2026-04-29T14:17:54Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -3238,8 +3238,8 @@
       "id": "broad-production-map-campaign-replayability-10184",
       "title": "Broad Map, Campaign, And Replayability Breadth",
       "phase": "phase-6-broad-production-breadth",
-      "status": "pending",
-      "classification": "future_phase",
+      "status": "completed",
+      "classification": "phase6_narrow_breadth_increment",
       "sourceDocs": [
         "completed RMG, harness, alpha, and production content outputs"
       ],
@@ -3249,7 +3249,16 @@
         "campaign complexity",
         "strategic pressure and polish"
       ],
-      "notes": "No late breadth work before foundational systems are validated."
+      "completionEvidence": [
+        "content/campaigns.json now authors campaign_ninefold_survey as a three-chapter campaign docket from ironbridge-stand through glassfen-breakers into ninefold-confluence, with briefing, carryover, unlock, aftermath, and journal text.",
+        "content/scenarios.json keeps the campaign chapters campaign+skirmish available and adds mireford-skirmish as an authored skirmish-only front consumed through ScenarioSelectRules.",
+        "tests/map_campaign_replayability_breadth_report.tscn reports campaign selection/unlock/replay flow, ScenarioFactory session boot, faction/town/hero/unit/economy hooks, skirmish-only boot, random-map provenance boundaries, and balance-regression reflection.",
+        "Validation passed for tests/validate_repo.py, all tests/random_map_*.tscn, balance_regression_report_suite, faction_content_breadth_report, map_campaign_replayability_breadth_report, ops/progress.json json.tool, git diff --check, and progress helper status/next after the update."
+      ],
+      "notes": "Small coherent breadth increment only; no alpha, parity, or production-readiness claim. Existing ninefold_scenario_smoke.tscn was attempted as relevant scenario coverage but did not return within the run window and was stopped.",
+      "updatedAt": "2026-04-29T14:17:54Z",
+      "startedAt": "2026-04-29T13:55:30Z",
+      "completedAt": "2026-04-29T14:17:54Z"
     },
     {
       "id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",

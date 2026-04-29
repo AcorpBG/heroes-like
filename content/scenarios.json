@@ -2356,7 +2356,7 @@
         "map_size_label": "Bridgehead Line (10x6)",
         "player_summary": "Mira Flintmere commands an Embercourt bridge column built for initiative swings, reserve trains, and hard town retakes.",
         "enemy_summary": "The Ford Reclaimers answer with brutes, silt hunters, and repeated raids out of Murkward.",
-        "availability": {"campaign": false, "skirmish": true}
+        "availability": {"campaign": true, "skirmish": true}
       },
       "map_size": {"width": 10, "height": 6},
       "player_faction_id": "faction_embercourt",
@@ -3231,7 +3231,7 @@
         "map_size_label": "Glassfen Front (10x6)",
         "player_summary": "Caelen Ashgrove leads an Embercourt column into the Glassfen and must keep pressure on Prismhearth before the arrays synchronize.",
         "enemy_summary": "The Sunvault Compact holds Prismhearth, launches relay pickets and glasswing sorties, and punishes any slow advance with prepared fire lanes.",
-        "availability": {"campaign": false, "skirmish": true}
+        "availability": {"campaign": true, "skirmish": true}
       },
       "map_size": {"width": 10, "height": 6},
       "player_faction_id": "faction_embercourt",
@@ -3487,9 +3487,462 @@
       ]
     },
     {
+      "id": "mireford-skirmish",
+      "name": "Mireford Skirmish",
+      "selection": {
+        "summary": "A skirmish-only Murkward ford setup focused on retaking the road without campaign carryover or progression records.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Skirmish Ford (10x6)",
+        "player_summary": "Mira Flintmere commands a compact Embercourt bridge column for a standalone ford fight.",
+        "enemy_summary": "The Mireclaw raiders hold Murkward with ford reavers, silt hunters, and ambush pressure tuned for skirmish launch.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 10,
+        "height": 6
+      },
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_flintmere_column",
+      "hero_id": "hero_mira",
+      "starting_resources": {
+        "gold": 1250,
+        "wood": 3,
+        "ore": 2
+      },
+      "map": [
+        [
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "water",
+          "water",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "grass",
+          "water",
+          "grass",
+          "forest",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "water",
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "water",
+          "grass",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "water",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "water",
+          "grass",
+          "grass"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 3
+      },
+      "hero_starts": [
+        "hero_mira"
+      ],
+      "objectives": {
+        "victory_text": "Mira wins the standalone ford fight and keeps the road open for skirmish scoring only.",
+        "defeat_text": "The standalone ford push fails and Murkward remains a skirmish raider gate.",
+        "victory": [
+          {
+            "id": "claim_murkward",
+            "label": "Claim Murkward Ford",
+            "type": "town_owned_by_player",
+            "placement_id": "murkward_ford"
+          },
+          {
+            "id": "break_ford_reavers",
+            "label": "Break the Ford Reavers",
+            "type": "flag_true",
+            "flag": "ford_reavers_broken"
+          },
+          {
+            "id": "purge_silt_hunters",
+            "label": "Purge the Silt Hunters",
+            "type": "flag_true",
+            "flag": "silt_hunters_broken"
+          },
+          {
+            "id": "clear_reed_totemists",
+            "label": "Clear the reed totemists",
+            "type": "encounter_resolved",
+            "placement_id": "ironbridge_reed_totemists"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_highwater",
+            "label": "Keep Highwater Keep under your banner",
+            "type": "town_not_owned_by_player",
+            "placement_id": "highwater_bridgehead"
+          },
+          {
+            "id": "mira_survives",
+            "label": "Mira must survive the expedition",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_ford_pressure",
+            "label": "Do not let Mireclaw pressure reach 9",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_mireclaw",
+            "threshold": 9
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "bridge_sappers_return",
+          "priority": 120,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "purge_silt_hunters"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "bridge_sappers_cache",
+                "site_id": "site_waystone_cache",
+                "x": 4,
+                "y": 0
+              }
+            },
+            {
+              "type": "message",
+              "text": "Once the Silt Hunters are cleared, Mira's bridge sappers recover a reserve cache above the flooded road."
+            }
+          ]
+        },
+        {
+          "id": "highwater_reserve_train",
+          "priority": 110,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "highwater_bridgehead"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 250,
+                "wood": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "highwater_bridgehead",
+              "recruits": {
+                "unit_river_guard": 2,
+                "unit_ember_archer": 2
+              }
+            },
+            {
+              "type": "message",
+              "text": "A reserve train from Highwater reaches the bridgehead with pay chests, pikes, and fresh archers."
+            }
+          ]
+        },
+        {
+          "id": "murkward_signal_douses",
+          "priority": 100,
+          "conditions": [
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "murkward_ford"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "murkward_ford",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "murkward_counterraid",
+                "encounter_id": "encounter_mire_raid",
+                "x": 9,
+                "y": 5,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Murkward's signal drums are doused, but the sound brings one last marsh raid up the southern bank."
+            }
+          ]
+        },
+        {
+          "id": "bridgehorn_recall",
+          "priority": 85,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 2
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "highwater_bridgehead"
+            },
+            {
+              "type": "active_raid_count_at_least",
+              "faction_id": "faction_mireclaw",
+              "threshold": 2
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_recruits",
+              "placement_id": "highwater_bridgehead",
+              "recruits": {
+                "unit_river_guard": 2,
+                "unit_ember_archer": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Mira blows the bridgehorn and reserve line wardens sprint back toward Highwater's battered bridgehead."
+            }
+          ]
+        },
+        {
+          "id": "reed_totemists_flood_the_bridge",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_reed_totemists"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_mireclaw",
+              "amount": 2
+            },
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "reed_totemists_flood_the_bridge",
+                "encounter_id": "encounter_mire_raid",
+                "x": 9,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Reed totemists keep the flooded channels marked, and another marsh raid spills toward Mira's bridge line."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "highwater_bridgehead",
+          "town_id": "town_highwater_keep",
+          "x": 0,
+          "y": 3,
+          "owner": "player",
+          "recovery": {
+            "pressure": 1,
+            "source": "bridgehead attrition"
+          }
+        },
+        {
+          "placement_id": "murkward_ford",
+          "town_id": "town_murkward_ford",
+          "x": 9,
+          "y": 2,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Ford Reclaimers",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 140,
+            "wood": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_ford_reavers",
+            "encounter_silt_hunters"
+          ],
+          "spawn_points": [
+            {
+              "x": 8,
+              "y": 1
+            },
+            {
+              "x": 8,
+              "y": 4
+            }
+          ],
+          "siege_target_placement_id": "highwater_bridgehead",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "bridge_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "bridge_shrine",
+          "site_id": "site_scout_shrine",
+          "x": 4,
+          "y": 2
+        },
+        {
+          "placement_id": "bridge_ore",
+          "site_id": "site_ore_crates",
+          "x": 6,
+          "y": 5
+        },
+        {
+          "placement_id": "ford_cache",
+          "site_id": "site_waystone_cache",
+          "x": 8,
+          "y": 1
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "bridge_boots",
+          "artifact_id": "artifact_trailsinger_boots",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "bridge_pennon",
+          "artifact_id": "artifact_warcrest_pennon",
+          "x": 5,
+          "y": 3
+        },
+        {
+          "placement_id": "ford_gorget",
+          "artifact_id": "artifact_bastion_gorget",
+          "x": 8,
+          "y": 4
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "bridge_ford_reavers",
+          "encounter_id": "encounter_ford_reavers",
+          "x": 4,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 10201
+        },
+        {
+          "placement_id": "bridge_silt_hunters",
+          "encounter_id": "encounter_silt_hunters",
+          "x": 7,
+          "y": 4,
+          "difficulty": "medium",
+          "combat_seed": 10202
+        },
+        {
+          "placement_id": "ironbridge_reed_totemists",
+          "encounter_id": "encounter_reed_totemists",
+          "x": 6,
+          "y": 0,
+          "difficulty": "medium",
+          "combat_seed": 10203
+        }
+      ]
+    },
+    {
       "id": "ninefold-confluence",
       "name": "Ninefold Confluence",
-      "selection": {"summary": "A large 64x64 authored breadth map that brings the six faction scaffolds, every biome, every neutral dwelling family, and the newer overworld site families onto one contested survey front.", "recommended_difficulty": "hard", "map_size_label": "Large Breadth Map (64x64)", "player_summary": "Mira Flintmere anchors an Embercourt survey camp at the central grass road and must decide which hostile frontier claims to break first.", "enemy_summary": "Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn all hold marked towns or pressure fronts around the confluence; this is breadth coverage, not balance proof.", "availability": {"campaign": false, "skirmish": true}},
+      "selection": {"summary": "A large 64x64 authored breadth map that brings the six faction scaffolds, every biome, every neutral dwelling family, and the newer overworld site families onto one contested survey front.", "recommended_difficulty": "hard", "map_size_label": "Large Breadth Map (64x64)", "player_summary": "Mira Flintmere anchors an Embercourt survey camp at the central grass road and must decide which hostile frontier claims to break first.", "enemy_summary": "Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn all hold marked towns or pressure fronts around the confluence; this is breadth coverage, not balance proof.", "availability": {"campaign": true, "skirmish": true}},
       "map_size": {"width": 64, "height": 64},
       "player_faction_id": "faction_embercourt",
       "player_army_id": "army_flintmere_column",

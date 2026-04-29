@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Recently completed implementation slice: `balance-regression-report-suite-10184`, following `random-map-validation-batch-retry-10184`, `random-map-skirmish-ui-save-replay-10184`, `random-map-roads-rivers-writeout-10184`, `random-map-decoration-density-pass-10184`, `random-map-monster-reward-bands-10184`, and `random-map-connection-guard-materialization-10184`. Current selected slice: `broad-production-faction-content-breadth-10184` as a narrow pulled-forward content increment, not a broad production completion claim. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated maps through controlled setup/session/report boundaries only; they are not HoMM3 RMG parity, campaign adoption, authored writeback, or alpha completion. The balance/regression suite is the first report-only Phase 3 foundation surface pulled forward to aggregate existing deterministic evidence; it is not automatic tuning, parity completion, or an alpha claim.
+Recently completed implementation slice: `broad-production-faction-content-breadth-10184`, following `balance-regression-report-suite-10184`, `random-map-validation-batch-retry-10184`, `random-map-skirmish-ui-save-replay-10184`, `random-map-roads-rivers-writeout-10184`, `random-map-decoration-density-pass-10184`, `random-map-monster-reward-bands-10184`, and `random-map-connection-guard-materialization-10184`. Current selected slice: `broad-production-map-campaign-replayability-10184` as a narrow pulled-forward map/campaign/replayability increment, not a broad production completion claim. P2.10 foundation and follow-up RMG slices prove deterministic catalog-backed generated maps through controlled setup/session/report boundaries only; they are not HoMM3 RMG parity, authored campaign adoption, authored writeback, or alpha completion. The balance/regression suite is the first report-only Phase 3 foundation surface pulled forward to aggregate existing deterministic evidence; it is not automatic tuning, parity completion, or an alpha claim.
 
 ## Slice Status Model
 
@@ -2550,13 +2550,13 @@ baselineChecks:
 - Full validation/smoke/harness suite.
 
 sliceEvidence:
-- Manual and headless validation prove replayability, difficulty, and scenario quality.
+- For the pulled-forward first increment, existing authored skirmish maps are wired into a three-chapter `campaign_ninefold_survey` docket ending on `ninefold-confluence` while remaining skirmish-selectable, and focused report coverage proves campaign selection/unlock/replay, skirmish setup, ScenarioFactory session boot, faction/town/hero/unit/economy hooks, generated-map provenance boundaries, and balance-regression scenario viability reflection.
 
 completionCriteria:
-- Map/campaign/replayability breadth is production-shaped.
+- The selected narrow map/campaign/replayability increment is consumed by existing content loaders, campaign rules, skirmish setup, session bootstrap, generated-map provenance checks, and focused reports.
 
 nonGoals:
-- No late breadth work before foundational systems are validated.
+- No broad production completion, alpha/parity claim, generated-map authored writeback, generated campaign adoption, or campaign system rewrite.
 
 ## Progress.json Generation Notes
 
