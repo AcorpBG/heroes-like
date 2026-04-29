@@ -1,0 +1,129 @@
+{
+  "schema_id": "random_map_validation_batch_cases_v1",
+  "purpose": "Deterministic RMG validation batch/retry fixtures for generated-map pipeline reports only.",
+  "cases": [
+    {
+      "id": "land_frontier_spokes",
+      "description": "Land template baseline with start towns, roads, mines, dwellings, guards, rewards, and decoration phases.",
+      "tags": ["land", "town_mine_dwelling"],
+      "config": {
+        "generator_version": "random_map_seeded_core_v1",
+        "seed": "validation-batch-land-10184",
+        "size": {"preset": "validation_batch_land", "width": 30, "height": 22, "water_mode": "land", "level_count": 1},
+        "player_constraints": {"human_count": 1, "computer_count": 2},
+        "profile": {
+          "id": "frontier_spokes_profile_v1",
+          "template_id": "frontier_spokes_v1",
+          "guard_strength_profile": "core_low",
+          "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"]
+        }
+      }
+    },
+    {
+      "id": "islands_water_translated_001",
+      "description": "Island/water-mode template exercising water/coast metadata and deferred transit boundaries.",
+      "tags": ["islands_water"],
+      "expected_final_status": "fail",
+      "config": {
+        "generator_version": "random_map_seeded_core_v1",
+        "seed": "validation-batch-islands-10184",
+        "size": {"preset": "validation_batch_islands", "width": 36, "height": 30, "water_mode": "islands", "level_count": 1},
+        "player_constraints": {"human_count": 2, "player_count": 4, "team_mode": "free_for_all"},
+        "profile": {
+          "id": "translated_rmg_profile_001_v1",
+          "template_id": "translated_rmg_template_001_v1",
+          "guard_strength_profile": "core_low",
+          "terrain_ids": ["grass", "plains", "forest", "swamp", "highland"],
+          "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"]
+        }
+      }
+    },
+    {
+      "id": "underground_transit_translated_001",
+      "description": "Two-level template exercising underground/cave metadata and deferred cross-level transit boundaries.",
+      "tags": ["underground_deferred_transit"],
+      "expected_final_status": "fail",
+      "config": {
+        "generator_version": "random_map_seeded_core_v1",
+        "seed": "validation-batch-underground-10184",
+        "size": {"preset": "validation_batch_underground", "width": 36, "height": 30, "water_mode": "land", "level_count": 2},
+        "player_constraints": {"human_count": 2, "player_count": 4, "team_mode": "free_for_all"},
+        "profile": {
+          "id": "translated_rmg_profile_001_v1",
+          "template_id": "translated_rmg_template_001_v1",
+          "guard_strength_profile": "core_low",
+          "terrain_ids": ["grass", "plains", "forest", "swamp", "highland"],
+          "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"]
+        }
+      }
+    },
+    {
+      "id": "border_guard_retry_fallback",
+      "description": "Negative explicit-template request preserves the original failure, then retries through bounded config fallback and salted seed.",
+      "tags": ["border_guard", "special_guard_border_wide", "retry_policy"],
+      "expect_initial_failure": true,
+      "config": {
+        "generator_version": "random_map_seeded_core_v1",
+        "seed": "validation-batch-border-retry-10184",
+        "size": {"preset": "validation_batch_border_retry", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
+        "player_constraints": {"human_count": 1, "computer_count": 2},
+        "profile": {
+          "id": "missing_validation_batch_profile",
+          "template_id": "missing_validation_batch_template"
+        }
+      },
+      "retry_policy": {
+        "max_attempts": 2,
+        "mode": "config_fallback_seed_salt",
+        "fallback_config": {
+          "generator_version": "random_map_seeded_core_v1",
+          "seed": "validation-batch-border-retry-10184",
+          "size": {"preset": "validation_batch_border_retry", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
+          "player_constraints": {"human_count": 1, "computer_count": 2},
+          "profile": {
+            "id": "border_gate_compact_profile_v1",
+            "template_id": "border_gate_compact_v1",
+            "guard_strength_profile": "core_low",
+            "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"]
+          }
+        }
+      }
+    },
+    {
+      "id": "wide_connection_border_gate",
+      "description": "Compact original template with both special border guard and wide-link normal guard suppression metadata.",
+      "tags": ["wide_link", "special_guard_border_wide"],
+      "expected_final_status": "fail",
+      "config": {
+        "generator_version": "random_map_seeded_core_v1",
+        "seed": "validation-batch-border-retry-10184:retry_1",
+        "size": {"preset": "validation_batch_wide", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
+        "player_constraints": {"human_count": 1, "computer_count": 2},
+        "profile": {
+          "id": "border_gate_compact_profile_v1",
+          "template_id": "border_gate_compact_v1",
+          "guard_strength_profile": "core_low",
+          "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"]
+        }
+      }
+    },
+    {
+      "id": "skirmish_provenance_border_gate",
+      "description": "Generated-map identity shape used by the skirmish setup provenance path while remaining report-only here.",
+      "tags": ["skirmish_provenance", "border_guard"],
+      "expected_final_status": "fail",
+      "config": {
+        "generator_version": "random_map_seeded_core_v1",
+        "seed": "validation-batch-skirmish-provenance-10184",
+        "size": {"preset": "validation_batch_skirmish", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
+        "player_constraints": {"human_count": 1, "computer_count": 2},
+        "profile": {
+          "id": "border_gate_compact_profile_v1",
+          "template_id": "border_gate_compact_v1",
+          "guard_strength_profile": "core_low",
+          "faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"]
+        }
+      }
+    }
+  ]
+}
