@@ -10,6 +10,8 @@ The random map generator foundation must provide deterministic, validated protot
 
 The generator should produce original Aurelion Reach scenarios that can be inspected, reported, and eventually loaded through the existing scenario pipeline. It must build on existing data-driven domains: terrain layers and grammar, factions, towns, resources, map objects, neutral encounters, objectives, strategic AI, and save-stable scenario ids.
 
+Translated implementation lessons from the HoMM3 RMG reverse-engineering and local web editor prototype are architectural only, not creative copying: generation should be a staged template/profile pipeline, preserve explicit seed/profile metadata, build an internal zone/connection/route graph before writeout, stage generated cells before scenario serialization, keep objects/resources/encounters separate from terrain cells, and write terrain through an editable owner-grid style model rather than a one-way opaque blob.
+
 ## Determinism
 
 Generation must be reproducible from explicit inputs:
