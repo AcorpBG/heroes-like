@@ -181,6 +181,7 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 		session.overworld["map_size"] = scenario.get("map_size", {})
 	if not session.overworld.has("terrain_layers") or not (session.overworld.get("terrain_layers") is Dictionary) or session.overworld.get("terrain_layers", {}).is_empty():
 		session.overworld["terrain_layers"] = ContentService.get_terrain_layers_for_scenario(session.scenario_id)
+	_normalize_generated_runtime_materialization(session, scenario)
 	if not session.overworld.has("hero_position") or not (session.overworld.get("hero_position") is Dictionary):
 		session.overworld["hero_position"] = scenario.get("start", {"x": 0, "y": 0})
 	_normalize_fog_of_war(session)
@@ -188,6 +189,36 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 	_normalize_command_risk_forecast(session)
 
 	_normalize_scenario_state_rules(session)
+
+static func _normalize_generated_runtime_materialization(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> void:
+	if session == null:
+		return
+	if not bool(scenario.get("generated", false)) and not bool(session.flags.get("generated_random_map", false)) and not bool(session.flags.get("generated_random_map_draft", false)):
+		return
+	var materialization: Dictionary = session.overworld.get(SessionStateStoreScript.GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY, {}) if session.overworld.get(SessionStateStoreScript.GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY, {}) is Dictionary else {}
+	var identity: Dictionary = session.overworld.get(SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG, {}) if session.overworld.get(SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG, {}) is Dictionary else {}
+	if materialization.is_empty():
+		var scenario_materialization: Dictionary = scenario.get("generated_runtime_materialization", {}) if scenario.get("generated_runtime_materialization", {}) is Dictionary else {}
+		if not scenario_materialization.is_empty():
+			materialization = scenario_materialization.duplicate(true)
+	if identity.is_empty() and not materialization.is_empty():
+		identity = {
+			"schema_id": String(materialization.get("schema_id", "")),
+			"scenario_id": String(materialization.get("scenario_id", session.scenario_id)),
+			"materialized_map_signature": String(materialization.get("materialized_map_signature", "")),
+			"generator_version": String(materialization.get("generator_version", "")),
+			"template_id": String(materialization.get("template_id", "")),
+			"profile_id": String(materialization.get("profile_id", "")),
+			"normalized_seed": String(materialization.get("normalized_seed", "")),
+			"content_manifest_fingerprint": String(materialization.get("content_manifest_fingerprint", "")),
+			"summary": materialization.get("summary", {}),
+			"boundary": materialization.get("boundary", {}),
+		}
+	if not materialization.is_empty():
+		session.overworld[SessionStateStoreScript.GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY] = materialization
+	if not identity.is_empty():
+		session.overworld[SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG] = identity
+		session.flags[SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG] = identity.duplicate(true)
 
 static func begin_normalized_read_scope(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:

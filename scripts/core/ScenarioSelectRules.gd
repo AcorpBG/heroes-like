@@ -420,6 +420,7 @@ static func _random_map_generated_identity(payload: Dictionary) -> Dictionary:
 	return {
 		"scenario_id": String(scenario.get("id", "")),
 		"stable_signature": String(payload.get("stable_signature", "")),
+		"materialized_map_signature": String(payload.get("runtime_materialization", {}).get("materialized_map_signature", "")),
 		"generator_version": String(metadata.get("generator_version", "")),
 		"template_id": String(metadata.get("template_id", "")),
 		"profile_id": String(profile.get("id", "")),
@@ -451,10 +452,11 @@ static func _random_map_provenance(input_config: Dictionary, payload: Dictionary
 		},
 		"content_manifest_fingerprint": String(metadata.get("content_manifest_fingerprint", "")),
 		"generated_identity": _random_map_generated_identity(payload),
+		"materialization": RandomMapGeneratorRulesScript.runtime_materialization_identity(payload),
 		"validation_status": String(report.get("status", "")),
 		"retry_status": retry_status,
-		"save_schema_status": "staged_metadata_preserved_without_save_version_bump",
-		"replay_status": "seed_config_identity_metadata_preserved_no_input_stream_replay_yet",
+		"save_schema_status": "runtime_materialization_signature_preserved_without_save_version_bump",
+		"replay_status": "seed_config_and_materialized_map_identity_preserved_no_input_stream_replay_yet",
 		"write_policy": String(payload.get("write_policy", "")),
 		"authored_content_writeback": false,
 		"campaign_adoption": false,
@@ -467,9 +469,10 @@ static func _random_map_replay_metadata(provenance: Dictionary, identity: Dictio
 		"source": "skirmish_random_map_seed_config",
 		"generator_config": provenance.get("generator_config", {}),
 		"generated_identity": identity,
+		"materialization": provenance.get("materialization", {}),
 		"retry_status": retry_status,
 		"content_manifest_fingerprint": String(provenance.get("content_manifest_fingerprint", "")),
-		"replay_boundary": "seed_config_identity_only_no_full_input_stream_replay_in_this_slice",
+		"replay_boundary": "seed_config_identity_and_materialized_map_signature_only_no_full_input_stream_replay_in_this_slice",
 	}
 
 static func _random_map_setup_summary(scenario: Dictionary, metadata: Dictionary, report: Dictionary, retry_status: Dictionary, difficulty_id: String) -> String:

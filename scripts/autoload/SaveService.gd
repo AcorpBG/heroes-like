@@ -896,6 +896,10 @@ func _ensure_generated_random_map_scenario_registered(normalized_payload: Dictio
 	var expected_signature := String(identity.get("stable_signature", ""))
 	if expected_signature != "" and String(payload.get("stable_signature", "")) != expected_signature:
 		return {"ok": false, "registered": false, "message": "Generated random-map save identity signature no longer matches saved provenance."}
+	var expected_materialized_signature := String(identity.get("materialized_map_signature", ""))
+	var materialization: Dictionary = payload.get("runtime_materialization", {}) if payload.get("runtime_materialization", {}) is Dictionary else {}
+	if expected_materialized_signature != "" and String(materialization.get("materialized_map_signature", "")) != expected_materialized_signature:
+		return {"ok": false, "registered": false, "message": "Generated random-map save materialized-map signature no longer matches saved provenance."}
 
 	var registration: Dictionary = ContentService.register_generated_scenario_draft(
 		scenario,
