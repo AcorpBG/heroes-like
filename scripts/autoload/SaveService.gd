@@ -27,6 +27,31 @@ const SUMMARY_INLINE_PAYLOAD_MAX_BYTES := 8 * 1024 * 1024
 
 var _selected_manual_slot := int(MANUAL_SLOT_IDS[0])
 var _slot_summary_cache := {}
+var _summary_inspection_trace_enabled := false
+var _summary_inspection_trace_counts := {}
+
+func validation_begin_summary_inspection_trace() -> void:
+	_summary_inspection_trace_enabled = true
+	_summary_inspection_trace_counts = {
+		"inspect_manual_slot": 0,
+		"inspect_autosave": 0,
+		"list_session_summaries": 0,
+		"latest_loadable_summary": 0,
+		"slot_file_inspections": 0,
+	}
+
+func validation_summary_inspection_trace_snapshot() -> Dictionary:
+	return _summary_inspection_trace_counts.duplicate(true)
+
+func validation_end_summary_inspection_trace() -> Dictionary:
+	var snapshot := validation_summary_inspection_trace_snapshot()
+	_summary_inspection_trace_enabled = false
+	return snapshot
+
+func _trace_summary_inspection(name: String) -> void:
+	if not _summary_inspection_trace_enabled:
+		return
+	_summary_inspection_trace_counts[name] = int(_summary_inspection_trace_counts.get(name, 0)) + 1
 
 func save_session(payload: Dictionary, slot: int = 1) -> String:
 	return save_manual_session(payload, slot)
@@ -134,13 +159,16 @@ func set_selected_manual_slot(slot: int) -> void:
 	_selected_manual_slot = _normalize_manual_slot(slot)
 
 func inspect_manual_slot(slot: int = 1) -> Dictionary:
+	_trace_summary_inspection("inspect_manual_slot")
 	var normalized_slot := _normalize_manual_slot(slot)
 	return _inspect_slot(SLOT_TYPE_MANUAL, str(normalized_slot), _slot_path(normalized_slot))
 
 func inspect_autosave() -> Dictionary:
+	_trace_summary_inspection("inspect_autosave")
 	return _inspect_slot(SLOT_TYPE_AUTOSAVE, SLOT_TYPE_AUTOSAVE, _autosave_path())
 
 func list_session_summaries() -> Array:
+	_trace_summary_inspection("list_session_summaries")
 	var summaries := [inspect_autosave()]
 	for slot in MANUAL_SLOT_IDS:
 		summaries.append(inspect_manual_slot(int(slot)))
@@ -154,6 +182,7 @@ func list_loadable_session_summaries() -> Array:
 	return summaries
 
 func latest_loadable_summary() -> Dictionary:
+	_trace_summary_inspection("latest_loadable_summary")
 	var latest := {}
 	for summary in list_session_summaries():
 		if not can_load_summary(summary):
@@ -716,6 +745,7 @@ func _load_raw_dictionary(file_path: String, warn_if_missing: bool) -> Dictionar
 	return payload if payload is Dictionary else {}
 
 func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
+	_trace_summary_inspection("slot_file_inspections")
 	var cached_summary := _cached_slot_summary(slot_type, slot_id, file_path)
 	if not cached_summary.is_empty():
 		return cached_summary

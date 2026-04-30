@@ -128,12 +128,12 @@ func _run_main_menu_smoke() -> bool:
 			String(first_view_tooltips.get("Editor", "")),
 			String(first_view_tooltips.get("Quit", "")),
 		],
-		["Command cue:", "Campaign opens", "Skirmish opens", "Load opens", "Load Selected", "Continue Check", "Play check:", "Resume handoff:", "Settings opens", "device config", "Editor opens", "Play Copy", "Quit closes", "Quit Check", "Resume point:"]
+		["Command cue:", "Campaign opens", "Skirmish opens", "Load opens", "inspects save slots only after this command is chosen", "Load Selected", "Load Check", "Boot boundary:", "Settings opens", "device config", "Editor opens", "Play Copy", "Quit closes", "Quit Check", "Resume point:"]
 	):
 		return false
 	var continue_check: Dictionary = first_view_snapshot.get("continue_check", {}) if first_view_snapshot.get("continue_check", {}) is Dictionary else {}
 	if not _assert_text_contains_all(
-		"Main menu Continue check cue",
+		"Main menu Load check cue",
 		[
 			String(first_view_snapshot.get("continue_check_text", "")),
 			String(first_view_snapshot.get("continue_check_tooltip", "")),
@@ -143,7 +143,7 @@ func _run_main_menu_smoke() -> bool:
 			String(first_view_snapshot.get("active_expedition", "")),
 			String(first_view_snapshot.get("active_expedition_full", "")),
 		],
-		["Continue check:", "Continue Latest opens", "Continue Check", "Action:", "loads", "Play check:", "Resume handoff:", "Inspection:", "does not load, save, route, or change campaign progression"]
+		["Load check:", "open Load to inspect", "Load Check", "Resume point:", "not inspected", "Boot boundary:", "does not inspect save slots", "load, save, route, or change campaign progression"]
 	):
 		return false
 	var quit_check: Dictionary = first_view_snapshot.get("quit_check", {}) if first_view_snapshot.get("quit_check", {}) is Dictionary else {}
@@ -162,15 +162,15 @@ func _run_main_menu_smoke() -> bool:
 	):
 		return false
 	if not _assert_text_contains_all(
-		"Main menu latest save pulse",
+		"Main menu lazy save pulse",
 		[String(first_view_snapshot.get("save_pulse_full", first_view_snapshot.get("save_pulse", "")))],
-		["Continue Latest", "Skirmish", "River Pass", "Day", "Overworld", "Play check:", "Resume handoff:"]
+		["Load board:", "open Load", "manual slots", "autosave"]
 	):
 		return false
 	if not _assert_text_contains_all(
-		"Main menu footer latest save target",
+		"Main menu footer lazy save target",
 		[String(first_view_snapshot.get("active_expedition_full", first_view_snapshot.get("active_expedition", "")))],
-		["Continue check:", "Continue Latest opens", "Latest save", "Skirmish", "River Pass", "Day", "Overworld", "Play check:", "Resume handoff:"]
+		["Load check:", "open Load to inspect", "Quit check:", "save first"]
 	):
 		return false
 	if not _assert_no_score_leak(

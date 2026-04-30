@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-extra-large-runtime-support-10184",
-  "currentSliceTitle": "Random Map Extra Large Runtime Support",
+  "currentSliceId": "main-menu-lean-save-boot-corrective-10184",
+  "currentSliceTitle": "Main Menu Lean Save Boot Corrective",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed runtime-size support through Extra Large 144x144 without hidden downscale/clamp; follow-up fixes derive player counts from template catalog ranges/capacity so compact Small remains 3-player while translated XL exposes 2..8. Runtime render follow-up optimized overworld refresh/render path with map references, spatial indexes, blocked-tile cache, queue-index BFS; validated 144x144 render smoke and RMG player-count smoke.",
-  "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. This is an RMG runtime-size support follow-up only: expose and materialize Small/Medium/Large/Extra Large at source dimensions, preserve generated skirmish/session boundaries, and do not claim campaign, alpha, release, asset-parity, or byte-clone completion.",
-  "updatedAt": "2026-04-30T11:50:48Z",
+  "currentSliceNotes": "Completed lean boot correction. First-view guard reports zero save summary/slot inspections and boot_display_ms=2509; explicit Saves/Load inspection still populates 4 rows. Validation passed: main_menu_lean_boot_save_guard, menu_outcome_visual_smoke, save_summary_deferred_payload_report, random_map_runtime_render_perf_smoke, random_map_player_count_range_report, validate_repo, json.tool, diff check.",
+  "nextActionGuardrailNote": "Keep this corrective slice narrow: no random-map true-size/template/player-count/rendering changes, no save schema migration, and no restoration of first-view dashboard/status panels.",
+  "updatedAt": "2026-04-30T13:14:39Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -85,6 +85,68 @@
         "Validation commands for json.tool, progress.py status, progress.py next, progress.py sync-plan --dry-run, and git diff --check passed on 2026-04-27."
       ],
       "notes": "This slice is complete only for tracker regeneration; it does not complete any gameplay/system/content implementation slice."
+    },
+    {
+      "id": "main-menu-lean-save-boot-corrective-10184",
+      "title": "Main Menu Lean Save Boot Corrective",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "sliceType": "child",
+      "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Correct the historical main-menu save play-check surface so boot and first-view menu display stay scenery-first and do not inspect save slots until the player explicitly opens Saves/Load or resumes a save.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "AcOrP boot-profile finding from 2026-04-30"
+      ],
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "focused menu/save validation guard",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py if static validation needs the new boundary",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "/root/.local/bin/godot --headless --path . tests/menu_outcome_visual_smoke.tscn",
+        "/root/.local/bin/godot --headless --path . tests/save_summary_deferred_payload_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_runtime_render_perf_smoke.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_player_count_range_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "First main-menu display does not call SaveService.latest_loadable_summary(), SaveService.list_session_summaries(), SaveService.inspect_autosave(), or SaveService.inspect_manual_slot() for footer, summary, tooltip, hidden stage-dock state, or save-browser setup.",
+        "First-view save/footer copy is cheap static command copy and does not summarize a save.",
+        "Saves/Load opening still lists and inspects save summaries, selects the latest loadable row, and supports explicit load/resume actions.",
+        "Focused guard proves boot first display does not touch save slots while explicit Saves/Load inspection still works."
+      ],
+      "completionCriteria": [
+        "Boot visible menu time is no longer dominated by save summary inspection with large user saves.",
+        "Existing explicit load menu and Continue Latest validation paths still restore save sessions correctly.",
+        "Required focused and baseline checks pass."
+      ],
+      "nonGoals": [
+        "No random-map true-size, template, player-count, or runtime-render behavior changes.",
+        "No save-schema migration, save-version bump, payload format rewrite, or broad UI redesign.",
+        "No restoration of first-view dashboard/status panels."
+      ],
+      "validationEvidence": [
+        "/root/.local/bin/godot --headless --path . tests/main_menu_lean_boot_save_guard.tscn passed; boot_display_ms=2509, first-view save inspections all zero, explicit Load inspections populated four save rows.",
+        "/root/.local/bin/godot --headless --path . tests/menu_outcome_visual_smoke.tscn passed.",
+        "/root/.local/bin/godot --headless --path . tests/save_summary_deferred_payload_report.tscn passed; large generated summary payload remained deferred.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_runtime_render_perf_smoke.tscn passed; 144x144 runtime render smoke unchanged.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_player_count_range_report.tscn passed; XL player range remains 2..8 with accepted 5..8 coverage.",
+        "python3 tests/validate_repo.py passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ],
+      "notes": "Completed lean boot correction. First-view guard reports zero save summary/slot inspections and boot_display_ms=2509; explicit Saves/Load inspection still populates 4 rows. Validation passed: main_menu_lean_boot_save_guard, menu_outcome_visual_smoke, save_summary_deferred_payload_report, random_map_runtime_render_perf_smoke, random_map_player_count_range_report, validate_repo, json.tool, diff check.",
+      "updatedAt": "2026-04-30T13:14:39Z",
+      "completedAt": "2026-04-30T13:14:39Z"
     },
     {
       "id": "river-pass-proof-preservation-10184",

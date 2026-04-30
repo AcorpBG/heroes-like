@@ -1017,6 +1017,49 @@ nonGoals:
 - No claim that export-intent validation is the same as durable authored scenario writeback.
 - No broad pathing/occupancy or renderer asset migration without explicit slice.
 
+### P2 Child: Main Menu Lean Save Boot Corrective
+
+id: `main-menu-lean-save-boot-corrective-10184`
+parentSliceId: `terrain-editor-tooling-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Correct the historical main-menu save play-check surface so boot and first-view menu display stay scenery-first and do not inspect save slots until the player explicitly opens Saves/Load or resumes a save.
+
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/screen-wireframes.md`
+- AcOrP boot-profile finding from 2026-04-30.
+
+implementationTargets:
+- `scenes/menus/MainMenu.gd`
+- focused menu/save validation guard
+- `tests/menu_outcome_visual_smoke.gd`
+- `tests/validate_repo.py` if static validation needs the new boundary
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- First main-menu display does not call `SaveService.latest_loadable_summary()`, `SaveService.list_session_summaries()`, `SaveService.inspect_autosave()`, or `SaveService.inspect_manual_slot()` for footer, summary, tooltip, hidden stage-dock state, or save-browser setup.
+- First-view save/footer copy is cheap static command copy and does not summarize a save.
+- Saves/Load opening still lists and inspects save summaries, selects the latest loadable row, and supports explicit load/resume actions.
+- Focused guard proves boot first display does not touch save slots while explicit Saves/Load inspection still works.
+
+completionCriteria:
+- Boot visible menu time is no longer dominated by save summary inspection with large user saves.
+- Existing explicit load menu and Continue Latest validation paths still restore save sessions correctly.
+- Required focused and baseline checks pass.
+
+nonGoals:
+- No random-map true-size, template, player-count, or runtime-render behavior changes.
+- No save-schema migration, save-version bump, payload format rewrite, or broad UI redesign.
+- No restoration of first-view dashboard/status panels.
+
+completionResult:
+- Boot and first-view main-menu display now use static Load/Quit copy and do not inspect save summaries, hidden save-browser rows, latest-save state, or save-slot metadata.
+- The save browser is populated lazily only after the player opens Load/Saves; explicit resume paths still call the save service at action time.
+- Focused guard reports `boot_display_ms=2509`, zero first-view save inspections, and four save rows inspected only after opening Load.
+- Validation passed for the focused guard, menu/outcome smoke, save-summary deferred-payload report, requested RMG render/player-count guards, repo validation, progress JSON parsing, and diff whitespace checks.
+
 ### P2.10 Random Map Generator Foundation
 
 id: `random-map-generator-foundation-10184`
