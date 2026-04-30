@@ -3543,7 +3543,7 @@
         "/root/.local/bin/godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn passed with live generated-map setup controls, bounded visible retry failure, valid launch handoff, and no campaign/authored writeback.",
         "/root/.local/bin/godot --headless --path . tests/random_map_skirmish_ui_save_replay_report.tscn passed with generated skirmish launch/save/replay provenance and no campaign/adopted authored writeback.",
         "/root/.local/bin/godot --headless --path . tests/random_map_validation_batch_retry_report.tscn passed with case_count=6, validation_pass_case_count=6, pass_after_retry_count=1, and original failure preservation.",
-        "/root/.local/bin/godot --headless --path . tests/random_map_playable_materialization_runtime_report.tscn passed with 78 object instances, 3 towns, 9 mines, 6 dwellings, 16 guards, 8 rewards, 2 overlay layers, save/restore, and export-stream replay boundary.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_playable_materialization_runtime_report.tscn passed with translated_rmg_template_043_v1 / translated_rmg_profile_043_v1, 33 zones, 68 links, 1824 object instances, 16 towns, 95 mines, 21 dwellings, 136 guards, 68 rewards, 2 overlay layers, save/restore, and export-stream replay boundary.",
         "python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json-check.txt passed.",
         "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like passed.",
         "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py next /root/dev/heroes-like passed.",
@@ -4073,6 +4073,7 @@
         "PLAN.md",
         "docs/random-map-generator-foundation.md",
         "docs/random-map-size-class-translation.md",
+        "docs/random-map-xl-template-alignment-audit.md",
         "docs/random-map-final-homm3-parity-regate-audit.md"
       ],
       "implementationTargets": [
@@ -4083,6 +4084,7 @@
         "tests/random_map_playable_materialization_runtime_report.gd",
         "tests/random_map_large_batch_parity_stress_report.gd",
         "docs/random-map-size-class-translation.md",
+        "docs/random-map-xl-template-alignment-audit.md",
         "docs/random-map-final-homm3-parity-regate-audit.md",
         "PLAN.md",
         "ops/progress.json"
@@ -4098,7 +4100,7 @@
       "sliceEvidence": [
         "Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144 are selectable and launchable/materializable at source width and height.",
         "Generated config, metadata, provenance, replay metadata, save data, and runtime materialization report actual materialized dimensions equal to the selected source class.",
-        "Focused reports prove Extra Large 144x144 selection, generation, launch/materialization, and honest provenance without hidden downscale/clamp.",
+        "Focused reports prove Extra Large 144x144 selection, generation, launch/materialization, and honest provenance without hidden downscale/clamp; Extra Large now selects translated_rmg_template_043_v1 / translated_rmg_profile_043_v1 instead of compact topology.",
         "Translated-template stress gates no longer classify source templates as accepted non-parity solely because of the earlier compact runtime cap."
       ],
       "completionCriteria": [
@@ -4112,7 +4114,7 @@
       ],
       "validationEvidence": [
         "/root/.local/bin/godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn passed with generated setup selecting homm3_extra_large, Extra Large 144x144 launch provenance, and over-cap custom rejection beyond 144x144x2 without hidden downscale.",
-        "/root/.local/bin/godot --headless --path . tests/random_map_playable_materialization_runtime_report.tscn passed with materialized_size width=144, height=144, level_count=1, terrain_row_count=144, object_instance_count=1263, save/restore, and replay/export boundary.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_playable_materialization_runtime_report.tscn passed with translated_rmg_template_043_v1 / translated_rmg_profile_043_v1, topology 33 zones / 68 links, materialized_size width=144, height=144, level_count=1, terrain_row_count=144, 16 towns, 95 mines, 21 dwellings, 136 guards, 68 rewards, 1824 object instances, save/restore, and replay/export boundary.",
         "/root/.local/bin/godot --headless --path . tests/random_map_large_batch_parity_stress_report.tscn passed with case_count=58, validation_pass_case_count=55, materialized_validation_pass_count=55, translated_template_count=53, covered_translated_template_count=53, translated_parity_materialized_validation_pass_count=51, accepted_non_parity_count=2, expected_negative_count=1, metadata_only_count=0, unsupported_warning_count=0, and hard_blocker_count=0.",
         "/root/.local/bin/godot --headless --path . tests/random_map_final_writeout_export_save_schema_report.tscn passed with final_tile_stream_count=468, object_writeout_count=78, generated_export_signature=c4f0270e, tile_stream_signature=5d212f8f, object_writeout_signature=8c37e543, and replay boundary versioned_seed_config_identity_export_stream_and_materialized_map_signature_contract.",
         "python3 tests/validate_repo.py passed.",
@@ -4125,10 +4127,10 @@
         "Campaign adoption, authored JSON writeback, alpha/release readiness, broad faction/content work, and byte-level HoMM3 map cloning remain out of scope."
       ],
       "createdAt": "2026-04-30T00:00:00Z",
-      "updatedAt": "2026-04-30T00:00:00Z",
+      "updatedAt": "2026-04-30T10:41:03Z",
       "startedAt": "2026-04-30T00:00:00Z",
       "completedAt": "2026-04-30T00:00:00Z",
-      "notes": "Completed AcOrP request to support 144x144 honestly."
+      "notes": "Completed AcOrP request to support 144x144 honestly. Follow-up evidence corrected Extra Large template/profile selection so 144x144 uses translated_rmg_template_043_v1 / translated_rmg_profile_043_v1 rather than compact topology; replay provenance now stores the source faction pool so save regeneration preserves the scenario id."
     }
   ],
   "completedImplementationEvidence": [

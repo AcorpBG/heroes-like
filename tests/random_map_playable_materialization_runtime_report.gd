@@ -11,7 +11,7 @@ func _ready() -> void:
 
 func _run() -> void:
 	ContentService.clear_generated_scenario_drafts()
-	var config := _config("skirmish-ui-save-replay-10184", "border_gate_compact_profile_v1")
+	var config := _config("skirmish-ui-save-replay-10184", "translated_rmg_profile_043_v1")
 	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(config, "normal")
 	if not _assert_setup_materialization(setup):
 		return
@@ -49,8 +49,8 @@ func _run() -> void:
 		return
 
 	var repeated_setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(config, "normal")
-	var changed_seed_setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(_config("skirmish-ui-save-replay-10184:changed", "border_gate_compact_profile_v1"), "normal")
-	var changed_profile_setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(_config("skirmish-ui-save-replay-10184", "frontier_spokes_profile_v1"), "normal")
+	var changed_seed_setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(_config("skirmish-ui-save-replay-10184:changed", "translated_rmg_profile_043_v1"), "normal")
+	var changed_profile_setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(_config("skirmish-ui-save-replay-10184", "translated_rmg_profile_042_v1"), "normal")
 	if not _assert_materialization_determinism(setup, repeated_setup, changed_seed_setup, changed_profile_setup):
 		return
 
@@ -62,20 +62,22 @@ func _run() -> void:
 		"stable_signature": setup.get("generated_identity", {}).get("stable_signature", ""),
 		"materialized_map_signature": setup.get("generated_identity", {}).get("materialized_map_signature", ""),
 		"changed_seed_materialized_map_signature": changed_seed_setup.get("generated_identity", {}).get("materialized_map_signature", ""),
-		"changed_profile_materialized_map_signature": changed_profile_setup.get("generated_identity", {}).get("materialized_map_signature", ""),
-		"runtime_summary": session.overworld.get(SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG, {}).get("summary", {}),
-		"materialized_size": setup.get("generated_identity", {}).get("materialized_size", {}),
-		"save_replay_boundary": saved_payload.get("flags", {}).get("generated_random_map_replay_metadata", {}).get("replay_boundary", ""),
-	})])
+			"changed_profile_materialized_map_signature": changed_profile_setup.get("generated_identity", {}).get("materialized_map_signature", ""),
+			"runtime_summary": session.overworld.get(SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG, {}).get("summary", {}),
+			"materialized_size": setup.get("generated_identity", {}).get("materialized_size", {}),
+			"topology": _topology_summary(setup),
+			"counts": _materialized_counts(setup),
+			"save_replay_boundary": saved_payload.get("flags", {}).get("generated_random_map_replay_metadata", {}).get("replay_boundary", ""),
+		})])
 	get_tree().quit(0)
 
 func _config(seed: String, profile_id: String) -> Dictionary:
-	var template_id := "frontier_spokes_v1" if profile_id == "frontier_spokes_profile_v1" else "border_gate_compact_v1"
+	var template_id := "translated_rmg_template_042_v1" if profile_id == "translated_rmg_profile_042_v1" else "translated_rmg_template_043_v1"
 	return ScenarioSelectRulesScript.build_random_map_player_config(
 		seed,
 		template_id,
 		profile_id,
-		3,
+		4,
 		"land",
 		false,
 		"homm3_extra_large"
@@ -98,6 +100,8 @@ func _assert_setup_materialization(setup: Dictionary) -> bool:
 		_fail("Setup identity did not expose materialized-map signature.")
 		return false
 	if not _assert_honest_extra_large_dimensions(setup, materialization):
+		return false
+	if not _assert_extra_large_topology(setup):
 		return false
 	return _assert_materialized_categories(materialization)
 
@@ -262,6 +266,52 @@ func _assert_materialized_categories(materialization: Dictionary) -> bool:
 		_fail("Runtime materialization violated generated-map boundary: %s" % JSON.stringify(materialization.get("boundary", {})))
 		return false
 	return true
+
+func _assert_extra_large_topology(setup: Dictionary) -> bool:
+	var generated_map: Dictionary = setup.get("generated_map", {}) if setup.get("generated_map", {}) is Dictionary else {}
+	var metadata: Dictionary = generated_map.get("metadata", {}) if generated_map.get("metadata", {}) is Dictionary else {}
+	var phases: Array = generated_map.get("phase_pipeline", []) if generated_map.get("phase_pipeline", []) is Array else []
+	var topology := _topology_summary(setup)
+	if String(metadata.get("template_id", "")) != "translated_rmg_template_043_v1":
+		_fail("Extra Large report did not select the translated XL template: %s" % JSON.stringify(metadata))
+		return false
+	if int(topology.get("zone_count", 0)) < 33 or int(topology.get("link_count", 0)) < 68:
+		_fail("Extra Large report used compact topology counts: %s" % JSON.stringify(topology))
+		return false
+	for phase in phases:
+		if not (phase is Dictionary) or String(phase.get("phase", "")) != "template_profile":
+			continue
+		var summary: Dictionary = phase.get("summary", {}) if phase.get("summary", {}) is Dictionary else {}
+		if int(summary.get("zone_count", 0)) < 33 or int(summary.get("link_count", 0)) < 68:
+			_fail("Template phase did not expose XL topology: %s" % JSON.stringify(phase))
+			return false
+		return true
+	_fail("Template profile phase was missing from XL materialization report.")
+	return false
+
+func _topology_summary(setup: Dictionary) -> Dictionary:
+	var generated_map: Dictionary = setup.get("generated_map", {}) if setup.get("generated_map", {}) is Dictionary else {}
+	var staging: Dictionary = generated_map.get("staging", {}) if generated_map.get("staging", {}) is Dictionary else {}
+	var template: Dictionary = staging.get("template", {}) if staging.get("template", {}) is Dictionary else {}
+	return {
+		"template_id": generated_map.get("metadata", {}).get("template_id", ""),
+		"profile_id": generated_map.get("metadata", {}).get("profile", {}).get("id", ""),
+		"zone_count": template.get("zones", []).size(),
+		"link_count": template.get("links", []).size(),
+		"source_template_index": template.get("import_provenance", {}).get("source_template_index", 0),
+	}
+
+func _materialized_counts(setup: Dictionary) -> Dictionary:
+	var materialization: Dictionary = setup.get("generated_map", {}).get("runtime_materialization", {}) if setup.get("generated_map", {}).get("runtime_materialization", {}) is Dictionary else {}
+	var objects: Dictionary = materialization.get("objects", {}) if materialization.get("objects", {}) is Dictionary else {}
+	return {
+		"towns": objects.get("towns", []).size(),
+		"mines": objects.get("mines", []).size(),
+		"dwellings": objects.get("dwellings", []).size(),
+		"guards": objects.get("guards", []).size(),
+		"rewards": objects.get("rewards", []).size(),
+		"object_instances": objects.get("object_instances", []).size(),
+	}
 
 func _assert_no_authored_writeback(scenario_id: String, phase: String) -> bool:
 	if ContentService.has_authored_scenario(scenario_id):

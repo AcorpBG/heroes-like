@@ -55,15 +55,15 @@ func _run() -> void:
 
 	shell.call("validation_set_generated_seed", "player-facing-setup-retry-ux-10184")
 	shell.call("validation_select_generated_size_class", "homm3_extra_large")
-	shell.call("validation_select_generated_template", "border_gate_compact_v1")
-	shell.call("validation_select_generated_profile", "border_gate_compact_profile_v1")
-	shell.call("validation_select_generated_player_count", 3)
 	shell.call("validation_select_generated_water_mode", "land")
 	shell.call("validation_set_generated_underground", false)
 	var launch_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
 	var launch_setup: Dictionary = launch_snapshot.get("setup", {}) if launch_snapshot.get("setup", {}) is Dictionary else {}
 	if String(launch_setup.get("template_id", "")) == "" or String(launch_setup.get("profile_id", "")) == "":
 		_fail("Generated UI setup did not expose template/profile provenance before launch: %s" % JSON.stringify(launch_setup))
+		return
+	if String(launch_setup.get("template_id", "")) != "translated_rmg_template_043_v1" or String(launch_setup.get("profile_id", "")) != "translated_rmg_profile_043_v1":
+		_fail("Extra Large UI setup did not select the translated XL topology: %s" % JSON.stringify(launch_setup))
 		return
 
 	var launch_result: Dictionary = shell.call("validation_start_generated_skirmish")
@@ -204,6 +204,9 @@ func _assert_extra_large_size_surface(shell: Node, setup: Dictionary) -> bool:
 	if int(map_size.get("width", 0)) != 144 or int(map_size.get("height", 0)) != 144:
 		_fail("Extra Large runtime materialization missed 144x144 map size: %s" % JSON.stringify(map_size))
 		return false
+	if String(setup.get("template_id", "")) != "translated_rmg_template_043_v1" or String(setup.get("profile_id", "")) != "translated_rmg_profile_043_v1":
+		_fail("Extra Large forced config did not use translated XL template/profile: %s" % JSON.stringify(setup))
+		return false
 	return true
 
 func _assert_over_cap_size_surface(shell: Node, setup: Dictionary) -> bool:
@@ -242,6 +245,9 @@ func _assert_session_boundary(launch_result: Dictionary) -> bool:
 		if not provenance.has(key):
 			_fail("Generated UI launch provenance missed %s: %s" % [key, JSON.stringify(provenance)])
 			return false
+	if String(provenance.get("template_id", "")) != "translated_rmg_template_043_v1" or String(provenance.get("profile_id", "")) != "translated_rmg_profile_043_v1":
+		_fail("Generated UI launch provenance did not preserve translated XL template/profile: %s" % JSON.stringify(provenance))
+		return false
 	if bool(provenance.get("campaign_adoption", true)) or bool(provenance.get("authored_content_writeback", true)) or bool(provenance.get("alpha_parity_claim", true)):
 		_fail("Generated UI launch provenance crossed forbidden boundary: %s" % JSON.stringify(provenance))
 		return false
@@ -269,9 +275,9 @@ func _invalid_config() -> Dictionary:
 func _extra_large_config() -> Dictionary:
 	return ScenarioSelectRulesScript.build_random_map_player_config(
 		"player-facing-setup-retry-ux-10184-extra-large",
-		"border_gate_compact_v1",
-		"border_gate_compact_profile_v1",
-		3,
+		"translated_rmg_template_043_v1",
+		"translated_rmg_profile_043_v1",
+		4,
 		"land",
 		false,
 		"homm3_extra_large"
