@@ -183,6 +183,7 @@ var _selected_tile := Vector2i(-1, -1)
 var _hover_tile := Vector2i(-1, -1)
 var _hero_tile := Vector2i.ZERO
 var _path_tiles: Array = []
+var _route_preview: Dictionary = {}
 var _terrain_layers: Dictionary = {}
 var _road_tiles: Dictionary = {}
 var _movement_left := 0
@@ -278,8 +279,11 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 	_selected_tile = selected_tile
 	var path_profile_start := _profile_begin("path_recompute")
 	_path_tiles = _build_path(_hero_tile, _selected_tile)
+	_route_preview = OverworldRulesScript.route_movement_preview(_session, _path_tiles, _movement_left)
 	var path_profile_details: Dictionary = _validation_profile.get("last_path_recompute", {}) if _validation_profile.get("last_path_recompute", {}) is Dictionary else {}
 	path_profile_details["path_tiles"] = _path_tiles.size()
+	path_profile_details["reachable_steps"] = int(_route_preview.get("reachable_steps", 0))
+	path_profile_details["unreachable_steps"] = int(_route_preview.get("unreachable_steps", 0))
 	_profile_end("path_recompute", path_profile_start, path_profile_details)
 	_ensure_camera_state()
 	var current_viewport_layout := _viewport_layout_signature()
@@ -1020,12 +1024,21 @@ func _draw_road_overlay_art(tile: Vector2i, rect: Rect2, road: Dictionary) -> bo
 func _draw_route(board_rect: Rect2) -> void:
 	if _path_tiles.size() <= 1:
 		return
-	var selected_visible = OverworldRulesScript.is_tile_explored(_session, _selected_tile.x, _selected_tile.y)
-	if not selected_visible:
-		return
-	var line_color = ROUTE_COLOR if (_path_tiles.size() - 1) <= _movement_left else ROUTE_BLOCKED_COLOR
+	var reachable_tiles := _tiles_from_payloads(_route_preview.get("reachable_tiles", []))
+	var unreachable_tiles := _tiles_from_payloads(_route_preview.get("unreachable_tiles", []))
+	if reachable_tiles.size() > 1:
+		_draw_route_segment(board_rect, reachable_tiles, ROUTE_COLOR)
+	if unreachable_tiles.size() > 0:
+		var blocked_segment := []
+		if reachable_tiles.size() > 0:
+			blocked_segment.append(reachable_tiles[reachable_tiles.size() - 1])
+		blocked_segment.append_array(unreachable_tiles)
+		if blocked_segment.size() > 1:
+			_draw_route_segment(board_rect, blocked_segment, ROUTE_BLOCKED_COLOR)
+
+func _draw_route_segment(board_rect: Rect2, tiles: Array, line_color: Color) -> void:
 	var points = PackedVector2Array()
-	for tile_value in _path_tiles:
+	for tile_value in tiles:
 		if not (tile_value is Vector2i):
 			continue
 		points.append(_tile_rect(board_rect, tile_value).get_center())
@@ -2396,6 +2409,7 @@ func validation_view_metrics() -> Dictionary:
 		"primitive_generated_render_path": false,
 		"camera_focus_tile": {"x": int(round(focus_tile.x)), "y": int(round(focus_tile.y))},
 		"camera_focus_tile_precise": {"x": focus_tile.x, "y": focus_tile.y},
+		"route_preview": _route_preview.duplicate(true),
 		"visible_bounds": {
 			"x": visible_bounds.position.x,
 			"y": visible_bounds.position.y,
@@ -5358,10 +5372,6 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	if OverworldRulesScript.tile_is_blocked(_session, goal.x, goal.y):
 		_profile_path_recompute_details(detail_profile_enabled, start, goal, "goal_blocked", 0, 0, 1 if detail_profile_enabled else 0, 0)
 		return []
-	if not OverworldRulesScript.is_tile_explored(_session, goal.x, goal.y):
-		_profile_path_recompute_details(detail_profile_enabled, start, goal, "goal_unexplored", 0, 0, 1 if detail_profile_enabled else 0, 0)
-		return []
-
 	var queue: Array = [start]
 	var queue_index := 0
 	var visited = {_tile_key(start): true}
@@ -5383,6 +5393,8 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 			if detail_profile_enabled:
 				blocked_tile_lookup_count += 1
 			if OverworldRulesScript.tile_is_blocked(_session, next.x, next.y):
+				continue
+			if next != goal and OverworldRulesScript.tile_has_route_interaction(_session, next.x, next.y):
 				continue
 			var key = _tile_key(next)
 			if visited.has(key):
@@ -5429,3 +5441,14 @@ func _profile_path_recompute_details(
 
 func _tile_key(tile: Vector2i) -> String:
 	return "%d,%d" % [tile.x, tile.y]
+
+func _tiles_from_payloads(value: Variant) -> Array:
+	var tiles := []
+	if not (value is Array):
+		return tiles
+	for tile_value in value:
+		if tile_value is Vector2i:
+			tiles.append(tile_value)
+		elif tile_value is Dictionary:
+			tiles.append(Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1))))
+	return tiles
