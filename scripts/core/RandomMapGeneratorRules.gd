@@ -2598,26 +2598,29 @@ static func _materialize_route_reward_resources(placements: Dictionary, monster_
 	placements["object_placements"] = object_placements
 	return materialized
 
-static func _materialize_compact_density_support(normalized: Dictionary, placements: Dictionary, road_network: Dictionary, zone_grid: Array, terrain_rows: Array, rng: DeterministicRng) -> Array:
-	if not _should_apply_compact_density_support(normalized, terrain_rows):
+static func _materialize_route_density_support(normalized: Dictionary, placements: Dictionary, road_network: Dictionary, zone_grid: Array, terrain_rows: Array, rng: DeterministicRng) -> Array:
+	var density_policy := _route_density_support_policy(normalized, terrain_rows)
+	if not bool(density_policy.get("enabled", false)):
 		return []
 	var start := _density_start_point(placements)
 	if start.is_empty():
 		return []
 	var materialized := []
 	var reserved := _road_reserved_lookup(road_network)
-	for index in range(12):
+	var max_records := int(density_policy.get("max_records", 12))
+	for index in range(max_records):
 		var object_placements: Array = placements.get("object_placements", [])
 		var occupied := _occupied_body_lookup(object_placements)
 		var distances := _density_passable_distances(terrain_rows, occupied, start)
-		var existing_points := _density_existing_interactable_lookup(placements, distances)
-		var window := _largest_density_empty_window(terrain_rows, distances, existing_points)
-		if int(window.get("reachable_cells", 0)) <= 42:
+		var existing_points := _density_existing_interactable_lookup(placements, distances, int(density_policy.get("max_distance", 24)))
+		var window := _largest_density_empty_window(terrain_rows, distances, existing_points, density_policy)
+		if int(window.get("reachable_cells", 0)) <= int(density_policy.get("empty_cell_threshold", 42)):
 			break
-		var candidate := _compact_density_reward_candidate(index)
+		var candidate := _density_support_reward_candidate(index)
 		var point := _density_window_free_cell_for_catalog(
 			window,
 			distances,
+			density_policy,
 			"reward_reference",
 			String(candidate.get("object_family_id", "")),
 			String(candidate.get("object_id", "")),
@@ -2643,26 +2646,26 @@ static func _materialize_compact_density_support(normalized: Dictionary, placeme
 		if point.is_empty():
 			break
 		var distance := int(distances.get(_point_key(int(point.get("x", 0)), int(point.get("y", 0))), -1))
-		if distance < 7 or distance > 24:
+		if distance < int(density_policy.get("min_distance", 7)) or distance > int(density_policy.get("max_distance", 24)):
 			break
 		var zone_id := String(_zone_at_point(zone_grid, point))
-		var placement_id := "rmg_compact_density_cache_%02d" % (materialized.size() + 1)
+		var placement_id := "%s%02d" % [String(density_policy.get("placement_prefix", "rmg_route_density_cache_")), materialized.size() + 1]
 		var payload := {
 			"site_id": String(candidate.get("site_id", "")),
 			"object_id": String(candidate.get("object_id", "")),
 			"family_id": String(candidate.get("object_family_id", "")),
-			"purpose": "compact_route_density_support",
+			"purpose": String(density_policy.get("purpose", "route_density_support")),
 			"owner": "neutral",
 			"player_slot": 0,
 			"player_type": "neutral",
 			"team_id": "",
-			"zone_role": "compact_density_support",
+			"zone_role": String(density_policy.get("zone_role", "route_density_support")),
 			"selected_reward_category_id": String(candidate.get("reward_category", "")),
 			"selected_resource_category_id": String(candidate.get("categories", [])[0]) if candidate.get("categories", []) is Array and not candidate.get("categories", []).is_empty() else "",
 			"candidate_value": int(candidate.get("value", 0)),
 			"guarded_policy": String(candidate.get("guarded_policy", "")),
 			"density_window": window,
-			"writeout_state": "materialized_compact_density_support_from_reachable_empty_window",
+			"writeout_state": String(density_policy.get("writeout_state", "materialized_route_density_support_from_reachable_empty_window")),
 		}
 		var placement := _object_placement(placement_id, "reward_reference", "", zone_id, point, payload)
 		_apply_pathing_metadata(placement, zone_grid, terrain_rows, occupied)
@@ -2685,16 +2688,40 @@ static func _materialize_compact_density_support(normalized: Dictionary, placeme
 		})
 	return materialized
 
-static func _should_apply_compact_density_support(normalized: Dictionary, terrain_rows: Array) -> bool:
+static func _route_density_support_policy(normalized: Dictionary, terrain_rows: Array) -> Dictionary:
 	var size: Dictionary = normalized.get("size", {}) if normalized.get("size", {}) is Dictionary else {}
-	var width := int(size.get("width", 0))
-	var height := int(size.get("height", 0))
+	var width: int = int(size.get("width", 0))
+	var height: int = int(size.get("height", 0))
 	if width <= 0 or height <= 0:
 		height = terrain_rows.size()
 		width = terrain_rows[0].size() if height > 0 and terrain_rows[0] is Array else 0
-	if width > 36 or height > 36:
-		return false
-	return String(normalized.get("template_id", "")).contains("compact") or String(normalized.get("profile", {}).get("id", "")).contains("compact")
+	var template_id: String = String(normalized.get("template_id", ""))
+	var profile_id: String = String(normalized.get("profile", {}).get("id", ""))
+	var is_compact: bool = template_id.contains("compact") or profile_id.contains("compact")
+	var is_translated: bool = template_id.begins_with("translated_rmg_template_") or profile_id.begins_with("translated_rmg_profile_")
+	if not is_compact and not is_translated:
+		return {"enabled": false, "reason": "template_profile_not_supported_for_route_density_support"}
+	var edge: float = max(1.0, float(min(max(1, width), max(1, height))) / 36.0)
+	var window_size: int = int(ceil(8.0 * edge))
+	var min_distance: int = int(ceil(7.0 * edge))
+	var max_distance: int = int(ceil(24.0 * edge))
+	var window_area: int = max(1, window_size * window_size)
+	var threshold: int = int(floor(float(window_area) * 0.66))
+	var max_records: int = 12 if is_compact else int(ceil(12.0 * edge))
+	return {
+		"enabled": true,
+		"scope": "compact" if is_compact else "translated",
+		"scale": snapped(edge, 0.001),
+		"window_size": window_size,
+		"min_distance": min_distance,
+		"max_distance": max_distance,
+		"empty_cell_threshold": threshold,
+		"max_records": max_records,
+		"placement_prefix": "rmg_compact_density_cache_" if is_compact else "rmg_route_density_cache_",
+		"purpose": "compact_route_density_support" if is_compact else "route_density_support",
+		"zone_role": "compact_density_support" if is_compact else "translated_route_density_support",
+		"writeout_state": "materialized_compact_density_support_from_reachable_empty_window" if is_compact else "materialized_route_density_support_from_reachable_empty_window",
+	}
 
 static func _density_start_point(placements: Dictionary) -> Dictionary:
 	for town_value in placements.get("towns", []):
@@ -2742,7 +2769,7 @@ static func _density_passable_distances(terrain_rows: Array, occupied: Dictionar
 			queue.append(next_tile)
 	return distances
 
-static func _density_existing_interactable_lookup(placements: Dictionary, distances: Dictionary) -> Dictionary:
+static func _density_existing_interactable_lookup(placements: Dictionary, distances: Dictionary, max_distance: int) -> Dictionary:
 	var lookup := {}
 	for collection_name in ["towns", "resource_nodes", "encounters"]:
 		for value in placements.get(collection_name, []):
@@ -2751,23 +2778,26 @@ static func _density_existing_interactable_lookup(placements: Dictionary, distan
 			var point := _density_record_point(value)
 			var key := _point_key(int(point.get("x", 0)), int(point.get("y", 0)))
 			var distance := int(distances.get(key, -1))
-			if distance >= 0 and distance <= 24:
+			if distance >= 0 and distance <= max_distance:
 				lookup[key] = true
 	return lookup
 
-static func _largest_density_empty_window(terrain_rows: Array, distances: Dictionary, existing_points: Dictionary) -> Dictionary:
+static func _largest_density_empty_window(terrain_rows: Array, distances: Dictionary, existing_points: Dictionary, density_policy: Dictionary) -> Dictionary:
 	var height := terrain_rows.size()
 	var width: int = terrain_rows[0].size() if height > 0 and terrain_rows[0] is Array else 0
+	var window_size := int(density_policy.get("window_size", 8))
+	var max_distance := int(density_policy.get("max_distance", 24))
+	var scan_stride: int = max(1, int(floor(float(window_size) / 4.0)))
 	var best := {"reachable_cells": 0}
-	for y0 in range(0, max(0, height - 7)):
-		for x0 in range(0, max(0, width - 7)):
+	for y0 in range(0, max(0, height - window_size + 1), scan_stride):
+		for x0 in range(0, max(0, width - window_size + 1), scan_stride):
 			var reachable_cells := 0
 			var object_count := 0
-			for y in range(y0, y0 + 8):
-				for x in range(x0, x0 + 8):
+			for y in range(y0, y0 + window_size):
+				for x in range(x0, x0 + window_size):
 					var key := _point_key(x, y)
 					var distance := int(distances.get(key, -1))
-					if distance < 0 or distance > 24:
+					if distance < 0 or distance > max_distance:
 						continue
 					if not _terrain_cell_is_passable(terrain_rows, x, y):
 						continue
@@ -2778,15 +2808,15 @@ static func _largest_density_empty_window(terrain_rows: Array, distances: Dictio
 				best = {
 					"x": x0,
 					"y": y0,
-					"width": 8,
-					"height": 8,
-					"center_x": x0 + 4,
-					"center_y": y0 + 4,
+					"width": window_size,
+					"height": window_size,
+					"center_x": x0 + int(floor(float(window_size) / 2.0)),
+					"center_y": y0 + int(floor(float(window_size) / 2.0)),
 					"reachable_cells": reachable_cells,
 				}
 	return best
 
-static func _density_window_free_cell_for_catalog(window: Dictionary, distances: Dictionary, kind: String, family_id: String, object_id: String, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary) -> Dictionary:
+static func _density_window_free_cell_for_catalog(window: Dictionary, distances: Dictionary, density_policy: Dictionary, kind: String, family_id: String, object_id: String, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary) -> Dictionary:
 	var probe := {"kind": kind, "family_id": family_id, "object_id": object_id, "x": int(window.get("center_x", 0)), "y": int(window.get("center_y", 0))}
 	var catalog := _object_footprint_catalog_record_for_placement(probe)
 	var x0 := int(window.get("x", 0))
@@ -2795,7 +2825,10 @@ static func _density_window_free_cell_for_catalog(window: Dictionary, distances:
 	var y1 := y0 + int(window.get("height", 8))
 	var center_x := int(window.get("center_x", x0 + 4))
 	var center_y := int(window.get("center_y", y0 + 4))
-	for radius in range(9):
+	var min_distance := int(density_policy.get("min_distance", 7))
+	var max_distance := int(density_policy.get("max_distance", 24))
+	var max_radius: int = max(1, int(ceil(float(max(int(window.get("width", 8)), int(window.get("height", 8)))) / 2.0)) + 1)
+	for radius in range(max_radius):
 		for dy in range(-radius, radius + 1):
 			for dx in range(-radius, radius + 1):
 				if max(abs(dx), abs(dy)) != radius:
@@ -2805,13 +2838,13 @@ static func _density_window_free_cell_for_catalog(window: Dictionary, distances:
 				if x < x0 or y < y0 or x >= x1 or y >= y1:
 					continue
 				var distance := int(distances.get(_point_key(x, y), -1))
-				if distance < 7 or distance > 24:
+				if distance < min_distance or distance > max_distance:
 					continue
 				if _placement_candidate_satisfies_catalog(x, y, null, zone_grid, terrain_rows, occupied, catalog, reserved):
 					return _point_dict(x, y)
 	return {}
 
-static func _compact_density_reward_candidate(index: int) -> Dictionary:
+static func _density_support_reward_candidate(index: int) -> Dictionary:
 	var candidates := [
 		{"reward_category": "resource_cache", "object_family_id": "reward_cache_small", "object_id": "object_waystone_cache", "site_id": "site_waystone_cache", "value": 450, "categories": ["gold"], "guarded_policy": "unguarded_or_light_guard"},
 		{"reward_category": "build_resource_cache", "object_family_id": "reward_cache_small", "object_id": "object_ore_crates", "site_id": "site_ore_crates", "value": 650, "categories": ["ore"], "guarded_policy": "unguarded_or_light_guard"},
@@ -2829,7 +2862,7 @@ static func _density_support_resource_node_from_placement(placement_id: String, 
 		"zone_id": zone_id,
 		"owner": "neutral",
 		"player_slot": 0,
-		"kind": "compact_route_density_support",
+		"kind": String(payload.get("purpose", "route_density_support")),
 		"generated_kind": "route_reward",
 		"selected_reward_category_id": String(payload.get("selected_reward_category_id", "")),
 		"selected_resource_category_id": String(payload.get("selected_resource_category_id", "")),
@@ -3262,7 +3295,7 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		terrain_rows,
 		rng
 	)
-	var materialized_compact_density_support := _materialize_compact_density_support(
+	var materialized_route_density_support := _materialize_route_density_support(
 		normalized,
 		placements,
 		route_build.get("road_network", {}),
@@ -3341,7 +3374,8 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		"connection_guard_materialization": connection_guard_materialization,
 		"monster_reward_bands": monster_reward_bands,
 		"materialized_route_rewards": materialized_route_rewards,
-		"materialized_compact_density_support": materialized_compact_density_support,
+		"materialized_route_density_support": materialized_route_density_support,
+		"materialized_compact_density_support": materialized_route_density_support,
 		"object_pool_value_weighting": object_pool_value_weighting,
 		"town_mine_dwelling_placement": town_mine_dwelling,
 		"decoration_density_pass": decoration_density,

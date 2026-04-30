@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-generated-object-footprint-interaction-corrective-10184",
-  "currentSliceTitle": "Generated Object Footprint Interaction Corrective",
+  "currentSliceId": "random-map-generated-density-globalization-corrective-10184",
+  "currentSliceTitle": "Generated Density Globalization Corrective",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed AcOrP footprint/pathing corrective: generated producers and neutral dwellings now use authored visible body tiles for blocking, authored visit tiles remain passable, and shell selection routes body/visual clicks to reachable visit tiles.",
+  "currentSliceNotes": "Completed AcOrP density globalization corrective: route reward materialization remains available for all generated templates with reward-band refs, and anti-barren route density support now covers translated Medium/Large/XL templates with size-aware windows and bounded low-tier reward resources.",
   "nextActionGuardrailNote": "Remaining generated save work should split generated map payload persistence from lightweight state/delta autosave without visual/map semantic changes.",
-  "updatedAt": "2026-04-30T18:24:40Z",
+  "updatedAt": "2026-04-30T19:16:50Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -4574,6 +4574,74 @@
         "Stopped hover from rebuilding command/frontier drawer handoff summaries when hover did not change selected tile or drawer state.",
         "Added signature-gated road/object/hero index reuse in OverworldMapView while keeping normal overworld art and generated-map semantics.",
         "Left full generated end-turn delta-save/split-map persistence as a measured follow-up rather than a large unproven rewrite."
+      ]
+    },
+    {
+      "id": "random-map-generated-density-globalization-corrective-10184",
+      "title": "Generated Density Globalization Corrective",
+      "phase": "phase-2-deep-production-foundation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "status": "completed",
+      "purpose": "Globalize generated object density and distribution fixes across current Small, Medium, Large, and Extra Large default generated templates without changing map sizes, player counts, templates, save architecture, decoration policy, or broad phase parity scope.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-size-class-translation.md",
+        "docs/random-map-final-homm3-parity-regate-audit.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_generated_density_distribution_report.gd",
+        "tests/random_map_generated_density_distribution_report.tscn",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "/root/.local/bin/godot4 --headless --path . tests/random_map_generated_density_distribution_report.tscn",
+        "/root/.local/bin/godot4 --headless --path . tests/random_map_generated_object_footprint_interaction_report.tscn",
+        "/root/.local/bin/godot4 --headless --path . tests/random_map_generated_visual_path_regression_report.tscn",
+        "/root/.local/bin/godot4 --headless --path . tests/random_map_generated_overworld_profile_report.tscn",
+        "/root/.local/bin/godot4 --headless --path . tests/random_map_live_overworld_render_move_report.tscn",
+        "/root/.local/bin/godot4 --headless --path . tests/random_map_default_seed_objective_regression_report.tscn",
+        "/root/.local/bin/godot4 --headless --path . tests/random_map_post_open_tail_timing_report.tscn",
+        "/root/.local/bin/godot4 --headless --path . tests/random_map_async_generation_ux_report.tscn",
+        "/root/.local/bin/godot4 --headless --path . tests/random_map_runtime_render_perf_smoke.tscn",
+        "/root/.local/bin/godot4 --headless --path . tests/random_map_player_count_range_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Audit found route reward resource materialization already ran generically, but anti-barren compact density support was explicitly gated to maps no larger than 36x36 and compact template/profile ids.",
+        "Added a focused multi-size density/distribution report that preserves true map size, selected template/profile, player count, live interactable counts by kind/source, reachable counts, normalized distance rings, nearest interactables, road proximity, normalized empty-window metrics, route reward materialization counts, and unreachable counts.",
+        "Route density support now uses a size-aware policy: compact Small keeps compact ids/kinds, translated Medium/Large/XL receive bounded low-tier route-density support only when reachable normalized empty windows exceed threshold."
+      ],
+      "completionCriteria": [
+        "Route reward materialization remains available for all generated sizes/templates when reward-band refs exist and selected sites/objects are supported.",
+        "Anti-barren support is size-aware and no longer Small-only, while avoiding arbitrary global multipliers or template/player-count/map-size changes.",
+        "Regression explicitly covers Small, Medium, Large, and Extra Large default generated templates and fails if normalized density remains barren outside Small.",
+        "Required focused and baseline validation gates pass or any unavailable gate is explicitly recorded."
+      ],
+      "nonGoals": [
+        "No save architecture rewrite, performance broadening, decoration pass changes, broad phase2 parity claim, hidden map downscale, player-count change, template substitution, or unreachable/blocked-object semantics change."
+      ],
+      "createdAt": "2026-04-30T19:16:50Z",
+      "updatedAt": "2026-04-30T19:16:50Z",
+      "startedAt": "2026-04-30T19:16:50Z",
+      "notes": "Completed generated-density globalization for AcOrP item 1 only: the Small-only compact density gate was replaced with size-aware compact/translated route density support, and the new multi-size report proves normalized density across current defaults.",
+      "completedAt": "2026-04-30T19:16:50Z",
+      "completionEvidence": [
+        "RANDOM_MAP_GENERATED_DENSITY_DISTRIBUTION_REPORT passed across Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144 current default templates/profiles.",
+        "Post-fix normalized largest empty-window ratios were Small 0.734, Medium 0.188, Large 0.418, and Extra Large 0.630; Large and Extra Large no longer remain at a fully barren normalized window.",
+        "Post-fix live interactable and materialized reward-resource totals were Small 46/12, Medium 108/7, Large 177/49, and Extra Large 282/70.",
+        "Validation passed: random_map_generated_density_distribution_report, random_map_generated_object_footprint_interaction_report, random_map_generated_visual_path_regression_report, random_map_generated_overworld_profile_report, random_map_live_overworld_render_move_report, random_map_default_seed_objective_regression_report, random_map_post_open_tail_timing_report, random_map_async_generation_ux_report, random_map_runtime_render_perf_smoke, random_map_player_count_range_report, python3 tests/validate_repo.py, python3 -m json.tool ops/progress.json, git diff --check."
+      ],
+      "completionResult": [
+        "Kept route reward materialization generic and surfaced live route reward counts in the multi-size density report.",
+        "Replaced the compact-only anti-barren gate with route-density support policy scoped to compact and translated generated templates, scaling distance rings/windows by map edge.",
+        "Added bounded translated support records using existing low-tier resource/reward content and reachable empty-window placement instead of arbitrary global inflation."
       ]
     }
   ],
