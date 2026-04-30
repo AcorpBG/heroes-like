@@ -81,6 +81,7 @@ const DIRECTIONS := [
 const RAIL_ACTION_WIDTH := 248.0
 const RAIL_LINE_CHARS := 42
 const ACTION_FEEDBACK_CHARS := 40
+const DEBUG_OVERLAY_TOGGLE_KEY := KEY_F3
 
 var _session: SessionStateStore.SessionData
 var _map_data: Array = []
@@ -102,10 +103,17 @@ var _action_feedback_tween: Tween = null
 var _field_return_handoff: Dictionary = {}
 var _validation_profile: Dictionary = {}
 var _validation_force_hover_drawer_sync := false
+var _debug_overlay_enabled := false
+var _debug_overlay_panel: PanelContainer = null
+var _debug_overlay_label: Label = null
+var _debug_command_in_progress := false
+var _debug_command_context: Dictionary = {}
+var _debug_last_command_snapshot: Dictionary = {}
 
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
 	_apply_visual_theme()
+	_build_debug_overlay()
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
 
@@ -161,6 +169,9 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
+			DEBUG_OVERLAY_TOGGLE_KEY:
+				_set_debug_overlay_enabled(not _debug_overlay_enabled)
+				get_viewport().set_input_as_handled()
 			KEY_HOME:
 				_focus_camera_on_hero()
 				get_viewport().set_input_as_handled()
@@ -407,22 +418,33 @@ func _on_spell_action_pressed(action_id: String) -> void:
 func _on_map_tile_pressed(tile: Vector2i) -> void:
 	if not _tile_in_bounds(tile):
 		return
+	var debug_started := _debug_begin_path_command("click", tile)
 	var route_tile := _selection_route_tile(tile)
+	_debug_set_path_command_target(route_tile)
 	if route_tile == _selected_tile:
+		_debug_set_path_command_type("click_existing_selection")
 		if not _activate_primary_action():
 			_move_toward_selected_tile()
+		_debug_finish_path_command()
 		return
 
 	_set_selected_tile(route_tile)
 	if _is_selected_owned_town_visit_target():
+		_debug_set_path_command_type("select_town")
 		_visit_selected_town()
+		_debug_finish_path_command()
 		return
 	var hero_pos = OverworldRules.hero_position(_session)
 	if _is_adjacent_move_target(hero_pos, route_tile):
+		_debug_set_path_command_type("adjacent_move")
 		_try_move(route_tile.x - hero_pos.x, route_tile.y - hero_pos.y, true)
+		_debug_finish_path_command()
 		return
 	_active_drawer = ""
+	_debug_set_path_command_type("select_route")
 	_refresh()
+	if debug_started:
+		_debug_finish_path_command()
 
 func _on_map_tile_hovered(tile: Vector2i) -> void:
 	var profile_start := _profile_begin("hover")
@@ -454,6 +476,8 @@ func _visit_selected_town() -> bool:
 	return true
 
 func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
+	var hero_pos_before := OverworldRules.hero_position(_session)
+	var debug_started := _debug_begin_path_command("move", hero_pos_before + Vector2i(dx, dy))
 	var result = OverworldRules.try_move(_session, dx, dy)
 	var route := String(result.get("route", ""))
 	if route == "battle":
@@ -471,22 +495,35 @@ func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 		if not preserve_selection:
 			_select_hero_tile()
 	if _handle_session_resolution():
+		if debug_started:
+			_debug_finish_path_command()
 		return
 	if route == "battle":
+		if debug_started:
+			_debug_finish_path_command()
 		AppRouter.go_to_battle()
 		return
 	if route == "town":
+		if debug_started:
+			_debug_finish_path_command()
 		AppRouter.go_to_town()
 		return
 	_refresh()
+	if debug_started:
+		_debug_finish_path_command()
 
 func _move_toward_selected_tile() -> void:
+	var debug_started := _debug_begin_path_command("advance_route", _selected_tile)
 	var route = _selected_route()
 	if route.size() <= 1:
+		if debug_started:
+			_debug_finish_path_command()
 		return
 	var hero_pos = OverworldRules.hero_position(_session)
 	var next_step: Vector2i = route[1]
 	_try_move(next_step.x - hero_pos.x, next_step.y - hero_pos.y, true)
+	if debug_started:
+		_debug_finish_path_command()
 
 func _start_encounter() -> void:
 	var placement = OverworldRules.get_active_encounter(_session)
@@ -3415,13 +3452,19 @@ func _selected_route() -> Array:
 	return _refresh_cache["selected_route"]
 
 func _build_path(start: Vector2i, goal: Vector2i) -> Array:
+	var debug_timing_enabled := _debug_route_timing_active()
+	var debug_profile_start := _profile_begin("route_bfs") if debug_timing_enabled else 0
 	if not _tile_in_bounds(goal):
+		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "goal_out_of_bounds", 0, 0, 0, 0)
 		return []
 	if start == goal:
+		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "same_tile", 1, 1, 0, 0)
 		return [start]
 	if OverworldRules.tile_is_blocked(_session, goal.x, goal.y):
+		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "goal_blocked", 0, 0, 1, 0)
 		return []
 	if not OverworldRules.is_tile_explored(_session, goal.x, goal.y):
+		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "goal_unexplored", 0, 0, 1, 0)
 		return []
 
 	var queue: Array = [start]
@@ -3429,6 +3472,8 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	var visited = {_tile_key(start): true}
 	var came_from = {_tile_key(start): start}
 	var found = false
+	var blocked_tile_lookup_count := 1 if debug_timing_enabled else 0
+	var enqueued_count := 1 if debug_timing_enabled else 0
 
 	while queue_index < queue.size():
 		var current: Vector2i = queue[queue_index]
@@ -3440,6 +3485,8 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 			var next: Vector2i = current + direction
 			if not _tile_in_bounds(next):
 				continue
+			if debug_timing_enabled:
+				blocked_tile_lookup_count += 1
 			if OverworldRules.tile_is_blocked(_session, next.x, next.y):
 				continue
 			var key = _tile_key(next)
@@ -3448,8 +3495,11 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 			visited[key] = true
 			came_from[key] = current
 			queue.append(next)
+			if debug_timing_enabled:
+				enqueued_count += 1
 
 	if not found:
+		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "not_found", 0, visited.size(), blocked_tile_lookup_count, enqueued_count)
 		return []
 
 	var path: Array = [goal]
@@ -3457,6 +3507,7 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	while walker != start:
 		walker = came_from.get(_tile_key(walker), start)
 		path.push_front(walker)
+	_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "found", path.size(), visited.size(), blocked_tile_lookup_count, enqueued_count)
 	return path
 
 func _tile_in_bounds(tile: Vector2i) -> bool:
@@ -3771,6 +3822,285 @@ func _profile_end(name: String, started_usec: int, details: Dictionary = {}) -> 
 func _profile_add(key: String, amount: int) -> void:
 	_validation_profile[key] = int(_validation_profile.get(key, 0)) + amount
 
+func _build_debug_overlay() -> void:
+	_debug_overlay_panel = PanelContainer.new()
+	_debug_overlay_panel.name = "PathDebugOverlay"
+	_debug_overlay_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_debug_overlay_panel.visible = false
+	_debug_overlay_panel.custom_minimum_size = Vector2(430.0, 0.0)
+	_debug_overlay_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_debug_overlay_panel.position = Vector2(18.0, 18.0)
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.02, 0.025, 0.03, 0.90)
+	panel_style.border_color = Color(0.42, 0.55, 0.62, 0.92)
+	panel_style.set_border_width_all(1)
+	panel_style.set_corner_radius_all(4)
+	_debug_overlay_panel.add_theme_stylebox_override("panel", panel_style)
+	var margin := MarginContainer.new()
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margin.add_theme_constant_override("margin_left", 10)
+	margin.add_theme_constant_override("margin_top", 8)
+	margin.add_theme_constant_override("margin_right", 10)
+	margin.add_theme_constant_override("margin_bottom", 8)
+	_debug_overlay_panel.add_child(margin)
+	_debug_overlay_label = Label.new()
+	_debug_overlay_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_debug_overlay_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_debug_overlay_label.add_theme_font_size_override("font_size", 12)
+	_debug_overlay_label.add_theme_color_override("font_color", Color(0.88, 0.93, 0.91, 1.0))
+	_debug_overlay_label.text = "Path Debug (F3)\nNo pathing command captured."
+	margin.add_child(_debug_overlay_label)
+	add_child(_debug_overlay_panel)
+	_debug_overlay_panel.move_to_front()
+
+func _set_debug_overlay_enabled(enabled: bool) -> void:
+	_debug_overlay_enabled = enabled
+	if _debug_overlay_panel != null:
+		_debug_overlay_panel.visible = enabled
+		if enabled:
+			_debug_overlay_panel.move_to_front()
+	_debug_update_overlay_text()
+
+func _debug_begin_path_command(command_type: String, target_tile: Vector2i) -> bool:
+	if not _debug_overlay_enabled or _debug_command_in_progress:
+		return false
+	_debug_command_in_progress = true
+	OverworldRules.validation_set_pathing_profile_capture_enabled(true)
+	_validation_profile.clear()
+	if _map_view != null and _map_view.has_method("validation_reset_profile"):
+		_map_view.call("validation_reset_profile")
+	if _map_view != null and _map_view.has_method("validation_set_path_detail_profile_enabled"):
+		_map_view.call("validation_set_path_detail_profile_enabled", true)
+	var save_profile_before: Dictionary = SaveService.validation_last_runtime_save_profile()
+	var rules_profile_before: Dictionary = OverworldRules.validation_pathing_profile_snapshot()
+	_debug_command_context = {
+		"command_type": command_type,
+		"raw_target_tile": _debug_tile_payload(target_tile),
+		"selected_before": _debug_tile_payload(_selected_tile),
+		"selected_tile": _debug_tile_payload(_selected_tile),
+		"hero_before": _debug_tile_payload(OverworldRules.hero_position(_session)),
+		"started_usec": Time.get_ticks_usec(),
+		"save_started_msec_before": int(save_profile_before.get("started_msec", -1)),
+		"blocked_index_rebuild_count_before": int(rules_profile_before.get("blocked_index_rebuild_count", 0)),
+	}
+	return true
+
+func _debug_set_path_command_type(command_type: String) -> void:
+	if _debug_command_in_progress:
+		_debug_command_context["command_type"] = command_type
+
+func _debug_set_path_command_target(target_tile: Vector2i) -> void:
+	if _debug_command_in_progress:
+		_debug_command_context["selected_tile"] = _debug_tile_payload(target_tile)
+
+func _debug_finish_path_command() -> void:
+	if not _debug_command_in_progress:
+		return
+	var elapsed_usec := maxi(0, Time.get_ticks_usec() - int(_debug_command_context.get("started_usec", Time.get_ticks_usec())))
+	var snapshot := _debug_build_command_snapshot(elapsed_usec)
+	_debug_last_command_snapshot = snapshot
+	_debug_command_in_progress = false
+	OverworldRules.validation_set_pathing_profile_capture_enabled(false)
+	if _map_view != null and _map_view.has_method("validation_set_path_detail_profile_enabled"):
+		_map_view.call("validation_set_path_detail_profile_enabled", false)
+	_debug_command_context.clear()
+	_debug_update_overlay_text()
+	call_deferred("_debug_refresh_overlay_after_frame")
+
+func _debug_refresh_overlay_after_frame() -> void:
+	await get_tree().process_frame
+	if _debug_last_command_snapshot.is_empty():
+		return
+	_debug_last_command_snapshot = _debug_enrich_command_snapshot(_debug_last_command_snapshot)
+	_debug_update_overlay_text()
+
+func _debug_build_command_snapshot(elapsed_usec: int) -> Dictionary:
+	var snapshot := _debug_command_context.duplicate(true)
+	snapshot["total_command_ms"] = _debug_usec_to_ms(elapsed_usec)
+	snapshot["hero_after"] = _debug_tile_payload(OverworldRules.hero_position(_session))
+	snapshot["profile"] = validation_profile_snapshot()
+	snapshot = _debug_enrich_command_snapshot(snapshot)
+	return snapshot
+
+func _debug_enrich_command_snapshot(snapshot: Dictionary) -> Dictionary:
+	var enriched := snapshot.duplicate(true)
+	var profile: Dictionary = validation_profile_snapshot()
+	var map_profile: Dictionary = profile.get("map_view", {}) if profile.get("map_view", {}) is Dictionary else {}
+	var route_details: Dictionary = profile.get("last_route_bfs", {}) if profile.get("last_route_bfs", {}) is Dictionary else {}
+	var map_route_details: Dictionary = map_profile.get("last_path_recompute", {}) if map_profile.get("last_path_recompute", {}) is Dictionary else {}
+	var rules_profile: Dictionary = OverworldRules.validation_pathing_profile_snapshot()
+	var save_profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	var save_before := int(enriched.get("save_started_msec_before", -1))
+	var save_after := int(save_profile.get("started_msec", -1))
+	var save_observed := save_after >= 0 and save_after != save_before
+	var blocked_rebuilds_before := int(enriched.get("blocked_index_rebuild_count_before", 0))
+	var blocked_rebuilds_after := int(rules_profile.get("blocked_index_rebuild_count", blocked_rebuilds_before))
+	var shell_bfs_usec := int(profile.get("route_bfs_usec", 0))
+	var map_path_usec := int(map_profile.get("path_recompute_usec", 0))
+	enriched["profile"] = profile
+	enriched["route_bfs_ms"] = _debug_usec_to_ms(shell_bfs_usec)
+	enriched["route_bfs_calls"] = int(profile.get("route_bfs_calls", 0))
+	enriched["route_bfs"] = route_details
+	enriched["map_view_path_ms"] = _debug_usec_to_ms(map_path_usec)
+	enriched["map_view_path"] = map_route_details
+	enriched["pathfinding_ms"] = _debug_usec_to_ms(shell_bfs_usec if shell_bfs_usec > 0 else map_path_usec)
+	enriched["blocked_tile_lookup_count"] = int(route_details.get("blocked_tile_lookup_count", map_route_details.get("blocked_tile_lookup_count", 0)))
+	enriched["blocked_index_rebuild_count_delta"] = max(0, blocked_rebuilds_after - blocked_rebuilds_before)
+	enriched["blocked_index_rebuild_ms"] = _debug_usec_to_ms(int(rules_profile.get("last_blocked_index_rebuild_usec", 0))) if int(enriched.get("blocked_index_rebuild_count_delta", 0)) > 0 else -1.0
+	enriched["blocked_index_tile_count"] = int(rules_profile.get("last_blocked_index_tile_count", 0))
+	enriched["refresh_ms"] = _debug_usec_to_ms(int(profile.get("refresh_usec", 0)))
+	enriched["refresh_set_map_state_ms"] = _debug_usec_to_ms(int(profile.get("refresh_set_map_state_usec", 0)))
+	enriched["map_view_set_map_state_ms"] = _debug_usec_to_ms(int(map_profile.get("set_map_state_usec", 0)))
+	enriched["object_index_ms"] = _debug_usec_to_ms(int(map_profile.get("object_index_usec", 0)))
+	enriched["object_index_rebuilds"] = int(map_profile.get("object_index_rebuilds", 0))
+	enriched["object_index_skips"] = int(map_profile.get("object_index_skips", 0))
+	enriched["hero_index_rebuilds"] = int(map_profile.get("hero_index_rebuilds", 0))
+	enriched["hero_index_skips"] = int(map_profile.get("hero_index_skips", 0))
+	enriched["road_index_ms"] = _debug_usec_to_ms(int(map_profile.get("road_index_usec", 0)))
+	enriched["road_index_rebuilds"] = int(map_profile.get("road_index_rebuilds", 0))
+	enriched["road_index_skips"] = int(map_profile.get("road_index_skips", 0))
+	enriched["draw_session_static_ms"] = _debug_usec_to_ms(int(map_profile.get("draw_session_static_usec", 0)))
+	enriched["draw_state_ms"] = _debug_usec_to_ms(int(map_profile.get("draw_state_usec", 0)))
+	enriched["draw_dynamic_ms"] = _debug_usec_to_ms(int(map_profile.get("draw_dynamic_usec", 0)))
+	enriched["dynamic_tile_checks"] = int(map_profile.get("dynamic_tile_checks", 0))
+	enriched["object_presentation_checks"] = int(map_profile.get("object_presentation_checks", 0))
+	enriched["terrain_tile_draws"] = int(map_profile.get("terrain_tile_draws", 0))
+	enriched["road_tile_draws"] = int(map_profile.get("road_tile_draws", 0))
+	var view_metrics: Dictionary = _validation_map_viewport_state()
+	var render_cache: Dictionary = view_metrics.get("render_cache", {}) if view_metrics.get("render_cache", {}) is Dictionary else {}
+	enriched["dynamic_layer_reason"] = String(render_cache.get("dynamic_reason", "n/a"))
+	enriched["dynamic_layer_generation"] = int(render_cache.get("dynamic_generation", 0))
+	enriched["save_observed"] = save_observed
+	enriched["save_profile"] = save_profile if save_observed else {}
+	enriched["save_summary"] = _debug_save_summary(save_profile) if save_observed else "none observed"
+	var fps := float(Engine.get_frames_per_second())
+	enriched["fps"] = fps
+	enriched["frame_ms"] = snapped(1000.0 / max(fps, 0.001), 0.001)
+	return enriched
+
+func _debug_update_overlay_text() -> void:
+	if _debug_overlay_label == null:
+		return
+	if not _debug_overlay_enabled:
+		return
+	if _debug_last_command_snapshot.is_empty():
+		_debug_overlay_label.text = "Path Debug (F3)\nNo pathing command captured."
+		return
+	_debug_overlay_label.text = _debug_overlay_text(_debug_last_command_snapshot)
+
+func _debug_overlay_text(snapshot: Dictionary) -> String:
+	var route_status := String(snapshot.get("route_bfs", {}).get("status", snapshot.get("map_view_path", {}).get("status", "n/a"))) if snapshot.get("route_bfs", {}) is Dictionary else "n/a"
+	var blocked_index_ms = snapshot.get("blocked_index_rebuild_ms", -1.0)
+	var blocked_index_text := "n/a"
+	if float(blocked_index_ms) >= 0.0:
+		blocked_index_text = "%.3f ms / %d tiles" % [float(blocked_index_ms), int(snapshot.get("blocked_index_tile_count", 0))]
+	return "\n".join([
+		"Path Debug (F3)",
+		"cmd %s | target %s | selected %s" % [
+			String(snapshot.get("command_type", "n/a")),
+			_debug_tile_text(snapshot.get("raw_target_tile", {})),
+			_debug_tile_text(snapshot.get("selected_tile", {})),
+		],
+		"total %.3f ms | route %.3f ms | status %s" % [
+			float(snapshot.get("total_command_ms", 0.0)),
+			float(snapshot.get("pathfinding_ms", 0.0)),
+			route_status,
+		],
+		"BFS %.3f ms (%d calls) | lookups %d" % [
+			float(snapshot.get("route_bfs_ms", 0.0)),
+			int(snapshot.get("route_bfs_calls", 0)),
+			int(snapshot.get("blocked_tile_lookup_count", 0)),
+		],
+		"refresh %.3f ms | set_map_state %.3f/%.3f ms" % [
+			float(snapshot.get("refresh_ms", 0.0)),
+			float(snapshot.get("refresh_set_map_state_ms", 0.0)),
+			float(snapshot.get("map_view_set_map_state_ms", 0.0)),
+		],
+		"blocked index %s | rebuilds +%d" % [
+			blocked_index_text,
+			int(snapshot.get("blocked_index_rebuild_count_delta", 0)),
+		],
+		"object index %.3f ms | r%d/s%d hero r%d/s%d" % [
+			float(snapshot.get("object_index_ms", 0.0)),
+			int(snapshot.get("object_index_rebuilds", 0)),
+			int(snapshot.get("object_index_skips", 0)),
+			int(snapshot.get("hero_index_rebuilds", 0)),
+			int(snapshot.get("hero_index_skips", 0)),
+		],
+		"road index %.3f ms | r%d/s%d" % [
+			float(snapshot.get("road_index_ms", 0.0)),
+			int(snapshot.get("road_index_rebuilds", 0)),
+			int(snapshot.get("road_index_skips", 0)),
+		],
+		"draw static/state/dyn %.3f/%.3f/%.3f ms | dyn %s #%d" % [
+			float(snapshot.get("draw_session_static_ms", 0.0)),
+			float(snapshot.get("draw_state_ms", 0.0)),
+			float(snapshot.get("draw_dynamic_ms", 0.0)),
+			String(snapshot.get("dynamic_layer_reason", "n/a")),
+			int(snapshot.get("dynamic_layer_generation", 0)),
+		],
+		"save %s" % String(snapshot.get("save_summary", "none observed")),
+		"fps %.1f | frame %.3f ms" % [float(snapshot.get("fps", 0.0)), float(snapshot.get("frame_ms", 0.0))],
+	])
+
+func _debug_route_timing_active() -> bool:
+	return _debug_command_in_progress
+
+func _debug_finish_route_bfs_profile(
+	enabled: bool,
+	started_usec: int,
+	start_tile: Vector2i,
+	goal_tile: Vector2i,
+	status: String,
+	path_size: int,
+	visited_count: int,
+	blocked_tile_lookup_count: int,
+	enqueued_count: int
+) -> void:
+	if not enabled:
+		return
+	_profile_end("route_bfs", started_usec, {
+		"start": _debug_tile_payload(start_tile),
+		"goal": _debug_tile_payload(goal_tile),
+		"status": status,
+		"path_tiles": path_size,
+		"visited_count": visited_count,
+		"blocked_tile_lookup_count": blocked_tile_lookup_count,
+		"enqueued_count": enqueued_count,
+	})
+
+func _debug_save_summary(save_profile: Dictionary) -> String:
+	if save_profile.is_empty():
+		return "none observed"
+	var slot_type := String(save_profile.get("slot_type", "save"))
+	var total_ms := int(save_profile.get("total_ms", 0))
+	var bytes := int(save_profile.get("written_bytes", 0))
+	return "%s %d ms %d bytes" % [slot_type, total_ms, bytes]
+
+func _debug_tile_payload(tile: Vector2i) -> Dictionary:
+	return {"x": tile.x, "y": tile.y}
+
+func _debug_tile_text(value: Variant) -> String:
+	if value is Dictionary:
+		return "%d,%d" % [int(value.get("x", -1)), int(value.get("y", -1))]
+	return "n/a"
+
+func _debug_usec_to_ms(usec: int) -> float:
+	return snapped(float(maxi(usec, 0)) / 1000.0, 0.001)
+
+func validation_set_debug_overlay_enabled(enabled: bool) -> Dictionary:
+	_set_debug_overlay_enabled(enabled)
+	return validation_debug_overlay_snapshot()
+
+func validation_debug_overlay_snapshot() -> Dictionary:
+	return {
+		"enabled": _debug_overlay_enabled,
+		"visible": _debug_overlay_panel != null and _debug_overlay_panel.visible,
+		"toggle_key": "F3",
+		"text": _debug_overlay_label.text if _debug_overlay_label != null else "",
+		"last_command": _debug_last_command_snapshot.duplicate(true),
+	}
+
 func validation_snapshot() -> Dictionary:
 	var hero_pos := OverworldRules.hero_position(_session)
 	var movement = _session.overworld.get("movement", {})
@@ -3928,6 +4258,7 @@ func validation_snapshot() -> Dictionary:
 		"map_viewport": _validation_map_viewport_state(),
 		"town_presentation_profiles": _validation_town_presentation_profiles(),
 		"chrome": _validation_chrome_state(),
+		"debug_overlay": validation_debug_overlay_snapshot(),
 		"profile": validation_profile_snapshot(),
 	}
 
@@ -4031,9 +4362,13 @@ func validation_select_tile(x: int, y: int) -> Dictionary:
 	var tile := Vector2i(x, y)
 	if not _tile_in_bounds(tile):
 		return {"ok": false, "message": "Tile is outside the overworld map."}
+	var debug_started := _debug_begin_path_command("validation_select_route", tile)
 	_set_selected_tile(tile)
+	_debug_set_path_command_target(_selected_tile)
 	_active_drawer = ""
 	_refresh()
+	if debug_started:
+		_debug_finish_path_command()
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = true
 	return snapshot

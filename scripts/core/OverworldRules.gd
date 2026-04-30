@@ -21,6 +21,13 @@ const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "fronti
 static var _normalized_read_scope_session_id := ""
 static var _normalized_read_scope_depth := 0
 static var _blocked_tile_indexes: Dictionary = {}
+static var _pathing_debug_profile: Dictionary = {
+	"capture_enabled": false,
+	"blocked_index_rebuild_count": 0,
+	"last_blocked_index_rebuild_usec": 0,
+	"last_blocked_index_tile_count": 0,
+	"last_blocked_index_session_id": "",
+}
 
 static func _scenario_factory() -> Variant:
 	return load("res://scripts/core/ScenarioFactory.gd")
@@ -247,6 +254,12 @@ static func end_normalized_read_scope(session: SessionStateStoreScript.SessionDa
 
 static func normalize_overworld_state_bridge(session) -> void:
 	normalize_overworld_state(session)
+
+static func validation_pathing_profile_snapshot() -> Dictionary:
+	return _pathing_debug_profile.duplicate(true)
+
+static func validation_set_pathing_profile_capture_enabled(enabled: bool) -> void:
+	_pathing_debug_profile["capture_enabled"] = enabled
 
 static func refresh_fog_of_war(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
@@ -1236,7 +1249,17 @@ static func _tile_blocked_by_resource_object(session: SessionStateStoreScript.Se
 static func _refresh_blocked_tile_index(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
-	_blocked_tile_indexes[str(session.session_id)] = _build_blocked_tile_index(session)
+	var capture_enabled := bool(_pathing_debug_profile.get("capture_enabled", false))
+	var started_usec := Time.get_ticks_usec() if capture_enabled else 0
+	var index := _build_blocked_tile_index(session)
+	_blocked_tile_indexes[str(session.session_id)] = index
+	if not capture_enabled:
+		return
+	var elapsed_usec := maxi(0, Time.get_ticks_usec() - started_usec)
+	_pathing_debug_profile["blocked_index_rebuild_count"] = int(_pathing_debug_profile.get("blocked_index_rebuild_count", 0)) + 1
+	_pathing_debug_profile["last_blocked_index_rebuild_usec"] = elapsed_usec
+	_pathing_debug_profile["last_blocked_index_tile_count"] = index.size()
+	_pathing_debug_profile["last_blocked_index_session_id"] = str(session.session_id)
 
 static func _blocked_tile_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null:
