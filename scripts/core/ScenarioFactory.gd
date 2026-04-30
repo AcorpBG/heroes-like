@@ -236,22 +236,58 @@ static func _build_resource_states(placements: Variant) -> Array:
 	for placement in placements:
 		if not (placement is Dictionary):
 			continue
-		nodes.append(
-			{
-				"placement_id": String(placement.get("placement_id", "")),
-				"site_id": String(placement.get("site_id", "")),
-				"x": int(placement.get("x", 0)),
-				"y": int(placement.get("y", 0)),
-				"collected": bool(placement.get("collected", false)),
-				"collected_by_faction_id": String(placement.get("collected_by_faction_id", "")),
-				"collected_day": max(0, int(placement.get("collected_day", 0))),
-				"response_origin": String(placement.get("response_origin", "")),
-				"response_source_town_id": String(placement.get("response_source_town_id", "")),
-				"response_last_day": max(0, int(placement.get("response_last_day", 0))),
-				"response_until_day": max(0, int(placement.get("response_until_day", 0))),
-			}
-		)
+		var node := {
+			"placement_id": String(placement.get("placement_id", "")),
+			"site_id": String(placement.get("site_id", "")),
+			"x": int(placement.get("x", 0)),
+			"y": int(placement.get("y", 0)),
+			"collected": bool(placement.get("collected", false)),
+			"collected_by_faction_id": String(placement.get("collected_by_faction_id", "")),
+			"collected_day": max(0, int(placement.get("collected_day", 0))),
+			"response_origin": String(placement.get("response_origin", "")),
+			"response_source_town_id": String(placement.get("response_source_town_id", "")),
+			"response_last_day": max(0, int(placement.get("response_last_day", 0))),
+			"response_until_day": max(0, int(placement.get("response_until_day", 0))),
+		}
+		_copy_resource_runtime_metadata(node, placement)
+		nodes.append(node)
 	return nodes
+
+static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
+	for key in [
+		"object_id",
+		"zone_id",
+		"owner",
+		"player_slot",
+		"player_type",
+		"team_id",
+		"kind",
+		"generated_kind",
+		"original_resource_category_id",
+		"resource_id",
+		"neutral_dwelling_family_id",
+		"guard_pressure",
+		"body_tiles",
+		"blocking_body",
+		"approach_tiles",
+		"visit_tile",
+		"pathing_status",
+		"object_footprint_catalog_ref",
+		"footprint",
+		"runtime_footprint",
+		"body_mask",
+		"runtime_body_mask",
+		"visit_mask",
+		"approach_mask",
+		"passability_mask",
+		"action_mask",
+		"terrain_restrictions",
+		"placement_predicates",
+		"placement_predicate_results",
+		"footprint_deferred",
+	]:
+		if source.has(key):
+			target[key] = source[key].duplicate(true) if source[key] is Array or source[key] is Dictionary else source[key]
 
 static func _seed_recruits(built_buildings: Array) -> Dictionary:
 	var recruits := {}

@@ -5101,12 +5101,21 @@ func _resource_object_profile(node: Dictionary) -> Dictionary:
 	var site_id := String(node.get("site_id", "")).strip_edges()
 	var profile = _resource_site_object_profiles.get(site_id, {})
 	if profile is Dictionary and not profile.is_empty():
-		return profile
+		var resolved_profile: Dictionary = profile.duplicate(true)
+		if node.get("runtime_footprint", {}) is Dictionary and not node.get("runtime_footprint", {}).is_empty():
+			resolved_profile["footprint"] = node.get("runtime_footprint", {}).duplicate(true)
+			resolved_profile["render_footprint_source"] = "generated_runtime_footprint"
+			resolved_profile["authored_footprint"] = profile.get("footprint", Vector2i(1, 1))
+		return resolved_profile
 	var site := ContentService.get_resource_site(site_id)
 	var family := String(site.get("family", "pickup"))
 	if family == "":
 		family = "pickup"
-	return _default_object_profile(family, Vector2i(1, 1))
+	var fallback := _default_object_profile(family, Vector2i(1, 1))
+	if node.get("runtime_footprint", {}) is Dictionary and not node.get("runtime_footprint", {}).is_empty():
+		fallback["footprint"] = node.get("runtime_footprint", {}).duplicate(true)
+		fallback["render_footprint_source"] = "generated_runtime_footprint"
+	return fallback
 
 func _artifact_object_profile() -> Dictionary:
 	return _default_object_profile("artifact", Vector2i(1, 1))
