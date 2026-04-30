@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "main-menu-lean-save-boot-corrective-10184",
-  "currentSliceTitle": "Main Menu Lean Save Boot Corrective",
+  "currentSliceId": "random-map-async-generation-ux-corrective-10184",
+  "currentSliceTitle": "Random Map Async Generation UX Corrective",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed lean boot correction. First-view guard reports zero save summary/slot inspections and boot_display_ms=2509; explicit Saves/Load inspection still populates 4 rows. Validation passed: main_menu_lean_boot_save_guard, menu_outcome_visual_smoke, save_summary_deferred_payload_report, random_map_runtime_render_perf_smoke, random_map_player_count_range_report, validate_repo, json.tool, diff check.",
-  "nextActionGuardrailNote": "Keep this corrective slice narrow: no random-map true-size/template/player-count/rendering changes, no save schema migration, and no restoration of first-view dashboard/status panels.",
-  "updatedAt": "2026-04-30T13:14:39Z",
+  "currentSliceNotes": "Completed narrow corrective slice for generated-map launch UX/performance. Generated-map launch now shows immediate staged progress with five process-frame yields before/around validation, materialization, and handoff; RMG true sizes, templates, player counts, object density, and deterministic generation outputs were preserved by focused and baseline validation.",
+  "nextActionGuardrailNote": "Keep this corrective slice narrow: no random-map true-size/template/player-count/content-density changes, no save schema migration, and no generated-map downscale or object-count reduction.",
+  "updatedAt": "2026-04-30T13:50:49Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -4196,6 +4196,79 @@
       "startedAt": "2026-04-30T00:00:00Z",
       "completedAt": "2026-04-30T00:00:00Z",
       "notes": "Completed runtime-size support through Extra Large 144x144 without hidden downscale/clamp; follow-up fixes derive player counts from template catalog ranges/capacity so compact Small remains 3-player while translated XL exposes 2..8. Runtime render follow-up optimized overworld refresh/render path with map references, spatial indexes, blocked-tile cache, queue-index BFS; validated 144x144 render smoke and RMG player-count smoke."
+    },
+    {
+      "id": "random-map-async-generation-ux-corrective-10184",
+      "title": "Random Map Async Generation UX Corrective",
+      "phase": "phase-2-deep-production-foundation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "status": "completed",
+      "purpose": "Prevent player-facing generated-map creation from appearing frozen by showing an immediate generating state and staging/yielding the launch pipeline without changing RMG outputs.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-size-class-translation.md",
+        "docs/random-map-final-homm3-parity-regate-audit.md"
+      ],
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "scripts/autoload/AppRouter.gd handoff inspection; no code change unless route staging requires it",
+        "scripts/core/RandomMapGeneratorRules.gd if safe staged generation hooks are required",
+        "focused RMG async UX/report test proving the generating state yields before completion",
+        "existing RMG runtime/player-count/materialization/render validation reports",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "/root/.local/bin/godot --headless --path . focused async RMG UX test",
+        "/root/.local/bin/godot --headless --path . tests/random_map_runtime_render_perf_smoke.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_player_count_range_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_playable_materialization_runtime_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/main_menu_lean_boot_save_guard.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Starting generated-map creation sets a visible generating/progress state immediately, disables duplicate launch input, and updates honest stage text before the heavy handoff.",
+        "The pipeline yields at least one rendered/process frame before synchronous generation and around major launch/materialization stages where safe.",
+        "Generated maps still preserve selected size class, template/profile selection, player-count behavior, object/content density, save/provenance, and deterministic seed results.",
+        "Focused validation proves progress state appears before completion and generation still produces a playable generated session."
+      ],
+      "completionCriteria": [
+        "No downscaling, content reduction, template swap, player-count restriction, or object-count lowering is introduced to mask generation cost.",
+        "The player sees clear in-progress feedback before and during generated-map launch rather than an unresponsive menu.",
+        "Required focused and baseline validation gates pass or any unavailable gate is explicitly recorded."
+      ],
+      "nonGoals": [
+        "No campaign adoption, authored JSON writeback, broad RMG rebalancing, asset work, alpha/release claim, or byte-level HoMM3 map clone.",
+        "No save-schema migration or generated-map content-density reduction."
+      ],
+      "validationEvidence": [
+        "/root/.local/bin/godot --headless --path . tests/random_map_async_generation_ux_report.tscn passed with yield_count=5, stage_count=5, final_stage=Opening generated map, and generated Small 36x36 session generated_border_gate_compact_profile_v1_338e26d0.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_runtime_render_perf_smoke.tscn passed on a 144x144 generated map with first_set_map_state_ms=127 and second_set_map_state_ms=10.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_player_count_range_report.tscn passed with compact_player_counts=[3], xl_player_counts=[2,3,4,5,6,7,8], and accepted_xl_player_counts=[5,6,7,8].",
+        "/root/.local/bin/godot --headless --path . tests/random_map_playable_materialization_runtime_report.tscn passed with materialized_size width=144, height=144, level_count=1, 16 towns, 95 mines, 21 dwellings, 136 guards, 68 rewards, and 1824 object instances.",
+        "/root/.local/bin/godot --headless --path . tests/main_menu_lean_boot_save_guard.tscn passed with first_view_save_inspections all zero and save_browser_items=4.",
+        "/root/.local/bin/godot --headless --path . tests/save_summary_deferred_payload_report.tscn passed with payload_deferred=true and resume_target=outcome.",
+        "/root/.local/bin/godot --headless --path . tests/menu_outcome_visual_smoke.tscn exited 0.",
+        "python3 tests/validate_repo.py passed.",
+        "python3 -m json.tool ops/progress.json and git diff --check passed."
+      ],
+      "completionResult": [
+        "Generated-map launch now enters a visible staged generation state immediately, disables duplicate generated-map inputs, shows a progress bar/status text, and updates honest milestones for preparation, validation, session materialization, and overworld handoff.",
+        "The launch path yields process frames before generation, before session materialization, and before route handoff while preserving the existing synchronous generator output and deterministic seed/config behavior.",
+        "Focused async UX validation records five staged snapshots and five frame yields, then starts a playable generated skirmish session without hidden downscale.",
+        "Existing RMG guard validation still proves 144x144 render refresh, XL player-count range behavior, and playable Extra Large materialization with the prior object/content density."
+      ],
+      "createdAt": "2026-04-30T13:32:03Z",
+      "updatedAt": "2026-04-30T13:50:49Z",
+      "startedAt": "2026-04-30T13:32:03Z",
+      "completedAt": "2026-04-30T13:50:49Z",
+      "notes": "Completed after Extra Large runtime support; preserved true size/template/player-count/render behavior while staging generated-map launch feedback."
     }
   ],
   "completedImplementationEvidence": [
