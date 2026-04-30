@@ -22,7 +22,7 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-Current tactical objective: keep the Phase 2 RMG workstream honest after the strict HoMM3-style random-map-generation parity re-gate, translated into original Aurelion Reach systems. The active follow-up is an RMG-only async/staged generation UX correction: player-facing generated-map creation must show immediate progress/status and yield frames around generation work without changing true sizes, templates, player counts, object/content density, or deterministic results. Completed non-RMG future-phase evidence remains preserved in progress history, but it is not the active continuation path and must not drive follow-up work.
+Current tactical objective: keep the Phase 2 RMG workstream honest after the strict HoMM3-style random-map-generation parity re-gate, translated into original Aurelion Reach systems. The active follow-up is an RMG-only default-seed/objective correction: player-facing generated-map launches must vary when the seed is blank/default, explicit seeds must remain deterministic, and generated objectives must not complete immediately after the first movement. Completed non-RMG future-phase evidence remains preserved in progress history, but it is not the active continuation path and must not drive follow-up work.
 
 Recently completed RMG evidence includes the P2.10 random-map foundation queue, translated-template runtime sweep, final writeout/export/save-schema closure, player-facing setup/retry UX, playable materialization/runtime evidence, water/underground/transit gameplay evidence, object-pool/value weighting evidence, large-batch parity stress evidence, size-class correction, and Extra Large 144x144 runtime support. The re-gate audit `random-map-final-homm3-parity-regate-audit-10184` concluded that HoMM3-style RMG functional parity was met for generated skirmish/session use with explicit accepted original-game translations. This is not authored campaign adoption, playable alpha completion, release readiness, broad faction/content completion, asset parity, or byte-level HoMM3 map-format cloning.
 
@@ -2761,6 +2761,51 @@ completionResult:
 - The launch path yields process frames before generation, before session materialization, and before route handoff while preserving the existing synchronous generator output and deterministic seed/config behavior.
 - Focused async UX validation records five staged snapshots and five frame yields, then starts a playable generated skirmish session without hidden downscale.
 - Existing RMG guard validation still proves 144x144 render refresh, XL player-count range behavior, and playable Extra Large materialization with the prior object/content density.
+
+### P2 Child: Random Map Default Seed And Objective Corrective
+
+id: `random-map-default-seed-objective-corrective-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Fix player-facing Small generated-map regressions where blank/default launches reused the same seed and generated objectives completed immediately after first movement.
+
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-generator-foundation.md`
+- `docs/random-map-size-class-translation.md`
+- `docs/random-map-final-homm3-parity-regate-audit.md`
+
+implementationTargets:
+- `scenes/menus/MainMenu.gd`
+- `scripts/core/ScenarioSelectRules.gd`
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_default_seed_objective_regression_report.gd`
+- `tests/random_map_default_seed_objective_regression_report.tscn`
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- Blank/default generated-map launch resolves to a fresh effective seed at launch time.
+- Explicit same-seed generated-map setup remains deterministic for replay/tests.
+- Generated Small objectives are supported by `ScenarioRules` and are not already complete at launch.
+- First hero movement on a generated Small map leaves the scenario in progress unless a real objective was met.
+
+completionCriteria:
+- No random-map true size, template, player count, or object/content density is changed to fake variation.
+- Default player-facing generated-map launches vary by effective seed while explicit seeds remain deterministic.
+- Generated maps have a non-instant playable objective state and focused validation proves the first-move outcome regression is fixed.
+- Required focused and baseline validation gates pass or any unavailable gate is explicitly recorded.
+
+nonGoals:
+- No campaign adoption, authored JSON writeback, broad RMG rebalancing, asset work, alpha/release claim, or byte-level HoMM3 map clone.
+- No correction to compact-template visual density beyond seed variation and objective validity.
+
+completionResult:
+- The generated-map seed field now stays blank by default and advertises auto seed behavior; blank or legacy default seed input resolves to a fresh effective seed only at launch.
+- Generated-map provenance and replay config preserve the effective seed plus seed source/input, while explicit non-default seeds remain deterministic.
+- Generated scenarios now use a rival-town capture victory objective and a starting-town loss defeat watch, avoiding the previous already-met starting-town victory condition.
+- Focused reports prove default Small variation, explicit same-seed determinism, and first generated Small movement staying in progress without changing size, template, player count, or object density.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 

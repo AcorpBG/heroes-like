@@ -180,6 +180,8 @@ const RANDOM_MAP_PLAYER_RETRY_POLICY := {
 	"max_attempts": 2,
 	"mode": "seed_salt",
 }
+const RANDOM_MAP_DEFAULT_SEED := "aurelion-random-skirmish-10184"
+const RANDOM_MAP_AUTO_SEED_PREFIX := "aurelion-auto-random-skirmish"
 
 static func _campaign_rules():
 	return load("res://scripts/core/CampaignRules.gd")
@@ -401,7 +403,7 @@ static func random_map_player_setup_options() -> Dictionary:
 		"player_count_options_by_template": _random_map_player_count_options_by_template(template_options),
 		"water_modes": RANDOM_MAP_WATER_OPTIONS.duplicate(true),
 		"retry_policy": RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
-		"default_seed": "aurelion-random-skirmish-10184",
+		"default_seed": RANDOM_MAP_DEFAULT_SEED,
 		"default_size_class_id": "homm3_small",
 		"default_template_id": "border_gate_compact_v1",
 		"default_profile_id": "border_gate_compact_profile_v1",
@@ -410,6 +412,17 @@ static func random_map_player_setup_options() -> Dictionary:
 		"default_water_mode": "land",
 		"default_underground": false,
 	}
+
+static func random_map_seed_requests_auto(seed: String) -> bool:
+	var normalized_seed := seed.strip_edges()
+	return normalized_seed == "" or normalized_seed == RANDOM_MAP_DEFAULT_SEED
+
+static func random_map_fresh_auto_seed() -> String:
+	return "%s-%d-%d" % [
+		RANDOM_MAP_AUTO_SEED_PREFIX,
+		Time.get_unix_time_from_system(),
+		Time.get_ticks_usec(),
+	]
 
 static func random_map_player_count_options_for_template(template_id: String) -> Array:
 	return _random_map_template_player_count_options(template_id, _random_map_template_option(template_id))
@@ -611,6 +624,8 @@ static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty
 		"template_id": String(identity.get("template_id", "")),
 		"profile_id": String(profile.get("id", "")),
 		"normalized_seed": String(identity.get("normalized_seed", "")),
+		"seed_source": String(input_config.get("seed_source", "explicit")),
+		"seed_input": String(input_config.get("seed_input", String(input_config.get("seed", "")))),
 		"content_manifest_fingerprint": String(identity.get("content_manifest_fingerprint", "")),
 		"generated_identity": identity,
 		"validation": report,
@@ -1037,6 +1052,8 @@ static func _random_map_replay_generator_config(input_config: Dictionary, normal
 	return {
 		"generator_version": String(normalized.get("generator_version", RandomMapGeneratorRulesScript.GENERATOR_VERSION)),
 		"seed": String(normalized.get("seed", "0")),
+		"seed_source": String(input_config.get("seed_source", "explicit")),
+		"seed_input": String(input_config.get("seed_input", String(input_config.get("seed", "")))),
 		"size": normalized.get("size", {}),
 		"player_constraints": normalized.get("player_constraints", {}),
 		"template_id": template_id,
