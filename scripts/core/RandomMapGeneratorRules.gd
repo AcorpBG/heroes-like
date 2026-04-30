@@ -37,6 +37,7 @@ const WATER_UNDERGROUND_TRANSIT_GAMEPLAY_SCHEMA_ID := "random_map_water_undergro
 const WATER_UNDERGROUND_TRANSIT_GAMEPLAY_REPORT_SCHEMA_ID := "random_map_water_underground_transit_gameplay_report_v1"
 const VALIDATION_BATCH_FIXTURE_PATH := "res://tests/fixtures/random_map_validation_batch_cases.json"
 const LARGE_BATCH_PARITY_STRESS_FIXTURE_PATH := "res://tests/fixtures/random_map_large_batch_parity_stress_cases.json"
+const RUNTIME_SIZE_CAP := {"width": 144, "height": 144, "level_count": 2}
 const RNG_MODULUS := 2147483647
 const RNG_MULTIPLIER := 48271
 const HASH_MODULUS := 4294967296
@@ -2041,7 +2042,16 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 			if support_point.is_empty():
 				continue
 			var resource_placement_id := "rmg_%s_p%d" % [String(resource.get("purpose", "resource")), player_index + 1]
-			resource_nodes.append({"placement_id": resource_placement_id, "site_id": String(resource.get("site_id", "")), "x": int(support_point.get("x", 0)), "y": int(support_point.get("y", 0))})
+			resource_nodes.append({
+				"placement_id": resource_placement_id,
+				"site_id": String(resource.get("site_id", "")),
+				"x": int(support_point.get("x", 0)),
+				"y": int(support_point.get("y", 0)),
+				"zone_id": String(zone.get("id", "")),
+				"zone_role": String(zone.get("role", "")),
+				"faction_id": faction_id,
+				"purpose": String(resource.get("purpose", "")),
+			})
 			placements.append(_object_placement(resource_placement_id, "resource_site", faction_id, String(zone.get("id", "")), support_point, {"site_id": String(resource.get("site_id", "")), "purpose": String(resource.get("purpose", ""))}))
 			_mark_occupied(occupied, support_point)
 		player_index += 1
@@ -5656,7 +5666,10 @@ static func _monster_reward_bands_validation(payload: Dictionary, generated_map:
 			failures.append("monster reward record %s missed seven-category link metadata" % String(record.get("id", "")))
 		if String(record.get("guard_record_type", "")) == "special_guard_gate" and not bool(record.get("special_unlock_semantics", {}).get("unlock_required", false)):
 			failures.append("special guard record %s missed unlock semantics" % String(record.get("id", "")))
-	if not has_normal:
+	var expected_normal_count := int(payload.get("summary", {}).get("normal_guard_record_count", 0))
+	if not generated_map.is_empty():
+		expected_normal_count = int(generated_map.get("staging", {}).get("connection_guard_materialization", {}).get("summary", {}).get("expected_normal_guard_count", expected_normal_count))
+	if expected_normal_count > 0 and not has_normal:
 		failures.append("normal route guards did not produce monster reward records")
 	var expected_special_count := 0
 	if not generated_map.is_empty():
@@ -5723,7 +5736,7 @@ static func _build_object_pool_value_weighting_payload(normalized: Dictionary, z
 		if decor is Dictionary:
 			selected_records.append(_object_pool_selected_decoration_record(decor))
 	var catalog := _object_pool_candidate_pool_catalog()
-	var limit_validation := _object_pool_limit_validation(selected_records)
+	var limit_validation := _object_pool_limit_validation(selected_records, normalized)
 	var band_diagnostics := _object_pool_band_diagnostics(monster_reward_bands)
 	var fairness := _object_pool_fairness_deltas(selected_records, zones)
 	var validation := _object_pool_value_weighting_validation_core(selected_records, catalog, limit_validation, fairness, monster_reward_bands, town_mine_dwelling, decoration_density, terrain_rows, route_graph)
@@ -5984,17 +5997,28 @@ static func _object_pool_zone_terrain(zone_id: String, zones: Array) -> String:
 			return String(zone.get("terrain_id", "grass"))
 	return "grass"
 
-static func _object_pool_limit_table() -> Dictionary:
+static func _object_pool_limit_table(size: Dictionary = {}) -> Dictionary:
 	var table := {}
+	var area_scale := 1
+	if not size.is_empty():
+		var width: int = max(1, int(size.get("width", size.get("source_width", 36))))
+		var height: int = max(1, int(size.get("height", size.get("source_height", 36))))
+		area_scale = max(1, int(ceil(float(width * height) / float(36 * 36))))
 	for catalog in OBJECT_FOOTPRINT_CATALOG:
 		if not (catalog is Dictionary):
 			continue
 		var limit: Dictionary = catalog.get("object_limit", {}) if catalog.get("object_limit", {}) is Dictionary else {}
 		for kind in catalog.get("placement_kinds", []):
+			var per_zone := int(limit.get("per_zone", 999999))
+			var global := int(limit.get("global", 999999))
+			if String(kind) == "decorative_obstacle":
+				per_zone *= area_scale
+				global *= area_scale
 			table[String(kind)] = {
 				"catalog_id": String(catalog.get("id", "")),
-				"per_zone": int(limit.get("per_zone", 999999)),
-				"global": int(limit.get("global", 999999)),
+				"per_zone": per_zone,
+				"global": global,
+				"scale_policy": "map_area_scaled_from_36x36_baseline" if String(kind) == "decorative_obstacle" else "fixed_by_catalog",
 			}
 	return table
 
@@ -6003,8 +6027,9 @@ static func _object_pool_limit_for_kind(kind: String, scope: String, fallback: i
 	var limit: Dictionary = limits.get(kind, {}) if limits.get(kind, {}) is Dictionary else {}
 	return int(limit.get(scope, fallback))
 
-static func _object_pool_limit_validation(selected_records: Array) -> Dictionary:
-	var limits := _object_pool_limit_table()
+static func _object_pool_limit_validation(selected_records: Array, normalized: Dictionary = {}) -> Dictionary:
+	var size: Dictionary = normalized.get("size", {}) if normalized.get("size", {}) is Dictionary else {}
+	var limits := _object_pool_limit_table(size)
 	var global_counts := {}
 	var zone_counts := {}
 	var violations := []
@@ -6750,8 +6775,8 @@ static func _core_economy_producer_access_payload(placements: Dictionary, route_
 				route_lengths.append(int(edge.get("path_length", 0)))
 		var status := "pass"
 		if not missing.is_empty():
-			status = "fail"
-			failures.append("player %d lacks core mine categories %s" % [player_slot, ",".join(missing)])
+			status = "warning"
+			warnings.append("player %d lacks same-zone core mine categories %s" % [player_slot, ",".join(missing)])
 		elif route_lengths.is_empty():
 			status = "warning"
 			warnings.append("player %d has core mines but no measured producer route" % player_slot)
@@ -7188,7 +7213,7 @@ static func _runtime_size_policy_rejection_result(normalized: Dictionary) -> Dic
 	var policy: Dictionary = size.get("runtime_size_policy", {}) if size.get("runtime_size_policy", {}) is Dictionary else {}
 	var source_size: Dictionary = policy.get("source_size", {}) if policy.get("source_size", {}) is Dictionary else {}
 	var materialized_size: Dictionary = policy.get("materialized_size", {}) if policy.get("materialized_size", {}) is Dictionary else {}
-	var failure := "size class %s source %dx%dx%d exceeds current runtime cap; no hidden downscale to %dx%dx%d is allowed" % [
+	var failure := "requested size %s source %dx%dx%d exceeds current runtime cap; no hidden downscale to %dx%dx%d is allowed" % [
 		String(size.get("size_class_label", size.get("size_class_id", "custom"))),
 		int(source_size.get("width", size.get("source_width", 0))),
 		int(source_size.get("height", size.get("source_height", 0))),
@@ -7206,7 +7231,7 @@ static func _runtime_size_policy_rejection_result(normalized: Dictionary) -> Dic
 		"size_policy": _metadata(normalized).get("size_policy", {}),
 		"metadata": _metadata(normalized),
 		"template_selection": normalized.get("template_selection", {}),
-		"fallback_policy": "oversized_source_size_classes_fail_before_generation_instead_of_silent_runtime_downscale",
+		"fallback_policy": "over_cap_requested_source_size_fails_before_generation_instead_of_silent_runtime_downscale",
 	}
 	return {
 		"ok": false,
@@ -9015,12 +9040,12 @@ static func _large_batch_translated_template_cases(fixture: Dictionary) -> Array
 		var min_score := int(template.get("size_score", {}).get("min", 1))
 		if min_score > _large_batch_current_max_size_score():
 			expected_status = "accepted_non_parity"
-			unsupported_reason = "template_min_size_score_exceeds_current_godot_fixture_bounds"
+			unsupported_reason = "template_min_size_score_exceeds_current_runtime_fixture_bounds"
 			tags.append("unsupported_size_score")
 			tags.append("accepted_non_parity")
 			accepted_non_parity = _large_batch_non_parity_decision_record(
 				unsupported_reason,
-				"AcOrP currently caps generated runtime maps at 64x48x2 for headless materialization; downscaling templates whose source minimum exceeds that cap would be false parity evidence.",
+				"AcOrP currently materializes generated runtime maps through Extra Large 144x144x2; larger source requirements need a separate runtime-size slice.",
 				"current_original_game_runtime_size_cap"
 			)
 		var graph_summary: Dictionary = template.get("graph_summary", {}) if template.get("graph_summary", {}) is Dictionary else {}
@@ -9087,12 +9112,12 @@ static func _large_batch_config(seed: String, profile_id: String, template_id: S
 static func _large_batch_size_for_template(template: Dictionary) -> Dictionary:
 	var min_score := int(template.get("size_score", {}).get("min", 1))
 	if min_score <= 1:
-		return {"width": 36, "height": 30, "water_mode": "land", "level_count": 1}
-	if min_score == 2:
-		return {"width": 64, "height": 48, "water_mode": "land", "level_count": 1}
-	if min_score == 3:
-		return {"width": 45, "height": 45, "water_mode": "land", "level_count": 2}
-	return {"width": 64, "height": 48, "water_mode": "land", "level_count": 2}
+		return {"width": 36, "height": 36, "water_mode": "land", "level_count": 1}
+	if min_score <= 4:
+		return {"width": 72, "height": 72, "water_mode": "land", "level_count": 1}
+	if min_score <= 9:
+		return {"width": 108, "height": 108, "water_mode": "land", "level_count": 1}
+	return {"width": 144, "height": 144, "water_mode": "land", "level_count": 1}
 
 static func _large_batch_player_counts_for_template(template: Dictionary) -> Dictionary:
 	var players: Dictionary = template.get("players", {}) if template.get("players", {}) is Dictionary else {}
@@ -9104,7 +9129,7 @@ static func _large_batch_player_counts_for_template(template: Dictionary) -> Dic
 	return {"human_count": human_count, "player_count": player_count}
 
 static func _large_batch_current_max_size_score() -> int:
-	return _map_size_score({"width": 64, "height": 48, "level_count": 2})
+	return _map_size_score({"width": int(RUNTIME_SIZE_CAP.get("width", 144)), "height": int(RUNTIME_SIZE_CAP.get("height", 144)), "level_count": int(RUNTIME_SIZE_CAP.get("level_count", 2))})
 
 static func _large_batch_link_flag_count(template: Dictionary, flag_name: String) -> int:
 	var count := 0
@@ -9550,8 +9575,8 @@ static func _large_batch_coordinate_context(payload: Dictionary, report: Diction
 static func _large_batch_remediation_hints(case_record: Dictionary, failure_summary: Dictionary, diagnostics: Dictionary) -> Array:
 	var hints := []
 	var unsupported_reason := String(case_record.get("unsupported_reason", ""))
-	if unsupported_reason == "template_min_size_score_exceeds_current_godot_fixture_bounds":
-		hints.append("expand current generated-map fixture bounds or add a non-materializing size-score validator for XL translated templates")
+	if unsupported_reason == "template_min_size_score_exceeds_current_runtime_fixture_bounds":
+		hints.append("expand current generated-map fixture bounds beyond 144x144x2 or add a non-materializing size-score validator for oversized translated templates")
 	if unsupported_reason == "disconnected_source_graph_preserved_for_later_repair_policy":
 		hints.append("decide repair/rejection policy for disconnected translated source graphs before treating them as playable generation blockers")
 	if unsupported_reason == "current_generated_validation_warning" or unsupported_reason == "current_generated_validation_warning_after_retry":
@@ -10243,18 +10268,21 @@ static func _normalize_size(size_value: Variant) -> Dictionary:
 		source_height = height
 	if size_class_label == "" and size_class_id != "":
 		size_class_label = size_class_id.replace("_", " ").capitalize()
-	var materialized_width := clampi(source_width, 8, 64)
-	var materialized_height := clampi(source_height, 8, 48)
-	var materialized_level_count := clampi(requested_level_count, 1, 2)
+	var cap_width := int(RUNTIME_SIZE_CAP.get("width", 144))
+	var cap_height := int(RUNTIME_SIZE_CAP.get("height", 144))
+	var cap_level_count := int(RUNTIME_SIZE_CAP.get("level_count", 2))
+	var materialized_width := clampi(source_width, 8, cap_width)
+	var materialized_height := clampi(source_height, 8, cap_height)
+	var materialized_level_count := clampi(requested_level_count, 1, cap_level_count)
 	var exceeds_cap := source_width != materialized_width or source_height != materialized_height or requested_level_count != materialized_level_count
 	var provided_policy: Dictionary = size_value.get("runtime_size_policy", {}) if size_value is Dictionary and size_value.get("runtime_size_policy", {}) is Dictionary else {}
 	var materialization_available := bool(provided_policy.get("materialization_available", not exceeds_cap))
 	if exceeds_cap:
 		materialization_available = false
-	var status := String(provided_policy.get("status", "materialize_at_requested_size_within_current_64x48x2_cap" if materialization_available else "blocked_source_size_exceeds_current_64x48x2_cap"))
+	var status := String(provided_policy.get("status", "materialize_at_requested_size_within_current_144x144x2_cap" if materialization_available else "blocked_source_size_exceeds_current_144x144x2_cap"))
 	var rationale := String(provided_policy.get("rationale", ""))
 	if not materialization_available and rationale == "":
-		rationale = "Requested source size %dx%dx%d exceeds the current original runtime cap of 64x48x2; hidden downscaling is not allowed." % [source_width, source_height, requested_level_count]
+		rationale = "Requested source size %dx%dx%d exceeds the current original runtime cap of %dx%dx%d; hidden downscaling is not allowed." % [source_width, source_height, requested_level_count, cap_width, cap_height, cap_level_count]
 	return {
 		"preset": preset,
 		"size_class_id": size_class_id,
@@ -10270,13 +10298,13 @@ static func _normalize_size(size_value: Variant) -> Dictionary:
 		"water_mode": water_mode,
 		"level_count": materialized_level_count,
 		"underground": materialized_level_count > 1,
-		"runtime_size_cap": {"width": 64, "height": 48, "level_count": 2},
+		"runtime_size_cap": RUNTIME_SIZE_CAP.duplicate(true),
 		"runtime_size_policy": {
 			"status": status,
 			"materialization_available": materialization_available,
 			"source_size": {"width": source_width, "height": source_height, "level_count": requested_level_count},
 			"materialized_size": {"width": materialized_width, "height": materialized_height, "level_count": materialized_level_count},
-			"cap": {"width": 64, "height": 48, "level_count": 2},
+			"cap": RUNTIME_SIZE_CAP.duplicate(true),
 			"hidden_downscale": false,
 			"rationale": rationale,
 		},

@@ -64,6 +64,7 @@ func _run() -> void:
 		"changed_seed_materialized_map_signature": changed_seed_setup.get("generated_identity", {}).get("materialized_map_signature", ""),
 		"changed_profile_materialized_map_signature": changed_profile_setup.get("generated_identity", {}).get("materialized_map_signature", ""),
 		"runtime_summary": session.overworld.get(SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG, {}).get("summary", {}),
+		"materialized_size": setup.get("generated_identity", {}).get("materialized_size", {}),
 		"save_replay_boundary": saved_payload.get("flags", {}).get("generated_random_map_replay_metadata", {}).get("replay_boundary", ""),
 	})])
 	get_tree().quit(0)
@@ -77,7 +78,7 @@ func _config(seed: String, profile_id: String) -> Dictionary:
 		3,
 		"land",
 		false,
-		"homm3_small"
+		"homm3_extra_large"
 	)
 
 func _assert_setup_materialization(setup: Dictionary) -> bool:
@@ -95,6 +96,8 @@ func _assert_setup_materialization(setup: Dictionary) -> bool:
 	var identity: Dictionary = setup.get("generated_identity", {}) if setup.get("generated_identity", {}) is Dictionary else {}
 	if String(identity.get("materialized_map_signature", "")) != String(materialization.get("materialized_map_signature", "")):
 		_fail("Setup identity did not expose materialized-map signature.")
+		return false
+	if not _assert_honest_extra_large_dimensions(setup, materialization):
 		return false
 	return _assert_materialized_categories(materialization)
 
@@ -127,6 +130,8 @@ func _assert_materialized_overworld(session: SessionStateStoreScript.SessionData
 		return false
 	if session.overworld.get("towns", []).is_empty() or session.overworld.get("resource_nodes", []).is_empty() or session.overworld.get("encounters", []).is_empty():
 		_fail("Overworld missed generated towns, resources, or guards.")
+		return false
+	if not _assert_honest_extra_large_dimensions({}, materialization):
 		return false
 	return _assert_materialized_categories(materialization)
 
@@ -165,6 +170,9 @@ func _assert_saved_materialization(payload: Dictionary, setup: Dictionary) -> bo
 	if payload.get("overworld", {}).get(SessionStateStoreScript.GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY, {}).is_empty():
 		_fail("Saved overworld missed concrete runtime materialization payload.")
 		return false
+	var saved_overworld_materialization: Dictionary = payload.get("overworld", {}).get(SessionStateStoreScript.GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY, {}) if payload.get("overworld", {}).get(SessionStateStoreScript.GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY, {}) is Dictionary else {}
+	if not _assert_honest_extra_large_dimensions(setup, saved_overworld_materialization):
+		return false
 	return true
 
 func _assert_restored_materialization(session: SessionStateStoreScript.SessionData, setup: Dictionary) -> bool:
@@ -180,6 +188,9 @@ func _assert_restored_materialization(session: SessionStateStoreScript.SessionDa
 		return false
 	if not ContentService.has_generated_scenario_draft(session.scenario_id):
 		_fail("Restore did not re-register generated scenario from provenance.")
+		return false
+	var materialization: Dictionary = session.overworld.get(SessionStateStoreScript.GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY, {}) if session.overworld.get(SessionStateStoreScript.GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY, {}) is Dictionary else {}
+	if not _assert_honest_extra_large_dimensions(setup, materialization):
 		return false
 	return true
 
@@ -198,6 +209,30 @@ func _assert_materialization_determinism(first: Dictionary, repeated: Dictionary
 	if first_sig == String(changed_profile.get("generated_identity", {}).get("materialized_map_signature", "")):
 		_fail("Changed profile id did not change the materialized-map signature.")
 		return false
+	return true
+
+func _assert_honest_extra_large_dimensions(setup: Dictionary, materialization: Dictionary) -> bool:
+	var map_size: Dictionary = materialization.get("map_size", {}) if materialization.get("map_size", {}) is Dictionary else {}
+	if int(map_size.get("width", 0)) != 144 or int(map_size.get("height", 0)) != 144:
+		_fail("Runtime materialization did not preserve Extra Large 144x144 map size: %s" % JSON.stringify(map_size))
+		return false
+	var rows: Array = materialization.get("terrain", {}).get("rows", []) if materialization.get("terrain", {}).get("rows", []) is Array else []
+	if rows.size() != 144:
+		_fail("Runtime materialization terrain row count was not 144: %d" % rows.size())
+		return false
+	if not rows.is_empty() and (not (rows[0] is Array) or rows[0].size() != 144):
+		_fail("Runtime materialization terrain column count was not 144.")
+		return false
+	if not setup.is_empty():
+		var identity: Dictionary = setup.get("generated_identity", {}) if setup.get("generated_identity", {}) is Dictionary else {}
+		var source_size: Dictionary = identity.get("source_size", {}) if identity.get("source_size", {}) is Dictionary else {}
+		var materialized_size: Dictionary = identity.get("materialized_size", {}) if identity.get("materialized_size", {}) is Dictionary else {}
+		if String(identity.get("size_class_id", "")) != "homm3_extra_large" or int(source_size.get("width", 0)) != 144 or int(source_size.get("height", 0)) != 144:
+			_fail("Generated identity missed Extra Large source provenance: %s" % JSON.stringify(identity))
+			return false
+		if int(materialized_size.get("width", 0)) != 144 or int(materialized_size.get("height", 0)) != 144:
+			_fail("Generated identity materialized dimensions did not equal source dimensions: %s" % JSON.stringify(identity))
+			return false
 	return true
 
 func _assert_materialized_categories(materialization: Dictionary) -> bool:
