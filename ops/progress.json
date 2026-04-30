@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-generated-overworld-profile-cache-corrective-10184",
-  "currentSliceTitle": "Generated Overworld Profiling Cache Corrective",
+  "currentSliceId": "random-map-generated-object-footprint-interaction-corrective-10184",
+  "currentSliceTitle": "Generated Object Footprint Interaction Corrective",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed profiling-first generated-overworld corrective with hover drawer-summary skip, generated index signature reuse, and save payload/time evidence.",
+  "currentSliceNotes": "Completed urgent corrective: generated resource, mine, and dwelling runtime body/visit/render contracts now preserve generated metadata and expose one reachable interaction tile.",
   "nextActionGuardrailNote": "Remaining generated save work should split generated map payload persistence from lightweight state/delta autosave without visual/map semantic changes.",
-  "updatedAt": "2026-04-30T16:30:55Z",
+  "updatedAt": "2026-04-30T17:23:20Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,51 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "random-map-generated-object-footprint-interaction-corrective-10184",
+      "title": "Generated Object Footprint Interaction Corrective",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-final-homm3-parity-regate-audit.md",
+        "docs/overworld-object-schema-migration-plan.md",
+        "docs/overworld-object-pathing-occupancy-adoption-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/ScenarioFactory.gd",
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/random_map_generated_object_footprint_interaction_report.gd",
+        "tests/random_map_generated_object_footprint_interaction_report.tscn"
+      ],
+      "startedAt": "2026-04-30T16:57:50Z",
+      "completedAt": "2026-04-30T17:23:20Z",
+      "completionEvidence": [
+        "Generated resource-node materialization now preserves object_id, body_tiles, visit_tile, runtime_footprint, runtime_body_mask, footprint_deferred, and related generated placement metadata.",
+        "Overworld pathing/blocking now uses generated runtime body and exactly one generated visit tile for generated resources, mines, and dwellings; passable pickup resources remain enter-to-collect and do not block their node tile.",
+        "Generated render profiles use runtime_footprint when a deferred multi-tile object is currently materialized as an anchor-tile runtime object, preventing invisible authored multi-tile blocking/render mismatch.",
+        "Focused Small-map report proves collectible resources, dwellings, and sawmill/resource-producer contracts have reachable interaction tiles and no self-body interaction blockage."
+      ],
+      "validationEvidence": [
+        "godot4 --headless --path . tests/random_map_generated_object_footprint_interaction_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_generated_visual_path_regression_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_generated_overworld_profile_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_live_overworld_render_move_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_default_seed_objective_regression_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_post_open_tail_timing_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_async_generation_ux_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_runtime_render_perf_smoke.tscn passed.",
+        "godot4 --headless --path . tests/random_map_player_count_range_report.tscn passed.",
+        "python3 tests/validate_repo.py passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ],
+      "notes": "Completed after AcOrP local testing found collectible resources/dwellings/mines could expose blocked or mismatched interaction tiles. Root cause was generated placement metadata being stripped before runtime pathing/rendering rebuilt contracts from authored object metadata."
+    },
     {
       "id": "document-model-reset-10184",
       "title": "Document Model Reset",

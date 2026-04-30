@@ -598,7 +598,7 @@ static func _resolve_post_move_interaction(session: SessionStateStoreScript.Sess
 			"route": "battle",
 		}
 
-	var resource_result := _find_active_resource_node(session)
+	var resource_result := _find_context_resource_node(session)
 	if int(resource_result.get("index", -1)) >= 0:
 		var result := collect_active_resource(session)
 		return {
@@ -1178,7 +1178,7 @@ static func overworld_object_placement_pathing_surface(
 	if map_object.is_empty():
 		return {}
 	var body_tiles := _map_object_world_body_tiles(map_object, node)
-	var interaction_tiles := _map_object_world_interaction_tiles(map_object, node)
+	var interaction_tiles := _resource_node_world_interaction_tiles(map_object, node)
 	var footprint: Dictionary = map_object.get("footprint", {}) if map_object.get("footprint", {}) is Dictionary else {}
 	var width: int = maxi(1, int(footprint.get("width", 1)))
 	var height: int = maxi(1, int(footprint.get("height", 1)))
@@ -1205,8 +1205,10 @@ static func overworld_object_placement_pathing_surface(
 		"body_tile_count": body_payload.size(),
 		"interaction_tile_count": interaction_payload.size(),
 		"uses_authored_body_tiles": map_object.get("body_tiles", []) is Array and not map_object.get("body_tiles", []).is_empty(),
+		"uses_runtime_body_tiles": _resource_node_has_runtime_object_contract(node),
+		"uses_runtime_visit_tile": _resource_node_has_runtime_visit_tile(node),
 		"uses_authored_approach": map_object.get("approach", {}) is Dictionary and not map_object.get("approach", {}).is_empty(),
-		"blocks_body_tiles": _map_object_blocks_body_tiles(map_object),
+		"blocks_body_tiles": _resource_node_blocks_body_tiles(node, map_object),
 		"blocks_visual_footprint_rectangle": false,
 	}
 
@@ -1253,7 +1255,7 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 			continue
 		var node: Dictionary = node_value
 		var map_object := _map_object_for_resource_node(node)
-		if map_object.is_empty() or not _map_object_blocks_body_tiles(map_object):
+		if not _resource_node_blocks_body_tiles(node, map_object):
 			continue
 		for body_tile in _map_object_world_body_tiles(map_object, node):
 			if body_tile is Vector2i:
@@ -1261,6 +1263,11 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 	return index
 
 static func _map_object_for_resource_node(node: Dictionary) -> Dictionary:
+	var object_id := String(node.get("object_id", "")).strip_edges()
+	if object_id != "":
+		var direct := ContentService.get_map_object(object_id)
+		if not direct.is_empty():
+			return direct
 	return ContentService.get_map_object_for_resource_site(String(node.get("site_id", "")))
 
 static func _map_object_blocks_body_tiles(map_object: Dictionary) -> bool:
@@ -1274,7 +1281,21 @@ static func _map_object_blocks_body_tiles(map_object: Dictionary) -> bool:
 		return true
 	return not bool(map_object.get("passable", true))
 
+static func _resource_node_blocks_body_tiles(node: Dictionary, map_object: Dictionary) -> bool:
+	if map_object.is_empty():
+		return bool(node.get("blocking_body", false))
+	var passability_class := String(map_object.get("passability_class", ""))
+	if passability_class in ["passable_visit_on_enter", "passable_scenic"]:
+		return false
+	if _resource_node_has_runtime_object_contract(node):
+		return bool(node.get("blocking_body", _map_object_blocks_body_tiles(map_object)))
+	return _map_object_blocks_body_tiles(map_object)
+
 static func _map_object_world_body_tiles(map_object: Dictionary, placement: Dictionary) -> Array:
+	if _resource_node_has_runtime_object_contract(placement):
+		var runtime_tiles := _world_tiles_from_payload_array(placement.get("body_tiles", []))
+		if not runtime_tiles.is_empty():
+			return runtime_tiles
 	var tiles := []
 	var origin := _map_object_footprint_origin(map_object, placement)
 	var body_tiles = map_object.get("body_tiles", [])
@@ -1285,6 +1306,14 @@ static func _map_object_world_body_tiles(map_object: Dictionary, placement: Dict
 			continue
 		tiles.append(origin + Vector2i(int(body_value.get("x", 0)), int(body_value.get("y", 0))))
 	return tiles
+
+static func _resource_node_world_interaction_tiles(map_object: Dictionary, placement: Dictionary) -> Array:
+	if String(map_object.get("passability_class", "")) == "passable_visit_on_enter":
+		return [Vector2i(int(placement.get("x", 0)), int(placement.get("y", 0)))]
+	if _resource_node_has_runtime_visit_tile(placement):
+		var visit_tile: Dictionary = placement.get("visit_tile", {})
+		return [Vector2i(int(visit_tile.get("x", 0)), int(visit_tile.get("y", 0)))]
+	return _map_object_world_interaction_tiles(map_object, placement)
 
 static func _map_object_world_interaction_tiles(map_object: Dictionary, placement: Dictionary) -> Array:
 	var tiles := []
@@ -1298,6 +1327,22 @@ static func _map_object_world_interaction_tiles(map_object: Dictionary, placemen
 			tiles.append(origin + Vector2i(int(offset_value.get("x", 0)), int(offset_value.get("y", 0))))
 		return tiles
 	return [Vector2i(int(placement.get("x", 0)), int(placement.get("y", 0)))]
+
+static func _resource_node_has_runtime_object_contract(node: Dictionary) -> bool:
+	return node.get("object_footprint_catalog_ref", {}) is Dictionary and not node.get("object_footprint_catalog_ref", {}).is_empty()
+
+static func _resource_node_has_runtime_visit_tile(node: Dictionary) -> bool:
+	return node.get("visit_tile", {}) is Dictionary and not node.get("visit_tile", {}).is_empty()
+
+static func _world_tiles_from_payload_array(payload: Variant) -> Array:
+	var tiles := []
+	if not (payload is Array):
+		return tiles
+	for value in payload:
+		if not (value is Dictionary):
+			continue
+		tiles.append(Vector2i(int(value.get("x", 0)), int(value.get("y", 0))))
+	return tiles
 
 static func _map_object_footprint_origin(map_object: Dictionary, placement: Dictionary) -> Vector2i:
 	var footprint: Dictionary = map_object.get("footprint", {}) if map_object.get("footprint", {}) is Dictionary else {}
@@ -1321,7 +1366,7 @@ static func _resource_node_matches_interaction_tile(node: Dictionary, tile: Vect
 	var map_object := _map_object_for_resource_node(node)
 	if map_object.is_empty():
 		return _position_matches(node, tile)
-	for interaction_tile in _map_object_world_interaction_tiles(map_object, node):
+	for interaction_tile in _resource_node_world_interaction_tiles(map_object, node):
 		if interaction_tile == tile:
 			return true
 	return false
@@ -3784,31 +3829,67 @@ static func _normalize_resource_nodes(nodes: Array) -> Array:
 	for node in nodes:
 		if not (node is Dictionary):
 			continue
-		normalized.append(
-			{
-				"placement_id": String(node.get("placement_id", "")),
-				"site_id": String(node.get("site_id", "")),
-				"x": int(node.get("x", 0)),
-				"y": int(node.get("y", 0)),
-				"collected": bool(node.get("collected", false)),
-				"collected_by_faction_id": String(node.get("collected_by_faction_id", "")),
-				"collected_day": max(0, int(node.get("collected_day", 0))),
-				"response_origin": String(node.get("response_origin", "")),
-				"response_source_town_id": String(node.get("response_source_town_id", "")),
-				"response_last_day": max(0, int(node.get("response_last_day", 0))),
-				"response_until_day": max(0, int(node.get("response_until_day", 0))),
-				"response_commander_id": String(node.get("response_commander_id", "")),
-				"response_security_rating": max(0, int(node.get("response_security_rating", 0))),
-				"delivery_controller_id": String(node.get("delivery_controller_id", "")),
-				"delivery_origin_town_id": String(node.get("delivery_origin_town_id", "")),
-				"delivery_target_kind": String(node.get("delivery_target_kind", "")),
-				"delivery_target_id": String(node.get("delivery_target_id", "")),
-				"delivery_target_label": String(node.get("delivery_target_label", "")),
-				"delivery_arrival_day": max(0, int(node.get("delivery_arrival_day", 0))),
-				"delivery_manifest": _normalize_recruit_payload(node.get("delivery_manifest", {})),
-			}
-		)
+		var normalized_node := {
+			"placement_id": String(node.get("placement_id", "")),
+			"site_id": String(node.get("site_id", "")),
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+			"collected": bool(node.get("collected", false)),
+			"collected_by_faction_id": String(node.get("collected_by_faction_id", "")),
+			"collected_day": max(0, int(node.get("collected_day", 0))),
+			"response_origin": String(node.get("response_origin", "")),
+			"response_source_town_id": String(node.get("response_source_town_id", "")),
+			"response_last_day": max(0, int(node.get("response_last_day", 0))),
+			"response_until_day": max(0, int(node.get("response_until_day", 0))),
+			"response_commander_id": String(node.get("response_commander_id", "")),
+			"response_security_rating": max(0, int(node.get("response_security_rating", 0))),
+			"delivery_controller_id": String(node.get("delivery_controller_id", "")),
+			"delivery_origin_town_id": String(node.get("delivery_origin_town_id", "")),
+			"delivery_target_kind": String(node.get("delivery_target_kind", "")),
+			"delivery_target_id": String(node.get("delivery_target_id", "")),
+			"delivery_target_label": String(node.get("delivery_target_label", "")),
+			"delivery_arrival_day": max(0, int(node.get("delivery_arrival_day", 0))),
+			"delivery_manifest": _normalize_recruit_payload(node.get("delivery_manifest", {})),
+		}
+		_copy_resource_runtime_metadata(normalized_node, node)
+		normalized.append(normalized_node)
 	return normalized
+
+static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
+	for key in [
+		"object_id",
+		"zone_id",
+		"owner",
+		"player_slot",
+		"player_type",
+		"team_id",
+		"kind",
+		"generated_kind",
+		"original_resource_category_id",
+		"resource_id",
+		"neutral_dwelling_family_id",
+		"guard_pressure",
+		"body_tiles",
+		"blocking_body",
+		"approach_tiles",
+		"visit_tile",
+		"pathing_status",
+		"object_footprint_catalog_ref",
+		"footprint",
+		"runtime_footprint",
+		"body_mask",
+		"runtime_body_mask",
+		"visit_mask",
+		"approach_mask",
+		"passability_mask",
+		"action_mask",
+		"terrain_restrictions",
+		"placement_predicates",
+		"placement_predicate_results",
+		"footprint_deferred",
+	]:
+		if source.has(key):
+			target[key] = source[key].duplicate(true) if source[key] is Array or source[key] is Dictionary else source[key]
 
 static func _normalize_artifact_nodes(nodes: Array) -> Array:
 	return ArtifactRulesScript.normalize_artifact_nodes(nodes)
