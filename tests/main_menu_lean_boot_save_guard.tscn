@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/main_menu_lean_boot_save_guard.gd" id="1"]
+
+[node name="MainMenuLeanBootSaveGuard" type="Node"]
+script = ExtResource("1")

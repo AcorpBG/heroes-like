@@ -101,6 +101,7 @@ const TAB_HELP_TOPIC := {
 
 var _save_summaries: Array = []
 var _selected_save_key := ""
+var _save_browser_loaded := false
 var _campaign_entries: Array = []
 var _selected_campaign_id := ""
 var _campaign_chapter_entries: Array = []
@@ -132,7 +133,10 @@ func _ready() -> void:
 
 func _refresh_menu() -> void:
 	_menu_notice = AppRouter.consume_menu_notice()
-	_rebuild_save_browser()
+	if _stage_dock_panel.visible and _menu_tabs.current_tab == TAB_SAVES:
+		_rebuild_save_browser()
+	else:
+		_reset_save_browser_placeholder()
 	_rebuild_campaign_browser()
 	_configure_difficulty_picker()
 	_configure_generated_random_map_controls()
@@ -148,7 +152,13 @@ func _refresh_menu() -> void:
 	_sync_first_view_command_tooltips()
 
 func _latest_continue_surface() -> Dictionary:
-	var latest_summary := SaveService.latest_loadable_summary()
+	var latest_summary := _active_save_board_latest_summary()
+	if latest_summary.is_empty():
+		return {
+			"text": "Continue Latest",
+			"enabled": false,
+			"tooltip": "Open Load to inspect saved expeditions. Continue Latest resolves save metadata only when a resume action is chosen.",
+		}
 	return {
 		"text": SaveService.continue_action_label(latest_summary),
 		"enabled": SaveService.can_load_summary(latest_summary),
@@ -216,6 +226,8 @@ func _on_open_skirmish_pressed() -> void:
 
 func _on_open_saves_pressed() -> void:
 	_toggle_stage_dock(TAB_SAVES)
+	if _stage_dock_panel.visible and _menu_tabs.current_tab == TAB_SAVES:
+		_ensure_save_browser_loaded()
 
 func _on_open_guide_pressed() -> void:
 	_select_help_topic(SettingsService.default_help_topic_id())
@@ -747,9 +759,10 @@ func _refresh_settings_panel() -> void:
 
 func _rebuild_save_browser() -> void:
 	_save_summaries = SaveService.list_session_summaries()
+	_save_browser_loaded = true
 	_save_list.clear()
 
-	var latest_key := _summary_key(SaveService.latest_loadable_summary())
+	var latest_key := _summary_key(_latest_loaded_save_summary())
 	var selected_index := -1
 	for index in range(_save_summaries.size()):
 		var summary: Dictionary = _save_summaries[index]
@@ -825,7 +838,7 @@ func _selected_save_command_tooltip(summary: Dictionary) -> String:
 	return _join_nonempty_lines(lines)
 
 func _default_selected_save_index() -> int:
-	var latest_key := _summary_key(SaveService.latest_loadable_summary())
+	var latest_key := _summary_key(_latest_loaded_save_summary())
 	if latest_key != "":
 		for index in range(_save_summaries.size()):
 			if _summary_key(_save_summaries[index]) == latest_key:
@@ -839,6 +852,43 @@ func _selected_summary() -> Dictionary:
 		if _summary_key(summary) == _selected_save_key:
 			return summary
 	return {}
+
+func _latest_loaded_save_summary() -> Dictionary:
+	var latest := {}
+	for summary in _save_summaries:
+		if not SaveService.can_load_summary(summary):
+			continue
+		if latest.is_empty() or int(summary.get("modified_timestamp", 0)) > int(latest.get("modified_timestamp", 0)):
+			latest = summary
+	return latest
+
+func _active_save_board_latest_summary() -> Dictionary:
+	if not _save_browser_loaded or not _stage_dock_panel.visible or _menu_tabs.current_tab != TAB_SAVES:
+		return {}
+	return _latest_loaded_save_summary()
+
+func _active_save_board_selected_summary() -> Dictionary:
+	if not _save_browser_loaded or not _stage_dock_panel.visible or _menu_tabs.current_tab != TAB_SAVES:
+		return {}
+	return _selected_summary()
+
+func _reset_save_browser_placeholder() -> void:
+	if _save_browser_loaded:
+		return
+	_save_summaries = []
+	_selected_save_key = ""
+	if _save_list != null:
+		_save_list.clear()
+	if _save_details_label != null:
+		_set_compact_label(_save_details_label, "Open Load to inspect saved expeditions.", 3, 84)
+	if _load_selected_button != null:
+		_load_selected_button.text = "Load Save"
+		_load_selected_button.disabled = true
+		_load_selected_button.tooltip_text = "Open Load to inspect save slots before loading."
+
+func _ensure_save_browser_loaded() -> void:
+	if not _save_browser_loaded:
+		_rebuild_save_browser()
 
 func _summary_key(summary: Dictionary) -> String:
 	if summary.is_empty():
@@ -1202,7 +1252,9 @@ func _build_campaign_pulse() -> String:
 	)
 
 func _build_save_pulse() -> String:
-	var latest_summary := SaveService.latest_loadable_summary()
+	var latest_summary := _active_save_board_latest_summary()
+	if latest_summary.is_empty():
+		return "Load board: open Load to inspect manual slots and autosave."
 	var latest_line := "No active resume point."
 	var play_check := ""
 	if SaveService.can_load_summary(latest_summary):
@@ -1227,7 +1279,7 @@ func _build_footer_expedition_summary() -> String:
 	var lines := [ScenarioSelectRulesScript.build_current_session_summary(SessionState.ensure_active_session())]
 	lines.append(String(_continue_check_surface().get("visible_text", "")))
 	lines.append(String(_quit_check_surface().get("visible_text", "")))
-	var latest_summary := SaveService.latest_loadable_summary()
+	var latest_summary := _active_save_board_latest_summary()
 	if SaveService.can_load_summary(latest_summary):
 		lines.append("Latest save: %s" % SaveService.describe_resume_brief(latest_summary))
 		lines.append(SaveService.describe_summary_play_check(latest_summary))
@@ -1253,6 +1305,8 @@ func _toggle_stage_dock(index: int) -> void:
 
 func _show_stage_dock() -> void:
 	_stage_dock_panel.visible = true
+	if _menu_tabs.current_tab == TAB_SAVES:
+		_ensure_save_browser_loaded()
 	_refresh_stage_dock_header()
 	_refresh_summary()
 	_sync_command_button_styles()
@@ -1284,10 +1338,7 @@ func _refresh_stage_dock_header() -> void:
 	_close_stage_dock_button.tooltip_text = _close_stage_dock_tooltip()
 
 func _quit_check_surface() -> Dictionary:
-	var latest_summary := SaveService.latest_loadable_summary()
-	var resume_line := "No current resume point will be created by Quit."
-	if SaveService.can_load_summary(latest_summary):
-		resume_line = "Latest resume stays %s." % SaveService.describe_resume_brief(latest_summary)
+	var resume_line := "Quit does not inspect, create, or update save slots from the first-view menu."
 	var visible := "Quit check: closes client; save first for an updated resume."
 	var tooltip := "Quit Check\n- Action: closes the client from the scenic menu.\n- Resume point: %s\n- Save first: use an in-run save or outcome save before quitting when the latest play state must be preserved.\n- Not changed: campaign progress, expedition saves, and device settings are not written by reading this cue." % resume_line
 	return {
@@ -1296,11 +1347,11 @@ func _quit_check_surface() -> Dictionary:
 	}
 
 func _continue_check_surface() -> Dictionary:
-	var latest_summary := SaveService.latest_loadable_summary()
+	var latest_summary := _active_save_board_latest_summary()
 	if not SaveService.can_load_summary(latest_summary):
 		return {
-			"visible_text": "Continue check: no loadable resume point yet.",
-			"tooltip_text": "Continue Check\n- Resume point: none loadable.\n- Next: start Campaign or Skirmish, then save or autosave to create a Continue Latest target.\n- Inspection: reading this cue does not start, load, save, or change campaign progression.",
+			"visible_text": "Load check: open Load to inspect saved expeditions.",
+			"tooltip_text": "Load Check\n- Resume point: not inspected on the first-view menu.\n- Next: open Load to inspect saves, or start Campaign or Skirmish for a fresh expedition.\n- Boot boundary: reading this cue does not inspect save slots, load, save, route, or change campaign progression.",
 		}
 	var resume_label := SaveService.describe_resume_brief(latest_summary)
 	var play_check := SaveService.describe_summary_play_check(latest_summary)
@@ -1339,9 +1390,9 @@ func validation_snapshot() -> Dictionary:
 	var campaign_chapter_check := _campaign_chapter_check_payload(selected_chapter_action, primary_campaign_action)
 	var selected_skirmish_setup := ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
 	var skirmish_front_check := _skirmish_front_check_payload(selected_skirmish_setup)
-	var selected_save_summary := _selected_summary()
+	var selected_save_summary := _active_save_board_selected_summary()
 	var latest_continue := _latest_continue_surface()
-	var latest_summary := SaveService.latest_loadable_summary()
+	var latest_summary := _active_save_board_latest_summary()
 	var quit_check := _quit_check_surface()
 	var continue_check := _continue_check_surface()
 	return {
@@ -1419,6 +1470,7 @@ func validation_snapshot() -> Dictionary:
 		"start_skirmish_tooltip": _start_skirmish_button.tooltip_text,
 		"start_skirmish_enabled": not _start_skirmish_button.disabled,
 		"selected_save_key": _selected_save_key,
+		"save_browser_loaded": _save_browser_loaded,
 		"latest_save_summary": latest_summary,
 		"selected_save_summary": selected_save_summary.duplicate(true),
 		"latest_play_check": SaveService.describe_summary_play_check(latest_summary),
@@ -1568,7 +1620,7 @@ func validation_open_skirmish_stage() -> void:
 func validation_open_saves_stage() -> void:
 	_select_menu_tab(TAB_SAVES)
 	_show_stage_dock()
-	_rebuild_save_browser()
+	_ensure_save_browser_loaded()
 
 func validation_open_contextual_guide_stage() -> void:
 	_on_stage_help_pressed()
@@ -1873,17 +1925,12 @@ func _sync_first_view_command_tooltips() -> void:
 	)
 
 func _first_view_load_tooltip() -> String:
-	var latest_summary := SaveService.latest_loadable_summary()
 	var lines := [
-		"Command cue: Load opens the war ledger; loading only happens after Load Selected.",
+		"Command cue: Load opens the war ledger and inspects save slots only after this command is chosen.",
+		"Load Selected stays unavailable until a save row is inspected and selected.",
 	]
-	if SaveService.can_load_summary(latest_summary):
-		lines.append(String(_continue_check_surface().get("tooltip_text", "")))
-		lines.append(SaveService.describe_summary_play_check(latest_summary))
-		lines.append(SaveService.describe_summary_resume_handoff(latest_summary))
-	else:
-		lines.append(String(_continue_check_surface().get("tooltip_text", "")))
-		lines.append("No loadable save is available; start Campaign or Skirmish to create a resume point.")
+	lines.append(String(_continue_check_surface().get("tooltip_text", "")))
+	lines.append("No save summary is read for this first-view tooltip.")
 	return "\n".join(lines)
 
 func _help_topic_for_tab(tab_index: int) -> String:

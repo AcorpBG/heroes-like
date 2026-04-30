@@ -41,6 +41,8 @@ ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
 ENEMY_ADVENTURE_RULES_PATH = ROOT / "scripts" / "core" / "EnemyAdventureRules.gd"
 MAIN_MENU_SCENE_PATH = ROOT / "scenes" / "menus" / "MainMenu.tscn"
 MAIN_MENU_SCRIPT_PATH = ROOT / "scenes" / "menus" / "MainMenu.gd"
+MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCENE_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.tscn"
+MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.gd"
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
 MAP_EDITOR_SCRIPT_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
 MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
@@ -10090,6 +10092,25 @@ def validate_save_management(errors: list[str]) -> None:
         "AppRouter.consume_menu_notice",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required save-browser state token: {required_token}")
+    for required_token in (
+        "var _save_browser_loaded",
+        "func _ensure_save_browser_loaded",
+        "func _reset_save_browser_placeholder",
+        "func _latest_loaded_save_summary",
+        "open Load to inspect saved expeditions",
+    ):
+        ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing lazy save-browser boot boundary token: {required_token}")
+    ensure(MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCENE_PATH.exists(), errors, "Missing focused main-menu lean boot save guard scene")
+    ensure(MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH.exists(), errors, "Missing focused main-menu lean boot save guard script")
+    if MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH.exists():
+        guard_text = MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "validation_begin_summary_inspection_trace",
+            "validation_summary_inspection_trace_snapshot",
+            "validation_open_saves_stage",
+            "boot_display_ms",
+        ):
+            ensure(required_token in guard_text, errors, f"main_menu_lean_boot_save_guard.gd is missing guard token: {required_token}")
 
     ensure(MAIN_MENU_SCENE_PATH.exists(), errors, "Missing main menu scene for save browser validation")
     if MAIN_MENU_SCENE_PATH.exists():
