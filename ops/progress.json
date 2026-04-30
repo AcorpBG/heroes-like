@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-live-overworld-render-move-perf-corrective-10184",
-  "currentSliceTitle": "Random Map Live Overworld Render And Move Performance Corrective",
+  "currentSliceId": "random-map-generated-overworld-profile-cache-corrective-10184",
+  "currentSliceTitle": "Generated Overworld Profiling Cache Corrective",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed urgent visual corrective: removed generated-map primitive render fast path, restored normal overworld art for generated maps, preserved compact refresh/save-summary latency wins, and validated live movement/render plus RMG regressions.",
-  "nextActionGuardrailNote": "Validated corrective preserved generated-map size/template/player count/object density, explicit-seed determinism, and generated objective behavior.",
-  "updatedAt": "2026-04-30T16:03:27Z",
+  "currentSliceNotes": "Completed profiling-first generated-overworld corrective with hover drawer-summary skip, generated index signature reuse, and save payload/time evidence.",
+  "nextActionGuardrailNote": "Remaining generated save work should split generated map payload persistence from lightweight state/delta autosave without visual/map semantic changes.",
+  "updatedAt": "2026-04-30T16:30:55Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -643,7 +643,8 @@
         "random-map-translated-template-runtime-sweep-10184",
         "random-map-validation-batch-retry-10184",
         "random-map-water-underground-transit-gameplay-10184",
-        "random-map-zone-layout-water-underground-10184"
+        "random-map-zone-layout-water-underground-10184",
+        "random-map-generated-overworld-profile-cache-corrective-10184"
       ],
       "aggregateStatusNote": "Parent status summarizes the broad RMG foundation plus parity-regated generated skirmish/session RMG workstream; child slices carry executable implementation evidence.",
       "docsReadyEvidenceIds": [
@@ -4408,6 +4409,78 @@
         "Live FPS sample under Xvfb/llvmpipe was 9.880 before movement and 9.693 after movement in the focused report, without changing generated map dimensions, templates, player counts, object density, or seed semantics.",
         "RANDOM_MAP_RUNTIME_RENDER_PERF_SMOKE passed on 144x144 with visible culling, normal_overworld_art, and primitive_generated_render_path false; first set_map_state was 236ms and second set_map_state was 58ms.",
         "Existing RMG seed/objective, post-open tail, async UX, player-count, repo validation, progress JSON, and diff hygiene checks passed after the visual corrective."
+      ]
+    },
+    {
+      "id": "random-map-generated-overworld-profile-cache-corrective-10184",
+      "title": "Generated Overworld Profiling Cache Corrective",
+      "phase": "phase-2-deep-production-foundation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "status": "completed",
+      "purpose": "Profile generated Small overworld draw/refresh/hover/save work and remove the highest-cost repeated work without changing generated visuals or map semantics.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-size-class-translation.md",
+        "docs/random-map-final-homm3-parity-regate-audit.md"
+      ],
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scripts/autoload/SaveService.gd",
+        "tests/random_map_generated_overworld_profile_report.gd",
+        "tests/random_map_generated_overworld_profile_report.tscn",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "/root/.local/bin/godot --headless --path . tests/random_map_generated_overworld_profile_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_generated_visual_path_regression_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_live_overworld_render_move_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_default_seed_objective_regression_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_post_open_tail_timing_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_async_generation_ux_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_runtime_render_perf_smoke.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_player_count_range_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report counts and times generated overworld refresh, hover, draw layers, object/road index rebuilds, visible/hidden tile checks, route recomputation, and save write size/time.",
+        "Report compares forced old hover drawer-summary rebuild against tooltip-only hover and forced uncached index refresh against signature-gated index reuse.",
+        "Generated maps keep the normal overworld art path and preserve size, template, player-count, seed, objective, and object-density behavior."
+      ],
+      "completionCriteria": [
+        "Profiling identifies repeated generated-overworld work before implementation is accepted.",
+        "Hover no longer rebuilds command/frontier drawer handoff summaries when hover did not change selected tile or drawer state.",
+        "Generated road/object/hero indexes are reused across unchanged refreshes and dirtied only by placement/hero/road signature changes.",
+        "Required focused and baseline validation gates pass or any unavailable gate is explicitly recorded."
+      ],
+      "nonGoals": [
+        "No primitive/debug visual shortcut, downscale, density cut, template/player-count change, seed/objective change, broad renderer rewrite, save-schema migration, or campaign/alpha/release claim."
+      ],
+      "createdAt": "2026-04-30T16:26:41Z",
+      "updatedAt": "2026-04-30T16:30:55Z",
+      "startedAt": "2026-04-30T16:26:41Z",
+      "notes": "Completed profiling-first generated-overworld corrective: hover skips redundant drawer-summary rebuilds, unchanged generated road/object/hero indexes are signature-reused, and focused report records save payload size/time as remaining delta-save work.",
+      "completedAt": "2026-04-30T16:30:55Z",
+      "completionEvidence": [
+        "RANDOM_MAP_GENERATED_OVERWORLD_PROFILE_REPORT passed on generated Small explicit seed generated-overworld-profile-10184 with normal_overworld_art and primitive_generated_render_path false.",
+        "Profile identified hover drawer handoff summary rebuilding as the highest repeated hover cost: forced baseline hover was about 2302.546ms; optimized tooltip-only hover was about 0.165ms.",
+        "Generated refresh now signature-reuses unchanged indexes: optimized cached refresh reported object_index_skips=1 and road_index_skips=1 versus forced baseline object_index_rebuilds=1 and road_index_rebuilds=1.",
+        "Draw instrumentation counted visible-window work only: sampled viewport drew 340 terrain tiles, 0 road tiles for the compact generated land seed, 315 hidden/unexplored checks, and 5 object presentation checks while preserving generated 36x36 map semantics.",
+        "Save profile evidence remains intentionally unhidden: generated end-turn autosave still serialized/wrote about 6,402,989 bytes in about 486ms, so generated map payload split/delta autosave remains future work.",
+        "Validation passed: random_map_generated_overworld_profile_report, random_map_generated_visual_path_regression_report, random_map_live_overworld_render_move_report, random_map_default_seed_objective_regression_report, random_map_post_open_tail_timing_report, random_map_async_generation_ux_report, random_map_runtime_render_perf_smoke, random_map_player_count_range_report, python3 tests/validate_repo.py, python3 -m json.tool ops/progress.json, git diff --check."
+      ],
+      "completionResult": [
+        "Added focused profiling around generated overworld map view draw/refresh/hover, shell refresh/hover/end-turn, and runtime save write size/time.",
+        "Stopped hover from rebuilding command/frontier drawer handoff summaries when hover did not change selected tile or drawer state.",
+        "Added signature-gated road/object/hero index reuse in OverworldMapView while keeping normal overworld art and generated-map semantics.",
+        "Left full generated end-turn delta-save/split-map persistence as a measured follow-up rather than a large unproven rewrite."
       ]
     }
   ],

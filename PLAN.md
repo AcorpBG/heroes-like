@@ -2807,6 +2807,49 @@ completionResult:
 - Generated scenarios now use a rival-town capture victory objective and a starting-town loss defeat watch, avoiding the previous already-met starting-town victory condition.
 - Focused reports prove default Small variation, explicit same-seed determinism, and first generated Small movement staying in progress without changing size, template, player count, or object density.
 
+### P2 Child: Generated Overworld Profiling Cache Corrective
+
+id: `random-map-generated-overworld-profile-cache-corrective-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Profile generated Small overworld draw/refresh/hover/save work and remove the highest-cost repeated work without changing generated visuals or map semantics.
+
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-generator-foundation.md`
+- `docs/random-map-size-class-translation.md`
+- `docs/random-map-final-homm3-parity-regate-audit.md`
+
+implementationTargets:
+- `scenes/overworld/OverworldMapView.gd`
+- `scenes/overworld/OverworldShell.gd`
+- `scripts/autoload/SaveService.gd`
+- `tests/random_map_generated_overworld_profile_report.gd`
+- `tests/random_map_generated_overworld_profile_report.tscn`
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- Focused report counts and times generated overworld refresh, hover, draw layers, object/road index rebuilds, visible/hidden tile checks, route recomputation, and save write size/time.
+- Report compares forced old hover drawer-summary rebuild against tooltip-only hover and forced uncached index refresh against signature-gated index reuse.
+- Generated maps keep the normal overworld art path and preserve size, template, player-count, seed, objective, and object-density behavior.
+
+completionCriteria:
+- Profiling identifies repeated generated-overworld work before implementation is accepted.
+- Hover no longer rebuilds command/frontier drawer handoff summaries when hover did not change selected tile or drawer state.
+- Generated road/object/hero indexes are reused across unchanged refreshes and dirtied only by placement/hero/road signature changes.
+- Required focused and baseline validation gates pass or any unavailable gate is explicitly recorded.
+
+nonGoals:
+- No primitive/debug visual shortcut, downscale, density cut, template/player-count change, seed/objective change, broad renderer rewrite, save-schema migration, or campaign/alpha/release claim.
+
+completionResult:
+- Added generated-overworld profiling hooks for map view draw layers, refresh, hover, route recomputation, road/object/hero index reuse, and runtime save write size/time.
+- Focused report identified hover drawer handoff summary rebuilding as the highest-cost repeated hover work: forced baseline hover was about 2302ms, optimized tooltip-only hover was about 0.165ms.
+- `OverworldMapView` now signature-gates generated road/object/hero spatial index rebuilds; unchanged refreshes skip road and object index rebuilds while preserving normal art rendering.
+- End-turn generated autosave remains full-session serialization in this slice, measured at about 6.4MB and 486ms; generated map payload split/delta autosave remains the next save-architecture target.
+
 ## Phase 3 - Headless AI Agent Balance Harness
 
 Goal: run scenarios, AI turns, economy loops, battles, and balance checks without graphics.

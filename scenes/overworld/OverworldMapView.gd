@@ -235,6 +235,11 @@ var _session_static_cache_reason := "uninitialized"
 var _state_cache_reason := "uninitialized"
 var _dynamic_layer_reason := "uninitialized"
 var _frame_layer_reason := "uninitialized"
+var _object_index_signature := 0
+var _hero_index_signature := 0
+var _road_index_signature := 0
+var _validation_force_index_rebuild := false
+var _validation_profile: Dictionary = {}
 var _towns_by_tile: Dictionary = {}
 var _town_footprints_by_tile: Dictionary = {}
 var _resources_by_tile: Dictionary = {}
@@ -254,6 +259,7 @@ func _ready() -> void:
 	_invalidate_frame_layer("ready")
 
 func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: Vector2i) -> void:
+	var profile_start := _profile_begin("set_map_state")
 	_ensure_render_layers()
 	var previous_viewport_layout := _viewport_layout_signature()
 	var previous_board_layout := _board_layout_signature()
@@ -269,7 +275,9 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 	_rebuild_object_indexes()
 	_rebuild_road_tiles()
 	_selected_tile = selected_tile
+	var path_profile_start := _profile_begin("path_recompute")
 	_path_tiles = _build_path(_hero_tile, _selected_tile)
+	_profile_end("path_recompute", path_profile_start, {"path_tiles": _path_tiles.size()})
 	_ensure_camera_state()
 	var current_viewport_layout := _viewport_layout_signature()
 	var current_board_layout := _board_layout_signature()
@@ -306,6 +314,7 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 		_invalidate_state_cache(state_reason)
 
 	_invalidate_dynamic_layer("map_state_updated")
+	_profile_end("set_map_state", profile_start)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
@@ -597,6 +606,9 @@ func _draw_frame_layer() -> void:
 func _draw_session_static_layer() -> void:
 	if _session == null:
 		return
+	var profile_start := _profile_begin("draw_session_static")
+	var terrain_draws := 0
+	var road_draws := 0
 	var previous_target = _draw_canvas_item
 	_draw_canvas_item = _session_static_layer
 	var viewport_rect := _map_viewport_rect()
@@ -610,12 +622,26 @@ func _draw_session_static_layer() -> void:
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
+			terrain_draws += 1
+			if not _road_tile_payload(tile).is_empty():
+				road_draws += 1
 			_draw_tile_session_static_background(tile, rect)
 	_draw_canvas_item = previous_target
+	_profile_add("terrain_tile_draws", terrain_draws)
+	_profile_add("road_tile_draws", road_draws)
+	_profile_end("draw_session_static", profile_start, {
+		"terrain_tile_draws": terrain_draws,
+		"road_tile_draws": road_draws,
+		"visible_bounds": _rect2i_payload(visible_bounds),
+	})
 
 func _draw_state_layer() -> void:
 	if _session == null:
 		return
+	var profile_start := _profile_begin("draw_state")
+	var tile_checks := 0
+	var hidden_checks := 0
+	var object_presentations := 0
 	var previous_target = _draw_canvas_item
 	_draw_canvas_item = _state_layer
 	var viewport_rect := _map_viewport_rect()
@@ -625,14 +651,30 @@ func _draw_state_layer() -> void:
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
+			tile_checks += 1
+			if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+				hidden_checks += 1
+			else:
+				object_presentations += _visible_object_presentation_count(tile)
 			_draw_tile_state_overlay(tile, rect)
 			_draw_town_footprint_underlay(tile, rect)
 			_draw_tile_state_icon(tile, rect)
 	_draw_canvas_item = previous_target
+	_profile_add("state_tile_checks", tile_checks)
+	_profile_add("hidden_tile_checks", hidden_checks)
+	_profile_add("object_presentation_checks", object_presentations)
+	_profile_end("draw_state", profile_start, {
+		"tile_checks": tile_checks,
+		"hidden_tile_checks": hidden_checks,
+		"object_presentation_checks": object_presentations,
+		"visible_bounds": _rect2i_payload(visible_bounds),
+	})
 
 func _draw_dynamic_layer() -> void:
 	if _session == null:
 		return
+	var profile_start := _profile_begin("draw_dynamic")
+	var tile_checks := 0
 	var previous_target = _draw_canvas_item
 	_draw_canvas_item = _dynamic_layer
 	var viewport_rect := _map_viewport_rect()
@@ -643,9 +685,15 @@ func _draw_dynamic_layer() -> void:
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
+			tile_checks += 1
 			_draw_tile_focus(tile, rect)
 			_draw_tile_dynamic_icon(tile, rect)
 	_draw_canvas_item = previous_target
+	_profile_add("dynamic_tile_checks", tile_checks)
+	_profile_end("draw_dynamic", profile_start, {
+		"tile_checks": tile_checks,
+		"visible_bounds": _rect2i_payload(visible_bounds),
+	})
 
 func _draw_tile_background(tile: Vector2i, rect: Rect2) -> void:
 	_draw_tile_session_static_background(tile, rect)
@@ -2243,6 +2291,41 @@ func _draw_viewport_mask(viewport_rect: Rect2) -> void:
 	_canvas_draw_rect(Rect2(Vector2(0.0, 0.0), Vector2(viewport_rect.position.x, size.y)), FRAME_FILL, true)
 	_canvas_draw_rect(Rect2(Vector2(viewport_rect.end.x, 0.0), Vector2(max(size.x - viewport_rect.end.x, 0.0), size.y)), FRAME_FILL, true)
 
+func validation_reset_profile() -> void:
+	_validation_profile.clear()
+
+func validation_set_force_index_rebuild(enabled: bool) -> void:
+	_validation_force_index_rebuild = enabled
+
+func validation_profile_snapshot() -> Dictionary:
+	return _validation_profile.duplicate(true)
+
+func _profile_begin(_name: String) -> int:
+	return Time.get_ticks_usec()
+
+func _profile_end(name: String, started_usec: int, details: Dictionary = {}) -> void:
+	var elapsed_usec := maxi(0, Time.get_ticks_usec() - started_usec)
+	_profile_add("%s_calls" % name, 1)
+	_profile_add("%s_usec" % name, elapsed_usec)
+	_validation_profile["last_%s_usec" % name] = elapsed_usec
+	if not details.is_empty():
+		_validation_profile["last_%s" % name] = details.duplicate(true)
+
+func _profile_add(key: String, amount: int) -> void:
+	_validation_profile[key] = int(_validation_profile.get(key, 0)) + amount
+
+func _visible_object_presentation_count(tile: Vector2i) -> int:
+	var count := 0
+	if _has_town_at(tile):
+		count += 1
+	if _has_resource_at(tile):
+		count += 1
+	if _has_artifact_at(tile):
+		count += 1
+	if _has_encounter_at(tile) or _has_rememberable_encounter_at(tile):
+		count += 1
+	return count
+
 func validation_view_metrics() -> Dictionary:
 	var viewport_rect := _map_viewport_rect()
 	var board_rect := _board_rect()
@@ -2290,6 +2373,7 @@ func validation_view_metrics() -> Dictionary:
 			"state_reason": _state_cache_reason,
 			"dynamic_reason": _dynamic_layer_reason,
 			"frame_reason": _frame_layer_reason,
+			"profile": validation_profile_snapshot(),
 		},
 		"spatial_index": {
 			"town_tiles": _towns_by_tile.size(),
@@ -2300,6 +2384,14 @@ func validation_view_metrics() -> Dictionary:
 			"rememberable_encounter_tiles": _rememberable_encounters_by_tile.size(),
 			"hero_tiles": _heroes_by_tile.size(),
 		},
+	}
+
+func _rect2i_payload(rect: Rect2i) -> Dictionary:
+	return {
+		"x": rect.position.x,
+		"y": rect.position.y,
+		"width": rect.size.x,
+		"height": rect.size.y,
 	}
 
 func validation_tile_presentation(tile: Vector2i) -> Dictionary:
@@ -4624,9 +4716,24 @@ func _color_from_hex(value: String, fallback: Color) -> Color:
 	return fallback
 
 func _rebuild_road_tiles() -> void:
-	_road_tiles.clear()
+	var profile_start := _profile_begin("road_index")
 	var roads = _terrain_layers.get("roads", [])
+	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, _map_size.x)
+	signature = _combine_cache_signature(signature, _map_size.y)
+	signature = _combine_cache_signature(signature, _roads_cache_signature(roads))
+	if not _validation_force_index_rebuild and signature == _road_index_signature:
+		_profile_add("road_index_skips", 1)
+		_profile_end("road_index", profile_start, {
+			"rebuilt": false,
+			"road_tiles": _road_tiles.size(),
+			"signature": signature,
+		})
+		return
+	_road_index_signature = signature
+	_road_tiles.clear()
 	if not (roads is Array):
+		_profile_add("road_index_rebuilds", 1)
+		_profile_end("road_index", profile_start, {"rebuilt": true, "road_tiles": 0, "signature": signature})
 		return
 	for road in roads:
 		if not (road is Dictionary):
@@ -4645,17 +4752,62 @@ func _rebuild_road_tiles() -> void:
 				continue
 			_ensure_road_tile_payload(tile, overlay_id, road_id, role)
 	_rebuild_road_adjacency_connections()
+	_profile_add("road_index_rebuilds", 1)
+	_profile_end("road_index", profile_start, {
+		"rebuilt": true,
+		"road_tiles": _road_tiles.size(),
+		"signature": signature,
+	})
 
 func _rebuild_object_indexes() -> void:
+	var profile_start := _profile_begin("object_index")
+	var static_signature := _object_index_signature_for(_session)
+	var hero_signature := _hero_index_signature_for(_session)
+	var rebuilt_static := false
+	var rebuilt_heroes := false
+	if _session == null:
+		_towns_by_tile.clear()
+		_town_footprints_by_tile.clear()
+		_resources_by_tile.clear()
+		_artifacts_by_tile.clear()
+		_encounters_by_tile.clear()
+		_rememberable_encounters_by_tile.clear()
+		_heroes_by_tile.clear()
+		_object_index_signature = 0
+		_hero_index_signature = 0
+		_profile_end("object_index", profile_start, {"rebuilt_static": true, "rebuilt_heroes": true})
+		return
+	if _validation_force_index_rebuild or static_signature != _object_index_signature:
+		_object_index_signature = static_signature
+		_rebuild_static_object_indexes()
+		rebuilt_static = true
+		_profile_add("object_index_rebuilds", 1)
+	else:
+		_profile_add("object_index_skips", 1)
+	if _validation_force_index_rebuild or hero_signature != _hero_index_signature:
+		_hero_index_signature = hero_signature
+		_rebuild_hero_index()
+		rebuilt_heroes = true
+		_profile_add("hero_index_rebuilds", 1)
+	else:
+		_profile_add("hero_index_skips", 1)
+	_profile_end("object_index", profile_start, {
+		"rebuilt_static": rebuilt_static,
+		"rebuilt_heroes": rebuilt_heroes,
+		"town_tiles": _towns_by_tile.size(),
+		"resource_tiles": _resources_by_tile.size(),
+		"artifact_tiles": _artifacts_by_tile.size(),
+		"encounter_tiles": _encounters_by_tile.size(),
+		"hero_tiles": _heroes_by_tile.size(),
+	})
+
+func _rebuild_static_object_indexes() -> void:
 	_towns_by_tile.clear()
 	_town_footprints_by_tile.clear()
 	_resources_by_tile.clear()
 	_artifacts_by_tile.clear()
 	_encounters_by_tile.clear()
 	_rememberable_encounters_by_tile.clear()
-	_heroes_by_tile.clear()
-	if _session == null:
-		return
 	for town_value in _session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
 			continue
@@ -4700,6 +4852,9 @@ func _rebuild_object_indexes() -> void:
 		_encounters_by_tile[key] = encounter
 		if String(encounter.get("spawned_by_faction_id", "")) == "":
 			_rememberable_encounters_by_tile[key] = encounter
+
+func _rebuild_hero_index() -> void:
+	_heroes_by_tile.clear()
 	for hero_value in HeroCommandRulesScript.hero_positions(_session):
 		if not (hero_value is Dictionary):
 			continue
@@ -4708,6 +4863,23 @@ func _rebuild_object_indexes() -> void:
 		var heroes: Array = _heroes_by_tile.get(key, [])
 		heroes.append(hero)
 		_heroes_by_tile[key] = heroes
+
+func _object_index_signature_for(session) -> int:
+	if session == null:
+		return 0
+	var overworld = session.overworld
+	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, _map_size.x)
+	signature = _combine_cache_signature(signature, _map_size.y)
+	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("towns", []), ["owner", "placement_id", "town_id"]))
+	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("resource_nodes", []), ["site_id", "placement_id", "collected", "collected_by_faction_id"]))
+	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("artifact_nodes", []), ["artifact_id", "placement_id", "collected", "collected_by_faction_id"]))
+	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("encounters", []), ["encounter_id", "placement_id", "spawned_by_faction_id"]))
+	return _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("resolved_encounters", []), ["placement_id", "encounter_id", "id"]))
+
+func _hero_index_signature_for(session) -> int:
+	if session == null:
+		return 0
+	return _placement_array_cache_signature(HeroCommandRulesScript.hero_positions(session), ["hero_id", "is_active"])
 
 func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: String, role: String) -> void:
 	var key := _tile_key(tile)

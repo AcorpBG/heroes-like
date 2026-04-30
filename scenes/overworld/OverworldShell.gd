@@ -100,6 +100,8 @@ var _action_feedback: Dictionary = {}
 var _action_feedback_sequence := 0
 var _action_feedback_tween: Tween = null
 var _field_return_handoff: Dictionary = {}
+var _validation_profile: Dictionary = {}
+var _validation_force_hover_drawer_sync := false
 
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
@@ -243,6 +245,7 @@ func _focus_camera_on_hero() -> bool:
 	return changed
 
 func _on_end_turn_pressed() -> void:
+	var profile_start := _profile_begin("end_turn")
 	# Validation anchor retained while the forecast stays informational instead of gating the turn.
 	# OverworldRules.consume_command_risk_forecast(_session)
 	var result = OverworldRules.end_turn(_session)
@@ -257,10 +260,14 @@ func _on_end_turn_pressed() -> void:
 		_dismiss_command_briefing()
 		_select_hero_tile()
 	if _session.scenario_status == "in_progress":
+		var save_profile_start := _profile_begin("end_turn_autosave")
 		SaveService.save_runtime_autosave_session(_session, not bool(_session.flags.get("generated_random_map", false)))
+		_profile_end("end_turn_autosave", save_profile_start, {"save_profile": SaveService.validation_last_runtime_save_profile()})
 	if _handle_session_resolution():
+		_profile_end("end_turn", profile_start, {"resolved": true})
 		return
 	_refresh()
+	_profile_end("end_turn", profile_start, {"resolved": false})
 
 func _on_save_pressed() -> void:
 	var result = AppRouter.save_active_session_to_selected_manual_slot()
@@ -417,9 +424,12 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	_refresh()
 
 func _on_map_tile_hovered(tile: Vector2i) -> void:
+	var profile_start := _profile_begin("hover")
 	_hovered_tile = tile
 	_update_map_tooltip()
-	_sync_context_drawers()
+	if _active_drawer != "" or _validation_force_hover_drawer_sync:
+		_sync_context_drawers()
+	_profile_end("hover", profile_start, {"tile": {"x": tile.x, "y": tile.y}})
 
 func _visit_selected_town() -> bool:
 	if not _is_selected_owned_town_visit_target():
@@ -510,6 +520,7 @@ func _render_state() -> void:
 	_refresh()
 
 func _refresh() -> void:
+	var profile_start := _profile_begin("refresh")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_enter")
 	OverworldRules.begin_normalized_read_scope(_session)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_read_scope_ready")
@@ -518,20 +529,27 @@ func _refresh() -> void:
 	_ensure_selected_tile()
 	_invalidate_refresh_cache()
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_start")
+	var set_map_state_profile_start := _profile_begin("refresh_set_map_state")
 	_map_view.set_map_state(_session, _map_data, _map_size, _selected_tile)
+	_profile_end("refresh_set_map_state", set_map_state_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_done")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_start")
+	var actions_profile_start := _profile_begin("refresh_actions")
 	_rebuild_hero_actions()
 	_rebuild_context_actions()
 	_rebuild_spell_actions()
 	_rebuild_specialty_actions()
 	_rebuild_artifact_actions()
+	_profile_end("refresh_actions", actions_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_done")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_start")
+	var generated_surface_start := 0
 	if _generated_initial_open_pending():
+		generated_surface_start = _profile_begin("refresh_generated_surfaces")
 		_set_deferred_generated_save_status("Save: generated autosave pending")
 		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_deferred")
 	elif _use_generated_compact_refresh():
+		generated_surface_start = _profile_begin("refresh_generated_surfaces")
 		_set_deferred_generated_save_status("Save: ready")
 		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_compact")
 	else:
@@ -541,9 +559,12 @@ func _refresh() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_start")
 	if _generated_initial_open_pending() or _use_generated_compact_refresh():
 		_refresh_generated_opening_surfaces()
+		if generated_surface_start > 0:
+			_profile_end("refresh_generated_surfaces", generated_surface_start)
 		OverworldRules.end_normalized_read_scope(_session)
 		AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_compact")
 		AppRouter.note_overworld_handoff_step("overworld_refresh_done")
+		_profile_end("refresh", profile_start, {"compact_generated": true})
 		return
 	var scenario = ContentService.get_scenario(_session.scenario_id)
 	_header_label.text = String(scenario.get("name", "Overworld Command"))
@@ -619,6 +640,7 @@ func _refresh() -> void:
 	_sync_context_drawers()
 	OverworldRules.end_normalized_read_scope(_session)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_done")
+	_profile_end("refresh", profile_start, {"compact_generated": false})
 
 func _refresh_generated_opening_surfaces() -> void:
 	var scenario = ContentService.get_scenario(_session.scenario_id)
@@ -3262,7 +3284,12 @@ func _describe_selected_tile() -> String:
 	]
 
 func _update_map_tooltip() -> void:
+	var profile_start := _profile_begin("map_tooltip")
 	_map_view.tooltip_text = _map_tooltip_text()
+	_profile_end("map_tooltip", profile_start, {
+		"hovered_tile": {"x": _hovered_tile.x, "y": _hovered_tile.y},
+		"selected_tile": {"x": _selected_tile.x, "y": _selected_tile.y},
+	})
 
 func _map_tooltip_text() -> String:
 	if _tile_in_bounds(_hovered_tile) and _hovered_tile != _selected_tile:
@@ -3651,6 +3678,41 @@ func _validation_string_array(value: Variant) -> Array:
 	items.sort()
 	return items
 
+func validation_reset_profile(clear_refresh_cache: bool = false) -> void:
+	_validation_profile.clear()
+	if clear_refresh_cache:
+		_invalidate_refresh_cache()
+	if _map_view != null and _map_view.has_method("validation_reset_profile"):
+		_map_view.call("validation_reset_profile")
+
+func validation_profile_snapshot() -> Dictionary:
+	var snapshot := _validation_profile.duplicate(true)
+	if _map_view != null and _map_view.has_method("validation_profile_snapshot"):
+		snapshot["map_view"] = _map_view.call("validation_profile_snapshot")
+	snapshot["last_save_profile"] = SaveService.validation_last_runtime_save_profile()
+	return snapshot
+
+func validation_set_force_map_index_rebuild(enabled: bool) -> void:
+	if _map_view != null and _map_view.has_method("validation_set_force_index_rebuild"):
+		_map_view.call("validation_set_force_index_rebuild", enabled)
+
+func validation_set_force_hover_drawer_sync(enabled: bool) -> void:
+	_validation_force_hover_drawer_sync = enabled
+
+func _profile_begin(_name: String) -> int:
+	return Time.get_ticks_usec()
+
+func _profile_end(name: String, started_usec: int, details: Dictionary = {}) -> void:
+	var elapsed_usec := maxi(0, Time.get_ticks_usec() - started_usec)
+	_profile_add("%s_calls" % name, 1)
+	_profile_add("%s_usec" % name, elapsed_usec)
+	_validation_profile["last_%s_usec" % name] = elapsed_usec
+	if not details.is_empty():
+		_validation_profile["last_%s" % name] = details.duplicate(true)
+
+func _profile_add(key: String, amount: int) -> void:
+	_validation_profile[key] = int(_validation_profile.get(key, 0)) + amount
+
 func validation_snapshot() -> Dictionary:
 	var hero_pos := OverworldRules.hero_position(_session)
 	var movement = _session.overworld.get("movement", {})
@@ -3808,6 +3870,7 @@ func validation_snapshot() -> Dictionary:
 		"map_viewport": _validation_map_viewport_state(),
 		"town_presentation_profiles": _validation_town_presentation_profiles(),
 		"chrome": _validation_chrome_state(),
+		"profile": validation_profile_snapshot(),
 	}
 
 func _validation_map_viewport_state() -> Dictionary:

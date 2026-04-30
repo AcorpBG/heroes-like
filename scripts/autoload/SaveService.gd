@@ -734,6 +734,9 @@ func _save_runtime_session(
 	if path == "":
 		_runtime_save_profile_finish(profile)
 		return {"ok": false, "path": "", "summary": summary, "message": "Save write failed."}
+	if FileAccess.file_exists(path):
+		profile["written_bytes"] = FileAccess.get_size(path)
+		profile["path"] = path
 
 	var result := {
 		"ok": true,
@@ -771,6 +774,9 @@ func _save_generated_opening_autosave_fast(
 	if path == "":
 		_runtime_save_profile_finish(profile)
 		return {"ok": false, "path": "", "summary": {}, "message": "Save write failed."}
+	if FileAccess.file_exists(path):
+		profile["written_bytes"] = FileAccess.get_size(path)
+		profile["path"] = path
 	_runtime_save_profile_step(profile, "summary_cache_deferred")
 	_runtime_save_profile_finish(profile)
 	return {
