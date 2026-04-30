@@ -368,22 +368,108 @@ static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: 
 	var ny = clamp(pos.y + dy, 0, max(map_size.y - 1, 0))
 	if nx == pos.x and ny == pos.y:
 		return {"ok": false, "message": "The map edge blocks further travel."}
-	if tile_is_blocked(session, nx, ny):
-		return {"ok": false, "message": "The terrain blocks that route."}
+	return try_move_along_route(session, [pos, Vector2i(nx, ny)], movement_left)
 
-	session.overworld["hero_position"] = {"x": nx, "y": ny}
-	movement["current"] = movement_left - 1
+static func route_movement_preview(
+	session: SessionStateStoreScript.SessionData,
+	route_tiles: Variant,
+	movement_budget: int = -1
+) -> Dictionary:
+	var path := _normalize_route_tiles(route_tiles)
+	var movement_current := 0
+	if session != null:
+		var movement: Variant = session.overworld.get("movement", {})
+		if movement is Dictionary:
+			movement_current = int(movement.get("current", 0))
+	var budget: int = movement_current if movement_budget < 0 else movement_budget
+	budget = max(0, budget)
+	var total_steps: int = max(0, path.size() - 1)
+	var reachable_steps := mini(total_steps, budget)
+	var reachable_tiles := []
+	for index in range(reachable_steps + 1):
+		if index >= 0 and index < path.size():
+			reachable_tiles.append(_route_tile_payload(path[index]))
+	var unreachable_tiles := []
+	for index in range(reachable_steps + 1, path.size()):
+		unreachable_tiles.append(_route_tile_payload(path[index]))
+	var final_tile: Vector2i = path[reachable_steps] if reachable_steps >= 0 and reachable_steps < path.size() else Vector2i(-1, -1)
+	var destination_tile: Vector2i = path[path.size() - 1] if not path.is_empty() else Vector2i(-1, -1)
+	return {
+		"ok": path.size() > 0,
+		"route_tiles": _route_tile_payloads(path),
+		"total_steps": total_steps,
+		"total_cost": total_steps,
+		"movement_budget": budget,
+		"reachable_steps": reachable_steps,
+		"reachable_cost": reachable_steps,
+		"unreachable_steps": max(0, total_steps - reachable_steps),
+		"movement_after_reachable": max(0, budget - reachable_steps),
+		"destination_reachable": total_steps > 0 and reachable_steps >= total_steps,
+		"reachable_tiles": reachable_tiles,
+		"unreachable_tiles": unreachable_tiles,
+		"final_tile": _route_tile_payload(final_tile),
+		"destination_tile": _route_tile_payload(destination_tile),
+	}
+
+static func try_move_along_route(
+	session: SessionStateStoreScript.SessionData,
+	route_tiles: Variant,
+	movement_budget: int = -1
+) -> Dictionary:
+	normalize_overworld_state_for_runtime(session)
+	var path := _normalize_route_tiles(route_tiles)
+	if path.size() <= 1:
+		return {"ok": false, "message": "No route selected.", "route_steps": []}
+	var pos := hero_position(session)
+	if path[0] != pos:
+		return {"ok": false, "message": "The selected route no longer starts at the active hero.", "route_steps": []}
+
+	var map_size := derive_map_size(session)
+	for index in range(1, path.size()):
+		var tile: Vector2i = path[index]
+		if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+			return {"ok": false, "message": "The map edge blocks that route.", "route_steps": []}
+		var previous: Vector2i = path[index - 1]
+		if maxi(abs(tile.x - previous.x), abs(tile.y - previous.y)) != 1:
+			return {"ok": false, "message": "The selected route is not contiguous.", "route_steps": []}
+		if tile_is_blocked(session, tile.x, tile.y):
+			return {"ok": false, "message": "The terrain blocks that route.", "route_steps": []}
+		if index < path.size() - 1 and tile_has_route_interaction(session, tile.x, tile.y):
+			return {"ok": false, "message": "An interaction blocks that route.", "route_steps": []}
+
+	var movement = session.overworld.get("movement", {})
+	var movement_left := int(movement.get("current", 0))
+	var effective_budget := movement_left if movement_budget < 0 else mini(movement_left, max(0, movement_budget))
+	if effective_budget <= 0:
+		return {"ok": false, "message": "No movement left today.", "route_steps": []}
+	var preview := route_movement_preview(session, path, effective_budget)
+	var reachable_steps := int(preview.get("reachable_steps", 0))
+	if reachable_steps <= 0:
+		return {"ok": false, "message": "No movement left today.", "route_steps": []}
+
+	var final_tile: Vector2i = path[reachable_steps]
+	var destination_tile: Vector2i = path[path.size() - 1]
+	_set_active_hero_position(session, final_tile)
+	movement["current"] = max(0, movement_left - reachable_steps)
 	session.overworld["movement"] = movement
 	HeroCommandRulesScript.commit_active_hero(session)
-	_reveal_current_fog_sources(session)
+	_reveal_route_fog(session, path.slice(1, reachable_steps + 1))
 	_mark_runtime_normalized(session)
 
-	var messages := ["Moved to %d,%d." % [nx, ny]]
-	var target_context := _post_action_tile_context(session, Vector2i(nx, ny))
-	var interaction_result := _resolve_post_move_interaction(session)
-	var interaction_message := String(interaction_result.get("message", ""))
-	if interaction_message != "":
-		messages.append(interaction_message)
+	var messages := ["Moved to %d,%d." % [final_tile.x, final_tile.y]]
+	var reached_destination := final_tile == destination_tile
+	if not reached_destination:
+		messages.append("Route pauses with %d step%s remaining." % [
+			path.size() - 1 - reachable_steps,
+			"" if path.size() - 1 - reachable_steps == 1 else "s",
+		])
+	var target_context := _post_action_tile_context(session, final_tile)
+	var interaction_result := {"ok": true, "message": "", "route": ""}
+	if reached_destination:
+		interaction_result = _resolve_post_move_interaction(session)
+		var interaction_message := String(interaction_result.get("message", ""))
+		if interaction_message != "":
+			messages.append(interaction_message)
 	var result := _finalize_action_result(
 		session,
 		bool(interaction_result.get("ok", true)),
@@ -394,6 +480,10 @@ static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: 
 	var route := String(interaction_result.get("route", ""))
 	if route != "":
 		result["route"] = route
+	result["route_steps"] = _route_tile_payloads(path.slice(1, reachable_steps + 1))
+	var route_execution := preview.duplicate(true)
+	route_execution["reached_destination"] = reached_destination
+	result["route_execution"] = route_execution
 	result = _attach_post_action_recap(
 		result,
 		session,
@@ -401,10 +491,13 @@ static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: 
 		{
 			"from_x": pos.x,
 			"from_y": pos.y,
-			"to_x": nx,
-			"to_y": ny,
+			"to_x": final_tile.x,
+			"to_y": final_tile.y,
 			"route": route,
 			"target_context": target_context,
+			"route_steps": _route_tile_payloads(path.slice(1, reachable_steps + 1)),
+			"planned_destination": _route_tile_payload(destination_tile),
+			"reached_destination": reached_destination,
 		}
 	)
 	return result
@@ -1320,6 +1413,51 @@ static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int
 	elif terrain_id == "water":
 		return true
 	return _blocked_tile_index(session).has(_tile_key(Vector2i(x, y)))
+
+static func tile_has_route_interaction(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
+	if session == null:
+		return false
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if int(town.get("x", -1)) == x and int(town.get("y", -1)) == y:
+			return true
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if not bool(site.get("persistent_control", false)) and bool(node.get("collected", false)):
+			continue
+		if _resource_node_matches_interaction_tile(node, Vector2i(x, y)):
+			return true
+	for node_value in session.overworld.get("artifact_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if bool(node.get("collected", false)):
+			continue
+		if int(node.get("x", -1)) == x and int(node.get("y", -1)) == y:
+			return true
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if is_encounter_resolved(session, encounter):
+			continue
+		if int(encounter.get("x", -1)) == x and int(encounter.get("y", -1)) == y:
+			return true
+	for hero_value in session.overworld.get("player_heroes", []):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = hero_value
+		if bool(hero.get("is_active", false)):
+			continue
+		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
+		if int(position.get("x", -999)) == x and int(position.get("y", -999)) == y:
+			return true
+	return false
 
 static func _tile_blocked_by_resource_object(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
 	if session == null:
@@ -9536,6 +9674,55 @@ static func _town_garrison_headcount(town: Dictionary) -> int:
 static func _town_requires_assault(town: Dictionary) -> bool:
 	return String(town.get("owner", "neutral")) == "enemy" and _town_garrison_headcount(town) > 0
 
+static func _set_active_hero_position(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> void:
+	var position := {"x": tile.x, "y": tile.y}
+	session.overworld["hero_position"] = position.duplicate(true)
+	var active_hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+	active_hero["position"] = position.duplicate(true)
+	session.overworld["hero"] = active_hero
+	var active_hero_id := String(session.overworld.get("active_hero_id", active_hero.get("id", "")))
+	var heroes = session.overworld.get("player_heroes", [])
+	if heroes is Array:
+		for index in range(heroes.size()):
+			var hero = heroes[index]
+			if hero is Dictionary and String(hero.get("id", "")) == active_hero_id:
+				hero["position"] = position.duplicate(true)
+				heroes[index] = hero
+				break
+		session.overworld["player_heroes"] = heroes
+
+static func _normalize_route_tiles(route_tiles: Variant) -> Array:
+	var tiles := []
+	if not (route_tiles is Array):
+		return tiles
+	for tile_value in route_tiles:
+		var tile := _route_tile_from_variant(tile_value)
+		if tile.x < 0 or tile.y < 0:
+			continue
+		tiles.append(tile)
+	return tiles
+
+static func _route_tile_from_variant(value: Variant) -> Vector2i:
+	if value is Vector2i:
+		return value
+	if value is Vector2:
+		return Vector2i(int(value.x), int(value.y))
+	if value is Dictionary:
+		return Vector2i(int(value.get("x", -1)), int(value.get("y", -1)))
+	return Vector2i(-1, -1)
+
+static func _route_tile_payload(tile: Vector2i) -> Dictionary:
+	return {"x": tile.x, "y": tile.y}
+
+static func _route_tile_payloads(tiles: Array) -> Array:
+	var payloads := []
+	for tile_value in tiles:
+		var tile := _route_tile_from_variant(tile_value)
+		if tile.x < 0 or tile.y < 0:
+			continue
+		payloads.append(_route_tile_payload(tile))
+	return payloads
+
 static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) -> void:
 	var map_size := derive_map_size(session)
 	var fog = session.overworld.get(FOG_KEY, {})
@@ -9560,6 +9747,25 @@ static func _reveal_current_fog_sources(session: SessionStateStoreScript.Session
 	var map_size := derive_map_size(session)
 	var fog: Dictionary = session.overworld.get(FOG_KEY, {})
 	var explored_tiles := _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
+	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
+	session.overworld[FOG_KEY] = _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
+
+static func _reveal_route_fog(session: SessionStateStoreScript.SessionData, traversed_tiles: Array) -> void:
+	if session == null:
+		return
+	if not _fog_state_ready(session):
+		_normalize_fog_of_war(session)
+	var map_size := derive_map_size(session)
+	var fog: Dictionary = session.overworld.get(FOG_KEY, {})
+	var explored_tiles := _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
+	var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+	for tile_value in traversed_tiles:
+		var tile := _route_tile_from_variant(tile_value)
+		if tile.x < 0 or tile.y < 0:
+			continue
+		var route_hero := hero.duplicate(true)
+		route_hero["position"] = {"x": tile.x, "y": tile.y}
+		_apply_hero_reveal(explored_tiles, route_hero, map_size)
 	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
 	session.overworld[FOG_KEY] = _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
 

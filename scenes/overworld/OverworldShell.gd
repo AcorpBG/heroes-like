@@ -93,6 +93,7 @@ var _last_enemy_activity_text := ""
 var _last_enemy_activity_events: Array = []
 var _last_turn_resolution_text := ""
 var _last_action_recap: Dictionary = {}
+var _last_route_execution: Dictionary = {}
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
 var _active_drawer := ""
@@ -491,7 +492,16 @@ func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 	var movement_rules_started_usec := _debug_phase_begin("movement_rules")
 	var result = OverworldRules.try_move(_session, dx, dy)
 	_debug_phase_end("movement_rules", movement_rules_started_usec, {"ok": bool(result.get("ok", false)), "route": String(result.get("route", ""))})
+	_handle_move_result(result, preserve_selection, debug_started)
+
+func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_started: bool) -> void:
 	var route := String(result.get("route", ""))
+	_last_route_execution = {}
+	if result.has("route_execution"):
+		_last_route_execution = _duplicate_dictionary(result.get("route_execution", {}))
+		var route_steps = result.get("route_steps", [])
+		if route_steps is Array:
+			_last_route_execution["route_steps"] = route_steps.duplicate(true)
 	if route == "battle":
 		_session.flags["last_action"] = "entered_battle"
 	elif route == "town":
@@ -525,19 +535,30 @@ func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 		_debug_finish_path_command()
 
 func _move_toward_selected_tile() -> void:
-	var debug_started := _debug_begin_path_command("advance_route", _selected_tile)
-	var route_lookup_started_usec := _debug_phase_begin("route_advance_lookup")
+	var debug_started := _debug_begin_path_command("full_route_execute", _selected_tile)
+	var route_lookup_started_usec := _debug_phase_begin("route_execution_lookup")
 	var route = _selected_route()
-	_debug_phase_end("route_advance_lookup", route_lookup_started_usec, {"path_tiles": route.size()})
+	_debug_phase_end("route_execution_lookup", route_lookup_started_usec, {"path_tiles": route.size()})
 	if route.size() <= 1:
 		if debug_started:
 			_debug_finish_path_command()
 		return
-	var hero_pos = OverworldRules.hero_position(_session)
-	var next_step: Vector2i = route[1]
-	_try_move(next_step.x - hero_pos.x, next_step.y - hero_pos.y, true)
-	if debug_started:
-		_debug_finish_path_command()
+	var movement_rules_started_usec := _debug_phase_begin("movement_rules")
+	var result: Dictionary = OverworldRules.try_move_along_route(_session, route)
+	var executed_steps := 0
+	var route_steps = result.get("route_steps", [])
+	if route_steps is Array:
+		executed_steps = route_steps.size()
+	_debug_phase_end(
+		"movement_rules",
+		movement_rules_started_usec,
+		{
+			"ok": bool(result.get("ok", false)),
+			"route": String(result.get("route", "")),
+			"executed_steps": executed_steps,
+		}
+	)
+	_handle_move_result(result, true, debug_started)
 
 func _start_encounter() -> void:
 	var placement = OverworldRules.get_active_encounter(_session)
@@ -1564,7 +1585,7 @@ func _primary_order_commit_check_surface(action: Dictionary = {}) -> Dictionary:
 	if bool(primary_action.get("disabled", false)):
 		confirmation = "This order is unavailable; inspect the selected context or choose another route."
 	elif action_id in ["advance_route", "march_selected"]:
-		confirmation = "Enter/Space spends the next movement step on this route."
+		confirmation = "Enter/Space spends movement along this route as far as today's budget allows."
 	elif action_id == "enter_battle":
 		confirmation = "Enter/Space opens the battle handoff for this encounter."
 	elif action_id == "visit_town":
@@ -1696,8 +1717,6 @@ func _selected_tile_movement_action() -> Dictionary:
 		return {}
 	if OverworldRules.tile_is_blocked(_session, _selected_tile.x, _selected_tile.y):
 		return {}
-	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
-		return {}
 
 	var hero_pos = OverworldRules.hero_position(_session)
 	if _is_adjacent_move_target(hero_pos, _selected_tile):
@@ -1749,9 +1768,14 @@ func _selected_route_decision_surface() -> Dictionary:
 	if destination_name == "":
 		destination_name = "%d,%d" % [_selected_tile.x, _selected_tile.y]
 	var route: Array = []
-	if not selected_is_hero and explored and not blocked:
+	if not selected_is_hero and not blocked:
 		route = _selected_route()
 	var steps: int = max(0, route.size() - 1)
+	var preview: Dictionary = OverworldRules.route_movement_preview(_session, route, movement_current)
+	var reachable_steps := int(preview.get("reachable_steps", 0))
+	var unreachable_steps := int(preview.get("unreachable_steps", 0))
+	var destination_reachable := bool(preview.get("destination_reachable", false))
+	var movement_after_reachable := int(preview.get("movement_after_reachable", movement_current))
 	var next_step := Vector2i(-1, -1)
 	var next_step_label := ""
 	var next_step_terrain := ""
@@ -1774,8 +1798,8 @@ func _selected_route_decision_surface() -> Dictionary:
 	var adjacent: bool = _is_adjacent_move_target(hero_pos, _selected_tile)
 	var action_kind := _selected_route_action_kind(adjacent)
 	var action_label := _selected_tile_order_label(adjacent) if not selected_is_hero else "Hold"
-	var movement_cost: int = 1 if steps > 0 and movement_current > 0 else 0
-	var reachable_today: bool = steps > 0 and movement_current >= steps
+	var movement_cost: int = steps if steps > 0 else 0
+	var reachable_today: bool = steps > 0 and destination_reachable
 	var route_clear: bool = steps > 0
 	var status := "selected"
 	var blocked_reason := ""
@@ -1784,9 +1808,6 @@ func _selected_route_decision_surface() -> Dictionary:
 		action_kind = "hold"
 		action_label = "Current Position"
 		reachable_today = true
-	elif not explored:
-		status = "blocked"
-		blocked_reason = "Unexplored ground; scout closer."
 	elif blocked:
 		status = "blocked"
 		blocked_reason = "%s blocks travel." % _terrain_name_at(_selected_tile.x, _selected_tile.y)
@@ -1797,7 +1818,10 @@ func _selected_route_decision_surface() -> Dictionary:
 		status = "reachable"
 	elif route_clear:
 		status = "not_today"
-		blocked_reason = "Route is clear, but not reachable with today's movement."
+		blocked_reason = "Route is clear; %d step%s remain after today's movement." % [
+			unreachable_steps,
+			"" if unreachable_steps == 1 else "s",
+		]
 	else:
 		status = "blocked"
 		blocked_reason = "No clear route from the active hero."
@@ -1833,7 +1857,13 @@ func _selected_route_decision_surface() -> Dictionary:
 		"movement_current": movement_current,
 		"movement_max": movement_max,
 		"movement_cost": movement_cost,
-		"movement_after_order": max(0, movement_current - movement_cost),
+		"movement_after_order": movement_after_reachable if route_clear else max(0, movement_current - movement_cost),
+		"total_cost": steps,
+		"reachable_steps": reachable_steps,
+		"reachable_cost": int(preview.get("reachable_cost", 0)),
+		"unreachable_steps": unreachable_steps,
+		"destination_reachable": destination_reachable,
+		"route_preview": preview,
 		"next_step": {
 			"x": next_step.x,
 			"y": next_step.y,
@@ -2129,7 +2159,7 @@ func _route_decision_next_practical_action(surface: Dictionary) -> String:
 		"no_movement":
 			return "End the turn after checking town orders, then continue toward %s." % destination
 		"not_today":
-			return "Take the next step toward %s now, then continue next day." % destination
+			return "Move as far as today's movement allows toward %s, then continue next day." % destination
 		"reachable":
 			return "Commit %s now." % action_label
 	return "Review the selected tile, then choose the next route order."
@@ -3551,10 +3581,6 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	if OverworldRules.tile_is_blocked(_session, goal.x, goal.y):
 		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "goal_blocked", 0, 0, 1, 0)
 		return []
-	if not OverworldRules.is_tile_explored(_session, goal.x, goal.y):
-		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "goal_unexplored", 0, 0, 1, 0)
-		return []
-
 	var queue: Array = [start]
 	var queue_index := 0
 	var visited = {_tile_key(start): true}
@@ -3576,6 +3602,8 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 			if debug_timing_enabled:
 				blocked_tile_lookup_count += 1
 			if OverworldRules.tile_is_blocked(_session, next.x, next.y):
+				continue
+			if next != goal and OverworldRules.tile_has_route_interaction(_session, next.x, next.y):
 				continue
 			var key = _tile_key(next)
 			if visited.has(key):
@@ -4207,7 +4235,7 @@ func _debug_measured_sum_ms(snapshot: Dictionary, phase_buckets: Dictionary) -> 
 		"input_handler_entry",
 		"validation_select_entry",
 		"tile_object_selection_resolution",
-		"route_advance_lookup",
+		"route_execution_lookup",
 		"movement_rules",
 	]:
 		sum += float(phase_buckets.get(phase, 0.0))
@@ -4511,6 +4539,8 @@ func validation_snapshot() -> Dictionary:
 		"selected_route_decision": route_decision,
 		"selected_route_decision_text": _route_decision_line(route_decision),
 		"selected_route_decision_brief": _duplicate_dictionary(route_decision.get("decision_brief", {})),
+		"selected_route_preview": _duplicate_dictionary(route_decision.get("route_preview", {})),
+		"last_route_execution": _duplicate_dictionary(_last_route_execution),
 		"route_target_handoff": route_target_handoff,
 		"route_target_handoff_visible_text": String(route_target_handoff.get("visible_text", "")),
 		"route_target_handoff_tooltip_text": String(route_target_handoff.get("tooltip_text", "")),
@@ -4978,6 +5008,7 @@ func validation_perform_primary_action() -> Dictionary:
 		"message": _last_message,
 		"action_feedback": _validation_action_feedback(),
 		"post_action_recap": _last_action_recap.duplicate(true),
+		"route_execution": _duplicate_dictionary(_last_route_execution),
 	}
 
 func validation_route_step_to_nearest_target(target_kind: String, owner_id: String = "") -> Dictionary:
@@ -5594,32 +5625,7 @@ func _validation_tile_has_route_hazard(
 ) -> bool:
 	if tile == goal:
 		return false
-	var town := _town_at(tile.x, tile.y)
-	if not town.is_empty():
-		return not (
-			target_kind == "town"
-			and String(town.get("placement_id", "")) == target_placement_id
-		)
-	if not _resource_node_at(tile.x, tile.y).is_empty():
-		if target_kind == "resource" and String(_resource_node_at(tile.x, tile.y).get("placement_id", "")) == target_placement_id:
-			return false
-		if target_kind in ["encounter", "town"]:
-			return false
-		return true
-	if not _artifact_node_at(tile.x, tile.y).is_empty():
-		if target_kind == "artifact" and String(_artifact_node_at(tile.x, tile.y).get("placement_id", "")) == target_placement_id:
-			return false
-		if target_kind in ["encounter", "town"]:
-			return false
-		return true
-	var encounter := _encounter_at(tile.x, tile.y)
-	if not encounter.is_empty() and not OverworldRules.is_encounter_resolved(_session, encounter):
-		if target_kind == "encounter" and String(encounter.get("placement_id", "")) == target_placement_id:
-			return false
-		return true
-	if not _hero_entries_at(tile.x, tile.y).is_empty():
-		return true
-	return false
+	return OverworldRules.tile_has_route_interaction(_session, tile.x, tile.y)
 
 func _make_placeholder_label(text: String) -> Label:
 	var placeholder := FrontierVisualKit.placeholder_label(text)
