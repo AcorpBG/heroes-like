@@ -41,9 +41,11 @@ func _run() -> void:
 	var failures := []
 	var pickup_record := {}
 	var dwelling_record := {}
+	var greenbranch_record := {}
 	var sawmill_record := {}
 	var producer_records := []
 	var producer_route_proofs := []
+	var shell_selection_proofs := []
 	var generated_producer_families := {}
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
@@ -60,6 +62,8 @@ func _run() -> void:
 			pickup_record = record
 		if dwelling_record.is_empty() and family == "neutral_dwelling":
 			dwelling_record = record
+		if site_id == "site_greenbranch_copse":
+			greenbranch_record = record
 		if site_id == "site_brightwood_sawmill":
 			sawmill_record = record
 
@@ -67,12 +71,24 @@ func _run() -> void:
 		failures.append("Generated Small produced no pickup resource record to validate.")
 	if dwelling_record.is_empty():
 		failures.append("Generated Small produced no neutral dwelling record to validate.")
+	if greenbranch_record.is_empty():
+		failures.append("Generated Small produced no Greenbranch Copse dwelling record to validate.")
 	if sawmill_record.is_empty():
 		failures.append("Generated Small produced no Brightwood Sawmill record to validate.")
 	elif not bool(sawmill_record.get("authored_runtime_contract", false)):
 		failures.append("Generated sawmill did not use the authored runtime footprint/body/visit contract: %s" % JSON.stringify(sawmill_record))
 	if producer_records.is_empty():
 		failures.append("Generated Small produced no mine/resource producer records to validate.")
+	if not greenbranch_record.is_empty():
+		var greenbranch_selection := await _prove_shell_body_selection_route(session, greenbranch_record)
+		shell_selection_proofs.append(greenbranch_selection)
+		if not bool(greenbranch_selection.get("ok", false)):
+			failures.append("Greenbranch body selection did not route to reachable visit tile: %s" % JSON.stringify(greenbranch_selection))
+	if not sawmill_record.is_empty():
+		var sawmill_selection := await _prove_shell_body_selection_route(session, sawmill_record)
+		shell_selection_proofs.append(sawmill_selection)
+		if not bool(sawmill_selection.get("ok", false)):
+			failures.append("Generated producer body selection did not route to reachable visit tile: %s" % JSON.stringify(sawmill_selection))
 	for record in producer_records:
 		var route_proof := _prove_interaction(session, record)
 		producer_route_proofs.append(route_proof)
@@ -101,6 +117,7 @@ func _run() -> void:
 		"resource_node_count": records.size(),
 		"pickup_interaction": pickup_interaction,
 		"dwelling_interaction": dwelling_interaction,
+		"shell_body_selection_route_proofs": shell_selection_proofs,
 		"producer_interactions": producer_route_proofs,
 		"generated_producer_families": _sorted_keys(generated_producer_families),
 		"object_list_producer_family_coverage": object_list_coverage,
@@ -119,7 +136,7 @@ func _inspect_resource_node(session, node: Dictionary) -> Dictionary:
 	var interaction_tiles: Array = surface.get("interaction_tiles", []) if surface.get("interaction_tiles", []) is Array else []
 	var body_tiles: Array = surface.get("body_tiles", []) if surface.get("body_tiles", []) is Array else []
 	var failures := []
-	if int(surface.get("interaction_tile_count", 0)) != 1:
+	if int(surface.get("interaction_tile_count", 0)) < 1:
 		failures.append("%s has %d interaction tiles." % [String(node.get("placement_id", "")), int(surface.get("interaction_tile_count", 0))])
 	var interaction_tile: Dictionary = interaction_tiles[0] if not interaction_tiles.is_empty() and interaction_tiles[0] is Dictionary else {}
 	if interaction_tile.is_empty():
@@ -128,6 +145,12 @@ func _inspect_resource_node(session, node: Dictionary) -> Dictionary:
 		failures.append("%s interaction tile is blocked: %s." % [String(node.get("placement_id", "")), JSON.stringify(interaction_tile)])
 	if bool(surface.get("blocks_body_tiles", false)) and _tile_in_array(body_tiles, interaction_tile):
 		failures.append("%s interaction tile overlaps body tiles: %s." % [String(node.get("placement_id", "")), JSON.stringify(surface)])
+	if bool(surface.get("blocks_body_tiles", false)):
+		for body_tile in body_tiles:
+			if not (body_tile is Dictionary):
+				continue
+			if not OverworldRules.tile_is_blocked(session, int(body_tile.get("x", 0)), int(body_tile.get("y", 0))):
+				failures.append("%s visible body tile is passable: %s." % [String(node.get("placement_id", "")), JSON.stringify(body_tile)])
 
 	var family := String(map_object.get("family", site.get("family", "pickup")))
 	if family == "":
@@ -145,7 +168,7 @@ func _inspect_resource_node(session, node: Dictionary) -> Dictionary:
 	var authored_body_tiles: Array = map_object.get("body_tiles", []) if map_object.get("body_tiles", []) is Array else []
 	var footprint_deferred: Dictionary = node.get("footprint_deferred", {}) if node.get("footprint_deferred", {}) is Dictionary else {}
 	var authored_runtime_contract := true
-	if family in PRODUCER_FAMILIES:
+	if family in PRODUCER_FAMILIES or family == "neutral_dwelling":
 		var has_runtime_contract: bool = node.get("object_footprint_catalog_ref", {}) is Dictionary and not node.get("object_footprint_catalog_ref", {}).is_empty()
 		authored_runtime_contract = runtime_area == authored_area and footprint_deferred.is_empty()
 		if has_runtime_contract:
@@ -153,7 +176,7 @@ func _inspect_resource_node(session, node: Dictionary) -> Dictionary:
 				authored_runtime_contract
 				and bool(surface.get("uses_runtime_body_tiles", false))
 				and bool(surface.get("uses_runtime_visit_tile", false))
-				and int(surface.get("body_tile_count", 0)) == 1
+				and int(surface.get("body_tile_count", 0)) == authored_body_tiles.size()
 				and not bool(_tile_in_array(body_tiles, interaction_tile))
 			)
 		else:
@@ -164,13 +187,18 @@ func _inspect_resource_node(session, node: Dictionary) -> Dictionary:
 				and bool(surface.get("uses_authored_approach", false))
 			)
 		if not authored_runtime_contract:
-			failures.append("%s producer runtime contract does not match authored object list footprint/body/visit data: %s." % [String(node.get("placement_id", "")), JSON.stringify(surface)])
+			failures.append("%s runtime contract does not match authored object list footprint/body/visit data: %s." % [String(node.get("placement_id", "")), JSON.stringify(surface)])
 	return {
 		"placement_id": String(node.get("placement_id", "")),
 		"site_id": String(node.get("site_id", "")),
 		"object_id": String(map_object.get("id", "")),
 		"family": family,
+		"kind": String(node.get("kind", "")),
 		"node_tile": node_tile,
+		"body_tiles": body_tiles,
+		"visit_tile": node.get("visit_tile", {}),
+		"runtime_body_mask": node.get("runtime_body_mask", []),
+		"object_footprint_catalog_ref": node.get("object_footprint_catalog_ref", {}),
 		"body_tile_count": int(surface.get("body_tile_count", 0)),
 		"interaction_tile_count": int(surface.get("interaction_tile_count", 0)),
 		"interaction_tile": interaction_tile,
@@ -186,6 +214,56 @@ func _inspect_resource_node(session, node: Dictionary) -> Dictionary:
 		"authored_body_tile_count": authored_body_tiles.size(),
 		"authored_runtime_contract": authored_runtime_contract,
 		"failures": failures,
+	}
+
+func _prove_shell_body_selection_route(session, record: Dictionary) -> Dictionary:
+	if record.is_empty():
+		return {"ok": false, "reason": "missing_record"}
+	var body_tiles: Array = record.get("body_tiles", []) if record.get("body_tiles", []) is Array else []
+	var interaction_tile: Dictionary = record.get("interaction_tile", {}) if record.get("interaction_tile", {}) is Dictionary else {}
+	if body_tiles.is_empty() or interaction_tile.is_empty():
+		return {"ok": false, "reason": "missing_body_or_interaction", "record": record}
+	var body_tile: Dictionary = body_tiles[0] if body_tiles[0] is Dictionary else {}
+	var visit := Vector2i(int(interaction_tile.get("x", 0)), int(interaction_tile.get("y", 0)))
+	var start := _open_neighbor(session, visit)
+	if start == visit:
+		return {"ok": false, "reason": "no_open_neighbor", "visit": interaction_tile, "record": record}
+	var shell_session = SessionState.set_active_session(session)
+	_set_active_hero_position(shell_session, start)
+	shell_session.overworld["movement"] = {"current": 8, "max": 8}
+	shell_session.overworld["fog"] = _all_visible_fog(
+		int(shell_session.overworld.get("map_size", {}).get("width", 1)),
+		int(shell_session.overworld.get("map_size", {}).get("height", 1))
+	)
+	OverworldRules.normalize_overworld_state(shell_session)
+	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(shell)
+	for _i in range(6):
+		await get_tree().process_frame
+	var snapshot: Dictionary = shell.call("validation_select_tile", int(body_tile.get("x", 0)), int(body_tile.get("y", 0)))
+	for _i in range(2):
+		await get_tree().process_frame
+	var selected: Dictionary = snapshot.get("selected_tile", {}) if snapshot.get("selected_tile", {}) is Dictionary else {}
+	var decision: Dictionary = snapshot.get("selected_route_decision", {}) if snapshot.get("selected_route_decision", {}) is Dictionary else {}
+	var selected_is_visit := int(selected.get("x", -999)) == visit.x and int(selected.get("y", -999)) == visit.y
+	var status := String(decision.get("status", ""))
+	var blocked_reason := String(decision.get("blocked_reason", ""))
+	var route_text := String(snapshot.get("selected_route_decision_text", ""))
+	remove_child(shell)
+	shell.queue_free()
+	SessionState.set_active_session(session)
+	return {
+		"ok": selected_is_visit and status == "reachable" and blocked_reason == "" and route_text.find("blocked") < 0,
+		"placement_id": String(record.get("placement_id", "")),
+		"site_id": String(record.get("site_id", "")),
+		"family": String(record.get("family", "")),
+		"body_tile": body_tile,
+		"visit_tile": interaction_tile,
+		"start": {"x": start.x, "y": start.y},
+		"selected_tile": selected,
+		"route_status": status,
+		"route_text": route_text,
+		"blocked_reason": blocked_reason,
 	}
 
 func _prove_interaction(session, record: Dictionary) -> Dictionary:
@@ -279,6 +357,7 @@ func _prove_object_list_producer_families() -> Dictionary:
 			"authored_footprint": authored_footprint,
 			"rendered_footprint": {"width": rendered_width, "height": rendered_height},
 			"body_tile_count": int(record.get("body_tile_count", 0)),
+			"body_tiles": record.get("body_tiles", []),
 			"interaction_tile": record.get("interaction_tile", {}),
 		})
 	remove_child(view)

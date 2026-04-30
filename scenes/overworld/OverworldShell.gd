@@ -407,18 +407,19 @@ func _on_spell_action_pressed(action_id: String) -> void:
 func _on_map_tile_pressed(tile: Vector2i) -> void:
 	if not _tile_in_bounds(tile):
 		return
-	if tile == _selected_tile:
+	var route_tile := _selection_route_tile(tile)
+	if route_tile == _selected_tile:
 		if not _activate_primary_action():
 			_move_toward_selected_tile()
 		return
 
-	_set_selected_tile(tile)
+	_set_selected_tile(route_tile)
 	if _is_selected_owned_town_visit_target():
 		_visit_selected_town()
 		return
 	var hero_pos = OverworldRules.hero_position(_session)
-	if _is_adjacent_move_target(hero_pos, tile):
-		_try_move(tile.x - hero_pos.x, tile.y - hero_pos.y, true)
+	if _is_adjacent_move_target(hero_pos, route_tile):
+		_try_move(route_tile.x - hero_pos.x, route_tile.y - hero_pos.y, true)
 		return
 	_active_drawer = ""
 	_refresh()
@@ -3474,9 +3475,10 @@ func _select_hero_tile() -> void:
 	_set_selected_tile(OverworldRules.hero_position(_session))
 
 func _set_selected_tile(tile: Vector2i) -> void:
-	if _selected_tile == tile:
+	var route_tile := _selection_route_tile(tile)
+	if _selected_tile == route_tile:
 		return
-	_selected_tile = tile
+	_selected_tile = route_tile
 	_invalidate_refresh_cache()
 
 func _invalidate_refresh_cache() -> void:
@@ -3489,15 +3491,71 @@ func _town_at(x: int, y: int) -> Dictionary:
 	return {}
 
 func _resource_node_at(x: int, y: int) -> Dictionary:
+	var tile := Vector2i(x, y)
+	for node in _active_resource_nodes():
+		if _resource_node_matches_interaction_tile(node, tile):
+			return node
+	for node in _active_resource_nodes():
+		if _resource_node_contains_visual_tile(node, tile):
+			return node
+	return {}
+
+func _active_resource_nodes() -> Array:
+	var nodes := []
 	for node in _session.overworld.get("resource_nodes", []):
 		if not (node is Dictionary):
 			continue
-		if int(node.get("x", -1)) != x or int(node.get("y", -1)) != y:
-			continue
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 		if bool(site.get("persistent_control", false)) or not bool(node.get("collected", false)):
-			return node
-	return {}
+			nodes.append(node)
+	return nodes
+
+func _selection_route_tile(tile: Vector2i) -> Vector2i:
+	var node := _resource_node_at(tile.x, tile.y)
+	if node.is_empty():
+		return tile
+	return _resource_node_route_tile(node, tile)
+
+func _resource_node_route_tile(node: Dictionary, fallback: Vector2i) -> Vector2i:
+	var surface := _resource_node_pathing_surface(node)
+	var interaction_tiles: Array = surface.get("interaction_tiles", []) if surface.get("interaction_tiles", []) is Array else []
+	for value in interaction_tiles:
+		if not (value is Dictionary):
+			continue
+		var candidate := Vector2i(int(value.get("x", 0)), int(value.get("y", 0)))
+		if not OverworldRules.tile_is_blocked(_session, candidate.x, candidate.y):
+			return candidate
+	return fallback
+
+func _resource_node_matches_interaction_tile(node: Dictionary, tile: Vector2i) -> bool:
+	var surface := _resource_node_pathing_surface(node)
+	var interaction_tiles: Array = surface.get("interaction_tiles", []) if surface.get("interaction_tiles", []) is Array else []
+	for value in interaction_tiles:
+		if value is Dictionary and int(value.get("x", -999)) == tile.x and int(value.get("y", -999)) == tile.y:
+			return true
+	return false
+
+func _resource_node_contains_visual_tile(node: Dictionary, tile: Vector2i) -> bool:
+	var surface := _resource_node_pathing_surface(node)
+	var footprint: Dictionary = surface.get("footprint", {}) if surface.get("footprint", {}) is Dictionary else {}
+	var origin: Dictionary = footprint.get("origin", {}) if footprint.get("origin", {}) is Dictionary else {}
+	var width := maxi(1, int(footprint.get("width", 1)))
+	var height := maxi(1, int(footprint.get("height", 1)))
+	var origin_x := int(origin.get("x", node.get("x", 0)))
+	var origin_y := int(origin.get("y", node.get("y", 0)))
+	if tile.x >= origin_x and tile.x < origin_x + width and tile.y >= origin_y and tile.y < origin_y + height:
+		return true
+	var body_tiles: Array = surface.get("body_tiles", []) if surface.get("body_tiles", []) is Array else []
+	for value in body_tiles:
+		if value is Dictionary and int(value.get("x", -999)) == tile.x and int(value.get("y", -999)) == tile.y:
+			return true
+	return int(node.get("x", -1)) == tile.x and int(node.get("y", -1)) == tile.y
+
+func _resource_node_pathing_surface(node: Dictionary) -> Dictionary:
+	var placement_id := String(node.get("placement_id", ""))
+	if placement_id == "":
+		return {}
+	return OverworldRules.overworld_object_placement_pathing_surface(_session, placement_id)
 
 func _artifact_node_at(x: int, y: int) -> Dictionary:
 	for node in _session.overworld.get("artifact_nodes", []):
