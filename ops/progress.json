@@ -6,9 +6,9 @@
   "currentSliceId": "random-map-async-generation-ux-corrective-10184",
   "currentSliceTitle": "Random Map Async Generation UX Corrective",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed narrow corrective slice for generated-map launch UX/performance. Generated-map launch now shows immediate staged progress with five process-frame yields before/around validation, materialization, and handoff; RMG true sizes, templates, player counts, object density, and deterministic generation outputs were preserved by focused and baseline validation.",
+  "currentSliceNotes": "Completed AcOrP correction: profiled post-Opening generated map handoff and removed Small generated-map route/session freeze by deferring first-open save scans/rail text and using a narrow generated-opening autosave fast path. Focused tail report now reaches first visible overworld in ~1.6-1.7s and completes deferred autosave tail in ~2.0s while preserving 36x36 Small map materialization.",
   "nextActionGuardrailNote": "Keep this corrective slice narrow: no random-map true-size/template/player-count/content-density changes, no save schema migration, and no generated-map downscale or object-count reduction.",
-  "updatedAt": "2026-04-30T13:50:49Z",
+  "updatedAt": "2026-04-30T14:56:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -4265,10 +4265,10 @@
         "Existing RMG guard validation still proves 144x144 render refresh, XL player-count range behavior, and playable Extra Large materialization with the prior object/content density."
       ],
       "createdAt": "2026-04-30T13:32:03Z",
-      "updatedAt": "2026-04-30T13:50:49Z",
+      "updatedAt": "2026-04-30T14:56:30Z",
       "startedAt": "2026-04-30T13:32:03Z",
       "completedAt": "2026-04-30T13:50:49Z",
-      "notes": "Completed after Extra Large runtime support; preserved true size/template/player-count/render behavior while staging generated-map launch feedback."
+      "notes": "Completed AcOrP correction: profiled post-Opening generated map handoff and removed Small generated-map route/session freeze by deferring first-open save scans/rail text and using a narrow generated-opening autosave fast path. Focused tail report now reaches first visible overworld in ~1.6-1.7s and completes deferred autosave tail in ~2.0s while preserving 36x36 Small map materialization."
     }
   ],
   "completedImplementationEvidence": [

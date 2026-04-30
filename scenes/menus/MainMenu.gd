@@ -1186,6 +1186,18 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 		"active_provenance": session.flags.get("generated_random_map_provenance", {}),
 	}
 	if route_to_overworld:
+		AppRouter.begin_overworld_handoff_profile(
+			"generated_random_map_post_open_tail",
+			{
+				"stage": String(_generated_generation_stage.get("stage", "")),
+				"progress": int(_generated_generation_stage.get("progress", 0)),
+				"scenario_id": session.scenario_id,
+				"size_class_id": _generated_size_class_id,
+				"template_id": String(setup.get("template_id", "")),
+				"profile_id": String(setup.get("profile_id", "")),
+				"player_count": _generated_player_count,
+			}
+		)
 		AppRouter.go_to_overworld()
 	else:
 		_generated_generation_in_progress = false
@@ -1917,6 +1929,10 @@ func validation_start_generated_skirmish() -> Dictionary:
 
 func validation_start_generated_skirmish_staged() -> Dictionary:
 	var result: Dictionary = await _start_generated_skirmish_staged(false)
+	return result
+
+func validation_start_generated_skirmish_staged_route_to_overworld() -> Dictionary:
+	var result: Dictionary = await _start_generated_skirmish_staged(true)
 	return result
 
 func validation_select_resolution(resolution_id: String) -> bool:

@@ -102,6 +102,7 @@ var _action_feedback_tween: Tween = null
 var _field_return_handoff: Dictionary = {}
 
 func _ready() -> void:
+	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
 	_apply_visual_theme()
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
@@ -109,14 +110,22 @@ func _ready() -> void:
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
 		push_warning("Cannot enter overworld without an active scenario session.")
+		AppRouter.note_overworld_handoff_step("overworld_ready_missing_session")
 		AppRouter.go_to_main_menu()
 		return
 
+	AppRouter.note_overworld_handoff_step("overworld_ready_normalize_start")
 	OverworldRules.normalize_overworld_state(_session)
+	AppRouter.note_overworld_handoff_step("overworld_ready_normalize_done")
 	if _session.scenario_status != "in_progress":
+		AppRouter.note_overworld_handoff_step("overworld_ready_outcome_redirect")
 		AppRouter.go_to_scenario_outcome()
 		return
-	_configure_save_slot_picker()
+	AppRouter.note_overworld_handoff_step("overworld_ready_save_picker_start")
+	_configure_save_slot_picker(not _generated_initial_open_pending())
+	if _generated_initial_open_pending():
+		_set_deferred_generated_save_status("Save: preparing generated autosave")
+	AppRouter.note_overworld_handoff_step("overworld_ready_save_picker_done")
 	var return_notice := String(_session.flags.get("return_notice", ""))
 	if return_notice != "":
 		_session.flags.erase("return_notice")
@@ -134,9 +143,18 @@ func _ready() -> void:
 	var command_briefing_text = OverworldRules.consume_command_briefing(_session)
 	if command_briefing_text != "":
 		_set_command_briefing("First Turn Briefing", command_briefing_text)
-		SaveService.save_runtime_autosave_session(_session)
+		if _generated_initial_open_pending():
+			_session.flags["generated_overworld_command_briefing_autosave_deferred"] = true
+			AppRouter.note_overworld_handoff_step("overworld_ready_briefing_autosave_deferred")
+		else:
+			AppRouter.note_overworld_handoff_step("overworld_ready_briefing_autosave_start")
+			SaveService.save_runtime_autosave_session(_session)
+			AppRouter.note_overworld_handoff_step("overworld_ready_briefing_autosave_done")
 	_select_hero_tile()
+	AppRouter.note_overworld_handoff_step("overworld_ready_render_state_start")
 	_render_state()
+	AppRouter.note_overworld_handoff_step("overworld_ready_render_state_done")
+	call_deferred("_complete_deferred_generated_overworld_autosave")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
@@ -492,19 +510,38 @@ func _render_state() -> void:
 	_refresh()
 
 func _refresh() -> void:
+	AppRouter.note_overworld_handoff_step("overworld_refresh_enter")
 	OverworldRules.begin_normalized_read_scope(_session)
+	AppRouter.note_overworld_handoff_step("overworld_refresh_read_scope_ready")
 	_map_data = _session.overworld.get("map", []) if _session.overworld.get("map", []) is Array else []
 	_map_size = OverworldRules.derive_map_size(_session)
 	_ensure_selected_tile()
 	_invalidate_refresh_cache()
+	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_start")
 	_map_view.set_map_state(_session, _map_data, _map_size, _selected_tile)
+	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_done")
+	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_start")
 	_rebuild_hero_actions()
 	_rebuild_context_actions()
 	_rebuild_spell_actions()
 	_rebuild_specialty_actions()
 	_rebuild_artifact_actions()
-	_refresh_save_slot_picker()
+	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_done")
+	AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_start")
+	if _generated_initial_open_pending():
+		_set_deferred_generated_save_status("Save: generated autosave pending")
+		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_deferred")
+	else:
+		_refresh_save_slot_picker()
+		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_done")
 
+	AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_start")
+	if _generated_initial_open_pending():
+		_refresh_generated_opening_surfaces()
+		OverworldRules.end_normalized_read_scope(_session)
+		AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_deferred")
+		AppRouter.note_overworld_handoff_step("overworld_refresh_done")
+		return
 	var scenario = ContentService.get_scenario(_session.scenario_id)
 	_header_label.text = String(scenario.get("name", "Overworld Command"))
 	var objective_brief := OverworldRules.describe_objective_brief(_session)
@@ -578,12 +615,99 @@ func _refresh() -> void:
 	_update_map_tooltip()
 	_sync_context_drawers()
 	OverworldRules.end_normalized_read_scope(_session)
+	AppRouter.note_overworld_handoff_step("overworld_refresh_done")
 
-func _configure_save_slot_picker() -> void:
+func _refresh_generated_opening_surfaces() -> void:
+	var scenario = ContentService.get_scenario(_session.scenario_id)
+	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+	var movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
+	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
+	var hero_pos := OverworldRules.hero_position(_session)
+	var hero_name := String(hero.get("name", "Commander"))
+	var move_line := "Move %d/%d" % [
+		int(movement.get("current", 0)),
+		int(movement.get("max", movement.get("current", 0))),
+	]
+	var resource_line := "Gold %d | Wood %d | Ore %d" % [
+		int(resources.get("gold", 0)),
+		int(resources.get("wood", 0)),
+		int(resources.get("ore", 0)),
+	]
+	_header_label.text = String(scenario.get("name", "Generated Map"))
+	_objective_brief_label.text = "Generated map opening"
+	_objective_brief_label.tooltip_text = "Detailed objective and readiness surfaces are deferred until the generated-map opening autosave completes."
+	_status_label.text = "Day %d | Pos %d,%d | %s" % [_session.day, hero_pos.x, hero_pos.y, move_line]
+	_status_label.tooltip_text = "Generated map is playable while detailed status surfaces finish after opening."
+	_resource_label.text = resource_line
+	_resource_label.tooltip_text = resource_line
+	_map_cue_label.text = "Opening generated map"
+	_map_cue_label.tooltip_text = "Map art and controls are loaded; save summary and detailed rails are deferred off the first frame."
+	_commitment_label.text = ""
+	_commitment_label.tooltip_text = ""
+	_set_rail_text(_hero_label, "%s | %s" % [hero_name, move_line], "%s | %s" % [hero_name, move_line], 2)
+	_set_rail_text(_army_label, "Army ready", "Army ready", 1)
+	_set_rail_text(_heroes_label, "Command ready", "Command ready", 1)
+	_set_rail_text(_specialty_label, "Spec ready", "Spec ready", 1)
+	_set_rail_text(_spell_label, "Spellbook ready", "Spellbook ready", 1)
+	_set_rail_text(_artifact_label, "Gear ready", "Gear ready", 1)
+	_set_collapsed_generated_opening_frontier_indicator()
+	_set_rail_text(_context_label, "Select a visible destination for orders.", "Select a visible destination", 2)
+	_set_rail_text(_event_label, _last_message if _last_message != "" else "Generated map opened.", "Generated map opened", 1)
+	_end_turn_button.text = "End Turn"
+	_end_turn_button.tooltip_text = "Finish the current day after issuing field orders."
+	_briefing_title_label.text = _briefing_title_text
+	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
+	_briefing_panel.visible = _command_briefing_text != ""
+	_map_view.tooltip_text = "Generated map ready | Select a visible destination."
+	_command_panel.visible = false
+	_frontier_panel.visible = false
+	_context_panel.visible = false
+	_command_spine.visible = false
+	_open_command_button.button_pressed = false
+	_open_frontier_button.button_pressed = false
+
+func _set_collapsed_generated_opening_frontier_indicator() -> void:
+	_frontier_indicator_label.text = "Frontier: opening"
+	_frontier_indicator_label.tooltip_text = "Detailed frontier forecast is deferred until generated-map opening completes."
+
+func _complete_deferred_generated_overworld_autosave() -> void:
+	if _session == null:
+		return
+	if not bool(_session.flags.get("generated_overworld_deferred_autosave_pending", false)):
+		AppRouter.finish_overworld_handoff_profile({"deferred_autosave": false})
+		return
+	AppRouter.note_overworld_handoff_step("overworld_deferred_autosave_wait_frame_start")
+	await get_tree().process_frame
+	AppRouter.note_overworld_handoff_step("overworld_deferred_autosave_start")
+	var result := SaveService.save_runtime_autosave_session(_session, false)
+	_session.flags.erase("generated_overworld_deferred_autosave_pending")
+	_session.flags.erase("generated_overworld_command_briefing_autosave_deferred")
+	_session.flags["generated_overworld_initial_autosave_completed"] = bool(result.get("ok", false))
+	_set_deferred_generated_save_status("Save: generated autosave ready" if bool(result.get("ok", false)) else "Save: generated autosave failed")
+	AppRouter.note_overworld_handoff_step(
+		"overworld_deferred_autosave_done",
+		{"ok": bool(result.get("ok", false)), "path": String(result.get("path", ""))}
+	)
+	AppRouter.finish_overworld_handoff_profile({"deferred_autosave": true, "autosave_ok": bool(result.get("ok", false))})
+
+func _configure_save_slot_picker(refresh_now: bool = true) -> void:
 	_save_slot_picker.clear()
 	for slot in SaveService.get_manual_slot_ids():
 		_save_slot_picker.add_item("M%d" % int(slot), int(slot))
-	_refresh_save_slot_picker()
+	if refresh_now:
+		_refresh_save_slot_picker()
+
+func _generated_initial_open_pending() -> bool:
+	return _session != null and bool(_session.flags.get("generated_overworld_deferred_autosave_pending", false))
+
+func _set_deferred_generated_save_status(text: String) -> void:
+	var save_ready := text.find("ready") >= 0
+	_save_status_label.text = text
+	_save_status_label.tooltip_text = "Generated map opening is keeping save summary inspection off the first rendered frame."
+	_save_button.text = "Save"
+	_save_button.tooltip_text = "Save the active expedition to the selected manual slot." if save_ready else "Save is available after the generated-map opening autosave settles."
+	_menu_button.text = "Menu: Field"
+	_menu_button.tooltip_text = "Return to the main menu." if save_ready else "Return to the main menu after the generated-map opening autosave settles."
 
 func _refresh_save_slot_picker() -> void:
 	if _save_slot_picker.get_item_count() <= 0:
@@ -3542,6 +3666,7 @@ func validation_snapshot() -> Dictionary:
 		"scenario_id": _session.scenario_id,
 		"difficulty": _session.difficulty,
 		"launch_mode": _session.launch_mode,
+		"generated_random_map": bool(_session.flags.get("generated_random_map", false)),
 		"campaign_id": String(_session.flags.get("campaign_id", "")),
 		"campaign_name": String(_session.flags.get("campaign_name", "")),
 		"campaign_chapter_label": String(_session.flags.get("campaign_chapter_label", "")),
@@ -3563,6 +3688,8 @@ func validation_snapshot() -> Dictionary:
 		"map_size": {
 			"x": _map_size.x,
 			"y": _map_size.y,
+			"width": _map_size.x,
+			"height": _map_size.y,
 		},
 		"selected_tile": {
 			"x": _selected_tile.x,

@@ -29,6 +29,7 @@ var _selected_manual_slot := int(MANUAL_SLOT_IDS[0])
 var _slot_summary_cache := {}
 var _summary_inspection_trace_enabled := false
 var _summary_inspection_trace_counts := {}
+var _last_runtime_save_profile := {}
 
 func validation_begin_summary_inspection_trace() -> void:
 	_summary_inspection_trace_enabled = true
@@ -47,6 +48,9 @@ func validation_end_summary_inspection_trace() -> Dictionary:
 	var snapshot := validation_summary_inspection_trace_snapshot()
 	_summary_inspection_trace_enabled = false
 	return snapshot
+
+func validation_last_runtime_save_profile() -> Dictionary:
+	return _last_runtime_save_profile.duplicate(true)
 
 func _trace_summary_inspection(name: String) -> void:
 	if not _summary_inspection_trace_enabled:
@@ -657,11 +661,26 @@ func _save_runtime_session(
 	slot: int = 1,
 	include_summary: bool = true
 ) -> Dictionary:
+	var profile := {
+		"slot_type": slot_type,
+		"include_summary": include_summary,
+		"scenario_id": session.scenario_id if session != null else "",
+		"generated_random_map": bool(session.flags.get("generated_random_map", false)) if session != null else false,
+		"started_msec": Time.get_ticks_msec(),
+		"steps": [],
+	}
+	_runtime_save_profile_step(profile, "enter")
 	if session == null or session.scenario_id == "":
+		_runtime_save_profile_finish(profile)
 		return {"ok": false, "path": "", "summary": {}, "message": "No active expedition is available to save."}
+	if _can_fast_save_generated_opening_autosave(session, slot_type, include_summary):
+		return _save_generated_opening_autosave_fast(session, profile)
 
+	_runtime_save_profile_step(profile, "to_dict_normalize_start")
 	var restore_result := _normalize_restore_result(session.to_dict(), slot_type)
+	_runtime_save_profile_step(profile, "to_dict_normalize_done")
 	if not bool(restore_result.get("ok", false)):
+		_runtime_save_profile_finish(profile)
 		return {
 			"ok": false,
 			"path": "",
@@ -671,6 +690,7 @@ func _save_runtime_session(
 
 	var sanitized_session: SessionStateStoreScript.SessionData = restore_result.get("session", null)
 	if sanitized_session == null:
+		_runtime_save_profile_finish(profile)
 		return {"ok": false, "path": "", "summary": {}, "message": "This session could not be prepared for saving."}
 
 	var path := ""
@@ -679,31 +699,102 @@ func _save_runtime_session(
 	var saved_payload := {}
 	match slot_type:
 		SLOT_TYPE_AUTOSAVE:
+			_runtime_save_profile_step(profile, "write_payload_start")
 			path = _save_payload(sanitized_session.to_dict(), _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload)
+			_runtime_save_profile_step(profile, "write_payload_done")
 			cache_slot_id = SLOT_TYPE_AUTOSAVE
 			if path != "":
+				_runtime_save_profile_step(profile, "summary_cache_store_start")
 				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_AUTOSAVE, cache_slot_id, path)
+				_runtime_save_profile_step(profile, "summary_cache_store_done")
 			if include_summary:
+				_runtime_save_profile_step(profile, "inspect_summary_start")
 				summary = inspect_autosave()
+				_runtime_save_profile_step(profile, "inspect_summary_done")
 		_:
 			var normalized_slot := _normalize_manual_slot(slot)
+			_runtime_save_profile_step(profile, "write_payload_start")
 			path = _save_payload(sanitized_session.to_dict(), _slot_path(normalized_slot), SLOT_TYPE_MANUAL, saved_payload)
+			_runtime_save_profile_step(profile, "write_payload_done")
 			cache_slot_id = str(normalized_slot)
 			if path != "":
 				_selected_manual_slot = normalized_slot
+				_runtime_save_profile_step(profile, "summary_cache_store_start")
 				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_MANUAL, cache_slot_id, path)
+				_runtime_save_profile_step(profile, "summary_cache_store_done")
 			if include_summary:
+				_runtime_save_profile_step(profile, "inspect_summary_start")
 				summary = inspect_manual_slot(normalized_slot)
+				_runtime_save_profile_step(profile, "inspect_summary_done")
 
 	if path == "":
+		_runtime_save_profile_finish(profile)
 		return {"ok": false, "path": "", "summary": summary, "message": "Save write failed."}
 
-	return {
+	var result := {
 		"ok": true,
 		"path": path,
 		"summary": summary,
 		"message": _runtime_save_message(slot_type, summary) if include_summary else "Autosave updated.",
 	}
+	_runtime_save_profile_finish(profile)
+	return result
+
+func _can_fast_save_generated_opening_autosave(
+	session: SessionStateStoreScript.SessionData,
+	slot_type: String,
+	include_summary: bool
+) -> bool:
+	return (
+		session != null
+		and slot_type == SLOT_TYPE_AUTOSAVE
+		and not include_summary
+		and bool(session.flags.get("generated_random_map", false))
+		and bool(session.flags.get("generated_overworld_deferred_autosave_pending", false))
+	)
+
+func _save_generated_opening_autosave_fast(
+	session: SessionStateStoreScript.SessionData,
+	profile: Dictionary
+) -> Dictionary:
+	_runtime_save_profile_step(profile, "generated_opening_payload_start")
+	var payload := session.to_dict()
+	_runtime_save_profile_step(profile, "generated_opening_payload_done")
+	_runtime_save_profile_step(profile, "write_payload_start")
+	var saved_payload := {}
+	var path := _save_payload(payload, _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload)
+	_runtime_save_profile_step(profile, "write_payload_done")
+	if path == "":
+		_runtime_save_profile_finish(profile)
+		return {"ok": false, "path": "", "summary": {}, "message": "Save write failed."}
+	_runtime_save_profile_step(profile, "summary_cache_deferred")
+	_runtime_save_profile_finish(profile)
+	return {
+		"ok": true,
+		"path": path,
+		"summary": {},
+		"message": "Autosave updated.",
+	}
+
+func _runtime_save_profile_step(profile: Dictionary, step_name: String) -> void:
+	var started := int(profile.get("started_msec", Time.get_ticks_msec()))
+	var elapsed: int = max(0, Time.get_ticks_msec() - started)
+	var steps: Array = profile.get("steps", [])
+	var previous_elapsed: int = 0
+	if not steps.is_empty():
+		var previous: Dictionary = steps[steps.size() - 1] if steps[steps.size() - 1] is Dictionary else {}
+		previous_elapsed = int(previous.get("elapsed_ms", 0))
+	steps.append({
+		"name": step_name,
+		"elapsed_ms": elapsed,
+		"delta_ms": max(0, elapsed - previous_elapsed),
+	})
+	profile["steps"] = steps
+
+func _runtime_save_profile_finish(profile: Dictionary) -> void:
+	_runtime_save_profile_step(profile, "finished")
+	profile["total_ms"] = max(0, Time.get_ticks_msec() - int(profile.get("started_msec", Time.get_ticks_msec())))
+	_last_runtime_save_profile = profile.duplicate(true)
 
 func _save_raw_dictionary(payload: Dictionary, file_path: String) -> String:
 	if not _ensure_save_dir():
