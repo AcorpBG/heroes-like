@@ -242,7 +242,6 @@ var _artifacts_by_tile: Dictionary = {}
 var _encounters_by_tile: Dictionary = {}
 var _rememberable_encounters_by_tile: Dictionary = {}
 var _heroes_by_tile: Dictionary = {}
-var _generated_render_fast_path := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -264,7 +263,6 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 	_session = session
 	_map_data = map_data
 	_map_size = Vector2i(max(map_size.x, 1), max(map_size.y, 1))
-	_generated_render_fast_path = _should_use_generated_render_fast_path(session, _map_size)
 	_hero_tile = OverworldRulesScript.hero_position(session) if session != null else Vector2i.ZERO
 	_movement_left = int(session.overworld.get("movement", {}).get("current", 0)) if session != null else 0
 	_terrain_layers = session.overworld.get("terrain_layers", {}) if session != null and session.overworld.get("terrain_layers", {}) is Dictionary else {}
@@ -363,7 +361,6 @@ func _session_static_signature_for(map_data: Array, terrain_layers: Dictionary) 
 	var roads = terrain_layers.get("roads", []) if terrain_layers is Dictionary else []
 	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, _map_size.x)
 	signature = _combine_cache_signature(signature, _map_size.y)
-	signature = _combine_cache_signature(signature, 1 if _generated_render_fast_path else 0)
 	signature = _combine_cache_signature(signature, hash(str(_session.scenario_id) if _session != null else ""))
 	if _session != null:
 		var materialization = _session.flags.get("generated_random_map_materialization", {})
@@ -473,13 +470,6 @@ func _placement_array_cache_signature(values, fields: Array) -> int:
 		for field in fields:
 			signature = _combine_cache_signature(signature, hash(str(entry.get(str(field), ""))))
 	return signature
-
-func _should_use_generated_render_fast_path(session, map_size: Vector2i) -> bool:
-	if session == null:
-		return false
-	if not bool(session.flags.get("generated_random_map", false)):
-		return false
-	return map_size.x >= 32 or map_size.y >= 32
 
 func _invalidate_session_static_cache(reason: String) -> void:
 	_session_static_cache_generation += 1
@@ -664,9 +654,6 @@ func _draw_tile_background(tile: Vector2i, rect: Rect2) -> void:
 func _draw_tile_session_static_background(tile: Vector2i, rect: Rect2) -> void:
 	var terrain = _terrain_at(tile)
 	if terrain == "":
-		return
-	if _generated_render_fast_path:
-		_draw_generated_fast_terrain_tile(tile, rect, terrain)
 		return
 	if not _draw_terrain_tile_art(tile, rect, terrain):
 		var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
@@ -1019,9 +1006,6 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
 		return
-	if _generated_render_fast_path:
-		_draw_generated_fast_state_icon(tile, rect)
-		return
 	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
 	var remembered := not visible
 
@@ -1045,72 +1029,8 @@ func _draw_tile_dynamic_icon(tile: Vector2i, rect: Rect2) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
 		return
 	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
-	if _generated_render_fast_path:
-		if visible and _has_hero_at(tile):
-			_draw_generated_fast_hero_marker(rect)
-		return
 	if visible and _has_hero_at(tile):
 		_draw_hero_marker(rect, tile)
-
-func _draw_generated_fast_terrain_tile(tile: Vector2i, rect: Rect2, terrain: String) -> void:
-	var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
-	_canvas_draw_rect(rect, base_color, true)
-	var road := _road_tile_payload(tile)
-	if road.is_empty():
-		return
-	var style := _road_overlay_style(String(road.get("overlay_id", "road_dirt")))
-	var road_color: Color = style.get("color", ROAD_DEFAULT_COLOR)
-	var edge_color: Color = style.get("edge_color", ROAD_DEFAULT_EDGE_COLOR)
-	var width := maxf(2.0, minf(rect.size.x, rect.size.y) * 0.11)
-	var directions := _road_neighbor_directions(tile)
-	if directions.is_empty():
-		_canvas_draw_circle(rect.get_center(), width * 0.58, edge_color)
-		_canvas_draw_circle(rect.get_center(), width * 0.40, road_color)
-		return
-	for direction in directions:
-		_canvas_draw_line(_road_connector_start(rect, direction), _road_connector_end(rect, direction), edge_color, width * 1.22)
-		_canvas_draw_line(_road_connector_start(rect, direction), _road_connector_end(rect, direction), road_color, width)
-
-func _draw_generated_fast_state_icon(tile: Vector2i, rect: Rect2) -> void:
-	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
-	var alpha := 1.0 if visible else 0.58
-	if _has_town_at(tile):
-		var color := _town_color(tile)
-		var body := rect.grow(-rect.size.x * 0.18)
-		_canvas_draw_rect(body, MARKER_OUTLINE_COLOR, true)
-		_canvas_draw_rect(body.grow(-maxf(2.0, rect.size.x * 0.045)), Color(color.r, color.g, color.b, alpha), true)
-	if _has_resource_at(tile):
-		_canvas_draw_circle(rect.get_center(), rect.size.x * 0.18, MARKER_OUTLINE_COLOR)
-		_canvas_draw_circle(rect.get_center(), rect.size.x * 0.13, Color(RESOURCE_COLOR.r, RESOURCE_COLOR.g, RESOURCE_COLOR.b, alpha))
-	if _has_artifact_at(tile):
-		var center := rect.get_center()
-		var radius := rect.size.x * 0.18
-		var points := PackedVector2Array([
-			center + Vector2(0.0, -radius),
-			center + Vector2(radius, 0.0),
-			center + Vector2(0.0, radius),
-			center + Vector2(-radius, 0.0),
-		])
-		_canvas_draw_colored_polygon(points, MARKER_OUTLINE_COLOR)
-		var inner := radius * 0.68
-		_canvas_draw_colored_polygon(PackedVector2Array([
-			center + Vector2(0.0, -inner),
-			center + Vector2(inner, 0.0),
-			center + Vector2(0.0, inner),
-			center + Vector2(-inner, 0.0),
-		]), Color(ARTIFACT_COLOR.r, ARTIFACT_COLOR.g, ARTIFACT_COLOR.b, alpha))
-	if _has_encounter_at(tile) and (visible or _has_rememberable_encounter_at(tile)):
-		var center := rect.get_center()
-		var radius := rect.size.x * 0.17
-		_canvas_draw_rect(Rect2(center - Vector2(radius, radius), Vector2(radius * 2.0, radius * 2.0)), MARKER_OUTLINE_COLOR, true)
-		_canvas_draw_rect(Rect2(center - Vector2(radius * 0.66, radius * 0.66), Vector2(radius * 1.32, radius * 1.32)), Color(ENCOUNTER_COLOR.r, ENCOUNTER_COLOR.g, ENCOUNTER_COLOR.b, alpha), true)
-
-func _draw_generated_fast_hero_marker(rect: Rect2) -> void:
-	var center := rect.get_center()
-	var radius := rect.size.x * 0.21
-	_canvas_draw_circle(center, radius * 1.35, HERO_RING_COLOR)
-	_canvas_draw_circle(center, radius * 1.04, MARKER_OUTLINE_COLOR)
-	_canvas_draw_circle(center, radius * 0.78, HERO_FILL_COLOR)
 
 func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_object_sprite(_resource_asset_id(node), rect, remembered, _resource_object_profile(node), tile)
@@ -2350,6 +2270,9 @@ func validation_view_metrics() -> Dictionary:
 		"fit_entire_map": _should_fit_entire_map(),
 		"pan_supported": _can_pan_camera(),
 		"manual_camera": _manual_camera,
+		"visual_render_path": "normal_overworld_art",
+		"generated_maps_use_normal_art_path": true,
+		"primitive_generated_render_path": false,
 		"camera_focus_tile": {"x": int(round(focus_tile.x)), "y": int(round(focus_tile.y))},
 		"camera_focus_tile_precise": {"x": focus_tile.x, "y": focus_tile.y},
 		"visible_bounds": {
