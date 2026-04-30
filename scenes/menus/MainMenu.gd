@@ -291,6 +291,8 @@ func _on_generated_size_selected(index: int) -> void:
 	_generated_player_count = int(size_defaults.get("player_count", _generated_player_count))
 	_select_generated_picker_metadata(_generated_template_picker, _generated_template_id)
 	_select_generated_picker_metadata(_generated_profile_picker, _generated_profile_id)
+	_clamp_generated_player_count_to_template()
+	_rebuild_generated_player_count_picker()
 	_select_generated_player_count_picker(_generated_player_count)
 	_refresh_generated_random_map_setup()
 
@@ -303,6 +305,9 @@ func _on_generated_template_selected(index: int) -> void:
 			_generated_profile_id = String(option.get("profile_id", _generated_profile_id))
 			_select_generated_picker_metadata(_generated_profile_picker, _generated_profile_id)
 			break
+	_clamp_generated_player_count_to_template()
+	_rebuild_generated_player_count_picker()
+	_select_generated_player_count_picker(_generated_player_count)
 	_refresh_generated_random_map_setup()
 
 func _on_generated_profile_selected(index: int) -> void:
@@ -874,6 +879,7 @@ func _configure_generated_random_map_controls() -> void:
 		_generated_profile_id = String(options.get("default_profile_id", "border_gate_compact_profile_v1"))
 	if _generated_player_count <= 0:
 		_generated_player_count = int(options.get("default_player_count", 3))
+	_clamp_generated_player_count_to_template()
 	if _generated_water_mode == "":
 		_generated_water_mode = String(options.get("default_water_mode", "land"))
 	_generated_seed_edit.text = _generated_seed
@@ -883,17 +889,7 @@ func _configure_generated_random_map_controls() -> void:
 	_rebuild_generated_option_picker(_generated_template_picker, options.get("templates", []), _generated_template_id, "template")
 	_rebuild_generated_option_picker(_generated_profile_picker, options.get("profiles", []), _generated_profile_id, "profile")
 
-	_generated_player_count_picker.clear()
-	var player_selected := -1
-	for index in range(options.get("player_counts", []).size()):
-		var player_count := int(options.get("player_counts", [])[index])
-		_generated_player_count_picker.add_item("%d players" % player_count, index)
-		_generated_player_count_picker.set_item_metadata(index, player_count)
-		if player_count == _generated_player_count:
-			player_selected = index
-	if player_selected >= 0:
-		_generated_player_count_picker.select(player_selected)
-	_generated_player_count_picker.tooltip_text = "Player count: one human start plus generated opponents."
+	_rebuild_generated_player_count_picker()
 
 	_generated_water_picker.clear()
 	var water_selected := -1
@@ -1114,6 +1110,30 @@ func _select_generated_player_count_picker(player_count: int) -> bool:
 		_generated_player_count_picker.select(index)
 		return true
 	return false
+
+func _rebuild_generated_player_count_picker() -> void:
+	_generated_player_count_picker.clear()
+	var player_selected := -1
+	var player_counts := ScenarioSelectRulesScript.random_map_player_count_options_for_template(_generated_template_id)
+	if player_counts.is_empty():
+		player_counts = ScenarioSelectRulesScript.random_map_player_setup_options().get("player_counts", [])
+	for index in range(player_counts.size()):
+		var player_count := int(player_counts[index])
+		_generated_player_count_picker.add_item("%d players" % player_count, index)
+		_generated_player_count_picker.set_item_metadata(index, player_count)
+		if player_count == _generated_player_count:
+			player_selected = index
+	if player_selected >= 0:
+		_generated_player_count_picker.select(player_selected)
+	_generated_player_count_picker.tooltip_text = "Player count: one human start plus generated opponents."
+
+func _clamp_generated_player_count_to_template() -> void:
+	var counts := ScenarioSelectRulesScript.random_map_player_count_options_for_template(_generated_template_id)
+	if counts.is_empty():
+		return
+	var first_count := int(counts[0])
+	var last_count := int(counts[counts.size() - 1])
+	_generated_player_count = clampi(_generated_player_count, first_count, last_count)
 
 func _skirmish_front_check_payload(setup: Dictionary) -> Dictionary:
 	if setup.is_empty():
@@ -1521,6 +1541,7 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"template_options": _picker_item_labels(_generated_template_picker),
 		"profile_options": _picker_item_labels(_generated_profile_picker),
 		"player_count_options": _picker_item_labels(_generated_player_count_picker),
+		"player_count_values": _picker_item_metadata_ints(_generated_player_count_picker),
 		"water_options": _picker_item_labels(_generated_water_picker),
 	}
 
@@ -1529,6 +1550,12 @@ func _picker_item_labels(picker: OptionButton) -> Array:
 	for index in range(picker.get_item_count()):
 		labels.append(picker.get_item_text(index))
 	return labels
+
+func _picker_item_metadata_ints(picker: OptionButton) -> Array:
+	var values := []
+	for index in range(picker.get_item_count()):
+		values.append(int(picker.get_item_metadata(index)))
+	return values
 
 func validation_open_campaign_stage() -> void:
 	_select_menu_tab(TAB_CAMPAIGN)

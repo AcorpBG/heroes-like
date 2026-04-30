@@ -6,7 +6,7 @@
   "currentSliceId": "random-map-extra-large-runtime-support-10184",
   "currentSliceTitle": "Random Map Extra Large Runtime Support",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed runtime-size support through Extra Large 144x144 without hidden downscale/clamp; over-cap custom requests reject against 144x144x2, and underground remains template-capability controlled.",
+  "currentSliceNotes": "Completed runtime-size support through Extra Large 144x144 without hidden downscale/clamp; follow-up fixes derive player counts from template catalog ranges/capacity so compact Small remains 3-player while translated XL exposes 2..8.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. This is an RMG runtime-size support follow-up only: expose and materialize Small/Medium/Large/Extra Large at source dimensions, preserve generated skirmish/session boundaries, and do not claim campaign, alpha, release, asset-parity, or byte-clone completion.",
   "updatedAt": "2026-04-30T00:00:00Z",
   "statusTaxonomy": {
@@ -4081,6 +4081,7 @@
         "scripts/core/RandomMapGeneratorRules.gd",
         "scenes/menus/MainMenu.gd if UI state/copy requires change",
         "tests/random_map_player_setup_retry_ux_report.gd",
+        "tests/random_map_player_count_range_report.gd",
         "tests/random_map_playable_materialization_runtime_report.gd",
         "tests/random_map_large_batch_parity_stress_report.gd",
         "docs/random-map-size-class-translation.md",
@@ -4101,6 +4102,7 @@
         "Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144 are selectable and launchable/materializable at source width and height.",
         "Generated config, metadata, provenance, replay metadata, save data, and runtime materialization report actual materialized dimensions equal to the selected source class.",
         "Focused reports prove Extra Large 144x144 selection, generation, launch/materialization, and honest provenance without hidden downscale/clamp; Extra Large now selects translated_rmg_template_043_v1 / translated_rmg_profile_043_v1 instead of compact topology.",
+        "Player-count setup/options now derive from catalog template players.total ranges and fixed start-slot capacity: Small compact remains [3], while translated_rmg_template_043_v1 exposes 2..8 and generator selection/player assignment accept 5, 6, 7, and 8.",
         "Translated-template stress gates no longer classify source templates as accepted non-parity solely because of the earlier compact runtime cap."
       ],
       "completionCriteria": [
@@ -4117,6 +4119,7 @@
         "/root/.local/bin/godot --headless --path . tests/random_map_playable_materialization_runtime_report.tscn passed with translated_rmg_template_043_v1 / translated_rmg_profile_043_v1, topology 33 zones / 68 links, materialized_size width=144, height=144, level_count=1, terrain_row_count=144, 16 towns, 95 mines, 21 dwellings, 136 guards, 68 rewards, 1824 object instances, save/restore, and replay/export boundary.",
         "/root/.local/bin/godot --headless --path . tests/random_map_large_batch_parity_stress_report.tscn passed with case_count=58, validation_pass_case_count=55, materialized_validation_pass_count=55, translated_template_count=53, covered_translated_template_count=53, translated_parity_materialized_validation_pass_count=51, accepted_non_parity_count=2, expected_negative_count=1, metadata_only_count=0, unsupported_warning_count=0, and hard_blocker_count=0.",
         "/root/.local/bin/godot --headless --path . tests/random_map_final_writeout_export_save_schema_report.tscn passed with final_tile_stream_count=468, object_writeout_count=78, generated_export_signature=c4f0270e, tile_stream_signature=5d212f8f, object_writeout_signature=8c37e543, and replay boundary versioned_seed_config_identity_export_stream_and_materialized_map_signature_contract.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_player_count_range_report.tscn passed with compact_player_counts=[3], xl_player_counts=[2,3,4,5,6,7,8], and accepted_xl_player_counts=[5,6,7,8].",
         "python3 tests/validate_repo.py passed.",
         "python3 -m json.tool ops/progress.json and git diff --check passed."
       ],
@@ -4127,10 +4130,10 @@
         "Campaign adoption, authored JSON writeback, alpha/release readiness, broad faction/content work, and byte-level HoMM3 map cloning remain out of scope."
       ],
       "createdAt": "2026-04-30T00:00:00Z",
-      "updatedAt": "2026-04-30T10:41:03Z",
+      "updatedAt": "2026-04-30T23:59:00Z",
       "startedAt": "2026-04-30T00:00:00Z",
       "completedAt": "2026-04-30T00:00:00Z",
-      "notes": "Completed AcOrP request to support 144x144 honestly. Follow-up evidence corrected Extra Large template/profile selection so 144x144 uses translated_rmg_template_043_v1 / translated_rmg_profile_043_v1 rather than compact topology; replay provenance now stores the source faction pool so save regeneration preserves the scenario id."
+      "notes": "Completed AcOrP request to support 144x144 honestly. Follow-up evidence corrected Extra Large template/profile selection so 144x144 uses translated_rmg_template_043_v1 / translated_rmg_profile_043_v1 rather than compact topology; replay provenance now stores the source faction pool so save regeneration preserves the scenario id. Player-count follow-up removed the legacy player-facing 2..4 clamp by deriving per-template counts from catalog ranges/capacity."
     }
   ],
   "completedImplementationEvidence": [

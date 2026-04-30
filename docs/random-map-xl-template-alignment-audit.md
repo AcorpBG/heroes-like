@@ -45,8 +45,11 @@ Extra Large now defaults to `translated_rmg_template_043_v1` / `translated_rmg_p
 
 Replay provenance now stores the source faction pool for generated-map replay. The previous provenance stored the post-assignment faction order, so restore-time regeneration shuffled an already shuffled pool and changed the generated scenario id.
 
+Player-count setup now derives valid counts from the selected catalog template's `players.total` range and fixed start-slot capacity instead of the legacy player-facing `[2, 3, 4]` list. Compact local templates still expose their compact range (`border_gate_compact_v1` remains `3` players), while translated XL template `translated_rmg_template_043_v1` exposes and normalizes valid `2..8` player requests.
+
 ## Validation Evidence
 
 - `random_map_template_filtering_assignment_report.tscn`: passed with `extra_large_topology` = template 043, profile 043, `size_score=16`, `zone_count=33`, `link_count=68`.
-- `random_map_player_setup_retry_ux_report.tscn`: passed with Extra Large UI controls selecting template 043, profile 043, and 4 players.
+- `random_map_player_count_range_report.tscn`: passed with compact player counts `[3]`, XL player counts `[2, 3, 4, 5, 6, 7, 8]`, and accepted XL generator selection/player assignment counts `[5, 6, 7, 8]`.
+- `random_map_player_setup_retry_ux_report.tscn`: updated to assert player-count selector/config ranges without forcing a full XL materialization in the menu report.
 - `random_map_playable_materialization_runtime_report.tscn`: passed with 144x144 materialization, template 043, profile 043, 33 zones, 68 links, 16 towns, 95 mines, 21 dwellings, 136 guards, 68 rewards, and 1824 object instances.
