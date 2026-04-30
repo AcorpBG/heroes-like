@@ -2240,6 +2240,7 @@ static func _place_mines_for_zone(zone: Dictionary, seeds: Dictionary, zone_grid
 			placements.append(_object_placement(placement_id, "mine", String(zone.get("faction_id", "")), zone_id, point, mine_payload))
 			resource_nodes.append(_resource_node_from_placement(placement_id, mine_payload, point, zone_id))
 			_mark_occupied(occupied, point)
+			_reserve_visit_tiles_for_catalog(reserved, point, "mine", String(mine_record.get("family_id", "")), String(mine_record.get("object_id", "")))
 			ordinal += 1
 
 static func _place_dwelling_for_zone(zone: Dictionary, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary, resource_nodes: Array, placements: Array, rng: DeterministicRng) -> void:
@@ -3900,6 +3901,9 @@ static func _apply_object_footprint_metadata(record: Dictionary, terrain_rows: A
 		}
 
 static func _object_footprint_catalog_record_for_placement(record: Dictionary) -> Dictionary:
+	var authored_resource_producer := _authored_resource_producer_catalog_record_for_placement(record)
+	if not authored_resource_producer.is_empty():
+		return authored_resource_producer
 	var kind := String(record.get("kind", ""))
 	var object_id := _object_record_content_id(record)
 	var family_id := String(record.get("family_id", record.get("selected_reward_family_id", "")))
@@ -3919,6 +3923,113 @@ static func _object_footprint_catalog_record_for_placement(record: Dictionary) -
 		if object_id != "" and object_id in catalog.get("object_ids", []):
 			return catalog
 	return {}
+
+static func _authored_resource_producer_catalog_record_for_placement(record: Dictionary) -> Dictionary:
+	var kind := String(record.get("kind", ""))
+	if kind not in ["mine", "resource_producer", "persistent_economy_site"]:
+		return {}
+	var object_id := String(record.get("object_id", "")).strip_edges()
+	var map_object := ContentService.get_map_object(object_id) if object_id != "" else {}
+	if map_object.is_empty():
+		map_object = ContentService.get_map_object_for_resource_site(String(record.get("site_id", "")))
+	if map_object.is_empty():
+		return {}
+	var family := String(map_object.get("family", ""))
+	if String(map_object.get("primary_class", "")) != "persistent_economy_site" and family not in ["mine", "staged_resource_front", "support_producer"]:
+		return {}
+	var footprint: Dictionary = map_object.get("footprint", {}) if map_object.get("footprint", {}) is Dictionary else {}
+	var body_mask := _authored_map_object_body_mask(map_object)
+	var visit_mask := _authored_map_object_visit_mask(map_object)
+	if visit_mask.is_empty():
+		visit_mask = [{"x": 0, "y": 1}]
+	var passability_class := String(map_object.get("passability_class", ""))
+	var body_blocks := passability_class not in ["passable_visit_on_enter", "passable_scenic"] and not bool(map_object.get("passable", true))
+	if passability_class in ["blocking_visitable", "blocking_non_visitable", "edge_blocker", "conditional_pass", "town_blocking", "neutral_stack_blocking"]:
+		body_blocks = true
+	var object_ids := [String(map_object.get("id", object_id))]
+	var resource_site_id := String(map_object.get("resource_site_id", ""))
+	if resource_site_id != "":
+		object_ids.append(resource_site_id)
+	return {
+		"id": "authored_%s" % String(map_object.get("id", object_id)),
+		"family_id": family,
+		"display_name": String(map_object.get("name", map_object.get("id", object_id))),
+		"placement_kinds": [kind],
+		"family_ids": [family],
+		"object_ids": object_ids,
+		"footprint": footprint.duplicate(true),
+		"runtime_footprint": footprint.duplicate(true),
+		"body_mask": body_mask,
+		"runtime_body_mask": [{"x": 0, "y": 0}],
+		"visit_mask": visit_mask,
+		"approach_mask": visit_mask.duplicate(true),
+		"passability_mask": {
+			"body_blocks_movement": body_blocks,
+			"visit_tiles_passable": true,
+			"approach_tiles_passable": true,
+			"road_may_cross_body": false,
+		},
+		"action_mask": {
+			"visitable": true,
+			"trigger": "mine_capture",
+			"visit_tile_required": true,
+			"interaction_cadence": "capture_then_daily",
+			"strict_single_visit_tile": true,
+			"runtime_body_contract": "anchor_tile_only_until_multitile_generated_pathing_is_template_safe",
+		},
+		"terrain_restrictions": {
+			"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"],
+			"blocked_terrain_ids": ["water", "coast", "shore"],
+		},
+		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "authored_single_visit_passable"],
+		"object_limit": {"per_zone": 7, "global": 128},
+	}
+
+static func _authored_map_object_body_mask(map_object: Dictionary) -> Array:
+	var body_mask := []
+	var origin_offset := _map_object_anchor_origin_offset(map_object)
+	var authored_body = map_object.get("body_tiles", [])
+	if authored_body is Array:
+		for body_value in authored_body:
+			if body_value is Dictionary:
+				body_mask.append({
+					"x": origin_offset.x + int(body_value.get("x", 0)),
+					"y": origin_offset.y + int(body_value.get("y", 0)),
+				})
+	if body_mask.is_empty():
+		body_mask.append({"x": 0, "y": 0})
+	return body_mask
+
+static func _authored_map_object_visit_mask(map_object: Dictionary) -> Array:
+	var visit_mask := []
+	var origin_offset := _map_object_anchor_origin_offset(map_object)
+	var approach: Dictionary = map_object.get("approach", {}) if map_object.get("approach", {}) is Dictionary else {}
+	var offsets = approach.get("visit_offsets", [])
+	if offsets is Array:
+		for offset_value in offsets:
+			if offset_value is Dictionary:
+				visit_mask.append({
+					"x": origin_offset.x + int(offset_value.get("x", 0)),
+					"y": origin_offset.y + int(offset_value.get("y", 0)),
+				})
+				break
+	return visit_mask
+
+static func _map_object_anchor_origin_offset(map_object: Dictionary) -> Vector2i:
+	var footprint: Dictionary = map_object.get("footprint", {}) if map_object.get("footprint", {}) is Dictionary else {}
+	var width: int = maxi(1, int(footprint.get("width", 1)))
+	var height: int = maxi(1, int(footprint.get("height", 1)))
+	match String(footprint.get("anchor", "bottom_center")):
+		"top_left":
+			return Vector2i.ZERO
+		"center":
+			return Vector2i(-int(width / 2), -int(height / 2))
+		"bottom_left":
+			return Vector2i(0, -(height - 1))
+		"bottom_right":
+			return Vector2i(-(width - 1), -(height - 1))
+		_:
+			return Vector2i(-int(width / 2), -(height - 1))
 
 static func _catalog_matches_object_or_family(catalog: Dictionary, object_id: String, family_id: String) -> bool:
 	if object_id == "" and family_id == "":
@@ -8474,6 +8585,8 @@ static func _approach_tiles_for_catalog(point: Dictionary, preferred_zone_id: St
 	if catalog.is_empty():
 		return _approach_tiles_for_point(point, preferred_zone_id, zone_grid, terrain_rows, occupied)
 	var result := []
+	var action_mask: Dictionary = catalog.get("action_mask", {}) if catalog.get("action_mask", {}) is Dictionary else {}
+	var strict_single_visit := bool(action_mask.get("strict_single_visit_tile", false))
 	var body_lookup := _point_lookup(runtime_body)
 	for offset in catalog.get("approach_mask", []):
 		if not (offset is Dictionary):
@@ -8490,6 +8603,10 @@ static func _approach_tiles_for_catalog(point: Dictionary, preferred_zone_id: St
 		if preferred_zone_id != "" and _zone_at_point(zone_grid, _point_dict(nx, ny)) != preferred_zone_id:
 			continue
 		result.append(_point_dict(nx, ny))
+		if strict_single_visit:
+			return result
+	if strict_single_visit:
+		return result
 	if result.size() < 2:
 		for fallback in _approach_tiles_for_point(point, preferred_zone_id, zone_grid, terrain_rows, occupied):
 			if fallback is Dictionary and not _point_in_array(result, fallback):
@@ -11302,6 +11419,18 @@ static func _point_dict(x: int, y: int) -> Dictionary:
 
 static func _mark_occupied(occupied: Dictionary, point: Dictionary) -> void:
 	occupied[_point_key(int(point.get("x", 0)), int(point.get("y", 0)))] = true
+
+static func _reserve_visit_tiles_for_catalog(reserved: Dictionary, point: Dictionary, kind: String, family_id: String, object_id: String) -> void:
+	var catalog := _object_footprint_catalog_record_for_placement({
+		"kind": kind,
+		"family_id": family_id,
+		"object_id": object_id,
+		"x": int(point.get("x", 0)),
+		"y": int(point.get("y", 0)),
+	})
+	for offset in catalog.get("visit_mask", []):
+		if offset is Dictionary:
+			reserved[_point_key(int(point.get("x", 0)) + int(offset.get("x", 0)), int(point.get("y", 0)) + int(offset.get("y", 0)))] = true
 
 static func _point_key(x: int, y: int) -> String:
 	return "%d,%d" % [x, y]
