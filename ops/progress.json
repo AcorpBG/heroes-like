@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-pathing-debug-overlay-instrumentation-10184",
-  "currentSliceTitle": "Random Map Pathing Debug Overlay Instrumentation",
+  "currentSliceId": "random-map-pathing-command-latency-optimization-10184",
+  "currentSliceTitle": "Random Map Pathing Command Latency Optimization",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed AcOrP instrumentation-only pathing debug overlay reconciliation: live overworld F3 overlay now shows last pathing/selection/move command lifecycle phase buckets, refresh call count and internal refresh section timings, deferred frame/overlay update cost, top offenders, measured_sum_ms, and unaccounted_ms without changing generation/pathing/rendering/gameplay semantics.",
+  "currentSliceNotes": "Completed AcOrP XL F3 overlay latency follow-up: routine generated-map movement now avoids redundant full runtime normalization, reuses spatial/refresh lookup caches, and skips broad route-interception fallback scans for selected-route action rebuilds without changing map generation, pathing/object contracts, renderer art semantics, saves, objectives, or balance.",
   "nextActionGuardrailNote": "Remaining generated save work should split generated map payload persistence from lightweight state/delta autosave without visual/map semantic changes.",
-  "updatedAt": "2026-04-30T22:18:00Z",
+  "updatedAt": "2026-04-30T22:08:33Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,66 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "random-map-pathing-command-latency-optimization-10184",
+      "title": "Random Map Pathing Command Latency Optimization",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-final-homm3-parity-regate-audit.md",
+        "docs/random-map-pathing-debug-overlay-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/random_map_pathing_debug_overlay_report.gd",
+        "tests/random_map_generated_overworld_profile_report.gd",
+        "docs/random-map-pathing-debug-overlay-report.md",
+        "ops/progress.json"
+      ],
+      "startedAt": "2026-04-30T21:41:16Z",
+      "completedAt": "2026-04-30T22:08:33Z",
+      "completionCriteria": [
+        "Routine generated-map movement/selection avoids semantically redundant full generated-map/session normalization and broad action rebuild work.",
+        "F3 overlay remains useful and reports the optimized phase buckets/top offenders.",
+        "Focused latency profile/report demonstrates substantial reduction in the targeted movement_rules, read-scope, and action-refresh hotspots.",
+        "Requested random-map pathing, density, footprint, visual, profile, objective, timing, UX, render, player-count, JSON, repo, and diff validation passes."
+      ],
+      "nonGoals": [
+        "Do not change map size, template behavior, player-count behavior, density, object counts, generation semantics, pathing semantics, renderer art semantics, saves, objectives, or balance.",
+        "Do not add debug/primitive render shortcuts, hidden downscale, content cuts, or fake speedups.",
+        "Do not weaken body-tile blocking, visit-tile passability/reachability, or body-click-to-visit-tile resolution contracts."
+      ],
+      "completionEvidence": [
+        "Runtime generated-map normalization is now signature-gated and marked fresh after full normalization, movement, and action finalization, so routine movement and refresh read scopes do not redo full generated-map/session normalization when the normalized state is already current.",
+        "Movement, resource collection, artifact collection, and town capture use the runtime-normalized path while preserving final fog/scenario refresh and save schema.",
+        "Generated overworld resource, artifact, encounter, and town lookups now reuse a session spatial lookup index for routine active-site checks instead of repeatedly scanning full object lists.",
+        "OverworldShell refresh caches selected-route decision surfaces and tile object lookups within a refresh, and selected-route action rebuilds skip the broad convoy/raid interception fallback scan when only route-specific action context is needed.",
+        "Focused generated Small F3 overlay report asserts read_scope_map_state <= 50ms, movement_rules <= 2000ms, refresh/actions <= 1200ms, and total command <= 3500ms; representative post-fix evidence was total 883.672ms, movement_rules 545.730ms, refresh 337.710ms, read_scope_map_state 0.743ms, and refresh/actions 317.206ms against AcOrP's known XL before total 13762.108ms, movement_rules 7890.9ms, refresh 5824.791ms, read_scope_map_state 3262.4ms, and refresh/actions 2214.8ms."
+      ],
+      "validationEvidence": [
+        "godot4 --headless --path . res://tests/random_map_pathing_debug_overlay_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_generated_density_distribution_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_generated_object_footprint_interaction_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_generated_visual_path_regression_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_generated_overworld_profile_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_live_overworld_render_move_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_default_seed_objective_regression_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_post_open_tail_timing_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_async_generation_ux_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_runtime_render_perf_smoke.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_player_count_range_report.tscn passed.",
+        "python3 tests/validate_repo.py passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ],
+      "notes": "Completed optimization/fix follow-up from AcOrP XL overlay evidence at HEAD d8c559c: adjacent/same-tile command total 13762.108ms, movement_rules 7890.9ms, refresh_total 5824.8ms, refresh_read_scope_map_state 3262.4ms, refresh/actions 2214.8ms, with route/BFS and map-view rendering/index buckets tiny. Local validation proves the targeted hotspots shrink on the focused generated Small live path; this run did not reproduce a full XL wall-clock profile locally."
+    },
     {
       "id": "random-map-pathing-debug-overlay-instrumentation-10184",
       "title": "Random Map Pathing Debug Overlay Instrumentation",

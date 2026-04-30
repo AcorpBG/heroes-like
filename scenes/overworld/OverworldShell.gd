@@ -1725,6 +1725,15 @@ func _selected_tile_movement_action() -> Dictionary:
 
 func _selected_route_decision_surface() -> Dictionary:
 	var decision_started_usec := _debug_phase_begin("route_decision_construction")
+	if _refresh_cache.has("selected_route_decision_surface"):
+		var cached_surface: Dictionary = _refresh_cache["selected_route_decision_surface"]
+		_debug_phase_end("route_decision_construction", decision_started_usec, {
+			"cached": true,
+			"status": String(cached_surface.get("status", "")),
+			"steps": int(cached_surface.get("steps", 0)),
+			"action_kind": String(cached_surface.get("action_kind", "")),
+		})
+		return cached_surface
 	if not _tile_in_bounds(_selected_tile):
 		_debug_phase_end("route_decision_construction", decision_started_usec, {"status": "out_of_bounds"})
 		return {}
@@ -1796,7 +1805,8 @@ func _selected_route_decision_surface() -> Dictionary:
 		_session,
 		_selected_tile.x,
 		_selected_tile.y,
-		steps
+		steps,
+		false
 	)
 	var remote_owned_town := _is_selected_owned_town_visit_target()
 	if remote_owned_town:
@@ -1846,6 +1856,7 @@ func _selected_route_decision_surface() -> Dictionary:
 	var decision_brief := _route_decision_brief(surface)
 	surface["decision_brief"] = decision_brief
 	surface["decision_brief_text"] = String(decision_brief.get("tooltip_text", ""))
+	_refresh_cache["selected_route_decision_surface"] = surface
 	_debug_phase_end("route_decision_construction", decision_started_usec, {"status": status, "steps": steps, "action_kind": action_kind})
 	return surface
 
@@ -3613,22 +3624,35 @@ func _invalidate_refresh_cache() -> void:
 	_refresh_cache.clear()
 
 func _town_at(x: int, y: int) -> Dictionary:
+	var cache_key := "town_at:%d,%d" % [x, y]
+	if _refresh_cache.has(cache_key):
+		return _refresh_cache[cache_key]
 	for town in _session.overworld.get("towns", []):
 		if town is Dictionary and int(town.get("x", -1)) == x and int(town.get("y", -1)) == y:
+			_refresh_cache[cache_key] = town
 			return town
+	_refresh_cache[cache_key] = {}
 	return {}
 
 func _resource_node_at(x: int, y: int) -> Dictionary:
+	var cache_key := "resource_node_at:%d,%d" % [x, y]
+	if _refresh_cache.has(cache_key):
+		return _refresh_cache[cache_key]
 	var tile := Vector2i(x, y)
 	for node in _active_resource_nodes():
 		if _resource_node_matches_interaction_tile(node, tile):
+			_refresh_cache[cache_key] = node
 			return node
 	for node in _active_resource_nodes():
 		if _resource_node_contains_visual_tile(node, tile):
+			_refresh_cache[cache_key] = node
 			return node
+	_refresh_cache[cache_key] = {}
 	return {}
 
 func _active_resource_nodes() -> Array:
+	if _refresh_cache.has("active_resource_nodes"):
+		return _refresh_cache["active_resource_nodes"]
 	var nodes := []
 	for node in _session.overworld.get("resource_nodes", []):
 		if not (node is Dictionary):
@@ -3636,6 +3660,7 @@ func _active_resource_nodes() -> Array:
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 		if bool(site.get("persistent_control", false)) or not bool(node.get("collected", false)):
 			nodes.append(node)
+	_refresh_cache["active_resource_nodes"] = nodes
 	return nodes
 
 func _selection_route_tile(tile: Vector2i) -> Vector2i:
@@ -3706,16 +3731,26 @@ func _resource_node_pathing_surface(node: Dictionary) -> Dictionary:
 	return OverworldRules.overworld_object_placement_pathing_surface(_session, placement_id)
 
 func _artifact_node_at(x: int, y: int) -> Dictionary:
+	var cache_key := "artifact_node_at:%d,%d" % [x, y]
+	if _refresh_cache.has(cache_key):
+		return _refresh_cache[cache_key]
 	for node in _session.overworld.get("artifact_nodes", []):
 		if node is Dictionary and not bool(node.get("collected", false)) and int(node.get("x", -1)) == x and int(node.get("y", -1)) == y:
+			_refresh_cache[cache_key] = node
 			return node
+	_refresh_cache[cache_key] = {}
 	return {}
 
 func _encounter_at(x: int, y: int) -> Dictionary:
+	var cache_key := "encounter_at:%d,%d" % [x, y]
+	if _refresh_cache.has(cache_key):
+		return _refresh_cache[cache_key]
 	for encounter in _session.overworld.get("encounters", []):
 		if encounter is Dictionary and int(encounter.get("x", -1)) == x and int(encounter.get("y", -1)) == y:
 			if not OverworldRules.is_encounter_resolved(_session, encounter):
+				_refresh_cache[cache_key] = encounter
 				return encounter
+	_refresh_cache[cache_key] = {}
 	return {}
 
 func _rememberable_encounter_at(x: int, y: int) -> Dictionary:
