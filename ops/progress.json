@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-async-generation-ux-corrective-10184",
-  "currentSliceTitle": "Random Map Async Generation UX Corrective",
+  "currentSliceId": "random-map-default-seed-objective-corrective-10184",
+  "currentSliceTitle": "Random Map Default Seed And Objective Corrective",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed AcOrP correction: profiled post-Opening generated map handoff and removed Small generated-map route/session freeze by deferring first-open save scans/rail text and using a narrow generated-opening autosave fast path. Focused tail report now reaches first visible overworld in ~1.6-1.7s and completes deferred autosave tail in ~2.0s while preserving 36x36 Small map materialization.",
+  "currentSliceNotes": "Completed AcOrP corrective: blank/default generated-map launches now resolve a fresh effective seed at launch, explicit seeds remain deterministic, and generated Small objectives now require claiming a rival town instead of already owning the start town.",
   "nextActionGuardrailNote": "Keep this corrective slice narrow: no random-map true-size/template/player-count/content-density changes, no save schema migration, and no generated-map downscale or object-count reduction.",
-  "updatedAt": "2026-04-30T14:56:30Z",
+  "updatedAt": "2026-04-30T15:14:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -615,6 +615,7 @@
       "sliceType": "parent",
       "childSliceIds": [
         "random-map-connection-guard-materialization-10184",
+        "random-map-default-seed-objective-corrective-10184",
         "random-map-decoration-density-pass-10184",
         "random-map-final-homm3-parity-gate-audit-10184",
         "random-map-final-homm3-parity-regate-audit-10184",
@@ -4269,6 +4270,79 @@
       "startedAt": "2026-04-30T13:32:03Z",
       "completedAt": "2026-04-30T13:50:49Z",
       "notes": "Completed AcOrP correction: profiled post-Opening generated map handoff and removed Small generated-map route/session freeze by deferring first-open save scans/rail text and using a narrow generated-opening autosave fast path. Focused tail report now reaches first visible overworld in ~1.6-1.7s and completes deferred autosave tail in ~2.0s while preserving 36x36 Small map materialization."
+    },
+    {
+      "id": "random-map-default-seed-objective-corrective-10184",
+      "title": "Random Map Default Seed And Objective Corrective",
+      "phase": "phase-2-deep-production-foundation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "status": "completed",
+      "purpose": "Fix player-facing Small generated-map regressions where blank/default launches reused the same seed and generated objectives completed immediately after first movement.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-size-class-translation.md",
+        "docs/random-map-final-homm3-parity-regate-audit.md"
+      ],
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "scripts/core/ScenarioSelectRules.gd",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_default_seed_objective_regression_report.gd",
+        "tests/random_map_default_seed_objective_regression_report.tscn",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "godot --headless --path . tests/random_map_default_seed_objective_regression_report.tscn",
+        "godot --headless --path . tests/random_map_async_generation_ux_report.tscn",
+        "godot --headless --path . tests/random_map_post_open_tail_timing_report.tscn",
+        "godot --headless --path . tests/random_map_player_count_range_report.tscn",
+        "godot --headless --path . tests/random_map_runtime_render_perf_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Blank/default generated-map launch resolves to a fresh effective seed at launch time.",
+        "Explicit same-seed generated-map setup remains deterministic for replay/tests.",
+        "Generated Small objectives are supported by ScenarioRules and are not already complete at launch.",
+        "First hero movement on a generated Small map leaves the scenario in progress unless a real objective was met."
+      ],
+      "completionCriteria": [
+        "No random-map true size, template, player count, or object/content density is changed to fake variation.",
+        "Default player-facing generated-map launches vary by effective seed while explicit seeds remain deterministic.",
+        "Generated maps have a non-instant playable objective state and focused validation proves the first-move outcome regression is fixed.",
+        "Required focused and baseline validation gates pass or any unavailable gate is explicitly recorded."
+      ],
+      "nonGoals": [
+        "No campaign adoption, authored JSON writeback, broad RMG rebalancing, asset work, alpha/release claim, or byte-level HoMM3 map clone.",
+        "No correction to compact-template visual density beyond seed variation and objective validity."
+      ],
+      "validationEvidence": [
+        "godot --headless --path . tests/random_map_default_seed_objective_regression_report.tscn passed with distinct blank/default effective seeds and materialized signatures, explicit same-seed determinism, objective ids generated_capture_rival_town/generated_primary_town_lost, and first generated Small move remaining in_progress.",
+        "godot --headless --path . tests/random_map_async_generation_ux_report.tscn passed with yield_count=5, stage_count=5, final_stage=Opening generated map, and Small 36x36 materialization.",
+        "godot --headless --path . tests/random_map_post_open_tail_timing_report.tscn passed with first_visible_ms=1639 and tail_with_deferred_autosave_ms=2013.",
+        "godot --headless --path . tests/random_map_player_count_range_report.tscn passed with compact_player_counts=[3] and xl_player_counts=[2,3,4,5,6,7,8].",
+        "godot --headless --path . tests/random_map_runtime_render_perf_smoke.tscn passed with first_set_map_state_ms=127 and second_set_map_state_ms=11 on 144x144.",
+        "godot --headless --path . tests/random_map_scenario_load_smoke.tscn passed with generated rival-town objective initially incomplete and completing after simulated rival-town claim.",
+        "python3 tests/validate_repo.py passed.",
+        "python3 -m json.tool ops/progress.json and git diff --check passed."
+      ],
+      "completionResult": [
+        "The generated-map seed field now stays blank by default and advertises auto seed behavior; blank or legacy default seed input resolves to a fresh effective seed only at launch.",
+        "Generated-map provenance and replay config preserve the effective seed plus seed_source/seed_input, while explicit non-default seeds remain deterministic.",
+        "Generated scenarios now use a rival-town capture victory objective and a starting-town loss defeat watch, avoiding the previous already-met starting-town victory condition.",
+        "Focused reports prove default Small variation, explicit same-seed determinism, and first generated Small movement staying in progress without changing size, template, player count, or object density."
+      ],
+      "createdAt": "2026-04-30T15:10:02Z",
+      "updatedAt": "2026-04-30T15:14:00Z",
+      "startedAt": "2026-04-30T15:10:02Z",
+      "completedAt": "2026-04-30T15:14:00Z",
+      "notes": "Completed narrow AcOrP corrective; compact Small template composition is left unchanged except for genuine seed variation and objective validity."
     }
   ],
   "completedImplementationEvidence": [

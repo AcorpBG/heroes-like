@@ -2527,13 +2527,32 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 	var player_hero_id := _default_hero_for_faction(player_faction_id)
 	var player_army_id := _default_army_for_faction(player_faction_id)
 	var victory_objectives := []
+	var defeat_objectives := []
 	if not towns.is_empty() and towns[0] is Dictionary:
+		var starting_town_id := String(towns[0].get("placement_id", ""))
+		defeat_objectives.append({
+			"id": "generated_primary_town_lost",
+			"type": "town_not_owned_by_player",
+			"placement_id": starting_town_id,
+			"label": "Do not lose the generated starting town",
+			"generated_support": "ScenarioRules.town_not_owned_by_player",
+		})
+	var rival_town := _generated_rival_town_objective_target(towns)
+	if not rival_town.is_empty():
 		victory_objectives.append({
-			"id": "generated_primary_town_held",
+			"id": "generated_capture_rival_town",
 			"type": "town_owned_by_player",
-			"placement_id": String(towns[0].get("placement_id", "")),
-			"label": "Hold the generated starting town",
+			"placement_id": String(rival_town.get("placement_id", "")),
+			"label": "Claim a generated rival town",
 			"generated_support": "ScenarioRules.town_owned_by_player",
+		})
+	else:
+		victory_objectives.append({
+			"id": "generated_hold_until_day_14",
+			"type": "day_at_least",
+			"day": 14,
+			"label": "Hold the generated frontier until Day 14",
+			"generated_support": "ScenarioRules.day_at_least",
 		})
 	return {
 		"id": scenario_id,
@@ -2576,7 +2595,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 			"victory_text": "Generated prototype objective completed.",
 			"defeat_text": "Generated prototype objective failed.",
 			"victory": victory_objectives,
-			"defeat": [],
+			"defeat": defeat_objectives,
 		},
 		"script_hooks": [],
 		"enemy_factions": [],
@@ -2599,6 +2618,15 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 			"fairness": constraints.get("fairness_report", {}),
 		},
 	}
+
+static func _generated_rival_town_objective_target(towns: Array) -> Dictionary:
+	for town in towns:
+		if town is Dictionary and String(town.get("owner", "neutral")) == "enemy":
+			return town
+	for town in towns:
+		if town is Dictionary and String(town.get("owner", "neutral")) != "player":
+			return town
+	return {}
 
 static func _build_terrain_layers_record(normalized: Dictionary, constraints: Dictionary) -> Dictionary:
 	var profile: Dictionary = normalized.get("profile", {})

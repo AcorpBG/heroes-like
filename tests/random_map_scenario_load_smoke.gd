@@ -198,8 +198,18 @@ func _assert_content_refs_resolve(scenario: Dictionary) -> bool:
 	return true
 
 func _assert_objective_path(session: SessionStateStoreScript.SessionData) -> bool:
-	if not ScenarioRulesScript.is_objective_met(session, "generated_primary_town_held", "victory"):
-		_fail("Generated objective did not evaluate through ScenarioRules.is_objective_met.")
+	if ScenarioRulesScript.is_objective_met(session, "generated_capture_rival_town", "victory"):
+		_fail("Generated rival-town objective should not be met at session start.")
+		return false
+	var opening_result: Dictionary = ScenarioRulesScript.evaluate_session(session)
+	if String(opening_result.get("status", "")) != "in_progress" or session.scenario_status != "in_progress":
+		_fail("Generated objective completed before the player met a real condition: %s." % JSON.stringify(opening_result))
+		return false
+	if not _claim_generated_rival_objective_town(session):
+		_fail("Generated objective test could not locate a rival town to claim.")
+		return false
+	if not ScenarioRulesScript.is_objective_met(session, "generated_capture_rival_town", "victory"):
+		_fail("Generated rival-town objective did not evaluate through ScenarioRules.is_objective_met after capture.")
 		return false
 	var result: Dictionary = ScenarioRulesScript.evaluate_session(session)
 	if String(result.get("status", "")) != "victory" or session.scenario_status != "victory":
@@ -209,6 +219,18 @@ func _assert_objective_path(session: SessionStateStoreScript.SessionData) -> boo
 		_fail("Generated draft evaluation unexpectedly picked up campaign flags: %s." % JSON.stringify(session.flags))
 		return false
 	return true
+
+func _claim_generated_rival_objective_town(session: SessionStateStoreScript.SessionData) -> bool:
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary):
+			continue
+		if String(town.get("placement_id", "")) == "rmg_town_p1":
+			continue
+		if String(town.get("owner", "neutral")) == "player":
+			continue
+		town["owner"] = "player"
+		return true
+	return false
 
 func _fail(message: String) -> void:
 	ContentService.clear_generated_scenario_drafts()

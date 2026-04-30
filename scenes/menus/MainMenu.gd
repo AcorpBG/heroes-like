@@ -907,8 +907,6 @@ func _configure_difficulty_picker() -> void:
 
 func _configure_generated_random_map_controls() -> void:
 	var options := ScenarioSelectRulesScript.random_map_player_setup_options()
-	if _generated_seed == "":
-		_generated_seed = String(options.get("default_seed", "aurelion-random-skirmish-10184"))
 	if _generated_size_class_id == "":
 		_generated_size_class_id = String(options.get("default_size_class_id", "homm3_small"))
 	if _generated_template_id == "":
@@ -921,7 +919,8 @@ func _configure_generated_random_map_controls() -> void:
 	if _generated_water_mode == "":
 		_generated_water_mode = String(options.get("default_water_mode", "land"))
 	_generated_seed_edit.text = _generated_seed
-	_generated_seed_edit.tooltip_text = "Seed: same seed and setup recreate the same generated map identity."
+	_generated_seed_edit.placeholder_text = "Auto seed"
+	_generated_seed_edit.tooltip_text = "Seed: leave blank for a fresh generated seed on launch, or enter a seed to recreate the same map identity."
 
 	_rebuild_generated_option_picker(_generated_size_picker, options.get("size_classes", []), _generated_size_class_id, "size")
 	_rebuild_generated_option_picker(_generated_template_picker, options.get("templates", []), _generated_template_id, "template")
@@ -1053,13 +1052,17 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 	var provenance_text := ""
 	_start_generated_skirmish_button.text = "Launch Generated"
 	if bool(setup.get("ok", false)):
+		var seed_source := String(setup.get("seed_source", "explicit"))
+		var seed_label := String(setup.get("normalized_seed", ""))
+		if seed_source == "auto_on_launch":
+			seed_label = "auto on launch"
 		status_text = "Generated validation %s | %d attempt(s), %d retry." % [
 			String(retry.get("validation_status", "pass")),
 			int(retry.get("attempt_count", 1)),
 			int(retry.get("retry_count", 0)),
 		]
 		provenance_text = "Seed %s | Size %s | Template %s | Profile %s | Players %d | Water %s | Underground %s" % [
-			String(setup.get("normalized_seed", "")),
+			seed_label,
 			ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
 			String(setup.get("template_id", "")),
 			String(setup.get("profile_id", "")),
@@ -1255,8 +1258,9 @@ func _duplicate_stage_snapshots() -> Array:
 
 func _generated_random_map_preview_setup() -> Dictionary:
 	var seed := _generated_seed.strip_edges()
-	if seed == "":
-		seed = String(ScenarioSelectRulesScript.random_map_player_setup_options().get("default_seed", "aurelion-random-skirmish-10184"))
+	var seed_source := "auto_on_launch" if ScenarioSelectRulesScript.random_map_seed_requests_auto(seed) else "explicit"
+	if seed_source == "auto_on_launch":
+		seed = "auto on launch"
 	return {
 		"ok": true,
 		"setup_kind": "generated_random_map_skirmish",
@@ -1270,6 +1274,7 @@ func _generated_random_map_preview_setup() -> Dictionary:
 		"template_id": _generated_template_id,
 		"profile_id": _generated_profile_id,
 		"normalized_seed": seed,
+		"seed_source": seed_source,
 		"retry_status": {
 			"policy": "bounded_player_setup_retry_visible",
 			"attempt_count": 0,
@@ -1289,10 +1294,10 @@ func _generated_random_map_preview_setup() -> Dictionary:
 	}
 
 func _generated_random_map_config() -> Dictionary:
-	var seed := _generated_seed.strip_edges()
-	if seed == "":
-		seed = String(ScenarioSelectRulesScript.random_map_player_setup_options().get("default_seed", "aurelion-random-skirmish-10184"))
-	return ScenarioSelectRulesScript.build_random_map_player_config(
+	var raw_seed := _generated_seed.strip_edges()
+	var seed_source := "auto_on_launch" if ScenarioSelectRulesScript.random_map_seed_requests_auto(raw_seed) else "explicit"
+	var seed := ScenarioSelectRulesScript.random_map_fresh_auto_seed() if seed_source == "auto_on_launch" else raw_seed
+	var config := ScenarioSelectRulesScript.build_random_map_player_config(
 		seed,
 		_generated_template_id,
 		_generated_profile_id,
@@ -1301,6 +1306,9 @@ func _generated_random_map_config() -> Dictionary:
 		_generated_underground,
 		_generated_size_class_id
 	)
+	config["seed_source"] = seed_source
+	config["seed_input"] = raw_seed
+	return config
 
 func _select_generated_picker_metadata(picker: OptionButton, metadata: String) -> bool:
 	for index in range(picker.get_item_count()):
