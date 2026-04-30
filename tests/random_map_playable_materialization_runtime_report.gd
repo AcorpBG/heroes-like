@@ -53,6 +53,9 @@ func _run() -> void:
 	var changed_profile_setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(_config("skirmish-ui-save-replay-10184", "translated_rmg_profile_042_v1"), "normal")
 	if not _assert_materialization_determinism(setup, repeated_setup, changed_seed_setup, changed_profile_setup):
 		return
+	var accepted_player_counts := _assert_extra_large_player_count_generation([5, 6, 7, 8])
+	if accepted_player_counts.is_empty():
+		return
 
 	ContentService.clear_generated_scenario_drafts()
 	print("%s %s" % [REPORT_ID, JSON.stringify({
@@ -65,19 +68,20 @@ func _run() -> void:
 			"changed_profile_materialized_map_signature": changed_profile_setup.get("generated_identity", {}).get("materialized_map_signature", ""),
 			"runtime_summary": session.overworld.get(SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG, {}).get("summary", {}),
 			"materialized_size": setup.get("generated_identity", {}).get("materialized_size", {}),
+			"accepted_xl_player_counts": accepted_player_counts,
 			"topology": _topology_summary(setup),
 			"counts": _materialized_counts(setup),
 			"save_replay_boundary": saved_payload.get("flags", {}).get("generated_random_map_replay_metadata", {}).get("replay_boundary", ""),
 		})])
 	get_tree().quit(0)
 
-func _config(seed: String, profile_id: String) -> Dictionary:
+func _config(seed: String, profile_id: String, player_count: int = 4) -> Dictionary:
 	var template_id := "translated_rmg_template_042_v1" if profile_id == "translated_rmg_profile_042_v1" else "translated_rmg_template_043_v1"
 	return ScenarioSelectRulesScript.build_random_map_player_config(
 		seed,
 		template_id,
 		profile_id,
-		4,
+		player_count,
 		"land",
 		false,
 		"homm3_extra_large"
@@ -214,6 +218,27 @@ func _assert_materialization_determinism(first: Dictionary, repeated: Dictionary
 		_fail("Changed profile id did not change the materialized-map signature.")
 		return false
 	return true
+
+func _assert_extra_large_player_count_generation(player_counts: Array) -> Array:
+	var accepted := []
+	for player_count in player_counts:
+		var normalized := RandomMapGeneratorRulesScript.normalize_config(
+			_config("xl-player-count-%d-10184" % int(player_count), "translated_rmg_profile_043_v1", int(player_count))
+		)
+		var selection: Dictionary = normalized.get("template_selection", {}) if normalized.get("template_selection", {}) is Dictionary else {}
+		if bool(selection.get("rejected", true)):
+			_fail("XL translated template rejected valid player_count=%d during generator selection: %s" % [int(player_count), JSON.stringify(selection)])
+			return []
+		var constraints: Dictionary = normalized.get("player_constraints", {}) if normalized.get("player_constraints", {}) is Dictionary else {}
+		var assignment: Dictionary = normalized.get("player_assignment", {}) if normalized.get("player_assignment", {}) is Dictionary else {}
+		if int(constraints.get("player_count", 0)) != int(player_count):
+			_fail("XL translated template normalized player_count=%d to %s." % [int(player_count), JSON.stringify(constraints)])
+			return []
+		if assignment.get("player_slots", []).size() != int(player_count):
+			_fail("XL translated template did not assign %d player slots: %s" % [int(player_count), JSON.stringify(assignment)])
+			return []
+		accepted.append(int(player_count))
+	return accepted
 
 func _assert_honest_extra_large_dimensions(setup: Dictionary, materialization: Dictionary) -> bool:
 	var map_size: Dictionary = materialization.get("map_size", {}) if materialization.get("map_size", {}) is Dictionary else {}

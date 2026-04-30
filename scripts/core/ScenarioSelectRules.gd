@@ -122,7 +122,7 @@ const RANDOM_MAP_PLAYER_PROFILE_OPTIONS := [
 		"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"],
 	},
 ]
-const RANDOM_MAP_PLAYER_COUNT_OPTIONS := [2, 3, 4]
+const RANDOM_MAP_FALLBACK_PLAYER_COUNT_OPTIONS := [2, 3, 4]
 const RANDOM_MAP_RUNTIME_SIZE_CAP := {"width": 144, "height": 144, "level_count": 2}
 const RANDOM_MAP_SIZE_CLASS_DEFAULTS := {
 	"homm3_small": {"template_id": "border_gate_compact_v1", "profile_id": "border_gate_compact_profile_v1", "player_count": 3},
@@ -392,11 +392,13 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 	}
 
 static func random_map_player_setup_options() -> Dictionary:
+	var template_options := _random_map_template_options_with_player_counts()
 	return {
-		"templates": RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS.duplicate(true),
+		"templates": template_options,
 		"profiles": RANDOM_MAP_PLAYER_PROFILE_OPTIONS.duplicate(true),
 		"size_classes": RANDOM_MAP_SIZE_OPTIONS.duplicate(true),
-		"player_counts": RANDOM_MAP_PLAYER_COUNT_OPTIONS.duplicate(true),
+		"player_counts": _random_map_all_player_count_options(template_options),
+		"player_count_options_by_template": _random_map_player_count_options_by_template(template_options),
 		"water_modes": RANDOM_MAP_WATER_OPTIONS.duplicate(true),
 		"retry_policy": RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"default_seed": "aurelion-random-skirmish-10184",
@@ -404,16 +406,27 @@ static func random_map_player_setup_options() -> Dictionary:
 		"default_template_id": "border_gate_compact_v1",
 		"default_profile_id": "border_gate_compact_profile_v1",
 		"size_class_defaults": RANDOM_MAP_SIZE_CLASS_DEFAULTS.duplicate(true),
-		"default_player_count": 3,
+		"default_player_count": _random_map_normalize_player_count_for_template("border_gate_compact_v1", 3, 3),
 		"default_water_mode": "land",
 		"default_underground": false,
 	}
+
+static func random_map_player_count_options_for_template(template_id: String) -> Array:
+	return _random_map_template_player_count_options(template_id, _random_map_template_option(template_id))
 
 static func random_map_size_class_default(size_class_id: String) -> Dictionary:
 	var size_option := _random_map_size_option(size_class_id)
 	var normalized_id := String(size_option.get("id", "homm3_small"))
 	var defaults: Dictionary = RANDOM_MAP_SIZE_CLASS_DEFAULTS.get(normalized_id, RANDOM_MAP_SIZE_CLASS_DEFAULTS.get("homm3_small", {}))
-	return defaults.duplicate(true)
+	var normalized_defaults := defaults.duplicate(true)
+	var template_id := String(normalized_defaults.get("template_id", "border_gate_compact_v1"))
+	normalized_defaults["player_count"] = _random_map_normalize_player_count_for_template(
+		template_id,
+		int(normalized_defaults.get("player_count", 3)),
+		int(defaults.get("player_count", 3))
+	)
+	normalized_defaults["player_counts"] = _random_map_template_player_count_options(template_id, _random_map_template_option(template_id))
+	return normalized_defaults
 
 static func build_random_map_player_config(
 	seed: String,
@@ -439,7 +452,11 @@ static func build_random_map_player_config(
 		profile_option = _random_map_profile_option(normalized_profile_id)
 	var source_width := int(size_option.get("source_width", 36))
 	var source_height := int(size_option.get("source_height", 36))
-	var normalized_player_count := clampi(player_count, 2, 4)
+	var normalized_player_count := _random_map_normalize_player_count_for_template(
+		normalized_template_id,
+		player_count,
+		int(size_defaults.get("player_count", template_option.get("player_count", 3)))
+	)
 	var normalized_water_mode := "islands" if water_mode == "islands" else "land"
 	var level_count := 2 if underground_enabled else 1
 	var materialization_available := bool(size_option.get("materialization_available", false))
@@ -727,6 +744,99 @@ static func _random_map_template_option(template_id: String) -> Dictionary:
 		if String(option.get("id", "")) == template_id:
 			return option.duplicate(true)
 	return RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS[0].duplicate(true)
+
+static func _random_map_template_options_with_player_counts() -> Array:
+	var options := []
+	for raw_option in RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS:
+		if not (raw_option is Dictionary):
+			continue
+		var option: Dictionary = raw_option.duplicate(true)
+		var player_counts := _random_map_template_player_count_options(String(option.get("id", "")), option)
+		option["player_counts"] = player_counts
+		option["player_count_min"] = int(player_counts[0]) if not player_counts.is_empty() else int(option.get("player_count", 3))
+		option["player_count_max"] = int(player_counts[player_counts.size() - 1]) if not player_counts.is_empty() else int(option.get("player_count", 3))
+		options.append(option)
+	return options
+
+static func _random_map_all_player_count_options(template_options: Array) -> Array:
+	var counts := {}
+	for option in template_options:
+		if not (option is Dictionary):
+			continue
+		for count in option.get("player_counts", []):
+			counts[str(int(count))] = true
+	if counts.is_empty():
+		for fallback_count in RANDOM_MAP_FALLBACK_PLAYER_COUNT_OPTIONS:
+			counts[str(int(fallback_count))] = true
+	return _sorted_int_keys(counts)
+
+static func _random_map_player_count_options_by_template(template_options: Array) -> Dictionary:
+	var result := {}
+	for option in template_options:
+		if not (option is Dictionary):
+			continue
+		result[String(option.get("id", ""))] = option.get("player_counts", []).duplicate(true)
+	return result
+
+static func _random_map_template_player_count_options(template_id: String, fallback_option: Dictionary = {}) -> Array:
+	var fallback_count := int(fallback_option.get("player_count", 3))
+	var template := _random_map_catalog_template(template_id)
+	if template.is_empty():
+		if fallback_count > 0:
+			return [fallback_count]
+		return RANDOM_MAP_FALLBACK_PLAYER_COUNT_OPTIONS.duplicate(true)
+	var players: Dictionary = template.get("players", {}) if template.get("players", {}) is Dictionary else {}
+	var total: Dictionary = players.get("total", {}) if players.get("total", {}) is Dictionary else {}
+	var min_count := clampi(int(total.get("min", fallback_count)), 2, 8)
+	var max_count := clampi(int(total.get("max", fallback_count)), min_count, 8)
+	var capacity := _random_map_template_total_start_capacity(template)
+	if capacity > 0:
+		max_count = min(max_count, capacity)
+	if min_count > max_count:
+		min_count = max_count
+	var counts := []
+	for count in range(min_count, max_count + 1):
+		counts.append(count)
+	if counts.is_empty():
+		counts.append(clampi(fallback_count, 2, 8))
+	return counts
+
+static func _random_map_normalize_player_count_for_template(template_id: String, player_count: int, fallback_count: int = 3) -> int:
+	var fallback_option := _random_map_template_option(template_id)
+	if fallback_count > 0:
+		fallback_option["player_count"] = fallback_count
+	var counts := _random_map_template_player_count_options(template_id, fallback_option)
+	if counts.is_empty():
+		return clampi(player_count if player_count > 0 else fallback_count, 2, 8)
+	var requested := player_count if player_count > 0 else fallback_count
+	var first_count := int(counts[0])
+	var last_count := int(counts[counts.size() - 1])
+	return clampi(requested, first_count, last_count)
+
+static func _random_map_catalog_template(template_id: String) -> Dictionary:
+	var catalog: Dictionary = ContentService.load_json(RandomMapGeneratorRulesScript.TEMPLATE_CATALOG_PATH)
+	for template in catalog.get("templates", []):
+		if template is Dictionary and String(template.get("id", "")) == template_id:
+			return template.duplicate(true)
+	return {}
+
+static func _random_map_template_total_start_capacity(template: Dictionary) -> int:
+	var owner_slots := {}
+	for zone in template.get("zones", []):
+		if not (zone is Dictionary) or zone.get("owner_slot", null) == null:
+			continue
+		var slot := int(zone.get("owner_slot", 0))
+		var role := String(zone.get("role", ""))
+		if slot > 0 and (role == "human_start" or role == "computer_start" or role.ends_with("_start")):
+			owner_slots[str(slot)] = true
+	return owner_slots.size()
+
+static func _sorted_int_keys(values: Dictionary) -> Array:
+	var result := []
+	for key in values.keys():
+		result.append(int(key))
+	result.sort()
+	return result
 
 static func _random_map_size_option(size_class_id: String) -> Dictionary:
 	for option in RANDOM_MAP_SIZE_OPTIONS:
