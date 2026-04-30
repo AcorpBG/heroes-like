@@ -487,13 +487,13 @@ func _start_encounter() -> void:
 	AppRouter.go_to_battle()
 
 func _render_state() -> void:
-	_map_data = _duplicate_array(_session.overworld.get("map", []))
+	_map_data = _session.overworld.get("map", []) if _session.overworld.get("map", []) is Array else []
 	_map_size = OverworldRules.derive_map_size(_session)
 	_refresh()
 
 func _refresh() -> void:
 	OverworldRules.begin_normalized_read_scope(_session)
-	_map_data = _duplicate_array(_session.overworld.get("map", []))
+	_map_data = _session.overworld.get("map", []) if _session.overworld.get("map", []) is Array else []
 	_map_size = OverworldRules.derive_map_size(_session)
 	_ensure_selected_tile()
 	_invalidate_refresh_cache()
@@ -3262,12 +3262,14 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 		return []
 
 	var queue: Array = [start]
+	var queue_index := 0
 	var visited = {_tile_key(start): true}
 	var came_from = {_tile_key(start): start}
 	var found = false
 
-	while not queue.is_empty():
-		var current: Vector2i = queue.pop_front()
+	while queue_index < queue.size():
+		var current: Vector2i = queue[queue_index]
+		queue_index += 1
 		if current == goal:
 			found = true
 			break
@@ -4660,12 +4662,14 @@ func _build_validation_path(
 		return []
 
 	var queue: Array = [start]
+	var queue_index := 0
 	var visited = {_tile_key(start): true}
 	var came_from = {_tile_key(start): start}
 	var found := false
 
-	while not queue.is_empty():
-		var current: Vector2i = queue.pop_front()
+	while queue_index < queue.size():
+		var current: Vector2i = queue[queue_index]
+		queue_index += 1
 		if current == goal:
 			found = true
 			break
