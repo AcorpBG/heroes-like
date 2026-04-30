@@ -2055,39 +2055,39 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 	_set_active_hero_position(session, remote_tile)
 	OverworldRules.refresh_fog_of_war(session)
 	if not OverworldRules.is_tile_explored(session, town_tile.x, town_tile.y):
-		push_error("Overworld smoke: the previously scouted owned town was not preserved as explored memory.")
+		push_error("Overworld smoke: the previously scouted owned town was not preserved as explored.")
 		get_tree().quit(1)
 		return false
-	if OverworldRules.is_tile_visible(session, town_tile.x, town_tile.y):
-		push_error("Overworld smoke: remote-entry setup failed; owned town is still in the current scout net.")
+	if not OverworldRules.is_tile_visible(session, town_tile.x, town_tile.y):
+		push_error("Overworld smoke: HoMM-style fog should keep the explored owned town visible after moving away.")
 		get_tree().quit(1)
 		return false
 	var selection: Dictionary = shell.call("validation_select_tile", town_tile.x, town_tile.y)
 	if String(selection.get("primary_action_id", "")) != "visit_town":
-		push_error("Overworld smoke: remembered owned town did not expose Visit Town as the primary order. snapshot=%s" % selection)
+		push_error("Overworld smoke: explored owned town did not expose Visit Town as the primary order. snapshot=%s" % selection)
 		get_tree().quit(1)
 		return false
-	if String(selection.get("context_summary", "")).find("Remembered Town") < 0:
-		push_error("Overworld smoke: remembered owned town selection did not present a remembered-town context. snapshot=%s" % selection)
+	if String(selection.get("context_summary", "")).find("Remembered Town") >= 0:
+		push_error("Overworld smoke: explored owned town still presented stale remembered-town context under HoMM-style fog. snapshot=%s" % selection)
 		get_tree().quit(1)
 		return false
 	var presentation: Dictionary = shell.call("validation_tile_presentation", town_tile.x, town_tile.y)
-	if not bool(presentation.get("draws_remembered_object", false)):
-		push_error("Overworld smoke: remembered owned town would not draw a remembered object marker. presentation=%s" % presentation)
+	if not bool(presentation.get("draws_discoverable_object", false)) or bool(presentation.get("draws_remembered_object", false)):
+		push_error("Overworld smoke: explored owned town should draw normally, not as remembered. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
 	if not _assert_explored_terrain_presentation(shell, town_tile, presentation):
 		return false
-	if not _assert_marker_style(presentation, "town", true):
+	if not _assert_marker_style(presentation, "town", false):
 		return false
-	var remembered_wood_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
-	if bool(remembered_wood_presentation.get("visible", true)) or not _assert_art_sprite(remembered_wood_presentation, "lumber_wagon", true):
-		push_error("Overworld smoke: remembered mapped pickup did not keep a ghosted sprite treatment. presentation=%s" % remembered_wood_presentation)
+	var mapped_wood_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
+	if not bool(mapped_wood_presentation.get("visible", false)) or not _assert_art_sprite(mapped_wood_presentation, "lumber_wagon", false):
+		push_error("Overworld smoke: mapped pickup did not stay normally visible under permanent explored fog. presentation=%s" % mapped_wood_presentation)
 		get_tree().quit(1)
 		return false
 	var visit_result: Dictionary = shell.call("validation_perform_primary_action")
 	if String(session.game_state) != "town" or not bool(visit_result.get("ok", false)):
-		push_error("Overworld smoke: remembered owned town primary action did not route into town management. result=%s state=%s" % [visit_result, session.game_state])
+		push_error("Overworld smoke: explored owned town primary action did not route into town management. result=%s state=%s" % [visit_result, session.game_state])
 		get_tree().quit(1)
 		return false
 	var active_town := TownRules.get_active_town(session)
@@ -2099,20 +2099,20 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 
 func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2i, remembered_presentation: Dictionary) -> bool:
 	var terrain_presentation: Dictionary = remembered_presentation.get("terrain_presentation", {})
-	if not bool(remembered_presentation.get("explored", false)) or bool(remembered_presentation.get("visible", true)):
-		push_error("Overworld smoke: terrain-memory assertion was not run against an explored tile outside the scout net. presentation=%s" % remembered_presentation)
+	if not bool(remembered_presentation.get("explored", false)) or not bool(remembered_presentation.get("visible", false)):
+		push_error("Overworld smoke: HoMM-style terrain assertion was not run against an explored visible tile. presentation=%s" % remembered_presentation)
 		get_tree().quit(1)
 		return false
 	if not bool(terrain_presentation.get("terrain_fully_visible", false)):
-		push_error("Overworld smoke: explored terrain outside the scout net is not staying fully visible at %s. presentation=%s" % [remembered_tile, remembered_presentation])
+		push_error("Overworld smoke: explored terrain is not staying fully visible at %s. presentation=%s" % [remembered_tile, remembered_presentation])
 		get_tree().quit(1)
 		return false
 	if bool(terrain_presentation.get("uses_memory_terrain_dimming", true)) or float(terrain_presentation.get("memory_overlay_alpha", 1.0)) > 0.01:
-		push_error("Overworld smoke: explored terrain outside the scout net is still using memory dimming at %s. presentation=%s" % [remembered_tile, remembered_presentation])
+		push_error("Overworld smoke: explored terrain is still using memory dimming at %s. presentation=%s" % [remembered_tile, remembered_presentation])
 		get_tree().quit(1)
 		return false
 	if String(terrain_presentation.get("pattern_detail", "")) != "full":
-		push_error("Overworld smoke: explored terrain outside the scout net lost full terrain detail at %s. presentation=%s" % [remembered_tile, remembered_presentation])
+		push_error("Overworld smoke: explored terrain lost full terrain detail at %s. presentation=%s" % [remembered_tile, remembered_presentation])
 		get_tree().quit(1)
 		return false
 	if String(terrain_presentation.get("visible_terrain_grid_mode", "")) != "fog_boundary_only" or float(terrain_presentation.get("visible_terrain_grid_alpha", 1.0)) > 0.01 or bool(terrain_presentation.get("explored_intertile_seams", true)):

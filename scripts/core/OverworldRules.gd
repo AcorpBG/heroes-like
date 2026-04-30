@@ -332,7 +332,7 @@ static func is_tile_visible(session: SessionStateStoreScript.SessionData, x: int
 	if not _fog_state_ready(session):
 		normalize_overworld_state(session)
 	var fog = session.overworld.get(FOG_KEY, {})
-	return _grid_cell(fog.get(VISIBLE_TILES_KEY, []), x, y)
+	return _grid_cell(fog.get(EXPLORED_TILES_KEY, fog.get(VISIBLE_TILES_KEY, [])), x, y)
 
 static func is_tile_explored(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
 	if session == null:
@@ -375,6 +375,7 @@ static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: 
 	movement["current"] = movement_left - 1
 	session.overworld["movement"] = movement
 	HeroCommandRulesScript.commit_active_hero(session)
+	_reveal_current_fog_sources(session)
 	_mark_runtime_normalized(session)
 
 	var messages := ["Moved to %d,%d." % [nx, ny]]
@@ -386,7 +387,9 @@ static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: 
 	var result := _finalize_action_result(
 		session,
 		bool(interaction_result.get("ok", true)),
-		" ".join(messages)
+		" ".join(messages),
+		false,
+		true
 	)
 	var route := String(interaction_result.get("route", ""))
 	if route != "":
@@ -1914,7 +1917,7 @@ static func describe_visibility_panel(session: SessionStateStoreScript.SessionDa
 	var lines := [
 		"Scout Net",
 		"- %s" % describe_visibility(session),
-		"- Controlled heroes %d | Current reveal radius follows every marching commander." % HeroCommandRulesScript.player_hero_count(session),
+		"- Controlled heroes %d | Movement permanently maps each commander scout radius." % HeroCommandRulesScript.player_hero_count(session),
 	]
 	if controlled_outposts > 0:
 		lines.append("- Held outposts %d | Frontier relays extend sight beyond commander scout rings." % controlled_outposts)
@@ -9543,12 +9546,29 @@ static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) 
 		explored_tiles = _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
 	else:
 		explored_tiles = _blank_visibility_grid(map_size)
-	var visible_tiles := _blank_visibility_grid(map_size)
+	if fog.has(VISIBLE_TILES_KEY):
+		explored_tiles = _merge_visibility_grids(explored_tiles, _normalize_visibility_grid(fog.get(VISIBLE_TILES_KEY, []), map_size), map_size)
+	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
+	session.overworld[FOG_KEY] = _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
+
+static func _reveal_current_fog_sources(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	if not _fog_state_ready(session):
+		_normalize_fog_of_war(session)
+		return
+	var map_size := derive_map_size(session)
+	var fog: Dictionary = session.overworld.get(FOG_KEY, {})
+	var explored_tiles := _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
+	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
+	session.overworld[FOG_KEY] = _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
+
+static func _reveal_all_current_fog_sources(session: SessionStateStoreScript.SessionData, explored_tiles: Array, map_size: Vector2i) -> void:
 	var heroes = session.overworld.get("player_heroes", [])
 	if heroes is Array:
 		for hero in heroes:
 			if hero is Dictionary:
-				_apply_hero_reveal(visible_tiles, explored_tiles, hero, map_size)
+				_apply_hero_reveal(explored_tiles, hero, map_size)
 	for node in session.overworld.get("resource_nodes", []):
 		if not (node is Dictionary):
 			continue
@@ -9557,8 +9577,7 @@ static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) 
 			continue
 		if String(node.get("collected_by_faction_id", "")) != "player":
 			continue
-		_apply_site_reveal(visible_tiles, explored_tiles, node, max(0, int(site.get("vision_radius", 0))), map_size)
-	session.overworld[FOG_KEY] = _build_fog_payload(visible_tiles, explored_tiles, map_size)
+		_apply_site_reveal(explored_tiles, node, max(0, int(site.get("vision_radius", 0))), map_size)
 
 static func _fog_state_ready(session: SessionStateStoreScript.SessionData) -> bool:
 	if session == null:
@@ -9597,6 +9616,27 @@ static func _normalize_visibility_grid(value: Variant, map_size: Vector2i) -> Ar
 			normalized[y][x] = bool(row[x])
 	return normalized
 
+static func _merge_visibility_grids(base: Array, overlay: Array, map_size: Vector2i) -> Array:
+	for y in range(max(map_size.y, 0)):
+		var base_row = base[y] if y >= 0 and y < base.size() else []
+		var overlay_row = overlay[y] if y >= 0 and y < overlay.size() else []
+		if not (base_row is Array) or not (overlay_row is Array):
+			continue
+		for x in range(max(map_size.x, 0)):
+			if x < overlay_row.size() and bool(overlay_row[x]):
+				base_row[x] = true
+		base[y] = base_row
+	return base
+
+static func _duplicate_visibility_grid(grid: Array) -> Array:
+	var duplicate_grid := []
+	for row_value in grid:
+		if row_value is Array:
+			duplicate_grid.append(row_value.duplicate())
+		else:
+			duplicate_grid.append([])
+	return duplicate_grid
+
 static func _blank_visibility_grid(map_size: Vector2i, fill_value: bool = false) -> Array:
 	var grid := []
 	for y in range(max(map_size.y, 0)):
@@ -9606,14 +9646,14 @@ static func _blank_visibility_grid(map_size: Vector2i, fill_value: bool = false)
 		grid.append(row)
 	return grid
 
-static func _apply_hero_reveal(visible_tiles: Array, explored_tiles: Array, hero: Dictionary, map_size: Vector2i) -> void:
+static func _apply_hero_reveal(explored_tiles: Array, hero: Dictionary, map_size: Vector2i) -> void:
 	var position = hero.get("position", {})
 	var position_dict = position if position is Dictionary else {}
 	var origin := Vector2i(int(position_dict.get("x", 0)), int(position_dict.get("y", 0)))
 	var radius := HeroCommandRulesScript.scouting_radius_for_hero(hero)
-	_apply_site_reveal(visible_tiles, explored_tiles, {"x": origin.x, "y": origin.y}, radius, map_size)
+	_apply_site_reveal(explored_tiles, {"x": origin.x, "y": origin.y}, radius, map_size)
 
-static func _apply_site_reveal(visible_tiles: Array, explored_tiles: Array, site_state: Dictionary, radius: int, map_size: Vector2i) -> void:
+static func _apply_site_reveal(explored_tiles: Array, site_state: Dictionary, radius: int, map_size: Vector2i) -> void:
 	if radius <= 0:
 		return
 	var origin := Vector2i(int(site_state.get("x", 0)), int(site_state.get("y", 0)))
@@ -9621,7 +9661,6 @@ static func _apply_site_reveal(visible_tiles: Array, explored_tiles: Array, site
 		for x in range(max(0, origin.x - radius), min(map_size.x - 1, origin.x + radius) + 1):
 			if abs(x - origin.x) + abs(y - origin.y) > radius:
 				continue
-			_set_grid_cell(visible_tiles, x, y, true)
 			_set_grid_cell(explored_tiles, x, y, true)
 
 static func _grid_cell(grid: Variant, x: int, y: int) -> bool:
@@ -10098,10 +10137,15 @@ static func _explored_tile_count(session: SessionStateStoreScript.SessionData) -
 static func _finalize_action_result(
 	session: SessionStateStoreScript.SessionData,
 	ok: bool,
-	base_message: String
+	base_message: String,
+	refresh_fog: bool = true,
+	incremental_fog: bool = false
 ) -> Dictionary:
 	HeroCommandRulesScript.commit_active_hero(session)
-	refresh_fog_of_war(session)
+	if refresh_fog:
+		refresh_fog_of_war(session)
+	elif incremental_fog:
+		_reveal_current_fog_sources(session)
 	var messages := []
 	if base_message != "":
 		messages.append(base_message)
@@ -10109,7 +10153,10 @@ static func _finalize_action_result(
 	var scenario_result: Dictionary = _evaluate_scenario_state(session)
 	var scenario_message := String(scenario_result.get("message", ""))
 	HeroCommandRulesScript.commit_active_hero(session)
-	refresh_fog_of_war(session)
+	if refresh_fog:
+		refresh_fog_of_war(session)
+	elif incremental_fog:
+		_reveal_current_fog_sources(session)
 	if scenario_message != "":
 		messages.append(scenario_message)
 	_mark_runtime_normalized(session)

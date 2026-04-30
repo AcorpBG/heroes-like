@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-pathing-command-latency-optimization-10184",
-  "currentSliceTitle": "Random Map Pathing Command Latency Optimization",
+  "currentSliceId": "fog-of-war-homm-style-permanent-visibility-10184",
+  "currentSliceTitle": "Fog Of War HoMM-Style Permanent Visibility",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed AcOrP XL F3 overlay latency follow-up: routine generated-map movement now avoids redundant full runtime normalization, reuses spatial/refresh lookup caches, and skips broad route-interception fallback scans for selected-route action rebuilds without changing map generation, pathing/object contracts, renderer art semantics, saves, objectives, or balance.",
-  "nextActionGuardrailNote": "Remaining generated save work should split generated map payload persistence from lightweight state/delta autosave without visual/map semantic changes.",
-  "updatedAt": "2026-04-30T22:08:33Z",
+  "currentSliceNotes": "Completed AcOrP HoMM-style fog follow-up: explored tiles remain visible forever, visible_tiles is normalized as a compatibility/cache alias for explored_tiles, routine try_move uses bounded reveal expansion instead of transient full-map visibility rebuilds, and focused/generated validation passed.",
+  "nextActionGuardrailNote": "Do not change map generation, player counts, object density/counts, object placement, objectives, save schema, renderer art semantics, pathing/body/visit contracts, or generated map art/path while correcting fog semantics.",
+  "updatedAt": "2026-04-30T22:46:32Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,72 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "fog-of-war-homm-style-permanent-visibility-10184",
+      "title": "Fog Of War HoMM-Style Permanent Visibility",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/fog-of-war-homm-style-decision.md",
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-pathing-debug-overlay-report.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/fog_of_war_homm_style_regression.gd",
+        "tests/fog_of_war_homm_style_regression.tscn",
+        "tests/core_systems_regression_smoke.gd",
+        "tests/random_map_pathing_debug_overlay_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "docs/fog-of-war-homm-style-decision.md",
+        "project.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "startedAt": "2026-04-30T22:27:54Z",
+      "completedAt": "2026-04-30T22:46:32Z",
+      "completionCriteria": [
+        "Rules and renderer APIs treat explored tiles as permanently visible and keep unexplored tiles hidden.",
+        "Routine hero movement expands explored coverage around current player scouting sources without rebuilding a transient full-map current-visibility mask.",
+        "F3 overlay remains populated and focused movement timing no longer shows avoidable transient fog recomputation in movement rules.",
+        "Focused fog regressions and requested generated-map validation pass."
+      ],
+      "nonGoals": [
+        "Do not change map generation, templates, player counts, object density/counts, object placement, objectives, save schema, renderer art semantics, or pathing/body/visit contracts.",
+        "Do not add primitive/debug rendering, hidden downscale, content cuts, or non-normal generated map art paths.",
+        "Do not implement separate stale enemy-sighting, AI memory, or grey-current-visibility gameplay layers in this slice."
+      ],
+      "completionEvidence": [
+        "OverworldRules now normalizes visible_tiles as a duplicate compatibility/cache of explored_tiles, merges legacy visible true cells into explored during normalization, and makes is_tile_visible read permanent explored coverage.",
+        "Routine try_move reveals current player hero/site scout sources before post-move interaction and finalizes with bounded incremental fog expansion instead of the previous transient full-map current-visibility rebuild path.",
+        "OverworldMapView validation terrain state now reports explored_visible for explored tiles, while unexplored tiles remain hidden.",
+        "Focused fog regression proves previously explored terrain remains visible after moving away, unexplored terrain remains hidden, movement expands coverage without shrinking it, and renderer validation APIs agree with the rules APIs.",
+        "F3 pathing debug report remains populated and shows generated Small movement fog/model evidence: visible/explored 25 -> 32, total command 890.214ms, movement_rules 531.007ms, read_scope_map_state 0.776ms, refresh/actions 338.105ms."
+      ],
+      "validationEvidence": [
+        "godot4 --headless --path . res://tests/fog_of_war_homm_style_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_pathing_debug_overlay_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_generated_density_distribution_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_generated_object_footprint_interaction_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_generated_visual_path_regression_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_generated_overworld_profile_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_live_overworld_render_move_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_default_seed_objective_regression_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_post_open_tail_timing_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_async_generation_ux_report.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_runtime_render_perf_smoke.tscn passed.",
+        "godot4 --headless --path . res://tests/random_map_player_count_range_report.tscn passed.",
+        "python3 tests/validate_repo.py passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ],
+      "notes": "AcOrP clarification at HEAD e344538 selected original HoMM-style permanent explored visibility. A broad non-required core_systems_regression_smoke run reached the later save/intercept section and failed on an existing battle-resume assertion after the fog regression path; the focused fog regression and required validation list passed."
+    },
     {
       "id": "random-map-pathing-command-latency-optimization-10184",
       "title": "Random Map Pathing Command Latency Optimization",

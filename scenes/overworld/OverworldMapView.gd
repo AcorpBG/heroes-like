@@ -2648,7 +2648,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var primary_base_model := TERRAIN_HOMM3_LOCAL_PROTOTYPE_RENDERING_MODE if tile_art_loaded and not homm3_selection.is_empty() else (TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE if tile_art_loaded else (TERRAIN_GRAMMAR_RENDERING_MODE if not _terrain_style(terrain).is_empty() else "procedural_color_pattern"))
 	return {
 		"terrain": terrain,
-		"state": "current_scout_net" if visible else "explored_outside_scout_net",
+		"state": "explored_visible",
 		"unexplored_hidden": false,
 		"terrain_fully_visible": true,
 		"uses_memory_terrain_dimming": false,
