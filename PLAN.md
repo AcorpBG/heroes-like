@@ -22,9 +22,9 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-Current tactical objective: keep the Phase 2 RMG workstream honest after the strict HoMM3-style random-map-generation parity re-gate, translated into original Aurelion Reach systems. The active follow-up is an RMG-only runtime-size support repair: player-facing generated-map setup must materialize Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144 at source dimensions, with no hidden downscale or clamp. Completed non-RMG future-phase evidence remains preserved in progress history, but it is not the active continuation path and must not drive follow-up work.
+Current tactical objective: keep the Phase 2 RMG workstream honest after the strict HoMM3-style random-map-generation parity re-gate, translated into original Aurelion Reach systems. The active follow-up is an RMG-only async/staged generation UX correction: player-facing generated-map creation must show immediate progress/status and yield frames around generation work without changing true sizes, templates, player counts, object/content density, or deterministic results. Completed non-RMG future-phase evidence remains preserved in progress history, but it is not the active continuation path and must not drive follow-up work.
 
-Recently completed RMG evidence includes the P2.10 random-map foundation queue, translated-template runtime sweep, final writeout/export/save-schema closure, player-facing setup/retry UX, playable materialization/runtime evidence, water/underground/transit gameplay evidence, object-pool/value weighting evidence, and large-batch parity stress evidence. The re-gate audit `random-map-final-homm3-parity-regate-audit-10184` concluded that HoMM3-style RMG functional parity was met for generated skirmish/session use with explicit accepted original-game translations, and `random-map-size-class-parity-correction-10184` repaired the player-facing size model. The active follow-up `random-map-extra-large-runtime-support-10184` lifts runtime materialization through Extra Large 144x144 honestly. This is not authored campaign adoption, playable alpha completion, release readiness, broad faction/content completion, asset parity, or byte-level HoMM3 map-format cloning.
+Recently completed RMG evidence includes the P2.10 random-map foundation queue, translated-template runtime sweep, final writeout/export/save-schema closure, player-facing setup/retry UX, playable materialization/runtime evidence, water/underground/transit gameplay evidence, object-pool/value weighting evidence, large-batch parity stress evidence, size-class correction, and Extra Large 144x144 runtime support. The re-gate audit `random-map-final-homm3-parity-regate-audit-10184` concluded that HoMM3-style RMG functional parity was met for generated skirmish/session use with explicit accepted original-game translations. This is not authored campaign adoption, playable alpha completion, release readiness, broad faction/content completion, asset parity, or byte-level HoMM3 map-format cloning.
 
 ## Slice Status Model
 
@@ -2717,6 +2717,50 @@ completionResult:
 - Extra Large setup, launch handoff, playable runtime materialization, save/restore, replay/export provenance, and terrain dimensions report `144x144` without hidden downscale or clamp.
 - Over-cap custom source requests fail validation against the explicit `144x144x2` cap before launch/writeback, while the translated-template stress gate no longer treats 72/108/144 source templates as runtime-cap accepted non-parity.
 - Validation passed for repo validation, Extra Large player setup/retry UX, Extra Large playable materialization/runtime, large-batch parity stress, final writeout/export/save schema, progress JSON parsing, and diff whitespace checks.
+
+### P2 Child: Random Map Async Generation UX Corrective
+
+id: `random-map-async-generation-ux-corrective-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Prevent player-facing generated-map creation from appearing frozen by showing an immediate generating state and staging/yielding the launch pipeline without changing RMG outputs.
+
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-generator-foundation.md`
+- `docs/random-map-size-class-translation.md`
+- `docs/random-map-final-homm3-parity-regate-audit.md`
+
+implementationTargets:
+- `scenes/menus/MainMenu.gd`
+- `scripts/autoload/AppRouter.gd` handoff inspection; no code change unless route staging requires it
+- `scripts/core/RandomMapGeneratorRules.gd` if safe staged generation hooks are required
+- focused RMG async UX/report test proving the generating state yields before completion
+- existing RMG runtime/player-count/materialization/render validation reports
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- Starting generated-map creation sets a visible generating/progress state immediately, disables duplicate launch input, and updates honest stage text before the heavy handoff.
+- The pipeline yields at least one rendered/process frame before synchronous generation and around major launch/materialization stages where safe.
+- Generated maps still preserve selected size class, template/profile selection, player-count behavior, object/content density, save/provenance, and deterministic seed results.
+- Focused validation proves progress state appears before completion and generation still produces a playable generated session.
+
+completionCriteria:
+- No downscaling, content reduction, template swap, player-count restriction, or object-count lowering is introduced to mask generation cost.
+- The player sees clear in-progress feedback before and during generated-map launch rather than an unresponsive menu.
+- Required focused and baseline validation gates pass or any unavailable gate is explicitly recorded.
+
+nonGoals:
+- No campaign adoption, authored JSON writeback, broad RMG rebalancing, asset work, alpha/release claim, or byte-level HoMM3 map clone.
+- No save-schema migration or generated-map content-density reduction.
+
+completionResult:
+- Generated-map launch now enters a visible staged generation state immediately, disables duplicate generated-map inputs, shows a progress bar/status text, and updates honest milestones for preparation, validation, session materialization, and overworld handoff.
+- The launch path yields process frames before generation, before session materialization, and before route handoff while preserving the existing synchronous generator output and deterministic seed/config behavior.
+- Focused async UX validation records five staged snapshots and five frame yields, then starts a playable generated skirmish session without hidden downscale.
+- Existing RMG guard validation still proves 144x144 render refresh, XL player-count range behavior, and playable Extra Large materialization with the prior object/content density.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 

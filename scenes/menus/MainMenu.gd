@@ -77,6 +77,7 @@ const TAB_HELP_TOPIC := {
 @onready var _generated_water_picker: OptionButton = %GeneratedWaterPicker
 @onready var _generated_underground_toggle: CheckButton = %GeneratedUndergroundToggle
 @onready var _generated_status_label: Label = %GeneratedMapStatus
+@onready var _generated_progress_bar: ProgressBar = %GeneratedMapProgress
 @onready var _generated_provenance_label: Label = %GeneratedMapProvenance
 @onready var _start_generated_skirmish_button: Button = %StartGeneratedSkirmish
 @onready var _skirmish_commander_preview_label: Label = %SkirmishCommanderPreview
@@ -117,6 +118,10 @@ var _generated_player_count := 3
 var _generated_water_mode := "land"
 var _generated_underground := false
 var _generated_last_setup := {}
+var _generated_generation_in_progress := false
+var _generated_generation_yield_count := 0
+var _generated_generation_stage := {}
+var _generated_generation_snapshots := []
 var _help_entries: Array = []
 var _selected_help_topic_id := ""
 var _last_context_tab := TAB_CAMPAIGN
@@ -351,24 +356,7 @@ func _on_generated_underground_toggled(enabled: bool) -> void:
 	_refresh_generated_random_map_setup()
 
 func _on_start_generated_skirmish_pressed() -> void:
-	if _start_generated_skirmish_button.disabled:
-		return
-	var config := _generated_random_map_config()
-	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
-		config,
-		_selected_difficulty,
-		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
-	)
-	_generated_last_setup = setup.duplicate(true)
-	if not bool(setup.get("ok", false)):
-		_apply_generated_random_map_setup_surface(setup)
-		return
-	var session := ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
-	if session.scenario_id == "":
-		_apply_generated_random_map_setup_surface(setup)
-		return
-	_refresh_menu()
-	AppRouter.go_to_overworld()
+	await _start_generated_skirmish_staged(true)
 
 func _on_help_selected(index: int) -> void:
 	if index < 0 or index >= _help_entries.size():
@@ -1053,6 +1041,8 @@ func _refresh_skirmish_setup() -> void:
 		]
 
 func _refresh_generated_random_map_setup() -> void:
+	if _generated_generation_in_progress:
+		return
 	var setup := _generated_random_map_preview_setup()
 	_generated_last_setup = setup.duplicate(true)
 	_apply_generated_random_map_setup_surface(setup)
@@ -1061,6 +1051,7 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 	var retry: Dictionary = setup.get("retry_status", {}) if setup.get("retry_status", {}) is Dictionary else {}
 	var status_text := ""
 	var provenance_text := ""
+	_start_generated_skirmish_button.text = "Launch Generated"
 	if bool(setup.get("ok", false)):
 		status_text = "Generated validation %s | %d attempt(s), %d retry." % [
 			String(retry.get("validation_status", "pass")),
@@ -1095,6 +1086,160 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 		])
 	_set_compact_label(_generated_status_label, status_text, 2, 72)
 	_set_compact_label(_generated_provenance_label, provenance_text, 2, 118)
+	_generated_progress_bar.visible = false
+
+func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
+	if _generated_generation_in_progress or _start_generated_skirmish_button.disabled:
+		return {
+			"started": false,
+			"blocked": true,
+			"reason": "generated_launch_unavailable_or_already_in_progress",
+			"yield_count": _generated_generation_yield_count,
+			"stage": _generated_generation_stage.duplicate(true),
+			"snapshots": _duplicate_stage_snapshots(),
+		}
+
+	_generated_generation_in_progress = true
+	_generated_generation_yield_count = 0
+	_generated_generation_snapshots = []
+	_set_generated_random_map_inputs_disabled(true)
+	_set_generated_generation_stage(
+		"Preparing generated map",
+		10,
+		"Preparing generated map launch; seed, size, template, player count, water, and underground choices are locked for this run."
+	)
+	await _yield_generated_generation_frame()
+
+	var config := _generated_random_map_config()
+	_set_generated_generation_stage(
+		"Validating seed and template",
+		25,
+		"Validating generated map seed/config with bounded retry. Map size, template, player-count, and density rules are unchanged."
+	)
+	await _yield_generated_generation_frame()
+
+	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		config,
+		_selected_difficulty,
+		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
+	)
+	_generated_last_setup = setup.duplicate(true)
+	_set_generated_generation_stage(
+		"Generation validation complete" if bool(setup.get("ok", false)) else "Generation blocked",
+		62,
+		String(setup.get("setup_summary", setup.get("failure_handoff", "Generated map validation finished.")))
+	)
+	await _yield_generated_generation_frame()
+
+	if not bool(setup.get("ok", false)):
+		_generated_generation_in_progress = false
+		_set_generated_random_map_inputs_disabled(false)
+		_apply_generated_random_map_setup_surface(setup)
+		return {
+			"started": false,
+			"blocked": false,
+			"setup": setup.duplicate(true),
+			"yield_count": _generated_generation_yield_count,
+			"stage": _generated_generation_stage.duplicate(true),
+			"snapshots": _duplicate_stage_snapshots(),
+		}
+
+	_set_generated_generation_stage(
+		"Materializing playable session",
+		82,
+		"Registering the generated scenario draft and normalizing the playable overworld without authored writeback."
+	)
+	await _yield_generated_generation_frame()
+
+	var session := ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
+	if session.scenario_id == "":
+		_generated_generation_in_progress = false
+		_set_generated_random_map_inputs_disabled(false)
+		_apply_generated_random_map_setup_surface(setup)
+		return {
+			"started": false,
+			"blocked": false,
+			"setup": setup.duplicate(true),
+			"yield_count": _generated_generation_yield_count,
+			"stage": _generated_generation_stage.duplicate(true),
+			"snapshots": _duplicate_stage_snapshots(),
+		}
+
+	_set_generated_generation_stage(
+		"Opening generated map",
+		96,
+		"Generated map ready; opening the Day 1 overworld."
+	)
+	await _yield_generated_generation_frame()
+
+	var result := {
+		"started": true,
+		"blocked": false,
+		"setup": setup.duplicate(true),
+		"yield_count": _generated_generation_yield_count,
+		"stage": _generated_generation_stage.duplicate(true),
+		"snapshots": _duplicate_stage_snapshots(),
+		"active_scenario_id": session.scenario_id,
+		"active_launch_mode": session.launch_mode,
+		"active_generated_random_map": bool(session.flags.get("generated_random_map", false)),
+		"active_retry_status": session.flags.get("generated_random_map_retry_status", {}),
+		"active_provenance": session.flags.get("generated_random_map_provenance", {}),
+	}
+	if route_to_overworld:
+		AppRouter.go_to_overworld()
+	else:
+		_generated_generation_in_progress = false
+		_set_generated_random_map_inputs_disabled(false)
+		_apply_generated_random_map_setup_surface(setup)
+	return result
+
+func _set_generated_generation_stage(stage_label: String, progress_value: int, detail: String) -> void:
+	_generated_generation_stage = {
+		"active": _generated_generation_in_progress,
+		"stage": stage_label,
+		"progress": clampi(progress_value, 0, 100),
+		"yield_count": _generated_generation_yield_count,
+		"detail": detail,
+	}
+	_generated_progress_bar.visible = true
+	_generated_progress_bar.value = float(_generated_generation_stage.get("progress", 0))
+	_start_generated_skirmish_button.text = "Generating..."
+	_start_generated_skirmish_button.disabled = true
+	_start_generated_skirmish_button.tooltip_text = detail
+	_set_compact_label(_generated_status_label, "%s | %d%%" % [stage_label, int(_generated_generation_stage.get("progress", 0))], 2, 72)
+	_set_compact_label(_generated_provenance_label, detail, 2, 118)
+	_generated_generation_snapshots.append(_generated_generation_stage.duplicate(true))
+
+func _yield_generated_generation_frame() -> void:
+	await get_tree().process_frame
+	_generated_generation_yield_count += 1
+	_generated_generation_stage["yield_count"] = _generated_generation_yield_count
+	if not _generated_generation_snapshots.is_empty():
+		_generated_generation_snapshots[_generated_generation_snapshots.size() - 1]["yield_count_after_stage"] = _generated_generation_yield_count
+
+func _set_generated_random_map_inputs_disabled(disabled: bool) -> void:
+	for control in [
+		_generated_seed_edit,
+		_generated_size_picker,
+		_generated_template_picker,
+		_generated_profile_picker,
+		_generated_player_count_picker,
+		_generated_water_picker,
+		_generated_underground_toggle,
+	]:
+		if control is LineEdit:
+			control.editable = not disabled
+		elif control != null:
+			control.disabled = disabled
+	if disabled:
+		_start_generated_skirmish_button.disabled = true
+
+func _duplicate_stage_snapshots() -> Array:
+	var snapshots := []
+	for snapshot in _generated_generation_snapshots:
+		if snapshot is Dictionary:
+			snapshots.append(snapshot.duplicate(true))
+	return snapshots
 
 func _generated_random_map_preview_setup() -> Dictionary:
 	var seed := _generated_seed.strip_edges()
@@ -1529,6 +1674,12 @@ func validation_generated_random_map_snapshot() -> Dictionary:
 		"start_text": _start_generated_skirmish_button.text,
 		"start_tooltip": _start_generated_skirmish_button.tooltip_text,
 		"start_enabled": not _start_generated_skirmish_button.disabled,
+		"generation_in_progress": _generated_generation_in_progress,
+		"generation_stage": _generated_generation_stage.duplicate(true),
+		"generation_yield_count": _generated_generation_yield_count,
+		"generation_progress_visible": _generated_progress_bar.visible,
+		"generation_progress_value": _generated_progress_bar.value,
+		"generation_snapshots": _duplicate_stage_snapshots(),
 	}
 
 func _first_view_command_labels() -> Array:
@@ -1763,6 +1914,10 @@ func validation_start_generated_skirmish() -> Dictionary:
 		"active_retry_status": active_session.flags.get("generated_random_map_retry_status", {}),
 		"active_provenance": active_session.flags.get("generated_random_map_provenance", {}),
 	}
+
+func validation_start_generated_skirmish_staged() -> Dictionary:
+	var result: Dictionary = await _start_generated_skirmish_staged(false)
+	return result
 
 func validation_select_resolution(resolution_id: String) -> bool:
 	validation_open_settings_stage()
