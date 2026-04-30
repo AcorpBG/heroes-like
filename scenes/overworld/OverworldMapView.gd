@@ -239,6 +239,7 @@ var _object_index_signature := 0
 var _hero_index_signature := 0
 var _road_index_signature := 0
 var _validation_force_index_rebuild := false
+var _path_detail_profile_enabled := false
 var _validation_profile: Dictionary = {}
 var _towns_by_tile: Dictionary = {}
 var _town_footprints_by_tile: Dictionary = {}
@@ -277,7 +278,9 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 	_selected_tile = selected_tile
 	var path_profile_start := _profile_begin("path_recompute")
 	_path_tiles = _build_path(_hero_tile, _selected_tile)
-	_profile_end("path_recompute", path_profile_start, {"path_tiles": _path_tiles.size()})
+	var path_profile_details: Dictionary = _validation_profile.get("last_path_recompute", {}) if _validation_profile.get("last_path_recompute", {}) is Dictionary else {}
+	path_profile_details["path_tiles"] = _path_tiles.size()
+	_profile_end("path_recompute", path_profile_start, path_profile_details)
 	_ensure_camera_state()
 	var current_viewport_layout := _viewport_layout_signature()
 	var current_board_layout := _board_layout_signature()
@@ -2328,6 +2331,9 @@ func validation_reset_profile() -> void:
 
 func validation_set_force_index_rebuild(enabled: bool) -> void:
 	_validation_force_index_rebuild = enabled
+
+func validation_set_path_detail_profile_enabled(enabled: bool) -> void:
+	_path_detail_profile_enabled = enabled
 
 func validation_profile_snapshot() -> Dictionary:
 	return _validation_profile.duplicate(true)
@@ -5337,15 +5343,23 @@ func _reserve_hero_count(tile: Vector2i) -> int:
 	return reserve_count
 
 func _build_path(start: Vector2i, goal: Vector2i) -> Array:
+	var detail_profile_enabled := _path_detail_profile_enabled
+	if not detail_profile_enabled:
+		_validation_profile.erase("last_path_recompute")
 	if _session == null or goal.x < 0 or goal.y < 0:
+		_profile_path_recompute_details(detail_profile_enabled, start, goal, "missing_session_or_goal", 0, 0, 0, 0)
 		return []
 	if start == goal:
+		_profile_path_recompute_details(detail_profile_enabled, start, goal, "same_tile", 1, 1, 0, 0)
 		return [start]
 	if goal.x >= _map_size.x or goal.y >= _map_size.y:
+		_profile_path_recompute_details(detail_profile_enabled, start, goal, "goal_out_of_bounds", 0, 0, 0, 0)
 		return []
 	if OverworldRulesScript.tile_is_blocked(_session, goal.x, goal.y):
+		_profile_path_recompute_details(detail_profile_enabled, start, goal, "goal_blocked", 0, 0, 1 if detail_profile_enabled else 0, 0)
 		return []
 	if not OverworldRulesScript.is_tile_explored(_session, goal.x, goal.y):
+		_profile_path_recompute_details(detail_profile_enabled, start, goal, "goal_unexplored", 0, 0, 1 if detail_profile_enabled else 0, 0)
 		return []
 
 	var queue: Array = [start]
@@ -5353,6 +5367,8 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	var visited = {_tile_key(start): true}
 	var came_from = {_tile_key(start): start}
 	var found = false
+	var blocked_tile_lookup_count := 1 if detail_profile_enabled else 0
+	var enqueued_count := 1 if detail_profile_enabled else 0
 
 	while queue_index < queue.size():
 		var current: Vector2i = queue[queue_index]
@@ -5364,6 +5380,8 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 			var next: Vector2i = current + direction
 			if next.x < 0 or next.y < 0 or next.x >= _map_size.x or next.y >= _map_size.y:
 				continue
+			if detail_profile_enabled:
+				blocked_tile_lookup_count += 1
 			if OverworldRulesScript.tile_is_blocked(_session, next.x, next.y):
 				continue
 			var key = _tile_key(next)
@@ -5372,8 +5390,11 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 			visited[key] = true
 			came_from[key] = current
 			queue.append(next)
+			if detail_profile_enabled:
+				enqueued_count += 1
 
 	if not found:
+		_profile_path_recompute_details(detail_profile_enabled, start, goal, "not_found", 0, visited.size() if detail_profile_enabled else 0, blocked_tile_lookup_count, enqueued_count)
 		return []
 
 	var path: Array = [goal]
@@ -5381,7 +5402,30 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	while walker != start:
 		walker = came_from.get(_tile_key(walker), start)
 		path.push_front(walker)
+	_profile_path_recompute_details(detail_profile_enabled, start, goal, "found", path.size(), visited.size() if detail_profile_enabled else 0, blocked_tile_lookup_count, enqueued_count)
 	return path
+
+func _profile_path_recompute_details(
+	enabled: bool,
+	start: Vector2i,
+	goal: Vector2i,
+	status: String,
+	path_size: int,
+	visited_count: int,
+	blocked_tile_lookup_count: int,
+	enqueued_count: int
+) -> void:
+	if not enabled:
+		return
+	_validation_profile["last_path_recompute"] = {
+		"start": {"x": start.x, "y": start.y},
+		"goal": {"x": goal.x, "y": goal.y},
+		"status": status,
+		"path_tiles": path_size,
+		"visited_count": visited_count,
+		"blocked_tile_lookup_count": blocked_tile_lookup_count,
+		"enqueued_count": enqueued_count,
+	}
 
 func _tile_key(tile: Vector2i) -> String:
 	return "%d,%d" % [tile.x, tile.y]
