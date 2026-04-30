@@ -32,7 +32,7 @@ Fresh validation evidence from this re-gate:
 - `random_map_player_setup_retry_ux_report.tscn`: passed; generated setup selected `homm3_extra_large`, launch handoff produced Extra Large 144x144 provenance, and over-cap custom requests beyond `144x144x2` rejected without hidden downscale.
 - `random_map_skirmish_ui_save_replay_report.tscn`: passed; generated skirmish launch uses v2 provenance, v2 replay boundary, no campaign/adopted authored writeback.
 - `random_map_validation_batch_retry_report.tscn`: passed; `case_count=6`, `validation_pass_case_count=6`, `pass_after_retry_count=1`, retry evidence preserves the original failure.
-- `random_map_playable_materialization_runtime_report.tscn`: passed; materialized Extra Large generated skirmish map reports `144x144`, includes `1263` object instances, `3` towns, `9` mines, `6` dwellings, `16` guards, `8` rewards, `2` overlay layers, save/restore, and export-stream replay boundary.
+- `random_map_playable_materialization_runtime_report.tscn`: passed; materialized Extra Large generated skirmish map uses `translated_rmg_template_043_v1` / `translated_rmg_profile_043_v1` with `33` zones and `68` links, reports `144x144`, includes `1824` object instances, `16` towns, `95` mines, `21` dwellings, `136` guards, `68` rewards, `2` overlay layers, save/restore, and export-stream replay boundary.
 
 The Godot report runs still emit existing ContentService warnings for broad authored content families. They did not fail the RMG gates and are not counted as RMG parity blockers in this slice.
 

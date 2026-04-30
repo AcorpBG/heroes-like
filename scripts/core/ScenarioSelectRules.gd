@@ -53,6 +53,30 @@ const RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS := [
 		"water_modes": ["land", "islands"],
 		"supports_underground": true,
 	},
+	{
+		"id": "translated_rmg_template_002_v1",
+		"label": "Translated Ring Mesh",
+		"profile_id": "translated_rmg_profile_002_v1",
+		"player_count": 4,
+		"water_modes": ["land"],
+		"supports_underground": true,
+	},
+	{
+		"id": "translated_rmg_template_042_v1",
+		"label": "Translated Large Mesh",
+		"profile_id": "translated_rmg_profile_042_v1",
+		"player_count": 4,
+		"water_modes": ["land"],
+		"supports_underground": true,
+	},
+	{
+		"id": "translated_rmg_template_043_v1",
+		"label": "Translated Extra Large Mesh",
+		"profile_id": "translated_rmg_profile_043_v1",
+		"player_count": 4,
+		"water_modes": ["land"],
+		"supports_underground": true,
+	},
 ]
 const RANDOM_MAP_PLAYER_PROFILE_OPTIONS := [
 	{
@@ -76,9 +100,36 @@ const RANDOM_MAP_PLAYER_PROFILE_OPTIONS := [
 		"guard_strength_profile": "core_low",
 		"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"],
 	},
+	{
+		"id": "translated_rmg_profile_002_v1",
+		"label": "Translated Ring Mesh",
+		"template_id": "translated_rmg_template_002_v1",
+		"guard_strength_profile": "preserve_source_guard_values",
+		"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"],
+	},
+	{
+		"id": "translated_rmg_profile_042_v1",
+		"label": "Translated Large Mesh",
+		"template_id": "translated_rmg_template_042_v1",
+		"guard_strength_profile": "preserve_source_guard_values",
+		"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"],
+	},
+	{
+		"id": "translated_rmg_profile_043_v1",
+		"label": "Translated Extra Large Mesh",
+		"template_id": "translated_rmg_template_043_v1",
+		"guard_strength_profile": "preserve_source_guard_values",
+		"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"],
+	},
 ]
 const RANDOM_MAP_PLAYER_COUNT_OPTIONS := [2, 3, 4]
 const RANDOM_MAP_RUNTIME_SIZE_CAP := {"width": 144, "height": 144, "level_count": 2}
+const RANDOM_MAP_SIZE_CLASS_DEFAULTS := {
+	"homm3_small": {"template_id": "border_gate_compact_v1", "profile_id": "border_gate_compact_profile_v1", "player_count": 3},
+	"homm3_medium": {"template_id": "translated_rmg_template_002_v1", "profile_id": "translated_rmg_profile_002_v1", "player_count": 4},
+	"homm3_large": {"template_id": "translated_rmg_template_042_v1", "profile_id": "translated_rmg_profile_042_v1", "player_count": 4},
+	"homm3_extra_large": {"template_id": "translated_rmg_template_043_v1", "profile_id": "translated_rmg_profile_043_v1", "player_count": 4},
+}
 const RANDOM_MAP_SIZE_OPTIONS := [
 	{
 		"id": "homm3_small",
@@ -352,10 +403,17 @@ static func random_map_player_setup_options() -> Dictionary:
 		"default_size_class_id": "homm3_small",
 		"default_template_id": "border_gate_compact_v1",
 		"default_profile_id": "border_gate_compact_profile_v1",
+		"size_class_defaults": RANDOM_MAP_SIZE_CLASS_DEFAULTS.duplicate(true),
 		"default_player_count": 3,
 		"default_water_mode": "land",
 		"default_underground": false,
 	}
+
+static func random_map_size_class_default(size_class_id: String) -> Dictionary:
+	var size_option := _random_map_size_option(size_class_id)
+	var normalized_id := String(size_option.get("id", "homm3_small"))
+	var defaults: Dictionary = RANDOM_MAP_SIZE_CLASS_DEFAULTS.get(normalized_id, RANDOM_MAP_SIZE_CLASS_DEFAULTS.get("homm3_small", {}))
+	return defaults.duplicate(true)
 
 static func build_random_map_player_config(
 	seed: String,
@@ -367,7 +425,18 @@ static func build_random_map_player_config(
 	size_class_id: String = "homm3_small"
 ) -> Dictionary:
 	var size_option := _random_map_size_option(size_class_id)
-	var profile_option := _random_map_profile_option(profile_id)
+	var size_defaults := random_map_size_class_default(String(size_option.get("id", "homm3_small")))
+	var normalized_template_id := template_id.strip_edges()
+	if normalized_template_id == "":
+		normalized_template_id = String(size_defaults.get("template_id", "border_gate_compact_v1"))
+	var template_option := _random_map_template_option(normalized_template_id)
+	var normalized_profile_id := profile_id.strip_edges()
+	if normalized_profile_id == "":
+		normalized_profile_id = String(size_defaults.get("profile_id", template_option.get("profile_id", "border_gate_compact_profile_v1")))
+	var profile_option := _random_map_profile_option(normalized_profile_id)
+	if String(profile_option.get("template_id", normalized_template_id)) != normalized_template_id:
+		normalized_profile_id = String(template_option.get("profile_id", size_defaults.get("profile_id", "border_gate_compact_profile_v1")))
+		profile_option = _random_map_profile_option(normalized_profile_id)
 	var source_width := int(size_option.get("source_width", 36))
 	var source_height := int(size_option.get("source_height", 36))
 	var normalized_player_count := clampi(player_count, 2, 4)
@@ -408,8 +477,8 @@ static func build_random_map_player_config(
 			"team_mode": "free_for_all",
 		},
 		"profile": {
-			"id": String(profile_option.get("id", profile_id)),
-			"template_id": template_id,
+			"id": String(profile_option.get("id", normalized_profile_id)),
+			"template_id": normalized_template_id,
 			"guard_strength_profile": String(profile_option.get("guard_strength_profile", "core_low")),
 			"faction_ids": profile_option.get("faction_ids", []),
 		},
@@ -796,6 +865,7 @@ static func _random_map_provenance(input_config: Dictionary, payload: Dictionary
 	var normalized := RandomMapGeneratorRulesScript.normalize_config(input_config)
 	var metadata: Dictionary = payload.get("metadata", {}) if payload.get("metadata", {}) is Dictionary else {}
 	var profile: Dictionary = metadata.get("profile", {}) if metadata.get("profile", {}) is Dictionary else {}
+	var replay_config := _random_map_replay_generator_config(input_config, normalized, metadata, profile)
 	var generated_export: Dictionary = payload.get("generated_export", {}) if payload.get("generated_export", {}) is Dictionary else {}
 	var export_contract := {
 		"schema_id": String(generated_export.get("schema_id", "")),
@@ -811,13 +881,7 @@ static func _random_map_provenance(input_config: Dictionary, payload: Dictionary
 		"schema_id": "generated_random_map_skirmish_provenance_v2",
 		"provenance_contract_version": 2,
 		"source": "random_map_skirmish_setup",
-		"generator_config": {
-			"generator_version": String(normalized.get("generator_version", RandomMapGeneratorRulesScript.GENERATOR_VERSION)),
-			"seed": String(normalized.get("seed", "0")),
-			"size": normalized.get("size", {}),
-			"player_constraints": normalized.get("player_constraints", {}),
-			"profile": profile,
-		},
+		"generator_config": replay_config,
 		"generator_version": String(metadata.get("generator_version", "")),
 		"normalized_seed": String(metadata.get("normalized_seed", "")),
 		"template_id": String(metadata.get("template_id", "")),
@@ -840,6 +904,33 @@ static func _random_map_provenance(input_config: Dictionary, payload: Dictionary
 		"authored_content_writeback": false,
 		"campaign_adoption": false,
 		"alpha_parity_claim": false,
+	}
+
+static func _random_map_replay_generator_config(input_config: Dictionary, normalized: Dictionary, metadata: Dictionary, profile: Dictionary) -> Dictionary:
+	var input_profile: Dictionary = input_config.get("profile", {}) if input_config.get("profile", {}) is Dictionary else {}
+	var replay_profile: Dictionary = input_profile.duplicate(true) if not input_profile.is_empty() else profile.duplicate(true)
+	var template_id := String(metadata.get("template_id", normalized.get("template_id", "")))
+	if String(replay_profile.get("id", "")).strip_edges() == "":
+		replay_profile["id"] = String(profile.get("id", ""))
+	if String(replay_profile.get("template_id", "")).strip_edges() == "":
+		replay_profile["template_id"] = template_id
+	if String(replay_profile.get("guard_strength_profile", "")).strip_edges() == "":
+		replay_profile["guard_strength_profile"] = String(profile.get("guard_strength_profile", "core_low"))
+
+	var player_assignment: Dictionary = metadata.get("player_assignment", {}) if metadata.get("player_assignment", {}) is Dictionary else {}
+	if String(player_assignment.get("assignment_policy", "")) == "fixed_owner_slots_first_n_players_seeded_factions":
+		var faction_pool: Array = player_assignment.get("faction_pool", []) if player_assignment.get("faction_pool", []) is Array else []
+		if not faction_pool.is_empty():
+			replay_profile["faction_ids"] = faction_pool.duplicate(true)
+			replay_profile.erase("town_ids")
+
+	return {
+		"generator_version": String(normalized.get("generator_version", RandomMapGeneratorRulesScript.GENERATOR_VERSION)),
+		"seed": String(normalized.get("seed", "0")),
+		"size": normalized.get("size", {}),
+		"player_constraints": normalized.get("player_constraints", {}),
+		"template_id": template_id,
+		"profile": replay_profile,
 	}
 
 static func _random_map_replay_metadata(provenance: Dictionary, identity: Dictionary, retry_status: Dictionary) -> Dictionary:

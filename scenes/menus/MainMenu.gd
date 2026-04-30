@@ -285,6 +285,13 @@ func _on_generated_size_selected(index: int) -> void:
 	if index < 0 or index >= _generated_size_picker.get_item_count():
 		return
 	_generated_size_class_id = String(_generated_size_picker.get_item_metadata(index))
+	var size_defaults := ScenarioSelectRulesScript.random_map_size_class_default(_generated_size_class_id)
+	_generated_template_id = String(size_defaults.get("template_id", _generated_template_id))
+	_generated_profile_id = String(size_defaults.get("profile_id", _generated_profile_id))
+	_generated_player_count = int(size_defaults.get("player_count", _generated_player_count))
+	_select_generated_picker_metadata(_generated_template_picker, _generated_template_id)
+	_select_generated_picker_metadata(_generated_profile_picker, _generated_profile_id)
+	_select_generated_player_count_picker(_generated_player_count)
 	_refresh_generated_random_map_setup()
 
 func _on_generated_template_selected(index: int) -> void:
@@ -1097,6 +1104,14 @@ func _select_generated_picker_metadata(picker: OptionButton, metadata: String) -
 		if String(picker.get_item_metadata(index)) != metadata:
 			continue
 		picker.select(index)
+		return true
+	return false
+
+func _select_generated_player_count_picker(player_count: int) -> bool:
+	for index in range(_generated_player_count_picker.get_item_count()):
+		if int(_generated_player_count_picker.get_item_metadata(index)) != player_count:
+			continue
+		_generated_player_count_picker.select(index)
 		return true
 	return false
 

@@ -10,6 +10,9 @@ func _run() -> void:
 	var generator = RandomMapGeneratorRulesScript.new()
 	if not _assert_invalid_requests_reject(generator):
 		return
+	var xl_topology := _assert_extra_large_template_selection(generator)
+	if xl_topology.is_empty():
+		return
 	var base_config := {
 		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
 		"seed": "filtering-assignment-10184",
@@ -52,6 +55,7 @@ func _run() -> void:
 		"stable_signature": payload.get("stable_signature", ""),
 		"changed_seed_signature": changed_payload.get("stable_signature", ""),
 		"selection": payload.get("metadata", {}).get("template_selection", {}),
+		"extra_large_topology": xl_topology,
 		"assignment": payload.get("staging", {}).get("player_assignment", {}),
 		"towns": payload.get("scenario_record", {}).get("towns", []),
 		"no_ui_save_adoption": payload.get("scenario_record", {}).get("selection", {}).get("availability", {}),
@@ -101,6 +105,46 @@ func _assert_invalid_requests_reject(generator) -> bool:
 			_fail("Invalid %s rejection did not expose expected reason %s: %s" % [String(invalid_case.get("name", "")), String(invalid_case.get("expected_reason", "")), reason_text])
 			return false
 	return true
+
+func _assert_extra_large_template_selection(generator) -> Dictionary:
+	var config := {
+		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
+		"seed": "filtering-assignment-10184-xl",
+		"size": {"preset": "filtering_assignment_xl", "source_width": 144, "source_height": 144, "width": 144, "height": 144, "water_mode": "land", "level_count": 1},
+		"player_constraints": {"human_count": 1, "player_count": 4, "team_mode": "free_for_all"},
+		"profile": {
+			"id": "translated_rmg_profile_043_v1",
+			"template_id": "translated_rmg_template_043_v1",
+			"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"],
+		},
+	}
+	var generated: Dictionary = generator.generate(config)
+	if not bool(generated.get("ok", false)):
+		_fail("XL translated template selection did not validate: %s" % JSON.stringify(generated.get("report", {})))
+		return {}
+	var payload: Dictionary = generated.get("generated_map", {}) if generated.get("generated_map", {}) is Dictionary else {}
+	var metadata: Dictionary = payload.get("metadata", {}) if payload.get("metadata", {}) is Dictionary else {}
+	var selection: Dictionary = metadata.get("template_selection", {}) if metadata.get("template_selection", {}) is Dictionary else {}
+	var constraint_report: Dictionary = selection.get("constraint_report", {}) if selection.get("constraint_report", {}) is Dictionary else {}
+	var requested: Dictionary = constraint_report.get("requested", {}) if constraint_report.get("requested", {}) is Dictionary else {}
+	var template: Dictionary = payload.get("staging", {}).get("template", {}) if payload.get("staging", {}).get("template", {}) is Dictionary else {}
+	if String(metadata.get("template_id", "")) != "translated_rmg_template_043_v1":
+		_fail("XL selection chose the wrong template: %s" % JSON.stringify(metadata))
+		return {}
+	if int(requested.get("size_score", 0)) != 16:
+		_fail("XL selection did not request size_score 16: %s" % JSON.stringify(selection))
+		return {}
+	if template.get("zones", []).size() < 33 or template.get("links", []).size() < 68:
+		_fail("XL selection used compact topology: %s" % JSON.stringify(template.get("graph_summary", {})))
+		return {}
+	return {
+		"template_id": String(metadata.get("template_id", "")),
+		"profile_id": String(metadata.get("profile", {}).get("id", "")),
+		"size_score": int(requested.get("size_score", 0)),
+		"zone_count": template.get("zones", []).size(),
+		"link_count": template.get("links", []).size(),
+		"source_template_index": template.get("import_provenance", {}).get("source_template_index", 0),
+	}
 
 func _invalid_config(overrides: Dictionary) -> Dictionary:
 	var config := {
