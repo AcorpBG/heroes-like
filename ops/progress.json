@@ -6,9 +6,9 @@
   "currentSliceId": "random-map-pathing-debug-overlay-instrumentation-10184",
   "currentSliceTitle": "Random Map Pathing Debug Overlay Instrumentation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed AcOrP instrumentation-only pathing debug overlay: live overworld F3 overlay shows last pathing/selection/move command timing, route/BFS details, blocked lookup/index timing, refresh/set_map_state, index rebuild/skip counts, draw timings, save observation, FPS, and frame time without changing generation/pathing/rendering/gameplay semantics.",
+  "currentSliceNotes": "Completed AcOrP instrumentation-only pathing debug overlay reconciliation: live overworld F3 overlay now shows last pathing/selection/move command lifecycle phase buckets, refresh call count and internal refresh section timings, deferred frame/overlay update cost, top offenders, measured_sum_ms, and unaccounted_ms without changing generation/pathing/rendering/gameplay semantics.",
   "nextActionGuardrailNote": "Remaining generated save work should split generated map payload persistence from lightweight state/delta autosave without visual/map semantic changes.",
-  "updatedAt": "2026-04-30T20:27:49Z",
+  "updatedAt": "2026-04-30T22:18:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -68,7 +68,8 @@
         "Added a hidden-by-default live overworld Path Debug overlay toggled with F3, with validation hooks for headless report coverage.",
         "Instrumented pathing-command capture around tile selection, adjacent movement, primary route advancement, and validation route selection without changing route/pathing rules, renderer semantics, map generation, saves, or balance.",
         "Overlay snapshots expose selected/target tile, command type, total command time, shell route/BFS timing, blocked-tile lookups, blocked-index rebuild timing/counts when captured, map-view path recompute and set_map_state timing, object/hero/road index rebuild/skip counts and timing, draw timings, dynamic-layer reason, save/autosave observation, FPS, and frame time.",
-        "Blocked-index rebuild timing is gated behind overlay command capture so normal hidden-overlay runs do not perform extra timing work."
+        "Blocked-index rebuild timing is gated behind overlay command capture so normal hidden-overlay runs do not perform extra timing work.",
+        "Extended the overlay to reconcile total command time with live lifecycle phase buckets: input/validation entry, tile/object selection, body-to-visit resolution, route decision and route text generation, primary/action-context computation and dispatch, movement rules, refresh call count, internal refresh section timings, deferred frame wait, overlay update cost, measured_sum_ms, unaccounted_ms, and top offenders."
       ],
       "validationEvidence": [
         "godot4 --headless --path . res://tests/random_map_pathing_debug_overlay_report.tscn passed.",
@@ -86,7 +87,7 @@
         "python3 -m json.tool ops/progress.json passed.",
         "git diff --check passed."
       ],
-      "notes": "Completed AcOrP instrumentation-only request for visible pathing/rendering stats on live generated overworld commands. Medium-or-larger smoke validation was not practical in this run because generated Small setup already takes roughly 90 seconds; the overlay is normal live OverworldShell UI and is not size-gated. Dynamic invalidation duration remains reported through draw time plus dynamic reason/generation rather than a separate invalidation timer."
+      "notes": "Completed AcOrP instrumentation-only request for visible pathing/rendering stats and command-total reconciliation on live generated overworld commands. Medium-or-larger smoke validation was not practical in this run because generated Small setup already takes roughly 90 seconds; the overlay is normal live OverworldShell UI and is not size-gated. Dynamic invalidation duration remains reported through draw time plus dynamic reason/generation rather than a separate invalidation timer. The missing XL time was hidden by incomplete lifecycle instrumentation: total included shell command work that was not broken out by the previous overlay, especially selection/object resolution and refresh-internal action/surface rebuild phases."
     },
     {
       "id": "random-map-small-object-density-corrective-10184",
