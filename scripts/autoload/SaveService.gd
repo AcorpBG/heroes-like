@@ -703,10 +703,12 @@ func _save_runtime_session(
 			path = _save_payload(sanitized_session.to_dict(), _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload)
 			_runtime_save_profile_step(profile, "write_payload_done")
 			cache_slot_id = SLOT_TYPE_AUTOSAVE
-			if path != "":
+			if path != "" and include_summary:
 				_runtime_save_profile_step(profile, "summary_cache_store_start")
 				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_AUTOSAVE, cache_slot_id, path)
 				_runtime_save_profile_step(profile, "summary_cache_store_done")
+			elif path != "":
+				_runtime_save_profile_step(profile, "summary_cache_deferred")
 			if include_summary:
 				_runtime_save_profile_step(profile, "inspect_summary_start")
 				summary = inspect_autosave()
@@ -717,11 +719,13 @@ func _save_runtime_session(
 			path = _save_payload(sanitized_session.to_dict(), _slot_path(normalized_slot), SLOT_TYPE_MANUAL, saved_payload)
 			_runtime_save_profile_step(profile, "write_payload_done")
 			cache_slot_id = str(normalized_slot)
-			if path != "":
+			if path != "" and include_summary:
 				_selected_manual_slot = normalized_slot
 				_runtime_save_profile_step(profile, "summary_cache_store_start")
 				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_MANUAL, cache_slot_id, path)
 				_runtime_save_profile_step(profile, "summary_cache_store_done")
+			elif path != "":
+				_runtime_save_profile_step(profile, "summary_cache_deferred")
 			if include_summary:
 				_runtime_save_profile_step(profile, "inspect_summary_start")
 				summary = inspect_manual_slot(normalized_slot)

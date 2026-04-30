@@ -257,7 +257,7 @@ func _on_end_turn_pressed() -> void:
 		_dismiss_command_briefing()
 		_select_hero_tile()
 	if _session.scenario_status == "in_progress":
-		SaveService.save_runtime_autosave_session(_session)
+		SaveService.save_runtime_autosave_session(_session, not bool(_session.flags.get("generated_random_map", false)))
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -531,15 +531,18 @@ func _refresh() -> void:
 	if _generated_initial_open_pending():
 		_set_deferred_generated_save_status("Save: generated autosave pending")
 		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_deferred")
+	elif _use_generated_compact_refresh():
+		_set_deferred_generated_save_status("Save: ready")
+		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_compact")
 	else:
 		_refresh_save_slot_picker()
 		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_done")
 
 	AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_start")
-	if _generated_initial_open_pending():
+	if _generated_initial_open_pending() or _use_generated_compact_refresh():
 		_refresh_generated_opening_surfaces()
 		OverworldRules.end_normalized_read_scope(_session)
-		AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_deferred")
+		AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_compact")
 		AppRouter.note_overworld_handoff_step("overworld_refresh_done")
 		return
 	var scenario = ContentService.get_scenario(_session.scenario_id)
@@ -624,6 +627,7 @@ func _refresh_generated_opening_surfaces() -> void:
 	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
 	var hero_pos := OverworldRules.hero_position(_session)
 	var hero_name := String(hero.get("name", "Commander"))
+	var opening_pending := _generated_initial_open_pending()
 	var move_line := "Move %d/%d" % [
 		int(movement.get("current", 0)),
 		int(movement.get("max", movement.get("current", 0))),
@@ -634,14 +638,14 @@ func _refresh_generated_opening_surfaces() -> void:
 		int(resources.get("ore", 0)),
 	]
 	_header_label.text = String(scenario.get("name", "Generated Map"))
-	_objective_brief_label.text = "Generated map opening"
-	_objective_brief_label.tooltip_text = "Detailed objective and readiness surfaces are deferred until the generated-map opening autosave completes."
+	_objective_brief_label.text = "Generated map opening" if opening_pending else "Generated map objective"
+	_objective_brief_label.tooltip_text = "Detailed objective and readiness surfaces are available from command/frontier drawers; routine generated-map movement keeps the live frame compact."
 	_status_label.text = "Day %d | Pos %d,%d | %s" % [_session.day, hero_pos.x, hero_pos.y, move_line]
-	_status_label.tooltip_text = "Generated map is playable while detailed status surfaces finish after opening."
+	_status_label.tooltip_text = "Generated map is playable; compact live refresh avoids rebuilding detailed rails on every movement."
 	_resource_label.text = resource_line
 	_resource_label.tooltip_text = resource_line
-	_map_cue_label.text = "Opening generated map"
-	_map_cue_label.tooltip_text = "Map art and controls are loaded; save summary and detailed rails are deferred off the first frame."
+	_map_cue_label.text = "Opening generated map" if opening_pending else _map_cue_text()
+	_map_cue_label.tooltip_text = "Map art and controls are loaded; save summary and detailed rails are deferred off routine generated-map frames."
 	_commitment_label.text = ""
 	_commitment_label.tooltip_text = ""
 	_set_rail_text(_hero_label, "%s | %s" % [hero_name, move_line], "%s | %s" % [hero_name, move_line], 2)
@@ -652,13 +656,13 @@ func _refresh_generated_opening_surfaces() -> void:
 	_set_rail_text(_artifact_label, "Gear ready", "Gear ready", 1)
 	_set_collapsed_generated_opening_frontier_indicator()
 	_set_rail_text(_context_label, "Select a visible destination for orders.", "Select a visible destination", 2)
-	_set_rail_text(_event_label, _last_message if _last_message != "" else "Generated map opened.", "Generated map opened", 1)
+	_set_rail_text(_event_label, _last_message if _last_message != "" else "Generated map ready.", "Generated map ready", 1)
 	_end_turn_button.text = "End Turn"
 	_end_turn_button.tooltip_text = "Finish the current day after issuing field orders."
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
-	_map_view.tooltip_text = "Generated map ready | Select a visible destination."
+	_update_map_tooltip()
 	_command_panel.visible = false
 	_frontier_panel.visible = false
 	_context_panel.visible = false
@@ -700,10 +704,17 @@ func _configure_save_slot_picker(refresh_now: bool = true) -> void:
 func _generated_initial_open_pending() -> bool:
 	return _session != null and bool(_session.flags.get("generated_overworld_deferred_autosave_pending", false))
 
+func _use_generated_compact_refresh() -> bool:
+	return (
+		_session != null
+		and bool(_session.flags.get("generated_random_map", false))
+		and _active_drawer == ""
+	)
+
 func _set_deferred_generated_save_status(text: String) -> void:
 	var save_ready := text.find("ready") >= 0
 	_save_status_label.text = text
-	_save_status_label.tooltip_text = "Generated map opening is keeping save summary inspection off the first rendered frame."
+	_save_status_label.tooltip_text = "Generated map refresh keeps save summary inspection off first-frame and routine movement paths."
 	_save_button.text = "Save"
 	_save_button.tooltip_text = "Save the active expedition to the selected manual slot." if save_ready else "Save is available after the generated-map opening autosave settles."
 	_menu_button.text = "Menu: Field"

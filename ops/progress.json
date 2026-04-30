@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-default-seed-objective-corrective-10184",
-  "currentSliceTitle": "Random Map Default Seed And Objective Corrective",
+  "currentSliceId": "random-map-live-overworld-render-move-perf-corrective-10184",
+  "currentSliceTitle": "Random Map Live Overworld Render And Move Performance Corrective",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed AcOrP corrective: blank/default generated-map launches now resolve a fresh effective seed at launch, explicit seeds remain deterministic, and generated Small objectives now require claiming a rival town instead of already owning the start town.",
-  "nextActionGuardrailNote": "Keep this corrective slice narrow: no random-map true-size/template/player-count/content-density changes, no save schema migration, and no generated-map downscale or object-count reduction.",
-  "updatedAt": "2026-04-30T15:14:00Z",
+  "currentSliceNotes": "Completed live generated Small corrective: compact generated-map refresh avoids detailed rail/save summary rebuilds on movement, generated-map rendering uses cheaper primitives, autosave summary cache is deferred when summaries are skipped, and the focused live report proves movement visibly updates.",
+  "nextActionGuardrailNote": "Validated corrective preserved generated-map size/template/player count/object density, explicit-seed determinism, and generated objective behavior.",
+  "updatedAt": "2026-04-30T16:18:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -4343,6 +4343,66 @@
       "startedAt": "2026-04-30T15:10:02Z",
       "completedAt": "2026-04-30T15:14:00Z",
       "notes": "Completed narrow AcOrP corrective; compact Small template composition is left unchanged except for genuine seed variation and objective validity."
+    },
+    {
+      "id": "random-map-live-overworld-render-move-perf-corrective-10184",
+      "title": "Random Map Live Overworld Render And Move Performance Corrective",
+      "phase": "phase-2-deep-production-foundation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "status": "completed",
+      "purpose": "Profile and fix live rendered Small generated-overworld frame, input, movement, and related End Turn latency without changing generated map semantics.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-size-class-translation.md",
+        "docs/random-map-final-homm3-parity-regate-audit.md"
+      ],
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/random_map_live_overworld_render_move_report.tscn",
+        "ops/progress.json",
+        "scripts/autoload/SaveService.gd"
+      ],
+      "baselineChecks": [
+        "xvfb-run -a godot --path . tests/random_map_live_overworld_render_move_report.tscn",
+        "xvfb-run -a godot --path . tests/random_map_default_seed_objective_regression_report.tscn",
+        "xvfb-run -a godot --path . tests/random_map_post_open_tail_timing_report.tscn",
+        "xvfb-run -a godot --path . tests/random_map_async_generation_ux_report.tscn",
+        "xvfb-run -a godot --path . tests/random_map_runtime_render_perf_smoke.tscn",
+        "xvfb-run -a godot --path . tests/random_map_player_count_range_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Live-ish generated Small report captures post-open frame timing rather than only set_map_state assignment.",
+        "Report commits a real hero movement action and proves the visible/session hero position changes while scenario remains in progress.",
+        "Frame and movement latency improve without reducing map size, template, player count, object density, or deterministic explicit-seed behavior."
+      ],
+      "completionCriteria": [
+        "Generated Small live overworld has acceptable measured frame latency under the focused report.",
+        "A hero movement command commits promptly and updates rendered/session state without routing to outcome.",
+        "Existing RMG seed/objective, post-open, async, render-smoke, player-count, repo validation, progress JSON, and diff hygiene checks pass."
+      ],
+      "nonGoals": [
+        "No generated-map downscale, object-density reduction, player-count/template change, objective semantic change, save-schema migration, campaign adoption, or alpha/release claim."
+      ],
+      "createdAt": "2026-04-30T15:37:38Z",
+      "updatedAt": "2026-04-30T16:18:00Z",
+      "startedAt": "2026-04-30T15:37:38Z",
+      "notes": "Completed AcOrP live generated-overworld performance corrective. Cause was routine generated-map frames and movement/turn refreshes rebuilding detailed UI/save summary surfaces plus expensive generated-map draw commands; fix keeps generated live refresh compact, simplifies generated-map draw primitives, and defers generated autosave summary cache when summaries are skipped.",
+      "completedAt": "2026-04-30T16:18:00Z",
+      "completionEvidence": [
+        "RANDOM_MAP_LIVE_OVERWORLD_RENDER_MOVE_REPORT passed on generated Small with explicit seed live-render-move-10184: hero moved from 6,21 to 6,20, scenario stayed in_progress, movement latency was 660.332ms, and post-move frame was 101.3ms.",
+        "Live FPS sample under Xvfb/llvmpipe improved from the AcOrP artifact around 7.6/7.2 FPS to 9.95 FPS before movement and 9.87 FPS after movement in the focused report, without changing generated map dimensions, templates, player counts, object density, or seed semantics.",
+        "Generated Small turn profile after the fix showed End Turn at 5046ms locally, with autosave total 560ms and summary_cache_deferred instead of synchronous summary cache storage.",
+        "Existing RMG seed/objective, post-open tail, async UX, render-smoke, player-count, repo validation, progress JSON, and diff hygiene checks passed after the change."
+      ]
     }
   ],
   "completedImplementationEvidence": [
