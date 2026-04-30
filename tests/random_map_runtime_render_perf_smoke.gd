@@ -54,6 +54,9 @@ func _assert_metrics(first_metrics: Dictionary, second_metrics: Dictionary, firs
 	if bool(first_metrics.get("full_map_visible", true)) or not bool(first_metrics.get("pan_supported", false)):
 		_fail("XL map should render through a panned visible window, not as full-map visible: %s" % JSON.stringify(first_metrics))
 		return false
+	if String(first_metrics.get("visual_render_path", "")) != "normal_overworld_art" or bool(first_metrics.get("primitive_generated_render_path", true)):
+		_fail("XL generated render smoke must use the normal overworld art path, not a primitive/debug path: %s" % JSON.stringify(first_metrics))
+		return false
 	var visible_bounds: Dictionary = first_metrics.get("visible_bounds", {})
 	var visible_area := int(visible_bounds.get("width", 0)) * int(visible_bounds.get("height", 0))
 	if visible_area <= 0 or visible_area >= MAP_WIDTH * MAP_HEIGHT:
@@ -104,6 +107,7 @@ func _xl_session() -> SessionStateStoreScript.SessionData:
 		"materialized_map_signature": "runtime-render-perf-smoke-xl-144",
 		"summary": {"map_size": {"width": MAP_WIDTH, "height": MAP_HEIGHT}},
 	}
+	session.flags["generated_random_map"] = true
 	return session
 
 func _map_rows() -> Array:
