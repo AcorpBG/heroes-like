@@ -23,6 +23,7 @@ const SAVE_METADATA_SLOT_TYPE_KEY := "save_slot_type"
 const SAVE_METADATA_GAME_STATE_KEY := "saved_from_game_state"
 const SAVE_METADATA_SCENARIO_STATUS_KEY := "saved_from_scenario_status"
 const SAVE_METADATA_LAUNCH_MODE_KEY := "saved_from_launch_mode"
+const SUMMARY_INLINE_PAYLOAD_MAX_BYTES := 8 * 1024 * 1024
 
 var _selected_manual_slot := int(MANUAL_SLOT_IDS[0])
 var _slot_summary_cache := {}
@@ -70,10 +71,10 @@ func save_autosave_session(payload: Dictionary) -> String:
 	return _save_payload(normalized, _autosave_path(), SLOT_TYPE_AUTOSAVE)
 
 func load_session(slot: int = 1) -> Dictionary:
-	return _summary_payload(inspect_manual_slot(slot))
+	return _load_summary_payload_for_restore(inspect_manual_slot(slot))
 
 func load_autosave() -> Dictionary:
-	return _summary_payload(inspect_autosave())
+	return _load_summary_payload_for_restore(inspect_autosave())
 
 func restore_manual_session(slot: int = 1):
 	return restore_session_from_summary(inspect_manual_slot(slot))
@@ -85,7 +86,13 @@ func restore_session_from_summary(summary: Dictionary):
 	var live_summary := refresh_summary(summary)
 	if not can_load_summary(live_summary):
 		return null
-	return _session_from_payload(_summary_payload(live_summary))
+	var payload := _load_summary_payload_for_restore(live_summary)
+	if payload.is_empty():
+		return null
+	var restore_result := _normalize_restore_result(payload, String(live_summary.get("slot_type", "")))
+	if not bool(restore_result.get("ok", false)):
+		return null
+	return restore_result.get("session", null)
 
 func refresh_summary(summary: Dictionary) -> Dictionary:
 	if summary.is_empty():
@@ -190,7 +197,10 @@ func resume_target_for_session(session: SessionStateStoreScript.SessionData) -> 
 	return _resume_target_for_session(session)
 
 func can_load_summary(summary: Dictionary) -> bool:
-	return bool(summary.get("valid", false)) and bool(summary.get("loadable", false)) and not _summary_payload(summary).is_empty()
+	return bool(summary.get("valid", false)) and bool(summary.get("loadable", false)) and (
+		not _summary_payload(summary).is_empty()
+		or bool(summary.get("payload_deferred", false))
+	)
 
 func load_action_label(summary: Dictionary) -> String:
 	if summary.is_empty() or not can_load_summary(summary):
@@ -703,7 +713,7 @@ func _load_raw_dictionary(file_path: String, warn_if_missing: bool) -> Dictionar
 		return {}
 
 	var payload = parser.data
-	return payload.duplicate(true) if payload is Dictionary else {}
+	return payload if payload is Dictionary else {}
 
 func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
 	var cached_summary := _cached_slot_summary(slot_type, slot_id, file_path)
@@ -715,6 +725,7 @@ func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dic
 		return _finalize_and_cache_summary(summary)
 
 	summary["modified_timestamp"] = FileAccess.get_modified_time(file_path)
+	summary["payload_bytes"] = FileAccess.get_size(file_path)
 	var raw_payload := _load_raw_dictionary(file_path, false)
 	if raw_payload.is_empty():
 		summary["validity"] = "corrupt_json"
@@ -722,29 +733,27 @@ func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dic
 		return _finalize_and_cache_summary(summary)
 
 	summary = _populate_summary_from_payload(summary, raw_payload)
-	var restore_result := _normalize_restore_result(raw_payload, slot_type)
-	if not bool(restore_result.get("ok", false)):
-		summary["validity"] = String(restore_result.get("validity", "invalid_payload"))
-		summary["status_text"] = String(restore_result.get("message", "Save cannot be restored."))
-		summary["warnings"] = restore_result.get("warnings", [])
+	var structure_report := _payload_structure_report(raw_payload, slot_type)
+	if not bool(structure_report.get("ok", false)):
+		summary["validity"] = String(structure_report.get("validity", "invalid_payload"))
+		summary["status_text"] = String(structure_report.get("message", "Save cannot be restored."))
+		summary["warnings"] = structure_report.get("warnings", [])
 		summary["resume_target"] = "blocked"
 		summary["loadable"] = false
 		return _finalize_and_cache_summary(summary)
 
-	var session = restore_result.get("session", null)
-	if session == null:
-		summary["validity"] = "invalid_payload"
-		summary["status_text"] = "Save session could not be restored."
-		summary["resume_target"] = "blocked"
-		return _finalize_and_cache_summary(summary)
-
-	summary["payload"] = session.to_dict()
-	summary = _populate_summary_from_payload(summary, _summary_payload(summary))
 	summary["valid"] = true
-	summary["validity"] = String(restore_result.get("validity", "ok"))
-	summary["warnings"] = restore_result.get("warnings", [])
-	summary["resume_target"] = String(restore_result.get("resume_target", _resume_target_for_session(session)))
+	summary["validity"] = String(structure_report.get("validity", "ok"))
+	summary["warnings"] = structure_report.get("warnings", [])
+	summary["resume_target"] = _resume_target_from_payload_summary(raw_payload)
 	summary["loadable"] = summary["resume_target"] != "blocked"
+	if int(summary.get("payload_bytes", 0)) <= SUMMARY_INLINE_PAYLOAD_MAX_BYTES:
+		summary["payload"] = raw_payload
+		summary["payload_deferred"] = false
+	else:
+		summary["payload"] = {}
+		summary["payload_deferred"] = true
+	summary["valid"] = true
 	summary["status_text"] = _status_text_for_summary(summary)
 	return _finalize_and_cache_summary(summary)
 
@@ -928,12 +937,11 @@ func _ensure_generated_random_map_scenario_registered(normalized_payload: Dictio
 	}
 
 func _populate_summary_from_payload(summary: Dictionary, payload: Dictionary) -> Dictionary:
-	var normalized: Dictionary = SessionStateStoreScript.normalize_payload(payload)
-	var scenario_id := String(normalized.get("scenario_id", ""))
+	var scenario_id := String(payload.get("scenario_id", ""))
 	var scenario := ContentService.get_scenario(scenario_id)
-	var launch_mode := String(normalized.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))
+	var launch_mode := SessionStateStoreScript.normalize_launch_mode(payload.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))
 	var campaign_metadata := _campaign_metadata_for_scenario(scenario_id, launch_mode)
-	var session_flags = normalized.get("flags", {})
+	var session_flags = payload.get("flags", {})
 	if session_flags is Dictionary and SessionStateStoreScript.normalize_launch_mode(launch_mode) == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
 		var flagged_campaign_id := String(session_flags.get("campaign_id", ""))
 		if flagged_campaign_id != "":
@@ -947,31 +955,31 @@ func _populate_summary_from_payload(summary: Dictionary, payload: Dictionary) ->
 		var flagged_chapter_label := String(session_flags.get("campaign_chapter_label", ""))
 		if flagged_chapter_label != "":
 			campaign_metadata["chapter_label"] = flagged_chapter_label
-	var hero_id := String(normalized.get("hero_id", ""))
-	var overworld_state = normalized.get("overworld", {})
+	var hero_id := String(payload.get("hero_id", ""))
+	var overworld_state = payload.get("overworld", {})
 	var hero_state_value = overworld_state.get("hero", {}) if overworld_state is Dictionary else {}
 	var hero_state: Dictionary = hero_state_value if hero_state_value is Dictionary else {}
 	var hero_template := ContentService.get_hero(hero_id)
 
 	summary["source_save_version"] = max(0, int(payload.get("save_version", SessionStateStoreScript.SAVE_VERSION)))
-	summary["save_version"] = int(normalized.get("save_version", SessionStateStoreScript.SAVE_VERSION))
+	summary["save_version"] = max(0, int(payload.get("save_version", SessionStateStoreScript.SAVE_VERSION)))
 	summary["recorded_timestamp"] = _recorded_timestamp_from_payload(payload, int(summary.get("modified_timestamp", 0)))
 	summary["scenario_id"] = scenario_id
 	summary["scenario_name"] = String(scenario.get("name", scenario_id))
-	summary["scenario_summary"] = String(normalized.get("scenario_summary", ""))
+	summary["scenario_summary"] = String(payload.get("scenario_summary", ""))
 	summary["campaign_id"] = String(campaign_metadata.get("campaign_id", ""))
 	summary["campaign_name"] = String(campaign_metadata.get("campaign_name", ""))
 	summary["chapter_label"] = String(campaign_metadata.get("chapter_label", ""))
-	summary["day"] = max(0, int(normalized.get("day", 0)))
+	summary["day"] = max(0, int(payload.get("day", 0)))
 	summary["hero_id"] = hero_id
 	summary["hero_name"] = _hero_name(hero_state, hero_template, hero_id)
 	summary["hero_specialties_summary"] = HeroProgressionRulesScript.brief_summary(hero_state)
-	summary["difficulty"] = String(normalized.get("difficulty", ScenarioSelectRulesScript.default_difficulty_id()))
+	summary["difficulty"] = ScenarioSelectRulesScript.normalize_difficulty(payload.get("difficulty", ScenarioSelectRulesScript.default_difficulty_id()))
 	summary["launch_mode"] = launch_mode
-	summary["scenario_status"] = String(normalized.get("scenario_status", "in_progress"))
-	summary["game_state"] = String(normalized.get("game_state", "overworld"))
-	summary["battle_name"] = _battle_name_from_payload(normalized)
-	summary["resume_location"] = _resume_location_from_payload(normalized)
+	summary["scenario_status"] = SessionStateStoreScript._normalize_scenario_status(payload.get("scenario_status", "in_progress"))
+	summary["game_state"] = SessionStateStoreScript._normalize_game_state(payload.get("game_state", "overworld"))
+	summary["battle_name"] = _battle_name_from_payload(payload)
+	summary["resume_location"] = _resume_location_from_payload(payload)
 	summary["saved_from_game_state"] = String(payload.get(SAVE_METADATA_GAME_STATE_KEY, summary.get("game_state", "overworld")))
 	summary["saved_from_scenario_status"] = String(payload.get(SAVE_METADATA_SCENARIO_STATUS_KEY, summary.get("scenario_status", "in_progress")))
 	summary["saved_from_launch_mode"] = String(payload.get(SAVE_METADATA_LAUNCH_MODE_KEY, summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN)))
@@ -1100,6 +1108,8 @@ func _empty_summary(slot_type: String, slot_id: String, file_path: String) -> Di
 		"summary": "",
 		"detail": "",
 		"payload": {},
+		"payload_bytes": 0,
+		"payload_deferred": false,
 	}
 
 func _finalize_summary(summary: Dictionary) -> Dictionary:
@@ -1151,8 +1161,14 @@ func _store_runtime_summary_cache(
 		return
 	var summary := _empty_summary(slot_type, slot_id, file_path)
 	summary["modified_timestamp"] = FileAccess.get_modified_time(file_path) if FileAccess.file_exists(file_path) else 0
+	summary["payload_bytes"] = FileAccess.get_size(file_path) if FileAccess.file_exists(file_path) else 0
 	summary = _populate_summary_from_payload(summary, payload)
-	summary["payload"] = payload.duplicate(true)
+	if int(summary.get("payload_bytes", 0)) <= SUMMARY_INLINE_PAYLOAD_MAX_BYTES:
+		summary["payload"] = payload.duplicate(true)
+		summary["payload_deferred"] = false
+	else:
+		summary["payload"] = {}
+		summary["payload_deferred"] = true
 	summary["valid"] = true
 	summary["validity"] = "ok"
 	summary["warnings"] = []
@@ -1183,6 +1199,28 @@ func _slot_file_signature(file_path: String) -> Dictionary:
 func _summary_payload(summary: Dictionary) -> Dictionary:
 	var payload = summary.get("payload", {})
 	return payload.duplicate(true) if payload is Dictionary else {}
+
+func _load_summary_payload_for_restore(summary: Dictionary) -> Dictionary:
+	var payload := _summary_payload(summary)
+	if not payload.is_empty():
+		return payload
+	var path := String(summary.get("path", ""))
+	if path == "" or not FileAccess.file_exists(path):
+		return {}
+	return _load_raw_dictionary(path, false)
+
+func _resume_target_from_payload_summary(payload: Dictionary) -> String:
+	if String(payload.get("scenario_id", "")) == "":
+		return "blocked"
+	var scenario_status := SessionStateStoreScript._normalize_scenario_status(payload.get("scenario_status", "in_progress"))
+	if scenario_status != "in_progress":
+		return "outcome"
+	var battle = payload.get("battle", {})
+	if battle is Dictionary and not battle.is_empty() and String(payload.get("game_state", "overworld")) == "battle":
+		return "battle"
+	if String(payload.get("game_state", "overworld")) == "town":
+		return "town"
+	return "overworld"
 
 func _summary_sort_timestamp(summary: Dictionary) -> int:
 	return max(int(summary.get("modified_timestamp", 0)), int(summary.get("recorded_timestamp", 0)))
