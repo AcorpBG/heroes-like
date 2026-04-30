@@ -90,6 +90,7 @@ func _run() -> void:
 		return
 
 	var before_move: Dictionary = overworld.validation_snapshot()
+	var before_fog: Dictionary = _fog_counts()
 	var before_pos: Dictionary = before_move.get("hero_position", {}) if before_move.get("hero_position", {}) is Dictionary else {}
 	var primary_action := String(before_move.get("primary_action_id", ""))
 	if primary_action not in ["advance_route", "march_selected"]:
@@ -99,6 +100,7 @@ func _run() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var after_move: Dictionary = overworld.validation_snapshot()
+	var after_fog: Dictionary = _fog_counts()
 	var after_pos: Dictionary = after_move.get("hero_position", {}) if after_move.get("hero_position", {}) is Dictionary else {}
 	if not bool(move_result.get("ok", false)):
 		_fail("Primary route movement failed: %s" % JSON.stringify(move_result))
@@ -112,6 +114,8 @@ func _run() -> void:
 		return
 	if String(after_move.get("scenario_status", "")) != "in_progress" or String(after_move.get("game_state", "")) != "overworld":
 		_fail("Route movement changed scenario/game state unexpectedly: %s" % JSON.stringify(_compact_snapshot(after_move)))
+		return
+	if not _assert_homm_style_fog_delta(before_fog, after_fog):
 		return
 	var move_overlay: Dictionary = overworld.validation_debug_overlay_snapshot()
 	if not _assert_overlay_command(move_overlay, "move"):
@@ -132,6 +136,11 @@ func _run() -> void:
 		"selection_overlay": _compact_overlay_command(selection_command),
 		"move_overlay": _compact_overlay_command(move_command),
 		"latency_optimization": _latency_optimization_summary(move_command),
+		"fog_model": {
+			"model": "homm_permanent_explored_visibility",
+			"before": before_fog,
+			"after": after_fog,
+		},
 		"move_result": {
 			"ok": bool(move_result.get("ok", false)),
 			"action_id": String(move_result.get("action_id", "")),
@@ -300,6 +309,18 @@ func _assert_latency_hotspot_reduction(command: Dictionary) -> bool:
 		return false
 	return true
 
+func _assert_homm_style_fog_delta(before_fog: Dictionary, after_fog: Dictionary) -> bool:
+	if int(before_fog.get("visible_count", 0)) != int(before_fog.get("explored_count", 0)):
+		_fail("Before movement, visible tiles were not aliased to explored tiles: before=%s" % JSON.stringify(before_fog))
+		return false
+	if int(after_fog.get("visible_count", 0)) != int(after_fog.get("explored_count", 0)):
+		_fail("After movement, visible tiles were not aliased to explored tiles: after=%s" % JSON.stringify(after_fog))
+		return false
+	if int(after_fog.get("explored_count", 0)) < int(before_fog.get("explored_count", 0)):
+		_fail("Movement shrank permanent explored coverage: before=%s after=%s" % [JSON.stringify(before_fog), JSON.stringify(after_fog)])
+		return false
+	return true
+
 func _latency_optimization_summary(command: Dictionary) -> Dictionary:
 	var refresh_sections: Dictionary = command.get("refresh_sections_ms", {}) if command.get("refresh_sections_ms", {}) is Dictionary else {}
 	var phase_buckets: Dictionary = command.get("phase_buckets_ms", {}) if command.get("phase_buckets_ms", {}) is Dictionary else {}
@@ -319,10 +340,11 @@ func _latency_optimization_summary(command: Dictionary) -> Dictionary:
 			"refresh_actions_ms": float(refresh_sections.get("actions", 0.0)),
 		},
 		"root_causes": [
-			"routine generated movement re-entered full overworld normalization through movement rules and refresh read scopes",
+			"routine generated movement re-entered full overworld normalization and transient fog rebuilds through movement rules and refresh read scopes",
 			"post-move collection re-normalized the just-mutated generated session before finalization",
 			"route-decision refresh work performed broad route-interception fallback scans during ordinary selected-route action rebuilds",
 		],
+		"fog_model": "visible_tiles is a compatibility alias for permanent explored_tiles",
 	}
 
 func _assert_generated_snapshot(snapshot: Dictionary, label: String) -> bool:
@@ -385,6 +407,15 @@ func _compact_snapshot(snapshot: Dictionary) -> Dictionary:
 		"hero_position": snapshot.get("hero_position", {}),
 		"selected_tile": snapshot.get("selected_tile", {}),
 		"primary_action_id": String(snapshot.get("primary_action_id", "")),
+	}
+
+func _fog_counts() -> Dictionary:
+	var session = SessionState.ensure_active_session()
+	var fog: Dictionary = session.overworld.get("fog", {}) if session != null and session.overworld.get("fog", {}) is Dictionary else {}
+	return {
+		"visible_count": int(fog.get("visible_count", 0)),
+		"explored_count": int(fog.get("explored_count", 0)),
+		"total_tiles": int(fog.get("total_tiles", 0)),
 	}
 
 func _fail(message: String) -> void:

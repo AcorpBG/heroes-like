@@ -63,6 +63,7 @@ Native extensions, external asset pipelines, or new storage layers may be added 
 - Prefer deterministic rule helpers and fixtureable data for tests and reports.
 - Public UI must not leak internal/debug score fields.
 - Scenic/play surfaces are primary. Do not solve missing usability by covering screens with giant dashboards.
+- Fog of war follows the classic Heroes-style permanent exploration model: unexplored tiles stay hidden, and once terrain is explored it remains visible for gameplay and rendering. `visible_tiles` may remain as a compatibility/cache field, but it must not represent a separate transient grey/stale information layer.
 
 ## Core System Ownership
 

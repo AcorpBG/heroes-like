@@ -26,6 +26,8 @@ Current tactical objective: keep the Phase 2 RMG workstream honest after the str
 
 Recently completed RMG evidence includes the P2.10 random-map foundation queue, translated-template runtime sweep, final writeout/export/save-schema closure, player-facing setup/retry UX, playable materialization/runtime evidence, water/underground/transit gameplay evidence, object-pool/value weighting evidence, large-batch parity stress evidence, size-class correction, and Extra Large 144x144 runtime support. The re-gate audit `random-map-final-homm3-parity-regate-audit-10184` concluded that HoMM3-style RMG functional parity was met for generated skirmish/session use with explicit accepted original-game translations. This is not authored campaign adoption, playable alpha completion, release readiness, broad faction/content completion, asset parity, or byte-level HoMM3 map-format cloning.
 
+Fog-of-war decision: heroes-like uses HoMM-style permanent explored visibility. Unexplored tiles remain hidden; explored tiles remain visible forever for rules and rendering. Routine movement should add newly explored hero/site scout radius tiles instead of rebuilding a transient current-visibility mask.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:

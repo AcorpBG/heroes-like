@@ -145,18 +145,35 @@ func _run_overworld_memory_fog_regression() -> bool:
 		get_tree().quit(1)
 		return false
 
+	var initial_fog: Dictionary = session.overworld.get("fog", {})
+	var initial_explored_count := int(initial_fog.get("explored_count", 0))
+	var initial_visible_count := int(initial_fog.get("visible_count", 0))
+	if initial_visible_count != initial_explored_count:
+		push_error("Core systems smoke: HoMM-style fog should keep visible tiles aliased to explored tiles. fog=%s" % initial_fog)
+		get_tree().quit(1)
+		return false
+
 	_set_active_hero_position(session, Vector2i(8, 2))
 	OverworldRules.refresh_fog_of_war(session)
-	if OverworldRules.is_tile_visible(session, start.x, start.y):
-		push_error("Core systems smoke: old scout ring stayed currently visible after the hero moved away.")
+	var moved_fog: Dictionary = session.overworld.get("fog", {})
+	if int(moved_fog.get("explored_count", 0)) < initial_explored_count or int(moved_fog.get("visible_count", 0)) < initial_visible_count:
+		push_error("Core systems smoke: movement fog refresh shrank mapped visibility. before=%s after=%s" % [initial_fog, moved_fog])
 		get_tree().quit(1)
 		return false
 	if not OverworldRules.is_tile_explored(session, start.x, start.y):
 		push_error("Core systems smoke: explored start tile was not preserved as mapped memory after moving away.")
 		get_tree().quit(1)
 		return false
+	if not OverworldRules.is_tile_visible(session, start.x, start.y):
+		push_error("Core systems smoke: explored start tile did not remain visible under HoMM-style permanent fog.")
+		get_tree().quit(1)
+		return false
 	if OverworldRules.is_tile_explored(session, never_seen.x, never_seen.y) or OverworldRules.is_tile_visible(session, never_seen.x, never_seen.y):
 		push_error("Core systems smoke: unscouted tile became explored without entering a scout ring.")
+		get_tree().quit(1)
+		return false
+	if int(moved_fog.get("visible_count", 0)) != int(moved_fog.get("explored_count", 0)):
+		push_error("Core systems smoke: visible/explored counts diverged after movement fog refresh. fog=%s" % moved_fog)
 		get_tree().quit(1)
 		return false
 
@@ -169,6 +186,49 @@ func _run_overworld_memory_fog_regression() -> bool:
 	OverworldRules.normalize_overworld_state(missing_fog_session)
 	if OverworldRules.is_tile_explored(missing_fog_session, never_seen.x, never_seen.y):
 		push_error("Core systems smoke: missing fog state normalized to full-map exploration.")
+		get_tree().quit(1)
+		return false
+	if not _run_homm_style_fog_move_expansion_regression():
+		return false
+	return true
+
+func _run_homm_style_fog_move_expansion_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	var start := OverworldRules.hero_position(session)
+	var before_fog: Dictionary = session.overworld.get("fog", {})
+	var before_explored := int(before_fog.get("explored_count", 0))
+	var before_visible := int(before_fog.get("visible_count", 0))
+	var directions: Array[Vector2i] = [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1)]
+	var move_result := {}
+	for direction in directions:
+		var target := start + direction
+		if target.x < 0 or target.y < 0:
+			continue
+		if OverworldRules.tile_is_blocked(session, target.x, target.y):
+			continue
+		move_result = OverworldRules.try_move(session, direction.x, direction.y)
+		if bool(move_result.get("ok", false)):
+			break
+	if not bool(move_result.get("ok", false)):
+		push_error("Core systems smoke: could not execute a one-step movement for HoMM-style fog expansion. result=%s" % move_result)
+		get_tree().quit(1)
+		return false
+	var after_fog: Dictionary = session.overworld.get("fog", {})
+	if int(after_fog.get("explored_count", 0)) < before_explored or int(after_fog.get("visible_count", 0)) < before_visible:
+		push_error("Core systems smoke: try_move shrank permanent fog coverage. before=%s after=%s result=%s" % [before_fog, after_fog, move_result])
+		get_tree().quit(1)
+		return false
+	if int(after_fog.get("visible_count", 0)) != int(after_fog.get("explored_count", 0)):
+		push_error("Core systems smoke: try_move left visible tiles out of sync with permanent explored tiles. fog=%s" % after_fog)
+		get_tree().quit(1)
+		return false
+	if not OverworldRules.is_tile_visible(session, start.x, start.y):
+		push_error("Core systems smoke: try_move made the previous tile invisible despite permanent explored visibility.")
 		get_tree().quit(1)
 		return false
 	return true
