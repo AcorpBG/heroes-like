@@ -22,9 +22,9 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-Current tactical objective: keep the Phase 2 RMG workstream honest after the strict HoMM3-style random-map-generation parity re-gate, translated into original Aurelion Reach systems. The active correction is an RMG-only map-size parity repair: player-facing generated-map setup must expose HoMM3-style size classes separately from template/profile choices, and runtime materialization must clearly report the current original-game cap instead of silently downscaling oversized classes. Completed non-RMG future-phase evidence remains preserved in progress history, but it is not the active continuation path and must not drive follow-up work.
+Current tactical objective: keep the Phase 2 RMG workstream honest after the strict HoMM3-style random-map-generation parity re-gate, translated into original Aurelion Reach systems. The active follow-up is an RMG-only runtime-size support repair: player-facing generated-map setup must materialize Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144 at source dimensions, with no hidden downscale or clamp. Completed non-RMG future-phase evidence remains preserved in progress history, but it is not the active continuation path and must not drive follow-up work.
 
-Recently completed RMG evidence includes the P2.10 random-map foundation queue, translated-template runtime sweep, final writeout/export/save-schema closure, player-facing setup/retry UX, playable materialization/runtime evidence, water/underground/transit gameplay evidence, object-pool/value weighting evidence, and large-batch parity stress evidence. The re-gate audit `random-map-final-homm3-parity-regate-audit-10184` concluded that HoMM3-style RMG functional parity was met for generated skirmish/session use with explicit accepted original-game translations, but `random-map-size-class-parity-correction-10184` narrows and repairs that claim for the player-facing size model: Small 36x36 is currently materializable, while Medium 72x72, Large 108x108, and Extra Large 144x144 must be visible as source classes but blocked or unavailable until the runtime supports them honestly. This is not authored campaign adoption, playable alpha completion, release readiness, broad faction/content completion, asset parity, or byte-level HoMM3 map-format cloning.
+Recently completed RMG evidence includes the P2.10 random-map foundation queue, translated-template runtime sweep, final writeout/export/save-schema closure, player-facing setup/retry UX, playable materialization/runtime evidence, water/underground/transit gameplay evidence, object-pool/value weighting evidence, and large-batch parity stress evidence. The re-gate audit `random-map-final-homm3-parity-regate-audit-10184` concluded that HoMM3-style RMG functional parity was met for generated skirmish/session use with explicit accepted original-game translations, and `random-map-size-class-parity-correction-10184` repaired the player-facing size model. The active follow-up `random-map-extra-large-runtime-support-10184` lifts runtime materialization through Extra Large 144x144 honestly. This is not authored campaign adoption, playable alpha completion, release readiness, broad faction/content completion, asset parity, or byte-level HoMM3 map-format cloning.
 
 ## Slice Status Model
 
@@ -2479,8 +2479,8 @@ sliceEvidence:
 - Large-batch report separates true validation-pass materializations from intentionally non-parity families.
 
 completionResult:
-- Large-batch stress evidence reports 58 cases with 42 materialized validation-pass cases, 15 accepted non-parity decisions, 1 expected negative, 0 metadata-only cases, 0 unsupported warnings, and 0 hard blockers.
-- All 38 parity-intended translated-template sweep cases materialize and validation-pass; accepted non-parity cases remain limited to explicit source-template size/disconnected-graph constraints.
+- Large-batch stress evidence reports 58 cases with 55 materialized validation-pass cases, 2 accepted non-parity decisions, 1 expected negative, 0 metadata-only cases, 0 unsupported warnings, and 0 hard blockers.
+- All 51 parity-intended translated-template sweep cases materialize and validation-pass; accepted non-parity cases remain limited to explicit disconnected-graph constraints.
 
 nonGoals:
 - No campaign work, faction breadth work, broad content expansion, or parity claim.
@@ -2576,10 +2576,10 @@ nonGoals:
 
 completionResult:
 - `docs/random-map-final-homm3-parity-regate-audit.md` concludes that HoMM3-style RMG functional parity is met for generated skirmish/session use.
-- Fresh large-batch stress evidence reports 58 cases, 42 materialized validation-pass cases, 38 parity-intended translated-template materialized validation-pass cases, 15 accepted original-game non-parity decisions, 1 expected negative, 0 metadata-only cases, 0 unsupported warnings, and 0 hard blockers.
+- Fresh large-batch stress evidence reports 58 cases, 55 materialized validation-pass cases, 51 parity-intended translated-template materialized validation-pass cases, 2 accepted original-game non-parity decisions, 1 expected negative, 0 metadata-only cases, 0 unsupported warnings, and 0 hard blockers.
 - Final writeout/export/save-schema evidence proves standalone generated exports, 468 final tile records, 78 object writeout records, v2 generated-map provenance, export-stream replay contract, save/restore, and tampered export rejection without campaign or authored JSON writeback.
 - Player-facing setup/retry evidence proves live generated-map skirmish controls, visible bounded retry/failure UX, generated skirmish launch handoff, and no broad menu/debug-dashboard overload.
-- Accepted non-parity decisions are limited to original-game translations and runtime policy boundaries: current materialized map size cap, disconnected source graph repair policy, campaign/writeback exclusion, no global save-version bump for versioned generated-map provenance, and creative/original-content translation.
+- Accepted non-parity decisions are limited to original-game translations and runtime policy boundaries: over-cap custom requests, disconnected source graph repair policy, campaign/writeback exclusion, no global save-version bump for versioned generated-map provenance, and creative/original-content translation.
 - This result does not claim playable alpha, campaign readiness, release readiness, broad production completion, faction breadth completion, asset parity, or byte-level HoMM3 map-format cloning.
 
 ### P2 Child: Random Map Size Class Parity Correction
@@ -2611,24 +2611,69 @@ implementationTargets:
 sliceEvidence:
 - Player-facing generated-map setup exposes Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144 as map-size classes separate from template/profile controls.
 - Generated config, metadata, provenance, replay metadata, and validation carry selected size-class source dimensions and runtime materialization policy.
-- Runtime materialization remains honest under the current `64x48x2` cap: Small can materialize at its source dimensions, while larger classes are blocked or marked unavailable with a visible rationale instead of hidden downscaling.
-- Focused reports prove size options are visible, generated Small maps carry honest 36x36 provenance, and oversized class attempts fail before launch without session/save/campaign/authored writeback.
+- Runtime materialization exposed the then-current cap honestly: Small materialized at source dimensions, while larger classes were visible but blocked with a rationale instead of hidden downscaling.
+- Focused reports proved size options were visible, generated Small maps carried honest 36x36 provenance, and over-cap attempts failed before launch without session/save/campaign/authored writeback.
 
 completionCriteria:
 - RMG setup no longer hides map size solely inside template cards.
-- No validation, report, UI text, save/replay provenance, or audit note presents clamped 64x48 output as a full 72/108/144 HoMM3-style map.
+- No validation, report, UI text, save/replay provenance, or audit note presents clamped output as a full 72/108/144 HoMM3-style map.
 - Required RMG validation gates pass.
 
 nonGoals:
 - No campaign, faction, broad content, future-phase, or alpha/release readiness work.
-- No runtime clamp lift unless full validation can honestly pass.
+- Runtime clamp lift is handled by the explicit follow-up slice `random-map-extra-large-runtime-support-10184`.
 - No authored JSON writeback or generated campaign adoption.
 
 completionResult:
 - Player-facing RMG setup now exposes explicit HoMM3-style size classes separate from template/profile choices: Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144.
 - Generated config, generated identity, provenance, replay metadata, and validation retain source size class, materialized size, runtime cap, and hidden-downscale status.
-- Current original runtime policy is honest: Small 36x36 materializes at source size; Medium/Large/Extra Large are visible but unavailable/rejected under the `64x48x2` cap until that cap is lifted and validated.
+- Original runtime policy was honest at correction time: Small 36x36 materialized at source size and Medium/Large/Extra Large were visible but rejected until the runtime support follow-up.
 - Validation evidence passed for repo validation, player setup/retry UX, large-batch parity stress, final writeout/export/save schema, playable materialization runtime, progress JSON parsing, and diff whitespace checks.
+
+### P2 Child: Random Map Extra Large Runtime Support
+
+id: `random-map-extra-large-runtime-support-10184`
+parentSliceId: `random-map-generator-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Lift generated-map runtime materialization through Extra Large 144x144 without hidden downscale or clamp.
+
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-generator-foundation.md`
+- `docs/random-map-size-class-translation.md`
+- `docs/random-map-final-homm3-parity-regate-audit.md`
+
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `scenes/menus/MainMenu.gd` if UI state/copy requires change
+- focused RMG report tests proving Extra Large selection, generation, launch/materialization, save/provenance/replay dimensions, and over-cap rejection
+- `docs/random-map-size-class-translation.md`
+- `docs/random-map-final-homm3-parity-regate-audit.md`
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144 are selectable and launchable/materializable at source width and height.
+- Generated config, metadata, provenance, replay metadata, save data, and runtime materialization report actual materialized dimensions equal to the selected source class.
+- Focused reports prove Extra Large 144x144 selection, generation, launch/materialization, and honest provenance without hidden downscale/clamp.
+- Translated-template stress gates no longer classify 72/108/144 source templates as accepted non-parity solely because of the earlier runtime-size cap.
+
+completionCriteria:
+- No runtime cap, validator, UI availability flag, report expectation, save/provenance note, or current doc/test claims only the previous compact cap is materializable or that 72/108/144 are unavailable.
+- Underground remains controlled by selected template/support policy rather than size-class downscaling.
+- Required focused and baseline validation gates pass or any unavailable gate is explicitly recorded.
+
+nonGoals:
+- No campaign adoption, authored JSON writeback, broad faction/content work, asset parity, alpha/release claim, or byte-level HoMM3 map clone.
+- No hidden scaling, truncation, or coordinate clamp to make over-cap custom requests appear to pass.
+
+completionResult:
+- Runtime size policy now allows the exposed generated-map size classes through Extra Large 144x144 at source dimensions, with optional underground still controlled by template capability.
+- Extra Large setup, launch handoff, playable runtime materialization, save/restore, replay/export provenance, and terrain dimensions report `144x144` without hidden downscale or clamp.
+- Over-cap custom source requests fail validation against the explicit `144x144x2` cap before launch/writeback, while the translated-template stress gate no longer treats 72/108/144 source templates as runtime-cap accepted non-parity.
+- Validation passed for repo validation, Extra Large player setup/retry UX, Extra Large playable materialization/runtime, large-batch parity stress, final writeout/export/save schema, progress JSON parsing, and diff whitespace checks.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 

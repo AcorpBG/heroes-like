@@ -46,12 +46,15 @@ func _run() -> void:
 	var failure_setup: Dictionary = shell.call("validation_force_generated_random_map_config", _invalid_config())
 	if not _assert_failure_surface(shell, failure_setup):
 		return
-	var oversized_setup: Dictionary = shell.call("validation_force_generated_random_map_config", _oversized_config())
-	if not _assert_oversized_size_surface(shell, oversized_setup):
+	var extra_large_setup: Dictionary = shell.call("validation_force_generated_random_map_config", _extra_large_config())
+	if not _assert_extra_large_size_surface(shell, extra_large_setup):
+		return
+	var over_cap_setup: Dictionary = shell.call("validation_force_generated_random_map_config", _over_cap_config())
+	if not _assert_over_cap_size_surface(shell, over_cap_setup):
 		return
 
 	shell.call("validation_set_generated_seed", "player-facing-setup-retry-ux-10184")
-	shell.call("validation_select_generated_size_class", "homm3_small")
+	shell.call("validation_select_generated_size_class", "homm3_extra_large")
 	shell.call("validation_select_generated_template", "border_gate_compact_v1")
 	shell.call("validation_select_generated_profile", "border_gate_compact_profile_v1")
 	shell.call("validation_select_generated_player_count", 3)
@@ -181,30 +184,52 @@ func _assert_failure_surface(shell: Node, setup: Dictionary) -> bool:
 			return false
 	return true
 
-func _assert_oversized_size_surface(shell: Node, setup: Dictionary) -> bool:
+func _assert_extra_large_size_surface(shell: Node, setup: Dictionary) -> bool:
+	if not bool(setup.get("ok", false)):
+		_fail("Extra Large generated size class failed validation: %s" % JSON.stringify(setup))
+		return false
+	var provenance: Dictionary = setup.get("provenance", {}) if setup.get("provenance", {}) is Dictionary else {}
+	var size_class: Dictionary = provenance.get("size_class", {}) if provenance.get("size_class", {}) is Dictionary else {}
+	var source_size: Dictionary = size_class.get("source_size", {}) if size_class.get("source_size", {}) is Dictionary else {}
+	var materialized_size: Dictionary = size_class.get("materialized_size", {}) if size_class.get("materialized_size", {}) is Dictionary else {}
+	var runtime_policy: Dictionary = size_class.get("runtime_size_policy", {}) if size_class.get("runtime_size_policy", {}) is Dictionary else {}
+	if String(size_class.get("size_class_id", "")) != "homm3_extra_large" or int(source_size.get("width", 0)) != 144 or int(source_size.get("height", 0)) != 144:
+		_fail("Extra Large validation missed 144x144 source provenance: %s" % JSON.stringify(size_class))
+		return false
+	if int(materialized_size.get("width", 0)) != 144 or int(materialized_size.get("height", 0)) != 144 or not bool(runtime_policy.get("materialization_available", false)) or bool(runtime_policy.get("hidden_downscale", true)):
+		_fail("Extra Large did not honestly materialize at 144x144 without hidden downscale: %s" % JSON.stringify(size_class))
+		return false
+	var materialization: Dictionary = setup.get("generated_map", {}).get("runtime_materialization", {}) if setup.get("generated_map", {}).get("runtime_materialization", {}) is Dictionary else {}
+	var map_size: Dictionary = materialization.get("map_size", {}) if materialization.get("map_size", {}) is Dictionary else {}
+	if int(map_size.get("width", 0)) != 144 or int(map_size.get("height", 0)) != 144:
+		_fail("Extra Large runtime materialization missed 144x144 map size: %s" % JSON.stringify(map_size))
+		return false
+	return true
+
+func _assert_over_cap_size_surface(shell: Node, setup: Dictionary) -> bool:
 	if bool(setup.get("ok", false)):
-		_fail("Oversized generated size class unexpectedly passed validation.")
+		_fail("Over-cap generated size unexpectedly passed validation.")
 		return false
 	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
 	if String(validation.get("schema_id", "")) != RandomMapGeneratorRulesScript.RUNTIME_SIZE_POLICY_REJECTION_SCHEMA_ID:
-		_fail("Oversized size class did not fail through runtime size policy: %s" % JSON.stringify(validation))
+		_fail("Over-cap size did not fail through runtime size policy: %s" % JSON.stringify(validation))
 		return false
 	var size_policy: Dictionary = validation.get("size_policy", {}) if validation.get("size_policy", {}) is Dictionary else {}
 	var source_size: Dictionary = size_policy.get("source_size", {}) if size_policy.get("source_size", {}) is Dictionary else {}
 	var materialized_size: Dictionary = size_policy.get("materialized_size", {}) if size_policy.get("materialized_size", {}) is Dictionary else {}
 	var runtime_policy: Dictionary = size_policy.get("runtime_size_policy", {}) if size_policy.get("runtime_size_policy", {}) is Dictionary else {}
-	if String(size_policy.get("size_class_id", "")) != "homm3_medium" or int(source_size.get("width", 0)) != 72 or int(source_size.get("height", 0)) != 72:
-		_fail("Oversized validation missed Medium 72x72 source provenance: %s" % JSON.stringify(size_policy))
+	if int(source_size.get("width", 0)) != 180 or int(source_size.get("height", 0)) != 180:
+		_fail("Over-cap validation missed 180x180 source provenance: %s" % JSON.stringify(size_policy))
 		return false
 	if bool(runtime_policy.get("materialization_available", true)) or bool(runtime_policy.get("hidden_downscale", true)):
-		_fail("Oversized validation did not explicitly block hidden downscale: %s" % JSON.stringify(size_policy))
+		_fail("Over-cap validation did not explicitly block hidden downscale: %s" % JSON.stringify(size_policy))
 		return false
-	if int(materialized_size.get("width", 0)) != 64 or int(materialized_size.get("height", 0)) != 48:
-		_fail("Oversized validation did not report the current runtime cap materialized bound: %s" % JSON.stringify(size_policy))
+	if int(materialized_size.get("width", 0)) != 144 or int(materialized_size.get("height", 0)) != 144:
+		_fail("Over-cap validation did not report the current runtime cap materialized bound: %s" % JSON.stringify(size_policy))
 		return false
 	var snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
 	if bool(snapshot.get("start_enabled", true)):
-		_fail("Generated launch button stayed enabled after forced oversized size failure.")
+		_fail("Generated launch button stayed enabled after forced over-cap size failure.")
 		return false
 	return true
 
@@ -224,11 +249,11 @@ func _assert_session_boundary(launch_result: Dictionary) -> bool:
 	var source_size: Dictionary = size_class.get("source_size", {}) if size_class.get("source_size", {}) is Dictionary else {}
 	var materialized_size: Dictionary = size_class.get("materialized_size", {}) if size_class.get("materialized_size", {}) is Dictionary else {}
 	var runtime_policy: Dictionary = size_class.get("runtime_size_policy", {}) if size_class.get("runtime_size_policy", {}) is Dictionary else {}
-	if String(size_class.get("size_class_id", "")) != "homm3_small" or int(source_size.get("width", 0)) != 36 or int(source_size.get("height", 0)) != 36:
-		_fail("Generated UI launch provenance missed HoMM3 Small source size: %s" % JSON.stringify(size_class))
+	if String(size_class.get("size_class_id", "")) != "homm3_extra_large" or int(source_size.get("width", 0)) != 144 or int(source_size.get("height", 0)) != 144:
+		_fail("Generated UI launch provenance missed HoMM3 Extra Large source size: %s" % JSON.stringify(size_class))
 		return false
-	if int(materialized_size.get("width", 0)) != 36 or int(materialized_size.get("height", 0)) != 36 or not bool(runtime_policy.get("materialization_available", false)) or bool(runtime_policy.get("hidden_downscale", true)):
-		_fail("Generated UI launch provenance did not honestly materialize Small without hidden downscale: %s" % JSON.stringify(size_class))
+	if int(materialized_size.get("width", 0)) != 144 or int(materialized_size.get("height", 0)) != 144 or not bool(runtime_policy.get("materialization_available", false)) or bool(runtime_policy.get("hidden_downscale", true)):
+		_fail("Generated UI launch provenance did not honestly materialize Extra Large without hidden downscale: %s" % JSON.stringify(size_class))
 		return false
 	return true
 
@@ -241,16 +266,25 @@ func _invalid_config() -> Dictionary:
 		"profile": {"id": "border_gate_compact_profile_v1", "template_id": "border_gate_compact_v1"},
 	}
 
-func _oversized_config() -> Dictionary:
+func _extra_large_config() -> Dictionary:
 	return ScenarioSelectRulesScript.build_random_map_player_config(
-		"player-facing-setup-retry-ux-10184-medium",
+		"player-facing-setup-retry-ux-10184-extra-large",
 		"border_gate_compact_v1",
 		"border_gate_compact_profile_v1",
 		3,
 		"land",
 		false,
-		"homm3_medium"
+		"homm3_extra_large"
 	)
+
+func _over_cap_config() -> Dictionary:
+	return {
+		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
+		"seed": "player-facing-setup-retry-ux-10184-over-cap",
+		"size": {"preset": "over_cap_validation", "width": 180, "height": 180, "water_mode": "land", "level_count": 1},
+		"player_constraints": {"human_count": 1, "player_count": 3, "team_mode": "free_for_all"},
+		"profile": {"id": "border_gate_compact_profile_v1", "template_id": "border_gate_compact_v1"},
+	}
 
 func _assert_no_authored_writeback(scenario_id: String, phase: String) -> bool:
 	if scenario_id == "":

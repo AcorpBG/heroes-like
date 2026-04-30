@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-size-class-parity-correction-10184",
-  "currentSliceTitle": "Random Map Size Class Parity Correction",
+  "currentSliceId": "random-map-extra-large-runtime-support-10184",
+  "currentSliceTitle": "Random Map Extra Large Runtime Support",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed RMG-only player-facing size-class correction. HoMM3-style source classes are explicit, Small 36x36 materializes honestly, and Medium/Large/Extra Large are visible but unavailable/rejected under the current 64x48x2 runtime cap without hidden downscale. No campaign, faction, broad production, alpha, or release claim.",
-  "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. The Phase 2 RMG size-class correction is complete for generated skirmish/session use. Preserve completed non-RMG/future-phase evidence, but do not continue campaign/faction/broad production work from it, and do not treat RMG parity as alpha, campaign, release, asset-parity, or byte-clone completion.",
-  "updatedAt": "2026-04-29T20:17:56Z",
+  "currentSliceNotes": "Completed runtime-size support through Extra Large 144x144 without hidden downscale/clamp; over-cap custom requests reject against 144x144x2, and underground remains template-capability controlled.",
+  "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. This is an RMG runtime-size support follow-up only: expose and materialize Small/Medium/Large/Extra Large at source dimensions, preserve generated skirmish/session boundaries, and do not claim campaign, alpha, release, asset-parity, or byte-clone completion.",
+  "updatedAt": "2026-04-30T00:00:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -3374,7 +3374,7 @@
       ],
       "createdAt": "2026-04-29T16:40:30Z",
       "updatedAt": "2026-04-29T18:33:44Z",
-      "notes": "Completed translated-template runtime sweep remediation. Large-batch stress evidence now reports 58 cases: 42 materialized validation-pass cases, 15 accepted non-parity decisions with source-template size/disconnected-graph rationale, 1 expected negative, 0 metadata-only cases, 0 unsupported warnings, and 0 hard blockers. This does not claim overall RMG parity.",
+      "notes": "Completed translated-template runtime sweep remediation. Later 144x144 runtime support refreshed large-batch stress evidence to 58 cases: 55 materialized validation-pass cases, 2 accepted non-parity decisions with disconnected-graph rationale, 1 expected negative, 0 metadata-only cases, 0 unsupported warnings, and 0 hard blockers. This does not claim overall RMG parity.",
       "validation": [
         "python3 tests/validate_repo.py",
         "/root/.local/bin/godot --headless --path . tests/random_map_large_batch_parity_stress_report.tscn",
@@ -3538,7 +3538,7 @@
       ],
       "validationEvidence": [
         "python3 tests/validate_repo.py passed.",
-        "/root/.local/bin/godot --headless --path . tests/random_map_large_batch_parity_stress_report.tscn passed with case_count=58, validation_pass_case_count=42, materialized_validation_pass_count=42, translated_template_count=53, covered_translated_template_count=53, translated_parity_materialized_validation_pass_count=38, accepted_non_parity_count=15, expected_negative_count=1, metadata_only_count=0, unsupported_warning_count=0, and hard_blocker_count=0.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_large_batch_parity_stress_report.tscn passed with case_count=58, validation_pass_case_count=55, materialized_validation_pass_count=55, translated_template_count=53, covered_translated_template_count=53, translated_parity_materialized_validation_pass_count=51, accepted_non_parity_count=2, expected_negative_count=1, metadata_only_count=0, unsupported_warning_count=0, and hard_blocker_count=0.",
         "/root/.local/bin/godot --headless --path . tests/random_map_final_writeout_export_save_schema_report.tscn passed with final_tile_stream_count=468, object_writeout_count=78, v2 generated-map provenance, export-stream replay contract, save/restore, and tampered export rejection.",
         "/root/.local/bin/godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn passed with live generated-map setup controls, bounded visible retry failure, valid launch handoff, and no campaign/authored writeback.",
         "/root/.local/bin/godot --headless --path . tests/random_map_skirmish_ui_save_replay_report.tscn passed with generated skirmish launch/save/replay provenance and no campaign/adopted authored writeback.",
@@ -3552,13 +3552,13 @@
       ],
       "completionResult": [
         "docs/random-map-final-homm3-parity-regate-audit.md concludes HoMM3-style RMG functional parity is met for generated skirmish/session use.",
-        "Accepted non-parity decisions are limited to original-game translations and runtime policy boundaries: current materialized map size cap, disconnected source graph repair policy, campaign/writeback exclusion, no global save-version bump for versioned generated-map provenance, and creative/original-content translation.",
+        "Accepted non-parity decisions are limited to original-game translations and runtime policy boundaries: over-cap custom requests, disconnected source graph repair policy, campaign/writeback exclusion, no global save-version bump for versioned generated-map provenance, and creative/original-content translation.",
         "No new RMG blocker slice is required by this re-gate.",
         "No alpha, campaign readiness, release readiness, broad production, faction breadth, asset parity, or byte-level HoMM3 map-format claim is made."
       ],
       "createdAt": "2026-04-29T19:03:41Z",
       "updatedAt": "2026-04-29T19:16:54Z",
-      "notes": "Completed strict final RMG parity re-gate. Result: HoMM3-style RMG functional parity is met for generated skirmish/session use, with accepted original-game non-parity boundaries for oversized templates, disconnected source graphs, campaign/writeback exclusion, save-version policy, and creative translation. No alpha, campaign, release, broad production, or byte-clone claim.",
+      "notes": "Completed strict final RMG parity re-gate. Result: HoMM3-style RMG functional parity is met for generated skirmish/session use, with accepted original-game non-parity boundaries for over-cap custom requests, disconnected source graphs, campaign/writeback exclusion, save-version policy, and creative translation. No alpha, campaign, release, broad production, or byte-clone claim.",
       "startedAt": "2026-04-29T19:07:15Z",
       "completedAt": "2026-04-29T19:16:54Z"
     },
@@ -3602,23 +3602,23 @@
       "sliceEvidence": [
         "Player-facing generated-map setup exposes Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144 as map-size classes separate from template/profile controls.",
         "Generated config, metadata, provenance, replay metadata, and validation carry selected size-class source dimensions and runtime materialization policy.",
-        "Runtime materialization remains honest under the current 64x48x2 cap: Small can materialize at its source dimensions, while larger classes are blocked or marked unavailable with a visible rationale instead of hidden downscaling.",
-        "Focused reports prove size options are visible, generated Small maps carry honest 36x36 provenance, and oversized class attempts fail before launch without session/save/campaign/authored writeback."
+        "Runtime materialization exposed the then-current compact cap honestly: Small could materialize at source dimensions, while larger classes were blocked with a visible rationale instead of hidden downscaling.",
+        "Focused reports proved size options were visible, generated Small maps carried honest 36x36 provenance, and over-cap class attempts failed before launch without session/save/campaign/authored writeback."
       ],
       "completionCriteria": [
         "RMG setup no longer hides map size solely inside template cards.",
-        "No validation, report, UI text, save/replay provenance, or audit note presents clamped 64x48 output as a full 72/108/144 HoMM3-style map.",
+        "No validation, report, UI text, save/replay provenance, or audit note presents clamped output as a full 72/108/144 HoMM3-style map.",
         "Required RMG validation gates pass."
       ],
       "nonGoals": [
         "No campaign, faction, broad content, future-phase, or alpha/release readiness work.",
-        "No runtime clamp lift unless full validation can honestly pass.",
+        "Runtime clamp lift is handled by the explicit follow-up slice random-map-extra-large-runtime-support-10184.",
         "No authored JSON writeback or generated campaign adoption."
       ],
       "validationEvidence": [
         "python3 tests/validate_repo.py passed.",
-        "/root/.local/bin/godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn passed; report exposed size_class_id=homm3_small, label Small 36x36, all four HoMM3-style size options, honest Small provenance, and oversized Medium 72x72 rejection under the 64x48 cap.",
-        "/root/.local/bin/godot --headless --path . tests/random_map_large_batch_parity_stress_report.tscn passed; case_count=58, validation_pass_case_count=42, materialized_validation_pass_count=42, hard_blocker_count=0.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn passed; report exposed size_class_id=homm3_small, label Small 36x36, all four HoMM3-style size options, honest Small provenance, and then-over-cap Medium 72x72 rejection.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_large_batch_parity_stress_report.tscn passed for the original correction slice; later runtime-size support refreshed the batch to case_count=58, validation_pass_case_count=55, materialized_validation_pass_count=55, hard_blocker_count=0.",
         "/root/.local/bin/godot --headless --path . tests/random_map_final_writeout_export_save_schema_report.tscn passed; final tile stream/export/save provenance remained valid.",
         "/root/.local/bin/godot --headless --path . tests/random_map_playable_materialization_runtime_report.tscn passed using explicit homm3_small player-facing config; materialized terrain rows=36 with stable save/replay boundary.",
         "python3 -m json.tool ops/progress.json passed.",
@@ -3627,7 +3627,7 @@
       "completionResult": [
         "Player-facing generated-map setup no longer hides map size solely inside template cards.",
         "Generated config, metadata, identity, provenance, replay metadata, and validation carry source size class and materialized runtime size separately.",
-        "No UI/report/provenance path presents capped 64x48 output as full Medium/Large/Extra Large source size; oversized classes are visible but blocked until runtime support is lifted and validated."
+        "No UI/report/provenance path presented capped output as full Medium/Large/Extra Large source size; larger classes were visible but blocked until runtime support was lifted and validated."
       ],
       "createdAt": "2026-04-29T20:00:00Z",
       "updatedAt": "2026-04-29T20:17:56Z",
@@ -4058,6 +4058,77 @@
       "notes": "Completed Batch 007 landmark/objective/state-variant metadata; validation passed.",
       "updatedAt": "2026-04-27T20:10:59Z",
       "completedAt": "2026-04-27T20:10:05Z"
+    },
+    {
+      "id": "random-map-extra-large-runtime-support-10184",
+      "title": "Random Map Extra Large Runtime Support",
+      "phase": "phase-2-deep-production-foundation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "status": "completed",
+      "purpose": "Lift the generated-map runtime materialization cap honestly through the player-facing Extra Large 144x144 size class without hidden downscale or clamp.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-size-class-translation.md",
+        "docs/random-map-final-homm3-parity-regate-audit.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "scenes/menus/MainMenu.gd if UI state/copy requires change",
+        "tests/random_map_player_setup_retry_ux_report.gd",
+        "tests/random_map_playable_materialization_runtime_report.gd",
+        "tests/random_map_large_batch_parity_stress_report.gd",
+        "docs/random-map-size-class-translation.md",
+        "docs/random-map-final-homm3-parity-regate-audit.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "/root/.local/bin/godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_playable_materialization_runtime_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_large_batch_parity_stress_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144 are selectable and launchable/materializable at source width and height.",
+        "Generated config, metadata, provenance, replay metadata, save data, and runtime materialization report actual materialized dimensions equal to the selected source class.",
+        "Focused reports prove Extra Large 144x144 selection, generation, launch/materialization, and honest provenance without hidden downscale/clamp.",
+        "Translated-template stress gates no longer classify source templates as accepted non-parity solely because of the earlier compact runtime cap."
+      ],
+      "completionCriteria": [
+        "No runtime cap, validator, UI availability flag, report expectation, save/provenance note, or doc/test still claims only the earlier compact cap is materializable or that 72/108/144 are unavailable.",
+        "Underground remains controlled by selected template/support policy rather than size-class downscaling.",
+        "Required focused and baseline validation gates pass or any unavailable gate is explicitly recorded."
+      ],
+      "nonGoals": [
+        "No campaign adoption, authored JSON writeback, broad faction/content work, asset parity, alpha/release claim, or byte-level HoMM3 map clone.",
+        "No hidden scaling, truncation, or coordinate clamp to make over-cap custom requests appear to pass."
+      ],
+      "validationEvidence": [
+        "/root/.local/bin/godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn passed with generated setup selecting homm3_extra_large, Extra Large 144x144 launch provenance, and over-cap custom rejection beyond 144x144x2 without hidden downscale.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_playable_materialization_runtime_report.tscn passed with materialized_size width=144, height=144, level_count=1, terrain_row_count=144, object_instance_count=1263, save/restore, and replay/export boundary.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_large_batch_parity_stress_report.tscn passed with case_count=58, validation_pass_case_count=55, materialized_validation_pass_count=55, translated_template_count=53, covered_translated_template_count=53, translated_parity_materialized_validation_pass_count=51, accepted_non_parity_count=2, expected_negative_count=1, metadata_only_count=0, unsupported_warning_count=0, and hard_blocker_count=0.",
+        "/root/.local/bin/godot --headless --path . tests/random_map_final_writeout_export_save_schema_report.tscn passed with final_tile_stream_count=468, object_writeout_count=78, generated_export_signature=c4f0270e, tile_stream_signature=5d212f8f, object_writeout_signature=8c37e543, and replay boundary versioned_seed_config_identity_export_stream_and_materialized_map_signature_contract.",
+        "python3 tests/validate_repo.py passed.",
+        "python3 -m json.tool ops/progress.json and git diff --check passed."
+      ],
+      "completionResult": [
+        "Runtime size policy now supports Small 36x36, Medium 72x72, Large 108x108, and Extra Large 144x144 as selectable and launchable/materializable source-size classes.",
+        "Generated config, metadata, provenance, replay metadata, save data, terrain dimensions, and runtime materialization report actual selected source dimensions for Extra Large 144x144 without hidden downscale or clamp.",
+        "Requests beyond 144x144x2 fail validation before launch/writeback, and translated-template stress no longer classifies 72/108/144 source sizes as accepted non-parity solely because of the previous compact runtime cap.",
+        "Campaign adoption, authored JSON writeback, alpha/release readiness, broad faction/content work, and byte-level HoMM3 map cloning remain out of scope."
+      ],
+      "createdAt": "2026-04-30T00:00:00Z",
+      "updatedAt": "2026-04-30T00:00:00Z",
+      "startedAt": "2026-04-30T00:00:00Z",
+      "completedAt": "2026-04-30T00:00:00Z",
+      "notes": "Completed AcOrP request to support 144x144 honestly."
     }
   ],
   "completedImplementationEvidence": [

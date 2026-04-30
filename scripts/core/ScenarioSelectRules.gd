@@ -78,7 +78,7 @@ const RANDOM_MAP_PLAYER_PROFILE_OPTIONS := [
 	},
 ]
 const RANDOM_MAP_PLAYER_COUNT_OPTIONS := [2, 3, 4]
-const RANDOM_MAP_RUNTIME_SIZE_CAP := {"width": 64, "height": 48, "level_count": 2}
+const RANDOM_MAP_RUNTIME_SIZE_CAP := {"width": 144, "height": 144, "level_count": 2}
 const RANDOM_MAP_SIZE_OPTIONS := [
 	{
 		"id": "homm3_small",
@@ -87,8 +87,8 @@ const RANDOM_MAP_SIZE_OPTIONS := [
 		"source_width": 36,
 		"source_height": 36,
 		"materialization_available": true,
-		"runtime_policy": "materialize_at_source_size_within_current_64x48x2_cap",
-		"rationale": "Small fits the current original runtime cap.",
+		"runtime_policy": "materialize_at_source_size_within_current_144x144x2_cap",
+		"rationale": "Small materializes at its source dimensions.",
 	},
 	{
 		"id": "homm3_medium",
@@ -96,9 +96,9 @@ const RANDOM_MAP_SIZE_OPTIONS := [
 		"source_model": "homm3_classic_size_class",
 		"source_width": 72,
 		"source_height": 72,
-		"materialization_available": false,
-		"runtime_policy": "blocked_source_size_exceeds_current_64x48x2_cap",
-		"rationale": "Medium exceeds the current 64x48 materialized runtime cap, so it is visible but unavailable until the cap is lifted and validated.",
+		"materialization_available": true,
+		"runtime_policy": "materialize_at_source_size_within_current_144x144x2_cap",
+		"rationale": "Medium materializes at its source dimensions.",
 	},
 	{
 		"id": "homm3_large",
@@ -106,9 +106,9 @@ const RANDOM_MAP_SIZE_OPTIONS := [
 		"source_model": "homm3_classic_size_class",
 		"source_width": 108,
 		"source_height": 108,
-		"materialization_available": false,
-		"runtime_policy": "blocked_source_size_exceeds_current_64x48x2_cap",
-		"rationale": "Large exceeds the current 64x48 materialized runtime cap, so it is visible but unavailable until the cap is lifted and validated.",
+		"materialization_available": true,
+		"runtime_policy": "materialize_at_source_size_within_current_144x144x2_cap",
+		"rationale": "Large materializes at its source dimensions.",
 	},
 	{
 		"id": "homm3_extra_large",
@@ -116,9 +116,9 @@ const RANDOM_MAP_SIZE_OPTIONS := [
 		"source_model": "homm3_classic_size_class",
 		"source_width": 144,
 		"source_height": 144,
-		"materialization_available": false,
-		"runtime_policy": "blocked_source_size_exceeds_current_64x48x2_cap",
-		"rationale": "Extra Large exceeds the current 64x48 materialized runtime cap, so it is visible but unavailable until the cap is lifted and validated.",
+		"materialization_available": true,
+		"runtime_policy": "materialize_at_source_size_within_current_144x144x2_cap",
+		"rationale": "Extra Large materializes at its source dimensions.",
 	},
 ]
 const RANDOM_MAP_WATER_OPTIONS := [
@@ -374,9 +374,9 @@ static func build_random_map_player_config(
 	var normalized_water_mode := "islands" if water_mode == "islands" else "land"
 	var level_count := 2 if underground_enabled else 1
 	var materialization_available := bool(size_option.get("materialization_available", false))
-	var runtime_policy_status := String(size_option.get("runtime_policy", "blocked_source_size_exceeds_current_64x48x2_cap"))
+	var runtime_policy_status := String(size_option.get("runtime_policy", "blocked_source_size_exceeds_current_144x144x2_cap"))
 	if materialization_available and level_count <= int(RANDOM_MAP_RUNTIME_SIZE_CAP.get("level_count", 2)):
-		runtime_policy_status = "materialize_at_source_size_within_current_64x48x2_cap"
+		runtime_policy_status = "materialize_at_source_size_within_current_144x144x2_cap"
 	return {
 		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
 		"seed": seed,
