@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-generated-object-footprint-interaction-corrective-10184",
-  "currentSliceTitle": "Generated Object Footprint Interaction Corrective",
+  "currentSliceId": "random-map-small-object-density-corrective-10184",
+  "currentSliceTitle": "Generated Small Object Density Corrective",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed urgent corrective: generated resource, mine, and dwelling runtime body/visit/render contracts now preserve generated metadata and expose one reachable interaction tile.",
+  "currentSliceNotes": "Completed urgent corrective: generated Small maps now materialize existing route reward bands plus bounded compact density support so reachable early/mid/frontier play space has meaningful live POIs without true-size/template/player-count/object-semantic changes.",
   "nextActionGuardrailNote": "Remaining generated save work should split generated map payload persistence from lightweight state/delta autosave without visual/map semantic changes.",
-  "updatedAt": "2026-04-30T17:23:20Z",
+  "updatedAt": "2026-04-30T18:40:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,52 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "random-map-small-object-density-corrective-10184",
+      "title": "Generated Small Object Density Corrective",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-generator-foundation.md",
+        "docs/random-map-final-homm3-parity-regate-audit.md",
+        "docs/random-map-xl-template-alignment-audit.md",
+        "docs/overworld-content-bible.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_generated_small_distribution_report.gd",
+        "tests/random_map_generated_small_distribution_report.tscn",
+        "ops/progress.json"
+      ],
+      "startedAt": "2026-04-30T18:05:00Z",
+      "completedAt": "2026-04-30T18:40:00Z",
+      "completionEvidence": [
+        "Focused Small distribution report profiles live interactables by kind/source, start-distance rings, nearest POIs, visible/explored density, road proximity, reachable counts, runtime reward-reference materialization, and largest empty reachable 8x8 windows.",
+        "Baseline diagnosis showed 34 live reachable interactables, only 3 mid-ring interactables, a 64-cell empty reachable 8x8 window, 8 staged reward references without live resource nodes, and no unreachable live interactables; the issue was under-materialized route/frontier rewards plus clustering, not true map size, template, player count, fog, or blocked tiles.",
+        "Generator now materializes supported existing route reward-band resource sites into normal live resource nodes and adds bounded Small compact density support only for large reachable empty windows using existing low-tier reward cache content.",
+        "Final focused metrics: 49 live reachable interactables, 7 early-ring, 10 mid-ring, 14 frontier-ring, 38 near-road interactables, 0 unreachable interactables, 15 live materialized reward resource nodes, and largest empty reachable 8x8 window reduced to 43 cells while preserving 36x36 Small size, compact template/profile, three players, objectives, footprint interactions, and normal art path."
+      ],
+      "validationEvidence": [
+        "godot4 --headless --path . tests/random_map_generated_small_distribution_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_generated_object_footprint_interaction_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_generated_visual_path_regression_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_generated_overworld_profile_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_live_overworld_render_move_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_default_seed_objective_regression_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_post_open_tail_timing_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_async_generation_ux_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_runtime_render_perf_smoke.tscn passed.",
+        "godot4 --headless --path . tests/random_map_player_count_range_report.tscn passed.",
+        "python3 tests/validate_repo.py passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ],
+      "notes": "Completed after AcOrP Small-map playtest found sparse meaningful points of interest in revealed/nearby playable space. Scope stayed limited to distribution and materialized reachable POIs; no true-size/template/player-count/object-semantic changes or global count inflation."
+    },
     {
       "id": "random-map-generated-object-footprint-interaction-corrective-10184",
       "title": "Generated Object Footprint Interaction Corrective",

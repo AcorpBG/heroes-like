@@ -483,7 +483,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 	var placements := _place_generated_objects(zones, template.get("links", []), seeds, zone_grid, terrain_rows, normalized, rng)
 	phases.append(_phase_record("object_placement_staging", _placement_counts(placements.get("object_placements", []))))
 
-	var constraints := _build_constraint_payload(normalized, zones, template.get("links", []), seeds, zone_grid, terrain_rows, placements, zone_layout, terrain_transit)
+	var constraints := _build_constraint_payload(normalized, zones, template.get("links", []), seeds, zone_grid, terrain_rows, placements, zone_layout, terrain_transit, rng)
 	phases.append(_phase_record("connection_guard_materialization", _connection_guard_materialization_phase_summary(constraints.get("connection_guard_materialization", {}))))
 	phases.append(_phase_record("monster_reward_bands", _monster_reward_bands_phase_summary(constraints.get("monster_reward_bands", {}))))
 	phases.append(_phase_record("object_pool_value_weighting", _object_pool_value_weighting_phase_summary(constraints.get("object_pool_value_weighting", {}))))
@@ -2512,6 +2512,364 @@ static func _resource_node_from_placement(placement_id: String, payload: Diction
 		"guard_pressure": payload.get("guard_pressure", {}),
 	}
 
+static func _materialize_route_reward_resources(placements: Dictionary, monster_reward_bands: Dictionary, route_graph: Dictionary, road_network: Dictionary, zone_grid: Array, terrain_rows: Array, rng: DeterministicRng) -> Array:
+	var resource_nodes: Array = placements.get("resource_nodes", [])
+	var object_placements: Array = placements.get("object_placements", [])
+	var occupied := _occupied_body_lookup(object_placements)
+	var reserved := _road_reserved_lookup(road_network)
+	var edges_by_id := _route_edges_by_id(route_graph.get("edges", []))
+	var reward_records := []
+	for reward in monster_reward_bands.get("reward_band_records", []):
+		if reward is Dictionary:
+			reward_records.append(reward)
+	var materialized := []
+	for index in range(reward_records.size()):
+		var reward: Dictionary = reward_records[index]
+		var site_id := String(reward.get("site_id", ""))
+		var object_id := String(reward.get("selected_reward_object_id", ""))
+		var family_id := String(reward.get("selected_reward_family_id", ""))
+		if site_id == "" or ContentService.get_resource_site(site_id).is_empty():
+			continue
+		var edge: Dictionary = edges_by_id.get(String(reward.get("route_edge_id", "")), {})
+		if edge.is_empty() or not bool(edge.get("path_found", false)):
+			continue
+		var anchor: Dictionary = edge.get("route_cell_anchor_candidate", {}) if edge.get("route_cell_anchor_candidate", {}) is Dictionary else {}
+		if anchor.is_empty():
+			anchor = edge.get("to_anchor", {}) if edge.get("to_anchor", {}) is Dictionary else {}
+		if anchor.is_empty():
+			continue
+		var offset := _route_reward_anchor_offset(index)
+		var point := _nearest_free_cell_for_catalog(
+			"reward_reference",
+			family_id,
+			object_id,
+			int(anchor.get("x", 0)) + offset.x,
+			int(anchor.get("y", 0)) + offset.y,
+			null,
+			zone_grid,
+			terrain_rows,
+			occupied,
+			rng,
+			reserved
+		)
+		if point.is_empty():
+			continue
+		var zone_id := String(_zone_at_point(zone_grid, point))
+		if zone_id == "":
+			zone_id = String(edge.get("to", edge.get("from", "")))
+		var placement_id := "rmg_reward_%s" % String(reward.get("id", "reward_%02d" % (index + 1)))
+		var payload := {
+			"site_id": site_id,
+			"object_id": object_id,
+			"family_id": family_id,
+			"purpose": "route_reward_cache",
+			"owner": "neutral",
+			"player_slot": 0,
+			"player_type": "neutral",
+			"team_id": "",
+			"zone_role": "route_reward",
+			"route_edge_id": String(reward.get("route_edge_id", "")),
+			"source_reward_band_id": String(reward.get("id", "")),
+			"selected_reward_category_id": String(reward.get("selected_reward_category_id", "")),
+			"selected_resource_category_id": String(reward.get("selected_resource_category_id", "")),
+			"candidate_value": int(reward.get("candidate_value", 0)),
+			"guarded_policy": String(reward.get("guarded_policy", "")),
+			"writeout_state": "materialized_route_reward_resource_node_from_existing_reward_band",
+		}
+		var placement := _object_placement(placement_id, "reward_reference", "", zone_id, point, payload)
+		_apply_pathing_metadata(placement, zone_grid, terrain_rows, occupied)
+		object_placements.append(placement)
+		var node := _route_reward_resource_node_from_placement(placement_id, payload, point, zone_id)
+		_copy_shared_placement_metadata(node, placement)
+		resource_nodes.append(node)
+		materialized.append({
+			"placement_id": placement_id,
+			"site_id": site_id,
+			"object_id": object_id,
+			"route_edge_id": String(reward.get("route_edge_id", "")),
+			"x": int(point.get("x", 0)),
+			"y": int(point.get("y", 0)),
+			"zone_id": zone_id,
+		})
+		_mark_occupied(occupied, point)
+	placements["resource_nodes"] = resource_nodes
+	placements["object_placements"] = object_placements
+	return materialized
+
+static func _materialize_compact_density_support(normalized: Dictionary, placements: Dictionary, road_network: Dictionary, zone_grid: Array, terrain_rows: Array, rng: DeterministicRng) -> Array:
+	if not _should_apply_compact_density_support(normalized, terrain_rows):
+		return []
+	var start := _density_start_point(placements)
+	if start.is_empty():
+		return []
+	var materialized := []
+	var reserved := _road_reserved_lookup(road_network)
+	for index in range(12):
+		var object_placements: Array = placements.get("object_placements", [])
+		var occupied := _occupied_body_lookup(object_placements)
+		var distances := _density_passable_distances(terrain_rows, occupied, start)
+		var existing_points := _density_existing_interactable_lookup(placements, distances)
+		var window := _largest_density_empty_window(terrain_rows, distances, existing_points)
+		if int(window.get("reachable_cells", 0)) <= 42:
+			break
+		var candidate := _compact_density_reward_candidate(index)
+		var point := _density_window_free_cell_for_catalog(
+			window,
+			distances,
+			"reward_reference",
+			String(candidate.get("object_family_id", "")),
+			String(candidate.get("object_id", "")),
+			zone_grid,
+			terrain_rows,
+			occupied,
+			reserved
+		)
+		if point.is_empty():
+			point = _nearest_free_cell_for_catalog(
+				"reward_reference",
+				String(candidate.get("object_family_id", "")),
+				String(candidate.get("object_id", "")),
+				int(window.get("center_x", 0)),
+				int(window.get("center_y", 0)),
+				null,
+				zone_grid,
+				terrain_rows,
+				occupied,
+				rng,
+				reserved
+			)
+		if point.is_empty():
+			break
+		var distance := int(distances.get(_point_key(int(point.get("x", 0)), int(point.get("y", 0))), -1))
+		if distance < 7 or distance > 24:
+			break
+		var zone_id := String(_zone_at_point(zone_grid, point))
+		var placement_id := "rmg_compact_density_cache_%02d" % (materialized.size() + 1)
+		var payload := {
+			"site_id": String(candidate.get("site_id", "")),
+			"object_id": String(candidate.get("object_id", "")),
+			"family_id": String(candidate.get("object_family_id", "")),
+			"purpose": "compact_route_density_support",
+			"owner": "neutral",
+			"player_slot": 0,
+			"player_type": "neutral",
+			"team_id": "",
+			"zone_role": "compact_density_support",
+			"selected_reward_category_id": String(candidate.get("reward_category", "")),
+			"selected_resource_category_id": String(candidate.get("categories", [])[0]) if candidate.get("categories", []) is Array and not candidate.get("categories", []).is_empty() else "",
+			"candidate_value": int(candidate.get("value", 0)),
+			"guarded_policy": String(candidate.get("guarded_policy", "")),
+			"density_window": window,
+			"writeout_state": "materialized_compact_density_support_from_reachable_empty_window",
+		}
+		var placement := _object_placement(placement_id, "reward_reference", "", zone_id, point, payload)
+		_apply_pathing_metadata(placement, zone_grid, terrain_rows, occupied)
+		object_placements.append(placement)
+		var resource_nodes: Array = placements.get("resource_nodes", [])
+		var node := _density_support_resource_node_from_placement(placement_id, payload, point, zone_id)
+		_copy_shared_placement_metadata(node, placement)
+		resource_nodes.append(node)
+		placements["object_placements"] = object_placements
+		placements["resource_nodes"] = resource_nodes
+		materialized.append({
+			"placement_id": placement_id,
+			"site_id": String(candidate.get("site_id", "")),
+			"object_id": String(candidate.get("object_id", "")),
+			"x": int(point.get("x", 0)),
+			"y": int(point.get("y", 0)),
+			"zone_id": zone_id,
+			"distance_from_start": distance,
+			"density_window": window,
+		})
+	return materialized
+
+static func _should_apply_compact_density_support(normalized: Dictionary, terrain_rows: Array) -> bool:
+	var size: Dictionary = normalized.get("size", {}) if normalized.get("size", {}) is Dictionary else {}
+	var width := int(size.get("width", 0))
+	var height := int(size.get("height", 0))
+	if width <= 0 or height <= 0:
+		height = terrain_rows.size()
+		width = terrain_rows[0].size() if height > 0 and terrain_rows[0] is Array else 0
+	if width > 36 or height > 36:
+		return false
+	return String(normalized.get("template_id", "")).contains("compact") or String(normalized.get("profile", {}).get("id", "")).contains("compact")
+
+static func _density_start_point(placements: Dictionary) -> Dictionary:
+	for town_value in placements.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "")) == "player" or (String(town.get("player_type", "")) == "human" and int(town.get("player_slot", 0)) == 1):
+			return _density_record_point(town)
+	for town_value in placements.get("towns", []):
+		if town_value is Dictionary:
+			return _density_record_point(town_value)
+	return {}
+
+static func _density_record_point(record: Dictionary) -> Dictionary:
+	var visit: Dictionary = record.get("visit_tile", {}) if record.get("visit_tile", {}) is Dictionary else {}
+	if not visit.is_empty():
+		return _point_dict(int(visit.get("x", 0)), int(visit.get("y", 0)))
+	var approaches: Array = record.get("approach_tiles", []) if record.get("approach_tiles", []) is Array else []
+	if not approaches.is_empty() and approaches[0] is Dictionary:
+		return _point_dict(int(approaches[0].get("x", 0)), int(approaches[0].get("y", 0)))
+	return _point_dict(int(record.get("x", 0)), int(record.get("y", 0)))
+
+static func _density_passable_distances(terrain_rows: Array, occupied: Dictionary, start: Dictionary) -> Dictionary:
+	var height := terrain_rows.size()
+	var width: int = terrain_rows[0].size() if height > 0 and terrain_rows[0] is Array else 0
+	var start_point := Vector2i(int(start.get("x", 0)), int(start.get("y", 0)))
+	var distances := {}
+	var queue := [start_point]
+	distances[_point_key(start_point.x, start_point.y)] = 0
+	var cursor := 0
+	while cursor < queue.size():
+		var current: Vector2i = queue[cursor]
+		cursor += 1
+		var current_distance := int(distances.get(_point_key(current.x, current.y), 0))
+		for offset in [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1)]:
+			var next_tile: Vector2i = current + offset
+			if next_tile.x < 0 or next_tile.y < 0 or next_tile.x >= width or next_tile.y >= height:
+				continue
+			var key := _point_key(next_tile.x, next_tile.y)
+			if distances.has(key):
+				continue
+			if occupied.has(key) or not _terrain_cell_is_passable(terrain_rows, next_tile.x, next_tile.y):
+				continue
+			distances[key] = current_distance + 1
+			queue.append(next_tile)
+	return distances
+
+static func _density_existing_interactable_lookup(placements: Dictionary, distances: Dictionary) -> Dictionary:
+	var lookup := {}
+	for collection_name in ["towns", "resource_nodes", "encounters"]:
+		for value in placements.get(collection_name, []):
+			if not (value is Dictionary):
+				continue
+			var point := _density_record_point(value)
+			var key := _point_key(int(point.get("x", 0)), int(point.get("y", 0)))
+			var distance := int(distances.get(key, -1))
+			if distance >= 0 and distance <= 24:
+				lookup[key] = true
+	return lookup
+
+static func _largest_density_empty_window(terrain_rows: Array, distances: Dictionary, existing_points: Dictionary) -> Dictionary:
+	var height := terrain_rows.size()
+	var width: int = terrain_rows[0].size() if height > 0 and terrain_rows[0] is Array else 0
+	var best := {"reachable_cells": 0}
+	for y0 in range(0, max(0, height - 7)):
+		for x0 in range(0, max(0, width - 7)):
+			var reachable_cells := 0
+			var object_count := 0
+			for y in range(y0, y0 + 8):
+				for x in range(x0, x0 + 8):
+					var key := _point_key(x, y)
+					var distance := int(distances.get(key, -1))
+					if distance < 0 or distance > 24:
+						continue
+					if not _terrain_cell_is_passable(terrain_rows, x, y):
+						continue
+					reachable_cells += 1
+					if existing_points.has(key):
+						object_count += 1
+			if object_count == 0 and reachable_cells > int(best.get("reachable_cells", 0)):
+				best = {
+					"x": x0,
+					"y": y0,
+					"width": 8,
+					"height": 8,
+					"center_x": x0 + 4,
+					"center_y": y0 + 4,
+					"reachable_cells": reachable_cells,
+				}
+	return best
+
+static func _density_window_free_cell_for_catalog(window: Dictionary, distances: Dictionary, kind: String, family_id: String, object_id: String, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary) -> Dictionary:
+	var probe := {"kind": kind, "family_id": family_id, "object_id": object_id, "x": int(window.get("center_x", 0)), "y": int(window.get("center_y", 0))}
+	var catalog := _object_footprint_catalog_record_for_placement(probe)
+	var x0 := int(window.get("x", 0))
+	var y0 := int(window.get("y", 0))
+	var x1 := x0 + int(window.get("width", 8))
+	var y1 := y0 + int(window.get("height", 8))
+	var center_x := int(window.get("center_x", x0 + 4))
+	var center_y := int(window.get("center_y", y0 + 4))
+	for radius in range(9):
+		for dy in range(-radius, radius + 1):
+			for dx in range(-radius, radius + 1):
+				if max(abs(dx), abs(dy)) != radius:
+					continue
+				var x := center_x + dx
+				var y := center_y + dy
+				if x < x0 or y < y0 or x >= x1 or y >= y1:
+					continue
+				var distance := int(distances.get(_point_key(x, y), -1))
+				if distance < 7 or distance > 24:
+					continue
+				if _placement_candidate_satisfies_catalog(x, y, null, zone_grid, terrain_rows, occupied, catalog, reserved):
+					return _point_dict(x, y)
+	return {}
+
+static func _compact_density_reward_candidate(index: int) -> Dictionary:
+	var candidates := [
+		{"reward_category": "resource_cache", "object_family_id": "reward_cache_small", "object_id": "object_waystone_cache", "site_id": "site_waystone_cache", "value": 450, "categories": ["gold"], "guarded_policy": "unguarded_or_light_guard"},
+		{"reward_category": "build_resource_cache", "object_family_id": "reward_cache_small", "object_id": "object_ore_crates", "site_id": "site_ore_crates", "value": 650, "categories": ["ore"], "guarded_policy": "unguarded_or_light_guard"},
+		{"reward_category": "build_resource_cache", "object_family_id": "reward_cache_small", "object_id": "object_wood_wagon", "site_id": "site_wood_wagon", "value": 650, "categories": ["timber"], "guarded_policy": "unguarded_or_light_guard"},
+	]
+	return candidates[index % candidates.size()]
+
+static func _density_support_resource_node_from_placement(placement_id: String, payload: Dictionary, point: Dictionary, zone_id: String) -> Dictionary:
+	return {
+		"placement_id": placement_id,
+		"site_id": String(payload.get("site_id", "")),
+		"object_id": String(payload.get("object_id", "")),
+		"x": int(point.get("x", 0)),
+		"y": int(point.get("y", 0)),
+		"zone_id": zone_id,
+		"owner": "neutral",
+		"player_slot": 0,
+		"kind": "compact_route_density_support",
+		"generated_kind": "route_reward",
+		"selected_reward_category_id": String(payload.get("selected_reward_category_id", "")),
+		"selected_resource_category_id": String(payload.get("selected_resource_category_id", "")),
+		"candidate_value": int(payload.get("candidate_value", 0)),
+		"guarded_policy": String(payload.get("guarded_policy", "")),
+		"density_window": payload.get("density_window", {}),
+	}
+
+static func _route_reward_resource_node_from_placement(placement_id: String, payload: Dictionary, point: Dictionary, zone_id: String) -> Dictionary:
+	return {
+		"placement_id": placement_id,
+		"site_id": String(payload.get("site_id", "")),
+		"object_id": String(payload.get("object_id", "")),
+		"x": int(point.get("x", 0)),
+		"y": int(point.get("y", 0)),
+		"zone_id": zone_id,
+		"owner": "neutral",
+		"player_slot": 0,
+		"kind": "route_reward_cache",
+		"generated_kind": "route_reward",
+		"route_edge_id": String(payload.get("route_edge_id", "")),
+		"source_reward_band_id": String(payload.get("source_reward_band_id", "")),
+		"selected_reward_category_id": String(payload.get("selected_reward_category_id", "")),
+		"selected_resource_category_id": String(payload.get("selected_resource_category_id", "")),
+		"candidate_value": int(payload.get("candidate_value", 0)),
+		"guarded_policy": String(payload.get("guarded_policy", "")),
+	}
+
+static func _road_reserved_lookup(road_network: Dictionary) -> Dictionary:
+	var reserved := {}
+	for segment in road_network.get("road_segments", []):
+		if not (segment is Dictionary):
+			continue
+		for cell in segment.get("cells", []):
+			if cell is Dictionary:
+				reserved[_point_key(int(cell.get("x", 0)), int(cell.get("y", 0)))] = true
+	return reserved
+
+static func _route_reward_anchor_offset(index: int) -> Vector2i:
+	var offsets := [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]
+	return offsets[index % offsets.size()]
+
 static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, placements: Dictionary, constraints: Dictionary) -> Dictionary:
 	var metadata := _metadata(normalized)
 	var size: Dictionary = normalized.get("size", {})
@@ -2876,7 +3234,7 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"terrain_owner_grid_source": "zone_layout_surface_owner_grid",
 	}
 
-static func _build_constraint_payload(normalized: Dictionary, zones: Array, links: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, placements: Dictionary, zone_layout: Dictionary, terrain_transit: Dictionary) -> Dictionary:
+static func _build_constraint_payload(normalized: Dictionary, zones: Array, links: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, placements: Dictionary, zone_layout: Dictionary, terrain_transit: Dictionary, rng: DeterministicRng) -> Dictionary:
 	var terrain_constraints := _terrain_constraints_payload(terrain_rows, zone_grid, zones, terrain_transit)
 	var occupied := _route_blocking_occupied_lookup(placements.get("object_placements", []))
 	var route_build := _build_route_and_road_payload(links, seeds, placements, terrain_rows, occupied, terrain_transit)
@@ -2893,6 +3251,23 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 	var monster_reward_bands := _build_monster_reward_bands(normalized, zones, connection_guard_materialization, route_graph, placements, terrain_transit)
 	route_graph["monster_reward_bands"] = monster_reward_bands
 	route_graph["monster_reward_bands_summary"] = monster_reward_bands.get("summary", {})
+	var materialized_route_rewards := _materialize_route_reward_resources(
+		placements,
+		monster_reward_bands,
+		route_graph,
+		route_build.get("road_network", {}),
+		zone_grid,
+		terrain_rows,
+		rng
+	)
+	var materialized_compact_density_support := _materialize_compact_density_support(
+		normalized,
+		placements,
+		route_build.get("road_network", {}),
+		zone_grid,
+		terrain_rows,
+		rng
+	)
 	var object_pool_value_weighting := _build_object_pool_value_weighting_payload(
 		normalized,
 		zones,
@@ -2963,6 +3338,8 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		"water_underground_transit_gameplay": terrain_transit.get("gameplay_transit_materialization", {}),
 		"connection_guard_materialization": connection_guard_materialization,
 		"monster_reward_bands": monster_reward_bands,
+		"materialized_route_rewards": materialized_route_rewards,
+		"materialized_compact_density_support": materialized_compact_density_support,
 		"object_pool_value_weighting": object_pool_value_weighting,
 		"town_mine_dwelling_placement": town_mine_dwelling,
 		"decoration_density_pass": decoration_density,
