@@ -318,22 +318,28 @@ func _on_close_drawers_pressed() -> void:
 	_sync_context_drawers()
 
 func _on_context_action_pressed(action_id: String) -> void:
+	var dispatch_started_usec := _debug_phase_begin("context_action_dispatch")
 	if action_id == "advance_route":
 		_move_toward_selected_tile()
+		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id})
 		return
 	if action_id == "march_selected":
 		var hero_pos = OverworldRules.hero_position(_session)
 		_try_move(_selected_tile.x - hero_pos.x, _selected_tile.y - hero_pos.y, true)
+		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id})
 		return
 	if action_id == "enter_battle":
 		_start_encounter()
+		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id})
 		return
 	if action_id == "visit_town":
 		_visit_selected_town()
+		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id})
 		return
 
 	var result = OverworldRules.perform_context_action(_session, action_id)
 	if result.is_empty():
+		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id, "empty_result": true})
 		return
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
@@ -343,8 +349,10 @@ func _on_context_action_pressed(action_id: String) -> void:
 		_dismiss_command_briefing()
 		_select_hero_tile()
 	if _handle_session_resolution():
+		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id, "resolved": true})
 		return
 	_refresh()
+	_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id, "resolved": false})
 
 func _on_artifact_action_pressed(action_id: String) -> void:
 	var result = OverworldRules.perform_artifact_action(_session, action_id)
@@ -416,9 +424,11 @@ func _on_spell_action_pressed(action_id: String) -> void:
 	_refresh()
 
 func _on_map_tile_pressed(tile: Vector2i) -> void:
+	var handler_started_usec := Time.get_ticks_usec()
 	if not _tile_in_bounds(tile):
 		return
 	var debug_started := _debug_begin_path_command("click", tile)
+	_debug_record_phase_usec("input_handler_entry", Time.get_ticks_usec() - handler_started_usec, {"handler": "map_tile_pressed"})
 	var route_tile := _selection_route_tile(tile)
 	_debug_set_path_command_target(route_tile)
 	if route_tile == _selected_tile:
@@ -478,7 +488,9 @@ func _visit_selected_town() -> bool:
 func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 	var hero_pos_before := OverworldRules.hero_position(_session)
 	var debug_started := _debug_begin_path_command("move", hero_pos_before + Vector2i(dx, dy))
+	var movement_rules_started_usec := _debug_phase_begin("movement_rules")
 	var result = OverworldRules.try_move(_session, dx, dy)
+	_debug_phase_end("movement_rules", movement_rules_started_usec, {"ok": bool(result.get("ok", false)), "route": String(result.get("route", ""))})
 	var route := String(result.get("route", ""))
 	if route == "battle":
 		_session.flags["last_action"] = "entered_battle"
@@ -514,7 +526,9 @@ func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 
 func _move_toward_selected_tile() -> void:
 	var debug_started := _debug_begin_path_command("advance_route", _selected_tile)
+	var route_lookup_started_usec := _debug_phase_begin("route_advance_lookup")
 	var route = _selected_route()
+	_debug_phase_end("route_advance_lookup", route_lookup_started_usec, {"path_tiles": route.size()})
 	if route.size() <= 1:
 		if debug_started:
 			_debug_finish_path_command()
@@ -560,12 +574,14 @@ func _render_state() -> void:
 func _refresh() -> void:
 	var profile_start := _profile_begin("refresh")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_enter")
+	var read_scope_profile_start := _debug_refresh_profile_begin("refresh_read_scope_map_state")
 	OverworldRules.begin_normalized_read_scope(_session)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_read_scope_ready")
 	_map_data = _session.overworld.get("map", []) if _session.overworld.get("map", []) is Array else []
 	_map_size = OverworldRules.derive_map_size(_session)
 	_ensure_selected_tile()
 	_invalidate_refresh_cache()
+	_debug_refresh_profile_end("refresh_read_scope_map_state", read_scope_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_start")
 	var set_map_state_profile_start := _profile_begin("refresh_set_map_state")
 	_map_view.set_map_state(_session, _map_data, _map_size, _selected_tile)
@@ -573,11 +589,21 @@ func _refresh() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_done")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_start")
 	var actions_profile_start := _profile_begin("refresh_actions")
+	var hero_actions_profile_start := _debug_refresh_profile_begin("refresh_hero_actions")
 	_rebuild_hero_actions()
+	_debug_refresh_profile_end("refresh_hero_actions", hero_actions_profile_start)
+	var context_actions_profile_start := _debug_refresh_profile_begin("refresh_context_actions")
 	_rebuild_context_actions()
+	_debug_refresh_profile_end("refresh_context_actions", context_actions_profile_start)
+	var spell_actions_profile_start := _debug_refresh_profile_begin("refresh_spell_actions")
 	_rebuild_spell_actions()
+	_debug_refresh_profile_end("refresh_spell_actions", spell_actions_profile_start)
+	var specialty_actions_profile_start := _debug_refresh_profile_begin("refresh_specialty_actions")
 	_rebuild_specialty_actions()
+	_debug_refresh_profile_end("refresh_specialty_actions", specialty_actions_profile_start)
+	var artifact_actions_profile_start := _debug_refresh_profile_begin("refresh_artifact_actions")
 	_rebuild_artifact_actions()
+	_debug_refresh_profile_end("refresh_artifact_actions", artifact_actions_profile_start)
 	_profile_end("refresh_actions", actions_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_done")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_start")
@@ -604,6 +630,7 @@ func _refresh() -> void:
 		AppRouter.note_overworld_handoff_step("overworld_refresh_done")
 		_profile_end("refresh", profile_start, {"compact_generated": true})
 		return
+	var header_profile_start := _debug_refresh_profile_begin("refresh_header_objective_status_resources")
 	var scenario = ContentService.get_scenario(_session.scenario_id)
 	_header_label.text = String(scenario.get("name", "Overworld Command"))
 	var objective_brief := OverworldRules.describe_objective_brief(_session)
@@ -622,11 +649,19 @@ func _refresh() -> void:
 	_resource_label.text = resource_text
 	_map_cue_label.text = _map_cue_text()
 	_map_cue_label.tooltip_text = _map_cue_tooltip()
+	_debug_refresh_profile_end("refresh_header_objective_status_resources", header_profile_start)
+	var commitment_profile_start := _debug_refresh_profile_begin("refresh_commitment_rail")
 	_refresh_commitment_panel()
+	_debug_refresh_profile_end("refresh_commitment_rail", commitment_profile_start)
+	var hero_rail_profile_start := _debug_refresh_profile_begin("refresh_hero_rail")
 	var hero_text := _hero_card_text()
 	_set_rail_text(_hero_label, hero_text, hero_text, 2)
+	_debug_refresh_profile_end("refresh_hero_rail", hero_rail_profile_start)
+	var army_rail_profile_start := _debug_refresh_profile_begin("refresh_army_rail")
 	var army_text := OverworldRules.describe_army(_session)
 	_set_rail_text(_army_label, army_text, _rail_prefixed_summary("Army", army_text), 1)
+	_debug_refresh_profile_end("refresh_army_rail", army_rail_profile_start)
+	var heroes_rail_profile_start := _debug_refresh_profile_begin("refresh_heroes_rail")
 	var heroes_text := OverworldRules.describe_heroes(_session)
 	var command_check := _command_check_surface()
 	_set_rail_text(
@@ -635,6 +670,8 @@ func _refresh() -> void:
 		String(command_check.get("visible_text", _rail_prefixed_summary("Heroes", heroes_text))),
 		1
 	)
+	_debug_refresh_profile_end("refresh_heroes_rail", heroes_rail_profile_start)
+	var specialty_rail_profile_start := _debug_refresh_profile_begin("refresh_specialty_rail")
 	var specialty_text := OverworldRules.describe_specialties(_session)
 	var specialty_check := _specialty_check_surface()
 	_set_rail_text(
@@ -643,6 +680,8 @@ func _refresh() -> void:
 		String(specialty_check.get("visible_text", _rail_prefixed_summary("Spec", specialty_text))),
 		1
 	)
+	_debug_refresh_profile_end("refresh_specialty_rail", specialty_rail_profile_start)
+	var spell_rail_profile_start := _debug_refresh_profile_begin("refresh_spell_rail")
 	var spell_text := OverworldRules.describe_spellbook(_session, SpellRules.CONTEXT_OVERWORLD)
 	var spell_check := _spell_check_surface()
 	_set_rail_text(
@@ -651,15 +690,23 @@ func _refresh() -> void:
 		String(spell_check.get("visible_text", OverworldRules.describe_spellbook_rail(_session, SpellRules.CONTEXT_OVERWORLD))),
 		1
 	)
+	_debug_refresh_profile_end("refresh_spell_rail", spell_rail_profile_start)
+	var artifact_rail_profile_start := _debug_refresh_profile_begin("refresh_artifact_rail")
 	var artifact_text := OverworldRules.describe_artifacts(_session)
 	_set_rail_text(_artifact_label, artifact_text, _rail_prefixed_summary("Gear", artifact_text), 1)
+	_debug_refresh_profile_end("refresh_artifact_rail", artifact_rail_profile_start)
+	var frontier_profile_start := _debug_refresh_profile_begin("refresh_frontier_drawer")
 	var command_risk_surface := {}
 	if _active_drawer == "frontier":
 		command_risk_surface = _refresh_frontier_drawer()
 	else:
 		_set_collapsed_frontier_indicator()
+	_debug_refresh_profile_end("refresh_frontier_drawer", frontier_profile_start, {"drawer_open": _active_drawer == "frontier"})
+	var context_tile_profile_start := _debug_refresh_profile_begin("refresh_context_tile_text")
 	var context_text := _cached_focus_tile_text()
 	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
+	_debug_refresh_profile_end("refresh_context_tile_text", context_tile_profile_start)
+	var event_context_profile_start := _debug_refresh_profile_begin("refresh_event_action_context")
 	var event_surface := _event_feed_surface()
 	var action_context_surface := _action_context_surface(event_surface, readiness_surface)
 	_set_rail_text(
@@ -668,14 +715,19 @@ func _refresh() -> void:
 		String(action_context_surface.get("visible_text", _rail_log_text())),
 		1
 	)
+	_debug_refresh_profile_end("refresh_event_action_context", event_context_profile_start)
+	var end_turn_profile_start := _debug_refresh_profile_begin("refresh_end_turn_surface")
 	var end_turn_check := _end_turn_confirmation_surface(readiness_surface)
 	_end_turn_button.text = String(end_turn_check.get("button_text", "End Turn"))
 	_end_turn_button.tooltip_text = String(end_turn_check.get("tooltip_text", OverworldRules.describe_end_turn_forecast(_session)))
+	_debug_refresh_profile_end("refresh_end_turn_surface", end_turn_profile_start)
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
+	var tooltip_context_profile_start := _debug_refresh_profile_begin("refresh_tooltip_context_drawers")
 	_update_map_tooltip()
 	_sync_context_drawers()
+	_debug_refresh_profile_end("refresh_tooltip_context_drawers", tooltip_context_profile_start)
 	OverworldRules.end_normalized_read_scope(_session)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_done")
 	_profile_end("refresh", profile_start, {"compact_generated": false})
@@ -913,8 +965,11 @@ func _rebuild_context_actions() -> void:
 		_context_actions.add_child(button)
 
 func _current_context_actions() -> Array:
+	var context_actions_started_usec := _debug_phase_begin("context_actions_computation")
 	if _refresh_cache.has("context_actions"):
-		return _refresh_cache["context_actions"]
+		var cached_actions: Array = _refresh_cache["context_actions"]
+		_debug_phase_end("context_actions_computation", context_actions_started_usec, {"cached": true, "action_count": cached_actions.size()})
+		return cached_actions
 	var actions: Array = []
 	if _selected_tile == OverworldRules.hero_position(_session):
 		actions = OverworldRules.get_context_actions(_session)
@@ -927,6 +982,7 @@ func _current_context_actions() -> Array:
 		if not movement_action.is_empty():
 			actions.append(movement_action)
 	_refresh_cache["context_actions"] = actions
+	_debug_phase_end("context_actions_computation", context_actions_started_usec, {"cached": false, "action_count": actions.size()})
 	return actions
 
 func _first_enabled_action(actions: Array) -> Dictionary:
@@ -1013,10 +1069,14 @@ func _town_entry_handoff_surface() -> Dictionary:
 	}
 
 func _current_primary_action() -> Dictionary:
+	var primary_action_started_usec := _debug_phase_begin("primary_action_computation")
 	if _refresh_cache.has("primary_action"):
-		return _refresh_cache["primary_action"]
+		var cached_action: Dictionary = _refresh_cache["primary_action"]
+		_debug_phase_end("primary_action_computation", primary_action_started_usec, {"cached": true, "action_id": String(cached_action.get("id", ""))})
+		return cached_action
 	var action := _first_enabled_action(_current_context_actions())
 	_refresh_cache["primary_action"] = action
+	_debug_phase_end("primary_action_computation", primary_action_started_usec, {"cached": false, "action_id": String(action.get("id", ""))})
 	return action
 
 func _cached_hero_actions() -> Array:
@@ -1450,13 +1510,17 @@ func _refresh_primary_action_button(action: Dictionary) -> void:
 	])
 
 func _activate_primary_action() -> bool:
+	var activation_started_usec := _debug_phase_begin("primary_action_activation")
 	var action := _current_primary_action()
 	if action.is_empty() or bool(action.get("disabled", false)):
+		_debug_phase_end("primary_action_activation", activation_started_usec, {"activated": false, "reason": "empty_or_disabled"})
 		return false
 	var action_id := String(action.get("id", ""))
 	if action_id == "":
+		_debug_phase_end("primary_action_activation", activation_started_usec, {"activated": false, "reason": "missing_action_id"})
 		return false
 	_on_context_action_pressed(action_id)
+	_debug_phase_end("primary_action_activation", activation_started_usec, {"activated": true, "action_id": action_id})
 	return true
 
 func _primary_order_commit_check_surface(action: Dictionary = {}) -> Dictionary:
@@ -1660,7 +1724,9 @@ func _selected_tile_movement_action() -> Dictionary:
 	return {}
 
 func _selected_route_decision_surface() -> Dictionary:
+	var decision_started_usec := _debug_phase_begin("route_decision_construction")
 	if not _tile_in_bounds(_selected_tile):
+		_debug_phase_end("route_decision_construction", decision_started_usec, {"status": "out_of_bounds"})
 		return {}
 	var hero_pos := OverworldRules.hero_position(_session)
 	var movement = _session.overworld.get("movement", {})
@@ -1780,6 +1846,7 @@ func _selected_route_decision_surface() -> Dictionary:
 	var decision_brief := _route_decision_brief(surface)
 	surface["decision_brief"] = decision_brief
 	surface["decision_brief_text"] = String(decision_brief.get("tooltip_text", ""))
+	_debug_phase_end("route_decision_construction", decision_started_usec, {"status": status, "steps": steps, "action_kind": action_kind})
 	return surface
 
 func _selected_route_action_kind(adjacent: bool) -> String:
@@ -1861,7 +1928,9 @@ func _route_decision_cue(surface: Dictionary) -> String:
 	]
 
 func _route_decision_tooltip(surface: Dictionary) -> String:
+	var text_started_usec := _debug_phase_begin("route_text_generation")
 	if surface.is_empty():
+		_debug_phase_end("route_text_generation", text_started_usec, {"empty": true})
 		return ""
 	var line := _route_decision_line(surface)
 	var reason := String(surface.get("blocked_reason", "")).strip_edges()
@@ -1874,19 +1943,27 @@ func _route_decision_tooltip(surface: Dictionary) -> String:
 			sections.append("%s. %s" % [line, reason])
 			sections.append(interception_tooltip)
 			sections.append(decision_brief)
-			return _join_tooltip_sections(sections)
+			var blocked_interception_text := _join_tooltip_sections(sections)
+			_debug_phase_end("route_text_generation", text_started_usec, {"status": String(surface.get("status", "")), "sections": sections.size()})
+			return blocked_interception_text
 		sections.append("%s. %s" % [line, reason])
 		sections.append(decision_brief)
-		return _join_tooltip_sections(sections)
+		var blocked_text := _join_tooltip_sections(sections)
+		_debug_phase_end("route_text_generation", text_started_usec, {"status": String(surface.get("status", "")), "sections": sections.size()})
+		return blocked_text
 	var commit_line := "%s. Commit %s." % [line, String(surface.get("action_label", "the selected order"))]
 	if interception_tooltip != "":
 		sections.append(commit_line)
 		sections.append(interception_tooltip)
 		sections.append(decision_brief)
-		return _join_tooltip_sections(sections)
+		var interception_text := _join_tooltip_sections(sections)
+		_debug_phase_end("route_text_generation", text_started_usec, {"status": String(surface.get("status", "")), "sections": sections.size()})
+		return interception_text
 	sections.append(commit_line)
 	sections.append(decision_brief)
-	return _join_tooltip_sections(sections)
+	var tooltip_text := _join_tooltip_sections(sections)
+	_debug_phase_end("route_text_generation", text_started_usec, {"status": String(surface.get("status", "")), "sections": sections.size()})
+	return tooltip_text
 
 func _route_target_handoff_surface(surface: Dictionary = {}) -> Dictionary:
 	var route_surface := surface
@@ -3562,12 +3639,22 @@ func _active_resource_nodes() -> Array:
 	return nodes
 
 func _selection_route_tile(tile: Vector2i) -> Vector2i:
+	var selection_started_usec := _debug_phase_begin("tile_object_selection_resolution")
 	var node := _resource_node_at(tile.x, tile.y)
 	if node.is_empty():
+		_debug_phase_end("tile_object_selection_resolution", selection_started_usec, {"raw": _debug_tile_payload(tile), "resolved": _debug_tile_payload(tile), "object": false})
 		return tile
-	return _resource_node_route_tile(node, tile)
+	var resolved := _resource_node_route_tile(node, tile)
+	_debug_phase_end("tile_object_selection_resolution", selection_started_usec, {
+		"raw": _debug_tile_payload(tile),
+		"resolved": _debug_tile_payload(resolved),
+		"object": true,
+		"placement_id": String(node.get("placement_id", "")),
+	})
+	return resolved
 
 func _resource_node_route_tile(node: Dictionary, fallback: Vector2i) -> Vector2i:
+	var body_visit_started_usec := _debug_phase_begin("body_visit_tile_resolution")
 	var surface := _resource_node_pathing_surface(node)
 	var interaction_tiles: Array = surface.get("interaction_tiles", []) if surface.get("interaction_tiles", []) is Array else []
 	for value in interaction_tiles:
@@ -3575,7 +3662,17 @@ func _resource_node_route_tile(node: Dictionary, fallback: Vector2i) -> Vector2i
 			continue
 		var candidate := Vector2i(int(value.get("x", 0)), int(value.get("y", 0)))
 		if not OverworldRules.tile_is_blocked(_session, candidate.x, candidate.y):
+			_debug_phase_end("body_visit_tile_resolution", body_visit_started_usec, {
+				"fallback": _debug_tile_payload(fallback),
+				"resolved": _debug_tile_payload(candidate),
+				"interaction_tile_count": interaction_tiles.size(),
+			})
 			return candidate
+	_debug_phase_end("body_visit_tile_resolution", body_visit_started_usec, {
+		"fallback": _debug_tile_payload(fallback),
+		"resolved": _debug_tile_payload(fallback),
+		"interaction_tile_count": interaction_tiles.size(),
+	})
 	return fallback
 
 func _resource_node_matches_interaction_tile(node: Dictionary, tile: Vector2i) -> bool:
@@ -3822,6 +3919,37 @@ func _profile_end(name: String, started_usec: int, details: Dictionary = {}) -> 
 func _profile_add(key: String, amount: int) -> void:
 	_validation_profile[key] = int(_validation_profile.get(key, 0)) + amount
 
+func _debug_phase_begin(_name: String) -> int:
+	if not _debug_command_in_progress:
+		return 0
+	return Time.get_ticks_usec()
+
+func _debug_phase_end(name: String, started_usec: int, details: Dictionary = {}) -> void:
+	if not _debug_command_in_progress or started_usec <= 0:
+		return
+	var elapsed_usec := maxi(0, Time.get_ticks_usec() - started_usec)
+	_debug_record_phase_usec(name, elapsed_usec, details)
+
+func _debug_record_phase_usec(name: String, elapsed_usec: int, details: Dictionary = {}) -> void:
+	if not _debug_command_in_progress:
+		return
+	var profile_name := "cmd_%s" % name
+	_profile_add("%s_calls" % profile_name, 1)
+	_profile_add("%s_usec" % profile_name, maxi(0, elapsed_usec))
+	_validation_profile["last_%s_usec" % profile_name] = maxi(0, elapsed_usec)
+	if not details.is_empty():
+		_validation_profile["last_%s" % profile_name] = details.duplicate(true)
+
+func _debug_refresh_profile_begin(_name: String) -> int:
+	if not _debug_command_in_progress:
+		return 0
+	return Time.get_ticks_usec()
+
+func _debug_refresh_profile_end(name: String, started_usec: int, details: Dictionary = {}) -> void:
+	if started_usec <= 0:
+		return
+	_profile_end(name, started_usec, details)
+
 func _build_debug_overlay() -> void:
 	_debug_overlay_panel = PanelContainer.new()
 	_debug_overlay_panel.name = "PathDebugOverlay"
@@ -3904,14 +4032,25 @@ func _debug_finish_path_command() -> void:
 	if _map_view != null and _map_view.has_method("validation_set_path_detail_profile_enabled"):
 		_map_view.call("validation_set_path_detail_profile_enabled", false)
 	_debug_command_context.clear()
+	var overlay_update_started_usec := Time.get_ticks_usec()
 	_debug_update_overlay_text()
+	_debug_last_command_snapshot["debug_overlay_update_ms"] = _debug_usec_to_ms(Time.get_ticks_usec() - overlay_update_started_usec)
+	_debug_last_command_snapshot["deferred_wait_start_usec"] = Time.get_ticks_usec()
 	call_deferred("_debug_refresh_overlay_after_frame")
 
 func _debug_refresh_overlay_after_frame() -> void:
+	var wait_started_usec := int(_debug_last_command_snapshot.get("deferred_wait_start_usec", Time.get_ticks_usec()))
 	await get_tree().process_frame
 	if _debug_last_command_snapshot.is_empty():
 		return
+	var deferred_wait_usec := maxi(0, Time.get_ticks_usec() - wait_started_usec)
 	_debug_last_command_snapshot = _debug_enrich_command_snapshot(_debug_last_command_snapshot)
+	_debug_last_command_snapshot["deferred_frame_wait_ms"] = _debug_usec_to_ms(deferred_wait_usec)
+	var overlay_update_started_usec := Time.get_ticks_usec()
+	_debug_update_overlay_text()
+	_debug_last_command_snapshot["debug_overlay_update_ms"] = _debug_usec_to_ms(
+		int(_debug_last_command_snapshot.get("debug_overlay_update_ms", 0.0) * 1000.0) + Time.get_ticks_usec() - overlay_update_started_usec
+	)
 	_debug_update_overlay_text()
 
 func _debug_build_command_snapshot(elapsed_usec: int) -> Dictionary:
@@ -3976,7 +4115,101 @@ func _debug_enrich_command_snapshot(snapshot: Dictionary) -> Dictionary:
 	var fps := float(Engine.get_frames_per_second())
 	enriched["fps"] = fps
 	enriched["frame_ms"] = snapped(1000.0 / max(fps, 0.001), 0.001)
+	var phase_buckets := _debug_command_phase_buckets(profile)
+	var refresh_sections := _debug_refresh_section_buckets(profile)
+	enriched["phase_buckets_ms"] = phase_buckets
+	enriched["refresh_sections_ms"] = refresh_sections
+	enriched["refresh_call_count"] = int(profile.get("refresh_calls", 0))
+	enriched["measured_sum_ms"] = _debug_measured_sum_ms(enriched, phase_buckets)
+	enriched["unaccounted_ms"] = snapped(float(enriched.get("total_command_ms", 0.0)) - float(enriched.get("measured_sum_ms", 0.0)), 0.001)
+	enriched["top_offenders"] = _debug_top_timing_buckets(_debug_top_offender_source_buckets(enriched, phase_buckets, refresh_sections), 6)
 	return enriched
+
+func _debug_command_phase_buckets(profile: Dictionary) -> Dictionary:
+	var buckets := {}
+	for key_value in profile.keys():
+		var key := String(key_value)
+		if not key.begins_with("cmd_") or not key.ends_with("_usec") or key.begins_with("last_"):
+			continue
+		var phase_name := key.trim_prefix("cmd_").trim_suffix("_usec")
+		buckets[phase_name] = _debug_usec_to_ms(int(profile.get(key, 0)))
+	return buckets
+
+func _debug_refresh_section_buckets(profile: Dictionary) -> Dictionary:
+	var buckets := {}
+	for section in [
+		"refresh_read_scope_map_state",
+		"refresh_set_map_state",
+		"refresh_actions",
+		"refresh_hero_actions",
+		"refresh_context_actions",
+		"refresh_spell_actions",
+		"refresh_specialty_actions",
+		"refresh_artifact_actions",
+		"refresh_generated_surfaces",
+		"refresh_header_objective_status_resources",
+		"refresh_commitment_rail",
+		"refresh_hero_rail",
+		"refresh_army_rail",
+		"refresh_heroes_rail",
+		"refresh_specialty_rail",
+		"refresh_spell_rail",
+		"refresh_artifact_rail",
+		"refresh_frontier_drawer",
+		"refresh_context_tile_text",
+		"refresh_event_action_context",
+		"refresh_end_turn_surface",
+		"refresh_tooltip_context_drawers",
+	]:
+		var usec_key := "%s_usec" % section
+		if profile.has(usec_key):
+			buckets[section.trim_prefix("refresh_")] = _debug_usec_to_ms(int(profile.get(usec_key, 0)))
+	return buckets
+
+func _debug_measured_sum_ms(snapshot: Dictionary, phase_buckets: Dictionary) -> float:
+	var sum := 0.0
+	for phase in [
+		"input_handler_entry",
+		"validation_select_entry",
+		"tile_object_selection_resolution",
+		"route_advance_lookup",
+		"movement_rules",
+	]:
+		sum += float(phase_buckets.get(phase, 0.0))
+	sum += float(snapshot.get("refresh_ms", 0.0))
+	return snapped(sum, 0.001)
+
+func _debug_top_offender_source_buckets(snapshot: Dictionary, phase_buckets: Dictionary, refresh_sections: Dictionary) -> Dictionary:
+	var buckets := {}
+	for key_value in phase_buckets.keys():
+		buckets["cmd/%s" % String(key_value)] = float(phase_buckets.get(key_value, 0.0))
+	buckets["refresh/total"] = float(snapshot.get("refresh_ms", 0.0))
+	for key_value in refresh_sections.keys():
+		buckets["refresh/%s" % String(key_value)] = float(refresh_sections.get(key_value, 0.0))
+	buckets["map_view/set_map_state"] = float(snapshot.get("map_view_set_map_state_ms", 0.0))
+	buckets["map_view/object_index"] = float(snapshot.get("object_index_ms", 0.0))
+	buckets["map_view/road_index"] = float(snapshot.get("road_index_ms", 0.0))
+	buckets["map_view/draw_dynamic"] = float(snapshot.get("draw_dynamic_ms", 0.0))
+	buckets["unaccounted"] = max(0.0, float(snapshot.get("unaccounted_ms", 0.0)))
+	return buckets
+
+func _debug_top_timing_buckets(buckets: Dictionary, limit: int) -> Array:
+	var remaining := buckets.duplicate(true)
+	var offenders := []
+	while offenders.size() < limit and not remaining.is_empty():
+		var best_key := ""
+		var best_ms := -1.0
+		for key_value in remaining.keys():
+			var key := String(key_value)
+			var value_ms := float(remaining.get(key, 0.0))
+			if value_ms > best_ms:
+				best_key = key
+				best_ms = value_ms
+		if best_key == "" or best_ms <= 0.0:
+			break
+		offenders.append({"name": best_key, "ms": snapped(best_ms, 0.001)})
+		remaining.erase(best_key)
+	return offenders
 
 func _debug_update_overlay_text() -> void:
 	if _debug_overlay_label == null:
@@ -4016,6 +4249,12 @@ func _debug_overlay_text(snapshot: Dictionary) -> String:
 			float(snapshot.get("refresh_set_map_state_ms", 0.0)),
 			float(snapshot.get("map_view_set_map_state_ms", 0.0)),
 		],
+		"refresh calls %d | measured %.3f ms | unaccounted %.3f ms" % [
+			int(snapshot.get("refresh_call_count", 0)),
+			float(snapshot.get("measured_sum_ms", 0.0)),
+			float(snapshot.get("unaccounted_ms", 0.0)),
+		],
+		"top %s" % _debug_top_offenders_text(snapshot.get("top_offenders", [])),
 		"blocked index %s | rebuilds +%d" % [
 			blocked_index_text,
 			int(snapshot.get("blocked_index_rebuild_count_delta", 0)),
@@ -4040,8 +4279,26 @@ func _debug_overlay_text(snapshot: Dictionary) -> String:
 			int(snapshot.get("dynamic_layer_generation", 0)),
 		],
 		"save %s" % String(snapshot.get("save_summary", "none observed")),
+		"deferred %.3f ms | overlay %.3f ms" % [
+			float(snapshot.get("deferred_frame_wait_ms", 0.0)),
+			float(snapshot.get("debug_overlay_update_ms", 0.0)),
+		],
 		"fps %.1f | frame %.3f ms" % [float(snapshot.get("fps", 0.0)), float(snapshot.get("frame_ms", 0.0))],
 	])
+
+func _debug_top_offenders_text(value: Variant) -> String:
+	var offenders: Array = value if value is Array else []
+	var parts := []
+	for index in range(mini(offenders.size(), 4)):
+		var offender: Dictionary = offenders[index] if offenders[index] is Dictionary else {}
+		var name := String(offender.get("name", "n/a"))
+		var short_name := name
+		if short_name.length() > 24:
+			short_name = "...%s" % short_name.right(21)
+		parts.append("%s %.1f" % [short_name, float(offender.get("ms", 0.0))])
+	if parts.is_empty():
+		return "n/a"
+	return " | ".join(parts)
 
 func _debug_route_timing_active() -> bool:
 	return _debug_command_in_progress
@@ -4359,10 +4616,12 @@ func validation_open_frontier_drawer() -> Dictionary:
 	return _validation_chrome_state()
 
 func validation_select_tile(x: int, y: int) -> Dictionary:
+	var handler_started_usec := Time.get_ticks_usec()
 	var tile := Vector2i(x, y)
 	if not _tile_in_bounds(tile):
 		return {"ok": false, "message": "Tile is outside the overworld map."}
 	var debug_started := _debug_begin_path_command("validation_select_route", tile)
+	_debug_record_phase_usec("validation_select_entry", Time.get_ticks_usec() - handler_started_usec, {"handler": "validation_select_tile"})
 	_set_selected_tile(tile)
 	_debug_set_path_command_target(_selected_tile)
 	_active_drawer = ""

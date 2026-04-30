@@ -193,13 +193,15 @@ func _assert_overlay_command(overlay: Dictionary, label: String) -> bool:
 		_fail("%s overlay was not enabled/visible: %s" % [label, JSON.stringify(overlay)])
 		return false
 	var text := String(overlay.get("text", ""))
-	for token in ["Path Debug (F3)", "total", "BFS", "set_map_state", "save"]:
+	for token in ["Path Debug (F3)", "total", "BFS", "set_map_state", "refresh calls", "unaccounted", "top", "save"]:
 		if text.find(token) < 0:
 			_fail("%s overlay text missed token %s: %s" % [label, token, text])
 			return false
 	var command: Dictionary = overlay.get("last_command", {}) if overlay.get("last_command", {}) is Dictionary else {}
 	if not _overlay_command_has_timings(command):
 		_fail("%s overlay command missed required timing fields: %s" % [label, JSON.stringify(command)])
+		return false
+	if not _assert_phase_reconciliation(command, label):
 		return false
 	if String(command.get("save_summary", "")) != "none observed" and not bool(command.get("save_observed", false)):
 		_fail("%s overlay save summary contradicted save_observed: %s" % [label, JSON.stringify(command)])
@@ -221,12 +223,57 @@ func _overlay_command_has_timings(command: Dictionary) -> bool:
 		and command.has("object_index_ms")
 		and command.has("road_index_ms")
 		and command.has("draw_dynamic_ms")
+		and command.has("phase_buckets_ms")
+		and command.has("refresh_sections_ms")
+		and command.has("refresh_call_count")
+		and command.has("measured_sum_ms")
+		and command.has("unaccounted_ms")
+		and command.has("top_offenders")
+		and command.has("deferred_frame_wait_ms")
+		and command.has("debug_overlay_update_ms")
 		and command.has("save_summary")
 		and command.has("fps")
 		and command.has("frame_ms")
-		and float(command.get("total_command_ms", -1.0)) >= 0.0
+		and float(command.get("total_command_ms", -1.0)) > 0.0
 		and float(command.get("map_view_set_map_state_ms", -1.0)) >= 0.0
 	)
+
+func _assert_phase_reconciliation(command: Dictionary, label: String) -> bool:
+	var phase_buckets: Dictionary = command.get("phase_buckets_ms", {}) if command.get("phase_buckets_ms", {}) is Dictionary else {}
+	var refresh_sections: Dictionary = command.get("refresh_sections_ms", {}) if command.get("refresh_sections_ms", {}) is Dictionary else {}
+	var top_offenders: Array = command.get("top_offenders", []) if command.get("top_offenders", []) is Array else []
+	if phase_buckets.is_empty():
+		_fail("%s overlay phase buckets were empty: %s" % [label, JSON.stringify(command)])
+		return false
+	if int(command.get("refresh_call_count", 0)) <= 0:
+		_fail("%s overlay did not capture refresh call count: %s" % [label, JSON.stringify(command)])
+		return false
+	if not command.has("unaccounted_ms") or not command.has("measured_sum_ms"):
+		_fail("%s overlay missed reconciliation fields: %s" % [label, JSON.stringify(command)])
+		return false
+	if top_offenders.is_empty():
+		_fail("%s overlay did not expose top timing offenders: %s" % [label, JSON.stringify(command)])
+		return false
+	var total_ms := float(command.get("total_command_ms", 0.0))
+	var measured_ms := float(command.get("measured_sum_ms", 0.0))
+	var unaccounted_ms := float(command.get("unaccounted_ms", 0.0))
+	if measured_ms <= 0.0 or measured_ms + maxf(unaccounted_ms, 0.0) < total_ms * 0.65:
+		var top_record: Dictionary = top_offenders[0] if top_offenders[0] is Dictionary else {}
+		var top_name := String(top_record.get("name", "unknown"))
+		if top_name != "unaccounted":
+			_fail("%s overlay measured too little of total without naming unaccounted as top unknown bucket: total=%.3f measured=%.3f unaccounted=%.3f top=%s command=%s" % [
+				label,
+				total_ms,
+				measured_ms,
+				unaccounted_ms,
+				top_name,
+				JSON.stringify(command),
+			])
+			return false
+	if refresh_sections.is_empty():
+		_fail("%s overlay missed detailed refresh sections: %s" % [label, JSON.stringify(command)])
+		return false
+	return true
 
 func _assert_generated_snapshot(snapshot: Dictionary, label: String) -> bool:
 	if not bool(snapshot.get("generated_random_map", false)):
@@ -255,6 +302,7 @@ func _compact_overlay_command(value: Variant) -> Dictionary:
 		"blocked_index_rebuild_count_delta": int(command.get("blocked_index_rebuild_count_delta", 0)),
 		"blocked_index_rebuild_ms": command.get("blocked_index_rebuild_ms", -1.0),
 		"refresh_ms": float(command.get("refresh_ms", 0.0)),
+		"refresh_call_count": int(command.get("refresh_call_count", 0)),
 		"set_map_state_ms": float(command.get("map_view_set_map_state_ms", 0.0)),
 		"object_index_ms": float(command.get("object_index_ms", 0.0)),
 		"object_index_rebuilds": int(command.get("object_index_rebuilds", 0)),
@@ -264,6 +312,13 @@ func _compact_overlay_command(value: Variant) -> Dictionary:
 		"road_index_skips": int(command.get("road_index_skips", 0)),
 		"draw_dynamic_ms": float(command.get("draw_dynamic_ms", 0.0)),
 		"dynamic_layer_reason": String(command.get("dynamic_layer_reason", "")),
+		"phase_buckets_ms": command.get("phase_buckets_ms", {}),
+		"refresh_sections_ms": command.get("refresh_sections_ms", {}),
+		"measured_sum_ms": float(command.get("measured_sum_ms", 0.0)),
+		"unaccounted_ms": float(command.get("unaccounted_ms", 0.0)),
+		"top_offenders": command.get("top_offenders", []),
+		"deferred_frame_wait_ms": float(command.get("deferred_frame_wait_ms", 0.0)),
+		"debug_overlay_update_ms": float(command.get("debug_overlay_update_ms", 0.0)),
 		"save_summary": String(command.get("save_summary", "")),
 		"fps": float(command.get("fps", 0.0)),
 		"frame_ms": float(command.get("frame_ms", 0.0)),
