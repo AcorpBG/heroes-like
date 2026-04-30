@@ -116,6 +116,9 @@ func _run() -> void:
 	var move_overlay: Dictionary = overworld.validation_debug_overlay_snapshot()
 	if not _assert_overlay_command(move_overlay, "move"):
 		return
+	var move_command: Dictionary = move_overlay.get("last_command", {}) if move_overlay.get("last_command", {}) is Dictionary else {}
+	if not _assert_latency_hotspot_reduction(move_command):
+		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
@@ -127,7 +130,8 @@ func _run() -> void:
 		"handoff_total_ms": int(handoff_profile.get("total_ms", -1)),
 		"route_probe": route_probe.get("target", {}),
 		"selection_overlay": _compact_overlay_command(selection_command),
-		"move_overlay": _compact_overlay_command(move_overlay.get("last_command", {})),
+		"move_overlay": _compact_overlay_command(move_command),
+		"latency_optimization": _latency_optimization_summary(move_command),
 		"move_result": {
 			"ok": bool(move_result.get("ok", false)),
 			"action_id": String(move_result.get("action_id", "")),
@@ -274,6 +278,52 @@ func _assert_phase_reconciliation(command: Dictionary, label: String) -> bool:
 		_fail("%s overlay missed detailed refresh sections: %s" % [label, JSON.stringify(command)])
 		return false
 	return true
+
+func _assert_latency_hotspot_reduction(command: Dictionary) -> bool:
+	var refresh_sections: Dictionary = command.get("refresh_sections_ms", {}) if command.get("refresh_sections_ms", {}) is Dictionary else {}
+	var phase_buckets: Dictionary = command.get("phase_buckets_ms", {}) if command.get("phase_buckets_ms", {}) is Dictionary else {}
+	var total_ms := float(command.get("total_command_ms", 0.0))
+	var movement_ms := float(phase_buckets.get("movement_rules", 0.0))
+	var read_scope_ms := float(refresh_sections.get("read_scope_map_state", 0.0))
+	var actions_ms := float(refresh_sections.get("actions", 0.0))
+	if read_scope_ms > 50.0:
+		_fail("Optimized move still spent too long in normalized read scope: %.3fms command=%s" % [read_scope_ms, JSON.stringify(_compact_overlay_command(command))])
+		return false
+	if movement_ms > 2000.0:
+		_fail("Optimized move still spent too long in movement rules: %.3fms command=%s" % [movement_ms, JSON.stringify(_compact_overlay_command(command))])
+		return false
+	if actions_ms > 1200.0:
+		_fail("Optimized move still spent too long rebuilding actions: %.3fms command=%s" % [actions_ms, JSON.stringify(_compact_overlay_command(command))])
+		return false
+	if total_ms > 3500.0:
+		_fail("Optimized move total exceeded focused generated Small latency ceiling: %.3fms command=%s" % [total_ms, JSON.stringify(_compact_overlay_command(command))])
+		return false
+	return true
+
+func _latency_optimization_summary(command: Dictionary) -> Dictionary:
+	var refresh_sections: Dictionary = command.get("refresh_sections_ms", {}) if command.get("refresh_sections_ms", {}) is Dictionary else {}
+	var phase_buckets: Dictionary = command.get("phase_buckets_ms", {}) if command.get("phase_buckets_ms", {}) is Dictionary else {}
+	return {
+		"known_before_xl": {
+			"total_command_ms": 13762.108,
+			"movement_rules_ms": 7890.9,
+			"refresh_ms": 5824.791,
+			"read_scope_map_state_ms": 3262.4,
+			"refresh_actions_ms": 2214.8,
+		},
+		"after_generated_small": {
+			"total_command_ms": float(command.get("total_command_ms", 0.0)),
+			"movement_rules_ms": float(phase_buckets.get("movement_rules", 0.0)),
+			"refresh_ms": float(command.get("refresh_ms", 0.0)),
+			"read_scope_map_state_ms": float(refresh_sections.get("read_scope_map_state", 0.0)),
+			"refresh_actions_ms": float(refresh_sections.get("actions", 0.0)),
+		},
+		"root_causes": [
+			"routine generated movement re-entered full overworld normalization through movement rules and refresh read scopes",
+			"post-move collection re-normalized the just-mutated generated session before finalization",
+			"route-decision refresh work performed broad route-interception fallback scans during ordinary selected-route action rebuilds",
+		],
+	}
 
 func _assert_generated_snapshot(snapshot: Dictionary, label: String) -> bool:
 	if not bool(snapshot.get("generated_random_map", false)):

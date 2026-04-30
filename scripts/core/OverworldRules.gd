@@ -20,6 +20,9 @@ const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "fronti
 
 static var _normalized_read_scope_session_id := ""
 static var _normalized_read_scope_depth := 0
+static var _runtime_normalized_signatures: Dictionary = {}
+static var _spatial_lookup_indexes: Dictionary = {}
+static var _spatial_lookup_signatures: Dictionary = {}
 static var _blocked_tile_indexes: Dictionary = {}
 static var _pathing_debug_profile: Dictionary = {
 	"capture_enabled": false,
@@ -198,6 +201,61 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 	_normalize_command_risk_forecast(session)
 
 	_normalize_scenario_state_rules(session)
+	_mark_runtime_normalized(session)
+
+static func normalize_overworld_state_for_runtime(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	if _normalized_read_scope_depth > 0 and String(session.session_id) == _normalized_read_scope_session_id:
+		return
+	var session_id := String(session.session_id)
+	if String(_runtime_normalized_signatures.get(session_id, "")) == _runtime_normalization_signature(session):
+		return
+	normalize_overworld_state(session)
+
+static func _mark_runtime_normalized(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	_runtime_normalized_signatures[String(session.session_id)] = _runtime_normalization_signature(session)
+
+static func _runtime_normalization_signature(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null:
+		return ""
+	var map_size := derive_map_size(session)
+	var movement: Dictionary = session.overworld.get("movement", {}) if session.overworld.get("movement", {}) is Dictionary else {}
+	var hero_pos := hero_position(session)
+	var fog: Dictionary = session.overworld.get(FOG_KEY, {}) if session.overworld.get(FOG_KEY, {}) is Dictionary else {}
+	return "|".join([
+		str(SessionStateStoreScript.SAVE_VERSION),
+		str(session.save_version),
+		String(session.session_id),
+		String(session.scenario_id),
+		String(session.hero_id),
+		String(session.difficulty),
+		SessionStateStoreScript.normalize_launch_mode(session.launch_mode),
+		String(session.game_state),
+		String(session.scenario_status),
+		str(session.day),
+		"%d,%d" % [map_size.x, map_size.y],
+		"%d,%d" % [hero_pos.x, hero_pos.y],
+		"%d/%d" % [int(movement.get("current", 0)), int(movement.get("max", 0))],
+		str(_collection_size(session.overworld.get("map", []))),
+		str(_collection_size(session.overworld.get("terrain_layers", {}))),
+		str(_collection_size(session.overworld.get("towns", []))),
+		str(_collection_size(session.overworld.get("resource_nodes", []))),
+		str(_collection_size(session.overworld.get("artifact_nodes", []))),
+		str(_collection_size(session.overworld.get("encounters", []))),
+		str(_collection_size(session.overworld.get("resolved_encounters", []))),
+		str(_collection_size(session.overworld.get("player_heroes", []))),
+		str(fog.get("visible_count", -1)),
+		str(fog.get("explored_count", -1)),
+		String(session.flags.get(ACTIVE_TOWN_PLACEMENT_KEY, "")),
+	])
+
+static func _collection_size(value: Variant) -> int:
+	if value is Array or value is Dictionary:
+		return value.size()
+	return 0
 
 static func _normalize_generated_runtime_materialization(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> void:
 	if session == null:
@@ -233,14 +291,14 @@ static func begin_normalized_read_scope(session: SessionStateStoreScript.Session
 	if session == null:
 		return
 	if _normalized_read_scope_depth <= 0:
-		normalize_overworld_state(session)
+		normalize_overworld_state_for_runtime(session)
 		_normalized_read_scope_session_id = String(session.session_id)
 		_normalized_read_scope_depth = 1
 		return
 	if String(session.session_id) == _normalized_read_scope_session_id:
 		_normalized_read_scope_depth += 1
 		return
-	normalize_overworld_state(session)
+	normalize_overworld_state_for_runtime(session)
 
 static func end_normalized_read_scope(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
@@ -297,7 +355,7 @@ static func describe_visibility(session: SessionStateStoreScript.SessionData) ->
 	]
 
 static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: int) -> Dictionary:
-	normalize_overworld_state(session)
+	normalize_overworld_state_for_runtime(session)
 
 	var movement = session.overworld.get("movement", {})
 	var movement_left := int(movement.get("current", 0))
@@ -317,6 +375,7 @@ static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: 
 	movement["current"] = movement_left - 1
 	session.overworld["movement"] = movement
 	HeroCommandRulesScript.commit_active_hero(session)
+	_mark_runtime_normalized(session)
 
 	var messages := ["Moved to %d,%d." % [nx, ny]]
 	var target_context := _post_action_tile_context(session, Vector2i(nx, ny))
@@ -438,7 +497,7 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 	return result
 
 static func collect_active_resource(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	normalize_overworld_state(session)
+	normalize_overworld_state_for_runtime(session)
 	var node_result := _find_context_resource_node(session)
 	if int(node_result.get("index", -1)) < 0:
 		return {"ok": false, "message": "No resource site here."}
@@ -513,7 +572,7 @@ static func collect_active_resource(session: SessionStateStoreScript.SessionData
 	)
 
 static func collect_active_artifact(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	normalize_overworld_state(session)
+	normalize_overworld_state_for_runtime(session)
 	var node_result := _find_active_artifact_node(session)
 	if int(node_result.get("index", -1)) < 0:
 		return {"ok": false, "message": "No artifact cache is here."}
@@ -663,7 +722,7 @@ static func award_hero_artifact(
 	return _finalize_action_result(session, true, String(result.get("message", "")))
 
 static func capture_active_town(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	normalize_overworld_state(session)
+	normalize_overworld_state_for_runtime(session)
 	var town_result := _find_active_town(session)
 	if int(town_result.get("index", -1)) < 0:
 		return {"ok": false, "message": "No town stands here."}
@@ -1104,10 +1163,28 @@ static func get_active_encounter(session: SessionStateStoreScript.SessionData) -
 	if not is_tile_visible(session, pos.x, pos.y):
 		return {}
 	var encounters = session.overworld.get("encounters", [])
-	for encounter in encounters:
-		if not (encounter is Dictionary):
-			continue
-		if _position_matches(encounter, pos) and not is_encounter_resolved(session, encounter):
+	var lookup_index := _spatial_lookup_index(session)
+	for encounter_index in _spatial_lookup_entries(lookup_index, "encounter_by_tile", pos):
+		var encounter = encounters[int(encounter_index)] if encounters is Array and int(encounter_index) >= 0 and int(encounter_index) < encounters.size() else {}
+		if encounter is Dictionary and not is_encounter_resolved(session, encounter):
+			return encounter
+	return {}
+
+static func _resource_node_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
+	var nodes = session.overworld.get("resource_nodes", [])
+	var lookup_index := _spatial_lookup_index(session)
+	for node_index in _spatial_lookup_entries(lookup_index, "resource_by_tile", Vector2i(x, y)):
+		var node = nodes[int(node_index)] if nodes is Array and int(node_index) >= 0 and int(node_index) < nodes.size() else {}
+		if node is Dictionary:
+			return node
+	return {}
+
+static func _encounter_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
+	var encounters = session.overworld.get("encounters", [])
+	var lookup_index := _spatial_lookup_index(session)
+	for encounter_index in _spatial_lookup_entries(lookup_index, "encounter_by_tile", Vector2i(x, y)):
+		var encounter = encounters[int(encounter_index)] if encounters is Array and int(encounter_index) >= 0 and int(encounter_index) < encounters.size() else {}
+		if encounter is Dictionary:
 			return encounter
 	return {}
 
@@ -1268,6 +1345,96 @@ static func _blocked_tile_index(session: SessionStateStoreScript.SessionData) ->
 	if not _blocked_tile_indexes.has(session_id):
 		_refresh_blocked_tile_index(session)
 	return _blocked_tile_indexes.get(session_id, {})
+
+static func _spatial_lookup_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null:
+		return {}
+	var session_id := String(session.session_id)
+	var signature := _spatial_lookup_signature(session)
+	if (
+		_spatial_lookup_indexes.has(session_id)
+		and String(_spatial_lookup_signatures.get(session_id, "")) == signature
+	):
+		return _spatial_lookup_indexes.get(session_id, {})
+	var index := _build_spatial_lookup_index(session)
+	_spatial_lookup_indexes[session_id] = index
+	_spatial_lookup_signatures[session_id] = signature
+	return index
+
+static func _spatial_lookup_signature(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null:
+		return ""
+	var map_size := derive_map_size(session)
+	return "|".join([
+		String(session.session_id),
+		String(session.scenario_id),
+		"%d,%d" % [map_size.x, map_size.y],
+		str(_collection_size(session.overworld.get("towns", []))),
+		str(_collection_size(session.overworld.get("resource_nodes", []))),
+		str(_collection_size(session.overworld.get("artifact_nodes", []))),
+		str(_collection_size(session.overworld.get("encounters", []))),
+	])
+
+static func _build_spatial_lookup_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var index := {
+		"town_by_tile": {},
+		"resource_by_tile": {},
+		"resource_by_interaction_tile": {},
+		"artifact_by_tile": {},
+		"encounter_by_tile": {},
+	}
+	var towns = session.overworld.get("towns", [])
+	if towns is Array:
+		var town_by_tile: Dictionary = index["town_by_tile"]
+		for town_index in range(towns.size()):
+			var town = towns[town_index]
+			if town is Dictionary:
+				town_by_tile[_tile_key(Vector2i(int(town.get("x", -1)), int(town.get("y", -1))))] = town_index
+	var resources = session.overworld.get("resource_nodes", [])
+	if resources is Array:
+		for node_index in range(resources.size()):
+			var node = resources[node_index]
+			if not (node is Dictionary):
+				continue
+			var node_tile_key := _tile_key(Vector2i(int(node.get("x", -1)), int(node.get("y", -1))))
+			_append_spatial_lookup_entry(index["resource_by_tile"], node_tile_key, node_index)
+			var map_object := _map_object_for_resource_node(node)
+			for interaction_tile in _resource_node_world_interaction_tiles(map_object, node):
+				if interaction_tile is Vector2i:
+					_append_spatial_lookup_entry(index["resource_by_interaction_tile"], _tile_key(interaction_tile), node_index)
+	var artifacts = session.overworld.get("artifact_nodes", [])
+	if artifacts is Array:
+		for artifact_index in range(artifacts.size()):
+			var artifact = artifacts[artifact_index]
+			if artifact is Dictionary:
+				_append_spatial_lookup_entry(
+					index["artifact_by_tile"],
+					_tile_key(Vector2i(int(artifact.get("x", -1)), int(artifact.get("y", -1)))),
+					artifact_index
+				)
+	var encounters = session.overworld.get("encounters", [])
+	if encounters is Array:
+		for encounter_index in range(encounters.size()):
+			var encounter = encounters[encounter_index]
+			if encounter is Dictionary:
+				_append_spatial_lookup_entry(
+					index["encounter_by_tile"],
+					_tile_key(Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))),
+					encounter_index
+				)
+	return index
+
+static func _append_spatial_lookup_entry(index_value: Variant, key: String, entry_index: int) -> void:
+	if not (index_value is Dictionary) or key == "":
+		return
+	var index: Dictionary = index_value
+	var entries: Array = index.get(key, []) if index.get(key, []) is Array else []
+	entries.append(entry_index)
+	index[key] = entries
+
+static func _spatial_lookup_entries(index: Dictionary, name: String, tile: Vector2i) -> Array:
+	var table: Dictionary = index.get(name, {}) if index.get(name, {}) is Dictionary else {}
+	return table.get(_tile_key(tile), []) if table.get(_tile_key(tile), []) is Array else []
 
 static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var index := {}
@@ -2759,7 +2926,8 @@ static func describe_route_interception_surface(
 	session: SessionStateStoreScript.SessionData,
 	destination_x: int = -1,
 	destination_y: int = -1,
-	route_steps: int = 0
+	route_steps: int = 0,
+	include_global_fallback: bool = true
 ) -> Dictionary:
 	normalize_overworld_state(session)
 	if session == null:
@@ -2772,6 +2940,8 @@ static func describe_route_interception_surface(
 		)
 		if bool(selected.get("active", false)):
 			return selected
+	if not include_global_fallback:
+		return _route_interception_empty_surface()
 	var convoy := _best_convoy_interception_surface(session)
 	if bool(convoy.get("active", false)):
 		return convoy
@@ -3033,24 +3203,6 @@ static func _raid_interception_why(target_kind: String, target_label: String, ob
 			return "Raid pressure on this guard can lock a route and delay objective progress.%s" % objective_clause
 		_:
 			return "Raid pressure can become economy, control, convoy, or objective loss if ignored.%s" % objective_clause
-
-static func _resource_node_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
-	for node_value in session.overworld.get("resource_nodes", []):
-		if not (node_value is Dictionary):
-			continue
-		var node: Dictionary = node_value
-		if int(node.get("x", -1)) == x and int(node.get("y", -1)) == y:
-			return node
-	return {}
-
-static func _encounter_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
-	for encounter_value in session.overworld.get("encounters", []):
-		if not (encounter_value is Dictionary):
-			continue
-		var encounter: Dictionary = encounter_value
-		if int(encounter.get("x", -1)) == x and int(encounter.get("y", -1)) == y:
-			return encounter
-	return {}
 
 static func _event_feed_convoy_line(session: SessionStateStoreScript.SessionData) -> String:
 	for node_value in session.overworld.get("resource_nodes", []):
@@ -3920,9 +4072,11 @@ static func _normalize_artifact_nodes(nodes: Array) -> Array:
 static func _find_resource_node_at(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var pos := hero_position(session)
 	var nodes = session.overworld.get("resource_nodes", [])
-	for index in range(nodes.size()):
-		var node = nodes[index]
-		if node is Dictionary and _position_matches(node, pos):
+	var lookup_index := _spatial_lookup_index(session)
+	for node_index in _spatial_lookup_entries(lookup_index, "resource_by_tile", pos):
+		var index := int(node_index)
+		var node = nodes[index] if nodes is Array and index >= 0 and index < nodes.size() else {}
+		if node is Dictionary:
 			return {"index": index, "node": node}
 	return {"index": -1, "node": {}}
 
@@ -3941,9 +4095,11 @@ static func _find_context_resource_node(session: SessionStateStoreScript.Session
 static func _find_resource_node_interaction_at(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var pos := hero_position(session)
 	var nodes = session.overworld.get("resource_nodes", [])
-	for index in range(nodes.size()):
-		var node = nodes[index]
-		if node is Dictionary and _resource_node_matches_interaction_tile(node, pos):
+	var lookup_index := _spatial_lookup_index(session)
+	for node_index in _spatial_lookup_entries(lookup_index, "resource_by_interaction_tile", pos):
+		var index := int(node_index)
+		var node = nodes[index] if nodes is Array and index >= 0 and index < nodes.size() else {}
+		if node is Dictionary:
 			return {"index": index, "node": node}
 	return {"index": -1, "node": {}}
 
@@ -3963,10 +4119,11 @@ static func _find_active_town(session: SessionStateStoreScript.SessionData) -> D
 		return visit_result
 	var pos := hero_position(session)
 	var towns = session.overworld.get("towns", [])
-	for index in range(towns.size()):
-		var town = towns[index]
-		if town is Dictionary and _position_matches(town, pos):
-			return {"index": index, "town": town}
+	var lookup_index := _spatial_lookup_index(session)
+	var town_by_tile: Dictionary = lookup_index.get("town_by_tile", {}) if lookup_index.get("town_by_tile", {}) is Dictionary else {}
+	var index := int(town_by_tile.get(_tile_key(pos), -1))
+	if towns is Array and index >= 0 and index < towns.size() and towns[index] is Dictionary:
+		return {"index": index, "town": towns[index]}
 	return {"index": -1, "town": {}}
 
 static func _find_active_town_by_visit_context(session: SessionStateStoreScript.SessionData) -> Dictionary:
@@ -3995,9 +4152,11 @@ static func _find_active_resource_node(session: SessionStateStoreScript.SessionD
 static func _find_active_artifact_node(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var pos := hero_position(session)
 	var nodes = session.overworld.get("artifact_nodes", [])
-	for index in range(nodes.size()):
-		var node = nodes[index]
-		if node is Dictionary and _position_matches(node, pos) and not bool(node.get("collected", false)):
+	var lookup_index := _spatial_lookup_index(session)
+	for node_index in _spatial_lookup_entries(lookup_index, "artifact_by_tile", pos):
+		var index := int(node_index)
+		var node = nodes[index] if nodes is Array and index >= 0 and index < nodes.size() else {}
+		if node is Dictionary and not bool(node.get("collected", false)):
 			return {"index": index, "node": node}
 	return {"index": -1, "node": {}}
 
@@ -9953,6 +10112,7 @@ static func _finalize_action_result(
 	refresh_fog_of_war(session)
 	if scenario_message != "":
 		messages.append(scenario_message)
+	_mark_runtime_normalized(session)
 
 	return {
 		"ok": ok,
