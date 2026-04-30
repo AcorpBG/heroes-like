@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-small-object-density-corrective-10184",
-  "currentSliceTitle": "Generated Small Object Density Corrective",
+  "currentSliceId": "random-map-generated-object-footprint-interaction-corrective-10184",
+  "currentSliceTitle": "Generated Object Footprint Interaction Corrective",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed urgent corrective: generated Small maps now materialize existing route reward bands plus bounded compact density support so reachable early/mid/frontier play space has meaningful live POIs without true-size/template/player-count/object-semantic changes.",
+  "currentSliceNotes": "Completed AcOrP follow-up for generated mines/resource producers: authored visual footprints, one reachable visit tile, no hidden multi-tile blockers.",
   "nextActionGuardrailNote": "Remaining generated save work should split generated map payload persistence from lightweight state/delta autosave without visual/map semantic changes.",
-  "updatedAt": "2026-04-30T18:40:00Z",
+  "updatedAt": "2026-04-30T17:59:09Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -107,15 +107,16 @@
         "tests/random_map_generated_object_footprint_interaction_report.tscn"
       ],
       "startedAt": "2026-04-30T16:57:50Z",
-      "completedAt": "2026-04-30T17:23:20Z",
+      "completedAt": "2026-04-30T17:59:09Z",
       "completionEvidence": [
-        "Generated resource-node materialization now preserves object_id, body_tiles, visit_tile, runtime_footprint, runtime_body_mask, footprint_deferred, and related generated placement metadata.",
-        "Overworld pathing/blocking now uses generated runtime body and exactly one generated visit tile for generated resources, mines, and dwellings; passable pickup resources remain enter-to-collect and do not block their node tile.",
-        "Generated render profiles use runtime_footprint when a deferred multi-tile object is currently materialized as an anchor-tile runtime object, preventing invisible authored multi-tile blocking/render mismatch.",
-        "Focused Small-map report proves collectible resources, dwellings, and sawmill/resource-producer contracts have reachable interaction tiles and no self-body interaction blockage."
+        "Generated mine/resource producer catalog synthesis now reads content/map_objects.json persistent producer footprint, body, and visit definitions instead of using the generic one-tile mine placeholder for rendering metadata.",
+        "Generated producers render at the authored visual footprint while using an explicit one-tile runtime body contract until generated multi-tile pathing is template-safe; this removes invisible 3x2 blockers and keeps the visit tile unblocked.",
+        "Generated producer placement now reserves the single authored visit tile so later generated bodies cannot occupy the interaction tile.",
+        "Focused regression proves generated Small producer visual footprint, body/visit contract, reachable route/move interaction, Brightwood Sawmill behavior, and object-list family fixtures for mine, staged_resource_front, and support_producer."
       ],
       "validationEvidence": [
-        "godot4 --headless --path . tests/random_map_generated_object_footprint_interaction_report.tscn passed.",
+        "godot4 --headless --path . tests/random_map_generated_object_footprint_interaction_report.tscn passed after cleanup.",
+        "godot4 --headless --path . tests/random_map_generated_small_distribution_report.tscn passed.",
         "godot4 --headless --path . tests/random_map_generated_visual_path_regression_report.tscn passed.",
         "godot4 --headless --path . tests/random_map_generated_overworld_profile_report.tscn passed.",
         "godot4 --headless --path . tests/random_map_live_overworld_render_move_report.tscn passed.",
@@ -128,7 +129,8 @@
         "python3 -m json.tool ops/progress.json passed.",
         "git diff --check passed."
       ],
-      "notes": "Completed after AcOrP local testing found collectible resources/dwellings/mines could expose blocked or mismatched interaction tiles. Root cause was generated placement metadata being stripped before runtime pathing/rendering rebuilt contracts from authored object metadata."
+      "notes": "Completed AcOrP follow-up for generated mine/resource producer footprint interaction. Runtime still intentionally uses an honest one-tile generated body contract for these generated producers; full generated multi-tile blocking remains deferred until template-safe pathing/body adoption.",
+      "updatedAt": "2026-04-30T17:59:09Z"
     },
     {
       "id": "document-model-reset-10184",

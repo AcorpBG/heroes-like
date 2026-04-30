@@ -1063,8 +1063,9 @@ func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
 			_draw_town_marker(footprint_rect, rect, _town_color(tile), remembered, tile)
 	var resource_node := _resource_node_at(tile)
 	if not resource_node.is_empty():
-		if not _draw_resource_sprite(resource_node, rect, remembered, tile):
-			_draw_resource_marker(resource_node, rect, remembered, tile)
+		var resource_rect := _resource_footprint_rect(resource_node, rect, tile)
+		if not _draw_resource_sprite(resource_node, resource_rect, remembered, tile):
+			_draw_resource_marker(resource_node, resource_rect, remembered, tile)
 	var artifact_node := _artifact_node_at(tile)
 	if not artifact_node.is_empty():
 		if not _draw_artifact_sprite(artifact_node, rect, remembered, tile):
@@ -1970,6 +1971,37 @@ func _object_profile_footprint(profile: Dictionary) -> Vector2i:
 	if footprint is Dictionary:
 		return _normalized_footprint(Vector2i(int(footprint.get("width", 1)), int(footprint.get("height", 1))))
 	return Vector2i(1, 1)
+
+func _object_profile_footprint_anchor(profile: Dictionary) -> String:
+	var footprint = profile.get("footprint", {})
+	if footprint is Dictionary:
+		return String(footprint.get("anchor", profile.get("footprint_anchor", "bottom_center")))
+	return String(profile.get("footprint_anchor", "bottom_center"))
+
+func _resource_footprint_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile: Vector2i) -> Rect2:
+	var profile := _resource_object_profile(node)
+	var footprint := _object_profile_footprint(profile)
+	if footprint == Vector2i(1, 1):
+		return anchor_rect
+	var origin := _object_footprint_origin_for_anchor(anchor_tile, footprint, _object_profile_footprint_anchor(profile))
+	var tile_size := anchor_rect.size
+	return Rect2(
+		anchor_rect.position + Vector2(float(origin.x - anchor_tile.x) * tile_size.x, float(origin.y - anchor_tile.y) * tile_size.y),
+		Vector2(tile_size.x * float(footprint.x), tile_size.y * float(footprint.y))
+	)
+
+func _object_footprint_origin_for_anchor(anchor_tile: Vector2i, footprint: Vector2i, anchor: String) -> Vector2i:
+	match anchor:
+		"top_left":
+			return anchor_tile
+		"center":
+			return anchor_tile - Vector2i(int(footprint.x / 2), int(footprint.y / 2))
+		"bottom_left":
+			return anchor_tile - Vector2i(0, footprint.y - 1)
+		"bottom_right":
+			return anchor_tile - Vector2i(footprint.x - 1, footprint.y - 1)
+		_:
+			return anchor_tile - Vector2i(int(footprint.x / 2), footprint.y - 1)
 
 func _presence_radius_factor(family: String, footprint: Vector2i, fallback: float = MARKER_PLATE_RADIUS_FACTOR) -> float:
 	match family:
@@ -5052,6 +5084,7 @@ func _load_map_object_profiles() -> void:
 			"id": String(object_value.get("id", "")),
 			"family": String(object_value.get("family", "pickup")),
 			"footprint": _normalized_footprint(footprint_size),
+			"footprint_anchor": String(footprint.get("anchor", "bottom_center")) if footprint is Dictionary else "bottom_center",
 			"passable": bool(object_value.get("passable", true)),
 			"visitable": bool(object_value.get("visitable", true)),
 			"map_roles": object_value.get("map_roles", []),
@@ -5103,7 +5136,9 @@ func _resource_object_profile(node: Dictionary) -> Dictionary:
 	if profile is Dictionary and not profile.is_empty():
 		var resolved_profile: Dictionary = profile.duplicate(true)
 		if node.get("runtime_footprint", {}) is Dictionary and not node.get("runtime_footprint", {}).is_empty():
-			resolved_profile["footprint"] = node.get("runtime_footprint", {}).duplicate(true)
+			var runtime_footprint: Dictionary = node.get("runtime_footprint", {}).duplicate(true)
+			resolved_profile["footprint"] = runtime_footprint
+			resolved_profile["footprint_anchor"] = String(runtime_footprint.get("anchor", resolved_profile.get("footprint_anchor", "bottom_center")))
 			resolved_profile["render_footprint_source"] = "generated_runtime_footprint"
 			resolved_profile["authored_footprint"] = profile.get("footprint", Vector2i(1, 1))
 		return resolved_profile
@@ -5113,7 +5148,9 @@ func _resource_object_profile(node: Dictionary) -> Dictionary:
 		family = "pickup"
 	var fallback := _default_object_profile(family, Vector2i(1, 1))
 	if node.get("runtime_footprint", {}) is Dictionary and not node.get("runtime_footprint", {}).is_empty():
-		fallback["footprint"] = node.get("runtime_footprint", {}).duplicate(true)
+		var runtime_footprint: Dictionary = node.get("runtime_footprint", {}).duplicate(true)
+		fallback["footprint"] = runtime_footprint
+		fallback["footprint_anchor"] = String(runtime_footprint.get("anchor", fallback.get("footprint_anchor", "bottom_center")))
 		fallback["render_footprint_source"] = "generated_runtime_footprint"
 	return fallback
 
@@ -5148,6 +5185,7 @@ func _default_object_profile(family: String, footprint: Vector2i) -> Dictionary:
 		"id": "",
 		"family": family,
 		"footprint": _normalized_footprint(footprint),
+		"footprint_anchor": "bottom_center",
 		"passable": true,
 		"visitable": true,
 		"map_roles": [],
