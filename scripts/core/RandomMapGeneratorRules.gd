@@ -2239,7 +2239,7 @@ static func _place_mines_for_zone(zone: Dictionary, seeds: Dictionary, zone_grid
 			}
 			placements.append(_object_placement(placement_id, "mine", String(zone.get("faction_id", "")), zone_id, point, mine_payload))
 			resource_nodes.append(_resource_node_from_placement(placement_id, mine_payload, point, zone_id))
-			_mark_occupied(occupied, point)
+			_mark_occupied_for_catalog(occupied, point, "mine", String(mine_record.get("family_id", "")), String(mine_record.get("object_id", "")))
 			_reserve_visit_tiles_for_catalog(reserved, point, "mine", String(mine_record.get("family_id", "")), String(mine_record.get("object_id", "")))
 			ordinal += 1
 
@@ -2275,7 +2275,8 @@ static func _place_dwelling_for_zone(zone: Dictionary, seeds: Dictionary, zone_g
 	}
 	placements.append(_object_placement(placement_id, "neutral_dwelling", String(zone.get("faction_id", "")), zone_id, point, payload))
 	resource_nodes.append(_resource_node_from_placement(placement_id, payload, point, zone_id))
-	_mark_occupied(occupied, point)
+	_mark_occupied_for_catalog(occupied, point, "neutral_dwelling", "neutral_dwelling", String(dwelling.get("object_id", "")))
+	_reserve_visit_tiles_for_catalog(reserved, point, "neutral_dwelling", "neutral_dwelling", String(dwelling.get("object_id", "")))
 
 static func _nearest_free_cell_for_catalog(kind: String, family_id: String, object_id: String, x: int, y: int, preferred_zone_id: Variant, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, rng: DeterministicRng, reserved: Dictionary = {}) -> Dictionary:
 	var height := zone_grid.size()
@@ -3926,7 +3927,7 @@ static func _object_footprint_catalog_record_for_placement(record: Dictionary) -
 
 static func _authored_resource_producer_catalog_record_for_placement(record: Dictionary) -> Dictionary:
 	var kind := String(record.get("kind", ""))
-	if kind not in ["mine", "resource_producer", "persistent_economy_site"]:
+	if kind not in ["mine", "resource_producer", "persistent_economy_site", "neutral_dwelling"]:
 		return {}
 	var object_id := String(record.get("object_id", "")).strip_edges()
 	var map_object := ContentService.get_map_object(object_id) if object_id != "" else {}
@@ -3935,7 +3936,8 @@ static func _authored_resource_producer_catalog_record_for_placement(record: Dic
 	if map_object.is_empty():
 		return {}
 	var family := String(map_object.get("family", ""))
-	if String(map_object.get("primary_class", "")) != "persistent_economy_site" and family not in ["mine", "staged_resource_front", "support_producer"]:
+	var primary_class := String(map_object.get("primary_class", ""))
+	if primary_class not in ["persistent_economy_site", "neutral_dwelling"] and family not in ["mine", "staged_resource_front", "support_producer", "neutral_dwelling"]:
 		return {}
 	var footprint: Dictionary = map_object.get("footprint", {}) if map_object.get("footprint", {}) is Dictionary else {}
 	var body_mask := _authored_map_object_body_mask(map_object)
@@ -3950,6 +3952,8 @@ static func _authored_resource_producer_catalog_record_for_placement(record: Dic
 	var resource_site_id := String(map_object.get("resource_site_id", ""))
 	if resource_site_id != "":
 		object_ids.append(resource_site_id)
+	var trigger := "neutral_dwelling_recruitment" if primary_class == "neutral_dwelling" or family == "neutral_dwelling" or kind == "neutral_dwelling" else "mine_capture"
+	var cadence := "persistent_weekly" if trigger == "neutral_dwelling_recruitment" else "capture_then_daily"
 	return {
 		"id": "authored_%s" % String(map_object.get("id", object_id)),
 		"family_id": family,
@@ -3960,7 +3964,7 @@ static func _authored_resource_producer_catalog_record_for_placement(record: Dic
 		"footprint": footprint.duplicate(true),
 		"runtime_footprint": footprint.duplicate(true),
 		"body_mask": body_mask,
-		"runtime_body_mask": [{"x": 0, "y": 0}],
+		"runtime_body_mask": body_mask.duplicate(true),
 		"visit_mask": visit_mask,
 		"approach_mask": visit_mask.duplicate(true),
 		"passability_mask": {
@@ -3971,11 +3975,11 @@ static func _authored_resource_producer_catalog_record_for_placement(record: Dic
 		},
 		"action_mask": {
 			"visitable": true,
-			"trigger": "mine_capture",
+			"trigger": trigger,
 			"visit_tile_required": true,
-			"interaction_cadence": "capture_then_daily",
+			"interaction_cadence": cadence,
 			"strict_single_visit_tile": true,
-			"runtime_body_contract": "anchor_tile_only_until_multitile_generated_pathing_is_template_safe",
+			"runtime_body_contract": "authored_body_tiles_match_visible_generated_footprint",
 		},
 		"terrain_restrictions": {
 			"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"],
@@ -4012,7 +4016,6 @@ static func _authored_map_object_visit_mask(map_object: Dictionary) -> Array:
 					"x": origin_offset.x + int(offset_value.get("x", 0)),
 					"y": origin_offset.y + int(offset_value.get("y", 0)),
 				})
-				break
 	return visit_mask
 
 static func _map_object_anchor_origin_offset(map_object: Dictionary) -> Vector2i:
@@ -11419,6 +11422,18 @@ static func _point_dict(x: int, y: int) -> Dictionary:
 
 static func _mark_occupied(occupied: Dictionary, point: Dictionary) -> void:
 	occupied[_point_key(int(point.get("x", 0)), int(point.get("y", 0)))] = true
+
+static func _mark_occupied_for_catalog(occupied: Dictionary, point: Dictionary, kind: String, family_id: String, object_id: String) -> void:
+	var catalog := _object_footprint_catalog_record_for_placement({
+		"kind": kind,
+		"family_id": family_id,
+		"object_id": object_id,
+		"x": int(point.get("x", 0)),
+		"y": int(point.get("y", 0)),
+	})
+	for body in _runtime_body_tiles_for_catalog(point, catalog):
+		if body is Dictionary:
+			_mark_occupied(occupied, body)
 
 static func _reserve_visit_tiles_for_catalog(reserved: Dictionary, point: Dictionary, kind: String, family_id: String, object_id: String) -> void:
 	var catalog := _object_footprint_catalog_record_for_placement({
