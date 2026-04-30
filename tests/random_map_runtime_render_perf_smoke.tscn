@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/random_map_runtime_render_perf_smoke.gd" id="1"]
+
+[node name="RandomMapRuntimeRenderPerfSmoke" type="Node"]
+script = ExtResource("1")

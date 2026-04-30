@@ -235,6 +235,13 @@ var _session_static_cache_reason := "uninitialized"
 var _state_cache_reason := "uninitialized"
 var _dynamic_layer_reason := "uninitialized"
 var _frame_layer_reason := "uninitialized"
+var _towns_by_tile: Dictionary = {}
+var _town_footprints_by_tile: Dictionary = {}
+var _resources_by_tile: Dictionary = {}
+var _artifacts_by_tile: Dictionary = {}
+var _encounters_by_tile: Dictionary = {}
+var _rememberable_encounters_by_tile: Dictionary = {}
+var _heroes_by_tile: Dictionary = {}
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -254,11 +261,12 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 	var previous_state_signature := _state_cache_signature
 	var previous_session_present := _session != null
 	_session = session
-	_map_data = map_data.duplicate(true)
+	_map_data = map_data
 	_map_size = Vector2i(max(map_size.x, 1), max(map_size.y, 1))
 	_hero_tile = OverworldRulesScript.hero_position(session) if session != null else Vector2i.ZERO
 	_movement_left = int(session.overworld.get("movement", {}).get("current", 0)) if session != null else 0
-	_terrain_layers = session.overworld.get("terrain_layers", {}).duplicate(true) if session != null and session.overworld.get("terrain_layers", {}) is Dictionary else {}
+	_terrain_layers = session.overworld.get("terrain_layers", {}) if session != null and session.overworld.get("terrain_layers", {}) is Dictionary else {}
+	_rebuild_object_indexes()
 	_rebuild_road_tiles()
 	_selected_tile = selected_tile
 	_path_tiles = _build_path(_hero_tile, _selected_tile)
@@ -351,15 +359,17 @@ func _board_layout_signature() -> String:
 
 func _session_static_signature_for(map_data: Array, terrain_layers: Dictionary) -> int:
 	var roads = terrain_layers.get("roads", []) if terrain_layers is Dictionary else []
-	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, map_data.size())
-	for row_index in range(map_data.size()):
-		var row = map_data[row_index]
-		if not (row is Array):
-			signature = _combine_cache_signature(signature, hash(typeof(row)))
-			continue
-		signature = _combine_cache_signature(signature, row.size())
-		for tile_value in row:
-			signature = _combine_cache_signature(signature, hash(String(tile_value)))
+	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, _map_size.x)
+	signature = _combine_cache_signature(signature, _map_size.y)
+	signature = _combine_cache_signature(signature, hash(str(_session.scenario_id) if _session != null else ""))
+	if _session != null:
+		var materialization = _session.flags.get("generated_random_map_materialization", {})
+		if materialization is Dictionary:
+			signature = _combine_cache_signature(signature, hash(str(materialization.get("materialized_map_signature", ""))))
+	if not map_data.is_empty():
+		signature = _combine_cache_signature(signature, hash(var_to_str(map_data[0])))
+		var last_row = map_data[map_data.size() - 1]
+		signature = _combine_cache_signature(signature, hash(var_to_str(last_row)))
 	return _combine_cache_signature(signature, _roads_cache_signature(roads))
 
 func _state_cache_signature_for(session) -> int:
@@ -367,11 +377,12 @@ func _state_cache_signature_for(session) -> int:
 		return 0
 	var overworld = session.overworld
 	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, _fog_cache_signature(overworld.get("fog", {})))
-	signature = _combine_cache_signature(signature, _variant_array_cache_signature(overworld.get("towns", [])))
-	signature = _combine_cache_signature(signature, _variant_array_cache_signature(overworld.get("resource_nodes", [])))
-	signature = _combine_cache_signature(signature, _variant_array_cache_signature(overworld.get("artifact_nodes", [])))
-	signature = _combine_cache_signature(signature, _variant_array_cache_signature(overworld.get("encounters", [])))
-	return _combine_cache_signature(signature, _variant_array_cache_signature(overworld.get("resolved_encounters", [])))
+	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("towns", []), ["owner", "placement_id", "town_id"]))
+	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("resource_nodes", []), ["site_id", "placement_id", "collected", "collected_by_faction_id"]))
+	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("artifact_nodes", []), ["artifact_id", "placement_id", "collected"]))
+	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("encounters", []), ["encounter_id", "placement_id", "spawned_by_faction_id"]))
+	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("resolved_encounters", []), ["placement_id", "encounter_id", "id"]))
+	return _combine_cache_signature(signature, _placement_array_cache_signature(HeroCommandRulesScript.hero_positions(session), ["hero_id", "is_active"]))
 
 func _combine_cache_signature(signature: int, value: int) -> int:
 	return int(((signature * 16777619) + value + 1013904223) & CACHE_SIGNATURE_MASK)
@@ -385,9 +396,9 @@ func _roads_cache_signature(roads) -> int:
 			signature = _combine_cache_signature(signature, hash(var_to_str(road_value)))
 			continue
 		var road: Dictionary = road_value
-		signature = _combine_cache_signature(signature, hash(String(road.get("id", ""))))
-		signature = _combine_cache_signature(signature, hash(String(road.get("overlay_id", ""))))
-		signature = _combine_cache_signature(signature, hash(String(road.get("role", ""))))
+		signature = _combine_cache_signature(signature, hash(str(road.get("id", ""))))
+		signature = _combine_cache_signature(signature, hash(str(road.get("overlay_id", ""))))
+		signature = _combine_cache_signature(signature, hash(str(road.get("role", ""))))
 		var tiles = road.get("tiles", [])
 		if not (tiles is Array):
 			signature = _combine_cache_signature(signature, hash(typeof(tiles)))
@@ -440,6 +451,24 @@ func _variant_array_cache_signature(values) -> int:
 	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, values.size())
 	for value in values:
 		signature = _combine_cache_signature(signature, hash(var_to_str(value)))
+	return signature
+
+func _placement_array_cache_signature(values, fields: Array) -> int:
+	if not (values is Array):
+		return hash(typeof(values))
+	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, values.size())
+	for value in values:
+		if not (value is Dictionary):
+			signature = _combine_cache_signature(signature, hash(typeof(value)))
+			continue
+		var entry: Dictionary = value
+		var position = entry.get("position", {})
+		var fallback_x = position.get("x", -1) if position is Dictionary else -1
+		var fallback_y = position.get("y", -1) if position is Dictionary else -1
+		signature = _combine_cache_signature(signature, int(entry.get("x", fallback_x)))
+		signature = _combine_cache_signature(signature, int(entry.get("y", fallback_y)))
+		for field in fields:
+			signature = _combine_cache_signature(signature, hash(str(entry.get(str(field), ""))))
 	return signature
 
 func _invalidate_session_static_cache(reason: String) -> void:
@@ -2258,6 +2287,15 @@ func validation_view_metrics() -> Dictionary:
 			"state_reason": _state_cache_reason,
 			"dynamic_reason": _dynamic_layer_reason,
 			"frame_reason": _frame_layer_reason,
+		},
+		"spatial_index": {
+			"town_tiles": _towns_by_tile.size(),
+			"town_footprint_tiles": _town_footprints_by_tile.size(),
+			"resource_tiles": _resources_by_tile.size(),
+			"artifact_tiles": _artifacts_by_tile.size(),
+			"encounter_tiles": _encounters_by_tile.size(),
+			"rememberable_encounter_tiles": _rememberable_encounters_by_tile.size(),
+			"hero_tiles": _heroes_by_tile.size(),
 		},
 	}
 
@@ -4605,6 +4643,69 @@ func _rebuild_road_tiles() -> void:
 			_ensure_road_tile_payload(tile, overlay_id, road_id, role)
 	_rebuild_road_adjacency_connections()
 
+func _rebuild_object_indexes() -> void:
+	_towns_by_tile.clear()
+	_town_footprints_by_tile.clear()
+	_resources_by_tile.clear()
+	_artifacts_by_tile.clear()
+	_encounters_by_tile.clear()
+	_rememberable_encounters_by_tile.clear()
+	_heroes_by_tile.clear()
+	if _session == null:
+		return
+	for town_value in _session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		var entry := _town_entry_tile(town)
+		_towns_by_tile[_tile_key(entry)] = town
+		var origin := _town_footprint_origin_for_entry(entry)
+		for y_offset in range(TOWN_PRESENTATION_FOOTPRINT.y):
+			for x_offset in range(TOWN_PRESENTATION_FOOTPRINT.x):
+				var tile := origin + Vector2i(x_offset, y_offset)
+				if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
+					continue
+				_town_footprints_by_tile[_tile_key(tile)] = {
+					"town": town,
+					"entry_tile": entry,
+					"origin_tile": origin,
+					"cell_offset": tile - origin,
+					"is_entry_tile": tile == entry,
+					"tile_role": TOWN_ENTRY_ROLE if tile == entry else TOWN_NON_ENTRY_ROLE,
+					"presentation_blocked": tile != entry,
+				}
+	for node_value in _session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
+		if bool(site.get("persistent_control", false)) or not bool(node.get("collected", false)):
+			_resources_by_tile[_tile_key(Vector2i(int(node.get("x", -1)), int(node.get("y", -1))))] = node
+	for node_value in _session.overworld.get("artifact_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if not bool(node.get("collected", false)):
+			_artifacts_by_tile[_tile_key(Vector2i(int(node.get("x", -1)), int(node.get("y", -1))))] = node
+	for encounter_value in _session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if OverworldRulesScript.is_encounter_resolved(_session, encounter):
+			continue
+		var key := _tile_key(Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1))))
+		_encounters_by_tile[key] = encounter
+		if String(encounter.get("spawned_by_faction_id", "")) == "":
+			_rememberable_encounters_by_tile[key] = encounter
+	for hero_value in HeroCommandRulesScript.hero_positions(_session):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = hero_value
+		var key := _tile_key(Vector2i(int(hero.get("x", -1)), int(hero.get("y", -1))))
+		var heroes: Array = _heroes_by_tile.get(key, [])
+		heroes.append(hero)
+		_heroes_by_tile[key] = heroes
+
 func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: String, role: String) -> void:
 	var key := _tile_key(tile)
 	var payload: Dictionary = _road_tiles.get(key, {})
@@ -4910,10 +5011,7 @@ func _has_town_at(tile: Vector2i) -> bool:
 	return not _town_at(tile).is_empty()
 
 func _town_at(tile: Vector2i) -> Dictionary:
-	for town in _session.overworld.get("towns", []):
-		if town is Dictionary and int(town.get("x", -1)) == tile.x and int(town.get("y", -1)) == tile.y:
-			return town
-	return {}
+	return _towns_by_tile.get(_tile_key(tile), {})
 
 func _town_color(tile: Vector2i) -> Color:
 	var town = _town_at(tile)
@@ -4931,26 +5029,7 @@ func _town_owner_color(town: Dictionary) -> Color:
 func _town_presentation_at(tile: Vector2i) -> Dictionary:
 	if _session == null:
 		return {}
-	for town_value in _session.overworld.get("towns", []):
-		if not (town_value is Dictionary):
-			continue
-		var town: Dictionary = town_value
-		var entry := _town_entry_tile(town)
-		var origin := _town_footprint_origin_for_entry(entry)
-		var footprint := TOWN_PRESENTATION_FOOTPRINT
-		if tile.x < origin.x or tile.y < origin.y or tile.x >= origin.x + footprint.x or tile.y >= origin.y + footprint.y:
-			continue
-		var is_entry := tile == entry
-		return {
-			"town": town,
-			"entry_tile": entry,
-			"origin_tile": origin,
-			"cell_offset": tile - origin,
-			"is_entry_tile": is_entry,
-			"tile_role": TOWN_ENTRY_ROLE if is_entry else TOWN_NON_ENTRY_ROLE,
-			"presentation_blocked": not is_entry,
-		}
-	return {}
+	return _town_footprints_by_tile.get(_tile_key(tile), {})
 
 func _town_entry_tile(town: Dictionary) -> Vector2i:
 	return Vector2i(int(town.get("x", -1)), int(town.get("y", -1)))
@@ -4999,15 +5078,7 @@ func _has_resource_at(tile: Vector2i) -> bool:
 	return not _resource_node_at(tile).is_empty()
 
 func _resource_node_at(tile: Vector2i) -> Dictionary:
-	for node in _session.overworld.get("resource_nodes", []):
-		if not (node is Dictionary):
-			continue
-		if int(node.get("x", -1)) != tile.x or int(node.get("y", -1)) != tile.y:
-			continue
-		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
-		if bool(site.get("persistent_control", false)) or not bool(node.get("collected", false)):
-			return node
-	return {}
+	return _resources_by_tile.get(_tile_key(tile), {})
 
 func _resource_asset_id(node: Dictionary) -> String:
 	if node.is_empty():
@@ -5023,45 +5094,21 @@ func _has_artifact_at(tile: Vector2i) -> bool:
 	return not _artifact_node_at(tile).is_empty()
 
 func _artifact_node_at(tile: Vector2i) -> Dictionary:
-	for node in _session.overworld.get("artifact_nodes", []):
-		if node is Dictionary and not bool(node.get("collected", false)) and int(node.get("x", -1)) == tile.x and int(node.get("y", -1)) == tile.y:
-			return node
-	return {}
+	return _artifacts_by_tile.get(_tile_key(tile), {})
 
 func _has_encounter_at(tile: Vector2i) -> bool:
-	for encounter in _session.overworld.get("encounters", []):
-		if not (encounter is Dictionary):
-			continue
-		if int(encounter.get("x", -1)) != tile.x or int(encounter.get("y", -1)) != tile.y:
-			continue
-		if not OverworldRulesScript.is_encounter_resolved(_session, encounter):
-			return true
-	return false
+	return _encounters_by_tile.has(_tile_key(tile))
 
 func _has_rememberable_encounter_at(tile: Vector2i) -> bool:
-	for encounter in _session.overworld.get("encounters", []):
-		if not (encounter is Dictionary):
-			continue
-		if String(encounter.get("spawned_by_faction_id", "")) != "":
-			continue
-		if int(encounter.get("x", -1)) != tile.x or int(encounter.get("y", -1)) != tile.y:
-			continue
-		if not OverworldRulesScript.is_encounter_resolved(_session, encounter):
-			return true
-	return false
+	return _rememberable_encounters_by_tile.has(_tile_key(tile))
 
 func _has_hero_at(tile: Vector2i) -> bool:
-	for entry in HeroCommandRulesScript.hero_positions(_session):
-		if entry is Dictionary and int(entry.get("x", -1)) == tile.x and int(entry.get("y", -1)) == tile.y:
-			return true
-	return false
+	return _heroes_by_tile.has(_tile_key(tile))
 
 func _reserve_hero_count(tile: Vector2i) -> int:
 	var reserve_count = 0
-	for entry in HeroCommandRulesScript.hero_positions(_session):
+	for entry in _heroes_by_tile.get(_tile_key(tile), []):
 		if not (entry is Dictionary):
-			continue
-		if int(entry.get("x", -1)) != tile.x or int(entry.get("y", -1)) != tile.y:
 			continue
 		if not bool(entry.get("is_active", false)):
 			reserve_count += 1
@@ -5080,12 +5127,14 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 		return []
 
 	var queue: Array = [start]
+	var queue_index := 0
 	var visited = {_tile_key(start): true}
 	var came_from = {_tile_key(start): start}
 	var found = false
 
-	while not queue.is_empty():
-		var current: Vector2i = queue.pop_front()
+	while queue_index < queue.size():
+		var current: Vector2i = queue[queue_index]
+		queue_index += 1
 		if current == goal:
 			found = true
 			break

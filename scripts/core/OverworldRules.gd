@@ -20,6 +20,7 @@ const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "fronti
 
 static var _normalized_read_scope_session_id := ""
 static var _normalized_read_scope_depth := 0
+static var _blocked_tile_indexes: Dictionary = {}
 
 static func _scenario_factory() -> Variant:
 	return load("res://scripts/core/ScenarioFactory.gd")
@@ -184,6 +185,7 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 	_normalize_generated_runtime_materialization(session, scenario)
 	if not session.overworld.has("hero_position") or not (session.overworld.get("hero_position") is Dictionary):
 		session.overworld["hero_position"] = scenario.get("start", {"x": 0, "y": 0})
+	_refresh_blocked_tile_index(session)
 	_normalize_fog_of_war(session)
 	_normalize_command_briefing(session)
 	_normalize_command_risk_forecast(session)
@@ -453,6 +455,7 @@ static func collect_active_resource(session: SessionStateStoreScript.SessionData
 	node = _clear_resource_site_response(node)
 	nodes[int(node_result.get("index", -1))] = node
 	session.overworld["resource_nodes"] = nodes
+	_refresh_blocked_tile_index(session)
 
 	var rewards = DifficultyRulesScript.scale_reward_resources(session, _resource_site_claim_rewards(site))
 	if not visit_cost.is_empty():
@@ -1221,11 +1224,30 @@ static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int
 			return true
 	elif terrain_id == "water":
 		return true
-	return _tile_blocked_by_resource_object(session, Vector2i(x, y))
+	return _blocked_tile_index(session).has(_tile_key(Vector2i(x, y)))
 
 static func _tile_blocked_by_resource_object(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
 	if session == null:
 		return false
+	return _blocked_tile_index(session).has(_tile_key(tile))
+
+static func _refresh_blocked_tile_index(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	_blocked_tile_indexes[str(session.session_id)] = _build_blocked_tile_index(session)
+
+static func _blocked_tile_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null:
+		return {}
+	var session_id := str(session.session_id)
+	if not _blocked_tile_indexes.has(session_id):
+		_refresh_blocked_tile_index(session)
+	return _blocked_tile_indexes.get(session_id, {})
+
+static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var index := {}
+	if session == null:
+		return index
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
 			continue
@@ -1234,9 +1256,9 @@ static func _tile_blocked_by_resource_object(session: SessionStateStoreScript.Se
 		if map_object.is_empty() or not _map_object_blocks_body_tiles(map_object):
 			continue
 		for body_tile in _map_object_world_body_tiles(map_object, node):
-			if body_tile == tile:
-				return true
-	return false
+			if body_tile is Vector2i:
+				index[_tile_key(body_tile)] = true
+	return index
 
 static func _map_object_for_resource_node(node: Dictionary) -> Dictionary:
 	return ContentService.get_map_object_for_resource_site(String(node.get("site_id", "")))
@@ -1306,6 +1328,9 @@ static func _resource_node_matches_interaction_tile(node: Dictionary, tile: Vect
 
 static func _tile_payload(tile: Vector2i) -> Dictionary:
 	return {"x": tile.x, "y": tile.y}
+
+static func _tile_key(tile: Vector2i) -> String:
+	return "%d,%d" % [tile.x, tile.y]
 
 static func terrain_profile_at(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
 	var terrain_id := _terrain_id_at(session, x, y)
