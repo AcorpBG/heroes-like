@@ -274,6 +274,8 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	buckets["town_entity_cache_hit"] = 1.0 if bool(cache_result.get("hit", false)) else 0.0
 	buckets["town_entity_cache_miss"] = 0.0 if bool(cache_result.get("hit", false)) else 1.0
 	buckets["town_entity_cache_entries"] = float(int(cache_result.get("entry_count", 0)))
+	buckets["town_entity_cache_signature"] = float(cache_result.get("signature_ms", 0.0))
+	buckets["town_entity_cache_build"] = float(cache_result.get("build_ms", 0.0))
 
 	section_started = ProfileLogScript.begin_usec()
 	_header_label.text = String(view_state.get("header_text", ""))
@@ -418,7 +420,9 @@ func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> 
 		return _build_active_town_entity_view_state(minimal)
 	var session_key := _town_entity_session_cache_key()
 	var bucket: Dictionary = _town_entity_cache_by_session.get(session_key, {}) if _town_entity_cache_by_session.get(session_key, {}) is Dictionary else {}
-	var signature := _town_entity_cache_signature(town)
+	var signature_started := ProfileLogScript.begin_usec()
+	var signature := _town_entity_cache_signature(town, minimal)
+	var signature_ms := ProfileLogScript.elapsed_ms(signature_started)
 	var entry: Dictionary = bucket.get(placement_id, {}) if bucket.get(placement_id, {}) is Dictionary else {}
 	if String(entry.get("signature", "")) == signature and entry.get("view_state", {}) is Dictionary and (minimal or not bool(entry.get("minimal", false))):
 		_last_town_entity_cache_result = {
@@ -426,10 +430,14 @@ func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> 
 			"placement_id": placement_id,
 			"entry_count": bucket.size(),
 			"signature": signature,
+			"signature_ms": signature_ms,
+			"build_ms": 0.0,
 			"minimal": bool(entry.get("minimal", false)),
 		}
 		return (entry.get("view_state", {}) as Dictionary).duplicate(true)
+	var build_started := ProfileLogScript.begin_usec()
 	var view_state := _build_active_town_entity_view_state(minimal)
+	var build_ms := ProfileLogScript.elapsed_ms(build_started)
 	bucket[placement_id] = {
 		"signature": signature,
 		"view_state": view_state.duplicate(true),
@@ -441,6 +449,8 @@ func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> 
 		"placement_id": placement_id,
 		"entry_count": bucket.size(),
 		"signature": signature,
+		"signature_ms": signature_ms,
+		"build_ms": build_ms,
 		"minimal": minimal,
 	}
 	return view_state
@@ -522,33 +532,241 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 		"artifact_actions": _duplicate_action_array(TownRules.get_artifact_actions(_session)) if (not minimal or current_lanes.has("logistics")) else [],
 	}
 
-func _town_entity_cache_signature(town: Dictionary) -> String:
-	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
-	return JSON.stringify({
-		"day": _session.day,
-		"town": _active_town_signature(town),
-		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
-		"active_hero_id": String(_session.overworld.get("active_hero_id", "")),
-		"hero": hero.duplicate(true),
-		"army": _duplicate_dictionary(_session.overworld.get("army", {})),
-		"player_heroes": _duplicate_array(_session.overworld.get("player_heroes", [])),
-		"last_message": _last_message,
-		"last_action_recap": _last_action_recap.duplicate(true),
-	})
+func _town_entity_cache_signature(town: Dictionary, minimal: bool) -> String:
+	if _session == null:
+		return "v3|missing-session"
+	var parts := []
+	var active_tab := _management_tabs.current_tab if _management_tabs != null else -1
+	parts.append("v3")
+	parts.append("mode:%s" % ("minimal" if minimal else "full"))
+	parts.append("tab:%d" % active_tab)
+	parts.append("day:%d" % int(_session.day))
+	parts.append("pid:%s" % _signature_token(town.get("placement_id", "")))
+	parts.append("town:%s" % _signature_token(town.get("town_id", "")))
+	parts.append("owner:%s" % _signature_token(town.get("owner", "")))
+	parts.append("role:%s" % _signature_token(town.get("strategic_role", "")))
+	parts.append("built:%s" % _string_array_signature(town.get("built_buildings", [])))
+	parts.append("recruits:%s" % _scalar_pairs_signature(town.get("available_recruits", {})))
+	parts.append("garrison:%s" % _stack_collection_signature(town.get("garrison", [])))
+	parts.append("recovery:%s" % _compact_local_state_signature(town.get("recovery", {})))
+	parts.append("front:%s" % _compact_local_state_signature(town.get("front", {})))
+	parts.append("occupation:%s" % _compact_local_state_signature(town.get("occupation", {})))
+	parts.append("market:%s" % _compact_local_state_signature(town.get("market_state", town.get("market", {}))))
+	parts.append("response:%s" % _compact_local_state_signature(town.get("response_state", town.get("responses", {}))))
+	parts.append("resources:%s" % _scalar_pairs_signature(_session.overworld.get("resources", {})))
+	parts.append("active_hero:%s" % _active_hero_cache_signature(town))
+	parts.append("army:%s" % _army_state_signature(_session.overworld.get("army", {})))
+	parts.append("stationed:%s" % _stationed_heroes_cache_signature(town))
+	parts.append("recap:%s" % _town_action_recap_cache_signature())
+	return "|".join(parts)
 
-func _active_town_signature(town: Dictionary) -> Dictionary:
-	return {
-		"placement_id": String(town.get("placement_id", "")),
-		"town_id": String(town.get("town_id", "")),
-		"owner": String(town.get("owner", "")),
-		"built_buildings": _normalize_string_array(town.get("built_buildings", [])),
-		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
-		"garrison": _duplicate_dictionary(town.get("garrison", {})),
-		"front_state": _duplicate_dictionary(town.get("front_state", {})),
-		"occupation_state": _duplicate_dictionary(town.get("occupation_state", {})),
-		"market_state": _duplicate_dictionary(town.get("market_state", {})),
-		"response_state": _duplicate_dictionary(town.get("response_state", {})),
-	}
+func _active_hero_cache_signature(town: Dictionary) -> String:
+	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+	var parts := []
+	parts.append("id=%s" % _signature_token(_session.overworld.get("active_hero_id", hero.get("id", ""))))
+	parts.append("hero=%s" % _signature_token(hero.get("id", "")))
+	parts.append("level=%d" % int(hero.get("level", 0)))
+	parts.append("xp=%d" % int(hero.get("experience", 0)))
+	var movement: Dictionary = hero.get("movement", {}) if hero.get("movement", {}) is Dictionary else {}
+	var overworld_movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
+	parts.append("move=%d/%d" % [
+		int(movement.get("current", overworld_movement.get("current", 0))),
+		int(movement.get("max", overworld_movement.get("max", 0))),
+	])
+	parts.append("pos=%s" % _position_signature(hero.get("position", _session.overworld.get("hero_position", {}))))
+	parts.append("army=%s" % _army_state_signature(hero.get("army", {})))
+	var spellbook: Dictionary = hero.get("spellbook", {}) if hero.get("spellbook", {}) is Dictionary else {}
+	parts.append("spells=%s" % _string_array_signature(spellbook.get("known_spell_ids", [])))
+	parts.append("specialties=%s" % _string_array_signature(hero.get("specialties", [])))
+	parts.append("pending_specialties=%s" % _string_array_signature(hero.get("pending_specialty_choices", [])))
+	parts.append("artifacts=%s" % _artifact_state_signature(hero.get("artifacts", {})))
+	parts.append("town_pos=%s" % _position_signature({"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}))
+	return ",".join(parts)
+
+func _stationed_heroes_cache_signature(town: Dictionary) -> String:
+	var heroes_value: Variant = _session.overworld.get("player_heroes", [])
+	if not (heroes_value is Array):
+		return "count=0"
+	var town_x := int(town.get("x", 0))
+	var town_y := int(town.get("y", 0))
+	var stationed := []
+	var all_ids := []
+	for hero_value in heroes_value:
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = hero_value
+		var hero_id := String(hero.get("id", ""))
+		if hero_id == "":
+			continue
+		all_ids.append(_signature_token(hero_id))
+		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
+		if int(position.get("x", -999999)) != town_x or int(position.get("y", -999999)) != town_y:
+			continue
+		var entry := []
+		entry.append(_signature_token(hero_id))
+		entry.append("lvl%d" % int(hero.get("level", 0)))
+		entry.append(_army_state_signature(hero.get("army", {})))
+		stationed.append(":".join(entry))
+	all_ids.sort()
+	stationed.sort()
+	return "count=%d,ids=%s,local=%s" % [
+		heroes_value.size(),
+		".".join(all_ids),
+		".".join(stationed),
+	]
+
+func _town_action_recap_cache_signature() -> String:
+	var parts := []
+	parts.append("msg=%d" % String(_last_message).hash())
+	parts.append("active=%d" % (1 if bool(_last_action_recap.get("active", false)) else 0))
+	parts.append("kind=%s" % _signature_token(_last_action_recap.get("kind", "")))
+	parts.append("action=%s" % _signature_token(_last_action_recap.get("action_id", "")))
+	parts.append("text=%d" % String(_last_action_recap.get("text", "")).hash())
+	return ",".join(parts)
+
+func _compact_local_state_signature(value: Variant) -> String:
+	if not (value is Dictionary):
+		return ""
+	var state: Dictionary = value
+	var keys := [
+		"active",
+		"id",
+		"kind",
+		"state",
+		"status",
+		"owner",
+		"controller_id",
+		"source_id",
+		"target_id",
+		"action_id",
+		"action_label",
+		"remaining_days",
+		"days_remaining",
+		"expires_day",
+		"last_event_day",
+		"progress_complete",
+		"progress_total",
+		"relief_per_day",
+		"watch_days",
+	]
+	var parts := []
+	for key in keys:
+		if state.has(key):
+			parts.append("%s=%s" % [_signature_token(key), _signature_scalar_value(state.get(key))])
+	if parts.is_empty():
+		return _scalar_pairs_signature(state)
+	return ",".join(parts)
+
+func _scalar_pairs_signature(value: Variant) -> String:
+	if not (value is Dictionary):
+		return ""
+	var dictionary: Dictionary = value
+	var keys := []
+	for key_value in dictionary.keys():
+		keys.append(String(key_value))
+	keys.sort()
+	var pairs := []
+	for key in keys:
+		pairs.append("%s=%s" % [_signature_token(key), _signature_scalar_value(dictionary.get(key))])
+	return ",".join(pairs)
+
+func _signature_scalar_value(value: Variant) -> String:
+	match typeof(value):
+		TYPE_BOOL:
+			return "1" if bool(value) else "0"
+		TYPE_INT:
+			return str(int(value))
+		TYPE_FLOAT:
+			return "%.3f" % float(value)
+		TYPE_STRING, TYPE_STRING_NAME, TYPE_NODE_PATH:
+			return _signature_token(value)
+		TYPE_VECTOR2I:
+			var tile: Vector2i = value
+			return "%d.%d" % [tile.x, tile.y]
+		TYPE_DICTIONARY:
+			var dictionary: Dictionary = value
+			if dictionary.has("unit_id") or dictionary.has("count"):
+				return _stack_signature(dictionary)
+			if dictionary.has("x") or dictionary.has("y"):
+				return _position_signature(dictionary)
+			return _scalar_pairs_signature(dictionary)
+		TYPE_ARRAY:
+			return _scalar_array_signature(value)
+		_:
+			return _signature_token(value)
+
+func _scalar_array_signature(value: Variant) -> String:
+	if not (value is Array):
+		return ""
+	var entries := []
+	for entry in value:
+		entries.append(_signature_scalar_value(entry))
+	entries.sort()
+	return ".".join(entries)
+
+func _string_array_signature(value: Variant) -> String:
+	var normalized := _normalize_string_array(value)
+	normalized.sort()
+	var entries := []
+	for entry in normalized:
+		entries.append(_signature_token(entry))
+	return ".".join(entries)
+
+func _army_state_signature(value: Variant) -> String:
+	if value is Dictionary:
+		var army: Dictionary = value
+		if army.has("stacks"):
+			return _stack_collection_signature(army.get("stacks", []))
+		return _scalar_pairs_signature(army)
+	if value is Array:
+		return _stack_collection_signature(value)
+	return ""
+
+func _stack_collection_signature(value: Variant) -> String:
+	if value is Dictionary:
+		return _scalar_pairs_signature(value)
+	if not (value is Array):
+		return ""
+	var stacks := []
+	for stack_value in value:
+		if stack_value is Dictionary:
+			stacks.append(_stack_signature(stack_value))
+	stacks.sort()
+	return ".".join(stacks)
+
+func _stack_signature(stack: Dictionary) -> String:
+	return "%s:%d:%d" % [
+		_signature_token(stack.get("unit_id", stack.get("id", ""))),
+		int(stack.get("count", 0)),
+		int(stack.get("wounded", stack.get("damage", 0))),
+	]
+
+func _artifact_state_signature(value: Variant) -> String:
+	if value is Dictionary:
+		var artifacts: Dictionary = value
+		var ids := []
+		for key_value in artifacts.keys():
+			var artifact_value = artifacts.get(key_value)
+			if artifact_value is Dictionary:
+				ids.append("%s=%s" % [_signature_token(key_value), _signature_token(artifact_value.get("id", ""))])
+			elif artifact_value is Array:
+				ids.append("%s=%s" % [_signature_token(key_value), _string_array_signature(artifact_value)])
+			else:
+				ids.append("%s=%s" % [_signature_token(key_value), _signature_token(artifact_value)])
+		ids.sort()
+		return ".".join(ids)
+	if value is Array:
+		return _string_array_signature(value)
+	return ""
+
+func _position_signature(value: Variant) -> String:
+	if not (value is Dictionary):
+		return ""
+	var position: Dictionary = value
+	return "%d.%d" % [int(position.get("x", 0)), int(position.get("y", 0))]
+
+func _signature_token(value: Variant) -> String:
+	return String(value).replace("\\", "\\\\").replace("|", "\\p").replace(",", "\\m").replace("=", "\\e").replace(":", "\\c")
 
 func _town_entity_session_cache_key() -> String:
 	if _session == null:

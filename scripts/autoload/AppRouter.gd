@@ -92,8 +92,8 @@ func go_to_overworld() -> void:
 		session.flags["generated_overworld_deferred_autosave_pending"] = true
 		_note_overworld_handoff_step("go_to_overworld_autosave_deferred")
 	else:
-		autosave_intent = _record_transition_autosave_intent(session, "go_to_overworld", "ordinary_transition_deferred")
-		_note_overworld_handoff_step("go_to_overworld_autosave_deferred")
+		autosave_intent = _record_transition_autosave_skip(session, "go_to_overworld", "manual_or_end_turn_only")
+		_note_overworld_handoff_step("go_to_overworld_autosave_skipped_manual_or_end_turn_only")
 	buckets["save_before_transition"] = 0.0
 	_note_overworld_handoff_step("go_to_overworld_change_scene_start")
 	var scene_started := ProfileLogScript.begin_usec()
@@ -132,7 +132,7 @@ func go_to_town() -> void:
 	var state_started := ProfileLogScript.begin_usec()
 	session.game_state = "town"
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
-	var autosave_intent := _record_transition_autosave_intent(session, "go_to_town", "ordinary_transition_deferred")
+	var autosave_intent := _record_transition_autosave_skip(session, "go_to_town", "manual_or_end_turn_only")
 	buckets["save_before_transition"] = 0.0
 	var scene_started := ProfileLogScript.begin_usec()
 	_change_scene(TOWN_SCENE)
@@ -303,12 +303,12 @@ func validation_prepare_overworld_handoff_without_scene_change() -> Dictionary:
 		session.flags["generated_overworld_deferred_autosave_pending"] = true
 		_note_overworld_handoff_step("go_to_overworld_autosave_deferred")
 	else:
-		autosave_intent = _record_transition_autosave_intent(session, "go_to_overworld", "ordinary_transition_deferred")
-		_note_overworld_handoff_step("go_to_overworld_autosave_deferred")
+		autosave_intent = _record_transition_autosave_skip(session, "go_to_overworld", "manual_or_end_turn_only")
+		_note_overworld_handoff_step("go_to_overworld_autosave_skipped_manual_or_end_turn_only")
 	_note_overworld_handoff_step("go_to_overworld_scene_change_skipped_for_validation")
 	return {
 		"ok": true,
-		"deferred_autosave": true,
+		"deferred_autosave": bool(autosave_intent.get("autosave_deferred", false)),
 		"generated_deferred_autosave": bool(session.flags.get("generated_overworld_deferred_autosave_pending", false)),
 		"save_before_transition_skipped": true,
 		"autosave_intent": autosave_intent,
@@ -323,10 +323,10 @@ func validation_prepare_town_handoff_without_scene_change() -> Dictionary:
 	if not TownRulesScript.can_visit_active_town_bridge(session):
 		return {"ok": false, "reason": "invalid_town_visit"}
 	session.game_state = "town"
-	var autosave_intent := _record_transition_autosave_intent(session, "go_to_town", "ordinary_transition_deferred")
+	var autosave_intent := _record_transition_autosave_skip(session, "go_to_town", "manual_or_end_turn_only")
 	return {
 		"ok": true,
-		"deferred_autosave": true,
+		"deferred_autosave": false,
 		"save_before_transition_skipped": true,
 		"autosave_intent": autosave_intent,
 	}
@@ -370,6 +370,23 @@ func _record_transition_autosave_intent(
 		"autosave_pending_route": route,
 		"autosave_pending_game_state": String(session.game_state),
 		"autosave_pending_count": int(session.flags.get(AUTOSAVE_PENDING_COUNT_FLAG, 0)),
+	}
+
+func _record_transition_autosave_skip(
+	session: SessionStateStoreScript.SessionData,
+	route: String,
+	reason: String
+) -> Dictionary:
+	if session == null:
+		return {}
+	_clear_transition_autosave_intent(session)
+	return {
+		"autosave_deferred_or_skipped_reason": reason,
+		"autosave_skipped_reason": reason,
+		"autosave_deferred": false,
+		"autosave_pending_intent": false,
+		"transition_route": route,
+		"transition_game_state": String(session.game_state),
 	}
 
 func _clear_transition_autosave_intent(session: SessionStateStoreScript.SessionData) -> void:

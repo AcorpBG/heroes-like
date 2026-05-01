@@ -95,6 +95,13 @@ func _run() -> void:
 	if not bool(hit_metadata.get("save_surface_skipped_hidden", false)):
 		_finish_fail("Town refresh profile did not expose hidden save-surface skip.", cache_hit_record)
 		return
+	var hit_buckets: Dictionary = cache_hit_record.get("buckets_ms", {}) if cache_hit_record.get("buckets_ms", {}) is Dictionary else {}
+	if not hit_buckets.has("town_entity_cache_signature") or not hit_buckets.has("town_entity_cache_build"):
+		_finish_fail("Town refresh profile did not expose town cache signature/build sub-buckets.", cache_hit_record)
+		return
+	if float(hit_buckets.get("town_entity_cache_signature", 99999.0)) > 50.0:
+		_finish_fail("Town cache signature bucket stayed too expensive.", hit_buckets)
+		return
 
 	OS.set_environment("HEROES_PROFILE_LOG", previous_general)
 	print("%s %s" % [REPORT_ID, JSON.stringify({
@@ -118,6 +125,14 @@ func _assert_snapshot(snapshot: Dictionary, expected_placement_id: String, expec
 		return false
 	if bool(snapshot.get("save_surface_skipped_hidden", false)) != expected_save_skip:
 		_finish_fail("%s had the wrong save-surface skip state." % label, snapshot)
+		return false
+	var cache_result: Dictionary = snapshot.get("last_cache_result", {}) if snapshot.get("last_cache_result", {}) is Dictionary else {}
+	var signature := String(cache_result.get("signature", ""))
+	if signature.length() > 4096 or signature.find("{") >= 0 or signature.find("player_heroes") >= 0 or signature.find("last_action_recap") >= 0:
+		_finish_fail("%s used a large JSON-style town cache signature." % label, cache_result)
+		return false
+	if float(cache_result.get("signature_ms", 99999.0)) > 50.0:
+		_finish_fail("%s spent too long constructing the town cache signature." % label, cache_result)
 		return false
 	return true
 
