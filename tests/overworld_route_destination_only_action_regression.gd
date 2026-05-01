@@ -42,6 +42,14 @@ func _assert_plain_route_selection_and_confirmation_skip_broad_actions() -> bool
 	var confirm_command := _last_command(shell)
 	if not _assert_destination_only_command(confirm_command, "click_existing_selection", "current", false):
 		return false
+	var confirm_profile: Dictionary = confirm_command.get("profile", {}) if confirm_command.get("profile", {}) is Dictionary else {}
+	var confirm_movement_details: Dictionary = confirm_profile.get("last_cmd_movement_rules", {}) if confirm_profile.get("last_cmd_movement_rules", {}) is Dictionary else {}
+	var confirm_sub_buckets: Dictionary = confirm_movement_details.get("sub_buckets_ms", {}) if confirm_movement_details.get("sub_buckets_ms", {}) is Dictionary else {}
+	if not bool(confirm_movement_details.get("scenario_eval_skipped", false)):
+		return _fail("Open route confirmation should still skip scenario evaluation.", confirm_movement_details)
+	for forbidden_bucket in ["descriptor_dispatch_total_ms", "descriptor_lookup_ms", "resource_collect_total_ms", "artifact_collect_total_ms", "post_action_recap_total_ms"]:
+		if confirm_sub_buckets.has(forbidden_bucket):
+			return _fail("Open route confirmation exposed an irrelevant descriptor bucket %s." % forbidden_bucket, confirm_movement_details)
 	if int(confirm_command.get("route_cache_hits", 0)) <= 0:
 		return _fail("Route confirmation did not reuse the selected route cache.", confirm_command)
 	shell.queue_free()
@@ -97,6 +105,19 @@ func _assert_resource_destination_keeps_existing_interaction_semantics() -> bool
 		return _fail("Resource route did not reuse already-revealed route fog during descriptor interaction.", movement_details)
 	if bool(movement_details.get("scenario_eval_skipped", true)):
 		return _fail("Resource destination interaction should preserve scenario evaluation semantics.", movement_details)
+	var sub_buckets: Dictionary = movement_details.get("sub_buckets_ms", {}) if movement_details.get("sub_buckets_ms", {}) is Dictionary else {}
+	for required_bucket in ["descriptor_dispatch_total_ms", "descriptor_lookup_ms", "resource_collect_total_ms", "finalize_scenario_eval_ms", "post_action_recap_total_ms"]:
+		if not sub_buckets.has(required_bucket):
+			return _fail("Resource descriptor confirmation did not expose rule sub-bucket %s." % required_bucket, movement_details)
+	var descriptor_profile: Dictionary = movement_details.get("descriptor", {}) if movement_details.get("descriptor", {}) is Dictionary else {}
+	if String(descriptor_profile.get("kind", "")) != "resource":
+		return _fail("Resource descriptor confirmation did not expose descriptor profile data.", movement_details)
+	var scenario_profile: Dictionary = movement_details.get("scenario_eval", {}) if movement_details.get("scenario_eval", {}) is Dictionary else {}
+	if String(scenario_profile.get("dependency_mode", "")) != "full" or not scenario_profile.has("objective_count") or not scenario_profile.has("hook_count"):
+		return _fail("Resource descriptor confirmation did not expose scenario evaluation counts.", movement_details)
+	var blocked_profile: Dictionary = movement_details.get("blocked_index", {}) if movement_details.get("blocked_index", {}) is Dictionary else {}
+	if not blocked_profile.has("rebuilt") or not blocked_profile.has("tile_count"):
+		return _fail("Resource descriptor confirmation did not expose blocked-index refresh details.", movement_details)
 	var pathing_profile: Dictionary = OverworldRules.validation_pathing_profile_snapshot()
 	if int(pathing_profile.get("post_move_global_discovery_count", 0)) != 0:
 		return _fail("Resource destination interaction used global post-move discovery.", pathing_profile)

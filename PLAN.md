@@ -38,6 +38,8 @@ Selected town performance follow-up after the full-flow profile at `.artifacts/u
 
 Current urgent overworld performance follow-up: `overworld-interaction-destination-fast-path-10184` extends the selected-route cached descriptor path from open/current tiles to resource, artifact, encounter, and safe town interaction destinations. It keeps preview cheap by using cached route state and compact destination descriptors instead of rich route decision/context/action rebuilds, and keeps confirmation on the prevalidated descriptor path with safe fallback for stale or unknown descriptors. Town first-render/cache-build work is explicitly out of scope.
 
+Selected instrumentation follow-up after `.artifacts/audits/20260501_overworld_interaction_confirmation_plan.md`: `overworld-interaction-confirmation-rules-instrumentation-10184` splits the remaining slow resource/artifact descriptor confirmation `cmd/movement_rules` bucket into additive rule sub-buckets and JSONL/analyzer summaries. It is instrumentation-only: no gameplay semantics, optimization, generated setup, save surfaces, or town first-render/cache-build behavior changes.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:
@@ -2940,6 +2942,43 @@ completionCriteria:
 
 nonGoals:
 - Do not optimize town scene first render, town entity cache build, battle scene render, generated map density/content, renderer shortcuts, save schema, async/threading, or route/pathing semantics.
+
+### P2 Child: Overworld Interaction Confirmation Rules Instrumentation
+
+id: `overworld-interaction-confirmation-rules-instrumentation-10184`
+parentSliceId: `overworld-interaction-destination-fast-path-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Split slow descriptor interaction confirmation work hidden under `cmd/movement_rules` into additive rule sub-buckets before any optimization.
+
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/profile-jsonl-usage.md`
+- `.artifacts/audits/20260501_overworld_interaction_confirmation_plan.md`
+- `.artifacts/uploaded_profiles/20260501/display99_interactions_after_ea441c2_overworld_profile.jsonl`
+
+implementationTargets:
+- `scripts/core/OverworldRules.gd`
+- `scenes/overworld/OverworldShell.gd`
+- `scripts/analyze_overworld_profile_log.py`
+- focused overworld route/profile regressions under `tests/`
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- Descriptor confirmations keep the existing top-level `movement_rules` timing while exposing additive rule sub-buckets for cached movement apply, descriptor lookup/dispatch, resource/artifact collection, finalization, scenario evaluation, recap, fog, and blocked-index refresh.
+- Profile JSONL exposes `movement_rules.sub_buckets_ms`, `movement_rules.rule_counts`, descriptor/scenario/recap/fog/blocked-index summaries, compact `rules_profile`, and exported pathfinding/blocked-index fields.
+- Analyzer overworld mode aggregates phase buckets, nested movement-rule sub-buckets, top offenders, and slowest records with descriptor/cache/save context.
+- Focused regressions prove descriptor confirmations include the new buckets and open route confirmations do not expose irrelevant descriptor/resource/artifact buckets.
+
+completionCriteria:
+- Required overworld route/profile/cache/refresh regressions pass.
+- Uploaded rendered overworld profile remains readable by the analyzer.
+- `ops/progress.json` remains valid JSON and `git diff --check` passes.
+- No gameplay semantics, optimization, generated-map setup/content/density, town first-render/cache-build, save schema/surfaces, renderer/fog behavior, object contracts, or F3/profile compatibility is intentionally changed.
+
+nonGoals:
+- Do not optimize scenario evaluation, recap generation, blocked-index refresh, descriptor indexes, fog accounting, artifact normalization, generated setup, save surfaces, or town rendering in this slice.
 
 ### P2 Child: Town Entity Cache Signature
 

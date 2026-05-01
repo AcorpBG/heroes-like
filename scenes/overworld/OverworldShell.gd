@@ -647,6 +647,13 @@ func _move_toward_selected_tile() -> void:
 			"scenario_eval_skipped": bool(route_execution.get("scenario_eval_skipped", false)),
 			"interaction_dispatch_mode": String(route_execution.get("interaction_dispatch_mode", "global_fallback" if not use_cached_execution else "")),
 			"descriptor_route_fog_reused": bool(route_execution.get("descriptor_route_fog_reused", false)),
+			"sub_buckets_ms": route_execution.get("sub_buckets_ms", {}) if route_execution.get("sub_buckets_ms", {}) is Dictionary else {},
+			"rule_counts": route_execution.get("rule_counts", {}) if route_execution.get("rule_counts", {}) is Dictionary else {},
+			"descriptor": route_execution.get("descriptor", {}) if route_execution.get("descriptor", {}) is Dictionary else {},
+			"scenario_eval": route_execution.get("scenario_eval", {}) if route_execution.get("scenario_eval", {}) is Dictionary else {},
+			"post_action_recap": route_execution.get("post_action_recap", {}) if route_execution.get("post_action_recap", {}) is Dictionary else {},
+			"fog": route_execution.get("fog", {}) if route_execution.get("fog", {}) is Dictionary else {},
+			"blocked_index": route_execution.get("blocked_index", {}) if route_execution.get("blocked_index", {}) is Dictionary else {},
 		}
 	)
 	_adopt_selected_route_after_execution(route, result)
@@ -5852,6 +5859,11 @@ func _debug_top_offender_source_buckets(snapshot: Dictionary, phase_buckets: Dic
 	var buckets := {}
 	for key_value in phase_buckets.keys():
 		buckets["cmd/%s" % String(key_value)] = float(phase_buckets.get(key_value, 0.0))
+	var profile: Dictionary = snapshot.get("profile", {}) if snapshot.get("profile", {}) is Dictionary else {}
+	var movement_rules: Dictionary = profile.get("last_cmd_movement_rules", {}) if profile.get("last_cmd_movement_rules", {}) is Dictionary else {}
+	var rule_sub_buckets: Dictionary = movement_rules.get("sub_buckets_ms", {}) if movement_rules.get("sub_buckets_ms", {}) is Dictionary else {}
+	for key_value in rule_sub_buckets.keys():
+		buckets["rules/%s" % String(key_value)] = float(rule_sub_buckets.get(key_value, 0.0))
 	buckets["refresh/total"] = float(snapshot.get("refresh_ms", 0.0))
 	for key_value in refresh_sections.keys():
 		buckets["refresh/%s" % String(key_value)] = float(refresh_sections.get(key_value, 0.0))
@@ -6072,6 +6084,22 @@ func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
 	var movement_rules := {}
 	if profile.get("last_cmd_movement_rules", {}) is Dictionary:
 		movement_rules = profile.get("last_cmd_movement_rules", {}).duplicate(true)
+	var movement_sub_buckets: Dictionary = movement_rules.get("sub_buckets_ms", {}) if movement_rules.get("sub_buckets_ms", {}) is Dictionary else {}
+	var movement_rule_counts: Dictionary = movement_rules.get("rule_counts", {}) if movement_rules.get("rule_counts", {}) is Dictionary else {}
+	var movement_descriptor: Dictionary = movement_rules.get("descriptor", {}) if movement_rules.get("descriptor", {}) is Dictionary else {}
+	var movement_scenario_eval: Dictionary = movement_rules.get("scenario_eval", {}) if movement_rules.get("scenario_eval", {}) is Dictionary else {}
+	var movement_post_action_recap: Dictionary = movement_rules.get("post_action_recap", {}) if movement_rules.get("post_action_recap", {}) is Dictionary else {}
+	var movement_fog: Dictionary = movement_rules.get("fog", {}) if movement_rules.get("fog", {}) is Dictionary else {}
+	var movement_blocked_index: Dictionary = movement_rules.get("blocked_index", {}) if movement_rules.get("blocked_index", {}) is Dictionary else {}
+	var rules_profile := {
+		"sub_buckets_ms": movement_sub_buckets.duplicate(true),
+		"rule_counts": movement_rule_counts.duplicate(true),
+		"descriptor": movement_descriptor.duplicate(true),
+		"scenario_eval": movement_scenario_eval.duplicate(true),
+		"post_action_recap": movement_post_action_recap.duplicate(true),
+		"fog": movement_fog.duplicate(true),
+		"blocked_index": movement_blocked_index.duplicate(true),
+	}
 	var route_execution_lookup := {}
 	if profile.get("last_cmd_route_execution_lookup", {}) is Dictionary:
 		route_execution_lookup = profile.get("last_cmd_route_execution_lookup", {}).duplicate(true)
@@ -6125,6 +6153,7 @@ func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
 			"route_destination_only_action": _profile_log_duplicate_dict(snapshot.get("route_destination_only_action", {})),
 		},
 		"map_view_timings_ms": {
+			"pathfinding": float(snapshot.get("pathfinding_ms", 0.0)),
 			"set_map_state": float(snapshot.get("map_view_set_map_state_ms", 0.0)),
 			"path_recompute": float(snapshot.get("map_view_path_ms", 0.0)),
 			"draw_session_static": float(snapshot.get("draw_session_static_ms", 0.0)),
@@ -6134,6 +6163,8 @@ func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
 			"road_index": float(snapshot.get("road_index_ms", 0.0)),
 		},
 		"map_view_counts": {
+			"blocked_index_rebuild_count_delta": int(snapshot.get("blocked_index_rebuild_count_delta", 0)),
+			"blocked_index_tile_count": int(snapshot.get("blocked_index_tile_count", 0)),
 			"object_index_rebuilds": int(snapshot.get("object_index_rebuilds", 0)),
 			"object_index_skips": int(snapshot.get("object_index_skips", 0)),
 			"hero_index_rebuilds": int(snapshot.get("hero_index_rebuilds", 0)),
@@ -6148,7 +6179,15 @@ func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
 		"movement_rules": {
 			"ms": float(phase_buckets.get("movement_rules", 0.0)),
 			"details": movement_rules,
+			"sub_buckets_ms": movement_sub_buckets.duplicate(true),
+			"rule_counts": movement_rule_counts.duplicate(true),
+			"descriptor": movement_descriptor.duplicate(true),
+			"scenario_eval": movement_scenario_eval.duplicate(true),
+			"post_action_recap": movement_post_action_recap.duplicate(true),
+			"fog": movement_fog.duplicate(true),
+			"blocked_index": movement_blocked_index.duplicate(true),
 		},
+		"rules_profile": rules_profile,
 		"route_execution": {
 			"lookup_ms": float(phase_buckets.get("route_execution_lookup", 0.0)),
 			"lookup_details": route_execution_lookup,
@@ -6161,6 +6200,10 @@ func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
 			"primary_action_activation": primary_activation,
 		},
 		"simple_route_fast_paths": _profile_log_duplicate_dict(snapshot.get("simple_route_fast_paths", {})),
+		"blocked_index_rebuild_count_delta": int(snapshot.get("blocked_index_rebuild_count_delta", 0)),
+		"blocked_index_rebuild_ms": float(snapshot.get("blocked_index_rebuild_ms", -1.0)),
+		"blocked_index_tile_count": int(snapshot.get("blocked_index_tile_count", 0)),
+		"pathfinding_ms": float(snapshot.get("pathfinding_ms", 0.0)),
 		"save": {
 			"observed": bool(snapshot.get("save_observed", false)),
 			"summary": String(snapshot.get("save_summary", "none observed")),

@@ -7,6 +7,16 @@ func _ready() -> void:
 
 func _run() -> void:
 	var session = _session_with_map(9, 3)
+	session.overworld["resource_nodes"] = [
+		{
+			"placement_id": "profile_log_wagon",
+			"site_id": "site_wood_wagon",
+			"x": 6,
+			"y": 1,
+			"collected": false,
+			"collected_by_faction_id": "",
+		}
+	]
 	session.overworld["fog"] = {}
 	var opened := await _open_shell(session)
 	var shell: Node = opened.get("shell", null)
@@ -83,6 +93,24 @@ func _run() -> void:
 	var last_command: Dictionary = overlay.get("last_command", {}) if overlay.get("last_command", {}) is Dictionary else {}
 	if not bool(overlay.get("enabled", false)) or not bool(overlay.get("visible", false)) or String(last_command.get("command_type", "")) != "click_existing_selection":
 		_fail("F3 overlay did not keep reporting the latest command while persistent logging was enabled.", overlay)
+		return
+
+	var resource_selection: Dictionary = shell.call("validation_select_tile", 6, 1)
+	await get_tree().process_frame
+	if not bool(resource_selection.get("ok", false)):
+		_fail("Resource route selection failed while profile logging was enabled.", resource_selection)
+		return
+	var resource_confirm: Dictionary = shell.call("validation_click_tile", 6, 1)
+	await get_tree().process_frame
+	if not bool(resource_confirm.get("ok", false)):
+		_fail("Resource route confirmation failed while profile logging was enabled.", resource_confirm)
+		return
+	records = shell.call("validation_overworld_profile_log_last_records", 5)
+	if records.size() != 4:
+		_fail("Resource route confirmation should append selection and confirmation JSONL records.", {"records": records, "count": shell.call("validation_overworld_profile_log_record_count")})
+		return
+	var resource_record: Dictionary = records[3]
+	if not _assert_resource_descriptor_profile_record(resource_record):
 		return
 
 	var final_log: Dictionary = shell.call("validation_clear_overworld_profile_log")
@@ -219,6 +247,11 @@ func _assert_record_shape(record: Dictionary, expected_command: String, expect_b
 		if String(movement_details.get("interaction_dispatch_mode", "")) != "none":
 			_fail("Existing-selection confirmation unexpectedly dispatched an interaction.", record)
 			return false
+		var open_sub_buckets: Dictionary = movement_rules.get("sub_buckets_ms", {}) if movement_rules.get("sub_buckets_ms", {}) is Dictionary else {}
+		for forbidden_bucket in ["descriptor_dispatch_total_ms", "descriptor_lookup_ms", "resource_collect_total_ms", "artifact_collect_total_ms", "post_action_recap_total_ms"]:
+			if open_sub_buckets.has(forbidden_bucket):
+				_fail("Open route confirmation exposed an irrelevant descriptor rule bucket %s." % forbidden_bucket, record)
+				return false
 		var confirm_incremental_refresh: Dictionary = record.get("incremental_refresh", {}) if record.get("incremental_refresh", {}) is Dictionary else {}
 		var confirm_destination_only: Dictionary = confirm_incremental_refresh.get("route_destination_only_action", {}) if confirm_incremental_refresh.get("route_destination_only_action", {}) is Dictionary else {}
 		if not bool(confirm_destination_only.get("simple_route_ui_fast_path", false)) or String(confirm_destination_only.get("destination_interaction_kind", "")) != "current":
@@ -231,6 +264,42 @@ func _assert_record_shape(record: Dictionary, expected_command: String, expect_b
 				return false
 	if not (record.get("map_view_timings_ms", {}) is Dictionary) or not (record.get("top_offenders", []) is Array):
 		_fail("Profile record did not include map-view timings or top offenders.", record)
+		return false
+	return true
+
+func _assert_resource_descriptor_profile_record(record: Dictionary) -> bool:
+	if String(record.get("command_type", "")) != "click_existing_selection":
+		_fail("Resource confirmation record used the wrong command type.", record)
+		return false
+	var movement_rules: Dictionary = record.get("movement_rules", {}) if record.get("movement_rules", {}) is Dictionary else {}
+	var movement_details: Dictionary = movement_rules.get("details", {}) if movement_rules.get("details", {}) is Dictionary else {}
+	if String(movement_details.get("cached_execution_mode", "")) != "destination_interaction_fast_path":
+		_fail("Resource confirmation JSONL did not expose descriptor fast-path execution.", record)
+		return false
+	var sub_buckets: Dictionary = movement_rules.get("sub_buckets_ms", {}) if movement_rules.get("sub_buckets_ms", {}) is Dictionary else {}
+	for required_bucket in ["descriptor_dispatch_total_ms", "descriptor_lookup_ms", "resource_collect_total_ms", "finalize_scenario_eval_ms", "post_action_recap_total_ms"]:
+		if not sub_buckets.has(required_bucket):
+			_fail("Resource confirmation JSONL is missing movement rule sub-bucket %s." % required_bucket, record)
+			return false
+	var descriptor: Dictionary = movement_rules.get("descriptor", {}) if movement_rules.get("descriptor", {}) is Dictionary else {}
+	if String(descriptor.get("kind", "")) != "resource" or String(descriptor.get("lookup_mode", "")) == "":
+		_fail("Resource confirmation JSONL did not expose descriptor lookup details.", record)
+		return false
+	var scenario_eval: Dictionary = movement_rules.get("scenario_eval", {}) if movement_rules.get("scenario_eval", {}) is Dictionary else {}
+	if String(scenario_eval.get("dependency_mode", "")) != "full" or not scenario_eval.has("objective_count") or not scenario_eval.has("hook_count"):
+		_fail("Resource confirmation JSONL did not expose scenario evaluation summary.", record)
+		return false
+	var fog: Dictionary = movement_rules.get("fog", {}) if movement_rules.get("fog", {}) is Dictionary else {}
+	if not fog.has("grid_cells") or not fog.has("source_count"):
+		_fail("Resource confirmation JSONL did not expose route fog details.", record)
+		return false
+	var blocked_index: Dictionary = movement_rules.get("blocked_index", {}) if movement_rules.get("blocked_index", {}) is Dictionary else {}
+	if not blocked_index.has("rebuilt") or not blocked_index.has("tile_count"):
+		_fail("Resource confirmation JSONL did not expose blocked-index details.", record)
+		return false
+	var rules_profile: Dictionary = record.get("rules_profile", {}) if record.get("rules_profile", {}) is Dictionary else {}
+	if not (rules_profile.get("sub_buckets_ms", {}) is Dictionary):
+		_fail("Resource confirmation JSONL did not include compact top-level rules_profile.", record)
 		return false
 	return true
 
