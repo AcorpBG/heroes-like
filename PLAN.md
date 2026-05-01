@@ -42,6 +42,8 @@ Selected instrumentation follow-up after `.artifacts/audits/20260501_overworld_i
 
 Selected compact confirmation follow-up after `.artifacts/audits/20260501_interactable_confirmation_solution_plan.md`: `overworld-interactable-compact-confirmation-10184` removes broad rich post-action recap/next-step/objective-feed work from descriptor-dispatched interactable confirmation. It keeps full scenario evaluation for this low-risk slice, preserves open/current route fast paths and existing analyzer buckets, and exposes explicit compact/skipped recap profile metadata instead of hiding cost under renamed fields.
 
+Selected full interactable confirmation optimization follow-up after AcOrP requested the remaining package: `overworld-interactable-confirmation-full-optimization-10184` adds safe event-gated scenario evaluation, shared interactable mutation/result facts, topology-aware blocked-index refresh skips, placement-id descriptor indexes with scan fallback, and save/profile guardrails for descriptor-dispatched interactable confirmations. It must preserve gameplay semantics, full fallback for uncertain scenario dependencies/object contracts/descriptors, existing route result keys, battle/town handoffs, generated content/density, renderer/fog behavior, save schema, and profile JSONL compatibility.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:
@@ -3018,6 +3020,46 @@ completionCriteria:
 nonGoals:
 - Do not skip or scope scenario evaluation unless separately proven safe.
 - Do not optimize save/autosave/save-surface work, generated setup/content/density, renderer shortcuts, town first-render/cache-build behavior, descriptor indexes, blocked-index delta updates, or battle/town scene rendering.
+
+### P2 Child: Overworld Interactable Confirmation Full Optimization
+
+id: `overworld-interactable-confirmation-full-optimization-10184`
+parentSliceId: `overworld-interactable-compact-confirmation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Implement the remaining safe interactable-confirmation optimization package across descriptor-dispatched resources, artifacts, encounters, and towns without changing gameplay semantics.
+
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/profile-jsonl-usage.md`
+- `.artifacts/audits/20260501_interactable_confirmation_solution_plan.md`
+- `.artifacts/uploaded_profiles/20260501/display99_interactions_after_2d2a778_overworld_profile.jsonl`
+- `.artifacts/uploaded_profiles/20260501/display99_interactions_after_2d2a778_overworld_profile.summary.txt`
+
+implementationTargets:
+- `scripts/core/ScenarioRules.gd`
+- `scripts/core/OverworldRules.gd`
+- `scenes/overworld/OverworldShell.gd`
+- focused overworld interactable/profile regressions under `tests/`
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- Interactable confirmations emit shared mutation/result facts for resource, artifact, encounter handoff, town visit, and town capture flows while preserving existing result keys such as `route`, `message`, `scenario_status`, and `route_execution`.
+- Scenario evaluation uses event/dependency metadata to skip only provably unrelated objective/hook checks, reports modes such as `event_gated_skip`, `scoped`, `full`, and full-fallback reasons, and keeps full evaluation for generated, unknown, broad, or non-in-progress cases.
+- Resource confirmations compare blocking/body-tile topology facts and skip blocked-index rebuild when only collection/control/reward state changed; unknown or changed topology keeps the full rebuild fallback.
+- Descriptor lookup uses shared placement indexes for resource, artifact, encounter, and town placement ids with explicit scan fallback and profile metadata for lookup mode and collection size.
+- Ordinary descriptor confirmation keeps save/autosave/save-surface work out of the hot path and profile JSONL/analyzer compatibility is additive.
+
+completionCriteria:
+- Required overworld route/profile/cache/refresh regressions pass.
+- New focused interactable optimization regression proves event-gated skip/full fallback correctness, blocked-index skip/full fallback behavior, descriptor index lookup and scan fallback, and resource/artifact/encounter/town coverage.
+- Uploaded rendered overworld profile remains readable by the analyzer.
+- `ops/progress.json` remains valid JSON and `git diff --check` passes.
+- No movement/pathing semantics, generated-map content/density, renderer/fog behavior, save schema/object contracts, F3/profile JSONL compatibility, open/current movement fast paths, battle/town route handoffs, or save/autosave behavior is intentionally changed.
+
+nonGoals:
+- Do not change generated content/density, renderer/fog semantics, save schema, battle/town scene rendering, town first-render/cache-build behavior, broad async/threading, or authored object contracts.
 
 ### P2 Child: Town Entity Cache Signature
 

@@ -103,8 +103,6 @@ func _assert_resource_destination_keeps_existing_interaction_semantics() -> bool
 		return _fail("Resource route did not dispatch by destination descriptor.", movement_details)
 	if not bool(movement_details.get("descriptor_route_fog_reused", false)):
 		return _fail("Resource route did not reuse already-revealed route fog during descriptor interaction.", movement_details)
-	if bool(movement_details.get("scenario_eval_skipped", true)):
-		return _fail("Resource destination interaction should preserve scenario evaluation semantics.", movement_details)
 	var sub_buckets: Dictionary = movement_details.get("sub_buckets_ms", {}) if movement_details.get("sub_buckets_ms", {}) is Dictionary else {}
 	for required_bucket in ["descriptor_dispatch_total_ms", "descriptor_lookup_ms", "resource_collect_total_ms", "finalize_scenario_eval_ms", "post_action_recap_total_ms"]:
 		if not sub_buckets.has(required_bucket):
@@ -113,8 +111,10 @@ func _assert_resource_destination_keeps_existing_interaction_semantics() -> bool
 	if String(descriptor_profile.get("kind", "")) != "resource":
 		return _fail("Resource descriptor confirmation did not expose descriptor profile data.", movement_details)
 	var scenario_profile: Dictionary = movement_details.get("scenario_eval", {}) if movement_details.get("scenario_eval", {}) is Dictionary else {}
-	if String(scenario_profile.get("dependency_mode", "")) != "full" or not scenario_profile.has("objective_count") or not scenario_profile.has("hook_count"):
+	if String(scenario_profile.get("dependency_mode", "")) != "event_gated_skip" or not scenario_profile.has("objective_count") or not scenario_profile.has("hook_count"):
 		return _fail("Resource descriptor confirmation did not expose scenario evaluation counts.", movement_details)
+	if not bool(movement_details.get("scenario_eval_skipped", false)) or int(scenario_profile.get("objectives_skipped", 0)) <= 0:
+		return _fail("Resource destination interaction should event-gate only unrelated scenario dependencies.", movement_details)
 	var blocked_profile: Dictionary = movement_details.get("blocked_index", {}) if movement_details.get("blocked_index", {}) is Dictionary else {}
 	if not blocked_profile.has("rebuilt") or not blocked_profile.has("tile_count"):
 		return _fail("Resource descriptor confirmation did not expose blocked-index refresh details.", movement_details)
