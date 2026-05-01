@@ -490,7 +490,9 @@ static func try_move_along_route(
 	result["route_steps"] = _route_tile_payloads(path.slice(1, reachable_steps + 1))
 	var route_execution := preview.duplicate(true)
 	route_execution["reached_destination"] = reached_destination
+	route_execution["route_validation_mode"] = "full_revalidation"
 	result["route_execution"] = route_execution
+	result["route_validation_mode"] = "full_revalidation"
 	result = _attach_post_action_recap(
 		result,
 		session,
@@ -505,6 +507,93 @@ static func try_move_along_route(
 			"route_steps": _route_tile_payloads(path.slice(1, reachable_steps + 1)),
 			"planned_destination": _route_tile_payload(destination_tile),
 			"reached_destination": reached_destination,
+		}
+	)
+	return result
+
+static func execute_prevalidated_route(
+	session: SessionStateStoreScript.SessionData,
+	route_tiles: Variant,
+	route_preview: Dictionary = {},
+	movement_budget: int = -1
+) -> Dictionary:
+	normalize_overworld_state_for_runtime(session)
+	var path := _normalize_route_tiles(route_tiles)
+	if path.size() <= 1:
+		return {"ok": false, "message": "No route selected.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
+	var pos := hero_position(session)
+	if path[0] != pos:
+		return {"ok": false, "message": "The selected route no longer starts at the active hero.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
+
+	var movement = session.overworld.get("movement", {})
+	var movement_left := int(movement.get("current", 0))
+	var effective_budget := movement_left if movement_budget < 0 else mini(movement_left, max(0, movement_budget))
+	if effective_budget <= 0:
+		return {"ok": false, "message": "No movement left today.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
+
+	var preview := route_preview.duplicate(true)
+	if preview.is_empty() or int(preview.get("movement_budget", effective_budget)) != effective_budget or int(preview.get("total_steps", path.size() - 1)) != path.size() - 1:
+		preview = route_movement_preview(session, path, effective_budget)
+	var reachable_steps := mini(max(0, int(preview.get("reachable_steps", 0))), path.size() - 1)
+	reachable_steps = mini(reachable_steps, effective_budget)
+	if reachable_steps <= 0:
+		return {"ok": false, "message": "No movement left today.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
+
+	var final_tile: Vector2i = path[reachable_steps]
+	var destination_tile: Vector2i = path[path.size() - 1]
+	_set_active_hero_position(session, final_tile)
+	var movement_after := int(preview.get("movement_after_reachable", movement_left - reachable_steps))
+	movement["current"] = max(0, movement_after)
+	session.overworld["movement"] = movement
+	HeroCommandRulesScript.commit_active_hero(session)
+	_reveal_route_fog(session, path.slice(1, reachable_steps + 1))
+	_mark_runtime_normalized(session)
+
+	var messages := ["Moved to %d,%d." % [final_tile.x, final_tile.y]]
+	var reached_destination := final_tile == destination_tile
+	if not reached_destination:
+		messages.append("Route pauses with %d step%s remaining." % [
+			path.size() - 1 - reachable_steps,
+			"" if path.size() - 1 - reachable_steps == 1 else "s",
+		])
+	var target_context := _post_action_tile_context(session, final_tile)
+	var interaction_result := {"ok": true, "message": "", "route": ""}
+	if reached_destination:
+		interaction_result = _resolve_post_move_interaction(session)
+		var interaction_message := String(interaction_result.get("message", ""))
+		if interaction_message != "":
+			messages.append(interaction_message)
+	var result := _finalize_action_result(
+		session,
+		bool(interaction_result.get("ok", true)),
+		" ".join(messages),
+		false,
+		true
+	)
+	var route := String(interaction_result.get("route", ""))
+	if route != "":
+		result["route"] = route
+	result["route_steps"] = _route_tile_payloads(path.slice(1, reachable_steps + 1))
+	var route_execution := preview.duplicate(true)
+	route_execution["reached_destination"] = reached_destination
+	route_execution["route_validation_mode"] = "cached_prevalidated"
+	result["route_execution"] = route_execution
+	result["route_validation_mode"] = "cached_prevalidated"
+	result = _attach_post_action_recap(
+		result,
+		session,
+		"move",
+		{
+			"from_x": pos.x,
+			"from_y": pos.y,
+			"to_x": final_tile.x,
+			"to_y": final_tile.y,
+			"route": route,
+			"target_context": target_context,
+			"route_steps": _route_tile_payloads(path.slice(1, reachable_steps + 1)),
+			"planned_destination": _route_tile_payload(destination_tile),
+			"reached_destination": reached_destination,
+			"route_validation_mode": "cached_prevalidated",
 		}
 	)
 	return result
