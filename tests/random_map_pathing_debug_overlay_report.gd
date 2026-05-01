@@ -206,7 +206,7 @@ func _assert_overlay_command(overlay: Dictionary, label: String) -> bool:
 		_fail("%s overlay was not enabled/visible: %s" % [label, JSON.stringify(overlay)])
 		return false
 	var text := String(overlay.get("text", ""))
-	for token in ["Path Debug (F3)", "total", "BFS", "set_map_state", "refresh calls", "unaccounted", "top", "save"]:
+	for token in ["Path Debug (F3)", "total", "BFS", "route cache", "set_map_state", "refresh calls", "unaccounted", "top", "save"]:
 		if text.find(token) < 0:
 			_fail("%s overlay text missed token %s: %s" % [label, token, text])
 			return false
@@ -230,6 +230,9 @@ func _overlay_command_has_timings(command: Dictionary) -> bool:
 		and command.has("total_command_ms")
 		and command.has("pathfinding_ms")
 		and command.has("route_bfs_ms")
+		and command.has("route_cache_hits")
+		and command.has("route_cache_misses")
+		and command.has("map_view_route_cache_reused")
 		and command.has("blocked_tile_lookup_count")
 		and command.has("refresh_ms")
 		and command.has("map_view_set_map_state_ms")
@@ -370,6 +373,9 @@ func _compact_overlay_command(value: Variant) -> Dictionary:
 		"pathfinding_ms": float(command.get("pathfinding_ms", 0.0)),
 		"route_bfs_ms": float(command.get("route_bfs_ms", 0.0)),
 		"route_bfs_calls": int(command.get("route_bfs_calls", 0)),
+		"route_cache_hits": int(command.get("route_cache_hits", 0)),
+		"route_cache_misses": int(command.get("route_cache_misses", 0)),
+		"map_view_route_cache_reused": bool(command.get("map_view_route_cache_reused", false)),
 		"blocked_tile_lookup_count": int(command.get("blocked_tile_lookup_count", 0)),
 		"blocked_index_rebuild_count_delta": int(command.get("blocked_index_rebuild_count_delta", 0)),
 		"blocked_index_rebuild_ms": command.get("blocked_index_rebuild_ms", -1.0),

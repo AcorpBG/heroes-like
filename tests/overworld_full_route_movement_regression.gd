@@ -10,6 +10,8 @@ func _ready() -> void:
 func _run() -> void:
 	if not await _assert_partial_full_route_execution():
 		return
+	if not await _assert_selected_route_cache_reuse():
+		return
 	if not await _assert_reachable_interaction_resolves_only_at_destination():
 		return
 	if not await _assert_route_does_not_pass_through_interaction():
@@ -71,6 +73,62 @@ func _assert_partial_full_route_execution() -> bool:
 	shell.queue_free()
 	return true
 
+func _assert_selected_route_cache_reuse() -> bool:
+	var session = _session_with_map(32, 3, true)
+	session.overworld["fog"] = {}
+	var opened := await _open_shell(session)
+	var shell: Node = opened.get("shell", null)
+	session = opened.get("session", session)
+	_prepare_shell_state(shell, session, Vector2i(0, 1), 31)
+	shell.call("validation_set_debug_overlay_enabled", true)
+	var target := Vector2i(30, 1)
+	var selection: Dictionary = shell.call("validation_select_tile", target.x, target.y)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var selection_command := _last_debug_command(shell)
+	var selection_map_path: Dictionary = selection_command.get("map_view_path", {}) if selection_command.get("map_view_path", {}) is Dictionary else {}
+	if String(selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
+		return _fail("Cache regression route should be reachable.", selection)
+	if int(selection_command.get("route_bfs_calls", -1)) != 1:
+		return _fail("Route selection should compute shell BFS exactly once.", selection_command)
+	if not bool(selection_command.get("map_view_route_cache_reused", false)) or not bool(selection_map_path.get("cache_reused", false)):
+		return _fail("Map view did not reuse the shell selected-route cache.", selection_command)
+	if int(selection_command.get("route_cache_misses", 0)) != 1 or int(selection_command.get("route_cache_hits", 0)) <= 0:
+		return _fail("Selection did not expose selected-route cache miss followed by reuse hits.", selection_command)
+
+	shell.call("validation_reset_profile", true)
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var snapshot_profile: Dictionary = shell.call("validation_profile_snapshot")
+	if not (String(snapshot.get("primary_action_id", "")) in ["advance_route", "march_selected"]):
+		return _fail("Cached selected route did not remain available to action surfaces.", snapshot)
+	if int(snapshot_profile.get("route_bfs_calls", 0)) != 0:
+		return _fail("Action/validation surfaces recomputed BFS instead of reusing cached route.", snapshot_profile)
+	if int(snapshot_profile.get("selected_route_cache_hits", 0)) <= 0:
+		return _fail("Action/validation surfaces did not hit the durable selected-route cache.", snapshot_profile)
+
+	var result: Dictionary = shell.call("validation_perform_primary_action")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var move_command := _last_debug_command(shell)
+	if not bool(result.get("ok", false)):
+		return _fail("Cached route confirmation failed.", result)
+	if int(move_command.get("route_bfs_calls", -1)) != 0:
+		return _fail("Existing-selection confirmation recomputed BFS despite a valid cached route.", move_command)
+	if int(move_command.get("route_cache_hits", 0)) <= 0 or not bool(move_command.get("map_view_route_cache_reused", false)):
+		return _fail("Existing-selection confirmation did not reuse route cache through refresh/map view.", move_command)
+	_evidence["selected_route_cache_reuse"] = {
+		"selection_bfs_calls": int(selection_command.get("route_bfs_calls", -1)),
+		"selection_route_cache_hits": int(selection_command.get("route_cache_hits", 0)),
+		"selection_route_cache_misses": int(selection_command.get("route_cache_misses", 0)),
+		"selection_map_view_reused": bool(selection_command.get("map_view_route_cache_reused", false)),
+		"snapshot_bfs_calls": int(snapshot_profile.get("route_bfs_calls", 0)),
+		"confirmation_bfs_calls": int(move_command.get("route_bfs_calls", -1)),
+		"confirmation_route_cache_hits": int(move_command.get("route_cache_hits", 0)),
+		"confirmation_map_view_reused": bool(move_command.get("map_view_route_cache_reused", false)),
+	}
+	shell.queue_free()
+	return true
+
 func _assert_reachable_interaction_resolves_only_at_destination() -> bool:
 	var session = _session_with_map(7, 3)
 	session.overworld["resource_nodes"] = [
@@ -126,6 +184,10 @@ func _assert_route_does_not_pass_through_interaction() -> bool:
 		return _fail("Blocked route did not explain that no clean path exists.", selection)
 	shell.queue_free()
 	return true
+
+func _last_debug_command(shell: Node) -> Dictionary:
+	var overlay: Dictionary = shell.call("validation_debug_overlay_snapshot")
+	return overlay.get("last_command", {}) if overlay.get("last_command", {}) is Dictionary else {}
 
 func _open_shell(session) -> Dictionary:
 	var active_session = SessionState.set_active_session(session)

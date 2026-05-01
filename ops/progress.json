@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-full-route-movement-model-10184",
-  "currentSliceTitle": "Overworld Full-Route Movement Model",
+  "currentSliceId": "overworld-route-refresh-cache-reuse-10184",
+  "currentSliceTitle": "Overworld Route Refresh Cache Reuse",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed AcOrP full-route movement semantics: route preview partitions reachable and out-of-movement segments, confirmation moves along the selected route to the farthest reachable tile, clean routes cannot pass through blockers/interactions, fog reveal follows traversed route steps, and F3 buckets identify full-route execution.",
+  "currentSliceNotes": "Completed selected-route cache reuse: durable shell route state now feeds map view and action surfaces, survives UI refreshes, and preserves the executed/remaining route so valid existing-selection confirmation performs no duplicate BFS.",
   "nextActionGuardrailNote": "Do not change map generation, player counts, object density/counts, object placement, objectives, save schema, renderer art semantics, object body/visit contracts, or generated map art/path while correcting full-route movement semantics.",
-  "updatedAt": "2026-04-30T23:26:11Z",
+  "updatedAt": "2026-05-01T00:42:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,56 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "overworld-route-refresh-cache-reuse-10184",
+      "title": "Overworld Route Refresh Cache Reuse",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/fog-of-war-homm-style-decision.md",
+        "docs/random-map-pathing-debug-overlay-report.md"
+      ],
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_full_route_movement_regression.gd",
+        "tests/random_map_pathing_debug_overlay_report.gd",
+        "ops/progress.json"
+      ],
+      "startedAt": "2026-04-30T23:45:00Z",
+      "completedAt": "2026-05-01T00:42:00Z",
+      "completionCriteria": [
+        "Selected-route state survives UI refreshes and is invalidated only by selected tile, hero position/movement, blocker/interactable topology, map, or session changes.",
+        "Shell route decision, map view route preview, action surfaces, and existing-selection confirmation reuse the cached route instead of duplicating BFS.",
+        "F3 overlay reports selected-route cache hit/miss state and map-view route cache reuse.",
+        "Focused route regression proves route selection computes BFS once and valid existing-selection confirmation performs no BFS."
+      ],
+      "nonGoals": [
+        "Do not change map generation, templates, player counts, object density/counts, object placement, objectives, save schema, renderer art semantics, fog semantics, object body/visit contracts, or generated map content.",
+        "Do not add primitive/debug rendering, hidden downscale, content cuts, or alternate renderer art paths.",
+        "Do not replace BFS with A* in this slice unless a trivial, fully validated follow-up becomes necessary."
+      ],
+      "completionEvidence": [
+        "OverworldShell now keeps durable selected-route state outside _refresh_cache with selected tile, hero/start tile, route tiles, route preview, movement, map, topology, and session signatures.",
+        "_refresh() no longer drops the selected-route object; volatile UI/action text caches can clear while the route is reused until its signature changes.",
+        "OverworldMapView.set_map_state accepts the selected-route state and reuses supplied route tiles/preview instead of rebuilding BFS when the hero, selected tile, and movement signature match.",
+        "Primary movement confirmation uses the cached route for march/advance orders and adopts the executed/remaining route after movement, so the post-confirmation refresh can reuse the route instead of recomputing BFS.",
+        "F3 overlay now reports shell selected-route cache hits/misses and map-view selected-route cache reuse."
+      ],
+      "validationEvidence": [
+        "godot4 --headless --path . res://tests/overworld_full_route_movement_regression.tscn passed; selected-route cache evidence: selection_bfs_calls=1, selection_route_cache_hits=2, selection_route_cache_misses=1, selection_map_view_reused=true, snapshot_bfs_calls=0, confirmation_bfs_calls=0, confirmation_route_cache_hits=2, confirmation_map_view_reused=true.",
+        "godot4 --headless --path . res://tests/random_map_pathing_debug_overlay_report.tscn passed; generated Small overlay evidence: selection route_bfs_calls=1 with map_view_route_cache_reused=true, move route_bfs_calls=0 with route_cache_hits=2 and map_view_route_cache_reused=true.",
+        "Requested Godot scene suite passed: overworld_full_route_movement_regression, fog_of_war_homm_style_regression, random_map_pathing_debug_overlay_report, random_map_generated_density_distribution_report, random_map_generated_object_footprint_interaction_report, random_map_generated_visual_path_regression_report, random_map_generated_overworld_profile_report, random_map_live_overworld_render_move_report, random_map_default_seed_objective_regression_report, random_map_post_open_tail_timing_report, random_map_async_generation_ux_report, random_map_runtime_render_perf_smoke, and random_map_player_count_range_report.",
+        "python3 tests/validate_repo.py passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ],
+      "notes": "Started from AcOrP large-map profiling after full-route movement commit 353a9cc showed duplicate selected-route BFS through refresh, map view, and action-surface recomputation. This slice did not replace BFS with A* or change map generation, content density, fog semantics, renderer art semantics, object contracts, or save schema."
+    },
     {
       "id": "fog-of-war-homm-style-permanent-visibility-10184",
       "title": "Fog Of War HoMM-Style Permanent Visibility",
