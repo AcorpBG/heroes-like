@@ -33,6 +33,8 @@ static var _pathing_debug_profile: Dictionary = {
 	"route_interaction_lookup_count": 0,
 	"route_interaction_spatial_lookup_count": 0,
 	"route_interaction_full_scan_count": 0,
+	"post_move_global_discovery_count": 0,
+	"post_action_tile_context_scan_count": 0,
 }
 
 static func _scenario_factory() -> Variant:
@@ -325,6 +327,8 @@ static func validation_set_pathing_profile_capture_enabled(enabled: bool) -> voi
 		_pathing_debug_profile["route_interaction_lookup_count"] = 0
 		_pathing_debug_profile["route_interaction_spatial_lookup_count"] = 0
 		_pathing_debug_profile["route_interaction_full_scan_count"] = 0
+		_pathing_debug_profile["post_move_global_discovery_count"] = 0
+		_pathing_debug_profile["post_action_tile_context_scan_count"] = 0
 
 static func refresh_fog_of_war(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
@@ -515,9 +519,9 @@ static func execute_prevalidated_route(
 	session: SessionStateStoreScript.SessionData,
 	route_tiles: Variant,
 	route_preview: Dictionary = {},
-	movement_budget: int = -1
+	movement_budget: int = -1,
+	destination_descriptor: Dictionary = {}
 ) -> Dictionary:
-	normalize_overworld_state_for_runtime(session)
 	var path := _normalize_route_tiles(route_tiles)
 	if path.size() <= 1:
 		return {"ok": false, "message": "No route selected.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
@@ -556,20 +560,36 @@ static func execute_prevalidated_route(
 			path.size() - 1 - reachable_steps,
 			"" if path.size() - 1 - reachable_steps == 1 else "s",
 		])
-	var target_context := _post_action_tile_context(session, final_tile)
 	var interaction_result := {"ok": true, "message": "", "route": ""}
+	var execution_mode := "open_fast_path"
+	var interaction_dispatch_mode := "none"
+	var post_action_recap_skipped := true
+	var scenario_eval_skipped := true
 	if reached_destination:
-		interaction_result = _resolve_post_move_interaction(session)
+		var descriptor_kind := String(destination_descriptor.get("kind", ""))
+		if destination_descriptor.is_empty() or descriptor_kind in ["", "open", "current"]:
+			interaction_result = {"ok": true, "message": "", "route": ""}
+		else:
+			execution_mode = "destination_interaction_fast_path"
+			interaction_dispatch_mode = "destination_descriptor"
+			post_action_recap_skipped = false
+			scenario_eval_skipped = false
+			interaction_result = _resolve_destination_descriptor_interaction(session, destination_descriptor)
 		var interaction_message := String(interaction_result.get("message", ""))
 		if interaction_message != "":
 			messages.append(interaction_message)
-	var result := _finalize_action_result(
-		session,
-		bool(interaction_result.get("ok", true)),
-		" ".join(messages),
-		false,
-		true
-	)
+	var result := {}
+	if execution_mode == "destination_interaction_fast_path":
+		result = interaction_result.duplicate(true)
+		result["ok"] = bool(interaction_result.get("ok", true))
+		result["message"] = " ".join(messages)
+		if not result.has("scenario_status"):
+			result["scenario_status"] = session.scenario_status
+	else:
+		result = {
+			"ok": bool(interaction_result.get("ok", true)),
+			"message": " ".join(messages),
+		}
 	var route := String(interaction_result.get("route", ""))
 	if route != "":
 		result["route"] = route
@@ -577,25 +597,12 @@ static func execute_prevalidated_route(
 	var route_execution := preview.duplicate(true)
 	route_execution["reached_destination"] = reached_destination
 	route_execution["route_validation_mode"] = "cached_prevalidated"
+	route_execution["cached_execution_mode"] = execution_mode
+	route_execution["post_action_recap_skipped"] = post_action_recap_skipped
+	route_execution["scenario_eval_skipped"] = scenario_eval_skipped
+	route_execution["interaction_dispatch_mode"] = interaction_dispatch_mode
 	result["route_execution"] = route_execution
 	result["route_validation_mode"] = "cached_prevalidated"
-	result = _attach_post_action_recap(
-		result,
-		session,
-		"move",
-		{
-			"from_x": pos.x,
-			"from_y": pos.y,
-			"to_x": final_tile.x,
-			"to_y": final_tile.y,
-			"route": route,
-			"target_context": target_context,
-			"route_steps": _route_tile_payloads(path.slice(1, reachable_steps + 1)),
-			"planned_destination": _route_tile_payload(destination_tile),
-			"reached_destination": reached_destination,
-			"route_validation_mode": "cached_prevalidated",
-		}
-	)
 	return result
 
 static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
@@ -693,7 +700,9 @@ static func collect_active_resource(session: SessionStateStoreScript.SessionData
 	var node_result := _find_context_resource_node(session)
 	if int(node_result.get("index", -1)) < 0:
 		return {"ok": false, "message": "No resource site here."}
+	return _collect_resource_node_result(session, node_result)
 
+static func _collect_resource_node_result(session: SessionStateStoreScript.SessionData, node_result: Dictionary) -> Dictionary:
 	var node = node_result.get("node", {})
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 	if site.is_empty():
@@ -768,7 +777,9 @@ static func collect_active_artifact(session: SessionStateStoreScript.SessionData
 	var node_result := _find_active_artifact_node(session)
 	if int(node_result.get("index", -1)) < 0:
 		return {"ok": false, "message": "No artifact cache is here."}
+	return _collect_artifact_node_result(session, node_result)
 
+static func _collect_artifact_node_result(session: SessionStateStoreScript.SessionData, node_result: Dictionary) -> Dictionary:
 	var node = node_result.get("node", {})
 	if bool(node.get("collected", false)):
 		return {"ok": false, "message": "This cache has already been claimed."}
@@ -846,6 +857,8 @@ static func active_town_visit_result(session: SessionStateStoreScript.SessionDat
 	return _find_active_town(session)
 
 static func _resolve_post_move_interaction(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if bool(_pathing_debug_profile.get("capture_enabled", false)):
+		_pathing_debug_profile["post_move_global_discovery_count"] = int(_pathing_debug_profile.get("post_move_global_discovery_count", 0)) + 1
 	var encounter := get_active_encounter(session)
 	if not encounter.is_empty():
 		var battle_payload = _battle_rules().create_battle_payload(session, encounter)
@@ -898,6 +911,50 @@ static func _resolve_post_move_interaction(session: SessionStateStoreScript.Sess
 		],
 		"route": "",
 	}
+
+static func _resolve_destination_descriptor_interaction(
+	session: SessionStateStoreScript.SessionData,
+	descriptor: Dictionary
+) -> Dictionary:
+	match String(descriptor.get("kind", "")):
+		"resource":
+			var resource_result := _find_resource_node_by_placement(session, String(descriptor.get("placement_id", "")))
+			if int(resource_result.get("index", -1)) < 0:
+				return {"ok": false, "message": "No resource site here.", "route": ""}
+			return _collect_resource_node_result(session, resource_result)
+		"artifact":
+			var artifact_result := _find_artifact_node_by_descriptor(session, descriptor)
+			if int(artifact_result.get("index", -1)) < 0:
+				return {"ok": false, "message": "No artifact cache is here.", "route": ""}
+			return _collect_artifact_node_result(session, artifact_result)
+		"encounter":
+			var encounter_result := _find_encounter_by_placement(session, String(descriptor.get("placement_id", "")))
+			var encounter: Dictionary = encounter_result.get("encounter", {}) if encounter_result.get("encounter", {}) is Dictionary else {}
+			if int(encounter_result.get("index", -1)) < 0 or encounter.is_empty() or is_encounter_resolved(session, encounter):
+				return {"ok": true, "message": "", "route": ""}
+			var battle_payload = _battle_rules().create_battle_payload(session, encounter)
+			if battle_payload.is_empty():
+				return {"ok": false, "message": "The enemy blocks the lane, but battle setup failed.", "route": ""}
+			session.battle = battle_payload
+			return {"ok": true, "message": describe_encounter_battle_cue(session, encounter), "route": "battle", "scenario_status": session.scenario_status}
+		"town":
+			var town_result := _find_town_by_placement(session, String(descriptor.get("placement_id", "")))
+			var town: Dictionary = town_result.get("town", {}) if town_result.get("town", {}) is Dictionary else {}
+			if int(town_result.get("index", -1)) < 0 or town.is_empty():
+				return {"ok": true, "message": "", "route": ""}
+			if String(town.get("owner", "neutral")) == "player":
+				return {"ok": true, "message": "%s opens its gates." % _town_name(town), "route": "town", "scenario_status": session.scenario_status}
+			return {
+				"ok": true,
+				"message": "%s remains under %s control." % [
+					_town_name(town),
+					String(town.get("owner", "neutral")).capitalize(),
+				],
+				"route": "",
+				"scenario_status": session.scenario_status,
+			}
+		_:
+			return {"ok": true, "message": "", "route": ""}
 
 static func award_hero_artifact(
 	session: SessionStateStoreScript.SessionData,
@@ -3170,9 +3227,10 @@ static func describe_route_interception_surface(
 	route_steps: int = 0,
 	include_global_fallback: bool = true
 ) -> Dictionary:
-	normalize_overworld_state_for_runtime(session)
 	if session == null:
 		return _route_interception_empty_surface()
+	if include_global_fallback:
+		normalize_overworld_state_for_runtime(session)
 	if destination_x >= 0 and destination_y >= 0:
 		var selected := _selected_route_interception_surface(
 			session,
@@ -4398,6 +4456,25 @@ static func _find_active_artifact_node(session: SessionStateStoreScript.SessionD
 		var index := int(node_index)
 		var node = nodes[index] if nodes is Array and index >= 0 and index < nodes.size() else {}
 		if node is Dictionary and not bool(node.get("collected", false)):
+			return {"index": index, "node": node}
+	return {"index": -1, "node": {}}
+
+static func _find_artifact_node_by_descriptor(session: SessionStateStoreScript.SessionData, descriptor: Dictionary) -> Dictionary:
+	if session == null:
+		return {"index": -1, "node": {}}
+	var artifact_id := String(descriptor.get("artifact_id", ""))
+	var x := int(descriptor.get("x", -999))
+	var y := int(descriptor.get("y", -999))
+	var nodes = session.overworld.get("artifact_nodes", [])
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary):
+			continue
+		if bool(node.get("collected", false)):
+			continue
+		if artifact_id != "" and String(node.get("artifact_id", "")) != artifact_id:
+			continue
+		if int(node.get("x", -1)) == x and int(node.get("y", -1)) == y:
 			return {"index": index, "node": node}
 	return {"index": -1, "node": {}}
 
@@ -10310,6 +10387,8 @@ static func _normalize_post_action_recap(value: Variant) -> Dictionary:
 	}
 
 static func _post_action_tile_context(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> Dictionary:
+	if bool(_pathing_debug_profile.get("capture_enabled", false)):
+		_pathing_debug_profile["post_action_tile_context_scan_count"] = int(_pathing_debug_profile.get("post_action_tile_context_scan_count", 0)) + 1
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
 			continue

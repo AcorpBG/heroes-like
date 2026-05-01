@@ -10,6 +10,8 @@ func _run() -> void:
 		return
 	if not await _assert_cached_execution_skips_full_revalidation():
 		return
+	if not await _assert_unknown_destination_descriptor_falls_back():
+		return
 	if not await _assert_stale_route_falls_back_to_full_revalidation():
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true})])
@@ -72,6 +74,54 @@ func _assert_cached_execution_skips_full_revalidation() -> bool:
 		return _fail("Cached route execution unexpectedly fell back.", movement_details)
 	if String(route_execution.get("route_validation_mode", "")) != "cached_prevalidated":
 		return _fail("Route execution result did not expose cached validation mode.", result)
+	if String(movement_details.get("cached_execution_mode", "")) != "open_fast_path":
+		return _fail("Open cached route did not use the open fast path.", movement_details)
+	if not bool(movement_details.get("post_action_recap_skipped", false)):
+		return _fail("Open cached route did not skip post-action recap.", movement_details)
+	if not bool(movement_details.get("scenario_eval_skipped", false)):
+		return _fail("Open cached route did not skip scenario evaluation.", movement_details)
+	if String(movement_details.get("interaction_dispatch_mode", "")) != "none":
+		return _fail("Open cached route unexpectedly dispatched an interaction.", movement_details)
+	if not (result.get("post_action_recap", {}) is Dictionary) or not result.get("post_action_recap", {}).is_empty():
+		return _fail("Open cached route produced a post-action recap.", result)
+	var pathing_profile: Dictionary = OverworldRules.validation_pathing_profile_snapshot()
+	if int(pathing_profile.get("post_move_global_discovery_count", 0)) != 0:
+		return _fail("Open cached route used global post-move discovery.", pathing_profile)
+	if int(pathing_profile.get("post_action_tile_context_scan_count", 0)) != 0:
+		return _fail("Open cached route scanned post-action tile context.", pathing_profile)
+	shell.queue_free()
+	return true
+
+func _assert_unknown_destination_descriptor_falls_back() -> bool:
+	var session = _session_with_map(12, 3, true)
+	var opened := await _open_shell(session)
+	var shell: Node = opened.get("shell", null)
+	session = opened.get("session", session)
+	_prepare_shell_state(shell, session, Vector2i(0, 1), 10)
+	shell.call("validation_set_debug_overlay_enabled", true)
+	var selection: Dictionary = shell.call("validation_select_tile", 8, 1)
+	if String(selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
+		return _fail("Descriptor fallback setup did not expose a reachable route.", selection)
+	var stale_state: Dictionary = shell.get("_selected_route_state").duplicate(true)
+	var descriptor: Dictionary = stale_state.get("destination_interaction_descriptor", {}) if stale_state.get("destination_interaction_descriptor", {}) is Dictionary else {}
+	descriptor["kind"] = "mystery"
+	stale_state["destination_interaction_descriptor"] = descriptor
+	stale_state["signature"] = shell.call("_selected_route_signature")
+	shell.set("_selected_route_state", stale_state)
+	shell.call("validation_reset_profile", false)
+	var result: Dictionary = shell.call("validation_perform_primary_action")
+	await get_tree().process_frame
+	var command := _last_debug_command(shell)
+	var profile: Dictionary = command.get("profile", {}) if command.get("profile", {}) is Dictionary else {}
+	var movement_details: Dictionary = profile.get("last_cmd_movement_rules", {}) if profile.get("last_cmd_movement_rules", {}) is Dictionary else {}
+	if bool(movement_details.get("cached_route_execution", true)):
+		return _fail("Unknown destination descriptor did not fall back to the full validation path.", movement_details)
+	if String(movement_details.get("fallback_reason", "")) != "unknown_destination_descriptor":
+		return _fail("Unknown destination descriptor fallback reason was not exposed.", movement_details)
+	if String(movement_details.get("cached_execution_mode", "")) != "full_fallback":
+		return _fail("Unknown destination descriptor did not expose full fallback mode.", movement_details)
+	if not bool(result.get("ok", false)):
+		return _fail("Unknown descriptor full fallback should still execute a valid route.", result)
 	shell.queue_free()
 	return true
 

@@ -195,6 +195,18 @@ func _assert_record_shape(record: Dictionary, expected_command: String, expect_b
 		if String(movement_details.get("fallback_reason", "")) != "":
 			_fail("Existing-selection confirmation unexpectedly recorded a fallback reason.", record)
 			return false
+		if String(movement_details.get("cached_execution_mode", "")) != "open_fast_path":
+			_fail("Existing-selection confirmation did not expose open fast-path mode.", record)
+			return false
+		if not bool(movement_details.get("post_action_recap_skipped", false)):
+			_fail("Existing-selection confirmation did not expose skipped post-action recap.", record)
+			return false
+		if not bool(movement_details.get("scenario_eval_skipped", false)):
+			_fail("Existing-selection confirmation did not expose skipped scenario evaluation.", record)
+			return false
+		if String(movement_details.get("interaction_dispatch_mode", "")) != "none":
+			_fail("Existing-selection confirmation unexpectedly dispatched an interaction.", record)
+			return false
 	if not (record.get("map_view_timings_ms", {}) is Dictionary) or not (record.get("top_offenders", []) is Array):
 		_fail("Profile record did not include map-view timings or top offenders.", record)
 		return false

@@ -79,6 +79,18 @@ func _assert_resource_destination_keeps_existing_interaction_semantics() -> bool
 	var node: Dictionary = session.overworld.get("resource_nodes", [])[0]
 	if not bool(node.get("collected", false)):
 		return _fail("Resource destination did not resolve through existing post-move interaction semantics.", clicked)
+	var confirm_command := _last_command(shell)
+	var profile: Dictionary = confirm_command.get("profile", {}) if confirm_command.get("profile", {}) is Dictionary else {}
+	var movement_details: Dictionary = profile.get("last_cmd_movement_rules", {}) if profile.get("last_cmd_movement_rules", {}) is Dictionary else {}
+	if String(movement_details.get("cached_execution_mode", "")) != "destination_interaction_fast_path":
+		return _fail("Resource route did not use descriptor destination interaction fast path.", movement_details)
+	if String(movement_details.get("interaction_dispatch_mode", "")) != "destination_descriptor":
+		return _fail("Resource route did not dispatch by destination descriptor.", movement_details)
+	if bool(movement_details.get("scenario_eval_skipped", true)):
+		return _fail("Resource destination interaction should preserve scenario evaluation semantics.", movement_details)
+	var pathing_profile: Dictionary = OverworldRules.validation_pathing_profile_snapshot()
+	if int(pathing_profile.get("post_move_global_discovery_count", 0)) != 0:
+		return _fail("Resource destination interaction used global post-move discovery.", pathing_profile)
 	if not _assert_destination_only_command(_last_command(shell), "click_existing_selection", "current", false):
 		return false
 	shell.queue_free()
