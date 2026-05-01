@@ -42,12 +42,27 @@ func _run() -> void:
 	if int(session.flags.get("runtime_autosave_pending_count", 0)) != 0:
 		_finish_fail("Ordinary town transitions should not record transition autosave intent counts.", session.flags)
 		return
+	session.flags["generated_random_map"] = true
+	var overworld_shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(overworld_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	SaveService.validation_clear_general_profile_log()
+	var overworld_snapshot: Dictionary = overworld_shell.call("validation_snapshot")
+	if not _assert_no_save_surface_build_records("generated overworld ordinary validation snapshot"):
+		return
+	var save_surface: Dictionary = overworld_snapshot.get("save_surface", {}) if overworld_snapshot.get("save_surface", {}) is Dictionary else {}
+	if not bool(save_surface.get("compact_generated_validation", false)):
+		_finish_fail("Generated overworld ordinary snapshot did not keep save surface compact.", save_surface)
+		return
+	overworld_shell.queue_free()
 
 	OS.set_environment("HEROES_PROFILE_LOG", previous_general)
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"town_result": town_result,
 		"overworld_result": overworld_result,
+		"compact_generated_save_surface": save_surface,
 		"pending_count": int(session.flags.get("runtime_autosave_pending_count", 0)),
 	})])
 	get_tree().quit(0)
@@ -88,6 +103,14 @@ func _assert_no_runtime_save_records(label: String) -> bool:
 	for record in records:
 		if record is Dictionary and String(record.get("surface", "")) == "save" and String(record.get("event", "")) == "runtime_save":
 			_finish_fail("%s synchronously wrote a runtime autosave." % label, records)
+			return false
+	return true
+
+func _assert_no_save_surface_build_records(label: String) -> bool:
+	var records: Array = SaveService.validation_general_profile_log_last_records(20)
+	for record in records:
+		if record is Dictionary and String(record.get("surface", "")) == "save" and String(record.get("event", "")) == "build_in_session_save_surface":
+			_finish_fail("%s built a save/recap surface." % label, records)
 			return false
 	return true
 

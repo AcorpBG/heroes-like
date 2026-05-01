@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-interactable-confirmation-full-optimization-10184",
-  "currentSliceTitle": "Overworld Interactable Confirmation Full Optimization",
+  "currentSliceId": "town-entry-exit-cache-save-hot-path-10184",
+  "currentSliceTitle": "Town Entry/Exit Cache And Save-Surface Hot Path",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed reopened full optimization follow-up: event-gated generated scenario confirms now use cached minimal dependency records and skip whole-scenario duplication/count prepass; descriptor-dispatched completed interactions use compact current-tile context during route_execution_changed refresh to avoid rich current-context rebuild. Validated requested Godot regressions, analyzer compatibility, progress JSON, and diff whitespace.",
-  "nextActionGuardrailNote": "Preserve gameplay semantics, generated map content/density, renderer/fog behavior, save schema, object contracts, F3/profile-log compatibility, open/current route fast paths, scenario evaluation semantics, and ordinary no-save interaction confirmation.",
-  "updatedAt": "2026-05-01T19:35:43Z",
+  "currentSliceNotes": "Completed urgent rendered-profile corrective for same-town entry/exit: town entity caches now retain separate minimal/full entries per placement, targeted invalidation clears all active-town modes, and generated ordinary validation snapshots avoid expensive save/recap surface construction while preserving manual save and end-turn autosave behavior.",
+  "nextActionGuardrailNote": "Preserve gameplay semantics, manual save and end-turn autosave behavior, save schema, generated map content/density, renderer/fog behavior, object contracts, F3/profile-log compatibility, and town-action targeted invalidation.",
+  "updatedAt": "2026-05-01T20:09:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -5634,6 +5634,59 @@
       "startedAt": "2026-05-01T18:28:49Z",
       "notes": "Completed reopened full optimization follow-up: event-gated generated scenario confirms now use cached minimal dependency records and skip whole-scenario duplication/count prepass; descriptor-dispatched completed interactions use compact current-tile context during route_execution_changed refresh to avoid rich current-context rebuild. Validated requested Godot regressions, analyzer compatibility, progress JSON, and diff whitespace.",
       "completedAt": "2026-05-01T19:35:43Z"
+    },
+    {
+      "id": "town-entry-exit-cache-save-hot-path-10184",
+      "title": "Town Entry/Exit Cache And Save-Surface Hot Path",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "town-transition-fast-path-10184",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-01T20:09:30Z",
+      "startedAt": "2026-05-01T20:05:00Z",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/profile-jsonl-usage.md",
+        ".artifacts/uploaded_profiles/20260501/display99_broad_after_ad1ee2e_heroes_profile.jsonl",
+        ".artifacts/uploaded_profiles/20260501/display99_broad_after_ad1ee2e_heroes_profile.summary.txt",
+        ".artifacts/uploaded_profiles/20260501/display99_broad_after_ad1ee2e_overworld_profile.jsonl",
+        ".artifacts/uploaded_profiles/20260501/display99_broad_after_ad1ee2e_overworld_profile.summary.txt"
+      ],
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scripts/autoload/SaveService.gd",
+        "tests/town_entity_cache_active_refresh_regression.gd",
+        "tests/town_transition_fast_path_regression.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Same-town entry/exit keeps separate reusable active-town entity cache entries for minimal/current-tab and full refresh modes instead of replacing one mode with the other.",
+        "Ordinary overworld/town transitions do not synchronously save/autosave and do not build whole save/recap surfaces unless save controls, manual save, end-turn autosave, menu return, or validation snapshots explicitly request them.",
+        "Town action invalidation remains targeted to the active town/UI cache and preserves correctness for build, recruit, hero hire/switch, transfer, market, spell, artifact, response, and specialty actions.",
+        "Profile logs and focused regressions prove cache hits across the same-town minimal/full cycle and no save-surface records on ordinary entry/exit.",
+        "Requested focused Godot regressions, analyzer compatibility, JSON, and whitespace validations pass."
+      ],
+      "nonGoals": [
+        "No save-schema migration, generated-map size/template/player-count/density change, renderer/fog behavior change, pathing/object-contract change, broad TownRules rewrite, broad save-payload/delta architecture, generated setup optimization, or hidden bucket renaming."
+      ],
+      "notes": "Rendered broad profile showed stable scalar town signatures but repeated misses for rmg_town_p1 because minimal and full mode shared the placement_id cache entry, plus explicit save surface builds after exits dominated by recap/current/latest summaries. Completed by keying town entity cache entries by placement_id and refresh mode, preserving targeted active-town invalidation across both modes, and keeping generated ordinary validation snapshots on compact UI state instead of building save/recap surfaces.",
+      "validationEvidence": [
+        "godot4 --headless --path . tests/town_entity_cache_active_refresh_regression.tscn passed.",
+        "godot4 --headless --path . tests/town_transition_fast_path_regression.tscn passed.",
+        "godot4 --headless --path . tests/profile_log_general_surface_regression.tscn passed.",
+        "DISPLAY=:99 HEROES_PROFILE_LOG=1 godot4 --path . tests/town_entity_cache_active_refresh_regression.tscn passed and produced .artifacts/town_hot_path_20260501/display99_town_cache_after_fix_heroes_profile.jsonl.",
+        "DISPLAY=:99 HEROES_PROFILE_LOG=1 godot4 --path . tests/town_transition_fast_path_regression.tscn passed and produced .artifacts/town_hot_path_20260501/display99_town_transition_after_fix_heroes_profile.jsonl with no save surface records.",
+        "python3 scripts/analyze_overworld_profile_log.py .artifacts/uploaded_profiles/20260501/display99_broad_after_ad1ee2e_heroes_profile.jsonl --mode auto passed.",
+        "python3 scripts/analyze_overworld_profile_log.py .artifacts/uploaded_profiles/20260501/display99_broad_after_ad1ee2e_overworld_profile.jsonl --mode auto passed.",
+        "python3 tests/validate_repo.py passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ],
+      "completedAt": "2026-05-01T20:09:30Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -6208,6 +6261,31 @@
           "title": "Emit opt-in JSONL timing records across lifecycle and gameplay surfaces",
           "status": "completed",
           "evidence": "Added HEROES_PROFILE_LOG-backed general JSONL records for boot, menu/generated setup, router scene transitions, SaveService runtime save/surface work, Overworld end-turn and battle handoff, TownShell entry/refresh/action/save, BattleShell entry/refresh/action/save, and BattleRules payload creation while keeping legacy overworld profile JSONL compatibility."
+        }
+      ]
+    },
+    {
+      "id": "town-entry-exit-cache-save-hot-path-10184",
+      "system": "town transition performance",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "town-entry-exit-cache-save-hot-path-10184"
+      ],
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/profile-jsonl-usage.md",
+        ".artifacts/uploaded_profiles/20260501/display99_broad_after_ad1ee2e_heroes_profile.jsonl",
+        ".artifacts/uploaded_profiles/20260501/display99_broad_after_ad1ee2e_heroes_profile.summary.txt",
+        ".artifacts/town_hot_path_20260501/display99_town_cache_after_fix_heroes_profile.jsonl",
+        ".artifacts/town_hot_path_20260501/display99_town_transition_after_fix_heroes_profile.jsonl"
+      ],
+      "entries": [
+        {
+          "id": "town-entry-exit-cache-save-hot-path-implementation-10184",
+          "title": "Keep same-town entry/exit on cached town UI state without ordinary save-surface rebuilds",
+          "status": "completed",
+          "evidence": "TownShell now stores active-town entity cache entries per placement_id and refresh mode so minimal/full refreshes do not evict each other, while active-town action invalidation clears all modes for the affected placement. Generated OverworldShell validation snapshots now use compact UI state instead of calling latest_loadable_summary/active_save_surface on ordinary transition checks. Focused rendered DISPLAY=:99 profiles show same-town full/minimal/full refreshes hitting cached entries with 0ms cache-build buckets after the first mode builds and no save-surface records for ordinary town/overworld transition validation."
         }
       ]
     }
