@@ -120,6 +120,11 @@ func _assert_destination_only_command(command: Dictionary, expected_command: Str
 		return _fail("Route command did not expose broad action skips.", command)
 	if String(destination_only.get("destination_interaction_kind", "")) != expected_kind:
 		return _fail("Route command exposed the wrong destination interaction kind.", command)
+	if expected_kind in ["open", "current"]:
+		if not bool(destination_only.get("simple_route_ui_fast_path", false)):
+			return _fail("Open/current route command did not expose the simple route UI fast path.", command)
+		if not bool(destination_only.get("rich_route_surface_skipped", false)):
+			return _fail("Open/current route command did not report skipped rich route surfaces.", command)
 	if expect_selection_request and int(profile.get("selected_context_actions_cache_misses", 0)) != 0:
 		return _fail("Route selection recomputed broad selected context actions.", command)
 	return true

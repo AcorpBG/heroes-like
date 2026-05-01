@@ -179,6 +179,9 @@ func _assert_record_shape(record: Dictionary, expected_command: String, expect_b
 		if not bool(destination_only.get("destination_only", false)) or not bool(destination_only.get("broad_context_actions_skipped", false)):
 			_fail("Route-selection profile did not expose destination-only action skips.", record)
 			return false
+		if not bool(destination_only.get("simple_route_ui_fast_path", false)) or not bool(destination_only.get("rich_route_surface_skipped", false)):
+			_fail("Open route-selection profile did not expose the simple route UI fast path.", record)
+			return false
 		var selected_context_cache: Dictionary = incremental_refresh.get("selected_context_actions_cache", {}) if incremental_refresh.get("selected_context_actions_cache", {}) is Dictionary else {}
 		if not selected_context_cache.has("hits") or not selected_context_cache.has("misses"):
 			_fail("Selected-context cache counters were not exposed in profile JSONL.", record)
@@ -206,6 +209,11 @@ func _assert_record_shape(record: Dictionary, expected_command: String, expect_b
 			return false
 		if String(movement_details.get("interaction_dispatch_mode", "")) != "none":
 			_fail("Existing-selection confirmation unexpectedly dispatched an interaction.", record)
+			return false
+		var confirm_incremental_refresh: Dictionary = record.get("incremental_refresh", {}) if record.get("incremental_refresh", {}) is Dictionary else {}
+		var confirm_destination_only: Dictionary = confirm_incremental_refresh.get("route_destination_only_action", {}) if confirm_incremental_refresh.get("route_destination_only_action", {}) is Dictionary else {}
+		if not bool(confirm_destination_only.get("simple_route_ui_fast_path", false)) or String(confirm_destination_only.get("destination_interaction_kind", "")) != "current":
+			_fail("Open route confirmation did not expose the minimal current-tile action refresh.", record)
 			return false
 	if not (record.get("map_view_timings_ms", {}) is Dictionary) or not (record.get("top_offenders", []) is Array):
 		_fail("Profile record did not include map-view timings or top offenders.", record)

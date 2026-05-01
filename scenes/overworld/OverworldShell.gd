@@ -486,7 +486,11 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	var hero_pos = OverworldRules.hero_position(_session)
 	if _is_adjacent_move_target(hero_pos, route_tile):
 		_debug_set_path_command_type("adjacent_move")
-		_try_move(route_tile.x - hero_pos.x, route_tile.y - hero_pos.y, true)
+		var destination_descriptor := _selected_route_destination_execution_descriptor(route_tile)
+		if String(destination_descriptor.get("kind", "")) == "open":
+			_move_toward_selected_tile()
+		else:
+			_try_move(route_tile.x - hero_pos.x, route_tile.y - hero_pos.y, true)
 		_debug_finish_path_command()
 		return
 	_active_drawer = ""
@@ -1231,7 +1235,24 @@ func _refresh_selected_route_action_surface() -> void:
 	_refresh_cache["primary_action"] = primary_action
 	_refresh_primary_action_button(primary_action)
 	_render_context_action_buttons(actions, primary_action, "Select a route destination")
-	var destination: Dictionary = _selected_route_destination_interaction_surface()
+	var destination: Dictionary = {}
+	if not primary_action.is_empty() and primary_action.get("destination_interaction", {}) is Dictionary:
+		destination = primary_action.get("destination_interaction", {})
+	elif not actions.is_empty() and actions[0] is Dictionary:
+		var first_action: Dictionary = actions[0]
+		if first_action.get("destination_interaction", {}) is Dictionary:
+			destination = first_action.get("destination_interaction", {})
+	var simple_route_ui := bool(destination.get("simple_route_ui_fast_path", false))
+	var rich_route_surface_skipped := bool(destination.get("rich_route_surface_skipped", false))
+	var destination_kind := String(destination.get("kind", ""))
+	if simple_route_ui:
+		_profile_add("simple_route_ui_fast_path", 1)
+		if destination_kind == "current":
+			_profile_add("simple_current_route_ui_fast_path", 1)
+		else:
+			_profile_add("simple_open_route_ui_fast_path", 1)
+	if rich_route_surface_skipped:
+		_profile_add("rich_route_surface_skipped_for_simple_route", 1)
 	var profile_payload := {
 		"status": "used",
 		"destination_only": true,
@@ -1240,9 +1261,11 @@ func _refresh_selected_route_action_surface() -> void:
 		"tooltip_context_drawers_skipped": true,
 		"action_count": actions.size(),
 		"primary_action_id": String(primary_action.get("id", "")),
-		"destination_interaction_kind": String(destination.get("kind", "")),
+		"destination_interaction_kind": destination_kind,
 		"destination_interaction_status": String(destination.get("status", "")),
 		"route_status": String(destination.get("route_status", "")),
+		"simple_route_ui_fast_path": simple_route_ui,
+		"rich_route_surface_skipped": rich_route_surface_skipped,
 	}
 	_validation_profile["last_route_destination_only_action_path"] = profile_payload
 	_profile_add("route_destination_only_action_path_calls", 1)
@@ -1978,6 +2001,17 @@ func _refresh_primary_action_button(action: Dictionary) -> void:
 	if action.is_empty():
 		_primary_action_button.text = "Select Site"
 		_primary_action_button.disabled = true
+		var simple_route_tooltip := _selected_route_simple_tooltip()
+		if simple_route_tooltip != "":
+			_primary_action_button.tooltip_text = simple_route_tooltip
+			_profile_add("primary_route_action_cheap_tooltip", 1)
+			_validation_profile["last_primary_route_action_tooltip"] = {
+				"mode": "simple_empty_route",
+				"rich_commit_check_skipped": true,
+				"route_target_handoff_skipped": true,
+				"town_entry_handoff_skipped": true,
+			}
+			return
 		var route_decision := _selected_route_decision_surface()
 		var route_tooltip := _route_decision_tooltip(route_decision)
 		_primary_action_button.tooltip_text = route_tooltip if route_tooltip != "" else "Select a visible destination or stand on a site to reveal its primary order."
@@ -1988,6 +2022,20 @@ func _refresh_primary_action_button(action: Dictionary) -> void:
 	var summary := String(action.get("summary", ""))
 	if summary == "":
 		summary = "Commit %s." % String(action.get("label", "the primary order")).to_lower()
+	if bool(action.get("simple_route_ui_fast_path", false)):
+		_primary_action_button.tooltip_text = _join_tooltip_sections([
+			summary,
+			"Press Enter or Space to commit this route order.",
+		])
+		_profile_add("primary_route_action_cheap_tooltip", 1)
+		_validation_profile["last_primary_route_action_tooltip"] = {
+			"mode": "simple_route",
+			"action_id": String(action.get("id", "")),
+			"rich_commit_check_skipped": true,
+			"route_target_handoff_skipped": true,
+			"town_entry_handoff_skipped": true,
+		}
+		return
 	var commit_check := _primary_order_commit_check_surface(action)
 	var active_site_order := _active_site_order_surface(action)
 	_primary_action_button.tooltip_text = _join_tooltip_sections([
@@ -2235,6 +2283,34 @@ func _selected_route_destination_actions() -> Array:
 	return actions
 
 func _build_selected_route_destination_actions() -> Array:
+	var simple_destination := _selected_route_simple_destination_surface()
+	if not simple_destination.is_empty():
+		var simple_decision: Dictionary = simple_destination.get("route_decision", {}) if simple_destination.get("route_decision", {}) is Dictionary else {}
+		var simple_kind := String(simple_destination.get("kind", "open"))
+		var simple_status := String(simple_destination.get("status", ""))
+		if simple_kind == "current":
+			return [_disabled_route_destination_action("hold_position", "Current Position", "The active hero is already on this tile.", simple_decision, simple_destination)]
+		if simple_status in ["blocked", "out_of_bounds"]:
+			var simple_reason := String(simple_destination.get("blocked_reason", "")).strip_edges()
+			if simple_reason == "":
+				simple_reason = "No clear route from the active hero."
+			return [_disabled_route_destination_action("route_blocked", "Route Blocked", simple_reason, simple_decision, simple_destination)]
+		var simple_route: Array = simple_destination.get("route_tiles", []) if simple_destination.get("route_tiles", []) is Array else []
+		if simple_route.size() <= 1:
+			return [_disabled_route_destination_action("route_unavailable", "No Route", "No clear route from the active hero.", simple_decision, simple_destination)]
+		var simple_adjacent := bool(simple_destination.get("adjacent", false))
+		var simple_action := {
+			"id": "march_selected" if simple_adjacent else "advance_route",
+			"label": _selected_route_destination_action_label(simple_destination, simple_adjacent),
+			"summary": _selected_route_simple_action_summary(simple_destination),
+			"route_decision": simple_decision,
+			"destination_interaction": simple_destination,
+			"destination_only": true,
+			"simple_route_ui_fast_path": true,
+		}
+		if simple_status == "no_movement":
+			simple_action["disabled"] = true
+		return [simple_action]
 	var destination := _selected_route_destination_interaction_surface()
 	var route_decision: Dictionary = destination.get("route_decision", {}) if destination.get("route_decision", {}) is Dictionary else {}
 	var kind := String(destination.get("kind", "open"))
@@ -2277,7 +2353,163 @@ func _disabled_route_destination_action(
 		"route_decision": route_decision,
 		"destination_interaction": destination,
 		"destination_only": true,
+		"simple_route_ui_fast_path": bool(destination.get("simple_route_ui_fast_path", false)),
 	}
+
+func _selected_route_simple_destination_surface() -> Dictionary:
+	var route_state := _ensure_selected_route_state("simple_destination_action")
+	var route: Array = route_state.get("route_tiles", []) if route_state.get("route_tiles", []) is Array else []
+	var hero_pos := OverworldRules.hero_position(_session)
+	var descriptor: Dictionary = route_state.get("destination_interaction_descriptor", {}) if route_state.get("destination_interaction_descriptor", {}) is Dictionary else {}
+	var descriptor_kind := String(descriptor.get("kind", "open"))
+	if _selected_tile == hero_pos:
+		descriptor_kind = "current"
+	if descriptor_kind not in ["open", "current"]:
+		return {}
+	var route_decision := _selected_route_compact_decision_surface(route_state, descriptor_kind)
+	if route_decision.is_empty():
+		return {}
+	return {
+		"kind": descriptor_kind,
+		"status": "hold" if descriptor_kind == "current" else String(route_decision.get("status", "")),
+		"route_status": String(route_decision.get("status", "")),
+		"x": _selected_tile.x,
+		"y": _selected_tile.y,
+		"adjacent": _is_adjacent_move_target(hero_pos, _selected_tile),
+		"route_tiles": route,
+		"route_decision": route_decision,
+		"blocked_reason": String(route_decision.get("blocked_reason", "")),
+		"summary": "",
+		"simple_route_ui_fast_path": true,
+		"rich_route_surface_skipped": true,
+		"interaction_signature": String(descriptor.get("interaction_signature", "")),
+	}
+
+func _selected_route_compact_decision_surface(route_state: Dictionary, destination_kind: String) -> Dictionary:
+	if not _tile_in_bounds(_selected_tile):
+		return {}
+	var hero_pos := OverworldRules.hero_position(_session)
+	var movement = _session.overworld.get("movement", {})
+	var movement_current := int(movement.get("current", 0)) if movement is Dictionary else 0
+	var movement_max := int(movement.get("max", movement_current)) if movement is Dictionary else movement_current
+	var selected_is_hero := _selected_tile == hero_pos or destination_kind == "current"
+	var route: Array = route_state.get("route_tiles", []) if route_state.get("route_tiles", []) is Array else []
+	var preview: Dictionary = route_state.get("route_preview", {}) if route_state.get("route_preview", {}) is Dictionary else {}
+	if preview.is_empty():
+		preview = OverworldRules.route_movement_preview(_session, route, movement_current)
+	var steps: int = max(0, route.size() - 1)
+	var reachable_steps := int(preview.get("reachable_steps", 0))
+	var unreachable_steps := int(preview.get("unreachable_steps", 0))
+	var destination_reachable := bool(preview.get("destination_reachable", false))
+	var movement_after_reachable := int(preview.get("movement_after_reachable", movement_current))
+	var next_step := Vector2i(-1, -1)
+	var next_step_label := ""
+	var next_step_terrain := ""
+	var next_step_line := ""
+	var steps_after_next := 0
+	if route.size() > 1 and route[1] is Vector2i:
+		next_step = route[1]
+		next_step_label = "%d,%d" % [next_step.x, next_step.y]
+		next_step_terrain = _terrain_name_at(next_step.x, next_step.y)
+		steps_after_next = max(0, steps - 1)
+		var remaining_text := "arrives at target" if steps_after_next <= 0 else "%d step%s remains" % [
+			steps_after_next,
+			"" if steps_after_next == 1 else "s",
+		]
+		next_step_line = "Next step: %s via %s (%s)" % [
+			next_step_label,
+			next_step_terrain,
+			remaining_text,
+		]
+	var adjacent := _is_adjacent_move_target(hero_pos, _selected_tile)
+	var action_kind := "move"
+	var action_label := "March" if adjacent else "Advance"
+	var movement_cost: int = steps if steps > 0 else 0
+	var reachable_today: bool = steps > 0 and destination_reachable
+	var route_clear: bool = steps > 0
+	var status := "selected"
+	var blocked_reason := ""
+	if selected_is_hero:
+		status = "current"
+		action_kind = "hold"
+		action_label = "Current Position"
+		reachable_today = true
+	elif route_clear and movement_current <= 0:
+		status = "no_movement"
+		blocked_reason = "No movement left today."
+	elif route_clear and reachable_today:
+		status = "reachable"
+	elif route_clear:
+		status = "not_today"
+		blocked_reason = "Route is clear; %d step%s remain after today's movement." % [
+			unreachable_steps,
+			"" if unreachable_steps == 1 else "s",
+		]
+	else:
+		status = "blocked"
+		blocked_reason = "No clear route from the active hero."
+	return {
+		"destination": "Current Position" if selected_is_hero else "%d,%d" % [_selected_tile.x, _selected_tile.y],
+		"x": _selected_tile.x,
+		"y": _selected_tile.y,
+		"action_kind": action_kind,
+		"action_label": action_label,
+		"status": status,
+		"reachable_today": reachable_today,
+		"route_clear": route_clear,
+		"blocked_reason": blocked_reason,
+		"steps": steps,
+		"distance": steps,
+		"movement_current": movement_current,
+		"movement_max": movement_max,
+		"movement_cost": movement_cost,
+		"movement_after_order": movement_after_reachable if route_clear else max(0, movement_current - movement_cost),
+		"total_cost": steps,
+		"reachable_steps": reachable_steps,
+		"reachable_cost": int(preview.get("reachable_cost", 0)),
+		"unreachable_steps": unreachable_steps,
+		"destination_reachable": destination_reachable,
+		"route_preview": preview,
+		"next_step": {
+			"x": next_step.x,
+			"y": next_step.y,
+			"label": next_step_label,
+			"terrain": next_step_terrain,
+			"remaining_steps_after": steps_after_next,
+		},
+		"next_step_label": next_step_label,
+		"next_step_terrain": next_step_terrain,
+		"next_step_line": next_step_line,
+		"remaining_steps_after_next": steps_after_next,
+		"visible": OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y),
+		"explored": OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y),
+		"terrain": _terrain_name_at(_selected_tile.x, _selected_tile.y),
+		"interception": {},
+		"interception_active": false,
+		"interception_cue": "",
+		"interception_tooltip": "",
+		"decision_brief": {},
+		"decision_brief_text": "",
+		"simple_route_ui_fast_path": true,
+	}
+
+func _selected_route_simple_action_summary(destination: Dictionary) -> String:
+	var route_decision: Dictionary = destination.get("route_decision", {}) if destination.get("route_decision", {}) is Dictionary else {}
+	var status := String(route_decision.get("status", ""))
+	if status in ["blocked", "no_movement"]:
+		var reason := String(route_decision.get("blocked_reason", "")).strip_edges()
+		return reason if reason != "" else "Route unavailable."
+	var steps := int(route_decision.get("steps", 0))
+	var movement_current := int(route_decision.get("movement_current", 0))
+	var movement_after := int(route_decision.get("movement_after_order", movement_current))
+	var movement_text := "Move %d/%d" % [movement_current, int(route_decision.get("movement_max", movement_current))]
+	if int(route_decision.get("movement_cost", 0)) > 0:
+		movement_text = "Move %d->%d" % [movement_current, movement_after]
+	var target := String(route_decision.get("destination", "selected tile"))
+	var step_text := "%d step%s" % [steps, "" if steps == 1 else "s"]
+	if status == "not_today":
+		return "Advance toward %s; %s, not reachable today." % [target, movement_text]
+	return "Move to %s; %s, %s." % [target, step_text, movement_text]
 
 func _selected_route_destination_action_label(destination: Dictionary, adjacent: bool) -> String:
 	match String(destination.get("kind", "open")):
@@ -3846,7 +4078,7 @@ func _rail_tile_text() -> String:
 	var terrain := _terrain_name_at(_selected_tile.x, _selected_tile.y)
 	var coords := "%d,%d" % [_selected_tile.x, _selected_tile.y]
 	var action_hint := _rail_action_hint()
-	var route_line := _route_decision_line(_selected_route_decision_surface())
+	var route_line := _selected_route_display_line()
 	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
 		return "Tile %s | Unexplored\n%s\nScout closer" % [coords, route_line]
 	if not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y):
@@ -4165,12 +4397,37 @@ func _map_tooltip_text() -> String:
 				_short_action_label(String(primary_action.get("label", "Action")), 22),
 			]
 		return "%s | Select a mapped destination on the map." % OverworldRules.describe_visibility(_session)
+	var simple_route_tooltip := _selected_route_simple_tooltip()
+	if simple_route_tooltip != "":
+		return simple_route_tooltip
 	var route_tooltip := _route_decision_tooltip(_selected_route_decision_surface())
 	if route_tooltip != "":
 		if not _resource_node_at(_selected_tile.x, _selected_tile.y).is_empty():
 			return "%s\n%s" % [route_tooltip, _tile_visibility_tooltip(_selected_tile, "Selected")]
 		return route_tooltip
 	return "Selected %d,%d | No clear route from the active hero." % [_selected_tile.x, _selected_tile.y]
+
+func _selected_route_display_line() -> String:
+	var simple_destination := _selected_route_simple_destination_surface()
+	if not simple_destination.is_empty():
+		var simple_decision: Dictionary = simple_destination.get("route_decision", {}) if simple_destination.get("route_decision", {}) is Dictionary else {}
+		return _route_decision_line(simple_decision)
+	return _route_decision_line(_selected_route_decision_surface())
+
+func _selected_route_simple_tooltip() -> String:
+	var simple_destination := _selected_route_simple_destination_surface()
+	if simple_destination.is_empty():
+		return ""
+	var route_decision: Dictionary = simple_destination.get("route_decision", {}) if simple_destination.get("route_decision", {}) is Dictionary else {}
+	if route_decision.is_empty():
+		return ""
+	var line := _route_decision_line(route_decision)
+	if String(route_decision.get("status", "")) == "current":
+		return "Current position. Select a mapped destination to plot a route."
+	var reason := String(route_decision.get("blocked_reason", "")).strip_edges()
+	if reason != "":
+		return "%s. %s" % [line, reason]
+	return "%s. Press Enter or Space to commit this route order." % line
 
 func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 	if not OverworldRules.is_tile_explored(_session, tile.x, tile.y):

@@ -6,9 +6,9 @@
   "currentSliceId": "overworld-incremental-route-preview-refresh-10184",
   "currentSliceTitle": "Overworld Incremental Route Preview Refresh",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Follow-up from AcOrP Windows profile after 532ead4: cached selected-route movement now has an open-tile fast path that skips finalization/recap/global discovery, descriptor-only interaction dispatch for real destinations, safe fallback for stale/unknown descriptors, and JSONL/F3 instrumentation for the split.",
+  "currentSliceNotes": "Follow-up from real DISPLAY=:99 Large 108x108 rendered-client profile after dcb3cdc: open/current route preview and post-move current-tile refresh now use a simple route UI fast path that skips rich route decision/brief/handoff/commit-check construction; adjacent open-tile clicks use cached selected-route execution; JSONL/F3 counters expose the simple-route skips.",
   "nextActionGuardrailNote": "After profile-log instrumentation, use uploaded JSONL evidence before selecting any performance fix; preserve movement/pathing semantics, map generation/content density, renderer/fog behavior, save schema, object contracts, and F3 overlay behavior.",
-  "updatedAt": "2026-05-01T12:02:49Z",
+  "updatedAt": "2026-05-01T13:03:48Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -53,7 +53,9 @@
         "docs/overworld-refresh-input-pipeline-plan.md",
         ".artifacts/uploaded_profiles/20260501/acorp_windows_overworld_profile_after_b2346b8.jsonl",
         ".artifacts/uploaded_profiles/20260501/acorp_windows_overworld_profile_after_incremental_9034263.jsonl",
-        ".artifacts/uploaded_profiles/20260501/acorp_windows_overworld_profile_after_cached_execution_532ead4.jsonl"
+        ".artifacts/uploaded_profiles/20260501/acorp_windows_overworld_profile_after_cached_execution_532ead4.jsonl",
+        ".artifacts/uploaded_profiles/20260501/display99_actual_large_overworld_profile.jsonl",
+        ".artifacts/uploaded_profiles/20260501/display99_actual_large_overworld_profile.summary.txt"
       ],
       "implementationTargets": [
         "scenes/overworld/OverworldShell.gd",
@@ -70,7 +72,7 @@
         "ops/progress.json"
       ],
       "startedAt": "2026-05-01T10:12:34Z",
-      "completedAt": "2026-05-01T12:02:49Z",
+      "completedAt": "2026-05-01T13:03:48Z",
       "completionCriteria": [
         "OverworldShell has an explicit lightweight refresh request/dirty-phase model covering map_view, action_rails, hero_actions, context_actions, route_preview/context_route, spell/specialty/artifact rails, status surfaces, save surface, and generated surfaces.",
         "Selected route/tile preview uses a targeted refresh entrypoint that updates route/map overlay, destination-only context/primary action, and selected-tile route text without rebuilding broad context actions, hero actions, tooltip/context drawers, or unrelated rails unless dirty.",
@@ -81,13 +83,14 @@
         "Focused regressions prove selected-route preview and route confirmation do not rebuild broad context actions, hero actions, broad map/topology/object/session recap signatures, full movement revalidation, or tooltip drawers while existing cache regressions and profile-log behavior still pass.",
         "Cached selected-route open-tile confirmations update position, movement, fog, and active hero once without scenario evaluation, post-action recap, broad active-tile discovery, post-action tile context scans, or full route revalidation.",
         "Cached selected-route interactable destinations dispatch by compact destination descriptor kind/id/tile, while missing, stale, unknown, or mismatched descriptors fall back safely to try_move_along_route.",
-        "Movement-rule profile details expose cached_execution_mode, post_action_recap_skipped, scenario_eval_skipped, interaction_dispatch_mode, and exact fallback_reason."
+        "Movement-rule profile details expose cached_execution_mode, post_action_recap_skipped, scenario_eval_skipped, interaction_dispatch_mode, and exact fallback_reason.",
+        "Open/current selected-route preview, confirmation refresh, and current-tile post-move route action surfaces use the simple-route UI fast path from cached selected-route state and destination descriptor, skipping rich route decision, route tooltip, decision brief, route target handoff, town handoff, and primary commit-check surfaces."
       ],
       "nonGoals": [
         "Do not implement a full async rewrite, worker threads, broad deferred scheduling, generated map content/density changes, renderer/fog behavior changes, save schema changes, object contract changes, or F3 overlay/profile-log regressions.",
         "Do not change stale/missing/non-selected route safety semantics; keep the full try_move_along_route fallback."
       ],
-      "notes": "Follow-up from AcOrP Windows profile after 532ead4: cached selected-route movement now has an open-tile fast path that skips finalization/recap/global discovery, descriptor-only interaction dispatch for real destinations, safe fallback for stale/unknown descriptors, and JSONL/F3 instrumentation for the split.",
+      "notes": "Follow-up from real DISPLAY=:99 Large 108x108 rendered-client profile after dcb3cdc: open/current route preview and post-move current-tile refresh now use a simple route UI fast path that skips rich route decision/brief/handoff/commit-check construction; adjacent open-tile clicks use cached selected-route execution; JSONL/F3 counters expose the simple-route skips.",
       "completionEvidence": [
         "OverworldShell now defines refresh request phases for map_view, action_rails, hero_actions, context_actions, route_preview, spell_rails, specialty_rails, artifact_rails, status_surfaces, save_surface, and generated_surfaces.",
         "_set_selected_tile marks only map_view and route_preview dirty for non-current selected route destinations, and route selection calls _refresh_selected_route_preview instead of the full _refresh path.",
@@ -102,7 +105,19 @@
         "OverworldRules.execute_prevalidated_route uses the descriptor to run open_fast_path for open reached destinations, avoiding normalize_overworld_state_for_runtime, _resolve_post_move_interaction, _finalize_action_result, _attach_post_action_recap, and _post_action_tile_context on that hot path.",
         "Descriptor destination interactions use destination_interaction_fast_path and dispatch resource/artifact/encounter/town by descriptor kind/id/tile instead of broad active-tile discovery; unsafe descriptors report fallback reasons and use full_revalidation fallback.",
         "Route decision construction now records interception_ms and avoids runtime normalization for selected-destination-only interception checks without enabling the global fallback scan.",
-        "F3/profile JSONL movement_rules details now expose cached_execution_mode, post_action_recap_skipped, scenario_eval_skipped, interaction_dispatch_mode, and fallback_reason."
+        "F3/profile JSONL movement_rules details now expose cached_execution_mode, post_action_recap_skipped, scenario_eval_skipped, interaction_dispatch_mode, and fallback_reason.",
+        "Real DISPLAY=:99 Large 108x108 profile evidence identified refresh_route_destination_action/route_decision_construction, not BFS/pathing or map_view, as the remaining simple open-route hot path.",
+        "Open/current selected-route actions now build compact route action, route line, and cheap primary tooltip from _selected_route_state, route_preview, and destination_interaction_descriptor without calling _selected_route_decision_surface, _route_decision_tooltip, _route_decision_brief, _primary_order_commit_check_surface, _route_target_handoff_surface, or _town_entry_handoff_surface.",
+        "Post-move current-tile selected-route refresh uses the same minimal current action surface instead of rebuilding full rich route destination UI just to show hold/current.",
+        "Adjacent open-tile direct clicks now use cached selected-route execution/open_fast_path while non-open adjacent destinations keep the existing direct move/interaction fallback.",
+        "Profile JSONL/F3 data now exposes simple_route_ui_fast_path, simple_open_route_ui_fast_path, simple_current_route_ui_fast_path, rich_route_surface_skipped_for_simple_route, and primary_route_action_cheap_tooltip counters/fields for open/current route UI verification.",
+        "godot4 --headless --path . res://tests/overworld_cached_route_execution_regression.tscn passed with adjacent open-tile cached execution coverage.",
+        "godot4 --headless --path . res://tests/overworld_route_destination_only_action_regression.tscn passed with open/current simple route UI fast-path assertions.",
+        "godot4 --headless --path . res://tests/overworld_incremental_route_preview_refresh_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_interaction_profile_log_regression.tscn passed with JSONL simple-route fast-path fields.",
+        "godot4 --headless --path . res://tests/overworld_selected_route_context_actions_cache_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_hero_actions_refresh_cache_regression.tscn passed.",
+        "python3 scripts/analyze_overworld_profile_log.py .artifacts/uploaded_profiles/20260501/display99_actual_large_overworld_profile.jsonl --slowest 4 --offenders 10 passed."
       ],
       "validationEvidence": [
         "godot4 --headless --path . res://tests/overworld_cached_route_execution_regression.tscn passed: selected-route selection uses compact signatures, cached open-tile confirmation reports open_fast_path, skips scenario eval and post-action recap, avoids global discovery/tile-context scans, unknown descriptors fall back safely, and stale route starts still fall back to full_revalidation.",
