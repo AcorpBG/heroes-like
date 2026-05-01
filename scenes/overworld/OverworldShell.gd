@@ -583,17 +583,19 @@ func _move_toward_selected_tile() -> void:
 	var preview: Dictionary = route_state.get("route_preview", {}) if route_state.get("route_preview", {}) is Dictionary else {}
 	var fallback_reason := _selected_cached_route_execution_fallback_reason(route_state, route, preview)
 	var use_cached_execution := fallback_reason == ""
+	var destination_descriptor: Dictionary = route_state.get("destination_interaction_descriptor", {}) if route_state.get("destination_interaction_descriptor", {}) is Dictionary else {}
 	_debug_phase_end("route_execution_lookup", route_lookup_started_usec, {
 		"path_tiles": route.size(),
 		"cached_route_execution": use_cached_execution,
 		"fallback_reason": fallback_reason,
+		"destination_interaction_kind": String(destination_descriptor.get("kind", "")),
 	})
 	if route.size() <= 1:
 		if debug_started:
 			_debug_finish_path_command()
 		return
 	var movement_rules_started_usec := _debug_phase_begin("movement_rules")
-	var result: Dictionary = OverworldRules.execute_prevalidated_route(_session, route, preview) if use_cached_execution else OverworldRules.try_move_along_route(_session, route)
+	var result: Dictionary = OverworldRules.execute_prevalidated_route(_session, route, preview, -1, destination_descriptor) if use_cached_execution else OverworldRules.try_move_along_route(_session, route)
 	var executed_steps := 0
 	var route_steps = result.get("route_steps", [])
 	if route_steps is Array:
@@ -615,6 +617,10 @@ func _move_toward_selected_tile() -> void:
 			"reachable_steps": reachable_steps,
 			"destination_reached": destination_reached,
 			"route_validation_mode": validation_mode,
+			"cached_execution_mode": String(route_execution.get("cached_execution_mode", "full_fallback" if not use_cached_execution else "")),
+			"post_action_recap_skipped": bool(route_execution.get("post_action_recap_skipped", false)),
+			"scenario_eval_skipped": bool(route_execution.get("scenario_eval_skipped", false)),
+			"interaction_dispatch_mode": String(route_execution.get("interaction_dispatch_mode", "global_fallback" if not use_cached_execution else "")),
 		}
 	)
 	_adopt_selected_route_after_execution(route, result)
@@ -652,6 +658,23 @@ func _selected_cached_route_execution_fallback_reason(route_state: Dictionary, r
 		return "destination_out_of_bounds"
 	if OverworldRules.tile_is_blocked(_session, destination.x, destination.y):
 		return "destination_blocked"
+	var descriptor: Dictionary = route_state.get("destination_interaction_descriptor", {}) if route_state.get("destination_interaction_descriptor", {}) is Dictionary else {}
+	var descriptor_reason := _selected_route_destination_descriptor_fallback_reason(descriptor, destination)
+	if descriptor_reason != "":
+		return descriptor_reason
+	return ""
+
+func _selected_route_destination_descriptor_fallback_reason(descriptor: Dictionary, destination: Vector2i) -> String:
+	if descriptor.is_empty():
+		return "missing_destination_descriptor"
+	var kind := String(descriptor.get("kind", ""))
+	if kind not in ["open", "resource", "artifact", "encounter", "town", "current"]:
+		return "unknown_destination_descriptor"
+	if int(descriptor.get("x", -999)) != destination.x or int(descriptor.get("y", -999)) != destination.y:
+		return "destination_descriptor_tile_stale"
+	var expected_signature := _selected_route_destination_interaction_signature(destination)
+	if String(descriptor.get("interaction_signature", "")) != expected_signature:
+		return "destination_descriptor_stale"
 	return ""
 
 func _start_encounter() -> void:
@@ -2340,6 +2363,42 @@ func _selected_route_destination_interaction_surface() -> Dictionary:
 		return destination
 	return destination
 
+func _selected_route_destination_execution_descriptor(tile: Vector2i) -> Dictionary:
+	var descriptor := {
+		"kind": "open",
+		"x": tile.x,
+		"y": tile.y,
+		"interaction_signature": _selected_route_destination_interaction_signature(tile),
+	}
+	if not _tile_in_bounds(tile):
+		descriptor["kind"] = "invalid"
+		return descriptor
+	var town := _town_at(tile.x, tile.y)
+	if not town.is_empty():
+		descriptor["kind"] = "town"
+		descriptor["placement_id"] = String(town.get("placement_id", ""))
+		descriptor["town_id"] = String(town.get("town_id", ""))
+		descriptor["owner"] = String(town.get("owner", "neutral"))
+		return descriptor
+	var node := _resource_node_at(tile.x, tile.y)
+	if not node.is_empty():
+		descriptor["kind"] = "resource"
+		descriptor["placement_id"] = String(node.get("placement_id", ""))
+		descriptor["site_id"] = String(node.get("site_id", ""))
+		return descriptor
+	var artifact_node := _artifact_node_at(tile.x, tile.y)
+	if not artifact_node.is_empty():
+		descriptor["kind"] = "artifact"
+		descriptor["artifact_id"] = String(artifact_node.get("artifact_id", ""))
+		return descriptor
+	var encounter := _encounter_at(tile.x, tile.y)
+	if not encounter.is_empty():
+		descriptor["kind"] = "encounter"
+		descriptor["placement_id"] = String(encounter.get("placement_id", encounter.get("id", "")))
+		descriptor["encounter_id"] = String(encounter.get("encounter_id", encounter.get("id", "")))
+		return descriptor
+	return descriptor
+
 func _resource_site_action_label_for_destination(node: Dictionary, site: Dictionary) -> String:
 	if bool(site.get("persistent_control", false)) and String(node.get("collected_by_faction_id", "")) == "player":
 		return "Enter Site"
@@ -2452,6 +2511,7 @@ func _selected_route_decision_surface() -> Dictionary:
 	else:
 		status = "blocked"
 		blocked_reason = "No clear route from the active hero."
+	var interception_started_usec := Time.get_ticks_usec()
 	var interception_surface := OverworldRules.describe_route_interception_surface(
 		_session,
 		_selected_tile.x,
@@ -2459,6 +2519,7 @@ func _selected_route_decision_surface() -> Dictionary:
 		steps,
 		false
 	)
+	var interception_ms := _debug_usec_to_ms(Time.get_ticks_usec() - interception_started_usec)
 	var remote_owned_town := _is_selected_owned_town_visit_target()
 	if remote_owned_town:
 		action_kind = "town"
@@ -2526,7 +2587,13 @@ func _selected_route_decision_surface() -> Dictionary:
 		"route_status": status,
 		"steps": steps,
 	}
-	_debug_phase_end("route_decision_construction", decision_started_usec, {"status": status, "steps": steps, "action_kind": action_kind})
+	_debug_phase_end("route_decision_construction", decision_started_usec, {
+		"status": status,
+		"steps": steps,
+		"action_kind": action_kind,
+		"interception_ms": interception_ms,
+		"interception_global_fallback": false,
+	})
 	return surface
 
 func _selected_route_action_kind(adjacent: bool) -> String:
@@ -4242,6 +4309,7 @@ func _store_selected_route_state(route: Array, source: String, signature: String
 	var route_signature := signature if signature != "" else _selected_route_signature()
 	var route_copy := route.duplicate(true)
 	var preview := OverworldRules.route_movement_preview(_session, route_copy, movement_current)
+	var destination_descriptor := _selected_route_destination_execution_descriptor(_selected_tile)
 	_selected_route_state_generation += 1
 	_selected_route_state = {
 		"valid": true,
@@ -4257,6 +4325,7 @@ func _store_selected_route_state(route: Array, source: String, signature: String
 		"session_signature": _selected_route_session_signature(),
 		"route_tiles": route_copy,
 		"route_preview": preview.duplicate(true),
+		"destination_interaction_descriptor": destination_descriptor,
 	}
 	_validation_profile["last_selected_route_cache"] = {
 		"status": "stored",
