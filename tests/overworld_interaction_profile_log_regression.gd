@@ -58,14 +58,14 @@ func _run() -> void:
 		_fail("Profile logging or F3 overlay changed movement behavior.", {"hero": _tile_payload(OverworldRules.hero_position(session)), "target": _tile_payload(target)})
 		return
 	var pathing_profile: Dictionary = OverworldRules.validation_pathing_profile_snapshot()
-	if int(pathing_profile.get("route_interaction_lookup_count", 0)) <= 0:
-		_fail("Route movement validation did not exercise route-interaction checks.", pathing_profile)
+	if int(pathing_profile.get("route_interaction_lookup_count", 0)) != 0:
+		_fail("Cached selected-route execution should not run route-wide interaction validation checks.", pathing_profile)
 		return
 	if int(pathing_profile.get("route_interaction_full_scan_count", 0)) != 0:
-		_fail("Route movement validation fell back to whole-map route-interaction scans.", pathing_profile)
+		_fail("Cached selected-route execution fell back to whole-map route-interaction scans.", pathing_profile)
 		return
-	if int(pathing_profile.get("route_interaction_spatial_lookup_count", 0)) != int(pathing_profile.get("route_interaction_lookup_count", 0)):
-		_fail("Route movement validation did not keep route-interaction checks on the spatial lookup path.", pathing_profile)
+	if int(pathing_profile.get("route_interaction_spatial_lookup_count", 0)) != 0:
+		_fail("Cached selected-route execution should not need spatial route-interaction lookups.", pathing_profile)
 		return
 
 	records = shell.call("validation_overworld_profile_log_last_records", 5)
@@ -182,6 +182,18 @@ func _assert_record_shape(record: Dictionary, expected_command: String, expect_b
 		var selected_context_cache: Dictionary = incremental_refresh.get("selected_context_actions_cache", {}) if incremental_refresh.get("selected_context_actions_cache", {}) is Dictionary else {}
 		if not selected_context_cache.has("hits") or not selected_context_cache.has("misses"):
 			_fail("Selected-context cache counters were not exposed in profile JSONL.", record)
+			return false
+	if expected_command == "click_existing_selection":
+		var movement_rules: Dictionary = record.get("movement_rules", {}) if record.get("movement_rules", {}) is Dictionary else {}
+		var movement_details: Dictionary = movement_rules.get("details", {}) if movement_rules.get("details", {}) is Dictionary else {}
+		if not bool(movement_details.get("cached_route_execution", false)):
+			_fail("Existing-selection confirmation did not expose cached route execution in profile JSONL.", record)
+			return false
+		if String(movement_details.get("route_validation_mode", "")) != "cached_prevalidated":
+			_fail("Existing-selection confirmation did not record cached_prevalidated route validation mode.", record)
+			return false
+		if String(movement_details.get("fallback_reason", "")) != "":
+			_fail("Existing-selection confirmation unexpectedly recorded a fallback reason.", record)
 			return false
 	if not (record.get("map_view_timings_ms", {}) is Dictionary) or not (record.get("top_offenders", []) is Array):
 		_fail("Profile record did not include map-view timings or top offenders.", record)

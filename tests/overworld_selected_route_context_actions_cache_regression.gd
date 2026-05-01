@@ -69,14 +69,14 @@ func _run() -> void:
 		return
 
 	shell.call("validation_reset_profile", true)
-	_add_route_blocking_encounter(session, Vector2i(5, 1))
+	_add_route_blocking_encounter(session, second_target)
 	shell.call("_refresh")
 	var topology_profile: Dictionary = shell.call("validation_profile_snapshot")
 	if int(topology_profile.get("selected_route_destination_action_cache_misses", 0)) <= 0:
-		_fail("Route interaction topology change did not rebuild destination-only route actions.", topology_profile)
+		_fail("Destination interaction change did not rebuild destination-only route actions.", topology_profile)
 		return
 	if int(topology_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0:
-		_fail("Route interaction topology change did not recompute selected-route decision surface.", topology_profile)
+		_fail("Destination interaction change did not recompute selected-route decision surface.", topology_profile)
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
