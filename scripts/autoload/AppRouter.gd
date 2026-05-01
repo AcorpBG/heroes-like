@@ -85,6 +85,7 @@ func go_to_overworld() -> void:
 	_note_overworld_handoff_step("go_to_overworld_state_set")
 	OverworldRules.clear_active_town_visit(session)
 	_note_overworld_handoff_step("go_to_overworld_town_visit_cleared")
+	OverworldRules.mark_runtime_normalized_transition_state(session)
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
 	var autosave_intent := {}
 	if _should_defer_initial_generated_overworld_autosave(session):
@@ -131,6 +132,7 @@ func go_to_town() -> void:
 		return
 	var state_started := ProfileLogScript.begin_usec()
 	session.game_state = "town"
+	OverworldRules.mark_runtime_normalized_transition_state(session)
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
 	var autosave_intent := _record_transition_autosave_skip(session, "go_to_town", "manual_or_end_turn_only")
 	buckets["save_before_transition"] = 0.0
@@ -297,6 +299,7 @@ func validation_prepare_overworld_handoff_without_scene_change() -> Dictionary:
 	_note_overworld_handoff_step("go_to_overworld_state_set")
 	OverworldRules.clear_active_town_visit(session)
 	_note_overworld_handoff_step("go_to_overworld_town_visit_cleared")
+	OverworldRules.mark_runtime_normalized_transition_state(session)
 	var autosave_intent := {}
 	if _should_defer_initial_generated_overworld_autosave(session):
 		autosave_intent = _record_transition_autosave_intent(session, "go_to_overworld", "generated_initial_overworld_deferred")
@@ -323,6 +326,7 @@ func validation_prepare_town_handoff_without_scene_change() -> Dictionary:
 	if not TownRulesScript.can_visit_active_town_bridge(session):
 		return {"ok": false, "reason": "invalid_town_visit"}
 	session.game_state = "town"
+	OverworldRules.mark_runtime_normalized_transition_state(session)
 	var autosave_intent := _record_transition_autosave_skip(session, "go_to_town", "manual_or_end_turn_only")
 	return {
 		"ok": true,

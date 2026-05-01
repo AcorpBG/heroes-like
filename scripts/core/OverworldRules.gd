@@ -278,6 +278,14 @@ static func is_runtime_session_normalized(session: SessionStateStoreScript.Sessi
 		return false
 	return String(_runtime_normalized_signatures.get(String(session.session_id), "")) == _runtime_normalization_signature(session)
 
+static func mark_runtime_normalized_transition_state(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	var session_id := String(session.session_id)
+	if not _runtime_normalized_signatures.has(session_id):
+		return
+	_mark_runtime_normalized(session)
+
 static func _mark_runtime_normalized(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return

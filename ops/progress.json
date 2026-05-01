@@ -5643,7 +5643,7 @@
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "town-transition-fast-path-10184",
       "source": "PLAN.md",
-      "updatedAt": "2026-05-01T20:09:30Z",
+      "updatedAt": "2026-05-01T21:10:00Z",
       "startedAt": "2026-05-01T20:05:00Z",
       "sourceDocs": [
         "project.md",
@@ -5673,17 +5673,14 @@
       "nonGoals": [
         "No save-schema migration, generated-map size/template/player-count/density change, renderer/fog behavior change, pathing/object-contract change, broad TownRules rewrite, broad save-payload/delta architecture, generated setup optimization, or hidden bucket renaming."
       ],
-      "notes": "Rendered broad profile showed stable scalar town signatures but repeated misses for rmg_town_p1 because minimal and full mode shared the placement_id cache entry, plus explicit save surface builds after exits dominated by recap/current/latest summaries. Completed by keying town entity cache entries by placement_id and refresh mode, preserving targeted active-town invalidation across both modes, and keeping generated ordinary validation snapshots on compact UI state instead of building save/recap surfaces.",
+      "notes": "Regression follow-up after actual DISPLAY=:99 client evidence from 665f96a showed the earlier fix only covered validation snapshots: OverworldShell._ready still refreshed the save slot picker on ordinary generated town exit, calling AppRouter.active_save_surface() and SaveService.build_in_session_save_surface(); TownShell._ready also forced full overworld normalization after transition state changes, and TownStageView recomputed full town action/stage state even when the town entity cache hit. Fixed by keeping generated ordinary overworld scene entry on compact save controls, marking trusted normalized transition state for town/overworld handoffs, using runtime normalization on scene entry, and feeding TownStageView from the cached town view state with targeted active-town invalidation preserved.",
       "validationEvidence": [
-        "godot4 --headless --path . tests/town_entity_cache_active_refresh_regression.tscn passed.",
-        "godot4 --headless --path . tests/town_transition_fast_path_regression.tscn passed.",
-        "godot4 --headless --path . tests/profile_log_general_surface_regression.tscn passed.",
-        "DISPLAY=:99 HEROES_PROFILE_LOG=1 godot4 --path . tests/town_entity_cache_active_refresh_regression.tscn passed and produced .artifacts/town_hot_path_20260501/display99_town_cache_after_fix_heroes_profile.jsonl.",
-        "DISPLAY=:99 HEROES_PROFILE_LOG=1 godot4 --path . tests/town_transition_fast_path_regression.tscn passed and produced .artifacts/town_hot_path_20260501/display99_town_transition_after_fix_heroes_profile.jsonl with no save surface records.",
-        "python3 scripts/analyze_overworld_profile_log.py .artifacts/uploaded_profiles/20260501/display99_broad_after_ad1ee2e_heroes_profile.jsonl --mode auto passed.",
-        "python3 scripts/analyze_overworld_profile_log.py .artifacts/uploaded_profiles/20260501/display99_broad_after_ad1ee2e_overworld_profile.jsonl --mode auto passed.",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_transition_fast_path_regression.tscn passed; regression now instantiates the generated overworld scene-entry path after a town-return handoff and rejects build_in_session_save_surface records.",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_entity_cache_active_refresh_regression.tscn passed; same-town cache-hit refresh reported stage=0.225ms, town_entity_cache_build=0.0ms, town_entity_cache_signature=0.158ms.",
+        "DISPLAY=:99 godot4 --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_transition_fast_path_regression.tscn passed; rendered generated compact save surface stayed compact and emitted no save/surface build records.",
+        "DISPLAY=:99 godot4 --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_entity_cache_active_refresh_regression.tscn passed; rendered profile JSONL showed same-town re-entry town_ready normalize_overworld=0.041ms, first_refresh=110.934ms, cache-hit stage=0.250ms, town_entity_cache_build=0.0ms, and no save/surface build records.",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/profile_log_general_surface_regression.tscn passed; town_ready normalize_overworld=0.046ms in the focused profile output.",
         "python3 tests/validate_repo.py passed.",
-        "python3 -m json.tool ops/progress.json passed.",
         "git diff --check passed."
       ],
       "completedAt": "2026-05-01T20:09:30Z"

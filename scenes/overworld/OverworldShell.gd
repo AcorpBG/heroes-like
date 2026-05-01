@@ -167,14 +167,14 @@ func _ready() -> void:
 		return
 
 	AppRouter.note_overworld_handoff_step("overworld_ready_normalize_start")
-	OverworldRules.normalize_overworld_state(_session)
+	OverworldRules.normalize_overworld_state_for_runtime(_session)
 	AppRouter.note_overworld_handoff_step("overworld_ready_normalize_done")
 	if _session.scenario_status != "in_progress":
 		AppRouter.note_overworld_handoff_step("overworld_ready_outcome_redirect")
 		AppRouter.go_to_scenario_outcome()
 		return
 	AppRouter.note_overworld_handoff_step("overworld_ready_save_picker_start")
-	_configure_save_slot_picker(not _generated_initial_open_pending())
+	_configure_save_slot_picker(not _generated_initial_open_pending() and not _use_generated_compact_refresh())
 	if _generated_initial_open_pending():
 		_set_deferred_generated_save_status("Save: preparing generated autosave")
 	AppRouter.note_overworld_handoff_step("overworld_ready_save_picker_done")

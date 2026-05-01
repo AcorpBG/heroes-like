@@ -65,19 +65,7 @@ func _notification(what: int) -> void:
 		queue_redraw()
 
 func set_town_state(session) -> void:
-	_session = session
-	_town = {}
-	_town_template = {}
-	_faction = {}
-	_stationed = []
-	_build_actions = []
-	_recruit_actions = []
-	_response_actions = []
-	_study_actions = []
-	_market_actions = []
-	_logistics = {}
-	_recovery = {}
-	_threat = {}
+	_clear_town_state(session)
 	if session != null:
 		_town = TownRulesScript.get_active_town(session)
 		if not _town.is_empty():
@@ -93,6 +81,46 @@ func set_town_state(session) -> void:
 			_recovery = OverworldRulesScript.town_recovery_state(session, _town)
 			_threat = OverworldRulesScript.town_public_threat_state(session, _town)
 	queue_redraw()
+
+func set_precomputed_town_state(session, state: Dictionary) -> void:
+	_clear_town_state(session)
+	if state.is_empty():
+		queue_redraw()
+		return
+	_town = _duplicate_dictionary(state.get("town", {}))
+	_town_template = _duplicate_dictionary(state.get("town_template", {}))
+	_faction = _duplicate_dictionary(state.get("faction", {}))
+	_stationed = _duplicate_array(state.get("stationed", []))
+	_build_actions = _duplicate_array(state.get("build_actions", []))
+	_recruit_actions = _duplicate_array(state.get("recruit_actions", []))
+	_response_actions = _duplicate_array(state.get("response_actions", []))
+	_study_actions = _duplicate_array(state.get("study_actions", []))
+	_market_actions = _duplicate_array(state.get("market_actions", []))
+	_logistics = _duplicate_dictionary(state.get("logistics", {}))
+	_recovery = _duplicate_dictionary(state.get("recovery", {}))
+	_threat = _duplicate_dictionary(state.get("threat", {}))
+	queue_redraw()
+
+func _clear_town_state(session) -> void:
+	_session = session
+	_town = {}
+	_town_template = {}
+	_faction = {}
+	_stationed = []
+	_build_actions = []
+	_recruit_actions = []
+	_response_actions = []
+	_study_actions = []
+	_market_actions = []
+	_logistics = {}
+	_recovery = {}
+	_threat = {}
+
+func _duplicate_dictionary(value: Variant) -> Dictionary:
+	return value.duplicate(true) if value is Dictionary else {}
+
+func _duplicate_array(value: Variant) -> Array:
+	return value.duplicate(true) if value is Array else []
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
