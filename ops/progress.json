@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-reentry-volatile-overlay-cache-10184",
-  "currentSliceTitle": "Town Re-entry Volatile Overlay Cache",
+  "currentSliceId": "town-exit-profile-accuracy-10184",
+  "currentSliceTitle": "Town Exit Profile Accuracy",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed volatile town re-entry cache fix: expensive town cache signature now excludes overworld resources, active-hero movement/position, stationed-local, and recap fields while dynamic resource/action overlays refresh cheaply on cache hits.",
+  "currentSliceNotes": "Added town Leave-to-first-overworld-frame JSONL span, rendered wall-clock reconciliation harness, save-surface skip, and generated return first-frame compact path; rendered cases stay sub-1s.",
   "nextActionGuardrailNote": "Preserve gameplay semantics, save schema, generated map content/density, renderer/fog behavior, object contracts, profile JSONL/F3 compatibility, manual save, end-turn autosave, and town action correctness.",
-  "updatedAt": "2026-05-01T21:33:37Z",
+  "updatedAt": "2026-05-01T21:59:16Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -5729,6 +5729,16 @@
         "git diff --check passed."
       ],
       "completedAt": "2026-05-01T20:09:30Z"
+    },
+    {
+      "id": "town-exit-profile-accuracy-10184",
+      "title": "Town Exit Profile Accuracy",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-01T21:59:16Z",
+      "startedAt": "2026-05-01T21:47:35Z",
+      "notes": "Added town Leave-to-first-overworld-frame JSONL span, rendered wall-clock reconciliation harness, save-surface skip, and generated return first-frame compact path; rendered cases stay sub-1s.",
+      "completedAt": "2026-05-01T21:59:16Z"
     }
   ],
   "completedImplementationEvidence": [
