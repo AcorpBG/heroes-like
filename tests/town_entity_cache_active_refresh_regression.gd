@@ -76,6 +76,7 @@ func _run() -> void:
 	if not bool(leave_result.get("ok", false)):
 		_finish_fail("Could not prepare ordinary town exit handoff for re-entry coverage.", leave_result)
 		return
+	_simulate_overworld_resource_movement(session, first_town)
 	OverworldRules.set_active_town_visit(session, first_id)
 	var reenter_result: Dictionary = AppRouter.validation_prepare_town_handoff_without_scene_change()
 	if not bool(reenter_result.get("ok", false)):
@@ -243,6 +244,7 @@ func _assert_generated_large_reentry_fast() -> Dictionary:
 	shell.queue_free()
 	await get_tree().process_frame
 	AppRouter.validation_prepare_overworld_handoff_without_scene_change()
+	_simulate_overworld_resource_movement(large_session, town)
 	OverworldRules.set_active_town_visit(large_session, placement_id)
 	AppRouter.validation_prepare_town_handoff_without_scene_change()
 	var reentry_shell = load("res://scenes/town/TownShell.tscn").instantiate()
@@ -306,6 +308,10 @@ func _assert_snapshot(snapshot: Dictionary, expected_placement_id: String, expec
 	if signature.length() > 4096 or signature.find("{") >= 0 or signature.find("player_heroes") >= 0 or signature.find("last_action_recap") >= 0:
 		_finish_fail("%s used a large JSON-style town cache signature." % label, cache_result)
 		return false
+	for volatile_token in ["resources:", "active_hero:", "move=", "pos=", "stationed:", "recap:"]:
+		if signature.find(String(volatile_token)) >= 0:
+			_finish_fail("%s included volatile overworld state in the expensive town cache signature." % label, cache_result)
+			return false
 	if float(cache_result.get("signature_ms", 99999.0)) > 50.0:
 		_finish_fail("%s spent too long constructing the town cache signature." % label, cache_result)
 		return false
@@ -343,6 +349,21 @@ func _give_resources(session) -> void:
 
 func _move_active_hero_to_town(session, town: Dictionary) -> void:
 	var position := {"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}
+	_set_active_hero_position(session, position)
+
+func _simulate_overworld_resource_movement(session, town: Dictionary) -> void:
+	var resources: Dictionary = session.overworld.get("resources", {}) if session.overworld.get("resources", {}) is Dictionary else {}
+	resources["gold"] = int(resources.get("gold", 0)) + 150
+	resources["wood"] = int(resources.get("wood", 0)) + 2
+	resources["ore"] = int(resources.get("ore", 0)) + 1
+	session.overworld["resources"] = resources
+	var movement: Dictionary = session.overworld.get("movement", {}) if session.overworld.get("movement", {}) is Dictionary else {}
+	movement["current"] = max(0, int(movement.get("current", movement.get("max", 14))) - 2)
+	session.overworld["movement"] = movement
+	var position := {"x": int(town.get("x", 0)) + 2, "y": int(town.get("y", 0))}
+	_set_active_hero_position(session, position)
+
+func _set_active_hero_position(session, position: Dictionary) -> void:
 	session.overworld["hero_position"] = position.duplicate(true)
 	var active_hero = session.overworld.get("hero", {})
 	if active_hero is Dictionary:

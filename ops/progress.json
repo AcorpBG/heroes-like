@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-entry-exit-cache-save-hot-path-10184",
-  "currentSliceTitle": "Town Entry/Exit Cache And Save-Surface Hot Path",
+  "currentSliceId": "town-reentry-volatile-overlay-cache-10184",
+  "currentSliceTitle": "Town Re-entry Volatile Overlay Cache",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed urgent rendered-profile corrective for same-town entry/exit: town entity caches now retain separate minimal/full entries per placement, targeted invalidation clears all active-town modes, and generated ordinary validation snapshots avoid expensive save/recap surface construction while preserving manual save and end-turn autosave behavior.",
-  "nextActionGuardrailNote": "Preserve gameplay semantics, manual save and end-turn autosave behavior, save schema, generated map content/density, renderer/fog behavior, object contracts, F3/profile-log compatibility, and town-action targeted invalidation.",
-  "updatedAt": "2026-05-01T20:09:30Z",
+  "currentSliceNotes": "Completed volatile town re-entry cache fix: expensive town cache signature now excludes overworld resources, active-hero movement/position, stationed-local, and recap fields while dynamic resource/action overlays refresh cheaply on cache hits.",
+  "nextActionGuardrailNote": "Preserve gameplay semantics, save schema, generated map content/density, renderer/fog behavior, object contracts, profile JSONL/F3 compatibility, manual save, end-turn autosave, and town action correctness.",
+  "updatedAt": "2026-05-01T21:33:37Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,51 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "town-reentry-volatile-overlay-cache-10184",
+      "title": "Town Re-entry Volatile Overlay Cache",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "town-entry-exit-cache-save-hot-path-10184",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/profile-jsonl-usage.md",
+        ".artifacts/uploaded_profiles/20260501/acorp_local_after_a4a86a2_heroes_profile.jsonl",
+        ".artifacts/uploaded_profiles/20260501/acorp_local_after_a4a86a2_heroes_profile.summary.txt",
+        ".artifacts/uploaded_profiles/20260501/acorp_local_after_a4a86a2_overworld_profile.jsonl",
+        ".artifacts/uploaded_profiles/20260501/acorp_local_after_a4a86a2_overworld_profile.summary.txt"
+      ],
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/town_entity_cache_active_refresh_regression.gd",
+        "docs/profile-jsonl-usage.md"
+      ],
+      "completionCriteria": [
+        "Same-town re-entry after overworld resource/movement changes remains a town entity cache hit with no full cache build.",
+        "Town cache signature excludes volatile resources, hero movement/position, stationed-local, and recap fields while preserving town-specific invalidation.",
+        "Generated Large focused regression proves sub-1s same-town re-entry and no hidden save/surface rebuild.",
+        "select_town uses runtime-normalized town selection and exposes town handoff profile buckets."
+      ],
+      "nonGoals": [
+        "No save schema migration.",
+        "No renderer/fog/object contract or generated-map content changes.",
+        "No fake async or bucket renaming to hide cost."
+      ],
+      "startedAt": "2026-05-01T21:24:59Z",
+      "completedAt": "2026-05-01T21:33:37Z",
+      "updatedAt": "2026-05-01T21:33:37Z",
+      "notes": "Completed follow-up from AcOrP local actual-client profiles after a4a86a2; exact volatile miss fields were resources, active hero move/position, stationed-local hero presence, and town action recap signature. The same-town cache hit now refreshes compact resource/action/departure/stage overlays without a full town entity cache build.",
+      "completionEvidence": [
+        "TownShell _town_entity_cache_signature is v4 and excludes resources, active_hero, move/pos, army, stationed, and recap fields from the expensive town view-state cache signature.",
+        "Town cache hits now record town_entity_cache_dynamic and refresh resource text, departure movement text, build/study/market affordability, recruit Ready xN/Trade xN counts, and compact stage payloads without rebuilding the static town view state.",
+        "OverworldRules.set_active_town_visit uses normalize_overworld_state_for_runtime instead of full normalize_overworld_state, and OverworldShell records town_visit_set_active, town_visit_feedback, and town_visit_router_transition buckets for select_town handoff cost.",
+        "tests/town_entity_cache_active_refresh_regression.gd now mutates resources, hero movement, and hero position between same-town visits and asserts cache hit, zero cache build, no volatile signature tokens, and generated Large sub-1s re-entry.",
+        "Rendered DISPLAY=:99 proof in .artifacts/generated/20260501/display99_town_reentry_volatile_overlay_after_dynamic_fix_heroes_profile.jsonl shows generated Large town/entry 5.077ms, town/refresh 2.170ms, town_entity_cache_build 0.0ms, town_entity_cache_hit 1.0, town_entity_cache_dynamic 0.690ms, and save_surface_skipped_hidden 1.0."
+      ]
+    },
     {
       "id": "overworld-interaction-destination-fast-path-10184",
       "title": "Overworld Interaction Destination Fast Path",
