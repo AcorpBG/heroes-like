@@ -137,10 +137,84 @@ func _assert_generated_scenario_event_gating() -> bool:
 		"resources": ["wood"],
 	})
 	var objective_profile: Dictionary = objective_result.get("profile", {}) if objective_result.get("profile", {}) is Dictionary else {}
-	if String(objective_profile.get("dependency_mode", "")) != "full_fallback_generated":
-		return _fail("Generated scenario with objectives should preserve full fallback.", objective_profile)
-	if int(objective_profile.get("objective_count", 0)) <= 0 or not bool(objective_profile.get("fallback_used", false)):
-		return _fail("Generated objective fallback did not report dependency/fallback metadata.", objective_profile)
+	if String(objective_profile.get("dependency_mode", "")) != "event_gated_skip":
+		return _fail("Generated scenario with unrelated objective should event-gate skip.", objective_profile)
+	if String(objective_profile.get("skip_reason", "")) != "no_affected_dependencies":
+		return _fail("Generated unrelated objective skip did not report no_affected_dependencies.", objective_profile)
+	if int(objective_profile.get("affected_objective_count", -1)) != 0 or int(objective_profile.get("objectives_checked", -1)) != 0:
+		return _fail("Generated unrelated objective skip should not check or affect objectives.", objective_profile)
+	if not bool(objective_profile.get("dependency_metadata_known", false)) or bool(objective_profile.get("fallback_used", true)):
+		return _fail("Generated unrelated objective skip should keep known metadata and avoid fallback.", objective_profile)
+
+	var affected_result: Dictionary = ScenarioRules.evaluate_session_for_event(objective_session, {
+		"event_type": "town_control_changed",
+		"family": "town",
+		"town_placement_ids": ["generated_target_town"],
+		"town_ids": ["town_riverwatch"],
+	})
+	var affected_profile: Dictionary = affected_result.get("profile", {}) if affected_result.get("profile", {}) is Dictionary else {}
+	if String(affected_profile.get("dependency_mode", "")) != "scoped":
+		return _fail("Generated objective-affecting event should preserve scoped/full semantic evaluation.", affected_profile)
+	if int(affected_profile.get("affected_objective_count", 0)) <= 0:
+		return _fail("Generated objective-affecting event should report affected objectives.", affected_profile)
+	if bool(affected_profile.get("fallback_used", true)):
+		return _fail("Generated objective-affecting scoped evaluation should not report fallback.", affected_profile)
+
+	var unknown_id := "generated_unknown_dependency_regression"
+	var unknown_registration: Dictionary = ContentService.register_generated_scenario_draft(
+		_generated_scenario_record(
+			unknown_id,
+			{
+				"victory": [
+					{
+						"id": "unsupported_generated_objective",
+						"type": "collect_resources",
+						"amount": 5,
+					}
+				],
+				"defeat": [],
+			},
+			[]
+		),
+		{"id": unknown_id, "scenario_id": unknown_id, "layers": {}}
+	)
+	if not bool(unknown_registration.get("ok", false)):
+		return _fail("Generated unknown-dependency scenario failed to register.", unknown_registration)
+	var unknown_session = SessionStateStore.new_session_data(
+		"",
+		unknown_id,
+		"",
+		1,
+		{},
+		"normal",
+		SessionState.LAUNCH_MODE_GENERATED_DRAFT
+	)
+	var unknown_result: Dictionary = ScenarioRules.evaluate_session_for_event(unknown_session, {
+		"event_type": "interactable_resolved",
+		"family": "resource_site",
+		"placement_id": "generated_resource_cache",
+		"resources": ["wood"],
+	})
+	var unknown_profile: Dictionary = unknown_result.get("profile", {}) if unknown_result.get("profile", {}) is Dictionary else {}
+	if String(unknown_profile.get("dependency_mode", "")) != "full_fallback_unknown":
+		return _fail("Generated unknown objective dependency should preserve full fallback.", unknown_profile)
+	if not bool(unknown_profile.get("fallback_used", false)):
+		return _fail("Generated unknown dependency fallback should mark fallback use.", unknown_profile)
+
+	var broad_result: Dictionary = ScenarioRules.evaluate_session_for_event(objective_session, {
+		"event_type": "battle_handoff",
+		"family": "encounter",
+		"broad": true,
+		"fallback_reason": "broad_event",
+	})
+	var broad_profile: Dictionary = broad_result.get("profile", {}) if broad_result.get("profile", {}) is Dictionary else {}
+	if String(broad_profile.get("dependency_mode", "")) != "full_fallback_unknown":
+		return _fail("Generated broad event should preserve full fallback.", broad_profile)
+	if String(broad_profile.get("fallback_reason", "")) != "broad_event":
+		return _fail("Generated broad fallback should preserve explicit reason.", broad_profile)
+	if not bool(broad_profile.get("fallback_used", false)):
+		return _fail("Generated broad fallback should mark fallback use.", broad_profile)
+
 	ContentService.clear_generated_scenario_drafts()
 	return true
 

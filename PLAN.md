@@ -3046,7 +3046,7 @@ implementationTargets:
 
 sliceEvidence:
 - Interactable confirmations emit shared mutation/result facts for resource, artifact, encounter handoff, town visit, and town capture flows while preserving existing result keys such as `route`, `message`, `scenario_status`, and `route_execution`.
-- Scenario evaluation uses event/dependency metadata to skip only provably unrelated objective/hook checks, reports modes such as `event_gated_skip`, `scoped`, `full`, and full-fallback reasons, skips generated no-observable-dependency events, and keeps full evaluation for generated scenarios with objectives/hooks plus unknown, broad, or non-in-progress cases.
+- Scenario evaluation uses event/dependency metadata to skip only provably unrelated objective/hook checks, reports modes such as `event_gated_skip`, `scoped`, `full`, and full-fallback reasons, skips generated no-observable-dependency and generated no-affected-dependency events when metadata is known and event dependencies are scoped, and keeps full fallback for unknown, broad, or non-in-progress cases.
 - Resource confirmations compare blocking/body-tile topology facts and skip blocked-index rebuild when only collection/control/reward state changed; unknown or changed topology keeps the full rebuild fallback.
 - Descriptor lookup uses shared placement indexes for resource, artifact, encounter, and town placement ids with explicit scan fallback and profile metadata for lookup mode and collection size.
 - Ordinary descriptor confirmation keeps save/autosave/save-surface work out of the hot path and profile JSONL/analyzer compatibility is additive.

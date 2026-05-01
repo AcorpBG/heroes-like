@@ -121,16 +121,6 @@ static func evaluate_session_for_event(session: SessionStateStoreScript.SessionD
 		profile["fallback_reason"] = ""
 		return {"status": session.scenario_status, "message": "", "profile": profile}
 
-	if bool(scenario.get("generated", false)):
-		profile["dependency_mode"] = "full_fallback_generated"
-		profile["fallback_reason"] = "generated_scenario_dependencies"
-		profile["fallback_used"] = true
-		profile["objectives_checked"] = int(profile.get("objective_count", 0))
-		profile["hooks_checked"] = int(profile.get("hook_count", 0))
-		var generated_result := evaluate_session(session)
-		generated_result["profile"] = profile
-		return generated_result
-
 	var affected_objectives := 0
 	var objectives: Array = dependency.get("objectives", []) if dependency.get("objectives", []) is Array else []
 	for objective_dependency in objectives:
@@ -150,6 +140,7 @@ static func evaluate_session_for_event(session: SessionStateStoreScript.SessionD
 	profile["affected_hook_count"] = affected_hooks
 	if affected_objectives <= 0 and affected_hooks <= 0:
 		profile["dependency_mode"] = "event_gated_skip"
+		profile["skip_reason"] = "no_affected_dependencies"
 		profile["fallback_reason"] = ""
 		return {"status": session.scenario_status, "message": "", "profile": profile}
 

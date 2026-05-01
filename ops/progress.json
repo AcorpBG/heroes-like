@@ -6,9 +6,9 @@
   "currentSliceId": "overworld-interactable-confirmation-full-optimization-10184",
   "currentSliceTitle": "Overworld Interactable Confirmation Full Optimization",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Follow-up completed: generated scenarios with objective_count=0 and hook_count=0 now report event_gated_skip/no_observable_dependencies without full ScenarioRules.evaluate_session; generated scenarios with objectives/hooks keep full_fallback_generated. Validation: required five Godot overworld regressions, uploaded-profile analyzer, ops/progress json.tool, git diff --check.",
+  "currentSliceNotes": "Completed generated-scenario event gating correction: known metadata plus non-broad event dependency with zero affected objectives/hooks now reports event_gated_skip/no_affected_dependencies (no full generated fallback), while non-in-progress, empty/requires-full event facts, unknown metadata, broad events, and affected dependencies still preserve full/scoped evaluation fallbacks.",
   "nextActionGuardrailNote": "Preserve gameplay semantics, generated map content/density, renderer/fog behavior, save schema, object contracts, F3/profile-log compatibility, open/current route fast paths, scenario evaluation semantics, and ordinary no-save interaction confirmation.",
-  "updatedAt": "2026-05-01T18:49:52Z",
+  "updatedAt": "2026-05-01T19:09:21Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -5630,10 +5630,10 @@
       "title": "Overworld Interactable Confirmation Full Optimization",
       "status": "completed",
       "source": "PLAN.md",
-      "updatedAt": "2026-05-01T18:49:52Z",
+      "updatedAt": "2026-05-01T19:09:21Z",
       "startedAt": "2026-05-01T18:28:49Z",
-      "notes": "Follow-up completed: generated scenarios with objective_count=0 and hook_count=0 now report event_gated_skip/no_observable_dependencies without full ScenarioRules.evaluate_session; generated scenarios with objectives/hooks keep full_fallback_generated. Validation: required five Godot overworld regressions, uploaded-profile analyzer, ops/progress json.tool, git diff --check.",
-      "completedAt": "2026-05-01T18:31:11Z"
+      "notes": "Adjusted ScenarioRules event gating so generated scenarios no longer force full_fallback_generated when dependency metadata is known, event dependency is scoped, and affected objective/hook counts are both zero; profile now reports dependency_mode=event_gated_skip with skip_reason=no_affected_dependencies. Preserved full/scoped fallback behavior for non-in-progress status, empty/requires-full event facts, unknown metadata, broad events, and affected objective/hook dependencies. Updated regression coverage for generated no-observable/no-affected skip, objective-affecting scoped evaluation, unknown dependency fallback, and broad-event fallback.",
+      "completedAt": "2026-05-01T19:09:21Z"
     }
   ],
   "completedImplementationEvidence": [
