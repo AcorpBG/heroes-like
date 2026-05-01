@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-refresh-phase-seams-10184",
-  "currentSliceTitle": "Overworld Refresh Phase Seams",
+  "currentSliceId": "overworld-incremental-route-preview-refresh-10184",
+  "currentSliceTitle": "Overworld Incremental Route Preview Refresh",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the first safe incremental/asynchronous-prep slice: documented the current overworld refresh/input pipeline and split OverworldShell._refresh into named synchronous phases without changing behavior or profile bucket names.",
+  "currentSliceNotes": "Completed the first event/request-based refresh slice: selected-route preview now uses a targeted refresh request for map_view, context_actions, and route_preview, while full refresh remains available for mutation-heavy paths.",
   "nextActionGuardrailNote": "After profile-log instrumentation, use uploaded JSONL evidence before selecting any performance fix; preserve movement/pathing semantics, map generation/content density, renderer/fog behavior, save schema, object contracts, and F3 overlay behavior.",
-  "updatedAt": "2026-05-01T10:05:28Z",
+  "updatedAt": "2026-05-01T10:18:05Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,57 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "overworld-incremental-route-preview-refresh-10184",
+      "title": "Overworld Incremental Route Preview Refresh",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-pathing-debug-overlay-report.md",
+        "docs/overworld-refresh-input-pipeline-plan.md",
+        ".artifacts/uploaded_profiles/20260501/acorp_windows_overworld_profile_after_b2346b8.jsonl"
+      ],
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_incremental_route_preview_refresh_regression.gd",
+        "tests/overworld_incremental_route_preview_refresh_regression.tscn",
+        "docs/overworld-refresh-input-pipeline-plan.md",
+        "ops/progress.json"
+      ],
+      "startedAt": "2026-05-01T10:12:34Z",
+      "completedAt": "2026-05-01T10:18:05Z",
+      "completionCriteria": [
+        "OverworldShell has an explicit lightweight refresh request/dirty-phase model covering map_view, action_rails, hero_actions, context_actions, route_preview/context_route, spell/specialty/artifact rails, status surfaces, save surface, and generated surfaces.",
+        "Selected route/tile preview uses a targeted refresh entrypoint that updates route/map overlay, context/primary action, selected-tile text, tooltip, and drawer sync without rebuilding unrelated rails unless dirty.",
+        "Full refresh remains available for session/load/map/topology/mutation-heavy operations.",
+        "Profile JSONL and validation snapshots expose incremental refresh request/phase counters plus selected context and route decision cache counters.",
+        "Focused regression proves selected-route preview does not rebuild unrelated rails while existing cache regressions and profile-log behavior still pass."
+      ],
+      "nonGoals": [
+        "Do not implement a full async rewrite, worker threads, broad deferred scheduling, movement/pathing semantic changes, generated map content/density changes, renderer/fog behavior changes, save schema changes, object contract changes, or F3 overlay/profile-log regressions.",
+        "Do not change movement_rules beyond documenting it as a separate future slice if still expensive."
+      ],
+      "notes": "Selected after AcOrP's current-version Windows profile showed no useful context_action improvement from the prior cache-only change and explicitly requested incremental/event-based refresh rather than another broad synchronous cache band-aid.",
+      "completionEvidence": [
+        "OverworldShell now defines refresh request phases for map_view, action_rails, hero_actions, context_actions, route_preview, spell_rails, specialty_rails, artifact_rails, status_surfaces, save_surface, and generated_surfaces.",
+        "_set_selected_tile marks only map_view, context_actions, and route_preview dirty, and route selection calls _refresh_selected_route_preview instead of the full _refresh path.",
+        "_refresh_action_rails(request) rebuilds only requested rails; selected-route preview refresh updates the map view, context/primary action controls, selected-tile rail text, tooltip, and drawer sync without rebuilding hero, spell, specialty, artifact, save, generated, or broad status surfaces.",
+        "Profile snapshots and JSONL records now include incremental_refresh request/phase data plus hero_actions, selected_context_actions, and selected_route_decision_surface cache counters."
+      ],
+      "validationEvidence": [
+        "python3 scripts/analyze_overworld_profile_log.py .artifacts/uploaded_profiles/20260501/acorp_windows_overworld_profile_after_b2346b8.jsonl passed and preserved the uploaded baseline context.",
+        "godot4 --headless --path . res://tests/overworld_incremental_route_preview_refresh_regression.tscn passed: route preview requested only map_view/context_actions/route_preview and skipped unrelated rail rebuild counters.",
+        "godot4 --headless --path . res://tests/overworld_selected_route_context_actions_cache_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_hero_actions_refresh_cache_regression.tscn passed with route selection hero-action cache misses at 0.",
+        "godot4 --headless --path . res://tests/overworld_interaction_profile_log_regression.tscn passed with incremental_refresh JSONL fields and selected-context cache counters present.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ]
+    },
     {
       "id": "overworld-refresh-phase-seams-10184",
       "title": "Overworld Refresh Phase Seams",

@@ -1,7 +1,7 @@
 # Overworld Refresh/Input Pipeline Plan
 
 Date: 2026-05-01
-Status: slice-1 implementation seam plus staged async/incremental plan
+Status: slice-2 incremental route-preview refresh implemented; staged async plan remains
 
 ## Current Synchronous Flow
 
@@ -9,14 +9,15 @@ Route selection is currently input-driven but refresh-heavy:
 
 1. `OverworldShell._on_map_tile_pressed(tile)` validates the tile, starts optional command profiling with `_debug_begin_path_command("click", tile)`, resolves `_selection_route_tile(tile)`, and records `input_handler_entry`.
 2. If the tile is a new selection, `_set_selected_tile(route_tile)` updates `_selected_tile`, calls `_invalidate_selected_route_state("selected_tile_changed")`, and clears `_refresh_cache`.
-3. Selection then either opens an owned town through `_visit_selected_town()`, performs adjacent movement through `_try_move(dx, dy, true)`, or calls `_refresh()` for route preview/order surfaces.
-4. `_refresh()` now runs named synchronous phases:
+3. Selection then either opens an owned town through `_visit_selected_town()`, performs adjacent movement through `_try_move(dx, dy, true)`, or calls `_refresh_selected_route_preview()` for route preview/order surfaces.
+4. `_refresh()` remains the full safety path and now runs through a refresh request containing all phases:
    - `_refresh_read_scope_and_map_state()`: `OverworldRules.begin_normalized_read_scope(_session)`, map data/size derivation, selected tile repair, refresh-cache invalidation.
    - `_refresh_map_view()`: `_map_view.set_map_state(_session, _map_data, _map_size, _selected_tile, _selected_route_cache_for_map_view())`.
-   - `_refresh_action_rails()`: `_rebuild_hero_actions()`, `_rebuild_context_actions()`, `_rebuild_spell_actions()`, `_rebuild_specialty_actions()`, `_rebuild_artifact_actions()`.
+   - `_refresh_action_rails(request)`: rebuilds only requested action rails, or all rails for full refresh.
    - `_refresh_save_surface()` and `_refresh_status_surfaces()`: save picker/generated opening surfaces, header/status rails, drawer text, tooltip/context drawer sync.
-5. Route preview work is pulled synchronously by `_selected_route_cache_for_map_view()` and `_selected_route_decision_surface()`, both of which can call `_ensure_selected_route_state()`. Misses compute `_build_path(hero_pos, _selected_tile)` and `OverworldRules.route_movement_preview(_session, route, movement_current)`.
-6. Context actions for selected routes run through `_current_context_actions()`. For non-hero selections it uses `_selected_route_action_surface_signature()`, `_build_selected_route_context_actions()`, `_selected_tile_movement_action()`, and `_selected_route_decision_surface()`. Current-tile actions still call `OverworldRules.get_context_actions(_session)`.
+5. `_refresh_selected_route_preview()` builds a targeted refresh request for `map_view`, `context_actions`, and `route_preview`. It keeps the normalized read scope, updates the selected-route overlay through the map view, rebuilds context/primary action controls, refreshes selected-tile text, tooltip, and context drawer sync, and skips hero/spell/specialty/artifact/save/status rails unless some later dirty request explicitly includes them.
+6. Route preview work is pulled synchronously by `_selected_route_cache_for_map_view()` and `_selected_route_decision_surface()`, both of which can call `_ensure_selected_route_state()`. Misses compute `_build_path(hero_pos, _selected_tile)` and `OverworldRules.route_movement_preview(_session, route, movement_current)`.
+7. Context actions for selected routes run through `_current_context_actions()`. For non-hero selections it uses `_selected_route_action_surface_signature()`, `_build_selected_route_context_actions()`, `_selected_tile_movement_action()`, and `_selected_route_decision_surface()`. Current-tile actions still call `OverworldRules.get_context_actions(_session)`.
 
 Movement confirmation is also synchronous:
 
@@ -48,6 +49,9 @@ Mutation-sensitive or read-scope dependent:
 
 ## Event And Invalidation Model
 
+- Implemented request phases: `map_view`, `action_rails`, `hero_actions`, `context_actions`, `route_preview`, `spell_rails`, `specialty_rails`, `artifact_rails`, `status_surfaces`, `save_surface`, and `generated_surfaces`.
+- `_set_selected_tile()` now marks only `map_view`, `context_actions`, and `route_preview` dirty while invalidating selected-route state/action surfaces. It does not mark hero/spell/specialty/artifact/status/save surfaces dirty.
+- `_refresh_selected_route_preview()` consumes the selected-route dirty phases through the targeted request and leaves the full `_refresh()` path available for load/session/topology/mutation-heavy operations.
 - Selected tile changed: invalidate selected route state, selected-route action surfaces, refresh-scope cache, map overlay route highlight; keep durable hero actions unless hero/roster signature changes.
 - Selected route changed: invalidate route decision/context surfaces and map route overlay; route preview/path cache can be replaced without touching mutation state.
 - Hero moved: invalidate selected route state unless `_adopt_selected_route_after_execution()` can prove the remaining route starts at the new hero tile; invalidate current-tile context/action surfaces, movement/fog/status rails, map dynamic layer.
@@ -65,11 +69,12 @@ Do not introduce real async until the synchronous phases above remain stable und
 - Route preview computation: make `_ensure_selected_route_state()` request-oriented and cancellable by route signature. Later compute `_build_path()` plus `route_movement_preview()` deferred, then commit only if the selected-route signature still matches.
 - Expensive action surfaces: split selected-route decision/context surfaces from current-tile mutation-sensitive actions. Later defer selected-route decision text/interception surfaces while keeping primary action fallback deterministic.
 - Map overlay updates: separate route highlight/fog/dynamic overlay refresh from full `_map_view.set_map_state()`. Later schedule overlay-only redraws when map/topology signatures are unchanged.
+- Movement execution remains synchronous in this slice. The uploaded profile's `movement_rules` cost should get a separate route-execution/movement-rules slice because changing `try_move_along_route()` semantics, fog reveal, interactions, and post-move routing is higher risk than route-preview refresh targeting.
 
 ## Implementation Slices
 
-1. Refresh phase seams: split `OverworldShell._refresh()` into named synchronous phase methods without behavior changes. Validation: profile-log analyzer, selected-route context-action cache regression, hero-action refresh cache regression, interaction profile-log regression, JSON validation, `git diff --check`.
-2. Explicit invalidation helpers: add event-named cache invalidation methods in `OverworldShell` and route all existing invalidations through them without changing cache signatures. Validation: same focused regressions plus a route execution regression.
-3. Route preview request object: extract selected-route path/preview computation behind a synchronous request/result helper keyed by `_selected_route_signature()`. Validation: cache regressions prove identical hit/miss behavior and profile bucket names remain comparable.
-4. Selected-route action surface split: separate pure selected-route decision/context construction from current-tile context actions, keeping current-tile actions synchronous. Validation: selected route, owned town, encounter, artifact, and resource primary-action regressions.
+1. Completed - Refresh phase seams: split `OverworldShell._refresh()` into named synchronous phase methods without behavior changes. Validation: profile-log analyzer, selected-route context-action cache regression, hero-action refresh cache regression, interaction profile-log regression, JSON validation, `git diff --check`.
+2. Completed - Incremental route-preview refresh: add the lightweight refresh request/dirty-phase model and route selected-tile/route preview through a targeted synchronous request. Validation: new incremental route-preview regression, existing cache regressions, interaction profile-log regression, JSON validation, `git diff --check`.
+3. Next async boundary - Route preview request object: extract selected-route path/preview computation behind a cancellable request/result helper keyed by `_selected_route_signature()`. Keep it synchronous first if needed, then defer `_build_path()` plus `route_movement_preview()` with stale-result rejection.
+4. Selected-route action surface split: separate pure selected-route decision/context construction from current-tile mutation-sensitive actions, keeping current-tile actions synchronous. Validation: selected route, owned town, encounter, artifact, and resource primary-action regressions.
 5. Deferred preview prototype: add a disabled-by-default deferred route-preview path with stale-result rejection by signature. Validation: default path parity tests plus opt-in deferred regression proving stale selections do not overwrite current route state.

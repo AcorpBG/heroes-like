@@ -30,6 +30,8 @@ Fog-of-war decision: heroes-like uses HoMM-style permanent explored visibility. 
 
 Current maintenance instrumentation follow-up after route-cache reuse: `overworld-interaction-profile-log-10184` adds an opt-in persistent JSONL log for overworld/pathing interaction timings so long multi-click reports can be uploaded as one file. It must remain instrumentation-only and preserve the F3 overlay, movement/pathing semantics, map generation, renderer/fog behavior, save schema, object contracts, and content density.
 
+Selected follow-up after AcOrP's current-version profile: `overworld-incremental-route-preview-refresh-10184` is the first incremental/event-based refresh slice. It targets selected route/tile preview refresh only, preserving the full refresh path and movement semantics while proving route selection can skip unrelated hero, spell, specialty, artifact, save, generated, and broad status surfaces when those phases are not dirty. The detailed implementation boundary is tracked in `docs/overworld-refresh-input-pipeline-plan.md`.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:

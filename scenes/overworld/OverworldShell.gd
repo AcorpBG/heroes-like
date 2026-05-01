@@ -83,6 +83,30 @@ const RAIL_LINE_CHARS := 42
 const ACTION_FEEDBACK_CHARS := 40
 const DEBUG_OVERLAY_TOGGLE_KEY := KEY_F3
 const OVERWORLD_PROFILE_LOG_PATH := "user://debug/overworld_profile.jsonl"
+const REFRESH_PHASE_MAP_VIEW := "map_view"
+const REFRESH_PHASE_ACTION_RAILS := "action_rails"
+const REFRESH_PHASE_HERO_ACTIONS := "hero_actions"
+const REFRESH_PHASE_CONTEXT_ACTIONS := "context_actions"
+const REFRESH_PHASE_CONTEXT_ROUTE := "route_preview"
+const REFRESH_PHASE_SPELL_RAILS := "spell_rails"
+const REFRESH_PHASE_SPECIALTY_RAILS := "specialty_rails"
+const REFRESH_PHASE_ARTIFACT_RAILS := "artifact_rails"
+const REFRESH_PHASE_STATUS_SURFACES := "status_surfaces"
+const REFRESH_PHASE_SAVE_SURFACE := "save_surface"
+const REFRESH_PHASE_GENERATED_SURFACES := "generated_surfaces"
+const REFRESH_ALL_PHASES := [
+	REFRESH_PHASE_MAP_VIEW,
+	REFRESH_PHASE_ACTION_RAILS,
+	REFRESH_PHASE_HERO_ACTIONS,
+	REFRESH_PHASE_CONTEXT_ACTIONS,
+	REFRESH_PHASE_CONTEXT_ROUTE,
+	REFRESH_PHASE_SPELL_RAILS,
+	REFRESH_PHASE_SPECIALTY_RAILS,
+	REFRESH_PHASE_ARTIFACT_RAILS,
+	REFRESH_PHASE_STATUS_SURFACES,
+	REFRESH_PHASE_SAVE_SURFACE,
+	REFRESH_PHASE_GENERATED_SURFACES,
+]
 
 var _session: SessionStateStore.SessionData
 var _map_data: Array = []
@@ -119,6 +143,8 @@ var _debug_command_in_progress := false
 var _debug_command_context: Dictionary = {}
 var _debug_last_command_snapshot: Dictionary = {}
 var _profile_log_enabled := false
+var _refresh_dirty_phases: Dictionary = {}
+var _refresh_request_sequence := 0
 
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
@@ -462,7 +488,7 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 		return
 	_active_drawer = ""
 	_debug_set_path_command_type("select_route")
-	_refresh()
+	_refresh_selected_route_preview("selected_route_changed")
 	if debug_started:
 		_debug_finish_path_command()
 
@@ -604,18 +630,133 @@ func _render_state() -> void:
 	_refresh()
 
 func _refresh() -> void:
+	_refresh_with_request(_make_refresh_request("full_refresh", REFRESH_ALL_PHASES, true, true))
+
+func _refresh_selected_route_preview(reason: String = "selected_route_preview") -> void:
+	_refresh_with_request(_make_refresh_request(
+		reason,
+		[
+			REFRESH_PHASE_MAP_VIEW,
+			REFRESH_PHASE_CONTEXT_ACTIONS,
+			REFRESH_PHASE_CONTEXT_ROUTE,
+		],
+		true,
+		false
+	))
+
+func _refresh_with_request(request: Dictionary) -> void:
 	var profile_start := _profile_begin("refresh")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_enter")
+	_record_refresh_request(request)
 	_refresh_read_scope_and_map_state()
-	_refresh_map_view()
-	_refresh_action_rails()
-	var generated_surface_start := _refresh_save_surface()
-	var compact_generated := _refresh_status_surfaces(generated_surface_start)
+	if _refresh_request_has_phase(request, REFRESH_PHASE_MAP_VIEW):
+		_refresh_map_view()
+	if _refresh_request_has_any_phase(request, [
+		REFRESH_PHASE_ACTION_RAILS,
+		REFRESH_PHASE_HERO_ACTIONS,
+		REFRESH_PHASE_CONTEXT_ACTIONS,
+		REFRESH_PHASE_SPELL_RAILS,
+		REFRESH_PHASE_SPECIALTY_RAILS,
+		REFRESH_PHASE_ARTIFACT_RAILS,
+	]):
+		_refresh_action_rails(request)
+	var generated_surface_start := 0
+	if _refresh_request_has_phase(request, REFRESH_PHASE_SAVE_SURFACE):
+		generated_surface_start = _refresh_save_surface()
+	var compact_generated := false
+	if _refresh_request_has_phase(request, REFRESH_PHASE_STATUS_SURFACES):
+		compact_generated = _refresh_status_surfaces(generated_surface_start)
+	elif _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ROUTE):
+		_refresh_context_tile_surface()
+		_refresh_tooltip_context_drawer_surfaces()
 	OverworldRules.end_normalized_read_scope(_session)
 	if compact_generated:
 		AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_compact")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_done")
-	_profile_end("refresh", profile_start, {"compact_generated": compact_generated})
+	_complete_refresh_request(request)
+	_profile_end("refresh", profile_start, {
+		"compact_generated": compact_generated,
+		"request": request.duplicate(true),
+	})
+
+func _make_refresh_request(reason: String, phases: Array, include_dirty: bool = true, full_refresh: bool = false) -> Dictionary:
+	_refresh_request_sequence += 1
+	var phase_map := {}
+	for phase in phases:
+		phase_map[String(phase)] = true
+	if full_refresh:
+		for phase in REFRESH_ALL_PHASES:
+			phase_map[String(phase)] = true
+	elif include_dirty:
+		for phase_value in _refresh_dirty_phases.keys():
+			phase_map[String(phase_value)] = true
+	var ordered_phases := []
+	for phase in REFRESH_ALL_PHASES:
+		if bool(phase_map.get(String(phase), false)):
+			ordered_phases.append(String(phase))
+	for phase_value in phase_map.keys():
+		var phase_name := String(phase_value)
+		if phase_name not in ordered_phases:
+			ordered_phases.append(phase_name)
+	return {
+		"id": _refresh_request_sequence,
+		"reason": reason,
+		"full": full_refresh,
+		"phases": ordered_phases,
+		"dirty_before": _refresh_dirty_phase_list(),
+	}
+
+func _refresh_request_has_phase(request: Dictionary, phase: String) -> bool:
+	var phases: Array = request.get("phases", []) if request.get("phases", []) is Array else []
+	return phase in phases
+
+func _refresh_request_has_any_phase(request: Dictionary, phases: Array) -> bool:
+	for phase in phases:
+		if _refresh_request_has_phase(request, String(phase)):
+			return true
+	return false
+
+func _record_refresh_request(request: Dictionary) -> void:
+	_validation_profile["last_refresh_request"] = request.duplicate(true)
+	_profile_add("refresh_request_%s_calls" % _refresh_request_bucket(String(request.get("reason", ""))), 1)
+	for phase_value in request.get("phases", []):
+		_profile_add("refresh_phase_%s_calls" % _refresh_phase_bucket(String(phase_value)), 1)
+
+func _complete_refresh_request(request: Dictionary) -> void:
+	var phases: Array = request.get("phases", []) if request.get("phases", []) is Array else []
+	for phase in phases:
+		_refresh_dirty_phases.erase(String(phase))
+	_validation_profile["last_refresh_dirty_after"] = _refresh_dirty_phase_list()
+
+func _mark_refresh_dirty(phases: Array, reason: String = "") -> void:
+	for phase in phases:
+		var phase_name := String(phase)
+		_refresh_dirty_phases[phase_name] = {
+			"reason": reason,
+			"sequence": _refresh_request_sequence,
+		}
+	_validation_profile["last_refresh_dirty_mark"] = {
+		"reason": reason,
+		"phases": _refresh_dirty_phase_list(),
+	}
+
+func _refresh_dirty_phase_list() -> Array:
+	var phases := []
+	for phase in REFRESH_ALL_PHASES:
+		if _refresh_dirty_phases.has(String(phase)):
+			phases.append(String(phase))
+	for phase_value in _refresh_dirty_phases.keys():
+		var phase_name := String(phase_value)
+		if phase_name not in phases:
+			phases.append(phase_name)
+	return phases
+
+func _refresh_phase_bucket(phase: String) -> String:
+	return phase.replace("/", "_").replace("-", "_").replace(" ", "_")
+
+func _refresh_request_bucket(reason: String) -> String:
+	var bucket := reason.strip_edges().to_lower().replace("/", "_").replace("-", "_").replace(" ", "_")
+	return bucket if bucket != "" else "unspecified"
 
 func _refresh_read_scope_and_map_state() -> void:
 	var read_scope_profile_start := _debug_refresh_profile_begin("refresh_read_scope_map_state")
@@ -634,24 +775,30 @@ func _refresh_map_view() -> void:
 	_profile_end("refresh_set_map_state", set_map_state_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_done")
 
-func _refresh_action_rails() -> void:
+func _refresh_action_rails(request: Dictionary = {}) -> void:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_start")
 	var actions_profile_start := _profile_begin("refresh_actions")
-	var hero_actions_profile_start := _debug_refresh_profile_begin("refresh_hero_actions")
-	_rebuild_hero_actions()
-	_debug_refresh_profile_end("refresh_hero_actions", hero_actions_profile_start)
-	var context_actions_profile_start := _debug_refresh_profile_begin("refresh_context_actions")
-	_rebuild_context_actions()
-	_debug_refresh_profile_end("refresh_context_actions", context_actions_profile_start)
-	var spell_actions_profile_start := _debug_refresh_profile_begin("refresh_spell_actions")
-	_rebuild_spell_actions()
-	_debug_refresh_profile_end("refresh_spell_actions", spell_actions_profile_start)
-	var specialty_actions_profile_start := _debug_refresh_profile_begin("refresh_specialty_actions")
-	_rebuild_specialty_actions()
-	_debug_refresh_profile_end("refresh_specialty_actions", specialty_actions_profile_start)
-	var artifact_actions_profile_start := _debug_refresh_profile_begin("refresh_artifact_actions")
-	_rebuild_artifact_actions()
-	_debug_refresh_profile_end("refresh_artifact_actions", artifact_actions_profile_start)
+	var full_action_rails := request.is_empty() or _refresh_request_has_phase(request, REFRESH_PHASE_ACTION_RAILS)
+	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_HERO_ACTIONS):
+		var hero_actions_profile_start := _debug_refresh_profile_begin("refresh_hero_actions")
+		_rebuild_hero_actions()
+		_debug_refresh_profile_end("refresh_hero_actions", hero_actions_profile_start)
+	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ACTIONS):
+		var context_actions_profile_start := _debug_refresh_profile_begin("refresh_context_actions")
+		_rebuild_context_actions()
+		_debug_refresh_profile_end("refresh_context_actions", context_actions_profile_start)
+	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_SPELL_RAILS):
+		var spell_actions_profile_start := _debug_refresh_profile_begin("refresh_spell_actions")
+		_rebuild_spell_actions()
+		_debug_refresh_profile_end("refresh_spell_actions", spell_actions_profile_start)
+	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_SPECIALTY_RAILS):
+		var specialty_actions_profile_start := _debug_refresh_profile_begin("refresh_specialty_actions")
+		_rebuild_specialty_actions()
+		_debug_refresh_profile_end("refresh_specialty_actions", specialty_actions_profile_start)
+	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_ARTIFACT_RAILS):
+		var artifact_actions_profile_start := _debug_refresh_profile_begin("refresh_artifact_actions")
+		_rebuild_artifact_actions()
+		_debug_refresh_profile_end("refresh_artifact_actions", artifact_actions_profile_start)
 	_profile_end("refresh_actions", actions_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_done")
 
@@ -750,10 +897,7 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	else:
 		_set_collapsed_frontier_indicator()
 	_debug_refresh_profile_end("refresh_frontier_drawer", frontier_profile_start, {"drawer_open": _active_drawer == "frontier"})
-	var context_tile_profile_start := _debug_refresh_profile_begin("refresh_context_tile_text")
-	var context_text := _cached_focus_tile_text()
-	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
-	_debug_refresh_profile_end("refresh_context_tile_text", context_tile_profile_start)
+	_refresh_context_tile_surface()
 	var event_context_profile_start := _debug_refresh_profile_begin("refresh_event_action_context")
 	var event_surface := _event_feed_surface()
 	var action_context_surface := _action_context_surface(event_surface, readiness_surface)
@@ -772,11 +916,20 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
+	_refresh_tooltip_context_drawer_surfaces()
+	return false
+
+func _refresh_context_tile_surface() -> void:
+	var context_tile_profile_start := _debug_refresh_profile_begin("refresh_context_tile_text")
+	var context_text := _cached_focus_tile_text()
+	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
+	_debug_refresh_profile_end("refresh_context_tile_text", context_tile_profile_start)
+
+func _refresh_tooltip_context_drawer_surfaces() -> void:
 	var tooltip_context_profile_start := _debug_refresh_profile_begin("refresh_tooltip_context_drawers")
 	_update_map_tooltip()
 	_sync_context_drawers()
 	_debug_refresh_profile_end("refresh_tooltip_context_drawers", tooltip_context_profile_start)
-	return false
 
 func _refresh_generated_opening_surfaces() -> void:
 	var scenario = ContentService.get_scenario(_session.scenario_id)
@@ -4108,6 +4261,11 @@ func _set_selected_tile(tile: Vector2i) -> void:
 	_selected_tile = route_tile
 	_invalidate_selected_route_state("selected_tile_changed")
 	_invalidate_refresh_cache()
+	_mark_refresh_dirty([
+		REFRESH_PHASE_MAP_VIEW,
+		REFRESH_PHASE_CONTEXT_ACTIONS,
+		REFRESH_PHASE_CONTEXT_ROUTE,
+	], "selected_tile_changed")
 
 func _invalidate_refresh_cache() -> void:
 	_refresh_cache.clear()
@@ -4641,6 +4799,24 @@ func _debug_enrich_command_snapshot(snapshot: Dictionary) -> Dictionary:
 	var render_cache: Dictionary = view_metrics.get("render_cache", {}) if view_metrics.get("render_cache", {}) is Dictionary else {}
 	enriched["dynamic_layer_reason"] = String(render_cache.get("dynamic_reason", "n/a"))
 	enriched["dynamic_layer_generation"] = int(render_cache.get("dynamic_generation", 0))
+	enriched["refresh_request"] = _profile_log_duplicate_dict(profile.get("last_refresh_request", {}))
+	enriched["refresh_dirty_after"] = profile.get("last_refresh_dirty_after", [])
+	enriched["refresh_phase_counts"] = _debug_refresh_phase_counts(profile)
+	enriched["hero_actions_cache"] = {
+		"hits": int(profile.get("hero_actions_cache_hits", 0)),
+		"misses": int(profile.get("hero_actions_cache_misses", 0)),
+		"last": _profile_log_duplicate_dict(profile.get("last_hero_actions_cache", {})),
+	}
+	enriched["selected_context_actions_cache"] = {
+		"hits": int(profile.get("selected_context_actions_cache_hits", 0)),
+		"misses": int(profile.get("selected_context_actions_cache_misses", 0)),
+		"last": _profile_log_duplicate_dict(profile.get("last_selected_context_actions_cache", {})),
+	}
+	enriched["selected_route_decision_surface_cache"] = {
+		"hits": int(profile.get("selected_route_decision_surface_cache_hits", 0)),
+		"misses": int(profile.get("selected_route_decision_surface_cache_misses", 0)),
+		"last": _profile_log_duplicate_dict(profile.get("last_selected_route_decision_surface_cache", {})),
+	}
 	enriched["save_observed"] = save_observed
 	enriched["save_profile"] = save_profile if save_observed else {}
 	enriched["save_summary"] = _debug_save_summary(save_profile) if save_observed else "none observed"
@@ -4656,6 +4832,13 @@ func _debug_enrich_command_snapshot(snapshot: Dictionary) -> Dictionary:
 	enriched["unaccounted_ms"] = snapped(float(enriched.get("total_command_ms", 0.0)) - float(enriched.get("measured_sum_ms", 0.0)), 0.001)
 	enriched["top_offenders"] = _debug_top_timing_buckets(_debug_top_offender_source_buckets(enriched, phase_buckets, refresh_sections), 6)
 	return enriched
+
+func _debug_refresh_phase_counts(profile: Dictionary) -> Dictionary:
+	var counts := {}
+	for phase in REFRESH_ALL_PHASES:
+		var phase_name := String(phase)
+		counts[phase_name] = int(profile.get("refresh_phase_%s_calls" % _refresh_phase_bucket(phase_name), 0))
+	return counts
 
 func _debug_command_phase_buckets(profile: Dictionary) -> Dictionary:
 	var buckets := {}
@@ -4954,6 +5137,14 @@ func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
 			"details": _profile_log_duplicate_dict(snapshot.get("route_cache", {})),
 			"map_view_reused": bool(snapshot.get("map_view_route_cache_reused", false)),
 			"map_view_details": _profile_log_duplicate_dict(snapshot.get("map_view_route_cache", {})),
+		},
+		"incremental_refresh": {
+			"request": _profile_log_duplicate_dict(snapshot.get("refresh_request", {})),
+			"dirty_after": snapshot.get("refresh_dirty_after", []),
+			"phase_counts": _profile_log_duplicate_dict(snapshot.get("refresh_phase_counts", {})),
+			"hero_actions_cache": _profile_log_duplicate_dict(snapshot.get("hero_actions_cache", {})),
+			"selected_context_actions_cache": _profile_log_duplicate_dict(snapshot.get("selected_context_actions_cache", {})),
+			"selected_route_decision_surface_cache": _profile_log_duplicate_dict(snapshot.get("selected_route_decision_surface_cache", {})),
 		},
 		"map_view_timings_ms": {
 			"set_map_state": float(snapshot.get("map_view_set_map_state_ms", 0.0)),
@@ -5414,7 +5605,7 @@ func validation_select_tile(x: int, y: int) -> Dictionary:
 	_set_selected_tile(tile)
 	_debug_set_path_command_target(_selected_tile)
 	_active_drawer = ""
-	_refresh()
+	_refresh_selected_route_preview("validation_selected_route_changed")
 	if debug_started:
 		_debug_finish_path_command()
 	var snapshot := validation_snapshot()

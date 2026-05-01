@@ -117,6 +117,7 @@ func _assert_record_shape(record: Dictionary, expected_command: String, expect_b
 		"refresh_sections_ms",
 		"route_bfs",
 		"route_cache",
+		"incremental_refresh",
 		"map_view_timings_ms",
 		"movement_rules",
 		"route_execution",
@@ -148,6 +149,25 @@ func _assert_record_shape(record: Dictionary, expected_command: String, expect_b
 	for key in ["hits", "misses", "status", "details", "map_view_reused", "map_view_details"]:
 		if not route_cache.has(key):
 			_fail("Route cache profile is missing %s." % key, route_cache)
+			return false
+	var incremental_refresh: Dictionary = record.get("incremental_refresh", {}) if record.get("incremental_refresh", {}) is Dictionary else {}
+	for key in ["request", "dirty_after", "phase_counts", "hero_actions_cache", "selected_context_actions_cache", "selected_route_decision_surface_cache"]:
+		if not incremental_refresh.has(key):
+			_fail("Incremental refresh profile is missing %s." % key, incremental_refresh)
+			return false
+	if expected_command == "select_route":
+		var request: Dictionary = incremental_refresh.get("request", {}) if incremental_refresh.get("request", {}) is Dictionary else {}
+		var phases: Array = request.get("phases", []) if request.get("phases", []) is Array else []
+		for required_phase in ["map_view", "context_actions", "route_preview"]:
+			if required_phase not in phases:
+				_fail("Route-selection profile did not record incremental phase %s." % required_phase, record)
+				return false
+		if "hero_actions" in phases:
+			_fail("Route-selection profile should not request unrelated hero actions.", record)
+			return false
+		var selected_context_cache: Dictionary = incremental_refresh.get("selected_context_actions_cache", {}) if incremental_refresh.get("selected_context_actions_cache", {}) is Dictionary else {}
+		if not selected_context_cache.has("hits") or not selected_context_cache.has("misses"):
+			_fail("Selected-context cache counters were not exposed in profile JSONL.", record)
 			return false
 	if not (record.get("map_view_timings_ms", {}) is Dictionary) or not (record.get("top_offenders", []) is Array):
 		_fail("Profile record did not include map-view timings or top offenders.", record)
