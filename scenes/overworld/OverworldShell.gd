@@ -130,6 +130,8 @@ var _selected_context_actions_cache: Array = []
 var _selected_context_actions_cache_signature := ""
 var _selected_route_decision_surface_cache: Dictionary = {}
 var _selected_route_decision_surface_cache_signature := ""
+var _selected_route_destination_actions_cache: Array = []
+var _selected_route_destination_actions_cache_signature := ""
 var _action_feedback: Dictionary = {}
 var _action_feedback_sequence := 0
 var _action_feedback_tween: Tween = null
@@ -565,7 +567,10 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 			_debug_finish_path_command()
 		AppRouter.go_to_town()
 		return
-	_refresh()
+	if preserve_selection and _last_route_execution.has("reached_destination"):
+		_refresh_selected_route_preview("route_execution_changed")
+	else:
+		_refresh()
 	if debug_started:
 		_debug_finish_path_command()
 
@@ -637,7 +642,6 @@ func _refresh_selected_route_preview(reason: String = "selected_route_preview") 
 		reason,
 		[
 			REFRESH_PHASE_MAP_VIEW,
-			REFRESH_PHASE_CONTEXT_ACTIONS,
 			REFRESH_PHASE_CONTEXT_ROUTE,
 		],
 		true,
@@ -660,6 +664,8 @@ func _refresh_with_request(request: Dictionary) -> void:
 		REFRESH_PHASE_ARTIFACT_RAILS,
 	]):
 		_refresh_action_rails(request)
+	elif _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ROUTE):
+		_refresh_selected_route_action_surface()
 	var generated_surface_start := 0
 	if _refresh_request_has_phase(request, REFRESH_PHASE_SAVE_SURFACE):
 		generated_surface_start = _refresh_save_surface()
@@ -668,7 +674,11 @@ func _refresh_with_request(request: Dictionary) -> void:
 		compact_generated = _refresh_status_surfaces(generated_surface_start)
 	elif _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ROUTE):
 		_refresh_context_tile_surface()
-		_refresh_tooltip_context_drawer_surfaces()
+		_validation_profile["last_route_tooltip_context_drawers"] = {
+			"status": "skipped",
+			"reason": "selected_route_destination_only",
+		}
+		_profile_add("route_tooltip_context_drawers_skipped", 1)
 	OverworldRules.end_normalized_read_scope(_session)
 	if compact_generated:
 		AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_compact")
@@ -1133,15 +1143,44 @@ func _rebuild_hero_actions() -> void:
 		_hero_actions.add_child(button)
 
 func _rebuild_context_actions() -> void:
-	for child in _context_actions.get_children():
-		child.queue_free()
-
 	var actions := _current_context_actions()
 	var primary_action := _first_enabled_action(actions)
 	_refresh_primary_action_button(primary_action)
+	_render_context_action_buttons(actions, primary_action, "Select a tile for orders")
+
+func _refresh_selected_route_action_surface() -> void:
+	var route_action_started := _debug_refresh_profile_begin("refresh_route_destination_action")
+	var actions := _selected_route_destination_actions()
+	var primary_action := _first_enabled_action(actions)
+	_refresh_cache["context_actions"] = actions
+	_refresh_cache["primary_action"] = primary_action
+	_refresh_primary_action_button(primary_action)
+	_render_context_action_buttons(actions, primary_action, "Select a route destination")
+	var destination: Dictionary = _selected_route_destination_interaction_surface()
+	var profile_payload := {
+		"status": "used",
+		"destination_only": true,
+		"broad_context_actions_skipped": true,
+		"hero_actions_skipped": true,
+		"tooltip_context_drawers_skipped": true,
+		"action_count": actions.size(),
+		"primary_action_id": String(primary_action.get("id", "")),
+		"destination_interaction_kind": String(destination.get("kind", "")),
+		"destination_interaction_status": String(destination.get("status", "")),
+		"route_status": String(destination.get("route_status", "")),
+	}
+	_validation_profile["last_route_destination_only_action_path"] = profile_payload
+	_profile_add("route_destination_only_action_path_calls", 1)
+	_profile_add("broad_context_actions_skipped", 1)
+	_profile_add("hero_actions_skipped_for_route_action", 1)
+	_debug_refresh_profile_end("refresh_route_destination_action", route_action_started, profile_payload)
+
+func _render_context_action_buttons(actions: Array, primary_action: Dictionary, placeholder_text: String) -> void:
+	for child in _context_actions.get_children():
+		child.queue_free()
 
 	if actions.is_empty():
-		_context_actions.add_child(_make_placeholder_label("Select a tile for orders"))
+		_context_actions.add_child(_make_placeholder_label(placeholder_text))
 		return
 
 	var skipped_primary := false
@@ -1174,11 +1213,12 @@ func _current_context_actions() -> Array:
 		actions = OverworldRules.get_context_actions(_session)
 		actions = _promote_selected_owned_town_action(actions)
 	else:
-		var selected_signature := _selected_route_action_surface_signature()
+		var selected_signature := _selected_route_destination_action_signature()
 		if _selected_context_actions_cache_signature == selected_signature:
 			_profile_add("selected_context_actions_cache_hits", 1)
 			_validation_profile["last_selected_context_actions_cache"] = {
 				"status": "hit",
+				"destination_only": true,
 				"signature": selected_signature,
 				"action_count": _selected_context_actions_cache.size(),
 			}
@@ -1190,11 +1230,12 @@ func _current_context_actions() -> Array:
 			})
 			return _selected_context_actions_cache
 		_profile_add("selected_context_actions_cache_misses", 1)
-		actions = _build_selected_route_context_actions()
+		actions = _selected_route_destination_actions()
 		_selected_context_actions_cache = actions
 		_selected_context_actions_cache_signature = selected_signature
 		_validation_profile["last_selected_context_actions_cache"] = {
 			"status": "miss",
+			"destination_only": true,
 			"signature": selected_signature,
 			"action_count": actions.size(),
 		}
@@ -1203,14 +1244,7 @@ func _current_context_actions() -> Array:
 	return actions
 
 func _build_selected_route_context_actions() -> Array:
-	var actions: Array = []
-	var town_action := _selected_owned_town_visit_action()
-	if not town_action.is_empty():
-		actions.append(town_action)
-	var movement_action = _selected_tile_movement_action()
-	if not movement_action.is_empty():
-		actions.append(movement_action)
-	return actions
+	return _selected_route_destination_actions()
 
 func _first_enabled_action(actions: Array) -> Dictionary:
 	for action_value in actions:
@@ -1301,7 +1335,11 @@ func _current_primary_action() -> Dictionary:
 		var cached_action: Dictionary = _refresh_cache["primary_action"]
 		_debug_phase_end("primary_action_computation", primary_action_started_usec, {"cached": true, "action_id": String(cached_action.get("id", ""))})
 		return cached_action
-	var action := _first_enabled_action(_current_context_actions())
+	var action := {}
+	if _selected_tile != OverworldRules.hero_position(_session):
+		action = _first_enabled_action(_selected_route_destination_actions())
+	else:
+		action = _first_enabled_action(_current_context_actions())
 	_refresh_cache["primary_action"] = action
 	_debug_phase_end("primary_action_computation", primary_action_started_usec, {"cached": false, "action_id": String(action.get("id", ""))})
 	return action
@@ -2094,6 +2132,161 @@ func _selected_tile_movement_action() -> Dictionary:
 			"route_decision": route_decision,
 		}
 	return {}
+
+func _selected_route_destination_actions() -> Array:
+	var signature := _selected_route_destination_action_signature()
+	if _selected_route_destination_actions_cache_signature == signature:
+		_profile_add("selected_route_destination_action_cache_hits", 1)
+		_validation_profile["last_selected_route_destination_action_cache"] = {
+			"status": "hit",
+			"signature": signature,
+			"action_count": _selected_route_destination_actions_cache.size(),
+		}
+		return _selected_route_destination_actions_cache
+	_profile_add("selected_route_destination_action_cache_misses", 1)
+	var actions := _build_selected_route_destination_actions()
+	_selected_route_destination_actions_cache = actions
+	_selected_route_destination_actions_cache_signature = signature
+	_validation_profile["last_selected_route_destination_action_cache"] = {
+		"status": "miss",
+		"signature": signature,
+		"action_count": actions.size(),
+	}
+	return actions
+
+func _build_selected_route_destination_actions() -> Array:
+	var destination := _selected_route_destination_interaction_surface()
+	var route_decision: Dictionary = destination.get("route_decision", {}) if destination.get("route_decision", {}) is Dictionary else {}
+	var kind := String(destination.get("kind", "open"))
+	var status := String(destination.get("status", ""))
+	if kind == "current":
+		return [_disabled_route_destination_action("hold_position", "Current Position", "The selected destination is the active hero's current tile.", route_decision, destination)]
+	if status in ["blocked", "out_of_bounds"]:
+		var reason := String(destination.get("blocked_reason", "")).strip_edges()
+		if reason == "":
+			reason = "No clear route from the active hero."
+		return [_disabled_route_destination_action("route_blocked", "Route Blocked", reason, route_decision, destination)]
+	var route: Array = destination.get("route_tiles", []) if destination.get("route_tiles", []) is Array else []
+	if route.size() <= 1:
+		return [_disabled_route_destination_action("route_unavailable", "No Route", "No clear route from the active hero.", route_decision, destination)]
+	var adjacent := bool(destination.get("adjacent", false))
+	var action := {
+		"id": "march_selected" if adjacent else "advance_route",
+		"label": _selected_route_destination_action_label(destination, adjacent),
+		"summary": _selected_route_destination_action_summary(destination, adjacent),
+		"route_decision": route_decision,
+		"destination_interaction": destination,
+		"destination_only": true,
+	}
+	if status == "no_movement":
+		action["disabled"] = true
+	return [action]
+
+func _disabled_route_destination_action(
+	action_id: String,
+	label: String,
+	summary: String,
+	route_decision: Dictionary,
+	destination: Dictionary
+) -> Dictionary:
+	return {
+		"id": action_id,
+		"label": label,
+		"summary": summary,
+		"disabled": true,
+		"route_decision": route_decision,
+		"destination_interaction": destination,
+		"destination_only": true,
+	}
+
+func _selected_route_destination_action_label(destination: Dictionary, adjacent: bool) -> String:
+	match String(destination.get("kind", "open")):
+		"town":
+			return "Visit Town" if String(destination.get("owner", "")) == "player" else ("Approach Town" if adjacent else "Advance to Town")
+		"resource":
+			if adjacent:
+				return String(destination.get("interaction_label", "Secure Site"))
+			return "Advance to Site"
+		"artifact":
+			return "Recover Artifact" if adjacent else "Advance to Artifact"
+		"encounter":
+			return "Enter Battle" if adjacent else "Advance to Battle"
+		_:
+			return "March" if adjacent else "Advance"
+
+func _selected_route_destination_action_summary(destination: Dictionary, adjacent: bool) -> String:
+	var route_decision: Dictionary = destination.get("route_decision", {}) if destination.get("route_decision", {}) is Dictionary else {}
+	var route_text := _route_decision_tooltip(route_decision)
+	var interaction_summary := String(destination.get("summary", "")).strip_edges()
+	if interaction_summary == "":
+		interaction_summary = _selected_tile_order_summary(adjacent)
+	if route_text == "":
+		return interaction_summary
+	return "%s %s" % [interaction_summary, route_text]
+
+func _selected_route_destination_interaction_surface() -> Dictionary:
+	var route_decision := _selected_route_decision_surface()
+	var route_state := _ensure_selected_route_state("destination_action")
+	var route: Array = route_state.get("route_tiles", []) if route_state.get("route_tiles", []) is Array else []
+	var hero_pos := OverworldRules.hero_position(_session)
+	var status := String(route_decision.get("status", ""))
+	var destination := {
+		"kind": "open",
+		"status": "ready",
+		"route_status": status,
+		"x": _selected_tile.x,
+		"y": _selected_tile.y,
+		"adjacent": _is_adjacent_move_target(hero_pos, _selected_tile),
+		"route_tiles": route,
+		"route_decision": route_decision,
+		"blocked_reason": String(route_decision.get("blocked_reason", "")),
+		"summary": "",
+	}
+	if not _tile_in_bounds(_selected_tile):
+		destination["kind"] = "invalid"
+		destination["status"] = "out_of_bounds"
+		return destination
+	if _selected_tile == hero_pos:
+		destination["kind"] = "current"
+		destination["status"] = "hold"
+		return destination
+	if status in ["blocked", "no_movement"]:
+		destination["status"] = status
+		return destination
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	if not town.is_empty():
+		destination["kind"] = "town"
+		destination["owner"] = String(town.get("owner", "neutral"))
+		destination["placement_id"] = String(town.get("placement_id", ""))
+		destination["summary"] = _selected_tile_order_summary(bool(destination.get("adjacent", false)))
+		return destination
+	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
+	if not node.is_empty():
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		destination["kind"] = "resource"
+		destination["placement_id"] = String(node.get("placement_id", ""))
+		destination["site_id"] = String(node.get("site_id", ""))
+		destination["interaction_label"] = _resource_site_action_label_for_destination(node, site)
+		destination["summary"] = _selected_tile_order_summary(bool(destination.get("adjacent", false)))
+		return destination
+	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
+	if not artifact_node.is_empty():
+		destination["kind"] = "artifact"
+		destination["artifact_id"] = String(artifact_node.get("artifact_id", ""))
+		destination["summary"] = _selected_tile_order_summary(bool(destination.get("adjacent", false)))
+		return destination
+	var encounter := _encounter_at(_selected_tile.x, _selected_tile.y)
+	if not encounter.is_empty():
+		destination["kind"] = "encounter"
+		destination["placement_id"] = String(encounter.get("placement_id", encounter.get("id", "")))
+		destination["summary"] = _selected_tile_order_summary(bool(destination.get("adjacent", false)))
+		return destination
+	return destination
+
+func _resource_site_action_label_for_destination(node: Dictionary, site: Dictionary) -> String:
+	if bool(site.get("persistent_control", false)) and String(node.get("collected_by_faction_id", "")) == "player":
+		return "Enter Site"
+	return _selected_tile_order_label(true)
 
 func _selected_route_decision_surface() -> Dictionary:
 	var decision_started_usec := _debug_phase_begin("route_decision_construction")
@@ -4049,9 +4242,15 @@ func _invalidate_selected_route_action_surfaces(reason: String = "") -> void:
 	_selected_context_actions_cache_signature = ""
 	_selected_route_decision_surface_cache.clear()
 	_selected_route_decision_surface_cache_signature = ""
+	_selected_route_destination_actions_cache.clear()
+	_selected_route_destination_actions_cache_signature = ""
 	if reason != "":
 		_validation_profile["last_selected_context_actions_cache"] = {"status": "invalidated", "reason": reason}
 		_validation_profile["last_selected_route_decision_surface_cache"] = {"status": "invalidated", "reason": reason}
+		_validation_profile["last_selected_route_destination_action_cache"] = {"status": "invalidated", "reason": reason}
+
+func _selected_route_destination_action_signature() -> String:
+	return _selected_route_action_surface_signature()
 
 func _selected_route_action_surface_signature() -> String:
 	if _session == null:
@@ -4261,11 +4460,13 @@ func _set_selected_tile(tile: Vector2i) -> void:
 	_selected_tile = route_tile
 	_invalidate_selected_route_state("selected_tile_changed")
 	_invalidate_refresh_cache()
-	_mark_refresh_dirty([
+	var dirty_phases := [
 		REFRESH_PHASE_MAP_VIEW,
-		REFRESH_PHASE_CONTEXT_ACTIONS,
 		REFRESH_PHASE_CONTEXT_ROUTE,
-	], "selected_tile_changed")
+	]
+	if route_tile == OverworldRules.hero_position(_session):
+		dirty_phases.append(REFRESH_PHASE_CONTEXT_ACTIONS)
+	_mark_refresh_dirty(dirty_phases, "selected_tile_changed")
 
 func _invalidate_refresh_cache() -> void:
 	_refresh_cache.clear()
@@ -4817,6 +5018,12 @@ func _debug_enrich_command_snapshot(snapshot: Dictionary) -> Dictionary:
 		"misses": int(profile.get("selected_route_decision_surface_cache_misses", 0)),
 		"last": _profile_log_duplicate_dict(profile.get("last_selected_route_decision_surface_cache", {})),
 	}
+	enriched["route_destination_only_action"] = _profile_log_duplicate_dict(profile.get("last_route_destination_only_action_path", {}))
+	enriched["selected_route_destination_action_cache"] = {
+		"hits": int(profile.get("selected_route_destination_action_cache_hits", 0)),
+		"misses": int(profile.get("selected_route_destination_action_cache_misses", 0)),
+		"last": _profile_log_duplicate_dict(profile.get("last_selected_route_destination_action_cache", {})),
+	}
 	enriched["save_observed"] = save_observed
 	enriched["save_profile"] = save_profile if save_observed else {}
 	enriched["save_summary"] = _debug_save_summary(save_profile) if save_observed else "none observed"
@@ -5145,6 +5352,8 @@ func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
 			"hero_actions_cache": _profile_log_duplicate_dict(snapshot.get("hero_actions_cache", {})),
 			"selected_context_actions_cache": _profile_log_duplicate_dict(snapshot.get("selected_context_actions_cache", {})),
 			"selected_route_decision_surface_cache": _profile_log_duplicate_dict(snapshot.get("selected_route_decision_surface_cache", {})),
+			"selected_route_destination_action_cache": _profile_log_duplicate_dict(snapshot.get("selected_route_destination_action_cache", {})),
+			"route_destination_only_action": _profile_log_duplicate_dict(snapshot.get("route_destination_only_action", {})),
 		},
 		"map_view_timings_ms": {
 			"set_map_state": float(snapshot.get("map_view_set_map_state_ms", 0.0)),

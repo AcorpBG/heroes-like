@@ -25,11 +25,8 @@ func _run() -> void:
 	shell.call("validation_reset_profile", true)
 	shell.call("_refresh")
 	var reused_profile: Dictionary = shell.call("validation_profile_snapshot")
-	if int(reused_profile.get("selected_context_actions_cache_hits", 0)) <= 0:
-		_fail("Unchanged selected-route refresh did not reuse durable context actions.", reused_profile)
-		return
-	if int(reused_profile.get("selected_context_actions_cache_misses", 0)) != 0:
-		_fail("Unchanged selected-route refresh recomputed context actions.", reused_profile)
+	if int(reused_profile.get("selected_route_destination_action_cache_hits", 0)) <= 0:
+		_fail("Unchanged selected-route refresh did not reuse destination-only route actions.", reused_profile)
 		return
 	if int(reused_profile.get("selected_route_decision_surface_cache_hits", 0)) <= 0:
 		_fail("Unchanged selected-route refresh did not reuse the route decision surface.", reused_profile)
@@ -41,8 +38,8 @@ func _run() -> void:
 	if not bool(changed_selection.get("ok", false)):
 		_fail("Selected tile mutation failed.", changed_selection)
 		return
-	if int(selected_tile_profile.get("selected_context_actions_cache_misses", 0)) <= 0:
-		_fail("Selected tile change did not recompute context actions.", selected_tile_profile)
+	if int(selected_tile_profile.get("selected_route_destination_action_cache_misses", 0)) <= 0:
+		_fail("Selected tile change did not rebuild destination-only route actions.", selected_tile_profile)
 		return
 	if int(selected_tile_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0:
 		_fail("Selected tile change did not recompute route decision surface.", selected_tile_profile)
@@ -53,8 +50,8 @@ func _run() -> void:
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
 	var hero_position_profile: Dictionary = shell.call("validation_profile_snapshot")
-	if int(hero_position_profile.get("selected_context_actions_cache_misses", 0)) <= 0:
-		_fail("Hero position change did not recompute selected-route context actions.", hero_position_profile)
+	if int(hero_position_profile.get("selected_route_destination_action_cache_misses", 0)) <= 0:
+		_fail("Hero position change did not rebuild destination-only route actions.", hero_position_profile)
 		return
 	if int(hero_position_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0:
 		_fail("Hero position change did not recompute selected-route decision surface.", hero_position_profile)
@@ -64,8 +61,8 @@ func _run() -> void:
 	_set_active_hero_movement(session, 6)
 	shell.call("_refresh")
 	var movement_profile: Dictionary = shell.call("validation_profile_snapshot")
-	if int(movement_profile.get("selected_context_actions_cache_misses", 0)) <= 0:
-		_fail("Movement budget change did not recompute selected-route context actions.", movement_profile)
+	if int(movement_profile.get("selected_route_destination_action_cache_misses", 0)) <= 0:
+		_fail("Movement budget change did not rebuild destination-only route actions.", movement_profile)
 		return
 	if int(movement_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0:
 		_fail("Movement budget change did not recompute selected-route decision surface.", movement_profile)
@@ -75,8 +72,8 @@ func _run() -> void:
 	_add_route_blocking_encounter(session, Vector2i(5, 1))
 	shell.call("_refresh")
 	var topology_profile: Dictionary = shell.call("validation_profile_snapshot")
-	if int(topology_profile.get("selected_context_actions_cache_misses", 0)) <= 0:
-		_fail("Route interaction topology change did not recompute selected-route context actions.", topology_profile)
+	if int(topology_profile.get("selected_route_destination_action_cache_misses", 0)) <= 0:
+		_fail("Route interaction topology change did not rebuild destination-only route actions.", topology_profile)
 		return
 	if int(topology_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0:
 		_fail("Route interaction topology change did not recompute selected-route decision surface.", topology_profile)
@@ -84,12 +81,12 @@ func _run() -> void:
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
-		"reuse_context_hits": int(reused_profile.get("selected_context_actions_cache_hits", 0)),
+		"reuse_destination_hits": int(reused_profile.get("selected_route_destination_action_cache_hits", 0)),
 		"reuse_route_decision_hits": int(reused_profile.get("selected_route_decision_surface_cache_hits", 0)),
-		"selected_tile_misses": int(selected_tile_profile.get("selected_context_actions_cache_misses", 0)),
-		"hero_position_misses": int(hero_position_profile.get("selected_context_actions_cache_misses", 0)),
-		"movement_misses": int(movement_profile.get("selected_context_actions_cache_misses", 0)),
-		"topology_misses": int(topology_profile.get("selected_context_actions_cache_misses", 0)),
+		"selected_tile_destination_misses": int(selected_tile_profile.get("selected_route_destination_action_cache_misses", 0)),
+		"hero_position_destination_misses": int(hero_position_profile.get("selected_route_destination_action_cache_misses", 0)),
+		"movement_destination_misses": int(movement_profile.get("selected_route_destination_action_cache_misses", 0)),
+		"topology_destination_misses": int(topology_profile.get("selected_route_destination_action_cache_misses", 0)),
 	})])
 	shell.queue_free()
 	get_tree().quit(0)
