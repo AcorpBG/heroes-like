@@ -122,6 +122,7 @@ func _assert_record_shape(record: Dictionary, expected_command: String, expect_b
 		"movement_rules",
 		"route_execution",
 		"action_dispatch",
+		"simple_route_fast_paths",
 		"save",
 		"fps",
 		"frame_ms",
@@ -182,6 +183,14 @@ func _assert_record_shape(record: Dictionary, expected_command: String, expect_b
 		if not bool(destination_only.get("simple_route_ui_fast_path", false)) or not bool(destination_only.get("rich_route_surface_skipped", false)):
 			_fail("Open route-selection profile did not expose the simple route UI fast path.", record)
 			return false
+		var simple_paths: Dictionary = record.get("simple_route_fast_paths", {}) if record.get("simple_route_fast_paths", {}) is Dictionary else {}
+		var context_last: Dictionary = simple_paths.get("context_tile_text_last", {}) if simple_paths.get("context_tile_text_last", {}) is Dictionary else {}
+		if int(simple_paths.get("context_tile_text_hits", 0)) <= 0 or int(simple_paths.get("context_tile_text_open_hits", 0)) <= 0:
+			_fail("Open route-selection profile did not expose the context tile text simple-route fast path.", record)
+			return false
+		if String(context_last.get("destination_interaction_kind", "")) != "open" or not bool(context_last.get("rich_route_decision_skipped", false)):
+			_fail("Open route-selection context fast-path details were not recorded.", record)
+			return false
 		var selected_context_cache: Dictionary = incremental_refresh.get("selected_context_actions_cache", {}) if incremental_refresh.get("selected_context_actions_cache", {}) is Dictionary else {}
 		if not selected_context_cache.has("hits") or not selected_context_cache.has("misses"):
 			_fail("Selected-context cache counters were not exposed in profile JSONL.", record)
@@ -215,6 +224,11 @@ func _assert_record_shape(record: Dictionary, expected_command: String, expect_b
 		if not bool(confirm_destination_only.get("simple_route_ui_fast_path", false)) or String(confirm_destination_only.get("destination_interaction_kind", "")) != "current":
 			_fail("Open route confirmation did not expose the minimal current-tile action refresh.", record)
 			return false
+		var confirm_simple_paths: Dictionary = record.get("simple_route_fast_paths", {}) if record.get("simple_route_fast_paths", {}) is Dictionary else {}
+		for key in ["context_tile_text_hits", "context_tile_text_current_hits", "field_readiness_hits", "field_readiness_current_hits"]:
+			if not confirm_simple_paths.has(key):
+				_fail("Open route confirmation simple-route fast-path summary is missing %s." % key, record)
+				return false
 	if not (record.get("map_view_timings_ms", {}) is Dictionary) or not (record.get("top_offenders", []) is Array):
 		_fail("Profile record did not include map-view timings or top offenders.", record)
 		return false
