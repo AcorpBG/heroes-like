@@ -151,19 +151,33 @@ func _assert_record_shape(record: Dictionary, expected_command: String, expect_b
 			_fail("Route cache profile is missing %s." % key, route_cache)
 			return false
 	var incremental_refresh: Dictionary = record.get("incremental_refresh", {}) if record.get("incremental_refresh", {}) is Dictionary else {}
-	for key in ["request", "dirty_after", "phase_counts", "hero_actions_cache", "selected_context_actions_cache", "selected_route_decision_surface_cache"]:
+	for key in [
+		"request",
+		"dirty_after",
+		"phase_counts",
+		"hero_actions_cache",
+		"selected_context_actions_cache",
+		"selected_route_decision_surface_cache",
+		"selected_route_destination_action_cache",
+		"route_destination_only_action",
+	]:
 		if not incremental_refresh.has(key):
 			_fail("Incremental refresh profile is missing %s." % key, incremental_refresh)
 			return false
 	if expected_command == "select_route":
 		var request: Dictionary = incremental_refresh.get("request", {}) if incremental_refresh.get("request", {}) is Dictionary else {}
 		var phases: Array = request.get("phases", []) if request.get("phases", []) is Array else []
-		for required_phase in ["map_view", "context_actions", "route_preview"]:
+		for required_phase in ["map_view", "route_preview"]:
 			if required_phase not in phases:
 				_fail("Route-selection profile did not record incremental phase %s." % required_phase, record)
 				return false
-		if "hero_actions" in phases:
-			_fail("Route-selection profile should not request unrelated hero actions.", record)
+		for forbidden_phase in ["context_actions", "hero_actions"]:
+			if forbidden_phase in phases:
+				_fail("Route-selection profile should not request unrelated phase %s." % forbidden_phase, record)
+				return false
+		var destination_only: Dictionary = incremental_refresh.get("route_destination_only_action", {}) if incremental_refresh.get("route_destination_only_action", {}) is Dictionary else {}
+		if not bool(destination_only.get("destination_only", false)) or not bool(destination_only.get("broad_context_actions_skipped", false)):
+			_fail("Route-selection profile did not expose destination-only action skips.", record)
 			return false
 		var selected_context_cache: Dictionary = incremental_refresh.get("selected_context_actions_cache", {}) if incremental_refresh.get("selected_context_actions_cache", {}) is Dictionary else {}
 		if not selected_context_cache.has("hits") or not selected_context_cache.has("misses"):

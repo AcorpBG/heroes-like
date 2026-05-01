@@ -24,11 +24,17 @@ func _run() -> void:
 		return
 	if not _assert_incremental_route_request(profile, "first_selection"):
 		return
-	if int(profile.get("selected_context_actions_cache_misses", 0)) <= 0:
-		_fail("Incremental route selection did not build selected context actions.", profile)
+	if int(profile.get("route_destination_only_action_path_calls", 0)) <= 0:
+		_fail("Incremental route selection did not use the destination-only action path.", profile)
 		return
 	if int(profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0:
 		_fail("Incremental route selection did not build the route decision surface.", profile)
+		return
+	if int(profile.get("selected_context_actions_cache_misses", 0)) != 0:
+		_fail("Incremental route selection recomputed broad selected context actions.", profile)
+		return
+	if int(profile.get("route_tooltip_context_drawers_skipped", 0)) <= 0:
+		_fail("Incremental route selection did not skip tooltip/context drawer rebuild.", profile)
 		return
 	if int(profile.get("hero_actions_cache_misses", 0)) != 0:
 		_fail("Incremental route selection rebuilt hero actions despite no hero/roster dirty phase.", profile)
@@ -48,7 +54,7 @@ func _run() -> void:
 		"ok": true,
 		"first_request": profile.get("last_refresh_request", {}),
 		"changed_request": changed_profile.get("last_refresh_request", {}),
-		"first_context_misses": int(profile.get("selected_context_actions_cache_misses", 0)),
+		"destination_only_calls": int(profile.get("route_destination_only_action_path_calls", 0)),
 		"first_route_decision_misses": int(profile.get("selected_route_decision_surface_cache_misses", 0)),
 	})])
 	shell.queue_free()
@@ -63,11 +69,11 @@ func _assert_incremental_route_request(profile: Dictionary, label: String) -> bo
 		_fail("%s used the full refresh path instead of the route-preview request." % label, request)
 		return false
 	var phases: Array = request.get("phases", []) if request.get("phases", []) is Array else []
-	for required_phase in ["map_view", "context_actions", "route_preview"]:
+	for required_phase in ["map_view", "route_preview"]:
 		if required_phase not in phases:
 			_fail("%s incremental request missed required phase %s." % [label, required_phase], request)
 			return false
-	for forbidden_phase in ["hero_actions", "spell_rails", "specialty_rails", "artifact_rails", "status_surfaces", "save_surface", "generated_surfaces"]:
+	for forbidden_phase in ["context_actions", "hero_actions", "spell_rails", "specialty_rails", "artifact_rails", "status_surfaces", "save_surface", "generated_surfaces"]:
 		if forbidden_phase in phases:
 			_fail("%s incremental request included unrelated phase %s." % [label, forbidden_phase], request)
 			return false
@@ -79,14 +85,12 @@ func _assert_incremental_route_request(profile: Dictionary, label: String) -> bo
 	if int(profile.get("refresh_phase_map_view_calls", 0)) <= 0:
 		_fail("%s did not run the map-view phase." % label, profile)
 		return false
-	if int(profile.get("refresh_phase_context_actions_calls", 0)) <= 0:
-		_fail("%s did not run the context-action phase." % label, profile)
-		return false
 	if int(profile.get("refresh_phase_route_preview_calls", 0)) <= 0:
 		_fail("%s did not run the route-preview phase." % label, profile)
 		return false
 	for skipped_counter in [
 		"refresh_phase_hero_actions_calls",
+		"refresh_phase_context_actions_calls",
 		"refresh_phase_spell_rails_calls",
 		"refresh_phase_specialty_rails_calls",
 		"refresh_phase_artifact_rails_calls",
@@ -94,6 +98,8 @@ func _assert_incremental_route_request(profile: Dictionary, label: String) -> bo
 		"refresh_phase_save_surface_calls",
 		"refresh_phase_generated_surfaces_calls",
 		"refresh_hero_actions_calls",
+		"refresh_context_actions_calls",
+		"refresh_tooltip_context_drawers_calls",
 		"refresh_spell_actions_calls",
 		"refresh_specialty_actions_calls",
 		"refresh_artifact_actions_calls",
