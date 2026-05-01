@@ -23,6 +23,7 @@ static var _normalized_read_scope_depth := 0
 static var _runtime_normalized_signatures: Dictionary = {}
 static var _spatial_lookup_indexes: Dictionary = {}
 static var _spatial_lookup_signatures: Dictionary = {}
+static var _active_town_visit_indexes: Dictionary = {}
 static var _blocked_tile_indexes: Dictionary = {}
 static var _pathing_debug_profile: Dictionary = {
 	"capture_enabled": false,
@@ -33,6 +34,9 @@ static var _pathing_debug_profile: Dictionary = {
 	"route_interaction_lookup_count": 0,
 	"route_interaction_spatial_lookup_count": 0,
 	"route_interaction_full_scan_count": 0,
+	"town_placement_lookup_direct_index_count": 0,
+	"town_placement_lookup_spatial_index_count": 0,
+	"town_placement_lookup_full_scan_count": 0,
 	"post_move_global_discovery_count": 0,
 	"post_action_tile_context_scan_count": 0,
 }
@@ -327,6 +331,9 @@ static func validation_set_pathing_profile_capture_enabled(enabled: bool) -> voi
 		_pathing_debug_profile["route_interaction_lookup_count"] = 0
 		_pathing_debug_profile["route_interaction_spatial_lookup_count"] = 0
 		_pathing_debug_profile["route_interaction_full_scan_count"] = 0
+		_pathing_debug_profile["town_placement_lookup_direct_index_count"] = 0
+		_pathing_debug_profile["town_placement_lookup_spatial_index_count"] = 0
+		_pathing_debug_profile["town_placement_lookup_full_scan_count"] = 0
 		_pathing_debug_profile["post_move_global_discovery_count"] = 0
 		_pathing_debug_profile["post_action_tile_context_scan_count"] = 0
 
@@ -842,6 +849,7 @@ static func set_active_town_visit(session: SessionStateStoreScript.SessionData, 
 		clear_active_town_visit(session)
 		return {"ok": false, "message": "Only owned towns can be managed remotely.", "town": town}
 	session.flags[ACTIVE_TOWN_PLACEMENT_KEY] = placement_id
+	_active_town_visit_indexes[String(session.session_id)] = int(town_result.get("index", -1))
 	return {
 		"ok": true,
 		"message": "%s opens its gates." % _town_name(town),
@@ -851,6 +859,7 @@ static func set_active_town_visit(session: SessionStateStoreScript.SessionData, 
 static func clear_active_town_visit(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
+	_active_town_visit_indexes.erase(String(session.session_id))
 	session.flags.erase(ACTIVE_TOWN_PLACEMENT_KEY)
 
 static func active_town_visit_result(session: SessionStateStoreScript.SessionData) -> Dictionary:
@@ -1676,6 +1685,7 @@ static func _spatial_lookup_signature(session: SessionStateStoreScript.SessionDa
 static func _build_spatial_lookup_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var index := {
 		"town_by_tile": {},
+		"town_by_placement": {},
 		"resource_by_tile": {},
 		"resource_by_interaction_tile": {},
 		"artifact_by_tile": {},
@@ -1688,6 +1698,9 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 			var town = towns[town_index]
 			if town is Dictionary:
 				town_by_tile[_tile_key(Vector2i(int(town.get("x", -1)), int(town.get("y", -1))))] = town_index
+				var placement_id := String(town.get("placement_id", ""))
+				if placement_id != "":
+					index["town_by_placement"][placement_id] = town_index
 	var resources = session.overworld.get("resource_nodes", [])
 	if resources is Array:
 		for node_index in range(resources.size()):
@@ -9628,9 +9641,29 @@ static func _find_town_by_placement(session: SessionStateStoreScript.SessionData
 	if session == null or placement_id == "":
 		return {"index": -1, "town": {}}
 	var towns = session.overworld.get("towns", [])
+	var session_id := String(session.session_id)
+	if String(session.flags.get(ACTIVE_TOWN_PLACEMENT_KEY, "")) == placement_id and _active_town_visit_indexes.has(session_id):
+		var direct_index := int(_active_town_visit_indexes.get(session_id, -1))
+		if towns is Array and direct_index >= 0 and direct_index < towns.size():
+			var direct_town = towns[direct_index]
+			if direct_town is Dictionary and String(direct_town.get("placement_id", "")) == placement_id:
+				_pathing_debug_profile["town_placement_lookup_direct_index_count"] = int(_pathing_debug_profile.get("town_placement_lookup_direct_index_count", 0)) + 1
+				return {"index": direct_index, "town": direct_town}
+	var lookup_index := _spatial_lookup_index(session)
+	var town_by_placement: Dictionary = lookup_index.get("town_by_placement", {}) if lookup_index.get("town_by_placement", {}) is Dictionary else {}
+	if town_by_placement.has(placement_id):
+		var placement_index := int(town_by_placement.get(placement_id, -1))
+		if towns is Array and placement_index >= 0 and placement_index < towns.size():
+			var indexed_town = towns[placement_index]
+			if indexed_town is Dictionary and String(indexed_town.get("placement_id", "")) == placement_id:
+				_pathing_debug_profile["town_placement_lookup_spatial_index_count"] = int(_pathing_debug_profile.get("town_placement_lookup_spatial_index_count", 0)) + 1
+				return {"index": placement_index, "town": indexed_town}
+	_pathing_debug_profile["town_placement_lookup_full_scan_count"] = int(_pathing_debug_profile.get("town_placement_lookup_full_scan_count", 0)) + 1
 	for index in range(towns.size()):
 		var town = towns[index]
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
+			if String(session.flags.get(ACTIVE_TOWN_PLACEMENT_KEY, "")) == placement_id:
+				_active_town_visit_indexes[session_id] = index
 			return {"index": index, "town": town}
 	return {"index": -1, "town": {}}
 

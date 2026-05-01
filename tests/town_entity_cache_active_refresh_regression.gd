@@ -1,0 +1,198 @@
+extends Node
+
+const REPORT_ID := "TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION"
+
+func _ready() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
+	var previous_general := OS.get_environment("HEROES_PROFILE_LOG")
+	OS.set_environment("HEROES_PROFILE_LOG", "1")
+	SaveService.validation_clear_general_profile_log()
+
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	OverworldRules.normalize_overworld_state(session)
+	var first_town := _first_player_town(session)
+	if first_town.is_empty():
+		_finish_fail("No player town was available for the town cache regression.")
+		return
+	var second_town := _ensure_second_player_town(session, first_town)
+	_give_resources(session)
+	_move_active_hero_to_town(session, first_town)
+	var first_id := String(first_town.get("placement_id", ""))
+	var second_id := String(second_town.get("placement_id", ""))
+	var visit_result: Dictionary = OverworldRules.set_active_town_visit(session, first_id)
+	if not bool(visit_result.get("ok", false)):
+		_finish_fail("Could not prepare first active town visit.", visit_result)
+		return
+	SessionState.set_active_session(session)
+	session = SessionState.ensure_active_session()
+
+	OverworldRules.validation_set_pathing_profile_capture_enabled(true)
+	var shell = load("res://scenes/town/TownShell.tscn").instantiate()
+	add_child(shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	var entry_snapshot: Dictionary = shell.call("validation_town_entity_cache_snapshot")
+	if not _assert_snapshot(entry_snapshot, first_id, false, true, "initial entry"):
+		return
+	var lookup_profile: Dictionary = OverworldRules.validation_pathing_profile_snapshot()
+	if int(lookup_profile.get("town_placement_lookup_full_scan_count", 0)) != 0:
+		_finish_fail("Town entry scanned all towns after active-town visit handoff.", lookup_profile)
+		return
+
+	var records: Array = SaveService.validation_general_profile_log_last_records(20)
+	if _has_save_surface_build_record(records):
+		_finish_fail("Ordinary town entry built the expensive save surface.", records)
+		return
+
+	var hit_snapshot: Dictionary = shell.call("validation_force_refresh")
+	if not _assert_snapshot(hit_snapshot, first_id, true, true, "same-town refresh"):
+		return
+
+	OverworldRules.set_active_town_visit(session, second_id)
+	OverworldRules.validation_set_pathing_profile_capture_enabled(true)
+	var second_snapshot: Dictionary = shell.call("validation_force_refresh")
+	if not _assert_snapshot(second_snapshot, second_id, false, true, "second-town refresh"):
+		return
+	if int(second_snapshot.get("entry_count", 0)) < 2:
+		_finish_fail("Per-town cache did not keep separate entries after visiting two towns.", second_snapshot)
+		return
+
+	OverworldRules.set_active_town_visit(session, first_id)
+	OverworldRules.validation_set_pathing_profile_capture_enabled(true)
+	var first_again_snapshot: Dictionary = shell.call("validation_force_refresh")
+	if not _assert_snapshot(first_again_snapshot, first_id, true, true, "first-town return"):
+		return
+
+	var build_action := _first_enabled_build_action(shell)
+	if build_action == "":
+		_finish_fail("No enabled build action was available for active-town invalidation coverage.", shell.call("validation_action_catalog"))
+		return
+	var build_result: Dictionary = shell.call("validation_perform_town_action", build_action)
+	if not bool(build_result.get("ok", false)):
+		_finish_fail("Build action did not change town state for cache invalidation coverage.", build_result)
+		return
+	var after_build_snapshot: Dictionary = shell.call("validation_town_entity_cache_snapshot")
+	var cached_placements: Array = after_build_snapshot.get("cached_placements", []) if after_build_snapshot.get("cached_placements", []) is Array else []
+	if not cached_placements.has(second_id):
+		_finish_fail("Build action invalidated a non-active town cache entry.", after_build_snapshot)
+		return
+	if not _assert_snapshot(after_build_snapshot, first_id, false, true, "after active-town build"):
+		return
+
+	var refresh_records: Array = SaveService.validation_general_profile_log_last_records(40)
+	var cache_hit_record := _find_town_refresh_record(refresh_records, true)
+	if cache_hit_record.is_empty():
+		_finish_fail("Town refresh profile records did not expose a cache hit.", refresh_records)
+		return
+	var cache_miss_record := _find_town_refresh_record(refresh_records, false)
+	if cache_miss_record.is_empty():
+		_finish_fail("Town refresh profile records did not expose a cache miss.", refresh_records)
+		return
+	var hit_metadata: Dictionary = cache_hit_record.get("metadata", {}) if cache_hit_record.get("metadata", {}) is Dictionary else {}
+	if not bool(hit_metadata.get("save_surface_skipped_hidden", false)):
+		_finish_fail("Town refresh profile did not expose hidden save-surface skip.", cache_hit_record)
+		return
+
+	OS.set_environment("HEROES_PROFILE_LOG", previous_general)
+	print("%s %s" % [REPORT_ID, JSON.stringify({
+		"ok": true,
+		"first_town": first_id,
+		"second_town": second_id,
+		"build_action": build_action,
+		"cache_hit_buckets": cache_hit_record.get("buckets_ms", {}),
+	})])
+	get_tree().quit(0)
+
+func _assert_snapshot(snapshot: Dictionary, expected_placement_id: String, expected_hit: bool, expected_save_skip: bool, label: String) -> bool:
+	if String(snapshot.get("active_placement_id", "")) != expected_placement_id:
+		_finish_fail("%s used the wrong active town." % label, snapshot)
+		return false
+	if bool(snapshot.get("last_cache_hit", false)) != expected_hit:
+		_finish_fail("%s had the wrong cache hit/miss state." % label, snapshot)
+		return false
+	if not bool(snapshot.get("active_cached", false)):
+		_finish_fail("%s did not leave the active town cached." % label, snapshot)
+		return false
+	if bool(snapshot.get("save_surface_skipped_hidden", false)) != expected_save_skip:
+		_finish_fail("%s had the wrong save-surface skip state." % label, snapshot)
+		return false
+	return true
+
+func _first_player_town(session) -> Dictionary:
+	for candidate in session.overworld.get("towns", []):
+		if candidate is Dictionary and String(candidate.get("owner", "")) == "player":
+			return candidate
+	return {}
+
+func _ensure_second_player_town(session, first_town: Dictionary) -> Dictionary:
+	var towns: Array = session.overworld.get("towns", []) if session.overworld.get("towns", []) is Array else []
+	for town_value in towns:
+		if town_value is Dictionary and String(town_value.get("owner", "")) == "player" and String(town_value.get("placement_id", "")) != String(first_town.get("placement_id", "")):
+			return town_value
+	var second := first_town.duplicate(true)
+	second["placement_id"] = "%s_cache_peer" % String(first_town.get("placement_id", "town"))
+	second["x"] = int(first_town.get("x", 0)) + 1
+	second["y"] = int(first_town.get("y", 0))
+	var built_buildings: Array = first_town.get("built_buildings", []) if first_town.get("built_buildings", []) is Array else []
+	var available_recruits: Dictionary = first_town.get("available_recruits", {}) if first_town.get("available_recruits", {}) is Dictionary else {}
+	second["built_buildings"] = built_buildings.duplicate(true)
+	second["available_recruits"] = available_recruits.duplicate(true)
+	towns.append(second)
+	session.overworld["towns"] = towns
+	return second
+
+func _give_resources(session) -> void:
+	session.overworld["resources"] = {
+		"gold": 99999,
+		"wood": 999,
+		"ore": 999,
+	}
+
+func _move_active_hero_to_town(session, town: Dictionary) -> void:
+	var position := {"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}
+	session.overworld["hero_position"] = position.duplicate(true)
+	var active_hero = session.overworld.get("hero", {})
+	if active_hero is Dictionary:
+		active_hero["position"] = position.duplicate(true)
+		session.overworld["hero"] = active_hero
+	var heroes = session.overworld.get("player_heroes", [])
+	for index in range(heroes.size()):
+		var hero = heroes[index]
+		if hero is Dictionary and String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
+			hero["position"] = position.duplicate(true)
+			heroes[index] = hero
+	session.overworld["player_heroes"] = heroes
+
+func _first_enabled_build_action(shell: Node) -> String:
+	var catalog: Dictionary = shell.call("validation_action_catalog")
+	var actions: Array = catalog.get("build", []) if catalog.get("build", []) is Array else []
+	for action in actions:
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			return String(action.get("id", ""))
+	return ""
+
+func _has_save_surface_build_record(records: Array) -> bool:
+	for record in records:
+		if record is Dictionary and String(record.get("surface", "")) == "save" and String(record.get("event", "")) == "build_in_session_save_surface":
+			return true
+	return false
+
+func _find_town_refresh_record(records: Array, hit: bool) -> Dictionary:
+	for record in records:
+		if not (record is Dictionary):
+			continue
+		if String(record.get("surface", "")) != "town" or String(record.get("phase", "")) != "refresh":
+			continue
+		var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
+		if bool(metadata.get("town_entity_cache_hit", false)) == hit:
+			return record
+	return {}
+
+func _finish_fail(message: String, details: Variant = {}) -> void:
+	OS.set_environment("HEROES_PROFILE_LOG", "")
+	push_error("%s %s" % [message, JSON.stringify(details)])
+	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": false, "message": message, "details": details})])
+	get_tree().quit(1)

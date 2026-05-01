@@ -64,6 +64,10 @@ const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 var _session: SessionStateStore.SessionData
 var _last_message := ""
 var _last_action_recap := {}
+var _last_town_entity_cache_result := {}
+var _last_save_surface_profile := {}
+
+static var _town_entity_cache_by_session: Dictionary = {}
 
 func _ready() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -102,6 +106,7 @@ func _on_build_action_pressed(action_id: String) -> void:
 	var action := _validation_action_for_id(full_action_id)
 	var result := TownRules.build_active_town(_session, action_id)
 	_record_town_action_result("build", full_action_id, action, result, before)
+	_invalidate_active_town_entity_cache("build", ["town", "economy", "recruitment"])
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -112,6 +117,7 @@ func _on_recruit_action_pressed(action_id: String) -> void:
 	var action := _validation_action_for_id(full_action_id)
 	var result := TownRules.recruit_active_town(_session, action_id)
 	_record_town_action_result("recruit", full_action_id, action, result, before)
+	_invalidate_active_town_entity_cache("recruit", ["town", "economy", "hero_army"])
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -123,6 +129,7 @@ func _on_market_action_pressed(action_id: String) -> void:
 	if result.is_empty():
 		return
 	_record_town_action_result("market", action_id, action, result, before)
+	_invalidate_active_town_entity_cache("market", ["economy"])
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -136,6 +143,7 @@ func _on_hero_action_pressed(action_id: String) -> void:
 	if result.is_empty():
 		return
 	_record_town_action_result("order", action_id, action, result, before)
+	_invalidate_active_town_entity_cache("hero", ["active_hero"])
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -149,6 +157,7 @@ func _on_tavern_action_pressed(action_id: String) -> void:
 	if result.is_empty():
 		return
 	_record_town_action_result("order", action_id, action, result, before)
+	_invalidate_active_town_entity_cache("tavern", ["town", "economy", "active_hero"])
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -160,6 +169,7 @@ func _on_transfer_action_pressed(action_id: String) -> void:
 	if result.is_empty():
 		return
 	_record_town_action_result("order", action_id, action, result, before)
+	_invalidate_active_town_entity_cache("transfer", ["town", "hero_army"])
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -171,6 +181,7 @@ func _on_response_action_pressed(action_id: String) -> void:
 	if result.is_empty():
 		return
 	_record_town_action_result("response", action_id, action, result, before)
+	_invalidate_active_town_entity_cache("response", ["town", "economy", "active_hero"])
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -181,6 +192,7 @@ func _on_study_action_pressed(action_id: String) -> void:
 	var action := _validation_action_for_id(full_action_id)
 	var result := TownRules.learn_spell_at_active_town(_session, action_id)
 	_record_town_action_result("order", full_action_id, action, result, before)
+	_invalidate_active_town_entity_cache("study", ["active_hero", "spells"])
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -190,6 +202,7 @@ func _on_artifact_action_pressed(action_id: String) -> void:
 	var action := _validation_action_for_id(action_id)
 	var result := TownRules.manage_artifact_at_active_town(_session, action_id)
 	_record_town_action_result("order", action_id, action, result, before)
+	_invalidate_active_town_entity_cache("artifact", ["active_hero", "artifacts"])
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -201,6 +214,7 @@ func _on_specialty_action_pressed(action_id: String) -> void:
 	if action_id.begins_with("choose_specialty:"):
 		result = TownRules.choose_specialty_at_active_town(_session, action_id.trim_prefix("choose_specialty:"))
 	_record_town_action_result("order", action_id, action, result, before)
+	_invalidate_active_town_entity_cache("specialty", ["active_hero"])
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -216,13 +230,16 @@ func _on_save_pressed() -> void:
 	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
 	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
+	var save_surface_started := ProfileLogScript.begin_usec()
+	_refresh_save_slot_picker(true)
+	buckets["save_surface_force"] = ProfileLogScript.elapsed_ms(save_surface_started)
 	ProfileLogScript.emit_general("town", "action", "save", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(false), _session)
 
 func _on_save_slot_selected(index: int) -> void:
 	if index < 0 or index >= _save_slot_picker.get_item_count():
 		return
 	SaveService.set_selected_manual_slot(_save_slot_picker.get_item_id(index))
-	_refresh_save_slot_picker()
+	_refresh_save_slot_picker(true)
 
 func _on_leave_pressed() -> void:
 	_prepare_town_return_handoff()
@@ -245,131 +262,59 @@ func _refresh() -> void:
 	buckets["read_scope"] = ProfileLogScript.elapsed_ms(section_started)
 
 	section_started = ProfileLogScript.begin_usec()
-	_header_label.text = TownRules.describe_header(_session)
-	_status_label.text = TownRules.describe_status(_session)
-	_resource_label.text = OverworldRules.describe_resources(_session)
+	var active_town := TownRules.get_active_town(_session)
+	var view_state := _active_town_entity_view_state(active_town)
+	var cache_result: Dictionary = _last_town_entity_cache_result
+	buckets["town_entity_cache"] = ProfileLogScript.elapsed_ms(section_started)
+	buckets["town_entity_cache_hit"] = 1.0 if bool(cache_result.get("hit", false)) else 0.0
+	buckets["town_entity_cache_miss"] = 0.0 if bool(cache_result.get("hit", false)) else 1.0
+	buckets["town_entity_cache_entries"] = float(int(cache_result.get("entry_count", 0)))
+
+	section_started = ProfileLogScript.begin_usec()
+	_header_label.text = String(view_state.get("header_text", ""))
+	_status_label.text = String(view_state.get("status_text", ""))
+	_resource_label.text = String(view_state.get("resources_text", ""))
 	_crest_label.text = _crest_text()
 	if _crest_glyph.has_method("set_glyph"):
 		_crest_glyph.call("set_glyph", "town", _faction_accent())
-	_set_compact_label(_outlook_label, TownRules.describe_outlook_board(_session), 4)
-	_set_compact_label(_command_ledger_label, TownRules.describe_command_ledger(_session), 4)
+	_set_compact_label(_outlook_label, String(view_state.get("outlook_text", "")), 4)
+	_set_compact_label(_command_ledger_label, String(view_state.get("command_ledger_text", "")), 4)
 	buckets["header_outlook"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
-	_set_compact_label(_hero_label, OverworldRules.describe_hero(_session), 2)
-	var defense_check := _defense_check_surface()
-	var production_overview := TownRules.describe_production_overview(_session)
-	var production_text := _production_overview_with_defense_check(
-		production_overview,
-		String(defense_check.get("visible_text", "")),
-	)
-	_set_compact_label(_production_overview_label, production_text, 4)
-	_production_overview_label.tooltip_text = _join_tooltip_sections([
-		String(defense_check.get("tooltip_text", "")),
-		production_overview,
-	])
-	_set_compact_label(_heroes_label, TownRules.describe_heroes(_session), 2)
-	var specialty_readiness := _specialty_readiness_surface()
-	var specialty_text := _join_tooltip_sections([
-		String(specialty_readiness.get("visible_text", "")),
-		TownRules.describe_specialties(_session),
-	])
-	_set_compact_label(_specialty_label, specialty_text, 2)
-	_specialty_label.tooltip_text = _join_tooltip_sections([
-		String(specialty_readiness.get("tooltip_text", "")),
-		TownRules.describe_specialties(_session),
-	])
-	_set_compact_label(_army_label, OverworldRules.describe_army(_session), 2)
+	_set_compact_label(_hero_label, String(view_state.get("hero_text", "")), 2)
+	_set_compact_label(_production_overview_label, String(view_state.get("production_visible_text", "")), 4)
+	_production_overview_label.tooltip_text = String(view_state.get("production_tooltip_text", ""))
+	_set_compact_label(_heroes_label, String(view_state.get("heroes_text", "")), 2)
+	_set_compact_label(_specialty_label, String(view_state.get("specialty_visible_text", "")), 2)
+	_specialty_label.tooltip_text = String(view_state.get("specialty_tooltip_text", ""))
+	_set_compact_label(_army_label, String(view_state.get("army_text", "")), 2)
 	buckets["hero_army"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
-	_set_compact_label(_town_label, TownRules.describe_summary(_session), 5)
-	_set_compact_label(_defense_label, TownRules.describe_defense(_session), 4)
-	_set_compact_label(_pressure_label, TownRules.describe_threats(_session), 4)
-	var build_readiness := _build_readiness_surface()
-	var build_text := _join_tooltip_sections([
-		String(build_readiness.get("visible_text", "")),
-		TownRules.describe_buildings(_session),
-	])
-	_set_compact_label(_building_label, build_text, 2)
-	_building_label.tooltip_text = _join_tooltip_sections([
-		String(build_readiness.get("tooltip_text", "")),
-		TownRules.describe_buildings(_session),
-	])
-	var market_readiness := _market_readiness_surface()
-	var market_text := _join_tooltip_sections([
-		String(market_readiness.get("visible_text", "")),
-		TownRules.describe_market(_session),
-	])
-	_set_compact_label(_market_label, market_text, 2)
-	_market_label.tooltip_text = _join_tooltip_sections([
-		String(market_readiness.get("tooltip_text", "")),
-		TownRules.describe_market(_session),
-	])
-	var muster_readiness := _muster_readiness_surface()
-	var recruit_text := _join_tooltip_sections([
-		String(muster_readiness.get("visible_text", "")),
-		TownRules.describe_recruitment(_session),
-	])
-	_set_compact_label(_recruit_label, recruit_text, 2)
-	_recruit_label.tooltip_text = _join_tooltip_sections([
-		String(muster_readiness.get("tooltip_text", "")),
-		TownRules.describe_recruitment(_session),
-	])
-	var hire_readiness := _hire_readiness_surface()
-	var tavern_text := _join_tooltip_sections([
-		String(hire_readiness.get("visible_text", "")),
-		TownRules.describe_tavern(_session),
-	])
-	_set_compact_label(_tavern_label, tavern_text, 2)
-	_tavern_label.tooltip_text = _join_tooltip_sections([
-		String(hire_readiness.get("tooltip_text", "")),
-		TownRules.describe_tavern(_session),
-	])
-	var transfer_readiness := _transfer_readiness_surface()
-	var transfer_text := _join_tooltip_sections([
-		String(transfer_readiness.get("visible_text", "")),
-		TownRules.describe_transfer(_session),
-	])
-	_set_compact_label(_transfer_label, transfer_text, 2)
-	_transfer_label.tooltip_text = _join_tooltip_sections([
-		String(transfer_readiness.get("tooltip_text", "")),
-		TownRules.describe_transfer(_session),
-	])
-	var response_readiness := _response_readiness_surface()
-	var response_text := _join_tooltip_sections([
-		String(response_readiness.get("visible_text", "")),
-		TownRules.describe_responses(_session),
-	])
-	_set_compact_label(_response_label, response_text, 2)
-	_response_label.tooltip_text = _join_tooltip_sections([
-		String(response_readiness.get("tooltip_text", "")),
-		TownRules.describe_responses(_session),
-	])
-	var study_readiness := _study_readiness_surface()
-	var study_text := _join_tooltip_sections([
-		String(study_readiness.get("visible_text", "")),
-		TownRules.describe_spell_access(_session),
-	])
-	_set_compact_label(_study_label, study_text, 2)
-	_study_label.tooltip_text = _join_tooltip_sections([
-		String(study_readiness.get("tooltip_text", "")),
-		TownRules.describe_spell_access(_session),
-	])
-	_set_compact_label(_spellbook_label, OverworldRules.describe_spellbook(_session), 2)
-	var artifact_readiness := _artifact_readiness_surface()
-	var artifact_text := _join_tooltip_sections([
-		String(artifact_readiness.get("visible_text", "")),
-		TownRules.describe_artifacts(_session),
-	])
-	_set_compact_label(_artifact_label, artifact_text, 2)
-	_artifact_label.tooltip_text = _join_tooltip_sections([
-		String(artifact_readiness.get("tooltip_text", "")),
-		TownRules.describe_artifacts(_session),
-	])
+	_set_compact_label(_town_label, String(view_state.get("summary_text", "")), 5)
+	_set_compact_label(_defense_label, String(view_state.get("defense_text", "")), 4)
+	_set_compact_label(_pressure_label, String(view_state.get("threats_text", "")), 4)
+	_set_compact_label(_building_label, String(view_state.get("build_visible_text", "")), 2)
+	_building_label.tooltip_text = String(view_state.get("build_tooltip_text", ""))
+	_set_compact_label(_market_label, String(view_state.get("market_visible_text", "")), 2)
+	_market_label.tooltip_text = String(view_state.get("market_tooltip_text", ""))
+	_set_compact_label(_recruit_label, String(view_state.get("recruit_visible_text", "")), 2)
+	_recruit_label.tooltip_text = String(view_state.get("recruit_tooltip_text", ""))
+	_set_compact_label(_tavern_label, String(view_state.get("tavern_visible_text", "")), 2)
+	_tavern_label.tooltip_text = String(view_state.get("tavern_tooltip_text", ""))
+	_set_compact_label(_transfer_label, String(view_state.get("transfer_visible_text", "")), 2)
+	_transfer_label.tooltip_text = String(view_state.get("transfer_tooltip_text", ""))
+	_set_compact_label(_response_label, String(view_state.get("response_visible_text", "")), 2)
+	_response_label.tooltip_text = String(view_state.get("response_tooltip_text", ""))
+	_set_compact_label(_study_label, String(view_state.get("study_visible_text", "")), 2)
+	_study_label.tooltip_text = String(view_state.get("study_tooltip_text", ""))
+	_set_compact_label(_spellbook_label, String(view_state.get("spellbook_text", "")), 2)
+	_set_compact_label(_artifact_label, String(view_state.get("artifact_visible_text", "")), 2)
+	_artifact_label.tooltip_text = String(view_state.get("artifact_tooltip_text", ""))
 	buckets["town_tabs_surfaces"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
-	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
-	var order_target := TownRules.town_order_target_handoff(_session)
-	var town_context_surface := _town_action_context_surface(dispatch_text)
+	var dispatch_text := String(view_state.get("dispatch_text", ""))
+	var order_target: Dictionary = view_state.get("order_target", {}) if view_state.get("order_target", {}) is Dictionary else {}
+	var town_context_surface: Dictionary = view_state.get("town_context_surface", {}) if view_state.get("town_context_surface", {}) is Dictionary else {}
 	if town_context_surface.is_empty():
 		_set_compact_label(_event_label, "%s\n%s" % [String(order_target.get("visible_text", "")), dispatch_text], 2)
 		_event_label.tooltip_text = _join_tooltip_sections([
@@ -390,17 +335,18 @@ func _refresh() -> void:
 	section_started = ProfileLogScript.begin_usec()
 	_refresh_save_slot_picker()
 	buckets["save_surface"] = ProfileLogScript.elapsed_ms(section_started)
+	buckets["save_surface_skipped_hidden"] = 1.0 if bool(_last_save_surface_profile.get("skipped_hidden", false)) else 0.0
 	section_started = ProfileLogScript.begin_usec()
-	_rebuild_hero_actions()
-	_rebuild_build_actions()
-	_rebuild_market_actions()
-	_rebuild_recruit_actions()
-	_rebuild_tavern_actions()
-	_rebuild_transfer_actions()
-	_rebuild_response_actions()
-	_rebuild_study_actions()
-	_rebuild_specialty_actions()
-	_rebuild_artifact_actions()
+	_rebuild_hero_actions(view_state.get("hero_actions", []))
+	_rebuild_build_actions(view_state.get("build_actions", []))
+	_rebuild_market_actions(view_state.get("market_actions", []))
+	_rebuild_recruit_actions(view_state.get("recruit_actions", []))
+	_rebuild_tavern_actions(view_state.get("tavern_actions", []))
+	_rebuild_transfer_actions(view_state.get("transfer_actions", []))
+	_rebuild_response_actions(view_state.get("response_actions", []))
+	_rebuild_study_actions(view_state.get("study_actions", []))
+	_rebuild_specialty_actions(view_state.get("specialty_actions", []))
+	_rebuild_artifact_actions(view_state.get("artifact_actions", []))
 	buckets["actions"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
 	_refresh_management_tab_cues()
@@ -409,21 +355,204 @@ func _refresh() -> void:
 	OverworldRules.end_normalized_read_scope(_session)
 	ProfileLogScript.emit_general("town", "refresh", "town_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(false), _session)
 
+func _active_town_entity_view_state(town: Dictionary) -> Dictionary:
+	var placement_id := String(town.get("placement_id", ""))
+	if placement_id == "":
+		_last_town_entity_cache_result = {"hit": false, "placement_id": "", "entry_count": 0, "reason": "missing_placement"}
+		return _build_active_town_entity_view_state()
+	var session_key := _town_entity_session_cache_key()
+	var bucket: Dictionary = _town_entity_cache_by_session.get(session_key, {}) if _town_entity_cache_by_session.get(session_key, {}) is Dictionary else {}
+	var signature := _town_entity_cache_signature(town)
+	var entry: Dictionary = bucket.get(placement_id, {}) if bucket.get(placement_id, {}) is Dictionary else {}
+	if String(entry.get("signature", "")) == signature and entry.get("view_state", {}) is Dictionary:
+		_last_town_entity_cache_result = {
+			"hit": true,
+			"placement_id": placement_id,
+			"entry_count": bucket.size(),
+			"signature": signature,
+		}
+		return (entry.get("view_state", {}) as Dictionary).duplicate(true)
+	var view_state := _build_active_town_entity_view_state()
+	bucket[placement_id] = {
+		"signature": signature,
+		"view_state": view_state.duplicate(true),
+	}
+	_town_entity_cache_by_session[session_key] = bucket
+	_last_town_entity_cache_result = {
+		"hit": false,
+		"placement_id": placement_id,
+		"entry_count": bucket.size(),
+		"signature": signature,
+	}
+	return view_state
+
+func _build_active_town_entity_view_state() -> Dictionary:
+	var defense_check := _defense_check_surface()
+	var production_overview := TownRules.describe_production_overview(_session)
+	var production_text := _production_overview_with_defense_check(
+		production_overview,
+		String(defense_check.get("visible_text", "")),
+	)
+	var specialty_readiness := _specialty_readiness_surface()
+	var specialties_text := TownRules.describe_specialties(_session)
+	var build_readiness := _build_readiness_surface()
+	var buildings_text := TownRules.describe_buildings(_session)
+	var market_readiness := _market_readiness_surface()
+	var market_text := TownRules.describe_market(_session)
+	var muster_readiness := _muster_readiness_surface()
+	var recruitment_text := TownRules.describe_recruitment(_session)
+	var hire_readiness := _hire_readiness_surface()
+	var tavern_text := TownRules.describe_tavern(_session)
+	var transfer_readiness := _transfer_readiness_surface()
+	var transfer_text := TownRules.describe_transfer(_session)
+	var response_readiness := _response_readiness_surface()
+	var response_text := TownRules.describe_responses(_session)
+	var study_readiness := _study_readiness_surface()
+	var study_text := TownRules.describe_spell_access(_session)
+	var artifact_readiness := _artifact_readiness_surface()
+	var artifact_text := TownRules.describe_artifacts(_session)
+	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
+	var order_target := TownRules.town_order_target_handoff(_session)
+	var town_context_surface := _town_action_context_surface(dispatch_text)
+	return {
+		"header_text": TownRules.describe_header(_session),
+		"status_text": TownRules.describe_status(_session),
+		"resources_text": OverworldRules.describe_resources(_session),
+		"outlook_text": TownRules.describe_outlook_board(_session),
+		"command_ledger_text": TownRules.describe_command_ledger(_session),
+		"hero_text": OverworldRules.describe_hero(_session),
+		"production_visible_text": production_text,
+		"production_tooltip_text": _join_tooltip_sections([String(defense_check.get("tooltip_text", "")), production_overview]),
+		"heroes_text": TownRules.describe_heroes(_session),
+		"specialty_visible_text": _join_tooltip_sections([String(specialty_readiness.get("visible_text", "")), specialties_text]),
+		"specialty_tooltip_text": _join_tooltip_sections([String(specialty_readiness.get("tooltip_text", "")), specialties_text]),
+		"army_text": OverworldRules.describe_army(_session),
+		"summary_text": TownRules.describe_summary(_session),
+		"defense_text": TownRules.describe_defense(_session),
+		"threats_text": TownRules.describe_threats(_session),
+		"build_visible_text": _join_tooltip_sections([String(build_readiness.get("visible_text", "")), buildings_text]),
+		"build_tooltip_text": _join_tooltip_sections([String(build_readiness.get("tooltip_text", "")), buildings_text]),
+		"market_visible_text": _join_tooltip_sections([String(market_readiness.get("visible_text", "")), market_text]),
+		"market_tooltip_text": _join_tooltip_sections([String(market_readiness.get("tooltip_text", "")), market_text]),
+		"recruit_visible_text": _join_tooltip_sections([String(muster_readiness.get("visible_text", "")), recruitment_text]),
+		"recruit_tooltip_text": _join_tooltip_sections([String(muster_readiness.get("tooltip_text", "")), recruitment_text]),
+		"tavern_visible_text": _join_tooltip_sections([String(hire_readiness.get("visible_text", "")), tavern_text]),
+		"tavern_tooltip_text": _join_tooltip_sections([String(hire_readiness.get("tooltip_text", "")), tavern_text]),
+		"transfer_visible_text": _join_tooltip_sections([String(transfer_readiness.get("visible_text", "")), transfer_text]),
+		"transfer_tooltip_text": _join_tooltip_sections([String(transfer_readiness.get("tooltip_text", "")), transfer_text]),
+		"response_visible_text": _join_tooltip_sections([String(response_readiness.get("visible_text", "")), response_text]),
+		"response_tooltip_text": _join_tooltip_sections([String(response_readiness.get("tooltip_text", "")), response_text]),
+		"study_visible_text": _join_tooltip_sections([String(study_readiness.get("visible_text", "")), study_text]),
+		"study_tooltip_text": _join_tooltip_sections([String(study_readiness.get("tooltip_text", "")), study_text]),
+		"spellbook_text": OverworldRules.describe_spellbook(_session),
+		"artifact_visible_text": _join_tooltip_sections([String(artifact_readiness.get("visible_text", "")), artifact_text]),
+		"artifact_tooltip_text": _join_tooltip_sections([String(artifact_readiness.get("tooltip_text", "")), artifact_text]),
+		"dispatch_text": dispatch_text,
+		"order_target": order_target,
+		"town_context_surface": town_context_surface,
+		"hero_actions": _duplicate_action_array(TownRules.get_hero_actions(_session)),
+		"build_actions": _duplicate_action_array(TownRules.get_build_actions(_session)),
+		"market_actions": _duplicate_action_array(TownRules.get_market_actions(_session)),
+		"recruit_actions": _duplicate_action_array(TownRules.get_recruit_actions(_session)),
+		"tavern_actions": _duplicate_action_array(TownRules.get_tavern_actions(_session)),
+		"transfer_actions": _duplicate_action_array(TownRules.get_transfer_actions(_session)),
+		"response_actions": _duplicate_action_array(TownRules.get_response_actions(_session)),
+		"study_actions": _duplicate_action_array(TownRules.get_spell_learning_actions(_session)),
+		"specialty_actions": _duplicate_action_array(TownRules.get_specialty_actions(_session)),
+		"artifact_actions": _duplicate_action_array(TownRules.get_artifact_actions(_session)),
+	}
+
+func _town_entity_cache_signature(town: Dictionary) -> String:
+	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+	return JSON.stringify({
+		"day": _session.day,
+		"town": _active_town_signature(town),
+		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
+		"active_hero_id": String(_session.overworld.get("active_hero_id", "")),
+		"hero": hero.duplicate(true),
+		"army": _duplicate_dictionary(_session.overworld.get("army", {})),
+		"player_heroes": _duplicate_array(_session.overworld.get("player_heroes", [])),
+		"last_message": _last_message,
+		"last_action_recap": _last_action_recap.duplicate(true),
+	})
+
+func _active_town_signature(town: Dictionary) -> Dictionary:
+	return {
+		"placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"owner": String(town.get("owner", "")),
+		"built_buildings": _normalize_string_array(town.get("built_buildings", [])),
+		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
+		"garrison": _duplicate_dictionary(town.get("garrison", {})),
+		"front_state": _duplicate_dictionary(town.get("front_state", {})),
+		"occupation_state": _duplicate_dictionary(town.get("occupation_state", {})),
+		"market_state": _duplicate_dictionary(town.get("market_state", {})),
+		"response_state": _duplicate_dictionary(town.get("response_state", {})),
+	}
+
+func _town_entity_session_cache_key() -> String:
+	if _session == null:
+		return ""
+	return "%s|%s" % [String(_session.session_id), String(_session.scenario_id)]
+
+func _invalidate_active_town_entity_cache(reason: String, scopes: Array = []) -> void:
+	if _session == null:
+		return
+	var placement_id := String(_session.flags.get(OverworldRules.ACTIVE_TOWN_PLACEMENT_KEY, ""))
+	if placement_id == "":
+		var town := TownRules.get_active_town(_session)
+		placement_id = String(town.get("placement_id", "")) if town is Dictionary else ""
+	if placement_id == "":
+		return
+	var session_key := _town_entity_session_cache_key()
+	var bucket: Dictionary = _town_entity_cache_by_session.get(session_key, {}) if _town_entity_cache_by_session.get(session_key, {}) is Dictionary else {}
+	bucket.erase(placement_id)
+	_town_entity_cache_by_session[session_key] = bucket
+	_last_town_entity_cache_result = {
+		"hit": false,
+		"invalidated": true,
+		"reason": reason,
+		"scopes": scopes.duplicate(),
+		"placement_id": placement_id,
+		"entry_count": bucket.size(),
+	}
+
 func _configure_save_slot_picker() -> void:
 	_save_slot_picker.clear()
 	for slot in SaveService.get_manual_slot_ids():
 		_save_slot_picker.add_item("Manual %d" % int(slot), int(slot))
 
-func _refresh_save_slot_picker() -> void:
+func _refresh_save_slot_picker(force_surface: bool = false) -> void:
+	_last_save_surface_profile = {
+		"forced": force_surface,
+		"skipped_hidden": false,
+		"mode": "full" if force_surface else "lazy_hidden",
+	}
 	if _save_slot_picker.get_item_count() <= 0:
 		return
 
-	var surface := AppRouter.active_save_surface()
 	var selected_slot := SaveService.get_selected_manual_slot()
 	for index in range(_save_slot_picker.get_item_count()):
 		if _save_slot_picker.get_item_id(index) == selected_slot:
 			_save_slot_picker.select(index)
 			break
+
+	if not force_surface:
+		_last_save_surface_profile["skipped_hidden"] = true
+		_save_status_label.visible = false
+		_save_status_label.text = ""
+		_save_status_label.tooltip_text = "Save details are refreshed when the save controls are used."
+		_save_slot_picker.tooltip_text = "Manual %d selected. Save details are refreshed when the save controls are used." % selected_slot
+		_save_button.text = "Save Town"
+		_save_button.tooltip_text = "Save the active town visit to the selected manual slot."
+		var lazy_departure := TownRules.town_departure_confirmation(_session)
+		_leave_button.text = String(lazy_departure.get("button_label", "Leave"))
+		_leave_button.tooltip_text = String(lazy_departure.get("tooltip_text", "Return to the overworld without leaving the current expedition."))
+		_menu_button.text = "Return to Menu"
+		_menu_button.tooltip_text = "Return to the main menu after updating autosave."
+		return
+
+	var surface := AppRouter.active_save_surface()
 
 	var summary_value: Variant = surface.get("slot_summary", SaveService.inspect_manual_slot(selected_slot))
 	var summary: Dictionary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
@@ -696,6 +825,31 @@ func validation_action_catalog() -> Dictionary:
 		"hero": _duplicate_action_array(TownRules.get_hero_actions(_session)),
 	}
 
+func validation_force_refresh() -> Dictionary:
+	_refresh()
+	return validation_town_entity_cache_snapshot()
+
+func validation_town_entity_cache_snapshot() -> Dictionary:
+	var town := TownRules.get_active_town(_session)
+	var placement_id := String(town.get("placement_id", "")) if town is Dictionary else ""
+	var session_key := _town_entity_session_cache_key()
+	var bucket: Dictionary = _town_entity_cache_by_session.get(session_key, {}) if _town_entity_cache_by_session.get(session_key, {}) is Dictionary else {}
+	var cached_placements := []
+	for key_value in bucket.keys():
+		cached_placements.append(String(key_value))
+	cached_placements.sort()
+	return {
+		"active_placement_id": placement_id,
+		"session_cache_key": session_key,
+		"cached_placements": cached_placements,
+		"entry_count": bucket.size(),
+		"active_cached": bucket.has(placement_id),
+		"last_cache_result": _last_town_entity_cache_result.duplicate(true),
+		"last_cache_hit": bool(_last_town_entity_cache_result.get("hit", false)),
+		"last_save_surface_profile": _last_save_surface_profile.duplicate(true),
+		"save_surface_skipped_hidden": bool(_last_save_surface_profile.get("skipped_hidden", false)),
+	}
+
 func validation_perform_town_action(action_id: String) -> Dictionary:
 	var action := _validation_action_for_id(action_id)
 	if action.is_empty():
@@ -754,7 +908,7 @@ func validation_select_save_slot(slot: int) -> bool:
 	if not SaveService.get_manual_slot_ids().has(normalized_slot):
 		return false
 	SaveService.set_selected_manual_slot(normalized_slot)
-	_refresh_save_slot_picker()
+	_refresh_save_slot_picker(true)
 	return SaveService.get_selected_manual_slot() == normalized_slot
 
 func validation_save_to_selected_slot() -> Dictionary:
@@ -789,11 +943,11 @@ func validation_leave_town() -> Dictionary:
 func validation_prepare_town_return_handoff() -> Dictionary:
 	return _prepare_town_return_handoff()
 
-func _rebuild_hero_actions() -> void:
+func _rebuild_hero_actions(actions_override: Variant = null) -> void:
 	for child in _hero_actions.get_children():
 		child.queue_free()
 
-	var actions = TownRules.get_hero_actions(_session)
+	var actions = actions_override if actions_override is Array else TownRules.get_hero_actions(_session)
 	if actions.size() <= 1:
 		_hero_actions.add_child(_make_placeholder_label("No alternate commanders in town"))
 		return
@@ -809,11 +963,11 @@ func _rebuild_hero_actions() -> void:
 		button.pressed.connect(_on_hero_action_pressed.bind(String(action.get("id", ""))))
 		_hero_actions.add_child(button)
 
-func _rebuild_build_actions() -> void:
+func _rebuild_build_actions(actions_override: Variant = null) -> void:
 	for child in _build_actions.get_children():
 		child.queue_free()
 
-	var actions = TownRules.get_build_actions(_session)
+	var actions = actions_override if actions_override is Array else TownRules.get_build_actions(_session)
 	if actions.is_empty():
 		_build_actions.add_child(_make_placeholder_label("No construction orders"))
 		return
@@ -829,11 +983,11 @@ func _rebuild_build_actions() -> void:
 		button.pressed.connect(_on_build_action_pressed.bind(String(action.get("id", "")).trim_prefix("build:")))
 		_build_actions.add_child(button)
 
-func _rebuild_market_actions() -> void:
+func _rebuild_market_actions(actions_override: Variant = null) -> void:
 	for child in _market_actions.get_children():
 		child.queue_free()
 
-	var actions = TownRules.get_market_actions(_session)
+	var actions = actions_override if actions_override is Array else TownRules.get_market_actions(_session)
 	if actions.is_empty():
 		_market_actions.add_child(_make_placeholder_label("No exchange orders ready"))
 		return
@@ -849,11 +1003,11 @@ func _rebuild_market_actions() -> void:
 		button.pressed.connect(_on_market_action_pressed.bind(String(action.get("id", ""))))
 		_market_actions.add_child(button)
 
-func _rebuild_recruit_actions() -> void:
+func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 	for child in _recruit_actions.get_children():
 		child.queue_free()
 
-	var actions = TownRules.get_recruit_actions(_session)
+	var actions = actions_override if actions_override is Array else TownRules.get_recruit_actions(_session)
 	if actions.is_empty():
 		_recruit_actions.add_child(_make_placeholder_label("No recruits waiting"))
 		return
@@ -869,11 +1023,11 @@ func _rebuild_recruit_actions() -> void:
 		button.pressed.connect(_on_recruit_action_pressed.bind(String(action.get("id", "")).trim_prefix("recruit:")))
 		_recruit_actions.add_child(button)
 
-func _rebuild_tavern_actions() -> void:
+func _rebuild_tavern_actions(actions_override: Variant = null) -> void:
 	for child in _tavern_actions.get_children():
 		child.queue_free()
 
-	var actions = TownRules.get_tavern_actions(_session)
+	var actions = actions_override if actions_override is Array else TownRules.get_tavern_actions(_session)
 	if actions.is_empty():
 		_tavern_actions.add_child(_make_placeholder_label("No hires are ready"))
 		return
@@ -889,11 +1043,11 @@ func _rebuild_tavern_actions() -> void:
 		button.pressed.connect(_on_tavern_action_pressed.bind(String(action.get("id", ""))))
 		_tavern_actions.add_child(button)
 
-func _rebuild_transfer_actions() -> void:
+func _rebuild_transfer_actions(actions_override: Variant = null) -> void:
 	for child in _transfer_actions.get_children():
 		child.queue_free()
 
-	var actions = TownRules.get_transfer_actions(_session)
+	var actions = actions_override if actions_override is Array else TownRules.get_transfer_actions(_session)
 	if actions.is_empty():
 		_transfer_actions.add_child(_make_placeholder_label("No transfers are ready"))
 		return
@@ -909,11 +1063,11 @@ func _rebuild_transfer_actions() -> void:
 		button.pressed.connect(_on_transfer_action_pressed.bind(String(action.get("id", ""))))
 		_transfer_actions.add_child(button)
 
-func _rebuild_response_actions() -> void:
+func _rebuild_response_actions(actions_override: Variant = null) -> void:
 	for child in _response_actions.get_children():
 		child.queue_free()
 
-	var actions = TownRules.get_response_actions(_session)
+	var actions = actions_override if actions_override is Array else TownRules.get_response_actions(_session)
 	if actions.is_empty():
 		_response_actions.add_child(_make_placeholder_label("No response orders ready"))
 		return
@@ -929,11 +1083,11 @@ func _rebuild_response_actions() -> void:
 		button.pressed.connect(_on_response_action_pressed.bind(String(action.get("id", ""))))
 		_response_actions.add_child(button)
 
-func _rebuild_study_actions() -> void:
+func _rebuild_study_actions(actions_override: Variant = null) -> void:
 	for child in _study_actions.get_children():
 		child.queue_free()
 
-	var actions = TownRules.get_spell_learning_actions(_session)
+	var actions = actions_override if actions_override is Array else TownRules.get_spell_learning_actions(_session)
 	if actions.is_empty():
 		_study_actions.add_child(_make_placeholder_label("No new spells to copy"))
 		return
@@ -949,11 +1103,11 @@ func _rebuild_study_actions() -> void:
 		button.pressed.connect(_on_study_action_pressed.bind(String(action.get("id", "")).trim_prefix("learn_spell:")))
 		_study_actions.add_child(button)
 
-func _rebuild_artifact_actions() -> void:
+func _rebuild_artifact_actions(actions_override: Variant = null) -> void:
 	for child in _artifact_actions.get_children():
 		child.queue_free()
 
-	var actions = TownRules.get_artifact_actions(_session)
+	var actions = actions_override if actions_override is Array else TownRules.get_artifact_actions(_session)
 	if actions.is_empty():
 		_artifact_actions.add_child(_make_placeholder_label("No artifact orders"))
 		return
@@ -969,11 +1123,11 @@ func _rebuild_artifact_actions() -> void:
 		button.pressed.connect(_on_artifact_action_pressed.bind(String(action.get("id", ""))))
 		_artifact_actions.add_child(button)
 
-func _rebuild_specialty_actions() -> void:
+func _rebuild_specialty_actions(actions_override: Variant = null) -> void:
 	for child in _specialty_actions.get_children():
 		child.queue_free()
 
-	var actions = TownRules.get_specialty_actions(_session)
+	var actions = actions_override if actions_override is Array else TownRules.get_specialty_actions(_session)
 	if actions.is_empty():
 		_specialty_actions.add_child(_make_placeholder_label("No specialty choice waiting"))
 		return
@@ -2163,6 +2317,11 @@ func _town_profile_metadata(first_render: bool) -> Dictionary:
 		"town_placement_id": String(town.get("placement_id", "")) if town is Dictionary else "",
 		"town_id": String(town.get("town_id", "")) if town is Dictionary else "",
 		"town_owner": String(town.get("owner", "")) if town is Dictionary else "",
+		"town_entity_cache": _last_town_entity_cache_result.duplicate(true),
+		"town_entity_cache_hit": bool(_last_town_entity_cache_result.get("hit", false)),
+		"town_entity_cache_placement_id": String(_last_town_entity_cache_result.get("placement_id", "")),
+		"save_surface": _last_save_surface_profile.duplicate(true),
+		"save_surface_skipped_hidden": bool(_last_save_surface_profile.get("skipped_hidden", false)),
 	}
 
 func _handle_session_resolution() -> bool:
@@ -2273,7 +2432,7 @@ func _town_action_context_surface(dispatch_text: String = "") -> Dictionary:
 		visible,
 		_short_text(_strip_sentence(next_step).trim_suffix("."), 36),
 	]
-	var save_surface := AppRouter.active_save_surface()
+	var save_surface := _town_save_surface_for_context(false)
 	var save_lines := []
 	var save_check := String(save_surface.get("save_check", "")).strip_edges()
 	var save_recap := String(save_surface.get("current_save_recap", "")).strip_edges()
@@ -2301,6 +2460,13 @@ func _town_action_context_surface(dispatch_text: String = "") -> Dictionary:
 		"handoff_check": handoff_check,
 		"source": "town_action_recap",
 	}
+
+func _town_save_surface_for_context(force_surface: bool) -> Dictionary:
+	if force_surface:
+		_last_save_surface_profile = {"forced": true, "skipped_hidden": false, "mode": "context_full"}
+		return AppRouter.active_save_surface()
+	_last_save_surface_profile = {"forced": false, "skipped_hidden": true, "mode": "context_lazy_hidden"}
+	return {}
 
 func _prepare_town_return_handoff() -> Dictionary:
 	var town := TownRules.get_active_town(_session)

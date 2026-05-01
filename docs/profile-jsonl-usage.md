@@ -48,6 +48,13 @@ Important fields:
 
 Records are evidence only. They do not change save schema, routing contracts, renderer/fog behavior, pathing, generated-map density, or gameplay rules.
 
+Town refresh records include active-town cache evidence when `surface: town` and `phase: refresh` or `entry`:
+
+- `buckets_ms.town_entity_cache_hit` / `buckets_ms.town_entity_cache_miss`: numeric 1/0 indicators for whether the active `placement_id` view-state cache was reused.
+- `buckets_ms.town_entity_cache_entries`: number of cached town entries for the active session.
+- `metadata.town_entity_cache`: cache details, including `placement_id`, hit/miss state, and entry count.
+- `metadata.save_surface_skipped_hidden` and `buckets_ms.save_surface_skipped_hidden`: true/1 when ordinary town refresh skipped expensive save-surface construction because save controls were not actively being used.
+
 ## Analyze
 
 General log:

@@ -34,6 +34,8 @@ Current broad instrumentation follow-up: expand opt-in JSONL profiling through `
 
 Selected follow-up after AcOrP's current-version profile and the real DISPLAY=:99 Large 108x108 rendered-client profile: `overworld-incremental-route-preview-refresh-10184` now includes the destination-only route preview/action cache, cached selected-route execution, and simple open/current route UI hot-path follow-up. It preserves the full refresh and safe movement fallback paths while proving normal selected-route preview/confirmation avoid broad context/hero/action surfaces, broad map/topology/object/session recap signatures, full route-wide movement revalidation, open-tile movement finalization/recap work, and rich route decision/brief/handoff/commit-check construction for simple open/current route surfaces. The detailed implementation boundary is tracked in `docs/overworld-refresh-input-pipeline-plan.md`.
 
+Selected town performance follow-up after the full-flow profile at `.artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.jsonl` and the architecture audit at `.artifacts/audits/20260501_game_state_architecture_audit.md`: `town-entity-cache-active-refresh-10184` introduces the first per-town entity/view cache keyed by `placement_id`, active-town-only refresh reuse, runtime active-town index handoff, lazy town save-surface refresh, and JSONL evidence fields for cache hit/miss and save-surface skip behavior. It must preserve gameplay semantics, save schema, generated map content/density, renderer/fog, object contracts, and F3/profile-log compatibility.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "broad-json-profile-instrumentation-10184",
-  "currentSliceTitle": "Broad JSON Profile Instrumentation",
+  "currentSliceId": "town-entity-cache-active-refresh-10184",
+  "currentSliceTitle": "Town Entity Cache Active Refresh",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Opt-in general JSONL profiling now covers boot/menu/generated setup/router transitions/save/end-turn/town/battle while preserving the legacy overworld profile log; usage documented in docs/profile-jsonl-usage.md.",
-  "nextActionGuardrailNote": "Use broad JSONL evidence before selecting any performance fix; preserve gameplay semantics, pathing, generated map density/content, renderer/fog behavior, save schema, object contracts, F3 overlay/profile behavior, and avoid same-thread deferred work labeled as async.",
-  "updatedAt": "2026-05-01T14:48:05Z",
+  "currentSliceNotes": "First per-town placement_id cache, active-town-only refresh reuse, runtime active-town index handoff, lazy hidden save-surface behavior, profile fields, docs, and focused regression are implemented and validated.",
+  "nextActionGuardrailNote": "Preserve gameplay semantics, save schema, generated map content/density, renderer/fog behavior, object contracts, F3/profile-log compatibility, and avoid same-thread deferred work labeled as async.",
+  "updatedAt": "2026-05-01T15:39:14Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,68 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "town-entity-cache-active-refresh-10184",
+      "title": "Town Entity Cache Active Refresh",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/profile-jsonl-usage.md",
+        ".artifacts/audits/20260501_game_state_architecture_audit.md",
+        ".artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.jsonl",
+        ".artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.summary.txt"
+      ],
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "scripts/core/OverworldRules.gd",
+        "docs/profile-jsonl-usage.md",
+        "tests/town_entity_cache_active_refresh_regression.gd",
+        "tests/town_entity_cache_active_refresh_regression.tscn",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "startedAt": "2026-05-01T15:28:17Z",
+      "completedAt": "2026-05-01T15:39:14Z",
+      "completionCriteria": [
+        "TownShell keeps derived active-town view state in a per-session, per-placement_id cache rather than a whole-session/all-towns cache.",
+        "Ordinary town entry and refresh reuse the active town cache when active town, economy, active hero, army, artifacts, spells, and relevant action-message inputs are unchanged.",
+        "Build, recruit, garrison/transfer, market, hero, artifact, spell, specialty, response, and tavern actions explicitly invalidate only the active town cache entry while broader signatures handle global/economy/hero-dependent changes.",
+        "Town entry and refresh avoid scanning or hashing all towns for active placement lookup after the visit handoff has established the active placement.",
+        "Normal town refresh skips expensive in-session save-surface construction until save UI behavior explicitly needs it.",
+        "Profile JSONL exposes active-town cache hits/misses and save-surface skipped-hidden/inactive evidence.",
+        "Focused regression proves repeated same-town refresh hits the cache, build invalidates only the active town entry, and save surface construction is skipped during ordinary refresh.",
+        "Requested profile, route, town, JSON, and whitespace validations pass."
+      ],
+      "nonGoals": [
+        "Do not rewrite TownRules broadly or extract all town view models in one slice.",
+        "Do not change gameplay rules, save schema, generated map content/density, renderer/fog behavior, object contracts, F3/profile-log behavior, routing semantics, or same-thread deferred work semantics."
+      ],
+      "notes": "Completed first safe active-town cache slice. TownShell now builds a derived active-town view state keyed by placement_id, reuses it for unchanged active-town refreshes, explicitly invalidates the active placement after town actions, and skips expensive save-surface construction during ordinary town refresh.",
+      "completionEvidence": [
+        "TownShell maintains a static per-session cache keyed by active town placement_id and stores derived label text, readiness surfaces, action arrays, event context, and action-button data instead of caching mutable town dictionaries.",
+        "TownShell cache signatures include only the active town state plus resources, active hero, army, player heroes, day, and latest town action recap inputs; no all-town or whole-map signature is built for cache lookup.",
+        "Town action handlers for build, recruit, market, hero, tavern, transfer, response, study, artifact, and specialty explicitly invalidate only the active town cache entry with scoped reason metadata.",
+        "OverworldRules keeps a runtime-only active-town visit index handoff and town_by_placement spatial lookup so TownShell active placement lookup can avoid full all-town scans after set_active_town_visit.",
+        "Ordinary TownShell refresh uses lazy save controls and records save_surface_skipped_hidden instead of calling AppRouter.active_save_surface/build_in_session_save_surface; save press, save slot selection, validation snapshot, and explicit context force paths still build the full save surface.",
+        "General JSONL town profile records expose town_entity_cache_hit, town_entity_cache_miss, town_entity_cache_entries, metadata.town_entity_cache, and save_surface_skipped_hidden.",
+        "docs/profile-jsonl-usage.md documents the new town cache/save-skip profile fields.",
+        "tests/town_entity_cache_active_refresh_regression.gd proves same active-town refresh hits cache, active town entry does not full-scan towns after handoff, ordinary refresh skips save surface construction, switching towns creates separate cache entries, and build invalidates only the active town entry."
+      ],
+      "validationEvidence": [
+        "godot4 --headless --path . res://tests/town_entity_cache_active_refresh_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/profile_log_general_surface_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_interaction_profile_log_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_cached_route_execution_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_route_destination_only_action_regression.tscn passed.",
+        "python3 scripts/analyze_overworld_profile_log.py .artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.jsonl --mode general --slowest 4 --offenders 10 passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ]
+    },
     {
       "id": "overworld-incremental-route-preview-refresh-10184",
       "title": "Overworld Incremental Route Preview Refresh",
