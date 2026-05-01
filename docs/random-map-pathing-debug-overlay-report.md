@@ -12,6 +12,32 @@ Implemented a normal live-overworld debug overlay for route/path command instrum
 - Validation hook: `OverworldShell.validation_set_debug_overlay_enabled(true)`
 - Live availability: the overlay is created by `OverworldShell.gd` in normal scene runs and is hidden by default.
 
+## Persistent Profile Log
+
+AcOrP can capture multi-interaction evidence without screenshots by enabling the opt-in JSONL profile log before launching the game:
+
+```bash
+HEROES_OVERWORLD_PROFILE_LOG=1 godot4 --path .
+```
+
+The log path is `user://debug/overworld_profile.jsonl`; on a normal Linux Godot install this resolves under the app userdata directory, for example `/root/.local/share/godot/app_userdata/heroes-like/debug/overworld_profile.jsonl` in the current validation environment. Upload that single JSONL file after reproducing the slow route/pathing interactions.
+
+Validation hooks on `OverworldShell`:
+
+- `validation_set_overworld_profile_log_enabled(true, true)` enables logging and optionally clears the previous file.
+- `validation_clear_overworld_profile_log()` truncates the log.
+- `validation_overworld_profile_log_path()` returns `user://debug/overworld_profile.jsonl`.
+- `validation_overworld_profile_log_snapshot()` returns enabled state, Godot path, absolute path, and record count.
+- `validation_overworld_profile_log_last_records(limit)` parses the last JSONL records for tests.
+
+Each JSONL line is self-contained and includes timestamp/monotonic time, scenario/session/map/generated metadata, command type, raw/selected targets, hero before/after, total command time, `phase_buckets_ms`, `refresh_sections_ms`, shell route-BFS metrics, route-cache hit/miss and map-view reuse fields, map-view set/path/draw/index timings, movement/route-execution/action-dispatch buckets, save/autosave observation, FPS/frame time, top offenders, measured sum, and `unaccounted_ms`. Logging reuses the same hidden timing capture as the F3 overlay, but it does not show or replace the overlay.
+
+Optional local summary:
+
+```bash
+python3 scripts/analyze_overworld_profile_log.py /path/to/overworld_profile.jsonl
+```
+
 ## Metrics Exposed
 
 - command type, raw target tile, selected route tile, hero before/after

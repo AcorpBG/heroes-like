@@ -28,6 +28,8 @@ Recently completed RMG evidence includes the P2.10 random-map foundation queue, 
 
 Fog-of-war decision: heroes-like uses HoMM-style permanent explored visibility. Unexplored tiles remain hidden; explored tiles remain visible forever for rules and rendering. Routine movement should add newly explored hero/site scout radius tiles instead of rebuilding a transient current-visibility mask.
 
+Current maintenance instrumentation follow-up after route-cache reuse: `overworld-interaction-profile-log-10184` adds an opt-in persistent JSONL log for overworld/pathing interaction timings so long multi-click reports can be uploaded as one file. It must remain instrumentation-only and preserve the F3 overlay, movement/pathing semantics, map generation, renderer/fog behavior, save schema, object contracts, and content density.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:
