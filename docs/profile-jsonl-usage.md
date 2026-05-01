@@ -60,8 +60,9 @@ Router scene-transition records expose autosave behavior for transition fast pat
 
 - `buckets_ms.save_before_transition`: `0` when the ordinary transition did not synchronously write the runtime autosave.
 - `metadata.save_before_transition_skipped`: true when save work was removed from the transition path.
-- `metadata.autosave_deferred_or_skipped_reason`: reason string such as `ordinary_transition_deferred`, `generated_initial_overworld_deferred`, or `forced_save_required_battle`.
-- `metadata.autosave_pending_intent`: true when the session was marked dirty and a later checkpoint/save is expected to preserve the latest route state.
+- `metadata.autosave_deferred_or_skipped_reason`: reason string such as `manual_or_end_turn_only`, `generated_initial_overworld_deferred`, or `forced_save_required_battle`.
+- `metadata.autosave_skipped_reason`: `manual_or_end_turn_only` for ordinary town/overworld transitions, which do not create pending autosave intent.
+- `metadata.autosave_pending_intent`: true only when a route intentionally records a later runtime-save intent, such as the generated opening autosave path.
 
 Runtime save records expose trusted-live autosave normalization behavior:
 

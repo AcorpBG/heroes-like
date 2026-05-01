@@ -36,7 +36,7 @@ Selected follow-up after AcOrP's current-version profile and the real DISPLAY=:9
 
 Selected town performance follow-up after the full-flow profile at `.artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.jsonl` and the architecture audit at `.artifacts/audits/20260501_game_state_architecture_audit.md`: `town-entity-cache-active-refresh-10184` introduces the first per-town entity/view cache keyed by `placement_id`, active-town-only refresh reuse, runtime active-town index handoff, lazy town save-surface refresh, and JSONL evidence fields for cache hit/miss and save-surface skip behavior. It must preserve gameplay semantics, save schema, generated map content/density, renderer/fog, object contracts, and F3/profile-log compatibility.
 
-Current urgent performance follow-up: `town-transition-fast-path-10184` targets ordinary overworld -> town and town -> overworld transitions under 1s on generated Large rendered play by removing mandatory synchronous autosave/restore-normalize/save-surface work from those scene transition paths, while preserving save intent and forced-save fallbacks.
+Current urgent performance follow-up: `town-entity-cache-signature-10184` replaces the active-town entity cache's whole-session JSON signature with compact scalar revision keys so town cache hits/misses do not serialize full hero, player hero, town, army, resource, or recap dictionaries. It uses only the active town, active tab/mode, relevant resource/hero/town scalar summaries, and current action recap/message inputs needed by town surfaces, while preserving the per-town cache semantics from `town-entity-cache-active-refresh-10184`.
 
 ## Slice Status Model
 
@@ -2903,6 +2903,45 @@ completionCriteria:
 
 nonGoals:
 - No save-schema migration, payload split/delta save architecture, broad route rewrite, generated-map density cut, renderer shortcut, town rules rewrite, or battle/outcome autosave removal.
+
+### P2 Child: Town Entity Cache Signature
+
+id: `town-entity-cache-signature-10184`
+parentSliceId: `random-map-final-homm3-parity-regate-audit-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Replace whole-session JSON town entity cache signatures with compact active-town revision keys so cache lookup/build is cheap on generated Large rendered town entry and refresh.
+
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/profile-jsonl-usage.md`
+- `.artifacts/uploaded_profiles/20260501/display99_transition_after_043cbf4_heroes_profile.jsonl`
+- `.artifacts/uploaded_profiles/20260501/display99_transition_after_043cbf4_heroes_profile.summary.txt`
+
+implementationTargets:
+- `scenes/town/TownShell.gd`
+- `scripts/autoload/AppRouter.gd` only if the nearby ordinary-transition autosave policy can be aligned safely
+- `docs/profile-jsonl-usage.md`
+- `tests/town_entity_cache_active_refresh_regression.gd`
+- `tests/town_transition_fast_path_regression.gd` only if autosave policy metadata changes
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- Active-town entity cache signatures are deterministic scalar strings built from placement id, active tab, minimal/full mode, day, owner/town id, built building ids, available recruit/garrison scalar pairs, relevant town state revision summaries, resources tuple, active hero scalar summary, army/spell/artifact/specialty id summaries, and current action recap/message ids.
+- Signature construction does not serialize full session, all towns, player hero lists, full hero dictionaries, whole map data, or full recap dictionaries, and does not scan all towns.
+- Town profile JSONL exposes town_entity_cache sub-buckets for signature and build time so signature cost can be distinguished from view-state construction.
+- Same-town refresh hits, switching towns preserves separate cache entries, active-town build invalidates only the active entry, and hidden save-surface skip behavior remain intact.
+
+completionCriteria:
+- Focused town entity cache regression passes and proves the existing per-town cache semantics still hold.
+- Transition fast-path, general profile, overworld interaction/profile, cached route execution, and route destination-only regressions pass.
+- Analyzer still reads `.artifacts/uploaded_profiles/20260501/display99_transition_after_043cbf4_heroes_profile.jsonl`.
+- `ops/progress.json` remains valid JSON and `git diff --check` passes.
+- No gameplay semantics, save schema, generated-map density/content, renderer/fog behavior, object contracts, F3/profile behavior, same-thread execution semantics, or route/pathing behavior is intentionally changed.
+
+nonGoals:
+- No broad TownRules rewrite, all-town cache, whole-session serialization, save-schema migration, generated-map content/density change, renderer shortcut, pathing change, or battle/outcome save behavior change.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 

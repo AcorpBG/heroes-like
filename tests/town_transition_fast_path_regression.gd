@@ -29,7 +29,7 @@ func _run() -> void:
 		return
 	if not _assert_no_runtime_save_records("go_to_town"):
 		return
-	if not _assert_pending_autosave_intent(session, "go_to_town", "town"):
+	if not _assert_no_pending_autosave_intent(session, "go_to_town"):
 		return
 
 	var overworld_result: Dictionary = AppRouter.validation_prepare_overworld_handoff_without_scene_change()
@@ -37,10 +37,10 @@ func _run() -> void:
 		return
 	if not _assert_no_runtime_save_records("go_to_overworld"):
 		return
-	if not _assert_pending_autosave_intent(session, "go_to_overworld", "overworld"):
+	if not _assert_no_pending_autosave_intent(session, "go_to_overworld"):
 		return
-	if int(session.flags.get("runtime_autosave_pending_count", 0)) < 2:
-		_finish_fail("Transition fast path did not record both pending autosave intents.", session.flags)
+	if int(session.flags.get("runtime_autosave_pending_count", 0)) != 0:
+		_finish_fail("Ordinary town transitions should not record transition autosave intent counts.", session.flags)
 		return
 
 	OS.set_environment("HEROES_PROFILE_LOG", previous_general)
@@ -59,18 +59,27 @@ func _assert_transition_result(result: Dictionary, route: String, expected_state
 	if not bool(result.get("save_before_transition_skipped", false)):
 		_finish_fail("%s did not mark save_before_transition skipped." % route, result)
 		return false
+	if bool(result.get("deferred_autosave", true)):
+		_finish_fail("%s marked an ordinary transition as a deferred autosave." % route, result)
+		return false
 	var intent: Dictionary = result.get("autosave_intent", {}) if result.get("autosave_intent", {}) is Dictionary else {}
-	if not bool(intent.get("autosave_pending_intent", false)):
-		_finish_fail("%s did not record pending autosave intent." % route, result)
+	if bool(intent.get("autosave_pending_intent", false)):
+		_finish_fail("%s recorded a pending autosave intent for an ordinary transition." % route, result)
 		return false
-	if String(intent.get("autosave_deferred_or_skipped_reason", "")) != "ordinary_transition_deferred":
-		_finish_fail("%s used the wrong autosave deferral reason." % route, result)
+	if String(intent.get("autosave_skipped_reason", "")) != "manual_or_end_turn_only":
+		_finish_fail("%s used the wrong autosave skip reason." % route, result)
 		return false
-	if String(intent.get("autosave_pending_route", "")) != route:
-		_finish_fail("%s recorded the wrong pending route." % route, result)
+	if String(intent.get("autosave_deferred_or_skipped_reason", "")) != "manual_or_end_turn_only":
+		_finish_fail("%s used the wrong autosave skip/defer compatibility reason." % route, result)
 		return false
-	if String(intent.get("autosave_pending_game_state", "")) != expected_state:
-		_finish_fail("%s recorded the wrong pending game state." % route, result)
+	if intent.has("autosave_pending_route") or intent.has("autosave_pending_game_state") or intent.has("autosave_pending_count"):
+		_finish_fail("%s exposed pending autosave metadata for a skipped ordinary transition." % route, result)
+		return false
+	if String(intent.get("transition_route", "")) != route:
+		_finish_fail("%s recorded the wrong transition route." % route, result)
+		return false
+	if String(intent.get("transition_game_state", "")) != expected_state:
+		_finish_fail("%s recorded the wrong transition game state." % route, result)
 		return false
 	return true
 
@@ -82,18 +91,14 @@ func _assert_no_runtime_save_records(label: String) -> bool:
 			return false
 	return true
 
-func _assert_pending_autosave_intent(session, route: String, expected_state: String) -> bool:
+func _assert_no_pending_autosave_intent(session, route: String) -> bool:
 	if not bool(session.flags.get("runtime_autosave_dirty", false)):
-		_finish_fail("%s did not mark the session save-dirty." % route, session.flags)
+		return true
+	if bool(session.flags.get("runtime_autosave_pending_intent", false)):
+		_finish_fail("%s kept pending autosave intent for a manual/end-turn-only save policy." % route, session.flags)
 		return false
-	if not bool(session.flags.get("runtime_autosave_pending_intent", false)):
-		_finish_fail("%s did not keep pending autosave intent." % route, session.flags)
-		return false
-	if String(session.flags.get("runtime_autosave_pending_route", "")) != route:
-		_finish_fail("%s recorded the wrong pending route in session flags." % route, session.flags)
-		return false
-	if String(session.flags.get("runtime_autosave_pending_game_state", "")) != expected_state:
-		_finish_fail("%s recorded the wrong pending state in session flags." % route, session.flags)
+	if session.flags.has("runtime_autosave_pending_route") or session.flags.has("runtime_autosave_pending_game_state"):
+		_finish_fail("%s kept transition autosave route/state flags for a skipped ordinary transition." % route, session.flags)
 		return false
 	return true
 
