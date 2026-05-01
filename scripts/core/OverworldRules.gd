@@ -30,6 +30,9 @@ static var _pathing_debug_profile: Dictionary = {
 	"last_blocked_index_rebuild_usec": 0,
 	"last_blocked_index_tile_count": 0,
 	"last_blocked_index_session_id": "",
+	"route_interaction_lookup_count": 0,
+	"route_interaction_spatial_lookup_count": 0,
+	"route_interaction_full_scan_count": 0,
 }
 
 static func _scenario_factory() -> Variant:
@@ -318,6 +321,10 @@ static func validation_pathing_profile_snapshot() -> Dictionary:
 
 static func validation_set_pathing_profile_capture_enabled(enabled: bool) -> void:
 	_pathing_debug_profile["capture_enabled"] = enabled
+	if enabled:
+		_pathing_debug_profile["route_interaction_lookup_count"] = 0
+		_pathing_debug_profile["route_interaction_spatial_lookup_count"] = 0
+		_pathing_debug_profile["route_interaction_full_scan_count"] = 0
 
 static func refresh_fog_of_war(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
@@ -1417,28 +1424,32 @@ static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int
 static func tile_has_route_interaction(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
 	if session == null:
 		return false
-	for town_value in session.overworld.get("towns", []):
-		if not (town_value is Dictionary):
+	var capture_enabled := bool(_pathing_debug_profile.get("capture_enabled", false))
+	if capture_enabled:
+		_pathing_debug_profile["route_interaction_lookup_count"] = int(_pathing_debug_profile.get("route_interaction_lookup_count", 0)) + 1
+		_pathing_debug_profile["route_interaction_spatial_lookup_count"] = int(_pathing_debug_profile.get("route_interaction_spatial_lookup_count", 0)) + 1
+	var tile := Vector2i(x, y)
+	var lookup_index := _spatial_lookup_index(session)
+	var towns = session.overworld.get("towns", [])
+	var town_by_tile: Dictionary = lookup_index.get("town_by_tile", {}) if lookup_index.get("town_by_tile", {}) is Dictionary else {}
+	var town_index := int(town_by_tile.get(_tile_key(tile), -1))
+	if towns is Array and town_index >= 0 and town_index < towns.size() and towns[town_index] is Dictionary:
+		return true
+	var resource_nodes = session.overworld.get("resource_nodes", [])
+	for node_index in _spatial_lookup_entries(lookup_index, "resource_by_interaction_tile", tile):
+		var index := int(node_index)
+		var node = resource_nodes[index] if resource_nodes is Array and index >= 0 and index < resource_nodes.size() else {}
+		if not (node is Dictionary):
 			continue
-		var town: Dictionary = town_value
-		if int(town.get("x", -1)) == x and int(town.get("y", -1)) == y:
-			return true
-	for node_value in session.overworld.get("resource_nodes", []):
-		if not (node_value is Dictionary):
-			continue
-		var node: Dictionary = node_value
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if not bool(site.get("persistent_control", false)) and bool(node.get("collected", false)):
 			continue
-		if _resource_node_matches_interaction_tile(node, Vector2i(x, y)):
-			return true
-	for node_value in session.overworld.get("artifact_nodes", []):
-		if not (node_value is Dictionary):
-			continue
-		var node: Dictionary = node_value
-		if bool(node.get("collected", false)):
-			continue
-		if int(node.get("x", -1)) == x and int(node.get("y", -1)) == y:
+		return true
+	var artifact_nodes = session.overworld.get("artifact_nodes", [])
+	for node_index in _spatial_lookup_entries(lookup_index, "artifact_by_tile", tile):
+		var index := int(node_index)
+		var node = artifact_nodes[index] if artifact_nodes is Array and index >= 0 and index < artifact_nodes.size() else {}
+		if node is Dictionary and not bool(node.get("collected", false)):
 			return true
 	for encounter_value in session.overworld.get("encounters", []):
 		if not (encounter_value is Dictionary):
@@ -3070,7 +3081,7 @@ static func describe_route_interception_surface(
 	route_steps: int = 0,
 	include_global_fallback: bool = true
 ) -> Dictionary:
-	normalize_overworld_state(session)
+	normalize_overworld_state_for_runtime(session)
 	if session == null:
 		return _route_interception_empty_surface()
 	if destination_x >= 0 and destination_y >= 0:
@@ -4038,18 +4049,18 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 	return actions
 
 static func get_artifact_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	normalize_overworld_state(session)
+	normalize_overworld_state_for_runtime(session)
 	return ArtifactRulesScript.get_management_actions(session.overworld.get("hero", {}))
 
 static func get_spell_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	normalize_overworld_state(session)
+	normalize_overworld_state_for_runtime(session)
 	return SpellRulesScript.get_overworld_actions(
 		session.overworld.get("hero", {}),
 		session.overworld.get("movement", {})
 	)
 
 static func get_hero_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	normalize_overworld_state(session)
+	normalize_overworld_state_for_runtime(session)
 	return HeroCommandRulesScript.get_overworld_switch_actions(session)
 
 static func switch_active_hero(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
@@ -4060,7 +4071,7 @@ static func switch_active_hero(session: SessionStateStoreScript.SessionData, her
 	return _finalize_action_result(session, true, String(result.get("message", "")))
 
 static func get_specialty_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	normalize_overworld_state(session)
+	normalize_overworld_state_for_runtime(session)
 	return HeroProgressionRulesScript.get_choice_actions(session.overworld.get("hero", {}))
 
 static func choose_specialty(session: SessionStateStoreScript.SessionData, specialty_id: String) -> Dictionary:

@@ -3700,17 +3700,23 @@ func _selected_route_session_signature() -> String:
 	return "session:%s" % "|".join(identity)
 
 func _selected_route_map_signature() -> String:
+	if _refresh_cache.has("selected_route_map_signature"):
+		return String(_refresh_cache["selected_route_map_signature"])
 	var signature := int(2166136261)
 	signature = int(((signature * 16777619) + _map_size.x + 1013904223) & 0x7fffffff)
 	signature = int(((signature * 16777619) + _map_size.y + 1013904223) & 0x7fffffff)
 	signature = int(((signature * 16777619) + _map_data.size() + 1013904223) & 0x7fffffff)
 	for row in _map_data:
 		signature = int(((signature * 16777619) + hash(var_to_str(row)) + 1013904223) & 0x7fffffff)
-	return "map:%d" % signature
+	var result := "map:%d" % signature
+	_refresh_cache["selected_route_map_signature"] = result
+	return result
 
 func _selected_route_topology_signature() -> String:
 	if _session == null:
 		return "topology:null"
+	if _refresh_cache.has("selected_route_topology_signature"):
+		return String(_refresh_cache["selected_route_topology_signature"])
 	var overworld := _session.overworld
 	var signature := int(2166136261)
 	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("towns", []), ["placement_id", "town_id", "owner"]))
@@ -3718,7 +3724,9 @@ func _selected_route_topology_signature() -> String:
 	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("artifact_nodes", []), ["placement_id", "artifact_id", "collected"]))
 	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("encounters", []), ["placement_id", "encounter_id", "spawned_by_faction_id"]))
 	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("resolved_encounters", []), ["placement_id", "encounter_id", "id"]))
-	return "topology:%d" % signature
+	var result := "topology:%d" % signature
+	_refresh_cache["selected_route_topology_signature"] = result
+	return result
 
 func _route_array_signature(values: Variant, fields: Array) -> int:
 	if not (values is Array):

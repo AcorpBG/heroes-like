@@ -57,6 +57,16 @@ func _run() -> void:
 	if OverworldRules.hero_position(session) != target:
 		_fail("Profile logging or F3 overlay changed movement behavior.", {"hero": _tile_payload(OverworldRules.hero_position(session)), "target": _tile_payload(target)})
 		return
+	var pathing_profile: Dictionary = OverworldRules.validation_pathing_profile_snapshot()
+	if int(pathing_profile.get("route_interaction_lookup_count", 0)) <= 0:
+		_fail("Route movement validation did not exercise route-interaction checks.", pathing_profile)
+		return
+	if int(pathing_profile.get("route_interaction_full_scan_count", 0)) != 0:
+		_fail("Route movement validation fell back to whole-map route-interaction scans.", pathing_profile)
+		return
+	if int(pathing_profile.get("route_interaction_spatial_lookup_count", 0)) != int(pathing_profile.get("route_interaction_lookup_count", 0)):
+		_fail("Route movement validation did not keep route-interaction checks on the spatial lookup path.", pathing_profile)
+		return
 
 	records = shell.call("validation_overworld_profile_log_last_records", 5)
 	if records.size() != 2:
