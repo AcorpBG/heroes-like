@@ -288,9 +288,15 @@ func _assert_resource_descriptor_profile_record(record: Dictionary) -> bool:
 	if String(descriptor.get("kind", "")) != "resource" or String(descriptor.get("lookup_mode", "")) == "":
 		_fail("Resource confirmation JSONL did not expose descriptor lookup details.", record)
 		return false
+	if String(descriptor.get("lookup_mode", "")) != "placement_index":
+		_fail("Resource confirmation did not use the shared placement descriptor index.", record)
+		return false
 	var scenario_eval: Dictionary = movement_rules.get("scenario_eval", {}) if movement_rules.get("scenario_eval", {}) is Dictionary else {}
-	if String(scenario_eval.get("dependency_mode", "")) != "full" or not scenario_eval.has("objective_count") or not scenario_eval.has("hook_count"):
+	if String(scenario_eval.get("dependency_mode", "")) != "event_gated_skip" or not scenario_eval.has("objective_count") or not scenario_eval.has("hook_count"):
 		_fail("Resource confirmation JSONL did not expose scenario evaluation summary.", record)
+		return false
+	if int(scenario_eval.get("objectives_skipped", 0)) <= 0 or String(scenario_eval.get("fallback_reason", "")) != "":
+		_fail("Resource confirmation did not event-gate unrelated scenario objectives.", record)
 		return false
 	var recap_profile: Dictionary = movement_rules.get("post_action_recap", {}) if movement_rules.get("post_action_recap", {}) is Dictionary else {}
 	if String(recap_profile.get("mode", "")) != "compact":
@@ -316,6 +322,13 @@ func _assert_resource_descriptor_profile_record(record: Dictionary) -> bool:
 	var blocked_index: Dictionary = movement_rules.get("blocked_index", {}) if movement_rules.get("blocked_index", {}) is Dictionary else {}
 	if not blocked_index.has("rebuilt") or not blocked_index.has("tile_count"):
 		_fail("Resource confirmation JSONL did not expose blocked-index details.", record)
+		return false
+	if bool(blocked_index.get("rebuilt", true)) or String(blocked_index.get("mode", "")) != "skipped":
+		_fail("Resource confirmation should skip blocked-index rebuild when topology is unchanged.", record)
+		return false
+	var interactable: Dictionary = movement_rules.get("interactable", {}) if movement_rules.get("interactable", {}) is Dictionary else {}
+	if String(interactable.get("family", "")) != "resource_site" or bool(interactable.get("blocks_changed", true)) or bool(interactable.get("body_tiles_changed", true)):
+		_fail("Resource confirmation did not expose shared interactable topology facts.", record)
 		return false
 	var rules_profile: Dictionary = record.get("rules_profile", {}) if record.get("rules_profile", {}) is Dictionary else {}
 	if not (rules_profile.get("sub_buckets_ms", {}) is Dictionary):

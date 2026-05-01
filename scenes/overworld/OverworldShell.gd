@@ -654,6 +654,7 @@ func _move_toward_selected_tile() -> void:
 			"post_action_recap": route_execution.get("post_action_recap", {}) if route_execution.get("post_action_recap", {}) is Dictionary else {},
 			"fog": route_execution.get("fog", {}) if route_execution.get("fog", {}) is Dictionary else {},
 			"blocked_index": route_execution.get("blocked_index", {}) if route_execution.get("blocked_index", {}) is Dictionary else {},
+			"interactable": route_execution.get("interactable", {}) if route_execution.get("interactable", {}) is Dictionary else {},
 		}
 	)
 	_adopt_selected_route_after_execution(route, result)
@@ -6091,6 +6092,7 @@ func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
 	var movement_post_action_recap: Dictionary = movement_rules.get("post_action_recap", {}) if movement_rules.get("post_action_recap", {}) is Dictionary else {}
 	var movement_fog: Dictionary = movement_rules.get("fog", {}) if movement_rules.get("fog", {}) is Dictionary else {}
 	var movement_blocked_index: Dictionary = movement_rules.get("blocked_index", {}) if movement_rules.get("blocked_index", {}) is Dictionary else {}
+	var movement_interactable: Dictionary = movement_rules.get("interactable", {}) if movement_rules.get("interactable", {}) is Dictionary else {}
 	var rules_profile := {
 		"sub_buckets_ms": movement_sub_buckets.duplicate(true),
 		"rule_counts": movement_rule_counts.duplicate(true),
@@ -6099,6 +6101,7 @@ func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
 		"post_action_recap": movement_post_action_recap.duplicate(true),
 		"fog": movement_fog.duplicate(true),
 		"blocked_index": movement_blocked_index.duplicate(true),
+		"interactable": movement_interactable.duplicate(true),
 	}
 	var route_execution_lookup := {}
 	if profile.get("last_cmd_route_execution_lookup", {}) is Dictionary:
@@ -6186,6 +6189,7 @@ func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
 			"post_action_recap": movement_post_action_recap.duplicate(true),
 			"fog": movement_fog.duplicate(true),
 			"blocked_index": movement_blocked_index.duplicate(true),
+			"interactable": movement_interactable.duplicate(true),
 		},
 		"rules_profile": rules_profile,
 		"route_execution": {

@@ -56,6 +56,7 @@ static func _rules_profile_begin() -> void:
 		"post_action_recap": {},
 		"fog": {},
 		"blocked_index": {},
+		"interactable": {},
 	}
 
 static func _rules_profile_finish() -> Dictionary:
@@ -144,6 +145,9 @@ static func _normalize_active_town_visit_context(session: SessionStateStoreScrip
 
 static func _evaluate_scenario_state(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	return _scenario_rules().evaluate_session(session)
+
+static func _evaluate_scenario_state_for_event(session: SessionStateStoreScript.SessionData, event_facts: Dictionary) -> Dictionary:
+	return _scenario_rules().evaluate_session_for_event(session, event_facts)
 
 static func _scenario_opening_objective_summary(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
 	return _scenario_rules()._opening_objective_summary(session, scenario)
@@ -682,6 +686,9 @@ static func execute_prevalidated_route(
 	_rules_profile_add_ms("execute_prevalidated_total_ms", execute_started_usec)
 	var rules_profile := _rules_profile_finish()
 	if not rules_profile.is_empty():
+		var scenario_profile: Dictionary = rules_profile.get("scenario_eval", {}) if rules_profile.get("scenario_eval", {}) is Dictionary else {}
+		if String(scenario_profile.get("dependency_mode", "")) == "event_gated_skip":
+			route_execution["scenario_eval_skipped"] = true
 		route_execution["sub_buckets_ms"] = rules_profile.get("sub_buckets_ms", {})
 		route_execution["rule_counts"] = rules_profile.get("rule_counts", {})
 		route_execution["descriptor"] = rules_profile.get("descriptor", {})
@@ -689,6 +696,7 @@ static func execute_prevalidated_route(
 		route_execution["post_action_recap"] = rules_profile.get("post_action_recap", {})
 		route_execution["fog"] = rules_profile.get("fog", {})
 		route_execution["blocked_index"] = rules_profile.get("blocked_index", {})
+		route_execution["interactable"] = rules_profile.get("interactable", {})
 	result["route_execution"] = route_execution
 	result["route_validation_mode"] = "cached_prevalidated"
 	return result
@@ -824,6 +832,8 @@ static func _collect_resource_node_result(
 
 	var mutate_started_usec := _rules_profile_timer()
 	var nodes = session.overworld.get("resource_nodes", [])
+	var before_node: Dictionary = node.duplicate(true)
+	var map_object := _map_object_for_resource_node(before_node)
 	var previous_controller := String(node.get("collected_by_faction_id", ""))
 	node["collected"] = true
 	node["collected_by_faction_id"] = "player"
@@ -833,7 +843,8 @@ static func _collect_resource_node_result(
 	session.overworld["resource_nodes"] = nodes
 	_rules_profile_add_ms("resource_mutate_node_ms", mutate_started_usec)
 	var blocked_started_usec := _rules_profile_timer()
-	_refresh_blocked_tile_index(session)
+	var topology_facts := _resource_topology_facts(before_node, node, map_object)
+	_refresh_blocked_tile_index_for_interaction(session, topology_facts)
 	_rules_profile_add_ms("resource_blocked_index_refresh_ms", blocked_started_usec)
 
 	var reward_started_usec := _rules_profile_timer()
@@ -869,9 +880,11 @@ static func _collect_resource_node_result(
 		messages.append(disruption_message)
 	messages.append_array(_award_experience(session, int(rewards.get("experience", 0))))
 	_rules_profile_add_ms("resource_recruits_spells_xp_ms", recruits_spells_xp_started_usec)
-	var result := _finalize_action_result(session, true, " ".join(messages), refresh_fog_after_action)
+	var mutation_facts := _resource_interaction_event_facts(node, site, previous_controller, rewards, visit_cost, topology_facts)
+	var result := _finalize_action_result(session, true, " ".join(messages), refresh_fog_after_action, false, mutation_facts)
 	if not refresh_fog_after_action:
 		result["descriptor_route_fog_reused"] = true
+	result["interaction_result"] = _interactable_result_payload("resource_site", node, mutation_facts, topology_facts)
 	var recapped := _attach_post_action_recap(
 		result,
 		session,
@@ -883,6 +896,7 @@ static func _collect_resource_node_result(
 			"y": int(node.get("y", 0)),
 			"previous_controller": previous_controller,
 			"rewards": rewards,
+			"mutation_facts": mutation_facts,
 		}
 	)
 	_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
@@ -923,18 +937,23 @@ static func _collect_artifact_node_result(
 	node["collected_day"] = session.day
 	nodes[int(node_result.get("index", -1))] = node
 	session.overworld["artifact_nodes"] = nodes
+	_profile_blocked_index_not_applicable(session, "artifact_collection_does_not_use_blocked_index")
 
-	var result := _finalize_action_result(session, true, String(pickup_result.get("message", "Recovered artifact.")), refresh_fog_after_action)
+	var mutation_facts := _artifact_interaction_event_facts(node)
+	var result := _finalize_action_result(session, true, String(pickup_result.get("message", "Recovered artifact.")), refresh_fog_after_action, false, mutation_facts)
 	if not refresh_fog_after_action:
 		result["descriptor_route_fog_reused"] = true
+	result["interaction_result"] = _interactable_result_payload("artifact", node, mutation_facts, {"contract_known": true, "blocks_changed": false, "body_tiles_changed": false})
 	var recapped := _attach_post_action_recap(
 		result,
 		session,
 		"artifact",
 		{
+			"placement_id": String(node.get("placement_id", "")),
 			"artifact_id": String(node.get("artifact_id", "")),
 			"x": int(node.get("x", 0)),
 			"y": int(node.get("y", 0)),
+			"mutation_facts": mutation_facts,
 		}
 	)
 	_rules_profile_add_ms("artifact_collect_total_ms", collect_started_usec)
@@ -1066,14 +1085,36 @@ static func _resolve_destination_descriptor_interaction(
 			if battle_payload.is_empty():
 				return {"ok": false, "message": "The enemy blocks the lane, but battle setup failed.", "route": ""}
 			session.battle = battle_payload
-			return {"ok": true, "message": describe_encounter_battle_cue(session, encounter), "route": "battle", "scenario_status": session.scenario_status}
+			_profile_blocked_index_not_applicable(session, "encounter_handoff_does_not_refresh_blocked_index")
+			var encounter_facts := _encounter_handoff_event_facts(encounter)
+			_profile_scenario_event_evaluation(session, encounter_facts)
+			return {
+				"ok": true,
+				"message": describe_encounter_battle_cue(session, encounter),
+				"route": "battle",
+				"scenario_status": session.scenario_status,
+				"interaction_result": _interactable_result_payload("encounter", encounter, encounter_facts, {"blocks_changed": false, "body_tiles_changed": false}),
+			}
 		"town":
+			var town_lookup_started_usec := _rules_profile_timer()
 			var town_result := _find_town_by_placement(session, String(descriptor.get("placement_id", "")))
+			_rules_profile_add_ms("descriptor_lookup_ms", town_lookup_started_usec)
+			_rules_profile_set("descriptor", "lookup_collection_size", _collection_size(session.overworld.get("towns", [])))
+			_rules_profile_set("descriptor", "lookup_mode", "placement_index_or_active_visit")
 			var town: Dictionary = town_result.get("town", {}) if town_result.get("town", {}) is Dictionary else {}
 			if int(town_result.get("index", -1)) < 0 or town.is_empty():
 				return {"ok": true, "message": "", "route": ""}
+			_profile_blocked_index_not_applicable(session, "town_visit_does_not_refresh_blocked_index")
+			var town_facts := _town_visit_event_facts(town)
+			_profile_scenario_event_evaluation(session, town_facts)
 			if String(town.get("owner", "neutral")) == "player":
-				return {"ok": true, "message": "%s opens its gates." % _town_name(town), "route": "town", "scenario_status": session.scenario_status}
+				return {
+					"ok": true,
+					"message": "%s opens its gates." % _town_name(town),
+					"route": "town",
+					"scenario_status": session.scenario_status,
+					"interaction_result": _interactable_result_payload("town", town, town_facts, {"blocks_changed": false, "body_tiles_changed": false}),
+				}
 			return {
 				"ok": true,
 				"message": "%s remains under %s control." % [
@@ -1082,6 +1123,7 @@ static func _resolve_destination_descriptor_interaction(
 				],
 				"route": "",
 				"scenario_status": session.scenario_status,
+				"interaction_result": _interactable_result_payload("town", town, town_facts, {"blocks_changed": false, "body_tiles_changed": false}),
 			}
 		_:
 			return {"ok": true, "message": "", "route": ""}
@@ -1112,7 +1154,15 @@ static func capture_active_town(session: SessionStateStoreScript.SessionData) ->
 	if String(town.get("owner", "neutral")) == "enemy" and _town_requires_assault(town):
 		return _begin_town_assault(session, town)
 
-	var result := _finalize_action_result(session, true, capture_town_by_placement(session, String(town.get("placement_id", ""))))
+	var previous_owner := String(town.get("owner", "neutral"))
+	var placement_id := String(town.get("placement_id", ""))
+	var capture_message := capture_town_by_placement(session, placement_id)
+	var captured_town_result := _find_town_by_placement(session, placement_id)
+	var captured_town: Dictionary = captured_town_result.get("town", town) if captured_town_result.get("town", town) is Dictionary else town
+	var town_facts := _town_capture_event_facts(captured_town, previous_owner, String(captured_town.get("owner", "neutral")))
+	_profile_blocked_index_not_applicable(session, "town_capture_does_not_refresh_blocked_index")
+	var result := _finalize_action_result(session, true, capture_message, true, false, town_facts)
+	result["interaction_result"] = _interactable_result_payload("town_capture", captured_town, town_facts, {"blocks_changed": false, "body_tiles_changed": false})
 	return _attach_post_action_recap(
 		result,
 		session,
@@ -1770,6 +1820,183 @@ static func _refresh_blocked_tile_index(session: SessionStateStoreScript.Session
 	_pathing_debug_profile["last_blocked_index_tile_count"] = index.size()
 	_pathing_debug_profile["last_blocked_index_session_id"] = str(session.session_id)
 
+static func _refresh_blocked_tile_index_for_interaction(session: SessionStateStoreScript.SessionData, topology_facts: Dictionary) -> void:
+	if session == null:
+		return
+	var session_id := str(session.session_id)
+	var blocks_changed := bool(topology_facts.get("blocks_changed", true))
+	var body_tiles_changed := bool(topology_facts.get("body_tiles_changed", true))
+	var contract_known := bool(topology_facts.get("contract_known", false))
+	if contract_known and not blocks_changed and not body_tiles_changed and _blocked_tile_indexes.has(session_id):
+		var index: Dictionary = _blocked_tile_indexes.get(session_id, {})
+		_rules_profile_set("blocked_index", "rebuilt", false)
+		_rules_profile_set("blocked_index", "mode", "skipped")
+		_rules_profile_set("blocked_index", "reason", "topology_unchanged")
+		_rules_profile_set("blocked_index", "blocks_changed", false)
+		_rules_profile_set("blocked_index", "body_tiles_changed", false)
+		_rules_profile_set("blocked_index", "tile_count", index.size())
+		return
+	_rules_profile_set("blocked_index", "mode", "full")
+	_rules_profile_set("blocked_index", "reason", String(topology_facts.get("fallback_reason", "topology_changed_or_unknown")))
+	_rules_profile_set("blocked_index", "blocks_changed", blocks_changed)
+	_rules_profile_set("blocked_index", "body_tiles_changed", body_tiles_changed)
+	_refresh_blocked_tile_index(session)
+
+static func _profile_blocked_index_not_applicable(session: SessionStateStoreScript.SessionData, reason: String) -> void:
+	var session_index_size := 0
+	if session != null:
+		var index: Dictionary = _blocked_tile_indexes.get(str(session.session_id), {}) if _blocked_tile_indexes.get(str(session.session_id), {}) is Dictionary else {}
+		session_index_size = index.size()
+	_rules_profile_set("blocked_index", "rebuilt", false)
+	_rules_profile_set("blocked_index", "mode", "not_applicable")
+	_rules_profile_set("blocked_index", "reason", reason)
+	_rules_profile_set("blocked_index", "blocks_changed", false)
+	_rules_profile_set("blocked_index", "body_tiles_changed", false)
+	_rules_profile_set("blocked_index", "tile_count", session_index_size)
+
+static func _resource_topology_facts(before_node: Dictionary, after_node: Dictionary, map_object: Dictionary) -> Dictionary:
+	if map_object.is_empty() and not _resource_node_has_runtime_object_contract(after_node):
+		return {
+			"contract_known": false,
+			"blocks_changed": true,
+			"body_tiles_changed": true,
+			"fallback_reason": "unknown_resource_object_contract",
+		}
+	var before_blocks := _resource_node_blocks_body_tiles(before_node, map_object)
+	var after_blocks := _resource_node_blocks_body_tiles(after_node, map_object)
+	var before_tiles := _tile_key_array(_map_object_world_body_tiles(map_object, before_node))
+	var after_tiles := _tile_key_array(_map_object_world_body_tiles(map_object, after_node))
+	return {
+		"contract_known": true,
+		"blocks_changed": before_blocks != after_blocks,
+		"body_tiles_changed": before_tiles != after_tiles,
+		"fallback_reason": "topology_changed",
+		"before_body_tile_count": before_tiles.size(),
+		"after_body_tile_count": after_tiles.size(),
+	}
+
+static func _tile_key_array(tiles: Array) -> Array:
+	var keys := []
+	for tile in tiles:
+		if tile is Vector2i:
+			keys.append(_tile_key(tile))
+	keys.sort()
+	return keys
+
+static func _resource_interaction_event_facts(
+	node: Dictionary,
+	site: Dictionary,
+	previous_controller: String,
+	rewards: Dictionary,
+	visit_cost: Dictionary,
+	topology_facts: Dictionary
+) -> Dictionary:
+	var changed_resources := []
+	for resource_id in rewards.keys():
+		if int(rewards.get(resource_id, 0)) != 0:
+			changed_resources.append(String(resource_id))
+	for resource_id in visit_cost.keys():
+		if int(visit_cost.get(resource_id, 0)) != 0 and String(resource_id) not in changed_resources:
+			changed_resources.append(String(resource_id))
+	var placement_id := String(node.get("placement_id", ""))
+	var control_changed := previous_controller != String(node.get("collected_by_faction_id", ""))
+	var facts := {
+		"event_type": "interactable_resolved",
+		"family": "resource_site",
+		"placement_id": placement_id,
+		"resource_site_placement_ids": [placement_id] if placement_id != "" else [],
+		"resources": changed_resources,
+		"changed_resources": changed_resources,
+		"control_changed": control_changed,
+		"previous_controller": previous_controller,
+		"new_controller": String(node.get("collected_by_faction_id", "")),
+		"blocks_changed": bool(topology_facts.get("blocks_changed", true)),
+		"body_tiles_changed": bool(topology_facts.get("body_tiles_changed", true)),
+		"contract_known": bool(topology_facts.get("contract_known", false)),
+	}
+	var learned_spell_id := String(site.get("learn_spell_id", ""))
+	if learned_spell_id != "":
+		facts["spell_ids"] = [learned_spell_id]
+	return facts
+
+static func _artifact_interaction_event_facts(node: Dictionary) -> Dictionary:
+	var placement_id := String(node.get("placement_id", ""))
+	var artifact_id := String(node.get("artifact_id", ""))
+	return {
+		"event_type": "interactable_resolved",
+		"family": "artifact",
+		"placement_id": placement_id,
+		"artifact_ids": [artifact_id] if artifact_id != "" else [],
+		"blocks_changed": false,
+		"body_tiles_changed": false,
+		"contract_known": true,
+	}
+
+static func _encounter_handoff_event_facts(encounter: Dictionary) -> Dictionary:
+	var placement_id := String(encounter.get("placement_id", encounter.get("id", "")))
+	return {
+		"event_type": "battle_handoff",
+		"family": "encounter",
+		"placement_id": placement_id,
+		"encounter_handoff_placement_ids": [placement_id] if placement_id != "" else [],
+		"blocks_changed": false,
+		"body_tiles_changed": false,
+		"contract_known": true,
+	}
+
+static func _town_visit_event_facts(town: Dictionary) -> Dictionary:
+	var placement_id := String(town.get("placement_id", ""))
+	return {
+		"event_type": "town_visit",
+		"family": "town",
+		"placement_id": placement_id,
+		"town_visit_placement_ids": [placement_id] if placement_id != "" else [],
+		"blocks_changed": false,
+		"body_tiles_changed": false,
+		"contract_known": true,
+	}
+
+static func _town_capture_event_facts(town: Dictionary, previous_owner: String, new_owner: String) -> Dictionary:
+	var placement_id := String(town.get("placement_id", ""))
+	var town_id := String(town.get("town_id", ""))
+	return {
+		"event_type": "town_control_changed",
+		"family": "town",
+		"placement_id": placement_id,
+		"town_placement_ids": [placement_id] if placement_id != "" else [],
+		"town_ids": [town_id] if town_id != "" else [],
+		"previous_owner": previous_owner,
+		"new_owner": new_owner,
+		"blocks_changed": false,
+		"body_tiles_changed": false,
+		"contract_known": true,
+	}
+
+static func _interactable_result_payload(family: String, placement: Dictionary, mutation_facts: Dictionary, topology_facts: Dictionary) -> Dictionary:
+	var payload := {
+		"family": family,
+		"placement_id": String(placement.get("placement_id", "")),
+		"content_id": String(placement.get("site_id", placement.get("artifact_id", placement.get("encounter_id", placement.get("town_id", ""))))),
+		"tile": {"x": int(placement.get("x", 0)), "y": int(placement.get("y", 0))},
+		"mutation_facts": mutation_facts.duplicate(true),
+		"blocks_changed": bool(topology_facts.get("blocks_changed", false)),
+		"body_tiles_changed": bool(topology_facts.get("body_tiles_changed", false)),
+	}
+	_rules_profile_set("interactable", "family", family)
+	_rules_profile_set("interactable", "placement_id", String(payload.get("placement_id", "")))
+	_rules_profile_set("interactable", "blocks_changed", bool(payload.get("blocks_changed", false)))
+	_rules_profile_set("interactable", "body_tiles_changed", bool(payload.get("body_tiles_changed", false)))
+	return payload
+
+static func _profile_scenario_event_evaluation(session: SessionStateStoreScript.SessionData, event_facts: Dictionary) -> Dictionary:
+	var scenario_started_usec := _rules_profile_timer()
+	var scenario_result := _evaluate_scenario_state_for_event(session, event_facts)
+	_rules_profile_add_ms("finalize_scenario_eval_ms", scenario_started_usec)
+	var scenario_profile: Dictionary = scenario_result.get("profile", {}) if scenario_result.get("profile", {}) is Dictionary else {}
+	for profile_key in scenario_profile.keys():
+		_rules_profile_set("scenario_eval", String(profile_key), scenario_profile.get(profile_key))
+	return scenario_result
+
 static func _blocked_tile_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null:
 		return {}
@@ -1813,8 +2040,11 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 		"town_by_placement": {},
 		"resource_by_tile": {},
 		"resource_by_interaction_tile": {},
+		"resource_by_placement": {},
 		"artifact_by_tile": {},
+		"artifact_by_placement": {},
 		"encounter_by_tile": {},
+		"encounter_by_placement": {},
 	}
 	var towns = session.overworld.get("towns", [])
 	if towns is Array:
@@ -1834,6 +2064,9 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 				continue
 			var node_tile_key := _tile_key(Vector2i(int(node.get("x", -1)), int(node.get("y", -1))))
 			_append_spatial_lookup_entry(index["resource_by_tile"], node_tile_key, node_index)
+			var resource_placement_id := String(node.get("placement_id", ""))
+			if resource_placement_id != "":
+				index["resource_by_placement"][resource_placement_id] = node_index
 			var map_object := _map_object_for_resource_node(node)
 			for interaction_tile in _resource_node_world_interaction_tiles(map_object, node):
 				if interaction_tile is Vector2i:
@@ -1843,6 +2076,9 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 		for artifact_index in range(artifacts.size()):
 			var artifact = artifacts[artifact_index]
 			if artifact is Dictionary:
+				var artifact_placement_id := String(artifact.get("placement_id", ""))
+				if artifact_placement_id != "":
+					index["artifact_by_placement"][artifact_placement_id] = artifact_index
 				_append_spatial_lookup_entry(
 					index["artifact_by_tile"],
 					_tile_key(Vector2i(int(artifact.get("x", -1)), int(artifact.get("y", -1)))),
@@ -1853,6 +2089,9 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 		for encounter_index in range(encounters.size()):
 			var encounter = encounters[encounter_index]
 			if encounter is Dictionary:
+				var encounter_placement_id := String(encounter.get("placement_id", encounter.get("id", "")))
+				if encounter_placement_id != "":
+					index["encounter_by_placement"][encounter_placement_id] = encounter_index
 				_append_spatial_lookup_entry(
 					index["encounter_by_tile"],
 					_tile_key(Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))),
@@ -4544,9 +4783,19 @@ static func _find_resource_node_by_placement(session: SessionStateStoreScript.Se
 	if session == null or placement_id == "":
 		return {"index": -1, "node": {}}
 	var lookup_started_usec := _rules_profile_timer()
-	_rules_profile_set("descriptor", "lookup_mode", "full_scan")
 	var nodes = session.overworld.get("resource_nodes", [])
 	_rules_profile_set("descriptor", "lookup_collection_size", nodes.size() if nodes is Array else 0)
+	var lookup_index := _spatial_lookup_index(session)
+	var by_placement: Dictionary = lookup_index.get("resource_by_placement", {}) if lookup_index.get("resource_by_placement", {}) is Dictionary else {}
+	if by_placement.has(placement_id):
+		var indexed := int(by_placement.get(placement_id, -1))
+		if nodes is Array and indexed >= 0 and indexed < nodes.size():
+			var indexed_node = nodes[indexed]
+			if indexed_node is Dictionary and String(indexed_node.get("placement_id", "")) == placement_id:
+				_rules_profile_set("descriptor", "lookup_mode", "placement_index")
+				_rules_profile_add_ms("descriptor_lookup_ms", lookup_started_usec)
+				return {"index": indexed, "node": indexed_node}
+	_rules_profile_set("descriptor", "lookup_mode", "full_scan_fallback")
 	for index in range(nodes.size()):
 		var node = nodes[index]
 		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
@@ -4606,12 +4855,24 @@ static func _find_artifact_node_by_descriptor(session: SessionStateStoreScript.S
 	if session == null:
 		return {"index": -1, "node": {}}
 	var lookup_started_usec := _rules_profile_timer()
-	_rules_profile_set("descriptor", "lookup_mode", "full_scan")
 	var artifact_id := String(descriptor.get("artifact_id", ""))
+	var placement_id := String(descriptor.get("placement_id", ""))
 	var x := int(descriptor.get("x", -999))
 	var y := int(descriptor.get("y", -999))
 	var nodes = session.overworld.get("artifact_nodes", [])
 	_rules_profile_set("descriptor", "lookup_collection_size", nodes.size() if nodes is Array else 0)
+	if placement_id != "":
+		var lookup_index := _spatial_lookup_index(session)
+		var by_placement: Dictionary = lookup_index.get("artifact_by_placement", {}) if lookup_index.get("artifact_by_placement", {}) is Dictionary else {}
+		if by_placement.has(placement_id):
+			var indexed := int(by_placement.get(placement_id, -1))
+			if nodes is Array and indexed >= 0 and indexed < nodes.size():
+				var indexed_node = nodes[indexed]
+				if indexed_node is Dictionary and String(indexed_node.get("placement_id", "")) == placement_id and not bool(indexed_node.get("collected", false)):
+					_rules_profile_set("descriptor", "lookup_mode", "placement_index")
+					_rules_profile_add_ms("descriptor_lookup_ms", lookup_started_usec)
+					return {"index": indexed, "node": indexed_node}
+	_rules_profile_set("descriptor", "lookup_mode", "full_scan_fallback")
 	for index in range(nodes.size()):
 		var node = nodes[index]
 		if not (node is Dictionary):
@@ -9806,9 +10067,19 @@ static func _find_encounter_by_placement(session: SessionStateStoreScript.Sessio
 	if session == null or placement_id == "":
 		return {"index": -1, "encounter": {}}
 	var lookup_started_usec := _rules_profile_timer()
-	_rules_profile_set("descriptor", "lookup_mode", "full_scan")
 	var encounters = session.overworld.get("encounters", [])
 	_rules_profile_set("descriptor", "lookup_collection_size", encounters.size() if encounters is Array else 0)
+	var lookup_index := _spatial_lookup_index(session)
+	var by_placement: Dictionary = lookup_index.get("encounter_by_placement", {}) if lookup_index.get("encounter_by_placement", {}) is Dictionary else {}
+	if by_placement.has(placement_id):
+		var indexed := int(by_placement.get(placement_id, -1))
+		if encounters is Array and indexed >= 0 and indexed < encounters.size():
+			var indexed_encounter = encounters[indexed]
+			if indexed_encounter is Dictionary and String(indexed_encounter.get("placement_id", indexed_encounter.get("id", ""))) == placement_id:
+				_rules_profile_set("descriptor", "lookup_mode", "placement_index")
+				_rules_profile_add_ms("descriptor_lookup_ms", lookup_started_usec)
+				return {"index": indexed, "encounter": indexed_encounter}
+	_rules_profile_set("descriptor", "lookup_mode", "full_scan_fallback")
 	for index in range(encounters.size()):
 		var encounter = encounters[index]
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
@@ -10731,7 +11002,8 @@ static func _finalize_action_result(
 	ok: bool,
 	base_message: String,
 	refresh_fog: bool = true,
-	incremental_fog: bool = false
+	incremental_fog: bool = false,
+	scenario_event_facts: Dictionary = {}
 ) -> Dictionary:
 	var finalize_started_usec := _rules_profile_timer()
 	var commit_before_started_usec := _rules_profile_timer()
@@ -10758,10 +11030,23 @@ static func _finalize_action_result(
 	var hooks = scenario.get("script_hooks", []) if scenario is Dictionary else []
 	_rules_profile_set("scenario_eval", "objective_count", objective_count)
 	_rules_profile_set("scenario_eval", "hook_count", hooks.size() if hooks is Array else 0)
-	_rules_profile_set("scenario_eval", "dependency_mode", "full")
 	var scenario_started_usec := _rules_profile_timer()
-	var scenario_result: Dictionary = _evaluate_scenario_state(session)
+	var scenario_result: Dictionary = _evaluate_scenario_state(session) if scenario_event_facts.is_empty() else _evaluate_scenario_state_for_event(session, scenario_event_facts)
 	_rules_profile_add_ms("finalize_scenario_eval_ms", scenario_started_usec)
+	var scenario_profile: Dictionary = scenario_result.get("profile", {}) if scenario_result.get("profile", {}) is Dictionary else {}
+	if scenario_profile.is_empty():
+		scenario_profile = {
+			"dependency_mode": "full",
+			"fallback_reason": "",
+			"objective_count": objective_count,
+			"hook_count": hooks.size() if hooks is Array else 0,
+			"objectives_checked": objective_count,
+			"objectives_skipped": 0,
+			"hooks_checked": hooks.size() if hooks is Array else 0,
+			"hooks_skipped": 0,
+		}
+	for profile_key in scenario_profile.keys():
+		_rules_profile_set("scenario_eval", String(profile_key), scenario_profile.get(profile_key))
 	var scenario_message := String(scenario_result.get("message", ""))
 	var commit_after_started_usec := _rules_profile_timer()
 	HeroCommandRulesScript.commit_active_hero(session)

@@ -70,6 +70,344 @@ static func evaluate_session(session: SessionStateStoreScript.SessionData) -> Di
 
 	return {"status": "in_progress", "message": script_message}
 
+static func evaluate_session_for_event(session: SessionStateStoreScript.SessionData, event_facts: Dictionary = {}) -> Dictionary:
+	normalize_scenario_state(session)
+	var profile := _scenario_event_dependency_profile(session, event_facts)
+	if session == null or session.scenario_id == "":
+		profile["dependency_mode"] = "full_fallback_unknown"
+		profile["fallback_reason"] = "missing_session_or_scenario"
+		return {"status": "invalid", "message": "", "profile": profile}
+
+	if session.scenario_status != "in_progress":
+		profile["dependency_mode"] = "full_fallback_not_in_progress"
+		profile["fallback_reason"] = "scenario_not_in_progress"
+		var inactive_result := evaluate_session(session)
+		inactive_result["profile"] = profile
+		return inactive_result
+
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	if bool(scenario.get("generated", false)):
+		profile["dependency_mode"] = "full_fallback_generated"
+		profile["fallback_reason"] = "generated_scenario"
+		var generated_result := evaluate_session(session)
+		generated_result["profile"] = profile
+		return generated_result
+
+	if event_facts.is_empty() or bool(event_facts.get("requires_full_scenario_eval", false)):
+		profile["dependency_mode"] = "full"
+		profile["fallback_reason"] = String(event_facts.get("fallback_reason", "no_event_facts"))
+		var full_result := evaluate_session(session)
+		full_result["profile"] = profile
+		return full_result
+
+	var dependency := _scenario_dependency_metadata(scenario)
+	profile["objective_count"] = int(dependency.get("objective_count", 0))
+	profile["hook_count"] = int(dependency.get("hook_count", 0))
+	profile["dependency_metadata_known"] = bool(dependency.get("known", false))
+	if not bool(dependency.get("known", false)):
+		profile["dependency_mode"] = "full_fallback_unknown"
+		profile["fallback_reason"] = String(dependency.get("unknown_reason", "unknown_dependency"))
+		var unknown_result := evaluate_session(session)
+		unknown_result["profile"] = profile
+		return unknown_result
+
+	var event_dependency := _scenario_event_dependency(event_facts)
+	if bool(event_dependency.get("broad", false)):
+		profile["dependency_mode"] = "full_fallback_unknown"
+		profile["fallback_reason"] = String(event_dependency.get("reason", "broad_event"))
+		var broad_result := evaluate_session(session)
+		broad_result["profile"] = profile
+		return broad_result
+
+	var affected_objectives := 0
+	var objectives: Array = dependency.get("objectives", []) if dependency.get("objectives", []) is Array else []
+	for objective_dependency in objectives:
+		if objective_dependency is Dictionary and _scenario_event_affects_dependency(event_dependency, objective_dependency):
+			affected_objectives += 1
+	var affected_hooks := 0
+	var hooks: Array = dependency.get("hooks", []) if dependency.get("hooks", []) is Array else []
+	for hook_dependency in hooks:
+		if hook_dependency is Dictionary and _scenario_event_affects_dependency(event_dependency, hook_dependency):
+			affected_hooks += 1
+
+	profile["objectives_checked"] = affected_objectives
+	profile["objectives_skipped"] = maxi(0, int(profile.get("objective_count", 0)) - affected_objectives)
+	profile["hooks_checked"] = affected_hooks
+	profile["hooks_skipped"] = maxi(0, int(profile.get("hook_count", 0)) - affected_hooks)
+	profile["affected_objective_count"] = affected_objectives
+	profile["affected_hook_count"] = affected_hooks
+	if affected_objectives <= 0 and affected_hooks <= 0:
+		profile["dependency_mode"] = "event_gated_skip"
+		profile["fallback_reason"] = ""
+		return {"status": session.scenario_status, "message": "", "profile": profile}
+
+	profile["dependency_mode"] = "scoped"
+	profile["fallback_reason"] = ""
+	profile["semantic_evaluation"] = "full_existing_evaluator_for_affected_dependencies"
+	var scoped_result := evaluate_session(session)
+	scoped_result["profile"] = profile
+	return scoped_result
+
+static func _scenario_event_dependency_profile(session: SessionStateStoreScript.SessionData, event_facts: Dictionary) -> Dictionary:
+	return {
+		"dependency_mode": "full",
+		"fallback_reason": "",
+		"event_type": String(event_facts.get("event_type", event_facts.get("event", ""))),
+		"event_family": String(event_facts.get("family", "")),
+		"objective_count": 0,
+		"hook_count": 0,
+		"objectives_checked": 0,
+		"objectives_skipped": 0,
+		"hooks_checked": 0,
+		"hooks_skipped": 0,
+		"affected_objective_count": 0,
+		"affected_hook_count": 0,
+		"dependency_metadata_known": false,
+	}
+
+static func _scenario_dependency_metadata(scenario: Dictionary) -> Dictionary:
+	var result := {
+		"known": true,
+		"unknown_reason": "",
+		"objective_count": 0,
+		"hook_count": 0,
+		"objectives": [],
+		"hooks": [],
+	}
+	var objectives = scenario.get("objectives", {})
+	if objectives is Dictionary:
+		var objective_index := {}
+		for bucket_name in ["victory", "defeat"]:
+			var bucket = objectives.get(bucket_name, [])
+			if not (bucket is Array):
+				continue
+			for objective in bucket:
+				if objective is Dictionary:
+					var objective_id := String(objective.get("id", ""))
+					if objective_id != "":
+						objective_index[objective_id] = objective
+		for bucket_name in ["victory", "defeat"]:
+			var bucket = objectives.get(bucket_name, [])
+			if not (bucket is Array):
+				continue
+			for objective in bucket:
+				if not (objective is Dictionary):
+					continue
+				var objective_dependency := _scenario_objective_dependency(objective, objective_index, {})
+				if not bool(objective_dependency.get("known", false)):
+					result["known"] = false
+					result["unknown_reason"] = String(objective_dependency.get("unknown_reason", "unsupported_objective"))
+				result["objective_count"] = int(result.get("objective_count", 0)) + 1
+				result["objectives"].append(objective_dependency)
+	elif scenario.has("objectives"):
+		result["known"] = false
+		result["unknown_reason"] = "objectives_not_dictionary"
+
+	var raw_hooks = scenario.get("script_hooks", [])
+	if raw_hooks is Array:
+		for hook in raw_hooks:
+			if not (hook is Dictionary):
+				continue
+			var hook_dependency := _scenario_hook_dependency(hook, result.get("objectives", []), objectives)
+			if not bool(hook_dependency.get("known", false)):
+				result["known"] = false
+				result["unknown_reason"] = String(hook_dependency.get("unknown_reason", "unsupported_hook"))
+			result["hook_count"] = int(result.get("hook_count", 0)) + 1
+			result["hooks"].append(hook_dependency)
+	elif scenario.has("script_hooks"):
+		result["known"] = false
+		result["unknown_reason"] = "script_hooks_not_array"
+	return result
+
+static func _scenario_objective_dependency(objective: Dictionary, objective_index: Dictionary, seen: Dictionary) -> Dictionary:
+	var dependency := _empty_dependency()
+	dependency["id"] = String(objective.get("id", ""))
+	match String(objective.get("type", "")):
+		"town_owned_by_player", "town_not_owned_by_player":
+			_add_dependency_value(dependency, "town_placement_ids", String(objective.get("placement_id", "")))
+			_add_dependency_value(dependency, "town_ids", String(objective.get("town_id", "")))
+		"flag_true", "session_flag_equals":
+			_add_dependency_value(dependency, "flags", String(objective.get("flag", "")))
+		"enemy_pressure_at_least":
+			_add_dependency_value(dependency, "enemy_pressure_faction_ids", String(objective.get("faction_id", "")))
+		"encounter_resolved":
+			_add_dependency_value(dependency, "encounter_placement_ids", String(objective.get("placement_id", "")))
+		"hook_fired":
+			_add_dependency_value(dependency, "hook_ids", String(objective.get("hook_id", "")))
+		"day_at_least":
+			dependency["day"] = true
+		_:
+			dependency["known"] = false
+			dependency["unknown_reason"] = "unsupported_objective_type:%s" % String(objective.get("type", ""))
+	return dependency
+
+static func _scenario_hook_dependency(hook: Dictionary, objective_dependencies: Array, objectives: Variant) -> Dictionary:
+	var dependency := _empty_dependency()
+	dependency["id"] = String(hook.get("id", ""))
+	var conditions = hook.get("conditions", [])
+	if not (conditions is Array):
+		dependency["known"] = false
+		dependency["unknown_reason"] = "hook_conditions_not_array"
+		return dependency
+	if conditions.is_empty():
+		return dependency
+	var objective_index := {}
+	if objectives is Dictionary:
+		for bucket_name in ["victory", "defeat"]:
+			var bucket = objectives.get(bucket_name, [])
+			if not (bucket is Array):
+				continue
+			for objective in bucket:
+				if objective is Dictionary and String(objective.get("id", "")) != "":
+					objective_index[String(objective.get("id", ""))] = objective
+	for condition in conditions:
+		if not (condition is Dictionary):
+			dependency["known"] = false
+			dependency["unknown_reason"] = "hook_condition_not_dictionary"
+			continue
+		var condition_dependency := _scenario_condition_dependency(condition, objective_index)
+		_merge_dependency(dependency, condition_dependency)
+	return dependency
+
+static func _scenario_condition_dependency(condition: Dictionary, objective_index: Dictionary) -> Dictionary:
+	var dependency := _empty_dependency()
+	match String(condition.get("type", "")):
+		"day_at_least":
+			dependency["day"] = true
+		"town_owned_by_player", "town_not_owned_by_player":
+			_add_dependency_value(dependency, "town_placement_ids", String(condition.get("placement_id", "")))
+			_add_dependency_value(dependency, "town_ids", String(condition.get("town_id", "")))
+		"flag_true", "session_flag_equals":
+			_add_dependency_value(dependency, "flags", String(condition.get("flag", "")))
+		"enemy_pressure_at_least":
+			_add_dependency_value(dependency, "enemy_pressure_faction_ids", String(condition.get("faction_id", "")))
+		"encounter_resolved":
+			_add_dependency_value(dependency, "encounter_placement_ids", String(condition.get("placement_id", "")))
+		"objective_met", "objective_not_met":
+			var objective_id := String(condition.get("objective_id", ""))
+			var objective = objective_index.get(objective_id, {})
+			if objective is Dictionary and not objective.is_empty():
+				_merge_dependency(dependency, _scenario_objective_dependency(objective, objective_index, {objective_id: true}))
+			else:
+				dependency["known"] = false
+				dependency["unknown_reason"] = "hook_objective_dependency_missing:%s" % objective_id
+		"active_raid_count_at_least", "active_raid_count_at_most":
+			_add_dependency_value(dependency, "active_raid_faction_ids", String(condition.get("faction_id", "")))
+		"hook_fired", "hook_not_fired":
+			_add_dependency_value(dependency, "hook_ids", String(condition.get("hook_id", "")))
+		_:
+			dependency["known"] = false
+			dependency["unknown_reason"] = "unsupported_hook_condition_type:%s" % String(condition.get("type", ""))
+	return dependency
+
+static func _empty_dependency() -> Dictionary:
+	return {
+		"known": true,
+		"unknown_reason": "",
+		"town_placement_ids": [],
+		"town_ids": [],
+		"flags": [],
+		"enemy_pressure_faction_ids": [],
+		"active_raid_faction_ids": [],
+		"encounter_placement_ids": [],
+		"hook_ids": [],
+		"resources": [],
+		"artifact_ids": [],
+		"day": false,
+	}
+
+static func _scenario_event_dependency(event_facts: Dictionary) -> Dictionary:
+	var dependency := _empty_dependency()
+	if bool(event_facts.get("broad", false)):
+		dependency["broad"] = true
+		dependency["reason"] = String(event_facts.get("fallback_reason", "broad_event"))
+		return dependency
+	for key in [
+		"town_placement_ids",
+		"town_ids",
+		"flags",
+		"enemy_pressure_faction_ids",
+		"active_raid_faction_ids",
+		"encounter_placement_ids",
+		"hook_ids",
+		"resources",
+		"artifact_ids",
+	]:
+		for value in _string_array(event_facts.get(key, [])):
+			_add_dependency_value(dependency, key, value)
+	dependency["day"] = bool(event_facts.get("day_changed", false))
+	return dependency
+
+static func _scenario_event_affects_dependency(event_dependency: Dictionary, dependency: Dictionary) -> bool:
+	if not bool(dependency.get("known", false)):
+		return true
+	if bool(event_dependency.get("day", false)) and bool(dependency.get("day", false)):
+		return true
+	for key in [
+		"town_placement_ids",
+		"town_ids",
+		"flags",
+		"enemy_pressure_faction_ids",
+		"active_raid_faction_ids",
+		"encounter_placement_ids",
+		"hook_ids",
+		"resources",
+		"artifact_ids",
+	]:
+		if _arrays_intersect(event_dependency.get(key, []), dependency.get(key, [])):
+			return true
+	return false
+
+static func _merge_dependency(target: Dictionary, source: Dictionary) -> void:
+	if not bool(source.get("known", false)):
+		target["known"] = false
+		target["unknown_reason"] = String(source.get("unknown_reason", "unknown_dependency"))
+	for key in [
+		"town_placement_ids",
+		"town_ids",
+		"flags",
+		"enemy_pressure_faction_ids",
+		"active_raid_faction_ids",
+		"encounter_placement_ids",
+		"hook_ids",
+		"resources",
+		"artifact_ids",
+	]:
+		for value in _string_array(source.get(key, [])):
+			_add_dependency_value(target, key, value)
+	if bool(source.get("day", false)):
+		target["day"] = true
+
+static func _add_dependency_value(dependency: Dictionary, key: String, value: String) -> void:
+	var normalized := value.strip_edges()
+	if normalized == "":
+		return
+	var values: Array = dependency.get(key, []) if dependency.get(key, []) is Array else []
+	if normalized not in values:
+		values.append(normalized)
+	dependency[key] = values
+
+static func _string_array(value: Variant) -> Array:
+	var result := []
+	if value is Array:
+		for item in value:
+			var text := String(item).strip_edges()
+			if text != "" and text not in result:
+				result.append(text)
+	else:
+		var text := String(value).strip_edges()
+		if text != "":
+			result.append(text)
+	return result
+
+static func _arrays_intersect(left: Variant, right: Variant) -> bool:
+	if not (left is Array) or not (right is Array):
+		return false
+	for value in left:
+		if value in right:
+			return true
+	return false
+
 static func is_objective_met(
 	session: SessionStateStoreScript.SessionData,
 	objective_id: String,

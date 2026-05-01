@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-interactable-compact-confirmation-10184",
-  "currentSliceTitle": "Overworld Interactable Compact Confirmation",
+  "currentSliceId": "overworld-interactable-confirmation-full-optimization-10184",
+  "currentSliceTitle": "Overworld Interactable Confirmation Full Optimization",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed compact selected-interactable confirmation recaps while preserving full scenario evaluation and profile/analyzer compatibility.",
+  "currentSliceNotes": "Implemented event-gated scenario evaluation with full fallback metadata, shared interactable facts, topology-aware blocked-index skip/full fallback, placement descriptor indexes with scan fallback, profile/save guardrails, and focused regressions.",
   "nextActionGuardrailNote": "Preserve gameplay semantics, generated map content/density, renderer/fog behavior, save schema, object contracts, F3/profile-log compatibility, open/current route fast paths, scenario evaluation semantics, and ordinary no-save interaction confirmation.",
-  "updatedAt": "2026-05-01T18:28:00Z",
+  "updatedAt": "2026-05-01T18:31:11Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -5624,6 +5624,16 @@
         "python3 -m json.tool ops/progress.json passed.",
         "git diff --check passed."
       ]
+    },
+    {
+      "id": "overworld-interactable-confirmation-full-optimization-10184",
+      "title": "Overworld Interactable Confirmation Full Optimization",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-01T18:31:11Z",
+      "startedAt": "2026-05-01T18:28:49Z",
+      "notes": "Implemented event-gated scenario evaluation with full fallback metadata, shared interactable facts, topology-aware blocked-index skip/full fallback, placement descriptor indexes with scan fallback, profile/save guardrails, and focused regressions.",
+      "completedAt": "2026-05-01T18:31:11Z"
     }
   ],
   "completedImplementationEvidence": [
