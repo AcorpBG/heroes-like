@@ -57,7 +57,102 @@ func _assert_scenario_event_gating() -> bool:
 	var inactive_profile: Dictionary = inactive_result.get("profile", {}) if inactive_result.get("profile", {}) is Dictionary else {}
 	if String(inactive_profile.get("dependency_mode", "")) != "full_fallback_not_in_progress":
 		return _fail("Completed scenario did not expose full fallback status mode.", inactive_profile)
+	if not _assert_generated_scenario_event_gating():
+		return false
 	return true
+
+func _assert_generated_scenario_event_gating() -> bool:
+	ContentService.clear_generated_scenario_drafts()
+	var no_dependency_id := "generated_no_observable_dependencies_regression"
+	var no_dependency_registration: Dictionary = ContentService.register_generated_scenario_draft(
+		_generated_scenario_record(no_dependency_id, {}, []),
+		{"id": no_dependency_id, "scenario_id": no_dependency_id, "layers": {}}
+	)
+	if not bool(no_dependency_registration.get("ok", false)):
+		return _fail("Generated no-dependency scenario failed to register.", no_dependency_registration)
+	var no_dependency_session = SessionStateStore.new_session_data(
+		"",
+		no_dependency_id,
+		"",
+		1,
+		{},
+		"normal",
+		SessionState.LAUNCH_MODE_GENERATED_DRAFT
+	)
+	no_dependency_session.scenario_summary = "Existing summary should remain untouched."
+	var no_dependency_result: Dictionary = ScenarioRules.evaluate_session_for_event(no_dependency_session, {
+		"event_type": "interactable_resolved",
+		"family": "resource_site",
+		"placement_id": "generated_resource_cache",
+		"resources": ["wood"],
+	})
+	var no_dependency_profile: Dictionary = no_dependency_result.get("profile", {}) if no_dependency_result.get("profile", {}) is Dictionary else {}
+	if String(no_dependency_profile.get("dependency_mode", "")) != "event_gated_skip":
+		return _fail("Generated scenario with no objectives/hooks did not event-gate skip.", no_dependency_profile)
+	if String(no_dependency_profile.get("skip_reason", "")) != "no_observable_dependencies":
+		return _fail("Generated no-dependency skip did not report no_observable_dependencies.", no_dependency_profile)
+	if int(no_dependency_profile.get("objective_count", -1)) != 0 or int(no_dependency_profile.get("hook_count", -1)) != 0:
+		return _fail("Generated no-dependency skip reported non-zero dependency counts.", no_dependency_profile)
+	if int(no_dependency_profile.get("objectives_checked", -1)) != 0 or int(no_dependency_profile.get("hooks_checked", -1)) != 0:
+		return _fail("Generated no-dependency skip checked scenario dependencies.", no_dependency_profile)
+	if String(no_dependency_profile.get("fallback_reason", "unexpected")) != "" or bool(no_dependency_profile.get("fallback_used", true)):
+		return _fail("Generated no-dependency skip should not report fallback use.", no_dependency_profile)
+	if String(no_dependency_result.get("status", "")) != "in_progress" or no_dependency_session.scenario_summary != "Existing summary should remain untouched.":
+		return _fail("Generated no-dependency skip changed scenario status or summary.", no_dependency_result)
+
+	var objective_id := "generated_objective_dependency_regression"
+	var objective_registration: Dictionary = ContentService.register_generated_scenario_draft(
+		_generated_scenario_record(
+			objective_id,
+			{
+				"victory": [
+					{
+						"id": "capture_generated_target",
+						"type": "town_owned_by_player",
+						"placement_id": "generated_target_town",
+						"label": "Capture the generated target town",
+					}
+				],
+				"defeat": [],
+			},
+			[]
+		),
+		{"id": objective_id, "scenario_id": objective_id, "layers": {}}
+	)
+	if not bool(objective_registration.get("ok", false)):
+		return _fail("Generated objective scenario failed to register.", objective_registration)
+	var objective_session = SessionStateStore.new_session_data(
+		"",
+		objective_id,
+		"",
+		1,
+		{"towns": [{"placement_id": "generated_target_town", "owner": "enemy"}]},
+		"normal",
+		SessionState.LAUNCH_MODE_GENERATED_DRAFT
+	)
+	var objective_result: Dictionary = ScenarioRules.evaluate_session_for_event(objective_session, {
+		"event_type": "interactable_resolved",
+		"family": "resource_site",
+		"placement_id": "generated_resource_cache",
+		"resources": ["wood"],
+	})
+	var objective_profile: Dictionary = objective_result.get("profile", {}) if objective_result.get("profile", {}) is Dictionary else {}
+	if String(objective_profile.get("dependency_mode", "")) != "full_fallback_generated":
+		return _fail("Generated scenario with objectives should preserve full fallback.", objective_profile)
+	if int(objective_profile.get("objective_count", 0)) <= 0 or not bool(objective_profile.get("fallback_used", false)):
+		return _fail("Generated objective fallback did not report dependency/fallback metadata.", objective_profile)
+	ContentService.clear_generated_scenario_drafts()
+	return true
+
+func _generated_scenario_record(id: String, objectives: Dictionary, script_hooks: Array) -> Dictionary:
+	return {
+		"id": id,
+		"name": id,
+		"generated": true,
+		"selection": {"availability": {"campaign": false, "skirmish": false}},
+		"objectives": objectives,
+		"script_hooks": script_hooks,
+	}
 
 func _assert_resource_blocked_index_full_fallback() -> bool:
 	var session = _session_with_map(4, 3)

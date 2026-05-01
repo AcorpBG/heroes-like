@@ -6,9 +6,9 @@
   "currentSliceId": "overworld-interactable-confirmation-full-optimization-10184",
   "currentSliceTitle": "Overworld Interactable Confirmation Full Optimization",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented event-gated scenario evaluation with full fallback metadata, shared interactable facts, topology-aware blocked-index skip/full fallback, placement descriptor indexes with scan fallback, profile/save guardrails, and focused regressions.",
+  "currentSliceNotes": "Follow-up completed: generated scenarios with objective_count=0 and hook_count=0 now report event_gated_skip/no_observable_dependencies without full ScenarioRules.evaluate_session; generated scenarios with objectives/hooks keep full_fallback_generated. Validation: required five Godot overworld regressions, uploaded-profile analyzer, ops/progress json.tool, git diff --check.",
   "nextActionGuardrailNote": "Preserve gameplay semantics, generated map content/density, renderer/fog behavior, save schema, object contracts, F3/profile-log compatibility, open/current route fast paths, scenario evaluation semantics, and ordinary no-save interaction confirmation.",
-  "updatedAt": "2026-05-01T18:31:11Z",
+  "updatedAt": "2026-05-01T18:49:52Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -5630,9 +5630,9 @@
       "title": "Overworld Interactable Confirmation Full Optimization",
       "status": "completed",
       "source": "PLAN.md",
-      "updatedAt": "2026-05-01T18:31:11Z",
+      "updatedAt": "2026-05-01T18:49:52Z",
       "startedAt": "2026-05-01T18:28:49Z",
-      "notes": "Implemented event-gated scenario evaluation with full fallback metadata, shared interactable facts, topology-aware blocked-index skip/full fallback, placement descriptor indexes with scan fallback, profile/save guardrails, and focused regressions.",
+      "notes": "Follow-up completed: generated scenarios with objective_count=0 and hook_count=0 now report event_gated_skip/no_observable_dependencies without full ScenarioRules.evaluate_session; generated scenarios with objectives/hooks keep full_fallback_generated. Validation: required five Godot overworld regressions, uploaded-profile analyzer, ops/progress json.tool, git diff --check.",
       "completedAt": "2026-05-01T18:31:11Z"
     }
   ],
