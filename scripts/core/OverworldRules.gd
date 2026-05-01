@@ -985,7 +985,7 @@ static func perform_context_action(session: SessionStateStoreScript.SessionData,
 	return {}
 
 static func set_active_town_visit(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
-	normalize_overworld_state(session)
+	normalize_overworld_state_for_runtime(session)
 	if session == null or placement_id == "":
 		return {"ok": false, "message": "No town was selected.", "town": {}}
 	var town_result := _find_town_by_placement(session, placement_id)

@@ -46,6 +46,8 @@ Selected full interactable confirmation optimization follow-up after AcOrP reque
 
 Selected urgent town transition follow-up after the rendered DISPLAY=:99 broad profile at `.artifacts/uploaded_profiles/20260501/display99_broad_after_ad1ee2e_heroes_profile.jsonl`: `town-entry-exit-cache-save-hot-path-10184` fixes ordinary same-town overworld/town transitions so they reuse town view caches across minimal/full refresh modes and do not build expensive save/recap surfaces on routine exit/entry. It must preserve gameplay semantics, manual save and end-turn autosave behavior, save schema, generated map content/density, renderer/fog behavior, object contracts, F3/profile-log compatibility, and town-action targeted invalidation.
 
+Selected urgent follow-up after AcOrP's local actual-client profile at `.artifacts/uploaded_profiles/20260501/acorp_local_after_a4a86a2_heroes_profile.jsonl`: `town-reentry-volatile-overlay-cache-10184` keeps same-town re-entry cache hits valid after overworld movement/resource pickups by removing volatile resources, hero position/movement, stationed-local, and recap fields from the expensive town cache signature while refreshing compact dynamic overlays/actions cheaply. It also fixes the related `select_town` handoff path to use runtime-normalized town selection and profile the town handoff buckets instead of leaving the cost unaccounted.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:

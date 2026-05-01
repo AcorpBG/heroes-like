@@ -538,16 +538,22 @@ func _visit_selected_town() -> bool:
 		_refresh()
 		return false
 	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	var visit_started_usec := _debug_phase_begin("town_visit_set_active")
 	var result: Dictionary = OverworldRules.set_active_town_visit(_session, String(town.get("placement_id", "")))
+	_debug_phase_end("town_visit_set_active", visit_started_usec, {"ok": bool(result.get("ok", false)), "placement_id": String(town.get("placement_id", ""))})
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
 	_last_turn_resolution_text = ""
+	var feedback_started_usec := _debug_phase_begin("town_visit_feedback")
 	_record_result_feedback("town", result, "Town opened.")
+	_debug_phase_end("town_visit_feedback", feedback_started_usec, {"ok": bool(result.get("ok", false))})
 	if not bool(result.get("ok", false)):
 		_refresh()
 		return false
 	_session.flags["last_action"] = "visited_town"
+	var router_started_usec := _debug_phase_begin("town_visit_router_transition")
 	AppRouter.go_to_town()
+	_debug_phase_end("town_visit_router_transition", router_started_usec, {"route": "go_to_town"})
 	return true
 
 func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
@@ -5712,7 +5718,12 @@ func _debug_finish_path_command() -> void:
 
 func _debug_refresh_overlay_after_frame() -> void:
 	var wait_started_usec := int(_debug_last_command_snapshot.get("deferred_wait_start_usec", Time.get_ticks_usec()))
-	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	var tree := get_tree()
+	if tree == null:
+		return
+	await tree.process_frame
 	if _debug_last_command_snapshot.is_empty():
 		return
 	var deferred_wait_usec := maxi(0, Time.get_ticks_usec() - wait_started_usec)

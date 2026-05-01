@@ -276,6 +276,7 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	buckets["town_entity_cache_entries"] = float(int(cache_result.get("entry_count", 0)))
 	buckets["town_entity_cache_signature"] = float(cache_result.get("signature_ms", 0.0))
 	buckets["town_entity_cache_build"] = float(cache_result.get("build_ms", 0.0))
+	buckets["town_entity_cache_dynamic"] = float(cache_result.get("dynamic_ms", 0.0))
 
 	section_started = ProfileLogScript.begin_usec()
 	_header_label.text = String(view_state.get("header_text", ""))
@@ -426,6 +427,10 @@ func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> 
 	var cache_key := _town_entity_cache_entry_key(placement_id, minimal)
 	var entry: Dictionary = bucket.get(cache_key, {}) if bucket.get(cache_key, {}) is Dictionary else {}
 	if String(entry.get("signature", "")) == signature and entry.get("view_state", {}) is Dictionary:
+		var dynamic_started := ProfileLogScript.begin_usec()
+		var cached_view_state: Dictionary = (entry.get("view_state", {}) as Dictionary).duplicate(true)
+		_refresh_active_town_dynamic_view_state(cached_view_state, town, minimal)
+		var dynamic_ms := ProfileLogScript.elapsed_ms(dynamic_started)
 		_last_town_entity_cache_result = {
 			"hit": true,
 			"placement_id": placement_id,
@@ -434,9 +439,10 @@ func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> 
 			"signature": signature,
 			"signature_ms": signature_ms,
 			"build_ms": 0.0,
+			"dynamic_ms": dynamic_ms,
 			"minimal": bool(entry.get("minimal", false)),
 		}
-		return (entry.get("view_state", {}) as Dictionary).duplicate(true)
+		return cached_view_state
 	var build_started := ProfileLogScript.begin_usec()
 	var view_state := _build_active_town_entity_view_state(minimal)
 	var build_ms := ProfileLogScript.elapsed_ms(build_started)
@@ -455,9 +461,163 @@ func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> 
 		"signature": signature,
 		"signature_ms": signature_ms,
 		"build_ms": build_ms,
+		"dynamic_ms": 0.0,
 		"minimal": minimal,
 	}
 	return view_state
+
+func _refresh_active_town_dynamic_view_state(view_state: Dictionary, town: Dictionary, minimal: bool = false) -> void:
+	var current_lanes := _current_town_tab_lanes()
+	view_state["resources_text"] = OverworldRules.describe_resources(_session)
+	view_state["departure"] = _cached_departure_dynamic(view_state.get("departure", {}))
+	view_state["town_context_surface"] = {} if minimal else _town_action_context_surface(String(view_state.get("dispatch_text", "")))
+	if not minimal:
+		view_state["hero_actions"] = _duplicate_action_array(view_state.get("hero_actions", []))
+		view_state["specialty_actions"] = _duplicate_action_array(view_state.get("specialty_actions", []))
+	if not minimal or current_lanes.has("build"):
+		var build_actions := _refresh_cached_cost_actions(view_state.get("build_actions", []), town)
+		view_state["build_actions"] = build_actions
+		_update_cached_build_readiness(view_state, build_actions, town)
+	if not minimal or current_lanes.has("market"):
+		view_state["market_actions"] = _refresh_cached_cost_actions(view_state.get("market_actions", []), town)
+	if not minimal or current_lanes.has("recruit"):
+		view_state["recruit_actions"] = _refresh_cached_recruit_actions(view_state.get("recruit_actions", []), town)
+	if not minimal or current_lanes.has("study"):
+		view_state["study_actions"] = _refresh_cached_cost_actions(view_state.get("study_actions", []), town)
+	if not minimal or current_lanes.has("logistics"):
+		view_state["tavern_actions"] = _refresh_cached_cost_actions(view_state.get("tavern_actions", []), town)
+		view_state["transfer_actions"] = _duplicate_action_array(view_state.get("transfer_actions", []))
+		view_state["response_actions"] = _duplicate_action_array(view_state.get("response_actions", []))
+		view_state["artifact_actions"] = _duplicate_action_array(view_state.get("artifact_actions", []))
+	view_state["stage_state"] = _refresh_cached_stage_dynamic(view_state, town)
+
+func _refresh_cached_cost_actions(actions: Variant, town: Dictionary) -> Array:
+	var refreshed := _duplicate_action_array(actions)
+	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
+	for index in range(refreshed.size()):
+		var action: Dictionary = refreshed[index]
+		var cost: Dictionary = action.get("cost", {}) if action.get("cost", {}) is Dictionary else {}
+		if cost.is_empty():
+			continue
+		var readiness: Dictionary = OverworldRules.town_cost_readiness(town, resources, cost)
+		var direct_affordable := bool(readiness.get("direct_affordable", false))
+		var market_coverable := bool(readiness.get("market_affordable", false)) and not direct_affordable
+		var market_summary := TownRules._market_coverage_line(readiness)
+		var shortfall_summary := TownRules._cost_shortfall_line(readiness)
+		var affordability_line := TownRules._cost_readiness_line(resources, cost, readiness).trim_suffix(".")
+		action["direct_affordable"] = direct_affordable
+		action["market_coverable"] = market_coverable
+		action["disabled"] = not direct_affordable
+		action["market_summary"] = market_summary
+		action["shortfall_summary"] = shortfall_summary
+		action["affordability_label"] = affordability_line
+		action["disabled_reason"] = TownRules._disabled_reason_line(direct_affordable, market_coverable, market_summary, shortfall_summary)
+		if action.has("button_label"):
+			action["button_label"] = "%s | %s" % [_cached_action_label_prefix(String(action.get("button_label", ""))), _cached_cost_badge(direct_affordable, market_coverable)]
+		refreshed[index] = action
+	return refreshed
+
+func _refresh_cached_recruit_actions(actions: Variant, town: Dictionary) -> Array:
+	var refreshed := _duplicate_action_array(actions)
+	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
+	for index in range(refreshed.size()):
+		var action: Dictionary = refreshed[index]
+		var unit_cost: Dictionary = action.get("unit_cost", {}) if action.get("unit_cost", {}) is Dictionary else {}
+		if unit_cost.is_empty():
+			continue
+		var available: int = max(0, int(action.get("available_count", 0)))
+		var direct_count: int = min(available, TownRules._max_affordable_count(_session, unit_cost))
+		var market_count: int = TownRules._max_market_affordable_count(town, resources, unit_cost, available)
+		var market_summary: String = ""
+		if market_count > direct_count:
+			market_summary = TownRules._market_coverage_line(OverworldRules.town_cost_readiness(
+				town,
+				resources,
+				TownRules._multiply_resource_cost(unit_cost, market_count)
+			))
+		var shortfall_summary: String = ""
+		if market_count <= 0:
+			shortfall_summary = TownRules._cost_shortfall_line(OverworldRules.town_cost_readiness(town, resources, unit_cost))
+		action["direct_affordable_count"] = direct_count
+		action["market_affordable_count"] = market_count
+		action["market_coverable"] = market_count > direct_count
+		action["market_summary"] = market_summary
+		action["shortfall_summary"] = shortfall_summary
+		action["disabled"] = direct_count <= 0
+		action["affordability_label"] = TownRules._recruit_affordability_label(direct_count, market_count, shortfall_summary)
+		action["disabled_reason"] = TownRules._disabled_reason_line(direct_count > 0, market_count > direct_count, market_summary, shortfall_summary)
+		if action.has("button_label"):
+			action["button_label"] = "%s | %s" % [_cached_action_label_prefix(String(action.get("button_label", ""))), _cached_recruit_badge(direct_count, market_count)]
+		refreshed[index] = action
+	return refreshed
+
+func _cached_action_label_prefix(label: String) -> String:
+	var separator := label.find(" | ")
+	if separator >= 0:
+		return label.left(separator)
+	return label
+
+func _cached_cost_badge(direct_affordable: bool, market_coverable: bool) -> String:
+	if direct_affordable:
+		return "Ready"
+	if market_coverable:
+		return "Trade"
+	return "Blocked"
+
+func _cached_recruit_badge(direct_count: int, market_count: int) -> String:
+	if direct_count > 0:
+		return "Ready x%d" % direct_count
+	if market_count > 0:
+		return "Trade x%d" % market_count
+	return "Blocked"
+
+func _update_cached_build_readiness(view_state: Dictionary, actions: Array, town: Dictionary) -> void:
+	var ready_orders := 0
+	var market_orders := 0
+	var blocked_orders := 0
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if bool(action.get("direct_affordable", false)):
+			ready_orders += 1
+		elif bool(action.get("market_coverable", false)):
+			market_orders += 1
+		else:
+			blocked_orders += 1
+	var built_count := _normalize_string_array(town.get("built_buildings", [])).size()
+	if ready_orders > 0:
+		view_state["build_visible_text"] = "Build check: Ready x%d | %d built" % [ready_orders, built_count]
+	elif market_orders > 0:
+		view_state["build_visible_text"] = "Build check: Trade unlocks x%d" % market_orders
+	elif blocked_orders > 0:
+		view_state["build_visible_text"] = "Build check: Blocked x%d waiting" % blocked_orders
+
+func _refresh_cached_stage_dynamic(view_state: Dictionary, town: Dictionary) -> Dictionary:
+	var stage_state: Dictionary = view_state.get("stage_state", {}) if view_state.get("stage_state", {}) is Dictionary else {}
+	if stage_state.is_empty():
+		return _build_town_stage_view_state(town)
+	var refreshed := stage_state.duplicate(true)
+	refreshed["town"] = _town_stage_town_payload(town)
+	refreshed["stationed"] = HeroCommandRules.stationed_heroes(_session, town).duplicate(true)
+	for lane in ["build_actions", "recruit_actions", "response_actions", "study_actions", "market_actions"]:
+		if view_state.has(lane):
+			refreshed[lane] = _duplicate_action_array(view_state.get(lane, []))
+	return refreshed
+
+func _cached_departure_dynamic(departure_value: Variant) -> Dictionary:
+	var departure: Dictionary = departure_value.duplicate(true) if departure_value is Dictionary else {}
+	var movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
+	var move_current := int(movement.get("current", 0))
+	var move_max := int(movement.get("max", move_current))
+	departure["movement_current"] = move_current
+	departure["movement_max"] = move_max
+	departure["button_label"] = "Leave / End Turn" if move_current <= 0 else "Leave: %d/%d Move" % [move_current, move_max]
+	if move_current <= 0:
+		departure["visible_text"] = "Ready check: finish town orders, then leave and end turn."
+	else:
+		departure["visible_text"] = "Ready check: finish town orders, then leave with %d/%d move." % [move_current, move_max]
+	return departure
 
 func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 	var current_lanes := _current_town_tab_lanes()
@@ -539,13 +699,13 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 		"stage_state": _build_town_stage_view_state(),
 	}
 
-func _build_town_stage_view_state() -> Dictionary:
-	var town := TownRules.get_active_town(_session)
+func _build_town_stage_view_state(town_override: Dictionary = {}) -> Dictionary:
+	var town := town_override if not town_override.is_empty() else TownRules.get_active_town(_session)
 	if town.is_empty():
 		return {}
 	var town_template := ContentService.get_town(String(town.get("town_id", "")))
 	return {
-		"town": town.duplicate(true),
+		"town": _town_stage_town_payload(town),
 		"town_template": town_template.duplicate(true),
 		"faction": ContentService.get_faction(String(town_template.get("faction_id", ""))).duplicate(true),
 		"stationed": HeroCommandRules.stationed_heroes(_session, town).duplicate(true),
@@ -557,6 +717,24 @@ func _build_town_stage_view_state() -> Dictionary:
 		"logistics": OverworldRules.town_logistics_state(_session, town).duplicate(true),
 		"recovery": OverworldRules.town_recovery_state(_session, town).duplicate(true),
 		"threat": OverworldRules.town_public_threat_state(_session, town).duplicate(true),
+	}
+
+func _town_stage_town_payload(town: Dictionary) -> Dictionary:
+	return {
+		"placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"owner": String(town.get("owner", "")),
+		"strategic_role": String(town.get("strategic_role", "")),
+		"x": int(town.get("x", 0)),
+		"y": int(town.get("y", 0)),
+		"built_buildings": _normalize_string_array(town.get("built_buildings", [])),
+		"garrison": _duplicate_action_array(town.get("garrison", [])),
+		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
+		"recovery": _duplicate_dictionary(town.get("recovery", {})),
+		"front": _duplicate_dictionary(town.get("front", {})),
+		"occupation": _duplicate_dictionary(town.get("occupation", {})),
+		"market_state": _duplicate_dictionary(town.get("market_state", town.get("market", {}))),
+		"response_state": _duplicate_dictionary(town.get("response_state", town.get("responses", {}))),
 	}
 
 func _refresh_town_stage_view(view_state: Dictionary) -> void:
@@ -602,10 +780,10 @@ func _collection_size(value: Variant) -> int:
 
 func _town_entity_cache_signature(town: Dictionary, minimal: bool) -> String:
 	if _session == null:
-		return "v3|missing-session"
+		return "v4|missing-session"
 	var parts := []
 	var active_tab := _management_tabs.current_tab if _management_tabs != null else -1
-	parts.append("v3")
+	parts.append("v4")
 	parts.append("mode:%s" % ("minimal" if minimal else "full"))
 	parts.append("tab:%d" % active_tab)
 	parts.append("day:%d" % int(_session.day))
@@ -621,11 +799,6 @@ func _town_entity_cache_signature(town: Dictionary, minimal: bool) -> String:
 	parts.append("occupation:%s" % _compact_local_state_signature(town.get("occupation", {})))
 	parts.append("market:%s" % _compact_local_state_signature(town.get("market_state", town.get("market", {}))))
 	parts.append("response:%s" % _compact_local_state_signature(town.get("response_state", town.get("responses", {}))))
-	parts.append("resources:%s" % _scalar_pairs_signature(_session.overworld.get("resources", {})))
-	parts.append("active_hero:%s" % _active_hero_cache_signature(town))
-	parts.append("army:%s" % _army_state_signature(_session.overworld.get("army", {})))
-	parts.append("stationed:%s" % _stationed_heroes_cache_signature(town))
-	parts.append("recap:%s" % _town_action_recap_cache_signature())
 	return "|".join(parts)
 
 func _active_hero_cache_signature(town: Dictionary) -> String:
