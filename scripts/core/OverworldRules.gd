@@ -10279,11 +10279,16 @@ static func _attach_post_action_recap(
 	if not bool(result.get("ok", false)):
 		return result
 	var recap_started_usec := _rules_profile_timer()
-	_rules_profile_set("post_action_recap", "mode", "rich")
+	_rules_profile_set("post_action_recap", "mode", "compact")
 	_rules_profile_set("post_action_recap", "action_kind", action_kind)
+	_rules_profile_set("post_action_recap", "rich_surface_skipped", true)
+	_rules_profile_set("post_action_recap", "objective_feed_used", false)
+	_rules_profile_set("post_action_recap", "objective_stakes_surface_used", false)
 	var recap := _build_post_action_recap(session, action_kind, context, String(result.get("message", "")))
 	if not recap.is_empty():
 		result["post_action_recap"] = recap
+	else:
+		_rules_profile_set("post_action_recap", "mode", "skipped_compact")
 	_rules_profile_add_ms("post_action_recap_total_ms", recap_started_usec)
 	return result
 
@@ -10333,7 +10338,7 @@ static func _movement_post_action_recap(
 	var to_x := int(context.get("to_x", 0))
 	var to_y := int(context.get("to_y", 0))
 	var movement = session.overworld.get("movement", {})
-	var terrain := _terrain_name_at(session, to_x, to_y)
+	var route_steps: Array = context.get("route_steps", []) if context.get("route_steps", []) is Array else []
 	var happened := "Moved from %d,%d to %d,%d; Move %d/%d remains." % [
 		int(context.get("from_x", 0)),
 		int(context.get("from_y", 0)),
@@ -10342,12 +10347,11 @@ static func _movement_post_action_recap(
 		int(movement.get("current", 0)),
 		int(movement.get("max", 0)),
 	]
-	var affected := "Tile %d,%d on %s; scout net now shows %d tiles and has mapped %d." % [
+	var affected := "Tile %d,%d; route spent %d step%s and updated scouting." % [
 		to_x,
 		to_y,
-		terrain,
-		_visible_tile_count(session),
-		_explored_tile_count(session),
+		route_steps.size(),
+		"" if route_steps.size() == 1 else "s",
 	]
 	return _post_action_recap_payload(
 		"move",
@@ -10369,17 +10373,13 @@ static func _resource_site_post_action_recap(
 	message: String
 ) -> Dictionary:
 	var recap_started_usec := _rules_profile_timer()
-	var node := _post_action_resource_node(session, context)
-	var site := ContentService.get_resource_site(String(context.get("site_id", node.get("site_id", ""))))
+	var site_id := String(context.get("site_id", ""))
+	var site := ContentService.get_resource_site(site_id)
 	var site_name := String(site.get("name", "the site"))
-	var tile := _post_action_tile_label(context, node)
-	var surface := describe_resource_site_surface(session, node, site)
-	var control := describe_resource_site_control_summary(session, node, site)
+	var tile := _post_action_tile_label(context, {})
 	var reward := _describe_reward_delta(context.get("rewards", _resource_site_claim_rewards(site)))
 	var happened := _sentence_with_keyword_or_default(message, site_name, "Secured %s." % site_name)
-	var affected_parts := [site_name, tile, surface]
-	if control != "":
-		affected_parts.append(control)
+	var affected_parts := [site_name, tile]
 	if reward != "":
 		affected_parts.append("Reward %s" % reward)
 	var recap := _post_action_recap_payload(
@@ -10388,7 +10388,7 @@ static func _resource_site_post_action_recap(
 		" | ".join(_non_empty_strings(affected_parts)),
 		_resource_site_post_action_why(site),
 		_post_action_next_step(session),
-		"%s secured | %s" % [site_name, _short_player_text(control if control != "" else surface, 46)]
+		"%s secured%s" % [site_name, " | %s" % _short_player_text(reward, 46) if reward != "" else ""]
 	)
 	_rules_profile_add_ms("post_action_recap_resource_ms", recap_started_usec)
 	return recap
@@ -10426,14 +10426,13 @@ static func _site_response_post_action_recap(
 ) -> Dictionary:
 	var node := _post_action_resource_node(session, context)
 	var site := ContentService.get_resource_site(String(context.get("site_id", node.get("site_id", ""))))
-	var response_state := _resource_site_response_state(session, node, site)
 	var site_name := String(site.get("name", "the site"))
 	var affected := "%s at %s | %s" % [
 		site_name,
 		_post_action_tile_label(context, node),
-		_resource_site_context_summary(session, node, site),
+		"response order updated",
 	]
-	var impact_summary := _resource_site_response_effect_summary(response_state)
+	var impact_summary := "route response active"
 	return _post_action_recap_payload(
 		"site_response",
 		_first_sentence_or_default(message, "%s response order issued." % site_name),
@@ -10485,7 +10484,7 @@ static func _town_capture_post_action_recap(
 	return _post_action_recap_payload(
 		"town_capture",
 		_first_sentence_or_default(message, "Captured %s." % town_name),
-		"%s at %s | %s" % [town_name, _post_action_tile_label(context, town), describe_town_context(town, session) if not town.is_empty() else "Control changed"],
+		"%s at %s | Control changed" % [town_name, _post_action_tile_label(context, town)],
 		"Town control changes recruitment, economy, defense posture, and objective progress.",
 		_post_action_next_step(session),
 		"%s captured | check town orders" % town_name
@@ -10517,12 +10516,11 @@ static func _battle_post_action_recap(
 	var encounter_result := _find_encounter_by_placement(session, placement_id)
 	var encounter: Dictionary = encounter_result.get("encounter", context)
 	var label := encounter_display_name(encounter)
-	var consequence := describe_encounter_consequence_surface(session, encounter, true)
 	return _post_action_recap_payload(
 		"battle",
 		_sentence_with_keyword_or_default(message, label, "Battle is joined against %s." % label),
 		"%s at %s | %s" % [label, _post_action_tile_label(context, encounter), describe_encounter_compact_readability(session, encounter)],
-		"Clearing the guard can open routes, rewards, scouting, or objective progress%s." % ("" if consequence == "" else " (%s)" % consequence),
+		"Clearing the guard can open routes, rewards, scouting, or objective progress.",
 		"Resolve the battle, then check the returned field report before spending the next move.",
 		"%s engaged | resolve battle" % label
 	)
@@ -10537,7 +10535,7 @@ static func _generic_post_action_recap(
 	return _post_action_recap_payload(
 		action_kind,
 		_first_sentence_or_default(message, "Order resolved."),
-		_dispatch_context_brief(session),
+		"Active hero at %d,%d." % [pos.x, pos.y],
 		"Resolved orders change the live route, economy, objective, or next-turn risk surface.",
 		_post_action_next_step(session),
 		"%s | %d,%d" % [_short_player_text(_first_sentence_or_default(message, "Order resolved."), 52), pos.x, pos.y]
@@ -10552,6 +10550,7 @@ static func _post_action_recap_payload(
 	cue_text: String
 ) -> Dictionary:
 	var recap := {
+		"mode": "compact",
 		"kind": kind,
 		"happened": _short_player_text(happened.strip_edges(), 180),
 		"affected": _short_player_text(affected.strip_edges(), 180),
@@ -10582,6 +10581,7 @@ static func _normalize_post_action_recap(value: Variant) -> Dictionary:
 	if tooltip_text == "":
 		tooltip_text = "Action Recap\n- Happened: %s\n- Affected: %s\n- Why it matters: %s\n- Next: %s" % [happened, affected, why, next_step]
 	return {
+		"mode": String(recap.get("mode", "compact")),
 		"kind": String(recap.get("kind", "action")),
 		"happened": happened,
 		"affected": affected,
@@ -10667,10 +10667,8 @@ static func _post_action_tile_label(context: Dictionary, fallback: Dictionary) -
 
 static func _post_action_next_step(session: SessionStateStoreScript.SessionData) -> String:
 	var next_step_started_usec := _rules_profile_timer()
-	var objective_next := _event_feed_next_step_line(session)
-	if objective_next != "":
-		_rules_profile_add_ms("post_action_next_step_ms", next_step_started_usec)
-		return objective_next
+	_rules_profile_set("post_action_recap", "next_step_mode", "compact")
+	_rules_profile_set("post_action_recap", "objective_feed_used", false)
 	var movement = session.overworld.get("movement", {})
 	if int(movement.get("current", 0)) <= 0:
 		_rules_profile_add_ms("post_action_next_step_ms", next_step_started_usec)

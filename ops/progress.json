@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-interaction-confirmation-rules-instrumentation-10184",
-  "currentSliceTitle": "Overworld Interaction Confirmation Rules Instrumentation",
+  "currentSliceId": "overworld-interactable-compact-confirmation-10184",
+  "currentSliceTitle": "Overworld Interactable Compact Confirmation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed instrumentation-only Slice 1; descriptor movement_rules costs now export additive rule sub-buckets.",
-  "nextActionGuardrailNote": "Preserve gameplay semantics, generated map content/density, renderer/fog behavior, save schema, object contracts, F3/profile-log compatibility, open/current route fast paths, and town first-render/cache-build behavior; no async/threading claim for same-thread work.",
-  "updatedAt": "2026-05-01T17:40:50Z",
+  "currentSliceNotes": "Completed compact selected-interactable confirmation recaps while preserving full scenario evaluation and profile/analyzer compatibility.",
+  "nextActionGuardrailNote": "Preserve gameplay semantics, generated map content/density, renderer/fog behavior, save schema, object contracts, F3/profile-log compatibility, open/current route fast paths, scenario evaluation semantics, and ordinary no-save interaction confirmation.",
+  "updatedAt": "2026-05-01T18:28:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -5572,6 +5572,58 @@
         "git diff --check passed after completion metadata update."
       ],
       "completedAt": "2026-05-01T17:40:50Z"
+    },
+    {
+      "id": "overworld-interactable-compact-confirmation-10184",
+      "title": "Overworld Interactable Compact Confirmation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-interaction-destination-fast-path-10184",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-01T18:28:00Z",
+      "startedAt": "2026-05-01T18:12:00Z",
+      "completedAt": "2026-05-01T18:28:00Z",
+      "notes": "Completed compact selected-interactable confirmation recaps after the 2d2a778 rendered profile isolated rich recap/next-step work as the immediate hot-path cost.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/profile-jsonl-usage.md",
+        ".artifacts/audits/20260501_interactable_confirmation_solution_plan.md",
+        ".artifacts/uploaded_profiles/20260501/display99_interactions_after_2d2a778_overworld_profile.jsonl",
+        ".artifacts/uploaded_profiles/20260501/display99_interactions_after_2d2a778_overworld_profile.summary.txt"
+      ],
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "tests/overworld_interaction_profile_log_regression.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Post-action next-step generation for interactable confirmation does not call objective-feed or objective-stakes surfaces.",
+        "Resource, artifact, site-response, spell, town capture/visit, battle handoff, movement, and generic shared recap builders produce compact selected-interactable recaps.",
+        "Descriptor resource confirmation JSONL exposes compact recap metadata and visible sub-buckets while preserving full scenario-evaluation metadata.",
+        "Ordinary descriptor interactable confirmation does not observe save/autosave work.",
+        "Requested Godot regressions, uploaded-profile analyzer, JSON, and whitespace validations pass."
+      ],
+      "nonGoals": [
+        "No scenario-evaluation skipping/scoping, save/autosave/save-surface optimization, generated setup/content/density changes, renderer shortcuts, town first-render/cache-build changes, descriptor index adoption, blocked-index delta update, battle/town scene rendering optimization, save schema changes, object contract changes, or gameplay semantics changes."
+      ],
+      "completionEvidence": [
+        "OverworldRules post-action recap attachment now records compact/skipped metadata, rich_surface_skipped=true, objective_feed_used=false, objective_stakes_surface_used=false, and compact next-step mode.",
+        "_post_action_next_step() now returns compact movement/status guidance without calling _event_feed_next_step_line() or _objective_stakes_surface().",
+        "Resource-site, artifact, site-response, spell, town capture/visit, battle, movement, and generic shared recap builders now use selected-interactable/action facts instead of broad objective/feed/status surfaces.",
+        "Descriptor resource confirmation profile-log regression now asserts compact recap metadata, bounded compact next-step work, full scenario evaluation metadata, visible movement-rule sub-buckets, and save.observed=false."
+      ],
+      "validationEvidence": [
+        "godot4 --headless --path . res://tests/overworld_route_destination_only_action_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_interaction_profile_log_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_cached_route_execution_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_incremental_route_preview_refresh_regression.tscn passed.",
+        "python3 scripts/analyze_overworld_profile_log.py --mode overworld .artifacts/uploaded_profiles/20260501/display99_interactions_after_2d2a778_overworld_profile.jsonl passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ]
     }
   ],
   "completedImplementationEvidence": [

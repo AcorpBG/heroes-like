@@ -281,6 +281,9 @@ func _assert_resource_descriptor_profile_record(record: Dictionary) -> bool:
 		if not sub_buckets.has(required_bucket):
 			_fail("Resource confirmation JSONL is missing movement rule sub-bucket %s." % required_bucket, record)
 			return false
+	if float(sub_buckets.get("post_action_next_step_ms", 0.0)) > 50.0:
+		_fail("Resource confirmation spent too long in compact next-step recap.", record)
+		return false
 	var descriptor: Dictionary = movement_rules.get("descriptor", {}) if movement_rules.get("descriptor", {}) is Dictionary else {}
 	if String(descriptor.get("kind", "")) != "resource" or String(descriptor.get("lookup_mode", "")) == "":
 		_fail("Resource confirmation JSONL did not expose descriptor lookup details.", record)
@@ -288,6 +291,23 @@ func _assert_resource_descriptor_profile_record(record: Dictionary) -> bool:
 	var scenario_eval: Dictionary = movement_rules.get("scenario_eval", {}) if movement_rules.get("scenario_eval", {}) is Dictionary else {}
 	if String(scenario_eval.get("dependency_mode", "")) != "full" or not scenario_eval.has("objective_count") or not scenario_eval.has("hook_count"):
 		_fail("Resource confirmation JSONL did not expose scenario evaluation summary.", record)
+		return false
+	var recap_profile: Dictionary = movement_rules.get("post_action_recap", {}) if movement_rules.get("post_action_recap", {}) is Dictionary else {}
+	if String(recap_profile.get("mode", "")) != "compact":
+		_fail("Resource confirmation did not expose compact recap mode.", record)
+		return false
+	if not bool(recap_profile.get("rich_surface_skipped", false)):
+		_fail("Resource confirmation did not record rich recap surface skip.", record)
+		return false
+	if bool(recap_profile.get("objective_feed_used", true)) or bool(recap_profile.get("objective_stakes_surface_used", true)):
+		_fail("Resource confirmation compact recap should not use objective feed/stakes surfaces.", record)
+		return false
+	if String(recap_profile.get("next_step_mode", "")) != "compact":
+		_fail("Resource confirmation compact recap did not expose compact next-step mode.", record)
+		return false
+	var save_profile: Dictionary = record.get("save", {}) if record.get("save", {}) is Dictionary else {}
+	if bool(save_profile.get("observed", false)):
+		_fail("Resource confirmation unexpectedly observed save/autosave work.", record)
 		return false
 	var fog: Dictionary = movement_rules.get("fog", {}) if movement_rules.get("fog", {}) is Dictionary else {}
 	if not fog.has("grid_cells") or not fog.has("source_count"):
