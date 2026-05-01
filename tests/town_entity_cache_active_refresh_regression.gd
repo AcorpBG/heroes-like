@@ -50,6 +50,12 @@ func _run() -> void:
 	var hit_snapshot: Dictionary = shell.call("validation_force_refresh")
 	if not _assert_snapshot(hit_snapshot, first_id, true, true, "same-town refresh"):
 		return
+	var minimal_again_snapshot: Dictionary = shell.call("validation_force_minimal_refresh")
+	if not _assert_snapshot(minimal_again_snapshot, first_id, true, true, "same-town minimal refresh after full refresh"):
+		return
+	var full_again_snapshot: Dictionary = shell.call("validation_force_refresh")
+	if not _assert_snapshot(full_again_snapshot, first_id, true, true, "same-town full refresh after minimal refresh"):
+		return
 
 	OverworldRules.set_active_town_visit(session, second_id)
 	OverworldRules.validation_set_pathing_profile_capture_enabled(true)
@@ -109,6 +115,7 @@ func _run() -> void:
 		"first_town": first_id,
 		"second_town": second_id,
 		"build_action": build_action,
+		"same_town_minimal_full_entry_count": int(full_again_snapshot.get("entry_count", 0)),
 		"cache_hit_buckets": cache_hit_record.get("buckets_ms", {}),
 	})])
 	get_tree().quit(0)

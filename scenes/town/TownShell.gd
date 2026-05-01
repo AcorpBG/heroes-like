@@ -423,11 +423,13 @@ func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> 
 	var signature_started := ProfileLogScript.begin_usec()
 	var signature := _town_entity_cache_signature(town, minimal)
 	var signature_ms := ProfileLogScript.elapsed_ms(signature_started)
-	var entry: Dictionary = bucket.get(placement_id, {}) if bucket.get(placement_id, {}) is Dictionary else {}
-	if String(entry.get("signature", "")) == signature and entry.get("view_state", {}) is Dictionary and (minimal or not bool(entry.get("minimal", false))):
+	var cache_key := _town_entity_cache_entry_key(placement_id, minimal)
+	var entry: Dictionary = bucket.get(cache_key, {}) if bucket.get(cache_key, {}) is Dictionary else {}
+	if String(entry.get("signature", "")) == signature and entry.get("view_state", {}) is Dictionary:
 		_last_town_entity_cache_result = {
 			"hit": true,
 			"placement_id": placement_id,
+			"cache_key": cache_key,
 			"entry_count": bucket.size(),
 			"signature": signature,
 			"signature_ms": signature_ms,
@@ -438,15 +440,17 @@ func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> 
 	var build_started := ProfileLogScript.begin_usec()
 	var view_state := _build_active_town_entity_view_state(minimal)
 	var build_ms := ProfileLogScript.elapsed_ms(build_started)
-	bucket[placement_id] = {
+	bucket[cache_key] = {
 		"signature": signature,
 		"view_state": view_state.duplicate(true),
+		"placement_id": placement_id,
 		"minimal": minimal,
 	}
 	_town_entity_cache_by_session[session_key] = bucket
 	_last_town_entity_cache_result = {
 		"hit": false,
 		"placement_id": placement_id,
+		"cache_key": cache_key,
 		"entry_count": bucket.size(),
 		"signature": signature,
 		"signature_ms": signature_ms,
@@ -773,6 +777,35 @@ func _town_entity_session_cache_key() -> String:
 		return ""
 	return "%s|%s" % [String(_session.session_id), String(_session.scenario_id)]
 
+func _town_entity_cache_entry_key(placement_id: String, minimal: bool) -> String:
+	return "%s|%s" % [placement_id, "minimal" if minimal else "full"]
+
+func _town_entity_cache_has_placement(bucket: Dictionary, placement_id: String) -> bool:
+	if placement_id == "":
+		return false
+	for key_value in bucket.keys():
+		var entry: Dictionary = bucket.get(key_value, {}) if bucket.get(key_value, {}) is Dictionary else {}
+		if String(entry.get("placement_id", "")) == placement_id:
+			return true
+		if String(key_value) == placement_id or String(key_value).begins_with("%s|" % placement_id):
+			return true
+	return false
+
+func _town_entity_cached_placements(bucket: Dictionary) -> Array:
+	var by_id := {}
+	for key_value in bucket.keys():
+		var entry: Dictionary = bucket.get(key_value, {}) if bucket.get(key_value, {}) is Dictionary else {}
+		var placement_id := String(entry.get("placement_id", ""))
+		if placement_id == "":
+			placement_id = String(key_value).split("|", false, 1)[0]
+		if placement_id != "":
+			by_id[placement_id] = true
+	var placements := []
+	for placement_id in by_id.keys():
+		placements.append(String(placement_id))
+	placements.sort()
+	return placements
+
 func _invalidate_active_town_entity_cache(reason: String, scopes: Array = []) -> void:
 	if _session == null:
 		return
@@ -784,7 +817,11 @@ func _invalidate_active_town_entity_cache(reason: String, scopes: Array = []) ->
 		return
 	var session_key := _town_entity_session_cache_key()
 	var bucket: Dictionary = _town_entity_cache_by_session.get(session_key, {}) if _town_entity_cache_by_session.get(session_key, {}) is Dictionary else {}
-	bucket.erase(placement_id)
+	for key_value in bucket.keys().duplicate():
+		var key := String(key_value)
+		var entry: Dictionary = bucket.get(key_value, {}) if bucket.get(key_value, {}) is Dictionary else {}
+		if key == placement_id or key.begins_with("%s|" % placement_id) or String(entry.get("placement_id", "")) == placement_id:
+			bucket.erase(key_value)
 	_town_entity_cache_by_session[session_key] = bucket
 	_last_town_entity_cache_result = {
 		"hit": false,
@@ -1107,21 +1144,22 @@ func validation_force_refresh() -> Dictionary:
 	_refresh()
 	return validation_town_entity_cache_snapshot()
 
+func validation_force_minimal_refresh() -> Dictionary:
+	_refresh(true)
+	return validation_town_entity_cache_snapshot()
+
 func validation_town_entity_cache_snapshot() -> Dictionary:
 	var town := TownRules.get_active_town(_session)
 	var placement_id := String(town.get("placement_id", "")) if town is Dictionary else ""
 	var session_key := _town_entity_session_cache_key()
 	var bucket: Dictionary = _town_entity_cache_by_session.get(session_key, {}) if _town_entity_cache_by_session.get(session_key, {}) is Dictionary else {}
-	var cached_placements := []
-	for key_value in bucket.keys():
-		cached_placements.append(String(key_value))
-	cached_placements.sort()
+	var cached_placements := _town_entity_cached_placements(bucket)
 	return {
 		"active_placement_id": placement_id,
 		"session_cache_key": session_key,
 		"cached_placements": cached_placements,
 		"entry_count": bucket.size(),
-		"active_cached": bucket.has(placement_id),
+		"active_cached": _town_entity_cache_has_placement(bucket, placement_id),
 		"last_cache_result": _last_town_entity_cache_result.duplicate(true),
 		"last_cache_hit": bool(_last_town_entity_cache_result.get("hit", false)),
 		"last_save_surface_profile": _last_save_surface_profile.duplicate(true),

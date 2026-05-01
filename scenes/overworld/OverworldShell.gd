@@ -6564,8 +6564,8 @@ func validation_snapshot() -> Dictionary:
 		"threat_summary": _cached_frontier_threats(),
 		"frontier_watch": _cached_frontier_threats(),
 		"enemy_pressure_states": _validation_enemy_pressure_states(),
-		"latest_save_summary": SaveService.latest_loadable_summary(),
-		"save_surface": AppRouter.active_save_surface(),
+		"latest_save_summary": _validation_latest_save_summary_snapshot(),
+		"save_surface": _validation_save_surface_snapshot(),
 		"save_status_visible_text": _save_status_label.text,
 		"save_status_tooltip_text": _save_status_label.tooltip_text,
 		"map_viewport": _validation_map_viewport_state(),
@@ -6573,6 +6573,36 @@ func validation_snapshot() -> Dictionary:
 		"chrome": _validation_chrome_state(),
 		"debug_overlay": validation_debug_overlay_snapshot(),
 		"profile": validation_profile_snapshot(),
+	}
+
+func _validation_latest_save_summary_snapshot() -> Dictionary:
+	if _use_generated_compact_refresh():
+		return {}
+	return SaveService.latest_loadable_summary()
+
+func _validation_save_surface_snapshot() -> Dictionary:
+	if not _use_generated_compact_refresh():
+		return AppRouter.active_save_surface()
+	var selected_slot := SaveService.get_selected_manual_slot()
+	return {
+		"selected_slot": selected_slot,
+		"slot_summary": {},
+		"latest_summary": {},
+		"save_button_label": _save_button.text,
+		"save_button_tooltip": _save_button.tooltip_text,
+		"latest_context": _save_status_label.text,
+		"current_context": "",
+		"play_check": "",
+		"save_check": "",
+		"save_handoff": "",
+		"save_handoff_brief": "",
+		"return_handoff": "",
+		"current_save_recap": "",
+		"slot_resume_recap": "",
+		"latest_resume_recap": "",
+		"menu_button_label": _menu_button.text,
+		"menu_button_tooltip": _menu_button.tooltip_text,
+		"compact_generated_validation": true,
 	}
 
 func _validation_map_viewport_state() -> Dictionary:
