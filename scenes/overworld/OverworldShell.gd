@@ -646,6 +646,7 @@ func _move_toward_selected_tile() -> void:
 			"post_action_recap_skipped": bool(route_execution.get("post_action_recap_skipped", false)),
 			"scenario_eval_skipped": bool(route_execution.get("scenario_eval_skipped", false)),
 			"interaction_dispatch_mode": String(route_execution.get("interaction_dispatch_mode", "global_fallback" if not use_cached_execution else "")),
+			"descriptor_route_fog_reused": bool(route_execution.get("descriptor_route_fog_reused", false)),
 		}
 	)
 	_adopt_selected_route_after_execution(route, result)
@@ -1280,6 +1281,7 @@ func _refresh_selected_route_action_surface() -> void:
 		if first_action.get("destination_interaction", {}) is Dictionary:
 			destination = first_action.get("destination_interaction", {})
 	var simple_route_ui := bool(destination.get("simple_route_ui_fast_path", false))
+	var compact_interaction_destination := bool(destination.get("compact_interaction_destination_fast_path", false))
 	var rich_route_surface_skipped := bool(destination.get("rich_route_surface_skipped", false))
 	var destination_kind := String(destination.get("kind", ""))
 	if simple_route_ui:
@@ -1302,6 +1304,7 @@ func _refresh_selected_route_action_surface() -> void:
 		"destination_interaction_status": String(destination.get("status", "")),
 		"route_status": String(destination.get("route_status", "")),
 		"simple_route_ui_fast_path": simple_route_ui,
+		"compact_interaction_destination_fast_path": compact_interaction_destination,
 		"rich_route_surface_skipped": rich_route_surface_skipped,
 	}
 	_validation_profile["last_route_destination_only_action_path"] = profile_payload
@@ -2073,6 +2076,20 @@ func _refresh_primary_action_button(action: Dictionary) -> void:
 			"town_entry_handoff_skipped": true,
 		}
 		return
+	if bool(action.get("compact_interaction_destination_fast_path", false)):
+		_primary_action_button.tooltip_text = _join_tooltip_sections([
+			summary,
+			"Press Enter or Space to commit this route order.",
+		])
+		_profile_add("primary_route_action_cheap_tooltip", 1)
+		_validation_profile["last_primary_route_action_tooltip"] = {
+			"mode": "compact_interaction_destination",
+			"action_id": String(action.get("id", "")),
+			"rich_commit_check_skipped": true,
+			"route_target_handoff_skipped": true,
+			"town_entry_handoff_skipped": true,
+		}
+		return
 	var commit_check := _primary_order_commit_check_surface(action)
 	var active_site_order := _active_site_order_surface(action)
 	_primary_action_button.tooltip_text = _join_tooltip_sections([
@@ -2348,6 +2365,31 @@ func _build_selected_route_destination_actions() -> Array:
 		if simple_status == "no_movement":
 			simple_action["disabled"] = true
 		return [simple_action]
+	var compact_destination := _selected_route_compact_interaction_destination_surface()
+	if not compact_destination.is_empty():
+		var compact_decision: Dictionary = compact_destination.get("route_decision", {}) if compact_destination.get("route_decision", {}) is Dictionary else {}
+		var compact_status := String(compact_destination.get("status", ""))
+		if compact_status in ["blocked", "out_of_bounds"]:
+			var compact_reason := String(compact_destination.get("blocked_reason", "")).strip_edges()
+			if compact_reason == "":
+				compact_reason = "No clear route from the active hero."
+			return [_disabled_route_destination_action("route_blocked", "Route Blocked", compact_reason, compact_decision, compact_destination)]
+		var compact_route: Array = compact_destination.get("route_tiles", []) if compact_destination.get("route_tiles", []) is Array else []
+		if compact_route.size() <= 1:
+			return [_disabled_route_destination_action("route_unavailable", "No Route", "No clear route from the active hero.", compact_decision, compact_destination)]
+		var compact_adjacent := bool(compact_destination.get("adjacent", false))
+		var compact_action := {
+			"id": "march_selected" if compact_adjacent else "advance_route",
+			"label": _selected_route_destination_action_label(compact_destination, compact_adjacent),
+			"summary": _selected_route_compact_action_summary(compact_destination),
+			"route_decision": compact_decision,
+			"destination_interaction": compact_destination,
+			"destination_only": true,
+			"compact_interaction_destination_fast_path": true,
+		}
+		if compact_status == "no_movement":
+			compact_action["disabled"] = true
+		return [compact_action]
 	var destination := _selected_route_destination_interaction_surface()
 	var route_decision: Dictionary = destination.get("route_decision", {}) if destination.get("route_decision", {}) is Dictionary else {}
 	var kind := String(destination.get("kind", "open"))
@@ -2394,6 +2436,24 @@ func _disabled_route_destination_action(
 	}
 
 func _selected_route_simple_destination_surface() -> Dictionary:
+	var destination := _selected_route_compact_destination_surface()
+	var destination_kind := String(destination.get("kind", ""))
+	if destination_kind not in ["open", "current"]:
+		return {}
+	if not destination.is_empty():
+		destination["simple_route_ui_fast_path"] = true
+	return destination
+
+func _selected_route_compact_interaction_destination_surface() -> Dictionary:
+	var destination := _selected_route_compact_destination_surface()
+	var destination_kind := String(destination.get("kind", ""))
+	if destination_kind in ["", "open", "current"]:
+		return {}
+	if not destination.is_empty():
+		destination["compact_interaction_destination_fast_path"] = true
+	return destination
+
+func _selected_route_compact_destination_surface() -> Dictionary:
 	var route_state := _ensure_selected_route_state("simple_destination_action")
 	var route: Array = route_state.get("route_tiles", []) if route_state.get("route_tiles", []) is Array else []
 	var hero_pos := OverworldRules.hero_position(_session)
@@ -2401,12 +2461,18 @@ func _selected_route_simple_destination_surface() -> Dictionary:
 	var descriptor_kind := String(descriptor.get("kind", "open"))
 	if _selected_tile == hero_pos:
 		descriptor_kind = "current"
-	if descriptor_kind not in ["open", "current"]:
+	if descriptor_kind not in ["open", "current", "resource", "artifact", "encounter", "town"]:
 		return {}
-	var route_decision := _selected_route_compact_decision_surface(route_state, descriptor_kind)
+	var route_decision := _selected_route_compact_decision_surface(
+		route_state,
+		descriptor_kind,
+		_selected_route_compact_destination_name(descriptor, descriptor_kind),
+		_selected_route_compact_action_kind(descriptor_kind, _is_adjacent_move_target(hero_pos, _selected_tile)),
+		_selected_route_compact_action_label(descriptor, descriptor_kind, _is_adjacent_move_target(hero_pos, _selected_tile))
+	)
 	if route_decision.is_empty():
 		return {}
-	return {
+	var destination := {
 		"kind": descriptor_kind,
 		"status": "hold" if descriptor_kind == "current" else String(route_decision.get("status", "")),
 		"route_status": String(route_decision.get("status", "")),
@@ -2417,12 +2483,24 @@ func _selected_route_simple_destination_surface() -> Dictionary:
 		"route_decision": route_decision,
 		"blocked_reason": String(route_decision.get("blocked_reason", "")),
 		"summary": "",
-		"simple_route_ui_fast_path": true,
 		"rich_route_surface_skipped": true,
 		"interaction_signature": String(descriptor.get("interaction_signature", "")),
 	}
+	for key in ["placement_id", "site_id", "artifact_id", "encounter_id", "town_id", "owner"]:
+		if descriptor.has(key):
+			destination[key] = descriptor.get(key)
+	if descriptor_kind == "resource":
+		destination["interaction_label"] = _selected_route_compact_resource_action_label(descriptor, bool(destination.get("adjacent", false)))
+	destination["summary"] = _selected_route_compact_destination_summary(destination)
+	return destination
 
-func _selected_route_compact_decision_surface(route_state: Dictionary, destination_kind: String) -> Dictionary:
+func _selected_route_compact_decision_surface(
+	route_state: Dictionary,
+	destination_kind: String,
+	destination_name: String = "",
+	compact_action_kind: String = "",
+	compact_action_label: String = ""
+) -> Dictionary:
 	if not _tile_in_bounds(_selected_tile):
 		return {}
 	var hero_pos := OverworldRules.hero_position(_session)
@@ -2459,8 +2537,8 @@ func _selected_route_compact_decision_surface(route_state: Dictionary, destinati
 			remaining_text,
 		]
 	var adjacent := _is_adjacent_move_target(hero_pos, _selected_tile)
-	var action_kind := "move"
-	var action_label := "March" if adjacent else "Advance"
+	var action_kind := compact_action_kind if compact_action_kind != "" else "move"
+	var action_label := compact_action_label if compact_action_label != "" else ("March" if adjacent else "Advance")
 	var movement_cost: int = steps if steps > 0 else 0
 	var reachable_today: bool = steps > 0 and destination_reachable
 	var route_clear: bool = steps > 0
@@ -2485,8 +2563,11 @@ func _selected_route_compact_decision_surface(route_state: Dictionary, destinati
 	else:
 		status = "blocked"
 		blocked_reason = "No clear route from the active hero."
+	var destination_label := destination_name.strip_edges()
+	if destination_label == "":
+		destination_label = "Current Position" if selected_is_hero else "%d,%d" % [_selected_tile.x, _selected_tile.y]
 	return {
-		"destination": "Current Position" if selected_is_hero else "%d,%d" % [_selected_tile.x, _selected_tile.y],
+		"destination": destination_label,
 		"x": _selected_tile.x,
 		"y": _selected_tile.y,
 		"action_kind": action_kind,
@@ -2529,6 +2610,88 @@ func _selected_route_compact_decision_surface(route_state: Dictionary, destinati
 		"decision_brief_text": "",
 		"simple_route_ui_fast_path": true,
 	}
+
+func _selected_route_compact_destination_name(descriptor: Dictionary, destination_kind: String) -> String:
+	match destination_kind:
+		"current":
+			return "Current Position"
+		"town":
+			var town_data := ContentService.get_town(String(descriptor.get("town_id", "")))
+			return String(town_data.get("name", descriptor.get("placement_id", "Town")))
+		"resource":
+			var site := ContentService.get_resource_site(String(descriptor.get("site_id", "")))
+			return String(site.get("name", "Resource site"))
+		"artifact":
+			return ArtifactRules.artifact_name(String(descriptor.get("artifact_id", "")))
+		"encounter":
+			var encounter_id := String(descriptor.get("encounter_id", ""))
+			var encounter_data := ContentService.get_encounter(encounter_id)
+			return String(encounter_data.get("name", descriptor.get("placement_id", "Encounter")))
+		_:
+			return "%d,%d" % [_selected_tile.x, _selected_tile.y]
+
+func _selected_route_compact_action_kind(destination_kind: String, adjacent: bool) -> String:
+	match destination_kind:
+		"town":
+			return "town" if adjacent else "move/town"
+		"resource":
+			return "collect" if adjacent else "move/collect"
+		"artifact":
+			return "collect" if adjacent else "move/collect"
+		"encounter":
+			return "enter" if adjacent else "move/enter"
+		_:
+			return "move"
+
+func _selected_route_compact_action_label(descriptor: Dictionary, destination_kind: String, adjacent: bool) -> String:
+	match destination_kind:
+		"town":
+			var owner := String(descriptor.get("owner", "neutral"))
+			if adjacent:
+				return "Visit Town" if owner == "player" else "Approach Town"
+			return "Advance to Town"
+		"resource":
+			return _selected_route_compact_resource_action_label(descriptor, adjacent)
+		"artifact":
+			return "Recover Artifact" if adjacent else "Advance to Artifact"
+		"encounter":
+			return "Enter Battle" if adjacent else "Advance to Battle"
+		_:
+			return "March" if adjacent else "Advance"
+
+func _selected_route_compact_resource_action_label(descriptor: Dictionary, adjacent: bool) -> String:
+	if not adjacent:
+		return "Advance to Site"
+	var site := ContentService.get_resource_site(String(descriptor.get("site_id", "")))
+	if bool(site.get("persistent_control", false)) and String(descriptor.get("collected_by_faction_id", "")) == "player":
+		return "Enter Site"
+	return "Secure Site"
+
+func _selected_route_compact_destination_summary(destination: Dictionary) -> String:
+	var route_decision: Dictionary = destination.get("route_decision", {}) if destination.get("route_decision", {}) is Dictionary else {}
+	var target := String(route_decision.get("destination", "%d,%d" % [_selected_tile.x, _selected_tile.y]))
+	var adjacent := bool(destination.get("adjacent", false))
+	match String(destination.get("kind", "open")):
+		"town":
+			return "%s %s." % [_selected_route_destination_action_label(destination, adjacent), target]
+		"resource":
+			return "%s %s." % [_selected_route_destination_action_label(destination, adjacent), target]
+		"artifact":
+			return "%s %s." % [_selected_route_destination_action_label(destination, adjacent), target]
+		"encounter":
+			return "%s %s." % [_selected_route_destination_action_label(destination, adjacent), target]
+		_:
+			return _selected_route_simple_action_summary(destination)
+
+func _selected_route_compact_action_summary(destination: Dictionary) -> String:
+	var route_decision: Dictionary = destination.get("route_decision", {}) if destination.get("route_decision", {}) is Dictionary else {}
+	var route_summary := _selected_route_simple_action_summary(destination)
+	var interaction_summary := String(destination.get("summary", "")).strip_edges()
+	if interaction_summary == "":
+		return route_summary
+	if route_summary == "":
+		return interaction_summary
+	return "%s %s" % [interaction_summary, route_summary]
 
 func _selected_route_simple_action_summary(destination: Dictionary) -> String:
 	var route_decision: Dictionary = destination.get("route_decision", {}) if destination.get("route_decision", {}) is Dictionary else {}
@@ -2654,10 +2817,12 @@ func _selected_route_destination_execution_descriptor(tile: Vector2i) -> Diction
 		descriptor["kind"] = "resource"
 		descriptor["placement_id"] = String(node.get("placement_id", ""))
 		descriptor["site_id"] = String(node.get("site_id", ""))
+		descriptor["collected_by_faction_id"] = String(node.get("collected_by_faction_id", ""))
 		return descriptor
 	var artifact_node := _artifact_node_at(tile.x, tile.y)
 	if not artifact_node.is_empty():
 		descriptor["kind"] = "artifact"
+		descriptor["placement_id"] = String(artifact_node.get("placement_id", ""))
 		descriptor["artifact_id"] = String(artifact_node.get("artifact_id", ""))
 		return descriptor
 	var encounter := _encounter_at(tile.x, tile.y)
@@ -4402,21 +4567,26 @@ func _describe_selected_tile() -> String:
 		return OverworldRules.describe_context(_session)
 
 	var terrain = _terrain_name_at(_selected_tile.x, _selected_tile.y)
-	var simple_destination := _selected_route_simple_destination_surface()
+	var compact_destination := _selected_route_compact_destination_surface()
 	var route_line := ""
-	if not simple_destination.is_empty():
-		var simple_decision: Dictionary = simple_destination.get("route_decision", {}) if simple_destination.get("route_decision", {}) is Dictionary else {}
-		route_line = _route_decision_line(simple_decision)
-		var destination_kind := String(simple_destination.get("kind", "open"))
-		_profile_add("context_tile_text_simple_route_fast_path", 1)
+	if not compact_destination.is_empty():
+		var compact_decision: Dictionary = compact_destination.get("route_decision", {}) if compact_destination.get("route_decision", {}) is Dictionary else {}
+		route_line = _route_decision_line(compact_decision)
+		var destination_kind := String(compact_destination.get("kind", "open"))
+		if destination_kind in ["open", "current"]:
+			_profile_add("context_tile_text_simple_route_fast_path", 1)
+		else:
+			_profile_add("context_tile_text_compact_interaction_destination_fast_path", 1)
 		if destination_kind == "current":
 			_profile_add("context_tile_text_simple_current_route_fast_path", 1)
-		else:
+		elif destination_kind == "open":
 			_profile_add("context_tile_text_simple_open_route_fast_path", 1)
+		else:
+			_profile_add("context_tile_text_compact_%s_destination_fast_path" % destination_kind, 1)
 		_validation_profile["last_context_tile_text_simple_route_fast_path"] = {
 			"destination_interaction_kind": destination_kind,
-			"route_status": String(simple_destination.get("route_status", simple_decision.get("status", ""))),
-			"steps": int(simple_decision.get("steps", 0)),
+			"route_status": String(compact_destination.get("route_status", compact_decision.get("status", ""))),
+			"steps": int(compact_decision.get("steps", 0)),
 			"rich_route_decision_skipped": true,
 		}
 	else:
@@ -4536,10 +4706,10 @@ func _map_tooltip_text() -> String:
 	return "Selected %d,%d | No clear route from the active hero." % [_selected_tile.x, _selected_tile.y]
 
 func _selected_route_display_line() -> String:
-	var simple_destination := _selected_route_simple_destination_surface()
-	if not simple_destination.is_empty():
-		var simple_decision: Dictionary = simple_destination.get("route_decision", {}) if simple_destination.get("route_decision", {}) is Dictionary else {}
-		return _route_decision_line(simple_decision)
+	var compact_destination := _selected_route_compact_destination_surface()
+	if not compact_destination.is_empty():
+		var compact_decision: Dictionary = compact_destination.get("route_decision", {}) if compact_destination.get("route_decision", {}) is Dictionary else {}
+		return _route_decision_line(compact_decision)
 	return _route_decision_line(_selected_route_decision_surface())
 
 func _selected_route_simple_tooltip() -> String:
@@ -5590,6 +5760,11 @@ func _debug_enrich_command_snapshot(snapshot: Dictionary) -> Dictionary:
 		"context_tile_text_hits": int(profile.get("context_tile_text_simple_route_fast_path", 0)),
 		"context_tile_text_open_hits": int(profile.get("context_tile_text_simple_open_route_fast_path", 0)),
 		"context_tile_text_current_hits": int(profile.get("context_tile_text_simple_current_route_fast_path", 0)),
+		"context_tile_text_compact_interaction_hits": int(profile.get("context_tile_text_compact_interaction_destination_fast_path", 0)),
+		"context_tile_text_resource_hits": int(profile.get("context_tile_text_compact_resource_destination_fast_path", 0)),
+		"context_tile_text_artifact_hits": int(profile.get("context_tile_text_compact_artifact_destination_fast_path", 0)),
+		"context_tile_text_encounter_hits": int(profile.get("context_tile_text_compact_encounter_destination_fast_path", 0)),
+		"context_tile_text_town_hits": int(profile.get("context_tile_text_compact_town_destination_fast_path", 0)),
 		"context_tile_text_last": _profile_log_duplicate_dict(profile.get("last_context_tile_text_simple_route_fast_path", {})),
 		"field_readiness_hits": int(profile.get("field_readiness_simple_route_fast_path", 0)),
 		"field_readiness_open_hits": int(profile.get("field_readiness_simple_open_route_fast_path", 0)),

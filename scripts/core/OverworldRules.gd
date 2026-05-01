@@ -613,6 +613,7 @@ static func execute_prevalidated_route(
 	route_execution["post_action_recap_skipped"] = post_action_recap_skipped
 	route_execution["scenario_eval_skipped"] = scenario_eval_skipped
 	route_execution["interaction_dispatch_mode"] = interaction_dispatch_mode
+	route_execution["descriptor_route_fog_reused"] = bool(interaction_result.get("descriptor_route_fog_reused", false))
 	result["route_execution"] = route_execution
 	result["route_validation_mode"] = "cached_prevalidated"
 	return result
@@ -714,7 +715,11 @@ static func collect_active_resource(session: SessionStateStoreScript.SessionData
 		return {"ok": false, "message": "No resource site here."}
 	return _collect_resource_node_result(session, node_result)
 
-static func _collect_resource_node_result(session: SessionStateStoreScript.SessionData, node_result: Dictionary) -> Dictionary:
+static func _collect_resource_node_result(
+	session: SessionStateStoreScript.SessionData,
+	node_result: Dictionary,
+	refresh_fog_after_action: bool = true
+) -> Dictionary:
 	var node = node_result.get("node", {})
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 	if site.is_empty():
@@ -769,7 +774,9 @@ static func _collect_resource_node_result(session: SessionStateStoreScript.Sessi
 	if disruption_message != "":
 		messages.append(disruption_message)
 	messages.append_array(_award_experience(session, int(rewards.get("experience", 0))))
-	var result := _finalize_action_result(session, true, " ".join(messages))
+	var result := _finalize_action_result(session, true, " ".join(messages), refresh_fog_after_action)
+	if not refresh_fog_after_action:
+		result["descriptor_route_fog_reused"] = true
 	return _attach_post_action_recap(
 		result,
 		session,
@@ -791,7 +798,11 @@ static func collect_active_artifact(session: SessionStateStoreScript.SessionData
 		return {"ok": false, "message": "No artifact cache is here."}
 	return _collect_artifact_node_result(session, node_result)
 
-static func _collect_artifact_node_result(session: SessionStateStoreScript.SessionData, node_result: Dictionary) -> Dictionary:
+static func _collect_artifact_node_result(
+	session: SessionStateStoreScript.SessionData,
+	node_result: Dictionary,
+	refresh_fog_after_action: bool = true
+) -> Dictionary:
 	var node = node_result.get("node", {})
 	if bool(node.get("collected", false)):
 		return {"ok": false, "message": "This cache has already been claimed."}
@@ -812,7 +823,9 @@ static func _collect_artifact_node_result(session: SessionStateStoreScript.Sessi
 	nodes[int(node_result.get("index", -1))] = node
 	session.overworld["artifact_nodes"] = nodes
 
-	var result := _finalize_action_result(session, true, String(pickup_result.get("message", "Recovered artifact.")))
+	var result := _finalize_action_result(session, true, String(pickup_result.get("message", "Recovered artifact.")), refresh_fog_after_action)
+	if not refresh_fog_after_action:
+		result["descriptor_route_fog_reused"] = true
 	return _attach_post_action_recap(
 		result,
 		session,
@@ -935,12 +948,12 @@ static func _resolve_destination_descriptor_interaction(
 			var resource_result := _find_resource_node_by_placement(session, String(descriptor.get("placement_id", "")))
 			if int(resource_result.get("index", -1)) < 0:
 				return {"ok": false, "message": "No resource site here.", "route": ""}
-			return _collect_resource_node_result(session, resource_result)
+			return _collect_resource_node_result(session, resource_result, false)
 		"artifact":
 			var artifact_result := _find_artifact_node_by_descriptor(session, descriptor)
 			if int(artifact_result.get("index", -1)) < 0:
 				return {"ok": false, "message": "No artifact cache is here.", "route": ""}
-			return _collect_artifact_node_result(session, artifact_result)
+			return _collect_artifact_node_result(session, artifact_result, false)
 		"encounter":
 			var encounter_result := _find_encounter_by_placement(session, String(descriptor.get("placement_id", "")))
 			var encounter: Dictionary = encounter_result.get("encounter", {}) if encounter_result.get("encounter", {}) is Dictionary else {}

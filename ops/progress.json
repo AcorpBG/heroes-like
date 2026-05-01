@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-entity-cache-signature-10184",
-  "currentSliceTitle": "Town Entity Cache Signature",
+  "currentSliceId": "overworld-interaction-destination-fast-path-10184",
+  "currentSliceTitle": "Overworld Interaction Destination Fast Path",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Town entity cache signatures now use compact active-town scalar revision keys with signature/build profile sub-buckets; ordinary town transitions also report manual_or_end_turn_only autosave skip metadata without pending autosave intent.",
-  "nextActionGuardrailNote": "Preserve gameplay semantics, save schema, generated map content/density, renderer/fog behavior, object contracts, F3/profile-log compatibility, forced-save safety paths, and avoid same-thread deferred work labeled as async.",
-  "updatedAt": "2026-05-01T16:36:18Z",
+  "currentSliceNotes": "Interaction destinations now use compact descriptor previews for selected-route resource/object/town/battle targets, and descriptor-dispatched resource/artifact confirmations reuse already-revealed route fog while preserving scenario evaluation and fallback semantics.",
+  "nextActionGuardrailNote": "Preserve gameplay semantics, generated map content/density, renderer/fog behavior, save schema, object contracts, F3/profile-log compatibility, open/current route fast paths, and town first-render/cache-build behavior; no async/threading claim for same-thread work.",
+  "updatedAt": "2026-05-01T17:02:17Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,59 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "overworld-interaction-destination-fast-path-10184",
+      "title": "Overworld Interaction Destination Fast Path",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/profile-jsonl-usage.md",
+        "docs/overworld-refresh-input-pipeline-plan.md",
+        ".artifacts/uploaded_profiles/20260501/acorp_windows_after_4953bbe_profile.jsonl"
+      ],
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scripts/core/OverworldRules.gd",
+        "tests/overworld_route_destination_only_action_regression.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "startedAt": "2026-05-01T16:55:30Z",
+      "completedAt": "2026-05-01T17:02:17Z",
+      "completionCriteria": [
+        "Interaction destination selection builds route action labels, summaries, and context route text from cached selected-route state and compact destination descriptors instead of rich route decision/interception/brief surfaces.",
+        "Resource and artifact confirmations use prevalidated selected-route descriptor dispatch and avoid redundant full fog refresh after route fog has already been revealed.",
+        "Stale, missing, mismatched, or unknown descriptors keep the safe full try_move_along_route fallback and expose the fallback reason.",
+        "Focused regressions prove interaction destination preview/confirmation use cheap/prevalidated paths and preserve fallback/semantics.",
+        "Requested overworld route/profile regressions, uploaded-profile analyzer, JSON, and whitespace validations pass."
+      ],
+      "nonGoals": [
+        "Do not optimize town first-render/cache-build work, town scene render, battle scene render, generated map content/density, renderer/fog behavior, save schema, object contracts, F3/profile compatibility, same-thread async semantics, or route/pathing semantics."
+      ],
+      "notes": "Completed narrow interaction-destination fast path after AcOrP's post-open-movement profile showed resource destinations still paying rich route-decision and movement/context costs. Focused validation proved resource selection no longer records route_decision_construction and resource confirmation reports descriptor_route_fog_reused while preserving scenario evaluation.",
+      "completionEvidence": [
+        "OverworldShell now builds compact selected-route destination surfaces for resource, artifact, encounter, and town descriptors from cached selected-route state and destination_interaction_descriptor.",
+        "Interaction destination actions expose compact_interaction_destination_fast_path and rich_route_surface_skipped while keeping the destination-only action path and selected-route cache signatures.",
+        "Selected route rail/context text now uses compact destination descriptors for interaction destinations instead of falling back to _selected_route_decision_surface.",
+        "Primary action tooltip generation for compact interaction destinations skips rich commit-check, route target handoff, and town handoff surfaces.",
+        "Descriptor-dispatched resource and artifact interactions call the existing collection rules with redundant post-route full fog refresh disabled; normal context actions keep the default full finalize path.",
+        "Movement-rule profile details now expose descriptor_route_fog_reused for descriptor confirmations."
+      ],
+      "validationEvidence": [
+        "godot4 --headless --path . res://tests/overworld_route_destination_only_action_regression.tscn passed; focused resource selection had route_decision_construction=0 and context_tile_text_resource_hits>0, and confirmation used destination_interaction_fast_path with descriptor_route_fog_reused=true and scenario_eval_skipped=false.",
+        "godot4 --headless --path . res://tests/overworld_interaction_profile_log_regression.tscn passed; controlled open-route JSONL still reported low selection/confirmation totals and cached_prevalidated open_fast_path confirmation.",
+        "godot4 --headless --path . res://tests/overworld_cached_route_execution_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_incremental_route_preview_refresh_regression.tscn passed.",
+        "python3 scripts/analyze_overworld_profile_log.py --mode overworld .artifacts/uploaded_profiles/20260501/acorp_windows_after_4953bbe_profile.jsonl passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ],
+      "updatedAt": "2026-05-01T17:02:17Z"
+    },
     {
       "id": "town-entity-cache-signature-10184",
       "title": "Town Entity Cache Signature",
