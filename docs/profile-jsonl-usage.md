@@ -65,6 +65,13 @@ Router scene-transition records expose autosave behavior for transition fast pat
 - `metadata.autosave_skipped_reason`: `manual_or_end_turn_only` for ordinary town/overworld transitions, which do not create pending autosave intent.
 - `metadata.autosave_pending_intent`: true only when a route intentionally records a later runtime-save intent, such as the generated opening autosave path.
 
+Town exit records are additive and do not replace the router transition record:
+
+- `surface: town`, `phase: exit_handoff`, `event: town_exit_first_overworld_frame` measures Leave button/input through the first overworld frame after return.
+- `buckets_ms` contains step-delta buckets whose sum reconciles with `total_ms`, covering town handoff computation, router state/scene change, overworld ready/normalize/save-picker work, first refresh/map-state work, compact save-surface handling, and first-frame wait.
+- `metadata.router_only_ms` keeps the comparable router-only span visible so slow perceived exits are not mistaken for the cheaper `router/scene_transition/go_to_overworld` record.
+- `metadata.first_overworld_ready_ms` and `metadata.first_overworld_frame_ms` distinguish synchronous overworld readiness from the first returned frame.
+
 Runtime save records expose trusted-live autosave normalization behavior:
 
 - `metadata.restore_normalize_skipped`: true when an already-live normalized autosave skipped the restore-style validation path.

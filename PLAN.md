@@ -48,6 +48,32 @@ Selected urgent town transition follow-up after the rendered DISPLAY=:99 broad p
 
 Selected urgent follow-up after AcOrP's local actual-client profile at `.artifacts/uploaded_profiles/20260501/acorp_local_after_a4a86a2_heroes_profile.jsonl`: `town-reentry-volatile-overlay-cache-10184` keeps same-town re-entry cache hits valid after overworld movement/resource pickups by removing volatile resources, hero position/movement, stationed-local, and recap fields from the expensive town cache signature while refreshing compact dynamic overlays/actions cheaply. It also fixes the related `select_town` handoff path to use runtime-normalized town selection and profile the town handoff buckets instead of leaving the cost unaccounted.
 
+Selected dedicated profiling follow-up after AcOrP reported town exit still felt slower than router-only timing implied: `town-exit-profile-accuracy-10184` adds end-to-end Leave-to-first-overworld-frame JSONL timing, validates it against rendered wall-clock, and keeps ordinary town exit off save/recap surface construction. It preserves the existing router, town, overworld, save, and F3/profile records without renaming analyzer-compatible buckets.
+
+### Current Maintenance Slice - Town Exit Profile Accuracy
+
+id: `town-exit-profile-accuracy-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Reconcile user-perceived town Leave latency with JSONL profile evidence from click/input through the first overworld frame.
+
+implementationTargets:
+- `scenes/town/TownShell.gd`
+- `scenes/overworld/OverworldShell.gd`
+- `scripts/autoload/AppRouter.gd`
+- `tests/town_exit_profile_accuracy_regression.gd`
+- `docs/profile-jsonl-usage.md`
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/profile_log_general_surface_regression.tscn`
+- `DISPLAY=:99 godot4 --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_exit_profile_accuracy_regression.tscn`
+
+completionCriteria:
+- A town exit JSONL record reports Leave-to-first-overworld-frame timing with additive buckets that reconcile with wall-clock.
+- Existing router-only records remain present and analyzer-compatible.
+- Ordinary town exit does not build save/autosave/save-surface records.
+- Rendered town exit remains under one second for the covered ordinary and generated Large cases.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:

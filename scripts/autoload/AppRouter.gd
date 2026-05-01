@@ -11,6 +11,7 @@ const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const BATTLE_SCENE := "res://scenes/battle/BattleShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
 const MAP_EDITOR_SCENE := "res://scenes/editor/MapEditorShell.tscn"
+const OVERWORLD_PACKED_SCENE := preload("res://scenes/overworld/OverworldShell.tscn")
 const AUTOSAVE_DIRTY_FLAG := "runtime_autosave_dirty"
 const AUTOSAVE_PENDING_INTENT_FLAG := "runtime_autosave_pending_intent"
 const AUTOSAVE_PENDING_REASON_FLAG := "runtime_autosave_pending_reason"
@@ -264,6 +265,7 @@ func begin_overworld_handoff_profile(reason: String, details: Dictionary = {}) -
 		"active": true,
 		"reason": reason,
 		"started_msec": Time.get_ticks_msec(),
+		"started_usec": Time.get_ticks_usec(),
 		"steps": [],
 		"details": details.duplicate(true),
 		"debug_print": bool(details.get("debug_print", false)),
@@ -279,8 +281,10 @@ func finish_overworld_handoff_profile(details: Dictionary = {}) -> Dictionary:
 	_note_overworld_handoff_step("profile_finished", details)
 	_active_overworld_handoff_profile["active"] = false
 	_active_overworld_handoff_profile["total_ms"] = _profile_elapsed_ms(_active_overworld_handoff_profile)
+	_active_overworld_handoff_profile["total_precise_ms"] = _profile_elapsed_precise_ms(_active_overworld_handoff_profile)
 	_last_overworld_handoff_profile = _active_overworld_handoff_profile.duplicate(true)
 	_active_overworld_handoff_profile = {}
+	_emit_overworld_handoff_profile_record(_last_overworld_handoff_profile)
 	return _last_overworld_handoff_profile.duplicate(true)
 
 func validation_latest_overworld_handoff_profile() -> Dictionary:
@@ -340,7 +344,7 @@ func _change_scene(scene_path: String) -> void:
 		push_error("Scene file is missing: %s" % scene_path)
 		return
 
-	var error := get_tree().change_scene_to_file(scene_path)
+	var error := get_tree().change_scene_to_packed(OVERWORLD_PACKED_SCENE) if scene_path == OVERWORLD_SCENE else get_tree().change_scene_to_file(scene_path)
 	if error != OK:
 		push_error("Failed to change scene to %s (error %d)." % [scene_path, error])
 
@@ -433,6 +437,67 @@ func _note_overworld_handoff_step(step_name: String, details: Dictionary = {}) -
 
 func _profile_elapsed_ms(profile: Dictionary) -> int:
 	return max(0, Time.get_ticks_msec() - int(profile.get("started_msec", Time.get_ticks_msec())))
+
+func _profile_elapsed_precise_ms(profile: Dictionary) -> float:
+	return ProfileLogScript.elapsed_ms(int(profile.get("started_usec", Time.get_ticks_usec())))
+
+func _emit_overworld_handoff_profile_record(profile: Dictionary) -> void:
+	if String(profile.get("reason", "")) != "town_exit":
+		return
+	var session := SessionState.ensure_active_session() if SessionState.has_playable_session() else null
+	var buckets := _handoff_step_delta_buckets(profile)
+	var details: Dictionary = profile.get("details", {}) if profile.get("details", {}) is Dictionary else {}
+	var metadata := {
+		"reason": String(profile.get("reason", "")),
+		"details": details.duplicate(true),
+		"steps": profile.get("steps", []),
+		"first_overworld_ready_ms": _handoff_step_elapsed(profile, "overworld_ready_render_state_done"),
+		"first_overworld_frame_ms": _handoff_step_elapsed(profile, "overworld_first_frame_after_return"),
+		"router_only_ms": _handoff_step_span_ms(profile, "go_to_overworld_enter", "go_to_overworld_change_scene_requested"),
+		"save_before_transition_skipped": true,
+	}
+	ProfileLogScript.emit_general(
+		"town",
+		"exit_handoff",
+		"town_exit_first_overworld_frame",
+		float(profile.get("total_precise_ms", profile.get("total_ms", 0.0))),
+		buckets,
+		metadata,
+		session
+	)
+
+func _handoff_step_delta_buckets(profile: Dictionary) -> Dictionary:
+	var buckets := {}
+	var steps: Array = profile.get("steps", []) if profile.get("steps", []) is Array else []
+	for index in range(steps.size()):
+		var step: Dictionary = steps[index] if steps[index] is Dictionary else {}
+		var name := _handoff_bucket_name(String(step.get("name", "step_%d" % index)))
+		if name == "":
+			name = "step_%d" % index
+		if buckets.has(name):
+			name = "%s_%d" % [name, index]
+		buckets[name] = float(step.get("delta_ms", 0.0))
+	return buckets
+
+func _handoff_bucket_name(step_name: String) -> String:
+	return step_name.strip_edges().to_lower().replace("/", "_").replace("-", "_").replace(" ", "_")
+
+func _handoff_step_elapsed(profile: Dictionary, step_name: String) -> int:
+	var steps: Array = profile.get("steps", []) if profile.get("steps", []) is Array else []
+	for step_value in steps:
+		if not (step_value is Dictionary):
+			continue
+		var step: Dictionary = step_value
+		if String(step.get("name", "")) == step_name:
+			return int(step.get("elapsed_ms", -1))
+	return -1
+
+func _handoff_step_span_ms(profile: Dictionary, start_step: String, end_step: String) -> int:
+	var start_ms := _handoff_step_elapsed(profile, start_step)
+	var end_ms := _handoff_step_elapsed(profile, end_step)
+	if start_ms < 0 or end_ms < 0:
+		return -1
+	return max(0, end_ms - start_ms)
 
 func _battle_stack_count(session: SessionStateStoreScript.SessionData) -> int:
 	if session == null or not (session.battle is Dictionary):

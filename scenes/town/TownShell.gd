@@ -68,6 +68,7 @@ var _last_town_entity_cache_result := {}
 var _last_save_surface_profile := {}
 var _last_refresh_minimal := false
 var _last_town_stage_signature := ""
+var _last_departure_confirmation := {}
 
 static var _town_entity_cache_by_session: Dictionary = {}
 
@@ -246,7 +247,22 @@ func _on_save_slot_selected(index: int) -> void:
 	_refresh_save_slot_picker(true)
 
 func _on_leave_pressed() -> void:
-	_prepare_town_return_handoff()
+	var town := TownRules.get_active_town(_session)
+	AppRouter.begin_overworld_handoff_profile("town_exit", {
+		"source_surface": "town",
+		"input": "leave_button",
+		"town_placement_id": String(town.get("placement_id", "")) if town is Dictionary else "",
+		"town_id": String(town.get("town_id", "")) if town is Dictionary else "",
+		"save_surface_skipped_hidden": bool(_last_save_surface_profile.get("skipped_hidden", false)),
+	})
+	AppRouter.note_overworld_handoff_step("town_exit_button_pressed")
+	var handoff_started := ProfileLogScript.begin_usec()
+	var handoff := _prepare_town_return_handoff()
+	AppRouter.note_overworld_handoff_step("town_return_handoff_prepared", {
+		"elapsed_ms": ProfileLogScript.elapsed_ms(handoff_started),
+		"town_placement_id": String(handoff.get("town_placement_id", "")),
+		"has_post_action_recap": handoff.get("post_action_recap", {}) is Dictionary,
+	})
 	AppRouter.go_to_overworld()
 
 func _on_menu_pressed() -> void:
@@ -617,6 +633,7 @@ func _cached_departure_dynamic(departure_value: Variant) -> Dictionary:
 		departure["visible_text"] = "Ready check: finish town orders, then leave and end turn."
 	else:
 		departure["visible_text"] = "Ready check: finish town orders, then leave with %d/%d move." % [move_current, move_max]
+	_last_departure_confirmation = departure.duplicate(true)
 	return departure
 
 func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
@@ -647,6 +664,7 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 	var artifact_text := TownRules.describe_artifacts(_session) if (not minimal or current_lanes.has("logistics")) else ""
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
 	var departure := TownRules.town_departure_confirmation(_session)
+	_last_departure_confirmation = departure.duplicate(true)
 	var order_target := TownRules.town_order_target_handoff(_session)
 	var town_context_surface := {} if minimal else _town_action_context_surface(dispatch_text)
 	return {
@@ -1100,6 +1118,7 @@ func _refresh_save_slot_picker(force_surface: bool = false, view_state: Dictiona
 		var lazy_departure: Dictionary = view_state.get("departure", {}) if view_state.get("departure", {}) is Dictionary else {}
 		if lazy_departure.is_empty():
 			lazy_departure = TownRules.town_departure_confirmation(_session)
+		_last_departure_confirmation = lazy_departure.duplicate(true)
 		_leave_button.text = String(lazy_departure.get("button_label", "Leave"))
 		_leave_button.tooltip_text = String(lazy_departure.get("tooltip_text", "Return to the overworld without leaving the current expedition."))
 		_menu_button.text = "Return to Menu"
@@ -1140,6 +1159,7 @@ func _refresh_save_slot_picker(force_surface: bool = false, view_state: Dictiona
 		save_check,
 	])
 	var departure := TownRules.town_departure_confirmation(_session)
+	_last_departure_confirmation = departure.duplicate(true)
 	_leave_button.text = String(departure.get("button_label", "Leave"))
 	_leave_button.tooltip_text = String(departure.get("tooltip_text", "Return to the overworld without leaving the current expedition."))
 	_menu_button.text = String(surface.get("menu_button_label", "Return to Menu"))
@@ -3036,7 +3056,7 @@ func _prepare_town_return_handoff() -> Dictionary:
 	var move_max := int(movement.get("max", move_current))
 	var movement_line := "Move %d/%d" % [move_current, move_max]
 	var field_position := "%d,%d" % [hero_pos.x, hero_pos.y]
-	var departure := TownRules.town_departure_confirmation(_session)
+	var departure: Dictionary = _last_departure_confirmation.duplicate(true) if not _last_departure_confirmation.is_empty() else TownRules.town_departure_confirmation(_session)
 	var next_step := String(departure.get("next_step", "")).strip_edges()
 	if next_step == "":
 		next_step = "Select the next destination or end the turn when field orders are spent."

@@ -150,14 +150,19 @@ var _debug_last_command_snapshot: Dictionary = {}
 var _profile_log_enabled := false
 var _refresh_dirty_phases: Dictionary = {}
 var _refresh_request_sequence := 0
+var _compact_town_return_save_surface_pending := false
+var _last_save_surface_compact_reason := ""
 
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
 	_apply_visual_theme()
+	AppRouter.note_overworld_handoff_step("overworld_ready_theme_done")
 	_build_debug_overlay()
+	AppRouter.note_overworld_handoff_step("overworld_ready_debug_overlay_done")
 	_profile_log_enabled = _profile_log_env_enabled()
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
+	AppRouter.note_overworld_handoff_step("overworld_ready_signals_done")
 
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
@@ -174,7 +179,11 @@ func _ready() -> void:
 		AppRouter.go_to_scenario_outcome()
 		return
 	AppRouter.note_overworld_handoff_step("overworld_ready_save_picker_start")
-	_configure_save_slot_picker(not _generated_initial_open_pending() and not _use_generated_compact_refresh())
+	_configure_save_slot_picker(
+		not _has_pending_town_return_handoff()
+		and not _generated_initial_open_pending()
+		and not _use_generated_compact_refresh()
+	)
 	if _generated_initial_open_pending():
 		_set_deferred_generated_save_status("Save: preparing generated autosave")
 	AppRouter.note_overworld_handoff_step("overworld_ready_save_picker_done")
@@ -184,15 +193,20 @@ func _ready() -> void:
 	var town_return_handoff := _consume_town_return_handoff()
 	if not town_return_handoff.is_empty():
 		_field_return_handoff = town_return_handoff
+		_compact_town_return_save_surface_pending = true
 		_last_message = String(town_return_handoff.get("visible_text", "Returned to the field."))
 		var recap := _duplicate_dictionary(town_return_handoff.get("post_action_recap", {}))
 		_last_action_recap = recap
 		_record_action_feedback("town", _last_message, "", recap)
+		AppRouter.note_overworld_handoff_step("overworld_ready_town_return_handoff_consumed")
 	else:
 		_last_message = _battle_return_notice(return_notice)
+		AppRouter.note_overworld_handoff_step("overworld_ready_no_town_return_handoff")
 	if _last_message != "" and _last_message != return_notice and town_return_handoff.is_empty():
 		_record_action_feedback("battle", _last_message)
-	var command_briefing_text = OverworldRules.consume_command_briefing(_session)
+	var command_briefing_text := ""
+	if town_return_handoff.is_empty():
+		command_briefing_text = OverworldRules.consume_command_briefing(_session)
 	if command_briefing_text != "":
 		_set_command_briefing("First Turn Briefing", command_briefing_text)
 		if _generated_initial_open_pending():
@@ -202,7 +216,10 @@ func _ready() -> void:
 			AppRouter.note_overworld_handoff_step("overworld_ready_briefing_autosave_start")
 			SaveService.save_runtime_autosave_session(_session)
 			AppRouter.note_overworld_handoff_step("overworld_ready_briefing_autosave_done")
+	else:
+		AppRouter.note_overworld_handoff_step("overworld_ready_no_command_briefing")
 	_select_hero_tile()
+	AppRouter.note_overworld_handoff_step("overworld_ready_select_hero_done")
 	AppRouter.note_overworld_handoff_step("overworld_ready_render_state_start")
 	_render_state()
 	AppRouter.note_overworld_handoff_step("overworld_ready_render_state_done")
@@ -767,6 +784,19 @@ func _start_encounter() -> void:
 func _render_state() -> void:
 	_map_data = _session.overworld.get("map", []) if _session.overworld.get("map", []) is Array else []
 	_map_size = OverworldRules.derive_map_size(_session)
+	if _use_generated_town_return_first_frame_refresh():
+		_refresh_with_request(_make_refresh_request(
+			"generated_town_return_first_frame",
+			[
+				REFRESH_PHASE_MAP_VIEW,
+				REFRESH_PHASE_STATUS_SURFACES,
+				REFRESH_PHASE_SAVE_SURFACE,
+			],
+			false,
+			false
+		))
+		_refresh_generated_town_return_action_surface()
+		return
 	_refresh()
 
 func _refresh() -> void:
@@ -954,11 +984,18 @@ func _refresh_save_surface() -> int:
 		generated_surface_start = _profile_begin("refresh_generated_surfaces")
 		_set_deferred_generated_save_status("Save: generated autosave pending")
 		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_deferred")
+	elif _compact_town_return_save_surface_pending:
+		_set_town_return_compact_save_status()
+		_compact_town_return_save_surface_pending = false
+		_last_save_surface_compact_reason = "town_return"
+		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_town_return_compact")
 	elif _use_generated_compact_refresh():
 		generated_surface_start = _profile_begin("refresh_generated_surfaces")
 		_set_deferred_generated_save_status("Save: ready")
+		_last_save_surface_compact_reason = "generated_compact"
 		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_compact")
 	else:
+		_last_save_surface_compact_reason = ""
 		_refresh_save_slot_picker()
 		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_done")
 	return generated_surface_start
@@ -1134,10 +1171,14 @@ func _complete_deferred_generated_overworld_autosave() -> void:
 	if _session == null:
 		return
 	if not bool(_session.flags.get("generated_overworld_deferred_autosave_pending", false)):
+		AppRouter.note_overworld_handoff_step("overworld_first_frame_wait_start")
+		await get_tree().process_frame
+		AppRouter.note_overworld_handoff_step("overworld_first_frame_after_return")
 		AppRouter.finish_overworld_handoff_profile({"deferred_autosave": false})
 		return
 	AppRouter.note_overworld_handoff_step("overworld_deferred_autosave_wait_frame_start")
 	await get_tree().process_frame
+	AppRouter.note_overworld_handoff_step("overworld_first_frame_after_return")
 	AppRouter.note_overworld_handoff_step("overworld_deferred_autosave_start")
 	var result := SaveService.save_runtime_autosave_session(_session, false)
 	_session.flags.erase("generated_overworld_deferred_autosave_pending")
@@ -1160,12 +1201,21 @@ func _configure_save_slot_picker(refresh_now: bool = true) -> void:
 func _generated_initial_open_pending() -> bool:
 	return _session != null and bool(_session.flags.get("generated_overworld_deferred_autosave_pending", false))
 
+func _has_pending_town_return_handoff() -> bool:
+	if _session == null:
+		return false
+	var handoff = _session.flags.get("town_return_handoff", {})
+	return handoff is Dictionary and not handoff.is_empty()
+
 func _use_generated_compact_refresh() -> bool:
 	return (
 		_session != null
 		and bool(_session.flags.get("generated_random_map", false))
 		and _active_drawer == ""
 	)
+
+func _use_generated_town_return_first_frame_refresh() -> bool:
+	return _compact_town_return_save_surface_pending and _use_generated_compact_refresh()
 
 func _set_deferred_generated_save_status(text: String) -> void:
 	var save_ready := text.find("ready") >= 0
@@ -1175,6 +1225,20 @@ func _set_deferred_generated_save_status(text: String) -> void:
 	_save_button.tooltip_text = "Save the active expedition to the selected manual slot." if save_ready else "Save is available after the generated-map opening autosave settles."
 	_menu_button.text = "Menu: Field"
 	_menu_button.tooltip_text = "Return to the main menu." if save_ready else "Return to the main menu after the generated-map opening autosave settles."
+
+func _set_town_return_compact_save_status() -> void:
+	var selected_slot := SaveService.get_selected_manual_slot()
+	_save_status_label.text = "Save: manual M%d ready" % selected_slot
+	_save_status_label.tooltip_text = "Save details are refreshed when the save controls are used; town exit keeps save summaries off the first overworld frame."
+	_save_slot_picker.tooltip_text = "Manual %d selected. Save details are refreshed when the save controls are used." % selected_slot
+	_save_button.text = "Save"
+	_save_button.tooltip_text = "Save the active expedition to the selected manual slot."
+	if bool(_session.flags.get("editor_working_copy", false)):
+		_menu_button.text = "Editor"
+		_menu_button.tooltip_text = "Return to the map editor and restore the Play Copy launch snapshot."
+	else:
+		_menu_button.text = "Menu: Field"
+		_menu_button.tooltip_text = "Return to the main menu."
 
 func _refresh_save_slot_picker() -> void:
 	if _save_slot_picker.get_item_count() <= 0:
@@ -1282,6 +1346,39 @@ func _rebuild_context_actions() -> void:
 	var primary_action := _first_enabled_action(actions)
 	_refresh_primary_action_button(primary_action)
 	_render_context_action_buttons(actions, primary_action, "Select a tile for orders")
+
+func _refresh_generated_town_return_action_surface() -> void:
+	var town_name := String(_field_return_handoff.get("town_name", "Town")).strip_edges()
+	if town_name == "":
+		town_name = "Town"
+	var movement_line := String(_field_return_handoff.get("movement_line", "")).strip_edges()
+	var field_position := String(_field_return_handoff.get("field_position", "")).strip_edges()
+	var summary_parts := ["Re-enter %s from the returned field tile." % town_name]
+	if field_position != "":
+		summary_parts.append("Position: %s." % field_position)
+	if movement_line != "":
+		summary_parts.append("%s remains." % movement_line)
+	var summary := " ".join(summary_parts)
+	var action := {
+		"id": "visit_town",
+		"label": "Visit Town",
+		"summary": summary,
+		"generated_town_return_compact": true,
+	}
+	_refresh_cache["context_actions"] = [action]
+	_refresh_cache["primary_action"] = action
+	_primary_action_button.text = "Visit Town [Enter]"
+	_primary_action_button.disabled = false
+	_primary_action_button.tooltip_text = "%s\n\nPress Enter or Space to re-enter town management." % summary
+	for child in _context_actions.get_children():
+		child.queue_free()
+	_context_actions.add_child(_make_placeholder_label("Town return ready"))
+	_validation_profile["last_generated_town_return_action_surface"] = {
+		"status": "compact",
+		"primary_action_id": "visit_town",
+		"full_context_actions_skipped": true,
+	}
+	_profile_add("generated_town_return_compact_action_surface", 1)
 
 func _refresh_selected_route_action_surface() -> void:
 	var route_action_started := _debug_refresh_profile_begin("refresh_route_destination_action")
@@ -6587,12 +6684,12 @@ func validation_snapshot() -> Dictionary:
 	}
 
 func _validation_latest_save_summary_snapshot() -> Dictionary:
-	if _use_generated_compact_refresh():
+	if _validation_uses_compact_save_surface():
 		return {}
 	return SaveService.latest_loadable_summary()
 
 func _validation_save_surface_snapshot() -> Dictionary:
-	if not _use_generated_compact_refresh():
+	if not _validation_uses_compact_save_surface():
 		return AppRouter.active_save_surface()
 	var selected_slot := SaveService.get_selected_manual_slot()
 	return {
@@ -6613,8 +6710,13 @@ func _validation_save_surface_snapshot() -> Dictionary:
 		"latest_resume_recap": "",
 		"menu_button_label": _menu_button.text,
 		"menu_button_tooltip": _menu_button.tooltip_text,
-		"compact_generated_validation": true,
+		"compact_generated_validation": _use_generated_compact_refresh(),
+		"compact_town_return_validation": _last_save_surface_compact_reason == "town_return",
+		"compact_reason": _last_save_surface_compact_reason,
 	}
+
+func _validation_uses_compact_save_surface() -> bool:
+	return _use_generated_compact_refresh() or _last_save_surface_compact_reason == "town_return"
 
 func _validation_map_viewport_state() -> Dictionary:
 	if _map_view == null or not _map_view.has_method("validation_view_metrics"):
