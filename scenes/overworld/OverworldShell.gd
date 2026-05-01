@@ -99,6 +99,8 @@ var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
 var _active_drawer := ""
 var _refresh_cache: Dictionary = {}
+var _hero_actions_cache: Array = []
+var _hero_actions_cache_signature := ""
 var _selected_route_state: Dictionary = {}
 var _action_feedback: Dictionary = {}
 var _action_feedback_sequence := 0
@@ -1106,9 +1108,156 @@ func _current_primary_action() -> Dictionary:
 	return action
 
 func _cached_hero_actions() -> Array:
-	if not _refresh_cache.has("hero_actions"):
-		_refresh_cache["hero_actions"] = OverworldRules.get_hero_actions(_session)
-	return _refresh_cache["hero_actions"]
+	var signature := _hero_actions_state_signature()
+	if _hero_actions_cache_signature == signature:
+		_profile_add("hero_actions_cache_hits", 1)
+		_validation_profile["last_hero_actions_cache"] = {
+			"status": "hit",
+			"signature": signature,
+			"action_count": _hero_actions_cache.size(),
+		}
+		return _hero_actions_cache
+
+	_profile_add("hero_actions_cache_misses", 1)
+	_hero_actions_cache = OverworldRules.get_hero_actions(_session)
+	_hero_actions_cache_signature = _hero_actions_state_signature()
+	_validation_profile["last_hero_actions_cache"] = {
+		"status": "miss",
+		"previous_signature": signature,
+		"signature": _hero_actions_cache_signature,
+		"action_count": _hero_actions_cache.size(),
+	}
+	return _hero_actions_cache
+
+func _invalidate_hero_actions_cache(reason: String = "") -> void:
+	_hero_actions_cache.clear()
+	_hero_actions_cache_signature = ""
+	if reason != "":
+		_validation_profile["last_hero_actions_cache"] = {"status": "invalidated", "reason": reason}
+
+func _hero_actions_state_signature() -> String:
+	if _session == null:
+		return "session:null"
+	var overworld := _session.overworld
+	var player_heroes: Array = overworld.get("player_heroes", []) if overworld.get("player_heroes", []) is Array else []
+	var roster := []
+	for index in range(player_heroes.size()):
+		var hero_value = player_heroes[index]
+		if hero_value is Dictionary:
+			roster.append(_hero_actions_hero_signature(hero_value, index))
+		else:
+			roster.append({"index": index, "type": typeof(hero_value), "value": str(hero_value)})
+	var payload := {
+		"session_id": String(_session.session_id),
+		"scenario_id": String(_session.scenario_id),
+		"hero_id": String(_session.hero_id),
+		"difficulty": String(_session.difficulty),
+		"launch_mode": String(_session.launch_mode),
+		"game_state": String(_session.game_state),
+		"scenario_status": String(_session.scenario_status),
+		"active_hero_id": String(overworld.get("active_hero_id", "")),
+		"map": _hero_actions_map_identity_signature(),
+		"hero_position": _hero_actions_position_signature(overworld.get("hero_position", {})),
+		"movement": _hero_actions_movement_signature(overworld.get("movement", {})),
+		"hero": _hero_actions_hero_signature(overworld.get("hero", {}) if overworld.get("hero", {}) is Dictionary else {}, -1),
+		"roster": roster,
+	}
+	return JSON.stringify(payload)
+
+func _hero_actions_map_identity_signature() -> Dictionary:
+	var materialization = _session.flags.get("generated_random_map_materialization", {}) if _session != null else {}
+	var generated_identity = _session.overworld.get("generated_random_map_identity", {}) if _session != null else {}
+	return {
+		"x": _map_size.x,
+		"y": _map_size.y,
+		"rows": _map_data.size(),
+		"generated_materialized": String(materialization.get("materialized_map_signature", "")) if materialization is Dictionary else "",
+		"generated_identity": String(generated_identity.get("materialized_map_signature", "")) if generated_identity is Dictionary else "",
+	}
+
+func _hero_actions_hero_signature(hero: Dictionary, index: int) -> Dictionary:
+	var spellbook = hero.get("spellbook", {})
+	var mana = spellbook.get("mana", {}) if spellbook is Dictionary else {}
+	return {
+		"index": index,
+		"id": String(hero.get("id", "")),
+		"name": String(hero.get("name", "")),
+		"faction_id": String(hero.get("faction_id", "")),
+		"archetype": String(hero.get("archetype", "")),
+		"roster_summary": String(hero.get("roster_summary", "")),
+		"is_primary": bool(hero.get("is_primary", false)),
+		"position": _hero_actions_position_signature(hero.get("position", {})),
+		"movement": _hero_actions_movement_signature(hero.get("movement", {})),
+		"level": int(hero.get("level", 1)),
+		"experience": int(hero.get("experience", 0)),
+		"next_level_experience": int(hero.get("next_level_experience", 0)),
+		"specialties": _hero_actions_string_array(hero.get("specialties", [])),
+		"pending_specialty_choices": _hero_actions_string_array(hero.get("pending_specialty_choices", [])),
+		"specialty_focus_ids": _hero_actions_string_array(hero.get("specialty_focus_ids", [])),
+		"base_movement": int(hero.get("base_movement", 0)),
+		"base_scouting_radius": int(hero.get("base_scouting_radius", 0)),
+		"mana": _hero_actions_mana_signature(mana),
+		"army": _hero_actions_army_signature(hero.get("army", {})),
+		"command": _hero_actions_command_signature(hero.get("command", {})),
+		"artifacts": var_to_str(hero.get("artifacts", {})),
+		"artifact_ids": _hero_actions_string_array(hero.get("artifact_ids", [])),
+	}
+
+func _hero_actions_position_signature(value: Variant) -> Dictionary:
+	if value is Dictionary:
+		return {"x": int(value.get("x", 0)), "y": int(value.get("y", 0))}
+	if value is Vector2i:
+		return {"x": value.x, "y": value.y}
+	return {"x": 0, "y": 0}
+
+func _hero_actions_movement_signature(value: Variant) -> Dictionary:
+	if value is Dictionary:
+		return {"current": int(value.get("current", 0)), "max": int(value.get("max", 0))}
+	return {"current": 0, "max": 0}
+
+func _hero_actions_mana_signature(value: Variant) -> Dictionary:
+	if value is Dictionary:
+		return {"current": int(value.get("current", 0)), "max": int(value.get("max", 0))}
+	return {"current": 0, "max": 0}
+
+func _hero_actions_army_signature(value: Variant) -> Dictionary:
+	if not (value is Dictionary):
+		return {"id": "", "name": "", "stacks": []}
+	var army: Dictionary = value
+	var stacks := []
+	var source_stacks: Array = army.get("stacks", []) if army.get("stacks", []) is Array else []
+	for stack_value in source_stacks:
+		if stack_value is Dictionary:
+			var stack: Dictionary = stack_value
+			stacks.append({
+				"unit_id": String(stack.get("unit_id", "")),
+				"count": int(stack.get("count", 0)),
+			})
+		else:
+			stacks.append(str(stack_value))
+	return {
+		"id": String(army.get("id", "")),
+		"name": String(army.get("name", "")),
+		"stacks": stacks,
+	}
+
+func _hero_actions_command_signature(value: Variant) -> Dictionary:
+	if value is Dictionary:
+		return {
+			"attack": int(value.get("attack", 0)),
+			"defense": int(value.get("defense", 0)),
+			"power": int(value.get("power", 0)),
+			"knowledge": int(value.get("knowledge", 0)),
+		}
+	return {"attack": 0, "defense": 0, "power": 0, "knowledge": 0}
+
+func _hero_actions_string_array(value: Variant) -> Array:
+	var items := []
+	if not (value is Array):
+		return items
+	for item in value:
+		items.append(String(item))
+	return items
 
 func _command_check_surface() -> Dictionary:
 	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
