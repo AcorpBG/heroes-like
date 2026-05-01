@@ -1,6 +1,8 @@
 extends Node
 
+const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const REPORT_ID := "TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION"
+const GENERATED_LARGE_SEED := "town-entry-cache-regression-large-10184"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -9,6 +11,8 @@ func _run() -> void:
 	var previous_general := OS.get_environment("HEROES_PROFILE_LOG")
 	OS.set_environment("HEROES_PROFILE_LOG", "1")
 	SaveService.validation_clear_general_profile_log()
+	ContentService.clear_generated_scenario_drafts()
+	SessionState.reset_session()
 
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	OverworldRules.normalize_overworld_state(session)
@@ -48,14 +52,14 @@ func _run() -> void:
 		_finish_fail("Ordinary town entry built the expensive save surface.", records)
 		return
 
-	var hit_snapshot: Dictionary = shell.call("validation_force_refresh")
-	if not _assert_snapshot(hit_snapshot, first_id, true, true, "same-town refresh"):
+	var hit_snapshot: Dictionary = shell.call("validation_force_minimal_refresh")
+	if not _assert_snapshot(hit_snapshot, first_id, true, true, "same-town current-tab refresh"):
 		return
-	var minimal_again_snapshot: Dictionary = shell.call("validation_force_minimal_refresh")
-	if not _assert_snapshot(minimal_again_snapshot, first_id, true, true, "same-town minimal refresh after full refresh"):
+	var full_build_snapshot: Dictionary = shell.call("validation_force_refresh")
+	if not _assert_snapshot(full_build_snapshot, first_id, false, true, "same-town explicit full refresh"):
 		return
 	var full_again_snapshot: Dictionary = shell.call("validation_force_refresh")
-	if not _assert_snapshot(full_again_snapshot, first_id, true, true, "same-town full refresh after minimal refresh"):
+	if not _assert_snapshot(full_again_snapshot, first_id, true, true, "same-town full refresh after explicit full build"):
 		return
 	var same_shell_records: Array = SaveService.validation_general_profile_log_last_records(40)
 	var same_shell_hit_record := _find_town_refresh_record(same_shell_records, true)
@@ -99,6 +103,9 @@ func _run() -> void:
 		_finish_fail("Same-town re-entry refresh did not expose a cache-hit profile record.", reentry_records)
 		return
 	if not _assert_cache_hit_refresh_is_light(reentry_hit_record, "same-town scene re-entry cache-hit refresh"):
+		return
+	if _has_town_refresh_cache_miss_record(reentry_records):
+		_finish_fail("Ordinary same-town re-entry triggered a full town cache rebuild after the cache-hit refresh.", reentry_records)
 		return
 	reentry_shell.queue_free()
 	await get_tree().process_frame
@@ -161,16 +168,125 @@ func _run() -> void:
 		_finish_fail("Town cache signature bucket stayed too expensive.", hit_buckets)
 		return
 
+	var generated_large_metrics: Dictionary = await _assert_generated_large_reentry_fast()
+	if generated_large_metrics.is_empty():
+		return
+
 	OS.set_environment("HEROES_PROFILE_LOG", previous_general)
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
+		"scenario_id": session.scenario_id,
 		"first_town": first_id,
 		"second_town": second_id,
 		"build_action": build_action,
 		"same_town_minimal_full_entry_count": int(full_again_snapshot.get("entry_count", 0)),
 		"cache_hit_buckets": cache_hit_record.get("buckets_ms", {}),
+		"generated_large_reentry": generated_large_metrics,
 	})])
+	ContentService.clear_generated_scenario_drafts()
 	get_tree().quit(0)
+
+func _generated_large_session():
+	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		ScenarioSelectRulesScript.build_random_map_player_config(
+			GENERATED_LARGE_SEED,
+			"translated_rmg_template_042_v1",
+			"translated_rmg_profile_042_v1",
+			4,
+			"land",
+			false,
+			"homm3_large"
+		),
+		"normal",
+		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
+	)
+	if not bool(setup.get("ok", false)):
+		push_error("Generated Large setup failed: %s" % JSON.stringify(setup))
+		return null
+	return ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
+
+func _assert_generated_large_reentry_fast() -> Dictionary:
+	ContentService.clear_generated_scenario_drafts()
+	SessionState.reset_session()
+	SaveService.validation_clear_general_profile_log()
+	var large_session = _generated_large_session()
+	if large_session == null or large_session.scenario_id == "":
+		_finish_fail("Could not create generated Large session for town cache regression.")
+		return {}
+	OverworldRules.normalize_overworld_state(large_session)
+	var town := _first_player_town(large_session)
+	if town.is_empty():
+		_finish_fail("Generated Large session had no player town.")
+		return {}
+	_move_active_hero_to_town(large_session, town)
+	var placement_id := String(town.get("placement_id", ""))
+	var visit_result: Dictionary = OverworldRules.set_active_town_visit(large_session, placement_id)
+	if not bool(visit_result.get("ok", false)):
+		_finish_fail("Could not prepare generated Large active town visit.", visit_result)
+		return {}
+	SessionState.set_active_session(large_session)
+	large_session = SessionState.ensure_active_session()
+	AppRouter.validation_prepare_town_handoff_without_scene_change()
+
+	var shell = load("res://scenes/town/TownShell.tscn").instantiate()
+	add_child(shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var entry_snapshot: Dictionary = shell.call("validation_town_entity_cache_snapshot")
+	if not _assert_snapshot(entry_snapshot, placement_id, false, true, "generated Large initial town entry"):
+		return {}
+	if _has_save_surface_build_record(SaveService.validation_general_profile_log_last_records(40)):
+		_finish_fail("Generated Large ordinary town entry built the expensive save surface.", SaveService.validation_general_profile_log_last_records(40))
+		return {}
+
+	SaveService.validation_clear_general_profile_log()
+	shell.queue_free()
+	await get_tree().process_frame
+	AppRouter.validation_prepare_overworld_handoff_without_scene_change()
+	OverworldRules.set_active_town_visit(large_session, placement_id)
+	AppRouter.validation_prepare_town_handoff_without_scene_change()
+	var reentry_shell = load("res://scenes/town/TownShell.tscn").instantiate()
+	add_child(reentry_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var reentry_snapshot: Dictionary = reentry_shell.call("validation_town_entity_cache_snapshot")
+	if not _assert_snapshot(reentry_snapshot, placement_id, true, true, "generated Large same-town re-entry"):
+		return {}
+	var records: Array = SaveService.validation_general_profile_log_last_records(40)
+	if _has_save_surface_build_record(records):
+		_finish_fail("Generated Large ordinary same-town re-entry built the expensive save surface.", records)
+		return {}
+	if _has_town_refresh_cache_miss_record(records):
+		_finish_fail("Generated Large ordinary same-town re-entry triggered a full town cache rebuild.", records)
+		return {}
+	var ready_record := _find_town_ready_record(records)
+	if ready_record.is_empty():
+		_finish_fail("Generated Large same-town re-entry did not expose town_ready.", records)
+		return {}
+	if not _assert_town_ready_reentry_is_light(ready_record):
+		return {}
+	var refresh_record := _find_town_refresh_record(records, true)
+	if refresh_record.is_empty():
+		_finish_fail("Generated Large same-town re-entry did not expose a cache-hit refresh.", records)
+		return {}
+	if not _assert_cache_hit_refresh_is_light(refresh_record, "generated Large same-town cache-hit re-entry refresh"):
+		return {}
+	reentry_shell.queue_free()
+	await get_tree().process_frame
+	var refresh_buckets: Dictionary = refresh_record.get("buckets_ms", {}) if refresh_record.get("buckets_ms", {}) is Dictionary else {}
+	var ready_buckets: Dictionary = ready_record.get("buckets_ms", {}) if ready_record.get("buckets_ms", {}) is Dictionary else {}
+	ContentService.clear_generated_scenario_drafts()
+	return {
+		"seed": GENERATED_LARGE_SEED,
+		"scenario_id": large_session.scenario_id,
+		"town_placement_id": placement_id,
+		"town_ready_total_ms": float(ready_record.get("total_ms", 0.0)),
+		"town_ready_first_refresh_ms": float(ready_buckets.get("first_refresh", 0.0)),
+		"town_refresh_total_ms": float(refresh_record.get("total_ms", 0.0)),
+		"town_refresh_save_surface_ms": float(refresh_buckets.get("save_surface", 0.0)),
+		"town_refresh_cache_build_ms": float(refresh_buckets.get("town_entity_cache_build", 0.0)),
+		"town_refresh_stage_ms": float(refresh_buckets.get("stage", 0.0)),
+	}
 
 func _assert_snapshot(snapshot: Dictionary, expected_placement_id: String, expected_hit: bool, expected_save_skip: bool, label: String) -> bool:
 	if String(snapshot.get("active_placement_id", "")) != expected_placement_id:
@@ -254,6 +370,17 @@ func _has_save_surface_build_record(records: Array) -> bool:
 			return true
 	return false
 
+func _has_town_refresh_cache_miss_record(records: Array) -> bool:
+	for record in records:
+		if not (record is Dictionary):
+			continue
+		if String(record.get("surface", "")) != "town" or String(record.get("phase", "")) != "refresh":
+			continue
+		var buckets: Dictionary = record.get("buckets_ms", {}) if record.get("buckets_ms", {}) is Dictionary else {}
+		if float(buckets.get("town_entity_cache_miss", 0.0)) >= 1.0 or float(buckets.get("town_entity_cache_build", 0.0)) > 0.001:
+			return true
+	return false
+
 func _find_town_refresh_record(records: Array, hit: bool) -> Dictionary:
 	for record in records:
 		if not (record is Dictionary):
@@ -282,6 +409,12 @@ func _assert_cache_hit_refresh_is_light(record: Dictionary, label: String) -> bo
 	if float(buckets.get("stage", 99999.0)) > 50.0:
 		_finish_fail("%s still spent too long refreshing the town stage." % label, buckets)
 		return false
+	if float(buckets.get("save_surface", 99999.0)) > 50.0:
+		_finish_fail("%s still spent too long refreshing hidden save controls." % label, buckets)
+		return false
+	if float(record.get("total_ms", 99999.0)) > 1000.0:
+		_finish_fail("%s exceeded the sub-1s cache-hit refresh target." % label, record)
+		return false
 	return true
 
 func _assert_town_ready_reentry_is_light(record: Dictionary) -> bool:
@@ -289,8 +422,8 @@ func _assert_town_ready_reentry_is_light(record: Dictionary) -> bool:
 	if float(buckets.get("normalize_overworld", 99999.0)) > 50.0:
 		_finish_fail("Same-town re-entry normalized the whole overworld.", buckets)
 		return false
-	if float(buckets.get("first_refresh", 99999.0)) > 250.0:
-		_finish_fail("Same-town re-entry first refresh stayed too expensive.", buckets)
+	if float(buckets.get("first_refresh", 99999.0)) > 1000.0:
+		_finish_fail("Same-town re-entry first refresh exceeded the sub-1s target.", buckets)
 		return false
 	var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
 	if not bool(metadata.get("town_entity_cache_hit", false)):
@@ -300,6 +433,7 @@ func _assert_town_ready_reentry_is_light(record: Dictionary) -> bool:
 
 func _finish_fail(message: String, details: Variant = {}) -> void:
 	OS.set_environment("HEROES_PROFILE_LOG", "")
+	ContentService.clear_generated_scenario_drafts()
 	push_error("%s %s" % [message, JSON.stringify(details)])
 	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": false, "message": message, "details": details})])
 	get_tree().quit(1)

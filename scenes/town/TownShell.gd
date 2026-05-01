@@ -103,7 +103,6 @@ func _ready() -> void:
 	_refresh(true)
 	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("town", "entry", "town_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(true), _session)
-	call_deferred("_complete_town_first_render_full_refresh")
 
 func _on_build_action_pressed(action_id: String) -> void:
 	var full_action_id := "build:%s" % action_id
@@ -341,7 +340,7 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	_refresh_town_stage_view(view_state)
 	buckets["stage"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
-	_refresh_save_slot_picker()
+	_refresh_save_slot_picker(false, view_state)
 	buckets["save_surface"] = ProfileLogScript.elapsed_ms(section_started)
 	buckets["save_surface_skipped_hidden"] = 1.0 if bool(_last_save_surface_profile.get("skipped_hidden", false)) else 0.0
 	section_started = ProfileLogScript.begin_usec()
@@ -363,12 +362,12 @@ func _complete_town_first_render_full_refresh() -> void:
 	await get_tree().process_frame
 	if not is_inside_tree() or _session == null:
 		return
-	_refresh(false)
+	_refresh(true)
 
 func _on_management_tab_changed(_tab: int) -> void:
 	if _session == null:
 		return
-	_refresh(false)
+	_refresh(true)
 
 func _rebuild_current_action_surfaces(view_state: Dictionary, minimal: bool) -> void:
 	if not minimal:
@@ -487,6 +486,7 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 	var artifact_readiness := _artifact_readiness_surface() if (not minimal or current_lanes.has("logistics")) else {}
 	var artifact_text := TownRules.describe_artifacts(_session) if (not minimal or current_lanes.has("logistics")) else ""
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
+	var departure := TownRules.town_departure_confirmation(_session)
 	var order_target := TownRules.town_order_target_handoff(_session)
 	var town_context_surface := {} if minimal else _town_action_context_surface(dispatch_text)
 	return {
@@ -523,6 +523,7 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 		"artifact_visible_text": _join_tooltip_sections([String(artifact_readiness.get("visible_text", "")), artifact_text]),
 		"artifact_tooltip_text": _join_tooltip_sections([String(artifact_readiness.get("tooltip_text", "")), artifact_text]),
 		"dispatch_text": dispatch_text,
+		"departure": departure,
 		"order_target": order_target,
 		"town_context_surface": town_context_surface,
 		"hero_actions": [] if minimal else _duplicate_action_array(TownRules.get_hero_actions(_session)),
@@ -900,7 +901,7 @@ func _configure_save_slot_picker() -> void:
 	for slot in SaveService.get_manual_slot_ids():
 		_save_slot_picker.add_item("Manual %d" % int(slot), int(slot))
 
-func _refresh_save_slot_picker(force_surface: bool = false) -> void:
+func _refresh_save_slot_picker(force_surface: bool = false, view_state: Dictionary = {}) -> void:
 	_last_save_surface_profile = {
 		"forced": force_surface,
 		"skipped_hidden": false,
@@ -923,7 +924,9 @@ func _refresh_save_slot_picker(force_surface: bool = false) -> void:
 		_save_slot_picker.tooltip_text = "Manual %d selected. Save details are refreshed when the save controls are used." % selected_slot
 		_save_button.text = "Save Town"
 		_save_button.tooltip_text = "Save the active town visit to the selected manual slot."
-		var lazy_departure := TownRules.town_departure_confirmation(_session)
+		var lazy_departure: Dictionary = view_state.get("departure", {}) if view_state.get("departure", {}) is Dictionary else {}
+		if lazy_departure.is_empty():
+			lazy_departure = TownRules.town_departure_confirmation(_session)
 		_leave_button.text = String(lazy_departure.get("button_label", "Leave"))
 		_leave_button.tooltip_text = String(lazy_departure.get("tooltip_text", "Return to the overworld without leaving the current expedition."))
 		_menu_button.text = "Return to Menu"
