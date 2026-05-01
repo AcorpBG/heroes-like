@@ -260,7 +260,7 @@ func _ready() -> void:
 	_load_overworld_art_manifest()
 	_invalidate_frame_layer("ready")
 
-func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: Vector2i) -> void:
+func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: Vector2i, selected_route_state: Dictionary = {}) -> void:
 	var profile_start := _profile_begin("set_map_state")
 	_ensure_render_layers()
 	var previous_viewport_layout := _viewport_layout_signature()
@@ -278,9 +278,16 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 	_rebuild_road_tiles()
 	_selected_tile = selected_tile
 	var path_profile_start := _profile_begin("path_recompute")
-	_path_tiles = _build_path(_hero_tile, _selected_tile)
-	_route_preview = OverworldRulesScript.route_movement_preview(_session, _path_tiles, _movement_left)
+	var route_cache_reused := _apply_selected_route_state(selected_route_state)
+	if not route_cache_reused:
+		_path_tiles = _build_path(_hero_tile, _selected_tile)
+		_route_preview = OverworldRulesScript.route_movement_preview(_session, _path_tiles, _movement_left)
 	var path_profile_details: Dictionary = _validation_profile.get("last_path_recompute", {}) if _validation_profile.get("last_path_recompute", {}) is Dictionary else {}
+	if route_cache_reused:
+		path_profile_details["status"] = "cache_reused"
+		path_profile_details["cache_reused"] = true
+	else:
+		path_profile_details["cache_reused"] = false
 	path_profile_details["path_tiles"] = _path_tiles.size()
 	path_profile_details["reachable_steps"] = int(_route_preview.get("reachable_steps", 0))
 	path_profile_details["unreachable_steps"] = int(_route_preview.get("unreachable_steps", 0))
@@ -322,6 +329,38 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 
 	_invalidate_dynamic_layer("map_state_updated")
 	_profile_end("set_map_state", profile_start)
+
+func _apply_selected_route_state(selected_route_state: Dictionary) -> bool:
+	if selected_route_state.is_empty() or not bool(selected_route_state.get("valid", false)):
+		return false
+	var selected_payload = selected_route_state.get("selected_tile", {})
+	var start_payload = selected_route_state.get("start_tile", selected_route_state.get("hero_tile", {}))
+	if not (selected_payload is Dictionary) or not (start_payload is Dictionary):
+		return false
+	var selected := Vector2i(int(selected_payload.get("x", -1)), int(selected_payload.get("y", -1)))
+	var start := Vector2i(int(start_payload.get("x", -1)), int(start_payload.get("y", -1)))
+	if selected != _selected_tile or start != _hero_tile:
+		return false
+	if int(selected_route_state.get("movement_current", _movement_left)) != _movement_left:
+		return false
+	var route_tiles := _tiles_from_payloads(selected_route_state.get("route_tiles", []))
+	if route_tiles.is_empty() and _selected_tile == _hero_tile:
+		route_tiles = [_hero_tile]
+	if route_tiles.is_empty():
+		return false
+	if route_tiles[0] != _hero_tile:
+		return false
+	_path_tiles = route_tiles
+	var preview = selected_route_state.get("route_preview", {})
+	_route_preview = preview.duplicate(true) if preview is Dictionary else OverworldRulesScript.route_movement_preview(_session, _path_tiles, _movement_left)
+	_profile_add("selected_route_cache_reuse_count", 1)
+	_validation_profile["last_selected_route_cache"] = {
+		"status": "reused",
+		"path_tiles": _path_tiles.size(),
+		"reachable_steps": int(_route_preview.get("reachable_steps", 0)),
+		"unreachable_steps": int(_route_preview.get("unreachable_steps", 0)),
+	}
+	return true
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:

@@ -98,6 +98,7 @@ var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
 var _active_drawer := ""
 var _refresh_cache: Dictionary = {}
+var _selected_route_state: Dictionary = {}
 var _action_feedback: Dictionary = {}
 var _action_feedback_sequence := 0
 var _action_feedback_tween: Tween = null
@@ -325,8 +326,7 @@ func _on_context_action_pressed(action_id: String) -> void:
 		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id})
 		return
 	if action_id == "march_selected":
-		var hero_pos = OverworldRules.hero_position(_session)
-		_try_move(_selected_tile.x - hero_pos.x, _selected_tile.y - hero_pos.y, true)
+		_move_toward_selected_tile()
 		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id})
 		return
 	if action_id == "enter_battle":
@@ -537,7 +537,8 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 func _move_toward_selected_tile() -> void:
 	var debug_started := _debug_begin_path_command("full_route_execute", _selected_tile)
 	var route_lookup_started_usec := _debug_phase_begin("route_execution_lookup")
-	var route = _selected_route()
+	var route_state := _ensure_selected_route_state("execution")
+	var route: Array = route_state.get("route_tiles", []) if route_state.get("route_tiles", []) is Array else []
 	_debug_phase_end("route_execution_lookup", route_lookup_started_usec, {"path_tiles": route.size()})
 	if route.size() <= 1:
 		if debug_started:
@@ -558,6 +559,7 @@ func _move_toward_selected_tile() -> void:
 			"executed_steps": executed_steps,
 		}
 	)
+	_adopt_selected_route_after_execution(route, result)
 	_handle_move_result(result, true, debug_started)
 
 func _start_encounter() -> void:
@@ -605,7 +607,7 @@ func _refresh() -> void:
 	_debug_refresh_profile_end("refresh_read_scope_map_state", read_scope_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_start")
 	var set_map_state_profile_start := _profile_begin("refresh_set_map_state")
-	_map_view.set_map_state(_session, _map_data, _map_size, _selected_tile)
+	_map_view.set_map_state(_session, _map_data, _map_size, _selected_tile, _selected_route_cache_for_map_view())
 	_profile_end("refresh_set_map_state", set_map_state_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_done")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_start")
@@ -1768,10 +1770,14 @@ func _selected_route_decision_surface() -> Dictionary:
 	if destination_name == "":
 		destination_name = "%d,%d" % [_selected_tile.x, _selected_tile.y]
 	var route: Array = []
+	var route_state: Dictionary = {}
 	if not selected_is_hero and not blocked:
-		route = _selected_route()
+		route_state = _ensure_selected_route_state("decision")
+		route = route_state.get("route_tiles", []) if route_state.get("route_tiles", []) is Array else []
 	var steps: int = max(0, route.size() - 1)
-	var preview: Dictionary = OverworldRules.route_movement_preview(_session, route, movement_current)
+	var preview: Dictionary = route_state.get("route_preview", {}) if route_state.get("route_preview", {}) is Dictionary else {}
+	if preview.is_empty():
+		preview = OverworldRules.route_movement_preview(_session, route, movement_current)
 	var reachable_steps := int(preview.get("reachable_steps", 0))
 	var unreachable_steps := int(preview.get("unreachable_steps", 0))
 	var destination_reachable := bool(preview.get("destination_reachable", false))
@@ -3565,9 +3571,173 @@ func _hover_tile_order_cue(tile: Vector2i) -> String:
 	return "Hover order: %s, then commit if ready; %s" % [order, movement_line]
 
 func _selected_route() -> Array:
-	if not _refresh_cache.has("selected_route"):
-		_refresh_cache["selected_route"] = _build_path(OverworldRules.hero_position(_session), _selected_tile)
-	return _refresh_cache["selected_route"]
+	var route_state := _ensure_selected_route_state("shell")
+	return route_state.get("route_tiles", []) if route_state.get("route_tiles", []) is Array else []
+
+func _selected_route_cache_for_map_view() -> Dictionary:
+	return _ensure_selected_route_state("map_view").duplicate(true)
+
+func _ensure_selected_route_state(requester: String = "shell") -> Dictionary:
+	var signature := _selected_route_signature()
+	if not _selected_route_state.is_empty() and String(_selected_route_state.get("signature", "")) == signature:
+		_profile_add("selected_route_cache_hits", 1)
+		_validation_profile["last_selected_route_cache"] = {
+			"status": "hit",
+			"requester": requester,
+			"signature": signature,
+			"path_tiles": int((_selected_route_state.get("route_tiles", []) if _selected_route_state.get("route_tiles", []) is Array else []).size()),
+		}
+		return _selected_route_state
+
+	_profile_add("selected_route_cache_misses", 1)
+	var hero_pos := OverworldRules.hero_position(_session)
+	var route: Array = []
+	if not _tile_in_bounds(_selected_tile):
+		route = []
+	elif _selected_tile == hero_pos:
+		route = [hero_pos]
+	else:
+		route = _build_path(hero_pos, _selected_tile)
+	_store_selected_route_state(route, "miss:%s" % requester, signature)
+	return _selected_route_state
+
+func _store_selected_route_state(route: Array, source: String, signature: String = "") -> void:
+	var hero_pos := OverworldRules.hero_position(_session)
+	var movement = _session.overworld.get("movement", {}) if _session != null else {}
+	var movement_current := int(movement.get("current", 0)) if movement is Dictionary else 0
+	var movement_max := int(movement.get("max", movement_current)) if movement is Dictionary else movement_current
+	var route_signature := signature if signature != "" else _selected_route_signature()
+	var route_copy := route.duplicate(true)
+	var preview := OverworldRules.route_movement_preview(_session, route_copy, movement_current)
+	_selected_route_state = {
+		"valid": true,
+		"signature": route_signature,
+		"source": source,
+		"selected_tile": _debug_tile_payload(_selected_tile),
+		"start_tile": _debug_tile_payload(hero_pos),
+		"hero_tile": _debug_tile_payload(hero_pos),
+		"movement_current": movement_current,
+		"movement_max": movement_max,
+		"map_size": {"x": _map_size.x, "y": _map_size.y},
+		"session_signature": _selected_route_session_signature(),
+		"map_signature": _selected_route_map_signature(),
+		"topology_signature": _selected_route_topology_signature(),
+		"route_tiles": route_copy,
+		"route_preview": preview.duplicate(true),
+	}
+	_validation_profile["last_selected_route_cache"] = {
+		"status": "stored",
+		"source": source,
+		"signature": route_signature,
+		"path_tiles": route_copy.size(),
+		"reachable_steps": int(preview.get("reachable_steps", 0)),
+		"unreachable_steps": int(preview.get("unreachable_steps", 0)),
+	}
+
+func _adopt_selected_route_after_execution(route: Array, result: Dictionary) -> void:
+	if not bool(result.get("ok", false)):
+		_invalidate_selected_route_state("route_execution_failed")
+		return
+	var route_steps: Array = result.get("route_steps", []) if result.get("route_steps", []) is Array else []
+	var executed_steps := route_steps.size()
+	if executed_steps <= 0:
+		_invalidate_selected_route_state("route_execution_no_steps")
+		return
+	var hero_pos := OverworldRules.hero_position(_session)
+	var remaining_route: Array = []
+	for index in range(executed_steps, route.size()):
+		remaining_route.append(route[index])
+	if remaining_route.is_empty() or not (remaining_route[0] is Vector2i) or remaining_route[0] != hero_pos:
+		remaining_route.push_front(hero_pos)
+	if remaining_route.size() > 0 and remaining_route[remaining_route.size() - 1] is Vector2i:
+		var destination: Vector2i = remaining_route[remaining_route.size() - 1]
+		if destination != _selected_tile and _tile_in_bounds(_selected_tile):
+			_invalidate_selected_route_state("route_execution_destination_changed")
+			return
+	_store_selected_route_state(remaining_route, "route_execution_remaining")
+
+func _invalidate_selected_route_state(reason: String = "") -> void:
+	if _selected_route_state.is_empty():
+		return
+	_selected_route_state.clear()
+	if reason != "":
+		_validation_profile["last_selected_route_cache"] = {"status": "invalidated", "reason": reason}
+
+func _selected_route_signature() -> String:
+	var hero_pos := OverworldRules.hero_position(_session)
+	var movement = _session.overworld.get("movement", {}) if _session != null else {}
+	var movement_current := int(movement.get("current", 0)) if movement is Dictionary else 0
+	var movement_max := int(movement.get("max", movement_current)) if movement is Dictionary else movement_current
+	return "|".join([
+		_selected_route_session_signature(),
+		_selected_route_map_signature(),
+		_selected_route_topology_signature(),
+		"selected:%d,%d" % [_selected_tile.x, _selected_tile.y],
+		"hero:%d,%d" % [hero_pos.x, hero_pos.y],
+		"move:%d/%d" % [movement_current, movement_max],
+	])
+
+func _selected_route_session_signature() -> String:
+	if _session == null:
+		return "session:null"
+	var identity := [
+		String(_session.scenario_id),
+		String(_session.difficulty),
+		String(_session.launch_mode),
+		String(_session.game_state),
+		String(_session.scenario_status),
+		String(_session.overworld.get("active_hero_id", "")),
+	]
+	var materialization = _session.flags.get("generated_random_map_materialization", {})
+	if materialization is Dictionary:
+		identity.append(String(materialization.get("materialized_map_signature", "")))
+	var generated_identity = _session.overworld.get("generated_random_map_identity", {})
+	if generated_identity is Dictionary:
+		identity.append(String(generated_identity.get("materialized_map_signature", "")))
+	return "session:%s" % "|".join(identity)
+
+func _selected_route_map_signature() -> String:
+	var signature := int(2166136261)
+	signature = int(((signature * 16777619) + _map_size.x + 1013904223) & 0x7fffffff)
+	signature = int(((signature * 16777619) + _map_size.y + 1013904223) & 0x7fffffff)
+	signature = int(((signature * 16777619) + _map_data.size() + 1013904223) & 0x7fffffff)
+	for row in _map_data:
+		signature = int(((signature * 16777619) + hash(var_to_str(row)) + 1013904223) & 0x7fffffff)
+	return "map:%d" % signature
+
+func _selected_route_topology_signature() -> String:
+	if _session == null:
+		return "topology:null"
+	var overworld := _session.overworld
+	var signature := int(2166136261)
+	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("towns", []), ["placement_id", "town_id", "owner"]))
+	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("resource_nodes", []), ["placement_id", "site_id", "collected", "collected_by_faction_id"]))
+	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("artifact_nodes", []), ["placement_id", "artifact_id", "collected"]))
+	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("encounters", []), ["placement_id", "encounter_id", "spawned_by_faction_id"]))
+	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("resolved_encounters", []), ["placement_id", "encounter_id", "id"]))
+	return "topology:%d" % signature
+
+func _route_array_signature(values: Variant, fields: Array) -> int:
+	if not (values is Array):
+		return hash(typeof(values))
+	var signature := int(2166136261)
+	signature = _combine_selected_route_signature(signature, values.size())
+	for value in values:
+		if not (value is Dictionary):
+			signature = _combine_selected_route_signature(signature, hash(var_to_str(value)))
+			continue
+		var entry: Dictionary = value
+		var position = entry.get("position", {})
+		var x = int(entry.get("x", position.get("x", -1) if position is Dictionary else -1))
+		var y = int(entry.get("y", position.get("y", -1) if position is Dictionary else -1))
+		signature = _combine_selected_route_signature(signature, x)
+		signature = _combine_selected_route_signature(signature, y)
+		for field in fields:
+			signature = _combine_selected_route_signature(signature, hash(str(entry.get(str(field), ""))))
+	return signature
+
+func _combine_selected_route_signature(signature: int, value: int) -> int:
+	return int(((signature * 16777619) + value + 1013904223) & 0x7fffffff)
 
 func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	var debug_timing_enabled := _debug_route_timing_active()
@@ -3646,6 +3816,7 @@ func _set_selected_tile(tile: Vector2i) -> void:
 	if _selected_tile == route_tile:
 		return
 	_selected_tile = route_tile
+	_invalidate_selected_route_state("selected_tile_changed")
 	_invalidate_refresh_cache()
 
 func _invalidate_refresh_cache() -> void:
@@ -4130,6 +4301,8 @@ func _debug_enrich_command_snapshot(snapshot: Dictionary) -> Dictionary:
 	var map_profile: Dictionary = profile.get("map_view", {}) if profile.get("map_view", {}) is Dictionary else {}
 	var route_details: Dictionary = profile.get("last_route_bfs", {}) if profile.get("last_route_bfs", {}) is Dictionary else {}
 	var map_route_details: Dictionary = map_profile.get("last_path_recompute", {}) if map_profile.get("last_path_recompute", {}) is Dictionary else {}
+	var route_cache_details: Dictionary = profile.get("last_selected_route_cache", {}) if profile.get("last_selected_route_cache", {}) is Dictionary else {}
+	var map_route_cache_details: Dictionary = map_profile.get("last_selected_route_cache", {}) if map_profile.get("last_selected_route_cache", {}) is Dictionary else {}
 	var rules_profile: Dictionary = OverworldRules.validation_pathing_profile_snapshot()
 	var save_profile: Dictionary = SaveService.validation_last_runtime_save_profile()
 	var save_before := int(enriched.get("save_started_msec_before", -1))
@@ -4143,8 +4316,13 @@ func _debug_enrich_command_snapshot(snapshot: Dictionary) -> Dictionary:
 	enriched["route_bfs_ms"] = _debug_usec_to_ms(shell_bfs_usec)
 	enriched["route_bfs_calls"] = int(profile.get("route_bfs_calls", 0))
 	enriched["route_bfs"] = route_details
+	enriched["route_cache_hits"] = int(profile.get("selected_route_cache_hits", 0))
+	enriched["route_cache_misses"] = int(profile.get("selected_route_cache_misses", 0))
+	enriched["route_cache"] = route_cache_details
 	enriched["map_view_path_ms"] = _debug_usec_to_ms(map_path_usec)
 	enriched["map_view_path"] = map_route_details
+	enriched["map_view_route_cache_reused"] = bool(map_route_details.get("cache_reused", false)) or String(map_route_cache_details.get("status", "")) == "reused"
+	enriched["map_view_route_cache"] = map_route_cache_details
 	enriched["pathfinding_ms"] = _debug_usec_to_ms(shell_bfs_usec if shell_bfs_usec > 0 else map_path_usec)
 	enriched["blocked_tile_lookup_count"] = int(route_details.get("blocked_tile_lookup_count", map_route_details.get("blocked_tile_lookup_count", 0)))
 	enriched["blocked_index_rebuild_count_delta"] = max(0, blocked_rebuilds_after - blocked_rebuilds_before)
@@ -4306,6 +4484,11 @@ func _debug_overlay_text(snapshot: Dictionary) -> String:
 			float(snapshot.get("route_bfs_ms", 0.0)),
 			int(snapshot.get("route_bfs_calls", 0)),
 			int(snapshot.get("blocked_tile_lookup_count", 0)),
+		],
+		"route cache h%d/m%d | map reuse %s" % [
+			int(snapshot.get("route_cache_hits", 0)),
+			int(snapshot.get("route_cache_misses", 0)),
+			"yes" if bool(snapshot.get("map_view_route_cache_reused", false)) else "no",
 		],
 		"refresh %.3f ms | set_map_state %.3f/%.3f ms" % [
 			float(snapshot.get("refresh_ms", 0.0)),
