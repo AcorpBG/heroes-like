@@ -86,16 +86,10 @@ static func evaluate_session_for_event(session: SessionStateStoreScript.SessionD
 		return inactive_result
 
 	var scenario := ContentService.get_scenario(session.scenario_id)
-	if bool(scenario.get("generated", false)):
-		profile["dependency_mode"] = "full_fallback_generated"
-		profile["fallback_reason"] = "generated_scenario"
-		var generated_result := evaluate_session(session)
-		generated_result["profile"] = profile
-		return generated_result
-
 	if event_facts.is_empty() or bool(event_facts.get("requires_full_scenario_eval", false)):
 		profile["dependency_mode"] = "full"
 		profile["fallback_reason"] = String(event_facts.get("fallback_reason", "no_event_facts"))
+		profile["fallback_used"] = true
 		var full_result := evaluate_session(session)
 		full_result["profile"] = profile
 		return full_result
@@ -107,6 +101,7 @@ static func evaluate_session_for_event(session: SessionStateStoreScript.SessionD
 	if not bool(dependency.get("known", false)):
 		profile["dependency_mode"] = "full_fallback_unknown"
 		profile["fallback_reason"] = String(dependency.get("unknown_reason", "unknown_dependency"))
+		profile["fallback_used"] = true
 		var unknown_result := evaluate_session(session)
 		unknown_result["profile"] = profile
 		return unknown_result
@@ -115,9 +110,26 @@ static func evaluate_session_for_event(session: SessionStateStoreScript.SessionD
 	if bool(event_dependency.get("broad", false)):
 		profile["dependency_mode"] = "full_fallback_unknown"
 		profile["fallback_reason"] = String(event_dependency.get("reason", "broad_event"))
+		profile["fallback_used"] = true
 		var broad_result := evaluate_session(session)
 		broad_result["profile"] = profile
 		return broad_result
+
+	if int(profile.get("objective_count", 0)) == 0 and int(profile.get("hook_count", 0)) == 0:
+		profile["dependency_mode"] = "event_gated_skip"
+		profile["skip_reason"] = "no_observable_dependencies"
+		profile["fallback_reason"] = ""
+		return {"status": session.scenario_status, "message": "", "profile": profile}
+
+	if bool(scenario.get("generated", false)):
+		profile["dependency_mode"] = "full_fallback_generated"
+		profile["fallback_reason"] = "generated_scenario_dependencies"
+		profile["fallback_used"] = true
+		profile["objectives_checked"] = int(profile.get("objective_count", 0))
+		profile["hooks_checked"] = int(profile.get("hook_count", 0))
+		var generated_result := evaluate_session(session)
+		generated_result["profile"] = profile
+		return generated_result
 
 	var affected_objectives := 0
 	var objectives: Array = dependency.get("objectives", []) if dependency.get("objectives", []) is Array else []
@@ -163,6 +175,8 @@ static func _scenario_event_dependency_profile(session: SessionStateStoreScript.
 		"affected_objective_count": 0,
 		"affected_hook_count": 0,
 		"dependency_metadata_known": false,
+		"fallback_used": false,
+		"skip_reason": "",
 	}
 
 static func _scenario_dependency_metadata(scenario: Dictionary) -> Dictionary:
@@ -192,6 +206,13 @@ static func _scenario_dependency_metadata(scenario: Dictionary) -> Dictionary:
 				continue
 			for objective in bucket:
 				if not (objective is Dictionary):
+					var unknown_objective_dependency := _empty_dependency()
+					unknown_objective_dependency["known"] = false
+					unknown_objective_dependency["unknown_reason"] = "objective_not_dictionary"
+					result["known"] = false
+					result["unknown_reason"] = "objective_not_dictionary"
+					result["objective_count"] = int(result.get("objective_count", 0)) + 1
+					result["objectives"].append(unknown_objective_dependency)
 					continue
 				var objective_dependency := _scenario_objective_dependency(objective, objective_index, {})
 				if not bool(objective_dependency.get("known", false)):
@@ -207,6 +228,13 @@ static func _scenario_dependency_metadata(scenario: Dictionary) -> Dictionary:
 	if raw_hooks is Array:
 		for hook in raw_hooks:
 			if not (hook is Dictionary):
+				var unknown_hook_dependency := _empty_dependency()
+				unknown_hook_dependency["known"] = false
+				unknown_hook_dependency["unknown_reason"] = "hook_not_dictionary"
+				result["known"] = false
+				result["unknown_reason"] = "hook_not_dictionary"
+				result["hook_count"] = int(result.get("hook_count", 0)) + 1
+				result["hooks"].append(unknown_hook_dependency)
 				continue
 			var hook_dependency := _scenario_hook_dependency(hook, result.get("objectives", []), objectives)
 			if not bool(hook_dependency.get("known", false)):
