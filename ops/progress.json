@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-selected-route-context-actions-cache-10184",
-  "currentSliceTitle": "Overworld Selected Route Context Actions Cache",
+  "currentSliceId": "overworld-refresh-phase-seams-10184",
+  "currentSliceTitle": "Overworld Refresh Phase Seams",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed durable selected-route context-action and route-decision surface cache for unchanged route-selection refreshes, with focused reuse/invalidation regression coverage and profile-log validation.",
+  "currentSliceNotes": "Completed the first safe incremental/asynchronous-prep slice: documented the current overworld refresh/input pipeline and split OverworldShell._refresh into named synchronous phases without changing behavior or profile bucket names.",
   "nextActionGuardrailNote": "After profile-log instrumentation, use uploaded JSONL evidence before selecting any performance fix; preserve movement/pathing semantics, map generation/content density, renderer/fog behavior, save schema, object contracts, and F3 overlay behavior.",
-  "updatedAt": "2026-05-01T09:50:33Z",
+  "updatedAt": "2026-05-01T10:05:28Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,53 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "overworld-refresh-phase-seams-10184",
+      "title": "Overworld Refresh Phase Seams",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-pathing-debug-overlay-report.md",
+        "docs/overworld-refresh-input-pipeline-plan.md",
+        ".artifacts/uploaded_profiles/20260501/acorp_windows_overworld_profile_after_b2346b8.jsonl"
+      ],
+      "implementationTargets": [
+        "docs/overworld-refresh-input-pipeline-plan.md",
+        "scenes/overworld/OverworldShell.gd",
+        "ops/progress.json"
+      ],
+      "startedAt": "2026-05-01T10:02:04Z",
+      "completedAt": "2026-05-01T10:05:28Z",
+      "completionCriteria": [
+        "Document the current synchronous route-selection and movement-confirmation call graph using real OverworldShell and OverworldRules methods.",
+        "Classify pure/cacheable derived state separately from mutation-sensitive state.",
+        "Define event/invalidation expectations for selected tile, route, hero movement, movement budget, roster, object resolution, map/topology, fog/visibility, and session/load changes.",
+        "Identify future async/deferred boundaries only after the refresh/input pipeline is split.",
+        "Split OverworldShell._refresh into named synchronous phase methods without changing behavior, cache semantics, movement/pathing, renderer/fog behavior, save schema, object contracts, F3 overlay/profile-log behavior, or profile bucket names."
+      ],
+      "nonGoals": [
+        "Do not introduce async, threads, deferred route computation, or new invalidation policy in this slice.",
+        "Do not change movement/pathing semantics, generated map content/density, renderer/fog behavior, save schema, object contracts, F3 overlay/profile-log behavior, or the selected-route/hero-action caches."
+      ],
+      "notes": "AcOrP's uploaded Windows profile still shows route interactions dominated by refresh/actions, context_actions, hero_actions, and movement_rules after the recent targeted cache fixes. This slice creates code seams and a technical plan before any incremental/deferred execution change.",
+      "completionEvidence": [
+        "docs/overworld-refresh-input-pipeline-plan.md records the current sync call graph, cacheability boundaries, invalidation model, deferred boundaries, and ordered implementation slices.",
+        "OverworldShell._refresh now delegates to _refresh_read_scope_and_map_state(), _refresh_map_view(), _refresh_action_rails(), _refresh_save_surface(), and _refresh_status_surfaces().",
+        "Existing profile bucket names inside the phases remain stable, including refresh_read_scope_map_state, refresh_set_map_state, refresh_actions, refresh_hero_actions, refresh_context_actions, refresh_spell_actions, refresh_specialty_actions, refresh_artifact_actions, refresh_generated_surfaces, and the status rail buckets."
+      ],
+      "validationEvidence": [
+        "python3 scripts/analyze_overworld_profile_log.py .artifacts/uploaded_profiles/20260501/acorp_windows_overworld_profile_after_b2346b8.jsonl passed and preserved the AcOrP profile baseline context.",
+        "godot4 --headless --path . res://tests/overworld_selected_route_context_actions_cache_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_hero_actions_refresh_cache_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_interaction_profile_log_regression.tscn passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ]
+    },
     {
       "id": "overworld-selected-route-context-actions-cache-10184",
       "title": "Overworld Selected Route Context Actions Cache",

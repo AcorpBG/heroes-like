@@ -606,6 +606,18 @@ func _render_state() -> void:
 func _refresh() -> void:
 	var profile_start := _profile_begin("refresh")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_enter")
+	_refresh_read_scope_and_map_state()
+	_refresh_map_view()
+	_refresh_action_rails()
+	var generated_surface_start := _refresh_save_surface()
+	var compact_generated := _refresh_status_surfaces(generated_surface_start)
+	OverworldRules.end_normalized_read_scope(_session)
+	if compact_generated:
+		AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_compact")
+	AppRouter.note_overworld_handoff_step("overworld_refresh_done")
+	_profile_end("refresh", profile_start, {"compact_generated": compact_generated})
+
+func _refresh_read_scope_and_map_state() -> void:
 	var read_scope_profile_start := _debug_refresh_profile_begin("refresh_read_scope_map_state")
 	OverworldRules.begin_normalized_read_scope(_session)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_read_scope_ready")
@@ -614,11 +626,15 @@ func _refresh() -> void:
 	_ensure_selected_tile()
 	_invalidate_refresh_cache()
 	_debug_refresh_profile_end("refresh_read_scope_map_state", read_scope_profile_start)
+
+func _refresh_map_view() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_start")
 	var set_map_state_profile_start := _profile_begin("refresh_set_map_state")
 	_map_view.set_map_state(_session, _map_data, _map_size, _selected_tile, _selected_route_cache_for_map_view())
 	_profile_end("refresh_set_map_state", set_map_state_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_done")
+
+func _refresh_action_rails() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_start")
 	var actions_profile_start := _profile_begin("refresh_actions")
 	var hero_actions_profile_start := _debug_refresh_profile_begin("refresh_hero_actions")
@@ -638,6 +654,8 @@ func _refresh() -> void:
 	_debug_refresh_profile_end("refresh_artifact_actions", artifact_actions_profile_start)
 	_profile_end("refresh_actions", actions_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_done")
+
+func _refresh_save_surface() -> int:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_start")
 	var generated_surface_start := 0
 	if _generated_initial_open_pending():
@@ -651,17 +669,15 @@ func _refresh() -> void:
 	else:
 		_refresh_save_slot_picker()
 		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_done")
+	return generated_surface_start
 
+func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_start")
 	if _generated_initial_open_pending() or _use_generated_compact_refresh():
 		_refresh_generated_opening_surfaces()
 		if generated_surface_start > 0:
 			_profile_end("refresh_generated_surfaces", generated_surface_start)
-		OverworldRules.end_normalized_read_scope(_session)
-		AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_compact")
-		AppRouter.note_overworld_handoff_step("overworld_refresh_done")
-		_profile_end("refresh", profile_start, {"compact_generated": true})
-		return
+		return true
 	var header_profile_start := _debug_refresh_profile_begin("refresh_header_objective_status_resources")
 	var scenario = ContentService.get_scenario(_session.scenario_id)
 	_header_label.text = String(scenario.get("name", "Overworld Command"))
@@ -760,9 +776,7 @@ func _refresh() -> void:
 	_update_map_tooltip()
 	_sync_context_drawers()
 	_debug_refresh_profile_end("refresh_tooltip_context_drawers", tooltip_context_profile_start)
-	OverworldRules.end_normalized_read_scope(_session)
-	AppRouter.note_overworld_handoff_step("overworld_refresh_done")
-	_profile_end("refresh", profile_start, {"compact_generated": false})
+	return false
 
 func _refresh_generated_opening_surfaces() -> void:
 	var scenario = ContentService.get_scenario(_session.scenario_id)
