@@ -70,8 +70,15 @@ func _assert_resource_destination_keeps_existing_interaction_semantics() -> bool
 		return _fail("Resource route selection failed.", selection)
 	if String(selection.get("primary_action_id", "")) != "advance_route":
 		return _fail("Resource route selection did not keep route execution as the commit path.", selection)
-	if not _assert_destination_only_command(_last_command(shell), "select_route", "resource", true):
+	var selection_command := _last_command(shell)
+	if not _assert_destination_only_command(selection_command, "select_route", "resource", true):
 		return false
+	var selection_phases: Dictionary = selection_command.get("phase_buckets_ms", {}) if selection_command.get("phase_buckets_ms", {}) is Dictionary else {}
+	if float(selection_phases.get("route_decision_construction", 0.0)) != 0.0:
+		return _fail("Resource route selection should use compact descriptor preview instead of rich route decision construction.", selection_command)
+	var selection_simple_paths: Dictionary = selection_command.get("simple_route_fast_paths", {}) if selection_command.get("simple_route_fast_paths", {}) is Dictionary else {}
+	if int(selection_simple_paths.get("context_tile_text_resource_hits", 0)) <= 0:
+		return _fail("Resource route selection did not expose compact interaction context text.", selection_command)
 
 	var clicked: Dictionary = shell.call("validation_click_tile", 4, 1)
 	if not bool(clicked.get("ok", false)):
@@ -86,6 +93,8 @@ func _assert_resource_destination_keeps_existing_interaction_semantics() -> bool
 		return _fail("Resource route did not use descriptor destination interaction fast path.", movement_details)
 	if String(movement_details.get("interaction_dispatch_mode", "")) != "destination_descriptor":
 		return _fail("Resource route did not dispatch by destination descriptor.", movement_details)
+	if not bool(movement_details.get("descriptor_route_fog_reused", false)):
+		return _fail("Resource route did not reuse already-revealed route fog during descriptor interaction.", movement_details)
 	if bool(movement_details.get("scenario_eval_skipped", true)):
 		return _fail("Resource destination interaction should preserve scenario evaluation semantics.", movement_details)
 	var pathing_profile: Dictionary = OverworldRules.validation_pathing_profile_snapshot()
@@ -125,6 +134,11 @@ func _assert_destination_only_command(command: Dictionary, expected_command: Str
 			return _fail("Open/current route command did not expose the simple route UI fast path.", command)
 		if not bool(destination_only.get("rich_route_surface_skipped", false)):
 			return _fail("Open/current route command did not report skipped rich route surfaces.", command)
+	else:
+		if not bool(destination_only.get("compact_interaction_destination_fast_path", false)):
+			return _fail("Interaction route command did not expose the compact interaction destination fast path.", command)
+		if not bool(destination_only.get("rich_route_surface_skipped", false)):
+			return _fail("Interaction route command did not report skipped rich route surfaces.", command)
 	if expect_selection_request and int(profile.get("selected_context_actions_cache_misses", 0)) != 0:
 		return _fail("Route selection recomputed broad selected context actions.", command)
 	return true

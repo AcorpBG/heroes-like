@@ -36,7 +36,7 @@ Selected follow-up after AcOrP's current-version profile and the real DISPLAY=:9
 
 Selected town performance follow-up after the full-flow profile at `.artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.jsonl` and the architecture audit at `.artifacts/audits/20260501_game_state_architecture_audit.md`: `town-entity-cache-active-refresh-10184` introduces the first per-town entity/view cache keyed by `placement_id`, active-town-only refresh reuse, runtime active-town index handoff, lazy town save-surface refresh, and JSONL evidence fields for cache hit/miss and save-surface skip behavior. It must preserve gameplay semantics, save schema, generated map content/density, renderer/fog, object contracts, and F3/profile-log compatibility.
 
-Current urgent performance follow-up: `town-entity-cache-signature-10184` replaces the active-town entity cache's whole-session JSON signature with compact scalar revision keys so town cache hits/misses do not serialize full hero, player hero, town, army, resource, or recap dictionaries. It uses only the active town, active tab/mode, relevant resource/hero/town scalar summaries, and current action recap/message inputs needed by town surfaces, while preserving the per-town cache semantics from `town-entity-cache-active-refresh-10184`.
+Current urgent overworld performance follow-up: `overworld-interaction-destination-fast-path-10184` extends the selected-route cached descriptor path from open/current tiles to resource, artifact, encounter, and safe town interaction destinations. It keeps preview cheap by using cached route state and compact destination descriptors instead of rich route decision/context/action rebuilds, and keeps confirmation on the prevalidated descriptor path with safe fallback for stale or unknown descriptors. Town first-render/cache-build work is explicitly out of scope.
 
 ## Slice Status Model
 
@@ -2903,6 +2903,43 @@ completionCriteria:
 
 nonGoals:
 - No save-schema migration, payload split/delta save architecture, broad route rewrite, generated-map density cut, renderer shortcut, town rules rewrite, or battle/outcome autosave removal.
+
+### P2 Child: Overworld Interaction Destination Fast Path
+
+id: `overworld-interaction-destination-fast-path-10184`
+parentSliceId: `random-map-final-homm3-parity-regate-audit-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Make resource, artifact, encounter, and safe town selected-route destinations use the same compact preview and prevalidated confirmation model already proven for open/current movement.
+
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/profile-jsonl-usage.md`
+- `docs/overworld-refresh-input-pipeline-plan.md`
+- `.artifacts/uploaded_profiles/20260501/acorp_windows_after_4953bbe_profile.jsonl`
+
+implementationTargets:
+- `scenes/overworld/OverworldShell.gd`
+- `scripts/core/OverworldRules.gd`
+- focused overworld route/profile regressions under `tests/`
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- Interaction destination selection builds action labels, summaries, and route text from cached selected-route state and `destination_interaction_descriptor` rather than constructing the rich route decision/interception/brief surfaces.
+- Resource and artifact confirmations keep using `execute_prevalidated_route` with descriptor dispatch and skip redundant full fog refresh after route fog has already been revealed.
+- Stale, missing, mismatched, or unknown descriptors keep the existing full `try_move_along_route` fallback and expose the fallback reason.
+- Focused regressions prove preview skips rich route decision/context/hero-action work for interaction destinations and confirmation preserves interaction semantics.
+
+completionCriteria:
+- New focused interaction-destination regression passes.
+- Existing overworld interaction/profile, cached route execution, route destination-only action, and incremental route preview regressions pass.
+- Uploaded AcOrP overworld profile remains readable by the analyzer.
+- `ops/progress.json` remains valid JSON and `git diff --check` passes.
+- No gameplay semantics, generated map content/density, renderer/fog behavior, save schema, object contracts, F3/profile compatibility, town render/cache-build behavior, or same-thread execution semantics is intentionally changed.
+
+nonGoals:
+- Do not optimize town scene first render, town entity cache build, battle scene render, generated map density/content, renderer shortcuts, save schema, async/threading, or route/pathing semantics.
 
 ### P2 Child: Town Entity Cache Signature
 
