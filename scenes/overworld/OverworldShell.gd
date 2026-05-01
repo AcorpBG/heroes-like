@@ -82,6 +82,7 @@ const RAIL_ACTION_WIDTH := 248.0
 const RAIL_LINE_CHARS := 42
 const ACTION_FEEDBACK_CHARS := 40
 const DEBUG_OVERLAY_TOGGLE_KEY := KEY_F3
+const OVERWORLD_PROFILE_LOG_PATH := "user://debug/overworld_profile.jsonl"
 
 var _session: SessionStateStore.SessionData
 var _map_data: Array = []
@@ -111,11 +112,13 @@ var _debug_overlay_label: Label = null
 var _debug_command_in_progress := false
 var _debug_command_context: Dictionary = {}
 var _debug_last_command_snapshot: Dictionary = {}
+var _profile_log_enabled := false
 
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
 	_apply_visual_theme()
 	_build_debug_overlay()
+	_profile_log_enabled = _profile_log_env_enabled()
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
 
@@ -4224,7 +4227,7 @@ func _set_debug_overlay_enabled(enabled: bool) -> void:
 	_debug_update_overlay_text()
 
 func _debug_begin_path_command(command_type: String, target_tile: Vector2i) -> bool:
-	if not _debug_overlay_enabled or _debug_command_in_progress:
+	if not _debug_capture_enabled() or _debug_command_in_progress:
 		return false
 	_debug_command_in_progress = true
 	OverworldRules.validation_set_pathing_profile_capture_enabled(true)
@@ -4261,6 +4264,7 @@ func _debug_finish_path_command() -> void:
 	var elapsed_usec := maxi(0, Time.get_ticks_usec() - int(_debug_command_context.get("started_usec", Time.get_ticks_usec())))
 	var snapshot := _debug_build_command_snapshot(elapsed_usec)
 	_debug_last_command_snapshot = snapshot
+	_profile_log_append_command_snapshot(snapshot)
 	_debug_command_in_progress = false
 	OverworldRules.validation_set_pathing_profile_capture_enabled(false)
 	if _map_view != null and _map_view.has_method("validation_set_path_detail_profile_enabled"):
@@ -4549,6 +4553,9 @@ func _debug_top_offenders_text(value: Variant) -> String:
 func _debug_route_timing_active() -> bool:
 	return _debug_command_in_progress
 
+func _debug_capture_enabled() -> bool:
+	return _debug_overlay_enabled or _profile_log_enabled
+
 func _debug_finish_route_bfs_profile(
 	enabled: bool,
 	started_usec: int,
@@ -4580,6 +4587,227 @@ func _debug_save_summary(save_profile: Dictionary) -> String:
 	var bytes := int(save_profile.get("written_bytes", 0))
 	return "%s %d ms %d bytes" % [slot_type, total_ms, bytes]
 
+func _profile_log_env_enabled() -> bool:
+	var value := OS.get_environment("HEROES_OVERWORLD_PROFILE_LOG").strip_edges().to_lower()
+	return value in ["1", "true", "yes", "on", "enabled"]
+
+func _profile_log_append_command_snapshot(snapshot: Dictionary) -> void:
+	if not _profile_log_enabled:
+		return
+	var record := _profile_log_record_from_snapshot(snapshot)
+	if record.is_empty():
+		return
+	_profile_log_ensure_directory()
+	if not FileAccess.file_exists(OVERWORLD_PROFILE_LOG_PATH):
+		var created := FileAccess.open(OVERWORLD_PROFILE_LOG_PATH, FileAccess.WRITE)
+		if created == null:
+			push_warning("Unable to create overworld profile log at %s: %s" % [OVERWORLD_PROFILE_LOG_PATH, error_string(FileAccess.get_open_error())])
+			return
+		created.close()
+	var file := FileAccess.open(OVERWORLD_PROFILE_LOG_PATH, FileAccess.READ_WRITE)
+	if file == null:
+		push_warning("Unable to append overworld profile log at %s: %s" % [OVERWORLD_PROFILE_LOG_PATH, error_string(FileAccess.get_open_error())])
+		return
+	file.seek_end()
+	file.store_string("%s\n" % JSON.stringify(_profile_log_json_safe(record)))
+	file.close()
+
+func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
+	var profile: Dictionary = snapshot.get("profile", {}) if snapshot.get("profile", {}) is Dictionary else {}
+	var map_profile: Dictionary = profile.get("map_view", {}) if profile.get("map_view", {}) is Dictionary else {}
+	var route_bfs: Dictionary = snapshot.get("route_bfs", {}) if snapshot.get("route_bfs", {}) is Dictionary else {}
+	var map_view_path: Dictionary = snapshot.get("map_view_path", {}) if snapshot.get("map_view_path", {}) is Dictionary else {}
+	var phase_buckets: Dictionary = snapshot.get("phase_buckets_ms", {}) if snapshot.get("phase_buckets_ms", {}) is Dictionary else {}
+	var route_bfs_status := String(route_bfs.get("status", map_view_path.get("status", "n/a")))
+	var route_bfs_path_tiles := int(route_bfs.get("path_tiles", map_view_path.get("path_tiles", 0)))
+	var route_bfs_visited := int(route_bfs.get("visited_count", map_view_path.get("visited_count", 0)))
+	var route_bfs_enqueued := int(route_bfs.get("enqueued_count", map_view_path.get("enqueued_count", 0)))
+	var route_bfs_lookups := int(snapshot.get("blocked_tile_lookup_count", route_bfs.get("blocked_tile_lookup_count", map_view_path.get("blocked_tile_lookup_count", 0))))
+	var movement_rules := {}
+	if profile.get("last_cmd_movement_rules", {}) is Dictionary:
+		movement_rules = profile.get("last_cmd_movement_rules", {}).duplicate(true)
+	var route_execution_lookup := {}
+	if profile.get("last_cmd_route_execution_lookup", {}) is Dictionary:
+		route_execution_lookup = profile.get("last_cmd_route_execution_lookup", {}).duplicate(true)
+	var context_dispatch := {}
+	if profile.get("last_cmd_context_action_dispatch", {}) is Dictionary:
+		context_dispatch = profile.get("last_cmd_context_action_dispatch", {}).duplicate(true)
+	var primary_activation := {}
+	if profile.get("last_cmd_primary_action_activation", {}) is Dictionary:
+		primary_activation = profile.get("last_cmd_primary_action_activation", {}).duplicate(true)
+	return {
+		"schema": "heroes_like.overworld_profile.v1",
+		"timestamp_utc": Time.get_datetime_string_from_system(true),
+		"monotonic_msec": Time.get_ticks_msec(),
+		"session": _profile_log_session_metadata(),
+		"command_type": String(snapshot.get("command_type", "")),
+		"raw_target": _profile_log_duplicate_dict(snapshot.get("raw_target_tile", {})),
+		"selected_target": _profile_log_duplicate_dict(snapshot.get("selected_tile", {})),
+		"selected_before": _profile_log_duplicate_dict(snapshot.get("selected_before", {})),
+		"hero_before": _profile_log_duplicate_dict(snapshot.get("hero_before", {})),
+		"hero_after": _profile_log_duplicate_dict(snapshot.get("hero_after", {})),
+		"total_command_ms": float(snapshot.get("total_command_ms", 0.0)),
+		"phase_buckets_ms": phase_buckets.duplicate(true),
+		"refresh_sections_ms": _profile_log_duplicate_dict(snapshot.get("refresh_sections_ms", {})),
+		"route_bfs": {
+			"ms": float(snapshot.get("route_bfs_ms", 0.0)),
+			"calls": int(snapshot.get("route_bfs_calls", 0)),
+			"lookups": route_bfs_lookups,
+			"status": route_bfs_status,
+			"visited": route_bfs_visited,
+			"enqueued": route_bfs_enqueued,
+			"path_tiles": route_bfs_path_tiles,
+			"details": route_bfs.duplicate(true),
+			"map_view_details": map_view_path.duplicate(true),
+		},
+		"route_cache": {
+			"hits": int(snapshot.get("route_cache_hits", 0)),
+			"misses": int(snapshot.get("route_cache_misses", 0)),
+			"status": String(snapshot.get("route_cache", {}).get("status", "")) if snapshot.get("route_cache", {}) is Dictionary else "",
+			"details": _profile_log_duplicate_dict(snapshot.get("route_cache", {})),
+			"map_view_reused": bool(snapshot.get("map_view_route_cache_reused", false)),
+			"map_view_details": _profile_log_duplicate_dict(snapshot.get("map_view_route_cache", {})),
+		},
+		"map_view_timings_ms": {
+			"set_map_state": float(snapshot.get("map_view_set_map_state_ms", 0.0)),
+			"path_recompute": float(snapshot.get("map_view_path_ms", 0.0)),
+			"draw_session_static": float(snapshot.get("draw_session_static_ms", 0.0)),
+			"draw_state": float(snapshot.get("draw_state_ms", 0.0)),
+			"draw_dynamic": float(snapshot.get("draw_dynamic_ms", 0.0)),
+			"object_index": float(snapshot.get("object_index_ms", 0.0)),
+			"road_index": float(snapshot.get("road_index_ms", 0.0)),
+		},
+		"map_view_counts": {
+			"object_index_rebuilds": int(snapshot.get("object_index_rebuilds", 0)),
+			"object_index_skips": int(snapshot.get("object_index_skips", 0)),
+			"hero_index_rebuilds": int(snapshot.get("hero_index_rebuilds", 0)),
+			"hero_index_skips": int(snapshot.get("hero_index_skips", 0)),
+			"road_index_rebuilds": int(snapshot.get("road_index_rebuilds", 0)),
+			"road_index_skips": int(snapshot.get("road_index_skips", 0)),
+			"dynamic_tile_checks": int(snapshot.get("dynamic_tile_checks", 0)),
+			"object_presentation_checks": int(snapshot.get("object_presentation_checks", 0)),
+			"terrain_tile_draws": int(snapshot.get("terrain_tile_draws", 0)),
+			"road_tile_draws": int(snapshot.get("road_tile_draws", 0)),
+		},
+		"movement_rules": {
+			"ms": float(phase_buckets.get("movement_rules", 0.0)),
+			"details": movement_rules,
+		},
+		"route_execution": {
+			"lookup_ms": float(phase_buckets.get("route_execution_lookup", 0.0)),
+			"lookup_details": route_execution_lookup,
+			"last_execution": _last_route_execution.duplicate(true),
+		},
+		"action_dispatch": {
+			"context_action_dispatch_ms": float(phase_buckets.get("context_action_dispatch", 0.0)),
+			"context_action_dispatch": context_dispatch,
+			"primary_action_activation_ms": float(phase_buckets.get("primary_action_activation", 0.0)),
+			"primary_action_activation": primary_activation,
+		},
+		"save": {
+			"observed": bool(snapshot.get("save_observed", false)),
+			"summary": String(snapshot.get("save_summary", "none observed")),
+			"profile": _profile_log_duplicate_dict(snapshot.get("save_profile", {})),
+		},
+		"fps": float(snapshot.get("fps", 0.0)),
+		"frame_ms": float(snapshot.get("frame_ms", 0.0)),
+		"top_offenders": snapshot.get("top_offenders", []),
+		"measured_sum_ms": float(snapshot.get("measured_sum_ms", 0.0)),
+		"unaccounted_ms": float(snapshot.get("unaccounted_ms", 0.0)),
+		"raw_profile": profile.duplicate(true),
+	}
+
+func _profile_log_session_metadata() -> Dictionary:
+	if _session == null:
+		return {}
+	var generated_identity = _session.overworld.get("generated_random_map_identity", {})
+	var materialization = _session.flags.get("generated_random_map_materialization", {})
+	return {
+		"session_id": String(_session.session_id),
+		"scenario_id": String(_session.scenario_id),
+		"difficulty": String(_session.difficulty),
+		"launch_mode": String(_session.launch_mode),
+		"day": int(_session.day),
+		"map_size": {"x": _map_size.x, "y": _map_size.y, "width": _map_size.x, "height": _map_size.y},
+		"generated_random_map": bool(_session.flags.get("generated_random_map", false)),
+		"generated_identity": generated_identity.duplicate(true) if generated_identity is Dictionary else {},
+		"generated_materialization": materialization.duplicate(true) if materialization is Dictionary else {},
+	}
+
+func _profile_log_duplicate_dict(value: Variant) -> Dictionary:
+	return value.duplicate(true) if value is Dictionary else {}
+
+func _profile_log_ensure_directory() -> void:
+	var dir := DirAccess.open("user://")
+	if dir != null:
+		dir.make_dir_recursive("debug")
+
+func _profile_log_clear() -> Dictionary:
+	_profile_log_ensure_directory()
+	var file := FileAccess.open(OVERWORLD_PROFILE_LOG_PATH, FileAccess.WRITE)
+	if file != null:
+		file.close()
+	return validation_overworld_profile_log_snapshot()
+
+func _profile_log_record_count() -> int:
+	if not FileAccess.file_exists(OVERWORLD_PROFILE_LOG_PATH):
+		return 0
+	var file := FileAccess.open(OVERWORLD_PROFILE_LOG_PATH, FileAccess.READ)
+	if file == null:
+		return 0
+	var count := 0
+	while not file.eof_reached():
+		var line := file.get_line().strip_edges()
+		if line != "":
+			count += 1
+	file.close()
+	return count
+
+func _profile_log_last_records(limit: int) -> Array:
+	var records := []
+	if limit <= 0 or not FileAccess.file_exists(OVERWORLD_PROFILE_LOG_PATH):
+		return records
+	var file := FileAccess.open(OVERWORLD_PROFILE_LOG_PATH, FileAccess.READ)
+	if file == null:
+		return records
+	while not file.eof_reached():
+		var line := file.get_line().strip_edges()
+		if line == "":
+			continue
+		var parsed = JSON.parse_string(line)
+		if parsed is Dictionary:
+			records.append(parsed)
+			while records.size() > limit:
+				records.pop_front()
+	file.close()
+	return records
+
+func _profile_log_json_safe(value: Variant) -> Variant:
+	match typeof(value):
+		TYPE_DICTIONARY:
+			var result := {}
+			var dictionary: Dictionary = value
+			for key_value in dictionary.keys():
+				result[String(key_value)] = _profile_log_json_safe(dictionary.get(key_value))
+			return result
+		TYPE_ARRAY:
+			var result := []
+			var array: Array = value
+			for item in array:
+				result.append(_profile_log_json_safe(item))
+			return result
+		TYPE_VECTOR2I:
+			var tile: Vector2i = value
+			return {"x": tile.x, "y": tile.y}
+		TYPE_VECTOR2:
+			var vector: Vector2 = value
+			return {"x": vector.x, "y": vector.y}
+		TYPE_COLOR:
+			var color: Color = value
+			return {"r": color.r, "g": color.g, "b": color.b, "a": color.a}
+		_:
+			return value
+
 func _debug_tile_payload(tile: Vector2i) -> Dictionary:
 	return {"x": tile.x, "y": tile.y}
 
@@ -4594,6 +4822,32 @@ func _debug_usec_to_ms(usec: int) -> float:
 func validation_set_debug_overlay_enabled(enabled: bool) -> Dictionary:
 	_set_debug_overlay_enabled(enabled)
 	return validation_debug_overlay_snapshot()
+
+func validation_set_overworld_profile_log_enabled(enabled: bool, clear_existing: bool = false) -> Dictionary:
+	_profile_log_enabled = enabled
+	if clear_existing:
+		_profile_log_clear()
+	return validation_overworld_profile_log_snapshot()
+
+func validation_clear_overworld_profile_log() -> Dictionary:
+	return _profile_log_clear()
+
+func validation_overworld_profile_log_path() -> String:
+	return OVERWORLD_PROFILE_LOG_PATH
+
+func validation_overworld_profile_log_snapshot() -> Dictionary:
+	return {
+		"enabled": _profile_log_enabled,
+		"path": OVERWORLD_PROFILE_LOG_PATH,
+		"absolute_path": ProjectSettings.globalize_path(OVERWORLD_PROFILE_LOG_PATH),
+		"record_count": _profile_log_record_count(),
+	}
+
+func validation_overworld_profile_log_record_count() -> int:
+	return _profile_log_record_count()
+
+func validation_overworld_profile_log_last_records(limit: int = 5) -> Array:
+	return _profile_log_last_records(limit)
 
 func validation_debug_overlay_snapshot() -> Dictionary:
 	return {
@@ -4868,7 +5122,7 @@ func validation_select_tile(x: int, y: int) -> Dictionary:
 	var tile := Vector2i(x, y)
 	if not _tile_in_bounds(tile):
 		return {"ok": false, "message": "Tile is outside the overworld map."}
-	var debug_started := _debug_begin_path_command("validation_select_route", tile)
+	var debug_started := _debug_begin_path_command("select_route", tile)
 	_debug_record_phase_usec("validation_select_entry", Time.get_ticks_usec() - handler_started_usec, {"handler": "validation_select_tile"})
 	_set_selected_tile(tile)
 	_debug_set_path_command_target(_selected_tile)
@@ -4876,6 +5130,15 @@ func validation_select_tile(x: int, y: int) -> Dictionary:
 	_refresh()
 	if debug_started:
 		_debug_finish_path_command()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = true
+	return snapshot
+
+func validation_click_tile(x: int, y: int) -> Dictionary:
+	var tile := Vector2i(x, y)
+	if not _tile_in_bounds(tile):
+		return {"ok": false, "message": "Tile is outside the overworld map."}
+	_on_map_tile_pressed(tile)
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = true
 	return snapshot

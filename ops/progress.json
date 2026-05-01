@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-route-refresh-cache-reuse-10184",
-  "currentSliceTitle": "Overworld Route Refresh Cache Reuse",
+  "currentSliceId": "overworld-interaction-profile-log-10184",
+  "currentSliceTitle": "Overworld Interaction Profile Log",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed selected-route cache reuse: durable shell route state now feeds map view and action surfaces, survives UI refreshes, and preserves the executed/remaining route so valid existing-selection confirmation performs no duplicate BFS.",
-  "nextActionGuardrailNote": "Do not change map generation, player counts, object density/counts, object placement, objectives, save schema, renderer art semantics, object body/visit contracts, or generated map art/path while correcting full-route movement semantics.",
-  "updatedAt": "2026-05-01T00:42:00Z",
+  "currentSliceNotes": "Completed opt-in persistent JSONL profile logging for overworld/pathing interactions at user://debug/overworld_profile.jsonl with validation hooks, analyzer, docs, and regression coverage.",
+  "nextActionGuardrailNote": "After profile-log instrumentation, use uploaded JSONL evidence before selecting any performance fix; preserve movement/pathing semantics, map generation/content density, renderer/fog behavior, save schema, object contracts, and F3 overlay behavior.",
+  "updatedAt": "2026-05-01T00:28:53Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,58 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "overworld-interaction-profile-log-10184",
+      "title": "Overworld Interaction Profile Log",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-pathing-debug-overlay-report.md"
+      ],
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_interaction_profile_log_regression.gd",
+        "tests/overworld_interaction_profile_log_regression.tscn",
+        "scripts/analyze_overworld_profile_log.py",
+        "docs/random-map-pathing-debug-overlay-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "startedAt": "2026-05-01T00:17:48Z",
+      "completionCriteria": [
+        "Persistent overworld/pathing interaction profile logging is opt-in via HEROES_OVERWORLD_PROFILE_LOG or validation hooks and is disabled by default.",
+        "Each JSONL record is self-contained with session/map/generated metadata, command targets, hero before/after, total and phase timings, refresh sections, route BFS/cache details, map-view timings, movement/action/route-execution buckets, save observation, FPS/frame time, top offenders, and unaccounted_ms.",
+        "Validation hooks can enable, clear, locate, count, and read recent profile records for tests.",
+        "Focused regression proves selection and existing-selection confirmation append records while F3 overlay and movement behavior remain intact."
+      ],
+      "nonGoals": [
+        "Do not change gameplay semantics, movement behavior, pathfinding behavior, map generation, templates, player counts, object density/counts, object placement, objectives, save schema, renderer art semantics, fog semantics, or object body/visit contracts.",
+        "Do not add primitive/debug renderer paths, hidden downscale, content cuts, A* rewrite, or performance fixes beyond the minimal persistent-log plumbing.",
+        "Do not replace or remove F3 overlay behavior; the persistent log complements it."
+      ],
+      "notes": "Completed AcOrP persistent overworld interaction profiling log without gameplay/pathing/render/fog/save/content semantic changes. Per repo instruction, do not push anywhere.",
+      "completedAt": "2026-05-01T00:28:53Z",
+      "completionEvidence": [
+        "OverworldShell starts command timing capture when either F3 overlay or the explicit persistent profile log is enabled; normal play remains disabled by default.",
+        "HEROES_OVERWORLD_PROFILE_LOG=1 enables JSONL append logging at user://debug/overworld_profile.jsonl without showing the F3 overlay.",
+        "Validation hooks can enable/clear the log, return Godot and absolute paths, count records, and parse recent records for tests.",
+        "Each JSONL record includes session/map/generated metadata, command type and targets, hero before/after, phase and refresh buckets, route BFS/cache data, map-view set/path/draw/index timings, movement/route/action buckets, save observation, FPS/frame time, top offenders, measured sum, and unaccounted_ms.",
+        "scripts/analyze_overworld_profile_log.py summarizes command latency, aggregate top offenders, and slowest records from an uploaded JSONL log.",
+        "docs/random-map-pathing-debug-overlay-report.md documents enablement, path, upload instructions, validation hooks, and field groups."
+      ],
+      "validationEvidence": [
+        "godot4 --headless --path . res://tests/overworld_interaction_profile_log_regression.tscn passed; it enabled and cleared the log, wrote select_route and click_existing_selection JSONL records, verified required field groups, kept F3 overlay behavior, and preserved movement.",
+        "Requested Godot scene suite passed with exit code 0: overworld_full_route_movement_regression, fog_of_war_homm_style_regression, random_map_pathing_debug_overlay_report, random_map_generated_density_distribution_report, random_map_generated_object_footprint_interaction_report, random_map_generated_visual_path_regression_report, random_map_generated_overworld_profile_report, random_map_live_overworld_render_move_report, random_map_default_seed_objective_regression_report, random_map_post_open_tail_timing_report, random_map_async_generation_ux_report, random_map_runtime_render_perf_smoke, and random_map_player_count_range_report.",
+        "python3 tests/validate_repo.py passed.",
+        "python3 scripts/analyze_overworld_profile_log.py --help passed.",
+        "python3 -m json.tool ops/progress.json passed before final completion update; rerun after update required.",
+        "git diff --check passed before final completion update; rerun after update required."
+      ]
+    },
     {
       "id": "overworld-route-refresh-cache-reuse-10184",
       "title": "Overworld Route Refresh Cache Reuse",
