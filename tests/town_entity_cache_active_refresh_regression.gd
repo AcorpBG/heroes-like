@@ -27,6 +27,7 @@ func _run() -> void:
 		return
 	SessionState.set_active_session(session)
 	session = SessionState.ensure_active_session()
+	AppRouter.validation_prepare_town_handoff_without_scene_change()
 
 	OverworldRules.validation_set_pathing_profile_capture_enabled(true)
 	var shell = load("res://scenes/town/TownShell.tscn").instantiate()
@@ -56,6 +57,57 @@ func _run() -> void:
 	var full_again_snapshot: Dictionary = shell.call("validation_force_refresh")
 	if not _assert_snapshot(full_again_snapshot, first_id, true, true, "same-town full refresh after minimal refresh"):
 		return
+	var same_shell_records: Array = SaveService.validation_general_profile_log_last_records(40)
+	var same_shell_hit_record := _find_town_refresh_record(same_shell_records, true)
+	if same_shell_hit_record.is_empty():
+		_finish_fail("Same-shell town refresh did not expose a cache-hit profile record.", same_shell_records)
+		return
+	if not _assert_cache_hit_refresh_is_light(same_shell_hit_record, "same-shell cache-hit refresh"):
+		return
+
+	SaveService.validation_clear_general_profile_log()
+	shell.queue_free()
+	await get_tree().process_frame
+	var leave_result: Dictionary = AppRouter.validation_prepare_overworld_handoff_without_scene_change()
+	if not bool(leave_result.get("ok", false)):
+		_finish_fail("Could not prepare ordinary town exit handoff for re-entry coverage.", leave_result)
+		return
+	OverworldRules.set_active_town_visit(session, first_id)
+	var reenter_result: Dictionary = AppRouter.validation_prepare_town_handoff_without_scene_change()
+	if not bool(reenter_result.get("ok", false)):
+		_finish_fail("Could not prepare ordinary same-town re-entry handoff.", reenter_result)
+		return
+	var reentry_shell = load("res://scenes/town/TownShell.tscn").instantiate()
+	add_child(reentry_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var reentry_snapshot: Dictionary = reentry_shell.call("validation_town_entity_cache_snapshot")
+	if not _assert_snapshot(reentry_snapshot, first_id, true, true, "same-town scene re-entry"):
+		return
+	var reentry_records: Array = SaveService.validation_general_profile_log_last_records(40)
+	if _has_save_surface_build_record(reentry_records):
+		_finish_fail("Ordinary same-town re-entry built the expensive save surface.", reentry_records)
+		return
+	var ready_record := _find_town_ready_record(reentry_records)
+	if ready_record.is_empty():
+		_finish_fail("Same-town re-entry did not expose a town_ready profile record.", reentry_records)
+		return
+	if not _assert_town_ready_reentry_is_light(ready_record):
+		return
+	var reentry_hit_record := _find_town_refresh_record(reentry_records, true)
+	if reentry_hit_record.is_empty():
+		_finish_fail("Same-town re-entry refresh did not expose a cache-hit profile record.", reentry_records)
+		return
+	if not _assert_cache_hit_refresh_is_light(reentry_hit_record, "same-town scene re-entry cache-hit refresh"):
+		return
+	reentry_shell.queue_free()
+	await get_tree().process_frame
+	OverworldRules.set_active_town_visit(session, first_id)
+	AppRouter.validation_prepare_town_handoff_without_scene_change()
+	shell = load("res://scenes/town/TownShell.tscn").instantiate()
+	add_child(shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
 
 	OverworldRules.set_active_town_visit(session, second_id)
 	OverworldRules.validation_set_pathing_profile_capture_enabled(true)
@@ -212,6 +264,39 @@ func _find_town_refresh_record(records: Array, hit: bool) -> Dictionary:
 		if bool(metadata.get("town_entity_cache_hit", false)) == hit:
 			return record
 	return {}
+
+func _find_town_ready_record(records: Array) -> Dictionary:
+	for record in records:
+		if record is Dictionary and String(record.get("surface", "")) == "town" and String(record.get("phase", "")) == "entry" and String(record.get("event", "")) == "town_ready":
+			return record
+	return {}
+
+func _assert_cache_hit_refresh_is_light(record: Dictionary, label: String) -> bool:
+	var buckets: Dictionary = record.get("buckets_ms", {}) if record.get("buckets_ms", {}) is Dictionary else {}
+	if float(buckets.get("town_entity_cache_hit", 0.0)) < 1.0:
+		_finish_fail("%s was not a cache-hit refresh." % label, record)
+		return false
+	if float(buckets.get("town_entity_cache_build", 99999.0)) > 0.001:
+		_finish_fail("%s rebuilt the town entity cache." % label, buckets)
+		return false
+	if float(buckets.get("stage", 99999.0)) > 50.0:
+		_finish_fail("%s still spent too long refreshing the town stage." % label, buckets)
+		return false
+	return true
+
+func _assert_town_ready_reentry_is_light(record: Dictionary) -> bool:
+	var buckets: Dictionary = record.get("buckets_ms", {}) if record.get("buckets_ms", {}) is Dictionary else {}
+	if float(buckets.get("normalize_overworld", 99999.0)) > 50.0:
+		_finish_fail("Same-town re-entry normalized the whole overworld.", buckets)
+		return false
+	if float(buckets.get("first_refresh", 99999.0)) > 250.0:
+		_finish_fail("Same-town re-entry first refresh stayed too expensive.", buckets)
+		return false
+	var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
+	if not bool(metadata.get("town_entity_cache_hit", false)):
+		_finish_fail("Same-town re-entry town_ready did not reuse the town entity cache.", record)
+		return false
+	return true
 
 func _finish_fail(message: String, details: Variant = {}) -> void:
 	OS.set_environment("HEROES_PROFILE_LOG", "")

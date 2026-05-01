@@ -43,11 +43,18 @@ func _run() -> void:
 		_finish_fail("Ordinary town transitions should not record transition autosave intent counts.", session.flags)
 		return
 	session.flags["generated_random_map"] = true
+	session.flags["town_return_handoff"] = {
+		"visible_text": "Town return: regression handoff",
+		"tooltip_text": "Town return handoff regression fixture.",
+		"post_action_recap": {},
+	}
+	SaveService.validation_clear_general_profile_log()
 	var overworld_shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
 	add_child(overworld_shell)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	SaveService.validation_clear_general_profile_log()
+	if not _assert_no_save_surface_build_records("generated overworld actual scene entry after town return"):
+		return
 	var overworld_snapshot: Dictionary = overworld_shell.call("validation_snapshot")
 	if not _assert_no_save_surface_build_records("generated overworld ordinary validation snapshot"):
 		return

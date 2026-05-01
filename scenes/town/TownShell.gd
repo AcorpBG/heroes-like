@@ -67,6 +67,7 @@ var _last_action_recap := {}
 var _last_town_entity_cache_result := {}
 var _last_save_surface_profile := {}
 var _last_refresh_minimal := false
+var _last_town_stage_signature := ""
 
 static var _town_entity_cache_by_session: Dictionary = {}
 
@@ -86,7 +87,7 @@ func _ready() -> void:
 		return
 
 	phase_started = ProfileLogScript.begin_usec()
-	OverworldRules.normalize_overworld_state(_session)
+	OverworldRules.normalize_overworld_state_for_runtime(_session)
 	buckets["normalize_overworld"] = ProfileLogScript.elapsed_ms(phase_started)
 	if _session.scenario_status != "in_progress":
 		AppRouter.go_to_scenario_outcome()
@@ -337,7 +338,7 @@ func _refresh(first_render_minimal: bool = false) -> void:
 		])
 	buckets["event_context"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
-	_town_stage_view.set_town_state(_session)
+	_refresh_town_stage_view(view_state)
 	buckets["stage"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
 	_refresh_save_slot_picker()
@@ -534,7 +535,69 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 		"study_actions": _duplicate_action_array(TownRules.get_spell_learning_actions(_session)) if (not minimal or current_lanes.has("study")) else [],
 		"specialty_actions": [] if minimal else _duplicate_action_array(TownRules.get_specialty_actions(_session)),
 		"artifact_actions": _duplicate_action_array(TownRules.get_artifact_actions(_session)) if (not minimal or current_lanes.has("logistics")) else [],
+		"stage_state": _build_town_stage_view_state(),
 	}
+
+func _build_town_stage_view_state() -> Dictionary:
+	var town := TownRules.get_active_town(_session)
+	if town.is_empty():
+		return {}
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	return {
+		"town": town.duplicate(true),
+		"town_template": town_template.duplicate(true),
+		"faction": ContentService.get_faction(String(town_template.get("faction_id", ""))).duplicate(true),
+		"stationed": HeroCommandRules.stationed_heroes(_session, town).duplicate(true),
+		"build_actions": _duplicate_action_array(TownRules.get_build_actions(_session)),
+		"recruit_actions": _duplicate_action_array(TownRules.get_recruit_actions(_session)),
+		"response_actions": _duplicate_action_array(TownRules.get_response_actions(_session)),
+		"study_actions": _duplicate_action_array(TownRules.get_spell_learning_actions(_session)),
+		"market_actions": _duplicate_action_array(TownRules.get_market_actions(_session)),
+		"logistics": OverworldRules.town_logistics_state(_session, town).duplicate(true),
+		"recovery": OverworldRules.town_recovery_state(_session, town).duplicate(true),
+		"threat": OverworldRules.town_public_threat_state(_session, town).duplicate(true),
+	}
+
+func _refresh_town_stage_view(view_state: Dictionary) -> void:
+	if _town_stage_view == null:
+		return
+	var stage_state: Dictionary = view_state.get("stage_state", {}) if view_state.get("stage_state", {}) is Dictionary else {}
+	var stage_signature := _town_stage_signature(stage_state)
+	if stage_signature != "" and stage_signature == _last_town_stage_signature:
+		return
+	_last_town_stage_signature = stage_signature
+	if not stage_state.is_empty() and _town_stage_view.has_method("set_precomputed_town_state"):
+		_town_stage_view.call("set_precomputed_town_state", _session, stage_state)
+	else:
+		_town_stage_view.set_town_state(_session)
+
+func _town_stage_signature(stage_state: Dictionary) -> String:
+	if stage_state.is_empty():
+		return ""
+	var town: Dictionary = stage_state.get("town", {}) if stage_state.get("town", {}) is Dictionary else {}
+	var logistics: Dictionary = stage_state.get("logistics", {}) if stage_state.get("logistics", {}) is Dictionary else {}
+	var threat: Dictionary = stage_state.get("threat", {}) if stage_state.get("threat", {}) is Dictionary else {}
+	return "|".join([
+		String(town.get("placement_id", "")),
+		String(town.get("town_id", "")),
+		String(town.get("owner", "")),
+		_string_array_signature(town.get("built_buildings", [])),
+		_stack_collection_signature(town.get("garrison", [])),
+		_scalar_pairs_signature(town.get("available_recruits", {})),
+		_scalar_pairs_signature(logistics),
+		_scalar_pairs_signature(threat),
+		str(_collection_size(stage_state.get("stationed", []))),
+		str(_collection_size(stage_state.get("build_actions", []))),
+		str(_collection_size(stage_state.get("recruit_actions", []))),
+		str(_collection_size(stage_state.get("response_actions", []))),
+		str(_collection_size(stage_state.get("study_actions", []))),
+		str(_collection_size(stage_state.get("market_actions", []))),
+	])
+
+func _collection_size(value: Variant) -> int:
+	if value is Array or value is Dictionary:
+		return value.size()
+	return 0
 
 func _town_entity_cache_signature(town: Dictionary, minimal: bool) -> String:
 	if _session == null:
