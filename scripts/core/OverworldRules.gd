@@ -25,6 +25,8 @@ static var _spatial_lookup_indexes: Dictionary = {}
 static var _spatial_lookup_signatures: Dictionary = {}
 static var _active_town_visit_indexes: Dictionary = {}
 static var _blocked_tile_indexes: Dictionary = {}
+static var _movement_rules_profile_active := false
+static var _movement_rules_profile: Dictionary = {}
 static var _pathing_debug_profile: Dictionary = {
 	"capture_enabled": false,
 	"blocked_index_rebuild_count": 0,
@@ -40,6 +42,51 @@ static var _pathing_debug_profile: Dictionary = {
 	"post_move_global_discovery_count": 0,
 	"post_action_tile_context_scan_count": 0,
 }
+
+static func _rules_profile_begin() -> void:
+	_movement_rules_profile_active = bool(_pathing_debug_profile.get("capture_enabled", false))
+	if not _movement_rules_profile_active:
+		_movement_rules_profile = {}
+		return
+	_movement_rules_profile = {
+		"sub_buckets_ms": {},
+		"rule_counts": {},
+		"descriptor": {},
+		"scenario_eval": {},
+		"post_action_recap": {},
+		"fog": {},
+		"blocked_index": {},
+	}
+
+static func _rules_profile_finish() -> Dictionary:
+	var profile := _movement_rules_profile.duplicate(true) if _movement_rules_profile_active else {}
+	_movement_rules_profile_active = false
+	_movement_rules_profile = {}
+	return profile
+
+static func _rules_profile_timer() -> int:
+	return Time.get_ticks_usec() if _movement_rules_profile_active else 0
+
+static func _rules_profile_add_ms(bucket: String, started_usec: int) -> void:
+	if not _movement_rules_profile_active or started_usec <= 0 or bucket == "":
+		return
+	var buckets: Dictionary = _movement_rules_profile.get("sub_buckets_ms", {})
+	buckets[bucket] = snapped(float(buckets.get(bucket, 0.0)) + float(maxi(0, Time.get_ticks_usec() - started_usec)) / 1000.0, 0.001)
+	_movement_rules_profile["sub_buckets_ms"] = buckets
+
+static func _rules_profile_set(section: String, key: String, value: Variant) -> void:
+	if not _movement_rules_profile_active or section == "" or key == "":
+		return
+	var target: Dictionary = _movement_rules_profile.get(section, {}) if _movement_rules_profile.get(section, {}) is Dictionary else {}
+	target[key] = value
+	_movement_rules_profile[section] = target
+
+static func _rules_profile_count(key: String, amount: int = 1) -> void:
+	if not _movement_rules_profile_active or key == "":
+		return
+	var counts: Dictionary = _movement_rules_profile.get("rule_counts", {})
+	counts[key] = int(counts.get(key, 0)) + amount
+	_movement_rules_profile["rule_counts"] = counts
 
 static func _scenario_factory() -> Variant:
 	return load("res://scripts/core/ScenarioFactory.gd")
@@ -534,27 +581,38 @@ static func execute_prevalidated_route(
 	movement_budget: int = -1,
 	destination_descriptor: Dictionary = {}
 ) -> Dictionary:
+	_rules_profile_begin()
+	var execute_started_usec := _rules_profile_timer()
+	var route_shape_started_usec := _rules_profile_timer()
 	var path := _normalize_route_tiles(route_tiles)
+	_rules_profile_add_ms("execute_prevalidated_route_shape_ms", route_shape_started_usec)
 	if path.size() <= 1:
+		_rules_profile_finish()
 		return {"ok": false, "message": "No route selected.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
 	var pos := hero_position(session)
 	if path[0] != pos:
+		_rules_profile_finish()
 		return {"ok": false, "message": "The selected route no longer starts at the active hero.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
 
 	var movement = session.overworld.get("movement", {})
 	var movement_left := int(movement.get("current", 0))
 	var effective_budget := movement_left if movement_budget < 0 else mini(movement_left, max(0, movement_budget))
 	if effective_budget <= 0:
+		_rules_profile_finish()
 		return {"ok": false, "message": "No movement left today.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
 
+	route_shape_started_usec = _rules_profile_timer()
 	var preview := route_preview.duplicate(true)
 	if preview.is_empty() or int(preview.get("movement_budget", effective_budget)) != effective_budget or int(preview.get("total_steps", path.size() - 1)) != path.size() - 1:
 		preview = route_movement_preview(session, path, effective_budget)
+	_rules_profile_add_ms("execute_prevalidated_route_shape_ms", route_shape_started_usec)
 	var reachable_steps := mini(max(0, int(preview.get("reachable_steps", 0))), path.size() - 1)
 	reachable_steps = mini(reachable_steps, effective_budget)
 	if reachable_steps <= 0:
+		_rules_profile_finish()
 		return {"ok": false, "message": "No movement left today.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
 
+	var apply_started_usec := _rules_profile_timer()
 	var final_tile: Vector2i = path[reachable_steps]
 	var destination_tile: Vector2i = path[path.size() - 1]
 	_set_active_hero_position(session, final_tile)
@@ -562,7 +620,10 @@ static func execute_prevalidated_route(
 	movement["current"] = max(0, movement_after)
 	session.overworld["movement"] = movement
 	HeroCommandRulesScript.commit_active_hero(session)
+	_rules_profile_add_ms("execute_prevalidated_apply_movement_ms", apply_started_usec)
+	var route_fog_started_usec := _rules_profile_timer()
 	_reveal_route_fog(session, path.slice(1, reachable_steps + 1))
+	_rules_profile_add_ms("execute_prevalidated_route_fog_ms", route_fog_started_usec)
 	_mark_runtime_normalized(session)
 
 	var messages := ["Moved to %d,%d." % [final_tile.x, final_tile.y]]
@@ -586,7 +647,11 @@ static func execute_prevalidated_route(
 			interaction_dispatch_mode = "destination_descriptor"
 			post_action_recap_skipped = false
 			scenario_eval_skipped = false
+			_rules_profile_set("descriptor", "kind", descriptor_kind)
+			_rules_profile_count("descriptor_dispatch_count")
+			var dispatch_started_usec := _rules_profile_timer()
 			interaction_result = _resolve_destination_descriptor_interaction(session, destination_descriptor)
+			_rules_profile_add_ms("descriptor_dispatch_total_ms", dispatch_started_usec)
 		var interaction_message := String(interaction_result.get("message", ""))
 		if interaction_message != "":
 			messages.append(interaction_message)
@@ -614,6 +679,16 @@ static func execute_prevalidated_route(
 	route_execution["scenario_eval_skipped"] = scenario_eval_skipped
 	route_execution["interaction_dispatch_mode"] = interaction_dispatch_mode
 	route_execution["descriptor_route_fog_reused"] = bool(interaction_result.get("descriptor_route_fog_reused", false))
+	_rules_profile_add_ms("execute_prevalidated_total_ms", execute_started_usec)
+	var rules_profile := _rules_profile_finish()
+	if not rules_profile.is_empty():
+		route_execution["sub_buckets_ms"] = rules_profile.get("sub_buckets_ms", {})
+		route_execution["rule_counts"] = rules_profile.get("rule_counts", {})
+		route_execution["descriptor"] = rules_profile.get("descriptor", {})
+		route_execution["scenario_eval"] = rules_profile.get("scenario_eval", {})
+		route_execution["post_action_recap"] = rules_profile.get("post_action_recap", {})
+		route_execution["fog"] = rules_profile.get("fog", {})
+		route_execution["blocked_index"] = rules_profile.get("blocked_index", {})
 	result["route_execution"] = route_execution
 	result["route_validation_mode"] = "cached_prevalidated"
 	return result
@@ -720,11 +795,18 @@ static func _collect_resource_node_result(
 	node_result: Dictionary,
 	refresh_fog_after_action: bool = true
 ) -> Dictionary:
+	var collect_started_usec := _rules_profile_timer()
+	_rules_profile_count("resource_collect_count")
+	var claimability_started_usec := _rules_profile_timer()
 	var node = node_result.get("node", {})
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 	if site.is_empty():
+		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
+		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 		return {"ok": false, "message": "This site has no authored payload."}
 	if not _resource_node_claimable_by_player(node, site, session):
+		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
+		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 		if _resource_site_is_repeatable(site):
 			return {"ok": false, "message": _resource_site_repeatable_block_message(session, node, site)}
 		if _resource_site_is_persistent(site):
@@ -732,11 +814,15 @@ static func _collect_resource_node_result(
 		return {"ok": false, "message": "This site has already been gathered."}
 	var visit_cost := _resource_site_visit_cost(site)
 	if not _can_afford(session, visit_cost):
+		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
+		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 		return {
 			"ok": false,
 			"message": "Insufficient resources for %s." % String(site.get("action_label", "that service")),
 		}
+	_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 
+	var mutate_started_usec := _rules_profile_timer()
 	var nodes = session.overworld.get("resource_nodes", [])
 	var previous_controller := String(node.get("collected_by_faction_id", ""))
 	node["collected"] = true
@@ -745,12 +831,18 @@ static func _collect_resource_node_result(
 	node = _clear_resource_site_response(node)
 	nodes[int(node_result.get("index", -1))] = node
 	session.overworld["resource_nodes"] = nodes
+	_rules_profile_add_ms("resource_mutate_node_ms", mutate_started_usec)
+	var blocked_started_usec := _rules_profile_timer()
 	_refresh_blocked_tile_index(session)
+	_rules_profile_add_ms("resource_blocked_index_refresh_ms", blocked_started_usec)
 
+	var reward_started_usec := _rules_profile_timer()
 	var rewards = DifficultyRulesScript.scale_reward_resources(session, _resource_site_claim_rewards(site))
 	if not visit_cost.is_empty():
 		_spend_resources(session, visit_cost)
 	_add_resources(session, rewards)
+	_rules_profile_add_ms("resource_reward_apply_ms", reward_started_usec)
+	var disruption_started_usec := _rules_profile_timer()
 	var disruption_message := apply_resource_site_disruption(
 		session,
 		node,
@@ -758,6 +850,7 @@ static func _collect_resource_node_result(
 		previous_controller,
 		"player"
 	)
+	_rules_profile_add_ms("resource_disruption_ms", disruption_started_usec)
 	var messages := [_resource_site_claim_message(site, previous_controller)]
 	var cost_summary := _describe_resource_delta(visit_cost)
 	if cost_summary != "":
@@ -765,6 +858,7 @@ static func _collect_resource_node_result(
 	var reward_summary := _describe_resource_delta(rewards)
 	if reward_summary != "":
 		messages.append("Stores %s." % reward_summary)
+	var recruits_spells_xp_started_usec := _rules_profile_timer()
 	var recruit_message := _grant_site_claim_recruits(session, _resource_site_claim_recruits(site))
 	if recruit_message != "":
 		messages.append(recruit_message)
@@ -774,10 +868,11 @@ static func _collect_resource_node_result(
 	if disruption_message != "":
 		messages.append(disruption_message)
 	messages.append_array(_award_experience(session, int(rewards.get("experience", 0))))
+	_rules_profile_add_ms("resource_recruits_spells_xp_ms", recruits_spells_xp_started_usec)
 	var result := _finalize_action_result(session, true, " ".join(messages), refresh_fog_after_action)
 	if not refresh_fog_after_action:
 		result["descriptor_route_fog_reused"] = true
-	return _attach_post_action_recap(
+	var recapped := _attach_post_action_recap(
 		result,
 		session,
 		"resource_site",
@@ -790,6 +885,8 @@ static func _collect_resource_node_result(
 			"rewards": rewards,
 		}
 	)
+	_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
+	return recapped
 
 static func collect_active_artifact(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state_for_runtime(session)
@@ -803,8 +900,11 @@ static func _collect_artifact_node_result(
 	node_result: Dictionary,
 	refresh_fog_after_action: bool = true
 ) -> Dictionary:
+	var collect_started_usec := _rules_profile_timer()
+	_rules_profile_count("artifact_collect_count")
 	var node = node_result.get("node", {})
 	if bool(node.get("collected", false)):
+		_rules_profile_add_ms("artifact_collect_total_ms", collect_started_usec)
 		return {"ok": false, "message": "This cache has already been claimed."}
 
 	var pickup_result := _apply_artifact_claim(
@@ -814,6 +914,7 @@ static func _collect_artifact_node_result(
 		true
 	)
 	if not bool(pickup_result.get("ok", false)):
+		_rules_profile_add_ms("artifact_collect_total_ms", collect_started_usec)
 		return {"ok": false, "message": String(pickup_result.get("message", "Artifact recovery failed."))}
 
 	var nodes = session.overworld.get("artifact_nodes", [])
@@ -826,7 +927,7 @@ static func _collect_artifact_node_result(
 	var result := _finalize_action_result(session, true, String(pickup_result.get("message", "Recovered artifact.")), refresh_fog_after_action)
 	if not refresh_fog_after_action:
 		result["descriptor_route_fog_reused"] = true
-	return _attach_post_action_recap(
+	var recapped := _attach_post_action_recap(
 		result,
 		session,
 		"artifact",
@@ -836,6 +937,8 @@ static func _collect_artifact_node_result(
 			"y": int(node.get("y", 0)),
 		}
 	)
+	_rules_profile_add_ms("artifact_collect_total_ms", collect_started_usec)
+	return recapped
 
 static func perform_context_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	if session == null:
@@ -1653,8 +1756,12 @@ static func _refresh_blocked_tile_index(session: SessionStateStoreScript.Session
 		return
 	var capture_enabled := bool(_pathing_debug_profile.get("capture_enabled", false))
 	var started_usec := Time.get_ticks_usec() if capture_enabled else 0
+	var resource_nodes = session.overworld.get("resource_nodes", [])
 	var index := _build_blocked_tile_index(session)
 	_blocked_tile_indexes[str(session.session_id)] = index
+	_rules_profile_set("blocked_index", "rebuilt", true)
+	_rules_profile_set("blocked_index", "node_count", resource_nodes.size() if resource_nodes is Array else 0)
+	_rules_profile_set("blocked_index", "tile_count", index.size())
 	if not capture_enabled:
 		return
 	var elapsed_usec := maxi(0, Time.get_ticks_usec() - started_usec)
@@ -4436,11 +4543,16 @@ static func _find_resource_node_interaction_at(session: SessionStateStoreScript.
 static func _find_resource_node_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	if session == null or placement_id == "":
 		return {"index": -1, "node": {}}
+	var lookup_started_usec := _rules_profile_timer()
+	_rules_profile_set("descriptor", "lookup_mode", "full_scan")
 	var nodes = session.overworld.get("resource_nodes", [])
+	_rules_profile_set("descriptor", "lookup_collection_size", nodes.size() if nodes is Array else 0)
 	for index in range(nodes.size()):
 		var node = nodes[index]
 		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
+			_rules_profile_add_ms("descriptor_lookup_ms", lookup_started_usec)
 			return {"index": index, "node": node}
+	_rules_profile_add_ms("descriptor_lookup_ms", lookup_started_usec)
 	return {"index": -1, "node": {}}
 
 static func _find_active_town(session: SessionStateStoreScript.SessionData) -> Dictionary:
@@ -4493,10 +4605,13 @@ static func _find_active_artifact_node(session: SessionStateStoreScript.SessionD
 static func _find_artifact_node_by_descriptor(session: SessionStateStoreScript.SessionData, descriptor: Dictionary) -> Dictionary:
 	if session == null:
 		return {"index": -1, "node": {}}
+	var lookup_started_usec := _rules_profile_timer()
+	_rules_profile_set("descriptor", "lookup_mode", "full_scan")
 	var artifact_id := String(descriptor.get("artifact_id", ""))
 	var x := int(descriptor.get("x", -999))
 	var y := int(descriptor.get("y", -999))
 	var nodes = session.overworld.get("artifact_nodes", [])
+	_rules_profile_set("descriptor", "lookup_collection_size", nodes.size() if nodes is Array else 0)
 	for index in range(nodes.size()):
 		var node = nodes[index]
 		if not (node is Dictionary):
@@ -4506,7 +4621,9 @@ static func _find_artifact_node_by_descriptor(session: SessionStateStoreScript.S
 		if artifact_id != "" and String(node.get("artifact_id", "")) != artifact_id:
 			continue
 		if int(node.get("x", -1)) == x and int(node.get("y", -1)) == y:
+			_rules_profile_add_ms("descriptor_lookup_ms", lookup_started_usec)
 			return {"index": index, "node": node}
+	_rules_profile_add_ms("descriptor_lookup_ms", lookup_started_usec)
 	return {"index": -1, "node": {}}
 
 static func _resource_site_is_persistent(site: Dictionary) -> bool:
@@ -9688,11 +9805,16 @@ static func _find_town_by_placement(session: SessionStateStoreScript.SessionData
 static func _find_encounter_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	if session == null or placement_id == "":
 		return {"index": -1, "encounter": {}}
+	var lookup_started_usec := _rules_profile_timer()
+	_rules_profile_set("descriptor", "lookup_mode", "full_scan")
 	var encounters = session.overworld.get("encounters", [])
+	_rules_profile_set("descriptor", "lookup_collection_size", encounters.size() if encounters is Array else 0)
 	for index in range(encounters.size()):
 		var encounter = encounters[index]
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			_rules_profile_add_ms("descriptor_lookup_ms", lookup_started_usec)
 			return {"index": index, "encounter": encounter}
+	_rules_profile_add_ms("descriptor_lookup_ms", lookup_started_usec)
 	return {"index": -1, "encounter": {}}
 
 static func _advance_all_town_occupations(session: SessionStateStoreScript.SessionData) -> Array:
@@ -9984,9 +10106,14 @@ static func _reveal_route_fog(session: SessionStateStoreScript.SessionData, trav
 	if not _fog_state_ready(session):
 		_normalize_fog_of_war(session)
 	var map_size := derive_map_size(session)
+	_rules_profile_set("fog", "grid_cells", max(map_size.x, 0) * max(map_size.y, 0))
 	var fog: Dictionary = session.overworld.get(FOG_KEY, {})
+	var before_explored_count := int(fog.get("explored_count", -1))
+	var normalize_started_usec := _rules_profile_timer()
 	var explored_tiles := _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
+	_rules_profile_add_ms("fog_normalize_grid_ms", normalize_started_usec)
 	var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+	var route_reveal_started_usec := _rules_profile_timer()
 	for tile_value in traversed_tiles:
 		var tile := _route_tile_from_variant(tile_value)
 		if tile.x < 0 or tile.y < 0:
@@ -9994,14 +10121,25 @@ static func _reveal_route_fog(session: SessionStateStoreScript.SessionData, trav
 		var route_hero := hero.duplicate(true)
 		route_hero["position"] = {"x": tile.x, "y": tile.y}
 		_apply_hero_reveal(explored_tiles, route_hero, map_size)
+	_rules_profile_add_ms("fog_apply_route_reveal_ms", route_reveal_started_usec)
+	var sources_started_usec := _rules_profile_timer()
 	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
-	session.overworld[FOG_KEY] = _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
+	_rules_profile_add_ms("fog_reveal_current_sources_ms", sources_started_usec)
+	var duplicate_started_usec := _rules_profile_timer()
+	var visible_tiles := _duplicate_visibility_grid(explored_tiles)
+	_rules_profile_add_ms("fog_duplicate_grid_ms", duplicate_started_usec)
+	var payload := _build_fog_payload(visible_tiles, explored_tiles, map_size)
+	if before_explored_count >= 0:
+		_rules_profile_set("fog", "changed_cells", max(0, int(payload.get("explored_count", before_explored_count)) - before_explored_count))
+	session.overworld[FOG_KEY] = payload
 
 static func _reveal_all_current_fog_sources(session: SessionStateStoreScript.SessionData, explored_tiles: Array, map_size: Vector2i) -> void:
+	var source_count := 0
 	var heroes = session.overworld.get("player_heroes", [])
 	if heroes is Array:
 		for hero in heroes:
 			if hero is Dictionary:
+				source_count += 1
 				_apply_hero_reveal(explored_tiles, hero, map_size)
 	for node in session.overworld.get("resource_nodes", []):
 		if not (node is Dictionary):
@@ -10011,7 +10149,9 @@ static func _reveal_all_current_fog_sources(session: SessionStateStoreScript.Ses
 			continue
 		if String(node.get("collected_by_faction_id", "")) != "player":
 			continue
+		source_count += 1
 		_apply_site_reveal(explored_tiles, node, max(0, int(site.get("vision_radius", 0))), map_size)
+	_rules_profile_set("fog", "source_count", source_count)
 
 static func _fog_state_ready(session: SessionStateStoreScript.SessionData) -> bool:
 	if session == null:
@@ -10030,11 +10170,15 @@ static func _fog_state_ready(session: SessionStateStoreScript.SessionData) -> bo
 	)
 
 static func _build_fog_payload(visible_tiles: Array, explored_tiles: Array, map_size: Vector2i) -> Dictionary:
+	var count_started_usec := _rules_profile_timer()
+	var visible_count := _count_grid(visible_tiles)
+	var explored_count := _count_grid(explored_tiles)
+	_rules_profile_add_ms("fog_count_grid_ms", count_started_usec)
 	return {
 		VISIBLE_TILES_KEY: visible_tiles,
 		EXPLORED_TILES_KEY: explored_tiles,
-		"visible_count": _count_grid(visible_tiles),
-		"explored_count": _count_grid(explored_tiles),
+		"visible_count": visible_count,
+		"explored_count": explored_count,
 		"total_tiles": max(map_size.x, 0) * max(map_size.y, 0),
 	}
 
@@ -10134,9 +10278,13 @@ static func _attach_post_action_recap(
 ) -> Dictionary:
 	if not bool(result.get("ok", false)):
 		return result
+	var recap_started_usec := _rules_profile_timer()
+	_rules_profile_set("post_action_recap", "mode", "rich")
+	_rules_profile_set("post_action_recap", "action_kind", action_kind)
 	var recap := _build_post_action_recap(session, action_kind, context, String(result.get("message", "")))
 	if not recap.is_empty():
 		result["post_action_recap"] = recap
+	_rules_profile_add_ms("post_action_recap_total_ms", recap_started_usec)
 	return result
 
 static func _build_post_action_recap(
@@ -10220,6 +10368,7 @@ static func _resource_site_post_action_recap(
 	context: Dictionary,
 	message: String
 ) -> Dictionary:
+	var recap_started_usec := _rules_profile_timer()
 	var node := _post_action_resource_node(session, context)
 	var site := ContentService.get_resource_site(String(context.get("site_id", node.get("site_id", ""))))
 	var site_name := String(site.get("name", "the site"))
@@ -10233,7 +10382,7 @@ static func _resource_site_post_action_recap(
 		affected_parts.append(control)
 	if reward != "":
 		affected_parts.append("Reward %s" % reward)
-	return _post_action_recap_payload(
+	var recap := _post_action_recap_payload(
 		"resource_site",
 		happened,
 		" | ".join(_non_empty_strings(affected_parts)),
@@ -10241,12 +10390,15 @@ static func _resource_site_post_action_recap(
 		_post_action_next_step(session),
 		"%s secured | %s" % [site_name, _short_player_text(control if control != "" else surface, 46)]
 	)
+	_rules_profile_add_ms("post_action_recap_resource_ms", recap_started_usec)
+	return recap
 
 static func _artifact_post_action_recap(
 	session: SessionStateStoreScript.SessionData,
 	context: Dictionary,
 	message: String
 ) -> Dictionary:
+	var recap_started_usec := _rules_profile_timer()
 	var artifact_id := String(context.get("artifact_id", ""))
 	var artifact_name := ArtifactRulesScript.artifact_name(artifact_id)
 	var happened := _sentence_with_keyword_or_default(message, artifact_name, "Recovered %s." % artifact_name)
@@ -10256,7 +10408,7 @@ static func _artifact_post_action_recap(
 		ArtifactRulesScript.artifact_reward_role(artifact_id),
 		ArtifactRulesScript.artifact_effect_summary(artifact_id),
 	]
-	return _post_action_recap_payload(
+	var recap := _post_action_recap_payload(
 		"artifact",
 		happened,
 		affected,
@@ -10264,6 +10416,8 @@ static func _artifact_post_action_recap(
 		_post_action_next_step(session),
 		"%s recovered | %s" % [artifact_name, _short_player_text(ArtifactRulesScript.artifact_effect_summary(artifact_id), 46)]
 	)
+	_rules_profile_add_ms("post_action_recap_artifact_ms", recap_started_usec)
+	return recap
 
 static func _site_response_post_action_recap(
 	session: SessionStateStoreScript.SessionData,
@@ -10512,12 +10666,16 @@ static func _post_action_tile_label(context: Dictionary, fallback: Dictionary) -
 	return "%d,%d" % [x, y]
 
 static func _post_action_next_step(session: SessionStateStoreScript.SessionData) -> String:
+	var next_step_started_usec := _rules_profile_timer()
 	var objective_next := _event_feed_next_step_line(session)
 	if objective_next != "":
+		_rules_profile_add_ms("post_action_next_step_ms", next_step_started_usec)
 		return objective_next
 	var movement = session.overworld.get("movement", {})
 	if int(movement.get("current", 0)) <= 0:
+		_rules_profile_add_ms("post_action_next_step_ms", next_step_started_usec)
 		return "End the turn after checking exposed routes and town orders."
+	_rules_profile_add_ms("post_action_next_step_ms", next_step_started_usec)
 	return "Choose the next route step, site order, or town response before ending the day."
 
 static func _resource_site_post_action_why(site: Dictionary) -> String:
@@ -10577,25 +10735,49 @@ static func _finalize_action_result(
 	refresh_fog: bool = true,
 	incremental_fog: bool = false
 ) -> Dictionary:
+	var finalize_started_usec := _rules_profile_timer()
+	var commit_before_started_usec := _rules_profile_timer()
 	HeroCommandRulesScript.commit_active_hero(session)
+	_rules_profile_add_ms("finalize_commit_before_ms", commit_before_started_usec)
+	var fog_before_started_usec := _rules_profile_timer()
 	if refresh_fog:
 		refresh_fog_of_war(session)
 	elif incremental_fog:
 		_reveal_current_fog_sources(session)
+	_rules_profile_add_ms("finalize_fog_before_ms", fog_before_started_usec)
 	var messages := []
 	if base_message != "":
 		messages.append(base_message)
 
+	var scenario := ContentService.get_scenario(session.scenario_id) if session != null else {}
+	var objectives = scenario.get("objectives", {}) if scenario is Dictionary else {}
+	var objective_count := 0
+	if objectives is Dictionary:
+		var victory_objectives = objectives.get("victory", [])
+		var defeat_objectives = objectives.get("defeat", [])
+		objective_count += victory_objectives.size() if victory_objectives is Array else 0
+		objective_count += defeat_objectives.size() if defeat_objectives is Array else 0
+	var hooks = scenario.get("script_hooks", []) if scenario is Dictionary else []
+	_rules_profile_set("scenario_eval", "objective_count", objective_count)
+	_rules_profile_set("scenario_eval", "hook_count", hooks.size() if hooks is Array else 0)
+	_rules_profile_set("scenario_eval", "dependency_mode", "full")
+	var scenario_started_usec := _rules_profile_timer()
 	var scenario_result: Dictionary = _evaluate_scenario_state(session)
+	_rules_profile_add_ms("finalize_scenario_eval_ms", scenario_started_usec)
 	var scenario_message := String(scenario_result.get("message", ""))
+	var commit_after_started_usec := _rules_profile_timer()
 	HeroCommandRulesScript.commit_active_hero(session)
+	_rules_profile_add_ms("finalize_commit_after_ms", commit_after_started_usec)
+	var fog_after_started_usec := _rules_profile_timer()
 	if refresh_fog:
 		refresh_fog_of_war(session)
 	elif incremental_fog:
 		_reveal_current_fog_sources(session)
+	_rules_profile_add_ms("finalize_fog_after_ms", fog_after_started_usec)
 	if scenario_message != "":
 		messages.append(scenario_message)
 	_mark_runtime_normalized(session)
+	_rules_profile_add_ms("finalize_action_total_ms", finalize_started_usec)
 
 	return {
 		"ok": ok,

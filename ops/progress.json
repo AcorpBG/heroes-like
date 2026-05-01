@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-interaction-destination-fast-path-10184",
-  "currentSliceTitle": "Overworld Interaction Destination Fast Path",
+  "currentSliceId": "overworld-interaction-confirmation-rules-instrumentation-10184",
+  "currentSliceTitle": "Overworld Interaction Confirmation Rules Instrumentation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Interaction destinations now use compact descriptor previews for selected-route resource/object/town/battle targets, and descriptor-dispatched resource/artifact confirmations reuse already-revealed route fog while preserving scenario evaluation and fallback semantics.",
+  "currentSliceNotes": "Completed instrumentation-only Slice 1; descriptor movement_rules costs now export additive rule sub-buckets.",
   "nextActionGuardrailNote": "Preserve gameplay semantics, generated map content/density, renderer/fog behavior, save schema, object contracts, F3/profile-log compatibility, open/current route fast paths, and town first-render/cache-build behavior; no async/threading claim for same-thread work.",
-  "updatedAt": "2026-05-01T17:02:17Z",
+  "updatedAt": "2026-05-01T17:40:50Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -5518,6 +5518,60 @@
         "Added documentation for Linux/Windows env vars, log paths, and record fields.",
         "Added focused profile log regression coverage for save and town surface records."
       ]
+    },
+    {
+      "id": "overworld-interaction-confirmation-rules-instrumentation-10184",
+      "title": "Overworld Interaction Confirmation Rules Instrumentation",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-01T17:40:50Z",
+      "startedAt": "2026-05-01T17:40:05Z",
+      "notes": "Completed instrumentation-only Slice 1 from the 2026-05-01 overworld interaction confirmation plan. This split descriptor confirmation movement_rules cost into additive rule sub-buckets without changing gameplay behavior or optimizing work.",
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-interaction-destination-fast-path-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/profile-jsonl-usage.md",
+        ".artifacts/audits/20260501_overworld_interaction_confirmation_plan.md",
+        ".artifacts/uploaded_profiles/20260501/display99_interactions_after_ea441c2_overworld_profile.jsonl"
+      ],
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scripts/analyze_overworld_profile_log.py",
+        "tests/overworld_route_destination_only_action_regression.gd",
+        "tests/overworld_interaction_profile_log_regression.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Descriptor confirmations keep top-level movement_rules timing and expose additive rule sub-buckets for movement apply, descriptor lookup/dispatch, resource/artifact collection, finalization, scenario evaluation, recap, fog, and blocked-index refresh.",
+        "Profile JSONL exposes movement_rules sub-buckets/counts/summaries, compact rules_profile, and pathfinding/blocked-index fields.",
+        "Analyzer overworld mode aggregates phase buckets, nested movement-rule sub-buckets, top offenders, and slowest records with descriptor/cache/save context.",
+        "Focused regressions prove descriptor confirmations include the new buckets and open route confirmations do not expose irrelevant descriptor/resource/artifact buckets.",
+        "Requested Godot regressions, uploaded-profile analyzer, JSON, and whitespace validations pass."
+      ],
+      "nonGoals": [
+        "No optimization, scenario-evaluation skipping, recap compaction, descriptor index adoption, blocked-index delta update, fog accounting optimization, artifact normalization narrowing, generated setup changes, save-surface changes, town first-render/cache-build changes, save schema changes, renderer/fog behavior changes, or gameplay semantics changes."
+      ],
+      "completionEvidence": [
+        "OverworldRules now records movement-rule sub_buckets_ms for execute_prevalidated total/shape/apply/fog, descriptor dispatch/lookup, resource/artifact collect, resource claim/mutate/blocked/reward/disruption/recruit-spell-xp, finalization, scenario eval, recap, next step, fog normalize/reveal/source/duplicate/count, and blocked-index refresh.",
+        "Route execution and OverworldShell movement_rules details now carry rule_counts plus descriptor, scenario_eval, post_action_recap, fog, and blocked_index summaries without renaming the top-level movement_rules bucket.",
+        "Persistent overworld JSONL now includes movement_rules.sub_buckets_ms, movement_rules.rule_counts, movement_rules descriptor/scenario/recap/fog/blocked summaries, compact rules_profile, pathfinding_ms, blocked_index_rebuild_count_delta, blocked_index_rebuild_ms, and blocked_index_tile_count.",
+        "Analyzer overworld mode now prints aggregate phase_buckets, movement_rule_sub_buckets, top_offenders, and slowest_records with descriptor kind, top rule sub-bucket, cache hit/miss, and save observed fields."
+      ],
+      "validationEvidence": [
+        "godot4 --headless --path . res://tests/overworld_route_destination_only_action_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_interaction_profile_log_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_cached_route_execution_regression.tscn passed.",
+        "godot4 --headless --path . res://tests/overworld_incremental_route_preview_refresh_regression.tscn passed.",
+        "python3 scripts/analyze_overworld_profile_log.py --mode overworld .artifacts/uploaded_profiles/20260501/display99_interactions_after_ea441c2_overworld_profile.jsonl passed.",
+        "python3 -m json.tool ops/progress.json passed after completion metadata update.",
+        "git diff --check passed after completion metadata update."
+      ],
+      "completedAt": "2026-05-01T17:40:50Z"
     }
   ],
   "completedImplementationEvidence": [

@@ -44,14 +44,63 @@ def offender_ms(offender: object) -> float:
     return 0.0
 
 
+def dict_float_items(value: object, prefix: str = "") -> list[tuple[str, float]]:
+    if not isinstance(value, dict):
+        return []
+    items: list[tuple[str, float]] = []
+    for name, raw in value.items():
+        try:
+            ms = float(raw or 0.0)
+        except (TypeError, ValueError):
+            continue
+        items.append((f"{prefix}{name}", ms))
+    return items
+
+
+def movement_rules_payload(record: dict) -> dict:
+    movement_rules = record.get("movement_rules", {})
+    if not isinstance(movement_rules, dict):
+        return {}
+    return movement_rules
+
+
+def top_movement_sub_bucket(record: dict) -> tuple[str, float]:
+    movement_rules = movement_rules_payload(record)
+    sub_buckets = movement_rules.get("sub_buckets_ms", {})
+    if not isinstance(sub_buckets, dict):
+        details = movement_rules.get("details", {})
+        if isinstance(details, dict):
+            sub_buckets = details.get("sub_buckets_ms", {})
+    items = dict_float_items(sub_buckets)
+    if not items:
+        return ("", 0.0)
+    return max(items, key=lambda item: item[1])
+
+
 def summarize_overworld(records: list[dict], slowest_limit: int, offender_limit: int) -> None:
     by_command: dict[str, list[float]] = defaultdict(list)
     offender_totals: dict[str, float] = defaultdict(float)
     offender_counts: dict[str, int] = defaultdict(int)
+    phase_totals: dict[str, float] = defaultdict(float)
+    phase_counts: dict[str, int] = defaultdict(int)
+    movement_sub_totals: dict[str, float] = defaultdict(float)
+    movement_sub_counts: dict[str, int] = defaultdict(int)
 
     for record in records:
         command = str(record.get("command_type", "unknown"))
         by_command[command].append(float(record.get("total_command_ms", 0.0) or 0.0))
+        for name, ms in dict_float_items(record.get("phase_buckets_ms", {})):
+            phase_totals[name] += ms
+            phase_counts[name] += 1
+        movement_rules = movement_rules_payload(record)
+        sub_buckets = movement_rules.get("sub_buckets_ms", {})
+        if not isinstance(sub_buckets, dict):
+            details = movement_rules.get("details", {})
+            if isinstance(details, dict):
+                sub_buckets = details.get("sub_buckets_ms", {})
+        for name, ms in dict_float_items(sub_buckets):
+            movement_sub_totals[name] += ms
+            movement_sub_counts[name] += 1
         offenders = record.get("top_offenders", [])
         if isinstance(offenders, list):
             for offender in offenders:
@@ -68,6 +117,40 @@ def summarize_overworld(records: list[dict], slowest_limit: int, offender_limit:
         print(
             f"  {command}: count={len(values)} "
             f"avg_ms={mean(values):.3f} max_ms={max(values):.3f} p95_ms={values_sorted[p95_index]:.3f}"
+        )
+
+    print("phase_buckets:")
+    for name, total_ms in sorted(phase_totals.items(), key=lambda item: item[1], reverse=True)[:offender_limit]:
+        print(f"  {name}: total_ms={total_ms:.3f} samples={phase_counts[name]}")
+
+    print("movement_rule_sub_buckets:")
+    for name, total_ms in sorted(movement_sub_totals.items(), key=lambda item: item[1], reverse=True)[:offender_limit]:
+        print(f"  {name}: total_ms={total_ms:.3f} samples={movement_sub_counts[name]}")
+
+    print("top_offenders:")
+    ranked_offenders = sorted(offender_totals.items(), key=lambda item: item[1], reverse=True)
+    for name, total_ms in ranked_offenders[:offender_limit]:
+        print(f"  {name}: total_ms={total_ms:.3f} samples={offender_counts[name]}")
+
+    print("slowest_records:")
+    slowest = sorted(records, key=lambda record: float(record.get("total_command_ms", 0.0) or 0.0), reverse=True)
+    for record in slowest[:slowest_limit]:
+        session = record.get("session", {}) if isinstance(record.get("session", {}), dict) else {}
+        target = record.get("selected_target", {}) if isinstance(record.get("selected_target", {}), dict) else {}
+        route_cache = record.get("route_cache", {}) if isinstance(record.get("route_cache", {}), dict) else {}
+        movement_rules = movement_rules_payload(record)
+        descriptor = movement_rules.get("descriptor", {}) if isinstance(movement_rules.get("descriptor", {}), dict) else {}
+        save = record.get("save", {}) if isinstance(record.get("save", {}), dict) else {}
+        top_sub_name, top_sub_ms = top_movement_sub_bucket(record)
+        print(
+            "  "
+            f"{record.get('timestamp_utc', '')} command={record.get('command_type', 'unknown')} "
+            f"total_ms={float(record.get('total_command_ms', 0.0) or 0.0):.3f} "
+            f"movement_rules_ms={float(movement_rules.get('ms', 0.0) or 0.0):.3f} "
+            f"descriptor={descriptor.get('kind', '')} top_rule={top_sub_name}:{top_sub_ms:.3f} "
+            f"scenario={session.get('scenario_id', '')} map={session.get('map_size', {})} "
+            f"target={target} cache_h={route_cache.get('hits', 0)} cache_m={route_cache.get('misses', 0)} "
+            f"save_observed={save.get('observed', False)} top={record.get('top_offenders', [])[:3]}"
         )
 
 
@@ -204,28 +287,6 @@ def detect_mode(records: list[dict]) -> str:
     if any(str(record.get("schema", "")) == "heroes_like.profile.v1" or "surface" in record for record in records):
         return "general"
     return "overworld"
-
-    print("top_offenders:")
-    ranked_offenders = sorted(offender_totals.items(), key=lambda item: item[1], reverse=True)
-    for name, total_ms in ranked_offenders[:offender_limit]:
-        print(f"  {name}: total_ms={total_ms:.3f} samples={offender_counts[name]}")
-
-    print("slowest_records:")
-    slowest = sorted(records, key=lambda record: float(record.get("total_command_ms", 0.0) or 0.0), reverse=True)
-    for record in slowest[:slowest_limit]:
-        session = record.get("session", {}) if isinstance(record.get("session", {}), dict) else {}
-        target = record.get("selected_target", {}) if isinstance(record.get("selected_target", {}), dict) else {}
-        route_bfs = record.get("route_bfs", {}) if isinstance(record.get("route_bfs", {}), dict) else {}
-        route_cache = record.get("route_cache", {}) if isinstance(record.get("route_cache", {}), dict) else {}
-        print(
-            "  "
-            f"{record.get('timestamp_utc', '')} command={record.get('command_type', 'unknown')} "
-            f"total_ms={float(record.get('total_command_ms', 0.0) or 0.0):.3f} "
-            f"scenario={session.get('scenario_id', '')} map={session.get('map_size', {})} "
-            f"target={target} bfs_status={route_bfs.get('status', '')} "
-            f"bfs_calls={route_bfs.get('calls', 0)} cache_h={route_cache.get('hits', 0)} "
-            f"cache_m={route_cache.get('misses', 0)} top={record.get('top_offenders', [])[:3]}"
-        )
 
 
 def main() -> None:
