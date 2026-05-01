@@ -102,6 +102,10 @@ var _refresh_cache: Dictionary = {}
 var _hero_actions_cache: Array = []
 var _hero_actions_cache_signature := ""
 var _selected_route_state: Dictionary = {}
+var _selected_context_actions_cache: Array = []
+var _selected_context_actions_cache_signature := ""
+var _selected_route_decision_surface_cache: Dictionary = {}
+var _selected_route_decision_surface_cache_signature := ""
 var _action_feedback: Dictionary = {}
 var _action_feedback_sequence := 0
 var _action_feedback_tween: Tween = null
@@ -1003,14 +1007,42 @@ func _current_context_actions() -> Array:
 		actions = OverworldRules.get_context_actions(_session)
 		actions = _promote_selected_owned_town_action(actions)
 	else:
-		var town_action := _selected_owned_town_visit_action()
-		if not town_action.is_empty():
-			actions.append(town_action)
-		var movement_action = _selected_tile_movement_action()
-		if not movement_action.is_empty():
-			actions.append(movement_action)
+		var selected_signature := _selected_route_action_surface_signature()
+		if _selected_context_actions_cache_signature == selected_signature:
+			_profile_add("selected_context_actions_cache_hits", 1)
+			_validation_profile["last_selected_context_actions_cache"] = {
+				"status": "hit",
+				"signature": selected_signature,
+				"action_count": _selected_context_actions_cache.size(),
+			}
+			_refresh_cache["context_actions"] = _selected_context_actions_cache
+			_debug_phase_end("context_actions_computation", context_actions_started_usec, {
+				"cached": true,
+				"durable": true,
+				"action_count": _selected_context_actions_cache.size(),
+			})
+			return _selected_context_actions_cache
+		_profile_add("selected_context_actions_cache_misses", 1)
+		actions = _build_selected_route_context_actions()
+		_selected_context_actions_cache = actions
+		_selected_context_actions_cache_signature = selected_signature
+		_validation_profile["last_selected_context_actions_cache"] = {
+			"status": "miss",
+			"signature": selected_signature,
+			"action_count": actions.size(),
+		}
 	_refresh_cache["context_actions"] = actions
 	_debug_phase_end("context_actions_computation", context_actions_started_usec, {"cached": false, "action_count": actions.size()})
+	return actions
+
+func _build_selected_route_context_actions() -> Array:
+	var actions: Array = []
+	var town_action := _selected_owned_town_visit_action()
+	if not town_action.is_empty():
+		actions.append(town_action)
+	var movement_action = _selected_tile_movement_action()
+	if not movement_action.is_empty():
+		actions.append(movement_action)
 	return actions
 
 func _first_enabled_action(actions: Array) -> Dictionary:
@@ -1907,6 +1939,25 @@ func _selected_route_decision_surface() -> Dictionary:
 			"action_kind": String(cached_surface.get("action_kind", "")),
 		})
 		return cached_surface
+	var decision_signature := _selected_route_action_surface_signature()
+	if _selected_route_decision_surface_cache_signature == decision_signature:
+		_profile_add("selected_route_decision_surface_cache_hits", 1)
+		_validation_profile["last_selected_route_decision_surface_cache"] = {
+			"status": "hit",
+			"signature": decision_signature,
+			"action_kind": String(_selected_route_decision_surface_cache.get("action_kind", "")),
+			"route_status": String(_selected_route_decision_surface_cache.get("status", "")),
+			"steps": int(_selected_route_decision_surface_cache.get("steps", 0)),
+		}
+		_refresh_cache["selected_route_decision_surface"] = _selected_route_decision_surface_cache
+		_debug_phase_end("route_decision_construction", decision_started_usec, {
+			"cached": true,
+			"durable": true,
+			"status": String(_selected_route_decision_surface_cache.get("status", "")),
+			"steps": int(_selected_route_decision_surface_cache.get("steps", 0)),
+			"action_kind": String(_selected_route_decision_surface_cache.get("action_kind", "")),
+		})
+		return _selected_route_decision_surface_cache
 	if not _tile_in_bounds(_selected_tile):
 		_debug_phase_end("route_decision_construction", decision_started_usec, {"status": "out_of_bounds"})
 		return {}
@@ -2045,6 +2096,16 @@ func _selected_route_decision_surface() -> Dictionary:
 	surface["decision_brief"] = decision_brief
 	surface["decision_brief_text"] = String(decision_brief.get("tooltip_text", ""))
 	_refresh_cache["selected_route_decision_surface"] = surface
+	_selected_route_decision_surface_cache = surface
+	_selected_route_decision_surface_cache_signature = decision_signature
+	_profile_add("selected_route_decision_surface_cache_misses", 1)
+	_validation_profile["last_selected_route_decision_surface_cache"] = {
+		"status": "miss",
+		"signature": decision_signature,
+		"action_kind": action_kind,
+		"route_status": status,
+		"steps": steps,
+	}
 	_debug_phase_end("route_decision_construction", decision_started_usec, {"status": status, "steps": steps, "action_kind": action_kind})
 	return surface
 
@@ -3809,11 +3870,49 @@ func _adopt_selected_route_after_execution(route: Array, result: Dictionary) -> 
 	_store_selected_route_state(remaining_route, "route_execution_remaining")
 
 func _invalidate_selected_route_state(reason: String = "") -> void:
+	_invalidate_selected_route_action_surfaces(reason)
 	if _selected_route_state.is_empty():
 		return
 	_selected_route_state.clear()
 	if reason != "":
 		_validation_profile["last_selected_route_cache"] = {"status": "invalidated", "reason": reason}
+
+func _invalidate_selected_route_action_surfaces(reason: String = "") -> void:
+	_selected_context_actions_cache.clear()
+	_selected_context_actions_cache_signature = ""
+	_selected_route_decision_surface_cache.clear()
+	_selected_route_decision_surface_cache_signature = ""
+	if reason != "":
+		_validation_profile["last_selected_context_actions_cache"] = {"status": "invalidated", "reason": reason}
+		_validation_profile["last_selected_route_decision_surface_cache"] = {"status": "invalidated", "reason": reason}
+
+func _selected_route_action_surface_signature() -> String:
+	if _session == null:
+		return "session:null"
+	var hero_pos := OverworldRules.hero_position(_session)
+	var movement = _session.overworld.get("movement", {})
+	var movement_current := int(movement.get("current", 0)) if movement is Dictionary else 0
+	var movement_max := int(movement.get("max", movement_current)) if movement is Dictionary else movement_current
+	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+	var payload := {
+		"route": _selected_route_signature(),
+		"session_id": String(_session.session_id),
+		"scenario_id": String(_session.scenario_id),
+		"game_state": String(_session.game_state),
+		"scenario_status": String(_session.scenario_status),
+		"day": int(_session.day),
+		"active_hero_id": String(_session.overworld.get("active_hero_id", "")),
+		"hero": _hero_actions_hero_signature(hero, -1),
+		"hero_position": {"x": hero_pos.x, "y": hero_pos.y},
+		"movement": {"current": movement_current, "max": movement_max},
+		"selected_tile": {"x": _selected_tile.x, "y": _selected_tile.y},
+		"selected_visible": _tile_in_bounds(_selected_tile) and OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y),
+		"selected_explored": _tile_in_bounds(_selected_tile) and OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y),
+		"selected_blocked": _tile_in_bounds(_selected_tile) and OverworldRules.tile_is_blocked(_session, _selected_tile.x, _selected_tile.y),
+		"resources": var_to_str(_session.overworld.get("resources", {})),
+		"objective_recap": hash(ScenarioRules.describe_session_progress_recap(_session, false)),
+	}
+	return JSON.stringify(payload)
 
 func _selected_route_signature() -> String:
 	var hero_pos := OverworldRules.hero_position(_session)
@@ -3833,6 +3932,7 @@ func _selected_route_session_signature() -> String:
 	if _session == null:
 		return "session:null"
 	var identity := [
+		String(_session.session_id),
 		String(_session.scenario_id),
 		String(_session.difficulty),
 		String(_session.launch_mode),
@@ -3868,11 +3968,27 @@ func _selected_route_topology_signature() -> String:
 		return String(_refresh_cache["selected_route_topology_signature"])
 	var overworld := _session.overworld
 	var signature := int(2166136261)
-	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("towns", []), ["placement_id", "town_id", "owner"]))
-	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("resource_nodes", []), ["placement_id", "site_id", "collected", "collected_by_faction_id"]))
-	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("artifact_nodes", []), ["placement_id", "artifact_id", "collected"]))
-	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("encounters", []), ["placement_id", "encounter_id", "spawned_by_faction_id"]))
+	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("towns", []), ["placement_id", "town_id", "owner", "garrison", "front_state", "occupation_state"]))
+	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("resource_nodes", []), [
+		"placement_id",
+		"site_id",
+		"object_id",
+		"collected",
+		"collected_by_faction_id",
+		"body_tiles",
+		"visit_tile",
+		"interaction_tiles",
+		"response_until_day",
+		"response_commander_id",
+		"delivery_target_kind",
+		"delivery_target_id",
+		"delivery_arrival_day",
+		"delivery_manifest",
+	]))
+	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("artifact_nodes", []), ["placement_id", "artifact_id", "collected", "collected_by_faction_id"]))
+	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("encounters", []), ["placement_id", "encounter_id", "id", "resolved", "spawned_by_faction_id", "enemy_commander_state", "army"]))
 	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("resolved_encounters", []), ["placement_id", "encounter_id", "id"]))
+	signature = _combine_selected_route_signature(signature, _route_array_signature(overworld.get("player_heroes", []), ["id", "is_active", "is_primary"]))
 	var result := "topology:%d" % signature
 	_refresh_cache["selected_route_topology_signature"] = result
 	return result

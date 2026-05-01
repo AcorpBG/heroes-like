@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-hero-actions-refresh-cache-10184",
-  "currentSliceTitle": "Overworld Hero Actions Refresh Cache",
+  "currentSliceId": "overworld-selected-route-context-actions-cache-10184",
+  "currentSliceTitle": "Overworld Selected Route Context Actions Cache",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed durable hero-actions state-signature cache for overworld refreshes, with focused reuse/invalidation regression coverage and profile-log/route validation.",
+  "currentSliceNotes": "Completed durable selected-route context-action and route-decision surface cache for unchanged route-selection refreshes, with focused reuse/invalidation regression coverage and profile-log validation.",
   "nextActionGuardrailNote": "After profile-log instrumentation, use uploaded JSONL evidence before selecting any performance fix; preserve movement/pathing semantics, map generation/content density, renderer/fog behavior, save schema, object contracts, and F3 overlay behavior.",
-  "updatedAt": "2026-05-01T09:39:55Z",
+  "updatedAt": "2026-05-01T09:50:33Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,53 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "overworld-selected-route-context-actions-cache-10184",
+      "title": "Overworld Selected Route Context Actions Cache",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-pathing-debug-overlay-report.md",
+        ".artifacts/uploaded_profiles/20260501/acorp_windows_overworld_profile_after_b2346b8.jsonl",
+        ".artifacts/uploaded_profiles/20260501/acorp_windows_overworld_profile_after_b2346b8.summary.txt"
+      ],
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_selected_route_context_actions_cache_regression.gd",
+        "tests/overworld_selected_route_context_actions_cache_regression.tscn",
+        "ops/progress.json"
+      ],
+      "startedAt": "2026-05-01T09:40:00Z",
+      "completedAt": "2026-05-01T09:50:33Z",
+      "completionCriteria": [
+        "Selected-route context actions and route decision surfaces survive ordinary refreshes when route-relevant state is unchanged.",
+        "The cache signature includes loaded session identity, active hero id, hero position, movement current/max, selected tile, map/topology signatures, selected tile visibility/blocking, day/objective/resource context, and active hero summary inputs.",
+        "Focused regression proves unchanged selected-route refreshes hit the cache and selected tile, hero position, movement, and route-interaction topology changes recompute it.",
+        "Profile-log regression passes without movement/pathing, map generation/content density, renderer/fog, save-schema, object-contract, F3 overlay, profile-log, or unrelated action-list behavior changes."
+      ],
+      "nonGoals": [
+        "Do not remove _invalidate_refresh_cache or make active/current-tile context actions durable.",
+        "Do not change movement/pathing semantics, generated map content, renderer/fog behavior, save schema, object contracts, F3 overlay/profile-log behavior, or unrelated action lists."
+      ],
+      "notes": "AcOrP's post-b2346b8 Windows profile still showed refresh/context_actions at 8657.710ms across 6 samples, with select_route averaging 3046.017ms and click_existing_selection averaging 4711.114ms overall. This slice targets the selected-route action/decision surface only.",
+      "completionEvidence": [
+        "OverworldShell now keeps selected-route context actions and selected route decision surfaces in durable caches separate from _refresh_cache.",
+        "The durable caches are keyed by selected-route state plus session id, active hero, hero position, movement, selected tile, map signature, topology signature, selected tile explored/visible/blocked state, day, resources, objective recap, and active hero summary inputs.",
+        "Route topology signatures now include additional route interaction and blocker inputs, including resource response/delivery fields, town ownership/garrison state, artifact collection ownership, encounter state, resolved encounters, and reserve hero positions.",
+        "Active/current-tile context actions still use the existing refresh-scoped path."
+      ],
+      "validationEvidence": [
+        "python3 scripts/analyze_overworld_profile_log.py .artifacts/uploaded_profiles/20260501/acorp_windows_overworld_profile_after_b2346b8.jsonl passed and identified refresh/context_actions at 8657.710ms total across 6 samples.",
+        "godot4 --headless --path . res://tests/overworld_selected_route_context_actions_cache_regression.tscn passed: unchanged refresh hit selected context actions and route decision cache once, while selected tile, hero position, movement, and topology changes each caused a cache miss.",
+        "godot4 --headless --path . res://tests/overworld_interaction_profile_log_regression.tscn passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ]
+    },
     {
       "id": "overworld-hero-actions-refresh-cache-10184",
       "title": "Overworld Hero Actions Refresh Cache",
