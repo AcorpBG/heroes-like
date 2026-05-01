@@ -25,6 +25,14 @@ const SAVE_METADATA_GAME_STATE_KEY := "saved_from_game_state"
 const SAVE_METADATA_SCENARIO_STATUS_KEY := "saved_from_scenario_status"
 const SAVE_METADATA_LAUNCH_MODE_KEY := "saved_from_launch_mode"
 const SUMMARY_INLINE_PAYLOAD_MAX_BYTES := 8 * 1024 * 1024
+const TRANSITION_AUTOSAVE_INTENT_FLAGS := [
+	"runtime_autosave_dirty",
+	"runtime_autosave_pending_intent",
+	"runtime_autosave_pending_reason",
+	"runtime_autosave_pending_route",
+	"runtime_autosave_pending_game_state",
+	"runtime_autosave_pending_unix",
+]
 
 var _selected_manual_slot := int(MANUAL_SLOT_IDS[0])
 var _slot_summary_cache := {}
@@ -717,34 +725,47 @@ func _save_runtime_session(
 	var runtime_payload := session.to_dict()
 	_runtime_save_profile_bucket(profile, "to_dict", ProfileLogScript.elapsed_ms(to_dict_started))
 	_runtime_save_profile_step(profile, "to_dict_done")
-	_runtime_save_profile_step(profile, "restore_normalize_start")
-	var restore_started := ProfileLogScript.begin_usec()
-	var restore_result := _normalize_restore_result(runtime_payload, slot_type)
-	_runtime_save_profile_bucket(profile, "restore_normalize", ProfileLogScript.elapsed_ms(restore_started))
-	_runtime_save_profile_step(profile, "restore_normalize_done")
-	if not bool(restore_result.get("ok", false)):
-		_runtime_save_profile_finish(profile)
-		return {
-			"ok": false,
-			"path": "",
-			"summary": {},
-			"message": String(restore_result.get("message", "This session cannot be saved safely right now.")),
-		}
+	var sanitized_session: SessionStateStoreScript.SessionData = null
+	var payload_for_write := runtime_payload
+	if _can_use_trusted_live_autosave_payload(session, runtime_payload, slot_type):
+		_runtime_save_profile_step(profile, "restore_normalize_skipped")
+		_runtime_save_profile_bucket(profile, "restore_normalize", 0.0)
+		profile["restore_normalize_skipped"] = true
+		profile["restore_normalize_skip_reason"] = "trusted_live_normalized_autosave"
+		sanitized_session = session
+	else:
+		_runtime_save_profile_step(profile, "restore_normalize_start")
+		var restore_started := ProfileLogScript.begin_usec()
+		var restore_result := _normalize_restore_result(runtime_payload, slot_type)
+		_runtime_save_profile_bucket(profile, "restore_normalize", ProfileLogScript.elapsed_ms(restore_started))
+		_runtime_save_profile_step(profile, "restore_normalize_done")
+		profile["restore_normalize_skipped"] = false
+		profile["restore_normalize_skip_reason"] = ""
+		if not bool(restore_result.get("ok", false)):
+			_runtime_save_profile_finish(profile)
+			return {
+				"ok": false,
+				"path": "",
+				"summary": {},
+				"message": String(restore_result.get("message", "This session cannot be saved safely right now.")),
+			}
 
-	var sanitized_session: SessionStateStoreScript.SessionData = restore_result.get("session", null)
-	if sanitized_session == null:
-		_runtime_save_profile_finish(profile)
-		return {"ok": false, "path": "", "summary": {}, "message": "This session could not be prepared for saving."}
+		sanitized_session = restore_result.get("session", null)
+		if sanitized_session == null:
+			_runtime_save_profile_finish(profile)
+			return {"ok": false, "path": "", "summary": {}, "message": "This session could not be prepared for saving."}
+		payload_for_write = sanitized_session.to_dict()
 
 	var path := ""
 	var summary := {}
 	var cache_slot_id := ""
 	var saved_payload := {}
+	var write_payload := _payload_without_transition_autosave_intent(payload_for_write)
 	match slot_type:
 		SLOT_TYPE_AUTOSAVE:
 			_runtime_save_profile_step(profile, "write_payload_start")
 			var write_to_dict_started := ProfileLogScript.begin_usec()
-			var autosave_payload := sanitized_session.to_dict()
+			var autosave_payload := write_payload
 			_runtime_save_profile_bucket(profile, "write_to_dict", ProfileLogScript.elapsed_ms(write_to_dict_started))
 			path = _save_payload(autosave_payload, _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload, profile)
 			_runtime_save_profile_step(profile, "write_payload_done")
@@ -767,7 +788,7 @@ func _save_runtime_session(
 			var normalized_slot := _normalize_manual_slot(slot)
 			_runtime_save_profile_step(profile, "write_payload_start")
 			var write_to_dict_started := ProfileLogScript.begin_usec()
-			var manual_payload := sanitized_session.to_dict()
+			var manual_payload := write_payload
 			_runtime_save_profile_bucket(profile, "write_to_dict", ProfileLogScript.elapsed_ms(write_to_dict_started))
 			path = _save_payload(manual_payload, _slot_path(normalized_slot), SLOT_TYPE_MANUAL, saved_payload, profile)
 			_runtime_save_profile_step(profile, "write_payload_done")
@@ -791,6 +812,7 @@ func _save_runtime_session(
 	if path == "":
 		_runtime_save_profile_finish(profile)
 		return {"ok": false, "path": "", "summary": summary, "message": "Save write failed."}
+	_clear_transition_autosave_intent_flags(session)
 	if FileAccess.file_exists(path):
 		profile["written_bytes"] = FileAccess.get_size(path)
 		profile["path"] = path
@@ -803,6 +825,54 @@ func _save_runtime_session(
 	}
 	_runtime_save_profile_finish(profile)
 	return result
+
+func _can_use_trusted_live_autosave_payload(
+	session: SessionStateStoreScript.SessionData,
+	payload: Dictionary,
+	slot_type: String
+) -> bool:
+	if session == null or payload.is_empty():
+		return false
+	if slot_type != SLOT_TYPE_AUTOSAVE:
+		return false
+	if String(payload.get("scenario_id", "")) == "":
+		return false
+	if int(payload.get("save_version", SessionStateStoreScript.SAVE_VERSION)) > SessionStateStoreScript.SAVE_VERSION:
+		return false
+	if not (String(payload.get("game_state", "")) in SessionStateStoreScript.SUPPORTED_GAME_STATES):
+		return false
+	if not (String(payload.get("scenario_status", "")) in SessionStateStoreScript.SUPPORTED_SCENARIO_STATUSES):
+		return false
+	if ContentService.get_scenario(String(payload.get("scenario_id", ""))).is_empty():
+		return false
+	if not OverworldRulesScript.is_runtime_session_normalized(session):
+		return false
+	var resume_target := _resume_target_for_session(session)
+	match resume_target:
+		"battle":
+			return not session.battle.is_empty()
+		"town":
+			return TownRulesScript.can_visit_active_town_bridge(session)
+		"outcome":
+			return session.scenario_status != "in_progress"
+		_:
+			return session.battle.is_empty()
+
+func _payload_without_transition_autosave_intent(payload: Dictionary) -> Dictionary:
+	var cleaned := payload.duplicate(true)
+	var flags: Dictionary = cleaned.get("flags", {}) if cleaned.get("flags", {}) is Dictionary else {}
+	if flags.is_empty():
+		return cleaned
+	for key in TRANSITION_AUTOSAVE_INTENT_FLAGS:
+		flags.erase(String(key))
+	cleaned["flags"] = flags
+	return cleaned
+
+func _clear_transition_autosave_intent_flags(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	for key in TRANSITION_AUTOSAVE_INTENT_FLAGS:
+		session.flags.erase(String(key))
 
 func _can_fast_save_generated_opening_autosave(
 	session: SessionStateStoreScript.SessionData,
@@ -885,6 +955,8 @@ func _runtime_save_profile_finish(profile: Dictionary) -> void:
 			"path": String(profile.get("path", "")),
 			"written_bytes": int(profile.get("written_bytes", 0)),
 			"generated_random_map": bool(profile.get("generated_random_map", false)),
+			"restore_normalize_skipped": bool(profile.get("restore_normalize_skipped", false)),
+			"restore_normalize_skip_reason": String(profile.get("restore_normalize_skip_reason", "")),
 			"session": profile.get("session_metadata", {}),
 			"steps": profile.get("steps", []),
 		},

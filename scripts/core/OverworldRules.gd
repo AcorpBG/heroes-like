@@ -222,6 +222,11 @@ static func normalize_overworld_state_for_runtime(session: SessionStateStoreScri
 		return
 	normalize_overworld_state(session)
 
+static func is_runtime_session_normalized(session: SessionStateStoreScript.SessionData) -> bool:
+	if session == null:
+		return false
+	return String(_runtime_normalized_signatures.get(String(session.session_id), "")) == _runtime_normalization_signature(session)
+
 static func _mark_runtime_normalized(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return

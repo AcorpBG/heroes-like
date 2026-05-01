@@ -11,6 +11,13 @@ const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const BATTLE_SCENE := "res://scenes/battle/BattleShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
 const MAP_EDITOR_SCENE := "res://scenes/editor/MapEditorShell.tscn"
+const AUTOSAVE_DIRTY_FLAG := "runtime_autosave_dirty"
+const AUTOSAVE_PENDING_INTENT_FLAG := "runtime_autosave_pending_intent"
+const AUTOSAVE_PENDING_REASON_FLAG := "runtime_autosave_pending_reason"
+const AUTOSAVE_PENDING_ROUTE_FLAG := "runtime_autosave_pending_route"
+const AUTOSAVE_PENDING_GAME_STATE_FLAG := "runtime_autosave_pending_game_state"
+const AUTOSAVE_PENDING_COUNT_FLAG := "runtime_autosave_pending_count"
+const AUTOSAVE_PENDING_UNIX_FLAG := "runtime_autosave_pending_unix"
 
 var _menu_notice := ""
 var _active_overworld_handoff_profile := {}
@@ -19,20 +26,28 @@ var _last_overworld_handoff_profile := {}
 func go_to_main_menu() -> void:
 	var started := ProfileLogScript.begin_usec()
 	var buckets := {}
+	var autosave_metadata := {}
 	if SessionState.has_playable_session():
 		var save_started := ProfileLogScript.begin_usec()
 		var autosave_result := _autosave_active_session(SessionState.ensure_active_session())
 		buckets["save_before_transition"] = ProfileLogScript.elapsed_ms(save_started)
 		_menu_notice = String(autosave_result.get("message", ""))
+		autosave_metadata = {
+			"autosave_deferred_or_skipped_reason": "forced_save_required_main_menu",
+			"autosave_forced": true,
+			"autosave_ok": bool(autosave_result.get("ok", false)),
+		}
 	else:
 		_menu_notice = ""
 	var scene_started := ProfileLogScript.begin_usec()
 	_change_scene(MAIN_MENU_SCENE)
 	buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
-	ProfileLogScript.emit_general("router", "scene_transition", "go_to_main_menu", ProfileLogScript.elapsed_ms(started), buckets, {
+	var metadata := {
 		"target_scene": MAIN_MENU_SCENE,
 		"has_playable_session": SessionState.has_playable_session(),
-	}, SessionState.ensure_active_session())
+	}
+	metadata.merge(autosave_metadata, true)
+	ProfileLogScript.emit_general("router", "scene_transition", "go_to_main_menu", ProfileLogScript.elapsed_ms(started), buckets, metadata, SessionState.ensure_active_session())
 
 func return_to_main_menu_from_active_play() -> void:
 	if SessionState.request_editor_return_from_active_play():
@@ -71,25 +86,27 @@ func go_to_overworld() -> void:
 	OverworldRules.clear_active_town_visit(session)
 	_note_overworld_handoff_step("go_to_overworld_town_visit_cleared")
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
+	var autosave_intent := {}
 	if _should_defer_initial_generated_overworld_autosave(session):
+		autosave_intent = _record_transition_autosave_intent(session, "go_to_overworld", "generated_initial_overworld_deferred")
 		session.flags["generated_overworld_deferred_autosave_pending"] = true
 		_note_overworld_handoff_step("go_to_overworld_autosave_deferred")
-		buckets["save_before_transition"] = 0.0
 	else:
-		_note_overworld_handoff_step("go_to_overworld_autosave_start")
-		var save_started := ProfileLogScript.begin_usec()
-		_autosave_active_session(session, false)
-		buckets["save_before_transition"] = ProfileLogScript.elapsed_ms(save_started)
-		_note_overworld_handoff_step("go_to_overworld_autosave_done")
+		autosave_intent = _record_transition_autosave_intent(session, "go_to_overworld", "ordinary_transition_deferred")
+		_note_overworld_handoff_step("go_to_overworld_autosave_deferred")
+	buckets["save_before_transition"] = 0.0
 	_note_overworld_handoff_step("go_to_overworld_change_scene_start")
 	var scene_started := ProfileLogScript.begin_usec()
 	_change_scene(OVERWORLD_SCENE)
 	buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
 	_note_overworld_handoff_step("go_to_overworld_change_scene_requested")
-	ProfileLogScript.emit_general("router", "scene_transition", "go_to_overworld", ProfileLogScript.elapsed_ms(started), buckets, {
+	var metadata := {
 		"target_scene": OVERWORLD_SCENE,
 		"generated_autosave_deferred": bool(session.flags.get("generated_overworld_deferred_autosave_pending", false)),
-	}, session)
+		"save_before_transition_skipped": true,
+	}
+	metadata.merge(autosave_intent, true)
+	ProfileLogScript.emit_general("router", "scene_transition", "go_to_overworld", ProfileLogScript.elapsed_ms(started), buckets, metadata, session)
 
 func go_to_town() -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -115,15 +132,17 @@ func go_to_town() -> void:
 	var state_started := ProfileLogScript.begin_usec()
 	session.game_state = "town"
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
-	var save_started := ProfileLogScript.begin_usec()
-	_autosave_active_session(session, false)
-	buckets["save_before_transition"] = ProfileLogScript.elapsed_ms(save_started)
+	var autosave_intent := _record_transition_autosave_intent(session, "go_to_town", "ordinary_transition_deferred")
+	buckets["save_before_transition"] = 0.0
 	var scene_started := ProfileLogScript.begin_usec()
 	_change_scene(TOWN_SCENE)
 	buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
-	ProfileLogScript.emit_general("router", "scene_transition", "go_to_town", ProfileLogScript.elapsed_ms(started), buckets, {
+	var metadata := {
 		"target_scene": TOWN_SCENE,
-	}, session)
+		"save_before_transition_skipped": true,
+	}
+	metadata.merge(autosave_intent, true)
+	ProfileLogScript.emit_general("router", "scene_transition", "go_to_town", ProfileLogScript.elapsed_ms(started), buckets, metadata, session)
 
 func go_to_battle() -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -150,7 +169,7 @@ func go_to_battle() -> void:
 	session.game_state = "battle"
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
 	var save_started := ProfileLogScript.begin_usec()
-	_autosave_active_session(session, false)
+	var autosave_result := _autosave_active_session(session, false)
 	buckets["save_before_transition"] = ProfileLogScript.elapsed_ms(save_started)
 	var scene_started := ProfileLogScript.begin_usec()
 	_change_scene(BATTLE_SCENE)
@@ -158,6 +177,9 @@ func go_to_battle() -> void:
 	ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle", ProfileLogScript.elapsed_ms(started), buckets, {
 		"target_scene": BATTLE_SCENE,
 		"battle_stack_count": _battle_stack_count(session),
+		"autosave_deferred_or_skipped_reason": "forced_save_required_battle",
+		"autosave_forced": true,
+		"autosave_ok": bool(autosave_result.get("ok", false)),
 	}, session)
 
 func go_to_scenario_outcome() -> void:
@@ -275,15 +297,39 @@ func validation_prepare_overworld_handoff_without_scene_change() -> Dictionary:
 	_note_overworld_handoff_step("go_to_overworld_state_set")
 	OverworldRules.clear_active_town_visit(session)
 	_note_overworld_handoff_step("go_to_overworld_town_visit_cleared")
+	var autosave_intent := {}
 	if _should_defer_initial_generated_overworld_autosave(session):
+		autosave_intent = _record_transition_autosave_intent(session, "go_to_overworld", "generated_initial_overworld_deferred")
 		session.flags["generated_overworld_deferred_autosave_pending"] = true
 		_note_overworld_handoff_step("go_to_overworld_autosave_deferred")
 	else:
-		_note_overworld_handoff_step("go_to_overworld_autosave_start")
-		_autosave_active_session(session, false)
-		_note_overworld_handoff_step("go_to_overworld_autosave_done")
+		autosave_intent = _record_transition_autosave_intent(session, "go_to_overworld", "ordinary_transition_deferred")
+		_note_overworld_handoff_step("go_to_overworld_autosave_deferred")
 	_note_overworld_handoff_step("go_to_overworld_scene_change_skipped_for_validation")
-	return {"ok": true, "deferred_autosave": bool(session.flags.get("generated_overworld_deferred_autosave_pending", false))}
+	return {
+		"ok": true,
+		"deferred_autosave": true,
+		"generated_deferred_autosave": bool(session.flags.get("generated_overworld_deferred_autosave_pending", false)),
+		"save_before_transition_skipped": true,
+		"autosave_intent": autosave_intent,
+	}
+
+func validation_prepare_town_handoff_without_scene_change() -> Dictionary:
+	if not SessionState.has_playable_session():
+		return {"ok": false, "reason": "missing_session"}
+	var session := SessionState.ensure_active_session()
+	if session.scenario_status != "in_progress":
+		return {"ok": false, "reason": "scenario_not_in_progress"}
+	if not TownRulesScript.can_visit_active_town_bridge(session):
+		return {"ok": false, "reason": "invalid_town_visit"}
+	session.game_state = "town"
+	var autosave_intent := _record_transition_autosave_intent(session, "go_to_town", "ordinary_transition_deferred")
+	return {
+		"ok": true,
+		"deferred_autosave": true,
+		"save_before_transition_skipped": true,
+		"autosave_intent": autosave_intent,
+	}
 
 func _change_scene(scene_path: String) -> void:
 	if not FileAccess.file_exists(scene_path):
@@ -300,7 +346,41 @@ func _autosave_active_session(
 ) -> Dictionary:
 	if session == null or session.scenario_id == "":
 		return {"ok": false, "message": "", "summary": {}}
+	_clear_transition_autosave_intent(session)
 	return SaveService.save_runtime_autosave_session(session, include_summary)
+
+func _record_transition_autosave_intent(
+	session: SessionStateStoreScript.SessionData,
+	route: String,
+	reason: String
+) -> Dictionary:
+	if session == null:
+		return {}
+	session.flags[AUTOSAVE_DIRTY_FLAG] = true
+	session.flags[AUTOSAVE_PENDING_INTENT_FLAG] = true
+	session.flags[AUTOSAVE_PENDING_REASON_FLAG] = reason
+	session.flags[AUTOSAVE_PENDING_ROUTE_FLAG] = route
+	session.flags[AUTOSAVE_PENDING_GAME_STATE_FLAG] = String(session.game_state)
+	session.flags[AUTOSAVE_PENDING_UNIX_FLAG] = Time.get_unix_time_from_system()
+	session.flags[AUTOSAVE_PENDING_COUNT_FLAG] = int(session.flags.get(AUTOSAVE_PENDING_COUNT_FLAG, 0)) + 1
+	return {
+		"autosave_deferred_or_skipped_reason": reason,
+		"autosave_deferred": true,
+		"autosave_pending_intent": true,
+		"autosave_pending_route": route,
+		"autosave_pending_game_state": String(session.game_state),
+		"autosave_pending_count": int(session.flags.get(AUTOSAVE_PENDING_COUNT_FLAG, 0)),
+	}
+
+func _clear_transition_autosave_intent(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	session.flags.erase(AUTOSAVE_DIRTY_FLAG)
+	session.flags.erase(AUTOSAVE_PENDING_INTENT_FLAG)
+	session.flags.erase(AUTOSAVE_PENDING_REASON_FLAG)
+	session.flags.erase(AUTOSAVE_PENDING_ROUTE_FLAG)
+	session.flags.erase(AUTOSAVE_PENDING_GAME_STATE_FLAG)
+	session.flags.erase(AUTOSAVE_PENDING_UNIX_FLAG)
 
 func _should_defer_initial_generated_overworld_autosave(session: SessionStateStoreScript.SessionData) -> bool:
 	if session == null:

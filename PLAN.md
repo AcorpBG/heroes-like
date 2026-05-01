@@ -36,6 +36,8 @@ Selected follow-up after AcOrP's current-version profile and the real DISPLAY=:9
 
 Selected town performance follow-up after the full-flow profile at `.artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.jsonl` and the architecture audit at `.artifacts/audits/20260501_game_state_architecture_audit.md`: `town-entity-cache-active-refresh-10184` introduces the first per-town entity/view cache keyed by `placement_id`, active-town-only refresh reuse, runtime active-town index handoff, lazy town save-surface refresh, and JSONL evidence fields for cache hit/miss and save-surface skip behavior. It must preserve gameplay semantics, save schema, generated map content/density, renderer/fog, object contracts, and F3/profile-log compatibility.
 
+Current urgent performance follow-up: `town-transition-fast-path-10184` targets ordinary overworld -> town and town -> overworld transitions under 1s on generated Large rendered play by removing mandatory synchronous autosave/restore-normalize/save-surface work from those scene transition paths, while preserving save intent and forced-save fallbacks.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:
@@ -2859,6 +2861,48 @@ completionResult:
 - Focused report identified hover drawer handoff summary rebuilding as the highest-cost repeated hover work: forced baseline hover was about 2302ms, optimized tooltip-only hover was about 0.165ms.
 - `OverworldMapView` now signature-gates generated road/object/hero spatial index rebuilds; unchanged refreshes skip road and object index rebuilds while preserving normal art rendering.
 - End-turn generated autosave remains full-session serialization in this slice, measured at about 6.4MB and 486ms; generated map payload split/delta autosave remains the next save-architecture target.
+
+### P2 Child: Town Transition Fast Path
+
+id: `town-transition-fast-path-10184`
+parentSliceId: `random-map-final-homm3-parity-regate-audit-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Bring ordinary overworld -> town and town -> overworld transitions under 1s on generated Large rendered sessions by removing mandatory synchronous autosave and restore-normalize work from the scene transition path.
+
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/profile-jsonl-usage.md`
+- `.artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.jsonl`
+- `.artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.summary.txt`
+
+implementationTargets:
+- `scripts/autoload/AppRouter.gd`
+- `scripts/autoload/SaveService.gd`
+- `scripts/core/OverworldRules.gd`
+- `scenes/town/TownShell.gd`
+- `docs/profile-jsonl-usage.md`
+- `tests/town_transition_fast_path_regression.gd`
+- `tests/town_transition_fast_path_regression.tscn`
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- Ordinary `go_to_town` and `go_to_overworld` record pending autosave intent and `save_before_transition=0` instead of synchronously writing the runtime autosave.
+- Forced-save routes such as battle/main-menu/outcome keep explicit save behavior and profile metadata.
+- Trusted live autosaves can skip restore-style normalization when the session is already runtime-normalized and route-safe; restore/load compatibility keeps the full validation path.
+- Town entry renders the active town/current tab first, skips save-surface construction, and defers broader town command surfaces until after first render.
+- Profile JSONL exposes router autosave skip/defer metadata, town first-render minimal metadata, and trusted-live save normalization skip metadata.
+
+completionCriteria:
+- Focused transition fast-path regression proves ordinary town and overworld handoffs do not call runtime autosave synchronously and do preserve dirty/pending autosave intent.
+- Existing town entity cache, general profile, overworld interaction/profile, cached route execution, and route destination-only regressions pass.
+- Analyzer still reads the uploaded full-flow profile evidence.
+- `ops/progress.json` remains valid JSON and `git diff --check` passes.
+- No gameplay semantics, pathing, generated-map density/content, renderer/fog behavior, save schema, object contracts, F3/profile behavior, or forced-save safety route is intentionally changed.
+
+nonGoals:
+- No save-schema migration, payload split/delta save architecture, broad route rewrite, generated-map density cut, renderer shortcut, town rules rewrite, or battle/outcome autosave removal.
 
 ## Phase 3 - Headless AI Agent Balance Harness
 

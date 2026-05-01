@@ -54,6 +54,19 @@ Town refresh records include active-town cache evidence when `surface: town` and
 - `buckets_ms.town_entity_cache_entries`: number of cached town entries for the active session.
 - `metadata.town_entity_cache`: cache details, including `placement_id`, hit/miss state, and entry count.
 - `metadata.save_surface_skipped_hidden` and `buckets_ms.save_surface_skipped_hidden`: true/1 when ordinary town refresh skipped expensive save-surface construction because save controls were not actively being used.
+- `metadata.first_render_minimal` / `metadata.minimal_current_tab_only`: true when town entry rendered only the active town/current tab before deferred full town command refresh.
+
+Router scene-transition records expose autosave behavior for transition fast paths:
+
+- `buckets_ms.save_before_transition`: `0` when the ordinary transition did not synchronously write the runtime autosave.
+- `metadata.save_before_transition_skipped`: true when save work was removed from the transition path.
+- `metadata.autosave_deferred_or_skipped_reason`: reason string such as `ordinary_transition_deferred`, `generated_initial_overworld_deferred`, or `forced_save_required_battle`.
+- `metadata.autosave_pending_intent`: true when the session was marked dirty and a later checkpoint/save is expected to preserve the latest route state.
+
+Runtime save records expose trusted-live autosave normalization behavior:
+
+- `metadata.restore_normalize_skipped`: true when an already-live normalized autosave skipped the restore-style validation path.
+- `metadata.restore_normalize_skip_reason`: reason string for the trusted-live skip.
 
 ## Analyze
 

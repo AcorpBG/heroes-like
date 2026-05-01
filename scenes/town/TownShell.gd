@@ -66,6 +66,7 @@ var _last_message := ""
 var _last_action_recap := {}
 var _last_town_entity_cache_result := {}
 var _last_save_surface_profile := {}
+var _last_refresh_minimal := false
 
 static var _town_entity_cache_by_session: Dictionary = {}
 
@@ -76,6 +77,8 @@ func _ready() -> void:
 	_apply_visual_theme()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
 	_management_tabs.current_tab = 0
+	if not _management_tabs.tab_changed.is_connected(_on_management_tab_changed):
+		_management_tabs.tab_changed.connect(_on_management_tab_changed)
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
 		push_warning("Cannot enter a town without an active scenario session.")
@@ -96,9 +99,10 @@ func _ready() -> void:
 	_configure_save_slot_picker()
 	buckets["configure_save_surface"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
-	_refresh()
+	_refresh(true)
 	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("town", "entry", "town_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(true), _session)
+	call_deferred("_complete_town_first_render_full_refresh")
 
 func _on_build_action_pressed(action_id: String) -> void:
 	var full_action_id := "build:%s" % action_id
@@ -248,7 +252,8 @@ func _on_leave_pressed() -> void:
 func _on_menu_pressed() -> void:
 	AppRouter.return_to_main_menu_from_active_play()
 
-func _refresh() -> void:
+func _refresh(first_render_minimal: bool = false) -> void:
+	_last_refresh_minimal = first_render_minimal
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	var section_started := ProfileLogScript.begin_usec()
@@ -263,7 +268,7 @@ func _refresh() -> void:
 
 	section_started = ProfileLogScript.begin_usec()
 	var active_town := TownRules.get_active_town(_session)
-	var view_state := _active_town_entity_view_state(active_town)
+	var view_state := _active_town_entity_view_state(active_town, first_render_minimal)
 	var cache_result: Dictionary = _last_town_entity_cache_result
 	buckets["town_entity_cache"] = ProfileLogScript.elapsed_ms(section_started)
 	buckets["town_entity_cache_hit"] = 1.0 if bool(cache_result.get("hit", false)) else 0.0
@@ -337,45 +342,98 @@ func _refresh() -> void:
 	buckets["save_surface"] = ProfileLogScript.elapsed_ms(section_started)
 	buckets["save_surface_skipped_hidden"] = 1.0 if bool(_last_save_surface_profile.get("skipped_hidden", false)) else 0.0
 	section_started = ProfileLogScript.begin_usec()
-	_rebuild_hero_actions(view_state.get("hero_actions", []))
-	_rebuild_build_actions(view_state.get("build_actions", []))
-	_rebuild_market_actions(view_state.get("market_actions", []))
-	_rebuild_recruit_actions(view_state.get("recruit_actions", []))
-	_rebuild_tavern_actions(view_state.get("tavern_actions", []))
-	_rebuild_transfer_actions(view_state.get("transfer_actions", []))
-	_rebuild_response_actions(view_state.get("response_actions", []))
-	_rebuild_study_actions(view_state.get("study_actions", []))
-	_rebuild_specialty_actions(view_state.get("specialty_actions", []))
-	_rebuild_artifact_actions(view_state.get("artifact_actions", []))
+	_rebuild_current_action_surfaces(view_state, first_render_minimal)
 	buckets["actions"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
-	_refresh_management_tab_cues()
+	if first_render_minimal:
+		_refresh_management_tab_titles_minimal()
+	else:
+		_refresh_management_tab_cues()
 	buckets["tabs"] = ProfileLogScript.elapsed_ms(section_started)
 	TownRules.end_read_scope(_session)
 	OverworldRules.end_normalized_read_scope(_session)
 	ProfileLogScript.emit_general("town", "refresh", "town_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(false), _session)
 
-func _active_town_entity_view_state(town: Dictionary) -> Dictionary:
+func _complete_town_first_render_full_refresh() -> void:
+	if not is_inside_tree():
+		return
+	await get_tree().process_frame
+	if not is_inside_tree() or _session == null:
+		return
+	_refresh(false)
+
+func _on_management_tab_changed(_tab: int) -> void:
+	if _session == null:
+		return
+	_refresh(false)
+
+func _rebuild_current_action_surfaces(view_state: Dictionary, minimal: bool) -> void:
+	if not minimal:
+		_rebuild_hero_actions(view_state.get("hero_actions", []))
+		_rebuild_build_actions(view_state.get("build_actions", []))
+		_rebuild_market_actions(view_state.get("market_actions", []))
+		_rebuild_recruit_actions(view_state.get("recruit_actions", []))
+		_rebuild_tavern_actions(view_state.get("tavern_actions", []))
+		_rebuild_transfer_actions(view_state.get("transfer_actions", []))
+		_rebuild_response_actions(view_state.get("response_actions", []))
+		_rebuild_study_actions(view_state.get("study_actions", []))
+		_rebuild_specialty_actions(view_state.get("specialty_actions", []))
+		_rebuild_artifact_actions(view_state.get("artifact_actions", []))
+		return
+	var lanes := _current_town_tab_lanes()
+	if lanes.has("build"):
+		_rebuild_build_actions(view_state.get("build_actions", []))
+	if lanes.has("recruit"):
+		_rebuild_recruit_actions(view_state.get("recruit_actions", []))
+	if lanes.has("study"):
+		_rebuild_study_actions(view_state.get("study_actions", []))
+	if lanes.has("market"):
+		_rebuild_market_actions(view_state.get("market_actions", []))
+	if lanes.has("logistics"):
+		_rebuild_tavern_actions(view_state.get("tavern_actions", []))
+		_rebuild_transfer_actions(view_state.get("transfer_actions", []))
+		_rebuild_response_actions(view_state.get("response_actions", []))
+		_rebuild_artifact_actions(view_state.get("artifact_actions", []))
+
+func _current_town_tab_lanes() -> Array:
+	var current_tab := _management_tabs.current_tab if _management_tabs != null else 0
+	match current_tab:
+		0:
+			return ["build"]
+		1:
+			return ["recruit"]
+		2:
+			return ["study"]
+		3:
+			return ["market"]
+		4:
+			return ["logistics"]
+		_:
+			return ["build"]
+
+func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> Dictionary:
 	var placement_id := String(town.get("placement_id", ""))
 	if placement_id == "":
 		_last_town_entity_cache_result = {"hit": false, "placement_id": "", "entry_count": 0, "reason": "missing_placement"}
-		return _build_active_town_entity_view_state()
+		return _build_active_town_entity_view_state(minimal)
 	var session_key := _town_entity_session_cache_key()
 	var bucket: Dictionary = _town_entity_cache_by_session.get(session_key, {}) if _town_entity_cache_by_session.get(session_key, {}) is Dictionary else {}
 	var signature := _town_entity_cache_signature(town)
 	var entry: Dictionary = bucket.get(placement_id, {}) if bucket.get(placement_id, {}) is Dictionary else {}
-	if String(entry.get("signature", "")) == signature and entry.get("view_state", {}) is Dictionary:
+	if String(entry.get("signature", "")) == signature and entry.get("view_state", {}) is Dictionary and (minimal or not bool(entry.get("minimal", false))):
 		_last_town_entity_cache_result = {
 			"hit": true,
 			"placement_id": placement_id,
 			"entry_count": bucket.size(),
 			"signature": signature,
+			"minimal": bool(entry.get("minimal", false)),
 		}
 		return (entry.get("view_state", {}) as Dictionary).duplicate(true)
-	var view_state := _build_active_town_entity_view_state()
+	var view_state := _build_active_town_entity_view_state(minimal)
 	bucket[placement_id] = {
 		"signature": signature,
 		"view_state": view_state.duplicate(true),
+		"minimal": minimal,
 	}
 	_town_entity_cache_by_session[session_key] = bucket
 	_last_town_entity_cache_result = {
@@ -383,37 +441,39 @@ func _active_town_entity_view_state(town: Dictionary) -> Dictionary:
 		"placement_id": placement_id,
 		"entry_count": bucket.size(),
 		"signature": signature,
+		"minimal": minimal,
 	}
 	return view_state
 
-func _build_active_town_entity_view_state() -> Dictionary:
+func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
+	var current_lanes := _current_town_tab_lanes()
 	var defense_check := _defense_check_surface()
-	var production_overview := TownRules.describe_production_overview(_session)
+	var production_overview := TownRules.describe_production_overview(_session) if (not minimal or current_lanes.has("build")) else ""
 	var production_text := _production_overview_with_defense_check(
 		production_overview,
 		String(defense_check.get("visible_text", "")),
 	)
-	var specialty_readiness := _specialty_readiness_surface()
-	var specialties_text := TownRules.describe_specialties(_session)
-	var build_readiness := _build_readiness_surface()
-	var buildings_text := TownRules.describe_buildings(_session)
-	var market_readiness := _market_readiness_surface()
-	var market_text := TownRules.describe_market(_session)
-	var muster_readiness := _muster_readiness_surface()
-	var recruitment_text := TownRules.describe_recruitment(_session)
-	var hire_readiness := _hire_readiness_surface()
-	var tavern_text := TownRules.describe_tavern(_session)
-	var transfer_readiness := _transfer_readiness_surface()
-	var transfer_text := TownRules.describe_transfer(_session)
-	var response_readiness := _response_readiness_surface()
-	var response_text := TownRules.describe_responses(_session)
-	var study_readiness := _study_readiness_surface()
-	var study_text := TownRules.describe_spell_access(_session)
-	var artifact_readiness := _artifact_readiness_surface()
-	var artifact_text := TownRules.describe_artifacts(_session)
+	var specialty_readiness := {} if minimal else _specialty_readiness_surface()
+	var specialties_text := "" if minimal else TownRules.describe_specialties(_session)
+	var build_readiness := _build_readiness_surface() if (not minimal or current_lanes.has("build")) else {}
+	var buildings_text := TownRules.describe_buildings(_session) if (not minimal or current_lanes.has("build")) else ""
+	var market_readiness := _market_readiness_surface() if (not minimal or current_lanes.has("market")) else {}
+	var market_text := TownRules.describe_market(_session) if (not minimal or current_lanes.has("market")) else ""
+	var muster_readiness := _muster_readiness_surface() if (not minimal or current_lanes.has("recruit")) else {}
+	var recruitment_text := TownRules.describe_recruitment(_session) if (not minimal or current_lanes.has("recruit")) else ""
+	var hire_readiness := _hire_readiness_surface() if (not minimal or current_lanes.has("logistics")) else {}
+	var tavern_text := TownRules.describe_tavern(_session) if (not minimal or current_lanes.has("logistics")) else ""
+	var transfer_readiness := _transfer_readiness_surface() if (not minimal or current_lanes.has("logistics")) else {}
+	var transfer_text := TownRules.describe_transfer(_session) if (not minimal or current_lanes.has("logistics")) else ""
+	var response_readiness := _response_readiness_surface() if (not minimal or current_lanes.has("logistics")) else {}
+	var response_text := TownRules.describe_responses(_session) if (not minimal or current_lanes.has("logistics")) else ""
+	var study_readiness := _study_readiness_surface() if (not minimal or current_lanes.has("study")) else {}
+	var study_text := TownRules.describe_spell_access(_session) if (not minimal or current_lanes.has("study")) else ""
+	var artifact_readiness := _artifact_readiness_surface() if (not minimal or current_lanes.has("logistics")) else {}
+	var artifact_text := TownRules.describe_artifacts(_session) if (not minimal or current_lanes.has("logistics")) else ""
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
 	var order_target := TownRules.town_order_target_handoff(_session)
-	var town_context_surface := _town_action_context_surface(dispatch_text)
+	var town_context_surface := {} if minimal else _town_action_context_surface(dispatch_text)
 	return {
 		"header_text": TownRules.describe_header(_session),
 		"status_text": TownRules.describe_status(_session),
@@ -444,22 +504,22 @@ func _build_active_town_entity_view_state() -> Dictionary:
 		"response_tooltip_text": _join_tooltip_sections([String(response_readiness.get("tooltip_text", "")), response_text]),
 		"study_visible_text": _join_tooltip_sections([String(study_readiness.get("visible_text", "")), study_text]),
 		"study_tooltip_text": _join_tooltip_sections([String(study_readiness.get("tooltip_text", "")), study_text]),
-		"spellbook_text": OverworldRules.describe_spellbook(_session),
+		"spellbook_text": OverworldRules.describe_spellbook(_session) if (not minimal or current_lanes.has("study")) else "",
 		"artifact_visible_text": _join_tooltip_sections([String(artifact_readiness.get("visible_text", "")), artifact_text]),
 		"artifact_tooltip_text": _join_tooltip_sections([String(artifact_readiness.get("tooltip_text", "")), artifact_text]),
 		"dispatch_text": dispatch_text,
 		"order_target": order_target,
 		"town_context_surface": town_context_surface,
-		"hero_actions": _duplicate_action_array(TownRules.get_hero_actions(_session)),
-		"build_actions": _duplicate_action_array(TownRules.get_build_actions(_session)),
-		"market_actions": _duplicate_action_array(TownRules.get_market_actions(_session)),
-		"recruit_actions": _duplicate_action_array(TownRules.get_recruit_actions(_session)),
-		"tavern_actions": _duplicate_action_array(TownRules.get_tavern_actions(_session)),
-		"transfer_actions": _duplicate_action_array(TownRules.get_transfer_actions(_session)),
-		"response_actions": _duplicate_action_array(TownRules.get_response_actions(_session)),
-		"study_actions": _duplicate_action_array(TownRules.get_spell_learning_actions(_session)),
-		"specialty_actions": _duplicate_action_array(TownRules.get_specialty_actions(_session)),
-		"artifact_actions": _duplicate_action_array(TownRules.get_artifact_actions(_session)),
+		"hero_actions": [] if minimal else _duplicate_action_array(TownRules.get_hero_actions(_session)),
+		"build_actions": _duplicate_action_array(TownRules.get_build_actions(_session)) if (not minimal or current_lanes.has("build")) else [],
+		"market_actions": _duplicate_action_array(TownRules.get_market_actions(_session)) if (not minimal or current_lanes.has("market")) else [],
+		"recruit_actions": _duplicate_action_array(TownRules.get_recruit_actions(_session)) if (not minimal or current_lanes.has("recruit")) else [],
+		"tavern_actions": _duplicate_action_array(TownRules.get_tavern_actions(_session)) if (not minimal or current_lanes.has("logistics")) else [],
+		"transfer_actions": _duplicate_action_array(TownRules.get_transfer_actions(_session)) if (not minimal or current_lanes.has("logistics")) else [],
+		"response_actions": _duplicate_action_array(TownRules.get_response_actions(_session)) if (not minimal or current_lanes.has("logistics")) else [],
+		"study_actions": _duplicate_action_array(TownRules.get_spell_learning_actions(_session)) if (not minimal or current_lanes.has("study")) else [],
+		"specialty_actions": [] if minimal else _duplicate_action_array(TownRules.get_specialty_actions(_session)),
+		"artifact_actions": _duplicate_action_array(TownRules.get_artifact_actions(_session)) if (not minimal or current_lanes.has("logistics")) else [],
 	}
 
 func _town_entity_cache_signature(town: Dictionary) -> String:
@@ -2313,6 +2373,8 @@ func _town_profile_metadata(first_render: bool) -> Dictionary:
 	var town := TownRules.get_active_town(_session) if _session != null else {}
 	return {
 		"first_render": first_render,
+		"first_render_minimal": first_render and _last_refresh_minimal,
+		"minimal_current_tab_only": _last_refresh_minimal,
 		"active_tab": _management_tabs.current_tab if _management_tabs != null else -1,
 		"town_placement_id": String(town.get("placement_id", "")) if town is Dictionary else "",
 		"town_id": String(town.get("town_id", "")) if town is Dictionary else "",
@@ -2576,6 +2638,12 @@ func _refresh_management_tab_cues() -> void:
 		var tab: Dictionary = tabs[index]
 		_management_tabs.set_tab_title(index, String(tab.get("title", "")))
 	_management_tabs.tooltip_text = String(payload.get("tooltip_text", ""))
+
+func _refresh_management_tab_titles_minimal() -> void:
+	var titles := ["Build", "Muster", "Spells", "Trade", "Log"]
+	for index in range(min(_management_tabs.get_tab_count(), titles.size())):
+		_management_tabs.set_tab_title(index, String(titles[index]))
+	_management_tabs.tooltip_text = "Town command tabs refresh after the first town frame."
 
 func _management_tab_readiness_payload() -> Dictionary:
 	var tabs := [

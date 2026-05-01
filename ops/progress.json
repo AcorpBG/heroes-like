@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-entity-cache-active-refresh-10184",
-  "currentSliceTitle": "Town Entity Cache Active Refresh",
+  "currentSliceId": "town-transition-fast-path-10184",
+  "currentSliceTitle": "Town Transition Fast Path",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "First per-town placement_id cache, active-town-only refresh reuse, runtime active-town index handoff, lazy hidden save-surface behavior, profile fields, docs, and focused regression are implemented and validated.",
-  "nextActionGuardrailNote": "Preserve gameplay semantics, save schema, generated map content/density, renderer/fog behavior, object contracts, F3/profile-log compatibility, and avoid same-thread deferred work labeled as async.",
-  "updatedAt": "2026-05-01T15:39:14Z",
+  "currentSliceNotes": "Ordinary overworld-to-town and town-to-overworld handoffs now skip synchronous runtime autosave, record pending autosave intent, and keep town first render minimal while forced-save paths remain explicit.",
+  "nextActionGuardrailNote": "Preserve gameplay semantics, save schema, generated map content/density, renderer/fog behavior, object contracts, F3/profile-log compatibility, forced-save safety paths, and avoid same-thread deferred work labeled as async.",
+  "updatedAt": "2026-05-01T16:28:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -96,6 +96,64 @@
         "godot4 --headless --path . res://tests/overworld_interaction_profile_log_regression.tscn passed.",
         "godot4 --headless --path . res://tests/overworld_cached_route_execution_regression.tscn passed.",
         "godot4 --headless --path . res://tests/overworld_route_destination_only_action_regression.tscn passed.",
+        "python3 scripts/analyze_overworld_profile_log.py .artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.jsonl --mode general --slowest 4 --offenders 10 passed.",
+        "python3 -m json.tool ops/progress.json passed.",
+        "git diff --check passed."
+      ]
+    },
+    {
+      "id": "town-transition-fast-path-10184",
+      "title": "Town Transition Fast Path",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-final-homm3-parity-regate-audit-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/profile-jsonl-usage.md",
+        ".artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.jsonl",
+        ".artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.summary.txt"
+      ],
+      "implementationTargets": [
+        "scripts/autoload/AppRouter.gd",
+        "scripts/autoload/SaveService.gd",
+        "scripts/core/OverworldRules.gd",
+        "scenes/town/TownShell.gd",
+        "docs/profile-jsonl-usage.md",
+        "tests/town_transition_fast_path_regression.gd",
+        "tests/town_transition_fast_path_regression.tscn",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "startedAt": "2026-05-01T16:02:00Z",
+      "completedAt": "2026-05-01T16:28:00Z",
+      "completionCriteria": [
+        "Ordinary go_to_town and go_to_overworld avoid synchronous runtime autosave and record save_before_transition=0 with pending autosave intent metadata.",
+        "Forced-save routes retain explicit autosave behavior and expose forced-save profile metadata.",
+        "Trusted live autosaves skip restore-style normalization only when the session is already runtime-normalized and route-safe, while load/restore keeps full validation.",
+        "Town entry renders active-town/current-tab surfaces first and skips save-surface construction before first render.",
+        "Focused transition, town cache, general profile, overworld profile, cached route, route destination, profile analyzer, JSON, and whitespace validations pass."
+      ],
+      "nonGoals": [
+        "No save-schema migration, payload split/delta architecture, generated-map density/content change, renderer/fog change, pathing change, object contract change, F3/profile behavior removal, broad town rules rewrite, or battle/outcome forced-save removal."
+      ],
+      "notes": "Completed urgent performance slice. Ordinary town/overworld route handoffs now mark dirty/pending autosave intent with save_before_transition=0 instead of synchronously writing the 49MB autosave, trusted live autosaves can skip restore-style normalization, and town entry does an active-town/current-tab first render before broader refresh.",
+      "completionEvidence": [
+        "AppRouter.go_to_town and AppRouter.go_to_overworld record runtime_autosave_dirty/runtime_autosave_pending_intent flags plus profile metadata instead of calling SaveService.save_runtime_autosave_session on ordinary transitions.",
+        "Router profile metadata now includes save_before_transition_skipped, autosave_deferred_or_skipped_reason, autosave_pending_intent, pending route, and pending game state; forced battle/main-menu saves keep explicit forced-save metadata.",
+        "SaveService strips transition-autosave intent flags from actual persisted payloads and clears the in-memory pending intent after a successful runtime save/checkpoint.",
+        "SaveService skips restore-style normalization for trusted live autosaves only when the session is already runtime-normalized and route-safe; restore/load still use the full _normalize_restore_result path.",
+        "TownShell first render uses active-town/current-tab minimal surfaces, skips expensive save-surface construction, and defers broader command/tab refresh until after the first town frame.",
+        "docs/profile-jsonl-usage.md documents router autosave skip/defer fields, trusted-live restore-normalize skip fields, and town first-render minimal fields."
+      ],
+      "validationEvidence": [
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_transition_fast_path_regression.tscn passed.",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_entity_cache_active_refresh_regression.tscn passed.",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/profile_log_general_surface_regression.tscn passed.",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_interaction_profile_log_regression.tscn passed.",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_cached_route_execution_regression.tscn passed.",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_route_destination_only_action_regression.tscn passed.",
         "python3 scripts/analyze_overworld_profile_log.py .artifacts/uploaded_profiles/20260501/display99_full_flow_after_c0f7a85_heroes_profile.jsonl --mode general --slowest 4 --offenders 10 passed.",
         "python3 -m json.tool ops/progress.json passed.",
         "git diff --check passed."
