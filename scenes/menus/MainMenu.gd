@@ -2,6 +2,7 @@ extends Control
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
 const TAB_CAMPAIGN := 0
 const TAB_SKIRMISH := 1
@@ -129,32 +130,63 @@ var _syncing_settings_ui := false
 var _menu_notice := ""
 
 func _ready() -> void:
+	var started := ProfileLogScript.begin_usec()
+	var buckets := {}
+	var phase_started := ProfileLogScript.begin_usec()
 	CampaignProgression.ensure_profile()
+	buckets["campaign_progression"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	SettingsService.ensure_settings()
+	buckets["settings"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_apply_visual_theme()
+	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_select_menu_tab(TAB_CAMPAIGN)
 	_hide_stage_dock()
+	buckets["initial_layout"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_refresh_menu()
+	buckets["refresh_menu"] = ProfileLogScript.elapsed_ms(phase_started)
+	ProfileLogScript.emit_general("menu", "ready", "main_menu_ready", ProfileLogScript.elapsed_ms(started), buckets, {
+		"current_tab": _menu_tabs.current_tab,
+	}, SessionState.ensure_active_session())
 
 func _refresh_menu() -> void:
+	var started := ProfileLogScript.begin_usec()
+	var buckets := {}
+	var phase_started := ProfileLogScript.begin_usec()
 	_menu_notice = AppRouter.consume_menu_notice()
 	if _stage_dock_panel.visible and _menu_tabs.current_tab == TAB_SAVES:
 		_rebuild_save_browser()
 	else:
 		_reset_save_browser_placeholder()
+	buckets["save_browser"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_rebuild_campaign_browser()
+	buckets["campaign_browser"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_configure_difficulty_picker()
 	_configure_generated_random_map_controls()
 	_rebuild_skirmish_browser()
 	_refresh_skirmish_setup()
 	_refresh_generated_random_map_setup()
+	buckets["skirmish_setup"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_rebuild_help_browser()
 	_refresh_settings_panel()
+	buckets["help_settings"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_refresh_stage_dock_header()
 	_refresh_summary()
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
 	_sync_first_view_command_tooltips()
+	buckets["summary_commands"] = ProfileLogScript.elapsed_ms(phase_started)
+	ProfileLogScript.emit_general("menu", "refresh", "refresh_menu", ProfileLogScript.elapsed_ms(started), buckets, {
+		"current_tab": _menu_tabs.current_tab,
+		"stage_dock_visible": _stage_dock_panel.visible,
+	}, SessionState.ensure_active_session())
 
 func _latest_continue_surface() -> Dictionary:
 	var latest_summary := _active_save_board_latest_summary()
@@ -204,19 +236,39 @@ func _on_start_chapter_pressed() -> void:
 	_launch_campaign_action(CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id))
 
 func _launch_campaign_action(action: Dictionary) -> void:
+	var started := ProfileLogScript.begin_usec()
+	var buckets := {}
 	if bool(action.get("disabled", false)):
+		ProfileLogScript.emit_general("menu", "scenario_launch", "campaign_launch_blocked", ProfileLogScript.elapsed_ms(started), buckets, {
+			"scenario_id": String(action.get("scenario_id", "")),
+			"campaign_id": String(action.get("campaign_id", _selected_campaign_id)),
+		}, SessionState.ensure_active_session())
 		return
 	var scenario_id := String(action.get("scenario_id", ""))
 	var campaign_id := String(action.get("campaign_id", _selected_campaign_id))
+	var start_started := ProfileLogScript.begin_usec()
 	var session := CampaignProgression.start_scenario(
 		scenario_id,
 		ScenarioSelectRulesScript.default_difficulty_id(),
 		campaign_id
 	)
+	buckets["scenario_start"] = ProfileLogScript.elapsed_ms(start_started)
 	if session.scenario_id == "":
+		var refresh_started := ProfileLogScript.begin_usec()
 		_refresh_menu()
+		buckets["refresh_after_block"] = ProfileLogScript.elapsed_ms(refresh_started)
+		ProfileLogScript.emit_general("menu", "scenario_launch", "campaign_launch_failed", ProfileLogScript.elapsed_ms(started), buckets, {
+			"scenario_id": scenario_id,
+			"campaign_id": campaign_id,
+		}, SessionState.ensure_active_session())
 		return
+	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh_menu()
+	buckets["refresh_before_route"] = ProfileLogScript.elapsed_ms(refresh_started)
+	ProfileLogScript.emit_general("menu", "scenario_launch", "campaign_launch", ProfileLogScript.elapsed_ms(started), buckets, {
+		"scenario_id": scenario_id,
+		"campaign_id": campaign_id,
+	}, session)
 	AppRouter.go_to_overworld()
 
 func _on_continue_pressed() -> void:
@@ -285,13 +337,33 @@ func _on_difficulty_selected(index: int) -> void:
 	_refresh_generated_random_map_setup()
 
 func _on_start_skirmish_pressed() -> void:
+	var started := ProfileLogScript.begin_usec()
+	var buckets := {}
 	if _start_skirmish_button.disabled:
+		ProfileLogScript.emit_general("menu", "scenario_launch", "skirmish_launch_blocked", ProfileLogScript.elapsed_ms(started), buckets, {
+			"scenario_id": _selected_skirmish_id,
+			"difficulty": _selected_difficulty,
+		}, SessionState.ensure_active_session())
 		return
+	var launch_started := ProfileLogScript.begin_usec()
 	var session := ScenarioSelectRulesScript.start_skirmish_session(_selected_skirmish_id, _selected_difficulty)
+	buckets["start_skirmish_session"] = ProfileLogScript.elapsed_ms(launch_started)
 	if session.scenario_id == "":
+		var refresh_started := ProfileLogScript.begin_usec()
 		_refresh_menu()
+		buckets["refresh_after_block"] = ProfileLogScript.elapsed_ms(refresh_started)
+		ProfileLogScript.emit_general("menu", "scenario_launch", "skirmish_launch_failed", ProfileLogScript.elapsed_ms(started), buckets, {
+			"scenario_id": _selected_skirmish_id,
+			"difficulty": _selected_difficulty,
+		}, SessionState.ensure_active_session())
 		return
+	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh_menu()
+	buckets["refresh_before_route"] = ProfileLogScript.elapsed_ms(refresh_started)
+	ProfileLogScript.emit_general("menu", "scenario_launch", "skirmish_launch", ProfileLogScript.elapsed_ms(started), buckets, {
+		"scenario_id": _selected_skirmish_id,
+		"difficulty": _selected_difficulty,
+	}, session)
 	AppRouter.go_to_overworld()
 
 func _on_generated_seed_changed(new_text: String) -> void:
@@ -1092,7 +1164,13 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 	_generated_progress_bar.visible = false
 
 func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
+	var profile_started := ProfileLogScript.begin_usec()
+	var profile_buckets := {}
 	if _generated_generation_in_progress or _start_generated_skirmish_button.disabled:
+		ProfileLogScript.emit_general("menu", "generated_setup", "generated_launch_blocked", ProfileLogScript.elapsed_ms(profile_started), profile_buckets, {
+			"reason": "generated_launch_unavailable_or_already_in_progress",
+			"route_to_overworld": route_to_overworld,
+		}, SessionState.ensure_active_session())
 		return {
 			"started": false,
 			"blocked": true,
@@ -1113,7 +1191,9 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 	)
 	await _yield_generated_generation_frame()
 
+	var phase_started := ProfileLogScript.begin_usec()
 	var config := _generated_random_map_config()
+	profile_buckets["config"] = ProfileLogScript.elapsed_ms(phase_started)
 	_set_generated_generation_stage(
 		"Validating seed and template",
 		25,
@@ -1121,11 +1201,13 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 	)
 	await _yield_generated_generation_frame()
 
+	phase_started = ProfileLogScript.begin_usec()
 	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
 		config,
 		_selected_difficulty,
 		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
 	)
+	profile_buckets["build_setup_with_retry"] = ProfileLogScript.elapsed_ms(phase_started)
 	_generated_last_setup = setup.duplicate(true)
 	_set_generated_generation_stage(
 		"Generation validation complete" if bool(setup.get("ok", false)) else "Generation blocked",
@@ -1138,6 +1220,12 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 		_generated_generation_in_progress = false
 		_set_generated_random_map_inputs_disabled(false)
 		_apply_generated_random_map_setup_surface(setup)
+		ProfileLogScript.emit_general("menu", "generated_setup", "generated_setup_blocked", ProfileLogScript.elapsed_ms(profile_started), profile_buckets, {
+			"route_to_overworld": route_to_overworld,
+			"setup_ok": false,
+			"yield_count": _generated_generation_yield_count,
+			"stage": _generated_generation_stage.duplicate(true),
+		}, SessionState.ensure_active_session())
 		return {
 			"started": false,
 			"blocked": false,
@@ -1154,11 +1242,19 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 	)
 	await _yield_generated_generation_frame()
 
+	phase_started = ProfileLogScript.begin_usec()
 	var session := ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
+	profile_buckets["materialize_session"] = ProfileLogScript.elapsed_ms(phase_started)
 	if session.scenario_id == "":
 		_generated_generation_in_progress = false
 		_set_generated_random_map_inputs_disabled(false)
 		_apply_generated_random_map_setup_surface(setup)
+		ProfileLogScript.emit_general("menu", "generated_setup", "generated_session_failed", ProfileLogScript.elapsed_ms(profile_started), profile_buckets, {
+			"route_to_overworld": route_to_overworld,
+			"setup_ok": true,
+			"yield_count": _generated_generation_yield_count,
+			"stage": _generated_generation_stage.duplicate(true),
+		}, SessionState.ensure_active_session())
 		return {
 			"started": false,
 			"blocked": false,
@@ -1189,6 +1285,17 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 		"active_provenance": session.flags.get("generated_random_map_provenance", {}),
 	}
 	if route_to_overworld:
+		ProfileLogScript.emit_general("menu", "generated_setup", "generated_launch_route_to_overworld", ProfileLogScript.elapsed_ms(profile_started), profile_buckets, {
+			"route_to_overworld": true,
+			"yield_count": _generated_generation_yield_count,
+			"stage": _generated_generation_stage.duplicate(true),
+			"scenario_id": session.scenario_id,
+			"size_class_id": _generated_size_class_id,
+			"template_id": String(setup.get("template_id", "")),
+			"profile_id": String(setup.get("profile_id", "")),
+			"player_count": _generated_player_count,
+			"same_thread_frame_yields": _generated_generation_yield_count,
+		}, session)
 		AppRouter.begin_overworld_handoff_profile(
 			"generated_random_map_post_open_tail",
 			{
@@ -1206,6 +1313,17 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 		_generated_generation_in_progress = false
 		_set_generated_random_map_inputs_disabled(false)
 		_apply_generated_random_map_setup_surface(setup)
+		ProfileLogScript.emit_general("menu", "generated_setup", "generated_launch_staged", ProfileLogScript.elapsed_ms(profile_started), profile_buckets, {
+			"route_to_overworld": false,
+			"yield_count": _generated_generation_yield_count,
+			"stage": _generated_generation_stage.duplicate(true),
+			"scenario_id": session.scenario_id,
+			"size_class_id": _generated_size_class_id,
+			"template_id": String(setup.get("template_id", "")),
+			"profile_id": String(setup.get("profile_id", "")),
+			"player_count": _generated_player_count,
+			"same_thread_frame_yields": _generated_generation_yield_count,
+		}, session)
 	return result
 
 func _set_generated_generation_stage(stage_label: String, progress_value: int, detail: String) -> void:

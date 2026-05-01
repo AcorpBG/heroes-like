@@ -11,6 +11,7 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
+const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
@@ -66,13 +67,24 @@ static func create_town_assault_payload(
 	return create_battle_payload(session, placement)
 
 static func create_battle_payload(session: SessionStateStoreScript.SessionData, encounter_placement: Dictionary) -> Dictionary:
+	var profile_started := ProfileLogScript.begin_usec()
+	var buckets := {}
+	var phase_started := ProfileLogScript.begin_usec()
 	OverworldRulesScript.normalize_overworld_state(session)
+	buckets["normalize_overworld"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	encounter_placement = _resolved_encounter_placement(session, encounter_placement)
 	var encounter_id = String(encounter_placement.get("encounter_id", encounter_placement.get("id", "")))
 	var encounter = ContentService.get_encounter(encounter_id)
 	if encounter.is_empty():
+		ProfileLogScript.emit_general("battle", "payload", "create_battle_payload_failed", ProfileLogScript.elapsed_ms(profile_started), buckets, {
+			"encounter_id": encounter_id,
+			"reason": "missing_encounter_content",
+		}, session)
 		return {}
+	buckets["resolve_encounter"] = ProfileLogScript.elapsed_ms(phase_started)
 
+	phase_started = ProfileLogScript.begin_usec()
 	var scenario = ContentService.get_scenario(session.scenario_id)
 	var battle_context = _normalized_battle_context(session, encounter_placement)
 	var player_setup = _player_setup_for_battle(session, encounter_placement, battle_context)
@@ -80,6 +92,8 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 	var enemy_hero_state = _enemy_commander_state_for_battle(session, encounter_placement, encounter, battle_context)
 	var player_commander_state = player_setup.get("commander_state", session.overworld.get("hero", {}))
 	var battlefield_tags = _normalized_battlefield_tags(encounter, battle_context)
+	buckets["setup_payload_inputs"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	var battle = {
 		"position": {
 			"x": int(encounter_placement.get("x", OverworldRulesScript.hero_position(session).x)),
@@ -133,6 +147,8 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 			"shown_round": 0,
 		},
 	}
+	buckets["assemble_payload"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 
 	var stacks = []
 	var player_stacks = player_setup.get("stacks", [])
@@ -166,6 +182,14 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 	battle["stacks"] = stacks
 	_ensure_battle_hex_state(battle)
 	_prepare_round(battle, 1)
+	buckets["stacks_and_round"] = ProfileLogScript.elapsed_ms(phase_started)
+	ProfileLogScript.emit_general("battle", "payload", "create_battle_payload", ProfileLogScript.elapsed_ms(profile_started), buckets, {
+		"encounter_id": encounter_id,
+		"placement_id": String(encounter_placement.get("placement_id", "")),
+		"battle_context_type": String(battle_context.get("type", "")) if battle_context is Dictionary else "",
+		"scenario_found": not scenario.is_empty(),
+		"stack_count": stacks.size(),
+	}, session)
 	return battle
 
 static func normalize_battle_state_bridge(session) -> bool:

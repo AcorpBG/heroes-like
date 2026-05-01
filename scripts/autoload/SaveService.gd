@@ -9,6 +9,7 @@ const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const CampaignRulesScript = preload("res://scripts/core/CampaignRules.gd")
+const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 # Validation markers: ScenarioSelectRules.launch_mode_label / ScenarioSelectRules.difficulty_label
 
 const SAVE_DIR := "user://saves"
@@ -51,6 +52,15 @@ func validation_end_summary_inspection_trace() -> Dictionary:
 
 func validation_last_runtime_save_profile() -> Dictionary:
 	return _last_runtime_save_profile.duplicate(true)
+
+func validation_clear_general_profile_log() -> Dictionary:
+	return ProfileLogScript.clear_general_log()
+
+func validation_general_profile_log_snapshot() -> Dictionary:
+	return ProfileLogScript.general_log_snapshot()
+
+func validation_general_profile_log_last_records(limit: int = 5) -> Array:
+	return ProfileLogScript.last_general_records(limit)
 
 func _trace_summary_inspection(name: String) -> void:
 	if not _summary_inspection_trace_enabled:
@@ -196,12 +206,27 @@ func latest_loadable_summary() -> Dictionary:
 	return latest
 
 func build_in_session_save_surface(session: SessionStateStoreScript.SessionData, manual_slot: int = -1) -> Dictionary:
+	var profile_started := ProfileLogScript.begin_usec()
+	var buckets := {}
 	var selected_slot := _normalize_manual_slot(manual_slot if manual_slot > 0 else _selected_manual_slot)
+	var slot_started := ProfileLogScript.begin_usec()
 	var slot_summary := inspect_manual_slot(selected_slot)
+	buckets["inspect_selected_slot"] = ProfileLogScript.elapsed_ms(slot_started)
+	var latest_started := ProfileLogScript.begin_usec()
 	var latest_summary := latest_loadable_summary()
+	buckets["latest_loadable_summary"] = ProfileLogScript.elapsed_ms(latest_started)
+	var context_started := ProfileLogScript.begin_usec()
 	var current_target := _resume_target_for_session(session)
 	var current_context := _runtime_session_resume_brief(session)
-	return {
+	buckets["current_context"] = ProfileLogScript.elapsed_ms(context_started)
+	var recap_started := ProfileLogScript.begin_usec()
+	var save_check := describe_session_save_check(session)
+	var save_handoff := describe_session_save_handoff(session, selected_slot)
+	var save_handoff_brief := describe_session_save_handoff_brief(session, selected_slot)
+	var return_handoff := describe_session_return_handoff(session)
+	var current_save_recap := describe_session_save_recap(session)
+	buckets["recap_surfaces"] = ProfileLogScript.elapsed_ms(recap_started)
+	var result := {
 		"selected_slot": selected_slot,
 		"slot_summary": slot_summary,
 		"latest_summary": latest_summary,
@@ -210,11 +235,11 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 		"latest_context": _latest_context_line(latest_summary, current_target),
 		"current_context": current_context,
 		"play_check": describe_session_play_check(session),
-		"save_check": describe_session_save_check(session),
-		"save_handoff": describe_session_save_handoff(session, selected_slot),
-		"save_handoff_brief": describe_session_save_handoff_brief(session, selected_slot),
-		"return_handoff": describe_session_return_handoff(session),
-		"current_save_recap": describe_session_save_recap(session),
+		"save_check": save_check,
+		"save_handoff": save_handoff,
+		"save_handoff_brief": save_handoff_brief,
+		"return_handoff": return_handoff,
+		"current_save_recap": current_save_recap,
 		"slot_resume_recap": describe_summary_resume_recap(slot_summary),
 		"latest_resume_recap": describe_summary_resume_recap(latest_summary),
 		"menu_button_label": _return_to_menu_label(current_target, session),
@@ -225,6 +250,11 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 			describe_session_return_handoff(session)
 		),
 	}
+	ProfileLogScript.emit_general("save", "surface", "build_in_session_save_surface", ProfileLogScript.elapsed_ms(profile_started), buckets, {
+		"selected_slot": selected_slot,
+		"current_target": current_target,
+	}, session)
+	return result
 
 func resume_target_for_session(session: SessionStateStoreScript.SessionData) -> String:
 	return _resume_target_for_session(session)
@@ -641,8 +671,10 @@ func _save_payload(
 	payload: Dictionary,
 	file_path: String,
 	slot_type: String = SLOT_TYPE_MANUAL,
-	saved_payload_out: Dictionary = {}
+	saved_payload_out: Dictionary = {},
+	profile: Dictionary = {}
 ) -> String:
+	var normalize_started := ProfileLogScript.begin_usec()
 	var normalized: Dictionary = SessionStateStoreScript.normalize_payload(payload)
 	normalized["save_version"] = SessionStateStoreScript.SAVE_VERSION
 	normalized[SAVE_METADATA_TIMESTAMP_KEY] = Time.get_unix_time_from_system()
@@ -650,10 +682,11 @@ func _save_payload(
 	normalized[SAVE_METADATA_GAME_STATE_KEY] = String(normalized.get("game_state", "overworld"))
 	normalized[SAVE_METADATA_SCENARIO_STATUS_KEY] = String(normalized.get("scenario_status", "in_progress"))
 	normalized[SAVE_METADATA_LAUNCH_MODE_KEY] = String(normalized.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))
+	_runtime_save_profile_bucket(profile, "save_normalize", ProfileLogScript.elapsed_ms(normalize_started))
 	saved_payload_out.clear()
 	for key in normalized.keys():
 		saved_payload_out[key] = normalized[key]
-	return _save_raw_dictionary(normalized, file_path)
+	return _save_raw_dictionary(normalized, file_path, profile)
 
 func _save_runtime_session(
 	session: SessionStateStoreScript.SessionData,
@@ -666,8 +699,11 @@ func _save_runtime_session(
 		"include_summary": include_summary,
 		"scenario_id": session.scenario_id if session != null else "",
 		"generated_random_map": bool(session.flags.get("generated_random_map", false)) if session != null else false,
+		"session_metadata": ProfileLogScript.session_metadata(session),
 		"started_msec": Time.get_ticks_msec(),
+		"started_usec": Time.get_ticks_usec(),
 		"steps": [],
+		"buckets_ms": {},
 	}
 	_runtime_save_profile_step(profile, "enter")
 	if session == null or session.scenario_id == "":
@@ -676,9 +712,16 @@ func _save_runtime_session(
 	if _can_fast_save_generated_opening_autosave(session, slot_type, include_summary):
 		return _save_generated_opening_autosave_fast(session, profile)
 
-	_runtime_save_profile_step(profile, "to_dict_normalize_start")
-	var restore_result := _normalize_restore_result(session.to_dict(), slot_type)
-	_runtime_save_profile_step(profile, "to_dict_normalize_done")
+	_runtime_save_profile_step(profile, "to_dict_start")
+	var to_dict_started := ProfileLogScript.begin_usec()
+	var runtime_payload := session.to_dict()
+	_runtime_save_profile_bucket(profile, "to_dict", ProfileLogScript.elapsed_ms(to_dict_started))
+	_runtime_save_profile_step(profile, "to_dict_done")
+	_runtime_save_profile_step(profile, "restore_normalize_start")
+	var restore_started := ProfileLogScript.begin_usec()
+	var restore_result := _normalize_restore_result(runtime_payload, slot_type)
+	_runtime_save_profile_bucket(profile, "restore_normalize", ProfileLogScript.elapsed_ms(restore_started))
+	_runtime_save_profile_step(profile, "restore_normalize_done")
 	if not bool(restore_result.get("ok", false)):
 		_runtime_save_profile_finish(profile)
 		return {
@@ -700,35 +743,49 @@ func _save_runtime_session(
 	match slot_type:
 		SLOT_TYPE_AUTOSAVE:
 			_runtime_save_profile_step(profile, "write_payload_start")
-			path = _save_payload(sanitized_session.to_dict(), _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload)
+			var write_to_dict_started := ProfileLogScript.begin_usec()
+			var autosave_payload := sanitized_session.to_dict()
+			_runtime_save_profile_bucket(profile, "write_to_dict", ProfileLogScript.elapsed_ms(write_to_dict_started))
+			path = _save_payload(autosave_payload, _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload, profile)
 			_runtime_save_profile_step(profile, "write_payload_done")
 			cache_slot_id = SLOT_TYPE_AUTOSAVE
 			if path != "" and include_summary:
 				_runtime_save_profile_step(profile, "summary_cache_store_start")
+				var summary_cache_started := ProfileLogScript.begin_usec()
 				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_AUTOSAVE, cache_slot_id, path)
+				_runtime_save_profile_bucket(profile, "summary_cache", ProfileLogScript.elapsed_ms(summary_cache_started))
 				_runtime_save_profile_step(profile, "summary_cache_store_done")
 			elif path != "":
 				_runtime_save_profile_step(profile, "summary_cache_deferred")
 			if include_summary:
 				_runtime_save_profile_step(profile, "inspect_summary_start")
+				var inspect_started := ProfileLogScript.begin_usec()
 				summary = inspect_autosave()
+				_runtime_save_profile_bucket(profile, "inspect_summary", ProfileLogScript.elapsed_ms(inspect_started))
 				_runtime_save_profile_step(profile, "inspect_summary_done")
 		_:
 			var normalized_slot := _normalize_manual_slot(slot)
 			_runtime_save_profile_step(profile, "write_payload_start")
-			path = _save_payload(sanitized_session.to_dict(), _slot_path(normalized_slot), SLOT_TYPE_MANUAL, saved_payload)
+			var write_to_dict_started := ProfileLogScript.begin_usec()
+			var manual_payload := sanitized_session.to_dict()
+			_runtime_save_profile_bucket(profile, "write_to_dict", ProfileLogScript.elapsed_ms(write_to_dict_started))
+			path = _save_payload(manual_payload, _slot_path(normalized_slot), SLOT_TYPE_MANUAL, saved_payload, profile)
 			_runtime_save_profile_step(profile, "write_payload_done")
 			cache_slot_id = str(normalized_slot)
 			if path != "" and include_summary:
 				_selected_manual_slot = normalized_slot
 				_runtime_save_profile_step(profile, "summary_cache_store_start")
+				var summary_cache_started := ProfileLogScript.begin_usec()
 				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_MANUAL, cache_slot_id, path)
+				_runtime_save_profile_bucket(profile, "summary_cache", ProfileLogScript.elapsed_ms(summary_cache_started))
 				_runtime_save_profile_step(profile, "summary_cache_store_done")
 			elif path != "":
 				_runtime_save_profile_step(profile, "summary_cache_deferred")
 			if include_summary:
 				_runtime_save_profile_step(profile, "inspect_summary_start")
+				var inspect_started := ProfileLogScript.begin_usec()
 				summary = inspect_manual_slot(normalized_slot)
+				_runtime_save_profile_bucket(profile, "inspect_summary", ProfileLogScript.elapsed_ms(inspect_started))
 				_runtime_save_profile_step(profile, "inspect_summary_done")
 
 	if path == "":
@@ -765,11 +822,13 @@ func _save_generated_opening_autosave_fast(
 	profile: Dictionary
 ) -> Dictionary:
 	_runtime_save_profile_step(profile, "generated_opening_payload_start")
+	var payload_started := ProfileLogScript.begin_usec()
 	var payload := session.to_dict()
+	_runtime_save_profile_bucket(profile, "to_dict", ProfileLogScript.elapsed_ms(payload_started))
 	_runtime_save_profile_step(profile, "generated_opening_payload_done")
 	_runtime_save_profile_step(profile, "write_payload_start")
 	var saved_payload := {}
-	var path := _save_payload(payload, _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload)
+	var path := _save_payload(payload, _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload, profile)
 	_runtime_save_profile_step(profile, "write_payload_done")
 	if path == "":
 		_runtime_save_profile_finish(profile)
@@ -787,6 +846,8 @@ func _save_generated_opening_autosave_fast(
 	}
 
 func _runtime_save_profile_step(profile: Dictionary, step_name: String) -> void:
+	if profile.is_empty():
+		return
 	var started := int(profile.get("started_msec", Time.get_ticks_msec()))
 	var elapsed: int = max(0, Time.get_ticks_msec() - started)
 	var steps: Array = profile.get("steps", [])
@@ -801,21 +862,51 @@ func _runtime_save_profile_step(profile: Dictionary, step_name: String) -> void:
 	})
 	profile["steps"] = steps
 
+func _runtime_save_profile_bucket(profile: Dictionary, bucket_name: String, elapsed_ms: float) -> void:
+	if profile.is_empty() or bucket_name == "":
+		return
+	var buckets: Dictionary = profile.get("buckets_ms", {}) if profile.get("buckets_ms", {}) is Dictionary else {}
+	buckets[bucket_name] = snapped(float(buckets.get(bucket_name, 0.0)) + maxf(0.0, elapsed_ms), 0.001)
+	profile["buckets_ms"] = buckets
+
 func _runtime_save_profile_finish(profile: Dictionary) -> void:
 	_runtime_save_profile_step(profile, "finished")
 	profile["total_ms"] = max(0, Time.get_ticks_msec() - int(profile.get("started_msec", Time.get_ticks_msec())))
 	_last_runtime_save_profile = profile.duplicate(true)
+	ProfileLogScript.emit_general(
+		"save",
+		String(profile.get("slot_type", "runtime")),
+		"runtime_save",
+		float(profile.get("total_ms", 0)),
+		profile.get("buckets_ms", {}) if profile.get("buckets_ms", {}) is Dictionary else {},
+		{
+			"slot_type": String(profile.get("slot_type", "")),
+			"include_summary": bool(profile.get("include_summary", false)),
+			"path": String(profile.get("path", "")),
+			"written_bytes": int(profile.get("written_bytes", 0)),
+			"generated_random_map": bool(profile.get("generated_random_map", false)),
+			"session": profile.get("session_metadata", {}),
+			"steps": profile.get("steps", []),
+		},
+		null
+	)
 
-func _save_raw_dictionary(payload: Dictionary, file_path: String) -> String:
+func _save_raw_dictionary(payload: Dictionary, file_path: String, profile: Dictionary = {}) -> String:
 	if not _ensure_save_dir():
 		return ""
 
+	var stringify_started := ProfileLogScript.begin_usec()
+	var json_text := JSON.stringify(payload, "\t")
+	_runtime_save_profile_bucket(profile, "stringify", ProfileLogScript.elapsed_ms(stringify_started))
+
+	var write_started := ProfileLogScript.begin_usec()
 	var file := FileAccess.open(file_path, FileAccess.WRITE)
 	if file == null:
 		push_error("Unable to open save file for writing: %s" % file_path)
 		return ""
-	file.store_string(JSON.stringify(payload, "\t"))
+	file.store_string(json_text)
 	file.close()
+	_runtime_save_profile_bucket(profile, "write", ProfileLogScript.elapsed_ms(write_started))
 	_invalidate_summary_cache_for_path(file_path)
 	return file_path
 

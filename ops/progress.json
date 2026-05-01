@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-incremental-route-preview-refresh-10184",
-  "currentSliceTitle": "Overworld Incremental Route Preview Refresh",
+  "currentSliceId": "broad-json-profile-instrumentation-10184",
+  "currentSliceTitle": "Broad JSON Profile Instrumentation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Follow-up from .artifacts/uploaded_profiles/20260501/display99_actual_large_after_2e81b35_profile.jsonl: open/current selected-route context tile text now uses compact simple-route line and field readiness skips rich route decision/brief/handoff construction for simple destinations; JSONL exposes simple_route_fast_paths context/readiness counters. Validation: required Godot route/profile/cache regressions, analyzer compatibility, json.tool, git diff --check.",
-  "nextActionGuardrailNote": "After profile-log instrumentation, use uploaded JSONL evidence before selecting any performance fix; preserve movement/pathing semantics, map generation/content density, renderer/fog behavior, save schema, object contracts, and F3 overlay behavior.",
-  "updatedAt": "2026-05-01T13:35:53Z",
+  "currentSliceNotes": "Opt-in general JSONL profiling now covers boot/menu/generated setup/router transitions/save/end-turn/town/battle while preserving the legacy overworld profile log; usage documented in docs/profile-jsonl-usage.md.",
+  "nextActionGuardrailNote": "Use broad JSONL evidence before selecting any performance fix; preserve gameplay semantics, pathing, generated map density/content, renderer/fog behavior, save schema, object contracts, F3 overlay/profile behavior, and avoid same-thread deferred work labeled as async.",
+  "updatedAt": "2026-05-01T14:48:05Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -5221,6 +5221,74 @@
         "Replaced the compact-only anti-barren gate with route-density support policy scoped to compact and translated generated templates, scaling distance rings/windows by map edge.",
         "Added bounded translated support records using existing low-tier resource/reward content and reachable empty-window placement instead of arbitrary global inflation."
       ]
+    },
+    {
+      "id": "broad-json-profile-instrumentation-10184",
+      "title": "Broad JSON Profile Instrumentation",
+      "phase": "phase-2-deep-production-foundation",
+      "sliceType": "maintenance_instrumentation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-interaction-profile-log-10184",
+      "status": "completed",
+      "purpose": "Expand opt-in JSONL profiling beyond overworld interactions into boot, menu/generated setup, router transitions, save/autosave, end-turn, town, and battle surfaces without optimizing or changing gameplay semantics.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        ".artifacts/audits/20260501_game_state_architecture_audit.md",
+        "docs/profile-jsonl-usage.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/ProfileLog.gd",
+        "scripts/autoload/AppRouter.gd",
+        "scripts/autoload/SaveService.gd",
+        "scenes/boot/Boot.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "scripts/core/BattleRules.gd",
+        "scripts/analyze_overworld_profile_log.py",
+        "tests/profile_log_general_surface_regression.gd",
+        "tests/profile_log_general_surface_regression.tscn",
+        "docs/profile-jsonl-usage.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "godot4 --headless --path . tests/profile_log_general_surface_regression.tscn",
+        "godot4 --headless --path . tests/overworld_interaction_profile_log_regression.tscn",
+        "godot4 --headless --path . tests/overworld_cached_route_execution_regression.tscn",
+        "godot4 --headless --path . tests/overworld_route_destination_only_action_regression.tscn",
+        "python3 scripts/analyze_overworld_profile_log.py .artifacts/uploaded_profiles/20260501/display99_actual_large_after_4953bbe_profile.jsonl --mode auto",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "General profile log writes self-contained JSONL records to user://debug/heroes_profile.jsonl under HEROES_PROFILE_LOG=1, while legacy overworld profile logging remains available through user://debug/overworld_profile.jsonl and HEROES_OVERWORLD_PROFILE_LOG=1.",
+        "Save profiling records explicit to_dict, restore_normalize, save_normalize, stringify, write, summary/cache, and inspect buckets without altering save schema.",
+        "Router, boot, menu/generated setup, town, battle, battle payload, end-turn, and overworld interaction records expose surface/phase/event/total/bucket metadata for hog discovery."
+      ],
+      "completionCriteria": [
+        "Instrumentation is opt-in and append-only.",
+        "Existing overworld profile behavior and analyzer compatibility are preserved.",
+        "Focused tests prove valid general JSONL for save profiling and a non-overworld surface without timing thresholds.",
+        "No gameplay semantics, pathing, generated map density, renderer/fog behavior, save schema, object contracts, or F3 overlay behavior changes are introduced."
+      ],
+      "nonGoals": [
+        "No optimization beyond tiny helper reuse required for instrumentation.",
+        "No save-schema migration.",
+        "No route/pathing, renderer/fog, generated content density, or async/deferred work changes."
+      ],
+      "createdAt": "2026-05-01T14:48:05Z",
+      "updatedAt": "2026-05-01T14:48:05Z",
+      "startedAt": "2026-05-01T14:48:05Z",
+      "completedAt": "2026-05-01T14:48:05Z",
+      "notes": "Completed broad profiling instrumentation requested after the 2026-05-01 architecture audit; scope is evidence collection only.",
+      "completionEvidence": [
+        "Added reusable ProfileLog helper and general analyzer mode.",
+        "Added documentation for Linux/Windows env vars, log paths, and record fields.",
+        "Added focused profile log regression coverage for save and town surface records."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -5758,6 +5826,43 @@
           "title": "Expose live overworld pathing/rendering command timings through F3 debug overlay",
           "status": "completed",
           "evidence": "Implemented a hidden-by-default F3 Path Debug overlay in OverworldShell with command-scoped timing snapshots for selection, route advancement, and movement. The overlay reports command/target/selected tiles, total command ms, shell BFS/path ms and lookup counts, blocked-index rebuild delta/ms when captured, map-view set_map_state/path refresh ms, object/hero/road index rebuild/skip counts and ms, draw timings, dynamic-layer reason/generation, save/autosave observation, FPS, and frame time. Focused generated-map report and requested random-map regression suite passed; scope stayed instrumentation-only."
+        }
+      ]
+    },
+    {
+      "id": "broad-json-profile-instrumentation-10184",
+      "system": "broad JSON performance profiling",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "broad-json-profile-instrumentation-10184"
+      ],
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        ".artifacts/audits/20260501_game_state_architecture_audit.md",
+        "docs/profile-jsonl-usage.md",
+        "scripts/core/ProfileLog.gd",
+        "scripts/autoload/AppRouter.gd",
+        "scripts/autoload/SaveService.gd",
+        "scenes/boot/Boot.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "scripts/core/BattleRules.gd",
+        "scripts/analyze_overworld_profile_log.py",
+        "tests/profile_log_general_surface_regression.gd",
+        "tests/profile_log_general_surface_regression.tscn",
+        "docs/profile-jsonl-usage.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "entries": [
+        {
+          "id": "broad-json-profile-lifecycle-surfaces-10184",
+          "title": "Emit opt-in JSONL timing records across lifecycle and gameplay surfaces",
+          "status": "completed",
+          "evidence": "Added HEROES_PROFILE_LOG-backed general JSONL records for boot, menu/generated setup, router scene transitions, SaveService runtime save/surface work, Overworld end-turn and battle handoff, TownShell entry/refresh/action/save, BattleShell entry/refresh/action/save, and BattleRules payload creation while keeping legacy overworld profile JSONL compatibility."
         }
       ]
     }
