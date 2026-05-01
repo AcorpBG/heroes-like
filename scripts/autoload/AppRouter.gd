@@ -3,6 +3,7 @@ extends Node
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
+const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
 const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const SCENARIO_OUTCOME_SCENE := "res://scenes/results/ScenarioOutcomeShell.tscn"
@@ -16,12 +17,22 @@ var _active_overworld_handoff_profile := {}
 var _last_overworld_handoff_profile := {}
 
 func go_to_main_menu() -> void:
+	var started := ProfileLogScript.begin_usec()
+	var buckets := {}
 	if SessionState.has_playable_session():
+		var save_started := ProfileLogScript.begin_usec()
 		var autosave_result := _autosave_active_session(SessionState.ensure_active_session())
+		buckets["save_before_transition"] = ProfileLogScript.elapsed_ms(save_started)
 		_menu_notice = String(autosave_result.get("message", ""))
 	else:
 		_menu_notice = ""
+	var scene_started := ProfileLogScript.begin_usec()
 	_change_scene(MAIN_MENU_SCENE)
+	buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
+	ProfileLogScript.emit_general("router", "scene_transition", "go_to_main_menu", ProfileLogScript.elapsed_ms(started), buckets, {
+		"target_scene": MAIN_MENU_SCENE,
+		"has_playable_session": SessionState.has_playable_session(),
+	}, SessionState.ensure_active_session())
 
 func return_to_main_menu_from_active_play() -> void:
 	if SessionState.request_editor_return_from_active_play():
@@ -31,68 +42,123 @@ func return_to_main_menu_from_active_play() -> void:
 	go_to_main_menu()
 
 func go_to_overworld() -> void:
+	var started := ProfileLogScript.begin_usec()
+	var buckets := {}
 	_note_overworld_handoff_step("go_to_overworld_enter")
 	if not SessionState.has_playable_session():
 		push_warning("Cannot enter overworld without an active scenario session.")
 		_note_overworld_handoff_step("go_to_overworld_missing_session")
+		var scene_started := ProfileLogScript.begin_usec()
 		_change_scene(MAIN_MENU_SCENE)
+		buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
+		ProfileLogScript.emit_general("router", "scene_transition", "go_to_overworld_missing_session", ProfileLogScript.elapsed_ms(started), buckets, {
+			"target_scene": MAIN_MENU_SCENE,
+			"route": "missing_session",
+		}, null)
 		return
 
 	var session := SessionState.ensure_active_session()
 	if session.scenario_status != "in_progress":
 		_note_overworld_handoff_step("go_to_overworld_outcome_redirect")
+		ProfileLogScript.emit_general("router", "scene_transition", "go_to_overworld_outcome_redirect", ProfileLogScript.elapsed_ms(started), buckets, {
+			"target_scene": SCENARIO_OUTCOME_SCENE,
+		}, session)
 		go_to_scenario_outcome()
 		return
+	var state_started := ProfileLogScript.begin_usec()
 	session.game_state = "overworld"
 	_note_overworld_handoff_step("go_to_overworld_state_set")
 	OverworldRules.clear_active_town_visit(session)
 	_note_overworld_handoff_step("go_to_overworld_town_visit_cleared")
+	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
 	if _should_defer_initial_generated_overworld_autosave(session):
 		session.flags["generated_overworld_deferred_autosave_pending"] = true
 		_note_overworld_handoff_step("go_to_overworld_autosave_deferred")
+		buckets["save_before_transition"] = 0.0
 	else:
 		_note_overworld_handoff_step("go_to_overworld_autosave_start")
+		var save_started := ProfileLogScript.begin_usec()
 		_autosave_active_session(session, false)
+		buckets["save_before_transition"] = ProfileLogScript.elapsed_ms(save_started)
 		_note_overworld_handoff_step("go_to_overworld_autosave_done")
 	_note_overworld_handoff_step("go_to_overworld_change_scene_start")
+	var scene_started := ProfileLogScript.begin_usec()
 	_change_scene(OVERWORLD_SCENE)
+	buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
 	_note_overworld_handoff_step("go_to_overworld_change_scene_requested")
+	ProfileLogScript.emit_general("router", "scene_transition", "go_to_overworld", ProfileLogScript.elapsed_ms(started), buckets, {
+		"target_scene": OVERWORLD_SCENE,
+		"generated_autosave_deferred": bool(session.flags.get("generated_overworld_deferred_autosave_pending", false)),
+	}, session)
 
 func go_to_town() -> void:
+	var started := ProfileLogScript.begin_usec()
+	var buckets := {}
 	if not SessionState.has_playable_session():
 		push_warning("Cannot enter a town without an active scenario session.")
+		var scene_started := ProfileLogScript.begin_usec()
 		_change_scene(MAIN_MENU_SCENE)
+		buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
+		ProfileLogScript.emit_general("router", "scene_transition", "go_to_town_missing_session", ProfileLogScript.elapsed_ms(started), buckets, {"target_scene": MAIN_MENU_SCENE}, null)
 		return
 	if not TownRulesScript.can_visit_active_town_bridge(SessionState.ensure_active_session()):
 		push_warning("Cannot enter a town without an active controlled town.")
+		ProfileLogScript.emit_general("router", "scene_transition", "go_to_town_invalid_visit", ProfileLogScript.elapsed_ms(started), buckets, {"target_scene": OVERWORLD_SCENE}, SessionState.ensure_active_session())
 		go_to_overworld()
 		return
 
 	var session := SessionState.ensure_active_session()
 	if session.scenario_status != "in_progress":
+		ProfileLogScript.emit_general("router", "scene_transition", "go_to_town_outcome_redirect", ProfileLogScript.elapsed_ms(started), buckets, {"target_scene": SCENARIO_OUTCOME_SCENE}, session)
 		go_to_scenario_outcome()
 		return
+	var state_started := ProfileLogScript.begin_usec()
 	session.game_state = "town"
+	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
+	var save_started := ProfileLogScript.begin_usec()
 	_autosave_active_session(session, false)
+	buckets["save_before_transition"] = ProfileLogScript.elapsed_ms(save_started)
+	var scene_started := ProfileLogScript.begin_usec()
 	_change_scene(TOWN_SCENE)
+	buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
+	ProfileLogScript.emit_general("router", "scene_transition", "go_to_town", ProfileLogScript.elapsed_ms(started), buckets, {
+		"target_scene": TOWN_SCENE,
+	}, session)
 
 func go_to_battle() -> void:
+	var started := ProfileLogScript.begin_usec()
+	var buckets := {}
 	if not SessionState.has_playable_session():
 		push_warning("Cannot enter battle without an active scenario session.")
+		var scene_started := ProfileLogScript.begin_usec()
 		_change_scene(MAIN_MENU_SCENE)
+		buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
+		ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle_missing_session", ProfileLogScript.elapsed_ms(started), buckets, {"target_scene": MAIN_MENU_SCENE}, null)
 		return
 	if not SessionState.has_battle_state():
 		push_warning("Cannot enter battle without an active battle payload.")
+		ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle_missing_payload", ProfileLogScript.elapsed_ms(started), buckets, {"target_scene": OVERWORLD_SCENE}, SessionState.ensure_active_session())
 		go_to_overworld()
 		return
 
 	var session := SessionState.ensure_active_session()
 	if session.scenario_status != "in_progress":
+		ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle_outcome_redirect", ProfileLogScript.elapsed_ms(started), buckets, {"target_scene": SCENARIO_OUTCOME_SCENE}, session)
 		go_to_scenario_outcome()
 		return
+	var state_started := ProfileLogScript.begin_usec()
 	session.game_state = "battle"
+	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
+	var save_started := ProfileLogScript.begin_usec()
 	_autosave_active_session(session, false)
+	buckets["save_before_transition"] = ProfileLogScript.elapsed_ms(save_started)
+	var scene_started := ProfileLogScript.begin_usec()
 	_change_scene(BATTLE_SCENE)
+	buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
+	ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle", ProfileLogScript.elapsed_ms(started), buckets, {
+		"target_scene": BATTLE_SCENE,
+		"battle_stack_count": _battle_stack_count(session),
+	}, session)
 
 func go_to_scenario_outcome() -> void:
 	if not SessionState.has_playable_session():
@@ -110,7 +176,11 @@ func go_to_map_editor() -> void:
 	_change_scene(MAP_EDITOR_SCENE)
 
 func boot() -> void:
+	var started := ProfileLogScript.begin_usec()
 	go_to_main_menu()
+	ProfileLogScript.emit_general("router", "boot", "boot", ProfileLogScript.elapsed_ms(started), {}, {
+		"target_scene": MAIN_MENU_SCENE,
+	}, SessionState.ensure_active_session())
 
 func resume_active_session() -> void:
 	if not SessionState.has_playable_session():
@@ -262,3 +332,9 @@ func _note_overworld_handoff_step(step_name: String, details: Dictionary = {}) -
 
 func _profile_elapsed_ms(profile: Dictionary) -> int:
 	return max(0, Time.get_ticks_msec() - int(profile.get("started_msec", Time.get_ticks_msec())))
+
+func _battle_stack_count(session: SessionStateStoreScript.SessionData) -> int:
+	if session == null or not (session.battle is Dictionary):
+		return 0
+	var stacks = session.battle.get("stacks", [])
+	return stacks.size() if stacks is Array else 0

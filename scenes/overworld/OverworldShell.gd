@@ -1,6 +1,7 @@
 extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
 @onready var _shell_panel: PanelContainer = %Shell
 @onready var _top_strip_panel: PanelContainer = %TopStrip
@@ -297,9 +298,13 @@ func _focus_camera_on_hero() -> bool:
 
 func _on_end_turn_pressed() -> void:
 	var profile_start := _profile_begin("end_turn")
+	var general_profile_start := ProfileLogScript.begin_usec()
+	var general_buckets := {}
 	# Validation anchor retained while the forecast stays informational instead of gating the turn.
 	# OverworldRules.consume_command_risk_forecast(_session)
+	var rules_started := ProfileLogScript.begin_usec()
 	var result = OverworldRules.end_turn(_session)
+	general_buckets["rules_end_turn"] = ProfileLogScript.elapsed_ms(rules_started)
 	_session.flags["last_action"] = "ended_turn"
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = String(result.get("enemy_activity_summary", ""))
@@ -312,13 +317,29 @@ func _on_end_turn_pressed() -> void:
 		_select_hero_tile()
 	if _session.scenario_status == "in_progress":
 		var save_profile_start := _profile_begin("end_turn_autosave")
+		var save_started := ProfileLogScript.begin_usec()
 		SaveService.save_runtime_autosave_session(_session, not bool(_session.flags.get("generated_random_map", false)))
+		general_buckets["autosave"] = ProfileLogScript.elapsed_ms(save_started)
 		_profile_end("end_turn_autosave", save_profile_start, {"save_profile": SaveService.validation_last_runtime_save_profile()})
 	if _handle_session_resolution():
 		_profile_end("end_turn", profile_start, {"resolved": true})
+		ProfileLogScript.emit_general("overworld", "end_turn", "end_turn", ProfileLogScript.elapsed_ms(general_profile_start), general_buckets, {
+			"resolved": true,
+			"result_ok": bool(result.get("ok", false)),
+			"scenario_status": _session.scenario_status,
+			"save_profile": SaveService.validation_last_runtime_save_profile(),
+		}, _session)
 		return
+	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
+	general_buckets["refresh_after_end_turn"] = ProfileLogScript.elapsed_ms(refresh_started)
 	_profile_end("end_turn", profile_start, {"resolved": false})
+	ProfileLogScript.emit_general("overworld", "end_turn", "end_turn", ProfileLogScript.elapsed_ms(general_profile_start), general_buckets, {
+		"resolved": false,
+		"result_ok": bool(result.get("ok", false)),
+		"scenario_status": _session.scenario_status,
+		"save_profile": SaveService.validation_last_runtime_save_profile(),
+	}, _session)
 
 func _on_save_pressed() -> void:
 	var result = AppRouter.save_active_session_to_selected_manual_slot()
@@ -682,6 +703,8 @@ func _selected_route_destination_descriptor_fallback_reason(descriptor: Dictiona
 	return ""
 
 func _start_encounter() -> void:
+	var profile_started := ProfileLogScript.begin_usec()
+	var buckets := {}
 	var placement = OverworldRules.get_active_encounter(_session)
 	if placement.is_empty():
 		_last_message = "No encounter is active here."
@@ -689,9 +712,14 @@ func _start_encounter() -> void:
 		_last_turn_resolution_text = ""
 		_record_action_feedback("blocked", _last_message)
 		_refresh()
+		ProfileLogScript.emit_general("overworld", "battle_transition", "start_encounter_blocked", ProfileLogScript.elapsed_ms(profile_started), buckets, {
+			"reason": "missing_active_encounter",
+		}, _session)
 		return
 
+	var payload_started := ProfileLogScript.begin_usec()
 	var payload = BattleRules.create_battle_payload(_session, placement)
+	buckets["battle_payload"] = ProfileLogScript.elapsed_ms(payload_started)
 	if payload.is_empty():
 		push_error("Unable to create battle payload for encounter %s." % String(placement.get("encounter_id", placement.get("id", ""))))
 		_last_message = "Battle setup failed."
@@ -699,6 +727,10 @@ func _start_encounter() -> void:
 		_last_turn_resolution_text = ""
 		_record_action_feedback("blocked", _last_message)
 		_refresh()
+		ProfileLogScript.emit_general("overworld", "battle_transition", "start_encounter_failed", ProfileLogScript.elapsed_ms(profile_started), buckets, {
+			"encounter_id": String(placement.get("encounter_id", placement.get("id", ""))),
+			"placement_id": String(placement.get("placement_id", "")),
+		}, _session)
 		return
 
 	_session.battle = payload
@@ -706,6 +738,11 @@ func _start_encounter() -> void:
 	_last_enemy_activity_text = ""
 	_last_turn_resolution_text = ""
 	_record_action_feedback("battle", OverworldRules.describe_encounter_battle_cue(_session, placement))
+	ProfileLogScript.emit_general("overworld", "battle_transition", "start_encounter", ProfileLogScript.elapsed_ms(profile_started), buckets, {
+		"encounter_id": String(placement.get("encounter_id", placement.get("id", ""))),
+		"placement_id": String(placement.get("placement_id", "")),
+		"battle_stack_count": payload.get("stacks", []).size() if payload.get("stacks", []) is Array else 0,
+	}, _session)
 	AppRouter.go_to_battle()
 
 func _render_state() -> void:
@@ -5800,8 +5837,10 @@ func _debug_save_summary(save_profile: Dictionary) -> String:
 	return "%s %d ms %d bytes" % [slot_type, total_ms, bytes]
 
 func _profile_log_env_enabled() -> bool:
-	var value := OS.get_environment("HEROES_OVERWORLD_PROFILE_LOG").strip_edges().to_lower()
-	return value in ["1", "true", "yes", "on", "enabled"]
+	return (
+		ProfileLogScript.env_enabled(ProfileLogScript.OVERWORLD_PROFILE_ENV)
+		or ProfileLogScript.env_enabled(ProfileLogScript.GENERAL_PROFILE_ENV)
+	)
 
 func _profile_log_append_command_snapshot(snapshot: Dictionary) -> void:
 	if not _profile_log_enabled:
@@ -5823,6 +5862,26 @@ func _profile_log_append_command_snapshot(snapshot: Dictionary) -> void:
 	file.seek_end()
 	file.store_string("%s\n" % JSON.stringify(_profile_log_json_safe(record)))
 	file.close()
+	ProfileLogScript.emit_general_record({
+		"schema": "heroes_like.profile.v1",
+		"timestamp_utc": Time.get_datetime_string_from_system(true),
+		"monotonic_msec": Time.get_ticks_msec(),
+		"surface": "overworld",
+		"phase": "interaction",
+		"event": String(record.get("command_type", "unknown")),
+		"total_ms": float(record.get("total_command_ms", 0.0)),
+		"buckets_ms": record.get("phase_buckets_ms", {}) if record.get("phase_buckets_ms", {}) is Dictionary else {},
+		"metadata": {
+			"legacy_overworld_log_path": OVERWORLD_PROFILE_LOG_PATH,
+			"top_offenders": record.get("top_offenders", []),
+			"refresh_sections_ms": record.get("refresh_sections_ms", {}),
+			"route_bfs": record.get("route_bfs", {}),
+			"route_cache": record.get("route_cache", {}),
+			"save": record.get("save", {}),
+			"overworld_profile": record,
+		},
+		"session": ProfileLogScript.session_metadata(_session),
+	})
 
 func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
 	var profile: Dictionary = snapshot.get("profile", {}) if snapshot.get("profile", {}) is Dictionary else {}

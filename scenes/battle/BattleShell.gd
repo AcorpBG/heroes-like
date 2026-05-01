@@ -1,6 +1,7 @@
 extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
 @onready var _banner_panel: PanelContainer = %Banner
 @onready var _briefing_panel: PanelContainer = %BriefingPanel
@@ -66,11 +67,17 @@ var _last_action_recap_payload := {}
 var _last_action_recap_text := ""
 
 func _ready() -> void:
+	var profile_started := ProfileLogScript.begin_usec()
+	var buckets := {}
+	var phase_started := ProfileLogScript.begin_usec()
 	_apply_visual_theme()
+	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	if _battle_board_view.has_signal("stack_focus_requested"):
 		_battle_board_view.stack_focus_requested.connect(_on_board_stack_focus_requested)
 	if _battle_board_view.has_signal("hex_destination_requested"):
 		_battle_board_view.hex_destination_requested.connect(_on_board_hex_destination_requested)
+	buckets["connect_board_signals"] = ProfileLogScript.elapsed_ms(phase_started)
 	_battle_tabs.current_tab = 0
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
@@ -82,16 +89,22 @@ func _ready() -> void:
 		AppRouter.go_to_overworld()
 		return
 
+	phase_started = ProfileLogScript.begin_usec()
 	OverworldRules.normalize_overworld_state(_session)
+	buckets["normalize_overworld"] = ProfileLogScript.elapsed_ms(phase_started)
 	if _session.scenario_status != "in_progress":
 		AppRouter.go_to_scenario_outcome()
 		return
+	phase_started = ProfileLogScript.begin_usec()
 	if not BattleRules.normalize_battle_state(_session):
 		push_warning("Battle payload could not be normalized.")
 		AppRouter.go_to_overworld()
 		return
+	buckets["normalize_battle"] = ProfileLogScript.elapsed_ms(phase_started)
 	_session.game_state = "battle"
+	phase_started = ProfileLogScript.begin_usec()
 	var initial_result := BattleRules.resolve_if_battle_ready(_session)
+	buckets["resolve_ready"] = ProfileLogScript.elapsed_ms(phase_started)
 	_last_message = String(initial_result.get("message", ""))
 	match String(initial_result.get("state", "continue")):
 		"victory", "retreat", "surrender", "stalemate", "hero_defeat", "town_lost":
@@ -101,19 +114,32 @@ func _ready() -> void:
 			AppRouter.go_to_scenario_outcome()
 			return
 
+	phase_started = ProfileLogScript.begin_usec()
 	_configure_save_slot_picker()
+	buckets["configure_save_surface"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_tactical_briefing_text = BattleRules.consume_tactical_briefing(_session)
+	buckets["consume_payload_briefing"] = ProfileLogScript.elapsed_ms(phase_started)
 	if _tactical_briefing_text != "":
+		phase_started = ProfileLogScript.begin_usec()
 		SaveService.save_runtime_autosave_session(_session)
+		buckets["briefing_autosave"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_refresh()
+	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
+	ProfileLogScript.emit_general("battle", "entry", "battle_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(true), _session)
 
 func _on_prev_target_pressed() -> void:
+	var started := ProfileLogScript.begin_usec()
 	BattleRules.cycle_target(_session, -1)
 	_refresh()
+	ProfileLogScript.emit_general("battle", "action", "cycle_target", ProfileLogScript.elapsed_ms(started), {}, _battle_profile_metadata(false).merged({"direction": -1}, true), _session)
 
 func _on_next_target_pressed() -> void:
+	var started := ProfileLogScript.begin_usec()
 	BattleRules.cycle_target(_session, 1)
 	_refresh()
+	ProfileLogScript.emit_general("battle", "action", "cycle_target", ProfileLogScript.elapsed_ms(started), {}, _battle_profile_metadata(false).merged({"direction": 1}, true), _session)
 
 func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 	if _session == null or _session.battle.is_empty() or battle_id == "":
@@ -305,20 +331,43 @@ func _on_surrender_pressed() -> void:
 func _on_spell_action_pressed(action_id: String) -> void:
 	if not action_id.begins_with("cast_spell:"):
 		return
+	var profile_started := ProfileLogScript.begin_usec()
+	var buckets := {}
+	var rules_started := ProfileLogScript.begin_usec()
 	var recap_context := BattleRules.post_action_recap_context(_session, action_id)
 	var result := BattleRules.cast_player_spell(_session, action_id.trim_prefix("cast_spell:"))
+	buckets["rules_action"] = ProfileLogScript.elapsed_ms(rules_started)
 	_last_message = String(result.get("message", ""))
 	_record_action_recap(action_id, result, recap_context)
 	if bool(result.get("ok", false)):
 		_dismiss_tactical_briefing()
 	if _handle_battle_resolution(result):
+		ProfileLogScript.emit_general("battle", "action", "spell", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false).merged({
+			"action_id": action_id,
+			"result_ok": bool(result.get("ok", false)),
+			"routed": true,
+		}, true), _session)
 		return
+	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
+	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
+	ProfileLogScript.emit_general("battle", "action", "spell", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false).merged({
+		"action_id": action_id,
+		"result_ok": bool(result.get("ok", false)),
+		"routed": false,
+	}, true), _session)
 
 func _on_save_pressed() -> void:
+	var profile_started := ProfileLogScript.begin_usec()
+	var buckets := {}
+	var save_started := ProfileLogScript.begin_usec()
 	var result := AppRouter.save_active_session_to_selected_manual_slot()
+	buckets["save"] = ProfileLogScript.elapsed_ms(save_started)
 	_last_message = String(result.get("message", ""))
+	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
+	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
+	ProfileLogScript.emit_general("battle", "action", "save", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
 
 func _on_save_slot_selected(index: int) -> void:
 	if index < 0 or index >= _save_slot_picker.get_item_count():
@@ -330,15 +379,31 @@ func _on_menu_pressed() -> void:
 	AppRouter.return_to_main_menu_from_active_play()
 
 func _perform_action(action: String) -> void:
+	var profile_started := ProfileLogScript.begin_usec()
+	var buckets := {}
+	var rules_started := ProfileLogScript.begin_usec()
 	var recap_context := BattleRules.post_action_recap_context(_session, action)
 	var result := BattleRules.perform_player_action(_session, action)
+	buckets["rules_action"] = ProfileLogScript.elapsed_ms(rules_started)
 	_last_message = String(result.get("message", ""))
 	_record_action_recap(action, result, recap_context)
 	if bool(result.get("ok", false)):
 		_dismiss_tactical_briefing()
 	if _handle_battle_resolution(result):
+		ProfileLogScript.emit_general("battle", "action", action, ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false).merged({
+			"action_id": action,
+			"result_ok": bool(result.get("ok", false)),
+			"routed": true,
+		}, true), _session)
 		return
+	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
+	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
+	ProfileLogScript.emit_general("battle", "action", action, ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false).merged({
+		"action_id": action,
+		"result_ok": bool(result.get("ok", false)),
+		"routed": false,
+	}, true), _session)
 
 func _handle_battle_resolution(result: Dictionary) -> bool:
 	if _session.scenario_status != "in_progress":
@@ -357,17 +422,28 @@ func _handle_battle_resolution(result: Dictionary) -> bool:
 	return false
 
 func _refresh() -> void:
+	var profile_started := ProfileLogScript.begin_usec()
+	var buckets := {}
 	if _session.battle.is_empty():
 		return
+	var section_started := ProfileLogScript.begin_usec()
 	if not BattleRules.normalize_battle_state(_session):
 		AppRouter.go_to_overworld()
 		return
+	buckets["normalize_battle"] = ProfileLogScript.elapsed_ms(section_started)
 
+	section_started = ProfileLogScript.begin_usec()
 	_rebuild_spell_actions()
 	_refresh_action_buttons()
+	buckets["actions"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	_refresh_save_slot_picker()
+	buckets["save_surface"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	_refresh_battle_tab_cues()
+	buckets["tabs"] = ProfileLogScript.elapsed_ms(section_started)
 
+	section_started = ProfileLogScript.begin_usec()
 	_header_label.text = BattleRules.describe_header(_session)
 	FrontierVisualKit.set_compact_label(_status_label, BattleRules.describe_status(_session), 1, 62, false)
 	FrontierVisualKit.set_compact_label(_pressure_label, BattleRules.describe_pressure(_session), 1, 44, false)
@@ -384,6 +460,8 @@ func _refresh() -> void:
 	_set_compact_label(_battle_context_label, BattleRules.describe_entry_context(_session), 3)
 	_set_compact_label(_briefing_label, _tactical_briefing_text, 4)
 	_briefing_panel.visible = false
+	buckets["header_context_payload"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	var risk_board := BattleRules.describe_risk_readiness_board(_session)
 	var risk_check := _battle_risk_check_cue_surface(risk_board, action_confirmation)
 	if risk_check.is_empty():
@@ -401,6 +479,8 @@ func _refresh() -> void:
 	_set_compact_label(_consequence_label, _battle_consequence_text(), 4)
 	_set_compact_label(_player_command_label, BattleRules.describe_commander_summary(_session, "player"), 1)
 	_set_compact_label(_enemy_command_label, BattleRules.describe_commander_summary(_session, "enemy"), 1)
+	buckets["risk_consequence_commanders"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	var initiative_track := BattleRules.describe_initiative_track(_session)
 	var initiative_handoff := _battle_initiative_handoff_surface()
 	if initiative_handoff.is_empty():
@@ -444,6 +524,8 @@ func _refresh() -> void:
 			target_context,
 		])
 	_set_compact_label(_spell_label, BattleRules.describe_spellbook(_session), 3)
+	buckets["turn_target_spell"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	var effect_board := BattleRules.describe_effect_board(_session)
 	var status_check := _battle_status_check_cue_surface()
 	if status_check.is_empty():
@@ -494,11 +576,15 @@ func _refresh() -> void:
 	if action_confirmation_tooltip != "":
 		_action_guide.tooltip_text = "%s\n\n%s" % [_action_guide.tooltip_text, action_confirmation_tooltip]
 	_battle_board_view.set_battle_state(_session)
+	buckets["surface_and_board"] = ProfileLogScript.elapsed_ms(section_started)
 
+	section_started = ProfileLogScript.begin_usec()
 	var player_lines = BattleRules.roster_lines(_session.battle, "player")
 	var enemy_lines = BattleRules.roster_lines(_session.battle, "enemy")
 	_set_compact_label(_player_roster, "\n".join(player_lines) if not player_lines.is_empty() else "No survivors remain.", 6)
 	_set_compact_label(_enemy_roster, "\n".join(enemy_lines) if not enemy_lines.is_empty() else "Enemy resistance has collapsed.", 6)
+	buckets["rosters"] = ProfileLogScript.elapsed_ms(section_started)
+	ProfileLogScript.emit_general("battle", "refresh", "battle_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
 
 func _rebuild_spell_actions() -> void:
 	for child in _spell_actions.get_children():
@@ -554,6 +640,19 @@ func _refresh_action_buttons() -> void:
 	_strike_button.tooltip_text = "%s Target: %s." % [_strike_button.tooltip_text, target_name] if player_turn and not target_stack.is_empty() else _strike_button.tooltip_text
 	_shoot_button.tooltip_text = "%s Target: %s." % [_shoot_button.tooltip_text, target_name] if player_turn and not target_stack.is_empty() else _shoot_button.tooltip_text
 	_append_last_action_tooltips()
+
+func _battle_profile_metadata(first_render: bool) -> Dictionary:
+	var battle := _session.battle if _session != null and _session.battle is Dictionary else {}
+	var stacks = battle.get("stacks", []) if battle is Dictionary else []
+	return {
+		"first_render": first_render,
+		"active_tab": _battle_tabs.current_tab if _battle_tabs != null else -1,
+		"encounter_id": String(battle.get("encounter_id", "")) if battle is Dictionary else "",
+		"battle_name": String(battle.get("encounter_name", "")) if battle is Dictionary else "",
+		"round": int(battle.get("round", 0)) if battle is Dictionary else 0,
+		"turn_index": int(battle.get("turn_index", 0)) if battle is Dictionary else 0,
+		"stack_count": stacks.size() if stacks is Array else 0,
+	}
 
 func _apply_action_surface(button: Button, action: Dictionary, show_order_cue: bool = false) -> void:
 	button.text = _battle_order_button_text(action) if show_order_cue else String(action.get("label", button.text))

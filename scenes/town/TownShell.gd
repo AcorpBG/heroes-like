@@ -1,6 +1,7 @@
 extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
 @onready var _banner_panel: PanelContainer = %Banner
 @onready var _crest_panel: PanelContainer = %CrestFrame
@@ -65,7 +66,11 @@ var _last_message := ""
 var _last_action_recap := {}
 
 func _ready() -> void:
+	var profile_started := ProfileLogScript.begin_usec()
+	var buckets := {}
+	var phase_started := ProfileLogScript.begin_usec()
 	_apply_visual_theme()
+	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
 	_management_tabs.current_tab = 0
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
@@ -73,7 +78,9 @@ func _ready() -> void:
 		AppRouter.go_to_main_menu()
 		return
 
+	phase_started = ProfileLogScript.begin_usec()
 	OverworldRules.normalize_overworld_state(_session)
+	buckets["normalize_overworld"] = ProfileLogScript.elapsed_ms(phase_started)
 	if _session.scenario_status != "in_progress":
 		AppRouter.go_to_scenario_outcome()
 		return
@@ -81,8 +88,13 @@ func _ready() -> void:
 		AppRouter.go_to_overworld()
 		return
 	_session.game_state = "town"
+	phase_started = ProfileLogScript.begin_usec()
 	_configure_save_slot_picker()
+	buckets["configure_save_surface"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_refresh()
+	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
+	ProfileLogScript.emit_general("town", "entry", "town_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(true), _session)
 
 func _on_build_action_pressed(action_id: String) -> void:
 	var full_action_id := "build:%s" % action_id
@@ -194,10 +206,17 @@ func _on_specialty_action_pressed(action_id: String) -> void:
 	_refresh()
 
 func _on_save_pressed() -> void:
+	var profile_started := ProfileLogScript.begin_usec()
+	var buckets := {}
+	var save_started := ProfileLogScript.begin_usec()
 	var result := AppRouter.save_active_session_to_selected_manual_slot()
+	buckets["save"] = ProfileLogScript.elapsed_ms(save_started)
 	_last_message = String(result.get("message", ""))
 	_last_action_recap = {}
+	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
+	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
+	ProfileLogScript.emit_general("town", "action", "save", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(false), _session)
 
 func _on_save_slot_selected(index: int) -> void:
 	if index < 0 or index >= _save_slot_picker.get_item_count():
@@ -213,6 +232,9 @@ func _on_menu_pressed() -> void:
 	AppRouter.return_to_main_menu_from_active_play()
 
 func _refresh() -> void:
+	var profile_started := ProfileLogScript.begin_usec()
+	var buckets := {}
+	var section_started := ProfileLogScript.begin_usec()
 	OverworldRules.begin_normalized_read_scope(_session)
 	TownRules.begin_read_scope(_session)
 	if not TownRules.can_visit_active_town(_session):
@@ -220,7 +242,9 @@ func _refresh() -> void:
 		OverworldRules.end_normalized_read_scope(_session)
 		AppRouter.go_to_overworld()
 		return
+	buckets["read_scope"] = ProfileLogScript.elapsed_ms(section_started)
 
+	section_started = ProfileLogScript.begin_usec()
 	_header_label.text = TownRules.describe_header(_session)
 	_status_label.text = TownRules.describe_status(_session)
 	_resource_label.text = OverworldRules.describe_resources(_session)
@@ -229,6 +253,8 @@ func _refresh() -> void:
 		_crest_glyph.call("set_glyph", "town", _faction_accent())
 	_set_compact_label(_outlook_label, TownRules.describe_outlook_board(_session), 4)
 	_set_compact_label(_command_ledger_label, TownRules.describe_command_ledger(_session), 4)
+	buckets["header_outlook"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	_set_compact_label(_hero_label, OverworldRules.describe_hero(_session), 2)
 	var defense_check := _defense_check_surface()
 	var production_overview := TownRules.describe_production_overview(_session)
@@ -253,6 +279,8 @@ func _refresh() -> void:
 		TownRules.describe_specialties(_session),
 	])
 	_set_compact_label(_army_label, OverworldRules.describe_army(_session), 2)
+	buckets["hero_army"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	_set_compact_label(_town_label, TownRules.describe_summary(_session), 5)
 	_set_compact_label(_defense_label, TownRules.describe_defense(_session), 4)
 	_set_compact_label(_pressure_label, TownRules.describe_threats(_session), 4)
@@ -337,6 +365,8 @@ func _refresh() -> void:
 		String(artifact_readiness.get("tooltip_text", "")),
 		TownRules.describe_artifacts(_session),
 	])
+	buckets["town_tabs_surfaces"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
 	var order_target := TownRules.town_order_target_handoff(_session)
 	var town_context_surface := _town_action_context_surface(dispatch_text)
@@ -353,8 +383,14 @@ func _refresh() -> void:
 			String(order_target.get("tooltip_text", "")),
 			dispatch_text,
 		])
+	buckets["event_context"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	_town_stage_view.set_town_state(_session)
+	buckets["stage"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	_refresh_save_slot_picker()
+	buckets["save_surface"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	_rebuild_hero_actions()
 	_rebuild_build_actions()
 	_rebuild_market_actions()
@@ -365,9 +401,13 @@ func _refresh() -> void:
 	_rebuild_study_actions()
 	_rebuild_specialty_actions()
 	_rebuild_artifact_actions()
+	buckets["actions"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
 	_refresh_management_tab_cues()
+	buckets["tabs"] = ProfileLogScript.elapsed_ms(section_started)
 	TownRules.end_read_scope(_session)
 	OverworldRules.end_normalized_read_scope(_session)
+	ProfileLogScript.emit_general("town", "refresh", "town_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(false), _session)
 
 func _configure_save_slot_picker() -> void:
 	_save_slot_picker.clear()
@@ -2102,10 +2142,28 @@ func _record_town_action_result(
 	result: Dictionary,
 	before: Dictionary
 ) -> void:
+	var profile_started := ProfileLogScript.begin_usec()
 	_last_message = String(result.get("message", ""))
 	_last_action_recap = TownRules.build_town_action_recap(_session, lane, action_id, action, result, before)
 	if bool(_last_action_recap.get("active", false)):
 		_session.flags["last_town_action_recap"] = _last_action_recap.duplicate(true)
+	ProfileLogScript.emit_general("town", "action", lane, ProfileLogScript.elapsed_ms(profile_started), {
+		"recap": ProfileLogScript.elapsed_ms(profile_started),
+	}, _town_profile_metadata(false).merged({
+		"action_id": action_id,
+		"action_label": String(action.get("label", "")),
+		"result_ok": bool(result.get("ok", false)),
+	}, true), _session)
+
+func _town_profile_metadata(first_render: bool) -> Dictionary:
+	var town := TownRules.get_active_town(_session) if _session != null else {}
+	return {
+		"first_render": first_render,
+		"active_tab": _management_tabs.current_tab if _management_tabs != null else -1,
+		"town_placement_id": String(town.get("placement_id", "")) if town is Dictionary else "",
+		"town_id": String(town.get("town_id", "")) if town is Dictionary else "",
+		"town_owner": String(town.get("owner", "")) if town is Dictionary else "",
+	}
 
 func _handle_session_resolution() -> bool:
 	if _session.scenario_status == "in_progress":
