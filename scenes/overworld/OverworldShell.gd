@@ -3802,6 +3802,9 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 		next_step = _line_with_prefix(progress_recap, "Next step:").trim_prefix("Next step:").strip_edges()
 	if next_step == "":
 		next_step = "Select the next destination or end the turn when field orders are spent."
+	var simple_destination := _selected_route_simple_destination_surface()
+	if not simple_destination.is_empty():
+		return _field_readiness_simple_route_surface(simple_destination, progress_line, next_step, movement_line)
 	var primary_action := _current_primary_action()
 	var primary_line := "Primary order: select a visible destination."
 	if not primary_action.is_empty():
@@ -3867,6 +3870,76 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 		"movement_line": movement_line,
 		"end_turn_forecast": forecast,
 	}
+
+func _field_readiness_simple_route_surface(simple_destination: Dictionary, progress_line: String, next_step: String, movement_line: String) -> Dictionary:
+	var route_decision: Dictionary = simple_destination.get("route_decision", {}) if simple_destination.get("route_decision", {}) is Dictionary else {}
+	var route_line := _route_decision_line(route_decision)
+	var forecast := OverworldRules.describe_end_turn_forecast_compact(_session)
+	var visible_next := _short_text(next_step.trim_suffix("."), 44)
+	var visible := "Ready: %s | %s" % [visible_next, movement_line]
+	var primary_line := _simple_route_primary_order_line(simple_destination)
+	var tooltip_lines := [
+		"Field Readiness",
+		"- %s" % (progress_line if progress_line != "" else "Current progress: no authored objective progress is available."),
+		"- Next practical action: %s" % next_step,
+		"- %s" % primary_line,
+	]
+	if route_line != "":
+		tooltip_lines.append("- %s" % route_line)
+	if forecast != "":
+		tooltip_lines.append("- End turn forecast: %s" % forecast)
+	var destination_kind := String(simple_destination.get("kind", "open"))
+	_profile_add("field_readiness_simple_route_fast_path", 1)
+	if destination_kind == "current":
+		_profile_add("field_readiness_simple_current_route_fast_path", 1)
+	else:
+		_profile_add("field_readiness_simple_open_route_fast_path", 1)
+	_validation_profile["last_field_readiness_simple_route_fast_path"] = {
+		"destination_interaction_kind": destination_kind,
+		"route_status": String(simple_destination.get("route_status", route_decision.get("status", ""))),
+		"steps": int(route_decision.get("steps", 0)),
+		"rich_route_decision_skipped": true,
+		"route_target_handoff_skipped": true,
+		"town_entry_handoff_skipped": true,
+		"active_site_order_skipped": true,
+	}
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"progress_line": progress_line,
+		"next_step": next_step,
+		"primary_order": primary_line,
+		"active_site_order": {},
+		"route_line": route_line,
+		"route_target_handoff": {},
+		"town_entry_handoff": {},
+		"movement_line": movement_line,
+		"end_turn_forecast": forecast,
+		"simple_route_fast_path": true,
+		"rich_route_decision_skipped": true,
+		"route_target_handoff_skipped": true,
+		"town_entry_handoff_skipped": true,
+		"active_site_order_skipped": true,
+	}
+
+func _simple_route_primary_order_line(simple_destination: Dictionary) -> String:
+	var destination_kind := String(simple_destination.get("kind", "open"))
+	var route_decision: Dictionary = simple_destination.get("route_decision", {}) if simple_destination.get("route_decision", {}) is Dictionary else {}
+	var route_status := String(route_decision.get("status", simple_destination.get("route_status", "")))
+	if destination_kind == "current" or route_status == "current":
+		return "Primary order: select a visible destination."
+	var label := String(route_decision.get("action_label", "")).strip_edges()
+	if label == "":
+		label = "March" if bool(simple_destination.get("adjacent", false)) else "Advance"
+	if route_status in ["blocked", "no_movement"]:
+		var reason := String(route_decision.get("blocked_reason", simple_destination.get("blocked_reason", ""))).strip_edges()
+		if reason == "":
+			reason = "Route unavailable."
+		return "Primary order: %s unavailable. %s" % [label, reason]
+	var summary := _selected_route_simple_action_summary(simple_destination).strip_edges()
+	if summary == "":
+		return "Primary order: %s." % label
+	return "Primary order: %s. %s" % [label, summary]
 
 func _status_forecast_surface() -> Dictionary:
 	var status_text := OverworldRules.describe_status(_session)
@@ -4292,7 +4365,25 @@ func _describe_selected_tile() -> String:
 		return OverworldRules.describe_context(_session)
 
 	var terrain = _terrain_name_at(_selected_tile.x, _selected_tile.y)
-	var route_line := _route_decision_line(_selected_route_decision_surface())
+	var simple_destination := _selected_route_simple_destination_surface()
+	var route_line := ""
+	if not simple_destination.is_empty():
+		var simple_decision: Dictionary = simple_destination.get("route_decision", {}) if simple_destination.get("route_decision", {}) is Dictionary else {}
+		route_line = _route_decision_line(simple_decision)
+		var destination_kind := String(simple_destination.get("kind", "open"))
+		_profile_add("context_tile_text_simple_route_fast_path", 1)
+		if destination_kind == "current":
+			_profile_add("context_tile_text_simple_current_route_fast_path", 1)
+		else:
+			_profile_add("context_tile_text_simple_open_route_fast_path", 1)
+		_validation_profile["last_context_tile_text_simple_route_fast_path"] = {
+			"destination_interaction_kind": destination_kind,
+			"route_status": String(simple_destination.get("route_status", simple_decision.get("status", ""))),
+			"steps": int(simple_decision.get("steps", 0)),
+			"rich_route_decision_skipped": true,
+		}
+	else:
+		route_line = _route_decision_line(_selected_route_decision_surface())
 	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
 		return "Unexplored Frontier\nCoords %d,%d | Terrain unknown\n%s\nScouts have not charted this ground yet." % [_selected_tile.x, _selected_tile.y, route_line]
 	if not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y):
@@ -5458,6 +5549,16 @@ func _debug_enrich_command_snapshot(snapshot: Dictionary) -> Dictionary:
 		"misses": int(profile.get("selected_route_destination_action_cache_misses", 0)),
 		"last": _profile_log_duplicate_dict(profile.get("last_selected_route_destination_action_cache", {})),
 	}
+	enriched["simple_route_fast_paths"] = {
+		"context_tile_text_hits": int(profile.get("context_tile_text_simple_route_fast_path", 0)),
+		"context_tile_text_open_hits": int(profile.get("context_tile_text_simple_open_route_fast_path", 0)),
+		"context_tile_text_current_hits": int(profile.get("context_tile_text_simple_current_route_fast_path", 0)),
+		"context_tile_text_last": _profile_log_duplicate_dict(profile.get("last_context_tile_text_simple_route_fast_path", {})),
+		"field_readiness_hits": int(profile.get("field_readiness_simple_route_fast_path", 0)),
+		"field_readiness_open_hits": int(profile.get("field_readiness_simple_open_route_fast_path", 0)),
+		"field_readiness_current_hits": int(profile.get("field_readiness_simple_current_route_fast_path", 0)),
+		"field_readiness_last": _profile_log_duplicate_dict(profile.get("last_field_readiness_simple_route_fast_path", {})),
+	}
 	enriched["save_observed"] = save_observed
 	enriched["save_profile"] = save_profile if save_observed else {}
 	enriched["save_summary"] = _debug_save_summary(save_profile) if save_observed else "none observed"
@@ -5825,6 +5926,7 @@ func _profile_log_record_from_snapshot(snapshot: Dictionary) -> Dictionary:
 			"primary_action_activation_ms": float(phase_buckets.get("primary_action_activation", 0.0)),
 			"primary_action_activation": primary_activation,
 		},
+		"simple_route_fast_paths": _profile_log_duplicate_dict(snapshot.get("simple_route_fast_paths", {})),
 		"save": {
 			"observed": bool(snapshot.get("save_observed", false)),
 			"summary": String(snapshot.get("save_summary", "none observed")),

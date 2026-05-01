@@ -6,9 +6,9 @@
   "currentSliceId": "overworld-incremental-route-preview-refresh-10184",
   "currentSliceTitle": "Overworld Incremental Route Preview Refresh",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Follow-up from real DISPLAY=:99 Large 108x108 rendered-client profile after dcb3cdc: open/current route preview and post-move current-tile refresh now use a simple route UI fast path that skips rich route decision/brief/handoff/commit-check construction; adjacent open-tile clicks use cached selected-route execution; JSONL/F3 counters expose the simple-route skips.",
+  "currentSliceNotes": "Follow-up from .artifacts/uploaded_profiles/20260501/display99_actual_large_after_2e81b35_profile.jsonl: open/current selected-route context tile text now uses compact simple-route line and field readiness skips rich route decision/brief/handoff construction for simple destinations; JSONL exposes simple_route_fast_paths context/readiness counters. Validation: required Godot route/profile/cache regressions, analyzer compatibility, json.tool, git diff --check.",
   "nextActionGuardrailNote": "After profile-log instrumentation, use uploaded JSONL evidence before selecting any performance fix; preserve movement/pathing semantics, map generation/content density, renderer/fog behavior, save schema, object contracts, and F3 overlay behavior.",
-  "updatedAt": "2026-05-01T13:03:48Z",
+  "updatedAt": "2026-05-01T13:35:53Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -90,7 +90,7 @@
         "Do not implement a full async rewrite, worker threads, broad deferred scheduling, generated map content/density changes, renderer/fog behavior changes, save schema changes, object contract changes, or F3 overlay/profile-log regressions.",
         "Do not change stale/missing/non-selected route safety semantics; keep the full try_move_along_route fallback."
       ],
-      "notes": "Follow-up from real DISPLAY=:99 Large 108x108 rendered-client profile after dcb3cdc: open/current route preview and post-move current-tile refresh now use a simple route UI fast path that skips rich route decision/brief/handoff/commit-check construction; adjacent open-tile clicks use cached selected-route execution; JSONL/F3 counters expose the simple-route skips.",
+      "notes": "Follow-up from .artifacts/uploaded_profiles/20260501/display99_actual_large_after_2e81b35_profile.jsonl: open/current selected-route context tile text now uses compact simple-route line and field readiness skips rich route decision/brief/handoff construction for simple destinations; JSONL exposes simple_route_fast_paths context/readiness counters. Validation: required Godot route/profile/cache regressions, analyzer compatibility, json.tool, git diff --check.",
       "completionEvidence": [
         "OverworldShell now defines refresh request phases for map_view, action_rails, hero_actions, context_actions, route_preview, spell_rails, specialty_rails, artifact_rails, status_surfaces, save_surface, and generated_surfaces.",
         "_set_selected_tile marks only map_view and route_preview dirty for non-current selected route destinations, and route selection calls _refresh_selected_route_preview instead of the full _refresh path.",
@@ -130,7 +130,7 @@
         "python3 -m json.tool ops/progress.json passed.",
         "git diff --check passed."
       ],
-      "updatedAt": "2026-05-01T12:02:49Z"
+      "updatedAt": "2026-05-01T13:35:53Z"
     },
     {
       "id": "overworld-refresh-phase-seams-10184",
