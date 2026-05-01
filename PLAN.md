@@ -40,6 +40,8 @@ Current urgent overworld performance follow-up: `overworld-interaction-destinati
 
 Selected instrumentation follow-up after `.artifacts/audits/20260501_overworld_interaction_confirmation_plan.md`: `overworld-interaction-confirmation-rules-instrumentation-10184` splits the remaining slow resource/artifact descriptor confirmation `cmd/movement_rules` bucket into additive rule sub-buckets and JSONL/analyzer summaries. It is instrumentation-only: no gameplay semantics, optimization, generated setup, save surfaces, or town first-render/cache-build behavior changes.
 
+Selected compact confirmation follow-up after `.artifacts/audits/20260501_interactable_confirmation_solution_plan.md`: `overworld-interactable-compact-confirmation-10184` removes broad rich post-action recap/next-step/objective-feed work from descriptor-dispatched interactable confirmation. It keeps full scenario evaluation for this low-risk slice, preserves open/current route fast paths and existing analyzer buckets, and exposes explicit compact/skipped recap profile metadata instead of hiding cost under renamed fields.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:
@@ -2979,6 +2981,43 @@ completionCriteria:
 
 nonGoals:
 - Do not optimize scenario evaluation, recap generation, blocked-index refresh, descriptor indexes, fog accounting, artifact normalization, generated setup, save surfaces, or town rendering in this slice.
+
+### P2 Child: Overworld Interactable Compact Confirmation
+
+id: `overworld-interactable-compact-confirmation-10184`
+parentSliceId: `overworld-interaction-destination-fast-path-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Remove broad rich recap, next-step, and objective-feed work from ordinary descriptor-dispatched interactable confirmation while preserving gameplay semantics and profile compatibility.
+
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/profile-jsonl-usage.md`
+- `.artifacts/audits/20260501_interactable_confirmation_solution_plan.md`
+- `.artifacts/uploaded_profiles/20260501/display99_interactions_after_2d2a778_overworld_profile.jsonl`
+- `.artifacts/uploaded_profiles/20260501/display99_interactions_after_2d2a778_overworld_profile.summary.txt`
+
+implementationTargets:
+- `scripts/core/OverworldRules.gd`
+- `tests/overworld_interaction_profile_log_regression.gd`
+- `PLAN.md`
+- `ops/progress.json`
+
+sliceEvidence:
+- `_post_action_next_step()` uses a compact movement/status next-step and no longer calls `_event_feed_next_step_line()` or `_objective_stakes_surface()` for post-action recap generation.
+- Shared recap builders for resource sites, artifacts, site responses, spells, town capture/visit, battle handoff, movement, and generic actions return compact selected-interactable recaps instead of broad objective/status/feed surfaces.
+- Descriptor resource confirmation JSONL exposes `post_action_recap.mode=compact`, `rich_surface_skipped=true`, `objective_feed_used=false`, `objective_stakes_surface_used=false`, compact next-step mode, visible sub-buckets, full scenario-evaluation metadata, and no ordinary save observation.
+
+completionCriteria:
+- Required overworld route/profile/cache/refresh regressions pass.
+- Focused profile-log regression proves descriptor resource confirmation does not run rich next-step/objective-feed recap and exposes compact recap metadata.
+- Uploaded rendered overworld profile remains readable by the analyzer.
+- `ops/progress.json` remains valid JSON and `git diff --check` passes.
+- No gameplay semantics, movement/pathing behavior, generated-map content/density, renderer/fog behavior, save schema/object contracts, F3/profile JSONL compatibility, open/current movement fast paths, save/autosave behavior, or scenario evaluation semantics is intentionally changed.
+
+nonGoals:
+- Do not skip or scope scenario evaluation unless separately proven safe.
+- Do not optimize save/autosave/save-surface work, generated setup/content/density, renderer shortcuts, town first-render/cache-build behavior, descriptor indexes, blocked-index delta updates, or battle/town scene rendering.
 
 ### P2 Child: Town Entity Cache Signature
 
