@@ -1914,6 +1914,9 @@ static func _resource_interaction_event_facts(
 		"body_tiles_changed": bool(topology_facts.get("body_tiles_changed", true)),
 		"contract_known": bool(topology_facts.get("contract_known", false)),
 	}
+	if String(site.get("family", "")) == "scenario_objective" or bool(site.get("requires_full_scenario_eval", false)):
+		facts["requires_full_scenario_eval"] = true
+		facts["fallback_reason"] = "resource_site_explicit_objective"
 	var learned_spell_id := String(site.get("learn_spell_id", ""))
 	if learned_spell_id != "":
 		facts["spell_ids"] = [learned_spell_id]
@@ -1942,6 +1945,8 @@ static func _encounter_handoff_event_facts(encounter: Dictionary) -> Dictionary:
 		"blocks_changed": false,
 		"body_tiles_changed": false,
 		"contract_known": true,
+		"requires_full_scenario_eval": true,
+		"fallback_reason": "battle_handoff",
 	}
 
 static func _town_visit_event_facts(town: Dictionary) -> Dictionary:
@@ -1970,6 +1975,8 @@ static func _town_capture_event_facts(town: Dictionary, previous_owner: String, 
 		"blocks_changed": false,
 		"body_tiles_changed": false,
 		"contract_known": true,
+		"requires_full_scenario_eval": true,
+		"fallback_reason": "town_control_changed",
 	}
 
 static func _interactable_result_payload(family: String, placement: Dictionary, mutation_facts: Dictionary, topology_facts: Dictionary) -> Dictionary:
@@ -11019,17 +11026,20 @@ static func _finalize_action_result(
 	if base_message != "":
 		messages.append(base_message)
 
-	var scenario := ContentService.get_scenario(session.scenario_id) if session != null else {}
-	var objectives = scenario.get("objectives", {}) if scenario is Dictionary else {}
 	var objective_count := 0
-	if objectives is Dictionary:
-		var victory_objectives = objectives.get("victory", [])
-		var defeat_objectives = objectives.get("defeat", [])
-		objective_count += victory_objectives.size() if victory_objectives is Array else 0
-		objective_count += defeat_objectives.size() if defeat_objectives is Array else 0
-	var hooks = scenario.get("script_hooks", []) if scenario is Dictionary else []
-	_rules_profile_set("scenario_eval", "objective_count", objective_count)
-	_rules_profile_set("scenario_eval", "hook_count", hooks.size() if hooks is Array else 0)
+	var hook_count := 0
+	if scenario_event_facts.is_empty():
+		var scenario := ContentService.get_scenario(session.scenario_id) if session != null else {}
+		var objectives = scenario.get("objectives", {}) if scenario is Dictionary else {}
+		if objectives is Dictionary:
+			var victory_objectives = objectives.get("victory", [])
+			var defeat_objectives = objectives.get("defeat", [])
+			objective_count += victory_objectives.size() if victory_objectives is Array else 0
+			objective_count += defeat_objectives.size() if defeat_objectives is Array else 0
+		var hooks = scenario.get("script_hooks", []) if scenario is Dictionary else []
+		hook_count = hooks.size() if hooks is Array else 0
+		_rules_profile_set("scenario_eval", "objective_count", objective_count)
+		_rules_profile_set("scenario_eval", "hook_count", hook_count)
 	var scenario_started_usec := _rules_profile_timer()
 	var scenario_result: Dictionary = _evaluate_scenario_state(session) if scenario_event_facts.is_empty() else _evaluate_scenario_state_for_event(session, scenario_event_facts)
 	_rules_profile_add_ms("finalize_scenario_eval_ms", scenario_started_usec)
@@ -11039,10 +11049,10 @@ static func _finalize_action_result(
 			"dependency_mode": "full",
 			"fallback_reason": "",
 			"objective_count": objective_count,
-			"hook_count": hooks.size() if hooks is Array else 0,
+			"hook_count": hook_count,
 			"objectives_checked": objective_count,
 			"objectives_skipped": 0,
-			"hooks_checked": hooks.size() if hooks is Array else 0,
+			"hooks_checked": hook_count,
 			"hooks_skipped": 0,
 		}
 	for profile_key in scenario_profile.keys():

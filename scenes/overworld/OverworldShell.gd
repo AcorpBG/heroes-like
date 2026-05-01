@@ -120,6 +120,7 @@ var _last_enemy_activity_events: Array = []
 var _last_turn_resolution_text := ""
 var _last_action_recap: Dictionary = {}
 var _last_route_execution: Dictionary = {}
+var _post_route_execution_compact_context := false
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
 var _active_drawer := ""
@@ -594,8 +595,11 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		AppRouter.go_to_town()
 		return
 	if preserve_selection and _last_route_execution.has("reached_destination"):
+		_post_route_execution_compact_context = _should_use_post_route_execution_compact_context()
 		_refresh_selected_route_preview("route_execution_changed")
+		_post_route_execution_compact_context = false
 	else:
+		_post_route_execution_compact_context = false
 		_refresh()
 	if debug_started:
 		_debug_finish_path_command()
@@ -2021,7 +2025,8 @@ func _cached_active_context() -> Dictionary:
 
 func _cached_focus_tile_text() -> String:
 	if not _refresh_cache.has("focus_tile_text"):
-		_refresh_cache["focus_tile_text"] = _describe_focus_tile()
+		var compact_context := _post_route_execution_compact_focus_tile_text()
+		_refresh_cache["focus_tile_text"] = compact_context if compact_context != "" else _describe_focus_tile()
 	return String(_refresh_cache["focus_tile_text"])
 
 func _cached_active_context_text() -> String:
@@ -3898,6 +3903,49 @@ func _describe_focus_tile() -> String:
 		return _cached_active_context_text()
 	return _describe_selected_tile()
 
+func _should_use_post_route_execution_compact_context() -> bool:
+	if not bool(_last_route_execution.get("reached_destination", false)):
+		return false
+	if String(_last_route_execution.get("cached_execution_mode", "")) != "destination_interaction_fast_path":
+		return false
+	if String(_last_route_execution.get("interaction_dispatch_mode", "")) != "destination_descriptor":
+		return false
+	if _selected_tile != OverworldRules.hero_position(_session):
+		return false
+	var interactable: Dictionary = _last_route_execution.get("interactable", {}) if _last_route_execution.get("interactable", {}) is Dictionary else {}
+	return String(interactable.get("family", "")) in ["resource_site", "artifact", "encounter", "town"]
+
+func _post_route_execution_compact_focus_tile_text() -> String:
+	if not _post_route_execution_compact_context:
+		return ""
+	if not _should_use_post_route_execution_compact_context():
+		return ""
+	var hero_pos := OverworldRules.hero_position(_session)
+	var terrain := _terrain_name_at(hero_pos.x, hero_pos.y) if _tile_in_bounds(hero_pos) else "unknown"
+	var movement = _session.overworld.get("movement", {})
+	var movement_line := "Move %d/%d" % [
+		int(movement.get("current", 0)) if movement is Dictionary else 0,
+		int(movement.get("max", 0)) if movement is Dictionary else 0,
+	]
+	var latest := _context_strip_sentence(_last_message).trim_suffix(".")
+	if latest == "":
+		latest = "Route complete"
+	_profile_add("context_tile_text_completed_interaction_fast_path", 1)
+	var interactable: Dictionary = _last_route_execution.get("interactable", {}) if _last_route_execution.get("interactable", {}) is Dictionary else {}
+	_validation_profile["last_context_tile_text_completed_interaction_fast_path"] = {
+		"selected_tile": {"x": hero_pos.x, "y": hero_pos.y},
+		"terrain": terrain,
+		"interaction_family": String(interactable.get("family", "")),
+		"rich_current_context_skipped": true,
+	}
+	return "Current Position\nCoords %d,%d | Terrain %s\n%s\nLatest: %s" % [
+		hero_pos.x,
+		hero_pos.y,
+		terrain,
+		movement_line,
+		_short_text(latest, 72),
+	]
+
 func _rail_log_text() -> String:
 	if _last_turn_resolution_text != "":
 		return "Turn: %s" % _last_turn_resolution_text
@@ -5773,7 +5821,9 @@ func _debug_enrich_command_snapshot(snapshot: Dictionary) -> Dictionary:
 		"context_tile_text_artifact_hits": int(profile.get("context_tile_text_compact_artifact_destination_fast_path", 0)),
 		"context_tile_text_encounter_hits": int(profile.get("context_tile_text_compact_encounter_destination_fast_path", 0)),
 		"context_tile_text_town_hits": int(profile.get("context_tile_text_compact_town_destination_fast_path", 0)),
+		"context_tile_text_completed_interaction_hits": int(profile.get("context_tile_text_completed_interaction_fast_path", 0)),
 		"context_tile_text_last": _profile_log_duplicate_dict(profile.get("last_context_tile_text_simple_route_fast_path", {})),
+		"context_tile_text_completed_interaction_last": _profile_log_duplicate_dict(profile.get("last_context_tile_text_completed_interaction_fast_path", {})),
 		"field_readiness_hits": int(profile.get("field_readiness_simple_route_fast_path", 0)),
 		"field_readiness_open_hits": int(profile.get("field_readiness_simple_open_route_fast_path", 0)),
 		"field_readiness_current_hits": int(profile.get("field_readiness_simple_current_route_fast_path", 0)),

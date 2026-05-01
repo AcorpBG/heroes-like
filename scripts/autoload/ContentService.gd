@@ -167,6 +167,15 @@ func get_scenario(id: String) -> Dictionary:
 	var draft: Dictionary = _generated_scenario_drafts.get(id, {})
 	return draft.duplicate(true) if not draft.is_empty() else {}
 
+func get_scenario_dependency_record(id: String) -> Dictionary:
+	var authored := get_content_by_id(SCENARIOS_PATH, id)
+	if not authored.is_empty():
+		return _scenario_dependency_record_from_source(id, authored, false)
+	var draft: Dictionary = _generated_scenario_drafts.get(id, {})
+	if not draft.is_empty():
+		return _scenario_dependency_record_from_source(id, draft, true)
+	return {}
+
 func get_authored_scenario(id: String) -> Dictionary:
 	var scenario := get_content_by_id(SCENARIOS_PATH, id)
 	return scenario.duplicate(true) if not scenario.is_empty() else {}
@@ -220,6 +229,22 @@ func get_content_by_id(path: String, id: String, list_key: String = "items") -> 
 		if String(item.get("id", "")) == id:
 			return item
 	return {}
+
+func _scenario_dependency_record_from_source(id: String, scenario: Dictionary, generated: bool) -> Dictionary:
+	var objectives = scenario.get("objectives", {})
+	var script_hooks = scenario.get("script_hooks", [])
+	var record := {
+		"id": id,
+		"generated": generated,
+		"objectives": objectives if objectives is Dictionary else objectives,
+		"script_hooks": script_hooks if script_hooks is Array else script_hooks,
+	}
+	record["dependency_signature"] = str(JSON.stringify({
+		"id": id,
+		"objectives": record.get("objectives", {}),
+		"script_hooks": record.get("script_hooks", []),
+	}).hash())
+	return record
 
 func _items_from_raw(raw: Dictionary, list_key: String = "items") -> Array:
 	var items = raw.get(list_key, raw.get("entries", []))

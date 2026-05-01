@@ -5,6 +5,8 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 
+static var _scenario_dependency_metadata_cache: Dictionary = {}
+
 static func _scenario_script_rules() -> Variant:
 	return load("res://scripts/core/ScenarioScriptRules.gd")
 
@@ -85,7 +87,6 @@ static func evaluate_session_for_event(session: SessionStateStoreScript.SessionD
 		inactive_result["profile"] = profile
 		return inactive_result
 
-	var scenario := ContentService.get_scenario(session.scenario_id)
 	if event_facts.is_empty() or bool(event_facts.get("requires_full_scenario_eval", false)):
 		profile["dependency_mode"] = "full"
 		profile["fallback_reason"] = String(event_facts.get("fallback_reason", "no_event_facts"))
@@ -94,10 +95,12 @@ static func evaluate_session_for_event(session: SessionStateStoreScript.SessionD
 		full_result["profile"] = profile
 		return full_result
 
-	var dependency := _scenario_dependency_metadata(scenario)
+	var dependency := _scenario_dependency_metadata_for_session(session)
 	profile["objective_count"] = int(dependency.get("objective_count", 0))
 	profile["hook_count"] = int(dependency.get("hook_count", 0))
 	profile["dependency_metadata_known"] = bool(dependency.get("known", false))
+	profile["dependency_cache_hit"] = bool(dependency.get("cache_hit", false))
+	profile["dependency_cache_signature"] = String(dependency.get("signature", ""))
 	if not bool(dependency.get("known", false)):
 		profile["dependency_mode"] = "full_fallback_unknown"
 		profile["fallback_reason"] = String(dependency.get("unknown_reason", "unknown_dependency"))
@@ -166,9 +169,54 @@ static func _scenario_event_dependency_profile(session: SessionStateStoreScript.
 		"affected_objective_count": 0,
 		"affected_hook_count": 0,
 		"dependency_metadata_known": false,
+		"dependency_cache_hit": false,
+		"dependency_cache_signature": "",
 		"fallback_used": false,
 		"skip_reason": "",
 	}
+
+static func clear_dependency_metadata_cache() -> void:
+	_scenario_dependency_metadata_cache.clear()
+
+static func _scenario_dependency_metadata_for_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var scenario_id := String(session.scenario_id) if session != null else ""
+	if scenario_id == "":
+		return {
+			"known": false,
+			"unknown_reason": "missing_scenario_id",
+			"objective_count": 0,
+			"hook_count": 0,
+			"objectives": [],
+			"hooks": [],
+			"cache_hit": false,
+			"signature": "",
+		}
+	var dependency_record: Dictionary = ContentService.get_scenario_dependency_record(scenario_id)
+	if dependency_record.is_empty():
+		return {
+			"known": false,
+			"unknown_reason": "missing_scenario_dependency_record",
+			"objective_count": 0,
+			"hook_count": 0,
+			"objectives": [],
+			"hooks": [],
+			"cache_hit": false,
+			"signature": "",
+		}
+	var signature := String(dependency_record.get("dependency_signature", ""))
+	var cache_key := "%s|%s" % [scenario_id, signature]
+	if _scenario_dependency_metadata_cache.has(cache_key):
+		var cached: Dictionary = _scenario_dependency_metadata_cache.get(cache_key, {}).duplicate(true)
+		cached["cache_hit"] = true
+		cached["signature"] = signature
+		return cached
+	var metadata := _scenario_dependency_metadata(dependency_record)
+	metadata["cache_hit"] = false
+	metadata["signature"] = signature
+	if _scenario_dependency_metadata_cache.size() > 128:
+		_scenario_dependency_metadata_cache.clear()
+	_scenario_dependency_metadata_cache[cache_key] = metadata.duplicate(true)
+	return metadata
 
 static func _scenario_dependency_metadata(scenario: Dictionary) -> Dictionary:
 	var result := {
