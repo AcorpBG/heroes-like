@@ -10,6 +10,8 @@ func _run() -> void:
 		return
 	if not await _assert_cached_execution_skips_full_revalidation():
 		return
+	if not await _assert_adjacent_open_click_uses_cached_execution():
+		return
 	if not await _assert_unknown_destination_descriptor_falls_back():
 		return
 	if not await _assert_stale_route_falls_back_to_full_revalidation():
@@ -89,6 +91,37 @@ func _assert_cached_execution_skips_full_revalidation() -> bool:
 		return _fail("Open cached route used global post-move discovery.", pathing_profile)
 	if int(pathing_profile.get("post_action_tile_context_scan_count", 0)) != 0:
 		return _fail("Open cached route scanned post-action tile context.", pathing_profile)
+	shell.queue_free()
+	return true
+
+func _assert_adjacent_open_click_uses_cached_execution() -> bool:
+	var session = _session_with_map(9, 3, true)
+	var opened := await _open_shell(session)
+	var shell: Node = opened.get("shell", null)
+	session = opened.get("session", session)
+	_prepare_shell_state(shell, session, Vector2i(0, 1), 6)
+	shell.call("validation_set_debug_overlay_enabled", true)
+	shell.call("validation_reset_profile", false)
+	var clicked: Dictionary = shell.call("validation_click_tile", 1, 1)
+	await get_tree().process_frame
+	var command := _last_debug_command(shell)
+	var profile: Dictionary = command.get("profile", {}) if command.get("profile", {}) is Dictionary else {}
+	var movement_details: Dictionary = profile.get("last_cmd_movement_rules", {}) if profile.get("last_cmd_movement_rules", {}) is Dictionary else {}
+	var destination_only: Dictionary = command.get("route_destination_only_action", {}) if command.get("route_destination_only_action", {}) is Dictionary else {}
+	if not bool(clicked.get("ok", false)):
+		return _fail("Adjacent open-tile click did not execute.", clicked)
+	if String(command.get("command_type", "")) != "adjacent_move":
+		return _fail("Adjacent open-tile click did not keep the adjacent_move command type.", command)
+	if OverworldRules.hero_position(session) != Vector2i(1, 1):
+		return _fail("Adjacent open-tile click did not move the active hero.", clicked)
+	if not bool(movement_details.get("cached_route_execution", false)):
+		return _fail("Adjacent open-tile click did not use cached selected-route execution.", movement_details)
+	if String(movement_details.get("route_validation_mode", "")) != "cached_prevalidated":
+		return _fail("Adjacent open-tile click used the wrong route validation mode.", movement_details)
+	if String(movement_details.get("cached_execution_mode", "")) != "open_fast_path":
+		return _fail("Adjacent open-tile click did not use the open fast path.", movement_details)
+	if not bool(destination_only.get("simple_route_ui_fast_path", false)) or String(destination_only.get("destination_interaction_kind", "")) != "current":
+		return _fail("Adjacent post-move refresh did not use the minimal current-tile route UI.", command)
 	shell.queue_free()
 	return true
 
