@@ -152,37 +152,6 @@ completionCriteria:
 - Existing inside-footprint interaction override, non-action body blocking, F4 overlay ordering, and generated-object interaction reports remain passing.
 - Validation reports expose the normalized contract so future authored interactables cannot regress to outside-footprint action tiles.
 
-### Current Owner-Reported Gameplay Bug Slice - Terrain Blocking And Town Capture Interaction
-
-id: `terrain-blocking-town-capture-interaction-10184`
-phase: `phase-2-deep-production-foundation`
-purpose: Fix owner-reported rock terrain passability and town route-arrival capture/entry behavior after interactable action tiles moved inside footprints.
-
-implementationTargets:
-- `content/terrain_grammar.json`
-- `content/biomes.json`
-- `scripts/core/OverworldRules.gd`
-- `scripts/core/RandomMapGeneratorRules.gd`
-- `scenes/editor/MapEditorShell.gd`
-- `scenes/overworld/OverworldShell.gd`
-- `tests/terrain_blocking_town_capture_interaction_regression.gd`
-- `tests/map_editor_smoke.gd`
-
-baselineChecks:
-- `python3 tests/validate_repo.py`
-- `python3 tests/all_interactable_object_footprint_audit.py`
-- `git diff --check`
-- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/terrain_blocking_town_capture_interaction_regression.tscn`
-- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_placement_debug_overlay_regression.tscn`
-- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_placement_interaction_footprint_override_regression.tscn`
-
-completionCriteria:
-- Explicit rock/cliff terrain blocks movement and editor object placement.
-- Passable rough terrain remains movement-valid while rock remains blocked.
-- Full-route and selected-route descriptor confirmations capture neutral towns and dispatch enemy town assaults through the existing town capture path.
-- Town route labels and selected-route descriptors expose claim/assault semantics instead of inert approach wording for non-player towns.
-- Existing inside-footprint action override and F4 placement overlay regressions remain passing.
-
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:
