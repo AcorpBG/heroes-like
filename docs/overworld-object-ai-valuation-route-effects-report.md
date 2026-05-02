@@ -16,12 +16,12 @@ The selected proof cases are `river_pass_reed_totemists` and `river_pass_hollow_
 
 ## Shape-Mask Boundary
 
-The helper preserves the HoMM-style object contract:
+The helper preserves the current inside-footprint object contract:
 
 - visual footprint is reported from `footprint`;
 - blocking body occupancy is reported from `body_tiles`;
 - interaction/approach positions are reported from `approach.visit_offsets`;
-- `body_tiles_separate_from_approach` is a report proof flag, not a renderer or migration switch.
+- `body_tiles_overlap_visit_offsets` is a report proof flag, not a renderer or migration switch.
 
 No broad neutral encounter pathing adoption was added.
 

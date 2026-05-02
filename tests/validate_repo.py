@@ -2688,6 +2688,71 @@ def overworld_object_tile_key(tile: object) -> str:
     return f"{int(tile.get('x', -999))},{int(tile.get('y', -999))}"
 
 
+BLOCKING_VISITABLE_PASSABILITY_CLASSES = {"blocking_visitable", "conditional_pass", "town_blocking", "neutral_stack_blocking"}
+INTERACTABLE_FOOTPRINT_AUDIT_EXCEPTIONS: dict[str, str] = {}
+
+
+def build_all_interactable_object_footprint_audit(map_objects: dict[str, dict]) -> dict:
+    failures: list[str] = []
+    exceptions: list[dict] = []
+    checked: list[dict] = []
+    for object_id, obj in sorted(map_objects.items()):
+        if not isinstance(obj, dict):
+            continue
+        footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
+        body_tiles = obj.get("body_tiles", []) if isinstance(obj.get("body_tiles", []), list) else []
+        approach = obj.get("approach", {}) if isinstance(obj.get("approach", {}), dict) else {}
+        visit_offsets = approach.get("visit_offsets", []) if isinstance(approach.get("visit_offsets", []), list) else []
+        interaction = obj.get("interaction", {}) if isinstance(obj.get("interaction", {}), dict) else {}
+        passability_class = str(obj.get("passability_class", ""))
+        interactable = (
+            bool(obj.get("visitable", False))
+            or bool(obj.get("resource_site_id", ""))
+            or str(interaction.get("cadence", "none")) != "none"
+            or str(obj.get("primary_class", "")) in {"persistent_economy_site", "neutral_dwelling", "scenario_objective", "guarded_reward_site", "faction_landmark", "interactable_site", "transit_route_object", "neutral_encounter"}
+        )
+        blocking = passability_class in BLOCKING_VISITABLE_PASSABILITY_CLASSES or (bool(obj.get("visitable", False)) and obj.get("passable") is False)
+        if not (interactable and blocking and body_tiles):
+            continue
+        if object_id in INTERACTABLE_FOOTPRINT_AUDIT_EXCEPTIONS:
+            exceptions.append({"object_id": object_id, "reason": INTERACTABLE_FOOTPRINT_AUDIT_EXCEPTIONS[object_id]})
+            continue
+        width = max(1, int(footprint.get("width", 1)))
+        height = max(1, int(footprint.get("height", 1)))
+        body_keys = {overworld_object_tile_key(tile) for tile in body_tiles if isinstance(tile, dict)}
+        if not visit_offsets:
+            failures.append(f"{object_id}: blocking interactable body has no approach.visit_offsets")
+            continue
+        object_failures: list[str] = []
+        for index, tile in enumerate(visit_offsets):
+            if not isinstance(tile, dict):
+                object_failures.append(f"visit offset {index} is not a dictionary")
+                continue
+            x = int(tile.get("x", -999))
+            y = int(tile.get("y", -999))
+            key = f"{x},{y}"
+            if x < 0 or y < 0 or x >= width or y >= height:
+                object_failures.append(f"visit offset {key} is outside footprint {width}x{height}")
+            if key not in body_keys:
+                object_failures.append(f"visit offset {key} does not overlap body_tiles")
+        if object_failures:
+            failures.append(f"{object_id}: {'; '.join(object_failures)}")
+        else:
+            checked.append({
+                "object_id": object_id,
+                "primary_class": str(obj.get("primary_class", "")),
+                "passability_class": passability_class,
+                "visit_offset_count": len(visit_offsets),
+            })
+    return {
+        "ok": not failures,
+        "checked_count": len(checked),
+        "exception_count": len(exceptions),
+        "failures": failures,
+        "exceptions": exceptions,
+    }
+
+
 def validate_overworld_object_route_effect_authoring_entry(object_id: str, obj: dict, site: dict | None) -> dict:
     footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
     body_tiles = obj.get("body_tiles", []) if isinstance(obj.get("body_tiles", []), list) else []
@@ -2716,7 +2781,8 @@ def validate_overworld_object_route_effect_authoring_entry(object_id: str, obj: 
             "body_tile_count": len(body_tiles),
             "approach_visit_offset_count": len(visit_offsets),
             "linked_exit_offset_count": len(linked_exit_offsets),
-            "body_tiles_separate_from_approach": bool(body_tiles) and bool(visit_offsets) and not set(overworld_object_tile_key(tile) for tile in body_tiles).intersection(set(overworld_object_tile_key(tile) for tile in visit_offsets)),
+            "body_tiles_overlap_visit_offsets": bool(body_tiles) and bool(visit_offsets) and bool(set(overworld_object_tile_key(tile) for tile in body_tiles).intersection(set(overworld_object_tile_key(tile) for tile in visit_offsets))),
+            "inside_footprint_interaction_contract": "visit_offsets_overlap_body_tiles; linked_exit_offsets_remain_exit_metadata",
         },
         "runtime_adoption": "metadata_only_reported_not_pathing_or_save_state",
         "warnings": [],
@@ -2752,8 +2818,8 @@ def validate_overworld_object_route_effect_authoring_entry(object_id: str, obj: 
         add_error("transit object must author at least two approach.visit_offsets")
     if len(linked_exit_offsets) != len(visit_offsets):
         add_error("transit object linked_exit_offsets must match approach.visit_offsets count")
-    if set(overworld_object_tile_key(tile) for tile in body_tiles).intersection(set(overworld_object_tile_key(tile) for tile in visit_offsets)):
-        add_error("transit object body_tiles must not overlap approach.visit_offsets")
+    if body_tiles and visit_offsets and not set(overworld_object_tile_key(tile) for tile in body_tiles).intersection(set(overworld_object_tile_key(tile) for tile in visit_offsets)):
+        add_error("transit object approach.visit_offsets must overlap body_tiles for inside-footprint interaction")
     if not route_effect:
         add_error("transit object must define route_effect metadata")
     else:
@@ -3763,18 +3829,14 @@ def build_overworld_object_content_batch_002_section(map_objects: dict[str, dict
                 continue
             x = int(tile.get("x", -999))
             y = int(tile.get("y", -999))
-            adjacent = (x == -1 and 0 <= y < height) or (x == width and 0 <= y < height) or (y == -1 and 0 <= x < width) or (y == height and 0 <= x < width)
             inside = 0 <= x < width and 0 <= y < height
-            if not adjacent and not inside:
-                add_error(f"{object_id}: approach tile {x},{y} must be inside or adjacent to footprint")
+            if not inside:
+                add_error(f"{object_id}: approach tile {x},{y} must be inside the footprint")
                 ready = False
             tile_key = f"{x},{y}"
-            if tile_key in seen_visit_offsets:
-                add_error(f"{object_id}: approach tile {tile_key} is duplicated")
-                ready = False
             seen_visit_offsets.add(tile_key)
-        if seen_body_tiles.intersection(seen_visit_offsets):
-            add_error(f"{object_id}: body_tiles must not overlap approach.visit_offsets")
+        if seen_body_tiles and seen_visit_offsets and not seen_body_tiles.intersection(seen_visit_offsets):
+            add_error(f"{object_id}: approach.visit_offsets must overlap body_tiles for inside-footprint interaction")
             ready = False
         if str(approach.get("mode", "")) not in {"adjacent", "enter"}:
             add_error(f"{object_id}: approach.mode must be adjacent or enter")
@@ -4014,18 +4076,14 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
                 continue
             x = int(tile.get("x", -999))
             y = int(tile.get("y", -999))
-            adjacent = (x == -1 and 0 <= y < height) or (x == width and 0 <= y < height) or (y == -1 and 0 <= x < width) or (y == height and 0 <= x < width)
             inside = 0 <= x < width and 0 <= y < height
-            if not adjacent and not inside:
-                add_error(f"{object_id}: approach tile {x},{y} must be inside or adjacent to footprint")
+            if not inside:
+                add_error(f"{object_id}: approach tile {x},{y} must be inside the footprint")
                 ready = False
             tile_key = f"{x},{y}"
-            if tile_key in seen_visit_offsets:
-                add_error(f"{object_id}: approach tile {tile_key} is duplicated")
-                ready = False
             seen_visit_offsets.add(tile_key)
-        if seen_body_tiles.intersection(seen_visit_offsets) and str(approach.get("mode", "")) != "enter":
-            add_error(f"{object_id}: body_tiles must not overlap approach.visit_offsets for adjacent visits")
+        if seen_body_tiles and seen_visit_offsets and not seen_body_tiles.intersection(seen_visit_offsets):
+            add_error(f"{object_id}: approach.visit_offsets must overlap body_tiles for inside-footprint interaction")
             ready = False
         if str(approach.get("mode", "")) not in {"adjacent", "enter", "linked_endpoint"}:
             add_error(f"{object_id}: approach.mode must be adjacent, enter, or linked_endpoint")
@@ -4261,17 +4319,14 @@ def build_overworld_object_content_batch_004_section(map_objects: dict[str, dict
                 continue
             x = int(tile.get("x", -999))
             y = int(tile.get("y", -999))
-            adjacent = (x == -1 and 0 <= y < height) or (x == width and 0 <= y < height) or (y == -1 and 0 <= x < width) or (y == height and 0 <= x < width)
-            if not adjacent:
-                add_error(f"{object_id}: approach tile {x},{y} must be adjacent to footprint")
+            inside = 0 <= x < width and 0 <= y < height
+            if not inside:
+                add_error(f"{object_id}: approach tile {x},{y} must be inside the footprint")
                 ready = False
             tile_key = f"{x},{y}"
-            if tile_key in seen_visit_offsets:
-                add_error(f"{object_id}: approach tile {tile_key} is duplicated")
-                ready = False
             seen_visit_offsets.add(tile_key)
-        if seen_body_tiles.intersection(seen_visit_offsets):
-            add_error(f"{object_id}: body_tiles must not overlap approach.visit_offsets")
+        if seen_body_tiles and seen_visit_offsets and not seen_body_tiles.intersection(seen_visit_offsets):
+            add_error(f"{object_id}: approach.visit_offsets must overlap body_tiles for inside-footprint interaction")
             ready = False
         if str(approach.get("mode", "")) != "linked_endpoint":
             add_error(f"{object_id}: Batch 004 approach.mode must be linked_endpoint")
@@ -4528,17 +4583,14 @@ def build_overworld_object_content_batch_005_section(
                 continue
             x = int(tile.get("x", -999))
             y = int(tile.get("y", -999))
-            adjacent = (x == -1 and 0 <= y < height) or (x == width and 0 <= y < height) or (y == -1 and 0 <= x < width) or (y == height and 0 <= x < width)
-            if not adjacent:
-                add_error(f"{object_id}: approach tile {x},{y} must be adjacent to footprint")
+            inside = 0 <= x < width and 0 <= y < height
+            if not inside:
+                add_error(f"{object_id}: approach tile {x},{y} must be inside the footprint")
                 ready = False
             tile_key = f"{x},{y}"
-            if tile_key in seen_visit_offsets:
-                add_error(f"{object_id}: approach tile {tile_key} is duplicated")
-                ready = False
             seen_visit_offsets.add(tile_key)
-        if seen_body_tiles.intersection(seen_visit_offsets):
-            add_error(f"{object_id}: body_tiles must not overlap approach.visit_offsets")
+        if seen_body_tiles and seen_visit_offsets and not seen_body_tiles.intersection(seen_visit_offsets):
+            add_error(f"{object_id}: approach.visit_offsets must overlap body_tiles for inside-footprint interaction")
             ready = False
         if str(approach.get("mode", "")) != "adjacent":
             add_error(f"{object_id}: Batch 005 approach.mode must be adjacent")
@@ -4835,17 +4887,14 @@ def build_overworld_object_content_batch_006_section(
                 continue
             x = int(tile.get("x", -999))
             y = int(tile.get("y", -999))
-            adjacent = (x == -1 and 0 <= y < height) or (x == width and 0 <= y < height) or (y == -1 and 0 <= x < width) or (y == height and 0 <= x < width)
-            if not adjacent:
-                add_error(f"{object_id}: approach tile {x},{y} must be adjacent to footprint")
+            inside = 0 <= x < width and 0 <= y < height
+            if not inside:
+                add_error(f"{object_id}: approach tile {x},{y} must be inside the footprint")
                 ready = False
             tile_key = f"{x},{y}"
-            if tile_key in seen_visit_offsets:
-                add_error(f"{object_id}: approach tile {tile_key} is duplicated")
-                ready = False
             seen_visit_offsets.add(tile_key)
-        if seen_body_tiles.intersection(seen_visit_offsets):
-            add_error(f"{object_id}: body_tiles must not overlap approach.visit_offsets")
+        if seen_body_tiles and seen_visit_offsets and not seen_body_tiles.intersection(seen_visit_offsets):
+            add_error(f"{object_id}: approach.visit_offsets must overlap body_tiles for inside-footprint interaction")
             ready = False
         if str(approach.get("mode", "")) != "adjacent":
             add_error(f"{object_id}: Batch 006 approach.mode must be adjacent")
@@ -5157,17 +5206,14 @@ def build_overworld_object_content_batch_007_section(
                 continue
             x = int(tile.get("x", -999))
             y = int(tile.get("y", -999))
-            adjacent = (x == -1 and 0 <= y < height) or (x == width and 0 <= y < height) or (y == -1 and 0 <= x < width) or (y == height and 0 <= x < width)
-            if not adjacent:
-                add_error(f"{object_id}: approach tile {x},{y} must be adjacent to footprint")
+            inside = 0 <= x < width and 0 <= y < height
+            if not inside:
+                add_error(f"{object_id}: approach tile {x},{y} must be inside the footprint")
                 ready = False
             tile_key = f"{x},{y}"
-            if tile_key in seen_visit_offsets:
-                add_error(f"{object_id}: approach tile {tile_key} is duplicated")
-                ready = False
             seen_visit_offsets.add(tile_key)
-        if seen_body_tiles.intersection(seen_visit_offsets):
-            add_error(f"{object_id}: body_tiles must not overlap approach.visit_offsets")
+        if seen_body_tiles and seen_visit_offsets and not seen_body_tiles.intersection(seen_visit_offsets):
+            add_error(f"{object_id}: approach.visit_offsets must overlap body_tiles for inside-footprint interaction")
             ready = False
         if str(approach.get("mode", "")) != "adjacent":
             add_error(f"{object_id}: Batch 007 approach.mode must be adjacent")
@@ -5872,8 +5918,8 @@ def validate_strict_overworld_object_fixtures() -> tuple[list[str], list[str]]:
                             local_errors.append(f"{object_id} route_effect toll resource {resource_id} is unsupported")
                         if type(amount) is not int or int(amount) < 0:
                             local_errors.append(f"{object_id} route_effect toll resource {resource_id} must be a non-negative integer")
-                if set(overworld_object_tile_key(tile) for tile in body_tiles).intersection(set(overworld_object_tile_key(tile) for tile in visit_offsets)):
-                    local_errors.append(f"{object_id} route-effect approach tiles must remain separate from body_tiles")
+                if body_tiles and visit_offsets and not set(overworld_object_tile_key(tile) for tile in body_tiles).intersection(set(overworld_object_tile_key(tile) for tile in visit_offsets)):
+                    local_errors.append(f"{object_id} route-effect approach tiles must overlap body_tiles for inside-footprint interaction")
                 if str(approach.get("mode", "")) == "linked_endpoint" and len(linked_exit_offsets := approach.get("linked_exit_offsets", []) if isinstance(approach.get("linked_exit_offsets", []), list) else []) != len(visit_offsets):
                     local_errors.append(f"{object_id} linked_endpoint linked_exit_offsets must match visit_offsets")
                 for public_key in ("public_reason", "public_summary", "display_name"):
@@ -6225,7 +6271,7 @@ def validate_neutral_encounter_first_class_object_bundle(errors: list[str], scen
         compare_expected_neutral_metadata(errors, f"{object_id}.secondary_tags", object_record.get("secondary_tags", []), expected["metadata"]["secondary_tags"])
         compare_expected_neutral_metadata(errors, f"{object_id}.footprint", object_record.get("footprint", {}), {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"})
         compare_expected_neutral_metadata(errors, f"{object_id}.body_tiles", object_record.get("body_tiles", []), [{"x": 0, "y": 0, "role": "body"}])
-        compare_expected_neutral_metadata(errors, f"{object_id}.approach", object_record.get("approach", {}), {"mode": "adjacent", "primary_sides": ["south"], "visit_offsets": [{"x": 0, "y": 1}], "stop_before_interaction": True, "requires_clear_tile": True, "linked_exit_offsets": []})
+        compare_expected_neutral_metadata(errors, f"{object_id}.approach", object_record.get("approach", {}), {"mode": "adjacent", "primary_sides": ["south"], "visit_offsets": [{"x": 0, "y": 0}], "stop_before_interaction": True, "requires_clear_tile": True, "linked_exit_offsets": []})
         ensure(object_record.get("passable") is False, errors, f"Map object {object_id} passable must be false")
         ensure(object_record.get("visitable") is True, errors, f"Map object {object_id} visitable must be true")
         ensure(str(object_record.get("passability_class", "")) == expected["metadata"]["passability"]["passability_class"], errors, f"Map object {object_id} passability_class must match bundle 002 passability")
@@ -12794,6 +12840,10 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
         map_roles = obj.get("map_roles", [])
         ensure(isinstance(map_roles, list) and bool(map_roles), errors, f"Map object {object_id} must define map_roles")
 
+    footprint_audit = build_all_interactable_object_footprint_audit(map_objects)
+    for failure in footprint_audit["failures"]:
+        ensure(False, errors, f"All-interactable footprint audit: {failure}")
+
     validate_overworld_object_safe_metadata_bundle(errors, map_objects, resource_sites)
 
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
@@ -12856,7 +12906,7 @@ def validate_overworld_object_ai_valuation_route_effects(errors: list[str]) -> N
         '"priority_with_object_metadata"',
         '"route_effect_status"',
         '"shape_mask_contract"',
-        '"body_tiles_separate_from_approach"',
+        '"body_tiles_overlap_visit_offsets"',
         "target_public_reason",
         "commander_role_public_leak_check",
     ):
@@ -12868,7 +12918,7 @@ def validate_overworld_object_ai_valuation_route_effects(errors: list[str]) -> N
         "river_pass_reed_totemists",
         "river_pass_hollow_mire",
         "commander_role_public_leak_check",
-        "body_tiles_separate_from_approach",
+        "body_tiles_overlap_visit_offsets",
         "SCORE_LEAK_TOKENS",
     ):
         ensure(required_token in report_text, errors, f"AI overworld object valuation report is missing token: {required_token}")

@@ -282,8 +282,9 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"body_mask": [{"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": 1, "y": -1}, {"x": -1, "y": 0}, {"x": 0, "y": 0}, {"x": 1, "y": 0}],
 		"runtime_body_mask": [{"x": 0, "y": 0}],
 		"visit_mask": [{"x": 1, "y": 0}],
+		"visit_mask_contract": "inside_intended_3x2_body; outside_current_1x1_runtime_body_until_multitile_town_runtime_slice",
 		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}, {"x": 2, "y": 0}],
-		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "town_entry", "visit_tile_required": true, "interaction_cadence": "repeatable"},
 		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "visit_or_approach_passable", "zone_preferred"],
@@ -299,9 +300,9 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},
 		"body_mask": [{"x": 0, "y": 0}],
 		"runtime_body_mask": [{"x": 0, "y": 0}],
-		"visit_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
+		"visit_mask": [{"x": 0, "y": 0}],
 		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
-		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "resource_collect", "visit_tile_required": true, "interaction_cadence": "one_time"},
 		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "visit_or_approach_passable", "start_support_radius"],
@@ -316,9 +317,9 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},
 		"body_mask": [{"x": 0, "y": 0}],
 		"runtime_body_mask": [{"x": 0, "y": 0}],
-		"visit_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
+		"visit_mask": [{"x": 0, "y": 0}],
 		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
-		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "neutral_guard_battle", "visit_tile_required": true, "interaction_cadence": "one_time"},
 		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "route_anchor_adjacent", "visit_or_approach_passable"],
@@ -333,9 +334,9 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},
 		"body_mask": [{"x": 0, "y": 0}],
 		"runtime_body_mask": [{"x": 0, "y": 0}],
-		"visit_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
+		"visit_mask": [{"x": 0, "y": 0}],
 		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
-		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "special_guard_unlock_then_battle", "visit_tile_required": true, "interaction_cadence": "gated"},
 		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "route_anchor_adjacent", "special_unlock_metadata_present"],
@@ -352,9 +353,9 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},
 		"body_mask": [{"x": 0, "y": 0}],
 		"runtime_body_mask": [{"x": 0, "y": 0}],
-		"visit_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
+		"visit_mask": [{"x": 0, "y": 0}],
 		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
-		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "reward_claim", "visit_tile_required": true, "interaction_cadence": "one_time"},
 		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
 		"placement_predicates": ["catalog_reference_present", "terrain_allowed_at_route_context", "deferred_reward_body_no_overlap_pending"],
@@ -372,9 +373,9 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"runtime_footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "anchor_tile"},
 		"body_mask": [{"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": -1, "y": 0}, {"x": 0, "y": 0}],
 		"runtime_body_mask": [{"x": 0, "y": 0}],
-		"visit_mask": [{"x": 0, "y": 1}, {"x": 1, "y": 0}],
+		"visit_mask": [{"x": 0, "y": 0}, {"x": -1, "y": 0}],
 		"approach_mask": [{"x": 0, "y": 1}, {"x": 1, "y": 0}, {"x": -1, "y": 1}],
-		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "mine_capture", "visit_tile_required": true, "interaction_cadence": "capture_then_daily"},
 		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "adjacent_resource_staging_space"],
@@ -392,9 +393,9 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"runtime_footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "anchor_tile"},
 		"body_mask": [{"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": -1, "y": 0}, {"x": 0, "y": 0}],
 		"runtime_body_mask": [{"x": 0, "y": 0}],
-		"visit_mask": [{"x": 0, "y": 1}, {"x": 1, "y": 0}],
+		"visit_mask": [{"x": 0, "y": 0}, {"x": -1, "y": 0}],
 		"approach_mask": [{"x": 0, "y": 1}, {"x": 1, "y": 0}, {"x": -1, "y": 1}],
-		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": true, "approach_tiles_passable": true, "road_may_cross_body": false},
+		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "neutral_dwelling_recruitment", "visit_tile_required": true, "interaction_cadence": "persistent_weekly"},
 		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "visit_or_approach_passable", "zone_role_and_reward_context"],
@@ -2079,7 +2080,8 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 			zone_grid,
 			terrain_rows,
 			occupied,
-			rng
+			rng,
+			route_reserved
 		)
 		if guard_point.is_empty():
 			continue
@@ -3978,6 +3980,7 @@ static func _authored_resource_producer_catalog_record_for_placement(record: Dic
 	var visit_mask := _authored_map_object_visit_mask(map_object)
 	if visit_mask.is_empty():
 		visit_mask = [{"x": 0, "y": 1}]
+	var approach_mask := _authored_map_object_approach_mask(body_mask, visit_mask)
 	var passability_class := String(map_object.get("passability_class", ""))
 	var body_blocks := passability_class not in ["passable_visit_on_enter", "passable_scenic"] and not bool(map_object.get("passable", true))
 	if passability_class in ["blocking_visitable", "blocking_non_visitable", "edge_blocker", "conditional_pass", "town_blocking", "neutral_stack_blocking"]:
@@ -4000,10 +4003,11 @@ static func _authored_resource_producer_catalog_record_for_placement(record: Dic
 		"body_mask": body_mask,
 		"runtime_body_mask": body_mask.duplicate(true),
 		"visit_mask": visit_mask,
-		"approach_mask": visit_mask.duplicate(true),
+		"approach_mask": approach_mask,
 		"passability_mask": {
 			"body_blocks_movement": body_blocks,
-			"visit_tiles_passable": true,
+			"visit_tiles_passable": false,
+			"visit_tiles_actionable_when_blocked": true,
 			"approach_tiles_passable": true,
 			"road_may_cross_body": false,
 		},
@@ -4019,7 +4023,7 @@ static func _authored_resource_producer_catalog_record_for_placement(record: Dic
 			"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"],
 			"blocked_terrain_ids": ["water", "coast", "shore"],
 		},
-		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "authored_single_visit_passable"],
+		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "authored_visit_access_passable"],
 		"object_limit": {"per_zone": 7, "global": 128},
 	}
 
@@ -4051,6 +4055,26 @@ static func _authored_map_object_visit_mask(map_object: Dictionary) -> Array:
 					"y": origin_offset.y + int(offset_value.get("y", 0)),
 				})
 	return visit_mask
+
+static func _authored_map_object_approach_mask(body_mask: Array, visit_mask: Array) -> Array:
+	var body_lookup := {}
+	for body in body_mask:
+		if body is Dictionary:
+			body_lookup[_point_key(int(body.get("x", 0)), int(body.get("y", 0)))] = true
+	var result := []
+	var seen := {}
+	for visit in visit_mask:
+		if not (visit is Dictionary):
+			continue
+		for offset in _cardinal_offsets():
+			var ax: int = int(visit.get("x", 0)) + int(offset.x)
+			var ay: int = int(visit.get("y", 0)) + int(offset.y)
+			var key := _point_key(ax, ay)
+			if body_lookup.has(key) or seen.has(key):
+				continue
+			seen[key] = true
+			result.append({"x": ax, "y": ay})
+	return result
 
 static func _map_object_anchor_origin_offset(map_object: Dictionary) -> Vector2i:
 	var footprint: Dictionary = map_object.get("footprint", {}) if map_object.get("footprint", {}) is Dictionary else {}
@@ -4108,6 +4132,11 @@ static func _runtime_body_tiles_for_catalog(point: Dictionary, catalog: Dictiona
 	if catalog.is_empty():
 		return [point]
 	return _relative_mask_to_tiles(point, catalog.get("runtime_body_mask", catalog.get("body_mask", [{"x": 0, "y": 0}])))
+
+static func _visit_tiles_for_catalog(point: Dictionary, catalog: Dictionary) -> Array:
+	if catalog.is_empty():
+		return [point]
+	return _relative_mask_to_tiles(point, catalog.get("visit_mask", []))
 
 static func _relative_mask_to_tiles(point: Dictionary, mask: Array) -> Array:
 	var result := []
@@ -5630,7 +5659,7 @@ static func _decoration_path_safety_validation(records: Array, route_graph: Dict
 			continue
 		var from_anchor: Dictionary = edge.get("from_anchor", {}) if edge.get("from_anchor", {}) is Dictionary else {}
 		var to_anchor: Dictionary = edge.get("to_anchor", {}) if edge.get("to_anchor", {}) is Dictionary else {}
-		var path := _find_passable_path(from_anchor, to_anchor, terrain_rows, decorated_occupied)
+		var path := _find_passable_path(from_anchor, to_anchor, terrain_rows, _occupied_without_route_endpoints(decorated_occupied, from_anchor, to_anchor))
 		if path.is_empty():
 			failures.append("required route %s became blocked by staged decoration" % String(edge.get("id", "")))
 	for record in records:
@@ -7102,7 +7131,7 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 		var to_node := _preferred_route_node_for_zone(to_zone, object_by_zone, route_nodes)
 		var from_point: Dictionary = from_node.get("point", seeds.get(from_zone, {}))
 		var to_point: Dictionary = to_node.get("point", seeds.get(to_zone, {}))
-		var path := _find_passable_path(from_point, to_point, terrain_rows, occupied)
+		var path := _find_passable_path(from_point, to_point, terrain_rows, _occupied_without_route_endpoints(occupied, from_point, to_point))
 		var classification := _route_classification(link, not path.is_empty())
 		var transit_semantics := _transit_semantics_for_surface_link(link, terrain_transit)
 		var edge_id := _route_edge_id(edge_index, from_zone, to_zone)
@@ -7153,7 +7182,7 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 				continue
 			var resource_node_id := "node_%s" % String(resource.get("placement_id", ""))
 			var resource_point := _first_approach_or_body(resource)
-			var resource_path := _find_passable_path(town_point, resource_point, terrain_rows, occupied)
+			var resource_path := _find_passable_path(town_point, resource_point, terrain_rows, _occupied_without_route_endpoints(occupied, town_point, resource_point))
 			var resource_edge_id := "edge_%02d_%s_%s" % [edge_index, town_placement_id, String(resource.get("placement_id", ""))]
 			var resource_classification := "full_connectivity" if not resource_path.is_empty() else "blocked_connectivity"
 			var resource_edge := {
@@ -8620,14 +8649,28 @@ static func _apply_pathing_metadata(placement: Dictionary, zone_grid: Array, ter
 	var zone_id := String(placement.get("zone_id", _zone_at_point(zone_grid, point)))
 	var catalog := _object_footprint_catalog_record_for_placement(placement)
 	var runtime_body := _runtime_body_tiles_for_catalog(point, catalog)
+	var visit_tiles := _visit_tiles_for_catalog(point, catalog)
 	var approaches := _approach_tiles_for_catalog(point, zone_id, zone_grid, terrain_rows, occupied, catalog, runtime_body)
 	placement["zone_id"] = zone_id
 	placement["body_tiles"] = runtime_body
 	placement["blocking_body"] = bool(catalog.get("passability_mask", {}).get("body_blocks_movement", true)) if not catalog.is_empty() else true
 	placement["approach_tiles"] = approaches
-	placement["visit_tile"] = approaches[0] if not approaches.is_empty() else point
+	placement["visit_tile"] = _preferred_visit_tile_for_catalog(visit_tiles, approaches, point)
 	placement["pathing_status"] = "pass" if not approaches.is_empty() else "blocked_no_approach"
 	_apply_object_footprint_metadata(placement, terrain_rows, occupied)
+
+static func _preferred_visit_tile_for_catalog(visit_tiles: Array, approaches: Array, point: Dictionary) -> Dictionary:
+	for visit in visit_tiles:
+		if not (visit is Dictionary):
+			continue
+		for approach in approaches:
+			if approach is Dictionary and _manhattan_distance(visit, approach) == 1:
+				return visit
+	if not visit_tiles.is_empty() and visit_tiles[0] is Dictionary:
+		return visit_tiles[0]
+	if not approaches.is_empty() and approaches[0] is Dictionary:
+		return approaches[0]
+	return point
 
 static func _copy_shared_placement_metadata(target: Dictionary, source: Dictionary) -> void:
 	for key in ["zone_id", "faction_id", "body_tiles", "blocking_body", "approach_tiles", "visit_tile", "pathing_status", "player_slot", "player_type", "team_id", "object_footprint_catalog_ref", "footprint", "runtime_footprint", "body_mask", "runtime_body_mask", "visit_mask", "approach_mask", "passability_mask", "action_mask", "terrain_restrictions", "placement_predicates", "placement_predicate_results", "footprint_deferred"]:
@@ -8785,6 +8828,9 @@ static func _preferred_route_node_for_zone(zone_id: String, object_by_zone: Dict
 	return route_nodes.get("node_zone_%s" % zone_id, {"id": "node_zone_%s" % zone_id, "point": _point_dict(0, 0)})
 
 static func _first_approach_or_body(placement: Dictionary) -> Dictionary:
+	var visit: Dictionary = placement.get("visit_tile", {}) if placement.get("visit_tile", {}) is Dictionary else {}
+	if not visit.is_empty():
+		return visit
 	var approaches: Array = placement.get("approach_tiles", [])
 	if not approaches.is_empty() and approaches[0] is Dictionary:
 		return approaches[0]
@@ -8885,6 +8931,14 @@ static func _find_passable_path(start: Dictionary, goal: Dictionary, terrain_row
 		guard -= 1
 	reversed_path.reverse()
 	return reversed_path
+
+static func _occupied_without_route_endpoints(occupied: Dictionary, from_anchor: Dictionary, to_anchor: Dictionary) -> Dictionary:
+	var route_occupied := occupied.duplicate(true)
+	if from_anchor is Dictionary:
+		route_occupied.erase(_point_key(int(from_anchor.get("x", 0)), int(from_anchor.get("y", 0))))
+	if to_anchor is Dictionary:
+		route_occupied.erase(_point_key(int(to_anchor.get("x", 0)), int(to_anchor.get("y", 0))))
+	return route_occupied
 
 static func _connect_adjacency(adjacency: Dictionary, a: String, b: String) -> void:
 	if not adjacency.has(a):
@@ -11350,7 +11404,7 @@ static func _zones_for_payload(zones: Array) -> Array:
 			})
 	return payload
 
-static func _nearest_free_cell(x: int, y: int, preferred_zone_id: Variant, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, rng: DeterministicRng) -> Dictionary:
+static func _nearest_free_cell(x: int, y: int, preferred_zone_id: Variant, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, rng: DeterministicRng, reserved: Dictionary = {}) -> Dictionary:
 	var height := zone_grid.size()
 	var width: int = zone_grid[0].size() if height > 0 and zone_grid[0] is Array else 0
 	x = clampi(x, 0, max(0, width - 1))
@@ -11366,6 +11420,8 @@ static func _nearest_free_cell(x: int, y: int, preferred_zone_id: Variant, zone_
 				if cx < 0 or cy < 0 or cx >= width or cy >= height:
 					continue
 				if occupied.has(_point_key(cx, cy)):
+					continue
+				if reserved.has(_point_key(cx, cy)):
 					continue
 				if not _terrain_cell_is_passable(terrain_rows, cx, cy):
 					continue
@@ -11495,9 +11551,15 @@ static func _reserve_visit_tiles_for_catalog(reserved: Dictionary, point: Dictio
 	for offset in catalog.get("visit_mask", []):
 		if offset is Dictionary:
 			reserved[_point_key(int(point.get("x", 0)) + int(offset.get("x", 0)), int(point.get("y", 0)) + int(offset.get("y", 0)))] = true
+	for offset in catalog.get("approach_mask", []):
+		if offset is Dictionary:
+			reserved[_point_key(int(point.get("x", 0)) + int(offset.get("x", 0)), int(point.get("y", 0)) + int(offset.get("y", 0)))] = true
 
 static func _point_key(x: int, y: int) -> String:
 	return "%d,%d" % [x, y]
+
+static func _manhattan_distance(a: Dictionary, b: Dictionary) -> int:
+	return abs(int(a.get("x", 0)) - int(b.get("x", 0))) + abs(int(a.get("y", 0)) - int(b.get("y", 0)))
 
 static func _zone_at_point(zone_grid: Array, point: Dictionary) -> String:
 	var y := int(point.get("y", 0))
