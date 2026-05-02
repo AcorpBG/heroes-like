@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-exit-profile-accuracy-10184",
-  "currentSliceTitle": "Town Exit Profile Accuracy",
+  "currentSliceId": "concept-art-asset-ingestion-boundary-10184",
+  "currentSliceTitle": "Concept-Art Asset Ingestion Boundary",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Added town Leave-to-first-overworld-frame JSONL span, rendered wall-clock reconciliation harness, save-surface skip, and generated return first-frame compact path; rendered cases stay sub-1s.",
-  "nextActionGuardrailNote": "Preserve gameplay semantics, save schema, generated map content/density, renderer/fog behavior, object contracts, profile JSONL/F3 compatibility, manual save, end-turn autosave, and town action correctness.",
-  "updatedAt": "2026-05-01T21:59:16Z",
+  "currentSliceNotes": "Completed P2.2 governance boundary as explicit deferral: generated PNGs and derivatives remain external concept evidence only. Future ingestion requires AcOrP approval, provenance/source packet, import manifest/path rules, rollback note, and validation before runtime/source-art entry.",
+  "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
+  "updatedAt": "2026-05-02T09:44:45Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1175,8 +1175,8 @@
       "implementationTargets": [
         "curation/status document or brief update only unless an explicit asset implementation slice follows"
       ],
-      "deferredReason": "Final asset approval and runtime ingestion remain deferred until the remaining P2.2 asset-ingestion boundary is explicitly resolved.",
-      "notes": "Preserved existing parent status; unrelated to random-map fairness slice.",
+      "deferredReason": "Final asset approval and runtime ingestion remain deferred by the completed P2.2 asset-ingestion boundary until AcOrP selects a later explicit ingestion slice.",
+      "notes": "Preserved existing parent status. The remaining P2.2 child now resolves the no-runtime-asset boundary as documentation/governance deferral, not asset approval.",
       "sliceType": "parent",
       "childSliceIds": [
         "concept-art-decision-register-10184",
@@ -1189,7 +1189,8 @@
       ],
       "completedImplementationEvidenceIds": [
         "concept-art-decision-register-10184",
-        "concept-art-implementation-brief-selection-10184"
+        "concept-art-implementation-brief-selection-10184",
+        "concept-art-asset-ingestion-boundary-10184"
       ],
       "reportOnlyEvidenceIds": [],
       "updatedAt": "2026-04-29T08:20:52Z",
@@ -1795,7 +1796,7 @@
       "id": "concept-art-asset-ingestion-boundary-10184",
       "title": "Concept-Art Asset Ingestion Boundary",
       "phase": "phase-2-deep-production-foundation",
-      "status": "paused",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "concept-art-curation-gate-10184",
@@ -1812,18 +1813,28 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "RandomMapGeneratorRules.gd emits terrain/passability/biome constraints, object body/approach pathing metadata, town/start viability constraints, staged road overlay segments/stubs, route connectivity classifications, and required reachability proof while preserving staged no-write boundaries.",
-        "tests/random_map_terrain_town_road_constraints_report.gd validates viable starts, primary town approaches, expansion and contest routes, guarded/full route classification, road paths avoiding blocked terrain/object bodies, and deterministic output.",
-        "Existing random_map_seeded_generator_core_report.tscn remains compatible with the stricter payload contract."
+        "docs/concept-art-pipeline.md defines an explicit runtime asset-ingestion deferral with approval authority, provenance/source requirements, import location rules, rollback path, and validation gate.",
+        "docs/concept-art-implementation-briefs.md points future Embercourt/object workers back to the runtime boundary before any generated-study-derived PNG can enter runtime or source-art paths.",
+        "ops/progress.json no longer contains random-map terrain/town/road evidence or criteria on this concept-art boundary slice."
       ],
       "completionCriteria": [
-        "Generated payloads expose terrain/town/start/road constraints suitable for scenario prototypes.",
-        "Focused Godot report and baseline validation pass.",
-        "Parent random-map foundation remains open for resource/encounter fairness and scenario-load smoke child slices."
+        "Generated PNGs and derivatives remain external concept evidence until AcOrP approves a later explicit ingestion slice.",
+        "Future ingestion cannot proceed without recorded approval, provenance packet, import manifest, rollback note, and validation result.",
+        "Baseline validation passes: python3 tests/validate_repo.py and git diff --check."
       ],
-      "updatedAt": "2026-04-27T13:18:49Z",
-      "deferredReason": "Runtime asset ingestion remains paused after brief-track selection. No generated PNG, derivative processed asset, source art import, runtime registration, renderer hookup, or final art approval is authorized until a later explicit boundary defines provenance requirements, approval authority, import location, rollback rules, and validation.",
-      "notes": "Remaining P2.2 child. Leave paused as a precise boundary after selecting Embercourt as the follow-up brief track; this paused state prevents asset ingestion while preserving the next governance item."
+      "updatedAt": "2026-05-02T09:44:45Z",
+      "deferralDecision": "Runtime asset ingestion remains explicitly deferred after brief-track selection. No generated PNG, generated crop, traced derivative, source art import, runtime registration, renderer hookup, or final art approval is authorized until a later AcOrP-approved boundary slice records provenance requirements, import paths, rollback rules, and validation.",
+      "notes": "Completed P2.2 governance boundary as explicit deferral: generated PNGs and derivatives remain external concept evidence only. Future ingestion requires AcOrP approval, provenance/source packet, import manifest/path rules, rollback note, and validation before runtime/source-art entry.",
+      "startedAt": "2026-05-02T09:42:56Z",
+      "futureActionGate": "If AcOrP later selects asset ingestion, create a new explicit ingestion slice that names approved source studies, provenance packet, import paths, rollback owner, and validation before touching runtime/source assets.",
+      "validationEvidence": [
+        "python3 tests/validate_repo.py passed on 2026-05-02.",
+        "git diff --check passed on 2026-05-02."
+      ],
+      "nonGoals": [
+        "No generated PNG import, crop, copy, trace, rename, manifest registration, scene hookup, renderer change, runtime/source asset approval, final art approval, save/schema change, gameplay rule change, map generation change, or AI behavior change."
+      ],
+      "completedAt": "2026-05-02T09:44:45Z"
     },
     {
       "id": "economy-resource-registry-policy-10184",
