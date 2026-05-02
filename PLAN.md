@@ -1246,22 +1246,6 @@ sourceDocs:
 implementationTargets:
 - asset ingestion plan or explicit deferral note
 
-baselineChecks:
-- `python3 tests/validate_repo.py`
-- `git diff --check`
-
-sliceEvidence:
-- `docs/concept-art-pipeline.md` defines an explicit runtime asset-ingestion deferral with approval authority, provenance/source requirements, import location rules, rollback path, and validation gate.
-- `docs/concept-art-implementation-briefs.md` points future Embercourt/object workers back to that boundary before any generated-study-derived PNG can enter runtime or source-art paths.
-
-completionCriteria:
-- Generated PNGs and derivatives remain external concept evidence until AcOrP approves a later explicit ingestion slice.
-- Future ingestion cannot proceed without recorded approval, provenance packet, import manifest, rollback note, and validation result.
-- `ops/progress.json` for this slice has no stale random-map evidence or criteria.
-
-nonGoals:
-- No generated PNG import, source-art import, runtime registration, renderer hookup, scene/content reference change, or final art approval.
-
 ### P2 Child: Economy Resource Registry Policy
 
 id: `economy-resource-registry-policy-10184`
