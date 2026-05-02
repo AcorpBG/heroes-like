@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "concept-art-asset-ingestion-boundary-10184",
-  "currentSliceTitle": "Concept-Art Asset Ingestion Boundary",
+  "currentSliceId": "placement-interaction-inside-footprint-override-10184",
+  "currentSliceTitle": "placement interaction inside footprint override 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed P2.2 governance boundary as explicit deferral: generated PNGs and derivatives remain external concept evidence only. Future ingestion requires AcOrP approval, provenance/source packet, import manifest/path rules, rollback note, and validation before runtime/source-art entry.",
+  "currentSliceNotes": "Completed inside-footprint interaction override. Validation: python3 tests/validate_repo.py; git diff --check; redirected Godot focused regression, F4 overlay regression, and random-map footprint interaction report all passed.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-02T10:59:21Z",
+  "updatedAt": "2026-05-02T11:50:47Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -5760,6 +5760,16 @@
       "startedAt": "2026-05-02T10:00:22Z",
       "notes": "Implemented F4 overworld placement debug overlay with red blocker/body tiles and yellow interaction/visit/entry/action tiles from live session/object metadata; focused regression and baseline validation passed.",
       "completedAt": "2026-05-02T10:00:50Z"
+    },
+    {
+      "id": "placement-interaction-inside-footprint-override-10184",
+      "title": "placement interaction inside footprint override 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-02T11:50:47Z",
+      "startedAt": "2026-05-02T11:44:15Z",
+      "notes": "Completed inside-footprint interaction override. Validation: python3 tests/validate_repo.py; git diff --check; redirected Godot focused regression, F4 overlay regression, and random-map footprint interaction report all passed.",
+      "completedAt": "2026-05-02T11:50:47Z"
     }
   ],
   "completedImplementationEvidence": [

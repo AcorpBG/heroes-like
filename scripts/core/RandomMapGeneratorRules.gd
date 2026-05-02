@@ -4210,7 +4210,7 @@ static func _object_footprint_validation_core(object_records: Array, reward_refe
 		for cell in segment.get("cells", []):
 			if cell is Dictionary:
 				var key := _point_key(int(cell.get("x", 0)), int(cell.get("y", 0)))
-				if route_occupied.has(key):
+				if route_occupied.has(key) and not _road_segment_cell_is_endpoint(segment, cell):
 					failures.append("road segment %s crosses footprint body %s at %s" % [String(segment.get("route_edge_id", "")), String(route_occupied[key]), key])
 	if not missing_catalog_ids.is_empty():
 		failures.append("missing catalog records for %s" % ", ".join(missing_catalog_ids))
@@ -4239,10 +4239,26 @@ static func _object_footprint_route_failures(route_graph: Dictionary, terrain_ro
 			continue
 		var from_anchor: Dictionary = edge.get("from_anchor", {}) if edge.get("from_anchor", {}) is Dictionary else {}
 		var to_anchor: Dictionary = edge.get("to_anchor", {}) if edge.get("to_anchor", {}) is Dictionary else {}
-		var path := _find_passable_path(from_anchor, to_anchor, terrain_rows, occupied)
+		var route_occupied := occupied.duplicate(true)
+		route_occupied.erase(_point_key(int(from_anchor.get("x", 0)), int(from_anchor.get("y", 0))))
+		route_occupied.erase(_point_key(int(to_anchor.get("x", 0)), int(to_anchor.get("y", 0))))
+		var path := _find_passable_path(from_anchor, to_anchor, terrain_rows, route_occupied)
 		if path.is_empty():
 			failures.append("required route %s is blocked under footprint body occupancy" % String(edge.get("id", "")))
 	return failures
+
+static func _road_segment_cell_is_endpoint(segment: Dictionary, cell: Dictionary) -> bool:
+	var cells: Array = segment.get("cells", []) if segment.get("cells", []) is Array else []
+	if cells.is_empty():
+		return false
+	var x := int(cell.get("x", 0))
+	var y := int(cell.get("y", 0))
+	var first: Dictionary = cells[0] if cells[0] is Dictionary else {}
+	var last: Dictionary = cells[cells.size() - 1] if cells[cells.size() - 1] is Dictionary else {}
+	return (
+		(not first.is_empty() and int(first.get("x", 0)) == x and int(first.get("y", 0)) == y)
+		or (not last.is_empty() and int(last.get("x", 0)) == x and int(last.get("y", 0)) == y)
+	)
 
 static func _object_footprint_deferred_record_count(records: Array) -> int:
 	var count := 0
@@ -4555,7 +4571,7 @@ static func _town_mine_dwelling_validation_core(town_records: Array, mine_record
 		for cell in segment.get("cells", []):
 			if cell is Dictionary:
 				var key := _point_key(int(cell.get("x", 0)), int(cell.get("y", 0)))
-				if body_lookup.has(key):
+				if body_lookup.has(key) and not _road_segment_cell_is_endpoint(segment, cell):
 					conflicts.append("road segment %s crosses %s at %s" % [String(segment.get("route_edge_id", "")), String(body_lookup[key]), key])
 	for decor in decoration_density.get("decoration_records", []):
 		if not (decor is Dictionary):
@@ -4721,7 +4737,7 @@ static func _road_overlay_writeout_payload(road_network: Dictionary, route_graph
 			var y := int(cell.get("y", -1))
 			var key := _point_key(x, y)
 			var terrain_id := String(terrain_rows[y][x]) if _point_in_rows(terrain_rows, x, y) else ""
-			var body_blocked := occupied.has(key)
+			var body_blocked := occupied.has(key) and not _road_segment_cell_is_endpoint(segment, cell)
 			var tile := {
 				"id": "road_tile_%s_%03d" % [route_edge_id, index + 1],
 				"route_edge_id": route_edge_id,
@@ -8551,7 +8567,7 @@ static func _validate_road_paths(road_network: Dictionary, terrain_rows: Array, 
 				failures.append("road segment %s leaves map bounds" % route_edge_id)
 			elif not _terrain_cell_is_passable(terrain_rows, x, y):
 				failures.append("road segment %s crosses impassable terrain at %d,%d" % [route_edge_id, x, y])
-			if occupied.has(_point_key(x, y)):
+			if occupied.has(_point_key(x, y)) and not _road_segment_cell_is_endpoint(segment, cell):
 				failures.append("road segment %s crosses blocked object body at %d,%d" % [route_edge_id, x, y])
 
 static func _terrain_region_counts(terrain_rows: Array) -> Dictionary:
@@ -8633,7 +8649,8 @@ static func _approach_tiles_for_catalog(point: Dictionary, preferred_zone_id: St
 		if not _point_in_rows(terrain_rows, nx, ny):
 			continue
 		var key := _point_key(nx, ny)
-		if body_lookup.has(key) or occupied.has(key):
+		var inside_runtime_body := body_lookup.has(key)
+		if occupied.has(key) and not inside_runtime_body:
 			continue
 		if not _terrain_cell_is_passable(terrain_rows, nx, ny):
 			continue
@@ -8829,8 +8846,6 @@ static func _find_passable_path(start: Dictionary, goal: Dictionary, terrain_row
 	var goal_y := int(goal.get("y", 0))
 	if not _point_in_rows(terrain_rows, start_x, start_y) or not _point_in_rows(terrain_rows, goal_x, goal_y):
 		return []
-	if occupied.has(_point_key(start_x, start_y)) or occupied.has(_point_key(goal_x, goal_y)):
-		return []
 	if not _terrain_cell_is_passable(terrain_rows, start_x, start_y) or not _terrain_cell_is_passable(terrain_rows, goal_x, goal_y):
 		return []
 	var start_key := _point_key(start_x, start_y)
@@ -8852,7 +8867,7 @@ static func _find_passable_path(start: Dictionary, goal: Dictionary, terrain_row
 				continue
 			if not _point_in_rows(terrain_rows, nx, ny):
 				continue
-			if occupied.has(next_key):
+			if occupied.has(next_key) and next_key != goal_key:
 				continue
 			if not _terrain_cell_is_passable(terrain_rows, nx, ny):
 				continue
