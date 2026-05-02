@@ -514,7 +514,7 @@ static func try_move_along_route(
 		var previous: Vector2i = path[index - 1]
 		if maxi(abs(tile.x - previous.x), abs(tile.y - previous.y)) != 1:
 			return {"ok": false, "message": "The selected route is not contiguous.", "route_steps": []}
-		if tile_is_blocked(session, tile.x, tile.y):
+		if _tile_blocks_route_step(session, tile, index == path.size() - 1):
 			return {"ok": false, "message": "The terrain blocks that route.", "route_steps": []}
 		if index < path.size() - 1 and tile_has_route_interaction(session, tile.x, tile.y):
 			return {"ok": false, "message": "An interaction blocks that route.", "route_steps": []}
@@ -1803,6 +1803,16 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 		if int(position.get("x", -999)) == x and int(position.get("y", -999)) == y:
 			return true
 	return false
+
+static func tile_is_actionable_route_destination(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
+	return tile_has_route_interaction(session, x, y)
+
+static func _tile_blocks_route_step(session: SessionStateStoreScript.SessionData, tile: Vector2i, is_destination: bool) -> bool:
+	if not tile_is_blocked(session, tile.x, tile.y):
+		return false
+	if is_destination and tile_is_actionable_route_destination(session, tile.x, tile.y):
+		return false
+	return true
 
 static func _tile_blocked_by_resource_object(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> bool:
 	if session == null:

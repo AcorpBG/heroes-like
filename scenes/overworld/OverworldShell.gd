@@ -722,7 +722,7 @@ func _selected_cached_route_execution_fallback_reason(route_state: Dictionary, r
 	var destination: Vector2i = route[route.size() - 1]
 	if not _tile_in_bounds(destination):
 		return "destination_out_of_bounds"
-	if OverworldRules.tile_is_blocked(_session, destination.x, destination.y):
+	if OverworldRules.tile_is_blocked(_session, destination.x, destination.y) and not OverworldRules.tile_is_actionable_route_destination(_session, destination.x, destination.y):
 		return "destination_blocked"
 	var descriptor: Dictionary = route_state.get("destination_interaction_descriptor", {}) if route_state.get("destination_interaction_descriptor", {}) is Dictionary else {}
 	var descriptor_reason := _selected_route_destination_descriptor_fallback_reason(descriptor, destination)
@@ -2408,7 +2408,7 @@ func _active_site_order_next_step(action_id: String, label: String) -> String:
 func _selected_tile_movement_action() -> Dictionary:
 	if not _tile_in_bounds(_selected_tile):
 		return {}
-	if OverworldRules.tile_is_blocked(_session, _selected_tile.x, _selected_tile.y):
+	if OverworldRules.tile_is_blocked(_session, _selected_tile.x, _selected_tile.y) and not OverworldRules.tile_is_actionable_route_destination(_session, _selected_tile.x, _selected_tile.y):
 		return {}
 
 	var hero_pos = OverworldRules.hero_position(_session)
@@ -3003,12 +3003,13 @@ func _selected_route_decision_surface() -> Dictionary:
 	var explored := OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y)
 	var visible := OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y)
 	var blocked := OverworldRules.tile_is_blocked(_session, _selected_tile.x, _selected_tile.y)
+	var selected_blocks_travel := blocked and not OverworldRules.tile_is_actionable_route_destination(_session, _selected_tile.x, _selected_tile.y)
 	var destination_name := _selected_tile_destination_name()
 	if destination_name == "":
 		destination_name = "%d,%d" % [_selected_tile.x, _selected_tile.y]
 	var route: Array = []
 	var route_state: Dictionary = {}
-	if not selected_is_hero and not blocked:
+	if not selected_is_hero and not selected_blocks_travel:
 		route_state = _ensure_selected_route_state("decision")
 		route = route_state.get("route_tiles", []) if route_state.get("route_tiles", []) is Array else []
 	var steps: int = max(0, route.size() - 1)
@@ -3051,7 +3052,7 @@ func _selected_route_decision_surface() -> Dictionary:
 		action_kind = "hold"
 		action_label = "Current Position"
 		reachable_today = true
-	elif blocked:
+	elif selected_blocks_travel:
 		status = "blocked"
 		blocked_reason = "%s blocks travel." % _terrain_name_at(_selected_tile.x, _selected_tile.y)
 	elif route_clear and movement_current <= 0:
@@ -5279,7 +5280,7 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	if start == goal:
 		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "same_tile", 1, 1, 0, 0)
 		return [start]
-	if OverworldRules.tile_is_blocked(_session, goal.x, goal.y):
+	if OverworldRules.tile_is_blocked(_session, goal.x, goal.y) and not OverworldRules.tile_is_actionable_route_destination(_session, goal.x, goal.y):
 		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "goal_blocked", 0, 0, 1, 0)
 		return []
 	var queue: Array = [start]
@@ -5302,7 +5303,7 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 				continue
 			if debug_timing_enabled:
 				blocked_tile_lookup_count += 1
-			if OverworldRules.tile_is_blocked(_session, next.x, next.y):
+			if OverworldRules.tile_is_blocked(_session, next.x, next.y) and not (next == goal and OverworldRules.tile_is_actionable_route_destination(_session, next.x, next.y)):
 				continue
 			if next != goal and OverworldRules.tile_has_route_interaction(_session, next.x, next.y):
 				continue
@@ -5333,7 +5334,7 @@ func _tile_in_bounds(tile: Vector2i) -> bool:
 func _is_adjacent_move_target(hero_pos: Vector2i, tile: Vector2i) -> bool:
 	if maxi(abs(hero_pos.x - tile.x), abs(hero_pos.y - tile.y)) != 1:
 		return false
-	return not OverworldRules.tile_is_blocked(_session, tile.x, tile.y)
+	return not OverworldRules.tile_is_blocked(_session, tile.x, tile.y) or OverworldRules.tile_is_actionable_route_destination(_session, tile.x, tile.y)
 
 func _ensure_selected_tile() -> void:
 	if not _tile_in_bounds(_selected_tile):
@@ -5432,7 +5433,7 @@ func _resource_node_route_tile(node: Dictionary, fallback: Vector2i) -> Vector2i
 		if not (value is Dictionary):
 			continue
 		var candidate := Vector2i(int(value.get("x", 0)), int(value.get("y", 0)))
-		if not OverworldRules.tile_is_blocked(_session, candidate.x, candidate.y):
+		if not OverworldRules.tile_is_blocked(_session, candidate.x, candidate.y) or OverworldRules.tile_is_actionable_route_destination(_session, candidate.x, candidate.y):
 			_debug_phase_end("body_visit_tile_resolution", body_visit_started_usec, {
 				"fallback": _debug_tile_payload(fallback),
 				"resolved": _debug_tile_payload(candidate),
@@ -7747,7 +7748,7 @@ func _build_validation_path(
 		return []
 	if start == goal:
 		return [start]
-	if OverworldRules.tile_is_blocked(_session, goal.x, goal.y):
+	if OverworldRules.tile_is_blocked(_session, goal.x, goal.y) and not OverworldRules.tile_is_actionable_route_destination(_session, goal.x, goal.y):
 		return []
 
 	var queue: Array = [start]
@@ -7766,7 +7767,7 @@ func _build_validation_path(
 			var next: Vector2i = current + direction
 			if not _tile_in_bounds(next):
 				continue
-			if OverworldRules.tile_is_blocked(_session, next.x, next.y):
+			if OverworldRules.tile_is_blocked(_session, next.x, next.y) and not (next == goal and OverworldRules.tile_is_actionable_route_destination(_session, next.x, next.y)):
 				continue
 			if avoid_interactables and _validation_tile_has_route_hazard(next, goal, target_kind, target_placement_id):
 				continue

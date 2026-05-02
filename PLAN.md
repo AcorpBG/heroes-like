@@ -95,6 +95,35 @@ completionCriteria:
 - The map view draws translucent red blocker/body tiles and translucent yellow interaction/visit/entry/action tiles from live session/object metadata for authored and generated placements.
 - The overlay is display-only and does not change gameplay, pathfinding, object contracts, save schema, renderer assets, AI, or generated map semantics.
 
+### Current Owner-Directed Placement Slice - Interaction Inside Footprint Override
+
+id: `placement-interaction-inside-footprint-override-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Allow authored and runtime action/interaction tiles to live inside a blocking object footprint, with interaction targeting overriding the body block only for the action destination.
+
+implementationTargets:
+- `content/map_objects.json`
+- `scripts/core/OverworldRules.gd`
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `scenes/overworld/OverworldShell.gd`
+- `scenes/overworld/OverworldMapView.gd`
+- `tests/overworld_placement_interaction_footprint_override_regression.gd`
+- `tests/overworld_placement_debug_overlay_regression.gd`
+- `tests/random_map_generated_object_footprint_interaction_report.gd`
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `git diff --check`
+- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_placement_debug_overlay_regression.tscn`
+- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_placement_interaction_footprint_override_regression.tscn`
+
+completionCriteria:
+- Reef Coin Assay has its visit/action tile inside its 2x2 footprint and overlapping its body mask.
+- Blocking lookups still block non-action body tiles and do not make whole bodies passable.
+- Route targeting and activation can use an action tile even when it overlaps a blocking body tile.
+- F4 overlay keeps overlapped body/action tiles visible, with the interactable layer drawn distinctly over blocker/body.
+- Generated object metadata accepts inside-body visit tiles without widening the transitional generated-town runtime footprint split.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:

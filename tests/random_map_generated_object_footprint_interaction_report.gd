@@ -142,9 +142,10 @@ func _inspect_resource_node(session, node: Dictionary) -> Dictionary:
 	if interaction_tile.is_empty():
 		failures.append("%s has no concrete interaction tile." % String(node.get("placement_id", "")))
 	elif OverworldRules.tile_is_blocked(session, int(interaction_tile.get("x", 0)), int(interaction_tile.get("y", 0))):
-		failures.append("%s interaction tile is blocked: %s." % [String(node.get("placement_id", "")), JSON.stringify(interaction_tile)])
-	if bool(surface.get("blocks_body_tiles", false)) and _tile_in_array(body_tiles, interaction_tile):
-		failures.append("%s interaction tile overlaps body tiles: %s." % [String(node.get("placement_id", "")), JSON.stringify(surface)])
+		if not _tile_in_array(body_tiles, interaction_tile):
+			failures.append("%s interaction tile is blocked outside the body mask: %s." % [String(node.get("placement_id", "")), JSON.stringify(interaction_tile)])
+		if not OverworldRules.tile_is_actionable_route_destination(session, int(interaction_tile.get("x", 0)), int(interaction_tile.get("y", 0))):
+			failures.append("%s blocked interaction tile is not actionable: %s." % [String(node.get("placement_id", "")), JSON.stringify(interaction_tile)])
 	if bool(surface.get("blocks_body_tiles", false)):
 		for body_tile in body_tiles:
 			if not (body_tile is Dictionary):
@@ -177,7 +178,6 @@ func _inspect_resource_node(session, node: Dictionary) -> Dictionary:
 				and bool(surface.get("uses_runtime_body_tiles", false))
 				and bool(surface.get("uses_runtime_visit_tile", false))
 				and int(surface.get("body_tile_count", 0)) == authored_body_tiles.size()
-				and not bool(_tile_in_array(body_tiles, interaction_tile))
 			)
 		else:
 			authored_runtime_contract = (
