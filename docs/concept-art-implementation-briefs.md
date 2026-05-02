@@ -39,7 +39,6 @@ Future implementation reference:
 - Create original runtime art/content from the motifs and constraints, not from copied generated-image layouts, silhouettes, banners, symbols, labels, or palette chips.
 - Define object metadata before production migration: footprint/body tiles, visit anchor, approach sides, passability class, primary class, ownership/capture states, route effects, guard expectations, and animation cue ids.
 - Keep economy-resource work staged behind the `embergrain` and canonical `wood` policy decisions named in the prerequisites.
-- Asset ingestion remains explicitly deferred by the runtime boundary in `docs/concept-art-pipeline.md`; future workers need AcOrP approval, provenance/source records, import-location rules, rollback instructions, and validation evidence before any generated-study-derived PNG can enter runtime or source-art paths.
 
 Explicit non-goals for this selection:
 
