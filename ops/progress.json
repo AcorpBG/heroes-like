@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-exit-profile-accuracy-10184",
-  "currentSliceTitle": "Town Exit Profile Accuracy",
+  "currentSliceId": "overworld-placement-debug-overlay-10184",
+  "currentSliceTitle": "overworld placement debug overlay 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Added town Leave-to-first-overworld-frame JSONL span, rendered wall-clock reconciliation harness, save-surface skip, and generated return first-frame compact path; rendered cases stay sub-1s.",
+  "currentSliceNotes": "Implemented F4 overworld placement debug overlay with red blocker/body tiles and yellow interaction/visit/entry/action tiles from live session/object metadata; focused regression and baseline validation passed.",
   "nextActionGuardrailNote": "Preserve gameplay semantics, save schema, generated map content/density, renderer/fog behavior, object contracts, profile JSONL/F3 compatibility, manual save, end-turn autosave, and town action correctness.",
-  "updatedAt": "2026-05-01T21:59:16Z",
+  "updatedAt": "2026-05-02T10:00:50Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -5739,6 +5739,16 @@
       "startedAt": "2026-05-01T21:47:35Z",
       "notes": "Added town Leave-to-first-overworld-frame JSONL span, rendered wall-clock reconciliation harness, save-surface skip, and generated return first-frame compact path; rendered cases stay sub-1s.",
       "completedAt": "2026-05-01T21:59:16Z"
+    },
+    {
+      "id": "overworld-placement-debug-overlay-10184",
+      "title": "overworld placement debug overlay 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-02T10:00:50Z",
+      "startedAt": "2026-05-02T10:00:22Z",
+      "notes": "Implemented F4 overworld placement debug overlay with red blocker/body tiles and yellow interaction/visit/entry/action tiles from live session/object metadata; focused regression and baseline validation passed.",
+      "completedAt": "2026-05-02T10:00:50Z"
     }
   ],
   "completedImplementationEvidence": [

@@ -74,6 +74,27 @@ completionCriteria:
 - Ordinary town exit does not build save/autosave/save-surface records.
 - Rendered town exit remains under one second for the covered ordinary and generated Large cases.
 
+### Current Owner-Directed Debug Slice - Overworld Placement Debug Overlay
+
+id: `overworld-placement-debug-overlay-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add an F4 overworld map-view debug overlay for placement passability review before any art/runtime asset ingestion resumes.
+
+implementationTargets:
+- `scenes/overworld/OverworldShell.gd`
+- `scenes/overworld/OverworldMapView.gd`
+- `tests/overworld_placement_debug_overlay_regression.gd`
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `git diff --check`
+- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_placement_debug_overlay_regression.tscn`
+
+completionCriteria:
+- F4 toggles the placement overlay on and off without changing the existing F3 debug/profile behavior.
+- The map view draws translucent red blocker/body tiles and translucent yellow interaction/visit/entry/action tiles from live session/object metadata for authored and generated placements.
+- The overlay is display-only and does not change gameplay, pathfinding, object contracts, save schema, renderer assets, AI, or generated map semantics.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:

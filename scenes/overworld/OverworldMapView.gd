@@ -30,6 +30,10 @@ const HERO_FILL_COLOR := Color(0.88, 0.32, 0.21, 1.0)
 const RESERVE_HERO_COLOR := Color(0.87, 0.90, 0.94, 1.0)
 const ROUTE_COLOR := Color(0.97, 0.86, 0.43, 0.92)
 const ROUTE_BLOCKED_COLOR := Color(0.87, 0.43, 0.33, 0.92)
+const PLACEMENT_DEBUG_BLOCKER_FILL := Color(1.0, 0.06, 0.04, 0.36)
+const PLACEMENT_DEBUG_BLOCKER_BORDER := Color(1.0, 0.17, 0.12, 0.86)
+const PLACEMENT_DEBUG_INTERACTABLE_FILL := Color(1.0, 0.86, 0.08, 0.38)
+const PLACEMENT_DEBUG_INTERACTABLE_BORDER := Color(1.0, 0.96, 0.32, 0.88)
 const TERRAIN_COLORS := {
 	"grass": Color(0.41, 0.62, 0.31, 1.0),
 	"forest": Color(0.23, 0.43, 0.25, 1.0),
@@ -249,6 +253,7 @@ var _artifacts_by_tile: Dictionary = {}
 var _encounters_by_tile: Dictionary = {}
 var _rememberable_encounters_by_tile: Dictionary = {}
 var _heroes_by_tile: Dictionary = {}
+var _placement_debug_overlay_enabled := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -329,6 +334,12 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 
 	_invalidate_dynamic_layer("map_state_updated")
 	_profile_end("set_map_state", profile_start)
+
+func set_placement_debug_overlay_enabled(enabled: bool) -> void:
+	if _placement_debug_overlay_enabled == enabled:
+		return
+	_placement_debug_overlay_enabled = enabled
+	_invalidate_dynamic_layer("placement_debug_overlay_toggled")
 
 func _apply_selected_route_state(selected_route_state: Dictionary) -> bool:
 	if selected_route_state.is_empty() or not bool(selected_route_state.get("valid", false)):
@@ -727,6 +738,7 @@ func _draw_dynamic_layer() -> void:
 	var board_rect = _board_rect()
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
 	_draw_route(board_rect)
+	_draw_placement_debug_overlay(board_rect, visible_bounds)
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
@@ -740,6 +752,28 @@ func _draw_dynamic_layer() -> void:
 		"tile_checks": tile_checks,
 		"visible_bounds": _rect2i_payload(visible_bounds),
 	})
+
+func _draw_placement_debug_overlay(board_rect: Rect2, visible_bounds: Rect2i) -> void:
+	if not _placement_debug_overlay_enabled:
+		return
+	var payload := _placement_debug_overlay_payload()
+	var blocker_tiles: Array = payload.get("blocker_tiles", []) if payload.get("blocker_tiles", []) is Array else []
+	var interactable_tiles: Array = payload.get("interactable_tiles", []) if payload.get("interactable_tiles", []) is Array else []
+	for tile_payload in blocker_tiles:
+		var tile := _tile_from_payload(tile_payload)
+		if not _tile_in_visible_bounds(tile, visible_bounds):
+			continue
+		_draw_placement_debug_tile(board_rect, tile, PLACEMENT_DEBUG_BLOCKER_FILL, PLACEMENT_DEBUG_BLOCKER_BORDER)
+	for tile_payload in interactable_tiles:
+		var tile := _tile_from_payload(tile_payload)
+		if not _tile_in_visible_bounds(tile, visible_bounds):
+			continue
+		_draw_placement_debug_tile(board_rect, tile, PLACEMENT_DEBUG_INTERACTABLE_FILL, PLACEMENT_DEBUG_INTERACTABLE_BORDER)
+
+func _draw_placement_debug_tile(board_rect: Rect2, tile: Vector2i, fill_color: Color, border_color: Color) -> void:
+	var rect := _tile_rect(board_rect, tile).grow(-1.0)
+	_canvas_draw_rect(rect, fill_color, true)
+	_canvas_draw_rect(rect, border_color, false, maxf(1.0, rect.size.x * 0.035))
 
 func _draw_tile_background(tile: Vector2i, rect: Rect2) -> void:
 	_draw_tile_session_static_background(tile, rect)
@@ -2389,6 +2423,12 @@ func validation_set_path_detail_profile_enabled(enabled: bool) -> void:
 
 func validation_profile_snapshot() -> Dictionary:
 	return _validation_profile.duplicate(true)
+
+func validation_placement_debug_overlay_snapshot() -> Dictionary:
+	var payload := _placement_debug_overlay_payload()
+	payload["enabled"] = _placement_debug_overlay_enabled
+	payload["dynamic_reason"] = _dynamic_layer_reason
+	return payload
 
 func _profile_begin(_name: String) -> int:
 	return Time.get_ticks_usec()
@@ -5385,6 +5425,142 @@ func _has_rememberable_encounter_at(tile: Vector2i) -> bool:
 
 func _has_hero_at(tile: Vector2i) -> bool:
 	return _heroes_by_tile.has(_tile_key(tile))
+
+func _placement_debug_overlay_payload() -> Dictionary:
+	var blocker_index := {}
+	var interactable_index := {}
+	var records := []
+	if _session == null:
+		return _placement_debug_payload_from_indexes(blocker_index, interactable_index, records)
+	var towns = _session.overworld.get("towns", [])
+	if towns is Array:
+		for town_value in towns:
+			if town_value is Dictionary:
+				_collect_town_placement_debug_tiles(town_value, blocker_index, interactable_index, records)
+	var resource_nodes = _session.overworld.get("resource_nodes", [])
+	if resource_nodes is Array:
+		for node_value in resource_nodes:
+			if node_value is Dictionary:
+				_collect_resource_placement_debug_tiles(node_value, blocker_index, interactable_index, records)
+	var artifact_nodes = _session.overworld.get("artifact_nodes", [])
+	if artifact_nodes is Array:
+		for node_value in artifact_nodes:
+			if node_value is Dictionary and not bool(node_value.get("collected", false)):
+				var tile := Vector2i(int(node_value.get("x", -1)), int(node_value.get("y", -1)))
+				_add_placement_debug_tile(interactable_index, tile, "artifact_action", String(node_value.get("placement_id", "")))
+				records.append(_placement_debug_record("artifact", String(node_value.get("placement_id", "")), 0, 1))
+	var encounters = _session.overworld.get("encounters", [])
+	if encounters is Array:
+		for encounter_value in encounters:
+			if encounter_value is Dictionary and not OverworldRulesScript.is_encounter_resolved(_session, encounter_value):
+				var tile := Vector2i(int(encounter_value.get("x", -1)), int(encounter_value.get("y", -1)))
+				_add_placement_debug_tile(interactable_index, tile, "encounter_action", String(encounter_value.get("placement_id", encounter_value.get("id", ""))))
+				records.append(_placement_debug_record("encounter", String(encounter_value.get("placement_id", encounter_value.get("id", ""))), 0, 1))
+	return _placement_debug_payload_from_indexes(blocker_index, interactable_index, records)
+
+func _collect_town_placement_debug_tiles(town: Dictionary, blocker_index: Dictionary, interactable_index: Dictionary, records: Array) -> void:
+	var entry := _town_entry_tile(town)
+	var blocker_count := 0
+	var interactable_count := 0
+	for cell_value in _town_in_bounds_footprint_cells_for_entry(entry):
+		var cell: Vector2i = cell_value
+		if cell == entry:
+			_add_placement_debug_tile(interactable_index, cell, "town_entry", String(town.get("placement_id", "")))
+			interactable_count += 1
+		else:
+			_add_placement_debug_tile(blocker_index, cell, "town_body", String(town.get("placement_id", "")))
+			blocker_count += 1
+	records.append(_placement_debug_record("town", String(town.get("placement_id", "")), blocker_count, interactable_count))
+
+func _collect_resource_placement_debug_tiles(node: Dictionary, blocker_index: Dictionary, interactable_index: Dictionary, records: Array) -> void:
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	if not bool(site.get("persistent_control", false)) and bool(node.get("collected", false)):
+		return
+	var placement_id := String(node.get("placement_id", ""))
+	var surface := OverworldRulesScript.overworld_object_placement_pathing_surface(_session, placement_id)
+	var blocker_count := 0
+	var interactable_count := 0
+	if bool(surface.get("blocks_body_tiles", false)):
+		var body_tiles: Array = surface.get("body_tiles", []) if surface.get("body_tiles", []) is Array else []
+		for tile_payload in body_tiles:
+			var tile := _tile_from_payload(tile_payload)
+			_add_placement_debug_tile(blocker_index, tile, "resource_body", placement_id)
+			blocker_count += 1
+	var interaction_tiles: Array = surface.get("interaction_tiles", []) if surface.get("interaction_tiles", []) is Array else []
+	for tile_payload in interaction_tiles:
+		var tile := _tile_from_payload(tile_payload)
+		_add_placement_debug_tile(interactable_index, tile, "resource_visit", placement_id)
+		interactable_count += 1
+	if interaction_tiles.is_empty():
+		_add_placement_debug_tile(interactable_index, Vector2i(int(node.get("x", -1)), int(node.get("y", -1))), "resource_action", placement_id)
+		interactable_count += 1
+	records.append(_placement_debug_record("resource", placement_id, blocker_count, interactable_count))
+
+func _placement_debug_record(kind: String, placement_id: String, blocker_count: int, interactable_count: int) -> Dictionary:
+	return {
+		"kind": kind,
+		"placement_id": placement_id,
+		"blocker_count": blocker_count,
+		"interactable_count": interactable_count,
+	}
+
+func _placement_debug_payload_from_indexes(blocker_index: Dictionary, interactable_index: Dictionary, records: Array) -> Dictionary:
+	return {
+		"blocker_tiles": _placement_debug_tiles_from_index(blocker_index),
+		"interactable_tiles": _placement_debug_tiles_from_index(interactable_index),
+		"blocker_tile_count": blocker_index.size(),
+		"interactable_tile_count": interactable_index.size(),
+		"records": records,
+	}
+
+func _placement_debug_tiles_from_index(index: Dictionary) -> Array:
+	var keys := index.keys()
+	keys.sort()
+	var tiles := []
+	for key in keys:
+		var tile: Dictionary = index.get(key, {})
+		tiles.append(tile.duplicate(true))
+	return tiles
+
+func _add_placement_debug_tile(index: Dictionary, tile: Vector2i, kind: String, placement_id: String) -> void:
+	if not _tile_in_map(tile):
+		return
+	var key := _tile_key(tile)
+	var payload: Dictionary = index.get(key, {}) if index.get(key, {}) is Dictionary else {}
+	if payload.is_empty():
+		payload = {
+			"x": tile.x,
+			"y": tile.y,
+			"kinds": [],
+			"placement_ids": [],
+		}
+	var kinds: Array = payload.get("kinds", []) if payload.get("kinds", []) is Array else []
+	if kind != "" and kind not in kinds:
+		kinds.append(kind)
+	payload["kinds"] = kinds
+	var placement_ids: Array = payload.get("placement_ids", []) if payload.get("placement_ids", []) is Array else []
+	if placement_id != "" and placement_id not in placement_ids:
+		placement_ids.append(placement_id)
+	payload["placement_ids"] = placement_ids
+	index[key] = payload
+
+func _tile_from_payload(value: Variant) -> Vector2i:
+	if value is Vector2i:
+		return value
+	if value is Dictionary:
+		return Vector2i(int(value.get("x", -1)), int(value.get("y", -1)))
+	return Vector2i(-1, -1)
+
+func _tile_in_map(tile: Vector2i) -> bool:
+	return tile.x >= 0 and tile.y >= 0 and tile.x < _map_size.x and tile.y < _map_size.y
+
+func _tile_in_visible_bounds(tile: Vector2i, visible_bounds: Rect2i) -> bool:
+	return (
+		tile.x >= visible_bounds.position.x
+		and tile.y >= visible_bounds.position.y
+		and tile.x < visible_bounds.position.x + visible_bounds.size.x
+		and tile.y < visible_bounds.position.y + visible_bounds.size.y
+	)
 
 func _reserve_hero_count(tile: Vector2i) -> int:
 	var reserve_count = 0

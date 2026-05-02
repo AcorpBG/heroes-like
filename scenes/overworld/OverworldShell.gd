@@ -83,6 +83,7 @@ const RAIL_ACTION_WIDTH := 248.0
 const RAIL_LINE_CHARS := 42
 const ACTION_FEEDBACK_CHARS := 40
 const DEBUG_OVERLAY_TOGGLE_KEY := KEY_F3
+const PLACEMENT_DEBUG_OVERLAY_TOGGLE_KEY := KEY_F4
 const OVERWORLD_PROFILE_LOG_PATH := "user://debug/overworld_profile.jsonl"
 const REFRESH_PHASE_MAP_VIEW := "map_view"
 const REFRESH_PHASE_ACTION_RAILS := "action_rails"
@@ -142,6 +143,7 @@ var _field_return_handoff: Dictionary = {}
 var _validation_profile: Dictionary = {}
 var _validation_force_hover_drawer_sync := false
 var _debug_overlay_enabled := false
+var _placement_debug_overlay_enabled := false
 var _debug_overlay_panel: PanelContainer = null
 var _debug_overlay_label: Label = null
 var _debug_command_in_progress := false
@@ -230,6 +232,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		match event.keycode:
 			DEBUG_OVERLAY_TOGGLE_KEY:
 				_set_debug_overlay_enabled(not _debug_overlay_enabled)
+				get_viewport().set_input_as_handled()
+			PLACEMENT_DEBUG_OVERLAY_TOGGLE_KEY:
+				_set_placement_debug_overlay_enabled(not _placement_debug_overlay_enabled)
 				get_viewport().set_input_as_handled()
 			KEY_HOME:
 				_focus_camera_on_hero()
@@ -947,6 +952,8 @@ func _refresh_map_view() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_start")
 	var set_map_state_profile_start := _profile_begin("refresh_set_map_state")
 	_map_view.set_map_state(_session, _map_data, _map_size, _selected_tile, _selected_route_cache_for_map_view())
+	if _map_view.has_method("set_placement_debug_overlay_enabled"):
+		_map_view.call("set_placement_debug_overlay_enabled", _placement_debug_overlay_enabled)
 	_profile_end("refresh_set_map_state", set_map_state_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_done")
 
@@ -5763,6 +5770,11 @@ func _set_debug_overlay_enabled(enabled: bool) -> void:
 			_debug_overlay_panel.move_to_front()
 	_debug_update_overlay_text()
 
+func _set_placement_debug_overlay_enabled(enabled: bool) -> void:
+	_placement_debug_overlay_enabled = enabled
+	if _map_view != null and _map_view.has_method("set_placement_debug_overlay_enabled"):
+		_map_view.call("set_placement_debug_overlay_enabled", enabled)
+
 func _debug_begin_path_command(command_type: String, target_tile: Vector2i) -> bool:
 	if not _debug_capture_enabled() or _debug_command_in_progress:
 		return false
@@ -6485,6 +6497,10 @@ func validation_set_debug_overlay_enabled(enabled: bool) -> Dictionary:
 	_set_debug_overlay_enabled(enabled)
 	return validation_debug_overlay_snapshot()
 
+func validation_set_placement_debug_overlay_enabled(enabled: bool) -> Dictionary:
+	_set_placement_debug_overlay_enabled(enabled)
+	return validation_placement_debug_overlay_snapshot()
+
 func validation_set_overworld_profile_log_enabled(enabled: bool, clear_existing: bool = false) -> Dictionary:
 	_profile_log_enabled = enabled
 	if clear_existing:
@@ -6518,6 +6534,16 @@ func validation_debug_overlay_snapshot() -> Dictionary:
 		"toggle_key": "F3",
 		"text": _debug_overlay_label.text if _debug_overlay_label != null else "",
 		"last_command": _debug_last_command_snapshot.duplicate(true),
+	}
+
+func validation_placement_debug_overlay_snapshot() -> Dictionary:
+	var map_payload := {}
+	if _map_view != null and _map_view.has_method("validation_placement_debug_overlay_snapshot"):
+		map_payload = _map_view.call("validation_placement_debug_overlay_snapshot")
+	return {
+		"enabled": _placement_debug_overlay_enabled,
+		"toggle_key": "F4",
+		"map_view": map_payload,
 	}
 
 func validation_snapshot() -> Dictionary:
@@ -6680,6 +6706,7 @@ func validation_snapshot() -> Dictionary:
 		"town_presentation_profiles": _validation_town_presentation_profiles(),
 		"chrome": _validation_chrome_state(),
 		"debug_overlay": validation_debug_overlay_snapshot(),
+		"placement_debug_overlay": validation_placement_debug_overlay_snapshot(),
 		"profile": validation_profile_snapshot(),
 	}
 
