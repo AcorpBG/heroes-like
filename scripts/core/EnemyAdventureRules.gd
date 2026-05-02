@@ -7841,12 +7841,7 @@ static func _impassable_terrain_tiles(session: SessionStateStoreScript.SessionDa
 			continue
 		for x in range(row.size()):
 			var terrain_id := String(row[x])
-			var biome := ContentService.get_biome_for_terrain(terrain_id)
-			var impassable := false
-			if not biome.is_empty() and biome.has("passable"):
-				impassable = not bool(biome.get("passable", true))
-			elif terrain_id == "water":
-				impassable = true
+			var impassable: bool = not OverworldRulesScript.terrain_id_is_passable(terrain_id)
 			if impassable:
 				blocked[_pos_key(Vector2i(x, y))] = true
 	return blocked

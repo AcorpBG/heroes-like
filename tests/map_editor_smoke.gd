@@ -232,7 +232,7 @@ func _assert_editor_terrain_option_contract(shell, snapshot: Dictionary) -> bool
 		{"id": "badlands", "label": "Dirt", "family": "dirt", "atlas": "dirttl"},
 		{"id": "lava", "label": "Lava", "family": "lava", "atlas": "lavatl"},
 		{"id": "swamp", "label": "Swamp", "family": "swamp", "atlas": "swmptl"},
-		{"id": "highland", "label": "Rock/None", "family": "rock", "atlas": "rocktl"},
+		{"id": "rock", "label": "Rock/None", "family": "rock", "atlas": "rocktl"},
 	]
 	if String(snapshot.get("terrain_option_contract", "")) != "homm3_base_family_picker" or String(snapshot.get("terrain_option_source", "")) != "editor_base_terrain_options":
 		_fail("Map editor smoke: terrain picker did not expose the HoMM3 base-family option contract: %s." % snapshot)
@@ -253,7 +253,7 @@ func _assert_editor_terrain_option_contract(shell, snapshot: Dictionary) -> bool
 			_fail("Map editor smoke: terrain picker option %d did not match the HoMM3-style contract: %s." % [index, options])
 			return false
 	var option_ids: Array = snapshot.get("terrain_option_ids", [])
-	for hidden_id in ["plains", "forest", "mire", "hills", "ridge", "coast", "shore", "ash", "cavern", "underway", "frost"]:
+	for hidden_id in ["plains", "forest", "mire", "hills", "ridge", "highland", "coast", "shore", "ash", "cavern", "underway", "frost"]:
 		if hidden_id in option_ids:
 			_fail("Map editor smoke: terrain picker still exposed hidden logical terrain id %s: %s." % [hidden_id, option_ids])
 			return false
@@ -600,7 +600,7 @@ func _assert_editor_special_system_groundwork(shell) -> bool:
 					return false
 
 	var rock_center: Vector2i = centers[0]
-	if not _paint_editor_terrain_for_orientation(shell, rock_center, "highland"):
+	if not _paint_editor_terrain_for_orientation(shell, rock_center, "rock"):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: could not seed rock/void special-system terrain.")
 		return false
@@ -651,7 +651,7 @@ func _assert_editor_special_system_groundwork(shell) -> bool:
 		return false
 
 	var direct_rock_tile := water_center + Vector2i(1, 0)
-	if not _paint_editor_terrain_for_orientation(shell, direct_rock_tile, "highland"):
+	if not _paint_editor_terrain_for_orientation(shell, direct_rock_tile, "rock"):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: could not seed direct water/rock relation-class contact at %s." % direct_rock_tile)
 		return false
@@ -1555,13 +1555,13 @@ func _assert_terrain_line_tool(shell) -> bool:
 			_fail("Map editor smoke: could not seed terrain-line tile %s." % tile)
 			return false
 
-	var start_result: Dictionary = shell.call("validation_set_terrain_line_start", 16, 16, "highland")
+	var start_result: Dictionary = shell.call("validation_set_terrain_line_start", 16, 16, "rock")
 	var pending_start: Dictionary = start_result.get("pending_terrain_line_start", {})
 	if (
 		not bool(start_result.get("ok", false))
 		or int(pending_start.get("x", -1)) != 16
 		or int(pending_start.get("y", -1)) != 16
-		or String(start_result.get("selected_terrain_id", "")) != "highland"
+		or String(start_result.get("selected_terrain_id", "")) != "rock"
 		or String(start_result.get("selected_terrain_label", "")) != "Rock/None"
 		or String(start_result.get("path_rule", "")) != "manhattan_l_horizontal_then_vertical"
 	):
@@ -1573,7 +1573,7 @@ func _assert_terrain_line_tool(shell) -> bool:
 	if (
 		not bool(line_result.get("ok", false))
 		or not bool(line_result.get("changed", false))
-		or String(line_result.get("active_terrain_id", "")) != "highland"
+		or String(line_result.get("active_terrain_id", "")) != "rock"
 		or String(line_result.get("path_rule", "")) != "manhattan_l_horizontal_then_vertical"
 		or int(line_result.get("path_count", 0)) != expected_tiles.size()
 		or int(line_result.get("affected_count", 0)) < expected_tiles.size()
@@ -1582,12 +1582,12 @@ func _assert_terrain_line_tool(shell) -> bool:
 	):
 		_fail("Map editor smoke: terrain line paint did not report the expected horizontal-first Manhattan L line: %s." % line_result)
 		return false
-	if not _assert_true_terrain_placement_result(line_result, "highland"):
+	if not _assert_true_terrain_placement_result(line_result, "rock"):
 		_fail("Map editor smoke: terrain line did not route through HoMM3 placement: %s." % line_result)
 		return false
 	for tile in expected_tiles:
 		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
-		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "highland":
+		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "rock":
 			_fail("Map editor smoke: terrain line did not update expected tile %s: %s." % [tile, presentation])
 			return false
 
@@ -1605,6 +1605,10 @@ func _assert_terrain_line_tool(shell) -> bool:
 	):
 		_fail("Map editor smoke: terrain line repeat did not no-op cleanly on matching active terrain: %s." % repeat_result)
 		return false
+	for tile in expected_tiles:
+		if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+			_fail("Map editor smoke: could not restore terrain-line tile %s after rock/none paint." % tile)
+			return false
 	return true
 
 func _assert_terrain_rectangle_tool(shell) -> bool:
@@ -2271,6 +2275,22 @@ func _assert_object_placement_preview_surfaces(shell) -> bool:
 	if not _assert_editor_object_preview_check(blocked_preview_result, false, ["Object preview check:", "Town", "Riverwatch", "23,26", "blocked", "occupied by", "choose another tile", "Tile already has"]):
 		return false
 	if not _assert_editor_placement_action_cue(blocked_preview_result, false, ["Placement action:", "Town", "Riverwatch", "23,26", "blocked", "choose another tile", "Tile already has"]):
+		return false
+	var rock_tile := Vector2i(5, 4)
+	if not _paint_editor_terrain_for_orientation(shell, rock_tile, "rock"):
+		_fail("Map editor smoke: could not seed rock terrain for placement blocking preview.")
+		return false
+	var rock_preview_result: Dictionary = shell.call("validation_preview_object_placement", rock_tile.x, rock_tile.y, "resource", "site_wood_wagon")
+	var rock_preview: Dictionary = rock_preview_result.get("selected_object_placement_preview", {})
+	if (
+		bool(rock_preview.get("can_place", true))
+		or String(rock_preview.get("blocked_reason", "")).find("Impassable terrain") < 0
+		or int(rock_preview_result.get("placement_count", 0)) != before_count
+	):
+		_fail("Map editor smoke: impassable rock terrain did not block object placement preview: preview=%s result=%s." % [rock_preview, rock_preview_result])
+		return false
+	if not _paint_editor_terrain_for_orientation(shell, rock_tile, "grass"):
+		_fail("Map editor smoke: could not restore rock placement preview tile.")
 		return false
 	return true
 

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "all-interactable-footprint-normalization-10184",
-  "currentSliceTitle": "all interactable footprint normalization 10184",
+  "currentSliceId": "terrain-blocking-town-capture-interaction-10184",
+  "currentSliceTitle": "Terrain Blocking And Town Capture Interaction",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Normalized authored blocking interactable visit offsets inside footprints/bodies; updated RMG catalog/action masks and route endpoint handling. Validation: python3 tests/all_interactable_object_footprint_audit.py; python3 -m py_compile tests/validate_repo.py tests/all_interactable_object_footprint_audit.py; python3 tests/validate_repo.py; git diff --check; Godot F4 overlay regression; Godot inside-footprint override regression; random_map_object_footprint_catalog_report; random_map_generated_object_footprint_interaction_report.",
+  "currentSliceNotes": "Completed: explicit rock terrain now blocks shared overworld passability and editor placement; highland/hills/ridge remain passable; non-player town route descriptors and completion dispatch capture/assault instead of inert town visit semantics.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-02T12:28:06Z",
+  "updatedAt": "2026-05-02T13:28:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,60 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "terrain-blocking-town-capture-interaction-10184",
+      "title": "Terrain Blocking And Town Capture Interaction",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "all-interactable-footprint-normalization-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "Owner screenshot report after 25880f4 Normalize interactable footprint action tiles"
+      ],
+      "implementationTargets": [
+        "content/terrain_grammar.json",
+        "content/biomes.json",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "scenes/editor/MapEditorShell.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/terrain_blocking_town_capture_interaction_regression.gd",
+        "tests/map_editor_smoke.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Explicit rock/cliff terrain blocks movement and editor object placement.",
+        "Passable highland, hills, and ridge terrain remain movement-valid high-ground terrain.",
+        "Full-route and selected-route descriptor confirmations capture neutral towns and dispatch enemy town assaults through the existing town capture path.",
+        "Town route labels and selected-route descriptors expose claim/assault semantics instead of inert approach wording for non-player towns.",
+        "Existing inside-footprint action override and F4 placement overlay regressions remain passing."
+      ],
+      "nonGoals": [
+        "No asset imports.",
+        "No save-version bump.",
+        "No reversion of all-interactable footprint normalization.",
+        "No multitile generated-town runtime expansion beyond the documented transitional split."
+      ],
+      "startedAt": "2026-05-02T13:10:50Z",
+      "updatedAt": "2026-05-02T13:28:00Z",
+      "notes": "Completed focused owner-reported gameplay bug slice.",
+      "completedAt": "2026-05-02T13:28:00Z",
+      "completionEvidence": [
+        "rock is an explicit Rock/None terrain id and OverworldRules.terrain_id_is_passable blocks rock/water/coast/shore before biome passability; highland/hills/ridge remain passable.",
+        "MapEditorShell placement previews reject object placement on impassable terrain and OverworldMapView session-static terrain signatures hash every map row after terrain edits.",
+        "Overworld town route descriptors, labels, compact actions, and destination resolution use claim/capture for neutral towns and assault for enemy towns while player-owned towns remain visit/town.",
+        "Focused regression tests/terrain_blocking_town_capture_interaction_regression.tscn proves rock blocks movement, highland/ridge stay passable, full-route neutral town capture succeeds, and cached selected-route town confirmation captures.",
+        "Validation passed: python3 tests/validate_repo.py; python3 tests/all_interactable_object_footprint_audit.py; git diff --check; F4 overlay; inside-footprint override; route-destination; cached-route; full-route; selected-route cache; town-transition fast path; random-map pathing overlay; random-map scenario load."
+      ],
+      "validationNotes": [
+        "Godot save-writing tests were run with XDG_DATA_HOME redirected under /tmp because the default /root/.local/share Godot app data is read-only in the sandbox.",
+        "random_map_terrain_town_road_constraints_report.tscn still fails on pre-existing generated decoration/footprint route reachability diagnostics not specific to rock terrain; random_map_scenario_load_smoke and random_map_pathing_debug_overlay_report passed for generated-map coverage.",
+        "core_systems_regression_smoke.tscn still fails on an unrelated save-summary battle-resume assertion under redirected user data; narrower affected route/town regressions passed."
+      ]
+    },
     {
       "id": "town-reentry-volatile-overlay-cache-10184",
       "title": "Town Re-entry Volatile Overlay Cache",
