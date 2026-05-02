@@ -15,7 +15,7 @@ func _run() -> void:
 		"profile": {
 			"id": "seeded_core_test_profile",
 			"label": "Seeded Core Test Profile",
-			"terrain_ids": ["grass", "plains", "forest", "swamp", "highland"],
+			"terrain_ids": ["grass", "grass", "grass", "dirt", "rough"],
 			"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
 			"guard_strength_profile": "core_low",
 		},

@@ -44,7 +44,7 @@ func _draw() -> void:
 	_draw_result_marks(palette)
 
 func _draw_ground(palette: Dictionary) -> void:
-	var ridge := PackedVector2Array(
+	var horizon_poly := PackedVector2Array(
 		[
 			Vector2(0.0, size.y * 0.78),
 			Vector2(size.x * 0.14, size.y * 0.63),
@@ -57,7 +57,7 @@ func _draw_ground(palette: Dictionary) -> void:
 			Vector2(0.0, size.y),
 		]
 	)
-	draw_colored_polygon(ridge, palette.ridge)
+	draw_colored_polygon(horizon_poly, palette.rough)
 
 	var foreground := PackedVector2Array(
 		[
@@ -180,7 +180,7 @@ func _palette() -> Dictionary:
 				"haze": Color(0.17, 0.15, 0.10, 1.0),
 				"burst": Color(0.90, 0.78, 0.46, 0.62),
 				"core": Color(0.92, 0.77, 0.43, 0.95),
-				"ridge": Color(0.11, 0.18, 0.18, 1.0),
+				"rough": Color(0.11, 0.18, 0.18, 1.0),
 				"foreground": Color(0.08, 0.12, 0.11, 1.0),
 				"shield": Color(0.15, 0.29, 0.27, 1.0),
 				"trim": Color(0.88, 0.73, 0.38, 1.0),
@@ -191,7 +191,7 @@ func _palette() -> Dictionary:
 				"haze": Color(0.19, 0.08, 0.07, 1.0),
 				"burst": Color(0.86, 0.32, 0.28, 0.45),
 				"core": Color(0.82, 0.28, 0.24, 0.82),
-				"ridge": Color(0.18, 0.08, 0.08, 1.0),
+				"rough": Color(0.18, 0.08, 0.08, 1.0),
 				"foreground": Color(0.10, 0.06, 0.07, 1.0),
 				"shield": Color(0.29, 0.12, 0.11, 1.0),
 				"trim": Color(0.88, 0.55, 0.35, 1.0),
@@ -202,7 +202,7 @@ func _palette() -> Dictionary:
 				"haze": Color(0.15, 0.13, 0.11, 1.0),
 				"burst": Color(0.70, 0.70, 0.58, 0.42),
 				"core": Color(0.82, 0.77, 0.55, 0.80),
-				"ridge": Color(0.14, 0.15, 0.18, 1.0),
+				"rough": Color(0.14, 0.15, 0.18, 1.0),
 				"foreground": Color(0.09, 0.10, 0.12, 1.0),
 				"shield": Color(0.19, 0.22, 0.27, 1.0),
 				"trim": Color(0.80, 0.74, 0.50, 1.0),

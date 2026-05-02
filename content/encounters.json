@@ -866,7 +866,7 @@
       "name": "Cliffhawk Roost Watch",
       "enemy_group_id": "army_neutral_cliffhawk_roost_watch",
       "affiliation": "neutral",
-      "terrain": "hills",
+      "terrain": "rough",
       "battlefield_tags": [
         "elevated_fire",
         "chokepoint"
@@ -956,7 +956,7 @@
       "name": "Glowcap Croft Watch",
       "enemy_group_id": "army_neutral_glowcap_croft_watch",
       "affiliation": "neutral",
-      "terrain": "hills",
+      "terrain": "rough",
       "battlefield_tags": [
         "fog_bank",
         "chokepoint"
@@ -1266,7 +1266,7 @@
       "name": "Switchback Hostel Watch",
       "enemy_group_id": "army_neutral_switchback_hostel_watch",
       "affiliation": "neutral",
-      "terrain": "hills",
+      "terrain": "rough",
       "battlefield_tags": [
         "elevated_fire",
         "chokepoint"
@@ -1355,7 +1355,7 @@
       "name": "Crystal Sump Watch",
       "enemy_group_id": "army_neutral_crystal_sump_watch",
       "affiliation": "neutral",
-      "terrain": "hills",
+      "terrain": "rough",
       "battlefield_tags": [
         "chokepoint",
         "fog_bank"
@@ -1578,7 +1578,7 @@
       "name": "Kite Signal Eyrie Watch",
       "enemy_group_id": "army_neutral_kite_signal_eyrie_watch",
       "affiliation": "neutral",
-      "terrain": "hills",
+      "terrain": "rough",
       "battlefield_tags": [
         "elevated_fire",
         "open_lane"
@@ -1623,7 +1623,7 @@
       "name": "Lantern Warren Watch",
       "enemy_group_id": "army_neutral_lantern_warren_watch",
       "affiliation": "neutral",
-      "terrain": "hills",
+      "terrain": "rough",
       "battlefield_tags": [
         "chokepoint",
         "fog_bank"
@@ -1845,7 +1845,7 @@
       "name": "Basalt Gatehouse Watch",
       "enemy_group_id": "army_neutral_basalt_gatehouse_watch",
       "affiliation": "neutral",
-      "terrain": "hills",
+      "terrain": "rough",
       "battlefield_tags": [
         "fortress_lane",
         "chokepoint"
@@ -1916,7 +1916,7 @@
       "id": "encounter_orevein_exactors",
       "name": "Orevein Exactors",
       "enemy_group_id": "army_orevein_exactors",
-      "terrain": "hills",
+      "terrain": "rough",
       "battlefield_tags": ["chokepoint", "fortress_lane"],
       "max_rounds": 14,
       "enemy_commander": {

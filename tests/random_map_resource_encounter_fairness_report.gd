@@ -15,7 +15,7 @@ func _run() -> void:
 		"profile": {
 			"id": "resource_encounter_fairness_profile",
 			"label": "Resource Encounter Fairness Profile",
-			"terrain_ids": ["grass", "plains", "forest", "swamp", "highland", "water"],
+			"terrain_ids": ["grass", "grass", "rough", "dirt", "rough", "water"],
 			"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
 			"guard_strength_profile": "core_low",
 		},

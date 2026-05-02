@@ -93,37 +93,43 @@ const DEFAULT_ARMY_BY_FACTION := {
 }
 const TERRAIN_BY_FACTION := {
 	"faction_embercourt": "grass",
-	"faction_mireclaw": "swamp",
-	"faction_sunvault": "plains",
-	"faction_thornwake": "forest",
-	"faction_brasshollow": "highland",
+	"faction_mireclaw": "dirt",
+	"faction_sunvault": "grass",
+	"faction_thornwake": "rough",
+	"faction_brasshollow": "rough",
 	"faction_veilmourn": "water",
 }
-const CORE_TERRAIN_POOL := ["grass", "plains", "forest", "swamp", "highland"]
+const CORE_TERRAIN_POOL := ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"]
 const ORIGINAL_TERRAIN_IDS := [
 	"grass",
-	"plains",
-	"forest",
-	"swamp",
-	"mire",
-	"highland",
-	"hills",
-	"ridge",
-	"rock",
-	"badlands",
-	"wastes",
-	"ash",
-	"lava",
 	"snow",
-	"frost",
+	"sand",
+	"dirt",
+	"rough",
+	"lava",
+	"underground",
 	"water",
-	"coast",
-	"shore",
-	"cavern",
-	"underway",
+	"rock",
 ]
-const SURFACE_SCENARIO_TERRAIN_IDS := ["grass", "plains", "forest", "swamp", "highland", "water"]
-const UNDERGROUND_TERRAIN_ID := "cavern"
+const LEGACY_TERRAIN_ALIASES := {
+	"plains": "grass",
+	"forest": "grass",
+	"mire": "dirt",
+	"swamp": "dirt",
+	"highland": "rough",
+	"hills": "rough",
+	"ridge": "rough",
+	"badlands": "dirt",
+	"wastes": "sand",
+	"ash": "lava",
+	"frost": "snow",
+	"coast": "water",
+	"shore": "water",
+	"cavern": "underground",
+	"underway": "underground",
+}
+const SURFACE_SCENARIO_TERRAIN_IDS := ["grass", "snow", "sand", "dirt", "rough", "lava", "underground", "water"]
+const UNDERGROUND_TERRAIN_ID := "underground"
 const SUPPORT_RESOURCE_SITES := [
 	{"purpose": "start_support_wood", "site_id": "site_wood_wagon", "offset": Vector2i(2, 0)},
 	{"purpose": "start_support_ore", "site_id": "site_ore_crates", "offset": Vector2i(0, 2)},
@@ -135,50 +141,28 @@ const WATER_TRANSIT_OBJECT_ID := "object_repaired_ferry_stage"
 const WATER_TRANSIT_SITE_ID := "site_repaired_ferry_stage"
 const CROSS_LEVEL_TRANSIT_OBJECT_ID := "object_rope_lift"
 const CROSS_LEVEL_TRANSIT_SITE_ID := "site_rope_lift"
-const BLOCKED_TERRAIN_IDS := ["rock", "water", "coast", "shore"]
+const BLOCKED_TERRAIN_IDS := ["rock", "water"]
 const BIOME_BY_TERRAIN := {
 	"grass": "biome_grasslands",
-	"plains": "biome_grasslands",
-	"forest": "biome_deep_forest",
-	"swamp": "biome_mire_fen",
-	"mire": "biome_mire_fen",
-	"highland": "biome_highland_ridge",
-	"hills": "biome_highland_ridge",
-	"ridge": "biome_highland_ridge",
-	"rock": "biome_highland_ridge",
-	"badlands": "biome_rough_badlands",
-	"wastes": "biome_rough_badlands",
-	"ash": "biome_ash_lava_wastes",
-	"lava": "biome_ash_lava_wastes",
 	"snow": "biome_snow_frost_marches",
-	"frost": "biome_snow_frost_marches",
+	"sand": "biome_rough_badlands",
+	"dirt": "biome_rough_badlands",
+	"rough": "biome_highland_ridge",
+	"lava": "biome_ash_lava_wastes",
+	"underground": "biome_subterranean_underways",
 	"water": "biome_coast_archipelago",
-	"coast": "biome_coast_archipelago",
-	"shore": "biome_coast_archipelago",
-	"cavern": "biome_subterranean_underways",
-	"underway": "biome_subterranean_underways",
+	"rock": "biome_highland_ridge",
 }
 const TERRAIN_MOVEMENT_COST := {
 	"grass": 1,
-	"plains": 1,
-	"forest": 2,
-	"swamp": 2,
-	"mire": 2,
-	"highland": 2,
-	"hills": 2,
-	"ridge": 2,
-	"rock": 999,
-	"badlands": 2,
-	"wastes": 2,
-	"ash": 3,
-	"lava": 3,
 	"snow": 2,
-	"frost": 2,
+	"sand": 2,
+	"dirt": 2,
+	"rough": 2,
+	"lava": 3,
+	"underground": 2,
 	"water": 999,
-	"coast": 999,
-	"shore": 999,
-	"cavern": 2,
-	"underway": 2,
+	"rock": 999,
 }
 const SUPPORT_RESOURCE_VALUE_BY_SITE := {
 	"site_wood_wagon": {"gold": 0, "wood": 4, "ore": 0},
@@ -261,17 +245,17 @@ const REWARD_BAND_CANDIDATES := [
 	{"reward_category": "skill_equivalent", "object_family_id": "skill_shrine", "object_id": "object_reedscript_vow_shrine", "site_id": "site_reedscript_vow_shrine", "skill_equivalent_id": "route_vow_shrine_contract", "value": 1300, "weight": 2, "categories": ["timber", "ore", "quicksilver"], "guarded_policy": "guarded_or_frontier"},
 ]
 const DECORATION_OBJECT_FAMILIES := [
-	{"family_id": "decor_grass_windgrass_tufts", "display_name": "Windgrass Tufts", "role": "decor", "terrain_ids": ["grass", "plains"], "biome_ids": ["biome_grasslands"], "weight": 5, "blocks_movement": true},
-	{"family_id": "decor_grass_saffron_bloom_patch", "display_name": "Saffron Bloom Patch", "role": "decor", "terrain_ids": ["grass", "plains"], "biome_ids": ["biome_grasslands"], "weight": 3, "blocks_movement": true},
-	{"family_id": "obstacle_forest_fallen_silverlog", "display_name": "Fallen Silverlog", "role": "obstacle", "terrain_ids": ["forest"], "biome_ids": ["biome_deep_forest"], "weight": 5, "blocks_movement": true},
-	{"family_id": "decor_forest_moonfern_bank", "display_name": "Moonfern Bank", "role": "decor", "terrain_ids": ["forest"], "biome_ids": ["biome_deep_forest"], "weight": 3, "blocks_movement": true},
-	{"family_id": "obstacle_mire_sinkroot_cluster", "display_name": "Sinkroot Cluster", "role": "obstacle", "terrain_ids": ["swamp", "mire"], "biome_ids": ["biome_mire_fen"], "weight": 5, "blocks_movement": true},
-	{"family_id": "decor_mire_glowmoss_hummock", "display_name": "Glowmoss Hummock", "role": "decor", "terrain_ids": ["swamp", "mire"], "biome_ids": ["biome_mire_fen"], "weight": 3, "blocks_movement": true},
-	{"family_id": "obstacle_highland_slate_outcrop", "display_name": "Slate Outcrop", "role": "obstacle", "terrain_ids": ["highland", "hills", "ridge"], "biome_ids": ["biome_highland_ridge"], "weight": 5, "blocks_movement": true},
-	{"family_id": "decor_highland_heather_cairn", "display_name": "Heather Cairn", "role": "decor", "terrain_ids": ["highland", "hills", "ridge"], "biome_ids": ["biome_highland_ridge"], "weight": 3, "blocks_movement": true},
-	{"family_id": "obstacle_rough_suncracked_stone", "display_name": "Suncracked Stone", "role": "obstacle", "terrain_ids": ["badlands", "wastes", "ash", "lava"], "biome_ids": ["biome_rough_badlands", "biome_ash_lava_wastes"], "weight": 4, "blocks_movement": true},
-	{"family_id": "decor_snow_icegrass_ridge", "display_name": "Icegrass Ridge", "role": "decor", "terrain_ids": ["snow", "frost"], "biome_ids": ["biome_snow_frost_marches"], "weight": 4, "blocks_movement": true},
-	{"family_id": "obstacle_cavern_glasscap_stalagmites", "display_name": "Glasscap Stalagmites", "role": "obstacle", "terrain_ids": ["cavern", "underway"], "biome_ids": ["biome_subterranean_underways"], "weight": 4, "blocks_movement": true},
+	{"family_id": "decor_grass_windgrass_tufts", "display_name": "Windgrass Tufts", "role": "decor", "terrain_ids": ["grass"], "biome_ids": ["biome_grasslands"], "weight": 5, "blocks_movement": true},
+	{"family_id": "decor_grass_saffron_bloom_patch", "display_name": "Saffron Bloom Patch", "role": "decor", "terrain_ids": ["grass"], "biome_ids": ["biome_grasslands"], "weight": 3, "blocks_movement": true},
+	{"family_id": "obstacle_forest_fallen_silverlog", "display_name": "Fallen Silverlog", "role": "obstacle", "terrain_ids": ["rough"], "biome_ids": ["biome_deep_forest"], "weight": 5, "blocks_movement": true},
+	{"family_id": "decor_forest_moonfern_bank", "display_name": "Moonfern Bank", "role": "decor", "terrain_ids": ["rough"], "biome_ids": ["biome_deep_forest"], "weight": 3, "blocks_movement": true},
+	{"family_id": "obstacle_mire_sinkroot_cluster", "display_name": "Sinkroot Cluster", "role": "obstacle", "terrain_ids": ["dirt"], "biome_ids": ["biome_mire_fen"], "weight": 5, "blocks_movement": true},
+	{"family_id": "decor_mire_glowmoss_hummock", "display_name": "Glowmoss Hummock", "role": "decor", "terrain_ids": ["dirt"], "biome_ids": ["biome_mire_fen"], "weight": 3, "blocks_movement": true},
+	{"family_id": "obstacle_highland_slate_outcrop", "display_name": "Slate Outcrop", "role": "obstacle", "terrain_ids": ["rough"], "biome_ids": ["biome_highland_ridge"], "weight": 5, "blocks_movement": true},
+	{"family_id": "decor_highland_heather_cairn", "display_name": "Heather Cairn", "role": "decor", "terrain_ids": ["rough"], "biome_ids": ["biome_highland_ridge"], "weight": 3, "blocks_movement": true},
+	{"family_id": "obstacle_rough_suncracked_stone", "display_name": "Suncracked Stone", "role": "obstacle", "terrain_ids": ["dirt", "sand", "lava"], "biome_ids": ["biome_rough_badlands", "biome_ash_lava_wastes"], "weight": 4, "blocks_movement": true},
+	{"family_id": "decor_snow_icegrass_ridge", "display_name": "Icegrass Ridge", "role": "decor", "terrain_ids": ["snow"], "biome_ids": ["biome_snow_frost_marches"], "weight": 4, "blocks_movement": true},
+	{"family_id": "obstacle_cavern_glasscap_stalagmites", "display_name": "Glasscap Stalagmites", "role": "obstacle", "terrain_ids": ["underground"], "biome_ids": ["biome_subterranean_underways"], "weight": 4, "blocks_movement": true},
 ]
 const OBJECT_FOOTPRINT_CATALOG := [
 	{
@@ -289,7 +273,7 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}, {"x": 2, "y": 0}],
 		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "town_entry", "visit_tile_required": true, "interaction_cadence": "repeatable"},
-		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"], "blocked_terrain_ids": ["water", "rock"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "visit_or_approach_passable", "zone_preferred"],
 		"object_limit": {"per_zone": 1, "global": 8},
 		"deferred_runtime_application": "full_3x2_town_body_reserved_for_later_multitile_placement_slice",
@@ -307,7 +291,7 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
 		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "resource_collect", "visit_tile_required": true, "interaction_cadence": "one_time"},
-		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"], "blocked_terrain_ids": ["water", "rock"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "visit_or_approach_passable", "start_support_radius"],
 		"object_limit": {"per_zone": 6, "global": 64},
 	},
@@ -324,7 +308,7 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
 		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "neutral_guard_battle", "visit_tile_required": true, "interaction_cadence": "one_time"},
-		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"], "blocked_terrain_ids": ["water", "rock"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "route_anchor_adjacent", "visit_or_approach_passable"],
 		"object_limit": {"per_zone": 16, "global": 128},
 	},
@@ -341,7 +325,7 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
 		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "special_guard_unlock_then_battle", "visit_tile_required": true, "interaction_cadence": "gated"},
-		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"], "blocked_terrain_ids": ["water", "rock"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "route_anchor_adjacent", "special_unlock_metadata_present"],
 		"object_limit": {"per_zone": 8, "global": 64},
 		"deferred_runtime_application": "final_key_gate_object_writeout_deferred",
@@ -360,7 +344,7 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"approach_mask": [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}],
 		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "reward_claim", "visit_tile_required": true, "interaction_cadence": "one_time"},
-		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"], "blocked_terrain_ids": ["water", "rock"]},
 		"placement_predicates": ["catalog_reference_present", "terrain_allowed_at_route_context", "deferred_reward_body_no_overlap_pending"],
 		"object_limit": {"per_zone": 16, "global": 128},
 		"deferred_runtime_application": "reward_object_body_placement_deferred_to_reward_materialization_slice",
@@ -380,7 +364,7 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"approach_mask": [{"x": 0, "y": 1}, {"x": 1, "y": 0}, {"x": -1, "y": 1}],
 		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "mine_capture", "visit_tile_required": true, "interaction_cadence": "capture_then_daily"},
-		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"], "blocked_terrain_ids": ["water", "rock"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "adjacent_resource_staging_space"],
 		"object_limit": {"per_zone": 7, "global": 128},
 		"deferred_runtime_application": "template_driven_mine_placement_deferred_to_town_mine_dwelling_slice",
@@ -400,7 +384,7 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"approach_mask": [{"x": 0, "y": 1}, {"x": 1, "y": 0}, {"x": -1, "y": 1}],
 		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "visit_tiles_actionable_when_blocked": true, "approach_tiles_passable": true, "road_may_cross_body": false},
 		"action_mask": {"visitable": true, "trigger": "neutral_dwelling_recruitment", "visit_tile_required": true, "interaction_cadence": "persistent_weekly"},
-		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"], "blocked_terrain_ids": ["water", "rock"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "visit_or_approach_passable", "zone_role_and_reward_context"],
 		"object_limit": {"per_zone": 2, "global": 32},
 		"deferred_runtime_application": "neutral_dwelling_site_is_staged_as_resource_node_until_final_object_writeout",
@@ -418,7 +402,7 @@ const OBJECT_FOOTPRINT_CATALOG := [
 		"approach_mask": [],
 		"passability_mask": {"body_blocks_movement": true, "visit_tiles_passable": false, "approach_tiles_passable": false, "road_may_cross_body": false},
 		"action_mask": {"visitable": false, "trigger": "none", "visit_tile_required": false, "interaction_cadence": "none"},
-		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"], "blocked_terrain_ids": ["water", "coast", "shore"]},
+		"terrain_restrictions": {"allowed_terrain_ids": ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"], "blocked_terrain_ids": ["water", "rock"]},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "not_on_required_route", "not_on_approach"],
 		"object_limit": {"per_zone": 64, "global": 512},
 		"links_to_decoration_family_catalog": true,
@@ -4023,8 +4007,8 @@ static func _authored_resource_producer_catalog_record_for_placement(record: Dic
 			"runtime_body_contract": "authored_body_tiles_match_visible_generated_footprint",
 		},
 		"terrain_restrictions": {
-			"allowed_terrain_ids": ["grass", "plains", "forest", "swamp", "mire", "highland", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway"],
-			"blocked_terrain_ids": ["water", "coast", "shore"],
+			"allowed_terrain_ids": ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"],
+			"blocked_terrain_ids": ["water", "rock"],
 		},
 		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "authored_visit_access_passable"],
 		"object_limit": {"per_zone": 7, "global": 128},
@@ -5499,10 +5483,10 @@ static func _decoration_density_target(zone: Dictionary, cell_count: int, terrai
 		ratio = 0.085
 	elif role == "junction":
 		ratio = 0.06
-	match terrain_id:
-		"forest", "swamp", "mire", "highland", "hills", "ridge":
+	match _normalize_legacy_terrain_id(terrain_id):
+		"rough", "dirt", "underground":
 			ratio += 0.015
-		"plains":
+		"grass":
 			ratio -= 0.005
 	var reward_bonus: int = min(2, int(reward_context.get("record_count", 0)))
 	var target: int = int(round(float(cell_count) * ratio)) + reward_bonus
@@ -5591,7 +5575,7 @@ static func _decoration_families_for_terrain(terrain_id: String, biome_id: Strin
 			continue
 		if terrain_id in family.get("terrain_ids", []) or biome_id in family.get("biome_ids", []):
 			result.append(family)
-	if result.is_empty() and terrain_id in ["grass", "plains"]:
+	if result.is_empty() and terrain_id in ["grass"]:
 		for family in DECORATION_OBJECT_FAMILIES:
 			if family is Dictionary and "biome_grasslands" in family.get("biome_ids", []):
 				result.append(family)
@@ -9140,32 +9124,29 @@ static func _cardinal_offsets() -> Array:
 	return [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1)]
 
 static func _terrain_is_passable(terrain_id: String) -> bool:
-	return _terrain_is_known_original(terrain_id) and terrain_id not in BLOCKED_TERRAIN_IDS
+	var normalized := _normalize_legacy_terrain_id(terrain_id)
+	return _terrain_is_known_original(normalized) and normalized not in BLOCKED_TERRAIN_IDS
 
 static func _terrain_is_known_original(terrain_id: String) -> bool:
 	return String(terrain_id) in ORIGINAL_TERRAIN_IDS
 
-static func _normalize_terrain_id_for_generated_rows(terrain_id: String) -> String:
+static func _normalize_legacy_terrain_id(terrain_id: String) -> String:
 	var normalized := String(terrain_id)
+	return String(LEGACY_TERRAIN_ALIASES.get(normalized, normalized))
+
+static func _normalize_terrain_id_for_generated_rows(terrain_id: String) -> String:
+	var normalized := _normalize_legacy_terrain_id(terrain_id)
 	if normalized in SURFACE_SCENARIO_TERRAIN_IDS:
 		return normalized
-	match normalized:
-		"mire":
-			return "swamp"
-		"rock", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway":
-			return "highland"
-		"coast", "shore":
-			return "water"
-		_:
-			return "grass" if not _terrain_is_known_original(normalized) else normalized
+	return "grass" if not _terrain_is_known_original(normalized) else normalized
 
 static func _terrain_movement_cost(terrain_id: String) -> int:
-	return int(TERRAIN_MOVEMENT_COST.get(String(terrain_id), 999))
+	return int(TERRAIN_MOVEMENT_COST.get(_normalize_legacy_terrain_id(terrain_id), 999))
 
 static func _unsupported_terrain_ids(terrain_ids: Array) -> Array:
 	var result := []
 	for terrain_id in terrain_ids:
-		var text := String(terrain_id)
+		var text := _normalize_legacy_terrain_id(terrain_id)
 		if text != "" and not _terrain_is_known_original(text) and text not in result:
 			result.append(text)
 	result.sort()
@@ -9174,7 +9155,7 @@ static func _unsupported_terrain_ids(terrain_ids: Array) -> Array:
 static func _passable_known_terrain_ids(terrain_ids: Array) -> Array:
 	var result := []
 	for terrain_id in terrain_ids:
-		var text := String(terrain_id)
+		var text := _normalize_legacy_terrain_id(terrain_id)
 		if text != "" and _terrain_is_passable(text) and text not in result:
 			result.append(text)
 	return result
@@ -9735,7 +9716,7 @@ static func _large_batch_config(seed: String, profile_id: String, template_id: S
 			"id": profile_id,
 			"template_id": template_id,
 			"guard_strength_profile": "core_low",
-			"terrain_ids": ["grass", "plains", "forest", "swamp", "highland"],
+			"terrain_ids": ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"],
 			"faction_ids": DEFAULT_FACTIONS,
 		},
 	}

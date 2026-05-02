@@ -8,7 +8,7 @@ func _ready() -> void:
 
 func _run() -> void:
 	var generator = RandomMapGeneratorRulesScript.new()
-	var base_config := _base_config("terrain-transit-10184", ["grass", "plains", "forest", "swamp", "highland"])
+	var base_config := _base_config("terrain-transit-10184", ["grass", "grass", "grass", "dirt", "rough"])
 	var report: Dictionary = generator.terrain_transit_report(base_config)
 	if not bool(report.get("ok", false)):
 		_fail("Terrain/transit report failed: %s" % JSON.stringify(report))
@@ -22,7 +22,7 @@ func _run() -> void:
 	if not _assert_land_routes(base_semantics):
 		return
 
-	var underground_payload: Dictionary = generator.generate(_translated_config("terrain-transit-underground-10184", "land", 2, ["grass", "plains", "forest", "swamp", "highland"])).get("generated_map", {})
+	var underground_payload: Dictionary = generator.generate(_translated_config("terrain-transit-underground-10184", "land", 2, ["grass", "grass", "grass", "dirt", "rough"])).get("generated_map", {})
 	if not _assert_payload_boundaries(underground_payload):
 		return
 	var underground_semantics: Dictionary = underground_payload.get("staging", {}).get("terrain_transit_semantics", {})
@@ -31,7 +31,7 @@ func _run() -> void:
 	if not _assert_land_and_underground_routes(underground_semantics):
 		return
 
-	var water_payload: Dictionary = generator.generate(_translated_config("terrain-transit-water-10184", "islands", 1, ["grass", "plains", "forest", "swamp", "highland"])).get("generated_map", {})
+	var water_payload: Dictionary = generator.generate(_translated_config("terrain-transit-water-10184", "islands", 1, ["grass", "grass", "grass", "dirt", "rough"])).get("generated_map", {})
 	if not _assert_payload_boundaries(water_payload):
 		return
 	if not _assert_water_semantics(water_payload.get("staging", {}).get("terrain_transit_semantics", {})):
@@ -155,7 +155,7 @@ func _assert_underground_semantics(semantics: Dictionary) -> bool:
 			continue
 		if String(layer.get("level_kind", "")) == "underground":
 			underground_layer_found = true
-			if not bool(layer.get("cave_metadata", {}).get("is_cave", false)) or String(layer.get("default_terrain_id", "")) != "cavern":
+			if not bool(layer.get("cave_metadata", {}).get("is_cave", false)) or String(layer.get("default_terrain_id", "")) != "underground":
 				_fail("Underground layer missed cave metadata: %s" % JSON.stringify(layer))
 				return false
 	if not underground_layer_found:

@@ -32,7 +32,7 @@ const TERRAIN_COLORS := {
 	"plains": Color(0.30, 0.38, 0.24, 1.0),
 	"forest": Color(0.18, 0.31, 0.22, 1.0),
 	"swamp": Color(0.24, 0.29, 0.22, 1.0),
-	"hills": Color(0.37, 0.32, 0.24, 1.0),
+	"rough": Color(0.37, 0.32, 0.24, 1.0),
 	"road": Color(0.35, 0.30, 0.24, 1.0),
 	"mire": Color(0.21, 0.27, 0.22, 1.0),
 }
@@ -41,7 +41,7 @@ const TERRAIN_TEXTURE_ALIASES := {
 	"grass": "grass",
 	"forest": "forest",
 	"swamp": "swamp",
-	"hills": "hills",
+	"rough": "rough",
 	"road": "road",
 	"mire": "mire",
 }
@@ -49,7 +49,7 @@ const TERRAIN_TEXTURE_PATHS := {
 	"grass": "res://art/battle/terrain/grass.png",
 	"forest": "res://art/battle/terrain/forest.png",
 	"swamp": "res://art/battle/terrain/swamp.png",
-	"hills": "res://art/battle/terrain/hills.png",
+	"rough": "res://art/battle/terrain/hills.png",
 	"road": "res://art/battle/terrain/road.png",
 	"mire": "res://art/battle/terrain/mire.png",
 }
@@ -779,7 +779,7 @@ func _draw_hex_procedural_detail(center: Vector2, radius: float, terrain: String
 			if detail_roll > 0.24:
 				draw_circle(center + Vector2(radius * 0.12, radius * 0.04), radius * 0.24, Color(0.10, 0.17, 0.16, 0.28))
 				draw_circle(center + Vector2(radius * 0.02, -radius * 0.04), radius * 0.12, Color(0.36, 0.42, 0.31, 0.15))
-		"hills":
+		"rough":
 			if detail_roll > 0.30:
 				_draw_hill(center + Vector2(0.0, radius * 0.06), radius * 0.88, radius * 0.38)
 		"road":

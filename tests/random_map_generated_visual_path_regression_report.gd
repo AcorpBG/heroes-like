@@ -128,9 +128,9 @@ func _map_rows() -> Array:
 		for x in range(MAP_WIDTH):
 			var terrain := "grass"
 			if x % 9 == 0:
-				terrain = "forest"
+				terrain = "rough"
 			elif y % 11 == 0:
-				terrain = "hills"
+				terrain = "rough"
 			row.append(terrain)
 		rows.append(row)
 	return rows

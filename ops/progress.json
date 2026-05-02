@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "terrain-blocking-town-capture-interaction-10184",
-  "currentSliceTitle": "Terrain Blocking And Town Capture Interaction",
+  "currentSliceId": "terrain-taxonomy-corrective-cleanup-10184",
+  "currentSliceTitle": "Terrain Taxonomy Corrective Cleanup",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: explicit rock terrain now blocks shared overworld passability and editor placement; highland/hills/ridge remain passable; non-player town route descriptors and completion dispatch capture/assault instead of inert town visit semantics.",
+  "currentSliceNotes": "Completed: canonical terrain taxonomy cleanup keeps rock blocking and town routing fixes while removing invalid highland/hills/ridge gameplay terrain ids from editor/runtime/content/test surfaces.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-02T13:28:00Z",
+  "updatedAt": "2026-05-02T14:10:07Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -40,6 +40,65 @@
   },
   "plannedSlices": [
     {
+      "id": "terrain-taxonomy-corrective-cleanup-10184",
+      "title": "Terrain Taxonomy Corrective Cleanup",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "terrain-blocking-town-capture-interaction-10184",
+      "sourceDocs": [
+        "Owner correction after commit 7dceb35",
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "content/terrain_grammar.json",
+        "content/biomes.json",
+        "content/random_map_template_catalog.json",
+        "scripts/autoload/ContentService.gd",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scenes/editor/MapEditorShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/validate_repo.py",
+        "tests/terrain_blocking_town_capture_interaction_regression.gd",
+        "tests/map_editor_smoke.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Editor/runtime terrain options use canonical grass, snow, sand, dirt, rough, lava, underground, water, and rock ids.",
+        "Invalid highland, hills, and ridge ids are removed from gameplay/editor terrain options, generated-map terrain pools, validation expectations, and focused tests.",
+        "Legacy highland/hills/ridge content is normalized to rough without treating those ids as valid gameplay terrain.",
+        "Rock remains blocked for movement/pathing/object placement and town capture/interaction routing remains covered.",
+        "PLAN.md remains a tactical plan without current completion-evidence blocks."
+      ],
+      "nonGoals": [
+        "No asset import.",
+        "No save-version bump.",
+        "No broad visual terrain-art rename beyond taxonomy references."
+      ],
+      "startedAt": "2026-05-02T13:53:38Z",
+      "updatedAt": "2026-05-02T14:10:07Z",
+      "notes": "Corrective cleanup for invalid terrain vocabulary introduced/retained by commit 7dceb35.",
+      "completedAt": "2026-05-02T14:10:07Z",
+      "completionEvidence": [
+        "Terrain grammar/editor options now expose only grass, snow, sand, dirt, rough, lava, underground, water, and rock.",
+        "Runtime and generator terrain normalization maps legacy highland/hills/ridge input to rough without treating those ids as valid options.",
+        "Authored biome/scenario/generated-map terrain surfaces and focused terrain tests use canonical terrain ids while retaining stable biome/object ids where they are not terrain ids.",
+        "PLAN.md no longer carries the prior completion-evidence block; operational evidence is tracked here."
+      ],
+      "validationNotes": [
+        "Passed: python3 tests/validate_repo.py.",
+        "Passed: python3 tests/all_interactable_object_footprint_audit.py.",
+        "Passed: git diff --check.",
+        "Passed: XDG_DATA_HOME=/tmp/heroes-like-godot-data timeout 180s godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/terrain_blocking_town_capture_interaction_regression.tscn.",
+        "Passed: XDG_DATA_HOME=/tmp/heroes-like-godot-data timeout 180s godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_placement_debug_overlay_regression.tscn.",
+        "Passed: XDG_DATA_HOME=/tmp/heroes-like-godot-data timeout 180s godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_placement_interaction_footprint_override_regression.tscn.",
+        "Known headless timeout remains: XDG_DATA_HOME=/tmp/heroes-like-godot-data timeout 240s godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_editor_smoke.tscn exited 124 after the corrected bridge-material assertion no longer appeared; tail contained existing ContentService unsupported-family warnings only."
+      ]
+    },
+    {
       "id": "terrain-blocking-town-capture-interaction-10184",
       "title": "Terrain Blocking And Town Capture Interaction",
       "phase": "phase-2-deep-production-foundation",
@@ -65,7 +124,7 @@
       ],
       "completionCriteria": [
         "Explicit rock/cliff terrain blocks movement and editor object placement.",
-        "Passable highland, hills, and ridge terrain remain movement-valid high-ground terrain.",
+        "Passable rough terrain remains movement-valid while rock remains blocked.",
         "Full-route and selected-route descriptor confirmations capture neutral towns and dispatch enemy town assaults through the existing town capture path.",
         "Town route labels and selected-route descriptors expose claim/assault semantics instead of inert approach wording for non-player towns.",
         "Existing inside-footprint action override and F4 placement overlay regressions remain passing."
@@ -77,15 +136,11 @@
         "No multitile generated-town runtime expansion beyond the documented transitional split."
       ],
       "startedAt": "2026-05-02T13:10:50Z",
-      "updatedAt": "2026-05-02T13:28:00Z",
+      "updatedAt": "2026-05-02T13:53:38Z",
       "notes": "Completed focused owner-reported gameplay bug slice.",
       "completedAt": "2026-05-02T13:28:00Z",
       "completionEvidence": [
-        "rock is an explicit Rock/None terrain id and OverworldRules.terrain_id_is_passable blocks rock/water/coast/shore before biome passability; highland/hills/ridge remain passable.",
-        "MapEditorShell placement previews reject object placement on impassable terrain and OverworldMapView session-static terrain signatures hash every map row after terrain edits.",
-        "Overworld town route descriptors, labels, compact actions, and destination resolution use claim/capture for neutral towns and assault for enemy towns while player-owned towns remain visit/town.",
-        "Focused regression tests/terrain_blocking_town_capture_interaction_regression.tscn proves rock blocks movement, highland/ridge stay passable, full-route neutral town capture succeeds, and cached selected-route town confirmation captures.",
-        "Validation passed: python3 tests/validate_repo.py; python3 tests/all_interactable_object_footprint_audit.py; git diff --check; F4 overlay; inside-footprint override; route-destination; cached-route; full-route; selected-route cache; town-transition fast path; random-map pathing overlay; random-map scenario load."
+        "Historical pre-correction evidence retained only for the rock-blocking and town capture/interaction fixes; invalid highland/hills/ridge terrain taxonomy was superseded by terrain-taxonomy-corrective-cleanup-10184."
       ],
       "validationNotes": [
         "Godot save-writing tests were run with XDG_DATA_HOME redirected under /tmp because the default /root/.local/share Godot app data is read-only in the sandbox.",

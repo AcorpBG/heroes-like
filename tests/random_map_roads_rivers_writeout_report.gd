@@ -77,7 +77,7 @@ func _water_config(seed: String) -> Dictionary:
 			"id": "translated_rmg_profile_001_v1",
 			"template_id": "translated_rmg_template_001_v1",
 			"guard_strength_profile": "core_low",
-			"terrain_ids": ["grass", "plains", "forest", "swamp", "highland"],
+			"terrain_ids": ["grass", "grass", "rough", "dirt", "rough"],
 			"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"],
 		},
 	}
