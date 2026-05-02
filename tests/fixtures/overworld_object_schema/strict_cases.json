@@ -69,7 +69,7 @@
         "approach": {
           "mode": "linked_endpoint",
           "primary_sides": ["west", "east"],
-          "visit_offsets": [{"x": -1, "y": 0}, {"x": 2, "y": 0}],
+          "visit_offsets": [{"x": 0, "y": 0}, {"x": 1, "y": 0}],
           "stop_before_interaction": true,
           "requires_clear_tile": true,
           "linked_exit_offsets": [{"x": -1, "y": 0}, {"x": 2, "y": 0}]
@@ -130,7 +130,7 @@
         "approach": {
           "mode": "adjacent",
           "primary_sides": ["south"],
-          "visit_offsets": [{"x": 0, "y": 2}],
+          "visit_offsets": [{"x": 0, "y": 1}],
           "stop_before_interaction": true,
           "requires_clear_tile": true,
           "linked_exit_offsets": []
@@ -193,7 +193,7 @@
         "approach": {
           "mode": "adjacent",
           "primary_sides": ["south"],
-          "visit_offsets": [{"x": 0, "y": 2}],
+          "visit_offsets": [{"x": 0, "y": 1}],
           "stop_before_interaction": true,
           "requires_clear_tile": true,
           "linked_exit_offsets": []

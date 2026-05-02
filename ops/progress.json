@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "placement-interaction-inside-footprint-override-10184",
-  "currentSliceTitle": "placement interaction inside footprint override 10184",
+  "currentSliceId": "all-interactable-footprint-normalization-10184",
+  "currentSliceTitle": "all interactable footprint normalization 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed inside-footprint interaction override. Validation: python3 tests/validate_repo.py; git diff --check; redirected Godot focused regression, F4 overlay regression, and random-map footprint interaction report all passed.",
+  "currentSliceNotes": "Normalized authored blocking interactable visit offsets inside footprints/bodies; updated RMG catalog/action masks and route endpoint handling. Validation: python3 tests/all_interactable_object_footprint_audit.py; python3 -m py_compile tests/validate_repo.py tests/all_interactable_object_footprint_audit.py; python3 tests/validate_repo.py; git diff --check; Godot F4 overlay regression; Godot inside-footprint override regression; random_map_object_footprint_catalog_report; random_map_generated_object_footprint_interaction_report.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-02T11:50:47Z",
+  "updatedAt": "2026-05-02T12:28:06Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -5770,6 +5770,16 @@
       "startedAt": "2026-05-02T11:44:15Z",
       "notes": "Completed inside-footprint interaction override. Validation: python3 tests/validate_repo.py; git diff --check; redirected Godot focused regression, F4 overlay regression, and random-map footprint interaction report all passed.",
       "completedAt": "2026-05-02T11:50:47Z"
+    },
+    {
+      "id": "all-interactable-footprint-normalization-10184",
+      "title": "all interactable footprint normalization 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-02T12:28:06Z",
+      "startedAt": "2026-05-02T12:07:09Z",
+      "notes": "Normalized authored blocking interactable visit offsets inside footprints/bodies; updated RMG catalog/action masks and route endpoint handling. Validation: python3 tests/all_interactable_object_footprint_audit.py; python3 -m py_compile tests/validate_repo.py tests/all_interactable_object_footprint_audit.py; python3 tests/validate_repo.py; git diff --check; Godot F4 overlay regression; Godot inside-footprint override regression; random_map_object_footprint_catalog_report; random_map_generated_object_footprint_interaction_report.",
+      "completedAt": "2026-05-02T12:28:06Z"
     }
   ],
   "completedImplementationEvidence": [

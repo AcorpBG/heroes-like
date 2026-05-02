@@ -124,6 +124,34 @@ completionCriteria:
 - F4 overlay keeps overlapped body/action tiles visible, with the interactable layer drawn distinctly over blocker/body.
 - Generated object metadata accepts inside-body visit tiles without widening the transitional generated-town runtime footprint split.
 
+### Current Owner-Directed Content Slice - All Interactable Footprint Normalization
+
+id: `all-interactable-footprint-normalization-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Normalize authored and generated interactable map-object action/visit tiles so blocking visitable footprints expose canonical interaction tiles inside their footprint/body.
+
+implementationTargets:
+- `content/map_objects.json`
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/validate_repo.py`
+- `tests/all_interactable_object_footprint_audit.py`
+- `tests/random_map_generated_object_footprint_interaction_report.gd`
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `python3 tests/all_interactable_object_footprint_audit.py`
+- `git diff --check`
+- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_placement_debug_overlay_regression.tscn`
+- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_placement_interaction_footprint_override_regression.tscn`
+- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/random_map_generated_object_footprint_interaction_report.tscn`
+- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/random_map_object_footprint_catalog_report.tscn`
+
+completionCriteria:
+- All blocking visitable authored map objects with body tiles have action/visit offsets inside their footprint and body, unless an explicit audited exception explains why.
+- RMG footprint/catalog records use inside-body visit/action masks for generated interactables while preserving passable approach metadata and the generated-town 3x2 intended / 1x1 runtime transitional split.
+- Existing inside-footprint interaction override, non-action body blocking, F4 overlay ordering, and generated-object interaction reports remain passing.
+- Validation reports expose the normalized contract so future authored interactables cannot regress to outside-footprint action tiles.
+
 ## Slice Status Model
 
 Each implementation slice maps to a progress entry with:

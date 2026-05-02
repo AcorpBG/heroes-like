@@ -141,6 +141,8 @@ func _inspect_resource_node(session, node: Dictionary) -> Dictionary:
 	var interaction_tile: Dictionary = interaction_tiles[0] if not interaction_tiles.is_empty() and interaction_tiles[0] is Dictionary else {}
 	if interaction_tile.is_empty():
 		failures.append("%s has no concrete interaction tile." % String(node.get("placement_id", "")))
+	elif bool(surface.get("blocks_body_tiles", false)) and not body_tiles.is_empty() and not _tile_in_array(body_tiles, interaction_tile):
+		failures.append("%s blocking generated interaction tile is outside the body mask: %s." % [String(node.get("placement_id", "")), JSON.stringify(interaction_tile)])
 	elif OverworldRules.tile_is_blocked(session, int(interaction_tile.get("x", 0)), int(interaction_tile.get("y", 0))):
 		if not _tile_in_array(body_tiles, interaction_tile):
 			failures.append("%s interaction tile is blocked outside the body mask: %s." % [String(node.get("placement_id", "")), JSON.stringify(interaction_tile)])

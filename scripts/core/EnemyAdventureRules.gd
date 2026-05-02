@@ -3553,7 +3553,8 @@ static func neutral_encounter_object_valuation_breakdown(
 			},
 			"body_tile_count": body_tiles.size(),
 			"approach_visit_offset_count": visit_offsets.size(),
-			"body_tiles_separate_from_approach": not body_tiles.is_empty() and not visit_offsets.is_empty(),
+			"body_tiles_overlap_visit_offsets": not body_tiles.is_empty() and not visit_offsets.is_empty(),
+			"inside_footprint_interaction_contract": "visit_offsets_overlap_body_tiles",
 		},
 	}
 

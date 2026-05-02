@@ -75,7 +75,7 @@ func _run() -> void:
 		"case_pass_criteria": [
 			"Object-backed neutral encounter metadata contributes positive internal valuation.",
 			"Route-block and scenario-objective guard links produce route/objective reason codes.",
-			"Body tiles and approach offsets remain separate in the shape-mask contract.",
+			"Body tiles and visit offsets overlap in the inside-footprint shape-mask contract.",
 			"Public event output omits internal score fields.",
 		],
 	}
@@ -103,8 +103,8 @@ func _assert_object_backed_route_pressure(target: Dictionary, require_separate_s
 		return
 	if require_separate_shape_mask:
 		var shape_mask: Dictionary = target.get("shape_mask_contract", {})
-		if not bool(shape_mask.get("body_tiles_separate_from_approach", false)):
-			_fail("%s did not preserve body/approach shape-mask separation: %s" % [target.get("placement_id", ""), shape_mask])
+		if not bool(shape_mask.get("body_tiles_overlap_visit_offsets", false)):
+			_fail("%s did not preserve inside-footprint body/visit overlap: %s" % [target.get("placement_id", ""), shape_mask])
 
 func _public_assignment_event(session, config: Dictionary, target: Dictionary) -> Dictionary:
 	var actor := {
