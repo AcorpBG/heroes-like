@@ -8,7 +8,7 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	if not _assert_rock_blocks_without_blocking_highland():
+	if not _assert_rock_blocks_without_blocking_rough():
 		return
 	if not _assert_full_route_town_capture():
 		return
@@ -17,14 +17,14 @@ func _run() -> void:
 	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true})])
 	get_tree().quit(0)
 
-func _assert_rock_blocks_without_blocking_highland() -> bool:
+func _assert_rock_blocks_without_blocking_rough() -> bool:
 	var session = _terrain_fixture_session()
 	OverworldRules.normalize_overworld_state(session)
 	if not OverworldRules.tile_is_blocked(session, 2, 1):
 		return _fail("Rock terrain did not block movement.", _terrain_snapshot(session))
 	for tile in [Vector2i(3, 1), Vector2i(4, 1)]:
 		if OverworldRules.tile_is_blocked(session, tile.x, tile.y):
-			return _fail("Passable highland/ridge terrain was blocked.", {
+			return _fail("Passable canonical terrain was blocked.", {
 				"tile": _tile_payload(tile),
 				"terrain": String(session.overworld.get("map", [])[tile.y][tile.x]),
 				"snapshot": _terrain_snapshot(session),
@@ -97,7 +97,7 @@ func _assert_cached_selected_route_town_capture() -> bool:
 func _terrain_fixture_session():
 	var rows := [
 		["grass", "grass", "grass", "grass", "grass"],
-		["grass", "grass", "rock", "highland", "ridge"],
+		["grass", "grass", "rock", "rough", "dirt"],
 		["grass", "grass", "grass", "grass", "grass"],
 	]
 	return _base_session("terrain_blocking_fixture", rows, Vector2i(1, 1), [])
@@ -218,8 +218,8 @@ func _all_visible_fog(width: int, height: int) -> Dictionary:
 func _terrain_snapshot(session) -> Dictionary:
 	return {
 		"rock": OverworldRules.terrain_profile_at(session, 2, 1),
-		"highland": OverworldRules.terrain_profile_at(session, 3, 1),
-		"ridge": OverworldRules.terrain_profile_at(session, 4, 1),
+		"rough": OverworldRules.terrain_profile_at(session, 3, 1),
+		"dirt": OverworldRules.terrain_profile_at(session, 4, 1),
 	}
 
 func _tile_payload(tile: Vector2i) -> Dictionary:

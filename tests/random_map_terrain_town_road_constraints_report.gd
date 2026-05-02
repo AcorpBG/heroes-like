@@ -15,7 +15,7 @@ func _run() -> void:
 		"profile": {
 			"id": "terrain_town_road_constraint_profile",
 			"label": "Terrain Town Road Constraint Profile",
-			"terrain_ids": ["grass", "plains", "forest", "swamp", "highland", "water"],
+			"terrain_ids": ["grass", "grass", "grass", "dirt", "rough", "water"],
 			"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
 			"guard_strength_profile": "core_low",
 		},

@@ -178,16 +178,10 @@ baselineChecks:
 
 completionCriteria:
 - Explicit rock/cliff terrain blocks movement and editor object placement.
-- Passable highland, hills, and ridge terrain remain movement-valid high-ground terrain.
+- Passable rough terrain remains movement-valid while rock remains blocked.
 - Full-route and selected-route descriptor confirmations capture neutral towns and dispatch enemy town assaults through the existing town capture path.
 - Town route labels and selected-route descriptors expose claim/assault semantics instead of inert approach wording for non-player towns.
 - Existing inside-footprint action override and F4 placement overlay regressions remain passing.
-
-completionEvidence:
-- `rock` is now the explicit Rock/None logical terrain id and is blocked by shared overworld passability rules, while highland/hills/ridge remain passable high-ground ids.
-- Map editor placement previews reject object placement on impassable terrain and map-view static cache signatures include all terrain rows so terrain edits refresh placement/pathing surfaces.
-- Non-player town route descriptors and labels expose claim/assault semantics and route completion dispatches through capture/assault instead of an inert town visit response.
-- `tests/terrain_blocking_town_capture_interaction_regression.tscn`, F4 overlay, inside-footprint override, route-destination, cached-route, full-route, selected-route cache, town-transition, random-map pathing overlay, and random-map scenario-load regressions were run with redirected `XDG_DATA_HOME` where save writes were needed.
 
 ## Slice Status Model
 

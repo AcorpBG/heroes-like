@@ -1736,8 +1736,8 @@ static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int
 	return _blocked_tile_index(session).has(_tile_key(Vector2i(x, y)))
 
 static func terrain_id_is_passable(terrain_id: String) -> bool:
-	var normalized := String(terrain_id)
-	if normalized in ["rock", "water", "coast", "shore"]:
+	var normalized := ContentService.normalize_terrain_id(String(terrain_id))
+	if normalized in ["rock", "water"]:
 		return false
 	var biome := ContentService.get_biome_for_terrain(normalized)
 	if not biome.is_empty() and biome.has("passable"):

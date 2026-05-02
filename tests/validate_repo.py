@@ -434,15 +434,17 @@ LOGISTICS_SITE_IDS = {
     "site_reedscript_shrine",
     "site_starlens_sanctum",
 }
-TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS = {"grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"}
+TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS = {"grass", "snow", "sand", "dirt", "rough", "lava", "underground", "water", "rock"}
+TERRAIN_GRAMMAR_ROAD_ENABLED_TERRAIN_IDS = {"grass", "snow", "sand", "dirt", "rough", "lava", "underground"}
 EDITOR_BASE_TERRAIN_OPTIONS = [
-    ("water", "Water", "water", "watrtl"),
-    ("snow", "Snow", "snow", "snowtl"),
     ("grass", "Grass", "grass", "grastl"),
-    ("wastes", "Sand", "sand", "sandtl"),
-    ("badlands", "Dirt", "dirt", "dirttl"),
+    ("snow", "Snow", "snow", "snowtl"),
+    ("sand", "Sand", "sand", "sandtl"),
+    ("dirt", "Dirt", "dirt", "dirttl"),
+    ("rough", "Rough", "rough", "rougtl"),
     ("lava", "Lava", "lava", "lavatl"),
-    ("swamp", "Swamp", "swamp", "swmptl"),
+    ("underground", "Underground", "subterranean", "subbtl"),
+    ("water", "Water", "water", "watrtl"),
     ("rock", "Rock/None", "rock", "rocktl"),
 ]
 EDITOR_BASE_TERRAIN_OPTION_IDS = {option[0] for option in EDITOR_BASE_TERRAIN_OPTIONS}
@@ -450,14 +452,30 @@ EDITOR_HIDDEN_LOGICAL_TERRAIN_IDS = {
     "plains",
     "forest",
     "mire",
-    "hills",
-    "ridge",
+    "swamp",
     "coast",
     "shore",
     "ash",
     "cavern",
     "underway",
     "frost",
+}
+LEGACY_TERRAIN_ID_ALIASES = {
+    "plains": "grass",
+    "forest": "grass",
+    "mire": "dirt",
+    "swamp": "dirt",
+    "highland": "rough",
+    "hills": "rough",
+    "ridge": "rough",
+    "badlands": "dirt",
+    "wastes": "sand",
+    "ash": "lava",
+    "frost": "snow",
+    "coast": "water",
+    "shore": "water",
+    "cavern": "underground",
+    "underway": "underground",
 }
 HOMM3_LOCAL_PROTOTYPE_FAMILIES = {"grass", "rough", "dirt", "rock", "sand", "snow", "swamp", "lava", "subterranean", "water"}
 HOMM3_FULL_RECEIVER_LAND_FAMILIES = {"grass", "rough", "snow", "swamp", "lava", "subterranean"}
@@ -12723,11 +12741,13 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
             for tile_id in tile_ids:
                 tile_key = str(tile_id)
                 ensure(bool(tile_key), errors, f"Biome {biome_id} contains an empty map tile id")
-                ensure(tile_key not in terrain_to_biome, errors, f"Map tile id {tile_key} is assigned to more than one biome")
-                terrain_to_biome[tile_key] = biome_id
+                ensure(tile_key in TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS, errors, f"Biome {biome_id} maps unsupported terrain id {tile_key}")
+                if tile_key not in terrain_to_biome:
+                    terrain_to_biome[tile_key] = biome_id
         ensure(int(biome.get("movement_cost", 0)) > 0, errors, f"Biome {biome_id} must define movement_cost > 0")
         ensure("passable" in biome, errors, f"Biome {biome_id} must explicitly define passable")
-        ensure(bool(str(biome.get("battle_terrain", ""))), errors, f"Biome {biome_id} must define battle_terrain")
+        battle_terrain = str(biome.get("battle_terrain", ""))
+        ensure(battle_terrain in TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS, errors, f"Biome {biome_id} must define canonical battle_terrain")
         for list_key in ("encounter_palette_tags", "decoration_palette", "blocker_palette", "route_roles"):
             values = biome.get(list_key, [])
             ensure(isinstance(values, list) and bool(values), errors, f"Biome {biome_id} must define non-empty {list_key}")
@@ -12739,7 +12759,7 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
                 ensure(family_key in SUPPORTED_RESOURCE_SITE_FAMILIES, errors, f"Biome {biome_id} allows unsupported site family {family_key}")
                 site_families_allowed_by_biomes.add(family_key)
 
-    ensure({"grass", "forest", "water"}.issubset(terrain_to_biome.keys()), errors, "Biomes must map the terrain ids used by current scenarios: grass, forest, and water")
+    ensure({"grass", "snow", "sand", "dirt", "rough", "lava", "underground", "water"}.issubset(terrain_to_biome.keys()), errors, "Biomes must map the canonical terrain ids used by current scenarios")
     if "water" in terrain_to_biome:
         ensure(not bool(biomes.get(terrain_to_biome["water"], {}).get("passable", True)), errors, "The biome mapped from water must remain impassable for current overworld pathing")
     ensure(OVERWORLD_FOUNDATION_SITE_FAMILIES.issubset(site_families_allowed_by_biomes), errors, "Biome palettes must allow mines, scouting structures, guarded reward sites, transit objects, and repeatable services")
@@ -13545,7 +13565,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             ensure(isinstance(supports, list) and "edge_transitions" in supports, errors, f"Terrain grammar {terrain_id} must support edge_transitions")
             if isinstance(supports, list) and "road_overlay" in supports:
                 road_enabled_terrain_ids.add(terrain_id)
-            if terrain_id in TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS:
+            if terrain_id in TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS and isinstance(supports, list) and "authored_tile_art" in supports:
                 ensure(isinstance(supports, list) and "authored_tile_art" in supports, errors, f"Terrain grammar {terrain_id} must mark authored_tile_art support")
                 tile_art = terrain_class.get("tile_art", {})
                 ensure(isinstance(tile_art, dict), errors, f"Terrain grammar {terrain_id} must define tile_art")
@@ -13571,8 +13591,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                             ensure(art_path.exists(), errors, f"Terrain grammar {terrain_id} edge overlay {direction} references missing texture {edge_overlays.get(direction)}")
                             if art_path.exists():
                                 ensure(png_size(art_path) == (64, 64), errors, f"Terrain grammar {terrain_id} edge overlay {direction} must be 64x64 PNG, found {png_size(art_path)}")
-    ensure(TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(terrain_class_ids), errors, "Terrain grammar must author the first readable terrain slice: grass/plains, forest, mire/swamp, and hills/ridge/highland")
-    ensure(TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(road_enabled_terrain_ids), errors, "First terrain slice ids must support structural road overlays")
+    ensure(TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(terrain_class_ids), errors, "Terrain grammar must author canonical base terrain ids plus special water/rock")
+    ensure(TERRAIN_GRAMMAR_ROAD_ENABLED_TERRAIN_IDS.issubset(road_enabled_terrain_ids), errors, "Canonical base terrain ids must support structural road overlays")
     editor_options = terrain_grammar.get("editor_base_terrain_options", [])
     ensure(isinstance(editor_options, list), errors, "Terrain grammar must define editor_base_terrain_options for the map editor base terrain picker")
     if isinstance(editor_options, list):
@@ -13586,11 +13606,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             for option in editor_options
             if isinstance(option, dict)
         ]
-        ensure(actual_options == EDITOR_BASE_TERRAIN_OPTIONS, errors, "Editor base terrain options must be the HoMM3-style family set in order: Water, Snow, Grass, Sand, Dirt, Lava, Swamp, Rock/None")
+        ensure(actual_options == EDITOR_BASE_TERRAIN_OPTIONS, errors, "Editor base terrain options must be the canonical family set in order: Grass, Snow, Sand, Dirt, Rough, Lava, Underground, Water, Rock/None")
         option_ids = {option[0] for option in actual_options}
         ensure(option_ids == EDITOR_BASE_TERRAIN_OPTION_IDS, errors, "Editor base terrain option ids must be the curated HoMM3-style representatives")
         ensure(option_ids.issubset(terrain_class_ids), errors, "Editor base terrain options must reference existing authored terrain ids")
-        ensure(EDITOR_HIDDEN_LOGICAL_TERRAIN_IDS.isdisjoint(option_ids), errors, "Editor base terrain options must not expose hidden logical terrain variants such as forest, mire, hills, ridge, ash, frost, coast, or shore")
+        ensure(EDITOR_HIDDEN_LOGICAL_TERRAIN_IDS.isdisjoint(option_ids), errors, "Editor base terrain options must not expose hidden logical terrain variants such as plains, forest, mire, swamp, ash, frost, coast, or shore")
         terrain_id_map = homm3_prototype.get("terrain_id_map", {}) if isinstance(homm3_prototype, dict) else {}
         terrain_families = homm3_prototype.get("terrain_families", {}) if isinstance(homm3_prototype, dict) else {}
         if isinstance(terrain_id_map, dict) and isinstance(terrain_families, dict):
@@ -13674,7 +13694,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 ensure(0 <= y < len(game_map) and isinstance(game_map[y], list) and 0 <= x < len(game_map[y]), errors, f"Terrain layer {scenario_id} road {road.get('id')} tile {x},{y} is out of bounds")
                 if 0 <= y < len(game_map) and isinstance(game_map[y], list) and 0 <= x < len(game_map[y]):
                     terrain_id = str(game_map[y][x])
-                    ensure(terrain_id in road_enabled_terrain_ids, errors, f"Terrain layer {scenario_id} road {road.get('id')} tile {x},{y} uses non-road terrain {terrain_id}")
+                    normalized_terrain_id = LEGACY_TERRAIN_ID_ALIASES.get(terrain_id, terrain_id)
+                    ensure(normalized_terrain_id in road_enabled_terrain_ids, errors, f"Terrain layer {scenario_id} road {road.get('id')} tile {x},{y} uses non-road terrain {terrain_id}")
         ensure(road_tile_count >= 8, errors, f"Terrain layer {scenario_id} must include enough road tiles to prove structural overlays")
 
     ensure(OVERWORLD_ART_REQUIRED_ASSET_IDS.issubset(set(object_assets.keys())), errors, "Overworld art manifest must preserve all required prepared object asset ids")
@@ -14038,19 +14059,27 @@ def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:
         ensure(all(isinstance(row, list) and len(row) == 64 for row in game_map), errors, "Ninefold Confluence must author 64 columns in every row")
 
     terrain_to_biome: dict[str, str] = {}
+    biome_allowed_terrain_ids: dict[str, set[str]] = {}
     for biome_id, biome in biomes.items():
+        allowed_terrain_ids: set[str] = set()
         for terrain_id in biome.get("map_tile_ids", []):
-            terrain_to_biome[str(terrain_id)] = biome_id
-    authored_biome_ids: set[str] = set()
+            terrain_key = str(terrain_id)
+            allowed_terrain_ids.add(terrain_key)
+            if terrain_key not in terrain_to_biome:
+                terrain_to_biome[terrain_key] = biome_id
+        biome_allowed_terrain_ids[biome_id] = allowed_terrain_ids
+    for legacy_id, canonical_id in LEGACY_TERRAIN_ID_ALIASES.items():
+        if canonical_id in terrain_to_biome and legacy_id not in terrain_to_biome:
+            terrain_to_biome[legacy_id] = terrain_to_biome[canonical_id]
+    authored_terrain_ids: set[str] = set()
     if isinstance(game_map, list):
         for row in game_map:
             if not isinstance(row, list):
                 continue
             for terrain_id in row:
-                biome_id = terrain_to_biome.get(str(terrain_id), "")
-                if biome_id:
-                    authored_biome_ids.add(biome_id)
-    ensure(set(biomes.keys()).issubset(authored_biome_ids), errors, "Ninefold Confluence map must represent every authored biome family")
+                authored_terrain_ids.add(str(terrain_id))
+    required_breadth_terrain_ids = {"grass", "snow", "sand", "dirt", "rough", "lava", "underground", "water"}
+    ensure(required_breadth_terrain_ids.issubset(authored_terrain_ids), errors, "Ninefold Confluence map must represent every canonical terrain family")
 
     scenario_faction_ids = {str(scenario.get("player_faction_id", ""))}
     for placement in scenario.get("towns", []):
@@ -14114,10 +14143,12 @@ def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:
         terrain_id = ""
         if isinstance(game_map, list) and 0 <= y < len(game_map) and isinstance(game_map[y], list) and 0 <= x < len(game_map[y]):
             terrain_id = str(game_map[y][x])
-        biome_id = terrain_to_biome.get(terrain_id, "")
         dwelling = neutral_dwellings.get(dwelling_id, {})
-        if dwelling and biome_id not in [str(value) for value in dwelling.get("biome_ids", [])]:
-            mismatched_dwelling_placements.append(f"{dwelling_id}@{x},{y}:{biome_id or terrain_id}")
+        dwelling_terrain_ids: set[str] = set()
+        for biome_id in dwelling.get("biome_ids", []):
+            dwelling_terrain_ids.update(biome_allowed_terrain_ids.get(str(biome_id), set()))
+        if dwelling and terrain_id not in dwelling_terrain_ids:
+            mismatched_dwelling_placements.append(f"{dwelling_id}@{x},{y}:{terrain_id}")
 
     ensure(
         SIX_FACTION_BIOME_BREADTH_REQUIRED_SITE_FAMILIES.issubset(placed_site_families),

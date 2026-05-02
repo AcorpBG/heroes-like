@@ -41,14 +41,14 @@ SOURCE_RESOURCE_TO_ORIGINAL = {
     "gems": "cut_gems",
 }
 SOURCE_TERRAIN_TO_ORIGINAL = {
-    "dirt": "plains",
+    "swamp": "dirt",
     "grass": "grass",
-    "sand": "plains",
-    "snow": "highland",
-    "swamp": "swamp",
-    "rough": "highland",
-    "cave": "highland",
-    "lava": "highland",
+    "sand": "sand",
+    "snow": "snow",
+    "dirt": "dirt",
+    "rough": "rough",
+    "cave": "underground",
+    "lava": "lava",
 }
 SOURCE_TOWN_TO_ORIGINAL_FACTION = {
     "castle": "faction_embercourt",
@@ -63,7 +63,7 @@ SOURCE_TOWN_TO_ORIGINAL_FACTION = {
     "forge": "faction_brasshollow",
     "neutral": "neutral",
 }
-DEFAULT_TERRAINS = ["grass", "plains", "forest", "swamp", "highland"]
+DEFAULT_TERRAINS = ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"]
 DEFAULT_FACTIONS = [
     "faction_embercourt",
     "faction_mireclaw",
@@ -409,10 +409,10 @@ def original_runtime_templates() -> list[dict[str, Any]]:
                 manual_zone("start_1", "human_start", 18, 1, {"match_to_faction": True}, mines={"timber": 1, "ore": 1}),
                 manual_zone("start_2", "computer_start", 18, 2, {"match_to_faction": True}, mines={"timber": 1, "ore": 1}),
                 manual_zone("start_3", "computer_start", 18, 3, {"match_to_faction": True}, mines={"timber": 1, "ore": 1}),
-                manual_zone("junction_1", "junction", 10, None, {"allowed": ["plains", "grass"]}),
-                manual_zone("reward_1", "treasure", 8, None, {"allowed": ["forest", "grass"]}, same_type=True),
-                manual_zone("reward_2", "treasure", 8, None, {"allowed": ["highland", "plains"]}),
-                manual_zone("reward_3", "treasure", 8, None, {"allowed": ["swamp", "forest"]}),
+                manual_zone("junction_1", "junction", 10, None, {"allowed": ["grass", "grass"]}),
+                manual_zone("reward_1", "treasure", 8, None, {"allowed": ["rough", "grass"]}, same_type=True),
+                manual_zone("reward_2", "treasure", 8, None, {"allowed": ["rough", "grass"]}),
+                manual_zone("reward_3", "treasure", 8, None, {"allowed": ["dirt", "rough"]}),
             ],
             "links": [
                 manual_link("start_1", "junction_1", "contest_route", 600),
@@ -438,10 +438,10 @@ def original_runtime_templates() -> list[dict[str, Any]]:
                 manual_zone("start_1", "human_start", 20, 1, {"match_to_faction": True}, mines={"timber": 1, "ore": 1, "quicksilver": 1}),
                 manual_zone("start_2", "computer_start", 20, 2, {"match_to_faction": True}, mines={"timber": 1, "ore": 1, "ember_salt": 1}),
                 manual_zone("start_3", "computer_start", 20, 3, {"match_to_faction": True}, mines={"timber": 1, "ore": 1, "lens_crystal": 1}),
-                manual_zone("gate_1", "junction", 9, None, {"allowed": ["highland", "plains"]}),
-                manual_zone("relic_1", "treasure", 7, None, {"allowed": ["forest", "grass"]}),
-                manual_zone("relic_2", "treasure", 7, None, {"allowed": ["swamp", "forest"]}),
-                manual_zone("relic_3", "treasure", 7, None, {"allowed": ["highland", "grass"]}),
+                manual_zone("gate_1", "junction", 9, None, {"allowed": ["rough", "grass"]}),
+                manual_zone("relic_1", "treasure", 7, None, {"allowed": ["rough", "grass"]}),
+                manual_zone("relic_2", "treasure", 7, None, {"allowed": ["dirt", "rough"]}),
+                manual_zone("relic_3", "treasure", 7, None, {"allowed": ["rough", "grass"]}),
             ],
             "links": [
                 manual_link("start_1", "gate_1", "contest_route", 500, border_guard=True),
@@ -468,10 +468,10 @@ def original_runtime_templates() -> list[dict[str, Any]]:
                 manual_zone("start_2", "computer_start", 17, 2, {"match_to_faction": True}),
                 manual_zone("start_3", "computer_start", 17, 3, {"match_to_faction": True}),
                 manual_zone("start_4", "computer_start", 17, 4, {"match_to_faction": True}),
-                manual_zone("north_cache", "treasure", 8, None, {"allowed": ["forest", "grass"]}),
-                manual_zone("south_cache", "treasure", 8, None, {"allowed": ["highland", "plains"]}),
-                manual_zone("east_cache", "treasure", 8, None, {"allowed": ["swamp", "forest"]}),
-                manual_zone("west_cache", "treasure", 8, None, {"allowed": ["grass", "plains"]}),
+                manual_zone("north_cache", "treasure", 8, None, {"allowed": ["rough", "grass"]}),
+                manual_zone("south_cache", "treasure", 8, None, {"allowed": ["rough", "grass"]}),
+                manual_zone("east_cache", "treasure", 8, None, {"allowed": ["dirt", "rough"]}),
+                manual_zone("west_cache", "treasure", 8, None, {"allowed": ["grass", "grass"]}),
             ],
             "links": [
                 manual_link("start_1", "north_cache", "contest_route", 450),
@@ -506,7 +506,7 @@ def original_profiles(imported_templates: list[dict[str, Any]]) -> list[dict[str
             "label": "Border Gate Compact",
             "template_id": "border_gate_compact_v1",
             "guard_strength_profile": "core_low",
-            "terrain_ids": ["grass", "forest", "swamp", "highland"],
+            "terrain_ids": ["grass", "rough", "dirt", "rough"],
             "faction_ids": DEFAULT_FACTIONS[:3],
             "encounter_id": "encounter_mire_raid",
         },

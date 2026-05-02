@@ -8,10 +8,10 @@
   "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and save/pathing data remain unchanged, while the Godot map editor routes terrain paint operations through the recovered HoMM3 owner queue/rewrite and final-normalization placement model before shared preview reprojection. Active HoMM3 terrain visual selection now uses the accepted web prototype's settled-owner relation-class row lookup for normal terrain, water, and rock frames instead of the older source-offset stamp/corner heuristics. Rendering reports logical terrain id, renderer family, atlas role, relation ring, recovered shape class, row group, frame, transform flags, final-normalization metadata, and fallback metadata. Roads remain resolved through the existing 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
   "editor_base_terrain_options": [
     {
-      "id": "water",
-      "label": "Water",
-      "homm3_family": "water",
-      "homm3_atlas": "watrtl"
+      "id": "grass",
+      "label": "Grass",
+      "homm3_family": "grass",
+      "homm3_atlas": "grastl"
     },
     {
       "id": "snow",
@@ -20,22 +20,22 @@
       "homm3_atlas": "snowtl"
     },
     {
-      "id": "grass",
-      "label": "Grass",
-      "homm3_family": "grass",
-      "homm3_atlas": "grastl"
-    },
-    {
-      "id": "wastes",
+      "id": "sand",
       "label": "Sand",
       "homm3_family": "sand",
       "homm3_atlas": "sandtl"
     },
     {
-      "id": "badlands",
+      "id": "dirt",
       "label": "Dirt",
       "homm3_family": "dirt",
       "homm3_atlas": "dirttl"
+    },
+    {
+      "id": "rough",
+      "label": "Rough",
+      "homm3_family": "rough",
+      "homm3_atlas": "rougtl"
     },
     {
       "id": "lava",
@@ -44,17 +44,22 @@
       "homm3_atlas": "lavatl"
     },
     {
-      "id": "swamp",
-      "label": "Swamp",
-      "homm3_family": "swamp",
-      "homm3_atlas": "swmptl"
+      "id": "underground",
+      "label": "Underground",
+      "homm3_family": "subterranean",
+      "homm3_atlas": "subbtl"
+    },
+    {
+      "id": "water",
+      "label": "Water",
+      "homm3_family": "water",
+      "homm3_atlas": "watrtl"
     },
     {
       "id": "rock",
       "label": "Rock/None",
       "homm3_family": "rock",
-      "homm3_atlas": "rocktl",
-      "note": "Explicit blocked rock/void terrain for cliff and no-ground authoring. Highland, hills, and ridge remain passable high-ground terrain ids."
+      "homm3_atlas": "rocktl"
     }
   ],
   "transition_rules": {
@@ -318,113 +323,17 @@
       }
     },
     {
-      "id": "hills",
+      "id": "rough",
       "biome_id": "biome_highland_ridge",
-      "terrain_group": "highland",
-      "autotile_family": "highland",
-      "style_id": "highland_hills",
-      "base_color": "#716b4c",
-      "detail_color": "#a29362",
-      "edge_color": "#504c38",
-      "transition_priority": 50,
-      "pattern": "contours",
-      "readability_role": "elevated approach",
-      "supports": [
-        "authored_variants",
-        "authored_tile_art",
-        "edge_transitions",
-        "road_overlay",
-        "homm3_local_prototype"
-      ],
-      "variant_keys": [
-        "slope",
-        "scrub",
-        "ridgelet"
-      ],
-      "tile_art": {
-        "base_tiles": [
-          {
-            "variant_key": "slope",
-            "path": "res://art/overworld/runtime/terrain_tiles/base/hills_slope.png"
-          },
-          {
-            "variant_key": "scrub",
-            "path": "res://art/overworld/runtime/terrain_tiles/base/hills_scrub.png"
-          },
-          {
-            "variant_key": "ridgelet",
-            "path": "res://art/overworld/runtime/terrain_tiles/base/hills_ridgelet.png"
-          }
-        ],
-        "edge_overlays": {
-          "N": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_n.png",
-          "E": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_e.png",
-          "S": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_s.png",
-          "W": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_w.png"
-        },
-        "source_basis": "homm3_local_reference_prototype_fallback_paths_superseded_by_lookup"
-      }
-    },
-    {
-      "id": "ridge",
-      "biome_id": "biome_highland_ridge",
-      "terrain_group": "highland",
-      "autotile_family": "highland",
-      "style_id": "highland_ridge",
-      "base_color": "#676142",
-      "detail_color": "#aa9a65",
-      "edge_color": "#464230",
-      "transition_priority": 52,
-      "pattern": "contours",
-      "readability_role": "ridge lane and choke",
-      "supports": [
-        "authored_variants",
-        "authored_tile_art",
-        "edge_transitions",
-        "road_overlay",
-        "homm3_local_prototype"
-      ],
-      "variant_keys": [
-        "ridge",
-        "scree",
-        "pass"
-      ],
-      "tile_art": {
-        "base_tiles": [
-          {
-            "variant_key": "ridge",
-            "path": "res://art/overworld/runtime/terrain_tiles/base/ridge_ridge.png"
-          },
-          {
-            "variant_key": "scree",
-            "path": "res://art/overworld/runtime/terrain_tiles/base/ridge_scree.png"
-          },
-          {
-            "variant_key": "pass",
-            "path": "res://art/overworld/runtime/terrain_tiles/base/ridge_pass.png"
-          }
-        ],
-        "edge_overlays": {
-          "N": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_n.png",
-          "E": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_e.png",
-          "S": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_s.png",
-          "W": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_w.png"
-        },
-        "source_basis": "homm3_local_reference_prototype_fallback_paths_superseded_by_lookup"
-      }
-    },
-    {
-      "id": "highland",
-      "biome_id": "biome_highland_ridge",
-      "terrain_group": "highland",
-      "autotile_family": "highland",
-      "style_id": "highland_open",
+      "terrain_group": "rough",
+      "autotile_family": "rough",
+      "style_id": "rough_open",
       "base_color": "#746c48",
       "detail_color": "#b1a06b",
       "edge_color": "#4d4632",
       "transition_priority": 50,
       "pattern": "contours",
-      "readability_role": "open high ground",
+      "readability_role": "open rough ground",
       "supports": [
         "authored_variants",
         "authored_tile_art",
@@ -579,11 +488,11 @@
       ]
     },
     {
-      "id": "badlands",
+      "id": "dirt",
       "biome_id": "biome_rough_badlands",
-      "terrain_group": "badlands",
-      "autotile_family": "badlands",
-      "style_id": "badlands_cracked",
+      "terrain_group": "dirt",
+      "autotile_family": "dirt",
+      "style_id": "dirt_cracked",
       "base_color": "#8a6646",
       "detail_color": "#b78b5a",
       "edge_color": "#5d402e",
@@ -603,11 +512,11 @@
       ]
     },
     {
-      "id": "wastes",
+      "id": "sand",
       "biome_id": "biome_rough_badlands",
-      "terrain_group": "badlands",
-      "autotile_family": "badlands",
-      "style_id": "badlands_waste",
+      "terrain_group": "sand",
+      "autotile_family": "sand",
+      "style_id": "sand_waste",
       "base_color": "#755a43",
       "detail_color": "#a67b55",
       "edge_color": "#523a2d",
@@ -675,11 +584,11 @@
       ]
     },
     {
-      "id": "cavern",
+      "id": "underground",
       "biome_id": "biome_subterranean_underways",
-      "terrain_group": "underways",
-      "autotile_family": "underways",
-      "style_id": "cavern_floor",
+      "terrain_group": "underground",
+      "autotile_family": "underground",
+      "style_id": "underground_floor",
       "base_color": "#3e3a4d",
       "detail_color": "#6d6680",
       "edge_color": "#292634",
@@ -694,30 +603,6 @@
       ],
       "variant_keys": [
         "stone",
-        "crystal",
-        "worn"
-      ]
-    },
-    {
-      "id": "underway",
-      "biome_id": "biome_subterranean_underways",
-      "terrain_group": "underways",
-      "autotile_family": "underways",
-      "style_id": "underway_floor",
-      "base_color": "#36344a",
-      "detail_color": "#746a8b",
-      "edge_color": "#242234",
-      "transition_priority": 44,
-      "pattern": "stone_facets",
-      "readability_role": "worked underground route",
-      "supports": [
-        "authored_variants",
-        "edge_transitions",
-        "road_overlay",
-        "homm3_local_prototype"
-      ],
-      "variant_keys": [
-        "worked",
         "crystal",
         "worn"
       ]
@@ -1951,21 +1836,6 @@
         "family": "swamp",
         "bridge_family": "dirt"
       },
-      "hills": {
-        "family": "rock",
-        "bridge_family": "sand",
-        "bridge_family_source_level": "editor_observation"
-      },
-      "ridge": {
-        "family": "rock",
-        "bridge_family": "sand",
-        "bridge_family_source_level": "editor_observation"
-      },
-      "highland": {
-        "family": "rock",
-        "bridge_family": "sand",
-        "bridge_family_source_level": "editor_observation"
-      },
       "rock": {
         "family": "rock",
         "bridge_family": "sand",
@@ -1984,14 +1854,6 @@
         "family": "water",
         "bridge_family": "sand"
       },
-      "badlands": {
-        "family": "dirt",
-        "bridge_family": "sand"
-      },
-      "wastes": {
-        "family": "sand",
-        "bridge_family": "sand"
-      },
       "ash": {
         "family": "lava",
         "bridge_family": "dirt"
@@ -2000,18 +1862,6 @@
         "family": "lava",
         "bridge_family": "dirt"
       },
-      "cavern": {
-        "family": "subterranean",
-        "bridge_family": "dirt",
-        "bridge_family_source_level": "provisional",
-        "provisional_fallback_policy": "subterranean preferred bridge class is unresolved"
-      },
-      "underway": {
-        "family": "subterranean",
-        "bridge_family": "dirt",
-        "bridge_family_source_level": "provisional",
-        "provisional_fallback_policy": "subterranean preferred bridge class is unresolved"
-      },
       "snow": {
         "family": "snow",
         "bridge_family": "dirt"
@@ -2019,6 +1869,25 @@
       "frost": {
         "family": "snow",
         "bridge_family": "dirt"
+      },
+      "rough": {
+        "family": "rough",
+        "bridge_family": "sand",
+        "bridge_family_source_level": "canonical_terrain_taxonomy"
+      },
+      "dirt": {
+        "family": "dirt",
+        "bridge_family": "dirt"
+      },
+      "sand": {
+        "family": "sand",
+        "bridge_family": "sand"
+      },
+      "underground": {
+        "family": "subterranean",
+        "bridge_family": "dirt",
+        "bridge_family_source_level": "provisional",
+        "provisional_fallback_policy": "subterranean preferred bridge class is unresolved"
       }
     },
     "road_overlays": {

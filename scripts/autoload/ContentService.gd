@@ -117,8 +117,24 @@ func get_terrain_layers_for_scenario(scenario_id: String) -> Dictionary:
 	var draft: Dictionary = _generated_terrain_layer_drafts.get(scenario_id, {})
 	return draft.duplicate(true) if not draft.is_empty() else {}
 
+func normalize_terrain_id(terrain_id: String) -> String:
+	var normalized := String(terrain_id).strip_edges()
+	match normalized:
+		"highland", "hills", "ridge":
+			return "rough"
+		"badlands":
+			return "dirt"
+		"wastes":
+			return "sand"
+		"cavern", "underway":
+			return "underground"
+		"coast", "shore":
+			return "water"
+		_:
+			return normalized
+
 func get_biome_for_terrain(terrain_id: String) -> Dictionary:
-	var normalized_terrain := String(terrain_id)
+	var normalized_terrain := normalize_terrain_id(terrain_id)
 	if normalized_terrain == "":
 		return {}
 	for biome in _items_from_raw(load_json(BIOMES_PATH)):
@@ -401,10 +417,10 @@ func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> 
 		var supports = terrain_class.get("supports", [])
 		if not (supports is Array) or "edge_transitions" not in supports:
 			push_warning("Terrain grammar %s must support edge_transitions." % terrain_id)
-		if terrain_id in ["grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"]:
+		if terrain_id in ["grass", "plains", "forest", "mire", "swamp", "rough"]:
 			_validate_terrain_tile_art(terrain_class, terrain_id)
 
-	for required_id in ["grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"]:
+	for required_id in ["grass", "snow", "sand", "dirt", "rough", "lava", "underground", "water", "rock"]:
 		if required_id not in terrain_ids:
 			push_warning("Terrain grammar must define authored terrain class %s." % required_id)
 	_validate_editor_base_terrain_options(grammar, terrain_ids)
@@ -437,13 +453,14 @@ func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> 
 
 func _validate_editor_base_terrain_options(grammar: Dictionary, terrain_ids: Array[String]) -> void:
 	var expected_options := [
-		{"id": "water", "label": "Water", "family": "water", "atlas": "watrtl"},
-		{"id": "snow", "label": "Snow", "family": "snow", "atlas": "snowtl"},
 		{"id": "grass", "label": "Grass", "family": "grass", "atlas": "grastl"},
-		{"id": "wastes", "label": "Sand", "family": "sand", "atlas": "sandtl"},
-		{"id": "badlands", "label": "Dirt", "family": "dirt", "atlas": "dirttl"},
+		{"id": "snow", "label": "Snow", "family": "snow", "atlas": "snowtl"},
+		{"id": "sand", "label": "Sand", "family": "sand", "atlas": "sandtl"},
+		{"id": "dirt", "label": "Dirt", "family": "dirt", "atlas": "dirttl"},
+		{"id": "rough", "label": "Rough", "family": "rough", "atlas": "rougtl"},
 		{"id": "lava", "label": "Lava", "family": "lava", "atlas": "lavatl"},
-		{"id": "swamp", "label": "Swamp", "family": "swamp", "atlas": "swmptl"},
+		{"id": "underground", "label": "Underground", "family": "subterranean", "atlas": "subbtl"},
+		{"id": "water", "label": "Water", "family": "water", "atlas": "watrtl"},
 		{"id": "rock", "label": "Rock/None", "family": "rock", "atlas": "rocktl"},
 	]
 	var options = grammar.get("editor_base_terrain_options", [])
@@ -574,7 +591,8 @@ func _validate_terrain_layer(layer: Dictionary, scenario_index: Dictionary, gram
 				push_warning("Terrain layer %s road %s tile %d,%d is out of bounds." % [scenario_id, road_id, x, y])
 				continue
 			var terrain_id := _terrain_id_from_map(map_data, x, y)
-			if terrain_id != "" and terrain_id not in supported_terrain:
+			var normalized_terrain_id := normalize_terrain_id(terrain_id)
+			if normalized_terrain_id != "" and normalized_terrain_id not in supported_terrain:
 				push_warning("Terrain layer %s road %s tile %d,%d uses terrain %s without road_overlay support." % [scenario_id, road_id, x, y, terrain_id])
 
 func _terrain_ids_supporting_roads(grammar: Dictionary) -> Array[String]:

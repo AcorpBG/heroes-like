@@ -225,13 +225,14 @@ func _run() -> void:
 
 func _assert_editor_terrain_option_contract(shell, snapshot: Dictionary) -> bool:
 	var expected_options := [
-		{"id": "water", "label": "Water", "family": "water", "atlas": "watrtl"},
-		{"id": "snow", "label": "Snow", "family": "snow", "atlas": "snowtl"},
 		{"id": "grass", "label": "Grass", "family": "grass", "atlas": "grastl"},
-		{"id": "wastes", "label": "Sand", "family": "sand", "atlas": "sandtl"},
-		{"id": "badlands", "label": "Dirt", "family": "dirt", "atlas": "dirttl"},
+		{"id": "snow", "label": "Snow", "family": "snow", "atlas": "snowtl"},
+		{"id": "sand", "label": "Sand", "family": "sand", "atlas": "sandtl"},
+		{"id": "dirt", "label": "Dirt", "family": "dirt", "atlas": "dirttl"},
+		{"id": "rough", "label": "Rough", "family": "rough", "atlas": "rougtl"},
 		{"id": "lava", "label": "Lava", "family": "lava", "atlas": "lavatl"},
-		{"id": "swamp", "label": "Swamp", "family": "swamp", "atlas": "swmptl"},
+		{"id": "underground", "label": "Underground", "family": "subterranean", "atlas": "subbtl"},
+		{"id": "water", "label": "Water", "family": "water", "atlas": "watrtl"},
 		{"id": "rock", "label": "Rock/None", "family": "rock", "atlas": "rocktl"},
 	]
 	if String(snapshot.get("terrain_option_contract", "")) != "homm3_base_family_picker" or String(snapshot.get("terrain_option_source", "")) != "editor_base_terrain_options":
@@ -253,7 +254,7 @@ func _assert_editor_terrain_option_contract(shell, snapshot: Dictionary) -> bool
 			_fail("Map editor smoke: terrain picker option %d did not match the HoMM3-style contract: %s." % [index, options])
 			return false
 	var option_ids: Array = snapshot.get("terrain_option_ids", [])
-	for hidden_id in ["plains", "forest", "mire", "hills", "ridge", "highland", "coast", "shore", "ash", "cavern", "underway", "frost"]:
+	for hidden_id in ["plains", "forest", "mire", "swamp", "coast", "shore", "ash", "frost"]:
 		if hidden_id in option_ids:
 			_fail("Map editor smoke: terrain picker still exposed hidden logical terrain id %s: %s." % [hidden_id, option_ids])
 			return false
@@ -261,7 +262,7 @@ func _assert_editor_terrain_option_contract(shell, snapshot: Dictionary) -> bool
 	if bool(hidden_select.get("ok", true)):
 		_fail("Map editor smoke: hidden logical terrain id forest was still selectable through the picker validation surface: %s." % hidden_select)
 		return false
-	var visible_select: Dictionary = shell.call("validation_select_terrain", "wastes")
+	var visible_select: Dictionary = shell.call("validation_select_terrain", "sand")
 	if not bool(visible_select.get("ok", false)) or String(visible_select.get("selected_terrain_label", "")) != "Sand":
 		_fail("Map editor smoke: visible Sand terrain option did not select through the picker validation surface: %s." % visible_select)
 		return false
@@ -397,10 +398,10 @@ func _assert_editor_direct_dirt_swamp_transition(shell) -> bool:
 			_fail("Map editor smoke: could not seed grass baseline for controlled dirt/swamp transition tile %s." % tile)
 			return false
 	var paint_plan := [
-		{"tile": Vector2i(46, 40), "terrain": "badlands"},
-		{"tile": Vector2i(47, 39), "terrain": "badlands"},
-		{"tile": Vector2i(47, 40), "terrain": "badlands"},
-		{"tile": Vector2i(47, 41), "terrain": "badlands"},
+		{"tile": Vector2i(46, 40), "terrain": "dirt"},
+		{"tile": Vector2i(47, 39), "terrain": "dirt"},
+		{"tile": Vector2i(47, 40), "terrain": "dirt"},
+		{"tile": Vector2i(47, 41), "terrain": "dirt"},
 		{"tile": Vector2i(48, 39), "terrain": "swamp"},
 		{"tile": Vector2i(48, 40), "terrain": "swamp"},
 		{"tile": Vector2i(48, 41), "terrain": "swamp"},
@@ -416,7 +417,7 @@ func _assert_editor_direct_dirt_swamp_transition(shell) -> bool:
 	var dirt_receiver: Dictionary = shell.call("validation_tile_presentation", 47, 40)
 	var dirt_terrain: Dictionary = dirt_receiver.get("terrain_presentation", {})
 	if (
-		String(dirt_terrain.get("terrain", "")) != "badlands"
+		String(dirt_terrain.get("terrain", "")) != "dirt"
 		or String(dirt_terrain.get("homm3_terrain_family", "")) != "dirt"
 		or String(dirt_terrain.get("homm3_terrain_atlas", "")) != "dirttl"
 		or String(dirt_terrain.get("transition_edge_mask", "")) != "E"
@@ -440,7 +441,7 @@ func _assert_editor_direct_dirt_swamp_transition(shell) -> bool:
 		or String(swamp_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
 		or String(swamp_terrain.get("homm3_bridge_family", "")) != "mixed"
 		or String(swamp_terrain.get("homm3_bridge_resolution_model", "")) != "accepted_web_relation_function"
-		or not _transition_sources_include_bridge(swamp_terrain, "W", "badlands", "dirt", "direct_family_pair_lookup")
+		or not _transition_sources_include_bridge(swamp_terrain, "W", "dirt", "dirt", "direct_family_pair_lookup")
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: direct swamp->dirt preview transition incorrectly routed through sand: %s." % swamp_receiver)
@@ -721,9 +722,9 @@ func _assert_editor_mixed_corner_class_reason_payload(shell) -> bool:
 			"shape_class": 17,
 			"reason": "E=1,S=1,SW=2; mixed corner block",
 			"sources": [
-				{"offset": Vector2i(1, 0), "terrain": "badlands"},
-				{"offset": Vector2i(0, 1), "terrain": "badlands"},
-				{"offset": Vector2i(-1, 1), "terrain": "wastes"},
+				{"offset": Vector2i(1, 0), "terrain": "dirt"},
+				{"offset": Vector2i(0, 1), "terrain": "dirt"},
+				{"offset": Vector2i(-1, 1), "terrain": "sand"},
 			],
 		},
 		{
@@ -731,9 +732,9 @@ func _assert_editor_mixed_corner_class_reason_payload(shell) -> bool:
 			"shape_class": 18,
 			"reason": "E=1,S=1,NE=2; mixed corner block",
 			"sources": [
-				{"offset": Vector2i(1, 0), "terrain": "badlands"},
-				{"offset": Vector2i(0, 1), "terrain": "badlands"},
-				{"offset": Vector2i(1, -1), "terrain": "wastes"},
+				{"offset": Vector2i(1, 0), "terrain": "dirt"},
+				{"offset": Vector2i(0, 1), "terrain": "dirt"},
+				{"offset": Vector2i(1, -1), "terrain": "sand"},
 			],
 		},
 	]
@@ -783,30 +784,30 @@ func _assert_editor_bridge_material_resolver(shell) -> bool:
 			return false
 	var fixture_plan := [
 		{"tile": Vector2i(32, 32), "terrain": "grass"},
-		{"tile": Vector2i(33, 32), "terrain": "badlands"},
-		{"tile": Vector2i(36, 32), "terrain": "badlands"},
-		{"tile": Vector2i(36, 31), "terrain": "badlands"},
-		{"tile": Vector2i(36, 33), "terrain": "badlands"},
-		{"tile": Vector2i(35, 32), "terrain": "badlands"},
-		{"tile": Vector2i(37, 32), "terrain": "wastes"},
+		{"tile": Vector2i(33, 32), "terrain": "dirt"},
+		{"tile": Vector2i(36, 32), "terrain": "dirt"},
+		{"tile": Vector2i(36, 31), "terrain": "dirt"},
+		{"tile": Vector2i(36, 33), "terrain": "dirt"},
+		{"tile": Vector2i(35, 32), "terrain": "dirt"},
+		{"tile": Vector2i(37, 32), "terrain": "sand"},
 		{"tile": Vector2i(40, 32), "terrain": "grass"},
 		{"tile": Vector2i(41, 32), "terrain": "swamp"},
 		{"tile": Vector2i(44, 32), "terrain": "grass"},
 		{"tile": Vector2i(45, 32), "terrain": "snow"},
-		{"tile": Vector2i(48, 32), "terrain": "cavern"},
-		{"tile": Vector2i(48, 31), "terrain": "cavern"},
-		{"tile": Vector2i(48, 33), "terrain": "cavern"},
-		{"tile": Vector2i(47, 32), "terrain": "cavern"},
+		{"tile": Vector2i(48, 32), "terrain": "underground"},
+		{"tile": Vector2i(48, 31), "terrain": "underground"},
+		{"tile": Vector2i(48, 33), "terrain": "underground"},
+		{"tile": Vector2i(47, 32), "terrain": "underground"},
 		{"tile": Vector2i(49, 32), "terrain": "grass"},
 		{"tile": Vector2i(52, 32), "terrain": "water"},
 		{"tile": Vector2i(52, 31), "terrain": "water"},
 		{"tile": Vector2i(52, 33), "terrain": "water"},
 		{"tile": Vector2i(51, 32), "terrain": "water"},
 		{"tile": Vector2i(53, 32), "terrain": "grass"},
-		{"tile": Vector2i(56, 32), "terrain": "highland"},
-		{"tile": Vector2i(56, 31), "terrain": "highland"},
-		{"tile": Vector2i(56, 33), "terrain": "highland"},
-		{"tile": Vector2i(55, 32), "terrain": "highland"},
+		{"tile": Vector2i(56, 32), "terrain": "rough"},
+		{"tile": Vector2i(56, 31), "terrain": "rough"},
+		{"tile": Vector2i(56, 33), "terrain": "rough"},
+		{"tile": Vector2i(55, 32), "terrain": "rough"},
 		{"tile": Vector2i(57, 32), "terrain": "grass"},
 	]
 	for entry in fixture_plan:
@@ -818,7 +819,7 @@ func _assert_editor_bridge_material_resolver(shell) -> bool:
 	var cases := [
 		{
 			"tile": Vector2i(32, 32),
-			"source": "badlands",
+			"source": "dirt",
 			"kind": "direct_bridge_material",
 			"rule": "full_receiver_direct_dirt_contact",
 			"class": "dirt_earth_bridge",
@@ -830,7 +831,7 @@ func _assert_editor_bridge_material_resolver(shell) -> bool:
 		},
 		{
 			"tile": Vector2i(36, 32),
-			"source": "wastes",
+			"source": "sand",
 			"kind": "direct_bridge_material",
 			"rule": "dirt_receiver_direct_sand_contact",
 			"class": "sand_bridge",
@@ -892,13 +893,13 @@ func _assert_editor_bridge_material_resolver(shell) -> bool:
 			"tile": Vector2i(56, 32),
 			"source": "grass",
 			"kind": "preferred_bridge_class",
-			"rule": "rock_prefers_sand_bridge_class",
-			"class": "sand_bridge",
-			"family": "sand",
-			"block": "rock_light_ground_context",
+			"rule": "full_receiver_prefers_dirt_bridge_class",
+			"class": "dirt_earth_bridge",
+			"family": "dirt",
+			"block": "native_to_dirt_transition",
 			"source_level": "editor_observation",
-			"model": "preferred_bridge_class_before_rock_system_lookup",
-			"selection": "rock_system",
+			"model": "receiver_preferred_bridge_class_lookup",
+			"stamp": {"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table", "direction": "E", "frame": "00_15", "offset": {"x": 1, "y": 0}, "bridge_family": "dirt", "target_block": "native_to_dirt_transition", "source_kind": "cardinal_source"},
 		},
 	]
 	for case in cases:
@@ -930,7 +931,7 @@ func _assert_editor_solid_region_for_receiver(shell, center: Vector2i, receiver_
 			"tile": tile,
 			"terrain": String(presentation.get("terrain_presentation", {}).get("terrain", "grass")),
 		})
-		if not _paint_editor_terrain_for_orientation(shell, tile, "badlands"):
+		if not _paint_editor_terrain_for_orientation(shell, tile, "dirt"):
 			_restore_editor_terrain_tiles(shell, original_terrains)
 			_fail("Map editor smoke: could not seed dirt around %s region at %s." % [receiver_terrain, tile])
 			return false
@@ -953,7 +954,7 @@ func _assert_editor_solid_region_for_receiver(shell, center: Vector2i, receiver_
 		or String(edge_terrain.get("homm3_selected_frame_block", "")) != "native_to_dirt_transition"
 		or int(edge_terrain.get("edge_transition_count", 0)) != 1
 		or int(edge_terrain.get("propagated_transition_count", -1)) != 0
-		or "badlands" not in edge_terrain.get("transition_source_terrain_ids", [])
+		or "dirt" not in edge_terrain.get("transition_source_terrain_ids", [])
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: %s block outer edge did not keep the dirt transition frame: %s." % [receiver_terrain, edge_presentation])
@@ -998,7 +999,7 @@ func _assert_solid_region_interior_payload(terrain: Dictionary, expected_terrain
 		return false
 	if int(terrain.get("edge_transition_count", -1)) != 0 or int(terrain.get("corner_transition_count", -1)) != 0 or int(terrain.get("propagated_transition_count", -1)) != 0:
 		return false
-	if "badlands" in terrain.get("transition_source_terrain_ids", []) or "wastes" in terrain.get("transition_source_terrain_ids", []):
+	if "dirt" in terrain.get("transition_source_terrain_ids", []) or "sand" in terrain.get("transition_source_terrain_ids", []):
 		return false
 	return true
 
@@ -1020,12 +1021,12 @@ func _assert_editor_true_terrain_placement(shell) -> bool:
 			_fail("Map editor smoke: could not seed grass for true terrain placement test at %s." % tile)
 			return false
 
-	var paint_result: Dictionary = shell.call("validation_paint_terrain", center.x, center.y, "wastes")
+	var paint_result: Dictionary = shell.call("validation_paint_terrain", center.x, center.y, "sand")
 	if not bool(paint_result.get("ok", false)) or not bool(paint_result.get("paint_changed", false)):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: true terrain placement paint did not report a changed operation: %s." % paint_result)
 		return false
-	if not _assert_true_terrain_placement_result(paint_result, "wastes"):
+	if not _assert_true_terrain_placement_result(paint_result, "sand"):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: true terrain placement did not expose queue rewrite and final normalization: %s." % paint_result)
 		return false
@@ -1039,7 +1040,7 @@ func _assert_editor_true_terrain_placement(shell) -> bool:
 			continue
 		if abs(tile.x - center.x) + abs(tile.y - center.y) == 1:
 			var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
-			if String(presentation.get("terrain_presentation", {}).get("terrain", "")) == "wastes":
+			if String(presentation.get("terrain_presentation", {}).get("terrain", "")) == "sand":
 				found_rewritten_neighbor = true
 				break
 	if not found_rewritten_neighbor:
@@ -1100,8 +1101,8 @@ func _assert_editor_placement_source_lower_edge(shell) -> bool:
 			return false
 
 	var cases := [
-		{"terrain": "wastes", "family": "sand", "block": "sand_base_interiors"},
-		{"terrain": "badlands", "family": "dirt", "block": "dirt_base_interiors"},
+		{"terrain": "sand", "family": "sand", "block": "sand_base_interiors"},
+		{"terrain": "dirt", "family": "dirt", "block": "dirt_base_interiors"},
 	]
 	for case in cases:
 		for tile in controlled_tiles:
@@ -1182,7 +1183,7 @@ func _assert_editor_sand_heavy_corner_ownership(shell) -> bool:
 		for offset_value in case.get("sand_offsets", []):
 			var offset: Vector2i = offset_value
 			var sand_tile: Vector2i = center + offset
-			if not _paint_editor_terrain_for_orientation(shell, sand_tile, "wastes"):
+			if not _paint_editor_terrain_for_orientation(shell, sand_tile, "sand"):
 				_restore_editor_terrain_tiles(shell, original_terrains)
 				_fail("Map editor smoke: could not seed sand-heavy corner source for case %s at %s." % [case, sand_tile])
 				return false
@@ -1241,7 +1242,7 @@ func _assert_editor_restamp_behavior_model(shell) -> bool:
 
 	var before_snapshot: Dictionary = shell.call("validation_snapshot")
 	var before_order := int(before_snapshot.get("terrain_paint_order", 0))
-	var sand_result: Dictionary = shell.call("validation_paint_terrain", painted.x, painted.y, "wastes")
+	var sand_result: Dictionary = shell.call("validation_paint_terrain", painted.x, painted.y, "sand")
 	var sand_order := int(sand_result.get("terrain_paint_order", 0))
 	if (
 		not bool(sand_result.get("ok", false))
@@ -1251,7 +1252,7 @@ func _assert_editor_restamp_behavior_model(shell) -> bool:
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: ordered sand paint did not expose a changed terrain paint operation: %s." % sand_result)
 		return false
-	if not _assert_true_terrain_placement_result(sand_result, "wastes"):
+	if not _assert_true_terrain_placement_result(sand_result, "sand"):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: sand paint did not use the HoMM3 owner queue and final-normalization path: %s." % sand_result)
 		return false
@@ -1265,7 +1266,7 @@ func _assert_editor_restamp_behavior_model(shell) -> bool:
 	if (
 		String(sand_source.get("role", "")) != "painted_source_tile"
 		or int(sand_source.get("restamp_order_index", -1)) != 0
-		or String(sand_source_terrain.get("terrain", "")) != "wastes"
+		or String(sand_source_terrain.get("terrain", "")) != "sand"
 		or String(sand_source_terrain.get("homm3_terrain_family", "")) != "sand"
 		or String(sand_source_terrain.get("homm3_selection_kind", "")) != "interior"
 		or String(sand_source_terrain.get("homm3_selected_frame_block", "")) != "sand_base_interiors"
@@ -1276,7 +1277,7 @@ func _assert_editor_restamp_behavior_model(shell) -> bool:
 		_fail("Map editor smoke: painted source tile did not report sand through the shared restamp payload: %s." % sand_source)
 		return false
 
-	var dirt_result: Dictionary = shell.call("validation_paint_terrain", painted.x, painted.y, "badlands")
+	var dirt_result: Dictionary = shell.call("validation_paint_terrain", painted.x, painted.y, "dirt")
 	var dirt_order := int(dirt_result.get("terrain_paint_order", 0))
 	if (
 		not bool(dirt_result.get("ok", false))
@@ -1286,7 +1287,7 @@ func _assert_editor_restamp_behavior_model(shell) -> bool:
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: ordered dirt repaint did not advance the editor paint order: %s." % dirt_result)
 		return false
-	if not _assert_true_terrain_placement_result(dirt_result, "badlands"):
+	if not _assert_true_terrain_placement_result(dirt_result, "dirt"):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: dirt repaint did not use the HoMM3 owner queue and final-normalization path: %s." % dirt_result)
 		return false
