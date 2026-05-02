@@ -1060,14 +1060,7 @@ static func _resolve_post_move_interaction(session: SessionStateStoreScript.Sess
 			"message": "%s opens its gates." % _town_name(town),
 			"route": "town",
 		}
-	return {
-		"ok": true,
-		"message": "%s remains under %s control." % [
-			_town_name(town),
-			String(town.get("owner", "neutral")).capitalize(),
-		],
-		"route": "",
-	}
+	return capture_active_town(session)
 
 static func _resolve_destination_descriptor_interaction(
 	session: SessionStateStoreScript.SessionData,
@@ -1112,10 +1105,10 @@ static func _resolve_destination_descriptor_interaction(
 			var town: Dictionary = town_result.get("town", {}) if town_result.get("town", {}) is Dictionary else {}
 			if int(town_result.get("index", -1)) < 0 or town.is_empty():
 				return {"ok": true, "message": "", "route": ""}
-			_profile_blocked_index_not_applicable(session, "town_visit_does_not_refresh_blocked_index")
-			var town_facts := _town_visit_event_facts(town)
-			_profile_scenario_event_evaluation(session, town_facts)
 			if String(town.get("owner", "neutral")) == "player":
+				_profile_blocked_index_not_applicable(session, "town_visit_does_not_refresh_blocked_index")
+				var town_facts := _town_visit_event_facts(town)
+				_profile_scenario_event_evaluation(session, town_facts)
 				return {
 					"ok": true,
 					"message": "%s opens its gates." % _town_name(town),
@@ -1123,16 +1116,7 @@ static func _resolve_destination_descriptor_interaction(
 					"scenario_status": session.scenario_status,
 					"interaction_result": _interactable_result_payload("town", town, town_facts, {"blocks_changed": false, "body_tiles_changed": false}),
 				}
-			return {
-				"ok": true,
-				"message": "%s remains under %s control." % [
-					_town_name(town),
-					String(town.get("owner", "neutral")).capitalize(),
-				],
-				"route": "",
-				"scenario_status": session.scenario_status,
-				"interaction_result": _interactable_result_payload("town", town, town_facts, {"blocks_changed": false, "body_tiles_changed": false}),
-			}
+			return capture_active_town(session)
 		_:
 			return {"ok": true, "message": "", "route": ""}
 
@@ -1747,13 +1731,18 @@ static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int
 	if not (row is Array) or x < 0 or x >= row.size():
 		return false
 	var terrain_id := String(row[x])
-	var biome := ContentService.get_biome_for_terrain(terrain_id)
-	if not biome.is_empty() and biome.has("passable"):
-		if not bool(biome.get("passable", true)):
-			return true
-	elif terrain_id == "water":
+	if not terrain_id_is_passable(terrain_id):
 		return true
 	return _blocked_tile_index(session).has(_tile_key(Vector2i(x, y)))
+
+static func terrain_id_is_passable(terrain_id: String) -> bool:
+	var normalized := String(terrain_id)
+	if normalized in ["rock", "water", "coast", "shore"]:
+		return false
+	var biome := ContentService.get_biome_for_terrain(normalized)
+	if not biome.is_empty() and biome.has("passable"):
+		return bool(biome.get("passable", true))
+	return true
 
 static func tile_has_route_interaction(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
 	if session == null:
@@ -2276,7 +2265,7 @@ static func terrain_profile_at(session: SessionStateStoreScript.SessionData, x: 
 			"name": terrain_id.capitalize() if terrain_id != "" else "Unknown terrain",
 			"movement_cost": 1,
 			"sight_modifier": 0,
-			"passable": terrain_id != "water",
+			"passable": terrain_id_is_passable(terrain_id),
 		}
 	var profile := biome.duplicate(true)
 	profile["terrain_id"] = terrain_id

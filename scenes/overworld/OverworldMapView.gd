@@ -432,10 +432,8 @@ func _session_static_signature_for(map_data: Array, terrain_layers: Dictionary) 
 		var materialization = _session.flags.get("generated_random_map_materialization", {})
 		if materialization is Dictionary:
 			signature = _combine_cache_signature(signature, hash(str(materialization.get("materialized_map_signature", ""))))
-	if not map_data.is_empty():
-		signature = _combine_cache_signature(signature, hash(var_to_str(map_data[0])))
-		var last_row = map_data[map_data.size() - 1]
-		signature = _combine_cache_signature(signature, hash(var_to_str(last_row)))
+	for row in map_data:
+		signature = _combine_cache_signature(signature, hash(var_to_str(row)))
 	return _combine_cache_signature(signature, _roads_cache_signature(roads))
 
 func _state_cache_signature_for(session) -> int:

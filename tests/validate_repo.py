@@ -443,7 +443,7 @@ EDITOR_BASE_TERRAIN_OPTIONS = [
     ("badlands", "Dirt", "dirt", "dirttl"),
     ("lava", "Lava", "lava", "lavatl"),
     ("swamp", "Swamp", "swamp", "swmptl"),
-    ("highland", "Rock/None", "rock", "rocktl"),
+    ("rock", "Rock/None", "rock", "rocktl"),
 ]
 EDITOR_BASE_TERRAIN_OPTION_IDS = {option[0] for option in EDITOR_BASE_TERRAIN_OPTIONS}
 EDITOR_HIDDEN_LOGICAL_TERRAIN_IDS = {

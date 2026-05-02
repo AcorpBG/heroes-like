@@ -2590,7 +2590,7 @@ func _selected_route_compact_destination_surface() -> Dictionary:
 		route_state,
 		descriptor_kind,
 		_selected_route_compact_destination_name(descriptor, descriptor_kind),
-		_selected_route_compact_action_kind(descriptor_kind, _is_adjacent_move_target(hero_pos, _selected_tile)),
+		_selected_route_compact_action_kind(descriptor, descriptor_kind, _is_adjacent_move_target(hero_pos, _selected_tile)),
 		_selected_route_compact_action_label(descriptor, descriptor_kind, _is_adjacent_move_target(hero_pos, _selected_tile))
 	)
 	if route_decision.is_empty():
@@ -2753,9 +2753,13 @@ func _selected_route_compact_destination_name(descriptor: Dictionary, destinatio
 		_:
 			return "%d,%d" % [_selected_tile.x, _selected_tile.y]
 
-func _selected_route_compact_action_kind(destination_kind: String, adjacent: bool) -> String:
+func _selected_route_compact_action_kind(descriptor: Dictionary, destination_kind: String, adjacent: bool) -> String:
 	match destination_kind:
 		"town":
+			if String(descriptor.get("owner", "neutral")) != "player":
+				if String(descriptor.get("owner", "neutral")) == "enemy":
+					return "assault" if adjacent else "move/assault"
+				return "capture" if adjacent else "move/capture"
 			return "town" if adjacent else "move/town"
 		"resource":
 			return "collect" if adjacent else "move/collect"
@@ -2771,8 +2775,12 @@ func _selected_route_compact_action_label(descriptor: Dictionary, destination_ki
 		"town":
 			var owner := String(descriptor.get("owner", "neutral"))
 			if adjacent:
-				return "Visit Town" if owner == "player" else "Approach Town"
-			return "Advance to Town"
+				if owner == "player":
+					return "Visit Town"
+				return "Assault Town" if owner == "enemy" else "Claim Town"
+			if owner == "player":
+				return "Advance to Town"
+			return "Advance to Assault" if owner == "enemy" else "Advance to Claim"
 		"resource":
 			return _selected_route_compact_resource_action_label(descriptor, adjacent)
 		"artifact":
@@ -2837,7 +2845,12 @@ func _selected_route_simple_action_summary(destination: Dictionary) -> String:
 func _selected_route_destination_action_label(destination: Dictionary, adjacent: bool) -> String:
 	match String(destination.get("kind", "open")):
 		"town":
-			return "Visit Town" if String(destination.get("owner", "")) == "player" else ("Approach Town" if adjacent else "Advance to Town")
+			var owner := String(destination.get("owner", "neutral"))
+			if owner == "player":
+				return "Visit Town" if adjacent else "Advance to Town"
+			if owner == "enemy":
+				return "Assault Town" if adjacent else "Advance to Assault"
+			return "Claim Town" if adjacent else "Advance to Claim"
 		"resource":
 			if adjacent:
 				return String(destination.get("interaction_label", "Secure Site"))
@@ -3158,7 +3171,12 @@ func _selected_route_action_kind(adjacent: bool) -> String:
 	if not _tile_in_bounds(_selected_tile):
 		return "select"
 	if not _town_at(_selected_tile.x, _selected_tile.y).is_empty():
-		return "town" if adjacent or _is_selected_owned_town_visit_target() else "move/town"
+		var owner := String(_town_at(_selected_tile.x, _selected_tile.y).get("owner", "neutral"))
+		if owner == "player":
+			return "town" if adjacent or _is_selected_owned_town_visit_target() else "move/town"
+		if owner == "enemy":
+			return "assault" if adjacent else "move/assault"
+		return "capture" if adjacent else "move/capture"
 	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
 	if not node.is_empty():
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
@@ -3510,8 +3528,12 @@ func _selected_tile_order_label(adjacent: bool) -> String:
 	if not town.is_empty():
 		var owner := String(town.get("owner", "neutral"))
 		if adjacent:
-			return "Visit Town" if owner == "player" else "Approach Town"
-		return "Advance to Town"
+			if owner == "player":
+				return "Visit Town"
+			return "Assault Town" if owner == "enemy" else "Claim Town"
+		if owner == "player":
+			return "Advance to Town"
+		return "Advance to Assault" if owner == "enemy" else "Advance to Claim"
 
 	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
 	if not node.is_empty():
@@ -4975,10 +4997,11 @@ func _hover_tile_order_cue(tile: Vector2i) -> String:
 	var adjacent := maxi(abs(hero_pos.x - tile.x), abs(hero_pos.y - tile.y)) == 1
 	var town := _town_at(tile.x, tile.y)
 	if not town.is_empty():
-		if String(town.get("owner", "neutral")) == "player":
+		var owner := String(town.get("owner", "neutral"))
+		if owner == "player":
 			order = "select Visit Town"
 		elif adjacent:
-			order = "select Approach Town"
+			order = "select Assault Town" if owner == "enemy" else "select Claim Town"
 	var node := _resource_node_at(tile.x, tile.y)
 	if not node.is_empty():
 		order = "select Secure Site" if adjacent else "select route"

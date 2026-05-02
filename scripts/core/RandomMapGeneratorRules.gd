@@ -109,6 +109,7 @@ const ORIGINAL_TERRAIN_IDS := [
 	"highland",
 	"hills",
 	"ridge",
+	"rock",
 	"badlands",
 	"wastes",
 	"ash",
@@ -134,7 +135,7 @@ const WATER_TRANSIT_OBJECT_ID := "object_repaired_ferry_stage"
 const WATER_TRANSIT_SITE_ID := "site_repaired_ferry_stage"
 const CROSS_LEVEL_TRANSIT_OBJECT_ID := "object_rope_lift"
 const CROSS_LEVEL_TRANSIT_SITE_ID := "site_rope_lift"
-const BLOCKED_TERRAIN_IDS := ["water", "coast", "shore"]
+const BLOCKED_TERRAIN_IDS := ["rock", "water", "coast", "shore"]
 const BIOME_BY_TERRAIN := {
 	"grass": "biome_grasslands",
 	"plains": "biome_grasslands",
@@ -144,6 +145,7 @@ const BIOME_BY_TERRAIN := {
 	"highland": "biome_highland_ridge",
 	"hills": "biome_highland_ridge",
 	"ridge": "biome_highland_ridge",
+	"rock": "biome_highland_ridge",
 	"badlands": "biome_rough_badlands",
 	"wastes": "biome_rough_badlands",
 	"ash": "biome_ash_lava_wastes",
@@ -165,6 +167,7 @@ const TERRAIN_MOVEMENT_COST := {
 	"highland": 2,
 	"hills": 2,
 	"ridge": 2,
+	"rock": 999,
 	"badlands": 2,
 	"wastes": 2,
 	"ash": 3,
@@ -9149,7 +9152,7 @@ static func _normalize_terrain_id_for_generated_rows(terrain_id: String) -> Stri
 	match normalized:
 		"mire":
 			return "swamp"
-		"hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway":
+		"rock", "hills", "ridge", "badlands", "wastes", "ash", "lava", "snow", "frost", "cavern", "underway":
 			return "highland"
 		"coast", "shore":
 			return "water"

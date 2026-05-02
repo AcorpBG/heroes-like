@@ -50,11 +50,11 @@
       "homm3_atlas": "swmptl"
     },
     {
-      "id": "highland",
+      "id": "rock",
       "label": "Rock/None",
       "homm3_family": "rock",
       "homm3_atlas": "rocktl",
-      "note": "Uses the existing highland logical terrain id so the editor exposes the rocktl-aligned Rock/None family without adding a fake terrain id."
+      "note": "Explicit blocked rock/void terrain for cliff and no-ground authoring. Highland, hills, and ridge remain passable high-ground terrain ids."
     }
   ],
   "transition_rules": {
@@ -459,6 +459,54 @@
           "W": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_w.png"
         },
         "source_basis": "homm3_local_reference_prototype_fallback_paths_superseded_by_lookup"
+      }
+    },
+    {
+      "id": "rock",
+      "biome_id": "biome_highland_ridge",
+      "terrain_group": "rock",
+      "autotile_family": "rock",
+      "style_id": "rock_void_cliff",
+      "base_color": "#242424",
+      "detail_color": "#56514a",
+      "edge_color": "#151515",
+      "transition_priority": 90,
+      "pattern": "void_cliff",
+      "readability_role": "impassable rock and cliff void",
+      "supports": [
+        "authored_variants",
+        "authored_tile_art",
+        "edge_transitions",
+        "road_overlay",
+        "homm3_local_prototype"
+      ],
+      "variant_keys": [
+        "void",
+        "cliff",
+        "scree"
+      ],
+      "tile_art": {
+        "base_tiles": [
+          {
+            "variant_key": "void",
+            "path": "res://art/overworld/runtime/terrain_tiles/base/highland_plateau.png"
+          },
+          {
+            "variant_key": "cliff",
+            "path": "res://art/overworld/runtime/terrain_tiles/base/ridge_ridge.png"
+          },
+          {
+            "variant_key": "scree",
+            "path": "res://art/overworld/runtime/terrain_tiles/base/ridge_scree.png"
+          }
+        ],
+        "edge_overlays": {
+          "N": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_n.png",
+          "E": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_e.png",
+          "S": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_s.png",
+          "W": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_w.png"
+        },
+        "source_basis": "homm3_local_reference_prototype_rock_void_logical_blocker"
       }
     },
     {
@@ -1917,6 +1965,12 @@
         "family": "rock",
         "bridge_family": "sand",
         "bridge_family_source_level": "editor_observation"
+      },
+      "rock": {
+        "family": "rock",
+        "bridge_family": "sand",
+        "bridge_family_source_level": "editor_observation",
+        "passability": "blocked_rock_void_cliff"
       },
       "water": {
         "family": "water",

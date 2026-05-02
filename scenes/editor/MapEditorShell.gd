@@ -1793,6 +1793,12 @@ func _placement_availability_for_selected_object(tile: Vector2i) -> Dictionary:
 		}
 	if _selected_object_family == OBJECT_FAMILY_ARTIFACT and _artifact_content_id_exists(_selected_object_content_id):
 		return {"can_place": false, "blocked_reason": "Artifact is already placed in this working copy."}
+	var terrain_id := _terrain_at(tile)
+	if not OverworldRules.terrain_id_is_passable(terrain_id):
+		return {
+			"can_place": false,
+			"blocked_reason": "Impassable terrain blocks placement: %s." % terrain_id,
+		}
 	var occupied_label := _first_placement_label_at_tile(tile)
 	if occupied_label != "":
 		return {
@@ -1839,7 +1845,7 @@ func _placement_terrain_context_line(tile: Vector2i) -> String:
 	var terrain_id := _terrain_at(tile)
 	var biome := ContentService.get_biome_for_terrain(terrain_id)
 	var biome_name := String(biome.get("name", "Unknown biome"))
-	var passable := bool(biome.get("passable", terrain_id != "water"))
+	var passable := OverworldRules.terrain_id_is_passable(terrain_id)
 	return "Terrain: %s / %s | passable %s" % [terrain_id, biome_name, "yes" if passable else "no"]
 
 func _placement_faction_context_line(family: String, content_id: String, tile: Vector2i) -> String:
@@ -5863,7 +5869,7 @@ func _tile_inspection_text(tile: Vector2i) -> String:
 		"Terrain: %s | %s | passable %s" % [
 			terrain_id,
 			String(biome.get("name", "Unknown biome")),
-			"yes" if bool(biome.get("passable", terrain_id != "water")) else "no",
+			"yes" if OverworldRules.terrain_id_is_passable(terrain_id) else "no",
 		],
 	]
 	if _has_road_at(tile):

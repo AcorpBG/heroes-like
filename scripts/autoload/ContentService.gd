@@ -444,7 +444,7 @@ func _validate_editor_base_terrain_options(grammar: Dictionary, terrain_ids: Arr
 		{"id": "badlands", "label": "Dirt", "family": "dirt", "atlas": "dirttl"},
 		{"id": "lava", "label": "Lava", "family": "lava", "atlas": "lavatl"},
 		{"id": "swamp", "label": "Swamp", "family": "swamp", "atlas": "swmptl"},
-		{"id": "highland", "label": "Rock/None", "family": "rock", "atlas": "rocktl"},
+		{"id": "rock", "label": "Rock/None", "family": "rock", "atlas": "rocktl"},
 	]
 	var options = grammar.get("editor_base_terrain_options", [])
 	if not (options is Array):
