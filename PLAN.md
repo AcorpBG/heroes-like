@@ -200,7 +200,7 @@ completionCriteria:
 nonGoals:
 - No native API, C++ document, save-version, authored catalog, renderer, fog, pathing, or gameplay semantics changes.
 
-Selected owner-directed implementation slice:
+Completed owner-directed implementation slice:
 
 id: `maps-folder-package-browser-integration-10184`
 phase: `phase-2-deep-production-foundation`
@@ -256,6 +256,38 @@ nonGoals:
 - No campaign adoption.
 - No save-version bump.
 - No renderer, fog, pathing, gameplay, RMG generation, or asset-ingestion changes.
+
+Selected owner-directed implementation slice:
+
+id: `generated-grastl-runtime-terrain-integration-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Wire the committed generated `grastl` grass terrain replacement frames into the overworld terrain runtime path instead of leaving them unused.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `art/overworld/runtime/terrain_tiles/generated/grastl/README.md`
+- 2026-05-03 owner directive to load/use generated grastl frames under `art/overworld/runtime/terrain_tiles/generated/grastl/frames_64/`
+implementationTargets:
+- `content/terrain_grammar.json`
+- `scripts/autoload/ContentService.gd`
+- `art/overworld/manifest.json`
+- `scenes/overworld/OverworldMapView.gd`
+- `tests/generated_grastl_runtime_asset_report.gd`
+- `tests/generated_grastl_runtime_asset_report.tscn`
+- `tests/overworld_visual_smoke.gd`
+- `tests/validate_repo.py`
+completionCriteria:
+- Grass/grastl terrain runtime asset resolution points at the generated `frames_64` resource directory.
+- The overworld map view can resolve generated grastl frame paths while preserving existing terrain selection behavior for other atlases and roads.
+- Godot import sidecars exist for the 79 generated grastl frame PNGs.
+- Focused validation proves all 79 generated frame resources exist/load and a runtime grass tile resolves through the generated grastl frame bank.
+validation:
+- `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/generated_grastl_runtime_asset_report.tscn`
+- `python3 tests/validate_repo.py`
+- `git diff --check`
+nonGoals:
+- No terrain placement, pathing, fog, save schema, RMG, editor paint semantics, road rendering, or non-grass terrain atlas redesign.
+- No new generated asset ingestion beyond the already committed grastl `frames_64` replacement trial frames.
 
 Selected Phase 2 corrective slice:
 

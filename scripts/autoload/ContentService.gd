@@ -385,8 +385,8 @@ func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> 
 		push_warning("Terrain grammar must declare rendering_model authored_autotile_layers.")
 	if String(grammar.get("primary_base_model", "")) != "homm3_local_reference_prototype":
 		push_warning("Terrain grammar must declare homm3_local_reference_prototype as the active local prototype base model.")
-	if String(grammar.get("generated_source_policy", "")) != "deprecated_not_used_by_homm3_local_prototype":
-		push_warning("Terrain grammar must mark generated terrain sheets deprecated and unused by the HoMM3 local prototype.")
+	if String(grammar.get("generated_source_policy", "")) != "generated_grastl_runtime_override_active":
+		push_warning("Terrain grammar must declare the generated grastl runtime override policy.")
 	var classes = grammar.get("terrain_classes", [])
 	if not (classes is Array) or classes.is_empty():
 		push_warning("Terrain grammar must define terrain_classes.")

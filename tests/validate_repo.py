@@ -479,6 +479,10 @@ LEGACY_TERRAIN_ID_ALIASES = {
 }
 HOMM3_LOCAL_PROTOTYPE_FAMILIES = {"grass", "rough", "dirt", "rock", "sand", "snow", "swamp", "lava", "subterranean", "water"}
 HOMM3_FULL_RECEIVER_LAND_FAMILIES = {"grass", "rough", "snow", "swamp", "lava", "subterranean"}
+GENERATED_GRASTL_FRAME_ROOT = ROOT / "art" / "overworld" / "runtime" / "terrain_tiles" / "generated" / "grastl" / "frames_64"
+GENERATED_GRASTL_RES_ROOT = "res://art/overworld/runtime/terrain_tiles/generated/grastl/frames_64"
+GENERATED_GRASTL_FRAME_COUNT = 79
+GENERATED_GRASTL_SOURCE_BASIS = "generated_grastl_replacement_trial_20260503"
 OVERWORLD_ART_REQUIRED_ASSET_IDS = {
     "frontier_town",
     "hostile_camp",
@@ -13363,7 +13367,21 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(terrain_rendering.get("editor_restamp_scope", "")) == "map_editor_terrain_paint_update_and_shared_preview", errors, "Overworld terrain rendering must keep editor restamp scope tied to terrain paint update and shared preview")
         ensure(str(terrain_rendering.get("interior_frame_selection", "")) == "accepted_web_full_row_bucket_selection", errors, "Overworld terrain rendering must document accepted web-prototype full-row interior selection")
         ensure(str(terrain_rendering.get("primary_base_model", "")) == "homm3_local_reference_prototype", errors, "Overworld terrain rendering must make the HoMM3 local prototype the primary base model")
-        ensure(str(terrain_rendering.get("generated_source_policy", "")) == "deprecated_not_used_by_homm3_local_prototype", errors, "Overworld terrain rendering must document generated terrain sources as unused by the HoMM3 local prototype")
+        ensure(str(terrain_rendering.get("generated_source_policy", "")) == "generated_grastl_runtime_override_active", errors, "Overworld terrain rendering must document the generated grastl runtime override")
+        grastl_override = terrain_rendering.get("generated_grastl_runtime_override", {})
+        ensure(isinstance(grastl_override, dict), errors, "Overworld terrain rendering must define generated_grastl_runtime_override")
+        if isinstance(grastl_override, dict):
+            ensure(str(grastl_override.get("family", "")) == "grass", errors, "Generated grastl override must target the grass family")
+            ensure(str(grastl_override.get("atlas", "")) == "grastl", errors, "Generated grastl override must target grastl")
+            ensure(str(grastl_override.get("frame_root", "")) == GENERATED_GRASTL_RES_ROOT, errors, "Generated grastl override must point at the committed frames_64 resource root")
+            ensure(int(grastl_override.get("frame_count", 0)) == GENERATED_GRASTL_FRAME_COUNT, errors, "Generated grastl override must record all 79 frames")
+            ensure(str(grastl_override.get("source_basis", "")) == GENERATED_GRASTL_SOURCE_BASIS, errors, "Generated grastl override must record its source basis")
+            for index in range(GENERATED_GRASTL_FRAME_COUNT):
+                frame_path = GENERATED_GRASTL_FRAME_ROOT / f"00_{index:02d}.png"
+                ensure(frame_path.exists(), errors, f"Generated grastl runtime frame is missing: {frame_path.relative_to(ROOT)}")
+                if frame_path.exists():
+                    ensure(png_size(frame_path) == (64, 64), errors, f"Generated grastl runtime frame must be 64x64 PNG: {frame_path.relative_to(ROOT)}")
+                ensure(frame_path.with_name(frame_path.name + ".import").exists(), errors, f"Generated grastl runtime frame is missing Godot import sidecar: {frame_path.relative_to(ROOT)}.import")
         ensure(bool(terrain_rendering.get("local_reference_only", False)), errors, "Overworld terrain rendering must mark HoMM3 extracted assets as local_reference_only")
         ensure(str(terrain_rendering.get("prototype_asset_policy", "")) == "not_shippable_or_redistributable", errors, "Overworld terrain rendering must mark HoMM3 extracted assets as not shippable or redistributable")
         authored_tile_sets = terrain_rendering.get("authored_tile_sets", [])
@@ -13377,7 +13395,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     ensure(str(terrain_grammar.get("rendering_model", "")) == "authored_autotile_layers", errors, "Terrain grammar must declare authored_autotile_layers")
     ensure(str(terrain_grammar.get("authoring_status", "")) == "homm3_local_reference_prototype", errors, "Terrain grammar must record the HoMM3 local-reference prototype status")
     ensure(str(terrain_grammar.get("primary_base_model", "")) == "homm3_local_reference_prototype", errors, "Terrain grammar must make the HoMM3 local prototype primary")
-    ensure(str(terrain_grammar.get("generated_source_policy", "")) == "deprecated_not_used_by_homm3_local_prototype", errors, "Terrain grammar must deprecate generated terrain sheets for this local prototype")
+    ensure(str(terrain_grammar.get("generated_source_policy", "")) == "generated_grastl_runtime_override_active", errors, "Terrain grammar must declare the generated grastl runtime override")
     transition_rules = terrain_grammar.get("transition_rules", {})
     ensure(isinstance(transition_rules, dict), errors, "Terrain grammar must define transition_rules")
     if isinstance(transition_rules, dict):
@@ -13406,6 +13424,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(homm3_prototype.get("unsupported_policy", "")) == "explicit_grammar_fallback", errors, "HoMM3 local prototype must use explicit fallback for unsupported cases")
         asset_root = res_path_to_disk(str(homm3_prototype.get("asset_root", "")))
         ensure(asset_root.exists(), errors, f"HoMM3 local prototype asset root is missing: {homm3_prototype.get('asset_root')}")
+        runtime_asset_overrides = homm3_prototype.get("runtime_asset_overrides", {})
         terrain_families = homm3_prototype.get("terrain_families", {})
         terrain_id_map = homm3_prototype.get("terrain_id_map", {})
         bridge_material_resolver = homm3_prototype.get("bridge_material_resolver", {})
@@ -13414,6 +13433,16 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         routed_bridge_rules = homm3_prototype.get("routed_bridge_rules", [])
         road_overlays = homm3_prototype.get("road_overlays", {})
         ensure(isinstance(terrain_families, dict) and HOMM3_LOCAL_PROTOTYPE_FAMILIES.issubset(set(map(str, terrain_families.keys()))), errors, "HoMM3 local prototype must define the extracted terrain family tables")
+        ensure(isinstance(runtime_asset_overrides, dict), errors, "HoMM3 local prototype must define runtime_asset_overrides")
+        if isinstance(runtime_asset_overrides, dict):
+            grastl_runtime = runtime_asset_overrides.get("grastl", {})
+            ensure(isinstance(grastl_runtime, dict), errors, "HoMM3 runtime_asset_overrides must define grastl")
+            if isinstance(grastl_runtime, dict):
+                ensure(str(grastl_runtime.get("family", "")) == "grass", errors, "HoMM3 grastl runtime override must target grass")
+                ensure(str(grastl_runtime.get("asset_root", "")) == GENERATED_GRASTL_RES_ROOT, errors, "HoMM3 grastl runtime override must point at frames_64")
+                ensure(str(grastl_runtime.get("asset_root_mode", "")) == "flat_frame_directory", errors, "HoMM3 grastl runtime override must use flat_frame_directory")
+                ensure(str(grastl_runtime.get("runtime_asset_source_basis", "")) == GENERATED_GRASTL_SOURCE_BASIS, errors, "HoMM3 grastl runtime override must record source basis")
+                ensure(int(grastl_runtime.get("expected_frame_count", 0)) == GENERATED_GRASTL_FRAME_COUNT, errors, "HoMM3 grastl runtime override must record 79 frames")
         ensure(isinstance(terrain_id_map, dict) and TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(set(map(str, terrain_id_map.keys()))), errors, "HoMM3 local prototype must map the existing authored logical terrain ids")
         ensure(isinstance(bridge_material_resolver, dict), errors, "HoMM3 local prototype must define a bridge_material_resolver contract")
         ensure(isinstance(land_receiver_stamp_lookup, dict), errors, "HoMM3 local prototype must define a full receiver land stamp lookup contract")
@@ -13476,6 +13505,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                     found_grass_swamp_route = True
                     break
             ensure(found_grass_swamp_route, errors, "HoMM3 local prototype must route grass/swamp through dirt bridge behavior, not a direct all-to-all blend")
+        def family_frame_path(family_id: str, frame_id: str) -> Path:
+            family = terrain_families.get(family_id, {}) if isinstance(terrain_families, dict) else {}
+            atlas = str(family.get("atlas", "")) if isinstance(family, dict) else ""
+            family_root = str(family.get("asset_root", "")) if isinstance(family, dict) else ""
+            root = res_path_to_disk(family_root) if family_root else asset_root
+            if isinstance(family, dict) and str(family.get("asset_root_mode", "")) == "flat_frame_directory":
+                return root / f"{frame_id}.png"
+            return root / "terrain" / atlas / f"{frame_id}.png"
         if isinstance(land_receiver_stamp_lookup, dict):
             ensure(str(land_receiver_stamp_lookup.get("resolver_model", "")) == "data_driven_full_receiver_land_stamp_lookup.v1", errors, "HoMM3 full receiver stamp lookup must expose the data-driven resolver model")
             ensure(str(land_receiver_stamp_lookup.get("applies_to_atlas_role", "")) == "full_receiver_land", errors, "HoMM3 full receiver stamp lookup must apply only to full receiver land atlases")
@@ -13519,9 +13556,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                         forbidden_mixed = {f"00_{index:02d}" for index in range(40, 49)} | {"00_77", "00_78"}
                         ensure(not bool(forbidden_mixed.intersection(flattened)), errors, f"HoMM3 {bridge_family} stamp table must not select reserved mixed junction frames")
                         for family_id in HOMM3_FULL_RECEIVER_LAND_FAMILIES:
-                            atlas = str(terrain_families.get(family_id, {}).get("atlas", ""))
                             for frame_id in flattened[:1] + flattened[-1:]:
-                                frame_path = asset_root / "terrain" / atlas / f"{frame_id}.png"
+                                frame_path = family_frame_path(family_id, frame_id)
                                 ensure(frame_path.exists(), errors, f"HoMM3 full receiver stamp table {bridge_family} references missing {family_id} frame {frame_path}")
         if isinstance(terrain_id_map, dict):
             forest_mapping = terrain_id_map.get("forest", {})
@@ -13534,6 +13570,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                     continue
                 atlas = str(family.get("atlas", ""))
                 ensure(atlas != "", errors, f"HoMM3 local prototype family {family_id} must define atlas")
+                if family_id == "grass":
+                    ensure(str(family.get("asset_root", "")) == GENERATED_GRASTL_RES_ROOT, errors, "HoMM3 grass/grastl family must point at generated frames_64")
+                    ensure(str(family.get("asset_root_mode", "")) == "flat_frame_directory", errors, "HoMM3 grass/grastl family must use flat_frame_directory")
+                    ensure(str(family.get("runtime_asset_source_basis", "")) == GENERATED_GRASTL_SOURCE_BASIS, errors, "HoMM3 grass/grastl family must record generated runtime source basis")
+                    ensure(int(family.get("expected_frame_count", 0)) == GENERATED_GRASTL_FRAME_COUNT, errors, "HoMM3 grass/grastl family must record all 79 generated frames")
                 interior_frames = family.get("interior_frames", [])
                 ensure(isinstance(interior_frames, list) and bool(interior_frames), errors, f"HoMM3 local prototype family {family_id} must define interior frames")
                 renderer_family = str(family.get("renderer_family", ""))
@@ -13586,7 +13627,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 if isinstance(lookup, dict):
                     sample_frames.extend(str(value) for value in list(lookup.values())[:4])
                 for frame_id in sample_frames:
-                    frame_path = asset_root / "terrain" / atlas / f"{frame_id}.png"
+                    frame_path = family_frame_path(family_id, frame_id)
                     ensure(frame_path.exists(), errors, f"HoMM3 local prototype family {family_id} references missing frame {frame_path}")
                     if frame_path.exists():
                         ensure(png_size(frame_path) == (64, 64), errors, f"HoMM3 local prototype frame {frame_path} must be 64x64 PNG")

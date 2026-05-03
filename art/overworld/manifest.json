@@ -9,7 +9,7 @@
       "town_candidate_file": "towns/001-fantasy-strategy-game-overworld-map-obje.png",
       "encounter_candidate_file": "encounters/001-fantasy-strategy-game-overworld-map-obje.png"
     },
-    "note": "Generated object asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. Generated terrain sheets and the Rubberduck terrain feel-test are superseded for the active local prototype. The 2026-04-21 terrain prototype stages extracted HoMM3 DEF terrain and road frames from /root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3sprite/defs for local renderer study only; those frames are not shippable or redistributable game assets."
+    "note": "Generated object asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. The active terrain prototype still uses the HoMM-style terrain grammar, with the grastl grass family overridden to the committed generated replacement trial frames under art/overworld/runtime/terrain_tiles/generated/grastl/frames_64. Other terrain families and roads remain on the local extracted reference prototype."
   },
   "terrain_rendering": {
     "model": "authored_autotile_layers",
@@ -26,7 +26,15 @@
     "editor_restamp_scope": "map_editor_terrain_paint_update_and_shared_preview",
     "interior_frame_selection": "accepted_web_full_row_bucket_selection",
     "primary_base_model": "homm3_local_reference_prototype",
-    "generated_source_policy": "deprecated_not_used_by_homm3_local_prototype",
+    "generated_source_policy": "generated_grastl_runtime_override_active",
+    "generated_grastl_runtime_override": {
+      "family": "grass",
+      "atlas": "grastl",
+      "frame_root": "res://art/overworld/runtime/terrain_tiles/generated/grastl/frames_64",
+      "frame_count": 79,
+      "frame_name_range": "00_00.png-00_78.png",
+      "source_basis": "generated_grastl_replacement_trial_20260503"
+    },
     "authored_tile_sets": ["grass", "rough", "dirt", "rock", "sand", "snow", "swamp", "lava", "subterranean", "water", "road_dirt"],
     "local_reference_only": true,
     "prototype_asset_policy": "not_shippable_or_redistributable",

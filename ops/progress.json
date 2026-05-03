@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "map-editor-load-map-package-ui-10184",
-  "currentSliceTitle": "Map Editor Load Map Package UI",
+  "currentSliceId": "generated-grastl-runtime-terrain-integration-10184",
+  "currentSliceTitle": "Generated Grastl Runtime Terrain Integration",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented an explicit Map Editor Load Map flow backed by maps-folder .amap/.ascenario package entries. The editor no longer auto-loads the old authored JSON scenario dropdown path; legacy authored scenario loading remains behind explicit dev-validation naming. Validation: godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_editor_load_map_package_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/maps_folder_package_browser_integration_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
-  "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T13:34:27Z",
+  "currentSliceNotes": "Completed generated grastl runtime terrain integration. Validation: tests/generated_grastl_runtime_asset_report.tscn passed with 79 Texture2D resources loaded from frames_64; python3 tests/validate_repo.py passed; git diff --check passed. Broader tests/overworld_visual_smoke.tscn was attempted and failed on an unrelated post-action recap assertion outside terrain asset resolution.",
+  "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for the explicit grastl frames_64 runtime integration slice selected by owner direction.",
+  "updatedAt": "2026-05-03T17:50:57Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7149,6 +7149,55 @@
       "startedAt": "2026-05-03T13:34:27Z",
       "completedAt": "2026-05-03T13:34:27Z",
       "notes": "Implemented an explicit Map Editor Load Map flow backed by maps-folder .amap/.ascenario package entries. The editor no longer auto-loads the old authored JSON scenario dropdown path; legacy authored scenario loading remains behind explicit dev-validation naming. Validation: godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_editor_load_map_package_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/maps_folder_package_browser_integration_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check."
+    },
+    {
+      "id": "generated-grastl-runtime-terrain-integration-10184",
+      "title": "Generated Grastl Runtime Terrain Integration",
+      "status": "completed",
+      "purpose": "Wire the committed generated grastl grass terrain replacement frames into the overworld terrain runtime path instead of leaving them unused.",
+      "implementationTargets": [
+        "content/terrain_grammar.json",
+        "art/overworld/manifest.json",
+        "scripts/autoload/ContentService.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/generated_grastl_runtime_asset_report.gd",
+        "tests/generated_grastl_runtime_asset_report.tscn",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Grass/grastl terrain runtime asset resolution points at the generated frames_64 resource directory.",
+        "The overworld map view can resolve generated grastl frame paths while preserving existing terrain selection behavior for other atlases and roads.",
+        "Godot import sidecars exist for the 79 generated grastl frame PNGs.",
+        "Focused validation proves all 79 generated frame resources exist/load and a runtime grass tile resolves through the generated grastl frame bank."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "terrain-editor-tooling-foundation-implementation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "art/overworld/runtime/terrain_tiles/generated/grastl/README.md",
+        "2026-05-03 owner directive to load/use generated grastl frames under art/overworld/runtime/terrain_tiles/generated/grastl/frames_64/"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/generated_grastl_runtime_asset_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_visual_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No terrain placement, pathing, fog, save schema, RMG, editor paint semantics, road rendering, or non-grass terrain atlas redesign.",
+        "No new generated asset ingestion beyond the already committed grastl frames_64 replacement trial frames."
+      ],
+      "createdAt": "2026-05-03T17:45:32Z",
+      "updatedAt": "2026-05-03T17:50:57Z",
+      "startedAt": "2026-05-03T17:45:32Z",
+      "notes": "Completed generated grastl runtime terrain integration. Validation: tests/generated_grastl_runtime_asset_report.tscn passed with 79 Texture2D resources loaded from frames_64; python3 tests/validate_repo.py passed; git diff --check passed. Broader tests/overworld_visual_smoke.tscn was attempted and failed on an unrelated post-action recap assertion outside terrain asset resolution.",
+      "completedAt": "2026-05-03T17:50:57Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -8229,19 +8278,7 @@
       "evidence": "Current editor export behavior includes validated authored scenario/terrain-layer draft contracts and working-copy validation, but deliberately does not write authored scenario files or campaign progress."
     }
   ],
-  "actionableNextTasks": [
-    {
-      "id": "map-editor-load-map-package-ui-10184",
-      "title": "Map Editor Load Map Package UI",
-      "status": "completed",
-      "sourceDocs": [
-        "project.md",
-        "PLAN.md",
-        "docs/map-scenario-gdextension-persistence-foundation.md",
-        "2026-05-03 owner directive to make the map editor load maps from maps-folder packages instead of old JSON scenarios"
-      ]
-    }
-  ],
+  "actionableNextTasks": [],
   "stoppedOrPausedTasks": [
     {
       "id": "overworld-artifact-check-cue-10184",
