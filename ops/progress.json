@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-town-guard-placement-10184",
-  "currentSliceTitle": "Native RMG Town And Guard Placement",
+  "currentSliceId": "native-rmg-validation-provenance-parity-10184",
+  "currentSliceTitle": "Native RMG Validation And Provenance Parity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed native RMG town and guard placement foundation: C++ and GDScript compatibility service expose deterministic staged town/capital/start-town records, neutral zone towns, guard stack records, route/object protected target references, faction/owner/zone/terrain metadata, combined object/town/guard occupancy, counts/statuses/signatures, and a headless town/guard smoke while preserving partial_foundation and full_generation_status=not_implemented. Validation passed: json.tool, sync-plan dry-run, cmake native build, package/native RMG foundation/terrain/zone-player-start/road-river/object-placement smokes, native town/guard smoke, git diff --check, tests/validate_repo.py.",
+  "currentSliceNotes": "Completed native RMG validation/provenance parity foundation. Native GDExtension output now exposes validation_status, validation_report, provenance, component summaries/counts/signatures, phase pipeline, deterministic full_output_signature, validation/provenance schemas/capability, and no-authored-writeback/no-adoption/full-parity-false boundaries while preserving partial_foundation and full_generation_status=not_implemented. Validation checks cover dimensions/tile counts, terrain count sums, zone/player-start bounds and references, owner-grid shape, road start coverage and bounded road cells, river bounds, object/town/guard occupancy uniqueness, object/town/guard zone references, guard protected target references, and no-authored-write policies. Added tests/native_random_map_validation_provenance_report.gd/.tscn. Validation passed: python3 -m json.tool ops/progress.json; progress.py sync-plan --dry-run; cmake --build .artifacts/map_persistence_native_build --parallel 2; Godot headless package/native RMG foundation/terrain/zone-player-start/road-river/object-placement/town-guard/validation-provenance smokes; git diff --check; python3 tests/validate_repo.py.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T10:38:10Z",
+  "updatedAt": "2026-05-03T10:48:43Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -6759,7 +6759,7 @@
     {
       "id": "native-rmg-validation-provenance-parity-10184",
       "title": "Native RMG Validation And Provenance Parity",
-      "status": "pending",
+      "status": "completed",
       "purpose": "Port validation reports, phase pipeline, stable signatures, generated provenance, no-authored-write policy, and warning/failure semantics.",
       "implementationTargets": [
         "src/gdextension/src/map_package_service.cpp",
@@ -6799,7 +6799,10 @@
         "No generated PNG or generated-study derivative import."
       ],
       "createdAt": "2026-05-03T09:37:49Z",
-      "updatedAt": "2026-05-03T09:37:49Z"
+      "updatedAt": "2026-05-03T10:48:43Z",
+      "startedAt": "2026-05-03T10:41:02Z",
+      "notes": "Completed native RMG validation/provenance parity foundation. Native GDExtension output now exposes validation_status, validation_report, provenance, component summaries/counts/signatures, phase pipeline, deterministic full_output_signature, validation/provenance schemas/capability, and no-authored-writeback/no-adoption/full-parity-false boundaries while preserving partial_foundation and full_generation_status=not_implemented. Validation checks cover dimensions/tile counts, terrain count sums, zone/player-start bounds and references, owner-grid shape, road start coverage and bounded road cells, river bounds, object/town/guard occupancy uniqueness, object/town/guard zone references, guard protected target references, and no-authored-write policies. Added tests/native_random_map_validation_provenance_report.gd/.tscn. Validation passed: python3 -m json.tool ops/progress.json; progress.py sync-plan --dry-run; cmake --build .artifacts/map_persistence_native_build --parallel 2; Godot headless package/native RMG foundation/terrain/zone-player-start/road-river/object-placement/town-guard/validation-provenance smokes; git diff --check; python3 tests/validate_repo.py.",
+      "completedAt": "2026-05-03T10:48:43Z"
     },
     {
       "id": "native-rmg-gdscript-comparison-harness-10184",
@@ -7990,8 +7993,8 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-town-guard-placement-10184",
-      "title": "Native RMG Town And Guard Placement",
+      "id": "native-rmg-gdscript-comparison-harness-10184",
+      "title": "Native RMG GDScript Comparison Harness",
       "status": "pending",
       "sourceDocs": [
         "project.md",

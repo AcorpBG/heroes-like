@@ -31,6 +31,8 @@ constexpr const char *NATIVE_RMG_OBJECT_PLACEMENT_SCHEMA_ID = "aurelion_native_r
 constexpr const char *NATIVE_RMG_TOWN_GUARD_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_town_guard_placement_v1";
 constexpr const char *NATIVE_RMG_TOWN_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_town_placement_v1";
 constexpr const char *NATIVE_RMG_GUARD_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_guard_placement_v1";
+constexpr const char *NATIVE_RMG_VALIDATION_REPORT_SCHEMA_ID = "aurelion_native_random_map_validation_report_v1";
+constexpr const char *NATIVE_RMG_PROVENANCE_SCHEMA_ID = "aurelion_native_random_map_provenance_v1";
 constexpr uint64_t HASH_MODULUS = 4294967296ULL;
 constexpr double TAU = 6.28318530717958647692;
 
@@ -47,6 +49,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_road_river_network_foundation");
 	result.append("native_random_map_object_placement_foundation");
 	result.append("native_random_map_town_guard_placement_foundation");
+	result.append("native_random_map_validation_provenance_foundation");
 	result.append("headless_binding_smoke");
 	return result;
 }
@@ -2401,6 +2404,394 @@ Dictionary generate_terrain_grid(const Dictionary &normalized) {
 	return grid;
 }
 
+void append_validation_issue(Array &issues, const String &severity, const String &code, const String &path, const String &message) {
+	Dictionary issue;
+	issue["severity"] = severity;
+	issue["code"] = code;
+	issue["path"] = path;
+	issue["message"] = message;
+	issue["context"] = Dictionary();
+	issues.append(issue);
+}
+
+bool cell_in_bounds(const Dictionary &cell, int32_t width, int32_t height, int32_t level_count) {
+	const int32_t x = int32_t(cell.get("x", -1));
+	const int32_t y = int32_t(cell.get("y", -1));
+	const int32_t level = int32_t(cell.get("level", 0));
+	return x >= 0 && x < width && y >= 0 && y < height && level >= 0 && level < level_count;
+}
+
+bool record_in_bounds(const Dictionary &record, int32_t width, int32_t height, int32_t level_count) {
+	return cell_in_bounds(cell_record(int32_t(record.get("x", -1)), int32_t(record.get("y", -1)), int32_t(record.get("level", 0))), width, height, level_count);
+}
+
+Dictionary component_summary(const String &component, const String &generation_status, const String &validation_status, int32_t count, const String &signature) {
+	Dictionary summary;
+	summary["component"] = component;
+	summary["generation_status"] = generation_status;
+	summary["validation_status"] = validation_status;
+	summary["count"] = count;
+	summary["signature"] = signature;
+	return summary;
+}
+
+Dictionary build_component_signatures(const Dictionary &terrain_grid, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, const Dictionary &river_network, const Dictionary &object_placement, const Dictionary &town_guard_placement) {
+	Dictionary signatures;
+	signatures["terrain_grid"] = terrain_grid.get("signature", "");
+	signatures["zone_layout"] = zone_layout.get("signature", "");
+	signatures["player_starts"] = player_starts.get("signature", "");
+	signatures["route_graph"] = Dictionary(road_network.get("route_graph", Dictionary())).get("signature", "");
+	signatures["road_network"] = road_network.get("signature", "");
+	signatures["river_network"] = river_network.get("signature", "");
+	signatures["object_placement"] = object_placement.get("signature", "");
+	signatures["object_occupancy"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
+	signatures["town_guard_placement"] = town_guard_placement.get("signature", "");
+	signatures["town_placement"] = Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("signature", "");
+	signatures["guard_placement"] = Dictionary(town_guard_placement.get("guard_placement", Dictionary())).get("signature", "");
+	signatures["town_guard_occupancy"] = Dictionary(town_guard_placement.get("combined_occupancy_index", Dictionary())).get("signature", "");
+	return signatures;
+}
+
+Dictionary build_component_counts(const Dictionary &normalized, const Dictionary &terrain_grid, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, const Dictionary &river_network, const Dictionary &object_placement, const Dictionary &town_guard_placement) {
+	Dictionary counts;
+	counts["width"] = int32_t(normalized.get("width", 36));
+	counts["height"] = int32_t(normalized.get("height", 36));
+	counts["level_count"] = int32_t(normalized.get("level_count", 1));
+	counts["tile_count"] = terrain_grid.get("tile_count", 0);
+	counts["zone_count"] = zone_layout.get("zone_count", 0);
+	counts["player_start_count"] = player_starts.get("start_count", 0);
+	counts["route_edge_count"] = Dictionary(road_network.get("route_graph", Dictionary())).get("route_edge_count", 0);
+	counts["road_segment_count"] = road_network.get("road_segment_count", 0);
+	counts["road_cell_count"] = road_network.get("road_cell_count", 0);
+	counts["river_segment_count"] = river_network.get("river_segment_count", 0);
+	counts["river_cell_count"] = river_network.get("river_cell_count", 0);
+	counts["object_count"] = object_placement.get("object_count", 0);
+	counts["town_count"] = town_guard_placement.get("town_count", 0);
+	counts["guard_count"] = town_guard_placement.get("guard_count", 0);
+	return counts;
+}
+
+Array build_phase_pipeline(const Dictionary &terrain_grid, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, const Dictionary &river_network, const Dictionary &object_placement, const Dictionary &town_guard_placement) {
+	Array phases;
+	phases.append(component_summary("terrain_grid", String(terrain_grid.get("generation_status", "")), "pass", int32_t(terrain_grid.get("tile_count", 0)), String(terrain_grid.get("signature", ""))));
+	phases.append(component_summary("zone_layout", String(zone_layout.get("generation_status", "")), "pass", int32_t(zone_layout.get("zone_count", 0)), String(zone_layout.get("signature", ""))));
+	phases.append(component_summary("player_starts", String(player_starts.get("generation_status", "")), "pass", int32_t(player_starts.get("start_count", 0)), String(player_starts.get("signature", ""))));
+	phases.append(component_summary("route_graph", String(Dictionary(road_network.get("route_graph", Dictionary())).get("generation_status", "")), "pass", int32_t(Dictionary(road_network.get("route_graph", Dictionary())).get("route_edge_count", 0)), String(Dictionary(road_network.get("route_graph", Dictionary())).get("signature", ""))));
+	phases.append(component_summary("road_network", String(road_network.get("generation_status", "")), "pass", int32_t(road_network.get("road_segment_count", 0)), String(road_network.get("signature", ""))));
+	phases.append(component_summary("river_network", String(river_network.get("generation_status", "")), "pass", int32_t(river_network.get("river_segment_count", 0)), String(river_network.get("signature", ""))));
+	phases.append(component_summary("object_placement", String(object_placement.get("generation_status", "")), "pass", int32_t(object_placement.get("object_count", 0)), String(object_placement.get("signature", ""))));
+	phases.append(component_summary("town_placement", String(Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("generation_status", "")), "pass", int32_t(town_guard_placement.get("town_count", 0)), String(Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("signature", ""))));
+	phases.append(component_summary("guard_placement", String(Dictionary(town_guard_placement.get("guard_placement", Dictionary())).get("generation_status", "")), "pass", int32_t(town_guard_placement.get("guard_count", 0)), String(Dictionary(town_guard_placement.get("guard_placement", Dictionary())).get("signature", ""))));
+	phases.append(component_summary("validation_provenance", "validation_provenance_generated_foundation", "pass", 1, ""));
+	return phases;
+}
+
+Dictionary validate_native_random_map_output(const Dictionary &normalized, const Dictionary &identity, const Dictionary &terrain_grid, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, const Dictionary &river_network, const Dictionary &object_placement, const Dictionary &town_guard_placement, const Dictionary &metrics, const Array &warnings) {
+	Array failures;
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t expected_tile_count = width * height * level_count;
+
+	if (width <= 0 || height <= 0 || level_count <= 0) {
+		append_validation_issue(failures, "fail", "invalid_dimensions", "normalized_config", "Native RMG dimensions must be positive.");
+	}
+	if (int32_t(terrain_grid.get("tile_count", 0)) != expected_tile_count) {
+		append_validation_issue(failures, "fail", "terrain_tile_count_mismatch", "terrain_grid.tile_count", "Terrain grid tile count did not match normalized dimensions.");
+	}
+	int32_t terrain_count_sum = 0;
+	Dictionary terrain_counts = terrain_grid.get("terrain_counts", Dictionary());
+	Array terrain_keys = terrain_counts.keys();
+	for (int64_t index = 0; index < terrain_keys.size(); ++index) {
+		terrain_count_sum += int32_t(terrain_counts.get(terrain_keys[index], 0));
+	}
+	if (terrain_count_sum != expected_tile_count) {
+		append_validation_issue(failures, "fail", "terrain_count_sum_mismatch", "terrain_grid.terrain_counts", "Terrain count sum did not match tile count.");
+	}
+
+	Array zones = zone_layout.get("zones", Array());
+	Dictionary zones_by_id;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		if (zone_id.is_empty()) {
+			append_validation_issue(failures, "fail", "zone_missing_id", "zone_layout.zones", "Zone record missed id.");
+			continue;
+		}
+		if (zones_by_id.has(zone_id)) {
+			append_validation_issue(failures, "fail", "duplicate_zone_id", "zone_layout.zones", "Zone ids must be unique.");
+		}
+		zones_by_id[zone_id] = true;
+		Dictionary anchor = zone.get("anchor", Dictionary());
+		if (!cell_in_bounds(cell_record(int32_t(anchor.get("x", -1)), int32_t(anchor.get("y", -1)), 0), width, height, level_count)) {
+			append_validation_issue(failures, "fail", "zone_anchor_out_of_bounds", "zone_layout.zones.anchor", "Zone anchor must be in bounds.");
+		}
+	}
+	if (zones.size() != int32_t(zone_layout.get("zone_count", zones.size()))) {
+		append_validation_issue(failures, "fail", "zone_count_mismatch", "zone_layout.zone_count", "Zone count did not match records.");
+	}
+	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
+	if (owner_grid.size() != height) {
+		append_validation_issue(failures, "fail", "owner_grid_height_mismatch", "zone_layout.surface_owner_grid", "Owner grid height did not match map height.");
+	}
+	for (int64_t y = 0; y < owner_grid.size(); ++y) {
+		Array row = owner_grid[y];
+		if (row.size() != width) {
+			append_validation_issue(failures, "fail", "owner_grid_width_mismatch", "zone_layout.surface_owner_grid", "Owner grid row width did not match map width.");
+			continue;
+		}
+		for (int64_t x = 0; x < row.size(); ++x) {
+			if (!zones_by_id.has(String(row[x]))) {
+				append_validation_issue(failures, "fail", "owner_grid_unknown_zone", "zone_layout.surface_owner_grid", "Owner grid referenced an unknown zone id.");
+			}
+		}
+	}
+
+	Array starts = player_starts.get("starts", Array());
+	if (starts.size() != int32_t(player_starts.get("expected_player_count", starts.size()))) {
+		append_validation_issue(failures, "fail", "player_start_count_mismatch", "player_starts.starts", "Player start count did not match expected player count.");
+	}
+	Dictionary starts_by_zone;
+	for (int64_t index = 0; index < starts.size(); ++index) {
+		Dictionary start = starts[index];
+		const String zone_id = String(start.get("zone_id", ""));
+		if (!record_in_bounds(start, width, height, level_count)) {
+			append_validation_issue(failures, "fail", "player_start_out_of_bounds", "player_starts.starts", "Player start must be in bounds.");
+		}
+		if (!zones_by_id.has(zone_id)) {
+			append_validation_issue(failures, "fail", "player_start_unknown_zone", "player_starts.starts.zone_id", "Player start referenced an unknown zone.");
+		}
+		starts_by_zone[zone_id] = true;
+	}
+
+	Dictionary route_graph = road_network.get("route_graph", Dictionary());
+	Array edges = route_graph.get("edges", Array());
+	Dictionary route_edges_by_id;
+	for (int64_t index = 0; index < edges.size(); ++index) {
+		Dictionary edge = edges[index];
+		const String edge_id = String(edge.get("id", ""));
+		if (edge_id.is_empty()) {
+			append_validation_issue(failures, "fail", "route_edge_missing_id", "route_graph.edges", "Route edge missed id.");
+		}
+		route_edges_by_id[edge_id] = true;
+	}
+	if (edges.is_empty()) {
+		append_validation_issue(failures, "fail", "route_graph_empty", "route_graph.edges", "Route graph must expose at least one edge.");
+	}
+	if (String(Dictionary(road_network.get("route_reachability_proof", Dictionary())).get("status", "")) != "pass") {
+		append_validation_issue(failures, "fail", "route_reachability_failed", "road_network.route_reachability_proof", "Route reachability proof must pass.");
+	}
+	Dictionary start_coverage = road_network.get("required_start_coverage", Dictionary());
+	if (int32_t(start_coverage.get("covered_player_start_count", 0)) != starts.size()) {
+		append_validation_issue(failures, "fail", "road_start_coverage_failed", "road_network.required_start_coverage", "Road network must cover every player start.");
+	}
+	for (int64_t index = 0; index < Array(road_network.get("road_segments", Array())).size(); ++index) {
+		Dictionary segment = Array(road_network.get("road_segments", Array()))[index];
+		Array cells = segment.get("cells", Array());
+		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+			if (!cell_in_bounds(cells[cell_index], width, height, level_count)) {
+				append_validation_issue(failures, "fail", "road_cell_out_of_bounds", "road_network.road_segments.cells", "Road segment emitted an out-of-bounds cell.");
+			}
+		}
+	}
+	if (String(road_network.get("writeout_policy", "")) != "final_generated_tile_stream_no_authored_tile_write") {
+		append_validation_issue(failures, "fail", "road_writeout_boundary_lost", "road_network.writeout_policy", "Road network lost no-authored-tile-write boundary.");
+	}
+
+	for (int64_t index = 0; index < Array(river_network.get("river_segments", Array())).size(); ++index) {
+		Dictionary segment = Array(river_network.get("river_segments", Array()))[index];
+		Array cells = segment.get("cells", Array());
+		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+			if (!cell_in_bounds(cells[cell_index], width, height, level_count)) {
+				append_validation_issue(failures, "fail", "river_cell_out_of_bounds", "river_network.river_segments.cells", "River segment emitted an out-of-bounds cell.");
+			}
+		}
+	}
+
+	Array objects = object_placement.get("object_placements", Array());
+	Dictionary object_ids;
+	for (int64_t index = 0; index < objects.size(); ++index) {
+		Dictionary object = objects[index];
+		const String placement_id = String(object.get("placement_id", ""));
+		if (placement_id.is_empty()) {
+			append_validation_issue(failures, "fail", "object_missing_placement_id", "object_placement.object_placements", "Object placement missed placement id.");
+		}
+		if (object_ids.has(placement_id)) {
+			append_validation_issue(failures, "fail", "duplicate_object_placement_id", "object_placement.object_placements", "Object placement ids must be unique.");
+		}
+		object_ids[placement_id] = true;
+		if (!record_in_bounds(object, width, height, level_count)) {
+			append_validation_issue(failures, "fail", "object_out_of_bounds", "object_placement.object_placements", "Object placement must be in bounds.");
+		}
+		if (!zones_by_id.has(String(object.get("zone_id", "")))) {
+			append_validation_issue(failures, "fail", "object_unknown_zone", "object_placement.object_placements.zone_id", "Object placement referenced an unknown zone.");
+		}
+	}
+	Dictionary object_occupancy = object_placement.get("occupancy_index", Dictionary());
+	if (String(object_occupancy.get("status", "")) != "pass" || int32_t(object_occupancy.get("duplicate_primary_tile_count", -1)) != 0) {
+		append_validation_issue(failures, "fail", "object_occupancy_not_unique", "object_placement.occupancy_index", "Object primary occupancy must be unique.");
+	}
+
+	Array towns = town_guard_placement.get("town_records", Array());
+	Array guards = town_guard_placement.get("guard_records", Array());
+	for (int64_t index = 0; index < towns.size(); ++index) {
+		Dictionary town = towns[index];
+		if (!record_in_bounds(town, width, height, level_count)) {
+			append_validation_issue(failures, "fail", "town_out_of_bounds", "town_guard_placement.town_records", "Town placement must be in bounds.");
+		}
+		if (!zones_by_id.has(String(town.get("zone_id", "")))) {
+			append_validation_issue(failures, "fail", "town_unknown_zone", "town_guard_placement.town_records.zone_id", "Town placement referenced an unknown zone.");
+		}
+		if (bool(town.get("is_start_town", false)) && !starts_by_zone.has(String(town.get("zone_id", "")))) {
+			append_validation_issue(failures, "fail", "start_town_missing_start_reference", "town_guard_placement.town_records.start_anchor", "Start town must reference a generated player start.");
+		}
+	}
+	for (int64_t index = 0; index < guards.size(); ++index) {
+		Dictionary guard = guards[index];
+		if (!record_in_bounds(guard, width, height, level_count)) {
+			append_validation_issue(failures, "fail", "guard_out_of_bounds", "town_guard_placement.guard_records", "Guard placement must be in bounds.");
+		}
+		const String target_type = String(guard.get("protected_target_type", ""));
+		if (target_type == "route_edge") {
+			if (!route_edges_by_id.has(String(guard.get("route_edge_id", "")))) {
+				append_validation_issue(failures, "fail", "guard_invalid_route_target", "town_guard_placement.guard_records.route_edge_id", "Route guard referenced an unknown route edge.");
+			}
+		} else if (target_type == "object_placement") {
+			if (!object_ids.has(String(guard.get("protected_object_placement_id", "")))) {
+				append_validation_issue(failures, "fail", "guard_invalid_object_target", "town_guard_placement.guard_records.protected_object_placement_id", "Site guard referenced an unknown object placement.");
+			}
+		} else {
+			append_validation_issue(failures, "fail", "guard_unknown_target_type", "town_guard_placement.guard_records.protected_target_type", "Guard protected target type must be route_edge or object_placement.");
+		}
+	}
+	Dictionary combined_occupancy = town_guard_placement.get("combined_occupancy_index", Dictionary());
+	if (String(combined_occupancy.get("status", "")) != "pass" || int32_t(combined_occupancy.get("duplicate_primary_tile_count", -1)) != 0) {
+		append_validation_issue(failures, "fail", "combined_occupancy_not_unique", "town_guard_placement.combined_occupancy_index", "Object/town/guard primary occupancy must be unique.");
+	}
+	if (int32_t(combined_occupancy.get("occupied_primary_tile_count", 0)) != objects.size() + towns.size() + guards.size()) {
+		append_validation_issue(failures, "fail", "combined_occupancy_count_mismatch", "town_guard_placement.combined_occupancy_index", "Combined occupancy count did not match objects plus towns plus guards.");
+	}
+	if (String(object_placement.get("writeout_policy", "")) != "generated_object_records_no_authored_content_write" || String(town_guard_placement.get("writeout_policy", "")) != "generated_town_guard_records_no_authored_content_write") {
+		append_validation_issue(failures, "fail", "authored_writeback_boundary_lost", "generated_components.writeout_policy", "Generated records must preserve no-authored-content-write boundaries.");
+	}
+
+	Dictionary signatures = build_component_signatures(terrain_grid, zone_layout, player_starts, road_network, river_network, object_placement, town_guard_placement);
+	Dictionary counts = build_component_counts(normalized, terrain_grid, zone_layout, player_starts, road_network, river_network, object_placement, town_guard_placement);
+	Array phases = build_phase_pipeline(terrain_grid, zone_layout, player_starts, road_network, river_network, object_placement, town_guard_placement);
+	const String phase_signature = hash32_hex(canonical_variant(phases));
+
+	Dictionary component_summaries;
+	component_summaries["terrain_grid"] = component_summary("terrain_grid", String(terrain_grid.get("generation_status", "")), failures.is_empty() ? "pass" : "fail", int32_t(terrain_grid.get("tile_count", 0)), String(terrain_grid.get("signature", "")));
+	component_summaries["zone_layout"] = component_summary("zone_layout", String(zone_layout.get("generation_status", "")), failures.is_empty() ? "pass" : "fail", int32_t(zone_layout.get("zone_count", 0)), String(zone_layout.get("signature", "")));
+	component_summaries["player_starts"] = component_summary("player_starts", String(player_starts.get("generation_status", "")), failures.is_empty() ? "pass" : "fail", int32_t(player_starts.get("start_count", 0)), String(player_starts.get("signature", "")));
+	component_summaries["road_network"] = component_summary("road_network", String(road_network.get("generation_status", "")), failures.is_empty() ? "pass" : "fail", int32_t(road_network.get("road_segment_count", 0)), String(road_network.get("signature", "")));
+	component_summaries["river_network"] = component_summary("river_network", String(river_network.get("generation_status", "")), failures.is_empty() ? "pass" : "fail", int32_t(river_network.get("river_segment_count", 0)), String(river_network.get("signature", "")));
+	component_summaries["object_placement"] = component_summary("object_placement", String(object_placement.get("generation_status", "")), failures.is_empty() ? "pass" : "fail", objects.size(), String(object_placement.get("signature", "")));
+	component_summaries["town_guard_placement"] = component_summary("town_guard_placement", String(town_guard_placement.get("generation_status", "")), failures.is_empty() ? "pass" : "fail", towns.size() + guards.size(), String(town_guard_placement.get("signature", "")));
+
+	Dictionary output_identity;
+	output_identity["generator_version"] = NATIVE_RMG_VERSION;
+	output_identity["normalized_seed"] = normalized.get("normalized_seed", "");
+	output_identity["config_hash"] = identity.get("config_hash", "");
+	output_identity["map_id"] = identity.get("map_id", "");
+	output_identity["component_signatures"] = signatures;
+	output_identity["component_counts"] = counts;
+	output_identity["phase_signature"] = phase_signature;
+	output_identity["write_policy"] = "generated_records_only_no_authored_writeback";
+	output_identity["full_generation_status"] = "not_implemented";
+	const String full_output_signature = hash32_hex(canonical_variant(output_identity));
+	output_identity["full_output_signature"] = full_output_signature;
+	output_identity["generated_output_identity_signature"] = hash32_hex(canonical_variant(output_identity));
+
+	Dictionary report;
+	report["schema_id"] = NATIVE_RMG_VALIDATION_REPORT_SCHEMA_ID;
+	report["schema_version"] = 1;
+	report["ok"] = failures.is_empty();
+	report["status"] = failures.is_empty() ? "pass" : "fail";
+	report["validation_status"] = report["status"];
+	report["generation_status"] = "partial_foundation";
+	report["full_generation_status"] = "not_implemented";
+	report["failure_count"] = failures.size();
+	report["warning_count"] = warnings.size();
+	report["failures"] = failures;
+	report["warnings"] = warnings;
+	report["metrics"] = metrics;
+	report["deterministic_identity"] = identity;
+	report["component_signatures"] = signatures;
+	report["component_counts"] = counts;
+	report["component_summaries"] = component_summaries;
+	report["phase_pipeline"] = phases;
+	report["phase_signature"] = phase_signature;
+	report["full_output_signature"] = full_output_signature;
+	report["deterministic_output_identity"] = output_identity;
+	report["terrain_grid_status"] = terrain_grid.get("generation_status", "");
+	report["terrain_grid_signature"] = terrain_grid.get("signature", "");
+	report["zone_generation_status"] = zone_layout.get("generation_status", "");
+	report["zone_layout_signature"] = zone_layout.get("signature", "");
+	report["player_start_generation_status"] = player_starts.get("generation_status", "");
+	report["player_start_signature"] = player_starts.get("signature", "");
+	report["road_generation_status"] = road_network.get("generation_status", "");
+	report["road_network_signature"] = road_network.get("signature", "");
+	report["route_graph_signature"] = Dictionary(road_network.get("route_graph", Dictionary())).get("signature", "");
+	report["route_reachability_status"] = Dictionary(road_network.get("route_reachability_proof", Dictionary())).get("status", "");
+	report["river_generation_status"] = river_network.get("generation_status", "");
+	report["river_network_signature"] = river_network.get("signature", "");
+	report["object_generation_status"] = object_placement.get("generation_status", "");
+	report["object_placement_signature"] = object_placement.get("signature", "");
+	report["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
+	report["object_category_counts"] = object_placement.get("category_counts", Dictionary());
+	report["town_generation_status"] = town_guard_placement.get("town_generation_status", "");
+	report["guard_generation_status"] = town_guard_placement.get("guard_generation_status", "");
+	report["town_guard_placement_signature"] = town_guard_placement.get("signature", "");
+	report["town_placement_signature"] = Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("signature", "");
+	report["guard_placement_signature"] = Dictionary(town_guard_placement.get("guard_placement", Dictionary())).get("signature", "");
+	report["town_guard_occupancy_signature"] = Dictionary(town_guard_placement.get("combined_occupancy_index", Dictionary())).get("signature", "");
+	report["town_guard_category_counts"] = town_guard_placement.get("category_counts", Dictionary());
+	Array remaining_parity_slices;
+	remaining_parity_slices.append("native-rmg-gdscript-comparison-harness-10184");
+	remaining_parity_slices.append("native-rmg-package-session-adoption-10184");
+	remaining_parity_slices.append("native-rmg-full-parity-gate-10184");
+	report["remaining_parity_slices"] = remaining_parity_slices;
+	report["no_authored_writeback"] = true;
+	report["full_parity_claim"] = false;
+	report["report_signature"] = hash32_hex(canonical_variant(report));
+	return report;
+}
+
+Dictionary build_native_random_map_provenance(const Dictionary &normalized, const Dictionary &identity, const Dictionary &validation_report) {
+	Dictionary provenance;
+	provenance["schema_id"] = NATIVE_RMG_PROVENANCE_SCHEMA_ID;
+	provenance["schema_version"] = 1;
+	provenance["source"] = "native_gdextension_rmg_foundation";
+	provenance["generator_version"] = NATIVE_RMG_VERSION;
+	provenance["normalized_seed"] = normalized.get("normalized_seed", "");
+	provenance["template_id"] = normalized.get("template_id", "");
+	provenance["profile_id"] = normalized.get("profile_id", "");
+	provenance["size_class_id"] = normalized.get("size_class_id", "");
+	provenance["water_mode"] = normalized.get("water_mode", "land");
+	provenance["deterministic_identity"] = identity;
+	provenance["config_hash"] = identity.get("config_hash", "");
+	provenance["map_id"] = identity.get("map_id", "");
+	provenance["component_signatures"] = validation_report.get("component_signatures", Dictionary());
+	provenance["component_counts"] = validation_report.get("component_counts", Dictionary());
+	provenance["phase_signature"] = validation_report.get("phase_signature", "");
+	provenance["validation_status"] = validation_report.get("validation_status", "");
+	provenance["validation_report_signature"] = validation_report.get("report_signature", "");
+	provenance["full_output_signature"] = validation_report.get("full_output_signature", "");
+	provenance["full_generation_status"] = "not_implemented";
+	Dictionary boundaries;
+	boundaries["authored_content_writeback"] = false;
+	boundaries["authored_tile_writeback"] = false;
+	boundaries["save_schema_write"] = false;
+	boundaries["runtime_call_site_adoption"] = false;
+	boundaries["package_session_adoption"] = false;
+	boundaries["full_parity_claim"] = false;
+	boundaries["content_provenance"] = "native_generated_records_only_original_placeholder_ids_no_authored_json_mutation";
+	provenance["boundaries"] = boundaries;
+	provenance["signature"] = hash32_hex(canonical_variant(provenance));
+	return provenance;
+}
+
 Dictionary validation_not_implemented(const String &operation, const String &report_schema_id) {
 	Dictionary failure;
 	failure["code"] = "not_implemented";
@@ -2489,6 +2880,8 @@ Dictionary MapPackageService::get_schema_ids() const {
 	result["native_rmg_town_guard_placement"] = NATIVE_RMG_TOWN_GUARD_PLACEMENT_SCHEMA_ID;
 	result["native_rmg_town_placement"] = NATIVE_RMG_TOWN_PLACEMENT_SCHEMA_ID;
 	result["native_rmg_guard_placement"] = NATIVE_RMG_GUARD_PLACEMENT_SCHEMA_ID;
+	result["native_rmg_validation_report"] = NATIVE_RMG_VALIDATION_REPORT_SCHEMA_ID;
+	result["native_rmg_provenance"] = NATIVE_RMG_PROVENANCE_SCHEMA_ID;
 	return result;
 }
 
@@ -2658,7 +3051,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	warning["code"] = "full_generation_not_implemented";
 	warning["severity"] = "warning";
 	warning["path"] = "generate_random_map";
-	warning["message"] = "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, player start anchors, road/river network records, staged object placement records, and staged town/guard placement records only; validation parity and package/session adoption are not implemented.";
+	warning["message"] = "Native RMG currently creates deterministic foundation output with validation/provenance records only; GDScript comparison, package/session adoption, and full parity remain incomplete.";
 	warning["context"] = Dictionary();
 
 	Array warnings;
@@ -2682,43 +3075,16 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metrics["guard_count"] = town_guard_placement.get("guard_count", 0);
 	metrics["object_count"] = document->get_object_count();
 
-	Dictionary report;
-	report["schema_id"] = "aurelion_native_random_map_foundation_report";
-	report["schema_version"] = 1;
-	report["status"] = "partial_foundation";
-	report["failure_count"] = 0;
-	report["warning_count"] = warnings.size();
-	report["failures"] = Array();
-	report["warnings"] = warnings;
-	report["metrics"] = metrics;
-	report["deterministic_identity"] = identity;
-	report["terrain_grid_status"] = terrain_grid.get("generation_status", "");
-	report["terrain_grid_signature"] = terrain_grid.get("signature", "");
-	report["zone_generation_status"] = zone_layout.get("generation_status", "");
-	report["zone_layout_signature"] = zone_layout.get("signature", "");
-	report["player_start_generation_status"] = player_starts.get("generation_status", "");
-	report["player_start_signature"] = player_starts.get("signature", "");
-	report["road_generation_status"] = road_network.get("generation_status", "");
-	report["road_network_signature"] = road_network.get("signature", "");
-	report["route_graph_signature"] = Dictionary(road_network.get("route_graph", Dictionary())).get("signature", "");
-	report["route_reachability_status"] = Dictionary(road_network.get("route_reachability_proof", Dictionary())).get("status", "");
-	report["river_generation_status"] = river_network.get("generation_status", "");
-	report["river_network_signature"] = river_network.get("signature", "");
-	report["object_generation_status"] = object_placement.get("generation_status", "");
-	report["object_placement_signature"] = object_placement.get("signature", "");
-	report["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
-	report["object_category_counts"] = object_placement.get("category_counts", Dictionary());
-	report["town_generation_status"] = town_guard_placement.get("town_generation_status", "");
-	report["guard_generation_status"] = town_guard_placement.get("guard_generation_status", "");
-	report["town_guard_placement_signature"] = town_guard_placement.get("signature", "");
-	report["town_placement_signature"] = Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("signature", "");
-	report["guard_placement_signature"] = Dictionary(town_guard_placement.get("guard_placement", Dictionary())).get("signature", "");
-	report["town_guard_occupancy_signature"] = Dictionary(town_guard_placement.get("combined_occupancy_index", Dictionary())).get("signature", "");
-	report["town_guard_category_counts"] = town_guard_placement.get("category_counts", Dictionary());
-	Array remaining_parity_slices;
-	remaining_parity_slices.append("native-rmg-validation-provenance-parity-10184");
-	remaining_parity_slices.append("native-rmg-package-session-adoption-10184");
-	report["remaining_parity_slices"] = remaining_parity_slices;
+	Dictionary report = validate_native_random_map_output(normalized, identity, terrain_grid, zone_layout, player_starts, road_network, river_network, object_placement, town_guard_placement, metrics, warnings);
+	Dictionary provenance = build_native_random_map_provenance(normalized, identity, report);
+	metadata["validation_status"] = report.get("validation_status", "");
+	metadata["validation_report_signature"] = report.get("report_signature", "");
+	metadata["provenance_signature"] = provenance.get("signature", "");
+	metadata["full_output_signature"] = report.get("full_output_signature", "");
+	metadata["phase_signature"] = report.get("phase_signature", "");
+	metadata["no_authored_writeback"] = true;
+	map_state["metadata"] = metadata;
+	document->configure(map_state);
 
 	Dictionary result;
 	result["ok"] = true;
@@ -2734,6 +3100,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["town_generation_status"] = "towns_generated_foundation";
 	result["guard_generation_status"] = "guards_generated_foundation";
 	result["full_generation_status"] = "not_implemented";
+	result["validation_status"] = report.get("validation_status", "");
 	result["normalized_config"] = normalized;
 	result["deterministic_identity"] = identity;
 	result["terrain_grid"] = terrain_grid;
@@ -2760,6 +3127,15 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["map_document"] = document;
 	result["map_metadata"] = metadata;
 	result["report"] = report;
+	result["validation_report"] = report;
+	result["provenance"] = provenance;
+	result["component_summaries"] = report.get("component_summaries", Dictionary());
+	result["component_signatures"] = report.get("component_signatures", Dictionary());
+	result["component_counts"] = report.get("component_counts", Dictionary());
+	result["phase_pipeline"] = report.get("phase_pipeline", Array());
+	result["full_output_signature"] = report.get("full_output_signature", "");
+	result["generated_output_identity"] = report.get("deterministic_output_identity", Dictionary());
+	result["no_authored_writeback"] = true;
 	result["adoption_status"] = "not_authoritative_no_runtime_call_site_adoption";
 	return result;
 }

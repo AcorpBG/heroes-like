@@ -1103,6 +1103,28 @@ not authoritative gameplay objects, are not written back to authored content,
 do not replace `RandomMapGeneratorRules.gd`, and keep `status:
 partial_foundation` plus `full_generation_status: not_implemented`.
 
+`native-rmg-validation-provenance-parity-10184` adds the native
+validation/provenance foundation around the current staged C++ RMG output. The
+native result now exposes `validation_status`, `validation_report`,
+`provenance`, `component_summaries`, `component_signatures`,
+`component_counts`, `phase_pipeline`, and `full_output_signature`.
+
+The native validation report checks structural dimensions and tile counts,
+terrain count totals, zone/player-start bounds, road start coverage and bounded
+road cells, bounded river cells, object/town/guard occupancy uniqueness,
+object/town/guard zone references, protected guard target references, and
+no-authored-writeback policy boundaries. Provenance records preserve generator
+version, normalized seed, deterministic config identity, component signatures,
+validation/report signatures, and explicit false values for authored writeback,
+save-schema write, runtime call-site adoption, package/session adoption, and
+full-parity claim boundaries.
+
+This remains a foundation-only parity step. Native generated output is not
+authoritative gameplay content, is not written back to authored JSON or tile
+streams, does not replace `RandomMapGeneratorRules.gd`, does not adopt package
+or session flow, and keeps `status: partial_foundation` plus
+`full_generation_status: not_implemented`.
+
 Planning/doc gates for this slice:
 
 - `python3 -m json.tool ops/progress.json`
