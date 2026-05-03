@@ -5,10 +5,10 @@
   "currentPhase": "phase-2-deep-production-foundation",
   "currentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
   "currentSliceTitle": "Map/Scenario GDExtension Persistence Foundation",
-  "currentSliceStatus": "docs_ready",
-  "currentSliceNotes": "Detailed docs/*.md specification produced for typed map/scenario documents, C++ GDExtension package API, durable package format, migration lifecycle, RMG bridge, staged implementation, and validation gates. Runtime implementation remains pending future slices.",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Slice 1 Package/API Skeleton implemented: inert map/scenario package API stubs, C++ GDExtension source/build skeleton, GDScript compatibility binding, and headless smoke evidence. Broad package conversion/read/write, migration, save-reference adoption, and content adoption remain unimplemented.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T06:50:00Z",
+  "updatedAt": "2026-05-03T06:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -43,7 +43,7 @@
       "id": "map-scenario-gdextension-persistence-foundation-10184",
       "title": "Map/Scenario GDExtension Persistence Foundation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "docs_ready",
+      "status": "in_progress",
       "classification": "phase2_child_architecture_and_implementation_slice",
       "parentSliceId": "random-map-generator-foundation-10184",
       "sourceDocs": [
@@ -93,20 +93,55 @@
         "No generated PNG/asset ingestion."
       ],
       "createdAt": "2026-05-03T05:50:07Z",
-      "updatedAt": "2026-05-03T06:50:00Z",
-      "notes": "Specification source document produced and validated; later implementation workers should use docs/map-scenario-gdextension-persistence-foundation.md as the detailed source. No runtime code, content migration, or behavior changes were made in this docs-only slice.",
+      "updatedAt": "2026-05-03T06:55:00Z",
+      "notes": "Slice 1 Package/API Skeleton implemented only. This adds an inert GDExtension source/build skeleton plus GDScript compatibility stubs and a headless API smoke. It does not adopt package files, bump save versions, migrate content/scenarios.json, or change runtime content/gameplay behavior.",
       "startedAt": "2026-05-03T05:57:04Z",
       "docsReadyAt": "2026-05-03T06:45:00Z",
       "documentationEvidence": {
         "sourceDoc": "docs/map-scenario-gdextension-persistence-foundation.md",
         "summary": "Defines current-state audit, typed MapDocument/ScenarioDocument boundaries, C++ GDExtension API, durable chunked package format, load/validate/save/migrate lifecycle, RMG bridge, staged implementation plan, validation gates, performance criteria, and explicit non-goals."
       },
+      "packageApiSkeletonEvidence": {
+        "status": "completed_for_slice_1_only",
+        "implementedAt": "2026-05-03T06:55:00Z",
+        "sourceFiles": [
+          "src/gdextension/CMakeLists.txt",
+          "src/gdextension/include/map_document.hpp",
+          "src/gdextension/include/scenario_document.hpp",
+          "src/gdextension/include/map_package_service.hpp",
+          "src/gdextension/src/register_types.cpp",
+          "src/gdextension/src/map_document.cpp",
+          "src/gdextension/src/scenario_document.cpp",
+          "src/gdextension/src/map_package_service.cpp",
+          "scripts/persistence/MapDocument.gd",
+          "scripts/persistence/ScenarioDocument.gd",
+          "scripts/persistence/MapPackageService.gd",
+          "tests/map_package_api_skeleton_report.gd",
+          "tests/map_package_api_skeleton_report.tscn"
+        ],
+        "apiEvidence": [
+          "MapDocument, ScenarioDocument, and MapPackageService stubs expose stable schema/version/id/capability metadata.",
+          "Package conversion/read/write/migration/hash/inspect methods return structured ok=false not_implemented dictionaries with stable error_code fields.",
+          "Document handles are RefCounted first-step stubs, matching the spec preference for immutable runtime handles before editor Resource integration is needed.",
+          "The Godot-visible binding for this slice is a GDScript compatibility shim; native C++ source and CMake configuration are present but no native library is built or loaded yet."
+        ],
+        "boundariesPreserved": [
+          "No package files were made authoritative.",
+          "No save version was bumped.",
+          "content/scenarios.json was not deleted, shrunk, migrated, or rewritten.",
+          "No generated maps were written into authored content.",
+          "No renderer, fog, pathing, RMG, content behavior, or gameplay semantics changed."
+        ],
+        "nativeBuildStatus": "blocked_by_environment: cmake command not found; scons not installed; godot-cpp is not checked into the repo. Source/config are present for a later native build slice."
+      },
       "validationEvidence": [
         "Passed 2026-05-03T06:50:00Z: python3 -m json.tool ops/progress.json.",
         "Passed 2026-05-03T06:50:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run.",
         "Passed 2026-05-03T06:50:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like.",
         "Passed 2026-05-03T06:50:00Z: git diff --check.",
-        "Passed 2026-05-03T06:50:00Z: python3 tests/validate_repo.py."
+        "Passed 2026-05-03T06:50:00Z: python3 tests/validate_repo.py.",
+        "Passed 2026-05-03T06:55:00Z: /root/.local/bin/godot --headless --path /root/dev/heroes-like --quit-after 20 /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn.",
+        "Blocked 2026-05-03T06:55:00Z native build validation: cmake -S src/gdextension -B .artifacts/map_persistence_native_build failed with /bin/bash: line 1: cmake: command not found. scons is not installed and godot-cpp is not present in the repo."
       ]
     },
     {
@@ -7015,7 +7050,7 @@
       "title": "Map/Scenario GDExtension Persistence Foundation",
       "status": "pending_after_implementation",
       "phase": "phase-2-deep-production-foundation",
-      "nextAction": "Use docs/map-scenario-gdextension-persistence-foundation.md as the implementation source after AcOrP accepts the specification; first future worker should start with the package/API skeleton and no runtime adoption.",
+      "nextAction": "Slice 1 Package/API Skeleton is implemented and validated through a GDScript compatibility smoke; next future worker should start Slice 2 Legacy Scenario Converter Design Probe or add native build dependencies in a separate explicit slice.",
       "sourceDocs": [
         "project.md",
         "PLAN.md",
@@ -7030,7 +7065,7 @@
         "No renderer, fog, pathing, occupancy, gameplay semantics, or production content migration unless separately selected.",
         "No generated PNG/asset ingestion."
       ],
-      "validationSummary": "Specification and tracker validation passed on 2026-05-03; implementation remains pending after AcOrP acceptance."
+      "validationSummary": "Slice 1 package/API skeleton smoke passed on 2026-05-03. Native build remains blocked by missing cmake/scons/godot-cpp; package conversion/read/write/adoption remains pending future slices."
     }
   ],
   "stoppedOrPausedTasks": [
