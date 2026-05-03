@@ -200,6 +200,34 @@ completionCriteria:
 nonGoals:
 - No native API, C++ document, save-version, authored catalog, renderer, fog, pathing, or gameplay semantics changes.
 
+Selected owner-directed implementation slice:
+
+id: `maps-folder-package-browser-integration-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Populate skirmish and map editor selection flows from generated `.amap`/`.ascenario` package pairs under `maps/` instead of authored JSON scenario records.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/map-scenario-gdextension-persistence-foundation.md`
+- 2026-05-03 owner directive to populate skirmish and map editor from generated maps-folder packages
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `scripts/persistence/NativeRandomMapPackageSessionBridge.gd`
+- `scenes/menus/MainMenu.gd`
+- `scenes/editor/MapEditorShell.gd`
+- `tests/maps_folder_package_browser_integration_report.gd`
+completionCriteria:
+- A generated maps-folder package index discovers paired `.amap`/`.ascenario` files under the active maps directory and returns readable records with package refs/metadata.
+- Skirmish browser entries are built from generated disk package pairs, handle an empty maps folder gracefully, and start sessions by loading the selected package paths.
+- Map editor can list and open generated package pairs from `maps/` without `content/scenarios.json` or transient generated draft registration.
+- Focused Godot smoke proves package listing, package-backed skirmish launch, map editor package access/open, sane empty-directory behavior, and no authored JSON scenario path for generated package launch/open.
+nonGoals:
+- No authored scenario/package catalog migration.
+- No campaign adoption.
+- No save-version bump.
+- No renderer, fog, pathing, gameplay, or RMG generation semantics changes.
+- No generated PNG or unrelated asset import.
+
 Selected Phase 2 corrective slice:
 
 id: `native-gdextension-editor-manifest-correction-10184`

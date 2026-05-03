@@ -186,6 +186,7 @@ const RANDOM_MAP_AUTO_SEED_PREFIX := "aurelion-auto-random-skirmish"
 const GENERATED_MAP_DEV_DIR := "res://maps"
 const GENERATED_MAP_RUNTIME_DIR := "user://maps"
 const GENERATED_MAP_PACKAGE_FEATURE_GATE := "native_rmg_generated_map_package_startup"
+const MAPS_FOLDER_PACKAGE_ID_PREFIX := "maps_package:"
 
 static func _campaign_rules():
 	return load("res://scripts/core/CampaignRules.gd")
@@ -269,35 +270,13 @@ static func build_current_session_summary(session: SessionStateStoreScript.Sessi
 
 static func build_skirmish_browser_entries() -> Array:
 	var entries := []
-	if not _scenario_domain_is_player_facing():
-		return entries
-	for scenario in _scenario_items():
-		if not (scenario is Dictionary):
-			continue
-		if not _scenario_is_player_facing(scenario):
-			continue
-		var selection := _selection_metadata(scenario)
-		var availability: Variant = selection.get("availability", {})
-		var availability_dict: Dictionary = availability if availability is Dictionary else {}
-		if not bool(availability_dict.get("skirmish", false)):
-			continue
-
-		var scenario_id := String(scenario.get("id", ""))
-		entries.append(
-			{
-				"scenario_id": scenario_id,
-				"label": "%s | %s | %s"
-				% [
-					String(scenario.get("name", scenario_id)),
-					String(selection.get("map_size_label", "Unknown Map")),
-					difficulty_label(String(selection.get("recommended_difficulty", default_difficulty_id()))),
-				],
-				"summary": _browser_summary_text(scenario, selection),
-			}
-		)
+	for package_entry in build_maps_folder_package_browser_entries():
+		entries.append(package_entry)
 	return entries
 
 static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> Dictionary:
+	if maps_folder_package_id_is_valid(scenario_id):
+		return build_maps_folder_package_skirmish_setup(scenario_id, difficulty_id)
 	var scenario := ContentService.get_scenario(scenario_id)
 	if scenario.is_empty():
 		return {}
@@ -436,6 +415,134 @@ static func generated_map_package_directory_policy() -> Dictionary:
 		"semantics": "Generated random-map startup writes .amap/.ascenario packages, then starts from packages loaded back from this directory. It does not write generated records into content/scenarios.json.",
 	}
 
+static func maps_folder_package_id_is_valid(package_id: String) -> bool:
+	return package_id.begins_with(MAPS_FOLDER_PACKAGE_ID_PREFIX)
+
+static func maps_folder_package_id_for_stem(package_stem: String) -> String:
+	return "%s%s" % [MAPS_FOLDER_PACKAGE_ID_PREFIX, _safe_package_stem(package_stem)]
+
+static func maps_folder_package_stem_from_id(package_id: String) -> String:
+	if not maps_folder_package_id_is_valid(package_id):
+		return ""
+	return package_id.substr(MAPS_FOLDER_PACKAGE_ID_PREFIX.length())
+
+static func build_maps_folder_package_browser_entries(options: Dictionary = {}) -> Array:
+	return maps_folder_package_index(options).get("entries", [])
+
+static func maps_folder_package_index(options: Dictionary = {}) -> Dictionary:
+	var service: Variant = _native_map_package_service()
+	var package_dir := String(options.get("package_dir", _generated_map_package_dir()))
+	var result := {
+		"ok": true,
+		"schema_id": "aurelion_maps_folder_package_index_v1",
+		"package_dir": package_dir,
+		"directory_policy": generated_map_package_directory_policy(),
+		"entries": [],
+		"warnings": [],
+		"message": "",
+		"authored_json_scenarios_used": false,
+	}
+	if service == null:
+		result["ok"] = false
+		result["message"] = "Native MapPackageService is required to read generated map packages."
+		return result
+	var dir := DirAccess.open(package_dir)
+	if dir == null:
+		result["message"] = "No generated maps folder exists yet."
+		return result
+	var stems_by_kind := _maps_folder_package_stems(dir)
+	var map_stems: Dictionary = stems_by_kind.get("map_stems", {})
+	var scenario_stems: Dictionary = stems_by_kind.get("scenario_stems", {})
+	var stems := []
+	for stem in map_stems.keys():
+		if scenario_stems.has(stem):
+			stems.append(String(stem))
+	stems.sort()
+	for stem in stems:
+		var entry := _maps_folder_package_record(service, package_dir, stem)
+		if bool(entry.get("ok", false)):
+			result["entries"].append(entry)
+		else:
+			result["warnings"].append(entry)
+	result["unpaired_map_count"] = max(0, map_stems.size() - stems.size())
+	result["unpaired_scenario_count"] = max(0, scenario_stems.size() - stems.size())
+	if result["entries"].is_empty():
+		result["message"] = "No generated .amap/.ascenario package pairs are available."
+	return result
+
+static func maps_folder_package_entry(package_id: String, options: Dictionary = {}) -> Dictionary:
+	var index := maps_folder_package_index(options)
+	for entry in index.get("entries", []):
+		if entry is Dictionary and String(entry.get("package_id", "")) == package_id:
+			return entry
+	return {}
+
+static func build_maps_folder_package_skirmish_setup(package_id: String, difficulty_id: String = "normal", options: Dictionary = {}) -> Dictionary:
+	var entry := maps_folder_package_entry(package_id, options)
+	if entry.is_empty():
+		return {}
+	var normalized_difficulty := normalize_difficulty(difficulty_id)
+	var difficulty_label_text := difficulty_label(normalized_difficulty)
+	var setup_lines := [
+		"Launch handoff: selected generated map starts from paired packages in maps/; authored scenario JSON stays out of this path.",
+		String(entry.get("summary", "")),
+		"Packages: %s | %s" % [String(entry.get("map_path", "")), String(entry.get("scenario_path", ""))],
+		"Mode: %s | Difficulty: %s" % [launch_mode_label(SessionStateStoreScript.LAUNCH_MODE_SKIRMISH), difficulty_label_text],
+		"Boundary: native packages loaded from disk; no content/scenarios.json startup, generated draft registry, campaign adoption, or legacy scenario JSON writeback.",
+	]
+	return {
+		"ok": true,
+		"setup_kind": "maps_folder_generated_package_skirmish",
+		"startup_source": "maps_folder_package",
+		"launch_mode": SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
+		"difficulty": normalized_difficulty,
+		"difficulty_label": difficulty_label_text,
+		"difficulty_summary": difficulty_summary(normalized_difficulty),
+		"recommended_difficulty": default_difficulty_id(),
+		"recommended_difficulty_label": difficulty_label(default_difficulty_id()),
+		"scenario_id": package_id,
+		"scenario_name": String(entry.get("display_name", package_id)),
+		"summary": String(entry.get("summary", "")),
+		"setup_summary": "\n".join(setup_lines),
+		"launch_preview": "Launch generated map package %s." % String(entry.get("display_name", package_id)),
+		"launch_handoff": String(setup_lines[0]),
+		"front_context": String(entry.get("front_context", "")),
+		"objective_stakes": "Package objective: defeat generated rivals from the loaded scenario document.",
+		"readiness_summary": String(entry.get("readiness_summary", "")),
+		"difficulty_check": describe_skirmish_difficulty_check(normalized_difficulty, default_difficulty_id()),
+		"difficulty_consequence": _skirmish_difficulty_consequence(normalized_difficulty, default_difficulty_id()),
+		"action_consequence": "Starts a fresh package-backed skirmish session without mutating maps/ or authored JSON content.",
+		"action_tooltip": "\n".join(setup_lines),
+		"commander_preview": "Commander preview: %s opens with Lyra at the generated start anchor." % String(entry.get("display_name", package_id)),
+		"operational_board": String(entry.get("operational_board", "")),
+		"package_entry": entry,
+		"map_ref": entry.get("map_ref", {}),
+		"scenario_ref": entry.get("scenario_ref", {}),
+		"campaign_adoption": false,
+		"alpha_parity_claim": false,
+	}
+
+static func load_maps_folder_package_session(package_id: String, difficulty_id: String = "normal", options: Dictionary = {}) -> SessionStateStoreScript.SessionData:
+	var entry := maps_folder_package_entry(package_id, options)
+	if entry.is_empty():
+		return SessionStateStoreScript.new_session_data()
+	return _load_maps_folder_package_session_from_entry(entry, normalize_difficulty(difficulty_id), options)
+
+static func start_maps_folder_package_skirmish_session(package_id: String, difficulty_id: String = "normal") -> SessionStateStoreScript.SessionData:
+	var session := load_maps_folder_package_session(package_id, difficulty_id, {"startup_source": "skirmish_browser_maps_folder"})
+	if session.scenario_id == "":
+		return session
+	var boundary: Dictionary = session.flags.get("generated_random_map_boundary", {}) if session.flags.get("generated_random_map_boundary", {}) is Dictionary else {}
+	boundary["adoption_path"] = "maps_folder_package_browser_loaded_from_disk"
+	boundary["content_service_generated_draft"] = ContentService.has_generated_scenario_draft(session.scenario_id)
+	boundary["legacy_json_scenario_record"] = false
+	boundary["authored_json_scenarios_used"] = false
+	session.flags["generated_random_map_boundary"] = boundary
+	session.flags["maps_folder_package_browser"] = true
+	OverworldRulesScript.normalize_overworld_state(session)
+	SessionState.active_session = session
+	return session
+
 static func random_map_seed_requests_auto(seed: String) -> bool:
 	var normalized_seed := seed.strip_edges()
 	return normalized_seed == "" or normalized_seed == RANDOM_MAP_DEFAULT_SEED
@@ -538,6 +645,8 @@ static func build_random_map_player_config(
 	}
 
 static func start_skirmish_session(scenario_id: String, difficulty_id: String) -> SessionStateStoreScript.SessionData:
+	if maps_folder_package_id_is_valid(scenario_id):
+		return start_maps_folder_package_skirmish_session(scenario_id, difficulty_id)
 	var setup := build_skirmish_setup(scenario_id, difficulty_id)
 	if setup.is_empty():
 		push_warning("Scenario %s is not available for skirmish." % scenario_id)
@@ -835,6 +944,214 @@ static func _native_map_package_service() -> Variant:
 	if not ClassDB.class_exists("MapPackageService"):
 		return null
 	return ClassDB.instantiate("MapPackageService")
+
+static func _maps_folder_package_stems(dir: DirAccess) -> Dictionary:
+	var map_stems := {}
+	var scenario_stems := {}
+	dir.list_dir_begin()
+	var filename := dir.get_next()
+	while filename != "":
+		if not dir.current_is_dir():
+			if filename.ends_with(".amap"):
+				map_stems[filename.get_basename()] = true
+			elif filename.ends_with(".ascenario"):
+				scenario_stems[filename.get_basename()] = true
+		filename = dir.get_next()
+	dir.list_dir_end()
+	return {"map_stems": map_stems, "scenario_stems": scenario_stems}
+
+static func _maps_folder_package_record(service: Variant, package_dir: String, package_stem: String) -> Dictionary:
+	var map_path := "%s/%s.amap" % [package_dir, package_stem]
+	var scenario_path := "%s/%s.ascenario" % [package_dir, package_stem]
+	var map_inspect: Dictionary = service.inspect_package(map_path)
+	var scenario_inspect: Dictionary = service.inspect_package(scenario_path)
+	if not bool(map_inspect.get("ok", false)) or not bool(scenario_inspect.get("ok", false)):
+		return {
+			"ok": false,
+			"package_stem": package_stem,
+			"map_path": map_path,
+			"scenario_path": scenario_path,
+			"error_code": "package_inspect_failed",
+			"map_inspect": _public_package_load_result(map_inspect),
+			"scenario_inspect": _public_package_load_result(scenario_inspect),
+		}
+	if bool(map_inspect.get("legacy_json_scenario_record", true)) or bool(scenario_inspect.get("legacy_json_scenario_record", true)):
+		return {
+			"ok": false,
+			"package_stem": package_stem,
+			"map_path": map_path,
+			"scenario_path": scenario_path,
+			"error_code": "legacy_json_package_rejected",
+		}
+	var map_load: Dictionary = service.load_map_package(map_path)
+	var scenario_load: Dictionary = service.load_scenario_package(scenario_path)
+	if not bool(map_load.get("ok", false)) or not bool(scenario_load.get("ok", false)):
+		return {
+			"ok": false,
+			"package_stem": package_stem,
+			"map_path": map_path,
+			"scenario_path": scenario_path,
+			"error_code": "package_load_failed",
+			"map_load": _public_package_load_result(map_load),
+			"scenario_load": _public_package_load_result(scenario_load),
+		}
+	var map_document: Variant = map_load.get("map_document", null)
+	var scenario_document: Variant = scenario_load.get("scenario_document", null)
+	var metadata := _map_document_metadata(map_document)
+	var map_ref: Dictionary = map_load.get("map_ref", {}) if map_load.get("map_ref", {}) is Dictionary else {}
+	var scenario_ref: Dictionary = scenario_load.get("scenario_ref", {}) if scenario_load.get("scenario_ref", {}) is Dictionary else {}
+	var package_id := maps_folder_package_id_for_stem(package_stem)
+	var display_name := _maps_folder_display_name(package_stem, metadata, scenario_document)
+	var width: int = map_document.get_width() if map_document != null else 0
+	var height: int = map_document.get_height() if map_document != null else 0
+	var level_count: int = map_document.get_level_count() if map_document != null else 1
+	var player_count := _scenario_document_player_count(scenario_document)
+	var generated := String(map_ref.get("source_kind", metadata.get("source_kind", "generated"))) == "generated"
+	if not generated:
+		return {
+			"ok": false,
+			"package_stem": package_stem,
+			"map_path": map_path,
+			"scenario_path": scenario_path,
+			"error_code": "non_generated_package_rejected",
+		}
+	var map_size_label := "%dx%d L%d" % [width, height, max(1, level_count)]
+	var summary := "Generated package | %s | Players %d | %s" % [
+		map_size_label,
+		max(1, player_count),
+		_maps_folder_metadata_summary(metadata),
+	]
+	return {
+		"ok": true,
+		"package_id": package_id,
+		"scenario_id": package_id,
+		"package_stem": package_stem,
+		"label": "%s | %s | %s" % [display_name, map_size_label, difficulty_label(default_difficulty_id())],
+		"display_name": display_name,
+		"summary": summary,
+		"front_context": "Front: generated package pair from maps/.",
+		"readiness_summary": "Readiness: paired .amap/.ascenario files load through native MapPackageService.",
+		"operational_board": "%s\n%s\n%s" % [summary, map_path, scenario_path],
+		"map_path": map_path,
+		"scenario_path": scenario_path,
+		"map_ref": map_ref,
+		"scenario_ref": scenario_ref,
+		"map_size": {"width": width, "height": height, "x": width, "y": height, "level_count": max(1, level_count)},
+		"player_count": max(1, player_count),
+		"metadata": metadata,
+		"source_kind": "generated",
+		"startup_source": "maps_folder_package",
+		"legacy_json_scenario_record": false,
+		"authored_json_scenarios_used": false,
+	}
+
+static func _load_maps_folder_package_session_from_entry(entry: Dictionary, difficulty_id: String, options: Dictionary = {}) -> SessionStateStoreScript.SessionData:
+	var service: Variant = _native_map_package_service()
+	if service == null:
+		return SessionStateStoreScript.new_session_data()
+	var map_path := String(entry.get("map_path", ""))
+	var scenario_path := String(entry.get("scenario_path", ""))
+	var map_load: Dictionary = service.load_map_package(map_path)
+	var scenario_load: Dictionary = service.load_scenario_package(scenario_path)
+	var map_ref: Dictionary = entry.get("map_ref", {}) if entry.get("map_ref", {}) is Dictionary else {}
+	var scenario_ref: Dictionary = entry.get("scenario_ref", {}) if entry.get("scenario_ref", {}) is Dictionary else {}
+	var boundary := {
+		"scenario_id": String(scenario_ref.get("scenario_id", "")),
+		"session_id": "%s-%d" % [String(options.get("session_id_prefix", "maps_folder_package_session")), Time.get_ticks_msec()],
+		"hero_id": "hero_lyra",
+		"feature_gate": GENERATED_MAP_PACKAGE_FEATURE_GATE,
+		"map_package_ref": map_ref,
+		"scenario_package_ref": scenario_ref,
+		"launch_mode": SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
+		"runtime_call_site_adoption": true,
+		"generated_record_policy": "maps_folder_package_loaded_documents_only",
+		"content_service_generated_draft": false,
+		"legacy_json_scenario_record": false,
+		"authored_json_scenarios_used": false,
+		"map_package_path": map_path,
+		"scenario_package_path": scenario_path,
+		"package_id": String(entry.get("package_id", "")),
+		"package_stem": String(entry.get("package_stem", "")),
+		"startup_source": String(options.get("startup_source", "maps_folder_package")),
+	}
+	var bridge := NativeRandomMapPackageSessionBridgeScript.new()
+	var session: SessionStateStoreScript.SessionData = bridge.build_session_from_loaded_packages(
+		map_load,
+		scenario_load,
+		boundary,
+		difficulty_id,
+		{"hero_id": "hero_lyra"}
+	)
+	if session.scenario_id == "":
+		return session
+	session.flags["maps_folder_package_browser"] = true
+	session.flags["maps_folder_package_entry"] = entry.duplicate(true)
+	session.flags["generated_random_map_source"] = "maps_folder_package"
+	session.flags["generated_random_map_package_paths"] = {"map_path": map_path, "scenario_path": scenario_path}
+	session.flags["generated_random_map_boundary"]["adoption_path"] = "maps_folder_package_loaded_from_disk"
+	session.flags["generated_random_map_boundary"]["content_service_generated_draft"] = ContentService.has_generated_scenario_draft(session.scenario_id)
+	session.flags["generated_random_map_boundary"]["legacy_json_scenario_record"] = false
+	session.flags["generated_random_map_boundary"]["authored_json_scenarios_used"] = false
+	session.overworld["maps_folder_package_entry"] = entry.duplicate(true)
+	OverworldRulesScript.normalize_overworld_state(session)
+	return session
+
+static func _map_document_metadata(map_document: Variant) -> Dictionary:
+	if map_document != null and map_document.has_method("get_metadata"):
+		var metadata: Dictionary = map_document.get_metadata()
+		return metadata.duplicate(true)
+	return {}
+
+static func _scenario_document_player_count(scenario_document: Variant) -> int:
+	if scenario_document != null and scenario_document.has_method("get_player_slots"):
+		var player_slots: Array = scenario_document.get_player_slots()
+		if not player_slots.is_empty():
+			return player_slots.size()
+	return 1
+
+static func _maps_folder_display_name(package_stem: String, metadata: Dictionary, scenario_document: Variant) -> String:
+	var candidate := String(metadata.get("display_name", metadata.get("name", ""))).strip_edges()
+	if candidate != "":
+		return candidate
+	if scenario_document != null and scenario_document.has_method("get_selection"):
+		var selection: Dictionary = scenario_document.get_selection()
+		candidate = String(selection.get("name", selection.get("label", ""))).strip_edges()
+		if candidate != "":
+			return candidate
+	return _title_from_package_stem(package_stem)
+
+static func _maps_folder_metadata_summary(metadata: Dictionary) -> String:
+	var normalized: Dictionary = metadata.get("normalized_config", {}) if metadata.get("normalized_config", {}) is Dictionary else {}
+	var parts := []
+	var seed := String(normalized.get("normalized_seed", normalized.get("seed", ""))).strip_edges()
+	var template_id := String(normalized.get("template_id", "")).strip_edges()
+	var profile_id := String(normalized.get("profile_id", "")).strip_edges()
+	if seed != "":
+		parts.append("Seed %s" % seed)
+	if template_id != "":
+		parts.append("Template %s" % template_id)
+	if profile_id != "":
+		parts.append("Profile %s" % profile_id)
+	return " | ".join(parts) if not parts.is_empty() else "Native generated map"
+
+static func _title_from_package_stem(package_stem: String) -> String:
+	var stem := package_stem.strip_edges()
+	var parts := stem.split("-", false)
+	if parts.size() >= 5:
+		var name_words := []
+		for index in range(1, parts.size() - 1):
+			name_words.append(String(parts[index]))
+		return _title_from_kebab(" ".join(name_words))
+	return _title_from_kebab(stem.replace("-", " "))
+
+static func _title_from_kebab(value: String) -> String:
+	var words := []
+	for word_value in value.replace("-", " ").split(" ", false):
+		var word := String(word_value).strip_edges()
+		if word == "":
+			continue
+		words.append(word.left(1).to_upper() + word.substr(1).to_lower())
+	return " ".join(words) if not words.is_empty() else "Generated Map"
 
 static func _use_project_maps_dir() -> bool:
 	return OS.has_feature("editor")

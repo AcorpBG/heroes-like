@@ -2,6 +2,7 @@ class_name MapEditorShell
 extends Control
 
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
+const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacementRules.gd")
 
@@ -542,7 +543,21 @@ func _selected_picker_metadata(picker: OptionButton, fallback: String = "") -> S
 func _scenario_items() -> Array:
 	var raw := ContentService.load_json("res://content/scenarios.json")
 	var items = raw.get("items", [])
-	return items if items is Array else []
+	var scenario_items: Array = items if items is Array else []
+	var package_items := []
+	for entry in ScenarioSelectRulesScript.build_maps_folder_package_browser_entries():
+		if not (entry is Dictionary):
+			continue
+		var map_size: Dictionary = entry.get("map_size", {}) if entry.get("map_size", {}) is Dictionary else {}
+		package_items.append({
+			"id": String(entry.get("package_id", "")),
+			"name": "Generated | %s" % String(entry.get("display_name", entry.get("package_stem", "Map"))),
+			"map_size": map_size,
+			"summary": String(entry.get("summary", "")),
+			"editor_source_kind": "maps_folder_package",
+			"maps_folder_package_entry": entry.duplicate(true),
+		})
+	return scenario_items + package_items
 
 func _terrain_items() -> Array:
 	var grammar := ContentService.get_terrain_grammar()
@@ -2743,6 +2758,8 @@ func _resource_delta_text(resources: Dictionary) -> String:
 	return ", ".join(parts)
 
 func _load_scenario_working_copy(scenario_id: String) -> bool:
+	if ScenarioSelectRulesScript.maps_folder_package_id_is_valid(scenario_id):
+		return _load_maps_folder_package_working_copy(scenario_id)
 	var session = ScenarioFactoryScript.create_session(
 		scenario_id,
 		"normal",
@@ -2772,6 +2789,50 @@ func _load_scenario_working_copy(scenario_id: String) -> bool:
 	_refresh_state()
 	return true
 
+func _load_maps_folder_package_working_copy(package_id: String) -> bool:
+	var session = ScenarioSelectRulesScript.load_maps_folder_package_session(
+		package_id,
+		"normal",
+		{"startup_source": "map_editor_maps_folder", "session_id_prefix": "editor_maps_folder_package"}
+	)
+	if session == null or session.scenario_id == "":
+		_last_message = "Unable to load generated package %s into the editor." % package_id
+		_refresh_state()
+		return false
+	_session = session
+	var entry: Dictionary = _session.flags.get("maps_folder_package_entry", {}) if _session.flags.get("maps_folder_package_entry", {}) is Dictionary else {}
+	_session.flags["editor_source_kind"] = "maps_folder_package"
+	_session.flags["editor_source_package_id"] = package_id
+	_session.flags["editor_source_display_name"] = String(entry.get("display_name", package_id))
+	_session.flags["editor_source_map_path"] = String(entry.get("map_path", ""))
+	_session.flags["editor_source_scenario_path"] = String(entry.get("scenario_path", ""))
+	_authored_baseline_cache = _duplicate_session(_session)
+	_authored_baseline_cache_id = _session.scenario_id
+	OverworldRules.normalize_overworld_state(_session)
+	_make_all_tiles_visible(_session)
+	_selected_scenario_id = package_id
+	_select_scenario_picker_by_id(package_id)
+	_selected_tile = OverworldRules.hero_position(_session)
+	_selected_property_object_key = ""
+	_pending_move_object_key = ""
+	_pending_duplicate_object_key = ""
+	_pending_terrain_line_start = Vector2i(-1, -1)
+	_pending_terrain_rectangle_corner = Vector2i(-1, -1)
+	_pending_road_path_start = Vector2i(-1, -1)
+	_terrain_paint_order = 0
+	_dirty = false
+	_restored_from_play_copy = false
+	_last_message = "Loaded generated package from maps/ into a mutable editor working copy."
+	_refresh_state()
+	return true
+
+func _duplicate_session(session):
+	if session == null or session.scenario_id == "":
+		return null
+	var copy = SessionState.new_session_data()
+	copy.from_dict(session.to_dict())
+	return copy
+
 func _resume_working_copy_from_memory(session) -> bool:
 	if session == null or session.scenario_id == "":
 		return false
@@ -2780,7 +2841,7 @@ func _resume_working_copy_from_memory(session) -> bool:
 	_authored_baseline_cache_id = ""
 	OverworldRules.normalize_overworld_state(_session)
 	_make_all_tiles_visible(_session)
-	_selected_scenario_id = _session.scenario_id
+	_selected_scenario_id = String(_session.flags.get("editor_source_package_id", _session.scenario_id))
 	_select_scenario_picker_by_id(_selected_scenario_id)
 	_restore_editor_ui_metadata()
 	_restored_from_play_copy = true
@@ -2974,9 +3035,8 @@ func _refresh_labels() -> void:
 		_set_compact_label(_tile_info_label, "No scenario loaded.", 4)
 		_set_compact_label(_status_label, _last_message, 2)
 		return
-	var scenario := ContentService.get_scenario(_session.scenario_id)
 	var map_size := OverworldRules.derive_map_size(_session)
-	_header_label.text = "Map Editor | %s" % String(scenario.get("name", _session.scenario_id))
+	_header_label.text = "Map Editor | %s" % _current_scenario_display_name()
 	var state_line := "Working copy | %dx%d | Tool %s | Terrain %s | Roads %d" % [
 		map_size.x,
 		map_size.y,
@@ -3076,6 +3136,15 @@ func _refresh_labels() -> void:
 		status_lines.append(_last_message)
 	_set_compact_label(_status_label, "\n".join(status_lines), 4)
 	_set_compact_label(_tile_info_label, _tile_inspection_text(_selected_tile), 12)
+
+func _current_scenario_display_name() -> String:
+	if _session == null:
+		return ""
+	var package_display := String(_session.flags.get("editor_source_display_name", "")).strip_edges()
+	if package_display != "":
+		return package_display
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	return String(scenario.get("name", _session.scenario_id))
 
 func _tool_label(tool: String) -> String:
 	match tool:
@@ -6431,6 +6500,12 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id if _session != null else "",
+		"selected_scenario_id": _selected_scenario_id,
+		"editor_source_kind": String(_session.flags.get("editor_source_kind", "")) if _session != null else "",
+		"editor_source_package_id": String(_session.flags.get("editor_source_package_id", "")) if _session != null else "",
+		"editor_source_map_path": String(_session.flags.get("editor_source_map_path", "")) if _session != null else "",
+		"editor_source_scenario_path": String(_session.flags.get("editor_source_scenario_path", "")) if _session != null else "",
+		"maps_folder_package_browser": bool(_session.flags.get("maps_folder_package_browser", false)) if _session != null else false,
 		"working_copy": _session != null,
 		"restored_from_play_copy": _restored_from_play_copy,
 		"return_model": String(_session.flags.get("editor_return_model", "")) if _session != null else "",
@@ -6539,6 +6614,12 @@ func validation_snapshot() -> Dictionary:
 
 func validation_load_scenario(scenario_id: String) -> Dictionary:
 	var loaded := _load_scenario_working_copy(scenario_id)
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = loaded
+	return snapshot
+
+func validation_load_maps_folder_package(package_id: String) -> Dictionary:
+	var loaded := _load_maps_folder_package_working_copy(package_id)
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = loaded
 	return snapshot
