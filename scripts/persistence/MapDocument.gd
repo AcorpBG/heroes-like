@@ -1,4 +1,3 @@
-class_name MapDocument
 extends RefCounted
 
 const SCHEMA_ID := "aurelion_map_document"
