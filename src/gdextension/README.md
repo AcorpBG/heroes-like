@@ -19,16 +19,17 @@ authoritative for gameplay until a later parity/adoption slice.
 ## Dependency Pin
 
 `godot-cpp` is an in-repo git submodule at `third_party/godot-cpp`, pinned to the
-`godot-4.2.2-stable` tag:
+official upstream 4.6 API binding tag `10.0.0-rc1`:
 
 ```text
-98c143a48365f3f3bf5f99d6289a2cb25e6472d1
+58d1de720b8ffe9f8ffcdfe3a85148582cfd2e74
 ```
 
-The project currently declares Godot 4.2 features in `project.godot`. Targeting the
-4.2.2 stable binding keeps the extension compatible with the repo's declared Godot
-minor while allowing later Godot 4 runtimes to load it through GDExtension's
-forward-minor compatibility.
+The repo targets Godot 4.6.2. Upstream `godot-cpp` does not currently publish a
+`godot-4.6.2-stable` tag; this pin is the official `godot-cpp` tag whose
+`gdextension/extension_api.json` is generated from Godot 4.6 stable. The
+GDExtension manifest declares `compatibility_minimum = "4.6"` for the repo's
+Godot 4.6.2 runtime.
 
 Initialize the dependency in a fresh checkout with:
 

@@ -870,7 +870,7 @@ Gates:
 
 Implementation evidence:
 
-- 2026-05-03 native build/load follow-up vendors `godot-cpp` as a git submodule pinned to `godot-4.2.2-stable` commit `98c143a48365f3f3bf5f99d6289a2cb25e6472d1`.
+- 2026-05-03 owner-correction follow-up vendors `godot-cpp` as a git submodule pinned to upstream tag `10.0.0-rc1` commit `58d1de720b8ffe9f8ffcdfe3a85148582cfd2e74`, whose `gdextension/extension_api.json` targets Godot 4.6 stable for the repo's Godot 4.6.2 runtime.
 - Build command: `cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=Debug` then `cmake --build .artifacts/map_persistence_native_build --parallel 2`.
 - The focused smoke `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/map_package_api_skeleton_report.tscn` passes with `binding_kind: native_gdextension` and `native_extension_loaded: true`.
 - This evidence only completes the native inert API skeleton/build/load step. It does not implement package format behavior, package adoption, save migration, content migration, RMG rewrite, renderer/fog/pathing/gameplay changes, or asset ingestion.

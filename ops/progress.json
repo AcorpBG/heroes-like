@@ -8,7 +8,7 @@
   "currentSliceStatus": "completed",
   "currentSliceNotes": "Completed first native RMG foundation slice: API surface, deterministic config/seed identity, and empty generated MapDocument stub only. Broad map/scenario persistence parent remains in_progress.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T08:32:00Z",
+  "updatedAt": "2026-05-03T08:51:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -127,7 +127,7 @@
           "Package conversion/read/write/migration/hash/inspect methods return structured ok=false not_implemented dictionaries with stable error_code fields.",
           "Document handles are RefCounted first-step stubs, matching the spec preference for immutable runtime handles before editor Resource integration is needed.",
           "The Godot-visible happy path for this slice is now the native GDExtension; scripts/persistence remains as fallback/API-parity compatibility code only.",
-          "godot-cpp is vendored as a pinned git submodule at third_party/godot-cpp using tag godot-4.2.2-stable commit 98c143a48365f3f3bf5f99d6289a2cb25e6472d1.",
+          "godot-cpp is vendored as a pinned git submodule at third_party/godot-cpp using upstream tag 10.0.0-rc1 commit 58d1de720b8ffe9f8ffcdfe3a85148582cfd2e74; its extension_api targets Godot 4.6 stable for the repo's Godot 4.6.2 runtime.",
           "The native C++ MapPackageService path is the tested happy path; scripts/persistence remains as a fallback compatibility shim only.",
           "src/gdextension/map_persistence.gdextension loads the generated Linux debug shared library from res://bin/."
         ],
@@ -148,7 +148,7 @@
         "Passed 2026-05-03T06:50:00Z: python3 tests/validate_repo.py.",
         "Passed 2026-05-03T06:55:00Z: /root/.local/bin/godot --headless --path /root/dev/heroes-like --quit-after 20 /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn.",
         "Blocked 2026-05-03T06:55:00Z native build validation: cmake -S src/gdextension -B .artifacts/map_persistence_native_build failed with /bin/bash: line 1: cmake: command not found. scons is not installed and godot-cpp is not present in the repo.",
-        "Passed 2026-05-03T07:05:00Z: git submodule add/pin recorded godot-cpp as third_party/godot-cpp at godot-4.2.2-stable commit 98c143a48365f3f3bf5f99d6289a2cb25e6472d1.",
+        "Passed 2026-05-03T07:05:00Z: git submodule add/pin recorded godot-cpp as third_party/godot-cpp. Superseded 2026-05-03 by the Godot 4.6.2 owner correction pin to upstream tag 10.0.0-rc1 commit 58d1de720b8ffe9f8ffcdfe3a85148582cfd2e74.",
         "Passed 2026-05-03T07:05:00Z: cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=Debug.",
         "Passed 2026-05-03T07:05:00Z: cmake --build .artifacts/map_persistence_native_build --parallel 2; produced bin/libaurelion_map_persistence.linux.template_debug.x86_64.so.",
         "Passed 2026-05-03T07:05:00Z: GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/map_package_api_skeleton_report.tscn; report showed binding_kind=native_gdextension and native_extension_loaded=true.",
@@ -185,7 +185,15 @@
         "Passed 2026-05-03 Windows helper follow-up: cmake --build .artifacts/map_persistence_native_build --parallel 2.",
         "Passed 2026-05-03 Windows helper follow-up: GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/map_package_api_skeleton_report.tscn; report showed binding_kind=native_gdextension and native_extension_loaded=true.",
         "Passed 2026-05-03 Windows helper follow-up: GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_foundation_report.tscn; report showed status partial_foundation, full_generation_status not_implemented, and native_extension_loaded=true.",
-        "Passed 2026-05-03 Windows helper follow-up: python3 -m json.tool ops/progress.json; progress sync-plan --dry-run; git diff --check; python3 tests/validate_repo.py."
+        "Passed 2026-05-03 Windows helper follow-up: python3 -m json.tool ops/progress.json; progress sync-plan --dry-run; git diff --check; python3 tests/validate_repo.py.",
+        "Passed 2026-05-03T08:51:30Z Godot 4.6.2 owner-correction follow-up: remote godot-cpp tags were inspected; no godot-4.6.2-stable godot-cpp tag exists, so third_party/godot-cpp was repinned to upstream tag 10.0.0-rc1 commit 58d1de720b8ffe9f8ffcdfe3a85148582cfd2e74 with extension_api Godot 4.6 stable for the repo's Godot 4.6.2 runtime.",
+        "Passed 2026-05-03T08:51:30Z Godot 4.6.2 owner-correction follow-up: src/gdextension/map_persistence.gdextension and .in declare compatibility_minimum = \"4.6\".",
+        "Passed 2026-05-03T08:51:30Z Godot 4.6.2 owner-correction follow-up: fresh Linux Debug and Release CMake configure/build succeeded after recreating .artifacts/map_persistence_native_build and .artifacts/map_persistence_native_build_release; produced bin/libaurelion_map_persistence.linux.template_debug.x86_64.so and bin/libaurelion_map_persistence.linux.template_release.x86_64.so.",
+        "Passed 2026-05-03T08:51:30Z Godot 4.6.2 owner-correction follow-up: /root/.local/bin/godot --version reported 4.6.2.stable.official.71f334935.",
+        "Passed 2026-05-03T08:51:30Z Godot 4.6.2 owner-correction follow-up: native package smoke passed with binding_kind=native_gdextension and native_extension_loaded=true.",
+        "Passed 2026-05-03T08:51:30Z Godot 4.6.2 owner-correction follow-up: native RMG smoke passed with status partial_foundation, full_generation_status not_implemented, same-seed signature ee893942, and changed-seed signature d26f6c90.",
+        "Passed 2026-05-03T08:51:30Z Godot 4.6.2 owner-correction follow-up: grep -R \"4\\.2\\.2\\|Godot 4\\.2\\|compatibility_minimum = \\\"4\\.2\\\"\" src/gdextension .gitmodules found no stale references.",
+        "Passed 2026-05-03T08:51:30Z Godot 4.6.2 owner-correction follow-up: python3 -m json.tool ops/progress.json; progress sync-plan --dry-run; git diff --check; python3 tests/validate_repo.py."
       ],
       "nativeBuildLoadEvidence": {
         "status": "completed_for_native_inert_api_skeleton_only",
@@ -193,9 +201,9 @@
         "dependency": {
           "kind": "git_submodule",
           "path": "third_party/godot-cpp",
-          "tag": "godot-4.2.2-stable",
-          "commit": "98c143a48365f3f3bf5f99d6289a2cb25e6472d1",
-          "reason": "Pinned in-repo submodule matches the project.godot Godot 4.2 stable feature baseline while remaining loadable by later Godot 4 runtimes through GDExtension forward-minor compatibility."
+          "tag": "10.0.0-rc1",
+          "commit": "58d1de720b8ffe9f8ffcdfe3a85148582cfd2e74",
+          "reason": "Pinned in-repo submodule uses upstream godot-cpp's official Godot 4.6 API binding for the repo's Godot 4.6.2 runtime; upstream does not currently publish a godot-4.6.2-stable godot-cpp tag."
         },
         "buildCommands": [
           "git submodule update --init --recursive",
