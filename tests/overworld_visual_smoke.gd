@@ -2512,6 +2512,10 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: HoMM3 prototype terrain did not report its local-reference source basis. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
+	if not String(grass_terrain.get("texture_path", "")).begins_with("res://art/overworld/runtime/terrain_tiles/generated/grastl/frames_64/") or String(grass_terrain.get("homm3_runtime_asset_source_basis", "")) != "generated_grastl_replacement_trial_20260503" or int(grass_terrain.get("homm3_expected_frame_count", 0)) != 79:
+		push_error("Overworld smoke: grass terrain is not resolving the generated grastl runtime frame bank. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
 	if String(grass_terrain.get("terrain_group", "")) != "grasslands" or String(grass_terrain.get("style_id", "")) == "":
 		push_error("Overworld smoke: grass terrain does not expose grammar group/style metadata. presentation=%s" % grass_presentation)
 		get_tree().quit(1)

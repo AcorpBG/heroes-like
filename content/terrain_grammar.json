@@ -3,7 +3,7 @@
   "rendering_model": "authored_autotile_layers",
   "authoring_status": "homm3_local_reference_prototype",
   "primary_base_model": "homm3_local_reference_prototype",
-  "generated_source_policy": "deprecated_not_used_by_homm3_local_prototype",
+  "generated_source_policy": "generated_grastl_runtime_override_active",
   "tile_size_reference": 64,
   "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and save/pathing data remain unchanged, while the Godot map editor routes terrain paint operations through the recovered HoMM3 owner queue/rewrite and final-normalization placement model before shared preview reprojection. Active HoMM3 terrain visual selection now uses the accepted web prototype's settled-owner relation-class row lookup for normal terrain, water, and rock frames instead of the older source-offset stamp/corner heuristics. Rendering reports logical terrain id, renderer family, atlas role, relation ring, recovered shape class, row group, frame, transform flags, final-normalization metadata, and fallback metadata. Roads remain resolved through the existing 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
   "editor_base_terrain_options": [
@@ -702,6 +702,15 @@
     "enabled": true,
     "local_reference_only": true,
     "asset_root": "res://art/overworld/runtime/homm3_local_prototype",
+    "runtime_asset_overrides": {
+      "grastl": {
+        "family": "grass",
+        "asset_root": "res://art/overworld/runtime/terrain_tiles/generated/grastl/frames_64",
+        "asset_root_mode": "flat_frame_directory",
+        "runtime_asset_source_basis": "generated_grastl_replacement_trial_20260503",
+        "expected_frame_count": 79
+      }
+    },
     "source_artifact": "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3sprite/defs",
     "data_contract_version": "homm3_renderer_data_contract.v1",
     "terrain_lookup_model": "accepted_web_prototype_relation_class_row_lookup",
@@ -1186,6 +1195,10 @@
       "grass": {
         "renderer_family": "grass",
         "atlas": "grastl",
+        "asset_root": "res://art/overworld/runtime/terrain_tiles/generated/grastl/frames_64",
+        "asset_root_mode": "flat_frame_directory",
+        "runtime_asset_source_basis": "generated_grastl_replacement_trial_20260503",
+        "expected_frame_count": 79,
         "atlas_role": "full_receiver_land",
         "atlas_role_source_level": "fact",
         "preferred_bridge_class": "dirt_earth_bridge",

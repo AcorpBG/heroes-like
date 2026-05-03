@@ -2777,6 +2777,10 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"homm3_terrain_family": String(homm3_selection.get("family", "")),
 		"homm3_renderer_family": String(homm3_selection.get("renderer_family", "")),
 		"homm3_terrain_atlas": String(homm3_selection.get("atlas_id", "")),
+		"homm3_asset_root": String(homm3_selection.get("asset_root", "")),
+		"homm3_asset_root_mode": String(homm3_selection.get("asset_root_mode", "")),
+		"homm3_runtime_asset_source_basis": String(homm3_selection.get("runtime_asset_source_basis", "")),
+		"homm3_expected_frame_count": int(homm3_selection.get("expected_frame_count", 0)),
 		"homm3_atlas_role": String(homm3_selection.get("atlas_role", "")),
 		"homm3_atlas_role_source_level": String(homm3_selection.get("atlas_role_source_level", "")),
 		"homm3_special_system": String(homm3_selection.get("special_system", "")),
@@ -3581,6 +3585,17 @@ func _homm3_road_art_path(overlay_id: String, tile: Vector2i) -> String:
 func _homm3_asset_root() -> String:
 	return String(_homm3_prototype.get("asset_root", "res://art/overworld/runtime/homm3_local_prototype")).strip_edges()
 
+func _homm3_family_asset_root(family: Dictionary) -> String:
+	var family_root := String(family.get("asset_root", "")).strip_edges()
+	return family_root if family_root != "" else _homm3_asset_root()
+
+func _homm3_terrain_frame_path(family: Dictionary, atlas_id: String, frame_id: String) -> String:
+	var asset_root := _homm3_family_asset_root(family)
+	var asset_root_mode := String(family.get("asset_root_mode", "prototype_terrain_atlas_directory")).strip_edges()
+	if asset_root_mode == "flat_frame_directory":
+		return "%s/%s.png" % [asset_root, frame_id]
+	return "%s/terrain/%s/%s.png" % [asset_root, atlas_id, frame_id]
+
 func _homm3_terrain_config(terrain_id: String) -> Dictionary:
 	var config = _homm3_terrain_id_map.get(terrain_id.strip_edges().to_lower(), {})
 	return config if config is Dictionary else {}
@@ -4008,7 +4023,8 @@ func _homm3_terrain_art_entry(terrain_id: String, tile: Vector2i) -> Dictionary:
 	var atlas_id := String(selection.get("atlas_id", "")).strip_edges()
 	if atlas_id == "" or frame_id == "":
 		return {}
-	var path := "%s/terrain/%s/%s.png" % [_homm3_asset_root(), atlas_id, frame_id]
+	var family := _homm3_terrain_family_config(String(selection.get("family", "")))
+	var path := _homm3_terrain_frame_path(family, atlas_id, frame_id)
 	return {
 		"variant_key": "homm3_%s_%s" % [atlas_id, frame_id],
 		"path": path,
@@ -4049,6 +4065,8 @@ func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dic
 	var selected_frame_block := _homm3_frame_block_payload(family, selected_frame_block_id)
 	var bridge_family := String(visual_selection.get("bridge_family", relation.get("bridge_family", config.get("bridge_family", family.get("bridge_family", ""))))).strip_edges()
 	var bridge_class := _homm3_bridge_class_for_family(bridge_family, family) if bridge_family != "" and bridge_family != "mixed" else bridge_family
+	var family_asset_root := _homm3_family_asset_root(family)
+	var family_source_basis := String(family.get("runtime_asset_source_basis", TERRAIN_HOMM3_SOURCE_BASIS)).strip_edges()
 	return {
 		"enabled": true,
 		"local_reference_only": bool(_homm3_prototype.get("local_reference_only", true)),
@@ -4059,6 +4077,10 @@ func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dic
 		"family": family_id,
 		"renderer_family": String(receiver_payload.get("renderer_family", family_id)),
 		"atlas_id": atlas_id,
+		"asset_root": family_asset_root,
+		"asset_root_mode": String(family.get("asset_root_mode", "prototype_terrain_atlas_directory")),
+		"runtime_asset_source_basis": family_source_basis,
+		"expected_frame_count": int(family.get("expected_frame_count", 0)),
 		"atlas_role": String(receiver_payload.get("atlas_role", "")),
 		"atlas_role_source_level": String(receiver_payload.get("atlas_role_source_level", "")),
 		"special_system": String(receiver_payload.get("special_system", "")),
