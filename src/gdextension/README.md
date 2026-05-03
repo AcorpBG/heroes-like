@@ -17,10 +17,12 @@ stable terrain codes, biome mapping, dimensions, tile counts, and signatures.
 The next child adds deterministic foundation zones and player start anchors with
 normalized player constraints, team metadata, zone bounds, owner-grid records, and
 stable zone/start signatures.
-Objects, roads, rivers, towns, guards, validation/provenance parity, package
-conversion, and runtime session adoption remain `not_implemented`; the existing
-GDScript `RandomMapGeneratorRules.gd` stays authoritative for gameplay until a
-later parity/adoption slice.
+The current child adds deterministic foundation route graph, road overlay, river,
+and waterline records with start coverage and reachability proof fields. Objects,
+towns, guards, validation/provenance parity, package conversion, and runtime
+session adoption remain `not_implemented`; the existing GDScript
+`RandomMapGeneratorRules.gd` stays authoritative for gameplay until a later
+parity/adoption slice.
 
 ## Dependency Pin
 
@@ -126,6 +128,7 @@ Godot_v4.6.2-stable_win64.exe --headless --path . tests\map_package_api_skeleton
 Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_foundation_report.tscn
 Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_terrain_grid_report.tscn
 Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_zone_player_starts_report.tscn
+Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_road_river_report.tscn
 ```
 
 The underlying MSVC commands are:
@@ -185,6 +188,7 @@ Focused native RMG foundation smoke:
 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_foundation_report.tscn
 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_terrain_grid_report.tscn
 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_zone_player_starts_report.tscn
+GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_road_river_report.tscn
 ```
 
 Passing output includes:

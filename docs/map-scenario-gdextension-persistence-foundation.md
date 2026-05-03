@@ -433,6 +433,29 @@ cross-platform GDExtension manifest/build outputs. No helper-script change is
 required for this slice; the generic native build path plus focused Godot smokes
 exercise the same native service entry points on both platforms.
 
+### Native RMG Road/River Network Child Slice
+
+The road/river child extends the native foundation with deterministic route
+records over the existing terrain, zones, and player starts. The C++ API now
+returns a route graph, route nodes, route edges, staged road overlay segments,
+route cell records, required player-start coverage, and a reachability proof. It
+also returns bounded river/waterline feature records with explicit metadata-only
+materialization state so the native result exposes route feature structure without
+mutating terrain tiles or adopting gameplay behavior.
+
+This remains a foundation slice. It does not place towns, guards, resources,
+encounters, objects, validate full GDScript parity, write packages, change saves,
+replace `RandomMapGeneratorRules.gd` call sites, or claim full generation parity.
+The result and report expose `road_generation_status:
+roads_generated_foundation`, `river_generation_status:
+rivers_generated_foundation`, road/route/river signatures, counts, and
+reachability status while preserving top-level `status: partial_foundation` and
+`full_generation_status: not_implemented`.
+
+Linux and Windows expectations remain synchronized: the same GDExtension service
+entry point is exercised by the Linux smoke and the Windows helper now includes
+the focused native road/river report alongside the earlier native RMG reports.
+
 ### `MapValidationReport`
 
 Can be a Dictionary return first. A typed class may follow once report consumers stabilize.
