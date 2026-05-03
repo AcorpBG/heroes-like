@@ -46,11 +46,12 @@ Locked stack for the current production foundation:
 - Engine: Godot 4 stable series.
 - Gameplay language: GDScript.
 - Rendering: 2D-first scenes and UI.
-- Authored content: JSON files under `content/`.
-- Runtime saves: versioned JSON snapshots and campaign progression under `user://saves/`.
+- Authored content: JSON files under `content/` until a selected migration replaces specific domains.
+- Runtime saves: versioned JSON snapshots and campaign progression under `user://saves/` until a selected migration introduces asset-reference saves plus compact deltas.
 - Validation: Python repository checks plus focused Godot smoke/report scenes.
+- Native extension candidate: Phase 2 map/scenario persistence may introduce a Godot GDExtension written in C++ for typed map documents, durable map packages, validation, save/load, and migration.
 
-Native extensions, external asset pipelines, or new storage layers may be added later only when a concrete phase requires them.
+Native extensions, external asset pipelines, or new storage layers may be added only through concrete tactical slices with rollback, compatibility, and validation gates.
 
 ## Architecture Rules
 
@@ -58,7 +59,9 @@ Native extensions, external asset pipelines, or new storage layers may be added 
 - Scene controllers render state and send intents; core rule scripts own gameplay decisions.
 - Authored content is immutable at runtime and referenced by stable ids.
 - Save data stores mutable state plus content references, not copied authored definitions.
+- Map/scenario persistence must separate authored/generated map assets from mutable session deltas; full map payload rewrites are not an acceptable long-term save model.
 - Save/load must remain explicit, versioned, and backward-aware.
+- New map formats need load, validate, save, and migrate mechanisms before they become authoritative runtime content.
 - Autoloads are for cross-cutting services, not hiding gameplay rules.
 - Prefer deterministic rule helpers and fixtureable data for tests and reports.
 - Public UI must not leak internal/debug score fields.
@@ -69,7 +72,8 @@ Native extensions, external asset pipelines, or new storage layers may be added 
 
 Expected ownership boundaries:
 
-- Scenario bootstrap and setup: `ScenarioFactory.gd`, scenario content JSON.
+- Scenario bootstrap and setup: `ScenarioFactory.gd`, scenario content JSON, and future scenario/map document adapters.
+- Map/scenario persistence: current JSON content/save plumbing in `ContentService.gd`, `SaveService.gd`, and `SessionStateStore.gd`; future C++ GDExtension map package ownership once selected by a tactical slice.
 - Overworld state, movement, sites, economy ticks, fog, towns, and strategic summaries: `OverworldRules.gd`.
 - Battle state, initiative, stack actions, spells/status, exits, and post-battle sync: `BattleRules.gd`.
 - Tactical enemy decisions: `BattleAiRules.gd`.
@@ -131,6 +135,7 @@ Tracks:
 - animation/event cue foundations;
 - strategic AI foundations;
 - terrain/editor/tooling foundations;
+- map/scenario document structure and persistence foundations;
 - random map generator foundations for scenario prototyping, balance harness input, and later skirmish replayability.
 
 Exit criteria:
@@ -138,6 +143,7 @@ Exit criteria:
 - Requirement docs are connected to implementation slices in PLAN/progress tracking.
 - At least two factions have enough identity, economy, unit/town/magic/artifact hooks, placement, and AI pressure to support alpha planning.
 - A random map generator foundation exists for controlled prototype maps, with validation hooks and constraints suitable for the later headless balance harness.
+- Map/scenario persistence has a selected architecture for durable authored/generated map assets, versioned validation/migration, and session saves that reference map assets plus compact mutable deltas instead of rewriting full map JSON payloads.
 
 ### Phase 3 — Headless AI Agent Balance Harness
 
@@ -190,7 +196,7 @@ Immediate strategic priority is not more ad hoc screen polish. Work should be se
 - Treat docs/reports as implemented systems.
 - Use UI dashboards or cue text as a substitute for real mechanics/content/tooling.
 - Start unanchored “small useful” slices outside the PLAN/progress workflow.
-- Make save-schema, resource-registry, AI-behavior, pathing/occupancy, renderer-asset, or production-JSON migrations without explicit tactical slices and rollback boundaries.
+- Make save-schema, map-package, resource-registry, AI-behavior, pathing/occupancy, renderer-asset, or production-JSON migrations without explicit tactical slices and rollback boundaries.
 - Multiplayer-first architecture.
 
 ## Strategic Guardrails
