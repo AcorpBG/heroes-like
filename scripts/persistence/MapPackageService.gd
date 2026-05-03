@@ -19,8 +19,13 @@ const CAPABILITIES := [
 	"stable_not_implemented_errors",
 	"native_random_map_config_identity",
 	"native_random_map_foundation_stub",
+	"native_random_map_terrain_grid_foundation",
 	"headless_binding_smoke",
 ]
+
+const CORE_TERRAIN_POOL := ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"]
+const DEFAULT_FACTIONS := ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"]
+const TERRAIN_ID_BY_CODE := ["grass", "snow", "sand", "dirt", "rough", "lava", "underground", "water"]
 
 func get_api_version() -> String:
 	return API_VERSION
@@ -107,6 +112,8 @@ func normalize_random_map_config(config: Dictionary) -> Dictionary:
 	var water_mode := String(size.get("water_mode", config.get("water_mode", "land"))).strip_edges()
 	if water_mode != "islands":
 		water_mode = "land"
+	var terrain_ids := _normalized_terrain_pool(_normalized_string_array(profile.get("terrain_ids", []), CORE_TERRAIN_POOL))
+	var faction_ids := _normalized_string_array(profile.get("faction_ids", []), DEFAULT_FACTIONS)
 	return {
 		"schema_id": "aurelion_native_random_map_foundation",
 		"schema_version": 1,
@@ -120,8 +127,10 @@ func normalize_random_map_config(config: Dictionary) -> Dictionary:
 		"profile_id": profile_id,
 		"size_class_id": String(size.get("size_class_id", config.get("size_class_id", ""))).strip_edges(),
 		"water_mode": water_mode,
+		"terrain_ids": terrain_ids,
+		"faction_ids": faction_ids,
 		"full_generation_status": "not_implemented",
-		"foundation_scope": "deterministic_config_identity_and_empty_map_document_stub_only",
+		"foundation_scope": "deterministic_config_identity_and_native_terrain_grid_only",
 	}
 
 func random_map_config_identity(config: Dictionary) -> Dictionary:
@@ -150,6 +159,7 @@ func random_map_config_identity(config: Dictionary) -> Dictionary:
 func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictionary:
 	var normalized := normalize_random_map_config(config)
 	var identity := random_map_config_identity(config)
+	var terrain_grid := _generate_terrain_grid(normalized)
 	var metadata := {
 		"schema_id": "aurelion_native_random_map_foundation",
 		"schema_version": 1,
@@ -157,8 +167,10 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"generator_version": "native_rmg_foundation_v1",
 		"generation_status": "partial_foundation",
 		"full_generation_status": "not_implemented",
+		"terrain_generation_status": "terrain_grid_generated",
 		"normalized_config": normalized,
 		"deterministic_identity": identity,
+		"terrain_grid_signature": terrain_grid.get("signature", ""),
 		"options_keys": options.keys(),
 	}
 	var map_document: Variant = create_map_document_stub({
@@ -174,16 +186,19 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"code": "full_generation_not_implemented",
 		"severity": "warning",
 		"path": "generate_random_map",
-		"message": "Native RMG currently creates only deterministic identity metadata and an empty MapDocument stub.",
+		"message": "Native RMG currently creates deterministic identity metadata and a terrain grid only; objects, roads, rivers, towns, guards, validation parity, and package/session adoption are not implemented.",
 		"context": {},
 	}]
 	return {
 		"ok": true,
 		"status": "partial_foundation",
 		"generation_status": "partial_foundation",
+		"terrain_generation_status": "terrain_grid_generated",
+		"terrain_grid_status": "generated",
 		"full_generation_status": "not_implemented",
 		"normalized_config": normalized,
 		"deterministic_identity": identity,
+		"terrain_grid": terrain_grid,
 		"map_document": map_document,
 		"map_metadata": metadata,
 		"report": {
@@ -199,9 +214,21 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 				"height": map_document.get_height(),
 				"level_count": map_document.get_level_count(),
 				"tile_count": map_document.get_tile_count(),
+				"terrain_grid_tile_count": terrain_grid.get("tile_count", 0),
+				"terrain_palette_count": terrain_grid.get("terrain_palette_ids", []).size(),
 				"object_count": map_document.get_object_count(),
 			},
 			"deterministic_identity": identity,
+			"terrain_grid_status": terrain_grid.get("generation_status", ""),
+			"terrain_grid_signature": terrain_grid.get("signature", ""),
+			"remaining_parity_slices": [
+				"native-rmg-zone-player-starts-10184",
+				"native-rmg-road-river-network-10184",
+				"native-rmg-object-placement-foundation-10184",
+				"native-rmg-town-guard-placement-10184",
+				"native-rmg-validation-provenance-parity-10184",
+				"native-rmg-package-session-adoption-10184",
+			],
 		},
 		"adoption_status": "not_authoritative_no_runtime_call_site_adoption",
 	}
@@ -237,7 +264,145 @@ func _foundation_dimension(root: Dictionary, size: Dictionary, key: String, alte
 		value = int(size.get(alternate_key, 0))
 	if value <= 0:
 		value = int(root.get(key, fallback))
-	return clampi(value, 1, 1024)
+	return clampi(value, 8, 144)
+
+func _normalized_string_array(value: Variant, fallback: Array) -> Array:
+	var result := []
+	if value is Array:
+		for item in value:
+			var text := String(item).strip_edges()
+			if text != "" and text not in result:
+				result.append(text)
+	return result if not result.is_empty() else fallback.duplicate()
+
+func _normalized_terrain_pool(requested: Array) -> Array:
+	var result := []
+	for terrain_id_value in requested:
+		var terrain_id := String(terrain_id_value)
+		if _is_passable_terrain_id(terrain_id) and terrain_id not in result:
+			result.append(terrain_id)
+	return result if not result.is_empty() else CORE_TERRAIN_POOL.duplicate()
+
+func _is_supported_terrain_id(terrain_id: String) -> bool:
+	return terrain_id in TERRAIN_ID_BY_CODE
+
+func _is_passable_terrain_id(terrain_id: String) -> bool:
+	return _is_supported_terrain_id(terrain_id) and terrain_id != "water"
+
+func _biome_for_terrain(terrain_id: String) -> String:
+	match terrain_id:
+		"snow":
+			return "biome_snow_frost_marches"
+		"sand", "dirt":
+			return "biome_rough_badlands"
+		"rough":
+			return "biome_highland_ridge"
+		"lava":
+			return "biome_ash_lava_wastes"
+		"underground":
+			return "biome_subterranean_underways"
+		"water":
+			return "biome_coast_archipelago"
+		_:
+			return "biome_grasslands"
+
+func _terrain_code_for_id(terrain_id: String) -> int:
+	return max(0, TERRAIN_ID_BY_CODE.find(terrain_id))
+
+func _terrain_seed_records(normalized: Dictionary, terrain_pool: Array) -> Array:
+	var records := []
+	var width := int(normalized.get("width", 36))
+	var height := int(normalized.get("height", 36))
+	var seed := String(normalized.get("normalized_seed", "0"))
+	for index in range(terrain_pool.size()):
+		var terrain_id := String(terrain_pool[index])
+		var seed_key := "%s:terrain_seed:%s:%d" % [seed, terrain_id, index]
+		records.append({
+			"terrain_id": terrain_id,
+			"biome_id": _biome_for_terrain(terrain_id),
+			"x": 1 + int(_hash32_int("%s:x" % seed_key) % max(1, width - 2)),
+			"y": 1 + int(_hash32_int("%s:y" % seed_key) % max(1, height - 2)),
+			"selection_source": "profile_palette_deterministic_seed",
+		})
+	return records
+
+func _terrain_for_cell(x: int, y: int, level: int, terrain_pool: Array, seeds: Array, normalized: Dictionary) -> String:
+	var width := int(normalized.get("width", 36))
+	var height := int(normalized.get("height", 36))
+	if level == 0 and String(normalized.get("water_mode", "land")) == "islands" and (x == 0 or y == 0 or x == width - 1 or y == height - 1):
+		return "water"
+	if level > 0 and "underground" in terrain_pool:
+		return "underground"
+	var best_terrain := String(terrain_pool[0])
+	var best_score := 9223372036854775807
+	var seed := String(normalized.get("normalized_seed", "0"))
+	for record_value in seeds:
+		var record: Dictionary = record_value
+		var dx := x - int(record.get("x", 0))
+		var dy := y - int(record.get("y", 0))
+		var jitter := int(_hash32_int("%s:terrain_cell:%d:%d:%d:%s" % [seed, level, x, y, String(record.get("terrain_id", ""))]) % 97)
+		var score := dx * dx * 100 + dy * dy * 126 - jitter
+		if score < best_score:
+			best_score = score
+			best_terrain = String(record.get("terrain_id", best_terrain))
+	return best_terrain
+
+func _generate_terrain_grid(normalized: Dictionary) -> Dictionary:
+	var width := int(normalized.get("width", 36))
+	var height := int(normalized.get("height", 36))
+	var level_count := int(normalized.get("level_count", 1))
+	var terrain_pool := _normalized_terrain_pool(normalized.get("terrain_ids", CORE_TERRAIN_POOL))
+	var seeds := _terrain_seed_records(normalized, terrain_pool)
+	var levels := []
+	var aggregate_counts := {}
+	for level in range(level_count):
+		var terrain_codes := PackedInt32Array()
+		terrain_codes.resize(width * height)
+		var counts := {}
+		var biome_counts := {}
+		for y in range(height):
+			for x in range(width):
+				var terrain_id := _terrain_for_cell(x, y, level, terrain_pool, seeds, normalized)
+				var biome_id := _biome_for_terrain(terrain_id)
+				var flat_index := y * width + x
+				terrain_codes[flat_index] = _terrain_code_for_id(terrain_id)
+				counts[terrain_id] = int(counts.get(terrain_id, 0)) + 1
+				biome_counts[biome_id] = int(biome_counts.get(biome_id, 0)) + 1
+				aggregate_counts[terrain_id] = int(aggregate_counts.get(terrain_id, 0)) + 1
+		var level_record := {
+			"level_index": level,
+			"level_kind": "surface" if level == 0 else "underground",
+			"width": width,
+			"height": height,
+			"tile_count": width * height,
+			"terrain_code_u16": terrain_codes,
+			"terrain_counts": counts,
+			"biome_counts": biome_counts,
+		}
+		level_record["signature"] = _hash32_hex(_stable_stringify(level_record))
+		levels.append(level_record)
+	var biome_by_terrain := {}
+	for terrain_id in TERRAIN_ID_BY_CODE:
+		biome_by_terrain[String(terrain_id)] = _biome_for_terrain(String(terrain_id))
+	var grid := {
+		"schema_id": "aurelion_native_rmg_terrain_grid_v1",
+		"schema_version": 1,
+		"generation_status": "terrain_grid_generated",
+		"full_generation_status": "not_implemented",
+		"width": width,
+		"height": height,
+		"level_count": level_count,
+		"tile_count": width * height * level_count,
+		"terrain_id_by_code": TERRAIN_ID_BY_CODE,
+		"biome_id_by_terrain_id": biome_by_terrain,
+		"terrain_palette_ids": terrain_pool,
+		"zone_seed_model": "deterministic_terrain_palette_voronoi_seed_grid",
+		"terrain_seed_records": seeds,
+		"terrain_counts": aggregate_counts,
+		"levels": levels,
+	}
+	grid["signature"] = _hash32_hex(_stable_stringify(grid))
+	return grid
 
 func _hash32_hex(text: String) -> String:
 	var value := _hash32_int(text)
@@ -266,6 +431,16 @@ func _stable_stringify(value: Variant) -> String:
 		var parts := []
 		for item in value:
 			parts.append(_stable_stringify(item))
+		return "[%s]" % ",".join(parts)
+	if value is PackedInt32Array:
+		var parts := []
+		for item in value:
+			parts.append("int:%d" % int(item))
+		return "[%s]" % ",".join(parts)
+	if value is PackedStringArray:
+		var parts := []
+		for item in value:
+			parts.append("string:%s" % String(item).c_escape())
 		return "[%s]" % ",".join(parts)
 	if value is String:
 		return "string:%s" % String(value).c_escape()

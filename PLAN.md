@@ -237,6 +237,22 @@ nonGoals:
 - No `ScenarioSelectRules.gd` runtime generation flow change.
 - No package adoption, save version bump, authored content migration, generated authored writeback, renderer/fog/pathing/gameplay semantic change, or fake parity claim.
 
+Native RMG parity track:
+
+The native C++ GDExtension RMG must reach functional parity with the current GDScript source of truth in `scripts/core/RandomMapGeneratorRules.gd` before any gameplay adoption. The practical breakdown is:
+
+- `native-rmg-terrain-grid-generation-10184`: deterministic normalized config, terrain/biome palette, width/height/level tile grid, terrain ids/codes, stable signatures, and terrain-grid smoke while preserving `partial_foundation`.
+- `native-rmg-zone-player-starts-10184`: template/profile selection parity, runtime zones, player assignment, zone seed layout, owner grid, start anchors, and start metadata.
+- `native-rmg-road-river-network-10184`: route/corridor graph, road overlays, river/water/underground transit records, and reachability proof surfaces.
+- `native-rmg-object-placement-foundation-10184`: resource/reward/decor/object staging, footprint predicates, occupancy, and deterministic object placement records.
+- `native-rmg-town-guard-placement-10184`: primary/neutral towns, mines, dwellings, route guards, border guards, monster/reward bands, and guard pressure records.
+- `native-rmg-validation-provenance-parity-10184`: validation reports, phase pipeline, stable signatures, generated provenance, no-authored-write policy, and warning/failure parity.
+- `native-rmg-gdscript-comparison-harness-10184`: headless comparison fixtures proving native/GDScript structural parity across supported seeds, sizes, water modes, underground, and player counts.
+- `native-rmg-package-session-adoption-10184`: package/session integration behind explicit adapters after parity gates pass; no save version bump or call-site replacement before this slice.
+- `native-rmg-full-parity-gate-10184`: final gate proving terrain, objects, roads, rivers, towns, guards, zones/player starts, validation/provenance, comparison harness, package/session integration, Linux, and Windows all pass before broad parity is claimed.
+
+Until `native-rmg-full-parity-gate-10184` completes, native RMG remains incomplete and `RandomMapGeneratorRules.gd` remains authoritative for live generated skirmish gameplay.
+
 Known Phase 2 parent tracks already represented in progress history:
 - `world-faction-identity-implementation-bridge-10184`
 - `concept-art-curation-gate-10184`
