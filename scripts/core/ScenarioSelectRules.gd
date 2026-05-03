@@ -977,44 +977,24 @@ static func _generated_map_package_identity(generated: Dictionary, adoption: Dic
 	if player_count <= 0:
 		var player_starts: Dictionary = generated.get("player_starts", {}) if generated.get("player_starts", {}) is Dictionary else {}
 		player_count = int(player_starts.get("start_count", 0))
-	var template_token := _safe_package_token(normalized.get("template_id", "template"), "template")
-	var profile_token := _safe_package_token(normalized.get("profile_id", "profile"), "profile")
 	var size_token := _safe_package_token(normalized.get("size_class_id", "map"), "map")
-	var water_token := _safe_package_token(normalized.get("water_mode", "land"), "land")
 	var seed_token := _safe_package_token(normalized.get("normalized_seed", normalized.get("seed", "seed")), "seed")
 	if seed_token.length() > 48:
 		seed_token = seed_token.substr(0, 48)
+	var creative_name := _generated_map_package_creative_name(normalized, generated)
 	var hash_token := _generated_map_package_short_hash(generated, adoption)
 	var parts := [
-		"rmg",
-		template_token,
-		profile_token,
 		size_token,
-		"%dx%d" % [width, height],
-		"l%d" % max(1, level_count),
-		"p%d" % max(1, player_count),
-		water_token,
-		"seed",
+		creative_name,
 		seed_token,
-		hash_token,
 	]
 	var package_stem := _safe_package_stem("-".join(parts))
-	if package_stem.length() > 180:
-		package_stem = _safe_package_stem("-".join([
-			"rmg",
-			template_token,
-			size_token,
-			"%dx%d" % [width, height],
-			"l%d" % max(1, level_count),
-			"p%d" % max(1, player_count),
-			water_token,
-			"seed",
-			seed_token.substr(0, 24),
-			hash_token,
-		]))
+	if package_stem.length() > 120:
+		package_stem = _safe_package_stem("-".join([size_token, creative_name, seed_token.substr(0, 24)]))
 	return {
 		"schema_id": "aurelion_native_rmg_package_filename_identity_v1",
 		"package_stem": package_stem,
+		"creative_name": creative_name,
 		"template_id": String(normalized.get("template_id", "")),
 		"profile_id": String(normalized.get("profile_id", "")),
 		"size_class_id": String(normalized.get("size_class_id", "")),
@@ -1025,8 +1005,51 @@ static func _generated_map_package_identity(generated: Dictionary, adoption: Dic
 		"water_mode": String(normalized.get("water_mode", "")),
 		"normalized_seed": String(normalized.get("normalized_seed", normalized.get("seed", ""))),
 		"short_hash": hash_token,
-		"filename_style": "lowercase_kebab_human_readable_deterministic",
+		"filename_style": "size-creative-name-seed-lowercase-kebab-deterministic",
+		"detailed_identity_storage": "package_metadata_refs_not_filename",
 	}
+
+static func _generated_map_package_creative_name(normalized: Dictionary, generated: Dictionary) -> String:
+	var name_key := "|".join([
+		str(normalized.get("normalized_seed", normalized.get("seed", ""))),
+		str(normalized.get("template_id", "")),
+		str(normalized.get("profile_id", "")),
+		str(normalized.get("size_class_id", "")),
+		str(normalized.get("width", "")),
+		str(normalized.get("height", "")),
+		str(normalized.get("level_count", "")),
+		str(normalized.get("player_count", "")),
+		str(normalized.get("water_mode", "")),
+		str(normalized.get("underground_enabled", "")),
+		str(normalized.get("generator_version", "")),
+		str(generated.get("validation_status", "")),
+	])
+	var first_words := [
+		"amber", "ash", "bracken", "cinder", "dawn", "dusk", "ember", "fallow",
+		"frost", "glass", "gold", "hollow", "iron", "jade", "mist", "moon",
+		"red", "silver", "sun", "thorn", "veil", "wild", "wind", "winter",
+	]
+	var second_words := [
+		"barrow", "brook", "cairn", "field", "ford", "gate", "grove", "hearth",
+		"keep", "lantern", "march", "mire", "moor", "pass", "ridge", "road",
+		"sanctum", "spire", "stone", "watch", "wood", "yard",
+	]
+	var third_words := [
+		"bend", "crossing", "deep", "fall", "fen", "glade", "hollow", "marsh",
+		"meadow", "reach", "rise", "shore", "spring", "trail", "vale", "way",
+	]
+	var a: String = first_words[_stable_name_index("%s|first" % name_key, first_words.size())]
+	var b: String = second_words[_stable_name_index("%s|second" % name_key, second_words.size())]
+	var c: String = third_words[_stable_name_index("%s|third" % name_key, third_words.size())]
+	return _safe_package_stem("%s-%s-%s" % [a, b, c])
+
+static func _stable_name_index(value: String, modulo: int) -> int:
+	if modulo <= 0:
+		return 0
+	var hash_value := 2166136261
+	for index in range(value.length()):
+		hash_value = int((hash_value ^ value.unicode_at(index)) * 16777619) & 0x7fffffff
+	return hash_value % modulo
 
 static func _generated_map_package_short_hash(generated: Dictionary, adoption: Dictionary) -> String:
 	var identity: Dictionary = generated.get("deterministic_identity", {}) if generated.get("deterministic_identity", {}) is Dictionary else {}

@@ -6,9 +6,9 @@
   "currentSliceId": "native-rmg-package-readable-filenames-10184",
   "currentSliceTitle": "Native RMG Package Readable Filenames",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented deterministic readable paired package stems for generated native RMG .amap/.ascenario files under maps/, including template/profile/size/dimensions/level/player/water/seed/hash identity; focused native disk startup and package-session smokes prove readable names and load/package refs remain intact. Validation: godot4 native_random_map_disk_package_startup_report.tscn; godot4 native_random_map_package_session_adoption_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
+  "currentSliceNotes": "Corrected generated native RMG package stems to size-creative-name-seed with deterministic creative names and paired .amap/.ascenario stems; moved template/profile/player/water/dim/hash identity to package metadata/refs; focused tests reject old debug-name parts. Validation: godot4 native_random_map_disk_package_startup_report.tscn; godot4 native_random_map_package_session_adoption_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T12:40:53Z",
+  "updatedAt": "2026-05-03T12:51:50Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7018,8 +7018,9 @@
       ],
       "completionCriteria": [
         "Generated native RMG map and scenario package files share a readable deterministic base stem with .amap and .ascenario extensions.",
-        "The package stem includes useful identity such as template, profile, size, dimensions, player count, water mode, normalized seed, and a short output hash.",
-        "Focused native disk-package startup tests assert generated package names are not opaque native_rmg hash stems and preserve package refs/load behavior.",
+        "The package stem uses size-creative-name-seed only, with a deterministic creative lowercase kebab name derived from normalized seed/config.",
+        "Template/profile/player-count/water-mode/dimensions/hash details stay in package metadata and refs, not the filename.",
+        "Focused native disk-package startup tests assert the corrected shape, reject old debug-name identity parts, and preserve package refs/load behavior.",
         "No save-version, content catalog, authored scenario, renderer, fog, pathing, or gameplay behavior changes are introduced."
       ],
       "phase": "phase-2-deep-production-foundation",
@@ -7045,10 +7046,10 @@
         "No generated PNG or unrelated asset import."
       ],
       "createdAt": "2026-05-03T12:50:00Z",
-      "updatedAt": "2026-05-03T12:40:53Z",
+      "updatedAt": "2026-05-03T12:51:50Z",
       "startedAt": "2026-05-03T12:50:00Z",
-      "notes": "Implemented deterministic readable paired package stems for generated native RMG .amap/.ascenario files under maps/, including template/profile/size/dimensions/level/player/water/seed/hash identity; focused native disk startup and package-session smokes prove readable names and load/package refs remain intact. Validation: godot4 native_random_map_disk_package_startup_report.tscn; godot4 native_random_map_package_session_adoption_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
-      "completedAt": "2026-05-03T12:40:53Z"
+      "notes": "Corrected generated native RMG package stems to size-creative-name-seed with deterministic creative names and paired .amap/.ascenario stems; moved template/profile/player/water/dim/hash identity to package metadata/refs; focused tests reject old debug-name parts. Validation: godot4 native_random_map_disk_package_startup_report.tscn; godot4 native_random_map_package_session_adoption_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
+      "completedAt": "2026-05-03T12:51:50Z"
     }
   ],
   "completedImplementationEvidence": [
