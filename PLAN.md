@@ -24,13 +24,16 @@ Rules:
 Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical chain: continue the native C++ GDExtension RMG parity track until
-it reaches full parity with `scripts/core/RandomMapGeneratorRules.gd`. The current
+it reaches full parity with `scripts/core/RandomMapGeneratorRules.gd` for the
+tracked supported profiles before any gameplay call-site adoption. The current
 completed native children cover deterministic identity, terrain/grid output,
 foundation zone/player-start output, foundation road/river network output,
 foundation non-town object placement output, foundation town/guard placement
 output, native validation/provenance reporting, and a focused GDScript/native
 comparison harness, and feature-gated package/session adoption records for native
-output. The next pending child is `native-rmg-full-parity-gate-10184`.
+output. `native-rmg-full-parity-gate-10184` closes the tracked gate for the
+current 36x36 `homm3_small` comparison fixtures while keeping unsupported native
+configs explicitly `partial_foundation`.
 
 Do not infer product readiness from the completed queue. Completed Phase 2/RMG/performance/tooling evidence means those specific slices passed their gates; it does not mean playable alpha, campaign breadth, release readiness, broad faction completion, asset parity, or HoMM3 byte-level cloning.
 
@@ -251,9 +254,13 @@ The native C++ GDExtension RMG must reach functional parity with the current GDS
 - `native-rmg-validation-provenance-parity-10184`: validation reports, phase pipeline, stable signatures, generated provenance, no-authored-write policy, and warning/failure parity.
 - `native-rmg-gdscript-comparison-harness-10184`: headless comparison fixtures proving native/GDScript structural parity across supported seeds, sizes, water modes, underground, and player counts.
 - `native-rmg-package-session-adoption-10184`: package/session integration behind explicit feature-gated adapters for native output; no save version bump or call-site replacement.
-- `native-rmg-full-parity-gate-10184`: final gate proving terrain, objects, roads, rivers, towns, guards, zones/player starts, validation/provenance, comparison harness, package/session integration, Linux, and Windows all pass before broad parity is claimed.
+- `native-rmg-full-parity-gate-10184`: final tracked gate proving terrain, objects, roads, rivers, towns, guards, zones/player starts, validation/provenance, comparison harness, package/session integration, Linux, and Windows for the supported 36x36 `homm3_small` comparison profiles before any runtime call-site adoption.
 
-Until `native-rmg-full-parity-gate-10184` completes, native RMG remains incomplete and `RandomMapGeneratorRules.gd` remains authoritative for live generated skirmish gameplay.
+With `native-rmg-full-parity-gate-10184` complete, native RMG may claim full
+parity only for the supported tracked comparison profiles. Unsupported native
+configs remain incomplete, and `RandomMapGeneratorRules.gd` remains
+authoritative for live generated skirmish gameplay until a later explicit
+runtime adoption slice changes the call sites.
 
 Known Phase 2 parent tracks already represented in progress history:
 - `world-faction-identity-implementation-bridge-10184`

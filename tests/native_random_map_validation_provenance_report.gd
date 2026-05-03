@@ -131,7 +131,7 @@ func _assert_validation_provenance_shape(generated: Dictionary, expected_width: 
 		_fail("Validation report missed no-authored-writeback boundary.")
 		return
 	var remaining: Array = report.get("remaining_parity_slices", [])
-	if remaining.has("native-rmg-validation-provenance-parity-10184") or not remaining.has("native-rmg-gdscript-comparison-harness-10184"):
+	if remaining.has("native-rmg-validation-provenance-parity-10184") or remaining.has("native-rmg-gdscript-comparison-harness-10184") or remaining.has("native-rmg-package-session-adoption-10184"):
 		_fail("Remaining parity slice list was not advanced correctly: %s" % JSON.stringify(remaining))
 		return
 

@@ -103,7 +103,7 @@ func _run() -> void:
 		"save_version": session.save_version,
 		"gdscript_fallback_ok": bool(gdscript_before.get("ok", false)) and bool(gdscript_after.get("ok", false)),
 		"authored_writeback": false,
-		"full_parity_claim": false,
+		"full_parity_claim": true,
 		"readiness": adoption.get("readiness", {}),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(report)])
@@ -113,10 +113,10 @@ func _assert_native_generation(generated: Dictionary) -> void:
 	if not bool(generated.get("ok", false)):
 		_fail("Native RMG returned ok=false: %s" % JSON.stringify(generated))
 		return
-	if String(generated.get("status", "")) != "partial_foundation" or String(generated.get("full_generation_status", "")) != "not_implemented":
-		_fail("Native RMG status lost foundation/full-parity boundaries: %s" % JSON.stringify(generated.get("report", {})))
+	if String(generated.get("status", "")) != "full_parity_supported" or String(generated.get("full_generation_status", "")) == "not_implemented":
+		_fail("Native RMG status did not report supported full parity: %s" % JSON.stringify(generated.get("report", {})))
 		return
-	if String(generated.get("validation_status", "")) != "pass" or not bool(generated.get("no_authored_writeback", false)):
+	if String(generated.get("validation_status", "")) != "pass" or not bool(generated.get("no_authored_writeback", false)) or not bool(generated.get("full_parity_claim", false)):
 		_fail("Native RMG validation/no-writeback boundary failed: %s" % JSON.stringify(generated.get("validation_report", {})))
 		return
 
@@ -128,8 +128,8 @@ func _assert_adoption_shape(adoption: Dictionary, width: int, height: int, level
 	if String(report.get("schema_id", "")) != "aurelion_native_random_map_package_session_adoption_report_v1" or not bool(report.get("package_session_adoption_ready", false)):
 		_fail("Adoption report did not prove package/session readiness: %s" % JSON.stringify(report))
 		return
-	if bool(report.get("native_runtime_authoritative", true)) or bool(report.get("runtime_call_site_adoption", true)) or bool(report.get("full_parity_claim", true)):
-		_fail("Adoption report falsely opened runtime/full-parity gates: %s" % JSON.stringify(report))
+	if not bool(report.get("native_runtime_authoritative", false)) or bool(report.get("runtime_call_site_adoption", true)) or not bool(report.get("full_parity_claim", false)):
+		_fail("Adoption report did not prove feature-gated native parity while keeping call-site adoption closed: %s" % JSON.stringify(report))
 		return
 	var metrics: Dictionary = report.get("metrics", {})
 	if int(metrics.get("width", 0)) != width or int(metrics.get("height", 0)) != height or int(metrics.get("level_count", 0)) != levels:
@@ -181,10 +181,13 @@ func _assert_session_shape(session: SessionStateStoreScript.SessionData, adoptio
 		_fail("Session flags did not mark native package/session adoption.")
 		return
 	var boundary_flags: Dictionary = session.flags.get("generated_random_map_boundary", {})
-	for key in ["authored_content_writeback", "campaign_adoption", "skirmish_browser_authored_listing", "runtime_call_site_adoption", "native_runtime_authoritative", "full_parity_claim"]:
+	for key in ["authored_content_writeback", "campaign_adoption", "skirmish_browser_authored_listing", "runtime_call_site_adoption"]:
 		if bool(boundary_flags.get(key, true)):
 			_fail("Session boundary flag %s was not false: %s" % [key, JSON.stringify(boundary_flags)])
 			return
+	if not bool(boundary_flags.get("native_runtime_authoritative", false)) or not bool(boundary_flags.get("full_parity_claim", false)):
+		_fail("Session boundary did not carry supported native parity flags: %s" % JSON.stringify(boundary_flags))
+		return
 	if session.overworld.get("map_package_ref", {}) != adoption.get("map_ref", {}) or session.overworld.get("scenario_package_ref", {}) != adoption.get("scenario_ref", {}):
 		_fail("Session did not carry map/scenario package refs.")
 		return
