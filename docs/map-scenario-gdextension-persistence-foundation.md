@@ -80,6 +80,7 @@ The generated package startup path uses `ScenarioSelectRules.generated_map_packa
 - In editor/dev/headless runs, the active maps directory is `res://maps`, which resolves to the repository-root `maps/` directory. This makes generated packages inspectable during development and keeps the owner-directed path explicit.
 - In exported/runtime builds, the policy target is `user://maps`, because exported `res://` content is not a reliable writable package location.
 - Generated startup writes one `.amap` map package and one `.ascenario` scenario package. The game then loads those files back from disk and builds the session from the loaded documents.
+- Generated package filenames use a shared deterministic lowercase kebab stem for the paired `.amap`/`.ascenario` files. The stem includes human-readable RMG identity such as template, profile, size, dimensions, level count, player count, water mode, normalized seed, and a short output signature hash, instead of opaque `native_rmg_<hash>` debug filenames.
 - These generated packages are not authored content and are not written into `content/scenarios.json`.
 - `content/scenarios.json` remains archived/dev compatibility content unless a later migration slice replaces it with a manifest/package catalog.
 - Native package save/load currently serializes a compact package document envelope sufficient for generated startup. `migrate_*` and full authored-package migration remain intentionally minimal/not implemented and must not be claimed as complete.

@@ -97,6 +97,17 @@ func _run() -> void:
 	if not map_path.begins_with("res://maps/") or not scenario_path.begins_with("res://maps/"):
 		_fail("Active generated setup did not use project maps/ package paths: %s" % JSON.stringify(package_startup))
 		return
+	var package_stem := String(package_startup.get("package_stem", ""))
+	if package_stem == "" or map_path.get_file().get_basename() != package_stem or scenario_path.get_file().get_basename() != package_stem:
+		_fail("Active generated setup did not pair map/scenario packages with one readable stem: %s" % JSON.stringify(package_startup))
+		return
+	if package_stem.begins_with("native_rmg_") or package_stem.begins_with("native-rmg-"):
+		_fail("Active generated setup still used an opaque native_rmg package stem: %s" % package_stem)
+		return
+	for required_part in ["border-gate-compact-v1", "border-gate-compact-profile-v1", "homm3-small", "36x36", "p3", "land"]:
+		if not package_stem.contains(required_part):
+			_fail("Active generated package stem missed readable identity part '%s': %s" % [required_part, package_stem])
+			return
 	if not bool(package_startup.get("map_load", {}).get("ok", false)) or not bool(package_startup.get("scenario_load", {}).get("ok", false)):
 		_fail("Active generated setup did not prove package load after save: %s" % JSON.stringify(package_startup))
 		return

@@ -53,6 +53,25 @@ func _run() -> void:
 	if not map_path.begins_with("res://maps/") or not scenario_path.begins_with("res://maps/"):
 		_fail("Generated packages were not written under res://maps: %s" % JSON.stringify(package_startup))
 		return
+	var package_stem := String(package_startup.get("package_stem", ""))
+	var map_file := map_path.get_file()
+	var scenario_file := scenario_path.get_file()
+	var map_stem := map_file.get_basename()
+	var scenario_stem := scenario_file.get_basename()
+	if package_stem == "" or map_stem != package_stem or scenario_stem != package_stem:
+		_fail("Generated map/scenario package names did not use the same readable stem: %s" % JSON.stringify(package_startup))
+		return
+	if map_stem.begins_with("native_rmg_") or scenario_stem.begins_with("native_rmg_scenario_"):
+		_fail("Generated package names still use opaque native_rmg hash stems: %s | %s" % [map_file, scenario_file])
+		return
+	for required_part in ["border-gate-compact-v1", "border-gate-compact-profile-v1", "homm3-small", "36x36", "l1", "p3", "land", "seed", "native-rmg-disk-package-startup-10184"]:
+		if not package_stem.contains(required_part):
+			_fail("Generated package stem missed readable identity part '%s': %s" % [required_part, package_stem])
+			return
+	var package_identity: Dictionary = package_startup.get("package_identity", {}) if package_startup.get("package_identity", {}) is Dictionary else {}
+	if String(package_identity.get("filename_style", "")) != "lowercase_kebab_human_readable_deterministic" or String(package_identity.get("short_hash", "")).length() < 8:
+		_fail("Generated package identity did not preserve filename style and short hash: %s" % JSON.stringify(package_identity))
+		return
 	if not FileAccess.file_exists(map_path) or not FileAccess.file_exists(scenario_path):
 		_fail("Generated package files do not exist on disk.")
 		return

@@ -177,6 +177,28 @@ nonGoals:
 - No renderer, fog, pathing, or broad gameplay redesign.
 - No generated PNG or unrelated asset import.
 
+Completed owner-directed corrective slice:
+
+id: `native-rmg-package-readable-filenames-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Replace opaque generated native RMG disk package filenames with deterministic, filesystem-safe, human-readable paired names under `maps/`.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/map-scenario-gdextension-persistence-foundation.md`
+- 2026-05-03 owner feedback that native RMG package filenames were dull/debug-sludge
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `tests/native_random_map_disk_package_startup_report.gd`
+- `tests/native_random_map_package_session_adoption_report.gd`
+- `docs/map-scenario-gdextension-persistence-foundation.md`
+completionCriteria:
+- Generated native RMG `.amap` and `.ascenario` packages share a readable deterministic base stem.
+- The stem includes useful identity such as template, profile, size, dimensions, player count, water mode, normalized seed, and a short output hash.
+- Focused native disk-package startup tests assert the names are not opaque `native_rmg_<hash>` stems and that package refs/load behavior still work.
+nonGoals:
+- No native API, C++ document, save-version, authored catalog, renderer, fog, pathing, or gameplay semantics changes.
+
 Selected Phase 2 corrective slice:
 
 id: `native-gdextension-editor-manifest-correction-10184`
