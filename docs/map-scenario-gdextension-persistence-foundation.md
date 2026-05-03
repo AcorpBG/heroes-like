@@ -456,6 +456,30 @@ Linux and Windows expectations remain synchronized: the same GDExtension service
 entry point is exercised by the Linux smoke and the Windows helper now includes
 the focused native road/river report alongside the earlier native RMG reports.
 
+### Native RMG Object Placement Foundation Child Slice
+
+The object placement foundation child extends the native result with deterministic
+non-town staged object records. The C++ API now returns resource pickup sites,
+reward references, mine placeholders, neutral dwellings, and decorative obstacle
+anchors with stable placement ids, family/type/object/category fields, zone and
+terrain associations, road proximity metadata, 1x1 runtime body tiles,
+footprints, occupancy indexes, category counts, and placement/occupancy
+signatures. `MapDocument` stubs can expose the staged object records through
+object count and placement lookup methods for API smoke coverage.
+
+This remains a foundation slice. It does not place primary or neutral towns,
+route guards, border guards, materialized encounters, gameplay rewards, package
+writeout, save deltas, renderer/pathing/fog changes, GDScript RMG call-site
+replacement, or any full-parity claim. The result and report expose
+`object_generation_status: objects_generated_foundation`,
+`object_placement_signature`, `object_occupancy_signature`, and object category
+counts while preserving top-level `status: partial_foundation` and
+`full_generation_status: not_implemented`.
+
+Linux and Windows expectations remain synchronized because this slice only
+extends the same GDExtension service surface and focused Godot smoke pattern; no
+manifest, helper, or platform-specific build contract changes are required.
+
 ### `MapValidationReport`
 
 Can be a Dictionary return first. A typed class may follow once report consumers stabilize.

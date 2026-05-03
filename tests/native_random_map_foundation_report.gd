@@ -79,8 +79,8 @@ func _run() -> void:
 	if String(doc_metadata.get("full_generation_status", "")) != "not_implemented":
 		_fail("Generated MapDocument metadata falsely implied full generation.")
 		return
-	if map_doc.get_object_count() != 0 or not map_doc.get_terrain_layer_ids().is_empty():
-		_fail("Foundation MapDocument stub should not contain terrain layers or object placements yet.")
+	if not map_doc.get_terrain_layer_ids().is_empty():
+		_fail("Foundation MapDocument stub should not contain terrain layers yet.")
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({

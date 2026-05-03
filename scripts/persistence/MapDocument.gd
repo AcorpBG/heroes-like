@@ -10,6 +10,7 @@ var _width := 0
 var _height := 0
 var _level_count := 1
 var _metadata: Dictionary = {}
+var _objects: Array = []
 
 func _init(initial_state: Dictionary = {}) -> void:
 	_map_id = String(initial_state.get("map_id", ""))
@@ -19,6 +20,7 @@ func _init(initial_state: Dictionary = {}) -> void:
 	_height = max(0, int(initial_state.get("height", 0)))
 	_level_count = max(1, int(initial_state.get("level_count", 1)))
 	_metadata = initial_state.get("metadata", {}).duplicate(true) if initial_state.get("metadata", {}) is Dictionary else {}
+	_objects = initial_state.get("objects", []).duplicate(true) if initial_state.get("objects", []) is Array else []
 
 func get_schema_version() -> int:
 	return SCHEMA_VERSION
@@ -57,16 +59,30 @@ func get_tile_layer_u16(layer_id: String, level: int = 0) -> PackedInt32Array:
 	return PackedInt32Array()
 
 func get_object_count() -> int:
-	return 0
+	return _objects.size()
 
 func get_object_by_index(index: int) -> Dictionary:
-	return _not_implemented("get_object_by_index")
+	if index < 0 or index >= _objects.size() or not (_objects[index] is Dictionary):
+		return {}
+	return _objects[index].duplicate(true)
 
 func get_object_by_placement_id(placement_id: String) -> Dictionary:
-	return _not_implemented("get_object_by_placement_id")
+	for object in _objects:
+		if object is Dictionary and String(object.get("placement_id", "")) == placement_id:
+			return object.duplicate(true)
+	return {}
 
 func get_objects_in_rect(rect: Rect2i, level: int = 0) -> Array:
-	return []
+	var result := []
+	for object in _objects:
+		if not (object is Dictionary):
+			continue
+		if int(object.get("level", 0)) != level:
+			continue
+		var point := Vector2i(int(object.get("x", 0)), int(object.get("y", 0)))
+		if rect.has_point(point):
+			result.append(object.duplicate(true))
+	return result
 
 func get_route_graph() -> Dictionary:
 	return _not_implemented("get_route_graph")
@@ -87,7 +103,7 @@ func get_validation_summary() -> Dictionary:
 			"height": _height,
 			"level_count": _level_count,
 			"tile_count": get_tile_count(),
-			"object_count": 0,
+			"object_count": get_object_count(),
 		},
 	}
 

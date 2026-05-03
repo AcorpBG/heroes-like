@@ -52,6 +52,8 @@ void MapDocument::configure(Dictionary initial_state) {
 	height = std::max(0, int32_t(initial_state.get("height", 0)));
 	level_count = std::max(1, int32_t(initial_state.get("level_count", 1)));
 	metadata = initial_state.get("metadata", Dictionary());
+	Variant objects_value = initial_state.get("objects", Variant());
+	objects = objects_value.get_type() == Variant::ARRAY ? Array(objects_value).duplicate(true) : Array();
 }
 
 int32_t MapDocument::get_schema_version() const { return SCHEMA_VERSION; }
@@ -72,10 +74,37 @@ Dictionary MapDocument::get_metadata() const {
 
 PackedStringArray MapDocument::get_terrain_layer_ids() const { return PackedStringArray(); }
 PackedInt32Array MapDocument::get_tile_layer_u16(String layer_id, int32_t level) const { return PackedInt32Array(); }
-int32_t MapDocument::get_object_count() const { return 0; }
-Dictionary MapDocument::get_object_by_index(int32_t index) const { return not_implemented("get_object_by_index"); }
-Dictionary MapDocument::get_object_by_placement_id(String placement_id) const { return not_implemented("get_object_by_placement_id"); }
-Array MapDocument::get_objects_in_rect(Rect2i rect, int32_t level) const { return Array(); }
+int32_t MapDocument::get_object_count() const { return objects.size(); }
+Dictionary MapDocument::get_object_by_index(int32_t index) const {
+	if (index < 0 || index >= objects.size()) {
+		return Dictionary();
+	}
+	return Dictionary(objects[index]).duplicate(true);
+}
+Dictionary MapDocument::get_object_by_placement_id(String placement_id) const {
+	for (int64_t index = 0; index < objects.size(); ++index) {
+		Dictionary object = objects[index];
+		if (String(object.get("placement_id", "")) == placement_id) {
+			return object.duplicate(true);
+		}
+	}
+	return Dictionary();
+}
+Array MapDocument::get_objects_in_rect(Rect2i rect, int32_t level) const {
+	Array result;
+	for (int64_t index = 0; index < objects.size(); ++index) {
+		Dictionary object = objects[index];
+		if (int32_t(object.get("level", 0)) != level) {
+			continue;
+		}
+		const int32_t x = int32_t(object.get("x", 0));
+		const int32_t y = int32_t(object.get("y", 0));
+		if (x >= rect.position.x && y >= rect.position.y && x < rect.position.x + rect.size.x && y < rect.position.y + rect.size.y) {
+			result.append(object.duplicate(true));
+		}
+	}
+	return result;
+}
 Dictionary MapDocument::get_route_graph() const { return not_implemented("get_route_graph"); }
 
 Dictionary MapDocument::get_validation_summary() const {
@@ -84,7 +113,7 @@ Dictionary MapDocument::get_validation_summary() const {
 	metrics["height"] = height;
 	metrics["level_count"] = level_count;
 	metrics["tile_count"] = get_tile_count();
-	metrics["object_count"] = 0;
+	metrics["object_count"] = get_object_count();
 
 	Dictionary result;
 	result["schema_id"] = "aurelion_map_validation_report";
