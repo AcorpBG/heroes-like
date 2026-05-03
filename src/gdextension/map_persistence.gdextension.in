@@ -1,6 +1,6 @@
 [configuration]
 entry_symbol = "aurelion_map_persistence_init"
-compatibility_minimum = "4.2"
+compatibility_minimum = "4.6"
 reloadable = true
 
 [libraries]
