@@ -104,10 +104,26 @@ func _run() -> void:
 	if package_stem.begins_with("native_rmg_") or package_stem.begins_with("native-rmg-"):
 		_fail("Active generated setup still used an opaque native_rmg package stem: %s" % package_stem)
 		return
-	for required_part in ["border-gate-compact-v1", "border-gate-compact-profile-v1", "homm3-small", "36x36", "p3", "land"]:
-		if not package_stem.contains(required_part):
-			_fail("Active generated package stem missed readable identity part '%s': %s" % [required_part, package_stem])
+	var expected_prefix := "homm3-small-"
+	var expected_suffix := "-native-rmg-gdscript-comparison-10184-small-land"
+	if not package_stem.begins_with(expected_prefix) or not package_stem.ends_with(expected_suffix):
+		_fail("Active generated package stem did not use size-creative-name-seed shape: %s" % package_stem)
+		return
+	var creative_part := package_stem.substr(expected_prefix.length(), package_stem.length() - expected_prefix.length() - expected_suffix.length())
+	if creative_part.split("-").size() != 3:
+		_fail("Active generated package stem did not include a three-word creative name: %s" % package_stem)
+		return
+	for forbidden_part in ["border-gate-compact-v1", "border-gate-compact-profile-v1", "36x36", "p3", "seed-"]:
+		if package_stem.contains(forbidden_part):
+			_fail("Active generated package stem still includes debug identity part '%s': %s" % [forbidden_part, package_stem])
 			return
+	var package_identity: Dictionary = package_startup.get("package_identity", {}) if package_startup.get("package_identity", {}) is Dictionary else {}
+	if String(package_identity.get("filename_style", "")) != "size-creative-name-seed-lowercase-kebab-deterministic":
+		_fail("Active generated package identity did not preserve the corrected filename style: %s" % JSON.stringify(package_identity))
+		return
+	if String(package_identity.get("creative_name", "")) != creative_part or String(package_identity.get("short_hash", "")).length() < 8:
+		_fail("Active generated package identity did not preserve creative name and metadata hash outside the filename: %s" % JSON.stringify(package_identity))
+		return
 	if not bool(package_startup.get("map_load", {}).get("ok", false)) or not bool(package_startup.get("scenario_load", {}).get("ok", false)):
 		_fail("Active generated setup did not prove package load after save: %s" % JSON.stringify(package_startup))
 		return

@@ -64,13 +64,28 @@ func _run() -> void:
 	if map_stem.begins_with("native_rmg_") or scenario_stem.begins_with("native_rmg_scenario_"):
 		_fail("Generated package names still use opaque native_rmg hash stems: %s | %s" % [map_file, scenario_file])
 		return
-	for required_part in ["border-gate-compact-v1", "border-gate-compact-profile-v1", "homm3-small", "36x36", "l1", "p3", "land", "seed", "native-rmg-disk-package-startup-10184"]:
-		if not package_stem.contains(required_part):
-			_fail("Generated package stem missed readable identity part '%s': %s" % [required_part, package_stem])
+	var expected_prefix := "homm3-small-"
+	var expected_suffix := "-native-rmg-disk-package-startup-10184"
+	if not package_stem.begins_with(expected_prefix) or not package_stem.ends_with(expected_suffix):
+		_fail("Generated package stem did not use size-creative-name-seed shape: %s" % package_stem)
+		return
+	var creative_part := package_stem.substr(expected_prefix.length(), package_stem.length() - expected_prefix.length() - expected_suffix.length())
+	if creative_part.split("-").size() != 3:
+		_fail("Generated package stem did not include a three-word creative name: %s" % package_stem)
+		return
+	for forbidden_part in ["border-gate-compact-v1", "border-gate-compact-profile-v1", "36x36", "l1", "p3", "land", "seed-"]:
+		if package_stem.contains(forbidden_part):
+			_fail("Generated package stem still includes debug identity part '%s': %s" % [forbidden_part, package_stem])
 			return
 	var package_identity: Dictionary = package_startup.get("package_identity", {}) if package_startup.get("package_identity", {}) is Dictionary else {}
-	if String(package_identity.get("filename_style", "")) != "lowercase_kebab_human_readable_deterministic" or String(package_identity.get("short_hash", "")).length() < 8:
-		_fail("Generated package identity did not preserve filename style and short hash: %s" % JSON.stringify(package_identity))
+	if String(package_identity.get("filename_style", "")) != "size-creative-name-seed-lowercase-kebab-deterministic":
+		_fail("Generated package identity did not preserve the corrected filename style: %s" % JSON.stringify(package_identity))
+		return
+	if String(package_identity.get("creative_name", "")) != creative_part or String(package_identity.get("short_hash", "")).length() < 8:
+		_fail("Generated package identity did not preserve creative name and metadata hash outside the filename: %s" % JSON.stringify(package_identity))
+		return
+	if String(package_identity.get("detailed_identity_storage", "")) != "package_metadata_refs_not_filename":
+		_fail("Generated package identity did not keep detailed generator identity in metadata: %s" % JSON.stringify(package_identity))
 		return
 	if not FileAccess.file_exists(map_path) or not FileAccess.file_exists(scenario_path):
 		_fail("Generated package files do not exist on disk.")

@@ -194,8 +194,9 @@ implementationTargets:
 - `docs/map-scenario-gdextension-persistence-foundation.md`
 completionCriteria:
 - Generated native RMG `.amap` and `.ascenario` packages share a readable deterministic base stem.
-- The stem includes useful identity such as template, profile, size, dimensions, player count, water mode, normalized seed, and a short output hash.
-- Focused native disk-package startup tests assert the names are not opaque `native_rmg_<hash>` stems and that package refs/load behavior still work.
+- The stem uses `size-creative-name-seed` only, with a deterministic creative lowercase kebab name derived from normalized seed/config.
+- Template/profile/player-count/water-mode/dimensions/hash details stay in package metadata/refs, not the filename.
+- Focused native disk-package startup tests assert the corrected shape, reject old debug-name identity parts, and prove package refs/load behavior still work.
 nonGoals:
 - No native API, C++ document, save-version, authored catalog, renderer, fog, pathing, or gameplay semantics changes.
 
