@@ -103,6 +103,7 @@ Primary tracks:
 - strategic AI foundations;
 - terrain/editor/tooling foundations;
 - random map generator foundations;
+- map/scenario document structure and persistence foundations;
 - focused corrective/performance/instrumentation slices selected from real evidence.
 
 Operational state lives in `ops/progress.json`. Completed parent/child evidence is intentionally not repeated here.
@@ -113,6 +114,48 @@ Selection rules for new Phase 2 slices:
 - Include explicit non-goals for save schema, generated-map density/content, renderer/fog behavior, object contracts, public UI, and asset ingestion when relevant.
 - Preserve existing validation/analyzer compatibility unless the slice explicitly changes it.
 - Do not use profile/instrumentation slices as permission for optimization or gameplay semantics changes.
+
+Selected Phase 2 planning slice:
+
+id: `map-scenario-gdextension-persistence-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Replace the current loose JSON/dictionary map and scenario persistence model with a planned typed map/scenario document architecture, likely backed by a C++ Godot GDExtension, before broad generated-map or scenario production depends on it.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- 2026-05-03 owner direction and RMG/save-path inspection
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd` generation/export boundary
+- `scripts/core/ScenarioSelectRules.gd` generated-skirmish setup boundary
+- `scripts/core/ScenarioFactory.gd` scenario/session bootstrap adapters
+- `scripts/core/SessionStateStore.gd` session save reference/delta boundary
+- `scripts/autoload/ContentService.gd` authored/generated scenario loading boundary
+- `scripts/autoload/SaveService.gd` save/load JSON hot path
+- `content/scenarios.json` split/manifest migration plan
+- future `src/gdextension` or equivalent C++ map package module
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run`
+- focused generated-map save/load, scenario-load, and RMG validation smokes selected at kickoff
+sliceEvidence:
+- Current RMG returns nested Dictionary payloads with `scenario_record`, `metadata`, `staging`, validation, and provenance instead of a typed map object.
+- Generated skirmish sessions are memory/session-oriented and preserve no-authored-writeback boundaries rather than producing durable first-class map assets.
+- Authored scenarios are bundled in large JSON content records under `content/scenarios.json`.
+- `SaveService._save_raw_dictionary()` serializes full save payloads with `JSON.stringify(payload, "\t")` and writes raw JSON strings through `FileAccess`.
+- A Small 36x36 generated-map profile wrote about 6.95 MB JSON and took roughly 202-219 ms in the save path, so larger generated maps will amplify the problem.
+completionCriteria:
+- A typed map/scenario document model is defined with stable ids, schema/version, metadata, terrain/layers, object placements, route/validation data, and generated provenance boundaries.
+- A durable map package approach is selected for authored and generated maps, including load, validate, save, migrate, and corruption/tamper handling.
+- Runtime saves are redesigned to reference immutable map packages by id/hash/version and store only mutable session deltas where practical.
+- `content/scenarios.json` has a migration plan toward an index/manifest plus separate map/scenario package files.
+- RMG bridge/export sequencing is defined so existing GDScript generation can emit/import the new format before any full C++ generator rewrite is attempted.
+- Backward compatibility, rollback, validation scenes, and performance acceptance gates are named before implementation starts.
+nonGoals:
+- No immediate coding or coding-agent implementation during planning refinement.
+- No breaking existing saves or authored scenarios without an explicit migration slice.
+- No full RMG rewrite as the first step.
+- No renderer/fog/pathing/gameplay semantics changes unless separately selected.
+- No production content migration without provenance, rollback, and validation evidence.
 
 Known Phase 2 parent tracks already represented in progress history:
 - `world-faction-identity-implementation-bridge-10184`
@@ -125,6 +168,7 @@ Known Phase 2 parent tracks already represented in progress history:
 - `strategic-ai-foundation-continuation-10184`
 - `terrain-editor-tooling-foundation-implementation-10184`
 - `random-map-generator-foundation-10184`
+- `map-scenario-gdextension-persistence-foundation-10184`
 
 ### Phase 3 - Headless AI Agent Balance Harness
 

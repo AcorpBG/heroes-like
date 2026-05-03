@@ -1,14 +1,14 @@
 {
   "project": "heroes-like",
   "taskId": "10184",
-  "status": "completed",
+  "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "terrain-taxonomy-corrective-cleanup-10184",
-  "currentSliceTitle": "Terrain Taxonomy Corrective Cleanup",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: canonical terrain taxonomy cleanup keeps rock blocking and town routing fixes while removing invalid highland/hills/ridge gameplay terrain ids from editor/runtime/content/test surfaces; PLAN.md no longer carries the owner-reported progress slice.",
+  "currentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+  "currentSliceTitle": "Map/Scenario GDExtension Persistence Foundation",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Pending selected Phase 2 map/scenario persistence foundation: typed documents, C++ GDExtension map package, load/validate/save/migrate, JSON scenario split, and save delta/reference redesign. Planning refined; implementation not started.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-02T14:18:24Z",
+  "updatedAt": "2026-05-03T05:50:07Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,62 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "map-scenario-gdextension-persistence-foundation-10184",
+      "title": "Map/Scenario GDExtension Persistence Foundation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "classification": "phase2_child_architecture_and_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "2026-05-03 owner direction: maps/scenarios need structure and persistence; prefer C++ Godot GDExtension map system",
+        "2026-05-03 RMG/save-path inspection"
+      ],
+      "purpose": "Define and then implement a typed, durable map/scenario persistence architecture so authored and generated maps are first-class assets instead of loose JSON/dictionary payloads embedded into scenario content and session saves.",
+      "currentInspectionFindings": [
+        "RandomMapGeneratorRules.generate(input_config) returns large nested Dictionary payloads with scenario_record, metadata, staging, validation/report, and provenance rather than a typed map object.",
+        "ScenarioSelectRules launches generated skirmishes by handing the generated payload to ScenarioFactory.create_generated_skirmish_session(...), preserving no-authored-writeback and memory/session-only boundaries.",
+        "Authored scenarios are bundled in content/scenarios.json with scenario metadata, terrain rows, objectives, script hooks, and placements in one JSON domain.",
+        "SaveService._save_raw_dictionary() serializes full payload dictionaries with JSON.stringify(payload, \"\\t\") and writes raw JSON strings through FileAccess.",
+        "A Small 36x36 generated map profile wrote about 6.95 MB of JSON and measured roughly 202-219 ms in the save path, so full-payload JSON saves are already expensive before larger maps."
+      ],
+      "implementationTargets": [
+        "scripts/core/RandomMapGeneratorRules.gd generation/export boundary",
+        "scripts/core/ScenarioSelectRules.gd generated-skirmish setup boundary",
+        "scripts/core/ScenarioFactory.gd scenario/session bootstrap adapters",
+        "scripts/core/SessionStateStore.gd session save reference/delta boundary",
+        "scripts/autoload/ContentService.gd authored/generated scenario loading boundary",
+        "scripts/autoload/SaveService.gd save/load JSON hot path",
+        "content/scenarios.json split/manifest migration plan",
+        "future C++ Godot GDExtension map package module and GDScript adapter API"
+      ],
+      "completionCriteria": [
+        "Define typed MapDocument and ScenarioDocument boundaries with explicit schema/version, stable ids, metadata, terrain/layer data, object placements, route/validation metadata, and generated provenance.",
+        "Select a durable map package format for authored and generated maps with load, validate, save, migrate, corruption/tamper handling, and deterministic identity/hash support.",
+        "Plan save files around immutable map package references plus compact mutable session deltas rather than full map/scenario JSON rewrites where practical.",
+        "Plan content/scenarios.json migration toward a compact manifest/index with separate authored/generated map package files.",
+        "Define a staged bridge from current GDScript RMG dictionary output into the new package format before any full C++ generator rewrite.",
+        "Name rollback, compatibility, validation scene/report, and performance acceptance gates before implementation begins."
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "python3 -m json.tool ops/progress.json",
+        "focused generated-map save/load, scenario-load, and RMG validation smokes selected at kickoff"
+      ],
+      "nonGoals": [
+        "No immediate coding or coding-agent implementation during planning refinement.",
+        "No breaking existing saves or authored scenarios without an explicit migration slice.",
+        "No full RMG rewrite as the first step.",
+        "No renderer, fog, pathing, occupancy, gameplay semantics, or production content migration unless separately selected.",
+        "No generated PNG/asset ingestion."
+      ],
+      "createdAt": "2026-05-03T05:50:07Z",
+      "updatedAt": "2026-05-03T05:50:07Z",
+      "notes": "Planning entry created after AcOrP selected Phase 2 map/scenario persistence refactor direction. This is the next selectable architecture/implementation foundation, not an implementation claim."
+    },
     {
       "id": "terrain-taxonomy-corrective-cleanup-10184",
       "title": "Terrain Taxonomy Corrective Cleanup",
@@ -6939,7 +6995,28 @@
       "evidence": "Current editor export behavior includes validated authored scenario/terrain-layer draft contracts and working-copy validation, but deliberately does not write authored scenario files or campaign progress."
     }
   ],
-  "actionableNextTasks": [],
+  "actionableNextTasks": [
+    {
+      "id": "map-scenario-gdextension-persistence-foundation-10184",
+      "title": "Map/Scenario GDExtension Persistence Foundation",
+      "status": "pending",
+      "phase": "phase-2-deep-production-foundation",
+      "nextAction": "Kick off implementation only after AcOrP confirms planning is accepted; first worker should produce the detailed map package/API/migration design and validation gate list before code changes.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "2026-05-03 owner direction: maps/scenarios need structure and persistence; prefer C++ Godot GDExtension map system",
+        "2026-05-03 RMG/save-path inspection"
+      ],
+      "guardrails": [
+        "No immediate coding or coding-agent implementation during planning refinement.",
+        "No breaking existing saves or authored scenarios without an explicit migration slice.",
+        "No full RMG rewrite as the first step.",
+        "No renderer, fog, pathing, occupancy, gameplay semantics, or production content migration unless separately selected.",
+        "No generated PNG/asset ingestion."
+      ]
+    }
+  ],
   "stoppedOrPausedTasks": [
     {
       "id": "overworld-artifact-check-cue-10184",
