@@ -123,6 +123,7 @@ purpose: Replace the current loose JSON/dictionary map and scenario persistence 
 sourceDocs:
 - `project.md`
 - `PLAN.md`
+- `docs/map-scenario-gdextension-persistence-foundation.md`
 - 2026-05-03 owner direction and RMG/save-path inspection
 implementationTargets:
 - `scripts/core/RandomMapGeneratorRules.gd` generation/export boundary
