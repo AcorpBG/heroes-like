@@ -194,7 +194,7 @@ implementationTargets:
 - `docs/map-scenario-gdextension-persistence-foundation.md`
 completionCriteria:
 - Generated native RMG `.amap` and `.ascenario` packages share a readable deterministic base stem.
-- The stem uses `size-creative-name-seed` only, with a deterministic creative lowercase kebab name derived from normalized seed/config.
+- The stem uses `size-creative-name-hash` only, with a user-facing size token, a deterministic creative lowercase kebab name derived from normalized seed/config, and an 8-hex deterministic config hash suffix.
 - Template/profile/player-count/water-mode/dimensions/hash details stay in package metadata/refs, not the filename.
 - Focused native disk-package startup tests assert the corrected shape, reject old debug-name identity parts, and prove package refs/load behavior still work.
 nonGoals:

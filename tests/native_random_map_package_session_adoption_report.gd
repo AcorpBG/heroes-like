@@ -101,28 +101,36 @@ func _run() -> void:
 	if package_stem == "" or map_path.get_file().get_basename() != package_stem or scenario_path.get_file().get_basename() != package_stem:
 		_fail("Active generated setup did not pair map/scenario packages with one readable stem: %s" % JSON.stringify(package_startup))
 		return
-	if package_stem.begins_with("native_rmg_") or package_stem.begins_with("native-rmg-"):
-		_fail("Active generated setup still used an opaque native_rmg package stem: %s" % package_stem)
+	if not _package_filename_is_clean(map_path.get_file()) or not _package_filename_is_clean(scenario_path.get_file()):
+		_fail("Active generated package filenames did not match clean player-readable shape: %s | %s" % [map_path.get_file(), scenario_path.get_file()])
 		return
-	var expected_prefix := "homm3-small-"
-	var expected_suffix := "-native-rmg-gdscript-comparison-10184-small-land"
-	if not package_stem.begins_with(expected_prefix) or not package_stem.ends_with(expected_suffix):
-		_fail("Active generated package stem did not use size-creative-name-seed shape: %s" % package_stem)
+	if not _package_stem_is_clean(package_stem):
+		_fail("Active generated package stem did not use size-creative-name-hash shape: %s" % package_stem)
 		return
-	var creative_part := package_stem.substr(expected_prefix.length(), package_stem.length() - expected_prefix.length() - expected_suffix.length())
+	var stem_parts := package_stem.split("-")
+	if stem_parts[0] != "small":
+		_fail("Active generated package stem leaked internal size class instead of display size: %s" % package_stem)
+		return
+	var creative_words := []
+	for index in range(1, stem_parts.size() - 1):
+		creative_words.append(stem_parts[index])
+	var creative_part := "-".join(creative_words)
 	if creative_part.split("-").size() != 3:
 		_fail("Active generated package stem did not include a three-word creative name: %s" % package_stem)
 		return
-	for forbidden_part in ["border-gate-compact-v1", "border-gate-compact-profile-v1", "36x36", "p3", "seed-"]:
+	for forbidden_part in _forbidden_filename_parts():
 		if package_stem.contains(forbidden_part):
 			_fail("Active generated package stem still includes debug identity part '%s': %s" % [forbidden_part, package_stem])
 			return
 	var package_identity: Dictionary = package_startup.get("package_identity", {}) if package_startup.get("package_identity", {}) is Dictionary else {}
-	if String(package_identity.get("filename_style", "")) != "size-creative-name-seed-lowercase-kebab-deterministic":
+	if String(package_identity.get("filename_style", "")) != "size-creative-name-hash-lowercase-kebab-deterministic":
 		_fail("Active generated package identity did not preserve the corrected filename style: %s" % JSON.stringify(package_identity))
 		return
-	if String(package_identity.get("creative_name", "")) != creative_part or String(package_identity.get("short_hash", "")).length() < 8:
+	if String(package_identity.get("creative_name", "")) != creative_part or not _is_hex8(String(package_identity.get("short_hash", ""))):
 		_fail("Active generated package identity did not preserve creative name and metadata hash outside the filename: %s" % JSON.stringify(package_identity))
+		return
+	if not package_stem.ends_with("-%s" % String(package_identity.get("short_hash", ""))):
+		_fail("Active generated package stem did not use the deterministic short hash suffix: %s" % JSON.stringify(package_identity))
 		return
 	if not bool(package_startup.get("map_load", {}).get("ok", false)) or not bool(package_startup.get("scenario_load", {}).get("ok", false)):
 		_fail("Active generated setup did not prove package load after save: %s" % JSON.stringify(package_startup))
@@ -167,6 +175,46 @@ func _run() -> void:
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(report)])
 	get_tree().quit(0)
+
+func _package_filename_is_clean(filename: String) -> bool:
+	var regex := RegEx.new()
+	regex.compile("^[a-z]+-[a-z0-9-]+-[0-9a-f]{8}\\.(amap|ascenario)$")
+	return regex.search(filename) != null
+
+func _package_stem_is_clean(stem: String) -> bool:
+	var regex := RegEx.new()
+	regex.compile("^[a-z]+-[a-z0-9-]+-[0-9a-f]{8}$")
+	return regex.search(stem) != null
+
+func _is_hex8(value: String) -> bool:
+	var regex := RegEx.new()
+	regex.compile("^[0-9a-f]{8}$")
+	return regex.search(value) != null
+
+func _forbidden_filename_parts() -> Array:
+	return [
+		"homm3",
+		"10184",
+		"native-rmg",
+		"native_rmg",
+		"disk-package",
+		"disk_package",
+		"startup",
+		"template",
+		"profile",
+		"debug",
+		"test",
+		"gdscript",
+		"comparison",
+		"border-gate-compact-v1",
+		"border-gate-compact-profile-v1",
+		"36x36",
+		"l1",
+		"p3",
+		"land",
+		"seed-",
+		"v1",
+	]
 
 func _assert_native_generation(generated: Dictionary) -> void:
 	if not bool(generated.get("ok", false)):

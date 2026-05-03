@@ -977,20 +977,17 @@ static func _generated_map_package_identity(generated: Dictionary, adoption: Dic
 	if player_count <= 0:
 		var player_starts: Dictionary = generated.get("player_starts", {}) if generated.get("player_starts", {}) is Dictionary else {}
 		player_count = int(player_starts.get("start_count", 0))
-	var size_token := _safe_package_token(normalized.get("size_class_id", "map"), "map")
-	var seed_token := _safe_package_token(normalized.get("normalized_seed", normalized.get("seed", "seed")), "seed")
-	if seed_token.length() > 48:
-		seed_token = seed_token.substr(0, 48)
+	var size_token := _generated_map_package_size_token(String(normalized.get("size_class_id", "map")))
 	var creative_name := _generated_map_package_creative_name(normalized, generated)
-	var hash_token := _generated_map_package_short_hash(generated, adoption)
+	var hash_token := _generated_map_package_short_hash(normalized)
 	var parts := [
 		size_token,
 		creative_name,
-		seed_token,
+		hash_token,
 	]
 	var package_stem := _safe_package_stem("-".join(parts))
 	if package_stem.length() > 120:
-		package_stem = _safe_package_stem("-".join([size_token, creative_name, seed_token.substr(0, 24)]))
+		package_stem = _safe_package_stem("-".join([size_token, creative_name, hash_token]))
 	return {
 		"schema_id": "aurelion_native_rmg_package_filename_identity_v1",
 		"package_stem": package_stem,
@@ -1005,9 +1002,18 @@ static func _generated_map_package_identity(generated: Dictionary, adoption: Dic
 		"water_mode": String(normalized.get("water_mode", "")),
 		"normalized_seed": String(normalized.get("normalized_seed", normalized.get("seed", ""))),
 		"short_hash": hash_token,
-		"filename_style": "size-creative-name-seed-lowercase-kebab-deterministic",
+		"filename_style": "size-creative-name-hash-lowercase-kebab-deterministic",
 		"detailed_identity_storage": "package_metadata_refs_not_filename",
 	}
+
+static func _generated_map_package_size_token(size_class_id: String) -> String:
+	var raw := size_class_id.strip_edges().to_lower()
+	if raw.begins_with("homm3_"):
+		raw = raw.substr("homm3_".length())
+	raw = raw.replace("_", "-")
+	if raw == "extra-large":
+		return raw
+	return _safe_package_token(raw, "map")
 
 static func _generated_map_package_creative_name(normalized: Dictionary, generated: Dictionary) -> String:
 	var name_key := "|".join([
@@ -1051,22 +1057,35 @@ static func _stable_name_index(value: String, modulo: int) -> int:
 		hash_value = int((hash_value ^ value.unicode_at(index)) * 16777619) & 0x7fffffff
 	return hash_value % modulo
 
-static func _generated_map_package_short_hash(generated: Dictionary, adoption: Dictionary) -> String:
-	var identity: Dictionary = generated.get("deterministic_identity", {}) if generated.get("deterministic_identity", {}) is Dictionary else {}
-	var validation: Dictionary = generated.get("validation_report", {}) if generated.get("validation_report", {}) is Dictionary else {}
-	var map_ref: Dictionary = adoption.get("map_ref", {}) if adoption.get("map_ref", {}) is Dictionary else {}
-	var map_package: Dictionary = adoption.get("map_package_record", {}) if adoption.get("map_package_record", {}) is Dictionary else {}
-	for candidate in [
-		generated.get("full_output_signature", ""),
-		validation.get("full_output_signature", ""),
-		identity.get("signature", ""),
-		map_ref.get("map_hash", ""),
-		map_package.get("package_hash", ""),
-	]:
-		var token := _safe_package_token(String(candidate).replace("fnv1a32:", ""), "")
-		if token != "":
-			return token.substr(0, 10)
-	return "nohash"
+static func _generated_map_package_short_hash(normalized: Dictionary) -> String:
+	var identity := "|".join([
+		str(normalized.get("normalized_seed", normalized.get("seed", ""))),
+		str(normalized.get("template_id", "")),
+		str(normalized.get("profile_id", "")),
+		str(normalized.get("size_class_id", "")),
+		str(normalized.get("width", "")),
+		str(normalized.get("height", "")),
+		str(normalized.get("level_count", "")),
+		str(normalized.get("player_count", "")),
+		str(normalized.get("water_mode", "")),
+		str(normalized.get("underground_enabled", "")),
+		str(normalized.get("generator_version", "")),
+	])
+	return _stable_hash_hex8(identity)
+
+static func _stable_hash_hex8(value: String) -> String:
+	var hash_value := 2166136261
+	for index in range(value.length()):
+		hash_value = int(hash_value ^ value.unicode_at(index))
+		hash_value = int((hash_value * 16777619) & 0xffffffff)
+	return _hex8(hash_value)
+
+static func _hex8(value: int) -> String:
+	var hex_chars := "0123456789abcdef"
+	var output := ""
+	for shift in [28, 24, 20, 16, 12, 8, 4, 0]:
+		output += hex_chars.substr((value >> shift) & 0xf, 1)
+	return output
 
 static func _safe_package_token(value: Variant, fallback: String = "generated") -> String:
 	var raw := String(value).strip_edges().to_lower()
