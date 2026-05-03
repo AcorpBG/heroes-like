@@ -40,6 +40,16 @@ void ScenarioDocument::configure(Dictionary initial_state) {
 	scenario_hash = String(initial_state.get("scenario_hash", ""));
 	map_ref = initial_state.get("map_ref", Dictionary());
 	selection = initial_state.get("selection", Dictionary());
+	Variant player_slots_value = initial_state.get("player_slots", Variant());
+	player_slots = player_slots_value.get_type() == Variant::ARRAY ? Array(player_slots_value).duplicate(true) : Array();
+	Variant objectives_value = initial_state.get("objectives", Variant());
+	objectives = objectives_value.get_type() == Variant::DICTIONARY ? Dictionary(objectives_value).duplicate(true) : Dictionary();
+	Variant script_hooks_value = initial_state.get("script_hooks", Variant());
+	script_hooks = script_hooks_value.get_type() == Variant::ARRAY ? Array(script_hooks_value).duplicate(true) : Array();
+	Variant enemy_factions_value = initial_state.get("enemy_factions", Variant());
+	enemy_factions = enemy_factions_value.get_type() == Variant::ARRAY ? Array(enemy_factions_value).duplicate(true) : Array();
+	Variant start_contract_value = initial_state.get("start_contract", Variant());
+	start_contract = start_contract_value.get_type() == Variant::DICTIONARY ? Dictionary(start_contract_value).duplicate(true) : Dictionary();
 }
 
 int32_t ScenarioDocument::get_schema_version() const { return SCHEMA_VERSION; }
@@ -47,11 +57,11 @@ String ScenarioDocument::get_scenario_id() const { return scenario_id; }
 String ScenarioDocument::get_scenario_hash() const { return scenario_hash; }
 Dictionary ScenarioDocument::get_map_ref() const { return map_ref.duplicate(true); }
 Dictionary ScenarioDocument::get_selection() const { return selection.duplicate(true); }
-Array ScenarioDocument::get_player_slots() const { return Array(); }
-Dictionary ScenarioDocument::get_objectives() const { return not_implemented("get_objectives"); }
-Array ScenarioDocument::get_script_hooks() const { return Array(); }
-Array ScenarioDocument::get_enemy_factions() const { return Array(); }
-Dictionary ScenarioDocument::get_start_contract() const { return not_implemented("get_start_contract"); }
+Array ScenarioDocument::get_player_slots() const { return player_slots.duplicate(true); }
+Dictionary ScenarioDocument::get_objectives() const { return objectives.duplicate(true); }
+Array ScenarioDocument::get_script_hooks() const { return script_hooks.duplicate(true); }
+Array ScenarioDocument::get_enemy_factions() const { return enemy_factions.duplicate(true); }
+Dictionary ScenarioDocument::get_start_contract() const { return start_contract.duplicate(true); }
 Dictionary ScenarioDocument::to_legacy_scenario_record(Ref<MapDocument> map_document) const { return not_implemented("to_legacy_scenario_record"); }
 
 Dictionary ScenarioDocument::get_validation_summary() const {
@@ -65,6 +75,9 @@ Dictionary ScenarioDocument::get_validation_summary() const {
 	result["warning_count"] = 0;
 	result["failures"] = Array();
 	result["warnings"] = Array();
-	result["metrics"] = Dictionary();
+	Dictionary metrics;
+	metrics["player_slot_count"] = player_slots.size();
+	metrics["enemy_faction_count"] = enemy_factions.size();
+	result["metrics"] = metrics;
 	return result;
 }

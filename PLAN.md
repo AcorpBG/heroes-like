@@ -29,8 +29,8 @@ completed native children cover deterministic identity, terrain/grid output,
 foundation zone/player-start output, foundation road/river network output,
 foundation non-town object placement output, foundation town/guard placement
 output, native validation/provenance reporting, and a focused GDScript/native
-comparison harness. The next pending child is
-`native-rmg-package-session-adoption-10184`.
+comparison harness, and feature-gated package/session adoption records for native
+output. The next pending child is `native-rmg-full-parity-gate-10184`.
 
 Do not infer product readiness from the completed queue. Completed Phase 2/RMG/performance/tooling evidence means those specific slices passed their gates; it does not mean playable alpha, campaign breadth, release readiness, broad faction completion, asset parity, or HoMM3 byte-level cloning.
 
@@ -250,7 +250,7 @@ The native C++ GDExtension RMG must reach functional parity with the current GDS
 - `native-rmg-town-guard-placement-10184`: primary/neutral towns, mines, dwellings, route guards, border guards, monster/reward bands, and guard pressure records.
 - `native-rmg-validation-provenance-parity-10184`: validation reports, phase pipeline, stable signatures, generated provenance, no-authored-write policy, and warning/failure parity.
 - `native-rmg-gdscript-comparison-harness-10184`: headless comparison fixtures proving native/GDScript structural parity across supported seeds, sizes, water modes, underground, and player counts.
-- `native-rmg-package-session-adoption-10184`: package/session integration behind explicit adapters after parity gates pass; no save version bump or call-site replacement before this slice.
+- `native-rmg-package-session-adoption-10184`: package/session integration behind explicit feature-gated adapters for native output; no save version bump or call-site replacement.
 - `native-rmg-full-parity-gate-10184`: final gate proving terrain, objects, roads, rivers, towns, guards, zones/player starts, validation/provenance, comparison harness, package/session integration, Linux, and Windows all pass before broad parity is claimed.
 
 Until `native-rmg-full-parity-gate-10184` completes, native RMG remains incomplete and `RandomMapGeneratorRules.gd` remains authoritative for live generated skirmish gameplay.

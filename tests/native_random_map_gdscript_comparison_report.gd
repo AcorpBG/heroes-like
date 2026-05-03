@@ -14,6 +14,7 @@ const REQUIRED_NATIVE_CAPABILITIES := [
 	"native_random_map_object_placement_foundation",
 	"native_random_map_town_guard_placement_foundation",
 	"native_random_map_validation_provenance_foundation",
+	"native_random_map_package_session_adoption_bridge",
 ]
 const REQUIRED_NATIVE_PHASE_COMPONENTS := [
 	"terrain_grid",
@@ -77,6 +78,7 @@ func _run() -> void:
 	var matched_dimensions := 0
 	var matched_player_counts := 0
 	var native_foundation_component_count := 0
+	var package_session_adoption_ready_count := 0
 	for case_record in cases:
 		if not (case_record is Dictionary):
 			_fail("Comparison fixture contains a non-dictionary case.")
@@ -95,6 +97,8 @@ func _run() -> void:
 			matched_player_counts += 1
 		if bool(report.get("native_foundation_components_reported", false)):
 			native_foundation_component_count += 1
+		if bool(report.get("package_session_adoption", {}).get("ready", false)):
+			package_session_adoption_ready_count += 1
 		for gap in report.get("known_gaps", []):
 			aggregate_gaps.append(gap)
 
@@ -103,7 +107,7 @@ func _run() -> void:
 		known_gaps.append({
 			"code": "full_parity_gate_still_required",
 			"severity": "gate",
-			"message": "Comparison produced no structural diffs, but native adoption still requires package/session adoption and the final full-parity gate.",
+			"message": "Comparison and package/session adoption passed for these fixtures, but the final full-parity gate still has to approve native RMG.",
 		})
 
 	var report := {
@@ -119,17 +123,18 @@ func _run() -> void:
 			"known_gap_count": known_gaps.size(),
 			"native_foundation_component_report_count": native_foundation_component_count,
 			"all_native_foundation_components_reported": native_foundation_component_count == case_reports.size(),
+			"package_session_adoption_ready_count": package_session_adoption_ready_count,
+			"all_package_session_adoptions_ready": package_session_adoption_ready_count == case_reports.size(),
 			"fixture_schema_id": String(fixture.get("schema_id", "")),
 		},
 		"known_gaps": known_gaps,
 		"readiness": {
 			"gdscript_source_of_truth": true,
 			"native_runtime_authoritative": false,
-			"package_session_adoption_ready": false,
+			"package_session_adoption_ready": package_session_adoption_ready_count == case_reports.size(),
 			"full_parity_claim": false,
-			"adoption_gate_status": "blocked_until_package_session_adoption_and_full_parity_gate",
+			"adoption_gate_status": "package_session_bridge_ready_feature_gated_full_parity_still_pending" if package_session_adoption_ready_count == case_reports.size() else "blocked_until_package_session_adoption_and_full_parity_gate",
 			"next_required_slices": [
-				"native-rmg-package-session-adoption-10184",
 				"native-rmg-full-parity-gate-10184",
 			],
 		},
@@ -156,11 +161,19 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 	if not bool(native_result.get("ok", false)):
 		_fail("Native generation failed for %s: %s" % [String(case_record.get("id", "")), JSON.stringify(native_result)])
 		return {}
+	var adoption: Dictionary = service.convert_generated_payload(native_result, {
+		"feature_gate": "native_rmg_gdscript_comparison_adoption_check",
+		"session_save_version": 9,
+	})
+	if not bool(adoption.get("ok", false)):
+		_fail("Native package/session adoption conversion failed for %s: %s" % [String(case_record.get("id", "")), JSON.stringify(adoption)])
+		return {}
 
 	var gdscript_summary := _gdscript_summary(gdscript_setup)
 	var native_summary := _native_summary(native_result)
 	var comparisons := _comparison_sections(gdscript_summary, native_summary)
-	var known_gaps := _case_known_gaps(case_record, gdscript_summary, native_summary, comparisons)
+	var adoption_summary := _adoption_summary(adoption)
+	var known_gaps := _case_known_gaps(case_record, gdscript_summary, native_summary, comparisons, adoption_summary)
 	return {
 		"case_id": String(case_record.get("id", "")),
 		"seed": String(config.get("seed", "")),
@@ -182,11 +195,13 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 		"roads_rivers": comparisons.get("roads_rivers", {}),
 		"objects_towns_guards": comparisons.get("objects_towns_guards", {}),
 		"validation_provenance": comparisons.get("validation_provenance", {}),
+		"package_session_adoption": adoption_summary,
 		"native_foundation_components_reported": _native_foundation_components_reported(native_summary),
 		"known_gaps": known_gaps,
 		"readiness": {
 			"byte_for_byte_parity_required": false,
 			"native_adoption_allowed": false,
+			"package_session_adoption_ready": bool(adoption_summary.get("ready", false)),
 			"full_parity_claim": false,
 		},
 	}
@@ -318,6 +333,28 @@ func _native_summary(native_result: Dictionary) -> Dictionary:
 		"phase_pipeline": native_result.get("phase_pipeline", []),
 	}
 
+func _adoption_summary(adoption: Dictionary) -> Dictionary:
+	var report: Dictionary = adoption.get("report", {}) if adoption.get("report", {}) is Dictionary else {}
+	var metrics: Dictionary = report.get("metrics", {}) if report.get("metrics", {}) is Dictionary else {}
+	var map_package: Dictionary = adoption.get("map_package_record", {}) if adoption.get("map_package_record", {}) is Dictionary else {}
+	var scenario_package: Dictionary = adoption.get("scenario_package_record", {}) if adoption.get("scenario_package_record", {}) is Dictionary else {}
+	var session_boundary: Dictionary = adoption.get("session_boundary_record", {}) if adoption.get("session_boundary_record", {}) is Dictionary else {}
+	return {
+		"ready": bool(adoption.get("ok", false)) and String(report.get("status", "")) == "pass" and bool(report.get("package_session_adoption_ready", false)),
+		"status": String(adoption.get("adoption_status", "")),
+		"report_schema_id": String(report.get("schema_id", "")),
+		"map_package_hash": String(map_package.get("package_hash", "")),
+		"scenario_package_hash": String(scenario_package.get("package_hash", "")),
+		"session_id": String(session_boundary.get("session_id", "")),
+		"save_version": int(session_boundary.get("save_version", 0)),
+		"save_version_bump": bool(session_boundary.get("save_version_bump", true)),
+		"authored_content_writeback": bool(session_boundary.get("authored_content_writeback", true)),
+		"runtime_call_site_adoption": bool(session_boundary.get("runtime_call_site_adoption", true)),
+		"native_runtime_authoritative": bool(session_boundary.get("native_runtime_authoritative", true)),
+		"full_parity_claim": bool(session_boundary.get("full_parity_claim", true)),
+		"metrics": metrics,
+	}
+
 func _comparison_sections(gdscript: Dictionary, native: Dictionary) -> Dictionary:
 	return {
 		"structural_dimensions": _dimension_comparison(gdscript, native),
@@ -410,7 +447,7 @@ func _validation_comparison(gdscript: Dictionary, native: Dictionary) -> Diction
 		"native_full_parity_claim": bool(right_provenance.get("full_parity_claim", true)),
 	}
 
-func _case_known_gaps(case_record: Dictionary, gdscript: Dictionary, native: Dictionary, comparisons: Dictionary) -> Array:
+func _case_known_gaps(case_record: Dictionary, gdscript: Dictionary, native: Dictionary, comparisons: Dictionary, adoption: Dictionary) -> Array:
 	var gaps := []
 	_append_gap_if_false(gaps, comparisons.get("structural_dimensions", {}).get("matches", false), "dimension_mismatch", case_record, "Native and GDScript dimensions differ.")
 	_append_gap_if_false(gaps, comparisons.get("players", {}).get("player_count_matches", false), "player_count_mismatch", case_record, "Native and GDScript player counts differ.")
@@ -425,7 +462,8 @@ func _case_known_gaps(case_record: Dictionary, gdscript: Dictionary, native: Dic
 	_append_gap_if_false(gaps, comparisons.get("objects_towns_guards", {}).get("guard_counts_match", false), "guard_count_gap", case_record, "Native and GDScript guard counts differ.")
 	if String(native.get("full_generation_status", "")) != "not_implemented":
 		gaps.append(_gap("native_full_generation_status_unexpected", case_record, "Native full-generation status must stay not_implemented until full parity gate."))
-	gaps.append(_gap("package_session_adoption_pending", case_record, "Native package/session adoption remains out of scope for this comparison harness."))
+	if not bool(adoption.get("ready", false)):
+		gaps.append(_gap("package_session_adoption_not_ready", case_record, "Native package/session adoption conversion did not pass."))
 	if bool(native.get("provenance", {}).get("full_parity_claim", true)):
 		gaps.append(_gap("native_false_parity_claim", case_record, "Native validation/provenance must not claim full parity."))
 	if bool(gdscript.get("provenance", {}).get("campaign_adoption", true)):
@@ -559,12 +597,15 @@ func _assert_report_contract(report: Dictionary, expected_case_count: int) -> vo
 	if not bool(report.get("aggregate", {}).get("all_native_foundation_components_reported", false)):
 		_fail("Native did not report every implemented foundation component for each case: %s" % JSON.stringify(report.get("aggregate", {})))
 		return
+	if not bool(report.get("aggregate", {}).get("all_package_session_adoptions_ready", false)):
+		_fail("Native package/session adoption conversion did not pass for each case: %s" % JSON.stringify(report.get("aggregate", {})))
+		return
 	if report.get("known_gaps", []).is_empty():
-		_fail("Comparison report must preserve explicit native parity/adoption gaps.")
+		_fail("Comparison report must preserve the explicit final parity gate.")
 		return
 	var readiness: Dictionary = report.get("readiness", {}) if report.get("readiness", {}) is Dictionary else {}
-	if bool(readiness.get("native_runtime_authoritative", true)) or bool(readiness.get("package_session_adoption_ready", true)) or bool(readiness.get("full_parity_claim", true)):
-		_fail("Comparison report falsely opened native adoption/parity gates: %s" % JSON.stringify(readiness))
+	if bool(readiness.get("native_runtime_authoritative", true)) or not bool(readiness.get("package_session_adoption_ready", false)) or bool(readiness.get("full_parity_claim", true)):
+		_fail("Comparison report readiness did not preserve feature-gated adoption/full-parity boundaries: %s" % JSON.stringify(readiness))
 		return
 
 func _fail(message: String) -> void:

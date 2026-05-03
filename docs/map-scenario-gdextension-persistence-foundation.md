@@ -1139,10 +1139,29 @@ provenance status, and explicit known gaps. It also proves that native reports
 all implemented foundation phase components and that GDScript remains the source
 of truth.
 
-The harness keeps package/session adoption and full parity gated. Its readiness
-section sets native runtime authority, package/session adoption, and full parity
-claim to false while naming the remaining package/session adoption and final
-full-parity gate slices.
+The harness initially kept package/session adoption and full parity gated. After
+the package/session adoption slice, its readiness section now allows only the
+feature-gated package/session bridge while keeping native runtime authority and
+the full parity claim false.
+
+`native-rmg-package-session-adoption-10184` adds the controlled native output
+bridge for package/session records without making native RMG authoritative. The
+native `MapPackageService.convert_generated_payload(...)` path now accepts the
+native RMG result after validation/provenance passes and returns typed
+`MapDocument`/`ScenarioDocument` handles, generated map/scenario package records,
+stable package/session refs, and a session boundary report. The GDScript shim
+mirrors the shape, and `NativeRandomMapPackageSessionBridge.gd` can build a
+generated-draft `SessionData` from those refs for focused smoke validation only.
+
+The bridge is intentionally feature-gated. Package records are memory/session
+records with `memory_only_no_authored_writeback`; no `.amap`/`.ascenario` files
+are written by default, no authored JSON or generated draft registry writeback
+occurs, and `RandomMapGeneratorRules.gd` remains the live source-of-truth
+fallback. The adoption report marks package/session adoption ready for the smoke
+path while keeping native runtime authority, runtime call-site adoption, save
+version bump, campaign/skirmish browser adoption, and full parity claim false.
+The comparison harness now verifies this adoption conversion for its native
+fixtures and advances the readiness blocker to the final full-parity gate only.
 
 Planning/doc gates for this slice:
 
