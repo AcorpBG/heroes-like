@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-gdextension-editor-manifest-correction-10184",
-  "currentSliceTitle": "Native GDExtension Editor Manifest Correction",
+  "currentSliceId": "native-rmg-terrain-grid-generation-10184",
+  "currentSliceTitle": "Native RMG Terrain/Grid Generation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed corrective follow-up: Linux and Windows editor/headless GDExtension library entries now point at Debug native outputs while debug/release template entries remain intact for export/template builds. Windows helper/docs now explain editor/headless smoke selection and Debug-only smoke sufficiency. Validation passed: Linux native rebuild; native package smoke; native RMG smoke; JSON/progress checks; git diff --check; python3 tests/validate_repo.py. No native API, RMG, gameplay, save, content, or package semantics changed.",
+  "currentSliceNotes": "Completed first native terrain/grid parity child only. Broad native RMG parity remains incomplete; pending queue starts with native-rmg-zone-player-starts-10184.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T09:11:32Z",
+  "updatedAt": "2026-05-03T09:40:24Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -6312,7 +6312,7 @@
       "id": "native-gdextension-editor-manifest-correction-10184",
       "title": "Native GDExtension Editor Manifest Correction",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
       "sourceDocs": [
@@ -6402,6 +6402,471 @@
           "No unsupported macOS paths"
         ]
       }
+    },
+    {
+      "id": "native-rmg-terrain-grid-generation-10184",
+      "title": "Native RMG Terrain/Grid Generation",
+      "status": "completed",
+      "purpose": "Implement the first real C++ RMG parity child: deterministic normalized config plus terrain/biome grid data suitable for later package conversion while preserving partial_foundation for incomplete full generation.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/persistence/MapPackageService.gd",
+        "tests/native_random_map_terrain_grid_report.gd",
+        "tests/native_random_map_terrain_grid_report.tscn",
+        "src/gdextension/README.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "generate_random_map(config) returns deterministic terrain_grid data with width, height, level_count, tile_count, terrain code table, packed terrain codes, biome mapping, counts, and stable signature.",
+        "Same config/seed produces stable terrain grid output and changed seed changes terrain output.",
+        "Terrain/grid fields are reported separately while top-level native generation remains status partial_foundation and full_generation_status not_implemented.",
+        "Existing GDScript RMG and runtime call sites remain authoritative and untouched.",
+        "Linux native rebuild, existing package smoke, existing native RMG foundation smoke, new terrain/grid smoke, JSON/progress checks, git diff check, and repo validation pass."
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_foundation_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_terrain_grid_report.tscn",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "nonGoals": [
+        "No gameplay adoption before native parity and adoption slices explicitly pass.",
+        "No replacement of RandomMapGeneratorRules.gd call sites before the package/session adoption slice.",
+        "No save version bump.",
+        "No content migration, authored writeback, renderer, fog, pathing, or gameplay semantics changes.",
+        "No fake full-parity claim while any native RMG parity child remains incomplete.",
+        "No generated PNG or generated-study derivative import."
+      ],
+      "startedAt": "2026-05-03T09:37:49Z",
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "2026-05-03 owner directive: native C++ GDExtension RMG must reach full parity before adoption"
+      ],
+      "createdAt": "2026-05-03T09:37:49Z",
+      "updatedAt": "2026-05-03T09:40:24Z",
+      "completedAt": "2026-05-03T09:40:24Z",
+      "notes": "Completed first native C++ RMG terrain/grid parity child. Native generate_random_map now returns deterministic terrain_grid data with dimensions, packed terrain codes, terrain id table, biome mapping, counts, terrain seed records, and stable signatures while preserving partial_foundation/full_generation_status not_implemented. No gameplay adoption, call-site replacement, save bump, package/session adoption, or parity claim was made.",
+      "completionEvidence": [
+        "Inspected scripts/core/RandomMapGeneratorRules.gd enough to split native RMG parity into terrain/grid, zones/player starts, roads/rivers, objects, towns/guards, validation/provenance, comparison harness, package/session adoption, and full parity gate slices.",
+        "PLAN.md now records a compact native RMG parity track and explicitly states RandomMapGeneratorRules.gd remains authoritative until the full parity gate completes.",
+        "ops/progress.json now has nine native RMG parity queue entries; only native-rmg-terrain-grid-generation-10184 was active/completed in this run and later parity slices remain pending.",
+        "MapPackageService C++ now normalizes terrain/faction palette fields, clamps native dimensions to the current 8..144 terrain-grid scope, and reports foundation_scope deterministic_config_identity_and_native_terrain_grid_only.",
+        "generate_random_map(config) now returns terrain_generation_status=terrain_grid_generated, terrain_grid_status=generated, and a terrain_grid Dictionary with schema aurelion_native_rmg_terrain_grid_v1, width/height/level_count, tile_count, terrain_id_by_code, biome_id_by_terrain_id, terrain_palette_ids, deterministic terrain_seed_records, PackedInt32Array terrain_code_u16 per level, terrain/biome counts, and stable signatures.",
+        "Top-level native RMG status remains partial_foundation and full_generation_status remains not_implemented; the warning/report lists remaining parity slices instead of claiming full generation.",
+        "scripts/persistence/MapPackageService.gd mirrors the terrain-grid API shape for compatibility only; focused happy-path smokes still require native_gdextension loading.",
+        "Added tests/native_random_map_terrain_grid_report.gd and .tscn to prove deterministic dimensions, tile count, terrain code table bounds, multi-terrain distribution, same-seed signature stability, and changed-seed signature change.",
+        "Linux and Windows build/docs remain in sync: no manifest, helper, or platform-specific build path changes were needed because this slice only extends cross-platform C++ service behavior and focused smoke coverage under the existing Linux/Windows GDExtension build setup.",
+        "RandomMapGeneratorRules.gd, ScenarioSelectRules.gd, save/load, renderer, fog, pathing, content migration, package/session adoption, and runtime call sites were not changed."
+      ],
+      "validationEvidence": [
+        {
+          "command": "python3 -m json.tool ops/progress.json",
+          "result": "pass"
+        },
+        {
+          "command": "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+          "result": "pass: PLAN slice ids: 8 existing: 150 missing: 0"
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+          "result": "pass"
+        },
+        {
+          "command": "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn",
+          "result": "pass: binding_kind=native_gdextension, native_extension_loaded=true, package API skeleton report ok"
+        },
+        {
+          "command": "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_foundation_report.tscn",
+          "result": "pass: status=partial_foundation, full_generation_status=not_implemented, same config stable identity, changed seed changed identity"
+        },
+        {
+          "command": "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_terrain_grid_report.tscn",
+          "result": "pass: terrain_generation_status=terrain_grid_generated, width=36, height=36, tile_count=1296, stable signature 09643c81, changed seed signature 3de1c464, multi-terrain counts present"
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass"
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "id": "native-rmg-zone-player-starts-10184",
+      "title": "Native RMG Zone And Player Starts",
+      "status": "pending",
+      "purpose": "Port template/profile selection, runtime zones, player assignment, deterministic zone seed layout, owner grid, start anchors, and player start metadata from the GDScript generator.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/persistence/MapPackageService.gd",
+        "tests/native_random_map_zone_player_starts_report.gd",
+        "tests/native_random_map_zone_player_starts_report.tscn"
+      ],
+      "completionCriteria": [
+        "Native output exposes template/profile selection and zone/player-start structures comparable to GDScript at structural level.",
+        "Same seed remains deterministic and changed seed changes seeded layout.",
+        "No runtime gameplay adoption or full parity claim."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "2026-05-03 owner directive: native C++ GDExtension RMG must reach full parity before adoption"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_foundation_report.tscn",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "nonGoals": [
+        "No gameplay adoption before native parity and adoption slices explicitly pass.",
+        "No replacement of RandomMapGeneratorRules.gd call sites before the package/session adoption slice.",
+        "No save version bump.",
+        "No content migration, authored writeback, renderer, fog, pathing, or gameplay semantics changes.",
+        "No fake full-parity claim while any native RMG parity child remains incomplete.",
+        "No generated PNG or generated-study derivative import."
+      ],
+      "createdAt": "2026-05-03T09:37:49Z",
+      "updatedAt": "2026-05-03T09:37:49Z"
+    },
+    {
+      "id": "native-rmg-road-river-network-10184",
+      "title": "Native RMG Road/River Network",
+      "status": "pending",
+      "purpose": "Port deterministic route/corridor graph, road overlays, river/water/underground transit records, and reachability proof surfaces.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/persistence/MapPackageService.gd",
+        "tests/native_random_map_road_river_network_report.gd",
+        "tests/native_random_map_road_river_network_report.tscn"
+      ],
+      "completionCriteria": [
+        "Native route, road, river/water, underground transit, and reachability records are structurally comparable to GDScript baseline.",
+        "No object/town/session adoption beyond required route data."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "2026-05-03 owner directive: native C++ GDExtension RMG must reach full parity before adoption"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_foundation_report.tscn",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "nonGoals": [
+        "No gameplay adoption before native parity and adoption slices explicitly pass.",
+        "No replacement of RandomMapGeneratorRules.gd call sites before the package/session adoption slice.",
+        "No save version bump.",
+        "No content migration, authored writeback, renderer, fog, pathing, or gameplay semantics changes.",
+        "No fake full-parity claim while any native RMG parity child remains incomplete.",
+        "No generated PNG or generated-study derivative import."
+      ],
+      "createdAt": "2026-05-03T09:37:49Z",
+      "updatedAt": "2026-05-03T09:37:49Z"
+    },
+    {
+      "id": "native-rmg-object-placement-foundation-10184",
+      "title": "Native RMG Object Placement Foundation",
+      "status": "pending",
+      "purpose": "Port deterministic resource/reward/decor/object staging, footprint predicates, occupancy constraints, and object placement records.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/persistence/MapPackageService.gd",
+        "tests/native_random_map_object_placement_report.gd",
+        "tests/native_random_map_object_placement_report.tscn"
+      ],
+      "completionCriteria": [
+        "Native object staging records include stable placement ids, kinds, terrain suitability, occupancy boundaries, and deterministic signatures comparable to GDScript.",
+        "No runtime adoption or content writeback."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "2026-05-03 owner directive: native C++ GDExtension RMG must reach full parity before adoption"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_foundation_report.tscn",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "nonGoals": [
+        "No gameplay adoption before native parity and adoption slices explicitly pass.",
+        "No replacement of RandomMapGeneratorRules.gd call sites before the package/session adoption slice.",
+        "No save version bump.",
+        "No content migration, authored writeback, renderer, fog, pathing, or gameplay semantics changes.",
+        "No fake full-parity claim while any native RMG parity child remains incomplete.",
+        "No generated PNG or generated-study derivative import."
+      ],
+      "createdAt": "2026-05-03T09:37:49Z",
+      "updatedAt": "2026-05-03T09:37:49Z"
+    },
+    {
+      "id": "native-rmg-town-guard-placement-10184",
+      "title": "Native RMG Town And Guard Placement",
+      "status": "pending",
+      "purpose": "Port primary/neutral towns, mines, dwellings, route guards, border guards, monster/reward bands, and guard pressure records.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/persistence/MapPackageService.gd",
+        "tests/native_random_map_town_guard_placement_report.gd",
+        "tests/native_random_map_town_guard_placement_report.tscn"
+      ],
+      "completionCriteria": [
+        "Native town/mine/dwelling/guard records are deterministic, structurally comparable, and preserve original content ids.",
+        "Guard/reward/town summaries expose parity evidence without gameplay adoption."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "2026-05-03 owner directive: native C++ GDExtension RMG must reach full parity before adoption"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_foundation_report.tscn",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "nonGoals": [
+        "No gameplay adoption before native parity and adoption slices explicitly pass.",
+        "No replacement of RandomMapGeneratorRules.gd call sites before the package/session adoption slice.",
+        "No save version bump.",
+        "No content migration, authored writeback, renderer, fog, pathing, or gameplay semantics changes.",
+        "No fake full-parity claim while any native RMG parity child remains incomplete.",
+        "No generated PNG or generated-study derivative import."
+      ],
+      "createdAt": "2026-05-03T09:37:49Z",
+      "updatedAt": "2026-05-03T09:37:49Z"
+    },
+    {
+      "id": "native-rmg-validation-provenance-parity-10184",
+      "title": "Native RMG Validation And Provenance Parity",
+      "status": "pending",
+      "purpose": "Port validation reports, phase pipeline, stable signatures, generated provenance, no-authored-write policy, and warning/failure semantics.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/persistence/MapPackageService.gd",
+        "tests/native_random_map_validation_provenance_report.gd",
+        "tests/native_random_map_validation_provenance_report.tscn"
+      ],
+      "completionCriteria": [
+        "Native validation/provenance reports cover terrain, zones, routes, objects, towns, guards, package boundaries, and no-authored-write policy.",
+        "Failure/warning semantics are comparable to GDScript for fixture cases."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "2026-05-03 owner directive: native C++ GDExtension RMG must reach full parity before adoption"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_foundation_report.tscn",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "nonGoals": [
+        "No gameplay adoption before native parity and adoption slices explicitly pass.",
+        "No replacement of RandomMapGeneratorRules.gd call sites before the package/session adoption slice.",
+        "No save version bump.",
+        "No content migration, authored writeback, renderer, fog, pathing, or gameplay semantics changes.",
+        "No fake full-parity claim while any native RMG parity child remains incomplete.",
+        "No generated PNG or generated-study derivative import."
+      ],
+      "createdAt": "2026-05-03T09:37:49Z",
+      "updatedAt": "2026-05-03T09:37:49Z"
+    },
+    {
+      "id": "native-rmg-gdscript-comparison-harness-10184",
+      "title": "Native RMG GDScript Comparison Harness",
+      "status": "pending",
+      "purpose": "Add headless comparison fixtures that run native and GDScript generators side by side across supported seeds, sizes, water modes, underground, and player counts.",
+      "implementationTargets": [
+        "tests/native_random_map_gdscript_comparison_report.gd",
+        "tests/native_random_map_gdscript_comparison_report.tscn",
+        "tests/fixtures/native_random_map_comparison_cases.json"
+      ],
+      "completionCriteria": [
+        "Comparison harness proves native/GDScript structural parity for terrain, zones, roads, rivers, objects, towns, guards, validation, and provenance across selected fixtures.",
+        "Harness reports actionable diffs without changing runtime call sites."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "2026-05-03 owner directive: native C++ GDExtension RMG must reach full parity before adoption"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_foundation_report.tscn",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "nonGoals": [
+        "No gameplay adoption before native parity and adoption slices explicitly pass.",
+        "No replacement of RandomMapGeneratorRules.gd call sites before the package/session adoption slice.",
+        "No save version bump.",
+        "No content migration, authored writeback, renderer, fog, pathing, or gameplay semantics changes.",
+        "No fake full-parity claim while any native RMG parity child remains incomplete.",
+        "No generated PNG or generated-study derivative import."
+      ],
+      "createdAt": "2026-05-03T09:37:49Z",
+      "updatedAt": "2026-05-03T09:37:49Z"
+    },
+    {
+      "id": "native-rmg-package-session-adoption-10184",
+      "title": "Native RMG Package And Session Adoption",
+      "status": "pending",
+      "purpose": "Adopt native RMG output into package/session integration through explicit adapters after parity gates pass.",
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "scripts/core/ScenarioFactory.gd",
+        "scripts/core/SessionStateStore.gd",
+        "scripts/autoload/SaveService.gd",
+        "scripts/persistence/MapPackageService.gd",
+        "src/gdextension/src/map_package_service.cpp"
+      ],
+      "completionCriteria": [
+        "Native generated package/session references work through focused generated-skirmish smokes.",
+        "Adoption is gated by comparison/validation evidence and does not silently bump saves or migrate content."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "2026-05-03 owner directive: native C++ GDExtension RMG must reach full parity before adoption"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_foundation_report.tscn",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "nonGoals": [
+        "No gameplay adoption before native parity and adoption slices explicitly pass.",
+        "No replacement of RandomMapGeneratorRules.gd call sites before the package/session adoption slice.",
+        "No save version bump.",
+        "No content migration, authored writeback, renderer, fog, pathing, or gameplay semantics changes.",
+        "No fake full-parity claim while any native RMG parity child remains incomplete.",
+        "No generated PNG or generated-study derivative import."
+      ],
+      "createdAt": "2026-05-03T09:37:49Z",
+      "updatedAt": "2026-05-03T09:37:49Z"
+    },
+    {
+      "id": "native-rmg-full-parity-gate-10184",
+      "title": "Native RMG Full Parity Gate",
+      "status": "pending",
+      "purpose": "Final acceptance gate before claiming native RMG parity with the current GDScript generator.",
+      "implementationTargets": [
+        "tests/native_random_map_full_parity_gate_report.gd",
+        "tests/native_random_map_full_parity_gate_report.tscn",
+        "ops/progress.json",
+        "PLAN.md"
+      ],
+      "completionCriteria": [
+        "All native RMG parity child slices are completed with validation evidence.",
+        "Full gate proves terrain, objects, roads, rivers, towns, guards, zones/player starts, validation/provenance, comparison harness, package/session integration, Linux, and Windows all pass.",
+        "Only this gate may move native RMG from incomplete/partial status to full parity."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "2026-05-03 owner directive: native C++ GDExtension RMG must reach full parity before adoption"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_foundation_report.tscn",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "nonGoals": [
+        "No gameplay adoption before native parity and adoption slices explicitly pass.",
+        "No replacement of RandomMapGeneratorRules.gd call sites before the package/session adoption slice.",
+        "No save version bump.",
+        "No content migration, authored writeback, renderer, fog, pathing, or gameplay semantics changes.",
+        "No fake full-parity claim while any native RMG parity child remains incomplete.",
+        "No generated PNG or generated-study derivative import."
+      ],
+      "createdAt": "2026-05-03T09:37:49Z",
+      "updatedAt": "2026-05-03T09:37:49Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -7455,26 +7920,15 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "map-scenario-gdextension-persistence-foundation-10184",
-      "title": "Map/Scenario GDExtension Persistence Foundation",
-      "status": "pending_after_implementation",
-      "phase": "phase-2-deep-production-foundation",
-      "nextAction": "Native inert package API and first native RMG foundation API/identity/stub proof are implemented. Next future work must stay scoped, such as legacy scenario converter probe or native RMG parity planning, without package adoption, save/content migration, or gameplay call-site replacement.",
+      "id": "native-rmg-zone-player-starts-10184",
+      "title": "Native RMG Zone And Player Starts",
+      "status": "pending",
       "sourceDocs": [
         "project.md",
         "PLAN.md",
-        "2026-05-03 owner direction: maps/scenarios need structure and persistence; prefer C++ Godot GDExtension map system",
-        "2026-05-03 RMG/save-path inspection",
-        "docs/map-scenario-gdextension-persistence-foundation.md"
-      ],
-      "guardrails": [
-        "No immediate coding or coding-agent implementation during planning refinement.",
-        "No breaking existing saves or authored scenarios without an explicit migration slice.",
-        "No full RMG rewrite as the first step.",
-        "No renderer, fog, pathing, occupancy, gameplay semantics, or production content migration unless separately selected.",
-        "No generated PNG/asset ingestion."
-      ],
-      "validationSummary": "Native package smoke and native RMG foundation smoke pass through the C++ GDExtension; full package read/write/conversion, full native RMG generation, and runtime adoption remain pending future slices."
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "scripts/core/RandomMapGeneratorRules.gd"
+      ]
     }
   ],
   "stoppedOrPausedTasks": [

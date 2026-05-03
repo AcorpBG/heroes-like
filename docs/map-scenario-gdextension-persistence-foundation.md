@@ -395,6 +395,21 @@ validation parity data. `RandomMapGeneratorRules.gd` remains authoritative for l
 generated skirmish gameplay until later parity and adoption slices explicitly move
 call sites.
 
+### Native RMG Terrain/Grid Child Slice
+
+The first real native parity child adds deterministic terrain/grid generation while
+still preserving the broader `partial_foundation` status. The C++ API may return a
+typed terrain-grid `Dictionary` with dimensions, tile count, terrain code table,
+packed terrain codes, biome mapping, deterministic terrain seed records, terrain
+counts, and stable signatures. This is structural parity scaffolding for the
+GDScript generator's terrain rows and zone-seeded terrain/biome phase only.
+
+This child still must not place objects, roads, rivers, towns, guards, validation
+parity, package conversion data, session adoption data, save migrations, or any
+claim that native RMG has full parity. Linux and Windows helper/docs remain in
+sync because the existing cross-platform GDExtension build and manifest paths are
+unchanged; only C++ service behavior and focused smoke coverage are extended.
+
 ### `MapValidationReport`
 
 Can be a Dictionary return first. A typed class may follow once report consumers stabilize.

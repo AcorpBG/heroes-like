@@ -11,10 +11,13 @@ smoke/report instantiates them directly.
 
 The native RMG foundation API is also intentionally narrow. `MapPackageService`
 can normalize a minimal random-map config, compute a deterministic foundation
-identity, and return an empty generated `MapDocument` stub through
-`generate_random_map(config)`. Full terrain/object/road/town generation remains
-`not_implemented`; the existing GDScript `RandomMapGeneratorRules.gd` stays
-authoritative for gameplay until a later parity/adoption slice.
+identity, and return generated metadata through `generate_random_map(config)`.
+The first parity child slice adds a deterministic native terrain-grid record with
+stable terrain codes, biome mapping, dimensions, tile counts, and signatures.
+Objects, roads, rivers, towns, guards, validation/provenance parity, package
+conversion, and runtime session adoption remain `not_implemented`; the existing
+GDScript `RandomMapGeneratorRules.gd` stays authoritative for gameplay until a
+later parity/adoption slice.
 
 ## Dependency Pin
 
