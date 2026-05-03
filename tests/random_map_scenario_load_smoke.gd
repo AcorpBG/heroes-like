@@ -1,6 +1,5 @@
 extends Node
 
-const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
@@ -13,23 +12,26 @@ func _ready() -> void:
 
 func _run() -> void:
 	ContentService.clear_generated_scenario_drafts()
-	var config := {
-		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
-		"seed": "scenario-load-smoke-10184",
-		"size": {"preset": "scenario_load_smoke", "width": 24, "height": 16},
-		"player_constraints": {"human_count": 1, "computer_count": 2},
-		"profile": {
-			"id": "border_gate_compact_profile_v1",
-			"template_id": "border_gate_compact_v1",
-		},
-	}
-
-	var generator = RandomMapGeneratorRulesScript.new()
-	var generated: Dictionary = generator.generate(config)
-	if not bool(generated.get("ok", false)):
-		_fail("Generated payload validation failed: %s" % JSON.stringify(generated.get("report", {})))
+	if not _assert_native_domains_archived():
 		return
-	var payload: Dictionary = generated.get("generated_map", {})
+	var config := ScenarioSelectRulesScript.build_random_map_player_config(
+		"scenario-load-smoke-10184",
+		"border_gate_compact_v1",
+		"border_gate_compact_profile_v1",
+		3,
+		"land",
+		false,
+		"homm3_small"
+	)
+	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		config,
+		"normal",
+		{"max_attempts": 3, "mode": "seed_salt"}
+	)
+	if not bool(setup.get("ok", false)):
+		_fail("Generated payload validation failed: %s" % JSON.stringify(setup.get("validation", {})))
+		return
+	var payload: Dictionary = setup.get("generated_map", {})
 	if not _assert_catalog_backed(payload):
 		return
 
@@ -89,6 +91,23 @@ func _run() -> void:
 	})])
 	get_tree().quit(0)
 
+func _assert_native_domains_archived() -> bool:
+	var scenarios := ContentService.load_json(ContentService.SCENARIOS_PATH)
+	var campaigns := ContentService.load_json(ContentService.CAMPAIGNS_PATH)
+	if String(scenarios.get("domain_status", "")) != "archived_native_scenario_set_disabled":
+		_fail("Native scenario domain is not archived/disabled.")
+		return false
+	if String(campaigns.get("domain_status", "")) != "archived_native_campaign_set_disabled":
+		_fail("Native campaign domain is not archived/disabled.")
+		return false
+	if not ScenarioSelectRulesScript.build_skirmish_browser_entries().is_empty():
+		_fail("Archived native scenarios still appear in the skirmish browser.")
+		return false
+	if not _campaign_rules().build_campaign_browser_entries({}).is_empty():
+		_fail("Archived native campaigns still appear in the campaign browser.")
+		return false
+	return true
+
 func _assert_catalog_backed(payload: Dictionary) -> bool:
 	var metadata: Dictionary = payload.get("metadata", {})
 	if String(metadata.get("template_id", "")) != "border_gate_compact_v1":
@@ -101,6 +120,9 @@ func _assert_catalog_backed(payload: Dictionary) -> bool:
 		_fail("Generated payload used fallback template selection: %s" % JSON.stringify(metadata.get("template_selection", {})))
 		return false
 	return true
+
+func _campaign_rules():
+	return load("res://scripts/core/CampaignRules.gd")
 
 func _assert_absent_from_authored_content(scenario_id: String, phase: String) -> bool:
 	if scenario_id == "":

@@ -265,8 +265,12 @@ static func build_current_session_summary(session: SessionStateStoreScript.Sessi
 
 static func build_skirmish_browser_entries() -> Array:
 	var entries := []
+	if not _scenario_domain_is_player_facing():
+		return entries
 	for scenario in _scenario_items():
 		if not (scenario is Dictionary):
+			continue
+		if not _scenario_is_player_facing(scenario):
 			continue
 		var selection := _selection_metadata(scenario)
 		var availability: Variant = selection.get("availability", {})
@@ -292,6 +296,10 @@ static func build_skirmish_browser_entries() -> Array:
 static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> Dictionary:
 	var scenario := ContentService.get_scenario(scenario_id)
 	if scenario.is_empty():
+		return {}
+	if ContentService.has_authored_scenario(scenario_id) and not _scenario_domain_is_player_facing():
+		return {}
+	if not _scenario_is_player_facing(scenario):
 		return {}
 
 	var selection := _selection_metadata(scenario)
@@ -1108,6 +1116,28 @@ static func _random_map_setup_summary(scenario: Dictionary, metadata: Dictionary
 
 static func _scenario_items() -> Array:
 	return ContentService.load_json(ContentService.SCENARIOS_PATH).get("items", [])
+
+static func _scenario_domain_is_player_facing() -> bool:
+	var raw := ContentService.load_json(ContentService.SCENARIOS_PATH)
+	var status := String(raw.get("domain_status", ""))
+	if status.begins_with("archived_") or status.ends_with("_disabled"):
+		return false
+	return true
+
+static func _scenario_is_player_facing(scenario: Dictionary) -> bool:
+	if scenario.is_empty():
+		return false
+	if scenario.has("active") and not bool(scenario.get("active", true)):
+		return false
+	if scenario.has("player_facing") and not bool(scenario.get("player_facing", true)):
+		return false
+	var content_status := String(scenario.get("content_status", ""))
+	if content_status.begins_with("archived_") or content_status.ends_with("_disabled"):
+		return false
+	var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
+	if selection.has("player_facing") and not bool(selection.get("player_facing", true)):
+		return false
+	return true
 
 static func _selection_metadata(scenario: Dictionary) -> Dictionary:
 	var selection: Variant = scenario.get("selection", {})
