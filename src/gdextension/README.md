@@ -52,7 +52,40 @@ bin/libaurelion_map_persistence.linux.template_debug.x86_64.so
 bin/libaurelion_map_persistence.linux.template_release.x86_64.so
 ```
 
-On Windows, prefer MSVC with the Visual Studio 2022 generator:
+On Windows, use the helper from a Command Prompt or Developer Command Prompt:
+
+```bat
+scripts\build_map_persistence_windows.bat
+```
+
+By default it:
+
+- initializes or updates `third_party/godot-cpp`;
+- configures MSVC with `-G "Visual Studio 17 2022" -A x64`;
+- builds Debug and Release;
+- verifies the expected DLLs in `bin\`;
+- runs the focused Godot smoke when `godot` is on `PATH`.
+
+Useful options:
+
+```bat
+scripts\build_map_persistence_windows.bat --debug-only
+scripts\build_map_persistence_windows.bat --release-only
+scripts\build_map_persistence_windows.bat --skip-test
+scripts\build_map_persistence_windows.bat --require-test
+scripts\build_map_persistence_windows.bat --godot "C:\Path\To\godot.exe"
+scripts\build_map_persistence_windows.bat --mingw
+```
+
+If Godot is not on `PATH`, the helper still treats a successful build as a pass
+unless `--require-test` is provided. Run the focused smoke manually after adding
+Godot to `PATH`:
+
+```bat
+godot --headless --path . tests\map_package_api_skeleton_report.tscn
+```
+
+The underlying MSVC commands are:
 
 ```powershell
 cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_msvc -G "Visual Studio 17 2022" -A x64

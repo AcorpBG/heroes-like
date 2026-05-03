@@ -8,7 +8,7 @@
   "currentSliceStatus": "completed",
   "currentSliceNotes": "Completed owner-directed corrective reset. Native authored scenario/campaign domains are archived out of active player-facing selection; generated random-map skirmish remains validated. This does not complete the broader map/scenario persistence foundation.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T07:22:08Z",
+  "updatedAt": "2026-05-03T07:35:16Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -93,8 +93,8 @@
         "No generated PNG/asset ingestion."
       ],
       "createdAt": "2026-05-03T05:50:07Z",
-      "updatedAt": "2026-05-03T07:22:08Z",
-      "notes": "Native inert GDExtension API skeleton now builds and loads through Godot, and its build/config/docs now cover Windows x86_64 library naming. The broad map/scenario persistence foundation remains in_progress; package format behavior, package adoption, save migration, content/scenarios.json migration, RMG rewrite, and gameplay/runtime adoption remain out of scope for this step.",
+      "updatedAt": "2026-05-03T07:35:16Z",
+      "notes": "Native inert GDExtension API skeleton now builds and loads through Godot, and its build/config/docs now cover Windows x86_64 library naming plus a Windows helper script for AcOrP's local builds. The broad map/scenario persistence foundation remains in_progress; package format behavior, package adoption, save migration, content/scenarios.json migration, RMG rewrite, and gameplay/runtime adoption remain out of scope for this step.",
       "startedAt": "2026-05-03T05:57:04Z",
       "docsReadyAt": "2026-05-03T06:45:00Z",
       "documentationEvidence": {
@@ -167,7 +167,12 @@
         "Passed 2026-05-03T07:22:08Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run.",
         "Passed 2026-05-03T07:22:08Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like.",
         "Passed 2026-05-03T07:22:08Z: git diff --check.",
-        "Passed 2026-05-03T07:22:08Z: python3 tests/validate_repo.py."
+        "Passed 2026-05-03T07:22:08Z: python3 tests/validate_repo.py.",
+        "Passed 2026-05-03T07:35:16Z: inspected scripts/build_map_persistence_windows.bat for batch syntax/flow on Linux host.",
+        "Passed 2026-05-03T07:35:16Z: python3 -m json.tool ops/progress.json.",
+        "Passed 2026-05-03T07:35:16Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run.",
+        "Passed 2026-05-03T07:35:16Z: git diff --check.",
+        "Passed 2026-05-03T07:35:16Z: python3 tests/validate_repo.py."
       ],
       "nativeBuildLoadEvidence": {
         "status": "completed_for_native_inert_api_skeleton_only",
@@ -220,6 +225,25 @@
         "boundariesPreserved": [
           "No package read/write/conversion/migration behavior was implemented.",
           "No package adoption, save version bump, scenario/content migration, RMG rewrite, or gameplay/renderer/fog/pathing change."
+        ]
+      },
+      "windowsBuildHelperEvidence": {
+        "status": "completed_for_windows_local_build_tooling_only",
+        "implementedAt": "2026-05-03T07:33:15Z",
+        "sourceFiles": [
+          "scripts/build_map_persistence_windows.bat",
+          "src/gdextension/README.md"
+        ],
+        "summary": "Added a Windows batch helper that auto-detects the repo root, initializes or updates third_party/godot-cpp, builds Debug and Release by default with Visual Studio 2022 x64, supports focused Debug/Release-only builds, optional MinGW builds, expected DLL verification, and optional Godot headless smoke execution.",
+        "smokeBehavior": "If godot is not on PATH, the helper prints the manual smoke command and does not fail the build unless --require-test is provided.",
+        "expectedDlls": [
+          "bin/aurelion_map_persistence.windows.template_debug.x86_64.dll",
+          "bin/aurelion_map_persistence.windows.template_release.x86_64.dll"
+        ],
+        "localValidationLimit": "The .bat cannot be executed on this Linux host; validation is by syntax inspection plus Linux-safe repository checks.",
+        "boundariesPreserved": [
+          "No package read/write/conversion/migration behavior was implemented.",
+          "No package adoption, save version bump, scenario/content migration, RMG rewrite, renderer/fog/pathing change, or gameplay behavior change."
         ]
       }
     },
