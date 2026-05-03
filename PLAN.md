@@ -26,8 +26,9 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 Current tactical chain: continue the native C++ GDExtension RMG parity track until
 it reaches full parity with `scripts/core/RandomMapGeneratorRules.gd`. The current
 completed native children cover deterministic identity, terrain/grid output, and
-foundation zone/player-start output, plus foundation road/river network output.
-The next pending child is `native-rmg-object-placement-foundation-10184`.
+foundation zone/player-start output, foundation road/river network output, and
+foundation non-town object placement output. The next pending child is
+`native-rmg-town-guard-placement-10184`.
 
 Do not infer product readiness from the completed queue. Completed Phase 2/RMG/performance/tooling evidence means those specific slices passed their gates; it does not mean playable alpha, campaign breadth, release readiness, broad faction completion, asset parity, or HoMM3 byte-level cloning.
 

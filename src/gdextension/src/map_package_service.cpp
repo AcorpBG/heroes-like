@@ -27,6 +27,7 @@ constexpr const char *NATIVE_RMG_PLAYER_STARTS_SCHEMA_ID = "aurelion_native_rmg_
 constexpr const char *NATIVE_RMG_ROUTE_GRAPH_SCHEMA_ID = "aurelion_native_rmg_route_graph_v1";
 constexpr const char *NATIVE_RMG_ROAD_NETWORK_SCHEMA_ID = "aurelion_native_rmg_road_network_v1";
 constexpr const char *NATIVE_RMG_RIVER_NETWORK_SCHEMA_ID = "aurelion_native_rmg_river_network_v1";
+constexpr const char *NATIVE_RMG_OBJECT_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_object_placement_v1";
 constexpr uint64_t HASH_MODULUS = 4294967296ULL;
 constexpr double TAU = 6.28318530717958647692;
 
@@ -41,6 +42,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_terrain_grid_foundation");
 	result.append("native_random_map_zone_player_starts_foundation");
 	result.append("native_random_map_road_river_network_foundation");
+	result.append("native_random_map_object_placement_foundation");
 	result.append("headless_binding_smoke");
 	return result;
 }
@@ -1450,6 +1452,412 @@ Dictionary generate_river_network(const Dictionary &normalized, const Dictionary
 	return network;
 }
 
+String terrain_id_for_zone(const Dictionary &zone) {
+	String terrain_id = String(zone.get("terrain_id", "grass"));
+	if (!is_passable_terrain_id(terrain_id)) {
+		return "grass";
+	}
+	return terrain_id;
+}
+
+Dictionary object_family_record(const String &kind, int32_t ordinal, const String &terrain_id) {
+	Dictionary record;
+	if (kind == "resource_site") {
+		static constexpr const char *SITE_IDS[] = {"site_wood_wagon", "site_ore_crates", "site_waystone_cache"};
+		static constexpr const char *OBJECT_IDS[] = {"object_wood_wagon", "object_ore_crates", "object_waystone_cache"};
+		static constexpr const char *CATEGORIES[] = {"timber", "ore", "gold"};
+		static constexpr const char *RESOURCE_IDS[] = {"wood", "ore", "gold"};
+		const int32_t index = ordinal % 3;
+		record["family_id"] = "resource_pickup_site";
+		record["object_family_id"] = "resource_pickup_site";
+		record["type_id"] = "resource_site";
+		record["site_id"] = SITE_IDS[index];
+		record["object_id"] = OBJECT_IDS[index];
+		record["category_id"] = CATEGORIES[index];
+		record["resource_id"] = RESOURCE_IDS[index];
+		record["reward_value"] = index == 2 ? 900 : 4;
+		record["purpose"] = index == 0 ? "start_support_wood" : (index == 1 ? "start_support_ore" : "start_support_cache");
+		return record;
+	}
+	if (kind == "mine") {
+		static constexpr const char *CATEGORIES[] = {"timber", "ore", "gold", "quicksilver", "ember_salt", "lens_crystal", "cut_gems"};
+		static constexpr const char *FAMILIES[] = {"sawmill", "ore_pit", "gold_mine", "alchemist_lab", "sulfur_dune_equivalent", "crystal_cavern_equivalent", "gem_pond_equivalent"};
+		static constexpr const char *OBJECT_IDS[] = {"object_brightwood_sawmill", "object_ridge_quarry", "object_reef_coin_assay", "object_marsh_peat_yard", "object_floodplain_sluice_camp", "object_reef_coin_assay", "object_badlands_coin_sluice"};
+		static constexpr const char *RESOURCE_IDS[] = {"wood", "ore", "gold", "gold", "gold", "gold", "gold"};
+		const int32_t index = ordinal % 7;
+		record["family_id"] = FAMILIES[index];
+		record["object_family_id"] = "resource_mine_placeholder";
+		record["type_id"] = "mine_placeholder";
+		record["site_id"] = String("site_native_foundation_") + CATEGORIES[index];
+		record["object_id"] = OBJECT_IDS[index];
+		record["category_id"] = CATEGORIES[index];
+		record["resource_id"] = RESOURCE_IDS[index];
+		record["mine_family_id"] = FAMILIES[index];
+		record["guard_base_value"] = index == 2 ? 7000 : (index == 0 || index == 1 ? 1500 : 3500);
+		record["purpose"] = "neutral_resource_control_foundation";
+		return record;
+	}
+	if (kind == "neutral_dwelling") {
+		static constexpr const char *OBJECT_IDS[] = {"object_bogbell_croft", "object_greenbranch_copse", "object_crystal_sump", "object_kite_signal_eyrie", "object_saltpan_camp", "object_cliffhawk_roost"};
+		static constexpr const char *FAMILIES[] = {"neutral_dwelling_bogbell_croft", "neutral_dwelling_greenbranch_copse", "neutral_dwelling_crystal_sump", "neutral_dwelling_kite_signal_eyrie", "neutral_dwelling_saltpan_camp", "neutral_dwelling_cliffhawk_roost"};
+		const int32_t index = ordinal % 6;
+		record["family_id"] = "neutral_dwelling";
+		record["object_family_id"] = "neutral_dwelling";
+		record["type_id"] = "neutral_dwelling";
+		record["site_id"] = String("site_native_foundation_dwelling_") + String::num_int64(index + 1);
+		record["object_id"] = OBJECT_IDS[index];
+		record["category_id"] = "dwelling";
+		record["neutral_dwelling_family_id"] = FAMILIES[index];
+		record["guard_pressure"] = index == 4 ? "high" : (index == 0 || index == 5 ? "low" : "medium");
+		record["purpose"] = "neutral_weekly_muster_foundation";
+		return record;
+	}
+	if (kind == "reward_reference") {
+		static constexpr const char *OBJECT_IDS[] = {"object_waystone_cache", "object_ore_crates", "object_wood_wagon", "artifact_trailsinger_boots", "artifact_waymark_compass", "spell_beacon_path", "object_reedscript_vow_shrine"};
+		static constexpr const char *FAMILIES[] = {"reward_cache_small", "reward_cache_small", "guarded_reward_cache", "artifact_cache", "artifact_cache", "spell_shrine", "skill_shrine"};
+		static constexpr const char *CATEGORIES[] = {"resource_cache", "build_resource_cache", "guarded_cache", "artifact", "artifact", "spell_access", "skill_equivalent"};
+		const int32_t index = ordinal % 7;
+		record["family_id"] = FAMILIES[index];
+		record["object_family_id"] = FAMILIES[index];
+		record["type_id"] = "reward_reference";
+		record["site_id"] = index == 6 ? "site_reedscript_vow_shrine" : (index == 1 ? "site_ore_crates" : "site_waystone_cache");
+		record["object_id"] = OBJECT_IDS[index];
+		record["category_id"] = CATEGORIES[index];
+		record["reward_category"] = CATEGORIES[index];
+		record["reward_value"] = 450 + index * 175;
+		if (index == 3 || index == 4) {
+			record["artifact_id"] = OBJECT_IDS[index];
+		}
+		if (index == 5) {
+			record["spell_id"] = OBJECT_IDS[index];
+		}
+		record["purpose"] = "zone_reward_foundation";
+		return record;
+	}
+
+	const String family_id = terrain_id == "snow" ? "decor_snow_icegrass_ridge" : (terrain_id == "rough" ? "obstacle_highland_slate_outcrop" : (terrain_id == "dirt" ? "obstacle_mire_sinkroot_cluster" : "decor_grass_windgrass_tufts"));
+	record["family_id"] = family_id;
+	record["object_family_id"] = "decorative_obstacle";
+	record["type_id"] = "decorative_obstacle";
+	record["site_id"] = "";
+	record["object_id"] = family_id;
+	record["category_id"] = "decorative_obstacle";
+	record["purpose"] = "zone_decoration_density_foundation";
+	return record;
+}
+
+Dictionary object_footprint_for_kind(const String &kind) {
+	Dictionary footprint;
+	if (kind == "mine" || kind == "neutral_dwelling") {
+		footprint["width"] = 2;
+		footprint["height"] = 2;
+		footprint["anchor"] = "bottom_center";
+		footprint["tier"] = "medium";
+	} else {
+		footprint["width"] = 1;
+		footprint["height"] = 1;
+		footprint["anchor"] = "center";
+		footprint["tier"] = "micro";
+	}
+	return footprint;
+}
+
+Array cardinal_approach_tiles(int32_t x, int32_t y, int32_t width, int32_t height, const Dictionary &occupied) {
+	Array result;
+	static constexpr int32_t OFFSETS[4][2] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+	for (const auto &offset : OFFSETS) {
+		const int32_t nx = x + offset[0];
+		const int32_t ny = y + offset[1];
+		if (nx < 0 || ny < 0 || nx >= width || ny >= height || occupied.has(point_key(nx, ny))) {
+			continue;
+		}
+		result.append(point_record(nx, ny));
+	}
+	return result;
+}
+
+Dictionary nearest_road_proximity(int32_t x, int32_t y, const Dictionary &road_network) {
+	int32_t best_distance = std::numeric_limits<int32_t>::max();
+	String best_segment_id;
+	Dictionary best_cell;
+	Array road_segments = road_network.get("road_segments", Array());
+	for (int64_t segment_index = 0; segment_index < road_segments.size(); ++segment_index) {
+		Dictionary segment = road_segments[segment_index];
+		Array cells = segment.get("cells", Array());
+		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+			Dictionary cell = cells[cell_index];
+			const int32_t distance = std::abs(x - int32_t(cell.get("x", 0))) + std::abs(y - int32_t(cell.get("y", 0)));
+			if (distance < best_distance) {
+				best_distance = distance;
+				best_segment_id = String(segment.get("id", ""));
+				best_cell = cell_record(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)), int32_t(cell.get("level", 0)));
+			}
+		}
+	}
+	Dictionary result;
+	result["nearest_distance_tiles"] = best_distance == std::numeric_limits<int32_t>::max() ? -1 : best_distance;
+	result["nearest_road_segment_id"] = best_segment_id;
+	result["nearest_road_cell"] = best_cell;
+	result["proximity_class"] = best_distance <= 1 ? "road_adjacent" : (best_distance <= 4 ? "near_road" : "off_road");
+	return result;
+}
+
+Dictionary find_object_point(int32_t x, int32_t y, const String &preferred_zone_id, const Array &owner_grid, const Dictionary &occupied, int32_t width, int32_t height) {
+	x = std::max(1, std::min(std::max(1, width - 2), x));
+	y = std::max(1, std::min(std::max(1, height - 2), y));
+	for (int32_t radius = 0; radius <= std::max(width, height); ++radius) {
+		for (int32_t dy = -radius; dy <= radius; ++dy) {
+			for (int32_t dx = -radius; dx <= radius; ++dx) {
+				if (std::max(std::abs(dx), std::abs(dy)) != radius) {
+					continue;
+				}
+				const int32_t cx = x + dx;
+				const int32_t cy = y + dy;
+				if (cx < 1 || cy < 1 || cx >= width - 1 || cy >= height - 1 || occupied.has(point_key(cx, cy))) {
+					continue;
+				}
+				if (!preferred_zone_id.is_empty() && radius < 4 && cy >= 0 && cy < owner_grid.size()) {
+					Array row = owner_grid[cy];
+					if (cx >= 0 && cx < row.size() && String(row[cx]) != preferred_zone_id) {
+						continue;
+					}
+				}
+				return cell_record(cx, cy, 0);
+			}
+		}
+	}
+	return Dictionary();
+}
+
+void append_object_placement(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const Dictionary &road_network, const Dictionary &zone_layout) {
+	if (point.is_empty()) {
+		return;
+	}
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const String zone_id = String(zone.get("id", ""));
+	const String terrain_id = terrain_id_for_zone(zone);
+	Dictionary family = object_family_record(kind, ordinal, terrain_id);
+	const int32_t x = int32_t(point.get("x", 0));
+	const int32_t y = int32_t(point.get("y", 0));
+	const String placement_id = "native_rmg_" + kind + "_" + zone_id + "_" + slot_id_2(ordinal + 1);
+	Dictionary body = cell_record(x, y, 0);
+	Array body_tiles;
+	body_tiles.append(body);
+	Array occupancy_keys;
+	occupancy_keys.append(point_key(x, y));
+	Dictionary bounds;
+	bounds["min_x"] = x;
+	bounds["min_y"] = y;
+	bounds["max_x"] = x;
+	bounds["max_y"] = y;
+
+	Dictionary runtime_footprint;
+	runtime_footprint["width"] = 1;
+	runtime_footprint["height"] = 1;
+	runtime_footprint["anchor"] = "center";
+	runtime_footprint["tier"] = "anchor_tile";
+
+	Dictionary predicate_results;
+	predicate_results["in_bounds"] = x >= 0 && y >= 0 && x < width && y < height;
+	predicate_results["terrain_allowed"] = is_passable_terrain_id(terrain_id);
+	predicate_results["runtime_body_unoccupied"] = !occupied.has(point_key(x, y));
+	predicate_results["zone_associated"] = !zone_id.is_empty();
+	predicate_results["road_proximity_recorded"] = true;
+
+	Dictionary placement;
+	placement["placement_id"] = placement_id;
+	placement["kind"] = kind;
+	placement["family_id"] = family.get("family_id", "");
+	placement["object_family_id"] = family.get("object_family_id", "");
+	placement["type_id"] = family.get("type_id", kind);
+	placement["object_id"] = family.get("object_id", "");
+	placement["site_id"] = family.get("site_id", "");
+	placement["category_id"] = family.get("category_id", kind);
+	placement["zone_id"] = zone_id;
+	placement["zone_role"] = zone.get("role", "");
+	placement["faction_id"] = zone.get("faction_id", "");
+	placement["owner_slot"] = zone.get("owner_slot", Variant());
+	placement["player_slot"] = zone.get("player_slot", Variant());
+	placement["player_type"] = zone.get("player_type", "neutral");
+	placement["terrain_id"] = terrain_id;
+	placement["biome_id"] = biome_for_terrain(terrain_id);
+	placement["x"] = x;
+	placement["y"] = y;
+	placement["level"] = 0;
+	placement["primary_tile"] = body;
+	placement["primary_occupancy_key"] = point_key(x, y);
+	placement["bounds"] = bounds;
+	placement["body_tiles"] = body_tiles;
+	placement["occupancy_keys"] = occupancy_keys;
+	placement["footprint"] = object_footprint_for_kind(kind);
+	placement["runtime_footprint"] = runtime_footprint;
+	placement["footprint_deferred"] = kind == "mine" || kind == "neutral_dwelling";
+	placement["approach_tiles"] = cardinal_approach_tiles(x, y, width, height, occupied);
+	placement["visit_tile"] = body;
+	Array predicates;
+	predicates.append("in_bounds");
+	predicates.append("terrain_allowed");
+	predicates.append("runtime_body_unoccupied");
+	predicates.append("zone_associated");
+	predicates.append("road_proximity_recorded");
+	placement["placement_predicates"] = predicates;
+	placement["placement_predicate_results"] = predicate_results;
+	placement["road_proximity"] = nearest_road_proximity(x, y, road_network);
+	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+	Dictionary zone_proximity;
+	zone_proximity["zone_anchor"] = anchor;
+	zone_proximity["manhattan_distance_to_anchor"] = std::abs(x - int32_t(anchor.get("x", x))) + std::abs(y - int32_t(anchor.get("y", y)));
+	zone_proximity["owner_grid_signature"] = zone_layout.get("signature", "");
+	placement["zone_proximity"] = zone_proximity;
+	placement["bounds_status"] = "in_bounds";
+	placement["occupancy_status"] = "primary_tile_reserved";
+	placement["materialization_state"] = "staged_object_record_only_no_gameplay_adoption";
+	placement["writeout_state"] = "staged_no_authored_content_writeback";
+	for (int64_t key_index = 0; key_index < family.keys().size(); ++key_index) {
+		const String key = String(family.keys()[key_index]);
+		if (!placement.has(key)) {
+			placement[key] = family[key];
+		}
+	}
+	placement["signature"] = hash32_hex(canonical_variant(placement));
+
+	placements.append(placement);
+	occupied[point_key(x, y)] = placement_id;
+}
+
+Dictionary count_by_field(const Array &placements, const String &field) {
+	Dictionary counts;
+	for (int64_t index = 0; index < placements.size(); ++index) {
+		Dictionary placement = placements[index];
+		const String key = String(placement.get(field, "unknown"));
+		counts[key] = int32_t(counts.get(key, 0)) + 1;
+	}
+	return counts;
+}
+
+Dictionary generate_object_placements(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	Array zones = zone_layout.get("zones", Array());
+	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
+	Array starts = player_starts.get("starts", Array());
+	Array placements;
+	Dictionary occupied;
+	int32_t ordinal = 0;
+
+	for (int64_t index = 0; index < starts.size(); ++index) {
+		Dictionary start = starts[index];
+		Dictionary zone;
+		const String zone_id = String(start.get("zone_id", ""));
+		for (int64_t zone_index = 0; zone_index < zones.size(); ++zone_index) {
+			Dictionary candidate = zones[zone_index];
+			if (String(candidate.get("id", "")) == zone_id) {
+				zone = candidate;
+				break;
+			}
+		}
+		if (zone.is_empty()) {
+			continue;
+		}
+		const int32_t sx = int32_t(start.get("x", 0));
+		const int32_t sy = int32_t(start.get("y", 0));
+		static constexpr int32_t OFFSETS[3][2] = {{2, 0}, {0, 2}, {-2, 0}};
+		for (int32_t resource_index = 0; resource_index < 3; ++resource_index) {
+			Dictionary point = find_object_point(sx + OFFSETS[resource_index][0], sy + OFFSETS[resource_index][1], zone_id, owner_grid, occupied, width, height);
+			append_object_placement(placements, occupied, normalized, zone, point, "resource_site", resource_index, road_network, zone_layout);
+			++ordinal;
+		}
+	}
+
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		const String role = String(zone.get("role", ""));
+		Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+		const int32_t ax = int32_t(anchor.get("x", width / 2));
+		const int32_t ay = int32_t(anchor.get("y", height / 2));
+		Dictionary decor_point = find_object_point(ax + deterministic_signed_jitter(String(normalized.get("normalized_seed", "0")) + zone_id + ":decor:x", 3), ay + deterministic_signed_jitter(String(normalized.get("normalized_seed", "0")) + zone_id + ":decor:y", 3), zone_id, owner_grid, occupied, width, height);
+		append_object_placement(placements, occupied, normalized, zone, decor_point, "decorative_obstacle", int32_t(index), road_network, zone_layout);
+		++ordinal;
+		if (role == "treasure") {
+			Dictionary reward_point = find_object_point(ax + 1, ay - 1, zone_id, owner_grid, occupied, width, height);
+			append_object_placement(placements, occupied, normalized, zone, reward_point, "reward_reference", int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + zone_id + ":reward") % 7U), road_network, zone_layout);
+			++ordinal;
+			Dictionary mine_point = find_object_point(ax - 2, ay + 1, zone_id, owner_grid, occupied, width, height);
+			append_object_placement(placements, occupied, normalized, zone, mine_point, "mine", int32_t(index), road_network, zone_layout);
+			++ordinal;
+			if (index % 2 == 0) {
+				Dictionary dwelling_point = find_object_point(ax + 2, ay + 2, zone_id, owner_grid, occupied, width, height);
+				append_object_placement(placements, occupied, normalized, zone, dwelling_point, "neutral_dwelling", int32_t(index), road_network, zone_layout);
+				++ordinal;
+			}
+		} else if (role == "junction") {
+			Dictionary reward_point = find_object_point(ax, ay + 2, zone_id, owner_grid, occupied, width, height);
+			append_object_placement(placements, occupied, normalized, zone, reward_point, "reward_reference", int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + zone_id + ":junction_reward") % 7U), road_network, zone_layout);
+			++ordinal;
+		}
+	}
+
+	Dictionary primary_tile_occupancy;
+	Dictionary body_tile_occupancy;
+	Dictionary object_index_by_placement_id;
+	Array footprint_records;
+	for (int64_t index = 0; index < placements.size(); ++index) {
+		Dictionary placement = placements[index];
+		const String placement_id = String(placement.get("placement_id", ""));
+		object_index_by_placement_id[placement_id] = index;
+		primary_tile_occupancy[placement.get("primary_occupancy_key", "")] = placement_id;
+		Array keys = placement.get("occupancy_keys", Array());
+		for (int64_t key_index = 0; key_index < keys.size(); ++key_index) {
+			body_tile_occupancy[String(keys[key_index])] = placement_id;
+		}
+		Dictionary footprint;
+		footprint["placement_id"] = placement_id;
+		footprint["zone_id"] = placement.get("zone_id", "");
+		footprint["primary_tile"] = placement.get("primary_tile", Dictionary());
+		footprint["bounds"] = placement.get("bounds", Dictionary());
+		footprint["body_tiles"] = placement.get("body_tiles", Array());
+		footprint["runtime_footprint"] = placement.get("runtime_footprint", Dictionary());
+		footprint_records.append(footprint);
+	}
+
+	Dictionary occupancy_index;
+	occupancy_index["primary_tile_occupancy"] = primary_tile_occupancy;
+	occupancy_index["body_tile_occupancy"] = body_tile_occupancy;
+	occupancy_index["object_index_by_placement_id"] = object_index_by_placement_id;
+	occupancy_index["occupied_primary_tile_count"] = primary_tile_occupancy.size();
+	occupancy_index["occupied_body_tile_count"] = body_tile_occupancy.size();
+	occupancy_index["duplicate_primary_tile_count"] = int32_t(placements.size()) - int32_t(primary_tile_occupancy.size());
+	occupancy_index["status"] = int32_t(placements.size()) == int32_t(primary_tile_occupancy.size()) ? "pass" : "duplicate_primary_tiles";
+	occupancy_index["signature"] = hash32_hex(canonical_variant(occupancy_index));
+
+	Dictionary category_counts;
+	category_counts["by_kind"] = count_by_field(placements, "kind");
+	category_counts["by_family"] = count_by_field(placements, "family_id");
+	category_counts["by_category"] = count_by_field(placements, "category_id");
+	category_counts["by_zone"] = count_by_field(placements, "zone_id");
+	category_counts["by_terrain"] = count_by_field(placements, "terrain_id");
+
+	Dictionary payload;
+	payload["schema_id"] = NATIVE_RMG_OBJECT_PLACEMENT_SCHEMA_ID;
+	payload["schema_version"] = 1;
+	payload["generation_status"] = "objects_generated_foundation";
+	payload["full_generation_status"] = "not_implemented";
+	payload["materialization_state"] = "staged_object_records_only_no_gameplay_adoption";
+	payload["writeout_policy"] = "generated_object_records_no_authored_content_write";
+	payload["object_placements"] = placements;
+	payload["object_count"] = placements.size();
+	payload["category_counts"] = category_counts;
+	payload["occupancy_index"] = occupancy_index;
+	payload["footprint_records"] = footprint_records;
+	payload["footprint_record_count"] = footprint_records.size();
+	payload["related_zone_layout_signature"] = zone_layout.get("signature", "");
+	payload["related_road_network_signature"] = road_network.get("signature", "");
+	payload["signature"] = hash32_hex(canonical_variant(payload));
+	return payload;
+}
+
 Dictionary generate_terrain_grid(const Dictionary &normalized) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -1678,7 +2086,7 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	result["faction_ids"] = faction_ids;
 	result["town_ids"] = town_ids;
 	result["full_generation_status"] = "not_implemented";
-	result["foundation_scope"] = "deterministic_config_identity_native_terrain_grid_zones_player_starts_and_road_river_networks_only";
+	result["foundation_scope"] = "deterministic_config_identity_native_terrain_grid_zones_player_starts_road_river_networks_and_object_placement_foundation_only";
 	return result;
 }
 
@@ -1716,6 +2124,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	Dictionary player_starts = generate_player_starts(normalized, zone_layout, player_assignment);
 	Dictionary road_network = generate_road_network(normalized, zone_layout, player_starts);
 	Dictionary river_network = generate_river_network(normalized, road_network);
+	Dictionary object_placement = generate_object_placements(normalized, zone_layout, player_starts, road_network);
+	Array object_placements = object_placement.get("object_placements", Array());
 
 	Dictionary metadata;
 	metadata["schema_id"] = NATIVE_RMG_SCHEMA_ID;
@@ -1729,6 +2139,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["player_start_generation_status"] = "player_starts_generated_foundation";
 	metadata["road_generation_status"] = "roads_generated_foundation";
 	metadata["river_generation_status"] = "rivers_generated_foundation";
+	metadata["object_generation_status"] = "objects_generated_foundation";
 	metadata["normalized_config"] = normalized;
 	metadata["deterministic_identity"] = identity;
 	metadata["terrain_grid_signature"] = terrain_grid.get("signature", "");
@@ -1737,6 +2148,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["road_network_signature"] = road_network.get("signature", "");
 	metadata["route_graph_signature"] = Dictionary(road_network.get("route_graph", Dictionary())).get("signature", "");
 	metadata["river_network_signature"] = river_network.get("signature", "");
+	metadata["object_placement_signature"] = object_placement.get("signature", "");
+	metadata["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
 	metadata["options_keys"] = options.keys();
 
 	Dictionary map_state;
@@ -1747,6 +2160,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	map_state["height"] = int32_t(normalized.get("height", 36));
 	map_state["level_count"] = int32_t(normalized.get("level_count", 1));
 	map_state["metadata"] = metadata;
+	map_state["objects"] = object_placements;
 
 	Ref<MapDocument> document;
 	document.instantiate();
@@ -1756,7 +2170,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	warning["code"] = "full_generation_not_implemented";
 	warning["severity"] = "warning";
 	warning["path"] = "generate_random_map";
-	warning["message"] = "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, player start anchors, and foundation road/river network records only; objects, towns, guards, validation parity, and package/session adoption are not implemented.";
+	warning["message"] = "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, player start anchors, road/river network records, and staged non-town object placement records only; towns, guards, validation parity, and package/session adoption are not implemented.";
 	warning["context"] = Dictionary();
 
 	Array warnings;
@@ -1775,6 +2189,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metrics["road_cell_count"] = road_network.get("road_cell_count", 0);
 	metrics["river_segment_count"] = river_network.get("river_segment_count", 0);
 	metrics["river_cell_count"] = river_network.get("river_cell_count", 0);
+	metrics["object_placement_count"] = object_placement.get("object_count", 0);
 	metrics["object_count"] = document->get_object_count();
 
 	Dictionary report;
@@ -1799,9 +2214,11 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	report["route_reachability_status"] = Dictionary(road_network.get("route_reachability_proof", Dictionary())).get("status", "");
 	report["river_generation_status"] = river_network.get("generation_status", "");
 	report["river_network_signature"] = river_network.get("signature", "");
+	report["object_generation_status"] = object_placement.get("generation_status", "");
+	report["object_placement_signature"] = object_placement.get("signature", "");
+	report["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
+	report["object_category_counts"] = object_placement.get("category_counts", Dictionary());
 	Array remaining_parity_slices;
-	remaining_parity_slices.append("native-rmg-road-river-network-10184");
-	remaining_parity_slices.append("native-rmg-object-placement-foundation-10184");
 	remaining_parity_slices.append("native-rmg-town-guard-placement-10184");
 	remaining_parity_slices.append("native-rmg-validation-provenance-parity-10184");
 	remaining_parity_slices.append("native-rmg-package-session-adoption-10184");
@@ -1817,6 +2234,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["player_start_generation_status"] = "player_starts_generated_foundation";
 	result["road_generation_status"] = "roads_generated_foundation";
 	result["river_generation_status"] = "rivers_generated_foundation";
+	result["object_generation_status"] = "objects_generated_foundation";
 	result["full_generation_status"] = "not_implemented";
 	result["normalized_config"] = normalized;
 	result["deterministic_identity"] = identity;
@@ -1827,6 +2245,11 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["route_graph"] = road_network.get("route_graph", Dictionary());
 	result["road_network"] = road_network;
 	result["river_network"] = river_network;
+	result["object_placement"] = object_placement;
+	result["object_placements"] = object_placements;
+	result["object_category_counts"] = object_placement.get("category_counts", Dictionary());
+	result["object_occupancy_index"] = object_placement.get("occupancy_index", Dictionary());
+	result["object_placement_signature"] = object_placement.get("signature", "");
 	result["route_reachability_proof"] = road_network.get("route_reachability_proof", Dictionary());
 	result["map_document"] = document;
 	result["map_metadata"] = metadata;

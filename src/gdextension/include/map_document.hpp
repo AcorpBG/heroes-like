@@ -21,6 +21,7 @@ class MapDocument : public RefCounted {
 	int32_t height = 0;
 	int32_t level_count = 1;
 	Dictionary metadata;
+	Array objects;
 
 protected:
 	static void _bind_methods();

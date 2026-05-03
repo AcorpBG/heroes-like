@@ -22,6 +22,7 @@ const CAPABILITIES := [
 	"native_random_map_terrain_grid_foundation",
 	"native_random_map_zone_player_starts_foundation",
 	"native_random_map_road_river_network_foundation",
+	"native_random_map_object_placement_foundation",
 	"headless_binding_smoke",
 ]
 
@@ -137,7 +138,7 @@ func normalize_random_map_config(config: Dictionary) -> Dictionary:
 		"faction_ids": faction_ids,
 		"town_ids": town_ids,
 		"full_generation_status": "not_implemented",
-		"foundation_scope": "deterministic_config_identity_native_terrain_grid_zones_player_starts_and_road_river_networks_only",
+		"foundation_scope": "deterministic_config_identity_native_terrain_grid_zones_player_starts_road_river_networks_and_object_placement_foundation_only",
 	}
 
 func random_map_config_identity(config: Dictionary) -> Dictionary:
@@ -172,6 +173,8 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 	var player_starts := _generate_player_starts(normalized, zone_layout, player_assignment)
 	var road_network := _generate_road_network(normalized, zone_layout, player_starts)
 	var river_network := _generate_river_network(normalized, road_network)
+	var object_placement := _generate_object_placements(normalized, zone_layout, player_starts, road_network)
+	var object_placements: Array = object_placement.get("object_placements", [])
 	var metadata := {
 		"schema_id": "aurelion_native_random_map_foundation",
 		"schema_version": 1,
@@ -184,6 +187,7 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"player_start_generation_status": "player_starts_generated_foundation",
 		"road_generation_status": "roads_generated_foundation",
 		"river_generation_status": "rivers_generated_foundation",
+		"object_generation_status": "objects_generated_foundation",
 		"normalized_config": normalized,
 		"deterministic_identity": identity,
 		"terrain_grid_signature": terrain_grid.get("signature", ""),
@@ -192,6 +196,8 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"road_network_signature": road_network.get("signature", ""),
 		"route_graph_signature": road_network.get("route_graph", {}).get("signature", ""),
 		"river_network_signature": river_network.get("signature", ""),
+		"object_placement_signature": object_placement.get("signature", ""),
+		"object_occupancy_signature": object_placement.get("occupancy_index", {}).get("signature", ""),
 		"options_keys": options.keys(),
 	}
 	var map_document: Variant = create_map_document_stub({
@@ -202,12 +208,13 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"height": int(normalized.get("height", 36)),
 		"level_count": int(normalized.get("level_count", 1)),
 		"metadata": metadata,
+		"objects": object_placements,
 	})
 	var warnings := [{
 		"code": "full_generation_not_implemented",
 		"severity": "warning",
 		"path": "generate_random_map",
-		"message": "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, player start anchors, and foundation road/river network records only; objects, towns, guards, validation parity, and package/session adoption are not implemented.",
+		"message": "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, player start anchors, road/river network records, and staged non-town object placement records only; towns, guards, validation parity, and package/session adoption are not implemented.",
 		"context": {},
 	}]
 	return {
@@ -220,6 +227,7 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"player_start_generation_status": "player_starts_generated_foundation",
 		"road_generation_status": "roads_generated_foundation",
 		"river_generation_status": "rivers_generated_foundation",
+		"object_generation_status": "objects_generated_foundation",
 		"full_generation_status": "not_implemented",
 		"normalized_config": normalized,
 		"deterministic_identity": identity,
@@ -230,6 +238,11 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"route_graph": road_network.get("route_graph", {}),
 		"road_network": road_network,
 		"river_network": river_network,
+		"object_placement": object_placement,
+		"object_placements": object_placements,
+		"object_category_counts": object_placement.get("category_counts", {}),
+		"object_occupancy_index": object_placement.get("occupancy_index", {}),
+		"object_placement_signature": object_placement.get("signature", ""),
 		"route_reachability_proof": road_network.get("route_reachability_proof", {}),
 		"map_document": map_document,
 		"map_metadata": metadata,
@@ -254,6 +267,7 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 				"road_cell_count": road_network.get("road_cell_count", 0),
 				"river_segment_count": river_network.get("river_segment_count", 0),
 				"river_cell_count": river_network.get("river_cell_count", 0),
+				"object_placement_count": object_placement.get("object_count", 0),
 				"object_count": map_document.get_object_count(),
 			},
 			"deterministic_identity": identity,
@@ -269,9 +283,11 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 			"route_reachability_status": road_network.get("route_reachability_proof", {}).get("status", ""),
 			"river_generation_status": river_network.get("generation_status", ""),
 			"river_network_signature": river_network.get("signature", ""),
+			"object_generation_status": object_placement.get("generation_status", ""),
+			"object_placement_signature": object_placement.get("signature", ""),
+			"object_occupancy_signature": object_placement.get("occupancy_index", {}).get("signature", ""),
+			"object_category_counts": object_placement.get("category_counts", {}),
 			"remaining_parity_slices": [
-				"native-rmg-road-river-network-10184",
-				"native-rmg-object-placement-foundation-10184",
 				"native-rmg-town-guard-placement-10184",
 				"native-rmg-validation-provenance-parity-10184",
 				"native-rmg-package-session-adoption-10184",
@@ -917,6 +933,217 @@ func _generate_river_network(normalized: Dictionary, road_network: Dictionary) -
 	var network := {"schema_id": "aurelion_native_rmg_river_network_v1", "schema_version": 1, "generation_status": "rivers_generated_foundation", "full_generation_status": "not_implemented", "policy": {"water_mode": String(normalized.get("water_mode", "land")), "enabled": true, "route_feature_boundary": "foundation_records_only_no_passability_or_tile_mutation", "road_crossing_policy": "crossing_metadata_deferred_to_later_parity_slice"}, "river_segments": segments, "river_segment_count": segments.size(), "river_cell_count": cell_count, "related_road_network_signature": road_network.get("signature", ""), "materialization_state": "staged_route_feature_records_only_no_gameplay_adoption"}
 	network["signature"] = _hash32_hex(_stable_stringify(network))
 	return network
+
+func _object_family_record(kind: String, ordinal: int, terrain_id: String) -> Dictionary:
+	match kind:
+		"resource_site":
+			var sites := ["site_wood_wagon", "site_ore_crates", "site_waystone_cache"]
+			var objects := ["object_wood_wagon", "object_ore_crates", "object_waystone_cache"]
+			var categories := ["timber", "ore", "gold"]
+			var resources := ["wood", "ore", "gold"]
+			var index := ordinal % sites.size()
+			return {"family_id": "resource_pickup_site", "object_family_id": "resource_pickup_site", "type_id": "resource_site", "site_id": sites[index], "object_id": objects[index], "category_id": categories[index], "resource_id": resources[index], "reward_value": 900 if index == 2 else 4, "purpose": ["start_support_wood", "start_support_ore", "start_support_cache"][index]}
+		"mine":
+			var categories := ["timber", "ore", "gold", "quicksilver", "ember_salt", "lens_crystal", "cut_gems"]
+			var families := ["sawmill", "ore_pit", "gold_mine", "alchemist_lab", "sulfur_dune_equivalent", "crystal_cavern_equivalent", "gem_pond_equivalent"]
+			var objects := ["object_brightwood_sawmill", "object_ridge_quarry", "object_reef_coin_assay", "object_marsh_peat_yard", "object_floodplain_sluice_camp", "object_reef_coin_assay", "object_badlands_coin_sluice"]
+			var resource_ids := ["wood", "ore", "gold", "gold", "gold", "gold", "gold"]
+			var index := ordinal % categories.size()
+			return {"family_id": families[index], "object_family_id": "resource_mine_placeholder", "type_id": "mine_placeholder", "site_id": "site_native_foundation_%s" % categories[index], "object_id": objects[index], "category_id": categories[index], "resource_id": resource_ids[index], "mine_family_id": families[index], "guard_base_value": 7000 if index == 2 else (1500 if index <= 1 else 3500), "purpose": "neutral_resource_control_foundation"}
+		"neutral_dwelling":
+			var objects := ["object_bogbell_croft", "object_greenbranch_copse", "object_crystal_sump", "object_kite_signal_eyrie", "object_saltpan_camp", "object_cliffhawk_roost"]
+			var families := ["neutral_dwelling_bogbell_croft", "neutral_dwelling_greenbranch_copse", "neutral_dwelling_crystal_sump", "neutral_dwelling_kite_signal_eyrie", "neutral_dwelling_saltpan_camp", "neutral_dwelling_cliffhawk_roost"]
+			var index := ordinal % objects.size()
+			return {"family_id": "neutral_dwelling", "object_family_id": "neutral_dwelling", "type_id": "neutral_dwelling", "site_id": "site_native_foundation_dwelling_%d" % (index + 1), "object_id": objects[index], "category_id": "dwelling", "neutral_dwelling_family_id": families[index], "guard_pressure": "high" if index == 4 else ("low" if index in [0, 5] else "medium"), "purpose": "neutral_weekly_muster_foundation"}
+		"reward_reference":
+			var objects := ["object_waystone_cache", "object_ore_crates", "object_wood_wagon", "artifact_trailsinger_boots", "artifact_waymark_compass", "spell_beacon_path", "object_reedscript_vow_shrine"]
+			var families := ["reward_cache_small", "reward_cache_small", "guarded_reward_cache", "artifact_cache", "artifact_cache", "spell_shrine", "skill_shrine"]
+			var categories := ["resource_cache", "build_resource_cache", "guarded_cache", "artifact", "artifact", "spell_access", "skill_equivalent"]
+			var index := ordinal % objects.size()
+			var record := {"family_id": families[index], "object_family_id": families[index], "type_id": "reward_reference", "site_id": "site_reedscript_vow_shrine" if index == 6 else ("site_ore_crates" if index == 1 else "site_waystone_cache"), "object_id": objects[index], "category_id": categories[index], "reward_category": categories[index], "reward_value": 450 + index * 175, "purpose": "zone_reward_foundation"}
+			if index in [3, 4]:
+				record["artifact_id"] = objects[index]
+			if index == 5:
+				record["spell_id"] = objects[index]
+			return record
+		_:
+			var family_id := "decor_snow_icegrass_ridge" if terrain_id == "snow" else ("obstacle_highland_slate_outcrop" if terrain_id == "rough" else ("obstacle_mire_sinkroot_cluster" if terrain_id == "dirt" else "decor_grass_windgrass_tufts"))
+			return {"family_id": family_id, "object_family_id": "decorative_obstacle", "type_id": "decorative_obstacle", "site_id": "", "object_id": family_id, "category_id": "decorative_obstacle", "purpose": "zone_decoration_density_foundation"}
+
+func _object_footprint_for_kind(kind: String) -> Dictionary:
+	if kind in ["mine", "neutral_dwelling"]:
+		return {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"}
+	return {"width": 1, "height": 1, "anchor": "center", "tier": "micro"}
+
+func _find_object_point(x: int, y: int, preferred_zone_id: String, owner_grid: Array, occupied: Dictionary, width: int, height: int) -> Dictionary:
+	x = clampi(x, 1, max(1, width - 2))
+	y = clampi(y, 1, max(1, height - 2))
+	for radius in range(max(width, height) + 1):
+		for dy in range(-radius, radius + 1):
+			for dx in range(-radius, radius + 1):
+				if max(abs(dx), abs(dy)) != radius:
+					continue
+				var cx := x + dx
+				var cy := y + dy
+				if cx < 1 or cy < 1 or cx >= width - 1 or cy >= height - 1 or occupied.has(_point_key(cx, cy)):
+					continue
+				if preferred_zone_id != "" and radius < 4 and cy >= 0 and cy < owner_grid.size() and owner_grid[cy] is Array and cx < owner_grid[cy].size() and String(owner_grid[cy][cx]) != preferred_zone_id:
+					continue
+				return _cell_dict(cx, cy, 0)
+	return {}
+
+func _nearest_road_proximity(x: int, y: int, road_network: Dictionary) -> Dictionary:
+	var best_distance := 999999
+	var best_segment_id := ""
+	var best_cell := {}
+	for segment in road_network.get("road_segments", []):
+		if not (segment is Dictionary):
+			continue
+		for cell in segment.get("cells", []):
+			if not (cell is Dictionary):
+				continue
+			var distance: int = abs(x - int(cell.get("x", 0))) + abs(y - int(cell.get("y", 0)))
+			if distance < best_distance:
+				best_distance = distance
+				best_segment_id = String(segment.get("id", ""))
+				best_cell = _cell_dict(int(cell.get("x", 0)), int(cell.get("y", 0)), int(cell.get("level", 0)))
+	return {"nearest_distance_tiles": -1 if best_distance == 999999 else best_distance, "nearest_road_segment_id": best_segment_id, "nearest_road_cell": best_cell, "proximity_class": "road_adjacent" if best_distance <= 1 else ("near_road" if best_distance <= 4 else "off_road")}
+
+func _approach_tiles_for_object(x: int, y: int, width: int, height: int, occupied: Dictionary) -> Array:
+	var result := []
+	for offset in [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1)]:
+		var nx: int = x + int(offset.x)
+		var ny: int = y + int(offset.y)
+		if nx >= 0 and ny >= 0 and nx < width and ny < height and not occupied.has(_point_key(nx, ny)):
+			result.append(_point_dict(nx, ny))
+	return result
+
+func _append_object_placement(placements: Array, occupied: Dictionary, normalized: Dictionary, zone: Dictionary, point: Dictionary, kind: String, ordinal: int, road_network: Dictionary, zone_layout: Dictionary) -> void:
+	if point.is_empty():
+		return
+	var width := int(normalized.get("width", 36))
+	var height := int(normalized.get("height", 36))
+	var zone_id := String(zone.get("id", ""))
+	var terrain_id := String(zone.get("terrain_id", "grass"))
+	if not _is_passable_terrain_id(terrain_id):
+		terrain_id = "grass"
+	var family := _object_family_record(kind, ordinal, terrain_id)
+	var x := int(point.get("x", 0))
+	var y := int(point.get("y", 0))
+	var primary_key := _point_key(x, y)
+	var body := _cell_dict(x, y, 0)
+	var bounds := {"min_x": x, "min_y": y, "max_x": x, "max_y": y}
+	var predicate_results := {"in_bounds": x >= 0 and y >= 0 and x < width and y < height, "terrain_allowed": _is_passable_terrain_id(terrain_id), "runtime_body_unoccupied": not occupied.has(primary_key), "zone_associated": zone_id != "", "road_proximity_recorded": true}
+	var anchor: Dictionary = zone.get("anchor", zone.get("center", {}))
+	var placement := {
+		"placement_id": "native_rmg_%s_%s_%02d" % [kind, zone_id, ordinal + 1],
+		"kind": kind,
+		"family_id": family.get("family_id", ""),
+		"object_family_id": family.get("object_family_id", ""),
+		"type_id": family.get("type_id", kind),
+		"object_id": family.get("object_id", ""),
+		"site_id": family.get("site_id", ""),
+		"category_id": family.get("category_id", kind),
+		"zone_id": zone_id,
+		"zone_role": String(zone.get("role", "")),
+		"faction_id": String(zone.get("faction_id", "")),
+		"owner_slot": zone.get("owner_slot", null),
+		"player_slot": zone.get("player_slot", null),
+		"player_type": String(zone.get("player_type", "neutral")),
+		"terrain_id": terrain_id,
+		"biome_id": _biome_for_terrain(terrain_id),
+		"x": x,
+		"y": y,
+		"level": 0,
+		"primary_tile": body,
+		"primary_occupancy_key": primary_key,
+		"bounds": bounds,
+		"body_tiles": [body],
+		"occupancy_keys": [primary_key],
+		"footprint": _object_footprint_for_kind(kind),
+		"runtime_footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "anchor_tile"},
+		"footprint_deferred": kind in ["mine", "neutral_dwelling"],
+		"approach_tiles": _approach_tiles_for_object(x, y, width, height, occupied),
+		"visit_tile": body,
+		"placement_predicates": ["in_bounds", "terrain_allowed", "runtime_body_unoccupied", "zone_associated", "road_proximity_recorded"],
+		"placement_predicate_results": predicate_results,
+		"road_proximity": _nearest_road_proximity(x, y, road_network),
+		"zone_proximity": {"zone_anchor": anchor, "manhattan_distance_to_anchor": abs(x - int(anchor.get("x", x))) + abs(y - int(anchor.get("y", y))), "owner_grid_signature": zone_layout.get("signature", "")},
+		"bounds_status": "in_bounds",
+		"occupancy_status": "primary_tile_reserved",
+		"materialization_state": "staged_object_record_only_no_gameplay_adoption",
+		"writeout_state": "staged_no_authored_content_writeback",
+	}
+	for key in family.keys():
+		if not placement.has(key):
+			placement[key] = family[key]
+	placement["signature"] = _hash32_hex(_stable_stringify(placement))
+	placements.append(placement)
+	occupied[primary_key] = placement["placement_id"]
+
+func _count_by_field(placements: Array, field: String) -> Dictionary:
+	var counts := {}
+	for placement in placements:
+		if placement is Dictionary:
+			var key := String(placement.get(field, "unknown"))
+			counts[key] = int(counts.get(key, 0)) + 1
+	return counts
+
+func _generate_object_placements(normalized: Dictionary, zone_layout: Dictionary, player_starts: Dictionary, road_network: Dictionary) -> Dictionary:
+	var width := int(normalized.get("width", 36))
+	var height := int(normalized.get("height", 36))
+	var zones: Array = zone_layout.get("zones", [])
+	var owner_grid: Array = zone_layout.get("surface_owner_grid", [])
+	var placements := []
+	var occupied := {}
+	for start in player_starts.get("starts", []):
+		if not (start is Dictionary):
+			continue
+		var zone := _zone_by_id(zones, String(start.get("zone_id", "")))
+		if zone.is_empty():
+			continue
+		var offsets := [Vector2i(2, 0), Vector2i(0, 2), Vector2i(-2, 0)]
+		for index in range(offsets.size()):
+			var point := _find_object_point(int(start.get("x", 0)) + offsets[index].x, int(start.get("y", 0)) + offsets[index].y, String(zone.get("id", "")), owner_grid, occupied, width, height)
+			_append_object_placement(placements, occupied, normalized, zone, point, "resource_site", index, road_network, zone_layout)
+	for index in range(zones.size()):
+		var zone: Dictionary = zones[index]
+		var zone_id := String(zone.get("id", ""))
+		var role := String(zone.get("role", ""))
+		var anchor: Dictionary = zone.get("anchor", zone.get("center", {}))
+		var ax := int(anchor.get("x", width / 2))
+		var ay := int(anchor.get("y", height / 2))
+		_append_object_placement(placements, occupied, normalized, zone, _find_object_point(ax + _signed_jitter("%s%s:decor:x" % [String(normalized.get("normalized_seed", "0")), zone_id]), ay + _signed_jitter("%s%s:decor:y" % [String(normalized.get("normalized_seed", "0")), zone_id]), zone_id, owner_grid, occupied, width, height), "decorative_obstacle", index, road_network, zone_layout)
+		if role == "treasure":
+			_append_object_placement(placements, occupied, normalized, zone, _find_object_point(ax + 1, ay - 1, zone_id, owner_grid, occupied, width, height), "reward_reference", int(_hash32_int("%s%s:reward" % [String(normalized.get("normalized_seed", "0")), zone_id]) % 7), road_network, zone_layout)
+			_append_object_placement(placements, occupied, normalized, zone, _find_object_point(ax - 2, ay + 1, zone_id, owner_grid, occupied, width, height), "mine", index, road_network, zone_layout)
+			if index % 2 == 0:
+				_append_object_placement(placements, occupied, normalized, zone, _find_object_point(ax + 2, ay + 2, zone_id, owner_grid, occupied, width, height), "neutral_dwelling", index, road_network, zone_layout)
+		elif role == "junction":
+			_append_object_placement(placements, occupied, normalized, zone, _find_object_point(ax, ay + 2, zone_id, owner_grid, occupied, width, height), "reward_reference", int(_hash32_int("%s%s:junction_reward" % [String(normalized.get("normalized_seed", "0")), zone_id]) % 7), road_network, zone_layout)
+	var primary_tile_occupancy := {}
+	var body_tile_occupancy := {}
+	var object_index_by_placement_id := {}
+	var footprint_records := []
+	for index in range(placements.size()):
+		var placement: Dictionary = placements[index]
+		var placement_id := String(placement.get("placement_id", ""))
+		object_index_by_placement_id[placement_id] = index
+		primary_tile_occupancy[String(placement.get("primary_occupancy_key", ""))] = placement_id
+		for key in placement.get("occupancy_keys", []):
+			body_tile_occupancy[String(key)] = placement_id
+		footprint_records.append({"placement_id": placement_id, "zone_id": placement.get("zone_id", ""), "primary_tile": placement.get("primary_tile", {}), "bounds": placement.get("bounds", {}), "body_tiles": placement.get("body_tiles", []), "runtime_footprint": placement.get("runtime_footprint", {})})
+	var occupancy_index := {"primary_tile_occupancy": primary_tile_occupancy, "body_tile_occupancy": body_tile_occupancy, "object_index_by_placement_id": object_index_by_placement_id, "occupied_primary_tile_count": primary_tile_occupancy.size(), "occupied_body_tile_count": body_tile_occupancy.size(), "duplicate_primary_tile_count": placements.size() - primary_tile_occupancy.size(), "status": "pass" if placements.size() == primary_tile_occupancy.size() else "duplicate_primary_tiles"}
+	occupancy_index["signature"] = _hash32_hex(_stable_stringify(occupancy_index))
+	var payload := {"schema_id": "aurelion_native_rmg_object_placement_v1", "schema_version": 1, "generation_status": "objects_generated_foundation", "full_generation_status": "not_implemented", "materialization_state": "staged_object_records_only_no_gameplay_adoption", "writeout_policy": "generated_object_records_no_authored_content_write", "object_placements": placements, "object_count": placements.size(), "category_counts": {"by_kind": _count_by_field(placements, "kind"), "by_family": _count_by_field(placements, "family_id"), "by_category": _count_by_field(placements, "category_id"), "by_zone": _count_by_field(placements, "zone_id"), "by_terrain": _count_by_field(placements, "terrain_id")}, "occupancy_index": occupancy_index, "footprint_records": footprint_records, "footprint_record_count": footprint_records.size(), "related_zone_layout_signature": zone_layout.get("signature", ""), "related_road_network_signature": road_network.get("signature", "")}
+	payload["signature"] = _hash32_hex(_stable_stringify(payload))
+	return payload
+
+func _zone_by_id(zones: Array, zone_id: String) -> Dictionary:
+	for zone in zones:
+		if zone is Dictionary and String(zone.get("id", "")) == zone_id:
+			return zone
+	return {}
 
 func _point_dict(x: int, y: int) -> Dictionary:
 	return {"x": x, "y": y}

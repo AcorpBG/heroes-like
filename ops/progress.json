@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-road-river-network-10184",
-  "currentSliceTitle": "Native RMG Road/River Network",
+  "currentSliceId": "native-rmg-object-placement-foundation-10184",
+  "currentSliceTitle": "Native RMG Object Placement Foundation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed native RMG road/river foundation: C++ and GDScript compatibility service now expose route graph, road network, river/waterline records, statuses, signatures, counts, and reachability/start coverage while preserving partial_foundation and full_generation_status=not_implemented. Validation passed: json.tool, sync-plan dry-run, cmake native build, map package smoke, native RMG foundation/terrain/zone-player-start smokes, native road/river smoke, git diff --check, tests/validate_repo.py.",
+  "currentSliceNotes": "Completed native RMG object placement foundation: C++ and GDScript compatibility service now expose deterministic non-town staged object placement records, object families/types/ids/categories, zone/terrain/road proximity metadata, runtime footprints, occupancy indexes, category counts, MapDocument object lookup, statuses, and signatures while preserving partial_foundation and full_generation_status=not_implemented. Validation passed: json.tool, sync-plan dry-run, cmake native build, package/native RMG foundation/terrain/zone-player-start/road-river smokes, native object placement smoke, git diff --check, tests/validate_repo.py.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T10:09:28Z",
+  "updatedAt": "2026-05-03T10:24:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -6663,7 +6663,7 @@
     {
       "id": "native-rmg-object-placement-foundation-10184",
       "title": "Native RMG Object Placement Foundation",
-      "status": "pending",
+      "status": "completed",
       "purpose": "Port deterministic resource/reward/decor/object staging, footprint predicates, occupancy constraints, and object placement records.",
       "implementationTargets": [
         "src/gdextension/src/map_package_service.cpp",
@@ -6703,7 +6703,10 @@
         "No generated PNG or generated-study derivative import."
       ],
       "createdAt": "2026-05-03T09:37:49Z",
-      "updatedAt": "2026-05-03T09:37:49Z"
+      "updatedAt": "2026-05-03T10:24:00Z",
+      "startedAt": "2026-05-03T10:12:56Z",
+      "notes": "Completed native RMG object placement foundation: C++ and GDScript compatibility service now expose deterministic non-town staged object placement records, object families/types/ids/categories, zone/terrain/road proximity metadata, runtime footprints, occupancy indexes, category counts, MapDocument object lookup, statuses, and signatures while preserving partial_foundation and full_generation_status=not_implemented. Validation passed: json.tool, sync-plan dry-run, cmake native build, package/native RMG foundation/terrain/zone-player-start/road-river smokes, native object placement smoke, git diff --check, tests/validate_repo.py.",
+      "completedAt": "2026-05-03T10:24:00Z"
     },
     {
       "id": "native-rmg-town-guard-placement-10184",
@@ -7984,8 +7987,8 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-object-placement-foundation-10184",
-      "title": "Native RMG Object Placement Foundation",
+      "id": "native-rmg-town-guard-placement-10184",
+      "title": "Native RMG Town And Guard Placement",
       "status": "pending",
       "sourceDocs": [
         "project.md",
