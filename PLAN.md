@@ -28,8 +28,9 @@ it reaches full parity with `scripts/core/RandomMapGeneratorRules.gd`. The curre
 completed native children cover deterministic identity, terrain/grid output,
 foundation zone/player-start output, foundation road/river network output,
 foundation non-town object placement output, foundation town/guard placement
-output, and native validation/provenance reporting. The next pending child is
-`native-rmg-gdscript-comparison-harness-10184`.
+output, native validation/provenance reporting, and a focused GDScript/native
+comparison harness. The next pending child is
+`native-rmg-package-session-adoption-10184`.
 
 Do not infer product readiness from the completed queue. Completed Phase 2/RMG/performance/tooling evidence means those specific slices passed their gates; it does not mean playable alpha, campaign breadth, release readiness, broad faction completion, asset parity, or HoMM3 byte-level cloning.
 

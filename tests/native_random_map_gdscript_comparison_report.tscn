@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/native_random_map_gdscript_comparison_report.gd" id="1"]
+
+[node name="NativeRandomMapGdscriptComparisonReport" type="Node"]
+script = ExtResource("1")
