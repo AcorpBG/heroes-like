@@ -24,6 +24,9 @@ constexpr const char *NATIVE_RMG_VERSION = "native_rmg_foundation_v1";
 constexpr const char *NATIVE_RMG_TERRAIN_GRID_SCHEMA_ID = "aurelion_native_rmg_terrain_grid_v1";
 constexpr const char *NATIVE_RMG_ZONE_LAYOUT_SCHEMA_ID = "aurelion_native_rmg_zone_layout_v1";
 constexpr const char *NATIVE_RMG_PLAYER_STARTS_SCHEMA_ID = "aurelion_native_rmg_player_starts_v1";
+constexpr const char *NATIVE_RMG_ROUTE_GRAPH_SCHEMA_ID = "aurelion_native_rmg_route_graph_v1";
+constexpr const char *NATIVE_RMG_ROAD_NETWORK_SCHEMA_ID = "aurelion_native_rmg_road_network_v1";
+constexpr const char *NATIVE_RMG_RIVER_NETWORK_SCHEMA_ID = "aurelion_native_rmg_river_network_v1";
 constexpr uint64_t HASH_MODULUS = 4294967296ULL;
 constexpr double TAU = 6.28318530717958647692;
 
@@ -37,6 +40,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_foundation_stub");
 	result.append("native_random_map_terrain_grid_foundation");
 	result.append("native_random_map_zone_player_starts_foundation");
+	result.append("native_random_map_road_river_network_foundation");
 	result.append("headless_binding_smoke");
 	return result;
 }
@@ -416,6 +420,14 @@ Dictionary point_record(int32_t x, int32_t y) {
 	Dictionary point;
 	point["x"] = x;
 	point["y"] = y;
+	return point;
+}
+
+Dictionary cell_record(int32_t x, int32_t y, int32_t level) {
+	Dictionary point;
+	point["x"] = x;
+	point["y"] = y;
+	point["level"] = level;
 	return point;
 }
 
@@ -953,6 +965,491 @@ Dictionary generate_player_starts(const Dictionary &normalized, const Dictionary
 	return payload;
 }
 
+Array foundation_route_links(const Dictionary &normalized) {
+	Dictionary constraints = normalized.get("player_constraints", Dictionary());
+	const int32_t player_count = int32_t(constraints.get("player_count", 2));
+	Array links;
+	for (int32_t index = 0; index < player_count; ++index) {
+		const String start_id = "start_" + String::num_int64(index + 1);
+		const String reward_id = "reward_" + String::num_int64((index % std::max(2, player_count)) + 1);
+
+		Dictionary contest;
+		contest["from"] = start_id;
+		contest["to"] = "junction_1";
+		contest["role"] = "contest_route";
+		contest["guard_value"] = 600;
+		contest["wide"] = false;
+		contest["border_guard"] = false;
+		links.append(contest);
+
+		Dictionary reward;
+		reward["from"] = start_id;
+		reward["to"] = reward_id;
+		reward["role"] = "early_reward_route";
+		reward["guard_value"] = 150;
+		reward["wide"] = false;
+		reward["border_guard"] = false;
+		links.append(reward);
+	}
+	for (int32_t index = 0; index < std::max(2, player_count); ++index) {
+		Dictionary link;
+		link["from"] = "reward_" + String::num_int64(index + 1);
+		link["to"] = "junction_1";
+		link["role"] = "reward_to_junction";
+		link["guard_value"] = 300;
+		link["wide"] = index == 0;
+		link["border_guard"] = false;
+		links.append(link);
+	}
+	return links;
+}
+
+String route_edge_id(int32_t index, const String &from_zone, const String &to_zone) {
+	return "edge_" + slot_id_2(index) + "_" + from_zone + "_" + to_zone;
+}
+
+String route_classification(const Dictionary &link, bool path_found) {
+	if (!path_found) {
+		return "blocked_connectivity";
+	}
+	if (bool(link.get("border_guard", false))) {
+		return "guarded_connectivity_border_guard";
+	}
+	if (bool(link.get("wide", false))) {
+		return "full_connectivity_wide_unguarded";
+	}
+	if (int32_t(link.get("guard_value", 0)) > 0) {
+		return "guarded_connectivity";
+	}
+	return "full_connectivity";
+}
+
+Array straight_route_cells(const Dictionary &from_point, const Dictionary &to_point, int32_t width, int32_t height, int32_t level) {
+	Array cells;
+	if (from_point.is_empty() || to_point.is_empty()) {
+		return cells;
+	}
+	int32_t x = std::max(0, std::min(width - 1, int32_t(from_point.get("x", 0))));
+	int32_t y = std::max(0, std::min(height - 1, int32_t(from_point.get("y", 0))));
+	const int32_t goal_x = std::max(0, std::min(width - 1, int32_t(to_point.get("x", 0))));
+	const int32_t goal_y = std::max(0, std::min(height - 1, int32_t(to_point.get("y", 0))));
+	const int32_t step_x = goal_x >= x ? 1 : -1;
+	while (x != goal_x) {
+		cells.append(cell_record(x, y, level));
+		x += step_x;
+	}
+	const int32_t step_y = goal_y >= y ? 1 : -1;
+	while (y != goal_y) {
+		cells.append(cell_record(x, y, level));
+		y += step_y;
+	}
+	cells.append(cell_record(goal_x, goal_y, level));
+	return cells;
+}
+
+Dictionary route_anchor_candidate(const Array &path, const Dictionary &from_anchor, const Dictionary &to_anchor, int32_t level) {
+	if (!path.is_empty()) {
+		Dictionary midpoint = path[int64_t(std::floor(double(path.size() - 1) * 0.5))];
+		Dictionary result = cell_record(int32_t(midpoint.get("x", 0)), int32_t(midpoint.get("y", 0)), level);
+		result["source"] = "route_path_midpoint";
+		return result;
+	}
+	if (!from_anchor.is_empty() && !to_anchor.is_empty()) {
+		Dictionary result = cell_record(
+				int32_t(std::llround(double(int32_t(from_anchor.get("x", 0)) + int32_t(to_anchor.get("x", 0))) * 0.5)),
+				int32_t(std::llround(double(int32_t(from_anchor.get("y", 0)) + int32_t(to_anchor.get("y", 0))) * 0.5)),
+				level);
+		result["source"] = "anchor_midpoint_fallback";
+		return result;
+	}
+	return Dictionary();
+}
+
+Dictionary zone_anchor_lookup(const Dictionary &zone_layout) {
+	Dictionary result;
+	Array zones = zone_layout.get("zones", Array());
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		if (!zone_id.is_empty()) {
+			result[zone_id] = zone.get("anchor", zone.get("center", Dictionary()));
+		}
+	}
+	return result;
+}
+
+Dictionary start_lookup_by_zone(const Dictionary &player_starts) {
+	Dictionary result;
+	Array starts = player_starts.get("starts", Array());
+	for (int64_t index = 0; index < starts.size(); ++index) {
+		Dictionary start = starts[index];
+		const String zone_id = String(start.get("zone_id", ""));
+		if (!zone_id.is_empty()) {
+			result[zone_id] = start;
+		}
+	}
+	return result;
+}
+
+Dictionary build_route_nodes(const Dictionary &zone_layout, const Dictionary &player_starts) {
+	Dictionary nodes;
+	Array zones = zone_layout.get("zones", Array());
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+		Dictionary node;
+		node["id"] = "node_zone_" + zone_id;
+		node["kind"] = "zone_anchor";
+		node["zone_id"] = zone_id;
+		node["zone_role"] = zone.get("role", "");
+		node["point"] = cell_record(int32_t(anchor.get("x", 0)), int32_t(anchor.get("y", 0)), 0);
+		node["required"] = false;
+		node["connectable_state"] = "foundation_zone_anchor";
+		nodes[node["id"]] = node;
+	}
+	Array starts = player_starts.get("starts", Array());
+	for (int64_t index = 0; index < starts.size(); ++index) {
+		Dictionary start = starts[index];
+		const int32_t player_slot = int32_t(start.get("player_slot", 0));
+		Dictionary node;
+		node["id"] = "node_player_start_" + String::num_int64(player_slot);
+		node["kind"] = "player_start_anchor";
+		node["start_id"] = start.get("start_id", "");
+		node["zone_id"] = start.get("zone_id", "");
+		node["player_slot"] = player_slot;
+		node["owner_slot"] = start.get("owner_slot", player_slot);
+		node["point"] = cell_record(int32_t(start.get("x", 0)), int32_t(start.get("y", 0)), int32_t(start.get("level", 0)));
+		node["required"] = true;
+		node["connectable_state"] = "foundation_player_start_anchor";
+		nodes[node["id"]] = node;
+	}
+	return nodes;
+}
+
+String preferred_node_id_for_zone(const String &zone_id, const Dictionary &start_by_zone) {
+	if (start_by_zone.has(zone_id)) {
+		Dictionary start = start_by_zone.get(zone_id, Dictionary());
+		return "node_player_start_" + String::num_int64(int32_t(start.get("player_slot", 0)));
+	}
+	return "node_zone_" + zone_id;
+}
+
+Dictionary route_reachability_proof(const Dictionary &nodes, const Array &edges, const Dictionary &adjacency) {
+	Array required_nodes;
+	Array keys = nodes.keys();
+	std::vector<String> sorted_keys;
+	for (int64_t index = 0; index < keys.size(); ++index) {
+		sorted_keys.push_back(String(keys[index]));
+	}
+	std::sort(sorted_keys.begin(), sorted_keys.end(), [](const String &left, const String &right) { return left < right; });
+	for (const String &node_id : sorted_keys) {
+		Dictionary node = nodes.get(node_id, Dictionary());
+		if (bool(node.get("required", false))) {
+			required_nodes.append(node_id);
+		}
+	}
+	if (required_nodes.is_empty()) {
+		Dictionary failed;
+		failed["status"] = "fail";
+		failed["reason"] = "no_required_nodes";
+		failed["required_nodes"] = required_nodes;
+		return failed;
+	}
+
+	const String start_node = String(required_nodes[0]);
+	Dictionary visited;
+	Array queue;
+	visited[start_node] = true;
+	queue.append(start_node);
+	int64_t cursor = 0;
+	while (cursor < queue.size()) {
+		const String current = String(queue[cursor]);
+		++cursor;
+		Array neighbors = adjacency.get(current, Array());
+		for (int64_t index = 0; index < neighbors.size(); ++index) {
+			const String next = String(neighbors[index]);
+			if (visited.has(next)) {
+				continue;
+			}
+			visited[next] = true;
+			queue.append(next);
+		}
+	}
+
+	Array unreachable;
+	for (int64_t index = 0; index < required_nodes.size(); ++index) {
+		const String node_id = String(required_nodes[index]);
+		if (!visited.has(node_id)) {
+			unreachable.append(node_id);
+		}
+	}
+	Array blocked_edges;
+	for (int64_t index = 0; index < edges.size(); ++index) {
+		Dictionary edge = edges[index];
+		if (bool(edge.get("required", false)) && !bool(edge.get("path_found", false))) {
+			blocked_edges.append(edge.get("id", ""));
+		}
+	}
+
+	Dictionary proof;
+	proof["status"] = unreachable.is_empty() && blocked_edges.is_empty() ? "pass" : "fail";
+	proof["model"] = "required_player_start_nodes_connected_by_staged_native_road_paths";
+	proof["required_nodes"] = required_nodes;
+	proof["reachable_required_nodes"] = required_nodes.size() - unreachable.size();
+	proof["unreachable_required_nodes"] = unreachable;
+	proof["blocked_required_edges"] = blocked_edges;
+	return proof;
+}
+
+void connect_adjacency(Dictionary &adjacency, const String &a, const String &b) {
+	Array a_neighbors = adjacency.get(a, Array());
+	Array b_neighbors = adjacency.get(b, Array());
+	if (!array_has_string(a_neighbors, b)) {
+		a_neighbors.append(b);
+	}
+	if (!array_has_string(b_neighbors, a)) {
+		b_neighbors.append(a);
+	}
+	adjacency[a] = a_neighbors;
+	adjacency[b] = b_neighbors;
+}
+
+Dictionary generate_road_network(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	Array links = foundation_route_links(normalized);
+	Dictionary nodes = build_route_nodes(zone_layout, player_starts);
+	Dictionary zone_anchors = zone_anchor_lookup(zone_layout);
+	Dictionary start_by_zone = start_lookup_by_zone(player_starts);
+	Array edges;
+	Array road_segments;
+	Dictionary adjacency;
+	Array covered_start_ids;
+	Array covered_zone_ids;
+
+	for (int64_t index = 0; index < links.size(); ++index) {
+		Dictionary link = links[index];
+		const String from_zone = String(link.get("from", ""));
+		const String to_zone = String(link.get("to", ""));
+		const String from_node_id = preferred_node_id_for_zone(from_zone, start_by_zone);
+		const String to_node_id = preferred_node_id_for_zone(to_zone, start_by_zone);
+		Dictionary from_node = nodes.get(from_node_id, Dictionary());
+		Dictionary to_node = nodes.get(to_node_id, Dictionary());
+		Dictionary from_point = from_node.get("point", zone_anchors.get(from_zone, Dictionary()));
+		Dictionary to_point = to_node.get("point", zone_anchors.get(to_zone, Dictionary()));
+		Array cells = straight_route_cells(from_point, to_point, width, height, 0);
+		const bool path_found = !cells.is_empty();
+		const String edge_id = route_edge_id(int32_t(index + 1), from_zone, to_zone);
+		const String classification = route_classification(link, path_found);
+
+		Dictionary edge;
+		edge["id"] = edge_id;
+		edge["from"] = from_zone;
+		edge["to"] = to_zone;
+		edge["from_node_id"] = from_node_id;
+		edge["to_node_id"] = to_node_id;
+		edge["role"] = link.get("role", "route");
+		edge["guard_value"] = link.get("guard_value", 0);
+		edge["wide"] = link.get("wide", false);
+		edge["border_guard"] = link.get("border_guard", false);
+		edge["required"] = true;
+		edge["path_found"] = path_found;
+		edge["cell_count"] = cells.size();
+		edge["from_point"] = from_point;
+		edge["to_point"] = to_point;
+		edge["route_cell_anchor_candidate"] = route_anchor_candidate(cells, from_point, to_point, 0);
+		edge["connectivity_classification"] = classification;
+		edge["transit_semantics"] = Dictionary();
+		edges.append(edge);
+
+		if (path_found) {
+			connect_adjacency(adjacency, from_node_id, to_node_id);
+		}
+		if (start_by_zone.has(from_zone)) {
+			Dictionary start = start_by_zone.get(from_zone, Dictionary());
+			const String start_id = String(start.get("start_id", ""));
+			if (!array_has_string(covered_start_ids, start_id)) {
+				covered_start_ids.append(start_id);
+			}
+		}
+		if (!array_has_string(covered_zone_ids, from_zone)) {
+			covered_zone_ids.append(from_zone);
+		}
+		if (!array_has_string(covered_zone_ids, to_zone)) {
+			covered_zone_ids.append(to_zone);
+		}
+
+		Dictionary segment;
+		segment["id"] = "road_" + edge_id;
+		segment["route_edge_id"] = edge_id;
+		segment["overlay_id"] = "generated_dirt_road";
+		segment["cells"] = cells;
+		segment["cell_count"] = cells.size();
+		segment["connectivity_classification"] = classification;
+		segment["role"] = link.get("role", "route");
+		segment["writeout_state"] = "staged_overlay_no_tile_bytes_written";
+		segment["bounds_status"] = "in_bounds";
+		road_segments.append(segment);
+	}
+
+	Dictionary reachability = route_reachability_proof(nodes, edges, adjacency);
+
+	Dictionary route_graph;
+	route_graph["schema_id"] = NATIVE_RMG_ROUTE_GRAPH_SCHEMA_ID;
+	route_graph["schema_version"] = 1;
+	route_graph["generation_status"] = "route_graph_generated_foundation";
+	route_graph["full_generation_status"] = "not_implemented";
+	route_graph["nodes"] = nodes;
+	route_graph["edges"] = edges;
+	route_graph["adjacency"] = adjacency;
+	route_graph["required_reachability"] = reachability;
+	route_graph["route_edge_count"] = edges.size();
+	route_graph["route_node_count"] = nodes.size();
+	route_graph["signature"] = hash32_hex(canonical_variant(route_graph));
+
+	Dictionary coverage;
+	coverage["expected_player_start_count"] = player_starts.get("start_count", 0);
+	coverage["covered_player_start_count"] = covered_start_ids.size();
+	coverage["covered_player_start_ids"] = covered_start_ids;
+	coverage["covered_zone_ids"] = covered_zone_ids;
+	coverage["status"] = covered_start_ids.size() == int32_t(player_starts.get("start_count", 0)) ? "pass" : "partial";
+
+	Dictionary road_network;
+	road_network["schema_id"] = NATIVE_RMG_ROAD_NETWORK_SCHEMA_ID;
+	road_network["schema_version"] = 1;
+	road_network["generation_status"] = "roads_generated_foundation";
+	road_network["full_generation_status"] = "not_implemented";
+	road_network["writeout_policy"] = "final_generated_tile_stream_no_authored_tile_write";
+	road_network["materialization_state"] = "staged_overlay_records_only_no_gameplay_adoption";
+	road_network["overlay_id"] = "generated_dirt_road";
+	road_network["route_graph"] = route_graph;
+	road_network["road_segments"] = road_segments;
+	road_network["road_segment_count"] = road_segments.size();
+	road_network["road_cell_count"] = [&road_segments]() {
+		int32_t total = 0;
+		for (int64_t index = 0; index < road_segments.size(); ++index) {
+			Dictionary segment = road_segments[index];
+			total += int32_t(segment.get("cell_count", 0));
+		}
+		return total;
+	}();
+	road_network["required_start_coverage"] = coverage;
+	road_network["route_reachability_proof"] = reachability;
+	road_network["signature"] = hash32_hex(canonical_variant(road_network));
+	return road_network;
+}
+
+Array bounded_river_cells(const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const String seed = String(normalized.get("normalized_seed", "0"));
+	Array cells;
+	const int32_t min_y = height <= 2 ? 0 : 1;
+	const int32_t max_y = height <= 2 ? height - 1 : height - 2;
+	const int32_t base_x = std::max(1, std::min(std::max(1, width - 2), 1 + int32_t(hash32_int(seed + String(":river_base_x")) % uint32_t(std::max(1, width - 2)))));
+	for (int32_t y = min_y; y <= max_y; ++y) {
+		const int32_t jitter = deterministic_signed_jitter(seed + String(":river_y:") + String::num_int64(y), 1);
+		const int32_t x = std::max(0, std::min(width - 1, base_x + jitter));
+		cells.append(cell_record(x, y, 0));
+	}
+	return cells;
+}
+
+Array island_waterline_cells(const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	Array cells;
+	if (width <= 1 || height <= 1) {
+		return cells;
+	}
+	for (int32_t x = 0; x < width; x += 2) {
+		cells.append(cell_record(x, 0, 0));
+	}
+	for (int32_t y = 2; y < height; y += 2) {
+		cells.append(cell_record(width - 1, y, 0));
+	}
+	return cells;
+}
+
+Dictionary bounds_for_cells(const Array &cells) {
+	Dictionary bounds;
+	if (cells.is_empty()) {
+		return bounds;
+	}
+	int32_t min_x = std::numeric_limits<int32_t>::max();
+	int32_t min_y = std::numeric_limits<int32_t>::max();
+	int32_t max_x = -1;
+	int32_t max_y = -1;
+	for (int64_t index = 0; index < cells.size(); ++index) {
+		Dictionary cell = cells[index];
+		const int32_t x = int32_t(cell.get("x", 0));
+		const int32_t y = int32_t(cell.get("y", 0));
+		min_x = std::min(min_x, x);
+		min_y = std::min(min_y, y);
+		max_x = std::max(max_x, x);
+		max_y = std::max(max_y, y);
+	}
+	bounds["min_x"] = min_x;
+	bounds["min_y"] = min_y;
+	bounds["max_x"] = max_x;
+	bounds["max_y"] = max_y;
+	return bounds;
+}
+
+Dictionary generate_river_network(const Dictionary &normalized, const Dictionary &road_network) {
+	Array segments;
+	Array river_cells = bounded_river_cells(normalized);
+	Dictionary river_segment;
+	river_segment["id"] = "river_foundation_01";
+	river_segment["kind"] = "river";
+	river_segment["route_feature_class"] = "bounded_waterline_feature";
+	river_segment["cells"] = river_cells;
+	river_segment["cell_count"] = river_cells.size();
+	river_segment["bounds"] = bounds_for_cells(river_cells);
+	river_segment["materialization_state"] = "bounded_route_feature_metadata_only_no_terrain_mutation";
+	segments.append(river_segment);
+
+	if (String(normalized.get("water_mode", "land")) == "islands") {
+		Array waterline = island_waterline_cells(normalized);
+		Dictionary waterline_segment;
+		waterline_segment["id"] = "waterline_foundation_01";
+		waterline_segment["kind"] = "shore_waterline";
+		waterline_segment["route_feature_class"] = "island_border_waterline";
+		waterline_segment["cells"] = waterline;
+		waterline_segment["cell_count"] = waterline.size();
+		waterline_segment["bounds"] = bounds_for_cells(waterline);
+		waterline_segment["materialization_state"] = "waterline_metadata_only_existing_terrain_grid_unchanged";
+		segments.append(waterline_segment);
+	}
+
+	int32_t cell_count = 0;
+	for (int64_t index = 0; index < segments.size(); ++index) {
+		Dictionary segment = segments[index];
+		cell_count += int32_t(segment.get("cell_count", 0));
+	}
+
+	Dictionary policy;
+	policy["water_mode"] = normalized.get("water_mode", "land");
+	policy["enabled"] = true;
+	policy["route_feature_boundary"] = "foundation_records_only_no_passability_or_tile_mutation";
+	policy["road_crossing_policy"] = "crossing_metadata_deferred_to_later_parity_slice";
+
+	Dictionary network;
+	network["schema_id"] = NATIVE_RMG_RIVER_NETWORK_SCHEMA_ID;
+	network["schema_version"] = 1;
+	network["generation_status"] = "rivers_generated_foundation";
+	network["full_generation_status"] = "not_implemented";
+	network["policy"] = policy;
+	network["river_segments"] = segments;
+	network["river_segment_count"] = segments.size();
+	network["river_cell_count"] = cell_count;
+	network["related_road_network_signature"] = road_network.get("signature", "");
+	network["materialization_state"] = "staged_route_feature_records_only_no_gameplay_adoption";
+	network["signature"] = hash32_hex(canonical_variant(network));
+	return network;
+}
+
 Dictionary generate_terrain_grid(const Dictionary &normalized) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -1181,7 +1678,7 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	result["faction_ids"] = faction_ids;
 	result["town_ids"] = town_ids;
 	result["full_generation_status"] = "not_implemented";
-	result["foundation_scope"] = "deterministic_config_identity_native_terrain_grid_zones_and_player_starts_only";
+	result["foundation_scope"] = "deterministic_config_identity_native_terrain_grid_zones_player_starts_and_road_river_networks_only";
 	return result;
 }
 
@@ -1217,6 +1714,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	Dictionary player_assignment = player_assignment_for_config(normalized);
 	Dictionary zone_layout = generate_zone_layout(normalized, player_assignment);
 	Dictionary player_starts = generate_player_starts(normalized, zone_layout, player_assignment);
+	Dictionary road_network = generate_road_network(normalized, zone_layout, player_starts);
+	Dictionary river_network = generate_river_network(normalized, road_network);
 
 	Dictionary metadata;
 	metadata["schema_id"] = NATIVE_RMG_SCHEMA_ID;
@@ -1228,11 +1727,16 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["terrain_generation_status"] = "terrain_grid_generated";
 	metadata["zone_generation_status"] = "zones_generated_foundation";
 	metadata["player_start_generation_status"] = "player_starts_generated_foundation";
+	metadata["road_generation_status"] = "roads_generated_foundation";
+	metadata["river_generation_status"] = "rivers_generated_foundation";
 	metadata["normalized_config"] = normalized;
 	metadata["deterministic_identity"] = identity;
 	metadata["terrain_grid_signature"] = terrain_grid.get("signature", "");
 	metadata["zone_layout_signature"] = zone_layout.get("signature", "");
 	metadata["player_start_signature"] = player_starts.get("signature", "");
+	metadata["road_network_signature"] = road_network.get("signature", "");
+	metadata["route_graph_signature"] = Dictionary(road_network.get("route_graph", Dictionary())).get("signature", "");
+	metadata["river_network_signature"] = river_network.get("signature", "");
 	metadata["options_keys"] = options.keys();
 
 	Dictionary map_state;
@@ -1252,7 +1756,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	warning["code"] = "full_generation_not_implemented";
 	warning["severity"] = "warning";
 	warning["path"] = "generate_random_map";
-	warning["message"] = "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, and player start anchors only; objects, roads, rivers, towns, guards, validation parity, and package/session adoption are not implemented.";
+	warning["message"] = "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, player start anchors, and foundation road/river network records only; objects, towns, guards, validation parity, and package/session adoption are not implemented.";
 	warning["context"] = Dictionary();
 
 	Array warnings;
@@ -1267,6 +1771,10 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metrics["terrain_palette_count"] = Array(terrain_grid.get("terrain_palette_ids", Array())).size();
 	metrics["zone_count"] = zone_layout.get("zone_count", 0);
 	metrics["player_start_count"] = player_starts.get("start_count", 0);
+	metrics["road_segment_count"] = road_network.get("road_segment_count", 0);
+	metrics["road_cell_count"] = road_network.get("road_cell_count", 0);
+	metrics["river_segment_count"] = river_network.get("river_segment_count", 0);
+	metrics["river_cell_count"] = river_network.get("river_cell_count", 0);
 	metrics["object_count"] = document->get_object_count();
 
 	Dictionary report;
@@ -1285,8 +1793,13 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	report["zone_layout_signature"] = zone_layout.get("signature", "");
 	report["player_start_generation_status"] = player_starts.get("generation_status", "");
 	report["player_start_signature"] = player_starts.get("signature", "");
+	report["road_generation_status"] = road_network.get("generation_status", "");
+	report["road_network_signature"] = road_network.get("signature", "");
+	report["route_graph_signature"] = Dictionary(road_network.get("route_graph", Dictionary())).get("signature", "");
+	report["route_reachability_status"] = Dictionary(road_network.get("route_reachability_proof", Dictionary())).get("status", "");
+	report["river_generation_status"] = river_network.get("generation_status", "");
+	report["river_network_signature"] = river_network.get("signature", "");
 	Array remaining_parity_slices;
-	remaining_parity_slices.append("native-rmg-zone-player-starts-10184");
 	remaining_parity_slices.append("native-rmg-road-river-network-10184");
 	remaining_parity_slices.append("native-rmg-object-placement-foundation-10184");
 	remaining_parity_slices.append("native-rmg-town-guard-placement-10184");
@@ -1302,6 +1815,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["terrain_grid_status"] = "generated";
 	result["zone_generation_status"] = "zones_generated_foundation";
 	result["player_start_generation_status"] = "player_starts_generated_foundation";
+	result["road_generation_status"] = "roads_generated_foundation";
+	result["river_generation_status"] = "rivers_generated_foundation";
 	result["full_generation_status"] = "not_implemented";
 	result["normalized_config"] = normalized;
 	result["deterministic_identity"] = identity;
@@ -1309,6 +1824,10 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["player_assignment"] = player_assignment;
 	result["zone_layout"] = zone_layout;
 	result["player_starts"] = player_starts;
+	result["route_graph"] = road_network.get("route_graph", Dictionary());
+	result["road_network"] = road_network;
+	result["river_network"] = river_network;
+	result["route_reachability_proof"] = road_network.get("route_reachability_proof", Dictionary());
 	result["map_document"] = document;
 	result["map_metadata"] = metadata;
 	result["report"] = report;

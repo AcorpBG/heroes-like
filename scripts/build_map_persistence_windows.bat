@@ -184,6 +184,9 @@ if "%GODOT_FOUND%"=="0" (
 	echo Build succeeded. To run the focused smokes manually, add Godot %EXPECTED_GODOT_VERSION% to PATH or pass --godot PATH_TO_4_6_2_EXE, then run:
 	echo Godot_v4.6.2-stable_win64.exe --headless --path . tests/map_package_api_skeleton_report.tscn
 	echo Godot_v4.6.2-stable_win64.exe --headless --path . tests/native_random_map_foundation_report.tscn
+	echo Godot_v4.6.2-stable_win64.exe --headless --path . tests/native_random_map_terrain_grid_report.tscn
+	echo Godot_v4.6.2-stable_win64.exe --headless --path . tests/native_random_map_zone_player_starts_report.tscn
+	echo Godot_v4.6.2-stable_win64.exe --headless --path . tests/native_random_map_road_river_report.tscn
 	if "%REQUIRE_TEST%"=="1" (
 		echo Failing because --require-test was provided.
 		exit /b 1
@@ -198,6 +201,12 @@ set "GODOT_SILENCE_ROOT_WARNING=1"
 call :run "%GODOT_EXE%" --headless --path . tests/map_package_api_skeleton_report.tscn
 if errorlevel 1 exit /b 1
 call :run "%GODOT_EXE%" --headless --path . tests/native_random_map_foundation_report.tscn
+if errorlevel 1 exit /b 1
+call :run "%GODOT_EXE%" --headless --path . tests/native_random_map_terrain_grid_report.tscn
+if errorlevel 1 exit /b 1
+call :run "%GODOT_EXE%" --headless --path . tests/native_random_map_zone_player_starts_report.tscn
+if errorlevel 1 exit /b 1
+call :run "%GODOT_EXE%" --headless --path . tests/native_random_map_road_river_report.tscn
 exit /b %ERRORLEVEL%
 
 :check_godot_version
