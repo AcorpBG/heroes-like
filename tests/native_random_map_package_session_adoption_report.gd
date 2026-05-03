@@ -15,9 +15,6 @@ func _run() -> void:
 	if not ClassDB.class_exists("MapPackageService"):
 		_fail("MapPackageService native class is not available.")
 		return
-	if not ResourceLoader.exists("res://scripts/core/RandomMapGeneratorRules.gd"):
-		_fail("GDScript source-of-truth RandomMapGeneratorRules.gd is missing.")
-		return
 
 	var service: Variant = ClassDB.instantiate("MapPackageService")
 	var metadata: Dictionary = service.get_api_metadata()
@@ -28,7 +25,11 @@ func _run() -> void:
 	if not capabilities.has("native_random_map_package_session_adoption_bridge"):
 		_fail("Native package/session adoption capability is missing: %s" % JSON.stringify(Array(capabilities)))
 		return
+	if not capabilities.has("native_package_save_load") or not capabilities.has("generated_map_package_disk_startup"):
+		_fail("Native generated package save/load startup capabilities are missing: %s" % JSON.stringify(Array(capabilities)))
+		return
 
+	ContentService.clear_generated_scenario_drafts()
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
 		"native-rmg-gdscript-comparison-10184-small-land",
 		"border_gate_compact_v1",
@@ -38,10 +39,6 @@ func _run() -> void:
 		false,
 		"homm3_small"
 	)
-	var gdscript_before := ScenarioSelectRulesScript.build_random_map_skirmish_setup(config, "normal")
-	if not bool(gdscript_before.get("ok", false)):
-		_fail("GDScript fallback setup failed before native adoption: %s" % JSON.stringify(gdscript_before))
-		return
 
 	var first: Dictionary = service.generate_random_map(config)
 	var second: Dictionary = service.generate_random_map(config.duplicate(true))
@@ -80,13 +77,45 @@ func _run() -> void:
 		_fail("Native package/session adoption wrote a generated draft into ContentService.")
 		return
 
-	var gdscript_after := ScenarioSelectRulesScript.build_random_map_skirmish_setup(config, "normal")
-	if not bool(gdscript_after.get("ok", false)):
-		_fail("GDScript fallback setup failed after native adoption: %s" % JSON.stringify(gdscript_after))
+	var active_setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		config,
+		"normal",
+		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
+	)
+	if not bool(active_setup.get("ok", false)):
+		_fail("Active generated package setup failed: %s" % JSON.stringify(active_setup))
 		return
-	if String(gdscript_after.get("generated_map", {}).get("source", "")) != "generated_random_map":
-		_fail("GDScript fallback setup stopped using the GDScript generated-map payload.")
+	if not active_setup.get("generated_map", {}).is_empty():
+		_fail("Active generated setup still exposed an in-memory generated scenario payload.")
 		return
+	var package_startup: Dictionary = active_setup.get("package_startup", {}) if active_setup.get("package_startup", {}) is Dictionary else {}
+	if package_startup.is_empty():
+		_fail("Active generated setup did not persist package startup data.")
+		return
+	var map_path := String(package_startup.get("map_path", ""))
+	var scenario_path := String(package_startup.get("scenario_path", ""))
+	if not map_path.begins_with("res://maps/") or not scenario_path.begins_with("res://maps/"):
+		_fail("Active generated setup did not use project maps/ package paths: %s" % JSON.stringify(package_startup))
+		return
+	if not bool(package_startup.get("map_load", {}).get("ok", false)) or not bool(package_startup.get("scenario_load", {}).get("ok", false)):
+		_fail("Active generated setup did not prove package load after save: %s" % JSON.stringify(package_startup))
+		return
+	var active_session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(active_setup)
+	if active_session == null or active_session.session_id == "":
+		_fail("Active generated package setup did not start a session.")
+		return
+	var active_boundary: Dictionary = active_session.flags.get("generated_random_map_boundary", {}) if active_session.flags.get("generated_random_map_boundary", {}) is Dictionary else {}
+	if String(active_boundary.get("adoption_path", "")) != "native_rmg_generated_package_saved_loaded_from_disk":
+		_fail("Active session did not load through disk package startup: %s" % JSON.stringify(active_boundary))
+		return
+	if bool(active_boundary.get("content_service_generated_draft", true)) or bool(active_boundary.get("legacy_json_scenario_record", true)):
+		_fail("Active session still used generated drafts or legacy scenario JSON: %s" % JSON.stringify(active_boundary))
+		return
+	if ContentService.has_generated_scenario_draft(String(active_setup.get("scenario_id", ""))):
+		_fail("Active package startup wrote a generated draft into ContentService.")
+		return
+	DirAccess.remove_absolute(map_path)
+	DirAccess.remove_absolute(scenario_path)
 
 	var report := {
 		"schema_id": REPORT_SCHEMA_ID,
@@ -100,8 +129,11 @@ func _run() -> void:
 		"scenario_id": scenario_id,
 		"scenario_package_hash": adoption.get("scenario_package_record", {}).get("package_hash", ""),
 		"session_id": session.session_id,
+		"active_session_id": active_session.session_id,
 		"save_version": session.save_version,
-		"gdscript_fallback_ok": bool(gdscript_before.get("ok", false)) and bool(gdscript_after.get("ok", false)),
+		"active_disk_package_startup_ok": true,
+		"active_map_package_path": map_path,
+		"active_scenario_package_path": scenario_path,
 		"authored_writeback": false,
 		"full_parity_claim": true,
 		"readiness": adoption.get("readiness", {}),
@@ -174,17 +206,20 @@ func _assert_session_shape(session: SessionStateStoreScript.SessionData, adoptio
 	if session.session_id != String(boundary.get("session_id", "")) or session.scenario_id != String(boundary.get("scenario_id", "")):
 		_fail("Session ids do not match adoption boundary.")
 		return
-	if session.save_version != SessionStateStoreScript.SAVE_VERSION or session.launch_mode != SessionStateStoreScript.LAUNCH_MODE_GENERATED_DRAFT:
-		_fail("Session save/launch boundary changed unexpectedly: %s" % JSON.stringify(session.to_dict()))
+	if session.save_version != SessionStateStoreScript.SAVE_VERSION or session.launch_mode != SessionStateStoreScript.LAUNCH_MODE_SKIRMISH:
+		_fail("Session save/launch boundary changed unexpectedly: save_version=%d launch_mode=%s" % [session.save_version, session.launch_mode])
 		return
 	if not bool(session.flags.get("native_random_map_package_session_adoption", false)):
 		_fail("Session flags did not mark native package/session adoption.")
 		return
 	var boundary_flags: Dictionary = session.flags.get("generated_random_map_boundary", {})
-	for key in ["authored_content_writeback", "campaign_adoption", "skirmish_browser_authored_listing", "runtime_call_site_adoption"]:
+	for key in ["authored_content_writeback", "campaign_adoption", "skirmish_browser_authored_listing", "content_service_generated_draft", "legacy_json_scenario_record"]:
 		if bool(boundary_flags.get(key, true)):
 			_fail("Session boundary flag %s was not false: %s" % [key, JSON.stringify(boundary_flags)])
 			return
+	if not bool(boundary_flags.get("runtime_call_site_adoption", false)):
+		_fail("Session boundary did not mark active runtime call-site adoption: %s" % JSON.stringify(boundary_flags))
+		return
 	if not bool(boundary_flags.get("native_runtime_authoritative", false)) or not bool(boundary_flags.get("full_parity_claim", false)):
 		_fail("Session boundary did not carry supported native parity flags: %s" % JSON.stringify(boundary_flags))
 		return

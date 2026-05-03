@@ -1,6 +1,6 @@
 # Map/Scenario GDExtension Persistence Foundation
 
-Status: specification source plus Slice 1 native build/load evidence; package format behavior is not implemented.
+Status: specification source plus native generated-package startup evidence; minimal package save/load is implemented for the generated RMG startup path.
 Date: 2026-05-03.
 Slice: map-scenario-gdextension-persistence-foundation-10184.
 
@@ -8,7 +8,7 @@ Slice: map-scenario-gdextension-persistence-foundation-10184.
 
 Maps and scenarios need durable structure before broad authored-scenario, generated-skirmish, editor-export, or save/load production work depends on the current loose JSON and Dictionary payloads.
 
-This document specifies the target map/scenario document model, package format, Godot GDExtension API, migration lifecycle, RMG bridge, validation gates, and implementation staging. It does not authorize runtime code changes, content migration, save-schema breakage, renderer/fog/pathing changes, or production map adoption by itself.
+This document specifies the target map/scenario document model, package format, Godot GDExtension API, migration lifecycle, RMG bridge, validation gates, and implementation staging. The 2026-05-03 owner-directed generated-startup slice implements only the narrow native RMG package save/load/start path; it does not complete authored content migration, save-schema replacement, broad package migration, renderer/fog/pathing redesign, or campaign adoption.
 
 The selected direction is a C++ Godot GDExtension that owns typed map package parsing, validation, serialization, migration, deterministic identity, and corruption checks, while existing GDScript services remain the first integration layer until implementation slices deliberately move responsibilities.
 
@@ -34,12 +34,13 @@ Current RMG reality:
 
 Current generated skirmish/session reality:
 
-- `ScenarioSelectRules.gd` calls `RandomMapGeneratorRulesScript.new().generate(input_config)` in `build_random_map_skirmish_setup`.
-- A valid generated setup carries the full generated map payload plus `generated_identity`, validation, retry status, provenance, replay metadata, and explicit `campaign_adoption: false`.
-- `start_random_map_skirmish_session_from_setup` launches through `ScenarioFactoryScript.create_generated_skirmish_session(...)`.
-- The launch boundary intentionally preserves `authored_content_writeback: false`, `campaign_adoption: false`, `skirmish_browser_authored_listing: false`, and `alpha_parity_claim: false`.
+- As of the owner-directed generated-package startup slice, `ScenarioSelectRules.gd` requires native `MapPackageService` for the player-facing generated skirmish setup.
+- `build_random_map_skirmish_setup` calls native `generate_random_map`, converts the native output to map/scenario documents, saves `.amap` and `.ascenario` packages under the active maps directory, then loads those packages back before launch.
+- A valid generated setup carries package refs, validation, retry status, provenance, replay metadata, and explicit `campaign_adoption: false`; it does not carry the old giant `scenario_record`/`terrain_layers_record` generated payload as the active startup handoff.
+- `start_random_map_skirmish_session_from_setup` launches through `NativeRandomMapPackageSessionBridge.build_session_from_loaded_packages(...)`.
+- The launch boundary intentionally preserves `authored_content_writeback: false`, `campaign_adoption: false`, `skirmish_browser_authored_listing: false`, `content_service_generated_draft: false`, and `legacy_json_scenario_record: false`.
 - Generated provenance and replay metadata are copied into both `session.flags` and `session.overworld`.
-- `ScenarioFactory.gd` registers generated maps with `ContentService.register_generated_scenario_draft(...)`, which stores generated scenario and terrain-layer drafts in memory under `draft_source: generated_random_map_transient_registry`.
+- `ScenarioFactory.gd` and `ContentService.register_generated_scenario_draft(...)` remain available only as legacy/dev/test compatibility paths. They are not the active player-facing generated skirmish startup path.
 - `ContentService.register_generated_scenario_draft(...)` rejects authored id collisions, requires `generated=true`, and returns `write_policy: memory_only_no_authored_json_write`.
 - `SaveService._ensure_generated_random_map_scenario_registered(...)` restores a missing generated scenario by regenerating from saved seed/config provenance and comparing stable/materialized/export signatures before re-registering a transient draft.
 
@@ -71,6 +72,17 @@ Specific risks:
 - Dictionary payloads make invalid states easy: out-of-bounds coordinates, duplicate placement ids, inconsistent map dimensions, stale terrain-layer ids, missing object content ids, and mismatched generated signatures can survive until a late load or gameplay path.
 - Deterministic identity is currently produced by GDScript stable stringification/hash helpers. Future package identity needs a canonical cross-language algorithm so C++, GDScript, CI, and tools agree.
 - Generated provenance currently restores by regeneration. That remains useful, but durable generated packages should not require generator code to produce identical output forever just to load an existing save.
+
+## Maps Directory Semantics
+
+The generated package startup path uses `ScenarioSelectRules.generated_map_package_directory_policy()`.
+
+- In editor/dev/headless runs, the active maps directory is `res://maps`, which resolves to the repository-root `maps/` directory. This makes generated packages inspectable during development and keeps the owner-directed path explicit.
+- In exported/runtime builds, the policy target is `user://maps`, because exported `res://` content is not a reliable writable package location.
+- Generated startup writes one `.amap` map package and one `.ascenario` scenario package. The game then loads those files back from disk and builds the session from the loaded documents.
+- These generated packages are not authored content and are not written into `content/scenarios.json`.
+- `content/scenarios.json` remains archived/dev compatibility content unless a later migration slice replaces it with a manifest/package catalog.
+- Native package save/load currently serializes a compact package document envelope sufficient for generated startup. `migrate_*` and full authored-package migration remain intentionally minimal/not implemented and must not be claimed as complete.
 
 ## Target Ownership Model
 

@@ -56,13 +56,20 @@ func _run() -> void:
 		_fail("ScenarioDocument identity getters failed.")
 		return
 
-	var load_result: Dictionary = service.load_map_package("res://content/maps/does-not-exist.amap")
-	if bool(load_result.get("ok", true)) or String(load_result.get("error_code", "")) != "not_implemented":
-		_fail("load_map_package did not return the stable stub failure shape: %s" % JSON.stringify(load_result))
+	var fixture_path := "res://maps/api_skeleton_fixture.amap"
+	var save_result: Dictionary = service.save_map_package(map_doc, fixture_path)
+	if not bool(save_result.get("ok", false)):
+		_fail("save_map_package did not write a package: %s" % JSON.stringify(save_result))
 		return
-	if not (load_result.get("report", {}) is Dictionary):
-		_fail("load_map_package failure did not include a structured report.")
+	var load_result: Dictionary = service.load_map_package(fixture_path)
+	if not bool(load_result.get("ok", false)):
+		_fail("load_map_package did not load the saved package: %s" % JSON.stringify(load_result))
 		return
+	var loaded_map: Variant = load_result.get("map_document", null)
+	if loaded_map == null or loaded_map.get_map_id() != map_doc.get_map_id() or loaded_map.get_tile_count() != map_doc.get_tile_count():
+		_fail("Loaded MapDocument did not preserve identity/dimensions.")
+		return
+	DirAccess.remove_absolute(fixture_path)
 
 	var validation_result: Dictionary = service.validate_map_document(map_doc)
 	if bool(validation_result.get("ok", true)) or String(validation_result.get("error_code", "")) != "not_implemented":
@@ -80,7 +87,8 @@ func _run() -> void:
 		"capabilities": Array(capabilities),
 		"map_schema_version": map_doc.get_schema_version(),
 		"scenario_schema_version": scenario_doc.get_schema_version(),
-		"stub_error_code": load_result.get("error_code", ""),
+		"saved_package_path": fixture_path,
+		"loaded_package_hash": load_result.get("package_hash", ""),
 	})])
 	get_tree().quit(0)
 
