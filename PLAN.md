@@ -228,6 +228,35 @@ nonGoals:
 - No renderer, fog, pathing, gameplay, or RMG generation semantics changes.
 - No generated PNG or unrelated asset import.
 
+Completed owner-directed corrective slice:
+
+id: `map-editor-load-map-package-ui-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Replace the Map Editor's active old JSON scenario dropdown path with an explicit Load Map flow backed only by generated `.amap`/`.ascenario` package pairs under `maps/`.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/map-scenario-gdextension-persistence-foundation.md`
+- 2026-05-03 owner directive to make the map editor load maps from maps-folder packages instead of old JSON scenarios
+implementationTargets:
+- `scenes/editor/MapEditorShell.gd`
+- `scenes/editor/MapEditorShell.tscn`
+- `tests/map_editor_load_map_package_report.gd`
+- `tests/map_editor_load_map_package_report.tscn`
+- `tests/validate_repo.py`
+completionCriteria:
+- The active Map Editor top-bar flow says `Load Map` and lists generated map package entries from `maps/`.
+- The active editor load path uses paired `.amap`/`.ascenario` refs and paths, and creates a package-backed editor working copy.
+- Old authored JSON scenario loading is removed from the active editor UI and kept only behind explicit legacy/dev validation naming.
+- Empty, invalid-pair, and failed-load states use map-package copy rather than scenario-dropdown copy.
+- Focused Godot smoke proves package entries, package refs/paths, no authored JSON scenario/draft registration, and no old scenario dropdown copy in the active flow.
+nonGoals:
+- No skirmish browser behavior change beyond preserving the shared maps-folder package helper.
+- No authored scenario/package catalog migration.
+- No campaign adoption.
+- No save-version bump.
+- No renderer, fog, pathing, gameplay, RMG generation, or asset-ingestion changes.
+
 Selected Phase 2 corrective slice:
 
 id: `native-gdextension-editor-manifest-correction-10184`

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "maps-folder-package-browser-integration-10184",
-  "currentSliceTitle": "Maps Folder Package Browser Integration",
+  "currentSliceId": "map-editor-load-map-package-ui-10184",
+  "currentSliceTitle": "Map Editor Load Map Package UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed maps-folder package browser integration: generated .amap/.ascenario pairs under maps/ are indexed through native package loads, skirmish browser/start uses selected package paths, map editor can open package-backed working copies, empty package directories return empty without fallback, and authored JSON/draft paths remain out of generated package launch/open. Validation: maps_folder_package_browser_integration_report; native_random_map_disk_package_startup_report; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
+  "currentSliceNotes": "Implemented an explicit Map Editor Load Map flow backed by maps-folder .amap/.ascenario package entries. The editor no longer auto-loads the old authored JSON scenario dropdown path; legacy authored scenario loading remains behind explicit dev-validation naming. Validation: godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_editor_load_map_package_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/maps_folder_package_browser_integration_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T13:19:23Z",
+  "updatedAt": "2026-05-03T13:34:27Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7099,6 +7099,56 @@
       "startedAt": "2026-05-03T13:11:15Z",
       "notes": "Implemented a native-package-backed maps-folder index for generated .amap/.ascenario pairs, skirmish browser/list/start from selected package paths, and map editor package listing/open into an in-memory working copy. Empty package directories return a clean empty index, and generated package launch/open records keep content/scenarios.json and generated draft registration out of the path. Validation: godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/maps_folder_package_browser_integration_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_disk_package_startup_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
       "completedAt": "2026-05-03T13:19:23Z"
+    },
+    {
+      "id": "map-editor-load-map-package-ui-10184",
+      "title": "Map Editor Load Map Package UI",
+      "status": "completed",
+      "purpose": "Replace the Map Editor's active old JSON scenario dropdown path with an explicit Load Map flow backed only by generated .amap/.ascenario package pairs under maps/.",
+      "implementationTargets": [
+        "scenes/editor/MapEditorShell.gd",
+        "scenes/editor/MapEditorShell.tscn",
+        "tests/map_editor_load_map_package_report.gd",
+        "tests/map_editor_load_map_package_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The active Map Editor top-bar flow says Load Map and lists generated map package entries from maps/.",
+        "The active editor load path uses paired .amap/.ascenario refs and paths, and creates a package-backed editor working copy.",
+        "Old authored JSON scenario loading is removed from the active editor UI and kept only behind explicit legacy/dev validation naming.",
+        "Empty, invalid-pair, and failed-load states use map-package copy rather than scenario-dropdown copy.",
+        "Focused Godot smoke proves package entries, package refs/paths, no authored JSON scenario/draft registration, and no old scenario dropdown copy in the active flow."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "native-rmg-disk-package-startup-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "2026-05-03 owner directive to make the map editor load maps from maps-folder packages instead of old JSON scenarios"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_editor_load_map_package_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/maps_folder_package_browser_integration_report.tscn",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No skirmish browser behavior change beyond preserving the shared maps-folder package helper.",
+        "No authored scenario/package catalog migration.",
+        "No campaign adoption.",
+        "No save-version bump.",
+        "No renderer, fog, pathing, gameplay, RMG generation, or asset-ingestion changes."
+      ],
+      "createdAt": "2026-05-03T13:34:27Z",
+      "updatedAt": "2026-05-03T13:34:27Z",
+      "startedAt": "2026-05-03T13:34:27Z",
+      "completedAt": "2026-05-03T13:34:27Z",
+      "notes": "Implemented an explicit Map Editor Load Map flow backed by maps-folder .amap/.ascenario package entries. The editor no longer auto-loads the old authored JSON scenario dropdown path; legacy authored scenario loading remains behind explicit dev-validation naming. Validation: godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_editor_load_map_package_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/maps_folder_package_browser_integration_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check."
     }
   ],
   "completedImplementationEvidence": [
@@ -7700,6 +7750,35 @@
           "evidence": "TownShell now stores active-town entity cache entries per placement_id and refresh mode so minimal/full refreshes do not evict each other, while active-town action invalidation clears all modes for the affected placement. Generated OverworldShell validation snapshots now use compact UI state instead of calling latest_loadable_summary/active_save_surface on ordinary transition checks. Focused rendered DISPLAY=:99 profiles show same-town full/minimal/full refreshes hitting cached entries with 0ms cache-build buckets after the first mode builds and no save-surface records for ordinary town/overworld transition validation."
         }
       ]
+    },
+    {
+      "id": "map-editor-load-map-package-ui-10184",
+      "system": "map editor package loading",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "map-editor-load-map-package-ui-10184"
+      ],
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "2026-05-03 owner directive to make the map editor load maps from maps-folder packages instead of old JSON scenarios",
+        "scenes/editor/MapEditorShell.gd",
+        "scenes/editor/MapEditorShell.tscn",
+        "tests/map_editor_load_map_package_report.gd",
+        "tests/map_editor_load_map_package_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "entries": [
+        {
+          "id": "map-editor-load-map-package-ui-implementation-10184",
+          "title": "Replace active editor scenario dropdown with maps-folder Load Map flow",
+          "status": "completed",
+          "evidence": "MapEditorShell now lists generated maps-folder package pairs in MapPackagePicker, opens them through an explicit Load Map action, records package refs/paths on the editor working copy, and keeps legacy authored scenario loading behind explicit dev-validation naming. Focused map_editor_load_map_package_report and existing maps_folder_package_browser_integration_report passed."
+        }
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -8152,14 +8231,14 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "maps-folder-package-browser-integration-10184",
-      "title": "Maps Folder Package Browser Integration",
+      "id": "map-editor-load-map-package-ui-10184",
+      "title": "Map Editor Load Map Package UI",
       "status": "completed",
       "sourceDocs": [
         "project.md",
         "PLAN.md",
         "docs/map-scenario-gdextension-persistence-foundation.md",
-        "2026-05-03 owner directive to populate skirmish/maps editor from maps/ generated package files"
+        "2026-05-03 owner directive to make the map editor load maps from maps-folder packages instead of old JSON scenarios"
       ]
     }
   ],

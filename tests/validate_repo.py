@@ -10687,7 +10687,8 @@ def validate_map_editor_shell_slice(errors: list[str]) -> None:
         errors,
         "MapEditorShell.tscn",
         [
-            ("ScenarioPicker", "OptionButton"),
+            ("MapPackagePicker", "OptionButton"),
+            ("LoadMap", "Button"),
             ("TerrainPicker", "OptionButton"),
             ("InspectTool", "Button"),
             ("TerrainTool", "Button"),
@@ -10717,7 +10718,8 @@ def validate_map_editor_shell_slice(errors: list[str]) -> None:
         errors,
         "MapEditorShell.gd",
         [
-            "_load_scenario_working_copy",
+            "_load_maps_folder_package_working_copy",
+            "_load_legacy_authored_scenario_working_copy_for_dev_validation",
             "_paint_terrain",
             "_terrain_line_tool_click",
             "_apply_terrain_line",
@@ -10755,6 +10757,8 @@ def validate_map_editor_shell_slice(errors: list[str]) -> None:
         ],
     )
     for required_token in (
+        "ScenarioSelectRulesScript.maps_folder_package_index",
+        "ScenarioSelectRulesScript.load_maps_folder_package_session",
         "ScenarioFactoryScript.create_session",
         "TerrainPlacementRulesScript.apply_paint",
         "OverworldRules.normalize_overworld_state",
@@ -10780,6 +10784,9 @@ def validate_map_editor_shell_slice(errors: list[str]) -> None:
         "AppRouter.go_to_overworld()",
     ):
         ensure(required_token in editor_script_text, errors, f"MapEditorShell.gd is missing required map-editor token: {required_token}")
+    ensure("_load_scenario_working_copy" not in editor_script_text, errors, "MapEditorShell.gd must quarantine the old scenario loader behind explicit legacy/package names")
+    ensure("ScenarioPicker" not in editor_scene_text, errors, "MapEditorShell.tscn must not keep the old scenario dropdown in the active editor UI")
+    ensure("Map Package |" in editor_script_text, errors, "MapEditorShell.gd must label active editor load entries as map packages")
 
 
 def validate_scenario_outcome_shell(errors: list[str]) -> None:
