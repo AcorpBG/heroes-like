@@ -14,6 +14,9 @@ can normalize a minimal random-map config, compute a deterministic foundation
 identity, and return generated metadata through `generate_random_map(config)`.
 The first parity child slice adds a deterministic native terrain-grid record with
 stable terrain codes, biome mapping, dimensions, tile counts, and signatures.
+The next child adds deterministic foundation zones and player start anchors with
+normalized player constraints, team metadata, zone bounds, owner-grid records, and
+stable zone/start signatures.
 Objects, roads, rivers, towns, guards, validation/provenance parity, package
 conversion, and runtime session adoption remain `not_implemented`; the existing
 GDScript `RandomMapGeneratorRules.gd` stays authoritative for gameplay until a
@@ -121,6 +124,8 @@ using its executable name directly:
 ```bat
 Godot_v4.6.2-stable_win64.exe --headless --path . tests\map_package_api_skeleton_report.tscn
 Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_foundation_report.tscn
+Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_terrain_grid_report.tscn
+Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_zone_player_starts_report.tscn
 ```
 
 The underlying MSVC commands are:
@@ -178,6 +183,8 @@ Focused native RMG foundation smoke:
 
 ```sh
 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_foundation_report.tscn
+GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_terrain_grid_report.tscn
+GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_zone_player_starts_report.tscn
 ```
 
 Passing output includes:

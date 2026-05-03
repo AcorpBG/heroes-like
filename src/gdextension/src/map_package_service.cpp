@@ -5,6 +5,7 @@
 #include <godot_cpp/variant/packed_int32_array.hpp>
 
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <limits>
 #include <map>
@@ -21,7 +22,10 @@ constexpr const char *SCENARIO_SCHEMA_ID = "aurelion_scenario_document";
 constexpr const char *NATIVE_RMG_SCHEMA_ID = "aurelion_native_random_map_foundation";
 constexpr const char *NATIVE_RMG_VERSION = "native_rmg_foundation_v1";
 constexpr const char *NATIVE_RMG_TERRAIN_GRID_SCHEMA_ID = "aurelion_native_rmg_terrain_grid_v1";
+constexpr const char *NATIVE_RMG_ZONE_LAYOUT_SCHEMA_ID = "aurelion_native_rmg_zone_layout_v1";
+constexpr const char *NATIVE_RMG_PLAYER_STARTS_SCHEMA_ID = "aurelion_native_rmg_player_starts_v1";
 constexpr uint64_t HASH_MODULUS = 4294967296ULL;
+constexpr double TAU = 6.28318530717958647692;
 
 PackedStringArray capabilities() {
 	PackedStringArray result;
@@ -32,6 +36,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_config_identity");
 	result.append("native_random_map_foundation_stub");
 	result.append("native_random_map_terrain_grid_foundation");
+	result.append("native_random_map_zone_player_starts_foundation");
 	result.append("headless_binding_smoke");
 	return result;
 }
@@ -208,6 +213,19 @@ Array default_faction_pool() {
 	return result;
 }
 
+String town_for_faction(const String &faction_id) {
+	if (faction_id == "faction_mireclaw") {
+		return "town_mirewatch";
+	}
+	if (faction_id == "faction_sunvault") {
+		return "town_sunspire";
+	}
+	if (faction_id == "faction_thornwake") {
+		return "town_thornhold";
+	}
+	return "town_riverwatch";
+}
+
 bool array_has_string(const Array &array, const String &needle) {
 	for (int64_t index = 0; index < array.size(); ++index) {
 		if (String(array[index]) == needle) {
@@ -230,6 +248,18 @@ Array normalized_string_array(const Variant &value, const Array &fallback) {
 	}
 	if (result.is_empty()) {
 		return fallback.duplicate();
+	}
+	return result;
+}
+
+Array ensure_repeated_to_count(const Array &source, const Array &fallback, int32_t count) {
+	Array base = source.is_empty() ? fallback.duplicate() : source.duplicate();
+	Array result;
+	if (base.is_empty()) {
+		return result;
+	}
+	for (int32_t index = 0; index < count; ++index) {
+		result.append(base[index % base.size()]);
 	}
 	return result;
 }
@@ -376,6 +406,551 @@ String choose_terrain_for_cell(int32_t x, int32_t y, int32_t level, const Array 
 		}
 	}
 	return best_terrain;
+}
+
+String point_key(int32_t x, int32_t y) {
+	return String::num_int64(x) + String(",") + String::num_int64(y);
+}
+
+Dictionary point_record(int32_t x, int32_t y) {
+	Dictionary point;
+	point["x"] = x;
+	point["y"] = y;
+	return point;
+}
+
+String slot_id_2(int32_t slot) {
+	return slot < 10 ? "0" + String::num_int64(slot) : String::num_int64(slot);
+}
+
+int32_t deterministic_signed_jitter(const String &seed_key, int32_t amplitude) {
+	if (amplitude <= 0) {
+		return 0;
+	}
+	const int32_t span = amplitude * 2 + 1;
+	return int32_t(hash32_int(seed_key) % uint32_t(span)) - amplitude;
+}
+
+Dictionary normalized_player_constraints(const Dictionary &config) {
+	Variant constraints_value = config.get("player_constraints", config.get("players", Variant()));
+	Dictionary constraints = constraints_value.get_type() == Variant::DICTIONARY ? Dictionary(constraints_value) : Dictionary();
+	int32_t human_count = std::max(1, std::min(8, normalized_int(constraints, "human_count", normalized_int(constraints, "humans", 1))));
+	int32_t computer_count = 1;
+	int32_t player_count = 2;
+	if (constraints.has("player_count") || constraints.has("total_count") || constraints.has("total")) {
+		player_count = std::max(1, std::min(8, normalized_int(constraints, "player_count", normalized_int(constraints, "total_count", normalized_int(constraints, "total", player_count)))));
+		player_count = std::max(player_count, human_count);
+		computer_count = std::max(0, player_count - human_count);
+	} else {
+		computer_count = std::max(0, std::min(7, normalized_int(constraints, "computer_count", normalized_int(constraints, "computers", computer_count))));
+		player_count = std::max(1, std::min(8, human_count + computer_count));
+	}
+	String team_mode = normalized_text(constraints, "team_mode", "free_for_all").to_lower();
+	if (team_mode.is_empty()) {
+		team_mode = "free_for_all";
+	}
+
+	Dictionary result;
+	result["human_count"] = human_count;
+	result["computer_count"] = computer_count;
+	result["player_count"] = player_count;
+	result["team_mode"] = team_mode;
+	return result;
+}
+
+Array town_ids_for_factions(const Variant &value, const Array &faction_ids, int32_t player_count) {
+	Array requested;
+	if (value.get_type() == Variant::ARRAY) {
+		requested = normalized_string_array(value, Array());
+	}
+	Array result;
+	for (int32_t index = 0; index < player_count; ++index) {
+		if (!requested.is_empty()) {
+			result.append(requested[index % requested.size()]);
+		} else if (!faction_ids.is_empty()) {
+			result.append(town_for_faction(String(faction_ids[index % faction_ids.size()])));
+		} else {
+			result.append("town_riverwatch");
+		}
+	}
+	return result;
+}
+
+Dictionary player_assignment_for_config(const Dictionary &normalized) {
+	Dictionary constraints = normalized.get("player_constraints", Dictionary());
+	const int32_t player_count = int32_t(constraints.get("player_count", 2));
+	const int32_t human_count = int32_t(constraints.get("human_count", 1));
+	const int32_t computer_count = int32_t(constraints.get("computer_count", std::max(0, player_count - human_count)));
+	const String team_mode = String(constraints.get("team_mode", "free_for_all"));
+	Array faction_ids = normalized.get("faction_ids", default_faction_pool());
+	Array town_ids = normalized.get("town_ids", Array());
+
+	Array player_slots;
+	Dictionary by_owner_slot;
+	Array active_owner_slots;
+	Array assigned_faction_ids;
+	Array assigned_town_ids;
+	Array teams;
+	for (int32_t index = 0; index < player_count; ++index) {
+		const int32_t player_slot = index + 1;
+		const int32_t owner_slot = index + 1;
+		const String player_type = player_slot <= human_count ? "human" : "computer";
+		const String faction_id = faction_ids.is_empty() ? String("faction_embercourt") : String(faction_ids[index % faction_ids.size()]);
+		const String town_id = town_ids.is_empty() ? town_for_faction(faction_id) : String(town_ids[index % town_ids.size()]);
+		const String team_id = "team_" + slot_id_2(player_slot);
+
+		Dictionary slot;
+		slot["player_slot"] = player_slot;
+		slot["owner_slot"] = owner_slot;
+		slot["player_type"] = player_type;
+		slot["faction_id"] = faction_id;
+		slot["town_id"] = town_id;
+		slot["team_id"] = team_id;
+		slot["team_mode"] = team_mode;
+		slot["ai_controlled"] = player_type != "human";
+		slot["assignment_source"] = "native_foundation_fixed_owner_slot_profile_order";
+		player_slots.append(slot);
+		by_owner_slot[String::num_int64(owner_slot)] = slot;
+		active_owner_slots.append(owner_slot);
+		assigned_faction_ids.append(faction_id);
+		assigned_town_ids.append(town_id);
+
+		Dictionary team;
+		team["team_id"] = team_id;
+		Array team_slots;
+		team_slots.append(player_slot);
+		team["player_slots"] = team_slots;
+		team["mode"] = "free_for_all";
+		teams.append(team);
+	}
+
+	Dictionary capacity;
+	capacity["human_start_capacity"] = std::max(1, human_count);
+	capacity["total_start_capacity"] = player_count;
+	capacity["fixed_owner_slots"] = active_owner_slots;
+	Array human_owner_slots;
+	for (int32_t index = 0; index < human_count; ++index) {
+		human_owner_slots.append(index + 1);
+	}
+	capacity["human_owner_slots"] = human_owner_slots;
+
+	Dictionary team_metadata;
+	team_metadata["mode"] = "free_for_all";
+	team_metadata["supported_now"] = team_mode == "free_for_all";
+	team_metadata["requested_mode"] = team_mode;
+	team_metadata["teams"] = teams;
+
+	Dictionary assignment;
+	assignment["schema_id"] = "random_map_player_assignment_v1";
+	assignment["assignment_policy"] = "native_foundation_fixed_owner_slots_first_n_players_profile_order";
+	assignment["team_mode"] = team_mode;
+	assignment["team_metadata"] = team_metadata;
+	assignment["human_count"] = human_count;
+	assignment["computer_count"] = computer_count;
+	assignment["player_count"] = player_count;
+	assignment["capacity"] = capacity;
+	assignment["active_owner_slots"] = active_owner_slots;
+	assignment["inactive_owner_slots"] = Array();
+	assignment["player_slots"] = player_slots;
+	assignment["player_slot_by_owner_slot"] = by_owner_slot;
+	assignment["assigned_faction_ids"] = assigned_faction_ids;
+	assignment["assigned_town_ids"] = assigned_town_ids;
+	assignment["faction_pool"] = faction_ids;
+	return assignment;
+}
+
+Dictionary terrain_palette_for_zone(const String &zone_id, const String &faction_id, bool match_to_faction, const Array &terrain_pool, int32_t index) {
+	String selected = terrain_pool.is_empty() ? String("grass") : String(terrain_pool[index % terrain_pool.size()]);
+	String source = "profile_palette_foundation_order";
+	const String faction_terrain = terrain_for_faction(faction_id);
+	if (match_to_faction && array_has_string(terrain_pool, faction_terrain)) {
+		selected = faction_terrain;
+		source = "faction_match_profile_palette";
+	}
+	Dictionary palette;
+	palette["zone_id"] = zone_id;
+	palette["faction_id"] = faction_id;
+	palette["terrain_match_to_faction"] = match_to_faction;
+	palette["profile_terrain_ids"] = terrain_pool;
+	palette["catalog_allowed_terrain_ids"] = Array();
+	palette["faction_terrain_id"] = faction_terrain;
+	palette["selected_terrain_id"] = selected;
+	palette["normalized_terrain_id"] = selected;
+	palette["original_terrain_id"] = selected;
+	palette["biome_id"] = biome_for_terrain(selected);
+	palette["passable"] = is_passable_terrain_id(selected);
+	palette["selection_source"] = source;
+	palette["fallback_used"] = false;
+	palette["unsupported_terrain_ids"] = Array();
+	palette["deferred_terrain_ids"] = Array();
+	palette["deferred_reason"] = "";
+	return palette;
+}
+
+Array build_foundation_zones(const Dictionary &normalized, const Dictionary &player_assignment) {
+	Dictionary constraints = normalized.get("player_constraints", Dictionary());
+	const int32_t player_count = int32_t(constraints.get("player_count", 2));
+	Array terrain_pool = normalized_terrain_pool(normalized.get("terrain_ids", default_terrain_pool()));
+	Dictionary by_owner_slot = player_assignment.get("player_slot_by_owner_slot", Dictionary());
+	Array zones;
+	for (int32_t index = 0; index < player_count; ++index) {
+		const int32_t owner_slot = index + 1;
+		Dictionary assignment = by_owner_slot.get(String::num_int64(owner_slot), Dictionary());
+		const String zone_id = "start_" + String::num_int64(owner_slot);
+		const String faction_id = String(assignment.get("faction_id", ""));
+		Dictionary palette = terrain_palette_for_zone(zone_id, faction_id, true, terrain_pool, index);
+		Dictionary zone;
+		zone["id"] = zone_id;
+		zone["source_id"] = zone_id;
+		zone["role"] = owner_slot == 1 ? "human_start" : "computer_start";
+		zone["owner_slot"] = owner_slot;
+		zone["player_slot"] = assignment.get("player_slot", owner_slot);
+		zone["player_type"] = assignment.get("player_type", owner_slot == 1 ? String("human") : String("computer"));
+		zone["team_id"] = assignment.get("team_id", "team_" + slot_id_2(owner_slot));
+		zone["faction_id"] = faction_id;
+		zone["terrain_id"] = palette.get("normalized_terrain_id", "grass");
+		zone["terrain_palette"] = palette;
+		zone["base_size"] = 18;
+		zone["anchor"] = Dictionary();
+		zone["bounds"] = Dictionary();
+		zone["cell_count"] = 0;
+		Dictionary catalog_metadata;
+		catalog_metadata["start_contract"] = "primary_town_anchor_deferred_to_later_native_slice";
+		catalog_metadata["native_foundation_source"] = "fallback_runtime_template";
+		zone["catalog_metadata"] = catalog_metadata;
+		zones.append(zone);
+	}
+
+	Dictionary junction_palette = terrain_palette_for_zone("junction_1", "", false, terrain_pool, player_count);
+	Dictionary junction;
+	junction["id"] = "junction_1";
+	junction["source_id"] = "junction_1";
+	junction["role"] = "junction";
+	junction["owner_slot"] = Variant();
+	junction["player_slot"] = Variant();
+	junction["player_type"] = "neutral";
+	junction["team_id"] = "";
+	junction["faction_id"] = "";
+	junction["terrain_id"] = junction_palette.get("normalized_terrain_id", "grass");
+	junction["terrain_palette"] = junction_palette;
+	junction["base_size"] = 10;
+	junction["anchor"] = Dictionary();
+	junction["bounds"] = Dictionary();
+	junction["cell_count"] = 0;
+	junction["catalog_metadata"] = Dictionary();
+	zones.append(junction);
+
+	const int32_t reward_count = std::max(2, player_count);
+	for (int32_t index = 0; index < reward_count; ++index) {
+		const String zone_id = "reward_" + String::num_int64(index + 1);
+		Dictionary palette = terrain_palette_for_zone(zone_id, "", false, terrain_pool, player_count + index + 1);
+		Dictionary reward;
+		reward["id"] = zone_id;
+		reward["source_id"] = zone_id;
+		reward["role"] = "treasure";
+		reward["owner_slot"] = Variant();
+		reward["player_slot"] = Variant();
+		reward["player_type"] = "neutral";
+		reward["team_id"] = "";
+		reward["faction_id"] = "";
+		reward["terrain_id"] = palette.get("normalized_terrain_id", "grass");
+		reward["terrain_palette"] = palette;
+		reward["base_size"] = 8;
+		reward["anchor"] = Dictionary();
+		reward["bounds"] = Dictionary();
+		reward["cell_count"] = 0;
+		reward["catalog_metadata"] = Dictionary();
+		zones.append(reward);
+	}
+	return zones;
+}
+
+Dictionary resolve_seed_collisions(const Dictionary &seeds, int32_t width, int32_t height) {
+	Dictionary resolved;
+	Dictionary occupied;
+	Array keys = seeds.keys();
+	std::vector<String> sorted_keys;
+	for (int64_t index = 0; index < keys.size(); ++index) {
+		sorted_keys.push_back(String(keys[index]));
+	}
+	std::sort(sorted_keys.begin(), sorted_keys.end(), [](const String &left, const String &right) { return left < right; });
+	for (const String &zone_id : sorted_keys) {
+		Dictionary point = seeds[zone_id];
+		int32_t x = int32_t(point.get("x", 0));
+		int32_t y = int32_t(point.get("y", 0));
+		int32_t guard = std::max(1, width * height);
+		while (occupied.has(point_key(x, y)) && guard > 0) {
+			x = std::max(1, std::min(std::max(1, width - 2), x + 1));
+			if (occupied.has(point_key(x, y))) {
+				y = std::max(1, std::min(std::max(1, height - 2), y + 1));
+			}
+			--guard;
+		}
+		occupied[point_key(x, y)] = true;
+		resolved[zone_id] = point_record(x, y);
+	}
+	return resolved;
+}
+
+Dictionary place_zone_seeds(const Array &zones, const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const String seed = String(normalized.get("normalized_seed", "0"));
+	const double center_x = (double(width) - 1.0) * 0.5;
+	const double center_y = (double(height) - 1.0) * 0.5;
+	const double radius_x = std::max(3.0, double(width) * 0.36);
+	const double radius_y = std::max(2.0, double(height) * 0.32);
+	const double angle_offset = (double(hash32_int(seed + String(":zone_angle_offset")) % 10000U) / 10000.0) * TAU;
+
+	Array starts;
+	Array others;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		if (zone.get("player_slot", Variant()).get_type() == Variant::NIL) {
+			others.append(zone);
+		} else {
+			starts.append(zone);
+		}
+	}
+
+	Dictionary seeds;
+	for (int64_t index = 0; index < starts.size(); ++index) {
+		Dictionary zone = starts[index];
+		const String zone_id = String(zone.get("id", ""));
+		const double angle = angle_offset + TAU * double(index) / double(std::max<int64_t>(1, starts.size()));
+		int32_t x = int32_t(std::llround(center_x + std::cos(angle) * radius_x)) + deterministic_signed_jitter(seed + String(":") + zone_id + String(":x"), 1);
+		int32_t y = int32_t(std::llround(center_y + std::sin(angle) * radius_y)) + deterministic_signed_jitter(seed + String(":") + zone_id + String(":y"), 1);
+		x = std::max(1, std::min(std::max(1, width - 2), x));
+		y = std::max(1, std::min(std::max(1, height - 2), y));
+		seeds[zone_id] = point_record(x, y);
+	}
+	for (int64_t index = 0; index < others.size(); ++index) {
+		Dictionary zone = others[index];
+		const String zone_id = String(zone.get("id", ""));
+		const String role = String(zone.get("role", "treasure"));
+		const double angle = angle_offset + TAU * (double(index) + 0.5) / double(std::max<int64_t>(1, others.size()));
+		const double radius_scale = role == "junction" ? 0.18 : 0.58;
+		int32_t x = int32_t(std::llround(center_x + std::cos(angle) * radius_x * radius_scale)) + deterministic_signed_jitter(seed + String(":") + zone_id + String(":x"), 1);
+		int32_t y = int32_t(std::llround(center_y + std::sin(angle) * radius_y * radius_scale)) + deterministic_signed_jitter(seed + String(":") + zone_id + String(":y"), 1);
+		x = std::max(1, std::min(std::max(1, width - 2), x));
+		y = std::max(1, std::min(std::max(1, height - 2), y));
+		seeds[zone_id] = point_record(x, y);
+	}
+	return resolve_seed_collisions(seeds, width, height);
+}
+
+String nearest_zone_id(int32_t x, int32_t y, const Array &zones, const Dictionary &seeds) {
+	String best_id = zones.is_empty() ? String("") : String(Dictionary(zones[0]).get("id", ""));
+	double best_score = std::numeric_limits<double>::max();
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		Dictionary seed = seeds.get(zone_id, Dictionary());
+		const double dx = double(x) - double(int32_t(seed.get("x", 0)));
+		const double dy = double(y) - double(int32_t(seed.get("y", 0)));
+		const double weight = std::sqrt(double(std::max(1, int32_t(zone.get("base_size", 1)))));
+		const double score = (dx * dx + dy * dy) / weight;
+		if (score < best_score) {
+			best_score = score;
+			best_id = zone_id;
+		}
+	}
+	return best_id;
+}
+
+Array zones_with_geometry(Array zones, const Dictionary &seeds, const Array &owner_grid) {
+	Dictionary counts;
+	Dictionary bounds_by_zone;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		counts[zone_id] = 0;
+		Dictionary bounds;
+		bounds["min_x"] = 999999;
+		bounds["min_y"] = 999999;
+		bounds["max_x"] = -1;
+		bounds["max_y"] = -1;
+		bounds_by_zone[zone_id] = bounds;
+	}
+	for (int64_t y = 0; y < owner_grid.size(); ++y) {
+		Array row = owner_grid[y];
+		for (int64_t x = 0; x < row.size(); ++x) {
+			const String zone_id = String(row[x]);
+			counts[zone_id] = int32_t(counts.get(zone_id, 0)) + 1;
+			Dictionary bounds = bounds_by_zone.get(zone_id, Dictionary());
+			bounds["min_x"] = std::min(int32_t(bounds.get("min_x", int32_t(x))), int32_t(x));
+			bounds["min_y"] = std::min(int32_t(bounds.get("min_y", int32_t(y))), int32_t(y));
+			bounds["max_x"] = std::max(int32_t(bounds.get("max_x", int32_t(x))), int32_t(x));
+			bounds["max_y"] = std::max(int32_t(bounds.get("max_y", int32_t(y))), int32_t(y));
+			bounds_by_zone[zone_id] = bounds;
+		}
+	}
+
+	Array result;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		Dictionary anchor = seeds.get(zone_id, Dictionary());
+		Dictionary bounds = bounds_by_zone.get(zone_id, Dictionary());
+		zone["anchor"] = anchor;
+		zone["center"] = point_record(int32_t(anchor.get("x", 0)), int32_t(anchor.get("y", 0)));
+		zone["bounds"] = bounds;
+		zone["cell_count"] = int32_t(counts.get(zone_id, 0));
+		result.append(zone);
+	}
+	return result;
+}
+
+Dictionary generate_zone_layout(const Dictionary &normalized, const Dictionary &player_assignment) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	Array zones = build_foundation_zones(normalized, player_assignment);
+	Dictionary seeds = place_zone_seeds(zones, normalized);
+	Array owner_grid;
+	for (int32_t y = 0; y < height; ++y) {
+		Array row;
+		for (int32_t x = 0; x < width; ++x) {
+			row.append(nearest_zone_id(x, y, zones, seeds));
+		}
+		owner_grid.append(row);
+	}
+	zones = zones_with_geometry(zones, seeds, owner_grid);
+
+	Dictionary level;
+	level["level_index"] = 0;
+	level["kind"] = "surface";
+	level["owner_grid"] = owner_grid;
+	level["anchor_points"] = seeds;
+	level["allocation_model"] = "native_foundation_nearest_seed_weighted_owner_grid";
+	Array levels;
+	levels.append(level);
+
+	Dictionary dimensions;
+	dimensions["width"] = width;
+	dimensions["height"] = height;
+	dimensions["level_count"] = level_count;
+
+	Dictionary policy;
+	policy["zone_area_model"] = "native_foundation_weighted_nearest_seed";
+	policy["water_mode"] = normalized.get("water_mode", "land");
+	policy["template_model"] = "fallback_runtime_template_until_catalog_parity_slice";
+
+	Dictionary layout;
+	layout["schema_id"] = NATIVE_RMG_ZONE_LAYOUT_SCHEMA_ID;
+	layout["schema_version"] = 1;
+	layout["generation_status"] = "zones_generated_foundation";
+	layout["full_generation_status"] = "not_implemented";
+	layout["template_id"] = normalized.get("template_id", "");
+	layout["template_source"] = "native_foundation_fallback_runtime_template";
+	layout["dimensions"] = dimensions;
+	layout["policy"] = policy;
+	layout["zone_count"] = zones.size();
+	layout["zones"] = zones;
+	layout["zone_seed_records"] = seeds;
+	layout["levels"] = levels;
+	layout["surface_owner_grid"] = owner_grid;
+	layout["surface_water_cells"] = Array();
+	layout["unsupported_runtime_features"] = Array();
+	layout["signature"] = hash32_hex(canonical_variant(layout));
+	return layout;
+}
+
+bool point_far_enough(const Array &starts, int32_t x, int32_t y, int32_t min_spacing) {
+	const int32_t min_distance_sq = min_spacing * min_spacing;
+	for (int64_t index = 0; index < starts.size(); ++index) {
+		Dictionary start = starts[index];
+		const int32_t dx = x - int32_t(start.get("x", 0));
+		const int32_t dy = y - int32_t(start.get("y", 0));
+		if (dx * dx + dy * dy < min_distance_sq) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Dictionary find_start_point(const Dictionary &zone, const Array &owner_grid, const Array &existing_starts, int32_t min_spacing) {
+	Dictionary anchor = zone.get("anchor", Dictionary());
+	int32_t best_x = int32_t(anchor.get("x", 0));
+	int32_t best_y = int32_t(anchor.get("y", 0));
+	if (point_far_enough(existing_starts, best_x, best_y, min_spacing)) {
+		return point_record(best_x, best_y);
+	}
+	const String zone_id = String(zone.get("id", ""));
+	int64_t best_score = std::numeric_limits<int64_t>::max();
+	Dictionary best;
+	for (int64_t y = 0; y < owner_grid.size(); ++y) {
+		Array row = owner_grid[y];
+		for (int64_t x = 0; x < row.size(); ++x) {
+			if (String(row[x]) != zone_id) {
+				continue;
+			}
+			if (!point_far_enough(existing_starts, int32_t(x), int32_t(y), min_spacing)) {
+				continue;
+			}
+			const int64_t dx = int64_t(x) - int64_t(best_x);
+			const int64_t dy = int64_t(y) - int64_t(best_y);
+			const int64_t score = dx * dx + dy * dy;
+			if (score < best_score) {
+				best_score = score;
+				best = point_record(int32_t(x), int32_t(y));
+			}
+		}
+	}
+	if (!best.is_empty()) {
+		return best;
+	}
+	return point_record(best_x, best_y);
+}
+
+Dictionary generate_player_starts(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_assignment) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	Dictionary constraints = normalized.get("player_constraints", Dictionary());
+	const int32_t player_count = int32_t(constraints.get("player_count", 2));
+	const int32_t min_spacing = std::max(3, std::min(width, height) / std::max(3, player_count + 2));
+	Array zones = zone_layout.get("zones", Array());
+	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
+	Array starts;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		if (zone.get("player_slot", Variant()).get_type() == Variant::NIL) {
+			continue;
+		}
+		Dictionary point = find_start_point(zone, owner_grid, starts, min_spacing);
+		const int32_t player_slot = int32_t(zone.get("player_slot", 0));
+		Dictionary start;
+		start["start_id"] = "player_start_" + String::num_int64(player_slot);
+		start["player_slot"] = player_slot;
+		start["owner_slot"] = zone.get("owner_slot", player_slot);
+		start["player_type"] = zone.get("player_type", "computer");
+		start["team_id"] = zone.get("team_id", "");
+		start["faction_id"] = zone.get("faction_id", "");
+		Dictionary assignment_by_owner = player_assignment.get("player_slot_by_owner_slot", Dictionary());
+		Dictionary assignment = assignment_by_owner.get(String::num_int64(int32_t(zone.get("owner_slot", player_slot))), Dictionary());
+		start["town_id"] = assignment.get("town_id", town_for_faction(String(zone.get("faction_id", ""))));
+		start["zone_id"] = zone.get("id", "");
+		start["zone_role"] = zone.get("role", "");
+		start["x"] = int32_t(point.get("x", 0));
+		start["y"] = int32_t(point.get("y", 0));
+		start["level"] = 0;
+		start["bounds_status"] = int32_t(point.get("x", 0)) >= 0 && int32_t(point.get("x", 0)) < width && int32_t(point.get("y", 0)) >= 0 && int32_t(point.get("y", 0)) < height ? "in_bounds" : "out_of_bounds";
+		start["spacing_model"] = "native_foundation_minimum_euclidean_tile_spacing";
+		start["primary_town_anchor_status"] = "reserved_not_materialized";
+		starts.append(start);
+	}
+
+	Dictionary payload;
+	payload["schema_id"] = NATIVE_RMG_PLAYER_STARTS_SCHEMA_ID;
+	payload["schema_version"] = 1;
+	payload["generation_status"] = "player_starts_generated_foundation";
+	payload["full_generation_status"] = "not_implemented";
+	payload["start_count"] = starts.size();
+	payload["expected_player_count"] = player_count;
+	payload["minimum_spacing_tiles"] = min_spacing;
+	payload["starts"] = starts;
+	payload["signature"] = hash32_hex(canonical_variant(payload));
+	return payload;
 }
 
 Dictionary generate_terrain_grid(const Dictionary &normalized) {
@@ -574,8 +1149,10 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	if (water_mode != "islands") {
 		water_mode = "land";
 	}
+	Dictionary player_constraints = normalized_player_constraints(config);
+	const int32_t player_count = int32_t(player_constraints.get("player_count", 2));
 	Array terrain_ids = normalized_terrain_pool(normalized_string_array(profile.get("terrain_ids", Variant()), default_terrain_pool()));
-	Array faction_ids = normalized_string_array(profile.get("faction_ids", Variant()), default_faction_pool());
+	Array faction_ids = ensure_repeated_to_count(normalized_string_array(profile.get("faction_ids", Variant()), default_faction_pool()), default_faction_pool(), player_count);
 	if (terrain_ids.is_empty()) {
 		for (int64_t index = 0; index < faction_ids.size(); ++index) {
 			const String faction_terrain = terrain_for_faction(String(faction_ids[index]));
@@ -584,6 +1161,7 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 			}
 		}
 	}
+	Array town_ids = town_ids_for_factions(profile.get("town_ids", Variant()), faction_ids, player_count);
 
 	Dictionary result;
 	result["schema_id"] = NATIVE_RMG_SCHEMA_ID;
@@ -598,10 +1176,12 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	result["profile_id"] = profile_id;
 	result["size_class_id"] = normalized_text(size, "size_class_id", normalized_text(config, "size_class_id", ""));
 	result["water_mode"] = water_mode;
+	result["player_constraints"] = player_constraints;
 	result["terrain_ids"] = terrain_ids;
 	result["faction_ids"] = faction_ids;
+	result["town_ids"] = town_ids;
 	result["full_generation_status"] = "not_implemented";
-	result["foundation_scope"] = "deterministic_config_identity_and_native_terrain_grid_only";
+	result["foundation_scope"] = "deterministic_config_identity_native_terrain_grid_zones_and_player_starts_only";
 	return result;
 }
 
@@ -634,6 +1214,9 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	Dictionary normalized = normalize_random_map_config(config);
 	Dictionary identity = random_map_config_identity(config);
 	Dictionary terrain_grid = generate_terrain_grid(normalized);
+	Dictionary player_assignment = player_assignment_for_config(normalized);
+	Dictionary zone_layout = generate_zone_layout(normalized, player_assignment);
+	Dictionary player_starts = generate_player_starts(normalized, zone_layout, player_assignment);
 
 	Dictionary metadata;
 	metadata["schema_id"] = NATIVE_RMG_SCHEMA_ID;
@@ -643,9 +1226,13 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["generation_status"] = "partial_foundation";
 	metadata["full_generation_status"] = "not_implemented";
 	metadata["terrain_generation_status"] = "terrain_grid_generated";
+	metadata["zone_generation_status"] = "zones_generated_foundation";
+	metadata["player_start_generation_status"] = "player_starts_generated_foundation";
 	metadata["normalized_config"] = normalized;
 	metadata["deterministic_identity"] = identity;
 	metadata["terrain_grid_signature"] = terrain_grid.get("signature", "");
+	metadata["zone_layout_signature"] = zone_layout.get("signature", "");
+	metadata["player_start_signature"] = player_starts.get("signature", "");
 	metadata["options_keys"] = options.keys();
 
 	Dictionary map_state;
@@ -665,7 +1252,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	warning["code"] = "full_generation_not_implemented";
 	warning["severity"] = "warning";
 	warning["path"] = "generate_random_map";
-	warning["message"] = "Native RMG currently creates deterministic identity metadata and a terrain grid only; objects, roads, rivers, towns, guards, validation parity, and package/session adoption are not implemented.";
+	warning["message"] = "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, and player start anchors only; objects, roads, rivers, towns, guards, validation parity, and package/session adoption are not implemented.";
 	warning["context"] = Dictionary();
 
 	Array warnings;
@@ -678,6 +1265,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metrics["tile_count"] = document->get_tile_count();
 	metrics["terrain_grid_tile_count"] = terrain_grid.get("tile_count", 0);
 	metrics["terrain_palette_count"] = Array(terrain_grid.get("terrain_palette_ids", Array())).size();
+	metrics["zone_count"] = zone_layout.get("zone_count", 0);
+	metrics["player_start_count"] = player_starts.get("start_count", 0);
 	metrics["object_count"] = document->get_object_count();
 
 	Dictionary report;
@@ -692,6 +1281,10 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	report["deterministic_identity"] = identity;
 	report["terrain_grid_status"] = terrain_grid.get("generation_status", "");
 	report["terrain_grid_signature"] = terrain_grid.get("signature", "");
+	report["zone_generation_status"] = zone_layout.get("generation_status", "");
+	report["zone_layout_signature"] = zone_layout.get("signature", "");
+	report["player_start_generation_status"] = player_starts.get("generation_status", "");
+	report["player_start_signature"] = player_starts.get("signature", "");
 	Array remaining_parity_slices;
 	remaining_parity_slices.append("native-rmg-zone-player-starts-10184");
 	remaining_parity_slices.append("native-rmg-road-river-network-10184");
@@ -707,10 +1300,15 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["generation_status"] = "partial_foundation";
 	result["terrain_generation_status"] = "terrain_grid_generated";
 	result["terrain_grid_status"] = "generated";
+	result["zone_generation_status"] = "zones_generated_foundation";
+	result["player_start_generation_status"] = "player_starts_generated_foundation";
 	result["full_generation_status"] = "not_implemented";
 	result["normalized_config"] = normalized;
 	result["deterministic_identity"] = identity;
 	result["terrain_grid"] = terrain_grid;
+	result["player_assignment"] = player_assignment;
+	result["zone_layout"] = zone_layout;
+	result["player_starts"] = player_starts;
 	result["map_document"] = document;
 	result["map_metadata"] = metadata;
 	result["report"] = report;

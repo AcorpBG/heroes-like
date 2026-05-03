@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-terrain-grid-generation-10184",
-  "currentSliceTitle": "Native RMG Terrain/Grid Generation",
+  "currentSliceId": "native-rmg-zone-player-starts-10184",
+  "currentSliceTitle": "Native RMG Zone And Player Starts",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed first native terrain/grid parity child only. Broad native RMG parity remains incomplete; pending queue starts with native-rmg-zone-player-starts-10184.",
+  "currentSliceNotes": "Completed native RMG zone/player-start foundation. Native generate_random_map now returns player_assignment, zone_layout, and player_starts with deterministic signatures while preserving partial_foundation/full_generation_status=not_implemented. No gameplay adoption, call-site replacement, save bump, package/session adoption, renderer/fog/pathing/content changes, or full-parity claim.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T09:40:24Z",
+  "updatedAt": "2026-05-03T09:53:59Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -6508,18 +6508,24 @@
     {
       "id": "native-rmg-zone-player-starts-10184",
       "title": "Native RMG Zone And Player Starts",
-      "status": "pending",
+      "status": "completed",
       "purpose": "Port template/profile selection, runtime zones, player assignment, deterministic zone seed layout, owner grid, start anchors, and player start metadata from the GDScript generator.",
       "implementationTargets": [
         "src/gdextension/src/map_package_service.cpp",
         "scripts/persistence/MapPackageService.gd",
         "tests/native_random_map_zone_player_starts_report.gd",
-        "tests/native_random_map_zone_player_starts_report.tscn"
+        "tests/native_random_map_zone_player_starts_report.tscn",
+        "src/gdextension/README.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "PLAN.md",
+        "ops/progress.json"
       ],
       "completionCriteria": [
-        "Native output exposes template/profile selection and zone/player-start structures comparable to GDScript at structural level.",
-        "Same seed remains deterministic and changed seed changes seeded layout.",
-        "No runtime gameplay adoption or full parity claim."
+        "Native output exposes normalized player constraints, assignment/team metadata, deterministic runtime fallback zones, owner grid, zone bounds/centers/terrain association, and player start records in the same generated result Dictionary.",
+        "Same config/seed produces stable zone and player-start signatures; changed seed changes seeded layout signatures.",
+        "Player starts are valid in-bounds, unique, and include usable slot/zone/faction/team/town metadata plus spacing/bounds status.",
+        "Top-level status remains partial_foundation, full_generation_status remains not_implemented, and zone/player-start status fields do not claim full parity.",
+        "No runtime gameplay adoption, RandomMapGeneratorRules.gd call-site replacement, save bump, content writeback, renderer/fog/pathing change, roads/rivers/object/town/guard implementation, or full parity claim."
       ],
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
@@ -6537,6 +6543,8 @@
         "cmake --build .artifacts/map_persistence_native_build --parallel 2",
         "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn",
         "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_foundation_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_terrain_grid_report.tscn",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_zone_player_starts_report.tscn",
         "git diff --check",
         "python3 tests/validate_repo.py"
       ],
@@ -6549,7 +6557,60 @@
         "No generated PNG or generated-study derivative import."
       ],
       "createdAt": "2026-05-03T09:37:49Z",
-      "updatedAt": "2026-05-03T09:37:49Z"
+      "updatedAt": "2026-05-03T09:53:59Z",
+      "startedAt": "2026-05-03T09:43:41Z",
+      "notes": "Completed native RMG zone/player-start foundation. Native generate_random_map now returns player_assignment, zone_layout, and player_starts with deterministic signatures while preserving partial_foundation/full_generation_status=not_implemented. No gameplay adoption, call-site replacement, save bump, package/session adoption, renderer/fog/pathing/content changes, or full-parity claim.",
+      "completedAt": "2026-05-03T09:53:59Z",
+      "completionEvidence": [
+        "Inspected scripts/core/RandomMapGeneratorRules.gd assignment, fallback runtime template, runtime zone, zone seed, owner-grid, zone geometry, and start-anchor concepts for this practical native foundation slice.",
+        "MapPackageService C++ now normalizes player_constraints, repeats profile faction ids to player count, derives town ids, and includes these fields in deterministic config identity.",
+        "Native generate_random_map(config) now returns player_assignment with player slots, owner slots, player types, team metadata, faction/town assignment, and active owner slots.",
+        "Native generate_random_map(config) now returns zone_layout with schema aurelion_native_rmg_zone_layout_v1, generation_status zones_generated_foundation, deterministic fallback start/junction/reward zones, zone seed anchors, weighted owner grid, dimensions, bounds, centers, cell counts, terrain palette metadata, and stable layout signature.",
+        "Native generate_random_map(config) now returns player_starts with schema aurelion_native_rmg_player_starts_v1, generation_status player_starts_generated_foundation, expected player count, minimum spacing metadata, unique in-bounds start records, player/faction/team/town/zone metadata, reserved primary-town anchor status, and stable signature.",
+        "Top-level result, map metadata, and report expose zone_generation_status=zones_generated_foundation and player_start_generation_status=player_starts_generated_foundation while preserving status=partial_foundation and full_generation_status=not_implemented.",
+        "Added tests/native_random_map_zone_player_starts_report.gd and .tscn to prove native load, same-seed determinism, changed-seed layout/signature changes, valid dimensions, non-empty zones, valid zone bounds/terrain association, valid unique in-bounds starts, and expected status fields.",
+        "scripts/persistence/MapPackageService.gd mirrors the new structured field shape for fallback/API comparison only; focused happy-path smokes still require native_gdextension loading.",
+        "Docs and README now describe the zone/player-start child and Linux/Windows expectations. No helper-script change was required because the existing cross-platform native build plus focused Godot smokes exercise the same service API.",
+        "RandomMapGeneratorRules.gd, ScenarioSelectRules.gd, save/load, renderer, fog, pathing, content migration/writeback, package/session adoption, roads/rivers, objects, towns, and guards were not changed."
+      ],
+      "validationEvidence": [
+        {
+          "command": "python3 -m json.tool ops/progress.json",
+          "result": "pass"
+        },
+        {
+          "command": "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+          "result": "pass: PLAN slice ids: 8 existing: 150 missing: 0"
+        },
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+          "result": "pass"
+        },
+        {
+          "command": "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn",
+          "result": "pass: binding_kind=native_gdextension, native_extension_loaded=true, zone/player-start capability listed"
+        },
+        {
+          "command": "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_foundation_report.tscn",
+          "result": "pass: status=partial_foundation, full_generation_status=not_implemented, same config stable identity, changed seed changed identity"
+        },
+        {
+          "command": "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_terrain_grid_report.tscn",
+          "result": "pass: terrain_generation_status=terrain_grid_generated, width=36, height=36, tile_count=1296, stable signature 09643c81, changed seed signature 3de1c464"
+        },
+        {
+          "command": "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_zone_player_starts_report.tscn",
+          "result": "pass: zone_generation_status=zones_generated_foundation, player_start_generation_status=player_starts_generated_foundation, zone_count=9, start_count=4, minimum_spacing_tiles=6, stable zone signature c6ca5406, changed zone signature 368e36a5, stable start signature af416d17, changed start signature 3f26b7de"
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass"
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "native-rmg-road-river-network-10184",
@@ -7920,8 +7981,8 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-zone-player-starts-10184",
-      "title": "Native RMG Zone And Player Starts",
+      "id": "native-rmg-road-river-network-10184",
+      "title": "Native RMG Road/River Network",
       "status": "pending",
       "sourceDocs": [
         "project.md",

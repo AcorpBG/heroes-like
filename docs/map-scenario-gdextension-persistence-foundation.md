@@ -410,6 +410,29 @@ claim that native RMG has full parity. Linux and Windows helper/docs remain in
 sync because the existing cross-platform GDExtension build and manifest paths are
 unchanged; only C++ service behavior and focused smoke coverage are extended.
 
+### Native RMG Zone/Player-Start Child Slice
+
+The next native parity child adds a practical foundation for deterministic zones
+and player starts. The C++ API now extends `generate_random_map(config)` with
+normalized player constraints, profile faction/town assignment, team metadata,
+fallback runtime zones, zone seed anchors, weighted owner-grid assignment, zone
+bounds/cell counts/terrain association, player start coordinates, minimum spacing
+metadata, and stable zone/start signatures.
+
+This is still structural scaffolding, not full template parity. It does not consume
+the full template catalog, place towns/objects/roads/rivers/guards, validate
+GDScript parity, write packages, change saves, or replace
+`RandomMapGeneratorRules.gd` call sites. The result and report explicitly expose
+`zone_generation_status: zones_generated_foundation` and
+`player_start_generation_status: player_starts_generated_foundation` while keeping
+top-level `status: partial_foundation` and
+`full_generation_status: not_implemented`.
+
+Linux and Windows build expectations remain synchronized through the existing
+cross-platform GDExtension manifest/build outputs. No helper-script change is
+required for this slice; the generic native build path plus focused Godot smokes
+exercise the same native service entry points on both platforms.
+
 ### `MapValidationReport`
 
 Can be a Dictionary return first. A typed class may follow once report consumers stabilize.
