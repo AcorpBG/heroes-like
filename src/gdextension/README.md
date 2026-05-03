@@ -72,8 +72,16 @@ By default it:
 - configures MSVC with `-G "Visual Studio 17 2022" -A x64`;
 - builds Debug and Release;
 - verifies the expected DLLs in `bin\`;
+- checks `godot --version` before smokes and requires Godot 4.6.2;
 - runs the focused native package and native RMG foundation Godot smokes when
-  `godot` is on `PATH`.
+  Godot is available.
+
+Use the corrected Godot 4.6.2 Windows executable explicitly when it is not the
+default `godot` on `PATH`:
+
+```bat
+scripts\build_map_persistence_windows.bat --godot "C:\Path\To\Godot_v4.6.2-stable_win64.exe"
+```
 
 Useful options:
 
@@ -82,18 +90,24 @@ scripts\build_map_persistence_windows.bat --debug-only
 scripts\build_map_persistence_windows.bat --release-only
 scripts\build_map_persistence_windows.bat --skip-test
 scripts\build_map_persistence_windows.bat --require-test
-scripts\build_map_persistence_windows.bat --godot "C:\Path\To\godot.exe"
+scripts\build_map_persistence_windows.bat --godot "C:\Path\To\Godot_v4.6.2-stable_win64.exe"
 scripts\build_map_persistence_windows.bat --mingw
+scripts\build_map_persistence_windows.bat --allow-other-godot-version
 ```
 
 If Godot is not on `PATH`, the helper still treats a successful build as a pass
 unless `--require-test` is provided. With `--require-test`, missing Godot or
-either focused smoke failure fails the helper. Run the focused smokes manually
-after adding Godot to `PATH`:
+either focused smoke failure fails the helper. When Godot is available and smokes
+are not skipped, the helper prints `%GODOT_EXE% --version` output and requires it
+to include `4.6.2`. For exceptional local testing with another Godot version,
+pass `--allow-other-godot-version`.
+
+Run the focused smokes manually with Godot 4.6.2 after adding it to `PATH` or
+using its executable name directly:
 
 ```bat
-godot --headless --path . tests\map_package_api_skeleton_report.tscn
-godot --headless --path . tests\native_random_map_foundation_report.tscn
+Godot_v4.6.2-stable_win64.exe --headless --path . tests\map_package_api_skeleton_report.tscn
+Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_foundation_report.tscn
 ```
 
 The underlying MSVC commands are:

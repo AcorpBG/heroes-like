@@ -12,6 +12,8 @@ set "BUILD_RELEASE=1"
 set "SKIP_TEST=0"
 set "REQUIRE_TEST=0"
 set "USE_MINGW=0"
+set "ALLOW_OTHER_GODOT_VERSION=0"
+set "EXPECTED_GODOT_VERSION=4.6.2"
 set "PARALLEL=2"
 set "GODOT_EXE=godot"
 
@@ -43,6 +45,11 @@ if /I "%~1"=="--require-test" (
 )
 if /I "%~1"=="--mingw" (
 	set "USE_MINGW=1"
+	shift
+	goto parse_args
+)
+if /I "%~1"=="--allow-other-godot-version" (
+	set "ALLOW_OTHER_GODOT_VERSION=1"
 	shift
 	goto parse_args
 )
@@ -167,9 +174,9 @@ if "%GODOT_FOUND%"=="0" (
 
 if "%GODOT_FOUND%"=="0" (
 	echo Godot was not found on PATH.
-	echo Build succeeded. To run the focused smokes manually, add Godot to PATH or pass --godot PATH_TO_GODOT_EXE, then run:
-	echo godot --headless --path . tests/map_package_api_skeleton_report.tscn
-	echo godot --headless --path . tests/native_random_map_foundation_report.tscn
+	echo Build succeeded. To run the focused smokes manually, add Godot %EXPECTED_GODOT_VERSION% to PATH or pass --godot PATH_TO_4_6_2_EXE, then run:
+	echo Godot_v4.6.2-stable_win64.exe --headless --path . tests/map_package_api_skeleton_report.tscn
+	echo Godot_v4.6.2-stable_win64.exe --headless --path . tests/native_random_map_foundation_report.tscn
 	if "%REQUIRE_TEST%"=="1" (
 		echo Failing because --require-test was provided.
 		exit /b 1
@@ -177,11 +184,36 @@ if "%GODOT_FOUND%"=="0" (
 	exit /b 0
 )
 
+call :check_godot_version
+if errorlevel 1 exit /b 1
+
 set "GODOT_SILENCE_ROOT_WARNING=1"
 call :run "%GODOT_EXE%" --headless --path . tests/map_package_api_skeleton_report.tscn
 if errorlevel 1 exit /b 1
 call :run "%GODOT_EXE%" --headless --path . tests/native_random_map_foundation_report.tscn
 exit /b %ERRORLEVEL%
+
+:check_godot_version
+set "DETECTED_GODOT_VERSION="
+for /F "usebackq delims=" %%V in (`"%GODOT_EXE%" --version 2^>^&1`) do (
+	if not defined DETECTED_GODOT_VERSION set "DETECTED_GODOT_VERSION=%%V"
+)
+if not defined DETECTED_GODOT_VERSION (
+	echo Failed to detect Godot version from: %GODOT_EXE% --version
+	echo Expected Godot %EXPECTED_GODOT_VERSION%; pass --godot PATH_TO_4_6_2_EXE or --allow-other-godot-version.
+	exit /b 1
+)
+echo Detected Godot version: !DETECTED_GODOT_VERSION!
+if "%ALLOW_OTHER_GODOT_VERSION%"=="1" (
+	echo Allowing non-%EXPECTED_GODOT_VERSION% Godot version because --allow-other-godot-version was provided.
+	exit /b 0
+)
+echo(!DETECTED_GODOT_VERSION! | find "%EXPECTED_GODOT_VERSION%" >nul
+if errorlevel 1 (
+	echo Expected Godot %EXPECTED_GODOT_VERSION%; pass --godot PATH_TO_4_6_2_EXE or --allow-other-godot-version.
+	exit /b 1
+)
+exit /b 0
 
 :run
 echo.
@@ -217,6 +249,8 @@ echo   --require-test     Fail when Godot is not available or either smoke fails
 echo   --mingw            Use MinGW Makefiles instead of Visual Studio 2022.
 echo   --parallel N       Build with N parallel jobs. Default: 2.
 echo   --godot PATH       Use a specific Godot executable for the smokes.
+echo   --allow-other-godot-version
+echo                      Allow smokes with a Godot version other than 4.6.2.
 echo   --help             Show this help.
 echo.
 echo Expected outputs:

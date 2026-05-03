@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-gdextension-foundation-10184",
-  "currentSliceTitle": "Native RMG GDExtension Foundation",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed first native RMG foundation slice: API surface, deterministic config/seed identity, and empty generated MapDocument stub only. Broad map/scenario persistence parent remains in_progress.",
+  "currentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+  "currentSliceTitle": "Map/Scenario GDExtension Persistence Foundation",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Native inert package API, Windows config/helper, and first native RMG foundation API/identity/stub proof are implemented and validated. 2026-05-03 Windows helper correction complete: build_map_persistence_windows.bat now checks Godot --version for 4.6.2 before focused smokes and documents --allow-other-godot-version for exceptional local testing. Validation passed: python3 -m json.tool ops/progress.json; progress sync-plan --dry-run; cmake native rebuild; map package smoke; native RMG smoke; git diff --check; python3 tests/validate_repo.py. Broad package read/write/conversion/adoption, save migration, content migration, full native RMG parity, and runtime call-site adoption remain future slices.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T08:51:30Z",
+  "updatedAt": "2026-05-03T08:59:31Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -93,8 +93,8 @@
         "No generated PNG/asset ingestion."
       ],
       "createdAt": "2026-05-03T05:50:07Z",
-      "updatedAt": "2026-05-03T08:32:00Z",
-      "notes": "Native inert package API, Windows config/helper, and first native RMG foundation API/identity/stub proof are implemented and validated. The Windows helper now covers both native package load and native RMG foundation smokes when Godot is available. The broad map/scenario persistence parent remains in_progress; package read/write/conversion/adoption, save migration, content migration, full native RMG parity, and runtime call-site adoption remain future slices.",
+      "updatedAt": "2026-05-03T08:59:31Z",
+      "notes": "Native inert package API, Windows config/helper, and first native RMG foundation API/identity/stub proof are implemented and validated. 2026-05-03 Windows helper correction complete: build_map_persistence_windows.bat now checks Godot --version for 4.6.2 before focused smokes and documents --allow-other-godot-version for exceptional local testing. Validation passed: python3 -m json.tool ops/progress.json; progress sync-plan --dry-run; cmake native rebuild; map package smoke; native RMG smoke; git diff --check; python3 tests/validate_repo.py. Broad package read/write/conversion/adoption, save migration, content migration, full native RMG parity, and runtime call-site adoption remain future slices.",
       "startedAt": "2026-05-03T05:57:04Z",
       "docsReadyAt": "2026-05-03T06:45:00Z",
       "documentationEvidence": {
