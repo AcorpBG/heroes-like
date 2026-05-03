@@ -4,6 +4,7 @@ extends RefCounted
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
+const NativeRandomMapPackageSessionBridgeScript = preload("res://scripts/persistence/NativeRandomMapPackageSessionBridge.gd")
 static var ScenarioRulesScript: Variant = load("res://scripts/core/ScenarioRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
@@ -182,6 +183,9 @@ const RANDOM_MAP_PLAYER_RETRY_POLICY := {
 }
 const RANDOM_MAP_DEFAULT_SEED := "aurelion-random-skirmish-10184"
 const RANDOM_MAP_AUTO_SEED_PREFIX := "aurelion-auto-random-skirmish"
+const GENERATED_MAP_DEV_DIR := "res://maps"
+const GENERATED_MAP_RUNTIME_DIR := "user://maps"
+const GENERATED_MAP_PACKAGE_FEATURE_GATE := "native_rmg_generated_map_package_startup"
 
 static func _campaign_rules():
 	return load("res://scripts/core/CampaignRules.gd")
@@ -419,6 +423,17 @@ static func random_map_player_setup_options() -> Dictionary:
 		"default_player_count": _random_map_normalize_player_count_for_template("border_gate_compact_v1", 3, 3),
 		"default_water_mode": "land",
 		"default_underground": false,
+		"package_directory_policy": generated_map_package_directory_policy(),
+	}
+
+static func generated_map_package_directory_policy() -> Dictionary:
+	return {
+		"schema_id": "aurelion_generated_map_package_directory_policy_v1",
+		"dev_source_dir": GENERATED_MAP_DEV_DIR,
+		"export_runtime_dir": GENERATED_MAP_RUNTIME_DIR,
+		"active_dir": _generated_map_package_dir(),
+		"active_dir_kind": "project_source_dev_maps" if _use_project_maps_dir() else "export_runtime_user_maps",
+		"semantics": "Generated random-map startup writes .amap/.ascenario packages, then starts from packages loaded back from this directory. It does not write generated records into content/scenarios.json.",
 	}
 
 static func random_map_seed_requests_auto(seed: String) -> bool:
@@ -560,13 +575,14 @@ static func build_random_map_skirmish_setup_with_retry(
 		final_setup["retry_status"] = retry_status
 		final_setup["retry_attempts"] = attempts
 		final_setup["failure_handoff"] = "Generation validated for launch after %d attempt(s); retry details are visible in setup and preserved in save/replay metadata." % int(retry_status.get("attempt_count", 1))
-		final_setup["setup_summary"] = _random_map_setup_summary(
-			final_setup.get("generated_map", {}).get("scenario_record", {}),
-			final_setup.get("generated_map", {}).get("metadata", {}),
-			final_setup.get("validation", {}),
-			retry_status,
-			String(final_setup.get("difficulty", difficulty_id))
-		)
+		if not (final_setup.get("package_startup", {}) is Dictionary) or final_setup.get("package_startup", {}).is_empty():
+			final_setup["setup_summary"] = _random_map_setup_summary(
+				final_setup.get("generated_map", {}).get("scenario_record", {}),
+				final_setup.get("generated_map", {}).get("metadata", {}),
+				final_setup.get("validation", {}),
+				retry_status,
+				String(final_setup.get("difficulty", difficulty_id))
+			)
 		var provenance: Dictionary = final_setup.get("provenance", {}) if final_setup.get("provenance", {}) is Dictionary else {}
 		provenance["retry_status"] = retry_status
 		provenance["retry_attempts"] = attempts
@@ -596,12 +612,17 @@ static func build_random_map_skirmish_setup_with_retry(
 
 static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty_id: String = "normal") -> Dictionary:
 	var normalized_difficulty := normalize_difficulty(difficulty_id)
-	var generator = RandomMapGeneratorRulesScript.new()
-	var generated: Dictionary = generator.generate(input_config)
-	var report: Dictionary = generated.get("report", {}) if generated.get("report", {}) is Dictionary else {}
-	var payload: Dictionary = generated.get("generated_map", {}) if generated.get("generated_map", {}) is Dictionary else {}
+	var service: Variant = _native_map_package_service()
+	if service == null:
+		return _native_package_setup_failure(
+			"native_package_service_unavailable",
+			"Native MapPackageService is required for generated skirmish startup.",
+			normalized_difficulty
+		)
+	var generated: Dictionary = service.generate_random_map(input_config, {"startup_path": "generated_skirmish"})
+	var report: Dictionary = generated.get("report", generated.get("validation_report", {})) if generated.get("report", generated.get("validation_report", {})) is Dictionary else {}
 	var retry_status := _random_map_retry_status(generated, report)
-	if not bool(generated.get("ok", false)) or payload.is_empty():
+	if not bool(generated.get("ok", false)):
 		return {
 			"ok": false,
 			"setup_kind": "generated_random_map_skirmish",
@@ -614,23 +635,50 @@ static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty
 			"alpha_parity_claim": false,
 		}
 
-	var scenario: Dictionary = payload.get("scenario_record", {})
-	var metadata: Dictionary = payload.get("metadata", {})
-	var profile: Dictionary = metadata.get("profile", {}) if metadata.get("profile", {}) is Dictionary else {}
-	var identity := _random_map_generated_identity(payload)
-	var provenance := _random_map_provenance(input_config, payload, report, retry_status)
-	var setup_summary := _random_map_setup_summary(scenario, metadata, report, retry_status, normalized_difficulty)
+	var adoption: Dictionary = service.convert_generated_payload(generated, {
+		"feature_gate": GENERATED_MAP_PACKAGE_FEATURE_GATE,
+		"session_save_version": SessionStateStoreScript.SAVE_VERSION,
+	})
+	if not bool(adoption.get("ok", false)):
+		return _native_package_setup_failure(
+			String(adoption.get("error_code", "native_package_conversion_failed")),
+			String(adoption.get("message", "Native generated payload could not be converted to package documents.")),
+			normalized_difficulty,
+			adoption.get("report", {}) if adoption.get("report", {}) is Dictionary else report
+		)
+	var persisted := _persist_and_load_generated_packages(service, adoption)
+	if not bool(persisted.get("ok", false)):
+		return _native_package_setup_failure(
+			String(persisted.get("error_code", "native_package_persist_load_failed")),
+			String(persisted.get("message", "Native generated packages could not be saved and loaded.")),
+			normalized_difficulty,
+			persisted.get("report", {}) if persisted.get("report", {}) is Dictionary else report
+		)
+
+	var identity := _native_random_map_generated_identity(generated, adoption, persisted)
+	var provenance := _native_random_map_provenance(input_config, generated, adoption, persisted, retry_status)
+	var setup_summary := _native_random_map_setup_summary(generated, adoption, persisted, report, retry_status, normalized_difficulty)
+	var scenario_ref: Dictionary = persisted.get("scenario_ref", {}) if persisted.get("scenario_ref", {}) is Dictionary else {}
+	var map_ref: Dictionary = persisted.get("map_ref", {}) if persisted.get("map_ref", {}) is Dictionary else {}
 	return {
 		"ok": true,
 		"setup_kind": "generated_random_map_skirmish",
+		"startup_source": "native_rmg_disk_package",
 		"launch_mode": SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
 		"difficulty": normalized_difficulty,
 		"difficulty_label": difficulty_label(normalized_difficulty),
-		"generated_map": payload,
+		"generated_map": {},
+		"native_generation": {
+			"status": String(generated.get("status", "")),
+			"full_generation_status": String(generated.get("full_generation_status", "")),
+			"validation_status": String(generated.get("validation_status", "")),
+			"supported_parity_config": bool(generated.get("supported_parity_config", false)),
+		},
+		"package_startup": persisted,
 		"scenario_id": String(identity.get("scenario_id", "")),
-		"scenario_name": String(scenario.get("name", identity.get("scenario_id", ""))),
+		"scenario_name": String(identity.get("scenario_id", "")),
 		"template_id": String(identity.get("template_id", "")),
-		"profile_id": String(profile.get("id", "")),
+		"profile_id": String(identity.get("profile_id", "")),
 		"normalized_seed": String(identity.get("normalized_seed", "")),
 		"seed_source": String(input_config.get("seed_source", "explicit")),
 		"seed_input": String(input_config.get("seed_input", String(input_config.get("seed", "")))),
@@ -641,10 +689,12 @@ static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty
 		"provenance": provenance,
 		"replay_metadata": _random_map_replay_metadata(provenance, identity, retry_status),
 		"setup_summary": setup_summary,
-		"launch_handoff": "Launch handoff: generated Skirmish starts a fresh Day 1 expedition from validated seed/config provenance; campaign progress and authored content stay unchanged.",
-		"failure_handoff": "Generation validated for launch; retry metadata is preserved for save/replay inspection.",
+		"map_ref": map_ref,
+		"scenario_ref": scenario_ref,
+		"launch_handoff": "Launch handoff: generated Skirmish starts from native packages written under maps/ and loaded back from disk; authored scenario JSON stays out of the startup path.",
+		"failure_handoff": "Generation validated for launch; package refs and retry metadata are preserved for save/replay inspection.",
 		"campaign_adoption": false,
-		"alpha_parity_claim": false,
+		"alpha_parity_claim": bool(generated.get("full_parity_claim", false)),
 	}
 
 static func start_random_map_skirmish_session(input_config: Dictionary, difficulty_id: String = "normal") -> SessionStateStoreScript.SessionData:
@@ -668,30 +718,49 @@ static func _start_random_map_skirmish_session_from_setup(setup: Dictionary) -> 
 		return SessionStateStoreScript.new_session_data()
 
 	var payload: Dictionary = setup.get("generated_map", {})
-	var session := ScenarioFactoryScript.create_generated_skirmish_session(
-		payload,
-		String(setup.get("difficulty", default_difficulty_id())),
-		{
-			"provenance": setup.get("provenance", {}),
-			"replay_metadata": setup.get("replay_metadata", {}),
-			"validation": setup.get("validation", {}),
-			"retry_status": setup.get("retry_status", {}),
-			"generated_identity": setup.get("generated_identity", {}),
-			"boundary": {
-				"authored_content_writeback": false,
-				"campaign_adoption": false,
-				"skirmish_browser_authored_listing": false,
-				"alpha_parity_claim": false,
-			},
-		}
-	)
+	var package_startup: Dictionary = setup.get("package_startup", {}) if setup.get("package_startup", {}) is Dictionary else {}
+	var session: SessionStateStoreScript.SessionData
+	if not package_startup.is_empty():
+		var service: Variant = _native_map_package_service()
+		if service == null:
+			return SessionStateStoreScript.new_session_data()
+		var map_load: Dictionary = service.load_map_package(String(package_startup.get("map_path", "")))
+		var scenario_load: Dictionary = service.load_scenario_package(String(package_startup.get("scenario_path", "")))
+		var bridge := NativeRandomMapPackageSessionBridgeScript.new()
+		session = bridge.build_session_from_loaded_packages(
+			map_load,
+			scenario_load,
+			package_startup.get("session_boundary_record", {}),
+			String(setup.get("difficulty", default_difficulty_id())),
+			{"hero_id": "hero_lyra"}
+		)
+	else:
+		session = ScenarioFactoryScript.create_generated_skirmish_session(
+			payload,
+			String(setup.get("difficulty", default_difficulty_id())),
+			{
+				"provenance": setup.get("provenance", {}),
+				"replay_metadata": setup.get("replay_metadata", {}),
+				"validation": setup.get("validation", {}),
+				"retry_status": setup.get("retry_status", {}),
+				"generated_identity": setup.get("generated_identity", {}),
+				"boundary": {
+					"authored_content_writeback": false,
+					"campaign_adoption": false,
+					"skirmish_browser_authored_listing": false,
+					"alpha_parity_claim": false,
+					"legacy_compatibility_only": true,
+				},
+			}
+		)
 	if session.scenario_id == "":
 		return session
 	session.flags["generated_random_map_provenance"] = setup.get("provenance", {})
 	session.flags["generated_random_map_replay_metadata"] = setup.get("replay_metadata", {})
 	session.flags["generated_random_map_validation"] = setup.get("validation", {})
 	session.flags["generated_random_map_retry_status"] = setup.get("retry_status", {})
-	session.flags["generated_random_map_boundary"]["adoption_path"] = "skirmish_session_only_no_authored_browser_or_campaign"
+	session.flags["generated_random_map_boundary"]["adoption_path"] = "native_rmg_generated_package_saved_loaded_from_disk" if not package_startup.is_empty() else "legacy_skirmish_session_only_no_authored_browser_or_campaign"
+	session.flags["generated_random_map_boundary"]["content_service_generated_draft"] = ContentService.has_generated_scenario_draft(session.scenario_id)
 	session.overworld["generated_random_map_provenance"] = setup.get("provenance", {})
 	session.overworld["generated_random_map_replay_metadata"] = setup.get("replay_metadata", {})
 	session.overworld["generated_random_map_validation"] = setup.get("validation", {})
@@ -761,6 +830,187 @@ static func _random_map_retry_status(generated: Dictionary, report: Dictionary) 
 		"failure_count": int(report.get("failure_count", 0)),
 		"warning_count": int(report.get("warning_count", 0)),
 	}
+
+static func _native_map_package_service() -> Variant:
+	if not ClassDB.class_exists("MapPackageService"):
+		return null
+	return ClassDB.instantiate("MapPackageService")
+
+static func _use_project_maps_dir() -> bool:
+	return OS.has_feature("editor")
+
+static func _generated_map_package_dir() -> String:
+	return GENERATED_MAP_DEV_DIR if _use_project_maps_dir() else GENERATED_MAP_RUNTIME_DIR
+
+static func _native_package_setup_failure(code: String, message: String, difficulty_id: String, report: Dictionary = {}) -> Dictionary:
+	return {
+		"ok": false,
+		"setup_kind": "generated_random_map_skirmish",
+		"startup_source": "native_rmg_disk_package",
+		"launch_mode": SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
+		"difficulty": normalize_difficulty(difficulty_id),
+		"validation": report,
+		"retry_status": {"status": "failed_before_launch", "attempt_count": 1, "retry_count": 0, "validation_status": "fail"},
+		"failure_handoff": "Generated Skirmish blocked: %s" % message,
+		"error_code": code,
+		"campaign_adoption": false,
+		"alpha_parity_claim": false,
+	}
+
+static func _persist_and_load_generated_packages(service: Variant, adoption: Dictionary) -> Dictionary:
+	var map_document: Variant = adoption.get("map_document", null)
+	var scenario_document: Variant = adoption.get("scenario_document", null)
+	if map_document == null or scenario_document == null:
+		return {"ok": false, "error_code": "missing_native_documents", "message": "Native package adoption did not return map and scenario documents."}
+	var map_id := String(adoption.get("map_ref", {}).get("map_id", map_document.get_map_id()))
+	var scenario_id := String(adoption.get("scenario_ref", {}).get("scenario_id", scenario_document.get_scenario_id()))
+	var package_dir := _generated_map_package_dir()
+	var map_path := "%s/%s.amap" % [package_dir, _safe_package_stem(map_id)]
+	var scenario_path := "%s/%s.ascenario" % [package_dir, _safe_package_stem(scenario_id)]
+	var policy := generated_map_package_directory_policy()
+	var save_options := {
+		"path_policy": "dev_res_maps_export_user_maps",
+		"directory_policy": policy,
+	}
+	var map_save: Dictionary = service.save_map_package(map_document, map_path, save_options)
+	if not bool(map_save.get("ok", false)):
+		return map_save
+	var map_load: Dictionary = service.load_map_package(map_path)
+	if not bool(map_load.get("ok", false)):
+		return map_load
+	var saved_map_ref: Dictionary = map_load.get("map_ref", {}) if map_load.get("map_ref", {}) is Dictionary else {}
+	if scenario_document.has_method("configure") and not saved_map_ref.is_empty():
+		scenario_document.configure({
+			"scenario_id": scenario_document.get_scenario_id(),
+			"scenario_hash": scenario_document.get_scenario_hash(),
+			"map_ref": saved_map_ref,
+			"selection": scenario_document.get_selection(),
+			"player_slots": scenario_document.get_player_slots(),
+			"objectives": scenario_document.get_objectives(),
+			"script_hooks": scenario_document.get_script_hooks(),
+			"enemy_factions": scenario_document.get_enemy_factions(),
+			"start_contract": scenario_document.get_start_contract(),
+		})
+	var scenario_save: Dictionary = service.save_scenario_package(scenario_document, scenario_path, save_options)
+	if not bool(scenario_save.get("ok", false)):
+		return scenario_save
+	var scenario_load: Dictionary = service.load_scenario_package(scenario_path)
+	if not bool(scenario_load.get("ok", false)):
+		return scenario_load
+	var map_ref: Dictionary = map_load.get("map_ref", {}) if map_load.get("map_ref", {}) is Dictionary else {}
+	var scenario_ref: Dictionary = scenario_load.get("scenario_ref", {}) if scenario_load.get("scenario_ref", {}) is Dictionary else {}
+	var boundary: Dictionary = adoption.get("session_boundary_record", {}) if adoption.get("session_boundary_record", {}) is Dictionary else {}
+	boundary["map_package_ref"] = map_ref
+	boundary["scenario_package_ref"] = scenario_ref
+	boundary["launch_mode"] = SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	boundary["runtime_call_site_adoption"] = true
+	boundary["generated_record_policy"] = "disk_package_loaded_documents_only"
+	boundary["content_service_generated_draft"] = false
+	boundary["legacy_json_scenario_record"] = false
+	boundary["map_package_path"] = map_path
+	boundary["scenario_package_path"] = scenario_path
+	return {
+		"ok": true,
+		"schema_id": "aurelion_native_rmg_disk_package_startup_v1",
+		"directory_policy": policy,
+		"map_path": map_path,
+		"scenario_path": scenario_path,
+		"map_save": _public_package_write_result(map_save),
+		"scenario_save": _public_package_write_result(scenario_save),
+		"map_load": _public_package_load_result(map_load),
+		"scenario_load": _public_package_load_result(scenario_load),
+		"map_ref": map_ref,
+		"scenario_ref": scenario_ref,
+		"session_boundary_record": boundary,
+		"storage_policy": "generated_package_saved_loaded_from_maps_dir",
+		"legacy_json_scenario_record": false,
+	}
+
+static func _public_package_load_result(load_result: Dictionary) -> Dictionary:
+	var cleaned := {}
+	for key in ["ok", "status", "operation", "path", "package_hash", "storage_policy", "report"]:
+		if load_result.has(key):
+			cleaned[key] = load_result[key]
+	if load_result.has("map_ref"):
+		cleaned["map_ref"] = load_result.get("map_ref", {})
+	if load_result.has("scenario_ref"):
+		cleaned["scenario_ref"] = load_result.get("scenario_ref", {})
+	return cleaned
+
+static func _public_package_write_result(write_result: Dictionary) -> Dictionary:
+	var cleaned := {}
+	for key in ["ok", "status", "operation", "path", "package_hash", "report"]:
+		if write_result.has(key):
+			cleaned[key] = write_result[key]
+	return cleaned
+
+static func _safe_package_stem(value: String) -> String:
+	var stem := value.strip_edges().to_lower()
+	for ch in ["\\", "/", ":", "*", "?", "\"", "<", ">", "|", " "]:
+		stem = stem.replace(ch, "_")
+	return stem if stem != "" else "generated_map"
+
+static func _native_random_map_generated_identity(generated: Dictionary, adoption: Dictionary, persisted: Dictionary) -> Dictionary:
+	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
+	var identity: Dictionary = generated.get("deterministic_identity", {}) if generated.get("deterministic_identity", {}) is Dictionary else {}
+	var scenario_ref: Dictionary = persisted.get("scenario_ref", {}) if persisted.get("scenario_ref", {}) is Dictionary else {}
+	var map_ref: Dictionary = persisted.get("map_ref", {}) if persisted.get("map_ref", {}) is Dictionary else {}
+	return {
+		"scenario_id": String(scenario_ref.get("scenario_id", adoption.get("scenario_ref", {}).get("scenario_id", ""))),
+		"map_id": String(map_ref.get("map_id", identity.get("map_id", ""))),
+		"map_package_path": String(persisted.get("map_path", "")),
+		"scenario_package_path": String(persisted.get("scenario_path", "")),
+		"stable_signature": String(identity.get("signature", "")),
+		"full_output_signature": String(generated.get("full_output_signature", generated.get("validation_report", {}).get("full_output_signature", ""))),
+		"generator_version": String(normalized.get("generator_version", "")),
+		"template_id": String(normalized.get("template_id", "")),
+		"profile_id": String(normalized.get("profile_id", "")),
+		"size_class_id": String(normalized.get("size_class_id", "")),
+		"normalized_seed": String(normalized.get("normalized_seed", "")),
+		"content_manifest_fingerprint": "native_package_no_authored_scenario_json",
+	}
+
+static func _native_random_map_provenance(input_config: Dictionary, generated: Dictionary, adoption: Dictionary, persisted: Dictionary, retry_status: Dictionary) -> Dictionary:
+	return {
+		"schema_id": "aurelion_native_rmg_disk_package_provenance_v1",
+		"input_config": input_config.duplicate(true),
+		"normalized_config": generated.get("normalized_config", {}),
+		"generated_identity": _native_random_map_generated_identity(generated, adoption, persisted),
+		"retry_status": retry_status,
+		"map_ref": persisted.get("map_ref", {}),
+		"scenario_ref": persisted.get("scenario_ref", {}),
+		"directory_policy": persisted.get("directory_policy", {}),
+		"boundaries": {
+			"authored_content_writeback": false,
+			"content_scenarios_json": false,
+			"generated_scenario_draft_registry": false,
+			"legacy_json_scenario_record": false,
+		},
+	}
+
+static func _native_random_map_setup_summary(generated: Dictionary, adoption: Dictionary, persisted: Dictionary, report: Dictionary, retry_status: Dictionary, difficulty_id: String) -> String:
+	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
+	return "\n".join([
+		"Generated Skirmish setup",
+		"Seed %s | Template %s | Profile %s" % [
+			String(normalized.get("normalized_seed", "")),
+			String(normalized.get("template_id", "")),
+			String(normalized.get("profile_id", "")),
+		],
+		"Size %dx%d L%d | Difficulty %s" % [
+			int(normalized.get("width", 0)),
+			int(normalized.get("height", 0)),
+			int(normalized.get("level_count", 1)),
+			difficulty_label(difficulty_id),
+		],
+		"Packages: %s | %s" % [String(persisted.get("map_path", "")), String(persisted.get("scenario_path", ""))],
+		"Validation %s | Attempts %d | Retries %d" % [
+			String(report.get("status", generated.get("validation_status", ""))),
+			int(retry_status.get("attempt_count", 1)),
+			int(retry_status.get("retry_count", 0)),
+		],
+		"Boundary: native packages loaded from disk; no content/scenarios.json startup, generated draft registry, campaign adoption, or legacy scenario JSON writeback.",
+	])
 
 static func _random_map_template_option(template_id: String) -> Dictionary:
 	for option in RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS:

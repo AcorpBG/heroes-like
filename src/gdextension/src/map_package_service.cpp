@@ -1,5 +1,8 @@
 #include "map_package_service.hpp"
 
+#include <godot_cpp/classes/dir_access.hpp>
+#include <godot_cpp/classes/file_access.hpp>
+#include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
@@ -19,6 +22,8 @@ constexpr const char *API_ID = "aurelion_map_package_api";
 constexpr const char *API_VERSION = "0.1.0";
 constexpr const char *MAP_SCHEMA_ID = "aurelion_map_document";
 constexpr const char *SCENARIO_SCHEMA_ID = "aurelion_scenario_document";
+constexpr const char *MAP_PACKAGE_SCHEMA_ID = "aurelion_map_package";
+constexpr const char *SCENARIO_PACKAGE_SCHEMA_ID = "aurelion_scenario_package";
 constexpr const char *NATIVE_RMG_SCHEMA_ID = "aurelion_native_random_map_foundation";
 constexpr const char *NATIVE_RMG_VERSION = "native_rmg_foundation_v1";
 constexpr const char *NATIVE_RMG_TERRAIN_GRID_SCHEMA_ID = "aurelion_native_rmg_terrain_grid_v1";
@@ -52,6 +57,8 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_validation_provenance_foundation");
 	result.append("native_random_map_package_session_adoption_bridge");
 	result.append("native_random_map_full_parity_supported_profiles");
+	result.append("native_package_save_load");
+	result.append("generated_map_package_disk_startup");
 	result.append("headless_binding_smoke");
 	return result;
 }
@@ -205,6 +212,202 @@ Dictionary not_implemented(const String &operation, const String &path = "", con
 	result["report"] = report;
 	result["recoverable"] = true;
 	return result;
+}
+
+Dictionary package_operation_report(const String &operation, const String &status, const String &path, const Array &failures, const Array &warnings = Array()) {
+	Dictionary report;
+	report["schema_id"] = "aurelion_package_operation_report";
+	report["schema_version"] = 1;
+	report["operation"] = operation;
+	report["status"] = status;
+	report["path"] = path;
+	report["failure_count"] = failures.size();
+	report["warning_count"] = warnings.size();
+	report["failures"] = failures;
+	report["warnings"] = warnings;
+	return report;
+}
+
+Dictionary package_failure(const String &operation, const String &path, const String &code, const String &message) {
+	Dictionary failure;
+	failure["code"] = code;
+	failure["severity"] = "fail";
+	failure["path"] = operation;
+	failure["message"] = message;
+	failure["context"] = Dictionary();
+
+	Array failures;
+	failures.append(failure);
+
+	Dictionary result;
+	result["ok"] = false;
+	result["status"] = "fail";
+	result["error_code"] = code;
+	result["message"] = message;
+	result["operation"] = operation;
+	result["path"] = path;
+	result["report"] = package_operation_report(operation, "fail", path, failures);
+	result["recoverable"] = true;
+	return result;
+}
+
+Dictionary package_success(const String &operation, const String &path, const Dictionary &payload, const Array &warnings = Array()) {
+	Dictionary result = payload.duplicate(true);
+	result["ok"] = true;
+	result["status"] = "pass";
+	result["operation"] = operation;
+	result["path"] = path;
+	result["report"] = package_operation_report(operation, "pass", path, Array(), warnings);
+	return result;
+}
+
+bool ensure_parent_dir(const String &path) {
+	const String base_dir = path.get_base_dir();
+	if (base_dir.is_empty()) {
+		return true;
+	}
+	return DirAccess::make_dir_recursive_absolute(base_dir) == OK;
+}
+
+Dictionary read_package_dictionary(const String &operation, const String &path) {
+	if (!FileAccess::file_exists(path)) {
+		return package_failure(operation, path, "missing_package", "Package file does not exist.");
+	}
+	Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		return package_failure(operation, path, "open_failed", "Package file could not be opened for reading.");
+	}
+	const String text = file->get_as_text();
+	Ref<JSON> parser;
+	parser.instantiate();
+	const Error parse_error = parser->parse(text);
+	if (parse_error != OK) {
+		return package_failure(operation, path, "invalid_package_json", "Package file could not be parsed.");
+	}
+	Variant data = parser->get_data();
+	if (data.get_type() != Variant::DICTIONARY) {
+		return package_failure(operation, path, "invalid_package_root", "Package root must be a dictionary.");
+	}
+	Dictionary result;
+	result["ok"] = true;
+	result["package"] = Dictionary(data);
+	return result;
+}
+
+Dictionary write_package_dictionary(const String &operation, const String &path, const Dictionary &package) {
+	if (!ensure_parent_dir(path)) {
+		return package_failure(operation, path, "create_directory_failed", "Package parent directory could not be created.");
+	}
+	Ref<FileAccess> file = FileAccess::open(path, FileAccess::WRITE);
+	if (file.is_null() || !file->is_open()) {
+		return package_failure(operation, path, "open_failed", "Package file could not be opened for writing.");
+	}
+	file->store_string(JSON::stringify(package, "\t", true, false));
+	Dictionary payload;
+	payload["package"] = package.duplicate(true);
+	payload["package_hash"] = package.get("package_hash", "");
+	return package_success(operation, path, payload);
+}
+
+Array document_objects(Ref<MapDocument> map_document) {
+	Array objects;
+	if (map_document.is_null()) {
+		return objects;
+	}
+	const int32_t object_count = map_document->get_object_count();
+	for (int32_t index = 0; index < object_count; ++index) {
+		objects.append(map_document->get_object_by_index(index));
+	}
+	return objects;
+}
+
+Dictionary map_document_payload(Ref<MapDocument> map_document) {
+	Dictionary document;
+	if (map_document.is_null()) {
+		return document;
+	}
+	document["schema_id"] = MAP_SCHEMA_ID;
+	document["schema_version"] = map_document->get_schema_version();
+	document["map_id"] = map_document->get_map_id();
+	document["map_hash"] = map_document->get_map_hash();
+	document["source_kind"] = map_document->get_source_kind();
+	document["width"] = map_document->get_width();
+	document["height"] = map_document->get_height();
+	document["level_count"] = map_document->get_level_count();
+	document["metadata"] = map_document->get_metadata();
+	document["terrain_layers"] = map_document->get_terrain_layers();
+	document["route_graph"] = map_document->get_route_graph();
+	document["objects"] = document_objects(map_document);
+	return document;
+}
+
+Dictionary scenario_document_payload(Ref<ScenarioDocument> scenario_document) {
+	Dictionary document;
+	if (scenario_document.is_null()) {
+		return document;
+	}
+	document["schema_id"] = SCENARIO_SCHEMA_ID;
+	document["schema_version"] = scenario_document->get_schema_version();
+	document["scenario_id"] = scenario_document->get_scenario_id();
+	document["scenario_hash"] = scenario_document->get_scenario_hash();
+	document["map_ref"] = scenario_document->get_map_ref();
+	document["selection"] = scenario_document->get_selection();
+	document["player_slots"] = scenario_document->get_player_slots();
+	document["objectives"] = scenario_document->get_objectives();
+	document["script_hooks"] = scenario_document->get_script_hooks();
+	document["enemy_factions"] = scenario_document->get_enemy_factions();
+	document["start_contract"] = scenario_document->get_start_contract();
+	return document;
+}
+
+Dictionary map_document_state_from_payload(const Dictionary &document) {
+	Dictionary state;
+	state["map_id"] = document.get("map_id", "");
+	state["map_hash"] = document.get("map_hash", "");
+	state["source_kind"] = document.get("source_kind", "");
+	state["width"] = document.get("width", 0);
+	state["height"] = document.get("height", 0);
+	state["level_count"] = document.get("level_count", 1);
+	state["metadata"] = document.get("metadata", Dictionary());
+	state["terrain_layers"] = document.get("terrain_layers", Dictionary());
+	state["route_graph"] = document.get("route_graph", Dictionary());
+	state["objects"] = document.get("objects", Array());
+	return state;
+}
+
+Dictionary scenario_document_state_from_payload(const Dictionary &document) {
+	Dictionary state;
+	state["scenario_id"] = document.get("scenario_id", "");
+	state["scenario_hash"] = document.get("scenario_hash", "");
+	state["map_ref"] = document.get("map_ref", Dictionary());
+	state["selection"] = document.get("selection", Dictionary());
+	state["player_slots"] = document.get("player_slots", Array());
+	state["objectives"] = document.get("objectives", Dictionary());
+	state["script_hooks"] = document.get("script_hooks", Array());
+	state["enemy_factions"] = document.get("enemy_factions", Array());
+	state["start_contract"] = document.get("start_contract", Dictionary());
+	return state;
+}
+
+Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid) {
+	Dictionary terrain_layers;
+	terrain_layers["schema_id"] = "aurelion_map_terrain_layers";
+	terrain_layers["schema_version"] = 1;
+	terrain_layers["terrain_id_by_code"] = terrain_grid.get("terrain_id_by_code", PackedStringArray());
+	Array levels = terrain_grid.get("levels", Array());
+	Array terrain_levels;
+	for (int64_t index = 0; index < levels.size(); ++index) {
+		if (Variant(levels[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary level_record = levels[index];
+		terrain_levels.append(level_record.get("terrain_code_u16", PackedInt32Array()));
+	}
+	Dictionary terrain;
+	terrain["encoding"] = "terrain_code_u16_by_level";
+	terrain["levels"] = terrain_levels;
+	terrain_layers["terrain"] = terrain;
+	return terrain_layers;
 }
 
 Array default_terrain_pool() {
@@ -3148,6 +3351,8 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	map_state["height"] = height;
 	map_state["level_count"] = level_count;
 	map_state["metadata"] = map_metadata;
+	map_state["terrain_layers"] = terrain_layers_from_grid(Dictionary(generated_map.get("terrain_grid", Dictionary())));
+	map_state["route_graph"] = generated_map.get("route_graph", Dictionary());
 	map_state["objects"] = combined_native_map_objects(generated_map);
 
 	Ref<MapDocument> map_document;
@@ -3457,18 +3662,167 @@ Ref<ScenarioDocument> MapPackageService::create_scenario_document_stub(Dictionar
 	return document;
 }
 
-Dictionary MapPackageService::load_map_package(String path, Dictionary options) const { return not_implemented("load_map_package", path, options); }
-Dictionary MapPackageService::load_scenario_package(String path, Dictionary options) const { return not_implemented("load_scenario_package", path, options); }
+Dictionary MapPackageService::load_map_package(String path, Dictionary options) const {
+	const String operation = "load_map_package";
+	Dictionary read_result = read_package_dictionary(operation, path);
+	if (!bool(read_result.get("ok", false))) {
+		return read_result;
+	}
+	Dictionary package = read_result.get("package", Dictionary());
+	if (String(package.get("schema_id", "")) != MAP_PACKAGE_SCHEMA_ID) {
+		return package_failure(operation, path, "wrong_package_schema", "Package is not an Aurelion map package.");
+	}
+	Variant document_value = package.get("document", Variant());
+	if (document_value.get_type() != Variant::DICTIONARY) {
+		return package_failure(operation, path, "missing_document", "Map package is missing its document payload.");
+	}
+	Dictionary document_payload = document_value;
+	if (String(document_payload.get("schema_id", "")) != MAP_SCHEMA_ID) {
+		return package_failure(operation, path, "wrong_document_schema", "Map package document schema is not supported.");
+	}
+	Ref<MapDocument> document;
+	document.instantiate();
+	document->configure(map_document_state_from_payload(document_payload));
+	Dictionary payload;
+	payload["package"] = package.duplicate(true);
+	payload["map_document"] = document;
+	payload["package_hash"] = package.get("package_hash", "");
+	payload["map_ref"] = package.get("map_ref", Dictionary());
+	payload["storage_policy"] = package.get("storage_policy", "");
+	return package_success(operation, path, payload);
+}
+
+Dictionary MapPackageService::load_scenario_package(String path, Dictionary options) const {
+	const String operation = "load_scenario_package";
+	Dictionary read_result = read_package_dictionary(operation, path);
+	if (!bool(read_result.get("ok", false))) {
+		return read_result;
+	}
+	Dictionary package = read_result.get("package", Dictionary());
+	if (String(package.get("schema_id", "")) != SCENARIO_PACKAGE_SCHEMA_ID) {
+		return package_failure(operation, path, "wrong_package_schema", "Package is not an Aurelion scenario package.");
+	}
+	Variant document_value = package.get("document", Variant());
+	if (document_value.get_type() != Variant::DICTIONARY) {
+		return package_failure(operation, path, "missing_document", "Scenario package is missing its document payload.");
+	}
+	Dictionary document_payload = document_value;
+	if (String(document_payload.get("schema_id", "")) != SCENARIO_SCHEMA_ID) {
+		return package_failure(operation, path, "wrong_document_schema", "Scenario package document schema is not supported.");
+	}
+	Ref<ScenarioDocument> document;
+	document.instantiate();
+	document->configure(scenario_document_state_from_payload(document_payload));
+	Dictionary payload;
+	payload["package"] = package.duplicate(true);
+	payload["scenario_document"] = document;
+	payload["package_hash"] = package.get("package_hash", "");
+	payload["scenario_ref"] = package.get("scenario_ref", Dictionary());
+	payload["storage_policy"] = package.get("storage_policy", "");
+	return package_success(operation, path, payload);
+}
 Dictionary MapPackageService::validate_map_document(Ref<MapDocument> map_document, Dictionary options) const { return validation_not_implemented("validate_map_document", "aurelion_map_validation_report"); }
 Dictionary MapPackageService::validate_scenario_document(Ref<ScenarioDocument> scenario_document, Ref<MapDocument> map_document, Dictionary options) const { return validation_not_implemented("validate_scenario_document", "aurelion_scenario_validation_report"); }
-Dictionary MapPackageService::save_map_package(Ref<MapDocument> map_document, String path, Dictionary options) const { return not_implemented("save_map_package", path, options); }
-Dictionary MapPackageService::save_scenario_package(Ref<ScenarioDocument> scenario_document, String path, Dictionary options) const { return not_implemented("save_scenario_package", path, options); }
+Dictionary MapPackageService::save_map_package(Ref<MapDocument> map_document, String path, Dictionary options) const {
+	const String operation = "save_map_package";
+	if (map_document.is_null()) {
+		return package_failure(operation, path, "missing_map_document", "Map package save requires a MapDocument.");
+	}
+	Dictionary document = map_document_payload(map_document);
+	Dictionary map_ref;
+	map_ref["schema_id"] = MAP_SCHEMA_ID;
+	map_ref["schema_version"] = map_document->get_schema_version();
+	map_ref["map_id"] = map_document->get_map_id();
+	map_ref["map_hash"] = map_document->get_map_hash();
+	map_ref["source_kind"] = map_document->get_source_kind();
+	map_ref["package_path"] = path;
+	map_ref["package_id"] = path.get_file();
+	map_ref["storage_policy"] = "project_maps_generated_package";
+
+	Dictionary package;
+	package["schema_id"] = MAP_PACKAGE_SCHEMA_ID;
+	package["schema_version"] = 1;
+	package["package_kind"] = "generated_map_package";
+	package["package_id"] = path.get_file();
+	package["document_kind"] = "map";
+	package["map_id"] = map_document->get_map_id();
+	package["map_hash"] = map_document->get_map_hash();
+	package["map_ref"] = map_ref;
+	package["source_kind"] = map_document->get_source_kind();
+	package["storage_policy"] = "project_maps_generated_package";
+	package["path_policy"] = String(options.get("path_policy", "dev_res_maps_export_user_maps"));
+	package["authored_content_writeback"] = false;
+	package["legacy_json_scenario_record"] = false;
+	package["document"] = document;
+	package["package_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(package));
+	Dictionary final_map_ref = map_ref.duplicate(true);
+	final_map_ref["package_hash"] = package.get("package_hash", "");
+	package["map_ref"] = final_map_ref;
+	return write_package_dictionary(operation, path, package);
+}
+
+Dictionary MapPackageService::save_scenario_package(Ref<ScenarioDocument> scenario_document, String path, Dictionary options) const {
+	const String operation = "save_scenario_package";
+	if (scenario_document.is_null()) {
+		return package_failure(operation, path, "missing_scenario_document", "Scenario package save requires a ScenarioDocument.");
+	}
+	Dictionary document = scenario_document_payload(scenario_document);
+	Dictionary scenario_ref;
+	scenario_ref["schema_id"] = SCENARIO_SCHEMA_ID;
+	scenario_ref["schema_version"] = scenario_document->get_schema_version();
+	scenario_ref["scenario_id"] = scenario_document->get_scenario_id();
+	scenario_ref["scenario_hash"] = scenario_document->get_scenario_hash();
+	scenario_ref["map_ref"] = scenario_document->get_map_ref();
+	scenario_ref["package_path"] = path;
+	scenario_ref["package_id"] = path.get_file();
+	scenario_ref["storage_policy"] = "project_maps_generated_package";
+
+	Dictionary package;
+	package["schema_id"] = SCENARIO_PACKAGE_SCHEMA_ID;
+	package["schema_version"] = 1;
+	package["package_kind"] = "generated_scenario_package";
+	package["package_id"] = path.get_file();
+	package["document_kind"] = "scenario";
+	package["scenario_id"] = scenario_document->get_scenario_id();
+	package["scenario_hash"] = scenario_document->get_scenario_hash();
+	package["scenario_ref"] = scenario_ref;
+	package["map_ref"] = scenario_document->get_map_ref();
+	package["source_kind"] = "generated";
+	package["storage_policy"] = "project_maps_generated_package";
+	package["path_policy"] = String(options.get("path_policy", "dev_res_maps_export_user_maps"));
+	package["authored_content_writeback"] = false;
+	package["legacy_json_scenario_record"] = false;
+	package["document"] = document;
+	package["package_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(package));
+	Dictionary final_scenario_ref = scenario_ref.duplicate(true);
+	final_scenario_ref["package_hash"] = package.get("package_hash", "");
+	package["scenario_ref"] = final_scenario_ref;
+	return write_package_dictionary(operation, path, package);
+}
 Dictionary MapPackageService::migrate_map_package(String source_path, String target_path, int32_t target_version, Dictionary options) const { return not_implemented("migrate_map_package", source_path, options); }
 Dictionary MapPackageService::migrate_scenario_package(String source_path, String target_path, int32_t target_version, Dictionary options) const { return not_implemented("migrate_scenario_package", source_path, options); }
 Dictionary MapPackageService::convert_legacy_scenario_record(Dictionary scenario_record, Dictionary terrain_layers_record, Dictionary options) const { return not_implemented("convert_legacy_scenario_record", "", options); }
 Dictionary MapPackageService::convert_generated_payload(Dictionary generated_map, Dictionary options) const { return build_native_package_session_adoption(generated_map, options); }
 Dictionary MapPackageService::compute_document_hash(Variant document, Dictionary options) const { return not_implemented("compute_document_hash", "", options); }
-Dictionary MapPackageService::inspect_package(String path, Dictionary options) const { return not_implemented("inspect_package", path, options); }
+Dictionary MapPackageService::inspect_package(String path, Dictionary options) const {
+	Dictionary read_result = read_package_dictionary("inspect_package", path);
+	if (!bool(read_result.get("ok", false))) {
+		return read_result;
+	}
+	Dictionary package = read_result.get("package", Dictionary());
+	Dictionary payload;
+	payload["schema_id"] = package.get("schema_id", "");
+	payload["schema_version"] = package.get("schema_version", 0);
+	payload["package_id"] = package.get("package_id", "");
+	payload["package_kind"] = package.get("package_kind", "");
+	payload["document_kind"] = package.get("document_kind", "");
+	payload["package_hash"] = package.get("package_hash", "");
+	payload["storage_policy"] = package.get("storage_policy", "");
+	payload["path_policy"] = package.get("path_policy", "");
+	payload["authored_content_writeback"] = package.get("authored_content_writeback", false);
+	payload["legacy_json_scenario_record"] = package.get("legacy_json_scenario_record", false);
+	return package_success("inspect_package", path, payload);
+}
 
 Dictionary MapPackageService::normalize_random_map_config(Dictionary config) const {
 	Variant size_value = config.get("size", Variant());
@@ -3605,6 +3959,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	map_state["height"] = int32_t(normalized.get("height", 36));
 	map_state["level_count"] = int32_t(normalized.get("level_count", 1));
 	map_state["metadata"] = metadata;
+	map_state["terrain_layers"] = terrain_layers_from_grid(terrain_grid);
+	map_state["route_graph"] = road_network.get("route_graph", Dictionary());
 	map_state["objects"] = object_placements;
 
 	Ref<MapDocument> document;

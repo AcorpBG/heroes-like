@@ -145,6 +145,38 @@ nonGoals:
 - No save schema/version bump.
 - No renderer, fog, pathing, gameplay, or asset-ingestion redesign.
 
+Completed owner-directed implementation slice:
+
+id: `native-rmg-disk-package-startup-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Make generated skirmish startup use native RMG package documents saved under `maps/` and loaded back from disk instead of authored `content/scenarios.json` or transient generated JSON scenario drafts.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/map-scenario-gdextension-persistence-foundation.md`
+- 2026-05-03 owner directive to remove JSON scenario startup and use native RMG packages under `maps/`
+implementationTargets:
+- `src/gdextension/include/map_document.hpp`
+- `src/gdextension/src/map_document.cpp`
+- `src/gdextension/src/map_package_service.cpp`
+- `scripts/core/ScenarioSelectRules.gd`
+- `scripts/persistence/NativeRandomMapPackageSessionBridge.gd`
+- `scenes/menus/MainMenu.gd`
+- `tests/native_random_map_disk_package_startup_report.gd`
+- `docs/map-scenario-gdextension-persistence-foundation.md`
+completionCriteria:
+- Native `MapPackageService` saves and loads generated map and scenario packages enough for generated startup.
+- Generated skirmish setup writes `.amap` and `.ascenario` packages under `maps/` in dev/headless and loads them back before session creation.
+- Generated startup does not use `ContentService` generated drafts or `content/scenarios.json` as the active launch source.
+- Maps directory policy is documented for dev `res://maps` and exported `user://maps` semantics.
+- Focused Godot smoke proves native load, generation, package save, package load, disk-backed startup, and no active `scenarios.json`/draft usage.
+nonGoals:
+- No authored scenario/package catalog migration.
+- No campaign adoption.
+- No save-version bump or full `SessionDelta` rewrite.
+- No renderer, fog, pathing, or broad gameplay redesign.
+- No generated PNG or unrelated asset import.
+
 Selected Phase 2 corrective slice:
 
 id: `native-gdextension-editor-manifest-correction-10184`

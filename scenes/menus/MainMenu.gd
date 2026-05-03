@@ -1238,7 +1238,7 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 	_set_generated_generation_stage(
 		"Materializing playable session",
 		82,
-		"Registering the generated scenario draft and normalizing the playable overworld without authored writeback."
+		"Loading the generated map package from disk and normalizing the playable overworld without authored writeback."
 	)
 	await _yield_generated_generation_frame()
 

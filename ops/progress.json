@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-full-parity-gate-10184",
-  "currentSliceTitle": "Native RMG Full Parity Gate",
+  "currentSliceId": "native-rmg-disk-package-startup-10184",
+  "currentSliceTitle": "Native RMG Disk Package Startup",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented native RMG full-parity support for the exact tracked 36x36 homm3_small comparison profiles; comparison and full gate report zero blocking gaps; full gate includes an adjacent unsupported translated land level-1 negative check to prevent false broad parity claims; package/session bridge ready for supported profiles with no runtime call-site adoption, no authored writeback, and no save version bump. Validation: json.tool ops/progress.json; progress sync-plan --dry-run; cmake --build .artifacts/map_persistence_native_build --parallel 2; native RMG smoke stack through package/session adoption; gdscript comparison smoke; full parity gate smoke; git diff --check; python3 tests/validate_repo.py.",
+  "currentSliceNotes": "Owner-directed implementation completed: native RMG generated skirmish packages are saved under maps/ for dev/headless, loaded back before startup, and legacy generated draft/content JSON paths are compatibility-only.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T11:44:18Z",
+  "updatedAt": "2026-05-03T12:45:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -6949,6 +6949,59 @@
       "startedAt": "2026-05-03T11:23:18Z",
       "notes": "Implemented native RMG full-parity support for the exact tracked 36x36 homm3_small comparison profiles; comparison and full gate report zero blocking gaps; full gate includes an adjacent unsupported translated land level-1 negative check to prevent false broad parity claims; package/session bridge ready for supported profiles with no runtime call-site adoption, no authored writeback, and no save version bump. Validation: json.tool ops/progress.json; progress sync-plan --dry-run; cmake --build .artifacts/map_persistence_native_build --parallel 2; native RMG smoke stack through package/session adoption; gdscript comparison smoke; full parity gate smoke; git diff --check; python3 tests/validate_repo.py.",
       "completedAt": "2026-05-03T11:40:47Z"
+    },
+    {
+      "id": "native-rmg-disk-package-startup-10184",
+      "title": "Native RMG Disk Package Startup",
+      "status": "completed",
+      "purpose": "Make generated skirmish startup use native RMG package documents saved under maps/ and loaded back from disk instead of authored scenarios.json or transient generated JSON scenario drafts.",
+      "implementationTargets": [
+        "src/gdextension/include/map_document.hpp",
+        "src/gdextension/src/map_document.cpp",
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/core/ScenarioSelectRules.gd",
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/native_random_map_disk_package_startup_report.gd",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Native MapPackageService saves and loads generated map and scenario packages enough for generated startup.",
+        "Generated skirmish setup writes .amap/.ascenario packages under maps/ in dev/headless and loads them back before session creation.",
+        "Generated startup does not use ContentService generated drafts or content/scenarios.json as the active launch source.",
+        "Maps directory policy is documented for dev res://maps and exported user://maps semantics.",
+        "Focused Godot smoke proves native load, generation, package save, package load, disk-backed startup, and no active scenarios.json/draft usage."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "2026-05-03 owner directive to remove JSON scenario startup and use native RMG packages under maps/"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_disk_package_startup_report.tscn",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No authored scenario/package catalog migration.",
+        "No campaign adoption.",
+        "No save-version bump or full SessionDelta rewrite.",
+        "No renderer, fog, pathing, or broad gameplay redesign.",
+        "No generated PNG or unrelated asset import."
+      ],
+      "createdAt": "2026-05-03T12:30:00Z",
+      "updatedAt": "2026-05-03T12:45:00Z",
+      "startedAt": "2026-05-03T12:30:00Z",
+      "completedAt": "2026-05-03T12:45:00Z",
+      "notes": "Implemented native MapPackageService generated .amap/.ascenario save/load, generated skirmish disk-package startup under maps/, loaded-package session construction, active path avoidance of content/scenarios.json and ContentService generated drafts, documented maps directory semantics, and focused native/package smokes. Validation: cmake --build .artifacts/map_persistence_native_build --parallel 2; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_disk_package_startup_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_package_session_adoption_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check."
     }
   ],
   "completedImplementationEvidence": [
@@ -8002,15 +8055,14 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-full-parity-gate-10184",
-      "title": "Native RMG Full Parity Gate",
-      "status": "pending",
+      "id": "native-rmg-disk-package-startup-10184",
+      "title": "Native RMG Disk Package Startup",
+      "status": "completed",
       "sourceDocs": [
         "project.md",
         "PLAN.md",
         "docs/map-scenario-gdextension-persistence-foundation.md",
-        "scripts/core/RandomMapGeneratorRules.gd",
-        "2026-05-03 owner directive: native C++ GDExtension RMG must reach full parity before adoption"
+        "2026-05-03 owner directive to remove JSON scenario startup and use native RMG packages under maps/"
       ]
     }
   ],

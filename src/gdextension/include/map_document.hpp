@@ -21,6 +21,8 @@ class MapDocument : public RefCounted {
 	int32_t height = 0;
 	int32_t level_count = 1;
 	Dictionary metadata;
+	Dictionary terrain_layers;
+	Dictionary route_graph;
 	Array objects;
 
 protected:
@@ -41,6 +43,7 @@ public:
 	Dictionary get_metadata() const;
 	PackedStringArray get_terrain_layer_ids() const;
 	PackedInt32Array get_tile_layer_u16(String layer_id, int32_t level = 0) const;
+	Dictionary get_terrain_layers() const;
 	int32_t get_object_count() const;
 	Dictionary get_object_by_index(int32_t index) const;
 	Dictionary get_object_by_placement_id(String placement_id) const;
