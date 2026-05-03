@@ -68,11 +68,17 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Map Editor"
 
-[node name="ScenarioPicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]
+[node name="MapPackagePicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="LoadMap" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Load Map"
 
 [node name="PlayWorkingCopy" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]
 unique_name_in_owner = true

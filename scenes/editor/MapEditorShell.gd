@@ -6,7 +6,6 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacementRules.gd")
 
-const DEFAULT_SCENARIO_ID := "ninefold-confluence"
 const DEFAULT_TERRAIN_ID := "grass"
 const EDITOR_ROAD_LAYER_ID := "editor_working_road"
 const SCENARIO_EXPORT_CONTRACT_ID := "editor_authored_scenario_export_contract_v1"
@@ -46,7 +45,8 @@ const TOWN_OWNER_OPTIONS := ["neutral", "player", "enemy"]
 const ENCOUNTER_DIFFICULTY_OPTIONS := ["low", "medium", "high", "pressure", "scripted"]
 
 @onready var _header_label: Label = %Header
-@onready var _scenario_picker: OptionButton = %ScenarioPicker
+@onready var _map_package_picker: OptionButton = %MapPackagePicker
+@onready var _load_map_button: Button = %LoadMap
 @onready var _terrain_picker: OptionButton = %TerrainPicker
 @onready var _inspect_tool_button: Button = %InspectTool
 @onready var _terrain_tool_button: Button = %TerrainTool
@@ -78,11 +78,12 @@ const ENCOUNTER_DIFFICULTY_OPTIONS := ["low", "medium", "high", "pressure", "scr
 @onready var _property_apply_button: Button = %ApplyObjectProperties
 
 var _session = null
-var _scenario_entries: Array = []
+var _map_package_entries: Array = []
+var _map_package_index_status := {}
 var _terrain_entries: Array = []
 var _object_family_entries: Array = []
 var _object_content_entries: Array = []
-var _selected_scenario_id := ""
+var _selected_map_package_id := ""
 var _selected_terrain_id := DEFAULT_TERRAIN_ID
 var _selected_object_family := DEFAULT_OBJECT_FAMILY
 var _selected_object_content_id := ""
@@ -110,16 +111,16 @@ func _ready() -> void:
 	_rebuild_terrain_picker()
 	_rebuild_object_family_picker()
 	_rebuild_property_option_pickers()
-	_rebuild_scenario_picker()
+	_rebuild_map_package_picker()
 	_select_tool(TOOL_INSPECT)
 	var returned_session = SessionState.consume_editor_return_session()
 	if returned_session != null and _resume_working_copy_from_memory(returned_session):
 		return
-	if _selected_scenario_id != "":
-		_load_scenario_working_copy(_selected_scenario_id)
+	_refresh_state()
 
 func _connect_ui() -> void:
-	_scenario_picker.item_selected.connect(_on_scenario_selected)
+	_map_package_picker.item_selected.connect(_on_map_package_selected)
+	_load_map_button.pressed.connect(_on_load_map_pressed)
 	_terrain_picker.item_selected.connect(_on_terrain_selected)
 	_inspect_tool_button.pressed.connect(func(): _select_tool(TOOL_INSPECT))
 	_terrain_tool_button.pressed.connect(func(): _select_tool(TOOL_TERRAIN))
@@ -145,28 +146,37 @@ func _connect_ui() -> void:
 		_map_view.tile_pressed.connect(_on_map_tile_pressed)
 		_map_view.tile_hovered.connect(_on_map_tile_hovered)
 
-func _rebuild_scenario_picker() -> void:
-	_scenario_entries = _scenario_items()
-	_scenario_picker.clear()
+func _rebuild_map_package_picker() -> void:
+	_map_package_index_status = ScenarioSelectRulesScript.maps_folder_package_index()
+	_map_package_entries = _map_package_index_status.get("entries", []) if _map_package_index_status.get("entries", []) is Array else []
+	_map_package_picker.clear()
 	var selected_index := -1
-	for index in range(_scenario_entries.size()):
-		var scenario: Dictionary = _scenario_entries[index]
-		var scenario_id := String(scenario.get("id", ""))
-		var map_size: Dictionary = scenario.get("map_size", {})
-		var label := "%s | %dx%d" % [
-			String(scenario.get("name", scenario_id)),
+	for index in range(_map_package_entries.size()):
+		var entry: Dictionary = _map_package_entries[index]
+		var package_id := String(entry.get("package_id", ""))
+		var map_size: Dictionary = entry.get("map_size", {}) if entry.get("map_size", {}) is Dictionary else {}
+		var label := "Map Package | %s | %dx%d" % [
+			String(entry.get("display_name", entry.get("package_stem", package_id))),
 			int(map_size.get("width", 0)),
 			int(map_size.get("height", 0)),
 		]
-		_scenario_picker.add_item(label, index)
-		_scenario_picker.set_item_metadata(index, scenario_id)
-		if scenario_id == DEFAULT_SCENARIO_ID:
+		_map_package_picker.add_item(label, index)
+		_map_package_picker.set_item_metadata(index, package_id)
+		if package_id == _selected_map_package_id:
 			selected_index = index
-	if selected_index < 0 and not _scenario_entries.is_empty():
+	if selected_index < 0 and not _map_package_entries.is_empty():
 		selected_index = 0
 	if selected_index >= 0:
-		_scenario_picker.select(selected_index)
-		_selected_scenario_id = String(_scenario_picker.get_item_metadata(selected_index))
+		_map_package_picker.select(selected_index)
+		_selected_map_package_id = String(_map_package_picker.get_item_metadata(selected_index))
+	else:
+		_selected_map_package_id = ""
+		var empty_label := "No map packages found"
+		if not bool(_map_package_index_status.get("ok", true)):
+			empty_label = "Map packages unavailable"
+		_map_package_picker.add_item(empty_label, 0)
+		_map_package_picker.set_item_metadata(0, "")
+	_map_package_picker.disabled = _map_package_entries.is_empty()
 
 func _rebuild_terrain_picker() -> void:
 	_terrain_entries = _terrain_items()
@@ -540,24 +550,10 @@ func _selected_picker_metadata(picker: OptionButton, fallback: String = "") -> S
 		return fallback
 	return String(picker.get_item_metadata(selected_index))
 
-func _scenario_items() -> Array:
+func _legacy_authored_scenario_items_for_dev_validation() -> Array:
 	var raw := ContentService.load_json("res://content/scenarios.json")
 	var items = raw.get("items", [])
-	var scenario_items: Array = items if items is Array else []
-	var package_items := []
-	for entry in ScenarioSelectRulesScript.build_maps_folder_package_browser_entries():
-		if not (entry is Dictionary):
-			continue
-		var map_size: Dictionary = entry.get("map_size", {}) if entry.get("map_size", {}) is Dictionary else {}
-		package_items.append({
-			"id": String(entry.get("package_id", "")),
-			"name": "Generated | %s" % String(entry.get("display_name", entry.get("package_stem", "Map"))),
-			"map_size": map_size,
-			"summary": String(entry.get("summary", "")),
-			"editor_source_kind": "maps_folder_package",
-			"maps_folder_package_entry": entry.duplicate(true),
-		})
-	return scenario_items + package_items
+	return items if items is Array else []
 
 func _terrain_items() -> Array:
 	var grammar := ContentService.get_terrain_grammar()
@@ -2757,16 +2753,14 @@ func _resource_delta_text(resources: Dictionary) -> String:
 		parts.append("%+d %s" % [amount, _humanize_editor_id(String(key))])
 	return ", ".join(parts)
 
-func _load_scenario_working_copy(scenario_id: String) -> bool:
-	if ScenarioSelectRulesScript.maps_folder_package_id_is_valid(scenario_id):
-		return _load_maps_folder_package_working_copy(scenario_id)
+func _load_legacy_authored_scenario_working_copy_for_dev_validation(scenario_id: String) -> bool:
 	var session = ScenarioFactoryScript.create_session(
 		scenario_id,
 		"normal",
 		SessionState.LAUNCH_MODE_SKIRMISH
 	)
 	if session == null or session.scenario_id == "":
-		_last_message = "Unable to load scenario %s into the editor." % scenario_id
+		_last_message = "Unable to load legacy authored scenario %s into the editor." % scenario_id
 		_refresh_state()
 		return false
 	_session = session
@@ -2774,8 +2768,7 @@ func _load_scenario_working_copy(scenario_id: String) -> bool:
 	_authored_baseline_cache_id = ""
 	OverworldRules.normalize_overworld_state(_session)
 	_make_all_tiles_visible(_session)
-	_selected_scenario_id = scenario_id
-	_select_scenario_picker_by_id(scenario_id)
+	_selected_map_package_id = ""
 	_selected_tile = OverworldRules.hero_position(_session)
 	_selected_property_object_key = ""
 	_pending_move_object_key = ""
@@ -2785,7 +2778,7 @@ func _load_scenario_working_copy(scenario_id: String) -> bool:
 	_terrain_paint_order = 0
 	_dirty = false
 	_restored_from_play_copy = false
-	_last_message = "Loaded authored scenario into a mutable editor working copy."
+	_last_message = "Loaded legacy authored scenario into a mutable editor working copy for dev validation."
 	_refresh_state()
 	return true
 
@@ -2810,8 +2803,8 @@ func _load_maps_folder_package_working_copy(package_id: String) -> bool:
 	_authored_baseline_cache_id = _session.scenario_id
 	OverworldRules.normalize_overworld_state(_session)
 	_make_all_tiles_visible(_session)
-	_selected_scenario_id = package_id
-	_select_scenario_picker_by_id(package_id)
+	_selected_map_package_id = package_id
+	_select_map_package_picker_by_id(package_id)
 	_selected_tile = OverworldRules.hero_position(_session)
 	_selected_property_object_key = ""
 	_pending_move_object_key = ""
@@ -2841,8 +2834,8 @@ func _resume_working_copy_from_memory(session) -> bool:
 	_authored_baseline_cache_id = ""
 	OverworldRules.normalize_overworld_state(_session)
 	_make_all_tiles_visible(_session)
-	_selected_scenario_id = String(_session.flags.get("editor_source_package_id", _session.scenario_id))
-	_select_scenario_picker_by_id(_selected_scenario_id)
+	_selected_map_package_id = String(_session.flags.get("editor_source_package_id", ""))
+	_select_map_package_picker_by_id(_selected_map_package_id)
 	_restore_editor_ui_metadata()
 	_restored_from_play_copy = true
 	_last_message = "Returned from Play Copy with the editor launch snapshot still in memory."
@@ -2928,7 +2921,7 @@ func _refresh_state() -> void:
 	_sync_tool_buttons()
 	_sync_property_controls()
 	_sync_object_taxonomy_summary()
-	_sync_scenario_validation_surface()
+	_sync_map_package_load_surface()
 	_sync_play_handoff_surface()
 	_sync_menu_return_surface()
 	_sync_restore_tile_surface()
@@ -2954,23 +2947,27 @@ func _sync_play_handoff_surface() -> void:
 	var return_tooltip := String(return_context.get("tooltip", "")).strip_edges()
 	if return_tooltip != "":
 		tooltip_lines.append(return_tooltip)
-	_play_button.tooltip_text = "\n".join(tooltip_lines) if not tooltip_lines.is_empty() else "Load a scenario working copy before play-testing it."
+	_play_button.tooltip_text = "\n".join(tooltip_lines) if not tooltip_lines.is_empty() else "Load a map package working copy before play-testing it."
 
-func _sync_scenario_validation_surface() -> void:
-	if _scenario_picker == null:
+func _sync_map_package_load_surface() -> void:
+	if _map_package_picker == null:
 		return
 	var check := _editor_scenario_validation_check_payload()
-	var tooltip_lines := [String(check.get("tooltip", "Load a scenario working copy to review editor validation."))]
-	var switch_handoff := String(_editor_scenario_switch_handoff_payload().get("tooltip", "")).strip_edges()
-	if switch_handoff != "":
-		tooltip_lines.append(switch_handoff)
+	var tooltip_lines := [String(check.get("tooltip", "Load a map package working copy to review editor validation."))]
+	var load_handoff := String(_editor_map_load_handoff_payload().get("tooltip", "")).strip_edges()
+	if load_handoff != "":
+		tooltip_lines.append(load_handoff)
 	var focus_tooltip := String(_editor_selected_validation_focus_payload().get("tooltip", "")).strip_edges()
 	if focus_tooltip != "":
 		tooltip_lines.append(focus_tooltip)
 	var export_tooltip := String(_editor_export_intent_payload().get("tooltip", "")).strip_edges()
 	if export_tooltip != "":
 		tooltip_lines.append(export_tooltip)
-	_scenario_picker.tooltip_text = "\n".join(tooltip_lines)
+	_map_package_picker.tooltip_text = "\n".join(tooltip_lines)
+	if _load_map_button != null:
+		_load_map_button.disabled = _selected_map_package_id == ""
+		_load_map_button.text = "Load Map"
+		_load_map_button.tooltip_text = load_handoff if load_handoff != "" else "Choose a map package from maps/, then load it into the editor working copy."
 
 func _sync_menu_return_surface() -> void:
 	if _menu_button == null:
@@ -2986,7 +2983,7 @@ func _sync_restore_tile_surface() -> void:
 	var cue := _editor_restore_tile_cue_payload()
 	_restore_tile_button.disabled = _session == null
 	_restore_tile_button.text = String(cue.get("button_label", "Restore Tile"))
-	_restore_tile_button.tooltip_text = String(cue.get("tooltip", "Restore the selected tile from the authored baseline."))
+	_restore_tile_button.tooltip_text = String(cue.get("tooltip", "Restore the selected tile from the loaded map baseline."))
 
 func _sync_terrain_paint_surface() -> void:
 	if _terrain_picker == null:
@@ -3032,8 +3029,21 @@ func _sync_preview() -> void:
 func _refresh_labels() -> void:
 	if _session == null:
 		_header_label.text = "Map Editor"
-		_set_compact_label(_tile_info_label, "No scenario loaded.", 4)
-		_set_compact_label(_status_label, _last_message, 2)
+		_set_compact_label(_tile_info_label, "No map package loaded.", 4)
+		var empty_lines := []
+		var load_handoff := String(_editor_map_load_handoff_payload().get("text", "")).strip_edges()
+		if load_handoff != "":
+			empty_lines.append(load_handoff)
+		var index_message := String(_map_package_index_status.get("message", "")).strip_edges()
+		if index_message != "":
+			empty_lines.append(index_message)
+		var warnings: Array = _map_package_index_status.get("warnings", []) if _map_package_index_status.get("warnings", []) is Array else []
+		var unpaired_count := int(_map_package_index_status.get("unpaired_map_count", 0)) + int(_map_package_index_status.get("unpaired_scenario_count", 0))
+		if not warnings.is_empty() or unpaired_count > 0:
+			empty_lines.append("Invalid map package pairs were skipped; check maps/ for matching .amap and .ascenario files.")
+		if _last_message != "":
+			empty_lines.append(_last_message)
+		_set_compact_label(_status_label, "\n".join(empty_lines), 3)
 		return
 	var map_size := OverworldRules.derive_map_size(_session)
 	_header_label.text = "Map Editor | %s" % _current_scenario_display_name()
@@ -3087,9 +3097,9 @@ func _refresh_labels() -> void:
 			_pending_road_path_start.y,
 		]
 	var status_lines := [state_line]
-	var scenario_switch_text := String(_editor_scenario_switch_handoff_payload().get("text", "")).strip_edges()
-	if scenario_switch_text != "":
-		status_lines.append(scenario_switch_text)
+	var map_load_text := String(_editor_map_load_handoff_payload().get("text", "")).strip_edges()
+	if map_load_text != "":
+		status_lines.append(map_load_text)
 	var scenario_check_text := String(_editor_scenario_validation_check_payload().get("text", "")).strip_edges()
 	if scenario_check_text != "":
 		status_lines.append(scenario_check_text)
@@ -3145,6 +3155,16 @@ func _current_scenario_display_name() -> String:
 		return package_display
 	var scenario := ContentService.get_scenario(_session.scenario_id)
 	return String(scenario.get("name", _session.scenario_id))
+
+func _selected_map_package_label() -> String:
+	if _selected_map_package_id == "":
+		return ""
+	for entry in _map_package_entries:
+		if not (entry is Dictionary):
+			continue
+		if String(entry.get("package_id", "")) == _selected_map_package_id:
+			return String(entry.get("display_name", entry.get("package_stem", _selected_map_package_id)))
+	return _selected_map_package_id
 
 func _tool_label(tool: String) -> String:
 	match tool:
@@ -3243,11 +3263,22 @@ func _sync_tool_buttons() -> void:
 				tooltip = "%s\n%s" % [tooltip, placement_action]
 		button.tooltip_text = tooltip
 
-func _on_scenario_selected(index: int) -> void:
-	if index < 0 or index >= _scenario_picker.get_item_count():
+func _on_map_package_selected(index: int) -> void:
+	if index < 0 or index >= _map_package_picker.get_item_count():
 		return
-	var scenario_id := String(_scenario_picker.get_item_metadata(index))
-	_load_scenario_working_copy(scenario_id)
+	_selected_map_package_id = String(_map_package_picker.get_item_metadata(index))
+	if _selected_map_package_id != "":
+		_last_message = "Selected map package %s. Press Load Map to open it." % _selected_map_package_label()
+	else:
+		_last_message = "No map package selected."
+	_refresh_state()
+
+func _on_load_map_pressed() -> void:
+	if _selected_map_package_id == "":
+		_last_message = "No map package selected. Generate a map so maps/ contains a paired .amap and .ascenario package."
+		_refresh_state()
+		return
+	_load_maps_folder_package_working_copy(_selected_map_package_id)
 
 func _on_terrain_selected(index: int) -> void:
 	if index < 0 or index >= _terrain_picker.get_item_count():
@@ -4558,7 +4589,7 @@ func _restore_selected_tile_from_authored() -> Dictionary:
 		return {
 			"ok": false,
 			"changed": false,
-			"message": "Could not read authored baseline for %s." % _session.scenario_id,
+			"message": "Could not read loaded map baseline for %s." % _session.scenario_id,
 		}
 
 	var before_overworld: Dictionary = _session.overworld.duplicate(true)
@@ -4572,9 +4603,9 @@ func _restore_selected_tile_from_authored() -> Dictionary:
 	_remove_stale_editor_object_keys()
 
 	var changed: bool = before_overworld != _session.overworld
-	var message: String = "Restored tile %d,%d from authored baseline." % [tile.x, tile.y]
+	var message: String = "Restored tile %d,%d from loaded map baseline." % [tile.x, tile.y]
 	if not changed:
-		message = "Tile %d,%d already matches the authored baseline." % [tile.x, tile.y]
+		message = "Tile %d,%d already matches the loaded map baseline." % [tile.x, tile.y]
 	return {
 		"ok": true,
 		"changed": changed,
@@ -4861,7 +4892,7 @@ func _editor_play_readiness_gate_payload() -> Dictionary:
 		return {
 			"button_label": "Play Copy",
 			"text": "",
-			"tooltip": "Load a scenario working copy before play-testing it.",
+			"tooltip": "Load a map package working copy before play-testing it.",
 			"state": "no_working_copy",
 		}
 	var validation := _scenario_authoring_validation_payload()
@@ -4904,7 +4935,7 @@ func _editor_scenario_validation_check_payload() -> Dictionary:
 	if _session == null:
 		return {
 			"text": "",
-			"tooltip": "Load a scenario working copy to review editor validation.",
+			"tooltip": "Load a map package working copy to review editor validation.",
 			"state": "no_working_copy",
 			"ready": false,
 		}
@@ -4964,7 +4995,7 @@ func _editor_export_intent_payload() -> Dictionary:
 	if _session == null:
 		return {
 			"text": "",
-			"tooltip": "Load a scenario working copy before reviewing export intent.",
+			"tooltip": "Load a map package working copy before reviewing export intent.",
 			"state": "no_working_copy",
 			"dirty": false,
 			"ready": false,
@@ -5373,30 +5404,50 @@ func _validate_export_terrain_layers_record(record: Dictionary) -> Array:
 				blockers.append("Terrain-layer export draft road %s has out-of-bounds tile %d,%d." % [road_id, tile.x, tile.y])
 	return blockers
 
-func _editor_scenario_switch_handoff_payload() -> Dictionary:
+func _editor_map_load_handoff_payload() -> Dictionary:
+	var selected_label := _selected_map_package_label()
+	var warnings: Array = _map_package_index_status.get("warnings", []) if _map_package_index_status.get("warnings", []) is Array else []
+	var unpaired_count := int(_map_package_index_status.get("unpaired_map_count", 0)) + int(_map_package_index_status.get("unpaired_scenario_count", 0))
 	if _session == null:
+		var state := "ready" if _selected_map_package_id != "" else "empty"
+		var text := "Load Map: choose a generated map package from maps/, then press Load Map."
+		var next_step := "press Load Map" if _selected_map_package_id != "" else "generate a map package so maps/ contains a paired .amap and .ascenario"
+		if not bool(_map_package_index_status.get("ok", true)):
+			state = "unavailable"
+			text = "Load Map: map packages are unavailable."
+			next_step = "enable native MapPackageService before loading map packages"
+		elif _map_package_entries.is_empty():
+			text = "Load Map: no map packages found in maps/."
+		if not warnings.is_empty() or unpaired_count > 0:
+			text = "%s Invalid package pairs were skipped." % text
 		return {
-			"text": "",
-			"tooltip": "Load a scenario working copy before switching scenarios.",
-			"state": "no_working_copy",
+			"text": text,
+			"tooltip": "Load Map\n- Source: generated map packages under maps/.\n- Selection: %s.\n- Next: %s.\n- Boundary: content/scenarios.json is not used by the active editor load path." % [
+				selected_label if selected_label != "" else "none",
+				next_step,
+			],
+			"state": state,
 			"dirty": false,
-			"scope": "scenario_picker_working_copy_replace",
+			"selected_map_package_id": _selected_map_package_id,
+			"map_package_count": _map_package_entries.size(),
+			"invalid_pair_count": warnings.size() + unpaired_count,
+			"authored_json_scenarios_used": false,
+			"scope": "map_package_load_working_copy_replace",
 		}
-	var scenario := ContentService.get_scenario(_session.scenario_id)
-	var scenario_name := String(scenario.get("name", _session.scenario_id))
+	var map_name := _current_scenario_display_name()
 	var state := "dirty" if _dirty else "clean"
-	var consequence := "choosing another scenario replaces this in-memory working copy"
-	var next_step := "choose another scenario to load its authored baseline"
+	var consequence := "loading another map package replaces this in-memory working copy"
+	var next_step := "choose another map package, then Load Map"
 	if _dirty:
 		next_step = "use Play Copy for a smoke pass or keep editing before switching"
-	var write_context := "no authored file or campaign progress is written"
-	var text := "Scenario switch: %s | %s working copy; %s." % [
-		scenario_name,
+	var write_context := "no authored file, old JSON scenario record, or campaign progress is written"
+	var text := "Load Map: %s | %s working copy; %s." % [
+		map_name,
 		state,
 		consequence,
 	]
-	var tooltip := "Scenario Switch\n- Current: %s.\n- State: %s working copy.\n- Consequence: %s.\n- Next: %s.\n- Scope: %s." % [
-		scenario_name,
+	var tooltip := "Load Map\n- Current map package: %s.\n- State: %s working copy.\n- Consequence: %s.\n- Next: %s.\n- Scope: %s." % [
+		map_name,
 		state,
 		consequence,
 		next_step,
@@ -5408,13 +5459,18 @@ func _editor_scenario_switch_handoff_payload() -> Dictionary:
 		"state": state,
 		"dirty": _dirty,
 		"scenario_id": _session.scenario_id,
-		"scenario_name": scenario_name,
+		"map_name": map_name,
+		"selected_map_package_id": _selected_map_package_id,
 		"consequence": consequence,
 		"next_step": next_step,
 		"write_context": write_context,
-		"scenario_count": _scenario_entries.size(),
-		"scope": "scenario_picker_working_copy_replace",
+		"map_package_count": _map_package_entries.size(),
+		"authored_json_scenarios_used": false,
+		"scope": "map_package_load_working_copy_replace",
 	}
+
+func _editor_scenario_switch_handoff_payload() -> Dictionary:
+	return _editor_map_load_handoff_payload()
 
 func _editor_selected_validation_focus_payload() -> Dictionary:
 	if _session == null or not _tile_in_bounds(_selected_tile):
@@ -5547,7 +5603,7 @@ func _editor_play_handoff_payload() -> Dictionary:
 		return {
 			"button_label": "Play Copy",
 			"text": "",
-			"tooltip": "Load a scenario working copy before play-testing it.",
+			"tooltip": "Load a map package working copy before play-testing it.",
 			"state_context": "no_working_copy",
 		}
 	var scenario := ContentService.get_scenario(_session.scenario_id)
@@ -5631,7 +5687,7 @@ func _editor_restore_tile_cue_payload() -> Dictionary:
 		return {
 			"button_label": "Restore Tile",
 			"text": "",
-			"tooltip": "Load a scenario working copy before restoring a selected tile.",
+			"tooltip": "Load a map package working copy before restoring a selected tile.",
 			"state": "no_working_copy",
 			"changed": false,
 		}
@@ -5648,7 +5704,7 @@ func _editor_restore_tile_cue_payload() -> Dictionary:
 		}
 	var baseline = _authored_baseline_session()
 	if baseline == null or baseline.scenario_id == "":
-		var missing_text := "Tile reset: authored baseline is unavailable for %s." % _session.scenario_id
+		var missing_text := "Tile reset: loaded map baseline is unavailable for %s." % _session.scenario_id
 		return {
 			"button_label": "Restore Tile",
 			"text": missing_text,
@@ -5668,13 +5724,13 @@ func _editor_restore_tile_cue_payload() -> Dictionary:
 	if changed:
 		button_label = "Restore Changed"
 		next_step = "press Restore Tile to reset this tile, then use Play Copy to smoke-test"
-		text = "Tile reset: %s differs in %s; Restore Tile returns this tile to authored baseline." % [
+		text = "Tile reset: %s differs in %s; Restore Tile returns this tile to the loaded map baseline." % [
 			tile_label,
 			", ".join(delta_labels),
 		]
 	else:
-		text = "Tile reset: %s already matches authored baseline; Restore Tile is a no-op check." % tile_label
-	var tooltip := "Restore Tile\n- Selected: %s\n- Current: %s\n- Authored: %s\n- Next: %s\n- Scope: selected tile only; in-memory working copy only; no authored file or campaign progress is written." % [
+		text = "Tile reset: %s already matches loaded map baseline; Restore Tile is a no-op check." % tile_label
+	var tooltip := "Restore Tile\n- Selected: %s\n- Current: %s\n- Baseline: %s\n- Next: %s\n- Scope: selected tile only; in-memory working copy only; no authored file or campaign progress is written." % [
 		tile_label,
 		_tile_authoring_signature_summary(current_signature),
 		_tile_authoring_signature_summary(authored_signature),
@@ -6500,11 +6556,14 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id if _session != null else "",
-		"selected_scenario_id": _selected_scenario_id,
+		"selected_map_package_id": _selected_map_package_id,
+		"selected_scenario_id": _selected_map_package_id,
 		"editor_source_kind": String(_session.flags.get("editor_source_kind", "")) if _session != null else "",
 		"editor_source_package_id": String(_session.flags.get("editor_source_package_id", "")) if _session != null else "",
 		"editor_source_map_path": String(_session.flags.get("editor_source_map_path", "")) if _session != null else "",
 		"editor_source_scenario_path": String(_session.flags.get("editor_source_scenario_path", "")) if _session != null else "",
+		"map_package_ref": _session.flags.get("map_package_ref", {}) if _session != null else {},
+		"scenario_package_ref": _session.flags.get("scenario_package_ref", {}) if _session != null else {},
 		"maps_folder_package_browser": bool(_session.flags.get("maps_folder_package_browser", false)) if _session != null else false,
 		"working_copy": _session != null,
 		"restored_from_play_copy": _restored_from_play_copy,
@@ -6522,10 +6581,23 @@ func validation_snapshot() -> Dictionary:
 		"scenario_switch_handoff": _editor_scenario_switch_handoff_payload(),
 		"scenario_switch_handoff_text": String(_editor_scenario_switch_handoff_payload().get("text", "")),
 		"scenario_switch_handoff_tooltip": String(_editor_scenario_switch_handoff_payload().get("tooltip", "")),
+		"map_load_handoff": _editor_map_load_handoff_payload(),
+		"map_load_handoff_text": String(_editor_map_load_handoff_payload().get("text", "")),
+		"map_load_handoff_tooltip": String(_editor_map_load_handoff_payload().get("tooltip", "")),
 		"selected_validation_focus": _editor_selected_validation_focus_payload(),
 		"selected_validation_focus_text": String(_editor_selected_validation_focus_payload().get("text", "")),
 		"selected_validation_focus_tooltip": String(_editor_selected_validation_focus_payload().get("tooltip", "")),
-		"scenario_picker_tooltip": _scenario_picker.tooltip_text if _scenario_picker != null else "",
+		"map_package_picker_tooltip": _map_package_picker.tooltip_text if _map_package_picker != null else "",
+		"map_package_picker_item_count": _map_package_picker.get_item_count() if _map_package_picker != null else 0,
+		"map_package_picker_labels": _map_package_picker_labels(),
+		"map_package_picker_metadata": _map_package_picker_metadata(),
+		"load_map_button_text": _load_map_button.text if _load_map_button != null else "",
+		"load_map_button_disabled": _load_map_button.disabled if _load_map_button != null else true,
+		"load_map_flow_active": true,
+		"legacy_scenario_dropdown_active": false,
+		"authored_json_scenarios_used": false,
+		"map_package_index_status": _public_map_package_index_status(),
+		"scenario_picker_tooltip": _map_package_picker.tooltip_text if _map_package_picker != null else "",
 		"play_readiness_gate": _editor_play_readiness_gate_payload(),
 		"play_readiness_gate_text": String(_editor_play_readiness_gate_payload().get("text", "")),
 		"play_handoff": _editor_play_handoff_payload(),
@@ -6612,14 +6684,56 @@ func validation_snapshot() -> Dictionary:
 		"map_viewport": _map_view.call("validation_view_metrics") if _map_view != null and _map_view.has_method("validation_view_metrics") else {},
 	}
 
-func validation_load_scenario(scenario_id: String) -> Dictionary:
-	var loaded := _load_scenario_working_copy(scenario_id)
+func _map_package_picker_labels() -> Array:
+	var labels := []
+	if _map_package_picker == null:
+		return labels
+	for index in range(_map_package_picker.get_item_count()):
+		labels.append(_map_package_picker.get_item_text(index))
+	return labels
+
+func _map_package_picker_metadata() -> Array:
+	var metadata := []
+	if _map_package_picker == null:
+		return metadata
+	for index in range(_map_package_picker.get_item_count()):
+		metadata.append(String(_map_package_picker.get_item_metadata(index)))
+	return metadata
+
+func _public_map_package_index_status() -> Dictionary:
+	var warnings: Array = _map_package_index_status.get("warnings", []) if _map_package_index_status.get("warnings", []) is Array else []
+	return {
+		"ok": bool(_map_package_index_status.get("ok", true)),
+		"schema_id": String(_map_package_index_status.get("schema_id", "")),
+		"package_dir": String(_map_package_index_status.get("package_dir", "")),
+		"entry_count": _map_package_entries.size(),
+		"message": String(_map_package_index_status.get("message", "")),
+		"warning_count": warnings.size(),
+		"unpaired_map_count": int(_map_package_index_status.get("unpaired_map_count", 0)),
+		"unpaired_scenario_count": int(_map_package_index_status.get("unpaired_scenario_count", 0)),
+		"authored_json_scenarios_used": false,
+	}
+
+func validation_load_legacy_authored_scenario_for_dev(scenario_id: String) -> Dictionary:
+	var loaded := _load_legacy_authored_scenario_working_copy_for_dev_validation(scenario_id)
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = loaded
+	snapshot["legacy_authored_scenario_dev_validation"] = true
 	return snapshot
 
 func validation_load_maps_folder_package(package_id: String) -> Dictionary:
 	var loaded := _load_maps_folder_package_working_copy(package_id)
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = loaded
+	return snapshot
+
+func validation_load_selected_map_package() -> Dictionary:
+	var loaded := false
+	if _selected_map_package_id != "":
+		loaded = _load_maps_folder_package_working_copy(_selected_map_package_id)
+	else:
+		_last_message = "No map package selected. Generate a map so maps/ contains a paired .amap and .ascenario package."
+		_refresh_state()
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = loaded
 	return snapshot
@@ -7318,10 +7432,10 @@ func _select_terrain_by_id(terrain_id: String) -> bool:
 			return true
 	return false
 
-func _select_scenario_picker_by_id(scenario_id: String) -> bool:
-	for index in range(_scenario_picker.get_item_count()):
-		if String(_scenario_picker.get_item_metadata(index)) == scenario_id:
-			_scenario_picker.select(index)
+func _select_map_package_picker_by_id(package_id: String) -> bool:
+	for index in range(_map_package_picker.get_item_count()):
+		if String(_map_package_picker.get_item_metadata(index)) == package_id:
+			_map_package_picker.select(index)
 			return true
 	return false
 

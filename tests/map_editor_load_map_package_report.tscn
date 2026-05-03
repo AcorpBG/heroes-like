@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://map_editor_load_map_package_report"]
+
+[ext_resource type="Script" path="res://tests/map_editor_load_map_package_report.gd" id="1"]
+
+[node name="MapEditorLoadMapPackageReport" type="Node"]
+script = ExtResource("1")
