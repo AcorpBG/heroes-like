@@ -109,8 +109,15 @@ func _run() -> void:
 	if int(ContentService.load_json(ContentService.SCENARIOS_PATH).get("items", []).size()) != authored_item_count:
 		_fail("content/scenarios.json item count changed during generated startup.")
 		return
-	if not ScenarioSelectRulesScript.build_skirmish_browser_entries().is_empty():
-		_fail("Authored skirmish browser unexpectedly exposed scenarios as the active path.")
+	var package_browser_entry := _find_package_browser_entry(
+		ScenarioSelectRulesScript.build_skirmish_browser_entries(),
+		ScenarioSelectRulesScript.maps_folder_package_id_for_stem(package_stem)
+	)
+	if package_browser_entry.is_empty():
+		_fail("Skirmish browser did not expose the generated maps-folder package entry.")
+		return
+	if bool(package_browser_entry.get("legacy_json_scenario_record", true)) or bool(package_browser_entry.get("authored_json_scenarios_used", true)):
+		_fail("Skirmish package browser entry used a forbidden JSON scenario boundary: %s" % JSON.stringify(package_browser_entry))
 		return
 
 	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
@@ -189,6 +196,12 @@ func _forbidden_filename_parts() -> Array:
 		"seed-",
 		"v1",
 	]
+
+func _find_package_browser_entry(entries: Array, package_id: String) -> Dictionary:
+	for entry in entries:
+		if entry is Dictionary and String(entry.get("package_id", entry.get("scenario_id", ""))) == package_id:
+			return entry
+	return {}
 
 func _fail(message: String) -> void:
 	push_error("%s failed: %s" % [REPORT_ID, message])

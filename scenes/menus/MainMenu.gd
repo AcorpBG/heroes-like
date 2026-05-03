@@ -1060,12 +1060,12 @@ func _refresh_skirmish_setup() -> void:
 	_set_compact_label(_difficulty_summary_label, ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty), 3, 82)
 
 	if selected_entry.is_empty():
-		_set_compact_label(_skirmish_details_label, "No active authored skirmish fronts are available.", 2, 82)
-		_set_compact_label(_setup_summary_label, "Use Generated Skirmish to create a fresh map.", 3, 82)
+		_set_compact_label(_skirmish_details_label, "No generated maps folder packages are available.", 2, 82)
+		_set_compact_label(_setup_summary_label, "Use Generated Skirmish to create a fresh map package under maps/.", 3, 82)
 		_set_compact_label(_skirmish_commander_preview_label, "Commander preview appears here.", 3, 82)
 		_set_compact_label(_skirmish_operational_board_label, "Operational pressure appears here.", 3, 82)
 		_start_skirmish_button.disabled = true
-		_start_skirmish_button.tooltip_text = "No active authored skirmish scenarios are available."
+		_start_skirmish_button.tooltip_text = "No paired generated .amap/.ascenario packages are available under the active maps folder."
 		return
 
 	_set_compact_label(_skirmish_details_label, String(selected_entry.get("summary", "")), 3, 84)

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-package-readable-filenames-10184",
-  "currentSliceTitle": "Native RMG Package Readable Filenames",
+  "currentSliceId": "maps-folder-package-browser-integration-10184",
+  "currentSliceTitle": "Maps Folder Package Browser Integration",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Owner correction completed: generated native RMG package filenames now use display-size + deterministic creative name + 8-hex normalized config hash suffix, e.g. small-iron-grove-way-56797c95.amap/.ascenario; focused startup smoke reports content_scenarios_json_used_for_startup=false and rejects homm3/task/debug/template/profile leakage. Validation: native_random_map_disk_package_startup_report; native_random_map_package_session_adoption_report; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
+  "currentSliceNotes": "Completed maps-folder package browser integration: generated .amap/.ascenario pairs under maps/ are indexed through native package loads, skirmish browser/start uses selected package paths, map editor can open package-backed working copies, empty package directories return empty without fallback, and authored JSON/draft paths remain out of generated package launch/open. Validation: maps_folder_package_browser_integration_report; native_random_map_disk_package_startup_report; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T13:02:09Z",
+  "updatedAt": "2026-05-03T13:19:23Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7050,6 +7050,55 @@
       "startedAt": "2026-05-03T12:50:00Z",
       "notes": "Owner correction completed: generated native RMG package filenames now use display-size + deterministic creative name + 8-hex normalized config hash suffix, e.g. small-iron-grove-way-56797c95.amap/.ascenario; focused startup smoke reports content_scenarios_json_used_for_startup=false and rejects homm3/task/debug/template/profile leakage. Validation: native_random_map_disk_package_startup_report; native_random_map_package_session_adoption_report; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
       "completedAt": "2026-05-03T13:02:09Z"
+    },
+    {
+      "id": "maps-folder-package-browser-integration-10184",
+      "title": "Maps Folder Package Browser Integration",
+      "status": "completed",
+      "purpose": "Populate skirmish and map editor selection flows from generated .amap/.ascenario package pairs under maps/ instead of authored JSON scenario records.",
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/editor/MapEditorShell.gd",
+        "tests/maps_folder_package_browser_integration_report.gd",
+        "tests/maps_folder_package_browser_integration_report.tscn",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A generated maps-folder package index discovers paired .amap/.ascenario files under the active maps directory and returns readable records with package refs/metadata.",
+        "Skirmish browser entries are built from generated disk package pairs, handle an empty maps folder gracefully, and start sessions by loading the selected package paths.",
+        "Map editor can list and open generated package pairs from maps/ without content/scenarios.json or transient generated draft registration.",
+        "Focused Godot smoke proves package listing, package-backed skirmish launch, map editor package access/open, sane empty-directory behavior, and no authored JSON scenario path for generated package launch/open."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "native-rmg-disk-package-startup-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "2026-05-03 owner directive to populate skirmish/maps editor from maps/ generated package files"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/maps_folder_package_browser_integration_report.tscn",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No authored scenario/package catalog migration.",
+        "No campaign adoption.",
+        "No save-version bump.",
+        "No renderer, fog, pathing, gameplay, or RMG generation semantics changes.",
+        "No generated PNG or unrelated asset import."
+      ],
+      "createdAt": "2026-05-03T13:11:15Z",
+      "updatedAt": "2026-05-03T13:19:23Z",
+      "startedAt": "2026-05-03T13:11:15Z",
+      "notes": "Implemented a native-package-backed maps-folder index for generated .amap/.ascenario pairs, skirmish browser/list/start from selected package paths, and map editor package listing/open into an in-memory working copy. Empty package directories return a clean empty index, and generated package launch/open records keep content/scenarios.json and generated draft registration out of the path. Validation: godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/maps_folder_package_browser_integration_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_disk_package_startup_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
+      "completedAt": "2026-05-03T13:19:23Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -8103,14 +8152,14 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-package-readable-filenames-10184",
-      "title": "Native RMG Package Readable Filenames",
+      "id": "maps-folder-package-browser-integration-10184",
+      "title": "Maps Folder Package Browser Integration",
       "status": "completed",
       "sourceDocs": [
         "project.md",
         "PLAN.md",
         "docs/map-scenario-gdextension-persistence-foundation.md",
-        "2026-05-03 owner feedback that native RMG package filenames were dull/debug-sludge"
+        "2026-05-03 owner directive to populate skirmish/maps editor from maps/ generated package files"
       ]
     }
   ],
