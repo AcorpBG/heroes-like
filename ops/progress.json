@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
-  "currentSliceTitle": "Map/Scenario GDExtension Persistence Foundation",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Slice 1 Package/API Skeleton implemented: inert map/scenario package API stubs, C++ GDExtension source/build skeleton, GDScript compatibility binding, and headless smoke evidence. Broad package conversion/read/write, migration, save-reference adoption, and content adoption remain unimplemented.",
+  "currentSliceId": "native-scenario-active-content-reset-10184",
+  "currentSliceTitle": "Native Scenario Active Content Reset",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed owner-directed corrective reset. Native authored scenario/campaign domains are archived out of active player-facing selection; generated random-map skirmish remains validated. This does not complete the broader map/scenario persistence foundation.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T06:55:00Z",
+  "updatedAt": "2026-05-03T07:08:02Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -6035,6 +6035,94 @@
       "startedAt": "2026-05-02T12:07:09Z",
       "notes": "Normalized authored blocking interactable visit offsets inside footprints/bodies; updated RMG catalog/action masks and route endpoint handling. Validation: python3 tests/all_interactable_object_footprint_audit.py; python3 -m py_compile tests/validate_repo.py tests/all_interactable_object_footprint_audit.py; python3 tests/validate_repo.py; git diff --check; Godot F4 overlay regression; Godot inside-footprint override regression; random_map_object_footprint_catalog_report; random_map_generated_object_footprint_interaction_report.",
       "completedAt": "2026-05-02T12:28:06Z"
+    },
+    {
+      "id": "native-scenario-active-content-reset-10184",
+      "title": "Native Scenario Active Content Reset",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "2026-05-03 owner direction: clear native scenarios"
+      ],
+      "purpose": "Archive the current native/authored scenario and campaign catalogs out of active player-facing selection while preserving generated random-map skirmish flow and historical compatibility records.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "content/campaigns.json",
+        "scripts/core/ScenarioSelectRules.gd",
+        "scripts/core/CampaignRules.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/random_map_scenario_load_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Authored/native scenario and campaign domains are marked archived/disabled.",
+        "Skirmish and campaign browsers expose zero native authored entries.",
+        "Generated random-map skirmish setup/load remains available and validated."
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like",
+        "git diff --check",
+        "python3 tests/validate_repo.py",
+        "godot --headless --path /root/dev/heroes-like res://tests/random_map_scenario_load_smoke.tscn"
+      ],
+      "nonGoals": [
+        "No RMG rewrite.",
+        "No map package adoption.",
+        "No save schema/version bump.",
+        "No renderer, fog, pathing, gameplay, or asset-ingestion redesign."
+      ],
+      "createdAt": "2026-05-03T07:05:35Z",
+      "updatedAt": "2026-05-03T07:08:02Z",
+      "startedAt": "2026-05-03T07:05:35Z",
+      "notes": "Owner-directed corrective content reset; does not complete the broader map/scenario persistence foundation.",
+      "completedAt": "2026-05-03T07:08:02Z",
+      "validationEvidence": [
+        {
+          "command": "python3 -m json.tool ops/progress.json",
+          "result": "pass"
+        },
+        {
+          "command": "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+          "result": "pass: PLAN slice ids: 6 existing: 139 missing: 0"
+        },
+        {
+          "command": "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like",
+          "result": "pass"
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass"
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass"
+        },
+        {
+          "command": "godot --headless --path /root/dev/heroes-like res://tests/random_map_scenario_load_smoke.tscn",
+          "result": "pass: generated draft scenario load preserved; native scenario/campaign browser entries absent"
+        },
+        {
+          "command": "godot --headless --path /root/dev/heroes-like res://tests/random_map_async_generation_ux_report.tscn",
+          "result": "pass: menu generated skirmish staged launch preserved"
+        }
+      ],
+      "completionEvidence": {
+        "summary": "Native authored scenario and campaign domains are archived/disabled at the content-domain level; campaign and skirmish selection rules return zero active native entries; generated random-map skirmish setup/load remains validated.",
+        "remainingReferences": "Historical scenario/campaign records remain in content JSON for compatibility validators, legacy direct lookup, and old save references; they are not player-facing active content while the domain status is archived/disabled.",
+        "nonGoalsObserved": [
+          "No RMG rewrite",
+          "No map package adoption",
+          "No save schema/version bump",
+          "No renderer/fog/pathing/gameplay redesign",
+          "No asset ingestion"
+        ]
+      }
     }
   ],
   "completedImplementationEvidence": [

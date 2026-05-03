@@ -53,7 +53,7 @@ static func normalize_profile(value: Variant) -> Dictionary:
 			for campaign_id in states.keys():
 				profile["campaign_states"][String(campaign_id)] = _normalize_campaign_state(states[campaign_id])
 
-	for campaign in _campaign_items():
+	for campaign in _active_campaign_items():
 		if not (campaign is Dictionary):
 			continue
 		var campaign_id := String(campaign.get("id", ""))
@@ -67,7 +67,7 @@ static func normalize_profile(value: Variant) -> Dictionary:
 	return profile
 
 static func get_default_campaign_id() -> String:
-	for campaign in _campaign_items():
+	for campaign in _active_campaign_items():
 		if campaign is Dictionary:
 			var campaign_id := String(campaign.get("id", ""))
 			if campaign_id != "":
@@ -76,7 +76,7 @@ static func get_default_campaign_id() -> String:
 
 static func campaign_ids() -> Array:
 	var ids := []
-	for campaign in _campaign_items():
+	for campaign in _active_campaign_items():
 		if not (campaign is Dictionary):
 			continue
 		var campaign_id := String(campaign.get("id", ""))
@@ -87,14 +87,14 @@ static func campaign_ids() -> Array:
 static func selected_campaign_id(profile: Dictionary) -> String:
 	var normalized := normalize_profile(profile)
 	var campaign_id := String(normalized.get("last_campaign_id", ""))
-	if campaign_id != "" and not ContentService.get_campaign(campaign_id).is_empty():
+	if campaign_id != "" and _campaign_is_player_facing(ContentService.get_campaign(campaign_id)):
 		return campaign_id
 	return get_default_campaign_id()
 
 static func get_campaign_id_for_scenario(scenario_id: String) -> String:
 	if scenario_id == "":
 		return ""
-	for campaign in _campaign_items():
+	for campaign in _active_campaign_items():
 		if not (campaign is Dictionary):
 			continue
 		for scenario_entry in campaign.get("scenarios", []):
@@ -108,7 +108,7 @@ static func get_campaign_state(profile: Dictionary, campaign_id: String) -> Dict
 
 static func mark_selected_campaign(profile: Dictionary, campaign_id: String) -> Dictionary:
 	var normalized := normalize_profile(profile)
-	if campaign_id == "" or ContentService.get_campaign(campaign_id).is_empty():
+	if campaign_id == "" or not _campaign_is_player_facing(ContentService.get_campaign(campaign_id)):
 		return normalized
 
 	var state := get_campaign_state(normalized, campaign_id).duplicate(true)
@@ -378,7 +378,7 @@ static func build_chapter_action(profile: Dictionary, campaign_id: String, scena
 	var normalized := normalize_profile(profile)
 	var campaign := ContentService.get_campaign(campaign_id)
 	var scenario_entry := _find_scenario_entry(campaign, scenario_id)
-	if campaign.is_empty() or scenario_entry.is_empty():
+	if not _campaign_is_player_facing(campaign) or scenario_entry.is_empty():
 		return {
 			"label": "No Chapter Available",
 			"summary": "No authored chapter is available.",
@@ -432,7 +432,7 @@ static func describe_campaign(profile: Dictionary, campaign_id: String) -> Strin
 static func build_start_action(profile: Dictionary, campaign_id: String) -> Dictionary:
 	var normalized := normalize_profile(profile)
 	var campaign := ContentService.get_campaign(campaign_id)
-	if campaign.is_empty():
+	if not _campaign_is_player_facing(campaign):
 		return {
 			"label": "No Campaign Available",
 			"summary": "No authored campaign is available to start.",
@@ -678,7 +678,7 @@ static func build_outcome_actions_bridge(profile: Dictionary, session) -> Array:
 static func first_available_scenario(profile: Dictionary, campaign_id: String) -> String:
 	var normalized := normalize_profile(profile)
 	var campaign := ContentService.get_campaign(campaign_id)
-	if campaign.is_empty():
+	if not _campaign_is_player_facing(campaign):
 		return ""
 
 	var starting_scenario_id := String(campaign.get("starting_scenario_id", ""))
@@ -704,7 +704,7 @@ static func first_available_scenario(profile: Dictionary, campaign_id: String) -
 static func is_scenario_unlocked(profile: Dictionary, campaign_id: String, scenario_id: String) -> bool:
 	var normalized := normalize_profile(profile)
 	var campaign := ContentService.get_campaign(campaign_id)
-	if campaign.is_empty():
+	if not _campaign_is_player_facing(campaign):
 		return false
 	var scenario_entry := _find_scenario_entry(campaign, scenario_id)
 	if scenario_entry.is_empty():
@@ -923,6 +923,36 @@ static func _normalize_hero_progression(value: Variant) -> Dictionary:
 
 static func _campaign_items() -> Array:
 	return ContentService.load_json(ContentService.CAMPAIGNS_PATH).get("items", [])
+
+static func _active_campaign_items() -> Array:
+	var items := []
+	if not _campaign_domain_is_player_facing():
+		return items
+	for campaign in _campaign_items():
+		if campaign is Dictionary and _campaign_is_player_facing(campaign):
+			items.append(campaign)
+	return items
+
+static func _campaign_domain_is_player_facing() -> bool:
+	var raw := ContentService.load_json(ContentService.CAMPAIGNS_PATH)
+	var status := String(raw.get("domain_status", ""))
+	if status.begins_with("archived_") or status.ends_with("_disabled"):
+		return false
+	return true
+
+static func _campaign_is_player_facing(campaign: Dictionary) -> bool:
+	if campaign.is_empty():
+		return false
+	if not _campaign_domain_is_player_facing():
+		return false
+	if campaign.has("active") and not bool(campaign.get("active", true)):
+		return false
+	if campaign.has("player_facing") and not bool(campaign.get("player_facing", true)):
+		return false
+	var content_status := String(campaign.get("content_status", ""))
+	if content_status.begins_with("archived_") or content_status.ends_with("_disabled"):
+		return false
+	return true
 
 static func _find_scenario_entry(campaign: Dictionary, scenario_id: String) -> Dictionary:
 	if campaign.is_empty() or scenario_id == "":

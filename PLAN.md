@@ -115,6 +115,31 @@ Selection rules for new Phase 2 slices:
 - Preserve existing validation/analyzer compatibility unless the slice explicitly changes it.
 - Do not use profile/instrumentation slices as permission for optimization or gameplay semantics changes.
 
+Completed owner-directed corrective slice:
+
+id: `native-scenario-active-content-reset-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Archive the current native/authored scenario and campaign catalogs out of active player-facing selection while preserving generated random-map skirmish flow and historical compatibility records.
+sourceDocs:
+- `project.md`
+- 2026-05-03 owner direction to clear native scenarios
+implementationTargets:
+- `content/scenarios.json`
+- `content/campaigns.json`
+- `scripts/core/ScenarioSelectRules.gd`
+- `scripts/core/CampaignRules.gd`
+- `scenes/menus/MainMenu.gd`
+- `tests/random_map_scenario_load_smoke.gd`
+completionCriteria:
+- Authored/native scenario and campaign domains are marked archived/disabled.
+- Skirmish and campaign browsers expose zero native authored entries.
+- Generated random-map skirmish setup/load remains available and validated.
+nonGoals:
+- No RMG rewrite.
+- No map package adoption.
+- No save schema/version bump.
+- No renderer, fog, pathing, gameplay, or asset-ingestion redesign.
+
 Selected Phase 2 planning slice:
 
 id: `map-scenario-gdextension-persistence-foundation-10184`

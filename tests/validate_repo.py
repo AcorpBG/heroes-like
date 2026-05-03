@@ -7147,8 +7147,8 @@ def validate_strict_neutral_encounter_fixtures() -> tuple[list[str], list[str]]:
 
 
 def validate_campaigns(errors: list[str], campaigns: dict[str, dict], scenarios: dict[str, dict]) -> None:
-    ensure(bool(campaigns), errors, "No campaigns are authored in content/campaigns.json")
-    ensure(len(campaigns) >= 3, errors, "Release-facing campaign content must author at least three campaign arcs")
+    ensure(bool(campaigns), errors, "No historical campaign records are archived in content/campaigns.json")
+    ensure(len(campaigns) >= 3, errors, "Historical campaign content must preserve at least three archived arcs for compatibility evidence")
     total_campaign_chapters = 0
     campaign_starting_factions: set[str] = set()
     for campaign_id, campaign in campaigns.items():
@@ -7260,6 +7260,53 @@ def validate_campaigns(errors: list[str], campaigns: dict[str, dict], scenarios:
                     ensure(bool(str(carryover_import.get("flags_prefix", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} carryover_import flags_prefix cannot be empty")
     ensure(total_campaign_chapters >= 9, errors, "Campaign content should author at least nine chapters across the available campaign arcs")
     ensure(RELEASE_PLAYER_FACTIONS.issubset(campaign_starting_factions), errors, "Campaign starts must cover all release player factions")
+
+
+def validate_native_scenario_reset(errors: list[str], scenario_payload: dict, campaign_payload: dict) -> None:
+    scenarios = items_index(scenario_payload)
+    campaigns = items_index(campaign_payload)
+    ensure(
+        str(scenario_payload.get("domain_status", "")) == "archived_native_scenario_set_disabled",
+        errors,
+        "content/scenarios.json must declare the native scenario domain archived/disabled",
+    )
+    ensure(
+        str(campaign_payload.get("domain_status", "")) == "archived_native_campaign_set_disabled",
+        errors,
+        "content/campaigns.json must declare the native campaign domain archived/disabled",
+    )
+    active_scenarios: list[str] = []
+    selectable_scenarios: list[str] = []
+    scenario_domain_active = str(scenario_payload.get("domain_status", "")).strip() == ""
+    for scenario_id, scenario in scenarios.items():
+        status = str(scenario.get("content_status", ""))
+        active = bool(scenario.get("active", True)) and bool(scenario.get("player_facing", True))
+        selection = scenario.get("selection", {}) if isinstance(scenario.get("selection", {}), dict) else {}
+        availability = selection.get("availability", {}) if isinstance(selection.get("availability", {}), dict) else {}
+        if scenario_domain_active and active and not status.startswith("archived_") and not status.endswith("_disabled"):
+            active_scenarios.append(scenario_id)
+        if scenario_domain_active and (bool(availability.get("campaign", False)) or bool(availability.get("skirmish", False))):
+            selectable_scenarios.append(scenario_id)
+    active_campaigns: list[str] = []
+    campaign_domain_active = str(campaign_payload.get("domain_status", "")).strip() == ""
+    for campaign_id, campaign in campaigns.items():
+        status = str(campaign.get("content_status", ""))
+        active = bool(campaign.get("active", True)) and bool(campaign.get("player_facing", True))
+        if campaign_domain_active and active and not status.startswith("archived_") and not status.endswith("_disabled"):
+            active_campaigns.append(campaign_id)
+    ensure(not active_scenarios, errors, f"Native scenario reset must leave zero active authored scenarios, found {active_scenarios}")
+    ensure(not selectable_scenarios, errors, f"Native scenario reset must leave zero campaign/skirmish-selectable authored scenarios, found {selectable_scenarios}")
+    ensure(not active_campaigns, errors, f"Native scenario reset must leave zero active authored campaigns, found {active_campaigns}")
+    ensure(
+        int(scenario_payload.get("player_facing_active_scenario_count", -1)) == 0,
+        errors,
+        "content/scenarios.json must record zero player-facing active scenarios",
+    )
+    ensure(
+        int(campaign_payload.get("player_facing_active_campaign_count", -1)) == 0,
+        errors,
+        "content/campaigns.json must record zero player-facing active campaigns",
+    )
 
 
 def artifact_set_id(artifact: dict) -> str:
@@ -9012,7 +9059,8 @@ def validate_content(errors: list[str]) -> None:
     scenarios = items_index(payloads["scenarios"])
     campaigns = items_index(payloads["campaigns"])
     ensure(len(heroes) >= 9, errors, "Release hero content must author at least nine commanders")
-    ensure(len(scenarios) >= 10, errors, "Release scenario content must author at least ten distinct fronts")
+    ensure(len(scenarios) >= 10, errors, "Historical scenario compatibility archive must preserve at least ten distinct fronts")
+    validate_native_scenario_reset(errors, payloads["scenarios"], payloads["campaigns"])
     campaign_scenario_ids = {
         str(scenario_entry.get("scenario_id", ""))
         for campaign in campaigns.values()

@@ -538,7 +538,7 @@ func _rebuild_campaign_chapter_browser() -> void:
 
 func _refresh_campaign_browser() -> void:
 	if _campaign_entries.is_empty():
-		_set_compact_label(_campaign_details_label, "No campaign arcs are authored.", 2, 82)
+		_set_compact_label(_campaign_details_label, "No active campaign arcs are available.", 2, 82)
 		_set_compact_label(_campaign_arc_status_label, "Arc status appears here.", 2, 82)
 		_set_compact_label(_chapter_details_label, "No chapters are ready.", 2, 82)
 		_set_compact_label(_campaign_commander_preview_label, "Select a chapter to review the commander and opening force.", 3, 82)
@@ -546,7 +546,7 @@ func _refresh_campaign_browser() -> void:
 		_set_compact_label(_campaign_journal_label, "Campaign journal entries appear here.", 3, 82)
 		_campaign_primary_button.text = "No Campaign"
 		_campaign_primary_button.disabled = true
-		_campaign_primary_button.tooltip_text = "Author a campaign arc to launch it from the main menu."
+		_campaign_primary_button.tooltip_text = "No active authored campaign arc is available from the main menu."
 		_start_chapter_button.text = "Select Chapter"
 		_start_chapter_button.disabled = true
 		_start_chapter_button.tooltip_text = "Select a chapter to start or replay it."
@@ -1060,12 +1060,12 @@ func _refresh_skirmish_setup() -> void:
 	_set_compact_label(_difficulty_summary_label, ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty), 3, 82)
 
 	if selected_entry.is_empty():
-		_set_compact_label(_skirmish_details_label, "No skirmish fronts are authored.", 2, 82)
-		_set_compact_label(_setup_summary_label, "Select a front to review its opening setup.", 3, 82)
+		_set_compact_label(_skirmish_details_label, "No active authored skirmish fronts are available.", 2, 82)
+		_set_compact_label(_setup_summary_label, "Use Generated Skirmish to create a fresh map.", 3, 82)
 		_set_compact_label(_skirmish_commander_preview_label, "Commander preview appears here.", 3, 82)
 		_set_compact_label(_skirmish_operational_board_label, "Operational pressure appears here.", 3, 82)
 		_start_skirmish_button.disabled = true
-		_start_skirmish_button.tooltip_text = "No skirmish scenarios are available."
+		_start_skirmish_button.tooltip_text = "No active authored skirmish scenarios are available."
 		return
 
 	_set_compact_label(_skirmish_details_label, String(selected_entry.get("summary", "")), 3, 84)
@@ -1514,7 +1514,7 @@ func _selected_skirmish_entry() -> Dictionary:
 
 func _build_campaign_pulse() -> String:
 	if _campaign_entries.is_empty():
-		return "No campaign arcs loaded."
+		return "No active campaign arcs loaded."
 
 	var completed_count := 0
 	for entry in _campaign_entries:
