@@ -1,4 +1,3 @@
-class_name MapPackageService
 extends RefCounted
 
 const MapDocumentScript = preload("res://scripts/persistence/MapDocument.gd")

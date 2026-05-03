@@ -11,7 +11,7 @@ Dictionary not_implemented(const String &operation) {
 	result["ok"] = false;
 	result["status"] = "fail";
 	result["error_code"] = "not_implemented";
-	result["message"] = operation + " is not implemented in the Slice 1 native scenario document skeleton.";
+	result["message"] = operation + String(" is not implemented in the Slice 1 native scenario document skeleton.");
 	result["operation"] = operation;
 	result["recoverable"] = true;
 	return result;

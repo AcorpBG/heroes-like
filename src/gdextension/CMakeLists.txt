@@ -5,11 +5,18 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(GODOT_CPP_ROOT "" CACHE PATH "Path to a Godot 4 godot-cpp checkout/build.")
-
-if(NOT GODOT_CPP_ROOT)
-	message(FATAL_ERROR "Set GODOT_CPP_ROOT to a Godot 4 godot-cpp checkout before building this skeleton.")
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
 endif()
+
+set(AURELION_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." CACHE PATH "Godot project root.")
+set(GODOT_CPP_ROOT "${AURELION_PROJECT_ROOT}/third_party/godot-cpp" CACHE PATH "Pinned Godot 4 godot-cpp checkout.")
+
+if(NOT EXISTS "${GODOT_CPP_ROOT}/CMakeLists.txt")
+	message(FATAL_ERROR "Missing pinned godot-cpp checkout at ${GODOT_CPP_ROOT}. Run: git submodule update --init --recursive")
+endif()
+
+add_subdirectory("${GODOT_CPP_ROOT}" "${CMAKE_CURRENT_BINARY_DIR}/godot-cpp")
 
 add_library(aurelion_map_persistence SHARED
 	src/register_types.cpp
@@ -20,21 +27,28 @@ add_library(aurelion_map_persistence SHARED
 
 target_include_directories(aurelion_map_persistence PRIVATE
 	include
-	${GODOT_CPP_ROOT}/include
-	${GODOT_CPP_ROOT}/gen/include
-	${GODOT_CPP_ROOT}/gdextension
 )
 
-find_library(GODOT_CPP_LIBRARY
-	NAMES godot-cpp
-	PATHS ${GODOT_CPP_ROOT}/bin ${GODOT_CPP_ROOT}/lib
-	NO_DEFAULT_PATH
-)
-
-if(NOT GODOT_CPP_LIBRARY)
-	message(FATAL_ERROR "Could not find a built godot-cpp library under GODOT_CPP_ROOT/bin or GODOT_CPP_ROOT/lib.")
-endif()
-
-target_link_libraries(aurelion_map_persistence PRIVATE ${GODOT_CPP_LIBRARY})
+target_link_libraries(aurelion_map_persistence PRIVATE godot::cpp)
 
 target_compile_definitions(aurelion_map_persistence PRIVATE GDEXTENSION)
+
+string(TOLOWER "${CMAKE_BUILD_TYPE}" AURELION_BUILD_TYPE)
+if(AURELION_BUILD_TYPE STREQUAL "release" OR AURELION_BUILD_TYPE STREQUAL "minsizerel")
+	set(AURELION_GODOT_TARGET "template_release")
+else()
+	set(AURELION_GODOT_TARGET "template_debug")
+endif()
+
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|amd64|AMD64)$")
+	set(AURELION_GODOT_ARCH "x86_64")
+else()
+	set(AURELION_GODOT_ARCH "${CMAKE_SYSTEM_PROCESSOR}")
+endif()
+
+set_target_properties(aurelion_map_persistence PROPERTIES
+	LIBRARY_OUTPUT_DIRECTORY "${AURELION_PROJECT_ROOT}/bin"
+	RUNTIME_OUTPUT_DIRECTORY "${AURELION_PROJECT_ROOT}/bin"
+	ARCHIVE_OUTPUT_DIRECTORY "${AURELION_PROJECT_ROOT}/bin"
+	OUTPUT_NAME "aurelion_map_persistence.linux.${AURELION_GODOT_TARGET}.${AURELION_GODOT_ARCH}"
+)

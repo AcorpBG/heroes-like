@@ -7,7 +7,7 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	var service: Variant = MapPackageServiceScript.new()
+	var service: Variant = _create_service()
 	var metadata: Dictionary = service.get_api_metadata()
 	if not bool(metadata.get("ok", false)):
 		_fail("API metadata did not return ok=true: %s" % JSON.stringify(metadata))
@@ -18,8 +18,11 @@ func _run() -> void:
 	if String(metadata.get("api_version", "")) != "0.1.0":
 		_fail("Unexpected API version: %s" % JSON.stringify(metadata))
 		return
-	if String(metadata.get("binding_kind", "")) != "gdscript_compatibility_shim":
+	if String(metadata.get("binding_kind", "")) != "native_gdextension":
 		_fail("Unexpected binding kind: %s" % JSON.stringify(metadata))
+		return
+	if not bool(metadata.get("native_extension_loaded", false)):
+		_fail("Native GDExtension did not load: %s" % JSON.stringify(metadata))
 		return
 
 	var capabilities: PackedStringArray = service.get_capabilities()
@@ -80,6 +83,11 @@ func _run() -> void:
 		"stub_error_code": load_result.get("error_code", ""),
 	})])
 	get_tree().quit(0)
+
+func _create_service() -> Variant:
+	if ClassDB.class_exists("MapPackageService"):
+		return ClassDB.instantiate("MapPackageService")
+	return MapPackageServiceScript.new()
 
 func _fail(message: String) -> void:
 	push_error("%s failed: %s" % [REPORT_ID, message])

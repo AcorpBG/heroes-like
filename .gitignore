@@ -4,4 +4,6 @@ tests/__pycache__/
 .godot/
 *.uid
 *.import
+bin/*.so
+src/gdextension/build/
 art/overworld/runtime/homm3_local_prototype/

@@ -45,9 +45,41 @@ Dictionary not_implemented(const String &operation, const String &path = "", con
 	result["ok"] = false;
 	result["status"] = "fail";
 	result["error_code"] = "not_implemented";
-	result["message"] = operation + " is not implemented in the Slice 1 native package API skeleton.";
+	result["message"] = operation + String(" is not implemented in the Slice 1 native package API skeleton.");
 	result["operation"] = operation;
 	result["path"] = path;
+	result["report"] = report;
+	result["recoverable"] = true;
+	return result;
+}
+
+Dictionary validation_not_implemented(const String &operation, const String &report_schema_id) {
+	Dictionary failure;
+	failure["code"] = "not_implemented";
+	failure["severity"] = "fail";
+	failure["path"] = operation;
+	failure["message"] = String("Validation is stubbed in the native package API skeleton.");
+	failure["context"] = Dictionary();
+
+	Array failures;
+	failures.append(failure);
+
+	Dictionary report;
+	report["schema_id"] = report_schema_id;
+	report["schema_version"] = 1;
+	report["status"] = "fail";
+	report["failure_count"] = 1;
+	report["warning_count"] = 0;
+	report["failures"] = failures;
+	report["warnings"] = Array();
+	report["metrics"] = Dictionary();
+
+	Dictionary result;
+	result["ok"] = false;
+	result["status"] = "fail";
+	result["error_code"] = "not_implemented";
+	result["message"] = operation + String(" is not implemented in the Slice 1 native package API skeleton.");
+	result["operation"] = operation;
 	result["report"] = report;
 	result["recoverable"] = true;
 	return result;
@@ -122,8 +154,8 @@ Ref<ScenarioDocument> MapPackageService::create_scenario_document_stub(Dictionar
 
 Dictionary MapPackageService::load_map_package(String path, Dictionary options) const { return not_implemented("load_map_package", path, options); }
 Dictionary MapPackageService::load_scenario_package(String path, Dictionary options) const { return not_implemented("load_scenario_package", path, options); }
-Dictionary MapPackageService::validate_map_document(Ref<MapDocument> map_document, Dictionary options) const { return not_implemented("validate_map_document", "", options); }
-Dictionary MapPackageService::validate_scenario_document(Ref<ScenarioDocument> scenario_document, Ref<MapDocument> map_document, Dictionary options) const { return not_implemented("validate_scenario_document", "", options); }
+Dictionary MapPackageService::validate_map_document(Ref<MapDocument> map_document, Dictionary options) const { return validation_not_implemented("validate_map_document", "aurelion_map_validation_report"); }
+Dictionary MapPackageService::validate_scenario_document(Ref<ScenarioDocument> scenario_document, Ref<MapDocument> map_document, Dictionary options) const { return validation_not_implemented("validate_scenario_document", "aurelion_scenario_validation_report"); }
 Dictionary MapPackageService::save_map_package(Ref<MapDocument> map_document, String path, Dictionary options) const { return not_implemented("save_map_package", path, options); }
 Dictionary MapPackageService::save_scenario_package(Ref<ScenarioDocument> scenario_document, String path, Dictionary options) const { return not_implemented("save_scenario_package", path, options); }
 Dictionary MapPackageService::migrate_map_package(String source_path, String target_path, int32_t target_version, Dictionary options) const { return not_implemented("migrate_map_package", source_path, options); }

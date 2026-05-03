@@ -1,4 +1,3 @@
-class_name ScenarioDocument
 extends RefCounted
 
 const SCHEMA_ID := "aurelion_scenario_document"

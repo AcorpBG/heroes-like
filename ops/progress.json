@@ -93,8 +93,8 @@
         "No generated PNG/asset ingestion."
       ],
       "createdAt": "2026-05-03T05:50:07Z",
-      "updatedAt": "2026-05-03T06:55:00Z",
-      "notes": "Slice 1 Package/API Skeleton implemented only. This adds an inert GDExtension source/build skeleton plus GDScript compatibility stubs and a headless API smoke. It does not adopt package files, bump save versions, migrate content/scenarios.json, or change runtime content/gameplay behavior.",
+      "updatedAt": "2026-05-03T07:10:00Z",
+      "notes": "Native inert GDExtension API skeleton now builds and loads through Godot. The broad map/scenario persistence foundation remains in_progress; package format behavior, package adoption, save migration, content/scenarios.json migration, RMG rewrite, and gameplay/runtime adoption remain out of scope for this step.",
       "startedAt": "2026-05-03T05:57:04Z",
       "docsReadyAt": "2026-05-03T06:45:00Z",
       "documentationEvidence": {
@@ -117,13 +117,19 @@
           "scripts/persistence/ScenarioDocument.gd",
           "scripts/persistence/MapPackageService.gd",
           "tests/map_package_api_skeleton_report.gd",
-          "tests/map_package_api_skeleton_report.tscn"
+          "tests/map_package_api_skeleton_report.tscn",
+          ".gitmodules",
+          "third_party/godot-cpp",
+          "src/gdextension/map_persistence.gdextension"
         ],
         "apiEvidence": [
           "MapDocument, ScenarioDocument, and MapPackageService stubs expose stable schema/version/id/capability metadata.",
           "Package conversion/read/write/migration/hash/inspect methods return structured ok=false not_implemented dictionaries with stable error_code fields.",
           "Document handles are RefCounted first-step stubs, matching the spec preference for immutable runtime handles before editor Resource integration is needed.",
-          "The Godot-visible binding for this slice is a GDScript compatibility shim; native C++ source and CMake configuration are present but no native library is built or loaded yet."
+          "The Godot-visible happy path for this slice is now the native GDExtension; scripts/persistence remains as fallback/API-parity compatibility code only.",
+          "godot-cpp is vendored as a pinned git submodule at third_party/godot-cpp using tag godot-4.2.2-stable commit 98c143a48365f3f3bf5f99d6289a2cb25e6472d1.",
+          "The native C++ MapPackageService path is the tested happy path; scripts/persistence remains as a fallback compatibility shim only.",
+          "src/gdextension/map_persistence.gdextension loads the generated Linux debug shared library from res://bin/."
         ],
         "boundariesPreserved": [
           "No package files were made authoritative.",
@@ -132,7 +138,7 @@
           "No generated maps were written into authored content.",
           "No renderer, fog, pathing, RMG, content behavior, or gameplay semantics changed."
         ],
-        "nativeBuildStatus": "blocked_by_environment: cmake command not found; scons not installed; godot-cpp is not checked into the repo. Source/config are present for a later native build slice."
+        "nativeBuildStatus": "passed: pinned godot-cpp submodule builds and Godot headless smoke loads native_gdextension with native_extension_loaded=true."
       },
       "validationEvidence": [
         "Passed 2026-05-03T06:50:00Z: python3 -m json.tool ops/progress.json.",
@@ -141,8 +147,44 @@
         "Passed 2026-05-03T06:50:00Z: git diff --check.",
         "Passed 2026-05-03T06:50:00Z: python3 tests/validate_repo.py.",
         "Passed 2026-05-03T06:55:00Z: /root/.local/bin/godot --headless --path /root/dev/heroes-like --quit-after 20 /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn.",
-        "Blocked 2026-05-03T06:55:00Z native build validation: cmake -S src/gdextension -B .artifacts/map_persistence_native_build failed with /bin/bash: line 1: cmake: command not found. scons is not installed and godot-cpp is not present in the repo."
-      ]
+        "Blocked 2026-05-03T06:55:00Z native build validation: cmake -S src/gdextension -B .artifacts/map_persistence_native_build failed with /bin/bash: line 1: cmake: command not found. scons is not installed and godot-cpp is not present in the repo.",
+        "Passed 2026-05-03T07:05:00Z: git submodule add/pin recorded godot-cpp as third_party/godot-cpp at godot-4.2.2-stable commit 98c143a48365f3f3bf5f99d6289a2cb25e6472d1.",
+        "Passed 2026-05-03T07:05:00Z: cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=Debug.",
+        "Passed 2026-05-03T07:05:00Z: cmake --build .artifacts/map_persistence_native_build --parallel 2; produced bin/libaurelion_map_persistence.linux.template_debug.x86_64.so.",
+        "Passed 2026-05-03T07:05:00Z: GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/map_package_api_skeleton_report.tscn; report showed binding_kind=native_gdextension and native_extension_loaded=true.",
+        "Passed 2026-05-03T07:10:00Z: python3 -m json.tool ops/progress.json.",
+        "Passed 2026-05-03T07:10:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run.",
+        "Passed 2026-05-03T07:10:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like.",
+        "Passed 2026-05-03T07:10:00Z: git diff --check.",
+        "Passed 2026-05-03T07:10:00Z: python3 tests/validate_repo.py."
+      ],
+      "nativeBuildLoadEvidence": {
+        "status": "completed_for_native_inert_api_skeleton_only",
+        "implementedAt": "2026-05-03T07:05:00Z",
+        "dependency": {
+          "kind": "git_submodule",
+          "path": "third_party/godot-cpp",
+          "tag": "godot-4.2.2-stable",
+          "commit": "98c143a48365f3f3bf5f99d6289a2cb25e6472d1",
+          "reason": "Pinned in-repo submodule matches the project.godot Godot 4.2 stable feature baseline while remaining loadable by later Godot 4 runtimes through GDExtension forward-minor compatibility."
+        },
+        "buildCommands": [
+          "git submodule update --init --recursive",
+          "cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=Debug",
+          "cmake --build .artifacts/map_persistence_native_build --parallel 2"
+        ],
+        "loadManifest": "src/gdextension/map_persistence.gdextension",
+        "libraryPath": "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "smokeCommand": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/map_package_api_skeleton_report.tscn",
+        "smokeEvidence": "MAP_PACKAGE_API_SKELETON_REPORT reported binding_kind=native_gdextension and native_extension_loaded=true while preserving API version, schema metadata, capabilities, and stable not_implemented stub errors.",
+        "boundariesPreserved": [
+          "No package format implementation beyond inert stubs.",
+          "No package files were made authoritative or adopted by runtime content paths.",
+          "No save version bump or save-schema migration.",
+          "No content/scenarios.json migration.",
+          "No RMG rewrite, renderer/fog/pathing/gameplay semantic change, generated authored-content writeback, or asset ingestion."
+        ]
+      }
     },
     {
       "id": "terrain-taxonomy-corrective-cleanup-10184",
@@ -7050,7 +7092,7 @@
       "title": "Map/Scenario GDExtension Persistence Foundation",
       "status": "pending_after_implementation",
       "phase": "phase-2-deep-production-foundation",
-      "nextAction": "Slice 1 Package/API Skeleton is implemented and validated through a GDScript compatibility smoke; next future worker should start Slice 2 Legacy Scenario Converter Design Probe or add native build dependencies in a separate explicit slice.",
+      "nextAction": "Native inert GDExtension build/load is now implemented and validated. Next future work should remain scoped, such as Slice 2 Legacy Scenario Converter Design Probe, without package adoption or save/content migration.",
       "sourceDocs": [
         "project.md",
         "PLAN.md",
@@ -7065,7 +7107,7 @@
         "No renderer, fog, pathing, occupancy, gameplay semantics, or production content migration unless separately selected.",
         "No generated PNG/asset ingestion."
       ],
-      "validationSummary": "Slice 1 package/API skeleton smoke passed on 2026-05-03. Native build remains blocked by missing cmake/scons/godot-cpp; package conversion/read/write/adoption remains pending future slices."
+      "validationSummary": "Native build/load smoke now passes with binding_kind=native_gdextension and native_extension_loaded=true. Package conversion/read/write/adoption remains pending future slices."
     }
   ],
   "stoppedOrPausedTasks": [
