@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-gdscript-comparison-harness-10184",
-  "currentSliceTitle": "Native RMG GDScript Comparison Harness",
+  "currentSliceId": "native-rmg-package-session-adoption-10184",
+  "currentSliceTitle": "Native RMG Package And Session Adoption",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed native RMG GDScript comparison harness. Added fixture-driven Godot smoke that builds configs through ScenarioSelectRules/RandomMapGeneratorRules as the GDScript source of truth, runs the same deterministic configs through native MapPackageService.generate_random_map, compares structural dimensions, player counts/starts, terrain categories/counts, road/river counts, object/town/guard counts/categories, validation/provenance status, and emits explicit known gaps/readiness gates without gameplay adoption, call-site replacement, save bump, package/session adoption, or full-parity claim. Validation passed: python3 -m json.tool ops/progress.json; progress.py sync-plan --dry-run; cmake --build .artifacts/map_persistence_native_build --parallel 2; Godot headless native smoke chain through validation/provenance plus native_random_map_gdscript_comparison_report; git diff --check; python3 tests/validate_repo.py.",
+  "currentSliceNotes": "Completed native RMG package/session adoption bridge. Added native convert_generated_payload adoption path returning typed MapDocument/ScenarioDocument handles, generated map/scenario package records, session boundary refs, readiness/report fields, and no-authored-writeback/save-version/full-parity boundaries. Added NativeRandomMapPackageSessionBridge.gd and native_random_map_package_session_adoption_report smoke proving native load/generation, package/session shape, stable ids/hashes, no authored writeback, save version 9, and GDScript fallback untouched. Updated comparison harness readiness so package/session adoption is ready only through feature-gated bridge while full parity remains pending. Validation passed: python3 -m json.tool ops/progress.json; progress.py sync-plan --dry-run; cmake --build .artifacts/map_persistence_native_build --parallel 2; map_package_api_skeleton_report; native RMG smoke chain through native_random_map_gdscript_comparison_report; native_random_map_package_session_adoption_report; git diff --check; python3 tests/validate_repo.py.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T11:01:19Z",
+  "updatedAt": "2026-05-03T11:19:05Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -6854,7 +6854,7 @@
     {
       "id": "native-rmg-package-session-adoption-10184",
       "title": "Native RMG Package And Session Adoption",
-      "status": "pending",
+      "status": "completed",
       "purpose": "Adopt native RMG output into package/session integration through explicit adapters after parity gates pass.",
       "implementationTargets": [
         "scripts/core/ScenarioSelectRules.gd",
@@ -6896,7 +6896,10 @@
         "No generated PNG or generated-study derivative import."
       ],
       "createdAt": "2026-05-03T09:37:49Z",
-      "updatedAt": "2026-05-03T09:37:49Z"
+      "updatedAt": "2026-05-03T11:19:05Z",
+      "startedAt": "2026-05-03T11:05:24Z",
+      "notes": "Completed native RMG package/session adoption bridge. Added native convert_generated_payload adoption path returning typed MapDocument/ScenarioDocument handles, generated map/scenario package records, session boundary refs, readiness/report fields, and no-authored-writeback/save-version/full-parity boundaries. Added NativeRandomMapPackageSessionBridge.gd and native_random_map_package_session_adoption_report smoke proving native load/generation, package/session shape, stable ids/hashes, no authored writeback, save version 9, and GDScript fallback untouched. Updated comparison harness readiness so package/session adoption is ready only through feature-gated bridge while full parity remains pending. Validation passed: python3 -m json.tool ops/progress.json; progress.py sync-plan --dry-run; cmake --build .artifacts/map_persistence_native_build --parallel 2; map_package_api_skeleton_report; native RMG smoke chain through native_random_map_gdscript_comparison_report; native_random_map_package_session_adoption_report; git diff --check; python3 tests/validate_repo.py.",
+      "completedAt": "2026-05-03T11:19:05Z"
     },
     {
       "id": "native-rmg-full-parity-gate-10184",
@@ -7996,8 +7999,8 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-package-session-adoption-10184",
-      "title": "Native RMG Package And Session Adoption",
+      "id": "native-rmg-full-parity-gate-10184",
+      "title": "Native RMG Full Parity Gate",
       "status": "pending",
       "sourceDocs": [
         "project.md",

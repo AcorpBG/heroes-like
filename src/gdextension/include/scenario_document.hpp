@@ -16,6 +16,11 @@ class ScenarioDocument : public RefCounted {
 	String scenario_hash;
 	Dictionary map_ref;
 	Dictionary selection;
+	Array player_slots;
+	Dictionary objectives;
+	Array script_hooks;
+	Array enemy_factions;
+	Dictionary start_contract;
 
 protected:
 	static void _bind_methods();

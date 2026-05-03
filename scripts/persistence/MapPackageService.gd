@@ -25,6 +25,7 @@ const CAPABILITIES := [
 	"native_random_map_object_placement_foundation",
 	"native_random_map_town_guard_placement_foundation",
 	"native_random_map_validation_provenance_foundation",
+	"native_random_map_package_session_adoption_bridge",
 	"headless_binding_smoke",
 ]
 
@@ -65,6 +66,7 @@ func get_schema_ids() -> Dictionary:
 		"native_rmg_guard_placement": "aurelion_native_rmg_guard_placement_v1",
 		"native_rmg_validation_report": "aurelion_native_random_map_validation_report_v1",
 		"native_rmg_provenance": "aurelion_native_random_map_provenance_v1",
+		"native_rmg_package_session_adoption_report": "aurelion_native_random_map_package_session_adoption_report_v1",
 	}
 
 func create_map_document_stub(initial_state: Dictionary = {}) -> Variant:
@@ -101,7 +103,7 @@ func convert_legacy_scenario_record(scenario_record: Dictionary, terrain_layers_
 	return _not_implemented("convert_legacy_scenario_record", "not_implemented", "", options)
 
 func convert_generated_payload(generated_map: Dictionary, options: Dictionary = {}) -> Dictionary:
-	return _not_implemented("convert_generated_payload", "not_implemented", "", options)
+	return _build_native_package_session_adoption(generated_map, options)
 
 func compute_document_hash(document: Variant, options: Dictionary = {}) -> Dictionary:
 	return _not_implemented("compute_document_hash", "not_implemented", "", options)
@@ -1464,6 +1466,283 @@ func _stable_stringify(value: Variant) -> String:
 	if value is float:
 		return "float:%s" % String.num(float(value))
 	return "variant:%s" % String(value).c_escape()
+
+func _conversion_fail(code: String, message: String) -> Dictionary:
+	return {
+		"ok": false,
+		"status": "fail",
+		"error_code": code,
+		"message": message,
+		"adoption_status": "blocked",
+		"report": {
+			"schema_id": "aurelion_native_random_map_package_session_adoption_report_v1",
+			"schema_version": 1,
+			"status": "fail",
+			"failure_count": 1,
+			"warning_count": 0,
+			"failures": [{
+				"code": code,
+				"severity": "fail",
+				"path": "convert_generated_payload",
+				"message": message,
+				"context": {},
+			}],
+			"warnings": [],
+			"metrics": {},
+			"package_session_adoption_ready": false,
+			"native_runtime_authoritative": false,
+			"full_parity_claim": false,
+		},
+	}
+
+func _tagged_record_snapshots(value: Variant, record_kind: String) -> Array:
+	var result := []
+	if not (value is Array):
+		return result
+	for item in value:
+		if not (item is Dictionary):
+			continue
+		var record: Dictionary = item.duplicate(true)
+		record["native_record_kind"] = record_kind
+		if not record.has("level"):
+			record["level"] = 0
+		result.append(record)
+	return result
+
+func _combined_native_map_objects(generated_map: Dictionary) -> Array:
+	var result := []
+	result.append_array(_tagged_record_snapshots(generated_map.get("object_placements", []), "object_placement"))
+	result.append_array(_tagged_record_snapshots(generated_map.get("town_records", []), "town"))
+	result.append_array(_tagged_record_snapshots(generated_map.get("guard_records", []), "guard"))
+	return result
+
+func _build_native_package_session_adoption(generated_map: Dictionary, options: Dictionary) -> Dictionary:
+	if not bool(generated_map.get("ok", false)):
+		return _conversion_fail("native_generation_not_ok", "Native RMG output must be ok=true before package/session adoption.")
+	if String(generated_map.get("status", "")) != "partial_foundation":
+		return _conversion_fail("unsupported_native_generation_status", "Native package/session adoption currently accepts partial_foundation native output only.")
+	var validation_report: Dictionary = generated_map.get("validation_report", generated_map.get("report", {})) if generated_map.get("validation_report", generated_map.get("report", {})) is Dictionary else {}
+	var validation_status := String(generated_map.get("validation_status", validation_report.get("validation_status", validation_report.get("status", ""))))
+	if validation_status != "pass":
+		return _conversion_fail("native_validation_not_pass", "Native RMG validation must pass before package/session adoption.")
+	if not bool(generated_map.get("no_authored_writeback", false)):
+		return _conversion_fail("native_no_authored_writeback_missing", "Native RMG output must preserve the no-authored-writeback boundary.")
+
+	var normalized: Dictionary = generated_map.get("normalized_config", {}) if generated_map.get("normalized_config", {}) is Dictionary else {}
+	var identity: Dictionary = generated_map.get("deterministic_identity", {}) if generated_map.get("deterministic_identity", {}) is Dictionary else {}
+	var validation_metrics: Dictionary = validation_report.get("metrics", {}) if validation_report.get("metrics", {}) is Dictionary else {}
+	var signature := String(generated_map.get("full_output_signature", validation_report.get("full_output_signature", identity.get("signature", ""))))
+	var map_id := String(identity.get("map_id", "native_rmg_%s" % signature))
+	var map_hash := "fnv1a32:%s" % signature
+	var scenario_id := String(options.get("scenario_id", "native_rmg_scenario_%s" % signature))
+	var session_save_version := int(options.get("session_save_version", 9))
+	var feature_gate := String(options.get("feature_gate", "native_rmg_package_session_adoption_bridge"))
+	var width := int(normalized.get("width", validation_metrics.get("width", 0)))
+	var height := int(normalized.get("height", validation_metrics.get("height", 0)))
+	var level_count := int(normalized.get("level_count", validation_metrics.get("level_count", 1)))
+
+	var map_metadata: Dictionary = generated_map.get("map_metadata", {}) if generated_map.get("map_metadata", {}) is Dictionary else {}
+	map_metadata = map_metadata.duplicate(true)
+	map_metadata["schema_id"] = MAP_SCHEMA_ID
+	map_metadata["schema_version"] = PACKAGE_SCHEMA_VERSION
+	map_metadata["source_kind"] = "generated"
+	map_metadata["package_session_adoption_status"] = "ready_feature_gated_not_authoritative"
+	map_metadata["feature_gate"] = feature_gate
+	map_metadata["no_authored_writeback"] = true
+	map_metadata["save_version_bump"] = false
+	map_metadata["native_runtime_authoritative"] = false
+	map_metadata["full_parity_claim"] = false
+
+	var map_document: Variant = create_map_document_stub({
+		"map_id": map_id,
+		"map_hash": map_hash,
+		"source_kind": "generated",
+		"width": width,
+		"height": height,
+		"level_count": level_count,
+		"metadata": map_metadata,
+		"objects": _combined_native_map_objects(generated_map),
+	})
+
+	var map_package_record := {
+		"schema_id": "aurelion_generated_map_package_record",
+		"schema_version": PACKAGE_SCHEMA_VERSION,
+		"package_kind": "native_rmg_generated_session_cache_record",
+		"package_id": "%s.amap" % map_id,
+		"map_id": map_id,
+		"map_hash": map_hash,
+		"source_kind": "generated",
+		"storage_policy": "memory_only_no_authored_writeback",
+		"path_policy": "not_written_by_default_feature_gated_cache_record",
+		"feature_gate": feature_gate,
+		"schema_version_boundary": PACKAGE_SCHEMA_VERSION,
+		"save_version_boundary": session_save_version,
+		"save_version_bump": false,
+		"authored_content_writeback": false,
+		"validation_status": validation_status,
+		"full_generation_status": String(generated_map.get("full_generation_status", "not_implemented")),
+		"full_output_signature": signature,
+		"component_signatures": generated_map.get("component_signatures", {}),
+		"component_counts": generated_map.get("component_counts", {}),
+	}
+	map_package_record["package_hash"] = "fnv1a32:%s" % _hash32_hex(_stable_stringify(map_package_record))
+	var map_ref := {
+		"schema_id": MAP_SCHEMA_ID,
+		"schema_version": PACKAGE_SCHEMA_VERSION,
+		"map_id": map_id,
+		"map_hash": map_hash,
+		"package_id": map_package_record.get("package_id", ""),
+		"package_hash": map_package_record.get("package_hash", ""),
+		"source_kind": "generated",
+		"storage_policy": "memory_only_no_authored_writeback",
+	}
+
+	var player_assignment: Dictionary = generated_map.get("player_assignment", {}) if generated_map.get("player_assignment", {}) is Dictionary else {}
+	var player_slots: Array = player_assignment.get("player_slots", []) if player_assignment.get("player_slots", []) is Array else []
+	var enemy_factions := []
+	for slot_value in player_slots:
+		if not (slot_value is Dictionary):
+			continue
+		if bool(slot_value.get("ai_controlled", false)):
+			enemy_factions.append({
+				"faction_id": String(slot_value.get("faction_id", "")),
+				"player_slot": int(slot_value.get("player_slot", 0)),
+				"team_id": String(slot_value.get("team_id", "")),
+			})
+	var player_starts: Dictionary = generated_map.get("player_starts", {}) if generated_map.get("player_starts", {}) is Dictionary else {}
+	var start_contract := {
+		"schema_id": "aurelion_native_rmg_start_contract_v1",
+		"player_starts": player_starts.get("starts", []) if player_starts.get("starts", []) is Array else [],
+		"start_count": int(player_starts.get("start_count", 0)),
+		"primary_hero_id": String(options.get("hero_id", "hero_lyra")),
+	}
+	var selection := {
+		"availability": {"campaign": false, "skirmish": false},
+		"generated": true,
+		"package_session_adoption_bridge": true,
+		"player_facing": false,
+	}
+	var scenario_state := {
+		"scenario_id": scenario_id,
+		"scenario_hash": "",
+		"map_ref": map_ref,
+		"selection": selection,
+		"player_slots": player_slots.duplicate(true),
+		"objectives": {},
+		"script_hooks": [],
+		"enemy_factions": enemy_factions,
+		"start_contract": start_contract,
+	}
+	scenario_state["scenario_hash"] = "fnv1a32:%s" % _hash32_hex(_stable_stringify(scenario_state))
+	var scenario_document: Variant = create_scenario_document_stub(scenario_state)
+
+	var scenario_package_record := {
+		"schema_id": "aurelion_generated_scenario_package_record",
+		"schema_version": PACKAGE_SCHEMA_VERSION,
+		"package_kind": "native_rmg_generated_scenario_session_cache_record",
+		"package_id": "%s.ascenario" % scenario_id,
+		"scenario_id": scenario_id,
+		"scenario_hash": scenario_state.get("scenario_hash", ""),
+		"map_ref": map_ref,
+		"storage_policy": "memory_only_no_authored_writeback",
+		"path_policy": "not_written_by_default_feature_gated_cache_record",
+		"feature_gate": feature_gate,
+		"save_version_boundary": session_save_version,
+		"save_version_bump": false,
+		"authored_content_writeback": false,
+	}
+	scenario_package_record["package_hash"] = "fnv1a32:%s" % _hash32_hex(_stable_stringify(scenario_package_record))
+	var scenario_ref := {
+		"schema_id": SCENARIO_SCHEMA_ID,
+		"schema_version": PACKAGE_SCHEMA_VERSION,
+		"scenario_id": scenario_id,
+		"scenario_hash": scenario_state.get("scenario_hash", ""),
+		"package_id": scenario_package_record.get("package_id", ""),
+		"package_hash": scenario_package_record.get("package_hash", ""),
+		"map_ref": map_ref,
+		"storage_policy": "memory_only_no_authored_writeback",
+	}
+	var session_id := "native_rmg_session_%s" % _hash32_hex("%s|%s|%d" % [scenario_id, map_hash, session_save_version])
+	var session_boundary_record := {
+		"schema_id": "aurelion_native_random_map_session_boundary_v1",
+		"schema_version": PACKAGE_SCHEMA_VERSION,
+		"session_id": session_id,
+		"scenario_id": scenario_id,
+		"hero_id": start_contract.get("primary_hero_id", "hero_lyra"),
+		"launch_mode": "generated_draft",
+		"game_state": "overworld",
+		"save_version": session_save_version,
+		"save_version_bump": false,
+		"map_package_ref": map_ref,
+		"scenario_package_ref": scenario_ref,
+		"feature_gate": feature_gate,
+		"generated_record_policy": "session_package_records_only",
+		"authored_content_writeback": false,
+		"runtime_call_site_adoption": false,
+		"gdscript_fallback_untouched": true,
+		"native_runtime_authoritative": false,
+		"full_parity_claim": false,
+	}
+	var remaining := ["native-rmg-full-parity-gate-10184"]
+	var report := {
+		"schema_id": "aurelion_native_random_map_package_session_adoption_report_v1",
+		"schema_version": PACKAGE_SCHEMA_VERSION,
+		"status": "pass",
+		"validation_status": validation_status,
+		"failure_count": 0,
+		"warning_count": 0,
+		"failures": [],
+		"warnings": [],
+		"metrics": {
+			"width": width,
+			"height": height,
+			"level_count": level_count,
+			"tile_count": map_document.get_tile_count(),
+			"map_document_object_count": map_document.get_object_count(),
+			"player_slot_count": player_slots.size(),
+			"enemy_faction_count": enemy_factions.size(),
+			"save_version": session_save_version,
+		},
+		"package_session_adoption_ready": true,
+		"adoption_status": "ready_feature_gated_not_authoritative",
+		"native_runtime_authoritative": false,
+		"runtime_call_site_adoption": false,
+		"gdscript_source_of_truth": true,
+		"gdscript_fallback_untouched": true,
+		"full_parity_claim": false,
+		"remaining_parity_slices": remaining,
+	}
+	var readiness := {
+		"gdscript_source_of_truth": true,
+		"native_runtime_authoritative": false,
+		"package_session_adoption_ready": true,
+		"adoption_gate_status": "package_session_bridge_ready_feature_gated_full_parity_still_pending",
+		"full_parity_claim": false,
+		"full_parity_gate_pending": true,
+		"next_required_slices": remaining,
+	}
+	return {
+		"ok": true,
+		"status": "pass",
+		"conversion_kind": "native_random_map_output_to_package_session_records",
+		"adoption_status": "ready_feature_gated_not_authoritative",
+		"feature_gate": feature_gate,
+		"map_document": map_document,
+		"scenario_document": scenario_document,
+		"map_package_record": map_package_record,
+		"scenario_package_record": scenario_package_record,
+		"session_boundary_record": session_boundary_record,
+		"map_ref": map_ref,
+		"scenario_ref": scenario_ref,
+		"generated_identity": identity,
+		"validation_report": validation_report,
+		"provenance": generated_map.get("provenance", {}),
+		"report": report,
+		"readiness": readiness,
+		"authored_content_writeback": false,
+		"save_version_bump": false,
+		"full_parity_claim": false,
+	}
 
 func _not_implemented(operation: String, error_code: String, path: String, options: Dictionary) -> Dictionary:
 	return {

@@ -50,6 +50,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_object_placement_foundation");
 	result.append("native_random_map_town_guard_placement_foundation");
 	result.append("native_random_map_validation_provenance_foundation");
+	result.append("native_random_map_package_session_adoption_bridge");
 	result.append("headless_binding_smoke");
 	return result;
 }
@@ -2792,6 +2793,327 @@ Dictionary build_native_random_map_provenance(const Dictionary &normalized, cons
 	return provenance;
 }
 
+Array tagged_record_snapshots(const Variant &value, const String &record_kind) {
+	Array result;
+	if (value.get_type() != Variant::ARRAY) {
+		return result;
+	}
+	Array source = value;
+	for (int64_t index = 0; index < source.size(); ++index) {
+		if (Variant(source[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary record = Dictionary(source[index]).duplicate(true);
+		record["native_record_kind"] = record_kind;
+		if (!record.has("level")) {
+			record["level"] = 0;
+		}
+		result.append(record);
+	}
+	return result;
+}
+
+Array combined_native_map_objects(const Dictionary &generated_map) {
+	Array result;
+	Array objects = tagged_record_snapshots(generated_map.get("object_placements", Variant()), "object_placement");
+	for (int64_t index = 0; index < objects.size(); ++index) {
+		result.append(objects[index]);
+	}
+	Array towns = tagged_record_snapshots(generated_map.get("town_records", Variant()), "town");
+	for (int64_t index = 0; index < towns.size(); ++index) {
+		result.append(towns[index]);
+	}
+	Array guards = tagged_record_snapshots(generated_map.get("guard_records", Variant()), "guard");
+	for (int64_t index = 0; index < guards.size(); ++index) {
+		result.append(guards[index]);
+	}
+	return result;
+}
+
+Dictionary native_conversion_fail(const String &code, const String &message) {
+	Dictionary failure;
+	failure["code"] = code;
+	failure["severity"] = "fail";
+	failure["path"] = "convert_generated_payload";
+	failure["message"] = message;
+	failure["context"] = Dictionary();
+
+	Array failures;
+	failures.append(failure);
+
+	Dictionary report;
+	report["schema_id"] = "aurelion_native_random_map_package_session_adoption_report_v1";
+	report["schema_version"] = 1;
+	report["status"] = "fail";
+	report["failure_count"] = 1;
+	report["warning_count"] = 0;
+	report["failures"] = failures;
+	report["warnings"] = Array();
+	report["metrics"] = Dictionary();
+	report["package_session_adoption_ready"] = false;
+	report["native_runtime_authoritative"] = false;
+	report["full_parity_claim"] = false;
+
+	Dictionary result;
+	result["ok"] = false;
+	result["status"] = "fail";
+	result["error_code"] = code;
+	result["message"] = message;
+	result["report"] = report;
+	result["adoption_status"] = "blocked";
+	return result;
+}
+
+Dictionary build_native_package_session_adoption(const Dictionary &generated_map, const Dictionary &options) {
+	if (!bool(generated_map.get("ok", false))) {
+		return native_conversion_fail("native_generation_not_ok", "Native RMG output must be ok=true before package/session adoption.");
+	}
+	if (String(generated_map.get("status", "")) != "partial_foundation") {
+		return native_conversion_fail("unsupported_native_generation_status", "Native package/session adoption currently accepts partial_foundation native output only.");
+	}
+
+	Dictionary normalized = generated_map.get("normalized_config", Dictionary());
+	Dictionary identity = generated_map.get("deterministic_identity", Dictionary());
+	Dictionary validation_report = generated_map.get("validation_report", generated_map.get("report", Dictionary()));
+	Dictionary provenance = generated_map.get("provenance", Dictionary());
+	const String validation_status = String(generated_map.get("validation_status", validation_report.get("validation_status", validation_report.get("status", ""))));
+	if (validation_status != "pass") {
+		return native_conversion_fail("native_validation_not_pass", "Native RMG validation must pass before package/session adoption.");
+	}
+	if (bool(generated_map.get("no_authored_writeback", false)) != true) {
+		return native_conversion_fail("native_no_authored_writeback_missing", "Native RMG output must preserve the no-authored-writeback boundary.");
+	}
+
+	Dictionary validation_metrics = validation_report.get("metrics", Dictionary());
+	const int32_t width = int32_t(normalized.get("width", validation_metrics.get("width", 0)));
+	const int32_t height = int32_t(normalized.get("height", validation_metrics.get("height", 0)));
+	const int32_t level_count = int32_t(normalized.get("level_count", validation_metrics.get("level_count", 1)));
+	const String signature = String(generated_map.get("full_output_signature", validation_report.get("full_output_signature", identity.get("signature", ""))));
+	const String map_id = String(identity.get("map_id", "native_rmg_" + signature));
+	const String map_hash = String("fnv1a32:") + signature;
+	const String scenario_id = String(options.get("scenario_id", String("native_rmg_scenario_") + signature));
+	const int32_t session_save_version = int32_t(options.get("session_save_version", 9));
+	const String feature_gate = String(options.get("feature_gate", "native_rmg_package_session_adoption_bridge"));
+	const String session_key = scenario_id + String("|") + map_hash + String("|") + String::num_int64(session_save_version);
+	const String session_id = String("native_rmg_session_") + hash32_hex(session_key);
+
+	Dictionary map_metadata = generated_map.get("map_metadata", Dictionary()).duplicate(true);
+	map_metadata["schema_id"] = MAP_SCHEMA_ID;
+	map_metadata["schema_version"] = 1;
+	map_metadata["source_kind"] = "generated";
+	map_metadata["package_session_adoption_status"] = "ready_feature_gated_not_authoritative";
+	map_metadata["feature_gate"] = feature_gate;
+	map_metadata["no_authored_writeback"] = true;
+	map_metadata["save_version_bump"] = false;
+	map_metadata["native_runtime_authoritative"] = false;
+	map_metadata["full_parity_claim"] = false;
+
+	Dictionary map_state;
+	map_state["map_id"] = map_id;
+	map_state["map_hash"] = map_hash;
+	map_state["source_kind"] = "generated";
+	map_state["width"] = width;
+	map_state["height"] = height;
+	map_state["level_count"] = level_count;
+	map_state["metadata"] = map_metadata;
+	map_state["objects"] = combined_native_map_objects(generated_map);
+
+	Ref<MapDocument> map_document;
+	map_document.instantiate();
+	map_document->configure(map_state);
+
+	Dictionary map_package_record;
+	map_package_record["schema_id"] = "aurelion_generated_map_package_record";
+	map_package_record["schema_version"] = 1;
+	map_package_record["package_kind"] = "native_rmg_generated_session_cache_record";
+	map_package_record["package_id"] = map_id + String(".amap");
+	map_package_record["map_id"] = map_id;
+	map_package_record["map_hash"] = map_hash;
+	map_package_record["source_kind"] = "generated";
+	map_package_record["storage_policy"] = "memory_only_no_authored_writeback";
+	map_package_record["path_policy"] = "not_written_by_default_feature_gated_cache_record";
+	map_package_record["feature_gate"] = feature_gate;
+	map_package_record["schema_version_boundary"] = 1;
+	map_package_record["save_version_boundary"] = session_save_version;
+	map_package_record["save_version_bump"] = false;
+	map_package_record["authored_content_writeback"] = false;
+	map_package_record["validation_status"] = validation_status;
+	map_package_record["full_generation_status"] = generated_map.get("full_generation_status", "not_implemented");
+	map_package_record["full_output_signature"] = signature;
+	map_package_record["component_signatures"] = generated_map.get("component_signatures", Dictionary());
+	map_package_record["component_counts"] = generated_map.get("component_counts", Dictionary());
+	map_package_record["package_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(map_package_record));
+
+	Dictionary map_ref;
+	map_ref["schema_id"] = MAP_SCHEMA_ID;
+	map_ref["schema_version"] = 1;
+	map_ref["map_id"] = map_id;
+	map_ref["map_hash"] = map_hash;
+	map_ref["package_id"] = map_package_record.get("package_id", "");
+	map_ref["package_hash"] = map_package_record.get("package_hash", "");
+	map_ref["source_kind"] = "generated";
+	map_ref["storage_policy"] = "memory_only_no_authored_writeback";
+
+	Dictionary player_assignment = generated_map.get("player_assignment", Dictionary());
+	Array player_slots = player_assignment.get("player_slots", Array());
+	Array enemy_factions;
+	for (int64_t index = 0; index < player_slots.size(); ++index) {
+		if (Variant(player_slots[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary slot = player_slots[index];
+		if (bool(slot.get("ai_controlled", false))) {
+			Dictionary enemy;
+			enemy["faction_id"] = slot.get("faction_id", "");
+			enemy["player_slot"] = slot.get("player_slot", 0);
+			enemy["team_id"] = slot.get("team_id", "");
+			enemy_factions.append(enemy);
+		}
+	}
+
+	Dictionary start_contract;
+	Dictionary player_starts = generated_map.get("player_starts", Dictionary());
+	start_contract["schema_id"] = "aurelion_native_rmg_start_contract_v1";
+	start_contract["player_starts"] = player_starts.get("starts", Array());
+	start_contract["start_count"] = player_starts.get("start_count", 0);
+	start_contract["primary_hero_id"] = String(options.get("hero_id", "hero_lyra"));
+
+	Dictionary selection;
+	Dictionary availability;
+	availability["campaign"] = false;
+	availability["skirmish"] = false;
+	selection["availability"] = availability;
+	selection["generated"] = true;
+	selection["package_session_adoption_bridge"] = true;
+	selection["player_facing"] = false;
+
+	Dictionary scenario_state;
+	scenario_state["scenario_id"] = scenario_id;
+	scenario_state["scenario_hash"] = "";
+	scenario_state["map_ref"] = map_ref;
+	scenario_state["selection"] = selection;
+	scenario_state["player_slots"] = player_slots.duplicate(true);
+	scenario_state["objectives"] = Dictionary();
+	scenario_state["script_hooks"] = Array();
+	scenario_state["enemy_factions"] = enemy_factions;
+	scenario_state["start_contract"] = start_contract;
+	scenario_state["scenario_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(scenario_state));
+
+	Ref<ScenarioDocument> scenario_document;
+	scenario_document.instantiate();
+	scenario_document->configure(scenario_state);
+
+	Dictionary scenario_package_record;
+	scenario_package_record["schema_id"] = "aurelion_generated_scenario_package_record";
+	scenario_package_record["schema_version"] = 1;
+	scenario_package_record["package_kind"] = "native_rmg_generated_scenario_session_cache_record";
+	scenario_package_record["package_id"] = scenario_id + String(".ascenario");
+	scenario_package_record["scenario_id"] = scenario_id;
+	scenario_package_record["scenario_hash"] = scenario_state.get("scenario_hash", "");
+	scenario_package_record["map_ref"] = map_ref;
+	scenario_package_record["storage_policy"] = "memory_only_no_authored_writeback";
+	scenario_package_record["path_policy"] = "not_written_by_default_feature_gated_cache_record";
+	scenario_package_record["feature_gate"] = feature_gate;
+	scenario_package_record["save_version_boundary"] = session_save_version;
+	scenario_package_record["save_version_bump"] = false;
+	scenario_package_record["authored_content_writeback"] = false;
+	scenario_package_record["package_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(scenario_package_record));
+
+	Dictionary scenario_ref;
+	scenario_ref["schema_id"] = SCENARIO_SCHEMA_ID;
+	scenario_ref["schema_version"] = 1;
+	scenario_ref["scenario_id"] = scenario_id;
+	scenario_ref["scenario_hash"] = scenario_state.get("scenario_hash", "");
+	scenario_ref["package_id"] = scenario_package_record.get("package_id", "");
+	scenario_ref["package_hash"] = scenario_package_record.get("package_hash", "");
+	scenario_ref["map_ref"] = map_ref;
+	scenario_ref["storage_policy"] = "memory_only_no_authored_writeback";
+
+	Dictionary session_boundary_record;
+	session_boundary_record["schema_id"] = "aurelion_native_random_map_session_boundary_v1";
+	session_boundary_record["schema_version"] = 1;
+	session_boundary_record["session_id"] = session_id;
+	session_boundary_record["scenario_id"] = scenario_id;
+	session_boundary_record["hero_id"] = start_contract.get("primary_hero_id", "hero_lyra");
+	session_boundary_record["launch_mode"] = "generated_draft";
+	session_boundary_record["game_state"] = "overworld";
+	session_boundary_record["save_version"] = session_save_version;
+	session_boundary_record["save_version_bump"] = false;
+	session_boundary_record["map_package_ref"] = map_ref;
+	session_boundary_record["scenario_package_ref"] = scenario_ref;
+	session_boundary_record["feature_gate"] = feature_gate;
+	session_boundary_record["generated_record_policy"] = "session_package_records_only";
+	session_boundary_record["authored_content_writeback"] = false;
+	session_boundary_record["runtime_call_site_adoption"] = false;
+	session_boundary_record["gdscript_fallback_untouched"] = true;
+	session_boundary_record["native_runtime_authoritative"] = false;
+	session_boundary_record["full_parity_claim"] = false;
+
+	Dictionary metrics;
+	metrics["width"] = width;
+	metrics["height"] = height;
+	metrics["level_count"] = level_count;
+	metrics["tile_count"] = map_document->get_tile_count();
+	metrics["map_document_object_count"] = map_document->get_object_count();
+	metrics["player_slot_count"] = player_slots.size();
+	metrics["enemy_faction_count"] = enemy_factions.size();
+	metrics["save_version"] = session_save_version;
+
+	Array remaining;
+	remaining.append("native-rmg-full-parity-gate-10184");
+
+	Dictionary report;
+	report["schema_id"] = "aurelion_native_random_map_package_session_adoption_report_v1";
+	report["schema_version"] = 1;
+	report["status"] = "pass";
+	report["validation_status"] = validation_status;
+	report["failure_count"] = 0;
+	report["warning_count"] = 0;
+	report["failures"] = Array();
+	report["warnings"] = Array();
+	report["metrics"] = metrics;
+	report["package_session_adoption_ready"] = true;
+	report["adoption_status"] = "ready_feature_gated_not_authoritative";
+	report["native_runtime_authoritative"] = false;
+	report["runtime_call_site_adoption"] = false;
+	report["gdscript_source_of_truth"] = true;
+	report["gdscript_fallback_untouched"] = true;
+	report["full_parity_claim"] = false;
+	report["remaining_parity_slices"] = remaining;
+
+	Dictionary readiness;
+	readiness["gdscript_source_of_truth"] = true;
+	readiness["native_runtime_authoritative"] = false;
+	readiness["package_session_adoption_ready"] = true;
+	readiness["adoption_gate_status"] = "package_session_bridge_ready_feature_gated_full_parity_still_pending";
+	readiness["full_parity_claim"] = false;
+	readiness["full_parity_gate_pending"] = true;
+	readiness["next_required_slices"] = remaining;
+
+	Dictionary result;
+	result["ok"] = true;
+	result["status"] = "pass";
+	result["conversion_kind"] = "native_random_map_output_to_package_session_records";
+	result["adoption_status"] = "ready_feature_gated_not_authoritative";
+	result["feature_gate"] = feature_gate;
+	result["map_document"] = map_document;
+	result["scenario_document"] = scenario_document;
+	result["map_package_record"] = map_package_record;
+	result["scenario_package_record"] = scenario_package_record;
+	result["session_boundary_record"] = session_boundary_record;
+	result["map_ref"] = map_ref;
+	result["scenario_ref"] = scenario_ref;
+	result["generated_identity"] = identity;
+	result["validation_report"] = validation_report;
+	result["provenance"] = provenance;
+	result["report"] = report;
+	result["readiness"] = readiness;
+	result["authored_content_writeback"] = false;
+	result["save_version_bump"] = false;
+	result["full_parity_claim"] = false;
+	return result;
+}
+
 Dictionary validation_not_implemented(const String &operation, const String &report_schema_id) {
 	Dictionary failure;
 	failure["code"] = "not_implemented";
@@ -2882,6 +3204,7 @@ Dictionary MapPackageService::get_schema_ids() const {
 	result["native_rmg_guard_placement"] = NATIVE_RMG_GUARD_PLACEMENT_SCHEMA_ID;
 	result["native_rmg_validation_report"] = NATIVE_RMG_VALIDATION_REPORT_SCHEMA_ID;
 	result["native_rmg_provenance"] = NATIVE_RMG_PROVENANCE_SCHEMA_ID;
+	result["native_rmg_package_session_adoption_report"] = "aurelion_native_random_map_package_session_adoption_report_v1";
 	return result;
 }
 
@@ -2908,7 +3231,7 @@ Dictionary MapPackageService::save_scenario_package(Ref<ScenarioDocument> scenar
 Dictionary MapPackageService::migrate_map_package(String source_path, String target_path, int32_t target_version, Dictionary options) const { return not_implemented("migrate_map_package", source_path, options); }
 Dictionary MapPackageService::migrate_scenario_package(String source_path, String target_path, int32_t target_version, Dictionary options) const { return not_implemented("migrate_scenario_package", source_path, options); }
 Dictionary MapPackageService::convert_legacy_scenario_record(Dictionary scenario_record, Dictionary terrain_layers_record, Dictionary options) const { return not_implemented("convert_legacy_scenario_record", "", options); }
-Dictionary MapPackageService::convert_generated_payload(Dictionary generated_map, Dictionary options) const { return not_implemented("convert_generated_payload", "", options); }
+Dictionary MapPackageService::convert_generated_payload(Dictionary generated_map, Dictionary options) const { return build_native_package_session_adoption(generated_map, options); }
 Dictionary MapPackageService::compute_document_hash(Variant document, Dictionary options) const { return not_implemented("compute_document_hash", "", options); }
 Dictionary MapPackageService::inspect_package(String path, Dictionary options) const { return not_implemented("inspect_package", path, options); }
 
