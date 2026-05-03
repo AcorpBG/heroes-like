@@ -23,12 +23,11 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-As of the compaction pass, `ops/progress.json` reports no actionable next task. The most recent completed current slice is `terrain-taxonomy-corrective-cleanup-10184`.
-
-Next work should start only after one of these happens:
-- AcOrP selects a new corrective/implementation slice;
-- a pending/blocked/docs-ready slice is added to `ops/progress.json` from this plan;
-- a completed evidence group reveals a concrete regression that needs a new corrective slice.
+Current tactical chain: continue the native C++ GDExtension RMG parity track until
+it reaches full parity with `scripts/core/RandomMapGeneratorRules.gd`. The current
+completed native children cover deterministic identity, terrain/grid output, and
+foundation zone/player-start output only. The next pending child is
+`native-rmg-road-river-network-10184`.
 
 Do not infer product readiness from the completed queue. Completed Phase 2/RMG/performance/tooling evidence means those specific slices passed their gates; it does not mean playable alpha, campaign breadth, release readiness, broad faction completion, asset parity, or HoMM3 byte-level cloning.
 
@@ -242,7 +241,7 @@ Native RMG parity track:
 The native C++ GDExtension RMG must reach functional parity with the current GDScript source of truth in `scripts/core/RandomMapGeneratorRules.gd` before any gameplay adoption. The practical breakdown is:
 
 - `native-rmg-terrain-grid-generation-10184`: deterministic normalized config, terrain/biome palette, width/height/level tile grid, terrain ids/codes, stable signatures, and terrain-grid smoke while preserving `partial_foundation`.
-- `native-rmg-zone-player-starts-10184`: template/profile selection parity, runtime zones, player assignment, zone seed layout, owner grid, start anchors, and start metadata.
+- `native-rmg-zone-player-starts-10184`: deterministic foundation player constraints, assignment metadata, runtime fallback zones, zone seed layout, owner grid, zone bounds/terrain association, start anchors, start spacing metadata, and status/signature reporting.
 - `native-rmg-road-river-network-10184`: route/corridor graph, road overlays, river/water/underground transit records, and reachability proof surfaces.
 - `native-rmg-object-placement-foundation-10184`: resource/reward/decor/object staging, footprint predicates, occupancy, and deterministic object placement records.
 - `native-rmg-town-guard-placement-10184`: primary/neutral towns, mines, dwellings, route guards, border guards, monster/reward bands, and guard pressure records.

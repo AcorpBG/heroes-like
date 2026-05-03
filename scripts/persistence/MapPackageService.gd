@@ -20,6 +20,7 @@ const CAPABILITIES := [
 	"native_random_map_config_identity",
 	"native_random_map_foundation_stub",
 	"native_random_map_terrain_grid_foundation",
+	"native_random_map_zone_player_starts_foundation",
 	"headless_binding_smoke",
 ]
 
@@ -102,6 +103,8 @@ func inspect_package(path: String, options: Dictionary = {}) -> Dictionary:
 func normalize_random_map_config(config: Dictionary) -> Dictionary:
 	var size: Dictionary = config.get("size", {}) if config.get("size", {}) is Dictionary else {}
 	var profile: Dictionary = config.get("profile", {}) if config.get("profile", {}) is Dictionary else {}
+	var player_constraints := _normalize_player_constraints(config.get("player_constraints", config.get("players", {})))
+	var player_count := int(player_constraints.get("player_count", 2))
 	var seed := String(config.get("seed", "0")).strip_edges()
 	if seed == "":
 		seed = "0"
@@ -113,7 +116,8 @@ func normalize_random_map_config(config: Dictionary) -> Dictionary:
 	if water_mode != "islands":
 		water_mode = "land"
 	var terrain_ids := _normalized_terrain_pool(_normalized_string_array(profile.get("terrain_ids", []), CORE_TERRAIN_POOL))
-	var faction_ids := _normalized_string_array(profile.get("faction_ids", []), DEFAULT_FACTIONS)
+	var faction_ids := _repeated_to_count(_normalized_string_array(profile.get("faction_ids", []), DEFAULT_FACTIONS), DEFAULT_FACTIONS, player_count)
+	var town_ids := _town_ids_for_factions(profile.get("town_ids", []), faction_ids, player_count)
 	return {
 		"schema_id": "aurelion_native_random_map_foundation",
 		"schema_version": 1,
@@ -127,10 +131,12 @@ func normalize_random_map_config(config: Dictionary) -> Dictionary:
 		"profile_id": profile_id,
 		"size_class_id": String(size.get("size_class_id", config.get("size_class_id", ""))).strip_edges(),
 		"water_mode": water_mode,
+		"player_constraints": player_constraints,
 		"terrain_ids": terrain_ids,
 		"faction_ids": faction_ids,
+		"town_ids": town_ids,
 		"full_generation_status": "not_implemented",
-		"foundation_scope": "deterministic_config_identity_and_native_terrain_grid_only",
+		"foundation_scope": "deterministic_config_identity_native_terrain_grid_zones_and_player_starts_only",
 	}
 
 func random_map_config_identity(config: Dictionary) -> Dictionary:
@@ -160,6 +166,9 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 	var normalized := normalize_random_map_config(config)
 	var identity := random_map_config_identity(config)
 	var terrain_grid := _generate_terrain_grid(normalized)
+	var player_assignment := _player_assignment_for_config(normalized)
+	var zone_layout := _generate_zone_layout(normalized, player_assignment)
+	var player_starts := _generate_player_starts(normalized, zone_layout, player_assignment)
 	var metadata := {
 		"schema_id": "aurelion_native_random_map_foundation",
 		"schema_version": 1,
@@ -168,9 +177,13 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"generation_status": "partial_foundation",
 		"full_generation_status": "not_implemented",
 		"terrain_generation_status": "terrain_grid_generated",
+		"zone_generation_status": "zones_generated_foundation",
+		"player_start_generation_status": "player_starts_generated_foundation",
 		"normalized_config": normalized,
 		"deterministic_identity": identity,
 		"terrain_grid_signature": terrain_grid.get("signature", ""),
+		"zone_layout_signature": zone_layout.get("signature", ""),
+		"player_start_signature": player_starts.get("signature", ""),
 		"options_keys": options.keys(),
 	}
 	var map_document: Variant = create_map_document_stub({
@@ -186,7 +199,7 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"code": "full_generation_not_implemented",
 		"severity": "warning",
 		"path": "generate_random_map",
-		"message": "Native RMG currently creates deterministic identity metadata and a terrain grid only; objects, roads, rivers, towns, guards, validation parity, and package/session adoption are not implemented.",
+		"message": "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, and player start anchors only; objects, roads, rivers, towns, guards, validation parity, and package/session adoption are not implemented.",
 		"context": {},
 	}]
 	return {
@@ -195,10 +208,15 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"generation_status": "partial_foundation",
 		"terrain_generation_status": "terrain_grid_generated",
 		"terrain_grid_status": "generated",
+		"zone_generation_status": "zones_generated_foundation",
+		"player_start_generation_status": "player_starts_generated_foundation",
 		"full_generation_status": "not_implemented",
 		"normalized_config": normalized,
 		"deterministic_identity": identity,
 		"terrain_grid": terrain_grid,
+		"player_assignment": player_assignment,
+		"zone_layout": zone_layout,
+		"player_starts": player_starts,
 		"map_document": map_document,
 		"map_metadata": metadata,
 		"report": {
@@ -216,11 +234,17 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 				"tile_count": map_document.get_tile_count(),
 				"terrain_grid_tile_count": terrain_grid.get("tile_count", 0),
 				"terrain_palette_count": terrain_grid.get("terrain_palette_ids", []).size(),
+				"zone_count": zone_layout.get("zone_count", 0),
+				"player_start_count": player_starts.get("start_count", 0),
 				"object_count": map_document.get_object_count(),
 			},
 			"deterministic_identity": identity,
 			"terrain_grid_status": terrain_grid.get("generation_status", ""),
 			"terrain_grid_signature": terrain_grid.get("signature", ""),
+			"zone_generation_status": zone_layout.get("generation_status", ""),
+			"zone_layout_signature": zone_layout.get("signature", ""),
+			"player_start_generation_status": player_starts.get("generation_status", ""),
+			"player_start_signature": player_starts.get("signature", ""),
 			"remaining_parity_slices": [
 				"native-rmg-zone-player-starts-10184",
 				"native-rmg-road-river-network-10184",
@@ -266,6 +290,25 @@ func _foundation_dimension(root: Dictionary, size: Dictionary, key: String, alte
 		value = int(root.get(key, fallback))
 	return clampi(value, 8, 144)
 
+func _normalize_player_constraints(value: Variant) -> Dictionary:
+	var human_count := 1
+	var computer_count := 1
+	var player_count := 2
+	var team_mode := "free_for_all"
+	if value is Dictionary:
+		human_count = clampi(int(value.get("human_count", value.get("humans", human_count))), 1, 8)
+		if value.has("player_count") or value.has("total_count") or value.has("total"):
+			player_count = clampi(int(value.get("player_count", value.get("total_count", value.get("total", player_count)))), 1, 8)
+			player_count = max(player_count, human_count)
+			computer_count = max(0, player_count - human_count)
+		else:
+			computer_count = clampi(int(value.get("computer_count", value.get("computers", computer_count))), 0, 7)
+			player_count = clampi(human_count + computer_count, 1, 8)
+		team_mode = String(value.get("team_mode", team_mode)).strip_edges().to_lower()
+	if team_mode == "":
+		team_mode = "free_for_all"
+	return {"human_count": human_count, "computer_count": computer_count, "player_count": player_count, "team_mode": team_mode}
+
 func _normalized_string_array(value: Variant, fallback: Array) -> Array:
 	var result := []
 	if value is Array:
@@ -274,6 +317,31 @@ func _normalized_string_array(value: Variant, fallback: Array) -> Array:
 			if text != "" and text not in result:
 				result.append(text)
 	return result if not result.is_empty() else fallback.duplicate()
+
+func _repeated_to_count(source: Array, fallback: Array, count: int) -> Array:
+	var base := source if not source.is_empty() else fallback
+	var result := []
+	for index in range(count):
+		result.append(base[index % base.size()])
+	return result
+
+func _town_for_faction(faction_id: String) -> String:
+	match faction_id:
+		"faction_mireclaw":
+			return "town_mirewatch"
+		"faction_sunvault":
+			return "town_sunspire"
+		"faction_thornwake":
+			return "town_thornhold"
+		_:
+			return "town_riverwatch"
+
+func _town_ids_for_factions(value: Variant, faction_ids: Array, count: int) -> Array:
+	var requested := _normalized_string_array(value, []) if value is Array else []
+	var result := []
+	for index in range(count):
+		result.append(String(requested[index % requested.size()]) if not requested.is_empty() else _town_for_faction(String(faction_ids[index % faction_ids.size()])))
+	return result
 
 func _normalized_terrain_pool(requested: Array) -> Array:
 	var result := []
@@ -403,6 +471,275 @@ func _generate_terrain_grid(normalized: Dictionary) -> Dictionary:
 	}
 	grid["signature"] = _hash32_hex(_stable_stringify(grid))
 	return grid
+
+func _player_assignment_for_config(normalized: Dictionary) -> Dictionary:
+	var constraints: Dictionary = normalized.get("player_constraints", {})
+	var player_count := int(constraints.get("player_count", 2))
+	var human_count := int(constraints.get("human_count", 1))
+	var team_mode := String(constraints.get("team_mode", "free_for_all"))
+	var faction_ids: Array = normalized.get("faction_ids", DEFAULT_FACTIONS)
+	var town_ids: Array = normalized.get("town_ids", [])
+	var player_slots := []
+	var by_owner_slot := {}
+	var active_owner_slots := []
+	var assigned_faction_ids := []
+	var assigned_town_ids := []
+	var teams := []
+	for index in range(player_count):
+		var player_slot := index + 1
+		var owner_slot := player_slot
+		var player_type := "human" if player_slot <= human_count else "computer"
+		var faction_id := String(faction_ids[index % faction_ids.size()])
+		var town_id := String(town_ids[index % town_ids.size()]) if not town_ids.is_empty() else _town_for_faction(faction_id)
+		var team_id := "team_%02d" % player_slot
+		var slot := {
+			"player_slot": player_slot,
+			"owner_slot": owner_slot,
+			"player_type": player_type,
+			"faction_id": faction_id,
+			"town_id": town_id,
+			"team_id": team_id,
+			"team_mode": team_mode,
+			"ai_controlled": player_type != "human",
+			"assignment_source": "native_foundation_fixed_owner_slot_profile_order",
+		}
+		player_slots.append(slot)
+		by_owner_slot[str(owner_slot)] = slot
+		active_owner_slots.append(owner_slot)
+		assigned_faction_ids.append(faction_id)
+		assigned_town_ids.append(town_id)
+		teams.append({"team_id": team_id, "player_slots": [player_slot], "mode": "free_for_all"})
+	return {
+		"schema_id": "random_map_player_assignment_v1",
+		"assignment_policy": "native_foundation_fixed_owner_slots_first_n_players_profile_order",
+		"team_mode": team_mode,
+		"team_metadata": {"mode": "free_for_all", "supported_now": team_mode == "free_for_all", "requested_mode": team_mode, "teams": teams},
+		"human_count": human_count,
+		"computer_count": int(constraints.get("computer_count", max(0, player_count - human_count))),
+		"player_count": player_count,
+		"capacity": {"human_start_capacity": human_count, "total_start_capacity": player_count, "fixed_owner_slots": active_owner_slots, "human_owner_slots": active_owner_slots.slice(0, human_count)},
+		"active_owner_slots": active_owner_slots,
+		"inactive_owner_slots": [],
+		"player_slots": player_slots,
+		"player_slot_by_owner_slot": by_owner_slot,
+		"assigned_faction_ids": assigned_faction_ids,
+		"assigned_town_ids": assigned_town_ids,
+		"faction_pool": faction_ids,
+	}
+
+func _terrain_for_faction(faction_id: String) -> String:
+	match faction_id:
+		"faction_mireclaw":
+			return "dirt"
+		"faction_thornwake":
+			return "rough"
+		_:
+			return "grass"
+
+func _zone_palette(zone_id: String, faction_id: String, match_to_faction: bool, terrain_pool: Array, index: int) -> Dictionary:
+	var selected := String(terrain_pool[index % terrain_pool.size()])
+	var source := "profile_palette_foundation_order"
+	var faction_terrain := _terrain_for_faction(faction_id)
+	if match_to_faction and faction_terrain in terrain_pool:
+		selected = faction_terrain
+		source = "faction_match_profile_palette"
+	return {
+		"zone_id": zone_id,
+		"faction_id": faction_id,
+		"terrain_match_to_faction": match_to_faction,
+		"profile_terrain_ids": terrain_pool,
+		"catalog_allowed_terrain_ids": [],
+		"faction_terrain_id": faction_terrain,
+		"selected_terrain_id": selected,
+		"normalized_terrain_id": selected,
+		"original_terrain_id": selected,
+		"biome_id": _biome_for_terrain(selected),
+		"passable": _is_passable_terrain_id(selected),
+		"selection_source": source,
+		"fallback_used": false,
+		"unsupported_terrain_ids": [],
+		"deferred_terrain_ids": [],
+		"deferred_reason": "",
+	}
+
+func _generate_zone_layout(normalized: Dictionary, player_assignment: Dictionary) -> Dictionary:
+	var width := int(normalized.get("width", 36))
+	var height := int(normalized.get("height", 36))
+	var player_count := int(normalized.get("player_constraints", {}).get("player_count", 2))
+	var terrain_pool := _normalized_terrain_pool(normalized.get("terrain_ids", CORE_TERRAIN_POOL))
+	var zones := []
+	var by_owner: Dictionary = player_assignment.get("player_slot_by_owner_slot", {})
+	for index in range(player_count):
+		var owner_slot := index + 1
+		var assignment: Dictionary = by_owner.get(str(owner_slot), {})
+		var zone_id := "start_%d" % owner_slot
+		var faction_id := String(assignment.get("faction_id", ""))
+		var palette := _zone_palette(zone_id, faction_id, true, terrain_pool, index)
+		zones.append({"id": zone_id, "source_id": zone_id, "role": "human_start" if owner_slot == 1 else "computer_start", "owner_slot": owner_slot, "player_slot": owner_slot, "player_type": assignment.get("player_type", "human" if owner_slot == 1 else "computer"), "team_id": assignment.get("team_id", "team_%02d" % owner_slot), "faction_id": faction_id, "terrain_id": palette.get("normalized_terrain_id", "grass"), "terrain_palette": palette, "base_size": 18, "catalog_metadata": {"start_contract": "primary_town_anchor_deferred_to_later_native_slice", "native_foundation_source": "fallback_runtime_template"}})
+	zones.append({"id": "junction_1", "source_id": "junction_1", "role": "junction", "owner_slot": null, "player_slot": null, "player_type": "neutral", "team_id": "", "faction_id": "", "terrain_id": String(terrain_pool[player_count % terrain_pool.size()]), "terrain_palette": _zone_palette("junction_1", "", false, terrain_pool, player_count), "base_size": 10, "catalog_metadata": {}})
+	for index in range(max(2, player_count)):
+		var zone_id := "reward_%d" % (index + 1)
+		zones.append({"id": zone_id, "source_id": zone_id, "role": "treasure", "owner_slot": null, "player_slot": null, "player_type": "neutral", "team_id": "", "faction_id": "", "terrain_id": String(terrain_pool[(player_count + index + 1) % terrain_pool.size()]), "terrain_palette": _zone_palette(zone_id, "", false, terrain_pool, player_count + index + 1), "base_size": 8, "catalog_metadata": {}})
+	var seeds := _place_foundation_zone_seeds(zones, normalized)
+	var owner_grid := []
+	for y in range(height):
+		var row := []
+		for x in range(width):
+			row.append(_nearest_foundation_zone_id(x, y, zones, seeds))
+		owner_grid.append(row)
+	_apply_zone_geometry(zones, seeds, owner_grid)
+	var layout := {
+		"schema_id": "aurelion_native_rmg_zone_layout_v1",
+		"schema_version": 1,
+		"generation_status": "zones_generated_foundation",
+		"full_generation_status": "not_implemented",
+		"template_id": String(normalized.get("template_id", "")),
+		"template_source": "native_foundation_fallback_runtime_template",
+		"dimensions": {"width": width, "height": height, "level_count": int(normalized.get("level_count", 1))},
+		"policy": {"zone_area_model": "native_foundation_weighted_nearest_seed", "water_mode": String(normalized.get("water_mode", "land")), "template_model": "fallback_runtime_template_until_catalog_parity_slice"},
+		"zone_count": zones.size(),
+		"zones": zones,
+		"zone_seed_records": seeds,
+		"levels": [{"level_index": 0, "kind": "surface", "owner_grid": owner_grid, "anchor_points": seeds, "allocation_model": "native_foundation_nearest_seed_weighted_owner_grid"}],
+		"surface_owner_grid": owner_grid,
+		"surface_water_cells": [],
+		"unsupported_runtime_features": [],
+	}
+	layout["signature"] = _hash32_hex(_stable_stringify(layout))
+	return layout
+
+func _place_foundation_zone_seeds(zones: Array, normalized: Dictionary) -> Dictionary:
+	var width := int(normalized.get("width", 36))
+	var height := int(normalized.get("height", 36))
+	var seed := String(normalized.get("normalized_seed", "0"))
+	var center := Vector2((float(width) - 1.0) * 0.5, (float(height) - 1.0) * 0.5)
+	var radius_x: float = max(3.0, float(width) * 0.36)
+	var radius_y: float = max(2.0, float(height) * 0.32)
+	var starts := zones.filter(func(zone: Dictionary) -> bool: return zone.get("player_slot", null) != null)
+	var others := zones.filter(func(zone: Dictionary) -> bool: return zone.get("player_slot", null) == null)
+	var angle_offset := float(_hash32_int("%s:zone_angle_offset" % seed) % 10000) / 10000.0 * TAU
+	var seeds := {}
+	for index in range(starts.size()):
+		var zone: Dictionary = starts[index]
+		var angle := angle_offset + TAU * float(index) / float(max(1, starts.size()))
+		seeds[String(zone.get("id", ""))] = _point_dict(clampi(int(round(center.x + cos(angle) * radius_x)) + _signed_jitter("%s:%s:x" % [seed, String(zone.get("id", ""))]), 1, max(1, width - 2)), clampi(int(round(center.y + sin(angle) * radius_y)) + _signed_jitter("%s:%s:y" % [seed, String(zone.get("id", ""))]), 1, max(1, height - 2)))
+	for index in range(others.size()):
+		var zone: Dictionary = others[index]
+		var role := String(zone.get("role", "treasure"))
+		var angle := angle_offset + TAU * (float(index) + 0.5) / float(max(1, others.size()))
+		var radius_scale := 0.18 if role == "junction" else 0.58
+		seeds[String(zone.get("id", ""))] = _point_dict(clampi(int(round(center.x + cos(angle) * radius_x * radius_scale)) + _signed_jitter("%s:%s:x" % [seed, String(zone.get("id", ""))]), 1, max(1, width - 2)), clampi(int(round(center.y + sin(angle) * radius_y * radius_scale)) + _signed_jitter("%s:%s:y" % [seed, String(zone.get("id", ""))]), 1, max(1, height - 2)))
+	return _resolve_point_collisions(seeds, width, height)
+
+func _generate_player_starts(normalized: Dictionary, zone_layout: Dictionary, player_assignment: Dictionary) -> Dictionary:
+	var width := int(normalized.get("width", 36))
+	var height := int(normalized.get("height", 36))
+	var player_count := int(normalized.get("player_constraints", {}).get("player_count", 2))
+	var min_spacing: int = max(3, int(min(width, height) / max(3, player_count + 2)))
+	var starts := []
+	for zone in zone_layout.get("zones", []):
+		if not (zone is Dictionary) or zone.get("player_slot", null) == null:
+			continue
+		var point := _usable_start_point(zone, zone_layout.get("surface_owner_grid", []), starts, min_spacing)
+		var player_slot := int(zone.get("player_slot", 0))
+		var assignment: Dictionary = player_assignment.get("player_slot_by_owner_slot", {}).get(str(int(zone.get("owner_slot", player_slot))), {})
+		starts.append({"start_id": "player_start_%d" % player_slot, "player_slot": player_slot, "owner_slot": int(zone.get("owner_slot", player_slot)), "player_type": String(zone.get("player_type", "computer")), "team_id": String(zone.get("team_id", "")), "faction_id": String(zone.get("faction_id", "")), "town_id": String(assignment.get("town_id", _town_for_faction(String(zone.get("faction_id", ""))))), "zone_id": String(zone.get("id", "")), "zone_role": String(zone.get("role", "")), "x": int(point.get("x", 0)), "y": int(point.get("y", 0)), "level": 0, "bounds_status": "in_bounds" if int(point.get("x", 0)) >= 0 and int(point.get("x", 0)) < width and int(point.get("y", 0)) >= 0 and int(point.get("y", 0)) < height else "out_of_bounds", "spacing_model": "native_foundation_minimum_euclidean_tile_spacing", "primary_town_anchor_status": "reserved_not_materialized"})
+	var payload := {"schema_id": "aurelion_native_rmg_player_starts_v1", "schema_version": 1, "generation_status": "player_starts_generated_foundation", "full_generation_status": "not_implemented", "start_count": starts.size(), "expected_player_count": player_count, "minimum_spacing_tiles": min_spacing, "starts": starts}
+	payload["signature"] = _hash32_hex(_stable_stringify(payload))
+	return payload
+
+func _point_dict(x: int, y: int) -> Dictionary:
+	return {"x": x, "y": y}
+
+func _point_key(x: int, y: int) -> String:
+	return "%d,%d" % [x, y]
+
+func _signed_jitter(key: String) -> int:
+	return int(_hash32_int(key) % 3) - 1
+
+func _resolve_point_collisions(points: Dictionary, width: int, height: int) -> Dictionary:
+	var resolved := {}
+	var occupied := {}
+	var keys := points.keys()
+	keys.sort()
+	for key in keys:
+		var point: Dictionary = points[key]
+		var x := int(point.get("x", 0))
+		var y := int(point.get("y", 0))
+		var guard: int = max(1, width * height)
+		while occupied.has(_point_key(x, y)) and guard > 0:
+			x = clampi(x + 1, 1, max(1, width - 2))
+			if occupied.has(_point_key(x, y)):
+				y = clampi(y + 1, 1, max(1, height - 2))
+			guard -= 1
+		occupied[_point_key(x, y)] = true
+		resolved[String(key)] = _point_dict(x, y)
+	return resolved
+
+func _nearest_foundation_zone_id(x: int, y: int, zones: Array, seeds: Dictionary) -> String:
+	var best_id := String(zones[0].get("id", "")) if not zones.is_empty() else ""
+	var best_score := INF
+	for zone in zones:
+		var seed: Dictionary = seeds.get(String(zone.get("id", "")), {})
+		var dx := float(x - int(seed.get("x", 0)))
+		var dy := float(y - int(seed.get("y", 0)))
+		var score := (dx * dx + dy * dy) / sqrt(float(max(1, int(zone.get("base_size", 1)))))
+		if score < best_score:
+			best_score = score
+			best_id = String(zone.get("id", ""))
+	return best_id
+
+func _apply_zone_geometry(zones: Array, seeds: Dictionary, owner_grid: Array) -> void:
+	var counts := {}
+	var bounds := {}
+	for zone in zones:
+		var zone_id := String(zone.get("id", ""))
+		counts[zone_id] = 0
+		bounds[zone_id] = {"min_x": 999999, "min_y": 999999, "max_x": -1, "max_y": -1}
+	for y in range(owner_grid.size()):
+		for x in range(owner_grid[y].size()):
+			var zone_id := String(owner_grid[y][x])
+			counts[zone_id] = int(counts.get(zone_id, 0)) + 1
+			var zone_bounds: Dictionary = bounds.get(zone_id, {})
+			zone_bounds["min_x"] = min(int(zone_bounds.get("min_x", x)), x)
+			zone_bounds["min_y"] = min(int(zone_bounds.get("min_y", y)), y)
+			zone_bounds["max_x"] = max(int(zone_bounds.get("max_x", x)), x)
+			zone_bounds["max_y"] = max(int(zone_bounds.get("max_y", y)), y)
+			bounds[zone_id] = zone_bounds
+	for zone in zones:
+		var zone_id := String(zone.get("id", ""))
+		var anchor: Dictionary = seeds.get(zone_id, {})
+		zone["anchor"] = anchor
+		zone["center"] = _point_dict(int(anchor.get("x", 0)), int(anchor.get("y", 0)))
+		zone["bounds"] = bounds.get(zone_id, {})
+		zone["cell_count"] = int(counts.get(zone_id, 0))
+
+func _start_far_enough(starts: Array, x: int, y: int, min_spacing: int) -> bool:
+	for start in starts:
+		var dx := x - int(start.get("x", 0))
+		var dy := y - int(start.get("y", 0))
+		if dx * dx + dy * dy < min_spacing * min_spacing:
+			return false
+	return true
+
+func _usable_start_point(zone: Dictionary, owner_grid: Array, starts: Array, min_spacing: int) -> Dictionary:
+	var anchor: Dictionary = zone.get("anchor", {})
+	var ax := int(anchor.get("x", 0))
+	var ay := int(anchor.get("y", 0))
+	if _start_far_enough(starts, ax, ay, min_spacing):
+		return _point_dict(ax, ay)
+	var best := {}
+	var best_score := 9223372036854775807
+	var zone_id := String(zone.get("id", ""))
+	for y in range(owner_grid.size()):
+		for x in range(owner_grid[y].size()):
+			if String(owner_grid[y][x]) != zone_id or not _start_far_enough(starts, x, y, min_spacing):
+				continue
+			var score := (x - ax) * (x - ax) + (y - ay) * (y - ay)
+			if score < best_score:
+				best_score = score
+				best = _point_dict(x, y)
+	return best if not best.is_empty() else _point_dict(ax, ay)
 
 func _hash32_hex(text: String) -> String:
 	var value := _hash32_int(text)
