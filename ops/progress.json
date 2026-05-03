@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-scenario-active-content-reset-10184",
-  "currentSliceTitle": "Native Scenario Active Content Reset",
+  "currentSliceId": "native-rmg-gdextension-foundation-10184",
+  "currentSliceTitle": "Native RMG GDExtension Foundation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed corrective reset. Native authored scenario/campaign domains are archived out of active player-facing selection; generated random-map skirmish remains validated. This does not complete the broader map/scenario persistence foundation.",
+  "currentSliceNotes": "Completed first native RMG foundation slice: API surface, deterministic config/seed identity, and empty generated MapDocument stub only. Broad map/scenario persistence parent remains in_progress.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T07:35:16Z",
+  "updatedAt": "2026-05-03T08:32:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -93,8 +93,8 @@
         "No generated PNG/asset ingestion."
       ],
       "createdAt": "2026-05-03T05:50:07Z",
-      "updatedAt": "2026-05-03T07:35:16Z",
-      "notes": "Native inert GDExtension API skeleton now builds and loads through Godot, and its build/config/docs now cover Windows x86_64 library naming plus a Windows helper script for AcOrP's local builds. The broad map/scenario persistence foundation remains in_progress; package format behavior, package adoption, save migration, content/scenarios.json migration, RMG rewrite, and gameplay/runtime adoption remain out of scope for this step.",
+      "updatedAt": "2026-05-03T08:32:00Z",
+      "notes": "Native inert package API, Windows config/helper, and first native RMG foundation API/identity/stub proof are implemented and validated. The broad map/scenario persistence parent remains in_progress; package read/write/conversion/adoption, save migration, content migration, full native RMG parity, and runtime call-site adoption remain future slices.",
       "startedAt": "2026-05-03T05:57:04Z",
       "docsReadyAt": "2026-05-03T06:45:00Z",
       "documentationEvidence": {
@@ -172,7 +172,15 @@
         "Passed 2026-05-03T07:35:16Z: python3 -m json.tool ops/progress.json.",
         "Passed 2026-05-03T07:35:16Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run.",
         "Passed 2026-05-03T07:35:16Z: git diff --check.",
-        "Passed 2026-05-03T07:35:16Z: python3 tests/validate_repo.py."
+        "Passed 2026-05-03T07:35:16Z: python3 tests/validate_repo.py.",
+        "Passed 2026-05-03T08:30:00Z: cmake --build .artifacts/map_persistence_native_build --parallel 2.",
+        "Passed 2026-05-03T08:30:00Z: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-map-api-final XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-map-api-final XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-map-api-final /root/.local/bin/godot --headless --path . tests/map_package_api_skeleton_report.tscn; report showed binding_kind=native_gdextension and native_extension_loaded=true.",
+        "Passed 2026-05-03T08:30:00Z: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-native-rmg-final XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-native-rmg-final XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-native-rmg-final /root/.local/bin/godot --headless --path . tests/native_random_map_foundation_report.tscn; report showed stable same-seed signature ee893942, changed-seed signature d26f6c90, status partial_foundation, and full_generation_status not_implemented.",
+        "Passed 2026-05-03T08:30:00Z: python3 -m json.tool ops/progress.json.",
+        "Passed 2026-05-03T08:30:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run.",
+        "Passed 2026-05-03T08:30:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like.",
+        "Passed 2026-05-03T08:30:00Z: git diff --check.",
+        "Passed 2026-05-03T08:31:00Z: python3 tests/validate_repo.py."
       ],
       "nativeBuildLoadEvidence": {
         "status": "completed_for_native_inert_api_skeleton_only",
@@ -245,7 +253,108 @@
           "No package read/write/conversion/migration behavior was implemented.",
           "No package adoption, save version bump, scenario/content migration, RMG rewrite, renderer/fog/pathing change, or gameplay behavior change."
         ]
+      },
+      "nativeRmgFoundationEvidence": {
+        "status": "completed_for_foundation_only",
+        "implementedAt": "2026-05-03T08:32:00Z",
+        "sourceFiles": [
+          "src/gdextension/include/map_package_service.hpp",
+          "src/gdextension/src/map_package_service.cpp",
+          "scripts/persistence/MapPackageService.gd",
+          "tests/native_random_map_foundation_report.gd",
+          "tests/native_random_map_foundation_report.tscn",
+          "docs/map-scenario-gdextension-persistence-foundation.md",
+          "PLAN.md"
+        ],
+        "summary": "MapPackageService exposes deterministic native RMG config normalization, identity, and partial_foundation MapDocument stub generation while preserving not_implemented full generation status.",
+        "smokeEvidence": "NATIVE_RANDOM_MAP_FOUNDATION_REPORT passed with native_gdextension loaded, stable same-seed signature, changed-seed signature delta, partial_foundation status, and full_generation_status not_implemented.",
+        "boundariesPreserved": [
+          "GDScript RMG remains authoritative for gameplay.",
+          "No ScenarioSelectRules runtime adoption.",
+          "No package/save/content migration.",
+          "No object placement/terrain/roads/validation parity claim."
+        ]
       }
+    },
+    {
+      "id": "native-rmg-gdextension-foundation-10184",
+      "title": "Native RMG GDExtension Foundation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "2026-05-03 owner direction: start native RMG foundation without gameplay adoption"
+      ],
+      "purpose": "Start the C++ GDExtension RMG path with only API surface, deterministic minimal config/seed normalization, stable identity, and an empty generated MapDocument smoke result while keeping the GDScript RMG authoritative.",
+      "implementationTargets": [
+        "src/gdextension/include/map_package_service.hpp",
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/persistence/MapPackageService.gd",
+        "tests/native_random_map_foundation_report.gd",
+        "tests/native_random_map_foundation_report.tscn",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Native MapPackageService exposes random-map config normalization, deterministic config identity, and generate_random_map(config) foundation behavior.",
+        "Same config and seed produce the same deterministic identity, and a changed seed changes identity.",
+        "generate_random_map returns partial_foundation with full_generation_status not_implemented and an empty generated MapDocument stub carrying width, height, source_kind, generated metadata, and identity.",
+        "Existing RandomMapGeneratorRules.gd and ScenarioSelectRules.gd runtime generation/adoption paths remain untouched.",
+        "Linux native rebuild, existing map package smoke, new native RMG foundation smoke, JSON/progress checks, git diff check, and repo validation pass."
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/map_package_api_skeleton_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_foundation_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "nonGoals": [
+        "No full RMG rewrite.",
+        "No replacement of RandomMapGeneratorRules.gd call sites.",
+        "No ScenarioSelectRules.gd runtime generation flow change.",
+        "No package adoption.",
+        "No save version bump.",
+        "No content/scenario migration or generated authored-content writeback.",
+        "No renderer, fog, pathing, gameplay semantics, terrain/object placement parity, or parity claim."
+      ],
+      "startedAt": "2026-05-03T08:02:00Z",
+      "updatedAt": "2026-05-03T08:32:00Z",
+      "notes": "Completed the first narrow native RMG foundation slice. This is API/identity/stub proof only; existing GDScript RMG remains authoritative for gameplay.",
+      "completedAt": "2026-05-03T08:32:00Z",
+      "completionEvidence": [
+        "MapPackageService now exposes native normalize_random_map_config(config), random_map_config_identity(config), and generate_random_map(config, options) methods through the C++ GDExtension.",
+        "Native normalization keeps only deterministic foundation fields: seed/normalized_seed, width, height, level_count, template_id, profile_id, size_class_id, and water_mode.",
+        "Native identity uses canonical normalized config data and a stable foundation FNV-1a 32-bit signature; same config/seed stays stable and a changed seed changes identity.",
+        "generate_random_map returns ok=true with status partial_foundation, full_generation_status not_implemented, deterministic identity metadata, and an empty generated MapDocument stub carrying width, height, level_count, source_kind generated, map hash, and generated metadata.",
+        "scripts/persistence/MapPackageService.gd mirrors the API as a compatibility shim only; native_gdextension remains the required happy path in focused smoke tests.",
+        "RandomMapGeneratorRules.gd and ScenarioSelectRules.gd runtime random-map generation/adoption paths were not changed."
+      ],
+      "validationNotes": [
+        "Passed 2026-05-03T08:30:00Z: cmake --build .artifacts/map_persistence_native_build --parallel 2.",
+        "Passed 2026-05-03T08:30:00Z: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-map-api-final XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-map-api-final XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-map-api-final /root/.local/bin/godot --headless --path . tests/map_package_api_skeleton_report.tscn; report showed binding_kind=native_gdextension and native_extension_loaded=true.",
+        "Passed 2026-05-03T08:30:00Z: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-native-rmg-final XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-native-rmg-final XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-native-rmg-final /root/.local/bin/godot --headless --path . tests/native_random_map_foundation_report.tscn; report showed stable same-seed signature ee893942, changed-seed signature d26f6c90, status partial_foundation, and full_generation_status not_implemented.",
+        "Passed 2026-05-03T08:30:00Z: python3 -m json.tool ops/progress.json.",
+        "Passed 2026-05-03T08:30:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run.",
+        "Passed 2026-05-03T08:30:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like.",
+        "Passed 2026-05-03T08:30:00Z: git diff --check.",
+        "Passed 2026-05-03T08:31:00Z: python3 tests/validate_repo.py."
+      ],
+      "boundariesPreserved": [
+        "No full RMG rewrite or terrain/object/road/town placement parity.",
+        "No RandomMapGeneratorRules.gd call-site replacement.",
+        "No ScenarioSelectRules.gd runtime generation flow change.",
+        "No package adoption, save version bump, content/scenario migration, or generated authored-content writeback.",
+        "No renderer, fog, pathing, gameplay semantic change, or parity claim."
+      ]
     },
     {
       "id": "terrain-taxonomy-corrective-cleanup-10184",
@@ -7241,7 +7350,7 @@
       "title": "Map/Scenario GDExtension Persistence Foundation",
       "status": "pending_after_implementation",
       "phase": "phase-2-deep-production-foundation",
-      "nextAction": "Native inert GDExtension build/load is now implemented and validated. Next future work should remain scoped, such as Slice 2 Legacy Scenario Converter Design Probe, without package adoption or save/content migration.",
+      "nextAction": "Native inert package API and first native RMG foundation API/identity/stub proof are implemented. Next future work must stay scoped, such as legacy scenario converter probe or native RMG parity planning, without package adoption, save/content migration, or gameplay call-site replacement.",
       "sourceDocs": [
         "project.md",
         "PLAN.md",
@@ -7256,7 +7365,7 @@
         "No renderer, fog, pathing, occupancy, gameplay semantics, or production content migration unless separately selected.",
         "No generated PNG/asset ingestion."
       ],
-      "validationSummary": "Native build/load smoke now passes with binding_kind=native_gdextension and native_extension_loaded=true. Package conversion/read/write/adoption remains pending future slices."
+      "validationSummary": "Native package smoke and native RMG foundation smoke pass through the C++ GDExtension; full package read/write/conversion, full native RMG generation, and runtime adoption remain pending future slices."
     }
   ],
   "stoppedOrPausedTasks": [

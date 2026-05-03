@@ -9,6 +9,13 @@ package read/write/conversion/migration/hash behavior intentionally returns stab
 migrated, and no runtime content path adopts these stubs unless a focused
 smoke/report instantiates them directly.
 
+The native RMG foundation API is also intentionally narrow. `MapPackageService`
+can normalize a minimal random-map config, compute a deterministic foundation
+identity, and return an empty generated `MapDocument` stub through
+`generate_random_map(config)`. Full terrain/object/road/town generation remains
+`not_implemented`; the existing GDScript `RandomMapGeneratorRules.gd` stays
+authoritative for gameplay until a later parity/adoption slice.
+
 ## Dependency Pin
 
 `godot-cpp` is an in-repo git submodule at `third_party/godot-cpp`, pinned to the
@@ -132,6 +139,12 @@ Focused native load smoke:
 
 ```sh
 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/map_package_api_skeleton_report.tscn
+```
+
+Focused native RMG foundation smoke:
+
+```sh
+GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_foundation_report.tscn
 ```
 
 Passing output includes:

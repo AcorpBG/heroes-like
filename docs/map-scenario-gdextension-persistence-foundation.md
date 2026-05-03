@@ -341,6 +341,9 @@ func convert_legacy_scenario_record(scenario_record: Dictionary, terrain_layers_
 func convert_generated_payload(generated_map: Dictionary, options: Dictionary = {}) -> Dictionary
 func compute_document_hash(document: Variant, options: Dictionary = {}) -> Dictionary
 func inspect_package(path: String, options: Dictionary = {}) -> Dictionary
+func normalize_random_map_config(config: Dictionary) -> Dictionary
+func random_map_config_identity(config: Dictionary) -> Dictionary
+func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictionary
 ```
 
 Return shape:
@@ -373,6 +376,24 @@ Failure shape:
   "recoverable": false
 }
 ```
+
+### Native RMG Foundation Slice
+
+The first native RMG slice is deliberately smaller than a generator port. It may add
+`MapPackageService.generate_random_map(config)` as a design-level API surface, but
+only for deterministic foundation behavior:
+
+- normalize the minimal config fields `seed`, `width`, `height`, `level_count`,
+  `template_id`, `profile_id`, `size_class_id`, and `water_mode`;
+- compute a stable foundation identity from canonical normalized config data;
+- return an empty generated `MapDocument` stub with dimensions, source kind,
+  generated metadata, and the deterministic identity;
+- report `status: partial_foundation` and `full_generation_status: not_implemented`.
+
+This slice must not place terrain, objects, roads, towns, encounters, rewards, or
+validation parity data. `RandomMapGeneratorRules.gd` remains authoritative for live
+generated skirmish gameplay until later parity and adoption slices explicitly move
+call sites.
 
 ### `MapValidationReport`
 

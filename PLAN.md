@@ -183,6 +183,35 @@ nonGoals:
 - No renderer/fog/pathing/gameplay semantics changes unless separately selected.
 - No production content migration without provenance, rollback, and validation evidence.
 
+Selected Phase 2 child implementation slice:
+
+id: `native-rmg-gdextension-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Start the native RMG port as a narrow C++ GDExtension foundation: API surface, deterministic minimal config/seed identity, and an empty generated `MapDocument` smoke result.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/map-scenario-gdextension-persistence-foundation.md`
+- 2026-05-03 owner direction to begin the native RMG port without gameplay adoption
+implementationTargets:
+- `src/gdextension/include/map_package_service.hpp`
+- `src/gdextension/src/map_package_service.cpp`
+- `scripts/persistence/MapPackageService.gd`
+- `tests/native_random_map_foundation_report.gd`
+- `tests/native_random_map_foundation_report.tscn`
+- `docs/map-scenario-gdextension-persistence-foundation.md`
+completionCriteria:
+- Native API exposes minimal random-map config normalization, deterministic config identity, and `generate_random_map(config)` foundation behavior.
+- Same config/seed produces the same identity and changed seed changes identity.
+- Returned generation status is explicitly `partial_foundation` with full generation `not_implemented`.
+- Existing GDScript RMG runtime flow remains authoritative and untouched.
+- Existing native map package smoke and new native RMG foundation smoke pass after Linux native rebuild.
+nonGoals:
+- No full RMG rewrite.
+- No `RandomMapGeneratorRules.gd` call-site replacement.
+- No `ScenarioSelectRules.gd` runtime generation flow change.
+- No package adoption, save version bump, authored content migration, generated authored writeback, renderer/fog/pathing/gameplay semantic change, or fake parity claim.
+
 Known Phase 2 parent tracks already represented in progress history:
 - `world-faction-identity-implementation-bridge-10184`
 - `concept-art-curation-gate-10184`
