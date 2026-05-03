@@ -60,6 +60,10 @@ bin/libaurelion_map_persistence.linux.template_debug.x86_64.so
 bin/libaurelion_map_persistence.linux.template_release.x86_64.so
 ```
 
+Linux editor/headless smokes load the `linux.editor.x86_64` manifest entry, which
+points at the Debug shared library. A Debug build is sufficient for the focused
+Godot smokes; Release remains needed for export/template validation.
+
 On Windows, use the helper from a Command Prompt or Developer Command Prompt:
 
 ```bat
@@ -75,6 +79,10 @@ By default it:
 - checks `godot --version` before smokes and requires Godot 4.6.2;
 - runs the focused native package and native RMG foundation Godot smokes when
   Godot is available.
+
+Windows editor/headless smokes load the `windows.editor.x86_64` manifest entry,
+which points at the Debug DLL. A `--debug-only` build is sufficient for the
+focused Godot smokes; Release remains needed for export/template validation.
 
 Use the corrected Godot 4.6.2 Windows executable explicitly when it is not the
 default `godot` on `PATH`:
@@ -100,7 +108,9 @@ unless `--require-test` is provided. With `--require-test`, missing Godot or
 either focused smoke failure fails the helper. When Godot is available and smokes
 are not skipped, the helper prints `%GODOT_EXE% --version` output and requires it
 to include `4.6.2`. For exceptional local testing with another Godot version,
-pass `--allow-other-godot-version`.
+pass `--allow-other-godot-version`. If `--release-only` is used without
+`--skip-test`, the smokes still require an existing Debug DLL because Godot
+editor/headless loads the `windows.editor.x86_64` entry.
 
 Run the focused smokes manually with Godot 4.6.2 after adding it to `PATH` or
 using its executable name directly:
@@ -148,8 +158,10 @@ bin/aurelion_map_persistence.windows.template_release.x86_64.dll
 
 The `.gdextension` manifest is `src/gdextension/map_persistence.gdextension` and
 points Godot at the generated `res://bin/` libraries for Linux and Windows x86_64.
-Build directories should stay in `.artifacts/` so Godot does not scan CMake output
-as project content.
+It includes `*.editor.x86_64` entries for editor/headless execution and keeps
+`*.debug.x86_64` / `*.release.x86_64` entries for export/template builds. Build
+directories should stay in `.artifacts/` so Godot does not scan CMake output as
+project content.
 
 ## Smoke Validation
 

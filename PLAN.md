@@ -140,6 +140,31 @@ nonGoals:
 - No save schema/version bump.
 - No renderer, fog, pathing, gameplay, or asset-ingestion redesign.
 
+Selected Phase 2 corrective slice:
+
+id: `native-gdextension-editor-manifest-correction-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Fix GDExtension library feature selection so Godot editor/headless smokes load the native Debug library on Linux and Windows instead of falling back to the GDScript compatibility shim.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/map-scenario-gdextension-persistence-foundation.md`
+- 2026-05-03 owner report that Windows Godot 4.6.2 headless selects `windows.editor.x86_64`
+implementationTargets:
+- `src/gdextension/map_persistence.gdextension`
+- `src/gdextension/map_persistence.gdextension.in`
+- `src/gdextension/README.md`
+- `scripts/build_map_persistence_windows.bat`
+- `docs/map-scenario-gdextension-persistence-foundation.md`
+completionCriteria:
+- Linux and Windows editor/headless manifest entries point to the Debug native library.
+- Existing debug/release template entries remain intact for export/template builds.
+- Windows helper/docs explain that headless/editor smokes use the editor entry and Debug-only builds are sufficient for smokes.
+- Linux native rebuild plus native package and RMG smokes still load the native extension.
+nonGoals:
+- No native API, RMG, gameplay, save, content, package, renderer, fog, pathing, or adoption semantics changes.
+- No unsupported macOS library paths.
+
 Selected Phase 2 planning slice:
 
 id: `map-scenario-gdextension-persistence-foundation-10184`

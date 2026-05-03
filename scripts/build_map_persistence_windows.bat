@@ -166,6 +166,13 @@ if "%BUILD_RELEASE%"=="1" (
 exit /b 0
 
 :run_smoke
+echo Headless/editor smokes load windows.editor.x86_64 from the GDExtension manifest, which points at the Debug DLL.
+if not exist "bin\aurelion_map_persistence.windows.template_debug.x86_64.dll" (
+	echo Missing Debug DLL required by editor/headless smokes: bin\aurelion_map_persistence.windows.template_debug.x86_64.dll
+	echo Build Debug first, use --debug-only, or pass --skip-test for a release-only build.
+	exit /b 1
+)
+
 set "GODOT_FOUND=0"
 if exist "%GODOT_EXE%" set "GODOT_FOUND=1"
 if "%GODOT_FOUND%"=="0" (
@@ -240,10 +247,11 @@ exit /b 0
 echo Usage: scripts\build_map_persistence_windows.bat [options]
 echo.
 echo Builds the Windows x86_64 map persistence GDExtension DLLs from the repository root.
+echo Headless/editor smokes use the manifest's windows.editor.x86_64 entry, which points at the Debug DLL.
 echo.
 echo Options:
-echo   --debug-only       Build and verify only the Debug DLL.
-echo   --release-only     Build and verify only the Release DLL.
+echo   --debug-only       Build and verify only the Debug DLL; sufficient for headless/editor smokes.
+echo   --release-only     Build and verify only the Release DLL; use --skip-test unless a Debug DLL already exists.
 echo   --skip-test        Do not run the focused Godot smokes.
 echo   --require-test     Fail when Godot is not available or either smoke fails.
 echo   --mingw            Use MinGW Makefiles instead of Visual Studio 2022.

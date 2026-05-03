@@ -875,7 +875,7 @@ Implementation evidence:
 - The focused smoke `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/map_package_api_skeleton_report.tscn` passes with `binding_kind: native_gdextension` and `native_extension_loaded: true`.
 - This evidence only completes the native inert API skeleton/build/load step. It does not implement package format behavior, package adoption, save migration, content migration, RMG rewrite, renderer/fog/pathing/gameplay changes, or asset ingestion.
 - 2026-05-03 Windows x86_64 follow-up makes the native CMake target platform-aware while preserving the Linux output names. Linux writes `libaurelion_map_persistence.linux.template_debug.x86_64.so` / `libaurelion_map_persistence.linux.template_release.x86_64.so`; Windows writes `aurelion_map_persistence.windows.template_debug.x86_64.dll` / `aurelion_map_persistence.windows.template_release.x86_64.dll`.
-- `src/gdextension/map_persistence.gdextension` now lists `windows.debug.x86_64` and `windows.release.x86_64` entries pointing at `res://bin/...dll`. Windows build commands are documented in `src/gdextension/README.md` for MSVC, MinGW, and Linux-hosted mingw-w64 cross-compilation.
+- `src/gdextension/map_persistence.gdextension` now lists Linux and Windows `editor.x86_64` entries pointing at the Debug library for editor/headless smokes, while keeping `debug.x86_64` and `release.x86_64` entries for export/template builds. Windows build commands are documented in `src/gdextension/README.md` for MSVC, MinGW, and Linux-hosted mingw-w64 cross-compilation.
 
 ### Slice 2: Legacy Scenario Converter Design Probe
 

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
-  "currentSliceTitle": "Map/Scenario GDExtension Persistence Foundation",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Native inert package API, Windows config/helper, and first native RMG foundation API/identity/stub proof are implemented and validated. 2026-05-03 Windows helper correction complete: build_map_persistence_windows.bat now checks Godot --version for 4.6.2 before focused smokes and documents --allow-other-godot-version for exceptional local testing. Validation passed: python3 -m json.tool ops/progress.json; progress sync-plan --dry-run; cmake native rebuild; map package smoke; native RMG smoke; git diff --check; python3 tests/validate_repo.py. Broad package read/write/conversion/adoption, save migration, content migration, full native RMG parity, and runtime call-site adoption remain future slices.",
+  "currentSliceId": "native-gdextension-editor-manifest-correction-10184",
+  "currentSliceTitle": "Native GDExtension Editor Manifest Correction",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed owner-directed corrective follow-up: Linux and Windows editor/headless GDExtension library entries now point at Debug native outputs while debug/release template entries remain intact for export/template builds. Windows helper/docs now explain editor/headless smoke selection and Debug-only smoke sufficiency. Validation passed: Linux native rebuild; native package smoke; native RMG smoke; JSON/progress checks; git diff --check; python3 tests/validate_repo.py. No native API, RMG, gameplay, save, content, or package semantics changed.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T08:59:31Z",
+  "updatedAt": "2026-05-03T09:11:32Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -43,7 +43,7 @@
       "id": "map-scenario-gdextension-persistence-foundation-10184",
       "title": "Map/Scenario GDExtension Persistence Foundation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "phase2_child_architecture_and_implementation_slice",
       "parentSliceId": "random-map-generator-foundation-10184",
       "sourceDocs": [
@@ -6305,6 +6305,101 @@
           "No save schema/version bump",
           "No renderer/fog/pathing/gameplay redesign",
           "No asset ingestion"
+        ]
+      }
+    },
+    {
+      "id": "native-gdextension-editor-manifest-correction-10184",
+      "title": "Native GDExtension Editor Manifest Correction",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "in_progress",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "map-scenario-gdextension-persistence-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "2026-05-03 owner report: Windows Godot 4.6.2 headless selects windows.editor.x86_64"
+      ],
+      "purpose": "Fix GDExtension library feature selection so Godot editor/headless smokes load the native Debug library on Linux and Windows instead of falling back to the GDScript compatibility shim.",
+      "implementationTargets": [
+        "src/gdextension/map_persistence.gdextension",
+        "src/gdextension/map_persistence.gdextension.in",
+        "src/gdextension/README.md",
+        "scripts/build_map_persistence_windows.bat",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "linux.editor.x86_64 points to the Linux Debug native shared library.",
+        "windows.editor.x86_64 points to the Windows Debug native DLL.",
+        "Linux and Windows debug/release template entries remain intact for export/template builds.",
+        "Windows helper/docs explain that editor/headless smokes load the editor entry and Debug-only builds are sufficient for smokes.",
+        "Linux native rebuild, native package smoke, native RMG smoke, JSON/progress checks, git diff check, and repo validation pass."
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/map_package_api_skeleton_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_foundation_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "nonGoals": [
+        "No native API semantics change.",
+        "No RMG behavior change.",
+        "No gameplay, save, content, package, renderer, fog, pathing, or runtime adoption change.",
+        "No unsupported macOS library paths."
+      ],
+      "createdAt": "2026-05-03T09:09:22Z",
+      "updatedAt": "2026-05-03T09:11:32Z",
+      "startedAt": "2026-05-03T09:09:22Z",
+      "notes": "Completed owner-directed manifest/helper correction. Validation: cmake Linux native rebuild; native package smoke; native RMG smoke; python3 -m json.tool ops/progress.json; progress sync-plan --dry-run; git diff --check; python3 tests/validate_repo.py; manifest inspection confirmed editor/debug/release entries.",
+      "completedAt": "2026-05-03T09:11:32Z",
+      "validationEvidence": [
+        {
+          "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+          "result": "pass"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/map_package_api_skeleton_report.tscn",
+          "result": "pass: binding_kind=native_gdextension and native_extension_loaded=true"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_foundation_report.tscn",
+          "result": "pass: binding_kind=native_gdextension, native_extension_loaded=true, status=partial_foundation, full_generation_status=not_implemented"
+        },
+        {
+          "command": "python3 -m json.tool ops/progress.json",
+          "result": "pass"
+        },
+        {
+          "command": "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+          "result": "pass: PLAN slice ids: 8 existing: 141 missing: 0"
+        },
+        {
+          "command": "git diff --check",
+          "result": "pass"
+        },
+        {
+          "command": "python3 tests/validate_repo.py",
+          "result": "pass"
+        },
+        {
+          "command": "rg -n \"^(linux|windows)\\.(editor|debug|release)\\.x86_64\" src/gdextension/map_persistence.gdextension src/gdextension/map_persistence.gdextension.in",
+          "result": "pass: both manifests contain linux.editor.x86_64, windows.editor.x86_64, and existing debug/release entries"
+        }
+      ],
+      "completionEvidence": {
+        "summary": "The GDExtension manifest and template now include linux.editor.x86_64 and windows.editor.x86_64 entries pointing at Debug native outputs so editor/headless smokes select the native library. Existing Linux and Windows debug/release template entries remain intact.",
+        "documentation": "Windows helper and GDExtension README now explain that editor/headless smokes use the editor entry and that Debug-only builds are sufficient for smoke validation.",
+        "nonGoalsObserved": [
+          "No native API semantics change",
+          "No RMG behavior change",
+          "No gameplay/save/content/package/runtime adoption change",
+          "No unsupported macOS paths"
         ]
       }
     }
