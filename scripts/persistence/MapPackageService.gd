@@ -24,6 +24,7 @@ const CAPABILITIES := [
 	"native_random_map_road_river_network_foundation",
 	"native_random_map_object_placement_foundation",
 	"native_random_map_town_guard_placement_foundation",
+	"native_random_map_validation_provenance_foundation",
 	"headless_binding_smoke",
 ]
 
@@ -62,6 +63,8 @@ func get_schema_ids() -> Dictionary:
 		"native_rmg_town_guard_placement": "aurelion_native_rmg_town_guard_placement_v1",
 		"native_rmg_town_placement": "aurelion_native_rmg_town_placement_v1",
 		"native_rmg_guard_placement": "aurelion_native_rmg_guard_placement_v1",
+		"native_rmg_validation_report": "aurelion_native_random_map_validation_report_v1",
+		"native_rmg_provenance": "aurelion_native_random_map_provenance_v1",
 	}
 
 func create_map_document_stub(initial_state: Dictionary = {}) -> Variant:
