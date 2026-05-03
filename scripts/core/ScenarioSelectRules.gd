@@ -646,7 +646,7 @@ static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty
 			normalized_difficulty,
 			adoption.get("report", {}) if adoption.get("report", {}) is Dictionary else report
 		)
-	var persisted := _persist_and_load_generated_packages(service, adoption)
+	var persisted := _persist_and_load_generated_packages(service, adoption, generated)
 	if not bool(persisted.get("ok", false)):
 		return _native_package_setup_failure(
 			String(persisted.get("error_code", "native_package_persist_load_failed")),
@@ -857,7 +857,7 @@ static func _native_package_setup_failure(code: String, message: String, difficu
 		"alpha_parity_claim": false,
 	}
 
-static func _persist_and_load_generated_packages(service: Variant, adoption: Dictionary) -> Dictionary:
+static func _persist_and_load_generated_packages(service: Variant, adoption: Dictionary, generated: Dictionary = {}) -> Dictionary:
 	var map_document: Variant = adoption.get("map_document", null)
 	var scenario_document: Variant = adoption.get("scenario_document", null)
 	if map_document == null or scenario_document == null:
@@ -865,8 +865,12 @@ static func _persist_and_load_generated_packages(service: Variant, adoption: Dic
 	var map_id := String(adoption.get("map_ref", {}).get("map_id", map_document.get_map_id()))
 	var scenario_id := String(adoption.get("scenario_ref", {}).get("scenario_id", scenario_document.get_scenario_id()))
 	var package_dir := _generated_map_package_dir()
-	var map_path := "%s/%s.amap" % [package_dir, _safe_package_stem(map_id)]
-	var scenario_path := "%s/%s.ascenario" % [package_dir, _safe_package_stem(scenario_id)]
+	var package_identity := _generated_map_package_identity(generated, adoption)
+	var package_stem := String(package_identity.get("package_stem", ""))
+	if package_stem == "":
+		package_stem = _safe_package_stem("%s-%s" % [map_id, scenario_id])
+	var map_path := "%s/%s.amap" % [package_dir, package_stem]
+	var scenario_path := "%s/%s.ascenario" % [package_dir, package_stem]
 	var policy := generated_map_package_directory_policy()
 	var save_options := {
 		"path_policy": "dev_res_maps_export_user_maps",
@@ -913,6 +917,8 @@ static func _persist_and_load_generated_packages(service: Variant, adoption: Dic
 		"ok": true,
 		"schema_id": "aurelion_native_rmg_disk_package_startup_v1",
 		"directory_policy": policy,
+		"package_stem": package_stem,
+		"package_identity": package_identity,
 		"map_path": map_path,
 		"scenario_path": scenario_path,
 		"map_save": _public_package_write_result(map_save),
@@ -945,10 +951,118 @@ static func _public_package_write_result(write_result: Dictionary) -> Dictionary
 	return cleaned
 
 static func _safe_package_stem(value: String) -> String:
-	var stem := value.strip_edges().to_lower()
-	for ch in ["\\", "/", ":", "*", "?", "\"", "<", ">", "|", " "]:
-		stem = stem.replace(ch, "_")
+	var stem := _safe_package_token(value, "generated-map")
 	return stem if stem != "" else "generated_map"
+
+static func _generated_map_package_identity(generated: Dictionary, adoption: Dictionary) -> Dictionary:
+	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
+	var report: Dictionary = generated.get("report", generated.get("validation_report", {})) if generated.get("report", generated.get("validation_report", {})) is Dictionary else {}
+	var metrics: Dictionary = report.get("metrics", {}) if report.get("metrics", {}) is Dictionary else {}
+	var map_document: Variant = adoption.get("map_document", null)
+	var width := int(normalized.get("width", metrics.get("width", 0)))
+	var height := int(normalized.get("height", metrics.get("height", 0)))
+	var level_count := int(normalized.get("level_count", metrics.get("level_count", 1)))
+	if map_document != null:
+		if width <= 0:
+			width = int(map_document.get_width())
+		if height <= 0:
+			height = int(map_document.get_height())
+		if level_count <= 0:
+			level_count = int(map_document.get_level_count())
+	var player_count := int(normalized.get("player_count", metrics.get("player_slot_count", 0)))
+	if player_count <= 0:
+		var player_assignment: Dictionary = generated.get("player_assignment", {}) if generated.get("player_assignment", {}) is Dictionary else {}
+		var player_slots: Array = player_assignment.get("player_slots", []) if player_assignment.get("player_slots", []) is Array else []
+		player_count = player_slots.size()
+	if player_count <= 0:
+		var player_starts: Dictionary = generated.get("player_starts", {}) if generated.get("player_starts", {}) is Dictionary else {}
+		player_count = int(player_starts.get("start_count", 0))
+	var template_token := _safe_package_token(normalized.get("template_id", "template"), "template")
+	var profile_token := _safe_package_token(normalized.get("profile_id", "profile"), "profile")
+	var size_token := _safe_package_token(normalized.get("size_class_id", "map"), "map")
+	var water_token := _safe_package_token(normalized.get("water_mode", "land"), "land")
+	var seed_token := _safe_package_token(normalized.get("normalized_seed", normalized.get("seed", "seed")), "seed")
+	if seed_token.length() > 48:
+		seed_token = seed_token.substr(0, 48)
+	var hash_token := _generated_map_package_short_hash(generated, adoption)
+	var parts := [
+		"rmg",
+		template_token,
+		profile_token,
+		size_token,
+		"%dx%d" % [width, height],
+		"l%d" % max(1, level_count),
+		"p%d" % max(1, player_count),
+		water_token,
+		"seed",
+		seed_token,
+		hash_token,
+	]
+	var package_stem := _safe_package_stem("-".join(parts))
+	if package_stem.length() > 180:
+		package_stem = _safe_package_stem("-".join([
+			"rmg",
+			template_token,
+			size_token,
+			"%dx%d" % [width, height],
+			"l%d" % max(1, level_count),
+			"p%d" % max(1, player_count),
+			water_token,
+			"seed",
+			seed_token.substr(0, 24),
+			hash_token,
+		]))
+	return {
+		"schema_id": "aurelion_native_rmg_package_filename_identity_v1",
+		"package_stem": package_stem,
+		"template_id": String(normalized.get("template_id", "")),
+		"profile_id": String(normalized.get("profile_id", "")),
+		"size_class_id": String(normalized.get("size_class_id", "")),
+		"width": width,
+		"height": height,
+		"level_count": max(1, level_count),
+		"player_count": max(1, player_count),
+		"water_mode": String(normalized.get("water_mode", "")),
+		"normalized_seed": String(normalized.get("normalized_seed", normalized.get("seed", ""))),
+		"short_hash": hash_token,
+		"filename_style": "lowercase_kebab_human_readable_deterministic",
+	}
+
+static func _generated_map_package_short_hash(generated: Dictionary, adoption: Dictionary) -> String:
+	var identity: Dictionary = generated.get("deterministic_identity", {}) if generated.get("deterministic_identity", {}) is Dictionary else {}
+	var validation: Dictionary = generated.get("validation_report", {}) if generated.get("validation_report", {}) is Dictionary else {}
+	var map_ref: Dictionary = adoption.get("map_ref", {}) if adoption.get("map_ref", {}) is Dictionary else {}
+	var map_package: Dictionary = adoption.get("map_package_record", {}) if adoption.get("map_package_record", {}) is Dictionary else {}
+	for candidate in [
+		generated.get("full_output_signature", ""),
+		validation.get("full_output_signature", ""),
+		identity.get("signature", ""),
+		map_ref.get("map_hash", ""),
+		map_package.get("package_hash", ""),
+	]:
+		var token := _safe_package_token(String(candidate).replace("fnv1a32:", ""), "")
+		if token != "":
+			return token.substr(0, 10)
+	return "nohash"
+
+static func _safe_package_token(value: Variant, fallback: String = "generated") -> String:
+	var raw := String(value).strip_edges().to_lower()
+	var token := ""
+	var previous_dash := false
+	for index in range(raw.length()):
+		var code := raw.unicode_at(index)
+		var allowed := (code >= 97 and code <= 122) or (code >= 48 and code <= 57)
+		if allowed:
+			token += raw.substr(index, 1)
+			previous_dash = false
+		elif not previous_dash and token != "":
+			token += "-"
+			previous_dash = true
+	while token.begins_with("-"):
+		token = token.substr(1)
+	while token.ends_with("-"):
+		token = token.substr(0, token.length() - 1)
+	return token if token != "" else fallback
 
 static func _native_random_map_generated_identity(generated: Dictionary, adoption: Dictionary, persisted: Dictionary) -> Dictionary:
 	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}

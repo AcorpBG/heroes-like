@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-disk-package-startup-10184",
-  "currentSliceTitle": "Native RMG Disk Package Startup",
+  "currentSliceId": "native-rmg-package-readable-filenames-10184",
+  "currentSliceTitle": "Native RMG Package Readable Filenames",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Owner-directed implementation completed: native RMG generated skirmish packages are saved under maps/ for dev/headless, loaded back before startup, and legacy generated draft/content JSON paths are compatibility-only.",
+  "currentSliceNotes": "Implemented deterministic readable paired package stems for generated native RMG .amap/.ascenario files under maps/, including template/profile/size/dimensions/level/player/water/seed/hash identity; focused native disk startup and package-session smokes prove readable names and load/package refs remain intact. Validation: godot4 native_random_map_disk_package_startup_report.tscn; godot4 native_random_map_package_session_adoption_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T12:45:00Z",
+  "updatedAt": "2026-05-03T12:40:53Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7002,6 +7002,53 @@
       "startedAt": "2026-05-03T12:30:00Z",
       "completedAt": "2026-05-03T12:45:00Z",
       "notes": "Implemented native MapPackageService generated .amap/.ascenario save/load, generated skirmish disk-package startup under maps/, loaded-package session construction, active path avoidance of content/scenarios.json and ContentService generated drafts, documented maps directory semantics, and focused native/package smokes. Validation: cmake --build .artifacts/map_persistence_native_build --parallel 2; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_package_api_skeleton_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_disk_package_startup_report.tscn; godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_package_session_adoption_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check."
+    },
+    {
+      "id": "native-rmg-package-readable-filenames-10184",
+      "title": "Native RMG Package Readable Filenames",
+      "status": "completed",
+      "purpose": "Replace opaque generated native RMG disk package filenames with deterministic, filesystem-safe, human-readable paired names under maps/.",
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "tests/native_random_map_disk_package_startup_report.gd",
+        "tests/native_random_map_package_session_adoption_report.gd",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Generated native RMG map and scenario package files share a readable deterministic base stem with .amap and .ascenario extensions.",
+        "The package stem includes useful identity such as template, profile, size, dimensions, player count, water mode, normalized seed, and a short output hash.",
+        "Focused native disk-package startup tests assert generated package names are not opaque native_rmg hash stems and preserve package refs/load behavior.",
+        "No save-version, content catalog, authored scenario, renderer, fog, pathing, or gameplay behavior changes are introduced."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "native-rmg-disk-package-startup-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/map-scenario-gdextension-persistence-foundation.md",
+        "2026-05-03 owner feedback that native RMG package filenames were dull/debug-sludge"
+      ],
+      "baselineChecks": [
+        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/native_random_map_disk_package_startup_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No native API or C++ map/scenario document changes.",
+        "No authored scenario/package catalog migration.",
+        "No save-version bump.",
+        "No renderer, fog, pathing, or gameplay semantics changes.",
+        "No generated PNG or unrelated asset import."
+      ],
+      "createdAt": "2026-05-03T12:50:00Z",
+      "updatedAt": "2026-05-03T12:40:53Z",
+      "startedAt": "2026-05-03T12:50:00Z",
+      "notes": "Implemented deterministic readable paired package stems for generated native RMG .amap/.ascenario files under maps/, including template/profile/size/dimensions/level/player/water/seed/hash identity; focused native disk startup and package-session smokes prove readable names and load/package refs remain intact. Validation: godot4 native_random_map_disk_package_startup_report.tscn; godot4 native_random_map_package_session_adoption_report.tscn; python3 -m json.tool ops/progress.json; python3 tests/validate_repo.py; git diff --check.",
+      "completedAt": "2026-05-03T12:40:53Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -8055,14 +8102,14 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-disk-package-startup-10184",
-      "title": "Native RMG Disk Package Startup",
+      "id": "native-rmg-package-readable-filenames-10184",
+      "title": "Native RMG Package Readable Filenames",
       "status": "completed",
       "sourceDocs": [
         "project.md",
         "PLAN.md",
         "docs/map-scenario-gdextension-persistence-foundation.md",
-        "2026-05-03 owner directive to remove JSON scenario startup and use native RMG packages under maps/"
+        "2026-05-03 owner feedback that native RMG package filenames were dull/debug-sludge"
       ]
     }
   ],
