@@ -23,6 +23,7 @@ const CAPABILITIES := [
 	"native_random_map_zone_player_starts_foundation",
 	"native_random_map_road_river_network_foundation",
 	"native_random_map_object_placement_foundation",
+	"native_random_map_town_guard_placement_foundation",
 	"headless_binding_smoke",
 ]
 
@@ -58,6 +59,9 @@ func get_schema_ids() -> Dictionary:
 		"scenario_document": SCENARIO_SCHEMA_ID,
 		"map_validation_report": "aurelion_map_validation_report",
 		"scenario_validation_report": "aurelion_scenario_validation_report",
+		"native_rmg_town_guard_placement": "aurelion_native_rmg_town_guard_placement_v1",
+		"native_rmg_town_placement": "aurelion_native_rmg_town_placement_v1",
+		"native_rmg_guard_placement": "aurelion_native_rmg_guard_placement_v1",
 	}
 
 func create_map_document_stub(initial_state: Dictionary = {}) -> Variant:
@@ -138,7 +142,7 @@ func normalize_random_map_config(config: Dictionary) -> Dictionary:
 		"faction_ids": faction_ids,
 		"town_ids": town_ids,
 		"full_generation_status": "not_implemented",
-		"foundation_scope": "deterministic_config_identity_native_terrain_grid_zones_player_starts_road_river_networks_and_object_placement_foundation_only",
+		"foundation_scope": "deterministic_config_identity_native_terrain_grid_zones_player_starts_road_river_networks_object_placement_and_town_guard_placement_foundation_only",
 	}
 
 func random_map_config_identity(config: Dictionary) -> Dictionary:
@@ -174,6 +178,7 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 	var road_network := _generate_road_network(normalized, zone_layout, player_starts)
 	var river_network := _generate_river_network(normalized, road_network)
 	var object_placement := _generate_object_placements(normalized, zone_layout, player_starts, road_network)
+	var town_guard_placement := _generate_town_guard_placements(normalized, zone_layout, player_starts, road_network, object_placement)
 	var object_placements: Array = object_placement.get("object_placements", [])
 	var metadata := {
 		"schema_id": "aurelion_native_random_map_foundation",
@@ -188,6 +193,8 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"road_generation_status": "roads_generated_foundation",
 		"river_generation_status": "rivers_generated_foundation",
 		"object_generation_status": "objects_generated_foundation",
+		"town_generation_status": "towns_generated_foundation",
+		"guard_generation_status": "guards_generated_foundation",
 		"normalized_config": normalized,
 		"deterministic_identity": identity,
 		"terrain_grid_signature": terrain_grid.get("signature", ""),
@@ -198,6 +205,10 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"river_network_signature": river_network.get("signature", ""),
 		"object_placement_signature": object_placement.get("signature", ""),
 		"object_occupancy_signature": object_placement.get("occupancy_index", {}).get("signature", ""),
+		"town_guard_placement_signature": town_guard_placement.get("signature", ""),
+		"town_placement_signature": town_guard_placement.get("town_placement", {}).get("signature", ""),
+		"guard_placement_signature": town_guard_placement.get("guard_placement", {}).get("signature", ""),
+		"town_guard_occupancy_signature": town_guard_placement.get("combined_occupancy_index", {}).get("signature", ""),
 		"options_keys": options.keys(),
 	}
 	var map_document: Variant = create_map_document_stub({
@@ -214,7 +225,7 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"code": "full_generation_not_implemented",
 		"severity": "warning",
 		"path": "generate_random_map",
-		"message": "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, player start anchors, road/river network records, and staged non-town object placement records only; towns, guards, validation parity, and package/session adoption are not implemented.",
+		"message": "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, player start anchors, road/river network records, staged object placement records, and staged town/guard placement records only; validation parity and package/session adoption are not implemented.",
 		"context": {},
 	}]
 	return {
@@ -228,6 +239,8 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"road_generation_status": "roads_generated_foundation",
 		"river_generation_status": "rivers_generated_foundation",
 		"object_generation_status": "objects_generated_foundation",
+		"town_generation_status": "towns_generated_foundation",
+		"guard_generation_status": "guards_generated_foundation",
 		"full_generation_status": "not_implemented",
 		"normalized_config": normalized,
 		"deterministic_identity": identity,
@@ -243,6 +256,14 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 		"object_category_counts": object_placement.get("category_counts", {}),
 		"object_occupancy_index": object_placement.get("occupancy_index", {}),
 		"object_placement_signature": object_placement.get("signature", ""),
+		"town_guard_placement": town_guard_placement,
+		"town_placement": town_guard_placement.get("town_placement", {}),
+		"guard_placement": town_guard_placement.get("guard_placement", {}),
+		"town_records": town_guard_placement.get("town_records", []),
+		"guard_records": town_guard_placement.get("guard_records", []),
+		"town_guard_category_counts": town_guard_placement.get("category_counts", {}),
+		"town_guard_occupancy_index": town_guard_placement.get("combined_occupancy_index", {}),
+		"town_guard_placement_signature": town_guard_placement.get("signature", ""),
 		"route_reachability_proof": road_network.get("route_reachability_proof", {}),
 		"map_document": map_document,
 		"map_metadata": metadata,
@@ -268,6 +289,8 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 				"river_segment_count": river_network.get("river_segment_count", 0),
 				"river_cell_count": river_network.get("river_cell_count", 0),
 				"object_placement_count": object_placement.get("object_count", 0),
+				"town_count": town_guard_placement.get("town_count", 0),
+				"guard_count": town_guard_placement.get("guard_count", 0),
 				"object_count": map_document.get_object_count(),
 			},
 			"deterministic_identity": identity,
@@ -287,8 +310,14 @@ func generate_random_map(config: Dictionary, options: Dictionary = {}) -> Dictio
 			"object_placement_signature": object_placement.get("signature", ""),
 			"object_occupancy_signature": object_placement.get("occupancy_index", {}).get("signature", ""),
 			"object_category_counts": object_placement.get("category_counts", {}),
+			"town_generation_status": town_guard_placement.get("town_generation_status", ""),
+			"guard_generation_status": town_guard_placement.get("guard_generation_status", ""),
+			"town_guard_placement_signature": town_guard_placement.get("signature", ""),
+			"town_placement_signature": town_guard_placement.get("town_placement", {}).get("signature", ""),
+			"guard_placement_signature": town_guard_placement.get("guard_placement", {}).get("signature", ""),
+			"town_guard_occupancy_signature": town_guard_placement.get("combined_occupancy_index", {}).get("signature", ""),
+			"town_guard_category_counts": town_guard_placement.get("category_counts", {}),
 			"remaining_parity_slices": [
-				"native-rmg-town-guard-placement-10184",
 				"native-rmg-validation-provenance-parity-10184",
 				"native-rmg-package-session-adoption-10184",
 			],
@@ -367,11 +396,15 @@ func _repeated_to_count(source: Array, fallback: Array, count: int) -> Array:
 func _town_for_faction(faction_id: String) -> String:
 	match faction_id:
 		"faction_mireclaw":
-			return "town_mirewatch"
+			return "town_duskfen"
 		"faction_sunvault":
-			return "town_sunspire"
+			return "town_prismhearth"
 		"faction_thornwake":
-			return "town_thornhold"
+			return "town_thornwake_graftroot_caravan"
+		"faction_brasshollow":
+			return "town_brasshollow_orevein_gantry"
+		"faction_veilmourn":
+			return "town_veilmourn_bellwake_harbor"
 		_:
 			return "town_riverwatch"
 
@@ -1136,6 +1169,144 @@ func _generate_object_placements(normalized: Dictionary, zone_layout: Dictionary
 	var occupancy_index := {"primary_tile_occupancy": primary_tile_occupancy, "body_tile_occupancy": body_tile_occupancy, "object_index_by_placement_id": object_index_by_placement_id, "occupied_primary_tile_count": primary_tile_occupancy.size(), "occupied_body_tile_count": body_tile_occupancy.size(), "duplicate_primary_tile_count": placements.size() - primary_tile_occupancy.size(), "status": "pass" if placements.size() == primary_tile_occupancy.size() else "duplicate_primary_tiles"}
 	occupancy_index["signature"] = _hash32_hex(_stable_stringify(occupancy_index))
 	var payload := {"schema_id": "aurelion_native_rmg_object_placement_v1", "schema_version": 1, "generation_status": "objects_generated_foundation", "full_generation_status": "not_implemented", "materialization_state": "staged_object_records_only_no_gameplay_adoption", "writeout_policy": "generated_object_records_no_authored_content_write", "object_placements": placements, "object_count": placements.size(), "category_counts": {"by_kind": _count_by_field(placements, "kind"), "by_family": _count_by_field(placements, "family_id"), "by_category": _count_by_field(placements, "category_id"), "by_zone": _count_by_field(placements, "zone_id"), "by_terrain": _count_by_field(placements, "terrain_id")}, "occupancy_index": occupancy_index, "footprint_records": footprint_records, "footprint_record_count": footprint_records.size(), "related_zone_layout_signature": zone_layout.get("signature", ""), "related_road_network_signature": road_network.get("signature", "")}
+	payload["signature"] = _hash32_hex(_stable_stringify(payload))
+	return payload
+
+func _generate_town_guard_placements(normalized: Dictionary, zone_layout: Dictionary, player_starts: Dictionary, road_network: Dictionary, object_placement: Dictionary) -> Dictionary:
+	var width := int(normalized.get("width", 36))
+	var height := int(normalized.get("height", 36))
+	var zones: Array = zone_layout.get("zones", [])
+	var owner_grid: Array = zone_layout.get("surface_owner_grid", [])
+	var objects: Array = object_placement.get("object_placements", [])
+	var occupied := {}
+	for object in objects:
+		if object is Dictionary:
+			occupied[String(object.get("primary_occupancy_key", ""))] = String(object.get("placement_id", ""))
+	var towns := []
+	for index in range(player_starts.get("starts", []).size()):
+		var start: Dictionary = player_starts.get("starts", [])[index]
+		var zone := _zone_by_id(zones, String(start.get("zone_id", "")))
+		var town := _town_record_at_point(normalized, zone, _point_dict(int(start.get("x", 0)), int(start.get("y", 0))), start, "player_start_town", index, road_network, zone_layout, occupied)
+		towns.append(town)
+		occupied[String(town.get("primary_occupancy_key", ""))] = String(town.get("placement_id", ""))
+	for index in range(zones.size()):
+		var zone: Dictionary = zones[index]
+		var role := String(zone.get("role", ""))
+		if role != "treasure" and role != "junction":
+			continue
+		var anchor: Dictionary = zone.get("anchor", zone.get("center", {}))
+		var point := _find_object_point(int(anchor.get("x", width / 2)) + 1, int(anchor.get("y", height / 2)) + 1, String(zone.get("id", "")), owner_grid, occupied, width, height)
+		var town := _town_record_at_point(normalized, zone, point, {}, "neutral_zone_town", index, road_network, zone_layout, occupied)
+		towns.append(town)
+		occupied[String(town.get("primary_occupancy_key", ""))] = String(town.get("placement_id", ""))
+		if towns.size() >= int(player_starts.get("start_count", 0)) + 2:
+			break
+	var guards := []
+	var guard_ordinal := 0
+	for edge in road_network.get("route_graph", {}).get("edges", []):
+		if not (edge is Dictionary):
+			continue
+		var guard_value := int(edge.get("guard_value", 0))
+		if guard_value <= 0 or bool(edge.get("wide", false)):
+			continue
+		var protected_zone_id := String(edge.get("to", edge.get("from", "")))
+		var anchor: Dictionary = edge.get("route_cell_anchor_candidate", {})
+		var point := _find_object_point(int(anchor.get("x", width / 2)), int(anchor.get("y", height / 2)), protected_zone_id, owner_grid, occupied, width, height)
+		var target := {"protected_target_id": String(edge.get("id", "")), "protected_target_type": "route_edge", "protected_zone_id": protected_zone_id, "route_edge_id": String(edge.get("id", "")), "from_zone_id": String(edge.get("from", "")), "to_zone_id": String(edge.get("to", "")), "route_role": String(edge.get("role", ""))}
+		var guard := _guard_record_at_point(normalized, _zone_by_id(zones, protected_zone_id), point, "route_guard", guard_ordinal, guard_value, road_network, zone_layout, occupied, target)
+		guards.append(guard)
+		occupied[String(guard.get("primary_occupancy_key", ""))] = String(guard.get("placement_id", ""))
+		guard_ordinal += 1
+	for object in objects:
+		if not (object is Dictionary):
+			continue
+		var kind := String(object.get("kind", ""))
+		var family_id := String(object.get("family_id", ""))
+		if kind != "mine" and kind != "neutral_dwelling" and family_id != "guarded_reward_cache":
+			continue
+		var zone_id := String(object.get("zone_id", ""))
+		var point := _find_object_point(int(object.get("x", 0)) + 1, int(object.get("y", 0)), zone_id, owner_grid, occupied, width, height)
+		var guard_value := int(object.get("guard_base_value", 700 if kind == "neutral_dwelling" else 450))
+		var target := {"protected_target_id": String(object.get("placement_id", "")), "protected_target_type": "object_placement", "protected_object_placement_id": String(object.get("placement_id", "")), "protected_object_kind": kind, "protected_zone_id": zone_id, "protected_object_id": String(object.get("object_id", ""))}
+		var guard := _guard_record_at_point(normalized, _zone_by_id(zones, zone_id), point, "site_guard", guard_ordinal, guard_value, road_network, zone_layout, occupied, target)
+		guards.append(guard)
+		occupied[String(guard.get("primary_occupancy_key", ""))] = String(guard.get("placement_id", ""))
+		guard_ordinal += 1
+	var combined_occupancy := _combined_primary_occupancy(objects, towns, guards)
+	var town_type_counts := _count_by_field(towns, "record_type")
+	var town_payload := {"schema_id": "aurelion_native_rmg_town_placement_v1", "schema_version": 1, "generation_status": "towns_generated_foundation", "full_generation_status": "not_implemented", "materialization_state": "staged_town_records_only_no_gameplay_adoption", "town_records": towns, "town_count": towns.size(), "start_player_town_count": int(town_type_counts.get("player_start_town", 0)), "neutral_town_count": int(town_type_counts.get("neutral_zone_town", 0)), "category_counts": {"by_record_type": town_type_counts, "by_faction": _count_by_field(towns, "faction_id"), "by_zone": _count_by_field(towns, "zone_id"), "by_town_id": _count_by_field(towns, "town_id")}, "related_player_start_signature": player_starts.get("signature", "")}
+	town_payload["signature"] = _hash32_hex(_stable_stringify(town_payload))
+	var guard_payload := {"schema_id": "aurelion_native_rmg_guard_placement_v1", "schema_version": 1, "generation_status": "guards_generated_foundation", "full_generation_status": "not_implemented", "materialization_state": "staged_guard_records_only_no_gameplay_adoption", "guard_records": guards, "guard_count": guards.size(), "category_counts": {"by_guard_kind": _count_by_field(guards, "guard_kind"), "by_zone": _count_by_field(guards, "zone_id"), "by_protected_target_type": _count_by_field(guards, "protected_target_type"), "by_strength_band": _count_by_field(guards, "strength_band")}, "related_route_graph_signature": road_network.get("route_graph", {}).get("signature", ""), "related_object_placement_signature": object_placement.get("signature", "")}
+	guard_payload["signature"] = _hash32_hex(_stable_stringify(guard_payload))
+	var payload := {"schema_id": "aurelion_native_rmg_town_guard_placement_v1", "schema_version": 1, "generation_status": "towns_and_guards_generated_foundation", "town_generation_status": "towns_generated_foundation", "guard_generation_status": "guards_generated_foundation", "full_generation_status": "not_implemented", "materialization_state": "staged_town_guard_records_only_no_gameplay_adoption", "writeout_policy": "generated_town_guard_records_no_authored_content_write", "town_placement": town_payload, "guard_placement": guard_payload, "town_records": towns, "guard_records": guards, "town_count": towns.size(), "guard_count": guards.size(), "combined_occupancy_index": combined_occupancy, "category_counts": {"towns": town_payload.get("category_counts", {}), "guards": guard_payload.get("category_counts", {})}, "related_zone_layout_signature": zone_layout.get("signature", ""), "related_road_network_signature": road_network.get("signature", ""), "related_object_placement_signature": object_placement.get("signature", "")}
+	payload["signature"] = _hash32_hex(_stable_stringify(payload))
+	return payload
+
+func _town_record_at_point(normalized: Dictionary, zone: Dictionary, point: Dictionary, start: Dictionary, record_type: String, ordinal: int, road_network: Dictionary, zone_layout: Dictionary, occupied: Dictionary) -> Dictionary:
+	var x := int(point.get("x", 0))
+	var y := int(point.get("y", 0))
+	var zone_id := String(zone.get("id", ""))
+	var terrain_id := String(zone.get("terrain_id", "grass"))
+	var start_town := record_type == "player_start_town"
+	var faction_id := String(start.get("faction_id", zone.get("faction_id", ""))) if start_town else String(zone.get("faction_id", ""))
+	if faction_id == "":
+		var faction_ids: Array = normalized.get("faction_ids", DEFAULT_FACTIONS)
+		faction_id = String(faction_ids[ordinal % faction_ids.size()])
+	var player_slot := int(start.get("player_slot", zone.get("player_slot", 0)))
+	var town_id := String(start.get("town_id", _town_for_faction(faction_id))) if start_town else _town_for_faction(faction_id)
+	var placement_id := "native_rmg_town_start_%02d" % player_slot if start_town else "native_rmg_town_neutral_%s_%02d" % [zone_id, ordinal + 1]
+	var body := _cell_dict(x, y, 0)
+	var anchor: Dictionary = zone.get("anchor", zone.get("center", {}))
+	var record := {"placement_id": placement_id, "record_type": record_type, "kind": "town", "town_id": town_id, "family_id": "town_primary", "object_family_id": "town_primary", "type_id": "town", "faction_id": faction_id, "owner": "player_%d" % player_slot if start_town else "neutral", "owner_slot": start.get("owner_slot", player_slot) if start_town else null, "player_slot": player_slot if start_town else null, "player_type": String(start.get("player_type", "human")) if start_town else "neutral", "team_id": String(start.get("team_id", "")) if start_town else "", "zone_id": zone_id, "zone_role": String(zone.get("role", "")), "terrain_id": terrain_id, "biome_id": _biome_for_terrain(terrain_id), "x": x, "y": y, "level": 0, "primary_tile": body, "primary_occupancy_key": _point_key(x, y), "bounds": {"min_x": x, "min_y": y, "max_x": x, "max_y": y}, "body_tiles": [body], "occupancy_keys": [_point_key(x, y)], "footprint": {"width": 3, "height": 2, "anchor": "bottom_middle", "visit_mask_contract": "inside_intended_3x2_body_outside_current_1x1_runtime_body_until_multitile_town_runtime_slice", "tier": "town"}, "runtime_footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "anchor_tile"}, "footprint_deferred": true, "approach_tiles": _approach_tiles_for_object(x, y, int(normalized.get("width", 36)), int(normalized.get("height", 36)), occupied), "visit_tile": body, "placement_predicates": ["in_bounds", "terrain_allowed", "primary_tile_unoccupied_before_town", "zone_associated", "road_proximity_recorded"], "placement_predicate_results": {"in_bounds": x >= 0 and y >= 0 and x < int(normalized.get("width", 36)) and y < int(normalized.get("height", 36)), "terrain_allowed": _is_passable_terrain_id(terrain_id), "primary_tile_unoccupied_before_town": not occupied.has(_point_key(x, y)), "zone_associated": zone_id != "", "start_anchor_linked": start_town and not start.is_empty(), "road_proximity_recorded": true}, "road_proximity": _nearest_road_proximity(x, y, road_network), "zone_proximity": {"zone_anchor": anchor, "manhattan_distance_to_anchor": abs(x - int(anchor.get("x", x))) + abs(y - int(anchor.get("y", y))), "owner_grid_signature": zone_layout.get("signature", "")}, "start_anchor": start, "is_start_town": start_town, "is_capital": start_town, "capital_role": "player_capital_and_starting_town" if start_town else "neutral_expansion_town", "town_assignment_semantics": "player_start_town_from_native_player_assignment" if start_town else "neutral_zone_town_from_native_foundation_zone", "bounds_status": "in_bounds", "occupancy_status": "primary_tile_reserved", "materialization_state": "staged_town_record_only_no_gameplay_adoption", "writeout_state": "staged_no_authored_content_writeback"}
+	record["signature"] = _hash32_hex(_stable_stringify(record))
+	return record
+
+func _guard_record_at_point(normalized: Dictionary, zone: Dictionary, point: Dictionary, guard_kind: String, ordinal: int, guard_value: int, road_network: Dictionary, zone_layout: Dictionary, occupied: Dictionary, target: Dictionary) -> Dictionary:
+	var x := int(point.get("x", 0))
+	var y := int(point.get("y", 0))
+	var zone_id := String(zone.get("id", target.get("protected_zone_id", "")))
+	var terrain_id := String(zone.get("terrain_id", "grass"))
+	var guard_id := "native_rmg_guard_%s_%02d" % [guard_kind, ordinal + 1]
+	var body := _cell_dict(x, y, 0)
+	var anchor: Dictionary = zone.get("anchor", zone.get("center", {}))
+	var strength_band := _strength_band_for_value(guard_value)
+	var record := {"guard_id": guard_id, "placement_id": guard_id, "record_type": "guard_stack", "kind": "guard", "guard_kind": guard_kind, "owner": "neutral", "zone_id": zone_id, "zone_role": String(zone.get("role", "")), "terrain_id": terrain_id, "biome_id": _biome_for_terrain(terrain_id), "x": x, "y": y, "level": 0, "primary_tile": body, "primary_occupancy_key": _point_key(x, y), "bounds": {"min_x": x, "min_y": y, "max_x": x, "max_y": y}, "body_tiles": [body], "occupancy_keys": [_point_key(x, y)], "runtime_footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "guard_anchor_tile"}, "approach_tiles": _approach_tiles_for_object(x, y, int(normalized.get("width", 36)), int(normalized.get("height", 36)), occupied), "visit_tile": body, "guard_value": guard_value, "effective_guard_pressure": strength_band, "strength_band": strength_band, "stack_records": _neutral_guard_stack_for_value(guard_value, "%s%s" % [String(normalized.get("normalized_seed", "0")), guard_id]), "protected_target": target, "protected_target_id": String(target.get("protected_target_id", "")), "protected_target_type": String(target.get("protected_target_type", "")), "protected_zone_id": String(target.get("protected_zone_id", zone_id)), "route_edge_id": String(target.get("route_edge_id", "")), "protected_object_placement_id": String(target.get("protected_object_placement_id", "")), "road_proximity": _nearest_road_proximity(x, y, road_network), "zone_proximity": {"zone_anchor": anchor, "manhattan_distance_to_anchor": abs(x - int(anchor.get("x", x))) + abs(y - int(anchor.get("y", y))), "owner_grid_signature": zone_layout.get("signature", "")}, "placement_predicates": ["in_bounds", "terrain_allowed", "primary_tile_unoccupied_before_guard", "protected_target_linked", "zone_associated"], "placement_predicate_results": {"in_bounds": x >= 0 and y >= 0 and x < int(normalized.get("width", 36)) and y < int(normalized.get("height", 36)), "terrain_allowed": _is_passable_terrain_id(terrain_id), "primary_tile_unoccupied_before_guard": not occupied.has(_point_key(x, y)), "protected_target_linked": String(target.get("protected_target_id", "")) != "", "zone_associated": zone_id != ""}, "monster_reward_band_record": {"id": "native_rmg_monster_reward_band_%02d" % (ordinal + 1), "strength_band": strength_band, "guard_value": guard_value, "reward_context": "guarded_site_reward_context" if String(target.get("protected_target_type", "")) == "object_placement" else "route_access_pressure_context", "selection_state": "structured_foundation_record_final_selection_deferred"}, "materialization_state": "staged_guard_record_only_no_gameplay_adoption", "writeout_state": "staged_no_authored_content_writeback"}
+	record["stack_count"] = record.get("stack_records", []).size()
+	record["signature"] = _hash32_hex(_stable_stringify(record))
+	return record
+
+func _neutral_guard_stack_for_value(guard_value: int, seed_key: String) -> Array:
+	var units := ["unit_neutral_roadwardens", "unit_neutral_hearthbow_carriers", "unit_neutral_mossglass_sentinels"]
+	var roles := ["road_guard", "ranged_guard", "sentinel_guard"]
+	var stack := []
+	for tier in range(2):
+		var index := int((_hash32_int("%s:unit:%d" % [seed_key, tier]) + tier) % units.size())
+		stack.append({"unit_id": units[index], "tier": index + 1, "role": roles[index], "count": max(3, int(max(1, guard_value) / (260 + index * 170)) + tier + 1), "selection_source": "native_foundation_guard_value_neutral_stack"})
+	return stack
+
+func _strength_band_for_value(guard_value: int) -> String:
+	if guard_value >= 1200:
+		return "high"
+	if guard_value >= 450:
+		return "medium"
+	return "low"
+
+func _combined_primary_occupancy(objects: Array, towns: Array, guards: Array) -> Dictionary:
+	var occupancy := {}
+	var duplicates := []
+	for bucket in [{"id": "object", "records": objects}, {"id": "town", "records": towns}, {"id": "guard", "records": guards}]:
+		for record in bucket.get("records", []):
+			if not (record is Dictionary):
+				continue
+			var key := String(record.get("primary_occupancy_key", ""))
+			if key == "":
+				continue
+			var entry := {"bucket": String(bucket.get("id", "")), "placement_id": String(record.get("placement_id", record.get("guard_id", ""))), "kind": String(record.get("kind", bucket.get("id", "")))}
+			if occupancy.has(key):
+				duplicates.append({"primary_occupancy_key": key, "existing": occupancy[key], "duplicate": entry})
+			else:
+				occupancy[key] = entry
+	var payload := {"primary_tile_occupancy": occupancy, "occupied_primary_tile_count": occupancy.size(), "duplicate_primary_tile_count": duplicates.size(), "duplicates": duplicates, "object_count": objects.size(), "town_count": towns.size(), "guard_count": guards.size(), "status": "pass" if duplicates.is_empty() else "duplicate_primary_tiles"}
 	payload["signature"] = _hash32_hex(_stable_stringify(payload))
 	return payload
 

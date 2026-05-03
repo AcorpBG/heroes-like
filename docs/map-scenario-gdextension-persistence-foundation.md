@@ -1089,6 +1089,20 @@ Gates:
 
 ## Validation Gates
 
+## Native RMG Parity Slice Evidence
+
+`native-rmg-town-guard-placement-10184` extends the C++ GDExtension RMG
+foundation with staged town and guard placement records. The native result now
+exposes `town_generation_status`, `guard_generation_status`,
+`town_guard_placement`, `town_placement`, `guard_placement`, town records,
+guard records, category counts, stable signatures, and a combined primary-tile
+occupancy index across existing object records, towns, and guards.
+
+The slice remains a foundation-only parity step: generated towns and guards are
+not authoritative gameplay objects, are not written back to authored content,
+do not replace `RandomMapGeneratorRules.gd`, and keep `status:
+partial_foundation` plus `full_generation_status: not_implemented`.
+
 Planning/doc gates for this slice:
 
 - `python3 -m json.tool ops/progress.json`

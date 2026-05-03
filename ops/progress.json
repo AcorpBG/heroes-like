@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-object-placement-foundation-10184",
-  "currentSliceTitle": "Native RMG Object Placement Foundation",
+  "currentSliceId": "native-rmg-town-guard-placement-10184",
+  "currentSliceTitle": "Native RMG Town And Guard Placement",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed native RMG object placement foundation: C++ and GDScript compatibility service now expose deterministic non-town staged object placement records, object families/types/ids/categories, zone/terrain/road proximity metadata, runtime footprints, occupancy indexes, category counts, MapDocument object lookup, statuses, and signatures while preserving partial_foundation and full_generation_status=not_implemented. Validation passed: json.tool, sync-plan dry-run, cmake native build, package/native RMG foundation/terrain/zone-player-start/road-river smokes, native object placement smoke, git diff --check, tests/validate_repo.py.",
+  "currentSliceNotes": "Completed native RMG town and guard placement foundation: C++ and GDScript compatibility service expose deterministic staged town/capital/start-town records, neutral zone towns, guard stack records, route/object protected target references, faction/owner/zone/terrain metadata, combined object/town/guard occupancy, counts/statuses/signatures, and a headless town/guard smoke while preserving partial_foundation and full_generation_status=not_implemented. Validation passed: json.tool, sync-plan dry-run, cmake native build, package/native RMG foundation/terrain/zone-player-start/road-river/object-placement smokes, native town/guard smoke, git diff --check, tests/validate_repo.py.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T10:24:00Z",
+  "updatedAt": "2026-05-03T10:38:10Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -6711,13 +6711,13 @@
     {
       "id": "native-rmg-town-guard-placement-10184",
       "title": "Native RMG Town And Guard Placement",
-      "status": "pending",
+      "status": "completed",
       "purpose": "Port primary/neutral towns, mines, dwellings, route guards, border guards, monster/reward bands, and guard pressure records.",
       "implementationTargets": [
         "src/gdextension/src/map_package_service.cpp",
         "scripts/persistence/MapPackageService.gd",
-        "tests/native_random_map_town_guard_placement_report.gd",
-        "tests/native_random_map_town_guard_placement_report.tscn"
+        "tests/native_random_map_town_guard_report.gd",
+        "tests/native_random_map_town_guard_report.tscn"
       ],
       "completionCriteria": [
         "Native town/mine/dwelling/guard records are deterministic, structurally comparable, and preserve original content ids.",
@@ -6751,7 +6751,10 @@
         "No generated PNG or generated-study derivative import."
       ],
       "createdAt": "2026-05-03T09:37:49Z",
-      "updatedAt": "2026-05-03T09:37:49Z"
+      "updatedAt": "2026-05-03T10:38:10Z",
+      "startedAt": "2026-05-03T10:27:11Z",
+      "notes": "Completed native RMG town and guard placement foundation: C++ and GDScript compatibility service expose deterministic staged town/capital/start-town records, neutral zone towns, guard stack records, route/object protected target references, faction/owner/zone/terrain metadata, combined object/town/guard occupancy, counts/statuses/signatures, and a headless town/guard smoke while preserving partial_foundation and full_generation_status=not_implemented. Validation passed: json.tool, sync-plan dry-run, cmake native build, package/native RMG foundation/terrain/zone-player-start/road-river/object-placement smokes, native town/guard smoke, git diff --check, tests/validate_repo.py.",
+      "completedAt": "2026-05-03T10:38:10Z"
     },
     {
       "id": "native-rmg-validation-provenance-parity-10184",

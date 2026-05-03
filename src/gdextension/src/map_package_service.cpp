@@ -28,6 +28,9 @@ constexpr const char *NATIVE_RMG_ROUTE_GRAPH_SCHEMA_ID = "aurelion_native_rmg_ro
 constexpr const char *NATIVE_RMG_ROAD_NETWORK_SCHEMA_ID = "aurelion_native_rmg_road_network_v1";
 constexpr const char *NATIVE_RMG_RIVER_NETWORK_SCHEMA_ID = "aurelion_native_rmg_river_network_v1";
 constexpr const char *NATIVE_RMG_OBJECT_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_object_placement_v1";
+constexpr const char *NATIVE_RMG_TOWN_GUARD_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_town_guard_placement_v1";
+constexpr const char *NATIVE_RMG_TOWN_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_town_placement_v1";
+constexpr const char *NATIVE_RMG_GUARD_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_guard_placement_v1";
 constexpr uint64_t HASH_MODULUS = 4294967296ULL;
 constexpr double TAU = 6.28318530717958647692;
 
@@ -43,6 +46,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_zone_player_starts_foundation");
 	result.append("native_random_map_road_river_network_foundation");
 	result.append("native_random_map_object_placement_foundation");
+	result.append("native_random_map_town_guard_placement_foundation");
 	result.append("headless_binding_smoke");
 	return result;
 }
@@ -221,13 +225,19 @@ Array default_faction_pool() {
 
 String town_for_faction(const String &faction_id) {
 	if (faction_id == "faction_mireclaw") {
-		return "town_mirewatch";
+		return "town_duskfen";
 	}
 	if (faction_id == "faction_sunvault") {
-		return "town_sunspire";
+		return "town_prismhearth";
 	}
 	if (faction_id == "faction_thornwake") {
-		return "town_thornhold";
+		return "town_thornwake_graftroot_caravan";
+	}
+	if (faction_id == "faction_brasshollow") {
+		return "town_brasshollow_orevein_gantry";
+	}
+	if (faction_id == "faction_veilmourn") {
+		return "town_veilmourn_bellwake_harbor";
 	}
 	return "town_riverwatch";
 }
@@ -1858,6 +1868,474 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	return payload;
 }
 
+Dictionary primary_occupancy_from_objects(const Dictionary &object_placement) {
+	Dictionary occupied;
+	Array placements = object_placement.get("object_placements", Array());
+	for (int64_t index = 0; index < placements.size(); ++index) {
+		Dictionary placement = placements[index];
+		const String key = String(placement.get("primary_occupancy_key", ""));
+		if (!key.is_empty()) {
+			occupied[key] = placement.get("placement_id", "");
+		}
+	}
+	return occupied;
+}
+
+Dictionary zone_by_id(const Array &zones, const String &zone_id) {
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		if (String(zone.get("id", "")) == zone_id) {
+			return zone;
+		}
+	}
+	return Dictionary();
+}
+
+Dictionary point_from_cell(const Dictionary &cell) {
+	return point_record(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)));
+}
+
+Array neutral_guard_stack_for_value(int32_t guard_value, const String &seed_key) {
+	static constexpr const char *UNIT_IDS[] = {"unit_neutral_roadwardens", "unit_neutral_hearthbow_carriers", "unit_neutral_mossglass_sentinels"};
+	static constexpr const char *ROLES[] = {"road_guard", "ranged_guard", "sentinel_guard"};
+	Array stack;
+	const int32_t base_value = std::max(1, guard_value);
+	for (int32_t tier = 0; tier < 2; ++tier) {
+		Dictionary record;
+		const int32_t index = int32_t((hash32_int(seed_key + String(":unit:") + String::num_int64(tier)) + uint32_t(tier)) % 3U);
+		record["unit_id"] = UNIT_IDS[index];
+		record["tier"] = index + 1;
+		record["role"] = ROLES[index];
+		record["count"] = std::max(3, base_value / (260 + index * 170) + tier + 1);
+		record["selection_source"] = "native_foundation_guard_value_neutral_stack";
+		stack.append(record);
+	}
+	return stack;
+}
+
+String strength_band_for_value(int32_t guard_value) {
+	if (guard_value >= 1200) {
+		return "high";
+	}
+	if (guard_value >= 450) {
+		return "medium";
+	}
+	return "low";
+}
+
+Dictionary point_bounds_record(int32_t x, int32_t y) {
+	Dictionary bounds;
+	bounds["min_x"] = x;
+	bounds["min_y"] = y;
+	bounds["max_x"] = x;
+	bounds["max_y"] = y;
+	return bounds;
+}
+
+Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const Dictionary &start, const String &record_type, int32_t ordinal, const Dictionary &road_network, const Dictionary &zone_layout, const Dictionary &occupied) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t x = int32_t(point.get("x", 0));
+	const int32_t y = int32_t(point.get("y", 0));
+	const String zone_id = String(zone.get("id", ""));
+	const String terrain_id = terrain_id_for_zone(zone);
+	const int32_t player_slot = int32_t(start.get("player_slot", int32_t(zone.get("player_slot", 0))));
+	const bool start_town = record_type == "player_start_town";
+	String faction_id = start_town ? String(start.get("faction_id", zone.get("faction_id", ""))) : String(zone.get("faction_id", ""));
+	if (faction_id.is_empty()) {
+		Array faction_ids = normalized.get("faction_ids", default_faction_pool());
+		faction_id = faction_ids.is_empty() ? String("faction_embercourt") : String(faction_ids[ordinal % faction_ids.size()]);
+	}
+	String town_id = start_town ? String(start.get("town_id", town_for_faction(faction_id))) : town_for_faction(faction_id);
+	if (town_id.is_empty()) {
+		town_id = town_for_faction(faction_id);
+	}
+	const String placement_id = start_town ? "native_rmg_town_start_" + slot_id_2(player_slot) : "native_rmg_town_neutral_" + zone_id + "_" + slot_id_2(ordinal + 1);
+	Dictionary body = cell_record(x, y, 0);
+	Array body_tiles;
+	body_tiles.append(body);
+	Array occupancy_keys;
+	occupancy_keys.append(point_key(x, y));
+
+	Dictionary footprint;
+	footprint["width"] = 3;
+	footprint["height"] = 2;
+	footprint["anchor"] = "bottom_middle";
+	footprint["visit_mask_contract"] = "inside_intended_3x2_body_outside_current_1x1_runtime_body_until_multitile_town_runtime_slice";
+	footprint["tier"] = "town";
+
+	Dictionary runtime_footprint;
+	runtime_footprint["width"] = 1;
+	runtime_footprint["height"] = 1;
+	runtime_footprint["anchor"] = "center";
+	runtime_footprint["tier"] = "anchor_tile";
+
+	Dictionary predicate_results;
+	predicate_results["in_bounds"] = x >= 0 && y >= 0 && x < width && y < height;
+	predicate_results["terrain_allowed"] = is_passable_terrain_id(terrain_id);
+	predicate_results["primary_tile_unoccupied_before_town"] = !occupied.has(point_key(x, y));
+	predicate_results["zone_associated"] = !zone_id.is_empty();
+	predicate_results["start_anchor_linked"] = start_town && !start.is_empty();
+	predicate_results["road_proximity_recorded"] = true;
+
+	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+	Dictionary zone_proximity;
+	zone_proximity["zone_anchor"] = anchor;
+	zone_proximity["manhattan_distance_to_anchor"] = std::abs(x - int32_t(anchor.get("x", x))) + std::abs(y - int32_t(anchor.get("y", y)));
+	zone_proximity["owner_grid_signature"] = zone_layout.get("signature", "");
+
+	Dictionary record;
+	record["placement_id"] = placement_id;
+	record["record_type"] = record_type;
+	record["kind"] = "town";
+	record["town_id"] = town_id;
+	record["family_id"] = "town_primary";
+	record["object_family_id"] = "town_primary";
+	record["type_id"] = "town";
+	record["faction_id"] = faction_id;
+	record["owner"] = start_town ? "player_" + String::num_int64(player_slot) : "neutral";
+	record["owner_slot"] = start_town ? start.get("owner_slot", player_slot) : Variant();
+	record["player_slot"] = start_town ? Variant(player_slot) : Variant();
+	record["player_type"] = start_town ? start.get("player_type", "human") : Variant("neutral");
+	record["team_id"] = start_town ? start.get("team_id", "") : Variant("");
+	record["zone_id"] = zone_id;
+	record["zone_role"] = zone.get("role", "");
+	record["terrain_id"] = terrain_id;
+	record["biome_id"] = biome_for_terrain(terrain_id);
+	record["x"] = x;
+	record["y"] = y;
+	record["level"] = 0;
+	record["primary_tile"] = body;
+	record["primary_occupancy_key"] = point_key(x, y);
+	record["bounds"] = point_bounds_record(x, y);
+	record["body_tiles"] = body_tiles;
+	record["occupancy_keys"] = occupancy_keys;
+	record["footprint"] = footprint;
+	record["runtime_footprint"] = runtime_footprint;
+	record["footprint_deferred"] = true;
+	record["approach_tiles"] = cardinal_approach_tiles(x, y, width, height, occupied);
+	record["visit_tile"] = body;
+	Array predicates;
+	predicates.append("in_bounds");
+	predicates.append("terrain_allowed");
+	predicates.append("primary_tile_unoccupied_before_town");
+	predicates.append("zone_associated");
+	predicates.append("road_proximity_recorded");
+	record["placement_predicates"] = predicates;
+	record["placement_predicate_results"] = predicate_results;
+	record["road_proximity"] = nearest_road_proximity(x, y, road_network);
+	record["zone_proximity"] = zone_proximity;
+	record["start_anchor"] = start;
+	record["is_start_town"] = start_town;
+	record["is_capital"] = start_town;
+	record["capital_role"] = start_town ? "player_capital_and_starting_town" : "neutral_expansion_town";
+	record["town_assignment_semantics"] = start_town ? "player_start_town_from_native_player_assignment" : "neutral_zone_town_from_native_foundation_zone";
+	record["bounds_status"] = "in_bounds";
+	record["occupancy_status"] = "primary_tile_reserved";
+	record["materialization_state"] = "staged_town_record_only_no_gameplay_adoption";
+	record["writeout_state"] = "staged_no_authored_content_writeback";
+	record["signature"] = hash32_hex(canonical_variant(record));
+	return record;
+}
+
+void append_town_record(Array &towns, Dictionary &occupied, const Dictionary &town) {
+	if (town.is_empty()) {
+		return;
+	}
+	towns.append(town);
+	occupied[town.get("primary_occupancy_key", "")] = town.get("placement_id", "");
+}
+
+Dictionary guard_record_at_point(const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &guard_kind, int32_t ordinal, int32_t guard_value, const Dictionary &road_network, const Dictionary &zone_layout, const Dictionary &occupied, const Dictionary &target) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t x = int32_t(point.get("x", 0));
+	const int32_t y = int32_t(point.get("y", 0));
+	const String zone_id = String(zone.get("id", target.get("zone_id", "")));
+	const String terrain_id = terrain_id_for_zone(zone.is_empty() ? Dictionary() : zone);
+	const String guard_id = "native_rmg_guard_" + guard_kind + "_" + slot_id_2(ordinal + 1);
+	const String strength_band = strength_band_for_value(guard_value);
+	Dictionary body = cell_record(x, y, 0);
+	Array body_tiles;
+	body_tiles.append(body);
+	Array occupancy_keys;
+	occupancy_keys.append(point_key(x, y));
+
+	Dictionary predicate_results;
+	predicate_results["in_bounds"] = x >= 0 && y >= 0 && x < width && y < height;
+	predicate_results["terrain_allowed"] = is_passable_terrain_id(terrain_id);
+	predicate_results["primary_tile_unoccupied_before_guard"] = !occupied.has(point_key(x, y));
+	predicate_results["protected_target_linked"] = !String(target.get("protected_target_id", "")).is_empty();
+	predicate_results["zone_associated"] = !zone_id.is_empty();
+
+	Dictionary monster_reward_band;
+	monster_reward_band["id"] = "native_rmg_monster_reward_band_" + slot_id_2(ordinal + 1);
+	monster_reward_band["strength_band"] = strength_band;
+	monster_reward_band["guard_value"] = guard_value;
+	monster_reward_band["reward_context"] = String(target.get("protected_target_type", "")) == "object_placement" ? "guarded_site_reward_context" : "route_access_pressure_context";
+	monster_reward_band["selection_state"] = "structured_foundation_record_final_selection_deferred";
+
+	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+	Dictionary record;
+	record["guard_id"] = guard_id;
+	record["placement_id"] = guard_id;
+	record["record_type"] = "guard_stack";
+	record["kind"] = "guard";
+	record["guard_kind"] = guard_kind;
+	record["owner"] = "neutral";
+	record["zone_id"] = zone_id;
+	record["zone_role"] = zone.get("role", "");
+	record["terrain_id"] = terrain_id;
+	record["biome_id"] = biome_for_terrain(terrain_id);
+	record["x"] = x;
+	record["y"] = y;
+	record["level"] = 0;
+	record["primary_tile"] = body;
+	record["primary_occupancy_key"] = point_key(x, y);
+	record["bounds"] = point_bounds_record(x, y);
+	record["body_tiles"] = body_tiles;
+	record["occupancy_keys"] = occupancy_keys;
+	Dictionary runtime_footprint;
+	runtime_footprint["width"] = 1;
+	runtime_footprint["height"] = 1;
+	runtime_footprint["anchor"] = "center";
+	runtime_footprint["tier"] = "guard_anchor_tile";
+	record["runtime_footprint"] = runtime_footprint;
+	record["approach_tiles"] = cardinal_approach_tiles(x, y, width, height, occupied);
+	record["visit_tile"] = body;
+	record["guard_value"] = guard_value;
+	record["effective_guard_pressure"] = strength_band;
+	record["strength_band"] = strength_band;
+	record["stack_records"] = neutral_guard_stack_for_value(guard_value, String(normalized.get("normalized_seed", "0")) + guard_id);
+	record["stack_count"] = Array(record.get("stack_records", Array())).size();
+	record["protected_target"] = target;
+	record["protected_target_id"] = target.get("protected_target_id", "");
+	record["protected_target_type"] = target.get("protected_target_type", "");
+	record["protected_zone_id"] = target.get("protected_zone_id", zone_id);
+	record["route_edge_id"] = target.get("route_edge_id", "");
+	record["protected_object_placement_id"] = target.get("protected_object_placement_id", "");
+	record["road_proximity"] = nearest_road_proximity(x, y, road_network);
+	Dictionary zone_proximity;
+	zone_proximity["zone_anchor"] = anchor;
+	zone_proximity["manhattan_distance_to_anchor"] = std::abs(x - int32_t(anchor.get("x", x))) + std::abs(y - int32_t(anchor.get("y", y)));
+	zone_proximity["owner_grid_signature"] = zone_layout.get("signature", "");
+	record["zone_proximity"] = zone_proximity;
+	Array guard_predicates;
+	guard_predicates.append("in_bounds");
+	guard_predicates.append("terrain_allowed");
+	guard_predicates.append("primary_tile_unoccupied_before_guard");
+	guard_predicates.append("protected_target_linked");
+	guard_predicates.append("zone_associated");
+	record["placement_predicates"] = guard_predicates;
+	record["placement_predicate_results"] = predicate_results;
+	record["monster_reward_band_record"] = monster_reward_band;
+	record["materialization_state"] = "staged_guard_record_only_no_gameplay_adoption";
+	record["writeout_state"] = "staged_no_authored_content_writeback";
+	record["signature"] = hash32_hex(canonical_variant(record));
+	return record;
+}
+
+void append_guard_record(Array &guards, Dictionary &occupied, const Dictionary &guard) {
+	if (guard.is_empty()) {
+		return;
+	}
+	guards.append(guard);
+	occupied[guard.get("primary_occupancy_key", "")] = guard.get("placement_id", "");
+}
+
+Dictionary occupancy_index_for_buckets(const Array &objects, const Array &towns, const Array &guards) {
+	Dictionary primary_tile_occupancy;
+	Array duplicates;
+	auto add_record = [&primary_tile_occupancy, &duplicates](const Dictionary &record, const String &bucket) {
+		const String key = String(record.get("primary_occupancy_key", ""));
+		if (key.is_empty()) {
+			return;
+		}
+		Dictionary entry;
+		entry["bucket"] = bucket;
+		entry["placement_id"] = record.get("placement_id", record.get("guard_id", ""));
+		entry["kind"] = record.get("kind", bucket);
+		if (primary_tile_occupancy.has(key)) {
+			Dictionary duplicate;
+			duplicate["primary_occupancy_key"] = key;
+			duplicate["existing"] = primary_tile_occupancy.get(key, Dictionary());
+			duplicate["duplicate"] = entry;
+			duplicates.append(duplicate);
+		} else {
+			primary_tile_occupancy[key] = entry;
+		}
+	};
+	for (int64_t index = 0; index < objects.size(); ++index) {
+		add_record(Dictionary(objects[index]), "object");
+	}
+	for (int64_t index = 0; index < towns.size(); ++index) {
+		add_record(Dictionary(towns[index]), "town");
+	}
+	for (int64_t index = 0; index < guards.size(); ++index) {
+		add_record(Dictionary(guards[index]), "guard");
+	}
+	Dictionary occupancy;
+	occupancy["primary_tile_occupancy"] = primary_tile_occupancy;
+	occupancy["occupied_primary_tile_count"] = primary_tile_occupancy.size();
+	occupancy["duplicate_primary_tile_count"] = duplicates.size();
+	occupancy["duplicates"] = duplicates;
+	occupancy["object_count"] = objects.size();
+	occupancy["town_count"] = towns.size();
+	occupancy["guard_count"] = guards.size();
+	occupancy["status"] = duplicates.is_empty() ? "pass" : "duplicate_primary_tiles";
+	occupancy["signature"] = hash32_hex(canonical_variant(occupancy));
+	return occupancy;
+}
+
+Dictionary generate_town_guard_placements(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, const Dictionary &object_placement) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	Array zones = zone_layout.get("zones", Array());
+	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
+	Array starts = player_starts.get("starts", Array());
+	Array objects = object_placement.get("object_placements", Array());
+	Dictionary occupied = primary_occupancy_from_objects(object_placement);
+	Array towns;
+	Array guards;
+
+	for (int64_t index = 0; index < starts.size(); ++index) {
+		Dictionary start = starts[index];
+		Dictionary zone = zone_by_id(zones, String(start.get("zone_id", "")));
+		Dictionary point = point_record(int32_t(start.get("x", 0)), int32_t(start.get("y", 0)));
+		append_town_record(towns, occupied, town_record_at_point(normalized, zone, point, start, "player_start_town", int32_t(index), road_network, zone_layout, occupied));
+	}
+
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String role = String(zone.get("role", ""));
+		if (role != "treasure" && role != "junction") {
+			continue;
+		}
+		Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+		Dictionary point = find_object_point(int32_t(anchor.get("x", width / 2)) + 1, int32_t(anchor.get("y", height / 2)) + 1, String(zone.get("id", "")), owner_grid, occupied, width, height);
+		append_town_record(towns, occupied, town_record_at_point(normalized, zone, point, Dictionary(), "neutral_zone_town", int32_t(index), road_network, zone_layout, occupied));
+		if (towns.size() >= starts.size() + 2) {
+			break;
+		}
+	}
+
+	Dictionary route_graph = road_network.get("route_graph", Dictionary());
+	Array edges = route_graph.get("edges", Array());
+	int32_t guard_ordinal = 0;
+	for (int64_t index = 0; index < edges.size(); ++index) {
+		Dictionary edge = edges[index];
+		const int32_t guard_value = int32_t(edge.get("guard_value", 0));
+		if (guard_value <= 0 || bool(edge.get("wide", false))) {
+			continue;
+		}
+		const String protected_zone_id = String(edge.get("to", edge.get("from", "")));
+		Dictionary zone = zone_by_id(zones, protected_zone_id);
+		Dictionary anchor = edge.get("route_cell_anchor_candidate", Dictionary());
+		Dictionary point = find_object_point(int32_t(anchor.get("x", width / 2)), int32_t(anchor.get("y", height / 2)), protected_zone_id, owner_grid, occupied, width, height);
+		Dictionary target;
+		target["protected_target_id"] = edge.get("id", "");
+		target["protected_target_type"] = "route_edge";
+		target["protected_zone_id"] = protected_zone_id;
+		target["route_edge_id"] = edge.get("id", "");
+		target["from_zone_id"] = edge.get("from", "");
+		target["to_zone_id"] = edge.get("to", "");
+		target["route_role"] = edge.get("role", "");
+		append_guard_record(guards, occupied, guard_record_at_point(normalized, zone, point, "route_guard", guard_ordinal, guard_value, road_network, zone_layout, occupied, target));
+		++guard_ordinal;
+	}
+
+	for (int64_t index = 0; index < objects.size(); ++index) {
+		Dictionary object = objects[index];
+		const String kind = String(object.get("kind", ""));
+		const String family_id = String(object.get("family_id", ""));
+		if (kind != "mine" && kind != "neutral_dwelling" && family_id != "guarded_reward_cache") {
+			continue;
+		}
+		const String zone_id = String(object.get("zone_id", ""));
+		Dictionary zone = zone_by_id(zones, zone_id);
+		Dictionary point = find_object_point(int32_t(object.get("x", 0)) + 1, int32_t(object.get("y", 0)), zone_id, owner_grid, occupied, width, height);
+		int32_t guard_value = int32_t(object.get("guard_base_value", kind == "neutral_dwelling" ? 700 : 450));
+		if (guard_value <= 0) {
+			guard_value = kind == "mine" ? 900 : 650;
+		}
+		Dictionary target;
+		target["protected_target_id"] = object.get("placement_id", "");
+		target["protected_target_type"] = "object_placement";
+		target["protected_object_placement_id"] = object.get("placement_id", "");
+		target["protected_object_kind"] = kind;
+		target["protected_zone_id"] = zone_id;
+		target["protected_object_id"] = object.get("object_id", "");
+		append_guard_record(guards, occupied, guard_record_at_point(normalized, zone, point, "site_guard", guard_ordinal, guard_value, road_network, zone_layout, occupied, target));
+		++guard_ordinal;
+	}
+
+	Dictionary combined_occupancy = occupancy_index_for_buckets(objects, towns, guards);
+
+	Dictionary town_payload;
+	town_payload["schema_id"] = NATIVE_RMG_TOWN_PLACEMENT_SCHEMA_ID;
+	town_payload["schema_version"] = 1;
+	town_payload["generation_status"] = "towns_generated_foundation";
+	town_payload["full_generation_status"] = "not_implemented";
+	town_payload["materialization_state"] = "staged_town_records_only_no_gameplay_adoption";
+	town_payload["town_records"] = towns;
+	town_payload["town_count"] = towns.size();
+	Dictionary town_category_counts;
+	town_category_counts["by_record_type"] = count_by_field(towns, "record_type");
+	town_category_counts["by_faction"] = count_by_field(towns, "faction_id");
+	town_category_counts["by_zone"] = count_by_field(towns, "zone_id");
+	town_category_counts["by_town_id"] = count_by_field(towns, "town_id");
+	town_payload["category_counts"] = town_category_counts;
+	Dictionary town_record_type_counts = count_by_field(towns, "record_type");
+	town_payload["start_player_town_count"] = town_record_type_counts.get("player_start_town", 0);
+	town_payload["neutral_town_count"] = town_record_type_counts.get("neutral_zone_town", 0);
+	town_payload["related_player_start_signature"] = player_starts.get("signature", "");
+	town_payload["signature"] = hash32_hex(canonical_variant(town_payload));
+
+	Dictionary guard_payload;
+	guard_payload["schema_id"] = NATIVE_RMG_GUARD_PLACEMENT_SCHEMA_ID;
+	guard_payload["schema_version"] = 1;
+	guard_payload["generation_status"] = "guards_generated_foundation";
+	guard_payload["full_generation_status"] = "not_implemented";
+	guard_payload["materialization_state"] = "staged_guard_records_only_no_gameplay_adoption";
+	guard_payload["guard_records"] = guards;
+	guard_payload["guard_count"] = guards.size();
+	Dictionary guard_category_counts;
+	guard_category_counts["by_guard_kind"] = count_by_field(guards, "guard_kind");
+	guard_category_counts["by_zone"] = count_by_field(guards, "zone_id");
+	guard_category_counts["by_protected_target_type"] = count_by_field(guards, "protected_target_type");
+	guard_category_counts["by_strength_band"] = count_by_field(guards, "strength_band");
+	guard_payload["category_counts"] = guard_category_counts;
+	guard_payload["related_route_graph_signature"] = route_graph.get("signature", "");
+	guard_payload["related_object_placement_signature"] = object_placement.get("signature", "");
+	guard_payload["signature"] = hash32_hex(canonical_variant(guard_payload));
+
+	Dictionary payload;
+	payload["schema_id"] = NATIVE_RMG_TOWN_GUARD_PLACEMENT_SCHEMA_ID;
+	payload["schema_version"] = 1;
+	payload["generation_status"] = "towns_and_guards_generated_foundation";
+	payload["town_generation_status"] = "towns_generated_foundation";
+	payload["guard_generation_status"] = "guards_generated_foundation";
+	payload["full_generation_status"] = "not_implemented";
+	payload["materialization_state"] = "staged_town_guard_records_only_no_gameplay_adoption";
+	payload["writeout_policy"] = "generated_town_guard_records_no_authored_content_write";
+	payload["town_placement"] = town_payload;
+	payload["guard_placement"] = guard_payload;
+	payload["town_records"] = towns;
+	payload["guard_records"] = guards;
+	payload["town_count"] = towns.size();
+	payload["guard_count"] = guards.size();
+	payload["combined_occupancy_index"] = combined_occupancy;
+	Dictionary category_counts;
+	category_counts["towns"] = town_payload.get("category_counts", Dictionary());
+	category_counts["guards"] = guard_payload.get("category_counts", Dictionary());
+	payload["category_counts"] = category_counts;
+	payload["related_zone_layout_signature"] = zone_layout.get("signature", "");
+	payload["related_road_network_signature"] = road_network.get("signature", "");
+	payload["related_object_placement_signature"] = object_placement.get("signature", "");
+	payload["signature"] = hash32_hex(canonical_variant(payload));
+	return payload;
+}
+
 Dictionary generate_terrain_grid(const Dictionary &normalized) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -2008,6 +2486,9 @@ Dictionary MapPackageService::get_schema_ids() const {
 	result["scenario_document"] = SCENARIO_SCHEMA_ID;
 	result["map_validation_report"] = "aurelion_map_validation_report";
 	result["scenario_validation_report"] = "aurelion_scenario_validation_report";
+	result["native_rmg_town_guard_placement"] = NATIVE_RMG_TOWN_GUARD_PLACEMENT_SCHEMA_ID;
+	result["native_rmg_town_placement"] = NATIVE_RMG_TOWN_PLACEMENT_SCHEMA_ID;
+	result["native_rmg_guard_placement"] = NATIVE_RMG_GUARD_PLACEMENT_SCHEMA_ID;
 	return result;
 }
 
@@ -2086,7 +2567,7 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	result["faction_ids"] = faction_ids;
 	result["town_ids"] = town_ids;
 	result["full_generation_status"] = "not_implemented";
-	result["foundation_scope"] = "deterministic_config_identity_native_terrain_grid_zones_player_starts_road_river_networks_and_object_placement_foundation_only";
+	result["foundation_scope"] = "deterministic_config_identity_native_terrain_grid_zones_player_starts_road_river_networks_object_placement_and_town_guard_placement_foundation_only";
 	return result;
 }
 
@@ -2125,6 +2606,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	Dictionary road_network = generate_road_network(normalized, zone_layout, player_starts);
 	Dictionary river_network = generate_river_network(normalized, road_network);
 	Dictionary object_placement = generate_object_placements(normalized, zone_layout, player_starts, road_network);
+	Dictionary town_guard_placement = generate_town_guard_placements(normalized, zone_layout, player_starts, road_network, object_placement);
 	Array object_placements = object_placement.get("object_placements", Array());
 
 	Dictionary metadata;
@@ -2140,6 +2622,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["road_generation_status"] = "roads_generated_foundation";
 	metadata["river_generation_status"] = "rivers_generated_foundation";
 	metadata["object_generation_status"] = "objects_generated_foundation";
+	metadata["town_generation_status"] = "towns_generated_foundation";
+	metadata["guard_generation_status"] = "guards_generated_foundation";
 	metadata["normalized_config"] = normalized;
 	metadata["deterministic_identity"] = identity;
 	metadata["terrain_grid_signature"] = terrain_grid.get("signature", "");
@@ -2150,6 +2634,10 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["river_network_signature"] = river_network.get("signature", "");
 	metadata["object_placement_signature"] = object_placement.get("signature", "");
 	metadata["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
+	metadata["town_guard_placement_signature"] = town_guard_placement.get("signature", "");
+	metadata["town_placement_signature"] = Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("signature", "");
+	metadata["guard_placement_signature"] = Dictionary(town_guard_placement.get("guard_placement", Dictionary())).get("signature", "");
+	metadata["town_guard_occupancy_signature"] = Dictionary(town_guard_placement.get("combined_occupancy_index", Dictionary())).get("signature", "");
 	metadata["options_keys"] = options.keys();
 
 	Dictionary map_state;
@@ -2170,7 +2658,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	warning["code"] = "full_generation_not_implemented";
 	warning["severity"] = "warning";
 	warning["path"] = "generate_random_map";
-	warning["message"] = "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, player start anchors, road/river network records, and staged non-town object placement records only; towns, guards, validation parity, and package/session adoption are not implemented.";
+	warning["message"] = "Native RMG currently creates deterministic identity metadata, a terrain grid, foundation zones, player start anchors, road/river network records, staged object placement records, and staged town/guard placement records only; validation parity and package/session adoption are not implemented.";
 	warning["context"] = Dictionary();
 
 	Array warnings;
@@ -2190,6 +2678,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metrics["river_segment_count"] = river_network.get("river_segment_count", 0);
 	metrics["river_cell_count"] = river_network.get("river_cell_count", 0);
 	metrics["object_placement_count"] = object_placement.get("object_count", 0);
+	metrics["town_count"] = town_guard_placement.get("town_count", 0);
+	metrics["guard_count"] = town_guard_placement.get("guard_count", 0);
 	metrics["object_count"] = document->get_object_count();
 
 	Dictionary report;
@@ -2218,8 +2708,14 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	report["object_placement_signature"] = object_placement.get("signature", "");
 	report["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
 	report["object_category_counts"] = object_placement.get("category_counts", Dictionary());
+	report["town_generation_status"] = town_guard_placement.get("town_generation_status", "");
+	report["guard_generation_status"] = town_guard_placement.get("guard_generation_status", "");
+	report["town_guard_placement_signature"] = town_guard_placement.get("signature", "");
+	report["town_placement_signature"] = Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("signature", "");
+	report["guard_placement_signature"] = Dictionary(town_guard_placement.get("guard_placement", Dictionary())).get("signature", "");
+	report["town_guard_occupancy_signature"] = Dictionary(town_guard_placement.get("combined_occupancy_index", Dictionary())).get("signature", "");
+	report["town_guard_category_counts"] = town_guard_placement.get("category_counts", Dictionary());
 	Array remaining_parity_slices;
-	remaining_parity_slices.append("native-rmg-town-guard-placement-10184");
 	remaining_parity_slices.append("native-rmg-validation-provenance-parity-10184");
 	remaining_parity_slices.append("native-rmg-package-session-adoption-10184");
 	report["remaining_parity_slices"] = remaining_parity_slices;
@@ -2235,6 +2731,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["road_generation_status"] = "roads_generated_foundation";
 	result["river_generation_status"] = "rivers_generated_foundation";
 	result["object_generation_status"] = "objects_generated_foundation";
+	result["town_generation_status"] = "towns_generated_foundation";
+	result["guard_generation_status"] = "guards_generated_foundation";
 	result["full_generation_status"] = "not_implemented";
 	result["normalized_config"] = normalized;
 	result["deterministic_identity"] = identity;
@@ -2250,6 +2748,14 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["object_category_counts"] = object_placement.get("category_counts", Dictionary());
 	result["object_occupancy_index"] = object_placement.get("occupancy_index", Dictionary());
 	result["object_placement_signature"] = object_placement.get("signature", "");
+	result["town_guard_placement"] = town_guard_placement;
+	result["town_placement"] = town_guard_placement.get("town_placement", Dictionary());
+	result["guard_placement"] = town_guard_placement.get("guard_placement", Dictionary());
+	result["town_records"] = town_guard_placement.get("town_records", Array());
+	result["guard_records"] = town_guard_placement.get("guard_records", Array());
+	result["town_guard_category_counts"] = town_guard_placement.get("category_counts", Dictionary());
+	result["town_guard_occupancy_index"] = town_guard_placement.get("combined_occupancy_index", Dictionary());
+	result["town_guard_placement_signature"] = town_guard_placement.get("signature", "");
 	result["route_reachability_proof"] = road_network.get("route_reachability_proof", Dictionary());
 	result["map_document"] = document;
 	result["map_metadata"] = metadata;
