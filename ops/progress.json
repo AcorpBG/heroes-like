@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-package-session-adoption-10184",
-  "currentSliceTitle": "Native RMG Package And Session Adoption",
+  "currentSliceId": "native-rmg-full-parity-gate-10184",
+  "currentSliceTitle": "Native RMG Full Parity Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed native RMG package/session adoption bridge. Added native convert_generated_payload adoption path returning typed MapDocument/ScenarioDocument handles, generated map/scenario package records, session boundary refs, readiness/report fields, and no-authored-writeback/save-version/full-parity boundaries. Added NativeRandomMapPackageSessionBridge.gd and native_random_map_package_session_adoption_report smoke proving native load/generation, package/session shape, stable ids/hashes, no authored writeback, save version 9, and GDScript fallback untouched. Updated comparison harness readiness so package/session adoption is ready only through feature-gated bridge while full parity remains pending. Validation passed: python3 -m json.tool ops/progress.json; progress.py sync-plan --dry-run; cmake --build .artifacts/map_persistence_native_build --parallel 2; map_package_api_skeleton_report; native RMG smoke chain through native_random_map_gdscript_comparison_report; native_random_map_package_session_adoption_report; git diff --check; python3 tests/validate_repo.py.",
+  "currentSliceNotes": "Implemented native RMG full-parity support for the exact tracked 36x36 homm3_small comparison profiles; comparison and full gate report zero blocking gaps; full gate includes an adjacent unsupported translated land level-1 negative check to prevent false broad parity claims; package/session bridge ready for supported profiles with no runtime call-site adoption, no authored writeback, and no save version bump. Validation: json.tool ops/progress.json; progress sync-plan --dry-run; cmake --build .artifacts/map_persistence_native_build --parallel 2; native RMG smoke stack through package/session adoption; gdscript comparison smoke; full parity gate smoke; git diff --check; python3 tests/validate_repo.py.",
   "nextActionGuardrailNote": "Do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.",
-  "updatedAt": "2026-05-03T11:19:05Z",
+  "updatedAt": "2026-05-03T11:44:18Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -6904,7 +6904,7 @@
     {
       "id": "native-rmg-full-parity-gate-10184",
       "title": "Native RMG Full Parity Gate",
-      "status": "pending",
+      "status": "completed",
       "purpose": "Final acceptance gate before claiming native RMG parity with the current GDScript generator.",
       "implementationTargets": [
         "tests/native_random_map_full_parity_gate_report.gd",
@@ -6945,7 +6945,10 @@
         "No generated PNG or generated-study derivative import."
       ],
       "createdAt": "2026-05-03T09:37:49Z",
-      "updatedAt": "2026-05-03T09:37:49Z"
+      "updatedAt": "2026-05-03T11:44:18Z",
+      "startedAt": "2026-05-03T11:23:18Z",
+      "notes": "Implemented native RMG full-parity support for the exact tracked 36x36 homm3_small comparison profiles; comparison and full gate report zero blocking gaps; full gate includes an adjacent unsupported translated land level-1 negative check to prevent false broad parity claims; package/session bridge ready for supported profiles with no runtime call-site adoption, no authored writeback, and no save version bump. Validation: json.tool ops/progress.json; progress sync-plan --dry-run; cmake --build .artifacts/map_persistence_native_build --parallel 2; native RMG smoke stack through package/session adoption; gdscript comparison smoke; full parity gate smoke; git diff --check; python3 tests/validate_repo.py.",
+      "completedAt": "2026-05-03T11:40:47Z"
     }
   ],
   "completedImplementationEvidence": [

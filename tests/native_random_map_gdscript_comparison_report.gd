@@ -103,12 +103,7 @@ func _run() -> void:
 			aggregate_gaps.append(gap)
 
 	var known_gaps := _unique_gap_records(aggregate_gaps)
-	if known_gaps.is_empty():
-		known_gaps.append({
-			"code": "full_parity_gate_still_required",
-			"severity": "gate",
-			"message": "Comparison and package/session adoption passed for these fixtures, but the final full-parity gate still has to approve native RMG.",
-		})
+	var full_parity_ready := known_gaps.is_empty() and package_session_adoption_ready_count == case_reports.size()
 
 	var report := {
 		"schema_id": REPORT_SCHEMA_ID,
@@ -125,18 +120,17 @@ func _run() -> void:
 			"all_native_foundation_components_reported": native_foundation_component_count == case_reports.size(),
 			"package_session_adoption_ready_count": package_session_adoption_ready_count,
 			"all_package_session_adoptions_ready": package_session_adoption_ready_count == case_reports.size(),
+			"full_parity_ready": full_parity_ready,
 			"fixture_schema_id": String(fixture.get("schema_id", "")),
 		},
 		"known_gaps": known_gaps,
 		"readiness": {
 			"gdscript_source_of_truth": true,
-			"native_runtime_authoritative": false,
+			"native_runtime_authoritative": full_parity_ready,
 			"package_session_adoption_ready": package_session_adoption_ready_count == case_reports.size(),
-			"full_parity_claim": false,
-			"adoption_gate_status": "package_session_bridge_ready_feature_gated_full_parity_still_pending" if package_session_adoption_ready_count == case_reports.size() else "blocked_until_package_session_adoption_and_full_parity_gate",
-			"next_required_slices": [
-				"native-rmg-full-parity-gate-10184",
-			],
+			"full_parity_claim": full_parity_ready,
+			"adoption_gate_status": "package_session_bridge_ready_full_parity_supported_profile" if full_parity_ready else "blocked_until_package_session_adoption_and_full_parity_gate",
+			"next_required_slices": [] if full_parity_ready else ["native-rmg-full-parity-gate-10184"],
 		},
 	}
 	_assert_report_contract(report, cases.size())
@@ -166,7 +160,7 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 		"session_save_version": 9,
 	})
 	if not bool(adoption.get("ok", false)):
-		_fail("Native package/session adoption conversion failed for %s: %s" % [String(case_record.get("id", "")), JSON.stringify(adoption)])
+		_fail("Native package/session adoption conversion failed for %s: adoption=%s native_validation=%s" % [String(case_record.get("id", "")), JSON.stringify(adoption), JSON.stringify(native_result.get("validation_report", {}))])
 		return {}
 
 	var gdscript_summary := _gdscript_summary(gdscript_setup)
@@ -200,9 +194,9 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 		"known_gaps": known_gaps,
 		"readiness": {
 			"byte_for_byte_parity_required": false,
-			"native_adoption_allowed": false,
+			"native_adoption_allowed": known_gaps.is_empty(),
 			"package_session_adoption_ready": bool(adoption_summary.get("ready", false)),
-			"full_parity_claim": false,
+			"full_parity_claim": bool(native_summary.get("provenance", {}).get("full_parity_claim", false)) and known_gaps.is_empty(),
 		},
 	}
 
@@ -455,17 +449,21 @@ func _case_known_gaps(case_record: Dictionary, gdscript: Dictionary, native: Dic
 	_append_gap_if_false(gaps, comparisons.get("terrain", {}).get("tile_count_matches", false), "terrain_tile_count_mismatch", case_record, "Native and GDScript terrain tile counts differ.")
 	_append_gap_if_false(gaps, comparisons.get("terrain", {}).get("category_keys_match", false), "terrain_category_gap", case_record, "Native and GDScript terrain category coverage differs.")
 	_append_gap_if_false(gaps, comparisons.get("roads_rivers", {}).get("road_segment_counts_match", false), "road_segment_count_gap", case_record, "Native and GDScript road segment counts differ.")
+	_append_gap_if_false(gaps, comparisons.get("roads_rivers", {}).get("road_cell_counts_match", false), "road_cell_count_gap", case_record, "Native and GDScript road cell counts differ.")
+	_append_gap_if_false(gaps, comparisons.get("roads_rivers", {}).get("river_segment_counts_match", false), "river_segment_count_gap", case_record, "Native and GDScript river segment counts differ.")
 	_append_gap_if_false(gaps, comparisons.get("roads_rivers", {}).get("river_cell_counts_match", false), "river_cell_count_gap", case_record, "Native and GDScript river cell counts differ.")
 	_append_gap_if_false(gaps, comparisons.get("objects_towns_guards", {}).get("object_placement_counts_match", false), "object_count_gap", case_record, "Native and GDScript staged object counts differ.")
 	_append_gap_if_false(gaps, comparisons.get("objects_towns_guards", {}).get("object_category_keys_match", false), "object_category_gap", case_record, "Native and GDScript object category coverage differs.")
 	_append_gap_if_false(gaps, comparisons.get("objects_towns_guards", {}).get("town_counts_match", false), "town_count_gap", case_record, "Native and GDScript town counts differ.")
 	_append_gap_if_false(gaps, comparisons.get("objects_towns_guards", {}).get("guard_counts_match", false), "guard_count_gap", case_record, "Native and GDScript guard counts differ.")
-	if String(native.get("full_generation_status", "")) != "not_implemented":
-		gaps.append(_gap("native_full_generation_status_unexpected", case_record, "Native full-generation status must stay not_implemented until full parity gate."))
+	if String(native.get("status", "")) != "full_parity_supported":
+		gaps.append(_gap("native_status_not_full_parity", case_record, "Native status must report full_parity_supported for tracked parity cases."))
+	if String(native.get("full_generation_status", "")) == "not_implemented":
+		gaps.append(_gap("native_full_generation_status_not_implemented", case_record, "Native full-generation status must no longer be not_implemented for tracked parity cases."))
 	if not bool(adoption.get("ready", false)):
 		gaps.append(_gap("package_session_adoption_not_ready", case_record, "Native package/session adoption conversion did not pass."))
-	if bool(native.get("provenance", {}).get("full_parity_claim", true)):
-		gaps.append(_gap("native_false_parity_claim", case_record, "Native validation/provenance must not claim full parity."))
+	if not bool(native.get("provenance", {}).get("full_parity_claim", false)):
+		gaps.append(_gap("native_missing_parity_claim", case_record, "Native validation/provenance must claim full parity for supported tracked cases."))
 	if bool(gdscript.get("provenance", {}).get("campaign_adoption", true)):
 		gaps.append(_gap("gdscript_false_campaign_adoption", case_record, "GDScript generated setup must keep campaign adoption disabled."))
 	if String(native.get("validation", {}).get("status", "")) != "pass":
@@ -600,12 +598,12 @@ func _assert_report_contract(report: Dictionary, expected_case_count: int) -> vo
 	if not bool(report.get("aggregate", {}).get("all_package_session_adoptions_ready", false)):
 		_fail("Native package/session adoption conversion did not pass for each case: %s" % JSON.stringify(report.get("aggregate", {})))
 		return
-	if report.get("known_gaps", []).is_empty():
-		_fail("Comparison report must preserve the explicit final parity gate.")
+	if not report.get("known_gaps", []).is_empty():
+		_fail("Comparison report still has blocking gaps: %s" % JSON.stringify(report.get("known_gaps", [])))
 		return
 	var readiness: Dictionary = report.get("readiness", {}) if report.get("readiness", {}) is Dictionary else {}
-	if bool(readiness.get("native_runtime_authoritative", true)) or not bool(readiness.get("package_session_adoption_ready", false)) or bool(readiness.get("full_parity_claim", true)):
-		_fail("Comparison report readiness did not preserve feature-gated adoption/full-parity boundaries: %s" % JSON.stringify(readiness))
+	if not bool(readiness.get("native_runtime_authoritative", false)) or not bool(readiness.get("package_session_adoption_ready", false)) or not bool(readiness.get("full_parity_claim", false)):
+		_fail("Comparison report readiness did not prove feature-gated native full parity: %s" % JSON.stringify(readiness))
 		return
 
 func _fail(message: String) -> void:
