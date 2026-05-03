@@ -21,12 +21,14 @@ Do not load all of `ops/progress.json` by default. It is an operations tracker, 
 
 ## Engineering rules
 - Default engine assumption: Godot 4 unless a documented decision in `project.md` changes it.
+- Mandatory platform target: the game is both Windows and Linux, not Linux-only. Any engine, native/GDExtension, build, packaging, file-path, save/load, tooling, or validation work must consider both platforms up front.
+- For native/GDExtension work, keep Linux and Windows build outputs, `.gdextension` library entries, helper scripts, docs, and validation expectations in sync. Do not land Linux-only native changes unless the slice explicitly records a temporary Windows blocker and follow-up.
 - Prefer data-driven content for factions, heroes, units, spells, map objects, resources, towns, and campaign metadata.
 - Keep core systems modular: overworld, combat, AI, economy, save/load, UI, content pipeline.
 - Avoid direct cloning of copyrighted names, assets, maps, factions, unit art, music, or text.
 - Use original placeholder content where needed.
 - No temporary git worktrees. Work directly in this repo.
-- Local commits are fine when they are coherent. Do not push anywhere.
+- Local commits are fine when they are coherent. Push completed validated work to GitHub unless AcOrP explicitly says not to for that slice.
 
 ## Screen composition hard rules
 - Do not cover the dominant screen surface with large text panels, stacked report boxes, or generic geometry just to expose existing data.
