@@ -71,7 +71,8 @@ By default it:
 - configures MSVC with `-G "Visual Studio 17 2022" -A x64`;
 - builds Debug and Release;
 - verifies the expected DLLs in `bin\`;
-- runs the focused Godot smoke when `godot` is on `PATH`.
+- runs the focused native package and native RMG foundation Godot smokes when
+  `godot` is on `PATH`.
 
 Useful options:
 
@@ -85,11 +86,13 @@ scripts\build_map_persistence_windows.bat --mingw
 ```
 
 If Godot is not on `PATH`, the helper still treats a successful build as a pass
-unless `--require-test` is provided. Run the focused smoke manually after adding
-Godot to `PATH`:
+unless `--require-test` is provided. With `--require-test`, missing Godot or
+either focused smoke failure fails the helper. Run the focused smokes manually
+after adding Godot to `PATH`:
 
 ```bat
 godot --headless --path . tests\map_package_api_skeleton_report.tscn
+godot --headless --path . tests\native_random_map_foundation_report.tscn
 ```
 
 The underlying MSVC commands are:
