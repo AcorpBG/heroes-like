@@ -1,0 +1,35 @@
+{
+	"schema_id": "native_random_map_gdscript_comparison_fixture_v1",
+	"cases": [
+		{
+			"id": "small_land_three_players",
+			"seed": "native-rmg-gdscript-comparison-10184-small-land",
+			"template_id": "border_gate_compact_v1",
+			"profile_id": "border_gate_compact_profile_v1",
+			"player_count": 3,
+			"water_mode": "land",
+			"underground_enabled": false,
+			"size_class_id": "homm3_small"
+		},
+		{
+			"id": "small_islands_four_players",
+			"seed": "native-rmg-gdscript-comparison-10184-small-islands",
+			"template_id": "translated_rmg_template_001_v1",
+			"profile_id": "translated_rmg_profile_001_v1",
+			"player_count": 4,
+			"water_mode": "islands",
+			"underground_enabled": false,
+			"size_class_id": "homm3_small"
+		},
+		{
+			"id": "small_land_underground_four_players",
+			"seed": "native-rmg-gdscript-comparison-10184-small-underground",
+			"template_id": "translated_rmg_template_001_v1",
+			"profile_id": "translated_rmg_profile_001_v1",
+			"player_count": 4,
+			"water_mode": "land",
+			"underground_enabled": true,
+			"size_class_id": "homm3_small"
+		}
+	]
+}

@@ -113,7 +113,7 @@ scripts\build_map_persistence_windows.bat --allow-other-godot-version
 
 If Godot is not on `PATH`, the helper still treats a successful build as a pass
 unless `--require-test` is provided. With `--require-test`, missing Godot or
-either focused smoke failure fails the helper. When Godot is available and smokes
+any focused smoke failure fails the helper. When Godot is available and smokes
 are not skipped, the helper prints `%GODOT_EXE% --version` output and requires it
 to include `4.6.2`. For exceptional local testing with another Godot version,
 pass `--allow-other-godot-version`. If `--release-only` is used without
@@ -129,6 +129,10 @@ Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_founda
 Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_terrain_grid_report.tscn
 Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_zone_player_starts_report.tscn
 Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_road_river_report.tscn
+Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_object_placement_report.tscn
+Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_town_guard_report.tscn
+Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_validation_provenance_report.tscn
+Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_gdscript_comparison_report.tscn
 ```
 
 The underlying MSVC commands are:
@@ -189,6 +193,10 @@ GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_f
 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_terrain_grid_report.tscn
 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_zone_player_starts_report.tscn
 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_road_river_report.tscn
+GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_object_placement_report.tscn
+GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_town_guard_report.tscn
+GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_validation_provenance_report.tscn
+GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_gdscript_comparison_report.tscn
 ```
 
 Passing output includes:

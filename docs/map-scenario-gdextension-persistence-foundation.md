@@ -1125,6 +1125,25 @@ streams, does not replace `RandomMapGeneratorRules.gd`, does not adopt package
 or session flow, and keeps `status: partial_foundation` plus
 `full_generation_status: not_implemented`.
 
+`native-rmg-gdscript-comparison-harness-10184` adds a fixture-driven headless
+comparison harness between the current GDScript runtime setup path and native
+`MapPackageService.generate_random_map(config)` output. The harness builds
+GDScript configs through `ScenarioSelectRules.build_random_map_player_config`
+and `build_random_map_skirmish_setup`, then passes the same deterministic config
+to native generation.
+
+The comparison report is deliberately not byte-for-byte parity. It compares
+structural dimensions, player counts and starts, terrain coverage/categories,
+road and river counts, object/town/guard counts and categories, validation and
+provenance status, and explicit known gaps. It also proves that native reports
+all implemented foundation phase components and that GDScript remains the source
+of truth.
+
+The harness keeps package/session adoption and full parity gated. Its readiness
+section sets native runtime authority, package/session adoption, and full parity
+claim to false while naming the remaining package/session adoption and final
+full-parity gate slices.
+
 Planning/doc gates for this slice:
 
 - `python3 -m json.tool ops/progress.json`
