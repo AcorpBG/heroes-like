@@ -94,7 +94,7 @@
       ],
       "createdAt": "2026-05-03T05:50:07Z",
       "updatedAt": "2026-05-03T08:32:00Z",
-      "notes": "Native inert package API, Windows config/helper, and first native RMG foundation API/identity/stub proof are implemented and validated. The broad map/scenario persistence parent remains in_progress; package read/write/conversion/adoption, save migration, content migration, full native RMG parity, and runtime call-site adoption remain future slices.",
+      "notes": "Native inert package API, Windows config/helper, and first native RMG foundation API/identity/stub proof are implemented and validated. The Windows helper now covers both native package load and native RMG foundation smokes when Godot is available. The broad map/scenario persistence parent remains in_progress; package read/write/conversion/adoption, save migration, content migration, full native RMG parity, and runtime call-site adoption remain future slices.",
       "startedAt": "2026-05-03T05:57:04Z",
       "docsReadyAt": "2026-05-03T06:45:00Z",
       "documentationEvidence": {
@@ -180,7 +180,12 @@
         "Passed 2026-05-03T08:30:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run.",
         "Passed 2026-05-03T08:30:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like.",
         "Passed 2026-05-03T08:30:00Z: git diff --check.",
-        "Passed 2026-05-03T08:31:00Z: python3 tests/validate_repo.py."
+        "Passed 2026-05-03T08:31:00Z: python3 tests/validate_repo.py.",
+        "Passed 2026-05-03 Windows helper follow-up: inspected scripts/build_map_persistence_windows.bat changed smoke flow; helper now runs tests/map_package_api_skeleton_report.tscn and tests/native_random_map_foundation_report.tscn when Godot is available unless --skip-test is used.",
+        "Passed 2026-05-03 Windows helper follow-up: cmake --build .artifacts/map_persistence_native_build --parallel 2.",
+        "Passed 2026-05-03 Windows helper follow-up: GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/map_package_api_skeleton_report.tscn; report showed binding_kind=native_gdextension and native_extension_loaded=true.",
+        "Passed 2026-05-03 Windows helper follow-up: GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_foundation_report.tscn; report showed status partial_foundation, full_generation_status not_implemented, and native_extension_loaded=true.",
+        "Passed 2026-05-03 Windows helper follow-up: python3 -m json.tool ops/progress.json; progress sync-plan --dry-run; git diff --check; python3 tests/validate_repo.py."
       ],
       "nativeBuildLoadEvidence": {
         "status": "completed_for_native_inert_api_skeleton_only",
@@ -242,8 +247,8 @@
           "scripts/build_map_persistence_windows.bat",
           "src/gdextension/README.md"
         ],
-        "summary": "Added a Windows batch helper that auto-detects the repo root, initializes or updates third_party/godot-cpp, builds Debug and Release by default with Visual Studio 2022 x64, supports focused Debug/Release-only builds, optional MinGW builds, expected DLL verification, and optional Godot headless smoke execution.",
-        "smokeBehavior": "If godot is not on PATH, the helper prints the manual smoke command and does not fail the build unless --require-test is provided.",
+        "summary": "Added a Windows batch helper that auto-detects the repo root, initializes or updates third_party/godot-cpp, builds Debug and Release by default with Visual Studio 2022 x64, supports focused Debug/Release-only builds, optional MinGW builds, expected DLL verification, and optional Godot headless smoke execution for both native package load and native RMG foundation coverage.",
+        "smokeBehavior": "If godot is not on PATH, the helper prints both manual smoke commands and does not fail the build unless --require-test is provided. When Godot is available and --skip-test is not used, it runs tests/map_package_api_skeleton_report.tscn and tests/native_random_map_foundation_report.tscn; --require-test also makes missing Godot a failure.",
         "expectedDlls": [
           "bin/aurelion_map_persistence.windows.template_debug.x86_64.dll",
           "bin/aurelion_map_persistence.windows.template_release.x86_64.dll"
@@ -346,7 +351,8 @@
         "Passed 2026-05-03T08:30:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run.",
         "Passed 2026-05-03T08:30:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like.",
         "Passed 2026-05-03T08:30:00Z: git diff --check.",
-        "Passed 2026-05-03T08:31:00Z: python3 tests/validate_repo.py."
+        "Passed 2026-05-03T08:31:00Z: python3 tests/validate_repo.py.",
+        "Passed 2026-05-03 Windows helper follow-up: scripts/build_map_persistence_windows.bat and src/gdextension/README.md now document and run both native package load and native RMG foundation smokes on Windows when Godot is available; Linux validation passed with cmake rebuild, both focused Godot smokes, JSON/progress checks, git diff --check, and python3 tests/validate_repo.py."
       ],
       "boundariesPreserved": [
         "No full RMG rewrite or terrain/object/road/town placement parity.",

@@ -99,7 +99,7 @@ call :verify_outputs
 if errorlevel 1 goto fail
 
 if "%SKIP_TEST%"=="1" (
-	echo Skipping Godot smoke because --skip-test was provided.
+	echo Skipping Godot smokes because --skip-test was provided.
 ) else (
 	call :run_smoke
 	if errorlevel 1 goto fail
@@ -167,8 +167,9 @@ if "%GODOT_FOUND%"=="0" (
 
 if "%GODOT_FOUND%"=="0" (
 	echo Godot was not found on PATH.
-	echo Build succeeded. To run the focused smoke manually, add Godot to PATH or pass --godot PATH_TO_GODOT_EXE, then run:
+	echo Build succeeded. To run the focused smokes manually, add Godot to PATH or pass --godot PATH_TO_GODOT_EXE, then run:
 	echo godot --headless --path . tests/map_package_api_skeleton_report.tscn
+	echo godot --headless --path . tests/native_random_map_foundation_report.tscn
 	if "%REQUIRE_TEST%"=="1" (
 		echo Failing because --require-test was provided.
 		exit /b 1
@@ -178,6 +179,8 @@ if "%GODOT_FOUND%"=="0" (
 
 set "GODOT_SILENCE_ROOT_WARNING=1"
 call :run "%GODOT_EXE%" --headless --path . tests/map_package_api_skeleton_report.tscn
+if errorlevel 1 exit /b 1
+call :run "%GODOT_EXE%" --headless --path . tests/native_random_map_foundation_report.tscn
 exit /b %ERRORLEVEL%
 
 :run
@@ -209,11 +212,11 @@ echo.
 echo Options:
 echo   --debug-only       Build and verify only the Debug DLL.
 echo   --release-only     Build and verify only the Release DLL.
-echo   --skip-test        Do not run the focused Godot smoke.
-echo   --require-test     Fail when Godot is not available or the smoke fails.
+echo   --skip-test        Do not run the focused Godot smokes.
+echo   --require-test     Fail when Godot is not available or either smoke fails.
 echo   --mingw            Use MinGW Makefiles instead of Visual Studio 2022.
 echo   --parallel N       Build with N parallel jobs. Default: 2.
-echo   --godot PATH       Use a specific Godot executable for the smoke.
+echo   --godot PATH       Use a specific Godot executable for the smokes.
 echo   --help             Show this help.
 echo.
 echo Expected outputs:
