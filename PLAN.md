@@ -257,7 +257,7 @@ nonGoals:
 - No save-version bump.
 - No renderer, fog, pathing, gameplay, RMG generation, or asset-ingestion changes.
 
-Selected owner-directed implementation slice:
+Completed owner-directed implementation slice:
 
 id: `generated-grastl-runtime-terrain-integration-10184`
 phase: `phase-2-deep-production-foundation`
@@ -288,6 +288,43 @@ validation:
 nonGoals:
 - No terrain placement, pathing, fog, save schema, RMG, editor paint semantics, road rendering, or non-grass terrain atlas redesign.
 - No new generated asset ingestion beyond the already committed grastl `frames_64` replacement trial frames.
+
+Selected owner-directed workflow slice:
+
+id: `generated-terrain-classes-runtime-integration-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add the tracked workflow and deterministic scaffolding needed to generate original replacement runtime terrain tiles for every remaining terrain class after `grastl`.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/generated-terrain-class-replacement-workflow.md`
+- `art/overworld/runtime/terrain_tiles/generated/grastl/README.md`
+- 2026-05-04 owner directive to continue the grastl workflow for `dirttl`, `lavatl`, `rocktl`, `rougtl`, `sandtl`, `snowtl`, `subbtl`, `swmptl`, and `watrtl`
+implementationTargets:
+- `docs/generated-terrain-class-replacement-workflow.md`
+- `tools/generated_terrain_atlas_tool.py`
+- `art/overworld/runtime/terrain_tiles/generated/<class>/source_sheets/`
+- `art/overworld/runtime/terrain_tiles/generated/<class>/previews/`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- A new tracked child slice exists for the remaining generated terrain class replacement workflow and is active in `ops/progress.json`.
+- The workflow explicitly lists `dirttl` 46, `lavatl` 79, `rocktl` 48, `rougtl` 79, `sandtl` 24, `snowtl` 79, `subbtl` 79, `swmptl` 79, and `watrtl` 33.
+- Deterministic tooling can pack original reference frames into 1024x1024 16x16 magenta-padded atlases, validate/cut later generated 1024 atlases into exact 64x64 class frames, force unused cells to magenta, and produce previews without calling image generation.
+- Repo-owned original reference 1024 atlases and previews exist for every listed remaining class.
+- Validation includes JSON validation, reference pack dry-run/generation, script syntax validation, `sync-plan` dry-run when available, and `git diff --check`.
+validation:
+- `python3 tools/generated_terrain_atlas_tool.py pack-reference --all --dry-run`
+- `python3 tools/generated_terrain_atlas_tool.py pack-reference --all --force`
+- `python3 -m py_compile tools/generated_terrain_atlas_tool.py`
+- `python3 -m json.tool ops/progress.json`
+- `python3 tests/validate_repo.py`
+- `python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan --dry-run /root/dev/heroes-like`
+- `git diff --check`
+nonGoals:
+- No image generation calls from this worker or repo tooling.
+- No runtime replacement frame ingestion for non-`grastl` terrain classes until generated candidates exist and pass validation.
+- No terrain placement, pathing, fog, save schema, RMG, editor paint semantics, road rendering, or unrelated renderer redesign.
 
 Selected Phase 2 corrective slice:
 
