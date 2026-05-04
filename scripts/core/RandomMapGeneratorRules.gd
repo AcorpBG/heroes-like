@@ -9061,13 +9061,17 @@ static func _early_resource_support_payload(placements: Dictionary, route_graph:
 		var zone_id := String(town.get("zone_id", ""))
 		var totals := {"gold": 0, "wood": 0, "ore": 0}
 		var resource_records := []
+		var support_resource_ids := {}
 		for resource in resources_by_zone.get(zone_id, []):
 			if not (resource is Dictionary):
 				continue
 			var site_id := String(resource.get("site_id", ""))
+			if not SUPPORT_RESOURCE_VALUE_BY_SITE.has(site_id):
+				continue
 			var value: Dictionary = SUPPORT_RESOURCE_VALUE_BY_SITE.get(site_id, {})
 			for key in ["gold", "wood", "ore"]:
 				totals[key] = int(totals.get(key, 0)) + int(value.get(key, 0))
+			support_resource_ids[String(resource.get("placement_id", ""))] = true
 			resource_records.append({
 				"placement_id": String(resource.get("placement_id", "")),
 				"site_id": site_id,
@@ -9080,7 +9084,7 @@ static func _early_resource_support_payload(placements: Dictionary, route_graph:
 				missing.append(key)
 		var route_lengths := []
 		for edge in resource_edges_by_town.get(String(town.get("placement_id", "")), []):
-			if edge is Dictionary and bool(edge.get("path_found", false)):
+			if edge is Dictionary and bool(edge.get("path_found", false)) and support_resource_ids.has(String(edge.get("to", ""))):
 				route_lengths.append(int(edge.get("path_length", 0)))
 		var route_status := _spread_status(route_lengths, ROUTE_DISTANCE_WARNING_SPREAD, ROUTE_DISTANCE_FAIL_SPREAD)
 		var status := "pass"
