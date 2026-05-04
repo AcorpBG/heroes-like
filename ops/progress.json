@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-guarded-site-coverage-10184",
-  "currentSliceTitle": "Random Map HoMM3 Parity Guarded Site Coverage",
+  "currentSliceId": "random-map-homm3-parity-river-crossing-quality-10184",
+  "currentSliceTitle": "Random Map HoMM3 Parity River Crossing Quality",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed guarded-site parity follow-up after blocker/choke shaping. Grounded in local homm3-re seven-category mine/resource semantics, value-banded object placement, decoration placement, and connection guard evidence. Object guard placement now reports and satisfies guarded coverage for mines, neutral dwellings, route rewards, and all valuable non-artifact targets in the bounded richness suite. Richness report passed in 31784 ms with summary {\"artifacts\":15,\"associated_object_guards\":161,\"guardable_valuable_objects\":161,\"guarded_valuable_objects\":161,\"unguarded_valuable_objects\":0,\"guardable_mines\":34,\"guarded_mines\":34,\"guardable_dwellings\":19,\"guarded_dwellings\":19,\"guardable_reward_objects\":93,\"guarded_reward_objects\":93,\"guarded_choke_routes\":41,\"route_shoulder_guards\":108,\"route_shoulder_guard_body_count\":108,\"required_routes\":148,\"required_routes_with_chokes\":62,\"required_routes_with_shoulders\":117,\"choked_road_tiles\":133,\"road_tiles\":1740}. Road/river writeout report passed. Monster reward bands report exposed a pre-existing 26x18 route decoration viability failure and was not used as this slice gate. Remaining likely gap: river quality/crossing semantics and broader visual/map inspection across more seeds.",
+  "currentSliceNotes": "Completed owner-directed RMG river/crossing quality follow-up after 3fb8168. Grounded in local homm3-re cell flags/overlays, writeout, phase runner, and template grammar evidence. River writeout now validates continuous ordered river candidates, connected components, isolated fragments, object-body conflicts, and road bridge/ford crossings. Richness report passed in 31621 ms with summary {\"river_candidates\":8,\"coherent_river_candidates\":8,\"river_continuity_failures\":0,\"isolated_river_fragments\":0,\"river_body_conflicts\":0,\"river_road_crossings\":156,\"land_river_candidates\":4,\"land_rivers_with_crossings\":4,\"guarded_valuable_objects\":161,\"unguarded_valuable_objects\":0,\"road_tiles\":1740}. Roads/rivers writeout report passed with land river 1/1 coherent, 29 crossings, 0 body conflicts/fragments; island candidates 3/3 coherent, 0 body conflicts. Remaining likely gap: template richness/zone treasure bands and broader visual inspection across more seeds.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T05:42:00Z",
+  "updatedAt": "2026-05-04T05:43:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7663,6 +7663,64 @@
         "random_map_monster_reward_bands_report.tscn was run as a probe and exposed a pre-existing 26x18 required-route decoration viability failure; it was excluded from this slice gate because the bounded richness and roads/rivers reports validate the guarded-site improvement on supported parity cases."
       ],
       "remainingNextGap": "river quality/crossing semantics and broader visual/map inspection across more seeds"
+    },
+    {
+      "id": "random-map-homm3-parity-river-crossing-quality-10184",
+      "title": "Random Map HoMM3 Parity River Crossing Quality",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Improve HoMM3-style RMG river overlay quality by making land river candidates continuous, body-safe, and measurably crossed by generated roads instead of only counting river candidates.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-cell-flags-and-overlays.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "2026-05-04 owner directive to continue RMG parity after 3fb8168"
+      ],
+      "implementationTargets": [
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_homm3_parity_richness_report.gd",
+        "tests/random_map_roads_rivers_writeout_report.gd",
+        ".artifacts/rmg_parity_richness/",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "Godot headless focused RMG parity richness report across bounded multiple seeds/templates/sizes",
+        "Godot headless random_map_roads_rivers_writeout_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Land river candidates are generated as continuous ordered overlay paths that avoid object bodies while allowing explicit road bridge/ford crossing cells.",
+        "Road/river writeout exposes river continuity, body-conflict, isolated-fragment, and road-crossing metrics.",
+        "Bounded richness metrics validate coherent river candidates and road crossing coverage across the selected land/island seeds/templates without exceeding the current runtime envelope.",
+        "Remaining RMG parity gaps are listed for the next slice."
+      ],
+      "nonGoals": [
+        "No generated terrain-art replacement work.",
+        "No copyrighted names, assets, maps, factions, unit art, music, or text.",
+        "No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.",
+        "No claim of full HoMM3 RMG parity beyond this measurable river/crossing quality improvement."
+      ],
+      "createdAt": "2026-05-04T04:08:49Z",
+      "updatedAt": "2026-05-04T05:43:00Z",
+      "startedAt": "2026-05-04T04:08:49Z",
+      "completedAt": "2026-05-04T05:43:00Z",
+      "notes": "Completed after inspecting current artifacts and local homm3-re evidence. Current reports counted river candidates but did not validate river continuity, isolated fragments, object-body conflicts, or road crossing quality; generator and reports now enforce those metrics on bounded parity cases.",
+      "sliceEvidence": [
+        "RandomMapGeneratorRules now routes land river candidates through waypointed passable paths, forces road crossing targets where road overlays exist, avoids object body tiles except allowed non-land endpoint anchors, and annotates every river candidate with quality metrics.",
+        "random_map_homm3_parity_richness_report.tscn passed in 31621 ms with river_candidates=8, coherent_river_candidates=8, river_continuity_failures=0, isolated_river_fragments=0, river_body_conflicts=0, river_road_crossings=156, land_river_candidates=4, land_rivers_with_crossings=4, guarded_valuable_objects=161, unguarded_valuable_objects=0, road_tiles=1740.",
+        "random_map_roads_rivers_writeout_report.tscn passed with land river coherent_river_candidate_count=1/1, river_road_crossing_count=29, river_body_conflict_count=0, isolated_river_fragment_count=0; island water candidates coherent_river_candidate_count=3/3, river_body_conflict_count=0.",
+        "python3 tests/validate_repo.py, python3 -m json.tool ops/progress.json, progress.py sync-plan --dry-run, and git diff --check passed."
+      ],
+      "remainingNextGap": "template richness/zone treasure bands and broader visual inspection across more seeds"
     }
   ],
   "completedImplementationEvidence": [

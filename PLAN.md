@@ -626,6 +626,34 @@ nonGoals:
 - No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.
 - No full HoMM3 RMG parity claim beyond this measurable movement-shaping improvement.
 
+Completed owner-directed implementation slice:
+
+id: `random-map-homm3-parity-river-crossing-quality-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Improve HoMM3-style RMG river overlay quality by making land river candidates continuous, body-safe, and measurably crossed by generated roads instead of only counting river candidates.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-cell-flags-and-overlays.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_homm3_parity_richness_report.gd`
+- `tests/random_map_roads_rivers_writeout_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Land river candidates are generated as continuous ordered overlay paths that avoid object bodies while allowing explicit road bridge/ford crossing cells.
+- Road/river writeout exposes river continuity, body-conflict, isolated-fragment, and road-crossing metrics.
+- Bounded richness metrics validate coherent river candidates and road crossing coverage across the selected land/island seeds/templates without exceeding the current runtime envelope.
+- Remaining RMG parity gaps are listed for the next slice.
+nonGoals:
+- No generated terrain-art replacement work.
+- No copyrighted names, assets, maps, factions, unit art, music, or text.
+- No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.
+- No full HoMM3 RMG parity claim beyond this measurable river/crossing quality improvement.
+
 ### Phase 3 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.

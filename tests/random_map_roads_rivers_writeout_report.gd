@@ -119,12 +119,22 @@ func _assert_land_river_state(writeout: Dictionary) -> bool:
 	if int(river.get("summary", {}).get("river_candidate_count", 0)) <= 0:
 		_fail("Land config did not generate river candidates: %s" % JSON.stringify(river))
 		return false
+	var summary: Dictionary = river.get("summary", {}) if river.get("summary", {}) is Dictionary else {}
+	if int(summary.get("coherent_river_candidate_count", 0)) < int(summary.get("river_candidate_count", 0)):
+		_fail("Land river candidates were not continuous: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("river_body_conflict_count", 0)) > 0 or int(summary.get("isolated_river_fragment_count", 0)) > 0:
+		_fail("Land river candidates had body conflicts or isolated fragments: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("land_river_with_crossing_count", 0)) < int(summary.get("land_river_candidate_count", 0)):
+		_fail("Land river candidates missed road crossing records: %s" % JSON.stringify(summary))
+		return false
 	for candidate in river.get("river_candidates", []):
 		if not (candidate is Dictionary):
 			continue
 		if String(candidate.get("overlay_type", "")) != "land_river_with_road_crossing_constraints":
 			continue
-		if candidate.get("candidate_cells", []).size() >= 8 and String(candidate.get("crossing_policy", "")) != "":
+		if candidate.get("candidate_cells", []).size() >= 8 and String(candidate.get("crossing_policy", "")) != "" and String(candidate.get("continuity_status", "")) == "pass" and int(candidate.get("road_crossing_count", 0)) > 0:
 			return true
 	_fail("Land river candidates missed coherent path/crossing metadata: %s" % JSON.stringify(river))
 	return false
@@ -139,6 +149,9 @@ func _assert_water_overlay_metadata(writeout: Dictionary) -> bool:
 		return false
 	if int(river.get("summary", {}).get("river_candidate_count", 0)) <= 0:
 		_fail("Water config missed deferred river/water transit candidates: %s" % JSON.stringify(river))
+		return false
+	if int(river.get("summary", {}).get("coherent_river_candidate_count", 0)) < int(river.get("summary", {}).get("river_candidate_count", 0)):
+		_fail("Water config river/water candidates were not continuous: %s" % JSON.stringify(river.get("summary", {})))
 		return false
 	for candidate in river.get("river_candidates", []):
 		if candidate is Dictionary and String(candidate.get("writeout_state", "")) == "final_generated_river_candidate_tile_bytes_written":
