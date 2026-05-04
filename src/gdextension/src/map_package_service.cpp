@@ -58,6 +58,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_validation_provenance_foundation");
 	result.append("native_random_map_package_session_adoption_bridge");
 	result.append("native_random_map_guard_reward_package_adoption");
+	result.append("native_random_map_homm3_land_water_shape");
 	result.append("native_random_map_full_parity_supported_profiles");
 	result.append("native_package_save_load");
 	result.append("generated_map_package_disk_startup");
@@ -4727,7 +4728,241 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	return payload;
 }
 
-Dictionary generate_terrain_grid(const Dictionary &normalized) {
+void mark_land_cell(Dictionary &land_lookup, int32_t x, int32_t y, int32_t width, int32_t height) {
+	if (x < 0 || y < 0 || x >= width || y >= height) {
+		return;
+	}
+	land_lookup[point_key(x, y)] = true;
+}
+
+void mark_land_radius(Dictionary &land_lookup, int32_t x, int32_t y, int32_t width, int32_t height, int32_t radius) {
+	for (int32_t dy = -radius; dy <= radius; ++dy) {
+		for (int32_t dx = -radius; dx <= radius; ++dx) {
+			if (std::abs(dx) + std::abs(dy) > radius) {
+				continue;
+			}
+			mark_land_cell(land_lookup, x + dx, y + dy, width, height);
+		}
+	}
+}
+
+void mark_land_cells_from_array(Dictionary &land_lookup, const Array &cells, int32_t width, int32_t height, int32_t radius = 0) {
+	for (int64_t index = 0; index < cells.size(); ++index) {
+		if (Variant(cells[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary cell = cells[index];
+		const int32_t x = int32_t(cell.get("x", 0));
+		const int32_t y = int32_t(cell.get("y", 0));
+		mark_land_radius(land_lookup, x, y, width, height, radius);
+	}
+}
+
+void mark_land_record_surfaces(Dictionary &land_lookup, const Dictionary &record, int32_t width, int32_t height) {
+	mark_land_cell(land_lookup, int32_t(record.get("x", 0)), int32_t(record.get("y", 0)), width, height);
+	if (Variant(record.get("primary_tile", Variant())).get_type() == Variant::DICTIONARY) {
+		Dictionary primary = record.get("primary_tile", Dictionary());
+		mark_land_cell(land_lookup, int32_t(primary.get("x", 0)), int32_t(primary.get("y", 0)), width, height);
+	}
+	mark_land_cells_from_array(land_lookup, record.get("body_tiles", Array()), width, height);
+	mark_land_cells_from_array(land_lookup, record.get("approach_tiles", Array()), width, height);
+	if (Variant(record.get("visit_tile", Variant())).get_type() == Variant::DICTIONARY) {
+		Dictionary visit = record.get("visit_tile", Dictionary());
+		mark_land_cell(land_lookup, int32_t(visit.get("x", 0)), int32_t(visit.get("y", 0)), width, height);
+	}
+}
+
+Dictionary protected_island_land_lookup(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, const Dictionary &object_placement, const Dictionary &town_guard_placement) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	Dictionary land_lookup;
+
+	Array zones = zone_layout.get("zones", Array());
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+		const String role = String(zone.get("role", ""));
+		const int32_t radius = role.contains("start") ? 4 : 2;
+		mark_land_radius(land_lookup, int32_t(anchor.get("x", 0)), int32_t(anchor.get("y", 0)), width, height, radius);
+	}
+
+	Array starts = player_starts.get("starts", Array());
+	for (int64_t index = 0; index < starts.size(); ++index) {
+		Dictionary start = starts[index];
+		mark_land_radius(land_lookup, int32_t(start.get("x", 0)), int32_t(start.get("y", 0)), width, height, 4);
+	}
+
+	Array road_segments = road_network.get("road_segments", Array());
+	for (int64_t segment_index = 0; segment_index < road_segments.size(); ++segment_index) {
+		Dictionary segment = road_segments[segment_index];
+		mark_land_cells_from_array(land_lookup, segment.get("cells", Array()), width, height);
+	}
+
+	Array objects = object_placement.get("object_placements", Array());
+	for (int64_t index = 0; index < objects.size(); ++index) {
+		mark_land_record_surfaces(land_lookup, Dictionary(objects[index]), width, height);
+	}
+	Array towns = town_guard_placement.get("town_records", Array());
+	for (int64_t index = 0; index < towns.size(); ++index) {
+		mark_land_record_surfaces(land_lookup, Dictionary(towns[index]), width, height);
+	}
+	Array guards = town_guard_placement.get("guard_records", Array());
+	for (int64_t index = 0; index < guards.size(); ++index) {
+		mark_land_record_surfaces(land_lookup, Dictionary(guards[index]), width, height);
+	}
+	return land_lookup;
+}
+
+struct IslandLandCandidate {
+	int32_t x = 0;
+	int32_t y = 0;
+	int64_t score = 0;
+	bool protected_land = false;
+};
+
+Array points_from_lookup(const Dictionary &lookup) {
+	Array points;
+	Array keys = lookup.keys();
+	for (int64_t index = 0; index < keys.size(); ++index) {
+		const String key = String(keys[index]);
+		const int32_t comma = key.find(",");
+		if (comma < 0) {
+			continue;
+		}
+		Dictionary point;
+		point["x"] = key.substr(0, comma).to_int();
+		point["y"] = key.substr(comma + 1).to_int();
+		points.append(point);
+	}
+	return points;
+}
+
+Dictionary zone_terrain_lookup(const Dictionary &zone_layout) {
+	Dictionary result;
+	Array zones = zone_layout.get("zones", Array());
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		if (!zone_id.is_empty()) {
+			result[zone_id] = terrain_id_for_zone(zone);
+		}
+	}
+	return result;
+}
+
+String island_land_terrain_for_cell(int32_t x, int32_t y, int32_t level, const Array &terrain_pool, const Array &seeds, const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &zone_terrain_by_id) {
+	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
+	if (y >= 0 && y < owner_grid.size()) {
+		Array row = owner_grid[y];
+		if (x >= 0 && x < row.size()) {
+			const String zone_id = String(row[x]);
+			const String zone_terrain = String(zone_terrain_by_id.get(zone_id, ""));
+			if (is_passable_terrain_id(zone_terrain)) {
+				return zone_terrain;
+			}
+		}
+	}
+	String terrain_id = choose_terrain_for_cell(x, y, level, terrain_pool, seeds, normalized);
+	if (is_passable_terrain_id(terrain_id)) {
+		return terrain_id;
+	}
+	return terrain_pool.is_empty() ? String("grass") : String(terrain_pool[0]);
+}
+
+Dictionary island_land_water_shape(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, const Dictionary &object_placement, const Dictionary &town_guard_placement) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	Dictionary protected_land = protected_island_land_lookup(normalized, zone_layout, player_starts, road_network, object_placement, town_guard_placement);
+	Array protected_points = points_from_lookup(protected_land);
+	Array zones = zone_layout.get("zones", Array());
+	Array zone_points;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+		zone_points.append(point_record(int32_t(anchor.get("x", width / 2)), int32_t(anchor.get("y", height / 2))));
+	}
+
+	const int32_t map_tiles = std::max(1, width * height);
+	const double owner_ratio = 1948.0 / 5184.0;
+	int32_t target_land_count = int32_t(std::llround(double(map_tiles) * owner_ratio));
+	target_land_count = std::max(target_land_count, int32_t(protected_land.size()));
+	target_land_count = std::min(map_tiles, target_land_count);
+
+	std::vector<IslandLandCandidate> candidates;
+	candidates.reserve(map_tiles);
+	const String seed = String(normalized.get("normalized_seed", "0"));
+	const double center_x = (double(width) - 1.0) * 0.5;
+	const double center_y = (double(height) - 1.0) * 0.5;
+	for (int32_t y = 0; y < height; ++y) {
+		for (int32_t x = 0; x < width; ++x) {
+			IslandLandCandidate candidate;
+			candidate.x = x;
+			candidate.y = y;
+			candidate.protected_land = protected_land.has(point_key(x, y));
+			if (candidate.protected_land) {
+				candidate.score = std::numeric_limits<int64_t>::min() / 4 + int64_t(y * width + x);
+				candidates.push_back(candidate);
+				continue;
+			}
+			int32_t nearest_protected = width + height;
+			for (int64_t index = 0; index < protected_points.size(); ++index) {
+				Dictionary point = protected_points[index];
+				const int32_t distance = std::abs(x - int32_t(point.get("x", 0))) + std::abs(y - int32_t(point.get("y", 0)));
+				nearest_protected = std::min(nearest_protected, distance);
+			}
+			int64_t nearest_zone_sq = int64_t(width * width + height * height);
+			for (int64_t index = 0; index < zone_points.size(); ++index) {
+				Dictionary point = zone_points[index];
+				const int64_t dx = int64_t(x) - int64_t(point.get("x", 0));
+				const int64_t dy = int64_t(y) - int64_t(point.get("y", 0));
+				nearest_zone_sq = std::min(nearest_zone_sq, dx * dx + dy * dy);
+			}
+			const int32_t edge_distance = std::min(std::min(x, y), std::min(width - 1 - x, height - 1 - y));
+			const int64_t edge_penalty = edge_distance <= 1 ? 2600 : (edge_distance <= 3 ? 900 : 0);
+			const uint32_t jitter = hash32_int(seed + String(":island_shape:") + String::num_int64(x) + String(":") + String::num_int64(y));
+			candidate.score = int64_t(nearest_protected * nearest_protected) * 115 + nearest_zone_sq * 7 + edge_penalty - int64_t(jitter % 251U);
+			const double dx = double(x) - center_x;
+			const double dy = double(y) - center_y;
+			candidate.score += int64_t((dx * dx + dy * dy) * 0.3);
+			candidates.push_back(candidate);
+		}
+	}
+	std::sort(candidates.begin(), candidates.end(), [](const IslandLandCandidate &left, const IslandLandCandidate &right) {
+		if (left.score == right.score) {
+			if (left.y == right.y) {
+				return left.x < right.x;
+			}
+			return left.y < right.y;
+		}
+		return left.score < right.score;
+	});
+
+	Dictionary land_lookup;
+	for (int32_t index = 0; index < target_land_count && index < int32_t(candidates.size()); ++index) {
+		land_lookup[point_key(candidates[index].x, candidates[index].y)] = true;
+	}
+
+	Dictionary shape;
+	shape["schema_id"] = "native_random_map_island_land_water_shape_v1";
+	shape["enabled"] = true;
+	shape["source_model"] = "protected_gameplay_surfaces_plus_owner_72x72_islands_land_ratio_target";
+	shape["owner_baseline_width"] = 72;
+	shape["owner_baseline_height"] = 72;
+	shape["owner_baseline_land_count"] = 1948;
+	shape["owner_baseline_water_count"] = 3236;
+	shape["owner_baseline_land_ratio"] = owner_ratio;
+	shape["target_land_count"] = target_land_count;
+	shape["protected_land_cell_count"] = protected_land.size();
+	shape["generated_land_cell_count"] = land_lookup.size();
+	shape["generated_water_cell_count"] = map_tiles - int32_t(land_lookup.size());
+	shape["generated_land_ratio"] = double(land_lookup.size()) / double(map_tiles);
+	shape["water_mode"] = normalized.get("water_mode", "land");
+	shape["policy"] = "water-dominant islands preserve starts, routes, towns, guards, rewards, decorations, and package body/visit/approach surfaces as land";
+	shape["land_lookup"] = land_lookup;
+	return shape;
+}
+
+Dictionary generate_terrain_grid(const Dictionary &normalized, const Dictionary &zone_layout = Dictionary(), const Dictionary &player_starts = Dictionary(), const Dictionary &road_network = Dictionary(), const Dictionary &object_placement = Dictionary(), const Dictionary &town_guard_placement = Dictionary()) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = int32_t(normalized.get("level_count", 1));
@@ -4737,6 +4972,10 @@ Dictionary generate_terrain_grid(const Dictionary &normalized) {
 	Dictionary aggregate_counts;
 	const PackedStringArray ids_by_code = terrain_id_by_code();
 	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
+	const bool use_island_shape = parity_targets.is_empty() && String(normalized.get("water_mode", "land")) == "islands" && !zone_layout.is_empty() && !road_network.is_empty();
+	Dictionary island_shape = use_island_shape ? island_land_water_shape(normalized, zone_layout, player_starts, road_network, object_placement, town_guard_placement) : Dictionary();
+	Dictionary island_land_lookup = island_shape.get("land_lookup", Dictionary());
+	Dictionary zone_terrain_by_id = use_island_shape ? zone_terrain_lookup(zone_layout) : Dictionary();
 	if (!parity_targets.is_empty()) {
 		Dictionary counts = parity_targets.get("terrain_counts", Dictionary());
 		Dictionary biome_counts;
@@ -4788,7 +5027,12 @@ Dictionary generate_terrain_grid(const Dictionary &normalized) {
 		Dictionary biome_counts;
 		for (int32_t y = 0; y < height; ++y) {
 			for (int32_t x = 0; x < width; ++x) {
-				const String terrain_id = choose_terrain_for_cell(x, y, level, terrain_pool, seeds, normalized);
+				String terrain_id;
+				if (use_island_shape && level == 0) {
+					terrain_id = island_land_lookup.has(point_key(x, y)) ? island_land_terrain_for_cell(x, y, level, terrain_pool, seeds, normalized, zone_layout, zone_terrain_by_id) : String("water");
+				} else {
+					terrain_id = choose_terrain_for_cell(x, y, level, terrain_pool, seeds, normalized);
+				}
 				const String biome_id = biome_for_terrain(terrain_id);
 				const int32_t terrain_code = terrain_code_for_id(terrain_id);
 				const int32_t flat_index = y * width + x;
@@ -4832,6 +5076,10 @@ Dictionary generate_terrain_grid(const Dictionary &normalized) {
 	grid["zone_seed_model"] = "deterministic_terrain_palette_voronoi_seed_grid";
 	grid["terrain_seed_records"] = seeds;
 	grid["terrain_counts"] = aggregate_counts;
+	if (!island_shape.is_empty()) {
+		island_shape.erase("land_lookup");
+		grid["land_water_shape"] = island_shape;
+	}
 	grid["levels"] = levels;
 	grid["materialized_level_count"] = levels.size();
 	grid["level_count_semantics"] = parity_targets.is_empty() ? "all_native_levels_materialized" : "gdscript_surface_tile_stream_with_level_count_metadata";
@@ -6154,7 +6402,6 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	const String generation_status = native_rmg_generation_status_for_config(normalized);
 	const String full_generation_status = native_rmg_full_generation_status_for_config(normalized);
 	Dictionary identity = random_map_config_identity(config);
-	Dictionary terrain_grid = generate_terrain_grid(normalized);
 	Dictionary player_assignment = player_assignment_for_config(normalized);
 	Dictionary zone_layout = generate_zone_layout(normalized, player_assignment);
 	Dictionary player_starts = generate_player_starts(normalized, zone_layout, player_assignment);
@@ -6162,6 +6409,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	Dictionary river_network = generate_river_network(normalized, road_network);
 	Dictionary object_placement = generate_object_placements(normalized, zone_layout, player_starts, road_network);
 	Dictionary town_guard_placement = generate_town_guard_placements(normalized, zone_layout, player_starts, road_network, object_placement);
+	Dictionary terrain_grid = generate_terrain_grid(normalized, zone_layout, player_starts, road_network, object_placement, town_guard_placement);
 	Array object_placements = object_placement.get("object_placements", Array());
 	Array map_objects;
 	Array tagged_objects = tagged_record_snapshots(object_placements, "object_placement");

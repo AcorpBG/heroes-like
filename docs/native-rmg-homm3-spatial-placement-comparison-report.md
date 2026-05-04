@@ -49,7 +49,7 @@ Post-change key metrics:
 |---|---:|---:|
 | object instances | 496 | 344 |
 | road tiles | 184 | 240 |
-| land tiles | 1,948 | 4,900 |
+| land tiles | 1,948 | 2,296 |
 | all-content quadrant CV | 0.1935 | 0.3560 |
 | reward quadrant CV | 0.2378 | 0.3499 |
 | reward nonempty 6x6 cells | 26 | 26 |
@@ -78,7 +78,9 @@ Measured effect on the owner-like case:
 
 ## Remaining Gaps
 
-This is spatial evidence and a bounded placement correction, not full parity.
-Remaining known gaps include exact HoMM3 object/art/template choice, byte-level
-H3M parity, owner water/land shape parity, exact object count parity, and exact
-HoMM3 road/object/deco spatial distributions.
+This is spatial evidence and bounded placement/terrain-shape correction, not
+full parity. The follow-up land/water shape slice reduced the owner-like native
+land count from 4,900 to 2,296 tiles while preserving route/object/package
+surfaces on land. Remaining known gaps include exact HoMM3 object/art/template
+choice, byte-level H3M parity, exact island contours/shore semantics, exact
+object count parity, and exact HoMM3 road/object/deco spatial distributions.

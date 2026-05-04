@@ -125,6 +125,27 @@ Selection rules for new Phase 2 slices:
 
 Completed owner-directed implementation slice:
 
+id: `native-rmg-homm3-land-water-shape-parity-10184`
+phase: `phase-2-deep-production-foundation`
+status: `completed`
+purpose: Continue beyond spatial placement comparison by correcting native C++ owner-like 72x72 islands output that was mostly land, anchoring the owner H3M land/water baseline, and preserving generated gameplay/package surfaces on land.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/native-rmg-homm3-spatial-placement-comparison-report.md`
+- `docs/native-rmg-homm3-land-water-shape-report.md`
+- owner-attached HoMM3 H3M gzip from 2026-05-04
+implementation:
+- Native islands terrain for non-structural-parity cases now shapes a water-dominant island mask after routes, objects, towns, and guards are known, protecting starts, roads, object body/visit/approach cells, town/guard cells, and converted package body/visit/block surfaces as land.
+- The new report parses the owner H3M tile stream directly and verifies the native owner-like case moved from 4,900 land / 284 water to 2,296 land / 2,888 water against the owner baseline of 1,948 land / 3,236 water.
+evidence:
+- `tests/native_random_map_homm3_land_water_shape_report.tscn`
+- `docs/native-rmg-homm3-land-water-shape-report.md`
+nonGoals:
+- No route back to `RandomMapGeneratorRules.gd` for active generation, no generated map packages committed under `maps/`, no HoMM3 copyrighted art/DEF asset import, no exact HoMM3-re terrain-shape/placement/art/object-table/byte parity claim, no save version bump or authored scenario/package adoption.
+
+Completed owner-directed implementation slice:
+
 id: `native-rmg-homm3-re-obstacle-identity-comparison-10184`
 phase: `phase-2-deep-production-foundation`
 status: `completed`
