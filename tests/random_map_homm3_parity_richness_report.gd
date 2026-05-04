@@ -67,6 +67,9 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 	var roads_rivers: Dictionary = staging.get("roads_rivers_writeout", {}) if staging.get("roads_rivers_writeout", {}) is Dictionary else {}
 	var roads: Dictionary = roads_rivers.get("road_overlay", {}) if roads_rivers.get("road_overlay", {}) is Dictionary else {}
 	var rivers: Dictionary = roads_rivers.get("river_water_coast_overlay", {}) if roads_rivers.get("river_water_coast_overlay", {}) is Dictionary else {}
+	var connection_guards: Dictionary = staging.get("connection_guard_materialization", {}) if staging.get("connection_guard_materialization", {}) is Dictionary else {}
+	var connection_guard_summary: Dictionary = connection_guards.get("summary", {}) if connection_guards.get("summary", {}) is Dictionary else {}
+	var road_summary: Dictionary = roads.get("summary", {}) if roads.get("summary", {}) is Dictionary else {}
 	var town_payload: Dictionary = staging.get("town_mine_dwelling_placement", {}) if staging.get("town_mine_dwelling_placement", {}) is Dictionary else {}
 	var route_reward_summary: Dictionary = staging.get("materialized_route_reward_summary", {}) if staging.get("materialized_route_reward_summary", {}) is Dictionary else {}
 	var object_guard_summary: Dictionary = staging.get("materialized_object_guard_summary", {}) if staging.get("materialized_object_guard_summary", {}) is Dictionary else {}
@@ -112,8 +115,22 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"decoration_blocking_body_tile_total": int(decor_summary.get("blocking_body_tile_total", 0)),
 		"multitile_decoration_count": int(decor_summary.get("multitile_decoration_count", 0)),
 		"decoration_body_density": snapped(float(decor_summary.get("blocking_body_tile_total", 0)) / float(max(1, int(case.get("width", 0)) * int(case.get("height", 0)))), 0.0001),
-		"road_tile_count": int(roads.get("summary", {}).get("tile_count", 0)),
-		"road_segment_count": int(roads.get("summary", {}).get("segment_count", 0)),
+		"road_tile_count": int(road_summary.get("tile_count", 0)),
+		"road_segment_count": int(road_summary.get("segment_count", 0)),
+		"road_class_counts": road_summary.get("road_class_counts", {}),
+		"expected_connection_guard_road_control_count": int(road_summary.get("expected_connection_guard_road_control_count", 0)),
+		"connection_guard_road_control_count": int(road_summary.get("connection_guard_road_control_count", 0)),
+		"missing_connection_guard_road_control_count": int(road_summary.get("missing_connection_guard_road_control_count", 0)),
+		"expected_wide_suppression_road_count": int(road_summary.get("expected_wide_suppression_road_count", 0)),
+		"wide_suppressed_route_count": int(road_summary.get("wide_suppressed_route_count", 0)),
+		"expected_special_guard_gate_road_count": int(road_summary.get("expected_special_guard_gate_road_count", 0)),
+		"special_guard_gate_road_count": int(road_summary.get("special_guard_gate_road_count", 0)),
+		"expected_normal_connection_guard_count": int(connection_guard_summary.get("expected_normal_guard_count", 0)),
+		"normal_connection_guard_count": int(connection_guard_summary.get("normal_guard_count", 0)),
+		"expected_special_connection_guard_count": int(connection_guard_summary.get("expected_special_guard_gate_count", 0)),
+		"special_connection_guard_count": int(connection_guard_summary.get("special_guard_gate_count", 0)),
+		"expected_wide_suppression_count": int(connection_guard_summary.get("expected_wide_suppression_count", 0)),
+		"wide_suppression_count": int(connection_guard_summary.get("wide_suppression_count", 0)),
 		"river_candidate_count": int(rivers.get("summary", {}).get("river_candidate_count", 0)),
 		"water_tile_count": int(rivers.get("summary", {}).get("water_tile_count", 0)),
 		"object_instance_count": serialization.get("object_instances", []).size() if serialization.get("object_instances", []) is Array else 0,
@@ -163,6 +180,12 @@ func _metric_failures(case_id: String, metrics: Dictionary) -> Array:
 		failures.append("%s exceeded per-case runtime budget: %d ms" % [case_id, int(metrics.get("elapsed_msec", 0))])
 	if int(metrics.get("road_tile_count", 0)) <= 0 or int(metrics.get("road_segment_count", 0)) <= 0:
 		failures.append("%s has no generated road network" % case_id)
+	if int(metrics.get("connection_guard_road_control_count", 0)) < int(metrics.get("expected_connection_guard_road_control_count", 0)):
+		failures.append("%s connection guard road controls are incomplete: %d/%d" % [case_id, int(metrics.get("connection_guard_road_control_count", 0)), int(metrics.get("expected_connection_guard_road_control_count", 0))])
+	if int(metrics.get("wide_suppressed_route_count", 0)) < int(metrics.get("expected_wide_suppression_road_count", 0)):
+		failures.append("%s wide guard-suppressed road semantics are incomplete: %d/%d" % [case_id, int(metrics.get("wide_suppressed_route_count", 0)), int(metrics.get("expected_wide_suppression_road_count", 0))])
+	if int(metrics.get("special_guard_gate_road_count", 0)) < int(metrics.get("expected_special_guard_gate_road_count", 0)):
+		failures.append("%s special border-guard gate roads are incomplete: %d/%d" % [case_id, int(metrics.get("special_guard_gate_road_count", 0)), int(metrics.get("expected_special_guard_gate_road_count", 0))])
 	if String(metrics.get("water_mode", "")) == "land" and int(metrics.get("river_candidate_count", 0)) <= 0:
 		failures.append("%s land map has no river candidates" % case_id)
 	if String(metrics.get("water_mode", "")) == "islands" and (int(metrics.get("water_tile_count", 0)) <= 0 or int(metrics.get("river_candidate_count", 0)) <= 0):
@@ -199,7 +222,7 @@ func _ascii_preview(payload: Dictionary) -> String:
 					marks[_point_key(int(cell.get("x", 0)), int(cell.get("y", 0)))] = "~"
 	for tile in staging.get("roads_rivers_writeout", {}).get("road_overlay", {}).get("tiles", []):
 		if tile is Dictionary:
-			marks[_point_key(int(tile.get("x", 0)), int(tile.get("y", 0)))] = "."
+			marks[_point_key(int(tile.get("x", 0)), int(tile.get("y", 0)))] = "C" if tile.get("connection_control", {}) is Dictionary and not tile.get("connection_control", {}).is_empty() else "."
 	for decor in staging.get("decoration_density_pass", {}).get("decoration_records", []):
 		if decor is Dictionary:
 			for body in decor.get("body_tiles", []):
@@ -252,6 +275,10 @@ func _terrain_char(terrain_id: String) -> String:
 func _summary(results: Array) -> Dictionary:
 	var totals := {
 		"road_tiles": 0,
+		"connection_guard_road_controls": 0,
+		"missing_connection_guard_road_controls": 0,
+		"wide_suppressed_routes": 0,
+		"special_guard_gate_roads": 0,
 		"river_candidates": 0,
 		"decorations": 0,
 		"decoration_blocking_body_tiles": 0,
@@ -270,6 +297,10 @@ func _summary(results: Array) -> Dictionary:
 			continue
 		var metrics: Dictionary = result.get("metrics", {}) if result.get("metrics", {}) is Dictionary else {}
 		totals["road_tiles"] = int(totals.get("road_tiles", 0)) + int(metrics.get("road_tile_count", 0))
+		totals["connection_guard_road_controls"] = int(totals.get("connection_guard_road_controls", 0)) + int(metrics.get("connection_guard_road_control_count", 0))
+		totals["missing_connection_guard_road_controls"] = int(totals.get("missing_connection_guard_road_controls", 0)) + int(metrics.get("missing_connection_guard_road_control_count", 0))
+		totals["wide_suppressed_routes"] = int(totals.get("wide_suppressed_routes", 0)) + int(metrics.get("wide_suppressed_route_count", 0))
+		totals["special_guard_gate_roads"] = int(totals.get("special_guard_gate_roads", 0)) + int(metrics.get("special_guard_gate_road_count", 0))
 		totals["river_candidates"] = int(totals.get("river_candidates", 0)) + int(metrics.get("river_candidate_count", 0))
 		totals["decorations"] = int(totals.get("decorations", 0)) + int(metrics.get("decoration_count", 0))
 		totals["decoration_blocking_body_tiles"] = int(totals.get("decoration_blocking_body_tiles", 0)) + int(metrics.get("decoration_blocking_body_tile_total", 0))
@@ -359,6 +390,9 @@ func _case_log_line(result: Dictionary) -> Dictionary:
 		"ok": result.get("failures", []).is_empty(),
 		"elapsed_msec": int(metrics.get("elapsed_msec", 0)),
 		"roads": int(metrics.get("road_tile_count", 0)),
+		"connection_controls": int(metrics.get("connection_guard_road_control_count", 0)),
+		"wide_roads": int(metrics.get("wide_suppressed_route_count", 0)),
+		"special_gate_roads": int(metrics.get("special_guard_gate_road_count", 0)),
 		"rivers": int(metrics.get("river_candidate_count", 0)),
 		"decor": int(metrics.get("decoration_count", 0)),
 		"decor_body_tiles": int(metrics.get("decoration_blocking_body_tile_total", 0)),

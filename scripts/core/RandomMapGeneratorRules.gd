@@ -5178,11 +5178,18 @@ static func _build_roads_rivers_writeout_payload(normalized: Dictionary, terrain
 static func _road_overlay_writeout_payload(road_network: Dictionary, route_graph: Dictionary, terrain_rows: Array, object_footprints: Dictionary) -> Dictionary:
 	var edges_by_id := _route_edges_by_id(route_graph.get("edges", []))
 	var occupied := _route_blocking_body_lookup_from_footprint_records(object_footprints.get("object_records", []))
+	var connection_controls_by_route := _connection_control_records_by_route(route_graph)
+	var connection_guard_summary: Dictionary = route_graph.get("connection_guard_materialization", {}).get("summary", {}) if route_graph.get("connection_guard_materialization", {}) is Dictionary else {}
 	var overlay_tiles := []
 	var segment_records := []
 	var route_ids := []
 	var required_route_ids := []
+	var controlled_route_ids := []
+	var road_class_counts := {}
 	var diagnostics := []
+	var connection_guard_road_control_count := 0
+	var special_guard_gate_road_count := 0
+	var wide_suppressed_route_count := 0
 	for segment in road_network.get("road_segments", []):
 		if not (segment is Dictionary):
 			diagnostics.append({"reason": "invalid_road_segment", "message": "road segment is not a dictionary", "retryable": true})
@@ -5191,6 +5198,19 @@ static func _road_overlay_writeout_payload(road_network: Dictionary, route_graph
 		var edge: Dictionary = edges_by_id.get(route_edge_id, {})
 		var road_class := _road_class_for_edge(edge, segment)
 		var road_type_id := _road_type_for_class(road_class, edge)
+		road_class_counts[road_class] = int(road_class_counts.get(road_class, 0)) + 1
+		if bool(edge.get("border_guard", false)):
+			special_guard_gate_road_count += 1
+		if bool(edge.get("wide", false)):
+			wide_suppressed_route_count += 1
+		var connection_control := _connection_control_for_road_segment(route_edge_id, segment.get("cells", []), connection_controls_by_route.get(route_edge_id, []))
+		var control_key := ""
+		if not connection_control.is_empty():
+			connection_guard_road_control_count += 1
+			if route_edge_id not in controlled_route_ids:
+				controlled_route_ids.append(route_edge_id)
+			var control_tile: Dictionary = connection_control.get("road_tile", {}) if connection_control.get("road_tile", {}) is Dictionary else {}
+			control_key = _point_key(int(control_tile.get("x", -9999)), int(control_tile.get("y", -9999)))
 		var segment_tiles := []
 		for index in range(segment.get("cells", []).size()):
 			var cell = segment.get("cells", [])[index]
@@ -5219,6 +5239,8 @@ static func _road_overlay_writeout_payload(road_network: Dictionary, route_graph
 				"body_conflict": body_blocked,
 				"writeout_state": "final_generated_tile_bytes_written_to_export_record",
 			}
+			if control_key != "" and key == control_key:
+				tile["connection_control"] = connection_control
 			overlay_tiles.append(tile)
 			segment_tiles.append(tile)
 		if route_edge_id not in route_ids:
@@ -5235,27 +5257,40 @@ static func _road_overlay_writeout_payload(road_network: Dictionary, route_graph
 			"road_type_id": road_type_id,
 			"tile_count": segment_tiles.size(),
 			"tiles": segment_tiles,
+			"connection_control": connection_control,
 			"transit_semantics": edge.get("transit_semantics", {}),
 			"writeout_state": "final_generated_road_overlay_tiles_written",
 		})
 	route_ids.sort()
 	required_route_ids.sort()
+	controlled_route_ids.sort()
+	var expected_connection_guard_road_control_count := int(connection_guard_summary.get("expected_normal_guard_count", 0)) + int(connection_guard_summary.get("expected_special_guard_gate_count", 0))
 	var payload := {
 		"schema_id": "random_map_road_overlay_writeout_v1",
 		"overlay_id": ROAD_OVERLAY_ID,
 		"writeout_policy": "final_generated_road_overlay_tile_bytes",
-		"road_class_policy": "required_routes_primary_guarded_routes_fortified_resource_routes_service",
+		"road_class_policy": "required_routes_primary_guarded_routes_fortified_resource_routes_service_with_connection_control_markers",
 		"segments": segment_records,
 		"tiles": overlay_tiles,
 		"route_edge_ids": route_ids,
 		"required_route_edge_ids": required_route_ids,
+		"connection_controlled_route_edge_ids": controlled_route_ids,
 		"diagnostics": diagnostics,
 		"blocked_body_policy": "road_tiles_must_not_overlap_object_footprint_body_tiles",
+		"connection_control_policy": "HoMM3-style connection Value and Border Guard records mark a controlling road tile; Wide records preserve a guard-suppressed unguarded route",
 		"summary": {
 			"segment_count": segment_records.size(),
 			"tile_count": overlay_tiles.size(),
 			"route_edge_count": route_ids.size(),
 			"required_route_count": required_route_ids.size(),
+			"road_class_counts": _sorted_dict(road_class_counts),
+			"expected_connection_guard_road_control_count": expected_connection_guard_road_control_count,
+			"connection_guard_road_control_count": connection_guard_road_control_count,
+			"missing_connection_guard_road_control_count": max(0, expected_connection_guard_road_control_count - connection_guard_road_control_count),
+			"expected_wide_suppression_road_count": int(connection_guard_summary.get("expected_wide_suppression_count", 0)),
+			"wide_suppressed_route_count": wide_suppressed_route_count,
+			"expected_special_guard_gate_road_count": int(connection_guard_summary.get("expected_special_guard_gate_count", 0)),
+			"special_guard_gate_road_count": special_guard_gate_road_count,
 			"body_conflict_count": _count_overlay_body_conflicts(overlay_tiles),
 			"diagnostic_count": diagnostics.size(),
 		},
@@ -5586,6 +5621,8 @@ static func _road_type_byte_for_class(road_class: String) -> int:
 	match road_class:
 		"special_guard_gate_road":
 			return 4
+		"wide_guard_suppressed_road":
+			return 1
 		"guarded_route_road":
 			return 3
 		"start_economy_service_road":
@@ -5707,6 +5744,13 @@ static func _roads_rivers_writeout_validation_core(road_overlay: Dictionary, riv
 		failures.append("road overlay produced no tiles")
 	if int(road_overlay.get("summary", {}).get("body_conflict_count", 0)) > 0:
 		failures.append("road overlay crosses object footprint body tiles")
+	var road_summary: Dictionary = road_overlay.get("summary", {}) if road_overlay.get("summary", {}) is Dictionary else {}
+	if int(road_summary.get("connection_guard_road_control_count", 0)) < int(road_summary.get("expected_connection_guard_road_control_count", 0)):
+		failures.append("road overlay missed connection guard control markers: %d/%d" % [int(road_summary.get("connection_guard_road_control_count", 0)), int(road_summary.get("expected_connection_guard_road_control_count", 0))])
+	if int(road_summary.get("wide_suppressed_route_count", 0)) < int(road_summary.get("expected_wide_suppression_road_count", 0)):
+		failures.append("road overlay missed wide guard-suppressed routes: %d/%d" % [int(road_summary.get("wide_suppressed_route_count", 0)), int(road_summary.get("expected_wide_suppression_road_count", 0))])
+	if int(road_summary.get("special_guard_gate_road_count", 0)) < int(road_summary.get("expected_special_guard_gate_road_count", 0)):
+		failures.append("road overlay missed special border-guard gate roads: %d/%d" % [int(road_summary.get("special_guard_gate_road_count", 0)), int(road_summary.get("expected_special_guard_gate_road_count", 0))])
 	var road_route_ids: Array = road_overlay.get("route_edge_ids", [])
 	for edge in route_graph.get("edges", []):
 		if not (edge is Dictionary) or not bool(edge.get("required", false)) or not bool(edge.get("path_found", false)):
@@ -5813,6 +5857,8 @@ static func _roads_rivers_writeout_phase_summary(payload: Dictionary) -> Diction
 static func _road_class_for_edge(edge: Dictionary, segment: Dictionary) -> String:
 	if bool(edge.get("border_guard", false)):
 		return "special_guard_gate_road"
+	if bool(edge.get("wide", false)):
+		return "wide_guard_suppressed_road"
 	if int(edge.get("guard_value", 0)) > 0:
 		return "guarded_route_road"
 	if bool(edge.get("required", false)) and String(edge.get("role", "")) == "required_start_economy_route":
@@ -5827,6 +5873,8 @@ static func _road_type_for_class(road_class: String, edge: Dictionary) -> String
 	match road_class:
 		"special_guard_gate_road":
 			return "generated_dirt_gate_road"
+		"wide_guard_suppressed_road":
+			return "generated_dirt_wide_guard_suppressed_road"
 		"guarded_route_road":
 			return "generated_dirt_guarded_road"
 		"start_economy_service_road":
@@ -5835,6 +5883,62 @@ static func _road_type_for_class(road_class: String, edge: Dictionary) -> String
 			return "generated_dirt_primary_road"
 		_:
 			return "generated_dirt_connector_road"
+
+static func _connection_control_records_by_route(route_graph: Dictionary) -> Dictionary:
+	var result := {}
+	var materialization: Dictionary = route_graph.get("connection_guard_materialization", {}) if route_graph.get("connection_guard_materialization", {}) is Dictionary else {}
+	for group_key in ["normal_route_guards", "special_guard_gates"]:
+		for record in materialization.get(group_key, []):
+			if not (record is Dictionary):
+				continue
+			var route_edge_id := String(record.get("route_edge_id", ""))
+			if route_edge_id == "":
+				continue
+			if not result.has(route_edge_id):
+				result[route_edge_id] = []
+			result[route_edge_id].append(record)
+	return result
+
+static func _connection_control_for_road_segment(route_edge_id: String, cells: Array, records: Array) -> Dictionary:
+	if cells.is_empty() or records.is_empty() or not (records[0] is Dictionary):
+		return {}
+	var record: Dictionary = records[0]
+	var anchor: Dictionary = record.get("route_cell_anchor_candidate", {}) if record.get("route_cell_anchor_candidate", {}) is Dictionary else {}
+	if anchor.is_empty():
+		anchor = record.get("placement_candidate", {}) if record.get("placement_candidate", {}) is Dictionary else {}
+	var road_tile := _closest_point_in_path(cells, anchor)
+	if road_tile.is_empty():
+		return {}
+	return {
+		"controlled": true,
+		"route_edge_id": route_edge_id,
+		"connection_guard_materialization_id": String(record.get("id", "")),
+		"control_kind": String(record.get("record_type", "")),
+		"guard_value": int(record.get("guard_value", 0)),
+		"road_tile": road_tile,
+		"anchor_candidate": anchor,
+		"distance_to_anchor": _manhattan_distance(road_tile, anchor) if not anchor.is_empty() else 0,
+		"normal_guard_materialized": bool(record.get("normal_guard_materialized", false)),
+		"special_guard_materialized": bool(record.get("special_guard_materialized", false)),
+		"source_link": record.get("source_link", {}),
+		"writeout_state": "final_generated_connection_choke_marker_written_to_road_overlay",
+	}
+
+static func _closest_point_in_path(cells: Array, anchor: Dictionary) -> Dictionary:
+	if cells.is_empty():
+		return {}
+	if anchor.is_empty():
+		return cells[int(floor(float(cells.size() - 1) * 0.5))] if cells[int(floor(float(cells.size() - 1) * 0.5))] is Dictionary else {}
+	var best := {}
+	var best_distance := 999999999
+	for cell in cells:
+		if not (cell is Dictionary):
+			continue
+		var distance := _manhattan_distance(cell, anchor)
+		if distance < best_distance:
+			best_distance = distance
+			best = cell
+	return best
 
 static func _road_neighbor_mask(cells: Array, x: int, y: int) -> Dictionary:
 	var lookup := _point_lookup(cells)
