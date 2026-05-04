@@ -86,6 +86,8 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 	var associated_guard_count: int = staging.get("materialized_object_guards", []).size() if staging.get("materialized_object_guards", []) is Array else 0
 	var guarded_artifact_ratio: float = float(associated_guard_count) / float(max(1, artifact_count))
 	var artifact_guard_summary := _artifact_guard_summary(scenario.get("artifact_nodes", []), staging.get("materialized_object_guards", []))
+	var zone_richness := _zone_richness_summary(payload)
+	var reward_bands := _reward_band_summary(staging.get("monster_reward_bands", {}))
 	var metrics := {
 		"ok": bool(generation.get("ok", false)),
 		"elapsed_msec": elapsed_msec,
@@ -173,6 +175,17 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"same_zone_town_pair_count": int(same_zone_town_spacing.get("pair_count", town_payload.get("summary", {}).get("same_zone_town_pair_count", 0))),
 		"same_zone_town_minimum_distance_required": int(same_zone_town_spacing.get("minimum_distance_required", town_payload.get("summary", {}).get("same_zone_town_minimum_distance_required", 0))),
 		"observed_same_zone_town_minimum_distance": int(same_zone_town_spacing.get("observed_minimum_distance", town_payload.get("summary", {}).get("observed_same_zone_town_minimum_distance", 0))),
+		"eligible_zone_count": int(zone_richness.get("eligible_zone_count", 0)),
+		"rich_zone_count": int(zone_richness.get("rich_zone_count", 0)),
+		"poor_zone_count": int(zone_richness.get("poor_zone_count", 0)),
+		"per_zone_richness_min": int(zone_richness.get("per_zone_richness_min", 0)),
+		"object_category_coverage_count": int(zone_richness.get("object_category_coverage_count", 0)),
+		"reward_band_record_count": int(reward_bands.get("record_count", 0)),
+		"template_reward_band_record_count": int(reward_bands.get("template_record_count", 0)),
+		"fallback_reward_band_record_count": int(reward_bands.get("fallback_record_count", 0)),
+		"reward_band_value_min": int(reward_bands.get("value_min", 0)),
+		"reward_band_value_max": int(reward_bands.get("value_max", 0)),
+		"reward_band_source_counts": reward_bands.get("source_counts", {}),
 	}
 	var failures := _metric_failures(String(case.get("id", "")), metrics)
 	return {
@@ -181,6 +194,8 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"metrics": metrics,
 		"failures": failures,
 		"validation_report": validation_report,
+		"zone_richness": zone_richness,
+		"reward_band_summary": reward_bands,
 		"artifact_guard_summary": artifact_guard_summary,
 		"artifact_node_samples": _sample_dictionaries(scenario.get("artifact_nodes", []), 8),
 		"materialized_object_guard_samples": _sample_dictionaries(staging.get("materialized_object_guards", []), 8),
@@ -206,6 +221,135 @@ func _config(case: Dictionary) -> Dictionary:
 			"guard_strength_profile": "core_low",
 		},
 	}
+
+func _zone_richness_summary(payload: Dictionary) -> Dictionary:
+	var staging: Dictionary = payload.get("staging", {}) if payload.get("staging", {}) is Dictionary else {}
+	var scenario: Dictionary = payload.get("scenario_record", {}) if payload.get("scenario_record", {}) is Dictionary else {}
+	var zones: Array = staging.get("zones", []) if staging.get("zones", []) is Array else []
+	var town_payload: Dictionary = staging.get("town_mine_dwelling_placement", {}) if staging.get("town_mine_dwelling_placement", {}) is Dictionary else {}
+	var decor: Dictionary = staging.get("decoration_density_pass", {}) if staging.get("decoration_density_pass", {}) is Dictionary else {}
+	var monster_rewards: Dictionary = staging.get("monster_reward_bands", {}) if staging.get("monster_reward_bands", {}) is Dictionary else {}
+	var by_zone := {}
+	for zone in zones:
+		if not (zone is Dictionary):
+			continue
+		var zone_id := String(zone.get("id", ""))
+		var role := String(zone.get("role", ""))
+		if _zone_role_is_connector(role):
+			continue
+		by_zone[zone_id] = {
+			"zone_id": zone_id,
+			"role": role,
+			"cell_count": int(zone.get("cell_count", 0)),
+			"categories": {},
+			"score": 0,
+			"minimum_score": 4,
+			"poor": false,
+		}
+	for town in town_payload.get("town_start_records", []):
+		if town is Dictionary:
+			_zone_richness_add(by_zone, String(town.get("zone_id", "")), "town")
+	for mine in town_payload.get("mine_resource_producer_records", []):
+		if mine is Dictionary:
+			_zone_richness_add(by_zone, String(mine.get("zone_id", "")), "mine")
+	for dwelling in town_payload.get("dwelling_recruitment_site_records", []):
+		if dwelling is Dictionary:
+			_zone_richness_add(by_zone, String(dwelling.get("zone_id", "")), "dwelling")
+	for resource in scenario.get("resource_nodes", []):
+		if resource is Dictionary:
+			if String(resource.get("generated_kind", "")) == "route_reward":
+				_zone_richness_add(by_zone, String(resource.get("zone_id", "")), "reward")
+	for artifact in scenario.get("artifact_nodes", []):
+		if artifact is Dictionary:
+			_zone_richness_add(by_zone, String(artifact.get("zone_id", "")), "artifact")
+	for target in decor.get("zone_density_targets", []):
+		if target is Dictionary and int(target.get("placed_count", 0)) > 0:
+			_zone_richness_add(by_zone, String(target.get("zone_id", "")), "decor")
+	for guard in staging.get("materialized_object_guards", []):
+		if guard is Dictionary:
+			_zone_richness_add(by_zone, String(guard.get("zone_id", "")), "guard")
+	for record in monster_rewards.get("monster_reward_records", []):
+		if not (record is Dictionary):
+			continue
+		var context: Dictionary = record.get("zone_context", {}) if record.get("zone_context", {}) is Dictionary else {}
+		var zone_id := String(context.get("primary_zone_id", ""))
+		_zone_richness_add(by_zone, zone_id, "guard")
+		_zone_richness_add(by_zone, zone_id, "reward_band")
+	var zone_records := []
+	var poor_zones := []
+	var category_union := {}
+	var min_score := 999999
+	for zone_id in by_zone.keys():
+		var record: Dictionary = by_zone[zone_id]
+		var categories: Dictionary = record.get("categories", {})
+		var score := categories.size()
+		record["score"] = score
+		record["poor"] = score < int(record.get("minimum_score", 4))
+		min_score = min(min_score, score)
+		for category_id in categories.keys():
+			category_union[String(category_id)] = true
+		zone_records.append(record)
+		if bool(record.get("poor", false)):
+			poor_zones.append(record)
+	zone_records.sort_custom(Callable(self, "_compare_zone_richness_record"))
+	poor_zones.sort_custom(Callable(self, "_compare_zone_richness_record"))
+	return {
+		"eligible_zone_count": by_zone.size(),
+		"rich_zone_count": by_zone.size() - poor_zones.size(),
+		"poor_zone_count": poor_zones.size(),
+		"per_zone_richness_min": 0 if min_score == 999999 else min_score,
+		"object_category_coverage_count": category_union.size(),
+		"object_category_coverage": _sorted_string_keys(category_union),
+		"zones": zone_records,
+		"poor_zones": poor_zones,
+		"policy": "eligible non-connector zones must expose a compact mix of economy/reward/guard/decor categories",
+	}
+
+func _zone_richness_add(by_zone: Dictionary, zone_id: String, category_id: String) -> void:
+	if zone_id == "" or category_id == "" or not by_zone.has(zone_id):
+		return
+	var record: Dictionary = by_zone[zone_id]
+	var categories: Dictionary = record.get("categories", {}) if record.get("categories", {}) is Dictionary else {}
+	categories[category_id] = int(categories.get(category_id, 0)) + 1
+	record["categories"] = categories
+	by_zone[zone_id] = record
+
+func _reward_band_summary(monster_reward_bands: Dictionary) -> Dictionary:
+	var source_counts := {}
+	var value_min := 999999
+	var value_max := 0
+	var records: Array = monster_reward_bands.get("reward_band_records", []) if monster_reward_bands.get("reward_band_records", []) is Array else []
+	for reward in records:
+		if not (reward is Dictionary):
+			continue
+		var source := String(reward.get("source", ""))
+		source_counts[source] = int(source_counts.get(source, 0)) + 1
+		var value_range: Dictionary = reward.get("value_range", {}) if reward.get("value_range", {}) is Dictionary else {}
+		value_min = min(value_min, int(value_range.get("min", 0)))
+		value_max = max(value_max, int(value_range.get("max", 0)))
+	return {
+		"record_count": records.size(),
+		"template_record_count": int(source_counts.get("template_treasure_band", 0)),
+		"fallback_record_count": records.size() - int(source_counts.get("template_treasure_band", 0)),
+		"source_counts": source_counts,
+		"value_min": 0 if value_min == 999999 else value_min,
+		"value_max": value_max,
+	}
+
+func _zone_role_is_connector(role: String) -> bool:
+	return role == "junction" or role.contains("gate") or role.contains("border") or role.contains("connector") or role.contains("crossing")
+
+func _compare_zone_richness_record(left: Dictionary, right: Dictionary) -> bool:
+	if int(left.get("score", 0)) == int(right.get("score", 0)):
+		return String(left.get("zone_id", "")) < String(right.get("zone_id", ""))
+	return int(left.get("score", 0)) < int(right.get("score", 0))
+
+func _sorted_string_keys(values: Dictionary) -> Array:
+	var keys := []
+	for key in values.keys():
+		keys.append(String(key))
+	keys.sort()
+	return keys
 
 func _metric_failures(case_id: String, metrics: Dictionary) -> Array:
 	var failures := []
@@ -277,6 +421,22 @@ func _metric_failures(case_id: String, metrics: Dictionary) -> Array:
 		failures.append("%s guard/encounter density is too low: %d" % [case_id, int(metrics.get("encounter_count", 0))])
 	if int(metrics.get("object_instance_count", 0)) < int(metrics.get("town_count", 0)) + int(metrics.get("mine_count", 0)) + int(metrics.get("decoration_count", 0)):
 		failures.append("%s object writeout count does not reflect placed objects" % case_id)
+	if int(metrics.get("eligible_zone_count", 0)) <= 0:
+		failures.append("%s has no eligible zones for richness validation" % case_id)
+	if int(metrics.get("poor_zone_count", 0)) > 0:
+		failures.append("%s has poor per-zone richness coverage: %d zones below floor" % [case_id, int(metrics.get("poor_zone_count", 0))])
+	if int(metrics.get("per_zone_richness_min", 0)) < 4:
+		failures.append("%s minimum zone richness score is too low: %d" % [case_id, int(metrics.get("per_zone_richness_min", 0))])
+	if int(metrics.get("object_category_coverage_count", 0)) < 6:
+		failures.append("%s object category coverage is too narrow: %d" % [case_id, int(metrics.get("object_category_coverage_count", 0))])
+	if int(metrics.get("reward_band_record_count", 0)) <= 0:
+		failures.append("%s produced no reward band records" % case_id)
+	if int(metrics.get("template_reward_band_record_count", 0)) <= 0:
+		failures.append("%s did not consume template treasure bands" % case_id)
+	if int(metrics.get("fallback_reward_band_record_count", 0)) > 0:
+		failures.append("%s fell back from template treasure bands: %d records" % [case_id, int(metrics.get("fallback_reward_band_record_count", 0))])
+	if int(metrics.get("reward_band_value_max", 0)) < int(metrics.get("reward_band_value_min", 0)):
+		failures.append("%s reward band value range is inverted" % case_id)
 	return failures
 
 func _ascii_preview(payload: Dictionary) -> String:
@@ -390,11 +550,27 @@ func _summary(results: Array) -> Dictionary:
 		"start_town_minimum_distance_required_max": 0,
 		"observed_start_town_minimum_distance_min": 999999,
 		"same_zone_town_pair_count": 0,
+		"eligible_zones": 0,
+		"rich_zones": 0,
+		"poor_zones": 0,
+		"per_zone_richness_min": 999999,
+		"object_category_coverage_max": 0,
+		"reward_band_records": 0,
+		"template_reward_band_records": 0,
+		"fallback_reward_band_records": 0,
+		"reward_band_value_min": 999999,
+		"reward_band_value_max": 0,
+		"template_variability_signature_count": 0,
+		"template_variability_template_count": 0,
 	}
+	var signatures := {}
+	var templates := {}
 	for result in results:
 		if not (result is Dictionary):
 			continue
 		var metrics: Dictionary = result.get("metrics", {}) if result.get("metrics", {}) is Dictionary else {}
+		signatures[String(metrics.get("stable_signature", ""))] = true
+		templates[String(metrics.get("template_id", ""))] = true
 		totals["road_tiles"] = int(totals.get("road_tiles", 0)) + int(metrics.get("road_tile_count", 0))
 		totals["connection_guard_road_controls"] = int(totals.get("connection_guard_road_controls", 0)) + int(metrics.get("connection_guard_road_control_count", 0))
 		totals["missing_connection_guard_road_controls"] = int(totals.get("missing_connection_guard_road_controls", 0)) + int(metrics.get("missing_connection_guard_road_control_count", 0))
@@ -444,10 +620,28 @@ func _summary(results: Array) -> Dictionary:
 		if int(metrics.get("observed_start_town_minimum_distance", 0)) > 0:
 			totals["observed_start_town_minimum_distance_min"] = min(int(totals.get("observed_start_town_minimum_distance_min", 999999)), int(metrics.get("observed_start_town_minimum_distance", 0)))
 		totals["same_zone_town_pair_count"] = int(totals.get("same_zone_town_pair_count", 0)) + int(metrics.get("same_zone_town_pair_count", 0))
+		totals["eligible_zones"] = int(totals.get("eligible_zones", 0)) + int(metrics.get("eligible_zone_count", 0))
+		totals["rich_zones"] = int(totals.get("rich_zones", 0)) + int(metrics.get("rich_zone_count", 0))
+		totals["poor_zones"] = int(totals.get("poor_zones", 0)) + int(metrics.get("poor_zone_count", 0))
+		if int(metrics.get("per_zone_richness_min", 0)) > 0:
+			totals["per_zone_richness_min"] = min(int(totals.get("per_zone_richness_min", 999999)), int(metrics.get("per_zone_richness_min", 0)))
+		totals["object_category_coverage_max"] = max(int(totals.get("object_category_coverage_max", 0)), int(metrics.get("object_category_coverage_count", 0)))
+		totals["reward_band_records"] = int(totals.get("reward_band_records", 0)) + int(metrics.get("reward_band_record_count", 0))
+		totals["template_reward_band_records"] = int(totals.get("template_reward_band_records", 0)) + int(metrics.get("template_reward_band_record_count", 0))
+		totals["fallback_reward_band_records"] = int(totals.get("fallback_reward_band_records", 0)) + int(metrics.get("fallback_reward_band_record_count", 0))
+		if int(metrics.get("reward_band_value_min", 0)) > 0:
+			totals["reward_band_value_min"] = min(int(totals.get("reward_band_value_min", 999999)), int(metrics.get("reward_band_value_min", 0)))
+		totals["reward_band_value_max"] = max(int(totals.get("reward_band_value_max", 0)), int(metrics.get("reward_band_value_max", 0)))
 	if int(totals.get("observed_minimum_town_distance_min", 999999)) == 999999:
 		totals["observed_minimum_town_distance_min"] = 0
 	if int(totals.get("observed_start_town_minimum_distance_min", 999999)) == 999999:
 		totals["observed_start_town_minimum_distance_min"] = 0
+	if int(totals.get("per_zone_richness_min", 999999)) == 999999:
+		totals["per_zone_richness_min"] = 0
+	if int(totals.get("reward_band_value_min", 999999)) == 999999:
+		totals["reward_band_value_min"] = 0
+	totals["template_variability_signature_count"] = signatures.size()
+	totals["template_variability_template_count"] = templates.size()
 	return totals
 
 func _town_distance_summary(towns: Variant) -> Dictionary:
@@ -555,6 +749,13 @@ func _case_log_line(result: Dictionary) -> Dictionary:
 		"guardable_dwellings": int(metrics.get("guardable_dwelling_count", 0)),
 		"guarded_rewards": int(metrics.get("guarded_reward_object_count", 0)),
 		"guardable_rewards": int(metrics.get("guardable_reward_object_count", 0)),
+		"eligible_zones": int(metrics.get("eligible_zone_count", 0)),
+		"poor_zones": int(metrics.get("poor_zone_count", 0)),
+		"zone_richness_min": int(metrics.get("per_zone_richness_min", 0)),
+		"category_coverage": int(metrics.get("object_category_coverage_count", 0)),
+		"reward_bands": int(metrics.get("reward_band_record_count", 0)),
+		"template_reward_bands": int(metrics.get("template_reward_band_record_count", 0)),
+		"fallback_reward_bands": int(metrics.get("fallback_reward_band_record_count", 0)),
 		"town_min": int(metrics.get("observed_minimum_town_distance", 0)),
 		"town_required": int(metrics.get("minimum_town_distance_required", 0)),
 		"start_town_min": int(metrics.get("observed_start_town_minimum_distance", 0)),
