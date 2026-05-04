@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/random_map_homm3_parity_visual_inspection_report.gd" id="1_d6y7l"]
+
+[node name="RandomMapHomm3ParityLargeVisualInspectionReport" type="Node"]
+script = ExtResource("1_d6y7l")
+report_mode = "large"

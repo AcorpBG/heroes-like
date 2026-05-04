@@ -743,6 +743,38 @@ nonGoals:
 - No save-version bump, authored campaign adoption, native generator rewrite, generated package/map clutter, or broad renderer/fog/pathing redesign.
 - No full HoMM3 RMG parity claim beyond this bounded report/runtime correction.
 
+Completed owner-directed follow-up slice:
+
+id: `random-map-homm3-parity-large-visual-diagnostic-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add a separate bounded visual diagnostic path for excluded large translated RMG templates, starting with `translated_rmg_template_042_v1` at 108x108, without making the cheap visual gate hang.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-homm3-parity-visual-inspection-gaps.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- 2026-05-04 owner directive to continue RMG parity after `41233b1`
+implementationTargets:
+- `tests/random_map_homm3_parity_visual_inspection_report.gd`
+- `tests/random_map_homm3_parity_large_visual_inspection_report.tscn`
+- `.artifacts/rmg_parity_large_visual_inspection/`
+- `docs/random-map-homm3-parity-visual-inspection-gaps.md`
+- `ops/progress.json`
+completionCriteria:
+- The existing cheap visual gate keeps its 36x36/72x72 case set and runtime bounds.
+- A separate large report mode inspects one deterministic 108x108 `translated_rmg_template_042_v1` case with explicit total and diagnostic per-case budgets.
+- Large-template quality gaps are reported as diagnostic gaps with limit 0 for this focused evidence path; strict-budget overruns remain diagnostic notes.
+- Focused large/cheap visual reports, richness report if reasonable, JSON/progress sync, diff check, and repository validation pass.
+nonGoals:
+- No generated terrain-art replacement work or generated PNG ingestion.
+- No copyrighted names, assets, maps, factions, unit art, music, or text.
+- No save-version bump, authored campaign adoption, native generator rewrite, generated package/map clutter, or broad renderer/fog/pathing redesign.
+- No promotion of `translated_rmg_template_042_v1`, `translated_rmg_template_043_v1`, 144x144, or underground large templates into strict cheap-gate fixtures.
+- No full HoMM3 RMG parity claim beyond this bounded large-template diagnostic evidence.
+
 ### Phase 3 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.

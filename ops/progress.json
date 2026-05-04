@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-visual-diagnostic-runtime-10184",
-  "currentSliceTitle": "Random Map HoMM3 Parity Visual Diagnostic Runtime",
+  "currentSliceId": "random-map-homm3-parity-large-visual-diagnostic-10184",
+  "currentSliceTitle": "Random Map HoMM3 Parity Large Visual Diagnostic",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed after be744e8: route-heavy translated probes avoid unnecessary full-grid path searches, visual diagnostics have explicit capped budgets, and the report now uses marker distribution/per-route evidence instead of misleading blank/grass-run summary gates.",
+  "currentSliceNotes": "Completed after inspecting the current visual matrix/per-case previews, current report implementation, and reverse-engineered HoMM3 template/phase/zone-link/decor docs. Template 042 at 108x108 produced no diagnostic quality gaps but remains too slow for the cheap gate.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T09:45:00Z",
+  "updatedAt": "2026-05-04T10:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7980,6 +7980,135 @@
         "Passed: python3 tests/validate_repo.py."
       ],
       "remainingNextGap": "translated_rmg_template_002_v1 remains diagnostic rather than strict because it exceeds the 18000 ms strict fixture budget; 108x108+ translated template inspection/rendered visual evidence and final art/object visual parity remain separate slices."
+    },
+    {
+      "id": "random-map-homm3-parity-large-visual-diagnostic-10184",
+      "title": "Random Map HoMM3 Parity Large Visual Diagnostic",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "2026-05-04 owner directive to continue RMG parity after 41233b1"
+      ],
+      "purpose": "Add a separate bounded visual diagnostic path for excluded large translated RMG templates, starting with translated_rmg_template_042_v1 at 108x108, without making the cheap visual gate hang.",
+      "implementationTargets": [
+        "tests/random_map_homm3_parity_visual_inspection_report.gd",
+        "tests/random_map_homm3_parity_large_visual_inspection_report.tscn",
+        ".artifacts/rmg_parity_large_visual_inspection/",
+        "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "/root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_large_visual_inspection_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_visual_inspection_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_richness_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "The existing cheap visual gate keeps its 36x36/72x72 case set and runtime bounds.",
+        "A separate large report mode inspects one deterministic 108x108 translated_rmg_template_042_v1 case with explicit total and diagnostic per-case budgets.",
+        "Large-template quality gaps are reported as diagnostic gaps with limit 0 for this focused evidence path; strict-budget overruns remain diagnostic notes.",
+        "Focused large/cheap visual reports, richness report if reasonable, JSON/progress sync, diff check, and repository validation pass."
+      ],
+      "nonGoals": [
+        "No generated terrain-art replacement work or generated PNG ingestion.",
+        "No copyrighted names, assets, maps, factions, unit art, music, or text.",
+        "No save-version bump, authored campaign adoption, native generator rewrite, generated package/map clutter, or broad renderer/fog/pathing redesign.",
+        "No promotion of translated_rmg_template_042_v1, translated_rmg_template_043_v1, 144x144, or underground large templates into strict cheap-gate fixtures.",
+        "No full HoMM3 RMG parity claim beyond this bounded large-template diagnostic evidence."
+      ],
+      "createdAt": "2026-05-04T10:20:00Z",
+      "updatedAt": "2026-05-04T10:35:00Z",
+      "startedAt": "2026-05-04T10:20:00Z",
+      "completedAt": "2026-05-04T10:35:00Z",
+      "notes": "Completed after inspecting the current visual matrix/per-case previews, current report implementation, and reverse-engineered HoMM3 template/phase/zone-link/decor docs. Template 042 at 108x108 produced no diagnostic quality gaps but remains too slow for the cheap gate.",
+      "implementationEvidence": {
+        "summary": "Added large visual report mode and scene for bounded 108x108 translated template 042 inspection without expanding the cheap visual gate.",
+        "sourceFiles": [
+          "tests/random_map_homm3_parity_visual_inspection_report.gd",
+          "tests/random_map_homm3_parity_large_visual_inspection_report.tscn",
+          "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+          "PLAN.md",
+          "ops/progress.json"
+        ],
+        "inspectionArtifacts": [
+          ".artifacts/rmg_parity_large_visual_inspection/summary.json",
+          ".artifacts/rmg_parity_large_visual_inspection/matrix.md",
+          ".artifacts/rmg_parity_large_visual_inspection/large_translated_land_042_visual.json",
+          ".artifacts/rmg_parity_large_visual_inspection/large_translated_land_042_visual.txt"
+        ],
+        "focusedMetrics": {
+          "large_report_runtime_msec": 41445,
+          "large_report_runtime_budget_msec": 120000,
+          "large_case_elapsed_msec": 41194,
+          "large_case_diagnostic_budget_msec": 90000,
+          "large_case_elapsed_msec_per_route": 438.234,
+          "template_id": "translated_rmg_template_042_v1",
+          "profile_id": "translated_rmg_profile_042_v1",
+          "width": 108,
+          "height": 108,
+          "zone_count": 25,
+          "link_count": 46,
+          "road_segment_count": 94,
+          "road_tiles": 2376,
+          "river_candidates": 2,
+          "river_road_crossings": 104,
+          "decoration_body_tiles": 1608,
+          "multitile_decoration_count": 613,
+          "guarded_valuable_objects": 120,
+          "guardable_valuable_objects": 120,
+          "unguarded_valuable_objects": 0,
+          "poor_zones": 0,
+          "per_zone_richness_min": 6,
+          "connection_guard_road_controls": 44,
+          "expected_connection_guard_road_controls": 44,
+          "wide_suppressed_routes": 2,
+          "expected_wide_suppressed_routes": 2,
+          "validation_failure_count": 0,
+          "diagnostic_gap_count": 0,
+          "diagnostic_note_count": 1,
+          "marker_count": 801,
+          "row_marker_coverage_ratio": 1.0,
+          "column_marker_coverage_ratio": 1.0,
+          "quadrant_marker_coverage": 4,
+          "cheap_visual_runtime_msec": 56925,
+          "cheap_visual_case_count": 6,
+          "cheap_visual_strict_pass_case_count": 5,
+          "cheap_visual_diagnostic_gap_case_count": 0,
+          "cheap_visual_total_road_tiles": 3889,
+          "cheap_visual_total_guarded_valuable_objects": 286,
+          "cheap_visual_total_guardable_valuable_objects": 286,
+          "richness_report_runtime_msec": 31652,
+          "richness_max_case_msec": 15630,
+          "richness_eligible_zones": 34,
+          "richness_poor_zones": 0,
+          "richness_guarded_valuable_objects": 166,
+          "richness_guardable_valuable_objects": 166
+        },
+        "concreteFix": "The visual inspection report now has a large diagnostic mode and separate scene/artifact path. It runs one 108x108 translated template 042 case with a 120000 ms report budget, 90000 ms diagnostic case budget, and diagnostic gap limit 0, while preserving the cheap six-case gate unchanged."
+      },
+      "validationEvidence": [
+        "Passed: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-rmg-large-visual-1 XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-rmg-large-visual-1 XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-rmg-large-visual-1 /root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_large_visual_inspection_report.tscn; report showed ok=true, one diagnostic case, runtime_msec=41445, elapsed_msec=41194, no diagnostic gaps, 2376 roads, 2 rivers, 1608 decor body tiles, 120/120 guarded valuable objects, 0 poor zones, and all rows/columns/quadrants covered.",
+        "Passed: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-rmg-visual-large-slice-1 XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-rmg-visual-large-slice-1 XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-rmg-visual-large-slice-1 /root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_visual_inspection_report.tscn; report showed 6 cases, 5/5 strict passes, 0 diagnostic gaps, runtime_msec=56925, 3889 road tiles, 10 river candidates, 1800 decor body tiles, 286/286 guarded valuable objects, and 0 poor zones.",
+        "Passed: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-rmg-richness-large-slice-1 XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-rmg-richness-large-slice-1 XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-rmg-richness-large-slice-1 /root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_richness_report.tscn; report showed runtime_msec=31652, max_case_msec=15630, eligible_zones=34, poor_zones=0, template_reward_band_records=48, fallback_reward_band_records=0, guarded_valuable_objects=166/166, road_tiles=1740, river_candidates=8.",
+        "Passed: python3 -m json.tool ops/progress.json.",
+        "Passed: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run; output showed PLAN slice ids: 25 existing: 168 missing: 0.",
+        "Passed: git diff --check.",
+        "Passed: python3 tests/validate_repo.py."
+      ],
+      "remainingNextGap": "translated_rmg_template_042_v1 remains diagnostic because 108x108 inspection takes about 41 seconds; translated_rmg_template_043_v1, 144x144, underground large profiles, rendered screenshot comparison, final terrain/object art, native parity adoption, and generated PNG ingestion remain separate slices."
     }
   ],
   "completedImplementationEvidence": [

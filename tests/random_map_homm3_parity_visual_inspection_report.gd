@@ -2,14 +2,22 @@ extends Node
 
 const RichnessReportScript = preload("res://tests/random_map_homm3_parity_richness_report.gd")
 
-const REPORT_ID := "RANDOM_MAP_HOMM3_PARITY_VISUAL_INSPECTION_REPORT"
-const ARTIFACT_DIR := "res://.artifacts/rmg_parity_visual_inspection"
-const MAX_TOTAL_MSEC := 70000
-const MIN_ATTEMPTED_CASES := 6
-const MIN_STRICT_PASS_CASES := 4
+const DEFAULT_REPORT_ID := "RANDOM_MAP_HOMM3_PARITY_VISUAL_INSPECTION_REPORT"
+const LARGE_REPORT_ID := "RANDOM_MAP_HOMM3_PARITY_LARGE_VISUAL_INSPECTION_REPORT"
+const DEFAULT_ARTIFACT_DIR := "res://.artifacts/rmg_parity_visual_inspection"
+const LARGE_ARTIFACT_DIR := "res://.artifacts/rmg_parity_large_visual_inspection"
+const DEFAULT_MAX_TOTAL_MSEC := 70000
+const LARGE_MAX_TOTAL_MSEC := 120000
+const DEFAULT_MIN_ATTEMPTED_CASES := 6
+const LARGE_MIN_ATTEMPTED_CASES := 1
+const DEFAULT_MIN_STRICT_PASS_CASES := 4
+const LARGE_MIN_STRICT_PASS_CASES := 0
 const STRICT_CASE_MSEC := 18000
 const DIAGNOSTIC_CASE_MSEC := 24000
+const LARGE_DIAGNOSTIC_CASE_MSEC := 90000
 const VISUAL_MARKERS := ["T", "G", "A", "M", "R", "#", ".", "C", "~", "="]
+
+@export var report_mode := "standard"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -28,7 +36,7 @@ func _run() -> void:
 		result["inspection"] = _inspection_summary(result)
 		results.append(result)
 		_write_case_artifacts(result)
-		print("%s_CASE %s" % [REPORT_ID, JSON.stringify(_case_log_line(result))])
+		print("%s_CASE %s" % [_report_id(), JSON.stringify(_case_log_line(result))])
 		if bool(case.get("strict_gate", true)):
 			strict_failures.append_array(result.get("failures", []))
 		elif not result.get("failures", []).is_empty():
@@ -37,47 +45,55 @@ func _run() -> void:
 				"template_id": String(result.get("metrics", {}).get("template_id", "")),
 				"failures": result.get("failures", []),
 			})
-		if Time.get_ticks_msec() - started_msec > MAX_TOTAL_MSEC:
-			strict_failures.append("visual inspection report exceeded total runtime budget %d ms" % MAX_TOTAL_MSEC)
+		if Time.get_ticks_msec() - started_msec > _max_total_msec():
+			strict_failures.append("visual inspection report exceeded total runtime budget %d ms" % _max_total_msec())
 			break
 	var summary := _summary(results)
-	if results.size() < MIN_ATTEMPTED_CASES:
-		strict_failures.append("visual inspection attempted too few cases: %d/%d" % [results.size(), MIN_ATTEMPTED_CASES])
-	if int(summary.get("strict_pass_case_count", 0)) < MIN_STRICT_PASS_CASES:
-		strict_failures.append("visual inspection strict pass count below floor: %d/%d" % [int(summary.get("strict_pass_case_count", 0)), MIN_STRICT_PASS_CASES])
+	if results.size() < _min_attempted_cases():
+		strict_failures.append("visual inspection attempted too few cases: %d/%d" % [results.size(), _min_attempted_cases()])
+	if int(summary.get("strict_pass_case_count", 0)) < _min_strict_pass_cases():
+		strict_failures.append("visual inspection strict pass count below floor: %d/%d" % [int(summary.get("strict_pass_case_count", 0)), _min_strict_pass_cases()])
+	if _max_diagnostic_gap_count() >= 0 and diagnostic_gaps.size() > _max_diagnostic_gap_count():
+		strict_failures.append("visual inspection diagnostic gaps exceeded limit: %d/%d" % [diagnostic_gaps.size(), _max_diagnostic_gap_count()])
 	var report := {
 		"ok": strict_failures.is_empty(),
-		"report_id": REPORT_ID,
+		"report_id": _report_id(),
+		"report_mode": _report_mode(),
 		"case_count": results.size(),
 		"runtime_msec": Time.get_ticks_msec() - started_msec,
-		"runtime_budget_msec": MAX_TOTAL_MSEC,
+		"runtime_budget_msec": _max_total_msec(),
 		"strict_failures": strict_failures,
 		"diagnostic_gaps": diagnostic_gaps,
 		"summary": summary,
 		"cases": results,
-		"artifact_dir": ARTIFACT_DIR,
+		"artifact_dir": _artifact_dir(),
 		"reference_basis": [
 			"/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
 			"/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
 			"/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+			"/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md",
 		],
 	}
-	_write_json("%s/summary.json" % ARTIFACT_DIR, report)
+	_write_json("%s/summary.json" % _artifact_dir(), report)
 	_write_matrix_markdown(report)
 	if not strict_failures.is_empty():
 		_fail("RMG visual inspection report failed: %s" % JSON.stringify(strict_failures))
 		return
-	print("%s %s" % [REPORT_ID, JSON.stringify({
+	print("%s %s" % [_report_id(), JSON.stringify({
 		"ok": true,
 		"case_count": results.size(),
 		"runtime_msec": report.get("runtime_msec", 0),
 		"summary": summary,
 		"diagnostic_gaps": diagnostic_gaps,
-		"artifact_dir": ARTIFACT_DIR,
+		"artifact_dir": _artifact_dir(),
 	})])
 	get_tree().quit(0)
 
 func _cases() -> Array:
+	if _report_mode() == "large":
+		return [
+			{"id": "large_translated_land_042_visual", "seed": "rmg-large-visual-042-10184", "width": 108, "height": 108, "water_mode": "land", "level_count": 1, "player_count": 4, "template_id": "translated_rmg_template_042_v1", "profile_id": "translated_rmg_profile_042_v1", "strict_gate": false, "diagnostic_runtime_budget_msec": LARGE_DIAGNOSTIC_CASE_MSEC},
+		]
 	return [
 		{"id": "small_compact_land_visual_a", "seed": "rmg-visual-small-a-10184", "width": 36, "height": 36, "water_mode": "land", "level_count": 1, "player_count": 3, "template_id": "border_gate_compact_v1", "profile_id": "border_gate_compact_profile_v1", "strict_gate": true},
 		{"id": "small_compact_land_visual_b", "seed": "rmg-visual-small-b-10184", "width": 36, "height": 36, "water_mode": "land", "level_count": 1, "player_count": 3, "template_id": "border_gate_compact_v1", "profile_id": "border_gate_compact_profile_v1", "strict_gate": true},
@@ -86,6 +102,28 @@ func _cases() -> Array:
 		{"id": "medium_translated_land_033_visual", "seed": "rmg-visual-medium-033-10184", "width": 72, "height": 72, "water_mode": "land", "level_count": 1, "player_count": 4, "template_id": "translated_rmg_template_033_v1", "profile_id": "translated_rmg_profile_033_v1", "strict_gate": true},
 		{"id": "medium_translated_land_002_probe_a", "seed": "rmg-visual-medium-002-a-10184", "width": 72, "height": 72, "water_mode": "land", "level_count": 1, "player_count": 4, "template_id": "translated_rmg_template_002_v1", "profile_id": "translated_rmg_profile_002_v1", "strict_gate": false, "diagnostic_runtime_budget_msec": DIAGNOSTIC_CASE_MSEC},
 	]
+
+func _report_mode() -> String:
+	var mode := report_mode.strip_edges().to_lower()
+	return "large" if mode == "large" else "standard"
+
+func _report_id() -> String:
+	return LARGE_REPORT_ID if _report_mode() == "large" else DEFAULT_REPORT_ID
+
+func _artifact_dir() -> String:
+	return LARGE_ARTIFACT_DIR if _report_mode() == "large" else DEFAULT_ARTIFACT_DIR
+
+func _max_total_msec() -> int:
+	return LARGE_MAX_TOTAL_MSEC if _report_mode() == "large" else DEFAULT_MAX_TOTAL_MSEC
+
+func _min_attempted_cases() -> int:
+	return LARGE_MIN_ATTEMPTED_CASES if _report_mode() == "large" else DEFAULT_MIN_ATTEMPTED_CASES
+
+func _min_strict_pass_cases() -> int:
+	return LARGE_MIN_STRICT_PASS_CASES if _report_mode() == "large" else DEFAULT_MIN_STRICT_PASS_CASES
+
+func _max_diagnostic_gap_count() -> int:
+	return 0 if _report_mode() == "large" else -1
 
 func _apply_visual_runtime_policy(result: Dictionary, case: Dictionary) -> void:
 	var metrics: Dictionary = result.get("metrics", {}) if result.get("metrics", {}) is Dictionary else {}
@@ -263,8 +301,8 @@ func _case_log_line(result: Dictionary) -> Dictionary:
 
 func _write_case_artifacts(result: Dictionary) -> void:
 	var case_id := String(result.get("id", "case"))
-	_write_json("%s/%s.json" % [ARTIFACT_DIR, case_id], result)
-	var preview := FileAccess.open("%s/%s.txt" % [ARTIFACT_DIR, case_id], FileAccess.WRITE)
+	_write_json("%s/%s.json" % [_artifact_dir(), case_id], result)
+	var preview := FileAccess.open("%s/%s.txt" % [_artifact_dir(), case_id], FileAccess.WRITE)
 	if preview != null:
 		preview.store_string(String(result.get("preview", "")) + "\n")
 
@@ -272,7 +310,7 @@ func _write_matrix_markdown(report: Dictionary) -> void:
 	var lines := [
 		"# RMG Parity Visual Inspection Matrix",
 		"",
-		"Generated by `%s`." % REPORT_ID,
+		"Generated by `%s`." % _report_id(),
 		"",
 		"| Case | Gate | Template | Size | Roads | Rivers | Decor Body | Guarded/Guardable | Poor Zones | Row Coverage | Quadrants | ms/Route | Status |",
 		"| --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
@@ -312,13 +350,13 @@ func _write_matrix_markdown(report: Dictionary) -> void:
 		lines.append(String(result.get("preview", "")))
 		lines.append("```")
 		lines.append("")
-	var file := FileAccess.open("%s/matrix.md" % ARTIFACT_DIR, FileAccess.WRITE)
+	var file := FileAccess.open("%s/matrix.md" % _artifact_dir(), FileAccess.WRITE)
 	if file != null:
 		file.store_string("\n".join(lines) + "\n")
 
 func _ensure_artifact_dir() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(ARTIFACT_DIR))
-	var dir := DirAccess.open(ARTIFACT_DIR)
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_artifact_dir()))
+	var dir := DirAccess.open(_artifact_dir())
 	if dir == null:
 		return
 	dir.list_dir_begin()
@@ -335,6 +373,6 @@ func _write_json(path: String, payload: Dictionary) -> void:
 		file.store_string(JSON.stringify(payload, "\t") + "\n")
 
 func _fail(message: String) -> void:
-	push_error("%s failed: %s" % [REPORT_ID, message])
-	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": false, "error": message})])
+	push_error("%s failed: %s" % [_report_id(), message])
+	print("%s %s" % [_report_id(), JSON.stringify({"ok": false, "error": message})])
 	get_tree().quit(1)
