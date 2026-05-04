@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "decorative-blocker-sprite-asset-foundation-10184",
-  "currentSliceTitle": "Decorative Blocker Sprite Asset Foundation",
+  "currentSliceId": "decorative-blocker-distinct-sprite-assets-10184",
+  "currentSliceTitle": "Decorative Blocker Distinct Sprite Assets",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed generated-art ingestion slice: original 16-archetype decorative/blocker sprite atlas was split into 512x512 runtime assets, all 200 authored decorative/blocker map objects were mapped with provenance, native generated decorative placements are bridged into overworld map_objects, and OverworldMapView renders mapped decorative placements with asset sprites while preserving procedural fallback for unmapped object types.",
-  "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected asset-ingestion slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-05T00:20:00Z",
+  "currentSliceNotes": "Completed owner-directed follow-up: every authored decorative/blocker object now maps to a distinct generated sprite asset id; 16 previous generated sprites are preserved for 16 representative objects and 184 new sprites were generated and ingested.",
+  "nextActionGuardrailNote": "Generated PNG ingestion for decorative/blocker distinct sprite assets is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
+  "updatedAt": "2026-05-05T01:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,62 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "decorative-blocker-distinct-sprite-assets-10184",
+      "title": "Decorative Blocker Distinct Sprite Assets",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "owner_directed_phase2_generated_decorative_blocker_distinct_sprite_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "art/overworld/decorative_object_sprites.json",
+        "owner correction on 2026-05-04 that all decorative/blocker objects need distinct assets, not only archetype coverage"
+      ],
+      "purpose": "Generate and ingest distinct original 2D sprite assets so every authored decorative/blocker overworld object resolves to its own object-specific sprite id.",
+      "implementationTargets": [
+        "art/overworld/runtime/objects/decorations/distinct/",
+        "art/overworld/source/generated/decorations/distinct/",
+        "art/overworld/source/trimmed/decorations/distinct/",
+        "art/overworld/manifest.json",
+        "art/overworld/decorative_object_sprites.json",
+        "tests/validate_repo.py",
+        "tests/overworld_decorative_sprite_asset_report.gd",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py --overworld-object-report",
+        "python3 tests/validate_repo.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/overworld_decorative_sprite_asset_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Exactly 200 authored decorative/blocker objects resolve to 200 distinct object asset ids.",
+        "The 16 existing generated decoration sprites are preserved for 16 representative objects and the remaining 184 objects receive newly generated original sprites.",
+        "Each distinct runtime sprite has source/provenance, manifest entry, trimmed source where applicable, and 512x512 runtime validation.",
+        "Validation rejects asset reuse in the decorative/blocker object mapping and proves at least one generated decorative placement renders through a distinct object-specific sprite.",
+        "No HoMM3 copyrighted art, DEF, or image assets are imported."
+      ],
+      "nonGoals": [
+        "No save-version bump.",
+        "No binary map-package schema migration.",
+        "No exact HoMM3 asset, DEF, or placement parity claim.",
+        "No terrain replacement.",
+        "No broad gameplay rebalance."
+      ],
+      "startedAt": "2026-05-05T00:35:00Z",
+      "notes": "Completed: 184 new generated distinct sprites plus 16 preserved generated representative sprites yield 200 unique decorative/blocker object asset ids.",
+      "completedAt": "2026-05-05T01:05:00Z",
+      "validationEvidence": [
+        "python3 -m json.tool ops/progress.json",
+        "python3 tests/validate_repo.py --overworld-object-report",
+        "python3 tests/validate_repo.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/overworld_decorative_sprite_asset_report.tscn",
+        "python3 -m py_compile tests/validate_repo.py",
+        "git diff --check"
+      ]
+    },
     {
       "id": "decorative-blocker-sprite-asset-foundation-10184",
       "title": "Decorative Blocker Sprite Asset Foundation",
