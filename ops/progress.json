@@ -1,14 +1,14 @@
 {
   "project": "heroes-like",
   "taskId": "10184",
-  "status": "in_progress",
+  "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-homm3-local-distribution-10184",
-  "currentSliceTitle": "native rmg homm3 local distribution 10184",
+  "currentSliceId": "native-rmg-homm3-road-placement-parity-10184",
+  "currentSliceTitle": "Native RMG HoMM3 Road Placement Parity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed native RMG local distribution correction: native C++ placement now uses deterministic local spacing/road scoring for owner-like 72x72 output while guarded packages remain compact; the initial candidate-vector OOM risk was replaced with streaming scoring, a road-distance field, and bounded large-map sampling. Local distribution, guard/reward package adoption including XL, land-normalized density, land/water shape, spatial placement, full parity, JSON, build, and diff checks passed.",
+  "currentSliceNotes": "Completed owner-directed native RMG road placement/layout correction. Native MapPackageService.generate_random_map() now materializes imported translated-template roads with a trunk/branch/short-spur policy and reward placement scoring is less road-adjacent, while start/town coverage, package adoption, local distribution, land/water shape, and full parity gates remain passing.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T18:38:00Z",
+  "updatedAt": "2026-05-04T19:13:20Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -9237,6 +9237,95 @@
       "startedAt": "2026-05-04T17:35:40Z",
       "completedAt": "2026-05-04T18:38:00Z",
       "notes": "Completed native C++ local distribution correction after screenshots showed sparse land windows and localized piles following ed0dad2. Added the local distribution report and kept the active path in MapPackageService.generate_random_map(); no old GDScript RMG routing, generated packages, or copyrighted assets. Validation passed for JSON, native build, local distribution, guard/reward package adoption including XL, land-normalized density, land/water shape, spatial placement, full parity, and git diff --check. Memory diagnosis: the interrupted multi-GB guard/report run was caused by the first scoring implementation allocating sorted per-cell Dictionary candidate vectors; final code uses streaming scoring, a packed road-distance field, and bounded large-map sampling."
+    },
+    {
+      "id": "native-rmg-homm3-road-placement-parity-10184",
+      "title": "Native RMG HoMM3 Road Placement Parity",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "owner_directed_phase2_native_rmg_homm3_road_placement_parity_slice",
+      "parentSliceId": "native-rmg-catalog-playability-wiring-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/native-rmg-homm3-spatial-placement-comparison-report.md",
+        "/root/.openclaw/media/inbound/Untitled---cad43d4f-6faa-4059-a9db-9b37770806af.gz",
+        "2026-05-04 owner feedback after a034a34: roads statistically close but not HoMM3-good"
+      ],
+      "purpose": "Improve native C++ RMG road placement/layout parity for owner-like translated medium islands and general native templates by making route materialization more intentional: trunk/branch roads, less over-connection, measured road/object interaction, and preserved start/town connectivity.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.tscn",
+        "docs/native-rmg-homm3-spatial-placement-comparison-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Native C++ MapPackageService.generate_random_map() remains the active runtime path and is not routed through scripts/core/RandomMapGeneratorRules.gd.",
+        "Owner-like road tile count, road density per land tile, road grid/quadrant spread, largest roadless land region, reward/object distance-to-road ratios, trunk/branch/endpoint/intersection counts, start coverage, and town coverage are reported against owner H3M metrics.",
+        "One bounded native route placement/layout improvement makes the owner-like road layout measurably closer to the owner H3M without breaking route reachability, town/start coverage, guard/reward package adoption, object distribution, land/water shape, or full parity fixtures.",
+        "Validation gates in the owner directive pass, no generated .amap/.ascenario packages are committed, and remaining exact HoMM3-re road-authoring gaps are stated."
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/native_random_map_homm3_spatial_placement_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_road_river_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/native_random_map_homm3_local_distribution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/native_random_map_homm3_land_normalized_object_density_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/native_random_map_homm3_land_water_shape_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 300 tests/native_random_map_guard_reward_package_adoption_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/native_random_map_full_parity_gate_report.tscn",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No route back to scripts/core/RandomMapGeneratorRules.gd for active generation.",
+        "No generated map packages committed under maps/.",
+        "No HoMM3 copyrighted art/DEF asset import.",
+        "No road renderer 4-neighbor lookup rewrite unless required by validation.",
+        "No exact HoMM3-re road algorithm, placement, art, object-table, or byte parity claim.",
+        "No save version bump or authored scenario/package adoption."
+      ],
+      "createdAt": "2026-05-04T18:58:00Z",
+      "updatedAt": "2026-05-04T19:13:20Z",
+      "startedAt": "2026-05-04T18:58:00Z",
+      "completedAt": "2026-05-04T19:13:20Z",
+      "notes": "Completed after owner feedback that native owner-like roads were count-close but visually over-connected and over-biased rewards toward roads. The active runtime path remains native C++ MapPackageService.generate_random_map(); road rendering lookup was not rewritten; no generated map packages or copyrighted assets were committed.",
+      "implementationEvidence": {
+        "summary": "Imported translated-template route materialization now builds an initial direct trunk, branches uncovered endpoints to the existing trunk, and emits short service spurs for covered cross-links instead of fully materializing every deterministic link. Reward-reference placement scoring now favors reachable off-road bands, reducing excessive road-adjacent reward piles while preserving package and local distribution gates.",
+        "roadMetrics": {
+          "ownerRoadTiles": 184,
+          "nativeRoadTilesBefore": 240,
+          "nativeRoadTilesAfter": 180,
+          "ownerRoadDensityPerLand": 0.0945,
+          "nativeRoadDensityPerLandBefore": 0.0983,
+          "nativeRoadDensityPerLandAfter": 0.0754,
+          "ownerRewardWithin4RoadTiles": 0.3727,
+          "nativeRewardWithin4RoadTilesBefore": 0.5588,
+          "nativeRewardWithin4RoadTilesAfter": 0.4632,
+          "ownerRewardAverageDistanceToRoad": 7.909,
+          "nativeRewardAverageDistanceToRoadBefore": 4.544,
+          "nativeRewardAverageDistanceToRoadAfter": 6.537,
+          "nativeTownRoadConnectionAfter": 1.0,
+          "nativeStartRoadConnectionAfter": 1.0
+        },
+        "remainingGap": "Exact HoMM3-re road authoring algorithm was not derived; this slice improves measured layout and object interaction but does not claim full algorithm, placement, art, object-table, or byte parity."
+      },
+      "validationEvidence": [
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "timeout 180s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_road_river_report.tscn (pass)",
+        "timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_spatial_placement_comparison_report.tscn (pass)",
+        "timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_local_distribution_report.tscn (pass)",
+        "timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_land_normalized_object_density_report.tscn (pass)",
+        "timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_land_water_shape_report.tscn (pass)",
+        "/usr/bin/time -v timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_guard_reward_package_adoption_report.tscn (pass, max RSS 1080236 KB)",
+        "timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_full_parity_gate_report.tscn (pass)",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -9273,6 +9362,41 @@
         "/usr/bin/time -v timeout 240s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_land_water_shape_report.tscn (pass, max RSS 559256 KB)",
         "/usr/bin/time -v timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/native_random_map_homm3_spatial_placement_comparison_report.tscn (pass, max RSS 545004 KB)",
         "/usr/bin/time -v timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/native_random_map_full_parity_gate_report.tscn (pass, max RSS 580480 KB)",
+        "git diff --check"
+      ]
+    },
+    {
+      "id": "native-rmg-homm3-road-placement-parity-10184",
+      "title": "Native RMG HoMM3 road placement parity improvement",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/native-rmg-homm3-spatial-placement-comparison-report.md",
+        "owner-attached HoMM3 H3M gzip from 2026-05-04",
+        "2026-05-04 owner feedback after a034a34"
+      ],
+      "mappedPlannedSliceIds": [
+        "native-rmg-homm3-road-placement-parity-10184"
+      ],
+      "implementationRefs": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "docs/native-rmg-homm3-spatial-placement-comparison-report.md"
+      ],
+      "evidence": "Native translated-template road materialization now favors an intentional trunk with branches and short service spurs instead of fully materializing every deterministic route cross-link. Owner-like road tiles moved from 240 to 180 against owner 184; native reward references within 4 road tiles moved from 0.5588 to 0.4632 against owner 0.3727; native reward average distance to road moved from 4.544 to 6.537 against owner 7.909. Town and start road connection coverage remain 1.0. The active runtime path remains native C++ MapPackageService.generate_random_map(); no road renderer lookup rewrite, generated package commit, copyrighted asset import, or full HoMM3-re algorithm parity claim.",
+      "validation": [
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "timeout 180s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_road_river_report.tscn (pass)",
+        "timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_spatial_placement_comparison_report.tscn (pass)",
+        "timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_local_distribution_report.tscn (pass)",
+        "timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_land_normalized_object_density_report.tscn (pass)",
+        "timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_land_water_shape_report.tscn (pass)",
+        "/usr/bin/time -v timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_guard_reward_package_adoption_report.tscn (pass, max RSS 1080236 KB)",
+        "timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_full_parity_gate_report.tscn (pass)",
         "git diff --check"
       ]
     },
