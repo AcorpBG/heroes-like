@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "generated-terrain-classes-runtime-integration-10184",
-  "currentSliceTitle": "Generated Terrain Classes Runtime Integration Workflow",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Integrated next generated terrain class batch for dirttl and rocktl only. Copied selected generated atlas ce016a89 into dirttl/source_sheets and a950ffa1 into rocktl/source_sheets, normalized unused cells to magenta, cut exactly 46 dirttl and 48 rocktl row-major 64x64 runtime frames under each frames_64 directory, added deterministic generated_terrain_atlas_tool --repair-edge-band support, applied 1px edge-band cleanup to rocktl after visual/metric seam inspection, left dirttl unrepaired after strict validation and clean gutter-preview inspection, and refreshed generated contact/gutter previews. Validation passed: generated_terrain_atlas_tool cut-generated dry-runs for dirttl and rocktl with force-unused-magenta, rocktl repair dry-run, focused Pillow frame check confirmed dirttl exactly 46 frames and rocktl exactly 48 frames, all 64x64 PNG, no magenta in used frames, and unused normalized atlas cells magenta; python3 -m py_compile tools/generated_terrain_atlas_tool.py; python3 -m json.tool ops/progress.json; python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan --dry-run /root/dev/heroes-like; python3 tests/validate_repo.py; git diff --check. Do not mark the whole remaining-classes slice completed; lavatl/rougtl/snowtl/subbtl/swmptl/watrtl remain pending generated runtime ingestion.",
+  "currentSliceId": "random-map-homm3-parity-richness-corrective-10184",
+  "currentSliceTitle": "Random Map HoMM3 Parity Richness Corrective",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed RMG parity richness corrective. Implemented stronger town spacing, land river candidates/crossing metadata, artifact reward nodes/writeout, object guard materialization for artifacts/mines/chokes/rewards, richer staging/runtime metrics, and deterministic multi-seed parity richness reports. Validation passed: random_map_homm3_parity_richness_report.tscn (6 cases: 10684 road tiles, 12 river candidates, 2944 decorations, 25 artifacts, 256 associated object guards, 414 encounters, 4213 object instances); random_map_roads_rivers_writeout_report.tscn; native_random_map_road_river_report.tscn; native_random_map_disk_package_startup_report.tscn; python3 tests/validate_repo.py; python3 -m json.tool ops/progress.json; progress sync-plan --dry-run; git diff --check. Follow-up: translated_rmg_template_002_v1 remains poor/failing under 72x72 inspection due to start viability and decoration route-blocking constraints; track separately.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T00:33:32Z",
+  "updatedAt": "2026-05-04T01:50:04Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -2031,7 +2031,8 @@
         "random-map-validation-batch-retry-10184",
         "random-map-water-underground-transit-gameplay-10184",
         "random-map-zone-layout-water-underground-10184",
-        "random-map-generated-overworld-profile-cache-corrective-10184"
+        "random-map-generated-overworld-profile-cache-corrective-10184",
+        "random-map-homm3-parity-richness-corrective-10184"
       ],
       "aggregateStatusNote": "Parent status summarizes the broad RMG foundation plus parity-regated generated skirmish/session RMG workstream; child slices carry executable implementation evidence.",
       "docsReadyEvidenceIds": [
@@ -2045,7 +2046,7 @@
         "random-map-scenario-load-smoke-10184"
       ],
       "reportOnlyEvidenceIds": [],
-      "updatedAt": "2026-04-29T19:16:54Z",
+      "updatedAt": "2026-05-04T00:57:12Z",
       "completedAt": "2026-04-29T09:02:24Z"
     },
     {
@@ -7265,6 +7266,56 @@
       "updatedAt": "2026-05-04T00:46:41Z",
       "startedAt": "2026-05-04T00:13:47Z",
       "notes": "Integrated next generated terrain class batch for dirttl and rocktl only. Copied selected generated atlas ce016a89 into dirttl/source_sheets and a950ffa1 into rocktl/source_sheets, normalized unused cells to magenta, cut exactly 46 dirttl and 48 rocktl row-major 64x64 runtime frames under each frames_64 directory, added deterministic generated_terrain_atlas_tool --repair-edge-band support, applied 1px edge-band cleanup to rocktl after visual/metric seam inspection, left dirttl unrepaired after strict validation and clean gutter-preview inspection, and refreshed generated contact/gutter previews. Validation passed: generated_terrain_atlas_tool cut-generated dry-runs for dirttl and rocktl with force-unused-magenta, rocktl repair dry-run, focused Pillow frame check confirmed dirttl exactly 46 frames and rocktl exactly 48 frames, all 64x64 PNG, no magenta in used frames, and unused normalized atlas cells magenta; python3 -m py_compile tools/generated_terrain_atlas_tool.py; python3 -m json.tool ops/progress.json; python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan --dry-run /root/dev/heroes-like; python3 tests/validate_repo.py; git diff --check. Do not mark the whole remaining-classes slice completed; lavatl/rougtl/snowtl/subbtl/swmptl/watrtl remain pending generated runtime ingestion."
+    },
+    {
+      "id": "random-map-homm3-parity-richness-corrective-10184",
+      "title": "Random Map HoMM3 Parity Richness Corrective",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Re-audit generated-map output against owner-visible HoMM3-style RMG expectations and improve concrete generated-map richness where maps still look sparse or structurally wrong.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-homm3-parity-gap-audit.md",
+        "docs/random-map-final-homm3-parity-regate-audit.md",
+        "docs/random-map-xl-template-alignment-audit.md",
+        "2026-05-04 owner directive that generated maps are still not close enough to HoMM3-style RMG"
+      ],
+      "implementationTargets": [
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "focused RMG report/test scenes under tests/",
+        ".artifacts/ generated-map inspection reports/previews when practical",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "Godot headless focused RMG parity richness report across multiple seeds/templates/sizes",
+        "Godot headless native random-map road/river report",
+        "Godot headless native random-map disk package startup report",
+        "python3 -m json.tool ops/progress.json",
+        "python3 tests/validate_repo.py",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Multiple deterministic generated-map seeds/templates/sizes are inspected with human-readable evidence.",
+        "Generated maps enforce stronger town spacing/zone placement constraints.",
+        "Roads, rivers where terrain/template policy supports them, movement-shaping blockers/decorations, artifacts/rewards, and guards are generated at visible HoMM3-style densities.",
+        "Validation checks road/river presence or explicit unsupported policy, minimum town distance, blocker/decor density, artifact and guard counts/association, template richness metrics, and native/package startup regressions.",
+        "Remaining parity gaps are explicitly tracked as follow-up instead of being hidden behind a parity claim."
+      ],
+      "nonGoals": [
+        "No generated terrain-art replacement work.",
+        "No copyrighted names, assets, maps, factions, unit art, music, or text.",
+        "No save-version bump, authored campaign adoption, or broad renderer/fog/pathing redesign unless required by focused validation."
+      ],
+      "updatedAt": "2026-05-04T01:50:04Z",
+      "startedAt": "2026-05-04T00:57:12Z",
+      "notes": "Completed RMG parity richness corrective. Implemented stronger town spacing, land river candidates/crossing metadata, artifact reward nodes/writeout, object guard materialization for artifacts/mines/chokes/rewards, richer staging/runtime metrics, and deterministic multi-seed parity richness reports. Validation passed: random_map_homm3_parity_richness_report.tscn (6 cases: 10684 road tiles, 12 river candidates, 2944 decorations, 25 artifacts, 256 associated object guards, 414 encounters, 4213 object instances); random_map_roads_rivers_writeout_report.tscn; native_random_map_road_river_report.tscn; native_random_map_disk_package_startup_report.tscn; python3 tests/validate_repo.py; python3 -m json.tool ops/progress.json; progress sync-plan --dry-run; git diff --check. Follow-up: translated_rmg_template_002_v1 remains poor/failing under 72x72 inspection due to start viability and decoration route-blocking constraints; track separately.",
+      "completedAt": "2026-05-04T01:50:04Z"
     }
   ],
   "completedImplementationEvidence": [
