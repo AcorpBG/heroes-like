@@ -546,6 +546,34 @@ nonGoals:
 - No copyrighted names, assets, maps, factions, unit art, music, or text.
 - No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.
 
+Selected owner-directed follow-up slice:
+
+id: `random-map-homm3-parity-connection-road-controls-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Improve HoMM3-style RMG road quality by making template connection `Value`, `Wide`, and `Border Guard` semantics visible and validated in generated road overlays instead of measuring only road tile counts.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-special-guards-and-wide.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- 2026-05-04 owner directive to continue RMG parity after `e20d96c`
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_homm3_parity_richness_report.gd`
+- `.artifacts/rmg_parity_richness/`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Generated road overlays carry explicit connection-control markers for normal guarded links and border-guard links.
+- Wide links preserve guard-suppressed road semantics without creating normal connection controls.
+- Bounded richness metrics validate connection-control coverage, wide route semantics, and special border-guard gate roads across multiple seeds/templates.
+- Remaining RMG parity gaps are listed for the next slice.
+nonGoals:
+- No generated terrain-art replacement work.
+- No copyrighted names, assets, maps, factions, unit art, music, or text.
+- No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.
+
 ### Phase 3 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.
