@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-start-front-fairness-10184",
-  "currentSliceTitle": "random map homm3 parity start front fairness 10184",
+  "currentSliceId": "random-map-homm3-parity-route-resource-fairness-10184",
+  "currentSliceTitle": "random map homm3 parity route resource fairness 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed source-semantics-aware primary start-front fairness correction. Richness report passed: fairness warnings 14->10, fail-threshold 4->2, max contest guard pressure 18000->500. Visual report passed: fairness warnings 18->11, fail-threshold 8->5, max contest guard pressure 18000->500. Large visual passed: fairness warnings 4->3, fail-threshold 4->1, max contest guard pressure 3000->0. Remaining gaps: translated route/resource distance spreads, especially visual probe town-to-resource 38 and large town-to-resource 42. Validated json, progress sync dry-run, and python3 tests/validate_repo.py.",
+  "currentSliceNotes": "Completed source-semantics-grounded route/resource fairness correction after 7689c3e. Translated template seed layout now uses source link adjacency, template routes prefer active start towns but zone anchors for neutral/treasure endpoints, and required start-economy roads/travel metrics are scoped to active player starts. Visual report passed: warnings 11->9, fail-threshold warnings 5->0, max contest/travel route spread 38->13, max town-resource spread 38->19. Richness report passed: warnings 10->9, fail-threshold warnings 2->0, max contest/travel route spread 22->13, max town-resource spread 8. Large visual passed: warnings 3->2, fail-threshold warnings 1->0, route spread 18->17, town-resource spread 42->1. Validated json, progress sync dry-run, git diff --check, and python3 tests/validate_repo.py.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T06:16:33Z",
+  "updatedAt": "2026-05-04T06:40:41Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -8241,6 +8241,16 @@
       "startedAt": "2026-05-04T06:11:31Z",
       "notes": "Completed source-semantics-aware primary start-front fairness correction. Richness report passed: fairness warnings 14->10, fail-threshold 4->2, max contest guard pressure 18000->500. Visual report passed: fairness warnings 18->11, fail-threshold 8->5, max contest guard pressure 18000->500. Large visual passed: fairness warnings 4->3, fail-threshold 4->1, max contest guard pressure 3000->0. Remaining gaps: translated route/resource distance spreads, especially visual probe town-to-resource 38 and large town-to-resource 42. Validated json, progress sync dry-run, and python3 tests/validate_repo.py.",
       "completedAt": "2026-05-04T06:16:33Z"
+    },
+    {
+      "id": "random-map-homm3-parity-route-resource-fairness-10184",
+      "title": "random map homm3 parity route resource fairness 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-04T06:40:41Z",
+      "startedAt": "2026-05-04T06:20:00Z",
+      "notes": "Completed source-semantics-grounded route/resource fairness correction after 7689c3e. Translated template seed layout now uses source link adjacency, template routes prefer active start towns but zone anchors for neutral/treasure endpoints, and required start-economy roads/travel metrics are scoped to active player starts. Visual report passed: warnings 11->9, fail-threshold warnings 5->0, max contest/travel route spread 38->13, max town-resource spread 38->19. Richness report passed: warnings 10->9, fail-threshold warnings 2->0, max contest/travel route spread 22->13, max town-resource spread 8. Large visual passed: warnings 3->2, fail-threshold warnings 1->0, route spread 18->17, town-resource spread 42->1. Validated json, progress sync dry-run, git diff --check, and python3 tests/validate_repo.py.",
+      "completedAt": "2026-05-04T06:40:41Z"
     }
   ],
   "completedImplementationEvidence": [

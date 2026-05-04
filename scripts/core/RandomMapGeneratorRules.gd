@@ -457,7 +457,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 	var zones := _build_runtime_zones(template, normalized, rng)
 	phases.append(_phase_record("runtime_zone_graph", {"zone_count": zones.size(), "link_count": template.get("links", []).size()}))
 
-	var seeds := _place_zone_seeds(zones, normalized, rng)
+	var seeds := _place_zone_seeds(zones, template.get("links", []), normalized, rng)
 	phases.append(_phase_record("zone_seed_layout", {"seed_count": seeds.size()}))
 
 	var zone_layout := _build_zone_layout(template, zones, template.get("links", []), seeds, normalized, rng)
@@ -1793,7 +1793,7 @@ static func _zone_terrain_palette_record(zone_record: Dictionary, faction_id: St
 		"deferred_reason": "terrain_row_writeout_uses_surface_supported_equivalent" if not deferred.is_empty() else "",
 	}
 
-static func _place_zone_seeds(zones: Array, normalized: Dictionary, rng: DeterministicRng) -> Dictionary:
+static func _place_zone_seeds(zones: Array, links: Array, normalized: Dictionary, rng: DeterministicRng) -> Dictionary:
 	var size: Dictionary = normalized.get("size", {})
 	var width := int(size.get("width", 16))
 	var height := int(size.get("height", 12))
@@ -1811,16 +1811,98 @@ static func _place_zone_seeds(zones: Array, normalized: Dictionary, rng: Determi
 			clampi(int(round(center.x + cos(angle) * radius_x + rng.jitter(1.0))), 1, max(1, width - 2)),
 			clampi(int(round(center.y + sin(angle) * radius_y + rng.jitter(1.0))), 1, max(1, height - 2))
 		)
-	for index in range(others.size()):
-		var zone: Dictionary = others[index]
-		var role := String(zone.get("role", "treasure"))
-		var angle := angle_offset + TAU * (float(index) + 0.5) / float(max(1, others.size()))
-		var radius_scale := 0.18 if role == "junction" else 0.58
-		seeds[String(zone.get("id", ""))] = _point_dict(
-			clampi(int(round(center.x + cos(angle) * radius_x * radius_scale + rng.jitter(1.4))), 1, max(1, width - 2)),
-			clampi(int(round(center.y + sin(angle) * radius_y * radius_scale + rng.jitter(1.2))), 1, max(1, height - 2))
-		)
+	if not _uses_translated_template_link_seed_layout(normalized):
+		for index in range(others.size()):
+			var zone: Dictionary = others[index]
+			seeds[String(zone.get("id", ""))] = _fallback_zone_seed_point(zone, index, others.size(), angle_offset, center, radius_x, radius_y, width, height, rng)
+		return _resolve_seed_collisions(seeds, width, height)
+	var adjacency := _zone_link_adjacency(links)
+	var remaining: Array = others.duplicate()
+	var fallback_cursor := 0
+	var guard: int = max(1, remaining.size() + zones.size())
+	while not remaining.is_empty() and guard > 0:
+		var next_remaining: Array = []
+		var placed_this_pass := false
+		for zone in remaining:
+			if not (zone is Dictionary):
+				continue
+			var zone_id := String(zone.get("id", ""))
+			var linked_points := []
+			for neighbor_id in adjacency.get(zone_id, []):
+				var neighbor_key := String(neighbor_id)
+				if seeds.has(neighbor_key):
+					linked_points.append(seeds[neighbor_key])
+			if linked_points.is_empty():
+				next_remaining.append(zone)
+				continue
+			seeds[zone_id] = _linked_zone_seed_point(zone, linked_points, center, width, height, rng)
+			placed_this_pass = true
+		if not placed_this_pass:
+			for zone in next_remaining:
+				if zone is Dictionary:
+					var zone_id := String(zone.get("id", ""))
+					seeds[zone_id] = _fallback_zone_seed_point(zone, fallback_cursor, next_remaining.size(), angle_offset, center, radius_x, radius_y, width, height, rng)
+					fallback_cursor += 1
+			next_remaining.clear()
+		remaining = next_remaining
+		guard -= 1
 	return _resolve_seed_collisions(seeds, width, height)
+
+static func _uses_translated_template_link_seed_layout(normalized: Dictionary) -> bool:
+	var profile: Dictionary = normalized.get("profile", {}) if normalized.get("profile", {}) is Dictionary else {}
+	var template_id := String(profile.get("template_id", normalized.get("template_id", "")))
+	return template_id.begins_with("translated_rmg_template_")
+
+static func _zone_link_adjacency(links: Array) -> Dictionary:
+	var adjacency := {}
+	for link in links:
+		if not (link is Dictionary):
+			continue
+		var from_zone := String(link.get("from", ""))
+		var to_zone := String(link.get("to", ""))
+		if from_zone == "" or to_zone == "":
+			continue
+		if not adjacency.has(from_zone):
+			adjacency[from_zone] = []
+		if not adjacency.has(to_zone):
+			adjacency[to_zone] = []
+		if to_zone not in adjacency[from_zone]:
+			adjacency[from_zone].append(to_zone)
+		if from_zone not in adjacency[to_zone]:
+			adjacency[to_zone].append(from_zone)
+	for zone_id in _sorted_keys(adjacency):
+		var neighbors: Array = adjacency.get(zone_id, [])
+		neighbors.sort()
+		adjacency[zone_id] = neighbors
+	return adjacency
+
+static func _linked_zone_seed_point(zone: Dictionary, linked_points: Array, center: Vector2, width: int, height: int, rng: DeterministicRng) -> Dictionary:
+	var total := Vector2.ZERO
+	var count := 0
+	for point in linked_points:
+		if not (point is Dictionary):
+			continue
+		total += Vector2(float(point.get("x", 0)), float(point.get("y", 0)))
+		count += 1
+	if count <= 0:
+		return _point_dict(clampi(int(round(center.x)), 1, max(1, width - 2)), clampi(int(round(center.y)), 1, max(1, height - 2)))
+	var average := total / float(count)
+	var role := String(zone.get("role", "treasure"))
+	var inward_bias := 0.44 if role == "junction" else 0.28 if role == "treasure" else 0.16
+	var target := average.lerp(center, inward_bias)
+	return _point_dict(
+		clampi(int(round(target.x + rng.jitter(1.2))), 1, max(1, width - 2)),
+		clampi(int(round(target.y + rng.jitter(1.2))), 1, max(1, height - 2))
+	)
+
+static func _fallback_zone_seed_point(zone: Dictionary, index: int, count: int, angle_offset: float, center: Vector2, radius_x: float, radius_y: float, width: int, height: int, rng: DeterministicRng) -> Dictionary:
+	var role := String(zone.get("role", "treasure"))
+	var angle := angle_offset + TAU * (float(index) + 0.5) / float(max(1, count))
+	var radius_scale := 0.18 if role == "junction" else 0.58
+	return _point_dict(
+		clampi(int(round(center.x + cos(angle) * radius_x * radius_scale + rng.jitter(1.4))), 1, max(1, width - 2)),
+		clampi(int(round(center.y + sin(angle) * radius_y * radius_scale + rng.jitter(1.2))), 1, max(1, height - 2))
+	)
 
 static func _assign_cells_to_zones(zones: Array, seeds: Dictionary, normalized: Dictionary) -> Array:
 	var size: Dictionary = normalized.get("size", {})
@@ -8587,6 +8669,8 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, zones
 	for town in placements.get("towns", []):
 		if not (town is Dictionary):
 			continue
+		if int(town.get("player_slot", 0)) <= 0:
+			continue
 		var town_placement_id := String(town.get("placement_id", ""))
 		var town_node_id := "node_%s" % town_placement_id
 		var town_point := _first_approach_or_body(town)
@@ -9075,6 +9159,8 @@ static func _travel_distance_comparisons_payload(placements: Dictionary, route_g
 	var warnings := []
 	for town in placements.get("towns", []):
 		if not (town is Dictionary):
+			continue
+		if int(town.get("player_slot", 0)) <= 0:
 			continue
 		var town_id := String(town.get("placement_id", ""))
 		var zone_id := String(town.get("zone_id", ""))
@@ -10351,8 +10437,9 @@ static func _add_route_endpoint_candidate(candidates: Array, seen: Dictionary, p
 static func _preferred_route_node_for_zone(zone_id: String, object_by_zone: Dictionary, route_nodes: Dictionary) -> Dictionary:
 	var zone_objects: Dictionary = object_by_zone.get(zone_id, {})
 	var towns: Array = zone_objects.get("town", [])
-	if not towns.is_empty() and towns[0] is Dictionary:
-		return route_nodes.get("node_%s" % String(towns[0].get("placement_id", "")), {"id": "node_zone_%s" % zone_id, "point": _point_dict(0, 0)})
+	for town in towns:
+		if town is Dictionary and int(town.get("player_slot", 0)) > 0:
+			return route_nodes.get("node_%s" % String(town.get("placement_id", "")), {"id": "node_zone_%s" % zone_id, "point": _point_dict(0, 0)})
 	return route_nodes.get("node_zone_%s" % zone_id, {"id": "node_zone_%s" % zone_id, "point": _point_dict(0, 0)})
 
 static func _first_approach_or_body(placement: Dictionary) -> Dictionary:
