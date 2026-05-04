@@ -3227,6 +3227,9 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	placement["occupancy_status"] = "primary_tile_reserved";
 	placement["materialization_state"] = "staged_object_record_only_no_gameplay_adoption";
 	placement["writeout_state"] = "staged_no_authored_content_writeback";
+	if (point.has("spatial_placement_policy")) {
+		placement["spatial_placement_policy"] = point.get("spatial_placement_policy", "");
+	}
 	if (kind == "resource_site") {
 		placement["placement_policy"] = String(family.get("purpose", "")).begins_with("start_support") ? "strict_start_zone_support_resource_path_scored" : "generic_resource_site";
 		placement["support_route_path_length"] = std::max(1, int32_t(std::abs(x - int32_t(Dictionary(zone.get("anchor", Dictionary())).get("x", x))) + std::abs(y - int32_t(Dictionary(zone.get("anchor", Dictionary())).get("y", y)))));
@@ -3667,16 +3670,77 @@ int32_t catalog_zone_dwelling_target(const Dictionary &normalized, const Diction
 	return 0;
 }
 
-Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, int32_t ring, const Dictionary &normalized, const Array &owner_grid, const Dictionary &occupied, int32_t width, int32_t height) {
+Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, int32_t ring, const String &kind, const Dictionary &normalized, const Array &owner_grid, const Dictionary &occupied, int32_t width, int32_t height) {
 	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
 	const String zone_id = String(zone.get("id", ""));
 	const String seed = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":object:" + String::num_int64(ordinal);
+	const int32_t anchor_x = int32_t(anchor.get("x", width / 2));
+	const int32_t anchor_y = int32_t(anchor.get("y", height / 2));
+	const int32_t zone_cell_count = std::max(0, int32_t(zone.get("cell_count", 0)));
+	if (zone_cell_count > 0 && zone_cell_count < 144) {
+		const int32_t angle_bucket = int32_t(hash32_int(seed) % 8U);
+		static constexpr int32_t OFFSETS[8][2] = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
+		const int32_t distance = 2 + ring + (ordinal % 3);
+		const int32_t x = anchor_x + OFFSETS[angle_bucket][0] * distance + deterministic_signed_jitter(seed + String(":x"), 1);
+		const int32_t y = anchor_y + OFFSETS[angle_bucket][1] * distance + deterministic_signed_jitter(seed + String(":y"), 1);
+		Dictionary compact_zone_point = find_object_point(x, y, zone_id, owner_grid, occupied, width, height);
+		if (!compact_zone_point.is_empty()) {
+			compact_zone_point["spatial_placement_policy"] = "anchor_ring_for_compact_zone_decoration_fit_preservation";
+		}
+		return compact_zone_point;
+	}
+	const int32_t coarse_cols = 6;
+	const int32_t coarse_rows = 6;
+	const int32_t desired_cell = int32_t(hash32_int(seed + String(":coarse:") + kind) % uint32_t(coarse_cols * coarse_rows));
+	const int32_t desired_cx = desired_cell % coarse_cols;
+	const int32_t desired_cy = desired_cell / coarse_cols;
+	const int32_t preferred_anchor_distance = 4 + ring * 3 + (ordinal % 5);
+
+	std::vector<Dictionary> candidates;
+	for (int32_t y = 1; y < height - 1; ++y) {
+		if (y < 0 || y >= owner_grid.size()) {
+			continue;
+		}
+		Array row = owner_grid[y];
+		for (int32_t x = 1; x < width - 1; ++x) {
+			if (occupied.has(point_key(x, y))) {
+				continue;
+			}
+			if (!zone_id.is_empty() && (x < 0 || x >= row.size() || String(row[x]) != zone_id)) {
+				continue;
+			}
+			const int32_t cx = std::max(0, std::min(coarse_cols - 1, (x * coarse_cols) / std::max(1, width)));
+			const int32_t cy = std::max(0, std::min(coarse_rows - 1, (y * coarse_rows) / std::max(1, height)));
+			const int32_t coarse_distance = std::abs(cx - desired_cx) + std::abs(cy - desired_cy);
+			const int32_t anchor_distance = std::abs(x - anchor_x) + std::abs(y - anchor_y);
+			const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
+			const int32_t jitter = int32_t(hash32_int(seed + String(":scatter:") + String::num_int64(x) + String(",") + String::num_int64(y)) % 10000U);
+			Dictionary point = point_record(x, y);
+			const int64_t sort_key = int64_t(coarse_distance) * 100000000LL + int64_t(anchor_penalty) * 10000LL + int64_t(jitter);
+			point["sort_key"] = Variant(sort_key);
+			point["spatial_placement_policy"] = "coarse_grid_scatter_within_zone_not_anchor_ring_cluster";
+			candidates.push_back(point);
+		}
+	}
+	std::sort(candidates.begin(), candidates.end(), [](const Dictionary &left, const Dictionary &right) {
+		return int64_t(left.get("sort_key", int64_t(0))) < int64_t(right.get("sort_key", int64_t(0)));
+	});
+	if (!candidates.empty()) {
+		Dictionary result = candidates.front();
+		result.erase("sort_key");
+		return result;
+	}
+
 	const int32_t angle_bucket = int32_t(hash32_int(seed) % 8U);
 	static constexpr int32_t OFFSETS[8][2] = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
 	const int32_t distance = 2 + ring + (ordinal % 3);
-	const int32_t x = int32_t(anchor.get("x", width / 2)) + OFFSETS[angle_bucket][0] * distance + deterministic_signed_jitter(seed + String(":x"), 1);
-	const int32_t y = int32_t(anchor.get("y", height / 2)) + OFFSETS[angle_bucket][1] * distance + deterministic_signed_jitter(seed + String(":y"), 1);
-	return find_object_point(x, y, zone_id, owner_grid, occupied, width, height);
+	const int32_t x = anchor_x + OFFSETS[angle_bucket][0] * distance + deterministic_signed_jitter(seed + String(":x"), 1);
+	const int32_t y = anchor_y + OFFSETS[angle_bucket][1] * distance + deterministic_signed_jitter(seed + String(":y"), 1);
+	Dictionary fallback = find_object_point(x, y, zone_id, owner_grid, occupied, width, height);
+	if (!fallback.is_empty()) {
+		fallback["spatial_placement_policy"] = "anchor_ring_fallback_after_zone_scatter_exhausted";
+	}
+	return fallback;
 }
 
 Dictionary generate_object_placements(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network) {
@@ -3738,21 +3802,21 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 			const int32_t reward_target = catalog_zone_reward_target(normalized, zone);
 			const int32_t dwelling_target = catalog_zone_dwelling_target(normalized, zone);
 			for (int32_t mine_index = 0; mine_index < mine_target; ++mine_index) {
-				Dictionary point = object_point_for_zone_index(zone, ordinal, mine_index / 3, normalized, owner_grid, occupied, width, height);
+				Dictionary point = object_point_for_zone_index(zone, ordinal, mine_index / 3, "mine", normalized, owner_grid, occupied, width, height);
 				point["native_mine_index"] = mine_index;
 				point["native_mine_target"] = mine_target;
 				append_object_placement(placements, occupied, normalized, zone, point, "mine", ordinal, road_network, zone_layout);
 				++ordinal;
 			}
 			for (int32_t dwelling_index = 0; dwelling_index < dwelling_target; ++dwelling_index) {
-				Dictionary point = object_point_for_zone_index(zone, ordinal, 2 + dwelling_index, normalized, owner_grid, occupied, width, height);
+				Dictionary point = object_point_for_zone_index(zone, ordinal, 2 + dwelling_index, "neutral_dwelling", normalized, owner_grid, occupied, width, height);
 				point["native_dwelling_index"] = dwelling_index;
 				point["native_dwelling_target"] = dwelling_target;
 				append_object_placement(placements, occupied, normalized, zone, point, "neutral_dwelling", ordinal, road_network, zone_layout);
 				++ordinal;
 			}
 			for (int32_t reward_index = 0; reward_index < reward_target; ++reward_index) {
-				Dictionary point = object_point_for_zone_index(zone, ordinal, 1 + reward_index / 4, normalized, owner_grid, occupied, width, height);
+				Dictionary point = object_point_for_zone_index(zone, ordinal, 1 + reward_index / 4, "reward_reference", normalized, owner_grid, occupied, width, height);
 				point["native_reward_index"] = reward_index;
 				point["native_reward_target"] = reward_target;
 				append_object_placement(placements, occupied, normalized, zone, point, "reward_reference", ordinal, road_network, zone_layout);

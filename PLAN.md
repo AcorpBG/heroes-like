@@ -181,6 +181,28 @@ nonGoals:
 
 Completed owner-directed implementation slice:
 
+id: `native-rmg-homm3-spatial-placement-comparison-10184`
+phase: `phase-2-deep-production-foundation`
+status: `completed`
+purpose: Continue native C++ RMG parity work beyond density/count gates by parsing the owner-attached HoMM3 H3M for spatial object/road placement metrics, comparing them to owner-like native output, and reducing a clear native object-distribution skew.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/native-rmg-homm3-fill-coverage-report.md`
+- `docs/native-rmg-homm3-re-obstacle-identity-comparison-report.md`
+- `docs/native-rmg-homm3-spatial-placement-comparison-report.md`
+- owner-attached HoMM3 H3M gzip from 2026-05-04
+implementation:
+- Added a native spatial comparison report that decompresses the owner H3M, parses the 72x72 tile stream, 297 object definitions, 496 placed object instances, and 184 road tiles, then compares quadrant/coarse-grid density, nearest-neighbor distances, road adjacency, and largest low-content regions against native owner-like generation.
+- Changed native non-town zone object placement for mines, dwellings, and rewards from anchor-ring clustering to deterministic coarse-grid scatter inside each owning zone, preserving start-support resource placement and native `MapPackageService.generate_random_map()` as the active path.
+evidence:
+- `tests/native_random_map_homm3_spatial_placement_comparison_report.tscn`
+- `docs/native-rmg-homm3-spatial-placement-comparison-report.md`
+nonGoals:
+- No route back to `RandomMapGeneratorRules.gd` for active generation, no generated map packages committed under `maps/`, no HoMM3 copyrighted art/DEF asset import, no exact HoMM3-re placement/art/object-table/byte parity claim, no save version bump or authored scenario/package adoption.
+
+Completed owner-directed implementation slice:
+
 id: `native-rmg-guard-reward-package-adoption-10184`
 phase: `phase-2-deep-production-foundation`
 status: `completed`
