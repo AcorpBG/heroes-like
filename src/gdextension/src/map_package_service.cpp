@@ -1903,6 +1903,102 @@ Array straight_route_cells(const Dictionary &from_point, const Dictionary &to_po
 	return cells;
 }
 
+bool point_is_materialized_road(const Dictionary &point, const Dictionary &road_lookup) {
+	if (point.is_empty()) {
+		return false;
+	}
+	return road_lookup.has(point_key(int32_t(point.get("x", 0)), int32_t(point.get("y", 0))));
+}
+
+void record_materialized_road_cells(const Array &cells, Dictionary &road_lookup, Array &road_cells) {
+	for (int64_t index = 0; index < cells.size(); ++index) {
+		if (Variant(cells[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary cell = cells[index];
+		const String key = point_key(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)));
+		if (!road_lookup.has(key)) {
+			road_lookup[key] = true;
+			road_cells.append(cell_record(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)), int32_t(cell.get("level", 0))));
+		}
+	}
+}
+
+Array route_cells_to_nearest_materialized_road(const Dictionary &from_point, const Array &road_cells, int32_t width, int32_t height, int32_t level) {
+	if (from_point.is_empty() || road_cells.is_empty()) {
+		return Array();
+	}
+	const int32_t from_x = int32_t(from_point.get("x", 0));
+	const int32_t from_y = int32_t(from_point.get("y", 0));
+	int32_t best_distance = std::numeric_limits<int32_t>::max();
+	Dictionary best_cell;
+	for (int64_t index = 0; index < road_cells.size(); ++index) {
+		if (Variant(road_cells[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary cell = road_cells[index];
+		const int32_t distance = std::abs(from_x - int32_t(cell.get("x", 0))) + std::abs(from_y - int32_t(cell.get("y", 0)));
+		if (distance < best_distance) {
+			best_distance = distance;
+			best_cell = cell;
+		}
+	}
+	if (best_cell.is_empty()) {
+		return Array();
+	}
+	return straight_route_cells(from_point, best_cell, width, height, level);
+}
+
+Array short_branch_spur_cells(const Array &direct_cells, const Dictionary &road_lookup, int32_t width, int32_t height) {
+	Array branch;
+	if (direct_cells.is_empty()) {
+		return branch;
+	}
+	const int32_t new_tile_target = std::max(4, std::min(12, std::max(width, height) / 6));
+	int32_t new_tiles = 0;
+	for (int64_t index = 0; index < direct_cells.size(); ++index) {
+		if (Variant(direct_cells[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary cell = direct_cells[index];
+		branch.append(cell);
+		const String key = point_key(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)));
+		if (!road_lookup.has(key)) {
+			++new_tiles;
+		}
+		if (new_tiles >= new_tile_target) {
+			break;
+		}
+	}
+	return branch;
+}
+
+Array homm3_like_imported_route_cells(const Dictionary &from_point, const Dictionary &to_point, const Array &direct_cells, const Dictionary &road_lookup, const Array &road_cells, int32_t width, int32_t height, int32_t level, String &materialization_policy) {
+	materialization_policy = "direct_template_route";
+	if (road_cells.is_empty()) {
+		return direct_cells;
+	}
+	const bool from_covered = point_is_materialized_road(from_point, road_lookup);
+	const bool to_covered = point_is_materialized_road(to_point, road_lookup);
+	if (from_covered && to_covered) {
+		Array branch = short_branch_spur_cells(direct_cells, road_lookup, width, height);
+		if (!branch.is_empty()) {
+			materialization_policy = "covered_crosslink_short_branch_spur";
+			return branch;
+		}
+		return direct_cells;
+	}
+	if (from_covered != to_covered) {
+		Dictionary uncovered = from_covered ? to_point : from_point;
+		Array branch = route_cells_to_nearest_materialized_road(uncovered, road_cells, width, height, level);
+		if (!branch.is_empty()) {
+			materialization_policy = "uncovered_endpoint_branches_to_existing_trunk";
+			return branch;
+		}
+	}
+	return direct_cells;
+}
+
 Dictionary route_anchor_candidate(const Array &path, const Dictionary &from_anchor, const Dictionary &to_anchor, int32_t level) {
 	if (!path.is_empty()) {
 		Dictionary midpoint = path[int64_t(std::floor(double(path.size() - 1) * 0.5))];
@@ -2185,6 +2281,7 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
 	Array links = foundation_route_links(normalized);
+	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
 	Dictionary nodes = build_route_nodes(zone_layout, player_starts);
 	Dictionary zone_anchors = zone_anchor_lookup(zone_layout);
 	Dictionary start_by_zone = start_lookup_by_zone(player_starts);
@@ -2193,6 +2290,12 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 	Dictionary adjacency;
 	Array covered_start_ids;
 	Array covered_zone_ids;
+	Dictionary materialized_road_lookup;
+	Array materialized_road_cells;
+	int32_t direct_template_route_count = 0;
+	int32_t branch_route_count = 0;
+	int32_t reused_crosslink_count = 0;
+	int32_t foundation_route_count = 0;
 
 	for (int64_t index = 0; index < links.size(); ++index) {
 		Dictionary link = links[index];
@@ -2204,7 +2307,14 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 		Dictionary to_node = nodes.get(to_node_id, Dictionary());
 		Dictionary from_point = from_node.get("point", zone_anchors.get(from_zone, Dictionary()));
 		Dictionary to_point = to_node.get("point", zone_anchors.get(to_zone, Dictionary()));
-		Array cells = straight_route_cells(from_point, to_point, width, height, 0);
+		Array direct_cells = straight_route_cells(from_point, to_point, width, height, 0);
+		String materialization_policy;
+		Array cells = (!parity_targets.is_empty() || String(link.get("source", "")) != "imported_random_map_template_catalog")
+				? direct_cells
+				: homm3_like_imported_route_cells(from_point, to_point, direct_cells, materialized_road_lookup, materialized_road_cells, width, height, 0, materialization_policy);
+		if (materialization_policy.is_empty()) {
+			materialization_policy = String(link.get("source", "")) == "imported_random_map_template_catalog" ? "direct_template_route" : "foundation_direct_route";
+		}
 		const bool path_found = !cells.is_empty();
 		const String edge_id = route_edge_id(int32_t(index + 1), from_zone, to_zone);
 		const String classification = route_classification(link, path_found);
@@ -2226,6 +2336,8 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 		edge["required"] = true;
 		edge["path_found"] = path_found;
 		edge["cell_count"] = cells.size();
+		edge["direct_cell_count"] = direct_cells.size();
+		edge["road_materialization_policy"] = materialization_policy;
 		edge["from_point"] = from_point;
 		edge["to_point"] = to_point;
 		edge["route_cell_anchor_candidate"] = route_anchor_candidate(cells, from_point, to_point, 0);
@@ -2272,14 +2384,25 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 		segment["connection_control"] = edge.get("connection_control", Dictionary());
 		segment["cells"] = cells;
 		segment["cell_count"] = cells.size();
+		segment["direct_cell_count"] = direct_cells.size();
+		segment["road_materialization_policy"] = materialization_policy;
 		segment["connectivity_classification"] = classification;
 		segment["role"] = link.get("role", "route");
 		segment["writeout_state"] = "staged_overlay_no_tile_bytes_written";
 		segment["bounds_status"] = "in_bounds";
 		road_segments.append(segment);
+		if (materialization_policy == "uncovered_endpoint_branches_to_existing_trunk") {
+			++branch_route_count;
+		} else if (materialization_policy == "covered_crosslink_short_branch_spur") {
+			++reused_crosslink_count;
+		} else if (materialization_policy == "direct_template_route") {
+			++direct_template_route_count;
+		} else {
+			++foundation_route_count;
+		}
+		record_materialized_road_cells(cells, materialized_road_lookup, materialized_road_cells);
 	}
 
-	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
 	if (!parity_targets.is_empty()) {
 		const int32_t target_count = int32_t(parity_targets.get("road_segment_count", road_segments.size()));
 		Array parity_segments;
@@ -2295,6 +2418,8 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 			segment["connection_control"] = source_edge.get("connection_control", Dictionary());
 			segment["cells"] = Array();
 			segment["cell_count"] = 0;
+			segment["direct_cell_count"] = source_edge.get("direct_cell_count", 0);
+			segment["road_materialization_policy"] = "gdscript_structural_parity_overlay_count_no_tile_cells";
 			segment["connectivity_classification"] = source_edge.get("connectivity_classification", "gdscript_structural_parity_segment");
 			segment["role"] = source_edge.get("role", "route");
 			segment["writeout_state"] = "gdscript_structural_parity_overlay_count_no_tile_cells";
@@ -2367,6 +2492,16 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 	}();
 	road_network["required_start_coverage"] = coverage;
 	road_network["route_reachability_proof"] = reachability;
+	Dictionary materialization_summary;
+	materialization_summary["schema_id"] = "native_random_map_homm3_like_road_materialization_v1";
+	materialization_summary["policy"] = "imported template roads grow as a reused trunk with branches to newly uncovered endpoints; already covered cross-links emit short branch spurs instead of drawing full direct roads";
+	materialization_summary["direct_template_route_count"] = direct_template_route_count;
+	materialization_summary["branch_route_count"] = branch_route_count;
+	materialization_summary["short_crosslink_spur_count"] = reused_crosslink_count;
+	materialization_summary["foundation_route_count"] = foundation_route_count;
+	materialization_summary["unique_materialized_road_cell_count"] = materialized_road_cells.size();
+	materialization_summary["status"] = "pass";
+	road_network["road_materialization_summary"] = materialization_summary;
 	Dictionary road_control_summary;
 	road_control_summary["schema_id"] = "native_random_map_connection_road_controls_v1";
 	road_control_summary["connection_control_policy"] = "HoMM3-style connection Value and Border Guard records mark a controlling road tile; Wide records preserve a guard-suppressed unguarded route";
@@ -3905,6 +4040,29 @@ int32_t interactive_road_reachability_penalty(int32_t distance_to_road) {
 	return penalty;
 }
 
+int32_t interactive_road_distribution_penalty(int32_t distance_to_road, const String &kind) {
+	if (kind != "reward_reference") {
+		return interactive_road_reachability_penalty(distance_to_road);
+	}
+	if (distance_to_road < 0) {
+		return 0;
+	}
+	if (distance_to_road <= 1) {
+		return 150;
+	}
+	if (distance_to_road <= 4) {
+		return 55;
+	}
+	if (distance_to_road <= 9) {
+		return 0;
+	}
+	int32_t penalty = (distance_to_road - 9) * 16;
+	if (distance_to_road > 13) {
+		penalty += (distance_to_road - 13) * 42;
+	}
+	return penalty;
+}
+
 Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, int32_t ring, const String &kind, const Dictionary &normalized, const Array &owner_grid, const Dictionary &occupied, const Array &existing_placements, const PackedInt32Array &road_distance_field, int32_t width, int32_t height) {
 	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
 	const String zone_id = String(zone.get("id", ""));
@@ -3954,7 +4112,7 @@ Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, 
 			const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
 			const int32_t spacing_penalty = interactive_spacing_penalty(existing_placements, x, y, kind, zone_id, width, height);
 			const int32_t road_distance = road_distance_from_field(road_distance_field, x, y, width, height);
-			const int32_t road_penalty = interactive_road_reachability_penalty(road_distance);
+			const int32_t road_penalty = interactive_road_distribution_penalty(road_distance, kind);
 			const int32_t distribution_penalty = spacing_penalty + road_penalty;
 			const int32_t jitter = int32_t(hash32_int(seed + String(":scatter:") + String::num_int64(x) + String(",") + String::num_int64(y)) % 10000U);
 			const int64_t sort_key = int64_t(distribution_penalty) * 1000000000LL + int64_t(coarse_distance) * 10000000LL + int64_t(anchor_penalty) * 10000LL + int64_t(jitter);

@@ -104,6 +104,8 @@ func _generate_native_owner_like(service: Variant) -> Dictionary:
 	metrics["water_mode"] = String(normalized.get("water_mode", ""))
 	metrics["zone_count"] = int(generated.get("zone_layout", {}).get("zone_count", 0))
 	metrics["route_edge_count"] = int(generated.get("route_graph", {}).get("route_edge_count", 0))
+	metrics["road_materialization_summary"] = generated.get("road_network", {}).get("road_materialization_summary", {})
+	metrics["start_road_connection"] = _point_connection_summary(_native_start_points(generated), road_points, "start", 4)
 	metrics["fill_coverage_summary"] = generated.get("fill_coverage_summary", {})
 	metrics["decoration_route_shaping_summary"] = generated.get("decoration_route_shaping_summary", {})
 	return metrics
@@ -368,6 +370,11 @@ func _spatial_metrics(id: String, width: int, height: int, land_lookup: Dictiona
 		"road_tile_count": road_points.size(),
 		"road_coverage_whole": snapped(float(road_points.size()) / float(map_tiles), 0.0001),
 		"road_coverage_land": snapped(float(road_points.size()) / float(max(1, land_tile_count)), 0.0001),
+		"road_quadrants": _distribution_for_points(road_points, width, height, 2, 2),
+		"road_grid_6x6": _distribution_for_points(road_points, width, height, 6, 6),
+		"road_topology": _road_topology_summary(road_points),
+		"largest_roadless_land_region": _largest_roadless_land_region(land_lookup, road_lookup, width, height, 6, 6),
+		"town_road_connection": _point_connection_summary(category_points.get("town", []), road_points, "town", 4),
 		"quadrants": _quadrant_distribution(category_points, width, height),
 		"coarse_grid_6x6": _coarse_grid_distribution(category_points, width, height, 6, 6),
 		"nearest_neighbor": _nearest_neighbor_summary(category_points),
@@ -384,33 +391,58 @@ func _spatial_comparison(owner: Dictionary, native: Dictionary) -> Dictionary:
 	var native_road: Dictionary = native.get("distance_to_road", {})
 	var owner_nn: Dictionary = owner.get("nearest_neighbor", {})
 	var native_nn: Dictionary = native.get("nearest_neighbor", {})
+	var owner_topology: Dictionary = owner.get("road_topology", {})
+	var native_topology: Dictionary = native.get("road_topology", {})
 	return {
 		"object_count_delta": int(native.get("object_count", 0)) - int(owner.get("object_count", 0)),
 		"road_tile_delta": int(native.get("road_tile_count", 0)) - int(owner.get("road_tile_count", 0)),
 		"road_coverage_land_delta": snapped(float(native.get("road_coverage_land", 0.0)) - float(owner.get("road_coverage_land", 0.0)), 0.0001),
+		"road_grid_nonempty_delta": int(native.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) - int(owner.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)),
+		"road_quadrant_cv_delta": snapped(float(native.get("road_quadrants", {}).get("coefficient_of_variation", 0.0)) - float(owner.get("road_quadrants", {}).get("coefficient_of_variation", 0.0)), 0.0001),
+		"largest_roadless_land_region_delta": int(native.get("largest_roadless_land_region", {}).get("largest_region_cell_count", 0)) - int(owner.get("largest_roadless_land_region", {}).get("largest_region_cell_count", 0)),
+		"road_endpoint_delta": int(native_topology.get("endpoint_count", 0)) - int(owner_topology.get("endpoint_count", 0)),
+		"road_branch_delta": int(native_topology.get("branch_count", 0)) - int(owner_topology.get("branch_count", 0)),
+		"road_intersection_delta": int(native_topology.get("intersection_count", 0)) - int(owner_topology.get("intersection_count", 0)),
 		"decoration_grid_nonempty_delta": _nested_int(native_grid, "decoration", "nonempty_cell_count") - _nested_int(owner_grid, "decoration", "nonempty_cell_count"),
 		"reward_grid_nonempty_delta": _nested_int(native_grid, "reward", "nonempty_cell_count") - _nested_int(owner_grid, "reward", "nonempty_cell_count"),
 		"all_content_grid_cv_delta": snapped(_nested_float(native_grid, "all_content", "coefficient_of_variation") - _nested_float(owner_grid, "all_content", "coefficient_of_variation"), 0.0001),
 		"reward_avg_distance_to_road_delta": snapped(_nested_float(native_road, "reward", "average_distance_to_road") - _nested_float(owner_road, "reward", "average_distance_to_road"), 0.001),
 		"reward_road_adjacent_ratio_delta": snapped(_nested_float(native.get("road_adjacency", {}), "reward", "road_adjacent_ratio") - _nested_float(owner.get("road_adjacency", {}), "reward", "road_adjacent_ratio"), 0.0001),
+		"reward_within_4_tiles_ratio_delta": snapped(_nested_float(native_road, "reward", "within_4_tiles_ratio") - _nested_float(owner_road, "reward", "within_4_tiles_ratio"), 0.0001),
+		"town_road_connection_delta": snapped(float(native.get("town_road_connection", {}).get("connected_ratio", 0.0)) - float(owner.get("town_road_connection", {}).get("connected_ratio", 0.0)), 0.0001),
 		"decoration_avg_nearest_neighbor_delta": snapped(_nested_float(native_nn, "decoration", "average_nearest_neighbor") - _nested_float(owner_nn, "decoration", "average_nearest_neighbor"), 0.001),
 		"largest_low_content_region_delta": int(native.get("largest_low_content_region", {}).get("largest_region_cell_count", 0)) - int(owner.get("largest_low_content_region", {}).get("largest_region_cell_count", 0)),
-		"interpretation": "Positive reward distance and low nonempty-grid counts indicate native clustering/off-road placement gaps; negative nearest-neighbor deltas indicate tighter clumping than the owner H3M.",
+		"interpretation": "Road parity is judged by layout shape and interaction metrics, not only road count. Remaining deltas are evidence for future HoMM3-re route authoring work, not a full parity claim.",
 	}
 
 func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary) -> Dictionary:
 	var failures = []
+	var warnings = []
 	if int(owner.get("object_count", 0)) != 496:
 		failures.append("owner_object_count_parse_changed")
 	if int(owner.get("road_tile_count", 0)) != 184:
 		failures.append("owner_road_tile_parse_changed")
 	if int(native.get("object_count", 0)) < 220:
 		failures.append("native_object_count_too_low_for_spatial_comparison")
+	if abs(int(comparison.get("road_tile_delta", 999))) > 24:
+		failures.append("native_road_tile_count_too_far_from_owner")
+	if abs(float(comparison.get("road_coverage_land_delta", 99.0))) > 0.03:
+		failures.append("native_road_land_density_too_far_from_owner")
+	if int(native.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) < max(8, int(owner.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) - 8):
+		failures.append("native_road_grid_spread_too_low")
+	if int(native.get("largest_roadless_land_region", {}).get("largest_region_cell_count", 99)) > int(owner.get("largest_roadless_land_region", {}).get("largest_region_cell_count", 0)) + 3:
+		warnings.append("native_largest_roadless_land_region_remains_larger_than_owner")
+	if int(native.get("road_topology", {}).get("endpoint_count", 0)) <= 0:
+		failures.append("native_roads_have_no_branch_endpoints")
 	if _nested_int(native.get("coarse_grid_6x6", {}), "reward", "nonempty_cell_count") < 12:
 		failures.append("native_rewards_too_spatially_collapsed")
-	if _nested_float(native.get("distance_to_road", {}), "reward", "average_distance_to_road") > 7.0:
+	if _nested_float(native.get("distance_to_road", {}), "reward", "average_distance_to_road") < 4.5:
+		failures.append("native_rewards_still_overbiased_to_roads")
+	if _nested_float(native.get("distance_to_road", {}), "reward", "average_distance_to_road") > 10.0:
 		failures.append("native_rewards_too_far_from_roads")
-	if _nested_float(native.get("road_adjacency", {}), "reward", "within_4_tiles_ratio") < 0.55:
+	if _nested_float(native.get("distance_to_road", {}), "reward", "within_4_tiles_ratio") > 0.50:
+		failures.append("native_rewards_still_too_road_adjacent")
+	if _nested_float(native.get("distance_to_road", {}), "reward", "within_4_tiles_ratio") < 0.30:
 		failures.append("native_rewards_not_road_reachable_enough")
 	if _nested_float(native.get("quadrants", {}), "all_content", "coefficient_of_variation") > 0.45:
 		failures.append("native_all_content_quadrant_skew_too_high")
@@ -420,16 +452,23 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 		failures.append("native_low_content_region_too_large")
 	if _nested_float(native.get("nearest_neighbor", {}), "decoration", "average_nearest_neighbor") < 2.0:
 		failures.append("native_decorations_clumped_too_tightly")
+	if _nested_float(native.get("distance_to_road", {}), "reward", "within_4_tiles_ratio") > _nested_float(owner.get("distance_to_road", {}), "reward", "within_4_tiles_ratio") + 0.08:
+		warnings.append("native_rewards_still_somewhat_more_road_adjacent_than_owner")
 	return {
 		"status": "pass" if failures.is_empty() else "fail",
 		"failures": failures,
+		"warnings": warnings,
 		"thresholds": {
 			"owner_object_count": 496,
 			"owner_road_tiles": 184,
 			"native_min_object_count": 220,
+			"native_max_abs_road_tile_delta": 24,
+			"native_max_abs_road_coverage_land_delta": 0.03,
 			"native_min_reward_nonempty_6x6_cells": 12,
-			"native_max_reward_average_distance_to_road": 7.0,
-			"native_min_reward_within_4_tiles_of_road_ratio": 0.55,
+			"native_min_reward_average_distance_to_road": 4.5,
+			"native_max_reward_average_distance_to_road": 10.0,
+			"native_min_reward_within_4_tiles_of_road_ratio": 0.30,
+			"native_max_reward_within_4_tiles_of_road_ratio": 0.50,
 			"native_max_all_content_quadrant_cv": 0.45,
 			"native_max_reward_quadrant_cv": 0.45,
 			"native_max_largest_low_content_region_over_owner": 1,
@@ -527,6 +566,136 @@ func _road_adjacency_summary(category_points: Dictionary, road_lookup: Dictionar
 			"within_4_tiles_ratio": snapped(float(within4) / float(max(1, total)), 0.0001),
 		}
 	return result
+
+func _distribution_for_points(points: Array, width: int, height: int, cols: int, rows: int) -> Dictionary:
+	var counts = []
+	for _index in range(cols * rows):
+		counts.append(0)
+	for point in points:
+		if not (point is Dictionary):
+			continue
+		var cx = clampi(int(floor(float(int(point.get("x", 0))) * float(cols) / float(max(1, width)))), 0, cols - 1)
+		var cy = clampi(int(floor(float(int(point.get("y", 0))) * float(rows) / float(max(1, height)))), 0, rows - 1)
+		counts[cy * cols + cx] = int(counts[cy * cols + cx]) + 1
+	var summary = _distribution_summary_from_counts(counts)
+	summary["cols"] = cols
+	summary["rows"] = rows
+	summary["counts"] = counts
+	return summary
+
+func _road_topology_summary(road_points: Array) -> Dictionary:
+	var lookup := _point_lookup(road_points)
+	var degree_counts := {}
+	var endpoint_count := 0
+	var trunk_count := 0
+	var branch_count := 0
+	var intersection_count := 0
+	for point in road_points:
+		if not (point is Dictionary):
+			continue
+		var degree := 0
+		var x := int(point.get("x", 0))
+		var y := int(point.get("y", 0))
+		for offset in [_point(1, 0), _point(-1, 0), _point(0, 1), _point(0, -1)]:
+			if lookup.has(_point_key(x + int(offset.get("x", 0)), y + int(offset.get("y", 0)))):
+				degree += 1
+		degree_counts[str(degree)] = int(degree_counts.get(str(degree), 0)) + 1
+		if degree <= 1:
+			endpoint_count += 1
+		elif degree == 2:
+			trunk_count += 1
+		elif degree == 3:
+			branch_count += 1
+		else:
+			intersection_count += 1
+	return {
+		"road_tile_count": road_points.size(),
+		"degree_counts": degree_counts,
+		"endpoint_count": endpoint_count,
+		"trunk_count": trunk_count,
+		"branch_count": branch_count,
+		"intersection_count": intersection_count,
+		"endpoint_ratio": snapped(float(endpoint_count) / float(max(1, road_points.size())), 0.0001),
+		"branch_intersection_ratio": snapped(float(branch_count + intersection_count) / float(max(1, road_points.size())), 0.0001),
+	}
+
+func _largest_roadless_land_region(land_lookup: Dictionary, road_lookup: Dictionary, width: int, height: int, cols: int, rows: int) -> Dictionary:
+	var road_counts = []
+	var land_counts = []
+	for _index in range(cols * rows):
+		road_counts.append(0)
+		land_counts.append(0)
+	for key in land_lookup.keys():
+		var parts := String(key).split(",")
+		if parts.size() != 2:
+			continue
+		var x := int(parts[0])
+		var y := int(parts[1])
+		var cx = clampi(int(floor(float(x) * float(cols) / float(max(1, width)))), 0, cols - 1)
+		var cy = clampi(int(floor(float(y) * float(rows) / float(max(1, height)))), 0, rows - 1)
+		land_counts[cy * cols + cx] = int(land_counts[cy * cols + cx]) + 1
+	for key in road_lookup.keys():
+		var parts := String(key).split(",")
+		if parts.size() != 2:
+			continue
+		var x := int(parts[0])
+		var y := int(parts[1])
+		var cx = clampi(int(floor(float(x) * float(cols) / float(max(1, width)))), 0, cols - 1)
+		var cy = clampi(int(floor(float(y) * float(rows) / float(max(1, height)))), 0, rows - 1)
+		road_counts[cy * cols + cx] = int(road_counts[cy * cols + cx]) + 1
+	var visited = {}
+	var largest = 0
+	for y in range(rows):
+		for x in range(cols):
+			var key := _point_key(x, y)
+			var index := y * cols + x
+			if visited.has(key) or int(land_counts[index]) <= 0 or int(road_counts[index]) > 0:
+				continue
+			var size := 0
+			var queue = [_point(x, y)]
+			visited[key] = true
+			while not queue.is_empty():
+				var current: Dictionary = queue.pop_front()
+				size += 1
+				for offset in [_point(1, 0), _point(-1, 0), _point(0, 1), _point(0, -1)]:
+					var nx := int(current.get("x", 0)) + int(offset.get("x", 0))
+					var ny := int(current.get("y", 0)) + int(offset.get("y", 0))
+					if nx < 0 or ny < 0 or nx >= cols or ny >= rows:
+						continue
+					var nkey := _point_key(nx, ny)
+					var nindex := ny * cols + nx
+					if visited.has(nkey) or int(land_counts[nindex]) <= 0 or int(road_counts[nindex]) > 0:
+						continue
+					visited[nkey] = true
+					queue.append(_point(nx, ny))
+			largest = max(largest, size)
+	return {
+		"cols": cols,
+		"rows": rows,
+		"largest_region_cell_count": largest,
+		"largest_region_ratio": snapped(float(largest) / float(max(1, cols * rows)), 0.0001),
+		"road_counts": road_counts,
+		"land_counts": land_counts,
+	}
+
+func _point_connection_summary(points: Array, roads: Array, label: String, max_distance: int) -> Dictionary:
+	var distances = []
+	var connected := 0
+	for point in points:
+		if not (point is Dictionary):
+			continue
+		var distance := _nearest_distance(point, roads)
+		if distance >= 0:
+			distances.append(distance)
+			if distance <= max_distance:
+				connected += 1
+	var summary := _distribution_summary_from_counts(distances)
+	summary["label"] = label
+	summary["max_connected_distance"] = max_distance
+	summary["point_count"] = points.size()
+	summary["connected_count"] = connected
+	summary["connected_ratio"] = snapped(float(connected) / float(max(1, points.size())), 0.0001)
+	return summary
 
 func _largest_low_content_region(points: Array, width: int, height: int, cols: int, rows: int, max_count: int) -> Dictionary:
 	var counts = []
@@ -633,6 +802,14 @@ func _native_road_points(generated: Dictionary) -> Array:
 				if not seen.has(key):
 					seen[key] = true
 					points.append(_point(int(cell.get("x", 0)), int(cell.get("y", 0))))
+	return points
+
+func _native_start_points(generated: Dictionary) -> Array:
+	var points = []
+	var starts: Array = generated.get("player_starts", {}).get("starts", []) if generated.get("player_starts", {}).get("starts", []) is Array else []
+	for start in starts:
+		if start is Dictionary:
+			points.append(_point(int(start.get("x", 0)), int(start.get("y", 0))))
 	return points
 
 func _native_land_lookup(generated: Dictionary, width: int, height: int) -> Dictionary:

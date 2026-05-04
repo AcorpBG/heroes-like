@@ -125,6 +125,34 @@ Selection rules for new Phase 2 slices:
 
 Completed owner-directed implementation slice:
 
+id: `native-rmg-homm3-road-placement-parity-10184`
+phase: `phase-2-deep-production-foundation`
+status: `completed`
+purpose: Improve native C++ RMG road layout parity for the owner-like translated medium islands case and general native templates by making route materialization more HoMM3-like: intentional trunk/branch roads, less over-connection, measured road/object interaction, and preserved start/town connectivity.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/native-rmg-homm3-spatial-placement-comparison-report.md`
+- owner-attached HoMM3 H3M gzip from 2026-05-04
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_spatial_placement_comparison_report.gd`
+- `docs/native-rmg-homm3-spatial-placement-comparison-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Native C++ `MapPackageService.generate_random_map()` remains the active runtime path.
+- Owner-like road tile count, land-normalized road density, reward distance-to-road ratios, road spread, road graph shape, and start/town coverage are reported against the owner H3M baseline.
+- One bounded road placement/layout improvement lands without touching 4-neighbor road rendering, generated-map package commits, or copyrighted HoMM3 assets.
+- Validation gates in the owner directive pass, and remaining exact HoMM3-re road-authoring gaps are stated.
+completionEvidence:
+- Native owner-like road materialization changed from fully materialized deterministic cross-links to a trunk/branch/short-spur policy for imported translated templates, preserving route graph reachability and road renderer lookup.
+- Owner-like native road tiles moved from 240 before the slice to 180 against the owner H3M baseline of 184; reward references within 4 road tiles moved from 0.5588 to 0.4632 against owner 0.3727.
+- Remaining exact HoMM3-re road authoring gap is documented; no full algorithm or byte parity is claimed.
+nonGoals:
+- No route back to `RandomMapGeneratorRules.gd`, no generated `.amap`/`.ascenario` files committed, no road renderer art/lookup rewrite unless required, no exact HoMM3-re algorithm/byte parity claim, no save version bump or authored scenario/package adoption.
+
+Completed owner-directed implementation slice:
+
 id: `native-rmg-homm3-land-normalized-object-density-10184`
 phase: `phase-2-deep-production-foundation`
 status: `completed`
