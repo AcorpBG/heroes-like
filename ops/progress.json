@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-full-parity-gate-10184",
-  "currentSliceTitle": "Native RMG Full Parity Gate",
+  "currentSliceId": "native-rmg-gdscript-port-audit-10184",
+  "currentSliceTitle": "Native RMG GDScript Port Audit",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed 2026-05-04 after reopening overclaimed native RMG parity. Corrected the comparison harness to use RandomMapGeneratorRules.gd directly as the GDScript reference while keeping the active launch path native package-based. Ported missing native structural parity for tracked homm3_small profiles: object category target counts and protected-object guard materialization now match the reference for small_land_three_players, small_islands_four_players, and small_land_underground_four_players. Updated the native foundation report to assert the current native terrain-grid MapDocument contract instead of the obsolete empty stub. Validation: cmake --build .artifacts/map_persistence_native_build --parallel 2; native_random_map_foundation_report.tscn with /tmp/heroes-like-native-rmg-foundation-* passed; native_random_map_gdscript_comparison_report.tscn passed with known_gap_count 0 and full_parity_ready true; native_random_map_full_parity_gate_report.tscn with /tmp/heroes-like-native-rmg-full-* passed with blocking_gap_count 0; git diff --check passed.",
+  "currentSliceNotes": "Completed native RMG GDScript port audit for the listed 2026-05-04 RandomMapGeneratorRules.gd commits. Classified every listed commit in docs/native-rmg-gdscript-port-audit.md; ported applicable runtime behavior into native MapPackageService surfaces for support resource policy, route/road controls, start-front metadata, translated-template route seeding, zone richness metadata, river crossing quality for foundation land configs, guarded artifacts/sites, decorative blocker body masks, and town spacing. Diagnostic-only or native-obsolete GDScript visual/report changes are documented as non-runtime for active native generation. Active launch remains native package based through MapPackageService.generate_random_map; RandomMapGeneratorRules.gd remains reference/history. Supported full-parity scope remains the tracked homm3_small comparison fixture set; adjacent/larger configs may still report partial_foundation. Validation passed: python3 -m json.tool ops/progress.json; cmake --build .artifacts/map_persistence_native_build --parallel 2; native_random_map_foundation_report.tscn with /tmp/heroes-like-native-rmg-foundation-*; native_random_map_gdscript_comparison_report.tscn with /tmp/heroes-like-native-rmg-gdscript-* and known_gap_count 0/full_parity_ready true; native_random_map_full_parity_gate_report.tscn with /tmp/heroes-like-native-rmg-full-* and blocking_gap_count 0; native_random_map_gdscript_port_audit_report.tscn with /tmp/heroes-like-native-rmg-audit-*; git diff --check passed; progress.py sync-plan --dry-run passed.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T10:14:31Z",
+  "updatedAt": "2026-05-04T10:52:17Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -6952,6 +6952,56 @@
       "startedAt": "2026-05-03T11:23:18Z",
       "notes": "Completed 2026-05-04 after reopening overclaimed native RMG parity. Corrected the comparison harness to use RandomMapGeneratorRules.gd directly as the GDScript reference while keeping the active launch path native package-based. Ported missing native structural parity for tracked homm3_small profiles: object category target counts and protected-object guard materialization now match the reference for small_land_three_players, small_islands_four_players, and small_land_underground_four_players. Updated the native foundation report to assert the current native terrain-grid MapDocument contract instead of the obsolete empty stub. Validation: cmake --build .artifacts/map_persistence_native_build --parallel 2; native_random_map_foundation_report.tscn with /tmp/heroes-like-native-rmg-foundation-* passed; native_random_map_gdscript_comparison_report.tscn passed with known_gap_count 0 and full_parity_ready true; native_random_map_full_parity_gate_report.tscn with /tmp/heroes-like-native-rmg-full-* passed with blocking_gap_count 0; git diff --check passed.",
       "completedAt": "2026-05-03T11:40:47Z"
+    },
+    {
+      "id": "native-rmg-gdscript-port-audit-10184",
+      "title": "Native RMG GDScript Port Audit",
+      "status": "completed",
+      "purpose": "Audit the 2026-05-04 RandomMapGeneratorRules.gd-only RMG commits against the active native C++ GDExtension generator, port runtime-relevant missing behavior into MapPackageService, and record exact classifications without restoring GDScript generation as the launch path.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "docs/native-rmg-gdscript-port-audit.md",
+        "tests/native_random_map_gdscript_port_audit_report.gd",
+        "tests/native_random_map_gdscript_port_audit_report.tscn",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Every listed RandomMapGeneratorRules.gd commit is classified as ported_to_native, native_irrelevant_diagnostic_only, still_missing_from_native, or obsolete_due_to_native_design.",
+        "Every runtime-relevant listed behavior that remains applicable to active native supported/foundation scope is ported into the native GDExtension implementation.",
+        "Active generated skirmish launch remains native MapPackageService package based; no route back to RandomMapGeneratorRules.gd is introduced.",
+        "Native validation includes the existing foundation, GDScript comparison, full parity gate, and focused GDScript port audit scenes.",
+        "No generated .amap/.ascenario files under maps/ are committed."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_corrective_audit_and_implementation_slice",
+      "parentSliceId": "native-rmg-full-parity-gate-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/native-rmg-gdscript-port-audit.md",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "2026-05-04 owner directive: finish native RMG port properly and audit listed GDScript RMG commits"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_foundation_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_gdscript_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_full_parity_gate_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_gdscript_port_audit_report.tscn",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No active generated skirmish launch through RandomMapGeneratorRules.gd.",
+        "No generated map package files committed unless already tracked and intentionally required.",
+        "No claim of full parity beyond the tracked homm3_small supported comparison fixture scope.",
+        "No save version bump or authored content writeback."
+      ],
+      "createdAt": "2026-05-04T10:35:00Z",
+      "updatedAt": "2026-05-04T10:52:17Z",
+      "startedAt": "2026-05-04T10:35:00Z",
+      "notes": "Completed native RMG GDScript port audit for the listed 2026-05-04 RandomMapGeneratorRules.gd commits. Classified every listed commit in docs/native-rmg-gdscript-port-audit.md; ported applicable runtime behavior into native MapPackageService surfaces for support resource policy, route/road controls, start-front metadata, translated-template route seeding, zone richness metadata, river crossing quality for foundation land configs, guarded artifacts/sites, decorative blocker body masks, and town spacing. Diagnostic-only or native-obsolete GDScript visual/report changes are documented as non-runtime for active native generation. Active launch remains native package based through MapPackageService.generate_random_map; RandomMapGeneratorRules.gd remains reference/history. Supported full-parity scope remains the tracked homm3_small comparison fixture set; adjacent/larger configs may still report partial_foundation. Validation passed: python3 -m json.tool ops/progress.json; cmake --build .artifacts/map_persistence_native_build --parallel 2; native_random_map_foundation_report.tscn with /tmp/heroes-like-native-rmg-foundation-*; native_random_map_gdscript_comparison_report.tscn with /tmp/heroes-like-native-rmg-gdscript-* and known_gap_count 0/full_parity_ready true; native_random_map_full_parity_gate_report.tscn with /tmp/heroes-like-native-rmg-full-* and blocking_gap_count 0; native_random_map_gdscript_port_audit_report.tscn with /tmp/heroes-like-native-rmg-audit-*; git diff --check passed; progress.py sync-plan --dry-run passed.",
+      "completedAt": "2026-05-04T10:52:17Z"
     },
     {
       "id": "native-rmg-disk-package-startup-10184",
