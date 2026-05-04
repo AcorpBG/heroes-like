@@ -57,6 +57,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_town_guard_placement_foundation");
 	result.append("native_random_map_validation_provenance_foundation");
 	result.append("native_random_map_package_session_adoption_bridge");
+	result.append("native_random_map_guard_reward_package_adoption");
 	result.append("native_random_map_full_parity_supported_profiles");
 	result.append("native_package_save_load");
 	result.append("generated_map_package_disk_startup");
@@ -3685,10 +3686,10 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
 	Array starts = player_starts.get("starts", Array());
 	Array placements;
-	Dictionary occupied;
+	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
+	Dictionary occupied = parity_targets.is_empty() ? road_body_exclusion_lookup(road_network) : Dictionary();
 	int32_t ordinal = 0;
 
-	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
 	if (!parity_targets.is_empty()) {
 		Dictionary parity_counts = parity_targets.get("object_category_counts", Dictionary());
 		static constexpr const char *ORDERED_KINDS[] = {"town", "resource_site", "mine", "neutral_dwelling", "reward_reference", "route_guard", "special_guard_gate"};
@@ -5191,21 +5192,246 @@ Array tagged_record_snapshots(const Variant &value, const String &record_kind) {
 	return result;
 }
 
+Array body_tiles_for_package_surface(const Dictionary &record) {
+	Array body_tiles = record.get("body_tiles", Array());
+	if (!body_tiles.is_empty()) {
+		return body_tiles.duplicate(true);
+	}
+	Dictionary primary = record.get("primary_tile", Dictionary());
+	if (primary.is_empty()) {
+		primary = cell_record(int32_t(record.get("x", 0)), int32_t(record.get("y", 0)), int32_t(record.get("level", 0)));
+	}
+	Array result;
+	result.append(primary);
+	return result;
+}
+
+Array visit_tiles_for_package_surface(const Dictionary &record, bool blocking_body) {
+	Array approach_tiles = record.get("approach_tiles", Array());
+	if (blocking_body && !approach_tiles.is_empty()) {
+		return approach_tiles.duplicate(true);
+	}
+	Dictionary visit_tile = record.get("visit_tile", Dictionary());
+	if (visit_tile.is_empty()) {
+		visit_tile = cell_record(int32_t(record.get("x", 0)), int32_t(record.get("y", 0)), int32_t(record.get("level", 0)));
+	}
+	Array result;
+	result.append(visit_tile);
+	return result;
+}
+
+bool record_blocks_package_pathing(const Dictionary &record) {
+	const String kind = String(record.get("kind", ""));
+	const String passability_class = String(record.get("passability_class", ""));
+	return bool(record.get("blocking_body", false)) || kind == "guard" || kind == "town" || kind == "mine" || kind == "neutral_dwelling" || kind == "reward_reference" || passability_class.begins_with("blocking") || passability_class == "edge_blocker";
+}
+
+bool record_is_visitable_package_object(const Dictionary &record) {
+	const String kind = String(record.get("kind", ""));
+	return kind == "resource_site" || kind == "mine" || kind == "neutral_dwelling" || kind == "reward_reference" || kind == "town" || kind == "guard";
+}
+
+Dictionary package_surface_record(Dictionary record) {
+	const bool blocking_body = record_blocks_package_pathing(record);
+	const bool visitable = record_is_visitable_package_object(record);
+	Array body_tiles = body_tiles_for_package_surface(record);
+	Array block_tiles = blocking_body ? body_tiles.duplicate(true) : Array();
+	Array visit_tiles = visitable ? visit_tiles_for_package_surface(record, blocking_body) : Array();
+
+	record["package_surface_adoption_version"] = 1;
+	record["package_surface_adoption_state"] = "native_generated_record_materialized_for_package_editor_runtime_surface";
+	record["package_pathing_materialization_state"] = "body_visit_block_masks_materialized_for_generated_package_surface";
+	record["package_body_tiles"] = body_tiles;
+	record["package_block_tiles"] = block_tiles;
+	record["package_visit_tiles"] = visit_tiles;
+	record["package_body_tile_count"] = body_tiles.size();
+	record["package_block_tile_count"] = block_tiles.size();
+	record["package_visit_tile_count"] = visit_tiles.size();
+	record["blocking_body"] = blocking_body;
+	record["visitable"] = visitable;
+	record["interaction"] = visitable ? (blocking_body ? "adjacent_visit" : "body_visit") : "none";
+	record["visit_policy"] = visitable ? (blocking_body ? "adjacent_to_blocking_body" : "enter_body_tile") : "non_visitable";
+	record["package_occupancy_role"] = blocking_body ? (visitable ? "visitable_blocking_body" : "blocking_body") : (visitable ? "visitable_nonblocking_body" : "nonblocking_nonvisitable");
+	record["materialization_state"] = "package_surface_materialized_feature_gated_from_native_generation";
+	return record;
+}
+
+Dictionary guard_reference_for_package_surface(const Dictionary &guard) {
+	Dictionary reference;
+	reference["guard_id"] = guard.get("guard_id", "");
+	reference["placement_id"] = guard.get("placement_id", "");
+	reference["guard_kind"] = guard.get("guard_kind", "");
+	reference["guard_value"] = guard.get("guard_value", 0);
+	reference["strength_band"] = guard.get("strength_band", "");
+	reference["guard_reward_value_ratio"] = guard.get("guard_reward_value_ratio", 0.0);
+	reference["guard_distance"] = guard.get("guard_distance", 0);
+	reference["adjacent_to_guarded_object"] = guard.get("adjacent_to_guarded_object", false);
+	reference["x"] = guard.get("x", 0);
+	reference["y"] = guard.get("y", 0);
+	reference["level"] = guard.get("level", 0);
+	reference["primary_tile"] = guard.get("primary_tile", Dictionary());
+	reference["stack_records"] = guard.get("stack_records", Array());
+	reference["protected_target_type"] = guard.get("protected_target_type", "");
+	reference["protected_object_placement_id"] = guard.get("protected_object_placement_id", "");
+	return reference;
+}
+
+void apply_package_guard_link(Dictionary &record, const Dictionary &guard) {
+	if (guard.is_empty()) {
+		return;
+	}
+	Dictionary reference = guard_reference_for_package_surface(guard);
+	record["protected_by_guard"] = true;
+	record["guarded_by_guard_id"] = guard.get("guard_id", "");
+	record["guarded_by_placement_id"] = guard.get("placement_id", "");
+	record["guarded_by_guard_kind"] = guard.get("guard_kind", "");
+	record["guarded_by_guard_value"] = guard.get("guard_value", 0);
+	record["guarded_by_strength_band"] = guard.get("strength_band", "");
+	record["guard_reward_value_ratio"] = guard.get("guard_reward_value_ratio", 0.0);
+	record["guard_distance"] = guard.get("guard_distance", 0);
+	record["adjacent_to_guarded_object"] = guard.get("adjacent_to_guarded_object", false);
+	record["guard_reference"] = reference;
+
+	Dictionary access;
+	access["requires_guard_clear"] = true;
+	access["blocking_guard_placement_id"] = guard.get("placement_id", "");
+	access["blocking_guard_id"] = guard.get("guard_id", "");
+	access["clear_required_for_visit"] = true;
+	access["access_state_before_clear"] = "blocked_by_guard";
+	access["access_state_after_clear"] = "visitable";
+	access["guard_value"] = guard.get("guard_value", 0);
+	access["guard_strength_band"] = guard.get("strength_band", "");
+	record["guarded_access_requirements"] = access;
+
+	Dictionary guard_link;
+	guard_link["guard_role"] = "guards_generated_reward_or_site";
+	guard_link["target_kind"] = record.get("kind", "");
+	guard_link["target_placement_id"] = record.get("placement_id", "");
+	guard_link["guard_placement_id"] = guard.get("placement_id", "");
+	guard_link["guard_id"] = guard.get("guard_id", "");
+	guard_link["blocks_approach"] = true;
+	guard_link["clear_required_for_target"] = true;
+	record["guard_link"] = guard_link;
+
+	Dictionary passability;
+	passability["passability_class"] = "guarded_reward_body";
+	passability["interaction_mode"] = "adjacent_after_guard_clear";
+	passability["blocks_route_until_cleared"] = true;
+	passability["blocking_guard_placement_id"] = guard.get("placement_id", "");
+	record["passability"] = passability;
+
+	Dictionary ai_hints;
+	ai_hints["path_blocking"] = true;
+	ai_hints["avoid_until_strength"] = guard.get("strength_band", "");
+	ai_hints["neutral_clearance_value"] = guard.get("guard_value", 0);
+	ai_hints["guard_target_value_hint"] = record.get("reward_value", record.get("guard_base_value", 0));
+	record["ai_hints"] = ai_hints;
+	record["package_guard_adoption_state"] = "guard_link_materialized_on_protected_object_package_surface";
+}
+
 Array combined_native_map_objects(const Dictionary &generated_map) {
 	Array result;
 	Array objects = tagged_record_snapshots(generated_map.get("object_placements", Variant()), "object_placement");
+	Array guards = tagged_record_snapshots(generated_map.get("guard_records", Variant()), "guard");
+	Dictionary guards_by_protected_object;
+	for (int64_t index = 0; index < guards.size(); ++index) {
+		Dictionary guard = guards[index];
+		const String protected_id = String(guard.get("protected_object_placement_id", ""));
+		if (String(guard.get("protected_target_type", "")) == "object_placement" && !protected_id.is_empty()) {
+			guards_by_protected_object[protected_id] = guard;
+		}
+	}
 	for (int64_t index = 0; index < objects.size(); ++index) {
-		result.append(objects[index]);
+		Dictionary record = package_surface_record(Dictionary(objects[index]).duplicate(true));
+		const String placement_id = String(record.get("placement_id", ""));
+		if (guards_by_protected_object.has(placement_id)) {
+			apply_package_guard_link(record, Dictionary(guards_by_protected_object.get(placement_id, Dictionary())));
+		} else {
+			record["protected_by_guard"] = false;
+			record["package_guard_adoption_state"] = "no_guard_link_for_package_surface";
+		}
+		record["signature"] = hash32_hex(canonical_variant(record));
+		result.append(record);
 	}
 	Array towns = tagged_record_snapshots(generated_map.get("town_records", Variant()), "town");
 	for (int64_t index = 0; index < towns.size(); ++index) {
-		result.append(towns[index]);
+		Dictionary record = package_surface_record(Dictionary(towns[index]).duplicate(true));
+		record["package_guard_adoption_state"] = "town_record_not_reward_guard_target";
+		record["signature"] = hash32_hex(canonical_variant(record));
+		result.append(record);
 	}
-	Array guards = tagged_record_snapshots(generated_map.get("guard_records", Variant()), "guard");
 	for (int64_t index = 0; index < guards.size(); ++index) {
-		result.append(guards[index]);
+		Dictionary record = package_surface_record(Dictionary(guards[index]).duplicate(true));
+		record["blocking_body"] = true;
+		record["package_guard_adoption_state"] = "guard_record_materialized_as_blocking_package_surface";
+		Dictionary passability;
+		passability["passability_class"] = "neutral_stack_blocking";
+		passability["interaction_mode"] = "adjacent_combat";
+		passability["blocks_route_until_cleared"] = true;
+		passability["protected_target_type"] = record.get("protected_target_type", "");
+		passability["protected_object_placement_id"] = record.get("protected_object_placement_id", "");
+		passability["route_edge_id"] = record.get("route_edge_id", "");
+		record["passability"] = passability;
+		record["signature"] = hash32_hex(canonical_variant(record));
+		result.append(record);
 	}
 	return result;
+}
+
+Dictionary guard_reward_package_adoption_summary(const Array &objects) {
+	int32_t reward_count = 0;
+	int32_t valuable_reward_count = 0;
+	int32_t guarded_valuable_reward_count = 0;
+	int32_t guard_count = 0;
+	int32_t package_body_tile_count = 0;
+	int32_t package_block_tile_count = 0;
+	int32_t package_visit_tile_count = 0;
+	Array unguarded_high_value_rewards;
+	for (int64_t index = 0; index < objects.size(); ++index) {
+		Dictionary object = objects[index];
+		const String kind = String(object.get("kind", ""));
+		package_body_tile_count += int32_t(object.get("package_body_tile_count", 0));
+		package_block_tile_count += int32_t(object.get("package_block_tile_count", 0));
+		package_visit_tile_count += int32_t(object.get("package_visit_tile_count", 0));
+		if (kind == "guard") {
+			++guard_count;
+			continue;
+		}
+		if (kind != "reward_reference") {
+			continue;
+		}
+		++reward_count;
+		const int32_t value = int32_t(object.get("reward_value", 0));
+		if (value >= 2500) {
+			++valuable_reward_count;
+			if (bool(object.get("protected_by_guard", false))) {
+				++guarded_valuable_reward_count;
+			}
+		}
+		if (value >= 6000 && !bool(object.get("protected_by_guard", false))) {
+			Dictionary missed;
+			missed["placement_id"] = object.get("placement_id", "");
+			missed["reward_value"] = value;
+			missed["reward_value_tier"] = object.get("reward_value_tier", "");
+			unguarded_high_value_rewards.append(missed);
+		}
+	}
+	Dictionary summary;
+	summary["schema_id"] = "native_random_map_guard_reward_package_adoption_summary_v1";
+	summary["package_adoption_state"] = "guard_reward_body_visit_block_surface_materialized";
+	summary["reward_count"] = reward_count;
+	summary["valuable_reward_count"] = valuable_reward_count;
+	summary["guarded_valuable_reward_count"] = guarded_valuable_reward_count;
+	summary["guard_count"] = guard_count;
+	summary["package_body_tile_count"] = package_body_tile_count;
+	summary["package_block_tile_count"] = package_block_tile_count;
+	summary["package_visit_tile_count"] = package_visit_tile_count;
+	summary["unguarded_high_value_rewards"] = unguarded_high_value_rewards;
+	summary["unguarded_high_value_reward_count"] = unguarded_high_value_rewards.size();
+	summary["status"] = unguarded_high_value_rewards.is_empty() ? "pass" : "unguarded_high_value_rewards";
+	summary["full_parity_claim"] = false;
+	summary["signature"] = hash32_hex(canonical_variant(summary));
+	return summary;
 }
 
 Dictionary native_conversion_fail(const String &code, const String &message) {
@@ -5288,6 +5514,11 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	map_metadata["native_runtime_authoritative"] = full_parity_supported;
 	map_metadata["full_parity_claim"] = full_parity_supported;
 
+	Array package_surface_objects = combined_native_map_objects(generated_map);
+	Dictionary guard_reward_adoption = guard_reward_package_adoption_summary(package_surface_objects);
+	map_metadata["guard_reward_package_adoption"] = guard_reward_adoption;
+	map_metadata["guard_reward_package_adoption_signature"] = guard_reward_adoption.get("signature", "");
+
 	Dictionary map_state;
 	map_state["map_id"] = map_id;
 	map_state["map_hash"] = map_hash;
@@ -5298,7 +5529,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	map_state["metadata"] = map_metadata;
 	map_state["terrain_layers"] = terrain_layers_from_grid(Dictionary(generated_map.get("terrain_grid", Dictionary())), Dictionary(generated_map.get("road_network", Dictionary())));
 	map_state["route_graph"] = generated_map.get("route_graph", Dictionary());
-	map_state["objects"] = combined_native_map_objects(generated_map);
+	map_state["objects"] = package_surface_objects;
 
 	Ref<MapDocument> map_document;
 	map_document.instantiate();
@@ -5440,6 +5671,10 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	metrics["player_slot_count"] = player_slots.size();
 	metrics["enemy_faction_count"] = enemy_factions.size();
 	metrics["save_version"] = session_save_version;
+	metrics["guarded_valuable_reward_count"] = guard_reward_adoption.get("guarded_valuable_reward_count", 0);
+	metrics["valuable_reward_count"] = guard_reward_adoption.get("valuable_reward_count", 0);
+	metrics["package_block_tile_count"] = guard_reward_adoption.get("package_block_tile_count", 0);
+	metrics["package_visit_tile_count"] = guard_reward_adoption.get("package_visit_tile_count", 0);
 
 	Array remaining;
 	if (!full_parity_supported) {
@@ -5457,6 +5692,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	report["warnings"] = Array();
 	report["metrics"] = metrics;
 	report["package_session_adoption_ready"] = true;
+	report["guard_reward_package_adoption"] = guard_reward_adoption;
 	report["adoption_status"] = full_parity_supported ? "ready_feature_gated_authoritative_for_supported_profile" : "ready_feature_gated_not_authoritative";
 	report["native_runtime_authoritative"] = full_parity_supported;
 	report["runtime_call_site_adoption"] = false;

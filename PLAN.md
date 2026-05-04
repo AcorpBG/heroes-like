@@ -181,6 +181,29 @@ nonGoals:
 
 Completed owner-directed implementation slice:
 
+id: `native-rmg-guard-reward-package-adoption-10184`
+phase: `phase-2-deep-production-foundation`
+status: `completed`
+purpose: Continue native RMG package parity by making generated package/editor surfaces preserve guard/reward relationships and object body/visit/block masks after native conversion and package save/load.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/random_map_template_catalog.json`
+- `docs/native-rmg-homm3-re-object-table-proxy-report.md`
+- `docs/native-rmg-homm3-re-reward-value-distribution-report.md`
+implementation:
+- Native generated non-parity object placement now reserves materialized road cells before placing non-town objects, preventing reward/site blocking bodies from landing on road corridors.
+- Native package conversion enriches generated object records with package body, visit, and block masks plus package occupancy roles.
+- Protected rewards/sites now carry direct package guard links, guard references, guarded access requirements, guarded passability, and AI/pathing hints after convert/save/load.
+- Guard records serialize as blocking package surfaces with neutral-stack passability metadata.
+evidence:
+- `tests/native_random_map_guard_reward_package_adoption_report.tscn`
+- `docs/native-rmg-guard-reward-package-adoption-report.md`
+nonGoals:
+- No route back to `RandomMapGeneratorRules.gd` for active generation, no generated map packages committed under `maps/`, no HoMM3 copyrighted art/DEF asset import, no exact HoMM3-re placement/art/reward-table/byte parity claim, no save version bump or authored scenario/package adoption.
+
+Completed owner-directed implementation slice:
+
 id: `native-rmg-homm3-re-reward-value-distribution-10184`
 phase: `phase-2-deep-production-foundation`
 status: `completed`
