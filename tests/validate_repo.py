@@ -13880,6 +13880,77 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                     ensure(source_trimmed_path.exists(), errors, f"Decorative distinct asset {asset_id} is missing trimmed source {entry.get('source_trimmed')}")
                     ensure(source_atlas_path.exists(), errors, f"Decorative distinct asset {asset_id} is missing generated source atlas {entry.get('source_generated_atlas')}")
 
+    map_object_manifest_path = res_path_to_disk(str(manifest.get("map_object_sprite_manifest", "")))
+    ensure(map_object_manifest_path.exists(), errors, "Overworld art manifest must reference the map object sprite manifest")
+    if map_object_manifest_path.exists():
+        map_object_manifest = load_json(map_object_manifest_path)
+        ensure(str(map_object_manifest.get("schema_id", "")) == "aurelion_map_object_sprite_mapping_v1", errors, "Map object sprite manifest must use the expected schema id")
+        source = map_object_manifest.get("source", {})
+        ensure(isinstance(source, dict), errors, "Map object sprite manifest must record source provenance")
+        if isinstance(source, dict):
+            ensure("no_homm3" in str(source.get("asset_policy", "")).lower(), errors, "Map object sprite manifest must record the no-HoMM3-art import policy")
+            ensure(int(source.get("new_generated_sprite_count", 0)) == 178, errors, "Map object sprite manifest must record 178 newly generated distinct sprites")
+            generated_batches = source.get("generated_batches", [])
+            ensure(isinstance(generated_batches, list) and len(generated_batches) == 12, errors, "Map object sprite manifest must record 12 generated source atlases")
+            if isinstance(generated_batches, list):
+                for batch in generated_batches:
+                    ensure(isinstance(batch, dict), errors, "Map object generated batch provenance must be a dictionary")
+                    if not isinstance(batch, dict):
+                        continue
+                    source_atlas_path = res_path_to_disk(str(batch.get("workspace_source_atlas", "")))
+                    ensure(source_atlas_path.exists(), errors, f"Map object source atlas is missing: {batch.get('workspace_source_atlas')}")
+        distinct_asset_ids = map_object_manifest.get("distinct_asset_ids", [])
+        mappings = map_object_manifest.get("object_sprite_mappings", {})
+        coverage = map_object_manifest.get("coverage", {})
+        map_objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+        decorative_object_ids = {
+            object_id
+            for object_id, obj in map_objects.items()
+            if str(obj.get("primary_class", "")) == "decoration" or str(obj.get("family", "")) in {"blocker", "decoration"}
+        }
+        non_decorative_object_ids = set(map_objects.keys()) - decorative_object_ids
+        ensure(len(non_decorative_object_ids) == 186, errors, f"Expected 186 authored non-decoration map objects, found {len(non_decorative_object_ids)}")
+        ensure(isinstance(distinct_asset_ids, list) and len(distinct_asset_ids) == 178, errors, "Map object sprite manifest must define 178 newly generated distinct asset ids")
+        if isinstance(distinct_asset_ids, list):
+            ensure(len(set(map(str, distinct_asset_ids))) == 178, errors, "Map object sprite distinct_asset_ids must not reuse asset ids")
+        ensure(isinstance(coverage, dict), errors, "Map object sprite manifest must record coverage")
+        if isinstance(coverage, dict):
+            ensure(int(coverage.get("authored_map_object_count", 0)) == 386, errors, "Map object sprite coverage must count all 386 authored map objects")
+            ensure(int(coverage.get("foundation_decorative_or_blocker_distinct_count", 0)) == 200, errors, "Map object sprite coverage must preserve the 200 decorative/blocker distinct assignments")
+            ensure(int(coverage.get("preexisting_unique_non_decorative_count", 0)) == 8, errors, "Map object sprite coverage must count 8 preexisting unique non-decoration assignments")
+            ensure(int(coverage.get("new_distinct_non_decorative_asset_count", 0)) == 178, errors, "Map object sprite coverage must count 178 new non-decoration assignments")
+            ensure(int(coverage.get("total_distinct_authored_map_object_count_after_pass", 0)) == 386, errors, "Map object sprite coverage must prove all authored map objects have distinct assignments after the pass")
+        ensure(isinstance(mappings, dict), errors, "Map object sprite manifest must define object_sprite_mappings")
+        if isinstance(mappings, dict):
+            ensure(len(mappings) == 178, errors, "Map object sprite manifest must map the 178 non-decoration gap objects")
+            mapped_asset_ids: list[str] = []
+            for object_id, entry in mappings.items():
+                ensure(str(object_id) in non_decorative_object_ids, errors, f"Map object sprite mapping references unexpected object {object_id}")
+                ensure(isinstance(entry, dict), errors, f"Map object sprite mapping {object_id} must be a dictionary with provenance")
+                if not isinstance(entry, dict):
+                    continue
+                asset_id = str(entry.get("asset_id", ""))
+                mapped_asset_ids.append(asset_id)
+                ensure(asset_id in object_assets, errors, f"Map object sprite mapping {object_id} references missing object asset {asset_id}")
+                ensure(str(entry.get("fit", "")) != "", errors, f"Map object sprite mapping {object_id} must record its semantic-fit note")
+            ensure(len(mapped_asset_ids) == 178 and len(set(mapped_asset_ids)) == 178, errors, "Map object sprite mappings must assign one unique asset id per gap object")
+            if isinstance(distinct_asset_ids, list):
+                ensure(set(mapped_asset_ids) == set(map(str, distinct_asset_ids)), errors, "Map object sprite mappings must match the manifest distinct_asset_ids set")
+        if isinstance(distinct_asset_ids, list):
+            for asset_id in map(str, distinct_asset_ids):
+                ensure(asset_id in object_assets, errors, f"Map object distinct asset {asset_id} is missing from overworld object_assets")
+                entry = object_assets.get(asset_id, {})
+                if isinstance(entry, dict):
+                    runtime_path = res_path_to_disk(str(entry.get("path", "")))
+                    source_trimmed_path = res_path_to_disk(str(entry.get("source_trimmed", "")))
+                    source_atlas_path = res_path_to_disk(str(entry.get("source_generated_atlas", "")))
+                    ensure(str(entry.get("asset_policy", "")) == "original_generated_runtime_sprite_no_homm3_art_import", errors, f"Map object distinct asset {asset_id} must record generated no-HoMM3 policy")
+                    ensure(bool(entry.get("distinct_sprite_assignment", False)), errors, f"Map object distinct asset {asset_id} must be marked as a distinct sprite assignment")
+                    ensure(str(entry.get("assigned_map_object_id", "")) in non_decorative_object_ids, errors, f"Map object distinct asset {asset_id} must record its assigned map object id")
+                    ensure(runtime_path.with_name(runtime_path.name + ".import").exists(), errors, f"Map object distinct runtime asset is missing Godot import sidecar: {runtime_path.relative_to(ROOT)}.import")
+                    ensure(source_trimmed_path.exists(), errors, f"Map object distinct asset {asset_id} is missing trimmed source {entry.get('source_trimmed')}")
+                    ensure(source_atlas_path.exists(), errors, f"Map object distinct asset {asset_id} is missing generated source atlas {entry.get('source_generated_atlas')}")
+
     resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
     for site_id, expected_asset_id in OVERWORLD_ART_REQUIRED_SITE_MAPPINGS.items():
         ensure(site_id in resource_sites, errors, f"Overworld art required mapping references missing resource site {site_id}")
@@ -13966,8 +14037,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "func _draw_decorative_object_sprite",
         "func _decorative_object_asset_id",
         "func _load_decorative_object_sprite_manifest",
+        "func _load_map_object_sprite_manifest",
+        "func _encounter_asset_id",
         "func _resource_asset_id",
         "decorative_object_sprite_manifest",
+        "map_object_sprite_manifest",
         "town_default_sprite",
         "encounter_default_sprite",
         "OBJECT_PRESENCE_MODEL",

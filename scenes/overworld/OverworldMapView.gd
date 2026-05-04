@@ -221,6 +221,7 @@ var _object_textures: Dictionary = {}
 var _object_texture_missing: Dictionary = {}
 var _resource_site_asset_ids: Dictionary = {}
 var _resource_site_object_profiles: Dictionary = {}
+var _map_object_asset_ids: Dictionary = {}
 var _artifact_default_asset_id := ""
 var _town_default_asset_id := ""
 var _encounter_default_asset_id := ""
@@ -1164,8 +1165,9 @@ func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
 	if not artifact_node.is_empty():
 		if not _draw_artifact_sprite(artifact_node, rect, remembered, tile):
 			_draw_artifact_marker(rect, remembered, tile)
-	if _has_encounter_at(tile) and (visible or _has_rememberable_encounter_at(tile)):
-		if not _draw_encounter_sprite(rect, remembered, tile):
+	var encounter_node := _encounter_node_at(tile)
+	if not encounter_node.is_empty() and (visible or _has_rememberable_encounter_at(tile)):
+		if not _draw_encounter_sprite(encounter_node, rect, remembered, tile):
 			_draw_encounter_marker(rect, remembered, tile)
 
 func _draw_tile_dynamic_icon(tile: Vector2i, rect: Rect2) -> void:
@@ -1201,8 +1203,8 @@ func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: V
 	_draw_town_entry_approach(entry_rect, _town_color(tile), remembered)
 	return true
 
-func _draw_encounter_sprite(rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
-	return _draw_object_sprite(_encounter_default_asset_id, rect, remembered, _encounter_object_profile(), tile)
+func _draw_encounter_sprite(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	return _draw_object_sprite(_encounter_asset_id(encounter), rect, remembered, _encounter_object_profile(), tile)
 
 func _draw_decorative_object_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_object_sprite(_decorative_object_asset_id(object), rect, remembered, _decorative_object_profile(object), tile)
@@ -3109,9 +3111,11 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			sprite_asset_ids.append(_artifact_default_asset_id)
 			var artifact_footprint := _object_profile_footprint(_artifact_object_profile())
 			sprite_footprints.append({"width": artifact_footprint.x, "height": artifact_footprint.y})
-	if "encounter" in object_kinds and _encounter_default_asset_id != "":
-		if _object_texture_for_asset(_encounter_default_asset_id) is Texture2D:
-			sprite_asset_ids.append(_encounter_default_asset_id)
+	var encounter_payload := _encounter_node_at(tile)
+	if not encounter_payload.is_empty():
+		var encounter_asset_id := _encounter_asset_id(encounter_payload)
+		if encounter_asset_id != "" and _object_texture_for_asset(encounter_asset_id) is Texture2D:
+			sprite_asset_ids.append(encounter_asset_id)
 			var encounter_footprint := _object_profile_footprint(_encounter_object_profile())
 			sprite_footprints.append({"width": encounter_footprint.x, "height": encounter_footprint.y})
 	var uses_asset_sprite := not sprite_asset_ids.is_empty()
@@ -5194,6 +5198,7 @@ func _load_overworld_art_manifest() -> void:
 	_object_texture_missing.clear()
 	_resource_site_asset_ids.clear()
 	_resource_site_object_profiles.clear()
+	_map_object_asset_ids.clear()
 	_decorative_object_asset_ids.clear()
 	_artifact_default_asset_id = ""
 	_town_default_asset_id = ""
@@ -5250,6 +5255,7 @@ func _load_overworld_art_manifest() -> void:
 		_encounter_default_asset_id = String(encounter_default.get("asset_id", ""))
 
 	_load_decorative_object_sprite_manifest(String(_overworld_art_manifest.get("decorative_object_sprite_manifest", "")))
+	_load_map_object_sprite_manifest(String(_overworld_art_manifest.get("map_object_sprite_manifest", "")))
 
 func _load_decorative_object_sprite_manifest(manifest_path: String) -> void:
 	var normalized_path := manifest_path.strip_edges()
@@ -5273,6 +5279,29 @@ func _load_decorative_object_sprite_manifest(manifest_path: String) -> void:
 		if object_id == "" or asset_id == "":
 			continue
 		_decorative_object_asset_ids[object_id] = asset_id
+
+func _load_map_object_sprite_manifest(manifest_path: String) -> void:
+	var normalized_path := manifest_path.strip_edges()
+	if normalized_path == "":
+		return
+	var raw := ContentService.load_json(normalized_path)
+	if raw.is_empty():
+		push_warning("Map object sprite manifest is missing or invalid; resource/default sprite fallbacks remain available.")
+		return
+	var mappings = raw.get("object_sprite_mappings", {})
+	if not (mappings is Dictionary):
+		return
+	for object_id_value in mappings.keys():
+		var object_id := String(object_id_value).strip_edges()
+		var entry = mappings.get(object_id_value, {})
+		var asset_id := ""
+		if entry is Dictionary:
+			asset_id = String(entry.get("asset_id", "")).strip_edges()
+		else:
+			asset_id = String(entry).strip_edges()
+		if object_id == "" or asset_id == "":
+			continue
+		_map_object_asset_ids[object_id] = asset_id
 
 func _load_map_object_profiles() -> void:
 	_resource_site_object_profiles.clear()
@@ -5563,12 +5592,26 @@ func _resource_node_at(tile: Vector2i) -> Dictionary:
 func _resource_asset_id(node: Dictionary) -> String:
 	if node.is_empty():
 		return ""
+	var object_id := String(node.get("object_id", "")).strip_edges()
+	if object_id != "" and _map_object_asset_ids.has(object_id):
+		return String(_map_object_asset_ids.get(object_id, ""))
 	var site_id := String(node.get("site_id", ""))
+	var map_object = ContentService.get_map_object_for_resource_site(site_id)
+	if map_object is Dictionary:
+		var mapped_object_id := String(map_object.get("id", "")).strip_edges()
+		if mapped_object_id != "" and _map_object_asset_ids.has(mapped_object_id):
+			return String(_map_object_asset_ids.get(mapped_object_id, ""))
 	var site := ContentService.get_resource_site(site_id)
 	var direct_asset_id := String(site.get("overworld_sprite_asset_id", ""))
 	if direct_asset_id != "":
 		return direct_asset_id
 	return String(_resource_site_asset_ids.get(site_id, ""))
+
+func _encounter_asset_id(encounter: Dictionary) -> String:
+	var object_id := String(encounter.get("object_id", "")).strip_edges()
+	if object_id != "" and _map_object_asset_ids.has(object_id):
+		return String(_map_object_asset_ids.get(object_id, ""))
+	return _encounter_default_asset_id
 
 func _has_decorative_object_at(tile: Vector2i) -> bool:
 	return not _decorative_object_at(tile).is_empty()
@@ -5626,6 +5669,9 @@ func _artifact_node_at(tile: Vector2i) -> Dictionary:
 
 func _has_encounter_at(tile: Vector2i) -> bool:
 	return _encounters_by_tile.has(_tile_key(tile))
+
+func _encounter_node_at(tile: Vector2i) -> Dictionary:
+	return _encounters_by_tile.get(_tile_key(tile), {})
 
 func _has_rememberable_encounter_at(tile: Vector2i) -> bool:
 	return _rememberable_encounters_by_tile.has(_tile_key(tile))

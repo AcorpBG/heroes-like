@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "decorative-blocker-distinct-sprite-assets-10184",
-  "currentSliceTitle": "Decorative Blocker Distinct Sprite Assets",
+  "currentSliceId": "overworld-map-object-distinct-sprite-gap-fill-10184",
+  "currentSliceTitle": "Overworld Map Object Distinct Sprite Gap Fill",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed follow-up: every authored decorative/blocker object now maps to a distinct generated sprite asset id; 16 previous generated sprites are preserved for 16 representative objects and 184 new sprites were generated and ingested.",
-  "nextActionGuardrailNote": "Generated PNG ingestion for decorative/blocker distinct sprite assets is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T01:05:00Z",
+  "currentSliceNotes": "Completed owner-directed asset follow-up: audited 386 authored overworld map objects, preserved the 200 decorative/blocker distinct assignments and 8 preexisting unique non-decoration assignments, then generated and ingested 178 distinct original map-object sprites so all authored map objects have distinct sprite assignments after the pass.",
+  "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
+  "updatedAt": "2026-05-04T23:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -9553,6 +9553,59 @@
         "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot4 --headless --path . tests/native_random_map_homm3_land_water_shape_report.tscn (pass)",
         "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot4 --headless --path . tests/native_random_map_full_parity_gate_report.tscn (pass)",
         "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot4 --headless --path . tests/native_random_map_guard_reward_package_adoption_report.tscn (pass, additional preservation check)",
+        "git diff --check (pass)"
+      ]
+    },
+    {
+      "id": "overworld-map-object-distinct-sprite-gap-fill-10184",
+      "title": "Overworld Map Object Distinct Sprite Gap Fill",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "owner_directed_generated_overworld_map_object_distinct_sprite_asset_slice",
+      "purpose": "Audit authored overworld map objects after the decorative/blocker foundation pass and assign original generated distinct sprite assets to every remaining non-decoration object gap.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/map_objects.json",
+        "art/overworld/manifest.json",
+        "art/overworld/decorative_object_sprites.json"
+      ],
+      "implementationTargets": [
+        "art/overworld/map_object_sprites.json",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/map_objects/distinct/",
+        "art/overworld/source/generated/map_objects/distinct/",
+        "art/overworld/source/trimmed/map_objects/distinct/",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/validate_repo.py",
+        "tests/overworld_map_object_sprite_asset_report.gd",
+        "docs/overworld-map-object-distinct-sprite-gap-audit.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/overworld_map_object_sprite_asset_report.tscn",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "The audit identifies authored map objects that still lack a unique sprite assignment after the 200-object decorative/blocker pass.",
+        "Every identified gap object has one distinct generated 512x512 runtime PNG, trimmed source PNG, source atlas provenance, manifest mapping, and no-HoMM3-art policy.",
+        "Renderer lookup resolves resource and encounter placements through object-specific map object sprite mappings before shared fallback assets.",
+        "Validation proves 386 authored map objects have distinct assignments after combining the decorative foundation pass, preexisting unique non-decoration assignments, and this generated gap-fill pass."
+      ],
+      "nonGoals": [
+        "No HoMM3 copyrighted art/DEF/image/name/text import.",
+        "No town, hero, unit, battle, terrain, road, or UI asset broadening beyond authored overworld map object sprite coverage.",
+        "No generated random map package clutter committed under runtime maps."
+      ],
+      "completionEvidence": [
+        "docs/overworld-map-object-distinct-sprite-gap-audit.md records the 386-object audit and 178-object gap breakdown.",
+        "art/overworld/map_object_sprites.json records 178 distinct generated map-object sprite assignments and provenance for 12 source atlases.",
+        "art/overworld/runtime/objects/map_objects/distinct/ contains 178 imported 512x512 runtime PNG sprites.",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/overworld_map_object_sprite_asset_report.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/overworld_decorative_sprite_asset_report.tscn (pass)",
+        "python3 tests/validate_repo.py (pass)",
+        "direct PIL audit: runtime=178, imports=178, edge_alpha_issues=0",
         "git diff --check (pass)"
       ]
     }

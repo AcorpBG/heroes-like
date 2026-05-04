@@ -1,0 +1,1561 @@
+{
+  "schema_id": "aurelion_map_object_sprite_mapping_v1",
+  "version": 1,
+  "source": {
+    "slice_id": "overworld-map-object-distinct-sprite-gap-fill-10184",
+    "prompt_summary": "One distinct original generated overworld sprite asset for each authored non-decoration map object that previously lacked a unique sprite assignment after the decorative/blocker foundation pass.",
+    "source_model": "built_in_image_gen_chroma_key_split",
+    "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+    "new_generated_sprite_count": 178,
+    "generated_batch_count": 12,
+    "generated_batches": [
+      {
+        "batch_index": 1,
+        "workspace_source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+        "object_index_range": [
+          1,
+          16
+        ]
+      },
+      {
+        "batch_index": 2,
+        "workspace_source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+        "object_index_range": [
+          17,
+          32
+        ]
+      },
+      {
+        "batch_index": 3,
+        "workspace_source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+        "object_index_range": [
+          33,
+          48
+        ]
+      },
+      {
+        "batch_index": 4,
+        "workspace_source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+        "object_index_range": [
+          49,
+          64
+        ]
+      },
+      {
+        "batch_index": 5,
+        "workspace_source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+        "object_index_range": [
+          65,
+          80
+        ]
+      },
+      {
+        "batch_index": 6,
+        "workspace_source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+        "object_index_range": [
+          81,
+          96
+        ]
+      },
+      {
+        "batch_index": 7,
+        "workspace_source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+        "object_index_range": [
+          97,
+          112
+        ]
+      },
+      {
+        "batch_index": 8,
+        "workspace_source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+        "object_index_range": [
+          113,
+          128
+        ]
+      },
+      {
+        "batch_index": 9,
+        "workspace_source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+        "object_index_range": [
+          129,
+          144
+        ]
+      },
+      {
+        "batch_index": 10,
+        "workspace_source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+        "object_index_range": [
+          145,
+          160
+        ]
+      },
+      {
+        "batch_index": 11,
+        "workspace_source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+        "object_index_range": [
+          161,
+          176
+        ]
+      },
+      {
+        "batch_index": 12,
+        "workspace_source_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_12.png",
+        "object_index_range": [
+          177,
+          178
+        ]
+      }
+    ]
+  },
+  "coverage": {
+    "authored_map_object_count": 386,
+    "foundation_decorative_or_blocker_distinct_count": 200,
+    "preexisting_unique_non_decorative_count": 8,
+    "new_distinct_non_decorative_asset_count": 178,
+    "total_distinct_authored_map_object_count_after_pass": 386,
+    "by_family": {
+      "faction_landmark": 9,
+      "guarded_reward_site": 32,
+      "mine": 10,
+      "neutral_dwelling": 32,
+      "neutral_encounter": 6,
+      "pickup": 9,
+      "repeatable_service": 7,
+      "scenario_objective": 14,
+      "scouting_structure": 6,
+      "shrine": 6,
+      "sign_waypoint": 5,
+      "staged_resource_front": 9,
+      "support_producer": 6,
+      "transit_object": 27
+    }
+  },
+  "distinct_asset_ids": [
+    "mapobj_roadward_lodge",
+    "mapobj_cliffhawk_roost",
+    "mapobj_reedbarge_mooring",
+    "mapobj_glowcap_croft",
+    "mapobj_dustjack_yard",
+    "mapobj_cinder_kiln",
+    "mapobj_frostbeacon_bothy",
+    "mapobj_orchard_levy",
+    "mapobj_bramble_hedge",
+    "mapobj_tidepool_skiffyard",
+    "mapobj_switchback_hostel",
+    "mapobj_saltpan_camp",
+    "mapobj_crystal_sump",
+    "mapobj_icehook_trapper_lodge",
+    "mapobj_obsidian_scar",
+    "mapobj_greenbranch_copse",
+    "mapobj_harbor_pilot_house",
+    "mapobj_kite_signal_eyrie",
+    "mapobj_lantern_warren",
+    "mapobj_bogbell_croft",
+    "mapobj_milestone_arsenal",
+    "mapobj_frostwharf_house",
+    "mapobj_charcoal_burners",
+    "mapobj_basalt_gatehouse",
+    "mapobj_marsh_peat_yard",
+    "mapobj_mist_lighthouse",
+    "mapobj_repaired_ferry_stage",
+    "mapobj_rope_lift",
+    "mapobj_market_caravanserai",
+    "mapobj_ember_signal_brazier",
+    "mapobj_bog_drum_totem",
+    "mapobj_prism_relay_lens",
+    "mapobj_neutral_encounter_river_pass_ghoul_grove_stack",
+    "mapobj_neutral_encounter_river_pass_hollow_mire_stack",
+    "mapobj_neutral_encounter_ninefold_basalt_gatehouse_watch_stack",
+    "mapobj_neutral_encounter_river_pass_reed_totemists_stack",
+    "mapobj_neutral_encounter_causeway_levee_cutters_stack",
+    "mapobj_neutral_encounter_stonewake_reed_totemists_stack",
+    "mapobj_road_writ_purse",
+    "mapobj_split_wood_pile",
+    "mapobj_quarry_chip_hod",
+    "mapobj_payroll_casket",
+    "mapobj_millroad_plank_stack",
+    "mapobj_aetherglass_splinter_lot",
+    "mapobj_embergrain_sample_sack",
+    "mapobj_peatwax_votive_bundle",
+    "mapobj_memory_salt_jar",
+    "mapobj_greenbough_wood_yard",
+    "mapobj_floodplain_sluice_camp",
+    "mapobj_ironstep_ore_pit",
+    "mapobj_reef_coin_assay",
+    "mapobj_cinder_ore_face",
+    "mapobj_frostwood_cutting_yard",
+    "mapobj_aetherglass_lens_house",
+    "mapobj_sunfall_aetherglass_yard",
+    "mapobj_embergrain_warm_granary",
+    "mapobj_charcoal_embergrain_store",
+    "mapobj_peatwax_reed_yard",
+    "mapobj_verdant_graft_nursery",
+    "mapobj_brass_scrip_mint",
+    "mapobj_underway_brass_scrip_press",
+    "mapobj_memory_salt_pan",
+    "mapobj_wind_press",
+    "mapobj_saw_chain",
+    "mapobj_tide_kiln",
+    "mapobj_orchard_levy_post",
+    "mapobj_smelter_annex",
+    "mapobj_charter_countinghouse",
+    "mapobj_badlands_coin_sluice",
+    "mapobj_underway_ore_counterfort",
+    "mapobj_grassland_plank_grove",
+    "mapobj_wayfarer_menders_tent",
+    "mapobj_courier_change_post",
+    "mapobj_contract_scribe_booth",
+    "mapobj_reedboat_supply_stand",
+    "mapobj_ash_cooler_kitchen",
+    "mapobj_lens_calibration_cart",
+    "mapobj_oath_ember_shrine",
+    "mapobj_reedscript_vow_shrine",
+    "mapobj_prism_measure_shrine",
+    "mapobj_root_accord_ring",
+    "mapobj_furnace_oath_marker",
+    "mapobj_tide_bell_shrine",
+    "mapobj_hilltop_signal_nest",
+    "mapobj_marsh_listener_post",
+    "mapobj_prism_survey_frame",
+    "mapobj_underway_echo_well",
+    "mapobj_coast_bell_watch",
+    "mapobj_mile_writ_sign",
+    "mapobj_reed_knot_waypost",
+    "mapobj_switchback_cairn",
+    "mapobj_ash_road_marker",
+    "mapobj_underway_chalk_index",
+    "mapobj_toll_chain_court",
+    "mapobj_root_lease_gate",
+    "mapobj_pressure_rail_stop",
+    "mapobj_campaign_muster_seal",
+    "mapobj_broken_accord_marker",
+    "mapobj_scenario_witness_stone",
+    "mapobj_root_pass_arch",
+    "mapobj_pressure_rail_switch",
+    "mapobj_mirror_stair_turn",
+    "mapobj_basalt_undergate",
+    "mapobj_ridge_wind_chute",
+    "mapobj_slipgate_mirror",
+    "mapobj_spillway_drop_marker",
+    "mapobj_tide_bore_marker",
+    "mapobj_charter_bar_gate",
+    "mapobj_thorn_seal_gate",
+    "mapobj_brass_toll_arch",
+    "mapobj_reef_chain_boom",
+    "mapobj_frost_toll_bar",
+    "mapobj_ash_sluice_lock",
+    "mapobj_veil_skiffyard",
+    "mapobj_harbor_pilot_post",
+    "mapobj_bell_buoy_station",
+    "mapobj_wreck_quay",
+    "mapobj_tide_chain_mooring",
+    "mapobj_marsh_skiff_shelf",
+    "mapobj_mileward_route_post",
+    "mapobj_road_oath_stone",
+    "mapobj_salt_skirmisher_pier",
+    "mapobj_rootwatch_hollow",
+    "mapobj_ember_cart_yard",
+    "mapobj_prism_outrider_post",
+    "mapobj_storm_rook_eyrie",
+    "mapobj_mirror_bound_barracks",
+    "mapobj_furnace_oath_yard",
+    "mapobj_drowned_crown_hall",
+    "mapobj_barrow_vault",
+    "mapobj_toll_ruin",
+    "mapobj_wreck_locker",
+    "mapobj_amber_reliquary",
+    "mapobj_slag_purse_vault",
+    "mapobj_old_orchard_crypt",
+    "mapobj_moss_oath_cache",
+    "mapobj_frost_tithe_cellar",
+    "mapobj_drowned_reliquary",
+    "mapobj_mirror_archive",
+    "mapobj_furnace_vault",
+    "mapobj_thorn_crown_hollow",
+    "mapobj_storm_bell_wreck",
+    "mapobj_prism_ossuary",
+    "mapobj_basalt_oath_tomb",
+    "mapobj_lantern_crown_nave",
+    "mapobj_sealed_muster_fort",
+    "mapobj_hive_of_reeds",
+    "mapobj_glassbound_eyrie",
+    "mapobj_rust_choir_foundry",
+    "mapobj_salt_wight_convoy",
+    "mapobj_kiln_chain_redoubt",
+    "mapobj_rootwarden_stockade",
+    "mapobj_brasswake_depot",
+    "mapobj_bridge_bastion",
+    "mapobj_chainboom_fort",
+    "mapobj_railblock_camp",
+    "mapobj_rootgate_den",
+    "mapobj_fog_quay_ambush",
+    "mapobj_mirror_toll_causeway",
+    "mapobj_ashbarb_roadblock",
+    "mapobj_frostford_hold",
+    "mapobj_thornwake_graft_arch",
+    "mapobj_brasshollow_gauge_shrine",
+    "mapobj_veilmourn_bell_mast",
+    "mapobj_granary_lock_exchange",
+    "mapobj_blackwater_shrine_marker",
+    "mapobj_prism_yard_standard",
+    "mapobj_broken_treaty_stone",
+    "mapobj_sealed_causeway_lever",
+    "mapobj_mirror_anchor_frame",
+    "mapobj_crownless_standard",
+    "mapobj_drowned_toll_bell",
+    "mapobj_orchard_writ_seal",
+    "mapobj_brass_oath_wheel",
+    "mapobj_burned_signal_brazier",
+    "mapobj_repaired_ferry_stage_claimed",
+    "mapobj_claimed_quarry_head",
+    "mapobj_withered_rootgate_marker"
+  ],
+  "object_sprite_mappings": {
+    "object_roadward_lodge": {
+      "asset_id": "mapobj_roadward_lodge",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Roadward Lodge' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_cliffhawk_roost": {
+      "asset_id": "mapobj_cliffhawk_roost",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Cliffhawk Roost' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_reedbarge_mooring": {
+      "asset_id": "mapobj_reedbarge_mooring",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Reedbarge Mooring' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_glowcap_croft": {
+      "asset_id": "mapobj_glowcap_croft",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Glowcap Croft' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_dustjack_yard": {
+      "asset_id": "mapobj_dustjack_yard",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Dustjack Yard' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_cinder_kiln": {
+      "asset_id": "mapobj_cinder_kiln",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Cinder Kiln' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_frostbeacon_bothy": {
+      "asset_id": "mapobj_frostbeacon_bothy",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Frostbeacon Bothy' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_orchard_levy": {
+      "asset_id": "mapobj_orchard_levy",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Orchard Levy Grounds' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_bramble_hedge": {
+      "asset_id": "mapobj_bramble_hedge",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Bramble Hedge' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_tidepool_skiffyard": {
+      "asset_id": "mapobj_tidepool_skiffyard",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Tidepool Skiffyard' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_switchback_hostel": {
+      "asset_id": "mapobj_switchback_hostel",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Switchback Hostel' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_saltpan_camp": {
+      "asset_id": "mapobj_saltpan_camp",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Saltpan Camp' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_crystal_sump": {
+      "asset_id": "mapobj_crystal_sump",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Crystal Sump' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_icehook_trapper_lodge": {
+      "asset_id": "mapobj_icehook_trapper_lodge",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Icehook Trapper Lodge' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_obsidian_scar": {
+      "asset_id": "mapobj_obsidian_scar",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Obsidian Scar Camp' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_greenbranch_copse": {
+      "asset_id": "mapobj_greenbranch_copse",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Greenbranch Copse' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 1
+    },
+    "object_harbor_pilot_house": {
+      "asset_id": "mapobj_harbor_pilot_house",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Harbor Pilot House' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 2
+    },
+    "object_kite_signal_eyrie": {
+      "asset_id": "mapobj_kite_signal_eyrie",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Kite Signal Eyrie' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 2
+    },
+    "object_lantern_warren": {
+      "asset_id": "mapobj_lantern_warren",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Lantern Warren' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 2
+    },
+    "object_bogbell_croft": {
+      "asset_id": "mapobj_bogbell_croft",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Bogbell Croft' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 2
+    },
+    "object_milestone_arsenal": {
+      "asset_id": "mapobj_milestone_arsenal",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Milestone Arsenal' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 2
+    },
+    "object_frostwharf_house": {
+      "asset_id": "mapobj_frostwharf_house",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Frostwharf House' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 2
+    },
+    "object_charcoal_burners": {
+      "asset_id": "mapobj_charcoal_burners",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Charcoal Burners Camp' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 2
+    },
+    "object_basalt_gatehouse": {
+      "asset_id": "mapobj_basalt_gatehouse",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Basalt Gatehouse' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 2
+    },
+    "object_marsh_peat_yard": {
+      "asset_id": "mapobj_marsh_peat_yard",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Marsh Peat Yard' (mine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "mine",
+      "source_batch": 2
+    },
+    "object_mist_lighthouse": {
+      "asset_id": "mapobj_mist_lighthouse",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Mist Lighthouse' (scouting_structure).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scouting_structure",
+      "source_batch": 2
+    },
+    "object_repaired_ferry_stage": {
+      "asset_id": "mapobj_repaired_ferry_stage",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Repaired Ferry Stage' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 2
+    },
+    "object_rope_lift": {
+      "asset_id": "mapobj_rope_lift",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Rope Lift' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 2
+    },
+    "object_market_caravanserai": {
+      "asset_id": "mapobj_market_caravanserai",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Market Caravanserai' (repeatable_service).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "repeatable_service",
+      "source_batch": 2
+    },
+    "object_ember_signal_brazier": {
+      "asset_id": "mapobj_ember_signal_brazier",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Ember Signal Brazier' (faction_landmark).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "faction_landmark",
+      "source_batch": 2
+    },
+    "object_bog_drum_totem": {
+      "asset_id": "mapobj_bog_drum_totem",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Bog Drum Totem' (faction_landmark).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "faction_landmark",
+      "source_batch": 2
+    },
+    "object_prism_relay_lens": {
+      "asset_id": "mapobj_prism_relay_lens",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Prism Relay Lens' (faction_landmark).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "faction_landmark",
+      "source_batch": 2
+    },
+    "object_neutral_encounter_river_pass_ghoul_grove_stack": {
+      "asset_id": "mapobj_neutral_encounter_river_pass_ghoul_grove_stack",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'River Pass Ghoul Grove Stack' (neutral_encounter).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_encounter",
+      "source_batch": 3
+    },
+    "object_neutral_encounter_river_pass_hollow_mire_stack": {
+      "asset_id": "mapobj_neutral_encounter_river_pass_hollow_mire_stack",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'River Pass Hollow Mire Stack' (neutral_encounter).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_encounter",
+      "source_batch": 3
+    },
+    "object_neutral_encounter_ninefold_basalt_gatehouse_watch_stack": {
+      "asset_id": "mapobj_neutral_encounter_ninefold_basalt_gatehouse_watch_stack",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Ninefold Basalt Gatehouse Watch Stack' (neutral_encounter).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_encounter",
+      "source_batch": 3
+    },
+    "object_neutral_encounter_river_pass_reed_totemists_stack": {
+      "asset_id": "mapobj_neutral_encounter_river_pass_reed_totemists_stack",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'River Pass Reed Totemists Stack' (neutral_encounter).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_encounter",
+      "source_batch": 3
+    },
+    "object_neutral_encounter_causeway_levee_cutters_stack": {
+      "asset_id": "mapobj_neutral_encounter_causeway_levee_cutters_stack",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Causeway Levee Cutters Stack' (neutral_encounter).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_encounter",
+      "source_batch": 3
+    },
+    "object_neutral_encounter_stonewake_reed_totemists_stack": {
+      "asset_id": "mapobj_neutral_encounter_stonewake_reed_totemists_stack",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Stonewake Reed Totemists Stack' (neutral_encounter).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_encounter",
+      "source_batch": 3
+    },
+    "object_road_writ_purse": {
+      "asset_id": "mapobj_road_writ_purse",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Road Writ Purse' (pickup).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": 3
+    },
+    "object_split_wood_pile": {
+      "asset_id": "mapobj_split_wood_pile",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Split Wood Pile' (pickup).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": 3
+    },
+    "object_quarry_chip_hod": {
+      "asset_id": "mapobj_quarry_chip_hod",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Quarry Chip Hod' (pickup).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": 3
+    },
+    "object_payroll_casket": {
+      "asset_id": "mapobj_payroll_casket",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Payroll Casket' (pickup).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": 3
+    },
+    "object_millroad_plank_stack": {
+      "asset_id": "mapobj_millroad_plank_stack",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Millroad Plank Stack' (pickup).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": 3
+    },
+    "object_aetherglass_splinter_lot": {
+      "asset_id": "mapobj_aetherglass_splinter_lot",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Aetherglass Splinter Lot' (pickup).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": 3
+    },
+    "object_embergrain_sample_sack": {
+      "asset_id": "mapobj_embergrain_sample_sack",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Embergrain Sample Sack' (pickup).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": 3
+    },
+    "object_peatwax_votive_bundle": {
+      "asset_id": "mapobj_peatwax_votive_bundle",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Peatwax Votive Bundle' (pickup).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": 3
+    },
+    "object_memory_salt_jar": {
+      "asset_id": "mapobj_memory_salt_jar",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Memory-Salt Jar' (pickup).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": 3
+    },
+    "object_greenbough_wood_yard": {
+      "asset_id": "mapobj_greenbough_wood_yard",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Greenbough Wood Yard' (mine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "mine",
+      "source_batch": 3
+    },
+    "object_floodplain_sluice_camp": {
+      "asset_id": "mapobj_floodplain_sluice_camp",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Floodplain Sluice Camp' (mine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "mine",
+      "source_batch": 4
+    },
+    "object_ironstep_ore_pit": {
+      "asset_id": "mapobj_ironstep_ore_pit",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Ironstep Ore Pit' (mine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "mine",
+      "source_batch": 4
+    },
+    "object_reef_coin_assay": {
+      "asset_id": "mapobj_reef_coin_assay",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Reef Coin Assay' (mine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "mine",
+      "source_batch": 4
+    },
+    "object_cinder_ore_face": {
+      "asset_id": "mapobj_cinder_ore_face",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Cinder Ore Face' (mine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "mine",
+      "source_batch": 4
+    },
+    "object_frostwood_cutting_yard": {
+      "asset_id": "mapobj_frostwood_cutting_yard",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Frostwood Cutting Yard' (mine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "mine",
+      "source_batch": 4
+    },
+    "object_aetherglass_lens_house": {
+      "asset_id": "mapobj_aetherglass_lens_house",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Aetherglass Lens House' (staged_resource_front).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "staged_resource_front",
+      "source_batch": 4
+    },
+    "object_sunfall_aetherglass_yard": {
+      "asset_id": "mapobj_sunfall_aetherglass_yard",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Sunfall Aetherglass Yard' (staged_resource_front).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "staged_resource_front",
+      "source_batch": 4
+    },
+    "object_embergrain_warm_granary": {
+      "asset_id": "mapobj_embergrain_warm_granary",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Embergrain Warm Granary' (staged_resource_front).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "staged_resource_front",
+      "source_batch": 4
+    },
+    "object_charcoal_embergrain_store": {
+      "asset_id": "mapobj_charcoal_embergrain_store",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Charcoal Embergrain Store' (staged_resource_front).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "staged_resource_front",
+      "source_batch": 4
+    },
+    "object_peatwax_reed_yard": {
+      "asset_id": "mapobj_peatwax_reed_yard",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Peatwax Reed Yard' (staged_resource_front).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "staged_resource_front",
+      "source_batch": 4
+    },
+    "object_verdant_graft_nursery": {
+      "asset_id": "mapobj_verdant_graft_nursery",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Verdant Graft Nursery' (staged_resource_front).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "staged_resource_front",
+      "source_batch": 4
+    },
+    "object_brass_scrip_mint": {
+      "asset_id": "mapobj_brass_scrip_mint",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Brass Scrip Mint' (staged_resource_front).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "staged_resource_front",
+      "source_batch": 4
+    },
+    "object_underway_brass_scrip_press": {
+      "asset_id": "mapobj_underway_brass_scrip_press",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Underway Brass Scrip Press' (staged_resource_front).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "staged_resource_front",
+      "source_batch": 4
+    },
+    "object_memory_salt_pan": {
+      "asset_id": "mapobj_memory_salt_pan",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Memory-Salt Pan' (staged_resource_front).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "staged_resource_front",
+      "source_batch": 4
+    },
+    "object_wind_press": {
+      "asset_id": "mapobj_wind_press",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Wind Press' (support_producer).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "support_producer",
+      "source_batch": 4
+    },
+    "object_saw_chain": {
+      "asset_id": "mapobj_saw_chain",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Saw Chain' (support_producer).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "support_producer",
+      "source_batch": 4
+    },
+    "object_tide_kiln": {
+      "asset_id": "mapobj_tide_kiln",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Tide Kiln' (support_producer).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "support_producer",
+      "source_batch": 5
+    },
+    "object_orchard_levy_post": {
+      "asset_id": "mapobj_orchard_levy_post",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Orchard Levy Post' (support_producer).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "support_producer",
+      "source_batch": 5
+    },
+    "object_smelter_annex": {
+      "asset_id": "mapobj_smelter_annex",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Smelter Annex' (support_producer).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "support_producer",
+      "source_batch": 5
+    },
+    "object_charter_countinghouse": {
+      "asset_id": "mapobj_charter_countinghouse",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Charter Countinghouse' (support_producer).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "support_producer",
+      "source_batch": 5
+    },
+    "object_badlands_coin_sluice": {
+      "asset_id": "mapobj_badlands_coin_sluice",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Badlands Coin Sluice' (mine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "mine",
+      "source_batch": 5
+    },
+    "object_underway_ore_counterfort": {
+      "asset_id": "mapobj_underway_ore_counterfort",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Underway Ore Counterfort' (mine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "mine",
+      "source_batch": 5
+    },
+    "object_grassland_plank_grove": {
+      "asset_id": "mapobj_grassland_plank_grove",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Grassland Plank Grove' (mine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "mine",
+      "source_batch": 5
+    },
+    "object_wayfarer_menders_tent": {
+      "asset_id": "mapobj_wayfarer_menders_tent",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Wayfarer Menders Tent' (repeatable_service).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "repeatable_service",
+      "source_batch": 5
+    },
+    "object_courier_change_post": {
+      "asset_id": "mapobj_courier_change_post",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Courier Change Post' (repeatable_service).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "repeatable_service",
+      "source_batch": 5
+    },
+    "object_contract_scribe_booth": {
+      "asset_id": "mapobj_contract_scribe_booth",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Contract Scribe Booth' (repeatable_service).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "repeatable_service",
+      "source_batch": 5
+    },
+    "object_reedboat_supply_stand": {
+      "asset_id": "mapobj_reedboat_supply_stand",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Reedboat Supply Stand' (repeatable_service).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "repeatable_service",
+      "source_batch": 5
+    },
+    "object_ash_cooler_kitchen": {
+      "asset_id": "mapobj_ash_cooler_kitchen",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Ash Cooler Kitchen' (repeatable_service).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "repeatable_service",
+      "source_batch": 5
+    },
+    "object_lens_calibration_cart": {
+      "asset_id": "mapobj_lens_calibration_cart",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Lens Calibration Cart' (repeatable_service).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "repeatable_service",
+      "source_batch": 5
+    },
+    "object_oath_ember_shrine": {
+      "asset_id": "mapobj_oath_ember_shrine",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Oath Ember Shrine' (shrine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "shrine",
+      "source_batch": 5
+    },
+    "object_reedscript_vow_shrine": {
+      "asset_id": "mapobj_reedscript_vow_shrine",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Reedscript Vow Shrine' (shrine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "shrine",
+      "source_batch": 5
+    },
+    "object_prism_measure_shrine": {
+      "asset_id": "mapobj_prism_measure_shrine",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Prism Measure Shrine' (shrine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "shrine",
+      "source_batch": 5
+    },
+    "object_root_accord_ring": {
+      "asset_id": "mapobj_root_accord_ring",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Root Accord Ring' (shrine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "shrine",
+      "source_batch": 6
+    },
+    "object_furnace_oath_marker": {
+      "asset_id": "mapobj_furnace_oath_marker",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Furnace Oath Marker' (shrine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "shrine",
+      "source_batch": 6
+    },
+    "object_tide_bell_shrine": {
+      "asset_id": "mapobj_tide_bell_shrine",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Tide Bell Shrine' (shrine).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "shrine",
+      "source_batch": 6
+    },
+    "object_hilltop_signal_nest": {
+      "asset_id": "mapobj_hilltop_signal_nest",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Hilltop Signal Nest' (scouting_structure).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scouting_structure",
+      "source_batch": 6
+    },
+    "object_marsh_listener_post": {
+      "asset_id": "mapobj_marsh_listener_post",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Marsh Listener Post' (scouting_structure).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scouting_structure",
+      "source_batch": 6
+    },
+    "object_prism_survey_frame": {
+      "asset_id": "mapobj_prism_survey_frame",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Prism Survey Frame' (scouting_structure).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scouting_structure",
+      "source_batch": 6
+    },
+    "object_underway_echo_well": {
+      "asset_id": "mapobj_underway_echo_well",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Underway Echo Well' (scouting_structure).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scouting_structure",
+      "source_batch": 6
+    },
+    "object_coast_bell_watch": {
+      "asset_id": "mapobj_coast_bell_watch",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Coast Bell Watch' (scouting_structure).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scouting_structure",
+      "source_batch": 6
+    },
+    "object_mile_writ_sign": {
+      "asset_id": "mapobj_mile_writ_sign",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Mile Writ Sign' (sign_waypoint).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "sign_waypoint",
+      "source_batch": 6
+    },
+    "object_reed_knot_waypost": {
+      "asset_id": "mapobj_reed_knot_waypost",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Reed Knot Waypost' (sign_waypoint).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "sign_waypoint",
+      "source_batch": 6
+    },
+    "object_switchback_cairn": {
+      "asset_id": "mapobj_switchback_cairn",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Switchback Cairn' (sign_waypoint).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "sign_waypoint",
+      "source_batch": 6
+    },
+    "object_ash_road_marker": {
+      "asset_id": "mapobj_ash_road_marker",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Ash Road Marker' (sign_waypoint).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "sign_waypoint",
+      "source_batch": 6
+    },
+    "object_underway_chalk_index": {
+      "asset_id": "mapobj_underway_chalk_index",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Underway Chalk Index' (sign_waypoint).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "sign_waypoint",
+      "source_batch": 6
+    },
+    "object_toll_chain_court": {
+      "asset_id": "mapobj_toll_chain_court",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Toll Chain Court' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 6
+    },
+    "object_root_lease_gate": {
+      "asset_id": "mapobj_root_lease_gate",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Root Lease Gate' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 6
+    },
+    "object_pressure_rail_stop": {
+      "asset_id": "mapobj_pressure_rail_stop",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Pressure Rail Stop' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 6
+    },
+    "object_campaign_muster_seal": {
+      "asset_id": "mapobj_campaign_muster_seal",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Campaign Muster Seal' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 7
+    },
+    "object_broken_accord_marker": {
+      "asset_id": "mapobj_broken_accord_marker",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Broken Accord Marker' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 7
+    },
+    "object_scenario_witness_stone": {
+      "asset_id": "mapobj_scenario_witness_stone",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Scenario Witness Stone' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 7
+    },
+    "object_root_pass_arch": {
+      "asset_id": "mapobj_root_pass_arch",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Root Pass Arch' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_pressure_rail_switch": {
+      "asset_id": "mapobj_pressure_rail_switch",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Pressure Rail Switch' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_mirror_stair_turn": {
+      "asset_id": "mapobj_mirror_stair_turn",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Mirror Stair Turn' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_basalt_undergate": {
+      "asset_id": "mapobj_basalt_undergate",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Basalt Undergate' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_ridge_wind_chute": {
+      "asset_id": "mapobj_ridge_wind_chute",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Ridge Wind Chute' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_slipgate_mirror": {
+      "asset_id": "mapobj_slipgate_mirror",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Slipgate Mirror' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_spillway_drop_marker": {
+      "asset_id": "mapobj_spillway_drop_marker",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Spillway Drop Marker' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_tide_bore_marker": {
+      "asset_id": "mapobj_tide_bore_marker",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Tide Bore Marker' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_charter_bar_gate": {
+      "asset_id": "mapobj_charter_bar_gate",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Charter Bar Gate' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_thorn_seal_gate": {
+      "asset_id": "mapobj_thorn_seal_gate",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Thorn Seal Gate' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_brass_toll_arch": {
+      "asset_id": "mapobj_brass_toll_arch",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Brass Toll Arch' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_reef_chain_boom": {
+      "asset_id": "mapobj_reef_chain_boom",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Reef Chain Boom' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_frost_toll_bar": {
+      "asset_id": "mapobj_frost_toll_bar",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Frost Toll Bar' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 7
+    },
+    "object_ash_sluice_lock": {
+      "asset_id": "mapobj_ash_sluice_lock",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Ash Sluice Lock' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 8
+    },
+    "object_veil_skiffyard": {
+      "asset_id": "mapobj_veil_skiffyard",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Veil Skiffyard' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 8
+    },
+    "object_harbor_pilot_post": {
+      "asset_id": "mapobj_harbor_pilot_post",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Harbor Pilot Post' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 8
+    },
+    "object_bell_buoy_station": {
+      "asset_id": "mapobj_bell_buoy_station",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Bell Buoy Station' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 8
+    },
+    "object_wreck_quay": {
+      "asset_id": "mapobj_wreck_quay",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Wreck Quay' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 8
+    },
+    "object_tide_chain_mooring": {
+      "asset_id": "mapobj_tide_chain_mooring",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Tide Chain Mooring' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 8
+    },
+    "object_marsh_skiff_shelf": {
+      "asset_id": "mapobj_marsh_skiff_shelf",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Marsh Skiff Shelf' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 8
+    },
+    "object_mileward_route_post": {
+      "asset_id": "mapobj_mileward_route_post",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Mileward Route Post' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 8
+    },
+    "object_road_oath_stone": {
+      "asset_id": "mapobj_road_oath_stone",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Road Oath Stone' (transit_object).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "transit_object",
+      "source_batch": 8
+    },
+    "object_salt_skirmisher_pier": {
+      "asset_id": "mapobj_salt_skirmisher_pier",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Salt Skirmisher Pier' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 8
+    },
+    "object_rootwatch_hollow": {
+      "asset_id": "mapobj_rootwatch_hollow",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Rootwatch Hollow' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 8
+    },
+    "object_ember_cart_yard": {
+      "asset_id": "mapobj_ember_cart_yard",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Ember Cart Yard' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 8
+    },
+    "object_prism_outrider_post": {
+      "asset_id": "mapobj_prism_outrider_post",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Prism Outrider Post' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 8
+    },
+    "object_storm_rook_eyrie": {
+      "asset_id": "mapobj_storm_rook_eyrie",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Storm Rook Eyrie' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 8
+    },
+    "object_mirror_bound_barracks": {
+      "asset_id": "mapobj_mirror_bound_barracks",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Mirror-Bound Barracks' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 8
+    },
+    "object_furnace_oath_yard": {
+      "asset_id": "mapobj_furnace_oath_yard",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Furnace Oath Yard' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 8
+    },
+    "object_drowned_crown_hall": {
+      "asset_id": "mapobj_drowned_crown_hall",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Drowned Crown Hall' (neutral_dwelling).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 9
+    },
+    "object_barrow_vault": {
+      "asset_id": "mapobj_barrow_vault",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Barrow Vault' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_toll_ruin": {
+      "asset_id": "mapobj_toll_ruin",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Toll Ruin' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_wreck_locker": {
+      "asset_id": "mapobj_wreck_locker",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Wreck Locker' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_amber_reliquary": {
+      "asset_id": "mapobj_amber_reliquary",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Amber Reliquary' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_slag_purse_vault": {
+      "asset_id": "mapobj_slag_purse_vault",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Slag Purse Vault' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_old_orchard_crypt": {
+      "asset_id": "mapobj_old_orchard_crypt",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Old Orchard Crypt' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_moss_oath_cache": {
+      "asset_id": "mapobj_moss_oath_cache",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Moss Oath Cache' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_frost_tithe_cellar": {
+      "asset_id": "mapobj_frost_tithe_cellar",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Frost Tithe Cellar' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_drowned_reliquary": {
+      "asset_id": "mapobj_drowned_reliquary",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Drowned Reliquary' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_mirror_archive": {
+      "asset_id": "mapobj_mirror_archive",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Mirror Archive' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_furnace_vault": {
+      "asset_id": "mapobj_furnace_vault",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Furnace Vault' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_thorn_crown_hollow": {
+      "asset_id": "mapobj_thorn_crown_hollow",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Thorn Crown Hollow' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_storm_bell_wreck": {
+      "asset_id": "mapobj_storm_bell_wreck",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Storm-Bell Wreck' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_prism_ossuary": {
+      "asset_id": "mapobj_prism_ossuary",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Prism Ossuary' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_basalt_oath_tomb": {
+      "asset_id": "mapobj_basalt_oath_tomb",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Basalt Oath Tomb' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 9
+    },
+    "object_lantern_crown_nave": {
+      "asset_id": "mapobj_lantern_crown_nave",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Lantern Crown Nave' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_sealed_muster_fort": {
+      "asset_id": "mapobj_sealed_muster_fort",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Sealed Muster Fort' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_hive_of_reeds": {
+      "asset_id": "mapobj_hive_of_reeds",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Hive of Reeds' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_glassbound_eyrie": {
+      "asset_id": "mapobj_glassbound_eyrie",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Glassbound Eyrie' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_rust_choir_foundry": {
+      "asset_id": "mapobj_rust_choir_foundry",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Rust Choir Foundry' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_salt_wight_convoy": {
+      "asset_id": "mapobj_salt_wight_convoy",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Salt-Wight Convoy' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_kiln_chain_redoubt": {
+      "asset_id": "mapobj_kiln_chain_redoubt",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Kiln Chain Redoubt' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_rootwarden_stockade": {
+      "asset_id": "mapobj_rootwarden_stockade",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Rootwarden Stockade' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_brasswake_depot": {
+      "asset_id": "mapobj_brasswake_depot",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Brasswake Depot' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_bridge_bastion": {
+      "asset_id": "mapobj_bridge_bastion",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Bridge Bastion' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_chainboom_fort": {
+      "asset_id": "mapobj_chainboom_fort",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Chainboom Fort' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_railblock_camp": {
+      "asset_id": "mapobj_railblock_camp",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Railblock Camp' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_rootgate_den": {
+      "asset_id": "mapobj_rootgate_den",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Rootgate Den' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_fog_quay_ambush": {
+      "asset_id": "mapobj_fog_quay_ambush",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Fog Quay Ambush' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_mirror_toll_causeway": {
+      "asset_id": "mapobj_mirror_toll_causeway",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Mirror Toll Causeway' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_ashbarb_roadblock": {
+      "asset_id": "mapobj_ashbarb_roadblock",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Ashbarb Roadblock' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 10
+    },
+    "object_frostford_hold": {
+      "asset_id": "mapobj_frostford_hold",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Frostford Hold' (guarded_reward_site).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": 11
+    },
+    "object_thornwake_graft_arch": {
+      "asset_id": "mapobj_thornwake_graft_arch",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Thornwake Graft Arch' (faction_landmark).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "faction_landmark",
+      "source_batch": 11
+    },
+    "object_brasshollow_gauge_shrine": {
+      "asset_id": "mapobj_brasshollow_gauge_shrine",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Brasshollow Gauge Shrine' (faction_landmark).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "faction_landmark",
+      "source_batch": 11
+    },
+    "object_veilmourn_bell_mast": {
+      "asset_id": "mapobj_veilmourn_bell_mast",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Veilmourn Bell Mast' (faction_landmark).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "faction_landmark",
+      "source_batch": 11
+    },
+    "object_granary_lock_exchange": {
+      "asset_id": "mapobj_granary_lock_exchange",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Granary Lock Exchange' (faction_landmark).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "faction_landmark",
+      "source_batch": 11
+    },
+    "object_blackwater_shrine_marker": {
+      "asset_id": "mapobj_blackwater_shrine_marker",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Blackwater Shrine Marker' (faction_landmark).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "faction_landmark",
+      "source_batch": 11
+    },
+    "object_prism_yard_standard": {
+      "asset_id": "mapobj_prism_yard_standard",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Prism Yard Standard' (faction_landmark).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "faction_landmark",
+      "source_batch": 11
+    },
+    "object_broken_treaty_stone": {
+      "asset_id": "mapobj_broken_treaty_stone",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Broken Treaty Stone' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 11
+    },
+    "object_sealed_causeway_lever": {
+      "asset_id": "mapobj_sealed_causeway_lever",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Sealed Causeway Lever' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 11
+    },
+    "object_mirror_anchor_frame": {
+      "asset_id": "mapobj_mirror_anchor_frame",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Mirror Anchor Frame' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 11
+    },
+    "object_crownless_standard": {
+      "asset_id": "mapobj_crownless_standard",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Crownless Standard' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 11
+    },
+    "object_drowned_toll_bell": {
+      "asset_id": "mapobj_drowned_toll_bell",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Drowned Toll Bell' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 11
+    },
+    "object_orchard_writ_seal": {
+      "asset_id": "mapobj_orchard_writ_seal",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Orchard Writ Seal' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 11
+    },
+    "object_brass_oath_wheel": {
+      "asset_id": "mapobj_brass_oath_wheel",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Brass Oath Wheel' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 11
+    },
+    "object_burned_signal_brazier": {
+      "asset_id": "mapobj_burned_signal_brazier",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Burned Signal Brazier' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 11
+    },
+    "object_repaired_ferry_stage_claimed": {
+      "asset_id": "mapobj_repaired_ferry_stage_claimed",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Claimed Ferry Stage' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 11
+    },
+    "object_claimed_quarry_head": {
+      "asset_id": "mapobj_claimed_quarry_head",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Claimed Quarry Head' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 12
+    },
+    "object_withered_rootgate_marker": {
+      "asset_id": "mapobj_withered_rootgate_marker",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Withered Rootgate Marker' (scenario_objective).",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "scenario_objective",
+      "source_batch": 12
+    }
+  }
+}
