@@ -32,4 +32,12 @@ No active generation path was routed back through `RandomMapGeneratorRules.gd`.
 ## Remaining Gaps
 
 - Exact HoMM3-re decoration art/family parity is not complete. Native output uses original terrain-biased `decorative_obstacle` family ids with runtime-safe footprint/body metadata.
-- Broader generated-map quality for large and unsupported templates remains partial-foundation unless separately promoted by future parity work. This report does not claim full HoMM3-re or whole-catalog gameplay parity.
+- Exact HoMM3-re byte, placement, art-family, and reward-table parity is not complete. The native generator now uses imported catalog topology broadly enough for playable generated-map package output across the exposed catalog, but it still translates that topology into original AcOrP systems and should not be described as full HoMM3-re parity.
+
+## 2026-05-04 Catalog Playability Correction
+
+Owner correction after this slice: all exposed native generated templates were collapsing through the partial/foundation fallback, so generated 72x72 and 144x144 maps both showed `Roads 0` and roughly 26 objects. That was not a map-size-specific defect.
+
+The follow-up implementation now makes the native generator read `content/random_map_template_catalog.json` for every exposed local and `translated_rmg_template_*` template before falling back to synthetic foundation records. Native generated packages now preserve catalog zone counts, catalog link counts, route-derived road cells, scaled object density, scaled `decorative_obstacle` placement, neutral towns, mines, dwellings, resources, rewards, and guards through package convert/save/load surfaces.
+
+Validation is covered by `tests/native_random_map_catalog_quality_report.tscn`, which samples a local small template, medium translated template, large translated template, and XL translated template and asserts generated package/editor-visible roads and object surfaces after native convert/save/load. This broad playability correction does not replace the existing tiny full-parity fixtures and does not claim exact HoMM3-re parity.

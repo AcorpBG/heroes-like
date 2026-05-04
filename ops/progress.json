@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-template-decoration-wiring-10184",
-  "currentSliceTitle": "Native RMG Template Decoration Wiring",
+  "currentSliceId": "native-rmg-catalog-playability-wiring-10184",
+  "currentSliceTitle": "Native RMG Catalog Playability Wiring",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed native RMG menu/template and decoration wiring. ScenarioSelectRules now derives generated-map template/profile/player-count/water/underground options from content/random_map_template_catalog.json; MainMenu rebuilds profile choices per selected template; all 56 catalog templates and 56 profiles are exposed and build configs. Active generation remains native MapPackageService.generate_random_map package output. Native object placements now include scalable decorative_obstacle records with body_tiles, blocking_body, non-visitable approach and occupancy metadata, road/occupancy exclusion, and terrain-biased original family ids. Focused report evidence: RANDOM_MAP_ALL_TEMPLATE_MENU_WIRING_REPORT ok=true with catalog_template_count=56, catalog_profile_count=56, menu_template_option_count=56, built_config_count=56; NATIVE_RANDOM_MAP_DECORATION_GENERATION_REPORT ok=true with small decoration_count=30 and xl_catalog decoration_count=358, body metadata present, and route reachability preserved. Existing template filtering, player-count, native full parity gate, JSON validation, native build, and git diff checks passed. Remaining gap: exact HoMM3-re decoration art/family parity is not complete; no full whole-catalog HoMM3 parity claim.",
+  "currentSliceNotes": "Completed owner correction: native C++ package generation now uses imported catalog zones/links for exposed templates, materializes visible road surfaces, and scales object/decor/town/resource/reward/guard placement across sampled small, medium, large, and XL templates. Exact HoMM3-re parity remains incomplete and is not claimed.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T11:34:17Z",
+  "updatedAt": "2026-05-04T12:03:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -8418,7 +8418,7 @@
         "No save version bump or authored content writeback."
       ],
       "createdAt": "2026-05-04T11:34:17Z",
-      "updatedAt": "2026-05-04T11:34:17Z",
+      "updatedAt": "2026-05-04T11:59:30Z",
       "startedAt": "2026-05-04T11:34:17Z",
       "completedAt": "2026-05-04T11:34:17Z",
       "sliceEvidence": {
@@ -8428,9 +8428,137 @@
         "builtConfigCount": 56,
         "nativeSmallDecorationCount": 30,
         "nativeLargeCatalogDecorationCount": 358,
-        "remainingGap": "Exact HoMM3-re decoration art/family parity is not complete; native output uses original terrain-biased decorative_obstacle family ids with runtime-safe body metadata."
+        "remainingGap": "Exact HoMM3-re decoration art/family parity is not complete; broad catalog playability is handled by native-rmg-catalog-playability-wiring-10184."
       },
-      "notes": "Completed owner-directed native RMG menu/template and decoration wiring. ScenarioSelectRules now derives generated-map template/profile/player-count/water/underground options from content/random_map_template_catalog.json; MainMenu rebuilds profile choices per selected template; all 56 catalog templates and 56 profiles are exposed and build configs. Active generation remains native MapPackageService.generate_random_map package output. Native object placements now include scalable decorative_obstacle records with body_tiles, blocking_body, non-visitable approach and occupancy metadata, road/occupancy exclusion, and terrain-biased original family ids. Focused report evidence: RANDOM_MAP_ALL_TEMPLATE_MENU_WIRING_REPORT ok=true with catalog_template_count=56, catalog_profile_count=56, menu_template_option_count=56, built_config_count=56; NATIVE_RANDOM_MAP_DECORATION_GENERATION_REPORT ok=true with small decoration_count=30 and xl_catalog decoration_count=358, body metadata present, and route reachability preserved. Existing template filtering, player-count, native full parity gate, JSON validation, native build, and git diff checks passed. Remaining gap: exact HoMM3-re decoration art/family parity is not complete; no full whole-catalog HoMM3 parity claim."
+      "notes": "Completed owner-directed native RMG menu/template and decoration wiring. ScenarioSelectRules now derives generated-map template/profile/player-count/water/underground options from content/random_map_template_catalog.json; MainMenu rebuilds profile choices per selected template; all 56 catalog templates and 56 profiles are exposed and build configs. Active generation remains native MapPackageService.generate_random_map package output. Native object placements now include scalable decorative_obstacle records with body_tiles, blocking_body, non-visitable approach and occupancy metadata, road/occupancy exclusion, and terrain-biased original family ids. Focused report evidence: RANDOM_MAP_ALL_TEMPLATE_MENU_WIRING_REPORT ok=true with catalog_template_count=56, catalog_profile_count=56, menu_template_option_count=56, built_config_count=56; NATIVE_RANDOM_MAP_DECORATION_GENERATION_REPORT ok=true with small decoration_count=30 and xl_catalog decoration_count=358, body metadata present, and route reachability preserved. Existing template filtering, player-count, native full parity gate, JSON validation, native build, and git diff checks passed. Remaining gap: exact HoMM3-re decoration art/family parity is not complete; broad catalog playability is handled by native-rmg-catalog-playability-wiring-10184."
+    },
+    {
+      "id": "native-rmg-catalog-playability-wiring-10184",
+      "title": "Native RMG Catalog Playability Wiring",
+      "status": "completed",
+      "purpose": "Correct the native generated-map fallback architecture so every exposed local and translated catalog template uses imported topology and materializes visible roads, objects, decorations, towns, resources, rewards, and guards through native package convert/save/load.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_catalog_quality_report.gd",
+        "tests/native_random_map_catalog_quality_report.tscn",
+        "docs/native-rmg-template-decoration-wiring-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Native generated maps load catalog template zone and link data for all exposed templates where catalog records exist.",
+        "Zone count, route edge count, road segments/cells, and object density scale from template topology and selected size instead of collapsing to the tiny foundation stub.",
+        "Roads materialize into package/editor-visible terrain road surfaces after native convert/save/load.",
+        "decorative_obstacle, town, mine/resource/reward/dwelling, and guard placements appear at sane scaled counts for sampled local, medium, large, and XL catalog templates.",
+        "Existing tiny native full-parity fixture tests remain valid and do not define broad catalog quality.",
+        "Broad catalog quality report, menu wiring report, decoration report, full parity gate, JSON validation, native build, and diff checks pass."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "owner_directed_phase2_native_rmg_catalog_playability_correction_slice",
+      "parentSliceId": "native-rmg-full-parity-gate-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/random_map_template_catalog.json",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "docs/native-rmg-template-decoration-wiring-report.md",
+        "2026-05-04 owner correction: exposed native generated templates all collapse to tiny stub output, not a map-size-specific defect"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 30 tests/native_random_map_catalog_quality_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 30 tests/random_map_all_template_menu_wiring_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 30 tests/native_random_map_decoration_generation_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 30 tests/native_random_map_full_parity_gate_report.tscn",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No active generated skirmish launch through RandomMapGeneratorRules.gd.",
+        "No generated .amap/.ascenario files under maps/ committed unless already tracked and intentionally required.",
+        "No exact HoMM3-re byte/placement/art/reward-table parity claim.",
+        "No save version bump or authored content writeback."
+      ],
+      "createdAt": "2026-05-04T11:59:30Z",
+      "updatedAt": "2026-05-04T12:03:30Z",
+      "startedAt": "2026-05-04T11:59:30Z",
+      "completedAt": "2026-05-04T11:59:30Z",
+      "sliceEvidence": {
+        "sampledTemplates": [
+          "frontier_spokes_v1",
+          "translated_rmg_template_024_v1",
+          "translated_rmg_template_042_v1",
+          "translated_rmg_template_043_v1"
+        ],
+        "smallLocal": {
+          "template_id": "frontier_spokes_v1",
+          "size": "36x36",
+          "zone_count": 7,
+          "route_edge_count": 9,
+          "road_cell_count": 107,
+          "object_count": 78,
+          "decoration_count": 27,
+          "town_count": 6,
+          "guard_count": 40,
+          "resource_count": 9,
+          "mine_count": 13,
+          "reward_count": 26,
+          "loaded_surface_object_count": 124,
+          "loaded_surface_road_cell_count": 107
+        },
+        "mediumTranslated": {
+          "template_id": "translated_rmg_template_024_v1",
+          "size": "72x72",
+          "zone_count": 8,
+          "route_edge_count": 8,
+          "road_cell_count": 164,
+          "object_count": 196,
+          "decoration_count": 72,
+          "town_count": 4,
+          "guard_count": 90,
+          "resource_count": 6,
+          "mine_count": 24,
+          "reward_count": 88,
+          "loaded_surface_object_count": 290,
+          "loaded_surface_road_cell_count": 164
+        },
+        "largeTranslated": {
+          "template_id": "translated_rmg_template_042_v1",
+          "size": "108x108",
+          "zone_count": 25,
+          "route_edge_count": 46,
+          "road_cell_count": 830,
+          "object_count": 809,
+          "decoration_count": 159,
+          "town_count": 10,
+          "guard_count": 529,
+          "resource_count": 12,
+          "mine_count": 169,
+          "reward_count": 400,
+          "loaded_surface_object_count": 1348,
+          "loaded_surface_road_cell_count": 830
+        },
+        "xlTranslated": {
+          "template_id": "translated_rmg_template_043_v1",
+          "size": "144x144",
+          "zone_count": 33,
+          "route_edge_count": 68,
+          "road_cell_count": 2039,
+          "object_count": 1474,
+          "decoration_count": 412,
+          "town_count": 17,
+          "guard_count": 842,
+          "resource_count": 24,
+          "mine_count": 240,
+          "reward_count": 726,
+          "loaded_surface_object_count": 2333,
+          "loaded_surface_road_cell_count": 2039
+        },
+        "remainingGap": "Broad native catalog wiring/playability is improved through package convert/save/load; exact HoMM3-re byte, placement, art-family, and reward-table parity remains incomplete."
+      },
+      "notes": "Completed owner correction for native generated-map catalog playability. MapPackageService now reads imported catalog zones and links for exposed templates, uses catalog topology for zone layout/route graph/road surfaces, scales object/decor/town/resource/reward/guard placement beyond the tiny foundation stub, and materializes road layers into package/editor-visible MapDocument terrain layers. New broad catalog quality report passed for frontier_spokes_v1 36x36, translated_rmg_template_024_v1 72x72, translated_rmg_template_042_v1 108x108, and translated_rmg_template_043_v1 144x144, with road cells 107/164/830/2039 and loaded object counts 124/290/1348/2333. Existing native full-parity tiny fixture gate remains preserved. Remaining gap: exact HoMM3-re byte/placement/art/reward-table parity is not claimed."
     }
   ],
   "completedImplementationEvidence": [
