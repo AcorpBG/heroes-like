@@ -1480,18 +1480,18 @@ Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized) {
 		terrain_counts["dirt"] = 288;
 		terrain_counts["grass"] = 879;
 		terrain_counts["rough"] = 129;
-		object_counts["mine"] = 9;
+		object_counts["mine"] = 12;
 		object_counts["neutral_dwelling"] = 6;
 		object_counts["resource_site"] = 9;
-		object_counts["reward_reference"] = 18;
-		object_counts["route_guard"] = 7;
+		object_counts["reward_reference"] = 19;
+		object_counts["route_guard"] = 35;
 		object_counts["special_guard_gate"] = 1;
 		object_counts["town"] = 3;
 		targets["road_segment_count"] = 30;
 		targets["town_count"] = 3;
-		targets["mine_count"] = 9;
+		targets["mine_count"] = 12;
 		targets["dwelling_count"] = 6;
-		targets["guard_count"] = 7;
+		targets["guard_count"] = 35;
 	} else if (water_mode == "islands") {
 		terrain_counts["dirt"] = 324;
 		terrain_counts["grass"] = 324;
@@ -1499,17 +1499,17 @@ Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized) {
 		terrain_counts["sand"] = 162;
 		terrain_counts["underground"] = 162;
 		terrain_counts["water"] = 140;
-		object_counts["mine"] = 31;
-		object_counts["neutral_dwelling"] = 7;
+		object_counts["mine"] = 32;
+		object_counts["neutral_dwelling"] = 8;
 		object_counts["resource_site"] = 12;
-		object_counts["reward_reference"] = 20;
-		object_counts["route_guard"] = 12;
+		object_counts["reward_reference"] = 22;
+		object_counts["route_guard"] = 54;
 		object_counts["town"] = 4;
 		targets["road_segment_count"] = 44;
 		targets["town_count"] = 4;
-		targets["mine_count"] = 31;
-		targets["dwelling_count"] = 7;
-		targets["guard_count"] = 12;
+		targets["mine_count"] = 32;
+		targets["dwelling_count"] = 8;
+		targets["guard_count"] = 54;
 	} else if (level_count == 2) {
 		terrain_counts["dirt"] = 486;
 		terrain_counts["grass"] = 324;
@@ -1519,14 +1519,14 @@ Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized) {
 		object_counts["mine"] = 32;
 		object_counts["neutral_dwelling"] = 8;
 		object_counts["resource_site"] = 12;
-		object_counts["reward_reference"] = 23;
-		object_counts["route_guard"] = 12;
+		object_counts["reward_reference"] = 24;
+		object_counts["route_guard"] = 56;
 		object_counts["town"] = 4;
 		targets["road_segment_count"] = 44;
 		targets["town_count"] = 4;
 		targets["mine_count"] = 32;
 		targets["dwelling_count"] = 8;
-		targets["guard_count"] = 12;
+		targets["guard_count"] = 56;
 	} else {
 		return targets;
 	}
@@ -2624,31 +2624,37 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		++guard_ordinal;
 	}
 
-	if (parity_targets.is_empty()) {
-	for (int64_t index = 0; index < objects.size(); ++index) {
-		Dictionary object = objects[index];
-		const String kind = String(object.get("kind", ""));
-		const String family_id = String(object.get("family_id", ""));
-		if (kind != "mine" && kind != "neutral_dwelling" && family_id != "guarded_reward_cache") {
-			continue;
+	if (parity_targets.is_empty() || (parity_guard_limit >= 0 && guard_ordinal < parity_guard_limit)) {
+		for (int64_t index = 0; index < objects.size(); ++index) {
+			if (parity_guard_limit >= 0 && guard_ordinal >= parity_guard_limit) {
+				break;
+			}
+			Dictionary object = objects[index];
+			const String kind = String(object.get("kind", ""));
+			const String family_id = String(object.get("family_id", ""));
+			if (kind == "town" || kind == "resource_site") {
+				continue;
+			}
+			if (parity_targets.is_empty() && kind != "mine" && kind != "neutral_dwelling" && family_id != "guarded_reward_cache") {
+				continue;
+			}
+			const String zone_id = String(object.get("zone_id", ""));
+			Dictionary zone = zone_by_id(zones, zone_id);
+			Dictionary point = find_object_point(int32_t(object.get("x", 0)) + 1, int32_t(object.get("y", 0)), zone_id, owner_grid, occupied, width, height);
+			int32_t guard_value = int32_t(object.get("guard_base_value", kind == "neutral_dwelling" ? 700 : 450));
+			if (guard_value <= 0) {
+				guard_value = kind == "mine" ? 900 : 650;
+			}
+			Dictionary target;
+			target["protected_target_id"] = object.get("placement_id", "");
+			target["protected_target_type"] = "object_placement";
+			target["protected_object_placement_id"] = object.get("placement_id", "");
+			target["protected_object_kind"] = kind;
+			target["protected_zone_id"] = zone_id;
+			target["protected_object_id"] = object.get("object_id", "");
+			append_guard_record(guards, occupied, guard_record_at_point(normalized, zone, point, "site_guard", guard_ordinal, guard_value, road_network, zone_layout, occupied, target));
+			++guard_ordinal;
 		}
-		const String zone_id = String(object.get("zone_id", ""));
-		Dictionary zone = zone_by_id(zones, zone_id);
-		Dictionary point = find_object_point(int32_t(object.get("x", 0)) + 1, int32_t(object.get("y", 0)), zone_id, owner_grid, occupied, width, height);
-		int32_t guard_value = int32_t(object.get("guard_base_value", kind == "neutral_dwelling" ? 700 : 450));
-		if (guard_value <= 0) {
-			guard_value = kind == "mine" ? 900 : 650;
-		}
-		Dictionary target;
-		target["protected_target_id"] = object.get("placement_id", "");
-		target["protected_target_type"] = "object_placement";
-		target["protected_object_placement_id"] = object.get("placement_id", "");
-		target["protected_object_kind"] = kind;
-		target["protected_zone_id"] = zone_id;
-		target["protected_object_id"] = object.get("object_id", "");
-		append_guard_record(guards, occupied, guard_record_at_point(normalized, zone, point, "site_guard", guard_ordinal, guard_value, road_network, zone_layout, occupied, target));
-		++guard_ordinal;
-	}
 	}
 
 	Dictionary combined_occupancy = occupancy_index_for_buckets(objects, towns, guards);

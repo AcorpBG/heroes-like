@@ -79,8 +79,24 @@ func _run() -> void:
 	if String(doc_metadata.get("full_generation_status", "")) != "not_implemented":
 		_fail("Generated MapDocument metadata falsely implied full generation.")
 		return
-	if not map_doc.get_terrain_layer_ids().is_empty():
-		_fail("Foundation MapDocument stub should not contain terrain layers yet.")
+	var terrain_layer_ids: PackedStringArray = map_doc.get_terrain_layer_ids()
+	if not terrain_layer_ids.has("terrain"):
+		_fail("Native RMG foundation MapDocument did not expose the generated terrain layer: %s" % JSON.stringify(Array(terrain_layer_ids)))
+		return
+	var terrain_tiles: PackedInt32Array = map_doc.get_tile_layer_u16("terrain", 0)
+	if terrain_tiles.size() != 36 * 36:
+		_fail("Native RMG foundation terrain layer tile count was %d, expected %d." % [terrain_tiles.size(), 36 * 36])
+		return
+
+	var terrain_grid: Dictionary = generated.get("terrain_grid", {}) if generated.get("terrain_grid", {}) is Dictionary else {}
+	if String(terrain_grid.get("schema_id", "")) != "aurelion_native_rmg_terrain_grid_v1":
+		_fail("Native RMG foundation terrain grid schema mismatch: %s" % JSON.stringify(terrain_grid))
+		return
+	if String(terrain_grid.get("generation_status", "")) != "terrain_grid_generated":
+		_fail("Native RMG foundation terrain grid did not report terrain_grid_generated: %s" % JSON.stringify(terrain_grid))
+		return
+	if int(terrain_grid.get("tile_count", 0)) != 36 * 36:
+		_fail("Native RMG foundation terrain grid tile count was %d, expected %d." % [int(terrain_grid.get("tile_count", 0)), 36 * 36])
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
@@ -95,6 +111,10 @@ func _run() -> void:
 		"width": map_doc.get_width(),
 		"height": map_doc.get_height(),
 		"source_kind": map_doc.get_source_kind(),
+		"terrain_layer_ids": Array(terrain_layer_ids),
+		"terrain_generation_status": generated.get("terrain_generation_status", ""),
+		"terrain_grid_status": terrain_grid.get("generation_status", ""),
+		"terrain_grid_tile_count": terrain_grid.get("tile_count", 0),
 	})])
 	get_tree().quit(0)
 
