@@ -4134,6 +4134,7 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 			"monster_reward_context": reward_context,
 			"family_ids_selected": _decoration_family_ids(selected),
 		})
+	var route_shaping := _decoration_route_shaping_summary(records, route_graph, road_network, terrain_rows)
 	var path_validation := _decoration_path_safety_validation(records, route_graph, terrain_rows, _route_blocking_occupied_lookup(placements.get("object_placements", [])), reachability)
 	var density_validation := _decoration_density_target_validation(zone_targets)
 	var status := "pass"
@@ -4155,6 +4156,7 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 			"excluded_sources": ["existing_object_bodies", "existing_object_approaches", "towns", "resources", "route_guards", "special_guards", "reward_route_anchors", "roads", "corridor_required_cells"],
 		},
 		"path_safety_validation": path_validation,
+		"route_shaping_summary": route_shaping,
 		"density_validation": density_validation,
 		"terrain_transit_signature": String(terrain_transit.get("terrain_transit_signature", "")),
 		"route_reachability_status_before_decoration": String(reachability.get("status", "")),
@@ -4170,6 +4172,12 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 			"placed_total": _decoration_sum_zone_targets(zone_targets, "placed_count"),
 			"density_target_failures": density_validation.get("failures", []).size(),
 			"path_safety_status": String(path_validation.get("status", "")),
+			"route_shoulder_body_count": int(route_shaping.get("route_shoulder_body_count", 0)),
+			"route_shoulder_decoration_count": int(route_shaping.get("route_shoulder_decoration_count", 0)),
+			"required_route_with_shoulder_count": int(route_shaping.get("required_route_with_shoulder_count", 0)),
+			"required_route_count": int(route_shaping.get("required_route_count", 0)),
+			"choked_road_tile_count": int(route_shaping.get("choked_road_tile_count", 0)),
+			"required_route_with_choke_count": int(route_shaping.get("required_route_with_choke_count", 0)),
 			"diagnostic_count": diagnostics.size(),
 		},
 		"deferred": [
@@ -4183,6 +4191,7 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 	payload["decoration_density_signature"] = _hash32_hex(_stable_stringify({
 		"zone_density_targets": zone_targets,
 		"decoration_records": records,
+		"route_shaping_summary": route_shaping,
 		"path_safety_validation": path_validation,
 		"density_validation": density_validation,
 		"diagnostics": diagnostics,
@@ -6252,6 +6261,7 @@ static func _decoration_candidate_scores(x: int, y: int, terrain_rows: Array, oc
 		hard_reject = -5000
 	var adjacent_object_count := 0
 	var adjacent_reserved_count := 0
+	var adjacent_route_pressure_count := 0
 	var adjacent_same_terrain_count := 0
 	for offset in _cardinal_offsets():
 		var nx := x + int(offset.x)
@@ -6260,21 +6270,30 @@ static func _decoration_candidate_scores(x: int, y: int, terrain_rows: Array, oc
 		if occupied.has(key):
 			adjacent_object_count += 1
 		if exclusion.has(key):
-			adjacent_reserved_count += 1
+			if _decoration_exclusion_reason_is_route_pressure(String(exclusion.get(key, ""))):
+				adjacent_route_pressure_count += 1
+			else:
+				adjacent_reserved_count += 1
 		if _point_in_rows(terrain_rows, nx, ny) and String(terrain_rows[ny][nx]) == terrain_id:
 			adjacent_same_terrain_count += 1
 	var terrain_score := 20 if not _decoration_families_for_terrain(terrain_id, biome_id).is_empty() else -5000
-	var adjacency_score := adjacent_same_terrain_count * 3 - adjacent_object_count * 2 - adjacent_reserved_count
+	var route_pressure_score := adjacent_route_pressure_count * 24
+	var adjacency_score := adjacent_same_terrain_count * 2 + route_pressure_score - adjacent_object_count * 2 - adjacent_reserved_count
 	var overlap_score := 12 if not occupied.has(_point_key(x, y)) and not exclusion.has(_point_key(x, y)) else -5000
 	var jitter := int(_hash32_int("%s:%s:%d,%d:decor_jitter" % [seed_text, zone_id, x, y]) % 17)
 	return {
 		"hard_reject_score": min(hard_reject, terrain_score, overlap_score),
 		"terrain_score": terrain_score,
 		"adjacency_score": adjacency_score,
+		"route_pressure_score": route_pressure_score,
+		"adjacent_route_pressure_count": adjacent_route_pressure_count,
 		"overlap_score": overlap_score,
 		"seed_jitter_score": jitter,
 		"total": terrain_score + adjacency_score + overlap_score + jitter,
 	}
+
+static func _decoration_exclusion_reason_is_route_pressure(reason: String) -> bool:
+	return reason in ["road_segment", "corridor_required_cell", "route_anchor", "monster_reward_route_anchor"]
 
 static func _decoration_candidate_sort_key(scores: Dictionary, seed_text: String, zone_id: String, x: int, y: int) -> String:
 	var total := int(scores.get("total", 0))
@@ -6405,6 +6424,90 @@ static func _decoration_path_safety_validation(records: Array, route_graph: Dict
 		"warnings": warnings,
 		"checked_required_route_count": _required_route_count(route_graph.get("edges", [])),
 		"checked_decoration_record_count": records.size(),
+	}
+
+static func _decoration_route_shaping_summary(records: Array, route_graph: Dictionary, road_network: Dictionary, terrain_rows: Array) -> Dictionary:
+	var body_to_record := {}
+	var blocking_record_ids := {}
+	for record in records:
+		if not (record is Dictionary) or not bool(record.get("blocking_body", true)):
+			continue
+		var record_id := String(record.get("id", record.get("placement_id", "")))
+		if record_id == "":
+			continue
+		blocking_record_ids[record_id] = true
+		for body in record.get("body_tiles", []):
+			if body is Dictionary:
+				body_to_record[_point_key(int(body.get("x", 0)), int(body.get("y", 0)))] = record_id
+	var edges_by_id := _route_edges_by_id(route_graph.get("edges", []))
+	var required_route_ids := []
+	for edge in route_graph.get("edges", []):
+		if edge is Dictionary and bool(edge.get("required", false)):
+			var edge_id := String(edge.get("id", ""))
+			if edge_id != "" and edge_id not in required_route_ids:
+				required_route_ids.append(edge_id)
+	required_route_ids.sort()
+	var required_with_shoulder := {}
+	var required_with_choke := {}
+	var shoulder_body_keys := {}
+	var shoulder_record_ids := {}
+	var choked_road_tile_count := 0
+	var road_tile_count := 0
+	var required_road_tile_count := 0
+	for segment in road_network.get("road_segments", []):
+		if not (segment is Dictionary):
+			continue
+		var route_edge_id := String(segment.get("route_edge_id", ""))
+		var edge: Dictionary = edges_by_id.get(route_edge_id, {})
+		var is_required := bool(edge.get("required", false))
+		var route_has_shoulder := false
+		var route_has_choke := false
+		for cell in segment.get("cells", []):
+			if not (cell is Dictionary):
+				continue
+			var x := int(cell.get("x", -1))
+			var y := int(cell.get("y", -1))
+			if not _point_in_rows(terrain_rows, x, y):
+				continue
+			road_tile_count += 1
+			if is_required:
+				required_road_tile_count += 1
+			var adjacent_body_count := 0
+			for offset in _cardinal_offsets():
+				var key := _point_key(x + int(offset.x), y + int(offset.y))
+				if body_to_record.has(key):
+					adjacent_body_count += 1
+					shoulder_body_keys[key] = true
+					shoulder_record_ids[String(body_to_record[key])] = true
+					route_has_shoulder = true
+			if adjacent_body_count >= 2:
+				choked_road_tile_count += 1
+				route_has_choke = true
+		if is_required and route_edge_id != "":
+			if route_has_shoulder:
+				required_with_shoulder[route_edge_id] = true
+			if route_has_choke:
+				required_with_choke[route_edge_id] = true
+	var required_count := required_route_ids.size()
+	return {
+		"schema_id": "random_map_decoration_route_shaping_v1",
+		"status": "pass" if required_count <= 0 or required_with_shoulder.size() > 0 else "warning",
+		"policy": "decorative_obstacle_bodies_are_biased_to_route_shoulders_without_blocking_required_roads",
+		"required_route_count": required_count,
+		"required_route_with_shoulder_count": required_with_shoulder.size(),
+		"required_route_with_choke_count": required_with_choke.size(),
+		"required_route_shoulder_coverage_ratio": snapped(float(required_with_shoulder.size()) / float(max(1, required_count)), 0.001),
+		"required_route_choke_coverage_ratio": snapped(float(required_with_choke.size()) / float(max(1, required_count)), 0.001),
+		"road_tile_count": road_tile_count,
+		"required_road_tile_count": required_road_tile_count,
+		"route_shoulder_body_count": shoulder_body_keys.size(),
+		"route_shoulder_decoration_count": shoulder_record_ids.size(),
+		"blocking_decoration_count": blocking_record_ids.size(),
+		"choked_road_tile_count": choked_road_tile_count,
+		"required_route_ids": required_route_ids,
+		"required_routes_with_shoulders": _sorted_keys(required_with_shoulder),
+		"required_routes_with_chokes": _sorted_keys(required_with_choke),
+		"remaining_required_routes_without_shoulders": _array_difference(required_route_ids, _sorted_keys(required_with_shoulder)),
 	}
 
 static func _required_route_count(edges: Array) -> int:
@@ -12242,6 +12345,17 @@ static func _sorted_keys(value: Dictionary) -> Array:
 		keys.append(String(key))
 	keys.sort()
 	return keys
+
+static func _array_difference(left: Array, right: Array) -> Array:
+	var right_lookup := {}
+	for value in right:
+		right_lookup[String(value)] = true
+	var result := []
+	for value in left:
+		if not right_lookup.has(String(value)):
+			result.append(String(value))
+	result.sort()
+	return result
 
 static func _sorted_int_keys(value: Dictionary) -> Array:
 	var keys := []

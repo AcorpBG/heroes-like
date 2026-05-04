@@ -78,6 +78,7 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 	var object_guard_summary: Dictionary = staging.get("materialized_object_guard_summary", {}) if staging.get("materialized_object_guard_summary", {}) is Dictionary else {}
 	var decor: Dictionary = staging.get("decoration_density_pass", {}) if staging.get("decoration_density_pass", {}) is Dictionary else {}
 	var decor_summary: Dictionary = decor.get("summary", {}) if decor.get("summary", {}) is Dictionary else {}
+	var decor_route_shaping: Dictionary = decor.get("route_shaping_summary", {}) if decor.get("route_shaping_summary", {}) is Dictionary else {}
 	var serialization: Dictionary = roads_rivers.get("generated_map_serialization", {}) if roads_rivers.get("generated_map_serialization", {}) is Dictionary else {}
 	var town_distances := _town_distance_summary(scenario.get("towns", []))
 	var artifact_count: int = scenario.get("artifact_nodes", []).size() if scenario.get("artifact_nodes", []) is Array else 0
@@ -118,6 +119,13 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"decoration_blocking_body_tile_total": int(decor_summary.get("blocking_body_tile_total", 0)),
 		"multitile_decoration_count": int(decor_summary.get("multitile_decoration_count", 0)),
 		"decoration_body_density": snapped(float(decor_summary.get("blocking_body_tile_total", 0)) / float(max(1, int(case.get("width", 0)) * int(case.get("height", 0)))), 0.0001),
+		"route_shoulder_body_count": int(decor_route_shaping.get("route_shoulder_body_count", decor_summary.get("route_shoulder_body_count", 0))),
+		"route_shoulder_decoration_count": int(decor_route_shaping.get("route_shoulder_decoration_count", decor_summary.get("route_shoulder_decoration_count", 0))),
+		"required_route_count": int(decor_route_shaping.get("required_route_count", decor_summary.get("required_route_count", 0))),
+		"required_route_with_shoulder_count": int(decor_route_shaping.get("required_route_with_shoulder_count", decor_summary.get("required_route_with_shoulder_count", 0))),
+		"required_route_shoulder_coverage_ratio": float(decor_route_shaping.get("required_route_shoulder_coverage_ratio", 0.0)),
+		"choked_road_tile_count": int(decor_route_shaping.get("choked_road_tile_count", decor_summary.get("choked_road_tile_count", 0))),
+		"required_route_with_choke_count": int(decor_route_shaping.get("required_route_with_choke_count", decor_summary.get("required_route_with_choke_count", 0))),
 		"road_tile_count": int(road_summary.get("tile_count", 0)),
 		"road_segment_count": int(road_summary.get("segment_count", 0)),
 		"road_class_counts": road_summary.get("road_class_counts", {}),
@@ -210,6 +218,16 @@ func _metric_failures(case_id: String, metrics: Dictionary) -> Array:
 		failures.append("%s decorative blocker body density is too low: %d" % [case_id, int(metrics.get("decoration_blocking_body_tile_total", 0))])
 	if int(metrics.get("multitile_decoration_count", 0)) <= 0:
 		failures.append("%s produced no multi-tile decorative blocker footprints" % case_id)
+	var required_routes := int(metrics.get("required_route_count", 0))
+	if required_routes > 0:
+		var min_shoulder_routes: int = max(1, int(ceil(float(required_routes) * 0.55)))
+		if int(metrics.get("required_route_with_shoulder_count", 0)) < min_shoulder_routes:
+			failures.append("%s decorative blockers do not shape enough required route shoulders: %d/%d required min %d" % [case_id, int(metrics.get("required_route_with_shoulder_count", 0)), required_routes, min_shoulder_routes])
+		if int(metrics.get("route_shoulder_body_count", 0)) < max(8, required_routes):
+			failures.append("%s route-adjacent decorative blocker body coverage is too low: %d" % [case_id, int(metrics.get("route_shoulder_body_count", 0))])
+		var min_choked_road_tiles: int = max(4, int(ceil(float(required_routes) * 0.20)))
+		if int(metrics.get("choked_road_tile_count", 0)) < min_choked_road_tiles:
+			failures.append("%s decorative blockers do not create enough road choke pressure: %d" % [case_id, int(metrics.get("choked_road_tile_count", 0))])
 	if int(metrics.get("artifact_count", 0)) <= 0:
 		failures.append("%s has no materialized artifact nodes" % case_id)
 	if int(metrics.get("guarded_artifact_count", 0)) < int(metrics.get("artifact_count", 0)):
@@ -295,6 +313,12 @@ func _summary(results: Array) -> Dictionary:
 		"decorations": 0,
 		"decoration_blocking_body_tiles": 0,
 		"multitile_decorations": 0,
+		"route_shoulder_body_count": 0,
+		"route_shoulder_decorations": 0,
+		"required_routes": 0,
+		"required_routes_with_shoulders": 0,
+		"choked_road_tiles": 0,
+		"required_routes_with_chokes": 0,
 		"artifacts": 0,
 		"guarded_artifacts": 0,
 		"guarded_artifact_missing": 0,
@@ -322,6 +346,12 @@ func _summary(results: Array) -> Dictionary:
 		totals["decorations"] = int(totals.get("decorations", 0)) + int(metrics.get("decoration_count", 0))
 		totals["decoration_blocking_body_tiles"] = int(totals.get("decoration_blocking_body_tiles", 0)) + int(metrics.get("decoration_blocking_body_tile_total", 0))
 		totals["multitile_decorations"] = int(totals.get("multitile_decorations", 0)) + int(metrics.get("multitile_decoration_count", 0))
+		totals["route_shoulder_body_count"] = int(totals.get("route_shoulder_body_count", 0)) + int(metrics.get("route_shoulder_body_count", 0))
+		totals["route_shoulder_decorations"] = int(totals.get("route_shoulder_decorations", 0)) + int(metrics.get("route_shoulder_decoration_count", 0))
+		totals["required_routes"] = int(totals.get("required_routes", 0)) + int(metrics.get("required_route_count", 0))
+		totals["required_routes_with_shoulders"] = int(totals.get("required_routes_with_shoulders", 0)) + int(metrics.get("required_route_with_shoulder_count", 0))
+		totals["choked_road_tiles"] = int(totals.get("choked_road_tiles", 0)) + int(metrics.get("choked_road_tile_count", 0))
+		totals["required_routes_with_chokes"] = int(totals.get("required_routes_with_chokes", 0)) + int(metrics.get("required_route_with_choke_count", 0))
 		totals["artifacts"] = int(totals.get("artifacts", 0)) + int(metrics.get("artifact_count", 0))
 		totals["guarded_artifacts"] = int(totals.get("guarded_artifacts", 0)) + int(metrics.get("guarded_artifact_count", 0))
 		totals["guarded_artifact_missing"] = int(totals.get("guarded_artifact_missing", 0)) + int(metrics.get("guarded_artifact_missing_count", 0))
@@ -425,6 +455,10 @@ func _case_log_line(result: Dictionary) -> Dictionary:
 		"decor": int(metrics.get("decoration_count", 0)),
 		"decor_body_tiles": int(metrics.get("decoration_blocking_body_tile_total", 0)),
 		"multitile_decor": int(metrics.get("multitile_decoration_count", 0)),
+		"route_shoulders": int(metrics.get("route_shoulder_body_count", 0)),
+		"routes_with_shoulders": int(metrics.get("required_route_with_shoulder_count", 0)),
+		"required_routes": int(metrics.get("required_route_count", 0)),
+		"choked_road_tiles": int(metrics.get("choked_road_tile_count", 0)),
 		"artifacts": int(metrics.get("artifact_count", 0)),
 		"guarded_artifacts": int(metrics.get("guarded_artifact_count", 0)),
 		"guarded_artifact_missing": int(metrics.get("guarded_artifact_missing_count", 0)),

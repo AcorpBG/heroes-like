@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-town-zone-spacing-10184",
-  "currentSliceTitle": "Random Map HoMM3 Parity Town Zone Spacing",
+  "currentSliceId": "random-map-homm3-parity-blocker-choke-shaping-10184",
+  "currentSliceTitle": "Random Map HoMM3 Parity Blocker Choke Shaping",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed town/zone spacing parity slice. Grounded in homm3-re template grammar town/castle columns, town same-type semantics, and phase-runner town placement layer. Implemented stricter size-scaled town spacing (small required 6, medium required 9 in bounded report), hard no-stack fallback before skipping town placement, town spacing policy provenance on town records, and validation/report metrics for all-town, start-town, and same-zone closest pairs. Bounded richness report passed in 30902 ms with summary {\"artifacts\": 15, \"associated_object_guards\": 56, \"connection_guard_road_controls\": 48, \"decoration_blocking_body_tiles\": 1072, \"decorations\": 594, \"encounters\": 102, \"guarded_artifact_max_distance\": 1, \"guarded_artifact_missing\": 0, \"guarded_artifacts\": 15, \"max_case_msec\": 15418, \"minimum_town_distance_required_max\": 9, \"missing_connection_guard_road_controls\": 0, \"multitile_decorations\": 312, \"object_instances\": 1017, \"observed_minimum_town_distance_min\": 22, \"observed_start_town_minimum_distance_min\": 22, \"river_candidates\": 8, \"road_tiles\": 1740, \"same_zone_town_pair_count\": 0, \"special_guard_gate_roads\": 2, \"start_town_minimum_distance_required_max\": 9, \"wide_suppressed_routes\": 2}. Road/river writeout report passed with 8/8 connection controls, 0 missing controls, 1 wide-suppressed route, and 1 special gate road. JSON progress validation, progress sync-plan dry-run, git diff --check, and tests/validate_repo.py passed. Known residual: random_map_town_mine_dwelling_placement_report.tscn and random_map_terrain_town_road_constraints_report.tscn still expose route/decor/body conflicts outside the new town spacing payload; bounded owner parity report remains green. Next likely gap: river/crossing quality or blocker shaping around chokes.",
+  "currentSliceNotes": "Completed blocker/choke shaping parity slice. Grounded in homm3-re random-map-decoration-object-placement.md rand_trn obstacle filler evidence, phase-runner phase 12 flagged-cell final filler, and object decoration/metadata catalogs. Implemented route-pressure-aware decorative obstacle scoring beside reserved roads/corridors/route anchors while preserving path safety, route-shaping payload metrics, and bounded report thresholds for route shoulders and choked road tiles. Bounded richness report passed in 30471 ms with summary {\"artifacts\": 15, \"associated_object_guards\": 56, \"choked_road_tiles\": 79, \"connection_guard_road_controls\": 48, \"decoration_blocking_body_tiles\": 1006, \"decorations\": 594, \"encounters\": 102, \"guarded_artifact_max_distance\": 1, \"guarded_artifact_missing\": 0, \"guarded_artifacts\": 15, \"max_case_msec\": 15180, \"missing_connection_guard_road_controls\": 0, \"multitile_decorations\": 264, \"object_instances\": 1017, \"required_routes\": 148, \"required_routes_with_chokes\": 43, \"required_routes_with_shoulders\": 111, \"river_candidates\": 8, \"road_tiles\": 1740, \"route_shoulder_body_count\": 398, \"route_shoulder_decorations\": 321, \"special_guard_gate_roads\": 2, \"wide_suppressed_routes\": 2}. Road/river writeout report, JSON progress validation, progress sync-plan dry-run, git diff --check, and tests/validate_repo.py passed. Next likely gap: river quality/crossing semantics or guard/mob distribution around mines/chokes beyond artifact/connection coverage.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T03:16:50Z",
+  "updatedAt": "2026-05-04T04:58:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7517,6 +7517,93 @@
           "KNOWN FAIL: godot --headless --path /root/dev/heroes-like tests/random_map_terrain_town_road_constraints_report.tscn (road crossed blocked object body at 15,9)"
         ],
         "remainingNextGap": "river/crossing quality or decoration/blocker choke shaping beyond current town spacing metrics"
+      }
+    },
+    {
+      "id": "random-map-homm3-parity-blocker-choke-shaping-10184",
+      "title": "Random Map HoMM3 Parity Blocker Choke Shaping",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Improve HoMM3-style RMG movement texture by making decorative obstacle filler measurably shape route shoulders and chokepoints instead of only proving global decoration/blocker density.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-decoration-obstacles.csv",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.csv",
+        "2026-05-04 owner directive to continue RMG parity after 202a1fa"
+      ],
+      "implementationTargets": [
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_homm3_parity_richness_report.gd",
+        ".artifacts/rmg_parity_richness/",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "Godot headless focused RMG parity richness report across bounded multiple seeds/templates/sizes",
+        "Godot headless random_map_roads_rivers_writeout_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "python3 tests/validate_repo.py",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Decorative obstacle candidate scoring accounts for required road/corridor shoulder pressure while preserving path safety.",
+        "Generated decoration records and validation expose movement-shaping metrics for road-adjacent blocker bodies, covered required routes, and choked road tiles.",
+        "Bounded richness report validates route/choke blocker coverage across multiple seeds/templates without exceeding the current runtime envelope.",
+        "Remaining RMG parity gaps are listed for the next slice."
+      ],
+      "nonGoals": [
+        "No generated terrain-art replacement work.",
+        "No copyrighted names, assets, maps, factions, unit art, music, or text.",
+        "No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.",
+        "No claim of full HoMM3 RMG parity beyond this measurable movement-shaping improvement."
+      ],
+      "createdAt": "2026-05-04T04:12:00Z",
+      "updatedAt": "2026-05-04T04:58:00Z",
+      "startedAt": "2026-05-04T04:12:00Z",
+      "completedAt": "2026-05-04T04:58:00Z",
+      "notes": "Completed blocker/choke shaping parity slice. Decorative obstacle candidate scoring now treats adjacent roads, corridor required cells, route anchors, and monster reward route anchors as route-pressure shoulders instead of generic reserved adjacency, while placement still excludes the reserved cells themselves and path safety is revalidated after staging. Bounded richness report passed in 30471 ms across four cases: 594 decorations, 1006 blocking body tiles, 321 route-shoulder decorations, 398 route-shoulder blocker body tiles, 111/148 required routes with shoulders, 43 required routes with choke pressure, 79 choked road tiles, 1740 road tiles, 8 river candidates, 15/15 guarded artifacts, and 0 missing connection controls. random_map_roads_rivers_writeout_report.tscn passed with 8/8 controls, 0 body conflicts, 1 wide-suppressed route, and 1 special gate road. JSON progress validation, progress sync-plan dry-run, git diff --check, and tests/validate_repo.py passed. Next likely gap: river quality/crossing semantics or guard/mob distribution around mines/chokes beyond artifact/connection coverage.",
+      "sliceEvidence": {
+        "boundedRichnessSummary": {
+          "artifacts": 15,
+          "associated_object_guards": 56,
+          "choked_road_tiles": 79,
+          "connection_guard_road_controls": 48,
+          "decoration_blocking_body_tiles": 1006,
+          "decorations": 594,
+          "encounters": 102,
+          "guarded_artifact_max_distance": 1,
+          "guarded_artifact_missing": 0,
+          "guarded_artifacts": 15,
+          "max_case_msec": 15180,
+          "missing_connection_guard_road_controls": 0,
+          "multitile_decorations": 264,
+          "object_instances": 1017,
+          "required_routes": 148,
+          "required_routes_with_chokes": 43,
+          "required_routes_with_shoulders": 111,
+          "river_candidates": 8,
+          "road_tiles": 1740,
+          "route_shoulder_body_count": 398,
+          "route_shoulder_decorations": 321,
+          "special_guard_gate_roads": 2,
+          "wide_suppressed_routes": 2
+        },
+        "validations": [
+          "PASS: godot --headless --path /root/dev/heroes-like tests/random_map_homm3_parity_richness_report.tscn",
+          "PASS: godot --headless --path /root/dev/heroes-like tests/random_map_roads_rivers_writeout_report.tscn",
+          "PASS: python3 -m json.tool ops/progress.json",
+          "PASS: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+          "PASS: git diff --check",
+          "PASS: python3 tests/validate_repo.py"
+        ],
+        "remainingNextGap": "river quality/crossing semantics or guard/mob distribution around mines/chokes beyond artifact/connection coverage"
       }
     }
   ],
