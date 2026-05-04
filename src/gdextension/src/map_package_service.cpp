@@ -2421,6 +2421,8 @@ String terrain_id_for_zone(const Dictionary &zone) {
 	return terrain_id;
 }
 
+Dictionary decoration_template_record(const String &terrain_id, int32_t ordinal);
+
 Dictionary object_family_record(const String &kind, int32_t ordinal, const String &terrain_id) {
 	Dictionary record;
 	if (kind == "resource_site") {
@@ -2497,19 +2499,102 @@ Dictionary object_family_record(const String &kind, int32_t ordinal, const Strin
 		return record;
 	}
 
-	const String family_id = terrain_id == "snow" ? "decor_snow_icegrass_ridge" : (terrain_id == "rough" ? "obstacle_highland_slate_outcrop" : (terrain_id == "dirt" ? "obstacle_mire_sinkroot_cluster" : (terrain_id == "underground" ? "obstacle_cavern_glasscap_stalagmites" : (terrain_id == "sand" ? "obstacle_rough_suncracked_stone" : (terrain_id == "lava" ? "obstacle_highland_slate_outcrop" : "decor_grass_windgrass_tufts")))));
+	Dictionary decoration_template = decoration_template_record(terrain_id, ordinal);
+	const String family_id = String(decoration_template.get("family_id", "object_greenway_root_lip"));
 	record["family_id"] = family_id;
 	record["object_family_id"] = "decorative_obstacle";
 	record["type_id"] = "decorative_obstacle";
 	record["site_id"] = "";
-	record["object_id"] = family_id;
+	record["object_id"] = decoration_template.get("object_id", family_id);
 	record["category_id"] = "decorative_obstacle";
+	record["passability_class"] = decoration_template.get("passability_class", "blocking_non_visitable");
+	record["terrain_bias"] = decoration_template.get("terrain_bias", terrain_id);
+	record["authored_map_object_source"] = "content/map_objects.json large-footprint decoration/blocker family";
 	record["family_art_parity"] = "original_runtime_family_id_not_exact_homm3_re_art_family";
-	record["purpose"] = "zone_decoration_density_foundation";
+	record["purpose"] = "zone_decoration_fill_coverage";
 	return record;
 }
 
-Dictionary object_footprint_for_kind(const String &kind) {
+Dictionary decoration_template_record(const String &terrain_id, int32_t ordinal) {
+	const int32_t selector = int32_t(hash32_int(terrain_id + String(":large_deco:") + String::num_int64(ordinal)) % 6U);
+	Dictionary record;
+	auto assign = [&record](const char *object_id, int32_t width, int32_t height, const char *tier, const char *passability, const char *bias) {
+		record["family_id"] = object_id;
+		record["object_id"] = object_id;
+		record["width"] = width;
+		record["height"] = height;
+		record["tier"] = tier;
+		record["passability_class"] = passability;
+		record["terrain_bias"] = bias;
+	};
+	if (terrain_id == "snow") {
+		switch (selector) {
+			case 0: assign("object_frost_whitewood_trunk_shelf", 5, 3, "large_blocker", "blocking_non_visitable", "snow"); break;
+			case 1: assign("object_frost_highland_rime_cliff_band", 6, 3, "large_edge", "edge_blocker", "snow"); break;
+			case 2: assign("object_frozen_pool_shelf", 4, 2, "medium_edge", "edge_blocker", "snow"); break;
+			case 3: assign("object_icefall_tooth_block", 3, 4, "large_blocker", "blocking_non_visitable", "snow"); break;
+			case 4: assign("object_coast_frost_ice_reef_shelf", 4, 4, "large_edge", "edge_blocker", "snow"); break;
+			default: assign("object_blue_ice_block", 4, 4, "large_blocker", "blocking_non_visitable", "snow"); break;
+		}
+	} else if (terrain_id == "rough") {
+		switch (selector) {
+			case 0: assign("object_highland_switchback_slate_overhang", 6, 4, "huge_edge", "edge_blocker", "rough"); break;
+			case 1: assign("object_highland_cliff_band_weathercut", 6, 3, "large_edge", "edge_blocker", "rough"); break;
+			case 2: assign("object_highland_scree_bowl", 5, 3, "large_blocker", "blocking_non_visitable", "rough"); break;
+			case 3: assign("object_highland_ridge_teeth_line", 5, 2, "large_blocker", "blocking_non_visitable", "rough"); break;
+			case 4: assign("object_cliff_lip_slate_line", 4, 1, "medium_edge", "edge_blocker", "rough"); break;
+			default: assign("object_scree_boulder_fan", 3, 2, "medium_blocker", "blocking_non_visitable", "rough"); break;
+		}
+	} else if (terrain_id == "sand") {
+		switch (selector) {
+			case 0: assign("object_badland_razorfin_wall", 6, 4, "huge_blocker", "blocking_non_visitable", "sand"); break;
+			case 1: assign("object_badland_dry_gully_fan", 6, 3, "large_edge", "edge_blocker", "sand"); break;
+			case 2: assign("object_badland_shardfall_rubble_wall", 5, 3, "large_blocker", "blocking_non_visitable", "sand"); break;
+			case 3: assign("object_badland_redstone_escarpment", 5, 2, "large_edge", "edge_blocker", "sand"); break;
+			case 4: assign("object_redstone_fin_wall", 3, 3, "medium_blocker", "blocking_non_visitable", "sand"); break;
+			default: assign("object_shardfall_rubble_wedge", 3, 2, "medium_blocker", "blocking_non_visitable", "sand"); break;
+		}
+	} else if (terrain_id == "swamp" || terrain_id == "dirt") {
+		switch (selector) {
+			case 0: assign("object_mire_drum_island_reed_wall", 6, 4, "huge_blocker", "blocking_non_visitable", "mire"); break;
+			case 1: assign("object_mire_blackwater_fen_shelf", 6, 3, "large_edge", "edge_blocker", "mire"); break;
+			case 2: assign("object_mire_drowned_cypress_knee_wall", 5, 3, "large_blocker", "blocking_non_visitable", "mire"); break;
+			case 3: assign("object_mire_coast_reed_bed_shelf", 5, 2, "large_edge", "edge_blocker", "mire"); break;
+			case 4: assign("object_bog_cypress_knee_wall", 4, 3, "large_blocker", "blocking_non_visitable", "mire"); break;
+			default: assign("object_blackwater_pool_rim", 4, 2, "medium_edge", "edge_blocker", "mire"); break;
+		}
+	} else if (terrain_id == "underground") {
+		switch (selector) {
+			case 0: assign("object_underway_brasspipe_cavern_wall", 6, 4, "huge_blocker", "blocking_non_visitable", "underground"); break;
+			case 1: assign("object_underway_pressure_rail_embankment", 6, 3, "large_edge", "edge_blocker", "underground"); break;
+			case 2: assign("object_underway_quarry_spoil_curtain", 5, 3, "large_blocker", "blocking_non_visitable", "underground"); break;
+			case 3: assign("object_underway_ash_rail_slag_bank", 4, 2, "medium_edge", "edge_blocker", "underground"); break;
+			case 4: assign("object_undergate_stone_plug", 3, 3, "medium_blocker", "blocking_non_visitable", "underground"); break;
+			default: assign("object_undergate_pipe_nest", 3, 2, "medium_blocker", "blocking_non_visitable", "underground"); break;
+		}
+	} else if (terrain_id == "lava") {
+		switch (selector) {
+			case 0: assign("object_ash_obsidian_cooling_wall", 6, 6, "huge_edge", "edge_blocker", "lava"); break;
+			case 1: assign("object_ash_lava_slag_wall", 6, 3, "large_blocker", "blocking_non_visitable", "lava"); break;
+			case 2: assign("object_ash_furnace_scree_shelf", 5, 3, "large_edge", "edge_blocker", "lava"); break;
+			case 3: assign("object_ash_badland_clinker_transition", 5, 2, "large_edge", "edge_blocker", "lava"); break;
+			case 4: assign("object_smoke_black_ruin_wall", 3, 4, "large_blocker", "blocking_non_visitable", "lava"); break;
+			default: assign("object_slag_berm_low_wall", 3, 2, "medium_blocker", "blocking_non_visitable", "lava"); break;
+		}
+	} else {
+		switch (selector) {
+			case 0: assign("object_forest_elder_root_overhang", 6, 4, "huge_edge", "edge_blocker", "grass"); break;
+			case 1: assign("object_forest_great_bough_deadfall", 6, 3, "large_blocker", "blocking_non_visitable", "grass"); break;
+			case 2: assign("object_forest_highland_root_shelf", 5, 3, "large_edge", "edge_blocker", "grass"); break;
+			case 3: assign("object_grass_millstone_breach_field", 5, 2, "large_blocker", "blocking_non_visitable", "grass"); break;
+			case 4: assign("object_greenway_root_lip", 4, 2, "medium_edge", "edge_blocker", "grass"); break;
+			default: assign("object_elder_root_wall", 4, 3, "large_edge", "edge_blocker", "grass"); break;
+		}
+	}
+	return record;
+}
+
+Dictionary object_footprint_for_kind(const String &kind, int32_t ordinal, const String &terrain_id) {
 	Dictionary footprint;
 	if (kind == "mine" || kind == "neutral_dwelling") {
 		footprint["width"] = 2;
@@ -2517,10 +2602,12 @@ Dictionary object_footprint_for_kind(const String &kind) {
 		footprint["anchor"] = "bottom_center";
 		footprint["tier"] = "medium";
 	} else if (kind == "decorative_obstacle") {
-		footprint["width"] = 2;
-		footprint["height"] = 1;
+		Dictionary decoration_template = decoration_template_record(terrain_id, ordinal);
+		footprint["width"] = decoration_template.get("width", 4);
+		footprint["height"] = decoration_template.get("height", 2);
 		footprint["anchor"] = "bottom_left";
-		footprint["tier"] = "small";
+		footprint["tier"] = decoration_template.get("tier", "large_blocker");
+		footprint["source"] = "content/map_objects.json authored decoration/blocker footprint proportions";
 	} else {
 		footprint["width"] = 1;
 		footprint["height"] = 1;
@@ -2530,11 +2617,18 @@ Dictionary object_footprint_for_kind(const String &kind) {
 	return footprint;
 }
 
-Array object_body_tiles_for_kind(const String &kind, int32_t x, int32_t y, int32_t width, int32_t height) {
+Array object_body_tiles_for_kind(const String &kind, int32_t x, int32_t y, int32_t width, int32_t height, const Dictionary &footprint) {
 	Array body_tiles;
-	body_tiles.append(cell_record(x, y, 0));
-	if (kind == "decorative_obstacle" && x + 1 < width) {
-		body_tiles.append(cell_record(x + 1, y, 0));
+	const int32_t body_width = kind == "decorative_obstacle" ? std::max(1, int32_t(footprint.get("width", 1))) : 1;
+	const int32_t body_height = kind == "decorative_obstacle" ? std::max(1, int32_t(footprint.get("height", 1))) : 1;
+	for (int32_t dy = 0; dy < body_height; ++dy) {
+		for (int32_t dx = 0; dx < body_width; ++dx) {
+			const int32_t tx = x + dx;
+			const int32_t ty = y + dy;
+			if (tx >= 0 && ty >= 0 && tx < width && ty < height) {
+				body_tiles.append(cell_record(tx, ty, 0));
+			}
+		}
 	}
 	return body_tiles;
 }
@@ -2620,19 +2714,25 @@ Dictionary road_body_exclusion_lookup(const Dictionary &road_network) {
 	return blocked;
 }
 
-bool decoration_body_fits(int32_t x, int32_t y, const String &zone_id, const Array &owner_grid, const Dictionary &occupied, const Dictionary &blocked, int32_t width, int32_t height) {
-	if (x < 1 || y < 1 || x + 1 >= width - 1 || y >= height - 1) {
+bool decoration_body_fits(int32_t x, int32_t y, const String &zone_id, const Array &owner_grid, const Dictionary &occupied, const Dictionary &blocked, int32_t width, int32_t height, const Dictionary &footprint) {
+	const int32_t body_width = std::max(1, int32_t(footprint.get("width", 1)));
+	const int32_t body_height = std::max(1, int32_t(footprint.get("height", 1)));
+	if (x < 1 || y < 1 || x + body_width > width - 1 || y + body_height > height - 1) {
 		return false;
 	}
-	for (int32_t dx = 0; dx <= 1; ++dx) {
-		const String key = point_key(x + dx, y);
-		if (occupied.has(key) || blocked.has(key)) {
-			return false;
-		}
-		if (!zone_id.is_empty() && y >= 0 && y < owner_grid.size()) {
-			Array row = owner_grid[y];
-			if (x + dx < 0 || x + dx >= row.size() || String(row[x + dx]) != zone_id) {
+	for (int32_t dy = 0; dy < body_height; ++dy) {
+		for (int32_t dx = 0; dx < body_width; ++dx) {
+			const int32_t tx = x + dx;
+			const int32_t ty = y + dy;
+			const String key = point_key(tx, ty);
+			if (occupied.has(key) || blocked.has(key)) {
 				return false;
+			}
+			if (!zone_id.is_empty() && ty >= 0 && ty < owner_grid.size()) {
+				Array row = owner_grid[ty];
+				if (tx < 0 || tx >= row.size() || String(row[tx]) != zone_id) {
+					return false;
+				}
 			}
 		}
 	}
@@ -2647,27 +2747,30 @@ int32_t decoration_target_for_zone(const Dictionary &normalized, const Dictionar
 		return 0;
 	}
 	const String role = String(zone.get("role", ""));
-	double ratio = 0.030;
+	double ratio = 0.260;
 	if (role.find("start") >= 0) {
-		ratio = 0.022;
+		ratio = 0.200;
 	} else if (role == "treasure") {
-		ratio = 0.042;
+		ratio = 0.320;
 	} else if (role == "junction") {
-		ratio = 0.034;
+		ratio = 0.280;
 	}
-	const int32_t max_per_zone = std::max(4, std::min(28, (width * height) / 864 + 4));
-	const int32_t raw_target = int32_t(std::round(double(cell_count) * ratio));
-	return std::max(2, std::min(max_per_zone, raw_target));
+	const double expected_body_tiles_per_record = 12.0;
+	const int32_t max_per_zone = std::max(8, std::min(96, std::max(1, cell_count / 5)));
+	const int32_t raw_target = int32_t(std::ceil(double(cell_count) * ratio / expected_body_tiles_per_record));
+	return std::max(3, std::min(max_per_zone, raw_target));
 }
 
 Dictionary find_decoration_point(const Dictionary &zone, int32_t ordinal, const Dictionary &normalized, const Array &owner_grid, const Dictionary &occupied, const Dictionary &blocked, int32_t width, int32_t height) {
 	const String zone_id = String(zone.get("id", ""));
+	const String terrain_id = terrain_id_for_zone(zone);
+	const Dictionary footprint = object_footprint_for_kind("decorative_obstacle", ordinal, terrain_id);
 	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
 	const int32_t ax = int32_t(anchor.get("x", width / 2));
 	const int32_t ay = int32_t(anchor.get("y", height / 2));
 	const String seed_text = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":decor:" + String::num_int64(ordinal);
 	std::vector<Dictionary> candidates;
-	const int32_t radius_limit = std::max(4, std::min(std::max(width, height), 10 + ordinal / 2));
+	const int32_t radius_limit = std::max(width, height);
 	for (int32_t radius = 2; radius <= radius_limit; ++radius) {
 		for (int32_t dy = -radius; dy <= radius; ++dy) {
 			for (int32_t dx = -radius; dx <= radius; ++dx) {
@@ -2676,7 +2779,7 @@ Dictionary find_decoration_point(const Dictionary &zone, int32_t ordinal, const 
 				}
 				const int32_t x = ax + dx;
 				const int32_t y = ay + dy;
-				if (!decoration_body_fits(x, y, zone_id, owner_grid, occupied, blocked, width, height)) {
+				if (!decoration_body_fits(x, y, zone_id, owner_grid, occupied, blocked, width, height, footprint)) {
 					continue;
 				}
 				Dictionary point = point_record(x, y);
@@ -2685,7 +2788,7 @@ Dictionary find_decoration_point(const Dictionary &zone, int32_t ordinal, const 
 				candidates.push_back(point);
 			}
 		}
-		if (candidates.size() >= 12) {
+		if (candidates.size() >= 18) {
 			break;
 		}
 	}
@@ -2713,7 +2816,7 @@ int32_t append_decoration_placements(Array &placements, Dictionary &occupied, co
 		Dictionary zone = zones[zone_index];
 		const int32_t target = decoration_target_for_zone(normalized, zone);
 		for (int32_t decoration_index = 0; decoration_index < target; ++decoration_index) {
-			Dictionary point = find_decoration_point(zone, decoration_index, normalized, owner_grid, occupied, blocked, width, height);
+			Dictionary point = find_decoration_point(zone, ordinal, normalized, owner_grid, occupied, blocked, width, height);
 			if (point.is_empty()) {
 				continue;
 			}
@@ -2737,7 +2840,8 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	const int32_t y = int32_t(point.get("y", 0));
 	const String placement_id = "native_rmg_" + kind + "_" + zone_id + "_" + slot_id_2(ordinal + 1);
 	Dictionary body = cell_record(x, y, 0);
-	Array body_tiles = object_body_tiles_for_kind(kind, x, y, width, height);
+	Dictionary footprint = object_footprint_for_kind(kind, ordinal, terrain_id);
+	Array body_tiles = object_body_tiles_for_kind(kind, x, y, width, height, footprint);
 	Array occupancy_keys;
 	for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
 		Dictionary body_tile = body_tiles[body_index];
@@ -2746,8 +2850,8 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	Dictionary bounds;
 	bounds["min_x"] = x;
 	bounds["min_y"] = y;
-	bounds["max_x"] = kind == "decorative_obstacle" && x + 1 < width ? x + 1 : x;
-	bounds["max_y"] = y;
+	bounds["max_x"] = kind == "decorative_obstacle" ? x + std::max(1, int32_t(footprint.get("width", 1))) - 1 : x;
+	bounds["max_y"] = kind == "decorative_obstacle" ? y + std::max(1, int32_t(footprint.get("height", 1))) - 1 : y;
 
 	Dictionary runtime_footprint;
 	runtime_footprint["width"] = 1;
@@ -2787,7 +2891,7 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	placement["bounds"] = bounds;
 	placement["body_tiles"] = body_tiles;
 	placement["occupancy_keys"] = occupancy_keys;
-	placement["footprint"] = object_footprint_for_kind(kind);
+	placement["footprint"] = footprint;
 	placement["runtime_footprint"] = runtime_footprint;
 	placement["footprint_deferred"] = kind == "mine" || kind == "neutral_dwelling";
 	placement["approach_tiles"] = cardinal_approach_tiles(x, y, width, height, occupied);
@@ -2908,6 +3012,91 @@ Dictionary decoration_route_shaping_summary(const Array &placements, const Dicti
 	summary["required_route_with_shoulder_count"] = required_with_shoulder.size();
 	summary["required_route_with_choke_count"] = required_with_choke.size();
 	summary["choked_road_tile_count"] = choked_road_tile_count;
+	return summary;
+}
+
+Dictionary object_fill_coverage_summary(const Array &placements, const Dictionary &zone_layout, int32_t width, int32_t height) {
+	Dictionary all_body_lookup;
+	Dictionary decoration_body_lookup;
+	Dictionary blocking_body_lookup;
+	Dictionary visit_lookup;
+	Dictionary decoration_count_by_zone;
+	Dictionary decoration_body_by_zone;
+	int32_t decoration_count = 0;
+	int32_t decoration_body_tile_total = 0;
+	int32_t authored_large_decoration_count = 0;
+	for (int64_t index = 0; index < placements.size(); ++index) {
+		Dictionary placement = placements[index];
+		const String kind = String(placement.get("kind", ""));
+		const String zone_id = String(placement.get("zone_id", ""));
+		Array body_tiles = placement.get("body_tiles", Array());
+		if (kind == "decorative_obstacle") {
+			++decoration_count;
+			decoration_count_by_zone[zone_id] = int32_t(decoration_count_by_zone.get(zone_id, 0)) + 1;
+			if (body_tiles.size() >= 6) {
+				++authored_large_decoration_count;
+			}
+		}
+		for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
+			Dictionary body = body_tiles[body_index];
+			const String key = point_key(int32_t(body.get("x", 0)), int32_t(body.get("y", 0)));
+			all_body_lookup[key] = true;
+			if (kind == "decorative_obstacle") {
+				decoration_body_lookup[key] = true;
+				blocking_body_lookup[key] = true;
+				++decoration_body_tile_total;
+				decoration_body_by_zone[zone_id] = int32_t(decoration_body_by_zone.get(zone_id, 0)) + 1;
+			} else if (bool(placement.get("blocking_body", false))) {
+				blocking_body_lookup[key] = true;
+			}
+		}
+		Dictionary visit_tile = placement.get("visit_tile", Dictionary());
+		if (!visit_tile.is_empty()) {
+			visit_lookup[point_key(int32_t(visit_tile.get("x", 0)), int32_t(visit_tile.get("y", 0)))] = true;
+		}
+	}
+	Array zones = zone_layout.get("zones", Array());
+	int32_t min_zone_decoration_count = std::numeric_limits<int32_t>::max();
+	int32_t max_zone_decoration_count = 0;
+	int32_t min_zone_decoration_body_tiles = std::numeric_limits<int32_t>::max();
+	int32_t max_zone_decoration_body_tiles = 0;
+	double min_zone_decoration_body_coverage = 1.0;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		const int32_t cell_count = std::max(1, int32_t(zone.get("cell_count", 1)));
+		const int32_t zone_count = int32_t(decoration_count_by_zone.get(zone_id, 0));
+		const int32_t zone_body = int32_t(decoration_body_by_zone.get(zone_id, 0));
+		min_zone_decoration_count = std::min(min_zone_decoration_count, zone_count);
+		max_zone_decoration_count = std::max(max_zone_decoration_count, zone_count);
+		min_zone_decoration_body_tiles = std::min(min_zone_decoration_body_tiles, zone_body);
+		max_zone_decoration_body_tiles = std::max(max_zone_decoration_body_tiles, zone_body);
+		min_zone_decoration_body_coverage = std::min(min_zone_decoration_body_coverage, double(zone_body) / double(cell_count));
+	}
+	const int32_t map_tiles = std::max(1, width * height);
+	Dictionary summary;
+	summary["schema_id"] = "native_random_map_fill_coverage_summary_v1";
+	summary["map_tile_count"] = map_tiles;
+	summary["unique_body_tile_count"] = all_body_lookup.size();
+	summary["unique_decoration_blocker_body_tile_count"] = decoration_body_lookup.size();
+	summary["unique_blocking_body_tile_count"] = blocking_body_lookup.size();
+	summary["unique_visit_tile_count"] = visit_lookup.size();
+	summary["body_coverage_ratio"] = double(all_body_lookup.size()) / double(map_tiles);
+	summary["decoration_blocker_body_coverage_ratio"] = double(decoration_body_lookup.size()) / double(map_tiles);
+	summary["blocking_body_coverage_ratio"] = double(blocking_body_lookup.size()) / double(map_tiles);
+	summary["visit_tile_coverage_ratio"] = double(visit_lookup.size()) / double(map_tiles);
+	summary["empty_body_tile_ratio"] = 1.0 - double(all_body_lookup.size()) / double(map_tiles);
+	summary["decoration_count"] = decoration_count;
+	summary["authored_large_decoration_count"] = authored_large_decoration_count;
+	summary["authored_large_decoration_ratio"] = decoration_count <= 0 ? 0.0 : double(authored_large_decoration_count) / double(decoration_count);
+	summary["average_decoration_body_tiles"] = decoration_count <= 0 ? 0.0 : double(decoration_body_tile_total) / double(decoration_count);
+	summary["decoration_count_by_zone"] = decoration_count_by_zone;
+	summary["decoration_body_tiles_by_zone"] = decoration_body_by_zone;
+	summary["min_zone_decoration_count"] = min_zone_decoration_count == std::numeric_limits<int32_t>::max() ? 0 : min_zone_decoration_count;
+	summary["max_zone_decoration_count"] = max_zone_decoration_count;
+	summary["min_zone_decoration_body_tiles"] = min_zone_decoration_body_tiles == std::numeric_limits<int32_t>::max() ? 0 : min_zone_decoration_body_tiles;
+	summary["max_zone_decoration_body_tiles"] = max_zone_decoration_body_tiles;
+	summary["min_zone_decoration_body_coverage_ratio"] = zones.is_empty() ? 0.0 : min_zone_decoration_body_coverage;
 	return summary;
 }
 
@@ -3118,6 +3307,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	Dictionary decoration_summary = decoration_route_shaping_summary(placements, road_network);
 	payload["decoration_density_pass"] = decoration_summary;
 	payload["decoration_route_shaping_summary"] = decoration_summary;
+	payload["fill_coverage_summary"] = object_fill_coverage_summary(placements, zone_layout, width, height);
 	payload["occupancy_index"] = occupancy_index;
 	payload["footprint_records"] = footprint_records;
 	payload["footprint_record_count"] = footprint_records.size();
@@ -3132,9 +3322,19 @@ Dictionary primary_occupancy_from_objects(const Dictionary &object_placement) {
 	Array placements = object_placement.get("object_placements", Array());
 	for (int64_t index = 0; index < placements.size(); ++index) {
 		Dictionary placement = placements[index];
-		const String key = String(placement.get("primary_occupancy_key", ""));
-		if (!key.is_empty()) {
-			occupied[key] = placement.get("placement_id", "");
+		Array occupancy_keys = placement.get("occupancy_keys", Array());
+		if (occupancy_keys.is_empty()) {
+			const String key = String(placement.get("primary_occupancy_key", ""));
+			if (!key.is_empty()) {
+				occupied[key] = placement.get("placement_id", "");
+			}
+			continue;
+		}
+		for (int64_t key_index = 0; key_index < occupancy_keys.size(); ++key_index) {
+			const String key = String(occupancy_keys[key_index]);
+			if (!key.is_empty()) {
+				occupied[key] = placement.get("placement_id", "");
+			}
 		}
 	}
 	return occupied;
@@ -4323,6 +4523,7 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	report["object_placement_signature"] = object_placement.get("signature", "");
 	report["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
 	report["object_category_counts"] = object_placement.get("category_counts", Dictionary());
+	report["fill_coverage_summary"] = object_placement.get("fill_coverage_summary", Dictionary());
 	report["town_generation_status"] = town_guard_placement.get("town_generation_status", "");
 	report["guard_generation_status"] = town_guard_placement.get("guard_generation_status", "");
 	report["town_guard_placement_signature"] = town_guard_placement.get("signature", "");
@@ -5204,6 +5405,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["object_placement"] = object_placement;
 	result["object_placements"] = object_placements;
 	result["decoration_route_shaping_summary"] = object_placement.get("decoration_route_shaping_summary", Dictionary());
+	result["fill_coverage_summary"] = object_placement.get("fill_coverage_summary", Dictionary());
 	result["object_category_counts"] = full_parity_supported ? native_rmg_structural_parity_targets(normalized).get("object_category_counts", Dictionary()) : object_placement.get("category_counts", Dictionary());
 	result["object_occupancy_index"] = object_placement.get("occupancy_index", Dictionary());
 	result["object_placement_signature"] = object_placement.get("signature", "");

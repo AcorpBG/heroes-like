@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-catalog-playability-wiring-10184",
-  "currentSliceTitle": "Native RMG Catalog Playability Wiring",
+  "currentSliceId": "native-rmg-homm3-fill-coverage-gate-10184",
+  "currentSliceTitle": "Native RMG HoMM3 Fill Coverage Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner correction: native C++ package generation now uses imported catalog zones/links for exposed templates, materializes visible road surfaces, and scales object/decor/town/resource/reward/guard placement across sampled small, medium, large, and XL templates. Exact HoMM3-re parity remains incomplete and is not claimed.",
+  "currentSliceNotes": "Completed owner correction: native C++ generated packages now use terrain-biased large decoration/blocker footprints, reserve full body occupancy, and fail barren decoration/blocker coverage. The attached 72x72 package remains recorded as pre-fix evidence at 2.78% deco/blocker body coverage and fails the new medium floor; the same config regenerated through native generation reaches 24.96%. Exact HoMM3-re obstacle identity/art/template parity and compact binary format parity remain gaps.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T12:03:30Z",
+  "updatedAt": "2026-05-04T12:39:25Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -8559,6 +8559,152 @@
         "remainingGap": "Broad native catalog wiring/playability is improved through package convert/save/load; exact HoMM3-re byte, placement, art-family, and reward-table parity remains incomplete."
       },
       "notes": "Completed owner correction for native generated-map catalog playability. MapPackageService now reads imported catalog zones and links for exposed templates, uses catalog topology for zone layout/route graph/road surfaces, scales object/decor/town/resource/reward/guard placement beyond the tiny foundation stub, and materializes road layers into package/editor-visible MapDocument terrain layers. New broad catalog quality report passed for frontier_spokes_v1 36x36, translated_rmg_template_024_v1 72x72, translated_rmg_template_042_v1 108x108, and translated_rmg_template_043_v1 144x144, with road cells 107/164/830/2039 and loaded object counts 124/290/1348/2333. Existing native full-parity tiny fixture gate remains preserved. Remaining gap: exact HoMM3-re byte/placement/art/reward-table parity is not claimed."
+    },
+    {
+      "id": "native-rmg-homm3-fill-coverage-gate-10184",
+      "title": "Native RMG HoMM3 Fill Coverage Gate",
+      "status": "completed",
+      "purpose": "Add a HoMM3-style fill coverage gate and raise native generated package decorative/blocking body coverage so generated maps no longer pass with barren token decorations.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_fill_coverage_report.gd",
+        "tests/native_random_map_homm3_fill_coverage_report.tscn",
+        "docs/native-rmg-homm3-fill-coverage-report.md",
+        "docs/native-rmg-template-decoration-wiring-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Native generated decorations use larger terrain-biased original blocker footprints and reserve full body tiles, not mostly 1x2 token records.",
+        "The report compares HoMM3-re rand_trn obstacle catalog scale, authored decoration/blocker catalog scale, attached pre-fix package fill, and sampled native small/medium/large/XL output.",
+        "The attached 72x72 2.78% decoration/blocker body coverage package fails the new medium coverage floor, while the same config regenerated through native C++ package generation passes.",
+        "Sampled native package convert/save/load surfaces retain road and object counts, and decorative bodies do not overlap materialized road cells.",
+        "Exact HoMM3-re obstacle identity/art/template parity and compact binary format parity remain explicitly unclaimed."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "owner_directed_phase2_native_rmg_fill_coverage_correction_slice",
+      "parentSliceId": "native-rmg-full-parity-gate-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/map_objects.json",
+        "docs/native-rmg-homm3-fill-coverage-report.md",
+        "docs/native-rmg-template-decoration-wiring-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-decoration-obstacles.csv",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "2026-05-04 owner directive: implement real HoMM3-re-style fill/coverage gate and raise native generated map decorative/blocking footprint coverage"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 90 tests/native_random_map_homm3_fill_coverage_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 60 tests/native_random_map_catalog_quality_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 60 tests/random_map_all_template_menu_wiring_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 60 tests/native_random_map_decoration_generation_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 60 tests/native_random_map_full_parity_gate_report.tscn",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No active generated skirmish launch through RandomMapGeneratorRules.gd.",
+        "No generated .amap/.ascenario files under maps/ committed unless already tracked and intentionally required.",
+        "No exact HoMM3-re obstacle identity, DEF art/template, byte, or placement parity claim.",
+        "No compact binary map format parity claim.",
+        "No save version bump or authored content writeback."
+      ],
+      "createdAt": "2026-05-04T12:39:25Z",
+      "updatedAt": "2026-05-04T12:39:25Z",
+      "startedAt": "2026-05-04T12:39:25Z",
+      "completedAt": "2026-05-04T12:39:25Z",
+      "sliceEvidence": {
+        "homm3ReObstacleCatalog": {
+          "rand_trn_obstacle_row_count": 109,
+          "unique_decorative_type_name_count": 33,
+          "mapped_def_template_ref_total": 2425,
+          "unique_mapped_def_template_count": 415,
+          "by_terrain_counts": {
+            "dirt": 17,
+            "grass": 17,
+            "rough": 15,
+            "swamp": 14,
+            "cave": 13,
+            "sand": 11,
+            "snow": 11,
+            "lava": 9,
+            "water": 2
+          }
+        },
+        "authoredDecorationBlockerCatalog": {
+          "authored_decoration_count": 199,
+          "authored_decoration_blocker_count": 117,
+          "blocking_non_visitable": 60,
+          "edge_blocker": 57
+        },
+        "attachedPackageBefore": {
+          "size": "72x72",
+          "object_count": 315,
+          "decoration_count": 72,
+          "unique_body_coverage_ratio": 0.0735,
+          "decoration_blocker_body_coverage_ratio": 0.0278,
+          "blocking_body_coverage_ratio": 0.0278,
+          "average_decoration_body_tiles": 2.0,
+          "raw_json_bytes": 1137126,
+          "gzip_equivalent_bytes": 47451,
+          "gate_result": "fails_new_medium_coverage_floor"
+        },
+        "generatedCoverageAfter": {
+          "small": {
+            "size": "36x36",
+            "object_count": 118,
+            "decoration_count": 21,
+            "road_cells": 103,
+            "body_coverage_ratio": 0.3225,
+            "decoration_blocker_body_coverage_ratio": 0.2477,
+            "average_decoration_body_tiles": 15.286
+          },
+          "medium": {
+            "size": "72x72",
+            "object_count": 339,
+            "decoration_count": 121,
+            "road_cells": 151,
+            "body_coverage_ratio": 0.3756,
+            "decoration_blocker_body_coverage_ratio": 0.3335,
+            "average_decoration_body_tiles": 14.289
+          },
+          "large": {
+            "size": "108x108",
+            "object_count": 1401,
+            "decoration_count": 212,
+            "road_cells": 735,
+            "body_coverage_ratio": 0.3631,
+            "decoration_blocker_body_coverage_ratio": 0.2611,
+            "average_decoration_body_tiles": 14.368
+          },
+          "xl": {
+            "size": "144x144",
+            "object_count": 2252,
+            "decoration_count": 331,
+            "road_cells": 1904,
+            "body_coverage_ratio": 0.3082,
+            "decoration_blocker_body_coverage_ratio": 0.2155,
+            "average_decoration_body_tiles": 13.502
+          },
+          "attachedConfigRegenerated": {
+            "size": "72x72",
+            "object_count": 338,
+            "decoration_count": 95,
+            "road_cells": 250,
+            "body_coverage_ratio": 0.2965,
+            "decoration_blocker_body_coverage_ratio": 0.2496,
+            "average_decoration_body_tiles": 13.621
+          }
+        },
+        "remainingGaps": [
+          "Exact HoMM3-re obstacle identity and DEF art/template parity are not implemented.",
+          "Exact byte/placement parity is not implemented.",
+          "Compact binary H3M-format parity is not implemented."
+        ]
+      }
     }
   ],
   "completedImplementationEvidence": [
@@ -9187,6 +9333,39 @@
           "title": "Replace active editor scenario dropdown with maps-folder Load Map flow",
           "status": "completed",
           "evidence": "MapEditorShell now lists generated maps-folder package pairs in MapPackagePicker, opens them through an explicit Load Map action, records package refs/paths on the editor working copy, and keeps legacy authored scenario loading behind explicit dev-validation naming. Focused map_editor_load_map_package_report and existing maps_folder_package_browser_integration_report passed."
+        }
+      ]
+    },
+    {
+      "id": "native-rmg-homm3-fill-coverage-gate-10184",
+      "system": "native random map generation",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "native-rmg-homm3-fill-coverage-gate-10184"
+      ],
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "content/map_objects.json",
+        "docs/native-rmg-homm3-fill-coverage-report.md",
+        "docs/native-rmg-template-decoration-wiring-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-decoration-obstacles.csv",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "2026-05-04 owner directive: implement real HoMM3-re-style fill/coverage gate and raise native generated map decorative/blocking footprint coverage",
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_fill_coverage_report.gd",
+        "tests/native_random_map_homm3_fill_coverage_report.tscn",
+        "docs/native-rmg-homm3-fill-coverage-report.md",
+        "docs/native-rmg-template-decoration-wiring-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "entries": [
+        {
+          "id": "native-rmg-homm3-fill-coverage-implementation-10184",
+          "title": "Raise native generated decoration/blocker footprint coverage and add a fill gate",
+          "status": "completed",
+          "evidence": "Native C++ generated packages now use terrain-biased large decoration/blocker bodies from authored content proportions, reserve full body occupancy for later town/guard placement, and expose fill coverage metrics. The focused fill report compares HoMM3-re rand_trn scale, authored blocker scale, attached pre-fix package metrics, and sampled native output. The attached 72x72 package fails the new medium floor at 2.78% deco/blocker coverage; the same config regenerated through native generation reaches 24.96%. Sampled small/medium/large/XL coverage reached 24.77%, 33.35%, 26.11%, and 21.55% deco/blocker coverage, with road/package surfaces intact."
         }
       ]
     }
