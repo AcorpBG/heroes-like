@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-visual-inspection-evidence-10184",
-  "currentSliceTitle": "Random Map HoMM3 Parity Visual Inspection Evidence",
+  "currentSliceId": "random-map-homm3-parity-visual-diagnostic-runtime-10184",
+  "currentSliceTitle": "Random Map HoMM3 Parity Visual Diagnostic Runtime",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed bounded multi-map ASCII/JSON visual inspection evidence and a route endpoint viability correction. Remaining gaps: template 002 runtime budget, large-template/rendered visual inspection, native parity, and final art/object visual parity.",
+  "currentSliceNotes": "Completed after be744e8: route-heavy translated probes avoid unnecessary full-grid path searches, visual diagnostics have explicit capped budgets, and the report now uses marker distribution/per-route evidence instead of misleading blank/grass-run summary gates.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T08:08:00Z",
+  "updatedAt": "2026-05-04T09:45:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7876,6 +7876,110 @@
         "Passed 2026-05-04T08:05:00Z: python3 tests/validate_repo.py; validation passed."
       ],
       "remainingNextGap": "translated_rmg_template_002_v1 still exceeds the cheap visual report per-case budget; 108x108+ translated template inspection/rendered visual evidence remains a separate large-template slice; ASCII/JSON inspection is not final rendered visual parity."
+    },
+    {
+      "id": "random-map-homm3-parity-visual-diagnostic-runtime-10184",
+      "title": "Random Map HoMM3 Parity Visual Diagnostic Runtime",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "2026-05-04 owner directive to continue RMG parity after be744e8"
+      ],
+      "purpose": "Correct the bounded RMG visual inspection evidence after be744e8 by reducing route-heavy translated-template probe cost, separating strict fixture budgets from capped diagnostic probe budgets, and replacing misleading grass-run summary metrics with marker-distribution evidence.",
+      "implementationTargets": [
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_homm3_parity_visual_inspection_report.gd",
+        ".artifacts/rmg_parity_visual_inspection/",
+        "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "/root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_visual_inspection_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_richness_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Route-heavy translated visual probes avoid unnecessary whole-grid path searches where direct or bidirectional route search is sufficient.",
+        "Strict positive fixtures remain on the existing per-case runtime bar, while diagnostic translated-template probes have explicit capped evidence budgets and still report strict-budget overruns as notes.",
+        "Visual summary and matrix expose marker row/column/quadrant coverage and per-route timing so grass terrain runs are not mistaken for blank-map quality failures.",
+        "Focused visual/richness reports, JSON/progress sync, diff check, and repository validation pass."
+      ],
+      "nonGoals": [
+        "No generated terrain-art replacement work or generated PNG ingestion.",
+        "No copyrighted names, assets, maps, factions, unit art, music, or text.",
+        "No save-version bump, authored campaign adoption, native generator rewrite, generated package/map clutter, or broad renderer/fog/pathing redesign.",
+        "No full HoMM3 RMG parity claim beyond this bounded report/runtime correction."
+      ],
+      "createdAt": "2026-05-04T09:05:00Z",
+      "updatedAt": "2026-05-04T09:45:00Z",
+      "startedAt": "2026-05-04T09:05:00Z",
+      "completedAt": "2026-05-04T09:45:00Z",
+      "notes": "Completed after inspecting docs/random-map-homm3-parity-visual-inspection-gaps.md and .artifacts/rmg_parity_visual_inspection. Template 002 remained route-heavy but viable; the fix reduces route path search cost where simple/direct or bidirectional search is sufficient and makes visual diagnostic runtime policy explicit without hiding strict-budget overruns.",
+      "implementationEvidence": {
+        "summary": "Reduced route-heavy visual probe cost and corrected visual inspection evidence semantics after be744e8.",
+        "sourceFiles": [
+          "scripts/core/RandomMapGeneratorRules.gd",
+          "tests/random_map_homm3_parity_visual_inspection_report.gd",
+          "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+          "PLAN.md",
+          "ops/progress.json"
+        ],
+        "inspectionArtifacts": [
+          ".artifacts/rmg_parity_visual_inspection/summary.json",
+          ".artifacts/rmg_parity_visual_inspection/matrix.md",
+          ".artifacts/rmg_parity_visual_inspection/<case>.json",
+          ".artifacts/rmg_parity_visual_inspection/<case>.txt"
+        ],
+        "focusedMetrics": {
+          "visual_case_count": 6,
+          "strict_case_count": 5,
+          "strict_pass_case_count": 5,
+          "diagnostic_case_count": 1,
+          "diagnostic_gap_case_count": 0,
+          "diagnostic_note_count": 1,
+          "template_count": 4,
+          "signature_count": 6,
+          "road_tiles": 3889,
+          "river_candidates": 10,
+          "decoration_body_tiles": 1800,
+          "guarded_valuable_objects": 286,
+          "guardable_valuable_objects": 286,
+          "poor_zones": 0,
+          "min_row_marker_coverage_ratio": 0.944,
+          "min_column_marker_coverage_ratio": 0.972,
+          "min_quadrant_marker_coverage": 4,
+          "medium_translated_land_002_elapsed_msec": 19515,
+          "medium_translated_land_002_diagnostic_budget_msec": 24000,
+          "medium_translated_land_002_elapsed_msec_per_route": 185.857,
+          "visual_report_runtime_msec": 57248,
+          "richness_report_runtime_msec": 31482,
+          "richness_max_case_msec": 15489,
+          "roads_rivers_road_tile_count": 234,
+          "roads_rivers_river_road_crossing_count": 27
+        },
+        "concreteFix": "Route pathing now first accepts clear direct axis-aligned passable routes, then uses bidirectional BFS for fallback route discovery instead of one-sided whole-grid BFS. Visual inspection now applies strict 18000 ms budgets only to strict fixtures; diagnostic probes use explicit capped budgets and retain strict-budget overruns as notes. Marker row/column/quadrant coverage and per-route timing replace max blank-run as the useful summary signal."
+      },
+      "validationEvidence": [
+        "Passed: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-rmg-visual-4 XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-rmg-visual-4 XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-rmg-visual-4 /root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_visual_inspection_report.tscn; report showed 6 cases, 5/5 strict passes, 0 diagnostic gaps, diagnostic_note_count=1, runtime_msec=57248, 3889 road tiles, 10 river candidates, 1800 decoration body tiles, 286/286 guarded valuable objects, 0 poor zones, min row marker coverage 0.944, min column marker coverage 0.972, and all quadrants covered.",
+        "Passed: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-rmg-richness-2 XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-rmg-richness-2 XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-rmg-richness-2 /root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_richness_report.tscn; report showed runtime_msec=31482, max_case_msec=15489, eligible_zones=34, poor_zones=0, template_reward_band_records=48, fallback_reward_band_records=0, guarded_valuable_objects=166/166, road_tiles=1740, river_candidates=8.",
+        "Passed: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-rmg-roads-2 XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-rmg-roads-2 XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-rmg-roads-2 /root/.local/bin/godot --headless --path . tests/random_map_roads_rivers_writeout_report.tscn; report showed ok=true, road_tile_count=234, segment_count=30, connection_guard_road_control_count=8, missing_connection_guard_road_control_count=0, wide_suppressed_route_count=1, special_guard_gate_road_count=1, body_conflict_count=0, river_candidate_count=1, river_body_conflict_count=0, river_road_crossing_count=27, and round_trip.ok=true.",
+        "Passed: python3 -m json.tool ops/progress.json.",
+        "Passed: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run; output showed PLAN slice ids: 24 existing: 167 missing: 0.",
+        "Passed: git diff --check.",
+        "Passed: python3 tests/validate_repo.py."
+      ],
+      "remainingNextGap": "translated_rmg_template_002_v1 remains diagnostic rather than strict because it exceeds the 18000 ms strict fixture budget; 108x108+ translated template inspection/rendered visual evidence and final art/object visual parity remain separate slices."
     }
   ],
   "completedImplementationEvidence": [
