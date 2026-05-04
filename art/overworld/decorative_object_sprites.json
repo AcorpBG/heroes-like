@@ -1,0 +1,2089 @@
+{
+  "schema_id": "aurelion_decorative_object_sprite_mapping_v1",
+  "schema_version": 1,
+  "source": {
+    "task_id": 10184,
+    "slice_id": "decorative-blocker-sprite-asset-foundation-10184",
+    "built_in_imagegen_source": "/root/.codex/generated_images/019df4c1-d549-7342-aaeb-30fb64beab18/ig_003365d1687a1fbd0169f908bac08081918b25caed884722c3.png",
+    "workspace_source_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+    "prompt_summary": "4x4 atlas of original decorative/blocker overworld sprites on #ff00ff chroma-key background, split into 16 alpha PNG archetype sprites.",
+    "asset_policy": "original_generated_art_no_homm3_image_def_or_copyrighted_asset_import",
+    "chroma_key": "#ff00ff",
+    "runtime_canvas": "512x512 RGBA PNG"
+  },
+  "coverage": {
+    "authored_decoration_or_blocker_object_count": 200,
+    "mapped_object_count": 200,
+    "archetype_asset_count": 16
+  },
+  "archetype_asset_ids": [
+    "decor_grass_root_millstone",
+    "decor_forest_elder_root_overhang",
+    "decor_mire_reed_cypress_wall",
+    "decor_highland_slate_cliff_band",
+    "decor_coast_frost_ice_reef",
+    "decor_badland_redstone_wall",
+    "decor_ash_lava_slag_wall",
+    "decor_underway_brasspipe_cavern_wall",
+    "decor_frost_whitewood_trunk_shelf",
+    "decor_mire_blackwater_fen_shelf",
+    "decor_underway_pressure_rail_embankment",
+    "decor_badland_dry_gully_fan",
+    "decor_greenway_root_lip",
+    "decor_blue_ice_block",
+    "decor_smoke_black_ruin_wall",
+    "decor_compact_scenic_ground_dressing"
+  ],
+  "object_sprite_mappings": {
+    "object_ash_badland_clinker_dust": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Ash-Badland Clinker Dust', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Ash-Badland Clinker Dust",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands"
+      ]
+    },
+    "object_ash_badland_clinker_transition": {
+      "asset_id": "decor_ash_lava_slag_wall",
+      "fit": "Archetype sprite selected from object name 'Ash-Badland Clinker Transition', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Ash-Badland Clinker Transition",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands"
+      ]
+    },
+    "object_ash_badland_slag_ridge": {
+      "asset_id": "decor_ash_lava_slag_wall",
+      "fit": "Archetype sprite selected from object name 'Ash-Badland Slag Ridge', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Ash-Badland Slag Ridge",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands"
+      ]
+    },
+    "object_ash_furnace_scree_shelf": {
+      "asset_id": "decor_ash_lava_slag_wall",
+      "fit": "Archetype sprite selected from object name 'Furnace Scree Shelf', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Furnace Scree Shelf",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_ash_heatglass_haze_sheet": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Heatglass Haze Sheet', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Heatglass Haze Sheet",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_ash_lava_slag_wall": {
+      "asset_id": "decor_ash_lava_slag_wall",
+      "fit": "Archetype sprite selected from object name 'Lava-Slag Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Lava-Slag Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_ash_obsidian_cooling_wall": {
+      "asset_id": "decor_ash_lava_slag_wall",
+      "fit": "Archetype sprite selected from object name 'Obsidian Cooling Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Obsidian Cooling Wall",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_ash_pennant_threads": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Ash Pennant Threads', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Ash Pennant Threads",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_badland_dry_gully_fan": {
+      "asset_id": "decor_badland_dry_gully_fan",
+      "fit": "Archetype sprite selected from object name 'Dry Gully Fan', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Dry Gully Fan",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_badland_razorfin_wall": {
+      "asset_id": "decor_badland_redstone_wall",
+      "fit": "Archetype sprite selected from object name 'Razorfin Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Razorfin Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_badland_redstone_escarpment": {
+      "asset_id": "decor_badland_redstone_wall",
+      "fit": "Archetype sprite selected from object name 'Redstone Escarpment', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Redstone Escarpment",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_badland_shardfall_rubble_wall": {
+      "asset_id": "decor_badland_redstone_wall",
+      "fit": "Archetype sprite selected from object name 'Shardfall Rubble Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Shardfall Rubble Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_badland_survey_stake_shadow": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Survey Stake Shadow', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Survey Stake Shadow",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_basin_river_stone_bar": {
+      "asset_id": "decor_grass_root_millstone",
+      "fit": "Archetype sprite selected from object name 'Basin River Stone Bar', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Basin River Stone Bar",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_bell_buoy_flake_drift": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Bell Buoy Flake Drift', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Bell Buoy Flake Drift",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_black_sail_keel_spill": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Black-Sail Keel Spill', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Black-Sail Keel Spill",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_black_sail_ribs": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Black-Sail Ribs', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Black-Sail Ribs",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_coast_archipelago",
+        "biome_mire_fen"
+      ]
+    },
+    "object_blackwater_foam_ring": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Blackwater Foam Ring', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Blackwater Foam Ring",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_blackwater_pool_rim": {
+      "asset_id": "decor_mire_blackwater_fen_shelf",
+      "fit": "Archetype sprite selected from object name 'Blackwater Pool Rim', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Blackwater Pool Rim",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_blue_ice_block": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Blue Ice Block', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Blue Ice Block",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_blue_ice_scale_chips": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Blue Ice Scale Chips', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Blue Ice Scale Chips",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_bog_cypress_knee_wall": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Bog Cypress Knee Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Bog Cypress Knee Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_bramble_wall": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Bramble Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Bramble Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_deep_forest",
+        "biome_mire_fen"
+      ]
+    },
+    "object_brass_pipe_tangle": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Brass Pipe Tangle', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Brass Pipe Tangle",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_brass_rivet_scatter": {
+      "asset_id": "decor_underway_pressure_rail_embankment",
+      "fit": "Archetype sprite selected from object name 'Brass Rivet Scatter', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Brass Rivet Scatter",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_cairn_lichen_flecks": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Cairn Lichen Flecks', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Cairn Lichen Flecks",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_causeway_straw_lines": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Causeway Straw Lines', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Causeway Straw Lines",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_charbeam_char_flecks": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Charbeam Char Flecks', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Charbeam Char Flecks",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_charred_beam_barrier": {
+      "asset_id": "decor_ash_lava_slag_wall",
+      "fit": "Archetype sprite selected from object name 'Charred Beam Barrier', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Charred Beam Barrier",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_cinder_pin_scatter": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Cinder Pin Scatter', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Cinder Pin Scatter",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_cinder_spark_scatter": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Cinder Spark Scatter', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Cinder Spark Scatter",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands"
+      ]
+    },
+    "object_cliff_lip_slate_line": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Cliff-Lip Slate Line', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Cliff-Lip Slate Line",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_coast_black_sail_wreck_field": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Black-Sail Wreck Field', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Black-Sail Wreck Field",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_coast_drowned_quay_blockline": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Drowned Quay Blockline', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Drowned Quay Blockline",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_coast_frost_ice_reef_shelf": {
+      "asset_id": "decor_frost_whitewood_trunk_shelf",
+      "fit": "Archetype sprite selected from object name 'Coast-Frost Ice Reef Shelf', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Coast-Frost Ice Reef Shelf",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_coast_archipelago",
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_coast_mirror_salt_shore_shelf": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Mirror-Salt Shore Shelf', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Mirror-Salt Shore Shelf",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_coast_reef_ledge_overhang": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Reef Ledge Overhang', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Reef Ledge Overhang",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_coast_tidepool_glass_shadow": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Tidepool Glass Shadow', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Tidepool Glass Shadow",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_coast_underway_sinkhole_quay": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Coast-Underway Sinkhole Quay', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Coast-Underway Sinkhole Quay",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_coast_archipelago",
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_cooled_rope_lava_veins": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Cooled Rope-Lava Veins', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Cooled Rope-Lava Veins",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_cooling_lava_rope_wall": {
+      "asset_id": "decor_ash_lava_slag_wall",
+      "fit": "Archetype sprite selected from object name 'Cooling Lava Rope Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Cooling Lava Rope Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_cracked_clay_lacing": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Cracked Clay Lacing', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Cracked Clay Lacing",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_cracked_road_slab_shoulder": {
+      "asset_id": "decor_badland_redstone_wall",
+      "fit": "Archetype sprite selected from object name 'Cracked Road-Slab Shoulder', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Cracked Road-Slab Shoulder",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_drowned_post_splinters": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Drowned Post Splinters', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Drowned Post Splinters",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_drowned_quay_corner": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Drowned Quay Corner', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Drowned Quay Corner",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_drum_island_stone_ring": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Drum-Island Stone Ring', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Drum-Island Stone Ring",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_dry_gully_dust_line": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Dry Gully Dust Line', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Dry Gully Dust Line",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_dry_gully_edge": {
+      "asset_id": "decor_badland_dry_gully_fan",
+      "fit": "Archetype sprite selected from object name 'Dry Gully Edge', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Dry Gully Edge",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_elder_root_wall": {
+      "asset_id": "decor_forest_elder_root_overhang",
+      "fit": "Archetype sprite selected from object name 'Elder Root Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Elder Root Wall",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_ember_crack_lip": {
+      "asset_id": "decor_ash_lava_slag_wall",
+      "fit": "Archetype sprite selected from object name 'Ember Crack Lip', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Ember Crack Lip",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_emberglass_flecks": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Emberglass Flecks', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Emberglass Flecks",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_escarpment_tooth_line": {
+      "asset_id": "decor_badland_redstone_wall",
+      "fit": "Archetype sprite selected from object name 'Escarpment Tooth Line', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Escarpment Tooth Line",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_fallen_bough_gate": {
+      "asset_id": "decor_forest_elder_root_overhang",
+      "fit": "Archetype sprite selected from object name 'Fallen Bough Gate', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Fallen Bough Gate",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_fernshadow_tuft": {
+      "asset_id": "decor_greenway_root_lip",
+      "fit": "Archetype sprite selected from object name 'Fernshadow Tuft', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Fernshadow Tuft",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_floodplain_cut_bank": {
+      "asset_id": "decor_grass_root_millstone",
+      "fit": "Archetype sprite selected from object name 'Floodplain Cut Bank', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Floodplain Cut Bank",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_floodplain_levy_lip": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Floodplain Levee Lip', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Floodplain Levee Lip",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_grasslands",
+        "biome_mire_fen"
+      ]
+    },
+    "object_floodplain_stone_specks": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Floodplain Stone Specks', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Floodplain Stone Specks",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_foamglass_pebbles": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Foamglass Pebbles', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Foamglass Pebbles",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_forest_canopy_shadow_fall": {
+      "asset_id": "decor_greenway_root_lip",
+      "fit": "Archetype sprite selected from object name 'Canopy Shadow Fall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Canopy Shadow Fall",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_forest_elder_root_overhang": {
+      "asset_id": "decor_forest_elder_root_overhang",
+      "fit": "Archetype sprite selected from object name 'Elder Root Overhang', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Elder Root Overhang",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_forest_great_bough_deadfall": {
+      "asset_id": "decor_forest_elder_root_overhang",
+      "fit": "Archetype sprite selected from object name 'Great Bough Deadfall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Great Bough Deadfall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_forest_highland_root_shelf": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Forest-Highland Root Shelf', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Forest-Highland Root Shelf",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_deep_forest",
+        "biome_highland_ridge"
+      ]
+    },
+    "object_forest_mire_root_reed_mat": {
+      "asset_id": "decor_greenway_root_lip",
+      "fit": "Archetype sprite selected from object name 'Forest-Mire Root Reed Mat', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Forest-Mire Root Reed Mat",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_deep_forest",
+        "biome_mire_fen"
+      ]
+    },
+    "object_forest_pilgrim_moss_stone_line": {
+      "asset_id": "decor_forest_elder_root_overhang",
+      "fit": "Archetype sprite selected from object name 'Pilgrim Moss Stone Line', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Pilgrim Moss Stone Line",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_forest_ridge_moss_line": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Forest-Ridge Moss Line', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Forest-Ridge Moss Line",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_forest_ridge_root_ledge": {
+      "asset_id": "decor_frost_whitewood_trunk_shelf",
+      "fit": "Archetype sprite selected from object name 'Forest-Ridge Root Ledge', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Forest-Ridge Root Ledge",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_frost_coast_salt_rime": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Frost-Coast Salt Rime', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Frost-Coast Salt Rime",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_frost_frozen_pool_lip": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Frozen Pool Lip', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Frozen Pool Lip",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_frost_highland_rime_cliff_band": {
+      "asset_id": "decor_frost_whitewood_trunk_shelf",
+      "fit": "Archetype sprite selected from object name 'Frost-Highland Rime Cliff Band', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Frost-Highland Rime Cliff Band",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_highland_ridge"
+      ]
+    },
+    "object_frost_icefall_anchor": {
+      "asset_id": "decor_frost_whitewood_trunk_shelf",
+      "fit": "Archetype sprite selected from object name 'Frost March Icefall Anchor', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Frost March Icefall Anchor",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_frost_snowblind_drift_shadow": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Snowblind Drift Shadow', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Snowblind Drift Shadow",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_frost_whitewood_trunk_shelf": {
+      "asset_id": "decor_frost_whitewood_trunk_shelf",
+      "fit": "Archetype sprite selected from object name 'Whitewood Trunk Shelf', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Whitewood Trunk Shelf",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_frozen_pool_shelf": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Frozen Pool Shelf', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Frozen Pool Shelf",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_furnace_scree_pile": {
+      "asset_id": "decor_ash_lava_slag_wall",
+      "fit": "Archetype sprite selected from object name 'Furnace Scree Pile', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Furnace Scree Pile",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_furnace_soot_tufts": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Furnace Soot Tufts', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Furnace Soot Tufts",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_glowcap_pinpricks": {
+      "asset_id": "decor_underway_pressure_rail_embankment",
+      "fit": "Archetype sprite selected from object name 'Glowcap Pinpricks', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Glowcap Pinpricks",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_glowcap_speckle": {
+      "asset_id": "decor_underway_pressure_rail_embankment",
+      "fit": "Archetype sprite selected from object name 'Glowcap Speckle', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Glowcap Speckle",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_subterranean_underways",
+        "biome_deep_forest"
+      ]
+    },
+    "object_grafted_trunk_pair": {
+      "asset_id": "decor_forest_elder_root_overhang",
+      "fit": "Archetype sprite selected from object name 'Grafted Trunk Pair', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Grafted Trunk Pair",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_grass_lockwall_flood_shelf": {
+      "asset_id": "decor_grass_root_millstone",
+      "fit": "Archetype sprite selected from object name 'Lockwall Flood Shelf', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Lockwall Flood Shelf",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_grass_millstone_breach_field": {
+      "asset_id": "decor_grass_root_millstone",
+      "fit": "Archetype sprite selected from object name 'Millstone Breach Field', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Millstone Breach Field",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_grass_mire_cutwater_lip": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Grass-Mire Cutwater Lip', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Grass-Mire Cutwater Lip",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_grasslands",
+        "biome_mire_fen"
+      ]
+    },
+    "object_grass_mire_cutwater_reed_shelf": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Grass-Mire Cutwater Reed Shelf', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Grass-Mire Cutwater Reed Shelf",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_grasslands",
+        "biome_mire_fen"
+      ]
+    },
+    "object_grass_old_weir_shadow": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Old Weir Shadow', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Old Weir Shadow",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_grass_ridge_scree_apron": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Grass-Ridge Scree Apron', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Grass-Ridge Scree Apron",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_grasslands",
+        "biome_highland_ridge"
+      ]
+    },
+    "object_grass_tollroad_embankment": {
+      "asset_id": "decor_underway_pressure_rail_embankment",
+      "fit": "Archetype sprite selected from object name 'Tollroad Embankment', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Tollroad Embankment",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_green_shrine_petals": {
+      "asset_id": "decor_greenway_root_lip",
+      "fit": "Archetype sprite selected from object name 'Green Shrine Petals', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Green Shrine Petals",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_greenway_root_lip": {
+      "asset_id": "decor_greenway_root_lip",
+      "fit": "Archetype sprite selected from object name 'Greenway Root Lip', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Greenway Root Lip",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_heatglass_shard_block": {
+      "asset_id": "decor_ash_lava_slag_wall",
+      "fit": "Archetype sprite selected from object name 'Heatglass Shard Block', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Heatglass Shard Block",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_highland_badland_ravine_lip": {
+      "asset_id": "decor_badland_redstone_wall",
+      "fit": "Archetype sprite selected from object name 'Highland-Badland Ravine Lip', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Highland-Badland Ravine Lip",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_highland_ridge",
+        "biome_rough_badlands"
+      ]
+    },
+    "object_highland_cliff_band_weathercut": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Weathercut Cliff Band', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Weathercut Cliff Band",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_highland_ridge_teeth_line": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Ridge Teeth Line', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Ridge Teeth Line",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_highland_scree_bowl": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Highland Scree Bowl', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Highland Scree Bowl",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_highland_storm_cairn_shadow": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Storm Cairn Shadow', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Storm Cairn Shadow",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_highland_switchback_slate_overhang": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Switchback Slate Overhang', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Switchback Slate Overhang",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_hollow_bark_chips": {
+      "asset_id": "decor_greenway_root_lip",
+      "fit": "Archetype sprite selected from object name 'Hollow Bark Chips', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Hollow Bark Chips",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_hollow_stump_mass": {
+      "asset_id": "decor_forest_elder_root_overhang",
+      "fit": "Archetype sprite selected from object name 'Hollow Stump Mass', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Hollow Stump Mass",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_icefall_tooth_block": {
+      "asset_id": "decor_frost_whitewood_trunk_shelf",
+      "fit": "Archetype sprite selected from object name 'Icefall Tooth Block', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Icefall Tooth Block",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_icefall_tooth_line": {
+      "asset_id": "decor_frost_whitewood_trunk_shelf",
+      "fit": "Archetype sprite selected from object name 'Icefall Tooth Line', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Icefall Tooth Line",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_highland_ridge"
+      ]
+    },
+    "object_living_road_root_threads": {
+      "asset_id": "decor_greenway_root_lip",
+      "fit": "Archetype sprite selected from object name 'Living Road Root Threads', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Living Road Root Threads",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_living_root_lip": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Living Root Lip', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Living Root Lip",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_deep_forest",
+        "biome_mire_fen"
+      ]
+    },
+    "object_lockroad_shoulder_rail": {
+      "asset_id": "decor_underway_pressure_rail_embankment",
+      "fit": "Archetype sprite selected from object name 'Lockroad Shoulder Rail', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Lockroad Shoulder Rail",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_lockroad_wheel_ruts": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Lockroad Wheel Ruts', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Lockroad Wheel Ruts",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_low_fence_splinters": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Low Fence Splinters', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Low Fence Splinters",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_meadow_scrip_grass": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Meadow Scrip Grass', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Meadow Scrip Grass",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_millrace_reed_sprigs": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Millrace Reed Sprigs', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Millrace Reed Sprigs",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_millstone_ruin_block": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Millstone Ruin Block', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Millstone Ruin Block",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_mine_spoil_wall": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Mine Spoil Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Mine Spoil Wall",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_mire_blackwater_fen_shelf": {
+      "asset_id": "decor_mire_blackwater_fen_shelf",
+      "fit": "Archetype sprite selected from object name 'Blackwater Fen Shelf', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Blackwater Fen Shelf",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_mire_coast_reed_bed_shelf": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Mire-Coast Reed Bed Shelf', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Mire-Coast Reed Bed Shelf",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_mire_coast_reed_reef_edge": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Mire-Coast Reed Reef Edge', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Mire-Coast Reed Reef Edge",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_mire_drowned_cypress_knee_wall": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Drowned Cypress Knee Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Drowned Cypress Knee Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_mire_drum_island_reed_wall": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Drum-Island Reed Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Drum-Island Reed Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_mire_rotted_causeway_shadow": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Rotted Causeway Shadow', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Rotted Causeway Shadow",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_mirror_shell_pinches": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Mirror Shell Pinches', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Mirror Shell Pinches",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_mirror_shoal_reef_line": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Mirror Shoal Reef Line', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Mirror Shoal Reef Line",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_moss_stitch_stones": {
+      "asset_id": "decor_greenway_root_lip",
+      "fit": "Archetype sprite selected from object name 'Moss-Stitch Stones', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Moss-Stitch Stones",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_deep_forest",
+        "biome_highland_ridge"
+      ]
+    },
+    "object_mudglass_dew_scatter": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Mudglass Dew Scatter', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Mudglass Dew Scatter",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_mudglass_splinters": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Mudglass Splinters', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Mudglass Splinters",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_mire_fen",
+        "biome_rough_badlands"
+      ]
+    },
+    "object_obituary_vault_rubble": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Obituary-Vault Rubble', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Obituary-Vault Rubble",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_orchard_leaf_litter": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Orchard Leaf Litter', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Orchard Leaf Litter",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_orchard_root_wall": {
+      "asset_id": "decor_grass_root_millstone",
+      "fit": "Archetype sprite selected from object name 'Orchard Root Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Orchard Root Wall",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_orchard_windfall": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Orchard Windfall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Orchard Windfall",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest"
+      ]
+    },
+    "object_peat_cut_crumbs": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Peat Cut Crumbs', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Peat Cut Crumbs",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_peat_cut_wall": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Peat Cut Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Peat Cut Wall",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_pilgrim_moss_flecks": {
+      "asset_id": "decor_greenway_root_lip",
+      "fit": "Archetype sprite selected from object name 'Pilgrim Moss Flecks', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Pilgrim Moss Flecks",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_pressure_rail_sleeper_edge": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Pressure-Rail Sleeper Edge', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Pressure-Rail Sleeper Edge",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_pressure_rail_sleepers": {
+      "asset_id": "decor_underway_pressure_rail_embankment",
+      "fit": "Archetype sprite selected from object name 'Pressure Rail Sleepers', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Pressure Rail Sleepers",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_subterranean_underways",
+        "biome_rough_badlands"
+      ]
+    },
+    "object_prism_road_chips": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Prism Road Chips', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Prism Road Chips",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_highland_ridge",
+        "biome_grasslands",
+        "biome_rough_badlands"
+      ]
+    },
+    "object_pumpstone_moss": {
+      "asset_id": "decor_underway_pressure_rail_embankment",
+      "fit": "Archetype sprite selected from object name 'Pumpstone Moss', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Pumpstone Moss",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_quarry_block_spill": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Quarry Block Spill', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Quarry Block Spill",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_highland_ridge",
+        "biome_rough_badlands",
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_quarry_chalk_rub": {
+      "asset_id": "decor_underway_pressure_rail_embankment",
+      "fit": "Archetype sprite selected from object name 'Quarry Chalk Rub', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Quarry Chalk Rub",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_quarry_chunk_spill": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Quarry Chunk Spill', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Quarry Chunk Spill",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_quay_sand_seams": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Quay Sand Seams', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Quay Sand Seams",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_rail_embankment_lip": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Rail Embankment Lip', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Rail Embankment Lip",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_railbed_dust_threads": {
+      "asset_id": "decor_underway_pressure_rail_embankment",
+      "fit": "Archetype sprite selected from object name 'Railbed Dust Threads', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Railbed Dust Threads",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_redstone_chip_scatter": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Redstone Chip Scatter', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Redstone Chip Scatter",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_redstone_fin_wall": {
+      "asset_id": "decor_badland_redstone_wall",
+      "fit": "Archetype sprite selected from object name 'Redstone Fin Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Redstone Fin Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_reed_fence_knot": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Reed Fence Knot', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Reed Fence Knot",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_reed_glimmer_mat": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Reed Glimmer Mat', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Reed Glimmer Mat",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_reed_island_choke": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Reed Island Choke', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Reed Island Choke",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_reed_lace_wisps": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Reed Lace Wisps', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Reed Lace Wisps",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_reef_line": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Reef Line', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Reef Line",
+      "source_family": "blocker",
+      "source_passability_class": "",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_reef_shelf_shoulder": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Reef Shelf Shoulder', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Reef Shelf Shoulder",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_ridge_tooth_column": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Ridge Tooth Column', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Ridge Tooth Column",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_rime_fence_shoulder": {
+      "asset_id": "decor_frost_whitewood_trunk_shelf",
+      "fit": "Archetype sprite selected from object name 'Rime Fence Shoulder', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Rime Fence Shoulder",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_rime_grass_tufts": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Rime Grass Tufts', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Rime Grass Tufts",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_grasslands"
+      ]
+    },
+    "object_rime_needle_scrub": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Rime Needle Scrub', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Rime Needle Scrub",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_river_pebble_fan": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'River Pebble Fan', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "River Pebble Fan",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_grasslands",
+        "biome_coast_archipelago",
+        "biome_mire_fen"
+      ]
+    },
+    "object_roadside_lantern_gravel": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Roadside Lantern Gravel', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Roadside Lantern Gravel",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_grasslands",
+        "biome_highland_ridge",
+        "biome_rough_badlands"
+      ]
+    },
+    "object_ropepost_fiber_scraps": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Ropepost Fiber Scraps', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Ropepost Fiber Scraps",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_rotted_causeway_rib_edge": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Rotted Causeway Rib Edge', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Rotted Causeway Rib Edge",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_saltgrass_needle_line": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Saltgrass Needle Line', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Saltgrass Needle Line",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_scree_boulder_fan": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Scree Boulder Fan', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Scree Boulder Fan",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_scree_button_scatter": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Scree Button Scatter', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Scree Button Scatter",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_highland_ridge",
+        "biome_rough_badlands"
+      ]
+    },
+    "object_seed_husk_litter": {
+      "asset_id": "decor_greenway_root_lip",
+      "fit": "Archetype sprite selected from object name 'Seed Husk Litter', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Seed Husk Litter",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_seed_husk_root_knot": {
+      "asset_id": "decor_forest_elder_root_overhang",
+      "fit": "Archetype sprite selected from object name 'Seed-Husk Root Knot', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Seed-Husk Root Knot",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_shardfall_rubble_wedge": {
+      "asset_id": "decor_badland_redstone_wall",
+      "fit": "Archetype sprite selected from object name 'Shardfall Rubble Wedge', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Shardfall Rubble Wedge",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_shell_drift": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Shell Drift', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Shell Drift",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_coast_archipelago",
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_shore_reed_shell_mix": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Shore Reed-Shell Mix', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Shore Reed-Shell Mix",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_slag_berm_crown": {
+      "asset_id": "decor_ash_lava_slag_wall",
+      "fit": "Archetype sprite selected from object name 'Slag Berm Crown', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Slag Berm Crown",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_slag_berm_low_wall": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Slag Berm Low Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Slag Berm Low Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways",
+        "biome_rough_badlands"
+      ]
+    },
+    "object_slate_ribbon_trail": {
+      "asset_id": "decor_underway_pressure_rail_embankment",
+      "fit": "Archetype sprite selected from object name 'Slate Ribbon Trail', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Slate Ribbon Trail",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_slate_shelf_drop": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Slate Shelf Drop', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Slate Shelf Drop",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_slate_switchback_teeth": {
+      "asset_id": "decor_frost_whitewood_trunk_shelf",
+      "fit": "Archetype sprite selected from object name 'Slate Switchback Teeth', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Slate Switchback Teeth",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_highland_ridge",
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_sled_runner_scrape": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Sled Runner Scrape', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Sled Runner Scrape",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_sled_wreck_ribs": {
+      "asset_id": "decor_frost_whitewood_trunk_shelf",
+      "fit": "Archetype sprite selected from object name 'Sled Wreck Ribs', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Sled Wreck Ribs",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_smoke_black_ruin_wall": {
+      "asset_id": "decor_ash_lava_slag_wall",
+      "fit": "Archetype sprite selected from object name 'Smoke-Black Ruin Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Smoke-Black Ruin Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_snow_buried_stone_bar": {
+      "asset_id": "decor_frost_whitewood_trunk_shelf",
+      "fit": "Archetype sprite selected from object name 'Snow-Buried Stone Bar', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Snow-Buried Stone Bar",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_snowpack_stone_crowns": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Snowpack Stone Crowns', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Snowpack Stone Crowns",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_soot_banner_tatters": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Soot Banner Tatters', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Soot Banner Tatters",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_storm_cairn_wall": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Storm Cairn Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Storm Cairn Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_stormgrass_knees": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Stormgrass Knees', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Stormgrass Knees",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_sunbleached_axle_flakes": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Sunbleached Axle Flakes', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Sunbleached Axle Flakes",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_sunken_axle_block": {
+      "asset_id": "decor_badland_redstone_wall",
+      "fit": "Archetype sprite selected from object name 'Sunken Axle Block', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Sunken Axle Block",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_sunken_cart_ribs": {
+      "asset_id": "decor_mire_reed_cypress_wall",
+      "fit": "Archetype sprite selected from object name 'Sunken Cart Ribs', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Sunken Cart Ribs",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_mire_fen"
+      ]
+    },
+    "object_support_strut_collapse": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Support Strut Collapse', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Support Strut Collapse",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_survey_stake_shavings": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Survey Stake Shavings', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Survey Stake Shavings",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_switchback_dust_tufts": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Switchback Dust Tufts', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Switchback Dust Tufts",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_switchback_rockfall": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Switchback Rockfall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Switchback Rockfall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_talus_pocket_mass": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Talus Pocket Mass', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Talus Pocket Mass",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_thorn_screen_bend": {
+      "asset_id": "decor_highland_slate_cliff_band",
+      "fit": "Archetype sprite selected from object name 'Thorn Screen Bend', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Thorn Screen Bend",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_deep_forest"
+      ]
+    },
+    "object_thornbrush_choke": {
+      "asset_id": "decor_badland_redstone_wall",
+      "fit": "Archetype sprite selected from object name 'Thornbrush Choke', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Thornbrush Choke",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_thornseed_burrs": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Thornseed Burrs', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Thornseed Burrs",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    "object_tidepool_stone_barrier": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Tidepool Stone Barrier', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Tidepool Stone Barrier",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_tidewrack_ribbon": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Tidewrack Ribbon', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Tidewrack Ribbon",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    "object_undergate_pipe_nest": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Undergate Pipe Nest', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Undergate Pipe Nest",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_subterranean_underways",
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_undergate_stone_plug": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Undergate Stone Plug', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Undergate Stone Plug",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_underway_ash_rail_slag_bank": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Underway-Ash Rail Slag Bank', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Underway-Ash Rail Slag Bank",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_subterranean_underways",
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_underway_ash_slag_pipe_choke": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Underway-Ash Slag Pipe Choke', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Underway-Ash Slag Pipe Choke",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_subterranean_underways",
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_underway_ash_soot_trail": {
+      "asset_id": "decor_smoke_black_ruin_wall",
+      "fit": "Archetype sprite selected from object name 'Underway Ash-Soot Trail', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Underway Ash-Soot Trail",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_subterranean_underways",
+        "biome_ash_lava_wastes"
+      ]
+    },
+    "object_underway_brasspipe_cavern_wall": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Brasspipe Cavern Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Brasspipe Cavern Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_underway_glowfungus_ceiling_shadow": {
+      "asset_id": "decor_underway_pressure_rail_embankment",
+      "fit": "Archetype sprite selected from object name 'Glowfungus Ceiling Shadow', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Glowfungus Ceiling Shadow",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_underway_pressure_rail_embankment": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Pressure-Rail Embankment', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Pressure-Rail Embankment",
+      "source_family": "blocker",
+      "source_passability_class": "edge_blocker",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_underway_quarry_spoil_curtain": {
+      "asset_id": "decor_underway_brasspipe_cavern_wall",
+      "fit": "Archetype sprite selected from object name 'Quarry Spoil Curtain', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Quarry Spoil Curtain",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    "object_waterlogged_arch_rubble": {
+      "asset_id": "decor_badland_redstone_wall",
+      "fit": "Archetype sprite selected from object name 'Waterlogged Arch Rubble', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Waterlogged Arch Rubble",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_grasslands"
+      ]
+    },
+    "object_whitewood_needle_fall": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Whitewood Needle Fall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Whitewood Needle Fall",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_whitewood_trunk_wall": {
+      "asset_id": "decor_frost_whitewood_trunk_shelf",
+      "fit": "Archetype sprite selected from object name 'Whitewood Trunk Wall', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Whitewood Trunk Wall",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_wind_shale_chips": {
+      "asset_id": "decor_compact_scenic_ground_dressing",
+      "fit": "Archetype sprite selected from object name 'Wind Shale Chips', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Wind Shale Chips",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_highland_ridge"
+      ]
+    },
+    "object_windbreak_bark_shavings": {
+      "asset_id": "decor_blue_ice_block",
+      "fit": "Archetype sprite selected from object name 'Windbreak Bark Shavings', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Windbreak Bark Shavings",
+      "source_family": "decoration",
+      "source_passability_class": "passable_scenic",
+      "source_biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    "object_wreck_rib_cage": {
+      "asset_id": "decor_coast_frost_ice_reef",
+      "fit": "Archetype sprite selected from object name 'Wreck Rib Cage', biome tags, footprint/passability, and decorative/blocker family.",
+      "source_object_name": "Wreck Rib Cage",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
+      "source_biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    }
+  }
+}

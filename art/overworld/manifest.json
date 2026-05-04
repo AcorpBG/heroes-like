@@ -35,7 +35,19 @@
       "frame_name_range": "00_00.png-00_78.png",
       "source_basis": "generated_grastl_replacement_trial_20260503"
     },
-    "authored_tile_sets": ["grass", "rough", "dirt", "rock", "sand", "snow", "swamp", "lava", "subterranean", "water", "road_dirt"],
+    "authored_tile_sets": [
+      "grass",
+      "rough",
+      "dirt",
+      "rock",
+      "sand",
+      "snow",
+      "swamp",
+      "lava",
+      "subterranean",
+      "water",
+      "road_dirt"
+    ],
     "local_reference_only": true,
     "prototype_asset_policy": "not_shippable_or_redistributable",
     "sampled_texture_status": "deprecated_not_primary"
@@ -126,6 +138,118 @@
     "stone_quarry": {
       "path": "res://art/overworld/runtime/objects/landmarks/stone_quarry.png",
       "source_trimmed": "res://art/overworld/source/trimmed/landmarks/stone_quarry-trimmed.png"
+    },
+    "decor_grass_root_millstone": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_grass_root_millstone.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_grass_root_millstone-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_forest_elder_root_overhang": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_forest_elder_root_overhang.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_forest_elder_root_overhang-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_mire_reed_cypress_wall": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_mire_reed_cypress_wall.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_mire_reed_cypress_wall-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_highland_slate_cliff_band": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_highland_slate_cliff_band.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_highland_slate_cliff_band-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_coast_frost_ice_reef": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_coast_frost_ice_reef.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_coast_frost_ice_reef-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_badland_redstone_wall": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_badland_redstone_wall.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_badland_redstone_wall-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_ash_lava_slag_wall": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_ash_lava_slag_wall.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_ash_lava_slag_wall-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_underway_brasspipe_cavern_wall": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_underway_brasspipe_cavern_wall.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_underway_brasspipe_cavern_wall-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_frost_whitewood_trunk_shelf": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_frost_whitewood_trunk_shelf.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_frost_whitewood_trunk_shelf-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_mire_blackwater_fen_shelf": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_mire_blackwater_fen_shelf.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_mire_blackwater_fen_shelf-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_underway_pressure_rail_embankment": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_underway_pressure_rail_embankment.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_underway_pressure_rail_embankment-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_badland_dry_gully_fan": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_badland_dry_gully_fan.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_badland_dry_gully_fan-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_greenway_root_lip": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_greenway_root_lip.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_greenway_root_lip-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_blue_ice_block": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_blue_ice_block.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_blue_ice_block-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_smoke_black_ruin_wall": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_smoke_black_ruin_wall.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_smoke_black_ruin_wall-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
+    },
+    "decor_compact_scenic_ground_dressing": {
+      "path": "res://art/overworld/runtime/objects/decorations/decor_compact_scenic_ground_dressing.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/decorations/decor_compact_scenic_ground_dressing-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/decorations/decorative_blocker_atlas_20260504.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
     }
   },
   "resource_site_sprites": {
@@ -209,5 +333,7 @@
   "encounter_default_sprite": {
     "asset_id": "hostile_camp",
     "fit": "First approved generated hostile camp placeholder for unresolved overworld encounters until encounter-family-specific sprites exist."
-  }
+  },
+  "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
+  "decorative_object_sprite_mapping_policy": "all_authored_decoration_and_blocker_objects_map_to_original_generated_archetype_sprites_by_object_id_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects"
 }
