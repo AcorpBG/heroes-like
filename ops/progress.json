@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-zone-richness-bands-10184",
-  "currentSliceTitle": "Random Map HoMM3 Parity Zone Richness Bands",
+  "currentSliceId": "random-map-homm3-parity-visual-inspection-evidence-10184",
+  "currentSliceTitle": "Random Map HoMM3 Parity Visual Inspection Evidence",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed RMG zone richness/reward-band follow-up after 93e2f2b. Bounded richness report now gates per-zone poor coverage and reward-band fallback across multiple templates/seeds.",
+  "currentSliceNotes": "Completed bounded multi-map ASCII/JSON visual inspection evidence and a route endpoint viability correction. Remaining gaps: template 002 runtime budget, large-template/rendered visual inspection, native parity, and final art/object visual parity.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T06:36:00Z",
+  "updatedAt": "2026-05-04T08:08:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7778,6 +7778,104 @@
       ],
       "completedAt": "2026-05-04T06:36:00Z",
       "remainingNextGap": "visual inspection across more seeds/templates and targeted correction for remaining poor translated templates outside the bounded positive evidence set"
+    },
+    {
+      "id": "random-map-homm3-parity-visual-inspection-evidence-10184",
+      "title": "Random Map HoMM3 Parity Visual Inspection Evidence",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "2026-05-04 owner directive to continue RMG parity after 2ba8fa5"
+      ],
+      "purpose": "Add bounded multi-map visual/ASCII/JSON inspection evidence across more seeds, templates, and sizes so RMG parity work does not hide remaining quality gaps behind aggregate richness counts.",
+      "implementationTargets": [
+        "tests/random_map_homm3_parity_visual_inspection_report.gd",
+        "tests/random_map_homm3_parity_visual_inspection_report.tscn",
+        ".artifacts/rmg_parity_visual_inspection/",
+        "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "/root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_visual_inspection_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_richness_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "The report samples multiple deterministic seeds/templates/sizes with bounded runtime and writes human-inspectable ASCII/JSON artifacts under ignored .artifacts/.",
+        "Strict positive cases remain green while diagnostic translated-template probes record remaining quality gaps without pretending full parity.",
+        "The tracked gap note records that ASCII/JSON inspection is evidence only and does not complete rendered visual parity, large-template repair, native RMG parity, or asset ingestion.",
+        "Focused RMG reports, JSON/progress sync, diff check, and repository validation pass."
+      ],
+      "nonGoals": [
+        "No generated terrain-art replacement work or generated PNG ingestion.",
+        "No copyrighted names, assets, maps, factions, unit art, music, or text.",
+        "No save-version bump, authored campaign adoption, native generator rewrite, generated package/map clutter, or broad renderer/fog/pathing redesign.",
+        "No full HoMM3 RMG parity claim beyond this inspection evidence and any explicitly fixed concrete gap."
+      ],
+      "createdAt": "2026-05-04T07:05:00Z",
+      "updatedAt": "2026-05-04T08:08:00Z",
+      "startedAt": "2026-05-04T07:05:00Z",
+      "notes": "Completed bounded RMG visual inspection evidence follow-up after 2ba8fa5. Added deterministic ASCII/JSON inspection artifacts and fixed a concrete translated-template route viability gap by repairing route endpoints only when the primary visit/approach endpoint path fails. This is not a full parity claim.",
+      "completedAt": "2026-05-04T07:58:00Z",
+      "implementationEvidence": {
+        "summary": "Added a bounded visual inspection report that samples six deterministic generated maps across 36x36 and 72x72, four templates, and multiple seeds; writes summary JSON, matrix Markdown, and per-case ASCII previews under ignored .artifacts/rmg_parity_visual_inspection/; records diagnostic translated-template gaps without treating them as strict parity passes.",
+        "sourceFiles": [
+          "scripts/core/RandomMapGeneratorRules.gd",
+          "tests/random_map_homm3_parity_visual_inspection_report.gd",
+          "tests/random_map_homm3_parity_visual_inspection_report.tscn",
+          "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+          "PLAN.md",
+          "ops/progress.json"
+        ],
+        "inspectionArtifacts": [
+          ".artifacts/rmg_parity_visual_inspection/summary.json",
+          ".artifacts/rmg_parity_visual_inspection/matrix.md",
+          ".artifacts/rmg_parity_visual_inspection/<case>.json",
+          ".artifacts/rmg_parity_visual_inspection/<case>.txt"
+        ],
+        "focusedMetrics": {
+          "visual_case_count": 6,
+          "strict_case_count": 5,
+          "strict_pass_case_count": 5,
+          "diagnostic_case_count": 1,
+          "diagnostic_gap_case_count": 1,
+          "template_count": 4,
+          "signature_count": 6,
+          "road_tiles": 3889,
+          "river_candidates": 10,
+          "decoration_body_tiles": 1850,
+          "guarded_valuable_objects": 286,
+          "guardable_valuable_objects": 286,
+          "poor_zones": 0,
+          "visual_report_runtime_msec": 60040,
+          "richness_report_runtime_msec": 32048,
+          "richness_eligible_zones": 34,
+          "richness_poor_zones": 0,
+          "richness_template_reward_band_records": 48
+        },
+        "concreteFix": "Route building now preserves primary visit/approach endpoints when they already path, but tries deterministic alternate passable visit/approach/body-adjacent endpoints when the primary path fails. This fixed translated_rmg_template_001_v1 land start/route viability while preserving existing richness report coverage."
+      },
+      "validationEvidence": [
+        "Passed 2026-05-04T07:50:00Z: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-rmg-visual XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-rmg-visual XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-rmg-visual /root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_visual_inspection_report.tscn; report showed 6 cases, 5/5 strict passes, 1 diagnostic template-002 runtime gap, 3889 road tiles, 10 river candidates, 1850 decoration body tiles, 286/286 guarded valuable objects, 0 poor zones, and artifact_dir=res://.artifacts/rmg_parity_visual_inspection.",
+        "Passed 2026-05-04T07:55:00Z: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-rmg-richness XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-rmg-richness XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-rmg-richness /root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_richness_report.tscn; report showed runtime_msec=32048, eligible_zones=34, poor_zones=0, template_reward_band_records=48, fallback_reward_band_records=0, guarded_valuable_objects=166/166, road_tiles=1740, river_candidates=8.",
+        "Passed 2026-05-04T08:03:00Z: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-rmg-roads XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-rmg-roads XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-rmg-roads /root/.local/bin/godot --headless --path . tests/random_map_roads_rivers_writeout_report.tscn; report showed ok=true, road_tile_count=234, segment_count=30, connection_guard_road_control_count=8, missing_connection_guard_road_control_count=0, wide_suppressed_route_count=1, special_guard_gate_road_count=1, body_conflict_count=0, river_candidate_count=1, river_body_conflict_count=0, land_river_with_crossing_count=1, and round_trip.ok=true.",
+        "Passed 2026-05-04T08:05:00Z: python3 -m json.tool ops/progress.json; progress JSON parsed successfully.",
+        "Passed 2026-05-04T08:05:00Z: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run; output showed PLAN slice ids: 23 existing: 166 missing: 0.",
+        "Passed 2026-05-04T08:05:00Z: git diff --check.",
+        "Passed 2026-05-04T08:05:00Z: python3 tests/validate_repo.py; validation passed."
+      ],
+      "remainingNextGap": "translated_rmg_template_002_v1 still exceeds the cheap visual report per-case budget; 108x108+ translated template inspection/rendered visual evidence remains a separate large-template slice; ASCII/JSON inspection is not final rendered visual parity."
     }
   ],
   "completedImplementationEvidence": [

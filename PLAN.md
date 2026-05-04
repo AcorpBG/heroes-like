@@ -683,6 +683,36 @@ nonGoals:
 - No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.
 - No claim of full HoMM3 RMG parity beyond this measurable zone richness and reward-band improvement.
 
+Selected owner-directed follow-up slice:
+
+id: `random-map-homm3-parity-visual-inspection-evidence-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add bounded multi-map visual/ASCII/JSON inspection evidence across more seeds, templates, and sizes so RMG parity work does not hide remaining quality gaps behind aggregate richness counts.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-homm3-parity-visual-inspection-gaps.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- 2026-05-04 owner directive to continue RMG parity after `2ba8fa5`
+implementationTargets:
+- `tests/random_map_homm3_parity_visual_inspection_report.gd`
+- `tests/random_map_homm3_parity_visual_inspection_report.tscn`
+- `.artifacts/rmg_parity_visual_inspection/`
+- `docs/random-map-homm3-parity-visual-inspection-gaps.md`
+- `ops/progress.json`
+completionCriteria:
+- The report samples multiple deterministic seeds/templates/sizes with bounded runtime and writes human-inspectable ASCII/JSON artifacts under ignored `.artifacts/`.
+- Strict positive cases remain green while diagnostic translated-template probes record remaining quality gaps without pretending full parity.
+- The tracked gap note records that ASCII/JSON inspection is evidence only and does not complete rendered visual parity, large-template repair, native RMG parity, or asset ingestion.
+- Focused RMG reports, JSON/progress sync, diff check, and repository validation pass.
+nonGoals:
+- No generated terrain-art replacement work or generated PNG ingestion.
+- No copyrighted names, assets, maps, factions, unit art, music, or text.
+- No save-version bump, authored campaign adoption, native generator rewrite, generated package/map clutter, or broad renderer/fog/pathing redesign.
+- No full HoMM3 RMG parity claim beyond this inspection evidence and any explicitly fixed concrete gap.
+
 ### Phase 3 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.

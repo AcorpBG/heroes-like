@@ -8426,9 +8426,12 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 		var to_zone := String(link.get("to", ""))
 		var from_node := _preferred_route_node_for_zone(from_zone, object_by_zone, route_nodes)
 		var to_node := _preferred_route_node_for_zone(to_zone, object_by_zone, route_nodes)
-		var from_point: Dictionary = from_node.get("point", seeds.get(from_zone, {}))
-		var to_point: Dictionary = to_node.get("point", seeds.get(to_zone, {}))
-		var path := _find_passable_path(from_point, to_point, terrain_rows, _occupied_without_route_endpoints(occupied, from_point, to_point))
+		var fallback_from_point: Dictionary = from_node.get("point", seeds.get(from_zone, {}))
+		var fallback_to_point: Dictionary = to_node.get("point", seeds.get(to_zone, {}))
+		var path_payload := _best_route_path_between_nodes(from_node, to_node, terrain_rows, occupied)
+		var path: Array = path_payload.get("path", [])
+		var from_point: Dictionary = path_payload.get("from_anchor", fallback_from_point)
+		var to_point: Dictionary = path_payload.get("to_anchor", fallback_to_point)
 		var classification := _route_classification(link, not path.is_empty())
 		var transit_semantics := _transit_semantics_for_surface_link(link, terrain_transit)
 		var edge_id := _route_edge_id(edge_index, from_zone, to_zone)
@@ -8479,7 +8482,24 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 				continue
 			var resource_node_id := "node_%s" % String(resource.get("placement_id", ""))
 			var resource_point := _first_approach_or_body(resource)
-			var resource_path := _find_passable_path(town_point, resource_point, terrain_rows, _occupied_without_route_endpoints(occupied, town_point, resource_point))
+			var resource_from_node := {
+				"id": town_node_id,
+				"point": town_point,
+				"body_tiles": town.get("body_tiles", []),
+				"visit_tile": town.get("visit_tile", {}),
+				"approach_tiles": town.get("approach_tiles", []),
+			}
+			var resource_to_node := {
+				"id": resource_node_id,
+				"point": resource_point,
+				"body_tiles": resource.get("body_tiles", []),
+				"visit_tile": resource.get("visit_tile", {}),
+				"approach_tiles": resource.get("approach_tiles", []),
+			}
+			var resource_path_payload := _best_route_path_between_nodes(resource_from_node, resource_to_node, terrain_rows, occupied)
+			var resource_path: Array = resource_path_payload.get("path", [])
+			town_point = resource_path_payload.get("from_anchor", town_point)
+			resource_point = resource_path_payload.get("to_anchor", resource_point)
 			var resource_edge_id := "edge_%02d_%s_%s" % [edge_index, town_placement_id, String(resource.get("placement_id", ""))]
 			var resource_classification := "full_connectivity" if not resource_path.is_empty() else "blocked_connectivity"
 			var resource_edge := {
@@ -10113,9 +10133,94 @@ static func _route_nodes_payload(seeds: Dictionary, placements: Dictionary) -> D
 			"zone_id": String(placement.get("zone_id", "")),
 			"point": _first_approach_or_body(placement),
 			"body_tiles": placement.get("body_tiles", []),
+			"visit_tile": placement.get("visit_tile", {}),
+			"approach_tiles": placement.get("approach_tiles", []),
 			"required": required_node,
 		}
 	return nodes
+
+static func _best_route_path_between_nodes(from_node: Dictionary, to_node: Dictionary, terrain_rows: Array, occupied: Dictionary) -> Dictionary:
+	var best_path := []
+	var best_from: Dictionary = from_node.get("point", {}) if from_node.get("point", {}) is Dictionary else {}
+	var best_to: Dictionary = to_node.get("point", {}) if to_node.get("point", {}) is Dictionary else {}
+	if not best_from.is_empty() and not best_to.is_empty():
+		var original_path := _find_passable_path(best_from, best_to, terrain_rows, _occupied_without_route_endpoints(occupied, best_from, best_to))
+		if not original_path.is_empty():
+			return {
+				"path": original_path,
+				"from_anchor": best_from,
+				"to_anchor": best_to,
+				"endpoint_policy": "primary_visit_or_approach_endpoint",
+				"from_candidate_count": 1,
+				"to_candidate_count": 1,
+			}
+	var from_candidates := _route_node_endpoint_candidates(from_node, terrain_rows, occupied)
+	var to_candidates := _route_node_endpoint_candidates(to_node, terrain_rows, occupied)
+	for from_point in from_candidates:
+		if not (from_point is Dictionary):
+			continue
+		for to_point in to_candidates:
+			if not (to_point is Dictionary):
+				continue
+			var route_occupied := _occupied_without_route_endpoints(occupied, from_point, to_point)
+			var path := _find_passable_path(from_point, to_point, terrain_rows, route_occupied)
+			if path.is_empty():
+				continue
+			if best_path.is_empty() or path.size() < best_path.size():
+				best_path = path
+				best_from = from_point
+				best_to = to_point
+	return {
+		"path": best_path,
+		"from_anchor": best_from,
+		"to_anchor": best_to,
+		"endpoint_policy": "best_passable_visit_or_approach_endpoint",
+		"from_candidate_count": from_candidates.size(),
+		"to_candidate_count": to_candidates.size(),
+	}
+
+static func _route_node_endpoint_candidates(node: Dictionary, terrain_rows: Array, occupied: Dictionary) -> Array:
+	var candidates := []
+	var seen := {}
+	_add_route_endpoint_candidate(candidates, seen, node.get("point", {}), terrain_rows, occupied, true)
+	_add_route_endpoint_candidate(candidates, seen, node.get("visit_tile", {}), terrain_rows, occupied, false)
+	for approach in node.get("approach_tiles", []):
+		_add_route_endpoint_candidate(candidates, seen, approach, terrain_rows, occupied, false)
+	for body in node.get("body_tiles", []):
+		if not (body is Dictionary):
+			continue
+		for offset in _cardinal_offsets():
+			_add_route_endpoint_candidate(
+				candidates,
+				seen,
+				_point_dict(int(body.get("x", 0)) + int(offset.x), int(body.get("y", 0)) + int(offset.y)),
+				terrain_rows,
+				occupied,
+				false
+			)
+	if candidates.is_empty() and node.get("point", {}) is Dictionary:
+		candidates.append(node.get("point", {}))
+	return candidates
+
+static func _add_route_endpoint_candidate(candidates: Array, seen: Dictionary, point_value: Variant, terrain_rows: Array, occupied: Dictionary, allow_occupied: bool) -> void:
+	if not (point_value is Dictionary):
+		return
+	var point: Dictionary = point_value
+	if point.is_empty():
+		return
+	var x := int(point.get("x", 0))
+	var y := int(point.get("y", 0))
+	var key := _point_key(x, y)
+	if seen.has(key):
+		return
+	if not _point_in_rows(terrain_rows, x, y):
+		return
+	if not _terrain_cell_is_passable(terrain_rows, x, y):
+		return
+	if occupied.has(key) and not allow_occupied:
+		return
+	seen[key] = true
+	candidates.append(_point_dict(x, y))
 
 static func _preferred_route_node_for_zone(zone_id: String, object_by_zone: Dictionary, route_nodes: Dictionary) -> Dictionary:
 	var zone_objects: Dictionary = object_by_zone.get(zone_id, {})
