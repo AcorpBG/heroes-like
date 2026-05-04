@@ -88,6 +88,7 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 	var artifact_guard_summary := _artifact_guard_summary(scenario.get("artifact_nodes", []), staging.get("materialized_object_guards", []))
 	var zone_richness := _zone_richness_summary(payload)
 	var reward_bands := _reward_band_summary(staging.get("monster_reward_bands", {}))
+	var fairness_metrics := _fairness_layout_quality_metrics(staging.get("fairness_report", {}))
 	var metrics := {
 		"ok": bool(generation.get("ok", false)),
 		"elapsed_msec": elapsed_msec,
@@ -186,6 +187,21 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"reward_band_value_min": int(reward_bands.get("value_min", 0)),
 		"reward_band_value_max": int(reward_bands.get("value_max", 0)),
 		"reward_band_source_counts": reward_bands.get("source_counts", {}),
+		"fairness_status": String(fairness_metrics.get("fairness_status", "")),
+		"fairness_warning_count": int(fairness_metrics.get("fairness_warning_count", 0)),
+		"fairness_fail_threshold_warning_count": int(fairness_metrics.get("fairness_fail_threshold_warning_count", 0)),
+		"fairness_layout_quality_status": String(fairness_metrics.get("fairness_layout_quality_status", "")),
+		"early_resource_status": String(fairness_metrics.get("early_resource_status", "")),
+		"contested_front_status": String(fairness_metrics.get("contested_front_status", "")),
+		"guard_pressure_status": String(fairness_metrics.get("guard_pressure_status", "")),
+		"travel_distance_status": String(fairness_metrics.get("travel_distance_status", "")),
+		"core_economy_producer_status": String(fairness_metrics.get("core_economy_producer_status", "")),
+		"contested_objective_pressure_status": String(fairness_metrics.get("contested_objective_pressure_status", "")),
+		"contest_route_distance_spread": int(fairness_metrics.get("contest_route_distance_spread", 0)),
+		"travel_contest_route_distance_spread": int(fairness_metrics.get("travel_contest_route_distance_spread", 0)),
+		"contest_guard_pressure_spread": int(fairness_metrics.get("contest_guard_pressure_spread", 0)),
+		"route_guard_pressure_spread": int(fairness_metrics.get("route_guard_pressure_spread", 0)),
+		"town_to_resource_distance_spread": int(fairness_metrics.get("town_to_resource_distance_spread", 0)),
 	}
 	var failures := _metric_failures(String(case.get("id", "")), metrics)
 	return {
@@ -335,6 +351,45 @@ func _reward_band_summary(monster_reward_bands: Dictionary) -> Dictionary:
 		"value_min": 0 if value_min == 999999 else value_min,
 		"value_max": value_max,
 	}
+
+func _fairness_layout_quality_metrics(fairness_report_value) -> Dictionary:
+	var fairness_report: Dictionary = fairness_report_value if fairness_report_value is Dictionary else {}
+	var summary: Dictionary = fairness_report.get("summary", {}) if fairness_report.get("summary", {}) is Dictionary else {}
+	var contested_front: Dictionary = fairness_report.get("contested_front_distribution", {}) if fairness_report.get("contested_front_distribution", {}) is Dictionary else {}
+	var guard_pressure: Dictionary = fairness_report.get("guard_pressure", {}) if fairness_report.get("guard_pressure", {}) is Dictionary else {}
+	var travel: Dictionary = fairness_report.get("travel_distance_comparisons", {}) if fairness_report.get("travel_distance_comparisons", {}) is Dictionary else {}
+	var warnings: Array = fairness_report.get("warnings", []) if fairness_report.get("warnings", []) is Array else []
+	var fail_threshold_warning_count := 0
+	for warning in warnings:
+		var warning_text := String(warning)
+		if warning_text.find("fail spread") >= 0 or warning_text.find("fail threshold") >= 0:
+			fail_threshold_warning_count += 1
+	var layout_quality_status := "pass"
+	if fail_threshold_warning_count > 0:
+		layout_quality_status = "fail_threshold_warning"
+	elif not warnings.is_empty():
+		layout_quality_status = "warning"
+	return {
+		"fairness_status": String(fairness_report.get("status", "")),
+		"fairness_warning_count": warnings.size(),
+		"fairness_fail_threshold_warning_count": fail_threshold_warning_count,
+		"fairness_layout_quality_status": layout_quality_status,
+		"early_resource_status": String(summary.get("early_resource_status", "")),
+		"contested_front_status": String(summary.get("contested_front_status", "")),
+		"guard_pressure_status": String(summary.get("guard_pressure_status", "")),
+		"travel_distance_status": String(summary.get("travel_distance_status", "")),
+		"core_economy_producer_status": String(summary.get("core_economy_producer_status", "")),
+		"contested_objective_pressure_status": String(summary.get("contested_objective_pressure_status", "")),
+		"contest_route_distance_spread": _spread_metric(contested_front.get("distance_spread", {})),
+		"travel_contest_route_distance_spread": _spread_metric(travel.get("contest_route_distance_spread", {})),
+		"contest_guard_pressure_spread": _spread_metric(contested_front.get("guard_pressure_spread", {})),
+		"route_guard_pressure_spread": _spread_metric(guard_pressure.get("pressure_spread", {})),
+		"town_to_resource_distance_spread": _spread_metric(travel.get("town_to_resource_distance_spread", {})),
+	}
+
+func _spread_metric(spread_value) -> int:
+	var spread: Dictionary = spread_value if spread_value is Dictionary else {}
+	return int(spread.get("spread", 0))
 
 func _zone_role_is_connector(role: String) -> bool:
 	return role == "junction" or role.contains("gate") or role.contains("border") or role.contains("connector") or role.contains("crossing")
@@ -560,6 +615,13 @@ func _summary(results: Array) -> Dictionary:
 		"fallback_reward_band_records": 0,
 		"reward_band_value_min": 999999,
 		"reward_band_value_max": 0,
+		"fairness_warning_count": 0,
+		"fairness_fail_threshold_warning_count": 0,
+		"max_contest_route_distance_spread": 0,
+		"max_travel_contest_route_distance_spread": 0,
+		"max_contest_guard_pressure_spread": 0,
+		"max_route_guard_pressure_spread": 0,
+		"max_town_to_resource_distance_spread": 0,
 		"template_variability_signature_count": 0,
 		"template_variability_template_count": 0,
 	}
@@ -632,6 +694,13 @@ func _summary(results: Array) -> Dictionary:
 		if int(metrics.get("reward_band_value_min", 0)) > 0:
 			totals["reward_band_value_min"] = min(int(totals.get("reward_band_value_min", 999999)), int(metrics.get("reward_band_value_min", 0)))
 		totals["reward_band_value_max"] = max(int(totals.get("reward_band_value_max", 0)), int(metrics.get("reward_band_value_max", 0)))
+		totals["fairness_warning_count"] = int(totals.get("fairness_warning_count", 0)) + int(metrics.get("fairness_warning_count", 0))
+		totals["fairness_fail_threshold_warning_count"] = int(totals.get("fairness_fail_threshold_warning_count", 0)) + int(metrics.get("fairness_fail_threshold_warning_count", 0))
+		totals["max_contest_route_distance_spread"] = max(int(totals.get("max_contest_route_distance_spread", 0)), int(metrics.get("contest_route_distance_spread", 0)))
+		totals["max_travel_contest_route_distance_spread"] = max(int(totals.get("max_travel_contest_route_distance_spread", 0)), int(metrics.get("travel_contest_route_distance_spread", 0)))
+		totals["max_contest_guard_pressure_spread"] = max(int(totals.get("max_contest_guard_pressure_spread", 0)), int(metrics.get("contest_guard_pressure_spread", 0)))
+		totals["max_route_guard_pressure_spread"] = max(int(totals.get("max_route_guard_pressure_spread", 0)), int(metrics.get("route_guard_pressure_spread", 0)))
+		totals["max_town_to_resource_distance_spread"] = max(int(totals.get("max_town_to_resource_distance_spread", 0)), int(metrics.get("town_to_resource_distance_spread", 0)))
 	if int(totals.get("observed_minimum_town_distance_min", 999999)) == 999999:
 		totals["observed_minimum_town_distance_min"] = 0
 	if int(totals.get("observed_start_town_minimum_distance_min", 999999)) == 999999:
@@ -756,6 +825,15 @@ func _case_log_line(result: Dictionary) -> Dictionary:
 		"reward_bands": int(metrics.get("reward_band_record_count", 0)),
 		"template_reward_bands": int(metrics.get("template_reward_band_record_count", 0)),
 		"fallback_reward_bands": int(metrics.get("fallback_reward_band_record_count", 0)),
+		"fairness_status": String(metrics.get("fairness_status", "")),
+		"layout_quality_status": String(metrics.get("fairness_layout_quality_status", "")),
+		"fairness_warnings": int(metrics.get("fairness_warning_count", 0)),
+		"fairness_fail_threshold_warnings": int(metrics.get("fairness_fail_threshold_warning_count", 0)),
+		"contest_route_distance_spread": int(metrics.get("contest_route_distance_spread", 0)),
+		"travel_contest_route_distance_spread": int(metrics.get("travel_contest_route_distance_spread", 0)),
+		"contest_guard_pressure_spread": int(metrics.get("contest_guard_pressure_spread", 0)),
+		"route_guard_pressure_spread": int(metrics.get("route_guard_pressure_spread", 0)),
+		"town_to_resource_distance_spread": int(metrics.get("town_to_resource_distance_spread", 0)),
 		"town_min": int(metrics.get("observed_minimum_town_distance", 0)),
 		"town_required": int(metrics.get("minimum_town_distance_required", 0)),
 		"start_town_min": int(metrics.get("observed_start_town_minimum_distance", 0)),
