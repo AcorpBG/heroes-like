@@ -125,6 +125,38 @@ Selection rules for new Phase 2 slices:
 
 Completed owner-directed implementation slice:
 
+id: `native-rmg-homm3-re-obstacle-identity-comparison-10184`
+phase: `phase-2-deep-production-foundation`
+status: `completed`
+purpose: Continue beyond fill coverage by making native C++ RMG decorative obstacles carry terrain-biased HoMM3-re `rand_trn` source identity/proxy metadata and by adding an empirical comparison/diversity gate against the owner-attached 72x72 Small Ring baseline.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/native-rmg-homm3-fill-coverage-report.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-decoration-obstacles.csv`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-catalog-by-type.json`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- owner-attached HoMM3 72x72 Small Ring metrics from 2026-05-04
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `content/homm3_re_obstacle_proxy_catalog.json`
+- `tests/native_random_map_homm3_re_identity_comparison_report.gd`
+- `tests/native_random_map_homm3_re_identity_comparison_report.tscn`
+- `tests/native_random_map_decoration_generation_report.gd`
+- `docs/native-rmg-homm3-re-obstacle-identity-comparison-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Native C++ package generation remains the active path and decorative_obstacle records include HoMM3-re `rand_trn` source row/type/subtype/terrain/DEF-reference provenance plus original proxy family mapping.
+- No HoMM3 copyrighted image/DEF assets are imported; source identity and DEF names are metadata/provenance only.
+- The new report verifies the owner-attached gzip/decompressed H3M size baseline, compares owner parsed metrics against similar 72x72 islands Small Ring native output, reports counts by HoMM3 source type/source row/proxy family, and gates source-row/type diversity and terrain-biased presence.
+- Broad seed/template quality sampling fails on low source-row diversity, missing terrain-biased source families, coverage regression, road/object density regression, or visually empty zone coverage regression.
+- Existing catalog playability, fill coverage, menu wiring, decoration generation, and full parity fixture gates still pass.
+nonGoals:
+- No route back to `RandomMapGeneratorRules.gd` for active generation, no generated map packages committed under `maps/`, no HoMM3 copyrighted art/DEF asset import, no full HoMM3-re parity claim beyond the implemented source-identity/proxy and comparison gate, no save version bump or authored scenario/package adoption.
+
+Completed owner-directed implementation slice:
+
 id: `native-rmg-homm3-fill-coverage-gate-10184`
 phase: `phase-2-deep-production-foundation`
 purpose: Add a real HoMM3-style fill coverage gate and raise native generated package decorative/blocking body coverage so generated maps no longer pass with barren token decorations.

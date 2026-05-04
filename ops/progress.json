@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-homm3-fill-coverage-gate-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Fill Coverage Gate",
+  "currentSliceId": "native-rmg-homm3-re-obstacle-identity-comparison-10184",
+  "currentSliceTitle": "Native RMG HoMM3-re Obstacle Identity And Comparison Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner correction: native C++ generated packages now use terrain-biased large decoration/blocker footprints, reserve full body occupancy, and fail barren decoration/blocker coverage. The attached 72x72 package remains recorded as pre-fix evidence at 2.78% deco/blocker body coverage and fails the new medium floor; the same config regenerated through native generation reaches 24.96%. Exact HoMM3-re obstacle identity/art/template parity and compact binary format parity remain gaps.",
+  "currentSliceNotes": "Completed: native decorative_obstacle records now carry terrain-biased HoMM3-re rand_trn source row/type/subtype/terrain/DEF-reference provenance mapped to original proxy blockers; new identity/comparison report validates owner-attached 72x72 Small Ring baseline sizes and broad 5-case source diversity. Validation passed: json.tool catalogs/progress, native CMake build, identity comparison, fill coverage, catalog quality, menu wiring, decoration generation, full parity gate, git diff --check.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T12:39:25Z",
+  "updatedAt": "2026-05-04T13:31:55Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -8705,6 +8705,79 @@
           "Compact binary H3M-format parity is not implemented."
         ]
       }
+    },
+    {
+      "id": "native-rmg-homm3-re-obstacle-identity-comparison-10184",
+      "title": "Native RMG HoMM3-re Obstacle Identity And Comparison Gate",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "owner_directed_phase2_native_rmg_homm3_re_identity_comparison_slice",
+      "parentSliceId": "native-rmg-homm3-fill-coverage-gate-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/native-rmg-homm3-fill-coverage-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-decoration-obstacles.csv",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-catalog-by-type.json",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "owner-attached HoMM3 72x72 Small Ring metrics from 2026-05-04"
+      ],
+      "purpose": "Continue beyond fill coverage by making native C++ RMG decorative obstacles carry terrain-biased HoMM3-re rand_trn source identity/proxy metadata and by adding an empirical comparison/diversity gate against the owner-attached 72x72 Small Ring baseline.",
+      "currentInspectionFindings": [
+        "Native generated packages already meet the fill coverage floor but still identify decorations through generic original families only.",
+        "The HoMM3-re obstacle CSV exposes 109 rand_trn obstacle rows, 33 type names, terrain scores, type/subtype ids, and DEF template reference names suitable for semantic provenance without importing art assets."
+      ],
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "content/homm3_re_obstacle_proxy_catalog.json",
+        "tests/native_random_map_homm3_re_identity_comparison_report.gd",
+        "tests/native_random_map_homm3_re_identity_comparison_report.tscn",
+        "tests/native_random_map_decoration_generation_report.gd",
+        "docs/native-rmg-homm3-re-obstacle-identity-comparison-report.md",
+        "ops/progress.json",
+        "PLAN.md"
+      ],
+      "completionCriteria": [
+        "Native C++ package generation remains the active path and decorative_obstacle records include HoMM3-re rand_trn source row/type/subtype/terrain/DEF-reference provenance plus original proxy family mapping.",
+        "No HoMM3 copyrighted image/DEF assets are imported; source identity and DEF names are metadata/provenance only.",
+        "The new report verifies the owner-attached gzip/decompressed H3M size baseline, compares owner parsed metrics against similar 72x72 islands Small Ring native output, reports counts by HoMM3 source type/source row/proxy family, and gates source-row/type diversity and terrain-biased presence.",
+        "Broad seed/template quality sampling fails on low source-row diversity, missing terrain-biased source families, coverage regression, road/object density regression, or visually empty zone coverage regression.",
+        "Existing catalog playability, fill coverage, menu wiring, decoration generation, and full parity fixture gates still pass."
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool content/homm3_re_obstacle_proxy_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "Godot reports for native HoMM3-re identity/comparison, fill coverage, catalog quality, menu wiring, decoration generation, and full parity gate",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No route back to scripts/core/RandomMapGeneratorRules.gd for active generation.",
+        "No generated .amap/.ascenario files committed under maps/.",
+        "No HoMM3 copyrighted art/DEF asset import.",
+        "No full HoMM3-re parity claim beyond the implemented source-identity/proxy and comparison gate.",
+        "No save version bump or authored scenario/package adoption."
+      ],
+      "createdAt": "2026-05-04T13:08:33Z",
+      "updatedAt": "2026-05-04T13:31:55Z",
+      "notes": "Started from owner direction after fill coverage was accepted as insufficient for real HoMM3-re RMG parity.",
+      "completedAt": "2026-05-04T13:31:55Z",
+      "completionNotes": "Completed: native decorative_obstacle records now carry terrain-biased HoMM3-re rand_trn source row/type/subtype/terrain/DEF-reference provenance mapped to original proxy blockers; new identity/comparison report validates owner-attached 72x72 Small Ring baseline sizes and broad 5-case source diversity. Validation passed: json.tool catalogs/progress, native CMake build, identity comparison, fill coverage, catalog quality, menu wiring, decoration generation, full parity gate, git diff --check.",
+      "validationEvidence": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool content/homm3_re_obstacle_proxy_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "tests/native_random_map_homm3_re_identity_comparison_report.tscn",
+        "tests/native_random_map_homm3_fill_coverage_report.tscn",
+        "tests/native_random_map_catalog_quality_report.tscn",
+        "tests/random_map_all_template_menu_wiring_report.tscn",
+        "tests/native_random_map_decoration_generation_report.tscn",
+        "tests/native_random_map_full_parity_gate_report.tscn",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
