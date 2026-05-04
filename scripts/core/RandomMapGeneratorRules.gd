@@ -10144,7 +10144,18 @@ static func _best_route_path_between_nodes(from_node: Dictionary, to_node: Dicti
 	var best_from: Dictionary = from_node.get("point", {}) if from_node.get("point", {}) is Dictionary else {}
 	var best_to: Dictionary = to_node.get("point", {}) if to_node.get("point", {}) is Dictionary else {}
 	if not best_from.is_empty() and not best_to.is_empty():
-		var original_path := _find_passable_path(best_from, best_to, terrain_rows, _occupied_without_route_endpoints(occupied, best_from, best_to))
+		var primary_occupied := _occupied_without_route_endpoints(occupied, best_from, best_to)
+		var direct_path := _find_direct_passable_path(best_from, best_to, terrain_rows, primary_occupied)
+		if not direct_path.is_empty():
+			return {
+				"path": direct_path,
+				"from_anchor": best_from,
+				"to_anchor": best_to,
+				"endpoint_policy": "primary_direct_visit_or_approach_endpoint",
+				"from_candidate_count": 1,
+				"to_candidate_count": 1,
+			}
+		var original_path := _find_passable_path(best_from, best_to, terrain_rows, primary_occupied)
 		if not original_path.is_empty():
 			return {
 				"path": original_path,
@@ -10163,7 +10174,9 @@ static func _best_route_path_between_nodes(from_node: Dictionary, to_node: Dicti
 			if not (to_point is Dictionary):
 				continue
 			var route_occupied := _occupied_without_route_endpoints(occupied, from_point, to_point)
-			var path := _find_passable_path(from_point, to_point, terrain_rows, route_occupied)
+			var path := _find_direct_passable_path(from_point, to_point, terrain_rows, route_occupied)
+			if path.is_empty():
+				path = _find_passable_path(from_point, to_point, terrain_rows, route_occupied)
 			if path.is_empty():
 				continue
 			if best_path.is_empty() or path.size() < best_path.size():
@@ -10285,6 +10298,59 @@ static func _road_segment_payload(edge_id: String, path: Array, classification: 
 		"writeout_state": "staged_overlay_no_tile_bytes_written",
 	}
 
+static func _find_direct_passable_path(start: Dictionary, goal: Dictionary, terrain_rows: Array, occupied: Dictionary) -> Array:
+	if start.is_empty() or goal.is_empty():
+		return []
+	var horizontal_first := _axis_aligned_passable_path(start, goal, terrain_rows, occupied, true)
+	if not horizontal_first.is_empty():
+		return horizontal_first
+	return _axis_aligned_passable_path(start, goal, terrain_rows, occupied, false)
+
+static func _axis_aligned_passable_path(start: Dictionary, goal: Dictionary, terrain_rows: Array, occupied: Dictionary, horizontal_first: bool) -> Array:
+	var start_x := int(start.get("x", 0))
+	var start_y := int(start.get("y", 0))
+	var goal_x := int(goal.get("x", 0))
+	var goal_y := int(goal.get("y", 0))
+	var corner := _point_dict(goal_x if horizontal_first else start_x, start_y if horizontal_first else goal_y)
+	var path := _axis_segment_path(_point_dict(start_x, start_y), corner, terrain_rows, occupied, true)
+	if path.is_empty():
+		return []
+	var second := _axis_segment_path(corner, _point_dict(goal_x, goal_y), terrain_rows, occupied, false)
+	if second.is_empty():
+		return []
+	return path + second
+
+static func _axis_segment_path(start: Dictionary, goal: Dictionary, terrain_rows: Array, occupied: Dictionary, include_start: bool) -> Array:
+	var start_x := int(start.get("x", 0))
+	var start_y := int(start.get("y", 0))
+	var goal_x := int(goal.get("x", 0))
+	var goal_y := int(goal.get("y", 0))
+	var dx := 1 if goal_x > start_x else (-1 if goal_x < start_x else 0)
+	var dy := 1 if goal_y > start_y else (-1 if goal_y < start_y else 0)
+	if dx != 0 and dy != 0:
+		return []
+	var path := []
+	var x := start_x
+	var y := start_y
+	if include_start:
+		if not _direct_path_cell_is_clear(x, y, terrain_rows, occupied):
+			return []
+		path.append(_point_dict(x, y))
+	while x != goal_x or y != goal_y:
+		x += dx
+		y += dy
+		if not _direct_path_cell_is_clear(x, y, terrain_rows, occupied):
+			return []
+		path.append(_point_dict(x, y))
+	return path
+
+static func _direct_path_cell_is_clear(x: int, y: int, terrain_rows: Array, occupied: Dictionary) -> bool:
+	if not _point_in_rows(terrain_rows, x, y):
+		return false
+	if occupied.has(_point_key(x, y)):
+		return false
+	return _terrain_cell_is_passable(terrain_rows, x, y)
+
 static func _find_passable_path(start: Dictionary, goal: Dictionary, terrain_rows: Array, occupied: Dictionary) -> Array:
 	if start.is_empty() or goal.is_empty():
 		return []
@@ -10298,41 +10364,63 @@ static func _find_passable_path(start: Dictionary, goal: Dictionary, terrain_row
 		return []
 	var start_key := _point_key(start_x, start_y)
 	var goal_key := _point_key(goal_x, goal_y)
-	var queue := [_point_dict(start_x, start_y)]
-	var came_from := {start_key: ""}
-	var cursor := 0
-	while cursor < queue.size():
-		var current: Dictionary = queue[cursor]
-		cursor += 1
-		var current_key := _point_key(int(current.get("x", 0)), int(current.get("y", 0)))
-		if current_key == goal_key:
-			break
+	if start_key == goal_key:
+		return [_point_dict(start_x, start_y)]
+	var start_frontier := [start_key]
+	var goal_frontier := [goal_key]
+	var came_from_start := {start_key: ""}
+	var came_from_goal := {goal_key: ""}
+	var guard: int = terrain_rows.size() * (terrain_rows[0].size() if not terrain_rows.is_empty() and terrain_rows[0] is Array else 1)
+	while not start_frontier.is_empty() and not goal_frontier.is_empty() and guard > 0:
+		var meeting_key := _expand_path_frontier(start_frontier, came_from_start, came_from_goal, terrain_rows, occupied)
+		if meeting_key != "":
+			return _reconstruct_bidirectional_path(meeting_key, came_from_start, came_from_goal)
+		meeting_key = _expand_path_frontier(goal_frontier, came_from_goal, came_from_start, terrain_rows, occupied)
+		if meeting_key != "":
+			return _reconstruct_bidirectional_path(meeting_key, came_from_start, came_from_goal)
+		guard -= 1
+	return []
+
+static func _expand_path_frontier(frontier: Array, own_came_from: Dictionary, other_came_from: Dictionary, terrain_rows: Array, occupied: Dictionary) -> String:
+	var current_layer: Array = frontier.duplicate()
+	frontier.clear()
+	for current_key in current_layer:
+		var current := _point_from_key(String(current_key))
 		for offset in _cardinal_offsets():
 			var nx: int = int(current.get("x", 0)) + int(offset.x)
 			var ny: int = int(current.get("y", 0)) + int(offset.y)
 			var next_key := _point_key(nx, ny)
-			if came_from.has(next_key):
+			if own_came_from.has(next_key):
 				continue
 			if not _point_in_rows(terrain_rows, nx, ny):
 				continue
-			if occupied.has(next_key) and next_key != goal_key:
+			if occupied.has(next_key):
 				continue
 			if not _terrain_cell_is_passable(terrain_rows, nx, ny):
 				continue
-			came_from[next_key] = current_key
-			queue.append(_point_dict(nx, ny))
-	if not came_from.has(goal_key):
-		return []
-	var reversed_path := []
-	var key := goal_key
-	var guard: int = terrain_rows.size() * (terrain_rows[0].size() if not terrain_rows.is_empty() and terrain_rows[0] is Array else 1)
+			own_came_from[next_key] = String(current_key)
+			if other_came_from.has(next_key):
+				return next_key
+			frontier.append(next_key)
+	return ""
+
+static func _reconstruct_bidirectional_path(meeting_key: String, came_from_start: Dictionary, came_from_goal: Dictionary) -> Array:
+	var start_half := []
+	var key := meeting_key
+	var guard := came_from_start.size() + 1
 	while key != "" and guard > 0:
-		var parts := key.split(",")
-		reversed_path.append(_point_dict(int(parts[0]), int(parts[1])))
-		key = String(came_from.get(key, ""))
+		start_half.append(_point_from_key(key))
+		key = String(came_from_start.get(key, ""))
 		guard -= 1
-	reversed_path.reverse()
-	return reversed_path
+	start_half.reverse()
+	var goal_half := []
+	key = String(came_from_goal.get(meeting_key, ""))
+	guard = came_from_goal.size() + 1
+	while key != "" and guard > 0:
+		goal_half.append(_point_from_key(key))
+		key = String(came_from_goal.get(key, ""))
+		guard -= 1
+	return start_half + goal_half
 
 static func _occupied_without_route_endpoints(occupied: Dictionary, from_anchor: Dictionary, to_anchor: Dictionary) -> Dictionary:
 	var route_occupied := occupied.duplicate(true)

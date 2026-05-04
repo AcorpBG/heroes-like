@@ -713,6 +713,36 @@ nonGoals:
 - No save-version bump, authored campaign adoption, native generator rewrite, generated package/map clutter, or broad renderer/fog/pathing redesign.
 - No full HoMM3 RMG parity claim beyond this inspection evidence and any explicitly fixed concrete gap.
 
+Completed owner-directed corrective slice:
+
+id: `random-map-homm3-parity-visual-diagnostic-runtime-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Correct the bounded RMG visual inspection evidence after `be744e8` by reducing route-heavy translated-template probe cost, separating strict fixture budgets from capped diagnostic probe budgets, and replacing misleading grass-run summary metrics with marker-distribution evidence.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-homm3-parity-visual-inspection-gaps.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- 2026-05-04 owner directive to continue RMG parity after `be744e8`
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_homm3_parity_visual_inspection_report.gd`
+- `.artifacts/rmg_parity_visual_inspection/`
+- `docs/random-map-homm3-parity-visual-inspection-gaps.md`
+- `ops/progress.json`
+completionCriteria:
+- Route-heavy translated visual probes avoid unnecessary whole-grid path searches where direct or bidirectional route search is sufficient.
+- Strict positive fixtures remain on the existing per-case runtime bar, while diagnostic translated-template probes have explicit capped evidence budgets and still report strict-budget overruns as notes.
+- Visual summary and matrix expose marker row/column/quadrant coverage and per-route timing so grass terrain runs are not mistaken for blank-map quality failures.
+- Focused visual/richness reports, JSON/progress sync, diff check, and repository validation pass.
+nonGoals:
+- No generated terrain-art replacement work or generated PNG ingestion.
+- No copyrighted names, assets, maps, factions, unit art, music, or text.
+- No save-version bump, authored campaign adoption, native generator rewrite, generated package/map clutter, or broad renderer/fog/pathing redesign.
+- No full HoMM3 RMG parity claim beyond this bounded report/runtime correction.
+
 ### Phase 3 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.
