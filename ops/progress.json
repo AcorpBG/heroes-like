@@ -6,9 +6,9 @@
   "currentSliceId": "generated-terrain-classes-runtime-integration-10184",
   "currentSliceTitle": "Generated Terrain Classes Runtime Integration Workflow",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Prepared deterministic workflow scaffolding and original reference 1024 atlases/previews for remaining generated terrain class replacements after grastl. Runtime frame ingestion remains blocked until generated candidates exist and pass validation. Validation passed: pack-reference --all --dry-run, pack-reference --all --force, cut-generated sandtl dry-run, py_compile, json.tool, sync-plan --dry-run, validate_repo, git diff --check.",
+  "currentSliceNotes": "Integrated first remaining generated terrain class batch for sandtl only. Copied selected generated atlas d47763c4 into sandtl/source_sheets, normalized unused cells to magenta, cut exactly 24 row-major 64x64 runtime frames 00_00.png through 00_23.png under sandtl/frames_64, applied deterministic 1px edge-band cleanup after visual source-atlas seam inspection, and refreshed sandtl previews. Validation passed: generated_terrain_atlas_tool cut-generated sandtl dry-run with force-unused-magenta; focused Pillow frame check confirmed exactly 24 64x64 PNG frames, no magenta in used frames, and unused normalized atlas cells magenta; py_compile generated_terrain_atlas_tool.py; json.tool ops/progress.json; progress sync-plan --dry-run; tests/validate_repo.py; git diff --check. Do not mark the whole remaining-classes slice completed; dirttl/lavatl/rocktl/rougtl/snowtl/subbtl/swmptl/watrtl remain pending generated runtime ingestion.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T00:16:19Z",
+  "updatedAt": "2026-05-04T00:33:32Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7262,9 +7262,9 @@
         "No terrain placement, pathing, fog, save schema, RMG, editor paint semantics, road rendering, or unrelated renderer redesign."
       ],
       "createdAt": "2026-05-04T00:13:47Z",
-      "updatedAt": "2026-05-04T00:16:19Z",
+      "updatedAt": "2026-05-04T00:33:32Z",
       "startedAt": "2026-05-04T00:13:47Z",
-      "notes": "Prepared deterministic workflow scaffolding and original reference 1024 atlases/previews for remaining generated terrain class replacements after grastl. Generated atlases/previews exist for dirttl, lavatl, rocktl, rougtl, sandtl, snowtl, subbtl, swmptl, and watrtl; no runtime frames_64 were added for those classes. Validation passed: python3 tools/generated_terrain_atlas_tool.py pack-reference --all --dry-run; python3 tools/generated_terrain_atlas_tool.py pack-reference --all --force; python3 tools/generated_terrain_atlas_tool.py cut-generated --class sandtl --atlas art/overworld/runtime/terrain_tiles/generated/sandtl/source_sheets/sandtl-original-reference-16x16-magenta-1024.png --out-dir /tmp/heroes-like-sandtl-cut-dry-run --dry-run --allow-suspicious-grid-edges; python3 -m py_compile tools/generated_terrain_atlas_tool.py; python3 -m json.tool ops/progress.json; python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan --dry-run /root/dev/heroes-like; python3 tests/validate_repo.py; git diff --check."
+      "notes": "Integrated first remaining generated terrain class batch for sandtl only. Copied selected generated atlas d47763c4 into sandtl/source_sheets, normalized unused cells to magenta, cut exactly 24 row-major 64x64 runtime frames 00_00.png through 00_23.png under sandtl/frames_64, applied deterministic 1px edge-band cleanup after visual source-atlas seam inspection, and refreshed sandtl previews. Validation passed: generated_terrain_atlas_tool cut-generated sandtl dry-run with force-unused-magenta; focused Pillow frame check confirmed exactly 24 64x64 PNG frames, no magenta in used frames, and unused normalized atlas cells magenta; py_compile generated_terrain_atlas_tool.py; json.tool ops/progress.json; progress sync-plan --dry-run; tests/validate_repo.py; git diff --check. Do not mark the whole remaining-classes slice completed; dirttl/lavatl/rocktl/rougtl/snowtl/subbtl/swmptl/watrtl remain pending generated runtime ingestion."
     }
   ],
   "completedImplementationEvidence": [
