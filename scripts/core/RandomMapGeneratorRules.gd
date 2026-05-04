@@ -2740,26 +2740,28 @@ static func _materialize_object_guards(normalized: Dictionary, placements: Dicti
 	var occupied := _occupied_body_lookup(object_placements)
 	var reserved := _road_reserved_lookup(road_network)
 	var candidates := []
+	var candidate_keys := {}
 	for node in placements.get("artifact_nodes", []):
 		if node is Dictionary:
-			candidates.append(_object_guard_candidate(node, "artifact", 1800, "guarded_artifact_reward"))
+			_append_object_guard_candidate(candidates, candidate_keys, node, "artifact", 1800, "guarded_artifact_reward")
 	for record in route_reward_records:
 		if record is Dictionary and String(record.get("artifact_id", "")) != "":
-			candidates.append(_object_guard_candidate(record, "artifact", 1800, "guarded_artifact_reward"))
+			_append_object_guard_candidate(candidates, candidate_keys, record, "artifact", 1800, "guarded_artifact_reward")
 	for node in placements.get("resource_nodes", []):
 		if not (node is Dictionary):
 			continue
 		if String(node.get("original_resource_category_id", "")) != "":
 			var pressure: Dictionary = node.get("guard_pressure", {}) if node.get("guard_pressure", {}) is Dictionary else {}
 			if bool(pressure.get("guarded", false)):
-				candidates.append(_object_guard_candidate(node, "mine", int(pressure.get("base_value", 1200)), "guarded_mine"))
+				_append_object_guard_candidate(candidates, candidate_keys, node, "mine", int(pressure.get("base_value", 1200)), "guarded_mine")
 		elif String(node.get("neutral_dwelling_family_id", "")) != "":
 			if int(node.get("player_slot", 0)) == 0:
-				candidates.append(_object_guard_candidate(node, "neutral_dwelling", 1200, "guarded_dwelling"))
+				_append_object_guard_candidate(candidates, candidate_keys, node, "neutral_dwelling", 1200, "guarded_dwelling")
 		elif String(node.get("generated_kind", "")) == "route_reward" and String(node.get("guarded_policy", "")).find("guarded") >= 0:
-			candidates.append(_object_guard_candidate(node, "route_reward", max(800, int(node.get("candidate_value", 800))), "guarded_reward_cache"))
+			_append_object_guard_candidate(candidates, candidate_keys, node, "route_reward", max(800, int(node.get("candidate_value", 800))), "guarded_reward_cache")
 	candidates.sort_custom(Callable(RandomMapGeneratorRules, "_compare_object_guard_candidate"))
-	var max_guards := _object_guard_cap_for_size(normalized, candidates.size())
+	var artifact_candidate_count: int = _count_object_guard_candidates_for_kind(candidates, "artifact")
+	var max_guards: int = max(_object_guard_cap_for_size(normalized, candidates.size()), artifact_candidate_count)
 	var materialized := []
 	var skipped_no_cell := 0
 	for index in range(min(max_guards, candidates.size())):
@@ -2767,19 +2769,29 @@ static func _materialize_object_guards(normalized: Dictionary, placements: Dicti
 		var target: Dictionary = candidate.get("target", {}) if candidate.get("target", {}) is Dictionary else {}
 		var zone_id := String(target.get("zone_id", _zone_at_point(zone_grid, target)))
 		var offset := _object_guard_anchor_offset(index)
-		var point := _nearest_free_cell_for_catalog(
-			"route_guard",
-			"route_guard",
-			DEFAULT_ENCOUNTER_ID,
-			int(target.get("x", 0)) + offset.x,
-			int(target.get("y", 0)) + offset.y,
-			zone_id if zone_id != "" else null,
+		var point := _nearest_object_guard_cell_for_target(
+			target,
+			zone_id,
 			zone_grid,
 			terrain_rows,
 			occupied,
-			rng,
-			reserved
+			reserved,
+			index
 		)
+		if point.is_empty():
+			point = _nearest_free_cell_for_catalog(
+				"route_guard",
+				"route_guard",
+				DEFAULT_ENCOUNTER_ID,
+				int(target.get("x", 0)) + offset.x,
+				int(target.get("y", 0)) + offset.y,
+				zone_id if zone_id != "" else null,
+				zone_grid,
+				terrain_rows,
+				occupied,
+				rng,
+				reserved
+			)
 		if point.is_empty():
 			point = _nearest_free_cell_for_catalog("route_guard", "route_guard", DEFAULT_ENCOUNTER_ID, int(target.get("x", 0)) + offset.x, int(target.get("y", 0)) + offset.y, null, zone_grid, terrain_rows, occupied, rng, reserved)
 		if point.is_empty():
@@ -2803,6 +2815,9 @@ static func _materialize_object_guards(normalized: Dictionary, placements: Dicti
 			continue
 		var placement_id := "rmg_object_guard_%03d" % (materialized.size() + 1)
 		var guard_value := int(candidate.get("guard_value", 1000))
+		var target_point := _point_dict(int(target.get("x", 0)), int(target.get("y", 0)))
+		var guard_distance := _object_guard_distance_to_target(point, target)
+		var adjacent_to_guarded_object := _object_guard_is_adjacent_to_target(point, target, guard_distance)
 		var payload := {
 			"encounter_id": DEFAULT_ENCOUNTER_ID,
 			"purpose": String(candidate.get("guard_context", "")),
@@ -2811,9 +2826,12 @@ static func _materialize_object_guards(normalized: Dictionary, placements: Dicti
 			"guarded_object_placement_id": String(target.get("placement_id", "")),
 			"guarded_artifact_id": String(target.get("artifact_id", "")),
 			"guarded_site_id": String(target.get("site_id", "")),
+			"guarded_object_point": target_point,
+			"guard_distance": guard_distance,
+			"adjacent_to_guarded_object": adjacent_to_guarded_object,
 			"guard_value": guard_value,
 			"effective_guard_pressure": _guard_strength_class_from_value(guard_value),
-			"association_policy": "guards_materialized_adjacent_to_artifacts_mines_dwellings_and_guarded_reward_caches",
+			"association_policy": "artifact_rewards_are_guarded_before_lower_priority_mines_dwellings_and_cache_fillers",
 			"wide": false,
 			"border_guard": false,
 		}
@@ -2830,6 +2848,9 @@ static func _materialize_object_guards(normalized: Dictionary, placements: Dicti
 			"guarded_object_kind": String(candidate.get("kind", "")),
 			"guarded_object_placement_id": String(target.get("placement_id", "")),
 			"guarded_artifact_id": String(target.get("artifact_id", "")),
+			"guarded_object_point": target_point,
+			"guard_distance": guard_distance,
+			"adjacent_to_guarded_object": adjacent_to_guarded_object,
 			"guard_value": guard_value,
 		}
 		_copy_shared_placement_metadata(encounter, placement)
@@ -2842,6 +2863,9 @@ static func _materialize_object_guards(normalized: Dictionary, placements: Dicti
 			"x": int(point.get("x", 0)),
 			"y": int(point.get("y", 0)),
 			"zone_id": String(placement.get("zone_id", "")),
+			"guarded_object_point": target_point,
+			"guard_distance": guard_distance,
+			"adjacent_to_guarded_object": adjacent_to_guarded_object,
 			"guard_value": guard_value,
 		})
 		_mark_occupied_for_catalog(occupied, point, "route_guard", "route_guard", DEFAULT_ENCOUNTER_ID)
@@ -2852,23 +2876,105 @@ static func _materialize_object_guards(normalized: Dictionary, placements: Dicti
 		"route_reward_artifact_record_count_seen": _count_route_reward_artifacts(route_reward_records),
 		"resource_node_count_seen": placements.get("resource_nodes", []).size(),
 		"candidate_count": candidates.size(),
+		"artifact_candidate_count": artifact_candidate_count,
 		"cap": max_guards,
 		"materialized_count": materialized.size(),
+		"artifact_guard_count": _count_materialized_object_guards_for_kind(materialized, "artifact"),
+		"artifact_guard_coverage_policy": "all_materialized_artifact_rewards_before_lower_priority_object_guards_when_cells_available",
 		"skipped_no_cell": skipped_no_cell,
 	}
 	return materialized
 
+static func _append_object_guard_candidate(candidates: Array, seen: Dictionary, target: Dictionary, kind: String, guard_value: int, context: String) -> void:
+	var key := _object_guard_candidate_key(target, kind)
+	if seen.has(key):
+		return
+	seen[key] = true
+	candidates.append(_object_guard_candidate(target, kind, guard_value, context))
+
+static func _object_guard_candidate_key(target: Dictionary, kind: String) -> String:
+	var placement_id := String(target.get("placement_id", ""))
+	if placement_id != "":
+		return "%s:%s" % [kind, placement_id]
+	return "%s:%d,%d:%s:%s" % [kind, int(target.get("x", 0)), int(target.get("y", 0)), String(target.get("artifact_id", "")), String(target.get("site_id", ""))]
+
+static func _nearest_object_guard_cell_for_target(target: Dictionary, preferred_zone_id: String, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary, ordinal: int) -> Dictionary:
+	var preferred_points: Array = []
+	var approaches: Array = target.get("approach_tiles", []) if target.get("approach_tiles", []) is Array else []
+	for approach in approaches:
+		if approach is Dictionary:
+			preferred_points.append(approach)
+	if preferred_points.is_empty():
+		var target_x := int(target.get("x", 0))
+		var target_y := int(target.get("y", 0))
+		for offset in [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1)]:
+			preferred_points.append(_point_dict(target_x + offset.x, target_y + offset.y))
+	var rotated: Array = []
+	for i in range(preferred_points.size()):
+		rotated.append(preferred_points[(i + ordinal) % preferred_points.size()])
+	var catalog := _object_footprint_catalog_record_for_placement({
+		"kind": "route_guard",
+		"family_id": "route_guard",
+		"object_id": DEFAULT_ENCOUNTER_ID,
+	})
+	for candidate in rotated:
+		if candidate is Dictionary and _placement_candidate_satisfies_catalog(int(candidate.get("x", 0)), int(candidate.get("y", 0)), preferred_zone_id if preferred_zone_id != "" else null, zone_grid, terrain_rows, occupied, catalog, reserved):
+			return _point_dict(int(candidate.get("x", 0)), int(candidate.get("y", 0)))
+	for candidate in rotated:
+		if candidate is Dictionary and _placement_candidate_satisfies_catalog(int(candidate.get("x", 0)), int(candidate.get("y", 0)), preferred_zone_id if preferred_zone_id != "" else null, zone_grid, terrain_rows, occupied, catalog, {}):
+			return _point_dict(int(candidate.get("x", 0)), int(candidate.get("y", 0)))
+	for candidate in rotated:
+		if candidate is Dictionary and _placement_candidate_satisfies_catalog(int(candidate.get("x", 0)), int(candidate.get("y", 0)), null, zone_grid, terrain_rows, occupied, catalog, reserved):
+			return _point_dict(int(candidate.get("x", 0)), int(candidate.get("y", 0)))
+	for candidate in rotated:
+		if candidate is Dictionary and _placement_candidate_satisfies_catalog(int(candidate.get("x", 0)), int(candidate.get("y", 0)), null, zone_grid, terrain_rows, occupied, catalog, {}):
+			return _point_dict(int(candidate.get("x", 0)), int(candidate.get("y", 0)))
+	return {}
+
+static func _object_guard_distance_to_target(point: Dictionary, target: Dictionary) -> int:
+	var target_point := _point_dict(int(target.get("x", 0)), int(target.get("y", 0)))
+	var distance := _manhattan_distance(target_point, point)
+	var approaches: Array = target.get("approach_tiles", []) if target.get("approach_tiles", []) is Array else []
+	if _point_in_array(approaches, point):
+		distance = min(distance, 1)
+	for body in target.get("body_tiles", []):
+		if body is Dictionary:
+			distance = min(distance, _manhattan_distance(body, point))
+	return distance
+
+static func _object_guard_is_adjacent_to_target(point: Dictionary, target: Dictionary, distance: int) -> bool:
+	if distance <= 1:
+		return true
+	var approaches: Array = target.get("approach_tiles", []) if target.get("approach_tiles", []) is Array else []
+	return _point_in_array(approaches, point)
+
 static func _object_guard_candidate(target: Dictionary, kind: String, guard_value: int, context: String) -> Dictionary:
+	var priority := 0 if kind == "artifact" else 1
 	return {
 		"target": target,
 		"kind": kind,
 		"guard_value": max(600, guard_value),
 		"guard_context": context,
-		"sort_key": "%09d:%s" % [999999999 - max(600, guard_value), String(target.get("placement_id", ""))],
+		"priority": priority,
+		"sort_key": "%02d:%09d:%s" % [priority, 999999999 - max(600, guard_value), String(target.get("placement_id", ""))],
 	}
 
 static func _compare_object_guard_candidate(a: Dictionary, b: Dictionary) -> bool:
 	return String(a.get("sort_key", "")) < String(b.get("sort_key", ""))
+
+static func _count_object_guard_candidates_for_kind(candidates: Array, kind: String) -> int:
+	var count := 0
+	for candidate in candidates:
+		if candidate is Dictionary and String(candidate.get("kind", "")) == kind:
+			count += 1
+	return count
+
+static func _count_materialized_object_guards_for_kind(records: Array, kind: String) -> int:
+	var count := 0
+	for record in records:
+		if record is Dictionary and String(record.get("guarded_object_kind", "")) == kind:
+			count += 1
+	return count
 
 static func _count_route_reward_artifacts(records: Array) -> int:
 	var count := 0

@@ -77,6 +77,7 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 	var artifact_count: int = scenario.get("artifact_nodes", []).size() if scenario.get("artifact_nodes", []) is Array else 0
 	var associated_guard_count: int = staging.get("materialized_object_guards", []).size() if staging.get("materialized_object_guards", []) is Array else 0
 	var guarded_artifact_ratio: float = float(associated_guard_count) / float(max(1, artifact_count))
+	var artifact_guard_summary := _artifact_guard_summary(scenario.get("artifact_nodes", []), staging.get("materialized_object_guards", []))
 	var metrics := {
 		"ok": bool(generation.get("ok", false)),
 		"elapsed_msec": elapsed_msec,
@@ -97,8 +98,14 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"encounter_count": scenario.get("encounters", []).size() if scenario.get("encounters", []) is Array else 0,
 		"associated_object_guard_count": associated_guard_count,
 		"guarded_artifact_ratio": snapped(guarded_artifact_ratio, 0.001),
+		"guarded_artifact_count": int(artifact_guard_summary.get("guarded_artifact_count", 0)),
+		"guarded_artifact_missing_count": int(artifact_guard_summary.get("missing_count", 0)),
+		"guarded_artifact_adjacent_count": int(artifact_guard_summary.get("adjacent_count", 0)),
+		"guarded_artifact_max_distance": int(artifact_guard_summary.get("max_distance", 0)),
+		"guarded_artifact_coverage_ratio": snapped(float(artifact_guard_summary.get("guarded_artifact_count", 0)) / float(max(1, artifact_count)), 0.001),
 		"object_guard_artifact_node_count_seen": int(object_guard_summary.get("artifact_node_count_seen", 0)),
 		"object_guard_route_reward_artifact_count_seen": int(object_guard_summary.get("route_reward_artifact_record_count_seen", 0)),
+		"object_guard_artifact_guard_count": int(object_guard_summary.get("artifact_guard_count", 0)),
 		"object_guard_candidate_count": int(object_guard_summary.get("candidate_count", 0)),
 		"object_guard_skipped_no_cell": int(object_guard_summary.get("skipped_no_cell", 0)),
 		"decoration_count": int(decor_summary.get("record_count", 0)),
@@ -121,8 +128,9 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"metrics": metrics,
 		"failures": failures,
 		"validation_report": validation_report,
-		"artifact_node_samples": _sample_dictionaries(scenario.get("artifact_nodes", []), 4),
-		"materialized_object_guard_samples": _sample_dictionaries(staging.get("materialized_object_guards", []), 4),
+		"artifact_guard_summary": artifact_guard_summary,
+		"artifact_node_samples": _sample_dictionaries(scenario.get("artifact_nodes", []), 8),
+		"materialized_object_guard_samples": _sample_dictionaries(staging.get("materialized_object_guards", []), 8),
 		"decoration_samples": _sample_dictionaries(decor.get("decoration_records", []), 4),
 		"preview": _ascii_preview(payload),
 	}
@@ -169,8 +177,10 @@ func _metric_failures(case_id: String, metrics: Dictionary) -> Array:
 		failures.append("%s produced no multi-tile decorative blocker footprints" % case_id)
 	if int(metrics.get("artifact_count", 0)) <= 0:
 		failures.append("%s has no materialized artifact nodes" % case_id)
-	if float(metrics.get("guarded_artifact_ratio", 0.0)) < 1.0:
-		failures.append("%s has fewer associated object guards than artifacts" % case_id)
+	if int(metrics.get("guarded_artifact_count", 0)) < int(metrics.get("artifact_count", 0)):
+		failures.append("%s guarded artifact coverage is incomplete: %d/%d" % [case_id, int(metrics.get("guarded_artifact_count", 0)), int(metrics.get("artifact_count", 0))])
+	if int(metrics.get("guarded_artifact_max_distance", 0)) > 2:
+		failures.append("%s guarded artifact max distance is too loose: %d" % [case_id, int(metrics.get("guarded_artifact_max_distance", 0))])
 	if int(metrics.get("encounter_count", 0)) < max(4, int(metrics.get("artifact_count", 0)) + int(metrics.get("town_count", 0))):
 		failures.append("%s guard/encounter density is too low: %d" % [case_id, int(metrics.get("encounter_count", 0))])
 	if int(metrics.get("object_instance_count", 0)) < int(metrics.get("town_count", 0)) + int(metrics.get("mine_count", 0)) + int(metrics.get("decoration_count", 0)):
@@ -247,6 +257,9 @@ func _summary(results: Array) -> Dictionary:
 		"decoration_blocking_body_tiles": 0,
 		"multitile_decorations": 0,
 		"artifacts": 0,
+		"guarded_artifacts": 0,
+		"guarded_artifact_missing": 0,
+		"guarded_artifact_max_distance": 0,
 		"encounters": 0,
 		"associated_object_guards": 0,
 		"object_instances": 0,
@@ -262,6 +275,9 @@ func _summary(results: Array) -> Dictionary:
 		totals["decoration_blocking_body_tiles"] = int(totals.get("decoration_blocking_body_tiles", 0)) + int(metrics.get("decoration_blocking_body_tile_total", 0))
 		totals["multitile_decorations"] = int(totals.get("multitile_decorations", 0)) + int(metrics.get("multitile_decoration_count", 0))
 		totals["artifacts"] = int(totals.get("artifacts", 0)) + int(metrics.get("artifact_count", 0))
+		totals["guarded_artifacts"] = int(totals.get("guarded_artifacts", 0)) + int(metrics.get("guarded_artifact_count", 0))
+		totals["guarded_artifact_missing"] = int(totals.get("guarded_artifact_missing", 0)) + int(metrics.get("guarded_artifact_missing_count", 0))
+		totals["guarded_artifact_max_distance"] = max(int(totals.get("guarded_artifact_max_distance", 0)), int(metrics.get("guarded_artifact_max_distance", 0)))
 		totals["encounters"] = int(totals.get("encounters", 0)) + int(metrics.get("encounter_count", 0))
 		totals["associated_object_guards"] = int(totals.get("associated_object_guards", 0)) + int(metrics.get("associated_object_guard_count", 0))
 		totals["object_instances"] = int(totals.get("object_instances", 0)) + int(metrics.get("object_instance_count", 0))
@@ -283,6 +299,47 @@ func _town_distance_summary(towns: Variant) -> Dictionary:
 			var distance: int = abs(int(left.get("x", 0)) - int(right.get("x", 0))) + abs(int(left.get("y", 0)) - int(right.get("y", 0)))
 			minimum = min(minimum, distance)
 	return {"minimum": minimum if minimum != 999999 else 0}
+
+func _artifact_guard_summary(artifacts: Variant, guards: Variant) -> Dictionary:
+	var artifact_by_id := {}
+	var guarded := {}
+	var adjacent_count := 0
+	var max_distance := 0
+	if artifacts is Array:
+		for artifact in artifacts:
+			if artifact is Dictionary:
+				artifact_by_id[String(artifact.get("placement_id", ""))] = artifact
+	if guards is Array:
+		for guard in guards:
+			if not (guard is Dictionary):
+				continue
+			if String(guard.get("guarded_object_kind", "")) != "artifact":
+				continue
+			var guarded_id := String(guard.get("guarded_object_placement_id", ""))
+			if guarded_id == "" or not artifact_by_id.has(guarded_id):
+				continue
+			guarded[guarded_id] = true
+			var artifact: Dictionary = artifact_by_id[guarded_id]
+			var distance := int(guard.get("guard_distance", -1))
+			if distance < 0:
+				distance = abs(int(guard.get("x", 0)) - int(artifact.get("x", 0))) + abs(int(guard.get("y", 0)) - int(artifact.get("y", 0)))
+			max_distance = max(max_distance, distance)
+			if distance <= 1 or bool(guard.get("adjacent_to_guarded_object", false)):
+				adjacent_count += 1
+	var missing := []
+	for artifact_id in artifact_by_id.keys():
+		if not guarded.has(String(artifact_id)):
+			missing.append(String(artifact_id))
+	missing.sort()
+	return {
+		"artifact_count": artifact_by_id.size(),
+		"guarded_artifact_count": guarded.size(),
+		"missing_count": missing.size(),
+		"missing_artifact_ids": missing,
+		"adjacent_count": adjacent_count,
+		"max_distance": max_distance,
+		"policy": "guards must explicitly reference materialized artifact placement ids",
+	}
 
 func _sample_dictionaries(records: Variant, limit: int) -> Array:
 	var samples := []
@@ -307,6 +364,9 @@ func _case_log_line(result: Dictionary) -> Dictionary:
 		"decor_body_tiles": int(metrics.get("decoration_blocking_body_tile_total", 0)),
 		"multitile_decor": int(metrics.get("multitile_decoration_count", 0)),
 		"artifacts": int(metrics.get("artifact_count", 0)),
+		"guarded_artifacts": int(metrics.get("guarded_artifact_count", 0)),
+		"guarded_artifact_missing": int(metrics.get("guarded_artifact_missing_count", 0)),
+		"guarded_artifact_max_distance": int(metrics.get("guarded_artifact_max_distance", 0)),
 		"guards": int(metrics.get("associated_object_guard_count", 0)),
 	}
 
