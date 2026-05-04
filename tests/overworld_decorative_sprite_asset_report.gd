@@ -84,12 +84,33 @@ func _static_manifest_summary() -> Dictionary:
 		if not ResourceLoader.exists(path):
 			_fail("Decorative distinct runtime texture is not importable: %s -> %s" % [asset_id, path])
 			return {}
+		if _texture_has_visible_outer_alpha(path, 3):
+			_fail("Decorative distinct runtime texture has visible crop-border alpha: %s -> %s" % [asset_id, path])
+			return {}
 	return {
 		"authored_decorative_or_blocker_object_count": decorative_object_count,
 		"mapped_object_count": mappings.size(),
 		"distinct_asset_count": distinct_asset_ids.size(),
 		"legacy_archetype_asset_count": legacy_archetypes.size(),
 	}
+
+func _texture_has_visible_outer_alpha(path: String, border_px: int) -> bool:
+	var image := Image.new()
+	var error := image.load(ProjectSettings.globalize_path(path))
+	if error != OK:
+		_fail("Could not load decorative runtime texture for alpha-border audit: %s" % path)
+		return true
+	var width := image.get_width()
+	var height := image.get_height()
+	for y in range(height):
+		for x in range(border_px):
+			if image.get_pixel(x, y).a > 0.03 or image.get_pixel(width - 1 - x, y).a > 0.03:
+				return true
+	for x in range(width):
+		for y in range(border_px):
+			if image.get_pixel(x, y).a > 0.03 or image.get_pixel(x, height - 1 - y).a > 0.03:
+				return true
+	return false
 
 func _native_runtime_presentation_summary(static_summary: Dictionary) -> Dictionary:
 	if not ClassDB.class_exists("MapPackageService"):
