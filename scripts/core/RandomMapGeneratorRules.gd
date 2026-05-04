@@ -2560,6 +2560,7 @@ static func _resource_node_from_placement(placement_id: String, payload: Diction
 		"original_resource_category_id": String(payload.get("original_resource_category_id", "")),
 		"resource_id": String(payload.get("resource_id", "")),
 		"neutral_dwelling_family_id": String(payload.get("neutral_dwelling_family_id", "")),
+		"zone_role": String(payload.get("zone_role", "")),
 		"guard_pressure": payload.get("guard_pressure", {}),
 	}
 
@@ -2890,6 +2891,9 @@ static func _materialize_object_guards(normalized: Dictionary, placements: Dicti
 			"guard_value": guard_value,
 		})
 		_mark_occupied_for_catalog(occupied, point, "route_guard", "route_guard", DEFAULT_ENCOUNTER_ID)
+	var candidate_counts_by_kind := _count_object_guard_candidates_by_kind(candidates)
+	var materialized_counts_by_kind := _count_materialized_object_guards_by_kind(materialized)
+	var unguarded_candidates := _unguarded_object_guard_candidates(candidates, materialized)
 	placements["object_placements"] = object_placements
 	placements["encounters"] = encounters
 	placements["materialized_object_guard_summary"] = {
@@ -2897,10 +2901,22 @@ static func _materialize_object_guards(normalized: Dictionary, placements: Dicti
 		"route_reward_artifact_record_count_seen": _count_route_reward_artifacts(route_reward_records),
 		"resource_node_count_seen": placements.get("resource_nodes", []).size(),
 		"candidate_count": candidates.size(),
+		"candidate_counts_by_kind": candidate_counts_by_kind,
 		"artifact_candidate_count": artifact_candidate_count,
 		"cap": max_guards,
 		"materialized_count": materialized.size(),
+		"materialized_counts_by_kind": materialized_counts_by_kind,
 		"artifact_guard_count": _count_materialized_object_guards_for_kind(materialized, "artifact"),
+		"mine_candidate_count": int(candidate_counts_by_kind.get("mine", 0)),
+		"mine_guard_count": int(materialized_counts_by_kind.get("mine", 0)),
+		"dwelling_candidate_count": int(candidate_counts_by_kind.get("neutral_dwelling", 0)),
+		"dwelling_guard_count": int(materialized_counts_by_kind.get("neutral_dwelling", 0)),
+		"route_reward_candidate_count": int(candidate_counts_by_kind.get("route_reward", 0)),
+		"route_reward_guard_count": int(materialized_counts_by_kind.get("route_reward", 0)),
+		"guardable_valuable_object_count": candidates.size(),
+		"guarded_valuable_object_count": materialized.size(),
+		"unguarded_valuable_object_count": unguarded_candidates.size(),
+		"unguarded_valuable_object_samples": unguarded_candidates.slice(0, 12),
 		"artifact_guard_coverage_policy": "all_materialized_artifact_rewards_before_lower_priority_object_guards_when_cells_available",
 		"skipped_no_cell": skipped_no_cell,
 	}
@@ -2990,12 +3006,62 @@ static func _count_object_guard_candidates_for_kind(candidates: Array, kind: Str
 			count += 1
 	return count
 
+static func _count_object_guard_candidates_by_kind(candidates: Array) -> Dictionary:
+	var counts := {}
+	for candidate in candidates:
+		if not (candidate is Dictionary):
+			continue
+		var kind := String(candidate.get("kind", ""))
+		if kind == "":
+			continue
+		counts[kind] = int(counts.get(kind, 0)) + 1
+	return _sorted_dict(counts)
+
 static func _count_materialized_object_guards_for_kind(records: Array, kind: String) -> int:
 	var count := 0
 	for record in records:
 		if record is Dictionary and String(record.get("guarded_object_kind", "")) == kind:
 			count += 1
 	return count
+
+static func _count_materialized_object_guards_by_kind(records: Array) -> Dictionary:
+	var counts := {}
+	for record in records:
+		if not (record is Dictionary):
+			continue
+		var kind := String(record.get("guarded_object_kind", ""))
+		if kind == "":
+			continue
+		counts[kind] = int(counts.get(kind, 0)) + 1
+	return _sorted_dict(counts)
+
+static func _unguarded_object_guard_candidates(candidates: Array, materialized: Array) -> Array:
+	var guarded := {}
+	for record in materialized:
+		if not (record is Dictionary):
+			continue
+		var key := "%s:%s" % [String(record.get("guarded_object_kind", "")), String(record.get("guarded_object_placement_id", ""))]
+		guarded[key] = true
+	var missing := []
+	for candidate in candidates:
+		if not (candidate is Dictionary):
+			continue
+		var target: Dictionary = candidate.get("target", {}) if candidate.get("target", {}) is Dictionary else {}
+		var key := _object_guard_candidate_key(target, String(candidate.get("kind", "")))
+		if guarded.has(key):
+			continue
+		missing.append({
+			"kind": String(candidate.get("kind", "")),
+			"placement_id": String(target.get("placement_id", "")),
+			"site_id": String(target.get("site_id", "")),
+			"artifact_id": String(target.get("artifact_id", "")),
+			"zone_id": String(target.get("zone_id", "")),
+			"x": int(target.get("x", 0)),
+			"y": int(target.get("y", 0)),
+			"guard_value": int(candidate.get("guard_value", 0)),
+			"guard_context": String(candidate.get("guard_context", "")),
+		})
+	return missing
 
 static func _count_route_reward_artifacts(records: Array) -> int:
 	var count := 0
@@ -3008,8 +3074,10 @@ static func _object_guard_cap_for_size(normalized: Dictionary, candidate_count: 
 	var size: Dictionary = normalized.get("size", {}) if normalized.get("size", {}) is Dictionary else {}
 	var width := int(size.get("width", 36))
 	var height := int(size.get("height", 36))
-	var scale: float = max(1.0, float(min(width, height)) / 36.0)
-	return min(candidate_count, int(ceil(8.0 * scale * scale)))
+	if min(width, height) < 36:
+		return min(candidate_count, 8)
+	var map_bound: int = max(8, int(ceil(float(max(1, width * height)) / 24.0)))
+	return min(candidate_count, map_bound)
 
 static func _object_guard_anchor_offset(index: int) -> Vector2i:
 	var offsets := [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]
@@ -3187,6 +3255,7 @@ static func _density_support_resource_node_from_placement(placement_id: String, 
 		"x": int(point.get("x", 0)),
 		"y": int(point.get("y", 0)),
 		"zone_id": zone_id,
+		"zone_role": String(payload.get("zone_role", "")),
 		"owner": "neutral",
 		"player_slot": 0,
 		"kind": String(payload.get("purpose", "route_density_support")),
@@ -3205,6 +3274,7 @@ static func _route_reward_artifact_node_from_placement(placement_id: String, pay
 		"x": int(point.get("x", 0)),
 		"y": int(point.get("y", 0)),
 		"zone_id": zone_id,
+		"zone_role": String(payload.get("zone_role", "")),
 		"collected": false,
 		"owner": "neutral",
 		"player_slot": 0,
@@ -3225,6 +3295,7 @@ static func _route_reward_resource_node_from_placement(placement_id: String, pay
 		"x": int(point.get("x", 0)),
 		"y": int(point.get("y", 0)),
 		"zone_id": zone_id,
+		"zone_role": String(payload.get("zone_role", "")),
 		"owner": "neutral",
 		"player_slot": 0,
 		"kind": "route_reward_cache",
@@ -4134,7 +4205,7 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 			"monster_reward_context": reward_context,
 			"family_ids_selected": _decoration_family_ids(selected),
 		})
-	var route_shaping := _decoration_route_shaping_summary(records, route_graph, road_network, terrain_rows)
+	var route_shaping := _decoration_route_shaping_summary(records, route_graph, road_network, terrain_rows, placements)
 	var path_validation := _decoration_path_safety_validation(records, route_graph, terrain_rows, _route_blocking_occupied_lookup(placements.get("object_placements", [])), reachability)
 	var density_validation := _decoration_density_target_validation(zone_targets)
 	var status := "pass"
@@ -6426,8 +6497,9 @@ static func _decoration_path_safety_validation(records: Array, route_graph: Dict
 		"checked_decoration_record_count": records.size(),
 	}
 
-static func _decoration_route_shaping_summary(records: Array, route_graph: Dictionary, road_network: Dictionary, terrain_rows: Array) -> Dictionary:
+static func _decoration_route_shaping_summary(records: Array, route_graph: Dictionary, road_network: Dictionary, terrain_rows: Array, placements: Dictionary = {}) -> Dictionary:
 	var body_to_record := {}
+	var guard_body_to_record := {}
 	var blocking_record_ids := {}
 	for record in records:
 		if not (record is Dictionary) or not bool(record.get("blocking_body", true)):
@@ -6439,6 +6511,17 @@ static func _decoration_route_shaping_summary(records: Array, route_graph: Dicti
 		for body in record.get("body_tiles", []):
 			if body is Dictionary:
 				body_to_record[_point_key(int(body.get("x", 0)), int(body.get("y", 0)))] = record_id
+	for placement in placements.get("object_placements", []):
+		if not (placement is Dictionary):
+			continue
+		if String(placement.get("kind", "")) not in ["route_guard", "special_guard_gate"]:
+			continue
+		var guard_id := String(placement.get("placement_id", placement.get("id", "")))
+		if guard_id == "":
+			continue
+		for body in placement.get("body_tiles", []):
+			if body is Dictionary:
+				guard_body_to_record[_point_key(int(body.get("x", 0)), int(body.get("y", 0)))] = guard_id
 	var edges_by_id := _route_edges_by_id(route_graph.get("edges", []))
 	var required_route_ids := []
 	for edge in route_graph.get("edges", []):
@@ -6451,6 +6534,8 @@ static func _decoration_route_shaping_summary(records: Array, route_graph: Dicti
 	var required_with_choke := {}
 	var shoulder_body_keys := {}
 	var shoulder_record_ids := {}
+	var shoulder_guard_body_keys := {}
+	var shoulder_guard_ids := {}
 	var choked_road_tile_count := 0
 	var road_tile_count := 0
 	var required_road_tile_count := 0
@@ -6480,6 +6565,11 @@ static func _decoration_route_shaping_summary(records: Array, route_graph: Dicti
 					shoulder_body_keys[key] = true
 					shoulder_record_ids[String(body_to_record[key])] = true
 					route_has_shoulder = true
+				elif guard_body_to_record.has(key):
+					adjacent_body_count += 1
+					shoulder_guard_body_keys[key] = true
+					shoulder_guard_ids[String(guard_body_to_record[key])] = true
+					route_has_shoulder = true
 			if adjacent_body_count >= 2:
 				choked_road_tile_count += 1
 				route_has_choke = true
@@ -6500,8 +6590,11 @@ static func _decoration_route_shaping_summary(records: Array, route_graph: Dicti
 		"required_route_choke_coverage_ratio": snapped(float(required_with_choke.size()) / float(max(1, required_count)), 0.001),
 		"road_tile_count": road_tile_count,
 		"required_road_tile_count": required_road_tile_count,
-		"route_shoulder_body_count": shoulder_body_keys.size(),
+		"route_shoulder_body_count": shoulder_body_keys.size() + shoulder_guard_body_keys.size(),
+		"route_shoulder_decoration_body_count": shoulder_body_keys.size(),
+		"route_shoulder_guard_body_count": shoulder_guard_body_keys.size(),
 		"route_shoulder_decoration_count": shoulder_record_ids.size(),
+		"route_shoulder_guard_count": shoulder_guard_ids.size(),
 		"blocking_decoration_count": blocking_record_ids.size(),
 		"choked_road_tile_count": choked_road_tile_count,
 		"required_route_ids": required_route_ids,

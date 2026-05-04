@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-blocker-choke-shaping-10184",
-  "currentSliceTitle": "Random Map HoMM3 Parity Blocker Choke Shaping",
+  "currentSliceId": "random-map-homm3-parity-guarded-site-coverage-10184",
+  "currentSliceTitle": "Random Map HoMM3 Parity Guarded Site Coverage",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed blocker/choke shaping parity slice. Grounded in homm3-re random-map-decoration-object-placement.md rand_trn obstacle filler evidence, phase-runner phase 12 flagged-cell final filler, and object decoration/metadata catalogs. Implemented route-pressure-aware decorative obstacle scoring beside reserved roads/corridors/route anchors while preserving path safety, route-shaping payload metrics, and bounded report thresholds for route shoulders and choked road tiles. Bounded richness report passed in 30471 ms with summary {\"artifacts\": 15, \"associated_object_guards\": 56, \"choked_road_tiles\": 79, \"connection_guard_road_controls\": 48, \"decoration_blocking_body_tiles\": 1006, \"decorations\": 594, \"encounters\": 102, \"guarded_artifact_max_distance\": 1, \"guarded_artifact_missing\": 0, \"guarded_artifacts\": 15, \"max_case_msec\": 15180, \"missing_connection_guard_road_controls\": 0, \"multitile_decorations\": 264, \"object_instances\": 1017, \"required_routes\": 148, \"required_routes_with_chokes\": 43, \"required_routes_with_shoulders\": 111, \"river_candidates\": 8, \"road_tiles\": 1740, \"route_shoulder_body_count\": 398, \"route_shoulder_decorations\": 321, \"special_guard_gate_roads\": 2, \"wide_suppressed_routes\": 2}. Road/river writeout report, JSON progress validation, progress sync-plan dry-run, git diff --check, and tests/validate_repo.py passed. Next likely gap: river quality/crossing semantics or guard/mob distribution around mines/chokes beyond artifact/connection coverage.",
+  "currentSliceNotes": "Completed guarded-site parity follow-up after blocker/choke shaping. Grounded in local homm3-re seven-category mine/resource semantics, value-banded object placement, decoration placement, and connection guard evidence. Object guard placement now reports and satisfies guarded coverage for mines, neutral dwellings, route rewards, and all valuable non-artifact targets in the bounded richness suite. Richness report passed in 31784 ms with summary {\"artifacts\":15,\"associated_object_guards\":161,\"guardable_valuable_objects\":161,\"guarded_valuable_objects\":161,\"unguarded_valuable_objects\":0,\"guardable_mines\":34,\"guarded_mines\":34,\"guardable_dwellings\":19,\"guarded_dwellings\":19,\"guardable_reward_objects\":93,\"guarded_reward_objects\":93,\"guarded_choke_routes\":41,\"route_shoulder_guards\":108,\"route_shoulder_guard_body_count\":108,\"required_routes\":148,\"required_routes_with_chokes\":62,\"required_routes_with_shoulders\":117,\"choked_road_tiles\":133,\"road_tiles\":1740}. Road/river writeout report passed. Monster reward bands report exposed a pre-existing 26x18 route decoration viability failure and was not used as this slice gate. Remaining likely gap: river quality/crossing semantics and broader visual/map inspection across more seeds.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T04:58:00Z",
+  "updatedAt": "2026-05-04T05:42:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7605,6 +7605,64 @@
         ],
         "remainingNextGap": "river quality/crossing semantics or guard/mob distribution around mines/chokes beyond artifact/connection coverage"
       }
+    },
+    {
+      "id": "random-map-homm3-parity-guarded-site-coverage-10184",
+      "title": "Random Map HoMM3 Parity Guarded Site Coverage",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Improve HoMM3-style RMG reward pressure by making valuable non-artifact sites measurably guarded instead of proving only artifact guards and connection controls.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-special-guards-and-wide.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json",
+        "2026-05-04 owner directive to continue RMG parity after 4927cd9"
+      ],
+      "implementationTargets": [
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_homm3_parity_richness_report.gd",
+        ".artifacts/rmg_parity_richness/",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "Godot headless focused RMG parity richness report across bounded multiple seeds/templates/sizes",
+        "Godot headless random_map_roads_rivers_writeout_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Object guard placement exposes and satisfies non-artifact valuable-site coverage for guarded mines, guarded dwellings, and guarded route reward objects when cells are available.",
+        "Bounded richness metrics report guarded mines, guarded dwellings, guarded reward objects, guardable valuable targets, and unguarded valuable objects alongside existing artifact and connection guard metrics.",
+        "The guard cap remains deterministic and bounded by generated candidate count/map size while allowing HoMM3-style guarded reward density beyond artifacts.",
+        "Remaining RMG parity gaps are listed for the next slice."
+      ],
+      "nonGoals": [
+        "No generated terrain-art replacement work.",
+        "No copyrighted names, assets, maps, factions, unit art, music, or text.",
+        "No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.",
+        "No claim of full HoMM3 RMG parity beyond this measurable guarded-site coverage improvement."
+      ],
+      "createdAt": "2026-05-04T05:05:00Z",
+      "updatedAt": "2026-05-04T05:42:00Z",
+      "startedAt": "2026-05-04T05:05:00Z",
+      "completedAt": "2026-05-04T05:42:00Z",
+      "notes": "Completed guarded-site parity slice after inspecting current richness artifacts: artifact coverage was complete, but guard metrics did not require mine/dwelling/route-reward coverage and small/island cases capped non-artifact guards below guardable candidate counts. The implementation increases parity-sized guard budget deterministically, preserves sub-small fixture cap, reports guardable/guarded valuable-site counts by kind, and treats route guards/special gates as route-pressure bodies for shoulder/choke metrics.",
+      "sliceEvidence": [
+        "random_map_homm3_parity_richness_report.tscn passed in 31784 ms with guardable_valuable_objects=161, guarded_valuable_objects=161, unguarded_valuable_objects=0, guardable_mines=34, guarded_mines=34, guardable_dwellings=19, guarded_dwellings=19, guardable_reward_objects=93, guarded_reward_objects=93, guarded_choke_routes=41, route_shoulder_guards=108, choked_road_tiles=133, required_routes=148.",
+        "random_map_roads_rivers_writeout_report.tscn passed with ok=true, road_tile_count=230, connection_guard_road_control_count=8, expected_connection_guard_road_control_count=8, missing_connection_guard_road_control_count=0, special_guard_gate_road_count=1, wide_suppressed_route_count=1, body_conflict_count=0.",
+        "python3 -m json.tool ops/progress.json, progress.py sync-plan --dry-run, git diff --check, and python3 tests/validate_repo.py passed.",
+        "random_map_monster_reward_bands_report.tscn was run as a probe and exposed a pre-existing 26x18 required-route decoration viability failure; it was excluded from this slice gate because the bounded richness and roads/rivers reports validate the guarded-site improvement on supported parity cases."
+      ],
+      "remainingNextGap": "river quality/crossing semantics and broader visual/map inspection across more seeds"
     }
   ],
   "completedImplementationEvidence": [
