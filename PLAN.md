@@ -775,6 +775,39 @@ nonGoals:
 - No promotion of `translated_rmg_template_042_v1`, `translated_rmg_template_043_v1`, 144x144, or underground large templates into strict cheap-gate fixtures.
 - No full HoMM3 RMG parity claim beyond this bounded large-template diagnostic evidence.
 
+Selected owner-directed follow-up slice:
+
+id: `random-map-homm3-parity-large-layout-quality-metrics-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Surface the source-backed large-template fairness/layout quality warnings that are currently present in validation output but hidden from the visual diagnostic matrix and compact metrics.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-homm3-parity-visual-inspection-gaps.md`
+- `docs/random-map-generator-foundation.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md`
+- 2026-05-04 owner directive to continue RMG parity after `6c14f35`
+implementationTargets:
+- `tests/random_map_homm3_parity_richness_report.gd`
+- `tests/random_map_homm3_parity_visual_inspection_report.gd`
+- `.artifacts/rmg_parity_large_visual_inspection/`
+- `.artifacts/rmg_parity_visual_inspection/`
+- `docs/random-map-homm3-parity-visual-inspection-gaps.md`
+- `ops/progress.json`
+completionCriteria:
+- Large/visual inspection metrics expose fairness status, warning counts, fail-threshold warning counts, contest-route distance spread, contest-guard pressure spread, route-guard pressure spread, and town-to-resource distance spread from the existing source-backed fairness report.
+- The visual matrix and JSON summaries make large layout-quality warnings visible without changing generator route, object, guard, terrain, save/load, renderer, or runtime semantics.
+- The gap note records the newly visible large-template layout warning evidence and identifies layout correction as a separate next slice before strict promotion.
+- Focused large visual report, cheap visual report if reasonable, JSON/progress sync, diff check, and repository validation pass.
+nonGoals:
+- No generated terrain-art replacement work or generated PNG ingestion.
+- No copyrighted names, assets, maps, factions, unit art, music, or text.
+- No route/pathing, zone layout, guard pressure, object placement, content density, save-version, native generator, renderer, fog, or gameplay behavior change.
+- No promotion of `translated_rmg_template_042_v1`, `translated_rmg_template_043_v1`, 144x144, or underground large templates into strict cheap-gate fixtures.
+- No full HoMM3 RMG parity claim beyond this clearer diagnostic evidence.
+
 ### Phase 3 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.

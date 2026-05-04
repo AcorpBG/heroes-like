@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-large-visual-diagnostic-10184",
-  "currentSliceTitle": "Random Map HoMM3 Parity Large Visual Diagnostic",
+  "currentSliceId": "random-map-homm3-parity-large-layout-quality-metrics-10184",
+  "currentSliceTitle": "Random Map HoMM3 Parity Large Layout Quality Metrics",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed after inspecting the current visual matrix/per-case previews, current report implementation, and reverse-engineered HoMM3 template/phase/zone-link/decor docs. Template 042 at 108x108 produced no diagnostic quality gaps but remains too slow for the cheap gate.",
+  "currentSliceNotes": "Completed after surfacing existing source-backed fairness/layout warnings in visual and richness report metrics. Large template 042 still has strong road/guard/decor/richness counters, but the diagnostic now exposes 4/4 fairness fail-threshold warnings: contest-route spread 39/56, contest guard pressure spread 3000, and town-to-resource spread 42.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T10:35:00Z",
+  "updatedAt": "2026-05-04T11:45:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -8109,6 +8109,128 @@
         "Passed: python3 tests/validate_repo.py."
       ],
       "remainingNextGap": "translated_rmg_template_042_v1 remains diagnostic because 108x108 inspection takes about 41 seconds; translated_rmg_template_043_v1, 144x144, underground large profiles, rendered screenshot comparison, final terrain/object art, native parity adoption, and generated PNG ingestion remain separate slices."
+    },
+    {
+      "id": "random-map-homm3-parity-large-layout-quality-metrics-10184",
+      "title": "Random Map HoMM3 Parity Large Layout Quality Metrics",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+        "docs/random-map-generator-foundation.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md",
+        "2026-05-04 owner directive to continue RMG parity after 6c14f35"
+      ],
+      "purpose": "Surface the source-backed large-template fairness/layout quality warnings that are currently present in validation output but hidden from the visual diagnostic matrix and compact metrics.",
+      "implementationTargets": [
+        "tests/random_map_homm3_parity_richness_report.gd",
+        "tests/random_map_homm3_parity_visual_inspection_report.gd",
+        ".artifacts/rmg_parity_large_visual_inspection/",
+        ".artifacts/rmg_parity_visual_inspection/",
+        "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "/root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_large_visual_inspection_report.tscn",
+        "/root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_visual_inspection_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "git diff --check",
+        "python3 tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Large/visual inspection metrics expose fairness status, warning counts, fail-threshold warning counts, contest-route distance spread, contest-guard pressure spread, route-guard pressure spread, and town-to-resource distance spread from the existing source-backed fairness report.",
+        "The visual matrix and JSON summaries make large layout-quality warnings visible without changing generator route, object, guard, terrain, save/load, renderer, or runtime semantics.",
+        "The gap note records the newly visible large-template layout warning evidence and identifies layout correction as a separate next slice before strict promotion.",
+        "Focused large visual report, cheap visual report if reasonable, JSON/progress sync, diff check, and repository validation pass."
+      ],
+      "nonGoals": [
+        "No generated terrain-art replacement work or generated PNG ingestion.",
+        "No copyrighted names, assets, maps, factions, unit art, music, or text.",
+        "No route/pathing, zone layout, guard pressure, object placement, content density, save-version, native generator, renderer, fog, or gameplay behavior change.",
+        "No promotion of translated_rmg_template_042_v1, translated_rmg_template_043_v1, 144x144, or underground large templates into strict cheap-gate fixtures.",
+        "No full HoMM3 RMG parity claim beyond this clearer diagnostic evidence."
+      ],
+      "createdAt": "2026-05-04T11:05:00Z",
+      "updatedAt": "2026-05-04T11:45:00Z",
+      "startedAt": "2026-05-04T11:05:00Z",
+      "completedAt": "2026-05-04T11:45:00Z",
+      "notes": "Completed after inspecting .artifacts/rmg_parity_large_visual_inspection and identifying layout fairness metrics as the highest-value next evidence gap. The large template 042 ASCII has full marker coverage and strong roads/guards/decor counters, but the source-backed fairness report contains fail-threshold spread warnings that were not visible in the visual matrix before this slice.",
+      "implementationEvidence": {
+        "summary": "Added source-backed fairness/layout quality metrics to the RMG richness and visual inspection report surfaces without changing generator semantics.",
+        "sourceFiles": [
+          "tests/random_map_homm3_parity_richness_report.gd",
+          "tests/random_map_homm3_parity_visual_inspection_report.gd",
+          "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+          "PLAN.md",
+          "ops/progress.json"
+        ],
+        "inspectionArtifacts": [
+          ".artifacts/rmg_parity_large_visual_inspection/summary.json",
+          ".artifacts/rmg_parity_large_visual_inspection/matrix.md",
+          ".artifacts/rmg_parity_visual_inspection/summary.json",
+          ".artifacts/rmg_parity_visual_inspection/matrix.md",
+          ".artifacts/rmg_parity_richness/summary.json"
+        ],
+        "focusedMetrics": {
+          "large_report_runtime_msec": 41479,
+          "large_case_elapsed_msec": 41221,
+          "large_case_elapsed_msec_per_route": 438.521,
+          "template_id": "translated_rmg_template_042_v1",
+          "profile_id": "translated_rmg_profile_042_v1",
+          "width": 108,
+          "height": 108,
+          "road_segment_count": 94,
+          "road_tiles": 2376,
+          "river_candidates": 2,
+          "decoration_body_tiles": 1608,
+          "guarded_valuable_objects": 120,
+          "guardable_valuable_objects": 120,
+          "poor_zones": 0,
+          "marker_count": 801,
+          "row_marker_coverage_ratio": 1.0,
+          "column_marker_coverage_ratio": 1.0,
+          "quadrant_marker_coverage": 4,
+          "fairness_status": "warning",
+          "fairness_warnings": 4,
+          "fairness_fail_threshold_warnings": 4,
+          "contest_route_distance_spread": 39,
+          "travel_contest_route_distance_spread": 56,
+          "contest_guard_pressure_spread": 3000,
+          "town_to_resource_distance_spread": 42,
+          "cheap_visual_runtime_msec": 57144,
+          "cheap_visual_case_count": 6,
+          "cheap_visual_strict_pass_case_count": 5,
+          "cheap_visual_total_fairness_warnings": 18,
+          "cheap_visual_total_fairness_fail_threshold_warnings": 8,
+          "cheap_visual_max_contest_route_distance_spread": 40,
+          "cheap_visual_max_travel_contest_route_distance_spread": 66,
+          "cheap_visual_max_contest_guard_pressure_spread": 18000,
+          "cheap_visual_max_town_to_resource_distance_spread": 38,
+          "richness_report_runtime_msec": 31549,
+          "richness_max_case_msec": 15546,
+          "richness_fairness_warnings": 14,
+          "richness_fairness_fail_threshold_warnings": 4
+        },
+        "concreteFix": "Visual and richness reports now preserve fairness status, fairness warning counts, fail-threshold warning counts, contest-route distance spreads, contest-guard pressure spreads, route-guard pressure spreads, and town-to-resource distance spreads from the existing source-backed resource/encounter fairness report. The visual matrix shows those layout metrics next to roads, rivers, decor, guards, and marker coverage."
+      },
+      "validationEvidence": [
+        "Passed: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-rmg-large-quality-1 XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-rmg-large-quality-1 XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-rmg-large-quality-1 /root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_large_visual_inspection_report.tscn; report showed ok=true, runtime_msec=41479, elapsed_msec=41221, roads=2376, rivers=2, decor_body_tiles=1608, guarded_valuable=120/120, poor_zones=0, total_fairness_warnings=4, total_fairness_fail_threshold_warnings=4, contest_route_distance_spread=39/56, contest_guard_pressure_spread=3000, and town_to_resource_distance_spread=42.",
+        "Passed: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-rmg-visual-quality-1 XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-rmg-visual-quality-1 XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-rmg-visual-quality-1 /root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_visual_inspection_report.tscn; report showed ok=true, runtime_msec=57144, 6 cases, 5/5 strict passes, 0 diagnostic gaps, total_fairness_warnings=18, total_fairness_fail_threshold_warnings=8, max contest-route spread 40/66, max contest-guard pressure spread 18000, max town-to-resource spread 38, 3889 road tiles, 286/286 guarded valuable objects, and 0 poor zones.",
+        "Passed: GODOT_SILENCE_ROOT_WARNING=1 XDG_DATA_HOME=/tmp/heroes-like-godot-data-rmg-richness-quality-1 XDG_CONFIG_HOME=/tmp/heroes-like-godot-config-rmg-richness-quality-1 XDG_CACHE_HOME=/tmp/heroes-like-godot-cache-rmg-richness-quality-1 /root/.local/bin/godot --headless --path . tests/random_map_homm3_parity_richness_report.tscn; report showed ok=true, runtime_msec=31549, max_case_msec=15546, fairness_warning_count=14, fairness_fail_threshold_warning_count=4, guarded_valuable_objects=166/166, poor_zones=0, and road_tiles=1740.",
+        "Passed: python3 -m json.tool ops/progress.json.",
+        "Passed: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run; output showed PLAN slice ids: 26 existing: 169 missing: 0.",
+        "Passed: git diff --check.",
+        "Passed: python3 tests/validate_repo.py."
+      ],
+      "remainingNextGap": "The next coherent parity slice should correct large/translated layout fairness spread, especially contest-route distance spread, contest-guard pressure spread, and town-to-resource route spread, before promoting translated template 042 or other route-heavy translated templates into strict fixtures. Rendered screenshot/manual play-surface evidence, 043/144x144/underground diagnostics, native parity adoption, final terrain/object art, and generated PNG ingestion remain separate gaps."
     }
   ],
   "completedImplementationEvidence": [
