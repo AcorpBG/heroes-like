@@ -71,6 +71,9 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 	var connection_guard_summary: Dictionary = connection_guards.get("summary", {}) if connection_guards.get("summary", {}) is Dictionary else {}
 	var road_summary: Dictionary = roads.get("summary", {}) if roads.get("summary", {}) is Dictionary else {}
 	var town_payload: Dictionary = staging.get("town_mine_dwelling_placement", {}) if staging.get("town_mine_dwelling_placement", {}) is Dictionary else {}
+	var town_spacing: Dictionary = town_payload.get("validation", {}).get("town_spacing", {}) if town_payload.get("validation", {}) is Dictionary and town_payload.get("validation", {}).get("town_spacing", {}) is Dictionary else {}
+	var start_town_spacing: Dictionary = town_spacing.get("start_towns", {}) if town_spacing.get("start_towns", {}) is Dictionary else {}
+	var same_zone_town_spacing: Dictionary = town_spacing.get("same_zone_towns", {}) if town_spacing.get("same_zone_towns", {}) is Dictionary else {}
 	var route_reward_summary: Dictionary = staging.get("materialized_route_reward_summary", {}) if staging.get("materialized_route_reward_summary", {}) is Dictionary else {}
 	var object_guard_summary: Dictionary = staging.get("materialized_object_guard_summary", {}) if staging.get("materialized_object_guard_summary", {}) is Dictionary else {}
 	var decor: Dictionary = staging.get("decoration_density_pass", {}) if staging.get("decoration_density_pass", {}) is Dictionary else {}
@@ -137,6 +140,11 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"minimum_town_distance_required": int(town_payload.get("summary", {}).get("minimum_town_distance_required", 0)),
 		"observed_minimum_town_distance": int(town_payload.get("summary", {}).get("observed_minimum_town_distance", town_distances.get("minimum", 0))),
 		"direct_minimum_town_distance": int(town_distances.get("minimum", 0)),
+		"start_town_minimum_distance_required": int(start_town_spacing.get("minimum_distance_required", town_payload.get("summary", {}).get("start_town_minimum_distance_required", 0))),
+		"observed_start_town_minimum_distance": int(start_town_spacing.get("observed_minimum_distance", town_payload.get("summary", {}).get("observed_start_town_minimum_distance", 0))),
+		"same_zone_town_pair_count": int(same_zone_town_spacing.get("pair_count", town_payload.get("summary", {}).get("same_zone_town_pair_count", 0))),
+		"same_zone_town_minimum_distance_required": int(same_zone_town_spacing.get("minimum_distance_required", town_payload.get("summary", {}).get("same_zone_town_minimum_distance_required", 0))),
+		"observed_same_zone_town_minimum_distance": int(same_zone_town_spacing.get("observed_minimum_distance", town_payload.get("summary", {}).get("observed_same_zone_town_minimum_distance", 0))),
 	}
 	var failures := _metric_failures(String(case.get("id", "")), metrics)
 	return {
@@ -192,6 +200,10 @@ func _metric_failures(case_id: String, metrics: Dictionary) -> Array:
 		failures.append("%s islands map has no water/river transit candidates" % case_id)
 	if int(metrics.get("direct_minimum_town_distance", 0)) < int(metrics.get("minimum_town_distance_required", 0)):
 		failures.append("%s town spacing %d below required %d" % [case_id, int(metrics.get("direct_minimum_town_distance", 0)), int(metrics.get("minimum_town_distance_required", 0))])
+	if int(metrics.get("observed_start_town_minimum_distance", 0)) > 0 and int(metrics.get("observed_start_town_minimum_distance", 0)) < int(metrics.get("start_town_minimum_distance_required", 0)):
+		failures.append("%s start town spacing %d below required %d" % [case_id, int(metrics.get("observed_start_town_minimum_distance", 0)), int(metrics.get("start_town_minimum_distance_required", 0))])
+	if int(metrics.get("same_zone_town_pair_count", 0)) > 0 and int(metrics.get("observed_same_zone_town_minimum_distance", 0)) < int(metrics.get("same_zone_town_minimum_distance_required", 0)):
+		failures.append("%s same-zone town spacing %d below required %d" % [case_id, int(metrics.get("observed_same_zone_town_minimum_distance", 0)), int(metrics.get("same_zone_town_minimum_distance_required", 0))])
 	if int(metrics.get("decoration_count", 0)) < max(8, int(area / 55)):
 		failures.append("%s decoration/blocker record density is too low: %d" % [case_id, int(metrics.get("decoration_count", 0))])
 	if int(metrics.get("decoration_blocking_body_tile_total", 0)) < max(10, int(area / 40)):
@@ -291,6 +303,11 @@ func _summary(results: Array) -> Dictionary:
 		"associated_object_guards": 0,
 		"object_instances": 0,
 		"max_case_msec": 0,
+		"minimum_town_distance_required_max": 0,
+		"observed_minimum_town_distance_min": 999999,
+		"start_town_minimum_distance_required_max": 0,
+		"observed_start_town_minimum_distance_min": 999999,
+		"same_zone_town_pair_count": 0,
 	}
 	for result in results:
 		if not (result is Dictionary):
@@ -313,6 +330,17 @@ func _summary(results: Array) -> Dictionary:
 		totals["associated_object_guards"] = int(totals.get("associated_object_guards", 0)) + int(metrics.get("associated_object_guard_count", 0))
 		totals["object_instances"] = int(totals.get("object_instances", 0)) + int(metrics.get("object_instance_count", 0))
 		totals["max_case_msec"] = max(int(totals.get("max_case_msec", 0)), int(metrics.get("elapsed_msec", 0)))
+		totals["minimum_town_distance_required_max"] = max(int(totals.get("minimum_town_distance_required_max", 0)), int(metrics.get("minimum_town_distance_required", 0)))
+		if int(metrics.get("observed_minimum_town_distance", 0)) > 0:
+			totals["observed_minimum_town_distance_min"] = min(int(totals.get("observed_minimum_town_distance_min", 999999)), int(metrics.get("observed_minimum_town_distance", 0)))
+		totals["start_town_minimum_distance_required_max"] = max(int(totals.get("start_town_minimum_distance_required_max", 0)), int(metrics.get("start_town_minimum_distance_required", 0)))
+		if int(metrics.get("observed_start_town_minimum_distance", 0)) > 0:
+			totals["observed_start_town_minimum_distance_min"] = min(int(totals.get("observed_start_town_minimum_distance_min", 999999)), int(metrics.get("observed_start_town_minimum_distance", 0)))
+		totals["same_zone_town_pair_count"] = int(totals.get("same_zone_town_pair_count", 0)) + int(metrics.get("same_zone_town_pair_count", 0))
+	if int(totals.get("observed_minimum_town_distance_min", 999999)) == 999999:
+		totals["observed_minimum_town_distance_min"] = 0
+	if int(totals.get("observed_start_town_minimum_distance_min", 999999)) == 999999:
+		totals["observed_start_town_minimum_distance_min"] = 0
 	return totals
 
 func _town_distance_summary(towns: Variant) -> Dictionary:
@@ -402,6 +430,9 @@ func _case_log_line(result: Dictionary) -> Dictionary:
 		"guarded_artifact_missing": int(metrics.get("guarded_artifact_missing_count", 0)),
 		"guarded_artifact_max_distance": int(metrics.get("guarded_artifact_max_distance", 0)),
 		"guards": int(metrics.get("associated_object_guard_count", 0)),
+		"town_min": int(metrics.get("observed_minimum_town_distance", 0)),
+		"town_required": int(metrics.get("minimum_town_distance_required", 0)),
+		"start_town_min": int(metrics.get("observed_start_town_minimum_distance", 0)),
 	}
 
 func _write_case_artifacts(result: Dictionary) -> void:

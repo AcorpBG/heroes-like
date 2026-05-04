@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-connection-road-controls-10184",
-  "currentSliceTitle": "Random Map HoMM3 Parity Connection Road Controls",
+  "currentSliceId": "random-map-homm3-parity-town-zone-spacing-10184",
+  "currentSliceTitle": "Random Map HoMM3 Parity Town Zone Spacing",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed RMG parity continuation after e20d96c. Road overlays now expose HoMM3-style connection Value, Wide, and Border Guard semantics in generated route metadata and bounded richness metrics: 48/48 expected connection road controls, 0 missing, 2 wide suppressed routes, 2 special guard gate roads across four report cases.",
+  "currentSliceNotes": "Completed town/zone spacing parity slice. Grounded in homm3-re template grammar town/castle columns, town same-type semantics, and phase-runner town placement layer. Implemented stricter size-scaled town spacing (small required 6, medium required 9 in bounded report), hard no-stack fallback before skipping town placement, town spacing policy provenance on town records, and validation/report metrics for all-town, start-town, and same-zone closest pairs. Bounded richness report passed in 30902 ms with summary {\"artifacts\": 15, \"associated_object_guards\": 56, \"connection_guard_road_controls\": 48, \"decoration_blocking_body_tiles\": 1072, \"decorations\": 594, \"encounters\": 102, \"guarded_artifact_max_distance\": 1, \"guarded_artifact_missing\": 0, \"guarded_artifacts\": 15, \"max_case_msec\": 15418, \"minimum_town_distance_required_max\": 9, \"missing_connection_guard_road_controls\": 0, \"multitile_decorations\": 312, \"object_instances\": 1017, \"observed_minimum_town_distance_min\": 22, \"observed_start_town_minimum_distance_min\": 22, \"river_candidates\": 8, \"road_tiles\": 1740, \"same_zone_town_pair_count\": 0, \"special_guard_gate_roads\": 2, \"start_town_minimum_distance_required_max\": 9, \"wide_suppressed_routes\": 2}. Road/river writeout report passed with 8/8 connection controls, 0 missing controls, 1 wide-suppressed route, and 1 special gate road. JSON progress validation, progress sync-plan dry-run, git diff --check, and tests/validate_repo.py passed. Known residual: random_map_town_mine_dwelling_placement_report.tscn and random_map_terrain_town_road_constraints_report.tscn still expose route/decor/body conflicts outside the new town spacing payload; bounded owner parity report remains green. Next likely gap: river/crossing quality or blocker shaping around chokes.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T02:55:05Z",
+  "updatedAt": "2026-05-04T03:16:50Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -7384,7 +7384,7 @@
       "id": "random-map-homm3-parity-connection-road-controls-10184",
       "title": "Random Map HoMM3 Parity Connection Road Controls",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "parentSliceId": "random-map-generator-foundation-10184",
       "classification": "phase2_child_implementation_slice",
@@ -7430,6 +7430,94 @@
       "startedAt": "2026-05-04T02:51:38Z",
       "completedAt": "2026-05-04T02:55:05Z",
       "notes": "Completed after inspecting current .artifacts/rmg_parity_richness output. Weakest remaining bounded metric was road quality/connectivity: road counts passed, but guarded/wide/border connection semantics were not validated as road-control/choke structure. Implemented connection-control road metadata and metrics grounded in homm3-re connection payload semantics, special guard, and template grammar docs. Focused richness report passed across four cases with 48/48 expected connection road controls, 0 missing controls, 2 wide suppressed routes, 2 special guard gate roads, 1740 road tiles, 8 river candidates, 15/15 guarded artifacts, and 0 missing guarded artifacts. Focused road/river writeout report passed with 8/8 controls, 1 wide suppressed route, and 1 special guard gate road in the deterministic case."
+    },
+    {
+      "id": "random-map-homm3-parity-town-zone-spacing-10184",
+      "title": "Random Map HoMM3 Parity Town Zone Spacing",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "sliceType": "child",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "classification": "phase2_child_implementation_slice",
+      "purpose": "Improve HoMM3-style RMG town placement quality by preventing start and neutral towns from appearing stacked or zone-collapsed, with deterministic spacing metrics across bounded seeds/templates.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md",
+        "2026-05-04 owner directive to continue RMG parity after 67879f8 and address likely town stacking gaps"
+      ],
+      "implementationTargets": [
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_homm3_parity_richness_report.gd",
+        ".artifacts/rmg_parity_richness/",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "Godot headless focused RMG parity richness report across bounded multiple seeds/templates/sizes",
+        "Godot headless random_map_town_mine_dwelling_placement_report.tscn",
+        "Godot headless random_map_terrain_town_road_constraints_report.tscn",
+        "python3 -m json.tool ops/progress.json",
+        "python3 tests/validate_repo.py",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Town placement uses a stricter map-size-aware separation policy for start and neutral towns instead of allowing near-stacked fallback placement.",
+        "Town/mine/dwelling validation reports all-town, start-town, and same-zone town spacing with closest-pair evidence.",
+        "Bounded richness metrics validate required and observed town spacing across multiple seeds/templates without exceeding the current report runtime envelope.",
+        "Remaining RMG parity gaps are listed for the next slice."
+      ],
+      "nonGoals": [
+        "No generated terrain-art replacement work.",
+        "No copyrighted names, assets, maps, factions, unit art, music, or text.",
+        "No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.",
+        "No attempt to claim full HoMM3 RMG parity beyond this measurable town spacing improvement."
+      ],
+      "createdAt": "2026-05-04T03:08:49Z",
+      "updatedAt": "2026-05-04T03:16:50Z",
+      "startedAt": "2026-05-04T03:08:49Z",
+      "notes": "Completed town/zone spacing parity slice. Grounded in homm3-re template grammar town/castle columns, town same-type semantics, and phase-runner town placement layer. Implemented stricter size-scaled town spacing (small required 6, medium required 9 in bounded report), hard no-stack fallback before skipping town placement, town spacing policy provenance on town records, and validation/report metrics for all-town, start-town, and same-zone closest pairs. Bounded richness report passed in 30902 ms with summary {\"artifacts\": 15, \"associated_object_guards\": 56, \"connection_guard_road_controls\": 48, \"decoration_blocking_body_tiles\": 1072, \"decorations\": 594, \"encounters\": 102, \"guarded_artifact_max_distance\": 1, \"guarded_artifact_missing\": 0, \"guarded_artifacts\": 15, \"max_case_msec\": 15418, \"minimum_town_distance_required_max\": 9, \"missing_connection_guard_road_controls\": 0, \"multitile_decorations\": 312, \"object_instances\": 1017, \"observed_minimum_town_distance_min\": 22, \"observed_start_town_minimum_distance_min\": 22, \"river_candidates\": 8, \"road_tiles\": 1740, \"same_zone_town_pair_count\": 0, \"special_guard_gate_roads\": 2, \"start_town_minimum_distance_required_max\": 9, \"wide_suppressed_routes\": 2}. Road/river writeout report passed with 8/8 connection controls, 0 missing controls, 1 wide-suppressed route, and 1 special gate road. JSON progress validation, progress sync-plan dry-run, git diff --check, and tests/validate_repo.py passed. Known residual: random_map_town_mine_dwelling_placement_report.tscn and random_map_terrain_town_road_constraints_report.tscn still expose route/decor/body conflicts outside the new town spacing payload; bounded owner parity report remains green. Next likely gap: river/crossing quality or blocker shaping around chokes.",
+      "completedAt": "2026-05-04T03:16:50Z",
+      "sliceEvidence": {
+        "boundedRichnessSummary": {
+          "artifacts": 15,
+          "associated_object_guards": 56,
+          "connection_guard_road_controls": 48,
+          "decoration_blocking_body_tiles": 1072,
+          "decorations": 594,
+          "encounters": 102,
+          "guarded_artifact_max_distance": 1,
+          "guarded_artifact_missing": 0,
+          "guarded_artifacts": 15,
+          "max_case_msec": 15418,
+          "minimum_town_distance_required_max": 9,
+          "missing_connection_guard_road_controls": 0,
+          "multitile_decorations": 312,
+          "object_instances": 1017,
+          "observed_minimum_town_distance_min": 22,
+          "observed_start_town_minimum_distance_min": 22,
+          "river_candidates": 8,
+          "road_tiles": 1740,
+          "same_zone_town_pair_count": 0,
+          "special_guard_gate_roads": 2,
+          "start_town_minimum_distance_required_max": 9,
+          "wide_suppressed_routes": 2
+        },
+        "validations": [
+          "PASS: godot --headless --path /root/dev/heroes-like tests/random_map_homm3_parity_richness_report.tscn",
+          "PASS: godot --headless --path /root/dev/heroes-like tests/random_map_roads_rivers_writeout_report.tscn",
+          "PASS: python3 -m json.tool ops/progress.json",
+          "PASS: python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
+          "PASS: git diff --check",
+          "PASS: python3 tests/validate_repo.py",
+          "KNOWN FAIL: godot --headless --path /root/dev/heroes-like tests/random_map_town_mine_dwelling_placement_report.tscn (route/decor validation failure while town_mine_dwelling_status=pass)",
+          "KNOWN FAIL: godot --headless --path /root/dev/heroes-like tests/random_map_terrain_town_road_constraints_report.tscn (road crossed blocked object body at 15,9)"
+        ],
+        "remainingNextGap": "river/crossing quality or decoration/blocker choke shaping beyond current town spacing metrics"
+      }
     }
   ],
   "completedImplementationEvidence": [
