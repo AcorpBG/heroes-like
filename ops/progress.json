@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-homm3-re-reward-value-distribution-10184",
-  "currentSliceTitle": "Native RMG HoMM3-re Reward Value Distribution",
+  "currentSliceId": "native-rmg-homm3-re-object-table-proxy-selection-10184",
+  "currentSliceTitle": "Native RMG HoMM3-re Object Table Proxy Selection",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed native C++ reward/value distribution parity increment: reward_reference records derive value/category/tier/provenance from zone treasure bands, valuable reward guards scale from protected reward value, the new distribution report passes, and existing native RMG gates remain green.",
+  "currentSliceNotes": "Completed owner-directed native C++ reward/object table proxy selection increment: reward-bearing generated records expose HoMM3-re source object/table identity and original proxy mapping metadata, with a new report proving tier/category/bucket/proxy diversity while preserving reward-value, road, fill, decoration, and package surfaces.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T16:20:00Z",
+  "updatedAt": "2026-05-04T18:10:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -8854,6 +8854,90 @@
         "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_decoration_generation_report.tscn",
         "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_full_parity_gate_report.tscn",
         "git diff --check"
+      ]
+    },
+    {
+      "id": "native-rmg-homm3-re-object-table-proxy-selection-10184",
+      "title": "Native RMG HoMM3-re Object Table Proxy Selection",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "owner_directed_phase2_native_rmg_homm3_re_object_table_proxy_selection_slice",
+      "parentSliceId": "native-rmg-homm3-re-reward-value-distribution-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/random_map_template_catalog.json",
+        "content/map_objects.json",
+        "content/homm3_re_reward_object_proxy_catalog.json",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-catalog-by-type.json",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json",
+        "2026-05-04 owner directive: continue native RMG parity beyond reward values into HoMM3-re reward/object table proxy source semantics"
+      ],
+      "purpose": "Continue native C++ GDExtension RMG parity by making reward-bearing generated object records expose HoMM3-re object/reward table source identity and by selecting original proxy object families/categories from a runtime-consumable metadata-only proxy catalog.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "content/homm3_re_reward_object_proxy_catalog.json",
+        "tests/native_random_map_homm3_re_object_table_proxy_report.gd",
+        "tests/native_random_map_homm3_re_object_table_proxy_report.tscn",
+        "docs/native-rmg-homm3-re-object-table-proxy-report.md",
+        "ops/progress.json",
+        "PLAN.md"
+      ],
+      "completionCriteria": [
+        "Active generated skirmish/package generation remains native MapPackageService.generate_random_map(), not scripts/core/RandomMapGeneratorRules.gd.",
+        "Generated resource_site, mine, neutral_dwelling, and reward_reference records carry HoMM3-re object source kind/catalog id/type id/type name/subtype/source row/reward table bucket and native proxy object/family/category provenance.",
+        "Proxy catalog and generated records explicitly preserve the provenance_only_original_proxy_art policy and do not import HoMM3 copyrighted art/DEF assets.",
+        "Reward proxy selection maps minor/resource/build/guarded/artifact/relic bands to meaningfully different original proxy families/categories rather than one generic placeholder.",
+        "The new report samples multiple templates/sizes and verifies source/proxy provenance, tier/category/bucket diversity, reward value distribution preservation, road/fill/decoration/package regression surfaces, and no generated map packages are committed."
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool content/homm3_re_reward_object_proxy_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_re_object_table_proxy_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_re_reward_value_distribution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_re_identity_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_fill_coverage_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_catalog_quality_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/random_map_all_template_menu_wiring_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_decoration_generation_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_full_parity_gate_report.tscn",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No active generated skirmish launch through RandomMapGeneratorRules.gd.",
+        "No generated .amap/.ascenario files under maps/ committed.",
+        "No HoMM3 copyrighted art/DEF asset import.",
+        "No exact HoMM3-re byte/object/reward-table/art/placement parity claim.",
+        "No save version bump or authored scenario/package adoption."
+      ],
+      "createdAt": "2026-05-04T17:05:00Z",
+      "updatedAt": "2026-05-04T18:10:00Z",
+      "startedAt": "2026-05-04T17:05:00Z",
+      "completedAt": "2026-05-04T18:10:00Z",
+      "notes": "Completed owner-directed native reward/object table proxy increment: metadata-only HoMM3-re source catalog drives native reward proxy selection while preserving original runtime art/proxy boundaries.",
+      "completionEvidence": [
+        "Added content/homm3_re_reward_object_proxy_catalog.json with 24 metadata-only entries covering reward_reference, resource_site, mine, and neutral_dwelling generated kinds.",
+        "Native value-bearing object records now expose HoMM3-re source kind/catalog id/type id/type name/subtype/source row/DEF-reference name/reward table bucket plus native proxy object/family/category and provenance_only_original_proxy_art policy.",
+        "New object table proxy report sampled 36x36, 108x108, and 144x144 native maps: reward source ids 8/14/14, reward table buckets 8/14/14, native proxy objects 7/12/12, with minor/medium/major/relic represented in broad sample.",
+        "Road cells, decoration source identity, fill coverage, package conversion, and reward value band checks remained present in the new report."
+      ],
+      "validationEvidence": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool content/homm3_re_reward_object_proxy_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_re_object_table_proxy_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_re_reward_value_distribution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_re_identity_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_fill_coverage_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_catalog_quality_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/random_map_all_template_menu_wiring_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_decoration_generation_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_full_parity_gate_report.tscn",
+        "git diff --check",
+        "Validation log directory: .artifacts/validation_logs/homm3_re_object_proxy_20260504T144039Z"
       ]
     }
   ],
