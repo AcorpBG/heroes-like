@@ -6234,6 +6234,8 @@ static func _road_type_byte_for_class(road_class: String) -> int:
 			return 3
 		"start_economy_service_road":
 			return 2
+		"secondary_major_object_service_road":
+			return 2
 		"required_primary_road":
 			return 1
 		_:
@@ -6486,6 +6488,8 @@ static func _road_class_for_edge(edge: Dictionary, segment: Dictionary) -> Strin
 		return "wide_guard_suppressed_road"
 	if int(edge.get("guard_value", 0)) > 0:
 		return "guarded_route_road"
+	if String(edge.get("role", "")) == "secondary_major_object_route":
+		return "secondary_major_object_service_road"
 	if bool(edge.get("required", false)) and String(edge.get("role", "")) == "required_start_economy_route":
 		return "start_economy_service_road"
 	if bool(edge.get("required", false)):
@@ -6504,6 +6508,8 @@ static func _road_type_for_class(road_class: String, edge: Dictionary) -> String
 			return "generated_dirt_guarded_road"
 		"start_economy_service_road":
 			return "generated_dirt_service_road"
+		"secondary_major_object_service_road":
+			return "generated_dirt_secondary_major_object_service_road"
 		"required_primary_road":
 			return "generated_dirt_primary_road"
 		_:
@@ -8725,9 +8731,24 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, zones
 				road_stubs.append({"edge_id": resource_edge_id, "node_id": resource_node_id, "point": resource_point, "role": "resource_stub"})
 				_connect_adjacency(adjacency, town_node_id, resource_node_id)
 			edge_index += 1
+	var secondary_roads := _secondary_major_object_roads_payload(edge_index, zones, object_by_zone, route_nodes, placements, terrain_rows, occupied)
+	edge_index = int(secondary_roads.get("next_edge_index", edge_index))
+	for edge in secondary_roads.get("edges", []):
+		if edge is Dictionary:
+			edges.append(edge)
+	for segment in secondary_roads.get("road_segments", []):
+		if segment is Dictionary:
+			road_segments.append(segment)
+	for stub in secondary_roads.get("road_stubs", []):
+		if stub is Dictionary:
+			road_stubs.append(stub)
+	for connection in secondary_roads.get("adjacency_connections", []):
+		if connection is Dictionary:
+			_connect_adjacency(adjacency, String(connection.get("from_node", "")), String(connection.get("to_node", "")))
 	var route_graph := {
 		"nodes": route_nodes,
 		"edges": edges,
+		"secondary_road_summary": secondary_roads.get("summary", {}),
 		"connection_payload_semantics": {
 			"value": "normal_guard_value",
 			"wide": "suppresses_normal_guard",
@@ -8746,6 +8767,7 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, zones
 			"overlay_id": ROAD_OVERLAY_ID,
 			"road_segments": road_segments,
 			"road_stubs": road_stubs,
+			"secondary_road_summary": secondary_roads.get("summary", {}),
 			"blocked_body_policy": "paths_exclude_object_body_tiles_and_impassable_terrain",
 			"transit_writeout_policy": "land_road_overlays_written_to_generated_tile_stream_transit_object_records_materialized",
 		},
@@ -10441,6 +10463,199 @@ static func _preferred_route_node_for_zone(zone_id: String, object_by_zone: Dict
 		if town is Dictionary and int(town.get("player_slot", 0)) > 0:
 			return route_nodes.get("node_%s" % String(town.get("placement_id", "")), {"id": "node_zone_%s" % zone_id, "point": _point_dict(0, 0)})
 	return route_nodes.get("node_zone_%s" % zone_id, {"id": "node_zone_%s" % zone_id, "point": _point_dict(0, 0)})
+
+static func _secondary_major_object_roads_payload(edge_index: int, zones: Array, object_by_zone: Dictionary, route_nodes: Dictionary, placements: Dictionary, terrain_rows: Array, occupied: Dictionary) -> Dictionary:
+	var width: int = terrain_rows[0].size() if not terrain_rows.is_empty() and terrain_rows[0] is Array else 0
+	var height: int = terrain_rows.size()
+	var edges := []
+	var road_segments := []
+	var road_stubs := []
+	var adjacency_connections := []
+	var per_zone := []
+	var object_kind_counts := {}
+	var attempted_count := 0
+	var materialized_count := 0
+	if width < 60 or height < 60:
+		return {
+			"edges": edges,
+			"road_segments": road_segments,
+			"road_stubs": road_stubs,
+			"adjacency_connections": adjacency_connections,
+			"next_edge_index": edge_index,
+			"summary": {
+				"schema_id": "random_map_secondary_major_object_roads_v1",
+				"policy": "optional_same_zone_major_object_roads_after_template_and_start_economy_routes",
+				"skip_reason": "small_maps_preserve_existing_river_and_route_density",
+				"source_basis": [
+					"random-map-generator-implementation-model.md:roads_after_towns_mines_major_rewards",
+					"random-map-cell-flags-and-overlays.md:roads_are_overlay_layers_not_decoration",
+				],
+				"attempted_candidate_count": 0,
+				"materialized_route_count": 0,
+				"object_kind_counts": {},
+				"per_zone": [],
+			},
+		}
+	for zone in zones:
+		if not (zone is Dictionary):
+			continue
+		var zone_id := String(zone.get("id", ""))
+		if zone_id == "":
+			continue
+		var source_node := _preferred_route_node_for_zone(zone_id, object_by_zone, route_nodes)
+		if source_node.is_empty():
+			continue
+		var candidates := _secondary_major_object_road_candidates(zone_id, source_node, object_by_zone, route_nodes)
+		var quota := _secondary_major_object_road_quota(zone, width, height, candidates.size())
+		var zone_materialized := 0
+		var selected_ids := []
+		for candidate in candidates:
+			if zone_materialized >= quota:
+				break
+			if not (candidate is Dictionary):
+				continue
+			attempted_count += 1
+			var target_node: Dictionary = candidate.get("node", {}) if candidate.get("node", {}) is Dictionary else {}
+			var path_payload := _best_route_path_between_nodes(source_node, target_node, terrain_rows, occupied)
+			var path: Array = path_payload.get("path", [])
+			if path.is_empty():
+				continue
+			var from_point: Dictionary = path_payload.get("from_anchor", source_node.get("point", {}))
+			var to_point: Dictionary = path_payload.get("to_anchor", target_node.get("point", {}))
+			var target_id := String(candidate.get("placement_id", ""))
+			var target_kind := String(candidate.get("kind", ""))
+			var edge_id := "edge_%02d_%s_%s" % [edge_index, zone_id, target_id]
+			var edge := {
+				"id": edge_id,
+				"from": zone_id,
+				"to": target_id,
+				"from_node": String(source_node.get("id", "node_zone_%s" % zone_id)),
+				"to_node": String(target_node.get("id", "")),
+				"role": "secondary_major_object_route",
+				"layout_contract_roles": [],
+				"fairness_start_front_zones": [],
+				"fairness_front_policy": "not_fairness_scoped_optional_major_object_road",
+				"secondary_road": true,
+				"secondary_road_kind": target_kind,
+				"source_basis": "homm3_road_overlay_pass_after_towns_mines_major_objects",
+				"guard_value": 0,
+				"wide": false,
+				"border_guard": false,
+				"connectivity_classification": "secondary_object_connectivity",
+				"transit_semantics": {"kind": "land_road", "materialization_state": "optional_major_object_road_overlay", "required_unlock": false},
+				"required": false,
+				"path_found": true,
+				"path_length": path.size(),
+				"from_anchor": from_point,
+				"to_anchor": to_point,
+				"route_cell_anchor_candidate": _route_anchor_candidate(path, from_point, to_point),
+				"writeout_state": "final_generated_secondary_major_object_road_overlay",
+			}
+			edges.append(edge)
+			road_segments.append(_road_segment_payload(edge_id, path, "secondary_object_connectivity", edge))
+			road_stubs.append({"edge_id": edge_id, "node_id": String(source_node.get("id", "")), "point": from_point, "role": "secondary_zone_stub"})
+			road_stubs.append({"edge_id": edge_id, "node_id": String(target_node.get("id", "")), "point": to_point, "role": "secondary_major_object_stub"})
+			adjacency_connections.append({"from_node": String(source_node.get("id", "")), "to_node": String(target_node.get("id", ""))})
+			object_kind_counts[target_kind] = int(object_kind_counts.get(target_kind, 0)) + 1
+			selected_ids.append(target_id)
+			zone_materialized += 1
+			materialized_count += 1
+			edge_index += 1
+		if quota > 0 or not candidates.is_empty():
+			per_zone.append({
+				"zone_id": zone_id,
+				"zone_role": String(zone.get("role", "")),
+				"candidate_count": candidates.size(),
+				"quota": quota,
+				"materialized_count": zone_materialized,
+				"selected_placement_ids": selected_ids,
+			})
+	return {
+		"edges": edges,
+		"road_segments": road_segments,
+		"road_stubs": road_stubs,
+		"adjacency_connections": adjacency_connections,
+		"next_edge_index": edge_index,
+		"summary": {
+			"schema_id": "random_map_secondary_major_object_roads_v1",
+			"policy": "optional_same_zone_major_object_roads_after_template_and_start_economy_routes",
+			"source_basis": [
+				"random-map-generator-implementation-model.md:roads_after_towns_mines_major_rewards",
+				"random-map-cell-flags-and-overlays.md:roads_are_overlay_layers_not_decoration",
+			],
+			"attempted_candidate_count": attempted_count,
+			"materialized_route_count": materialized_count,
+			"object_kind_counts": _sorted_dict(object_kind_counts),
+			"per_zone": per_zone,
+		},
+	}
+
+static func _secondary_major_object_road_candidates(zone_id: String, source_node: Dictionary, object_by_zone: Dictionary, route_nodes: Dictionary) -> Array:
+	var zone_objects: Dictionary = object_by_zone.get(zone_id, {})
+	var source_node_id := String(source_node.get("id", ""))
+	var source_point: Dictionary = source_node.get("point", {}) if source_node.get("point", {}) is Dictionary else {}
+	var candidates := []
+	for kind in ["town", "mine", "neutral_dwelling"]:
+		for placement in zone_objects.get(kind, []):
+			if not (placement is Dictionary):
+				continue
+			if kind == "town" and int(placement.get("player_slot", 0)) > 0:
+				continue
+			var placement_id := String(placement.get("placement_id", ""))
+			var node_id := "node_%s" % placement_id
+			if placement_id == "" or node_id == source_node_id or not route_nodes.has(node_id):
+				continue
+			var node: Dictionary = route_nodes.get(node_id, {})
+			var target_point: Dictionary = node.get("point", _first_approach_or_body(placement)) if node.get("point", {}) is Dictionary else _first_approach_or_body(placement)
+			if target_point.is_empty():
+				continue
+			candidates.append({
+				"placement_id": placement_id,
+				"kind": kind,
+				"node": node,
+				"priority": _secondary_major_object_road_kind_priority(kind),
+				"distance": _manhattan_distance(source_point, target_point) if not source_point.is_empty() else 0,
+			})
+	candidates.sort_custom(Callable(RandomMapGeneratorRules, "_compare_secondary_major_object_road_candidate"))
+	return candidates
+
+static func _secondary_major_object_road_quota(zone: Dictionary, width: int, height: int, candidate_count: int) -> int:
+	if candidate_count <= 0:
+		return 0
+	var area: int = max(1, width * height)
+	var quota: int = 1
+	if area >= 108 * 108:
+		quota = 2
+	if area >= 108 * 108 and int(zone.get("cell_count", 0)) >= 1000:
+		quota += 1
+	var role := String(zone.get("role", ""))
+	if role == "junction":
+		quota = max(1, quota - 1)
+	elif role.contains("start"):
+		quota = max(1, quota - 1)
+	return min(candidate_count, quota)
+
+static func _secondary_major_object_road_kind_priority(kind: String) -> int:
+	match kind:
+		"town":
+			return 0
+		"mine":
+			return 1
+		"neutral_dwelling":
+			return 2
+		_:
+			return 9
+
+static func _compare_secondary_major_object_road_candidate(a: Dictionary, b: Dictionary) -> bool:
+	var priority_a := int(a.get("priority", 99))
+	var priority_b := int(b.get("priority", 99))
+	if priority_a != priority_b:
+		return priority_a < priority_b
+	var distance_a := int(a.get("distance", 0))
+	var distance_b := int(b.get("distance", 0))
+	if distance_a != distance_b:
+		return distance_a < distance_b
+	return String(a.get("placement_id", "")) < String(b.get("placement_id", ""))
 
 static func _first_approach_or_body(placement: Dictionary) -> Dictionary:
 	var visit: Dictionary = placement.get("visit_tile", {}) if placement.get("visit_tile", {}) is Dictionary else {}

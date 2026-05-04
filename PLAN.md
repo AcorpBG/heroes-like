@@ -122,6 +122,31 @@ Selection rules for new Phase 2 slices:
 
 Selected owner-directed implementation slice:
 
+id: `random-map-homm3-parity-secondary-road-coverage-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Review post-fairness RMG road coverage after `ee6015c` and restore HoMM3-like major-object road richness where the route graph remains connected but visually under-roaded.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-cell-flags-and-overlays.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md`
+- `.artifacts/rmg_parity_visual_inspection/summary.json`
+- `.artifacts/rmg_parity_large_visual_inspection/summary.json`
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_homm3_parity_visual_inspection_report.gd`
+- `tests/random_map_homm3_parity_richness_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Visual artifact review distinguishes fairer path shortening from lost HoMM3-like major-object road coverage.
+- Any added roads are grounded in source-backed road overlay timing after towns/mines/major objects and remain separate from fairness diagnostics.
+- Visual and richness reports pass with no new fail-threshold fairness warnings and record road coverage/richness impact.
+nonGoals:
+- No diagnostic threshold weakening, generated PNG import, public UI work, save-version bump, native generator rewrite, or authored scenario/package adoption.
+
+Completed owner-directed implementation slice:
+
 id: `random-map-homm3-parity-route-resource-fairness-10184`
 phase: `phase-2-deep-production-foundation`
 purpose: Reduce remaining translated-template route and resource distance unfairness after `random-map-homm3-parity-start-front-fairness-10184`, especially medium translated land templates whose strict diagnostics still exceed fail-threshold route spreads.
