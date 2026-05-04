@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-homm3-spatial-placement-comparison-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Spatial Placement Comparison",
+  "currentSliceId": "native-rmg-homm3-land-water-shape-parity-10184",
+  "currentSliceTitle": "Native RMG HoMM3 Land Water Shape Parity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed spatial placement increment: owner H3M parsing now verifies 72x72 version-28 attachment, 297 object definitions, 496 object instances, and 184 road tiles; native mines/dwellings/rewards now scatter by deterministic coarse-grid zone targets instead of clustering from zone anchors.",
+  "currentSliceNotes": "Completed owner-directed land/water shape increment: native owner-like 72x72 islands output moved from 4,900 land / 284 water to 2,296 land / 2,888 water against the owner H3M 1,948 land / 3,236 water baseline, with no generated/package surface water conflicts.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T21:15:00Z",
+  "updatedAt": "2026-05-04T23:35:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -9064,6 +9064,81 @@
         "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
         "python3 -m json.tool ops/progress.json >/dev/null",
         "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_spatial_placement_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_guard_reward_package_adoption_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_re_object_table_proxy_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_re_reward_value_distribution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_re_identity_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_fill_coverage_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_catalog_quality_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/random_map_all_template_menu_wiring_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_decoration_generation_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_full_parity_gate_report.tscn",
+        "git diff --check"
+      ]
+    },
+    {
+      "id": "native-rmg-homm3-land-water-shape-parity-10184",
+      "title": "Native RMG HoMM3 Land Water Shape Parity",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "owner_directed_phase2_native_rmg_homm3_land_water_shape_parity_slice",
+      "parentSliceId": "native-rmg-catalog-playability-wiring-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/native-rmg-homm3-spatial-placement-comparison-report.md",
+        "/root/.openclaw/media/inbound/Untitled---cad43d4f-6faa-4059-a9db-9b37770806af.gz"
+      ],
+      "purpose": "Correct native C++ owner-like 72x72 islands output that currently produces a mostly-land map, making land/water ratio and island shape materially closer to the owner HoMM3-re spatial baseline while preserving generated package gameplay surfaces.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_land_water_shape_report.gd",
+        "tests/native_random_map_homm3_land_water_shape_report.tscn",
+        "docs/native-rmg-homm3-land-water-shape-report.md",
+        "docs/native-rmg-homm3-spatial-placement-comparison-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Native C++ package generation remains the active random map runtime path and is not routed through scripts/core/RandomMapGeneratorRules.gd.",
+        "Owner H3M 72x72 land/water counts are parsed and anchored in a report.",
+        "Native owner-like 72x72 islands land/water ratio moves substantially closer to the owner baseline without claiming full parity.",
+        "Roads, starts, towns, rewards, guards, decorations, and package surfaces remain present on generated land.",
+        "Existing native RMG gates pass and no generated .amap/.ascenario packages are committed under maps/."
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_land_water_shape_report.tscn",
+        "existing native RMG parity gates from owner request",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No route back to scripts/core/RandomMapGeneratorRules.gd for active generation.",
+        "No generated map packages committed under maps/.",
+        "No HoMM3 copyrighted art/DEF asset import.",
+        "No exact HoMM3-re placement/art/object-table/terrain-shape/byte parity claim.",
+        "No save version bump or authored scenario/package adoption."
+      ],
+      "createdAt": "2026-05-04T22:10:00Z",
+      "updatedAt": "2026-05-04T23:35:00Z",
+      "startedAt": "2026-05-04T22:10:00Z",
+      "completedAt": "2026-05-04T23:35:00Z",
+      "notes": "Completed owner-directed land/water shape increment without changing the active native generation path.",
+      "completionEvidence": [
+        "Native islands terrain now runs after route/object/town/guard placement for non-structural-parity islands cases and protects starts, roads, towns, guards, rewards, decorations, generated body/visit/approach cells, and package body/visit/block surfaces as land.",
+        "Owner parsed metrics from the attached H3M remain anchored at 72x72, version 28, 1,948 land tiles, 3,236 water tiles, and 184 road tiles.",
+        "Native owner-like 72x72 islands output moved from 4,900 land / 284 water to 2,296 land / 2,888 water, reducing absolute land delta versus owner from 2,952 to 348 tiles, an 88.21% improvement.",
+        "Focused report found 0 generated-surface water conflicts and 0 package-surface water conflicts across 292 generated road cells, 1,660 generated body cells, 344 generated visit cells, 1,044 generated approach cells, 1,660 package body cells, 1,648 package block cells, and 674 package visit cells.",
+        "Package adoption remained passing in the focused report with 88 rewards, 64 valuable rewards, 46 guarded valuable rewards, 103 guards, and 0 unguarded high-value rewards."
+      ],
+      "validationEvidence": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_land_water_shape_report.tscn",
         "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_spatial_placement_comparison_report.tscn",
         "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_guard_reward_package_adoption_report.tscn",
         "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_re_object_table_proxy_report.tscn",
