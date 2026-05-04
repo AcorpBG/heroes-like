@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-route-resource-fairness-10184",
-  "currentSliceTitle": "random map homm3 parity route resource fairness 10184",
+  "currentSliceId": "random-map-homm3-parity-secondary-road-coverage-10184",
+  "currentSliceTitle": "random map homm3 parity secondary road coverage 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed source-semantics-grounded route/resource fairness correction after 7689c3e. Translated template seed layout now uses source link adjacency, template routes prefer active start towns but zone anchors for neutral/treasure endpoints, and required start-economy roads/travel metrics are scoped to active player starts. Visual report passed: warnings 11->9, fail-threshold warnings 5->0, max contest/travel route spread 38->13, max town-resource spread 38->19. Richness report passed: warnings 10->9, fail-threshold warnings 2->0, max contest/travel route spread 22->13, max town-resource spread 8. Large visual passed: warnings 3->2, fail-threshold warnings 1->0, route spread 18->17, town-resource spread 42->1. Validated json, progress sync dry-run, git diff --check, and python3 tests/validate_repo.py.",
+  "currentSliceNotes": "Completed post-ee6015c road coverage review and source-backed secondary major-object service roads. Visual artifacts showed the fairness correction kept connectivity but reduced road coverage from 3889 to 2363; the new pass adds optional same-zone town/mine/dwelling road overlays after template/start-economy routing, grounded in homm3-re road overlay timing after towns/mines/major objects and excluded from fairness-scoped route diagnostics. Final visual report passed: total road tiles 2363->3153, fairness warnings 9, fail-threshold warnings 0, max contest/travel spread 13, town-resource spread 19, diagnostic notes 0. Richness report passed: road tiles 1445->1787, fairness warnings 9, fail-threshold warnings 0, max contest/travel spread 13, town-resource spread 8. Large visual passed: road tiles 1022->2108, fairness warnings 2, fail-threshold warnings 0, max contest/travel spread 17, town-resource spread 1; existing diagnostic runtime note remains.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T06:40:41Z",
+  "updatedAt": "2026-05-04T07:00:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -8251,6 +8251,16 @@
       "startedAt": "2026-05-04T06:20:00Z",
       "notes": "Completed source-semantics-grounded route/resource fairness correction after 7689c3e. Translated template seed layout now uses source link adjacency, template routes prefer active start towns but zone anchors for neutral/treasure endpoints, and required start-economy roads/travel metrics are scoped to active player starts. Visual report passed: warnings 11->9, fail-threshold warnings 5->0, max contest/travel route spread 38->13, max town-resource spread 38->19. Richness report passed: warnings 10->9, fail-threshold warnings 2->0, max contest/travel route spread 22->13, max town-resource spread 8. Large visual passed: warnings 3->2, fail-threshold warnings 1->0, route spread 18->17, town-resource spread 42->1. Validated json, progress sync dry-run, git diff --check, and python3 tests/validate_repo.py.",
       "completedAt": "2026-05-04T06:40:41Z"
+    },
+    {
+      "id": "random-map-homm3-parity-secondary-road-coverage-10184",
+      "title": "random map homm3 parity secondary road coverage 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-04T07:00:00Z",
+      "startedAt": "2026-05-04T06:50:48Z",
+      "notes": "Completed post-ee6015c road coverage review and source-backed secondary major-object service roads. Visual artifacts showed the fairness correction kept connectivity but reduced road coverage from 3889 to 2363; the new pass adds optional same-zone town/mine/dwelling road overlays after template/start-economy routing, grounded in homm3-re road overlay timing after towns/mines/major objects and excluded from fairness-scoped route diagnostics. Final visual report passed: total road tiles 2363->3153, fairness warnings 9, fail-threshold warnings 0, max contest/travel spread 13, town-resource spread 19, diagnostic notes 0. Richness report passed: road tiles 1445->1787, fairness warnings 9, fail-threshold warnings 0, max contest/travel spread 13, town-resource spread 8. Large visual passed: road tiles 1022->2108, fairness warnings 2, fail-threshold warnings 0, max contest/travel spread 17, town-resource spread 1; existing diagnostic runtime note remains.",
+      "completedAt": "2026-05-04T07:00:00Z"
     }
   ],
   "completedImplementationEvidence": [
