@@ -2914,6 +2914,54 @@ Dictionary nearest_road_proximity(int32_t x, int32_t y, const Dictionary &road_n
 	return result;
 }
 
+PackedInt32Array road_distance_field_for_map(const Dictionary &road_network, int32_t width, int32_t height) {
+	PackedInt32Array distances;
+	distances.resize(std::max(0, width * height));
+	for (int32_t index = 0; index < distances.size(); ++index) {
+		distances[index] = -1;
+	}
+	if (width <= 0 || height <= 0) {
+		return distances;
+	}
+	Array road_cells;
+	Array road_segments = road_network.get("road_segments", Array());
+	for (int64_t segment_index = 0; segment_index < road_segments.size(); ++segment_index) {
+		Dictionary segment = road_segments[segment_index];
+		Array cells = segment.get("cells", Array());
+		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+			road_cells.append(cells[cell_index]);
+		}
+	}
+	for (int32_t y = 0; y < height; ++y) {
+		for (int32_t x = 0; x < width; ++x) {
+			int32_t best_distance = std::numeric_limits<int32_t>::max();
+			for (int64_t road_index = 0; road_index < road_cells.size(); ++road_index) {
+				if (Variant(road_cells[road_index]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				Dictionary cell = road_cells[road_index];
+				const int32_t distance = std::abs(x - int32_t(cell.get("x", 0))) + std::abs(y - int32_t(cell.get("y", 0)));
+				if (distance < best_distance) {
+					best_distance = distance;
+				}
+			}
+			distances[y * width + x] = best_distance == std::numeric_limits<int32_t>::max() ? -1 : best_distance;
+		}
+	}
+	return distances;
+}
+
+int32_t road_distance_from_field(const PackedInt32Array &road_distance_field, int32_t x, int32_t y, int32_t width, int32_t height) {
+	if (x < 0 || y < 0 || x >= width || y >= height) {
+		return -1;
+	}
+	const int32_t index = y * width + x;
+	if (index < 0 || index >= road_distance_field.size()) {
+		return -1;
+	}
+	return road_distance_field[index];
+}
+
 Dictionary find_object_point(int32_t x, int32_t y, const String &preferred_zone_id, const Array &owner_grid, const Dictionary &occupied, int32_t width, int32_t height) {
 	x = std::max(1, std::min(std::max(1, width - 2), x));
 	y = std::max(1, std::min(std::max(1, height - 2), y));
@@ -3024,16 +3072,16 @@ int32_t owner_like_islands_compact_decoration_target_for_zone(const Dictionary &
 		return 0;
 	}
 	const String role = String(zone.get("role", ""));
-	double ratio = 0.034;
+	double ratio = 0.052;
 	if (role.find("start") >= 0) {
-		ratio = 0.026;
+		ratio = 0.044;
 	} else if (role == "treasure") {
-		ratio = 0.042;
+		ratio = 0.060;
 	} else if (role == "junction") {
-		ratio = 0.036;
+		ratio = 0.054;
 	}
 	const int32_t raw_target = int32_t(std::ceil(double(cell_count) * ratio));
-	const int32_t max_per_zone = std::max(4, std::min(28, std::max(1, cell_count / 12)));
+	const int32_t max_per_zone = std::max(4, std::min(36, std::max(1, cell_count / 10)));
 	return std::max(1, std::min(max_per_zone, raw_target));
 }
 
@@ -3782,33 +3830,102 @@ int32_t catalog_zone_dwelling_target(const Dictionary &normalized, const Diction
 	return 0;
 }
 
-Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, int32_t ring, const String &kind, const Dictionary &normalized, const Array &owner_grid, const Dictionary &occupied, int32_t width, int32_t height) {
+int32_t interactive_spacing_penalty(const Array &placements, int32_t x, int32_t y, const String &kind, const String &zone_id, int32_t width, int32_t height) {
+	int32_t penalty = 0;
+	int32_t nearest_distance = std::numeric_limits<int32_t>::max();
+	int32_t local_window_count = 0;
+	int32_t same_zone_window_count = 0;
+	int32_t same_kind_window_count = 0;
+	int32_t same_quadrant_count = 0;
+	int32_t same_kind_quadrant_count = 0;
+	const int32_t quadrant = (x >= width / 2 ? 1 : 0) + (y >= height / 2 ? 2 : 0);
+	for (int64_t index = 0; index < placements.size(); ++index) {
+		if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary placement = placements[index];
+		const String existing_kind = String(placement.get("kind", ""));
+		if (existing_kind == "decorative_obstacle") {
+			continue;
+		}
+		const int32_t px = int32_t(placement.get("x", 0));
+		const int32_t py = int32_t(placement.get("y", 0));
+		const int32_t dx = std::abs(x - px);
+		const int32_t dy = std::abs(y - py);
+		const int32_t distance = dx + dy;
+		const int32_t existing_quadrant = (px >= width / 2 ? 1 : 0) + (py >= height / 2 ? 2 : 0);
+		if (existing_quadrant == quadrant) {
+			++same_quadrant_count;
+			if (existing_kind == kind) {
+				++same_kind_quadrant_count;
+			}
+		}
+		nearest_distance = std::min(nearest_distance, distance);
+		if (dx <= 6 && dy <= 6) {
+			++local_window_count;
+			if (String(placement.get("zone_id", "")) == zone_id) {
+				++same_zone_window_count;
+			}
+			if (existing_kind == kind) {
+				++same_kind_window_count;
+			}
+		}
+		if (distance <= 2) {
+			penalty += 240;
+		} else if (distance <= 4) {
+			penalty += 96;
+		} else if (distance <= 6) {
+			penalty += 36;
+		} else if (distance <= 10) {
+			penalty += 10;
+		}
+	}
+	if (nearest_distance == std::numeric_limits<int32_t>::max()) {
+		return 0;
+	}
+	penalty += local_window_count * 70;
+	penalty += same_zone_window_count * 55;
+	penalty += same_kind_window_count * 35;
+	penalty += same_quadrant_count * 8;
+	penalty += same_kind_quadrant_count * 14;
+	return penalty;
+}
+
+int32_t interactive_road_reachability_penalty(int32_t distance_to_road) {
+	if (distance_to_road < 0) {
+		return 0;
+	}
+	if (distance_to_road <= 4) {
+		return 0;
+	}
+	int32_t penalty = (distance_to_road - 4) * 12;
+	if (distance_to_road > 7) {
+		penalty += (distance_to_road - 7) * 70;
+	}
+	return penalty;
+}
+
+Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, int32_t ring, const String &kind, const Dictionary &normalized, const Array &owner_grid, const Dictionary &occupied, const Array &existing_placements, const PackedInt32Array &road_distance_field, int32_t width, int32_t height) {
 	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
 	const String zone_id = String(zone.get("id", ""));
 	const String seed = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":object:" + String::num_int64(ordinal);
 	const int32_t anchor_x = int32_t(anchor.get("x", width / 2));
 	const int32_t anchor_y = int32_t(anchor.get("y", height / 2));
 	const int32_t zone_cell_count = std::max(0, int32_t(zone.get("cell_count", 0)));
-	if (zone_cell_count > 0 && zone_cell_count < 144) {
-		const int32_t angle_bucket = int32_t(hash32_int(seed) % 8U);
-		static constexpr int32_t OFFSETS[8][2] = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
-		const int32_t distance = 2 + ring + (ordinal % 3);
-		const int32_t x = anchor_x + OFFSETS[angle_bucket][0] * distance + deterministic_signed_jitter(seed + String(":x"), 1);
-		const int32_t y = anchor_y + OFFSETS[angle_bucket][1] * distance + deterministic_signed_jitter(seed + String(":y"), 1);
-		Dictionary compact_zone_point = find_object_point(x, y, zone_id, owner_grid, occupied, width, height);
-		if (!compact_zone_point.is_empty()) {
-			compact_zone_point["spatial_placement_policy"] = "anchor_ring_for_compact_zone_decoration_fit_preservation";
-		}
-		return compact_zone_point;
-	}
-	const int32_t coarse_cols = 6;
-	const int32_t coarse_rows = 6;
-	const int32_t desired_cell = int32_t(hash32_int(seed + String(":coarse:") + kind) % uint32_t(coarse_cols * coarse_rows));
+	const int32_t coarse_cols = zone_cell_count > 0 && zone_cell_count < 144 ? 4 : 8;
+	const int32_t coarse_rows = zone_cell_count > 0 && zone_cell_count < 144 ? 4 : 8;
+	const int32_t desired_cell = int32_t(hash32_int(seed + String(":local_distribution:") + kind) % uint32_t(coarse_cols * coarse_rows));
 	const int32_t desired_cx = desired_cell % coarse_cols;
 	const int32_t desired_cy = desired_cell / coarse_cols;
 	const int32_t preferred_anchor_distance = 4 + ring * 3 + (ordinal % 5);
+	const bool bounded_large_map_scoring = width > 72 || height > 72;
+	const int32_t target_evaluated_candidates = !bounded_large_map_scoring ? zone_cell_count : (zone_cell_count > 0 && zone_cell_count < 600 ? zone_cell_count : 128);
+	const int32_t sample_mod = zone_cell_count > target_evaluated_candidates ? std::max(2, zone_cell_count / std::max(1, target_evaluated_candidates)) : 1;
 
-	std::vector<Dictionary> candidates;
+	int64_t best_sort_key = std::numeric_limits<int64_t>::max();
+	int32_t best_x = -1;
+	int32_t best_y = -1;
+	int32_t best_road_distance = -1;
 	for (int32_t y = 1; y < height - 1; ++y) {
 		if (y < 0 || y >= owner_grid.size()) {
 			continue;
@@ -3824,22 +3941,35 @@ Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, 
 			const int32_t cx = std::max(0, std::min(coarse_cols - 1, (x * coarse_cols) / std::max(1, width)));
 			const int32_t cy = std::max(0, std::min(coarse_rows - 1, (y * coarse_rows) / std::max(1, height)));
 			const int32_t coarse_distance = std::abs(cx - desired_cx) + std::abs(cy - desired_cy);
+			if (sample_mod > 1) {
+				const uint32_t sample_hash = hash32_int(seed + String(":sample:") + String::num_int64(x) + String(",") + String::num_int64(y));
+				const uint32_t preferred_mod = uint32_t(std::max(1, sample_mod / 2));
+				const bool preferred_coarse_sample = coarse_distance == 0 && sample_hash % preferred_mod == 0U;
+				const bool broad_sample = sample_hash % uint32_t(sample_mod) == 0U;
+				if (!preferred_coarse_sample && !broad_sample) {
+					continue;
+				}
+			}
 			const int32_t anchor_distance = std::abs(x - anchor_x) + std::abs(y - anchor_y);
 			const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
+			const int32_t spacing_penalty = interactive_spacing_penalty(existing_placements, x, y, kind, zone_id, width, height);
+			const int32_t road_distance = road_distance_from_field(road_distance_field, x, y, width, height);
+			const int32_t road_penalty = interactive_road_reachability_penalty(road_distance);
+			const int32_t distribution_penalty = spacing_penalty + road_penalty;
 			const int32_t jitter = int32_t(hash32_int(seed + String(":scatter:") + String::num_int64(x) + String(",") + String::num_int64(y)) % 10000U);
-			Dictionary point = point_record(x, y);
-			const int64_t sort_key = int64_t(coarse_distance) * 100000000LL + int64_t(anchor_penalty) * 10000LL + int64_t(jitter);
-			point["sort_key"] = Variant(sort_key);
-			point["spatial_placement_policy"] = "coarse_grid_scatter_within_zone_not_anchor_ring_cluster";
-			candidates.push_back(point);
+			const int64_t sort_key = int64_t(distribution_penalty) * 1000000000LL + int64_t(coarse_distance) * 10000000LL + int64_t(anchor_penalty) * 10000LL + int64_t(jitter);
+			if (sort_key < best_sort_key) {
+				best_sort_key = sort_key;
+				best_x = x;
+				best_y = y;
+				best_road_distance = road_distance;
+			}
 		}
 	}
-	std::sort(candidates.begin(), candidates.end(), [](const Dictionary &left, const Dictionary &right) {
-		return int64_t(left.get("sort_key", int64_t(0))) < int64_t(right.get("sort_key", int64_t(0)));
-	});
-	if (!candidates.empty()) {
-		Dictionary result = candidates.front();
-		result.erase("sort_key");
+	if (best_x >= 0 && best_y >= 0) {
+		Dictionary result = point_record(best_x, best_y);
+		result["distance_to_nearest_road_tiles"] = best_road_distance;
+		result["spatial_placement_policy"] = "local_window_road_reachable_blue_noise_scatter_within_zone_preserving_guarded_clusters";
 		return result;
 	}
 
@@ -3850,7 +3980,7 @@ Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, 
 	const int32_t y = anchor_y + OFFSETS[angle_bucket][1] * distance + deterministic_signed_jitter(seed + String(":y"), 1);
 	Dictionary fallback = find_object_point(x, y, zone_id, owner_grid, occupied, width, height);
 	if (!fallback.is_empty()) {
-		fallback["spatial_placement_policy"] = "anchor_ring_fallback_after_zone_scatter_exhausted";
+		fallback["spatial_placement_policy"] = "anchor_ring_fallback_after_local_distribution_scatter_exhausted";
 	}
 	return fallback;
 }
@@ -3864,6 +3994,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	Array placements;
 	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
 	Dictionary occupied = parity_targets.is_empty() ? road_body_exclusion_lookup(road_network) : Dictionary();
+	const PackedInt32Array road_distance_field = road_distance_field_for_map(road_network, width, height);
 	int32_t ordinal = 0;
 
 	if (!parity_targets.is_empty()) {
@@ -3914,21 +4045,21 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 			const int32_t reward_target = catalog_zone_reward_target(normalized, zone);
 			const int32_t dwelling_target = catalog_zone_dwelling_target(normalized, zone);
 			for (int32_t mine_index = 0; mine_index < mine_target; ++mine_index) {
-				Dictionary point = object_point_for_zone_index(zone, ordinal, mine_index / 3, "mine", normalized, owner_grid, occupied, width, height);
+				Dictionary point = object_point_for_zone_index(zone, ordinal, mine_index / 3, "mine", normalized, owner_grid, occupied, placements, road_distance_field, width, height);
 				point["native_mine_index"] = mine_index;
 				point["native_mine_target"] = mine_target;
 				append_object_placement(placements, occupied, normalized, zone, point, "mine", ordinal, road_network, zone_layout);
 				++ordinal;
 			}
 			for (int32_t dwelling_index = 0; dwelling_index < dwelling_target; ++dwelling_index) {
-				Dictionary point = object_point_for_zone_index(zone, ordinal, 2 + dwelling_index, "neutral_dwelling", normalized, owner_grid, occupied, width, height);
+				Dictionary point = object_point_for_zone_index(zone, ordinal, 2 + dwelling_index, "neutral_dwelling", normalized, owner_grid, occupied, placements, road_distance_field, width, height);
 				point["native_dwelling_index"] = dwelling_index;
 				point["native_dwelling_target"] = dwelling_target;
 				append_object_placement(placements, occupied, normalized, zone, point, "neutral_dwelling", ordinal, road_network, zone_layout);
 				++ordinal;
 			}
 			for (int32_t reward_index = 0; reward_index < reward_target; ++reward_index) {
-				Dictionary point = object_point_for_zone_index(zone, ordinal, 1 + reward_index / 4, "reward_reference", normalized, owner_grid, occupied, width, height);
+				Dictionary point = object_point_for_zone_index(zone, ordinal, 1 + reward_index / 4, "reward_reference", normalized, owner_grid, occupied, placements, road_distance_field, width, height);
 				point["native_reward_index"] = reward_index;
 				point["native_reward_target"] = reward_target;
 				append_object_placement(placements, occupied, normalized, zone, point, "reward_reference", ordinal, road_network, zone_layout);
@@ -4597,6 +4728,22 @@ Dictionary object_guard_summary(const Array &candidates, const Array &guards) {
 	return summary;
 }
 
+int32_t local_guard_count_near_point(const Array &guards, const Dictionary &point, int32_t radius) {
+	const int32_t x = int32_t(point.get("x", 0));
+	const int32_t y = int32_t(point.get("y", 0));
+	int32_t count = 0;
+	for (int64_t index = 0; index < guards.size(); ++index) {
+		if (Variant(guards[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary guard = guards[index];
+		if (std::abs(x - int32_t(guard.get("x", 0))) <= radius && std::abs(y - int32_t(guard.get("y", 0))) <= radius) {
+			++count;
+		}
+	}
+	return count;
+}
+
 int32_t neutral_town_target_count(const Dictionary &normalized, const Array &zones, int32_t start_count) {
 	int32_t eligible = 0;
 	for (int64_t index = 0; index < zones.size(); ++index) {
@@ -4718,6 +4865,14 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			const int32_t guard_distance = std::abs(int32_t(point.get("x", 0)) - int32_t(object.get("x", 0))) + std::abs(int32_t(point.get("y", 0)) - int32_t(object.get("y", 0)));
 			if (parity_targets.is_empty() && reward_value >= 2500 && reward_value < 6000 && guard_distance > 12) {
 				continue;
+			}
+			if (parity_targets.is_empty()) {
+				const bool high_value_reward = kind == "reward_reference" && reward_value >= 6000;
+				const bool medium_value_reward = kind == "reward_reference" && reward_value >= 2500;
+				const int32_t local_guard_count = local_guard_count_near_point(guards, point, 6);
+				if (!high_value_reward && local_guard_count >= (medium_value_reward ? 5 : 4)) {
+					continue;
+				}
 			}
 			Dictionary target;
 			target["protected_target_id"] = object.get("placement_id", "");
