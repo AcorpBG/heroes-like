@@ -456,6 +456,37 @@ Known Phase 2 parent tracks already represented in progress history:
 - `random-map-generator-foundation-10184`
 - `map-scenario-gdextension-persistence-foundation-10184`
 
+Selected owner-directed corrective slice:
+
+id: `random-map-homm3-parity-richness-corrective-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Re-audit generated-map output against owner-visible HoMM3-style RMG expectations and improve concrete generated-map richness where maps still look sparse or structurally wrong.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `docs/random-map-final-homm3-parity-regate-audit.md`
+- `docs/random-map-xl-template-alignment-audit.md`
+- 2026-05-04 owner directive that generated maps are still not close enough to HoMM3-style RMG
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- focused RMG report/test scenes under `tests/`
+- `.artifacts/` generated-map inspection reports/previews when practical
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Multiple deterministic generated-map seeds/templates/sizes are inspected with human-readable evidence.
+- Generated maps enforce stronger town spacing/zone placement constraints.
+- Roads, rivers where terrain/template policy supports them, movement-shaping blockers/decorations, artifacts/rewards, and guards are generated at visible HoMM3-style densities.
+- Validation checks road/river presence or explicit unsupported policy, minimum town distance, blocker/decor density, artifact and guard counts/association, template richness metrics, and native/package startup regressions.
+- Remaining parity gaps are explicitly tracked as follow-up instead of being hidden behind a parity claim.
+nonGoals:
+- No generated terrain-art replacement work.
+- No copyrighted names, assets, maps, factions, unit art, music, or text.
+- No save-version bump, authored campaign adoption, or broad renderer/fog/pathing redesign unless required by focused validation.
+knownFollowUp:
+- `translated_rmg_template_002_v1` remains a poor/failing translated template under 72x72 inspection because start viability and decoration route-blocking constraints fail; track a separate template-structure corrective before using it as positive parity evidence.
+
 ### Phase 3 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.

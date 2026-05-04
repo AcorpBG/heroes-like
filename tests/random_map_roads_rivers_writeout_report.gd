@@ -28,7 +28,7 @@ func _run() -> void:
 	var writeout: Dictionary = payload.get("staging", {}).get("roads_rivers_writeout", {})
 	if not _assert_road_overlay(payload, writeout):
 		return
-	if not _assert_land_no_river_state(writeout):
+	if not _assert_land_river_state(writeout):
 		return
 	if not _assert_serialization(payload, writeout):
 		return
@@ -114,15 +114,20 @@ func _assert_road_overlay(payload: Dictionary, writeout: Dictionary) -> bool:
 			return false
 	return true
 
-func _assert_land_no_river_state(writeout: Dictionary) -> bool:
+func _assert_land_river_state(writeout: Dictionary) -> bool:
 	var river: Dictionary = writeout.get("river_water_coast_overlay", {})
-	if river.get("explicit_no_river_state", {}).is_empty():
-		_fail("Land config did not expose explicit no-river state: %s" % JSON.stringify(river))
+	if int(river.get("summary", {}).get("river_candidate_count", 0)) <= 0:
+		_fail("Land config did not generate river candidates: %s" % JSON.stringify(river))
 		return false
-	if String(river.get("explicit_no_river_state", {}).get("state", "")) != "explicit_land_no_river_overlay_candidates":
-		_fail("Land config no-river state used unexpected marker: %s" % JSON.stringify(river.get("explicit_no_river_state", {})))
-		return false
-	return true
+	for candidate in river.get("river_candidates", []):
+		if not (candidate is Dictionary):
+			continue
+		if String(candidate.get("overlay_type", "")) != "land_river_with_road_crossing_constraints":
+			continue
+		if candidate.get("candidate_cells", []).size() >= 8 and String(candidate.get("crossing_policy", "")) != "":
+			return true
+	_fail("Land river candidates missed coherent path/crossing metadata: %s" % JSON.stringify(river))
+	return false
 
 func _assert_water_overlay_metadata(writeout: Dictionary) -> bool:
 	var river: Dictionary = writeout.get("river_water_coast_overlay", {})

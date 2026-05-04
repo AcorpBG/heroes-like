@@ -240,7 +240,11 @@ const REWARD_BAND_CANDIDATES := [
 	{"reward_category": "build_resource_cache", "object_family_id": "reward_cache_small", "object_id": "object_ore_crates", "site_id": "site_ore_crates", "value": 650, "weight": 4, "categories": ["ore", "timber"], "guarded_policy": "unguarded_or_light_guard"},
 	{"reward_category": "guarded_cache", "object_family_id": "guarded_reward_cache", "object_id": "object_wood_wagon", "site_id": "site_wood_wagon", "value": 800, "weight": 4, "categories": ["timber", "ore"], "guarded_policy": "guarded_preferred"},
 	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "value": 1200, "weight": 2, "categories": ["timber", "gold"], "guarded_policy": "guarded_preferred"},
+	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_quarry_tally_rod", "artifact_id": "artifact_quarry_tally_rod", "value": 1250, "weight": 2, "categories": ["timber", "ore", "gold"], "guarded_policy": "guarded_preferred"},
 	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_waymark_compass", "artifact_id": "artifact_waymark_compass", "value": 1400, "weight": 2, "categories": ["gold", "lens_crystal", "cut_gems"], "guarded_policy": "guarded_preferred"},
+	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_milepost_lantern", "artifact_id": "artifact_milepost_lantern", "value": 1500, "weight": 2, "categories": ["timber", "gold", "quicksilver"], "guarded_policy": "guarded_preferred"},
+	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "value": 1700, "weight": 2, "categories": ["ore", "gold", "ember_salt"], "guarded_policy": "guarded_preferred"},
+	{"reward_category": "artifact", "object_family_id": "artifact_cache", "object_id": "artifact_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "value": 1900, "weight": 1, "categories": ["gold", "ember_salt", "lens_crystal"], "guarded_policy": "guarded_preferred"},
 	{"reward_category": "spell_access", "object_family_id": "spell_shrine", "object_id": "spell_beacon_path", "spell_id": "spell_beacon_path", "value": 1700, "weight": 1, "categories": ["quicksilver", "ember_salt", "lens_crystal"], "guarded_policy": "guarded_preferred"},
 	{"reward_category": "skill_equivalent", "object_family_id": "skill_shrine", "object_id": "object_reedscript_vow_shrine", "site_id": "site_reedscript_vow_shrine", "skill_equivalent_id": "route_vow_shrine_contract", "value": 1300, "weight": 2, "categories": ["timber", "ore", "quicksilver"], "guarded_policy": "guarded_or_frontier"},
 ]
@@ -1137,7 +1141,7 @@ static func large_batch_parity_stress_report(input_config: Dictionary = {}) -> D
 		"incorporated_slice_evidence": {
 			"playable_materialization": "materialized_map_signature_checked_for_successful_cases",
 			"translated_template_runtime_sweep": "parity-intended translated templates must validation-pass with materialized signatures; unsupported families are explicit accepted non-parity decisions",
-			"object_pool_value_weighting": "object_pool_value_weighting phase signature and summary checked",
+		"object_pool_value_weighting": "object_pool_value_weighting phase signature and summary checked",
 			"water_underground_transit_gameplay": "water/islands and underground fixture axes included",
 			"validation_batch_retry": "bounded retry policy and original failure preservation included",
 		},
@@ -1996,26 +2000,32 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 	var placements := []
 	var towns := []
 	var resource_nodes := []
+	var artifact_nodes := []
 	var encounters := []
 	var occupied := {}
+	var town_spacing_reserved := {}
+	var town_spacing_radius := _town_spacing_radius_for_size(normalized)
 	var player_index := 0
 	for zone in zones:
 		if not (zone is Dictionary) or zone.get("player_slot", null) == null:
 			continue
 		var seed: Dictionary = seeds.get(String(zone.get("id", "")), {})
-		var point := _nearest_free_cell(int(seed.get("x", 0)), int(seed.get("y", 0)), String(zone.get("id", "")), zone_grid, terrain_rows, occupied, rng)
-		if point.is_empty():
-			continue
 		var player_slot := int(zone.get("player_slot", 0))
 		var player_type := String(zone.get("player_type", "computer"))
 		var owner := "player" if player_type == "human" and player_slot == 1 else "enemy"
 		var faction_id := String(zone.get("faction_id", ""))
 		var town_id := String(town_ids[player_index % town_ids.size()]) if not town_ids.is_empty() else String(DEFAULT_TOWN_BY_FACTION.get(faction_id, "town_riverwatch"))
+		var point := _nearest_free_cell_for_catalog("town", "town_primary", town_id, int(seed.get("x", 0)), int(seed.get("y", 0)), String(zone.get("id", "")), zone_grid, terrain_rows, occupied, rng, town_spacing_reserved)
+		if point.is_empty():
+			point = _nearest_free_cell_for_catalog("town", "town_primary", town_id, int(seed.get("x", 0)), int(seed.get("y", 0)), String(zone.get("id", "")), zone_grid, terrain_rows, occupied, rng)
+		if point.is_empty():
+			continue
 		var placement_id := "rmg_town_p%d" % (player_index + 1)
 		var town := {"placement_id": placement_id, "town_id": town_id, "faction_id": faction_id, "player_slot": player_slot, "player_type": player_type, "team_id": String(zone.get("team_id", "")), "zone_id": String(zone.get("id", "")), "zone_role": String(zone.get("role", "")), "x": int(point.get("x", 0)), "y": int(point.get("y", 0)), "owner": owner, "town_assignment_semantics": "owned_start_uses_player_assignment_town"}
 		towns.append(town)
 		placements.append(_object_placement(placement_id, "town", faction_id, String(zone.get("id", "")), point, {"town_id": town_id, "owner": owner, "player_slot": player_slot, "player_type": player_type, "team_id": String(zone.get("team_id", "")), "purpose": "player_start", "zone_role": String(zone.get("role", "")), "town_assignment_semantics": "owned_start_uses_player_assignment_town", "same_type_semantics": "owned_zone_player_assignment_not_neutral_same_type"}))
-		_mark_occupied(occupied, point)
+		_mark_occupied_for_catalog(occupied, point, "town", "town_primary", town_id)
+		_reserve_town_spacing(town_spacing_reserved, point, zone_grid, terrain_rows, town_spacing_radius)
 		for resource_index in range(SUPPORT_RESOURCE_SITES.size()):
 			var resource: Dictionary = SUPPORT_RESOURCE_SITES[resource_index]
 			var support_point := _nearest_free_cell(
@@ -2047,7 +2057,7 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 	for zone in zones:
 		if not (zone is Dictionary):
 			continue
-		_place_neutral_town_for_zone(zone, zones, seeds, zone_grid, terrain_rows, occupied, route_reserved, towns, placements, rng)
+		_place_neutral_town_for_zone(zone, zones, seeds, zone_grid, terrain_rows, occupied, route_reserved, town_spacing_reserved, town_spacing_radius, towns, placements, rng)
 		_place_mines_for_zone(zone, seeds, zone_grid, terrain_rows, occupied, route_reserved, resource_nodes, placements, rng)
 		_place_dwelling_for_zone(zone, seeds, zone_grid, terrain_rows, occupied, route_reserved, resource_nodes, placements, rng)
 	for index in range(links.size()):
@@ -2101,6 +2111,7 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 		"object_placements": placements,
 		"towns": towns,
 		"resource_nodes": resource_nodes,
+		"artifact_nodes": artifact_nodes,
 		"encounters": encounters,
 	}
 
@@ -2133,7 +2144,7 @@ static func _reserved_route_corridor_lookup(links: Array, seeds: Dictionary, zon
 			reserved[_point_key(x, y)] = true
 	return reserved
 
-static func _place_neutral_town_for_zone(zone: Dictionary, zones: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary, towns: Array, placements: Array, rng: DeterministicRng) -> void:
+static func _place_neutral_town_for_zone(zone: Dictionary, zones: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary, town_spacing_reserved: Dictionary, town_spacing_radius: int, towns: Array, placements: Array, rng: DeterministicRng) -> void:
 	if zone.get("player_slot", null) != null:
 		return
 	var target_count := _neutral_town_target_count(zone)
@@ -2143,7 +2154,12 @@ static func _place_neutral_town_for_zone(zone: Dictionary, zones: Array, seeds: 
 	var seed: Dictionary = seeds.get(zone_id, {})
 	var town_choice := _neutral_town_choice_for_zone(zone, zones, seeds)
 	for index in range(target_count):
-		var point := _nearest_free_cell_for_catalog("town", String(town_choice.get("faction_id", "")), String(town_choice.get("town_id", "")), int(seed.get("x", 0)) + index, int(seed.get("y", 0)) + index, zone_id, zone_grid, terrain_rows, occupied, rng, reserved)
+		var spacing_reserved := reserved.duplicate()
+		for key in town_spacing_reserved.keys():
+			spacing_reserved[key] = true
+		var point := _nearest_free_cell_for_catalog("town", String(town_choice.get("faction_id", "")), String(town_choice.get("town_id", "")), int(seed.get("x", 0)) + index, int(seed.get("y", 0)) + index, zone_id, zone_grid, terrain_rows, occupied, rng, spacing_reserved)
+		if point.is_empty():
+			point = _nearest_free_cell_for_catalog("town", String(town_choice.get("faction_id", "")), String(town_choice.get("town_id", "")), int(seed.get("x", 0)) + index, int(seed.get("y", 0)) + index, zone_id, zone_grid, terrain_rows, occupied, rng, reserved)
 		if point.is_empty():
 			continue
 		var placement_id := "rmg_neutral_town_%s_%02d" % [zone_id, index + 1]
@@ -2176,7 +2192,8 @@ static func _place_neutral_town_for_zone(zone: Dictionary, zones: Array, seeds: 
 			"same_type_semantics": String(town_choice.get("same_type_semantics", "")),
 			"same_type_source_zone_id": String(town_choice.get("same_type_source_zone_id", "")),
 		}))
-		_mark_occupied(occupied, point)
+		_mark_occupied_for_catalog(occupied, point, "town", "town_primary", town_id)
+		_reserve_town_spacing(town_spacing_reserved, point, zone_grid, terrain_rows, town_spacing_radius)
 
 static func _place_mines_for_zone(zone: Dictionary, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary, resource_nodes: Array, placements: Array, rng: DeterministicRng) -> void:
 	var zone_id := String(zone.get("id", ""))
@@ -2288,6 +2305,28 @@ static func _nearest_free_cell_for_catalog(kind: String, family_id: String, obje
 		if not candidates.is_empty():
 			return candidates[rng.next_index(candidates.size())]
 	return {}
+
+static func _town_spacing_radius_for_size(normalized: Dictionary) -> int:
+	var size: Dictionary = normalized.get("size", {}) if normalized.get("size", {}) is Dictionary else {}
+	var width := int(size.get("width", 36))
+	var height := int(size.get("height", 36))
+	var shortest: int = max(1, min(width, height))
+	return clampi(int(floor(float(shortest) / 12.0)), 4, 14)
+
+static func _reserve_town_spacing(reserved: Dictionary, point: Dictionary, zone_grid: Array, terrain_rows: Array, radius: int) -> void:
+	var cx := int(point.get("x", 0))
+	var cy := int(point.get("y", 0))
+	for dy in range(-radius, radius + 1):
+		for dx in range(-radius, radius + 1):
+			if abs(dx) + abs(dy) > radius:
+				continue
+			var x := cx + dx
+			var y := cy + dy
+			if not _point_in_rows(terrain_rows, x, y):
+				continue
+			if String(_zone_at_point(zone_grid, _point_dict(x, y))) == "":
+				continue
+			reserved[_point_key(x, y)] = true
 
 static func _placement_candidate_satisfies_catalog(x: int, y: int, preferred_zone_id: Variant, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, catalog: Dictionary, reserved: Dictionary = {}) -> bool:
 	if not _point_in_rows(terrain_rows, x, y):
@@ -2505,6 +2544,7 @@ static func _resource_node_from_placement(placement_id: String, payload: Diction
 
 static func _materialize_route_reward_resources(placements: Dictionary, monster_reward_bands: Dictionary, route_graph: Dictionary, road_network: Dictionary, zone_grid: Array, terrain_rows: Array, rng: DeterministicRng) -> Array:
 	var resource_nodes: Array = placements.get("resource_nodes", [])
+	var artifact_nodes: Array = placements.get("artifact_nodes", [])
 	var object_placements: Array = placements.get("object_placements", [])
 	var occupied := _occupied_body_lookup(object_placements)
 	var reserved := _road_reserved_lookup(road_network)
@@ -2519,7 +2559,8 @@ static func _materialize_route_reward_resources(placements: Dictionary, monster_
 		var site_id := String(reward.get("site_id", ""))
 		var object_id := String(reward.get("selected_reward_object_id", ""))
 		var family_id := String(reward.get("selected_reward_family_id", ""))
-		if site_id == "" or ContentService.get_resource_site(site_id).is_empty():
+		var artifact_id := String(reward.get("artifact_id", ""))
+		if artifact_id == "" and (site_id == "" or ContentService.get_resource_site(site_id).is_empty()):
 			continue
 		var edge: Dictionary = edges_by_id.get(String(reward.get("route_edge_id", "")), {})
 		if edge.is_empty() or not bool(edge.get("path_found", false)):
@@ -2554,6 +2595,7 @@ static func _materialize_route_reward_resources(placements: Dictionary, monster_
 			"object_id": object_id,
 			"family_id": family_id,
 			"purpose": "route_reward_cache",
+			"artifact_id": artifact_id,
 			"owner": "neutral",
 			"player_slot": 0,
 			"player_type": "neutral",
@@ -2567,24 +2609,39 @@ static func _materialize_route_reward_resources(placements: Dictionary, monster_
 			"guarded_policy": String(reward.get("guarded_policy", "")),
 			"writeout_state": "materialized_route_reward_resource_node_from_existing_reward_band",
 		}
+		if artifact_id != "":
+			payload["purpose"] = "guarded_artifact_cache"
+			payload["writeout_state"] = "materialized_guarded_artifact_node_from_reward_band"
 		var placement := _object_placement(placement_id, "reward_reference", "", zone_id, point, payload)
 		_apply_pathing_metadata(placement, zone_grid, terrain_rows, occupied)
 		object_placements.append(placement)
-		var node := _route_reward_resource_node_from_placement(placement_id, payload, point, zone_id)
-		_copy_shared_placement_metadata(node, placement)
-		resource_nodes.append(node)
+		if artifact_id != "":
+			var artifact_node := _route_reward_artifact_node_from_placement(placement_id, payload, point, zone_id)
+			_copy_shared_placement_metadata(artifact_node, placement)
+			artifact_nodes.append(artifact_node)
+		else:
+			var node := _route_reward_resource_node_from_placement(placement_id, payload, point, zone_id)
+			_copy_shared_placement_metadata(node, placement)
+			resource_nodes.append(node)
 		materialized.append({
 			"placement_id": placement_id,
 			"site_id": site_id,
 			"object_id": object_id,
+			"artifact_id": artifact_id,
 			"route_edge_id": String(reward.get("route_edge_id", "")),
 			"x": int(point.get("x", 0)),
 			"y": int(point.get("y", 0)),
 			"zone_id": zone_id,
 		})
-		_mark_occupied(occupied, point)
+		_mark_occupied_for_catalog(occupied, point, "reward_reference", family_id, object_id)
 	placements["resource_nodes"] = resource_nodes
+	placements["artifact_nodes"] = artifact_nodes
 	placements["object_placements"] = object_placements
+	placements["materialized_route_reward_summary"] = {
+		"materialized_count": materialized.size(),
+		"artifact_node_count": artifact_nodes.size(),
+		"resource_node_count": resource_nodes.size(),
+	}
 	return materialized
 
 static func _materialize_route_density_support(normalized: Dictionary, placements: Dictionary, road_network: Dictionary, zone_grid: Array, terrain_rows: Array, rng: DeterministicRng) -> Array:
@@ -2676,6 +2733,160 @@ static func _materialize_route_density_support(normalized: Dictionary, placement
 			"density_window": window,
 		})
 	return materialized
+
+static func _materialize_object_guards(normalized: Dictionary, placements: Dictionary, road_network: Dictionary, zone_grid: Array, terrain_rows: Array, rng: DeterministicRng, route_reward_records: Array = []) -> Array:
+	var object_placements: Array = placements.get("object_placements", [])
+	var encounters: Array = placements.get("encounters", [])
+	var occupied := _occupied_body_lookup(object_placements)
+	var reserved := _road_reserved_lookup(road_network)
+	var candidates := []
+	for node in placements.get("artifact_nodes", []):
+		if node is Dictionary:
+			candidates.append(_object_guard_candidate(node, "artifact", 1800, "guarded_artifact_reward"))
+	for record in route_reward_records:
+		if record is Dictionary and String(record.get("artifact_id", "")) != "":
+			candidates.append(_object_guard_candidate(record, "artifact", 1800, "guarded_artifact_reward"))
+	for node in placements.get("resource_nodes", []):
+		if not (node is Dictionary):
+			continue
+		if String(node.get("original_resource_category_id", "")) != "":
+			var pressure: Dictionary = node.get("guard_pressure", {}) if node.get("guard_pressure", {}) is Dictionary else {}
+			if bool(pressure.get("guarded", false)):
+				candidates.append(_object_guard_candidate(node, "mine", int(pressure.get("base_value", 1200)), "guarded_mine"))
+		elif String(node.get("neutral_dwelling_family_id", "")) != "":
+			if int(node.get("player_slot", 0)) == 0:
+				candidates.append(_object_guard_candidate(node, "neutral_dwelling", 1200, "guarded_dwelling"))
+		elif String(node.get("generated_kind", "")) == "route_reward" and String(node.get("guarded_policy", "")).find("guarded") >= 0:
+			candidates.append(_object_guard_candidate(node, "route_reward", max(800, int(node.get("candidate_value", 800))), "guarded_reward_cache"))
+	candidates.sort_custom(Callable(RandomMapGeneratorRules, "_compare_object_guard_candidate"))
+	var max_guards := _object_guard_cap_for_size(normalized, candidates.size())
+	var materialized := []
+	var skipped_no_cell := 0
+	for index in range(min(max_guards, candidates.size())):
+		var candidate: Dictionary = candidates[index]
+		var target: Dictionary = candidate.get("target", {}) if candidate.get("target", {}) is Dictionary else {}
+		var zone_id := String(target.get("zone_id", _zone_at_point(zone_grid, target)))
+		var offset := _object_guard_anchor_offset(index)
+		var point := _nearest_free_cell_for_catalog(
+			"route_guard",
+			"route_guard",
+			DEFAULT_ENCOUNTER_ID,
+			int(target.get("x", 0)) + offset.x,
+			int(target.get("y", 0)) + offset.y,
+			zone_id if zone_id != "" else null,
+			zone_grid,
+			terrain_rows,
+			occupied,
+			rng,
+			reserved
+		)
+		if point.is_empty():
+			point = _nearest_free_cell_for_catalog("route_guard", "route_guard", DEFAULT_ENCOUNTER_ID, int(target.get("x", 0)) + offset.x, int(target.get("y", 0)) + offset.y, null, zone_grid, terrain_rows, occupied, rng, reserved)
+		if point.is_empty():
+			point = _nearest_free_cell_for_catalog(
+				"route_guard",
+				"route_guard",
+				DEFAULT_ENCOUNTER_ID,
+				int(target.get("x", 0)) + offset.x,
+				int(target.get("y", 0)) + offset.y,
+				zone_id if zone_id != "" else null,
+				zone_grid,
+				terrain_rows,
+				occupied,
+				rng,
+				{}
+			)
+		if point.is_empty():
+			point = _nearest_free_cell_for_catalog("route_guard", "route_guard", DEFAULT_ENCOUNTER_ID, int(target.get("x", 0)) + offset.x, int(target.get("y", 0)) + offset.y, null, zone_grid, terrain_rows, occupied, rng, {})
+		if point.is_empty():
+			skipped_no_cell += 1
+			continue
+		var placement_id := "rmg_object_guard_%03d" % (materialized.size() + 1)
+		var guard_value := int(candidate.get("guard_value", 1000))
+		var payload := {
+			"encounter_id": DEFAULT_ENCOUNTER_ID,
+			"purpose": String(candidate.get("guard_context", "")),
+			"guard_context": String(candidate.get("guard_context", "")),
+			"guarded_object_kind": String(candidate.get("kind", "")),
+			"guarded_object_placement_id": String(target.get("placement_id", "")),
+			"guarded_artifact_id": String(target.get("artifact_id", "")),
+			"guarded_site_id": String(target.get("site_id", "")),
+			"guard_value": guard_value,
+			"effective_guard_pressure": _guard_strength_class_from_value(guard_value),
+			"association_policy": "guards_materialized_adjacent_to_artifacts_mines_dwellings_and_guarded_reward_caches",
+			"wide": false,
+			"border_guard": false,
+		}
+		var placement := _object_placement(placement_id, "route_guard", "", String(_zone_at_point(zone_grid, point)), point, payload)
+		_apply_pathing_metadata(placement, zone_grid, terrain_rows, occupied)
+		object_placements.append(placement)
+		var encounter := {
+			"placement_id": placement_id,
+			"encounter_id": DEFAULT_ENCOUNTER_ID,
+			"x": int(point.get("x", 0)),
+			"y": int(point.get("y", 0)),
+			"difficulty": "generated_object_guard",
+			"guard_context": String(candidate.get("guard_context", "")),
+			"guarded_object_kind": String(candidate.get("kind", "")),
+			"guarded_object_placement_id": String(target.get("placement_id", "")),
+			"guarded_artifact_id": String(target.get("artifact_id", "")),
+			"guard_value": guard_value,
+		}
+		_copy_shared_placement_metadata(encounter, placement)
+		encounters.append(encounter)
+		materialized.append({
+			"placement_id": placement_id,
+			"guarded_object_placement_id": String(target.get("placement_id", "")),
+			"guarded_object_kind": String(candidate.get("kind", "")),
+			"guard_context": String(candidate.get("guard_context", "")),
+			"x": int(point.get("x", 0)),
+			"y": int(point.get("y", 0)),
+			"zone_id": String(placement.get("zone_id", "")),
+			"guard_value": guard_value,
+		})
+		_mark_occupied_for_catalog(occupied, point, "route_guard", "route_guard", DEFAULT_ENCOUNTER_ID)
+	placements["object_placements"] = object_placements
+	placements["encounters"] = encounters
+	placements["materialized_object_guard_summary"] = {
+		"artifact_node_count_seen": placements.get("artifact_nodes", []).size(),
+		"route_reward_artifact_record_count_seen": _count_route_reward_artifacts(route_reward_records),
+		"resource_node_count_seen": placements.get("resource_nodes", []).size(),
+		"candidate_count": candidates.size(),
+		"cap": max_guards,
+		"materialized_count": materialized.size(),
+		"skipped_no_cell": skipped_no_cell,
+	}
+	return materialized
+
+static func _object_guard_candidate(target: Dictionary, kind: String, guard_value: int, context: String) -> Dictionary:
+	return {
+		"target": target,
+		"kind": kind,
+		"guard_value": max(600, guard_value),
+		"guard_context": context,
+		"sort_key": "%09d:%s" % [999999999 - max(600, guard_value), String(target.get("placement_id", ""))],
+	}
+
+static func _compare_object_guard_candidate(a: Dictionary, b: Dictionary) -> bool:
+	return String(a.get("sort_key", "")) < String(b.get("sort_key", ""))
+
+static func _count_route_reward_artifacts(records: Array) -> int:
+	var count := 0
+	for record in records:
+		if record is Dictionary and String(record.get("artifact_id", "")) != "":
+			count += 1
+	return count
+
+static func _object_guard_cap_for_size(normalized: Dictionary, candidate_count: int) -> int:
+	var size: Dictionary = normalized.get("size", {}) if normalized.get("size", {}) is Dictionary else {}
+	var width := int(size.get("width", 36))
+	var height := int(size.get("height", 36))
+	var scale: float = max(1.0, float(min(width, height)) / 36.0)
+	return min(candidate_count, int(ceil(8.0 * scale * scale)))
+
+static func _object_guard_anchor_offset(index: int) -> Vector2i:
+	var offsets := [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]
+	return offsets[index % offsets.size()]
 
 static func _route_density_support_policy(normalized: Dictionary, terrain_rows: Array) -> Dictionary:
 	var size: Dictionary = normalized.get("size", {}) if normalized.get("size", {}) is Dictionary else {}
@@ -2860,6 +3071,25 @@ static func _density_support_resource_node_from_placement(placement_id: String, 
 		"density_window": payload.get("density_window", {}),
 	}
 
+static func _route_reward_artifact_node_from_placement(placement_id: String, payload: Dictionary, point: Dictionary, zone_id: String) -> Dictionary:
+	return {
+		"placement_id": placement_id,
+		"artifact_id": String(payload.get("artifact_id", "")),
+		"x": int(point.get("x", 0)),
+		"y": int(point.get("y", 0)),
+		"zone_id": zone_id,
+		"collected": false,
+		"owner": "neutral",
+		"player_slot": 0,
+		"kind": "guarded_artifact_cache",
+		"generated_kind": "route_artifact_reward",
+		"route_edge_id": String(payload.get("route_edge_id", "")),
+		"source_reward_band_id": String(payload.get("source_reward_band_id", "")),
+		"selected_reward_category_id": String(payload.get("selected_reward_category_id", "")),
+		"candidate_value": int(payload.get("candidate_value", 0)),
+		"guarded_policy": String(payload.get("guarded_policy", "")),
+	}
+
 static func _route_reward_resource_node_from_placement(placement_id: String, payload: Dictionary, point: Dictionary, zone_id: String) -> Dictionary:
 	return {
 		"placement_id": placement_id,
@@ -2971,7 +3201,7 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 		],
 		"towns": placements.get("towns", []),
 		"resource_nodes": placements.get("resource_nodes", []),
-		"artifact_nodes": [],
+		"artifact_nodes": placements.get("artifact_nodes", []),
 		"encounters": placements.get("encounters", []),
 		"objectives": {
 			"victory_text": "Generated prototype objective completed.",
@@ -2989,6 +3219,9 @@ static func _build_scenario_record(normalized: Dictionary, terrain_rows: Array, 
 			"water_underground_transit": constraints.get("water_underground_transit_gameplay", {}),
 			"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 			"monster_reward_bands": constraints.get("monster_reward_bands", {}),
+			"materialized_object_guards": constraints.get("materialized_object_guards", []),
+			"materialized_route_reward_summary": placements.get("materialized_route_reward_summary", {}),
+			"materialized_object_guard_summary": placements.get("materialized_object_guard_summary", {}),
 			"object_pool_value_weighting": constraints.get("object_pool_value_weighting", {}),
 			"town_mine_dwelling_placement": constraints.get("town_mine_dwelling_placement", {}),
 			"decoration_density_pass": constraints.get("decoration_density_pass", {}),
@@ -3084,6 +3317,7 @@ static func _build_playable_runtime_materialization_record(
 		"objects": {
 			"towns": scenario.get("towns", []),
 			"resources": _runtime_resource_records(scenario.get("resource_nodes", [])),
+			"artifacts": scenario.get("artifact_nodes", []),
 			"mines": _runtime_mine_records(scenario.get("resource_nodes", [])),
 			"dwellings": _runtime_dwelling_records(scenario.get("resource_nodes", [])),
 			"guards": _runtime_guard_records(scenario, placements, constraints),
@@ -3135,6 +3369,7 @@ static func _runtime_materialization_counts(materialization: Dictionary) -> Dict
 		"overlay_layer_count": overlays.get("overlay_layers", []).size(),
 		"town_count": objects.get("towns", []).size(),
 		"resource_count": objects.get("resources", []).size(),
+		"artifact_count": objects.get("artifacts", []).size(),
 		"mine_count": objects.get("mines", []).size(),
 		"dwelling_count": objects.get("dwellings", []).size(),
 		"guard_count": objects.get("guards", []).size(),
@@ -3241,6 +3476,10 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 		"water_underground_transit_gameplay": constraints.get("water_underground_transit_gameplay", {}),
 		"connection_guard_materialization": constraints.get("connection_guard_materialization", {}),
 		"monster_reward_bands": constraints.get("monster_reward_bands", {}),
+		"materialized_route_rewards": constraints.get("materialized_route_rewards", []),
+		"materialized_route_reward_summary": placements.get("materialized_route_reward_summary", {}),
+		"materialized_object_guards": constraints.get("materialized_object_guards", []),
+		"materialized_object_guard_summary": placements.get("materialized_object_guard_summary", {}),
 		"object_pool_value_weighting": constraints.get("object_pool_value_weighting", {}),
 		"town_mine_dwelling_placement": constraints.get("town_mine_dwelling_placement", {}),
 		"decoration_density_pass": constraints.get("decoration_density_pass", {}),
@@ -3291,6 +3530,15 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		zone_grid,
 		terrain_rows,
 		rng
+	)
+	var materialized_object_guards := _materialize_object_guards(
+		normalized,
+		placements,
+		route_build.get("road_network", {}),
+		zone_grid,
+		terrain_rows,
+		rng,
+		materialized_route_rewards
 	)
 	var object_pool_value_weighting := _build_object_pool_value_weighting_payload(
 		normalized,
@@ -3365,6 +3613,7 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		"materialized_route_rewards": materialized_route_rewards,
 		"materialized_route_density_support": materialized_route_density_support,
 		"materialized_compact_density_support": materialized_route_density_support,
+		"materialized_object_guards": materialized_object_guards,
 		"object_pool_value_weighting": object_pool_value_weighting,
 		"town_mine_dwelling_placement": town_mine_dwelling,
 		"decoration_density_pass": decoration_density,
@@ -4399,6 +4648,8 @@ static func _build_town_mine_dwelling_placement_payload(normalized: Dictionary, 
 			"core_category_mine_count": _count_core_category_mines(mine_records),
 			"validation_status": String(validation.get("status", "")),
 			"conflict_count": validation.get("conflicts", []).size(),
+			"minimum_town_distance_required": int(validation.get("town_spacing", {}).get("minimum_distance_required", 0)),
+			"observed_minimum_town_distance": int(validation.get("town_spacing", {}).get("observed_minimum_distance", 0)),
 		},
 		"deferred": [
 			"final_multitile_body_stamping",
@@ -4599,6 +4850,9 @@ static func _town_mine_dwelling_validation_core(town_records: Array, mine_record
 					conflicts.append("decoration %s overlaps %s at %s" % [String(decor.get("placement_id", decor.get("id", ""))), String(body_lookup[key]), key])
 	if conflicts.size() > 0:
 		failures.append_array(conflicts)
+	var town_spacing := _town_spacing_validation(town_records, terrain_rows)
+	if not bool(town_spacing.get("ok", false)):
+		failures.append_array(town_spacing.get("failures", []))
 	var same_type_count := _count_records_with_value(town_records, "same_type_semantics", "source_zone_choice_reused_for_neutral_town_when_same_type_flag_is_present")
 	if same_type_count <= 0:
 		warnings.append("no neutral same-type town was placed for this seed/template")
@@ -4620,11 +4874,44 @@ static func _town_mine_dwelling_validation_core(town_records: Array, mine_record
 		"failures": failures,
 		"warnings": warnings,
 		"conflicts": conflicts,
+		"town_spacing": town_spacing,
 		"route_edge_count": route_graph.get("edges", []).size(),
 		"road_segment_count": road_network.get("road_segments", []).size(),
 		"decoration_record_count": decoration_density.get("decoration_records", []).size(),
 		"placed_resource_categories": _sorted_keys(seven_categories),
 	}
+
+static func _town_spacing_validation(town_records: Array, terrain_rows: Array) -> Dictionary:
+	var failures := []
+	var min_distance := _minimum_town_distance_for_map(terrain_rows)
+	var observed_min := 999999
+	var closest_pair := []
+	for i in range(town_records.size()):
+		var a = town_records[i]
+		if not (a is Dictionary):
+			continue
+		for j in range(i + 1, town_records.size()):
+			var b = town_records[j]
+			if not (b is Dictionary):
+				continue
+			var distance: int = abs(int(a.get("x", 0)) - int(b.get("x", 0))) + abs(int(a.get("y", 0)) - int(b.get("y", 0)))
+			if distance < observed_min:
+				observed_min = distance
+				closest_pair = [String(a.get("placement_id", "")), String(b.get("placement_id", ""))]
+	if observed_min != 999999 and observed_min < min_distance:
+		failures.append("town spacing below minimum: %d < %d for %s" % [observed_min, min_distance, ",".join(closest_pair)])
+	return {
+		"ok": failures.is_empty(),
+		"minimum_distance_required": min_distance,
+		"observed_minimum_distance": 0 if observed_min == 999999 else observed_min,
+		"closest_pair": closest_pair,
+		"failures": failures,
+	}
+
+static func _minimum_town_distance_for_map(terrain_rows: Array) -> int:
+	var height := terrain_rows.size()
+	var width: int = terrain_rows[0].size() if height > 0 and terrain_rows[0] is Array else 36
+	return clampi(int(floor(float(min(width, height)) / 12.0)), 4, 14)
 
 static func _town_mine_dwelling_validation(payload: Dictionary, generated_map: Dictionary = {}) -> Dictionary:
 	var failures := []
@@ -4686,7 +4973,7 @@ static func _count_core_category_mines(records: Array) -> int:
 
 static func _build_roads_rivers_writeout_payload(normalized: Dictionary, terrain_rows: Array, zone_layout: Dictionary, terrain_transit: Dictionary, road_network: Dictionary, route_graph: Dictionary, object_footprints: Dictionary, placements: Dictionary) -> Dictionary:
 	var road_overlay := _road_overlay_writeout_payload(road_network, route_graph, terrain_rows, object_footprints)
-	var river_overlay := _river_water_coast_overlay_payload(zone_layout, terrain_transit)
+	var river_overlay := _river_water_coast_overlay_payload(zone_layout, terrain_transit, terrain_rows, road_overlay, object_footprints)
 	var serialization_record := _generated_map_serialization_record(normalized, terrain_rows, terrain_transit, road_overlay, river_overlay, object_footprints, placements, route_graph)
 	var round_trip := _round_trip_serialization_record(serialization_record)
 	var validation := _roads_rivers_writeout_validation_core(road_overlay, river_overlay, serialization_record, round_trip, route_graph, object_footprints)
@@ -4815,7 +5102,7 @@ static func _road_overlay_writeout_payload(road_network: Dictionary, route_graph
 	payload["road_overlay_signature"] = _hash32_hex(_stable_stringify({"segments": segment_records, "tiles": overlay_tiles, "diagnostics": diagnostics}))
 	return payload
 
-static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_transit: Dictionary) -> Dictionary:
+static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_transit: Dictionary, terrain_rows: Array = [], road_overlay: Dictionary = {}, object_footprints: Dictionary = {}) -> Dictionary:
 	var water: Dictionary = terrain_transit.get("water_coast_passability", {}) if terrain_transit.get("water_coast_passability", {}) is Dictionary else {}
 	var water_tiles := []
 	for index in range(water.get("water_cells", []).size()):
@@ -4867,6 +5154,8 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 			"materialization_state": "gameplay_ferry_bridge_record_materialized_and_exported",
 			"writeout_state": "final_generated_river_candidate_tile_bytes_written",
 		})
+	if river_candidates.is_empty() and water_tiles.is_empty() and coast_tiles.is_empty() and String(water.get("water_mode", zone_layout.get("policy", {}).get("water_mode", "land"))) == "land":
+		river_candidates.append_array(_land_river_candidates(zone_layout, terrain_rows, road_overlay, object_footprints))
 	var explicit_state := {}
 	if water_tiles.is_empty() and coast_tiles.is_empty() and river_candidates.is_empty():
 		explicit_state = {
@@ -4892,6 +5181,89 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 	}
 	payload["river_water_coast_signature"] = _hash32_hex(_stable_stringify({"water_overlay_tiles": water_tiles, "coast_overlay_tiles": coast_tiles, "river_candidates": river_candidates, "explicit_no_river_state": explicit_state}))
 	return payload
+
+static func _land_river_candidates(zone_layout: Dictionary, terrain_rows: Array, road_overlay: Dictionary, object_footprints: Dictionary) -> Array:
+	var height := terrain_rows.size()
+	var width: int = terrain_rows[0].size() if height > 0 and terrain_rows[0] is Array else 0
+	if width < 18 or height < 18:
+		return []
+	var occupied := _route_blocking_body_lookup_from_footprint_records(object_footprints.get("object_records", []))
+	var road_lookup := _tile_lookup_by_point(road_overlay.get("tiles", []))
+	var count := 2 if min(width, height) >= 72 else 1
+	var candidates := []
+	for index in range(count):
+		var start_x := int(clampi(int(round(float(width) * (0.25 + 0.35 * float(index)))), 2, width - 3))
+		var end_x := int(clampi(width - 1 - start_x + (index * 5), 2, width - 3))
+		var path := _meandering_land_river_path(start_x, 1, end_x, height - 2, terrain_rows, occupied, road_lookup, index)
+		if path.size() < max(8, int(floor(float(height) * 0.45))):
+			continue
+		var crossing_cells := []
+		for cell in path:
+			if cell is Dictionary and road_lookup.has(_point_key(int(cell.get("x", 0)), int(cell.get("y", 0)))):
+				crossing_cells.append(cell)
+		candidates.append({
+			"id": "land_river_candidate_%03d" % (index + 1),
+			"zone_id": "",
+			"level_index": 0,
+			"candidate_cells": path,
+			"from_anchor": path[0],
+			"to_coast": path[path.size() - 1],
+			"overlay_type": "land_river_with_road_crossing_constraints",
+			"river_type_byte": 1 + index,
+			"river_art_index": int(_hash32_int("land_river_candidate_%03d:art" % (index + 1)) % 16),
+			"crossing_cells": crossing_cells,
+			"crossing_policy": "roads_may_cross_at_recorded_bridge_or_ford_cells",
+			"transit_semantics": {
+				"kind": "land_river",
+				"route_class": "river_obstacle_with_crossings",
+				"passability": "blocked_except_recorded_road_crossing_or_future_bridge",
+				"materialization_options": ["river_overlay", "bridge", "ford"],
+				"required_unlock": false,
+				"materialization_state": "final_generated_land_river_candidate_tile_bytes_written",
+			},
+			"materialization_state": "land_river_overlay_record_materialized",
+			"writeout_state": "final_generated_river_candidate_tile_bytes_written",
+		})
+	return candidates
+
+static func _meandering_land_river_path(start_x: int, start_y: int, end_x: int, end_y: int, terrain_rows: Array, occupied: Dictionary, road_lookup: Dictionary, ordinal: int) -> Array:
+	var height := terrain_rows.size()
+	var width: int = terrain_rows[0].size() if height > 0 and terrain_rows[0] is Array else 0
+	var path := []
+	var x := start_x
+	var y := start_y
+	var guard: int = max(1, width * height)
+	while y <= end_y and guard > 0:
+		var key := _point_key(x, y)
+		if _point_in_rows(terrain_rows, x, y) and _terrain_cell_is_passable(terrain_rows, x, y) and (not occupied.has(key) or road_lookup.has(key)):
+			path.append(_point_dict(x, y))
+		var target_x := int(round(lerpf(float(start_x), float(end_x), float(y) / float(max(1, end_y)))))
+		var wave := int(round(sin(float(y + ordinal * 7) * 0.45) * 2.0))
+		var desired_x := clampi(target_x + wave, 1, max(1, width - 2))
+		if desired_x > x:
+			x += 1
+		elif desired_x < x:
+			x -= 1
+		else:
+			y += 1
+		if not _point_in_rows(terrain_rows, x, y) or (occupied.has(_point_key(x, y)) and not road_lookup.has(_point_key(x, y))):
+			y += 1
+			x = clampi(desired_x, 1, max(1, width - 2))
+		guard -= 1
+	return _dedupe_point_path(path)
+
+static func _dedupe_point_path(points: Array) -> Array:
+	var result := []
+	var seen := {}
+	for point in points:
+		if not (point is Dictionary):
+			continue
+		var key := _point_key(int(point.get("x", 0)), int(point.get("y", 0)))
+		if seen.has(key):
+			continue
+		seen[key] = true
+		result.append(point)
+	return result
 
 static func _generated_map_serialization_record(normalized: Dictionary, terrain_rows: Array, terrain_transit: Dictionary, road_overlay: Dictionary, river_overlay: Dictionary, object_footprints: Dictionary, placements: Dictionary, route_graph: Dictionary) -> Dictionary:
 	var metadata := _metadata(normalized)
