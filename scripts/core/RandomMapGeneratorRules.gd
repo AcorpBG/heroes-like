@@ -2113,9 +2113,10 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 		_reserve_town_spacing(town_hard_spacing_reserved, point, zone_grid, terrain_rows, town_hard_spacing_radius)
 		for resource_index in range(SUPPORT_RESOURCE_SITES.size()):
 			var resource: Dictionary = SUPPORT_RESOURCE_SITES[resource_index]
-			var support_point := _nearest_free_cell(
+			var support_point := _nearest_start_support_resource_cell(
 				int(point.get("x", 0)) + resource.get("offset", Vector2i.ZERO).x,
 				int(point.get("y", 0)) + resource.get("offset", Vector2i.ZERO).y,
+				point,
 				String(zone.get("id", "")),
 				zone_grid,
 				terrain_rows,
@@ -2134,8 +2135,9 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 				"zone_role": String(zone.get("role", "")),
 				"faction_id": faction_id,
 				"purpose": String(resource.get("purpose", "")),
+				"placement_policy": String(support_point.get("placement_policy", "")),
 			})
-			placements.append(_object_placement(resource_placement_id, "resource_site", faction_id, String(zone.get("id", "")), support_point, {"site_id": String(resource.get("site_id", "")), "purpose": String(resource.get("purpose", ""))}))
+			placements.append(_object_placement(resource_placement_id, "resource_site", faction_id, String(zone.get("id", "")), support_point, {"site_id": String(resource.get("site_id", "")), "purpose": String(resource.get("purpose", "")), "placement_policy": String(support_point.get("placement_policy", ""))}))
 			_mark_occupied(occupied, support_point)
 		player_index += 1
 	var route_reserved := _reserved_route_corridor_lookup(links, seeds, zone_grid, terrain_rows)
@@ -2398,6 +2400,63 @@ static func _nearest_free_cell_for_catalog(kind: String, family_id: String, obje
 		if not candidates.is_empty():
 			return candidates[rng.next_index(candidates.size())]
 	return {}
+
+static func _nearest_start_support_resource_cell(x: int, y: int, town_point: Dictionary, preferred_zone_id: String, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, rng: DeterministicRng) -> Dictionary:
+	var height := zone_grid.size()
+	var width: int = zone_grid[0].size() if height > 0 and zone_grid[0] is Array else 0
+	x = clampi(x, 0, max(0, width - 1))
+	y = clampi(y, 0, max(0, height - 1))
+	var generic := _nearest_free_cell(x, y, preferred_zone_id, zone_grid, terrain_rows, occupied, rng)
+	if generic.is_empty():
+		return generic
+	if String(_zone_at_point(zone_grid, generic)) == preferred_zone_id:
+		generic["placement_policy"] = "generic_start_zone_support_resource"
+		return generic
+	var best := {}
+	var best_path_length := 999999
+	var best_distance := 999999
+	var nearest_strict := {}
+	var nearest_distance := 999999
+	var search_limit: int = min(max(width, height), 10)
+	for radius in range(search_limit + 1):
+		for dy in range(-radius, radius + 1):
+			for dx in range(-radius, radius + 1):
+				if max(abs(dx), abs(dy)) != radius:
+					continue
+				var cx := x + dx
+				var cy := y + dy
+				if not _point_in_rows(terrain_rows, cx, cy):
+					continue
+				if String(_zone_at_point(zone_grid, _point_dict(cx, cy))) != preferred_zone_id:
+					continue
+				if occupied.has(_point_key(cx, cy)):
+					continue
+				if not _terrain_cell_is_passable(terrain_rows, cx, cy):
+					continue
+				var candidate := {"x": cx, "y": cy, "placement_policy": "strict_start_zone_support_resource_path_scored"}
+				var distance: int = abs(cx - int(town_point.get("x", 0))) + abs(cy - int(town_point.get("y", 0)))
+				if nearest_strict.is_empty() or distance < nearest_distance:
+					nearest_strict = candidate
+					nearest_distance = distance
+				var route_occupied := _occupied_without_route_endpoints(occupied, town_point, candidate)
+				var path := _find_direct_passable_path(town_point, candidate, terrain_rows, route_occupied)
+				if path.is_empty():
+					path = _find_passable_path(town_point, candidate, terrain_rows, route_occupied)
+				if path.is_empty():
+					continue
+				var path_length: int = path.size()
+				if best.is_empty() or path_length < best_path_length or (path_length == best_path_length and distance < best_distance):
+					best = candidate
+					best["support_route_path_length"] = path_length
+					best_path_length = path_length
+					best_distance = distance
+	if not best.is_empty():
+		return best
+	if not nearest_strict.is_empty():
+		nearest_strict["placement_policy"] = "strict_start_zone_support_resource_unscored_fallback"
+		return nearest_strict
+	generic["placement_policy"] = "fallback_relaxed_start_zone_support_resource"
+	return generic
 
 static func _town_spacing_radius_for_size(normalized: Dictionary) -> int:
 	var size: Dictionary = normalized.get("size", {}) if normalized.get("size", {}) is Dictionary else {}

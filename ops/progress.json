@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-secondary-road-coverage-10184",
-  "currentSliceTitle": "random map homm3 parity secondary road coverage 10184",
+  "currentSliceId": "random-map-homm3-parity-support-resource-preview-gate-10184",
+  "currentSliceTitle": "random map homm3 parity support resource preview gate 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed post-ee6015c road coverage review and source-backed secondary major-object service roads. Visual artifacts showed the fairness correction kept connectivity but reduced road coverage from 3889 to 2363; the new pass adds optional same-zone town/mine/dwelling road overlays after template/start-economy routing, grounded in homm3-re road overlay timing after towns/mines/major objects and excluded from fairness-scoped route diagnostics. Final visual report passed: total road tiles 2363->3153, fairness warnings 9, fail-threshold warnings 0, max contest/travel spread 13, town-resource spread 19, diagnostic notes 0. Richness report passed: road tiles 1445->1787, fairness warnings 9, fail-threshold warnings 0, max contest/travel spread 13, town-resource spread 8. Large visual passed: road tiles 1022->2108, fairness warnings 2, fail-threshold warnings 0, max contest/travel spread 17, town-resource spread 1; existing diagnostic runtime note remains.",
+  "currentSliceNotes": "Completed warning-level RMG parity continuation after 43ab952. Artifact review found the compact visual town-resource spread was real placement drift: generic start-support resource placement could relax out of the owning start zone while retaining the start zone id. The generator now preserves generic placement when it remains in-zone and only path-scores strict same-zone support candidates when generic placement would drift out-of-zone. Visual report passed: fairness warnings 9->8, fail-threshold warnings 0, max town-resource spread 19->7, max contest/travel spread 13, road tiles 3069, rendered SVG previews 6. Richness passed: fairness warnings 10, fail-threshold warnings 0, max town-resource spread 8, road tiles 1792. Large visual passed: warnings 2, fail-threshold warnings 0, route spread 17, town-resource spread 1, rendered SVG preview 1. Remaining translated route/travel spreads and richness warning count are documented in docs/random-map-homm3-parity-warning-review.md.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T07:00:00Z",
+  "updatedAt": "2026-05-04T07:19:46Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -8261,6 +8261,47 @@
       "startedAt": "2026-05-04T06:50:48Z",
       "notes": "Completed post-ee6015c road coverage review and source-backed secondary major-object service roads. Visual artifacts showed the fairness correction kept connectivity but reduced road coverage from 3889 to 2363; the new pass adds optional same-zone town/mine/dwelling road overlays after template/start-economy routing, grounded in homm3-re road overlay timing after towns/mines/major objects and excluded from fairness-scoped route diagnostics. Final visual report passed: total road tiles 2363->3153, fairness warnings 9, fail-threshold warnings 0, max contest/travel spread 13, town-resource spread 19, diagnostic notes 0. Richness report passed: road tiles 1445->1787, fairness warnings 9, fail-threshold warnings 0, max contest/travel spread 13, town-resource spread 8. Large visual passed: road tiles 1022->2108, fairness warnings 2, fail-threshold warnings 0, max contest/travel spread 17, town-resource spread 1; existing diagnostic runtime note remains.",
       "completedAt": "2026-05-04T07:00:00Z"
+    },
+    {
+      "id": "random-map-homm3-parity-support-resource-preview-gate-10184",
+      "title": "random map homm3 parity support resource preview gate 10184",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "random-map-generator-foundation-10184",
+      "source": "owner direction after 43ab952",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-cell-flags-and-overlays.md",
+        ".artifacts/rmg_parity_visual_inspection/summary.json",
+        ".artifacts/rmg_parity_large_visual_inspection/summary.json",
+        ".artifacts/rmg_parity_richness/summary.json"
+      ],
+      "implementationTargets": [
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "tests/random_map_homm3_parity_visual_inspection_report.gd",
+        "docs/random-map-homm3-parity-warning-review.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Inspect current visual/richness/large artifacts and identify whether warning-level fairness issues are generator imbalance or acceptable translated-template asymmetry.",
+        "Correct any real compact start-support resource route drift without relaxing diagnostics or reducing road coverage.",
+        "Generate human-inspectable rendered preview artifacts from the existing visual inspection report.",
+        "Validate focused visual/richness/large reports and repository health checks."
+      ],
+      "nonGoals": [
+        "No fairness-threshold weakening.",
+        "No generated PNG import or runtime/source asset ingestion.",
+        "No public UI work, save-version bump, native generator rewrite, or authored scenario/package adoption."
+      ],
+      "updatedAt": "2026-05-04T07:19:46Z",
+      "startedAt": "2026-05-04T07:10:31Z",
+      "notes": "Completed warning-level RMG parity continuation after 43ab952. Artifact review found compact visual town-resource spread was real start-support resource placement drift: the generic helper could relax out of the owning start zone while retaining the start zone id. Implemented guarded correction that keeps generic support placement when it remains in-zone and only path-scores strict same-zone candidates when generic placement would drift out-of-zone. Visual report passed with warnings 9->8, fail-threshold warnings 0, max town-resource spread 19->7, max contest/travel spread 13, road tiles 3069, rendered SVG previews 6. Richness passed with warnings 10, fail-threshold warnings 0, max town-resource spread 8, road tiles 1792. Large visual passed with warnings 2, fail-threshold warnings 0, route spread 17, town-resource spread 1, rendered SVG preview 1. Remaining translated route/travel spreads and richness warning count are documented in docs/random-map-homm3-parity-warning-review.md.",
+      "completedAt": "2026-05-04T07:19:46Z"
     }
   ],
   "completedImplementationEvidence": [
