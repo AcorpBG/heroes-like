@@ -56,7 +56,7 @@ func _run() -> void:
 		"native_extension_loaded": metadata.get("native_extension_loaded", false),
 		"small": small_summary,
 		"xl_catalog": large_summary,
-		"remaining_gap": "native uses original terrain-biased decorative_obstacle family ids; exact HoMM3-re decoration art/family parity is not complete",
+		"remaining_gap": "native records HoMM3-re source-row identity and maps it to original proxy decorative_obstacle family ids; exact HoMM3-re decoration art/DEF rendering parity is not complete",
 	})])
 	get_tree().quit(0)
 
@@ -87,7 +87,13 @@ func _assert_decorations(case_id: String, generated: Dictionary, expect_supporte
 				or placement.get("occupancy_keys", []).is_empty() \
 				or not (placement.get("footprint", {}) is Dictionary) \
 				or String(placement.get("approach_policy", "")) == "" \
-				or String(placement.get("occupancy_metadata", "")) == "":
+				or String(placement.get("occupancy_metadata", "")) == "" \
+				or String(placement.get("homm3_re_source_kind", "")) != "rand_trn_obstacle_row" \
+				or int(placement.get("homm3_re_rand_trn_source_row", 0)) <= 0 \
+				or String(placement.get("homm3_re_type_name", "")) == "" \
+				or String(placement.get("homm3_re_primary_def_template_ref", "")) == "" \
+				or String(placement.get("proxy_family_id", "")) == "" \
+				or String(placement.get("homm3_re_art_asset_policy", "")) != "metadata_only_def_names_are_not_imported_runtime_art":
 			missing_metadata.append(String(placement.get("placement_id", "")))
 	if decorations.is_empty():
 		_fail("%s did not generate decorative_obstacle placements." % case_id)
@@ -113,6 +119,9 @@ func _assert_decorations(case_id: String, generated: Dictionary, expect_supporte
 		"blocking_body_tile_total": int(shaping.get("blocking_body_tile_total", 0)),
 		"multitile_decoration_count": int(shaping.get("multitile_decoration_count", 0)),
 		"category_counts": _count_by_kind(generated.get("object_placements", [])),
+		"homm3_re_source_rows": _unique_field_count(decorations, "homm3_re_rand_trn_source_row"),
+		"homm3_re_type_names": _unique_field_count(decorations, "homm3_re_type_name"),
+		"proxy_families": _unique_field_count(decorations, "proxy_family_id"),
 	}
 
 func _road_body_conflicts(generated: Dictionary) -> Array:
@@ -141,6 +150,13 @@ func _count_by_kind(records: Array) -> Dictionary:
 			var kind := String(record.get("kind", ""))
 			counts[kind] = int(counts.get(kind, 0)) + 1
 	return counts
+
+func _unique_field_count(records: Array, field: String) -> int:
+	var values := {}
+	for record in records:
+		if record is Dictionary:
+			values[str(record.get(field, ""))] = true
+	return values.size()
 
 func _point_key(x: int, y: int) -> String:
 	return "%d,%d" % [x, y]

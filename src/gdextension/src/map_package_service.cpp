@@ -941,6 +941,70 @@ Dictionary load_random_map_template_catalog() {
 	return cached_catalog;
 }
 
+Dictionary load_homm3_re_obstacle_proxy_catalog() {
+	static Dictionary cached_catalog;
+	static bool loaded = false;
+	if (loaded) {
+		return cached_catalog;
+	}
+	loaded = true;
+	const String path = "res://content/homm3_re_obstacle_proxy_catalog.json";
+	if (!FileAccess::file_exists(path)) {
+		return cached_catalog;
+	}
+	Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		return cached_catalog;
+	}
+	Ref<JSON> parser;
+	parser.instantiate();
+	if (parser->parse(file->get_as_text()) != OK || parser->get_data().get_type() != Variant::DICTIONARY) {
+		return cached_catalog;
+	}
+	cached_catalog = Dictionary(parser->get_data());
+	return cached_catalog;
+}
+
+String homm3_re_source_terrain_for_native_terrain(const String &terrain_id) {
+	if (terrain_id == "underground") {
+		return "cave";
+	}
+	if (terrain_id == "mire") {
+		return "swamp";
+	}
+	if (terrain_id == "water") {
+		return "water";
+	}
+	if (terrain_id == "dirt" || terrain_id == "sand" || terrain_id == "grass" || terrain_id == "snow" || terrain_id == "swamp" || terrain_id == "rough" || terrain_id == "lava") {
+		return terrain_id;
+	}
+	return "grass";
+}
+
+Dictionary homm3_re_obstacle_source_record(const String &terrain_id, int32_t ordinal) {
+	Dictionary catalog = load_homm3_re_obstacle_proxy_catalog();
+	Dictionary terrain_rows = catalog.get("terrain_rows", Dictionary());
+	const String source_terrain = homm3_re_source_terrain_for_native_terrain(terrain_id);
+	Array candidates = terrain_rows.get(source_terrain, Array());
+	if (candidates.is_empty() && source_terrain != "grass") {
+		candidates = terrain_rows.get("grass", Array());
+	}
+	if (candidates.is_empty()) {
+		return Dictionary();
+	}
+	const String seed = source_terrain + String(":rand_trn_proxy:") + String::num_int64(ordinal);
+	const int64_t index = int64_t(hash32_int(seed) % uint32_t(candidates.size()));
+	if (Variant(candidates[index]).get_type() != Variant::DICTIONARY) {
+		return Dictionary();
+	}
+	Dictionary source = Dictionary(candidates[index]);
+	source["native_terrain_id"] = terrain_id;
+	source["native_terrain_source_alias"] = source_terrain;
+	source["source_catalog_path"] = "content/homm3_re_obstacle_proxy_catalog.json";
+	source["source_catalog_schema_id"] = catalog.get("schema_id", "homm3_re_obstacle_proxy_catalog_v1");
+	return source;
+}
+
 Dictionary catalog_template_for_id(const String &template_id) {
 	if (template_id.is_empty()) {
 		return Dictionary();
@@ -2500,6 +2564,7 @@ Dictionary object_family_record(const String &kind, int32_t ordinal, const Strin
 	}
 
 	Dictionary decoration_template = decoration_template_record(terrain_id, ordinal);
+	Dictionary homm3_re_source = homm3_re_obstacle_source_record(terrain_id, ordinal);
 	const String family_id = String(decoration_template.get("family_id", "object_greenway_root_lip"));
 	record["family_id"] = family_id;
 	record["object_family_id"] = "decorative_obstacle";
@@ -2510,7 +2575,32 @@ Dictionary object_family_record(const String &kind, int32_t ordinal, const Strin
 	record["passability_class"] = decoration_template.get("passability_class", "blocking_non_visitable");
 	record["terrain_bias"] = decoration_template.get("terrain_bias", terrain_id);
 	record["authored_map_object_source"] = "content/map_objects.json large-footprint decoration/blocker family";
-	record["family_art_parity"] = "original_runtime_family_id_not_exact_homm3_re_art_family";
+	record["family_art_parity"] = "homm3_re_source_identity_recorded_original_runtime_proxy_family_no_copyrighted_art_import";
+	record["proxy_family_id"] = family_id;
+	record["proxy_object_id"] = decoration_template.get("object_id", family_id);
+	record["proxy_mapping_policy"] = "terrain_biased_homm3_re_rand_trn_source_row_to_original_authored_blocker";
+	if (!homm3_re_source.is_empty()) {
+		record["homm3_re_source_kind"] = "rand_trn_obstacle_row";
+		record["homm3_re_source_catalog_path"] = homm3_re_source.get("source_catalog_path", "content/homm3_re_obstacle_proxy_catalog.json");
+		record["homm3_re_source_catalog_schema_id"] = homm3_re_source.get("source_catalog_schema_id", "homm3_re_obstacle_proxy_catalog_v1");
+		record["homm3_re_obstacle_id"] = homm3_re_source.get("obstacle_id", 0);
+		record["homm3_re_rand_trn_source_row"] = homm3_re_source.get("rand_trn_source_row", 0);
+		record["homm3_re_semantic_name"] = homm3_re_source.get("semantic_name", "");
+		record["homm3_re_type_id"] = homm3_re_source.get("type_id", 0);
+		record["homm3_re_type_name"] = homm3_re_source.get("type_name", "");
+		record["homm3_re_subtype"] = homm3_re_source.get("subtype", 0);
+		record["homm3_re_terrain_id"] = homm3_re_source.get("terrain_id", 0);
+		record["homm3_re_terrain_name"] = homm3_re_source.get("terrain_name", "");
+		record["homm3_re_native_terrain_source_alias"] = homm3_re_source.get("native_terrain_source_alias", terrain_id);
+		record["homm3_re_mapped_template_count"] = homm3_re_source.get("mapped_template_count", 0);
+		record["homm3_re_primary_def_template_ref"] = homm3_re_source.get("primary_def_template_ref", "");
+		record["homm3_re_def_template_refs"] = homm3_re_source.get("def_template_refs", Array());
+		record["homm3_re_terrain_scores"] = homm3_re_source.get("terrain_scores", Dictionary());
+		record["homm3_re_art_asset_policy"] = "metadata_only_def_names_are_not_imported_runtime_art";
+	} else {
+		record["homm3_re_source_kind"] = "missing_proxy_catalog_fallback";
+		record["homm3_re_art_asset_policy"] = "original_runtime_family_only_catalog_missing";
+	}
 	record["purpose"] = "zone_decoration_fill_coverage";
 	return record;
 }
@@ -2607,7 +2697,7 @@ Dictionary object_footprint_for_kind(const String &kind, int32_t ordinal, const 
 		footprint["height"] = decoration_template.get("height", 2);
 		footprint["anchor"] = "bottom_left";
 		footprint["tier"] = decoration_template.get("tier", "large_blocker");
-		footprint["source"] = "content/map_objects.json authored decoration/blocker footprint proportions";
+		footprint["source"] = "content/map_objects.json authored decoration/blocker footprint proportions with HoMM3-re rand_trn source identity proxy";
 	} else {
 		footprint["width"] = 1;
 		footprint["height"] = 1;
@@ -2800,6 +2890,46 @@ Dictionary find_decoration_point(const Dictionary &zone, int32_t ordinal, const 
 		result.erase("sort_key");
 		return result;
 	}
+	static constexpr int32_t COMPACT_FALLBACKS[2][2] = {{3, 2}, {2, 3}};
+	for (const auto &fallback : COMPACT_FALLBACKS) {
+		Dictionary compact_footprint = footprint.duplicate();
+		compact_footprint["width"] = fallback[0];
+		compact_footprint["height"] = fallback[1];
+		compact_footprint["tier"] = "compact_constrained_zone_proxy";
+		compact_footprint["source"] = "compact fallback for constrained HoMM3-re source-row proxy placement";
+		std::vector<Dictionary> compact_candidates;
+		for (int32_t radius = 1; radius <= radius_limit; ++radius) {
+			for (int32_t dy = -radius; dy <= radius; ++dy) {
+				for (int32_t dx = -radius; dx <= radius; ++dx) {
+					if (std::max(std::abs(dx), std::abs(dy)) != radius) {
+						continue;
+					}
+					const int32_t x = ax + dx;
+					const int32_t y = ay + dy;
+					if (!decoration_body_fits(x, y, zone_id, owner_grid, occupied, blocked, width, height, compact_footprint)) {
+						continue;
+					}
+					Dictionary point = point_record(x, y);
+					const int32_t jitter = int32_t(hash32_int(seed_text + String(":compact:") + String::num_int64(fallback[0]) + String("x") + String::num_int64(fallback[1]) + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 100000U);
+					point["sort_key"] = String::num_int64(radius * 100000 + jitter);
+					point["decoration_footprint_override"] = compact_footprint;
+					point["decoration_fit_fallback"] = "compact_constrained_zone_proxy";
+					compact_candidates.push_back(point);
+				}
+			}
+			if (compact_candidates.size() >= 12) {
+				break;
+			}
+		}
+		std::sort(compact_candidates.begin(), compact_candidates.end(), [](const Dictionary &left, const Dictionary &right) {
+			return String(left.get("sort_key", "")) < String(right.get("sort_key", ""));
+		});
+		if (!compact_candidates.empty()) {
+			Dictionary result = compact_candidates.front();
+			result.erase("sort_key");
+			return result;
+		}
+	}
 	return Dictionary();
 }
 
@@ -2816,12 +2946,20 @@ int32_t append_decoration_placements(Array &placements, Dictionary &occupied, co
 		Dictionary zone = zones[zone_index];
 		const int32_t target = decoration_target_for_zone(normalized, zone);
 		for (int32_t decoration_index = 0; decoration_index < target; ++decoration_index) {
-			Dictionary point = find_decoration_point(zone, ordinal, normalized, owner_grid, occupied, blocked, width, height);
-			if (point.is_empty()) {
+			bool placed = false;
+			for (int32_t attempt = 0; attempt < 8; ++attempt) {
+				Dictionary point = find_decoration_point(zone, ordinal, normalized, owner_grid, occupied, blocked, width, height);
+				if (!point.is_empty()) {
+					append_object_placement(placements, occupied, normalized, zone, point, "decorative_obstacle", ordinal, road_network, zone_layout);
+					++ordinal;
+					placed = true;
+					break;
+				}
+				++ordinal;
+			}
+			if (!placed) {
 				continue;
 			}
-			append_object_placement(placements, occupied, normalized, zone, point, "decorative_obstacle", ordinal, road_network, zone_layout);
-			++ordinal;
 		}
 	}
 	return ordinal;
@@ -2841,6 +2979,9 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	const String placement_id = "native_rmg_" + kind + "_" + zone_id + "_" + slot_id_2(ordinal + 1);
 	Dictionary body = cell_record(x, y, 0);
 	Dictionary footprint = object_footprint_for_kind(kind, ordinal, terrain_id);
+	if (kind == "decorative_obstacle" && point.has("decoration_footprint_override") && Variant(point.get("decoration_footprint_override", Dictionary())).get_type() == Variant::DICTIONARY) {
+		footprint = Dictionary(point.get("decoration_footprint_override", Dictionary()));
+	}
 	Array body_tiles = object_body_tiles_for_kind(kind, x, y, width, height, footprint);
 	Array occupancy_keys;
 	for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
@@ -2926,7 +3067,10 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 		placement["interaction"] = "none";
 		placement["approach_policy"] = "non_visitable_no_approach";
 		placement["occupancy_metadata"] = "blocking_body_tiles_reserved_in_native_object_occupancy";
-		placement["decoration_family_source"] = "native_original_family_catalog";
+		placement["decoration_family_source"] = "homm3_re_rand_trn_source_row_with_original_runtime_proxy_family";
+		if (point.has("decoration_fit_fallback")) {
+			placement["decoration_fit_fallback"] = point.get("decoration_fit_fallback", "");
+		}
 	}
 	for (int64_t key_index = 0; key_index < family.keys().size(); ++key_index) {
 		const String key = String(family.keys()[key_index]);
@@ -3022,9 +3166,14 @@ Dictionary object_fill_coverage_summary(const Array &placements, const Dictionar
 	Dictionary visit_lookup;
 	Dictionary decoration_count_by_zone;
 	Dictionary decoration_body_by_zone;
+	Dictionary homm3_re_source_row_lookup;
+	Dictionary homm3_re_type_name_lookup;
+	Dictionary homm3_re_terrain_name_lookup;
+	Dictionary proxy_family_lookup;
 	int32_t decoration_count = 0;
 	int32_t decoration_body_tile_total = 0;
 	int32_t authored_large_decoration_count = 0;
+	int32_t homm3_re_sourced_decoration_count = 0;
 	for (int64_t index = 0; index < placements.size(); ++index) {
 		Dictionary placement = placements[index];
 		const String kind = String(placement.get("kind", ""));
@@ -3035,6 +3184,13 @@ Dictionary object_fill_coverage_summary(const Array &placements, const Dictionar
 			decoration_count_by_zone[zone_id] = int32_t(decoration_count_by_zone.get(zone_id, 0)) + 1;
 			if (body_tiles.size() >= 6) {
 				++authored_large_decoration_count;
+			}
+			if (String(placement.get("homm3_re_source_kind", "")) == "rand_trn_obstacle_row") {
+				++homm3_re_sourced_decoration_count;
+				homm3_re_source_row_lookup[String::num_int64(int64_t(placement.get("homm3_re_rand_trn_source_row", 0)))] = true;
+				homm3_re_type_name_lookup[String(placement.get("homm3_re_type_name", ""))] = true;
+				homm3_re_terrain_name_lookup[String(placement.get("homm3_re_terrain_name", ""))] = true;
+				proxy_family_lookup[String(placement.get("proxy_family_id", placement.get("family_id", "")))] = true;
 			}
 		}
 		for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
@@ -3089,6 +3245,12 @@ Dictionary object_fill_coverage_summary(const Array &placements, const Dictionar
 	summary["decoration_count"] = decoration_count;
 	summary["authored_large_decoration_count"] = authored_large_decoration_count;
 	summary["authored_large_decoration_ratio"] = decoration_count <= 0 ? 0.0 : double(authored_large_decoration_count) / double(decoration_count);
+	summary["homm3_re_sourced_decoration_count"] = homm3_re_sourced_decoration_count;
+	summary["homm3_re_sourced_decoration_ratio"] = decoration_count <= 0 ? 0.0 : double(homm3_re_sourced_decoration_count) / double(decoration_count);
+	summary["homm3_re_unique_source_row_count"] = homm3_re_source_row_lookup.size();
+	summary["homm3_re_unique_type_name_count"] = homm3_re_type_name_lookup.size();
+	summary["homm3_re_unique_terrain_name_count"] = homm3_re_terrain_name_lookup.size();
+	summary["homm3_re_unique_proxy_family_count"] = proxy_family_lookup.size();
 	summary["average_decoration_body_tiles"] = decoration_count <= 0 ? 0.0 : double(decoration_body_tile_total) / double(decoration_count);
 	summary["decoration_count_by_zone"] = decoration_count_by_zone;
 	summary["decoration_body_tiles_by_zone"] = decoration_body_by_zone;
