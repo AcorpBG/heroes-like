@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-warning-classification-followup-10184",
-  "currentSliceTitle": "random map homm3 parity warning classification followup 10184",
+  "currentSliceId": "native-rmg-full-parity-gate-10184",
+  "currentSliceTitle": "Native RMG Full Parity Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed post-a749da2 RMG warning classification follow-up. Tightened early support-resource fairness diagnostic to measure actual start-support resource routes only. Added raw/accepted/unresolved/fail-threshold warning split to richness and visual reports without changing fail thresholds. Validation: visual report passed with raw warnings 6, accepted 6, unresolved 0, fail-threshold 0, rendered previews 6, road tiles 3069; richness passed with raw warnings 6, accepted 6, unresolved 0, fail-threshold 0, road tiles 1792; large visual passed with raw warnings 2, accepted 2, unresolved 0, fail-threshold 0, rendered previews 1; sync-plan dry-run missing 0; git diff --check passed; tests/validate_repo.py passed.",
+  "currentSliceNotes": "Completed 2026-05-04 after reopening overclaimed native RMG parity. Corrected the comparison harness to use RandomMapGeneratorRules.gd directly as the GDScript reference while keeping the active launch path native package-based. Ported missing native structural parity for tracked homm3_small profiles: object category target counts and protected-object guard materialization now match the reference for small_land_three_players, small_islands_four_players, and small_land_underground_four_players. Updated the native foundation report to assert the current native terrain-grid MapDocument contract instead of the obsolete empty stub. Validation: cmake --build .artifacts/map_persistence_native_build --parallel 2; native_random_map_foundation_report.tscn with /tmp/heroes-like-native-rmg-foundation-* passed; native_random_map_gdscript_comparison_report.tscn passed with known_gap_count 0 and full_parity_ready true; native_random_map_full_parity_gate_report.tscn with /tmp/heroes-like-native-rmg-full-* passed with blocking_gap_count 0; git diff --check passed.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T07:49:34Z",
+  "updatedAt": "2026-05-04T10:14:31Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -6948,9 +6948,9 @@
         "No generated PNG or generated-study derivative import."
       ],
       "createdAt": "2026-05-03T09:37:49Z",
-      "updatedAt": "2026-05-03T11:44:18Z",
+      "updatedAt": "2026-05-04T10:14:31Z",
       "startedAt": "2026-05-03T11:23:18Z",
-      "notes": "Implemented native RMG full-parity support for the exact tracked 36x36 homm3_small comparison profiles; comparison and full gate report zero blocking gaps; full gate includes an adjacent unsupported translated land level-1 negative check to prevent false broad parity claims; package/session bridge ready for supported profiles with no runtime call-site adoption, no authored writeback, and no save version bump. Validation: json.tool ops/progress.json; progress sync-plan --dry-run; cmake --build .artifacts/map_persistence_native_build --parallel 2; native RMG smoke stack through package/session adoption; gdscript comparison smoke; full parity gate smoke; git diff --check; python3 tests/validate_repo.py.",
+      "notes": "Completed 2026-05-04 after reopening overclaimed native RMG parity. Corrected the comparison harness to use RandomMapGeneratorRules.gd directly as the GDScript reference while keeping the active launch path native package-based. Ported missing native structural parity for tracked homm3_small profiles: object category target counts and protected-object guard materialization now match the reference for small_land_three_players, small_islands_four_players, and small_land_underground_four_players. Updated the native foundation report to assert the current native terrain-grid MapDocument contract instead of the obsolete empty stub. Validation: cmake --build .artifacts/map_persistence_native_build --parallel 2; native_random_map_foundation_report.tscn with /tmp/heroes-like-native-rmg-foundation-* passed; native_random_map_gdscript_comparison_report.tscn passed with known_gap_count 0 and full_parity_ready true; native_random_map_full_parity_gate_report.tscn with /tmp/heroes-like-native-rmg-full-* passed with blocking_gap_count 0; git diff --check passed.",
       "completedAt": "2026-05-03T11:40:47Z"
     },
     {

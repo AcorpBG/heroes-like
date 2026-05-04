@@ -1,6 +1,7 @@
 extends Node
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
+const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 
 const REPORT_ID := "NATIVE_RANDOM_MAP_GDSCRIPT_COMPARISON_REPORT"
 const REPORT_SCHEMA_ID := "native_random_map_gdscript_comparison_report_v1"
@@ -147,7 +148,7 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 		bool(case_record.get("underground_enabled", false)),
 		String(case_record.get("size_class_id", "homm3_small"))
 	)
-	var gdscript_setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup(config, "normal")
+	var gdscript_setup := _run_gdscript_reference(config)
 	if not bool(gdscript_setup.get("ok", false)):
 		_fail("GDScript source-of-truth generation failed for %s: %s" % [String(case_record.get("id", "")), JSON.stringify(gdscript_setup)])
 		return {}
@@ -197,6 +198,24 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 			"native_adoption_allowed": known_gaps.is_empty(),
 			"package_session_adoption_ready": bool(adoption_summary.get("ready", false)),
 			"full_parity_claim": bool(native_summary.get("provenance", {}).get("full_parity_claim", false)) and known_gaps.is_empty(),
+		},
+	}
+
+func _run_gdscript_reference(config: Dictionary) -> Dictionary:
+	var reference: Dictionary = RandomMapGeneratorRulesScript.generate(config)
+	if not bool(reference.get("ok", false)):
+		return reference
+	var generated_map: Dictionary = reference.get("generated_map", {}) if reference.get("generated_map", {}) is Dictionary else {}
+	var report: Dictionary = reference.get("report", {}) if reference.get("report", {}) is Dictionary else {}
+	return {
+		"ok": true,
+		"generated_map": generated_map,
+		"validation": report,
+		"campaign_adoption": false,
+		"alpha_parity_claim": false,
+		"generated_identity": {
+			"stable_signature": String(generated_map.get("stable_signature", "")),
+			"materialized_map_signature": String(generated_map.get("runtime_materialization", {}).get("materialized_map_signature", "")),
 		},
 	}
 
