@@ -13807,6 +13807,51 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             width, height = png_size(runtime_path)
             ensure((width, height) == (512, 512), errors, f"Overworld runtime object asset {asset_id} must use the 512 canvas, found {width}x{height}")
 
+    decorative_manifest_path = res_path_to_disk(str(manifest.get("decorative_object_sprite_manifest", "")))
+    ensure(decorative_manifest_path.exists(), errors, "Overworld art manifest must reference the decorative object sprite manifest")
+    if decorative_manifest_path.exists():
+        decorative_manifest = load_json(decorative_manifest_path)
+        ensure(str(decorative_manifest.get("schema_id", "")) == "aurelion_decorative_object_sprite_mapping_v1", errors, "Decorative object sprite manifest must use the expected schema id")
+        source = decorative_manifest.get("source", {})
+        ensure(isinstance(source, dict), errors, "Decorative object sprite manifest must record source provenance")
+        if isinstance(source, dict):
+            ensure("no_homm3" in str(source.get("asset_policy", "")).lower(), errors, "Decorative object sprite manifest must record the no-HoMM3-art import policy")
+            source_atlas_path = res_path_to_disk(str(source.get("workspace_source_atlas", "")))
+            ensure(source_atlas_path.exists(), errors, f"Decorative object sprite source atlas is missing: {source.get('workspace_source_atlas')}")
+        archetype_asset_ids = decorative_manifest.get("archetype_asset_ids", [])
+        mappings = decorative_manifest.get("object_sprite_mappings", {})
+        ensure(isinstance(archetype_asset_ids, list) and len(archetype_asset_ids) >= 16, errors, "Decorative object sprite manifest must define at least 16 generated archetype assets")
+        ensure(isinstance(mappings, dict), errors, "Decorative object sprite manifest must define object_sprite_mappings")
+        map_objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+        decorative_object_ids = {
+            object_id
+            for object_id, obj in map_objects.items()
+            if str(obj.get("primary_class", "")) == "decoration" or str(obj.get("family", "")) in {"blocker", "decoration"}
+        }
+        ensure(len(decorative_object_ids) == 200, errors, f"Expected 200 authored decorative/blocker map objects, found {len(decorative_object_ids)}")
+        if isinstance(mappings, dict):
+            ensure(decorative_object_ids.issubset(set(map(str, mappings.keys()))), errors, "Decorative object sprite manifest must map every authored decorative/blocker map object")
+            for object_id in sorted(decorative_object_ids):
+                entry = mappings.get(object_id, {})
+                ensure(isinstance(entry, dict), errors, f"Decorative object mapping {object_id} must be a dictionary with provenance")
+                if not isinstance(entry, dict):
+                    continue
+                asset_id = str(entry.get("asset_id", ""))
+                ensure(asset_id in object_assets, errors, f"Decorative object mapping {object_id} references missing object asset {asset_id}")
+                ensure(str(entry.get("fit", "")) != "", errors, f"Decorative object mapping {object_id} must record its semantic-fit note")
+        if isinstance(archetype_asset_ids, list):
+            for asset_id in map(str, archetype_asset_ids):
+                ensure(asset_id in object_assets, errors, f"Decorative archetype asset {asset_id} is missing from overworld object_assets")
+                entry = object_assets.get(asset_id, {})
+                if isinstance(entry, dict):
+                    runtime_path = res_path_to_disk(str(entry.get("path", "")))
+                    source_trimmed_path = res_path_to_disk(str(entry.get("source_trimmed", "")))
+                    source_atlas_path = res_path_to_disk(str(entry.get("source_generated_atlas", "")))
+                    ensure(str(entry.get("asset_policy", "")) == "original_generated_runtime_sprite_no_homm3_art_import", errors, f"Decorative archetype asset {asset_id} must record generated no-HoMM3 policy")
+                    ensure(runtime_path.with_name(runtime_path.name + ".import").exists(), errors, f"Decorative archetype runtime asset is missing Godot import sidecar: {runtime_path.relative_to(ROOT)}.import")
+                    ensure(source_trimmed_path.exists(), errors, f"Decorative archetype asset {asset_id} is missing trimmed source {entry.get('source_trimmed')}")
+                    ensure(source_atlas_path.exists(), errors, f"Decorative archetype asset {asset_id} is missing generated source atlas {entry.get('source_generated_atlas')}")
+
     resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
     for site_id, expected_asset_id in OVERWORLD_ART_REQUIRED_SITE_MAPPINGS.items():
         ensure(site_id in resource_sites, errors, f"Overworld art required mapping references missing resource site {site_id}")
@@ -13890,7 +13935,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "func _draw_town_front_contact",
         "func validation_town_presentation_profiles",
         "func _draw_encounter_sprite",
+        "func _draw_decorative_object_sprite",
+        "func _decorative_object_asset_id",
+        "func _load_decorative_object_sprite_manifest",
         "func _resource_asset_id",
+        "decorative_object_sprite_manifest",
         "town_default_sprite",
         "encounter_default_sprite",
         "OBJECT_PRESENCE_MODEL",

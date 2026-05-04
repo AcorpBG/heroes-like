@@ -125,6 +125,40 @@ Selection rules for new Phase 2 slices:
 
 Completed owner-directed implementation slice:
 
+id: `decorative-blocker-sprite-asset-foundation-10184`
+phase: `phase-2-deep-production-foundation`
+status: `completed`
+purpose: Owner-directed generated-art ingestion slice for decorative/blocker overworld objects: audit renderer and native map-generator object surfaces, generate original 2D sprite assets for decorative/blocker objects lacking art, wire those assets through the overworld renderer/manifest, and validate that generated decorative/blocker objects are represented without relying only on procedural fallback markers.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/concept-art-pipeline.md`
+- `docs/overworld-object-taxonomy-density.md`
+- `docs/overworld-object-content-batch-001b-biome-scenic-decoration-report.md`
+- `docs/overworld-object-content-batch-001c-biome-blockers-edge-report.md`
+- `docs/overworld-object-content-batch-001d-large-footprint-coverage-report.md`
+- `docs/native-rmg-template-decoration-wiring-report.md`
+- owner request on 2026-05-04 to generate sprites for decorative/blocker objects after checking renderer and map generator
+implementationTargets:
+- `art/overworld/runtime/objects/decorations/`
+- `art/overworld/source/trimmed/decorations/`
+- `art/overworld/manifest.json`
+- `scenes/overworld/OverworldMapView.gd`
+- `tests/validate_repo.py`
+- focused overworld visual/native decoration report tests as needed
+- `ops/progress.json`
+completionCriteria:
+- Renderer and native map-generator decorative/blocker placement contracts are inspected and documented in the run evidence.
+- Decorative/blocker objects lacking 2D assets are represented by generated original sprite assets or a documented, validated archetype mapping sufficient for every authored decorative/blocker object used by the renderer/generator.
+- Generated sprite assets are committed only with provenance, runtime/source paths, manifest entries, and validation that files exist at expected dimensions.
+- The overworld renderer can draw decorative/blocker map-object placements through mapped sprites while preserving procedural fallback for unmapped object types.
+- No HoMM3 copyrighted art/DEF/image assets are imported.
+- Validation covers manifest integrity, decorative/blocker asset mapping coverage, and at least one generated decorative/blocker runtime presentation path.
+nonGoals:
+- No save-version bump, no binary map-package schema migration, no exact HoMM3 asset/DEF parity claim, no full replacement of all terrain art, no broad gameplay rebalance.
+
+Completed owner-directed implementation slice:
+
 id: `native-rmg-homm3-road-spread-parity-10184`
 phase: `phase-2-deep-production-foundation`
 status: `completed`

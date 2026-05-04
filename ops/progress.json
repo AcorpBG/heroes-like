@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-homm3-road-spread-parity-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Road Spread Parity",
+  "currentSliceId": "decorative-blocker-sprite-asset-foundation-10184",
+  "currentSliceTitle": "Decorative Blocker Sprite Asset Foundation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed road spread follow-up: native C++ MapPackageService.generate_random_map() adds bounded short service stubs in residual roadless land pockets for the owner-like translated medium islands case, improving coarse road spread without returning to the pre-accfaf1 over-road bias. Exact HoMM3-re road authoring parity remains out of scope.",
-  "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T23:55:00Z",
+  "currentSliceNotes": "Completed owner-directed generated-art ingestion slice: original 16-archetype decorative/blocker sprite atlas was split into 512x512 runtime assets, all 200 authored decorative/blocker map objects were mapped with provenance, native generated decorative placements are bridged into overworld map_objects, and OverworldMapView renders mapped decorative placements with asset sprites while preserving procedural fallback for unmapped object types.",
+  "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected asset-ingestion slices with provenance, validation, and runtime wiring gates.",
+  "updatedAt": "2026-05-05T00:20:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,67 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "decorative-blocker-sprite-asset-foundation-10184",
+      "title": "Decorative Blocker Sprite Asset Foundation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "owner_directed_phase2_generated_decorative_blocker_sprite_asset_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/concept-art-pipeline.md",
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/overworld-object-content-batch-001b-biome-scenic-decoration-report.md",
+        "docs/overworld-object-content-batch-001c-biome-blockers-edge-report.md",
+        "docs/overworld-object-content-batch-001d-large-footprint-coverage-report.md",
+        "docs/native-rmg-template-decoration-wiring-report.md",
+        "owner request on 2026-05-04 to generate sprites for decorative/blocker objects after checking renderer and map generator"
+      ],
+      "purpose": "Generate and ingest original 2D sprite assets for decorative/blocker overworld objects after auditing the renderer and native map-generator object placement surfaces.",
+      "implementationTargets": [
+        "art/overworld/runtime/objects/decorations/",
+        "art/overworld/source/trimmed/decorations/",
+        "art/overworld/manifest.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/validate_repo.py",
+        "focused overworld visual/native decoration report tests as needed",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py --overworld-object-report",
+        "python3 tests/validate_repo.py",
+        "focused Godot visual/report smoke proving decorative/blocker sprite presentation",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Renderer and native map-generator decorative/blocker placement contracts are inspected and documented in the run evidence.",
+        "Decorative/blocker objects lacking 2D assets are represented by generated original sprite assets or a documented, validated archetype mapping sufficient for every authored decorative/blocker object used by the renderer/generator.",
+        "Generated sprite assets are committed only with provenance, runtime/source paths, manifest entries, and validation that files exist at expected dimensions.",
+        "The overworld renderer can draw decorative/blocker map-object placements through mapped sprites while preserving procedural fallback for unmapped object types.",
+        "No HoMM3 copyrighted art/DEF/image assets are imported.",
+        "Validation covers manifest integrity, decorative/blocker asset mapping coverage, and at least one generated decorative/blocker runtime presentation path."
+      ],
+      "completionEvidence": [
+        "Generated original built-in imagegen 4x4 decorative/blocker atlas and committed split runtime assets under art/overworld/runtime/objects/decorations/ with matching trimmed source files and source atlas provenance.",
+        "art/overworld/decorative_object_sprites.json maps all 200 authored decoration/blocker objects to 16 generated archetype asset ids with semantic-fit notes and no-HoMM3-art import policy.",
+        "NativeRandomMapPackageSessionBridge now transfers native decorative_obstacle map document records into session.overworld.map_objects for runtime presentation.",
+        "OverworldMapView now loads the decorative mapping manifest, indexes decorative map_objects, resolves object_id to generated asset ids, draws mapped decorative sprites, and reports decorative asset presentation in validation_tile_presentation.",
+        "Focused runtime report passed: OVERWORLD_DECORATIVE_SPRITE_ASSET_REPORT generated 67 native decorations, verified 200 mapped authored objects, and proved sample object_underway_brasspipe_cavern_wall rendered as decor_underway_brasspipe_cavern_wall with fallback_procedural_marker=false.",
+        "Validation passed: python3 tests/validate_repo.py --overworld-object-report; python3 tests/validate_repo.py; GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_decoration_generation_report.tscn; git diff --check; JSON validation for ops/progress.json and art manifests."
+      ],
+      "nonGoals": [
+        "No save-version bump.",
+        "No binary map-package schema migration.",
+        "No exact HoMM3 asset, DEF, or placement parity claim.",
+        "No full replacement of all terrain art.",
+        "No broad gameplay rebalance."
+      ],
+      "startedAt": "2026-05-05T00:00:00Z",
+      "completedAt": "2026-05-05T00:20:00Z",
+      "notes": "Completed owner-directed generated sprite asset ingestion slice. Uses original generated art only; no HoMM3 image or DEF assets."
+    },
     {
       "id": "map-scenario-gdextension-persistence-foundation-10184",
       "title": "Map/Scenario GDExtension Persistence Foundation",

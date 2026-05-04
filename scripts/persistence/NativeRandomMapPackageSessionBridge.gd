@@ -33,6 +33,7 @@ static func build_session_from_adoption(
 	var hero_state := _hero_state(hero_id_from_doc, start, difficulty)
 	var towns := _town_states_from_document(map_document)
 	var resource_nodes := _resource_nodes_from_document(map_document)
+	var map_objects := _decorative_objects_from_document(map_document)
 	var overworld_state := {
 		"map": map_rows,
 		"map_size": map_size,
@@ -48,6 +49,7 @@ static func build_session_from_adoption(
 		"resolved_encounters": [],
 		"towns": towns,
 		"resource_nodes": resource_nodes,
+		"map_objects": map_objects,
 		"artifact_nodes": [],
 		"enemy_states": _enemy_states_from_document(scenario_document),
 		"map_package_ref": map_ref,
@@ -230,6 +232,19 @@ static func _resource_nodes_from_document(map_document: Variant) -> Array:
 		node["collected"] = false
 		nodes.append(node)
 	return nodes
+
+static func _decorative_objects_from_document(map_document: Variant) -> Array:
+	var objects := []
+	for object in _document_objects(map_document):
+		var kind := String(object.get("kind", ""))
+		var family := String(object.get("object_family_id", object.get("family_id", "")))
+		if kind != "decorative_obstacle" and family != "decorative_obstacle":
+			continue
+		var node: Dictionary = object.duplicate(true)
+		node["runtime_object_role"] = "decorative_blocker_sprite"
+		node["collected"] = false
+		objects.append(node)
+	return objects
 
 static func _enemy_states_from_document(scenario_document: Variant) -> Array:
 	var enemies := []
