@@ -1938,6 +1938,1786 @@
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_decorative_object_id": "object_forest_mire_root_reed_mat",
       "distinct_sprite_assignment": true
+    },
+    "mapobj_roadward_lodge": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_roadward_lodge.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_roadward_lodge-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_roadward_lodge",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_cliffhawk_roost": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_cliffhawk_roost.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_cliffhawk_roost-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_cliffhawk_roost",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_reedbarge_mooring": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_reedbarge_mooring.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_reedbarge_mooring-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_reedbarge_mooring",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_glowcap_croft": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_glowcap_croft.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_glowcap_croft-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_glowcap_croft",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_dustjack_yard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_dustjack_yard.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_dustjack_yard-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dustjack_yard",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_cinder_kiln": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_cinder_kiln.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_cinder_kiln-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_cinder_kiln",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_frostbeacon_bothy": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_frostbeacon_bothy.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_frostbeacon_bothy-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_frostbeacon_bothy",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_orchard_levy": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_orchard_levy.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_orchard_levy-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_orchard_levy",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_bramble_hedge": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_bramble_hedge.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_bramble_hedge-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_bramble_hedge",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_tidepool_skiffyard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_tidepool_skiffyard.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_tidepool_skiffyard-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_tidepool_skiffyard",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_switchback_hostel": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_switchback_hostel.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_switchback_hostel-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_switchback_hostel",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_saltpan_camp": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_saltpan_camp.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_saltpan_camp-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_saltpan_camp",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_crystal_sump": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_crystal_sump.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_crystal_sump-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_crystal_sump",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_icehook_trapper_lodge": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_icehook_trapper_lodge.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_icehook_trapper_lodge-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_icehook_trapper_lodge",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_obsidian_scar": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_obsidian_scar.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_obsidian_scar-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_obsidian_scar",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_greenbranch_copse": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_greenbranch_copse.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_greenbranch_copse-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_01.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_greenbranch_copse",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_harbor_pilot_house": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_harbor_pilot_house.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_harbor_pilot_house-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_harbor_pilot_house",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_kite_signal_eyrie": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_kite_signal_eyrie.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_kite_signal_eyrie-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_kite_signal_eyrie",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_lantern_warren": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_lantern_warren.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_lantern_warren-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_lantern_warren",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_bogbell_croft": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_bogbell_croft.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_bogbell_croft-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_bogbell_croft",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_milestone_arsenal": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_milestone_arsenal.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_milestone_arsenal-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_milestone_arsenal",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_frostwharf_house": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_frostwharf_house.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_frostwharf_house-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_frostwharf_house",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_charcoal_burners": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_charcoal_burners.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_charcoal_burners-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_charcoal_burners",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_basalt_gatehouse": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_basalt_gatehouse.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_basalt_gatehouse-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_basalt_gatehouse",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_marsh_peat_yard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_marsh_peat_yard.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_marsh_peat_yard-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_marsh_peat_yard",
+      "assigned_map_object_family": "mine"
+    },
+    "mapobj_mist_lighthouse": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_mist_lighthouse.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_mist_lighthouse-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_mist_lighthouse",
+      "assigned_map_object_family": "scouting_structure"
+    },
+    "mapobj_repaired_ferry_stage": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_repaired_ferry_stage.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_repaired_ferry_stage-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_repaired_ferry_stage",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_rope_lift": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_rope_lift.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_rope_lift-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_rope_lift",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_market_caravanserai": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_market_caravanserai.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_market_caravanserai-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_market_caravanserai",
+      "assigned_map_object_family": "repeatable_service"
+    },
+    "mapobj_ember_signal_brazier": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ember_signal_brazier.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ember_signal_brazier-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_ember_signal_brazier",
+      "assigned_map_object_family": "faction_landmark"
+    },
+    "mapobj_bog_drum_totem": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_bog_drum_totem.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_bog_drum_totem-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_bog_drum_totem",
+      "assigned_map_object_family": "faction_landmark"
+    },
+    "mapobj_prism_relay_lens": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_prism_relay_lens.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_prism_relay_lens-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_02.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_prism_relay_lens",
+      "assigned_map_object_family": "faction_landmark"
+    },
+    "mapobj_neutral_encounter_river_pass_ghoul_grove_stack": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_neutral_encounter_river_pass_ghoul_grove_stack.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_neutral_encounter_river_pass_ghoul_grove_stack-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_neutral_encounter_river_pass_ghoul_grove_stack",
+      "assigned_map_object_family": "neutral_encounter"
+    },
+    "mapobj_neutral_encounter_river_pass_hollow_mire_stack": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_neutral_encounter_river_pass_hollow_mire_stack.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_neutral_encounter_river_pass_hollow_mire_stack-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_neutral_encounter_river_pass_hollow_mire_stack",
+      "assigned_map_object_family": "neutral_encounter"
+    },
+    "mapobj_neutral_encounter_ninefold_basalt_gatehouse_watch_stack": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_neutral_encounter_ninefold_basalt_gatehouse_watch_stack.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_neutral_encounter_ninefold_basalt_gatehouse_watch_stack-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_neutral_encounter_ninefold_basalt_gatehouse_watch_stack",
+      "assigned_map_object_family": "neutral_encounter"
+    },
+    "mapobj_neutral_encounter_river_pass_reed_totemists_stack": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_neutral_encounter_river_pass_reed_totemists_stack.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_neutral_encounter_river_pass_reed_totemists_stack-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_neutral_encounter_river_pass_reed_totemists_stack",
+      "assigned_map_object_family": "neutral_encounter"
+    },
+    "mapobj_neutral_encounter_causeway_levee_cutters_stack": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_neutral_encounter_causeway_levee_cutters_stack.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_neutral_encounter_causeway_levee_cutters_stack-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_neutral_encounter_causeway_levee_cutters_stack",
+      "assigned_map_object_family": "neutral_encounter"
+    },
+    "mapobj_neutral_encounter_stonewake_reed_totemists_stack": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_neutral_encounter_stonewake_reed_totemists_stack.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_neutral_encounter_stonewake_reed_totemists_stack-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_neutral_encounter_stonewake_reed_totemists_stack",
+      "assigned_map_object_family": "neutral_encounter"
+    },
+    "mapobj_road_writ_purse": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_road_writ_purse.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_road_writ_purse-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_road_writ_purse",
+      "assigned_map_object_family": "pickup"
+    },
+    "mapobj_split_wood_pile": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_split_wood_pile.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_split_wood_pile-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_split_wood_pile",
+      "assigned_map_object_family": "pickup"
+    },
+    "mapobj_quarry_chip_hod": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_quarry_chip_hod.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_quarry_chip_hod-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_quarry_chip_hod",
+      "assigned_map_object_family": "pickup"
+    },
+    "mapobj_payroll_casket": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_payroll_casket.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_payroll_casket-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_payroll_casket",
+      "assigned_map_object_family": "pickup"
+    },
+    "mapobj_millroad_plank_stack": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_millroad_plank_stack.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_millroad_plank_stack-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_millroad_plank_stack",
+      "assigned_map_object_family": "pickup"
+    },
+    "mapobj_aetherglass_splinter_lot": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_aetherglass_splinter_lot.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_aetherglass_splinter_lot-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_aetherglass_splinter_lot",
+      "assigned_map_object_family": "pickup"
+    },
+    "mapobj_embergrain_sample_sack": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_embergrain_sample_sack.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_embergrain_sample_sack-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_embergrain_sample_sack",
+      "assigned_map_object_family": "pickup"
+    },
+    "mapobj_peatwax_votive_bundle": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_peatwax_votive_bundle.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_peatwax_votive_bundle-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_peatwax_votive_bundle",
+      "assigned_map_object_family": "pickup"
+    },
+    "mapobj_memory_salt_jar": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_memory_salt_jar.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_memory_salt_jar-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_memory_salt_jar",
+      "assigned_map_object_family": "pickup"
+    },
+    "mapobj_greenbough_wood_yard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_greenbough_wood_yard.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_greenbough_wood_yard-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_greenbough_wood_yard",
+      "assigned_map_object_family": "mine"
+    },
+    "mapobj_floodplain_sluice_camp": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_floodplain_sluice_camp.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_floodplain_sluice_camp-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_floodplain_sluice_camp",
+      "assigned_map_object_family": "mine"
+    },
+    "mapobj_ironstep_ore_pit": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ironstep_ore_pit.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ironstep_ore_pit-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_ironstep_ore_pit",
+      "assigned_map_object_family": "mine"
+    },
+    "mapobj_reef_coin_assay": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_reef_coin_assay.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_reef_coin_assay-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_reef_coin_assay",
+      "assigned_map_object_family": "mine"
+    },
+    "mapobj_cinder_ore_face": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_cinder_ore_face.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_cinder_ore_face-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_cinder_ore_face",
+      "assigned_map_object_family": "mine"
+    },
+    "mapobj_frostwood_cutting_yard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_frostwood_cutting_yard.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_frostwood_cutting_yard-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_frostwood_cutting_yard",
+      "assigned_map_object_family": "mine"
+    },
+    "mapobj_aetherglass_lens_house": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_aetherglass_lens_house.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_aetherglass_lens_house-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_aetherglass_lens_house",
+      "assigned_map_object_family": "staged_resource_front"
+    },
+    "mapobj_sunfall_aetherglass_yard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_sunfall_aetherglass_yard.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_sunfall_aetherglass_yard-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_sunfall_aetherglass_yard",
+      "assigned_map_object_family": "staged_resource_front"
+    },
+    "mapobj_embergrain_warm_granary": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_embergrain_warm_granary.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_embergrain_warm_granary-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_embergrain_warm_granary",
+      "assigned_map_object_family": "staged_resource_front"
+    },
+    "mapobj_charcoal_embergrain_store": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_charcoal_embergrain_store.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_charcoal_embergrain_store-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_charcoal_embergrain_store",
+      "assigned_map_object_family": "staged_resource_front"
+    },
+    "mapobj_peatwax_reed_yard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_peatwax_reed_yard.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_peatwax_reed_yard-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_peatwax_reed_yard",
+      "assigned_map_object_family": "staged_resource_front"
+    },
+    "mapobj_verdant_graft_nursery": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_verdant_graft_nursery.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_verdant_graft_nursery-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_verdant_graft_nursery",
+      "assigned_map_object_family": "staged_resource_front"
+    },
+    "mapobj_brass_scrip_mint": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_brass_scrip_mint.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_brass_scrip_mint-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_brass_scrip_mint",
+      "assigned_map_object_family": "staged_resource_front"
+    },
+    "mapobj_underway_brass_scrip_press": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_underway_brass_scrip_press.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_underway_brass_scrip_press-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_underway_brass_scrip_press",
+      "assigned_map_object_family": "staged_resource_front"
+    },
+    "mapobj_memory_salt_pan": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_memory_salt_pan.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_memory_salt_pan-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_memory_salt_pan",
+      "assigned_map_object_family": "staged_resource_front"
+    },
+    "mapobj_wind_press": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wind_press.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_wind_press-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_wind_press",
+      "assigned_map_object_family": "support_producer"
+    },
+    "mapobj_saw_chain": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_saw_chain.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_saw_chain-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_04.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_saw_chain",
+      "assigned_map_object_family": "support_producer"
+    },
+    "mapobj_tide_kiln": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_tide_kiln.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_tide_kiln-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_tide_kiln",
+      "assigned_map_object_family": "support_producer"
+    },
+    "mapobj_orchard_levy_post": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_orchard_levy_post.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_orchard_levy_post-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_orchard_levy_post",
+      "assigned_map_object_family": "support_producer"
+    },
+    "mapobj_smelter_annex": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_smelter_annex.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_smelter_annex-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_smelter_annex",
+      "assigned_map_object_family": "support_producer"
+    },
+    "mapobj_charter_countinghouse": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_charter_countinghouse.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_charter_countinghouse-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_charter_countinghouse",
+      "assigned_map_object_family": "support_producer"
+    },
+    "mapobj_badlands_coin_sluice": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_badlands_coin_sluice.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_badlands_coin_sluice-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_badlands_coin_sluice",
+      "assigned_map_object_family": "mine"
+    },
+    "mapobj_underway_ore_counterfort": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_underway_ore_counterfort.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_underway_ore_counterfort-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_underway_ore_counterfort",
+      "assigned_map_object_family": "mine"
+    },
+    "mapobj_grassland_plank_grove": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_grassland_plank_grove.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_grassland_plank_grove-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_grassland_plank_grove",
+      "assigned_map_object_family": "mine"
+    },
+    "mapobj_wayfarer_menders_tent": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayfarer_menders_tent.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_wayfarer_menders_tent-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_wayfarer_menders_tent",
+      "assigned_map_object_family": "repeatable_service"
+    },
+    "mapobj_courier_change_post": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_courier_change_post.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_courier_change_post-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_courier_change_post",
+      "assigned_map_object_family": "repeatable_service"
+    },
+    "mapobj_contract_scribe_booth": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_contract_scribe_booth.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_contract_scribe_booth-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_contract_scribe_booth",
+      "assigned_map_object_family": "repeatable_service"
+    },
+    "mapobj_reedboat_supply_stand": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_reedboat_supply_stand.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_reedboat_supply_stand-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_reedboat_supply_stand",
+      "assigned_map_object_family": "repeatable_service"
+    },
+    "mapobj_ash_cooler_kitchen": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ash_cooler_kitchen.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ash_cooler_kitchen-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_ash_cooler_kitchen",
+      "assigned_map_object_family": "repeatable_service"
+    },
+    "mapobj_lens_calibration_cart": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_lens_calibration_cart.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_lens_calibration_cart-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_lens_calibration_cart",
+      "assigned_map_object_family": "repeatable_service"
+    },
+    "mapobj_oath_ember_shrine": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_oath_ember_shrine.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_oath_ember_shrine-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_oath_ember_shrine",
+      "assigned_map_object_family": "shrine"
+    },
+    "mapobj_reedscript_vow_shrine": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_reedscript_vow_shrine.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_reedscript_vow_shrine-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_reedscript_vow_shrine",
+      "assigned_map_object_family": "shrine"
+    },
+    "mapobj_prism_measure_shrine": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_prism_measure_shrine.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_prism_measure_shrine-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_05.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_prism_measure_shrine",
+      "assigned_map_object_family": "shrine"
+    },
+    "mapobj_root_accord_ring": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_root_accord_ring.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_root_accord_ring-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_root_accord_ring",
+      "assigned_map_object_family": "shrine"
+    },
+    "mapobj_furnace_oath_marker": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_furnace_oath_marker.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_furnace_oath_marker-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_furnace_oath_marker",
+      "assigned_map_object_family": "shrine"
+    },
+    "mapobj_tide_bell_shrine": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_tide_bell_shrine.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_tide_bell_shrine-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_tide_bell_shrine",
+      "assigned_map_object_family": "shrine"
+    },
+    "mapobj_hilltop_signal_nest": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_hilltop_signal_nest.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_hilltop_signal_nest-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_hilltop_signal_nest",
+      "assigned_map_object_family": "scouting_structure"
+    },
+    "mapobj_marsh_listener_post": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_marsh_listener_post.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_marsh_listener_post-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_marsh_listener_post",
+      "assigned_map_object_family": "scouting_structure"
+    },
+    "mapobj_prism_survey_frame": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_prism_survey_frame.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_prism_survey_frame-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_prism_survey_frame",
+      "assigned_map_object_family": "scouting_structure"
+    },
+    "mapobj_underway_echo_well": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_underway_echo_well.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_underway_echo_well-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_underway_echo_well",
+      "assigned_map_object_family": "scouting_structure"
+    },
+    "mapobj_coast_bell_watch": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_coast_bell_watch.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_coast_bell_watch-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_coast_bell_watch",
+      "assigned_map_object_family": "scouting_structure"
+    },
+    "mapobj_mile_writ_sign": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_mile_writ_sign.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_mile_writ_sign-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_mile_writ_sign",
+      "assigned_map_object_family": "sign_waypoint"
+    },
+    "mapobj_reed_knot_waypost": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_reed_knot_waypost.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_reed_knot_waypost-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_reed_knot_waypost",
+      "assigned_map_object_family": "sign_waypoint"
+    },
+    "mapobj_switchback_cairn": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_switchback_cairn.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_switchback_cairn-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_switchback_cairn",
+      "assigned_map_object_family": "sign_waypoint"
+    },
+    "mapobj_ash_road_marker": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ash_road_marker.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ash_road_marker-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_ash_road_marker",
+      "assigned_map_object_family": "sign_waypoint"
+    },
+    "mapobj_underway_chalk_index": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_underway_chalk_index.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_underway_chalk_index-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_underway_chalk_index",
+      "assigned_map_object_family": "sign_waypoint"
+    },
+    "mapobj_toll_chain_court": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_toll_chain_court.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_toll_chain_court-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_toll_chain_court",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_root_lease_gate": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_root_lease_gate.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_root_lease_gate-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_root_lease_gate",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_pressure_rail_stop": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_pressure_rail_stop.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_pressure_rail_stop-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_06.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_pressure_rail_stop",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_campaign_muster_seal": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_campaign_muster_seal.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_campaign_muster_seal-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_campaign_muster_seal",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_broken_accord_marker": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_broken_accord_marker.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_broken_accord_marker-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_broken_accord_marker",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_scenario_witness_stone": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_scenario_witness_stone.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_scenario_witness_stone-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_scenario_witness_stone",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_root_pass_arch": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_root_pass_arch.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_root_pass_arch-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_root_pass_arch",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_pressure_rail_switch": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_pressure_rail_switch.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_pressure_rail_switch-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_pressure_rail_switch",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_mirror_stair_turn": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_mirror_stair_turn.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_mirror_stair_turn-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_mirror_stair_turn",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_basalt_undergate": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_basalt_undergate.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_basalt_undergate-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_basalt_undergate",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_ridge_wind_chute": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ridge_wind_chute.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ridge_wind_chute-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_ridge_wind_chute",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_slipgate_mirror": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_slipgate_mirror.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_slipgate_mirror-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_slipgate_mirror",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_spillway_drop_marker": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_spillway_drop_marker.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_spillway_drop_marker-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_spillway_drop_marker",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_tide_bore_marker": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_tide_bore_marker.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_tide_bore_marker-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_tide_bore_marker",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_charter_bar_gate": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_charter_bar_gate.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_charter_bar_gate-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_charter_bar_gate",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_thorn_seal_gate": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_thorn_seal_gate.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_thorn_seal_gate-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_thorn_seal_gate",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_brass_toll_arch": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_brass_toll_arch.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_brass_toll_arch-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_brass_toll_arch",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_reef_chain_boom": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_reef_chain_boom.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_reef_chain_boom-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_reef_chain_boom",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_frost_toll_bar": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_frost_toll_bar.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_frost_toll_bar-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_07.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_frost_toll_bar",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_ash_sluice_lock": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ash_sluice_lock.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ash_sluice_lock-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_ash_sluice_lock",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_veil_skiffyard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_veil_skiffyard.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_veil_skiffyard-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_veil_skiffyard",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_harbor_pilot_post": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_harbor_pilot_post.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_harbor_pilot_post-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_harbor_pilot_post",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_bell_buoy_station": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_bell_buoy_station.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_bell_buoy_station-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_bell_buoy_station",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_wreck_quay": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wreck_quay.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_wreck_quay-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_wreck_quay",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_tide_chain_mooring": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_tide_chain_mooring.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_tide_chain_mooring-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_tide_chain_mooring",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_marsh_skiff_shelf": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_marsh_skiff_shelf.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_marsh_skiff_shelf-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_marsh_skiff_shelf",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_mileward_route_post": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_mileward_route_post.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_mileward_route_post-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_mileward_route_post",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_road_oath_stone": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_road_oath_stone.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_road_oath_stone-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_road_oath_stone",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_salt_skirmisher_pier": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_salt_skirmisher_pier.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_salt_skirmisher_pier-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_salt_skirmisher_pier",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_rootwatch_hollow": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_rootwatch_hollow.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_rootwatch_hollow-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_rootwatch_hollow",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_ember_cart_yard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ember_cart_yard.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ember_cart_yard-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_ember_cart_yard",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_prism_outrider_post": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_prism_outrider_post.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_prism_outrider_post-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_prism_outrider_post",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_storm_rook_eyrie": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_storm_rook_eyrie.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_storm_rook_eyrie-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_storm_rook_eyrie",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_mirror_bound_barracks": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_mirror_bound_barracks.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_mirror_bound_barracks-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_mirror_bound_barracks",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_furnace_oath_yard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_furnace_oath_yard.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_furnace_oath_yard-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_08.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_furnace_oath_yard",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_drowned_crown_hall": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_drowned_crown_hall.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_drowned_crown_hall-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_drowned_crown_hall",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_barrow_vault": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_barrow_vault.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_barrow_vault-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_barrow_vault",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_toll_ruin": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_toll_ruin.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_toll_ruin-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_toll_ruin",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_wreck_locker": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wreck_locker.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_wreck_locker-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_wreck_locker",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_amber_reliquary": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_amber_reliquary.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_amber_reliquary-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_amber_reliquary",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_slag_purse_vault": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_slag_purse_vault.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_slag_purse_vault-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_slag_purse_vault",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_old_orchard_crypt": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_old_orchard_crypt.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_old_orchard_crypt-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_old_orchard_crypt",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_moss_oath_cache": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_moss_oath_cache.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_moss_oath_cache-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_moss_oath_cache",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_frost_tithe_cellar": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_frost_tithe_cellar.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_frost_tithe_cellar-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_frost_tithe_cellar",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_drowned_reliquary": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_drowned_reliquary.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_drowned_reliquary-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_drowned_reliquary",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_mirror_archive": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_mirror_archive.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_mirror_archive-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_mirror_archive",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_furnace_vault": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_furnace_vault.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_furnace_vault-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_furnace_vault",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_thorn_crown_hollow": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_thorn_crown_hollow.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_thorn_crown_hollow-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_thorn_crown_hollow",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_storm_bell_wreck": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_storm_bell_wreck.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_storm_bell_wreck-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_storm_bell_wreck",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_prism_ossuary": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_prism_ossuary.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_prism_ossuary-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_prism_ossuary",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_basalt_oath_tomb": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_basalt_oath_tomb.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_basalt_oath_tomb-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_09.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_basalt_oath_tomb",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_lantern_crown_nave": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_lantern_crown_nave.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_lantern_crown_nave-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_lantern_crown_nave",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_sealed_muster_fort": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_sealed_muster_fort.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_sealed_muster_fort-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_sealed_muster_fort",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_hive_of_reeds": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_hive_of_reeds.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_hive_of_reeds-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_hive_of_reeds",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_glassbound_eyrie": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_glassbound_eyrie.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_glassbound_eyrie-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_glassbound_eyrie",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_rust_choir_foundry": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_rust_choir_foundry.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_rust_choir_foundry-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_rust_choir_foundry",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_salt_wight_convoy": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_salt_wight_convoy.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_salt_wight_convoy-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_salt_wight_convoy",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_kiln_chain_redoubt": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_kiln_chain_redoubt.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_kiln_chain_redoubt-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_kiln_chain_redoubt",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_rootwarden_stockade": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_rootwarden_stockade.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_rootwarden_stockade-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_rootwarden_stockade",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_brasswake_depot": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_brasswake_depot.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_brasswake_depot-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_brasswake_depot",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_bridge_bastion": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_bridge_bastion.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_bridge_bastion-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_bridge_bastion",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_chainboom_fort": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_chainboom_fort.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_chainboom_fort-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_chainboom_fort",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_railblock_camp": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_railblock_camp.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_railblock_camp-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_railblock_camp",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_rootgate_den": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_rootgate_den.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_rootgate_den-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_rootgate_den",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_fog_quay_ambush": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_fog_quay_ambush.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_fog_quay_ambush-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_fog_quay_ambush",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_mirror_toll_causeway": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_mirror_toll_causeway.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_mirror_toll_causeway-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_mirror_toll_causeway",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_ashbarb_roadblock": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ashbarb_roadblock.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ashbarb_roadblock-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_10.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_ashbarb_roadblock",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_frostford_hold": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_frostford_hold.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_frostford_hold-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_frostford_hold",
+      "assigned_map_object_family": "guarded_reward_site"
+    },
+    "mapobj_thornwake_graft_arch": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_thornwake_graft_arch.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_thornwake_graft_arch-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_thornwake_graft_arch",
+      "assigned_map_object_family": "faction_landmark"
+    },
+    "mapobj_brasshollow_gauge_shrine": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_brasshollow_gauge_shrine.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_brasshollow_gauge_shrine-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_brasshollow_gauge_shrine",
+      "assigned_map_object_family": "faction_landmark"
+    },
+    "mapobj_veilmourn_bell_mast": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_veilmourn_bell_mast.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_veilmourn_bell_mast-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_veilmourn_bell_mast",
+      "assigned_map_object_family": "faction_landmark"
+    },
+    "mapobj_granary_lock_exchange": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_granary_lock_exchange.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_granary_lock_exchange-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_granary_lock_exchange",
+      "assigned_map_object_family": "faction_landmark"
+    },
+    "mapobj_blackwater_shrine_marker": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_blackwater_shrine_marker.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_blackwater_shrine_marker-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_blackwater_shrine_marker",
+      "assigned_map_object_family": "faction_landmark"
+    },
+    "mapobj_prism_yard_standard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_prism_yard_standard.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_prism_yard_standard-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_prism_yard_standard",
+      "assigned_map_object_family": "faction_landmark"
+    },
+    "mapobj_broken_treaty_stone": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_broken_treaty_stone.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_broken_treaty_stone-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_broken_treaty_stone",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_sealed_causeway_lever": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_sealed_causeway_lever.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_sealed_causeway_lever-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_sealed_causeway_lever",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_mirror_anchor_frame": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_mirror_anchor_frame.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_mirror_anchor_frame-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_mirror_anchor_frame",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_crownless_standard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_crownless_standard.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_crownless_standard-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_crownless_standard",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_drowned_toll_bell": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_drowned_toll_bell.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_drowned_toll_bell-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_drowned_toll_bell",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_orchard_writ_seal": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_orchard_writ_seal.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_orchard_writ_seal-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_orchard_writ_seal",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_brass_oath_wheel": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_brass_oath_wheel.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_brass_oath_wheel-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_brass_oath_wheel",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_burned_signal_brazier": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_burned_signal_brazier.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_burned_signal_brazier-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_burned_signal_brazier",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_repaired_ferry_stage_claimed": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_repaired_ferry_stage_claimed.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_repaired_ferry_stage_claimed-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_11.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_repaired_ferry_stage_claimed",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_claimed_quarry_head": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_claimed_quarry_head.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_claimed_quarry_head-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_12.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_claimed_quarry_head",
+      "assigned_map_object_family": "scenario_objective"
+    },
+    "mapobj_withered_rootgate_marker": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_withered_rootgate_marker.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_withered_rootgate_marker-trimmed.png",
+      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_12.png",
+      "source_model": "built_in_image_gen_chroma_key_split",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_withered_rootgate_marker",
+      "assigned_map_object_family": "scenario_objective"
     }
   },
   "resource_site_sprites": {
@@ -2023,5 +3803,7 @@
     "fit": "First approved generated hostile camp placeholder for unresolved overworld encounters until encounter-family-specific sprites exist."
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
-  "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects"
+  "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",
+  "map_object_sprite_manifest": "res://art/overworld/map_object_sprites.json",
+  "map_object_sprite_mapping_policy": "distinct_generated_sprite_per_authored_non_decorative_gap_object_after_foundation_pass"
 }

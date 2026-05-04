@@ -154,6 +154,42 @@ nonGoals:
 
 Completed owner-directed implementation slice:
 
+id: `overworld-map-object-distinct-sprite-gap-fill-10184`
+phase: `phase-2-deep-production-foundation`
+status: `completed`
+purpose: Owner-directed asset follow-up to audit authored overworld map objects after the decorative/blocker foundation pass and generate distinct original sprite assets for every remaining non-decoration object gap.
+sourceDocs:
+- `content/map_objects.json`
+- `art/overworld/manifest.json`
+- `art/overworld/decorative_object_sprites.json`
+- `docs/overworld-map-object-distinct-sprite-gap-audit.md`
+implementationTargets:
+- `art/overworld/map_object_sprites.json`
+- `art/overworld/manifest.json`
+- `art/overworld/runtime/objects/map_objects/distinct/`
+- `art/overworld/source/generated/map_objects/distinct/`
+- `art/overworld/source/trimmed/map_objects/distinct/`
+- `scenes/overworld/OverworldMapView.gd`
+- `tests/validate_repo.py`
+- `tests/overworld_map_object_sprite_asset_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- The audit identifies authored map objects that still lack unique sprite assignments after the 200-object decorative/blocker pass.
+- Every identified gap object has one distinct generated 512x512 runtime PNG, trimmed source PNG, source atlas provenance, manifest mapping, and no-HoMM3-art policy.
+- Renderer lookup resolves resource and encounter placements through object-specific map object sprite mappings before shared fallback assets.
+- Validation proves all 386 authored map objects have distinct assignments after combining the decorative foundation pass, preexisting unique non-decoration assignments, and this gap-fill pass.
+completionEvidence:
+- `docs/overworld-map-object-distinct-sprite-gap-audit.md`
+- `art/overworld/map_object_sprites.json`
+- `python3 tests/validate_repo.py`
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/overworld_map_object_sprite_asset_report.tscn`
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/overworld_decorative_sprite_asset_report.tscn`
+- direct PIL audit: runtime=178, imports=178, edge_alpha_issues=0
+nonGoals:
+- No HoMM3 copyrighted art/DEF/image/name/text import.
+- No town, hero, unit, battle, terrain, road, or UI asset broadening beyond authored overworld map object sprite coverage.
+- No generated random map package clutter committed under runtime maps.
+
 id: `decorative-blocker-sprite-asset-foundation-10184`
 phase: `phase-2-deep-production-foundation`
 status: `completed`
