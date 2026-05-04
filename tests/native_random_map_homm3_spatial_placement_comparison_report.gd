@@ -105,6 +105,7 @@ func _generate_native_owner_like(service: Variant) -> Dictionary:
 	metrics["zone_count"] = int(generated.get("zone_layout", {}).get("zone_count", 0))
 	metrics["route_edge_count"] = int(generated.get("route_graph", {}).get("route_edge_count", 0))
 	metrics["road_materialization_summary"] = generated.get("road_network", {}).get("road_materialization_summary", {})
+	metrics["road_spread_service_stub_summary"] = generated.get("road_network", {}).get("road_spread_service_stub_summary", {})
 	metrics["start_road_connection"] = _point_connection_summary(_native_start_points(generated), road_points, "start", 4)
 	metrics["fill_coverage_summary"] = generated.get("fill_coverage_summary", {})
 	metrics["decoration_route_shaping_summary"] = generated.get("decoration_route_shaping_summary", {})
@@ -428,15 +429,15 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 		failures.append("native_road_tile_count_too_far_from_owner")
 	if abs(float(comparison.get("road_coverage_land_delta", 99.0))) > 0.03:
 		failures.append("native_road_land_density_too_far_from_owner")
-	if int(native.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) < max(8, int(owner.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) - 8):
+	if int(native.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) < max(12, int(owner.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) - 2):
 		failures.append("native_road_grid_spread_too_low")
 	if int(native.get("largest_roadless_land_region", {}).get("largest_region_cell_count", 99)) > int(owner.get("largest_roadless_land_region", {}).get("largest_region_cell_count", 0)) + 3:
-		warnings.append("native_largest_roadless_land_region_remains_larger_than_owner")
+		failures.append("native_largest_roadless_land_region_too_large")
 	if int(native.get("road_topology", {}).get("endpoint_count", 0)) <= 0:
 		failures.append("native_roads_have_no_branch_endpoints")
 	if _nested_int(native.get("coarse_grid_6x6", {}), "reward", "nonempty_cell_count") < 12:
 		failures.append("native_rewards_too_spatially_collapsed")
-	if _nested_float(native.get("distance_to_road", {}), "reward", "average_distance_to_road") < 4.5:
+	if _nested_float(native.get("distance_to_road", {}), "reward", "average_distance_to_road") < 5.0:
 		failures.append("native_rewards_still_overbiased_to_roads")
 	if _nested_float(native.get("distance_to_road", {}), "reward", "average_distance_to_road") > 10.0:
 		failures.append("native_rewards_too_far_from_roads")
@@ -444,6 +445,8 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 		failures.append("native_rewards_still_too_road_adjacent")
 	if _nested_float(native.get("distance_to_road", {}), "reward", "within_4_tiles_ratio") < 0.30:
 		failures.append("native_rewards_not_road_reachable_enough")
+	if _nested_float(native.get("distance_to_road", {}), "reward", "within_1_tile_ratio") > 0.14:
+		failures.append("native_rewards_too_directly_road_adjacent")
 	if _nested_float(native.get("quadrants", {}), "all_content", "coefficient_of_variation") > 0.45:
 		failures.append("native_all_content_quadrant_skew_too_high")
 	if _nested_float(native.get("quadrants", {}), "reward", "coefficient_of_variation") > 0.45:
@@ -464,9 +467,12 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 			"native_min_object_count": 220,
 			"native_max_abs_road_tile_delta": 24,
 			"native_max_abs_road_coverage_land_delta": 0.03,
+			"native_min_road_nonempty_6x6_cells": max(12, int(owner.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) - 2),
+			"native_max_largest_roadless_land_region_over_owner": 3,
 			"native_min_reward_nonempty_6x6_cells": 12,
-			"native_min_reward_average_distance_to_road": 4.5,
+			"native_min_reward_average_distance_to_road": 5.0,
 			"native_max_reward_average_distance_to_road": 10.0,
+			"native_max_reward_within_1_tile_of_road_ratio": 0.14,
 			"native_min_reward_within_4_tiles_of_road_ratio": 0.30,
 			"native_max_reward_within_4_tiles_of_road_ratio": 0.50,
 			"native_max_all_content_quadrant_cv": 0.45,

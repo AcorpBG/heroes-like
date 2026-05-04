@@ -46,26 +46,26 @@ The comparison now reports:
 - largest coarse low-content region approximation;
 - H3M owner land/water normalized counts.
 
-Post-road-placement-parity key metrics:
+Post-road-spread follow-up key metrics:
 
 | Metric | Owner H3M | Native owner-like |
 |---|---:|---:|
-| object instances | 496 | 508 |
-| road tiles | 184 | 180 |
-| land tiles | 1,948 | 2,387 |
-| road density per land tile | 0.0945 | 0.0754 |
-| road nonempty 6x6 cells | 16 | 10 |
-| road endpoints / branches / intersections | 18 / 10 / 0 | 4 / 46 / 14 |
+| object instances | 496 | 513 |
+| road tiles | 184 | 201 |
+| land tiles | 1,948 | 2,441 |
+| road density per land tile | 0.0945 | 0.0823 |
+| road nonempty 6x6 cells | 16 | 17 |
+| road endpoints / branches / intersections | 18 / 10 / 0 | 18 / 46 / 14 |
 | town road coverage within 4 tiles | 1.0000 | 1.0000 |
 | start road coverage within 4 tiles | n/a | 1.0000 |
-| all-content quadrant CV | 0.1935 | 0.1972 |
-| reward quadrant CV | 0.2378 | 0.3852 |
-| reward nonempty 6x6 cells | 26 | 31 |
-| reward average distance to road | 7.909 | 6.537 |
+| all-content quadrant CV | 0.1935 | 0.1886 |
+| reward quadrant CV | 0.2378 | 0.3962 |
+| reward nonempty 6x6 cells | 26 | 33 |
+| reward average distance to road | 7.909 | 5.522 |
 | reward within 1 tile of road | 0.0909 | 0.1250 |
-| reward within 4 tiles of road | 0.3727 | 0.4632 |
+| reward within 4 tiles of road | 0.3727 | 0.4779 |
 | largest low-content 6x6 region | 2 | 1 |
-| largest roadless land 6x6 region | 8 | 25 |
+| largest roadless land 6x6 region | 8 | 9 |
 
 ## Native Placement Change
 
@@ -119,16 +119,43 @@ Measured effect on the owner-like case:
 - all-content quadrant CV moved from 0.2049 to 0.1972 against owner 0.1935;
 - town and native start road coverage remain 1.0000 within four tiles.
 
+## Native Road Spread Follow-up
+
+After the first road pass, road count and reward-road bias were much closer, but
+the road layout under-spread across land: native occupied only 10 nonempty 6x6
+road cells against owner 16, and the largest roadless coarse land region stayed
+25 cells against owner 8.
+
+`src/gdextension/src/map_package_service.cpp` now adds a bounded owner-like
+road-spread supplement after imported-template trunk/branch materialization:
+
+- only the native C++ owner-like translated 72x72 islands case is eligible;
+- seven three-tile non-route service stubs are placed in coarse roadless zone
+  pockets far from existing road cells;
+- the stubs are exposed in `road_spread_service_stub_summary` and counted in
+  endpoint/branch/intersection topology;
+- route graph reachability, start/town coverage, road renderer lookup, and the
+  native `MapPackageService.generate_random_map()` path remain unchanged.
+
+Measured effect against the post-accfaf1 baseline:
+
+- road tiles moved from 180 to 201 against owner 184, remaining inside the
+  count gate and far below the pre-pass 240;
+- road nonempty 6x6 cells moved from 10 to 17 against owner 16;
+- largest roadless land 6x6 region moved from 25 to 9 against owner 8;
+- reward within one tile stayed 0.1250, and reward within four tiles moved from
+  0.4632 to 0.4779, still below the gate ceiling and below the pre-pass 0.5588;
+- town and native start road coverage remain 1.0000 within four tiles.
+
 ## Remaining Gaps
 
 This is spatial evidence and bounded placement/terrain-shape correction, not
 full parity. The follow-up land/water shape slice reduced the owner-like native
-land count from 4,900 to the current post-road report's 2,387 tiles while
+land count from 4,900 to the current post-road-spread report's 2,441 tiles while
 preserving route/object/package surfaces on land. The road placement gate now
-reports two explicit residual
-warnings: the native largest coarse roadless land region remains larger because
-native land area is still larger than the owner baseline, and rewards remain
-somewhat more road-adjacent than owner despite the improvement. Remaining known
+requires the owner-like native road spread and largest roadless region to stay
+near the owner coarse baseline, while still reporting the residual warning that
+native rewards remain somewhat more road-adjacent than owner. Remaining known
 gaps include exact HoMM3 object/art/template choice, byte-level H3M parity,
 exact island contours/shore semantics, exact object count parity, and exact
 HoMM3-re road authoring/placement/object/deco spatial distributions.
