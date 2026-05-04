@@ -517,6 +517,35 @@ nonGoals:
 - No copyrighted names, assets, maps, factions, unit art, music, or text.
 - No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.
 
+Selected owner-directed follow-up slice:
+
+id: `random-map-homm3-parity-guarded-artifact-pairing-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Improve HoMM3-style RMG reward semantics by making materialized artifacts explicitly consume nearby object guards before lower-priority filler guards, and prove the pairing in bounded richness reports.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md`
+- 2026-05-04 owner directive to continue RMG parity after `3b7fc04`
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_homm3_parity_richness_report.gd`
+- `.artifacts/` generated-map inspection reports/previews
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Object guard materialization deduplicates artifact reward candidates and prioritizes artifact guards before lower-priority mine, dwelling, and cache guards.
+- Guard records carry explicit guarded-object point, distance, adjacency, and placement-id association metadata.
+- Bounded richness report includes direct guarded-artifact coverage, missing-count, adjacency, and max-distance metrics across the existing multi-template cases without exceeding the runtime budget.
+- Focused RMG report and repository validation pass, and remaining parity gaps are listed for the next slice.
+nonGoals:
+- No generated terrain-art replacement work.
+- No copyrighted names, assets, maps, factions, unit art, music, or text.
+- No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.
+
 ### Phase 3 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.
