@@ -5502,6 +5502,7 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 				"writeout_state": "terrain_coast_tile_written_to_export_record",
 			})
 	var river_candidates := []
+	var occupied := _route_blocking_body_lookup_from_footprint_records(object_footprints.get("object_records", []))
 	var water_access: Array = terrain_transit.get("transit_routes", {}).get("water_access_candidates", [])
 	for index in range(water_access.size()):
 		var candidate = water_access[index]
@@ -5509,11 +5510,14 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 			continue
 		var from_anchor: Dictionary = candidate.get("from_anchor", {}) if candidate.get("from_anchor", {}) is Dictionary else {}
 		var to_coast: Dictionary = candidate.get("to_coast", {}) if candidate.get("to_coast", {}) is Dictionary else {}
+		var candidate_cells := _find_passable_path(from_anchor, to_coast, terrain_rows, occupied)
+		if candidate_cells.is_empty():
+			continue
 		river_candidates.append({
 			"id": "river_candidate_%03d" % (index + 1),
 			"zone_id": String(candidate.get("zone_id", "")),
 			"level_index": int(candidate.get("level_index", 0)),
-			"candidate_cells": _straight_corridor_cells(from_anchor, to_coast),
+			"candidate_cells": candidate_cells,
 			"from_anchor": from_anchor,
 			"to_coast": to_coast,
 			"overlay_type": "river_or_ferry_channel_candidate",
@@ -5525,6 +5529,7 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 		})
 	if river_candidates.is_empty() and water_tiles.is_empty() and coast_tiles.is_empty() and String(water.get("water_mode", zone_layout.get("policy", {}).get("water_mode", "land"))) == "land":
 		river_candidates.append_array(_land_river_candidates(zone_layout, terrain_rows, road_overlay, object_footprints))
+	river_candidates = _annotated_river_candidates(river_candidates, terrain_rows, road_overlay, object_footprints)
 	var explicit_state := {}
 	if water_tiles.is_empty() and coast_tiles.is_empty() and river_candidates.is_empty():
 		explicit_state = {
@@ -5545,6 +5550,13 @@ static func _river_water_coast_overlay_payload(zone_layout: Dictionary, terrain_
 			"water_tile_count": water_tiles.size(),
 			"coast_tile_count": coast_tiles.size(),
 			"river_candidate_count": river_candidates.size(),
+			"coherent_river_candidate_count": _count_river_quality_value(river_candidates, "continuity_status", "pass"),
+			"river_continuity_failure_count": _count_river_quality_not_value(river_candidates, "continuity_status", "pass"),
+			"isolated_river_fragment_count": _sum_river_quality_int(river_candidates, "isolated_cell_count"),
+			"river_body_conflict_count": _sum_river_quality_int(river_candidates, "body_conflict_count"),
+			"river_road_crossing_count": _sum_river_quality_int(river_candidates, "road_crossing_count"),
+			"land_river_candidate_count": _count_river_overlay_type(river_candidates, "land_river_with_road_crossing_constraints"),
+			"land_river_with_crossing_count": _count_land_rivers_with_crossings(river_candidates),
 			"explicit_no_river": not explicit_state.is_empty(),
 		},
 	}
@@ -5563,7 +5575,8 @@ static func _land_river_candidates(zone_layout: Dictionary, terrain_rows: Array,
 	for index in range(count):
 		var start_x := int(clampi(int(round(float(width) * (0.25 + 0.35 * float(index)))), 2, width - 3))
 		var end_x := int(clampi(width - 1 - start_x + (index * 5), 2, width - 3))
-		var path := _meandering_land_river_path(start_x, 1, end_x, height - 2, terrain_rows, occupied, road_lookup, index)
+		var crossing_target := _river_road_crossing_target(road_lookup, occupied, width, height, index)
+		var path := _meandering_land_river_path(start_x, 1, end_x, height - 2, terrain_rows, occupied, road_lookup, index, crossing_target)
 		if path.size() < max(8, int(floor(float(height) * 0.45))):
 			continue
 		var crossing_cells := []
@@ -5595,44 +5608,281 @@ static func _land_river_candidates(zone_layout: Dictionary, terrain_rows: Array,
 		})
 	return candidates
 
-static func _meandering_land_river_path(start_x: int, start_y: int, end_x: int, end_y: int, terrain_rows: Array, occupied: Dictionary, road_lookup: Dictionary, ordinal: int) -> Array:
+static func _meandering_land_river_path(start_x: int, start_y: int, end_x: int, end_y: int, terrain_rows: Array, occupied: Dictionary, road_lookup: Dictionary, ordinal: int, crossing_target: Dictionary = {}) -> Array:
 	var height := terrain_rows.size()
 	var width: int = terrain_rows[0].size() if height > 0 and terrain_rows[0] is Array else 0
+	var river_occupied := occupied.duplicate(true)
+	for road_key in road_lookup.keys():
+		river_occupied.erase(String(road_key))
+	var waypoints := []
+	waypoints.append(_nearest_valid_land_river_point(_point_dict(start_x, start_y), terrain_rows, river_occupied))
+	for fraction in [0.25, 0.5, 0.75]:
+		var y := int(clampi(int(round(lerpf(float(start_y), float(end_y), float(fraction)))), 1, max(1, height - 2)))
+		var target_x := int(round(lerpf(float(start_x), float(end_x), float(fraction))))
+		var wave := int(round(sin(float(y + ordinal * 7) * 0.45) * 3.0))
+		waypoints.append(_nearest_valid_land_river_point(_point_dict(clampi(target_x + wave, 1, max(1, width - 2)), y), terrain_rows, river_occupied))
+	if not crossing_target.is_empty():
+		waypoints.append(_nearest_valid_land_river_point(crossing_target, terrain_rows, river_occupied))
+	waypoints.append(_nearest_valid_land_river_point(_point_dict(end_x, end_y), terrain_rows, river_occupied))
+	waypoints = _sorted_river_waypoints(waypoints)
 	var path := []
-	var x := start_x
-	var y := start_y
-	var guard: int = max(1, width * height)
-	while y <= end_y and guard > 0:
-		var key := _point_key(x, y)
-		if _point_in_rows(terrain_rows, x, y) and _terrain_cell_is_passable(terrain_rows, x, y) and (not occupied.has(key) or road_lookup.has(key)):
-			path.append(_point_dict(x, y))
-		var target_x := int(round(lerpf(float(start_x), float(end_x), float(y) / float(max(1, end_y)))))
-		var wave := int(round(sin(float(y + ordinal * 7) * 0.45) * 2.0))
-		var desired_x := clampi(target_x + wave, 1, max(1, width - 2))
-		if desired_x > x:
-			x += 1
-		elif desired_x < x:
-			x -= 1
-		else:
-			y += 1
-		if not _point_in_rows(terrain_rows, x, y) or (occupied.has(_point_key(x, y)) and not road_lookup.has(_point_key(x, y))):
-			y += 1
-			x = clampi(desired_x, 1, max(1, width - 2))
-		guard -= 1
-	return _dedupe_point_path(path)
+	for index in range(waypoints.size() - 1):
+		var from_point: Dictionary = waypoints[index]
+		var to_point: Dictionary = waypoints[index + 1]
+		if from_point.is_empty() or to_point.is_empty():
+			continue
+		var segment := _find_passable_path(from_point, to_point, terrain_rows, river_occupied)
+		if segment.is_empty():
+			return []
+		for cell_index in range(segment.size()):
+			if not path.is_empty() and cell_index == 0 and _same_point(path[path.size() - 1], segment[cell_index]):
+				continue
+			path.append(segment[cell_index])
+	return _dedupe_consecutive_point_path(path)
 
-static func _dedupe_point_path(points: Array) -> Array:
+static func _river_road_crossing_target(road_lookup: Dictionary, occupied: Dictionary, width: int, height: int, ordinal: int) -> Dictionary:
+	var candidates := []
+	var desired_x := int(round(float(width) * (0.35 + 0.2 * float(ordinal % 2))))
+	var desired_y := int(round(float(height) * 0.5))
+	for key in road_lookup.keys():
+		var tile: Dictionary = road_lookup[key]
+		var x := int(tile.get("x", 0))
+		var y := int(tile.get("y", 0))
+		if x <= 1 or x >= width - 2 or y <= 1 or y >= height - 2:
+			continue
+		if occupied.has(_point_key(x, y)) and not road_lookup.has(_point_key(x, y)):
+			continue
+		candidates.append({
+			"x": x,
+			"y": y,
+			"score": abs(x - desired_x) + abs(y - desired_y) + int(_hash32_int("%d:%d,%d:river_crossing" % [ordinal, x, y]) % 5),
+		})
+	candidates.sort_custom(Callable(RandomMapGeneratorRules, "_compare_score_xy"))
+	if candidates.is_empty():
+		return {}
+	var selected: Dictionary = candidates[0]
+	return _point_dict(int(selected.get("x", 0)), int(selected.get("y", 0)))
+
+static func _nearest_valid_land_river_point(preferred: Dictionary, terrain_rows: Array, occupied: Dictionary) -> Dictionary:
+	if preferred.is_empty():
+		return {}
+	var x := int(preferred.get("x", 0))
+	var y := int(preferred.get("y", 0))
+	if _point_in_rows(terrain_rows, x, y) and _terrain_cell_is_passable(terrain_rows, x, y) and not occupied.has(_point_key(x, y)):
+		return _point_dict(x, y)
+	for radius in range(1, 7):
+		var candidates := []
+		for dy in range(-radius, radius + 1):
+			for dx in range(-radius, radius + 1):
+				if abs(dx) + abs(dy) != radius:
+					continue
+				var nx := x + dx
+				var ny := y + dy
+				if not _point_in_rows(terrain_rows, nx, ny):
+					continue
+				if not _terrain_cell_is_passable(terrain_rows, nx, ny) or occupied.has(_point_key(nx, ny)):
+					continue
+				candidates.append({"x": nx, "y": ny, "score": abs(dx) + abs(dy)})
+		candidates.sort_custom(Callable(RandomMapGeneratorRules, "_compare_score_xy"))
+		if not candidates.is_empty():
+			var selected: Dictionary = candidates[0]
+			return _point_dict(int(selected.get("x", 0)), int(selected.get("y", 0)))
+	return {}
+
+static func _sorted_river_waypoints(points: Array) -> Array:
 	var result := []
 	var seen := {}
 	for point in points:
-		if not (point is Dictionary):
+		if not (point is Dictionary) or point.is_empty():
 			continue
 		var key := _point_key(int(point.get("x", 0)), int(point.get("y", 0)))
 		if seen.has(key):
 			continue
 		seen[key] = true
 		result.append(point)
+	result.sort_custom(Callable(RandomMapGeneratorRules, "_compare_yx"))
 	return result
+
+static func _dedupe_consecutive_point_path(points: Array) -> Array:
+	var result := []
+	for point in points:
+		if not (point is Dictionary):
+			continue
+		if not result.is_empty() and _same_point(result[result.size() - 1], point):
+			continue
+		result.append(point)
+	return result
+
+static func _annotated_river_candidates(candidates: Array, terrain_rows: Array, road_overlay: Dictionary, object_footprints: Dictionary) -> Array:
+	var road_lookup := _tile_lookup_by_point(road_overlay.get("tiles", []))
+	var occupied := _route_blocking_body_lookup_from_footprint_records(object_footprints.get("object_records", []))
+	var result := []
+	for candidate in candidates:
+		if not (candidate is Dictionary):
+			continue
+		var record: Dictionary = candidate.duplicate(true)
+		var quality := _river_candidate_quality(record, terrain_rows, road_lookup, occupied)
+		record["quality"] = quality
+		record["continuity_status"] = String(quality.get("continuity_status", "fail"))
+		record["road_crossing_count"] = int(quality.get("road_crossing_count", 0))
+		record["body_conflict_count"] = int(quality.get("body_conflict_count", 0))
+		record["isolated_cell_count"] = int(quality.get("isolated_cell_count", 0))
+		record["ordered_adjacency_break_count"] = int(quality.get("ordered_adjacency_break_count", 0))
+		record["component_count"] = int(quality.get("component_count", 0))
+		result.append(record)
+	return result
+
+static func _river_candidate_quality(candidate: Dictionary, terrain_rows: Array, road_lookup: Dictionary, occupied: Dictionary) -> Dictionary:
+	var cells: Array = candidate.get("candidate_cells", []) if candidate.get("candidate_cells", []) is Array else []
+	var path_lookup := {}
+	var road_crossings := []
+	var road_route_ids := {}
+	var body_conflicts := []
+	var non_passable := []
+	var ordered_breaks := 0
+	var land_river := String(candidate.get("overlay_type", "")) == "land_river_with_road_crossing_constraints"
+	for index in range(cells.size()):
+		var cell = cells[index]
+		if not (cell is Dictionary):
+			continue
+		var x := int(cell.get("x", 0))
+		var y := int(cell.get("y", 0))
+		var key := _point_key(x, y)
+		path_lookup[key] = true
+		if index > 0 and cells[index - 1] is Dictionary and _manhattan_distance(cells[index - 1], cell) != 1:
+			ordered_breaks += 1
+		if not _point_in_rows(terrain_rows, x, y) or not _terrain_cell_is_passable(terrain_rows, x, y):
+			non_passable.append(_point_dict(x, y))
+		var endpoint_channel_anchor := not land_river and (index == 0 or index == cells.size() - 1)
+		if occupied.has(key) and not road_lookup.has(key) and not endpoint_channel_anchor:
+			body_conflicts.append(_point_dict(x, y))
+		if road_lookup.has(key):
+			var road_tile: Dictionary = road_lookup[key]
+			road_crossings.append({
+				"x": x,
+				"y": y,
+				"route_edge_id": String(road_tile.get("route_edge_id", "")),
+				"road_class": String(road_tile.get("road_class", "")),
+			})
+			road_route_ids[String(road_tile.get("route_edge_id", ""))] = true
+	var component_count := _point_lookup_component_count(path_lookup)
+	var isolated_count := _isolated_point_count(path_lookup)
+	var has_required_crossing := (not land_river) or not road_crossings.is_empty()
+	var continuity_ok := cells.size() > 1 and ordered_breaks == 0 and component_count == 1 and isolated_count == 0 and body_conflicts.is_empty() and non_passable.is_empty() and has_required_crossing
+	return {
+		"continuity_status": "pass" if continuity_ok else "fail",
+		"candidate_cell_count": cells.size(),
+		"ordered_adjacency_break_count": ordered_breaks,
+		"component_count": component_count,
+		"isolated_cell_count": isolated_count,
+		"body_conflict_count": body_conflicts.size(),
+		"non_passable_cell_count": non_passable.size(),
+		"road_crossing_count": road_crossings.size(),
+		"road_crossings": road_crossings,
+		"road_crossing_route_edge_ids": _sorted_keys(road_route_ids),
+		"requires_road_crossing": land_river,
+		"has_required_crossing": has_required_crossing,
+		"policy": "river overlay cells must form one continuous ordered path, avoid object bodies, and land rivers must record road bridge/ford crossings",
+	}
+
+static func _point_lookup_component_count(lookup: Dictionary) -> int:
+	var remaining := {}
+	for key in lookup.keys():
+		remaining[String(key)] = true
+	var count := 0
+	while not remaining.is_empty():
+		var start_key := String(remaining.keys()[0])
+		count += 1
+		var queue := [start_key]
+		remaining.erase(start_key)
+		var cursor := 0
+		while cursor < queue.size():
+			var key := String(queue[cursor])
+			cursor += 1
+			var point := _point_from_key(key)
+			for offset in _cardinal_offsets():
+				var next_key := _point_key(int(point.get("x", 0)) + int(offset.x), int(point.get("y", 0)) + int(offset.y))
+				if not remaining.has(next_key):
+					continue
+				remaining.erase(next_key)
+				queue.append(next_key)
+	return count
+
+static func _isolated_point_count(lookup: Dictionary) -> int:
+	var count := 0
+	for key in lookup.keys():
+		var point := _point_from_key(String(key))
+		var neighbor_count := 0
+		for offset in _cardinal_offsets():
+			if lookup.has(_point_key(int(point.get("x", 0)) + int(offset.x), int(point.get("y", 0)) + int(offset.y))):
+				neighbor_count += 1
+		if neighbor_count == 0:
+			count += 1
+	return count
+
+static func _point_from_key(key: String) -> Dictionary:
+	var parts := key.split(",")
+	if parts.size() != 2:
+		return _point_dict(0, 0)
+	return _point_dict(int(parts[0]), int(parts[1]))
+
+static func _count_river_quality_value(candidates: Array, key: String, expected: String) -> int:
+	var count := 0
+	for candidate in candidates:
+		if candidate is Dictionary and String(candidate.get("quality", {}).get(key, "")) == expected:
+			count += 1
+	return count
+
+static func _count_river_quality_not_value(candidates: Array, key: String, expected: String) -> int:
+	var count := 0
+	for candidate in candidates:
+		if candidate is Dictionary and String(candidate.get("quality", {}).get(key, "")) != expected:
+			count += 1
+	return count
+
+static func _sum_river_quality_int(candidates: Array, key: String) -> int:
+	var total := 0
+	for candidate in candidates:
+		if candidate is Dictionary:
+			total += int(candidate.get("quality", {}).get(key, 0))
+	return total
+
+static func _count_river_overlay_type(candidates: Array, overlay_type: String) -> int:
+	var count := 0
+	for candidate in candidates:
+		if candidate is Dictionary and String(candidate.get("overlay_type", "")) == overlay_type:
+			count += 1
+	return count
+
+static func _count_land_rivers_with_crossings(candidates: Array) -> int:
+	var count := 0
+	for candidate in candidates:
+		if not (candidate is Dictionary):
+			continue
+		if String(candidate.get("overlay_type", "")) == "land_river_with_road_crossing_constraints" and int(candidate.get("quality", {}).get("road_crossing_count", 0)) > 0:
+			count += 1
+	return count
+
+static func _same_point(left: Dictionary, right: Dictionary) -> bool:
+	return int(left.get("x", 0)) == int(right.get("x", 0)) and int(left.get("y", 0)) == int(right.get("y", 0))
+
+static func _compare_score_xy(a: Dictionary, b: Dictionary) -> bool:
+	var a_score := int(a.get("score", 0))
+	var b_score := int(b.get("score", 0))
+	if a_score != b_score:
+		return a_score < b_score
+	var ay := int(a.get("y", 0))
+	var by := int(b.get("y", 0))
+	if ay != by:
+		return ay < by
+	return int(a.get("x", 0)) < int(b.get("x", 0))
+
+static func _compare_yx(a: Dictionary, b: Dictionary) -> bool:
+	var ay := int(a.get("y", 0))
+	var by := int(b.get("y", 0))
+	if ay != by:
+		return ay < by
+	return int(a.get("x", 0)) < int(b.get("x", 0))
 
 static func _generated_map_serialization_record(normalized: Dictionary, terrain_rows: Array, terrain_transit: Dictionary, road_overlay: Dictionary, river_overlay: Dictionary, object_footprints: Dictionary, placements: Dictionary, route_graph: Dictionary) -> Dictionary:
 	var metadata := _metadata(normalized)
@@ -5938,6 +6188,24 @@ static func _roads_rivers_writeout_validation_core(road_overlay: Dictionary, riv
 			failures.append("island/water config missed deferred river/water transit candidates")
 	elif river_overlay.get("explicit_no_river_state", {}).is_empty():
 		warnings.append("land config has no explicit no-river state because water/coast overlay metadata exists")
+	var river_summary: Dictionary = river_overlay.get("summary", {}) if river_overlay.get("summary", {}) is Dictionary else {}
+	var river_candidate_count := int(river_summary.get("river_candidate_count", 0))
+	if river_candidate_count > 0:
+		if int(river_summary.get("coherent_river_candidate_count", 0)) < river_candidate_count:
+			failures.append("river overlay contains incoherent candidates: %d/%d coherent" % [int(river_summary.get("coherent_river_candidate_count", 0)), river_candidate_count])
+		if int(river_summary.get("river_body_conflict_count", 0)) > 0:
+			failures.append("river overlay crosses object footprint body tiles: %d" % int(river_summary.get("river_body_conflict_count", 0)))
+		if int(river_summary.get("isolated_river_fragment_count", 0)) > 0:
+			failures.append("river overlay contains isolated fragments: %d" % int(river_summary.get("isolated_river_fragment_count", 0)))
+		if water_mode == "land" and int(river_summary.get("land_river_with_crossing_count", 0)) < int(river_summary.get("land_river_candidate_count", 0)):
+			failures.append("land river candidates missed recorded road bridge/ford crossings: %d/%d" % [int(river_summary.get("land_river_with_crossing_count", 0)), int(river_summary.get("land_river_candidate_count", 0))])
+	for candidate in river_overlay.get("river_candidates", []):
+		if not (candidate is Dictionary):
+			failures.append("river candidate is not a dictionary")
+			continue
+		var quality: Dictionary = candidate.get("quality", {}) if candidate.get("quality", {}) is Dictionary else {}
+		if String(quality.get("continuity_status", "")) != "pass":
+			failures.append("river candidate %s failed continuity quality: %s" % [String(candidate.get("id", "")), JSON.stringify(quality)])
 	if serialization_record.get("terrain_layers", []).is_empty():
 		failures.append("serialization record missed terrain layers")
 	if serialization_record.get("overlay_layers", []).is_empty():

@@ -156,6 +156,13 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"expected_wide_suppression_count": int(connection_guard_summary.get("expected_wide_suppression_count", 0)),
 		"wide_suppression_count": int(connection_guard_summary.get("wide_suppression_count", 0)),
 		"river_candidate_count": int(rivers.get("summary", {}).get("river_candidate_count", 0)),
+		"coherent_river_candidate_count": int(rivers.get("summary", {}).get("coherent_river_candidate_count", 0)),
+		"river_continuity_failure_count": int(rivers.get("summary", {}).get("river_continuity_failure_count", 0)),
+		"isolated_river_fragment_count": int(rivers.get("summary", {}).get("isolated_river_fragment_count", 0)),
+		"river_body_conflict_count": int(rivers.get("summary", {}).get("river_body_conflict_count", 0)),
+		"river_road_crossing_count": int(rivers.get("summary", {}).get("river_road_crossing_count", 0)),
+		"land_river_candidate_count": int(rivers.get("summary", {}).get("land_river_candidate_count", 0)),
+		"land_river_with_crossing_count": int(rivers.get("summary", {}).get("land_river_with_crossing_count", 0)),
 		"water_tile_count": int(rivers.get("summary", {}).get("water_tile_count", 0)),
 		"object_instance_count": serialization.get("object_instances", []).size() if serialization.get("object_instances", []) is Array else 0,
 		"minimum_town_distance_required": int(town_payload.get("summary", {}).get("minimum_town_distance_required", 0)),
@@ -219,6 +226,15 @@ func _metric_failures(case_id: String, metrics: Dictionary) -> Array:
 		failures.append("%s land map has no river candidates" % case_id)
 	if String(metrics.get("water_mode", "")) == "islands" and (int(metrics.get("water_tile_count", 0)) <= 0 or int(metrics.get("river_candidate_count", 0)) <= 0):
 		failures.append("%s islands map has no water/river transit candidates" % case_id)
+	if int(metrics.get("river_candidate_count", 0)) > 0:
+		if int(metrics.get("coherent_river_candidate_count", 0)) < int(metrics.get("river_candidate_count", 0)):
+			failures.append("%s river continuity is incomplete: %d/%d coherent" % [case_id, int(metrics.get("coherent_river_candidate_count", 0)), int(metrics.get("river_candidate_count", 0))])
+		if int(metrics.get("river_continuity_failure_count", 0)) > 0 or int(metrics.get("isolated_river_fragment_count", 0)) > 0:
+			failures.append("%s has fragmented river overlays: failures=%d isolated=%d" % [case_id, int(metrics.get("river_continuity_failure_count", 0)), int(metrics.get("isolated_river_fragment_count", 0))])
+		if int(metrics.get("river_body_conflict_count", 0)) > 0:
+			failures.append("%s river overlay crosses object bodies: %d" % [case_id, int(metrics.get("river_body_conflict_count", 0))])
+		if String(metrics.get("water_mode", "")) == "land" and int(metrics.get("land_river_with_crossing_count", 0)) < int(metrics.get("land_river_candidate_count", 0)):
+			failures.append("%s land rivers missed road bridge/ford crossings: %d/%d" % [case_id, int(metrics.get("land_river_with_crossing_count", 0)), int(metrics.get("land_river_candidate_count", 0))])
 	if int(metrics.get("direct_minimum_town_distance", 0)) < int(metrics.get("minimum_town_distance_required", 0)):
 		failures.append("%s town spacing %d below required %d" % [case_id, int(metrics.get("direct_minimum_town_distance", 0)), int(metrics.get("minimum_town_distance_required", 0))])
 	if int(metrics.get("observed_start_town_minimum_distance", 0)) > 0 and int(metrics.get("observed_start_town_minimum_distance", 0)) < int(metrics.get("start_town_minimum_distance_required", 0)):
@@ -333,6 +349,13 @@ func _summary(results: Array) -> Dictionary:
 		"wide_suppressed_routes": 0,
 		"special_guard_gate_roads": 0,
 		"river_candidates": 0,
+		"coherent_river_candidates": 0,
+		"river_continuity_failures": 0,
+		"isolated_river_fragments": 0,
+		"river_body_conflicts": 0,
+		"river_road_crossings": 0,
+		"land_river_candidates": 0,
+		"land_rivers_with_crossings": 0,
 		"decorations": 0,
 		"decoration_blocking_body_tiles": 0,
 		"multitile_decorations": 0,
@@ -378,6 +401,13 @@ func _summary(results: Array) -> Dictionary:
 		totals["wide_suppressed_routes"] = int(totals.get("wide_suppressed_routes", 0)) + int(metrics.get("wide_suppressed_route_count", 0))
 		totals["special_guard_gate_roads"] = int(totals.get("special_guard_gate_roads", 0)) + int(metrics.get("special_guard_gate_road_count", 0))
 		totals["river_candidates"] = int(totals.get("river_candidates", 0)) + int(metrics.get("river_candidate_count", 0))
+		totals["coherent_river_candidates"] = int(totals.get("coherent_river_candidates", 0)) + int(metrics.get("coherent_river_candidate_count", 0))
+		totals["river_continuity_failures"] = int(totals.get("river_continuity_failures", 0)) + int(metrics.get("river_continuity_failure_count", 0))
+		totals["isolated_river_fragments"] = int(totals.get("isolated_river_fragments", 0)) + int(metrics.get("isolated_river_fragment_count", 0))
+		totals["river_body_conflicts"] = int(totals.get("river_body_conflicts", 0)) + int(metrics.get("river_body_conflict_count", 0))
+		totals["river_road_crossings"] = int(totals.get("river_road_crossings", 0)) + int(metrics.get("river_road_crossing_count", 0))
+		totals["land_river_candidates"] = int(totals.get("land_river_candidates", 0)) + int(metrics.get("land_river_candidate_count", 0))
+		totals["land_rivers_with_crossings"] = int(totals.get("land_rivers_with_crossings", 0)) + int(metrics.get("land_river_with_crossing_count", 0))
 		totals["decorations"] = int(totals.get("decorations", 0)) + int(metrics.get("decoration_count", 0))
 		totals["decoration_blocking_body_tiles"] = int(totals.get("decoration_blocking_body_tiles", 0)) + int(metrics.get("decoration_blocking_body_tile_total", 0))
 		totals["multitile_decorations"] = int(totals.get("multitile_decorations", 0)) + int(metrics.get("multitile_decoration_count", 0))
@@ -499,6 +529,9 @@ func _case_log_line(result: Dictionary) -> Dictionary:
 		"wide_roads": int(metrics.get("wide_suppressed_route_count", 0)),
 		"special_gate_roads": int(metrics.get("special_guard_gate_road_count", 0)),
 		"rivers": int(metrics.get("river_candidate_count", 0)),
+		"coherent_rivers": int(metrics.get("coherent_river_candidate_count", 0)),
+		"river_crossings": int(metrics.get("river_road_crossing_count", 0)),
+		"river_fragment_failures": int(metrics.get("river_continuity_failure_count", 0)),
 		"decor": int(metrics.get("decoration_count", 0)),
 		"decor_body_tiles": int(metrics.get("decoration_blocking_body_tile_total", 0)),
 		"multitile_decor": int(metrics.get("multitile_decoration_count", 0)),
