@@ -157,6 +157,27 @@ nonGoals:
 
 Completed owner-directed implementation slice:
 
+id: `native-rmg-homm3-re-reward-value-distribution-10184`
+phase: `phase-2-deep-production-foundation`
+status: `completed`
+purpose: Continue beyond obstacle source identity by making native C++ RMG reward references derive values/categories from catalog zone treasure bands and by pairing valuable rewards with guard values scaled from protected reward values.
+sourceDocs:
+- `project.md`
+- `content/random_map_template_catalog.json`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md`
+implementation:
+- Native reward records now include zone value budget/tier, reward value tier, reward source bucket, HoMM3-re-like treasure-band low/high/density provenance, and reward index/target metadata.
+- Native site guards scale from protected reward value and record guard/reward relation metadata; medium rewards reject distant fallback guards while major/relic rewards are required guarded content for the report scope.
+- `tests/native_random_map_homm3_re_reward_value_distribution_report.tscn` samples small, medium, large, and XL templates and preserves road/object/fill/decor/package regression checks.
+evidence:
+- `docs/native-rmg-homm3-re-reward-value-distribution-report.md`
+- `ops/progress.json`
+nonGoals:
+- No route back to `RandomMapGeneratorRules.gd` for active generation, no generated map packages committed under `maps/`, no HoMM3 copyrighted art/DEF asset import, no exact HoMM3-re reward table/object/art/byte placement parity claim, no save version bump or authored scenario/package adoption.
+
+Completed owner-directed implementation slice:
+
 id: `native-rmg-homm3-fill-coverage-gate-10184`
 phase: `phase-2-deep-production-foundation`
 purpose: Add a real HoMM3-style fill coverage gate and raise native generated package decorative/blocking body coverage so generated maps no longer pass with barren token decorations.

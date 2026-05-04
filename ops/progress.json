@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-homm3-re-obstacle-identity-comparison-10184",
-  "currentSliceTitle": "Native RMG HoMM3-re Obstacle Identity And Comparison Gate",
+  "currentSliceId": "native-rmg-homm3-re-reward-value-distribution-10184",
+  "currentSliceTitle": "Native RMG HoMM3-re Reward Value Distribution",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed: native decorative_obstacle records now carry terrain-biased HoMM3-re rand_trn source row/type/subtype/terrain/DEF-reference provenance mapped to original proxy blockers; new identity/comparison report validates owner-attached 72x72 Small Ring baseline sizes and broad 5-case source diversity. Validation passed: json.tool catalogs/progress, native CMake build, identity comparison, fill coverage, catalog quality, menu wiring, decoration generation, full parity gate, git diff --check.",
+  "currentSliceNotes": "Completed owner-directed native C++ reward/value distribution parity increment: reward_reference records derive value/category/tier/provenance from zone treasure bands, valuable reward guards scale from protected reward value, the new distribution report passes, and existing native RMG gates remain green.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T13:31:55Z",
+  "updatedAt": "2026-05-04T16:20:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -8776,6 +8776,83 @@
         "tests/random_map_all_template_menu_wiring_report.tscn",
         "tests/native_random_map_decoration_generation_report.tscn",
         "tests/native_random_map_full_parity_gate_report.tscn",
+        "git diff --check"
+      ]
+    },
+    {
+      "id": "native-rmg-homm3-re-reward-value-distribution-10184",
+      "title": "Native RMG HoMM3-re Reward Value Distribution",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "owner_directed_phase2_native_rmg_homm3_re_reward_value_distribution_slice",
+      "parentSliceId": "native-rmg-homm3-re-obstacle-identity-comparison-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/random_map_template_catalog.json",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "2026-05-04 owner directive: continue native RMG parity beyond obstacle source identity into reward/object value budgets and guard/reward distribution"
+      ],
+      "purpose": "Continue native C++ GDExtension RMG parity by deriving generated reward object values from catalog zone treasure bands and scaling site guard values from protected reward values so generated zones feel value-budgeted rather than flat/samey.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_re_reward_value_distribution_report.gd",
+        "tests/native_random_map_homm3_re_reward_value_distribution_report.tscn",
+        "docs/native-rmg-homm3-re-reward-value-distribution-report.md",
+        "ops/progress.json",
+        "PLAN.md"
+      ],
+      "completionCriteria": [
+        "Active generated skirmish/package generation remains native MapPackageService.generate_random_map(), not scripts/core/RandomMapGeneratorRules.gd.",
+        "Generated reward-bearing native object records carry zone id, zone value budget/tier, reward category/source bucket, HoMM3-re-like treasure band low/high/density provenance, and reward value tier.",
+        "Valuable reward references are guarded with guard values scaled from protected reward value and record guard/reward relation metadata.",
+        "The new report samples several templates/seeds/sizes and verifies value-bearing content per playable land zone, reward values within zone bands, guard/reward pairing, value scaling by zone budget, object category mix, road/object/fill/decor identity regression guards, and package conversion surface preservation.",
+        "Existing native RMG gates still pass and no generated .amap/.ascenario files under maps/ are committed."
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_re_reward_value_distribution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_re_identity_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_fill_coverage_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_catalog_quality_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/random_map_all_template_menu_wiring_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_decoration_generation_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_full_parity_gate_report.tscn",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No active generated skirmish launch through RandomMapGeneratorRules.gd.",
+        "No generated .amap/.ascenario files under maps/ committed.",
+        "No HoMM3 copyrighted art/DEF asset import.",
+        "No exact HoMM3-re byte/object/reward-table parity claim.",
+        "No save version bump or authored scenario/package adoption."
+      ],
+      "createdAt": "2026-05-04T14:05:00Z",
+      "updatedAt": "2026-05-04T16:20:00Z",
+      "startedAt": "2026-05-04T14:05:00Z",
+      "completedAt": "2026-05-04T16:20:00Z",
+      "notes": "Completed: native reward_reference records now derive reward_value/category/tier/source bucket/provenance from zone treasure bands; valuable reward guards scale from protected reward value and expose guard/reward relation metadata; full-parity fixture guard counts are preserved through a supported-profile-only route-edge backfill.",
+      "completionEvidence": [
+        "Native reward values now derive from catalog treasure_band low/high/density metadata instead of flat ordinal values.",
+        "Report samples small/medium/large/XL native generated packages: rewards 26/88/400/726, max reward values 1600/29300/25300/29950, guarded valuable rewards 0/70/244/570, high-value rewards 0/28/135/220.",
+        "HoMM3-re sourced decoration ratio stayed 1.0 in all sampled reward/value report cases; road cells stayed present at 103/155/819/2009."
+      ],
+      "validationEvidence": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_re_reward_value_distribution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_re_identity_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_fill_coverage_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_catalog_quality_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/random_map_all_template_menu_wiring_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_decoration_generation_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_full_parity_gate_report.tscn",
         "git diff --check"
       ]
     }
