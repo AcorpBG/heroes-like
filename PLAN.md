@@ -654,6 +654,35 @@ nonGoals:
 - No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.
 - No full HoMM3 RMG parity claim beyond this measurable river/crossing quality improvement.
 
+Completed owner-directed implementation slice:
+
+id: `random-map-homm3-parity-zone-richness-bands-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Improve HoMM3-style RMG template richness by ensuring non-connector zones carry measurable economy, treasure-band, guard, decoration, and reward coverage instead of hiding poor zones behind whole-map aggregate counts.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_homm3_parity_richness_report.gd`
+- `.artifacts/rmg_parity_richness/`
+- `ops/progress.json`
+completionCriteria:
+- Runtime zone metadata applies a conservative richness floor only where mine/resource requirements, treasure bands, or monster policy are missing or empty.
+- Bounded richness metrics report per-zone richness minimum, poor zone count, object category coverage, reward-band source/fallback counts, value bands, and template variability across multiple seeds/templates.
+- Focused richness validation passes within its runtime budget with zero poor eligible zones and no reward-band fallback in the selected cases.
+- Remaining RMG parity gaps are listed for the next slice.
+nonGoals:
+- No generated terrain-art replacement work.
+- No copyrighted names, assets, maps, factions, unit art, music, or text.
+- No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.
+- No claim of full HoMM3 RMG parity beyond this measurable zone richness and reward-band improvement.
+
 ### Phase 3 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.

@@ -1689,6 +1689,8 @@ static func _build_runtime_zones(template: Dictionary, normalized: Dictionary, r
 	for zone_record in template.get("zones", []):
 		if not (zone_record is Dictionary):
 			continue
+		var catalog_metadata: Dictionary = zone_record.get("catalog_metadata", {}) if zone_record.get("catalog_metadata", {}) is Dictionary else {}
+		catalog_metadata = _zone_catalog_metadata_with_richness_floor(zone_record, catalog_metadata)
 		var owner_slot = zone_record.get("owner_slot", null)
 		var faction_id := ""
 		var player_slot = null
@@ -1722,7 +1724,7 @@ static func _build_runtime_zones(template: Dictionary, normalized: Dictionary, r
 			"anchor": {},
 			"bounds": {},
 			"cell_count": 0,
-			"catalog_metadata": zone_record.get("catalog_metadata", {}),
+			"catalog_metadata": catalog_metadata,
 		})
 	return zones
 
@@ -2428,6 +2430,106 @@ static func _nearest_owned_zone(zone: Dictionary, zones: Array, seeds: Dictionar
 			best = candidate
 			best_distance = distance
 	return best if not best.is_empty() else {"id": "", "faction_id": "faction_embercourt"}
+
+static func _zone_catalog_metadata_with_richness_floor(zone_record: Dictionary, metadata: Dictionary) -> Dictionary:
+	var enriched := metadata.duplicate(true)
+	var role := String(zone_record.get("role", enriched.get("role", "treasure")))
+	if _zone_role_is_route_connector({"role": role}):
+		return enriched
+	var floor_record := {
+		"source_model": "HoMM3_RMG_zone_mine_treasure_band_floor_translated_to_original_content",
+		"applied_mine_floor": false,
+		"applied_treasure_band_floor": false,
+		"applied_monster_policy_floor": false,
+		"role": role,
+		"base_size": int(zone_record.get("base_size", enriched.get("base_size", 0))),
+	}
+	var mine_requirements: Dictionary = enriched.get("mine_requirements", {}) if enriched.get("mine_requirements", {}) is Dictionary else {}
+	if mine_requirements.is_empty():
+		mine_requirements = enriched.get("resource_category_requirements", {}) if enriched.get("resource_category_requirements", {}) is Dictionary else {}
+	if not _zone_requirements_have_positive_counts(mine_requirements):
+		mine_requirements = _zone_richness_floor_requirements(zone_record, role)
+		enriched["mine_requirements"] = mine_requirements
+		enriched["resource_category_requirements"] = mine_requirements.duplicate(true)
+		floor_record["applied_mine_floor"] = true
+	var treasure_bands: Array = enriched.get("treasure_bands", []) if enriched.get("treasure_bands", []) is Array else []
+	if _eligible_treasure_bands(treasure_bands).is_empty():
+		enriched["treasure_bands"] = _zone_richness_floor_treasure_bands(role, int(zone_record.get("base_size", 0)))
+		floor_record["applied_treasure_band_floor"] = true
+	var monster_policy: Dictionary = enriched.get("monster_policy", {}) if enriched.get("monster_policy", {}) is Dictionary else {}
+	if monster_policy.is_empty():
+		enriched["monster_policy"] = {
+			"strength": "avg" if role.contains("start") else "strong" if role == "treasure" else "avg",
+			"match_to_town": role.contains("start"),
+			"allowed_faction_ids": ["neutral", "faction_embercourt", "faction_thornwake", "faction_sunvault", "faction_brasshollow", "faction_veilmourn", "faction_mireclaw"],
+			"source": "zone_richness_floor",
+		}
+		floor_record["applied_monster_policy_floor"] = true
+	enriched["richness_floor"] = floor_record
+	return enriched
+
+static func _zone_requirements_have_positive_counts(requirements: Dictionary) -> bool:
+	for bucket_key in ["minimum_by_category", "density_by_category"]:
+		var bucket: Dictionary = requirements.get(bucket_key, {}) if requirements.get(bucket_key, {}) is Dictionary else {}
+		for category_id in bucket.keys():
+			if int(bucket.get(category_id, 0)) > 0:
+				return true
+	return false
+
+static func _zone_richness_floor_requirements(zone_record: Dictionary, role: String) -> Dictionary:
+	var minimums := {}
+	var densities := {}
+	for category in ORIGINAL_RESOURCE_CATEGORY_ORDER:
+		if category is Dictionary:
+			var category_id := String(category.get("original_category_id", ""))
+			minimums[category_id] = 0
+			densities[category_id] = 0
+	if role.contains("start"):
+		minimums["timber"] = 1
+		minimums["ore"] = 1
+		densities["timber"] = 1
+		densities["ore"] = 1
+	elif role == "treasure":
+		var category_id := _zone_richness_floor_resource_category_id(zone_record)
+		minimums[category_id] = 1
+		densities[category_id] = 1
+	return {
+		"minimum_by_category": minimums,
+		"density_by_category": densities,
+		"resource_category_ids": _original_resource_category_ids(),
+		"source": "zone_richness_floor",
+	}
+
+static func _zone_richness_floor_resource_category_id(zone_record: Dictionary) -> String:
+	var candidates := ["gold", "quicksilver", "ember_salt", "lens_crystal", "cut_gems"]
+	return candidates[_stable_choice_index(candidates.size(), "%s:%s:zone_richness_floor_resource" % [String(zone_record.get("id", "")), String(zone_record.get("role", ""))])]
+
+static func _zone_richness_floor_treasure_bands(role: String, base_size: int) -> Array:
+	if role.contains("start"):
+		return [
+			{"low": 300, "high": 900, "density": 4},
+			{"low": 900, "high": 1800, "density": 2},
+			{"low": 0, "high": 0, "density": 0},
+		]
+	if role == "treasure":
+		var high_scale := 2 if base_size >= 10 else 1
+		return [
+			{"low": 900 * high_scale, "high": 1800 * high_scale, "density": 2},
+			{"low": 450, "high": 1200 * high_scale, "density": 5},
+			{"low": 0, "high": 0, "density": 0},
+		]
+	return [
+		{"low": 300, "high": 900, "density": 1},
+		{"low": 0, "high": 0, "density": 0},
+		{"low": 0, "high": 0, "density": 0},
+	]
+
+static func _original_resource_category_ids() -> Array:
+	var ids := []
+	for category in ORIGINAL_RESOURCE_CATEGORY_ORDER:
+		if category is Dictionary:
+			ids.append(String(category.get("original_category_id", "")))
+	return ids
 
 static func _zone_resource_requirements(zone: Dictionary) -> Dictionary:
 	if _zone_role_is_route_connector(zone):
