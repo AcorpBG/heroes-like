@@ -965,6 +965,148 @@ Dictionary load_homm3_re_obstacle_proxy_catalog() {
 	return cached_catalog;
 }
 
+Dictionary load_homm3_re_reward_object_proxy_catalog() {
+	static Dictionary cached_catalog;
+	static bool loaded = false;
+	if (loaded) {
+		return cached_catalog;
+	}
+	loaded = true;
+	const String path = "res://content/homm3_re_reward_object_proxy_catalog.json";
+	if (!FileAccess::file_exists(path)) {
+		return cached_catalog;
+	}
+	Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		return cached_catalog;
+	}
+	Ref<JSON> parser;
+	parser.instantiate();
+	if (parser->parse(file->get_as_text()) != OK || parser->get_data().get_type() != Variant::DICTIONARY) {
+		return cached_catalog;
+	}
+	cached_catalog = Dictionary(parser->get_data());
+	return cached_catalog;
+}
+
+Dictionary homm3_re_reward_object_proxy_record(const String &generated_kind, const String &reward_tier, const String &source_bucket, const String &resource_category, int32_t ordinal) {
+	Dictionary catalog = load_homm3_re_reward_object_proxy_catalog();
+	Array entries = catalog.get("entries", Array());
+	Array candidates;
+	Array fallback_candidates;
+	for (int64_t index = 0; index < entries.size(); ++index) {
+		if (Variant(entries[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary entry = entries[index];
+		if (String(entry.get("generated_kind", "")) != generated_kind) {
+			continue;
+		}
+		Array tiers = entry.get("reward_value_tiers", Array());
+		if (!reward_tier.is_empty() && !tiers.is_empty() && !array_has_string(tiers, reward_tier)) {
+			continue;
+		}
+		Array resources = entry.get("resource_categories", Array());
+		if (!resource_category.is_empty() && !resources.is_empty() && !array_has_string(resources, resource_category)) {
+			continue;
+		}
+		if (!source_bucket.is_empty() && generated_kind == "reward_reference") {
+			const String entry_bucket = String(entry.get("homm3_re_reward_table_bucket", ""));
+			const String entry_proxy_bucket = String(entry.get("proxy_bucket", ""));
+			const String semantic_category = String(entry.get("semantic_category", ""));
+			const bool bucket_related = source_bucket.contains(entry_proxy_bucket) || entry_proxy_bucket.contains(source_bucket) || source_bucket.contains(semantic_category) || resource_category.contains(semantic_category) || semantic_category.contains(resource_category) || source_bucket == entry_bucket;
+			if (bucket_related) {
+				candidates.append(entry);
+			} else {
+				fallback_candidates.append(entry);
+			}
+			continue;
+		}
+		candidates.append(entry);
+	}
+	if (candidates.is_empty()) {
+		candidates = fallback_candidates;
+	} else if (generated_kind == "reward_reference" && candidates.size() < 5) {
+		for (int64_t index = 0; index < fallback_candidates.size(); ++index) {
+			candidates.append(fallback_candidates[index]);
+		}
+	}
+	if (candidates.is_empty()) {
+		return Dictionary();
+	}
+	const String selector = generated_kind + String(":") + reward_tier + String(":") + source_bucket + String(":") + resource_category + String(":") + String::num_int64(ordinal);
+	const int64_t selected = int64_t(hash32_int(selector) % uint32_t(candidates.size()));
+	if (Variant(candidates[selected]).get_type() != Variant::DICTIONARY) {
+		return Dictionary();
+	}
+	Dictionary result = Dictionary(candidates[selected]);
+	result["source_catalog_path"] = "content/homm3_re_reward_object_proxy_catalog.json";
+	result["source_catalog_schema_id"] = catalog.get("schema_id", "homm3_re_reward_object_proxy_catalog_v1");
+	return result;
+}
+
+void apply_homm3_re_reward_object_proxy(Dictionary &record, const Dictionary &proxy, bool apply_native_proxy) {
+	if (proxy.is_empty()) {
+		record["homm3_re_reward_object_source_kind"] = "missing_reward_object_proxy_catalog_fallback";
+		record["homm3_re_art_asset_policy"] = "original_runtime_family_only_catalog_missing";
+		return;
+	}
+	if (apply_native_proxy) {
+		if (!String(proxy.get("native_proxy_family", "")).is_empty()) {
+			record["family_id"] = proxy.get("native_proxy_family", record.get("family_id", ""));
+			record["object_family_id"] = proxy.get("native_proxy_family", record.get("object_family_id", ""));
+		}
+		if (!String(proxy.get("native_proxy_category", "")).is_empty()) {
+			record["category_id"] = proxy.get("native_proxy_category", record.get("category_id", ""));
+			record["reward_category"] = proxy.get("native_proxy_category", record.get("reward_category", record.get("category_id", "")));
+		}
+		if (!String(proxy.get("native_proxy_object_id", "")).is_empty()) {
+			record["object_id"] = proxy.get("native_proxy_object_id", record.get("object_id", ""));
+		}
+		if (!String(proxy.get("native_proxy_site_id", "")).is_empty()) {
+			record["site_id"] = proxy.get("native_proxy_site_id", record.get("site_id", ""));
+		} else if (String(proxy.get("native_proxy_category", "")) == "artifact") {
+			record["site_id"] = "";
+		}
+		if (!String(proxy.get("native_resource_id", "")).is_empty()) {
+			record["resource_id"] = proxy.get("native_resource_id", record.get("resource_id", ""));
+		}
+		if (!String(proxy.get("native_artifact_id", "")).is_empty()) {
+			record["artifact_id"] = proxy.get("native_artifact_id", "");
+			record.erase("spell_id");
+		} else if (String(proxy.get("native_proxy_category", "")) != "artifact") {
+			record.erase("artifact_id");
+		}
+		if (!String(proxy.get("native_spell_id", "")).is_empty()) {
+			record["spell_id"] = proxy.get("native_spell_id", "");
+			record.erase("artifact_id");
+		} else if (String(proxy.get("native_proxy_category", "")) != "spell_access") {
+			record.erase("spell_id");
+		}
+	}
+	record["homm3_re_reward_object_source_kind"] = proxy.get("source_kind", "homm3_re_reward_object_type");
+	record["homm3_re_reward_object_catalog_id"] = proxy.get("id", "");
+	record["homm3_re_reward_object_catalog_path"] = proxy.get("source_catalog_path", "content/homm3_re_reward_object_proxy_catalog.json");
+	record["homm3_re_reward_object_catalog_schema_id"] = proxy.get("source_catalog_schema_id", "homm3_re_reward_object_proxy_catalog_v1");
+	record["homm3_re_source_catalog_kind"] = proxy.get("source_catalog_kind", "");
+	record["homm3_re_object_type_id"] = proxy.get("homm3_re_object_type_id", 0);
+	record["homm3_re_object_type_name"] = proxy.get("homm3_re_object_type_name", "");
+	record["homm3_re_type_name"] = proxy.get("homm3_re_object_type_name", "");
+	record["homm3_re_object_subtype"] = proxy.get("homm3_re_object_subtype", 0);
+	record["homm3_re_subtype"] = proxy.get("homm3_re_object_subtype", 0);
+	record["homm3_re_object_source_row"] = proxy.get("homm3_re_object_source_row", 0);
+	record["homm3_re_object_def_ref"] = proxy.get("homm3_re_object_def_ref", "");
+	record["homm3_re_reward_table_bucket"] = proxy.get("homm3_re_reward_table_bucket", "");
+	record["homm3_re_proxy_bucket"] = proxy.get("proxy_bucket", "");
+	record["homm3_re_semantic_category"] = proxy.get("semantic_category", "");
+	record["native_proxy_object_id"] = apply_native_proxy ? proxy.get("native_proxy_object_id", record.get("object_id", "")) : record.get("object_id", "");
+	record["native_proxy_family"] = apply_native_proxy ? proxy.get("native_proxy_family", record.get("family_id", "")) : record.get("family_id", "");
+	record["native_proxy_category"] = apply_native_proxy ? proxy.get("native_proxy_category", record.get("category_id", "")) : record.get("category_id", "");
+	record["proxy_mapping_policy"] = "homm3_re_reward_object_type_to_original_authored_proxy_object";
+	record["family_art_parity"] = "homm3_re_source_identity_recorded_original_runtime_proxy_no_copyrighted_art_import";
+	record["homm3_re_art_asset_policy"] = "provenance_only_original_proxy_art";
+}
+
 String homm3_re_source_terrain_for_native_terrain(const String &terrain_id) {
 	if (terrain_id == "underground") {
 		return "cave";
@@ -2504,6 +2646,8 @@ Dictionary object_family_record(const String &kind, int32_t ordinal, const Strin
 		record["resource_id"] = RESOURCE_IDS[index];
 		record["reward_value"] = index == 2 ? 900 : 4;
 		record["purpose"] = index == 0 ? "start_support_wood" : (index == 1 ? "start_support_ore" : "start_support_cache");
+		Dictionary proxy = homm3_re_reward_object_proxy_record("resource_site", "", "", CATEGORIES[index], ordinal);
+		apply_homm3_re_reward_object_proxy(record, proxy, false);
 		return record;
 	}
 	if (kind == "mine") {
@@ -2522,6 +2666,9 @@ Dictionary object_family_record(const String &kind, int32_t ordinal, const Strin
 		record["mine_family_id"] = FAMILIES[index];
 		record["guard_base_value"] = index == 2 ? 7000 : (index == 0 || index == 1 ? 1500 : 3500);
 		record["purpose"] = "neutral_resource_control_foundation";
+		Dictionary proxy = homm3_re_reward_object_proxy_record("mine", "", "", CATEGORIES[index], ordinal);
+		apply_homm3_re_reward_object_proxy(record, proxy, true);
+		record["mine_family_id"] = record.get("family_id", FAMILIES[index]);
 		return record;
 	}
 	if (kind == "neutral_dwelling") {
@@ -2537,6 +2684,8 @@ Dictionary object_family_record(const String &kind, int32_t ordinal, const Strin
 		record["neutral_dwelling_family_id"] = FAMILIES[index];
 		record["guard_pressure"] = index == 4 ? "high" : (index == 0 || index == 5 ? "low" : "medium");
 		record["purpose"] = "neutral_weekly_muster_foundation";
+		Dictionary proxy = homm3_re_reward_object_proxy_record("neutral_dwelling", "", "", "dwelling", ordinal);
+		apply_homm3_re_reward_object_proxy(record, proxy, false);
 		return record;
 	}
 	if (kind == "reward_reference") {
@@ -3458,6 +3607,15 @@ void apply_reward_value_profile(Dictionary &family, const Dictionary &profile, i
 		family["object_id"] = ordinal % 2 == 0 ? "object_waystone_cache" : "object_wood_wagon";
 		family["site_id"] = ordinal % 2 == 0 ? "site_waystone_cache" : "site_wood_wagon";
 		family["guarded_policy"] = "unguarded_or_light_guard_allowed";
+	}
+	Dictionary proxy = homm3_re_reward_object_proxy_record("reward_reference", tier, String(family.get("reward_source_bucket", "")), String(family.get("category_id", "")), ordinal);
+	apply_homm3_re_reward_object_proxy(family, proxy, true);
+	if (String(family.get("category_id", "")) == "artifact") {
+		family["guarded_policy"] = tier == "minor" ? "guarded_preferred" : "guarded_required";
+	} else if (String(family.get("category_id", "")) == "guarded_cache") {
+		family["guarded_policy"] = "guarded_required";
+	} else if (String(family.get("category_id", "")) == "spell_access" || String(family.get("category_id", "")) == "skill_equivalent") {
+		family["guarded_policy"] = tier == "minor" ? "unguarded_or_light_guard_allowed" : "guarded_preferred";
 	}
 	family["purpose"] = "zone_reward_value_budget_materialization";
 }

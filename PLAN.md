@@ -157,6 +157,30 @@ nonGoals:
 
 Completed owner-directed implementation slice:
 
+id: `native-rmg-homm3-re-object-table-proxy-selection-10184`
+phase: `phase-2-deep-production-foundation`
+status: `completed`
+purpose: Continue beyond native reward value tiers by making reward-bearing native C++ RMG object records carry HoMM3-re object/reward table source identity and select original proxy object families from a metadata-only proxy catalog.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/random_map_template_catalog.json`
+- `content/map_objects.json`
+- `content/homm3_re_reward_object_proxy_catalog.json`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-catalog-by-type.json`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json`
+implementation:
+- Added a runtime-consumable reward/object proxy catalog with source type/name/subtype/source-row/DEF-reference provenance and original proxy mappings.
+- Native `resource_site`, `mine`, `neutral_dwelling`, and `reward_reference` records now expose HoMM3-re source/proxy provenance and `provenance_only_original_proxy_art` policy.
+- Reward proxy selection now maps minor, medium, major, and relic bands to different original proxy families/categories instead of only generic placeholder caches.
+evidence:
+- `tests/native_random_map_homm3_re_object_table_proxy_report.tscn`
+- `docs/native-rmg-homm3-re-object-table-proxy-report.md`
+nonGoals:
+- No route back to `RandomMapGeneratorRules.gd` for active generation, no generated map packages committed under `maps/`, no HoMM3 copyrighted art/DEF asset import, no exact HoMM3-re reward table/object/art/byte placement parity claim, no save version bump or authored scenario/package adoption.
+
+Completed owner-directed implementation slice:
+
 id: `native-rmg-homm3-re-reward-value-distribution-10184`
 phase: `phase-2-deep-production-foundation`
 status: `completed`
