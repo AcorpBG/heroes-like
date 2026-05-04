@@ -249,17 +249,17 @@ const REWARD_BAND_CANDIDATES := [
 	{"reward_category": "skill_equivalent", "object_family_id": "skill_shrine", "object_id": "object_reedscript_vow_shrine", "site_id": "site_reedscript_vow_shrine", "skill_equivalent_id": "route_vow_shrine_contract", "value": 1300, "weight": 2, "categories": ["timber", "ore", "quicksilver"], "guarded_policy": "guarded_or_frontier"},
 ]
 const DECORATION_OBJECT_FAMILIES := [
-	{"family_id": "decor_grass_windgrass_tufts", "display_name": "Windgrass Tufts", "role": "decor", "terrain_ids": ["grass"], "biome_ids": ["biome_grasslands"], "weight": 5, "blocks_movement": true},
-	{"family_id": "decor_grass_saffron_bloom_patch", "display_name": "Saffron Bloom Patch", "role": "decor", "terrain_ids": ["grass"], "biome_ids": ["biome_grasslands"], "weight": 3, "blocks_movement": true},
-	{"family_id": "obstacle_forest_fallen_silverlog", "display_name": "Fallen Silverlog", "role": "obstacle", "terrain_ids": ["rough"], "biome_ids": ["biome_deep_forest"], "weight": 5, "blocks_movement": true},
-	{"family_id": "decor_forest_moonfern_bank", "display_name": "Moonfern Bank", "role": "decor", "terrain_ids": ["rough"], "biome_ids": ["biome_deep_forest"], "weight": 3, "blocks_movement": true},
-	{"family_id": "obstacle_mire_sinkroot_cluster", "display_name": "Sinkroot Cluster", "role": "obstacle", "terrain_ids": ["dirt"], "biome_ids": ["biome_mire_fen"], "weight": 5, "blocks_movement": true},
-	{"family_id": "decor_mire_glowmoss_hummock", "display_name": "Glowmoss Hummock", "role": "decor", "terrain_ids": ["dirt"], "biome_ids": ["biome_mire_fen"], "weight": 3, "blocks_movement": true},
-	{"family_id": "obstacle_highland_slate_outcrop", "display_name": "Slate Outcrop", "role": "obstacle", "terrain_ids": ["rough"], "biome_ids": ["biome_highland_ridge"], "weight": 5, "blocks_movement": true},
-	{"family_id": "decor_highland_heather_cairn", "display_name": "Heather Cairn", "role": "decor", "terrain_ids": ["rough"], "biome_ids": ["biome_highland_ridge"], "weight": 3, "blocks_movement": true},
-	{"family_id": "obstacle_rough_suncracked_stone", "display_name": "Suncracked Stone", "role": "obstacle", "terrain_ids": ["dirt", "sand", "lava"], "biome_ids": ["biome_rough_badlands", "biome_ash_lava_wastes"], "weight": 4, "blocks_movement": true},
-	{"family_id": "decor_snow_icegrass_ridge", "display_name": "Icegrass Ridge", "role": "decor", "terrain_ids": ["snow"], "biome_ids": ["biome_snow_frost_marches"], "weight": 4, "blocks_movement": true},
-	{"family_id": "obstacle_cavern_glasscap_stalagmites", "display_name": "Glasscap Stalagmites", "role": "obstacle", "terrain_ids": ["underground"], "biome_ids": ["biome_subterranean_underways"], "weight": 4, "blocks_movement": true},
+	{"family_id": "decor_grass_windgrass_tufts", "display_name": "Windgrass Tufts", "role": "decor", "terrain_ids": ["grass"], "biome_ids": ["biome_grasslands"], "weight": 5, "blocks_movement": true, "footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"}, "body_mask": [{"x": 0, "y": 0}]},
+	{"family_id": "decor_grass_saffron_bloom_patch", "display_name": "Saffron Bloom Patch", "role": "decor", "terrain_ids": ["grass"], "biome_ids": ["biome_grasslands"], "weight": 3, "blocks_movement": true, "footprint": {"width": 2, "height": 1, "anchor": "bottom_left", "tier": "small"}, "body_mask": [{"x": 0, "y": 0}, {"x": 1, "y": 0}]},
+	{"family_id": "obstacle_forest_fallen_silverlog", "display_name": "Fallen Silverlog", "role": "obstacle", "terrain_ids": ["rough"], "biome_ids": ["biome_deep_forest"], "weight": 5, "blocks_movement": true, "footprint": {"width": 2, "height": 1, "anchor": "bottom_left", "tier": "small"}, "body_mask": [{"x": 0, "y": 0}, {"x": 1, "y": 0}]},
+	{"family_id": "decor_forest_moonfern_bank", "display_name": "Moonfern Bank", "role": "decor", "terrain_ids": ["rough"], "biome_ids": ["biome_deep_forest"], "weight": 3, "blocks_movement": true, "footprint": {"width": 1, "height": 2, "anchor": "bottom_left", "tier": "small"}, "body_mask": [{"x": 0, "y": -1}, {"x": 0, "y": 0}]},
+	{"family_id": "obstacle_mire_sinkroot_cluster", "display_name": "Sinkroot Cluster", "role": "obstacle", "terrain_ids": ["dirt"], "biome_ids": ["biome_mire_fen"], "weight": 5, "blocks_movement": true, "footprint": {"width": 2, "height": 2, "anchor": "bottom_left", "tier": "medium"}, "body_mask": [{"x": 0, "y": -1}, {"x": 1, "y": -1}, {"x": 0, "y": 0}, {"x": 1, "y": 0}]},
+	{"family_id": "decor_mire_glowmoss_hummock", "display_name": "Glowmoss Hummock", "role": "decor", "terrain_ids": ["dirt"], "biome_ids": ["biome_mire_fen"], "weight": 3, "blocks_movement": true, "footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"}, "body_mask": [{"x": 0, "y": 0}]},
+	{"family_id": "obstacle_highland_slate_outcrop", "display_name": "Slate Outcrop", "role": "obstacle", "terrain_ids": ["rough"], "biome_ids": ["biome_highland_ridge"], "weight": 5, "blocks_movement": true, "footprint": {"width": 2, "height": 2, "anchor": "bottom_left", "tier": "medium"}, "body_mask": [{"x": 0, "y": -1}, {"x": 1, "y": -1}, {"x": 0, "y": 0}, {"x": 1, "y": 0}]},
+	{"family_id": "decor_highland_heather_cairn", "display_name": "Heather Cairn", "role": "decor", "terrain_ids": ["rough"], "biome_ids": ["biome_highland_ridge"], "weight": 3, "blocks_movement": true, "footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"}, "body_mask": [{"x": 0, "y": 0}]},
+	{"family_id": "obstacle_rough_suncracked_stone", "display_name": "Suncracked Stone", "role": "obstacle", "terrain_ids": ["dirt", "sand", "lava"], "biome_ids": ["biome_rough_badlands", "biome_ash_lava_wastes"], "weight": 4, "blocks_movement": true, "footprint": {"width": 2, "height": 1, "anchor": "bottom_left", "tier": "small"}, "body_mask": [{"x": 0, "y": 0}, {"x": 1, "y": 0}]},
+	{"family_id": "decor_snow_icegrass_ridge", "display_name": "Icegrass Ridge", "role": "decor", "terrain_ids": ["snow"], "biome_ids": ["biome_snow_frost_marches"], "weight": 4, "blocks_movement": true, "footprint": {"width": 1, "height": 2, "anchor": "bottom_left", "tier": "small"}, "body_mask": [{"x": 0, "y": -1}, {"x": 0, "y": 0}]},
+	{"family_id": "obstacle_cavern_glasscap_stalagmites", "display_name": "Glasscap Stalagmites", "role": "obstacle", "terrain_ids": ["underground"], "biome_ids": ["biome_subterranean_underways"], "weight": 4, "blocks_movement": true, "footprint": {"width": 2, "height": 2, "anchor": "bottom_left", "tier": "medium"}, "body_mask": [{"x": 0, "y": -1}, {"x": 1, "y": -1}, {"x": 0, "y": 0}, {"x": 1, "y": 0}]},
 ]
 const OBJECT_FOOTPRINT_CATALOG := [
 	{
@@ -3906,6 +3906,7 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 		var tolerance: int = _decoration_density_tolerance(raw_target)
 		var selected := []
 		var cursor := 0
+		var footprint_rejected_count := 0
 		while selected.size() < effective_target and cursor < candidates.size():
 			var candidate: Dictionary = candidates[cursor]
 			cursor += 1
@@ -3915,6 +3916,25 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 			var family: Dictionary = _decoration_family_for_cell(terrain_id, biome_id, seed_text, zone_id, int(candidate.get("x", 0)), int(candidate.get("y", 0)), selected.size())
 			if family.is_empty():
 				diagnostics.append(_decoration_diagnostic(zone_id, "missing_family", "no terrain-biased original decoration family resolved for %s" % terrain_id, true))
+				continue
+			var family_id := String(family.get("family_id", ""))
+			var family_catalog := _object_footprint_catalog_record_for_placement({
+				"kind": "decorative_obstacle",
+				"family_id": family_id,
+				"x": int(candidate.get("x", 0)),
+				"y": int(candidate.get("y", 0)),
+			})
+			if not _placement_candidate_satisfies_catalog(
+				int(candidate.get("x", 0)),
+				int(candidate.get("y", 0)),
+				zone_id,
+				zone_layout.get("surface_owner_grid", []),
+				terrain_rows,
+				staged_occupied,
+				family_catalog,
+				exclusion
+			):
+				footprint_rejected_count += 1
 				continue
 			var record_id := "decor_%s_%03d" % [zone_id, records.size() + 1]
 			var point := _point_dict(int(candidate.get("x", 0)), int(candidate.get("y", 0)))
@@ -3929,7 +3949,7 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 				"blocking_body": bool(family.get("blocks_movement", true)),
 				"visit_tile": {},
 				"approach_tiles": [],
-				"family_id": String(family.get("family_id", "")),
+				"family_id": family_id,
 				"display_name": String(family.get("display_name", "")),
 				"family_role": String(family.get("role", "")),
 				"terrain_id": terrain_id,
@@ -3955,9 +3975,18 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 			records.append(record)
 			selected.append(record)
 			if bool(family.get("blocks_movement", true)):
-				staged_occupied[key] = record_id
+				for body in record.get("body_tiles", []):
+					if body is Dictionary:
+						staged_occupied[_point_key(int(body.get("x", 0)), int(body.get("y", 0)))] = record_id
+		var footprint_capacity_limited := selected.size() < effective_target and cursor >= candidates.size() and footprint_rejected_count > 0
+		var validation_effective_target := selected.size() if footprint_capacity_limited else effective_target
 		if selected.size() < effective_target:
-			diagnostics.append(_decoration_diagnostic(zone_id, "density_target_underfilled", "zone selected %d of effective target %d" % [selected.size(), effective_target], true))
+			diagnostics.append(_decoration_diagnostic(
+				zone_id,
+				"footprint_capacity_limited" if footprint_capacity_limited else "density_target_underfilled",
+				"zone selected %d of effective target %d after %d footprint/body-mask rejections" % [selected.size(), effective_target, footprint_rejected_count],
+				not footprint_capacity_limited
+			))
 		zone_targets.append({
 			"zone_id": zone_id,
 			"role": String(zone.get("role", "")),
@@ -3968,10 +3997,13 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 			"eligible_cell_count": candidates.size(),
 			"raw_target": raw_target,
 			"effective_target": effective_target,
+			"validation_effective_target": validation_effective_target,
 			"placed_count": selected.size(),
 			"tolerance": tolerance,
-			"within_tolerance": abs(selected.size() - effective_target) <= tolerance,
-			"capacity_limited": raw_target > candidates.size(),
+			"within_tolerance": abs(selected.size() - validation_effective_target) <= tolerance,
+			"capacity_limited": raw_target > candidates.size() or footprint_capacity_limited,
+			"footprint_capacity_limited": footprint_capacity_limited,
+			"footprint_rejected_count": footprint_rejected_count,
 			"monster_reward_context": reward_context,
 			"family_ids_selected": _decoration_family_ids(selected),
 		})
@@ -4004,6 +4036,8 @@ static func _build_decoration_density_pass(normalized: Dictionary, zones: Array,
 		"summary": {
 			"zone_count": zone_targets.size(),
 			"record_count": records.size(),
+			"blocking_body_tile_total": _decoration_blocking_body_tile_total(records),
+			"multitile_decoration_count": _decoration_multitile_record_count(records),
 			"raw_target_total": _decoration_sum_zone_targets(zone_targets, "raw_target"),
 			"effective_target_total": _decoration_sum_zone_targets(zone_targets, "effective_target"),
 			"placed_total": _decoration_sum_zone_targets(zone_targets, "placed_count"),
@@ -4185,6 +4219,8 @@ static func _object_footprint_catalog_record_for_placement(record: Dictionary) -
 			continue
 		if kind != "" and kind in catalog.get("placement_kinds", []):
 			if _catalog_matches_object_or_family(catalog, object_id, family_id):
+				if kind == "decorative_obstacle":
+					return _decorative_obstacle_catalog_for_family(catalog, family_id)
 				return catalog
 			if object_id == "" and family_id == "":
 				return catalog
@@ -4192,10 +4228,29 @@ static func _object_footprint_catalog_record_for_placement(record: Dictionary) -
 		if not (catalog is Dictionary):
 			continue
 		if family_id != "" and family_id in catalog.get("family_ids", []):
+			if kind == "decorative_obstacle" or String(catalog.get("family_id", "")) == "decorative_obstacle":
+				return _decorative_obstacle_catalog_for_family(catalog, family_id)
 			return catalog
 		if object_id != "" and object_id in catalog.get("object_ids", []):
 			return catalog
 	return {}
+
+static func _decorative_obstacle_catalog_for_family(catalog: Dictionary, family_id: String) -> Dictionary:
+	var result: Dictionary = catalog.duplicate(true)
+	for family in DECORATION_OBJECT_FAMILIES:
+		if not (family is Dictionary) or String(family.get("family_id", "")) != family_id:
+			continue
+		var body_mask: Array = family.get("body_mask", [{"x": 0, "y": 0}])
+		var footprint: Dictionary = family.get("footprint", result.get("footprint", {})) if family.get("footprint", {}) is Dictionary else result.get("footprint", {})
+		result["family_id"] = family_id
+		result["display_name"] = String(family.get("display_name", result.get("display_name", "")))
+		result["footprint"] = footprint.duplicate(true)
+		result["runtime_footprint"] = footprint.duplicate(true)
+		result["body_mask"] = body_mask.duplicate(true)
+		result["runtime_body_mask"] = body_mask.duplicate(true)
+		result["family_body_mask_source"] = "terrain_biased_decoration_family_passability_mask"
+		return result
+	return result
 
 static func _authored_resource_producer_catalog_record_for_placement(record: Dictionary) -> Dictionary:
 	var kind := String(record.get("kind", ""))
@@ -5971,6 +6026,20 @@ static func _decoration_family_ids(records: Array) -> Array:
 	result.sort()
 	return result
 
+static func _decoration_blocking_body_tile_total(records: Array) -> int:
+	var total := 0
+	for record in records:
+		if record is Dictionary and bool(record.get("blocking_body", true)):
+			total += record.get("body_tiles", []).size()
+	return total
+
+static func _decoration_multitile_record_count(records: Array) -> int:
+	var count := 0
+	for record in records:
+		if record is Dictionary and record.get("body_tiles", []).size() > 1:
+			count += 1
+	return count
+
 static func _decoration_sum_zone_targets(zone_targets: Array, key: String) -> int:
 	var total := 0
 	for target in zone_targets:
@@ -5986,13 +6055,13 @@ static func _decoration_density_target_validation(zone_targets: Array) -> Dictio
 			failures.append("non-dictionary zone density target")
 			continue
 		var zone_id := String(target.get("zone_id", ""))
-		var effective_target := int(target.get("effective_target", 0))
+		var effective_target := int(target.get("validation_effective_target", target.get("effective_target", 0)))
 		var placed := int(target.get("placed_count", 0))
 		var tolerance := int(target.get("tolerance", 0))
 		if abs(placed - effective_target) > tolerance:
 			failures.append("zone %s placed %d outside effective target %d tolerance %d" % [zone_id, placed, effective_target, tolerance])
 		if bool(target.get("capacity_limited", false)):
-			warnings.append("zone %s decoration target was capacity limited by exclusions" % zone_id)
+			warnings.append("zone %s decoration target was capacity limited by exclusions or multi-tile footprint fit" % zone_id)
 	return {
 		"ok": failures.is_empty(),
 		"status": "pass" if failures.is_empty() else "fail",

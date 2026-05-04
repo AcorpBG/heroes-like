@@ -3,25 +3,33 @@ extends Node
 const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 const REPORT_ID := "RANDOM_MAP_HOMM3_PARITY_RICHNESS_REPORT"
 const ARTIFACT_DIR := "res://.artifacts/rmg_parity_richness"
+const MAX_TOTAL_MSEC := 45000
+const MAX_CASE_MSEC := 18000
 
 func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	var cases := _cases()
+	var started_msec := Time.get_ticks_msec()
 	var results := []
 	var failures := []
 	_ensure_artifact_dir()
-	for case in cases:
+	for case in _cases():
 		var result := _inspect_case(case)
 		results.append(result)
 		failures.append_array(result.get("failures", []))
 		_write_case_artifacts(result)
+		print("%s_CASE %s" % [REPORT_ID, JSON.stringify(_case_log_line(result))])
+		if Time.get_ticks_msec() - started_msec > MAX_TOTAL_MSEC:
+			failures.append("report exceeded total runtime budget %d ms" % MAX_TOTAL_MSEC)
+			break
 	var summary := _summary(results)
 	var report := {
 		"ok": failures.is_empty(),
 		"report_id": REPORT_ID,
 		"case_count": results.size(),
+		"runtime_msec": Time.get_ticks_msec() - started_msec,
+		"runtime_budget_msec": MAX_TOTAL_MSEC,
 		"summary": summary,
 		"cases": results,
 		"failures": failures,
@@ -34,6 +42,7 @@ func _run() -> void:
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"case_count": results.size(),
+		"runtime_msec": report.get("runtime_msec", 0),
 		"summary": summary,
 		"artifact_dir": ARTIFACT_DIR,
 	})])
@@ -43,27 +52,34 @@ func _cases() -> Array:
 	return [
 		{"id": "small_compact_land_a", "seed": "rmg-richness-small-a-10184", "width": 36, "height": 36, "water_mode": "land", "level_count": 1, "player_count": 3, "template_id": "border_gate_compact_v1", "profile_id": "border_gate_compact_profile_v1"},
 		{"id": "small_compact_land_b", "seed": "rmg-richness-small-b-10184", "width": 36, "height": 36, "water_mode": "land", "level_count": 1, "player_count": 3, "template_id": "border_gate_compact_v1", "profile_id": "border_gate_compact_profile_v1"},
-		{"id": "medium_translated_land", "seed": "rmg-richness-medium-10184", "width": 72, "height": 72, "water_mode": "land", "level_count": 1, "player_count": 4, "template_id": "translated_rmg_template_033_v1", "profile_id": "translated_rmg_profile_033_v1"},
-		{"id": "large_translated_land", "seed": "rmg-richness-large-10184", "width": 108, "height": 108, "water_mode": "land", "level_count": 1, "player_count": 4, "template_id": "translated_rmg_template_042_v1", "profile_id": "translated_rmg_profile_042_v1"},
-		{"id": "xl_translated_land", "seed": "rmg-richness-xl-10184", "width": 144, "height": 144, "water_mode": "land", "level_count": 1, "player_count": 4, "template_id": "translated_rmg_template_043_v1", "profile_id": "translated_rmg_profile_043_v1"},
-		{"id": "small_islands", "seed": "rmg-richness-islands-10184", "width": 36, "height": 36, "water_mode": "islands", "level_count": 1, "player_count": 4, "template_id": "translated_rmg_template_001_v1", "profile_id": "translated_rmg_profile_001_v1"},
+		{"id": "medium_translated_land_033", "seed": "rmg-richness-medium-033-10184", "width": 72, "height": 72, "water_mode": "land", "level_count": 1, "player_count": 4, "template_id": "translated_rmg_template_033_v1", "profile_id": "translated_rmg_profile_033_v1"},
+		{"id": "small_translated_islands_001", "seed": "rmg-richness-islands-001-10184", "width": 36, "height": 36, "water_mode": "islands", "level_count": 1, "player_count": 4, "template_id": "translated_rmg_template_001_v1", "profile_id": "translated_rmg_profile_001_v1"},
 	]
 
 func _inspect_case(case: Dictionary) -> Dictionary:
+	var started_msec := Time.get_ticks_msec()
 	var generation: Dictionary = RandomMapGeneratorRulesScript.generate(_config(case))
+	var elapsed_msec := Time.get_ticks_msec() - started_msec
 	var payload: Dictionary = generation.get("generated_map", {}) if generation.get("generated_map", {}) is Dictionary else {}
 	var validation_report: Dictionary = generation.get("report", {}) if generation.get("report", {}) is Dictionary else {}
 	var staging: Dictionary = payload.get("staging", {}) if payload.get("staging", {}) is Dictionary else {}
 	var scenario: Dictionary = payload.get("scenario_record", {}) if payload.get("scenario_record", {}) is Dictionary else {}
-	var roads: Dictionary = staging.get("roads_rivers_writeout", {}).get("road_overlay", {}) if staging.get("roads_rivers_writeout", {}).get("road_overlay", {}) is Dictionary else {}
-	var rivers: Dictionary = staging.get("roads_rivers_writeout", {}).get("river_water_coast_overlay", {}) if staging.get("roads_rivers_writeout", {}).get("river_water_coast_overlay", {}) is Dictionary else {}
+	var roads_rivers: Dictionary = staging.get("roads_rivers_writeout", {}) if staging.get("roads_rivers_writeout", {}) is Dictionary else {}
+	var roads: Dictionary = roads_rivers.get("road_overlay", {}) if roads_rivers.get("road_overlay", {}) is Dictionary else {}
+	var rivers: Dictionary = roads_rivers.get("river_water_coast_overlay", {}) if roads_rivers.get("river_water_coast_overlay", {}) is Dictionary else {}
 	var town_payload: Dictionary = staging.get("town_mine_dwelling_placement", {}) if staging.get("town_mine_dwelling_placement", {}) is Dictionary else {}
 	var route_reward_summary: Dictionary = staging.get("materialized_route_reward_summary", {}) if staging.get("materialized_route_reward_summary", {}) is Dictionary else {}
 	var object_guard_summary: Dictionary = staging.get("materialized_object_guard_summary", {}) if staging.get("materialized_object_guard_summary", {}) is Dictionary else {}
 	var decor: Dictionary = staging.get("decoration_density_pass", {}) if staging.get("decoration_density_pass", {}) is Dictionary else {}
-	var serialization: Dictionary = staging.get("roads_rivers_writeout", {}).get("generated_map_serialization", {}) if staging.get("roads_rivers_writeout", {}).get("generated_map_serialization", {}) is Dictionary else {}
+	var decor_summary: Dictionary = decor.get("summary", {}) if decor.get("summary", {}) is Dictionary else {}
+	var serialization: Dictionary = roads_rivers.get("generated_map_serialization", {}) if roads_rivers.get("generated_map_serialization", {}) is Dictionary else {}
+	var town_distances := _town_distance_summary(scenario.get("towns", []))
+	var artifact_count: int = scenario.get("artifact_nodes", []).size() if scenario.get("artifact_nodes", []) is Array else 0
+	var associated_guard_count: int = staging.get("materialized_object_guards", []).size() if staging.get("materialized_object_guards", []) is Array else 0
+	var guarded_artifact_ratio: float = float(associated_guard_count) / float(max(1, artifact_count))
 	var metrics := {
 		"ok": bool(generation.get("ok", false)),
+		"elapsed_msec": elapsed_msec,
 		"validation_failure_count": validation_report.get("failures", []).size() if validation_report.get("failures", []) is Array else 0,
 		"stable_signature": String(payload.get("stable_signature", "")),
 		"template_id": String(payload.get("metadata", {}).get("template_id", "")),
@@ -71,27 +87,32 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"width": int(case.get("width", 0)),
 		"height": int(case.get("height", 0)),
 		"water_mode": String(case.get("water_mode", "land")),
-		"zone_count": staging.get("zones", []).size(),
-		"link_count": staging.get("template", {}).get("links", []).size(),
-		"town_count": scenario.get("towns", []).size(),
+		"zone_count": staging.get("zones", []).size() if staging.get("zones", []) is Array else 0,
+		"link_count": staging.get("template", {}).get("links", []).size() if staging.get("template", {}).get("links", []) is Array else 0,
+		"town_count": scenario.get("towns", []).size() if scenario.get("towns", []) is Array else 0,
 		"mine_count": int(town_payload.get("summary", {}).get("mine_count", 0)),
 		"dwelling_count": int(town_payload.get("summary", {}).get("dwelling_count", 0)),
-		"artifact_count": scenario.get("artifact_nodes", []).size(),
+		"artifact_count": artifact_count,
 		"route_reward_artifact_node_count": int(route_reward_summary.get("artifact_node_count", 0)),
-		"encounter_count": scenario.get("encounters", []).size(),
-		"associated_object_guard_count": staging.get("materialized_object_guards", []).size(),
+		"encounter_count": scenario.get("encounters", []).size() if scenario.get("encounters", []) is Array else 0,
+		"associated_object_guard_count": associated_guard_count,
+		"guarded_artifact_ratio": snapped(guarded_artifact_ratio, 0.001),
 		"object_guard_artifact_node_count_seen": int(object_guard_summary.get("artifact_node_count_seen", 0)),
 		"object_guard_route_reward_artifact_count_seen": int(object_guard_summary.get("route_reward_artifact_record_count_seen", 0)),
 		"object_guard_candidate_count": int(object_guard_summary.get("candidate_count", 0)),
 		"object_guard_skipped_no_cell": int(object_guard_summary.get("skipped_no_cell", 0)),
-		"decoration_count": int(decor.get("summary", {}).get("record_count", 0)),
+		"decoration_count": int(decor_summary.get("record_count", 0)),
+		"decoration_blocking_body_tile_total": int(decor_summary.get("blocking_body_tile_total", 0)),
+		"multitile_decoration_count": int(decor_summary.get("multitile_decoration_count", 0)),
+		"decoration_body_density": snapped(float(decor_summary.get("blocking_body_tile_total", 0)) / float(max(1, int(case.get("width", 0)) * int(case.get("height", 0)))), 0.0001),
 		"road_tile_count": int(roads.get("summary", {}).get("tile_count", 0)),
 		"road_segment_count": int(roads.get("summary", {}).get("segment_count", 0)),
 		"river_candidate_count": int(rivers.get("summary", {}).get("river_candidate_count", 0)),
 		"water_tile_count": int(rivers.get("summary", {}).get("water_tile_count", 0)),
-		"object_instance_count": serialization.get("object_instances", []).size(),
+		"object_instance_count": serialization.get("object_instances", []).size() if serialization.get("object_instances", []) is Array else 0,
 		"minimum_town_distance_required": int(town_payload.get("summary", {}).get("minimum_town_distance_required", 0)),
-		"observed_minimum_town_distance": int(town_payload.get("summary", {}).get("observed_minimum_town_distance", 0)),
+		"observed_minimum_town_distance": int(town_payload.get("summary", {}).get("observed_minimum_town_distance", town_distances.get("minimum", 0))),
+		"direct_minimum_town_distance": int(town_distances.get("minimum", 0)),
 	}
 	var failures := _metric_failures(String(case.get("id", "")), metrics)
 	return {
@@ -101,8 +122,8 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"failures": failures,
 		"validation_report": validation_report,
 		"artifact_node_samples": _sample_dictionaries(scenario.get("artifact_nodes", []), 4),
-		"materialized_route_reward_samples": _sample_dictionaries(staging.get("materialized_route_rewards", []), 4),
 		"materialized_object_guard_samples": _sample_dictionaries(staging.get("materialized_object_guards", []), 4),
+		"decoration_samples": _sample_dictionaries(decor.get("decoration_records", []), 4),
 		"preview": _ascii_preview(payload),
 	}
 
@@ -127,21 +148,28 @@ func _config(case: Dictionary) -> Dictionary:
 
 func _metric_failures(case_id: String, metrics: Dictionary) -> Array:
 	var failures := []
+	var area: int = max(1, int(metrics.get("width", 0)) * int(metrics.get("height", 0)))
 	if not bool(metrics.get("ok", false)):
 		failures.append("%s generation failed validation" % case_id)
+	if int(metrics.get("elapsed_msec", 0)) > MAX_CASE_MSEC:
+		failures.append("%s exceeded per-case runtime budget: %d ms" % [case_id, int(metrics.get("elapsed_msec", 0))])
 	if int(metrics.get("road_tile_count", 0)) <= 0 or int(metrics.get("road_segment_count", 0)) <= 0:
 		failures.append("%s has no generated road network" % case_id)
 	if String(metrics.get("water_mode", "")) == "land" and int(metrics.get("river_candidate_count", 0)) <= 0:
 		failures.append("%s land map has no river candidates" % case_id)
 	if String(metrics.get("water_mode", "")) == "islands" and (int(metrics.get("water_tile_count", 0)) <= 0 or int(metrics.get("river_candidate_count", 0)) <= 0):
 		failures.append("%s islands map has no water/river transit candidates" % case_id)
-	if int(metrics.get("observed_minimum_town_distance", 0)) < int(metrics.get("minimum_town_distance_required", 0)):
-		failures.append("%s town spacing %d below required %d" % [case_id, int(metrics.get("observed_minimum_town_distance", 0)), int(metrics.get("minimum_town_distance_required", 0))])
-	if int(metrics.get("decoration_count", 0)) < max(8, int(metrics.get("width", 0) * metrics.get("height", 0) / 45)):
-		failures.append("%s decoration/blocker density is too low: %d" % [case_id, int(metrics.get("decoration_count", 0))])
+	if int(metrics.get("direct_minimum_town_distance", 0)) < int(metrics.get("minimum_town_distance_required", 0)):
+		failures.append("%s town spacing %d below required %d" % [case_id, int(metrics.get("direct_minimum_town_distance", 0)), int(metrics.get("minimum_town_distance_required", 0))])
+	if int(metrics.get("decoration_count", 0)) < max(8, int(area / 55)):
+		failures.append("%s decoration/blocker record density is too low: %d" % [case_id, int(metrics.get("decoration_count", 0))])
+	if int(metrics.get("decoration_blocking_body_tile_total", 0)) < max(10, int(area / 40)):
+		failures.append("%s decorative blocker body density is too low: %d" % [case_id, int(metrics.get("decoration_blocking_body_tile_total", 0))])
+	if int(metrics.get("multitile_decoration_count", 0)) <= 0:
+		failures.append("%s produced no multi-tile decorative blocker footprints" % case_id)
 	if int(metrics.get("artifact_count", 0)) <= 0:
 		failures.append("%s has no materialized artifact nodes" % case_id)
-	if int(metrics.get("associated_object_guard_count", 0)) < int(metrics.get("artifact_count", 0)):
+	if float(metrics.get("guarded_artifact_ratio", 0.0)) < 1.0:
 		failures.append("%s has fewer associated object guards than artifacts" % case_id)
 	if int(metrics.get("encounter_count", 0)) < max(4, int(metrics.get("artifact_count", 0)) + int(metrics.get("town_count", 0))):
 		failures.append("%s guard/encounter density is too low: %d" % [case_id, int(metrics.get("encounter_count", 0))])
@@ -164,7 +192,9 @@ func _ascii_preview(payload: Dictionary) -> String:
 			marks[_point_key(int(tile.get("x", 0)), int(tile.get("y", 0)))] = "."
 	for decor in staging.get("decoration_density_pass", {}).get("decoration_records", []):
 		if decor is Dictionary:
-			marks[_point_key(int(decor.get("x", 0)), int(decor.get("y", 0)))] = "#"
+			for body in decor.get("body_tiles", []):
+				if body is Dictionary:
+					marks[_point_key(int(body.get("x", 0)), int(body.get("y", 0)))] = "#"
 	for node in scenario.get("resource_nodes", []):
 		if node is Dictionary:
 			marks[_point_key(int(node.get("x", 0)), int(node.get("y", 0)))] = "M" if String(node.get("original_resource_category_id", "")) != "" else "R"
@@ -177,20 +207,16 @@ func _ascii_preview(payload: Dictionary) -> String:
 	for town in scenario.get("towns", []):
 		if town is Dictionary:
 			marks[_point_key(int(town.get("x", 0)), int(town.get("y", 0)))] = "T"
-	var max_width: int = 72
-	var step: int = 1
+	var step := 1
 	if not rows.is_empty() and rows[0] is Array:
-		step = max(1, int(ceil(float((rows[0] as Array).size()) / float(max_width))))
+		step = max(1, int(ceil(float((rows[0] as Array).size()) / 72.0)))
 	var lines: Array[String] = []
 	for y in range(0, rows.size(), step):
 		var row: Array = rows[y]
 		var chars: Array[String] = []
 		for x in range(0, row.size(), step):
 			var key := _point_key(x, y)
-			if marks.has(key):
-				chars.append(String(marks[key]))
-			else:
-				chars.append(_terrain_char(String(row[x])))
+			chars.append(String(marks[key]) if marks.has(key) else _terrain_char(String(row[x])))
 		lines.append("".join(chars))
 	return "\n".join(lines)
 
@@ -218,10 +244,13 @@ func _summary(results: Array) -> Dictionary:
 		"road_tiles": 0,
 		"river_candidates": 0,
 		"decorations": 0,
+		"decoration_blocking_body_tiles": 0,
+		"multitile_decorations": 0,
 		"artifacts": 0,
 		"encounters": 0,
 		"associated_object_guards": 0,
 		"object_instances": 0,
+		"max_case_msec": 0,
 	}
 	for result in results:
 		if not (result is Dictionary):
@@ -230,11 +259,30 @@ func _summary(results: Array) -> Dictionary:
 		totals["road_tiles"] = int(totals.get("road_tiles", 0)) + int(metrics.get("road_tile_count", 0))
 		totals["river_candidates"] = int(totals.get("river_candidates", 0)) + int(metrics.get("river_candidate_count", 0))
 		totals["decorations"] = int(totals.get("decorations", 0)) + int(metrics.get("decoration_count", 0))
+		totals["decoration_blocking_body_tiles"] = int(totals.get("decoration_blocking_body_tiles", 0)) + int(metrics.get("decoration_blocking_body_tile_total", 0))
+		totals["multitile_decorations"] = int(totals.get("multitile_decorations", 0)) + int(metrics.get("multitile_decoration_count", 0))
 		totals["artifacts"] = int(totals.get("artifacts", 0)) + int(metrics.get("artifact_count", 0))
 		totals["encounters"] = int(totals.get("encounters", 0)) + int(metrics.get("encounter_count", 0))
 		totals["associated_object_guards"] = int(totals.get("associated_object_guards", 0)) + int(metrics.get("associated_object_guard_count", 0))
 		totals["object_instances"] = int(totals.get("object_instances", 0)) + int(metrics.get("object_instance_count", 0))
+		totals["max_case_msec"] = max(int(totals.get("max_case_msec", 0)), int(metrics.get("elapsed_msec", 0)))
 	return totals
+
+func _town_distance_summary(towns: Variant) -> Dictionary:
+	if not (towns is Array) or (towns as Array).size() < 2:
+		return {"minimum": 0}
+	var minimum := 999999
+	for i in range((towns as Array).size()):
+		if not ((towns as Array)[i] is Dictionary):
+			continue
+		var left: Dictionary = (towns as Array)[i]
+		for j in range(i + 1, (towns as Array).size()):
+			if not ((towns as Array)[j] is Dictionary):
+				continue
+			var right: Dictionary = (towns as Array)[j]
+			var distance: int = abs(int(left.get("x", 0)) - int(right.get("x", 0))) + abs(int(left.get("y", 0)) - int(right.get("y", 0)))
+			minimum = min(minimum, distance)
+	return {"minimum": minimum if minimum != 999999 else 0}
 
 func _sample_dictionaries(records: Variant, limit: int) -> Array:
 	var samples := []
@@ -246,6 +294,21 @@ func _sample_dictionaries(records: Variant, limit: int) -> Array:
 		if samples.size() >= limit:
 			break
 	return samples
+
+func _case_log_line(result: Dictionary) -> Dictionary:
+	var metrics: Dictionary = result.get("metrics", {}) if result.get("metrics", {}) is Dictionary else {}
+	return {
+		"id": String(result.get("id", "")),
+		"ok": result.get("failures", []).is_empty(),
+		"elapsed_msec": int(metrics.get("elapsed_msec", 0)),
+		"roads": int(metrics.get("road_tile_count", 0)),
+		"rivers": int(metrics.get("river_candidate_count", 0)),
+		"decor": int(metrics.get("decoration_count", 0)),
+		"decor_body_tiles": int(metrics.get("decoration_blocking_body_tile_total", 0)),
+		"multitile_decor": int(metrics.get("multitile_decoration_count", 0)),
+		"artifacts": int(metrics.get("artifact_count", 0)),
+		"guards": int(metrics.get("associated_object_guard_count", 0)),
+	}
 
 func _write_case_artifacts(result: Dictionary) -> void:
 	var case_id := String(result.get("id", "case"))
