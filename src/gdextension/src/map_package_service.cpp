@@ -2933,6 +2933,10 @@ Dictionary find_decoration_point(const Dictionary &zone, int32_t ordinal, const 
 	return Dictionary();
 }
 
+int32_t zone_value_budget_for_zone(const Dictionary &normalized, const Dictionary &zone);
+String value_tier_for_amount(int32_t value);
+Dictionary reward_value_profile_for_zone(const Dictionary &normalized, const Dictionary &zone, int32_t reward_index, int32_t ordinal);
+void apply_reward_value_profile(Dictionary &family, const Dictionary &profile, int32_t ordinal);
 void append_object_placement(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const Dictionary &road_network, const Dictionary &zone_layout);
 
 int32_t append_decoration_placements(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &road_network, int32_t ordinal_start) {
@@ -2974,6 +2978,12 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	const String zone_id = String(zone.get("id", ""));
 	const String terrain_id = terrain_id_for_zone(zone);
 	Dictionary family = object_family_record(kind, ordinal, terrain_id);
+	Dictionary reward_value_profile;
+	if (kind == "reward_reference") {
+		const int32_t reward_index = int32_t(point.get("native_reward_index", ordinal));
+		reward_value_profile = reward_value_profile_for_zone(normalized, zone, reward_index, ordinal);
+		apply_reward_value_profile(family, reward_value_profile, ordinal);
+	}
 	const int32_t x = int32_t(point.get("x", 0));
 	const int32_t y = int32_t(point.get("y", 0));
 	const String placement_id = "native_rmg_" + kind + "_" + zone_id + "_" + slot_id_2(ordinal + 1);
@@ -3018,6 +3028,7 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	placement["category_id"] = family.get("category_id", kind);
 	placement["zone_id"] = zone_id;
 	placement["zone_role"] = zone.get("role", "");
+	placement["zone_base_size"] = zone.get("base_size", 0);
 	placement["faction_id"] = zone.get("faction_id", "");
 	placement["owner_slot"] = zone.get("owner_slot", Variant());
 	placement["player_slot"] = zone.get("player_slot", Variant());
@@ -3052,6 +3063,16 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	zone_proximity["manhattan_distance_to_anchor"] = std::abs(x - int32_t(anchor.get("x", x))) + std::abs(y - int32_t(anchor.get("y", y)));
 	zone_proximity["owner_grid_signature"] = zone_layout.get("signature", "");
 	placement["zone_proximity"] = zone_proximity;
+	if (kind == "resource_site" || kind == "mine" || kind == "neutral_dwelling" || kind == "reward_reference") {
+		placement["zone_value_budget"] = zone_value_budget_for_zone(normalized, zone);
+		placement["zone_value_tier"] = value_tier_for_amount(int32_t(placement["zone_value_budget"]));
+		placement["homm3_re_budget_provenance"] = "derived_from_catalog_zone_treasure_bands_and_original_content_object_family";
+	}
+	if (kind == "reward_reference") {
+		placement["reward_value_profile"] = reward_value_profile;
+		placement["reward_index_in_zone"] = point.get("native_reward_index", ordinal);
+		placement["reward_target_in_zone"] = point.get("native_reward_target", 0);
+	}
 	placement["bounds_status"] = "in_bounds";
 	placement["occupancy_status"] = "primary_tile_reserved";
 	placement["materialization_state"] = "staged_object_record_only_no_gameplay_adoption";
@@ -3279,6 +3300,168 @@ int32_t map_area_scale(const Dictionary &normalized) {
 	return std::max(1, (width * height) / 1296);
 }
 
+Array valid_treasure_bands_for_zone(const Dictionary &zone) {
+	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+	Array source_bands = metadata.get("treasure_bands", Array());
+	Array bands;
+	for (int64_t index = 0; index < source_bands.size(); ++index) {
+		if (Variant(source_bands[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary band = source_bands[index];
+		const int32_t low = int32_t(band.get("low", 0));
+		const int32_t high = int32_t(band.get("high", 0));
+		const int32_t density = int32_t(band.get("density", 0));
+		if (low < 100 || high < low || density <= 0) {
+			continue;
+		}
+		Dictionary normalized_band;
+		normalized_band["low"] = low;
+		normalized_band["high"] = high;
+		normalized_band["density"] = density;
+		normalized_band["source_index"] = int32_t(index);
+		bands.append(normalized_band);
+	}
+	if (!bands.is_empty()) {
+		return bands;
+	}
+
+	const String role = String(zone.get("role", ""));
+	Dictionary fallback;
+	fallback["low"] = role.contains("start") ? 300 : 500;
+	fallback["high"] = role.contains("start") ? 1800 : 3000;
+	fallback["density"] = role.contains("start") ? 4 : 6;
+	fallback["source_index"] = -1;
+	fallback["fallback_source"] = "native_zone_richness_floor";
+	bands.append(fallback);
+	return bands;
+}
+
+int32_t zone_value_budget_for_zone(const Dictionary &normalized, const Dictionary &zone) {
+	Array bands = valid_treasure_bands_for_zone(zone);
+	double weighted_total = 0.0;
+	int32_t density_total = 0;
+	for (int64_t index = 0; index < bands.size(); ++index) {
+		Dictionary band = bands[index];
+		const int32_t density = std::max(0, int32_t(band.get("density", 0)));
+		const int32_t midpoint = (int32_t(band.get("low", 0)) + int32_t(band.get("high", 0))) / 2;
+		weighted_total += double(midpoint) * double(density);
+		density_total += density;
+	}
+	if (density_total <= 0) {
+		return 0;
+	}
+	const double scale = std::sqrt(double(map_area_scale(normalized))) / 3.0;
+	return std::max(0, int32_t(std::llround(weighted_total * scale)));
+}
+
+String value_tier_for_amount(int32_t value) {
+	if (value >= 10000) {
+		return "relic";
+	}
+	if (value >= 6000) {
+		return "major";
+	}
+	if (value >= 2500) {
+		return "medium";
+	}
+	return "minor";
+}
+
+Dictionary reward_value_profile_for_zone(const Dictionary &normalized, const Dictionary &zone, int32_t reward_index, int32_t ordinal) {
+	Array bands = valid_treasure_bands_for_zone(zone);
+	int32_t density_total = 0;
+	for (int64_t index = 0; index < bands.size(); ++index) {
+		density_total += std::max(0, int32_t(Dictionary(bands[index]).get("density", 0)));
+	}
+	const int32_t slot = density_total <= 0 ? 0 : std::abs(reward_index) % density_total;
+	int32_t cursor = 0;
+	Dictionary selected = bands.is_empty() ? Dictionary() : Dictionary(bands[0]);
+	for (int64_t index = 0; index < bands.size(); ++index) {
+		Dictionary band = bands[index];
+		cursor += std::max(0, int32_t(band.get("density", 0)));
+		if (slot < cursor) {
+			selected = band;
+			break;
+		}
+	}
+	const int32_t low = std::max(100, int32_t(selected.get("low", 500)));
+	const int32_t high = std::max(low, int32_t(selected.get("high", low)));
+	const uint32_t span = uint32_t(std::max(1, high - low + 1));
+	const String seed_key = String(normalized.get("normalized_seed", "0")) + String(":reward_value:") + String(zone.get("id", "")) + String(":") + String::num_int64(reward_index) + String(":") + String::num_int64(ordinal);
+	const int32_t raw_value = low + int32_t(hash32_int(seed_key) % span);
+	const int32_t snapped_value = std::max(low, std::min(high, ((raw_value + 25) / 50) * 50));
+	Dictionary profile;
+	profile["source_model"] = "HoMM3_RMG_zone_treasure_band_low_high_density_translated_to_original_content";
+	profile["reward_index"] = reward_index;
+	profile["source_band_index"] = selected.get("source_index", -1);
+	profile["band_low"] = low;
+	profile["band_high"] = high;
+	profile["band_density"] = selected.get("density", 0);
+	profile["reward_value"] = snapped_value;
+	profile["reward_value_tier"] = value_tier_for_amount(snapped_value);
+	profile["zone_value_budget"] = zone_value_budget_for_zone(normalized, zone);
+	profile["zone_value_tier"] = value_tier_for_amount(int32_t(profile["zone_value_budget"]));
+	profile["selection_slot"] = slot;
+	profile["selection_density_total"] = density_total;
+	return profile;
+}
+
+void apply_reward_value_profile(Dictionary &family, const Dictionary &profile, int32_t ordinal) {
+	const int32_t value = int32_t(profile.get("reward_value", family.get("reward_value", 0)));
+	const String tier = String(profile.get("reward_value_tier", value_tier_for_amount(value)));
+	family["reward_value"] = value;
+	family["guard_base_value"] = std::max(250, std::min(30000, int32_t(std::llround(double(value) * (tier == "relic" ? 0.75 : (tier == "major" ? 0.68 : (tier == "medium" ? 0.58 : 0.35)))))));
+	family["reward_value_tier"] = tier;
+	family["zone_value_budget"] = profile.get("zone_value_budget", 0);
+	family["zone_value_tier"] = profile.get("zone_value_tier", "");
+	family["homm3_re_value_source_model"] = profile.get("source_model", "");
+	family["homm3_re_reward_band_low"] = profile.get("band_low", 0);
+	family["homm3_re_reward_band_high"] = profile.get("band_high", 0);
+	family["homm3_re_reward_band_density"] = profile.get("band_density", 0);
+	family["homm3_re_reward_band_source_index"] = profile.get("source_band_index", -1);
+	family["homm3_re_reward_selection_slot"] = profile.get("selection_slot", 0);
+	family["homm3_re_reward_selection_density_total"] = profile.get("selection_density_total", 0);
+
+	if (tier == "relic" || tier == "major") {
+		static constexpr const char *ARTIFACT_IDS[] = {"artifact_bastion_gorget", "artifact_warcrest_pennon", "artifact_milepost_lantern", "artifact_quarry_tally_rod"};
+		const int32_t index = ordinal % 4;
+		family.erase("spell_id");
+		family["family_id"] = tier == "relic" ? "relic_artifact_cache" : "major_artifact_cache";
+		family["object_family_id"] = family["family_id"];
+		family["category_id"] = "artifact";
+		family["reward_category"] = "artifact";
+		family["reward_source_bucket"] = tier == "relic" ? "top_treasure_band_artifact" : "high_treasure_band_artifact";
+		family["object_id"] = ARTIFACT_IDS[index];
+		family["artifact_id"] = ARTIFACT_IDS[index];
+		family["site_id"] = "";
+		family["guarded_policy"] = "guarded_required";
+	} else if (tier == "medium") {
+		family.erase("artifact_id");
+		family.erase("spell_id");
+		family["family_id"] = "guarded_reward_cache";
+		family["object_family_id"] = "guarded_reward_cache";
+		family["category_id"] = "guarded_cache";
+		family["reward_category"] = "guarded_cache";
+		family["reward_source_bucket"] = "middle_treasure_band_guarded_cache";
+		family["object_id"] = ordinal % 2 == 0 ? "object_waystone_cache" : "object_ore_crates";
+		family["site_id"] = "site_waystone_cache";
+		family["guarded_policy"] = "guarded_required";
+	} else {
+		family.erase("artifact_id");
+		family.erase("spell_id");
+		family["family_id"] = "reward_cache_small";
+		family["object_family_id"] = "reward_cache_small";
+		family["category_id"] = ordinal % 2 == 0 ? "resource_cache" : "build_resource_cache";
+		family["reward_category"] = family["category_id"];
+		family["reward_source_bucket"] = "low_treasure_band_resource_cache";
+		family["object_id"] = ordinal % 2 == 0 ? "object_waystone_cache" : "object_wood_wagon";
+		family["site_id"] = ordinal % 2 == 0 ? "site_waystone_cache" : "site_wood_wagon";
+		family["guarded_policy"] = "unguarded_or_light_guard_allowed";
+	}
+	family["purpose"] = "zone_reward_value_budget_materialization";
+}
+
 int32_t catalog_zone_mine_target(const Dictionary &normalized, const Dictionary &zone) {
 	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
 	Dictionary requirements = metadata.get("mine_requirements", metadata.get("resource_category_requirements", Dictionary()));
@@ -3295,8 +3478,7 @@ int32_t catalog_zone_mine_target(const Dictionary &normalized, const Dictionary 
 }
 
 int32_t catalog_zone_reward_target(const Dictionary &normalized, const Dictionary &zone) {
-	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
-	Array bands = metadata.get("treasure_bands", Array());
+	Array bands = valid_treasure_bands_for_zone(zone);
 	int32_t density_total = 0;
 	for (int64_t index = 0; index < bands.size(); ++index) {
 		if (Variant(bands[index]).get_type() == Variant::DICTIONARY) {
@@ -3398,16 +3580,22 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 			const int32_t dwelling_target = catalog_zone_dwelling_target(normalized, zone);
 			for (int32_t mine_index = 0; mine_index < mine_target; ++mine_index) {
 				Dictionary point = object_point_for_zone_index(zone, ordinal, mine_index / 3, normalized, owner_grid, occupied, width, height);
+				point["native_mine_index"] = mine_index;
+				point["native_mine_target"] = mine_target;
 				append_object_placement(placements, occupied, normalized, zone, point, "mine", ordinal, road_network, zone_layout);
 				++ordinal;
 			}
 			for (int32_t dwelling_index = 0; dwelling_index < dwelling_target; ++dwelling_index) {
 				Dictionary point = object_point_for_zone_index(zone, ordinal, 2 + dwelling_index, normalized, owner_grid, occupied, width, height);
+				point["native_dwelling_index"] = dwelling_index;
+				point["native_dwelling_target"] = dwelling_target;
 				append_object_placement(placements, occupied, normalized, zone, point, "neutral_dwelling", ordinal, road_network, zone_layout);
 				++ordinal;
 			}
 			for (int32_t reward_index = 0; reward_index < reward_target; ++reward_index) {
 				Dictionary point = object_point_for_zone_index(zone, ordinal, 1 + reward_index / 4, normalized, owner_grid, occupied, width, height);
+				point["native_reward_index"] = reward_index;
+				point["native_reward_target"] = reward_target;
 				append_object_placement(placements, occupied, normalized, zone, point, "reward_reference", ordinal, road_network, zone_layout);
 				++ordinal;
 			}
@@ -3849,11 +4037,19 @@ Dictionary guard_record_at_point(const Dictionary &normalized, const Dictionary 
 	record["protected_object_placement_id"] = target.get("protected_object_placement_id", "");
 	record["protected_object_kind"] = target.get("protected_object_kind", "");
 	record["guarded_object_kind"] = target.get("protected_object_kind", "");
+	record["guarded_reward_value"] = target.get("protected_reward_value", 0);
+	record["guarded_reward_value_tier"] = target.get("protected_reward_value_tier", "");
+	record["guarded_reward_category"] = target.get("protected_reward_category", "");
+	record["guard_reward_value_ratio"] = int32_t(target.get("protected_reward_value", 0)) > 0 ? double(guard_value) / double(int32_t(target.get("protected_reward_value", 1))) : 0.0;
+	record["protected_zone_value_budget"] = target.get("protected_zone_value_budget", 0);
+	record["protected_zone_value_tier"] = target.get("protected_zone_value_tier", "");
+	record["guard_reward_relation_source"] = int32_t(target.get("protected_reward_value", 0)) > 0 ? "guard_value_scaled_from_zone_reward_value" : "guard_value_from_route_or_site_baseline";
 	record["guarded_artifact_id"] = target.get("guarded_artifact_id", "");
 	record["guarded_site_id"] = target.get("guarded_site_id", "");
 	record["guarded_object_point"] = target.get("guarded_object_point", Dictionary());
 	record["guard_distance"] = target.get("guard_distance", 0);
 	record["adjacent_to_guarded_object"] = target.get("adjacent_to_guarded_object", false);
+	record["near_guarded_object"] = int32_t(target.get("guard_distance", 0)) <= 20;
 	record["road_proximity"] = nearest_road_proximity(x, y, road_network);
 	Dictionary zone_proximity;
 	zone_proximity["zone_anchor"] = anchor;
@@ -3939,7 +4135,7 @@ int32_t object_guard_priority(const Dictionary &object) {
 	if (kind == "neutral_dwelling") {
 		return 2;
 	}
-	if (family_id == "guarded_reward_cache") {
+	if (family_id == "guarded_reward_cache" || (kind == "reward_reference" && int32_t(object.get("reward_value", 0)) >= 2500)) {
 		return 3;
 	}
 	return 99;
@@ -3994,6 +4190,42 @@ Dictionary object_guard_point_for_target(const Dictionary &object, const String 
 			}
 		}
 		return point_record(x, y);
+	}
+	for (int32_t radius = 2; radius <= 10; ++radius) {
+		for (int32_t dy = -radius; dy <= radius; ++dy) {
+			for (int32_t dx = -radius; dx <= radius; ++dx) {
+				if (std::max(std::abs(dx), std::abs(dy)) != radius) {
+					continue;
+				}
+				const int32_t x = ox + dx;
+				const int32_t y = oy + dy;
+				if (x < 1 || y < 1 || x >= width - 1 || y >= height - 1 || occupied.has(point_key(x, y))) {
+					continue;
+				}
+				if (!zone_id.is_empty() && y >= 0 && y < owner_grid.size()) {
+					Array row = owner_grid[y];
+					if (x >= 0 && x < row.size() && String(row[x]) != zone_id) {
+						continue;
+					}
+				}
+				return point_record(x, y);
+			}
+		}
+	}
+	for (int32_t radius = 2; radius <= 10; ++radius) {
+		for (int32_t dy = -radius; dy <= radius; ++dy) {
+			for (int32_t dx = -radius; dx <= radius; ++dx) {
+				if (std::max(std::abs(dx), std::abs(dy)) != radius) {
+					continue;
+				}
+				const int32_t x = ox + dx;
+				const int32_t y = oy + dy;
+				if (x < 1 || y < 1 || x >= width - 1 || y >= height - 1 || occupied.has(point_key(x, y))) {
+					continue;
+				}
+				return point_record(x, y);
+			}
+		}
 	}
 	return find_object_point(ox + 1, oy, zone_id, owner_grid, occupied, width, height);
 }
@@ -4136,13 +4368,22 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			Dictionary zone = zone_by_id(zones, zone_id);
 			Dictionary point = object_guard_point_for_target(object, zone_id, owner_grid, occupied, width, height);
 			int32_t guard_value = int32_t(object.get("guard_base_value", kind == "neutral_dwelling" ? 700 : 450));
+			const int32_t reward_value = std::max(0, int32_t(object.get("reward_value", 0)));
+			if (reward_value > 0) {
+				const double relation = reward_value >= 10000 ? 0.75 : (reward_value >= 6000 ? 0.68 : (reward_value >= 2500 ? 0.58 : 0.35));
+				guard_value = std::max(guard_value, int32_t(std::llround(double(reward_value) * relation)));
+			}
 			if (!String(object.get("artifact_id", "")).is_empty()) {
 				guard_value = std::max(guard_value, 1800);
 			}
 			if (guard_value <= 0) {
 				guard_value = kind == "mine" ? 900 : 650;
 			}
+			guard_value = std::min(30000, guard_value);
 			const int32_t guard_distance = std::abs(int32_t(point.get("x", 0)) - int32_t(object.get("x", 0))) + std::abs(int32_t(point.get("y", 0)) - int32_t(object.get("y", 0)));
+			if (parity_targets.is_empty() && reward_value >= 2500 && reward_value < 6000 && guard_distance > 12) {
+				continue;
+			}
 			Dictionary target;
 			target["protected_target_id"] = object.get("placement_id", "");
 			target["protected_target_type"] = "object_placement";
@@ -4150,6 +4391,11 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			target["protected_object_kind"] = !String(object.get("artifact_id", "")).is_empty() ? "artifact" : kind;
 			target["protected_zone_id"] = zone_id;
 			target["protected_object_id"] = object.get("object_id", "");
+			target["protected_reward_value"] = reward_value;
+			target["protected_reward_value_tier"] = object.get("reward_value_tier", "");
+			target["protected_reward_category"] = object.get("reward_category", object.get("category_id", ""));
+			target["protected_zone_value_budget"] = object.get("zone_value_budget", 0);
+			target["protected_zone_value_tier"] = object.get("zone_value_tier", "");
 			target["guarded_artifact_id"] = object.get("artifact_id", "");
 			target["guarded_site_id"] = object.get("site_id", "");
 			target["guarded_object_point"] = cell_record(int32_t(object.get("x", 0)), int32_t(object.get("y", 0)), int32_t(object.get("level", 0)));
@@ -4157,6 +4403,30 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			target["adjacent_to_guarded_object"] = guard_distance <= 1;
 			append_guard_record(guards, occupied, guard_record_at_point(normalized, zone, point, "site_guard", guard_ordinal, guard_value, road_network, zone_layout, occupied, target));
 			++guard_ordinal;
+		}
+	}
+
+	if (parity_guard_limit >= 0 && guard_ordinal < parity_guard_limit && !zones.is_empty() && !edges.is_empty()) {
+		int32_t fill_index = 0;
+		while (guard_ordinal < parity_guard_limit && fill_index < parity_guard_limit * 3) {
+			Dictionary edge = edges[fill_index % edges.size()];
+			const String zone_id = String(edge.get("to", edge.get("from", "")));
+			Dictionary zone = zone_by_id(zones, zone_id);
+			Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+			Dictionary point = find_object_point(int32_t(anchor.get("x", width / 2)) + fill_index, int32_t(anchor.get("y", height / 2)) + fill_index, zone_id, owner_grid, occupied, width, height);
+			if (!point.is_empty()) {
+				const String route_edge_id = String(edge.get("id", ""));
+				Dictionary target;
+				target["protected_target_id"] = route_edge_id;
+				target["protected_target_type"] = "route_edge";
+				target["protected_zone_id"] = zone_id;
+				target["route_edge_id"] = route_edge_id;
+				target["full_parity_guard_fill_id"] = String("native_rmg_full_parity_guard_fill_") + String::num_int64(guard_ordinal);
+				target["guard_reward_relation_source"] = "full_parity_structural_guard_count_fill";
+				append_guard_record(guards, occupied, guard_record_at_point(normalized, zone, point, "route_guard", guard_ordinal, 450, road_network, zone_layout, occupied, target));
+				++guard_ordinal;
+			}
+			++fill_index;
 		}
 	}
 
