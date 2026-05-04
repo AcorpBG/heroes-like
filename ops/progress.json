@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-gdscript-port-audit-10184",
-  "currentSliceTitle": "Native RMG GDScript Port Audit",
+  "currentSliceId": "native-rmg-template-decoration-wiring-10184",
+  "currentSliceTitle": "Native RMG Template Decoration Wiring",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed native RMG GDScript port audit for the listed 2026-05-04 RandomMapGeneratorRules.gd commits. Classified every listed commit in docs/native-rmg-gdscript-port-audit.md; ported applicable runtime behavior into native MapPackageService surfaces for support resource policy, route/road controls, start-front metadata, translated-template route seeding, zone richness metadata, river crossing quality for foundation land configs, guarded artifacts/sites, decorative blocker body masks, and town spacing. Diagnostic-only or native-obsolete GDScript visual/report changes are documented as non-runtime for active native generation. Active launch remains native package based through MapPackageService.generate_random_map; RandomMapGeneratorRules.gd remains reference/history. Supported full-parity scope remains the tracked homm3_small comparison fixture set; adjacent/larger configs may still report partial_foundation. Validation passed: python3 -m json.tool ops/progress.json; cmake --build .artifacts/map_persistence_native_build --parallel 2; native_random_map_foundation_report.tscn with /tmp/heroes-like-native-rmg-foundation-*; native_random_map_gdscript_comparison_report.tscn with /tmp/heroes-like-native-rmg-gdscript-* and known_gap_count 0/full_parity_ready true; native_random_map_full_parity_gate_report.tscn with /tmp/heroes-like-native-rmg-full-* and blocking_gap_count 0; native_random_map_gdscript_port_audit_report.tscn with /tmp/heroes-like-native-rmg-audit-*; git diff --check passed; progress.py sync-plan --dry-run passed.",
+  "currentSliceNotes": "Completed owner-directed native RMG menu/template and decoration wiring. ScenarioSelectRules now derives generated-map template/profile/player-count/water/underground options from content/random_map_template_catalog.json; MainMenu rebuilds profile choices per selected template; all 56 catalog templates and 56 profiles are exposed and build configs. Active generation remains native MapPackageService.generate_random_map package output. Native object placements now include scalable decorative_obstacle records with body_tiles, blocking_body, non-visitable approach and occupancy metadata, road/occupancy exclusion, and terrain-biased original family ids. Focused report evidence: RANDOM_MAP_ALL_TEMPLATE_MENU_WIRING_REPORT ok=true with catalog_template_count=56, catalog_profile_count=56, menu_template_option_count=56, built_config_count=56; NATIVE_RANDOM_MAP_DECORATION_GENERATION_REPORT ok=true with small decoration_count=30 and xl_catalog decoration_count=358, body metadata present, and route reachability preserved. Existing template filtering, player-count, native full parity gate, JSON validation, native build, and git diff checks passed. Remaining gap: exact HoMM3-re decoration art/family parity is not complete; no full whole-catalog HoMM3 parity claim.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T10:52:17Z",
+  "updatedAt": "2026-05-04T11:34:17Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -8362,6 +8362,75 @@
       "startedAt": "2026-05-04T07:48:35Z",
       "notes": "Completed post-a749da2 RMG warning classification follow-up. Tightened early support-resource fairness diagnostic to measure actual start-support resource routes only. Added raw/accepted/unresolved/fail-threshold warning split to richness and visual reports without changing fail thresholds. Validation: visual report passed with raw warnings 6, accepted 6, unresolved 0, fail-threshold 0, rendered previews 6, road tiles 3069; richness passed with raw warnings 6, accepted 6, unresolved 0, fail-threshold 0, road tiles 1792; large visual passed with raw warnings 2, accepted 2, unresolved 0, fail-threshold 0, rendered previews 1; sync-plan dry-run missing 0; git diff --check passed; tests/validate_repo.py passed.",
       "completedAt": "2026-05-04T07:49:34Z"
+    },
+    {
+      "id": "native-rmg-template-decoration-wiring-10184",
+      "title": "Native RMG Template Decoration Wiring",
+      "status": "completed",
+      "purpose": "Wire all imported random-map template catalog entries into the generated skirmish menu and make active native C++ GDExtension random-map package output include real decorative_obstacle placements.",
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "scenes/menus/MainMenu.gd",
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/random_map_all_template_menu_wiring_report.gd",
+        "tests/random_map_all_template_menu_wiring_report.tscn",
+        "tests/native_random_map_decoration_generation_report.gd",
+        "tests/native_random_map_decoration_generation_report.tscn",
+        "tests/native_random_map_gdscript_comparison_report.gd",
+        "docs/native-rmg-template-decoration-wiring-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Generated-map menu rules and the Skirmish Generated Map UI expose all 56 catalog templates and all 56 catalog profiles from content/random_map_template_catalog.json.",
+        "Template labels, profile ids, player-count options, water modes, and underground support are derived from catalog template/profile records where available, with fallback only for missing data.",
+        "Active generated skirmish launch remains native package generation through MapPackageService.generate_random_map and does not route back to RandomMapGeneratorRules.gd.",
+        "Native generated object_placements include scalable decorative_obstacle records with body_tiles, blocking_body, non-visitable approach policy, and occupancy metadata.",
+        "Decoration placement keeps required gameplay object/town/guard counts and road reachability intact for supported native outputs.",
+        "Validation reports prove all-template menu wiring and native decoration generation, and existing template filtering, player-count, and native full-parity gates still pass."
+      ],
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "owner_directed_phase2_native_rmg_menu_and_decoration_implementation_slice",
+      "parentSliceId": "native-rmg-full-parity-gate-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/random_map_template_catalog.json",
+        "docs/native-rmg-template-decoration-wiring-report.md",
+        "2026-05-04 owner directive: WIRE ALL THE TEMPLATES AND WIRE ALL THE DECORATIONS"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/random_map_all_template_menu_wiring_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_decoration_generation_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/random_map_template_filtering_assignment_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/random_map_player_count_range_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_full_parity_gate_report.tscn",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No active generated skirmish launch through RandomMapGeneratorRules.gd.",
+        "No generated .amap/.ascenario files under maps/ committed unless already tracked and intentionally required.",
+        "No whole-catalog full gameplay parity claim; larger/unsupported configs may remain partial_foundation.",
+        "No exact HoMM3-re decoration art/family parity claim; native output uses original terrain-biased decorative_obstacle families for now.",
+        "No save version bump or authored content writeback."
+      ],
+      "createdAt": "2026-05-04T11:34:17Z",
+      "updatedAt": "2026-05-04T11:34:17Z",
+      "startedAt": "2026-05-04T11:34:17Z",
+      "completedAt": "2026-05-04T11:34:17Z",
+      "sliceEvidence": {
+        "catalogTemplateCount": 56,
+        "catalogProfileCount": 56,
+        "menuTemplateOptionCount": 56,
+        "builtConfigCount": 56,
+        "nativeSmallDecorationCount": 30,
+        "nativeLargeCatalogDecorationCount": 358,
+        "remainingGap": "Exact HoMM3-re decoration art/family parity is not complete; native output uses original terrain-biased decorative_obstacle family ids with runtime-safe body metadata."
+      },
+      "notes": "Completed owner-directed native RMG menu/template and decoration wiring. ScenarioSelectRules now derives generated-map template/profile/player-count/water/underground options from content/random_map_template_catalog.json; MainMenu rebuilds profile choices per selected template; all 56 catalog templates and 56 profiles are exposed and build configs. Active generation remains native MapPackageService.generate_random_map package output. Native object placements now include scalable decorative_obstacle records with body_tiles, blocking_body, non-visitable approach and occupancy metadata, road/occupancy exclusion, and terrain-biased original family ids. Focused report evidence: RANDOM_MAP_ALL_TEMPLATE_MENU_WIRING_REPORT ok=true with catalog_template_count=56, catalog_profile_count=56, menu_template_option_count=56, built_config_count=56; NATIVE_RANDOM_MAP_DECORATION_GENERATION_REPORT ok=true with small decoration_count=30 and xl_catalog decoration_count=358, body metadata present, and route reachability preserved. Existing template filtering, player-count, native full parity gate, JSON validation, native build, and git diff checks passed. Remaining gap: exact HoMM3-re decoration art/family parity is not complete; no full whole-catalog HoMM3 parity claim."
     }
   ],
   "completedImplementationEvidence": [

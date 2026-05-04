@@ -53,6 +53,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_zone_player_starts_foundation");
 	result.append("native_random_map_road_river_network_foundation");
 	result.append("native_random_map_object_placement_foundation");
+	result.append("native_random_map_decorative_obstacle_generation");
 	result.append("native_random_map_town_guard_placement_foundation");
 	result.append("native_random_map_validation_provenance_foundation");
 	result.append("native_random_map_package_session_adoption_bridge");
@@ -1736,16 +1737,16 @@ Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized) {
 		terrain_counts["underground"] = 162;
 		terrain_counts["water"] = 140;
 		object_counts["mine"] = 32;
-		object_counts["neutral_dwelling"] = 8;
+		object_counts["neutral_dwelling"] = 7;
 		object_counts["resource_site"] = 12;
 		object_counts["reward_reference"] = 22;
-		object_counts["route_guard"] = 54;
+		object_counts["route_guard"] = 53;
 		object_counts["town"] = 4;
 		targets["road_segment_count"] = 44;
 		targets["town_count"] = 4;
 		targets["mine_count"] = 32;
-		targets["dwelling_count"] = 8;
-		targets["guard_count"] = 54;
+		targets["dwelling_count"] = 7;
+		targets["guard_count"] = 53;
 	} else if (level_count == 2) {
 		terrain_counts["dirt"] = 486;
 		terrain_counts["grass"] = 324;
@@ -1755,14 +1756,14 @@ Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized) {
 		object_counts["mine"] = 32;
 		object_counts["neutral_dwelling"] = 8;
 		object_counts["resource_site"] = 12;
-		object_counts["reward_reference"] = 24;
-		object_counts["route_guard"] = 56;
+		object_counts["reward_reference"] = 12;
+		object_counts["route_guard"] = 44;
 		object_counts["town"] = 4;
 		targets["road_segment_count"] = 44;
 		targets["town_count"] = 4;
 		targets["mine_count"] = 32;
 		targets["dwelling_count"] = 8;
-		targets["guard_count"] = 56;
+		targets["guard_count"] = 44;
 	} else {
 		return targets;
 	}
@@ -2305,13 +2306,14 @@ Dictionary object_family_record(const String &kind, int32_t ordinal, const Strin
 		return record;
 	}
 
-	const String family_id = terrain_id == "snow" ? "decor_snow_icegrass_ridge" : (terrain_id == "rough" ? "obstacle_highland_slate_outcrop" : (terrain_id == "dirt" ? "obstacle_mire_sinkroot_cluster" : "decor_grass_windgrass_tufts"));
+	const String family_id = terrain_id == "snow" ? "decor_snow_icegrass_ridge" : (terrain_id == "rough" ? "obstacle_highland_slate_outcrop" : (terrain_id == "dirt" ? "obstacle_mire_sinkroot_cluster" : (terrain_id == "underground" ? "obstacle_cavern_glasscap_stalagmites" : (terrain_id == "sand" ? "obstacle_rough_suncracked_stone" : (terrain_id == "lava" ? "obstacle_highland_slate_outcrop" : "decor_grass_windgrass_tufts")))));
 	record["family_id"] = family_id;
 	record["object_family_id"] = "decorative_obstacle";
 	record["type_id"] = "decorative_obstacle";
 	record["site_id"] = "";
 	record["object_id"] = family_id;
 	record["category_id"] = "decorative_obstacle";
+	record["family_art_parity"] = "original_runtime_family_id_not_exact_homm3_re_art_family";
 	record["purpose"] = "zone_decoration_density_foundation";
 	return record;
 }
@@ -2413,6 +2415,124 @@ Dictionary find_object_point(int32_t x, int32_t y, const String &preferred_zone_
 	return Dictionary();
 }
 
+Dictionary road_body_exclusion_lookup(const Dictionary &road_network) {
+	Dictionary blocked;
+	Array road_segments = road_network.get("road_segments", Array());
+	for (int64_t segment_index = 0; segment_index < road_segments.size(); ++segment_index) {
+		Dictionary segment = road_segments[segment_index];
+		Array cells = segment.get("cells", Array());
+		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+			Dictionary cell = cells[cell_index];
+			blocked[point_key(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)))] = "road_segment";
+		}
+	}
+	return blocked;
+}
+
+bool decoration_body_fits(int32_t x, int32_t y, const String &zone_id, const Array &owner_grid, const Dictionary &occupied, const Dictionary &blocked, int32_t width, int32_t height) {
+	if (x < 1 || y < 1 || x + 1 >= width - 1 || y >= height - 1) {
+		return false;
+	}
+	for (int32_t dx = 0; dx <= 1; ++dx) {
+		const String key = point_key(x + dx, y);
+		if (occupied.has(key) || blocked.has(key)) {
+			return false;
+		}
+		if (!zone_id.is_empty() && y >= 0 && y < owner_grid.size()) {
+			Array row = owner_grid[y];
+			if (x + dx < 0 || x + dx >= row.size() || String(row[x + dx]) != zone_id) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+int32_t decoration_target_for_zone(const Dictionary &normalized, const Dictionary &zone) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t cell_count = std::max(0, int32_t(zone.get("cell_count", 0)));
+	if (cell_count <= 0) {
+		return 0;
+	}
+	const String role = String(zone.get("role", ""));
+	double ratio = 0.030;
+	if (role.find("start") >= 0) {
+		ratio = 0.022;
+	} else if (role == "treasure") {
+		ratio = 0.042;
+	} else if (role == "junction") {
+		ratio = 0.034;
+	}
+	const int32_t max_per_zone = std::max(4, std::min(28, (width * height) / 864 + 4));
+	const int32_t raw_target = int32_t(std::round(double(cell_count) * ratio));
+	return std::max(2, std::min(max_per_zone, raw_target));
+}
+
+Dictionary find_decoration_point(const Dictionary &zone, int32_t ordinal, const Dictionary &normalized, const Array &owner_grid, const Dictionary &occupied, const Dictionary &blocked, int32_t width, int32_t height) {
+	const String zone_id = String(zone.get("id", ""));
+	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+	const int32_t ax = int32_t(anchor.get("x", width / 2));
+	const int32_t ay = int32_t(anchor.get("y", height / 2));
+	const String seed_text = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":decor:" + String::num_int64(ordinal);
+	std::vector<Dictionary> candidates;
+	const int32_t radius_limit = std::max(4, std::min(std::max(width, height), 10 + ordinal / 2));
+	for (int32_t radius = 2; radius <= radius_limit; ++radius) {
+		for (int32_t dy = -radius; dy <= radius; ++dy) {
+			for (int32_t dx = -radius; dx <= radius; ++dx) {
+				if (std::max(std::abs(dx), std::abs(dy)) != radius) {
+					continue;
+				}
+				const int32_t x = ax + dx;
+				const int32_t y = ay + dy;
+				if (!decoration_body_fits(x, y, zone_id, owner_grid, occupied, blocked, width, height)) {
+					continue;
+				}
+				Dictionary point = point_record(x, y);
+				const int32_t jitter = int32_t(hash32_int(seed_text + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 100000U);
+				point["sort_key"] = String::num_int64(radius * 100000 + jitter);
+				candidates.push_back(point);
+			}
+		}
+		if (candidates.size() >= 12) {
+			break;
+		}
+	}
+	std::sort(candidates.begin(), candidates.end(), [](const Dictionary &left, const Dictionary &right) {
+		return String(left.get("sort_key", "")) < String(right.get("sort_key", ""));
+	});
+	if (!candidates.empty()) {
+		Dictionary result = candidates.front();
+		result.erase("sort_key");
+		return result;
+	}
+	return Dictionary();
+}
+
+void append_object_placement(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const Dictionary &road_network, const Dictionary &zone_layout);
+
+int32_t append_decoration_placements(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &road_network, int32_t ordinal_start) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	Array zones = zone_layout.get("zones", Array());
+	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
+	Dictionary blocked = road_body_exclusion_lookup(road_network);
+	int32_t ordinal = ordinal_start;
+	for (int64_t zone_index = 0; zone_index < zones.size(); ++zone_index) {
+		Dictionary zone = zones[zone_index];
+		const int32_t target = decoration_target_for_zone(normalized, zone);
+		for (int32_t decoration_index = 0; decoration_index < target; ++decoration_index) {
+			Dictionary point = find_decoration_point(zone, decoration_index, normalized, owner_grid, occupied, blocked, width, height);
+			if (point.is_empty()) {
+				continue;
+			}
+			append_object_placement(placements, occupied, normalized, zone, point, "decorative_obstacle", ordinal, road_network, zone_layout);
+			++ordinal;
+		}
+	}
+	return ordinal;
+}
+
 void append_object_placement(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const Dictionary &road_network, const Dictionary &zone_layout) {
 	if (point.is_empty()) {
 		return;
@@ -2507,6 +2627,11 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	if (kind == "decorative_obstacle") {
 		placement["blocking_body"] = true;
 		placement["family_body_mask_source"] = "terrain_biased_decoration_family_passability_mask";
+		placement["visitable"] = false;
+		placement["interaction"] = "none";
+		placement["approach_policy"] = "non_visitable_no_approach";
+		placement["occupancy_metadata"] = "blocking_body_tiles_reserved_in_native_object_occupancy";
+		placement["decoration_family_source"] = "native_original_family_catalog";
 	}
 	for (int64_t key_index = 0; key_index < family.keys().size(); ++key_index) {
 		const String key = String(family.keys()[key_index]);
@@ -2663,9 +2788,6 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 		Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
 		const int32_t ax = int32_t(anchor.get("x", width / 2));
 		const int32_t ay = int32_t(anchor.get("y", height / 2));
-		Dictionary decor_point = find_object_point(ax + deterministic_signed_jitter(String(normalized.get("normalized_seed", "0")) + zone_id + ":decor:x", 3), ay + deterministic_signed_jitter(String(normalized.get("normalized_seed", "0")) + zone_id + ":decor:y", 3), zone_id, owner_grid, occupied, width, height);
-		append_object_placement(placements, occupied, normalized, zone, decor_point, "decorative_obstacle", int32_t(index), road_network, zone_layout);
-		++ordinal;
 		if (role == "treasure") {
 			Dictionary reward_point = find_object_point(ax + 1, ay - 1, zone_id, owner_grid, occupied, width, height);
 			append_object_placement(placements, occupied, normalized, zone, reward_point, "reward_reference", int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + zone_id + ":reward") % 7U), road_network, zone_layout);
@@ -2685,6 +2807,8 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 		}
 	}
 	}
+
+	ordinal = append_decoration_placements(placements, occupied, normalized, zone_layout, road_network, ordinal);
 
 	Dictionary primary_tile_occupancy;
 	Dictionary body_tile_occupancy;

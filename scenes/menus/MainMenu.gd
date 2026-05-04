@@ -379,7 +379,7 @@ func _on_generated_size_selected(index: int) -> void:
 	_generated_profile_id = String(size_defaults.get("profile_id", _generated_profile_id))
 	_generated_player_count = int(size_defaults.get("player_count", _generated_player_count))
 	_select_generated_picker_metadata(_generated_template_picker, _generated_template_id)
-	_select_generated_picker_metadata(_generated_profile_picker, _generated_profile_id)
+	_rebuild_generated_profile_picker()
 	_clamp_generated_player_count_to_template()
 	_rebuild_generated_player_count_picker()
 	_select_generated_player_count_picker(_generated_player_count)
@@ -392,8 +392,8 @@ func _on_generated_template_selected(index: int) -> void:
 	for option in ScenarioSelectRulesScript.random_map_player_setup_options().get("templates", []):
 		if option is Dictionary and String(option.get("id", "")) == _generated_template_id:
 			_generated_profile_id = String(option.get("profile_id", _generated_profile_id))
-			_select_generated_picker_metadata(_generated_profile_picker, _generated_profile_id)
 			break
+	_rebuild_generated_profile_picker()
 	_clamp_generated_player_count_to_template()
 	_rebuild_generated_player_count_picker()
 	_select_generated_player_count_picker(_generated_player_count)
@@ -996,7 +996,7 @@ func _configure_generated_random_map_controls() -> void:
 
 	_rebuild_generated_option_picker(_generated_size_picker, options.get("size_classes", []), _generated_size_class_id, "size")
 	_rebuild_generated_option_picker(_generated_template_picker, options.get("templates", []), _generated_template_id, "template")
-	_rebuild_generated_option_picker(_generated_profile_picker, options.get("profiles", []), _generated_profile_id, "profile")
+	_rebuild_generated_profile_picker()
 
 	_rebuild_generated_player_count_picker()
 
@@ -1460,6 +1460,19 @@ func _rebuild_generated_player_count_picker() -> void:
 		_generated_player_count_picker.select(player_selected)
 	_generated_player_count_picker.tooltip_text = "Player count: one human start plus generated opponents."
 
+func _rebuild_generated_profile_picker() -> void:
+	var profile_options := ScenarioSelectRulesScript.random_map_profile_options_for_template(_generated_template_id)
+	if profile_options.is_empty():
+		profile_options = ScenarioSelectRulesScript.random_map_player_setup_options().get("profiles", [])
+	var selected_still_valid := false
+	for option in profile_options:
+		if option is Dictionary and String(option.get("id", "")) == _generated_profile_id:
+			selected_still_valid = true
+			break
+	if not selected_still_valid and not profile_options.is_empty() and profile_options[0] is Dictionary:
+		_generated_profile_id = String(profile_options[0].get("id", _generated_profile_id))
+	_rebuild_generated_option_picker(_generated_profile_picker, profile_options, _generated_profile_id, "profile")
+
 func _clamp_generated_player_count_to_template() -> void:
 	var counts := ScenarioSelectRulesScript.random_map_player_count_options_for_template(_generated_template_id)
 	if counts.is_empty():
@@ -1880,7 +1893,9 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"retry_policy": ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"size_options": _picker_item_labels(_generated_size_picker),
 		"template_options": _picker_item_labels(_generated_template_picker),
+		"template_option_ids": _picker_item_metadata_strings(_generated_template_picker),
 		"profile_options": _picker_item_labels(_generated_profile_picker),
+		"profile_option_ids": _picker_item_metadata_strings(_generated_profile_picker),
 		"player_count_options": _picker_item_labels(_generated_player_count_picker),
 		"player_count_values": _picker_item_metadata_ints(_generated_player_count_picker),
 		"water_options": _picker_item_labels(_generated_water_picker),
@@ -1891,6 +1906,12 @@ func _picker_item_labels(picker: OptionButton) -> Array:
 	for index in range(picker.get_item_count()):
 		labels.append(picker.get_item_text(index))
 	return labels
+
+func _picker_item_metadata_strings(picker: OptionButton) -> Array:
+	var ids := []
+	for index in range(picker.get_item_count()):
+		ids.append(String(picker.get_item_metadata(index)))
+	return ids
 
 func _picker_item_metadata_ints(picker: OptionButton) -> Array:
 	var values := []
