@@ -598,6 +598,34 @@ nonGoals:
 - No copyrighted names, assets, maps, factions, unit art, music, or text.
 - No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.
 
+Completed owner-directed implementation slice:
+
+id: `random-map-homm3-parity-blocker-choke-shaping-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Improve HoMM3-style RMG movement texture by making decorative obstacle filler measurably shape route shoulders and chokepoints instead of only proving global decoration/blocker density.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-decoration-obstacles.csv`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.csv`
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_homm3_parity_richness_report.gd`
+- `.artifacts/rmg_parity_richness/`
+- `ops/progress.json`
+completionCriteria:
+- Decorative obstacle candidate scoring accounts for required road/corridor shoulder pressure while preserving path safety.
+- Generated decoration records and validation expose movement-shaping metrics for road-adjacent blocker bodies, covered required routes, and choked road tiles.
+- Bounded richness report validates route/choke blocker coverage across multiple seeds/templates without exceeding the current runtime envelope.
+- Remaining RMG parity gaps are listed for the next slice.
+nonGoals:
+- No generated terrain-art replacement work.
+- No copyrighted names, assets, maps, factions, unit art, music, or text.
+- No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.
+- No full HoMM3 RMG parity claim beyond this measurable movement-shaping improvement.
+
 ### Phase 3 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.
