@@ -3800,7 +3800,7 @@ static func _build_staging_payload(normalized: Dictionary, template: Dictionary,
 static func _build_constraint_payload(normalized: Dictionary, zones: Array, links: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, placements: Dictionary, zone_layout: Dictionary, terrain_transit: Dictionary, rng: DeterministicRng) -> Dictionary:
 	var terrain_constraints := _terrain_constraints_payload(terrain_rows, zone_grid, zones, terrain_transit)
 	var occupied := _route_blocking_occupied_lookup(placements.get("object_placements", []))
-	var route_build := _build_route_and_road_payload(links, seeds, placements, terrain_rows, occupied, terrain_transit)
+	var route_build := _build_route_and_road_payload(links, seeds, zones, placements, terrain_rows, occupied, terrain_transit)
 	var route_graph: Dictionary = route_build.get("route_graph", _route_graph_payload(links, seeds))
 	var connection_guard_materialization := _build_connection_guard_materialization(
 		links,
@@ -8210,6 +8210,114 @@ static func _object_pool_batch_example(payload: Dictionary, pool: Dictionary) ->
 		"value_totals": pool.get("value_totals", {}),
 	}
 
+static func _route_zone_context_by_id(zones: Array) -> Dictionary:
+	var result := {}
+	for zone in zones:
+		if not (zone is Dictionary):
+			continue
+		var zone_id := String(zone.get("id", ""))
+		if zone_id == "":
+			continue
+		result[zone_id] = {
+			"zone_id": zone_id,
+			"role": String(zone.get("role", "")),
+			"owner_slot": zone.get("owner_slot", null),
+			"player_slot": zone.get("player_slot", null),
+			"active_player_start": zone.get("player_slot", null) != null,
+		}
+	return result
+
+static func _primary_start_front_zones_by_edge(links: Array, zone_context: Dictionary) -> Dictionary:
+	var active_start_zones := []
+	for zone_id in _sorted_keys(zone_context):
+		var context: Dictionary = zone_context.get(zone_id, {})
+		if bool(context.get("active_player_start", false)):
+			active_start_zones.append(zone_id)
+	var candidates_by_zone := {}
+	for zone_id in active_start_zones:
+		candidates_by_zone[zone_id] = []
+	for index in range(links.size()):
+		var link = links[index]
+		if not (link is Dictionary):
+			continue
+		var role := String(link.get("role", ""))
+		if role != "template_connection" and role != "contest_route" and role != "early_reward_route":
+			continue
+		var from_zone := String(link.get("from", ""))
+		var to_zone := String(link.get("to", ""))
+		var edge_id := _route_edge_id(index + 1, from_zone, to_zone)
+		for active_zone in [from_zone, to_zone]:
+			if active_zone not in candidates_by_zone:
+				continue
+			var other_zone := to_zone if active_zone == from_zone else from_zone
+			var candidate := {
+				"edge_id": edge_id,
+				"zone_id": active_zone,
+				"other_zone_id": other_zone,
+				"front_priority": _start_front_priority(active_zone, other_zone, role, zone_context),
+				"guard_pressure": _effective_guard_pressure_from_link(link),
+				"edge_index": index + 1,
+			}
+			candidates_by_zone[active_zone].append(candidate)
+	var result := {}
+	for zone_id in active_start_zones:
+		var candidates: Array = candidates_by_zone.get(zone_id, [])
+		if candidates.is_empty():
+			continue
+		candidates.sort_custom(Callable(RandomMapGeneratorRules, "_compare_start_front_candidate"))
+		var selected: Dictionary = candidates[0]
+		var edge_id := String(selected.get("edge_id", ""))
+		if edge_id == "":
+			continue
+		if not result.has(edge_id):
+			result[edge_id] = []
+		result[edge_id].append(zone_id)
+	for edge_id in _sorted_keys(result):
+		var zones_for_edge: Array = result[edge_id]
+		zones_for_edge.sort()
+		result[edge_id] = zones_for_edge
+	return result
+
+static func _start_front_priority(active_zone: String, other_zone: String, role: String, zone_context: Dictionary) -> int:
+	if role == "contest_route":
+		return 0
+	if role == "early_reward_route":
+		return 1
+	var other_context: Dictionary = zone_context.get(other_zone, {})
+	if bool(other_context.get("active_player_start", false)):
+		return 0
+	var other_role := String(other_context.get("role", ""))
+	if other_role == "junction":
+		return 1
+	if other_role == "treasure":
+		return 2
+	if other_context.get("owner_slot", null) != null:
+		return 3
+	return 4
+
+static func _compare_start_front_candidate(a: Dictionary, b: Dictionary) -> bool:
+	var priority_a := int(a.get("front_priority", 99))
+	var priority_b := int(b.get("front_priority", 99))
+	if priority_a != priority_b:
+		return priority_a < priority_b
+	var guard_a := int(a.get("guard_pressure", 0))
+	var guard_b := int(b.get("guard_pressure", 0))
+	if guard_a != guard_b:
+		return guard_a < guard_b
+	var index_a := int(a.get("edge_index", 0))
+	var index_b := int(b.get("edge_index", 0))
+	if index_a != index_b:
+		return index_a < index_b
+	return String(a.get("edge_id", "")) < String(b.get("edge_id", ""))
+
+static func _effective_guard_pressure_from_link(link: Dictionary) -> int:
+	if bool(link.get("wide", false)):
+		return 0
+	var value := int(link.get("guard_value", 0))
+	if bool(link.get("border_guard", false)):
+		value += 500
+	return value
+
 static func _connection_guard_source_link(edge_id: String, index: int, link: Dictionary, edge: Dictionary) -> Dictionary:
 	return {
 		"id": edge_id,
@@ -8411,9 +8519,11 @@ static func _terrain_constraints_payload(terrain_rows: Array, zone_grid: Array, 
 		"water_coast_passability": terrain_transit.get("water_coast_passability", {}),
 	}
 
-static func _build_route_and_road_payload(links: Array, seeds: Dictionary, placements: Dictionary, terrain_rows: Array, occupied: Dictionary, terrain_transit: Dictionary = {}) -> Dictionary:
+static func _build_route_and_road_payload(links: Array, seeds: Dictionary, zones: Array, placements: Dictionary, terrain_rows: Array, occupied: Dictionary, terrain_transit: Dictionary = {}) -> Dictionary:
 	var object_by_zone := _object_placements_by_zone_and_kind(placements.get("object_placements", []))
 	var route_nodes := _route_nodes_payload(seeds, placements)
+	var zone_context := _route_zone_context_by_id(zones)
+	var start_front_zones_by_edge := _primary_start_front_zones_by_edge(links, zone_context)
 	var road_segments := []
 	var road_stubs := []
 	var edges := []
@@ -8437,6 +8547,7 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 		var edge_id := _route_edge_id(edge_index, from_zone, to_zone)
 		var role := String(link.get("role", ""))
 		var required := role in ["contest_route", "early_reward_route", "reward_to_junction", "template_connection"]
+		var start_front_zones: Array = start_front_zones_by_edge.get(edge_id, [])
 		var route_anchor_candidate := _route_anchor_candidate(path, from_point, to_point)
 		var edge := {
 			"id": edge_id,
@@ -8445,7 +8556,9 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, place
 			"from_node": String(from_node.get("id", from_zone)),
 			"to_node": String(to_node.get("id", to_zone)),
 			"role": role,
-			"layout_contract_roles": _layout_contract_roles_for_route(role),
+			"layout_contract_roles": _layout_contract_roles_for_route_context(role, link, edge_id, start_front_zones_by_edge),
+			"fairness_start_front_zones": start_front_zones,
+			"fairness_front_policy": "primary_start_front_per_active_player_zone" if not start_front_zones.is_empty() else "secondary_template_connection_or_non_start_route",
 			"guard_value": int(link.get("guard_value", 0)),
 			"guard": link.get("guard", {}),
 			"wide": bool(link.get("wide", false)),
@@ -10492,6 +10605,8 @@ static func _route_counts_by_zone(edges: Array) -> Dictionary:
 			var role := String(edge.get("role", "route"))
 			counts[zone_id][role] = int(counts[zone_id].get(role, 0)) + 1
 			for contract_role in edge.get("layout_contract_roles", []):
+				if _layout_contract_role_is_start_front_scoped(edge, String(contract_role)) and zone_id not in edge.get("fairness_start_front_zones", []):
+					continue
 				counts[zone_id][String(contract_role)] = int(counts[zone_id].get(String(contract_role), 0)) + 1
 	return counts
 
@@ -10541,9 +10656,21 @@ static func _edges_for_zone_and_role(edges: Array, zone_id: String, role: String
 			continue
 		if String(edge.get("role", "")) != role and String(role) not in edge.get("layout_contract_roles", []):
 			continue
+		if _layout_contract_role_is_start_front_scoped(edge, role) and zone_id not in edge.get("fairness_start_front_zones", []):
+			continue
 		if String(edge.get("from", "")) == zone_id or String(edge.get("to", "")) == zone_id:
 			result.append(edge)
 	return result
+
+static func _layout_contract_roles_for_route_context(role: String, link: Dictionary, edge_id: String, start_front_zones_by_edge: Dictionary) -> Array:
+	if role != "template_connection":
+		return _layout_contract_roles_for_route(role)
+	var roles := []
+	if start_front_zones_by_edge.has(edge_id):
+		roles.append_array(["contest_route", "early_reward_route", "reward_route"])
+	if int(link.get("guard_value", 0)) > 0 or bool(link.get("border_guard", false)) or bool(link.get("wide", false)):
+		roles.append("guarded_route")
+	return roles
 
 static func _layout_contract_roles_for_route(role: String) -> Array:
 	match role:
@@ -10555,6 +10682,11 @@ static func _layout_contract_roles_for_route(role: String) -> Array:
 			return ["contest_route", "early_reward_route", "reward_route", "guarded_route"]
 		_:
 			return []
+
+static func _layout_contract_role_is_start_front_scoped(edge: Dictionary, role: String) -> bool:
+	if edge.get("fairness_start_front_zones", []).is_empty():
+		return false
+	return String(edge.get("role", "")) == "template_connection" and role in ["contest_route", "early_reward_route", "reward_route"]
 
 static func _route_has_layout_contract_role(edge: Dictionary, role: String) -> bool:
 	if String(edge.get("role", "")) == role:

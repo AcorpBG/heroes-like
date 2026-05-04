@@ -808,6 +808,42 @@ nonGoals:
 - No promotion of `translated_rmg_template_042_v1`, `translated_rmg_template_043_v1`, 144x144, or underground large templates into strict cheap-gate fixtures.
 - No full HoMM3 RMG parity claim beyond this clearer diagnostic evidence.
 
+Selected owner-directed implementation slice:
+
+id: `random-map-homm3-parity-start-front-fairness-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Reduce the largest newly exposed RMG layout fairness warnings by classifying comparable primary contest/early fronts per active player start from translated template connections, without weakening guard/resource/distance diagnostics.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-homm3-parity-visual-inspection-gaps.md`
+- `docs/random-map-generator-foundation.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md`
+- 2026-05-04 owner directive to continue RMG parity after `cf52aa9`
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_homm3_parity_richness_report.gd`
+- `tests/random_map_homm3_parity_visual_inspection_report.gd`
+- `.artifacts/rmg_parity_richness/`
+- `.artifacts/rmg_parity_visual_inspection/`
+- `.artifacts/rmg_parity_large_visual_inspection/`
+- `docs/random-map-homm3-parity-visual-inspection-gaps.md`
+- `ops/progress.json`
+completionCriteria:
+- Translated template connections keep their source guard payloads and required route materialization, including wide and border-guard semantics.
+- Layout fairness classifies one deterministic primary contest/early front per active player start, preferring active-opponent fronts and then lower-pressure neutral fronts, so duplicate links and inactive owner-slot links do not inflate one player's comparable start-front pressure.
+- Fairness diagnostics remain strict and continue reporting remaining route/resource/guard spread warnings after the corrected primary-front model.
+- Richness, visual, large visual if reasonable, JSON/progress sync, diff check, and repository validation pass or any skipped validation is recorded with a concrete reason.
+nonGoals:
+- No generated terrain-art replacement work or generated PNG ingestion.
+- No copyrighted names, assets, maps, factions, unit art, music, or text.
+- No save-version bump, authored campaign adoption, native generator rewrite, generated package/map clutter, renderer, fog, pathing, or gameplay loop redesign.
+- No promotion of large translated templates into strict cheap-gate fixtures.
+- No full HoMM3 RMG parity claim beyond this bounded start-front fairness correction.
+
 ### Phase 3 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.
