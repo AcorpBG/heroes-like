@@ -80,6 +80,7 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 	var decor_summary: Dictionary = decor.get("summary", {}) if decor.get("summary", {}) is Dictionary else {}
 	var decor_route_shaping: Dictionary = decor.get("route_shaping_summary", {}) if decor.get("route_shaping_summary", {}) is Dictionary else {}
 	var serialization: Dictionary = roads_rivers.get("generated_map_serialization", {}) if roads_rivers.get("generated_map_serialization", {}) is Dictionary else {}
+	var guarded_choke_routes := _intersection_count(decor_route_shaping.get("required_routes_with_chokes", []), roads.get("connection_controlled_route_edge_ids", []))
 	var town_distances := _town_distance_summary(scenario.get("towns", []))
 	var artifact_count: int = scenario.get("artifact_nodes", []).size() if scenario.get("artifact_nodes", []) is Array else 0
 	var associated_guard_count: int = staging.get("materialized_object_guards", []).size() if staging.get("materialized_object_guards", []) is Array else 0
@@ -114,6 +115,15 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"object_guard_route_reward_artifact_count_seen": int(object_guard_summary.get("route_reward_artifact_record_count_seen", 0)),
 		"object_guard_artifact_guard_count": int(object_guard_summary.get("artifact_guard_count", 0)),
 		"object_guard_candidate_count": int(object_guard_summary.get("candidate_count", 0)),
+		"guardable_valuable_object_count": int(object_guard_summary.get("guardable_valuable_object_count", 0)),
+		"guarded_valuable_object_count": int(object_guard_summary.get("guarded_valuable_object_count", 0)),
+		"unguarded_valuable_object_count": int(object_guard_summary.get("unguarded_valuable_object_count", 0)),
+		"guarded_mine_count": int(object_guard_summary.get("mine_guard_count", 0)),
+		"guardable_mine_count": int(object_guard_summary.get("mine_candidate_count", 0)),
+		"guarded_dwelling_count": int(object_guard_summary.get("dwelling_guard_count", 0)),
+		"guardable_dwelling_count": int(object_guard_summary.get("dwelling_candidate_count", 0)),
+		"guarded_reward_object_count": int(object_guard_summary.get("route_reward_guard_count", 0)),
+		"guardable_reward_object_count": int(object_guard_summary.get("route_reward_candidate_count", 0)),
 		"object_guard_skipped_no_cell": int(object_guard_summary.get("skipped_no_cell", 0)),
 		"decoration_count": int(decor_summary.get("record_count", 0)),
 		"decoration_blocking_body_tile_total": int(decor_summary.get("blocking_body_tile_total", 0)),
@@ -121,11 +131,14 @@ func _inspect_case(case: Dictionary) -> Dictionary:
 		"decoration_body_density": snapped(float(decor_summary.get("blocking_body_tile_total", 0)) / float(max(1, int(case.get("width", 0)) * int(case.get("height", 0)))), 0.0001),
 		"route_shoulder_body_count": int(decor_route_shaping.get("route_shoulder_body_count", decor_summary.get("route_shoulder_body_count", 0))),
 		"route_shoulder_decoration_count": int(decor_route_shaping.get("route_shoulder_decoration_count", decor_summary.get("route_shoulder_decoration_count", 0))),
+		"route_shoulder_guard_body_count": int(decor_route_shaping.get("route_shoulder_guard_body_count", 0)),
+		"route_shoulder_guard_count": int(decor_route_shaping.get("route_shoulder_guard_count", 0)),
 		"required_route_count": int(decor_route_shaping.get("required_route_count", decor_summary.get("required_route_count", 0))),
 		"required_route_with_shoulder_count": int(decor_route_shaping.get("required_route_with_shoulder_count", decor_summary.get("required_route_with_shoulder_count", 0))),
 		"required_route_shoulder_coverage_ratio": float(decor_route_shaping.get("required_route_shoulder_coverage_ratio", 0.0)),
 		"choked_road_tile_count": int(decor_route_shaping.get("choked_road_tile_count", decor_summary.get("choked_road_tile_count", 0))),
 		"required_route_with_choke_count": int(decor_route_shaping.get("required_route_with_choke_count", decor_summary.get("required_route_with_choke_count", 0))),
+		"guarded_choke_route_count": guarded_choke_routes,
 		"road_tile_count": int(road_summary.get("tile_count", 0)),
 		"road_segment_count": int(road_summary.get("segment_count", 0)),
 		"road_class_counts": road_summary.get("road_class_counts", {}),
@@ -228,12 +241,22 @@ func _metric_failures(case_id: String, metrics: Dictionary) -> Array:
 		var min_choked_road_tiles: int = max(4, int(ceil(float(required_routes) * 0.20)))
 		if int(metrics.get("choked_road_tile_count", 0)) < min_choked_road_tiles:
 			failures.append("%s decorative blockers do not create enough road choke pressure: %d" % [case_id, int(metrics.get("choked_road_tile_count", 0))])
+		if int(metrics.get("required_route_with_choke_count", 0)) > 0 and int(metrics.get("guarded_choke_route_count", 0)) <= 0:
+			failures.append("%s has choked required routes but none are connection-guard controlled" % case_id)
 	if int(metrics.get("artifact_count", 0)) <= 0:
 		failures.append("%s has no materialized artifact nodes" % case_id)
 	if int(metrics.get("guarded_artifact_count", 0)) < int(metrics.get("artifact_count", 0)):
 		failures.append("%s guarded artifact coverage is incomplete: %d/%d" % [case_id, int(metrics.get("guarded_artifact_count", 0)), int(metrics.get("artifact_count", 0))])
 	if int(metrics.get("guarded_artifact_max_distance", 0)) > 2:
 		failures.append("%s guarded artifact max distance is too loose: %d" % [case_id, int(metrics.get("guarded_artifact_max_distance", 0))])
+	if int(metrics.get("guardable_valuable_object_count", 0)) > 0 and int(metrics.get("guarded_valuable_object_count", 0)) + int(metrics.get("object_guard_skipped_no_cell", 0)) < int(metrics.get("guardable_valuable_object_count", 0)):
+		failures.append("%s has unguarded valuable objects despite available guard budget: %d guarded / %d guardable, skipped_no_cell=%d" % [case_id, int(metrics.get("guarded_valuable_object_count", 0)), int(metrics.get("guardable_valuable_object_count", 0)), int(metrics.get("object_guard_skipped_no_cell", 0))])
+	if int(metrics.get("guardable_mine_count", 0)) > 0 and int(metrics.get("guarded_mine_count", 0)) <= 0:
+		failures.append("%s has guardable mines but no mine guards" % case_id)
+	if int(metrics.get("guardable_dwelling_count", 0)) > 0 and int(metrics.get("guarded_dwelling_count", 0)) <= 0:
+		failures.append("%s has guardable dwellings but no dwelling guards" % case_id)
+	if int(metrics.get("guardable_reward_object_count", 0)) > 0 and int(metrics.get("guarded_reward_object_count", 0)) <= 0:
+		failures.append("%s has guardable route reward objects but no reward-object guards" % case_id)
 	if int(metrics.get("encounter_count", 0)) < max(4, int(metrics.get("artifact_count", 0)) + int(metrics.get("town_count", 0))):
 		failures.append("%s guard/encounter density is too low: %d" % [case_id, int(metrics.get("encounter_count", 0))])
 	if int(metrics.get("object_instance_count", 0)) < int(metrics.get("town_count", 0)) + int(metrics.get("mine_count", 0)) + int(metrics.get("decoration_count", 0)):
@@ -315,16 +338,28 @@ func _summary(results: Array) -> Dictionary:
 		"multitile_decorations": 0,
 		"route_shoulder_body_count": 0,
 		"route_shoulder_decorations": 0,
+		"route_shoulder_guard_body_count": 0,
+		"route_shoulder_guards": 0,
 		"required_routes": 0,
 		"required_routes_with_shoulders": 0,
 		"choked_road_tiles": 0,
 		"required_routes_with_chokes": 0,
+		"guarded_choke_routes": 0,
 		"artifacts": 0,
 		"guarded_artifacts": 0,
 		"guarded_artifact_missing": 0,
 		"guarded_artifact_max_distance": 0,
 		"encounters": 0,
 		"associated_object_guards": 0,
+		"guardable_valuable_objects": 0,
+		"guarded_valuable_objects": 0,
+		"unguarded_valuable_objects": 0,
+		"guardable_mines": 0,
+		"guarded_mines": 0,
+		"guardable_dwellings": 0,
+		"guarded_dwellings": 0,
+		"guardable_reward_objects": 0,
+		"guarded_reward_objects": 0,
 		"object_instances": 0,
 		"max_case_msec": 0,
 		"minimum_town_distance_required_max": 0,
@@ -348,16 +383,28 @@ func _summary(results: Array) -> Dictionary:
 		totals["multitile_decorations"] = int(totals.get("multitile_decorations", 0)) + int(metrics.get("multitile_decoration_count", 0))
 		totals["route_shoulder_body_count"] = int(totals.get("route_shoulder_body_count", 0)) + int(metrics.get("route_shoulder_body_count", 0))
 		totals["route_shoulder_decorations"] = int(totals.get("route_shoulder_decorations", 0)) + int(metrics.get("route_shoulder_decoration_count", 0))
+		totals["route_shoulder_guard_body_count"] = int(totals.get("route_shoulder_guard_body_count", 0)) + int(metrics.get("route_shoulder_guard_body_count", 0))
+		totals["route_shoulder_guards"] = int(totals.get("route_shoulder_guards", 0)) + int(metrics.get("route_shoulder_guard_count", 0))
 		totals["required_routes"] = int(totals.get("required_routes", 0)) + int(metrics.get("required_route_count", 0))
 		totals["required_routes_with_shoulders"] = int(totals.get("required_routes_with_shoulders", 0)) + int(metrics.get("required_route_with_shoulder_count", 0))
 		totals["choked_road_tiles"] = int(totals.get("choked_road_tiles", 0)) + int(metrics.get("choked_road_tile_count", 0))
 		totals["required_routes_with_chokes"] = int(totals.get("required_routes_with_chokes", 0)) + int(metrics.get("required_route_with_choke_count", 0))
+		totals["guarded_choke_routes"] = int(totals.get("guarded_choke_routes", 0)) + int(metrics.get("guarded_choke_route_count", 0))
 		totals["artifacts"] = int(totals.get("artifacts", 0)) + int(metrics.get("artifact_count", 0))
 		totals["guarded_artifacts"] = int(totals.get("guarded_artifacts", 0)) + int(metrics.get("guarded_artifact_count", 0))
 		totals["guarded_artifact_missing"] = int(totals.get("guarded_artifact_missing", 0)) + int(metrics.get("guarded_artifact_missing_count", 0))
 		totals["guarded_artifact_max_distance"] = max(int(totals.get("guarded_artifact_max_distance", 0)), int(metrics.get("guarded_artifact_max_distance", 0)))
 		totals["encounters"] = int(totals.get("encounters", 0)) + int(metrics.get("encounter_count", 0))
 		totals["associated_object_guards"] = int(totals.get("associated_object_guards", 0)) + int(metrics.get("associated_object_guard_count", 0))
+		totals["guardable_valuable_objects"] = int(totals.get("guardable_valuable_objects", 0)) + int(metrics.get("guardable_valuable_object_count", 0))
+		totals["guarded_valuable_objects"] = int(totals.get("guarded_valuable_objects", 0)) + int(metrics.get("guarded_valuable_object_count", 0))
+		totals["unguarded_valuable_objects"] = int(totals.get("unguarded_valuable_objects", 0)) + int(metrics.get("unguarded_valuable_object_count", 0))
+		totals["guardable_mines"] = int(totals.get("guardable_mines", 0)) + int(metrics.get("guardable_mine_count", 0))
+		totals["guarded_mines"] = int(totals.get("guarded_mines", 0)) + int(metrics.get("guarded_mine_count", 0))
+		totals["guardable_dwellings"] = int(totals.get("guardable_dwellings", 0)) + int(metrics.get("guardable_dwelling_count", 0))
+		totals["guarded_dwellings"] = int(totals.get("guarded_dwellings", 0)) + int(metrics.get("guarded_dwelling_count", 0))
+		totals["guardable_reward_objects"] = int(totals.get("guardable_reward_objects", 0)) + int(metrics.get("guardable_reward_object_count", 0))
+		totals["guarded_reward_objects"] = int(totals.get("guarded_reward_objects", 0)) + int(metrics.get("guarded_reward_object_count", 0))
 		totals["object_instances"] = int(totals.get("object_instances", 0)) + int(metrics.get("object_instance_count", 0))
 		totals["max_case_msec"] = max(int(totals.get("max_case_msec", 0)), int(metrics.get("elapsed_msec", 0)))
 		totals["minimum_town_distance_required_max"] = max(int(totals.get("minimum_town_distance_required_max", 0)), int(metrics.get("minimum_town_distance_required", 0)))
@@ -456,14 +503,25 @@ func _case_log_line(result: Dictionary) -> Dictionary:
 		"decor_body_tiles": int(metrics.get("decoration_blocking_body_tile_total", 0)),
 		"multitile_decor": int(metrics.get("multitile_decoration_count", 0)),
 		"route_shoulders": int(metrics.get("route_shoulder_body_count", 0)),
+		"route_shoulder_guards": int(metrics.get("route_shoulder_guard_count", 0)),
 		"routes_with_shoulders": int(metrics.get("required_route_with_shoulder_count", 0)),
 		"required_routes": int(metrics.get("required_route_count", 0)),
 		"choked_road_tiles": int(metrics.get("choked_road_tile_count", 0)),
+		"guarded_choke_routes": int(metrics.get("guarded_choke_route_count", 0)),
 		"artifacts": int(metrics.get("artifact_count", 0)),
 		"guarded_artifacts": int(metrics.get("guarded_artifact_count", 0)),
 		"guarded_artifact_missing": int(metrics.get("guarded_artifact_missing_count", 0)),
 		"guarded_artifact_max_distance": int(metrics.get("guarded_artifact_max_distance", 0)),
 		"guards": int(metrics.get("associated_object_guard_count", 0)),
+		"guardable_valuable": int(metrics.get("guardable_valuable_object_count", 0)),
+		"guarded_valuable": int(metrics.get("guarded_valuable_object_count", 0)),
+		"unguarded_valuable": int(metrics.get("unguarded_valuable_object_count", 0)),
+		"guarded_mines": int(metrics.get("guarded_mine_count", 0)),
+		"guardable_mines": int(metrics.get("guardable_mine_count", 0)),
+		"guarded_dwellings": int(metrics.get("guarded_dwelling_count", 0)),
+		"guardable_dwellings": int(metrics.get("guardable_dwelling_count", 0)),
+		"guarded_rewards": int(metrics.get("guarded_reward_object_count", 0)),
+		"guardable_rewards": int(metrics.get("guardable_reward_object_count", 0)),
 		"town_min": int(metrics.get("observed_minimum_town_distance", 0)),
 		"town_required": int(metrics.get("minimum_town_distance_required", 0)),
 		"start_town_min": int(metrics.get("observed_start_town_minimum_distance", 0)),
@@ -486,6 +544,18 @@ func _write_json(path: String, payload: Dictionary) -> void:
 
 func _point_key(x: int, y: int) -> String:
 	return "%d,%d" % [x, y]
+
+func _intersection_count(left: Variant, right: Variant) -> int:
+	if not (left is Array) or not (right is Array):
+		return 0
+	var right_lookup := {}
+	for value in right:
+		right_lookup[String(value)] = true
+	var count := 0
+	for value in left:
+		if right_lookup.has(String(value)):
+			count += 1
+	return count
 
 func _fail(message: String) -> void:
 	push_error("%s failed: %s" % [REPORT_ID, message])
