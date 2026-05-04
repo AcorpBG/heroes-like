@@ -32,8 +32,11 @@ foundation non-town object placement output, foundation town/guard placement
 output, native validation/provenance reporting, and a focused GDScript/native
 comparison harness, and feature-gated package/session adoption records for native
 output. `native-rmg-full-parity-gate-10184` closes the tracked gate for the
-current 36x36 `homm3_small` comparison fixtures while keeping unsupported native
-configs explicitly `partial_foundation`.
+current tiny comparison fixtures only. `native-rmg-catalog-playability-wiring-10184`
+then corrects the exposed-template fallback path so native package generation
+uses imported catalog topology broadly enough for playable generated maps across
+the menu catalog, while exact HoMM3-re byte/placement/art/reward-table parity
+remains outside the current claim.
 
 Do not infer product readiness from the completed queue. Completed Phase 2/RMG/performance/tooling evidence means those specific slices passed their gates; it does not mean playable alpha, campaign breadth, release readiness, broad faction completion, asset parity, or HoMM3 byte-level cloning.
 
@@ -119,6 +122,34 @@ Selection rules for new Phase 2 slices:
 - Include explicit non-goals for save schema, generated-map density/content, renderer/fog behavior, object contracts, public UI, and asset ingestion when relevant.
 - Preserve existing validation/analyzer compatibility unless the slice explicitly changes it.
 - Do not use profile/instrumentation slices as permission for optimization or gameplay semantics changes.
+
+Completed owner-directed implementation slice:
+
+id: `native-rmg-catalog-playability-wiring-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Correct the native generated-map fallback architecture so every exposed local and translated catalog template uses imported topology and materializes visible roads, objects, decorations, towns, resources, rewards, and guards through native package convert/save/load.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/random_map_template_catalog.json`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `docs/native-rmg-template-decoration-wiring-report.md`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_catalog_quality_report.gd`
+- `tests/native_random_map_catalog_quality_report.tscn`
+- `docs/native-rmg-template-decoration-wiring-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Native generated maps load catalog template zone and link data for all exposed templates where catalog records exist.
+- Zone count, route edge count, road segments/cells, and object density scale from template topology and selected size instead of collapsing to the tiny foundation stub.
+- Roads materialize into package/editor-visible terrain road surfaces after native convert/save/load.
+- `decorative_obstacle`, town, mine/resource/reward/dwelling, and guard placements appear at sane scaled counts for sampled local, medium, large, and XL catalog templates.
+- Existing tiny native full-parity fixture tests remain valid and do not define broad catalog quality.
+- Broad catalog quality report, menu wiring report, decoration report, full parity gate, JSON validation, native build, and diff checks pass.
+nonGoals:
+- No route back to `RandomMapGeneratorRules.gd` for active generation, no generated map packages committed under `maps/`, no exact HoMM3-re byte/placement/art/reward-table parity claim, no save version bump or authored content writeback.
 
 Completed owner-directed implementation slice:
 

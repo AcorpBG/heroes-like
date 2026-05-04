@@ -390,7 +390,7 @@ Dictionary scenario_document_state_from_payload(const Dictionary &document) {
 	return state;
 }
 
-Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid) {
+Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictionary &road_network = Dictionary()) {
 	Dictionary terrain_layers;
 	terrain_layers["schema_id"] = "aurelion_map_terrain_layers";
 	terrain_layers["schema_version"] = 1;
@@ -408,6 +408,42 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid) {
 	terrain["encoding"] = "terrain_code_u16_by_level";
 	terrain["levels"] = terrain_levels;
 	terrain_layers["terrain"] = terrain;
+
+	Array roads;
+	Array road_segments = road_network.get("road_segments", Array());
+	for (int64_t index = 0; index < road_segments.size(); ++index) {
+		if (Variant(road_segments[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary segment = Dictionary(road_segments[index]);
+		Array tiles;
+		Array cells = segment.get("cells", Array());
+		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+			if (Variant(cells[cell_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary cell = Dictionary(cells[cell_index]);
+			Dictionary tile;
+			tile["x"] = int32_t(cell.get("x", 0));
+			tile["y"] = int32_t(cell.get("y", 0));
+			tile["level"] = int32_t(cell.get("level", 0));
+			tiles.append(tile);
+		}
+		Dictionary road;
+		road["id"] = segment.get("id", "road_" + String::num_int64(index + 1));
+		road["route_edge_id"] = segment.get("route_edge_id", "");
+		road["overlay_id"] = segment.get("overlay_id", road_network.get("overlay_id", "generated_dirt_road"));
+		road["road_class"] = segment.get("road_class", "");
+		road["road_type_id"] = segment.get("road_type_id", "");
+		road["tiles"] = tiles;
+		road["cells"] = tiles;
+		road["tile_count"] = tiles.size();
+		road["cell_count"] = tiles.size();
+		road["source"] = "native_rmg_road_network_materialized_for_package_surface";
+		roads.append(road);
+	}
+	terrain_layers["roads"] = roads;
+	terrain_layers["road_count"] = roads.size();
 	return terrain_layers;
 }
 
@@ -881,7 +917,137 @@ Dictionary zone_richness_floor_metadata(const String &role, int32_t base_size) {
 	return metadata;
 }
 
+Dictionary load_random_map_template_catalog() {
+	static Dictionary cached_catalog;
+	static bool loaded = false;
+	if (loaded) {
+		return cached_catalog;
+	}
+	loaded = true;
+	const String path = "res://content/random_map_template_catalog.json";
+	if (!FileAccess::file_exists(path)) {
+		return cached_catalog;
+	}
+	Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		return cached_catalog;
+	}
+	Ref<JSON> parser;
+	parser.instantiate();
+	if (parser->parse(file->get_as_text()) != OK || parser->get_data().get_type() != Variant::DICTIONARY) {
+		return cached_catalog;
+	}
+	cached_catalog = Dictionary(parser->get_data());
+	return cached_catalog;
+}
+
+Dictionary catalog_template_for_id(const String &template_id) {
+	if (template_id.is_empty()) {
+		return Dictionary();
+	}
+	Dictionary catalog = load_random_map_template_catalog();
+	Array templates = catalog.get("templates", Array());
+	for (int64_t index = 0; index < templates.size(); ++index) {
+		if (Variant(templates[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary candidate = Dictionary(templates[index]);
+		if (String(candidate.get("id", "")) == template_id) {
+			return candidate;
+		}
+	}
+	return Dictionary();
+}
+
+bool has_catalog_template(const Dictionary &normalized) {
+	return !catalog_template_for_id(String(normalized.get("template_id", ""))).is_empty();
+}
+
+bool catalog_player_filter_allows(const Dictionary &record, int32_t player_count) {
+	Dictionary filter = record.get("player_filter", Dictionary());
+	if (filter.is_empty()) {
+		return true;
+	}
+	const int32_t min_total = int32_t(filter.get("min_total", 1));
+	const int32_t max_total = int32_t(filter.get("max_total", 8));
+	return player_count >= min_total && player_count <= max_total;
+}
+
+Dictionary catalog_zone_to_native_zone(const Dictionary &source_zone, const Dictionary &normalized, const Dictionary &player_assignment, int64_t zone_index) {
+	Dictionary constraints = normalized.get("player_constraints", Dictionary());
+	const int32_t player_count = int32_t(constraints.get("player_count", 2));
+	Array terrain_pool = normalized_terrain_pool(normalized.get("terrain_ids", default_terrain_pool()));
+	Dictionary by_owner_slot = player_assignment.get("player_slot_by_owner_slot", Dictionary());
+
+	const String zone_id = normalized_text(source_zone, "id", "zone_" + slot_id_2(int32_t(zone_index + 1)));
+	const int32_t owner_slot = int32_t(source_zone.get("owner_slot", 0));
+	const bool active_player_zone = owner_slot > 0 && owner_slot <= player_count;
+	Dictionary assignment = active_player_zone ? Dictionary(by_owner_slot.get(String::num_int64(owner_slot), Dictionary())) : Dictionary();
+	String role = normalized_text(source_zone, "role", normalized_text(source_zone, "type", "treasure"));
+	if (active_player_zone) {
+		role = owner_slot == 1 ? "human_start" : "computer_start";
+	} else if (role.contains("start")) {
+		role = "treasure";
+	}
+	const String faction_id = active_player_zone ? String(assignment.get("faction_id", "")) : "";
+	Dictionary palette = terrain_palette_for_zone(zone_id, faction_id, active_player_zone, terrain_pool, int32_t(zone_index));
+	Variant terrain_value = source_zone.get("terrain", Variant());
+	if (terrain_value.get_type() == Variant::DICTIONARY) {
+		Dictionary terrain = terrain_value;
+		Array allowed = normalized_terrain_pool(terrain.get("allowed", Array()));
+		if (!allowed.is_empty()) {
+			const String terrain_id = String(allowed[int64_t(hash32_int(String(normalized.get("normalized_seed", "0")) + zone_id + ":terrain") % uint32_t(allowed.size()))]);
+			palette["normalized_terrain_id"] = terrain_id;
+			palette["biome_id"] = biome_for_terrain(terrain_id);
+			palette["source"] = "catalog_zone_terrain_allowed";
+		}
+	}
+
+	Dictionary metadata = source_zone.duplicate(true);
+	metadata["source_template_id"] = normalized.get("template_id", "");
+	metadata["native_foundation_source"] = "imported_random_map_template_catalog";
+	metadata["active_player_zone"] = active_player_zone;
+	if (!metadata.has("richness_floor")) {
+		metadata["richness_floor"] = zone_richness_floor_metadata(role, int32_t(source_zone.get("base_size", 10))).get("richness_floor", Dictionary());
+	}
+
+	Dictionary zone;
+	zone["id"] = zone_id;
+	zone["source_id"] = source_zone.get("source_zone_id", zone_id);
+	zone["role"] = role;
+	zone["source_role"] = source_zone.get("role", role);
+	zone["owner_slot"] = active_player_zone ? Variant(owner_slot) : Variant();
+	zone["player_slot"] = active_player_zone ? assignment.get("player_slot", owner_slot) : Variant();
+	zone["player_type"] = active_player_zone ? assignment.get("player_type", owner_slot == 1 ? String("human") : String("computer")) : Variant("neutral");
+	zone["team_id"] = active_player_zone ? assignment.get("team_id", "team_" + slot_id_2(owner_slot)) : Variant("");
+	zone["faction_id"] = faction_id;
+	zone["terrain_id"] = palette.get("normalized_terrain_id", "grass");
+	zone["terrain_palette"] = palette;
+	zone["base_size"] = std::max(4, int32_t(source_zone.get("base_size", 10)));
+	zone["anchor"] = Dictionary();
+	zone["bounds"] = Dictionary();
+	zone["cell_count"] = 0;
+	zone["catalog_metadata"] = metadata;
+	zone["template_player_filter_active"] = catalog_player_filter_allows(source_zone, player_count);
+	return zone;
+}
+
 Array build_foundation_zones(const Dictionary &normalized, const Dictionary &player_assignment) {
+	Dictionary catalog_template = catalog_template_for_id(String(normalized.get("template_id", "")));
+	Array catalog_zones = catalog_template.get("zones", Array());
+	if (!catalog_zones.is_empty()) {
+		Array zones;
+		for (int64_t index = 0; index < catalog_zones.size(); ++index) {
+			if (Variant(catalog_zones[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			zones.append(catalog_zone_to_native_zone(Dictionary(catalog_zones[index]), normalized, player_assignment, index));
+		}
+		if (!zones.is_empty()) {
+			return zones;
+		}
+	}
+
 	Dictionary constraints = normalized.get("player_constraints", Dictionary());
 	const int32_t player_count = int32_t(constraints.get("player_count", 2));
 	Array terrain_pool = normalized_terrain_pool(normalized.get("terrain_ids", default_terrain_pool()));
@@ -988,8 +1154,8 @@ Dictionary resolve_seed_collisions(const Dictionary &seeds, int32_t width, int32
 
 Array foundation_route_links(const Dictionary &normalized);
 
-bool uses_translated_template_link_seed_layout(const Dictionary &normalized) {
-	return String(normalized.get("template_id", "")).begins_with("translated_rmg_template_");
+bool uses_template_link_seed_layout(const Dictionary &normalized) {
+	return has_catalog_template(normalized);
 }
 
 Dictionary zone_link_adjacency(const Array &links) {
@@ -1084,7 +1250,7 @@ Dictionary place_zone_seeds(const Array &zones, const Dictionary &normalized) {
 		y = std::max(1, std::min(std::max(1, height - 2), y));
 		seeds[zone_id] = point_record(x, y);
 	}
-	if (!uses_translated_template_link_seed_layout(normalized)) {
+	if (!uses_template_link_seed_layout(normalized)) {
 		for (int64_t index = 0; index < others.size(); ++index) {
 			Dictionary zone = others[index];
 			seeds[String(zone.get("id", ""))] = fallback_zone_seed_point(zone, index, others.size(), angle_offset, center_x, center_y, radius_x, radius_y, width, height, seed);
@@ -1226,7 +1392,7 @@ Dictionary generate_zone_layout(const Dictionary &normalized, const Dictionary &
 	Dictionary policy;
 	policy["zone_area_model"] = "native_foundation_weighted_nearest_seed";
 	policy["water_mode"] = normalized.get("water_mode", "land");
-	policy["template_model"] = "fallback_runtime_template_until_catalog_parity_slice";
+	policy["template_model"] = has_catalog_template(normalized) ? "imported_catalog_template_zones_and_links" : "fallback_runtime_template";
 
 	Dictionary layout;
 	layout["schema_id"] = NATIVE_RMG_ZONE_LAYOUT_SCHEMA_ID;
@@ -1234,7 +1400,7 @@ Dictionary generate_zone_layout(const Dictionary &normalized, const Dictionary &
 	layout["generation_status"] = "zones_generated_foundation";
 	layout["full_generation_status"] = "not_implemented";
 	layout["template_id"] = normalized.get("template_id", "");
-	layout["template_source"] = "native_foundation_fallback_runtime_template";
+	layout["template_source"] = has_catalog_template(normalized) ? "content_random_map_template_catalog" : "native_foundation_fallback_runtime_template";
 	layout["dimensions"] = dimensions;
 	layout["policy"] = policy;
 	layout["zone_count"] = zones.size();
@@ -1349,6 +1515,31 @@ Array foundation_route_links(const Dictionary &normalized) {
 	Dictionary constraints = normalized.get("player_constraints", Dictionary());
 	const int32_t player_count = int32_t(constraints.get("player_count", 2));
 	Array links;
+	Dictionary catalog_template = catalog_template_for_id(String(normalized.get("template_id", "")));
+	Array catalog_links = catalog_template.get("links", Array());
+	if (!catalog_links.is_empty()) {
+		for (int64_t index = 0; index < catalog_links.size(); ++index) {
+			if (Variant(catalog_links[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary source_link = Dictionary(catalog_links[index]);
+			Dictionary link = source_link.duplicate(true);
+			link["from"] = normalized_text(source_link, "from", "");
+			link["to"] = normalized_text(source_link, "to", "");
+			link["role"] = normalized_text(source_link, "role", "template_connection");
+			Dictionary guard = source_link.get("guard", Dictionary());
+			link["guard_value"] = int32_t(source_link.get("guard_value", guard.get("value", 0)));
+			link["wide"] = bool(source_link.get("wide", false));
+			link["border_guard"] = bool(source_link.get("border_guard", false));
+			link["source"] = "imported_random_map_template_catalog";
+			if (!String(link.get("from", "")).is_empty() && !String(link.get("to", "")).is_empty()) {
+				links.append(link);
+			}
+		}
+		if (!links.is_empty()) {
+			return links;
+		}
+	}
 	for (int32_t index = 0; index < player_count; ++index) {
 		const String start_id = "start_" + String::num_int64(index + 1);
 		const String reward_id = "reward_" + String::num_int64((index % std::max(2, player_count)) + 1);
@@ -2720,6 +2911,82 @@ Dictionary decoration_route_shaping_summary(const Array &placements, const Dicti
 	return summary;
 }
 
+Dictionary zone_by_id(const Array &zones, const String &zone_id);
+
+int32_t sum_dictionary_int_values(const Dictionary &values) {
+	int32_t total = 0;
+	Array keys = values.keys();
+	for (int64_t index = 0; index < keys.size(); ++index) {
+		total += std::max(0, int32_t(values.get(keys[index], 0)));
+	}
+	return total;
+}
+
+int32_t map_area_scale(const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	return std::max(1, (width * height) / 1296);
+}
+
+int32_t catalog_zone_mine_target(const Dictionary &normalized, const Dictionary &zone) {
+	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+	Dictionary requirements = metadata.get("mine_requirements", metadata.get("resource_category_requirements", Dictionary()));
+	Dictionary minimum = requirements.get("minimum_by_category", Dictionary());
+	Dictionary density = requirements.get("density_by_category", Dictionary());
+	const int32_t minimum_total = sum_dictionary_int_values(minimum);
+	const int32_t density_total = sum_dictionary_int_values(density);
+	const double scale = std::sqrt(double(map_area_scale(normalized)));
+	const int32_t density_target = int32_t(std::ceil(double(density_total) * scale / 4.0));
+	const String role = String(zone.get("role", ""));
+	const int32_t fallback = role.contains("start") ? 2 : (role == "treasure" ? 2 : 1);
+	const int32_t cap = role.contains("start") ? std::max(4, 5 + map_area_scale(normalized) / 2) : std::max(4, 4 + map_area_scale(normalized));
+	return std::max(fallback, std::min(cap, minimum_total + density_target));
+}
+
+int32_t catalog_zone_reward_target(const Dictionary &normalized, const Dictionary &zone) {
+	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+	Array bands = metadata.get("treasure_bands", Array());
+	int32_t density_total = 0;
+	for (int64_t index = 0; index < bands.size(); ++index) {
+		if (Variant(bands[index]).get_type() == Variant::DICTIONARY) {
+			density_total += std::max(0, int32_t(Dictionary(bands[index]).get("density", 0)));
+		}
+	}
+	const String role = String(zone.get("role", ""));
+	const double scale = std::sqrt(double(map_area_scale(normalized)));
+	const int32_t fallback = role.contains("start") ? 3 : (role == "treasure" ? 5 : 2);
+	const int32_t cap = std::max(5, 8 + map_area_scale(normalized));
+	return std::max(fallback, std::min(cap, int32_t(std::ceil(double(density_total) * scale / 3.0))));
+}
+
+int32_t catalog_zone_dwelling_target(const Dictionary &normalized, const Dictionary &zone) {
+	const String role = String(zone.get("role", ""));
+	const int32_t base_size = std::max(1, int32_t(zone.get("base_size", 8)));
+	const int32_t area_scale = map_area_scale(normalized);
+	if (role.contains("start")) {
+		return area_scale >= 9 ? 1 : 0;
+	}
+	if (role == "treasure") {
+		return std::max(1, std::min(4, base_size / 6 + area_scale / 8));
+	}
+	if (role == "junction") {
+		return area_scale >= 4 ? 1 : 0;
+	}
+	return 0;
+}
+
+Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, int32_t ring, const Dictionary &normalized, const Array &owner_grid, const Dictionary &occupied, int32_t width, int32_t height) {
+	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+	const String zone_id = String(zone.get("id", ""));
+	const String seed = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":object:" + String::num_int64(ordinal);
+	const int32_t angle_bucket = int32_t(hash32_int(seed) % 8U);
+	static constexpr int32_t OFFSETS[8][2] = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
+	const int32_t distance = 2 + ring + (ordinal % 3);
+	const int32_t x = int32_t(anchor.get("x", width / 2)) + OFFSETS[angle_bucket][0] * distance + deterministic_signed_jitter(seed + String(":x"), 1);
+	const int32_t y = int32_t(anchor.get("y", height / 2)) + OFFSETS[angle_bucket][1] * distance + deterministic_signed_jitter(seed + String(":y"), 1);
+	return find_object_point(x, y, zone_id, owner_grid, occupied, width, height);
+}
+
 Dictionary generate_object_placements(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -2757,55 +3024,43 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	}
 
 	if (parity_targets.is_empty()) {
-	for (int64_t index = 0; index < starts.size(); ++index) {
-		Dictionary start = starts[index];
-		Dictionary zone;
-		const String zone_id = String(start.get("zone_id", ""));
-		for (int64_t zone_index = 0; zone_index < zones.size(); ++zone_index) {
-			Dictionary candidate = zones[zone_index];
-			if (String(candidate.get("id", "")) == zone_id) {
-				zone = candidate;
-				break;
+		for (int64_t index = 0; index < starts.size(); ++index) {
+			Dictionary start = starts[index];
+			Dictionary zone = zone_by_id(zones, String(start.get("zone_id", "")));
+			if (zone.is_empty()) {
+				continue;
 			}
-		}
-		if (zone.is_empty()) {
-			continue;
-		}
-		const int32_t sx = int32_t(start.get("x", 0));
-		const int32_t sy = int32_t(start.get("y", 0));
-		static constexpr int32_t OFFSETS[3][2] = {{2, 0}, {0, 2}, {-2, 0}};
-		for (int32_t resource_index = 0; resource_index < 3; ++resource_index) {
-			Dictionary point = find_object_point(sx + OFFSETS[resource_index][0], sy + OFFSETS[resource_index][1], zone_id, owner_grid, occupied, width, height);
-			append_object_placement(placements, occupied, normalized, zone, point, "resource_site", resource_index, road_network, zone_layout);
-			++ordinal;
-		}
-	}
-
-	for (int64_t index = 0; index < zones.size(); ++index) {
-		Dictionary zone = zones[index];
-		const String zone_id = String(zone.get("id", ""));
-		const String role = String(zone.get("role", ""));
-		Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
-		const int32_t ax = int32_t(anchor.get("x", width / 2));
-		const int32_t ay = int32_t(anchor.get("y", height / 2));
-		if (role == "treasure") {
-			Dictionary reward_point = find_object_point(ax + 1, ay - 1, zone_id, owner_grid, occupied, width, height);
-			append_object_placement(placements, occupied, normalized, zone, reward_point, "reward_reference", int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + zone_id + ":reward") % 7U), road_network, zone_layout);
-			++ordinal;
-			Dictionary mine_point = find_object_point(ax - 2, ay + 1, zone_id, owner_grid, occupied, width, height);
-			append_object_placement(placements, occupied, normalized, zone, mine_point, "mine", int32_t(index), road_network, zone_layout);
-			++ordinal;
-			if (index % 2 == 0) {
-				Dictionary dwelling_point = find_object_point(ax + 2, ay + 2, zone_id, owner_grid, occupied, width, height);
-				append_object_placement(placements, occupied, normalized, zone, dwelling_point, "neutral_dwelling", int32_t(index), road_network, zone_layout);
+			const int32_t sx = int32_t(start.get("x", 0));
+			const int32_t sy = int32_t(start.get("y", 0));
+			static constexpr int32_t OFFSETS[3][2] = {{2, 0}, {0, 2}, {-2, 0}};
+			for (int32_t resource_index = 0; resource_index < 3; ++resource_index) {
+				Dictionary point = find_object_point(sx + OFFSETS[resource_index][0], sy + OFFSETS[resource_index][1], String(start.get("zone_id", "")), owner_grid, occupied, width, height);
+				append_object_placement(placements, occupied, normalized, zone, point, "resource_site", resource_index, road_network, zone_layout);
 				++ordinal;
 			}
-		} else if (role == "junction") {
-			Dictionary reward_point = find_object_point(ax, ay + 2, zone_id, owner_grid, occupied, width, height);
-			append_object_placement(placements, occupied, normalized, zone, reward_point, "reward_reference", int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + zone_id + ":junction_reward") % 7U), road_network, zone_layout);
-			++ordinal;
 		}
-	}
+
+		for (int64_t index = 0; index < zones.size(); ++index) {
+			Dictionary zone = zones[index];
+			const int32_t mine_target = catalog_zone_mine_target(normalized, zone);
+			const int32_t reward_target = catalog_zone_reward_target(normalized, zone);
+			const int32_t dwelling_target = catalog_zone_dwelling_target(normalized, zone);
+			for (int32_t mine_index = 0; mine_index < mine_target; ++mine_index) {
+				Dictionary point = object_point_for_zone_index(zone, ordinal, mine_index / 3, normalized, owner_grid, occupied, width, height);
+				append_object_placement(placements, occupied, normalized, zone, point, "mine", ordinal, road_network, zone_layout);
+				++ordinal;
+			}
+			for (int32_t dwelling_index = 0; dwelling_index < dwelling_target; ++dwelling_index) {
+				Dictionary point = object_point_for_zone_index(zone, ordinal, 2 + dwelling_index, normalized, owner_grid, occupied, width, height);
+				append_object_placement(placements, occupied, normalized, zone, point, "neutral_dwelling", ordinal, road_network, zone_layout);
+				++ordinal;
+			}
+			for (int32_t reward_index = 0; reward_index < reward_target; ++reward_index) {
+				Dictionary point = object_point_for_zone_index(zone, ordinal, 1 + reward_index / 4, normalized, owner_grid, occupied, width, height);
+				append_object_placement(placements, occupied, normalized, zone, point, "reward_reference", ordinal, road_network, zone_layout);
+				++ordinal;
+			}
+		}
 	}
 
 	ordinal = append_decoration_placements(placements, occupied, normalized, zone_layout, road_network, ordinal);
@@ -3413,6 +3668,24 @@ Dictionary object_guard_summary(const Array &candidates, const Array &guards) {
 	return summary;
 }
 
+int32_t neutral_town_target_count(const Dictionary &normalized, const Array &zones, int32_t start_count) {
+	int32_t eligible = 0;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String role = String(zone.get("role", ""));
+		if (role == "treasure" || role == "junction") {
+			++eligible;
+		}
+		Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+		Dictionary neutral_towns = metadata.get("neutral_towns", Dictionary());
+		if (int32_t(neutral_towns.get("min_towns", 0)) > 0 || int32_t(neutral_towns.get("min_castles", 0)) > 0 || int32_t(neutral_towns.get("town_density", 0)) > 0 || int32_t(neutral_towns.get("castle_density", 0)) > 0) {
+			++eligible;
+		}
+	}
+	const int32_t scaled = std::max(2, int32_t(std::ceil(double(zones.size()) / (map_area_scale(normalized) >= 9 ? 5.0 : 7.0))));
+	return std::max(0, std::min(eligible, std::max(2, scaled + start_count / 3)));
+}
+
 Dictionary generate_town_guard_placements(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, const Dictionary &object_placement) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -3435,19 +3708,22 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	}
 
 	if (parity_targets.is_empty()) {
-	for (int64_t index = 0; index < zones.size(); ++index) {
-		Dictionary zone = zones[index];
-		const String role = String(zone.get("role", ""));
-		if (role != "treasure" && role != "junction") {
-			continue;
+		const int32_t neutral_target = neutral_town_target_count(normalized, zones, starts.size());
+		int32_t neutral_count = 0;
+		for (int64_t index = 0; index < zones.size(); ++index) {
+			Dictionary zone = zones[index];
+			const String role = String(zone.get("role", ""));
+			if (role != "treasure" && role != "junction") {
+				continue;
+			}
+			Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+			Dictionary point = find_spaced_object_point(int32_t(anchor.get("x", width / 2)) + 1, int32_t(anchor.get("y", height / 2)) + 1, String(zone.get("id", "")), owner_grid, occupied, width, height, towns, town_hard_spacing_radius_for_size(normalized));
+			append_town_record(towns, occupied, town_record_at_point(normalized, zone, point, Dictionary(), "neutral_zone_town", int32_t(index), road_network, zone_layout, occupied));
+			++neutral_count;
+			if (neutral_count >= neutral_target) {
+				break;
+			}
 		}
-		Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
-		Dictionary point = find_spaced_object_point(int32_t(anchor.get("x", width / 2)) + 1, int32_t(anchor.get("y", height / 2)) + 1, String(zone.get("id", "")), owner_grid, occupied, width, height, towns, town_hard_spacing_radius_for_size(normalized));
-		append_town_record(towns, occupied, town_record_at_point(normalized, zone, point, Dictionary(), "neutral_zone_town", int32_t(index), road_network, zone_layout, occupied));
-		if (towns.size() >= starts.size() + 2) {
-			break;
-		}
-	}
 	}
 
 	Dictionary route_graph = road_network.get("route_graph", Dictionary());
@@ -4229,7 +4505,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	map_state["height"] = height;
 	map_state["level_count"] = level_count;
 	map_state["metadata"] = map_metadata;
-	map_state["terrain_layers"] = terrain_layers_from_grid(Dictionary(generated_map.get("terrain_grid", Dictionary())));
+	map_state["terrain_layers"] = terrain_layers_from_grid(Dictionary(generated_map.get("terrain_grid", Dictionary())), Dictionary(generated_map.get("road_network", Dictionary())));
 	map_state["route_graph"] = generated_map.get("route_graph", Dictionary());
 	map_state["objects"] = combined_native_map_objects(generated_map);
 
@@ -4796,6 +5072,19 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	Dictionary object_placement = generate_object_placements(normalized, zone_layout, player_starts, road_network);
 	Dictionary town_guard_placement = generate_town_guard_placements(normalized, zone_layout, player_starts, road_network, object_placement);
 	Array object_placements = object_placement.get("object_placements", Array());
+	Array map_objects;
+	Array tagged_objects = tagged_record_snapshots(object_placements, "object_placement");
+	for (int64_t index = 0; index < tagged_objects.size(); ++index) {
+		map_objects.append(tagged_objects[index]);
+	}
+	Array tagged_towns = tagged_record_snapshots(town_guard_placement.get("town_records", Array()), "town");
+	for (int64_t index = 0; index < tagged_towns.size(); ++index) {
+		map_objects.append(tagged_towns[index]);
+	}
+	Array tagged_guards = tagged_record_snapshots(town_guard_placement.get("guard_records", Array()), "guard");
+	for (int64_t index = 0; index < tagged_guards.size(); ++index) {
+		map_objects.append(tagged_guards[index]);
+	}
 
 	Dictionary metadata;
 	metadata["schema_id"] = NATIVE_RMG_SCHEMA_ID;
@@ -4837,9 +5126,9 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	map_state["height"] = int32_t(normalized.get("height", 36));
 	map_state["level_count"] = int32_t(normalized.get("level_count", 1));
 	map_state["metadata"] = metadata;
-	map_state["terrain_layers"] = terrain_layers_from_grid(terrain_grid);
+	map_state["terrain_layers"] = terrain_layers_from_grid(terrain_grid, road_network);
 	map_state["route_graph"] = road_network.get("route_graph", Dictionary());
-	map_state["objects"] = object_placements;
+	map_state["objects"] = map_objects;
 
 	Ref<MapDocument> document;
 	document.instantiate();
@@ -4851,7 +5140,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 		warning["code"] = "full_generation_not_implemented";
 		warning["severity"] = "warning";
 		warning["path"] = "generate_random_map";
-		warning["message"] = "Native RMG currently creates deterministic foundation output with validation/provenance records only; full parity is limited to tracked supported profiles.";
+		warning["message"] = "Native RMG creates catalog-wired playable generated-map output for exposed templates; exact full parity remains limited to tracked supported profiles.";
 		warning["context"] = Dictionary();
 		warnings.append(warning);
 	}
