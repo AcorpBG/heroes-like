@@ -2004,7 +2004,9 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 	var encounters := []
 	var occupied := {}
 	var town_spacing_reserved := {}
+	var town_hard_spacing_reserved := {}
 	var town_spacing_radius := _town_spacing_radius_for_size(normalized)
+	var town_hard_spacing_radius := _town_hard_spacing_radius_for_size(normalized)
 	var player_index := 0
 	for zone in zones:
 		if not (zone is Dictionary) or zone.get("player_slot", null) == null:
@@ -2015,17 +2017,16 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 		var owner := "player" if player_type == "human" and player_slot == 1 else "enemy"
 		var faction_id := String(zone.get("faction_id", ""))
 		var town_id := String(town_ids[player_index % town_ids.size()]) if not town_ids.is_empty() else String(DEFAULT_TOWN_BY_FACTION.get(faction_id, "town_riverwatch"))
-		var point := _nearest_free_cell_for_catalog("town", "town_primary", town_id, int(seed.get("x", 0)), int(seed.get("y", 0)), String(zone.get("id", "")), zone_grid, terrain_rows, occupied, rng, town_spacing_reserved)
-		if point.is_empty():
-			point = _nearest_free_cell_for_catalog("town", "town_primary", town_id, int(seed.get("x", 0)), int(seed.get("y", 0)), String(zone.get("id", "")), zone_grid, terrain_rows, occupied, rng)
+		var point := _nearest_free_cell_for_catalog("town", "town_primary", town_id, int(seed.get("x", 0)), int(seed.get("y", 0)), String(zone.get("id", "")), zone_grid, terrain_rows, occupied, rng, town_hard_spacing_reserved)
 		if point.is_empty():
 			continue
 		var placement_id := "rmg_town_p%d" % (player_index + 1)
-		var town := {"placement_id": placement_id, "town_id": town_id, "faction_id": faction_id, "player_slot": player_slot, "player_type": player_type, "team_id": String(zone.get("team_id", "")), "zone_id": String(zone.get("id", "")), "zone_role": String(zone.get("role", "")), "x": int(point.get("x", 0)), "y": int(point.get("y", 0)), "owner": owner, "town_assignment_semantics": "owned_start_uses_player_assignment_town"}
+		var town := {"placement_id": placement_id, "town_id": town_id, "faction_id": faction_id, "player_slot": player_slot, "player_type": player_type, "team_id": String(zone.get("team_id", "")), "zone_id": String(zone.get("id", "")), "zone_role": String(zone.get("role", "")), "x": int(point.get("x", 0)), "y": int(point.get("y", 0)), "owner": owner, "town_assignment_semantics": "owned_start_uses_player_assignment_town", "zone_anchor": seed, "town_spacing_policy": _town_spacing_policy_payload(town_spacing_radius, town_hard_spacing_radius)}
 		towns.append(town)
-		placements.append(_object_placement(placement_id, "town", faction_id, String(zone.get("id", "")), point, {"town_id": town_id, "owner": owner, "player_slot": player_slot, "player_type": player_type, "team_id": String(zone.get("team_id", "")), "purpose": "player_start", "zone_role": String(zone.get("role", "")), "town_assignment_semantics": "owned_start_uses_player_assignment_town", "same_type_semantics": "owned_zone_player_assignment_not_neutral_same_type"}))
+		placements.append(_object_placement(placement_id, "town", faction_id, String(zone.get("id", "")), point, {"town_id": town_id, "owner": owner, "player_slot": player_slot, "player_type": player_type, "team_id": String(zone.get("team_id", "")), "purpose": "player_start", "zone_role": String(zone.get("role", "")), "town_assignment_semantics": "owned_start_uses_player_assignment_town", "same_type_semantics": "owned_zone_player_assignment_not_neutral_same_type", "zone_anchor": seed, "town_spacing_policy": _town_spacing_policy_payload(town_spacing_radius, town_hard_spacing_radius)}))
 		_mark_occupied_for_catalog(occupied, point, "town", "town_primary", town_id)
 		_reserve_town_spacing(town_spacing_reserved, point, zone_grid, terrain_rows, town_spacing_radius)
+		_reserve_town_spacing(town_hard_spacing_reserved, point, zone_grid, terrain_rows, town_hard_spacing_radius)
 		for resource_index in range(SUPPORT_RESOURCE_SITES.size()):
 			var resource: Dictionary = SUPPORT_RESOURCE_SITES[resource_index]
 			var support_point := _nearest_free_cell(
@@ -2057,7 +2058,7 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 	for zone in zones:
 		if not (zone is Dictionary):
 			continue
-		_place_neutral_town_for_zone(zone, zones, seeds, zone_grid, terrain_rows, occupied, route_reserved, town_spacing_reserved, town_spacing_radius, towns, placements, rng)
+		_place_neutral_town_for_zone(zone, zones, seeds, zone_grid, terrain_rows, occupied, route_reserved, town_spacing_reserved, town_spacing_radius, town_hard_spacing_reserved, town_hard_spacing_radius, towns, placements, rng)
 		_place_mines_for_zone(zone, seeds, zone_grid, terrain_rows, occupied, route_reserved, resource_nodes, placements, rng)
 		_place_dwelling_for_zone(zone, seeds, zone_grid, terrain_rows, occupied, route_reserved, resource_nodes, placements, rng)
 	for index in range(links.size()):
@@ -2144,7 +2145,7 @@ static func _reserved_route_corridor_lookup(links: Array, seeds: Dictionary, zon
 			reserved[_point_key(x, y)] = true
 	return reserved
 
-static func _place_neutral_town_for_zone(zone: Dictionary, zones: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary, town_spacing_reserved: Dictionary, town_spacing_radius: int, towns: Array, placements: Array, rng: DeterministicRng) -> void:
+static func _place_neutral_town_for_zone(zone: Dictionary, zones: Array, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary, town_spacing_reserved: Dictionary, town_spacing_radius: int, town_hard_spacing_reserved: Dictionary, town_hard_spacing_radius: int, towns: Array, placements: Array, rng: DeterministicRng) -> void:
 	if zone.get("player_slot", null) != null:
 		return
 	var target_count := _neutral_town_target_count(zone)
@@ -2159,7 +2160,10 @@ static func _place_neutral_town_for_zone(zone: Dictionary, zones: Array, seeds: 
 			spacing_reserved[key] = true
 		var point := _nearest_free_cell_for_catalog("town", String(town_choice.get("faction_id", "")), String(town_choice.get("town_id", "")), int(seed.get("x", 0)) + index, int(seed.get("y", 0)) + index, zone_id, zone_grid, terrain_rows, occupied, rng, spacing_reserved)
 		if point.is_empty():
-			point = _nearest_free_cell_for_catalog("town", String(town_choice.get("faction_id", "")), String(town_choice.get("town_id", "")), int(seed.get("x", 0)) + index, int(seed.get("y", 0)) + index, zone_id, zone_grid, terrain_rows, occupied, rng, reserved)
+			var hard_spacing_reserved := reserved.duplicate()
+			for key in town_hard_spacing_reserved.keys():
+				hard_spacing_reserved[key] = true
+			point = _nearest_free_cell_for_catalog("town", String(town_choice.get("faction_id", "")), String(town_choice.get("town_id", "")), int(seed.get("x", 0)) + index, int(seed.get("y", 0)) + index, zone_id, zone_grid, terrain_rows, occupied, rng, hard_spacing_reserved)
 		if point.is_empty():
 			continue
 		var placement_id := "rmg_neutral_town_%s_%02d" % [zone_id, index + 1]
@@ -2179,6 +2183,8 @@ static func _place_neutral_town_for_zone(zone: Dictionary, zones: Array, seeds: 
 			"owner": "neutral",
 			"town_assignment_semantics": String(town_choice.get("town_assignment_semantics", "")),
 			"same_type_source_zone_id": String(town_choice.get("same_type_source_zone_id", "")),
+			"zone_anchor": seed,
+			"town_spacing_policy": _town_spacing_policy_payload(town_spacing_radius, town_hard_spacing_radius),
 		})
 		placements.append(_object_placement(placement_id, "town", faction_id, zone_id, point, {
 			"town_id": town_id,
@@ -2191,9 +2197,12 @@ static func _place_neutral_town_for_zone(zone: Dictionary, zones: Array, seeds: 
 			"town_assignment_semantics": String(town_choice.get("town_assignment_semantics", "")),
 			"same_type_semantics": String(town_choice.get("same_type_semantics", "")),
 			"same_type_source_zone_id": String(town_choice.get("same_type_source_zone_id", "")),
+			"zone_anchor": seed,
+			"town_spacing_policy": _town_spacing_policy_payload(town_spacing_radius, town_hard_spacing_radius),
 		}))
 		_mark_occupied_for_catalog(occupied, point, "town", "town_primary", town_id)
 		_reserve_town_spacing(town_spacing_reserved, point, zone_grid, terrain_rows, town_spacing_radius)
+		_reserve_town_spacing(town_hard_spacing_reserved, point, zone_grid, terrain_rows, town_hard_spacing_radius)
 
 static func _place_mines_for_zone(zone: Dictionary, seeds: Dictionary, zone_grid: Array, terrain_rows: Array, occupied: Dictionary, reserved: Dictionary, resource_nodes: Array, placements: Array, rng: DeterministicRng) -> void:
 	var zone_id := String(zone.get("id", ""))
@@ -2311,7 +2320,19 @@ static func _town_spacing_radius_for_size(normalized: Dictionary) -> int:
 	var width := int(size.get("width", 36))
 	var height := int(size.get("height", 36))
 	var shortest: int = max(1, min(width, height))
-	return clampi(int(floor(float(shortest) / 12.0)), 4, 14)
+	var minimum := 6 if shortest >= 30 else 5
+	return clampi(max(minimum, int(ceil(float(shortest) / 8.0))), minimum, 18)
+
+static func _town_hard_spacing_radius_for_size(normalized: Dictionary) -> int:
+	return max(4, int(floor(float(_town_spacing_radius_for_size(normalized)) * 0.75)))
+
+static func _town_spacing_policy_payload(preferred_radius: int, hard_radius: int) -> Dictionary:
+	return {
+		"source_model": "HoMM3_RMG_town_layer_after_runtime_zone_construction_translated_to_original_spacing_contract",
+		"preferred_minimum_manhattan_distance": preferred_radius,
+		"hard_fallback_minimum_manhattan_distance": hard_radius,
+		"fallback_policy": "retry_with_hard_spacing_before_any_unspaced_town_placement",
+	}
 
 static func _reserve_town_spacing(reserved: Dictionary, point: Dictionary, zone_grid: Array, terrain_rows: Array, radius: int) -> void:
 	var cx := int(point.get("x", 0))
@@ -4811,6 +4832,11 @@ static func _build_town_mine_dwelling_placement_payload(normalized: Dictionary, 
 			"conflict_count": validation.get("conflicts", []).size(),
 			"minimum_town_distance_required": int(validation.get("town_spacing", {}).get("minimum_distance_required", 0)),
 			"observed_minimum_town_distance": int(validation.get("town_spacing", {}).get("observed_minimum_distance", 0)),
+			"start_town_minimum_distance_required": int(validation.get("town_spacing", {}).get("start_towns", {}).get("minimum_distance_required", 0)),
+			"observed_start_town_minimum_distance": int(validation.get("town_spacing", {}).get("start_towns", {}).get("observed_minimum_distance", 0)),
+			"same_zone_town_pair_count": int(validation.get("town_spacing", {}).get("same_zone_towns", {}).get("pair_count", 0)),
+			"same_zone_town_minimum_distance_required": int(validation.get("town_spacing", {}).get("same_zone_towns", {}).get("minimum_distance_required", 0)),
+			"observed_same_zone_town_minimum_distance": int(validation.get("town_spacing", {}).get("same_zone_towns", {}).get("observed_minimum_distance", 0)),
 		},
 		"deferred": [
 			"final_multitile_body_stamping",
@@ -4876,6 +4902,8 @@ static func _town_placement_record(town: Dictionary, source: Dictionary) -> Dict
 		"town_assignment_semantics": String(town.get("town_assignment_semantics", source.get("town_assignment_semantics", ""))),
 		"same_type_semantics": String(source.get("same_type_semantics", "")),
 		"same_type_source_zone_id": String(town.get("same_type_source_zone_id", source.get("same_type_source_zone_id", ""))),
+		"zone_anchor": town.get("zone_anchor", source.get("zone_anchor", {})),
+		"town_spacing_policy": town.get("town_spacing_policy", source.get("town_spacing_policy", {})),
 		"start_contract": "primary_town_start_support" if int(town.get("player_slot", 0)) > 0 else "neutral_town_objective_or_expansion",
 		"writeout_state": "staged_town_record_no_authored_content_writeback",
 	}
@@ -5043,36 +5071,101 @@ static func _town_mine_dwelling_validation_core(town_records: Array, mine_record
 	}
 
 static func _town_spacing_validation(town_records: Array, terrain_rows: Array) -> Dictionary:
-	var failures := []
 	var min_distance := _minimum_town_distance_for_map(terrain_rows)
-	var observed_min := 999999
-	var closest_pair := []
-	for i in range(town_records.size()):
-		var a = town_records[i]
-		if not (a is Dictionary):
-			continue
-		for j in range(i + 1, town_records.size()):
-			var b = town_records[j]
-			if not (b is Dictionary):
-				continue
-			var distance: int = abs(int(a.get("x", 0)) - int(b.get("x", 0))) + abs(int(a.get("y", 0)) - int(b.get("y", 0)))
-			if distance < observed_min:
-				observed_min = distance
-				closest_pair = [String(a.get("placement_id", "")), String(b.get("placement_id", ""))]
-	if observed_min != 999999 and observed_min < min_distance:
-		failures.append("town spacing below minimum: %d < %d for %s" % [observed_min, min_distance, ",".join(closest_pair)])
+	var hard_min_distance: int = max(4, int(floor(float(min_distance) * 0.75)))
+	var start_records := []
+	for record in town_records:
+		if record is Dictionary and int(record.get("player_slot", 0)) > 0:
+			start_records.append(record)
+	var all_towns := _town_pair_distance_summary(town_records, min_distance, "all_towns")
+	var start_towns := _town_pair_distance_summary(start_records, min_distance, "start_towns")
+	var same_zone_towns := _same_zone_town_pair_distance_summary(town_records, hard_min_distance)
+	var failures := []
+	failures.append_array(all_towns.get("failures", []))
+	failures.append_array(start_towns.get("failures", []))
+	failures.append_array(same_zone_towns.get("failures", []))
 	return {
 		"ok": failures.is_empty(),
 		"minimum_distance_required": min_distance,
-		"observed_minimum_distance": 0 if observed_min == 999999 else observed_min,
-		"closest_pair": closest_pair,
+		"observed_minimum_distance": int(all_towns.get("observed_minimum_distance", 0)),
+		"closest_pair": all_towns.get("closest_pair", []),
+		"all_towns": all_towns,
+		"start_towns": start_towns,
+		"same_zone_towns": same_zone_towns,
 		"failures": failures,
 	}
 
 static func _minimum_town_distance_for_map(terrain_rows: Array) -> int:
 	var height := terrain_rows.size()
 	var width: int = terrain_rows[0].size() if height > 0 and terrain_rows[0] is Array else 36
-	return clampi(int(floor(float(min(width, height)) / 12.0)), 4, 14)
+	var shortest: int = max(1, min(width, height))
+	var minimum := 6 if shortest >= 30 else 5
+	return clampi(max(minimum, int(ceil(float(shortest) / 8.0))), minimum, 18)
+
+static func _town_pair_distance_summary(records: Array, required_distance: int, scope: String) -> Dictionary:
+	var observed_min := 999999
+	var closest_pair := []
+	var pair_count := 0
+	for i in range(records.size()):
+		var a = records[i]
+		if not (a is Dictionary):
+			continue
+		for j in range(i + 1, records.size()):
+			var b = records[j]
+			if not (b is Dictionary):
+				continue
+			pair_count += 1
+			var distance := _town_record_distance(a, b)
+			if distance < observed_min:
+				observed_min = distance
+				closest_pair = [String(a.get("placement_id", "")), String(b.get("placement_id", ""))]
+	var observed := 0 if observed_min == 999999 else observed_min
+	var failures := []
+	if observed_min != 999999 and observed_min < required_distance:
+		failures.append("%s town spacing below minimum: %d < %d for %s" % [scope, observed, required_distance, ",".join(closest_pair)])
+	return {
+		"scope": scope,
+		"pair_count": pair_count,
+		"minimum_distance_required": required_distance,
+		"observed_minimum_distance": observed,
+		"closest_pair": closest_pair,
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+	}
+
+static func _same_zone_town_pair_distance_summary(records: Array, required_distance: int) -> Dictionary:
+	var observed_min := 999999
+	var closest_pair := []
+	var pair_count := 0
+	for i in range(records.size()):
+		var a = records[i]
+		if not (a is Dictionary):
+			continue
+		for j in range(i + 1, records.size()):
+			var b = records[j]
+			if not (b is Dictionary) or String(a.get("zone_id", "")) != String(b.get("zone_id", "")):
+				continue
+			pair_count += 1
+			var distance := _town_record_distance(a, b)
+			if distance < observed_min:
+				observed_min = distance
+				closest_pair = [String(a.get("placement_id", "")), String(b.get("placement_id", ""))]
+	var observed := 0 if observed_min == 999999 else observed_min
+	var failures := []
+	if observed_min != 999999 and observed_min < required_distance:
+		failures.append("same_zone town spacing below minimum: %d < %d for %s" % [observed, required_distance, ",".join(closest_pair)])
+	return {
+		"scope": "same_zone_towns",
+		"pair_count": pair_count,
+		"minimum_distance_required": required_distance,
+		"observed_minimum_distance": observed,
+		"closest_pair": closest_pair,
+		"status": "pass" if failures.is_empty() else "fail",
+		"failures": failures,
+	}
+
+static func _town_record_distance(left: Dictionary, right: Dictionary) -> int:
+	return abs(int(left.get("x", 0)) - int(right.get("x", 0))) + abs(int(left.get("y", 0)) - int(right.get("y", 0)))
 
 static func _town_mine_dwelling_validation(payload: Dictionary, generated_map: Dictionary = {}) -> Dictionary:
 	var failures := []

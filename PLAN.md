@@ -120,6 +120,30 @@ Selection rules for new Phase 2 slices:
 - Preserve existing validation/analyzer compatibility unless the slice explicitly changes it.
 - Do not use profile/instrumentation slices as permission for optimization or gameplay semantics changes.
 
+Completed owner-directed implementation slice:
+
+id: `random-map-homm3-parity-town-zone-spacing-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Improve HoMM3-style RMG town placement quality by preventing generated start and neutral towns from reading as stacked or zone-collapsed, with deterministic spacing metrics across bounded seeds/templates.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md`
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_homm3_parity_richness_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Town placement uses a stricter map-size-aware separation policy with a hard no-stack fallback before giving up on a town placement.
+- Town/mine/dwelling validation reports all-town, start-town, and same-zone closest-pair spacing metrics.
+- The bounded HoMM3 parity richness report validates the stronger spacing requirements across multiple seeds/templates within its runtime budget.
+nonGoals:
+- No generated terrain-art replacement work.
+- No save-version bump, authored campaign adoption, native generator rewrite, or broad renderer/fog/pathing redesign.
+- No full HoMM3 RMG parity claim beyond this measurable town spacing improvement.
+
 Completed owner-directed corrective slice:
 
 id: `native-scenario-active-content-reset-10184`
