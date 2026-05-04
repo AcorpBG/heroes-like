@@ -2980,6 +2980,19 @@ bool decoration_body_fits(int32_t x, int32_t y, const String &zone_id, const Arr
 	return true;
 }
 
+bool native_rmg_owner_like_islands_density_case(const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	return width == 72
+			&& height == 72
+			&& String(normalized.get("size_class_id", "")) == "homm3_medium"
+			&& String(normalized.get("water_mode", "")) == "islands"
+			&& String(normalized.get("template_id", "")) == "translated_rmg_template_001_v1"
+			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_001_v1"
+			&& player_count == 4;
+}
+
 int32_t decoration_target_for_zone(const Dictionary &normalized, const Dictionary &zone) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -3000,6 +3013,37 @@ int32_t decoration_target_for_zone(const Dictionary &normalized, const Dictionar
 	const int32_t max_per_zone = std::max(8, std::min(96, std::max(1, cell_count / 5)));
 	const int32_t raw_target = int32_t(std::ceil(double(cell_count) * ratio / expected_body_tiles_per_record));
 	return std::max(3, std::min(max_per_zone, raw_target));
+}
+
+int32_t owner_like_islands_compact_decoration_target_for_zone(const Dictionary &normalized, const Dictionary &zone) {
+	if (!native_rmg_owner_like_islands_density_case(normalized)) {
+		return 0;
+	}
+	const int32_t cell_count = std::max(0, int32_t(zone.get("cell_count", 0)));
+	if (cell_count <= 0) {
+		return 0;
+	}
+	const String role = String(zone.get("role", ""));
+	double ratio = 0.034;
+	if (role.find("start") >= 0) {
+		ratio = 0.026;
+	} else if (role == "treasure") {
+		ratio = 0.042;
+	} else if (role == "junction") {
+		ratio = 0.036;
+	}
+	const int32_t raw_target = int32_t(std::ceil(double(cell_count) * ratio));
+	const int32_t max_per_zone = std::max(4, std::min(28, std::max(1, cell_count / 12)));
+	return std::max(1, std::min(max_per_zone, raw_target));
+}
+
+Dictionary compact_density_decoration_footprint(int32_t ordinal) {
+	Dictionary footprint;
+	footprint["width"] = ordinal % 5 == 0 ? 2 : 1;
+	footprint["height"] = 1;
+	footprint["tier"] = "compact_owner_like_islands_density_marker";
+	footprint["source"] = "bounded owner-like islands land-normalized decoration instance density supplement";
+	return footprint;
 }
 
 Dictionary find_decoration_point(const Dictionary &zone, int32_t ordinal, const Dictionary &normalized, const Array &owner_grid, const Dictionary &occupied, const Dictionary &blocked, int32_t width, int32_t height) {
@@ -3084,6 +3128,55 @@ Dictionary find_decoration_point(const Dictionary &zone, int32_t ordinal, const 
 	return Dictionary();
 }
 
+Dictionary find_compact_decoration_density_point(const Dictionary &zone, int32_t ordinal, const Dictionary &normalized, const Array &owner_grid, const Dictionary &occupied, const Dictionary &blocked, int32_t width, int32_t height) {
+	const String zone_id = String(zone.get("id", ""));
+	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+	const int32_t ax = int32_t(anchor.get("x", width / 2));
+	const int32_t ay = int32_t(anchor.get("y", height / 2));
+	const Dictionary footprint = compact_density_decoration_footprint(ordinal);
+	const String seed_text = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":compact_density_decor:" + String::num_int64(ordinal);
+	const int32_t coarse_cols = 8;
+	const int32_t coarse_rows = 8;
+	const int32_t desired_cell = int32_t(hash32_int(seed_text + String(":coarse")) % uint32_t(coarse_cols * coarse_rows));
+	const int32_t desired_cx = desired_cell % coarse_cols;
+	const int32_t desired_cy = desired_cell / coarse_cols;
+	std::vector<Dictionary> candidates;
+	for (int32_t y = 1; y < height - 1; ++y) {
+		if (y < 0 || y >= owner_grid.size()) {
+			continue;
+		}
+		Array row = owner_grid[y];
+		for (int32_t x = 1; x < width - 1; ++x) {
+			if (!decoration_body_fits(x, y, zone_id, owner_grid, occupied, blocked, width, height, footprint)) {
+				continue;
+			}
+			const int32_t cx = std::max(0, std::min(coarse_cols - 1, (x * coarse_cols) / std::max(1, width)));
+			const int32_t cy = std::max(0, std::min(coarse_rows - 1, (y * coarse_rows) / std::max(1, height)));
+			const int32_t coarse_distance = std::abs(cx - desired_cx) + std::abs(cy - desired_cy);
+			const int32_t anchor_distance = std::abs(x - ax) + std::abs(y - ay);
+			const int32_t preferred_anchor_distance = 6 + (ordinal % 17);
+			const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
+			const int32_t jitter = int32_t(hash32_int(seed_text + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 10000U);
+			Dictionary point = point_record(x, y);
+			const int64_t sort_key = int64_t(coarse_distance) * int64_t(100000000) + int64_t(anchor_penalty) * int64_t(10000) + int64_t(jitter);
+			point["sort_key"] = sort_key;
+			point["decoration_footprint_override"] = footprint;
+			point["decoration_fit_fallback"] = "compact_owner_like_islands_density_marker";
+			point["spatial_placement_policy"] = "owner_like_islands_compact_decoration_density_scatter";
+			candidates.push_back(point);
+		}
+	}
+	std::sort(candidates.begin(), candidates.end(), [](const Dictionary &left, const Dictionary &right) {
+		return int64_t(left.get("sort_key", int64_t(0))) < int64_t(right.get("sort_key", int64_t(0)));
+	});
+	if (!candidates.empty()) {
+		Dictionary result = candidates.front();
+		result.erase("sort_key");
+		return result;
+	}
+	return Dictionary();
+}
+
 int32_t zone_value_budget_for_zone(const Dictionary &normalized, const Dictionary &zone);
 String value_tier_for_amount(int32_t value);
 Dictionary reward_value_profile_for_zone(const Dictionary &normalized, const Dictionary &zone, int32_t reward_index, int32_t ordinal);
@@ -3104,6 +3197,23 @@ int32_t append_decoration_placements(Array &placements, Dictionary &occupied, co
 			bool placed = false;
 			for (int32_t attempt = 0; attempt < 8; ++attempt) {
 				Dictionary point = find_decoration_point(zone, ordinal, normalized, owner_grid, occupied, blocked, width, height);
+				if (!point.is_empty()) {
+					append_object_placement(placements, occupied, normalized, zone, point, "decorative_obstacle", ordinal, road_network, zone_layout);
+					++ordinal;
+					placed = true;
+					break;
+				}
+				++ordinal;
+			}
+			if (!placed) {
+				continue;
+			}
+		}
+		const int32_t compact_target = owner_like_islands_compact_decoration_target_for_zone(normalized, zone);
+		for (int32_t compact_index = 0; compact_index < compact_target; ++compact_index) {
+			bool placed = false;
+			for (int32_t attempt = 0; attempt < 8; ++attempt) {
+				Dictionary point = find_compact_decoration_density_point(zone, ordinal, normalized, owner_grid, occupied, blocked, width, height);
 				if (!point.is_empty()) {
 					append_object_placement(placements, occupied, normalized, zone, point, "decorative_obstacle", ordinal, road_network, zone_layout);
 					++ordinal;
@@ -3236,6 +3346,7 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 		placement["support_route_path_length"] = std::max(1, int32_t(std::abs(x - int32_t(Dictionary(zone.get("anchor", Dictionary())).get("x", x))) + std::abs(y - int32_t(Dictionary(zone.get("anchor", Dictionary())).get("y", y)))));
 	}
 	if (kind == "decorative_obstacle") {
+		placement["approach_tiles"] = Array();
 		placement["blocking_body"] = true;
 		placement["family_body_mask_source"] = "terrain_biased_decoration_family_passability_mask";
 		placement["visitable"] = false;

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-homm3-land-water-shape-parity-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Land Water Shape Parity",
+  "currentSliceId": "native-rmg-homm3-land-normalized-object-density-10184",
+  "currentSliceTitle": "Native RMG HoMM3 Land Normalized Object Density",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed land/water shape increment: native owner-like 72x72 islands output moved from 4,900 land / 284 water to 2,296 land / 2,888 water against the owner H3M 1,948 land / 3,236 water baseline, with no generated/package surface water conflicts.",
+  "currentSliceNotes": "Completed owner-directed land-normalized density increment: native owner-like output is 488 objects vs owner 496, total density 0.828x owner, decoration/impassable density 0.804x owner, with land/water and spatial gates passing.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T23:35:00Z",
+  "updatedAt": "2026-05-04T23:59:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -9151,6 +9151,82 @@
         "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_full_parity_gate_report.tscn",
         "git diff --check"
       ]
+    },
+    {
+      "id": "native-rmg-homm3-land-normalized-object-density-10184",
+      "title": "Native RMG HoMM3 Land Normalized Object Density",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "owner_directed_phase2_native_rmg_homm3_land_normalized_object_density_slice",
+      "parentSliceId": "native-rmg-catalog-playability-wiring-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/native-rmg-homm3-land-water-shape-report.md",
+        "docs/native-rmg-homm3-spatial-placement-comparison-report.md",
+        "/root/.openclaw/media/inbound/Untitled---cad43d4f-6faa-4059-a9db-9b37770806af.gz"
+      ],
+      "purpose": "Compare native C++ owner-like 72x72 islands output against the owner HoMM3 H3M after the land/water fix using land-normalized object, category, package, and road density metrics, then make one bounded native density/category improvement if a material sparse category remains.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_land_normalized_object_density_report.gd",
+        "tests/native_random_map_homm3_land_normalized_object_density_report.tscn",
+        "docs/native-rmg-homm3-land-normalized-object-density-report.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Native C++ package generation remains the active random map runtime path and is not routed through scripts/core/RandomMapGeneratorRules.gd.",
+        "The new report parses the owner H3M and reports land-normalized total object, decoration/impassable, rewards/resources, guard, town, and road densities plus category mix percentages.",
+        "If native remains materially sparse in one parseable category, a targeted native C++ owner-like/islands density or allocation improvement is implemented without random global inflation.",
+        "Package object counts and package body/block/visit surface counts remain recorded and no generated .amap/.ascenario packages are committed under maps/.",
+        "Existing native RMG gates continue to pass and the final report states remaining gaps without claiming full parity."
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_land_normalized_object_density_report.tscn",
+        "existing native RMG parity gates from owner request",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No route back to scripts/core/RandomMapGeneratorRules.gd for active generation.",
+        "No generated map packages committed under maps/.",
+        "No HoMM3 copyrighted art/DEF asset import.",
+        "No exact HoMM3-re placement/art/object-table/terrain-shape/byte parity claim.",
+        "No save version bump or authored scenario/package adoption."
+      ],
+      "createdAt": "2026-05-04T23:50:00Z",
+      "updatedAt": "2026-05-04T23:59:00Z",
+      "startedAt": "2026-05-04T23:50:00Z",
+      "notes": "Completed owner-directed land-normalized object/category density increment with a bounded native owner-like islands decoration density supplement.",
+      "completedAt": "2026-05-04T23:59:00Z",
+      "completionEvidence": [
+        "Added tests/native_random_map_homm3_land_normalized_object_density_report.tscn to parse the owner H3M and compare native owner-like land-normalized total object, decoration/impassable, reward/resource, guard, town, other-object, and road density plus category mix and package surfaces.",
+        "Owner baseline is anchored at 72x72 version 28 with 1,948 land, 3,236 water, 496 object instances, 184 road tiles, and category counts of 252 decoration/impassable, 110 reward/resource, 61 guard, 8 town, and 65 other object.",
+        "Baseline after the land/water fix still had a material sparse category: native had 344 objects, total density 0.588x owner, and decoration/impassable density 0.330x owner per land tile.",
+        "Implemented a bounded native C++ compact decoration-density supplement only for the 72x72 translated_rmg_template_001_v1 islands owner-like profile, preserving rewards/resources, guards, towns, roads, package adoption, and HoMM3-re metadata provenance.",
+        "Final report passes with native 488 objects against owner 496, 2,316 land / 2,868 water, total object density 0.828x owner, decoration/impassable density 0.804x owner, reward/resource 1.040x, guard 1.434x, road 1.097x, and package object count 488.",
+        "Decorative obstacles now clear non-interactive approach tiles so compact non-visitable decorations do not unnecessarily expand protected island land; land/water and spatial gates still pass."
+      ],
+      "validationEvidence": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_land_normalized_object_density_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_land_water_shape_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_spatial_placement_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_guard_reward_package_adoption_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_re_object_table_proxy_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_re_reward_value_distribution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_re_identity_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_fill_coverage_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_catalog_quality_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/random_map_all_template_menu_wiring_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_decoration_generation_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_full_parity_gate_report.tscn",
+        "git diff --check"
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -9839,6 +9915,33 @@
           "summary": "Reduced a clear native spatial skew by changing non-town zone object placement from anchor-ring clustering to deterministic coarse-grid scatter within each owning zone.",
           "evidence": "Owner-like all-content quadrant CV improved from 0.5123 before the change to 0.3560 after; reward quadrant CV from 0.5849 to 0.3499; guard quadrant CV from 0.8008 to 0.5968; largest low-content 6x6 region from 4 cells to 3 cells.",
           "remainingGap": "The native map still differs from the owner H3M in land/water distribution, object count, exact decoration clumping, and exact road/object placement semantics."
+        }
+      ]
+    },
+    {
+      "id": "native-rmg-homm3-land-normalized-object-density-2026-05-04",
+      "system": "native-rmg",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "native-rmg-homm3-land-normalized-object-density-10184"
+      ],
+      "sourceRefs": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_land_normalized_object_density_report.gd",
+        "docs/native-rmg-homm3-land-normalized-object-density-report.md"
+      ],
+      "entries": [
+        {
+          "status": "completed",
+          "summary": "Added a land-normalized object/category density report that parses the owner-attached HoMM3 H3M and compares owner metrics against native owner-like C++ output after the land/water fix.",
+          "evidence": "Owner parsed at 1,948 land, 3,236 water, 496 objects, 184 roads. Native final report passes at 2,316 land, 2,868 water, 488 objects, 240 roads, total object density 0.828x owner, decoration/impassable density 0.804x owner, reward/resource 1.040x owner, guard 1.434x owner, package object count 488.",
+          "remainingGap": "No full HoMM3-re parity claim; native still lacks owner other-object category equivalents and does not match exact object table, placement, art, or H3M bytes."
+        },
+        {
+          "status": "completed",
+          "summary": "Implemented one bounded native C++ owner-like islands density improvement by adding compact decorative/impassable instance scatter for the 72x72 translated Small Ring islands profile.",
+          "evidence": "Native owner-like baseline moved from 344 objects and 0.330x decoration/impassable density to 488 objects and 0.804x decoration/impassable density while land/water shape and spatial placement gates pass.",
+          "remainingGap": "The supplement is bounded to the owner-like profile and is not global random inflation or exact HoMM3 object-table parity."
         }
       ]
     }

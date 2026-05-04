@@ -125,6 +125,28 @@ Selection rules for new Phase 2 slices:
 
 Completed owner-directed implementation slice:
 
+id: `native-rmg-homm3-land-normalized-object-density-10184`
+phase: `phase-2-deep-production-foundation`
+status: `completed`
+purpose: Compare owner-attached HoMM3 H3M object/category density against native owner-like 72x72 islands output after the land/water fix, then correct one clear land-normalized sparse category without rerouting generation away from native C++.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/native-rmg-homm3-land-water-shape-report.md`
+- `docs/native-rmg-homm3-spatial-placement-comparison-report.md`
+- `docs/native-rmg-homm3-land-normalized-object-density-report.md`
+- owner-attached HoMM3 H3M gzip from 2026-05-04
+implementation:
+- Added a land-normalized density report that parses the owner H3M and reports total object, decoration/impassable, reward/resource, guard, town, other-object, and road density per 100 land tiles plus category mix and package surfaces.
+- Native owner-like islands output now applies a bounded compact decoration-density supplement for the 72x72 translated Small Ring islands profile, raising total objects from 344 to 488 against owner 496 and decoration/impassable density from 0.330x to 0.804x owner after land normalization.
+evidence:
+- `tests/native_random_map_homm3_land_normalized_object_density_report.tscn`
+- `docs/native-rmg-homm3-land-normalized-object-density-report.md`
+nonGoals:
+- No route back to `RandomMapGeneratorRules.gd` for active generation, no generated map packages committed under `maps/`, no HoMM3 copyrighted art/DEF asset import, no exact HoMM3-re placement/art/object-table/byte parity claim, no save version bump or authored scenario/package adoption.
+
+Completed owner-directed implementation slice:
+
 id: `native-rmg-homm3-land-water-shape-parity-10184`
 phase: `phase-2-deep-production-foundation`
 status: `completed`
