@@ -230,6 +230,7 @@ func _gdscript_summary(setup: Dictionary) -> Dictionary:
 	var roads_rivers: Dictionary = staging.get("roads_rivers_writeout", {}) if staging.get("roads_rivers_writeout", {}) is Dictionary else {}
 	var town_mine_dwelling: Dictionary = staging.get("town_mine_dwelling_placement", {}) if staging.get("town_mine_dwelling_placement", {}) is Dictionary else {}
 	var runtime_materialization: Dictionary = payload.get("runtime_materialization", {}) if payload.get("runtime_materialization", {}) is Dictionary else {}
+	var decoration: Dictionary = staging.get("decoration_density_pass", {}) if staging.get("decoration_density_pass", {}) is Dictionary else {}
 	return {
 		"generator": "gdscript_random_map_generator_rules",
 		"ok": bool(setup.get("ok", false)),
@@ -251,6 +252,9 @@ func _gdscript_summary(setup: Dictionary) -> Dictionary:
 		"objects": {
 			"placement_count": staging.get("object_placements", []).size(),
 			"category_counts": _count_by_key(staging.get("object_placements", []), "kind"),
+			"core_placement_count": staging.get("object_placements", []).size(),
+			"core_category_counts": _count_by_key(staging.get("object_placements", []), "kind"),
+			"decorative_obstacle_count": decoration.get("decoration_records", []).size(),
 			"runtime_object_instance_count": runtime_materialization.get("objects", {}).get("object_instances", []).size(),
 		},
 		"towns": {
@@ -283,6 +287,10 @@ func _native_summary(native_result: Dictionary) -> Dictionary:
 	var provenance: Dictionary = native_result.get("provenance", {}) if native_result.get("provenance", {}) is Dictionary else {}
 	var metrics: Dictionary = report.get("metrics", {}) if report.get("metrics", {}) is Dictionary else {}
 	var terrain_grid: Dictionary = native_result.get("terrain_grid", {}) if native_result.get("terrain_grid", {}) is Dictionary else {}
+	var native_objects: Array = native_result.get("object_placements", []) if native_result.get("object_placements", []) is Array else []
+	var native_category_counts := _count_by_key(native_objects, "kind")
+	var native_core_category_counts := _count_by_key(_records_without_kind(native_objects, "decorative_obstacle"), "kind")
+	var native_decor_count := int(native_category_counts.get("decorative_obstacle", 0))
 	return {
 		"generator": "native_gdextension_map_package_service",
 		"ok": bool(native_result.get("ok", false)),
@@ -315,7 +323,10 @@ func _native_summary(native_result: Dictionary) -> Dictionary:
 		},
 		"objects": {
 			"placement_count": int(metrics.get("object_placement_count", native_result.get("object_placements", []).size())),
-			"category_counts": native_result.get("object_category_counts", {}),
+			"category_counts": native_category_counts,
+			"core_placement_count": native_objects.size() - native_decor_count,
+			"core_category_counts": native_core_category_counts,
+			"decorative_obstacle_count": native_decor_count,
 			"runtime_object_instance_count": 0,
 		},
 		"towns": {
@@ -432,8 +443,11 @@ func _object_comparison(gdscript: Dictionary, native: Dictionary) -> Dictionary:
 	var left_guards: Dictionary = gdscript.get("guards", {})
 	var right_guards: Dictionary = native.get("guards", {})
 	return {
-		"object_placement_counts_match": int(left_objects.get("placement_count", 0)) == int(right_objects.get("placement_count", 0)),
-		"object_category_keys_match": _sorted_keys(left_objects.get("category_counts", {})) == _sorted_keys(right_objects.get("category_counts", {})),
+		"object_placement_counts_match": int(left_objects.get("core_placement_count", left_objects.get("placement_count", 0))) == int(right_objects.get("core_placement_count", right_objects.get("placement_count", 0))),
+		"object_category_keys_match": _sorted_keys(left_objects.get("core_category_counts", left_objects.get("category_counts", {}))) == _sorted_keys(right_objects.get("core_category_counts", right_objects.get("category_counts", {}))),
+		"native_decorative_obstacle_count": int(right_objects.get("decorative_obstacle_count", 0)),
+		"gdscript_decoration_record_count": int(left_objects.get("decorative_obstacle_count", 0)),
+		"decorations_generated_in_native_output": int(right_objects.get("decorative_obstacle_count", 0)) > 0,
 		"town_counts_match": int(left_towns.get("scenario_town_count", 0)) == int(right_towns.get("scenario_town_count", 0)),
 		"guard_counts_match": int(left_guards.get("scenario_encounter_count", 0)) == int(right_guards.get("scenario_encounter_count", 0)),
 		"gdscript_objects": left_objects,
@@ -473,6 +487,7 @@ func _case_known_gaps(case_record: Dictionary, gdscript: Dictionary, native: Dic
 	_append_gap_if_false(gaps, comparisons.get("roads_rivers", {}).get("river_cell_counts_match", false), "river_cell_count_gap", case_record, "Native and GDScript river cell counts differ.")
 	_append_gap_if_false(gaps, comparisons.get("objects_towns_guards", {}).get("object_placement_counts_match", false), "object_count_gap", case_record, "Native and GDScript staged object counts differ.")
 	_append_gap_if_false(gaps, comparisons.get("objects_towns_guards", {}).get("object_category_keys_match", false), "object_category_gap", case_record, "Native and GDScript object category coverage differs.")
+	_append_gap_if_false(gaps, comparisons.get("objects_towns_guards", {}).get("decorations_generated_in_native_output", false), "native_decoration_absent", case_record, "Native supported output must include decorative_obstacle records.")
 	_append_gap_if_false(gaps, comparisons.get("objects_towns_guards", {}).get("town_counts_match", false), "town_count_gap", case_record, "Native and GDScript town counts differ.")
 	_append_gap_if_false(gaps, comparisons.get("objects_towns_guards", {}).get("guard_counts_match", false), "guard_count_gap", case_record, "Native and GDScript guard counts differ.")
 	if String(native.get("status", "")) != "full_parity_supported":
@@ -560,6 +575,13 @@ func _count_by_key(records: Array, key: String) -> Dictionary:
 			value = "unknown"
 		counts[value] = int(counts.get(value, 0)) + 1
 	return counts
+
+func _records_without_kind(records: Array, excluded_kind: String) -> Array:
+	var result := []
+	for record_value in records:
+		if record_value is Dictionary and String(record_value.get("kind", "")) != excluded_kind:
+			result.append(record_value)
+	return result
 
 func _sorted_keys(value: Variant) -> Array:
 	var keys := []

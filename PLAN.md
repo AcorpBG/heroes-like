@@ -120,7 +120,33 @@ Selection rules for new Phase 2 slices:
 - Preserve existing validation/analyzer compatibility unless the slice explicitly changes it.
 - Do not use profile/instrumentation slices as permission for optimization or gameplay semantics changes.
 
-Selected owner-directed implementation slice:
+Completed owner-directed implementation slice:
+
+id: `native-rmg-template-decoration-wiring-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Wire the full imported random-map template catalog into the generated skirmish menu and make native C++ GDExtension package generation emit real decorative obstacle placements.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/random_map_template_catalog.json`
+- `docs/native-rmg-template-decoration-wiring-report.md`
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `scenes/menus/MainMenu.gd`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/random_map_all_template_menu_wiring_report.gd`
+- `tests/native_random_map_decoration_generation_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Generated-map menu rules and UI expose all 56 catalog templates and 56 catalog profiles with template-scoped profile selection.
+- Player-count options come from catalog template ranges/slots where available, with fallback only for missing catalog data.
+- Active generated skirmish launch remains native `MapPackageService.generate_random_map()` package generation.
+- Native object placements include scalable `decorative_obstacle` records with body, footprint, blocking, approach, and occupancy metadata.
+- Menu wiring, native decoration generation, player-count/template filtering, full native parity gate, JSON validation, native build, and diff checks pass.
+nonGoals:
+- No route back to `RandomMapGeneratorRules.gd` for active generation, no generated map packages committed under `maps/`, no false whole-catalog/full HoMM3-re parity claim, no exact HoMM3 decoration art/family parity claim.
+
+Completed owner-directed implementation slice:
 
 id: `random-map-homm3-parity-warning-classification-followup-10184`
 phase: `phase-2-deep-production-foundation`

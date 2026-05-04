@@ -386,12 +386,14 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 
 static func random_map_player_setup_options() -> Dictionary:
 	var template_options := _random_map_template_options_with_player_counts()
+	var profile_options := _random_map_profile_options()
 	return {
 		"templates": template_options,
-		"profiles": RANDOM_MAP_PLAYER_PROFILE_OPTIONS.duplicate(true),
+		"profiles": profile_options,
 		"size_classes": RANDOM_MAP_SIZE_OPTIONS.duplicate(true),
 		"player_counts": _random_map_all_player_count_options(template_options),
 		"player_count_options_by_template": _random_map_player_count_options_by_template(template_options),
+		"profile_options_by_template": _random_map_profile_options_by_template(profile_options),
 		"water_modes": RANDOM_MAP_WATER_OPTIONS.duplicate(true),
 		"retry_policy": RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"default_seed": RANDOM_MAP_DEFAULT_SEED,
@@ -556,6 +558,15 @@ static func random_map_fresh_auto_seed() -> String:
 
 static func random_map_player_count_options_for_template(template_id: String) -> Array:
 	return _random_map_template_player_count_options(template_id, _random_map_template_option(template_id))
+
+static func random_map_profile_options_for_template(template_id: String) -> Array:
+	var options := []
+	for option in _random_map_profile_options():
+		if option is Dictionary and String(option.get("template_id", "")) == template_id:
+			options.append(option.duplicate(true))
+	if options.is_empty():
+		options = _random_map_profile_options()
+	return options
 
 static func random_map_size_class_default(size_class_id: String) -> Dictionary:
 	var size_option := _random_map_size_option(size_class_id)
@@ -1486,14 +1497,18 @@ static func _native_random_map_setup_summary(generated: Dictionary, adoption: Di
 	])
 
 static func _random_map_template_option(template_id: String) -> Dictionary:
-	for option in RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS:
+	var options := _random_map_template_options()
+	for option in options:
 		if String(option.get("id", "")) == template_id:
 			return option.duplicate(true)
-	return RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS[0].duplicate(true)
+	for option in options:
+		if String(option.get("id", "")) == "border_gate_compact_v1":
+			return option.duplicate(true)
+	return options[0].duplicate(true) if not options.is_empty() else RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS[0].duplicate(true)
 
 static func _random_map_template_options_with_player_counts() -> Array:
 	var options := []
-	for raw_option in RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS:
+	for raw_option in _random_map_template_options():
 		if not (raw_option is Dictionary):
 			continue
 		var option: Dictionary = raw_option.duplicate(true)
@@ -1522,6 +1537,19 @@ static func _random_map_player_count_options_by_template(template_options: Array
 		if not (option is Dictionary):
 			continue
 		result[String(option.get("id", ""))] = option.get("player_counts", []).duplicate(true)
+	return result
+
+static func _random_map_profile_options_by_template(profile_options: Array) -> Dictionary:
+	var result := {}
+	for option in profile_options:
+		if not (option is Dictionary):
+			continue
+		var template_id := String(option.get("template_id", ""))
+		if template_id == "":
+			continue
+		if not result.has(template_id):
+			result[template_id] = []
+		result[template_id].append(option.duplicate(true))
 	return result
 
 static func _random_map_template_player_count_options(template_id: String, fallback_option: Dictionary = {}) -> Array:
@@ -1560,11 +1588,109 @@ static func _random_map_normalize_player_count_for_template(template_id: String,
 	return clampi(requested, first_count, last_count)
 
 static func _random_map_catalog_template(template_id: String) -> Dictionary:
-	var catalog: Dictionary = ContentService.load_json(RandomMapGeneratorRulesScript.TEMPLATE_CATALOG_PATH)
+	var catalog := _random_map_catalog()
 	for template in catalog.get("templates", []):
 		if template is Dictionary and String(template.get("id", "")) == template_id:
 			return template.duplicate(true)
 	return {}
+
+static func _random_map_catalog() -> Dictionary:
+	var catalog: Dictionary = ContentService.load_json(RandomMapGeneratorRulesScript.TEMPLATE_CATALOG_PATH)
+	return catalog if catalog is Dictionary else {}
+
+static func _random_map_template_options() -> Array:
+	var catalog := _random_map_catalog()
+	var profiles_by_template := {}
+	for profile in catalog.get("profiles", []):
+		if profile is Dictionary:
+			profiles_by_template[String(profile.get("template_id", ""))] = profile
+	var options := []
+	for template_value in catalog.get("templates", []):
+		if not (template_value is Dictionary):
+			continue
+		var template: Dictionary = template_value
+		var template_id := String(template.get("id", ""))
+		if template_id == "":
+			continue
+		var profile: Dictionary = profiles_by_template.get(template_id, {}) if profiles_by_template.get(template_id, {}) is Dictionary else {}
+		var player_counts := _player_counts_from_catalog_template(template, 3)
+		var option := {
+			"id": template_id,
+			"label": String(template.get("label", template_id)),
+			"profile_id": String(profile.get("id", "")),
+			"player_count": int(player_counts[min(player_counts.size() - 1, 2)]) if not player_counts.is_empty() else 3,
+			"water_modes": _water_modes_from_catalog_template(template),
+			"supports_underground": _template_supports_underground(template),
+			"catalog_source": "content/random_map_template_catalog.json",
+			"family": String(template.get("family", "")),
+			"size_score": template.get("size_score", {}),
+		}
+		options.append(option)
+	if not options.is_empty():
+		return options
+	return RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS.duplicate(true)
+
+static func _random_map_profile_options() -> Array:
+	var catalog := _random_map_catalog()
+	var options := []
+	for profile_value in catalog.get("profiles", []):
+		if not (profile_value is Dictionary):
+			continue
+		var profile: Dictionary = profile_value
+		var profile_id := String(profile.get("id", ""))
+		if profile_id == "":
+			continue
+		options.append({
+			"id": profile_id,
+			"label": String(profile.get("label", profile_id)),
+			"template_id": String(profile.get("template_id", "")),
+			"guard_strength_profile": String(profile.get("guard_strength_profile", "core_low")),
+			"terrain_ids": profile.get("terrain_ids", []),
+			"faction_ids": profile.get("faction_ids", []),
+			"encounter_id": String(profile.get("encounter_id", "")),
+			"catalog_source": "content/random_map_template_catalog.json",
+		})
+	if not options.is_empty():
+		return options
+	return RANDOM_MAP_PLAYER_PROFILE_OPTIONS.duplicate(true)
+
+static func _player_counts_from_catalog_template(template: Dictionary, fallback_count: int) -> Array:
+	var players: Dictionary = template.get("players", {}) if template.get("players", {}) is Dictionary else {}
+	var total: Dictionary = players.get("total", {}) if players.get("total", {}) is Dictionary else {}
+	var min_count := clampi(int(total.get("min", fallback_count)), 2, 8)
+	var max_count := clampi(int(total.get("max", fallback_count)), min_count, 8)
+	var capacity := _random_map_template_total_start_capacity(template)
+	if capacity > 0:
+		max_count = min(max_count, capacity)
+	if min_count > max_count:
+		min_count = max_count
+	var counts := []
+	for count in range(min_count, max_count + 1):
+		counts.append(count)
+	if counts.is_empty():
+		counts.append(clampi(fallback_count, 2, 8))
+	return counts
+
+static func _water_modes_from_catalog_template(template: Dictionary) -> Array:
+	var result := {}
+	var support: Dictionary = template.get("map_support", {}) if template.get("map_support", {}) is Dictionary else {}
+	for mode_value in support.get("water_modes", ["land"]):
+		var mode := String(mode_value)
+		if mode == "land":
+			result["land"] = true
+		elif mode.contains("islands"):
+			result["islands"] = true
+	if result.is_empty():
+		result["land"] = true
+	return _sorted_string_keys(result)
+
+static func _template_supports_underground(template: Dictionary) -> bool:
+	var support: Dictionary = template.get("map_support", {}) if template.get("map_support", {}) is Dictionary else {}
+	var levels: Dictionary = support.get("levels", {}) if support.get("levels", {}) is Dictionary else {}
+	for count in levels.get("supported_counts", []):
+		if int(count) >= 2:
+			return true
+	return false
 
 static func _random_map_template_total_start_capacity(template: Dictionary) -> int:
 	var owner_slots := {}
@@ -1584,6 +1710,13 @@ static func _sorted_int_keys(values: Dictionary) -> Array:
 	result.sort()
 	return result
 
+static func _sorted_string_keys(values: Dictionary) -> Array:
+	var result := []
+	for key in values.keys():
+		result.append(String(key))
+	result.sort()
+	return result
+
 static func _random_map_size_option(size_class_id: String) -> Dictionary:
 	for option in RANDOM_MAP_SIZE_OPTIONS:
 		if String(option.get("id", "")) == size_class_id:
@@ -1594,10 +1727,14 @@ static func random_map_size_class_label(size_class_id: String) -> String:
 	return String(_random_map_size_option(size_class_id).get("label", "Small 36x36"))
 
 static func _random_map_profile_option(profile_id: String) -> Dictionary:
-	for option in RANDOM_MAP_PLAYER_PROFILE_OPTIONS:
+	var options := _random_map_profile_options()
+	for option in options:
 		if String(option.get("id", "")) == profile_id:
 			return option.duplicate(true)
-	return RANDOM_MAP_PLAYER_PROFILE_OPTIONS[0].duplicate(true)
+	for option in options:
+		if String(option.get("id", "")) == "border_gate_compact_profile_v1":
+			return option.duplicate(true)
+	return options[0].duplicate(true) if not options.is_empty() else RANDOM_MAP_PLAYER_PROFILE_OPTIONS[0].duplicate(true)
 
 static func _random_map_retry_policy(retry_policy: Dictionary) -> Dictionary:
 	var policy := RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true)
