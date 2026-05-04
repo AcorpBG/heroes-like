@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-homm3-re-object-table-proxy-selection-10184",
-  "currentSliceTitle": "Native RMG HoMM3-re Object Table Proxy Selection",
+  "currentSliceId": "native-rmg-guard-reward-package-adoption-10184",
+  "currentSliceTitle": "Native RMG Guard/Reward Package Adoption",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed native C++ reward/object table proxy selection increment: reward-bearing generated records expose HoMM3-re source object/table identity and original proxy mapping metadata, with a new report proving tier/category/bucket/proxy diversity while preserving reward-value, road, fill, decoration, and package surfaces.",
+  "currentSliceNotes": "Completed owner-directed native C++ package adoption increment: generated package/editor surfaces now retain guard/reward links, guard references, guarded access requirements, and package body/visit/block masks after convert/save/load, while non-town object placement reserves road cells to avoid non-guard body/path conflicts.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T18:10:00Z",
+  "updatedAt": "2026-05-04T18:50:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -8938,6 +8938,69 @@
         "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_full_parity_gate_report.tscn",
         "git diff --check",
         "Validation log directory: .artifacts/validation_logs/homm3_re_object_proxy_20260504T144039Z"
+      ]
+    },
+    {
+      "id": "native-rmg-guard-reward-package-adoption-10184",
+      "title": "Native RMG Guard/Reward Package Adoption",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "completed",
+      "classification": "owner_directed_phase2_native_rmg_guard_reward_package_adoption_slice",
+      "parentSliceId": "native-rmg-homm3-re-object-table-proxy-selection-10184",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "content/random_map_template_catalog.json",
+        "docs/native-rmg-homm3-re-object-table-proxy-report.md",
+        "docs/native-rmg-homm3-re-reward-value-distribution-report.md",
+        "2026-05-04 owner directive: generated package/gameplay adoption of guard/reward bodies and pathing"
+      ],
+      "purpose": "Continue native C++ GDExtension RMG package parity by making generated package/editor surfaces preserve guard/reward relationships and object body/visit/block masks after native conversion and package save/load.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_guard_reward_package_adoption_report.gd",
+        "tests/native_random_map_guard_reward_package_adoption_report.tscn",
+        "docs/native-rmg-guard-reward-package-adoption-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Active generated skirmish/package generation remains native MapPackageService.generate_random_map(), not scripts/core/RandomMapGeneratorRules.gd.",
+        "Generated package-loaded reward records retain value, proxy, source, guard, body, visit, and block metadata after convert/save/load.",
+        "Protected valuable rewards carry direct package guard links, guard references, guarded access requirements, passability, and pathing hints.",
+        "Guard records materialize as blocking package surfaces.",
+        "Non-town reward/site body block masks do not overlap materialized road/path cells in sampled package-loaded surfaces.",
+        "No generated .amap/.ascenario files under maps/ are committed and no HoMM3 copyrighted assets are imported."
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot4 --headless --path . tests/native_random_map_guard_reward_package_adoption_report.tscn",
+        "existing native RMG parity/package gates listed in the owner directive",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No active generated skirmish launch through RandomMapGeneratorRules.gd.",
+        "No generated .amap/.ascenario files under maps/ committed.",
+        "No HoMM3 copyrighted art/DEF asset import.",
+        "No exact HoMM3-re byte/object/reward-table/art/placement parity claim.",
+        "No save version bump or authored scenario/package adoption."
+      ],
+      "createdAt": "2026-05-04T18:20:00Z",
+      "updatedAt": "2026-05-04T18:50:00Z",
+      "startedAt": "2026-05-04T18:20:00Z",
+      "completedAt": "2026-05-04T18:50:00Z",
+      "notes": "Completed native package adoption increment: convert_generated_payload now enriches package objects with body/visit/block masks, guarded access metadata, guard references, guarded passability, and package adoption summaries; non-parity object placement reserves roads before non-town object placement.",
+      "completionEvidence": [
+        "Package-loaded reward records retain HoMM3-re value/proxy/source metadata plus package body/visit/block masks.",
+        "Protected reward records retain protected_by_guard, guarded_by_placement_id, guard_reference, guarded_access_requirements, guard_link, passability, and ai_hints after save/load.",
+        "Guard records retain package block masks and neutral_stack_blocking passability after save/load.",
+        "The new report sampled small, medium, large, and XL package-loaded surfaces: aggregate 1240 rewards, 953 valuable rewards, 728 guarded valuable rewards, 383 high-value rewards, 345 guarded medium rewards, 1548 guards, 13670 package block tiles, 8018 package visit tiles, and 0 non-guard road block conflicts."
+      ],
+      "validationEvidence": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot4 --headless --path /root/dev/heroes-like tests/native_random_map_guard_reward_package_adoption_report.tscn"
       ]
     }
   ],
