@@ -125,6 +125,35 @@ Selection rules for new Phase 2 slices:
 
 Completed owner-directed implementation slice:
 
+id: `native-rmg-homm3-fill-coverage-gate-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Add a real HoMM3-style fill coverage gate and raise native generated package decorative/blocking body coverage so generated maps no longer pass with barren token decorations.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/map_objects.json`
+- `docs/native-rmg-homm3-fill-coverage-report.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-decoration-obstacles.csv`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- owner-attached HoMM3 gzip and native `.amap`/`.ascenario` packages from 2026-05-04
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_fill_coverage_report.gd`
+- `tests/native_random_map_homm3_fill_coverage_report.tscn`
+- `docs/native-rmg-homm3-fill-coverage-report.md`
+- `docs/native-rmg-template-decoration-wiring-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Native generated decorations use larger terrain-biased original blocker footprints and reserve full body tiles, not mostly 1x2 token records.
+- The report compares HoMM3-re `rand_trn` obstacle catalog scale, authored AcOrP decoration/blocker catalog scale, attached pre-fix package fill, and sampled native small/medium/large/XL output.
+- The attached 72x72 2.78% decoration/blocker body coverage package fails the new medium coverage floor, while the same config regenerated through native C++ package generation passes.
+- Sampled native package convert/save/load surfaces retain road and object counts, and decorative bodies do not overlap materialized road cells.
+- Exact HoMM3-re obstacle identity/art/template parity and compact binary format parity remain explicitly unclaimed.
+nonGoals:
+- No route back to `RandomMapGeneratorRules.gd` for active generation, no generated map packages committed under `maps/`, no exact HoMM3-re DEF/art/placement parity claim, no compact binary map format claim, no save version bump or authored content writeback.
+
+Completed owner-directed implementation slice:
+
 id: `native-rmg-catalog-playability-wiring-10184`
 phase: `phase-2-deep-production-foundation`
 purpose: Correct the native generated-map fallback architecture so every exposed local and translated catalog template uses imported topology and materializes visible roads, objects, decorations, towns, resources, rewards, and guards through native package convert/save/load.

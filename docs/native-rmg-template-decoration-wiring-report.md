@@ -41,3 +41,31 @@ Owner correction after this slice: all exposed native generated templates were c
 The follow-up implementation now makes the native generator read `content/random_map_template_catalog.json` for every exposed local and `translated_rmg_template_*` template before falling back to synthetic foundation records. Native generated packages now preserve catalog zone counts, catalog link counts, route-derived road cells, scaled object density, scaled `decorative_obstacle` placement, neutral towns, mines, dwellings, resources, rewards, and guards through package convert/save/load surfaces.
 
 Validation is covered by `tests/native_random_map_catalog_quality_report.tscn`, which samples a local small template, medium translated template, large translated template, and XL translated template and asserts generated package/editor-visible roads and object surfaces after native convert/save/load. This broad playability correction does not replace the existing tiny full-parity fixtures and does not claim exact HoMM3-re parity.
+
+## 2026-05-04 HoMM3 Fill Coverage Correction
+
+Owner-attached evidence showed the previous 72x72 native package had 315 objects
+but only 144 unique decoration/blocker body tiles: 2.78% map coverage. Object
+count alone was not a meaningful fill metric.
+
+The native C++ generator now samples terrain-biased original large-footprint
+decoration/blocker families from `content/map_objects.json` proportions, fits
+the whole body mask against zone ownership, existing object bodies, and
+materialized road cells, and records `fill_coverage_summary` metrics on native
+output. Later town/guard placement now reserves against full object body
+occupancy, not just primary tiles.
+
+The focused report
+`tests/native_random_map_homm3_fill_coverage_report.tscn` compares HoMM3-re
+`rand_trn` obstacle catalog scale, our authored decoration/blocker catalog, the
+attached barren package, sampled small/medium/large/XL native output, and the
+attached medium config regenerated through the active native path. The attached
+package fails the new 20% medium decoration/blocker body coverage floor at
+2.78%; the regenerated same config passes at 24.96% with 95 decorations averaging
+13.621 body tiles. Sampled native coverage now ranges from 21.55% to 33.35%
+decoration/blocker body coverage across medium/large/XL, with package
+convert/save/load road and object surfaces intact.
+
+Remaining gaps are explicit: broad fill density is improved, but exact
+HoMM3-re obstacle identity, DEF art/template parity, byte/placement parity, and
+compact binary H3M-format parity are not implemented by this correction.
