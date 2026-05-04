@@ -1170,6 +1170,34 @@ nonGoals:
 
 Selected owner-directed implementation slice:
 
+id: `native-rmg-homm3-local-distribution-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Correct the native C++ owner-like 72x72 islands output after the land/water and land-normalized density fixes so local interactive placement has fewer barren land windows and fewer oversized piles while preserving small guarded reward clusters.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/native-rmg-homm3-spatial-placement-comparison-report.md`
+- `docs/native-rmg-homm3-land-water-shape-report.md`
+- `docs/native-rmg-homm3-land-normalized-object-density-report.md`
+- owner screenshots from 2026-05-04 showing desolate regions and localized piles after commit `ed0dad2`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_local_distribution_report.gd`
+- `tests/native_random_map_homm3_local_distribution_report.tscn`
+- `docs/native-rmg-homm3-local-distribution-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Active native package generation through `MapPackageService.generate_random_map()` remains the only runtime path touched; generation is not rerouted to `scripts/core/RandomMapGeneratorRules.gd`.
+- The new report measures local empty-window, pile concentration, window density spread, and nearest-neighbor metrics separately for decorations, interactive rewards/sites, guards, and guarded packages on the owner-like 72x72 generated/native case.
+- Native interactive object placement uses deterministic coarse-grid/spacing scoring so non-decorative objects distribute across eligible zone/land windows while guarded reward packages remain compact local pairs, not large piles.
+- Existing guard/reward package adoption, road non-conflict/connectivity, source identity/proxy metadata, land/water shape, fill coverage, catalog/menu wiring, decoration generation, and full-parity gates still pass.
+nonGoals:
+- No generated `.amap`/`.ascenario` commits under `maps/`.
+- No copyrighted HoMM3 art/assets, exact HoMM3 byte/object-table/art parity, or full parity claim.
+- No save-version bump, authored scenario adoption, renderer/fog rewrite, generated terrain-art ingestion, or route back to old GDScript RMG.
+
+Selected owner-directed implementation slice:
+
 id: `random-map-homm3-parity-start-front-fairness-10184`
 phase: `phase-2-deep-production-foundation`
 purpose: Reduce the largest newly exposed RMG layout fairness warnings by classifying comparable primary contest/early fronts per active player start from translated template connections, without weakening guard/resource/distance diagnostics.

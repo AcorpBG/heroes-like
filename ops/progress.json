@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "native-rmg-homm3-land-normalized-object-density-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Land Normalized Object Density",
+  "currentSliceId": "native-rmg-homm3-local-distribution-10184",
+  "currentSliceTitle": "native rmg homm3 local distribution 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed land-normalized density increment: native owner-like output is 488 objects vs owner 496, total density 0.828x owner, decoration/impassable density 0.804x owner, with land/water and spatial gates passing.",
+  "currentSliceNotes": "Completed owner-directed native RMG local distribution correction: native C++ placement now uses deterministic local spacing/road scoring for owner-like 72x72 output while guarded packages remain compact; the initial candidate-vector OOM risk was replaced with streaming scoring, a road-distance field, and bounded large-map sampling. Local distribution, guard/reward package adoption including XL, land-normalized density, land/water shape, spatial placement, full parity, JSON, build, and diff checks passed.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T23:59:00Z",
+  "updatedAt": "2026-05-04T18:38:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -9227,9 +9227,55 @@
         "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_full_parity_gate_report.tscn",
         "git diff --check"
       ]
+    },
+    {
+      "id": "native-rmg-homm3-local-distribution-10184",
+      "title": "native rmg homm3 local distribution 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-04T18:38:00Z",
+      "startedAt": "2026-05-04T17:35:40Z",
+      "completedAt": "2026-05-04T18:38:00Z",
+      "notes": "Completed native C++ local distribution correction after screenshots showed sparse land windows and localized piles following ed0dad2. Added the local distribution report and kept the active path in MapPackageService.generate_random_map(); no old GDScript RMG routing, generated packages, or copyrighted assets. Validation passed for JSON, native build, local distribution, guard/reward package adoption including XL, land-normalized density, land/water shape, spatial placement, full parity, and git diff --check. Memory diagnosis: the interrupted multi-GB guard/report run was caused by the first scoring implementation allocating sorted per-cell Dictionary candidate vectors; final code uses streaming scoring, a packed road-distance field, and bounded large-map sampling."
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-homm3-local-distribution-10184",
+      "title": "Native RMG HoMM3 local distribution correction",
+      "status": "completed",
+      "phase": "phase-2-deep-production-foundation",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/native-rmg-homm3-local-distribution-report.md",
+        "docs/native-rmg-homm3-spatial-placement-comparison-report.md",
+        "docs/native-rmg-homm3-land-water-shape-report.md",
+        "docs/native-rmg-homm3-land-normalized-object-density-report.md",
+        "owner screenshots from 2026-05-04 after ed0dad2"
+      ],
+      "mappedPlannedSliceIds": [
+        "native-rmg-homm3-local-distribution-10184"
+      ],
+      "implementationRefs": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_local_distribution_report.gd",
+        "tests/native_random_map_homm3_local_distribution_report.tscn"
+      ],
+      "evidence": "Native owner-like 72x72 islands output now passes the local distribution gate with object_count=511, empty_interactive_window_ratio=0.04, low_interactive_guard_window_ratio=0.04, max_interactive_window=19, max_interactive_guard_window=26, max_guarded_package_window=14, interactive_density_cv=0.7981, largest_low_content_land_region=3, interactive_average_nearest_neighbor=3.301, and interactive_guard_close_pair_ratio_le_2=0.8341. The active runtime path remains native C++ MapPackageService.generate_random_map(). The initial local-scoring memory risk was diagnosed as per-cell sorted Dictionary candidate allocation on large/XL report cases; final code uses streaming best-candidate scoring, a packed road-distance field, and bounded sampling only above 72x72.",
+      "validation": [
+        "python3 -m json.tool content/random_map_template_catalog.json >/dev/null",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "/usr/bin/time -v timeout 240s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_local_distribution_report.tscn (pass, max RSS 545008 KB)",
+        "/usr/bin/time -v timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/native_random_map_guard_reward_package_adoption_report.tscn (pass including XL, max RSS 1132992 KB)",
+        "/usr/bin/time -v timeout 240s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_land_normalized_object_density_report.tscn (pass, max RSS 559456 KB)",
+        "/usr/bin/time -v timeout 240s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_land_water_shape_report.tscn (pass, max RSS 559256 KB)",
+        "/usr/bin/time -v timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/native_random_map_homm3_spatial_placement_comparison_report.tscn (pass, max RSS 545004 KB)",
+        "/usr/bin/time -v timeout 300s env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tests/native_random_map_full_parity_gate_report.tscn (pass, max RSS 580480 KB)",
+        "git diff --check"
+      ]
+    },
     {
       "id": "river-pass-manual-proof-history",
       "system": "manual scenario proof",
