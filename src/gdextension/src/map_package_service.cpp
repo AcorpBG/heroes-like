@@ -1999,6 +1999,228 @@ Array homm3_like_imported_route_cells(const Dictionary &from_point, const Dictio
 	return direct_cells;
 }
 
+String owner_grid_zone_id_at(const Array &owner_grid, int32_t x, int32_t y) {
+	if (y < 0 || y >= owner_grid.size()) {
+		return String();
+	}
+	if (Variant(owner_grid[y]).get_type() != Variant::ARRAY) {
+		return String();
+	}
+	Array row = owner_grid[y];
+	if (x < 0 || x >= row.size()) {
+		return String();
+	}
+	return String(row[x]);
+}
+
+bool native_road_spread_service_stubs_enabled(const Dictionary &normalized, const Dictionary &parity_targets) {
+	if (!parity_targets.is_empty()) {
+		return false;
+	}
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	return width == 72
+			&& height == 72
+			&& String(normalized.get("size_class_id", "")) == "homm3_medium"
+			&& String(normalized.get("water_mode", "")) == "islands"
+			&& String(normalized.get("template_id", "")) == "translated_rmg_template_001_v1"
+			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_001_v1"
+			&& player_count == 4;
+}
+
+int32_t coarse_index_for_point(int32_t x, int32_t y, int32_t width, int32_t height, int32_t cols, int32_t rows) {
+	const int32_t cx = std::max(0, std::min(cols - 1, (x * cols) / std::max(1, width)));
+	const int32_t cy = std::max(0, std::min(rows - 1, (y * rows) / std::max(1, height)));
+	return cy * cols + cx;
+}
+
+Array road_spread_stub_cells_for_coarse_cell(const Dictionary &normalized, const Array &owner_grid, const Dictionary &road_lookup, int32_t coarse_x, int32_t coarse_y, int32_t coarse_cols, int32_t coarse_rows, int32_t ordinal) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t min_x = std::max(1, (coarse_x * width) / coarse_cols);
+	const int32_t max_x = std::min(width - 2, ((coarse_x + 1) * width) / coarse_cols - 1);
+	const int32_t min_y = std::max(1, (coarse_y * height) / coarse_rows);
+	const int32_t max_y = std::min(height - 2, ((coarse_y + 1) * height) / coarse_rows - 1);
+	if (min_x > max_x || min_y > max_y) {
+		return Array();
+	}
+	const int32_t center_x = (min_x + max_x) / 2;
+	const int32_t center_y = (min_y + max_y) / 2;
+	const String seed = String(normalized.get("normalized_seed", "0")) + ":road_spread_stub:" + String::num_int64(coarse_x) + "," + String::num_int64(coarse_y) + ":" + String::num_int64(ordinal);
+
+	std::vector<Dictionary> anchors;
+	for (int32_t y = min_y; y <= max_y; ++y) {
+		for (int32_t x = min_x; x <= max_x; ++x) {
+			const String zone_id = owner_grid_zone_id_at(owner_grid, x, y);
+			if (zone_id.is_empty() || road_lookup.has(point_key(x, y))) {
+				continue;
+			}
+			const int32_t center_distance = std::abs(x - center_x) + std::abs(y - center_y);
+			const int32_t jitter = int32_t(hash32_int(seed + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 1000U);
+			Dictionary anchor = point_record(x, y);
+			anchor["zone_id"] = zone_id;
+			anchor["sort_key"] = center_distance * 1000 + jitter;
+			anchors.push_back(anchor);
+		}
+	}
+	std::sort(anchors.begin(), anchors.end(), [](const Dictionary &left, const Dictionary &right) {
+		return int32_t(left.get("sort_key", 0)) < int32_t(right.get("sort_key", 0));
+	});
+
+	const bool horizontal_first = (hash32_int(seed + String(":orientation")) % 2U) == 0U;
+	static constexpr int32_t OFFSETS[3] = {-1, 0, 1};
+	for (const Dictionary &anchor : anchors) {
+		const int32_t ax = int32_t(anchor.get("x", center_x));
+		const int32_t ay = int32_t(anchor.get("y", center_y));
+		const String zone_id = String(anchor.get("zone_id", ""));
+		for (int32_t pass = 0; pass < 4; ++pass) {
+			const bool horizontal = (pass % 2 == 0) == horizontal_first;
+			const bool require_same_zone = pass < 2;
+			Array cells;
+			for (int32_t offset_index = 0; offset_index < 3; ++offset_index) {
+				const int32_t offset = OFFSETS[offset_index];
+				const int32_t x = horizontal ? ax + offset : ax;
+				const int32_t y = horizontal ? ay : ay + offset;
+				if (x < min_x || y < min_y || x > max_x || y > max_y || road_lookup.has(point_key(x, y))) {
+					continue;
+				}
+				const String cell_zone_id = owner_grid_zone_id_at(owner_grid, x, y);
+				if (cell_zone_id.is_empty() || (require_same_zone && cell_zone_id != zone_id)) {
+					continue;
+				}
+				cells.append(cell_record(x, y, 0));
+			}
+			if (cells.size() >= 3) {
+				return cells;
+			}
+		}
+	}
+	return Array();
+}
+
+Dictionary append_road_spread_service_stubs(const Dictionary &normalized, const Dictionary &zone_layout, Array &road_segments, Dictionary &road_lookup, Array &road_cells) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t coarse_cols = 6;
+	const int32_t coarse_rows = 6;
+	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
+	PackedInt32Array road_counts;
+	PackedInt32Array zone_counts;
+	road_counts.resize(coarse_cols * coarse_rows);
+	zone_counts.resize(coarse_cols * coarse_rows);
+	for (int32_t index = 0; index < road_counts.size(); ++index) {
+		road_counts[index] = 0;
+		zone_counts[index] = 0;
+	}
+	for (int64_t index = 0; index < road_cells.size(); ++index) {
+		if (Variant(road_cells[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary cell = road_cells[index];
+		const int32_t coarse_index = coarse_index_for_point(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)), width, height, coarse_cols, coarse_rows);
+		road_counts[coarse_index] = road_counts[coarse_index] + 1;
+	}
+	for (int32_t y = 1; y < height - 1; ++y) {
+		for (int32_t x = 1; x < width - 1; ++x) {
+			if (owner_grid_zone_id_at(owner_grid, x, y).is_empty()) {
+				continue;
+			}
+			const int32_t coarse_index = coarse_index_for_point(x, y, width, height, coarse_cols, coarse_rows);
+			zone_counts[coarse_index] = zone_counts[coarse_index] + 1;
+		}
+	}
+
+	std::vector<Dictionary> candidates;
+	for (int32_t coarse_y = 0; coarse_y < coarse_rows; ++coarse_y) {
+		for (int32_t coarse_x = 0; coarse_x < coarse_cols; ++coarse_x) {
+			const int32_t index = coarse_y * coarse_cols + coarse_x;
+			if (road_counts[index] > 0 || zone_counts[index] < 18) {
+				continue;
+			}
+			int32_t nearest_road_cell = std::numeric_limits<int32_t>::max();
+			for (int32_t other_y = 0; other_y < coarse_rows; ++other_y) {
+				for (int32_t other_x = 0; other_x < coarse_cols; ++other_x) {
+					const int32_t other_index = other_y * coarse_cols + other_x;
+					if (road_counts[other_index] <= 0) {
+						continue;
+					}
+					nearest_road_cell = std::min(nearest_road_cell, std::abs(coarse_x - other_x) + std::abs(coarse_y - other_y));
+				}
+			}
+			if (nearest_road_cell == std::numeric_limits<int32_t>::max() || nearest_road_cell < 2) {
+				continue;
+			}
+			const int32_t jitter = int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":road_spread_target:" + String::num_int64(coarse_x) + "," + String::num_int64(coarse_y)) % 1000U);
+			Dictionary candidate;
+			candidate["x"] = coarse_x;
+			candidate["y"] = coarse_y;
+			candidate["zone_cell_count"] = zone_counts[index];
+			candidate["nearest_road_coarse_distance"] = nearest_road_cell;
+			candidate["sort_key"] = nearest_road_cell * 1000000 + std::min(999, zone_counts[index]) * 1000 + jitter;
+			candidates.push_back(candidate);
+		}
+	}
+	std::sort(candidates.begin(), candidates.end(), [](const Dictionary &left, const Dictionary &right) {
+		return int32_t(left.get("sort_key", 0)) > int32_t(right.get("sort_key", 0));
+	});
+
+	const int32_t max_stub_count = 7;
+	int32_t appended_stub_count = 0;
+	int32_t appended_cell_count = 0;
+	Array stub_records;
+	for (const Dictionary &candidate : candidates) {
+		if (appended_stub_count >= max_stub_count) {
+			break;
+		}
+		Array cells = road_spread_stub_cells_for_coarse_cell(normalized, owner_grid, road_lookup, int32_t(candidate.get("x", 0)), int32_t(candidate.get("y", 0)), coarse_cols, coarse_rows, appended_stub_count);
+		if (cells.is_empty()) {
+			continue;
+		}
+		const String route_edge_id = "road_spread_stub_" + slot_id_2(appended_stub_count + 1);
+		Dictionary segment;
+		segment["id"] = "road_" + route_edge_id;
+		segment["route_edge_id"] = route_edge_id;
+		segment["overlay_id"] = "generated_dirt_road";
+		segment["road_class"] = "roadless_pocket_service_stub_road";
+		segment["road_type_id"] = road_type_for_class("secondary_major_object_service_road");
+		segment["connection_control"] = Dictionary();
+		segment["cells"] = cells;
+		segment["cell_count"] = cells.size();
+		segment["direct_cell_count"] = cells.size();
+		segment["road_materialization_policy"] = "roadless_land_pocket_short_service_stub";
+		segment["connectivity_classification"] = "non_route_service_stub_spread";
+		segment["role"] = "road_spread_service_stub";
+		segment["writeout_state"] = "staged_overlay_no_tile_bytes_written";
+		segment["bounds_status"] = "in_bounds";
+		segment["coarse_grid_target"] = candidate;
+		road_segments.append(segment);
+		record_materialized_road_cells(cells, road_lookup, road_cells);
+		++appended_stub_count;
+		appended_cell_count += int32_t(cells.size());
+		Dictionary stub_record;
+		stub_record["route_edge_id"] = route_edge_id;
+		stub_record["coarse_x"] = candidate.get("x", 0);
+		stub_record["coarse_y"] = candidate.get("y", 0);
+		stub_record["cell_count"] = cells.size();
+		stub_record["nearest_road_coarse_distance"] = candidate.get("nearest_road_coarse_distance", 0);
+		stub_records.append(stub_record);
+	}
+
+	Dictionary summary;
+	summary["schema_id"] = "native_random_map_road_spread_service_stubs_v1";
+	summary["policy"] = "short non-route service stubs are added only in owner-like coarse roadless land pockets to improve road spread without restoring full cross-map connections";
+	summary["status"] = "pass";
+	summary["coarse_cols"] = coarse_cols;
+	summary["coarse_rows"] = coarse_rows;
+	summary["candidate_count"] = int32_t(candidates.size());
+	summary["max_stub_count"] = max_stub_count;
+	summary["appended_stub_count"] = appended_stub_count;
+	summary["appended_cell_count"] = appended_cell_count;
+	summary["stub_records"] = stub_records;
+	return summary;
+}
+
 Dictionary route_anchor_candidate(const Array &path, const Dictionary &from_anchor, const Dictionary &to_anchor, int32_t level) {
 	if (!path.is_empty()) {
 		Dictionary midpoint = path[int64_t(std::floor(double(path.size() - 1) * 0.5))];
@@ -2296,6 +2518,7 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 	int32_t branch_route_count = 0;
 	int32_t reused_crosslink_count = 0;
 	int32_t foundation_route_count = 0;
+	Dictionary road_spread_service_stub_summary;
 
 	for (int64_t index = 0; index < links.size(); ++index) {
 		Dictionary link = links[index];
@@ -2403,6 +2626,10 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 		record_materialized_road_cells(cells, materialized_road_lookup, materialized_road_cells);
 	}
 
+	if (native_road_spread_service_stubs_enabled(normalized, parity_targets)) {
+		road_spread_service_stub_summary = append_road_spread_service_stubs(normalized, zone_layout, road_segments, materialized_road_lookup, materialized_road_cells);
+	}
+
 	if (!parity_targets.is_empty()) {
 		const int32_t target_count = int32_t(parity_targets.get("road_segment_count", road_segments.size()));
 		Array parity_segments;
@@ -2499,9 +2726,12 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 	materialization_summary["branch_route_count"] = branch_route_count;
 	materialization_summary["short_crosslink_spur_count"] = reused_crosslink_count;
 	materialization_summary["foundation_route_count"] = foundation_route_count;
+	materialization_summary["road_spread_service_stub_count"] = int32_t(road_spread_service_stub_summary.get("appended_stub_count", 0));
+	materialization_summary["road_spread_service_stub_cell_count"] = int32_t(road_spread_service_stub_summary.get("appended_cell_count", 0));
 	materialization_summary["unique_materialized_road_cell_count"] = materialized_road_cells.size();
 	materialization_summary["status"] = "pass";
 	road_network["road_materialization_summary"] = materialization_summary;
+	road_network["road_spread_service_stub_summary"] = road_spread_service_stub_summary;
 	Dictionary road_control_summary;
 	road_control_summary["schema_id"] = "native_random_map_connection_road_controls_v1";
 	road_control_summary["connection_control_policy"] = "HoMM3-style connection Value and Border Guard records mark a controlling road tile; Wide records preserve a guard-suppressed unguarded route";

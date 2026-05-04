@@ -125,6 +125,34 @@ Selection rules for new Phase 2 slices:
 
 Completed owner-directed implementation slice:
 
+id: `native-rmg-homm3-road-spread-parity-10184`
+phase: `phase-2-deep-production-foundation`
+status: `completed`
+purpose: Follow up `native-rmg-homm3-road-placement-parity-10184` by improving the residual owner-like road spread gap: more occupied 6x6 road cells and smaller largest coarse roadless land regions, while preserving count-close roads and reduced reward-road bias.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/native-rmg-homm3-spatial-placement-comparison-report.md`
+- owner follow-up after accfaf1 on 2026-05-04
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_spatial_placement_comparison_report.gd`
+- `docs/native-rmg-homm3-spatial-placement-comparison-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Native C++ `MapPackageService.generate_random_map()` remains the active runtime path.
+- Owner-like road tile count stays near owner and reward within 1/4 tiles does not materially regress toward the prior over-road-bias.
+- Road nonempty 6x6 cells move closer to owner and largest roadless land 6x6 region is reduced from the accfaf1 baseline.
+- Town/start coverage, route reachability, local distribution, land/water shape, guard/reward package adoption, and full parity fixture reports remain passing.
+completionEvidence:
+- Native owner-like output now adds bounded short service stubs in residual roadless land pockets through the native C++ road materialization path; the active runtime path remains `MapPackageService.generate_random_map()`.
+- Road nonempty 6x6 cells moved from 10 to 17 against owner 16, and largest roadless land 6x6 region moved from 25 to 9 against owner 8; road tiles moved from 180 to 201 against owner 184, still below the pre-accfaf1 240 over-road count.
+- Reward-road bias remains a documented residual warning rather than full parity: reward within 1 tile stayed 0.125, reward within 4 tiles moved 0.4632 to 0.4779 against owner 0.3727, and town/start road coverage stayed 1.0.
+nonGoals:
+- No route back to `RandomMapGeneratorRules.gd`, no generated packages committed, no road art lookup rewrite unless required, no HoMM3 asset import, no full parity claim.
+
+Completed owner-directed implementation slice:
+
 id: `native-rmg-homm3-road-placement-parity-10184`
 phase: `phase-2-deep-production-foundation`
 status: `completed`
