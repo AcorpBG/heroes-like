@@ -22,7 +22,7 @@ func _run() -> void:
 		"ok": true,
 		"static_manifest": static_summary,
 		"runtime_presentation": runtime_summary,
-		"asset_policy": "original_generated_archetype_sprites_no_homm3_art_or_def_import",
+		"asset_policy": "original_generated_distinct_sprites_no_homm3_art_or_def_import",
 	})])
 	get_tree().quit(0)
 
@@ -30,12 +30,14 @@ func _static_manifest_summary() -> Dictionary:
 	var art_manifest: Dictionary = ContentService.load_json("res://art/overworld/manifest.json")
 	var object_assets: Dictionary = art_manifest.get("object_assets", {}) if art_manifest.get("object_assets", {}) is Dictionary else {}
 	var decorative_manifest: Dictionary = ContentService.load_json("res://art/overworld/decorative_object_sprites.json")
-	var archetypes: Array = decorative_manifest.get("archetype_asset_ids", []) if decorative_manifest.get("archetype_asset_ids", []) is Array else []
+	var distinct_asset_ids: Array = decorative_manifest.get("distinct_asset_ids", []) if decorative_manifest.get("distinct_asset_ids", []) is Array else []
+	var legacy_archetypes: Array = decorative_manifest.get("legacy_archetype_asset_ids", []) if decorative_manifest.get("legacy_archetype_asset_ids", []) is Array else []
 	var mappings: Dictionary = decorative_manifest.get("object_sprite_mappings", {}) if decorative_manifest.get("object_sprite_mappings", {}) is Dictionary else {}
 	var map_objects: Dictionary = ContentService.load_json("res://content/map_objects.json")
 	var items: Array = map_objects.get("items", []) if map_objects.get("items", []) is Array else []
 	var decorative_object_count := 0
 	var missing_mappings := []
+	var mapped_asset_ids := {}
 	for item_value in items:
 		if not (item_value is Dictionary):
 			continue
@@ -47,29 +49,46 @@ func _static_manifest_summary() -> Dictionary:
 		decorative_object_count += 1
 		if not mappings.has(object_id):
 			missing_mappings.append(object_id)
+			continue
+		var mapping: Dictionary = mappings.get(object_id, {}) if mappings.get(object_id, {}) is Dictionary else {}
+		var mapped_asset_id := String(mapping.get("asset_id", ""))
+		if mapped_asset_id == "":
+			_fail("Decorative sprite mapping has an empty asset id for %s." % object_id)
+			return {}
+		if mapped_asset_ids.has(mapped_asset_id):
+			_fail("Decorative sprite mapping reused asset id %s for %s and %s." % [mapped_asset_id, mapped_asset_ids[mapped_asset_id], object_id])
+			return {}
+		mapped_asset_ids[mapped_asset_id] = object_id
 	if decorative_object_count != 200:
 		_fail("Expected 200 authored decorative/blocker objects, found %d." % decorative_object_count)
 		return {}
 	if not missing_mappings.is_empty():
 		_fail("Decorative sprite manifest missed mappings: %s" % JSON.stringify(missing_mappings))
 		return {}
-	if archetypes.size() < 16:
-		_fail("Decorative sprite manifest has too few archetype assets: %d." % archetypes.size())
+	if legacy_archetypes.size() != 16:
+		_fail("Decorative sprite manifest must preserve 16 representative generated assets, found %d." % legacy_archetypes.size())
 		return {}
-	for asset_id_value in archetypes:
+	if distinct_asset_ids.size() != 200 or mapped_asset_ids.size() != 200:
+		_fail("Decorative sprite manifest must map 200 objects to 200 distinct asset ids, found distinct=%d mapped=%d." % [distinct_asset_ids.size(), mapped_asset_ids.size()])
+		return {}
+	for asset_id_value in distinct_asset_ids:
 		var asset_id := String(asset_id_value)
+		if not mapped_asset_ids.has(asset_id):
+			_fail("Decorative distinct asset is not used by a mapping: %s" % asset_id)
+			return {}
 		var entry: Dictionary = object_assets.get(asset_id, {}) if object_assets.get(asset_id, {}) is Dictionary else {}
 		if entry.is_empty():
-			_fail("Decorative archetype asset is missing from object_assets: %s" % asset_id)
+			_fail("Decorative distinct asset is missing from object_assets: %s" % asset_id)
 			return {}
 		var path := String(entry.get("path", ""))
 		if not ResourceLoader.exists(path):
-			_fail("Decorative archetype runtime texture is not importable: %s -> %s" % [asset_id, path])
+			_fail("Decorative distinct runtime texture is not importable: %s -> %s" % [asset_id, path])
 			return {}
 	return {
 		"authored_decorative_or_blocker_object_count": decorative_object_count,
 		"mapped_object_count": mappings.size(),
-		"archetype_asset_count": archetypes.size(),
+		"distinct_asset_count": distinct_asset_ids.size(),
+		"legacy_archetype_asset_count": legacy_archetypes.size(),
 	}
 
 func _native_runtime_presentation_summary(static_summary: Dictionary) -> Dictionary:
@@ -160,6 +179,7 @@ func _native_runtime_presentation_summary(static_summary: Dictionary) -> Diction
 		"native_extension_loaded": metadata.get("native_extension_loaded", false),
 		"generated_decoration_count": map_objects.size(),
 		"mapped_static_object_count": int(static_summary.get("mapped_object_count", 0)),
+		"distinct_static_asset_count": int(static_summary.get("distinct_asset_count", 0)),
 		"sample_object_id": String(target_object.get("object_id", "")),
 		"sample_placement_id": String(target_object.get("placement_id", "")),
 		"sample_tile": {"x": target_tile.x, "y": target_tile.y},

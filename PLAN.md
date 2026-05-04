@@ -125,6 +125,35 @@ Selection rules for new Phase 2 slices:
 
 Completed owner-directed implementation slice:
 
+id: `decorative-blocker-distinct-sprite-assets-10184`
+phase: `phase-2-deep-production-foundation`
+status: `completed`
+purpose: Follow up the decorative/blocker sprite foundation by replacing shared archetype reuse with one distinct generated sprite asset per authored decorative/blocker object while preserving the renderer/generator wiring and no-HoMM3-art boundary.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `art/overworld/decorative_object_sprites.json`
+- owner correction on 2026-05-04 that all decorative/blocker objects need distinct assets, not only archetype coverage
+implementationTargets:
+- `art/overworld/runtime/objects/decorations/distinct/`
+- `art/overworld/source/generated/decorations/distinct/`
+- `art/overworld/source/trimmed/decorations/distinct/`
+- `art/overworld/manifest.json`
+- `art/overworld/decorative_object_sprites.json`
+- `tests/validate_repo.py`
+- `tests/overworld_decorative_sprite_asset_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Exactly 200 authored decorative/blocker objects resolve to 200 distinct object asset ids.
+- The 16 existing generated decoration sprites are preserved for 16 representative objects and the remaining 184 objects receive newly generated original sprites.
+- Each distinct runtime sprite has source/provenance, manifest entry, trimmed source where applicable, and 512x512 runtime validation.
+- Validation rejects asset reuse in the decorative/blocker object mapping and proves at least one generated decorative placement renders through a distinct object-specific sprite.
+- No HoMM3 copyrighted art/DEF/image assets are imported.
+nonGoals:
+- No save-version bump, no binary map-package schema migration, no exact HoMM3 asset/DEF parity claim, no terrain replacement, no broad gameplay rebalance.
+
+Completed owner-directed implementation slice:
+
 id: `decorative-blocker-sprite-asset-foundation-10184`
 phase: `phase-2-deep-production-foundation`
 status: `completed`
