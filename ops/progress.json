@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "random-map-homm3-parity-support-resource-preview-gate-10184",
-  "currentSliceTitle": "random map homm3 parity support resource preview gate 10184",
+  "currentSliceId": "random-map-homm3-parity-warning-classification-followup-10184",
+  "currentSliceTitle": "random map homm3 parity warning classification followup 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed warning-level RMG parity continuation after 43ab952. Artifact review found the compact visual town-resource spread was real placement drift: generic start-support resource placement could relax out of the owning start zone while retaining the start zone id. The generator now preserves generic placement when it remains in-zone and only path-scores strict same-zone support candidates when generic placement would drift out-of-zone. Visual report passed: fairness warnings 9->8, fail-threshold warnings 0, max town-resource spread 19->7, max contest/travel spread 13, road tiles 3069, rendered SVG previews 6. Richness passed: fairness warnings 10, fail-threshold warnings 0, max town-resource spread 8, road tiles 1792. Large visual passed: warnings 2, fail-threshold warnings 0, route spread 17, town-resource spread 1, rendered SVG preview 1. Remaining translated route/travel spreads and richness warning count are documented in docs/random-map-homm3-parity-warning-review.md.",
+  "currentSliceNotes": "Completed post-a749da2 RMG warning classification follow-up. Tightened early support-resource fairness diagnostic to measure actual start-support resource routes only. Added raw/accepted/unresolved/fail-threshold warning split to richness and visual reports without changing fail thresholds. Validation: visual report passed with raw warnings 6, accepted 6, unresolved 0, fail-threshold 0, rendered previews 6, road tiles 3069; richness passed with raw warnings 6, accepted 6, unresolved 0, fail-threshold 0, road tiles 1792; large visual passed with raw warnings 2, accepted 2, unresolved 0, fail-threshold 0, rendered previews 1; sync-plan dry-run missing 0; git diff --check passed; tests/validate_repo.py passed.",
   "nextActionGuardrailNote": "Generated PNG ingestion remains blocked except for explicitly selected terrain replacement slices with provenance, validation, and runtime wiring gates.",
-  "updatedAt": "2026-05-04T07:19:46Z",
+  "updatedAt": "2026-05-04T07:49:34Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -8302,6 +8302,16 @@
       "startedAt": "2026-05-04T07:10:31Z",
       "notes": "Completed warning-level RMG parity continuation after 43ab952. Artifact review found compact visual town-resource spread was real start-support resource placement drift: the generic helper could relax out of the owning start zone while retaining the start zone id. Implemented guarded correction that keeps generic support placement when it remains in-zone and only path-scores strict same-zone candidates when generic placement would drift out-of-zone. Visual report passed with warnings 9->8, fail-threshold warnings 0, max town-resource spread 19->7, max contest/travel spread 13, road tiles 3069, rendered SVG previews 6. Richness passed with warnings 10, fail-threshold warnings 0, max town-resource spread 8, road tiles 1792. Large visual passed with warnings 2, fail-threshold warnings 0, route spread 17, town-resource spread 1, rendered SVG preview 1. Remaining translated route/travel spreads and richness warning count are documented in docs/random-map-homm3-parity-warning-review.md.",
       "completedAt": "2026-05-04T07:19:46Z"
+    },
+    {
+      "id": "random-map-homm3-parity-warning-classification-followup-10184",
+      "title": "random map homm3 parity warning classification followup 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-04T07:49:34Z",
+      "startedAt": "2026-05-04T07:48:35Z",
+      "notes": "Completed post-a749da2 RMG warning classification follow-up. Tightened early support-resource fairness diagnostic to measure actual start-support resource routes only. Added raw/accepted/unresolved/fail-threshold warning split to richness and visual reports without changing fail thresholds. Validation: visual report passed with raw warnings 6, accepted 6, unresolved 0, fail-threshold 0, rendered previews 6, road tiles 3069; richness passed with raw warnings 6, accepted 6, unresolved 0, fail-threshold 0, road tiles 1792; large visual passed with raw warnings 2, accepted 2, unresolved 0, fail-threshold 0, rendered previews 1; sync-plan dry-run missing 0; git diff --check passed; tests/validate_repo.py passed.",
+      "completedAt": "2026-05-04T07:49:34Z"
     }
   ],
   "completedImplementationEvidence": [

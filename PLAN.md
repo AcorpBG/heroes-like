@@ -122,6 +122,36 @@ Selection rules for new Phase 2 slices:
 
 Selected owner-directed implementation slice:
 
+id: `random-map-homm3-parity-warning-classification-followup-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Continue post-a749da2 HoMM3 RMG visual fairness review by reducing remaining warning-level support-resource false positives and classifying accepted HoMM3-like template asymmetry separately from true unresolved regressions.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-special-guards-and-wide.md`
+- `.artifacts/rmg_parity_visual_inspection/summary.json`
+- `.artifacts/rmg_parity_large_visual_inspection/summary.json`
+- `.artifacts/rmg_parity_richness/summary.json`
+implementationTargets:
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `tests/random_map_homm3_parity_richness_report.gd`
+- `tests/random_map_homm3_parity_visual_inspection_report.gd`
+- `docs/random-map-homm3-parity-warning-review.md`
+- `ops/progress.json`
+completionCriteria:
+- Visual preview artifacts and warning review identify each remaining warning-level fairness source after `a749da2`.
+- Early support-resource diagnostics measure only actual start-support resource routes, not every same-zone mine or dwelling route.
+- Reports preserve raw warning and fail-threshold counts while splitting accepted HoMM3-like template asymmetry from unresolved warning-level review items.
+- Focused visual, richness, and large visual reports pass with fail-threshold diagnostics still strict.
+nonGoals:
+- No fairness-threshold weakening, generated PNG import, runtime/source asset ingestion, public UI work, save-version bump, native generator rewrite, or authored scenario/package adoption.
+
+Completed owner-directed implementation slice:
+
 id: `random-map-homm3-parity-support-resource-preview-gate-10184`
 phase: `phase-2-deep-production-foundation`
 purpose: Continue post-43ab952 HoMM3 RMG parity by separating real warning-level fairness imbalance from acceptable translated-template asymmetry, correcting compact start-support resource drift where present, and adding human-inspectable rendered preview artifacts for manual layout review.
