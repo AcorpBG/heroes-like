@@ -133,6 +133,23 @@ def validate_tile_crop(crop: Image.Image, label: str, *, strict_grid: bool) -> N
             )
 
 
+def repaired_edge_band(frame: Image.Image, width: int) -> Image.Image:
+    ensure(0 < width < TILE_SIZE // 2, f"Invalid edge repair width: {width}")
+    source = frame.convert("RGBA")
+    repaired = source.copy()
+    pixels = repaired.load()
+    source_pixels = source.load()
+    max_source = TILE_SIZE - 1 - width
+    for y in range(TILE_SIZE):
+        for x in range(TILE_SIZE):
+            if x >= width and x <= max_source and y >= width and y <= max_source:
+                continue
+            source_x = min(max(x, width), max_source)
+            source_y = min(max(y, width), max_source)
+            pixels[x, y] = source_pixels[source_x, source_y]
+    return repaired
+
+
 def make_contact_sheet(frames: Iterable[Image.Image], count: int, out_path: Path) -> None:
     sheet = Image.new("RGBA", (ATLAS_SIZE, ATLAS_SIZE), MAGENTA)
     draw = ImageDraw.Draw(sheet)
@@ -223,6 +240,14 @@ def cut_generated(spec: ClassSpec, args: argparse.Namespace) -> None:
         strict_grid=not args.allow_suspicious_grid_edges,
         require_unused_magenta=require_unused_magenta,
     )
+    if args.repair_edge_band:
+        frames = [repaired_edge_band(frame, args.repair_edge_band_px) for frame in frames]
+        for index, frame in enumerate(frames):
+            validate_tile_crop(
+                frame,
+                f"{spec.class_id} repaired cell {index:02d}",
+                strict_grid=not args.allow_suspicious_grid_edges,
+            )
     if args.normalized_atlas:
         if args.dry_run:
             print(f"DRY-RUN normalize {spec.class_id}: {repo_path(args.normalized_atlas)}")
@@ -273,6 +298,8 @@ def build_parser() -> argparse.ArgumentParser:
     cut_parser.add_argument("--force-unused-magenta", action="store_true", help="Fill unused cells with magenta before validation/cutting.")
     cut_parser.add_argument("--require-unused-magenta", action=argparse.BooleanOptionalAction, default=True)
     cut_parser.add_argument("--allow-suspicious-grid-edges", action="store_true")
+    cut_parser.add_argument("--repair-edge-band", action="store_true", help="Replace each used frame's outer edge band from adjacent interior pixels after validation.")
+    cut_parser.add_argument("--repair-edge-band-px", type=int, default=1)
     cut_parser.add_argument("--preview", action=argparse.BooleanOptionalAction, default=True)
     cut_parser.add_argument("--force", action="store_true")
     cut_parser.add_argument("--dry-run", action="store_true")
