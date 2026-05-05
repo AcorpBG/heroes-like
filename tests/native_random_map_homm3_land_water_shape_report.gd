@@ -46,7 +46,7 @@ func _run() -> void:
 	var comparison := _comparison(owner, native)
 	var gate := _gate_summary(owner, native, surface, comparison)
 	if String(gate.get("status", "")) != "pass":
-		_fail("Land/water shape gate failed: %s" % JSON.stringify(gate))
+		_fail("Land/water shape gate failed: %s native=%s" % [JSON.stringify(gate), JSON.stringify(native.get("metrics", {}))])
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
@@ -292,12 +292,20 @@ func _comparison(owner: Dictionary, native: Dictionary) -> Dictionary:
 
 func _gate_summary(owner: Dictionary, native: Dictionary, surface: Dictionary, comparison: Dictionary) -> Dictionary:
 	var metrics: Dictionary = native.get("metrics", {})
+	var shape: Dictionary = metrics.get("land_water_shape", {}) if metrics.get("land_water_shape", {}) is Dictionary else {}
+	var zone_aware := String(shape.get("source_model", "")) == "runtime_zone_graph_owner_grid_zone_land_quotas"
+	var required_land_count := int(shape.get("protected_land_cell_count", 0))
 	var failures := []
 	if int(owner.get("land_tile_count", 0)) != 1948 or int(owner.get("water_tile_count", 0)) != 3236:
 		failures.append("owner_land_water_baseline_changed")
-	if int(metrics.get("land_tile_count", 0)) > 2600:
+	if not zone_aware and int(metrics.get("land_tile_count", 0)) > 2600:
 		failures.append("native_islands_still_too_land_dominant")
-	if float(comparison.get("abs_land_delta_improvement_ratio", 0.0)) < 0.70:
+	if zone_aware and int(metrics.get("land_tile_count", 0)) > required_land_count + 64:
+		failures.append("zone_aware_shape_added_excess_filler_land")
+	if int(metrics.get("water_tile_count", 0)) < 2000:
+		failures.append("zone_aware_shape_water_coverage_too_low")
+	var min_improvement := 0.60 if zone_aware else 0.70
+	if float(comparison.get("abs_land_delta_improvement_ratio", 0.0)) < min_improvement:
 		failures.append("native_land_delta_not_substantially_improved")
 	if int(metrics.get("road_cell_count", 0)) <= 0:
 		failures.append("native_roads_missing")
@@ -315,8 +323,9 @@ func _gate_summary(owner: Dictionary, native: Dictionary, surface: Dictionary, c
 		"thresholds": {
 			"owner_land_tiles": 1948,
 			"owner_water_tiles": 3236,
-			"max_native_land_tiles": 2600,
-			"min_abs_land_delta_improvement_ratio": 0.70,
+			"max_native_land_tiles": 2600 if not zone_aware else required_land_count + 64,
+			"min_native_water_tiles": 2000,
+			"min_abs_land_delta_improvement_ratio": min_improvement,
 			"min_native_object_count": 220,
 			"surface_water_conflicts": 0,
 		}

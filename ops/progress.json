@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-homm3-runtime-zone-graph-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Runtime Zone Graph",
+  "currentSliceId": "native-rmg-homm3-terrain-island-shape-10184",
+  "currentSliceTitle": "Native RMG HoMM3 Terrain And Island Shape",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed runtime template zone graph: catalog templates now build runtime zone/link records with target areas, connected graph validation, quota-based zone ownership, road-link consumption, focused report evidence, and passing validation.",
+  "currentSliceNotes": "Completed zone-aware native terrain/island shaping: runtime zone owner grids now drive land/water and terrain assignment, old global island candidate scoring is disabled, required generated surfaces report quota diagnostics, medium/XL focused report passed, and repo validation passed.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T10:58:00Z",
+  "updatedAt": "2026-05-05T11:01:26Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -9765,7 +9765,7 @@
       "id": "native-rmg-homm3-terrain-island-shape-10184",
       "title": "Native RMG HoMM3 Terrain And Island Shape",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "pending",
+      "status": "completed",
       "classification": "implementation_slice",
       "purpose": "Replace global protected-land/ratio island shaping with zone-aware terrain and water placement informed by recovered TerrainPlacement semantics and performance constraints.",
       "sourceDocs": [
@@ -9796,7 +9796,11 @@
         "No terrain art replacement.",
         "No exact TerrainPlacement queue scratch-bit clone unless selected later."
       ],
-      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184",
+      "updatedAt": "2026-05-05T11:01:26Z",
+      "startedAt": "2026-05-05T10:45:36Z",
+      "notes": "Implemented zone-aware terrain/island shaping in native RMG. Validation: json.tool, validate_repo.py, git diff --check, and native_random_map_homm3_terrain_island_shape_report.tscn passed.",
+      "completedAt": "2026-05-05T11:01:26Z"
     },
     {
       "id": "native-rmg-homm3-roads-rivers-connections-10184",
