@@ -4852,6 +4852,23 @@ bool native_rmg_owner_like_islands_density_case(const Dictionary &normalized) {
 			&& player_count == 4;
 }
 
+bool native_rmg_owner_like_small_land_density_case(const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	const String template_id = String(normalized.get("template_id", ""));
+	const String profile_id = String(normalized.get("profile_id", ""));
+	return width == 36
+			&& height == 36
+			&& level_count == 1
+			&& String(normalized.get("size_class_id", "")) == "homm3_small"
+			&& String(normalized.get("water_mode", "")) == "land"
+			&& template_id.begins_with("translated_rmg_template_")
+			&& profile_id.begins_with("translated_rmg_profile_")
+			&& player_count == 3;
+}
+
 int32_t decoration_target_for_zone(const Dictionary &normalized, const Dictionary &zone) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -4875,7 +4892,8 @@ int32_t decoration_target_for_zone(const Dictionary &normalized, const Dictionar
 }
 
 int32_t owner_like_islands_compact_decoration_target_for_zone(const Dictionary &normalized, const Dictionary &zone) {
-	if (!native_rmg_owner_like_islands_density_case(normalized)) {
+	const bool small_land_density = native_rmg_owner_like_small_land_density_case(normalized);
+	if (!small_land_density && !native_rmg_owner_like_islands_density_case(normalized)) {
 		return 0;
 	}
 	const int32_t cell_count = std::max(0, int32_t(zone.get("cell_count", 0)));
@@ -4883,16 +4901,18 @@ int32_t owner_like_islands_compact_decoration_target_for_zone(const Dictionary &
 		return 0;
 	}
 	const String role = String(zone.get("role", ""));
-	double ratio = 0.052;
+	double ratio = small_land_density ? 0.095 : 0.052;
 	if (role.find("start") >= 0) {
-		ratio = 0.044;
+		ratio = small_land_density ? 0.090 : 0.044;
 	} else if (role == "treasure") {
-		ratio = 0.060;
+		ratio = small_land_density ? 0.105 : 0.060;
 	} else if (role == "junction") {
-		ratio = 0.054;
+		ratio = small_land_density ? 0.098 : 0.054;
 	}
 	const int32_t raw_target = int32_t(std::ceil(double(cell_count) * ratio));
-	const int32_t max_per_zone = std::max(4, std::min(36, std::max(1, cell_count / 10)));
+	const int32_t max_per_zone = small_land_density
+			? std::max(10, std::min(28, std::max(1, cell_count / 6)))
+			: std::max(4, std::min(36, std::max(1, cell_count / 10)));
 	return std::max(1, std::min(max_per_zone, raw_target));
 }
 
@@ -7980,6 +8000,37 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			for (int32_t count = 0; count < player_castle_density_count; ++count) {
 				++density_attempt_count;
 				append_town_attempt(zone, start, "player", "castle", true, player_castle_density, "player_density_castle", "phase_4b_weighted_player_castle_density", count);
+			}
+		}
+
+		Dictionary catalog_metadata = zone.get("catalog_metadata", Dictionary());
+		const bool inactive_source_start_zone = !player_zone
+				&& int32_t(zone.get("source_owner_slot", 0)) > 0
+				&& String(zone.get("source_role", zone.get("role", ""))).find("start") >= 0
+				&& !bool(catalog_metadata.get("active_player_zone", false));
+		if (inactive_source_start_zone) {
+			Dictionary source_player_rules = town_rules_for_zone(zone, "player_towns");
+			const int32_t source_min_towns = std::max(0, int32_t(source_player_rules.get("min_towns", 0)));
+			const int32_t source_min_castles = std::max(0, int32_t(source_player_rules.get("min_castles", 0)));
+			const int32_t source_town_density = std::max(0, int32_t(source_player_rules.get("town_density", 0)));
+			const int32_t source_castle_density = std::max(0, int32_t(source_player_rules.get("castle_density", 0)));
+			for (int32_t count = 0; count < source_min_towns; ++count) {
+				++required_attempt_count;
+				append_town_attempt(zone, Dictionary(), "neutral", "town", false, source_min_towns, "neutralized_inactive_player_minimum_town", "phase_4a_inactive_source_player_town_as_neutral_town", count);
+			}
+			for (int32_t count = 0; count < source_min_castles; ++count) {
+				++required_attempt_count;
+				append_town_attempt(zone, Dictionary(), "neutral", "castle", false, source_min_castles, "neutralized_inactive_player_minimum_castle", "phase_4a_inactive_source_player_castle_as_neutral_castle", count);
+			}
+			const int32_t source_town_density_count = town_density_attempt_count(normalized, zone, "inactive_source_player_town_density", source_town_density);
+			const int32_t source_castle_density_count = town_density_attempt_count(normalized, zone, "inactive_source_player_castle_density", source_castle_density);
+			for (int32_t count = 0; count < source_town_density_count; ++count) {
+				++density_attempt_count;
+				append_town_attempt(zone, Dictionary(), "neutral", "town", true, source_town_density, "neutralized_inactive_player_density_town", "phase_4b_inactive_source_player_town_density_as_neutral_town", count);
+			}
+			for (int32_t count = 0; count < source_castle_density_count; ++count) {
+				++density_attempt_count;
+				append_town_attempt(zone, Dictionary(), "neutral", "castle", true, source_castle_density, "neutralized_inactive_player_density_castle", "phase_4b_inactive_source_player_castle_density_as_neutral_castle", count);
 			}
 		}
 

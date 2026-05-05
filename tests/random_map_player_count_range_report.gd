@@ -3,6 +3,8 @@ extends Node
 const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const REPORT_ID := "RANDOM_MAP_PLAYER_COUNT_RANGE_REPORT"
+const SMALL_DEFAULT_TEMPLATE_ID := "translated_rmg_template_049_v1"
+const SMALL_DEFAULT_PROFILE_ID := "translated_rmg_profile_049_v1"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -18,8 +20,11 @@ func _run() -> void:
 		return
 
 	var small_defaults := ScenarioSelectRulesScript.random_map_size_class_default("homm3_small")
-	if not _arrays_equal(small_defaults.get("player_counts", []), [3]):
-		_fail("Small size defaults did not stay compact: %s" % JSON.stringify(small_defaults))
+	if String(small_defaults.get("template_id", "")) != SMALL_DEFAULT_TEMPLATE_ID or String(small_defaults.get("profile_id", "")) != SMALL_DEFAULT_PROFILE_ID:
+		_fail("Small size defaults did not select recovered template 049: %s" % JSON.stringify(small_defaults))
+		return
+	if not _arrays_equal(small_defaults.get("player_counts", []), [2, 3, 4, 5, 6, 7]):
+		_fail("Small recovered template did not expose translated player range 2..7: %s" % JSON.stringify(small_defaults))
 		return
 	var xl_defaults := ScenarioSelectRulesScript.random_map_size_class_default("homm3_extra_large")
 	if not _arrays_equal(xl_defaults.get("player_counts", []), [2, 3, 4, 5, 6, 7, 8]):

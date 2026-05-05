@@ -126,7 +126,7 @@ const RANDOM_MAP_PLAYER_PROFILE_OPTIONS := [
 const RANDOM_MAP_FALLBACK_PLAYER_COUNT_OPTIONS := [2, 3, 4]
 const RANDOM_MAP_RUNTIME_SIZE_CAP := {"width": 144, "height": 144, "level_count": 2}
 const RANDOM_MAP_SIZE_CLASS_DEFAULTS := {
-	"homm3_small": {"template_id": "border_gate_compact_v1", "profile_id": "border_gate_compact_profile_v1", "player_count": 3},
+	"homm3_small": {"template_id": "translated_rmg_template_049_v1", "profile_id": "translated_rmg_profile_049_v1", "player_count": 3},
 	"homm3_medium": {"template_id": "translated_rmg_template_002_v1", "profile_id": "translated_rmg_profile_002_v1", "player_count": 4},
 	"homm3_large": {"template_id": "translated_rmg_template_042_v1", "profile_id": "translated_rmg_profile_042_v1", "player_count": 4},
 	"homm3_extra_large": {"template_id": "translated_rmg_template_043_v1", "profile_id": "translated_rmg_profile_043_v1", "player_count": 4},
@@ -398,10 +398,10 @@ static func random_map_player_setup_options() -> Dictionary:
 		"retry_policy": RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"default_seed": RANDOM_MAP_DEFAULT_SEED,
 		"default_size_class_id": "homm3_small",
-		"default_template_id": "border_gate_compact_v1",
-		"default_profile_id": "border_gate_compact_profile_v1",
+		"default_template_id": "translated_rmg_template_049_v1",
+		"default_profile_id": "translated_rmg_profile_049_v1",
 		"size_class_defaults": RANDOM_MAP_SIZE_CLASS_DEFAULTS.duplicate(true),
-		"default_player_count": _random_map_normalize_player_count_for_template("border_gate_compact_v1", 3, 3),
+		"default_player_count": _random_map_normalize_player_count_for_template("translated_rmg_template_049_v1", 3, 3),
 		"default_water_mode": "land",
 		"default_underground": false,
 		"package_directory_policy": generated_map_package_directory_policy(),
