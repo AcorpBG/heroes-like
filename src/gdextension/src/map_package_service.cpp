@@ -10,6 +10,7 @@
 #include <godot_cpp/variant/packed_int32_array.hpp>
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <cstdint>
 #include <limits>
@@ -60,6 +61,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_road_river_network_foundation");
 	result.append("native_random_map_homm3_roads_rivers_connections");
 	result.append("native_random_map_object_placement_foundation");
+	result.append("native_random_map_homm3_object_placement_pipeline");
 	result.append("native_random_map_homm3_mines_resources");
 	result.append("native_random_map_homm3_guards_rewards_monsters");
 	result.append("native_random_map_decorative_obstacle_generation");
@@ -4066,11 +4068,29 @@ Dictionary decoration_template_record(const String &terrain_id, int32_t ordinal)
 
 Dictionary object_footprint_for_kind(const String &kind, int32_t ordinal, const String &terrain_id) {
 	Dictionary footprint;
-	if (kind == "mine" || kind == "neutral_dwelling") {
-		footprint["width"] = 2;
-		footprint["height"] = 2;
+	if (kind == "mine") {
+		const int32_t category = std::max(0, ordinal) % RMG_MINE_CATEGORY_COUNT;
+		if (category == 0) {
+			footprint["width"] = 3;
+			footprint["height"] = 2;
+			footprint["tier"] = "large_mine";
+		} else if (category == 1 || category == 3 || category == 4 || category == 5) {
+			footprint["width"] = 2;
+			footprint["height"] = 3;
+			footprint["tier"] = "rare_mine";
+		} else {
+			footprint["width"] = 2;
+			footprint["height"] = 2;
+			footprint["tier"] = "medium_mine";
+		}
 		footprint["anchor"] = "bottom_center";
-		footprint["tier"] = "medium";
+		footprint["source"] = "content/random_map_generator_data_model.json mine object definition";
+	} else if (kind == "neutral_dwelling") {
+		footprint["width"] = 2;
+		footprint["height"] = 1;
+		footprint["anchor"] = "bottom_center";
+		footprint["tier"] = "small_dwelling";
+		footprint["source"] = "content/random_map_generator_data_model.json neutral dwelling object definition";
 	} else if (kind == "decorative_obstacle") {
 		Dictionary decoration_template = decoration_template_record(terrain_id, ordinal);
 		footprint["width"] = decoration_template.get("width", 4);
@@ -4089,8 +4109,8 @@ Dictionary object_footprint_for_kind(const String &kind, int32_t ordinal, const 
 
 Array object_body_tiles_for_kind(const String &kind, int32_t x, int32_t y, int32_t width, int32_t height, const Dictionary &footprint) {
 	Array body_tiles;
-	const int32_t body_width = kind == "decorative_obstacle" ? std::max(1, int32_t(footprint.get("width", 1))) : 1;
-	const int32_t body_height = kind == "decorative_obstacle" ? std::max(1, int32_t(footprint.get("height", 1))) : 1;
+	const int32_t body_width = std::max(1, int32_t(footprint.get("width", 1)));
+	const int32_t body_height = std::max(1, int32_t(footprint.get("height", 1)));
 	for (int32_t dy = 0; dy < body_height; ++dy) {
 		for (int32_t dx = 0; dx < body_width; ++dx) {
 			const int32_t tx = x + dx;
@@ -4101,6 +4121,123 @@ Array object_body_tiles_for_kind(const String &kind, int32_t x, int32_t y, int32
 		}
 	}
 	return body_tiles;
+}
+
+bool object_body_fits_in_zone(int32_t x, int32_t y, const String &zone_id, const Array &owner_grid, const Dictionary &occupied, int32_t width, int32_t height, const Dictionary &footprint) {
+	const int32_t body_width = std::max(1, int32_t(footprint.get("width", 1)));
+	const int32_t body_height = std::max(1, int32_t(footprint.get("height", 1)));
+	if (x < 1 || y < 1 || x + body_width > width - 1 || y + body_height > height - 1) {
+		return false;
+	}
+	for (int32_t dy = 0; dy < body_height; ++dy) {
+		for (int32_t dx = 0; dx < body_width; ++dx) {
+			const int32_t tx = x + dx;
+			const int32_t ty = y + dy;
+			if (occupied.has(point_key(tx, ty))) {
+				return false;
+			}
+			if (!zone_id.is_empty() && ty >= 0 && ty < owner_grid.size()) {
+				Array row = owner_grid[ty];
+				if (tx < 0 || tx >= row.size() || String(row[tx]) != zone_id) {
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+Dictionary object_pipeline_type_metadata_for_kind(const String &kind) {
+	Dictionary metadata;
+	metadata["schema_id"] = "aurelion_native_rmg_object_type_metadata_v1";
+	metadata["type_id"] = kind;
+	metadata["category"] = kind == "reward_reference" ? "reward" : (kind == "special_guard_gate" ? "connection_gate" : kind);
+	metadata["primary_placement_gate"] = kind != "decorative_obstacle";
+	metadata["wide_placement_footprint"] = kind == "mine" || kind == "neutral_dwelling" || kind == "decorative_obstacle" || kind == "special_guard_gate";
+	metadata["secondary_placement_gate"] = kind != "resource_site";
+	metadata["definition_serialization_pass"] = true;
+	Dictionary limits;
+	if (kind == "decorative_obstacle") {
+		limits["global"] = 4096;
+		limits["per_zone"] = 256;
+	} else if (kind == "reward_reference") {
+		limits["global"] = 768;
+		limits["per_zone"] = 48;
+	} else if (kind == "mine") {
+		limits["global"] = 256;
+		limits["per_zone"] = 24;
+	} else if (kind == "neutral_dwelling") {
+		limits["global"] = 72;
+		limits["per_zone"] = 4;
+	} else if (kind == "resource_site") {
+		limits["global"] = 512;
+		limits["per_zone"] = 12;
+	} else {
+		limits["global"] = 1024;
+		limits["per_zone"] = 96;
+	}
+	metadata["limits"] = limits;
+	return metadata;
+}
+
+Dictionary object_pipeline_definition_for_kind(const String &kind, int32_t ordinal, const String &terrain_id) {
+	Dictionary definition;
+	definition["schema_id"] = "aurelion_native_rmg_original_object_definition_v1";
+	definition["definition_id"] = "rmg_object_" + kind + "_v1";
+	definition["generated_kind"] = kind;
+	definition["content_policy"] = "original_content_ids_only_no_homm3_asset_name_text_import";
+	definition["template_source"] = kind == "decorative_obstacle" ? "rand_trn_obstacle_row_mapped_to_original_object_template" : "content_random_map_generator_data_model_original_definition";
+	definition["ordinary_object_template"] = true;
+	definition["decoration_super_type_shortcut"] = false;
+	definition["footprint"] = object_footprint_for_kind(kind, ordinal, terrain_id);
+	Dictionary passability;
+	Dictionary action;
+	if (kind == "decorative_obstacle") {
+		passability["class"] = "blocking_non_visitable";
+		passability["mask"] = Array::make("body_blocked");
+		action["class"] = "none";
+		action["mask"] = Array();
+	} else if (kind == "resource_site" || kind == "reward_reference") {
+		passability["class"] = "passable_visit_on_enter";
+		passability["mask"] = Array::make("anchor_enterable");
+		action["class"] = kind == "reward_reference" ? "visit_on_enter_or_guarded_claim" : "visit_on_enter";
+		action["mask"] = Array::make("anchor_action");
+	} else {
+		passability["class"] = "blocking_visitable";
+		passability["mask"] = Array::make("body_blocked", "adjacent_visit");
+		action["class"] = kind == "mine" ? "adjacent_claim" : "adjacent_recruit";
+		action["mask"] = Array::make("south_action", "west_action");
+	}
+	definition["passability"] = passability;
+	definition["action"] = action;
+	Dictionary terrain;
+	terrain["allowed_terrain_ids"] = Array::make("grass", "dirt", "sand", "snow", "swamp", "rough", "underground", "lava");
+	terrain["reject_terrain_ids"] = Array::make("water", "rock");
+	terrain["runtime_terrain_id"] = terrain_id;
+	definition["terrain_constraints"] = terrain;
+	definition["type_metadata"] = object_pipeline_type_metadata_for_kind(kind);
+	Dictionary value_density;
+	if (kind == "decorative_obstacle") {
+		value_density["density"] = "late_rand_trn_fill";
+		value_density["value_bands"] = Array::make(Dictionary());
+	} else if (kind == "reward_reference") {
+		value_density["density"] = "phase_10_zone_treasure_band_weight";
+		value_density["value_source"] = "low_high_density_triplets";
+	} else if (kind == "mine") {
+		value_density["density"] = "phase_7_minimum_then_density";
+		value_density["value_source"] = "seven_category_mine_resource_fields";
+	} else {
+		value_density["density"] = "zone_role_scaled_target";
+		value_density["value_source"] = "original_content_family_weight";
+	}
+	definition["value_density"] = value_density;
+	Dictionary writeout;
+	writeout["record_kind"] = kind == "decorative_obstacle" ? "decorative_map_object" : "map_object";
+	writeout["serialization_state"] = "definition_and_instance_staged_package_record";
+	writeout["no_authored_content_writeback"] = true;
+	writeout["payload_fields"] = Array::make("object_id", "family_id", "zone_id", "body_tiles", "occupancy_keys", "passability", "action");
+	definition["writeout"] = writeout;
+	return definition;
 }
 
 Array cardinal_approach_tiles(int32_t x, int32_t y, int32_t width, int32_t height, const Dictionary &occupied) {
@@ -4518,6 +4655,7 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	const String terrain_id = terrain_id_for_zone(zone);
 	const int32_t family_ordinal = int32_t(point.get("object_family_ordinal", ordinal));
 	Dictionary family = object_family_record(kind, family_ordinal, terrain_id);
+	Dictionary object_definition = object_pipeline_definition_for_kind(kind, family_ordinal, terrain_id);
 	Dictionary reward_value_profile;
 	if (kind == "reward_reference") {
 		const int32_t reward_index = int32_t(point.get("native_reward_index", ordinal));
@@ -4531,6 +4669,7 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	Dictionary footprint = object_footprint_for_kind(kind, ordinal, terrain_id);
 	if (kind == "decorative_obstacle" && point.has("decoration_footprint_override") && Variant(point.get("decoration_footprint_override", Dictionary())).get_type() == Variant::DICTIONARY) {
 		footprint = Dictionary(point.get("decoration_footprint_override", Dictionary()));
+		object_definition["footprint"] = footprint;
 	}
 	Array body_tiles = object_body_tiles_for_kind(kind, x, y, width, height, footprint);
 	Array occupancy_keys;
@@ -4541,19 +4680,28 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	Dictionary bounds;
 	bounds["min_x"] = x;
 	bounds["min_y"] = y;
-	bounds["max_x"] = kind == "decorative_obstacle" ? x + std::max(1, int32_t(footprint.get("width", 1))) - 1 : x;
-	bounds["max_y"] = kind == "decorative_obstacle" ? y + std::max(1, int32_t(footprint.get("height", 1))) - 1 : y;
+	bounds["max_x"] = x + std::max(1, int32_t(footprint.get("width", 1))) - 1;
+	bounds["max_y"] = y + std::max(1, int32_t(footprint.get("height", 1))) - 1;
 
 	Dictionary runtime_footprint;
-	runtime_footprint["width"] = 1;
-	runtime_footprint["height"] = 1;
-	runtime_footprint["anchor"] = "center";
-	runtime_footprint["tier"] = "anchor_tile";
+	runtime_footprint["width"] = footprint.get("width", 1);
+	runtime_footprint["height"] = footprint.get("height", 1);
+	runtime_footprint["anchor"] = footprint.get("anchor", "center");
+	runtime_footprint["tier"] = footprint.get("tier", "micro");
+	runtime_footprint["source"] = footprint.get("source", "native object placement pipeline");
+
+	bool body_unoccupied = true;
+	for (int64_t key_index = 0; key_index < occupancy_keys.size(); ++key_index) {
+		if (occupied.has(String(occupancy_keys[key_index]))) {
+			body_unoccupied = false;
+			break;
+		}
+	}
 
 	Dictionary predicate_results;
 	predicate_results["in_bounds"] = x >= 0 && y >= 0 && x < width && y < height;
 	predicate_results["terrain_allowed"] = is_passable_terrain_id(terrain_id);
-	predicate_results["runtime_body_unoccupied"] = !occupied.has(point_key(x, y));
+	predicate_results["runtime_body_unoccupied"] = body_unoccupied;
 	predicate_results["zone_associated"] = !zone_id.is_empty();
 	predicate_results["road_proximity_recorded"] = true;
 
@@ -4585,7 +4733,16 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	placement["occupancy_keys"] = occupancy_keys;
 	placement["footprint"] = footprint;
 	placement["runtime_footprint"] = runtime_footprint;
-	placement["footprint_deferred"] = kind == "mine" || kind == "neutral_dwelling";
+	placement["footprint_deferred"] = false;
+	placement["object_definition_id"] = object_definition.get("definition_id", "");
+	placement["object_type_metadata"] = object_definition.get("type_metadata", Dictionary());
+	placement["passability"] = object_definition.get("passability", Dictionary());
+	placement["action"] = object_definition.get("action", Dictionary());
+	placement["terrain_constraints"] = object_definition.get("terrain_constraints", Dictionary());
+	placement["value_density"] = object_definition.get("value_density", Dictionary());
+	placement["writeout_metadata"] = object_definition.get("writeout", Dictionary());
+	placement["ordinary_object_template_filler"] = kind == "decorative_obstacle";
+	placement["decoration_super_type_shortcut"] = false;
 	placement["approach_tiles"] = cardinal_approach_tiles(x, y, width, height, occupied);
 	placement["visit_tile"] = body;
 	Array predicates;
@@ -4855,6 +5012,147 @@ Dictionary object_fill_coverage_summary(const Array &placements, const Dictionar
 	summary["min_zone_decoration_body_tiles"] = min_zone_decoration_body_tiles == std::numeric_limits<int32_t>::max() ? 0 : min_zone_decoration_body_tiles;
 	summary["max_zone_decoration_body_tiles"] = max_zone_decoration_body_tiles;
 	summary["min_zone_decoration_body_coverage_ratio"] = zones.is_empty() ? 0.0 : min_zone_decoration_body_coverage;
+	return summary;
+}
+
+Dictionary object_placement_pipeline_summary(const Dictionary &normalized, const Dictionary &zone_layout, const Array &placements, const Dictionary &occupancy_index, int64_t elapsed_usec) {
+	static constexpr const char *SUPPORTED_KINDS[] = {"resource_site", "mine", "neutral_dwelling", "reward_reference", "decorative_obstacle"};
+	Dictionary definitions;
+	Dictionary global_counts;
+	Dictionary per_zone_counts;
+	Dictionary passability_counts;
+	Dictionary action_counts;
+	Dictionary writeout_counts;
+	Dictionary terrain_constraint_counts;
+	Dictionary limit_failures;
+	int32_t decoration_count = 0;
+	int32_t ordinary_decoration_count = 0;
+	int32_t missing_definition_count = 0;
+	int32_t missing_mask_count = 0;
+	int32_t missing_writeout_count = 0;
+	int32_t body_reference_count = 0;
+	int32_t body_overlap_count = std::max(0, int32_t(occupancy_index.get("duplicate_body_tile_count", 0)));
+
+	for (const char *kind_value : SUPPORTED_KINDS) {
+		const String kind = kind_value;
+		definitions[kind] = object_pipeline_definition_for_kind(kind, 0, "grass");
+	}
+
+	for (int64_t index = 0; index < placements.size(); ++index) {
+		if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary placement = Dictionary(placements[index]);
+		body_reference_count += Array(placement.get("occupancy_keys", Array())).size();
+		const String kind = String(placement.get("kind", ""));
+		const String zone_id = String(placement.get("zone_id", ""));
+		global_counts[kind] = int32_t(global_counts.get(kind, 0)) + 1;
+		Dictionary zone_counts = per_zone_counts.get(zone_id, Dictionary());
+		zone_counts[kind] = int32_t(zone_counts.get(kind, 0)) + 1;
+		per_zone_counts[zone_id] = zone_counts;
+
+		if (String(placement.get("object_definition_id", "")).is_empty() || !definitions.has(kind)) {
+			++missing_definition_count;
+		}
+		Dictionary passability = placement.get("passability", Dictionary());
+		Dictionary action = placement.get("action", Dictionary());
+		Dictionary terrain = placement.get("terrain_constraints", Dictionary());
+		Dictionary writeout = placement.get("writeout_metadata", Dictionary());
+		if (passability.is_empty() || action.is_empty()) {
+			++missing_mask_count;
+		}
+		if (writeout.is_empty()) {
+			++missing_writeout_count;
+		}
+		passability_counts[String(passability.get("class", "missing"))] = int32_t(passability_counts.get(String(passability.get("class", "missing")), 0)) + 1;
+		action_counts[String(action.get("class", "missing"))] = int32_t(action_counts.get(String(action.get("class", "missing")), 0)) + 1;
+		writeout_counts[String(writeout.get("record_kind", "missing"))] = int32_t(writeout_counts.get(String(writeout.get("record_kind", "missing")), 0)) + 1;
+		terrain_constraint_counts[String(terrain.get("runtime_terrain_id", "missing"))] = int32_t(terrain_constraint_counts.get(String(terrain.get("runtime_terrain_id", "missing")), 0)) + 1;
+		if (kind == "decorative_obstacle") {
+			++decoration_count;
+			if (bool(placement.get("ordinary_object_template_filler", false)) && !bool(placement.get("decoration_super_type_shortcut", true))) {
+				++ordinary_decoration_count;
+			}
+		}
+	}
+
+	Array definition_keys = definitions.keys();
+	for (int64_t def_index = 0; def_index < definition_keys.size(); ++def_index) {
+		const String kind = String(definition_keys[def_index]);
+		Dictionary definition = definitions[kind];
+		Dictionary limits = Dictionary(Dictionary(definition.get("type_metadata", Dictionary())).get("limits", Dictionary()));
+		const int32_t global_limit = std::max(0, int32_t(limits.get("global", 0)));
+		const int32_t global_count = int32_t(global_counts.get(kind, 0));
+		if (global_limit > 0 && global_count > global_limit) {
+			limit_failures["global:" + kind] = global_count;
+		}
+		Array zone_keys = per_zone_counts.keys();
+		for (int64_t zone_index = 0; zone_index < zone_keys.size(); ++zone_index) {
+			Dictionary zone_counts = Dictionary(per_zone_counts[zone_keys[zone_index]]);
+			const int32_t per_zone_limit = std::max(0, int32_t(limits.get("per_zone", 0)));
+			const int32_t zone_count = int32_t(zone_counts.get(kind, 0));
+			if (per_zone_limit > 0 && zone_count > per_zone_limit) {
+				limit_failures[String(zone_keys[zone_index]) + ":" + kind] = zone_count;
+			}
+		}
+	}
+
+	Dictionary xl_cost;
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t tile_count = std::max(1, width * height);
+	xl_cost["measured"] = true;
+	xl_cost["elapsed_usec"] = elapsed_usec;
+	xl_cost["elapsed_msec"] = double(elapsed_usec) / 1000.0;
+	xl_cost["map_tile_count"] = tile_count;
+	xl_cost["microseconds_per_tile"] = double(elapsed_usec) / double(tile_count);
+	xl_cost["bounded_large_map_sampling"] = width > 72 || height > 72;
+	xl_cost["budget_msec_for_xl_report"] = 90000.0;
+	xl_cost["budget_scope"] = "focused_report_bounded_sampling_ceiling_not_release_perf_target";
+	xl_cost["status"] = double(elapsed_usec) / 1000.0 <= 90000.0 ? "pass" : "over_budget";
+
+	Array unsupported_boundaries;
+	unsupported_boundaries.append("exact_homm3_object_table_candidate_scoring_not_claimed");
+	unsupported_boundaries.append("homm3_def_art_names_are_metadata_only_and_not_imported");
+	unsupported_boundaries.append("binary_h3m_writeout_not_claimed");
+
+	Dictionary summary;
+	summary["schema_id"] = "aurelion_native_rmg_homm3_object_placement_pipeline_summary_v1";
+	summary["phase_order"] = "shared_object_pipeline_after_roads_connections_before_late_guard_reward_validation_with_phase_12_decorative_filler";
+	summary["source_model"] = "recovered_object_template_footprint_mask_limit_value_density_structure_translated_to_original_content";
+	summary["supported_definition_count"] = definitions.size();
+	summary["supported_original_definitions"] = definitions;
+	summary["object_count"] = placements.size();
+	summary["global_counts"] = global_counts;
+	summary["per_zone_counts"] = per_zone_counts;
+	summary["passability_counts"] = passability_counts;
+	summary["action_counts"] = action_counts;
+	summary["terrain_constraint_counts"] = terrain_constraint_counts;
+	summary["writeout_record_counts"] = writeout_counts;
+	summary["occupancy_status"] = occupancy_index.get("status", "");
+	summary["body_tile_reference_count"] = body_reference_count;
+	summary["body_overlap_count"] = std::max(0, body_overlap_count);
+	summary["missing_definition_count"] = missing_definition_count;
+	summary["missing_mask_count"] = missing_mask_count;
+	summary["missing_writeout_count"] = missing_writeout_count;
+	summary["limit_failure_count"] = limit_failures.size();
+	summary["limit_failures"] = limit_failures;
+	summary["decorative_filler_semantics"] = "ordinary_object_template_rand_trn_proxy_not_decoration_super_type";
+	summary["decorative_filler_ordinary_template_count"] = ordinary_decoration_count;
+	summary["decorative_filler_count"] = decoration_count;
+	summary["decorative_filler_ordinary_template_ratio"] = decoration_count <= 0 ? 0.0 : double(ordinary_decoration_count) / double(decoration_count);
+	summary["xl_cost"] = xl_cost;
+	summary["unsupported_parity_boundaries"] = unsupported_boundaries;
+	const bool ok = missing_definition_count == 0
+			&& missing_mask_count == 0
+			&& missing_writeout_count == 0
+			&& body_overlap_count <= 0
+			&& limit_failures.is_empty()
+			&& decoration_count > 0
+			&& ordinary_decoration_count == decoration_count
+			&& String(xl_cost.get("status", "")) == "pass";
+	summary["validation_status"] = ok ? "pass" : "fail";
+	summary["signature"] = hash32_hex(canonical_variant(summary));
 	return summary;
 }
 
@@ -5443,24 +5741,27 @@ Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, 
 	const int32_t desired_cell = int32_t(hash32_int(seed + String(":local_distribution:") + kind) % uint32_t(coarse_cols * coarse_rows));
 	const int32_t desired_cx = desired_cell % coarse_cols;
 	const int32_t desired_cy = desired_cell / coarse_cols;
+	const Dictionary footprint = object_footprint_for_kind(kind, ordinal, terrain_id_for_zone(zone));
 	const int32_t preferred_anchor_distance = 4 + ring * 3 + (ordinal % 5);
 	const bool bounded_large_map_scoring = width > 72 || height > 72;
 	const int32_t target_evaluated_candidates = !bounded_large_map_scoring ? zone_cell_count : (zone_cell_count > 0 && zone_cell_count < 600 ? zone_cell_count : 128);
 	const int32_t sample_mod = zone_cell_count > target_evaluated_candidates ? std::max(2, zone_cell_count / std::max(1, target_evaluated_candidates)) : 1;
+	Dictionary bounds = zone.get("bounds", Dictionary());
+	const int32_t scan_min_x = std::max(1, int32_t(bounds.get("min_x", 1)));
+	const int32_t scan_max_x = std::min(width - 2, int32_t(bounds.get("max_x", width - 2)));
+	const int32_t scan_min_y = std::max(1, int32_t(bounds.get("min_y", 1)));
+	const int32_t scan_max_y = std::min(height - 2, int32_t(bounds.get("max_y", height - 2)));
 
 	int64_t best_sort_key = std::numeric_limits<int64_t>::max();
 	int32_t best_x = -1;
 	int32_t best_y = -1;
 	int32_t best_road_distance = -1;
-	for (int32_t y = 1; y < height - 1; ++y) {
+	for (int32_t y = scan_min_y; y <= scan_max_y; ++y) {
 		if (y < 0 || y >= owner_grid.size()) {
 			continue;
 		}
 		Array row = owner_grid[y];
-		for (int32_t x = 1; x < width - 1; ++x) {
-			if (occupied.has(point_key(x, y))) {
-				continue;
-			}
+		for (int32_t x = scan_min_x; x <= scan_max_x; ++x) {
 			if (!zone_id.is_empty() && (x < 0 || x >= row.size() || String(row[x]) != zone_id)) {
 				continue;
 			}
@@ -5475,6 +5776,9 @@ Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, 
 				if (!preferred_coarse_sample && !broad_sample) {
 					continue;
 				}
+			}
+			if (!object_body_fits_in_zone(x, y, zone_id, owner_grid, occupied, width, height, footprint)) {
+				continue;
 			}
 			const int32_t anchor_distance = std::abs(x - anchor_x) + std::abs(y - anchor_y);
 			const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
@@ -5512,6 +5816,7 @@ Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, 
 }
 
 Dictionary generate_object_placements(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network) {
+	const auto object_phase_started_at = std::chrono::steady_clock::now();
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
 	Array zones = zone_layout.get("zones", Array());
@@ -5550,6 +5855,10 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 						occupied,
 						width,
 						height);
+				Dictionary footprint = object_footprint_for_kind(kind, ordinal, terrain_id_for_zone(zone));
+				if (!point.is_empty() && !object_body_fits_in_zone(int32_t(point.get("x", 0)), int32_t(point.get("y", 0)), zone_id, owner_grid, occupied, width, height, footprint)) {
+					point = object_point_for_zone_index(zone, ordinal, 1 + index / 6, kind, normalized, owner_grid, occupied, placements, road_distance_field, width, height);
+				}
 				append_object_placement(placements, occupied, normalized, zone, point, kind, ordinal, road_network, zone_layout);
 				++ordinal;
 			}
@@ -5695,12 +6004,14 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	Dictionary body_tile_occupancy;
 	Dictionary object_index_by_placement_id;
 	Array footprint_records;
+	int32_t total_body_tile_reference_count = 0;
 	for (int64_t index = 0; index < placements.size(); ++index) {
 		Dictionary placement = placements[index];
 		const String placement_id = String(placement.get("placement_id", ""));
 		object_index_by_placement_id[placement_id] = index;
 		primary_tile_occupancy[placement.get("primary_occupancy_key", "")] = placement_id;
 		Array keys = placement.get("occupancy_keys", Array());
+		total_body_tile_reference_count += keys.size();
 		for (int64_t key_index = 0; key_index < keys.size(); ++key_index) {
 			body_tile_occupancy[String(keys[key_index])] = placement_id;
 		}
@@ -5720,8 +6031,10 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	occupancy_index["object_index_by_placement_id"] = object_index_by_placement_id;
 	occupancy_index["occupied_primary_tile_count"] = primary_tile_occupancy.size();
 	occupancy_index["occupied_body_tile_count"] = body_tile_occupancy.size();
+	occupancy_index["body_tile_reference_count"] = total_body_tile_reference_count;
+	occupancy_index["duplicate_body_tile_count"] = total_body_tile_reference_count - int32_t(body_tile_occupancy.size());
 	occupancy_index["duplicate_primary_tile_count"] = int32_t(placements.size()) - int32_t(primary_tile_occupancy.size());
-	occupancy_index["status"] = int32_t(placements.size()) == int32_t(primary_tile_occupancy.size()) ? "pass" : "duplicate_primary_tiles";
+	occupancy_index["status"] = int32_t(placements.size()) == int32_t(primary_tile_occupancy.size()) && total_body_tile_reference_count == int32_t(body_tile_occupancy.size()) ? "pass" : "duplicate_occupancy_tiles";
 	occupancy_index["signature"] = hash32_hex(canonical_variant(occupancy_index));
 
 	Dictionary category_counts;
@@ -5776,6 +6089,10 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	payload["decoration_route_shaping_summary"] = decoration_summary;
 	payload["fill_coverage_summary"] = object_fill_coverage_summary(placements, zone_layout, width, height);
 	payload["occupancy_index"] = occupancy_index;
+	const int64_t object_phase_elapsed_usec = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - object_phase_started_at).count();
+	Dictionary pipeline_summary = object_placement_pipeline_summary(normalized, zone_layout, placements, occupancy_index, object_phase_elapsed_usec);
+	payload["object_placement_pipeline_summary"] = pipeline_summary;
+	payload["object_placement_pipeline_status"] = pipeline_summary.get("validation_status", "");
 	payload["footprint_records"] = footprint_records;
 	payload["footprint_record_count"] = footprint_records.size();
 	payload["related_zone_layout_signature"] = zone_layout.get("signature", "");
@@ -8225,8 +8542,12 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 		}
 	}
 	Dictionary object_occupancy = object_placement.get("occupancy_index", Dictionary());
-	if (String(object_occupancy.get("status", "")) != "pass" || int32_t(object_occupancy.get("duplicate_primary_tile_count", -1)) != 0) {
-		append_validation_issue(failures, "fail", "object_occupancy_not_unique", "object_placement.occupancy_index", "Object primary occupancy must be unique.");
+	if (String(object_occupancy.get("status", "")) != "pass" || int32_t(object_occupancy.get("duplicate_primary_tile_count", -1)) != 0 || int32_t(object_occupancy.get("duplicate_body_tile_count", -1)) != 0) {
+		append_validation_issue(failures, "fail", "object_occupancy_not_unique", "object_placement.occupancy_index", "Object primary/body occupancy must be unique.");
+	}
+	Dictionary object_pipeline_summary = object_placement.get("object_placement_pipeline_summary", Dictionary());
+	if (String(object_pipeline_summary.get("validation_status", "")) != "pass") {
+		append_validation_issue(failures, "fail", "object_pipeline_summary_failed", "object_placement.object_placement_pipeline_summary", "Object placement pipeline summary must validate definitions, masks, limits, occupancy, decoration filler, and cost.");
 	}
 	Dictionary mine_resource_summary = object_placement.get("mine_resource_summary", Dictionary());
 	if (String(mine_resource_summary.get("schema_id", "")) != "aurelion_native_rmg_phase7_mines_resources_summary_v1") {
@@ -8379,6 +8700,8 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	report["object_placement_signature"] = object_placement.get("signature", "");
 	report["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
 	report["object_category_counts"] = object_placement.get("category_counts", Dictionary());
+	report["object_placement_pipeline_summary"] = object_placement.get("object_placement_pipeline_summary", Dictionary());
+	report["object_placement_pipeline_summary_signature"] = Dictionary(object_placement.get("object_placement_pipeline_summary", Dictionary())).get("signature", "");
 	report["mine_resource_summary"] = object_placement.get("mine_resource_summary", Dictionary());
 	report["mine_resource_summary_signature"] = Dictionary(object_placement.get("mine_resource_summary", Dictionary())).get("signature", "");
 	report["fill_coverage_summary"] = object_placement.get("fill_coverage_summary", Dictionary());
@@ -9442,6 +9765,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["river_network_signature"] = river_network.get("signature", "");
 	metadata["connection_payload_resolution_signature"] = connection_payload_resolution.get("signature", "");
 	metadata["object_placement_signature"] = object_placement.get("signature", "");
+	metadata["object_placement_pipeline_signature"] = Dictionary(object_placement.get("object_placement_pipeline_summary", Dictionary())).get("signature", "");
 	metadata["mine_resource_summary_signature"] = Dictionary(object_placement.get("mine_resource_summary", Dictionary())).get("signature", "");
 	metadata["reward_band_summary_signature"] = Dictionary(object_placement.get("reward_band_summary", Dictionary())).get("signature", "");
 	metadata["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
@@ -9542,6 +9866,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["river_quality_summary"] = river_network.get("quality_summary", Dictionary());
 	result["object_placement"] = object_placement;
 	result["object_placements"] = object_placements;
+	result["object_placement_pipeline_summary"] = object_placement.get("object_placement_pipeline_summary", Dictionary());
 	result["mine_resource_summary"] = object_placement.get("mine_resource_summary", Dictionary());
 	result["reward_band_summary"] = object_placement.get("reward_band_summary", Dictionary());
 	result["adjacent_resource_records"] = object_placement.get("adjacent_resource_records", Array());
