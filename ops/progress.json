@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-template-spec-filtering-correction-10184",
-  "currentSliceTitle": "Native RMG Template Spec Filtering Correction",
+  "currentSliceId": "native-rmg-zone-choke-topology-correction-10184",
+  "currentSliceTitle": "Native RMG Zone Choke Topology Correction",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed recovered-spec correction for native RMG template filtering, accepted selection, wide-link semantics, and recovered-field metadata.",
+  "currentSliceNotes": "Completed owner-directed corrective topology pass for native RMG zone boundaries and guarded crossings after uploaded HoMM3 small-map comparison.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T19:15:27Z",
+  "updatedAt": "2026-05-05T23:27:51Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -10197,6 +10197,53 @@
         "No save-version bump, package/schema migration, or runtime call-site adoption change.",
         "No broad RMG rebalance outside the recovered template filtering and metadata semantics."
       ]
+    },
+    {
+      "id": "native-rmg-zone-choke-topology-correction-10184",
+      "title": "Native RMG Zone Choke Topology Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "owner-uploaded small 3-player single-level HoMM3 map comparison on 2026-05-05"
+      ],
+      "purpose": "Correct the native RMG structural failure where zones/towns were separated mostly by metadata and count parity rather than physical impassable boundaries with guarded route openings.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/persistence/MapPackageService.gd",
+        "tests/native_random_map_zone_choke_regression_report.gd",
+        "tests/native_random_map_zone_choke_regression_report.tscn"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "godot --headless --path . tests/native_random_map_homm3_validation_adoption_gates_report.tscn",
+        "godot --headless --path . tests/native_random_map_town_spacing_regression_report.tscn",
+        "python3 tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Land templates materialize impassable zone-boundary terrain so adjacent zones cannot be crossed freely outside generated route openings.",
+        "Route guards materialize on or adjacent to their route control choke and block the local crossing body until cleared.",
+        "Supported small profiles materialize real road cells instead of count-only parity road records.",
+        "Object placement reserves generated road cells so roads, guards, and blockers do not overlap into invalid occupancy.",
+        "Regression coverage proves start towns are unreachable while connection guards/gates are unresolved and reachable after those blockers are cleared for small and true four-player medium land templates."
+      ],
+      "completionEvidence": [
+        "Native land terrain now adds a rock boundary-barrier shape from runtime zone owner-grid boundaries with road, town, start, and guard openings.",
+        "Route guards now prefer route anchors/control tiles, use route-edge body tiles around boundary crossings, and no longer pad fake route-guard counts to parity targets.",
+        "Supported parity profiles now keep materialized road cells and reserve road bodies during object placement.",
+        "Regression report passed for small_supported_land with 3 start towns and medium_translated_4p_land with 4 start towns; unresolved blockers deny start-town traversal and cleared connection blockers restore it."
+      ],
+      "nonGoals": [
+        "No HoMM3 copyrighted art or binary H3M writeout/import adoption.",
+        "No save-version bump, package/schema migration, or runtime call-site adoption change.",
+        "No claim of byte-level HoMM3 parity; this fixes the physical guarded-zone topology failure only."
+      ],
+      "updatedAt": "2026-05-05T23:27:51Z",
+      "completedAt": "2026-05-05T23:27:51Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -11083,6 +11130,40 @@
         "godot --headless --path . --scene res://tests/native_random_map_template_spec_filtering_report.tscn passed",
         "godot --headless --path . --scene res://tests/random_map_template_catalog_grammar_report.tscn passed",
         "python3 tests/validate_repo.py passed"
+      ]
+    },
+    {
+      "id": "native-rmg-zone-choke-topology-correction-10184",
+      "title": "Native RMG Zone Choke Topology Correction Evidence",
+      "status": "completed",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "owner-uploaded small 3-player single-level HoMM3 map comparison on 2026-05-05"
+      ],
+      "mappedPlannedSliceIds": [
+        "native-rmg-zone-choke-topology-correction-10184"
+      ],
+      "implementationRefs": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/persistence/MapPackageService.gd",
+        "tests/native_random_map_zone_choke_regression_report.gd",
+        "tests/native_random_map_zone_choke_regression_report.tscn"
+      ],
+      "evidence": [
+        "Native land terrain now adds a rock boundary-barrier shape from runtime zone owner-grid boundaries with road, town, start, and guard openings.",
+        "Route guards now prefer route anchors/control tiles, use route-edge body tiles around boundary crossings, and no longer pad fake route-guard counts to parity targets.",
+        "Supported parity profiles now keep materialized road cells and reserve road bodies during object placement.",
+        "Regression report passed for small_supported_land with 3 start towns and medium_translated_4p_land with 4 start towns; unresolved blockers deny start-town traversal and cleared connection blockers restore it."
+      ],
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "godot --headless --path . tests/native_random_map_homm3_validation_adoption_gates_report.tscn",
+        "godot --headless --path . tests/native_random_map_town_spacing_regression_report.tscn",
+        "python3 tests/validate_repo.py"
       ]
     }
   ],
