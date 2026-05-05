@@ -59,6 +59,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_road_river_network_foundation");
 	result.append("native_random_map_homm3_roads_rivers_connections");
 	result.append("native_random_map_object_placement_foundation");
+	result.append("native_random_map_homm3_mines_resources");
 	result.append("native_random_map_decorative_obstacle_generation");
 	result.append("native_random_map_town_guard_placement_foundation");
 	result.append("native_random_map_homm3_towns_castles");
@@ -930,6 +931,56 @@ Dictionary terrain_palette_for_zone(const String &zone_id, const String &faction
 	return palette;
 }
 
+constexpr int32_t RMG_MINE_CATEGORY_COUNT = 7;
+
+int32_t rmg_mine_category_index_from_id(const String &category_id) {
+	static constexpr const char *CATEGORIES[] = {"timber", "quicksilver", "ore", "ember_salt", "lens_crystal", "cut_gems", "gold"};
+	for (int32_t index = 0; index < RMG_MINE_CATEGORY_COUNT; ++index) {
+		if (category_id == CATEGORIES[index]) {
+			return index;
+		}
+	}
+	return -1;
+}
+
+String rmg_mine_category_id(int32_t category_index) {
+	static constexpr const char *CATEGORIES[] = {"timber", "quicksilver", "ore", "ember_salt", "lens_crystal", "cut_gems", "gold"};
+	return CATEGORIES[std::max(0, category_index) % RMG_MINE_CATEGORY_COUNT];
+}
+
+String rmg_mine_source_equivalent(int32_t category_index) {
+	static constexpr const char *SOURCE_EQUIVALENTS[] = {"wood", "mercury", "ore", "sulfur", "crystal", "gems", "gold"};
+	return SOURCE_EQUIVALENTS[std::max(0, category_index) % RMG_MINE_CATEGORY_COUNT];
+}
+
+String rmg_mine_minimum_source_offset(int32_t category_index) {
+	static constexpr const char *OFFSETS[] = {"+0x4c", "+0x50", "+0x54", "+0x58", "+0x5c", "+0x60", "+0x64"};
+	return OFFSETS[std::max(0, category_index) % RMG_MINE_CATEGORY_COUNT];
+}
+
+String rmg_mine_density_source_offset(int32_t category_index) {
+	static constexpr const char *OFFSETS[] = {"+0x68", "+0x6c", "+0x70", "+0x74", "+0x78", "+0x7c", "+0x80"};
+	return OFFSETS[std::max(0, category_index) % RMG_MINE_CATEGORY_COUNT];
+}
+
+int32_t rmg_mine_guard_base_value(int32_t category_index) {
+	if (category_index == 0 || category_index == 2) {
+		return 1500;
+	}
+	if (category_index == 6) {
+		return 7000;
+	}
+	return 3500;
+}
+
+Array rmg_mine_category_ids() {
+	Array ids;
+	for (int32_t index = 0; index < RMG_MINE_CATEGORY_COUNT; ++index) {
+		ids.append(rmg_mine_category_id(index));
+	}
+	return ids;
+}
+
 Dictionary zone_richness_floor_metadata(const String &role, int32_t base_size) {
 	Dictionary metadata;
 	Dictionary floor;
@@ -944,9 +995,9 @@ Dictionary zone_richness_floor_metadata(const String &role, int32_t base_size) {
 	if (role != "junction") {
 		Dictionary minimums;
 		Dictionary densities;
-		static constexpr const char *CATEGORIES[] = {"timber", "ore", "gold", "quicksilver", "ember_salt", "lens_crystal", "cut_gems"};
 		Array category_ids;
-		for (const char *category : CATEGORIES) {
+		for (int32_t index = 0; index < RMG_MINE_CATEGORY_COUNT; ++index) {
+			const String category = rmg_mine_category_id(index);
 			minimums[category] = 0;
 			densities[category] = 0;
 			category_ids.append(category);
@@ -957,7 +1008,7 @@ Dictionary zone_richness_floor_metadata(const String &role, int32_t base_size) {
 			densities["timber"] = 1;
 			densities["ore"] = 1;
 		} else {
-			const String selected = String(CATEGORIES[2 + (base_size % 5)]);
+			const String selected = rmg_mine_category_id(1 + (base_size % 6));
 			minimums[selected] = 1;
 			densities[selected] = 1;
 		}
@@ -3733,22 +3784,23 @@ Dictionary object_family_record(const String &kind, int32_t ordinal, const Strin
 		return record;
 	}
 	if (kind == "mine") {
-		static constexpr const char *CATEGORIES[] = {"timber", "ore", "gold", "quicksilver", "ember_salt", "lens_crystal", "cut_gems"};
-		static constexpr const char *FAMILIES[] = {"sawmill", "ore_pit", "gold_mine", "alchemist_lab", "sulfur_dune_equivalent", "crystal_cavern_equivalent", "gem_pond_equivalent"};
-		static constexpr const char *OBJECT_IDS[] = {"object_brightwood_sawmill", "object_ridge_quarry", "object_reef_coin_assay", "object_marsh_peat_yard", "object_floodplain_sluice_camp", "object_reef_coin_assay", "object_badlands_coin_sluice"};
-		static constexpr const char *RESOURCE_IDS[] = {"wood", "ore", "gold", "gold", "gold", "gold", "gold"};
-		const int32_t index = ordinal % 7;
+		static constexpr const char *FAMILIES[] = {"sawmill", "alchemist_lab", "ore_pit", "sulfur_dune_equivalent", "crystal_cavern_equivalent", "gem_pond_equivalent", "gold_mine"};
+		static constexpr const char *OBJECT_IDS[] = {"object_brightwood_sawmill", "object_marsh_peat_yard", "object_ridge_quarry", "object_floodplain_sluice_camp", "object_cinder_ore_face", "object_badlands_coin_sluice", "object_reef_coin_assay"};
+		static constexpr const char *RESOURCE_IDS[] = {"wood", "gold", "ore", "gold", "gold", "gold", "gold"};
+		const int32_t index = std::max(0, ordinal) % RMG_MINE_CATEGORY_COUNT;
 		record["family_id"] = FAMILIES[index];
 		record["object_family_id"] = "resource_mine_placeholder";
 		record["type_id"] = "mine_placeholder";
-		record["site_id"] = String("site_native_foundation_") + CATEGORIES[index];
+		record["site_id"] = String("site_native_foundation_") + rmg_mine_category_id(index);
 		record["object_id"] = OBJECT_IDS[index];
-		record["category_id"] = CATEGORIES[index];
+		record["category_id"] = rmg_mine_category_id(index);
 		record["resource_id"] = RESOURCE_IDS[index];
 		record["mine_family_id"] = FAMILIES[index];
-		record["guard_base_value"] = index == 2 ? 7000 : (index == 0 || index == 1 ? 1500 : 3500);
-		record["purpose"] = "neutral_resource_control_foundation";
-		Dictionary proxy = homm3_re_reward_object_proxy_record("mine", "", "", CATEGORIES[index], ordinal);
+		record["guard_base_value"] = rmg_mine_guard_base_value(index);
+		record["purpose"] = "phase_7_mine_resource_control_from_recovered_category";
+		record["homm3_re_mine_category_index"] = index;
+		record["homm3_re_mine_source_equivalent"] = rmg_mine_source_equivalent(index);
+		Dictionary proxy = homm3_re_reward_object_proxy_record("mine", "", "", rmg_mine_category_id(index), ordinal);
 		apply_homm3_re_reward_object_proxy(record, proxy, true);
 		record["mine_family_id"] = record.get("family_id", FAMILIES[index]);
 		return record;
@@ -4366,7 +4418,8 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const String zone_id = String(zone.get("id", ""));
 	const String terrain_id = terrain_id_for_zone(zone);
-	Dictionary family = object_family_record(kind, ordinal, terrain_id);
+	const int32_t family_ordinal = int32_t(point.get("object_family_ordinal", ordinal));
+	Dictionary family = object_family_record(kind, family_ordinal, terrain_id);
 	Dictionary reward_value_profile;
 	if (kind == "reward_reference") {
 		const int32_t reward_index = int32_t(point.get("native_reward_index", ordinal));
@@ -4461,6 +4514,32 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 		placement["reward_value_profile"] = reward_value_profile;
 		placement["reward_index_in_zone"] = point.get("native_reward_index", ordinal);
 		placement["reward_target_in_zone"] = point.get("native_reward_target", 0);
+	}
+	if (kind == "mine") {
+		const int32_t category_index = int32_t(point.get("mine_category_index", family.get("homm3_re_mine_category_index", family_ordinal % RMG_MINE_CATEGORY_COUNT)));
+		placement["homm3_re_phase"] = "phase_7_mines_resources";
+		placement["homm3_re_phase_order"] = "after_towns_castles_and_cleanup_connections_before_treasure_reward_bands";
+		placement["mine_category_index"] = category_index;
+		placement["mine_category_id"] = rmg_mine_category_id(category_index);
+		placement["homm3_re_mine_source_equivalent"] = rmg_mine_source_equivalent(category_index);
+		placement["source_field_offset"] = point.get("source_field_offset", rmg_mine_minimum_source_offset(category_index));
+		placement["source_field_name"] = point.get("source_field_name", "");
+		placement["source_field_value"] = point.get("source_field_value", 0);
+		placement["source_phase"] = point.get("source_phase", "phase_7_mine_minimum");
+		placement["density_selection_slot"] = point.get("density_selection_slot", -1);
+		placement["special_near_start_bias"] = point.get("special_near_start_bias", false);
+		placement["adjacent_resource_policy"] = point.get("adjacent_resource_policy", "same_category_support_record");
+		placement["placement_policy"] = point.get("placement_policy", "phase_7_minimum_before_density_mine_category_placement");
+	}
+	if (kind == "resource_site" && point.has("adjacent_to_mine_placement_id")) {
+		const int32_t category_index = int32_t(point.get("mine_category_index", 0));
+		placement["homm3_re_phase"] = "phase_7_adjacent_resource_support";
+		placement["mine_category_index"] = category_index;
+		placement["mine_category_id"] = rmg_mine_category_id(category_index);
+		placement["homm3_re_resource_source_equivalent"] = rmg_mine_source_equivalent(category_index);
+		placement["adjacent_to_mine_placement_id"] = point.get("adjacent_to_mine_placement_id", "");
+		placement["adjacent_resource_support"] = true;
+		placement["placement_policy"] = "phase_7_adjacent_resource_object_when_original_runtime_pickup_supported";
 	}
 	placement["bounds_status"] = "in_bounds";
 	placement["occupancy_status"] = "primary_tile_reserved";
@@ -4879,6 +4958,118 @@ int32_t catalog_zone_mine_target(const Dictionary &normalized, const Dictionary 
 	return std::max(fallback, std::min(cap, minimum_total + density_target));
 }
 
+Dictionary mine_requirements_for_zone(const Dictionary &zone) {
+	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+	Variant requirements_value = metadata.get("mine_requirements", metadata.get("resource_category_requirements", Variant()));
+	if (requirements_value.get_type() == Variant::DICTIONARY) {
+		return Dictionary(requirements_value);
+	}
+	return Dictionary();
+}
+
+int32_t mine_density_attempt_count(const Dictionary &normalized, const Dictionary &zone, const Dictionary &density_by_category) {
+	const int32_t density_total = sum_dictionary_int_values(density_by_category);
+	if (density_total <= 0) {
+		return 0;
+	}
+	const double scale = std::sqrt(double(map_area_scale(normalized)));
+	const int32_t base = int32_t(std::ceil(double(density_total) * scale / 4.0));
+	const String role = String(zone.get("role", ""));
+	const int32_t cap = role.contains("start") ? std::max(2, 2 + map_area_scale(normalized) / 3) : std::max(2, 2 + map_area_scale(normalized) / 2);
+	return std::max(1, std::min(cap, base));
+}
+
+int32_t weighted_mine_density_category(const Dictionary &normalized, const Dictionary &zone, const Dictionary &density_by_category, int32_t slot) {
+	int32_t density_total = 0;
+	for (int32_t category_index = 0; category_index < RMG_MINE_CATEGORY_COUNT; ++category_index) {
+		density_total += std::max(0, int32_t(density_by_category.get(rmg_mine_category_id(category_index), 0)));
+	}
+	if (density_total <= 0) {
+		return -1;
+	}
+	const String seed = String(normalized.get("normalized_seed", "0")) + ":phase7_mine_density:" + String(zone.get("id", "")) + ":" + String::num_int64(slot);
+	const int32_t selected_slot = int32_t(hash32_int(seed) % uint32_t(density_total));
+	int32_t cursor = 0;
+	for (int32_t category_index = 0; category_index < RMG_MINE_CATEGORY_COUNT; ++category_index) {
+		cursor += std::max(0, int32_t(density_by_category.get(rmg_mine_category_id(category_index), 0)));
+		if (selected_slot < cursor) {
+			return category_index;
+		}
+	}
+	return -1;
+}
+
+Array mine_phase7_schedule_for_zone(const Dictionary &normalized, const Dictionary &zone) {
+	Array schedule;
+	Dictionary requirements = mine_requirements_for_zone(zone);
+	Dictionary minimum_by_category = requirements.get("minimum_by_category", Dictionary());
+	Dictionary density_by_category = requirements.get("density_by_category", Dictionary());
+	int32_t local_ordinal = 0;
+	for (int32_t category_index = 0; category_index < RMG_MINE_CATEGORY_COUNT; ++category_index) {
+		const String category_id = rmg_mine_category_id(category_index);
+		const int32_t minimum = std::max(0, int32_t(minimum_by_category.get(category_id, 0)));
+		for (int32_t count = 0; count < minimum; ++count) {
+			Dictionary item;
+			item["category_index"] = category_index;
+			item["category_id"] = category_id;
+			item["source_phase"] = "phase_7_mine_minimum";
+			item["source_field_offset"] = rmg_mine_minimum_source_offset(category_index);
+			item["source_field_name"] = "minimum_" + rmg_mine_source_equivalent(category_index);
+			item["source_field_value"] = minimum;
+			item["minimum_index"] = count;
+			item["local_ordinal"] = local_ordinal++;
+			schedule.append(item);
+		}
+	}
+	const int32_t density_attempts = mine_density_attempt_count(normalized, zone, density_by_category);
+	for (int32_t slot = 0; slot < density_attempts; ++slot) {
+		const int32_t category_index = weighted_mine_density_category(normalized, zone, density_by_category, slot);
+		if (category_index < 0) {
+			continue;
+		}
+		Dictionary item;
+		item["category_index"] = category_index;
+		item["category_id"] = rmg_mine_category_id(category_index);
+		item["source_phase"] = "phase_7_mine_density";
+		item["source_field_offset"] = rmg_mine_density_source_offset(category_index);
+		item["source_field_name"] = "density_" + rmg_mine_source_equivalent(category_index);
+		item["source_field_value"] = std::max(0, int32_t(density_by_category.get(rmg_mine_category_id(category_index), 0)));
+		item["density_selection_slot"] = slot;
+		item["density_attempt_count"] = density_attempts;
+		item["local_ordinal"] = local_ordinal++;
+		schedule.append(item);
+	}
+	return schedule;
+}
+
+bool rmg_adjacent_resource_pickup_supported(int32_t category_index) {
+	return category_index == 0 || category_index == 2 || category_index == 6;
+}
+
+int32_t rmg_adjacent_resource_family_ordinal(int32_t category_index) {
+	if (category_index == 0) {
+		return 0;
+	}
+	if (category_index == 2) {
+		return 1;
+	}
+	return 2;
+}
+
+Dictionary adjacent_resource_point_for_mine(const Dictionary &mine_point, const String &zone_id, const Array &owner_grid, const Dictionary &occupied, int32_t width, int32_t height) {
+	static constexpr int32_t OFFSETS[4][2] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+	const int32_t mx = int32_t(mine_point.get("x", 0));
+	const int32_t my = int32_t(mine_point.get("y", 0));
+	for (const auto &offset : OFFSETS) {
+		Dictionary point = find_object_point(mx + offset[0], my + offset[1], zone_id, owner_grid, occupied, width, height);
+		if (!point.is_empty()) {
+			point["spatial_placement_policy"] = "phase_7_adjacent_resource_same_category_next_to_mine";
+			return point;
+		}
+	}
+	return Dictionary();
+}
+
 int32_t catalog_zone_reward_target(const Dictionary &normalized, const Dictionary &zone) {
 	Array bands = valid_treasure_bands_for_zone(zone);
 	int32_t density_total = 0;
@@ -5099,6 +5290,14 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	Dictionary occupied = parity_targets.is_empty() ? road_body_exclusion_lookup(road_network) : Dictionary();
 	const PackedInt32Array road_distance_field = road_distance_field_for_map(road_network, width, height);
 	int32_t ordinal = 0;
+	Array mine_resource_diagnostics;
+	Array adjacent_resource_records;
+	int32_t mine_required_attempt_count = 0;
+	int32_t mine_density_attempt_count_value = 0;
+	int32_t mine_required_placed_count = 0;
+	int32_t mine_density_placed_count = 0;
+	int32_t adjacent_resource_support_count = 0;
+	int32_t adjacent_resource_object_count = 0;
 
 	if (!parity_targets.is_empty()) {
 		Dictionary parity_counts = parity_targets.get("object_category_counts", Dictionary());
@@ -5144,15 +5343,102 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 
 		for (int64_t index = 0; index < zones.size(); ++index) {
 			Dictionary zone = zones[index];
-			const int32_t mine_target = catalog_zone_mine_target(normalized, zone);
 			const int32_t reward_target = catalog_zone_reward_target(normalized, zone);
 			const int32_t dwelling_target = catalog_zone_dwelling_target(normalized, zone);
-			for (int32_t mine_index = 0; mine_index < mine_target; ++mine_index) {
-				Dictionary point = object_point_for_zone_index(zone, ordinal, mine_index / 3, "mine", normalized, owner_grid, occupied, placements, road_distance_field, width, height);
-				point["native_mine_index"] = mine_index;
-				point["native_mine_target"] = mine_target;
+			Array mine_schedule = mine_phase7_schedule_for_zone(normalized, zone);
+			for (int64_t mine_index = 0; mine_index < mine_schedule.size(); ++mine_index) {
+				Dictionary scheduled = mine_schedule[mine_index];
+				const int32_t category_index = int32_t(scheduled.get("category_index", 0));
+				const bool density_phase = String(scheduled.get("source_phase", "")) == "phase_7_mine_density";
+				if (density_phase) {
+					++mine_density_attempt_count_value;
+				} else {
+					++mine_required_attempt_count;
+				}
+				const bool special_near_start_bias = (category_index == 0 || category_index == 2) && String(zone.get("role", "")).contains("start");
+				const int32_t ring = special_near_start_bias ? 0 : 1 + int32_t(mine_index / 3);
+				Dictionary point = object_point_for_zone_index(zone, ordinal, ring, "mine", normalized, owner_grid, occupied, placements, road_distance_field, width, height);
+				const bool point_available = !point.is_empty();
+				point["object_family_ordinal"] = category_index;
+				point["native_mine_index"] = int32_t(mine_index);
+				point["native_mine_target"] = mine_schedule.size();
+				point["mine_category_index"] = category_index;
+				point["mine_category_id"] = scheduled.get("category_id", rmg_mine_category_id(category_index));
+				point["source_phase"] = scheduled.get("source_phase", "");
+				point["source_field_offset"] = scheduled.get("source_field_offset", "");
+				point["source_field_name"] = scheduled.get("source_field_name", "");
+				point["source_field_value"] = scheduled.get("source_field_value", 0);
+				point["density_selection_slot"] = scheduled.get("density_selection_slot", -1);
+				point["special_near_start_bias"] = special_near_start_bias;
+				point["adjacent_resource_policy"] = "same_category_resource_support_record_after_mine";
+				point["placement_policy"] = density_phase ? "phase_7_density_weighted_mine_category_placement" : "phase_7_minimum_mine_category_placement_before_density";
+				Dictionary diagnostic;
+				diagnostic["zone_id"] = zone.get("id", "");
+				diagnostic["zone_role"] = zone.get("role", "");
+				diagnostic["category_index"] = category_index;
+				diagnostic["category_id"] = rmg_mine_category_id(category_index);
+				diagnostic["source_equivalent"] = rmg_mine_source_equivalent(category_index);
+				diagnostic["source_phase"] = scheduled.get("source_phase", "");
+				diagnostic["source_field_offset"] = scheduled.get("source_field_offset", "");
+				diagnostic["source_field_value"] = scheduled.get("source_field_value", 0);
+				if (!point_available) {
+					diagnostic["code"] = "mine_resource_placement_infeasible";
+					diagnostic["severity"] = density_phase ? "warning" : "failure";
+					diagnostic["message"] = "No unoccupied in-zone tile was available for the scheduled mine/resource category placement.";
+					mine_resource_diagnostics.append(diagnostic);
+					continue;
+				}
+				const String mine_placement_id = "native_rmg_mine_" + String(zone.get("id", "")) + "_" + slot_id_2(ordinal + 1);
 				append_object_placement(placements, occupied, normalized, zone, point, "mine", ordinal, road_network, zone_layout);
+				if (density_phase) {
+					++mine_density_placed_count;
+				} else {
+					++mine_required_placed_count;
+				}
+				diagnostic["code"] = "mine_resource_placement_materialized";
+				diagnostic["severity"] = "info";
+				diagnostic["placement_id"] = mine_placement_id;
+				diagnostic["special_near_start_bias"] = special_near_start_bias;
+				mine_resource_diagnostics.append(diagnostic);
 				++ordinal;
+
+				Dictionary support;
+				support["mine_placement_id"] = mine_placement_id;
+				support["zone_id"] = zone.get("id", "");
+				support["category_index"] = category_index;
+				support["category_id"] = rmg_mine_category_id(category_index);
+				support["source_equivalent"] = rmg_mine_source_equivalent(category_index);
+				support["source_model"] = "phase_7_0x4a9e40_resource_type_same_subtype_translated_to_original_support_record";
+				support["adjacent_resource_object_supported"] = rmg_adjacent_resource_pickup_supported(category_index);
+				++adjacent_resource_support_count;
+				if (rmg_adjacent_resource_pickup_supported(category_index)) {
+					Dictionary resource_point = adjacent_resource_point_for_mine(point, String(zone.get("id", "")), owner_grid, occupied, width, height);
+					if (!resource_point.is_empty()) {
+						resource_point["object_family_ordinal"] = rmg_adjacent_resource_family_ordinal(category_index);
+						resource_point["adjacent_to_mine_placement_id"] = mine_placement_id;
+						resource_point["mine_category_index"] = category_index;
+						append_object_placement(placements, occupied, normalized, zone, resource_point, "resource_site", ordinal, road_network, zone_layout);
+						support["adjacent_resource_placement_id"] = "native_rmg_resource_site_" + String(zone.get("id", "")) + "_" + slot_id_2(ordinal + 1);
+						support["materialization_state"] = "adjacent_resource_object_materialized";
+						++adjacent_resource_object_count;
+						++ordinal;
+					} else {
+						support["materialization_state"] = "adjacent_resource_object_infeasible_support_record_only";
+						Dictionary resource_diagnostic = diagnostic.duplicate(true);
+						resource_diagnostic["code"] = "adjacent_resource_placement_infeasible";
+						resource_diagnostic["severity"] = "warning";
+						resource_diagnostic["message"] = "Mine was placed, but no adjacent unoccupied resource pickup tile was available.";
+						mine_resource_diagnostics.append(resource_diagnostic);
+					}
+				} else {
+					support["materialization_state"] = "support_record_only_original_runtime_pickup_category_not_active";
+					Dictionary unsupported = diagnostic.duplicate(true);
+					unsupported["code"] = "adjacent_resource_category_not_runtime_pickup_supported";
+					unsupported["severity"] = "info";
+					unsupported["fallback_behavior"] = "mine_placement_kept_with_category_metadata_support_record_only";
+					mine_resource_diagnostics.append(unsupported);
+				}
+				adjacent_resource_records.append(support);
 			}
 			for (int32_t dwelling_index = 0; dwelling_index < dwelling_target; ++dwelling_index) {
 				Dictionary point = object_point_for_zone_index(zone, ordinal, 2 + dwelling_index, "neutral_dwelling", normalized, owner_grid, occupied, placements, road_distance_field, width, height);
@@ -5223,6 +5509,33 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	payload["object_placements"] = placements;
 	payload["object_count"] = placements.size();
 	payload["category_counts"] = category_counts;
+	Dictionary mine_resource_summary;
+	mine_resource_summary["schema_id"] = "aurelion_native_rmg_phase7_mines_resources_summary_v1";
+	mine_resource_summary["phase_order"] = "phase_7_after_towns_castles_and_cleanup_connections_before_treasure_reward_bands";
+	mine_resource_summary["category_order"] = rmg_mine_category_ids();
+	Array minimum_offsets;
+	Array density_offsets;
+	for (int32_t category_index = 0; category_index < RMG_MINE_CATEGORY_COUNT; ++category_index) {
+		minimum_offsets.append(rmg_mine_minimum_source_offset(category_index));
+		density_offsets.append(rmg_mine_density_source_offset(category_index));
+	}
+	mine_resource_summary["source_offsets_minimums"] = minimum_offsets;
+	mine_resource_summary["source_offsets_densities"] = density_offsets;
+	mine_resource_summary["minimum_before_density"] = true;
+	mine_resource_summary["required_attempt_count"] = mine_required_attempt_count;
+	mine_resource_summary["density_attempt_count"] = mine_density_attempt_count_value;
+	mine_resource_summary["placed_required_count"] = mine_required_placed_count;
+	mine_resource_summary["placed_density_count"] = mine_density_placed_count;
+	mine_resource_summary["adjacent_resource_support_count"] = adjacent_resource_support_count;
+	mine_resource_summary["adjacent_resource_object_count"] = adjacent_resource_object_count;
+	mine_resource_summary["diagnostics"] = mine_resource_diagnostics;
+	mine_resource_summary["diagnostic_count"] = mine_resource_diagnostics.size();
+	mine_resource_summary["adjacent_resource_records"] = adjacent_resource_records;
+	mine_resource_summary["adjacent_resource_record_count"] = adjacent_resource_records.size();
+	mine_resource_summary["signature"] = hash32_hex(canonical_variant(mine_resource_summary));
+	payload["mine_resource_summary"] = mine_resource_summary;
+	payload["mine_resource_diagnostics"] = mine_resource_diagnostics;
+	payload["adjacent_resource_records"] = adjacent_resource_records;
 	Dictionary decoration_summary = decoration_route_shaping_summary(placements, road_network);
 	payload["decoration_density_pass"] = decoration_summary;
 	payload["decoration_route_shaping_summary"] = decoration_summary;
@@ -7365,6 +7678,27 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	if (String(object_occupancy.get("status", "")) != "pass" || int32_t(object_occupancy.get("duplicate_primary_tile_count", -1)) != 0) {
 		append_validation_issue(failures, "fail", "object_occupancy_not_unique", "object_placement.occupancy_index", "Object primary occupancy must be unique.");
 	}
+	Dictionary mine_resource_summary = object_placement.get("mine_resource_summary", Dictionary());
+	if (String(mine_resource_summary.get("schema_id", "")) != "aurelion_native_rmg_phase7_mines_resources_summary_v1") {
+		append_validation_issue(failures, "fail", "mine_resource_summary_missing", "object_placement.mine_resource_summary", "Phase 7 mines/resources summary must be emitted.");
+	} else {
+		if (!bool(mine_resource_summary.get("minimum_before_density", false))) {
+			append_validation_issue(failures, "fail", "mine_resource_minimum_order_missing", "object_placement.mine_resource_summary.minimum_before_density", "Mine minimums must be scheduled before density extras.");
+		}
+		if (Array(mine_resource_summary.get("category_order", Array())).size() != RMG_MINE_CATEGORY_COUNT) {
+			append_validation_issue(failures, "fail", "mine_resource_seven_category_order_missing", "object_placement.mine_resource_summary.category_order", "Seven recovered mine/resource categories must be represented.");
+		}
+		Array mine_diagnostics = mine_resource_summary.get("diagnostics", Array());
+		for (int64_t index = 0; index < mine_diagnostics.size(); ++index) {
+			if (Variant(mine_diagnostics[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary diagnostic = mine_diagnostics[index];
+			if (String(diagnostic.get("severity", "")) == "failure") {
+				append_validation_issue(failures, "fail", "mine_resource_placement_infeasible", "object_placement.mine_resource_summary.diagnostics", "Required mine/resource placement reported an infeasible source-field placement.");
+			}
+		}
+	}
 
 	Array towns = town_guard_placement.get("town_records", Array());
 	Array guards = town_guard_placement.get("guard_records", Array());
@@ -7495,6 +7829,8 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	report["object_placement_signature"] = object_placement.get("signature", "");
 	report["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
 	report["object_category_counts"] = object_placement.get("category_counts", Dictionary());
+	report["mine_resource_summary"] = object_placement.get("mine_resource_summary", Dictionary());
+	report["mine_resource_summary_signature"] = Dictionary(object_placement.get("mine_resource_summary", Dictionary())).get("signature", "");
 	report["fill_coverage_summary"] = object_placement.get("fill_coverage_summary", Dictionary());
 	report["town_generation_status"] = town_guard_placement.get("town_generation_status", "");
 	report["guard_generation_status"] = town_guard_placement.get("guard_generation_status", "");
@@ -8547,6 +8883,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["river_network_signature"] = river_network.get("signature", "");
 	metadata["connection_payload_resolution_signature"] = connection_payload_resolution.get("signature", "");
 	metadata["object_placement_signature"] = object_placement.get("signature", "");
+	metadata["mine_resource_summary_signature"] = Dictionary(object_placement.get("mine_resource_summary", Dictionary())).get("signature", "");
 	metadata["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
 	metadata["town_guard_placement_signature"] = town_guard_placement.get("signature", "");
 	metadata["town_placement_signature"] = Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("signature", "");
@@ -8644,6 +8981,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["river_quality_summary"] = river_network.get("quality_summary", Dictionary());
 	result["object_placement"] = object_placement;
 	result["object_placements"] = object_placements;
+	result["mine_resource_summary"] = object_placement.get("mine_resource_summary", Dictionary());
+	result["adjacent_resource_records"] = object_placement.get("adjacent_resource_records", Array());
 	result["decoration_route_shaping_summary"] = object_placement.get("decoration_route_shaping_summary", Dictionary());
 	result["fill_coverage_summary"] = object_placement.get("fill_coverage_summary", Dictionary());
 	result["object_category_counts"] = full_parity_supported ? native_rmg_structural_parity_targets(normalized).get("object_category_counts", Dictionary()) : object_placement.get("category_counts", Dictionary());
