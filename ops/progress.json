@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-homm3-guards-rewards-monsters-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Guards Rewards Monsters",
+  "currentSliceId": "native-rmg-homm3-object-placement-pipeline-10184",
+  "currentSliceTitle": "Native RMG HoMM3 Object Placement Pipeline",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed Phase 10 rewards and monster/guard semantics: reward-band low/high/density diagnostics, recovered strength scaling, match-to-town and allowed-mask original unit selection, guard/reward summary, focused report scene, and validation pass.",
+  "currentSliceNotes": "Completed shared native object-placement pipeline with explicit original-content definitions, footprints, masks, terrain/writeout metadata, occupancy and limit diagnostics, ordinary decorative filler semantics, XL cost measurement, focused report evidence, and validation pass.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T12:35:25Z",
+  "updatedAt": "2026-05-05T15:05:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -9882,7 +9882,7 @@
       "id": "native-rmg-homm3-object-placement-pipeline-10184",
       "title": "Native RMG HoMM3 Object Placement Pipeline",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "pending",
+      "status": "completed",
       "classification": "implementation_slice",
       "purpose": "Rework object selection, footprints, terrain masks, occupancy, value bands, limits, and decorative filler as the shared placement pipeline used by later town, mine, reward, and guard slices.",
       "sourceDocs": [
@@ -9915,7 +9915,11 @@
         "No exact DEF frame dependency.",
         "No broad economy rebalance."
       ],
-      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184",
+      "updatedAt": "2026-05-05T15:05:00Z",
+      "startedAt": "2026-05-05T12:39:25Z",
+      "notes": "Completed shared native object-placement pipeline with explicit original-content definitions, footprints, masks, terrain/writeout metadata, occupancy and limit diagnostics, ordinary decorative filler semantics, XL cost measurement, focused report evidence, and validation pass.",
+      "completedAt": "2026-05-05T15:05:00Z"
     },
     {
       "id": "native-rmg-homm3-mines-resources-10184",
@@ -11409,9 +11413,9 @@
     {
       "id": "native-rmg-homm3-object-placement-pipeline-10184",
       "title": "Native RMG HoMM3 Object Placement Pipeline",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "reason": "Next corrected Phase 3 child after completed roads/rivers/connections; implements object catalog/footprint/occupancy/value-band/limit/decorative filler pipeline without mines/resources or full guard/reward scope."
+      "reason": "Completed by this run with focused native object-placement report evidence and required validation pass."
     }
   ],
   "stoppedOrPausedTasks": [

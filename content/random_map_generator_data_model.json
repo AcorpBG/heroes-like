@@ -67,7 +67,7 @@
       "category": "mine",
       "bucket_index": 2,
       "operational_flags": {"primary_placement_gate": true, "wide_placement_footprint": true, "secondary_placement_gate": true, "definition_serialization_pass": true},
-      "limits": {"global": 96, "per_zone": 7}
+      "limits": {"global": 256, "per_zone": 24}
     },
     {
       "type_id": "neutral_dwelling",
@@ -141,7 +141,7 @@
       "action": {"class": "adjacent_claim", "mask": ["south_action", "west_action"]},
       "terrain_constraints": {"allowed_terrain_ids": ["grass", "dirt", "snow"], "reject_terrain_ids": ["water", "rock"]},
       "zone_constraints": {"allowed_roles": ["human_start", "computer_start", "treasure"], "requires_land": true},
-      "limits": {"global": 24, "per_zone": 2},
+      "limits": {"global": 256, "per_zone": 24},
       "value_density": {"value_bands": [{"low": 1200, "high": 1800, "density": 1}], "weight": 6, "categories": ["timber"]},
       "writeout": {"record_kind": "map_object_persistent_control", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "site_id", "resource_id", "mine_family_id"]}
     },
@@ -157,7 +157,7 @@
       "action": {"class": "adjacent_claim", "mask": ["south_action", "west_action"]},
       "terrain_constraints": {"allowed_terrain_ids": ["rough", "underground", "sand"], "reject_terrain_ids": ["water", "rock"]},
       "zone_constraints": {"allowed_roles": ["human_start", "computer_start", "treasure"], "requires_land": true},
-      "limits": {"global": 24, "per_zone": 2},
+      "limits": {"global": 256, "per_zone": 24},
       "value_density": {"value_bands": [{"low": 1200, "high": 1800, "density": 1}], "weight": 6, "categories": ["ore"]},
       "writeout": {"record_kind": "map_object_persistent_control", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "site_id", "resource_id", "mine_family_id"]}
     },
@@ -173,7 +173,7 @@
       "action": {"class": "adjacent_claim", "mask": ["south_action", "west_action"]},
       "terrain_constraints": {"allowed_terrain_ids": ["grass", "sand", "underground"], "reject_terrain_ids": ["water", "rock"]},
       "zone_constraints": {"allowed_roles": ["treasure", "junction"], "requires_land": true},
-      "limits": {"global": 12, "per_zone": 1},
+      "limits": {"global": 256, "per_zone": 24},
       "value_density": {"value_bands": [{"low": 6500, "high": 9000, "density": 1}], "weight": 2, "categories": ["gold"]},
       "writeout": {"record_kind": "map_object_persistent_control", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "site_id", "resource_id", "mine_family_id"]}
     },
@@ -189,7 +189,7 @@
       "action": {"class": "adjacent_claim", "mask": ["south_action", "west_action"]},
       "terrain_constraints": {"allowed_terrain_ids": ["grass", "dirt", "sand", "swamp", "rough", "underground", "lava"], "reject_terrain_ids": ["water", "rock"]},
       "zone_constraints": {"allowed_roles": ["treasure", "junction"], "requires_land": true},
-      "limits": {"global": 48, "per_zone": 4},
+      "limits": {"global": 256, "per_zone": 24},
       "value_density": {"value_bands": [{"low": 3000, "high": 4200, "density": 1}], "weight": 3, "categories": ["quicksilver", "ember_salt", "lens_crystal", "cut_gems"]},
       "writeout": {"record_kind": "map_object_persistent_control", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "site_id", "resource_id", "mine_family_id"]}
     },
