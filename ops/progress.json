@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-homm3-spec-gap-audit-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Spec Gap Audit",
+  "currentSliceId": "native-rmg-homm3-generator-data-model-10184",
+  "currentSliceTitle": "Native RMG HoMM3 Generator Data Model",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed report/planning gate: produced docs/native-rmg-homm3-spec-rework-gap-report.md, reconciled Phase 3 child-slice order, and left implementation children pending.",
+  "currentSliceNotes": "Completed native RMG generator data model: added original-content data definitions, native validation/report API, focused Godot report, and implementation evidence.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T09:45:50Z",
+  "updatedAt": "2026-05-05T10:42:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -9670,7 +9670,7 @@
       "id": "native-rmg-homm3-generator-data-model-10184",
       "title": "Native RMG HoMM3 Generator Data Model",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "pending",
+      "status": "completed",
       "classification": "implementation_slice",
       "purpose": "Introduce reusable generator data for templates, runtime zones, links, object definitions, terrain masks, footprints, value bands, limits, and validation results.",
       "sourceDocs": [
@@ -9701,7 +9701,18 @@
         "No broad gameplay rebalance.",
         "No renderer art rewrite."
       ],
-      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184",
+      "updatedAt": "2026-05-05T10:42:00Z",
+      "startedAt": "2026-05-05T09:54:46Z",
+      "completedAt": "2026-05-05T10:42:00Z",
+      "notes": "Completed native RMG generator data model: content/random_map_generator_data_model.json defines template/zone/link/cell placeholders, object type metadata, explicit object definitions, validation structure, compatibility gates, and unsupported parity boundaries; MapPackageService exposes inspect_random_map_generator_data_model() through src/gdextension/src/rmg_data_model.cpp; tests/native_random_map_homm3_generator_data_model_report.tscn validates model loading, current generated object resolution, template catalog metrics, and package compatibility.",
+      "validationEvidence": [
+        "cmake --build /tmp/heroes-like-gdextension-build --target aurelion_map_persistence -j2 (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_generator_data_model_report.tscn (pass)",
+        "python3 tests/validate_repo.py (pass)",
+        "git diff --check (pass)",
+        "python3 -m json.tool ops/progress.json >/dev/null (pass)"
+      ]
     },
     {
       "id": "native-rmg-homm3-runtime-zone-graph-10184",
@@ -11324,11 +11335,11 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-homm3-generator-data-model-10184",
-      "title": "Native RMG HoMM3 Generator Data Model",
+      "id": "native-rmg-homm3-runtime-zone-graph-10184",
+      "title": "Native RMG HoMM3 Runtime Zone Graph",
       "phase": "phase-3-homm3-style-rmg-rework",
       "status": "pending",
-      "reason": "First implementation child after the completed spec gap audit; defines shared template, zone, link, object, terrain, footprint, value-band, limit, and validation data used by all later RMG rework slices."
+      "reason": "Next Phase 3 child after the completed generator data-model slice; builds filtered runtime template/zone/link graph state preserving source roles, owner slots, base sizes, target areas, terrain/faction rules, links, and infeasibility diagnostics before terrain/object rewrites."
     }
   ],
   "stoppedOrPausedTasks": [

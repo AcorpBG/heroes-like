@@ -36,6 +36,7 @@ public:
 	Dictionary convert_generated_payload(Dictionary generated_map, Dictionary options = Dictionary()) const;
 	Dictionary compute_document_hash(Variant document, Dictionary options = Dictionary()) const;
 	Dictionary inspect_package(String path, Dictionary options = Dictionary()) const;
+	Dictionary inspect_random_map_generator_data_model(Dictionary options = Dictionary()) const;
 	Dictionary normalize_random_map_config(Dictionary config) const;
 	Dictionary random_map_config_identity(Dictionary config) const;
 	Dictionary generate_random_map(Dictionary config, Dictionary options = Dictionary()) const;
