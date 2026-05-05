@@ -532,8 +532,8 @@
       "asset_id": "decor_smoke_black_ruin_wall",
       "fit": "Distinct sprite assigned to authored object 'Ash-Badland Clinker Dust' from the decorative/blocker generated asset pass.",
       "source_object_name": "Ash-Badland Clinker Dust",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_ash_lava_wastes",
         "biome_rough_badlands"
@@ -723,8 +723,8 @@
       "asset_id": "decor_blackwater_foam_ring",
       "fit": "Distinct sprite assigned to authored object 'Blackwater Foam Ring' from the decorative/blocker generated asset pass.",
       "source_object_name": "Blackwater Foam Ring",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_mire_fen"
       ],
@@ -756,8 +756,8 @@
       "asset_id": "decor_blue_ice_scale_chips",
       "fit": "Distinct sprite assigned to authored object 'Blue Ice Scale Chips' from the decorative/blocker generated asset pass.",
       "source_object_name": "Blue Ice Scale Chips",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_snow_frost_marches"
       ],
@@ -801,8 +801,8 @@
       "asset_id": "decor_underway_pressure_rail_embankment",
       "fit": "Distinct sprite assigned to authored object 'Brass Rivet Scatter' from the decorative/blocker generated asset pass.",
       "source_object_name": "Brass Rivet Scatter",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_subterranean_underways"
       ],
@@ -812,8 +812,8 @@
       "asset_id": "decor_cairn_lichen_flecks",
       "fit": "Distinct sprite assigned to authored object 'Cairn Lichen Flecks' from the decorative/blocker generated asset pass.",
       "source_object_name": "Cairn Lichen Flecks",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_highland_ridge"
       ],
@@ -823,8 +823,8 @@
       "asset_id": "decor_causeway_straw_lines",
       "fit": "Distinct sprite assigned to authored object 'Causeway Straw Lines' from the decorative/blocker generated asset pass.",
       "source_object_name": "Causeway Straw Lines",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_mire_fen"
       ],
@@ -834,8 +834,8 @@
       "asset_id": "decor_charbeam_char_flecks",
       "fit": "Distinct sprite assigned to authored object 'Charbeam Char Flecks' from the decorative/blocker generated asset pass.",
       "source_object_name": "Charbeam Char Flecks",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_ash_lava_wastes"
       ],
@@ -946,8 +946,8 @@
       "asset_id": "decor_coast_tidepool_glass_shadow",
       "fit": "Distinct sprite assigned to authored object 'Tidepool Glass Shadow' from the decorative/blocker generated asset pass.",
       "source_object_name": "Tidepool Glass Shadow",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_coast_archipelago"
       ],
@@ -969,8 +969,8 @@
       "asset_id": "decor_cooled_rope_lava_veins",
       "fit": "Distinct sprite assigned to authored object 'Cooled Rope-Lava Veins' from the decorative/blocker generated asset pass.",
       "source_object_name": "Cooled Rope-Lava Veins",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_ash_lava_wastes"
       ],
@@ -1013,8 +1013,8 @@
       "asset_id": "decor_drowned_post_splinters",
       "fit": "Distinct sprite assigned to authored object 'Drowned Post Splinters' from the decorative/blocker generated asset pass.",
       "source_object_name": "Drowned Post Splinters",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_mire_fen"
       ],
@@ -1123,8 +1123,8 @@
       "asset_id": "decor_fernshadow_tuft",
       "fit": "Distinct sprite assigned to authored object 'Fernshadow Tuft' from the decorative/blocker generated asset pass.",
       "source_object_name": "Fernshadow Tuft",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_deep_forest"
       ],
@@ -1224,8 +1224,8 @@
       "asset_id": "decor_forest_mire_root_reed_mat",
       "fit": "Distinct sprite assigned to authored object 'Forest-Mire Root Reed Mat' from the decorative/blocker generated asset pass.",
       "source_object_name": "Forest-Mire Root Reed Mat",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_deep_forest",
         "biome_mire_fen"
@@ -1247,8 +1247,8 @@
       "asset_id": "decor_forest_ridge_moss_line",
       "fit": "Distinct sprite assigned to authored object 'Forest-Ridge Moss Line' from the decorative/blocker generated asset pass.",
       "source_object_name": "Forest-Ridge Moss Line",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_deep_forest",
         "biome_highland_ridge",
@@ -1273,8 +1273,8 @@
       "asset_id": "decor_frost_coast_salt_rime",
       "fit": "Distinct sprite assigned to authored object 'Frost-Coast Salt Rime' from the decorative/blocker generated asset pass.",
       "source_object_name": "Frost-Coast Salt Rime",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_snow_frost_marches",
         "biome_coast_archipelago"
@@ -1385,8 +1385,8 @@
       "asset_id": "decor_glowcap_speckle",
       "fit": "Distinct sprite assigned to authored object 'Glowcap Speckle' from the decorative/blocker generated asset pass.",
       "source_object_name": "Glowcap Speckle",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_subterranean_underways",
         "biome_deep_forest"
@@ -1454,8 +1454,8 @@
       "asset_id": "decor_grass_old_weir_shadow",
       "fit": "Distinct sprite assigned to authored object 'Old Weir Shadow' from the decorative/blocker generated asset pass.",
       "source_object_name": "Old Weir Shadow",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_grasslands"
       ],
@@ -1488,8 +1488,8 @@
       "asset_id": "decor_green_shrine_petals",
       "fit": "Distinct sprite assigned to authored object 'Green Shrine Petals' from the decorative/blocker generated asset pass.",
       "source_object_name": "Green Shrine Petals",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_deep_forest"
       ],
@@ -1566,8 +1566,8 @@
       "asset_id": "decor_highland_storm_cairn_shadow",
       "fit": "Distinct sprite assigned to authored object 'Storm Cairn Shadow' from the decorative/blocker generated asset pass.",
       "source_object_name": "Storm Cairn Shadow",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_highland_ridge"
       ],
@@ -1588,8 +1588,8 @@
       "asset_id": "decor_hollow_bark_chips",
       "fit": "Distinct sprite assigned to authored object 'Hollow Bark Chips' from the decorative/blocker generated asset pass.",
       "source_object_name": "Hollow Bark Chips",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_deep_forest"
       ],
@@ -1633,8 +1633,8 @@
       "asset_id": "decor_living_road_root_threads",
       "fit": "Distinct sprite assigned to authored object 'Living Road Root Threads' from the decorative/blocker generated asset pass.",
       "source_object_name": "Living Road Root Threads",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_deep_forest"
       ],
@@ -1678,8 +1678,8 @@
       "asset_id": "decor_low_fence_splinters",
       "fit": "Distinct sprite assigned to authored object 'Low Fence Splinters' from the decorative/blocker generated asset pass.",
       "source_object_name": "Low Fence Splinters",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_grasslands"
       ],
@@ -1700,8 +1700,8 @@
       "asset_id": "decor_millrace_reed_sprigs",
       "fit": "Distinct sprite assigned to authored object 'Millrace Reed Sprigs' from the decorative/blocker generated asset pass.",
       "source_object_name": "Millrace Reed Sprigs",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_grasslands"
       ],
@@ -1790,8 +1790,8 @@
       "asset_id": "decor_mire_rotted_causeway_shadow",
       "fit": "Distinct sprite assigned to authored object 'Rotted Causeway Shadow' from the decorative/blocker generated asset pass.",
       "source_object_name": "Rotted Causeway Shadow",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_mire_fen"
       ],
@@ -1823,8 +1823,8 @@
       "asset_id": "decor_moss_stitch_stones",
       "fit": "Distinct sprite assigned to authored object 'Moss-Stitch Stones' from the decorative/blocker generated asset pass.",
       "source_object_name": "Moss-Stitch Stones",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_deep_forest",
         "biome_highland_ridge"
@@ -1947,8 +1947,8 @@
       "asset_id": "decor_pressure_rail_sleepers",
       "fit": "Distinct sprite assigned to authored object 'Pressure Rail Sleepers' from the decorative/blocker generated asset pass.",
       "source_object_name": "Pressure Rail Sleepers",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_subterranean_underways",
         "biome_rough_badlands"
@@ -1972,8 +1972,8 @@
       "asset_id": "decor_pumpstone_moss",
       "fit": "Distinct sprite assigned to authored object 'Pumpstone Moss' from the decorative/blocker generated asset pass.",
       "source_object_name": "Pumpstone Moss",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_subterranean_underways"
       ],
@@ -2084,8 +2084,8 @@
       "asset_id": "decor_reed_glimmer_mat",
       "fit": "Distinct sprite assigned to authored object 'Reed Glimmer Mat' from the decorative/blocker generated asset pass.",
       "source_object_name": "Reed Glimmer Mat",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_mire_fen",
         "biome_coast_archipelago"
@@ -2119,7 +2119,7 @@
       "fit": "Distinct sprite assigned to authored object 'Reef Line' from the decorative/blocker generated asset pass.",
       "source_object_name": "Reef Line",
       "source_family": "blocker",
-      "source_passability_class": "",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_coast_archipelago"
       ],
@@ -2198,8 +2198,8 @@
       "asset_id": "decor_roadside_lantern_gravel",
       "fit": "Distinct sprite assigned to authored object 'Roadside Lantern Gravel' from the decorative/blocker generated asset pass.",
       "source_object_name": "Roadside Lantern Gravel",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_grasslands",
         "biome_highland_ridge",
@@ -2211,8 +2211,8 @@
       "asset_id": "decor_ropepost_fiber_scraps",
       "fit": "Distinct sprite assigned to authored object 'Ropepost Fiber Scraps' from the decorative/blocker generated asset pass.",
       "source_object_name": "Ropepost Fiber Scraps",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_highland_ridge"
       ],
@@ -2312,8 +2312,8 @@
       "asset_id": "decor_shore_reed_shell_mix",
       "fit": "Distinct sprite assigned to authored object 'Shore Reed-Shell Mix' from the decorative/blocker generated asset pass.",
       "source_object_name": "Shore Reed-Shell Mix",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_mire_fen",
         "biome_coast_archipelago"
@@ -2426,8 +2426,8 @@
       "asset_id": "decor_snowpack_stone_crowns",
       "fit": "Distinct sprite assigned to authored object 'Snowpack Stone Crowns' from the decorative/blocker generated asset pass.",
       "source_object_name": "Snowpack Stone Crowns",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_snow_frost_marches"
       ],
@@ -2437,8 +2437,8 @@
       "asset_id": "decor_soot_banner_tatters",
       "fit": "Distinct sprite assigned to authored object 'Soot Banner Tatters' from the decorative/blocker generated asset pass.",
       "source_object_name": "Soot Banner Tatters",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_subterranean_underways"
       ],
@@ -2459,8 +2459,8 @@
       "asset_id": "decor_stormgrass_knees",
       "fit": "Distinct sprite assigned to authored object 'Stormgrass Knees' from the decorative/blocker generated asset pass.",
       "source_object_name": "Stormgrass Knees",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_highland_ridge"
       ],
@@ -2470,8 +2470,8 @@
       "asset_id": "decor_sunbleached_axle_flakes",
       "fit": "Distinct sprite assigned to authored object 'Sunbleached Axle Flakes' from the decorative/blocker generated asset pass.",
       "source_object_name": "Sunbleached Axle Flakes",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_rough_badlands"
       ],
@@ -2580,8 +2580,8 @@
       "asset_id": "decor_thornseed_burrs",
       "fit": "Distinct sprite assigned to authored object 'Thornseed Burrs' from the decorative/blocker generated asset pass.",
       "source_object_name": "Thornseed Burrs",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_rough_badlands"
       ],
@@ -2683,8 +2683,8 @@
       "asset_id": "decor_underway_glowfungus_ceiling_shadow",
       "fit": "Distinct sprite assigned to authored object 'Glowfungus Ceiling Shadow' from the decorative/blocker generated asset pass.",
       "source_object_name": "Glowfungus Ceiling Shadow",
-      "source_family": "decoration",
-      "source_passability_class": "passable_scenic",
+      "source_family": "blocker",
+      "source_passability_class": "blocking_non_visitable",
       "source_biome_ids": [
         "biome_subterranean_underways"
       ],

@@ -4214,9 +4214,27 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        }
+      ],
       "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "lane_shape",
         "conditional_lock"
       ],
@@ -4236,19 +4254,62 @@
       "id": "object_reef_line",
       "name": "Reef Line",
       "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "water_blocker"
+      ],
       "biome_ids": [
         "biome_coast_archipelago"
       ],
       "footprint": {
         "width": 3,
-        "height": 1
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "medium"
       },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        }
+      ],
       "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "coastal_lane_shape",
         "water_blocker"
-      ]
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      }
     },
     {
       "id": "object_ember_signal_brazier",
@@ -5621,10 +5682,11 @@
     {
       "id": "object_moss_stitch_stones",
       "name": "Moss-Stitch Stones",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -5639,14 +5701,26 @@
         "anchor": "bottom_center",
         "tier": "small"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -5660,17 +5734,18 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       }
     },
     {
       "id": "object_reed_glimmer_mat",
       "name": "Reed Glimmer Mat",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "ambush_lane"
       ],
@@ -5685,14 +5760,36 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore",
         "ambush_lane"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -5706,7 +5803,7 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "ruin_reward_pocket",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       }
     },
@@ -5847,10 +5944,11 @@
     {
       "id": "object_glowcap_speckle",
       "name": "Glowcap Speckle",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "sightline"
       ],
@@ -5865,14 +5963,26 @@
         "anchor": "bottom_center",
         "tier": "small"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore",
         "sightline"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -5886,7 +5996,7 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       }
     },
@@ -6035,10 +6145,11 @@
     {
       "id": "object_pressure_rail_sleepers",
       "name": "Pressure Rail Sleepers",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "road_control"
       ],
@@ -6053,14 +6164,36 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore",
         "road_control"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -6074,7 +6207,7 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "contested_economy",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true,
         "requires_road_adjacency": true
       }
@@ -7553,10 +7686,11 @@
     {
       "id": "object_millrace_reed_sprigs",
       "name": "Millrace Reed Sprigs",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -7570,13 +7704,30 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -7590,22 +7741,23 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
       "id": "object_low_fence_splinters",
       "name": "Low Fence Splinters",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -7619,13 +7771,35 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -7639,13 +7813,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -7749,10 +7923,11 @@
     {
       "id": "object_living_road_root_threads",
       "name": "Living Road Root Threads",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -7766,13 +7941,25 @@
         "anchor": "bottom_center",
         "tier": "small"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -7786,22 +7973,23 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
       "id": "object_fernshadow_tuft",
       "name": "Fernshadow Tuft",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -7815,13 +8003,30 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -7835,22 +8040,23 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
       "id": "object_hollow_bark_chips",
       "name": "Hollow Bark Chips",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -7864,13 +8070,30 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -7884,22 +8107,23 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
       "id": "object_green_shrine_petals",
       "name": "Green Shrine Petals",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -7913,13 +8137,35 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -7933,13 +8179,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "ruin_reward_pocket",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -8043,10 +8289,11 @@
     {
       "id": "object_blackwater_foam_ring",
       "name": "Blackwater Foam Ring",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -8060,13 +8307,25 @@
         "anchor": "bottom_center",
         "tier": "small"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -8080,22 +8339,23 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
       "id": "object_drowned_post_splinters",
       "name": "Drowned Post Splinters",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -8109,13 +8369,30 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -8129,13 +8406,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -8190,10 +8467,11 @@
     {
       "id": "object_causeway_straw_lines",
       "name": "Causeway Straw Lines",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -8207,13 +8485,35 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -8227,13 +8527,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -8288,10 +8588,11 @@
     {
       "id": "object_cairn_lichen_flecks",
       "name": "Cairn Lichen Flecks",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -8305,13 +8606,25 @@
         "anchor": "bottom_center",
         "tier": "small"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -8325,13 +8638,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -8386,10 +8699,11 @@
     {
       "id": "object_stormgrass_knees",
       "name": "Stormgrass Knees",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -8403,13 +8717,30 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -8423,13 +8754,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -8484,10 +8815,11 @@
     {
       "id": "object_ropepost_fiber_scraps",
       "name": "Ropepost Fiber Scraps",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -8501,13 +8833,35 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -8521,13 +8875,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "ruin_reward_pocket",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -8974,10 +9328,11 @@
     {
       "id": "object_thornseed_burrs",
       "name": "Thornseed Burrs",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -8991,13 +9346,30 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -9011,13 +9383,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -9072,10 +9444,11 @@
     {
       "id": "object_sunbleached_axle_flakes",
       "name": "Sunbleached Axle Flakes",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -9089,13 +9462,35 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -9109,13 +9504,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "ruin_reward_pocket",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -9268,10 +9663,11 @@
     {
       "id": "object_cooled_rope_lava_veins",
       "name": "Cooled Rope-Lava Veins",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -9285,13 +9681,30 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -9305,13 +9718,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -9366,10 +9779,11 @@
     {
       "id": "object_charbeam_char_flecks",
       "name": "Charbeam Char Flecks",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -9383,13 +9797,35 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -9403,13 +9839,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "ruin_reward_pocket",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -9464,10 +9900,11 @@
     {
       "id": "object_brass_rivet_scatter",
       "name": "Brass Rivet Scatter",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -9481,13 +9918,25 @@
         "anchor": "bottom_center",
         "tier": "small"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -9501,13 +9950,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "town_influence",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -9562,10 +10011,11 @@
     {
       "id": "object_pumpstone_moss",
       "name": "Pumpstone Moss",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -9579,13 +10029,30 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -9599,13 +10066,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -9660,10 +10127,11 @@
     {
       "id": "object_soot_banner_tatters",
       "name": "Soot Banner Tatters",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -9677,13 +10145,35 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -9697,13 +10187,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "ruin_reward_pocket",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -9758,10 +10248,11 @@
     {
       "id": "object_blue_ice_scale_chips",
       "name": "Blue Ice Scale Chips",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -9775,13 +10266,25 @@
         "anchor": "bottom_center",
         "tier": "small"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -9795,22 +10298,23 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
       "id": "object_snowpack_stone_crowns",
       "name": "Snowpack Stone Crowns",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -9824,13 +10328,25 @@
         "anchor": "bottom_center",
         "tier": "small"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -9844,13 +10360,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -10003,10 +10519,11 @@
     {
       "id": "object_roadside_lantern_gravel",
       "name": "Roadside Lantern Gravel",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -10022,13 +10539,45 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -10042,22 +10591,23 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
       "id": "object_shore_reed_shell_mix",
       "name": "Shore Reed-Shell Mix",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -10072,13 +10622,45 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -10092,22 +10674,23 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
       "id": "object_forest_ridge_moss_line",
       "name": "Forest-Ridge Moss Line",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -10123,13 +10706,45 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -10143,22 +10758,23 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
       "id": "object_ash_badland_clinker_dust",
       "name": "Ash-Badland Clinker Dust",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -10173,13 +10789,45 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -10193,13 +10841,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "standard_adventure",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -10255,10 +10903,11 @@
     {
       "id": "object_frost_coast_salt_rime",
       "name": "Frost-Coast Salt Rime",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -10273,13 +10922,45 @@
         "anchor": "bottom_center",
         "tier": "medium"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -10293,13 +10974,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic_density"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -15959,10 +16640,11 @@
     {
       "id": "object_grass_old_weir_shadow",
       "name": "Old Weir Shadow",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -15976,14 +16658,106 @@
         "anchor": "bottom_center",
         "tier": "region_feature"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 5,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -15997,13 +16771,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -16823,10 +17597,11 @@
     {
       "id": "object_mire_rotted_causeway_shadow",
       "name": "Rotted Causeway Shadow",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -16840,14 +17615,66 @@
         "anchor": "bottom_center",
         "tier": "region_feature"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -16861,13 +17688,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -17235,10 +18062,11 @@
     {
       "id": "object_highland_storm_cairn_shadow",
       "name": "Storm Cairn Shadow",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -17252,14 +18080,66 @@
         "anchor": "bottom_center",
         "tier": "region_feature"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -17273,13 +18153,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -17632,10 +18512,11 @@
     {
       "id": "object_coast_tidepool_glass_shadow",
       "name": "Tidepool Glass Shadow",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -17649,14 +18530,66 @@
         "anchor": "bottom_center",
         "tier": "region_feature"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -17670,13 +18603,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -18893,10 +19826,11 @@
     {
       "id": "object_underway_glowfungus_ceiling_shadow",
       "name": "Glowfungus Ceiling Shadow",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -18910,14 +19844,66 @@
         "anchor": "bottom_center",
         "tier": "region_feature"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -18931,13 +19917,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
@@ -19640,10 +20626,11 @@
     {
       "id": "object_forest_mire_root_reed_mat",
       "name": "Forest-Mire Root Reed Mat",
-      "family": "decoration",
+      "family": "blocker",
       "schema_version": 1,
       "primary_class": "decoration",
       "secondary_tags": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
@@ -19658,14 +20645,66 @@
         "anchor": "bottom_center",
         "tier": "region_feature"
       },
-      "body_tiles": [],
-      "passable": true,
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
       "visitable": false,
       "map_roles": [
+        "blocked_route",
         "world_lore",
         "route_pacing"
       ],
-      "passability_class": "passable_scenic",
+      "passability_class": "blocking_non_visitable",
       "interaction": {
         "cadence": "none",
         "remains_after_visit": true,
@@ -19679,13 +20718,13 @@
       "editor_placement": {
         "placement_mode": "palette_object",
         "density_band": "sparse_wild",
-        "minimum_lane_clearance": 0,
+        "minimum_lane_clearance": 1,
         "allows_adjacent_visitable": true
       },
       "ai_hints": {
         "strategic_value": 0,
         "risk_tier": "unguarded",
-        "placement_role": "passable_scenic"
+        "placement_role": "blocking_non_visitable"
       }
     },
     {
