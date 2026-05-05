@@ -1566,7 +1566,7 @@ nonGoals:
 
 id: `native-rmg-homm3-mines-resources-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `pending`
+status: `completed`
 purpose: Implement recovered seven mine/resource categories, minimums/densities, adjacent resources, and placement diagnostics after towns/castles and the shared object-placement pipeline.
 sourceDocs:
 - `docs/native-rmg-homm3-spec-rework-gap-report.md`
@@ -1577,8 +1577,10 @@ implementationTargets:
 - native mine/resource placement
 - original-content mine and resource proxy mappings
 - focused mine/resource validation reports
+- `docs/native-rmg-homm3-mines-resources-report.md`
+- `tests/native_random_map_homm3_mines_resources_report.tscn`
 validation:
-- focused native RMG mine/resource report scene
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_mines_resources_report.tscn`
 - `python3 tests/validate_repo.py`
 - `git diff --check`
 completionCriteria:

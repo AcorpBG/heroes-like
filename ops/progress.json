@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-homm3-roads-rivers-connections-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Roads Rivers Connections",
+  "currentSliceId": "native-rmg-homm3-mines-resources-10184",
+  "currentSliceTitle": "Native RMG HoMM3 Mines Resources",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed post-town cleanup/connection payload handling with Wide guard suppression, original border-gate materialization, deterministic road/river overlay metadata, and focused report validation.",
+  "currentSliceNotes": "Completed Phase 7 mines/resources placement: seven recovered categories, minimum-before-density scheduling, adjacent/resource support records, deterministic diagnostics, focused report scene, and validation pass.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T12:20:00Z",
+  "updatedAt": "2026-05-05T12:10:03Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -9921,7 +9921,7 @@
       "id": "native-rmg-homm3-mines-resources-10184",
       "title": "Native RMG HoMM3 Mines Resources",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "pending",
+      "status": "completed",
       "classification": "implementation_slice",
       "purpose": "Implement recovered seven mine/resource categories, minimums/densities, adjacent resources, and placement diagnostics after towns/castles and the shared object-placement pipeline.",
       "sourceDocs": [
@@ -9950,8 +9950,20 @@
         "No HoMM3 mine or resource art/name/text import."
       ],
       "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184",
-      "updatedAt": "2026-05-05T11:26:03Z",
-      "notes": "Split from the older towns/mines/resources pending slice; towns/castles now live in native-rmg-homm3-towns-castles-10184 and must complete first."
+      "updatedAt": "2026-05-05T12:10:03Z",
+      "notes": "Completed Phase 7 mines/resources placement: seven recovered categories, minimum-before-density scheduling, adjacent/resource support records, deterministic diagnostics, focused report scene, and validation pass.",
+      "startedAt": "2026-05-05T11:59:14Z",
+      "completedAt": "2026-05-05T12:10:03Z",
+      "validationResult": {
+        "status": "passed",
+        "commands": [
+          "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+          "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_mines_resources_report.tscn",
+          "python3 -m json.tool ops/progress.json >/dev/null",
+          "python3 tests/validate_repo.py",
+          "git diff --check"
+        ]
+      }
     },
     {
       "id": "native-rmg-homm3-guards-rewards-monsters-10184",
