@@ -253,6 +253,7 @@ var _artifacts_by_tile: Dictionary = {}
 var _encounters_by_tile: Dictionary = {}
 var _rememberable_encounters_by_tile: Dictionary = {}
 var _decorative_objects_by_tile: Dictionary = {}
+var _standalone_map_objects_by_tile: Dictionary = {}
 var _heroes_by_tile: Dictionary = {}
 var _decorative_object_asset_ids: Dictionary = {}
 var _map_object_content_profiles: Dictionary = {}
@@ -1152,6 +1153,11 @@ func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
 		var decorative_rect := _decorative_object_footprint_rect(decorative_object, rect)
 		if not _draw_decorative_object_sprite(decorative_object, decorative_rect, remembered, tile):
 			_draw_decorative_object_marker(decorative_object, decorative_rect, remembered, tile)
+	var standalone_map_object := _standalone_map_object_at(tile)
+	if not standalone_map_object.is_empty():
+		var object_rect := _decorative_object_footprint_rect(standalone_map_object, rect)
+		if not _draw_standalone_map_object_sprite(standalone_map_object, object_rect, remembered, tile):
+			_draw_standalone_map_object_marker(standalone_map_object, object_rect, remembered, tile)
 	if _has_town_at(tile):
 		var footprint_rect := _town_footprint_rect_for_entry(tile)
 		if not _draw_town_sprite(footprint_rect, rect, remembered, tile):
@@ -1209,6 +1215,9 @@ func _draw_encounter_sprite(encounter: Dictionary, rect: Rect2, remembered: bool
 func _draw_decorative_object_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_object_sprite(_decorative_object_asset_id(object), rect, remembered, _decorative_object_profile(object), tile)
 
+func _draw_standalone_map_object_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	return _draw_object_sprite(_standalone_map_object_asset_id(object), rect, remembered, _standalone_map_object_profile(object), tile)
+
 func _draw_decorative_object_marker(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> void:
 	var profile := _decorative_object_profile(object)
 	var footprint := _object_profile_footprint(profile)
@@ -1220,6 +1229,30 @@ func _draw_decorative_object_marker(object: Dictionary, rect: Rect2, remembered:
 		_draw_ruin_silhouette(rect, marker_color, outline_color, remembered)
 	else:
 		_draw_pickup_silhouette(rect, marker_color, outline_color, remembered)
+	_draw_procedural_contact_marks(anchor, family, remembered)
+
+func _draw_standalone_map_object_marker(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> void:
+	var profile := _standalone_map_object_profile(object)
+	var footprint := _object_profile_footprint(profile)
+	var family := String(profile.get("family", "pickup"))
+	var anchor := _draw_procedural_object_grounding(rect, tile, family, footprint, remembered)
+	var marker_color := _procedural_resource_marker_color(family, remembered)
+	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
+	match family:
+		"neutral_dwelling":
+			_draw_dwelling_silhouette(rect, marker_color, outline_color, remembered)
+		"mine", "support_producer", "staged_resource_front":
+			_draw_mine_silhouette(rect, marker_color, outline_color, remembered)
+		"scouting_structure", "sign_waypoint":
+			_draw_tower_silhouette(rect, marker_color, outline_color, remembered)
+		"guarded_reward_site", "scenario_objective", "faction_landmark":
+			_draw_ruin_silhouette(rect, marker_color, outline_color, remembered)
+		"transit_object":
+			_draw_transit_silhouette(rect, marker_color, outline_color, remembered)
+		"shrine", "repeatable_service":
+			_draw_shrine_silhouette(rect, marker_color, outline_color, remembered)
+		_:
+			_draw_pickup_silhouette(rect, marker_color, outline_color, remembered)
 	_draw_procedural_contact_marks(anchor, family, remembered)
 
 func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profile: Dictionary, tile: Vector2i) -> bool:
@@ -2483,6 +2516,8 @@ func _visible_object_presentation_count(tile: Vector2i) -> int:
 	var count := 0
 	if _has_decorative_object_at(tile):
 		count += 1
+	if _has_standalone_map_object_at(tile):
+		count += 1
 	if _has_town_at(tile):
 		count += 1
 	if _has_resource_at(tile):
@@ -2551,6 +2586,7 @@ func validation_view_metrics() -> Dictionary:
 			"encounter_tiles": _encounters_by_tile.size(),
 			"rememberable_encounter_tiles": _rememberable_encounters_by_tile.size(),
 			"decorative_object_tiles": _decorative_objects_by_tile.size(),
+			"standalone_map_object_tiles": _standalone_map_objects_by_tile.size(),
 			"hero_tiles": _heroes_by_tile.size(),
 		},
 	}
@@ -2570,6 +2606,7 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 	var has_resource := explored and _has_resource_at(tile)
 	var has_artifact := explored and _has_artifact_at(tile)
 	var has_decorative_object := explored and _has_decorative_object_at(tile)
+	var has_standalone_map_object := explored and _has_standalone_map_object_at(tile)
 	var has_rememberable_encounter := explored and _has_rememberable_encounter_at(tile)
 	var has_visible_encounter := visible and _has_encounter_at(tile)
 	var has_visible_hero := visible and _has_hero_at(tile)
@@ -2578,6 +2615,8 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 	var object_kinds := []
 	if has_decorative_object:
 		object_kinds.append("decorative_object")
+	if has_standalone_map_object:
+		object_kinds.append("map_object")
 	if has_town:
 		object_kinds.append("town")
 	if has_resource:
@@ -2587,7 +2626,7 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 	if has_visible_encounter or has_rememberable_encounter:
 		object_kinds.append("encounter")
 	var remembered_object := explored and not visible and (
-		has_town or has_resource or has_artifact or has_decorative_object or has_rememberable_encounter or has_town_footprint
+		has_town or has_resource or has_artifact or has_decorative_object or has_standalone_map_object or has_rememberable_encounter or has_town_footprint
 	)
 	return {
 		"x": tile.x,
@@ -2599,13 +2638,14 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 		"has_resource": has_resource,
 		"has_artifact": has_artifact,
 		"has_decorative_object": has_decorative_object,
+		"has_standalone_map_object": has_standalone_map_object,
 		"has_rememberable_encounter": has_rememberable_encounter,
 		"has_visible_encounter": has_visible_encounter,
 		"has_visible_hero": has_visible_hero,
 		"has_town_footprint": has_town_footprint,
 		"has_town_entry": bool(town_presentation.get("is_entry_tile", false)),
 		"has_town_non_entry": has_town_footprint and not bool(town_presentation.get("is_entry_tile", false)),
-		"draws_discoverable_object": (visible and (has_town or has_resource or has_artifact or has_decorative_object or has_visible_encounter or has_town_footprint)) or remembered_object,
+		"draws_discoverable_object": (visible and (has_town or has_resource or has_artifact or has_decorative_object or has_standalone_map_object or has_visible_encounter or has_town_footprint)) or remembered_object,
 		"draws_remembered_object": remembered_object,
 		"terrain_presentation": _terrain_visual_payload(tile, explored, visible),
 		"marker_readability": _marker_readability_payload(tile, explored, visible, object_kinds, has_visible_hero),
@@ -3093,6 +3133,13 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			sprite_asset_ids.append(decorative_asset_id)
 			var decorative_footprint := _object_profile_footprint(_decorative_object_profile(decorative_object))
 			sprite_footprints.append({"width": decorative_footprint.x, "height": decorative_footprint.y})
+	var standalone_map_object := _standalone_map_object_at(tile)
+	if not standalone_map_object.is_empty():
+		var standalone_asset_id := _standalone_map_object_asset_id(standalone_map_object)
+		if standalone_asset_id != "" and _object_texture_for_asset(standalone_asset_id) is Texture2D:
+			sprite_asset_ids.append(standalone_asset_id)
+			var standalone_footprint := _object_profile_footprint(_standalone_map_object_profile(standalone_map_object))
+			sprite_footprints.append({"width": standalone_footprint.x, "height": standalone_footprint.y})
 	if "town" in object_kinds and _town_default_asset_id != "":
 		if _object_texture_for_asset(_town_default_asset_id) is Texture2D:
 			sprite_asset_ids.append(_town_default_asset_id)
@@ -3333,6 +3380,8 @@ func _symbol_extent_fraction(kind: String) -> float:
 		"encounter":
 			return ENCOUNTER_MARKER_EXTENT * 2.0
 		"decorative_object":
+			return OBJECT_SPRITE_EXTENT_FACTOR
+		"map_object":
 			return OBJECT_SPRITE_EXTENT_FACTOR
 		_:
 			return 0.0
@@ -4979,6 +5028,7 @@ func _rebuild_object_indexes() -> void:
 		_encounters_by_tile.clear()
 		_rememberable_encounters_by_tile.clear()
 		_decorative_objects_by_tile.clear()
+		_standalone_map_objects_by_tile.clear()
 		_heroes_by_tile.clear()
 		_object_index_signature = 0
 		_hero_index_signature = 0
@@ -5006,6 +5056,7 @@ func _rebuild_object_indexes() -> void:
 		"artifact_tiles": _artifacts_by_tile.size(),
 		"encounter_tiles": _encounters_by_tile.size(),
 		"decorative_object_tiles": _decorative_objects_by_tile.size(),
+		"standalone_map_object_tiles": _standalone_map_objects_by_tile.size(),
 		"hero_tiles": _heroes_by_tile.size(),
 	})
 
@@ -5017,6 +5068,7 @@ func _rebuild_static_object_indexes() -> void:
 	_encounters_by_tile.clear()
 	_rememberable_encounters_by_tile.clear()
 	_decorative_objects_by_tile.clear()
+	_standalone_map_objects_by_tile.clear()
 	for town_value in _session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
 			continue
@@ -5066,6 +5118,12 @@ func _rebuild_static_object_indexes() -> void:
 			continue
 		var object: Dictionary = object_value
 		if not _is_decorative_object_placement(object):
+			if not _is_standalone_map_object_placement(object):
+				continue
+			var standalone_tile := Vector2i(int(object.get("x", -1)), int(object.get("y", -1)))
+			if standalone_tile.x < 0 or standalone_tile.y < 0 or standalone_tile.x >= _map_size.x or standalone_tile.y >= _map_size.y:
+				continue
+			_standalone_map_objects_by_tile[_tile_key(standalone_tile)] = object
 			continue
 		var tile := Vector2i(int(object.get("x", -1)), int(object.get("y", -1)))
 		if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
@@ -5430,6 +5488,37 @@ func _decorative_object_profile(object: Dictionary) -> Dictionary:
 		resolved_profile["render_footprint_source"] = "generated_runtime_bounds"
 	return resolved_profile
 
+func _standalone_map_object_profile(object: Dictionary) -> Dictionary:
+	if object.is_empty():
+		return _default_object_profile("pickup", Vector2i(1, 1))
+	var object_id := String(object.get("object_id", object.get("id", ""))).strip_edges()
+	var profile = _map_object_content_profiles.get(object_id, {})
+	var resolved_profile: Dictionary = profile.duplicate(true) if profile is Dictionary and not profile.is_empty() else {}
+	if resolved_profile.is_empty():
+		resolved_profile = _default_object_profile(String(object.get("family_id", object.get("object_family_id", "pickup"))), Vector2i(1, 1))
+	var footprint = object.get("footprint", {})
+	if footprint is Dictionary and not footprint.is_empty():
+		resolved_profile["footprint"] = {
+			"width": maxi(1, int(footprint.get("width", 1))),
+			"height": maxi(1, int(footprint.get("height", 1))),
+			"anchor": String(footprint.get("anchor", resolved_profile.get("footprint_anchor", "bottom_center"))),
+		}
+		resolved_profile["footprint_anchor"] = String(resolved_profile["footprint"].get("anchor", "bottom_center"))
+		resolved_profile["render_footprint_source"] = "generated_runtime_footprint"
+	var bounds = object.get("bounds", {})
+	if bounds is Dictionary and not bounds.is_empty():
+		var min_x := int(bounds.get("min_x", object.get("x", 0)))
+		var min_y := int(bounds.get("min_y", object.get("y", 0)))
+		var max_x := int(bounds.get("max_x", min_x))
+		var max_y := int(bounds.get("max_y", min_y))
+		resolved_profile["footprint"] = {
+			"width": maxi(1, max_x - min_x + 1),
+			"height": maxi(1, max_y - min_y + 1),
+			"anchor": String(resolved_profile.get("footprint_anchor", "bottom_center")),
+		}
+		resolved_profile["render_footprint_source"] = "generated_runtime_bounds"
+	return resolved_profile
+
 func _decorative_object_family(object: Dictionary, fallback: String = "blocker") -> String:
 	var object_id := String(object.get("object_id", object.get("id", ""))).strip_edges()
 	if object_id != "":
@@ -5500,6 +5589,8 @@ func _profile_for_kind(tile: Vector2i, kind: String) -> Dictionary:
 			return _encounter_object_profile()
 		"decorative_object":
 			return _decorative_object_profile(_decorative_object_at(tile))
+		"map_object":
+			return _standalone_map_object_profile(_standalone_map_object_at(tile))
 		"hero":
 			return _hero_object_profile()
 		_:
@@ -5619,11 +5710,28 @@ func _has_decorative_object_at(tile: Vector2i) -> bool:
 func _decorative_object_at(tile: Vector2i) -> Dictionary:
 	return _decorative_objects_by_tile.get(_tile_key(tile), {})
 
+func _has_standalone_map_object_at(tile: Vector2i) -> bool:
+	return not _standalone_map_object_at(tile).is_empty()
+
+func _standalone_map_object_at(tile: Vector2i) -> Dictionary:
+	return _standalone_map_objects_by_tile.get(_tile_key(tile), {})
+
 func _is_decorative_object_placement(object: Dictionary) -> bool:
 	var kind := String(object.get("kind", "")).strip_edges()
 	var family := String(object.get("object_family_id", object.get("family_id", ""))).strip_edges()
 	var role := String(object.get("runtime_object_role", "")).strip_edges()
 	return kind == "decorative_obstacle" or family == "decorative_obstacle" or role == "decorative_blocker_sprite"
+
+func _is_standalone_map_object_placement(object: Dictionary) -> bool:
+	var kind := String(object.get("kind", "")).strip_edges()
+	if kind in ["town", "guard"]:
+		return false
+	if String(object.get("site_id", "")).strip_edges() != "":
+		return false
+	if String(object.get("artifact_id", "")).strip_edges() != "":
+		return false
+	var object_id := String(object.get("object_id", object.get("id", ""))).strip_edges()
+	return object_id != "" and (_map_object_asset_ids.has(object_id) or String(object.get("overworld_sprite_asset_id", "")).strip_edges() != "")
 
 func _decorative_object_asset_id(object: Dictionary) -> String:
 	if object.is_empty():
@@ -5637,6 +5745,17 @@ func _decorative_object_asset_id(object: Dictionary) -> String:
 	var family_id := String(object.get("object_family_id", object.get("family_id", ""))).strip_edges()
 	if family_id != "" and _decorative_object_asset_ids.has(family_id):
 		return String(_decorative_object_asset_ids.get(family_id, ""))
+	return ""
+
+func _standalone_map_object_asset_id(object: Dictionary) -> String:
+	if object.is_empty():
+		return ""
+	var direct_asset_id := String(object.get("overworld_sprite_asset_id", "")).strip_edges()
+	if direct_asset_id != "":
+		return direct_asset_id
+	var object_id := String(object.get("object_id", object.get("id", ""))).strip_edges()
+	if object_id != "" and _map_object_asset_ids.has(object_id):
+		return String(_map_object_asset_ids.get(object_id, ""))
 	return ""
 
 func _decorative_object_footprint_rect(object: Dictionary, entry_rect: Rect2) -> Rect2:

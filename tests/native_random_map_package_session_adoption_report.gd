@@ -3,6 +3,7 @@ extends Node
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const NativeRandomMapPackageSessionBridgeScript = preload("res://scripts/persistence/NativeRandomMapPackageSessionBridge.gd")
+const OverworldMapViewScript = preload("res://scenes/overworld/OverworldMapView.gd")
 
 const REPORT_ID := "NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT"
 const REPORT_SCHEMA_ID := "native_random_map_package_session_adoption_smoke_v1"
@@ -68,6 +69,7 @@ func _run() -> void:
 	var bridge := NativeRandomMapPackageSessionBridgeScript.new()
 	var session: SessionStateStoreScript.SessionData = bridge.build_session_from_adoption(adoption, "normal")
 	_assert_session_shape(session, adoption)
+	var visual_bridge: Dictionary = await _assert_visual_asset_bridge(session)
 
 	var scenario_id := String(adoption.get("scenario_ref", {}).get("scenario_id", ""))
 	if ContentService.has_authored_scenario(scenario_id):
@@ -169,6 +171,7 @@ func _run() -> void:
 		"active_disk_package_startup_ok": true,
 		"active_map_package_path": map_path,
 		"active_scenario_package_path": scenario_path,
+		"visual_bridge": visual_bridge,
 		"authored_writeback": false,
 		"full_parity_claim": true,
 		"readiness": adoption.get("readiness", {}),
@@ -301,6 +304,92 @@ func _assert_session_shape(session: SessionStateStoreScript.SessionData, adoptio
 	if session.overworld.get("map_package_ref", {}) != adoption.get("map_ref", {}) or session.overworld.get("scenario_package_ref", {}) != adoption.get("scenario_ref", {}):
 		_fail("Session did not carry map/scenario package refs.")
 		return
+	var map_document: Variant = adoption.get("map_document", null)
+	var expected_guard_count := 0
+	var expected_artifact_count := 0
+	if map_document != null:
+		for index in range(int(map_document.get_object_count())):
+			var object: Dictionary = map_document.get_object_by_index(index)
+			if String(object.get("kind", "")) == "guard" or String(object.get("native_record_kind", "")) == "guard":
+				expected_guard_count += 1
+			if String(object.get("artifact_id", "")) != "":
+				expected_artifact_count += 1
+	if expected_guard_count > 0 and int(session.overworld.get("encounters", []).size()) < expected_guard_count:
+		_fail("Session bridge dropped generated guard encounters: expected=%d actual=%d" % [expected_guard_count, int(session.overworld.get("encounters", []).size())])
+		return
+	if expected_artifact_count > 0 and int(session.overworld.get("artifact_nodes", []).size()) < expected_artifact_count:
+		_fail("Session bridge dropped generated artifact rewards: expected=%d actual=%d" % [expected_artifact_count, int(session.overworld.get("artifact_nodes", []).size())])
+		return
+
+func _assert_visual_asset_bridge(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var map_size_payload: Dictionary = session.overworld.get("map_size", {}) if session.overworld.get("map_size", {}) is Dictionary else {}
+	var map_size := Vector2i(int(map_size_payload.get("width", map_size_payload.get("x", 0))), int(map_size_payload.get("height", map_size_payload.get("y", 0))))
+	if map_size.x <= 0 or map_size.y <= 0:
+		_fail("Session visual bridge missed map size: %s" % JSON.stringify(map_size_payload))
+		return {}
+	session.overworld["fog"] = _all_visible_fog(map_size.x, map_size.y)
+	var view: Variant = OverworldMapViewScript.new()
+	view.size = Vector2(960, 640)
+	add_child(view)
+	var summary := {}
+	var encounter := _first_node(session.overworld.get("encounters", []))
+	if not encounter.is_empty():
+		summary["guard_encounter"] = await _assert_view_node_sprite(view, session, map_size, encounter, "has_visible_encounter", "hostile_camp", "guard encounter")
+	var artifact := _first_node(session.overworld.get("artifact_nodes", []))
+	if not artifact.is_empty():
+		summary["artifact_reward"] = await _assert_view_node_sprite(view, session, map_size, artifact, "has_artifact", "adventurers_bundle", "artifact reward")
+	remove_child(view)
+	view.queue_free()
+	if summary.is_empty():
+		_fail("Session visual bridge did not expose guard or artifact nodes to validate.")
+		return {}
+	return summary
+
+func _assert_view_node_sprite(view: Variant, session: SessionStateStoreScript.SessionData, map_size: Vector2i, node: Dictionary, presence_key: String, expected_asset_id: String, label: String) -> Dictionary:
+	var tile := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
+	view.set_map_state(session, session.overworld.get("map", []), map_size, tile)
+	await get_tree().process_frame
+	var presentation: Dictionary = view.validation_tile_presentation(tile)
+	if not bool(presentation.get(presence_key, false)):
+		_fail("Visual bridge did not expose %s at tile %s: %s" % [label, tile, JSON.stringify(presentation)])
+		return {}
+	var art: Dictionary = presentation.get("art_presentation", {}) if presentation.get("art_presentation", {}) is Dictionary else {}
+	var sprite_asset_ids: Array = art.get("sprite_asset_ids", []) if art.get("sprite_asset_ids", []) is Array else []
+	if not bool(art.get("uses_asset_sprite", false)) or expected_asset_id not in sprite_asset_ids or bool(art.get("fallback_procedural_marker", true)):
+		_fail("Visual bridge %s did not resolve to expected asset %s: %s" % [label, expected_asset_id, JSON.stringify(presentation)])
+		return {}
+	return {
+		"tile": {"x": tile.x, "y": tile.y},
+		"uses_asset_sprite": bool(art.get("uses_asset_sprite", false)),
+		"sprite_asset_ids": sprite_asset_ids,
+	}
+
+func _first_node(nodes: Variant) -> Dictionary:
+	if not (nodes is Array):
+		return {}
+	for node in nodes:
+		if node is Dictionary:
+			return node
+	return {}
+
+func _all_visible_fog(width: int, height: int) -> Dictionary:
+	var visible := []
+	var explored := []
+	for _y in range(height):
+		var visible_row := []
+		var explored_row := []
+		for _x in range(width):
+			visible_row.append(true)
+			explored_row.append(true)
+		visible.append(visible_row)
+		explored.append(explored_row)
+	return {
+		"visible_tiles": visible,
+		"explored_tiles": explored,
+		"visible_count": width * height,
+		"explored_count": width * height,
+		"total_tiles": width * height,
+	}
 
 func _fail(message: String) -> void:
 	push_error("%s failed: %s" % [REPORT_ID, message])
