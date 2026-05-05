@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-zone-choke-topology-correction-10184",
-  "currentSliceTitle": "Native RMG Zone Choke Topology Correction",
+  "currentSliceId": "native-rmg-full-output-replay-identity-correction-10184",
+  "currentSliceTitle": "Native RMG Full Output Replay Identity Correction",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed corrective topology pass for native RMG zone boundaries and guarded crossings after uploaded HoMM3 small-map comparison.",
+  "currentSliceNotes": "Correct the native RMG full-output replay gate so identical seed/config generations produce stable package component signatures by excluding volatile runtime timing signatures from deterministic object placement payload identity. Runtime call-site adoption is still false, translated medium profiles remain partial foundations, and exact HoMM3 private-toolkit parity is not claimed.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T23:27:51Z",
+  "updatedAt": "2026-05-05T00:00:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -10244,6 +10244,41 @@
       ],
       "updatedAt": "2026-05-05T23:27:51Z",
       "completedAt": "2026-05-05T23:27:51Z"
+    },
+    {
+      "id": "native-rmg-full-output-replay-identity-correction-10184",
+      "title": "Native RMG Full Output Replay Identity Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/native-rmg-homm3-spec-rework-gate-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "owner-uploaded small 3-player single-level HoMM3 map comparison on 2026-05-05"
+      ],
+      "purpose": "Correct the native RMG full-output replay gate so identical seed/config generations produce stable package component signatures by excluding volatile runtime timing signatures from deterministic object placement payload identity.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_validation_adoption_gates_report.gd",
+        "docs/native-rmg-homm3-spec-rework-gate-report.md",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot --headless --path . tests/native_random_map_homm3_validation_adoption_gates_report.tscn",
+        "godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "completionEvidence": [
+        "The HoMM3 validation/adoption gate now fails on same-seed full-output signature drift and passes with matching first/repeat signatures.",
+        "Object placement deterministic payload identity now removes the previous volatile pipeline summary signature after clearing runtime phase timing.",
+        "Gate documentation and repo validation tokens now reflect stable full-output replay identity for validated generated components while runtime authoritative adoption remains gated."
+      ],
+      "remainingRisk": "Runtime call-site adoption is still false, translated medium profiles remain partial foundations, and exact HoMM3 private-toolkit parity is not claimed."
     }
   ],
   "completedImplementationEvidence": [
@@ -11165,6 +11200,42 @@
         "godot --headless --path . tests/native_random_map_town_spacing_regression_report.tscn",
         "python3 tests/validate_repo.py"
       ]
+    },
+    {
+      "id": "native-rmg-full-output-replay-identity-correction-10184",
+      "title": "Native RMG Full Output Replay Identity Correction Evidence",
+      "status": "completed",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "docs/native-rmg-homm3-spec-rework-gate-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "owner-uploaded small 3-player single-level HoMM3 map comparison on 2026-05-05"
+      ],
+      "mappedPlannedSliceIds": [
+        "native-rmg-full-output-replay-identity-correction-10184"
+      ],
+      "implementationRefs": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_validation_adoption_gates_report.gd",
+        "docs/native-rmg-homm3-spec-rework-gate-report.md",
+        "tests/validate_repo.py",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Validation gate replay assertions now require same-seed full_output_signature stability and changed-seed signature divergence, with component/object diagnostics on failure.",
+        "Native object placement package signatures no longer retain the volatile pre-sanitized pipeline summary signature that included runtime timing data.",
+        "Observed gate replay identity after the fix: first_full_output_signature=44a15dbb, repeat_full_output_signature=44a15dbb, changed_full_output_signature=a38dcb7c, full_output_signature_stable=true."
+      ],
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot --headless --path . tests/native_random_map_homm3_validation_adoption_gates_report.tscn",
+        "godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "remainingGap": "Runtime call-site adoption is still false, translated medium profiles remain partial foundations, and exact HoMM3 private-toolkit parity is not claimed."
     }
   ],
   "docsReadyEvidence": [

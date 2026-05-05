@@ -6795,6 +6795,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	Dictionary payload_signature_source = payload.duplicate(true);
 	Dictionary deterministic_pipeline_summary = pipeline_summary.duplicate(true);
 	deterministic_pipeline_summary.erase("runtime_phase_profile");
+	deterministic_pipeline_summary.erase("signature");
 	Dictionary deterministic_xl_cost = deterministic_pipeline_summary.get("xl_cost", Dictionary());
 	deterministic_xl_cost["elapsed_usec"] = 0;
 	deterministic_xl_cost["elapsed_msec"] = 0.0;
