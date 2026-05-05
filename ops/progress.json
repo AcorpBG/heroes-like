@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-homm3-spec-rework-parent-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Spec Rework Parent",
+  "currentSliceId": "generated-skirmish-homm3-size-default-template-ux-10184",
+  "currentSliceTitle": "Generated Skirmish HoMM3 Size Default Template UX",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed Phase 3 HoMM3-style native RMG rework parent after all child implementation slices and final validation/adoption gate passed; authoritative package/session replay remains future-gated.",
+  "currentSliceNotes": "Completed owner-directed correction: generated skirmish setup no longer exposes manual random-map template/profile selection; selected HoMM3 size/defaults derive internal template/profile provenance.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T13:26:39Z",
+  "updatedAt": "2026-05-05T17:33:31Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,52 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "generated-skirmish-homm3-size-default-template-ux-10184",
+      "title": "Generated Skirmish HoMM3 Size Default Template UX",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_rmg_menu_ux_correction_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "owner correction on 2026-05-05 that generated skirmish setup should follow HoMM3 UX and not expose manual random-map template/profile selection"
+      ],
+      "purpose": "Remove the player-facing generated random-map template/profile picker flow while preserving internal template/profile derivation, provenance, catalog validation, and generated skirmish startup.",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/random_map_all_template_menu_wiring_report.gd",
+        "tests/random_map_player_setup_retry_ux_report.gd",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/random_map_all_template_menu_wiring_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Generated skirmish player controls expose seed, HoMM3 size, player count, water mode, underground, and launch, but no visible manual template/profile selectors.",
+        "Template/profile ids are still derived internally from selected HoMM3 size-class defaults and retained as provenance in generated config/session metadata.",
+        "Programmatic config construction and random-map template catalog usage remain validated.",
+        "Focused Godot menu validation asserts HoMM3-style UX rather than all-template manual menu wiring."
+      ],
+      "completionEvidence": [
+        "MainMenu generated random-map setup hides GeneratedTemplatePicker and GeneratedProfilePicker and reports template/profile ids only under internal_template_provenance in validation snapshots.",
+        "Size-class selection derives template_id/profile_id from ScenarioSelectRules.random_map_size_class_default(), while programmatic build_random_map_player_config and catalog-wide template/profile construction remain validated.",
+        "random_map_all_template_menu_wiring_report now asserts no manual all-template player control is exposed and all 56 catalog templates/profiles still build through internal config construction.",
+        "random_map_player_setup_retry_ux_report now asserts visible player controls are seed, size, player count, water, underground, and launch; Small launch preserved native generated package startup provenance.",
+        "Validation passed: focused Godot reports, python3 tests/validate_repo.py, python3 -m json.tool ops/progress.json, and git diff --check."
+      ],
+      "nonGoals": [
+        "No random-map generator algorithm changes.",
+        "No native package/session adoption change.",
+        "No save-version bump.",
+        "No broad main menu redesign."
+      ]
+    },
     {
       "id": "decorative-blocker-distinct-sprite-assets-10184",
       "title": "Decorative Blocker Distinct Sprite Assets",
