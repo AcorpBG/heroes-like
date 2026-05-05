@@ -23,7 +23,7 @@ Rules:
 
 Current phase: **Phase 3 - HoMM3-Style Random Map Generator Rework**.
 
-Current tactical chain: use the recovered `homm3-re` RMG spec as the ground truth and rework the native C++ GDExtension generator from a surface-statistics parity approximation into a phased, data-driven HoMM3-style generator translated into original game content. The prior Phase 2 native RMG work remains valuable as infrastructure, profiling, fixture, package, and validation foundation, but it is no longer the target architecture. The next accepted goal is `native-rmg-homm3-spec-rework-parent-10184` and its child slices in order: spec gap audit, generator data model, runtime template/zone graph, terrain/island shaping, roads/rivers/connections, object placement pipeline, towns/mines/resources, guards/rewards/monsters, and validation/adoption gates.
+Current tactical chain: use the recovered `homm3-re` RMG spec as the ground truth and rework the native C++ GDExtension generator from a surface-statistics parity approximation into a phased, data-driven HoMM3-style generator translated into original game content. The prior Phase 2 native RMG work remains valuable as infrastructure, profiling, fixture, package, and validation foundation, but it is no longer the target architecture. The accepted goal is `native-rmg-homm3-spec-rework-parent-10184` and its child slices in recovered order: spec gap audit, generator data model, runtime template/zone graph, terrain/island shaping, towns/castles placement, cleanup/connection payload/roads/rivers, object placement pipeline, mines/resources, guards/rewards/monsters, and validation/adoption gates.
 
 Do not infer product readiness from the completed queue. Completed Phase 2/RMG/performance/tooling evidence means those specific slices passed their gates; it does not mean playable alpha, campaign breadth, release readiness, broad faction completion, asset parity, or HoMM3 byte-level cloning.
 
@@ -1453,7 +1453,7 @@ nonGoals:
 
 id: `native-rmg-homm3-runtime-zone-graph-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `pending`
+status: `completed`
 purpose: Replace radial/Voronoi zone approximation with runtime template/zone graph construction preserving base size, owner, terrain/faction, source role, adjacency, links, and infeasibility diagnostics.
 sourceDocs:
 - `docs/native-rmg-homm3-spec-rework-gap-report.md`
@@ -1474,7 +1474,7 @@ nonGoals:
 
 id: `native-rmg-homm3-terrain-island-shape-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `pending`
+status: `completed`
 purpose: Replace global protected-land/ratio island shaping with zone-aware terrain and water placement informed by recovered TerrainPlacement semantics and performance constraints.
 sourceDocs:
 - `docs/native-rmg-homm3-spec-rework-gap-report.md`
@@ -1493,10 +1493,30 @@ completionCriteria:
 nonGoals:
 - No terrain art replacement or exact terrain queue scratch-bit clone unless selected later.
 
+id: `native-rmg-homm3-towns-castles-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Implement recovered Phase 4a/4b town/castle placement before cleanup, connection payload handling, roads, rivers, mines, resources, guards, rewards, and decoration.
+sourceDocs:
+- `docs/native-rmg-homm3-spec-rework-gap-report.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+implementationTargets:
+- native town/castle placement records in `src/gdextension/src/map_package_service.cpp`
+- runtime/source-zone faction selection and original town id mapping
+- focused native town/castle validation in `tests/native_random_map_town_guard_report.gd`
+completionCriteria:
+- Player fields `+0x20..+0x2c` place mapped-owner town/castle minimums and density attempts.
+- Neutral fields `+0x30..+0x3c` place owner `-1` town/castle minimums and density attempts with deterministic infeasibility diagnostics.
+- Source `+0x40` affects neutral weighted same-type faction reuse only; it is not a global map lock.
+nonGoals:
+- No mines/resources, guards/rewards/monsters, roads/rivers, or decoration implementation in this slice.
+
 id: `native-rmg-homm3-roads-rivers-connections-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `pending`
-purpose: Rework connection handling so early layout consumes endpoints while late guard, wide, border-guard, road, and river semantics are applied in the recovered phase order.
+purpose: After towns/castles, apply cleanup/connection payload handling so late guard, wide, border-guard, road, and river semantics follow the recovered phase order.
 sourceDocs:
 - `docs/native-rmg-homm3-spec-rework-gap-report.md`
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md`
@@ -1505,11 +1525,12 @@ sourceDocs:
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-cell-flags-and-overlays.md`
 - `docs/native-rmg-homm3-spatial-placement-comparison-report.md`
 implementationTargets:
+- native cleanup/connection payload handling after town/castle placement
 - native road/river network generation
 - link/guard validation reports
 - road/river overlay metadata
 completionCriteria:
-- `Wide` suppresses normal guards, `Border Guard` materializes supported type-9-equivalent original gate behavior, and required links produce corridors or explicit failures.
+- `Wide` suppresses normal guards, `Border Guard` materializes supported type-9-equivalent original gate behavior, and required links produce corridors or explicit failures after town/castle records exist.
 - Roads/rivers are stored as overlays with deterministic autotile/writeout metadata separate from rand_trn decoration scoring.
 nonGoals:
 - No road renderer art rewrite unless validation proves it is required.
@@ -1517,7 +1538,7 @@ nonGoals:
 id: `native-rmg-homm3-object-placement-pipeline-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `pending`
-purpose: Rework object selection, footprints, terrain masks, occupancy, value bands, limits, and decorative filler as the shared placement pipeline used by later town, mine, reward, and guard slices.
+purpose: Rework object selection, footprints, terrain masks, occupancy, value bands, limits, and decorative filler as the shared placement pipeline used by later mine, reward, guard, and decoration slices.
 sourceDocs:
 - `docs/native-rmg-homm3-spec-rework-gap-report.md`
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
@@ -1537,28 +1558,29 @@ completionCriteria:
 nonGoals:
 - No HoMM3 asset import, exact DEF frame dependency, or broad economy rebalance.
 
-id: `native-rmg-homm3-towns-mines-resources-10184`
+id: `native-rmg-homm3-mines-resources-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `pending`
-purpose: Implement recovered town/castle placement, same-type neutral reuse, seven mine/resource categories, minimums/densities, adjacent resources, and placement diagnostics.
+purpose: Implement recovered seven mine/resource categories, minimums/densities, adjacent resources, and placement diagnostics after towns/castles and the shared object-placement pipeline.
 sourceDocs:
 - `docs/native-rmg-homm3-spec-rework-gap-report.md`
-- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md`
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md`
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
 - `docs/native-rmg-homm3-re-object-table-proxy-report.md`
 implementationTargets:
-- native town/castle placement
 - native mine/resource placement
-- original-content town, mine, and resource proxy mappings
-- focused town/mine/resource validation reports
+- original-content mine and resource proxy mappings
+- focused mine/resource validation reports
+validation:
+- focused native RMG mine/resource report scene
+- `python3 tests/validate_repo.py`
+- `git diff --check`
 completionCriteria:
-- Player and neutral town/castle minimums and density placements are attempted by zone and report failures with zone/category context.
-- Neutral town placement honors per-zone same-type reuse semantics where supported.
 - Seven mine/resource categories are implemented for supported profiles with minimum-before-density behavior and original content ids.
+- Mine/resource placements report failures with zone/category context and keep adjacent-resource behavior explicit.
 nonGoals:
 - No broad economy rebalance.
-- No HoMM3 town, mine, or resource art/name/text import.
+- No HoMM3 mine or resource art/name/text import.
 
 id: `native-rmg-homm3-guards-rewards-monsters-10184`
 phase: `phase-3-homm3-style-rmg-rework`

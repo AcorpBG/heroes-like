@@ -59,6 +59,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_object_placement_foundation");
 	result.append("native_random_map_decorative_obstacle_generation");
 	result.append("native_random_map_town_guard_placement_foundation");
+	result.append("native_random_map_homm3_towns_castles");
 	result.append("native_random_map_validation_provenance_foundation");
 	result.append("native_random_map_package_session_adoption_bridge");
 	result.append("native_random_map_guard_reward_package_adoption");
@@ -753,6 +754,30 @@ Array town_ids_for_factions(const Variant &value, const Array &faction_ids, int3
 	return result;
 }
 
+Array allowed_faction_ids_for_source_zone(const Dictionary &source_zone, const Dictionary &normalized) {
+	Dictionary town_policy = source_zone.get("town_policy", Dictionary());
+	Array allowed = normalized_string_array(town_policy.get("allowed_faction_ids", Variant()), Array());
+	if (allowed.is_empty()) {
+		allowed = normalized_string_array(source_zone.get("allowed_towns", Variant()), Array());
+	}
+	if (allowed.is_empty()) {
+		allowed = normalized_string_array(normalized.get("faction_ids", Variant()), default_faction_pool());
+	}
+	if (allowed.is_empty()) {
+		return default_faction_pool();
+	}
+	return allowed;
+}
+
+String source_zone_faction_choice(const Dictionary &source_zone, const Dictionary &normalized, const String &zone_id, int32_t zone_index) {
+	Array allowed = allowed_faction_ids_for_source_zone(source_zone, normalized);
+	if (allowed.is_empty()) {
+		return "faction_embercourt";
+	}
+	const String seed = String(normalized.get("normalized_seed", "0")) + ":source_zone_faction:" + zone_id + ":" + String::num_int64(zone_index);
+	return String(allowed[int64_t(hash32_int(seed) % uint32_t(allowed.size()))]);
+}
+
 Dictionary player_assignment_for_config(const Dictionary &normalized) {
 	Dictionary constraints = normalized.get("player_constraints", Dictionary());
 	const int32_t player_count = int32_t(constraints.get("player_count", 2));
@@ -1279,7 +1304,8 @@ Dictionary catalog_zone_to_native_zone(const Dictionary &source_zone, const Dict
 	} else if (role.contains("start")) {
 		role = "treasure";
 	}
-	const String faction_id = active_player_zone ? String(assignment.get("faction_id", "")) : "";
+	const String selected_source_faction_id = source_zone_faction_choice(source_zone, normalized, zone_id, int32_t(zone_index));
+	const String faction_id = active_player_zone ? String(assignment.get("faction_id", selected_source_faction_id)) : selected_source_faction_id;
 	Dictionary palette = terrain_palette_for_zone(zone_id, faction_id, active_player_zone, terrain_pool, int32_t(zone_index));
 	Variant terrain_value = source_zone.get("terrain", Variant());
 	if (terrain_value.get_type() == Variant::DICTIONARY) {
@@ -1297,6 +1323,8 @@ Dictionary catalog_zone_to_native_zone(const Dictionary &source_zone, const Dict
 	metadata["source_template_id"] = normalized.get("template_id", "");
 	metadata["native_foundation_source"] = "imported_random_map_template_catalog";
 	metadata["active_player_zone"] = active_player_zone;
+	metadata["source_zone_faction_id"] = selected_source_faction_id;
+	metadata["allowed_town_faction_ids"] = allowed_faction_ids_for_source_zone(source_zone, normalized);
 	if (!metadata.has("richness_floor")) {
 		metadata["richness_floor"] = zone_richness_floor_metadata(role, int32_t(source_zone.get("base_size", 10))).get("richness_floor", Dictionary());
 	}
@@ -1311,6 +1339,8 @@ Dictionary catalog_zone_to_native_zone(const Dictionary &source_zone, const Dict
 	zone["player_type"] = active_player_zone ? assignment.get("player_type", owner_slot == 1 ? String("human") : String("computer")) : Variant("neutral");
 	zone["team_id"] = active_player_zone ? assignment.get("team_id", "team_" + slot_id_2(owner_slot)) : Variant("");
 	zone["faction_id"] = faction_id;
+	zone["source_zone_faction_id"] = selected_source_faction_id;
+	zone["allowed_town_faction_ids"] = metadata.get("allowed_town_faction_ids", Array());
 	zone["terrain_id"] = palette.get("normalized_terrain_id", "grass");
 	zone["terrain_palette"] = palette;
 	zone["base_size"] = std::max(4, int32_t(source_zone.get("base_size", 10)));
@@ -5253,7 +5283,7 @@ Dictionary town_spacing_summary(const Array &towns, const Dictionary &normalized
 	return summary;
 }
 
-Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const Dictionary &start, const String &record_type, int32_t ordinal, const Dictionary &road_network, const Dictionary &zone_layout, const Dictionary &occupied) {
+Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const Dictionary &start, const String &record_type, int32_t ordinal, const Dictionary &road_network, const Dictionary &zone_layout, const Dictionary &occupied, const Dictionary &semantics) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t x = int32_t(point.get("x", 0));
@@ -5262,16 +5292,25 @@ Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &
 	const String terrain_id = terrain_id_for_zone(zone);
 	const int32_t player_slot = int32_t(start.get("player_slot", int32_t(zone.get("player_slot", 0))));
 	const bool start_town = record_type == "player_start_town";
-	String faction_id = start_town ? String(start.get("faction_id", zone.get("faction_id", ""))) : String(zone.get("faction_id", ""));
+	const bool player_owned = start_town || record_type.begins_with("player_");
+	const bool castle_record = record_type.contains("castle");
+	String faction_id = String(semantics.get("faction_id", ""));
+	if (faction_id.is_empty()) {
+		faction_id = player_owned ? String(start.get("faction_id", zone.get("faction_id", ""))) : String(zone.get("faction_id", ""));
+	}
 	if (faction_id.is_empty()) {
 		Array faction_ids = normalized.get("faction_ids", default_faction_pool());
 		faction_id = faction_ids.is_empty() ? String("faction_embercourt") : String(faction_ids[ordinal % faction_ids.size()]);
 	}
-	String town_id = start_town ? String(start.get("town_id", town_for_faction(faction_id))) : town_for_faction(faction_id);
+	String town_id = String(semantics.get("town_id", ""));
+	if (town_id.is_empty()) {
+		town_id = player_owned ? String(start.get("town_id", town_for_faction(faction_id))) : town_for_faction(faction_id);
+	}
 	if (town_id.is_empty()) {
 		town_id = town_for_faction(faction_id);
 	}
-	const String placement_id = start_town ? "native_rmg_town_start_" + slot_id_2(player_slot) : "native_rmg_town_neutral_" + zone_id + "_" + slot_id_2(ordinal + 1);
+	String placement_prefix = player_owned ? "native_rmg_town_player_" : "native_rmg_town_neutral_";
+	const String placement_id = start_town ? "native_rmg_town_start_" + slot_id_2(player_slot) : placement_prefix + zone_id + "_" + slot_id_2(ordinal + 1);
 	Dictionary body = cell_record(x, y, 0);
 	Array body_tiles;
 	body_tiles.append(body);
@@ -5314,11 +5353,11 @@ Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &
 	record["object_family_id"] = "town_primary";
 	record["type_id"] = "town";
 	record["faction_id"] = faction_id;
-	record["owner"] = start_town ? "player_" + String::num_int64(player_slot) : "neutral";
-	record["owner_slot"] = start_town ? start.get("owner_slot", player_slot) : Variant();
-	record["player_slot"] = start_town ? Variant(player_slot) : Variant();
-	record["player_type"] = start_town ? start.get("player_type", "human") : Variant("neutral");
-	record["team_id"] = start_town ? start.get("team_id", "") : Variant("");
+	record["owner"] = player_owned ? "player_" + String::num_int64(player_slot) : "neutral";
+	record["owner_slot"] = player_owned ? start.get("owner_slot", zone.get("owner_slot", player_slot)) : Variant(-1);
+	record["player_slot"] = player_owned ? Variant(player_slot) : Variant();
+	record["player_type"] = player_owned ? start.get("player_type", zone.get("player_type", "computer")) : Variant("neutral");
+	record["team_id"] = player_owned ? start.get("team_id", zone.get("team_id", "")) : Variant("");
 	record["zone_id"] = zone_id;
 	record["zone_role"] = zone.get("role", "");
 	record["terrain_id"] = terrain_id;
@@ -5349,8 +5388,20 @@ Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &
 	record["start_anchor"] = start;
 	record["is_start_town"] = start_town;
 	record["is_capital"] = start_town;
+	record["is_castle"] = castle_record || start_town;
+	record["settlement_category"] = record["is_castle"] ? "castle" : "town";
 	record["capital_role"] = start_town ? "player_capital_and_starting_town" : "neutral_expansion_town";
-	record["town_assignment_semantics"] = start_town ? "player_start_town_from_native_player_assignment" : "neutral_zone_town_from_native_foundation_zone";
+	record["town_assignment_semantics"] = semantics.get("town_assignment_semantics", start_town ? Variant("player_start_town_from_native_player_assignment") : Variant("neutral_zone_town_from_native_foundation_zone"));
+	record["source_phase"] = semantics.get("source_phase", "");
+	record["source_field_offset"] = semantics.get("source_field_offset", "");
+	record["source_field_name"] = semantics.get("source_field_name", "");
+	record["source_field_value"] = semantics.get("source_field_value", 0);
+	record["source_zone_faction_id"] = semantics.get("source_zone_faction_id", zone.get("source_zone_faction_id", ""));
+	record["allowed_town_faction_ids"] = semantics.get("allowed_town_faction_ids", zone.get("allowed_town_faction_ids", Array()));
+	record["faction_selection_source"] = semantics.get("faction_selection_source", player_owned ? Variant("mapped_owner_player_assignment") : Variant("source_zone_allowed_faction_choice"));
+	record["same_type_neutral"] = semantics.get("same_type_neutral", false);
+	record["same_type_semantics"] = semantics.get("same_type_semantics", "not_applicable");
+	record["owner_semantics"] = player_owned ? "mapped_owner_player" : "neutral_owner_minus_one";
 	record["zone_anchor"] = zone.get("anchor", Dictionary());
 	record["town_spacing_policy"] = town_spacing_policy_payload(normalized);
 	record["bounds_status"] = "in_bounds";
@@ -5698,6 +5749,71 @@ int32_t neutral_town_target_count(const Dictionary &normalized, const Array &zon
 	return std::max(0, std::min(eligible, std::max(2, scaled + start_count / 3)));
 }
 
+Dictionary town_rules_for_zone(const Dictionary &zone, const String &field) {
+	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+	Variant rules_value = metadata.get(field, Variant());
+	return rules_value.get_type() == Variant::DICTIONARY ? Dictionary(rules_value) : Dictionary();
+}
+
+int32_t town_density_attempt_count(const Dictionary &normalized, const Dictionary &zone, const String &field_name, int32_t density) {
+	if (density <= 0) {
+		return 0;
+	}
+	const int32_t base = std::max(0, density / 8);
+	const int32_t remainder = std::max(0, density % 8);
+	const String seed = String(normalized.get("normalized_seed", "0")) + ":town_density:" + String(zone.get("id", "")) + ":" + field_name;
+	const int32_t extra = int32_t(hash32_int(seed) % 8U) < remainder ? 1 : 0;
+	return std::min(3, std::max(1, base + extra));
+}
+
+String town_source_field_offset(const String &owner_scope, const String &settlement_kind, bool density) {
+	if (owner_scope == "player" && settlement_kind == "town" && !density) {
+		return "+0x20";
+	}
+	if (owner_scope == "player" && settlement_kind == "castle" && !density) {
+		return "+0x24";
+	}
+	if (owner_scope == "player" && settlement_kind == "town" && density) {
+		return "+0x28";
+	}
+	if (owner_scope == "player" && settlement_kind == "castle" && density) {
+		return "+0x2c";
+	}
+	if (owner_scope == "neutral" && settlement_kind == "town" && !density) {
+		return "+0x30";
+	}
+	if (owner_scope == "neutral" && settlement_kind == "castle" && !density) {
+		return "+0x34";
+	}
+	if (owner_scope == "neutral" && settlement_kind == "town" && density) {
+		return "+0x38";
+	}
+	return "+0x3c";
+}
+
+String town_source_field_name(const String &owner_scope, const String &settlement_kind, bool density) {
+	return owner_scope + String(density ? "_density_" : "_minimum_") + settlement_kind + String("s");
+}
+
+String town_faction_for_placement(const Dictionary &normalized, const Dictionary &zone, const String &owner_scope, const String &settlement_kind, bool density, int32_t ordinal, bool same_type_neutral) {
+	if (owner_scope == "player") {
+		return String(zone.get("faction_id", zone.get("source_zone_faction_id", "faction_embercourt")));
+	}
+	const String source_zone_faction_id = String(zone.get("source_zone_faction_id", zone.get("faction_id", "")));
+	if (density && same_type_neutral && !source_zone_faction_id.is_empty()) {
+		return source_zone_faction_id;
+	}
+	Array allowed = zone.get("allowed_town_faction_ids", Array());
+	if (allowed.is_empty()) {
+		allowed = normalized.get("faction_ids", default_faction_pool());
+	}
+	if (allowed.is_empty()) {
+		return source_zone_faction_id.is_empty() ? String("faction_embercourt") : source_zone_faction_id;
+	}
+	const String seed = String(normalized.get("normalized_seed", "0")) + ":town_faction:" + String(zone.get("id", "")) + ":" + owner_scope + ":" + settlement_kind + ":" + String::num_int64(ordinal);
+	return String(allowed[int64_t(hash32_int(seed) % uint32_t(allowed.size()))]);
+}
+
 Dictionary generate_town_guard_placements(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, const Dictionary &object_placement) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -5708,33 +5824,145 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	Dictionary occupied = primary_occupancy_from_objects(object_placement);
 	Array towns;
 	Array guards;
+	Array town_diagnostics;
+	Dictionary starts_by_zone;
+	for (int64_t index = 0; index < starts.size(); ++index) {
+		Dictionary start = starts[index];
+		starts_by_zone[String(start.get("zone_id", ""))] = start;
+	}
 	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
+	const int32_t parity_town_limit = parity_targets.is_empty() ? -1 : int32_t(parity_targets.get("town_count", 0));
+	int32_t town_ordinal = 0;
+	int32_t required_attempt_count = 0;
+	int32_t density_attempt_count = 0;
+	int32_t placed_required_count = 0;
+	int32_t placed_density_count = 0;
+
+	auto append_town_attempt = [&](const Dictionary &zone, const Dictionary &start, const String &owner_scope, const String &settlement_kind, bool density, int32_t source_value, const String &record_type, const String &phase_label, int32_t local_ordinal) {
+		if (parity_town_limit >= 0 && towns.size() >= parity_town_limit) {
+			Dictionary diagnostic;
+			diagnostic["code"] = "town_placement_skipped_by_supported_profile_count_cap";
+			diagnostic["severity"] = "warning";
+			diagnostic["zone_id"] = zone.get("id", "");
+			diagnostic["record_type"] = record_type;
+			diagnostic["source_field_offset"] = town_source_field_offset(owner_scope, settlement_kind, density);
+			town_diagnostics.append(diagnostic);
+			return;
+		}
+		const String zone_id = String(zone.get("id", ""));
+		Dictionary anchor = !start.is_empty() ? Dictionary(start) : Dictionary(zone.get("anchor", zone.get("center", Dictionary())));
+		const int32_t jitter = int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":town_point:" + zone_id + ":" + record_type + ":" + String::num_int64(local_ordinal)) % 5U) - 2;
+		Dictionary point = find_spaced_object_point(int32_t(anchor.get("x", width / 2)) + jitter, int32_t(anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, occupied, width, height, towns, town_hard_spacing_radius_for_size(normalized));
+		Dictionary diagnostic;
+		diagnostic["zone_id"] = zone_id;
+		diagnostic["record_type"] = record_type;
+		diagnostic["owner_scope"] = owner_scope;
+		diagnostic["settlement_kind"] = settlement_kind;
+		diagnostic["source_field_offset"] = town_source_field_offset(owner_scope, settlement_kind, density);
+		diagnostic["source_field_name"] = town_source_field_name(owner_scope, settlement_kind, density);
+		diagnostic["source_field_value"] = source_value;
+		diagnostic["phase"] = phase_label;
+		if (point.is_empty()) {
+			diagnostic["code"] = "town_castle_placement_infeasible";
+			diagnostic["severity"] = "failure";
+			diagnostic["message"] = "No unoccupied in-bounds tile was available for a required town/castle placement.";
+			town_diagnostics.append(diagnostic);
+			return;
+		}
+
+		const bool same_type_neutral = bool(Dictionary(zone.get("catalog_metadata", Dictionary())).get("same_town_type", Dictionary(zone.get("town_rules", Dictionary())).get("same_type", false)));
+		const String faction_id = town_faction_for_placement(normalized, zone, owner_scope, settlement_kind, density, local_ordinal, same_type_neutral);
+		Dictionary semantics;
+		semantics["source_phase"] = phase_label;
+		semantics["source_field_offset"] = diagnostic["source_field_offset"];
+		semantics["source_field_name"] = diagnostic["source_field_name"];
+		semantics["source_field_value"] = source_value;
+		semantics["faction_id"] = faction_id;
+		semantics["town_id"] = town_for_faction(faction_id);
+		semantics["source_zone_faction_id"] = zone.get("source_zone_faction_id", faction_id);
+		semantics["allowed_town_faction_ids"] = zone.get("allowed_town_faction_ids", Array());
+		semantics["same_type_neutral"] = same_type_neutral;
+		semantics["same_type_semantics"] = owner_scope == "neutral" && density ? (same_type_neutral ? "source_zone_choice_reused_for_neutral_weighted_placement" : "fresh_allowed_faction_draw_for_neutral_weighted_placement") : "not_applicable_to_this_category";
+		semantics["faction_selection_source"] = owner_scope == "player" ? "mapped_owner_player_assignment" : (density && same_type_neutral ? "source_zone_faction_reuse_plus_0x40" : "allowed_faction_weighted_draw");
+		semantics["town_assignment_semantics"] = owner_scope == "player" ? "mapped_owner_player_town_castle_from_source_fields_0x20_to_0x2c" : "neutral_owner_minus_one_town_castle_from_source_fields_0x30_to_0x3c";
+		append_town_record(towns, occupied, town_record_at_point(normalized, zone, point, start, record_type, town_ordinal, road_network, zone_layout, occupied, semantics));
+		++town_ordinal;
+		diagnostic["code"] = "town_castle_placement_materialized";
+		diagnostic["severity"] = "info";
+		diagnostic["placement_id"] = Dictionary(towns[towns.size() - 1]).get("placement_id", "");
+		diagnostic["faction_id"] = faction_id;
+		diagnostic["owner_behavior"] = owner_scope == "player" ? "mapped_owner_player" : "neutral_minus_one";
+		town_diagnostics.append(diagnostic);
+		if (density) {
+			++placed_density_count;
+		} else {
+			++placed_required_count;
+		}
+	};
 
 	for (int64_t index = 0; index < starts.size(); ++index) {
 		Dictionary start = starts[index];
 		Dictionary zone = zone_by_id(zones, String(start.get("zone_id", "")));
-		Dictionary point = parity_targets.is_empty()
-				? find_spaced_object_point(int32_t(start.get("x", 0)), int32_t(start.get("y", 0)), String(start.get("zone_id", "")), owner_grid, occupied, width, height, towns, town_hard_spacing_radius_for_size(normalized))
-				: find_spaced_object_point(int32_t(start.get("x", 0)), int32_t(start.get("y", 0)), String(start.get("zone_id", "")), owner_grid, occupied, width, height, towns, town_hard_spacing_radius_for_size(normalized));
-		append_town_record(towns, occupied, town_record_at_point(normalized, zone, point, start, "player_start_town", int32_t(index), road_network, zone_layout, occupied));
+		Dictionary player_rules = town_rules_for_zone(zone, "player_towns");
+		const int32_t min_castles = std::max(0, int32_t(player_rules.get("min_castles", 1)));
+		++required_attempt_count;
+		append_town_attempt(zone, start, "player", "castle", false, min_castles, "player_start_town", "phase_4a_direct_minimum_player_castle_anchor", int32_t(index));
 	}
 
-	if (parity_targets.is_empty()) {
-		const int32_t neutral_target = neutral_town_target_count(normalized, zones, starts.size());
-		int32_t neutral_count = 0;
-		for (int64_t index = 0; index < zones.size(); ++index) {
-			Dictionary zone = zones[index];
-			const String role = String(zone.get("role", ""));
-			if (role != "treasure" && role != "junction") {
-				continue;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		const bool player_zone = zone.get("player_slot", Variant()).get_type() != Variant::NIL;
+		Dictionary start = starts_by_zone.get(zone_id, Dictionary());
+		if (player_zone) {
+			Dictionary player_rules = town_rules_for_zone(zone, "player_towns");
+			const int32_t min_towns = std::max(0, int32_t(player_rules.get("min_towns", 0)));
+			const int32_t min_castles = std::max(0, int32_t(player_rules.get("min_castles", start.is_empty() ? 0 : 1)));
+			const int32_t remaining_castles = std::max(0, min_castles - (start.is_empty() ? 0 : 1));
+			for (int32_t count = 0; count < min_towns; ++count) {
+				++required_attempt_count;
+				append_town_attempt(zone, start, "player", "town", false, min_towns, "player_minimum_town", "phase_4a_direct_minimum_player_town", count);
 			}
-			Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
-			Dictionary point = find_spaced_object_point(int32_t(anchor.get("x", width / 2)) + 1, int32_t(anchor.get("y", height / 2)) + 1, String(zone.get("id", "")), owner_grid, occupied, width, height, towns, town_hard_spacing_radius_for_size(normalized));
-			append_town_record(towns, occupied, town_record_at_point(normalized, zone, point, Dictionary(), "neutral_zone_town", int32_t(index), road_network, zone_layout, occupied));
-			++neutral_count;
-			if (neutral_count >= neutral_target) {
-				break;
+			for (int32_t count = 0; count < remaining_castles; ++count) {
+				++required_attempt_count;
+				append_town_attempt(zone, start, "player", "castle", false, min_castles, "player_minimum_castle", "phase_4a_direct_minimum_player_castle", count);
 			}
+			const int32_t player_town_density = std::max(0, int32_t(player_rules.get("town_density", 0)));
+			const int32_t player_castle_density = std::max(0, int32_t(player_rules.get("castle_density", 0)));
+			const int32_t player_town_density_count = town_density_attempt_count(normalized, zone, "player_town_density", player_town_density);
+			const int32_t player_castle_density_count = town_density_attempt_count(normalized, zone, "player_castle_density", player_castle_density);
+			for (int32_t count = 0; count < player_town_density_count; ++count) {
+				++density_attempt_count;
+				append_town_attempt(zone, start, "player", "town", true, player_town_density, "player_density_town", "phase_4b_weighted_player_town_density", count);
+			}
+			for (int32_t count = 0; count < player_castle_density_count; ++count) {
+				++density_attempt_count;
+				append_town_attempt(zone, start, "player", "castle", true, player_castle_density, "player_density_castle", "phase_4b_weighted_player_castle_density", count);
+			}
+		}
+
+		Dictionary neutral_rules = town_rules_for_zone(zone, "neutral_towns");
+		const int32_t neutral_min_towns = std::max(0, int32_t(neutral_rules.get("min_towns", 0)));
+		const int32_t neutral_min_castles = std::max(0, int32_t(neutral_rules.get("min_castles", 0)));
+		const int32_t neutral_town_density = std::max(0, int32_t(neutral_rules.get("town_density", 0)));
+		const int32_t neutral_castle_density = std::max(0, int32_t(neutral_rules.get("castle_density", 0)));
+		for (int32_t count = 0; count < neutral_min_towns; ++count) {
+			++required_attempt_count;
+			append_town_attempt(zone, Dictionary(), "neutral", "town", false, neutral_min_towns, "neutral_minimum_town", "phase_4a_direct_minimum_neutral_town_owner_minus_one", count);
+		}
+		for (int32_t count = 0; count < neutral_min_castles; ++count) {
+			++required_attempt_count;
+			append_town_attempt(zone, Dictionary(), "neutral", "castle", false, neutral_min_castles, "neutral_minimum_castle", "phase_4a_direct_minimum_neutral_castle_owner_minus_one", count);
+		}
+		const int32_t neutral_town_density_count = town_density_attempt_count(normalized, zone, "neutral_town_density", neutral_town_density);
+		const int32_t neutral_castle_density_count = town_density_attempt_count(normalized, zone, "neutral_castle_density", neutral_castle_density);
+		for (int32_t count = 0; count < neutral_town_density_count; ++count) {
+			++density_attempt_count;
+			append_town_attempt(zone, Dictionary(), "neutral", "town", true, neutral_town_density, "neutral_density_town", "phase_4b_weighted_neutral_town_density_owner_minus_one", count);
+		}
+		for (int32_t count = 0; count < neutral_castle_density_count; ++count) {
+			++density_attempt_count;
+			append_town_attempt(zone, Dictionary(), "neutral", "castle", true, neutral_castle_density, "neutral_density_castle", "phase_4b_weighted_neutral_castle_density_owner_minus_one", count);
 		}
 	}
 
@@ -5866,15 +6094,27 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	town_payload["materialization_state"] = native_rmg_full_parity_supported(normalized) ? "staged_town_records_full_parity_no_authored_writeback" : "staged_town_records_only_no_gameplay_adoption";
 	town_payload["town_records"] = towns;
 	town_payload["town_count"] = towns.size();
+	town_payload["source_field_semantics"] = "phases_4a_4b_source_fields_plus_0x20_to_plus_0x3c";
+	town_payload["phase_order_anchor"] = "terrain_island_shape_before_towns_connections_payload_roads_rivers_after_towns";
+	town_payload["same_type_neutral_scope"] = "per_source_zone_neutral_weighted_reuse_only_not_global_map_lock";
+	town_payload["required_attempt_count"] = required_attempt_count;
+	town_payload["density_attempt_count"] = density_attempt_count;
+	town_payload["placed_required_count"] = placed_required_count;
+	town_payload["placed_density_count"] = placed_density_count;
+	town_payload["diagnostics"] = town_diagnostics;
+	town_payload["diagnostic_count"] = town_diagnostics.size();
 	Dictionary town_category_counts;
 	town_category_counts["by_record_type"] = count_by_field(towns, "record_type");
 	town_category_counts["by_faction"] = count_by_field(towns, "faction_id");
 	town_category_counts["by_zone"] = count_by_field(towns, "zone_id");
 	town_category_counts["by_town_id"] = count_by_field(towns, "town_id");
+	town_category_counts["by_settlement_category"] = count_by_field(towns, "settlement_category");
+	town_category_counts["by_source_field_offset"] = count_by_field(towns, "source_field_offset");
+	town_category_counts["by_owner_semantics"] = count_by_field(towns, "owner_semantics");
 	town_payload["category_counts"] = town_category_counts;
 	Dictionary town_record_type_counts = count_by_field(towns, "record_type");
 	town_payload["start_player_town_count"] = town_record_type_counts.get("player_start_town", 0);
-	town_payload["neutral_town_count"] = town_record_type_counts.get("neutral_zone_town", 0);
+	town_payload["neutral_town_count"] = int32_t(town_record_type_counts.get("neutral_minimum_town", 0)) + int32_t(town_record_type_counts.get("neutral_minimum_castle", 0)) + int32_t(town_record_type_counts.get("neutral_density_town", 0)) + int32_t(town_record_type_counts.get("neutral_density_castle", 0));
 	Dictionary spacing_summary = town_spacing_summary(towns, normalized);
 	town_payload["town_spacing"] = spacing_summary;
 	town_payload["minimum_town_distance_required"] = spacing_summary.get("minimum_distance_required", 0);
@@ -6745,6 +6985,24 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 		if (bool(town.get("is_start_town", false)) && !starts_by_zone.has(String(town.get("zone_id", "")))) {
 			append_validation_issue(failures, "fail", "start_town_missing_start_reference", "town_guard_placement.town_records.start_anchor", "Start town must reference a generated player start.");
 		}
+		const String source_field_offset = String(town.get("source_field_offset", ""));
+		if (source_field_offset.is_empty() || !(source_field_offset == "+0x20" || source_field_offset == "+0x24" || source_field_offset == "+0x28" || source_field_offset == "+0x2c" || source_field_offset == "+0x30" || source_field_offset == "+0x34" || source_field_offset == "+0x38" || source_field_offset == "+0x3c")) {
+			append_validation_issue(failures, "fail", "town_source_field_semantics_missing", "town_guard_placement.town_records.source_field_offset", "Town/castle placement must record recovered source field offset semantics.");
+		}
+		if (String(town.get("owner_semantics", "")) == "neutral_owner_minus_one" && int32_t(town.get("owner_slot", 0)) != -1) {
+			append_validation_issue(failures, "fail", "neutral_town_owner_semantics_invalid", "town_guard_placement.town_records.owner_slot", "Neutral town/castle records must preserve owner -1 semantics.");
+		}
+	}
+	Dictionary town_payload = town_guard_placement.get("town_placement", Dictionary());
+	Array town_diagnostics = town_payload.get("diagnostics", Array());
+	for (int64_t index = 0; index < town_diagnostics.size(); ++index) {
+		Dictionary diagnostic = town_diagnostics[index];
+		if (String(diagnostic.get("severity", "")) == "failure") {
+			append_validation_issue(failures, "fail", "town_castle_placement_infeasible", "town_guard_placement.town_placement.diagnostics", "Town/castle placement reported an infeasible required source-field placement.");
+		}
+	}
+	if (String(town_payload.get("same_type_neutral_scope", "")) != "per_source_zone_neutral_weighted_reuse_only_not_global_map_lock") {
+		append_validation_issue(failures, "fail", "town_same_type_scope_missing", "town_guard_placement.town_placement.same_type_neutral_scope", "Same-town-type semantics must remain per source zone and neutral weighted only.");
 	}
 	for (int64_t index = 0; index < guards.size(); ++index) {
 		Dictionary guard = guards[index];

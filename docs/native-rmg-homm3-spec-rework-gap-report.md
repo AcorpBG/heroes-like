@@ -58,13 +58,14 @@ This is the exact Phase 3 order. Later workers should not skip ahead unless AcOr
 | 1 | `native-rmg-homm3-generator-data-model-10184` | Define reusable generator schema/data for templates, zones, links, object definitions, masks, footprints, limits, value bands, validation, and writeout metadata. | audit |
 | 2 | `native-rmg-homm3-runtime-zone-graph-10184` | Build filtered runtime template/zone graph preserving owners, roles, base sizes, links, terrain/faction rules, and infeasibility diagnostics. | data model |
 | 3 | `native-rmg-homm3-terrain-island-shape-10184` | Replace ratio/protected-cell island shaping with zone-aware terrain/water painting and fix XL island candidate-scoring performance. | data model, runtime graph |
-| 4 | `native-rmg-homm3-roads-rivers-connections-10184` | Consume link endpoints and payloads in recovered order; implement corridors, `Wide`, border-guard, road, and river overlay semantics. | runtime graph, terrain/island |
-| 5 | `native-rmg-homm3-object-placement-pipeline-10184` | Implement object catalog/footprint/occupancy/value-band/limit/decorative filler pipeline shared by towns, mines, rewards, and decorations. | data model, runtime graph, terrain/island, roads/connections |
-| 6 | `native-rmg-homm3-towns-mines-resources-10184` | Implement town/castle minimums/densities, same-type neutral reuse, seven mine/resource categories, adjacent resources, and placement failure reporting. | object pipeline, runtime graph, terrain/island |
-| 7 | `native-rmg-homm3-guards-rewards-monsters-10184` | Implement connection guards, protected rewards, monster masks, strength scaling, guard/reward relations, and value-banded reward semantics. | object pipeline, towns/mines/resources, roads/connections |
-| 8 | `native-rmg-homm3-validation-adoption-gates-10184` | Add phase validators, regression/performance gates, package/session/save/replay boundaries, and final adoption report. | all implementation slices |
+| 4 | `native-rmg-homm3-towns-castles-10184` | Implement Phase 4a/4b town/castle minimums/densities, mapped owner vs neutral `-1`, same-type neutral reuse, source-zone faction choice, and placement failure reporting. | runtime graph, terrain/island |
+| 5 | `native-rmg-homm3-roads-rivers-connections-10184` | After towns/castles, consume connection payloads in recovered cleanup/late order; implement `Wide`, border-guard, road, and river overlay semantics. | runtime graph, terrain/island, towns/castles |
+| 6 | `native-rmg-homm3-object-placement-pipeline-10184` | Implement object catalog/footprint/occupancy/value-band/limit/decorative filler pipeline shared by mines, rewards, guards, and decorations. | data model, runtime graph, terrain/island, roads/connections |
+| 7 | `native-rmg-homm3-mines-resources-10184` | Implement seven mine/resource categories, adjacent resources, and placement failure reporting. | object pipeline, runtime graph, terrain/island, towns/castles |
+| 8 | `native-rmg-homm3-guards-rewards-monsters-10184` | Implement connection guards, protected rewards, monster masks, strength scaling, guard/reward relations, and value-banded reward semantics. | object pipeline, mines/resources, roads/connections |
+| 9 | `native-rmg-homm3-validation-adoption-gates-10184` | Add phase validators, regression/performance gates, package/session/save/replay boundaries, and final adoption report. | all implementation slices |
 
-Rationale: the recovered pipeline starts from template graph and runtime zones, then terrain, towns, connections, objects, overlays, and writeout. The implementation order keeps shared data and runtime graph first, resolves the XL terrain bottleneck before broad sampling, establishes connection/road reservation before dense object placement, and leaves adoption until all structure can be validated.
+Rationale: the recovered pipeline starts from template graph and runtime zones, then terrain, towns/castles, cleanup/connection payload handling, mines/resources and other objects, guards/rewards, decoration/overlays, and writeout. The implementation order keeps shared data and runtime graph first, resolves the XL terrain bottleneck before broad sampling, places towns/castles before later connection/object/road/river work, and leaves adoption until all structure can be validated.
 
 ## Phase Gap Matrix
 
@@ -176,13 +177,14 @@ Player-visible/product effect:
 
 - Roads can visually and structurally improve map readability, but gates and wide edges are not yet reliable gameplay geometry. Rivers are mostly decorative/report metadata. Link semantics can drift from template intent.
 
-Required implementation slice:
+Required implementation slices:
 
-- `native-rmg-homm3-roads-rivers-connections-10184`
+- `native-rmg-homm3-towns-castles-10184` must run first for Phase 4a/4b town/castle placement.
+- `native-rmg-homm3-roads-rivers-connections-10184` follows towns/castles for cleanup, late connection payloads, roads, and rivers.
 
 Priority/dependencies:
 
-- Order 4, depends on runtime graph and terrain/island shape. It should reserve corridors/overlays before dense object placement.
+- Order 5 for roads/rivers/connections, depends on runtime graph, terrain/island shape, and town/castle placement. It should not be selected before `native-rmg-homm3-towns-castles-10184`.
 
 Unknowns/unsupported boundaries:
 
@@ -220,7 +222,7 @@ Unknowns/unsupported boundaries:
 - HoMM3 object identity, DEF frame dependency, and exact object table parity are not goals.
 - Original object ids/assets must be used for product output.
 
-### 6. Towns, Mines, Resources, And Same-Type Neutral Semantics
+### 6. Towns, Castles, Mines, Resources, And Same-Type Neutral Semantics
 
 Recovered behavior:
 
@@ -236,13 +238,15 @@ Player-visible/product effect:
 
 - Player starts and economy sites exist, but economic shape is not yet driven by template semantics. Rare resource availability, mine distribution, and neutral town faction reuse can diverge from intended map templates.
 
-Required implementation slice:
+Required implementation slices:
 
-- `native-rmg-homm3-towns-mines-resources-10184`
+- `native-rmg-homm3-towns-castles-10184`
+- `native-rmg-homm3-mines-resources-10184`
 
 Priority/dependencies:
 
-- Order 6, depends on object placement pipeline, runtime graph, and terrain/island shape.
+- Towns/castles are Order 4 and depend on runtime graph and terrain/island shape.
+- Mines/resources are Order 7 and depend on the object placement pipeline, runtime graph, terrain/island shape, and completed town/castle placement.
 
 Unknowns/unsupported boundaries:
 
@@ -313,10 +317,11 @@ Unknowns/unsupported boundaries:
 1. XL island candidate scoring and object-placement performance are release blockers for broad seed validation. Fix under `native-rmg-homm3-terrain-island-shape-10184` and keep object-placement cost visible under `native-rmg-homm3-object-placement-pipeline-10184`.
 2. Template graph and runtime zone semantics are the root architectural gap. Fix before adding more local placement heuristics.
 3. Terrain/water island shaping must be zone-aware and performant before object density and route validation are meaningful.
-4. Roads/rivers/connections must consume `Value`, `Wide`, and border-guard flags in the recovered phase order, with original gate objects.
-5. Object placement must move from proxy target counts to explicit object definitions, footprints, limits, value bands, and ordinary-object decoration filler.
-6. Guards/rewards/monsters/towns/mines/resources must translate recovered semantics into original content without broad rebalance or creative copying.
-7. Validation/adoption must remain last and must cover save/replay/package boundaries and Windows/Linux native expectations.
+4. Towns/castles must consume source fields `+0x20..+0x3c` before later cleanup, connection payload, road, river, mine/resource, object, guard/reward, and decoration work.
+5. Roads/rivers/connections must consume `Value`, `Wide`, and border-guard flags in the recovered phase order, with original gate objects.
+6. Object placement must move from proxy target counts to explicit object definitions, footprints, limits, value bands, and ordinary-object decoration filler.
+7. Guards/rewards/monsters/mines/resources must translate recovered semantics into original content without broad rebalance or creative copying.
+8. Validation/adoption must remain last and must cover save/replay/package boundaries and Windows/Linux native expectations.
 
 ## Final Boundaries
 

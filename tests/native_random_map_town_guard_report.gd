@@ -20,6 +20,9 @@ func _run() -> void:
 	if not capabilities.has("native_random_map_town_guard_placement_foundation"):
 		_fail("Native town/guard capability is missing: %s" % JSON.stringify(Array(capabilities)))
 		return
+	if not capabilities.has("native_random_map_homm3_towns_castles"):
+		_fail("Native HoMM3 towns/castles capability is missing: %s" % JSON.stringify(Array(capabilities)))
+		return
 
 	var config := {
 		"seed": "native-rmg-town-guard-placement-10184",
@@ -44,14 +47,17 @@ func _run() -> void:
 	}
 	var changed_seed_config := config.duplicate(true)
 	changed_seed_config["seed"] = "native-rmg-town-guard-placement-10184-changed"
+	var translated_config := _translated_town_castle_config()
 
 	var first: Dictionary = service.generate_random_map(config)
 	var second: Dictionary = service.generate_random_map(config.duplicate(true))
 	var changed: Dictionary = service.generate_random_map(changed_seed_config)
+	var translated: Dictionary = service.generate_random_map(translated_config)
 
 	_assert_town_guard_shape(first, 46, 40)
 	_assert_town_guard_shape(second, 46, 40)
 	_assert_town_guard_shape(changed, 46, 40)
+	_assert_translated_town_castle_semantics(translated, 72, 72)
 
 	var first_payload: Dictionary = first.get("town_guard_placement", {})
 	var second_payload: Dictionary = second.get("town_guard_placement", {})
@@ -91,12 +97,37 @@ func _run() -> void:
 		"guard_generation_status": first.get("guard_generation_status", ""),
 		"town_count": first_payload.get("town_count", 0),
 		"guard_count": first_payload.get("guard_count", 0),
+		"translated_town_count": translated.get("town_guard_placement", {}).get("town_count", 0),
+		"translated_town_categories": translated.get("town_guard_placement", {}).get("town_placement", {}).get("category_counts", {}),
 		"town_guard_signature": signature,
 		"changed_town_guard_signature": changed_payload.get("signature", ""),
 		"occupancy_signature": first_payload.get("combined_occupancy_index", {}).get("signature", ""),
 		"category_counts": first_payload.get("category_counts", {}),
 	})])
 	get_tree().quit(0)
+
+func _translated_town_castle_config() -> Dictionary:
+	return {
+		"seed": "native-rmg-town-castle-source-semantics-10184",
+		"size": {
+			"width": 72,
+			"height": 72,
+			"level_count": 1,
+			"size_class_id": "homm3_medium",
+			"water_mode": "land",
+		},
+		"player_constraints": {
+			"human_count": 1,
+			"computer_count": 2,
+			"team_mode": "free_for_all",
+		},
+		"profile": {
+			"id": "native_town_castle_source_semantics_profile",
+			"template_id": "translated_rmg_template_005_v1",
+			"terrain_ids": ["grass", "dirt", "rough", "snow", "underground"],
+			"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
+		},
+	}
 
 func _assert_town_guard_shape(generated: Dictionary, expected_width: int, expected_height: int) -> void:
 	if not bool(generated.get("ok", false)):
@@ -113,6 +144,7 @@ func _assert_town_guard_shape(generated: Dictionary, expected_width: int, expect
 		return
 
 	var payload: Dictionary = generated.get("town_guard_placement", {})
+	var town_payload: Dictionary = payload.get("town_placement", {})
 	if String(payload.get("schema_id", "")) != "aurelion_native_rmg_town_guard_placement_v1":
 		_fail("Town/guard schema mismatch: %s" % JSON.stringify(payload))
 		return
@@ -129,6 +161,12 @@ func _assert_town_guard_shape(generated: Dictionary, expected_width: int, expect
 		return
 	if int(payload.get("town_count", 0)) != towns.size() or int(payload.get("guard_count", 0)) != guards.size():
 		_fail("Town/guard counts did not match records.")
+		return
+	if String(town_payload.get("source_field_semantics", "")) != "phases_4a_4b_source_fields_plus_0x20_to_plus_0x3c":
+		_fail("Town payload missed recovered source-field semantics: %s" % JSON.stringify(town_payload))
+		return
+	if String(town_payload.get("same_type_neutral_scope", "")) != "per_source_zone_neutral_weighted_reuse_only_not_global_map_lock":
+		_fail("Town payload missed same-type neutral scope: %s" % JSON.stringify(town_payload))
 		return
 
 	var town_by_player := {}
@@ -197,11 +235,62 @@ func _assert_town_valid(town: Dictionary, width: int, height: int) -> void:
 	if String(town.get("primary_occupancy_key", "")) == "" or String(town.get("signature", "")) == "":
 		_fail("Town missed occupancy/signature fields: %s" % JSON.stringify(town))
 		return
+	if String(town.get("source_field_offset", "")) not in ["+0x20", "+0x24", "+0x28", "+0x2c", "+0x30", "+0x34", "+0x38", "+0x3c"]:
+		_fail("Town missed recovered source field offset: %s" % JSON.stringify(town))
+		return
+	if String(town.get("owner_semantics", "")) not in ["mapped_owner_player", "neutral_owner_minus_one"]:
+		_fail("Town missed owner semantics: %s" % JSON.stringify(town))
+		return
+	if String(town.get("owner_semantics", "")) == "neutral_owner_minus_one" and int(town.get("owner_slot", 0)) != -1:
+		_fail("Neutral town did not preserve owner -1 semantics: %s" % JSON.stringify(town))
+		return
+	if String(town.get("source_zone_faction_id", "")) == "" or String(town.get("faction_selection_source", "")) == "":
+		_fail("Town missed faction selection semantics: %s" % JSON.stringify(town))
+		return
 	if town.get("body_tiles", []).is_empty() or town.get("occupancy_keys", []).is_empty():
 		_fail("Town missed footprint occupancy fields: %s" % JSON.stringify(town))
 		return
 	if String(town.get("road_proximity", {}).get("proximity_class", "")) == "":
 		_fail("Town missed road proximity: %s" % JSON.stringify(town))
+		return
+
+func _assert_translated_town_castle_semantics(generated: Dictionary, expected_width: int, expected_height: int) -> void:
+	if not bool(generated.get("ok", false)):
+		_fail("Translated town/castle semantics config returned ok=false: %s" % JSON.stringify(generated.get("report", {})))
+		return
+	var payload: Dictionary = generated.get("town_guard_placement", {})
+	var town_payload: Dictionary = payload.get("town_placement", {})
+	var towns: Array = payload.get("town_records", [])
+	if towns.is_empty():
+		_fail("Translated town/castle config produced no towns.")
+		return
+	var source_offsets := {}
+	var neutral_seen := false
+	var same_type_weighted_seen := false
+	for town in towns:
+		if not (town is Dictionary):
+			_fail("Translated town record was not a dictionary.")
+			return
+		_assert_town_valid(town, expected_width, expected_height)
+		source_offsets[String(town.get("source_field_offset", ""))] = true
+		if String(town.get("owner_semantics", "")) == "neutral_owner_minus_one":
+			neutral_seen = true
+		if String(town.get("same_type_semantics", "")).find("source_zone_choice_reused_for_neutral_weighted_placement") >= 0:
+			same_type_weighted_seen = true
+			if String(town.get("faction_id", "")) != String(town.get("source_zone_faction_id", "")):
+				_fail("Same-type neutral weighted town did not reuse source-zone faction: %s" % JSON.stringify(town))
+				return
+	if not source_offsets.has("+0x24") or not source_offsets.has("+0x2c") or not source_offsets.has("+0x34") or not source_offsets.has("+0x38"):
+		_fail("Translated town/castle config did not exercise required source fields: %s" % JSON.stringify(source_offsets))
+		return
+	if not neutral_seen:
+		_fail("Translated town/castle config did not produce neutral owner -1 towns.")
+		return
+	if not same_type_weighted_seen:
+		_fail("Translated town/castle config did not exercise +0x40 neutral weighted same-type reuse: %s" % JSON.stringify(town_payload.get("category_counts", {})))
+		return
+	if int(town_payload.get("diagnostic_count", 0)) <= 0:
+		_fail("Town/castle diagnostics were not recorded: %s" % JSON.stringify(town_payload))
 		return
 
 func _assert_guard_valid(guard: Dictionary, width: int, height: int, object_ids: Dictionary, route_ids: Dictionary) -> void:
