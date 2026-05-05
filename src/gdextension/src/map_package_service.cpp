@@ -73,11 +73,67 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_homm3_land_water_shape");
 	result.append("native_random_map_homm3_zone_aware_terrain_island_shape");
 	result.append("native_random_map_full_parity_supported_profiles");
+	result.append("native_random_map_extension_profile");
 	result.append("native_rmg_homm3_generator_data_model_report");
 	result.append("native_package_save_load");
 	result.append("generated_map_package_disk_startup");
 	result.append("headless_binding_smoke");
 	return result;
+}
+
+int64_t elapsed_usec_since(const std::chrono::steady_clock::time_point &started_at) {
+	return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - started_at).count();
+}
+
+void append_extension_profile_elapsed(Array &phases, const String &phase_id, int64_t elapsed_usec, int64_t &top_phase_usec, String &top_phase_id) {
+	Dictionary phase;
+	phase["phase_id"] = phase_id;
+	phase["elapsed_usec"] = elapsed_usec;
+	phase["elapsed_msec"] = double(elapsed_usec) / 1000.0;
+	phases.append(phase);
+	if (elapsed_usec > top_phase_usec) {
+		top_phase_usec = elapsed_usec;
+		top_phase_id = phase_id;
+	}
+}
+
+void append_extension_profile_phase(Array &phases, const String &phase_id, std::chrono::steady_clock::time_point &phase_started_at, int64_t &top_phase_usec, String &top_phase_id) {
+	const int64_t elapsed_usec = elapsed_usec_since(phase_started_at);
+	append_extension_profile_elapsed(phases, phase_id, elapsed_usec, top_phase_usec, top_phase_id);
+	phase_started_at = std::chrono::steady_clock::now();
+}
+
+Dictionary build_extension_profile(const Array &phases, const std::chrono::steady_clock::time_point &started_at, int32_t width, int32_t height, int32_t level_count, int32_t object_count, int32_t road_segment_count, int32_t town_count, int32_t guard_count, const String &top_phase_id, int64_t top_phase_usec) {
+	const int64_t total_usec = elapsed_usec_since(started_at);
+	const int32_t tile_count = width * height * level_count;
+	Array normalized_phases;
+	for (int64_t index = 0; index < phases.size(); ++index) {
+		Dictionary phase = phases[index];
+		const int64_t phase_usec = int64_t(phase.get("elapsed_usec", 0));
+		phase["percent_total"] = total_usec > 0 ? double(phase_usec) * 100.0 / double(total_usec) : 0.0;
+		normalized_phases.append(phase);
+	}
+	Dictionary profile;
+	profile["schema_id"] = "aurelion_native_rmg_extension_profile_v1";
+	profile["schema_version"] = 1;
+	profile["measurement"] = "steady_clock_microseconds_runtime_only_not_deterministic_identity";
+	profile["total_elapsed_usec"] = total_usec;
+	profile["total_elapsed_msec"] = double(total_usec) / 1000.0;
+	profile["phase_count"] = normalized_phases.size();
+	profile["phases"] = normalized_phases;
+	profile["top_phase_id"] = top_phase_id;
+	profile["top_phase_elapsed_usec"] = top_phase_usec;
+	profile["top_phase_elapsed_msec"] = double(top_phase_usec) / 1000.0;
+	profile["tile_count"] = tile_count;
+	profile["microseconds_per_tile"] = tile_count > 0 ? double(total_usec) / double(tile_count) : 0.0;
+	profile["width"] = width;
+	profile["height"] = height;
+	profile["level_count"] = level_count;
+	profile["object_count"] = object_count;
+	profile["road_segment_count"] = road_segment_count;
+	profile["town_count"] = town_count;
+	profile["guard_count"] = guard_count;
+	return profile;
 }
 
 String escaped_atom(const String &value) {
@@ -4414,22 +4470,49 @@ Array cardinal_approach_tiles(int32_t x, int32_t y, int32_t width, int32_t heigh
 	return result;
 }
 
-Dictionary nearest_road_proximity(int32_t x, int32_t y, const Dictionary &road_network) {
+struct NativeRoadCell {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	String segment_id;
+};
+
+std::vector<NativeRoadCell> native_road_cells_for_network(const Dictionary &road_network) {
+	std::vector<NativeRoadCell> road_cells;
+	Array road_segments = road_network.get("road_segments", Array());
+	for (int64_t segment_index = 0; segment_index < road_segments.size(); ++segment_index) {
+		if (Variant(road_segments[segment_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary segment = road_segments[segment_index];
+		const String segment_id = String(segment.get("id", ""));
+		Array cells = segment.get("cells", Array());
+		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+			if (Variant(cells[cell_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary cell = cells[cell_index];
+			NativeRoadCell road_cell;
+			road_cell.x = int32_t(cell.get("x", 0));
+			road_cell.y = int32_t(cell.get("y", 0));
+			road_cell.level = int32_t(cell.get("level", 0));
+			road_cell.segment_id = segment_id;
+			road_cells.push_back(road_cell);
+		}
+	}
+	return road_cells;
+}
+
+Dictionary nearest_road_proximity_from_cells(int32_t x, int32_t y, const std::vector<NativeRoadCell> &road_cells) {
 	int32_t best_distance = std::numeric_limits<int32_t>::max();
 	String best_segment_id;
 	Dictionary best_cell;
-	Array road_segments = road_network.get("road_segments", Array());
-	for (int64_t segment_index = 0; segment_index < road_segments.size(); ++segment_index) {
-		Dictionary segment = road_segments[segment_index];
-		Array cells = segment.get("cells", Array());
-		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
-			Dictionary cell = cells[cell_index];
-			const int32_t distance = std::abs(x - int32_t(cell.get("x", 0))) + std::abs(y - int32_t(cell.get("y", 0)));
-			if (distance < best_distance) {
-				best_distance = distance;
-				best_segment_id = String(segment.get("id", ""));
-				best_cell = cell_record(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)), int32_t(cell.get("level", 0)));
-			}
+	for (const NativeRoadCell &cell : road_cells) {
+		const int32_t distance = std::abs(x - cell.x) + std::abs(y - cell.y);
+		if (distance < best_distance) {
+			best_distance = distance;
+			best_segment_id = cell.segment_id;
+			best_cell = cell_record(cell.x, cell.y, cell.level);
 		}
 	}
 	Dictionary result;
@@ -4440,7 +4523,12 @@ Dictionary nearest_road_proximity(int32_t x, int32_t y, const Dictionary &road_n
 	return result;
 }
 
-PackedInt32Array road_distance_field_for_map(const Dictionary &road_network, int32_t width, int32_t height) {
+Dictionary nearest_road_proximity(int32_t x, int32_t y, const Dictionary &road_network) {
+	const std::vector<NativeRoadCell> road_cells = native_road_cells_for_network(road_network);
+	return nearest_road_proximity_from_cells(x, y, road_cells);
+}
+
+PackedInt32Array road_distance_field_for_cells(const std::vector<NativeRoadCell> &road_cells, int32_t width, int32_t height) {
 	PackedInt32Array distances;
 	distances.resize(std::max(0, width * height));
 	for (int32_t index = 0; index < distances.size(); ++index) {
@@ -4449,32 +4537,48 @@ PackedInt32Array road_distance_field_for_map(const Dictionary &road_network, int
 	if (width <= 0 || height <= 0) {
 		return distances;
 	}
-	Array road_cells;
-	Array road_segments = road_network.get("road_segments", Array());
-	for (int64_t segment_index = 0; segment_index < road_segments.size(); ++segment_index) {
-		Dictionary segment = road_segments[segment_index];
-		Array cells = segment.get("cells", Array());
-		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
-			road_cells.append(cells[cell_index]);
+	std::vector<int32_t> queue;
+	queue.reserve(size_t(width) * size_t(height));
+	for (const NativeRoadCell &cell : road_cells) {
+		const int32_t x = cell.x;
+		const int32_t y = cell.y;
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			continue;
 		}
+		const int32_t tile_index = y * width + x;
+		if (distances[tile_index] == 0) {
+			continue;
+		}
+		distances[tile_index] = 0;
+		queue.push_back(tile_index);
 	}
-	for (int32_t y = 0; y < height; ++y) {
-		for (int32_t x = 0; x < width; ++x) {
-			int32_t best_distance = std::numeric_limits<int32_t>::max();
-			for (int64_t road_index = 0; road_index < road_cells.size(); ++road_index) {
-				if (Variant(road_cells[road_index]).get_type() != Variant::DICTIONARY) {
-					continue;
-				}
-				Dictionary cell = road_cells[road_index];
-				const int32_t distance = std::abs(x - int32_t(cell.get("x", 0))) + std::abs(y - int32_t(cell.get("y", 0)));
-				if (distance < best_distance) {
-					best_distance = distance;
-				}
+
+	static constexpr int32_t OFFSETS[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+	for (size_t cursor = 0; cursor < queue.size(); ++cursor) {
+		const int32_t tile_index = queue[cursor];
+		const int32_t x = tile_index % width;
+		const int32_t y = tile_index / width;
+		const int32_t next_distance = distances[tile_index] + 1;
+		for (const auto &offset : OFFSETS) {
+			const int32_t nx = x + offset[0];
+			const int32_t ny = y + offset[1];
+			if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+				continue;
 			}
-			distances[y * width + x] = best_distance == std::numeric_limits<int32_t>::max() ? -1 : best_distance;
+			const int32_t neighbor_index = ny * width + nx;
+			if (distances[neighbor_index] >= 0 && distances[neighbor_index] <= next_distance) {
+				continue;
+			}
+			distances[neighbor_index] = next_distance;
+			queue.push_back(neighbor_index);
 		}
 	}
 	return distances;
+}
+
+PackedInt32Array road_distance_field_for_map(const Dictionary &road_network, int32_t width, int32_t height) {
+	const std::vector<NativeRoadCell> road_cells = native_road_cells_for_network(road_network);
+	return road_distance_field_for_cells(road_cells, width, height);
 }
 
 int32_t road_distance_from_field(const PackedInt32Array &road_distance_field, int32_t x, int32_t y, int32_t width, int32_t height) {
@@ -4527,6 +4631,196 @@ Dictionary road_body_exclusion_lookup(const Dictionary &road_network) {
 		}
 	}
 	return blocked;
+}
+
+void append_object_placement(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const std::vector<NativeRoadCell> &road_cells, const Dictionary &zone_layout);
+
+struct NativePlacementTile {
+	int32_t x = 0;
+	int32_t y = 0;
+};
+
+struct NativePlacedObject {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t quadrant = 0;
+	String kind;
+	String zone_id;
+	bool decorative = false;
+};
+
+struct NativeZoneCandidateCache {
+	String zone_id;
+	std::vector<NativePlacementTile> candidates;
+};
+
+struct NativeObjectPlacementContext {
+	int32_t width = 0;
+	int32_t height = 0;
+	std::vector<int32_t> zone_index_by_tile;
+	std::vector<uint8_t> occupied_by_tile;
+	std::vector<NativeZoneCandidateCache> zones;
+	std::vector<NativePlacedObject> placements;
+};
+
+int32_t native_tile_index(const NativeObjectPlacementContext &context, int32_t x, int32_t y) {
+	if (x < 0 || y < 0 || x >= context.width || y >= context.height) {
+		return -1;
+	}
+	return y * context.width + x;
+}
+
+int32_t native_zone_index_for_id(const NativeObjectPlacementContext &context, const String &zone_id) {
+	for (int32_t index = 0; index < int32_t(context.zones.size()); ++index) {
+		if (context.zones[index].zone_id == zone_id) {
+			return index;
+		}
+	}
+	return -1;
+}
+
+void mark_native_occupied(NativeObjectPlacementContext &context, int32_t x, int32_t y) {
+	const int32_t index = native_tile_index(context, x, y);
+	if (index >= 0 && index < int32_t(context.occupied_by_tile.size())) {
+		context.occupied_by_tile[index] = 1;
+	}
+}
+
+NativeObjectPlacementContext build_native_object_placement_context(const Array &zones, const Array &owner_grid, const Dictionary &road_network, int32_t width, int32_t height, bool seed_road_occupied) {
+	NativeObjectPlacementContext context;
+	context.width = width;
+	context.height = height;
+	context.zone_index_by_tile.assign(std::max(0, width * height), -1);
+	context.occupied_by_tile.assign(std::max(0, width * height), 0);
+	context.zones.reserve(zones.size());
+	for (int64_t zone_index = 0; zone_index < zones.size(); ++zone_index) {
+		Dictionary zone = zones[zone_index];
+		NativeZoneCandidateCache cache;
+		cache.zone_id = String(zone.get("id", ""));
+		context.zones.push_back(cache);
+	}
+	for (int32_t y = 1; y < height - 1 && y < owner_grid.size(); ++y) {
+		Array row = owner_grid[y];
+		for (int32_t x = 1; x < width - 1 && x < row.size(); ++x) {
+			const String zone_id = String(row[x]);
+			const int32_t zone_index = native_zone_index_for_id(context, zone_id);
+			if (zone_index < 0) {
+				continue;
+			}
+			const int32_t tile_index = native_tile_index(context, x, y);
+			context.zone_index_by_tile[tile_index] = zone_index;
+			context.zones[zone_index].candidates.push_back({x, y});
+		}
+	}
+	if (seed_road_occupied) {
+		Array road_segments = road_network.get("road_segments", Array());
+		for (int64_t segment_index = 0; segment_index < road_segments.size(); ++segment_index) {
+			Dictionary segment = road_segments[segment_index];
+			Array cells = segment.get("cells", Array());
+			for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+				Dictionary cell = cells[cell_index];
+				mark_native_occupied(context, int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)));
+			}
+		}
+	}
+	return context;
+}
+
+bool object_body_fits_in_zone_native(const NativeObjectPlacementContext &context, int32_t x, int32_t y, int32_t zone_index, const Dictionary &footprint) {
+	const int32_t body_width = std::max(1, int32_t(footprint.get("width", 1)));
+	const int32_t body_height = std::max(1, int32_t(footprint.get("height", 1)));
+	if (x < 1 || y < 1 || x + body_width > context.width - 1 || y + body_height > context.height - 1) {
+		return false;
+	}
+	for (int32_t dy = 0; dy < body_height; ++dy) {
+		for (int32_t dx = 0; dx < body_width; ++dx) {
+			const int32_t index = native_tile_index(context, x + dx, y + dy);
+			if (index < 0 || index >= int32_t(context.occupied_by_tile.size())) {
+				return false;
+			}
+			if (context.occupied_by_tile[index] != 0 || context.zone_index_by_tile[index] != zone_index) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+int32_t interactive_spacing_penalty_native(const NativeObjectPlacementContext &context, int32_t x, int32_t y, const String &kind, const String &zone_id) {
+	int32_t penalty = 0;
+	int32_t nearest_distance = std::numeric_limits<int32_t>::max();
+	int32_t local_window_count = 0;
+	int32_t same_zone_window_count = 0;
+	int32_t same_kind_window_count = 0;
+	int32_t same_quadrant_count = 0;
+	int32_t same_kind_quadrant_count = 0;
+	const int32_t quadrant = (x >= context.width / 2 ? 1 : 0) + (y >= context.height / 2 ? 2 : 0);
+	for (const NativePlacedObject &placement : context.placements) {
+		if (placement.decorative) {
+			continue;
+		}
+		const int32_t dx = std::abs(x - placement.x);
+		const int32_t dy = std::abs(y - placement.y);
+		const int32_t distance = dx + dy;
+		if (placement.quadrant == quadrant) {
+			++same_quadrant_count;
+			if (placement.kind == kind) {
+				++same_kind_quadrant_count;
+			}
+		}
+		nearest_distance = std::min(nearest_distance, distance);
+		if (dx <= 6 && dy <= 6) {
+			++local_window_count;
+			if (placement.zone_id == zone_id) {
+				++same_zone_window_count;
+			}
+			if (placement.kind == kind) {
+				++same_kind_window_count;
+			}
+		}
+		if (distance <= 2) {
+			penalty += 240;
+		} else if (distance <= 4) {
+			penalty += 96;
+		} else if (distance <= 6) {
+			penalty += 36;
+		} else if (distance <= 10) {
+			penalty += 10;
+		}
+	}
+	if (nearest_distance == std::numeric_limits<int32_t>::max()) {
+		return 0;
+	}
+	penalty += local_window_count * 70;
+	penalty += same_zone_window_count * 55;
+	penalty += same_kind_window_count * 35;
+	penalty += same_quadrant_count * 8;
+	penalty += same_kind_quadrant_count * 14;
+	return penalty;
+}
+
+void mark_native_placement(NativeObjectPlacementContext &context, const Dictionary &placement) {
+	Array body_tiles = placement.get("body_tiles", Array());
+	for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
+		Dictionary body = body_tiles[body_index];
+		mark_native_occupied(context, int32_t(body.get("x", 0)), int32_t(body.get("y", 0)));
+	}
+	NativePlacedObject native_placement;
+	native_placement.x = int32_t(placement.get("x", 0));
+	native_placement.y = int32_t(placement.get("y", 0));
+	native_placement.quadrant = (native_placement.x >= context.width / 2 ? 1 : 0) + (native_placement.y >= context.height / 2 ? 2 : 0);
+	native_placement.kind = String(placement.get("kind", ""));
+	native_placement.zone_id = String(placement.get("zone_id", ""));
+	native_placement.decorative = native_placement.kind == "decorative_obstacle";
+	context.placements.push_back(native_placement);
+}
+
+void append_object_placement_fast(Array &placements, Dictionary &occupied, NativeObjectPlacementContext &context, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const std::vector<NativeRoadCell> &road_cells, const Dictionary &zone_layout) {
+	const int64_t previous_size = placements.size();
+	append_object_placement(placements, occupied, normalized, zone, point, kind, ordinal, road_cells, zone_layout);
+	if (placements.size() > previous_size) {
+		mark_native_placement(context, Dictionary(placements[placements.size() - 1]));
+	}
 }
 
 bool decoration_body_fits(int32_t x, int32_t y, const String &zone_id, const Array &owner_grid, const Dictionary &occupied, const Dictionary &blocked, int32_t width, int32_t height, const Dictionary &footprint) {
@@ -4751,19 +5045,158 @@ Dictionary find_compact_decoration_density_point(const Dictionary &zone, int32_t
 	return Dictionary();
 }
 
+Dictionary find_decoration_point_fast(const Dictionary &zone, int32_t ordinal, const Dictionary &normalized, NativeObjectPlacementContext &placement_context) {
+	const String zone_id = String(zone.get("id", ""));
+	const int32_t zone_index = native_zone_index_for_id(placement_context, zone_id);
+	if (zone_index < 0) {
+		return Dictionary();
+	}
+	const String terrain_id = terrain_id_for_zone(zone);
+	const Dictionary footprint = object_footprint_for_kind("decorative_obstacle", ordinal, terrain_id);
+	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+	const int32_t ax = int32_t(anchor.get("x", placement_context.width / 2));
+	const int32_t ay = int32_t(anchor.get("y", placement_context.height / 2));
+	const String seed_text = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":decor:" + String::num_int64(ordinal);
+	const int32_t radius_limit = std::max(placement_context.width, placement_context.height);
+	int32_t candidate_count = 0;
+	int64_t best_sort_key = std::numeric_limits<int64_t>::max();
+	int32_t best_x = -1;
+	int32_t best_y = -1;
+	for (int32_t radius = 2; radius <= radius_limit; ++radius) {
+		for (int32_t dy = -radius; dy <= radius; ++dy) {
+			for (int32_t dx = -radius; dx <= radius; ++dx) {
+				if (std::max(std::abs(dx), std::abs(dy)) != radius) {
+					continue;
+				}
+				const int32_t x = ax + dx;
+				const int32_t y = ay + dy;
+				if (!object_body_fits_in_zone_native(placement_context, x, y, zone_index, footprint)) {
+					continue;
+				}
+				++candidate_count;
+				const int32_t jitter = int32_t(hash32_int(seed_text + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 100000U);
+				const int64_t sort_key = int64_t(radius) * 100000LL + jitter;
+				if (sort_key < best_sort_key) {
+					best_sort_key = sort_key;
+					best_x = x;
+					best_y = y;
+				}
+			}
+		}
+		if (candidate_count >= 18) {
+			break;
+		}
+	}
+	if (best_x >= 0 && best_y >= 0) {
+		Dictionary result = point_record(best_x, best_y);
+		result["spatial_placement_policy"] = "native_cached_decoration_ring_scan";
+		return result;
+	}
+	static constexpr int32_t COMPACT_FALLBACKS[2][2] = {{3, 2}, {2, 3}};
+	for (const auto &fallback : COMPACT_FALLBACKS) {
+		Dictionary compact_footprint = footprint.duplicate();
+		compact_footprint["width"] = fallback[0];
+		compact_footprint["height"] = fallback[1];
+		compact_footprint["tier"] = "compact_constrained_zone_proxy";
+		compact_footprint["source"] = "compact fallback for constrained HoMM3-re source-row proxy placement";
+		candidate_count = 0;
+		best_sort_key = std::numeric_limits<int64_t>::max();
+		best_x = -1;
+		best_y = -1;
+		for (int32_t radius = 1; radius <= radius_limit; ++radius) {
+			for (int32_t dy = -radius; dy <= radius; ++dy) {
+				for (int32_t dx = -radius; dx <= radius; ++dx) {
+					if (std::max(std::abs(dx), std::abs(dy)) != radius) {
+						continue;
+					}
+					const int32_t x = ax + dx;
+					const int32_t y = ay + dy;
+					if (!object_body_fits_in_zone_native(placement_context, x, y, zone_index, compact_footprint)) {
+						continue;
+					}
+					++candidate_count;
+					const int32_t jitter = int32_t(hash32_int(seed_text + String(":compact:") + String::num_int64(fallback[0]) + String("x") + String::num_int64(fallback[1]) + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 100000U);
+					const int64_t sort_key = int64_t(radius) * 100000LL + jitter;
+					if (sort_key < best_sort_key) {
+						best_sort_key = sort_key;
+						best_x = x;
+						best_y = y;
+					}
+				}
+			}
+			if (candidate_count >= 12) {
+				break;
+			}
+		}
+		if (best_x >= 0 && best_y >= 0) {
+			Dictionary result = point_record(best_x, best_y);
+			result["decoration_footprint_override"] = compact_footprint;
+			result["decoration_fit_fallback"] = "compact_constrained_zone_proxy";
+			result["spatial_placement_policy"] = "native_cached_decoration_compact_fallback";
+			return result;
+		}
+	}
+	return Dictionary();
+}
+
+Dictionary find_compact_decoration_density_point_fast(const Dictionary &zone, int32_t ordinal, const Dictionary &normalized, NativeObjectPlacementContext &placement_context) {
+	const String zone_id = String(zone.get("id", ""));
+	const int32_t zone_index = native_zone_index_for_id(placement_context, zone_id);
+	if (zone_index < 0 || zone_index >= int32_t(placement_context.zones.size())) {
+		return Dictionary();
+	}
+	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+	const int32_t ax = int32_t(anchor.get("x", placement_context.width / 2));
+	const int32_t ay = int32_t(anchor.get("y", placement_context.height / 2));
+	const Dictionary footprint = compact_density_decoration_footprint(ordinal);
+	const String seed_text = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":compact_density_decor:" + String::num_int64(ordinal);
+	const int32_t coarse_cols = 8;
+	const int32_t coarse_rows = 8;
+	const int32_t desired_cell = int32_t(hash32_int(seed_text + String(":coarse")) % uint32_t(coarse_cols * coarse_rows));
+	const int32_t desired_cx = desired_cell % coarse_cols;
+	const int32_t desired_cy = desired_cell / coarse_cols;
+	int64_t best_sort_key = std::numeric_limits<int64_t>::max();
+	int32_t best_x = -1;
+	int32_t best_y = -1;
+	for (const NativePlacementTile &candidate : placement_context.zones[zone_index].candidates) {
+		const int32_t x = candidate.x;
+		const int32_t y = candidate.y;
+		if (!object_body_fits_in_zone_native(placement_context, x, y, zone_index, footprint)) {
+			continue;
+		}
+		const int32_t cx = std::max(0, std::min(coarse_cols - 1, (x * coarse_cols) / std::max(1, placement_context.width)));
+		const int32_t cy = std::max(0, std::min(coarse_rows - 1, (y * coarse_rows) / std::max(1, placement_context.height)));
+		const int32_t coarse_distance = std::abs(cx - desired_cx) + std::abs(cy - desired_cy);
+		const int32_t anchor_distance = std::abs(x - ax) + std::abs(y - ay);
+		const int32_t preferred_anchor_distance = 6 + (ordinal % 17);
+		const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
+		const int32_t jitter = int32_t(hash32_int(seed_text + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 10000U);
+		const int64_t sort_key = int64_t(coarse_distance) * int64_t(100000000) + int64_t(anchor_penalty) * int64_t(10000) + int64_t(jitter);
+		if (sort_key < best_sort_key) {
+			best_sort_key = sort_key;
+			best_x = x;
+			best_y = y;
+		}
+	}
+	if (best_x >= 0 && best_y >= 0) {
+		Dictionary result = point_record(best_x, best_y);
+		result["decoration_footprint_override"] = footprint;
+		result["decoration_fit_fallback"] = "compact_owner_like_islands_density_marker";
+		result["spatial_placement_policy"] = "native_cached_owner_like_islands_compact_decoration_density_scatter";
+		return result;
+	}
+	return Dictionary();
+}
+
 int32_t zone_value_budget_for_zone(const Dictionary &normalized, const Dictionary &zone);
 String value_tier_for_amount(int32_t value);
 Dictionary reward_value_profile_for_zone(const Dictionary &normalized, const Dictionary &zone, int32_t reward_index, int32_t ordinal);
 void apply_reward_value_profile(Dictionary &family, const Dictionary &profile, int32_t ordinal);
 Dictionary reward_band_source_offsets(int32_t source_index);
-void append_object_placement(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const Dictionary &road_network, const Dictionary &zone_layout);
+void append_object_placement(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const std::vector<NativeRoadCell> &road_cells, const Dictionary &zone_layout);
 
-int32_t append_decoration_placements(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &road_network, int32_t ordinal_start) {
-	const int32_t width = int32_t(normalized.get("width", 36));
-	const int32_t height = int32_t(normalized.get("height", 36));
+int32_t append_decoration_placements(Array &placements, Dictionary &occupied, NativeObjectPlacementContext &placement_context, const Dictionary &normalized, const Dictionary &zone_layout, const std::vector<NativeRoadCell> &road_cells, int32_t ordinal_start) {
 	Array zones = zone_layout.get("zones", Array());
-	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
-	Dictionary blocked = road_body_exclusion_lookup(road_network);
 	int32_t ordinal = ordinal_start;
 	for (int64_t zone_index = 0; zone_index < zones.size(); ++zone_index) {
 		Dictionary zone = zones[zone_index];
@@ -4771,9 +5204,9 @@ int32_t append_decoration_placements(Array &placements, Dictionary &occupied, co
 		for (int32_t decoration_index = 0; decoration_index < target; ++decoration_index) {
 			bool placed = false;
 			for (int32_t attempt = 0; attempt < 8; ++attempt) {
-				Dictionary point = find_decoration_point(zone, ordinal, normalized, owner_grid, occupied, blocked, width, height);
+				Dictionary point = find_decoration_point_fast(zone, ordinal, normalized, placement_context);
 				if (!point.is_empty()) {
-					append_object_placement(placements, occupied, normalized, zone, point, "decorative_obstacle", ordinal, road_network, zone_layout);
+					append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "decorative_obstacle", ordinal, road_cells, zone_layout);
 					++ordinal;
 					placed = true;
 					break;
@@ -4788,9 +5221,9 @@ int32_t append_decoration_placements(Array &placements, Dictionary &occupied, co
 		for (int32_t compact_index = 0; compact_index < compact_target; ++compact_index) {
 			bool placed = false;
 			for (int32_t attempt = 0; attempt < 8; ++attempt) {
-				Dictionary point = find_compact_decoration_density_point(zone, ordinal, normalized, owner_grid, occupied, blocked, width, height);
+				Dictionary point = find_compact_decoration_density_point_fast(zone, ordinal, normalized, placement_context);
 				if (!point.is_empty()) {
-					append_object_placement(placements, occupied, normalized, zone, point, "decorative_obstacle", ordinal, road_network, zone_layout);
+					append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "decorative_obstacle", ordinal, road_cells, zone_layout);
 					++ordinal;
 					placed = true;
 					break;
@@ -4805,7 +5238,7 @@ int32_t append_decoration_placements(Array &placements, Dictionary &occupied, co
 	return ordinal;
 }
 
-void append_object_placement(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const Dictionary &road_network, const Dictionary &zone_layout) {
+void append_object_placement(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const std::vector<NativeRoadCell> &road_cells, const Dictionary &zone_layout) {
 	if (point.is_empty()) {
 		return;
 	}
@@ -4913,7 +5346,7 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 	predicates.append("road_proximity_recorded");
 	placement["placement_predicates"] = predicates;
 	placement["placement_predicate_results"] = predicate_results;
-	placement["road_proximity"] = nearest_road_proximity(x, y, road_network);
+	placement["road_proximity"] = nearest_road_proximity_from_cells(x, y, road_cells);
 	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
 	Dictionary zone_proximity;
 	zone_proximity["zone_anchor"] = anchor;
@@ -5175,7 +5608,7 @@ Dictionary object_fill_coverage_summary(const Array &placements, const Dictionar
 	return summary;
 }
 
-Dictionary object_placement_pipeline_summary(const Dictionary &normalized, const Dictionary &zone_layout, const Array &placements, const Dictionary &occupancy_index, int64_t elapsed_usec) {
+Dictionary object_placement_pipeline_summary(const Dictionary &normalized, const Dictionary &zone_layout, const Array &placements, const Dictionary &occupancy_index, int64_t elapsed_usec, const Dictionary &runtime_phase_profile) {
 	static constexpr const char *SUPPORTED_KINDS[] = {"resource_site", "mine", "neutral_dwelling", "reward_reference", "decorative_obstacle", "town", "route_guard", "special_guard_gate"};
 	Dictionary definitions;
 	Dictionary global_counts;
@@ -5302,6 +5735,7 @@ Dictionary object_placement_pipeline_summary(const Dictionary &normalized, const
 	summary["decorative_filler_count"] = decoration_count;
 	summary["decorative_filler_ordinary_template_ratio"] = decoration_count <= 0 ? 0.0 : double(ordinary_decoration_count) / double(decoration_count);
 	summary["xl_cost"] = xl_cost;
+	summary["runtime_phase_profile"] = runtime_phase_profile;
 	summary["unsupported_parity_boundaries"] = unsupported_boundaries;
 	const bool ok = missing_definition_count == 0
 			&& missing_mask_count == 0
@@ -5975,8 +6409,92 @@ Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, 
 	return fallback;
 }
 
+Dictionary object_point_for_zone_index_fast(const Dictionary &zone, int32_t ordinal, int32_t ring, const String &kind, const Dictionary &normalized, NativeObjectPlacementContext &placement_context, const Array &owner_grid, const Dictionary &occupied, const PackedInt32Array &road_distance_field) {
+	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+	const String zone_id = String(zone.get("id", ""));
+	const String seed = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":object:" + String::num_int64(ordinal);
+	const int32_t width = placement_context.width;
+	const int32_t height = placement_context.height;
+	const int32_t anchor_x = int32_t(anchor.get("x", width / 2));
+	const int32_t anchor_y = int32_t(anchor.get("y", height / 2));
+	const int32_t zone_index = native_zone_index_for_id(placement_context, zone_id);
+	if (zone_index < 0 || zone_index >= int32_t(placement_context.zones.size())) {
+		return object_point_for_zone_index(zone, ordinal, ring, kind, normalized, owner_grid, occupied, Array(), road_distance_field, width, height);
+	}
+	const std::vector<NativePlacementTile> &candidates = placement_context.zones[zone_index].candidates;
+	const int32_t zone_cell_count = std::max(0, int32_t(candidates.size()));
+	const int32_t coarse_cols = zone_cell_count > 0 && zone_cell_count < 144 ? 4 : 8;
+	const int32_t coarse_rows = zone_cell_count > 0 && zone_cell_count < 144 ? 4 : 8;
+	const int32_t desired_cell = int32_t(hash32_int(seed + String(":local_distribution:") + kind) % uint32_t(coarse_cols * coarse_rows));
+	const int32_t desired_cx = desired_cell % coarse_cols;
+	const int32_t desired_cy = desired_cell / coarse_cols;
+	const Dictionary footprint = object_footprint_for_kind(kind, ordinal, terrain_id_for_zone(zone));
+	const int32_t preferred_anchor_distance = 4 + ring * 3 + (ordinal % 5);
+	const bool bounded_large_map_scoring = width > 72 || height > 72;
+	const int32_t target_evaluated_candidates = !bounded_large_map_scoring ? zone_cell_count : (zone_cell_count > 0 && zone_cell_count < 600 ? zone_cell_count : 128);
+	const int32_t sample_mod = zone_cell_count > target_evaluated_candidates ? std::max(2, zone_cell_count / std::max(1, target_evaluated_candidates)) : 1;
+
+	int64_t best_sort_key = std::numeric_limits<int64_t>::max();
+	int32_t best_x = -1;
+	int32_t best_y = -1;
+	int32_t best_road_distance = -1;
+	for (const NativePlacementTile &candidate : candidates) {
+		const int32_t x = candidate.x;
+		const int32_t y = candidate.y;
+		const int32_t cx = std::max(0, std::min(coarse_cols - 1, (x * coarse_cols) / std::max(1, width)));
+		const int32_t cy = std::max(0, std::min(coarse_rows - 1, (y * coarse_rows) / std::max(1, height)));
+		const int32_t coarse_distance = std::abs(cx - desired_cx) + std::abs(cy - desired_cy);
+		if (sample_mod > 1) {
+			const uint32_t sample_hash = hash32_int(seed + String(":sample:") + String::num_int64(x) + String(",") + String::num_int64(y));
+			const uint32_t preferred_mod = uint32_t(std::max(1, sample_mod / 2));
+			const bool preferred_coarse_sample = coarse_distance == 0 && sample_hash % preferred_mod == 0U;
+			const bool broad_sample = sample_hash % uint32_t(sample_mod) == 0U;
+			if (!preferred_coarse_sample && !broad_sample) {
+				continue;
+			}
+		}
+		if (!object_body_fits_in_zone_native(placement_context, x, y, zone_index, footprint)) {
+			continue;
+		}
+		const int32_t anchor_distance = std::abs(x - anchor_x) + std::abs(y - anchor_y);
+		const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
+		const int32_t spacing_penalty = interactive_spacing_penalty_native(placement_context, x, y, kind, zone_id);
+		const int32_t road_distance = road_distance_from_field(road_distance_field, x, y, width, height);
+		const int32_t road_penalty = interactive_road_distribution_penalty(road_distance, kind);
+		const int32_t distribution_penalty = spacing_penalty + road_penalty;
+		const int32_t jitter = int32_t(hash32_int(seed + String(":scatter:") + String::num_int64(x) + String(",") + String::num_int64(y)) % 10000U);
+		const int64_t sort_key = int64_t(distribution_penalty) * 1000000000LL + int64_t(coarse_distance) * 10000000LL + int64_t(anchor_penalty) * 10000LL + int64_t(jitter);
+		if (sort_key < best_sort_key) {
+			best_sort_key = sort_key;
+			best_x = x;
+			best_y = y;
+			best_road_distance = road_distance;
+		}
+	}
+	if (best_x >= 0 && best_y >= 0) {
+		Dictionary result = point_record(best_x, best_y);
+		result["distance_to_nearest_road_tiles"] = best_road_distance;
+		result["spatial_placement_policy"] = "native_cached_zone_candidate_scan_road_reachable_blue_noise_scatter";
+		return result;
+	}
+
+	const int32_t angle_bucket = int32_t(hash32_int(seed) % 8U);
+	static constexpr int32_t OFFSETS[8][2] = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
+	const int32_t distance = 2 + ring + (ordinal % 3);
+	const int32_t x = anchor_x + OFFSETS[angle_bucket][0] * distance + deterministic_signed_jitter(seed + String(":x"), 1);
+	const int32_t y = anchor_y + OFFSETS[angle_bucket][1] * distance + deterministic_signed_jitter(seed + String(":y"), 1);
+	Dictionary fallback = find_object_point(x, y, zone_id, owner_grid, occupied, width, height);
+	if (!fallback.is_empty()) {
+		fallback["spatial_placement_policy"] = "anchor_ring_fallback_after_native_cached_candidate_scan_exhausted";
+	}
+	return fallback;
+}
+
 Dictionary generate_object_placements(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network) {
 	const auto object_phase_started_at = std::chrono::steady_clock::now();
+	Array object_profile_phases;
+	int64_t top_object_phase_usec = 0;
+	String top_object_phase_id;
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
 	Array zones = zone_layout.get("zones", Array());
@@ -5985,7 +6503,10 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	Array placements;
 	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
 	Dictionary occupied = parity_targets.is_empty() ? road_body_exclusion_lookup(road_network) : Dictionary();
-	const PackedInt32Array road_distance_field = road_distance_field_for_map(road_network, width, height);
+	const std::vector<NativeRoadCell> road_cells = native_road_cells_for_network(road_network);
+	const PackedInt32Array road_distance_field = road_distance_field_for_cells(road_cells, width, height);
+	NativeObjectPlacementContext placement_context = build_native_object_placement_context(zones, owner_grid, road_network, width, height, parity_targets.is_empty());
+	append_extension_profile_elapsed(object_profile_phases, "prepare_inputs_and_road_distance", elapsed_usec_since(object_phase_started_at), top_object_phase_usec, top_object_phase_id);
 	int32_t ordinal = 0;
 	Array mine_resource_diagnostics;
 	Array adjacent_resource_records;
@@ -5997,6 +6518,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	int32_t adjacent_resource_object_count = 0;
 
 	if (!parity_targets.is_empty()) {
+		const auto parity_started_at = std::chrono::steady_clock::now();
 		Dictionary parity_counts = parity_targets.get("object_category_counts", Dictionary());
 		static constexpr const char *ORDERED_KINDS[] = {"town", "resource_site", "mine", "neutral_dwelling", "reward_reference", "route_guard", "special_guard_gate"};
 		for (const char *kind_value : ORDERED_KINDS) {
@@ -6017,15 +6539,17 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 						height);
 				Dictionary footprint = object_footprint_for_kind(kind, ordinal, terrain_id_for_zone(zone));
 				if (!point.is_empty() && !object_body_fits_in_zone(int32_t(point.get("x", 0)), int32_t(point.get("y", 0)), zone_id, owner_grid, occupied, width, height, footprint)) {
-					point = object_point_for_zone_index(zone, ordinal, 1 + index / 6, kind, normalized, owner_grid, occupied, placements, road_distance_field, width, height);
+					point = object_point_for_zone_index_fast(zone, ordinal, 1 + index / 6, kind, normalized, placement_context, owner_grid, occupied, road_distance_field);
 				}
-				append_object_placement(placements, occupied, normalized, zone, point, kind, ordinal, road_network, zone_layout);
+				append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, kind, ordinal, road_cells, zone_layout);
 				++ordinal;
 			}
 		}
+		append_extension_profile_elapsed(object_profile_phases, "supported_profile_seed_objects", elapsed_usec_since(parity_started_at), top_object_phase_usec, top_object_phase_id);
 	}
 
 	if (parity_targets.is_empty()) {
+		const auto start_resources_started_at = std::chrono::steady_clock::now();
 		for (int64_t index = 0; index < starts.size(); ++index) {
 			Dictionary start = starts[index];
 			Dictionary zone = zone_by_id(zones, String(start.get("zone_id", "")));
@@ -6037,16 +6561,21 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 			static constexpr int32_t OFFSETS[3][2] = {{2, 0}, {0, 2}, {-2, 0}};
 			for (int32_t resource_index = 0; resource_index < 3; ++resource_index) {
 				Dictionary point = find_object_point(sx + OFFSETS[resource_index][0], sy + OFFSETS[resource_index][1], String(start.get("zone_id", "")), owner_grid, occupied, width, height);
-				append_object_placement(placements, occupied, normalized, zone, point, "resource_site", resource_index, road_network, zone_layout);
+				append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "resource_site", resource_index, road_cells, zone_layout);
 				++ordinal;
 			}
 		}
+		append_extension_profile_elapsed(object_profile_phases, "player_start_resource_sites", elapsed_usec_since(start_resources_started_at), top_object_phase_usec, top_object_phase_id);
 
+		int64_t mine_resource_usec = 0;
+		int64_t dwelling_usec = 0;
+		int64_t reward_usec = 0;
 		for (int64_t index = 0; index < zones.size(); ++index) {
 			Dictionary zone = zones[index];
 			const int32_t reward_target = catalog_zone_reward_target(normalized, zone);
 			const int32_t dwelling_target = catalog_zone_dwelling_target(normalized, zone);
 			Array mine_schedule = mine_phase7_schedule_for_zone(normalized, zone);
+			const auto mine_started_at = std::chrono::steady_clock::now();
 			for (int64_t mine_index = 0; mine_index < mine_schedule.size(); ++mine_index) {
 				Dictionary scheduled = mine_schedule[mine_index];
 				const int32_t category_index = int32_t(scheduled.get("category_index", 0));
@@ -6058,7 +6587,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 				}
 				const bool special_near_start_bias = (category_index == 0 || category_index == 2) && String(zone.get("role", "")).contains("start");
 				const int32_t ring = special_near_start_bias ? 0 : 1 + int32_t(mine_index / 3);
-				Dictionary point = object_point_for_zone_index(zone, ordinal, ring, "mine", normalized, owner_grid, occupied, placements, road_distance_field, width, height);
+				Dictionary point = object_point_for_zone_index_fast(zone, ordinal, ring, "mine", normalized, placement_context, owner_grid, occupied, road_distance_field);
 				const bool point_available = !point.is_empty();
 				point["object_family_ordinal"] = category_index;
 				point["native_mine_index"] = int32_t(mine_index);
@@ -6090,7 +6619,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 					continue;
 				}
 				const String mine_placement_id = "native_rmg_mine_" + String(zone.get("id", "")) + "_" + slot_id_2(ordinal + 1);
-				append_object_placement(placements, occupied, normalized, zone, point, "mine", ordinal, road_network, zone_layout);
+				append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "mine", ordinal, road_cells, zone_layout);
 				if (density_phase) {
 					++mine_density_placed_count;
 				} else {
@@ -6118,7 +6647,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 						resource_point["object_family_ordinal"] = rmg_adjacent_resource_family_ordinal(category_index);
 						resource_point["adjacent_to_mine_placement_id"] = mine_placement_id;
 						resource_point["mine_category_index"] = category_index;
-						append_object_placement(placements, occupied, normalized, zone, resource_point, "resource_site", ordinal, road_network, zone_layout);
+						append_object_placement_fast(placements, occupied, placement_context, normalized, zone, resource_point, "resource_site", ordinal, road_cells, zone_layout);
 						support["adjacent_resource_placement_id"] = "native_rmg_resource_site_" + String(zone.get("id", "")) + "_" + slot_id_2(ordinal + 1);
 						support["materialization_state"] = "adjacent_resource_object_materialized";
 						++adjacent_resource_object_count;
@@ -6139,27 +6668,38 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 					unsupported["fallback_behavior"] = "mine_placement_kept_with_category_metadata_support_record_only";
 					mine_resource_diagnostics.append(unsupported);
 				}
-				adjacent_resource_records.append(support);
-			}
+					adjacent_resource_records.append(support);
+				}
+			mine_resource_usec += elapsed_usec_since(mine_started_at);
+			const auto dwelling_started_at = std::chrono::steady_clock::now();
 			for (int32_t dwelling_index = 0; dwelling_index < dwelling_target; ++dwelling_index) {
-				Dictionary point = object_point_for_zone_index(zone, ordinal, 2 + dwelling_index, "neutral_dwelling", normalized, owner_grid, occupied, placements, road_distance_field, width, height);
+				Dictionary point = object_point_for_zone_index_fast(zone, ordinal, 2 + dwelling_index, "neutral_dwelling", normalized, placement_context, owner_grid, occupied, road_distance_field);
 				point["native_dwelling_index"] = dwelling_index;
 				point["native_dwelling_target"] = dwelling_target;
-				append_object_placement(placements, occupied, normalized, zone, point, "neutral_dwelling", ordinal, road_network, zone_layout);
+				append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "neutral_dwelling", ordinal, road_cells, zone_layout);
 				++ordinal;
 			}
+			dwelling_usec += elapsed_usec_since(dwelling_started_at);
+			const auto reward_started_at = std::chrono::steady_clock::now();
 			for (int32_t reward_index = 0; reward_index < reward_target; ++reward_index) {
-				Dictionary point = object_point_for_zone_index(zone, ordinal, 1 + reward_index / 4, "reward_reference", normalized, owner_grid, occupied, placements, road_distance_field, width, height);
+				Dictionary point = object_point_for_zone_index_fast(zone, ordinal, 1 + reward_index / 4, "reward_reference", normalized, placement_context, owner_grid, occupied, road_distance_field);
 				point["native_reward_index"] = reward_index;
 				point["native_reward_target"] = reward_target;
-				append_object_placement(placements, occupied, normalized, zone, point, "reward_reference", ordinal, road_network, zone_layout);
+				append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "reward_reference", ordinal, road_cells, zone_layout);
 				++ordinal;
 			}
+			reward_usec += elapsed_usec_since(reward_started_at);
 		}
+		append_extension_profile_elapsed(object_profile_phases, "mine_resource_placement", mine_resource_usec, top_object_phase_usec, top_object_phase_id);
+		append_extension_profile_elapsed(object_profile_phases, "neutral_dwelling_placement", dwelling_usec, top_object_phase_usec, top_object_phase_id);
+		append_extension_profile_elapsed(object_profile_phases, "reward_reference_placement", reward_usec, top_object_phase_usec, top_object_phase_id);
 	}
 
-	ordinal = append_decoration_placements(placements, occupied, normalized, zone_layout, road_network, ordinal);
+	const auto decoration_started_at = std::chrono::steady_clock::now();
+	ordinal = append_decoration_placements(placements, occupied, placement_context, normalized, zone_layout, road_cells, ordinal);
+	append_extension_profile_elapsed(object_profile_phases, "decorative_obstacle_placement", elapsed_usec_since(decoration_started_at), top_object_phase_usec, top_object_phase_id);
 
+	const auto occupancy_started_at = std::chrono::steady_clock::now();
 	Dictionary primary_tile_occupancy;
 	Dictionary body_tile_occupancy;
 	Dictionary object_index_by_placement_id;
@@ -6203,7 +6743,9 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	category_counts["by_category"] = count_by_field(placements, "category_id");
 	category_counts["by_zone"] = count_by_field(placements, "zone_id");
 	category_counts["by_terrain"] = count_by_field(placements, "terrain_id");
+	append_extension_profile_elapsed(object_profile_phases, "occupancy_and_category_indexes", elapsed_usec_since(occupancy_started_at), top_object_phase_usec, top_object_phase_id);
 
+	const auto summary_started_at = std::chrono::steady_clock::now();
 	Dictionary payload;
 	payload["schema_id"] = NATIVE_RMG_OBJECT_PLACEMENT_SCHEMA_ID;
 	payload["schema_version"] = 1;
@@ -6249,8 +6791,10 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	payload["decoration_route_shaping_summary"] = decoration_summary;
 	payload["fill_coverage_summary"] = object_fill_coverage_summary(placements, zone_layout, width, height);
 	payload["occupancy_index"] = occupancy_index;
+	append_extension_profile_elapsed(object_profile_phases, "object_summary_payloads", elapsed_usec_since(summary_started_at), top_object_phase_usec, top_object_phase_id);
 	const int64_t object_phase_elapsed_usec = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - object_phase_started_at).count();
-	Dictionary pipeline_summary = object_placement_pipeline_summary(normalized, zone_layout, placements, occupancy_index, object_phase_elapsed_usec);
+	Dictionary runtime_phase_profile = build_extension_profile(object_profile_phases, object_phase_started_at, width, height, 1, int32_t(placements.size()), int32_t(road_network.get("road_segment_count", 0)), 0, 0, top_object_phase_id, top_object_phase_usec);
+	Dictionary pipeline_summary = object_placement_pipeline_summary(normalized, zone_layout, placements, occupancy_index, object_phase_elapsed_usec, runtime_phase_profile);
 	payload["object_placement_pipeline_summary"] = pipeline_summary;
 	payload["object_placement_pipeline_status"] = pipeline_summary.get("validation_status", "");
 	payload["footprint_records"] = footprint_records;
@@ -6259,6 +6803,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	payload["related_road_network_signature"] = road_network.get("signature", "");
 	Dictionary payload_signature_source = payload.duplicate(true);
 	Dictionary deterministic_pipeline_summary = pipeline_summary.duplicate(true);
+	deterministic_pipeline_summary.erase("runtime_phase_profile");
 	Dictionary deterministic_xl_cost = deterministic_pipeline_summary.get("xl_cost", Dictionary());
 	deterministic_xl_cost["elapsed_usec"] = 0;
 	deterministic_xl_cost["elapsed_msec"] = 0.0;
@@ -9881,21 +10426,37 @@ Dictionary MapPackageService::random_map_config_identity(Dictionary config) cons
 }
 
 Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary options) const {
+	const std::chrono::steady_clock::time_point profile_started_at = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point phase_started_at = profile_started_at;
+	Array extension_profile_phases;
+	int64_t top_profile_phase_usec = 0;
+	String top_profile_phase_id;
 	Dictionary normalized = normalize_random_map_config(config);
+	append_extension_profile_phase(extension_profile_phases, "normalize_config", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	const bool full_parity_supported = native_rmg_full_parity_supported(normalized);
 	const String generation_status = native_rmg_generation_status_for_config(normalized);
 	const String full_generation_status = native_rmg_full_generation_status_for_config(normalized);
 	Dictionary identity = random_map_config_identity(config);
+	append_extension_profile_phase(extension_profile_phases, "config_identity", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary player_assignment = player_assignment_for_config(normalized);
+	append_extension_profile_phase(extension_profile_phases, "player_assignment", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary zone_layout = generate_zone_layout(normalized, player_assignment);
+	append_extension_profile_phase(extension_profile_phases, "zone_layout", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary player_starts = generate_player_starts(normalized, zone_layout, player_assignment);
+	append_extension_profile_phase(extension_profile_phases, "player_starts", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary road_network = generate_road_network(normalized, zone_layout, player_starts);
+	append_extension_profile_phase(extension_profile_phases, "road_network", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary object_placement = generate_object_placements(normalized, zone_layout, player_starts, road_network);
+	append_extension_profile_phase(extension_profile_phases, "object_placement", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary town_guard_placement = generate_town_guard_placements(normalized, zone_layout, player_starts, road_network, object_placement);
+	append_extension_profile_phase(extension_profile_phases, "town_guard_placement", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary connection_payload_resolution = generate_connection_payload_resolution(normalized, zone_layout, road_network, town_guard_placement);
 	road_network = attach_connection_payload_resolution(road_network, connection_payload_resolution);
+	append_extension_profile_phase(extension_profile_phases, "connection_payload_resolution", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary river_network = generate_river_network(normalized, road_network);
+	append_extension_profile_phase(extension_profile_phases, "river_network", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary terrain_grid = generate_terrain_grid(normalized, zone_layout, player_starts, road_network, object_placement, town_guard_placement);
+	append_extension_profile_phase(extension_profile_phases, "terrain_grid", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Array object_placements = object_placement.get("object_placements", Array());
 	Array map_objects;
 	Array tagged_objects = tagged_record_snapshots(object_placements, "object_placement");
@@ -9914,6 +10475,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	for (int64_t index = 0; index < tagged_gates.size(); ++index) {
 		map_objects.append(tagged_gates[index]);
 	}
+	append_extension_profile_phase(extension_profile_phases, "map_object_snapshot_merge", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 
 	Dictionary metadata;
 	metadata["schema_id"] = NATIVE_RMG_SCHEMA_ID;
@@ -9969,6 +10531,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	Ref<MapDocument> document;
 	document.instantiate();
 	document->configure(map_state);
+	append_extension_profile_phase(extension_profile_phases, "map_document_initial_configure", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 
 	Array warnings;
 	if (!full_parity_supported) {
@@ -10010,6 +10573,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["no_authored_writeback"] = true;
 	map_state["metadata"] = metadata;
 	document->configure(map_state);
+	append_extension_profile_phase(extension_profile_phases, "validation_provenance_configure", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 
 	Dictionary result;
 	result["ok"] = true;
@@ -10089,5 +10653,18 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["native_runtime_authoritative"] = full_parity_supported;
 	result["full_parity_claim"] = full_parity_supported;
 	result["adoption_status"] = full_parity_supported ? "feature_gated_authoritative_package_ready" : "not_authoritative_no_runtime_call_site_adoption";
+	append_extension_profile_phase(extension_profile_phases, "result_assembly", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	result["extension_profile"] = build_extension_profile(
+			extension_profile_phases,
+			profile_started_at,
+			int32_t(normalized.get("width", 36)),
+			int32_t(normalized.get("height", 36)),
+			int32_t(normalized.get("level_count", 1)),
+			int32_t(metrics.get("object_count", 0)),
+			int32_t(metrics.get("road_segment_count", 0)),
+			int32_t(metrics.get("town_count", 0)),
+			int32_t(metrics.get("guard_count", 0)),
+			top_profile_phase_id,
+			top_profile_phase_usec);
 	return result;
 }
