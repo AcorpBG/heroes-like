@@ -33,7 +33,9 @@ static func build_session_from_adoption(
 	var hero_state := _hero_state(hero_id_from_doc, start, difficulty)
 	var towns := _town_states_from_document(map_document)
 	var resource_nodes := _resource_nodes_from_document(map_document)
-	var map_objects := _decorative_objects_from_document(map_document)
+	var artifact_nodes := _artifact_nodes_from_document(map_document)
+	var encounters := _encounters_from_document(map_document)
+	var map_objects := _map_objects_from_document(map_document)
 	var overworld_state := {
 		"map": map_rows,
 		"map_size": map_size,
@@ -45,12 +47,12 @@ static func build_session_from_adoption(
 		"movement": hero_state.get("movement", {"current": 0, "max": 0}) if not hero_state.is_empty() else {"current": 0, "max": 0},
 		"resources": {"gold": 5000, "wood": 10, "ore": 10},
 		"army": hero_state.get("army", {}) if not hero_state.is_empty() else {},
-		"encounters": [],
+		"encounters": encounters,
 		"resolved_encounters": [],
 		"towns": towns,
 		"resource_nodes": resource_nodes,
 		"map_objects": map_objects,
-		"artifact_nodes": [],
+		"artifact_nodes": artifact_nodes,
 		"enemy_states": _enemy_states_from_document(scenario_document),
 		"map_package_ref": map_ref,
 		"scenario_package_ref": scenario_ref,
@@ -233,15 +235,51 @@ static func _resource_nodes_from_document(map_document: Variant) -> Array:
 		nodes.append(node)
 	return nodes
 
-static func _decorative_objects_from_document(map_document: Variant) -> Array:
+static func _artifact_nodes_from_document(map_document: Variant) -> Array:
+	var nodes := []
+	for object in _document_objects(map_document):
+		var artifact_id := String(object.get("artifact_id", ""))
+		if artifact_id == "":
+			continue
+		var node: Dictionary = object.duplicate(true)
+		node["collected"] = false
+		nodes.append(node)
+	return nodes
+
+static func _encounters_from_document(map_document: Variant) -> Array:
+	var encounters := []
+	for object in _document_objects(map_document):
+		var kind := String(object.get("kind", ""))
+		var native_kind := String(object.get("native_record_kind", ""))
+		if kind != "guard" and native_kind != "guard":
+			continue
+		var encounter: Dictionary = object.duplicate(true)
+		var encounter_id := String(encounter.get("encounter_id", ""))
+		if encounter_id == "":
+			encounter_id = String(encounter.get("object_id", ""))
+		if encounter_id == "":
+			encounter_id = "encounter_mire_raid"
+		encounter["encounter_id"] = encounter_id
+		if String(encounter.get("object_id", "")) == "":
+			encounter["object_id"] = encounter_id
+		encounters.append(encounter)
+	return encounters
+
+static func _map_objects_from_document(map_document: Variant) -> Array:
 	var objects := []
 	for object in _document_objects(map_document):
 		var kind := String(object.get("kind", ""))
+		var native_kind := String(object.get("native_record_kind", ""))
+		if kind == "town" or native_kind == "town":
+			continue
+		if kind == "guard" or native_kind == "guard":
+			continue
 		var family := String(object.get("object_family_id", object.get("family_id", "")))
-		if kind != "decorative_obstacle" and family != "decorative_obstacle":
+		if kind != "decorative_obstacle" and family != "decorative_obstacle" and String(object.get("object_id", "")) == "":
 			continue
 		var node: Dictionary = object.duplicate(true)
-		node["runtime_object_role"] = "decorative_blocker_sprite"
+		if kind == "decorative_obstacle" or family == "decorative_obstacle":
+			node["runtime_object_role"] = "decorative_blocker_sprite"
 		node["collected"] = false
 		objects.append(node)
 	return objects
