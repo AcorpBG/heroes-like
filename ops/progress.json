@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-homm3-generator-data-model-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Generator Data Model",
+  "currentSliceId": "native-rmg-homm3-runtime-zone-graph-10184",
+  "currentSliceTitle": "Native RMG HoMM3 Runtime Zone Graph",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed native RMG generator data model: added original-content data definitions, native validation/report API, focused Godot report, and implementation evidence.",
+  "currentSliceNotes": "Completed runtime template zone graph: catalog templates now build runtime zone/link records with target areas, connected graph validation, quota-based zone ownership, road-link consumption, focused report evidence, and passing validation.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T10:42:00Z",
+  "updatedAt": "2026-05-05T10:58:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -9718,7 +9718,7 @@
       "id": "native-rmg-homm3-runtime-zone-graph-10184",
       "title": "Native RMG HoMM3 Runtime Zone Graph",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "pending",
+      "status": "completed",
       "classification": "implementation_slice",
       "purpose": "Replace radial/Voronoi zone approximation with runtime template/zone graph construction preserving base size, owner, terrain/faction, source role, adjacency, links, and infeasibility diagnostics.",
       "sourceDocs": [
@@ -9747,7 +9747,19 @@
       "nonGoals": [
         "Exact HoMM3 footprint heuristics may remain unresolved if documented and bounded."
       ],
-      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184",
+      "updatedAt": "2026-05-05T10:58:00Z",
+      "startedAt": "2026-05-05T10:20:01Z",
+      "notes": "Completed runtime template zone graph: catalog templates now build runtime zone/link records with target areas, connected graph validation, quota-based zone ownership, road-link consumption, focused report evidence, and passing validation.",
+      "completedAt": "2026-05-05T10:58:00Z",
+      "completionEvidence": [
+        "docs/native-rmg-homm3-runtime-zone-graph-report.md",
+        "tests/native_random_map_homm3_runtime_zone_graph_report.gd",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_runtime_zone_graph_report.tscn",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ]
     },
     {
       "id": "native-rmg-homm3-terrain-island-shape-10184",
