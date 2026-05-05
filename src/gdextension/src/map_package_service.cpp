@@ -1,5 +1,7 @@
 #include "map_package_service.hpp"
 
+#include "rmg_data_model.hpp"
+
 #include <godot_cpp/classes/dir_access.hpp>
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/json.hpp>
@@ -60,6 +62,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_guard_reward_package_adoption");
 	result.append("native_random_map_homm3_land_water_shape");
 	result.append("native_random_map_full_parity_supported_profiles");
+	result.append("native_rmg_homm3_generator_data_model_report");
 	result.append("native_package_save_load");
 	result.append("generated_map_package_disk_startup");
 	result.append("headless_binding_smoke");
@@ -6754,6 +6757,7 @@ void MapPackageService::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("convert_generated_payload", "generated_map", "options"), &MapPackageService::convert_generated_payload, DEFVAL(Dictionary()));
 	ClassDB::bind_method(D_METHOD("compute_document_hash", "document", "options"), &MapPackageService::compute_document_hash, DEFVAL(Dictionary()));
 	ClassDB::bind_method(D_METHOD("inspect_package", "path", "options"), &MapPackageService::inspect_package, DEFVAL(Dictionary()));
+	ClassDB::bind_method(D_METHOD("inspect_random_map_generator_data_model", "options"), &MapPackageService::inspect_random_map_generator_data_model, DEFVAL(Dictionary()));
 	ClassDB::bind_method(D_METHOD("normalize_random_map_config", "config"), &MapPackageService::normalize_random_map_config);
 	ClassDB::bind_method(D_METHOD("random_map_config_identity", "config"), &MapPackageService::random_map_config_identity);
 	ClassDB::bind_method(D_METHOD("generate_random_map", "config", "options"), &MapPackageService::generate_random_map, DEFVAL(Dictionary()));
@@ -6969,6 +6973,10 @@ Dictionary MapPackageService::inspect_package(String path, Dictionary options) c
 	payload["authored_content_writeback"] = package.get("authored_content_writeback", false);
 	payload["legacy_json_scenario_record"] = package.get("legacy_json_scenario_record", false);
 	return package_success("inspect_package", path, payload);
+}
+
+Dictionary MapPackageService::inspect_random_map_generator_data_model(Dictionary options) const {
+	return rmg_data_model::inspect_generator_data_model(options);
 }
 
 Dictionary MapPackageService::normalize_random_map_config(Dictionary config) const {

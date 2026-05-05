@@ -1,0 +1,312 @@
+{
+  "schema_id": "native_rmg_homm3_generator_data_model_v1",
+  "source_model": "Recovered HoMM3 RMG structure translated into original Aurelion content ids and report-only native definitions.",
+  "runtime_adoption_state": "report_only_data_model_gate_not_full_generator_rewrite",
+  "legal_policy": {
+    "asset_policy": "original_content_ids_only_no_homm3_names_assets_maps_text_or_def_import",
+    "source_use": "behavior_structure_reference_only"
+  },
+  "source_artifacts": [
+    "docs/native-rmg-homm3-spec-rework-gap-report.md",
+    "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+    "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md",
+    "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+    "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+    "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+    "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md",
+    "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md",
+    "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md"
+  ],
+  "template_record_model": {
+    "record": "RmgTemplate",
+    "required_fields": ["id", "label", "size_score", "players", "map_support", "zones", "links"],
+    "preserved_semantics": ["size_score", "water_modes", "human_player_range", "total_player_range", "zone_records", "link_payloads"],
+    "later_slice_owner": "native-rmg-homm3-runtime-zone-graph-10184"
+  },
+  "runtime_zone_record_model": {
+    "record": "RuntimeZone",
+    "required_fields": ["runtime_id", "source_template_id", "source_zone_id", "role", "owner_slot", "base_size", "target_area", "terrain_rules", "town_rules", "mine_rules", "treasure_bands", "monster_rules", "diagnostics"],
+    "counter_contract": "per_type_counts lives on runtime zones so later placement slices enforce limits without count/ratio-only shortcuts."
+  },
+  "runtime_link_record_model": {
+    "record": "RuntimeLink",
+    "required_fields": ["runtime_id", "source_template_id", "from_zone_id", "to_zone_id", "value", "wide", "border_guard", "road_policy", "guard_policy", "diagnostics"],
+    "payload_contract": "wide suppresses normal link guard value; border_guard materializes through original special_guard_gate object definitions."
+  },
+  "generated_cell_model": {
+    "record": "GeneratedCell",
+    "required_fields": ["x", "y", "level", "zone_id", "terrain_id", "terrain_art", "terrain_flip_h", "terrain_flip_v", "water_state", "river", "road", "valid_free", "decor_candidate", "occupied_or_blocked", "locked_special_record", "object_ids"],
+    "placeholder_scope": "Terrain, water, road, river, and connection metadata are modeled for later slices only; algorithms are not implemented in this slice."
+  },
+  "terrain_water_road_connection_placeholders": {
+    "terrain": {"fields": ["terrain_id", "terrain_art", "terrain_flip_h", "terrain_flip_v", "zone_terrain_source"], "algorithm_state": "placeholder_for_terrain_island_slice"},
+    "water": {"fields": ["water_mode", "is_land", "is_water", "shoreline_class"], "algorithm_state": "placeholder_for_terrain_island_slice"},
+    "road": {"fields": ["road_type", "road_art", "road_flip_a", "road_flip_b", "reserved_by_link_id"], "algorithm_state": "placeholder_for_roads_rivers_connections_slice"},
+    "river": {"fields": ["river_type", "river_art", "river_flip_a", "river_flip_b"], "algorithm_state": "placeholder_for_roads_rivers_connections_slice"},
+    "connection": {"fields": ["source_link_id", "value", "wide", "border_guard", "guard_cells", "corridor_cells"], "algorithm_state": "placeholder_for_roads_rivers_connections_slice"}
+  },
+  "resource_categories": [
+    {"id": "timber", "source_equivalent": "wood", "core": true},
+    {"id": "quicksilver", "source_equivalent": "mercury", "core": false},
+    {"id": "ore", "source_equivalent": "ore", "core": true},
+    {"id": "ember_salt", "source_equivalent": "sulfur", "core": false},
+    {"id": "lens_crystal", "source_equivalent": "crystal", "core": false},
+    {"id": "cut_gems", "source_equivalent": "gems", "core": false},
+    {"id": "gold", "source_equivalent": "gold", "core": true}
+  ],
+  "object_type_metadata": [
+    {
+      "type_id": "resource_site",
+      "category": "resource_site",
+      "bucket_index": 1,
+      "operational_flags": {"primary_placement_gate": true, "wide_placement_footprint": false, "secondary_placement_gate": false, "definition_serialization_pass": true},
+      "limits": {"global": 512, "per_zone": 12}
+    },
+    {
+      "type_id": "mine",
+      "category": "mine",
+      "bucket_index": 2,
+      "operational_flags": {"primary_placement_gate": true, "wide_placement_footprint": true, "secondary_placement_gate": true, "definition_serialization_pass": true},
+      "limits": {"global": 96, "per_zone": 7}
+    },
+    {
+      "type_id": "neutral_dwelling",
+      "category": "neutral_dwelling",
+      "bucket_index": 3,
+      "operational_flags": {"primary_placement_gate": true, "wide_placement_footprint": true, "secondary_placement_gate": true, "definition_serialization_pass": true},
+      "limits": {"global": 72, "per_zone": 4}
+    },
+    {
+      "type_id": "reward_reference",
+      "category": "reward",
+      "bucket_index": 4,
+      "operational_flags": {"primary_placement_gate": true, "wide_placement_footprint": false, "secondary_placement_gate": true, "definition_serialization_pass": true},
+      "limits": {"global": 768, "per_zone": 48}
+    },
+    {
+      "type_id": "decorative_obstacle",
+      "category": "decoration",
+      "bucket_index": 5,
+      "operational_flags": {"primary_placement_gate": false, "wide_placement_footprint": true, "secondary_placement_gate": true, "definition_serialization_pass": true},
+      "limits": {"global": 4096, "per_zone": 256}
+    },
+    {
+      "type_id": "town",
+      "category": "town",
+      "bucket_index": 6,
+      "operational_flags": {"primary_placement_gate": true, "wide_placement_footprint": true, "secondary_placement_gate": true, "definition_serialization_pass": true},
+      "limits": {"global": 64, "per_zone": 4}
+    },
+    {
+      "type_id": "guard",
+      "category": "guard",
+      "bucket_index": 7,
+      "operational_flags": {"primary_placement_gate": true, "wide_placement_footprint": false, "secondary_placement_gate": true, "definition_serialization_pass": true},
+      "limits": {"global": 1024, "per_zone": 96}
+    },
+    {
+      "type_id": "special_guard_gate",
+      "category": "connection_gate",
+      "bucket_index": 8,
+      "operational_flags": {"primary_placement_gate": true, "wide_placement_footprint": true, "secondary_placement_gate": true, "definition_serialization_pass": true},
+      "limits": {"global": 64, "per_zone": 8}
+    }
+  ],
+  "object_definitions": [
+    {
+      "id": "rmg_object_resource_site_core_pickup_v1",
+      "generated_kind": "resource_site",
+      "stable_original_object_id": "object_waystone_cache",
+      "supported_runtime_object_ids": ["object_waystone_cache", "object_wood_wagon", "object_ore_crates"],
+      "content_domain": "map_object",
+      "category": "resource_site",
+      "footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro", "source": "content/map_objects.json"},
+      "passability": {"class": "passable_visit_on_enter", "mask": ["anchor_enterable"]},
+      "action": {"class": "visit_on_enter", "mask": ["anchor_action"]},
+      "terrain_constraints": {"allowed_terrain_ids": ["grass", "dirt", "sand", "snow", "swamp", "rough", "underground", "lava"], "reject_terrain_ids": ["water", "rock"]},
+      "zone_constraints": {"allowed_roles": ["human_start", "computer_start", "treasure", "junction"], "requires_land": true},
+      "limits": {"global": 512, "per_zone": 12},
+      "value_density": {"value_bands": [{"low": 100, "high": 900, "density": 6}], "weight": 8, "categories": ["timber", "ore", "gold"]},
+      "writeout": {"record_kind": "map_object", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "site_id", "resource_id", "reward_value"]}
+    },
+    {
+      "id": "rmg_object_mine_timber_v1",
+      "generated_kind": "mine",
+      "stable_original_object_id": "object_brightwood_sawmill",
+      "supported_runtime_object_ids": ["object_brightwood_sawmill", "object_greenbough_wood_yard", "object_grassland_plank_grove"],
+      "content_domain": "map_object",
+      "category": "mine",
+      "footprint": {"width": 3, "height": 2, "anchor": "bottom_center", "tier": "large", "runtime_compatibility": "current native placement reserves anchor tile until object pipeline slice"},
+      "passability": {"class": "blocking_visitable", "mask": ["body_blocked", "adjacent_visit"]},
+      "action": {"class": "adjacent_claim", "mask": ["south_action", "west_action"]},
+      "terrain_constraints": {"allowed_terrain_ids": ["grass", "dirt", "snow"], "reject_terrain_ids": ["water", "rock"]},
+      "zone_constraints": {"allowed_roles": ["human_start", "computer_start", "treasure"], "requires_land": true},
+      "limits": {"global": 24, "per_zone": 2},
+      "value_density": {"value_bands": [{"low": 1200, "high": 1800, "density": 1}], "weight": 6, "categories": ["timber"]},
+      "writeout": {"record_kind": "map_object_persistent_control", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "site_id", "resource_id", "mine_family_id"]}
+    },
+    {
+      "id": "rmg_object_mine_ore_v1",
+      "generated_kind": "mine",
+      "stable_original_object_id": "object_ridge_quarry",
+      "supported_runtime_object_ids": ["object_ridge_quarry", "object_ironstep_ore_pit", "object_underway_ore_counterfort"],
+      "content_domain": "map_object",
+      "category": "mine",
+      "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium", "runtime_compatibility": "current native placement reserves anchor tile until object pipeline slice"},
+      "passability": {"class": "blocking_visitable", "mask": ["body_blocked", "adjacent_visit"]},
+      "action": {"class": "adjacent_claim", "mask": ["south_action", "west_action"]},
+      "terrain_constraints": {"allowed_terrain_ids": ["rough", "underground", "sand"], "reject_terrain_ids": ["water", "rock"]},
+      "zone_constraints": {"allowed_roles": ["human_start", "computer_start", "treasure"], "requires_land": true},
+      "limits": {"global": 24, "per_zone": 2},
+      "value_density": {"value_bands": [{"low": 1200, "high": 1800, "density": 1}], "weight": 6, "categories": ["ore"]},
+      "writeout": {"record_kind": "map_object_persistent_control", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "site_id", "resource_id", "mine_family_id"]}
+    },
+    {
+      "id": "rmg_object_mine_gold_v1",
+      "generated_kind": "mine",
+      "stable_original_object_id": "object_reef_coin_assay",
+      "supported_runtime_object_ids": ["object_reef_coin_assay", "object_badlands_coin_sluice"],
+      "content_domain": "map_object",
+      "category": "mine",
+      "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium", "runtime_compatibility": "current native placement reserves anchor tile until object pipeline slice"},
+      "passability": {"class": "blocking_visitable", "mask": ["body_blocked", "adjacent_visit"]},
+      "action": {"class": "adjacent_claim", "mask": ["south_action", "west_action"]},
+      "terrain_constraints": {"allowed_terrain_ids": ["grass", "sand", "underground"], "reject_terrain_ids": ["water", "rock"]},
+      "zone_constraints": {"allowed_roles": ["treasure", "junction"], "requires_land": true},
+      "limits": {"global": 12, "per_zone": 1},
+      "value_density": {"value_bands": [{"low": 6500, "high": 9000, "density": 1}], "weight": 2, "categories": ["gold"]},
+      "writeout": {"record_kind": "map_object_persistent_control", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "site_id", "resource_id", "mine_family_id"]}
+    },
+    {
+      "id": "rmg_object_mine_rare_v1",
+      "generated_kind": "mine",
+      "stable_original_object_id": "object_marsh_peat_yard",
+      "supported_runtime_object_ids": ["object_marsh_peat_yard", "object_floodplain_sluice_camp", "object_reef_coin_assay", "object_badlands_coin_sluice", "object_cinder_ore_face"],
+      "content_domain": "map_object",
+      "category": "mine",
+      "footprint": {"width": 2, "height": 3, "anchor": "bottom_center", "tier": "large", "runtime_compatibility": "current native placement reserves anchor tile until object pipeline slice"},
+      "passability": {"class": "blocking_visitable", "mask": ["body_blocked", "adjacent_visit"]},
+      "action": {"class": "adjacent_claim", "mask": ["south_action", "west_action"]},
+      "terrain_constraints": {"allowed_terrain_ids": ["grass", "dirt", "sand", "swamp", "rough", "underground", "lava"], "reject_terrain_ids": ["water", "rock"]},
+      "zone_constraints": {"allowed_roles": ["treasure", "junction"], "requires_land": true},
+      "limits": {"global": 48, "per_zone": 4},
+      "value_density": {"value_bands": [{"low": 3000, "high": 4200, "density": 1}], "weight": 3, "categories": ["quicksilver", "ember_salt", "lens_crystal", "cut_gems"]},
+      "writeout": {"record_kind": "map_object_persistent_control", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "site_id", "resource_id", "mine_family_id"]}
+    },
+    {
+      "id": "rmg_object_neutral_dwelling_v1",
+      "generated_kind": "neutral_dwelling",
+      "stable_original_object_id": "object_roadward_lodge",
+      "supported_runtime_object_ids": ["object_roadward_lodge", "object_bogbell_croft", "object_greenbranch_copse", "object_crystal_sump", "object_kite_signal_eyrie", "object_saltpan_camp", "object_cliffhawk_roost"],
+      "content_domain": "map_object",
+      "category": "neutral_dwelling",
+      "footprint": {"width": 2, "height": 1, "anchor": "bottom_center", "tier": "small", "runtime_compatibility": "current native placement reserves anchor tile until object pipeline slice"},
+      "passability": {"class": "blocking_visitable", "mask": ["body_blocked", "adjacent_visit"]},
+      "action": {"class": "adjacent_recruit", "mask": ["south_action", "west_action"]},
+      "terrain_constraints": {"allowed_terrain_ids": ["grass", "dirt", "sand", "snow", "swamp", "rough", "underground"], "reject_terrain_ids": ["water", "rock"]},
+      "zone_constraints": {"allowed_roles": ["treasure", "junction"], "requires_land": true},
+      "limits": {"global": 72, "per_zone": 4},
+      "value_density": {"value_bands": [{"low": 900, "high": 3200, "density": 2}], "weight": 4, "categories": ["dwelling"]},
+      "writeout": {"record_kind": "map_object_recruit_source", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "site_id", "neutral_dwelling_family_id"]}
+    },
+    {
+      "id": "rmg_object_reward_reference_v1",
+      "generated_kind": "reward_reference",
+      "stable_original_object_id": "object_waystone_cache",
+      "supported_runtime_object_ids": ["object_waystone_cache", "object_ore_crates", "object_wood_wagon", "object_reedscript_vow_shrine", "object_moss_oath_cache", "object_glassbound_eyrie", "artifact_trailsinger_boots", "artifact_quarry_tally_rod", "artifact_waymark_compass", "artifact_milepost_lantern", "artifact_bastion_gorget", "artifact_warcrest_pennon", "spell_beacon_path"],
+      "content_domain": "map_object",
+      "category": "reward",
+      "footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "micro"},
+      "passability": {"class": "passable_visit_on_enter", "mask": ["anchor_enterable"]},
+      "action": {"class": "visit_on_enter_or_guarded_claim", "mask": ["anchor_action"]},
+      "terrain_constraints": {"allowed_terrain_ids": ["grass", "dirt", "sand", "snow", "swamp", "rough", "underground", "lava"], "reject_terrain_ids": ["water", "rock"]},
+      "zone_constraints": {"allowed_roles": ["treasure", "junction", "human_start", "computer_start"], "requires_land": true},
+      "limits": {"global": 768, "per_zone": 48},
+      "value_density": {"value_bands": [{"low": 300, "high": 900, "density": 4}, {"low": 900, "high": 1800, "density": 2}, {"low": 1800, "high": 4500, "density": 1}], "weight": 9, "categories": ["resource_cache", "artifact", "spell_access", "skill_equivalent"]},
+      "writeout": {"record_kind": "map_object_or_reward_ref", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "site_id", "artifact_id", "spell_id", "reward_value", "reward_category"]}
+    },
+    {
+      "id": "rmg_object_decorative_obstacle_v1",
+      "generated_kind": "decorative_obstacle",
+      "stable_original_object_id": "object_greenway_root_lip",
+      "supported_runtime_object_ids": ["object_greenway_root_lip", "object_elder_root_wall", "object_undergate_pipe_nest", "object_slag_berm_low_wall", "object_scree_boulder_fan", "object_blue_ice_block"],
+      "content_domain": "map_object",
+      "category": "decoration",
+      "footprint": {"width": 4, "height": 2, "anchor": "bottom_left", "tier": "large_blocker"},
+      "passability": {"class": "blocking_non_visitable", "mask": ["body_blocked"]},
+      "action": {"class": "none", "mask": []},
+      "terrain_constraints": {"allowed_terrain_ids": ["grass", "dirt", "sand", "snow", "swamp", "rough", "underground", "lava"], "reject_terrain_ids": ["water", "rock"]},
+      "zone_constraints": {"allowed_roles": ["human_start", "computer_start", "treasure", "junction"], "requires_land": true, "avoid_required_roads": true},
+      "limits": {"global": 4096, "per_zone": 256},
+      "value_density": {"value_bands": [{"low": 0, "high": 0, "density": 0}], "density": "late_rand_trn_fill", "weight": 12, "categories": ["scenic_blocker"]},
+      "writeout": {"record_kind": "decorative_map_object", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "terrain_bias", "body_tiles", "homm3_re_source_catalog_path"]}
+    },
+    {
+      "id": "rmg_object_town_primary_v1",
+      "generated_kind": "town",
+      "stable_original_object_id": "town_primary",
+      "content_domain": "town_record",
+      "category": "town",
+      "footprint": {"width": 3, "height": 2, "anchor": "bottom_center", "tier": "town", "runtime_compatibility": "current native town record reserves anchor tile until object pipeline slice"},
+      "passability": {"class": "blocking_visitable", "mask": ["body_blocked", "adjacent_visit"]},
+      "action": {"class": "enter_town", "mask": ["south_action", "west_action"]},
+      "terrain_constraints": {"allowed_terrain_ids": ["grass", "dirt", "sand", "snow", "swamp", "rough", "underground", "lava"], "reject_terrain_ids": ["water", "rock"]},
+      "zone_constraints": {"allowed_roles": ["human_start", "computer_start", "treasure"], "requires_land": true, "owner_slot_aware": true},
+      "limits": {"global": 64, "per_zone": 4},
+      "value_density": {"value_bands": [{"low": 0, "high": 0, "density": 0}], "weight": 1, "categories": ["player_town", "neutral_town"]},
+      "writeout": {"record_kind": "town_record", "serialization_state": "staged_package_record", "payload_fields": ["town_id", "faction_id", "owner_slot", "same_town_type"]}
+    },
+    {
+      "id": "rmg_object_guard_stack_v1",
+      "generated_kind": "guard",
+      "stable_original_object_id": "object_neutral_encounter_ninefold_basalt_gatehouse_watch_stack",
+      "content_domain": "map_object",
+      "category": "guard",
+      "footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "guard_anchor_tile"},
+      "passability": {"class": "blocking_visitable", "mask": ["anchor_blocked_until_defeated"]},
+      "action": {"class": "battle_on_contact", "mask": ["anchor_action"]},
+      "terrain_constraints": {"allowed_terrain_ids": ["grass", "dirt", "sand", "snow", "swamp", "rough", "underground", "lava"], "reject_terrain_ids": ["water", "rock"]},
+      "zone_constraints": {"allowed_roles": ["treasure", "junction", "human_start", "computer_start"], "requires_land": true, "may_protect_link_or_object": true},
+      "limits": {"global": 1024, "per_zone": 96},
+      "value_density": {"value_bands": [{"low": 150, "high": 7000, "density": 1}], "weight": 1, "categories": ["route_guard", "reward_guard"]},
+      "writeout": {"record_kind": "guard_stack_record", "serialization_state": "staged_package_record", "payload_fields": ["guard_value", "stack_records", "protected_target_id", "monster_reward_band"]}
+    },
+    {
+      "id": "rmg_object_special_guard_gate_v1",
+      "generated_kind": "special_guard_gate",
+      "stable_original_object_id": "object_charter_bar_gate",
+      "supported_runtime_object_ids": ["object_charter_bar_gate", "object_thorn_seal_gate", "object_brass_toll_arch", "object_reef_chain_boom", "object_frost_toll_bar", "object_ash_sluice_lock"],
+      "content_domain": "map_object",
+      "category": "connection_gate",
+      "footprint": {"width": 3, "height": 1, "anchor": "bottom_center", "tier": "route_gate"},
+      "passability": {"class": "blocking_visitable", "mask": ["gate_body_blocked", "adjacent_visit"]},
+      "action": {"class": "unlock_or_battle_gate", "mask": ["south_action", "west_action"]},
+      "terrain_constraints": {"allowed_terrain_ids": ["grass", "dirt", "sand", "snow", "swamp", "rough", "underground", "lava"], "reject_terrain_ids": ["water", "rock"]},
+      "zone_constraints": {"allowed_roles": ["junction", "treasure"], "requires_land": true, "requires_link_border_guard": true},
+      "limits": {"global": 64, "per_zone": 8},
+      "value_density": {"value_bands": [{"low": 0, "high": 7000, "density": 1}], "weight": 1, "categories": ["border_guard_link"]},
+      "writeout": {"record_kind": "connection_gate_object", "serialization_state": "definition_and_instance", "payload_fields": ["object_id", "route_edge_id", "border_guard", "guard_value"]}
+    }
+  ],
+  "validation_result_model": {
+    "record": "RmgValidationResult",
+    "required_fields": ["ok", "validation_status", "failures", "warnings", "unsupported_parity_boundaries", "metrics", "component_signatures"],
+    "diagnostic_levels": ["failure", "warning", "unsupported_boundary", "info"],
+    "unsupported_boundary_contract": "Unsupported exact parity surfaces must be reported as explicit boundaries and must not be hidden behind pass/fail counts."
+  },
+  "compatibility_gates": {
+    "existing_generate_random_map_surface": "unchanged",
+    "existing_convert_generated_payload_surface": "unchanged",
+    "phase3_data_model_adoption": "gated_report_only",
+    "save_schema_bump_required": false,
+    "windows_linux_native_build_scope": "same GDExtension target and source list; no platform-specific behavior"
+  },
+  "unsupported_parity_boundaries": [
+    {"id": "exact_homm3_object_table_identity", "status": "unsupported", "reason": "Original content ids replace HoMM3 object names/assets."},
+    {"id": "binary_h3m_writeout", "status": "unsupported", "reason": "Project package/session surfaces remain original JSON/GDExtension documents."},
+    {"id": "exact_zone_footprint_heuristics", "status": "deferred", "owner_slice": "native-rmg-homm3-runtime-zone-graph-10184"},
+    {"id": "terrain_art_flip_byte_parity", "status": "deferred", "owner_slice": "native-rmg-homm3-terrain-island-shape-10184"},
+    {"id": "full_object_placement_algorithm", "status": "deferred", "owner_slice": "native-rmg-homm3-object-placement-pipeline-10184"},
+    {"id": "guard_reward_monster_strength_formula", "status": "deferred", "owner_slice": "native-rmg-homm3-guards-rewards-monsters-10184"}
+  ]
+}

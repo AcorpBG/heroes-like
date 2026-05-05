@@ -1426,7 +1426,7 @@ nonGoals:
 
 id: `native-rmg-homm3-generator-data-model-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `pending`
+status: `completed`
 purpose: Introduce the reusable generator data model needed for template zones, links, object definitions, terrain masks, footprints, value bands, limits, and validation results.
 sourceDocs:
 - `docs/native-rmg-homm3-spec-rework-gap-report.md`
@@ -1437,12 +1437,17 @@ sourceDocs:
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
 - `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md`
 implementationTargets:
-- native RMG data structs/helpers in `src/gdextension/src/map_package_service.cpp` or a deliberately split native support file
-- original-content generator tables under `content/` as needed
-- focused schema/fixture validators
+- native RMG data structs/helpers in `src/gdextension/src/rmg_data_model.cpp` exposed through `MapPackageService`
+- original-content generator table `content/random_map_generator_data_model.json`
+- focused schema/fixture validator `tests/native_random_map_homm3_generator_data_model_report.gd`
+- implementation evidence `docs/native-rmg-homm3-generator-data-model-report.md`
 completionCriteria:
 - Supported generated objects resolve through explicit definitions with footprint, passability/action, terrain, category, limit, value/density, and writeout metadata.
 - Existing package/session surfaces remain backward-compatible or explicitly gated.
+validation:
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_generator_data_model_report.tscn`
+- `python3 tests/validate_repo.py`
+- `git diff --check`
 nonGoals:
 - No broad gameplay rebalance and no renderer art rewrite.
 

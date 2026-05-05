@@ -24,6 +24,7 @@ add_library(aurelion_map_persistence SHARED
 	src/map_document.cpp
 	src/scenario_document.cpp
 	src/map_package_service.cpp
+	src/rmg_data_model.cpp
 )
 
 target_include_directories(aurelion_map_persistence PRIVATE
