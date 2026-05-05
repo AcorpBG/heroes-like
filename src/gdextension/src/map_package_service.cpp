@@ -63,6 +63,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_package_session_adoption_bridge");
 	result.append("native_random_map_guard_reward_package_adoption");
 	result.append("native_random_map_homm3_land_water_shape");
+	result.append("native_random_map_homm3_zone_aware_terrain_island_shape");
 	result.append("native_random_map_full_parity_supported_profiles");
 	result.append("native_rmg_homm3_generator_data_model_report");
 	result.append("native_package_save_load");
@@ -5978,15 +5979,6 @@ Dictionary protected_island_land_lookup(const Dictionary &normalized, const Dict
 	const int32_t height = int32_t(normalized.get("height", 36));
 	Dictionary land_lookup;
 
-	Array zones = zone_layout.get("zones", Array());
-	for (int64_t index = 0; index < zones.size(); ++index) {
-		Dictionary zone = zones[index];
-		Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
-		const String role = String(zone.get("role", ""));
-		const int32_t radius = role.contains("start") ? 4 : 2;
-		mark_land_radius(land_lookup, int32_t(anchor.get("x", 0)), int32_t(anchor.get("y", 0)), width, height, radius);
-	}
-
 	Array starts = player_starts.get("starts", Array());
 	for (int64_t index = 0; index < starts.size(); ++index) {
 		Dictionary start = starts[index];
@@ -6012,30 +6004,6 @@ Dictionary protected_island_land_lookup(const Dictionary &normalized, const Dict
 		mark_land_record_surfaces(land_lookup, Dictionary(guards[index]), width, height);
 	}
 	return land_lookup;
-}
-
-struct IslandLandCandidate {
-	int32_t x = 0;
-	int32_t y = 0;
-	int64_t score = 0;
-	bool protected_land = false;
-};
-
-Array points_from_lookup(const Dictionary &lookup) {
-	Array points;
-	Array keys = lookup.keys();
-	for (int64_t index = 0; index < keys.size(); ++index) {
-		const String key = String(keys[index]);
-		const int32_t comma = key.find(",");
-		if (comma < 0) {
-			continue;
-		}
-		Dictionary point;
-		point["x"] = key.substr(0, comma).to_int();
-		point["y"] = key.substr(comma + 1).to_int();
-		points.append(point);
-	}
-	return points;
 }
 
 Dictionary zone_terrain_lookup(const Dictionary &zone_layout) {
@@ -6070,97 +6038,320 @@ String island_land_terrain_for_cell(int32_t x, int32_t y, int32_t level, const A
 	return terrain_pool.is_empty() ? String("grass") : String(terrain_pool[0]);
 }
 
+bool zone_cell_is_interior(const Array &owner_grid, int32_t x, int32_t y, int32_t width, int32_t height, const String &zone_id) {
+	if (x <= 0 || y <= 0 || x >= width - 1 || y >= height - 1) {
+		return false;
+	}
+	static constexpr int32_t DX[4] = { 1, -1, 0, 0 };
+	static constexpr int32_t DY[4] = { 0, 0, 1, -1 };
+	for (int32_t index = 0; index < 4; ++index) {
+		if (owner_grid_value_at(owner_grid, x + DX[index], y + DY[index]) != zone_id) {
+			return false;
+		}
+	}
+	return true;
+}
+
+double island_land_fraction_for_zone(const Dictionary &zone) {
+	const String role = String(zone.get("role", ""));
+	if (role.contains("start")) {
+		return 0.32;
+	}
+	if (role == "junction") {
+		return 0.24;
+	}
+	if (role == "treasure" || role == "neutral") {
+		return 0.18;
+	}
+	return 0.22;
+}
+
+int32_t count_lookup_cells_for_zone(const Dictionary &lookup, const Array &owner_grid, const String &zone_id) {
+	int32_t count = 0;
+	Array keys = lookup.keys();
+	for (int64_t index = 0; index < keys.size(); ++index) {
+		const String key = String(keys[index]);
+		const int32_t comma = key.find(",");
+		if (comma < 0) {
+			continue;
+		}
+		const int32_t x = key.substr(0, comma).to_int();
+		const int32_t y = key.substr(comma + 1).to_int();
+		if (owner_grid_value_at(owner_grid, x, y) == zone_id) {
+			++count;
+		}
+	}
+	return count;
+}
+
+void append_zone_frontier_cell(Array &frontier, Dictionary &queued, int32_t x, int32_t y, int32_t width, int32_t height) {
+	if (x < 0 || y < 0 || x >= width || y >= height) {
+		return;
+	}
+	const String key = point_key(x, y);
+	if (queued.has(key)) {
+		return;
+	}
+	queued[key] = true;
+	frontier.append(cell_record(x, y, 0));
+}
+
+void seed_zone_frontier_from_lookup(Array &frontier, Dictionary &queued, const Dictionary &lookup, const Array &owner_grid, const String &zone_id, int32_t width, int32_t height) {
+	Array keys = lookup.keys();
+	for (int64_t index = 0; index < keys.size(); ++index) {
+		const String key = String(keys[index]);
+		const int32_t comma = key.find(",");
+		if (comma < 0) {
+			continue;
+		}
+		const int32_t x = key.substr(0, comma).to_int();
+		const int32_t y = key.substr(comma + 1).to_int();
+		if (owner_grid_value_at(owner_grid, x, y) == zone_id) {
+			append_zone_frontier_cell(frontier, queued, x, y, width, height);
+		}
+	}
+}
+
+int32_t expand_zone_land(Dictionary &land_lookup, const Dictionary &protected_land, const Array &owner_grid, const Dictionary &zone, int32_t width, int32_t height, int32_t quota) {
+	const String zone_id = String(zone.get("id", ""));
+	if (zone_id.is_empty() || quota <= 0) {
+		return 0;
+	}
+	int32_t land_count = count_lookup_cells_for_zone(land_lookup, owner_grid, zone_id);
+	Array frontier;
+	Dictionary queued;
+	seed_zone_frontier_from_lookup(frontier, queued, land_lookup, owner_grid, zone_id, width, height);
+	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+	const int32_t anchor_x = int32_t(anchor.get("x", width / 2));
+	const int32_t anchor_y = int32_t(anchor.get("y", height / 2));
+	if (owner_grid_value_at(owner_grid, anchor_x, anchor_y) == zone_id) {
+		mark_land_cell(land_lookup, anchor_x, anchor_y, width, height);
+		land_count = count_lookup_cells_for_zone(land_lookup, owner_grid, zone_id);
+		append_zone_frontier_cell(frontier, queued, anchor_x, anchor_y, width, height);
+	}
+	if (frontier.is_empty()) {
+		for (int32_t y = 0; y < height && frontier.is_empty(); ++y) {
+			for (int32_t x = 0; x < width && frontier.is_empty(); ++x) {
+				if (owner_grid_value_at(owner_grid, x, y) == zone_id) {
+					mark_land_cell(land_lookup, x, y, width, height);
+					land_count = count_lookup_cells_for_zone(land_lookup, owner_grid, zone_id);
+					append_zone_frontier_cell(frontier, queued, x, y, width, height);
+				}
+			}
+		}
+	}
+
+	static constexpr int32_t DX[4] = { 1, -1, 0, 0 };
+	static constexpr int32_t DY[4] = { 0, 0, 1, -1 };
+	for (int32_t pass = 0; pass < 2 && land_count < quota; ++pass) {
+		if (pass == 1) {
+			frontier.clear();
+			queued.clear();
+			seed_zone_frontier_from_lookup(frontier, queued, land_lookup, owner_grid, zone_id, width, height);
+		}
+		int64_t cursor = 0;
+		while (cursor < frontier.size() && land_count < quota) {
+			Dictionary cell = frontier[cursor];
+			++cursor;
+			const int32_t base_x = int32_t(cell.get("x", 0));
+			const int32_t base_y = int32_t(cell.get("y", 0));
+			const int32_t offset = int32_t(hash32_int(zone_id + String(":island_land_expand:") + String::num_int64(base_x) + String(":") + String::num_int64(base_y)) % 4U);
+			for (int32_t step = 0; step < 4 && land_count < quota; ++step) {
+				const int32_t direction = (offset + step) % 4;
+				const int32_t next_x = base_x + DX[direction];
+				const int32_t next_y = base_y + DY[direction];
+				if (next_x < 0 || next_y < 0 || next_x >= width || next_y >= height || owner_grid_value_at(owner_grid, next_x, next_y) != zone_id) {
+					continue;
+				}
+				const String next_key = point_key(next_x, next_y);
+				if (queued.has(next_key)) {
+					continue;
+				}
+				queued[next_key] = true;
+				const bool required_surface = protected_land.has(next_key);
+				if (pass == 0 && !required_surface && !zone_cell_is_interior(owner_grid, next_x, next_y, width, height, zone_id)) {
+					continue;
+				}
+				if (!land_lookup.has(next_key)) {
+					land_lookup[next_key] = true;
+					++land_count;
+				}
+				frontier.append(cell_record(next_x, next_y, 0));
+			}
+		}
+	}
+	return land_count;
+}
+
 Dictionary island_land_water_shape(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, const Dictionary &object_placement, const Dictionary &town_guard_placement) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
 	Dictionary protected_land = protected_island_land_lookup(normalized, zone_layout, player_starts, road_network, object_placement, town_guard_placement);
-	Array protected_points = points_from_lookup(protected_land);
 	Array zones = zone_layout.get("zones", Array());
-	Array zone_points;
-	for (int64_t index = 0; index < zones.size(); ++index) {
-		Dictionary zone = zones[index];
-		Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
-		zone_points.append(point_record(int32_t(anchor.get("x", width / 2)), int32_t(anchor.get("y", height / 2))));
-	}
-
+	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
 	const int32_t map_tiles = std::max(1, width * height);
-	const double owner_ratio = 1948.0 / 5184.0;
-	int32_t target_land_count = int32_t(std::llround(double(map_tiles) * owner_ratio));
-	target_land_count = std::max(target_land_count, int32_t(protected_land.size()));
-	target_land_count = std::min(map_tiles, target_land_count);
 
-	std::vector<IslandLandCandidate> candidates;
-	candidates.reserve(map_tiles);
-	const String seed = String(normalized.get("normalized_seed", "0"));
-	const double center_x = (double(width) - 1.0) * 0.5;
-	const double center_y = (double(height) - 1.0) * 0.5;
-	for (int32_t y = 0; y < height; ++y) {
-		for (int32_t x = 0; x < width; ++x) {
-			IslandLandCandidate candidate;
-			candidate.x = x;
-			candidate.y = y;
-			candidate.protected_land = protected_land.has(point_key(x, y));
-			if (candidate.protected_land) {
-				candidate.score = std::numeric_limits<int64_t>::min() / 4 + int64_t(y * width + x);
-				candidates.push_back(candidate);
-				continue;
+	Dictionary land_lookup = protected_land.duplicate(true);
+	Array diagnostics;
+	Array zone_targets;
+	int32_t requested_land_count = 0;
+	if (owner_grid.size() != height || zones.is_empty()) {
+		Dictionary diagnostic;
+		diagnostic["severity"] = "failure";
+		diagnostic["code"] = "zone_aware_island_shape_missing_runtime_owner_grid";
+		diagnostic["message"] = "Island terrain shaping requires runtime zone owner cells.";
+		diagnostics.append(diagnostic);
+	} else {
+		for (int64_t index = 0; index < zones.size(); ++index) {
+			Dictionary zone = zones[index];
+			const String zone_id = String(zone.get("id", ""));
+			const int32_t cell_count = std::max(0, int32_t(zone.get("cell_count", 0)));
+			const int32_t target_area = std::max(1, int32_t(zone.get("target_area", cell_count)));
+			const double land_fraction = island_land_fraction_for_zone(zone);
+			const int32_t required_land = count_lookup_cells_for_zone(protected_land, owner_grid, zone_id);
+			int32_t requested_quota = std::max(1, int32_t(std::llround(double(target_area) * land_fraction)));
+			requested_quota = std::min(std::max(1, cell_count), requested_quota);
+			int32_t quota = requested_quota;
+			String quota_status = "zone_quota";
+			if (required_land > quota) {
+				quota = std::min(std::max(1, cell_count), required_land);
+				quota_status = "required_surface_exceeded_zone_quota";
+				Dictionary diagnostic;
+				diagnostic["severity"] = "warning";
+				diagnostic["code"] = "zone_required_land_exceeded_quota";
+				diagnostic["message"] = "Required generated surfaces exceeded the zone terrain/island quota; land was expanded only enough to keep those surfaces loadable.";
+				diagnostic["zone_id"] = zone_id;
+				diagnostic["required_land_count"] = required_land;
+				diagnostic["requested_quota"] = requested_quota;
+				diagnostic["applied_quota"] = quota;
+				diagnostics.append(diagnostic);
 			}
-			int32_t nearest_protected = width + height;
-			for (int64_t index = 0; index < protected_points.size(); ++index) {
-				Dictionary point = protected_points[index];
-				const int32_t distance = std::abs(x - int32_t(point.get("x", 0))) + std::abs(y - int32_t(point.get("y", 0)));
-				nearest_protected = std::min(nearest_protected, distance);
-			}
-			int64_t nearest_zone_sq = int64_t(width * width + height * height);
-			for (int64_t index = 0; index < zone_points.size(); ++index) {
-				Dictionary point = zone_points[index];
-				const int64_t dx = int64_t(x) - int64_t(point.get("x", 0));
-				const int64_t dy = int64_t(y) - int64_t(point.get("y", 0));
-				nearest_zone_sq = std::min(nearest_zone_sq, dx * dx + dy * dy);
-			}
-			const int32_t edge_distance = std::min(std::min(x, y), std::min(width - 1 - x, height - 1 - y));
-			const int64_t edge_penalty = edge_distance <= 1 ? 2600 : (edge_distance <= 3 ? 900 : 0);
-			const uint32_t jitter = hash32_int(seed + String(":island_shape:") + String::num_int64(x) + String(":") + String::num_int64(y));
-			candidate.score = int64_t(nearest_protected * nearest_protected) * 115 + nearest_zone_sq * 7 + edge_penalty - int64_t(jitter % 251U);
-			const double dx = double(x) - center_x;
-			const double dy = double(y) - center_y;
-			candidate.score += int64_t((dx * dx + dy * dy) * 0.3);
-			candidates.push_back(candidate);
+			requested_land_count += quota;
+			Dictionary target;
+			target["zone_id"] = zone_id;
+			target["role"] = zone.get("role", "");
+			target["terrain_id"] = terrain_id_for_zone(zone);
+			target["target_area"] = target_area;
+			target["cell_count"] = cell_count;
+			target["land_fraction"] = land_fraction;
+			target["required_land_count"] = required_land;
+			target["requested_land_count"] = requested_quota;
+			target["applied_land_quota"] = quota;
+			target["generated_land_count"] = count_lookup_cells_for_zone(land_lookup, owner_grid, zone_id);
+			target["quota_status"] = quota_status;
+			zone_targets.append(target);
 		}
-	}
-	std::sort(candidates.begin(), candidates.end(), [](const IslandLandCandidate &left, const IslandLandCandidate &right) {
-		if (left.score == right.score) {
-			if (left.y == right.y) {
-				return left.x < right.x;
-			}
-			return left.y < right.y;
+		if (int32_t(protected_land.size()) > requested_land_count) {
+			Dictionary diagnostic;
+			diagnostic["severity"] = "warning";
+			diagnostic["code"] = "required_surface_land_exceeded_total_zone_budget";
+			diagnostic["message"] = "Required generated surfaces exceeded the total zone-derived island land budget; no extra filler land was added beyond required surfaces.";
+			diagnostic["required_land_count"] = protected_land.size();
+			diagnostic["requested_land_count"] = requested_land_count;
+			diagnostics.append(diagnostic);
 		}
-		return left.score < right.score;
-	});
-
-	Dictionary land_lookup;
-	for (int32_t index = 0; index < target_land_count && index < int32_t(candidates.size()); ++index) {
-		land_lookup[point_key(candidates[index].x, candidates[index].y)] = true;
+		for (int64_t index = 0; int32_t(land_lookup.size()) < requested_land_count && index < zones.size(); ++index) {
+			Dictionary zone = zones[index];
+			Dictionary target = zone_targets[index];
+			const int32_t remaining = requested_land_count - int32_t(land_lookup.size());
+			const int32_t current_zone_land = count_lookup_cells_for_zone(land_lookup, owner_grid, String(zone.get("id", "")));
+			const int32_t zone_quota = int32_t(target.get("applied_land_quota", current_zone_land));
+			const int32_t bounded_quota = std::min(zone_quota, current_zone_land + std::max(0, remaining));
+			const int32_t generated_land = expand_zone_land(land_lookup, protected_land, owner_grid, zone, width, height, bounded_quota);
+			target["generated_land_count"] = generated_land;
+			zone_targets[index] = target;
+		}
+		for (int64_t index = 0; index < zone_targets.size(); ++index) {
+			Dictionary target = zone_targets[index];
+			const String zone_id = String(target.get("zone_id", ""));
+			const int32_t generated_land = count_lookup_cells_for_zone(land_lookup, owner_grid, zone_id);
+			target["generated_land_count"] = generated_land;
+			if (int32_t(land_lookup.size()) < requested_land_count && generated_land < std::min(int32_t(target.get("applied_land_quota", 0)), int32_t(target.get("cell_count", 0)))) {
+				Dictionary diagnostic;
+				diagnostic["severity"] = "failure";
+				diagnostic["code"] = "zone_land_quota_infeasible";
+				diagnostic["message"] = "Zone-aware terrain shaping could not satisfy a zone land quota inside the runtime owner cells.";
+				diagnostic["zone_id"] = zone_id;
+				diagnostic["applied_quota"] = target.get("applied_land_quota", 0);
+				diagnostic["generated_land_count"] = generated_land;
+				diagnostic["zone_cell_count"] = target.get("cell_count", 0);
+				diagnostics.append(diagnostic);
+			}
+			zone_targets[index] = target;
+		}
 	}
 
 	Dictionary shape;
-	shape["schema_id"] = "native_random_map_island_land_water_shape_v1";
+	shape["schema_id"] = "native_random_map_zone_aware_land_water_shape_v1";
 	shape["enabled"] = true;
-	shape["source_model"] = "protected_gameplay_surfaces_plus_owner_72x72_islands_land_ratio_target";
-	shape["owner_baseline_width"] = 72;
-	shape["owner_baseline_height"] = 72;
-	shape["owner_baseline_land_count"] = 1948;
-	shape["owner_baseline_water_count"] = 3236;
-	shape["owner_baseline_land_ratio"] = owner_ratio;
-	shape["target_land_count"] = target_land_count;
+	shape["source_model"] = "runtime_zone_graph_owner_grid_zone_land_quotas";
+	shape["placement_model"] = "linear_zone_flood_fill_from_required_surfaces_and_zone_anchors";
+	shape["candidate_scoring_policy"] = "disabled_old_global_candidate_sort_removed";
+	shape["performance_model"] = "bounded_by_surface_tiles_and_runtime_zone_cells";
+	shape["requested_land_count"] = requested_land_count;
 	shape["protected_land_cell_count"] = protected_land.size();
 	shape["generated_land_cell_count"] = land_lookup.size();
 	shape["generated_water_cell_count"] = map_tiles - int32_t(land_lookup.size());
 	shape["generated_land_ratio"] = double(land_lookup.size()) / double(map_tiles);
 	shape["water_mode"] = normalized.get("water_mode", "land");
-	shape["policy"] = "water-dominant islands preserve starts, routes, towns, guards, rewards, decorations, and package body/visit/approach surfaces as land";
+	shape["zone_target_count"] = zone_targets.size();
+	shape["zone_targets"] = zone_targets;
+	shape["diagnostics"] = diagnostics;
+	shape["diagnostic_count"] = diagnostics.size();
+	shape["policy"] = "water-dominant islands derive land from runtime zone semantics while preserving already-generated load-bearing surfaces as explicit required land";
 	shape["land_lookup"] = land_lookup;
 	return shape;
+}
+
+void add_generated_cell_terrain_fields(Dictionary &level_record, const PackedInt32Array &terrain_codes, int32_t width, int32_t height) {
+	const int32_t tile_count = std::max(0, width * height);
+	level_record["generated_cell_field_model"] = "terrain_id_art_index_flip_h_flip_v";
+	level_record["terrain_normalization_policy"] = "full_map_neighbor_topology_recomputed_after_zone_paint";
+	if (tile_count > 5184) {
+		Dictionary summary;
+		summary["mode"] = "compact_metadata_only_for_large_maps";
+		summary["tile_count"] = tile_count;
+		PackedStringArray omitted_arrays;
+		omitted_arrays.append("terrain_art_index_u8");
+		omitted_arrays.append("terrain_flip_h");
+		omitted_arrays.append("terrain_flip_v");
+		summary["omitted_arrays"] = omitted_arrays;
+		summary["reason"] = "avoid_large_map_signature_and_serialization_cost_until_tile_writeout_adoption_slice";
+		level_record["terrain_generated_cell_summary"] = summary;
+		return;
+	}
+	PackedInt32Array art_indices;
+	PackedInt32Array flip_h;
+	PackedInt32Array flip_v;
+	art_indices.resize(tile_count);
+	flip_h.resize(tile_count);
+	flip_v.resize(tile_count);
+	for (int32_t y = 0; y < height; ++y) {
+		for (int32_t x = 0; x < width; ++x) {
+			const int32_t flat_index = y * width + x;
+			const int32_t terrain_code = terrain_codes[flat_index];
+			int32_t neighbor_mask = 0;
+			if (y > 0 && terrain_codes[(y - 1) * width + x] == terrain_code) {
+				neighbor_mask |= 1;
+			}
+			if (x + 1 < width && terrain_codes[y * width + x + 1] == terrain_code) {
+				neighbor_mask |= 2;
+			}
+			if (y + 1 < height && terrain_codes[(y + 1) * width + x] == terrain_code) {
+				neighbor_mask |= 4;
+			}
+			if (x > 0 && terrain_codes[y * width + x - 1] == terrain_code) {
+				neighbor_mask |= 8;
+			}
+			const uint32_t jitter = hash32_int(String::num_int64(width) + String(":terrain_art:") + String::num_int64(flat_index) + String(":") + String::num_int64(terrain_code));
+			art_indices.set(flat_index, (neighbor_mask * 3 + int32_t(jitter % 3U)) % 64);
+			flip_h.set(flat_index, int32_t((jitter >> 3) & 1U));
+			flip_v.set(flat_index, int32_t((jitter >> 4) & 1U));
+		}
+	}
+	level_record["terrain_art_index_u8"] = art_indices;
+	level_record["terrain_flip_h"] = flip_h;
+	level_record["terrain_flip_v"] = flip_v;
 }
 
 Dictionary generate_terrain_grid(const Dictionary &normalized, const Dictionary &zone_layout = Dictionary(), const Dictionary &player_starts = Dictionary(), const Dictionary &road_network = Dictionary(), const Dictionary &object_placement = Dictionary(), const Dictionary &town_guard_placement = Dictionary()) {
@@ -6218,6 +6409,7 @@ Dictionary generate_terrain_grid(const Dictionary &normalized, const Dictionary 
 		level_record["terrain_code_u16"] = terrain_codes;
 		level_record["terrain_counts"] = aggregate_counts;
 		level_record["biome_counts"] = biome_counts;
+		add_generated_cell_terrain_fields(level_record, terrain_codes, width, height);
 		level_record["signature"] = hash32_hex(canonical_variant(level_record));
 		levels.append(level_record);
 	}
@@ -6252,6 +6444,7 @@ Dictionary generate_terrain_grid(const Dictionary &normalized, const Dictionary 
 		level_record["terrain_code_u16"] = terrain_codes;
 		level_record["terrain_counts"] = counts;
 		level_record["biome_counts"] = biome_counts;
+		add_generated_cell_terrain_fields(level_record, terrain_codes, width, height);
 		level_record["signature"] = hash32_hex(canonical_variant(level_record));
 		levels.append(level_record);
 	}
@@ -6372,6 +6565,7 @@ Array build_phase_pipeline(const Dictionary &terrain_grid, const Dictionary &zon
 
 Dictionary validate_native_random_map_output(const Dictionary &normalized, const Dictionary &identity, const Dictionary &terrain_grid, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, const Dictionary &river_network, const Dictionary &object_placement, const Dictionary &town_guard_placement, const Dictionary &metrics, const Array &warnings) {
 	Array failures;
+	Array validation_warnings = warnings.duplicate(true);
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = int32_t(normalized.get("level_count", 1));
@@ -6394,6 +6588,25 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	}
 	if (terrain_count_sum != expected_tile_count) {
 		append_validation_issue(failures, "fail", "terrain_count_sum_mismatch", "terrain_grid.terrain_counts", "Terrain count sum did not match tile count.");
+	}
+	Dictionary land_water_shape = terrain_grid.get("land_water_shape", Dictionary());
+	Array terrain_diagnostics = land_water_shape.get("diagnostics", Array());
+	for (int64_t index = 0; index < terrain_diagnostics.size(); ++index) {
+		if (Variant(terrain_diagnostics[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary diagnostic = terrain_diagnostics[index];
+		const String severity = String(diagnostic.get("severity", "warning"));
+		const String code = String(diagnostic.get("code", "terrain_shape_diagnostic"));
+		const String message = String(diagnostic.get("message", "Terrain/island shaping reported a diagnostic."));
+		if (severity == "failure" || severity == "fail") {
+			append_validation_issue(failures, "fail", code, "terrain_grid.land_water_shape", message);
+		} else {
+			Dictionary warning = diagnostic.duplicate(true);
+			warning["severity"] = "warning";
+			warning["path"] = "terrain_grid.land_water_shape";
+			validation_warnings.append(warning);
+		}
 	}
 
 	Array zones = zone_layout.get("zones", Array());
@@ -6599,9 +6812,9 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	report["generation_status"] = generation_status;
 	report["full_generation_status"] = full_generation_status;
 	report["failure_count"] = failures.size();
-	report["warning_count"] = warnings.size();
+	report["warning_count"] = validation_warnings.size();
 	report["failures"] = failures;
-	report["warnings"] = warnings;
+	report["warnings"] = validation_warnings;
 	report["metrics"] = metrics;
 	report["deterministic_identity"] = identity;
 	report["component_signatures"] = signatures;
