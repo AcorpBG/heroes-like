@@ -1515,7 +1515,7 @@ nonGoals:
 
 id: `native-rmg-homm3-roads-rivers-connections-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `pending`
+status: `completed`
 purpose: After towns/castles, apply cleanup/connection payload handling so late guard, wide, border-guard, road, and river semantics follow the recovered phase order.
 sourceDocs:
 - `docs/native-rmg-homm3-spec-rework-gap-report.md`
@@ -1529,11 +1529,17 @@ implementationTargets:
 - native road/river network generation
 - link/guard validation reports
 - road/river overlay metadata
+- focused report scene `tests/native_random_map_homm3_roads_rivers_connections_report.tscn`
+- implementation evidence `docs/native-rmg-homm3-roads-rivers-connections-report.md`
 completionCriteria:
 - `Wide` suppresses normal guards, `Border Guard` materializes supported type-9-equivalent original gate behavior, and required links produce corridors or explicit failures after town/castle records exist.
 - Roads/rivers are stored as overlays with deterministic autotile/writeout metadata separate from rand_trn decoration scoring.
 nonGoals:
 - No road renderer art rewrite unless validation proves it is required.
+validation:
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_roads_rivers_connections_report.tscn`
+- `python3 tests/validate_repo.py`
+- `git diff --check`
 
 id: `native-rmg-homm3-object-placement-pipeline-10184`
 phase: `phase-3-homm3-style-rmg-rework`

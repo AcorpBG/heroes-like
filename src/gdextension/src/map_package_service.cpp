@@ -35,6 +35,7 @@ constexpr const char *NATIVE_RMG_PLAYER_STARTS_SCHEMA_ID = "aurelion_native_rmg_
 constexpr const char *NATIVE_RMG_ROUTE_GRAPH_SCHEMA_ID = "aurelion_native_rmg_route_graph_v1";
 constexpr const char *NATIVE_RMG_ROAD_NETWORK_SCHEMA_ID = "aurelion_native_rmg_road_network_v1";
 constexpr const char *NATIVE_RMG_RIVER_NETWORK_SCHEMA_ID = "aurelion_native_rmg_river_network_v1";
+constexpr const char *NATIVE_RMG_CONNECTION_PAYLOAD_SCHEMA_ID = "aurelion_native_rmg_connection_payload_resolution_v1";
 constexpr const char *NATIVE_RMG_OBJECT_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_object_placement_v1";
 constexpr const char *NATIVE_RMG_TOWN_GUARD_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_town_guard_placement_v1";
 constexpr const char *NATIVE_RMG_TOWN_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_town_placement_v1";
@@ -56,6 +57,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_zone_player_starts_foundation");
 	result.append("native_random_map_homm3_runtime_zone_graph");
 	result.append("native_random_map_road_river_network_foundation");
+	result.append("native_random_map_homm3_roads_rivers_connections");
 	result.append("native_random_map_object_placement_foundation");
 	result.append("native_random_map_decorative_obstacle_generation");
 	result.append("native_random_map_town_guard_placement_foundation");
@@ -399,7 +401,7 @@ Dictionary scenario_document_state_from_payload(const Dictionary &document) {
 	return state;
 }
 
-Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictionary &road_network = Dictionary()) {
+Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictionary &road_network = Dictionary(), const Dictionary &river_network = Dictionary()) {
 	Dictionary terrain_layers;
 	terrain_layers["schema_id"] = "aurelion_map_terrain_layers";
 	terrain_layers["schema_version"] = 1;
@@ -444,6 +446,8 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 		road["overlay_id"] = segment.get("overlay_id", road_network.get("overlay_id", "generated_dirt_road"));
 		road["road_class"] = segment.get("road_class", "");
 		road["road_type_id"] = segment.get("road_type_id", "");
+		road["overlay_byte_layout"] = segment.get("overlay_byte_layout", Dictionary());
+		road["overlay_tiles"] = segment.get("overlay_tiles", Array());
 		road["tiles"] = tiles;
 		road["cells"] = tiles;
 		road["tile_count"] = tiles.size();
@@ -453,6 +457,43 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	}
 	terrain_layers["roads"] = roads;
 	terrain_layers["road_count"] = roads.size();
+
+	Array rivers;
+	Array river_segments = river_network.get("river_segments", Array());
+	for (int64_t index = 0; index < river_segments.size(); ++index) {
+		if (Variant(river_segments[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary segment = Dictionary(river_segments[index]);
+		Array tiles;
+		Array cells = segment.get("cells", Array());
+		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+			if (Variant(cells[cell_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary cell = Dictionary(cells[cell_index]);
+			Dictionary tile;
+			tile["x"] = int32_t(cell.get("x", 0));
+			tile["y"] = int32_t(cell.get("y", 0));
+			tile["level"] = int32_t(cell.get("level", 0));
+			tiles.append(tile);
+		}
+		Dictionary river;
+		river["id"] = segment.get("id", "river_" + String::num_int64(index + 1));
+		river["kind"] = segment.get("kind", "river");
+		river["overlay_id"] = segment.get("overlay_id", "generated_river_overlay");
+		river["route_feature_class"] = segment.get("route_feature_class", "");
+		river["overlay_byte_layout"] = segment.get("overlay_byte_layout", Dictionary());
+		river["overlay_tiles"] = segment.get("overlay_tiles", Array());
+		river["tiles"] = tiles;
+		river["cells"] = tiles;
+		river["tile_count"] = tiles.size();
+		river["cell_count"] = tiles.size();
+		river["source"] = "native_rmg_river_network_materialized_for_package_surface";
+		rivers.append(river);
+	}
+	terrain_layers["rivers"] = rivers;
+	terrain_layers["river_count"] = rivers.size();
 	return terrain_layers;
 }
 
@@ -3073,6 +3114,82 @@ Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized) {
 	return targets;
 }
 
+Dictionary road_overlay_byte_layout() {
+	Dictionary layout;
+	layout["schema_id"] = "aurelion_native_rmg_road_overlay_tile_bytes_v1";
+	layout["overlay_layer"] = "road";
+	layout["terrain_stream_boundary"] = "overlay_metadata_only_no_terrain_repaint";
+	layout["tile_byte_4"] = "road_type";
+	layout["tile_byte_5"] = "road_art_direction_subtype";
+	layout["tile_byte_6_bits_4_5"] = "road_flip_a_b";
+	layout["rand_trn_decoration_scoring"] = "not_used";
+	return layout;
+}
+
+Dictionary river_overlay_byte_layout() {
+	Dictionary layout;
+	layout["schema_id"] = "aurelion_native_rmg_river_overlay_tile_bytes_v1";
+	layout["overlay_layer"] = "river";
+	layout["terrain_stream_boundary"] = "overlay_metadata_only_no_terrain_repaint";
+	layout["tile_byte_2"] = "river_type";
+	layout["tile_byte_3"] = "river_art_direction_subtype";
+	layout["tile_byte_6_bits_2_3"] = "river_flip_a_b";
+	layout["rand_trn_decoration_scoring"] = "not_used";
+	return layout;
+}
+
+Array road_overlay_tiles_for_segment(const Array &cells, const String &route_edge_id, const String &road_class, const String &road_type_id) {
+	Array tiles;
+	for (int64_t index = 0; index < cells.size(); ++index) {
+		if (Variant(cells[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary cell = Dictionary(cells[index]);
+		Dictionary tile;
+		tile["x"] = int32_t(cell.get("x", 0));
+		tile["y"] = int32_t(cell.get("y", 0));
+		tile["level"] = int32_t(cell.get("level", 0));
+		tile["route_edge_id"] = route_edge_id;
+		tile["overlay_layer"] = "road";
+		tile["road_class"] = road_class;
+		tile["road_type_id"] = road_type_id;
+		tile["road_type_byte"] = road_class == "special_guard_gate_road" ? 2 : 1;
+		tile["road_art_byte"] = cells.size() <= 1 ? 0 : (index == 0 ? 1 : (index == cells.size() - 1 ? 2 : 3));
+		tile["road_flip_a"] = bool((index + road_class.length()) % 2);
+		tile["road_flip_b"] = bool((index + route_edge_id.length()) % 3 == 0);
+		tile["passability"] = "passable";
+		tile["body_conflict"] = false;
+		tile["writeout_state"] = "final_generated_road_overlay_tile_bytes_metadata";
+		tiles.append(tile);
+	}
+	return tiles;
+}
+
+Array river_overlay_tiles_for_segment(const Array &cells, const String &segment_id, const String &feature_class, bool road_crossing_required) {
+	Array tiles;
+	for (int64_t index = 0; index < cells.size(); ++index) {
+		if (Variant(cells[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary cell = Dictionary(cells[index]);
+		Dictionary tile;
+		tile["x"] = int32_t(cell.get("x", 0));
+		tile["y"] = int32_t(cell.get("y", 0));
+		tile["level"] = int32_t(cell.get("level", 0));
+		tile["segment_id"] = segment_id;
+		tile["overlay_layer"] = "river";
+		tile["route_feature_class"] = feature_class;
+		tile["river_type_byte"] = feature_class == "island_border_waterline" ? 2 : 1;
+		tile["river_art_byte"] = cells.size() <= 1 ? 0 : (index == 0 ? 1 : (index == cells.size() - 1 ? 2 : 3));
+		tile["river_flip_a"] = bool((index + segment_id.length()) % 2);
+		tile["river_flip_b"] = bool((index + feature_class.length()) % 3 == 0);
+		tile["road_crossing_required"] = road_crossing_required;
+		tile["writeout_state"] = "final_generated_river_candidate_tile_bytes_written";
+		tiles.append(tile);
+	}
+	return tiles;
+}
+
 Dictionary generate_road_network(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -3183,11 +3300,14 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 		segment["connection_control"] = edge.get("connection_control", Dictionary());
 		segment["cells"] = cells;
 		segment["cell_count"] = cells.size();
+		segment["overlay_byte_layout"] = road_overlay_byte_layout();
+		segment["overlay_tiles"] = road_overlay_tiles_for_segment(cells, edge_id, road_class, String(edge.get("road_type_id", "")));
+		segment["overlay_tile_count"] = Array(segment.get("overlay_tiles", Array())).size();
 		segment["direct_cell_count"] = direct_cells.size();
 		segment["road_materialization_policy"] = materialization_policy;
 		segment["connectivity_classification"] = classification;
 		segment["role"] = link.get("role", "route");
-		segment["writeout_state"] = "staged_overlay_no_tile_bytes_written";
+		segment["writeout_state"] = "final_generated_road_overlay_tile_bytes_metadata";
 		segment["bounds_status"] = "in_bounds";
 		road_segments.append(segment);
 		if (materialization_policy == "uncovered_endpoint_branches_to_existing_trunk") {
@@ -3221,6 +3341,9 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 			segment["connection_control"] = source_edge.get("connection_control", Dictionary());
 			segment["cells"] = Array();
 			segment["cell_count"] = 0;
+			segment["overlay_byte_layout"] = road_overlay_byte_layout();
+			segment["overlay_tiles"] = Array();
+			segment["overlay_tile_count"] = 0;
 			segment["direct_cell_count"] = source_edge.get("direct_cell_count", 0);
 			segment["road_materialization_policy"] = "gdscript_structural_parity_overlay_count_no_tile_cells";
 			segment["connectivity_classification"] = source_edge.get("connectivity_classification", "gdscript_structural_parity_segment");
@@ -3284,6 +3407,8 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 	road_network["writeout_policy"] = "final_generated_tile_stream_no_authored_tile_write";
 	road_network["materialization_state"] = "staged_overlay_records_only_no_gameplay_adoption";
 	road_network["overlay_id"] = "generated_dirt_road";
+	road_network["overlay_semantics"] = "deterministic_road_overlay_metadata_separate_from_rand_trn_decoration_object_scoring";
+	road_network["overlay_byte_layout"] = road_overlay_byte_layout();
 	road_network["route_graph"] = route_graph;
 	road_network["road_segments"] = road_segments;
 	road_network["road_segment_count"] = road_segments.size();
@@ -3488,15 +3613,20 @@ Dictionary generate_river_network(const Dictionary &normalized, const Dictionary
 		Dictionary river_segment;
 		river_segment["id"] = "river_foundation_01";
 		river_segment["kind"] = "river";
+		river_segment["overlay_id"] = "generated_river_overlay";
 		river_segment["route_feature_class"] = land_mode ? "land_river_with_road_crossing_constraints" : "bounded_waterline_feature";
 		river_segment["cells"] = river_cells;
 		river_segment["cell_count"] = river_cells.size();
+		river_segment["overlay_byte_layout"] = river_overlay_byte_layout();
+		river_segment["overlay_tiles"] = river_overlay_tiles_for_segment(river_cells, "river_foundation_01", String(river_segment.get("route_feature_class", "")), land_mode);
+		river_segment["overlay_tile_count"] = Array(river_segment.get("overlay_tiles", Array())).size();
 		river_segment["bounds"] = bounds_for_cells(river_cells);
 		river_segment["quality"] = quality;
 		river_segment["continuity_status"] = quality.get("continuity_status", "");
 		river_segment["road_crossing_count"] = quality.get("road_crossing_count", 0);
 		river_segment["crossing_policy"] = land_mode ? "roads_may_cross_at_recorded_bridge_or_ford_cells" : "waterline_no_crossing_required";
-		river_segment["materialization_state"] = "bounded_route_feature_metadata_only_no_terrain_mutation";
+		river_segment["materialization_state"] = "staged_river_overlay_metadata_no_terrain_mutation";
+		river_segment["writeout_state"] = "final_generated_river_candidate_tile_bytes_written";
 		segments.append(river_segment);
 
 		if (String(normalized.get("water_mode", "land")) == "islands") {
@@ -3504,11 +3634,16 @@ Dictionary generate_river_network(const Dictionary &normalized, const Dictionary
 			Dictionary waterline_segment;
 			waterline_segment["id"] = "waterline_foundation_01";
 			waterline_segment["kind"] = "shore_waterline";
+			waterline_segment["overlay_id"] = "generated_river_overlay";
 			waterline_segment["route_feature_class"] = "island_border_waterline";
 			waterline_segment["cells"] = waterline;
 			waterline_segment["cell_count"] = waterline.size();
+			waterline_segment["overlay_byte_layout"] = river_overlay_byte_layout();
+			waterline_segment["overlay_tiles"] = river_overlay_tiles_for_segment(waterline, "waterline_foundation_01", "island_border_waterline", false);
+			waterline_segment["overlay_tile_count"] = Array(waterline_segment.get("overlay_tiles", Array())).size();
 			waterline_segment["bounds"] = bounds_for_cells(waterline);
-			waterline_segment["materialization_state"] = "waterline_metadata_only_existing_terrain_grid_unchanged";
+			waterline_segment["materialization_state"] = "staged_river_waterline_overlay_metadata_no_terrain_mutation";
+			waterline_segment["writeout_state"] = "final_generated_river_candidate_tile_bytes_written";
 			segments.append(waterline_segment);
 		}
 	}
@@ -3522,7 +3657,8 @@ Dictionary generate_river_network(const Dictionary &normalized, const Dictionary
 	Dictionary policy;
 	policy["water_mode"] = normalized.get("water_mode", "land");
 	policy["enabled"] = true;
-	policy["route_feature_boundary"] = "foundation_records_only_no_passability_or_tile_mutation";
+	policy["route_feature_boundary"] = "deterministic_overlay_metadata_only_no_passability_or_tile_mutation";
+	policy["overlay_semantics"] = "river_overlay_metadata_separate_from_rand_trn_decoration_object_scoring";
 	policy["road_crossing_policy"] = "land_rivers_record_bridge_or_ford_crossing_metadata_when_road_cells_are_available";
 	Dictionary quality_summary;
 	quality_summary["river_candidate_count"] = segments.size();
@@ -3554,6 +3690,7 @@ Dictionary generate_river_network(const Dictionary &normalized, const Dictionary
 	network["generation_status"] = full_parity_supported ? "rivers_generated_full_parity" : "rivers_generated_foundation";
 	network["full_generation_status"] = native_rmg_full_generation_status_for_config(normalized);
 	network["policy"] = policy;
+	network["overlay_byte_layout"] = river_overlay_byte_layout();
 	network["quality_summary"] = quality_summary;
 	network["river_segments"] = segments;
 	network["river_segment_count"] = segments.size();
@@ -5976,7 +6113,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		}
 		Dictionary edge = edges[index];
 		const int32_t guard_value = int32_t(edge.get("guard_value", 0));
-		if (parity_targets.is_empty() && (guard_value <= 0 || bool(edge.get("wide", false)))) {
+		if (parity_targets.is_empty() && (guard_value <= 0 || bool(edge.get("wide", false)) || bool(edge.get("border_guard", false)))) {
 			continue;
 		}
 		const String protected_zone_id = String(edge.get("to", edge.get("from", "")));
@@ -6168,6 +6305,226 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	payload["related_object_placement_signature"] = object_placement.get("signature", "");
 	payload["signature"] = hash32_hex(canonical_variant(payload));
 	return payload;
+}
+
+String connection_gate_object_id_for_subtype(int32_t subtype) {
+	static constexpr const char *OBJECT_IDS[] = {
+		"object_charter_bar_gate",
+		"object_root_lease_gate",
+		"object_thorn_seal_gate",
+		"object_brass_toll_arch",
+		"object_frost_toll_bar",
+		"object_root_pass_arch",
+		"object_basalt_undergate",
+		"object_slipgate_mirror",
+	};
+	return OBJECT_IDS[std::max(0, subtype) % 8];
+}
+
+Array single_tile_body(int32_t x, int32_t y, int32_t width, int32_t height) {
+	Array body;
+	if (x >= 0 && y >= 0 && x < width && y < height) {
+		body.append(cell_record(x, y, 0));
+	}
+	return body;
+}
+
+Array adjacent_approach_tiles_for_gate(int32_t x, int32_t y, int32_t width, int32_t height) {
+	Array tiles;
+	static constexpr int32_t OFFSETS[4][2] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+	for (const auto &offset : OFFSETS) {
+		const int32_t nx = x + offset[0];
+		const int32_t ny = y + offset[1];
+		if (nx >= 0 && ny >= 0 && nx < width && ny < height) {
+			tiles.append(cell_record(nx, ny, 0));
+		}
+	}
+	return tiles;
+}
+
+Dictionary connection_gate_record_for_edge(const Dictionary &normalized, const Dictionary &edge, int32_t ordinal) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	Dictionary anchor = edge.get("route_cell_anchor_candidate", Dictionary());
+	const int32_t x = std::max(0, std::min(width - 1, int32_t(anchor.get("x", width / 2))));
+	const int32_t y = std::max(0, std::min(height - 1, int32_t(anchor.get("y", height / 2))));
+	const int32_t subtype = int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":connection_gate:" + String(edge.get("id", ""))) % 8U);
+	Dictionary record;
+	record["placement_id"] = "native_rmg_connection_gate_" + String(edge.get("id", "edge")) + "_" + slot_id_2(ordinal + 1);
+	record["kind"] = "connection_gate";
+	record["type_id"] = "special_guard_gate";
+	record["object_id"] = connection_gate_object_id_for_subtype(subtype);
+	record["source_type_equivalent"] = "type_9_border_guard_equivalent_original_gate";
+	record["source_subtype_equivalent"] = subtype;
+	record["route_edge_id"] = edge.get("id", "");
+	record["from_zone_id"] = edge.get("from", "");
+	record["to_zone_id"] = edge.get("to", "");
+	record["x"] = x;
+	record["y"] = y;
+	record["level"] = 0;
+	record["primary_tile"] = cell_record(x, y, 0);
+	record["primary_occupancy_key"] = point_key(x, y);
+	record["body_tiles"] = single_tile_body(x, y, width, height);
+	record["approach_tiles"] = adjacent_approach_tiles_for_gate(x, y, width, height);
+	record["visit_tile"] = record["primary_tile"];
+	record["passability_class"] = "blocking_visitable";
+	record["blocking_body"] = true;
+	record["unlock_required"] = true;
+	Dictionary unlock;
+	unlock["unlock_required"] = true;
+	unlock["gate_behavior"] = "original_connection_gate_blocks_route_until_supported_unlock";
+	unlock["keymaster_side_feature_scope"] = "not_implemented_in_this_slice";
+	record["unlock_metadata"] = unlock;
+	record["materialization_state"] = "supported_original_gate_record_materialized_from_border_guard_connection_payload";
+	record["writeout_state"] = "staged_connection_gate_object_record_no_authored_content_write";
+	record["signature"] = hash32_hex(canonical_variant(record));
+	return record;
+}
+
+Dictionary guards_by_route_edge_id(const Array &guards) {
+	Dictionary result;
+	for (int64_t index = 0; index < guards.size(); ++index) {
+		if (Variant(guards[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary guard = Dictionary(guards[index]);
+		const String route_edge_id = String(guard.get("route_edge_id", ""));
+		if (!route_edge_id.is_empty()) {
+			result[route_edge_id] = guard;
+		}
+	}
+	return result;
+}
+
+Dictionary generate_connection_payload_resolution(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &road_network, const Dictionary &town_guard_placement) {
+	Dictionary route_graph = road_network.get("route_graph", Dictionary());
+	Array edges = route_graph.get("edges", Array());
+	Dictionary route_guards = guards_by_route_edge_id(town_guard_placement.get("guard_records", Array()));
+	Array materialized_records;
+	Array normal_guards;
+	Array wide_suppressions;
+	Array special_gate_records;
+	Array diagnostics;
+	int32_t required_link_count = 0;
+	int32_t required_link_failure_count = 0;
+
+	for (int64_t index = 0; index < edges.size(); ++index) {
+		if (Variant(edges[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary edge = Dictionary(edges[index]);
+		const String edge_id = String(edge.get("id", ""));
+		const bool required = bool(edge.get("required", true));
+		const bool path_found = bool(edge.get("path_found", false));
+		const bool wide = bool(edge.get("wide", false));
+		const bool border_guard = bool(edge.get("border_guard", false));
+		const int32_t raw_value = int32_t(edge.get("guard_value", 0));
+		if (required) {
+			++required_link_count;
+		}
+		if (required && !path_found) {
+			++required_link_failure_count;
+			Dictionary diagnostic;
+			diagnostic["code"] = "required_connection_corridor_missing";
+			diagnostic["severity"] = "failure";
+			diagnostic["route_edge_id"] = edge_id;
+			diagnostic["message"] = "Required template link did not produce a corridor/road segment.";
+			diagnostics.append(diagnostic);
+			continue;
+		}
+
+		Dictionary record;
+		record["id"] = "connection_payload_" + edge_id;
+		record["route_edge_id"] = edge_id;
+		record["from_zone_id"] = edge.get("from", "");
+		record["to_zone_id"] = edge.get("to", "");
+		record["raw_value"] = raw_value;
+		record["wide"] = wide;
+		record["border_guard"] = border_guard;
+		record["path_found"] = path_found;
+		record["processed_after_town_castle_placement"] = true;
+		record["related_town_placement_signature"] = Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("signature", "");
+		record["road_overlay_route_edge_id"] = edge_id;
+
+		if (wide) {
+			record["normal_guard_value"] = 0;
+			record["normal_guard_materialized"] = false;
+			record["resolution_kind"] = "wide_suppresses_normal_guard";
+			record["wide_semantics"] = "suppresses_normal_guard_not_corridor_width";
+			wide_suppressions.append(record);
+		} else if (border_guard) {
+			Dictionary gate = connection_gate_record_for_edge(normalized, edge, special_gate_records.size());
+			record["normal_guard_value"] = 0;
+			record["normal_guard_materialized"] = false;
+			record["resolution_kind"] = "border_guard_original_gate_materialized";
+			record["special_gate_placement_id"] = gate.get("placement_id", "");
+			record["source_type_equivalent"] = gate.get("source_type_equivalent", "");
+			special_gate_records.append(gate);
+		} else if (raw_value > 0) {
+			record["normal_guard_value"] = raw_value;
+			record["normal_guard_materialized"] = route_guards.has(edge_id);
+			record["resolution_kind"] = "normal_connection_guard_value_consumed";
+			if (route_guards.has(edge_id)) {
+				Dictionary guard = route_guards.get(edge_id, Dictionary());
+				record["guard_placement_id"] = guard.get("placement_id", "");
+				record["guard_id"] = guard.get("guard_id", "");
+			} else {
+				Dictionary diagnostic;
+				diagnostic["code"] = "normal_connection_guard_missing";
+				diagnostic["severity"] = "failure";
+				diagnostic["route_edge_id"] = edge_id;
+				diagnostic["message"] = "Non-wide, non-border connection with positive Value did not materialize a route guard record.";
+				diagnostics.append(diagnostic);
+			}
+			normal_guards.append(record);
+		} else {
+			record["normal_guard_value"] = 0;
+			record["normal_guard_materialized"] = false;
+			record["resolution_kind"] = "unguarded_connection_payload";
+		}
+		materialized_records.append(record);
+	}
+
+	Dictionary summary;
+	summary["required_link_count"] = required_link_count;
+	summary["required_link_failure_count"] = required_link_failure_count;
+	summary["normal_guard_count"] = normal_guards.size();
+	summary["wide_suppressed_count"] = wide_suppressions.size();
+	summary["special_gate_count"] = special_gate_records.size();
+	summary["materialized_record_count"] = materialized_records.size();
+	summary["validation_status"] = diagnostics.is_empty() ? "pass" : "fail";
+
+	Dictionary payload;
+	payload["schema_id"] = NATIVE_RMG_CONNECTION_PAYLOAD_SCHEMA_ID;
+	payload["schema_version"] = 1;
+	payload["generation_status"] = diagnostics.is_empty() ? "connection_payloads_processed_after_towns" : "connection_payloads_failed_validation";
+	payload["full_generation_status"] = native_rmg_full_generation_status_for_config(normalized);
+	payload["phase_order"] = "cleanup_late_connection_payload_after_town_castle_placement_before_river_overlay_writeout";
+	payload["source_semantics"] = "Value_Wide_Border_Guard_consumed_late_after_endpoint_geometry";
+	payload["wide_semantics"] = "suppresses_normal_guard_not_corridor_width";
+	payload["border_guard_semantics"] = "supported_original_gate_record_materialized_as_type_9_equivalent_without_homm3_art_or_text";
+	payload["road_river_overlay_boundary"] = "road_and_river_overlay_metadata_separate_from_rand_trn_decoration_object_scoring";
+	payload["related_zone_layout_signature"] = zone_layout.get("signature", "");
+	payload["related_road_network_signature"] = road_network.get("signature", "");
+	payload["related_town_guard_placement_signature"] = town_guard_placement.get("signature", "");
+	payload["materialized_records"] = materialized_records;
+	payload["normal_route_guards"] = normal_guards;
+	payload["wide_suppressions"] = wide_suppressions;
+	payload["special_connection_gate_records"] = special_gate_records;
+	payload["diagnostics"] = diagnostics;
+	payload["summary"] = summary;
+	payload["validation_status"] = summary.get("validation_status", "");
+	payload["signature"] = hash32_hex(canonical_variant(payload));
+	return payload;
+}
+
+Dictionary attach_connection_payload_resolution(Dictionary road_network, const Dictionary &connection_payload) {
+	road_network["late_connection_payload_resolution"] = connection_payload;
+	road_network["connection_payload_resolution_signature"] = connection_payload.get("signature", "");
+	road_network["connection_gate_records"] = connection_payload.get("special_connection_gate_records", Array());
+	road_network["connection_gate_count"] = Array(connection_payload.get("special_connection_gate_records", Array())).size();
+	road_network["signature"] = hash32_hex(canonical_variant(road_network));
+	return road_network;
 }
 
 void mark_land_cell(Dictionary &land_lookup, int32_t x, int32_t y, int32_t width, int32_t height) {
@@ -6759,6 +7116,7 @@ Dictionary build_component_signatures(const Dictionary &terrain_grid, const Dict
 	signatures["player_starts"] = player_starts.get("signature", "");
 	signatures["route_graph"] = Dictionary(road_network.get("route_graph", Dictionary())).get("signature", "");
 	signatures["road_network"] = road_network.get("signature", "");
+	signatures["connection_payload_resolution"] = Dictionary(road_network.get("late_connection_payload_resolution", Dictionary())).get("signature", "");
 	signatures["river_network"] = river_network.get("signature", "");
 	signatures["object_placement"] = object_placement.get("signature", "");
 	signatures["object_occupancy"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
@@ -6780,6 +7138,7 @@ Dictionary build_component_counts(const Dictionary &normalized, const Dictionary
 	counts["route_edge_count"] = Dictionary(road_network.get("route_graph", Dictionary())).get("route_edge_count", 0);
 	counts["road_segment_count"] = road_network.get("road_segment_count", 0);
 	counts["road_cell_count"] = road_network.get("road_cell_count", 0);
+	counts["connection_gate_count"] = road_network.get("connection_gate_count", 0);
 	counts["river_segment_count"] = river_network.get("river_segment_count", 0);
 	counts["river_cell_count"] = river_network.get("river_cell_count", 0);
 	counts["object_count"] = object_placement.get("object_count", 0);
@@ -6795,6 +7154,7 @@ Array build_phase_pipeline(const Dictionary &terrain_grid, const Dictionary &zon
 	phases.append(component_summary("player_starts", String(player_starts.get("generation_status", "")), "pass", int32_t(player_starts.get("start_count", 0)), String(player_starts.get("signature", ""))));
 	phases.append(component_summary("route_graph", String(Dictionary(road_network.get("route_graph", Dictionary())).get("generation_status", "")), "pass", int32_t(Dictionary(road_network.get("route_graph", Dictionary())).get("route_edge_count", 0)), String(Dictionary(road_network.get("route_graph", Dictionary())).get("signature", ""))));
 	phases.append(component_summary("road_network", String(road_network.get("generation_status", "")), "pass", int32_t(road_network.get("road_segment_count", 0)), String(road_network.get("signature", ""))));
+	phases.append(component_summary("connection_payload_resolution", String(Dictionary(road_network.get("late_connection_payload_resolution", Dictionary())).get("generation_status", "")), "pass", int32_t(Dictionary(Dictionary(road_network.get("late_connection_payload_resolution", Dictionary())).get("summary", Dictionary())).get("materialized_record_count", 0)), String(Dictionary(road_network.get("late_connection_payload_resolution", Dictionary())).get("signature", ""))));
 	phases.append(component_summary("river_network", String(river_network.get("generation_status", "")), "pass", int32_t(river_network.get("river_segment_count", 0)), String(river_network.get("signature", ""))));
 	phases.append(component_summary("object_placement", String(object_placement.get("generation_status", "")), "pass", int32_t(object_placement.get("object_count", 0)), String(object_placement.get("signature", ""))));
 	phases.append(component_summary("town_placement", String(Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("generation_status", "")), "pass", int32_t(town_guard_placement.get("town_count", 0)), String(Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("signature", ""))));
@@ -6937,6 +7297,37 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	if (String(road_network.get("writeout_policy", "")) != "final_generated_tile_stream_no_authored_tile_write") {
 		append_validation_issue(failures, "fail", "road_writeout_boundary_lost", "road_network.writeout_policy", "Road network lost no-authored-tile-write boundary.");
 	}
+	if (String(road_network.get("overlay_semantics", "")) != "deterministic_road_overlay_metadata_separate_from_rand_trn_decoration_object_scoring") {
+		append_validation_issue(failures, "fail", "road_overlay_semantics_missing", "road_network.overlay_semantics", "Road overlays must be deterministic metadata separate from rand_trn decoration scoring.");
+	}
+	Dictionary connection_payload = road_network.get("late_connection_payload_resolution", Dictionary());
+	if (String(connection_payload.get("schema_id", "")) != NATIVE_RMG_CONNECTION_PAYLOAD_SCHEMA_ID) {
+		append_validation_issue(failures, "fail", "connection_payload_resolution_missing", "road_network.late_connection_payload_resolution", "Late connection payload resolution must run after town/castle placement.");
+	} else {
+		if (String(connection_payload.get("validation_status", "")) != "pass") {
+			append_validation_issue(failures, "fail", "connection_payload_resolution_failed", "road_network.late_connection_payload_resolution", "Late connection payload resolution reported validation failures.");
+		}
+		Array payload_diagnostics = connection_payload.get("diagnostics", Array());
+		for (int64_t index = 0; index < payload_diagnostics.size(); ++index) {
+			if (Variant(payload_diagnostics[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary diagnostic = Dictionary(payload_diagnostics[index]);
+			if (String(diagnostic.get("severity", "")) == "failure") {
+				append_validation_issue(failures, "fail", String(diagnostic.get("code", "connection_payload_failure")), "road_network.late_connection_payload_resolution.diagnostics", String(diagnostic.get("message", "Connection payload resolution failed.")));
+			}
+		}
+		Dictionary payload_summary = connection_payload.get("summary", Dictionary());
+		if (int32_t(payload_summary.get("required_link_failure_count", 0)) > 0) {
+			append_validation_issue(failures, "fail", "required_connection_corridor_missing", "road_network.late_connection_payload_resolution.summary", "Required links must produce corridors or explicit failures.");
+		}
+		for (int64_t index = 0; index < Array(connection_payload.get("wide_suppressions", Array())).size(); ++index) {
+			Dictionary record = Array(connection_payload.get("wide_suppressions", Array()))[index];
+			if (bool(record.get("normal_guard_materialized", true)) || int32_t(record.get("normal_guard_value", -1)) != 0) {
+				append_validation_issue(failures, "fail", "wide_connection_guard_not_suppressed", "road_network.late_connection_payload_resolution.wide_suppressions", "Wide links must suppress normal connection guards.");
+			}
+		}
+	}
 
 	for (int64_t index = 0; index < Array(river_network.get("river_segments", Array())).size(); ++index) {
 		Dictionary segment = Array(river_network.get("river_segments", Array()))[index];
@@ -6946,6 +7337,9 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 				append_validation_issue(failures, "fail", "river_cell_out_of_bounds", "river_network.river_segments.cells", "River segment emitted an out-of-bounds cell.");
 			}
 		}
+	}
+	if (String(Dictionary(river_network.get("policy", Dictionary())).get("overlay_semantics", "")) != "river_overlay_metadata_separate_from_rand_trn_decoration_object_scoring") {
+		append_validation_issue(failures, "fail", "river_overlay_semantics_missing", "river_network.policy.overlay_semantics", "River overlays must remain separate from rand_trn decoration scoring.");
 	}
 
 	Array objects = object_placement.get("object_placements", Array());
@@ -7092,6 +7486,9 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	report["road_network_signature"] = road_network.get("signature", "");
 	report["route_graph_signature"] = Dictionary(road_network.get("route_graph", Dictionary())).get("signature", "");
 	report["route_reachability_status"] = Dictionary(road_network.get("route_reachability_proof", Dictionary())).get("status", "");
+	report["connection_payload_generation_status"] = Dictionary(road_network.get("late_connection_payload_resolution", Dictionary())).get("generation_status", "");
+	report["connection_payload_resolution_signature"] = Dictionary(road_network.get("late_connection_payload_resolution", Dictionary())).get("signature", "");
+	report["connection_payload_summary"] = Dictionary(road_network.get("late_connection_payload_resolution", Dictionary())).get("summary", Dictionary());
 	report["river_generation_status"] = river_network.get("generation_status", "");
 	report["river_network_signature"] = river_network.get("signature", "");
 	report["object_generation_status"] = object_placement.get("generation_status", "");
@@ -7207,12 +7604,12 @@ Array visit_tiles_for_package_surface(const Dictionary &record, bool blocking_bo
 bool record_blocks_package_pathing(const Dictionary &record) {
 	const String kind = String(record.get("kind", ""));
 	const String passability_class = String(record.get("passability_class", ""));
-	return bool(record.get("blocking_body", false)) || kind == "guard" || kind == "town" || kind == "mine" || kind == "neutral_dwelling" || kind == "reward_reference" || passability_class.begins_with("blocking") || passability_class == "edge_blocker";
+	return bool(record.get("blocking_body", false)) || kind == "guard" || kind == "town" || kind == "connection_gate" || kind == "mine" || kind == "neutral_dwelling" || kind == "reward_reference" || passability_class.begins_with("blocking") || passability_class == "edge_blocker";
 }
 
 bool record_is_visitable_package_object(const Dictionary &record) {
 	const String kind = String(record.get("kind", ""));
-	return kind == "resource_site" || kind == "mine" || kind == "neutral_dwelling" || kind == "reward_reference" || kind == "town" || kind == "guard";
+	return kind == "resource_site" || kind == "mine" || kind == "neutral_dwelling" || kind == "reward_reference" || kind == "town" || kind == "guard" || kind == "connection_gate";
 }
 
 Dictionary package_surface_record(Dictionary record) {
@@ -7355,6 +7752,20 @@ Array combined_native_map_objects(const Dictionary &generated_map) {
 		passability["protected_target_type"] = record.get("protected_target_type", "");
 		passability["protected_object_placement_id"] = record.get("protected_object_placement_id", "");
 		passability["route_edge_id"] = record.get("route_edge_id", "");
+		record["passability"] = passability;
+		record["signature"] = hash32_hex(canonical_variant(record));
+		result.append(record);
+	}
+	Array gates = tagged_record_snapshots(generated_map.get("connection_gate_records", Variant()), "connection_gate");
+	for (int64_t index = 0; index < gates.size(); ++index) {
+		Dictionary record = package_surface_record(Dictionary(gates[index]).duplicate(true));
+		record["package_guard_adoption_state"] = "connection_gate_record_materialized_as_blocking_package_surface";
+		Dictionary passability;
+		passability["passability_class"] = "connection_gate_blocking";
+		passability["interaction_mode"] = "adjacent_unlock_or_gate_clear";
+		passability["blocks_route_until_cleared"] = true;
+		passability["route_edge_id"] = record.get("route_edge_id", "");
+		passability["unlock_required"] = record.get("unlock_required", true);
 		record["passability"] = passability;
 		record["signature"] = hash32_hex(canonical_variant(record));
 		result.append(record);
@@ -8083,9 +8494,11 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	Dictionary zone_layout = generate_zone_layout(normalized, player_assignment);
 	Dictionary player_starts = generate_player_starts(normalized, zone_layout, player_assignment);
 	Dictionary road_network = generate_road_network(normalized, zone_layout, player_starts);
-	Dictionary river_network = generate_river_network(normalized, road_network);
 	Dictionary object_placement = generate_object_placements(normalized, zone_layout, player_starts, road_network);
 	Dictionary town_guard_placement = generate_town_guard_placements(normalized, zone_layout, player_starts, road_network, object_placement);
+	Dictionary connection_payload_resolution = generate_connection_payload_resolution(normalized, zone_layout, road_network, town_guard_placement);
+	road_network = attach_connection_payload_resolution(road_network, connection_payload_resolution);
+	Dictionary river_network = generate_river_network(normalized, road_network);
 	Dictionary terrain_grid = generate_terrain_grid(normalized, zone_layout, player_starts, road_network, object_placement, town_guard_placement);
 	Array object_placements = object_placement.get("object_placements", Array());
 	Array map_objects;
@@ -8100,6 +8513,10 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	Array tagged_guards = tagged_record_snapshots(town_guard_placement.get("guard_records", Array()), "guard");
 	for (int64_t index = 0; index < tagged_guards.size(); ++index) {
 		map_objects.append(tagged_guards[index]);
+	}
+	Array tagged_gates = tagged_record_snapshots(connection_payload_resolution.get("special_connection_gate_records", Array()), "connection_gate");
+	for (int64_t index = 0; index < tagged_gates.size(); ++index) {
+		map_objects.append(tagged_gates[index]);
 	}
 
 	Dictionary metadata;
@@ -8116,6 +8533,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["player_start_generation_status"] = "player_starts_generated_foundation";
 	metadata["road_generation_status"] = road_network.get("generation_status", "roads_generated_foundation");
 	metadata["river_generation_status"] = river_network.get("generation_status", "rivers_generated_foundation");
+	metadata["connection_payload_generation_status"] = connection_payload_resolution.get("generation_status", "");
 	metadata["object_generation_status"] = object_placement.get("generation_status", "objects_generated_foundation");
 	metadata["town_generation_status"] = town_guard_placement.get("town_generation_status", "towns_generated_foundation");
 	metadata["guard_generation_status"] = town_guard_placement.get("guard_generation_status", "guards_generated_foundation");
@@ -8127,6 +8545,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["road_network_signature"] = road_network.get("signature", "");
 	metadata["route_graph_signature"] = Dictionary(road_network.get("route_graph", Dictionary())).get("signature", "");
 	metadata["river_network_signature"] = river_network.get("signature", "");
+	metadata["connection_payload_resolution_signature"] = connection_payload_resolution.get("signature", "");
 	metadata["object_placement_signature"] = object_placement.get("signature", "");
 	metadata["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
 	metadata["town_guard_placement_signature"] = town_guard_placement.get("signature", "");
@@ -8143,7 +8562,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	map_state["height"] = int32_t(normalized.get("height", 36));
 	map_state["level_count"] = int32_t(normalized.get("level_count", 1));
 	map_state["metadata"] = metadata;
-	map_state["terrain_layers"] = terrain_layers_from_grid(terrain_grid, road_network);
+	map_state["terrain_layers"] = terrain_layers_from_grid(terrain_grid, road_network, river_network);
 	map_state["route_graph"] = road_network.get("route_graph", Dictionary());
 	map_state["objects"] = map_objects;
 
@@ -8175,6 +8594,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metrics["road_cell_count"] = road_network.get("road_cell_count", 0);
 	metrics["river_segment_count"] = river_network.get("river_segment_count", 0);
 	metrics["river_cell_count"] = river_network.get("river_cell_count", 0);
+	metrics["connection_gate_count"] = Array(connection_payload_resolution.get("special_connection_gate_records", Array())).size();
 	metrics["object_placement_count"] = object_placement.get("object_count", 0);
 	metrics["town_count"] = town_guard_placement.get("town_count", 0);
 	metrics["guard_count"] = town_guard_placement.get("guard_count", 0);
@@ -8218,6 +8638,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["route_graph"] = road_network.get("route_graph", Dictionary());
 	result["road_network"] = road_network;
 	result["connection_road_controls"] = road_network.get("connection_road_controls", Dictionary());
+	result["connection_payload_resolution"] = connection_payload_resolution;
+	result["connection_gate_records"] = connection_payload_resolution.get("special_connection_gate_records", Array());
 	result["river_network"] = river_network;
 	result["river_quality_summary"] = river_network.get("quality_summary", Dictionary());
 	result["object_placement"] = object_placement;

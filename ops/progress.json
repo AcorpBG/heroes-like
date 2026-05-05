@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-homm3-towns-castles-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Towns Castles",
+  "currentSliceId": "native-rmg-homm3-roads-rivers-connections-10184",
+  "currentSliceTitle": "Native RMG HoMM3 Roads Rivers Connections",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed corrected towns/castles placement slice; roads/rivers are restored to pending and must follow towns/castles.",
+  "currentSliceNotes": "Completed post-town cleanup/connection payload handling with Wide guard suppression, original border-gate materialization, deterministic road/river overlay metadata, and focused report validation.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T11:28:46Z",
+  "updatedAt": "2026-05-05T12:20:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -9840,7 +9840,7 @@
       "id": "native-rmg-homm3-roads-rivers-connections-10184",
       "title": "Native RMG HoMM3 Roads Rivers Connections",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "pending",
+      "status": "completed",
       "classification": "implementation_slice",
       "purpose": "After towns/castles, apply cleanup/connection payload handling so late guard, wide, border-guard, road, and river semantics follow the recovered phase order.",
       "sourceDocs": [
@@ -9855,7 +9855,9 @@
         "native cleanup/connection payload handling after town/castle placement",
         "native road/river network generation",
         "link/guard validation reports",
-        "road/river overlay metadata"
+        "road/river overlay metadata",
+        "tests/native_random_map_homm3_roads_rivers_connections_report.tscn",
+        "docs/native-rmg-homm3-roads-rivers-connections-report.md"
       ],
       "baselineChecks": [
         "python3 -m json.tool ops/progress.json >/dev/null",
@@ -9871,8 +9873,10 @@
         "No road renderer art rewrite unless validation proves it is required."
       ],
       "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184",
-      "updatedAt": "2026-05-05T11:28:46Z",
-      "notes": "Correct next implementation slice after completed towns/castles: cleanup/connection payload, roads, and rivers now wait for Phase 4a/4b settlement records."
+      "updatedAt": "2026-05-05T12:20:00Z",
+      "notes": "Implemented native post-town connection payload resolution, required-link diagnostics, Wide normal-guard suppression, supported original gate records for Border Guard links, road/river overlay metadata separation, and focused report evidence. Validation passed: json.tool, validate_repo.py, git diff --check, cmake native build, native_random_map_homm3_roads_rivers_connections_report.tscn, native_random_map_road_river_report.tscn, and native_random_map_town_guard_report.tscn.",
+      "startedAt": "2026-05-05T11:39:16Z",
+      "completedAt": "2026-05-05T12:20:00Z"
     },
     {
       "id": "native-rmg-homm3-object-placement-pipeline-10184",
@@ -11387,11 +11391,11 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-homm3-roads-rivers-connections-10184",
-      "title": "Native RMG HoMM3 Roads Rivers Connections",
+      "id": "native-rmg-homm3-object-placement-pipeline-10184",
+      "title": "Native RMG HoMM3 Object Placement Pipeline",
       "status": "pending",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "reason": "Next corrected Phase 3 child after completed towns/castles; handles cleanup/connection payload, roads, and rivers in recovered order."
+      "reason": "Next corrected Phase 3 child after completed roads/rivers/connections; implements object catalog/footprint/occupancy/value-band/limit/decorative filler pipeline without mines/resources or full guard/reward scope."
     }
   ],
   "stoppedOrPausedTasks": [
