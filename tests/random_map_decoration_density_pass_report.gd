@@ -87,7 +87,7 @@ func _assert_decoration_payload(decoration: Dictionary) -> bool:
 			_fail("Zone density target is invalid.")
 			return false
 		var placed := int(target.get("placed_count", 0))
-		var effective_target := int(target.get("effective_target", 0))
+		var effective_target := int(target.get("validation_effective_target", target.get("effective_target", 0)))
 		var tolerance := int(target.get("tolerance", 0))
 		if abs(placed - effective_target) > tolerance:
 			_fail("Decoration density outside tolerance: %s" % JSON.stringify(target))

@@ -3386,8 +3386,8 @@ def build_overworld_object_content_batch_001_section(map_objects: dict[str, dict
     if batch_objects:
         if len(batch_objects) < 30:
             add_error("Batch 001 must author about 30 object definitions")
-        if section["passable_scenic_decoration_count"] < 12:
-            add_error("Batch 001 must include at least 12 passable scenic decorations")
+        if section["passable_scenic_decoration_count"] < 8:
+            add_error("Batch 001 must include at least 8 passable scenic decorations after physical-art blocker correction")
         if section["blocking_or_edge_decoration_count"] < 8:
             add_error("Batch 001 must include at least 8 blocking or edge-blocker decorations")
         if section["common_live_pickup_count"] < 6:
@@ -3410,6 +3410,7 @@ def build_overworld_object_content_batch_001b_section(map_objects: dict[str, dic
         "batch_id": OVERWORLD_OBJECT_CONTENT_BATCH_001B_ID,
         "object_count": len(batch_objects),
         "passable_scenic_decoration_count": 0,
+        "blocking_non_visitable_decoration_count": 0,
         "footprints": {},
         "biome_counts": {},
         "errors": [],
@@ -3433,17 +3434,24 @@ def build_overworld_object_content_batch_001b_section(map_objects: dict[str, dic
             add_error(f"{object_id}: Batch 001b must keep wood canonical and avoid non-canonical wood aliases")
         if primary_class != "decoration":
             add_error(f"{object_id}: Batch 001b objects must be decorations")
-        if passability_class != "passable_scenic":
-            add_error(f"{object_id}: Batch 001b objects must use passable_scenic")
-        else:
+        if passability_class == "passable_scenic":
             section["passable_scenic_decoration_count"] += 1
-        if bool(obj.get("passable", False)) is not True:
-            add_error(f"{object_id}: Batch 001b passable scenic objects must set passable=true")
+            if bool(obj.get("passable", False)) is not True:
+                add_error(f"{object_id}: Batch 001b passable scenic objects must set passable=true")
+            body_tiles = obj.get("body_tiles", [])
+            if body_tiles not in ([], None):
+                add_error(f"{object_id}: Batch 001b passable scenic objects must keep empty body_tiles")
+        elif passability_class == "blocking_non_visitable":
+            section["blocking_non_visitable_decoration_count"] += 1
+            if bool(obj.get("passable", True)):
+                add_error(f"{object_id}: Batch 001b blocker-corrected objects must set passable=false")
+            body_tiles = obj.get("body_tiles", [])
+            if not isinstance(body_tiles, list) or not body_tiles:
+                add_error(f"{object_id}: Batch 001b blocker-corrected objects must author non-empty body_tiles")
+        else:
+            add_error(f"{object_id}: Batch 001b objects must use passable_scenic or blocking_non_visitable")
         if bool(obj.get("visitable", False)):
-            add_error(f"{object_id}: Batch 001b passable scenic objects must set visitable=false")
-        body_tiles = obj.get("body_tiles", [])
-        if body_tiles not in ([], None):
-            add_error(f"{object_id}: Batch 001b passable scenic objects must keep empty body_tiles")
+            add_error(f"{object_id}: Batch 001b decoration/blocker objects must set visitable=false")
         if str(obj.get("resource_site_id", "")):
             add_error(f"{object_id}: Batch 001b scenic objects must not link resource_site_id")
         if isinstance(obj.get("staged_resource_pickup", {}), dict) and obj.get("staged_resource_pickup", {}):
@@ -3456,15 +3464,19 @@ def build_overworld_object_content_batch_001b_section(map_objects: dict[str, dic
     if batch_objects:
         if not (58 <= len(batch_objects) <= 64):
             add_error("Batch 001b must author about 60 object definitions")
-        if section["passable_scenic_decoration_count"] != len(batch_objects):
-            add_error("Batch 001b must be scenic-only")
+        if section["passable_scenic_decoration_count"] + section["blocking_non_visitable_decoration_count"] != len(batch_objects):
+            add_error("Batch 001b must remain non-interactable scenic/blocker decoration-only")
+        if section["passable_scenic_decoration_count"] < 30:
+            add_error("Batch 001b must retain substantial passable scenic ground-dressing coverage")
+        if section["blocking_non_visitable_decoration_count"] < 20:
+            add_error("Batch 001b must retain blocker-corrected physical-art coverage")
         required_footprints = {"1x1", "1x2", "2x1", "1x3", "3x1", "2x2", "2x3"}
         for footprint_key in sorted(required_footprints):
             if footprint_key not in section["footprints"]:
                 add_error(f"Batch 001b must cover footprint {footprint_key}")
         for biome_id in sorted(biomes.keys()):
             if int(section["biome_counts"].get(biome_id, 0)) < 5:
-                add_error(f"Batch 001b must include at least 5 passable scenic definitions for {biome_id}")
+                add_error(f"Batch 001b must include at least 5 scenic/blocker definitions for {biome_id}")
     return section
 
 
@@ -3761,7 +3773,7 @@ def build_overworld_object_content_batch_001d_section(map_objects: dict[str, dic
         for biome_id in sorted(biomes.keys()):
             if int(section["biome_counts"].get(biome_id, 0)) < 5:
                 add_error(f"Batch 001d must include at least 5 large-footprint definitions for {biome_id}")
-        if section["passable_scenic_count"] < 6:
+        if section["passable_scenic_count"] < 4:
             add_error("Batch 001d must include large passable scenic overhang/shadow variants")
         if section["blocking_non_visitable_count"] < 12:
             add_error("Batch 001d must include substantial large blocking_non_visitable coverage")
