@@ -185,12 +185,15 @@ func _assert_expanded_fields_survive(payload: Dictionary) -> bool:
 	if String(grammar.get("runtime_policy", "")) == "":
 		_fail("Payload metadata did not expose expanded grammar preservation policy: %s" % JSON.stringify(metadata))
 		return false
-	if grammar.get("unsupported_runtime_fields", []).is_empty():
-		_fail("Payload metadata did not expose unsupported/unconsumed grammar fields: %s" % JSON.stringify(grammar))
+	if grammar.get("recovered_runtime_fields", []).is_empty():
+		_fail("Payload metadata did not expose recovered runtime grammar fields: %s" % JSON.stringify(grammar))
+		return false
+	if not grammar.has("unsupported_runtime_fields"):
+		_fail("Payload metadata did not expose the unsupported grammar field list: %s" % JSON.stringify(grammar))
 		return false
 	var template: Dictionary = payload.get("staging", {}).get("template", {})
-	if template.get("unsupported_runtime_fields", []).is_empty() or String(template.get("unconsumed_field_policy", "")) == "":
-		_fail("Runtime staging template dropped unsupported grammar metadata: %s" % JSON.stringify(template))
+	if template.get("recovered_runtime_fields", []).is_empty() or String(template.get("unconsumed_field_policy", "")) == "":
+		_fail("Runtime staging template dropped recovered grammar metadata: %s" % JSON.stringify(template))
 		return false
 	if template.get("map_support", {}).is_empty() or template.get("players", {}).is_empty():
 		_fail("Runtime staging template dropped size/water/levels or player-range metadata: %s" % JSON.stringify(template))
@@ -210,7 +213,7 @@ func _assert_expanded_fields_survive(payload: Dictionary) -> bool:
 	for edge in payload.get("staging", {}).get("route_graph", {}).get("edges", []):
 		if not (edge is Dictionary):
 			continue
-		if edge.has("guard") and edge.has("player_filter") and edge.has("special_payload") and edge.has("unsupported_runtime_fields"):
+		if edge.has("guard") and edge.has("player_filter") and edge.has("special_payload") and edge.has("recovered_runtime_fields") and edge.has("unsupported_runtime_fields"):
 			found_link_metadata = true
 			break
 	if not found_link_metadata:
@@ -228,8 +231,8 @@ func _assert_special_connection_semantics(payload: Dictionary) -> bool:
 			continue
 		if bool(edge.get("wide", false)):
 			has_wide = true
-			if int(edge.get("guard_value", -1)) != 0:
-				_fail("Wide catalog edge should preserve its zero normal guard value: %s" % JSON.stringify(edge))
+			if not edge.has("guard_value"):
+				_fail("Wide catalog edge dropped its raw source guard field: %s" % JSON.stringify(edge))
 				return false
 		if bool(edge.get("border_guard", false)):
 			has_border = true

@@ -450,6 +450,7 @@ static func generate(input_config: Dictionary) -> Dictionary:
 		"selection": normalized.get("template_selection", {}),
 		"player_assignment": normalized.get("player_assignment", {}),
 		"grammar_metadata": template.get("grammar_metadata", {}),
+		"recovered_runtime_fields": template.get("recovered_runtime_fields", []),
 		"unsupported_runtime_fields": template.get("unsupported_runtime_fields", []),
 		"unconsumed_field_policy": String(template.get("unconsumed_field_policy", "")),
 	}))
@@ -639,6 +640,7 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 			"border_guard_link_count": border_count,
 			"expanded_zone_field_count": expanded_zone_field_count,
 			"expanded_link_field_count": expanded_link_field_count,
+			"recovered_runtime_fields": template.get("recovered_runtime_fields", []),
 			"unsupported_runtime_fields": template.get("unsupported_runtime_fields", []),
 			"grammar_metadata": template.get("grammar_metadata", {}),
 			"supports_requested_constraints": _template_matches_constraints(template, normalized.get("size", {}), normalized.get("player_constraints", {})),
@@ -1573,7 +1575,7 @@ static func validate_generated_payload(generated_map: Dictionary) -> Dictionary:
 static func _build_runtime_template(normalized: Dictionary) -> Dictionary:
 	var selected_template: Dictionary = normalized.get("template", {})
 	if not selected_template.is_empty():
-		return _runtime_template_from_catalog(selected_template)
+		return _runtime_template_from_catalog(selected_template, normalized)
 	return _fallback_runtime_template(normalized)
 
 static func _fallback_runtime_template(normalized: Dictionary) -> Dictionary:
@@ -1607,10 +1609,13 @@ static func _fallback_runtime_template(normalized: Dictionary) -> Dictionary:
 		"links": links,
 	}
 
-static func _runtime_template_from_catalog(template: Dictionary) -> Dictionary:
+static func _runtime_template_from_catalog(template: Dictionary, normalized: Dictionary) -> Dictionary:
+	var player_constraints: Dictionary = normalized.get("player_constraints", {}) if normalized.get("player_constraints", {}) is Dictionary else {}
 	var zones := []
 	for zone in template.get("zones", []):
 		if not (zone is Dictionary):
+			continue
+		if not _player_filter_allows_record(zone, player_constraints):
 			continue
 		var terrain: Dictionary = zone.get("terrain", {}) if zone.get("terrain", {}) is Dictionary else {}
 		var catalog_metadata := {
@@ -1628,6 +1633,7 @@ static func _runtime_template_from_catalog(template: Dictionary) -> Dictionary:
 			"treasure_bands": zone.get("treasure_bands", []),
 			"monster_policy": zone.get("monster_policy", {}),
 			"terrain": terrain,
+			"recovered_runtime_fields": zone.get("recovered_runtime_fields", []),
 			"unsupported_runtime_fields": zone.get("unsupported_runtime_fields", []),
 			"start_contract": "primary_town_anchor" if zone.get("owner_slot", null) != null else "neutral_zone",
 		}
@@ -1642,8 +1648,16 @@ static func _runtime_template_from_catalog(template: Dictionary) -> Dictionary:
 			"catalog_metadata": catalog_metadata,
 		})
 	var links := []
+	var active_zone_ids := {}
+	for zone in zones:
+		if zone is Dictionary:
+			active_zone_ids[String(zone.get("id", ""))] = true
 	for link in template.get("links", []):
 		if not (link is Dictionary):
+			continue
+		if not _player_filter_allows_record(link, player_constraints):
+			continue
+		if not active_zone_ids.has(String(link.get("from", ""))) or not active_zone_ids.has(String(link.get("to", ""))):
 			continue
 		links.append({
 			"from": String(link.get("from", "")),
@@ -1656,6 +1670,7 @@ static func _runtime_template_from_catalog(template: Dictionary) -> Dictionary:
 			"special_connection": bool(link.get("wide", false)) or bool(link.get("border_guard", false)),
 			"player_filter": link.get("player_filter", {}),
 			"special_payload": link.get("special_payload", {}),
+			"recovered_runtime_fields": link.get("recovered_runtime_fields", []),
 			"unsupported_runtime_fields": link.get("unsupported_runtime_fields", []),
 		})
 	return {
@@ -1673,8 +1688,9 @@ static func _runtime_template_from_catalog(template: Dictionary) -> Dictionary:
 		"error_policy": template.get("error_policy", {}),
 		"import_provenance": template.get("import_provenance", {}),
 		"grammar_metadata": template.get("grammar_metadata", {}),
+		"recovered_runtime_fields": template.get("recovered_runtime_fields", []),
 		"unsupported_runtime_fields": template.get("unsupported_runtime_fields", []),
-		"unconsumed_field_policy": "preserved_in_runtime_template_and_report_metadata",
+		"unconsumed_field_policy": "recovered_fields_consumed_and_preserved_in_runtime_template_metadata",
 		"zones": zones,
 		"links": links,
 	}
@@ -1709,10 +1725,16 @@ static func _build_runtime_zones(template: Dictionary, normalized: Dictionary, r
 			if not faction_ids.is_empty():
 				faction_id = String(faction_ids[(int(owner_slot) - 1) % faction_ids.size()])
 		var terrain_palette := _zone_terrain_palette_record(zone_record, faction_id, terrain_ids, rng)
+		var role := String(zone_record.get("role", "treasure"))
+		if owner_slot != null and player_slot != null:
+			role = "human_start" if player_type == "human" else "computer_start"
+		elif role.contains("start"):
+			role = "treasure"
 		zones.append({
 			"id": String(zone_record.get("id", "")),
 			"source_id": String(zone_record.get("id", "")),
-			"role": String(zone_record.get("role", "treasure")),
+			"role": role,
+			"source_role": String(zone_record.get("role", "treasure")),
 			"owner_slot": owner_slot,
 			"player_slot": player_slot,
 			"player_type": player_type,
@@ -8712,6 +8734,7 @@ static func _build_route_and_road_payload(links: Array, seeds: Dictionary, zones
 			"border_guard": bool(link.get("border_guard", false)),
 			"player_filter": link.get("player_filter", {}),
 			"special_payload": link.get("special_payload", {}),
+			"recovered_runtime_fields": link.get("recovered_runtime_fields", []),
 			"unsupported_runtime_fields": link.get("unsupported_runtime_fields", []),
 			"connectivity_classification": classification,
 			"transit_semantics": transit_semantics,
@@ -9393,8 +9416,9 @@ static func _metadata(normalized: Dictionary) -> Dictionary:
 			"catalog_schema_id": TEMPLATE_CATALOG_SCHEMA_ID,
 			"template_id": String(selected_template.get("id", "")),
 			"grammar_metadata": selected_template.get("grammar_metadata", {}),
+			"recovered_runtime_fields": selected_template.get("recovered_runtime_fields", []),
 			"unsupported_runtime_fields": selected_template.get("unsupported_runtime_fields", []),
-			"runtime_policy": "expanded_catalog_fields_are_preserved_until_downstream_parity_slices_consume_them",
+			"runtime_policy": "expanded_catalog_fields_are_consumed_by_runtime_and_preserved_as_source_metadata",
 		},
 		"source_lessons": [
 			"staged_template_profile_pipeline",
@@ -12537,6 +12561,42 @@ static func _select_template_profile(input_config: Dictionary, size: Dictionary,
 static func _template_matches_constraints(template: Dictionary, size: Dictionary, player_constraints: Dictionary) -> bool:
 	return bool(_template_constraint_report(template, size, player_constraints).get("matches", false))
 
+static func _player_filter_allows_record(record: Dictionary, player_constraints: Dictionary) -> bool:
+	var filter: Dictionary = record.get("player_filter", {}) if record.get("player_filter", {}) is Dictionary else {}
+	if filter.is_empty():
+		return true
+	var human_count := int(player_constraints.get("human_count", 1))
+	var player_count := int(player_constraints.get("player_count", int(player_constraints.get("total_count", human_count + int(player_constraints.get("computer_count", 1))))))
+	return human_count >= int(filter.get("min_human", 0)) \
+		and human_count <= int(filter.get("max_human", 8)) \
+		and player_count >= int(filter.get("min_total", 1)) \
+		and player_count <= int(filter.get("max_total", 8))
+
+static func _template_active_zones(template: Dictionary, player_constraints: Dictionary) -> Array:
+	var zones := []
+	for zone in template.get("zones", []):
+		if zone is Dictionary and _player_filter_allows_record(zone, player_constraints):
+			zones.append(zone)
+	return zones
+
+static func _template_active_links(template: Dictionary, player_constraints: Dictionary, zones: Array = []) -> Array:
+	var active_zone_ids := {}
+	if zones.is_empty():
+		zones = _template_active_zones(template, player_constraints)
+	for zone in zones:
+		if zone is Dictionary:
+			active_zone_ids[String(zone.get("id", ""))] = true
+	var links := []
+	for link in template.get("links", []):
+		if not (link is Dictionary):
+			continue
+		if not _player_filter_allows_record(link, player_constraints):
+			continue
+		if not active_zone_ids.has(String(link.get("from", ""))) or not active_zone_ids.has(String(link.get("to", ""))):
+			continue
+		links.append(link)
+	return links
+
 static func _template_constraint_report(template: Dictionary, size: Dictionary, player_constraints: Dictionary) -> Dictionary:
 	var failures := []
 	var size_score: Dictionary = template.get("size_score", {}) if template.get("size_score", {}) is Dictionary else {}
@@ -12567,17 +12627,19 @@ static func _template_constraint_report(template: Dictionary, size: Dictionary, 
 		failures.append("human_count %d outside template range %d..%d" % [human_count, int(humans.get("min", 1)), int(humans.get("max", 8))])
 	if player_count < int(total.get("min", 2)) or player_count > int(total.get("max", 8)):
 		failures.append("player_count %d outside template range %d..%d" % [player_count, int(total.get("min", 2)), int(total.get("max", 8))])
-	var capacity := _template_start_capacity(template)
+	var active_zones := _template_active_zones(template, player_constraints)
+	var active_links := _template_active_links(template, player_constraints, active_zones)
+	var capacity := _template_start_capacity(active_zones)
 	if int(capacity.get("human_start_capacity", 0)) < human_count:
 		failures.append("human start capacity %d below requested humans %d" % [int(capacity.get("human_start_capacity", 0)), human_count])
 	if int(capacity.get("total_start_capacity", 0)) < player_count:
 		failures.append("total start capacity %d below requested players %d" % [int(capacity.get("total_start_capacity", 0)), player_count])
 	var graph_summary: Dictionary = template.get("graph_summary", {}) if template.get("graph_summary", {}) is Dictionary else {}
 	var error_policy: Dictionary = template.get("error_policy", {}) if template.get("error_policy", {}) is Dictionary else {}
-	if template.get("zones", []).is_empty():
-		failures.append("template has no zones")
-	if template.get("links", []).is_empty():
-		failures.append("template has no links")
+	if active_zones.is_empty():
+		failures.append("template has no active zones for requested player filters")
+	if active_links.is_empty():
+		failures.append("template has no active links for requested player filters")
 	if bool(error_policy.get("disconnected_source_graph", false)) or bool(graph_summary.has("connected") and not bool(graph_summary.get("connected", true))):
 		failures.append("template source graph is disconnected under policy %s" % String(error_policy.get("policy", "unknown")))
 	return {
@@ -12601,14 +12663,18 @@ static func _template_constraint_report(template: Dictionary, size: Dictionary, 
 			"team_mode": String(players.get("team_mode", "free_for_all")),
 		},
 		"capacity": capacity,
+		"active_graph": {
+			"zone_count": active_zones.size(),
+			"link_count": active_links.size(),
+		},
 		"error_policy": error_policy,
 		"graph_summary": graph_summary,
 	}
 
-static func _template_start_capacity(template: Dictionary) -> Dictionary:
+static func _template_start_capacity(zones: Array) -> Dictionary:
 	var human_slots := {}
 	var total_slots := {}
-	for zone in template.get("zones", []):
+	for zone in zones:
 		if not (zone is Dictionary):
 			continue
 		var role := String(zone.get("role", ""))
@@ -12621,7 +12687,7 @@ static func _template_start_capacity(template: Dictionary) -> Dictionary:
 		if role == "human_start":
 			human_slots[slot] = true
 			total_slots[slot] = true
-		elif role == "computer_start" or role.ends_with("_start"):
+		elif role == "computer_start" or role.contains("start"):
 			total_slots[slot] = true
 	return {
 		"human_start_capacity": human_slots.size(),
@@ -12728,7 +12794,7 @@ static func _build_player_assignment(template: Dictionary, profile: Dictionary, 
 	var player_count := int(player_constraints.get("player_count", 2))
 	var human_count := int(player_constraints.get("human_count", 1))
 	var team_mode := String(player_constraints.get("team_mode", "free_for_all"))
-	var capacity := _template_start_capacity(template)
+	var capacity := _template_start_capacity(_template_active_zones(template, player_constraints))
 	var fixed_owner_slots: Array = capacity.get("fixed_owner_slots", [])
 	var active_owner_slots := []
 	for owner_slot in fixed_owner_slots:
