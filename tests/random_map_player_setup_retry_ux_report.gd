@@ -3,6 +3,8 @@ extends Node
 const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const REPORT_ID := "RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT"
+const SMALL_DEFAULT_TEMPLATE_ID := "translated_rmg_template_049_v1"
+const SMALL_DEFAULT_PROFILE_ID := "translated_rmg_profile_049_v1"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -60,8 +62,8 @@ func _run() -> void:
 	if String(launch_setup.get("template_id", "")) == "" or String(launch_setup.get("profile_id", "")) == "":
 		_fail("Generated UI setup did not expose template/profile provenance before launch: %s" % JSON.stringify(launch_setup))
 		return
-	if String(launch_setup.get("template_id", "")) != "border_gate_compact_v1" or String(launch_setup.get("profile_id", "")) != "border_gate_compact_profile_v1":
-		_fail("Small UI setup did not select the compact default topology: %s" % JSON.stringify(launch_setup))
+		if String(launch_setup.get("template_id", "")) != SMALL_DEFAULT_TEMPLATE_ID or String(launch_setup.get("profile_id", "")) != SMALL_DEFAULT_PROFILE_ID:
+			_fail("Small UI setup did not select the recovered default topology: %s" % JSON.stringify(launch_setup))
 		return
 
 	var launch_result: Dictionary = shell.call("validation_start_generated_skirmish")
@@ -118,7 +120,7 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 	if String(internal_provenance.get("selection_source", "")) != "homm3_size_class_default":
 		_fail("Generated template/profile provenance did not identify size-default derivation: %s" % JSON.stringify(internal_provenance))
 		return false
-	if String(internal_provenance.get("template_id", "")) != "border_gate_compact_v1" or String(internal_provenance.get("profile_id", "")) != "border_gate_compact_profile_v1":
+	if String(internal_provenance.get("template_id", "")) != SMALL_DEFAULT_TEMPLATE_ID or String(internal_provenance.get("profile_id", "")) != SMALL_DEFAULT_PROFILE_ID:
 		_fail("Generated internal template/profile provenance did not persist in snapshot: %s" % JSON.stringify(internal_provenance))
 		return false
 	if bool(internal_provenance.get("template_picker_visible", true)) or bool(internal_provenance.get("profile_picker_visible", true)):
@@ -244,8 +246,8 @@ func _assert_session_boundary(launch_result: Dictionary) -> bool:
 			return false
 	var normalized: Dictionary = provenance.get("normalized_config", {}) if provenance.get("normalized_config", {}) is Dictionary else {}
 	var identity: Dictionary = provenance.get("generated_identity", {}) if provenance.get("generated_identity", {}) is Dictionary else {}
-	if String(normalized.get("template_id", identity.get("template_id", ""))) != "border_gate_compact_v1" or String(normalized.get("profile_id", identity.get("profile_id", ""))) != "border_gate_compact_profile_v1":
-		_fail("Generated UI launch provenance did not preserve compact size-default template/profile: %s" % JSON.stringify(provenance))
+	if String(normalized.get("template_id", identity.get("template_id", ""))) != SMALL_DEFAULT_TEMPLATE_ID or String(normalized.get("profile_id", identity.get("profile_id", ""))) != SMALL_DEFAULT_PROFILE_ID:
+		_fail("Generated UI launch provenance did not preserve recovered size-default template/profile: %s" % JSON.stringify(provenance))
 		return false
 	var boundaries: Dictionary = provenance.get("boundaries", {}) if provenance.get("boundaries", {}) is Dictionary else {}
 	if bool(boundaries.get("authored_content_writeback", true)) or bool(boundaries.get("content_scenarios_json", true)) or bool(boundaries.get("generated_scenario_draft_registry", true)) or bool(boundaries.get("legacy_json_scenario_record", true)):

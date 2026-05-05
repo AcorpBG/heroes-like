@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-full-output-replay-identity-correction-10184",
-  "currentSliceTitle": "Native RMG Full Output Replay Identity Correction",
+  "currentSliceId": "native-rmg-uploaded-small-default-parity-correction-10184",
+  "currentSliceTitle": "Native RMG Uploaded Small Default Parity Correction",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Correct the native RMG full-output replay gate so identical seed/config generations produce stable package component signatures by excluding volatile runtime timing signatures from deterministic object placement payload identity. Runtime call-site adoption is still false, translated medium profiles remain partial foundations, and exact HoMM3 private-toolkit parity is not claimed.",
+  "currentSliceNotes": "Exact HoMM3 parity is still not claimed: translated profile full_generation_status remains not_implemented, reward/mine mix is still high versus the uploaded baseline, and runtime authoritative call-site adoption remains gated.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T00:00:00Z",
+  "updatedAt": "2026-05-05T23:51:33Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -10279,6 +10279,62 @@
         "Gate documentation and repo validation tokens now reflect stable full-output replay identity for validated generated components while runtime authoritative adoption remains gated."
       ],
       "remainingRisk": "Runtime call-site adoption is still false, translated medium profiles remain partial foundations, and exact HoMM3 private-toolkit parity is not claimed."
+    },
+    {
+      "id": "native-rmg-uploaded-small-default-parity-correction-10184",
+      "title": "Native RMG Uploaded Small Default Parity Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "owner-uploaded small 3-player single-level HoMM3 map comparison on 2026-05-05"
+      ],
+      "purpose": "Compare the uploaded single-level 3-player HoMM3 small map against native output and move player-facing small generation from the synthetic compact fixture toward recovered translated-template scale for towns, roads, decorations, and guarded zone structure.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/core/ScenarioSelectRules.gd",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "tests/random_map_player_setup_retry_ux_report.gd",
+        "tests/random_map_player_count_range_report.gd",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn",
+        "godot --headless --path . tests/random_map_player_count_range_report.tscn",
+        "godot --headless --path . tests/random_map_template_catalog_grammar_report.tscn",
+        "godot --headless --path . tests/random_map_all_template_menu_wiring_report.tscn",
+        "godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "godot --headless --path . tests/native_random_map_homm3_validation_adoption_gates_report.tscn",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Player-facing Small 36x36 defaults select recovered translated template/profile 049 instead of the synthetic compact fixture.",
+        "Inactive source start zones from translated templates can materialize their source player town/castle requirements as neutral towns/castles when the requested player count is lower than the source template capacity.",
+        "Small translated land generation uses HoMM3-like dense decoration targets so blockers/decorations, town count, guard records, and roads approximate the uploaded baseline.",
+        "A focused report records the uploaded baseline and native current output for legacy compact, player-facing small default, and explicit translated template 049 cases."
+      ],
+      "completionEvidence": [
+        "Uploaded baseline constants from small3playermap-1level.h3m: 36x36x1, 7 towns, nearest town distance 10, 303 objects, 150 decorations, 40 guards, and 110 road cells.",
+        "Player-facing small default now resolves to translated_rmg_template_049_v1 / translated_rmg_profile_049_v1.",
+        "Focused native comparison report passes with player-facing small output: 7 towns, nearest town distance 9, 291 objects, 159 decorations, 45 guard records, and 105 road cells.",
+        "Legacy border_gate_compact_v1 remains explicitly testable as a compact fixture but no longer drives the default Small UI path."
+      ],
+      "remainingRisk": "Exact HoMM3 parity is still not claimed: translated profile full_generation_status remains not_implemented, reward/mine mix is still high versus the uploaded baseline, and runtime authoritative call-site adoption remains gated.",
+      "nonGoals": [
+        "No HoMM3 copyrighted art or binary H3M writeout/import adoption.",
+        "No save-version bump, package/schema migration, or authoritative runtime adoption change.",
+        "No claim of byte-level or full object-table parity for all recovered translated templates."
+      ],
+      "updatedAt": "2026-05-05T23:51:33Z",
+      "startedAt": "2026-05-05T23:51:33Z",
+      "completedAt": "2026-05-05T23:51:33Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -11236,6 +11292,49 @@
         "git diff --check"
       ],
       "remainingGap": "Runtime call-site adoption is still false, translated medium profiles remain partial foundations, and exact HoMM3 private-toolkit parity is not claimed."
+    },
+    {
+      "id": "native-rmg-uploaded-small-default-parity-correction-10184",
+      "title": "Native RMG Uploaded Small Default Parity Correction Evidence",
+      "status": "completed",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "owner-uploaded small 3-player single-level HoMM3 map comparison on 2026-05-05"
+      ],
+      "mappedPlannedSliceIds": [
+        "native-rmg-uploaded-small-default-parity-correction-10184"
+      ],
+      "implementationRefs": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/core/ScenarioSelectRules.gd",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "tests/random_map_player_setup_retry_ux_report.gd",
+        "tests/random_map_player_count_range_report.gd",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Uploaded baseline constants from small3playermap-1level.h3m: 36x36x1, 7 towns, nearest town distance 10, 303 objects, 150 decorations, 40 guards, and 110 road cells.",
+        "Player-facing small default now resolves to translated_rmg_template_049_v1 / translated_rmg_profile_049_v1.",
+        "Focused native comparison report passes with player-facing small output: 7 towns, nearest town distance 9, 291 objects, 159 decorations, 45 guard records, and 105 road cells.",
+        "Legacy border_gate_compact_v1 remains explicitly testable as a compact fixture but no longer drives the default Small UI path."
+      ],
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn",
+        "godot --headless --path . tests/random_map_player_count_range_report.tscn",
+        "godot --headless --path . tests/random_map_template_catalog_grammar_report.tscn",
+        "godot --headless --path . tests/random_map_all_template_menu_wiring_report.tscn",
+        "godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "godot --headless --path . tests/native_random_map_homm3_validation_adoption_gates_report.tscn",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "remainingGap": "Exact HoMM3 parity is still not claimed: translated profile full_generation_status remains not_implemented, reward/mine mix is still high versus the uploaded baseline, and runtime authoritative call-site adoption remains gated."
     }
   ],
   "docsReadyEvidence": [
