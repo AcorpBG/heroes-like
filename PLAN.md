@@ -21,9 +21,9 @@ Rules:
 
 ## Current Tactical State
 
-Current phase: **Phase 3 - HoMM3-Style Random Map Generator Rework**.
+Current phase: **Phase 3 - HoMM3-Style Random Map Generator Rework complete**.
 
-Current tactical chain: use the recovered `homm3-re` RMG spec as the ground truth and rework the native C++ GDExtension generator from a surface-statistics parity approximation into a phased, data-driven HoMM3-style generator translated into original game content. The prior Phase 2 native RMG work remains valuable as infrastructure, profiling, fixture, package, and validation foundation, but it is no longer the target architecture. The accepted goal is `native-rmg-homm3-spec-rework-parent-10184` and its child slices in recovered order: spec gap audit, generator data model, runtime template/zone graph, terrain/island shaping, towns/castles placement, cleanup/connection payload/roads/rivers, object placement pipeline, mines/resources, guards/rewards/monsters, and validation/adoption gates.
+Current tactical chain: the accepted Phase 3 goal `native-rmg-homm3-spec-rework-parent-10184` and its child slices are complete through validation/adoption gates. Native package/session adoption remains feature-gated and non-authoritative until a later replay gate proves stable full-output package/session identity for supported profiles.
 
 Do not infer product readiness from the completed queue. Completed Phase 2/RMG/performance/tooling evidence means those specific slices passed their gates; it does not mean playable alpha, campaign breadth, release readiness, broad faction completion, asset parity, or HoMM3 byte-level cloning.
 
@@ -1375,7 +1375,7 @@ nonGoals:
 
 id: `native-rmg-homm3-spec-rework-parent-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `in_progress`
+status: `completed`
 purpose: Parent goal for replacing the current native RMG surface-parity approximation with a recovered-spec-driven, phased generator architecture.
 sourceDocs:
 - `project.md`
@@ -1543,7 +1543,7 @@ validation:
 
 id: `native-rmg-homm3-object-placement-pipeline-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `pending`
+status: `completed`
 purpose: Rework object selection, footprints, terrain masks, occupancy, value bands, limits, and decorative filler as the shared placement pipeline used by later mine, reward, guard, and decoration slices.
 sourceDocs:
 - `docs/native-rmg-homm3-spec-rework-gap-report.md`
@@ -1557,10 +1557,16 @@ implementationTargets:
 - native object placement
 - object definition/footprint validators
 - local/spatial distribution reports
+- focused report scene `tests/native_random_map_homm3_object_placement_pipeline_report.tscn`
+- implementation evidence `docs/native-rmg-homm3-object-placement-pipeline-report.md`
 completionCriteria:
 - Supported objects resolve through explicit original-content definitions with footprint, passability/action, terrain, category, limit, value/density, and writeout metadata.
 - Decoration uses ordinary object-template filler semantics rather than a decoration super-type shortcut.
 - XL object-placement cost is measured and bounded enough for broad seed validation.
+validation:
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_object_placement_pipeline_report.tscn`
+- `python3 tests/validate_repo.py`
+- `git diff --check`
 nonGoals:
 - No HoMM3 asset import, exact DEF frame dependency, or broad economy rebalance.
 
@@ -1592,7 +1598,7 @@ nonGoals:
 
 id: `native-rmg-homm3-guards-rewards-monsters-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `pending`
+status: `completed`
 purpose: Implement recovered monster masks, strength scaling, connection guards, protected rewards, and guard/reward relations using original unit and reward content.
 sourceDocs:
 - `docs/native-rmg-homm3-spec-rework-gap-report.md`
@@ -1606,17 +1612,22 @@ implementationTargets:
 - monster mask and strength scaling helpers
 - reward value-band selection and guard/reward validators
 - focused guard/reward/monster reports
+- implementation evidence `docs/native-rmg-homm3-guards-rewards-monsters-report.md`
 completionCriteria:
 - Monster selection honors match-to-town, allowed faction masks, and recovered local/global strength scaling for supported profiles.
 - Connection and protected-object guards use recovered value semantics and original unit/content ids.
 - Value-banded rewards preserve low/high/density behavior with explicit unsupported reward boundaries.
+validation:
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/native_random_map_homm3_guards_rewards_monsters_report.tscn`
+- `python3 tests/validate_repo.py`
+- `git diff --check`
 nonGoals:
 - No HoMM3 creature, artifact, spell, skill, or reward art/name/text import.
 - No broad combat/economy rebalance beyond generator guard/reward semantics.
 
 id: `native-rmg-homm3-validation-adoption-gates-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `pending`
+status: `completed`
 purpose: Gate the reworked generator through validation, fixture comparison, performance, save/replay boundaries, and package/session adoption before gameplay reliance.
 sourceDocs:
 - `docs/native-rmg-homm3-spec-rework-gap-report.md`
@@ -1632,6 +1643,18 @@ implementationTargets:
 completionCriteria:
 - Validators cover template filtering, zone graph connectivity, required placements, footprints/occupancy, object definition references, road/river ranges, guard semantics, and performance budgets.
 - Native package/session adoption remains feature-gated until reports prove supported profiles are structurally acceptable.
+validation:
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2`
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_homm3_validation_adoption_gates_report.tscn`
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 180 tests/native_random_map_package_session_adoption_report.tscn`
+- Selected Phase 3 native RMG reports for runtime zone graph, terrain island shape, roads/rivers/connections, object placement pipeline, mines/resources, and guards/rewards/monsters.
+- `python3 -m json.tool ops/progress.json >/dev/null`
+- `python3 tests/validate_repo.py`
+- `git diff --check`
+adoptionStatus:
+- Phase 3 closes with package/session adoption structurally ready but feature-gated and non-authoritative.
+- `full_output_signature_stable=false` keeps authoritative package/session replay and runtime call-site adoption out of this phase.
+- Follow-up: `native-rmg-package-session-authoritative-replay-gate-10184` should isolate nondeterministic full-output signature fields before any native runtime authority claim.
 nonGoals:
 - No alpha readiness claim; this gate only closes the RMG rework phase.
 
