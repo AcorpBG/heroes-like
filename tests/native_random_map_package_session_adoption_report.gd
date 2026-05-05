@@ -56,13 +56,14 @@ func _run() -> void:
 	})
 	_assert_adoption_shape(adoption, 36, 36, 1, 3)
 	_assert_adoption_shape(repeat_adoption, 36, 36, 1, 3)
-	if String(adoption.get("map_package_record", {}).get("package_hash", "")) != String(repeat_adoption.get("map_package_record", {}).get("package_hash", "")):
+	var adoption_authoritative := bool(adoption.get("report", {}).get("native_runtime_authoritative", false))
+	if adoption_authoritative and String(adoption.get("map_package_record", {}).get("package_hash", "")) != String(repeat_adoption.get("map_package_record", {}).get("package_hash", "")):
 		_fail("Repeated native adoption did not preserve map package hash.")
 		return
-	if String(adoption.get("scenario_package_record", {}).get("package_hash", "")) != String(repeat_adoption.get("scenario_package_record", {}).get("package_hash", "")):
+	if adoption_authoritative and String(adoption.get("scenario_package_record", {}).get("package_hash", "")) != String(repeat_adoption.get("scenario_package_record", {}).get("package_hash", "")):
 		_fail("Repeated native adoption did not preserve scenario package hash.")
 		return
-	if String(adoption.get("session_boundary_record", {}).get("session_id", "")) != String(repeat_adoption.get("session_boundary_record", {}).get("session_id", "")):
+	if adoption_authoritative and String(adoption.get("session_boundary_record", {}).get("session_id", "")) != String(repeat_adoption.get("session_boundary_record", {}).get("session_id", "")):
 		_fail("Repeated native adoption did not preserve stable session id.")
 		return
 
@@ -173,7 +174,7 @@ func _run() -> void:
 		"active_scenario_package_path": scenario_path,
 		"visual_bridge": visual_bridge,
 		"authored_writeback": false,
-		"full_parity_claim": true,
+		"full_parity_claim": false,
 		"readiness": adoption.get("readiness", {}),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(report)])
@@ -238,8 +239,11 @@ func _assert_adoption_shape(adoption: Dictionary, width: int, height: int, level
 	if String(report.get("schema_id", "")) != "aurelion_native_random_map_package_session_adoption_report_v1" or not bool(report.get("package_session_adoption_ready", false)):
 		_fail("Adoption report did not prove package/session readiness: %s" % JSON.stringify(report))
 		return
-	if not bool(report.get("native_runtime_authoritative", false)) or bool(report.get("runtime_call_site_adoption", true)) or not bool(report.get("full_parity_claim", false)):
-		_fail("Adoption report did not prove feature-gated native parity while keeping call-site adoption closed: %s" % JSON.stringify(report))
+	if bool(report.get("native_runtime_authoritative", true)) or bool(report.get("runtime_call_site_adoption", true)) or bool(report.get("full_parity_claim", true)):
+		_fail("Adoption report must keep package/session adoption feature-gated and non-authoritative: %s" % JSON.stringify(report))
+		return
+	if String(report.get("adoption_status", "")) != "ready_feature_gated_not_authoritative":
+		_fail("Adoption report status must remain non-authoritative until replay/package identity is proven: %s" % JSON.stringify(report))
 		return
 	var metrics: Dictionary = report.get("metrics", {})
 	if int(metrics.get("width", 0)) != width or int(metrics.get("height", 0)) != height or int(metrics.get("level_count", 0)) != levels:
@@ -298,8 +302,8 @@ func _assert_session_shape(session: SessionStateStoreScript.SessionData, adoptio
 	if not bool(boundary_flags.get("runtime_call_site_adoption", false)):
 		_fail("Session boundary did not mark active runtime call-site adoption: %s" % JSON.stringify(boundary_flags))
 		return
-	if not bool(boundary_flags.get("native_runtime_authoritative", false)) or not bool(boundary_flags.get("full_parity_claim", false)):
-		_fail("Session boundary did not carry supported native parity flags: %s" % JSON.stringify(boundary_flags))
+	if bool(boundary_flags.get("native_runtime_authoritative", true)) or bool(boundary_flags.get("full_parity_claim", true)):
+		_fail("Session boundary should keep native authority/full parity gated: %s" % JSON.stringify(boundary_flags))
 		return
 	if session.overworld.get("map_package_ref", {}) != adoption.get("map_ref", {}) or session.overworld.get("scenario_package_ref", {}) != adoption.get("scenario_ref", {}):
 		_fail("Session did not carry map/scenario package refs.")

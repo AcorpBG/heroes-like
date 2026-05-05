@@ -91,6 +91,9 @@ AI_HERO_TASK_NORMALIZER_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-tas
 AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_live_adoption_gate_report.gd"
 AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_live_adoption_gate_report.tscn"
 AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-live-hero-task-adoption-gate-report.md"
+NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.gd"
+NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.tscn"
+NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH = ROOT / "docs" / "native-rmg-homm3-spec-rework-gate-report.md"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -15266,6 +15269,50 @@ def validate_live_client_harness(errors: list[str]) -> None:
         ensure(required_token in outcome_script_text, errors, f"ScenarioOutcomeShell.gd is missing required live-harness token: {required_token}")
 
 
+def validate_native_rmg_homm3_validation_adoption_gate(errors: list[str]) -> None:
+    for path in (
+        NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH,
+        NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH,
+        NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing native RMG HoMM3 validation/adoption gate file: {path.relative_to(ROOT)}")
+
+    if NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH.exists():
+        scene_text = NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/native_random_map_homm3_validation_adoption_gates_report.gd"' in scene_text,
+            errors,
+            "Native RMG HoMM3 validation/adoption gate scene is not wired to its report script",
+        )
+
+    if NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH.exists():
+        script_text = NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "NATIVE_RANDOM_MAP_HOMM3_VALIDATION_ADOPTION_GATES_REPORT",
+            "native_rmg_homm3_validation_adoption_gates_10184",
+            "runtime_zone_graph",
+            "object_placement_pipeline",
+            "guard_reward",
+            "ready_feature_gated_not_authoritative",
+            "seed_config_replay_boundary_only_no_authoritative_package_session_adoption",
+            "full_output_signature_stable",
+            "performance_budget_msec",
+        ):
+            ensure(required_token in script_text, errors, f"Native RMG HoMM3 gate report is missing required token: {required_token}")
+
+    if NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH.exists():
+        doc_text = NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Native RMG HoMM3 Validation Adoption Gate Report",
+            "native-rmg-homm3-validation-adoption-gates-10184",
+            "ready_feature_gated_not_authoritative",
+            "full_output_signature_stable=false",
+            "No alpha readiness claim",
+            "authoritative package/session adoption remains gated",
+        ):
+            ensure(required_text in doc_text, errors, f"Native RMG HoMM3 gate report doc is missing required text: {required_text}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -15345,6 +15392,7 @@ def main() -> int:
     validate_battle_surrender_pursuit_aftermath(errors)
     validate_town_defense_battle_flow(errors)
     validate_live_client_harness(errors)
+    validate_native_rmg_homm3_validation_adoption_gate(errors)
     validate_in_session_save_controls(errors)
     validate_six_faction_content_scaffold(errors)
     validate_economy_wood_canonical_policy(errors)

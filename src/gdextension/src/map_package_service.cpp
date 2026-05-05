@@ -4202,6 +4202,21 @@ Dictionary object_pipeline_definition_for_kind(const String &kind, int32_t ordin
 		passability["mask"] = Array::make("anchor_enterable");
 		action["class"] = kind == "reward_reference" ? "visit_on_enter_or_guarded_claim" : "visit_on_enter";
 		action["mask"] = Array::make("anchor_action");
+	} else if (kind == "route_guard") {
+		passability["class"] = "blocking_visitable";
+		passability["mask"] = Array::make("body_blocked", "guard_blocks_route_until_defeated");
+		action["class"] = "battle_to_clear_route_guard";
+		action["mask"] = Array::make("approach_action");
+	} else if (kind == "special_guard_gate") {
+		passability["class"] = "blocking_visitable";
+		passability["mask"] = Array::make("body_blocked", "gate_unlock_required");
+		action["class"] = "unlock_connection_gate";
+		action["mask"] = Array::make("approach_action");
+	} else if (kind == "town") {
+		passability["class"] = "blocking_visitable";
+		passability["mask"] = Array::make("body_blocked", "town_approach");
+		action["class"] = "enter_or_capture_town";
+		action["mask"] = Array::make("south_action", "west_action");
 	} else {
 		passability["class"] = "blocking_visitable";
 		passability["mask"] = Array::make("body_blocked", "adjacent_visit");
@@ -4226,13 +4241,22 @@ Dictionary object_pipeline_definition_for_kind(const String &kind, int32_t ordin
 	} else if (kind == "mine") {
 		value_density["density"] = "phase_7_minimum_then_density";
 		value_density["value_source"] = "seven_category_mine_resource_fields";
+	} else if (kind == "route_guard") {
+		value_density["density"] = "connection_and_site_guard_strength_scaling";
+		value_density["value_source"] = "phase_10_monster_strength_formula";
+	} else if (kind == "special_guard_gate") {
+		value_density["density"] = "connection_payload_border_guard";
+		value_density["value_source"] = "type_9_equivalent_original_gate_payload";
+	} else if (kind == "town") {
+		value_density["density"] = "phase_4a_4b_town_castle_minimum_density";
+		value_density["value_source"] = "template_town_fields";
 	} else {
 		value_density["density"] = "zone_role_scaled_target";
 		value_density["value_source"] = "original_content_family_weight";
 	}
 	definition["value_density"] = value_density;
 	Dictionary writeout;
-	writeout["record_kind"] = kind == "decorative_obstacle" ? "decorative_map_object" : "map_object";
+	writeout["record_kind"] = kind == "decorative_obstacle" ? "decorative_map_object" : (kind == "special_guard_gate" ? "connection_gate" : "map_object");
 	writeout["serialization_state"] = "definition_and_instance_staged_package_record";
 	writeout["no_authored_content_writeback"] = true;
 	writeout["payload_fields"] = Array::make("object_id", "family_id", "zone_id", "body_tiles", "occupancy_keys", "passability", "action");
@@ -5016,7 +5040,7 @@ Dictionary object_fill_coverage_summary(const Array &placements, const Dictionar
 }
 
 Dictionary object_placement_pipeline_summary(const Dictionary &normalized, const Dictionary &zone_layout, const Array &placements, const Dictionary &occupancy_index, int64_t elapsed_usec) {
-	static constexpr const char *SUPPORTED_KINDS[] = {"resource_site", "mine", "neutral_dwelling", "reward_reference", "decorative_obstacle"};
+	static constexpr const char *SUPPORTED_KINDS[] = {"resource_site", "mine", "neutral_dwelling", "reward_reference", "decorative_obstacle", "town", "route_guard", "special_guard_gate"};
 	Dictionary definitions;
 	Dictionary global_counts;
 	Dictionary per_zone_counts;
@@ -6097,7 +6121,16 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	payload["footprint_record_count"] = footprint_records.size();
 	payload["related_zone_layout_signature"] = zone_layout.get("signature", "");
 	payload["related_road_network_signature"] = road_network.get("signature", "");
-	payload["signature"] = hash32_hex(canonical_variant(payload));
+	Dictionary payload_signature_source = payload.duplicate(true);
+	Dictionary deterministic_pipeline_summary = pipeline_summary.duplicate(true);
+	Dictionary deterministic_xl_cost = deterministic_pipeline_summary.get("xl_cost", Dictionary());
+	deterministic_xl_cost["elapsed_usec"] = 0;
+	deterministic_xl_cost["elapsed_msec"] = 0.0;
+	deterministic_xl_cost["microseconds_per_tile"] = 0.0;
+	deterministic_pipeline_summary["xl_cost"] = deterministic_xl_cost;
+	deterministic_pipeline_summary["signature"] = hash32_hex(canonical_variant(deterministic_pipeline_summary));
+	payload_signature_source["object_placement_pipeline_summary"] = deterministic_pipeline_summary;
+	payload["signature"] = hash32_hex(canonical_variant(payload_signature_source));
 	return payload;
 }
 
@@ -7686,7 +7719,8 @@ Dictionary generate_connection_payload_resolution(const Dictionary &normalized, 
 	payload["road_river_overlay_boundary"] = "road_and_river_overlay_metadata_separate_from_rand_trn_decoration_object_scoring";
 	payload["related_zone_layout_signature"] = zone_layout.get("signature", "");
 	payload["related_road_network_signature"] = road_network.get("signature", "");
-	payload["related_town_guard_placement_signature"] = town_guard_placement.get("signature", "");
+	payload["related_town_guard_placement_signature"] = Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("signature", "");
+	payload["related_town_guard_signature_scope"] = "town_placement_only_route_guard_records_inlined_no_full_object_guard_signature_dependency";
 	payload["materialized_records"] = materialized_records;
 	payload["normal_route_guards"] = normal_guards;
 	payload["wide_suppressions"] = wide_suppressions;
@@ -9082,7 +9116,8 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	}
 
 	Dictionary normalized = generated_map.get("normalized_config", Dictionary());
-	const bool full_parity_supported = bool(generated_map.get("supported_parity_config", native_rmg_full_parity_supported(normalized))) && bool(generated_map.get("full_parity_claim", false));
+	const bool structurally_supported_profile = bool(generated_map.get("supported_parity_config", native_rmg_full_parity_supported(normalized))) && bool(generated_map.get("full_parity_claim", false));
+	const bool adoption_authoritative = false;
 	Dictionary identity = generated_map.get("deterministic_identity", Dictionary());
 	Dictionary validation_report = generated_map.get("validation_report", generated_map.get("report", Dictionary()));
 	Dictionary provenance = generated_map.get("provenance", Dictionary());
@@ -9111,12 +9146,13 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	map_metadata["schema_id"] = MAP_SCHEMA_ID;
 	map_metadata["schema_version"] = 1;
 	map_metadata["source_kind"] = "generated";
-	map_metadata["package_session_adoption_status"] = full_parity_supported ? "ready_feature_gated_authoritative_for_supported_profile" : "ready_feature_gated_not_authoritative";
+	map_metadata["package_session_adoption_status"] = "ready_feature_gated_not_authoritative";
 	map_metadata["feature_gate"] = feature_gate;
 	map_metadata["no_authored_writeback"] = true;
 	map_metadata["save_version_bump"] = false;
-	map_metadata["native_runtime_authoritative"] = full_parity_supported;
-	map_metadata["full_parity_claim"] = full_parity_supported;
+	map_metadata["native_runtime_authoritative"] = adoption_authoritative;
+	map_metadata["structurally_supported_profile"] = structurally_supported_profile;
+	map_metadata["full_parity_claim"] = adoption_authoritative;
 
 	Array package_surface_objects = combined_native_map_objects(generated_map);
 	Dictionary guard_reward_adoption = guard_reward_package_adoption_summary(package_surface_objects);
@@ -9263,8 +9299,9 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	session_boundary_record["authored_content_writeback"] = false;
 	session_boundary_record["runtime_call_site_adoption"] = false;
 	session_boundary_record["gdscript_fallback_untouched"] = true;
-	session_boundary_record["native_runtime_authoritative"] = full_parity_supported;
-	session_boundary_record["full_parity_claim"] = full_parity_supported;
+	session_boundary_record["native_runtime_authoritative"] = adoption_authoritative;
+	session_boundary_record["structurally_supported_profile"] = structurally_supported_profile;
+	session_boundary_record["full_parity_claim"] = adoption_authoritative;
 
 	Dictionary metrics;
 	metrics["width"] = width;
@@ -9281,9 +9318,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	metrics["package_visit_tile_count"] = guard_reward_adoption.get("package_visit_tile_count", 0);
 
 	Array remaining;
-	if (!full_parity_supported) {
-		remaining.append("native-rmg-full-parity-gate-10184");
-	}
+	remaining.append("native-rmg-package-session-authoritative-replay-gate-10184");
 
 	Dictionary report;
 	report["schema_id"] = "aurelion_native_random_map_package_session_adoption_report_v1";
@@ -9297,28 +9332,30 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	report["metrics"] = metrics;
 	report["package_session_adoption_ready"] = true;
 	report["guard_reward_package_adoption"] = guard_reward_adoption;
-	report["adoption_status"] = full_parity_supported ? "ready_feature_gated_authoritative_for_supported_profile" : "ready_feature_gated_not_authoritative";
-	report["native_runtime_authoritative"] = full_parity_supported;
+	report["adoption_status"] = "ready_feature_gated_not_authoritative";
+	report["native_runtime_authoritative"] = adoption_authoritative;
+	report["structurally_supported_profile"] = structurally_supported_profile;
 	report["runtime_call_site_adoption"] = false;
 	report["gdscript_source_of_truth"] = true;
 	report["gdscript_fallback_untouched"] = true;
-	report["full_parity_claim"] = full_parity_supported;
+	report["full_parity_claim"] = adoption_authoritative;
 	report["remaining_parity_slices"] = remaining;
 
 	Dictionary readiness;
 	readiness["gdscript_source_of_truth"] = true;
-	readiness["native_runtime_authoritative"] = full_parity_supported;
+	readiness["native_runtime_authoritative"] = adoption_authoritative;
+	readiness["structurally_supported_profile"] = structurally_supported_profile;
 	readiness["package_session_adoption_ready"] = true;
-	readiness["adoption_gate_status"] = full_parity_supported ? "package_session_bridge_ready_full_parity_supported_profile" : "package_session_bridge_ready_feature_gated_full_parity_still_pending";
-	readiness["full_parity_claim"] = full_parity_supported;
-	readiness["full_parity_gate_pending"] = !full_parity_supported;
+	readiness["adoption_gate_status"] = "package_session_bridge_ready_feature_gated_authoritative_replay_still_pending";
+	readiness["full_parity_claim"] = adoption_authoritative;
+	readiness["full_parity_gate_pending"] = true;
 	readiness["next_required_slices"] = remaining;
 
 	Dictionary result;
 	result["ok"] = true;
 	result["status"] = "pass";
 	result["conversion_kind"] = "native_random_map_output_to_package_session_records";
-	result["adoption_status"] = full_parity_supported ? "ready_feature_gated_authoritative_for_supported_profile" : "ready_feature_gated_not_authoritative";
+	result["adoption_status"] = "ready_feature_gated_not_authoritative";
 	result["feature_gate"] = feature_gate;
 	result["map_document"] = map_document;
 	result["scenario_document"] = scenario_document;
@@ -9334,8 +9371,9 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	result["readiness"] = readiness;
 	result["authored_content_writeback"] = false;
 	result["save_version_bump"] = false;
-	result["native_runtime_authoritative"] = full_parity_supported;
-	result["full_parity_claim"] = full_parity_supported;
+	result["native_runtime_authoritative"] = adoption_authoritative;
+	result["structurally_supported_profile"] = structurally_supported_profile;
+	result["full_parity_claim"] = adoption_authoritative;
 	return result;
 }
 

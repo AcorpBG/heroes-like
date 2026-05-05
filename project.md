@@ -198,9 +198,9 @@ Exit criteria:
 
 ## Current Strategic Focus
 
-Current phase: Phase 3 — HoMM3-Style Random Map Generator Rework.
+Current phase: Phase 3 — HoMM3-Style Random Map Generator Rework is complete; the next active production focus should be selected through `PLAN.md` and `ops/progress.json`.
 
-Immediate strategic priority is the RMG rework: convert the current native random-map generator from count/ratio parity heuristics into a recovered-spec-driven phased generator with explicit template, zone, terrain, connection, object, guard/reward, validation, performance, and adoption gates. Work should be selected through PLAN.md and progress tracking, with source requirements in `docs/*.md`, implementation targets, and validation gates.
+The completed RMG rework closes with explicit validation and adoption boundaries. Native package/session adoption remains feature-gated and non-authoritative until a later replay gate proves stable full-output package/session identity for supported profiles.
 
 ## Non-Goals
 
