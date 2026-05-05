@@ -2,13 +2,13 @@
   "project": "heroes-like",
   "taskId": "10184",
   "status": "completed",
-  "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-map-object-distinct-sprite-gap-fill-10184",
-  "currentSliceTitle": "Overworld Map Object Distinct Sprite Gap Fill",
+  "currentPhase": "phase-3-homm3-style-rmg-rework",
+  "currentSliceId": "native-rmg-homm3-spec-gap-audit-10184",
+  "currentSliceTitle": "Native RMG HoMM3 Spec Gap Audit",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed asset follow-up: audited 386 authored overworld map objects, preserved the 200 decorative/blocker distinct assignments and 8 preexisting unique non-decoration assignments, then generated and ingested 178 distinct original map-object sprites so all authored map objects have distinct sprite assignments after the pass.",
+  "currentSliceNotes": "Completed report/planning gate: produced docs/native-rmg-homm3-spec-rework-gap-report.md, reconciled Phase 3 child-slice order, and left implementation children pending.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-04T23:55:00Z",
+  "updatedAt": "2026-05-05T09:45:50Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -5217,7 +5217,7 @@
     {
       "id": "headless-agent-simulation-harness-10184",
       "title": "Headless Simulation Harness",
-      "phase": "phase-3-headless-ai-agent-balance-harness",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
       "status": "completed",
       "classification": "future_phase",
       "sourceDocs": [
@@ -5263,7 +5263,7 @@
     {
       "id": "balance-regression-report-suite-10184",
       "title": "Balance And Regression Report Suite",
-      "phase": "phase-3-headless-ai-agent-balance-harness",
+      "phase": "phase-4-headless-ai-agent-balance-harness",
       "status": "completed",
       "classification": "future_phase",
       "sourceDocs": [
@@ -5311,7 +5311,7 @@
     {
       "id": "playable-alpha-scenario-set-10184",
       "title": "Alpha Scenario Set",
-      "phase": "phase-4-playable-alpha-baseline",
+      "phase": "phase-5-playable-alpha-baseline",
       "status": "paused",
       "classification": "future_phase",
       "sourceDocs": [
@@ -5331,7 +5331,7 @@
     {
       "id": "playable-alpha-ux-onboarding-10184",
       "title": "Alpha UX And Onboarding Pass",
-      "phase": "phase-4-playable-alpha-baseline",
+      "phase": "phase-5-playable-alpha-baseline",
       "status": "paused",
       "classification": "future_phase",
       "sourceDocs": [
@@ -5353,7 +5353,7 @@
     {
       "id": "production-alpha-content-expansion-10184",
       "title": "Production Alpha Content Expansion",
-      "phase": "phase-5-production-alpha-layer",
+      "phase": "phase-6-production-alpha-layer",
       "status": "paused",
       "classification": "future_phase",
       "sourceDocs": [
@@ -5371,7 +5371,7 @@
     {
       "id": "production-alpha-packaging-settings-performance-10184",
       "title": "Packaging, Settings, Accessibility, And Performance Baseline",
-      "phase": "phase-5-production-alpha-layer",
+      "phase": "phase-6-production-alpha-layer",
       "status": "paused",
       "classification": "future_phase",
       "sourceDocs": [
@@ -5388,7 +5388,7 @@
     {
       "id": "broad-production-faction-content-breadth-10184",
       "title": "Broad Faction And Content Breadth",
-      "phase": "phase-6-broad-production-breadth",
+      "phase": "phase-7-broad-production-breadth",
       "status": "completed",
       "classification": "future_phase",
       "sourceDocs": [
@@ -5419,7 +5419,7 @@
     {
       "id": "broad-production-map-campaign-replayability-10184",
       "title": "Broad Map, Campaign, And Replayability Breadth",
-      "phase": "phase-6-broad-production-breadth",
+      "phase": "phase-7-broad-production-breadth",
       "status": "completed",
       "classification": "phase6_narrow_breadth_increment",
       "sourceDocs": [
@@ -9557,9 +9557,412 @@
       ]
     },
     {
+      "id": "native-rmg-homm3-spec-rework-parent-10184",
+      "title": "Native RMG HoMM3 Spec Rework Parent",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "in_progress",
+      "classification": "parent_implementation_goal",
+      "purpose": "Replace the current native RMG surface-statistics parity approximation with a recovered-spec-driven phased generator architecture translated into original game content.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/rmg-profile-20260504/profile_native_rmg_cpp_phases_compare.log",
+        "docs/native-rmg-homm3-spatial-placement-comparison-report.md",
+        "docs/native-rmg-homm3-land-water-shape-report.md"
+      ],
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "content/random_map_template_catalog.json",
+        "tests/native_random_map_*_report.gd",
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "focused native RMG Godot report scenes selected by child slices",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Child slices define and implement the replacement generator data model, runtime phase order, validation gates, and adoption rules.",
+        "Supported outputs are judged against recovered HoMM3-style structure rather than count/ratio shortcuts.",
+        "Unsupported exact byte/art/private-toolkit parity gaps are explicitly reported."
+      ],
+      "nonGoals": [
+        "No HoMM3 copyrighted art/DEF/image/name/text import.",
+        "No binary-compatible .h3m output claim.",
+        "No generated map package clutter committed under runtime maps.",
+        "No save-version bump or campaign adoption until a child adoption slice explicitly gates it."
+      ],
+      "childSliceIds": [
+        "native-rmg-homm3-spec-gap-audit-10184",
+        "native-rmg-homm3-generator-data-model-10184",
+        "native-rmg-homm3-runtime-zone-graph-10184",
+        "native-rmg-homm3-terrain-island-shape-10184",
+        "native-rmg-homm3-roads-rivers-connections-10184",
+        "native-rmg-homm3-object-placement-pipeline-10184",
+        "native-rmg-homm3-towns-mines-resources-10184",
+        "native-rmg-homm3-guards-rewards-monsters-10184",
+        "native-rmg-homm3-validation-adoption-gates-10184"
+      ],
+      "updatedAt": "2026-05-05T09:45:50Z"
+    },
+    {
+      "id": "native-rmg-homm3-spec-gap-audit-10184",
+      "title": "Native RMG HoMM3 Spec Gap Audit",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "report_and_planning_gate",
+      "purpose": "Map recovered HoMM3 RMG phases to current native C++ behavior and define the exact implementation order for the rework.",
+      "sourceDocs": [
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-special-guards-and-wide.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-cell-flags-and-overlays.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/rmg-profile-20260504/profile_native_rmg_cpp_phases_compare.log",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/rmg-profile-20260504/profile_native_rmg_cpp_phases_direct.log",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/rmg-profile-20260504/profile_native_rmg_compare.log",
+        "src/gdextension/src/map_package_service.cpp",
+        "content/random_map_template_catalog.json"
+      ],
+      "implementationTargets": [
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Report states HoMM3 recovered behavior, current native behavior, player-visible effect, and required implementation slice for each generator phase.",
+        "XL island scoring, template graph/zone semantics, terrain/water shaping, roads/rivers/connections, object placement, guards/rewards/monsters, towns/mines/resources, and validation/adoption gaps are prioritized.",
+        "Follow-up child slices are reconciled in progress with source docs, targets, validation, completion criteria, and non-goals."
+      ],
+      "nonGoals": [
+        "No generator rewrite in this audit slice except minimal report/test plumbing if required."
+      ],
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184",
+      "updatedAt": "2026-05-05T09:45:50Z",
+      "startedAt": "2026-05-05T09:37:11Z",
+      "notes": "Completed report/planning gate only; no implementation child slices marked complete.",
+      "completedAt": "2026-05-05T09:45:50Z",
+      "completionEvidence": [
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "PLAN.md Phase 3 child slice order reconciled",
+        "ops/progress.json Phase 3 child slices reconciled with sourceDocs, implementationTargets, baselineChecks, completionCriteria, and nonGoals",
+        "python3 -m json.tool ops/progress.json >/dev/null (pass)",
+        "python3 tests/validate_repo.py (pass)",
+        "git diff --check (pass)"
+      ]
+    },
+    {
+      "id": "native-rmg-homm3-generator-data-model-10184",
+      "title": "Native RMG HoMM3 Generator Data Model",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "classification": "implementation_slice",
+      "purpose": "Introduce reusable generator data for templates, runtime zones, links, object definitions, terrain masks, footprints, value bands, limits, and validation results.",
+      "sourceDocs": [
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md"
+      ],
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp or deliberately split native support file",
+        "content/ generator support tables as selected",
+        "focused schema/fixture validators"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "focused native RMG data-model report scene"
+      ],
+      "completionCriteria": [
+        "Supported generated objects resolve through explicit definitions with footprint, passability/action, terrain, category, limit, value/density, and writeout metadata.",
+        "Existing package/session surfaces remain backward-compatible or explicitly gated."
+      ],
+      "nonGoals": [
+        "No broad gameplay rebalance.",
+        "No renderer art rewrite."
+      ],
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+    },
+    {
+      "id": "native-rmg-homm3-runtime-zone-graph-10184",
+      "title": "Native RMG HoMM3 Runtime Zone Graph",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "classification": "implementation_slice",
+      "purpose": "Replace radial/Voronoi zone approximation with runtime template/zone graph construction preserving base size, owner, terrain/faction, source role, adjacency, links, and infeasibility diagnostics.",
+      "sourceDocs": [
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md",
+        "content/random_map_template_catalog.json"
+      ],
+      "implementationTargets": [
+        "native zone layout generation",
+        "template catalog import/normalization",
+        "zone/connectivity validation reports"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "focused native RMG zone graph report scene"
+      ],
+      "completionCriteria": [
+        "Generated zones preserve source-template semantics and produce connected playable graphs or explicit validation failures.",
+        "Starts, neutral zones, links, and target areas are represented as runtime state before terrain/object placement."
+      ],
+      "nonGoals": [
+        "Exact HoMM3 footprint heuristics may remain unresolved if documented and bounded."
+      ],
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+    },
+    {
+      "id": "native-rmg-homm3-terrain-island-shape-10184",
+      "title": "Native RMG HoMM3 Terrain And Island Shape",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "classification": "implementation_slice",
+      "purpose": "Replace global protected-land/ratio island shaping with zone-aware terrain and water placement informed by recovered TerrainPlacement semantics and performance constraints.",
+      "sourceDocs": [
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-cell-flags-and-overlays.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/rmg-profile-20260504/profile_native_rmg_cpp_phases_compare.log",
+        "docs/native-rmg-homm3-land-water-shape-report.md"
+      ],
+      "implementationTargets": [
+        "native terrain grid generation",
+        "island/water shaping code path",
+        "XL performance fixtures and visual/spatial reports"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "XL native RMG performance profile",
+        "focused terrain/island visual report"
+      ],
+      "completionCriteria": [
+        "Terrain and water are painted from runtime zone semantics with explicit allowed-terrain/match-to-town handling.",
+        "XL islands avoid the current candidate-scoring bottleneck and pass focused performance gates."
+      ],
+      "nonGoals": [
+        "No terrain art replacement.",
+        "No exact TerrainPlacement queue scratch-bit clone unless selected later."
+      ],
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+    },
+    {
+      "id": "native-rmg-homm3-roads-rivers-connections-10184",
+      "title": "Native RMG HoMM3 Roads Rivers Connections",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "classification": "implementation_slice",
+      "purpose": "Rework connection handling so early layout consumes endpoints while late guard, wide, border-guard, road, and river semantics are applied in the recovered phase order.",
+      "sourceDocs": [
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-special-guards-and-wide.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-cell-flags-and-overlays.md",
+        "docs/native-rmg-homm3-spatial-placement-comparison-report.md"
+      ],
+      "implementationTargets": [
+        "native road/river network generation",
+        "link/guard validation reports",
+        "road/river overlay metadata"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "focused roads/rivers/connection report scene"
+      ],
+      "completionCriteria": [
+        "Wide suppresses normal guards, Border Guard materializes supported type-9-equivalent original gate behavior, and required links produce corridors or explicit failures.",
+        "Roads/rivers are stored as overlays with deterministic autotile/writeout metadata separate from rand_trn decoration scoring."
+      ],
+      "nonGoals": [
+        "No road renderer art rewrite unless validation proves it is required."
+      ],
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+    },
+    {
+      "id": "native-rmg-homm3-object-placement-pipeline-10184",
+      "title": "Native RMG HoMM3 Object Placement Pipeline",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "classification": "implementation_slice",
+      "purpose": "Rework object selection, footprints, terrain masks, occupancy, value bands, limits, and decorative filler as the shared placement pipeline used by later town, mine, reward, and guard slices.",
+      "sourceDocs": [
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md",
+        "docs/native-rmg-homm3-fill-coverage-report.md",
+        "docs/native-rmg-homm3-re-object-table-proxy-report.md",
+        "docs/native-rmg-homm3-local-distribution-report.md"
+      ],
+      "implementationTargets": [
+        "native object placement",
+        "object definition/footprint validators",
+        "local/spatial distribution reports"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "focused native RMG object placement pipeline report scene"
+      ],
+      "completionCriteria": [
+        "Supported objects resolve through explicit original-content definitions with footprint, passability/action, terrain, category, limit, value/density, and writeout metadata.",
+        "Decoration uses ordinary object-template filler semantics rather than a decoration super-type shortcut.",
+        "XL object-placement cost is measured and bounded enough for broad seed validation."
+      ],
+      "nonGoals": [
+        "No HoMM3 asset import.",
+        "No exact DEF frame dependency.",
+        "No broad economy rebalance."
+      ],
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+    },
+    {
+      "id": "native-rmg-homm3-towns-mines-resources-10184",
+      "title": "Native RMG HoMM3 Towns Mines Resources",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "classification": "implementation_slice",
+      "purpose": "Implement recovered town/castle placement, same-type neutral reuse, seven mine/resource categories, minimums/densities, adjacent resources, and placement diagnostics.",
+      "sourceDocs": [
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md",
+        "docs/native-rmg-homm3-re-object-table-proxy-report.md"
+      ],
+      "implementationTargets": [
+        "native town/castle placement",
+        "native mine/resource placement",
+        "original-content town, mine, and resource proxy mappings",
+        "focused town/mine/resource validation reports"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "focused native RMG town/mine/resource report scene"
+      ],
+      "completionCriteria": [
+        "Player and neutral town/castle minimums and density placements are attempted by zone and report failures with zone/category context.",
+        "Neutral town placement honors per-zone same-type reuse semantics where supported.",
+        "Seven mine/resource categories are implemented for supported profiles with minimum-before-density behavior and original content ids."
+      ],
+      "nonGoals": [
+        "No broad economy rebalance.",
+        "No HoMM3 town, mine, or resource art/name/text import."
+      ],
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+    },
+    {
+      "id": "native-rmg-homm3-guards-rewards-monsters-10184",
+      "title": "Native RMG HoMM3 Guards Rewards Monsters",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "classification": "implementation_slice",
+      "purpose": "Implement recovered monster masks, strength scaling, connection guards, protected rewards, and guard/reward relations using original unit and reward content.",
+      "sourceDocs": [
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-special-guards-and-wide.md",
+        "docs/native-rmg-homm3-re-reward-value-distribution-report.md",
+        "docs/native-rmg-guard-reward-package-adoption-report.md"
+      ],
+      "implementationTargets": [
+        "native guard/reward package generation",
+        "monster mask and strength scaling helpers",
+        "reward value-band selection and guard/reward validators",
+        "focused guard/reward/monster reports"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "focused native RMG guard/reward/monster report scene"
+      ],
+      "completionCriteria": [
+        "Monster selection honors match-to-town, allowed faction masks, and recovered local/global strength scaling for supported profiles.",
+        "Connection and protected-object guards use recovered value semantics and original unit/content ids.",
+        "Value-banded rewards preserve low/high/density behavior with explicit unsupported reward boundaries."
+      ],
+      "nonGoals": [
+        "No HoMM3 creature, artifact, spell, skill, or reward art/name/text import.",
+        "No broad combat/economy rebalance beyond generator guard/reward semantics."
+      ],
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+    },
+    {
+      "id": "native-rmg-homm3-validation-adoption-gates-10184",
+      "title": "Native RMG HoMM3 Validation Adoption Gates",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "classification": "validation_and_adoption_gate",
+      "purpose": "Gate the reworked generator through validation, fixture comparison, performance, save/replay boundaries, and package/session adoption before gameplay reliance.",
+      "sourceDocs": [
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md",
+        "docs/random-map-generator-foundation.md",
+        "docs/native-rmg-guard-reward-package-adoption-report.md"
+      ],
+      "implementationTargets": [
+        "tests/validate_repo.py",
+        "native RMG report scenes",
+        "generated package/session adoption records",
+        "docs/native-rmg-homm3-spec-rework-gate-report.md"
+      ],
+      "baselineChecks": [
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "python3 tests/validate_repo.py",
+        "git diff --check",
+        "selected native RMG fixture/profile/report scenes"
+      ],
+      "completionCriteria": [
+        "Validators cover template filtering, zone graph connectivity, required placements, footprints/occupancy, object definition references, road/river ranges, guard semantics, performance budgets, and save/replay/package boundaries.",
+        "Native package/session adoption remains feature-gated until reports prove supported profiles are structurally acceptable."
+      ],
+      "nonGoals": [
+        "No alpha readiness claim; this gate only closes the RMG rework phase."
+      ],
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+    },
+    {
       "id": "overworld-map-object-distinct-sprite-gap-fill-10184",
       "title": "Overworld Map Object Distinct Sprite Gap Fill",
-      "phase": "phase-2-deep-production-foundation",
+      "phase": "phase-3-homm3-style-rmg-rework",
       "status": "completed",
       "classification": "owner_directed_generated_overworld_map_object_distinct_sprite_asset_slice",
       "purpose": "Audit authored overworld map objects after the decorative/blocker foundation pass and assign original generated distinct sprite assets to every remaining non-decoration object gap.",
@@ -10765,7 +11168,8 @@
       "id": "audit-and-reconciliation-reports",
       "system": "progress governance reports",
       "sourceRefs": [
-        "docs/progress-implementation-audit-2026-04-27.md"
+        "docs/progress-implementation-audit-2026-04-27.md",
+        "docs/native-rmg-homm3-spec-rework-gap-report.md"
       ],
       "entries": [
         {
@@ -10785,6 +11189,17 @@
           "title": "Random Map HoMM3-Parity Gap Audit",
           "evidence": "docs/random-map-homm3-parity-gap-audit.md defines the parity gap matrix and executable follow-on queue.",
           "completedAt": "2026-04-29T09:40:00Z"
+        },
+        {
+          "sliceId": "native-rmg-homm3-spec-gap-audit-10184",
+          "title": "Native RMG HoMM3 Spec Gap Audit",
+          "evidence": "docs/native-rmg-homm3-spec-rework-gap-report.md maps recovered HoMM3 RMG phases to current native behavior and locks the Phase 3 implementation child-slice order.",
+          "completedAt": "2026-05-05T09:45:50Z",
+          "validation": [
+            "python3 -m json.tool ops/progress.json >/dev/null (pass)",
+            "python3 tests/validate_repo.py (pass)",
+            "git diff --check (pass)"
+          ]
         }
       ]
     }
@@ -10907,7 +11322,15 @@
       "evidence": "Current editor export behavior includes validated authored scenario/terrain-layer draft contracts and working-copy validation, but deliberately does not write authored scenario files or campaign progress."
     }
   ],
-  "actionableNextTasks": [],
+  "actionableNextTasks": [
+    {
+      "id": "native-rmg-homm3-generator-data-model-10184",
+      "title": "Native RMG HoMM3 Generator Data Model",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "reason": "First implementation child after the completed spec gap audit; defines shared template, zone, link, object, terrain, footprint, value-band, limit, and validation data used by all later RMG rework slices."
+    }
+  ],
   "stoppedOrPausedTasks": [
     {
       "id": "overworld-artifact-check-cue-10184",

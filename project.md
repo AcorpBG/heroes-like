@@ -145,7 +145,19 @@ Exit criteria:
 - A random map generator foundation exists for controlled prototype maps, with validation hooks and constraints suitable for the later headless balance harness.
 - Map/scenario persistence has a selected architecture for durable authored/generated map assets, versioned validation/migration, and session saves that reference map assets plus compact mutable deltas instead of rewriting full map JSON payloads.
 
-### Phase 3 — Headless AI Agent Balance Harness
+### Phase 3 — HoMM3-Style Random Map Generator Rework
+
+Goal: rework random map generation from the current statistical/native parity approximation into a data-driven, phased HoMM3-style generator translated into this original game.
+
+Exit criteria:
+- The generator is driven by recovered template, zone, connection, object, terrain, guard, reward, mine, road, river, validation, and serialization semantics instead of count/ratio-only parity targets.
+- Runtime zones preserve source-template roles, areas, owner slots, terrain/faction choices, link semantics, guard values, wide/border-guard flags, and explicit infeasibility reporting.
+- Terrain, island/water shaping, roads/rivers, towns, mines, resources, rewards, monsters/guards, and decoration placement follow the recovered phase order closely enough to produce structurally HoMM3-like maps with original content ids/assets.
+- Object definitions, footprints, terrain/passability/action masks, per-zone/global limits, value bands, density rules, and deterministic validation are implemented as reusable generator data rather than one-off placement heuristics.
+- Performance is acceptable for supported sizes without the current XL island candidate-scoring bottleneck, and unsupported exact byte/art parity gaps are explicitly reported.
+- Native package/session adoption remains gated behind validators, fixture comparisons, generated-map inspection reports, and save/replay boundary checks.
+
+### Phase 4 — Headless AI Agent Balance Harness
 
 Goal: create a non-graphical agent/test harness that can run scenarios, AI turns, economy loops, battles, and balance checks faster than manual UI play.
 
@@ -155,7 +167,7 @@ Exit criteria:
 - Reports expose actionable balance and rules failures without becoming player-facing UI or replacing manual play.
 - Save/load and deterministic replay boundaries are tested through the harness where practical.
 
-### Phase 4 — Playable Alpha Baseline
+### Phase 5 — Playable Alpha Baseline
 
 Goal: a small coherent alpha that can be played repeatedly without developer interpretation.
 
@@ -165,7 +177,7 @@ Exit criteria:
 - Town, battle, overworld, save/load, AI, economy, and UI loops hold together under repeated play.
 - Major UX surfaces are understandable without debug/report panels.
 
-### Phase 5 — Production Alpha Layer
+### Phase 6 — Production Alpha Layer
 
 Goal: expand alpha into a production-shaped game slice.
 
@@ -174,7 +186,7 @@ Exit criteria:
 - Campaign/skirmish flow, difficulty, AI, balance, and content pipeline are stable enough for broader production.
 - Packaging/settings/accessibility/performance requirements are known and tracked.
 
-### Phase 6 — Broad Production Breadth
+### Phase 7 — Broad Production Breadth
 
 Goal: expand into a broad original fantasy strategy package with the systemic breadth, density, and replayability expected from classic Heroes-style strategy games.
 
@@ -186,9 +198,9 @@ Exit criteria:
 
 ## Current Strategic Focus
 
-Current phase: Phase 2 — Deep Production Foundation.
+Current phase: Phase 3 — HoMM3-Style Random Map Generator Rework.
 
-Immediate strategic priority is not more ad hoc screen polish. Work should be selected through PLAN.md and progress tracking, with source requirements in `docs/*.md`, implementation targets, and validation gates.
+Immediate strategic priority is the RMG rework: convert the current native random-map generator from count/ratio parity heuristics into a recovered-spec-driven phased generator with explicit template, zone, terrain, connection, object, guard/reward, validation, performance, and adoption gates. Work should be selected through PLAN.md and progress tracking, with source requirements in `docs/*.md`, implementation targets, and validation gates.
 
 ## Non-Goals
 
