@@ -21,22 +21,9 @@ Rules:
 
 ## Current Tactical State
 
-Current phase: **Phase 2 - Deep Production Foundation**.
+Current phase: **Phase 3 - HoMM3-Style Random Map Generator Rework**.
 
-Current tactical chain: continue the native C++ GDExtension RMG parity track until
-it reaches full parity with `scripts/core/RandomMapGeneratorRules.gd` for the
-tracked supported profiles before any gameplay call-site adoption. The current
-completed native children cover deterministic identity, terrain/grid output,
-foundation zone/player-start output, foundation road/river network output,
-foundation non-town object placement output, foundation town/guard placement
-output, native validation/provenance reporting, and a focused GDScript/native
-comparison harness, and feature-gated package/session adoption records for native
-output. `native-rmg-full-parity-gate-10184` closes the tracked gate for the
-current tiny comparison fixtures only. `native-rmg-catalog-playability-wiring-10184`
-then corrects the exposed-template fallback path so native package generation
-uses imported catalog topology broadly enough for playable generated maps across
-the menu catalog, while exact HoMM3-re byte/placement/art/reward-table parity
-remains outside the current claim.
+Current tactical chain: use the recovered `homm3-re` RMG spec as the ground truth and rework the native C++ GDExtension generator from a surface-statistics parity approximation into a phased, data-driven HoMM3-style generator translated into original game content. The prior Phase 2 native RMG work remains valuable as infrastructure, profiling, fixture, package, and validation foundation, but it is no longer the target architecture. The next accepted goal is `native-rmg-homm3-spec-rework-parent-10184` and its child slices in order: spec gap audit, generator data model, runtime template/zone graph, terrain/island shaping, roads/rivers/connections, object placement pipeline, towns/mines/resources, guards/rewards/monsters, and validation/adoption gates.
 
 Do not infer product readiness from the completed queue. Completed Phase 2/RMG/performance/tooling evidence means those specific slices passed their gates; it does not mean playable alpha, campaign breadth, release readiness, broad faction completion, asset parity, or HoMM3 byte-level cloning.
 
@@ -153,42 +140,6 @@ nonGoals:
 - No save-version bump, no binary map-package schema migration, no exact HoMM3 asset/DEF parity claim, no terrain replacement, no broad gameplay rebalance.
 
 Completed owner-directed implementation slice:
-
-id: `overworld-map-object-distinct-sprite-gap-fill-10184`
-phase: `phase-2-deep-production-foundation`
-status: `completed`
-purpose: Owner-directed asset follow-up to audit authored overworld map objects after the decorative/blocker foundation pass and generate distinct original sprite assets for every remaining non-decoration object gap.
-sourceDocs:
-- `content/map_objects.json`
-- `art/overworld/manifest.json`
-- `art/overworld/decorative_object_sprites.json`
-- `docs/overworld-map-object-distinct-sprite-gap-audit.md`
-implementationTargets:
-- `art/overworld/map_object_sprites.json`
-- `art/overworld/manifest.json`
-- `art/overworld/runtime/objects/map_objects/distinct/`
-- `art/overworld/source/generated/map_objects/distinct/`
-- `art/overworld/source/trimmed/map_objects/distinct/`
-- `scenes/overworld/OverworldMapView.gd`
-- `tests/validate_repo.py`
-- `tests/overworld_map_object_sprite_asset_report.gd`
-- `ops/progress.json`
-completionCriteria:
-- The audit identifies authored map objects that still lack unique sprite assignments after the 200-object decorative/blocker pass.
-- Every identified gap object has one distinct generated 512x512 runtime PNG, trimmed source PNG, source atlas provenance, manifest mapping, and no-HoMM3-art policy.
-- Renderer lookup resolves resource and encounter placements through object-specific map object sprite mappings before shared fallback assets.
-- Validation proves all 386 authored map objects have distinct assignments after combining the decorative foundation pass, preexisting unique non-decoration assignments, and this gap-fill pass.
-completionEvidence:
-- `docs/overworld-map-object-distinct-sprite-gap-audit.md`
-- `art/overworld/map_object_sprites.json`
-- `python3 tests/validate_repo.py`
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/overworld_map_object_sprite_asset_report.tscn`
-- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 120 tests/overworld_decorative_sprite_asset_report.tscn`
-- direct PIL audit: runtime=178, imports=178, edge_alpha_issues=0
-nonGoals:
-- No HoMM3 copyrighted art/DEF/image/name/text import.
-- No town, hero, unit, battle, terrain, road, or UI asset broadening beyond authored overworld map object sprite coverage.
-- No generated random map package clutter committed under runtime maps.
 
 id: `decorative-blocker-sprite-asset-foundation-10184`
 phase: `phase-2-deep-production-foundation`
@@ -1387,7 +1338,269 @@ nonGoals:
 - No promotion of large translated templates into strict cheap-gate fixtures.
 - No full HoMM3 RMG parity claim beyond this bounded start-front fairness correction.
 
-### Phase 3 - Headless AI Agent Balance Harness
+### Phase 3 - HoMM3-Style Random Map Generator Rework
+
+Goal: rework native random map generation around the recovered HoMM3 RMG execution model, while translating all output into original game content and keeping exact byte/art parity out of scope.
+
+Active tactical slices:
+
+id: `overworld-map-object-distinct-sprite-gap-fill-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Owner-directed asset follow-up to audit authored overworld map objects after the decorative/blocker foundation pass and generate distinct original sprite assets for every remaining non-decoration object gap.
+sourceDocs:
+- `content/map_objects.json`
+- `art/overworld/manifest.json`
+- `art/overworld/decorative_object_sprites.json`
+- `docs/overworld-map-object-distinct-sprite-gap-audit.md`
+implementationTargets:
+- `art/overworld/map_object_sprites.json`
+- `art/overworld/manifest.json`
+- `art/overworld/runtime/objects/map_objects/distinct/`
+- `art/overworld/source/generated/map_objects/distinct/`
+- `art/overworld/source/trimmed/map_objects/distinct/`
+- `scenes/overworld/OverworldMapView.gd`
+- `tests/validate_repo.py`
+- `tests/overworld_map_object_sprite_asset_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- The audit identifies authored map objects that still lack unique sprite assignments after the 200-object decorative/blocker pass.
+- Every identified gap object has one distinct generated 512x512 runtime PNG, trimmed source PNG, source atlas provenance, manifest mapping, and no-HoMM3-art policy.
+- Renderer lookup resolves resource and encounter placements through object-specific map object sprite mappings before shared fallback assets.
+- Validation proves all 386 authored map objects have distinct assignments after combining the decorative foundation pass, preexisting unique non-decoration assignments, and this gap-fill pass.
+nonGoals:
+- No HoMM3 copyrighted art/DEF/image/name/text import.
+- No town, hero, unit, battle, terrain, road, or UI asset broadening beyond authored overworld map object sprite coverage.
+- No generated random map package clutter committed under runtime maps.
+
+id: `native-rmg-homm3-spec-rework-parent-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `in_progress`
+purpose: Parent goal for replacing the current native RMG surface-parity approximation with a recovered-spec-driven, phased generator architecture.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/rmg-profile-20260504/profile_native_rmg_cpp_phases_compare.log`
+- existing `docs/native-rmg-*.md` comparison, parity, spatial, and land/water reports
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `content/random_map_template_catalog.json`
+- generator support data under `content/` or `docs/` selected by child slices
+- focused native RMG Godot report scenes under `tests/`
+- `docs/native-rmg-homm3-spec-rework-gap-report.md`
+- `ops/progress.json`
+completionCriteria:
+- Child slices define and implement the replacement generator data model, runtime phase order, validation gates, and adoption rules.
+- The generator no longer relies on count/ratio parity shortcuts as the main quality target for supported profiles.
+- Outputs are judged against recovered HoMM3-style structure: template graph, zone semantics, terrain/island shape, roads/rivers, object density/footprints, mines/resources, guards/rewards/monsters, and serialization/adoption boundaries.
+- Unsupported exact byte/art/private-toolkit parity gaps remain explicit rather than silently approximated.
+nonGoals:
+- No HoMM3 copyrighted art/DEF/image/name/text import.
+- No claim of binary-compatible `.h3m` output.
+- No generated map package clutter committed under runtime maps.
+- No save-version bump or campaign adoption until a child adoption slice explicitly gates it.
+
+id: `native-rmg-homm3-spec-gap-audit-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Produce the implementation gap report that maps recovered HoMM3 RMG phases to current native C++ behavior and defines the exact child-slice order.
+sourceDocs:
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-phase-runner.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `content/random_map_template_catalog.json`
+- existing native RMG comparison/profile artifacts
+implementationTargets:
+- `docs/native-rmg-homm3-spec-rework-gap-report.md`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Report states, phase by phase, HoMM3 recovered behavior, current native behavior, player-visible effect, and required implementation slice.
+- The current XL island scoring bottleneck and object/road/terrain semantic gaps are prioritized before broad adoption.
+- Follow-up child slices are reconciled in `ops/progress.json` with source docs, targets, validation, and non-goals.
+nonGoals:
+- No code rewrite in the audit slice except minimal test/report plumbing if required.
+
+id: `native-rmg-homm3-generator-data-model-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `pending`
+purpose: Introduce the reusable generator data model needed for template zones, links, object definitions, terrain masks, footprints, value bands, limits, and validation results.
+sourceDocs:
+- `docs/native-rmg-homm3-spec-rework-gap-report.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md`
+implementationTargets:
+- native RMG data structs/helpers in `src/gdextension/src/map_package_service.cpp` or a deliberately split native support file
+- original-content generator tables under `content/` as needed
+- focused schema/fixture validators
+completionCriteria:
+- Supported generated objects resolve through explicit definitions with footprint, passability/action, terrain, category, limit, value/density, and writeout metadata.
+- Existing package/session surfaces remain backward-compatible or explicitly gated.
+nonGoals:
+- No broad gameplay rebalance and no renderer art rewrite.
+
+id: `native-rmg-homm3-runtime-zone-graph-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `pending`
+purpose: Replace radial/Voronoi zone approximation with runtime template/zone graph construction preserving base size, owner, terrain/faction, source role, adjacency, links, and infeasibility diagnostics.
+sourceDocs:
+- `docs/native-rmg-homm3-spec-rework-gap-report.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-model.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-template-grammar.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md`
+- `content/random_map_template_catalog.json`
+implementationTargets:
+- native zone layout generation
+- template catalog import/normalization
+- zone/connectivity validation reports
+completionCriteria:
+- Generated zones preserve source-template semantics and produce connected playable graphs or explicit validation failures.
+- Starts, neutral zones, links, and target areas are represented as runtime state before terrain/object placement.
+nonGoals:
+- Exact HoMM3 footprint heuristics may remain unresolved if documented and bounded.
+
+id: `native-rmg-homm3-terrain-island-shape-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `pending`
+purpose: Replace global protected-land/ratio island shaping with zone-aware terrain and water placement informed by recovered TerrainPlacement semantics and performance constraints.
+sourceDocs:
+- `docs/native-rmg-homm3-spec-rework-gap-report.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-cell-flags-and-overlays.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/rmg-profile-20260504/profile_native_rmg_cpp_phases_compare.log`
+- `docs/native-rmg-homm3-land-water-shape-report.md`
+implementationTargets:
+- native terrain grid generation
+- island/water shaping code path
+- XL performance fixtures and visual/spatial reports
+completionCriteria:
+- Terrain and water are painted from runtime zone semantics with explicit allowed-terrain/match-to-town handling.
+- XL islands avoid the current candidate-scoring bottleneck and pass focused performance gates.
+nonGoals:
+- No terrain art replacement or exact terrain queue scratch-bit clone unless selected later.
+
+id: `native-rmg-homm3-roads-rivers-connections-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `pending`
+purpose: Rework connection handling so early layout consumes endpoints while late guard, wide, border-guard, road, and river semantics are applied in the recovered phase order.
+sourceDocs:
+- `docs/native-rmg-homm3-spec-rework-gap-report.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-special-guards-and-wide.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-zone-link-consumers.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-cell-flags-and-overlays.md`
+- `docs/native-rmg-homm3-spatial-placement-comparison-report.md`
+implementationTargets:
+- native road/river network generation
+- link/guard validation reports
+- road/river overlay metadata
+completionCriteria:
+- `Wide` suppresses normal guards, `Border Guard` materializes supported type-9-equivalent original gate behavior, and required links produce corridors or explicit failures.
+- Roads/rivers are stored as overlays with deterministic autotile/writeout metadata separate from rand_trn decoration scoring.
+nonGoals:
+- No road renderer art rewrite unless validation proves it is required.
+
+id: `native-rmg-homm3-object-placement-pipeline-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `pending`
+purpose: Rework object selection, footprints, terrain masks, occupancy, value bands, limits, and decorative filler as the shared placement pipeline used by later town, mine, reward, and guard slices.
+sourceDocs:
+- `docs/native-rmg-homm3-spec-rework-gap-report.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md`
+- `docs/native-rmg-homm3-fill-coverage-report.md`
+- `docs/native-rmg-homm3-re-object-table-proxy-report.md`
+- `docs/native-rmg-homm3-local-distribution-report.md`
+implementationTargets:
+- native object placement
+- object definition/footprint validators
+- local/spatial distribution reports
+completionCriteria:
+- Supported objects resolve through explicit original-content definitions with footprint, passability/action, terrain, category, limit, value/density, and writeout metadata.
+- Decoration uses ordinary object-template filler semantics rather than a decoration super-type shortcut.
+- XL object-placement cost is measured and bounded enough for broad seed validation.
+nonGoals:
+- No HoMM3 asset import, exact DEF frame dependency, or broad economy rebalance.
+
+id: `native-rmg-homm3-towns-mines-resources-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `pending`
+purpose: Implement recovered town/castle placement, same-type neutral reuse, seven mine/resource categories, minimums/densities, adjacent resources, and placement diagnostics.
+sourceDocs:
+- `docs/native-rmg-homm3-spec-rework-gap-report.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-town-sametype-and-object-metadata.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-decoration-object-placement.md`
+- `docs/native-rmg-homm3-re-object-table-proxy-report.md`
+implementationTargets:
+- native town/castle placement
+- native mine/resource placement
+- original-content town, mine, and resource proxy mappings
+- focused town/mine/resource validation reports
+completionCriteria:
+- Player and neutral town/castle minimums and density placements are attempted by zone and report failures with zone/category context.
+- Neutral town placement honors per-zone same-type reuse semantics where supported.
+- Seven mine/resource categories are implemented for supported profiles with minimum-before-density behavior and original content ids.
+nonGoals:
+- No broad economy rebalance.
+- No HoMM3 town, mine, or resource art/name/text import.
+
+id: `native-rmg-homm3-guards-rewards-monsters-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `pending`
+purpose: Implement recovered monster masks, strength scaling, connection guards, protected rewards, and guard/reward relations using original unit and reward content.
+sourceDocs:
+- `docs/native-rmg-homm3-spec-rework-gap-report.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-monster-and-seven-category-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-payload-semantics.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-connection-special-guards-and-wide.md`
+- `docs/native-rmg-homm3-re-reward-value-distribution-report.md`
+- `docs/native-rmg-guard-reward-package-adoption-report.md`
+implementationTargets:
+- native guard/reward package generation
+- monster mask and strength scaling helpers
+- reward value-band selection and guard/reward validators
+- focused guard/reward/monster reports
+completionCriteria:
+- Monster selection honors match-to-town, allowed faction masks, and recovered local/global strength scaling for supported profiles.
+- Connection and protected-object guards use recovered value semantics and original unit/content ids.
+- Value-banded rewards preserve low/high/density behavior with explicit unsupported reward boundaries.
+nonGoals:
+- No HoMM3 creature, artifact, spell, skill, or reward art/name/text import.
+- No broad combat/economy rebalance beyond generator guard/reward semantics.
+
+id: `native-rmg-homm3-validation-adoption-gates-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `pending`
+purpose: Gate the reworked generator through validation, fixture comparison, performance, save/replay boundaries, and package/session adoption before gameplay reliance.
+sourceDocs:
+- `docs/native-rmg-homm3-spec-rework-gap-report.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generator-implementation-checklist.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-writeout-to-map-structures.md`
+- `docs/random-map-generator-foundation.md`
+- `docs/native-rmg-guard-reward-package-adoption-report.md`
+implementationTargets:
+- `tests/validate_repo.py`
+- native RMG report scenes
+- generated package/session adoption records
+- `docs/native-rmg-homm3-spec-rework-gate-report.md`
+completionCriteria:
+- Validators cover template filtering, zone graph connectivity, required placements, footprints/occupancy, object definition references, road/river ranges, guard semantics, and performance budgets.
+- Native package/session adoption remains feature-gated until reports prove supported profiles are structurally acceptable.
+nonGoals:
+- No alpha readiness claim; this gate only closes the RMG rework phase.
+
+### Phase 4 - Headless AI Agent Balance Harness
 
 Goal: create non-graphical agent/test loops for scenarios, AI turns, economy, battles, balance checks, save/load, and regression detection.
 
@@ -1397,15 +1610,15 @@ Closed tactical slices:
 
 Future work should be selected only when new gameplay/content systems need harness coverage or balance evidence.
 
-### Phase 4 - Playable Alpha Baseline
+### Phase 5 - Playable Alpha Baseline
 
 Goal: a small coherent alpha that can be played repeatedly without developer interpretation.
 
 Paused tactical slices:
 
 id: `playable-alpha-scenario-set-10184`
-phase: `phase-4-playable-alpha-baseline`
-purpose: Build a small validated scenario/skirmish set after Phase 2 foundations are deliberately selected for alpha assembly.
+phase: `phase-5-playable-alpha-baseline`
+purpose: Build a small validated scenario/skirmish set after Phase 3 RMG rework and Phase 4 harness foundations are deliberately selected for alpha assembly.
 sourceDocs:
 - `project.md`
 - relevant scenario, faction, economy, AI, town, battle, and RMG docs selected at kickoff
@@ -1420,7 +1633,7 @@ nonGoals:
 - No content-breadth claim based only on JSON volume.
 
 id: `playable-alpha-ux-onboarding-10184`
-phase: `phase-4-playable-alpha-baseline`
+phase: `phase-5-playable-alpha-baseline`
 purpose: Make the selected alpha setups understandable through compact player-facing UX rather than debug/report panels.
 sourceDocs:
 - `project.md`
@@ -1435,14 +1648,14 @@ nonGoals:
 - No giant dashboard substitution for missing mechanics.
 - No broad polish pass outside selected alpha paths.
 
-### Phase 5 - Production Alpha Layer
+### Phase 6 - Production Alpha Layer
 
 Goal: expand the playable alpha into a production-shaped game slice.
 
 Paused tactical slices:
 
 id: `production-alpha-content-expansion-10184`
-phase: `phase-5-production-alpha-layer`
+phase: `phase-6-production-alpha-layer`
 purpose: Add more factions/content through established systems and validation gates.
 sourceDocs:
 - `project.md`
@@ -1457,7 +1670,7 @@ nonGoals:
 - No unvalidated asset ingestion.
 
 id: `production-alpha-packaging-settings-performance-10184`
-phase: `phase-5-production-alpha-layer`
+phase: `phase-6-production-alpha-layer`
 purpose: Establish packaging, settings, accessibility, and performance requirements for a production alpha.
 sourceDocs:
 - `project.md`
@@ -1471,7 +1684,7 @@ nonGoals:
 - No release readiness claim.
 - No platform promise without tested artifact evidence.
 
-### Phase 6 - Broad Production Breadth
+### Phase 7 - Broad Production Breadth
 
 Goal: broaden into a full original fantasy strategy package after alpha foundations hold.
 
@@ -1480,7 +1693,7 @@ Long-horizon tracks:
 - broader map, campaign, skirmish, and replayability breadth;
 - deeper AI/balance/polish/content pipeline maturity.
 
-Do not reopen Phase 6 work until Phase 4/5 evidence supports it or AcOrP explicitly changes priorities.
+Do not reopen Phase 7 work until Phase 5/6 evidence supports it or AcOrP explicitly changes priorities.
 
 ## Progress Reconciliation
 
