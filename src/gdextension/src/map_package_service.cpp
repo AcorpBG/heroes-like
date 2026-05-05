@@ -1408,6 +1408,81 @@ bool catalog_player_filter_allows(const Dictionary &record, const Dictionary &no
 	return human_count >= min_human && human_count <= max_human && player_count >= min_total && player_count <= max_total;
 }
 
+Array catalog_active_zones_for_config(const Dictionary &template_record, const Dictionary &normalized) {
+	Array result;
+	Array zones = template_record.get("zones", Array());
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		if (Variant(zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = Dictionary(zones[index]);
+		if (catalog_player_filter_allows(zone, normalized)) {
+			result.append(zone);
+		}
+	}
+	return result;
+}
+
+Dictionary catalog_active_zone_id_lookup(const Array &zones) {
+	Dictionary lookup;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		if (Variant(zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		const String zone_id = String(Dictionary(zones[index]).get("id", ""));
+		if (!zone_id.is_empty()) {
+			lookup[zone_id] = true;
+		}
+	}
+	return lookup;
+}
+
+Array catalog_active_links_for_config(const Dictionary &template_record, const Dictionary &normalized, const Dictionary &active_zone_ids) {
+	Array result;
+	Array links = template_record.get("links", Array());
+	for (int64_t index = 0; index < links.size(); ++index) {
+		if (Variant(links[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = Dictionary(links[index]);
+		if (!catalog_player_filter_allows(link, normalized)) {
+			continue;
+		}
+		const String from_zone = String(link.get("from", ""));
+		const String to_zone = String(link.get("to", ""));
+		if (from_zone.is_empty() || to_zone.is_empty() || !active_zone_ids.has(from_zone) || !active_zone_ids.has(to_zone)) {
+			continue;
+		}
+		result.append(link);
+	}
+	return result;
+}
+
+Dictionary catalog_start_capacity_for_active_zones(const Array &zones) {
+	Dictionary human_slots;
+	Dictionary total_slots;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		if (Variant(zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = Dictionary(zones[index]);
+		const String role = String(zone.get("role", ""));
+		const Variant owner_value = zone.get("owner_slot", Variant());
+		const String slot_key = owner_value.get_type() == Variant::NIL ? "row_" + String::num_int64(index + 1) : String::num_int64(int32_t(owner_value));
+		if (role == "human_start") {
+			human_slots[slot_key] = true;
+			total_slots[slot_key] = true;
+		} else if (role == "computer_start" || role.contains("start")) {
+			total_slots[slot_key] = true;
+		}
+	}
+
+	Dictionary capacity;
+	capacity["human_start_capacity"] = human_slots.size();
+	capacity["total_start_capacity"] = total_slots.size();
+	return capacity;
+}
+
 int32_t catalog_size_score_for_config(const Dictionary &normalized, const Dictionary &template_record) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -1476,7 +1551,63 @@ bool catalog_template_supports_config(const Dictionary &template_record, const D
 		diagnostics.append(diagnostic);
 		supported = false;
 	}
+	Array active_zones = catalog_active_zones_for_config(template_record, normalized);
+	Dictionary active_zone_ids = catalog_active_zone_id_lookup(active_zones);
+	Array active_links = catalog_active_links_for_config(template_record, normalized, active_zone_ids);
+	Dictionary capacity = catalog_start_capacity_for_active_zones(active_zones);
+	if (int32_t(capacity.get("human_start_capacity", 0)) < human_count) {
+		Dictionary diagnostic;
+		diagnostic["code"] = "template_human_start_capacity_below_requested_config";
+		diagnostic["severity"] = "failure";
+		diagnostic["message"] = "Template active rows do not provide enough human starts for the requested config.";
+		diagnostic["human_count"] = human_count;
+		diagnostic["capacity"] = capacity;
+		diagnostics.append(diagnostic);
+		supported = false;
+	}
+	if (int32_t(capacity.get("total_start_capacity", 0)) < player_count) {
+		Dictionary diagnostic;
+		diagnostic["code"] = "template_total_start_capacity_below_requested_config";
+		diagnostic["severity"] = "failure";
+		diagnostic["message"] = "Template active rows do not provide enough total starts for the requested config.";
+		diagnostic["player_count"] = player_count;
+		diagnostic["capacity"] = capacity;
+		diagnostics.append(diagnostic);
+		supported = false;
+	}
+	if (active_zones.is_empty() || active_links.is_empty()) {
+		Dictionary diagnostic;
+		diagnostic["code"] = "template_active_graph_empty_for_config";
+		diagnostic["severity"] = "failure";
+		diagnostic["message"] = "Template row filters leave no active zone/link graph for the requested config.";
+		diagnostic["active_zone_count"] = active_zones.size();
+		diagnostic["active_link_count"] = active_links.size();
+		diagnostics.append(diagnostic);
+		supported = false;
+	}
 	return supported;
+}
+
+String catalog_template_id_for_config(const Dictionary &normalized) {
+	Dictionary catalog = load_random_map_template_catalog();
+	Array templates = catalog.get("templates", Array());
+	Array accepted;
+	for (int64_t index = 0; index < templates.size(); ++index) {
+		if (Variant(templates[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary candidate = Dictionary(templates[index]);
+		Array diagnostics;
+		if (catalog_template_supports_config(candidate, normalized, diagnostics)) {
+			accepted.append(candidate);
+		}
+	}
+	if (accepted.is_empty()) {
+		return "";
+	}
+	const String seed = String(normalized.get("normalized_seed", normalized.get("seed", "0"))) + ":catalog_template_selection:" + String::num_int64(accepted.size());
+	Dictionary selected = Dictionary(accepted[int64_t(hash32_int(seed) % uint32_t(accepted.size()))]);
+	return String(selected.get("id", ""));
 }
 
 Dictionary catalog_zone_to_native_zone(const Dictionary &source_zone, const Dictionary &normalized, const Dictionary &player_assignment, int64_t zone_index) {
@@ -1491,7 +1622,7 @@ Dictionary catalog_zone_to_native_zone(const Dictionary &source_zone, const Dict
 	Dictionary assignment = active_player_zone ? Dictionary(by_owner_slot.get(String::num_int64(owner_slot), Dictionary())) : Dictionary();
 	String role = normalized_text(source_zone, "role", normalized_text(source_zone, "type", "treasure"));
 	if (active_player_zone) {
-		role = owner_slot == 1 ? "human_start" : "computer_start";
+		role = String(assignment.get("player_type", owner_slot == 1 ? String("human") : String("computer"))) == "human" ? "human_start" : "computer_start";
 	} else if (role.contains("start")) {
 		role = "treasure";
 	}
@@ -1566,7 +1697,11 @@ Array build_foundation_zones(const Dictionary &normalized, const Dictionary &pla
 			if (Variant(catalog_zones[index]).get_type() != Variant::DICTIONARY) {
 				continue;
 			}
-			zones.append(catalog_zone_to_native_zone(Dictionary(catalog_zones[index]), normalized, player_assignment, index));
+			Dictionary source_zone = Dictionary(catalog_zones[index]);
+			if (!catalog_player_filter_allows(source_zone, normalized)) {
+				continue;
+			}
+			zones.append(catalog_zone_to_native_zone(source_zone, normalized, player_assignment, index));
 		}
 		if (!zones.is_empty()) {
 			return zones;
@@ -2120,6 +2255,9 @@ Array runtime_link_records_from_catalog(const Dictionary &normalized, const Arra
 		const String from_zone = normalized_text(source_link, "from", "");
 		const String to_zone = normalized_text(source_link, "to", "");
 		const bool player_filter_active = catalog_player_filter_allows(source_link, normalized);
+		if (!player_filter_active) {
+			continue;
+		}
 		if (from_zone.is_empty() || to_zone.is_empty() || !zones_by_id.has(from_zone) || !zones_by_id.has(to_zone)) {
 			Dictionary diagnostic;
 			diagnostic["code"] = "runtime_link_endpoint_missing";
@@ -2129,15 +2267,6 @@ Array runtime_link_records_from_catalog(const Dictionary &normalized, const Arra
 			diagnostic["to"] = to_zone;
 			diagnostics.append(diagnostic);
 			continue;
-		}
-		if (!player_filter_active) {
-			Dictionary diagnostic;
-			diagnostic["code"] = "runtime_link_player_filter_inactive";
-			diagnostic["severity"] = "warning";
-			diagnostic["message"] = "Catalog link is preserved as inactive because its player filter does not match the requested config.";
-			diagnostic["from"] = from_zone;
-			diagnostic["to"] = to_zone;
-			diagnostics.append(diagnostic);
 		}
 		Dictionary guard = source_link.get("guard", Dictionary());
 		const int32_t guard_value = int32_t(source_link.get("guard_value", guard.get("value", 0)));
@@ -3412,7 +3541,7 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 		const String road_class = road_class_for_edge(edge);
 		edge["road_class"] = road_class;
 		edge["road_type_id"] = road_type_for_class(road_class);
-		if (int32_t(edge.get("guard_value", 0)) > 0 || bool(edge.get("border_guard", false))) {
+		if ((!bool(edge.get("wide", false)) && int32_t(edge.get("guard_value", 0)) > 0) || bool(edge.get("border_guard", false))) {
 			Dictionary connection_control;
 			connection_control["controlled"] = true;
 			connection_control["route_edge_id"] = edge_id;
@@ -9708,6 +9837,10 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	result["town_ids"] = town_ids;
 	result["global_monster_strength_mode"] = global_monster_strength_mode;
 	result["global_monster_strength_source"] = global_monster_strength_token;
+	if (template_id.is_empty()) {
+		template_id = catalog_template_id_for_config(result);
+		result["template_id"] = template_id;
+	}
 	result["full_generation_status"] = native_rmg_full_generation_status_for_config(result);
 	result["supported_parity_config"] = native_rmg_full_parity_supported(result);
 	result["foundation_scope"] = native_rmg_full_parity_supported(result) ? "tracked_gdscript_structural_parity_profile" : "deterministic_config_identity_native_terrain_grid_zones_player_starts_road_river_networks_object_placement_and_town_guard_placement_foundation_only";

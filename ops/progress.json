@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "generated-skirmish-homm3-size-default-template-ux-10184",
-  "currentSliceTitle": "Generated Skirmish HoMM3 Size Default Template UX",
+  "currentSliceId": "native-rmg-template-spec-filtering-correction-10184",
+  "currentSliceTitle": "Native RMG Template Spec Filtering Correction",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-directed correction: generated skirmish setup no longer exposes manual random-map template/profile selection; selected HoMM3 size/defaults derive internal template/profile provenance.",
+  "currentSliceNotes": "Completed owner-directed recovered-spec correction for native RMG template filtering, accepted selection, wide-link semantics, and recovered-field metadata.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T17:33:31Z",
+  "updatedAt": "2026-05-05T19:15:27Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -10150,6 +10150,53 @@
         "direct PIL audit: runtime=178, imports=178, edge_alpha_issues=0",
         "git diff --check (pass)"
       ]
+    },
+    {
+      "id": "native-rmg-template-spec-filtering-correction-10184",
+      "title": "Native RMG Template Spec Filtering Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "owner request on 2026-05-05 to fix audit findings in native GDExtension templates"
+      ],
+      "purpose": "Correct the RMG template translation/runtime gaps found in the recovered-spec audit: active player-filtered rows, config-specific capacity/selection, wide-link guard semantics, and stale recovered-field metadata.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "scripts/tools/import_random_map_template_catalog.py",
+        "content/random_map_template_catalog.json",
+        "content/random_map_template_import_summary.json",
+        "tests/random_map_template_catalog_grammar_report.gd",
+        "tests/native_random_map_template_spec_filtering_report.gd",
+        "tests/native_random_map_template_spec_filtering_report.tscn"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "cmake -S src/gdextension -B tmp/gdextension-build -DCMAKE_BUILD_TYPE=Debug && cmake --build tmp/gdextension-build --target aurelion_map_persistence -j2"
+      ],
+      "completionCriteria": [
+        "Native GDExtension filters template zones and links by requested human/total player counts before graph generation.",
+        "Native template support and default selection use filtered active row capacity and an accepted catalog candidate vector.",
+        "Wide links preserve raw guard value while suppressing normal guard/control materialization.",
+        "Catalog/import metadata no longer labels recovered consumed fields as unsupported runtime fields.",
+        "Focused native and catalog grammar reports validate the corrected semantics."
+      ],
+      "completionEvidence": [
+        "translated_rmg_template_001_v1 now produces the recovered active 1/2 row set in native generation: 4 zones and 4 links.",
+        "Native no-template generation selects a nonempty accepted catalog template id through the catalog candidate vector.",
+        "Native wide-link fixture preserves raw guard value and omits normal connection_control for wide route edges.",
+        "Source-vs-repo structural catalog comparison still reports 53 translated templates, 0 field mismatches, 21 wide links, and 8 border links; unsupported runtime field lists are empty after regeneration.",
+        "Godot scene reports pass: native_random_map_template_spec_filtering_report.tscn and random_map_template_catalog_grammar_report.tscn."
+      ],
+      "nonGoals": [
+        "No HoMM3 copyrighted art or byte-level map cloning.",
+        "No save-version bump, package/schema migration, or runtime call-site adoption change.",
+        "No broad RMG rebalance outside the recovered template filtering and metadata semantics."
+      ]
     }
   ],
   "completedImplementationEvidence": [
@@ -10998,6 +11045,44 @@
           "evidence": "Native owner-like baseline moved from 344 objects and 0.330x decoration/impassable density to 488 objects and 0.804x decoration/impassable density while land/water shape and spatial placement gates pass.",
           "remainingGap": "The supplement is bounded to the owner-like profile and is not global random inflation or exact HoMM3 object-table parity."
         }
+      ]
+    },
+    {
+      "id": "native-rmg-template-spec-filtering-correction-10184",
+      "title": "Native RMG Template Spec Filtering Correction Evidence",
+      "status": "completed",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "owner request on 2026-05-05 to fix audit findings in native GDExtension templates"
+      ],
+      "mappedPlannedSliceIds": [
+        "native-rmg-template-spec-filtering-correction-10184"
+      ],
+      "implementationRefs": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/core/RandomMapGeneratorRules.gd",
+        "scripts/tools/import_random_map_template_catalog.py",
+        "content/random_map_template_catalog.json",
+        "content/random_map_template_import_summary.json",
+        "tests/random_map_template_catalog_grammar_report.gd",
+        "tests/native_random_map_template_spec_filtering_report.gd",
+        "tests/native_random_map_template_spec_filtering_report.tscn"
+      ],
+      "evidence": [
+        "translated_rmg_template_001_v1 now produces the recovered active 1/2 row set in native generation: 4 zones and 4 links.",
+        "Native no-template generation selects a nonempty accepted catalog template id through the catalog candidate vector.",
+        "Native wide-link fixture preserves raw guard value and omits normal connection_control for wide route edges.",
+        "Source-vs-repo structural catalog comparison still reports 53 translated templates, 0 field mismatches, 21 wide links, and 8 border links; unsupported runtime field lists are empty after regeneration.",
+        "Godot scene reports pass: native_random_map_template_spec_filtering_report.tscn and random_map_template_catalog_grammar_report.tscn."
+      ],
+      "validation": [
+        "cmake configure/build for aurelion_map_persistence completed successfully and wrote bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "godot --headless --path . --scene res://tests/native_random_map_template_spec_filtering_report.tscn passed",
+        "godot --headless --path . --scene res://tests/random_map_template_catalog_grammar_report.tscn passed",
+        "python3 tests/validate_repo.py passed"
       ]
     }
   ],

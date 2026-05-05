@@ -70,7 +70,7 @@ DEFAULT_FACTIONS = [
     "faction_sunvault",
     "faction_thornwake",
 ]
-UNCONSUMED_ZONE_FIELDS = [
+RECOVERED_ZONE_FIELDS = [
     "player_filter",
     "ownership.fixed_player_slot",
     "player_towns",
@@ -82,13 +82,15 @@ UNCONSUMED_ZONE_FIELDS = [
     "treasure_bands",
     "monster_policy",
 ]
-UNCONSUMED_LINK_FIELDS = [
+RECOVERED_LINK_FIELDS = [
     "player_filter",
     "guard.scaling_policy",
     "wide",
     "border_guard",
     "special_payload",
 ]
+UNCONSUMED_ZONE_FIELDS: list[str] = []
+UNCONSUMED_LINK_FIELDS: list[str] = []
 
 
 def stable_hash(value: Any) -> str:
@@ -188,6 +190,7 @@ def translate_zone(zone: dict[str, Any], template_index: int) -> dict[str, Any]:
             "source_row": int(zone.get("row", 0)),
             "source_bucket": int(zone.get("bucket", 0)),
         },
+        "recovered_runtime_fields": list(RECOVERED_ZONE_FIELDS),
         "unsupported_runtime_fields": list(UNCONSUMED_ZONE_FIELDS),
     }
 
@@ -216,6 +219,7 @@ def translate_connection(connection: dict[str, Any]) -> dict[str, Any]:
             "border_guard_special_mode": border_guard,
         },
         "grammar_source": {"source_row": int(connection.get("row", 0))},
+        "recovered_runtime_fields": list(RECOVERED_LINK_FIELDS),
         "unsupported_runtime_fields": list(UNCONSUMED_LINK_FIELDS),
     }
 
@@ -284,8 +288,9 @@ def translate_template(source_template: dict[str, Any], index: int) -> dict[str,
                 "connection_guard_wide_border_payloads",
                 "disconnected_error_policy",
             ],
-            "runtime_consumption_state": "preserved_not_fully_consumed",
+            "runtime_consumption_state": "consumed_by_native_runtime_with_preserved_source_metadata",
         },
+        "recovered_runtime_fields": sorted(set(RECOVERED_ZONE_FIELDS + RECOVERED_LINK_FIELDS)),
         "unsupported_runtime_fields": sorted(set(UNCONSUMED_ZONE_FIELDS + UNCONSUMED_LINK_FIELDS)),
     }
 
@@ -344,6 +349,7 @@ def manual_zone(
             "allowed_faction_ids": ["neutral"] + list(DEFAULT_FACTIONS),
         },
         "terrain": terrain,
+        "recovered_runtime_fields": list(RECOVERED_ZONE_FIELDS),
         "unsupported_runtime_fields": list(UNCONSUMED_ZONE_FIELDS),
     }
 
@@ -371,6 +377,7 @@ def manual_link(
             "wide_suppresses_normal_guard": wide,
             "border_guard_special_mode": border_guard,
         },
+        "recovered_runtime_fields": list(RECOVERED_LINK_FIELDS),
         "unsupported_runtime_fields": list(UNCONSUMED_LINK_FIELDS),
     }
 
@@ -387,7 +394,7 @@ def original_runtime_templates() -> list[dict[str, Any]]:
         "faction_constraints": {"allowed": list(DEFAULT_FACTIONS)},
         "error_policy": {"disconnected_source_graph": False, "policy": "reject_invalid_links"},
         "grammar_metadata": {
-            "runtime_consumption_state": "partially_consumed_preserves_expanded_fields",
+            "runtime_consumption_state": "consumed_by_native_runtime_with_preserved_source_metadata",
             "preserved_field_groups": [
                 "size_water_levels",
                 "player_ranges",
@@ -395,6 +402,7 @@ def original_runtime_templates() -> list[dict[str, Any]]:
                 "link_guard_wide_border_payloads",
             ],
         },
+        "recovered_runtime_fields": sorted(set(RECOVERED_ZONE_FIELDS + RECOVERED_LINK_FIELDS)),
         "unsupported_runtime_fields": sorted(set(UNCONSUMED_ZONE_FIELDS + UNCONSUMED_LINK_FIELDS)),
     }
     templates: list[dict[str, Any]] = []
@@ -600,15 +608,29 @@ def build_catalog(source: dict[str, Any]) -> dict[str, Any]:
                 "zones.owner_slot",
                 "zones.terrain.allowed",
                 "zones.terrain.match_to_faction",
+                "zones.player_filter",
+                "zones.ownership.fixed_player_slot",
+                "zones.player_towns",
+                "zones.neutral_towns",
+                "zones.same_town_type",
+                "zones.town_policy.allowed_faction_ids",
+                "zones.mine_requirements",
+                "zones.resource_category_requirements",
+                "zones.treasure_bands",
+                "zones.monster_policy",
                 "links.from",
                 "links.to",
                 "links.role",
                 "links.guard_value",
+                "links.guard.scaling_policy",
                 "links.wide",
                 "links.border_guard",
+                "links.player_filter",
+                "links.special_payload",
             ],
+            "recovered_runtime_fields": sorted(set(RECOVERED_ZONE_FIELDS + RECOVERED_LINK_FIELDS)),
             "preserved_not_consumed": sorted(set(UNCONSUMED_ZONE_FIELDS + UNCONSUMED_LINK_FIELDS)),
-            "reporting_policy": "metadata_and_staging_must_expose_unconsumed_fields_explicitly",
+            "reporting_policy": "metadata_and_staging_expose_recovered_source_fields_and_empty_unsupported_lists_explicitly",
         },
         "resource_category_ids": list(RESOURCE_CATEGORY_IDS),
         "profiles": original_profiles(imported_templates),
