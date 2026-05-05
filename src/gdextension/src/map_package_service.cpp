@@ -30,6 +30,7 @@ constexpr const char *NATIVE_RMG_SCHEMA_ID = "aurelion_native_random_map_foundat
 constexpr const char *NATIVE_RMG_VERSION = "native_rmg_foundation_v1";
 constexpr const char *NATIVE_RMG_TERRAIN_GRID_SCHEMA_ID = "aurelion_native_rmg_terrain_grid_v1";
 constexpr const char *NATIVE_RMG_ZONE_LAYOUT_SCHEMA_ID = "aurelion_native_rmg_zone_layout_v1";
+constexpr const char *NATIVE_RMG_RUNTIME_ZONE_GRAPH_SCHEMA_ID = "aurelion_native_rmg_runtime_zone_graph_v1";
 constexpr const char *NATIVE_RMG_PLAYER_STARTS_SCHEMA_ID = "aurelion_native_rmg_player_starts_v1";
 constexpr const char *NATIVE_RMG_ROUTE_GRAPH_SCHEMA_ID = "aurelion_native_rmg_route_graph_v1";
 constexpr const char *NATIVE_RMG_ROAD_NETWORK_SCHEMA_ID = "aurelion_native_rmg_road_network_v1";
@@ -53,6 +54,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_foundation_stub");
 	result.append("native_random_map_terrain_grid_foundation");
 	result.append("native_random_map_zone_player_starts_foundation");
+	result.append("native_random_map_homm3_runtime_zone_graph");
 	result.append("native_random_map_road_river_network_foundation");
 	result.append("native_random_map_object_placement_foundation");
 	result.append("native_random_map_decorative_obstacle_generation");
@@ -1174,14 +1176,90 @@ bool has_catalog_template(const Dictionary &normalized) {
 	return !catalog_template_for_id(String(normalized.get("template_id", ""))).is_empty();
 }
 
-bool catalog_player_filter_allows(const Dictionary &record, int32_t player_count) {
+bool catalog_player_filter_allows(const Dictionary &record, const Dictionary &normalized) {
+	Dictionary constraints = normalized.get("player_constraints", Dictionary());
+	const int32_t human_count = int32_t(constraints.get("human_count", 1));
+	const int32_t player_count = int32_t(constraints.get("player_count", 2));
 	Dictionary filter = record.get("player_filter", Dictionary());
 	if (filter.is_empty()) {
 		return true;
 	}
+	const int32_t min_human = int32_t(filter.get("min_human", 0));
+	const int32_t max_human = int32_t(filter.get("max_human", 8));
 	const int32_t min_total = int32_t(filter.get("min_total", 1));
 	const int32_t max_total = int32_t(filter.get("max_total", 8));
-	return player_count >= min_total && player_count <= max_total;
+	return human_count >= min_human && human_count <= max_human && player_count >= min_total && player_count <= max_total;
+}
+
+int32_t catalog_size_score_for_config(const Dictionary &normalized, const Dictionary &template_record) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	int32_t score = std::max(1, (width * height * level_count) / 0x510);
+	Dictionary map_support = template_record.get("map_support", Dictionary());
+	Array water_modes = map_support.get("water_modes", Array());
+	if (String(normalized.get("water_mode", "land")) == "islands" && array_has_string(water_modes, "islands_size_score_halved")) {
+		score = std::max(1, score / 2);
+	}
+	return score;
+}
+
+bool catalog_template_supports_config(const Dictionary &template_record, const Dictionary &normalized, Array &diagnostics) {
+	bool supported = true;
+	Dictionary constraints = normalized.get("player_constraints", Dictionary());
+	const int32_t human_count = int32_t(constraints.get("human_count", 1));
+	const int32_t player_count = int32_t(constraints.get("player_count", 2));
+	Dictionary players = template_record.get("players", Dictionary());
+	Dictionary humans = players.get("humans", Dictionary());
+	Dictionary total = players.get("total", Dictionary());
+	if (human_count < int32_t(humans.get("min", 0)) || human_count > int32_t(humans.get("max", 8))) {
+		Dictionary diagnostic;
+		diagnostic["code"] = "template_human_count_out_of_range";
+		diagnostic["severity"] = "failure";
+		diagnostic["message"] = "Template human-player range does not accept the requested config.";
+		diagnostic["human_count"] = human_count;
+		diagnostic["range"] = humans;
+		diagnostics.append(diagnostic);
+		supported = false;
+	}
+	if (player_count < int32_t(total.get("min", 1)) || player_count > int32_t(total.get("max", 8))) {
+		Dictionary diagnostic;
+		diagnostic["code"] = "template_total_player_count_out_of_range";
+		diagnostic["severity"] = "failure";
+		diagnostic["message"] = "Template total-player range does not accept the requested config.";
+		diagnostic["player_count"] = player_count;
+		diagnostic["range"] = total;
+		diagnostics.append(diagnostic);
+		supported = false;
+	}
+
+	Dictionary map_support = template_record.get("map_support", Dictionary());
+	Array water_modes = map_support.get("water_modes", Array());
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	const bool water_supported = water_mode == "islands" ? array_has_string(water_modes, "islands") || array_has_string(water_modes, "islands_size_score_halved") : array_has_string(water_modes, "land");
+	if (!water_modes.is_empty() && !water_supported) {
+		Dictionary diagnostic;
+		diagnostic["code"] = "template_water_mode_unsupported";
+		diagnostic["severity"] = "failure";
+		diagnostic["message"] = "Template water modes do not accept the requested config.";
+		diagnostic["water_mode"] = water_mode;
+		diagnostic["supported_water_modes"] = water_modes;
+		diagnostics.append(diagnostic);
+		supported = false;
+	}
+	Dictionary size_score = template_record.get("size_score", Dictionary());
+	const int32_t score = catalog_size_score_for_config(normalized, template_record);
+	if (!size_score.is_empty() && (score < int32_t(size_score.get("min", 1)) || score > int32_t(size_score.get("max", 32)))) {
+		Dictionary diagnostic;
+		diagnostic["code"] = "template_size_score_out_of_range";
+		diagnostic["severity"] = "failure";
+		diagnostic["message"] = "Template size score does not accept the requested dimensions.";
+		diagnostic["size_score"] = score;
+		diagnostic["range"] = size_score;
+		diagnostics.append(diagnostic);
+		supported = false;
+	}
+	return supported;
 }
 
 Dictionary catalog_zone_to_native_zone(const Dictionary &source_zone, const Dictionary &normalized, const Dictionary &player_assignment, int64_t zone_index) {
@@ -1239,7 +1317,21 @@ Dictionary catalog_zone_to_native_zone(const Dictionary &source_zone, const Dict
 	zone["bounds"] = Dictionary();
 	zone["cell_count"] = 0;
 	zone["catalog_metadata"] = metadata;
-	zone["template_player_filter_active"] = catalog_player_filter_allows(source_zone, player_count);
+	zone["template_player_filter_active"] = catalog_player_filter_allows(source_zone, normalized);
+	zone["runtime_id"] = zone_id;
+	zone["source_template_id"] = normalized.get("template_id", "");
+	zone["source_zone_id"] = source_zone.get("source_zone_id", zone_id);
+	zone["source_owner_slot"] = source_zone.get("owner_slot", Variant());
+	zone["target_area"] = 0;
+	zone["terrain_rules"] = source_zone.get("terrain", Dictionary());
+	zone["town_rules"] = source_zone.get("town_policy", Dictionary());
+	zone["mine_rules"] = source_zone.get("mine_requirements", Dictionary());
+	zone["resource_rules"] = source_zone.get("resource_category_requirements", Dictionary());
+	zone["treasure_bands"] = source_zone.get("treasure_bands", Array());
+	zone["monster_rules"] = source_zone.get("monster_policy", Dictionary());
+	zone["runtime_links"] = Array();
+	zone["adjacent_zone_ids"] = Array();
+	zone["diagnostics"] = Array();
 	return zone;
 }
 
@@ -1364,6 +1456,7 @@ Dictionary resolve_seed_collisions(const Dictionary &seeds, int32_t width, int32
 }
 
 Array foundation_route_links(const Dictionary &normalized);
+void connect_adjacency(Dictionary &adjacency, const String &a, const String &b);
 
 bool uses_template_link_seed_layout(const Dictionary &normalized) {
 	return has_catalog_template(normalized);
@@ -1570,28 +1663,453 @@ Array zones_with_geometry(Array zones, const Dictionary &seeds, const Array &own
 	return result;
 }
 
+Array zones_with_target_areas(Array zones, int32_t surface_tile_count) {
+	int32_t total_weight = 0;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		total_weight += std::max(1, int32_t(zone.get("base_size", 1)));
+	}
+	if (total_weight <= 0 || zones.is_empty()) {
+		return zones;
+	}
+
+	std::vector<int32_t> targets;
+	std::vector<double> remainders;
+	targets.reserve(zones.size());
+	remainders.reserve(zones.size());
+	int32_t assigned = 0;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const int32_t weight = std::max(1, int32_t(zone.get("base_size", 1)));
+		const double exact = double(surface_tile_count) * double(weight) / double(total_weight);
+		const int32_t target = std::max(1, int32_t(std::floor(exact)));
+		targets.push_back(target);
+		remainders.push_back(exact - std::floor(exact));
+		assigned += target;
+	}
+	while (assigned > surface_tile_count && assigned > int32_t(zones.size())) {
+		int64_t best_index = -1;
+		double best_remainder = std::numeric_limits<double>::max();
+		for (int64_t index = 0; index < int64_t(targets.size()); ++index) {
+			if (targets[index] > 1 && remainders[index] < best_remainder) {
+				best_remainder = remainders[index];
+				best_index = index;
+			}
+		}
+		if (best_index < 0) {
+			break;
+		}
+		targets[best_index] -= 1;
+		assigned -= 1;
+	}
+	while (assigned < surface_tile_count) {
+		int64_t best_index = 0;
+		double best_remainder = -1.0;
+		for (int64_t index = 0; index < int64_t(targets.size()); ++index) {
+			if (remainders[index] > best_remainder) {
+				best_remainder = remainders[index];
+				best_index = index;
+			}
+		}
+		targets[best_index] += 1;
+		remainders[best_index] = 0.0;
+		assigned += 1;
+	}
+
+	Array result;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		zone["target_area"] = targets[index];
+		Dictionary area_model;
+		area_model["source_base_size"] = std::max(1, int32_t(zone.get("base_size", 1)));
+		area_model["total_base_size"] = total_weight;
+		area_model["surface_tile_count"] = surface_tile_count;
+		area_model["allocation_policy"] = "base_size_weight_normalized_to_surface_target_area";
+		zone["target_area_model"] = area_model;
+		result.append(zone);
+	}
+	return result;
+}
+
+String owner_grid_value_at(const Array &owner_grid, int32_t x, int32_t y) {
+	if (y < 0 || y >= owner_grid.size()) {
+		return String();
+	}
+	Array row = owner_grid[y];
+	if (x < 0 || x >= row.size()) {
+		return String();
+	}
+	return String(row[x]);
+}
+
+void owner_grid_set(Array &owner_grid, int32_t x, int32_t y, const String &zone_id) {
+	if (y < 0 || y >= owner_grid.size()) {
+		return;
+	}
+	Array row = owner_grid[y];
+	if (x < 0 || x >= row.size()) {
+		return;
+	}
+	row[x] = zone_id;
+	owner_grid[y] = row;
+}
+
+Array runtime_graph_owner_grid(const Array &zones, const Dictionary &seeds, int32_t width, int32_t height) {
+	Array owner_grid;
+	for (int32_t y = 0; y < height; ++y) {
+		Array row;
+		for (int32_t x = 0; x < width; ++x) {
+			row.append("");
+		}
+		owner_grid.append(row);
+	}
+
+	Dictionary counts;
+	Dictionary quotas;
+	Dictionary frontiers;
+	Dictionary cursors;
+	Array zone_ids;
+	int32_t assigned = 0;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		if (zone_id.is_empty()) {
+			continue;
+		}
+		zone_ids.append(zone_id);
+		quotas[zone_id] = std::max(1, int32_t(zone.get("target_area", 1)));
+		counts[zone_id] = 0;
+		cursors[zone_id] = 0;
+		frontiers[zone_id] = Array();
+	}
+
+	for (int64_t index = 0; index < zone_ids.size(); ++index) {
+		const String zone_id = String(zone_ids[index]);
+		Dictionary seed = seeds.get(zone_id, Dictionary());
+		int32_t x = std::max(0, std::min(std::max(0, width - 1), int32_t(seed.get("x", 0))));
+		int32_t y = std::max(0, std::min(std::max(0, height - 1), int32_t(seed.get("y", 0))));
+		int32_t guard = std::max(1, width * height);
+		while (!owner_grid_value_at(owner_grid, x, y).is_empty() && guard > 0) {
+			x = (x + 1) % std::max(1, width);
+			if (x == 0) {
+				y = (y + 1) % std::max(1, height);
+			}
+			--guard;
+		}
+		if (owner_grid_value_at(owner_grid, x, y).is_empty()) {
+			owner_grid_set(owner_grid, x, y, zone_id);
+			counts[zone_id] = int32_t(counts.get(zone_id, 0)) + 1;
+			Array frontier = frontiers.get(zone_id, Array());
+			frontier.append(cell_record(x, y, 0));
+			frontiers[zone_id] = frontier;
+			assigned += 1;
+		}
+	}
+
+	static constexpr int32_t DX[4] = { 1, -1, 0, 0 };
+	static constexpr int32_t DY[4] = { 0, 0, 1, -1 };
+	const int32_t surface_tile_count = width * height;
+	int32_t guard = std::max(1, surface_tile_count * 4);
+	while (assigned < surface_tile_count && guard > 0) {
+		bool progressed = false;
+		for (int64_t zone_index = 0; zone_index < zone_ids.size(); ++zone_index) {
+			const String zone_id = String(zone_ids[zone_index]);
+			if (int32_t(counts.get(zone_id, 0)) >= int32_t(quotas.get(zone_id, 1))) {
+				continue;
+			}
+			Array frontier = frontiers.get(zone_id, Array());
+			int32_t cursor = int32_t(cursors.get(zone_id, 0));
+			while (cursor < frontier.size() && int32_t(counts.get(zone_id, 0)) < int32_t(quotas.get(zone_id, 1))) {
+				Dictionary cell = frontier[cursor];
+				++cursor;
+				const int32_t base_x = int32_t(cell.get("x", 0));
+				const int32_t base_y = int32_t(cell.get("y", 0));
+				const int32_t offset = int32_t(hash32_int(zone_id + String(":neighbor_order")) % 4U);
+				for (int32_t step = 0; step < 4 && int32_t(counts.get(zone_id, 0)) < int32_t(quotas.get(zone_id, 1)); ++step) {
+					const int32_t direction = (offset + step) % 4;
+					const int32_t next_x = base_x + DX[direction];
+					const int32_t next_y = base_y + DY[direction];
+					if (next_x < 0 || next_y < 0 || next_x >= width || next_y >= height || !owner_grid_value_at(owner_grid, next_x, next_y).is_empty()) {
+						continue;
+					}
+					owner_grid_set(owner_grid, next_x, next_y, zone_id);
+					counts[zone_id] = int32_t(counts.get(zone_id, 0)) + 1;
+					frontier.append(cell_record(next_x, next_y, 0));
+					assigned += 1;
+					progressed = true;
+				}
+			}
+			cursors[zone_id] = cursor;
+			frontiers[zone_id] = frontier;
+		}
+		if (!progressed) {
+			break;
+		}
+		--guard;
+	}
+
+	for (int32_t y = 0; y < height; ++y) {
+		for (int32_t x = 0; x < width; ++x) {
+			if (!owner_grid_value_at(owner_grid, x, y).is_empty()) {
+				continue;
+			}
+			String best_zone;
+			int32_t best_distance = std::numeric_limits<int32_t>::max();
+			for (int64_t zone_index = 0; zone_index < zone_ids.size(); ++zone_index) {
+				const String zone_id = String(zone_ids[zone_index]);
+				Dictionary seed = seeds.get(zone_id, Dictionary());
+				const int32_t dx = x - int32_t(seed.get("x", 0));
+				const int32_t dy = y - int32_t(seed.get("y", 0));
+				const int32_t distance = dx * dx + dy * dy;
+				const bool under_quota = int32_t(counts.get(zone_id, 0)) < int32_t(quotas.get(zone_id, 1));
+				const int32_t score = distance + (under_quota ? 0 : surface_tile_count * 2);
+				if (score < best_distance) {
+					best_distance = score;
+					best_zone = zone_id;
+				}
+			}
+			if (!best_zone.is_empty()) {
+				owner_grid_set(owner_grid, x, y, best_zone);
+				counts[best_zone] = int32_t(counts.get(best_zone, 0)) + 1;
+			}
+		}
+	}
+	return owner_grid;
+}
+
+Array runtime_link_records_from_catalog(const Dictionary &normalized, const Array &zones, Array &diagnostics) {
+	Dictionary catalog_template = catalog_template_for_id(String(normalized.get("template_id", "")));
+	Array catalog_links = catalog_template.get("links", Array());
+	Dictionary zones_by_id;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		if (!zone_id.is_empty()) {
+			zones_by_id[zone_id] = true;
+		}
+	}
+
+	Array links;
+	for (int64_t index = 0; index < catalog_links.size(); ++index) {
+		if (Variant(catalog_links[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary source_link = Dictionary(catalog_links[index]);
+		const String from_zone = normalized_text(source_link, "from", "");
+		const String to_zone = normalized_text(source_link, "to", "");
+		const bool player_filter_active = catalog_player_filter_allows(source_link, normalized);
+		if (from_zone.is_empty() || to_zone.is_empty() || !zones_by_id.has(from_zone) || !zones_by_id.has(to_zone)) {
+			Dictionary diagnostic;
+			diagnostic["code"] = "runtime_link_endpoint_missing";
+			diagnostic["severity"] = "failure";
+			diagnostic["message"] = "Catalog link endpoint did not resolve to runtime zones.";
+			diagnostic["from"] = from_zone;
+			diagnostic["to"] = to_zone;
+			diagnostics.append(diagnostic);
+			continue;
+		}
+		if (!player_filter_active) {
+			Dictionary diagnostic;
+			diagnostic["code"] = "runtime_link_player_filter_inactive";
+			diagnostic["severity"] = "warning";
+			diagnostic["message"] = "Catalog link is preserved as inactive because its player filter does not match the requested config.";
+			diagnostic["from"] = from_zone;
+			diagnostic["to"] = to_zone;
+			diagnostics.append(diagnostic);
+		}
+		Dictionary guard = source_link.get("guard", Dictionary());
+		const int32_t guard_value = int32_t(source_link.get("guard_value", guard.get("value", 0)));
+		const bool wide = bool(source_link.get("wide", false));
+		const bool border_guard = bool(source_link.get("border_guard", false));
+		Dictionary link = source_link.duplicate(true);
+		link["runtime_id"] = "runtime_link_" + slot_id_2(int32_t(links.size() + 1)) + "_" + from_zone + "_" + to_zone;
+		link["source_template_id"] = normalized.get("template_id", "");
+		link["from"] = from_zone;
+		link["to"] = to_zone;
+		link["from_zone_id"] = from_zone;
+		link["to_zone_id"] = to_zone;
+		link["role"] = normalized_text(source_link, "role", "template_connection");
+		link["value"] = guard_value;
+		link["guard_value"] = guard_value;
+		link["wide"] = wide;
+		link["border_guard"] = border_guard;
+		link["template_player_filter_active"] = player_filter_active;
+		Dictionary road_policy;
+		road_policy["endpoint_geometry_consumer"] = "later_roads_rivers_connections_slice";
+		road_policy["wide_semantics"] = wide ? "wide_link_suppresses_normal_guard_not_corridor_width" : "normal_width_policy_deferred";
+		link["road_policy"] = road_policy;
+		Dictionary guard_policy;
+		guard_policy["normal_guard_value"] = wide ? 0 : guard_value;
+		guard_policy["raw_value"] = guard_value;
+		guard_policy["wide_suppresses_normal_guard"] = wide;
+		guard_policy["border_guard_special_mode"] = border_guard;
+		guard_policy["materialization_owner_slice"] = "native-rmg-homm3-roads-rivers-connections-10184";
+		link["guard_policy"] = guard_policy;
+		link["diagnostics"] = Array();
+		link["source"] = "runtime_template_zone_graph";
+		links.append(link);
+	}
+	return links;
+}
+
+Dictionary runtime_zone_graph_validation(const Array &zones, const Array &links, const Array &owner_grid, const Array &input_diagnostics) {
+	Array failures;
+	Array warnings = input_diagnostics.duplicate(true);
+	Dictionary zones_by_id;
+	Dictionary adjacency;
+	int32_t start_zone_count = 0;
+	int32_t neutral_zone_count = 0;
+	int32_t target_area_sum = 0;
+	int32_t cell_count_sum = 0;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		if (zone_id.is_empty()) {
+			failures.append("runtime_zone_missing_id");
+			continue;
+		}
+		zones_by_id[zone_id] = true;
+		adjacency[zone_id] = Array();
+		if (String(zone.get("role", "")).contains("start")) {
+			++start_zone_count;
+		}
+		if (zone.get("owner_slot", Variant()).get_type() == Variant::NIL) {
+			++neutral_zone_count;
+		}
+		target_area_sum += int32_t(zone.get("target_area", 0));
+		cell_count_sum += int32_t(zone.get("cell_count", 0));
+		if (int32_t(zone.get("target_area", 0)) <= 0 || int32_t(zone.get("cell_count", 0)) <= 0) {
+			failures.append(String("runtime_zone_area_missing:") + zone_id);
+		}
+	}
+	int32_t wide_link_count = 0;
+	int32_t border_guard_link_count = 0;
+	for (int64_t index = 0; index < links.size(); ++index) {
+		Dictionary link = links[index];
+		const String from_zone = String(link.get("from_zone_id", link.get("from", "")));
+		const String to_zone = String(link.get("to_zone_id", link.get("to", "")));
+		if (!zones_by_id.has(from_zone) || !zones_by_id.has(to_zone)) {
+			failures.append(String("runtime_link_unknown_endpoint:") + from_zone + String("->") + to_zone);
+			continue;
+		}
+		connect_adjacency(adjacency, from_zone, to_zone);
+		if (bool(link.get("wide", false))) {
+			++wide_link_count;
+		}
+		if (bool(link.get("border_guard", false))) {
+			++border_guard_link_count;
+		}
+	}
+	if (links.is_empty()) {
+		failures.append("runtime_graph_links_empty");
+	}
+	if (!zones.is_empty()) {
+		const String start = String(Dictionary(zones[0]).get("id", ""));
+		Dictionary visited;
+		Array queue;
+		visited[start] = true;
+		queue.append(start);
+		int64_t cursor = 0;
+		while (cursor < queue.size()) {
+			const String current = String(queue[cursor]);
+			++cursor;
+			Array neighbors = adjacency.get(current, Array());
+			for (int64_t neighbor_index = 0; neighbor_index < neighbors.size(); ++neighbor_index) {
+				const String next = String(neighbors[neighbor_index]);
+				if (!visited.has(next)) {
+					visited[next] = true;
+					queue.append(next);
+				}
+			}
+		}
+		if (visited.size() != zones_by_id.size()) {
+			failures.append("runtime_graph_disconnected");
+		}
+	}
+
+	Dictionary report;
+	report["schema_id"] = "aurelion_native_rmg_runtime_zone_graph_validation_v1";
+	report["status"] = failures.is_empty() ? "pass" : "fail";
+	report["failure_count"] = failures.size();
+	report["warning_count"] = warnings.size();
+	report["failures"] = failures;
+	report["warnings"] = warnings;
+	report["start_zone_count"] = start_zone_count;
+	report["neutral_zone_count"] = neutral_zone_count;
+	report["target_area_sum"] = target_area_sum;
+	report["cell_count_sum"] = cell_count_sum;
+	report["surface_tile_count"] = [&owner_grid]() {
+		int32_t total = 0;
+		for (int64_t y = 0; y < owner_grid.size(); ++y) {
+			total += Array(owner_grid[y]).size();
+		}
+		return total;
+	}();
+	report["wide_link_count"] = wide_link_count;
+	report["border_guard_link_count"] = border_guard_link_count;
+	report["connectivity_model"] = "runtime_template_link_graph_must_connect_all_runtime_zones";
+	return report;
+}
+
+Array zones_with_runtime_adjacency(Array zones, const Array &links) {
+	Dictionary adjacency = zone_link_adjacency(links);
+	Dictionary links_by_zone;
+	for (int64_t index = 0; index < links.size(); ++index) {
+		Dictionary link = links[index];
+		const String from_zone = String(link.get("from_zone_id", link.get("from", "")));
+		const String to_zone = String(link.get("to_zone_id", link.get("to", "")));
+		Array from_links = links_by_zone.get(from_zone, Array());
+		Array to_links = links_by_zone.get(to_zone, Array());
+		from_links.append(link.get("runtime_id", link.get("id", "")));
+		to_links.append(link.get("runtime_id", link.get("id", "")));
+		links_by_zone[from_zone] = from_links;
+		links_by_zone[to_zone] = to_links;
+	}
+	Array result;
+	for (int64_t index = 0; index < zones.size(); ++index) {
+		Dictionary zone = zones[index];
+		const String zone_id = String(zone.get("id", ""));
+		zone["adjacent_zone_ids"] = adjacency.get(zone_id, Array());
+		zone["runtime_links"] = links_by_zone.get(zone_id, Array());
+		result.append(zone);
+	}
+	return result;
+}
+
 Dictionary generate_zone_layout(const Dictionary &normalized, const Dictionary &player_assignment) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = int32_t(normalized.get("level_count", 1));
 	Array zones = build_foundation_zones(normalized, player_assignment);
+	const bool catalog_runtime_graph = has_catalog_template(normalized);
+	Array diagnostics;
+	Dictionary catalog_template = catalog_template_for_id(String(normalized.get("template_id", "")));
+	const bool template_supported = catalog_runtime_graph ? catalog_template_supports_config(catalog_template, normalized, diagnostics) : false;
+	zones = zones_with_target_areas(zones, width * height);
 	Dictionary seeds = place_zone_seeds(zones, normalized);
 	Array owner_grid;
-	for (int32_t y = 0; y < height; ++y) {
-		Array row;
-		for (int32_t x = 0; x < width; ++x) {
-			row.append(nearest_zone_id(x, y, zones, seeds));
+	if (catalog_runtime_graph && template_supported) {
+		owner_grid = runtime_graph_owner_grid(zones, seeds, width, height);
+	} else {
+		for (int32_t y = 0; y < height; ++y) {
+			Array row;
+			for (int32_t x = 0; x < width; ++x) {
+				row.append(nearest_zone_id(x, y, zones, seeds));
+			}
+			owner_grid.append(row);
 		}
-		owner_grid.append(row);
 	}
 	zones = zones_with_geometry(zones, seeds, owner_grid);
+	Array runtime_links = catalog_runtime_graph ? runtime_link_records_from_catalog(normalized, zones, diagnostics) : Array();
+	zones = zones_with_runtime_adjacency(zones, runtime_links);
+	Dictionary runtime_validation = runtime_zone_graph_validation(zones, runtime_links, owner_grid, diagnostics);
 
 	Dictionary level;
 	level["level_index"] = 0;
 	level["kind"] = "surface";
 	level["owner_grid"] = owner_grid;
 	level["anchor_points"] = seeds;
-	level["allocation_model"] = "native_foundation_nearest_seed_weighted_owner_grid";
+	level["allocation_model"] = catalog_runtime_graph && template_supported ? "runtime_template_graph_target_area_flood_fill" : "native_foundation_nearest_seed_weighted_owner_grid";
 	Array levels;
 	levels.append(level);
 
@@ -1601,19 +2119,40 @@ Dictionary generate_zone_layout(const Dictionary &normalized, const Dictionary &
 	dimensions["level_count"] = level_count;
 
 	Dictionary policy;
-	policy["zone_area_model"] = "native_foundation_weighted_nearest_seed";
+	policy["zone_area_model"] = catalog_runtime_graph && template_supported ? "runtime_template_graph_base_size_target_area" : "native_foundation_weighted_nearest_seed";
 	policy["water_mode"] = normalized.get("water_mode", "land");
 	policy["template_model"] = has_catalog_template(normalized) ? "imported_catalog_template_zones_and_links" : "fallback_runtime_template";
+	policy["runtime_graph_model"] = catalog_runtime_graph ? "template_catalog_runtime_zone_graph" : "fallback_foundation_template";
+	policy["layout_algorithm"] = catalog_runtime_graph && template_supported ? "quota_limited_connected_flood_fill_from_template_graph_anchors" : "weighted_nearest_seed_fallback";
+
+	Dictionary runtime_graph;
+	runtime_graph["schema_id"] = NATIVE_RMG_RUNTIME_ZONE_GRAPH_SCHEMA_ID;
+	runtime_graph["schema_version"] = 1;
+	runtime_graph["generation_status"] = catalog_runtime_graph ? "runtime_zone_graph_generated" : "runtime_zone_graph_not_applicable";
+	runtime_graph["source_template_id"] = normalized.get("template_id", "");
+	runtime_graph["source_profile_id"] = normalized.get("profile_id", "");
+	runtime_graph["source_template_label"] = catalog_template.get("label", "");
+	runtime_graph["template_supported_for_config"] = template_supported;
+	runtime_graph["size_score"] = catalog_runtime_graph ? catalog_size_score_for_config(normalized, catalog_template) : 0;
+	runtime_graph["zones"] = zones;
+	runtime_graph["links"] = runtime_links;
+	runtime_graph["zone_count"] = zones.size();
+	runtime_graph["link_count"] = runtime_links.size();
+	runtime_graph["validation"] = runtime_validation;
+	runtime_graph["diagnostics"] = diagnostics;
+	runtime_graph["signature"] = hash32_hex(canonical_variant(runtime_graph));
 
 	Dictionary layout;
 	layout["schema_id"] = NATIVE_RMG_ZONE_LAYOUT_SCHEMA_ID;
 	layout["schema_version"] = 1;
-	layout["generation_status"] = "zones_generated_foundation";
+	layout["generation_status"] = catalog_runtime_graph && template_supported ? "zones_generated_runtime_template_graph" : "zones_generated_foundation";
 	layout["full_generation_status"] = "not_implemented";
 	layout["template_id"] = normalized.get("template_id", "");
 	layout["template_source"] = has_catalog_template(normalized) ? "content_random_map_template_catalog" : "native_foundation_fallback_runtime_template";
 	layout["dimensions"] = dimensions;
 	layout["policy"] = policy;
+	layout["runtime_zone_graph"] = runtime_graph;
+	layout["runtime_graph_validation"] = runtime_validation;
 	layout["zone_count"] = zones.size();
 	layout["zones"] = zones;
 	layout["zone_seed_records"] = seeds;
@@ -1621,6 +2160,7 @@ Dictionary generate_zone_layout(const Dictionary &normalized, const Dictionary &
 	layout["surface_owner_grid"] = owner_grid;
 	layout["surface_water_cells"] = Array();
 	layout["unsupported_runtime_features"] = Array();
+	layout["diagnostics"] = diagnostics;
 	layout["signature"] = hash32_hex(canonical_variant(layout));
 	return layout;
 }
@@ -2505,7 +3045,9 @@ Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized) {
 Dictionary generate_road_network(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
-	Array links = foundation_route_links(normalized);
+	Dictionary runtime_zone_graph = zone_layout.get("runtime_zone_graph", Dictionary());
+	Array runtime_links = runtime_zone_graph.get("links", Array());
+	Array links = runtime_links.is_empty() ? foundation_route_links(normalized) : runtime_links;
 	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
 	Dictionary nodes = build_route_nodes(zone_layout, player_starts);
 	Dictionary zone_anchors = zone_anchor_lookup(zone_layout);
@@ -2686,6 +3228,8 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 	route_graph["schema_version"] = 1;
 	route_graph["generation_status"] = "route_graph_generated_foundation";
 	route_graph["full_generation_status"] = native_rmg_full_generation_status_for_config(normalized);
+	route_graph["source_runtime_zone_graph_signature"] = runtime_zone_graph.get("signature", "");
+	route_graph["source_link_model"] = runtime_links.is_empty() ? "foundation_route_links" : "runtime_template_zone_graph_links";
 	route_graph["nodes"] = nodes;
 	route_graph["edges"] = edges;
 	route_graph["adjacency"] = adjacency;
@@ -7096,7 +7640,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["full_generation_status"] = full_generation_status;
 	metadata["supported_parity_config"] = full_parity_supported;
 	metadata["terrain_generation_status"] = terrain_grid.get("generation_status", "terrain_grid_generated");
-	metadata["zone_generation_status"] = "zones_generated_foundation";
+	metadata["zone_generation_status"] = zone_layout.get("generation_status", "zones_generated_foundation");
+	metadata["runtime_zone_graph_signature"] = Dictionary(zone_layout.get("runtime_zone_graph", Dictionary())).get("signature", "");
 	metadata["player_start_generation_status"] = "player_starts_generated_foundation";
 	metadata["road_generation_status"] = road_network.get("generation_status", "roads_generated_foundation");
 	metadata["river_generation_status"] = river_network.get("generation_status", "rivers_generated_foundation");
@@ -7181,7 +7726,9 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["generation_status"] = generation_status;
 	result["terrain_generation_status"] = terrain_grid.get("generation_status", "terrain_grid_generated");
 	result["terrain_grid_status"] = full_parity_supported ? "generated_full_parity" : "generated";
-	result["zone_generation_status"] = "zones_generated_foundation";
+	result["zone_generation_status"] = zone_layout.get("generation_status", "zones_generated_foundation");
+	result["runtime_zone_graph"] = zone_layout.get("runtime_zone_graph", Dictionary());
+	result["runtime_graph_validation"] = zone_layout.get("runtime_graph_validation", Dictionary());
 	result["player_start_generation_status"] = "player_starts_generated_foundation";
 	result["road_generation_status"] = road_network.get("generation_status", "roads_generated_foundation");
 	result["river_generation_status"] = river_network.get("generation_status", "rivers_generated_foundation");
