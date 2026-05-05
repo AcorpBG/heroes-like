@@ -3563,6 +3563,13 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 				covered_start_ids.append(start_id);
 			}
 		}
+		if (start_by_zone.has(to_zone)) {
+			Dictionary start = start_by_zone.get(to_zone, Dictionary());
+			const String start_id = String(start.get("start_id", ""));
+			if (!array_has_string(covered_start_ids, start_id)) {
+				covered_start_ids.append(start_id);
+			}
+		}
 		if (!array_has_string(covered_zone_ids, from_zone)) {
 			covered_zone_ids.append(from_zone);
 		}
