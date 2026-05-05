@@ -2,7 +2,7 @@ extends Node
 
 const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
-const REPORT_ID := "RANDOM_MAP_ALL_TEMPLATE_MENU_WIRING_REPORT"
+const REPORT_ID := "RANDOM_MAP_HOMM3_SIZE_DEFAULT_MENU_WIRING_REPORT"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -28,6 +28,11 @@ func _run() -> void:
 	if catalog_profile_ids != exposed_profile_ids:
 		_fail("Rules setup profile ids did not match catalog ids.")
 		return
+	var size_defaults: Dictionary = setup_options.get("size_class_defaults", {}) if setup_options.get("size_class_defaults", {}) is Dictionary else {}
+	for size_class_id in ["homm3_small", "homm3_medium", "homm3_large", "homm3_extra_large"]:
+		if not (size_defaults.get(size_class_id, {}) is Dictionary):
+			_fail("Rules setup missed internal size default for %s." % size_class_id)
+			return
 
 	var shell = load("res://scenes/menus/MainMenu.tscn").instantiate()
 	add_child(shell)
@@ -36,10 +41,13 @@ func _run() -> void:
 	shell.call("validation_open_skirmish_stage")
 	var snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
 	var controls: Dictionary = snapshot.get("controls", {}) if snapshot.get("controls", {}) is Dictionary else {}
-	var menu_template_ids: Array = controls.get("template_option_ids", []) if controls.get("template_option_ids", []) is Array else []
-	menu_template_ids.sort()
-	if menu_template_ids != catalog_template_ids:
-		_fail("Main menu generated template picker did not expose all catalog template ids: count=%d expected=%d" % [menu_template_ids.size(), catalog_template_ids.size()])
+	for forbidden_key in ["template_options", "template_option_ids", "profile_options", "profile_option_ids"]:
+		if controls.has(forbidden_key):
+			_fail("Main menu generated player controls still exposed manual %s: %s" % [forbidden_key, JSON.stringify(controls)])
+			return
+	var internal_provenance: Dictionary = controls.get("internal_template_provenance", {}) if controls.get("internal_template_provenance", {}) is Dictionary else {}
+	if bool(internal_provenance.get("template_picker_visible", true)) or bool(internal_provenance.get("profile_picker_visible", true)):
+		_fail("Manual template/profile pickers remained visible: %s" % JSON.stringify(internal_provenance))
 		return
 
 	var built_count := 0
@@ -48,12 +56,10 @@ func _run() -> void:
 		if not (template is Dictionary):
 			continue
 		var template_id := String(template.get("id", ""))
-		if not bool(shell.call("validation_select_generated_template", template_id)):
-			_fail("Main menu could not select exposed template %s." % template_id)
-			return
-		var template_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
-		var template_controls: Dictionary = template_snapshot.get("controls", {}) if template_snapshot.get("controls", {}) is Dictionary else {}
-		var profile_ids: Array = template_controls.get("profile_option_ids", []) if template_controls.get("profile_option_ids", []) is Array else []
+		var profile_ids := []
+		for profile in catalog_profiles:
+			if profile is Dictionary and String(profile.get("template_id", "")) == template_id:
+				profile_ids.append(String(profile.get("id", "")))
 		if profile_ids.is_empty():
 			profile_coherence_failures.append("%s has no profile options" % template_id)
 			continue
@@ -80,7 +86,41 @@ func _run() -> void:
 			return
 		built_count += 1
 	if not profile_coherence_failures.is_empty():
-		_fail("Profile picker coherence failed: %s" % JSON.stringify(profile_coherence_failures))
+		_fail("Catalog profile coherence failed: %s" % JSON.stringify(profile_coherence_failures))
+		return
+
+	var size_default_failures := []
+	for size_class_id in ["homm3_small", "homm3_medium", "homm3_large", "homm3_extra_large"]:
+		if not bool(shell.call("validation_select_generated_size_class", size_class_id)):
+			_fail("Main menu could not select generated size class %s." % size_class_id)
+			return
+		var size_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
+		var size_controls: Dictionary = size_snapshot.get("controls", {}) if size_snapshot.get("controls", {}) is Dictionary else {}
+		var provenance: Dictionary = size_controls.get("internal_template_provenance", {}) if size_controls.get("internal_template_provenance", {}) is Dictionary else {}
+		var defaults := ScenarioSelectRulesScript.random_map_size_class_default(size_class_id)
+		if String(provenance.get("template_id", "")) != String(defaults.get("template_id", "")) or String(provenance.get("profile_id", "")) != String(defaults.get("profile_id", "")):
+			size_default_failures.append({
+				"size_class_id": size_class_id,
+				"provenance": provenance,
+				"defaults": defaults,
+			})
+		var default_config := ScenarioSelectRulesScript.build_random_map_player_config(
+			"size-default-menu-wiring-%s" % size_class_id,
+			"",
+			"",
+			int(defaults.get("player_count", 3)),
+			"land",
+			false,
+			size_class_id
+		)
+		if String(default_config.get("profile", {}).get("template_id", "")) != String(defaults.get("template_id", "")) or String(default_config.get("profile", {}).get("id", "")) != String(defaults.get("profile_id", "")):
+			size_default_failures.append({
+				"size_class_id": size_class_id,
+				"default_config_profile": default_config.get("profile", {}),
+				"defaults": defaults,
+			})
+	if not size_default_failures.is_empty():
+		_fail("Size default template/profile derivation failed: %s" % JSON.stringify(size_default_failures))
 		return
 
 	var counts_by_template: Dictionary = setup_options.get("player_count_options_by_template", {}) if setup_options.get("player_count_options_by_template", {}) is Dictionary else {}
@@ -88,7 +128,8 @@ func _run() -> void:
 		"ok": true,
 		"catalog_template_count": catalog_template_ids.size(),
 		"catalog_profile_count": catalog_profile_ids.size(),
-		"menu_template_option_count": menu_template_ids.size(),
+		"manual_template_player_controls_visible": bool(internal_provenance.get("template_picker_visible", true)),
+		"manual_profile_player_controls_visible": bool(internal_provenance.get("profile_picker_visible", true)),
 		"built_config_count": built_count,
 		"default_template_id": setup_options.get("default_template_id", ""),
 		"player_count_options_by_template_count": counts_by_template.size(),

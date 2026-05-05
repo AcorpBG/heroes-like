@@ -997,6 +997,10 @@ func _configure_generated_random_map_controls() -> void:
 	_rebuild_generated_option_picker(_generated_size_picker, options.get("size_classes", []), _generated_size_class_id, "size")
 	_rebuild_generated_option_picker(_generated_template_picker, options.get("templates", []), _generated_template_id, "template")
 	_rebuild_generated_profile_picker()
+	_generated_template_picker.visible = false
+	_generated_profile_picker.visible = false
+	_generated_template_picker.tooltip_text = "Internal provenance: chosen from the selected HoMM3 size default."
+	_generated_profile_picker.tooltip_text = "Internal provenance: chosen from the selected HoMM3 size default."
 
 	_rebuild_generated_player_count_picker()
 
@@ -1015,7 +1019,7 @@ func _configure_generated_random_map_controls() -> void:
 	_generated_water_picker.tooltip_text = "Water: land or islands generation policy."
 
 	_generated_underground_toggle.button_pressed = _generated_underground
-	_generated_underground_toggle.tooltip_text = "Underground: include a second generated level when supported by the selected template."
+	_generated_underground_toggle.tooltip_text = "Underground: include a second generated level when supported by the selected size profile."
 
 func _rebuild_generated_option_picker(picker: OptionButton, options: Array, selected_id: String, label_key: String) -> void:
 	picker.clear()
@@ -1133,14 +1137,14 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 			int(retry.get("attempt_count", 1)),
 			int(retry.get("retry_count", 0)),
 		]
-		provenance_text = "Seed %s | Size %s | Template %s | Profile %s | Players %d | Water %s | Underground %s" % [
+		provenance_text = "Seed %s | Size %s | Players %d | Water %s | Underground %s | Internal profile %s/%s" % [
 			seed_label,
 			ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
-			String(setup.get("template_id", "")),
-			String(setup.get("profile_id", "")),
 			_generated_player_count,
 			_generated_water_mode,
 			"on" if _generated_underground else "off",
+			String(setup.get("template_id", "")),
+			String(setup.get("profile_id", "")),
 		]
 		_start_generated_skirmish_button.disabled = false
 		_start_generated_skirmish_button.tooltip_text = _join_nonempty_lines([
@@ -1187,7 +1191,7 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 	_set_generated_generation_stage(
 		"Preparing generated map",
 		10,
-		"Preparing generated map launch; seed, size, template, player count, water, and underground choices are locked for this run."
+		"Preparing generated map launch; seed, size, player count, water, underground, and internal size-default profile are locked for this run."
 	)
 	await _yield_generated_generation_frame()
 
@@ -1195,9 +1199,9 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 	var config := _generated_random_map_config()
 	profile_buckets["config"] = ProfileLogScript.elapsed_ms(phase_started)
 	_set_generated_generation_stage(
-		"Validating seed and template",
+		"Validating generated setup",
 		25,
-		"Validating generated map seed/config with bounded retry. Map size, template, player-count, and density rules are unchanged."
+		"Validating generated map seed/config with bounded retry. Map size, internal size-default profile, player-count, and density rules are unchanged."
 	)
 	await _yield_generated_generation_frame()
 
@@ -1885,20 +1889,38 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"seed": _generated_seed,
 		"size_class_id": _generated_size_class_id,
 		"size_class_label": ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
-		"template_id": _generated_template_id,
-		"profile_id": _generated_profile_id,
 		"player_count": _generated_player_count,
 		"water_mode": _generated_water_mode,
 		"underground": _generated_underground,
 		"retry_policy": ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"size_options": _picker_item_labels(_generated_size_picker),
-		"template_options": _picker_item_labels(_generated_template_picker),
-		"template_option_ids": _picker_item_metadata_strings(_generated_template_picker),
-		"profile_options": _picker_item_labels(_generated_profile_picker),
-		"profile_option_ids": _picker_item_metadata_strings(_generated_profile_picker),
 		"player_count_options": _picker_item_labels(_generated_player_count_picker),
 		"player_count_values": _picker_item_metadata_ints(_generated_player_count_picker),
 		"water_options": _picker_item_labels(_generated_water_picker),
+		"visible_player_controls": [
+			"seed",
+			"size_class",
+			"player_count",
+			"water_mode",
+			"underground",
+			"launch_generated",
+		],
+		"internal_template_provenance": _generated_random_map_internal_template_provenance(),
+	}
+
+func _generated_random_map_internal_template_provenance() -> Dictionary:
+	var size_defaults := ScenarioSelectRulesScript.random_map_size_class_default(_generated_size_class_id)
+	return {
+		"selection_source": "homm3_size_class_default",
+		"template_id": _generated_template_id,
+		"profile_id": _generated_profile_id,
+		"size_class_id": _generated_size_class_id,
+		"size_class_default_template_id": String(size_defaults.get("template_id", "")),
+		"size_class_default_profile_id": String(size_defaults.get("profile_id", "")),
+		"template_picker_visible": _generated_template_picker.visible,
+		"profile_picker_visible": _generated_profile_picker.visible,
+		"manual_template_player_control": false,
+		"manual_profile_player_control": false,
 	}
 
 func _picker_item_labels(picker: OptionButton) -> Array:
@@ -2037,16 +2059,60 @@ func validation_set_generated_underground(enabled: bool) -> bool:
 	return _generated_underground == enabled
 
 func validation_force_generated_random_map_config(config: Dictionary) -> Dictionary:
-	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
-		config,
-		_selected_difficulty,
-		ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
-	)
+	var setup := {}
+	if bool(config.get("validation_force_failure", false)):
+		setup = _validation_forced_generated_random_map_failure(config)
+	else:
+		setup = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+			config,
+			_selected_difficulty,
+			ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
+		)
 	_generated_last_setup = setup.duplicate(true)
 	_set_compact_label(_generated_status_label, String(setup.get("setup_summary", setup.get("failure_handoff", ""))), 2, 92)
 	_set_compact_label(_generated_provenance_label, String(setup.get("failure_handoff", setup.get("setup_summary", ""))), 2, 118)
 	_start_generated_skirmish_button.disabled = not bool(setup.get("ok", false))
 	return setup
+
+func _validation_forced_generated_random_map_failure(config: Dictionary) -> Dictionary:
+	var max_attempts := int(ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.get("max_attempts", 2))
+	var validation := {
+		"schema_id": String(config.get("validation_schema_id", "generated_random_map_validation_forced_failure_v1")),
+		"status": "fail",
+		"validation_status": "fail",
+		"failure_count": 1,
+		"warning_count": 0,
+		"failures": [String(config.get("validation_failure", "forced_validation_failure"))],
+		"size_policy": config.get("validation_size_policy", {}),
+	}
+	var retry_status := {
+		"policy": "bounded_player_setup_retry_visible",
+		"attempt_count": max_attempts,
+		"retry_count": max(0, max_attempts - 1),
+		"max_attempts": max_attempts,
+		"mode": String(ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.get("mode", "seed_salt")),
+		"status": "failed_before_launch",
+		"validation_status": "fail",
+		"failure_count": 1,
+		"warning_count": 0,
+	}
+	return {
+		"ok": false,
+		"setup_kind": "generated_random_map_skirmish",
+		"launch_mode": SessionState.LAUNCH_MODE_SKIRMISH,
+		"difficulty": _selected_difficulty,
+		"difficulty_label": ScenarioSelectRulesScript.difficulty_label(_selected_difficulty),
+		"validation": validation,
+		"retry_status": retry_status,
+		"retry_attempts": [],
+		"failure_handoff": "Generated setup blocked by validation after bounded retry attempts; no session, save, campaign progress, or authored content changes occur.",
+		"setup_summary": "Generated validation blocked before launch | attempts %d | retry %d | Boundary: no session, save, campaign adoption, authored JSON writeback, or alpha/parity claim." % [
+			int(retry_status.get("attempt_count", 0)),
+			int(retry_status.get("retry_count", 0)),
+		],
+		"campaign_adoption": false,
+		"alpha_parity_claim": false,
+	}
 
 func validation_start_generated_skirmish() -> Dictionary:
 	var requested_setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
