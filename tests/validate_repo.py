@@ -15306,7 +15306,7 @@ def validate_native_rmg_homm3_validation_adoption_gate(errors: list[str]) -> Non
             "object_placement_pipeline",
             "guard_reward",
             "ready_feature_gated_not_authoritative",
-            "seed_config_replay_boundary_only_no_authoritative_package_session_adoption",
+            "seed_config_and_full_output_replay_boundary_stable_for_validated_components",
             "full_output_signature_stable",
             "performance_budget_msec",
         ):
@@ -15318,7 +15318,7 @@ def validate_native_rmg_homm3_validation_adoption_gate(errors: list[str]) -> Non
             "Native RMG HoMM3 Validation Adoption Gate Report",
             "native-rmg-homm3-validation-adoption-gates-10184",
             "ready_feature_gated_not_authoritative",
-            "full_output_signature_stable=false",
+            "full_output_signature_stable=true",
             "No alpha readiness claim",
             "authoritative package/session adoption remains gated",
         ):

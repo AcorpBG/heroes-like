@@ -54,7 +54,7 @@ Observed gate summary:
 - `adoption_status=ready_feature_gated_not_authoritative`
 - `deterministic_config_identity_stable=true`
 - `changed_seed_identity_changes=true`
-- `full_output_signature_stable=false`
+- `full_output_signature_stable=true`
 
 Package/session bridge report:
 
@@ -76,7 +76,7 @@ git diff --check
 
 ## Adoption Boundary
 
-The supported package/session bridge is structurally acceptable but not authoritative because repeated full generated output still reports `full_output_signature_stable=false`. The stable replay boundary proven by this gate is seed/config identity only, not full output package/session equivalence.
+The supported package/session bridge is structurally acceptable but not authoritative because runtime call sites still do not adopt the generated package/session as authoritative state, and medium translated profiles remain partial foundations. The stable replay boundary proven by this gate now includes seed/config identity and full generated-output signature stability for validated components.
 
 The gate therefore keeps:
 
@@ -88,8 +88,8 @@ The gate therefore keeps:
 - no campaign browser authored-listing adoption
 - no skirmish browser authored-listing adoption
 
-The follow-up for authoritative use is `native-rmg-package-session-authoritative-replay-gate-10184`: isolate remaining nondeterministic full-output signature fields, prove repeated package/session identity for supported profiles, then decide whether runtime call sites can move from GDScript/source-of-truth guarded usage to native generated package/session authority.
+The follow-up for authoritative use is `native-rmg-package-session-authoritative-replay-gate-10184`: adopt native generated package/session records at runtime, expand exact full-generation coverage for translated profiles, and decide whether runtime call sites can move from GDScript/source-of-truth guarded usage to native generated package/session authority.
 
 ## Phase 3 Status
 
-The Phase 3 RMG rework can close because all child implementation slices are complete and this final gate passes with the adoption boundary explicit. The generator is validated for the implemented HoMM3-style structural surface, while unsupported exact byte/art/private-toolkit parity and authoritative package/session replay remain outside this phase.
+The Phase 3 RMG rework can close because all child implementation slices are complete and this final gate passes with the adoption boundary explicit. The generator is validated for the implemented HoMM3-style structural surface, while unsupported exact byte/art/private-toolkit parity and authoritative runtime package/session adoption remain outside this phase.

@@ -117,7 +117,7 @@ func _run() -> void:
 			"authored_content_writeback": false,
 			"save_version_bump": false,
 			"alpha_readiness_claim": false,
-			"remaining_follow_up": "Authoritative package/session adoption remains gated because full output/package identity is not stable across all validated generated components; replay remains seed/config-boundary only.",
+			"remaining_follow_up": "Authoritative package/session adoption remains gated on runtime call-site adoption and exact full-generation coverage for translated profiles; validated generated components now preserve stable seed/config and full-output replay identity.",
 		},
 	})])
 	get_tree().quit(0)
@@ -301,14 +301,85 @@ func _assert_replay_boundary(first: Dictionary, repeat: Dictionary, changed: Dic
 	var first_signature := String(first.get("full_output_signature", ""))
 	var repeat_signature := String(repeat.get("full_output_signature", ""))
 	var changed_signature := String(changed.get("full_output_signature", ""))
+	if first_signature == "" or first_signature != repeat_signature:
+		_fail("Same seed/config did not preserve full output signature: %s vs %s; component_diff=%s; object_diff=%s" % [
+			first_signature,
+			repeat_signature,
+			JSON.stringify(_signature_diff(
+				first.get("component_signatures", {}) if first.get("component_signatures", {}) is Dictionary else {},
+				repeat.get("component_signatures", {}) if repeat.get("component_signatures", {}) is Dictionary else {}
+			)),
+			JSON.stringify(_record_signature_diff(
+				first.get("object_placements", []) if first.get("object_placements", []) is Array else [],
+				repeat.get("object_placements", []) if repeat.get("object_placements", []) is Array else [],
+				"placement_id"
+			)),
+		])
+		return {}
+	if first_signature == changed_signature:
+		_fail("Changed seed did not change full output signature: %s" % first_signature)
+		return {}
 	return {
 		"deterministic_config_identity_stable": true,
 		"changed_seed_identity_changes": true,
-		"full_output_signature_stable": first_signature != "" and first_signature == repeat_signature,
+		"full_output_signature_stable": true,
 		"first_full_output_signature": first_signature,
 		"repeat_full_output_signature": repeat_signature,
 		"changed_full_output_signature": changed_signature,
-		"policy": "seed_config_replay_boundary_only_no_authoritative_package_session_adoption",
+		"policy": "seed_config_and_full_output_replay_boundary_stable_for_validated_components",
+	}
+
+func _signature_diff(first: Dictionary, repeat: Dictionary) -> Dictionary:
+	var keys := {}
+	for key in first.keys():
+		keys[String(key)] = true
+	for key in repeat.keys():
+		keys[String(key)] = true
+	var result := {}
+	for key in keys.keys():
+		var first_value := String(first.get(key, ""))
+		var repeat_value := String(repeat.get(key, ""))
+		if first_value != repeat_value:
+			result[key] = {
+				"first": first_value,
+				"repeat": repeat_value,
+			}
+	return result
+
+func _record_signature_diff(first: Array, repeat: Array, id_key: String) -> Array:
+	var repeat_by_id := {}
+	for record in repeat:
+		if record is Dictionary:
+			repeat_by_id[String(record.get(id_key, ""))] = record
+	var result := []
+	for record in first:
+		if not (record is Dictionary):
+			continue
+		var record_id := String(record.get(id_key, ""))
+		var other: Dictionary = repeat_by_id.get(record_id, {}) if repeat_by_id.get(record_id, {}) is Dictionary else {}
+		if other.is_empty():
+			result.append({"id": record_id, "issue": "missing_in_repeat"})
+		elif String(record.get("signature", "")) != String(other.get("signature", "")):
+			result.append({
+				"id": record_id,
+				"first_signature": String(record.get("signature", "")),
+				"repeat_signature": String(other.get("signature", "")),
+				"first": _brief_record(record),
+				"repeat": _brief_record(other),
+			})
+		if result.size() >= 5:
+			return result
+	return result
+
+func _brief_record(record: Dictionary) -> Dictionary:
+	return {
+		"kind": String(record.get("kind", record.get("guard_kind", ""))),
+		"zone_id": String(record.get("zone_id", "")),
+		"x": int(record.get("x", 0)),
+		"y": int(record.get("y", 0)),
+		"family_id": String(record.get("family_id", "")),
+		"object_id": String(record.get("object_id", "")),
+		"category_id": String(record.get("category_id", "")),
 	}
 
 func _assert_adoption_boundary(case_id: String, adoption: Dictionary) -> bool:
