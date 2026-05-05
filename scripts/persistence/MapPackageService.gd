@@ -905,6 +905,10 @@ func _generate_road_network(normalized: Dictionary, zone_layout: Dictionary, pla
 			var start_id := String(start_by_zone[from_zone].get("start_id", ""))
 			if start_id not in covered_start_ids:
 				covered_start_ids.append(start_id)
+		if start_by_zone.has(to_zone):
+			var start_id := String(start_by_zone[to_zone].get("start_id", ""))
+			if start_id not in covered_start_ids:
+				covered_start_ids.append(start_id)
 		for zone_id in [from_zone, to_zone]:
 			if zone_id not in covered_zone_ids:
 				covered_zone_ids.append(zone_id)

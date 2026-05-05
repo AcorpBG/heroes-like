@@ -1823,13 +1823,18 @@ static func _random_map_failure_setup_summary(report: Dictionary, retry_status: 
 	for failure in report.get("failures", []):
 		if lines.size() >= 5:
 			break
-		lines.append("Failure: %s" % String(failure))
+		lines.append("Failure: %s" % _stringify_report_value(failure))
 	if attempts.size() > 0:
 		var last_attempt: Dictionary = attempts[attempts.size() - 1] if attempts[attempts.size() - 1] is Dictionary else {}
 		var retry_decision: Dictionary = last_attempt.get("retry_decision", {}) if last_attempt.get("retry_decision", {}) is Dictionary else {}
 		lines.append("Retry decision: %s." % String(retry_decision.get("reason", "attempt_limit_reached")))
 	lines.append("Boundary: no session, save, campaign adoption, authored JSON writeback, or alpha/parity claim.")
 	return "\n".join(lines)
+
+static func _stringify_report_value(value: Variant) -> String:
+	if value is Dictionary or value is Array:
+		return JSON.stringify(value)
+	return String(value)
 
 static func _random_map_generated_identity(payload: Dictionary) -> Dictionary:
 	var scenario: Dictionary = payload.get("scenario_record", {}) if payload.get("scenario_record", {}) is Dictionary else {}
