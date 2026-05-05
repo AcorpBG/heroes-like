@@ -31,7 +31,7 @@ const CAPABILITIES := [
 
 const CORE_TERRAIN_POOL := ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"]
 const DEFAULT_FACTIONS := ["faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake"]
-const TERRAIN_ID_BY_CODE := ["grass", "snow", "sand", "dirt", "rough", "lava", "underground", "water"]
+const TERRAIN_ID_BY_CODE := ["grass", "snow", "sand", "dirt", "rough", "lava", "underground", "water", "rock"]
 
 func get_api_version() -> String:
 	return API_VERSION
