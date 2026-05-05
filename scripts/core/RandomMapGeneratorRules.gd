@@ -2123,7 +2123,9 @@ static func _place_generated_objects(zones: Array, links: Array, seeds: Dictiona
 		var owner := "player" if player_type == "human" and player_slot == 1 else "enemy"
 		var faction_id := String(zone.get("faction_id", ""))
 		var town_id := String(town_ids[player_index % town_ids.size()]) if not town_ids.is_empty() else String(DEFAULT_TOWN_BY_FACTION.get(faction_id, "town_riverwatch"))
-		var point := _nearest_free_cell_for_catalog("town", "town_primary", town_id, int(seed.get("x", 0)), int(seed.get("y", 0)), String(zone.get("id", "")), zone_grid, terrain_rows, occupied, rng, town_hard_spacing_reserved)
+		var point := _nearest_free_cell_for_catalog("town", "town_primary", town_id, int(seed.get("x", 0)), int(seed.get("y", 0)), String(zone.get("id", "")), zone_grid, terrain_rows, occupied, rng, town_spacing_reserved)
+		if point.is_empty() and town_hard_spacing_radius < town_spacing_radius:
+			point = _nearest_free_cell_for_catalog("town", "town_primary", town_id, int(seed.get("x", 0)), int(seed.get("y", 0)), String(zone.get("id", "")), zone_grid, terrain_rows, occupied, rng, town_hard_spacing_reserved)
 		if point.is_empty():
 			continue
 		var placement_id := "rmg_town_p%d" % (player_index + 1)
@@ -2485,18 +2487,19 @@ static func _town_spacing_radius_for_size(normalized: Dictionary) -> int:
 	var width := int(size.get("width", 36))
 	var height := int(size.get("height", 36))
 	var shortest: int = max(1, min(width, height))
-	var minimum := 6 if shortest >= 30 else 5
-	return clampi(max(minimum, int(ceil(float(shortest) / 8.0))), minimum, 18)
+	var minimum := 12 if shortest >= 60 else 8
+	return clampi(max(minimum, int(ceil(float(shortest) / 5.0))), minimum, 24)
 
 static func _town_hard_spacing_radius_for_size(normalized: Dictionary) -> int:
-	return max(4, int(floor(float(_town_spacing_radius_for_size(normalized)) * 0.75)))
+	return max(8, int(floor(float(_town_spacing_radius_for_size(normalized)) * 0.80)))
 
 static func _town_spacing_policy_payload(preferred_radius: int, hard_radius: int) -> Dictionary:
 	return {
 		"source_model": "HoMM3_RMG_town_layer_after_runtime_zone_construction_translated_to_original_spacing_contract",
-		"preferred_minimum_manhattan_distance": preferred_radius,
-		"hard_fallback_minimum_manhattan_distance": hard_radius,
-		"fallback_policy": "retry_with_hard_spacing_before_any_unspaced_town_placement",
+		"preferred_minimum_direct_route_distance": preferred_radius,
+		"hard_fallback_minimum_direct_route_distance": hard_radius,
+		"distance_model": "direct_tile_route_chebyshev_distance",
+		"fallback_policy": "retry_with_hard_spacing_then_skip_infeasible_town_no_unspaced_fallback",
 	}
 
 static func _reserve_town_spacing(reserved: Dictionary, point: Dictionary, zone_grid: Array, terrain_rows: Array, radius: int) -> void:
@@ -2504,7 +2507,7 @@ static func _reserve_town_spacing(reserved: Dictionary, point: Dictionary, zone_
 	var cy := int(point.get("y", 0))
 	for dy in range(-radius, radius + 1):
 		for dx in range(-radius, radius + 1):
-			if abs(dx) + abs(dy) > radius:
+			if max(abs(dx), abs(dy)) > radius:
 				continue
 			var x := cx + dx
 			var y := cy + dy
@@ -5417,21 +5420,22 @@ static func _town_mine_dwelling_validation_core(town_records: Array, mine_record
 
 static func _town_spacing_validation(town_records: Array, terrain_rows: Array) -> Dictionary:
 	var min_distance := _minimum_town_distance_for_map(terrain_rows)
-	var hard_min_distance: int = max(4, int(floor(float(min_distance) * 0.75)))
+	var hard_min_distance: int = max(8, int(floor(float(min_distance) * 0.80)))
 	var start_records := []
 	for record in town_records:
 		if record is Dictionary and int(record.get("player_slot", 0)) > 0:
 			start_records.append(record)
-	var all_towns := _town_pair_distance_summary(town_records, min_distance, "all_towns")
+	var all_towns := _town_pair_distance_summary(town_records, hard_min_distance, "all_towns", min_distance)
 	var start_towns := _town_pair_distance_summary(start_records, min_distance, "start_towns")
-	var same_zone_towns := _same_zone_town_pair_distance_summary(town_records, hard_min_distance)
+	var same_zone_towns := _same_zone_town_pair_distance_summary(town_records, hard_min_distance, min_distance)
 	var failures := []
 	failures.append_array(all_towns.get("failures", []))
 	failures.append_array(start_towns.get("failures", []))
 	failures.append_array(same_zone_towns.get("failures", []))
 	return {
 		"ok": failures.is_empty(),
-		"minimum_distance_required": min_distance,
+		"minimum_distance_required": hard_min_distance,
+		"preferred_minimum_distance": min_distance,
 		"observed_minimum_distance": int(all_towns.get("observed_minimum_distance", 0)),
 		"closest_pair": all_towns.get("closest_pair", []),
 		"all_towns": all_towns,
@@ -5444,10 +5448,10 @@ static func _minimum_town_distance_for_map(terrain_rows: Array) -> int:
 	var height := terrain_rows.size()
 	var width: int = terrain_rows[0].size() if height > 0 and terrain_rows[0] is Array else 36
 	var shortest: int = max(1, min(width, height))
-	var minimum := 6 if shortest >= 30 else 5
-	return clampi(max(minimum, int(ceil(float(shortest) / 8.0))), minimum, 18)
+	var minimum := 12 if shortest >= 60 else 8
+	return clampi(max(minimum, int(ceil(float(shortest) / 5.0))), minimum, 24)
 
-static func _town_pair_distance_summary(records: Array, required_distance: int, scope: String) -> Dictionary:
+static func _town_pair_distance_summary(records: Array, required_distance: int, scope: String, preferred_distance: int = -1) -> Dictionary:
 	var observed_min := 999999
 	var closest_pair := []
 	var pair_count := 0
@@ -5472,13 +5476,15 @@ static func _town_pair_distance_summary(records: Array, required_distance: int, 
 		"scope": scope,
 		"pair_count": pair_count,
 		"minimum_distance_required": required_distance,
+		"preferred_minimum_distance": preferred_distance if preferred_distance > 0 else required_distance,
 		"observed_minimum_distance": observed,
 		"closest_pair": closest_pair,
+		"distance_model": "direct_tile_route_chebyshev_distance",
 		"status": "pass" if failures.is_empty() else "fail",
 		"failures": failures,
 	}
 
-static func _same_zone_town_pair_distance_summary(records: Array, required_distance: int) -> Dictionary:
+static func _same_zone_town_pair_distance_summary(records: Array, required_distance: int, preferred_distance: int = -1) -> Dictionary:
 	var observed_min := 999999
 	var closest_pair := []
 	var pair_count := 0
@@ -5503,14 +5509,16 @@ static func _same_zone_town_pair_distance_summary(records: Array, required_dista
 		"scope": "same_zone_towns",
 		"pair_count": pair_count,
 		"minimum_distance_required": required_distance,
+		"preferred_minimum_distance": preferred_distance if preferred_distance > 0 else required_distance,
 		"observed_minimum_distance": observed,
 		"closest_pair": closest_pair,
+		"distance_model": "direct_tile_route_chebyshev_distance",
 		"status": "pass" if failures.is_empty() else "fail",
 		"failures": failures,
 	}
 
 static func _town_record_distance(left: Dictionary, right: Dictionary) -> int:
-	return abs(int(left.get("x", 0)) - int(right.get("x", 0))) + abs(int(left.get("y", 0)) - int(right.get("y", 0)))
+	return max(abs(int(left.get("x", 0)) - int(right.get("x", 0))), abs(int(left.get("y", 0)) - int(right.get("y", 0))))
 
 static func _town_mine_dwelling_validation(payload: Dictionary, generated_map: Dictionary = {}) -> Dictionary:
 	var failures := []

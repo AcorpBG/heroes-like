@@ -7033,27 +7033,30 @@ Dictionary point_bounds_record(int32_t x, int32_t y) {
 
 int32_t town_spacing_radius_for_size(const Dictionary &normalized) {
 	const int32_t shortest = std::max(1, std::min(int32_t(normalized.get("width", 36)), int32_t(normalized.get("height", 36))));
-	const int32_t minimum = shortest >= 30 ? 6 : 5;
-	return std::max(minimum, std::min(18, int32_t(std::ceil(double(shortest) / 8.0))));
+	const int32_t minimum = shortest >= 60 ? 12 : 8;
+	return std::max(minimum, std::min(24, int32_t(std::ceil(double(shortest) / 5.0))));
 }
 
 int32_t town_hard_spacing_radius_for_size(const Dictionary &normalized) {
-	return std::max(4, int32_t(std::floor(double(town_spacing_radius_for_size(normalized)) * 0.75)));
+	return std::max(8, int32_t(std::floor(double(town_spacing_radius_for_size(normalized)) * 0.80)));
 }
 
 Dictionary town_spacing_policy_payload(const Dictionary &normalized) {
 	Dictionary policy;
 	policy["source_model"] = "HoMM3_RMG_town_layer_after_runtime_zone_construction_translated_to_original_spacing_contract";
-	policy["preferred_minimum_manhattan_distance"] = town_spacing_radius_for_size(normalized);
-	policy["hard_fallback_minimum_manhattan_distance"] = town_hard_spacing_radius_for_size(normalized);
-	policy["fallback_policy"] = "retry_with_hard_spacing_before_any_unspaced_town_placement";
+	policy["preferred_minimum_direct_route_distance"] = town_spacing_radius_for_size(normalized);
+	policy["hard_fallback_minimum_direct_route_distance"] = town_hard_spacing_radius_for_size(normalized);
+	policy["distance_model"] = "direct_tile_route_chebyshev_distance";
+	policy["fallback_policy"] = "retry_with_hard_spacing_then_skip_infeasible_town_no_unspaced_fallback";
 	return policy;
 }
 
 bool point_far_from_towns(const Array &towns, int32_t x, int32_t y, int32_t minimum_distance) {
 	for (int64_t index = 0; index < towns.size(); ++index) {
 		Dictionary town = towns[index];
-		const int32_t distance = std::abs(x - int32_t(town.get("x", 0))) + std::abs(y - int32_t(town.get("y", 0)));
+		const int32_t dx = std::abs(x - int32_t(town.get("x", 0)));
+		const int32_t dy = std::abs(y - int32_t(town.get("y", 0)));
+		const int32_t distance = std::max(dx, dy);
 		if (distance < minimum_distance) {
 			return false;
 		}
@@ -7062,7 +7065,6 @@ bool point_far_from_towns(const Array &towns, int32_t x, int32_t y, int32_t mini
 }
 
 Dictionary find_spaced_object_point(int32_t x, int32_t y, const String &preferred_zone_id, const Array &owner_grid, const Dictionary &occupied, int32_t width, int32_t height, const Array &towns, int32_t minimum_distance) {
-	Dictionary fallback = find_object_point(x, y, preferred_zone_id, owner_grid, occupied, width, height);
 	for (int32_t radius = 0; radius <= std::max(width, height); ++radius) {
 		for (int32_t dy = -radius; dy <= radius; ++dy) {
 			for (int32_t dx = -radius; dx <= radius; ++dx) {
@@ -7084,12 +7086,12 @@ Dictionary find_spaced_object_point(int32_t x, int32_t y, const String &preferre
 			}
 		}
 	}
-	return fallback;
+	return Dictionary();
 }
 
 Dictionary town_spacing_summary(const Array &towns, const Dictionary &normalized) {
-	const int32_t required = town_spacing_radius_for_size(normalized);
-	const int32_t same_zone_required = town_hard_spacing_radius_for_size(normalized);
+	const int32_t preferred_required = town_spacing_radius_for_size(normalized);
+	const int32_t hard_required = town_hard_spacing_radius_for_size(normalized);
 	int32_t observed_min = std::numeric_limits<int32_t>::max();
 	int32_t start_observed_min = std::numeric_limits<int32_t>::max();
 	int32_t same_zone_observed_min = std::numeric_limits<int32_t>::max();
@@ -7100,10 +7102,12 @@ Dictionary town_spacing_summary(const Array &towns, const Dictionary &normalized
 		Dictionary left = towns[left_index];
 		for (int64_t right_index = left_index + 1; right_index < towns.size(); ++right_index) {
 			Dictionary right = towns[right_index];
-			const int32_t distance = std::abs(int32_t(left.get("x", 0)) - int32_t(right.get("x", 0))) + std::abs(int32_t(left.get("y", 0)) - int32_t(right.get("y", 0)));
+			const int32_t dx = std::abs(int32_t(left.get("x", 0)) - int32_t(right.get("x", 0)));
+			const int32_t dy = std::abs(int32_t(left.get("y", 0)) - int32_t(right.get("y", 0)));
+			const int32_t distance = std::max(dx, dy);
 			++pair_count;
 			observed_min = std::min(observed_min, distance);
-			if (int32_t(left.get("player_slot", 0)) > 0 && int32_t(right.get("player_slot", 0)) > 0) {
+			if (bool(left.get("is_start_town", false)) && bool(right.get("is_start_town", false))) {
 				++start_pair_count;
 				start_observed_min = std::min(start_observed_min, distance);
 			}
@@ -7116,24 +7120,31 @@ Dictionary town_spacing_summary(const Array &towns, const Dictionary &normalized
 	Dictionary all_towns;
 	all_towns["scope"] = "all_towns";
 	all_towns["pair_count"] = pair_count;
-	all_towns["minimum_distance_required"] = required;
+	all_towns["minimum_distance_required"] = hard_required;
+	all_towns["preferred_minimum_distance"] = preferred_required;
 	all_towns["observed_minimum_distance"] = observed_min == std::numeric_limits<int32_t>::max() ? 0 : observed_min;
-	all_towns["status"] = observed_min == std::numeric_limits<int32_t>::max() || observed_min >= required ? "pass" : "fail";
+	all_towns["distance_model"] = "direct_tile_route_chebyshev_distance";
+	all_towns["status"] = observed_min == std::numeric_limits<int32_t>::max() || observed_min >= hard_required ? "pass" : "fail";
 	Dictionary start_towns;
 	start_towns["scope"] = "start_towns";
 	start_towns["pair_count"] = start_pair_count;
-	start_towns["minimum_distance_required"] = required;
+	start_towns["minimum_distance_required"] = preferred_required;
+	start_towns["hard_fallback_minimum_distance"] = hard_required;
 	start_towns["observed_minimum_distance"] = start_observed_min == std::numeric_limits<int32_t>::max() ? 0 : start_observed_min;
-	start_towns["status"] = start_observed_min == std::numeric_limits<int32_t>::max() || start_observed_min >= required ? "pass" : "fail";
+	start_towns["distance_model"] = "direct_tile_route_chebyshev_distance";
+	start_towns["status"] = start_observed_min == std::numeric_limits<int32_t>::max() || start_observed_min >= preferred_required ? "pass" : "fail";
 	Dictionary same_zone_towns;
 	same_zone_towns["scope"] = "same_zone_towns";
 	same_zone_towns["pair_count"] = same_zone_pair_count;
-	same_zone_towns["minimum_distance_required"] = same_zone_required;
+	same_zone_towns["minimum_distance_required"] = hard_required;
+	same_zone_towns["preferred_minimum_distance"] = preferred_required;
 	same_zone_towns["observed_minimum_distance"] = same_zone_observed_min == std::numeric_limits<int32_t>::max() ? 0 : same_zone_observed_min;
-	same_zone_towns["status"] = same_zone_observed_min == std::numeric_limits<int32_t>::max() || same_zone_observed_min >= same_zone_required ? "pass" : "fail";
+	same_zone_towns["distance_model"] = "direct_tile_route_chebyshev_distance";
+	same_zone_towns["status"] = same_zone_observed_min == std::numeric_limits<int32_t>::max() || same_zone_observed_min >= hard_required ? "pass" : "fail";
 	Dictionary summary;
 	summary["ok"] = String(all_towns["status"]) == "pass" && String(start_towns["status"]) == "pass" && String(same_zone_towns["status"]) == "pass";
-	summary["minimum_distance_required"] = required;
+	summary["minimum_distance_required"] = hard_required;
+	summary["preferred_minimum_distance"] = preferred_required;
 	summary["observed_minimum_distance"] = all_towns["observed_minimum_distance"];
 	summary["all_towns"] = all_towns;
 	summary["start_towns"] = start_towns;
@@ -7823,7 +7834,14 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		const String zone_id = String(zone.get("id", ""));
 		Dictionary anchor = !start.is_empty() ? Dictionary(start) : Dictionary(zone.get("anchor", zone.get("center", Dictionary())));
 		const int32_t jitter = int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":town_point:" + zone_id + ":" + record_type + ":" + String::num_int64(local_ordinal)) % 5U) - 2;
-		Dictionary point = find_spaced_object_point(int32_t(anchor.get("x", width / 2)) + jitter, int32_t(anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, occupied, width, height, towns, town_hard_spacing_radius_for_size(normalized));
+		const int32_t preferred_spacing = town_spacing_radius_for_size(normalized);
+		const int32_t hard_spacing = town_hard_spacing_radius_for_size(normalized);
+		int32_t applied_spacing = preferred_spacing;
+		Dictionary point = find_spaced_object_point(int32_t(anchor.get("x", width / 2)) + jitter, int32_t(anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, occupied, width, height, towns, preferred_spacing);
+		if (point.is_empty() && hard_spacing < preferred_spacing) {
+			applied_spacing = hard_spacing;
+			point = find_spaced_object_point(int32_t(anchor.get("x", width / 2)) + jitter, int32_t(anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, occupied, width, height, towns, hard_spacing);
+		}
 		Dictionary diagnostic;
 		diagnostic["zone_id"] = zone_id;
 		diagnostic["record_type"] = record_type;
@@ -7833,10 +7851,13 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		diagnostic["source_field_name"] = town_source_field_name(owner_scope, settlement_kind, density);
 		diagnostic["source_field_value"] = source_value;
 		diagnostic["phase"] = phase_label;
+		diagnostic["preferred_town_spacing"] = preferred_spacing;
+		diagnostic["applied_town_spacing"] = applied_spacing;
+		diagnostic["town_spacing_distance_model"] = "direct_tile_route_chebyshev_distance";
 		if (point.is_empty()) {
 			diagnostic["code"] = "town_castle_placement_infeasible";
 			diagnostic["severity"] = "failure";
-			diagnostic["message"] = "No unoccupied in-bounds tile was available for a required town/castle placement.";
+			diagnostic["message"] = "No unoccupied in-bounds tile satisfied the required town/castle spacing contract.";
 			town_diagnostics.append(diagnostic);
 			return;
 		}
