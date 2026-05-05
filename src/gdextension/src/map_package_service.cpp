@@ -40,6 +40,7 @@ constexpr const char *NATIVE_RMG_OBJECT_PLACEMENT_SCHEMA_ID = "aurelion_native_r
 constexpr const char *NATIVE_RMG_TOWN_GUARD_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_town_guard_placement_v1";
 constexpr const char *NATIVE_RMG_TOWN_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_town_placement_v1";
 constexpr const char *NATIVE_RMG_GUARD_PLACEMENT_SCHEMA_ID = "aurelion_native_rmg_guard_placement_v1";
+constexpr const char *NATIVE_RMG_GUARDS_REWARDS_MONSTERS_SCHEMA_ID = "aurelion_native_rmg_guards_rewards_monsters_v1";
 constexpr const char *NATIVE_RMG_VALIDATION_REPORT_SCHEMA_ID = "aurelion_native_random_map_validation_report_v1";
 constexpr const char *NATIVE_RMG_PROVENANCE_SCHEMA_ID = "aurelion_native_random_map_provenance_v1";
 constexpr uint64_t HASH_MODULUS = 4294967296ULL;
@@ -60,6 +61,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_homm3_roads_rivers_connections");
 	result.append("native_random_map_object_placement_foundation");
 	result.append("native_random_map_homm3_mines_resources");
+	result.append("native_random_map_homm3_guards_rewards_monsters");
 	result.append("native_random_map_decorative_obstacle_generation");
 	result.append("native_random_map_town_guard_placement_foundation");
 	result.append("native_random_map_homm3_towns_castles");
@@ -971,6 +973,101 @@ int32_t rmg_mine_guard_base_value(int32_t category_index) {
 		return 7000;
 	}
 	return 3500;
+}
+
+int32_t rmg_strength_scaled_value(int32_t base_value, int32_t mode) {
+	static constexpr int32_t THRESHOLD_1[] = {50000, 2500, 1500, 1000, 500, 0};
+	static constexpr int32_t THRESHOLD_2[] = {50000, 7500, 7500, 7500, 5000, 5000};
+	static constexpr int32_t SLOPE_1[] = {0, 2, 3, 4, 6, 6};
+	static constexpr int32_t SLOPE_2[] = {0, 2, 3, 4, 4, 6};
+	const int32_t clamped_mode = std::max(0, std::min(5, mode));
+	const int32_t base = std::max(0, base_value);
+	int32_t value = 0;
+	if (base > THRESHOLD_1[clamped_mode]) {
+		value += ((base - THRESHOLD_1[clamped_mode]) * SLOPE_1[clamped_mode]) / 4;
+	}
+	if (base > THRESHOLD_2[clamped_mode]) {
+		value += ((base - THRESHOLD_2[clamped_mode]) * SLOPE_2[clamped_mode]) / 4;
+	}
+	return value < 2000 ? 0 : value;
+}
+
+int32_t rmg_local_monster_strength_mode(const Variant &strength_value) {
+	const String token = String(strength_value).to_lower().strip_edges();
+	if (token == "0" || token == "n" || token == "none" || token == "no" || token == "none_or_unguarded") {
+		return 0;
+	}
+	if (token == "2" || token == "w" || token == "weak" || token == "core_low") {
+		return 2;
+	}
+	if (token == "4" || token == "s" || token == "strong") {
+		return 4;
+	}
+	if (token == "1") {
+		return 1;
+	}
+	if (token == "5") {
+		return 5;
+	}
+	return 3;
+}
+
+int32_t rmg_global_monster_strength_mode_from_token(const String &token_value, const String &seed) {
+	const String token = token_value.to_lower().strip_edges();
+	if (token == "random") {
+		return 2 + int32_t(hash32_int(seed + String(":global_monster_strength")) % 3U);
+	}
+	if (token == "weak" || token == "core_low") {
+		return 2;
+	}
+	if (token == "strong" || token == "core_high") {
+		return 4;
+	}
+	if (token == "0" || token == "1" || token == "2" || token == "3" || token == "4" || token == "5") {
+		return std::max(0, std::min(5, int32_t(token.to_int())));
+	}
+	return 3;
+}
+
+int32_t rmg_global_monster_strength_mode(const Dictionary &normalized) {
+	return std::max(0, std::min(5, int32_t(normalized.get("global_monster_strength_mode", 3))));
+}
+
+Dictionary rmg_strength_sample_table() {
+	static constexpr int32_t BASES[] = {1500, 3500, 7000};
+	Dictionary table;
+	for (int32_t base : BASES) {
+		Array row;
+		for (int32_t mode = 0; mode <= 5; ++mode) {
+			row.append(rmg_strength_scaled_value(base, mode));
+		}
+		table[String::num_int64(base)] = row;
+	}
+	return table;
+}
+
+int32_t rmg_effective_monster_strength_mode(const Dictionary &normalized, const Dictionary &zone) {
+	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+	Dictionary monster_policy = metadata.get("monster_policy", Dictionary());
+	const int32_t source_strength = rmg_local_monster_strength_mode(monster_policy.get("strength", "avg"));
+	if (source_strength == 0) {
+		return 0;
+	}
+	return std::max(0, std::min(5, source_strength + rmg_global_monster_strength_mode(normalized) - 3));
+}
+
+int32_t rmg_zone_monster_scaled_value(const Dictionary &normalized, const Dictionary &zone, int32_t base_value) {
+	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+	Dictionary monster_policy = metadata.get("monster_policy", Dictionary());
+	const int32_t source_strength = rmg_local_monster_strength_mode(monster_policy.get("strength", "avg"));
+	if (source_strength == 0) {
+		return 0;
+	}
+	return rmg_strength_scaled_value(base_value, rmg_effective_monster_strength_mode(normalized, zone));
+}
+
+int32_t rmg_connection_guard_scaled_value(const Dictionary &normalized, int32_t raw_value) {
+	return rmg_strength_scaled_value(raw_value, rmg_global_monster_strength_mode(normalized));
 }
 
 Array rmg_mine_category_ids() {
@@ -4361,6 +4458,7 @@ int32_t zone_value_budget_for_zone(const Dictionary &normalized, const Dictionar
 String value_tier_for_amount(int32_t value);
 Dictionary reward_value_profile_for_zone(const Dictionary &normalized, const Dictionary &zone, int32_t reward_index, int32_t ordinal);
 void apply_reward_value_profile(Dictionary &family, const Dictionary &profile, int32_t ordinal);
+Dictionary reward_band_source_offsets(int32_t source_index);
 void append_object_placement(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const Dictionary &road_network, const Dictionary &zone_layout);
 
 int32_t append_decoration_placements(Array &placements, Dictionary &occupied, const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &road_network, int32_t ordinal_start) {
@@ -4514,6 +4612,11 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 		placement["reward_value_profile"] = reward_value_profile;
 		placement["reward_index_in_zone"] = point.get("native_reward_index", ordinal);
 		placement["reward_target_in_zone"] = point.get("native_reward_target", 0);
+		const int32_t source_band_index = int32_t(reward_value_profile.get("source_band_index", -1));
+		placement["homm3_re_phase"] = "phase_10_treasure_reward_bands";
+		placement["homm3_re_phase_order"] = "after_phase_7_mines_resources_before_decorative_filler";
+		placement["homm3_re_reward_band_source_offsets"] = reward_band_source_offsets(source_band_index);
+		placement["homm3_re_reward_band_selection_rule"] = "low_at_least_100_high_at_or_above_low_positive_density_weighted_slot";
 	}
 	if (kind == "mine") {
 		const int32_t category_index = int32_t(point.get("mine_category_index", family.get("homm3_re_mine_category_index", family_ordinal % RMG_MINE_CATEGORY_COUNT)));
@@ -4941,6 +5044,135 @@ void apply_reward_value_profile(Dictionary &family, const Dictionary &profile, i
 		family["guarded_policy"] = tier == "minor" ? "unguarded_or_light_guard_allowed" : "guarded_preferred";
 	}
 	family["purpose"] = "zone_reward_value_budget_materialization";
+}
+
+Dictionary reward_band_source_offsets(int32_t source_index) {
+	static constexpr const char *LOWS[] = {"+0xa0", "+0xac", "+0xb8"};
+	static constexpr const char *HIGHS[] = {"+0xa4", "+0xb0", "+0xbc"};
+	static constexpr const char *DENSITIES[] = {"+0xa8", "+0xb4", "+0xc0"};
+	Dictionary offsets;
+	if (source_index < 0 || source_index >= 3) {
+		offsets["low"] = "";
+		offsets["high"] = "";
+		offsets["density"] = "";
+		return offsets;
+	}
+	offsets["low"] = LOWS[source_index];
+	offsets["high"] = HIGHS[source_index];
+	offsets["density"] = DENSITIES[source_index];
+	return offsets;
+}
+
+Dictionary reward_band_summary_for_zones(const Dictionary &normalized, const Array &zones, const Array &placements) {
+	Array diagnostics;
+	Dictionary placed_by_band;
+	int32_t reward_count = 0;
+	int32_t out_of_band_count = 0;
+	for (int64_t index = 0; index < placements.size(); ++index) {
+		if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary placement = Dictionary(placements[index]);
+		if (String(placement.get("kind", "")) != "reward_reference") {
+			continue;
+		}
+		++reward_count;
+		const int32_t source_index = int32_t(placement.get("homm3_re_reward_band_source_index", -1));
+		placed_by_band[String::num_int64(source_index)] = int32_t(placed_by_band.get(String::num_int64(source_index), 0)) + 1;
+		const int32_t value = int32_t(placement.get("reward_value", 0));
+		const int32_t low = int32_t(placement.get("homm3_re_reward_band_low", 0));
+		const int32_t high = int32_t(placement.get("homm3_re_reward_band_high", 0));
+		if (low >= 100 && high >= low && (value < low || value > high)) {
+			++out_of_band_count;
+			Dictionary diagnostic;
+			diagnostic["code"] = "reward_value_outside_selected_band";
+			diagnostic["severity"] = "failure";
+			diagnostic["placement_id"] = placement.get("placement_id", "");
+			diagnostic["reward_value"] = value;
+			diagnostic["band_low"] = low;
+			diagnostic["band_high"] = high;
+			diagnostics.append(diagnostic);
+		}
+	}
+
+	int32_t source_band_count = 0;
+	int32_t valid_band_count = 0;
+	int32_t invalid_band_count = 0;
+	int32_t fallback_zone_count = 0;
+	Array invalid_band_records;
+	for (int64_t zone_index = 0; zone_index < zones.size(); ++zone_index) {
+		if (Variant(zones[zone_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = Dictionary(zones[zone_index]);
+		Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+		Array bands = metadata.get("treasure_bands", Array());
+		int32_t zone_valid_count = 0;
+		for (int64_t band_index = 0; band_index < bands.size(); ++band_index) {
+			if (Variant(bands[band_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			++source_band_count;
+			Dictionary band = Dictionary(bands[band_index]);
+			const int32_t low = int32_t(band.get("low", 0));
+			const int32_t high = int32_t(band.get("high", 0));
+			const int32_t density = int32_t(band.get("density", 0));
+			if (low >= 100 && high >= low && density > 0) {
+				++valid_band_count;
+				++zone_valid_count;
+			} else {
+				++invalid_band_count;
+				Dictionary invalid;
+				invalid["zone_id"] = zone.get("id", "");
+				invalid["source_band_index"] = int32_t(band_index);
+				invalid["low"] = low;
+				invalid["high"] = high;
+				invalid["density"] = density;
+				invalid["reason"] = low < 100 ? "low_below_100" : (high < low ? "high_below_low" : "nonpositive_density");
+				invalid["source_offsets"] = reward_band_source_offsets(int32_t(band_index));
+				invalid_band_records.append(invalid);
+			}
+		}
+		if (zone_valid_count == 0) {
+			++fallback_zone_count;
+			Dictionary diagnostic;
+			diagnostic["code"] = "reward_band_zone_used_floor_fallback";
+			diagnostic["severity"] = "warning";
+			diagnostic["zone_id"] = zone.get("id", "");
+			diagnostic["fallback_behavior"] = "native_zone_richness_floor_reward_band";
+			diagnostics.append(diagnostic);
+		}
+	}
+
+	Array source_offsets;
+	for (int32_t index = 0; index < 3; ++index) {
+		source_offsets.append(reward_band_source_offsets(index));
+	}
+
+	Dictionary summary;
+	summary["schema_id"] = "aurelion_native_rmg_phase10_reward_bands_summary_v1";
+	summary["phase_order"] = "phase_10_after_mines_resources_before_decorative_filler";
+	summary["source_triplet_offsets"] = source_offsets;
+	summary["eligibility_rule"] = "low_at_least_100_high_at_or_above_low_positive_density";
+	summary["density_semantics"] = "positive_density_triplets_are_weighted_selection_slots";
+	summary["source_band_count"] = source_band_count;
+	summary["valid_band_count"] = valid_band_count;
+	summary["invalid_band_count"] = invalid_band_count;
+	summary["fallback_zone_count"] = fallback_zone_count;
+	summary["reward_count"] = reward_count;
+	summary["placed_by_source_band"] = placed_by_band;
+	summary["out_of_band_reward_count"] = out_of_band_count;
+	summary["invalid_band_records"] = invalid_band_records;
+	summary["diagnostics"] = diagnostics;
+	summary["diagnostic_count"] = diagnostics.size();
+	Array boundaries;
+	boundaries.append("exact_private_object_table_candidate_scoring_not_claimed");
+	boundaries.append("homm3_art_def_names_text_not_imported");
+	boundaries.append("unsupported_or_zero_density_bands_are_reported_and_not_selected");
+	summary["unsupported_reward_boundaries"] = boundaries;
+	summary["validation_status"] = out_of_band_count == 0 ? "pass" : "fail";
+	summary["signature"] = hash32_hex(canonical_variant(summary));
+	return summary;
 }
 
 int32_t catalog_zone_mine_target(const Dictionary &normalized, const Dictionary &zone) {
@@ -5536,6 +5768,9 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	payload["mine_resource_summary"] = mine_resource_summary;
 	payload["mine_resource_diagnostics"] = mine_resource_diagnostics;
 	payload["adjacent_resource_records"] = adjacent_resource_records;
+	Dictionary reward_band_summary = reward_band_summary_for_zones(normalized, zones, placements);
+	payload["reward_band_summary"] = reward_band_summary;
+	payload["reward_band_diagnostics"] = reward_band_summary.get("diagnostics", Array());
 	Dictionary decoration_summary = decoration_route_shaping_summary(placements, road_network);
 	payload["decoration_density_pass"] = decoration_summary;
 	payload["decoration_route_shaping_summary"] = decoration_summary;
@@ -5586,20 +5821,162 @@ Dictionary point_from_cell(const Dictionary &cell) {
 	return point_record(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)));
 }
 
-Array neutral_guard_stack_for_value(int32_t guard_value, const String &seed_key) {
-	static constexpr const char *UNIT_IDS[] = {"unit_neutral_roadwardens", "unit_neutral_hearthbow_carriers", "unit_neutral_mossglass_sentinels"};
-	static constexpr const char *ROLES[] = {"road_guard", "ranged_guard", "sentinel_guard"};
+Array load_content_items_array(const String &path) {
+	Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		return Array();
+	}
+	Ref<JSON> parser;
+	parser.instantiate();
+	if (parser->parse(file->get_as_text()) != OK || parser->get_data().get_type() != Variant::DICTIONARY) {
+		return Array();
+	}
+	Dictionary root = Dictionary(parser->get_data());
+	Variant items = root.get("items", Variant());
+	return items.get_type() == Variant::ARRAY ? Array(items) : Array();
+}
+
+Array load_unit_content_items() {
+	static Array cached_units;
+	static bool loaded = false;
+	if (loaded) {
+		return cached_units;
+	}
+	loaded = true;
+	cached_units = load_content_items_array("res://content/units.json");
+	return cached_units;
+}
+
+String normalized_unit_faction_id(const Dictionary &unit) {
+	const String faction_id = String(unit.get("faction_id", "")).strip_edges();
+	return faction_id.is_empty() ? String("neutral") : faction_id;
+}
+
+int32_t unit_guard_value_estimate(const Dictionary &unit) {
+	const int32_t tier = std::max(1, int32_t(unit.get("tier", 1)));
+	const int32_t hp = std::max(1, int32_t(unit.get("hp", 1)));
+	const int32_t attack = std::max(0, int32_t(unit.get("attack", 0)));
+	const int32_t defense = std::max(0, int32_t(unit.get("defense", 0)));
+	const int32_t min_damage = std::max(0, int32_t(unit.get("min_damage", 0)));
+	const int32_t max_damage = std::max(min_damage, int32_t(unit.get("max_damage", min_damage)));
+	const int32_t avg_damage = (min_damage + max_damage) / 2;
+	return std::max(160, hp * 4 + attack * 30 + defense * 24 + avg_damage * 30 + tier * 80);
+}
+
+Array monster_allowed_factions_for_zone(const Dictionary &normalized, const Dictionary &zone, Array &diagnostics) {
+	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+	Dictionary monster_policy = metadata.get("monster_policy", Dictionary());
+	Array allowed;
+	const bool match_to_town = bool(monster_policy.get("match_to_town", false));
+	const String zone_faction = String(zone.get("faction_id", zone.get("source_zone_faction_id", "")));
+	if (match_to_town && !zone_faction.is_empty()) {
+		allowed.append(zone_faction);
+		return allowed;
+	}
+	Variant allowed_value = monster_policy.get("allowed_faction_ids", Variant());
+	if (allowed_value.get_type() == Variant::ARRAY) {
+		Array source_allowed = Array(allowed_value);
+		for (int64_t index = 0; index < source_allowed.size(); ++index) {
+			const String faction_id = String(source_allowed[index]).strip_edges();
+			if (!faction_id.is_empty() && !array_has_string(allowed, faction_id)) {
+				allowed.append(faction_id);
+			}
+		}
+	}
+	if (allowed.is_empty()) {
+		allowed.append("neutral");
+		Array factions = normalized.get("faction_ids", default_faction_pool());
+		for (int64_t index = 0; index < factions.size(); ++index) {
+			const String faction_id = String(factions[index]);
+			if (!faction_id.is_empty() && !array_has_string(allowed, faction_id)) {
+				allowed.append(faction_id);
+			}
+		}
+		Dictionary diagnostic;
+		diagnostic["code"] = "monster_allowed_faction_mask_empty_fallback";
+		diagnostic["severity"] = "warning";
+		diagnostic["zone_id"] = zone.get("id", "");
+		diagnostic["fallback_behavior"] = "neutral_plus_profile_factions";
+		diagnostics.append(diagnostic);
+	}
+	return allowed;
+}
+
+Array original_unit_guard_stack_for_value(int32_t guard_value, const String &seed_key, const Array &allowed_factions, Array &diagnostics, const String &zone_id) {
+	Array units = load_unit_content_items();
+	std::vector<Dictionary> candidates;
+	std::vector<Dictionary> neutral_fallbacks;
+	for (int64_t index = 0; index < units.size(); ++index) {
+		if (Variant(units[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary unit = Dictionary(units[index]);
+		const String faction_id = normalized_unit_faction_id(unit);
+		if (faction_id == "neutral") {
+			neutral_fallbacks.push_back(unit);
+		}
+		if (array_has_string(allowed_factions, faction_id)) {
+			candidates.push_back(unit);
+		}
+	}
+	if (candidates.empty()) {
+		candidates = neutral_fallbacks;
+		Dictionary diagnostic;
+		diagnostic["code"] = "monster_allowed_mask_missing_original_unit_content";
+		diagnostic["severity"] = "warning";
+		diagnostic["zone_id"] = zone_id;
+		diagnostic["allowed_faction_ids"] = allowed_factions;
+		diagnostic["fallback_behavior"] = "neutral_original_units";
+		diagnostics.append(diagnostic);
+	}
+	std::sort(candidates.begin(), candidates.end(), [](const Dictionary &left, const Dictionary &right) {
+		const int32_t left_tier = int32_t(left.get("tier", 1));
+		const int32_t right_tier = int32_t(right.get("tier", 1));
+		if (left_tier != right_tier) {
+			return left_tier < right_tier;
+		}
+		return String(left.get("id", "")) < String(right.get("id", ""));
+	});
+
 	Array stack;
-	const int32_t base_value = std::max(1, guard_value);
-	for (int32_t tier = 0; tier < 2; ++tier) {
+	if (candidates.empty()) {
+		Dictionary diagnostic;
+		diagnostic["code"] = "monster_selection_no_unit_content_available";
+		diagnostic["severity"] = "failure";
+		diagnostic["zone_id"] = zone_id;
+		diagnostics.append(diagnostic);
+		return stack;
+	}
+	const int32_t stack_count = guard_value >= 6000 && candidates.size() >= 2 ? 2 : 1;
+	int32_t remaining = std::max(1, guard_value);
+	for (int32_t slot = 0; slot < stack_count; ++slot) {
+		const uint32_t selector = hash32_int(seed_key + String(":stack:") + String::num_int64(slot));
+		const int32_t desired_tier = std::max(1, std::min(7, guard_value / 1800 + 1 + slot));
+		int32_t best_index = 0;
+		int32_t best_score = std::numeric_limits<int32_t>::max();
+		for (int32_t index = 0; index < int32_t(candidates.size()); ++index) {
+			Dictionary unit = candidates[index];
+			const int32_t tier = int32_t(unit.get("tier", 1));
+			const int32_t score = std::abs(tier - desired_tier) * 1000 + int32_t((selector + uint32_t(index * 37)) % 997U);
+			if (score < best_score) {
+				best_score = score;
+				best_index = index;
+			}
+		}
+		Dictionary unit = candidates[best_index];
+		const int32_t estimate = unit_guard_value_estimate(unit);
+		const int32_t slot_budget = stack_count == 1 ? remaining : (slot == 0 ? std::max(estimate * 3, remaining / 2) : remaining);
 		Dictionary record;
-		const int32_t index = int32_t((hash32_int(seed_key + String(":unit:") + String::num_int64(tier)) + uint32_t(tier)) % 3U);
-		record["unit_id"] = UNIT_IDS[index];
-		record["tier"] = index + 1;
-		record["role"] = ROLES[index];
-		record["count"] = std::max(3, base_value / (260 + index * 170) + tier + 1);
-		record["selection_source"] = "native_foundation_guard_value_neutral_stack";
+		record["unit_id"] = unit.get("id", "");
+		record["faction_id"] = normalized_unit_faction_id(unit);
+		record["tier"] = unit.get("tier", 1);
+		record["role"] = unit.get("role", "");
+		record["count"] = std::max(3, int32_t(std::ceil(double(std::max(1, slot_budget)) / double(std::max(1, estimate)))));
+		record["unit_value_estimate"] = estimate;
+		record["allowed_faction_mask_matched"] = array_has_string(allowed_factions, String(record["faction_id"]));
+		record["selection_source"] = "phase_10_original_unit_selection_from_recovered_monster_mask_and_strength_value";
 		stack.append(record);
+		remaining = std::max(1, remaining - int32_t(record["count"]) * estimate);
 	}
 	return stack;
 }
@@ -5879,6 +6256,13 @@ Dictionary guard_record_at_point(const Dictionary &normalized, const Dictionary 
 	const String terrain_id = terrain_id_for_zone(zone.is_empty() ? Dictionary() : zone);
 	const String guard_id = "native_rmg_guard_" + guard_kind + "_" + slot_id_2(ordinal + 1);
 	const String strength_band = strength_band_for_value(guard_value);
+	Array monster_diagnostics;
+	Array allowed_factions = monster_allowed_factions_for_zone(normalized, zone, monster_diagnostics);
+	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+	Dictionary monster_policy = metadata.get("monster_policy", Dictionary());
+	const int32_t source_strength_mode = rmg_local_monster_strength_mode(monster_policy.get("strength", "avg"));
+	const int32_t effective_strength_mode = rmg_effective_monster_strength_mode(normalized, zone);
+	Array stack_records = original_unit_guard_stack_for_value(guard_value, String(normalized.get("normalized_seed", "0")) + guard_id, allowed_factions, monster_diagnostics, zone_id);
 	Dictionary body = cell_record(x, y, 0);
 	Array body_tiles;
 	body_tiles.append(body);
@@ -5897,7 +6281,12 @@ Dictionary guard_record_at_point(const Dictionary &normalized, const Dictionary 
 	monster_reward_band["strength_band"] = strength_band;
 	monster_reward_band["guard_value"] = guard_value;
 	monster_reward_band["reward_context"] = String(target.get("protected_target_type", "")) == "object_placement" ? "guarded_site_reward_context" : "route_access_pressure_context";
-	monster_reward_band["selection_state"] = "structured_foundation_record_final_selection_deferred";
+	monster_reward_band["selection_state"] = "original_unit_stack_selected_from_supported_monster_mask";
+	monster_reward_band["source_strength_mode"] = source_strength_mode;
+	monster_reward_band["global_strength_mode"] = rmg_global_monster_strength_mode(normalized);
+	monster_reward_band["effective_strength_mode"] = effective_strength_mode;
+	monster_reward_band["allowed_faction_ids"] = allowed_factions;
+	monster_reward_band["match_to_town"] = monster_policy.get("match_to_town", false);
 
 	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
 	Dictionary record;
@@ -5930,8 +6319,19 @@ Dictionary guard_record_at_point(const Dictionary &normalized, const Dictionary 
 	record["guard_value"] = guard_value;
 	record["effective_guard_pressure"] = strength_band;
 	record["strength_band"] = strength_band;
-	record["stack_records"] = neutral_guard_stack_for_value(guard_value, String(normalized.get("normalized_seed", "0")) + guard_id);
+	record["stack_records"] = stack_records;
 	record["stack_count"] = Array(record.get("stack_records", Array())).size();
+	record["monster_selection_source"] = "recovered_match_to_town_allowed_faction_mask_strength_scaling_translated_to_original_units";
+	record["monster_policy"] = monster_policy;
+	record["monster_match_to_town"] = monster_policy.get("match_to_town", false);
+	record["monster_allowed_faction_ids"] = allowed_factions;
+	record["monster_source_strength_mode"] = source_strength_mode;
+	record["monster_global_strength_mode"] = rmg_global_monster_strength_mode(normalized);
+	record["monster_effective_strength_mode"] = effective_strength_mode;
+	record["monster_strength_formula"] = "0x4a960a_effective_mode_plus_0x4a65a5_threshold_slope_tables";
+	record["monster_diagnostics"] = monster_diagnostics;
+	record["monster_diagnostic_count"] = monster_diagnostics.size();
+	record["unsupported_monster_boundaries"] = Array();
 	record["protected_target"] = target;
 	record["protected_target_id"] = target.get("protected_target_id", "");
 	record["protected_target_type"] = target.get("protected_target_type", "");
@@ -5946,7 +6346,7 @@ Dictionary guard_record_at_point(const Dictionary &normalized, const Dictionary 
 	record["guard_reward_value_ratio"] = int32_t(target.get("protected_reward_value", 0)) > 0 ? double(guard_value) / double(int32_t(target.get("protected_reward_value", 1))) : 0.0;
 	record["protected_zone_value_budget"] = target.get("protected_zone_value_budget", 0);
 	record["protected_zone_value_tier"] = target.get("protected_zone_value_tier", "");
-	record["guard_reward_relation_source"] = int32_t(target.get("protected_reward_value", 0)) > 0 ? "guard_value_scaled_from_zone_reward_value" : "guard_value_from_route_or_site_baseline";
+	record["guard_reward_relation_source"] = target.get("guard_reward_relation_source", int32_t(target.get("protected_reward_value", 0)) > 0 ? Variant("guard_value_scaled_from_zone_reward_value") : Variant("guard_value_from_route_or_site_baseline"));
 	record["guarded_artifact_id"] = target.get("guarded_artifact_id", "");
 	record["guarded_site_id"] = target.get("guarded_site_id", "");
 	record["guarded_object_point"] = target.get("guarded_object_point", Dictionary());
@@ -6165,6 +6565,95 @@ Dictionary object_guard_summary(const Array &candidates, const Array &guards) {
 	return summary;
 }
 
+Dictionary guard_reward_monster_summary_for_records(const Dictionary &normalized, const Dictionary &object_placement, const Array &guards, const Array &guard_diagnostics) {
+	int32_t route_guard_count = 0;
+	int32_t site_guard_count = 0;
+	int32_t match_to_town_count = 0;
+	int32_t explicit_mask_count = 0;
+	int32_t stack_record_count = 0;
+	int32_t stack_mask_mismatch_count = 0;
+	Dictionary allowed_mask_counts;
+	Dictionary effective_mode_counts;
+	Array guard_failures;
+	for (int64_t index = 0; index < guards.size(); ++index) {
+		if (Variant(guards[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary guard = Dictionary(guards[index]);
+		const String kind = String(guard.get("guard_kind", ""));
+		if (kind == "route_guard") {
+			++route_guard_count;
+		} else if (kind == "site_guard") {
+			++site_guard_count;
+		}
+		if (bool(guard.get("monster_match_to_town", false))) {
+			++match_to_town_count;
+		} else {
+			++explicit_mask_count;
+		}
+		const String mode_key = String::num_int64(int32_t(guard.get("monster_effective_strength_mode", -1)));
+		effective_mode_counts[mode_key] = int32_t(effective_mode_counts.get(mode_key, 0)) + 1;
+		Array allowed = guard.get("monster_allowed_faction_ids", Array());
+		for (int64_t allowed_index = 0; allowed_index < allowed.size(); ++allowed_index) {
+			const String faction_id = String(allowed[allowed_index]);
+			allowed_mask_counts[faction_id] = int32_t(allowed_mask_counts.get(faction_id, 0)) + 1;
+		}
+		Array stacks = guard.get("stack_records", Array());
+		stack_record_count += stacks.size();
+		for (int64_t stack_index = 0; stack_index < stacks.size(); ++stack_index) {
+			if (Variant(stacks[stack_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary stack = Dictionary(stacks[stack_index]);
+			if (!bool(stack.get("allowed_faction_mask_matched", false))) {
+				++stack_mask_mismatch_count;
+			}
+		}
+		Array monster_diagnostics = guard.get("monster_diagnostics", Array());
+		for (int64_t diagnostic_index = 0; diagnostic_index < monster_diagnostics.size(); ++diagnostic_index) {
+			if (Variant(monster_diagnostics[diagnostic_index]).get_type() == Variant::DICTIONARY && String(Dictionary(monster_diagnostics[diagnostic_index]).get("severity", "")) == "failure") {
+				guard_failures.append(monster_diagnostics[diagnostic_index]);
+			}
+		}
+	}
+	for (int64_t index = 0; index < guard_diagnostics.size(); ++index) {
+		if (Variant(guard_diagnostics[index]).get_type() == Variant::DICTIONARY && String(Dictionary(guard_diagnostics[index]).get("severity", "")) == "failure") {
+			guard_failures.append(guard_diagnostics[index]);
+		}
+	}
+
+	Dictionary reward_band_summary = object_placement.get("reward_band_summary", Dictionary());
+	Dictionary summary;
+	summary["schema_id"] = NATIVE_RMG_GUARDS_REWARDS_MONSTERS_SCHEMA_ID;
+	summary["phase_order"] = "phase_10_rewards_and_monsters_after_phase_7_mines_resources_before_decorative_filler";
+	summary["global_monster_strength_mode"] = rmg_global_monster_strength_mode(normalized);
+	summary["global_monster_strength_source"] = normalized.get("global_monster_strength_source", "");
+	summary["strength_formula"] = "if_source_strength_nonzero_mode_clamp_source_plus_global_minus_3_then_0x4a65a5_threshold_slope_tables";
+	summary["strength_sample_table"] = rmg_strength_sample_table();
+	summary["reward_band_summary"] = reward_band_summary;
+	summary["guard_count"] = guards.size();
+	summary["route_guard_count"] = route_guard_count;
+	summary["site_guard_count"] = site_guard_count;
+	summary["match_to_town_guard_count"] = match_to_town_count;
+	summary["explicit_mask_guard_count"] = explicit_mask_count;
+	summary["allowed_mask_counts"] = allowed_mask_counts;
+	summary["effective_mode_counts"] = effective_mode_counts;
+	summary["stack_record_count"] = stack_record_count;
+	summary["stack_mask_mismatch_count"] = stack_mask_mismatch_count;
+	summary["diagnostics"] = guard_diagnostics;
+	summary["diagnostic_count"] = guard_diagnostics.size();
+	summary["failure_count"] = guard_failures.size();
+	summary["failures"] = guard_failures;
+	Array unsupported;
+	unsupported.append("exact_homm3_creature_rosters_names_and_art_not_imported");
+	unsupported.append("private_border_guard_companion_keymaster_vectors_not_implemented");
+	unsupported.append("exact_private_object_table_candidate_scoring_not_claimed");
+	summary["unsupported_boundaries"] = unsupported;
+	summary["validation_status"] = guard_failures.is_empty() && int32_t(reward_band_summary.get("out_of_band_reward_count", 0)) == 0 && stack_mask_mismatch_count == 0 ? "pass" : "fail";
+	summary["signature"] = hash32_hex(canonical_variant(summary));
+	return summary;
+}
+
 int32_t local_guard_count_near_point(const Array &guards, const Dictionary &point, int32_t radius) {
 	const int32_t x = int32_t(point.get("x", 0));
 	const int32_t y = int32_t(point.get("y", 0));
@@ -6275,6 +6764,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	Array towns;
 	Array guards;
 	Array town_diagnostics;
+	Array guard_diagnostics;
 	Dictionary starts_by_zone;
 	for (int64_t index = 0; index < starts.size(); ++index) {
 		Dictionary start = starts[index];
@@ -6425,8 +6915,19 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			break;
 		}
 		Dictionary edge = edges[index];
-		const int32_t guard_value = int32_t(edge.get("guard_value", 0));
-		if (parity_targets.is_empty() && (guard_value <= 0 || bool(edge.get("wide", false)) || bool(edge.get("border_guard", false)))) {
+		const int32_t raw_guard_value = int32_t(edge.get("guard_value", 0));
+		const int32_t guard_value = rmg_connection_guard_scaled_value(normalized, raw_guard_value);
+		if (parity_targets.is_empty() && (raw_guard_value <= 0 || guard_value <= 0 || bool(edge.get("wide", false)) || bool(edge.get("border_guard", false)))) {
+			if (raw_guard_value > 0 && guard_value <= 0 && !bool(edge.get("wide", false)) && !bool(edge.get("border_guard", false))) {
+				Dictionary diagnostic;
+				diagnostic["code"] = "connection_guard_value_scaled_to_zero";
+				diagnostic["severity"] = "info";
+				diagnostic["route_edge_id"] = edge.get("id", "");
+				diagnostic["raw_value"] = raw_guard_value;
+				diagnostic["global_monster_strength_mode"] = rmg_global_monster_strength_mode(normalized);
+				diagnostic["fallback_behavior"] = "normal_connection_guard_not_materialized";
+				guard_diagnostics.append(diagnostic);
+			}
 			continue;
 		}
 		const String protected_zone_id = String(edge.get("to", edge.get("from", "")));
@@ -6441,7 +6942,20 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		target["from_zone_id"] = edge.get("from", "");
 		target["to_zone_id"] = edge.get("to", "");
 		target["route_role"] = edge.get("role", "");
-		append_guard_record(guards, occupied, guard_record_at_point(normalized, zone, point, "route_guard", guard_ordinal, guard_value > 0 ? guard_value : 450, road_network, zone_layout, occupied, target));
+		target["raw_connection_guard_value"] = raw_guard_value;
+		target["scaled_connection_guard_value"] = guard_value;
+		target["guard_reward_relation_source"] = "connection_value_scaled_by_recovered_0x4a65a5_global_monster_strength";
+		if (point.is_empty()) {
+			Dictionary diagnostic;
+			diagnostic["code"] = "connection_guard_placement_infeasible";
+			diagnostic["severity"] = "failure";
+			diagnostic["route_edge_id"] = edge.get("id", "");
+			diagnostic["raw_value"] = raw_guard_value;
+			diagnostic["scaled_value"] = guard_value;
+			guard_diagnostics.append(diagnostic);
+			continue;
+		}
+		append_guard_record(guards, occupied, guard_record_at_point(normalized, zone, point, "route_guard", guard_ordinal, guard_value, road_network, zone_layout, occupied, target));
 		++guard_ordinal;
 	}
 
@@ -6463,19 +6977,40 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			const String zone_id = String(object.get("zone_id", ""));
 			Dictionary zone = zone_by_id(zones, zone_id);
 			Dictionary point = object_guard_point_for_target(object, zone_id, owner_grid, occupied, width, height);
-			int32_t guard_value = int32_t(object.get("guard_base_value", kind == "neutral_dwelling" ? 700 : 450));
+			int32_t guard_base_value = int32_t(object.get("guard_base_value", kind == "neutral_dwelling" ? 3500 : 0));
 			const int32_t reward_value = std::max(0, int32_t(object.get("reward_value", 0)));
 			if (reward_value > 0) {
-				const double relation = reward_value >= 10000 ? 0.75 : (reward_value >= 6000 ? 0.68 : (reward_value >= 2500 ? 0.58 : 0.35));
-				guard_value = std::max(guard_value, int32_t(std::llround(double(reward_value) * relation)));
+				guard_base_value = std::max(guard_base_value, reward_value);
 			}
 			if (!String(object.get("artifact_id", "")).is_empty()) {
-				guard_value = std::max(guard_value, 1800);
+				guard_base_value = std::max(guard_base_value, 6000);
 			}
+			int32_t guard_value = rmg_zone_monster_scaled_value(normalized, zone, guard_base_value);
 			if (guard_value <= 0) {
-				guard_value = kind == "mine" ? 900 : 650;
+				Dictionary diagnostic;
+				diagnostic["code"] = "protected_object_guard_value_scaled_to_zero";
+				diagnostic["severity"] = "info";
+				diagnostic["placement_id"] = object.get("placement_id", "");
+				diagnostic["object_kind"] = kind;
+				diagnostic["zone_id"] = zone_id;
+				diagnostic["base_value"] = guard_base_value;
+				diagnostic["effective_monster_strength_mode"] = rmg_effective_monster_strength_mode(normalized, zone);
+				diagnostic["fallback_behavior"] = "object_left_unguarded_when_recovered_strength_formula_returns_zero";
+				guard_diagnostics.append(diagnostic);
+				continue;
 			}
 			guard_value = std::min(30000, guard_value);
+			if (point.is_empty()) {
+				Dictionary diagnostic;
+				diagnostic["code"] = "protected_object_guard_placement_infeasible";
+				diagnostic["severity"] = "warning";
+				diagnostic["placement_id"] = object.get("placement_id", "");
+				diagnostic["object_kind"] = kind;
+				diagnostic["zone_id"] = zone_id;
+				diagnostic["guard_value"] = guard_value;
+				guard_diagnostics.append(diagnostic);
+				continue;
+			}
 			const int32_t guard_distance = std::abs(int32_t(point.get("x", 0)) - int32_t(object.get("x", 0))) + std::abs(int32_t(point.get("y", 0)) - int32_t(object.get("y", 0)));
 			if (parity_targets.is_empty() && reward_value >= 2500 && reward_value < 6000 && guard_distance > 12) {
 				continue;
@@ -6500,6 +7035,10 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			target["protected_reward_category"] = object.get("reward_category", object.get("category_id", ""));
 			target["protected_zone_value_budget"] = object.get("zone_value_budget", 0);
 			target["protected_zone_value_tier"] = object.get("zone_value_tier", "");
+			target["guard_base_value"] = guard_base_value;
+			target["scaled_guard_value"] = guard_value;
+			target["effective_monster_strength_mode"] = rmg_effective_monster_strength_mode(normalized, zone);
+			target["guard_reward_relation_source"] = reward_value > 0 ? "protected_reward_value_scaled_by_zone_monster_strength_formula" : "protected_site_base_value_scaled_by_zone_monster_strength_formula";
 			target["guarded_artifact_id"] = object.get("artifact_id", "");
 			target["guarded_site_id"] = object.get("site_id", "");
 			target["guarded_object_point"] = cell_record(int32_t(object.get("x", 0)), int32_t(object.get("y", 0)), int32_t(object.get("level", 0)));
@@ -6587,9 +7126,12 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	guard_category_counts["by_strength_band"] = count_by_field(guards, "strength_band");
 	guard_payload["category_counts"] = guard_category_counts;
 	guard_payload["materialized_object_guard_summary"] = object_guard_summary(object_guard_candidates, guards);
+	guard_payload["diagnostics"] = guard_diagnostics;
+	guard_payload["diagnostic_count"] = guard_diagnostics.size();
 	guard_payload["related_route_graph_signature"] = route_graph.get("signature", "");
 	guard_payload["related_object_placement_signature"] = object_placement.get("signature", "");
 	guard_payload["signature"] = hash32_hex(canonical_variant(guard_payload));
+	Dictionary guard_reward_monster_summary = guard_reward_monster_summary_for_records(normalized, object_placement, guards, guard_diagnostics);
 
 	Dictionary payload;
 	payload["schema_id"] = NATIVE_RMG_TOWN_GUARD_PLACEMENT_SCHEMA_ID;
@@ -6603,6 +7145,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	payload["town_placement"] = town_payload;
 	payload["guard_placement"] = guard_payload;
 	payload["materialized_object_guard_summary"] = guard_payload.get("materialized_object_guard_summary", Dictionary());
+	payload["guard_reward_monster_summary"] = guard_reward_monster_summary;
 	payload["town_records"] = towns;
 	payload["guard_records"] = guards;
 	payload["town_count"] = towns.size();
@@ -6732,6 +7275,7 @@ Dictionary generate_connection_payload_resolution(const Dictionary &normalized, 
 		const bool wide = bool(edge.get("wide", false));
 		const bool border_guard = bool(edge.get("border_guard", false));
 		const int32_t raw_value = int32_t(edge.get("guard_value", 0));
+		const int32_t scaled_value = rmg_connection_guard_scaled_value(normalized, raw_value);
 		if (required) {
 			++required_link_count;
 		}
@@ -6752,6 +7296,9 @@ Dictionary generate_connection_payload_resolution(const Dictionary &normalized, 
 		record["from_zone_id"] = edge.get("from", "");
 		record["to_zone_id"] = edge.get("to", "");
 		record["raw_value"] = raw_value;
+		record["scaled_value"] = scaled_value;
+		record["global_monster_strength_mode"] = rmg_global_monster_strength_mode(normalized);
+		record["strength_formula"] = "0x4a65a5_raw_connection_value_and_global_monster_strength";
 		record["wide"] = wide;
 		record["border_guard"] = border_guard;
 		record["path_found"] = path_found;
@@ -6774,10 +7321,13 @@ Dictionary generate_connection_payload_resolution(const Dictionary &normalized, 
 			record["source_type_equivalent"] = gate.get("source_type_equivalent", "");
 			special_gate_records.append(gate);
 		} else if (raw_value > 0) {
-			record["normal_guard_value"] = raw_value;
+			record["normal_guard_value"] = scaled_value;
 			record["normal_guard_materialized"] = route_guards.has(edge_id);
-			record["resolution_kind"] = "normal_connection_guard_value_consumed";
-			if (route_guards.has(edge_id)) {
+			record["resolution_kind"] = scaled_value > 0 ? "normal_connection_guard_value_scaled_and_consumed" : "normal_connection_guard_value_scaled_to_zero";
+			if (scaled_value <= 0) {
+				record["normal_guard_materialized"] = false;
+				record["fallback_behavior"] = "normal_connection_guard_not_materialized_when_recovered_strength_formula_returns_zero";
+			} else if (route_guards.has(edge_id)) {
 				Dictionary guard = route_guards.get(edge_id, Dictionary());
 				record["guard_placement_id"] = guard.get("placement_id", "");
 				record["guard_id"] = guard.get("guard_id", "");
@@ -8555,6 +9105,7 @@ Dictionary MapPackageService::get_schema_ids() const {
 	result["native_rmg_town_guard_placement"] = NATIVE_RMG_TOWN_GUARD_PLACEMENT_SCHEMA_ID;
 	result["native_rmg_town_placement"] = NATIVE_RMG_TOWN_PLACEMENT_SCHEMA_ID;
 	result["native_rmg_guard_placement"] = NATIVE_RMG_GUARD_PLACEMENT_SCHEMA_ID;
+	result["native_rmg_guards_rewards_monsters"] = NATIVE_RMG_GUARDS_REWARDS_MONSTERS_SCHEMA_ID;
 	result["native_rmg_validation_report"] = NATIVE_RMG_VALIDATION_REPORT_SCHEMA_ID;
 	result["native_rmg_provenance"] = NATIVE_RMG_PROVENANCE_SCHEMA_ID;
 	result["native_rmg_package_session_adoption_report"] = "aurelion_native_random_map_package_session_adoption_report_v1";
@@ -8770,6 +9321,12 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 		}
 	}
 	Array town_ids = town_ids_for_factions(profile.get("town_ids", Variant()), faction_ids, player_count);
+	String global_monster_strength_token = normalized_text(profile, "monster_strength", normalized_text(config, "monster_strength", ""));
+	if (global_monster_strength_token.is_empty()) {
+		const String guard_strength_profile = normalized_text(profile, "guard_strength_profile", normalized_text(config, "guard_strength_profile", "normal"));
+		global_monster_strength_token = guard_strength_profile == "core_low" ? "weak" : (guard_strength_profile == "core_high" ? "strong" : "normal");
+	}
+	const int32_t global_monster_strength_mode = rmg_global_monster_strength_mode_from_token(global_monster_strength_token, seed);
 
 	Dictionary result;
 	result["schema_id"] = NATIVE_RMG_SCHEMA_ID;
@@ -8788,6 +9345,8 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	result["terrain_ids"] = terrain_ids;
 	result["faction_ids"] = faction_ids;
 	result["town_ids"] = town_ids;
+	result["global_monster_strength_mode"] = global_monster_strength_mode;
+	result["global_monster_strength_source"] = global_monster_strength_token;
 	result["full_generation_status"] = native_rmg_full_generation_status_for_config(result);
 	result["supported_parity_config"] = native_rmg_full_parity_supported(result);
 	result["foundation_scope"] = native_rmg_full_parity_supported(result) ? "tracked_gdscript_structural_parity_profile" : "deterministic_config_identity_native_terrain_grid_zones_player_starts_road_river_networks_object_placement_and_town_guard_placement_foundation_only";
@@ -8884,10 +9443,12 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["connection_payload_resolution_signature"] = connection_payload_resolution.get("signature", "");
 	metadata["object_placement_signature"] = object_placement.get("signature", "");
 	metadata["mine_resource_summary_signature"] = Dictionary(object_placement.get("mine_resource_summary", Dictionary())).get("signature", "");
+	metadata["reward_band_summary_signature"] = Dictionary(object_placement.get("reward_band_summary", Dictionary())).get("signature", "");
 	metadata["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
 	metadata["town_guard_placement_signature"] = town_guard_placement.get("signature", "");
 	metadata["town_placement_signature"] = Dictionary(town_guard_placement.get("town_placement", Dictionary())).get("signature", "");
 	metadata["guard_placement_signature"] = Dictionary(town_guard_placement.get("guard_placement", Dictionary())).get("signature", "");
+	metadata["guard_reward_monster_summary_signature"] = Dictionary(town_guard_placement.get("guard_reward_monster_summary", Dictionary())).get("signature", "");
 	metadata["town_guard_occupancy_signature"] = Dictionary(town_guard_placement.get("combined_occupancy_index", Dictionary())).get("signature", "");
 	metadata["options_keys"] = options.keys();
 
@@ -8982,6 +9543,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["object_placement"] = object_placement;
 	result["object_placements"] = object_placements;
 	result["mine_resource_summary"] = object_placement.get("mine_resource_summary", Dictionary());
+	result["reward_band_summary"] = object_placement.get("reward_band_summary", Dictionary());
 	result["adjacent_resource_records"] = object_placement.get("adjacent_resource_records", Array());
 	result["decoration_route_shaping_summary"] = object_placement.get("decoration_route_shaping_summary", Dictionary());
 	result["fill_coverage_summary"] = object_placement.get("fill_coverage_summary", Dictionary());
@@ -8990,6 +9552,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["object_placement_signature"] = object_placement.get("signature", "");
 	result["town_guard_placement"] = town_guard_placement;
 	result["materialized_object_guard_summary"] = town_guard_placement.get("materialized_object_guard_summary", Dictionary());
+	result["guard_reward_monster_summary"] = town_guard_placement.get("guard_reward_monster_summary", Dictionary());
 	result["town_placement"] = town_guard_placement.get("town_placement", Dictionary());
 	result["guard_placement"] = town_guard_placement.get("guard_placement", Dictionary());
 	result["town_records"] = town_guard_placement.get("town_records", Array());
