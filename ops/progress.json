@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-homm3-mines-resources-10184",
-  "currentSliceTitle": "Native RMG HoMM3 Mines Resources",
+  "currentSliceId": "native-rmg-homm3-guards-rewards-monsters-10184",
+  "currentSliceTitle": "Native RMG HoMM3 Guards Rewards Monsters",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed Phase 7 mines/resources placement: seven recovered categories, minimum-before-density scheduling, adjacent/resource support records, deterministic diagnostics, focused report scene, and validation pass.",
+  "currentSliceNotes": "Completed Phase 10 rewards and monster/guard semantics: reward-band low/high/density diagnostics, recovered strength scaling, match-to-town and allowed-mask original unit selection, guard/reward summary, focused report scene, and validation pass.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T12:10:03Z",
+  "updatedAt": "2026-05-05T12:35:25Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -9969,7 +9969,7 @@
       "id": "native-rmg-homm3-guards-rewards-monsters-10184",
       "title": "Native RMG HoMM3 Guards Rewards Monsters",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "pending",
+      "status": "completed",
       "classification": "implementation_slice",
       "purpose": "Implement recovered monster masks, strength scaling, connection guards, protected rewards, and guard/reward relations using original unit and reward content.",
       "sourceDocs": [
@@ -10001,7 +10001,11 @@
         "No HoMM3 creature, artifact, spell, skill, or reward art/name/text import.",
         "No broad combat/economy rebalance beyond generator guard/reward semantics."
       ],
-      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184"
+      "parentSliceId": "native-rmg-homm3-spec-rework-parent-10184",
+      "updatedAt": "2026-05-05T12:35:25Z",
+      "startedAt": "2026-05-05T12:19:48Z",
+      "notes": "Completed Phase 10 rewards and monster/guard semantics: reward-band low/high/density diagnostics, recovered strength scaling, match-to-town and allowed-mask original unit selection, guard/reward summary, focused report scene, and validation pass.",
+      "completedAt": "2026-05-05T12:35:25Z"
     },
     {
       "id": "native-rmg-homm3-validation-adoption-gates-10184",
