@@ -3141,7 +3141,7 @@ Dictionary append_road_spread_service_stubs(const Dictionary &normalized, const 
 		return int32_t(left.get("sort_key", 0)) > int32_t(right.get("sort_key", 0));
 	});
 
-	const int32_t max_stub_count = 7;
+	const int32_t max_stub_count = 3;
 	int32_t appended_stub_count = 0;
 	int32_t appended_cell_count = 0;
 	Array stub_records;

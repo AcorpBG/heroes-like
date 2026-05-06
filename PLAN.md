@@ -1344,6 +1344,33 @@ Goal: rework native random map generation around the recovered HoMM3 RMG executi
 
 Active tactical slices:
 
+id: `native-rmg-owner-medium-001-road-shape-correction-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Continue the owner-uploaded medium 001 comparison work by correcting the remaining road-shape gap after category counts, town-road topology, and content clustering were brought into owner-relative gates. The latest spatial report still shows native roads distributed too evenly across quadrants/coarse cells compared with the uploaded HoMM3 H3M.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_spatial_placement_comparison_report.gd`
+- owner-uploaded 72x72 H3M comparison evidence from 2026-05-06
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_spatial_placement_comparison_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Owner-medium translated template 001 keeps the corrected category counts, town-road connections, road branch/endpoint topology, and content clustering gates passing.
+- Native owner-medium road quadrant/coarse-grid shape moves materially toward the uploaded H3M instead of remaining evenly distributed across all quadrants.
+- Any new road-shape gate is owner-relative and does not accept road count alone as a proxy for HoMM3-like road layout.
+- Small 049 package topology, uploaded-small comparison, choke, startup, repo validation, JSON validation, and diff hygiene remain passing.
+completionEvidence:
+- Owner-medium service road stubs were reduced to 3, and the spatial report now passes stricter owner-relative road-shape gates with road_tile_delta +10, road_grid_nonempty_delta +3, largest_roadless_land_region_delta -1, road_endpoint_delta +1, and road_branch_delta 0.
+- Remaining gap is explicit: native roads are still more quadrant-even than the uploaded H3M sample, so broad HoMM3-style RMG parity remains open.
+nonGoals:
+- No HoMM3 art, DEF, name, text, map, or binary `.h3m` import.
+- No exact byte-level road parity claim.
+- No broad generator rewrite outside this owner-medium road-shape correction.
+- No save-version bump or runtime-authoritative package/session promotion.
+
 id: `overworld-map-object-distinct-sprite-gap-fill-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`

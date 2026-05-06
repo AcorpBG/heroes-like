@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-owner-medium-001-spatial-distribution-correction-10184",
-  "currentSliceTitle": "Native RMG Owner Medium 001 Spatial Distribution Correction",
+  "currentSliceId": "native-rmg-owner-medium-001-road-shape-correction-10184",
+  "currentSliceTitle": "Native RMG Owner Medium 001 Road Shape Correction",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner medium 001 spatial distribution correction: reward and decoration coarse-grid occupancy now track the uploaded H3M owner sample with stricter report gates while preserving corrected category counts, town-road connections, road topology, small 049 comparison, topology, choke, startup, and repo validation checks.",
+  "currentSliceNotes": "Completed owner-medium 001 road-shape correction slice. Native roads now stay within the owner-relative road tile, coarse spread, largest-roadless-region, endpoint, and branch gates after reducing owner-medium service stubs, but roads remain more quadrant-even than the uploaded H3M and broad RMG parity remains open.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T02:32:11Z",
+  "updatedAt": "2026-05-06T02:49:32Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -198,6 +198,61 @@
       "updatedAt": "2026-05-06T02:32:11Z",
       "startedAt": "2026-05-06T02:18:28Z",
       "completedAt": "2026-05-06T02:32:11Z"
+    },
+    {
+      "id": "native-rmg-owner-medium-001-road-shape-correction-10184",
+      "title": "Native RMG Owner Medium 001 Road Shape Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "owner-uploaded 72x72 H3M comparison evidence from 2026-05-06"
+      ],
+      "purpose": "Continue the owner-medium 001 comparison work by addressing the remaining road-shape gap after category counts, town-road topology, and content clustering were corrected. Native roads still spread too evenly across quadrants/coarse cells compared with the uploaded H3M sample.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_spatial_placement_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_disk_package_startup_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Owner-medium translated template 001 keeps corrected category counts, town-road connections, road branch/endpoint topology, and content clustering gates passing.",
+        "Native owner-medium road quadrant/coarse-grid shape moves materially toward the uploaded H3M instead of remaining evenly distributed across all quadrants.",
+        "The spatial comparison gate rejects road count-only parity and includes an owner-relative road-shape threshold.",
+        "Small 049 package topology, uploaded-small comparison, choke, startup, repo validation, JSON validation, and diff hygiene remain passing."
+      ],
+      "completionEvidence": [
+        "Native owner-medium road spread service stubs were reduced to 3, lowering road_tile_delta to +10 against owner, road_grid_nonempty_delta to +3, and largest_roadless_land_region_delta to -1 while preserving road_endpoint_delta +1 and road_branch_delta 0.",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.tscn passed with the new owner-relative road-shape gates: max positive road tile delta 12, max road nonempty 6x6 cells over owner 3, and min largest roadless land region delta -2.",
+        "Remaining non-parity warning is explicit: native_roads_still_more_quadrant_even_than_owner remains because native road quadrant CV is 0.2135 against owner 0.7113. This is not a full HoMM3-re route authoring claim.",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.tscn passed with current player-facing Small default using translated_rmg_template_049_v1 at 7 towns, 303 content, 150 decorations, 40 guards, and 105 road cells.",
+        "tests/native_random_map_package_surface_topology_report.tscn passed with Small 049 converted and loaded packages at 7 towns, 303 objects, 40 guards, zero empty road records, and no unresolved reachable cross-zone town pairs.",
+        "tests/native_random_map_zone_choke_regression_report.tscn and tests/native_random_map_disk_package_startup_report.tscn passed; disk package startup produced Small 049 package surface with 7 towns, 303 objects, 40 guards, 107 road tiles, and zero empty road records.",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2, python3 tests/validate_repo.py, python3 -m json.tool ops/progress.json, and git diff --check passed."
+      ],
+      "remainingGap": "Road quadrant distribution is still more even than the uploaded H3M sample, and broader HoMM3-style RMG production parity remains open.",
+      "nonGoals": [
+        "No HoMM3 art, DEF, name, text, map, or binary H3M import.",
+        "No exact byte-level road parity claim.",
+        "No broad generator rewrite outside this owner-medium road-shape correction.",
+        "No save-version bump or runtime-authoritative package/session promotion."
+      ],
+      "updatedAt": "2026-05-06T02:49:32Z",
+      "startedAt": "2026-05-06T02:34:27Z",
+      "completedAt": "2026-05-06T02:49:32Z"
     },
     {
       "id": "native-rmg-small-049-owner-density-tightening-10184",
@@ -10887,6 +10942,57 @@
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-owner-medium-001-road-shape-correction-10184",
+      "title": "Native RMG Owner Medium 001 Road Shape Correction",
+      "status": "completed",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "owner-uploaded 72x72 H3M comparison evidence from 2026-05-06"
+      ],
+      "mappedPlannedSliceIds": [
+        "native-rmg-owner-medium-001-road-shape-correction-10184"
+      ],
+      "implementationRefs": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": "Native owner-medium road spread service stubs were reduced from the previous seven-stub policy to three bounded service stubs. The owner-medium spatial report now passes stricter owner-relative road-shape gates with road_tile_delta +10, road_grid_nonempty_delta +3, largest_roadless_land_region_delta -1, road_endpoint_delta +1, road_branch_delta 0, and preserved town_road_connection_delta 0.0. This closes the bounded road-shape correction slice without claiming full HoMM3-re road authoring parity.",
+      "roadMetrics": {
+        "ownerRoadTiles": 184,
+        "nativeRoadTilesAfter": 194,
+        "roadTileDeltaAfter": 10,
+        "ownerRoadNonempty6x6Cells": 16,
+        "nativeRoadNonempty6x6CellsAfter": 19,
+        "roadGridNonemptyDeltaAfter": 3,
+        "ownerLargestRoadlessLand6x6Region": 8,
+        "nativeLargestRoadlessLand6x6RegionAfter": 7,
+        "largestRoadlessLandRegionDeltaAfter": -1,
+        "roadEndpointDeltaAfter": 1,
+        "roadBranchDeltaAfter": 0,
+        "roadQuadrantCvDeltaAfter": -0.4978,
+        "nativeRoadQuadrantCvAfter": 0.2135,
+        "ownerRoadQuadrantCv": 0.7113
+      },
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_spatial_placement_comparison_report.tscn (pass with native_roads_still_more_quadrant_even_than_owner warning)",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_disk_package_startup_report.tscn (pass)",
+        "python3 tests/validate_repo.py (pass)",
+        "python3 -m json.tool ops/progress.json >/dev/null (pass)",
+        "git diff --check (pass)"
+      ],
+      "remainingGap": "Road quadrant distribution is still more even than the uploaded H3M sample, and broad native RMG production parity remains open.",
+      "completedAt": "2026-05-06T02:49:32Z"
+    },
     {
       "id": "native-rmg-homm3-road-spread-parity-10184",
       "title": "Native RMG HoMM3 road spread parity follow-up",
