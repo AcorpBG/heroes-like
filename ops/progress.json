@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-player-facing-small-package-parity-regression-10184",
-  "currentSliceTitle": "Native RMG Player-Facing Small Package Parity Regression",
+  "currentSliceId": "native-rmg-package-road-overlay-deduplication-10184",
+  "currentSliceTitle": "Native RMG Package Road Overlay Deduplication",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Player-facing Small default package regression now proves translated template 049 is selected and converted/saved/loaded package surfaces preserve non-empty roads, 7 towns, 40 guards, and 316 package objects; the uploaded stale compact package remains untracked comparison evidence.",
+  "currentSliceNotes": "Player-facing Small package roads now serialize one unique overlay tile per x/y/level, package metadata carries unique road component counts, and direct plus disk package regressions reject duplicate or empty road records.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
   "updatedAt": "2026-05-06T00:00:00Z",
   "statusTaxonomy": {
@@ -39,6 +39,58 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "native-rmg-package-road-overlay-deduplication-10184",
+      "title": "Native RMG Package Road Overlay Deduplication",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "maps/small3playermap-1level.h3m",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd",
+        "tests/native_random_map_disk_package_startup_report.gd",
+        "owner correction on 2026-05-06 that native RMG package output must be production usable compared with HoMM3 examples"
+      ],
+      "purpose": "Correct saved-package road overlay semantics so overlapping native route segments do not serialize duplicate road tiles; package road surfaces should represent unique map tiles like HoMM3 tile overlay bytes while route graph metadata remains separate.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd",
+        "tests/native_random_map_disk_package_startup_report.gd",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_disk_package_startup_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Generated package terrain_layers roads contain no duplicate x/y/level road tiles across road records.",
+        "Converted and loaded Small default package unique road tile count equals the native in-memory unique road_cell_count.",
+        "Package road records with no unique tiles are not serialized as zero-tile road records.",
+        "Route graph and generation road-network metadata remain available outside the terrain-layer overlay surface.",
+        "No generated .amap/.ascenario package files are committed."
+      ],
+      "nonGoals": [
+        "No road path algorithm retuning.",
+        "No HoMM3 asset import or binary .h3m writeout.",
+        "No broad template-count parity claim."
+      ],
+      "completionEvidence": [
+        "src/gdextension/src/map_package_service.cpp now deduplicates terrain_layers roads by x/y/level while serializing generated package road overlays, skips route segments that add no unique overlay tiles, and records road_source_tile_count, road_duplicate_tile_count, and road_unique_tile_count on the terrain layer.",
+        "Generated MapDocument metadata now carries component_counts, and component_counts.road_cell_count now means unique materialized road tiles while road_segment_cell_count preserves the overlapping route-segment total for diagnostics.",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd now fails if converted or loaded Small default package road_unique_tile_count differs from the native unique road_cell_count, or if any duplicate/empty road record is serialized.",
+        "tests/native_random_map_disk_package_startup_report.gd now applies the same duplicate/empty road checks to the player-facing saved/loaded package startup path.",
+        "Uploaded-small focused report evidence for player_facing_small_default: translated_rmg_template_049_v1, 7 towns, 40 guards, 316 package objects, 105 unique package road tiles, 105 source road cells, 0 duplicate road tiles, and 0 zero-tile road records.",
+        "Disk package startup evidence: translated_rmg_template_049_v1, 7 towns, 40 guards, 316 package objects, 107 unique package road tiles, 107 source road cells, 0 duplicate road tiles, and 0 zero-tile road records.",
+        "Zone choke regression still passes for translated Small 049 and medium translated 4p land after the package road overlay change."
+      ]
+    },
     {
       "id": "native-rmg-player-facing-small-package-parity-regression-10184",
       "title": "Native RMG Player-Facing Small Package Parity Regression",
