@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-owner-medium-001-road-town-topology-correction-10184",
-  "currentSliceTitle": "Native RMG Owner Medium 001 Road And Town Topology Correction",
+  "currentSliceId": "native-rmg-owner-medium-001-spatial-distribution-correction-10184",
+  "currentSliceTitle": "Native RMG Owner Medium 001 Spatial Distribution Correction",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "The completed owner medium 001 density/category correction closed the uploaded H3M count gaps. The next queued follow-up is road/town topology: native roads still lack the owner H3M branch/end-point shape and only 5 of 8 owner-like medium towns are within the focused town-road connection threshold.",
+  "currentSliceNotes": "The owner medium density/category and road/town topology corrections are complete. The next queued gap is distribution shape: native still has a much more even road/content grid than the uploaded H3M, with road quadrant/coarse-grid and object clustering deltas remaining as non-parity evidence.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T02:10:47Z",
+  "updatedAt": "2026-05-06T02:18:28Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -98,7 +98,7 @@
       "id": "native-rmg-owner-medium-001-road-town-topology-correction-10184",
       "title": "Native RMG Owner Medium 001 Road And Town Topology Correction",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "pending",
+      "status": "completed",
       "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
       "sourceDocs": [
         "project.md",
@@ -127,6 +127,58 @@
         "Native owner-like medium road topology moves materially toward the owner H3M branch/end-point shape without over-connecting zones or regressing road tile count.",
         "Native owner-like medium town-road connection reaches all eight towns within the focused spatial threshold or records a deterministic infeasibility diagnostic.",
         "The just-closed owner category counts remain at or above the uploaded owner H3M baseline.",
+        "Small 049 package topology, guard separation, and saved/loaded package gates remain passing.",
+        "No uploaded H3M or generated map packages are committed."
+      ],
+      "completionEvidence": [
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.tscn passed after the topology gate was tightened. Native owner-like medium road_branch_delta moved from -10 to 0, town_road_connection_delta moved from -0.375 to 0.0, road_tile_delta stayed within threshold at +13, and endpoint_delta stayed bounded at +3.",
+        "The spatial gate now requires native road branch count >= owner, native endpoint count >= owner without overshooting by more than 4, and native town-road connected_count >= owner.",
+        "Native owner-like medium category counts remained at the uploaded owner H3M baseline: 496 total objects, 252 decorations, 110 rewards, 65 other/scenic objects, 61 guards, and 8 towns.",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.tscn passed with player-facing and translated Small 049 still at 303 total content, 150 decorations, 76 rewards, 30 other/scenic objects, 7 towns, and 40 guards.",
+        "tests/native_random_map_package_surface_topology_report.tscn passed with converted and loaded Small packages checking 21 cross-zone town pairs and 3 player start-town pairs with no unresolved reachable pairs.",
+        "tests/native_random_map_zone_choke_regression_report.tscn passed for small supported land, Small translated 049 3-player land, and medium translated 4-player land.",
+        "tests/native_random_map_disk_package_startup_report.tscn passed with a generated Small 049 disk package at 303 objects, 150 decorations, 7 towns, and 40 guards.",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2, python3 tests/validate_repo.py, python3 -m json.tool ops/progress.json, and git diff --check passed."
+      ],
+      "nonGoals": [
+        "No HoMM3 asset import.",
+        "No exact binary H3M parity claim.",
+        "No broad template catalog parity closure.",
+        "No save-version bump or runtime-authoritative adoption promotion."
+      ]
+    },
+    {
+      "id": "native-rmg-owner-medium-001-spatial-distribution-correction-10184",
+      "title": "Native RMG Owner Medium 001 Spatial Distribution Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "owner-uploaded 72x72 H3M comparison evidence from 2026-05-06"
+      ],
+      "purpose": "Follow the owner medium density and road/town topology corrections by addressing remaining spatial distribution differences: native road/content placement is still too even and too globally filled compared with the uploaded H3M's quadrant/coarse-grid clustering and empty-pocket shape.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_spatial_placement_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Native owner-like medium keeps the corrected owner category counts and road/town topology gates passing.",
+        "Native road quadrant/coarse-grid shape moves materially toward the uploaded H3M without exceeding road tile and road coverage thresholds.",
+        "Native content and reward clustering moves toward the uploaded H3M without reintroducing low-content holes beyond the report thresholds.",
         "Small 049 package topology, guard separation, and saved/loaded package gates remain passing.",
         "No uploaded H3M or generated map packages are committed."
       ],
