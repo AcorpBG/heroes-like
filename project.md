@@ -198,9 +198,9 @@ Exit criteria:
 
 ## Current Strategic Focus
 
-Current phase: Phase 3 — HoMM3-Style Random Map Generator Rework is complete; the next active production focus should be selected through `PLAN.md` and `ops/progress.json`.
+Current phase: Phase 3 — HoMM3-Style Random Map Generator Rework corrective parity queue is reopened by owner-uploaded H3M comparisons.
 
-The completed RMG rework closes with explicit validation and adoption boundaries. Native package/session adoption remains feature-gated and non-authoritative until a later replay gate proves stable full-output package/session identity for supported profiles.
+Completed RMG slices are evidence for their focused gates, not broad HoMM3-style production parity. Native package/session adoption remains feature-gated and non-authoritative until later replay and owner-comparison gates prove stable full-output package/session identity, road topology, object density, guard placement, and town separation across supported profiles.
 
 ## Non-Goals
 

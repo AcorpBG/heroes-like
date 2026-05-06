@@ -1,14 +1,14 @@
 {
   "project": "heroes-like",
   "taskId": "10184",
-  "status": "completed",
+  "status": "in_progress",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-small-049-owner-density-tightening-10184",
-  "currentSliceTitle": "Native RMG Small 049 Owner Density Tightening",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Player-facing translated Small 049 now matches the uploaded HoMM3 Small sample's headline density at 303 package objects and 150 decorative obstacles, keeps 7 towns/40 guards/package save-load integrity, and blocks all 21 unresolved cross-zone town pairs by making unresolved route guards control their protected road segments.",
+  "currentSliceId": "native-rmg-owner-medium-001-road-town-topology-correction-10184",
+  "currentSliceTitle": "Native RMG Owner Medium 001 Road And Town Topology Correction",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "The completed owner medium 001 density/category correction closed the uploaded H3M count gaps. The next queued follow-up is road/town topology: native roads still lack the owner H3M branch/end-point shape and only 5 of 8 owner-like medium towns are within the focused town-road connection threshold.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T01:59:09Z",
+  "updatedAt": "2026-05-06T02:10:47Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,104 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "native-rmg-owner-medium-001-density-category-correction-10184",
+      "title": "Native RMG Owner Medium 001 Density Category Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/native-rmg-homm3-spec-rework-gap-report.md",
+        "docs/random-map-final-homm3-parity-gate-audit.md",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "owner correction on 2026-05-06 that native RMG remains far from real HoMM3 maps and Small 049 was only a fast example"
+      ],
+      "purpose": "Move the native owner-like translated medium islands profile toward the owner-attached 72x72 H3M by correcting the largest content-density/category misses: missing other/scenic object category, sparse reward category, sparse guard count, low town count, and slightly low decoration count.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "ops/progress.json",
+        "PLAN.md",
+        "project.md"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_spatial_placement_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Owner-like translated medium islands native output materially reduces the spatial report object_count_delta from -144 by adding owner-H3M-inspired scenic/other objects, rewards, decorations, towns, and guards without using HoMM3 assets.",
+        "The spatial report records native other/object category coverage instead of zero native object-category entries for the owner-like 72x72 comparison.",
+        "Town, guard, reward, decoration, road, and topology focused gates do not regress the just-fixed Small 049 package topology.",
+        "The tracker and tactical docs no longer imply broad native RMG production parity is complete while owner-comparison gates still show material gaps.",
+        "No uploaded .h3m or generated .amap/.ascenario evidence files are committed."
+      ],
+      "completionEvidence": [
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.tscn passed with native owner-like medium counts matching the uploaded owner H3M: 496 total objects, 252 decorations, 110 rewards, 65 other/scenic objects, 61 guards, and 8 towns. The report gate now requires native category counts to meet the owner baseline instead of using the old loose 220-object floor.",
+        "The same spatial report records remaining non-parity evidence: road_branch_delta -10, road_endpoint_delta -10, and town_road_connection_delta -0.375, so this slice closes density/category misses but not full road topology parity.",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.tscn passed with player-facing and translated Small 049 at 303 total content, 150 decorations, 30 other/scenic objects, 76 rewards, 7 towns, 40 guards, and package object_count 303 after save/load.",
+        "tests/native_random_map_package_surface_topology_report.tscn passed with converted and loaded Small packages checking 21 cross-zone town pairs and 3 player start-town pairs with no unresolved reachable pairs.",
+        "tests/native_random_map_zone_choke_regression_report.tscn passed for small supported land, Small translated 049 3-player land, and medium translated 4-player land.",
+        "tests/native_random_map_disk_package_startup_report.tscn passed with a generated Small 049 disk package at 303 objects, 150 decorations, 7 towns, and 40 guards.",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2, python3 tests/validate_repo.py, python3 -m json.tool ops/progress.json, and git diff --check passed."
+      ],
+      "nonGoals": [
+        "No HoMM3 copyrighted asset/DEF import.",
+        "No exact byte-for-byte H3M output or PRNG-stream parity claim.",
+        "No full translated catalog runtime sweep closure in this slice.",
+        "No save-version bump, campaign adoption, or authoritative runtime adoption promotion."
+      ]
+    },
+    {
+      "id": "native-rmg-owner-medium-001-road-town-topology-correction-10184",
+      "title": "Native RMG Owner Medium 001 Road And Town Topology Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "owner-uploaded 72x72 H3M comparison evidence from 2026-05-06"
+      ],
+      "purpose": "Follow the completed owner medium 001 density/category correction by addressing the remaining owner H3M spatial topology gaps: native road graph lacks the owner's branch/end-point shape and only 5 of 8 towns are within the town-road connection threshold.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "tests/native_random_map_package_surface_topology_report.gd",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_spatial_placement_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Native owner-like medium road topology moves materially toward the owner H3M branch/end-point shape without over-connecting zones or regressing road tile count.",
+        "Native owner-like medium town-road connection reaches all eight towns within the focused spatial threshold or records a deterministic infeasibility diagnostic.",
+        "The just-closed owner category counts remain at or above the uploaded owner H3M baseline.",
+        "Small 049 package topology, guard separation, and saved/loaded package gates remain passing.",
+        "No uploaded H3M or generated map packages are committed."
+      ],
+      "nonGoals": [
+        "No HoMM3 asset import.",
+        "No exact binary H3M parity claim.",
+        "No broad template catalog parity closure.",
+        "No save-version bump or runtime-authoritative adoption promotion."
+      ]
+    },
     {
       "id": "native-rmg-small-049-owner-density-tightening-10184",
       "title": "Native RMG Small 049 Owner Density Tightening",

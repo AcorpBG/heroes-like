@@ -423,8 +423,13 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 		failures.append("owner_object_count_parse_changed")
 	if int(owner.get("road_tile_count", 0)) != 184:
 		failures.append("owner_road_tile_parse_changed")
-	if int(native.get("object_count", 0)) < 220:
+	if int(native.get("object_count", 0)) < int(owner.get("object_count", 0)):
 		failures.append("native_object_count_too_low_for_spatial_comparison")
+	var owner_counts: Dictionary = owner.get("counts_by_category", {}) if owner.get("counts_by_category", {}) is Dictionary else {}
+	var native_counts: Dictionary = native.get("counts_by_category", {}) if native.get("counts_by_category", {}) is Dictionary else {}
+	for category in ["decoration", "guard", "object", "reward", "town"]:
+		if int(native_counts.get(category, 0)) < int(owner_counts.get(category, 0)):
+			failures.append("native_%s_count_below_owner_spatial_baseline" % category)
 	if abs(int(comparison.get("road_tile_delta", 999))) > 24:
 		failures.append("native_road_tile_count_too_far_from_owner")
 	if abs(float(comparison.get("road_coverage_land_delta", 99.0))) > 0.03:
@@ -464,7 +469,8 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 		"thresholds": {
 			"owner_object_count": 496,
 			"owner_road_tiles": 184,
-			"native_min_object_count": 220,
+			"native_min_object_count": int(owner.get("object_count", 0)),
+			"native_min_counts_by_category": owner_counts,
 			"native_max_abs_road_tile_delta": 24,
 			"native_max_abs_road_coverage_land_delta": 0.03,
 			"native_min_road_nonempty_6x6_cells": max(12, int(owner.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) - 2),
