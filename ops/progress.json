@@ -5,10 +5,10 @@
   "currentPhase": "phase-3-homm3-style-rmg-rework",
   "currentSliceId": "native-rmg-owner-medium-001-spatial-distribution-correction-10184",
   "currentSliceTitle": "Native RMG Owner Medium 001 Spatial Distribution Correction",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "The owner medium density/category and road/town topology corrections are complete. The next queued gap is distribution shape: native still has a much more even road/content grid than the uploaded H3M, with road quadrant/coarse-grid and object clustering deltas remaining as non-parity evidence.",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed owner medium 001 spatial distribution correction: reward and decoration coarse-grid occupancy now track the uploaded H3M owner sample with stricter report gates while preserving corrected category counts, town-road connections, road topology, small 049 comparison, topology, choke, startup, and repo validation checks.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T02:18:28Z",
+  "updatedAt": "2026-05-06T02:32:11Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -151,7 +151,7 @@
       "id": "native-rmg-owner-medium-001-spatial-distribution-correction-10184",
       "title": "Native RMG Owner Medium 001 Spatial Distribution Correction",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "pending",
+      "status": "completed",
       "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
       "sourceDocs": [
         "project.md",
@@ -187,7 +187,17 @@
         "No exact binary H3M parity claim.",
         "No broad template catalog parity closure.",
         "No save-version bump or runtime-authoritative adoption promotion."
-      ]
+      ],
+      "completionEvidence": [
+        "Owner-medium 72x72 translated template 001 keeps exact uploaded-H3M category counts: 496 total objects, 252 decorations, 110 rewards, 65 other/scenic objects, 61 guards, and 8 towns.",
+        "Owner-medium reward coarse-grid occupancy now matches owner shape closely: native reward nonempty 6x6 cells 25 versus owner 26, with reward nearest-neighbor delta 0.745 and reward within-4-road ratio delta -0.0091.",
+        "Owner-medium decoration coarse-grid occupancy moved from globally filled/too-even behavior into owner-relative bounds: native decoration nonempty 6x6 cells 33 versus owner 31 and decoration average-nearest-neighbor delta 0.896.",
+        "Spatial comparison gate now asserts owner-relative reward/decor nonempty-cell deltas, all-content grid CV bounds, and reward/decor nearest-neighbor bounds so the earlier too-even placement behavior cannot silently regress."
+      ],
+      "remainingRisk": "Exact HoMM3 object placement, road quadrant shape, binary H3M parity, and full HoMM3-re algorithm parity remain unclaimed. Road quadrant CV still differs from the owner sample, but category counts, road topology, town-road connections, and owner-relative content clustering gates now pass.",
+      "updatedAt": "2026-05-06T02:32:11Z",
+      "startedAt": "2026-05-06T02:18:28Z",
+      "completedAt": "2026-05-06T02:32:11Z"
     },
     {
       "id": "native-rmg-small-049-owner-density-tightening-10184",
@@ -11946,6 +11956,44 @@
         "git diff --check"
       ],
       "remainingGap": "Some neutral fallback-town cleared-route reachability remains a follow-up parity issue; this slice specifically closes the owner-reported close-town and unguarded-route regression for uploaded small comparison output."
+    },
+    {
+      "id": "native-rmg-owner-medium-001-spatial-distribution-correction-10184",
+      "title": "Native RMG Owner Medium 001 Spatial Distribution Correction",
+      "status": "completed",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "owner-uploaded 72x72 H3M comparison evidence from 2026-05-06"
+      ],
+      "mappedPlannedSliceIds": [
+        "native-rmg-owner-medium-001-spatial-distribution-correction-10184"
+      ],
+      "implementationRefs": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_spatial_placement_comparison_report.gd",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Owner-medium placement scoring now applies recovered owner 6x6 category distribution targets only for translated_rmg_template_001_v1 / translated_rmg_profile_001_v1 72x72 four-player islands output.",
+        "Reward objects keep owner-like clustering without falling back to road-shoulder placement: native reward nonempty 6x6 cells are 25 versus owner 26, reward nearest-neighbor delta is 0.745, average distance-to-road delta is -2.391, and within-4-road ratio delta is -0.0091.",
+        "Decorative blockers no longer fill every coarse cell: native decoration nonempty 6x6 cells are 33 versus owner 31, while all-content grid CV delta improved to -0.139 against owner.",
+        "The spatial comparison gate now rejects reward/decor coarse-grid nonempty deltas beyond four cells, all-content grid CV that remains too even or too clustered, and reward/decor nearest-neighbor spacing that drifts away from the owner sample."
+      ],
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_spatial_placement_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_disk_package_startup_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json >/dev/null",
+        "git diff --check"
+      ],
+      "remainingGap": "Exact HoMM3 object placement, road quadrant shape, binary H3M parity, and full HoMM3-re algorithm parity are still not claimed; this slice closes the owner-medium category-count-preserving content clustering gap."
     }
   ],
   "docsReadyEvidence": [

@@ -412,6 +412,7 @@ func _spatial_comparison(owner: Dictionary, native: Dictionary) -> Dictionary:
 		"reward_within_4_tiles_ratio_delta": snapped(_nested_float(native_road, "reward", "within_4_tiles_ratio") - _nested_float(owner_road, "reward", "within_4_tiles_ratio"), 0.0001),
 		"town_road_connection_delta": snapped(float(native.get("town_road_connection", {}).get("connected_ratio", 0.0)) - float(owner.get("town_road_connection", {}).get("connected_ratio", 0.0)), 0.0001),
 		"decoration_avg_nearest_neighbor_delta": snapped(_nested_float(native_nn, "decoration", "average_nearest_neighbor") - _nested_float(owner_nn, "decoration", "average_nearest_neighbor"), 0.001),
+		"reward_avg_nearest_neighbor_delta": snapped(_nested_float(native_nn, "reward", "average_nearest_neighbor") - _nested_float(owner_nn, "reward", "average_nearest_neighbor"), 0.001),
 		"largest_low_content_region_delta": int(native.get("largest_low_content_region", {}).get("largest_region_cell_count", 0)) - int(owner.get("largest_low_content_region", {}).get("largest_region_cell_count", 0)),
 		"interpretation": "Road parity is judged by layout shape and interaction metrics, not only road count. Remaining deltas are evidence for future HoMM3-re route authoring work, not a full parity claim.",
 	}
@@ -452,6 +453,14 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 		failures.append("native_town_road_connection_distance_too_high")
 	if _nested_int(native.get("coarse_grid_6x6", {}), "reward", "nonempty_cell_count") < 12:
 		failures.append("native_rewards_too_spatially_collapsed")
+	if abs(int(comparison.get("reward_grid_nonempty_delta", 99))) > 4:
+		failures.append("native_reward_grid_nonempty_cells_too_far_from_owner")
+	if abs(int(comparison.get("decoration_grid_nonempty_delta", 99))) > 4:
+		failures.append("native_decoration_grid_nonempty_cells_too_far_from_owner")
+	if float(comparison.get("all_content_grid_cv_delta", -99.0)) < -0.25:
+		failures.append("native_all_content_grid_still_too_even_vs_owner")
+	if float(comparison.get("all_content_grid_cv_delta", 99.0)) > 0.45:
+		failures.append("native_all_content_grid_too_clustered_vs_owner")
 	if _nested_float(native.get("distance_to_road", {}), "reward", "average_distance_to_road") < 5.0:
 		failures.append("native_rewards_still_overbiased_to_roads")
 	if _nested_float(native.get("distance_to_road", {}), "reward", "average_distance_to_road") > 10.0:
@@ -468,8 +477,12 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 		failures.append("native_reward_quadrant_skew_too_high")
 	if int(native.get("largest_low_content_region", {}).get("largest_region_cell_count", 99)) > int(owner.get("largest_low_content_region", {}).get("largest_region_cell_count", 0)) + 1:
 		failures.append("native_low_content_region_too_large")
-	if _nested_float(native.get("nearest_neighbor", {}), "decoration", "average_nearest_neighbor") < 2.0:
-		failures.append("native_decorations_clumped_too_tightly")
+	if _nested_float(native.get("nearest_neighbor", {}), "decoration", "average_nearest_neighbor") < maxf(0.9, _nested_float(owner.get("nearest_neighbor", {}), "decoration", "average_nearest_neighbor") - 0.35):
+		failures.append("native_decorations_clumped_more_tightly_than_owner")
+	if float(comparison.get("decoration_avg_nearest_neighbor_delta", 99.0)) > 1.05:
+		failures.append("native_decorations_still_too_evenly_spaced_vs_owner")
+	if float(comparison.get("reward_avg_nearest_neighbor_delta", 99.0)) > 1.25:
+		failures.append("native_rewards_still_too_evenly_spaced_vs_owner")
 	if _nested_float(native.get("distance_to_road", {}), "reward", "within_4_tiles_ratio") > _nested_float(owner.get("distance_to_road", {}), "reward", "within_4_tiles_ratio") + 0.08:
 		warnings.append("native_rewards_still_somewhat_more_road_adjacent_than_owner")
 	return {
@@ -491,6 +504,10 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 			"native_max_town_road_distance_over_owner": 2,
 			"native_max_largest_roadless_land_region_over_owner": 3,
 			"native_min_reward_nonempty_6x6_cells": 12,
+			"native_max_abs_reward_nonempty_6x6_cell_delta": 4,
+			"native_max_abs_decoration_nonempty_6x6_cell_delta": 4,
+			"native_min_all_content_grid_cv_delta": -0.25,
+			"native_max_all_content_grid_cv_delta": 0.45,
 			"native_min_reward_average_distance_to_road": 5.0,
 			"native_max_reward_average_distance_to_road": 10.0,
 			"native_max_reward_within_1_tile_of_road_ratio": 0.14,
@@ -499,7 +516,9 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 			"native_max_all_content_quadrant_cv": 0.45,
 			"native_max_reward_quadrant_cv": 0.45,
 			"native_max_largest_low_content_region_over_owner": 1,
-			"native_min_decoration_average_nearest_neighbor": 2.0,
+			"native_min_decoration_average_nearest_neighbor": maxf(0.9, _nested_float(owner.get("nearest_neighbor", {}), "decoration", "average_nearest_neighbor") - 0.35),
+			"native_max_decoration_average_nearest_neighbor_over_owner": 1.05,
+			"native_max_reward_average_nearest_neighbor_over_owner": 1.25,
 		},
 		"comparison_snapshot": comparison,
 	}

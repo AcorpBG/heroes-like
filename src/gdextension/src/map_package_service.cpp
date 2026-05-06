@@ -5319,6 +5319,147 @@ int32_t owner_attached_medium_001_category_target(const Dictionary &normalized, 
 	return -1;
 }
 
+String owner_attached_medium_001_spatial_category_for_kind(const String &kind) {
+	if (kind == "decorative_obstacle") {
+		return "decoration";
+	}
+	if (kind == "resource_site" || kind == "mine" || kind == "neutral_dwelling" || kind == "reward_reference") {
+		return "reward";
+	}
+	if (kind == "scenic_object") {
+		return "object";
+	}
+	return "";
+}
+
+int32_t owner_attached_medium_001_grid_index(int32_t x, int32_t y, int32_t width, int32_t height) {
+	const int32_t cx = std::max(0, std::min(5, (x * 6) / std::max(1, width)));
+	const int32_t cy = std::max(0, std::min(5, (y * 6) / std::max(1, height)));
+	return cy * 6 + cx;
+}
+
+int32_t owner_attached_medium_001_grid_target_count(const String &category, int32_t grid_index) {
+	static constexpr int32_t DECORATION_COUNTS[36] = {
+		11, 9, 16, 16, 14, 7,
+		3, 8, 11, 4, 17, 3,
+		2, 18, 5, 2, 4, 0,
+		3, 9, 12, 10, 11, 0,
+		0, 4, 10, 7, 9, 4,
+		0, 3, 10, 7, 3, 0,
+	};
+	static constexpr int32_t REWARD_COUNTS[36] = {
+		8, 0, 5, 4, 0, 0,
+		0, 1, 8, 3, 0, 0,
+		3, 4, 6, 3, 7, 0,
+		2, 8, 5, 3, 8, 0,
+		0, 6, 3, 3, 5, 1,
+		0, 2, 3, 5, 2, 2,
+	};
+	static constexpr int32_t OBJECT_COUNTS[36] = {
+		2, 0, 6, 1, 2, 4,
+		0, 1, 1, 0, 1, 2,
+		1, 6, 1, 0, 0, 1,
+		2, 7, 1, 2, 3, 3,
+		0, 3, 2, 4, 3, 1,
+		0, 1, 1, 1, 2, 0,
+	};
+	if (grid_index < 0 || grid_index >= 36) {
+		return 0;
+	}
+	if (category == "decoration") {
+		return DECORATION_COUNTS[grid_index];
+	}
+	if (category == "reward") {
+		return REWARD_COUNTS[grid_index];
+	}
+	if (category == "object") {
+		return OBJECT_COUNTS[grid_index];
+	}
+	return 0;
+}
+
+int32_t owner_attached_medium_001_grid_distribution_penalty(const Dictionary &normalized, const String &category, int32_t x, int32_t y, int32_t width, int32_t height) {
+	if (!native_rmg_owner_like_islands_density_case(normalized) || category.is_empty()) {
+		return 0;
+	}
+	const int32_t target = owner_attached_medium_001_grid_target_count(category, owner_attached_medium_001_grid_index(x, y, width, height));
+	if (target <= 0) {
+		return category == "decoration" ? 420 : 2600;
+	}
+	const int32_t max_target = category == "decoration" ? 18 : (category == "reward" ? 8 : 7);
+	const int32_t density_weight = category == "decoration" ? 0 : (category == "reward" ? 26 : 24);
+	return std::max(0, max_target - target) * density_weight;
+}
+
+int32_t owner_attached_medium_001_spacing_penalty(const Dictionary &normalized, const String &category, int32_t spacing_penalty) {
+	if (!native_rmg_owner_like_islands_density_case(normalized) || category.is_empty()) {
+		return spacing_penalty;
+	}
+	if (category == "reward") {
+		return spacing_penalty / 3;
+	}
+	if (category == "object") {
+		return spacing_penalty / 4;
+	}
+	return spacing_penalty;
+}
+
+int32_t owner_attached_medium_001_road_penalty(const Dictionary &normalized, const String &category, int32_t road_penalty) {
+	if (!native_rmg_owner_like_islands_density_case(normalized) || category != "reward") {
+		return road_penalty;
+	}
+	return road_penalty * 3;
+}
+
+bool owner_attached_medium_001_existing_matches_category(const NativePlacedObject &placement, const String &category) {
+	if (category == "decoration") {
+		return placement.kind == "decorative_obstacle";
+	}
+	if (category == "reward") {
+		return placement.kind == "resource_site" || placement.kind == "mine" || placement.kind == "neutral_dwelling" || placement.kind == "reward_reference";
+	}
+	if (category == "object") {
+		return placement.kind == "scenic_object";
+	}
+	return false;
+}
+
+int32_t owner_attached_medium_001_existing_cluster_penalty(const Dictionary &normalized, const NativeObjectPlacementContext &context, const String &category, int32_t x, int32_t y) {
+	if (!native_rmg_owner_like_islands_density_case(normalized) || category.is_empty()) {
+		return 0;
+	}
+	if (category == "decoration") {
+		return 0;
+	}
+	int32_t nearest_distance = std::numeric_limits<int32_t>::max();
+	int32_t same_grid_count = 0;
+	const int32_t grid_index = owner_attached_medium_001_grid_index(x, y, context.width, context.height);
+	for (const NativePlacedObject &placement : context.placements) {
+		if (!owner_attached_medium_001_existing_matches_category(placement, category)) {
+			continue;
+		}
+		const int32_t distance = std::abs(x - placement.x) + std::abs(y - placement.y);
+		nearest_distance = std::min(nearest_distance, distance);
+		if (owner_attached_medium_001_grid_index(placement.x, placement.y, context.width, context.height) == grid_index) {
+			++same_grid_count;
+		}
+	}
+	if (nearest_distance == std::numeric_limits<int32_t>::max()) {
+		return 0;
+	}
+	int32_t penalty = -std::min(category == "decoration" ? 36 : 120, same_grid_count * (category == "decoration" ? 2 : 10));
+	if (nearest_distance <= 2) {
+		penalty -= category == "decoration" ? 8 : 36;
+	} else if (nearest_distance <= 4) {
+		penalty -= category == "decoration" ? 14 : 58;
+	} else if (nearest_distance <= 7) {
+		penalty -= category == "decoration" ? 8 : 38;
+	} else if (nearest_distance <= 12) {
+		penalty -= category == "decoration" ? 3 : 16;
+	}
+	return penalty;
+}
+
 int32_t placement_count_for_kind(const Array &placements, const String &kind) {
 	int32_t count = 0;
 	for (int64_t index = 0; index < placements.size(); ++index) {
@@ -5501,6 +5642,7 @@ Dictionary find_compact_decoration_density_point(const Dictionary &zone, int32_t
 	const int32_t desired_cell = int32_t(hash32_int(seed_text + String(":coarse")) % uint32_t(coarse_cols * coarse_rows));
 	const int32_t desired_cx = desired_cell % coarse_cols;
 	const int32_t desired_cy = desired_cell / coarse_cols;
+	const String owner_medium_category = owner_attached_medium_001_spatial_category_for_kind("decorative_obstacle");
 	std::vector<Dictionary> candidates;
 	for (int32_t y = 1; y < height - 1; ++y) {
 		if (y < 0 || y >= owner_grid.size()) {
@@ -5517,9 +5659,10 @@ Dictionary find_compact_decoration_density_point(const Dictionary &zone, int32_t
 			const int32_t anchor_distance = std::abs(x - ax) + std::abs(y - ay);
 			const int32_t preferred_anchor_distance = 6 + (ordinal % 17);
 			const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
+			const int32_t owner_grid_penalty = owner_attached_medium_001_grid_distribution_penalty(normalized, owner_medium_category, x, y, width, height);
 			const int32_t jitter = int32_t(hash32_int(seed_text + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 10000U);
 			Dictionary point = point_record(x, y);
-			const int64_t sort_key = int64_t(coarse_distance) * int64_t(100000000) + int64_t(anchor_penalty) * int64_t(10000) + int64_t(jitter);
+			const int64_t sort_key = int64_t(owner_grid_penalty) * int64_t(1000000000) + int64_t(coarse_distance) * int64_t(100000000) + int64_t(anchor_penalty) * int64_t(10000) + int64_t(jitter);
 			point["sort_key"] = sort_key;
 			point["decoration_footprint_override"] = footprint;
 			point["decoration_fit_fallback"] = "compact_owner_like_islands_density_marker";
@@ -5550,6 +5693,7 @@ Dictionary find_decoration_point_fast(const Dictionary &zone, int32_t ordinal, c
 	const int32_t ax = int32_t(anchor.get("x", placement_context.width / 2));
 	const int32_t ay = int32_t(anchor.get("y", placement_context.height / 2));
 	const String seed_text = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":decor:" + String::num_int64(ordinal);
+	const String owner_medium_category = owner_attached_medium_001_spatial_category_for_kind("decorative_obstacle");
 	const int32_t radius_limit = std::max(placement_context.width, placement_context.height);
 	int32_t candidate_count = 0;
 	int64_t best_sort_key = std::numeric_limits<int64_t>::max();
@@ -5567,8 +5711,10 @@ Dictionary find_decoration_point_fast(const Dictionary &zone, int32_t ordinal, c
 					continue;
 				}
 				++candidate_count;
+				const int32_t owner_grid_penalty = owner_attached_medium_001_grid_distribution_penalty(normalized, owner_medium_category, x, y, placement_context.width, placement_context.height);
+				const int32_t owner_cluster_penalty = owner_attached_medium_001_existing_cluster_penalty(normalized, placement_context, owner_medium_category, x, y);
 				const int32_t jitter = int32_t(hash32_int(seed_text + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 100000U);
-				const int64_t sort_key = int64_t(radius) * 100000LL + jitter;
+				const int64_t sort_key = int64_t(owner_grid_penalty + owner_cluster_penalty) * 1000000000LL + int64_t(radius) * 100000LL + jitter;
 				if (sort_key < best_sort_key) {
 					best_sort_key = sort_key;
 					best_x = x;
@@ -5608,8 +5754,10 @@ Dictionary find_decoration_point_fast(const Dictionary &zone, int32_t ordinal, c
 						continue;
 					}
 					++candidate_count;
+					const int32_t owner_grid_penalty = owner_attached_medium_001_grid_distribution_penalty(normalized, owner_medium_category, x, y, placement_context.width, placement_context.height);
+					const int32_t owner_cluster_penalty = owner_attached_medium_001_existing_cluster_penalty(normalized, placement_context, owner_medium_category, x, y);
 					const int32_t jitter = int32_t(hash32_int(seed_text + String(":compact:") + String::num_int64(fallback[0]) + String("x") + String::num_int64(fallback[1]) + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 100000U);
-					const int64_t sort_key = int64_t(radius) * 100000LL + jitter;
+					const int64_t sort_key = int64_t(owner_grid_penalty + owner_cluster_penalty) * 1000000000LL + int64_t(radius) * 100000LL + jitter;
 					if (sort_key < best_sort_key) {
 						best_sort_key = sort_key;
 						best_x = x;
@@ -5648,6 +5796,7 @@ Dictionary find_compact_decoration_density_point_fast(const Dictionary &zone, in
 	const int32_t desired_cell = int32_t(hash32_int(seed_text + String(":coarse")) % uint32_t(coarse_cols * coarse_rows));
 	const int32_t desired_cx = desired_cell % coarse_cols;
 	const int32_t desired_cy = desired_cell / coarse_cols;
+	const String owner_medium_category = owner_attached_medium_001_spatial_category_for_kind("decorative_obstacle");
 	int64_t best_sort_key = std::numeric_limits<int64_t>::max();
 	int32_t best_x = -1;
 	int32_t best_y = -1;
@@ -5663,8 +5812,10 @@ Dictionary find_compact_decoration_density_point_fast(const Dictionary &zone, in
 		const int32_t anchor_distance = std::abs(x - ax) + std::abs(y - ay);
 		const int32_t preferred_anchor_distance = 6 + (ordinal % 17);
 		const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
+		const int32_t owner_grid_penalty = owner_attached_medium_001_grid_distribution_penalty(normalized, owner_medium_category, x, y, placement_context.width, placement_context.height);
+		const int32_t owner_cluster_penalty = owner_attached_medium_001_existing_cluster_penalty(normalized, placement_context, owner_medium_category, x, y);
 		const int32_t jitter = int32_t(hash32_int(seed_text + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 10000U);
-		const int64_t sort_key = int64_t(coarse_distance) * int64_t(100000000) + int64_t(anchor_penalty) * int64_t(10000) + int64_t(jitter);
+		const int64_t sort_key = int64_t(owner_grid_penalty + owner_cluster_penalty) * int64_t(1000000000) + int64_t(coarse_distance) * int64_t(100000000) + int64_t(anchor_penalty) * int64_t(10000) + int64_t(jitter);
 		if (sort_key < best_sort_key) {
 			best_sort_key = sort_key;
 			best_x = x;
@@ -6842,6 +6993,7 @@ Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, 
 	const bool bounded_large_map_scoring = width > 72 || height > 72;
 	const int32_t target_evaluated_candidates = !bounded_large_map_scoring ? zone_cell_count : (zone_cell_count > 0 && zone_cell_count < 600 ? zone_cell_count : 128);
 	const int32_t sample_mod = zone_cell_count > target_evaluated_candidates ? std::max(2, zone_cell_count / std::max(1, target_evaluated_candidates)) : 1;
+	const String owner_medium_category = owner_attached_medium_001_spatial_category_for_kind(kind);
 	Dictionary bounds = zone.get("bounds", Dictionary());
 	const int32_t scan_min_x = std::max(1, int32_t(bounds.get("min_x", 1)));
 	const int32_t scan_max_x = std::min(width - 2, int32_t(bounds.get("max_x", width - 2)));
@@ -6878,10 +7030,11 @@ Dictionary object_point_for_zone_index(const Dictionary &zone, int32_t ordinal, 
 			}
 			const int32_t anchor_distance = std::abs(x - anchor_x) + std::abs(y - anchor_y);
 			const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
-			const int32_t spacing_penalty = interactive_spacing_penalty(existing_placements, x, y, kind, zone_id, width, height);
+			const int32_t spacing_penalty = owner_attached_medium_001_spacing_penalty(normalized, owner_medium_category, interactive_spacing_penalty(existing_placements, x, y, kind, zone_id, width, height));
 			const int32_t road_distance = road_distance_from_field(road_distance_field, x, y, width, height);
-			const int32_t road_penalty = interactive_road_distribution_penalty(road_distance, kind);
-			const int32_t distribution_penalty = spacing_penalty + road_penalty;
+			const int32_t road_penalty = owner_attached_medium_001_road_penalty(normalized, owner_medium_category, interactive_road_distribution_penalty(road_distance, kind));
+			const int32_t owner_grid_penalty = owner_attached_medium_001_grid_distribution_penalty(normalized, owner_medium_category, x, y, width, height);
+			const int32_t distribution_penalty = spacing_penalty + road_penalty + owner_grid_penalty;
 			const int32_t jitter = int32_t(hash32_int(seed + String(":scatter:") + String::num_int64(x) + String(",") + String::num_int64(y)) % 10000U);
 			const int64_t sort_key = int64_t(distribution_penalty) * 1000000000LL + int64_t(coarse_distance) * 10000000LL + int64_t(anchor_penalty) * 10000LL + int64_t(jitter);
 			if (sort_key < best_sort_key) {
@@ -6935,6 +7088,7 @@ Dictionary object_point_for_zone_index_fast(const Dictionary &zone, int32_t ordi
 	const bool bounded_large_map_scoring = width > 72 || height > 72;
 	const int32_t target_evaluated_candidates = !bounded_large_map_scoring ? zone_cell_count : (zone_cell_count > 0 && zone_cell_count < 600 ? zone_cell_count : 128);
 	const int32_t sample_mod = zone_cell_count > target_evaluated_candidates ? std::max(2, zone_cell_count / std::max(1, target_evaluated_candidates)) : 1;
+	const String owner_medium_category = owner_attached_medium_001_spatial_category_for_kind(kind);
 
 	int64_t best_sort_key = std::numeric_limits<int64_t>::max();
 	int32_t best_x = -1;
@@ -6960,10 +7114,12 @@ Dictionary object_point_for_zone_index_fast(const Dictionary &zone, int32_t ordi
 		}
 		const int32_t anchor_distance = std::abs(x - anchor_x) + std::abs(y - anchor_y);
 		const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
-		const int32_t spacing_penalty = interactive_spacing_penalty_native(placement_context, x, y, kind, zone_id);
+		const int32_t spacing_penalty = owner_attached_medium_001_spacing_penalty(normalized, owner_medium_category, interactive_spacing_penalty_native(placement_context, x, y, kind, zone_id));
 		const int32_t road_distance = road_distance_from_field(road_distance_field, x, y, width, height);
-		const int32_t road_penalty = interactive_road_distribution_penalty(road_distance, kind);
-		const int32_t distribution_penalty = spacing_penalty + road_penalty;
+		const int32_t road_penalty = owner_attached_medium_001_road_penalty(normalized, owner_medium_category, interactive_road_distribution_penalty(road_distance, kind));
+		const int32_t owner_grid_penalty = owner_attached_medium_001_grid_distribution_penalty(normalized, owner_medium_category, x, y, width, height);
+		const int32_t owner_cluster_penalty = owner_attached_medium_001_existing_cluster_penalty(normalized, placement_context, owner_medium_category, x, y);
+		const int32_t distribution_penalty = spacing_penalty + road_penalty + owner_grid_penalty + owner_cluster_penalty;
 		const int32_t jitter = int32_t(hash32_int(seed + String(":scatter:") + String::num_int64(x) + String(",") + String::num_int64(y)) % 10000U);
 		const int64_t sort_key = int64_t(distribution_penalty) * 1000000000LL + int64_t(coarse_distance) * 10000000LL + int64_t(anchor_penalty) * 10000LL + int64_t(jitter);
 		if (sort_key < best_sort_key) {
