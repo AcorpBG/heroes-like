@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-uploaded-small-town-spacing-choke-correction-10184",
-  "currentSliceTitle": "Native RMG Uploaded Small Town Spacing Choke Correction",
+  "currentSliceId": "native-rmg-required-town-access-corridor-correction-10184",
+  "currentSliceTitle": "Native RMG Required Town Access Corridor Correction",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Some neutral fallback-town cleared-route reachability remains a follow-up parity issue; this slice specifically closes the owner-reported close-town and unguarded-route regression for uploaded small comparison output.",
+  "currentSliceNotes": "Required/neutral towns now materialize deterministic access corridors to road/start anchors; decorative/scenic blockers on those corridors become nonblocking while mines/rewards/guards remain non-clearable, preserving uploaded-small 7-town reachability after guard clearing.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
   "updatedAt": "2026-05-06T00:00:00Z",
   "statusTaxonomy": {
@@ -10375,6 +10375,55 @@
       ],
       "remainingRisk": "Some neutral fallback-town cleared-route reachability remains a follow-up parity issue; this slice specifically closes the owner-reported close-town and unguarded-route regression for uploaded small comparison output.",
       "updatedAt": "2026-05-06T00:00:00Z"
+    },
+    {
+      "id": "native-rmg-required-town-access-corridor-correction-10184",
+      "title": "Native RMG Required Town Access Corridor Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "owner-uploaded small 3-player one-level H3M comparison request on 2026-05-06"
+      ],
+      "purpose": "Correct the remaining native small translated-template gap where required/fallback towns can be isolated by terrain or decorative blockers after route guards/gates are cleared, unlike the uploaded HoMM3 small map where blockers control zone routes without leaving towns unreachable.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_zone_choke_regression_report.gd",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "godot --headless --path . tests/native_random_map_homm3_validation_adoption_gates_report.tscn",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Small translated-template all cross-zone town pairs remain blocked while unresolved guards/obstacles are present.",
+        "After clearing connection guards/gates, all cross-zone town pairs in the uploaded-small translated-template case are path-reachable.",
+        "Required/fallback towns materialize explicit access corridor metadata and the final terrain/object pass preserves those corridors.",
+        "Uploaded-small comparison still preserves the owner-like 7-town count, town spacing at least 8, dense object mix, guard count, and road coverage."
+      ],
+      "completionEvidence": [
+        "Zone choke regression now enforces cleared all-cross-zone-town traversal for the uploaded-small translated template and passes with 7 total towns, 21 cross-zone town pairs, 40 guards, unresolved blocked tiles 944, and cleared-connection blocked tiles 808.",
+        "Native town placement uses strict in-zone fallback for required towns, records required_town_access_corridor_cells, opens those cells in terrain boundary/island shaping, and clears only decorative/scenic blockers that overlap the corridor.",
+        "Corridor pathfinding avoids non-clearable blockers such as mines, rewards, towns, guards, and gates; the focused debug path proved mine bodies were the remaining bad route and now routes around them instead of weakening them.",
+        "Uploaded-small comparison remains owner-like: player-facing small default/template 049 keeps 7 towns, nearest town manhattan 10 versus owner baseline 10, 269 object placements, 316 total content, 163 decorations, 76 reward/mine/resource records, 30 scenic objects, 40 guard records, and 105 road cells.",
+        "Validation/adoption gate passes with deterministic replay boundary stable for same seed/config after deterministic object-placement signature narrowing."
+      ],
+      "remainingRisk": "Exact HoMM3 parity is still not claimed: translated profile full_generation_status remains not_implemented and runtime authoritative adoption remains feature-gated.",
+      "nonGoals": [
+        "No HoMM3 copyrighted art or binary H3M import/adoption.",
+        "No save-version bump, package/schema migration, or authoritative runtime adoption change.",
+        "No broad RMG rewrite beyond required-town access corridor preservation."
+      ],
+      "updatedAt": "2026-05-06T00:00:00Z",
+      "startedAt": "2026-05-06T00:00:00Z",
+      "completedAt": "2026-05-06T00:00:00Z"
     }
   ],
   "completedImplementationEvidence": [
