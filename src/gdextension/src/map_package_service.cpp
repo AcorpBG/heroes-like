@@ -4084,6 +4084,23 @@ Dictionary object_family_record(const String &kind, int32_t ordinal, const Strin
 		apply_homm3_re_reward_object_proxy(record, proxy, false);
 		return record;
 	}
+	if (kind == "scenic_object") {
+		static constexpr const char *FAMILIES[] = {"scenic_sinkhole", "scenic_mere", "scenic_waygate_marker", "scenic_low_foliage", "scenic_standing_stone", "scenic_weathered_marker"};
+		static constexpr const char *OBJECT_IDS[] = {"object_scenic_sinkhole", "object_scenic_mere", "object_scenic_waygate_marker", "object_scenic_low_foliage", "object_scenic_standing_stone", "object_scenic_weathered_marker"};
+		static constexpr const char *CATEGORIES[] = {"hole_equivalent", "lake_equivalent", "monolith_equivalent", "foliage_equivalent", "standing_stone", "marker"};
+		const int32_t index = ordinal % 6;
+		record["family_id"] = FAMILIES[index];
+		record["object_family_id"] = "scenic_object";
+		record["type_id"] = "scenic_object";
+		record["site_id"] = "";
+		record["object_id"] = OBJECT_IDS[index];
+		record["category_id"] = CATEGORIES[index];
+		record["passability_class"] = index == 1 ? "blocking_non_visitable" : (index == 2 ? "blocking_visitable" : "blocking_non_visitable");
+		record["purpose"] = "owner_uploaded_h3m_other_map_object_equivalent";
+		record["homm3_re_source_kind"] = "parsed_uploaded_small_other_object_category_equivalent";
+		record["homm3_re_art_asset_policy"] = "original_runtime_family_only_no_homm3_art_import";
+		return record;
+	}
 	if (kind == "reward_reference") {
 		static constexpr const char *OBJECT_IDS[] = {"object_waystone_cache", "object_ore_crates", "object_wood_wagon", "artifact_trailsinger_boots", "artifact_quarry_tally_rod", "artifact_waymark_compass", "artifact_milepost_lantern", "artifact_bastion_gorget", "artifact_warcrest_pennon", "spell_beacon_path", "object_reedscript_vow_shrine"};
 		static constexpr const char *FAMILIES[] = {"reward_cache_small", "reward_cache_small", "guarded_reward_cache", "artifact_cache", "artifact_cache", "artifact_cache", "artifact_cache", "artifact_cache", "artifact_cache", "spell_shrine", "skill_shrine"};
@@ -4254,6 +4271,12 @@ Dictionary object_footprint_for_kind(const String &kind, int32_t ordinal, const 
 		footprint["anchor"] = "bottom_center";
 		footprint["tier"] = "small_dwelling";
 		footprint["source"] = "content/random_map_generator_data_model.json neutral dwelling object definition";
+	} else if (kind == "scenic_object") {
+		footprint["width"] = ordinal % 3 == 1 ? 2 : 1;
+		footprint["height"] = ordinal % 3 == 1 ? 2 : 1;
+		footprint["anchor"] = "center";
+		footprint["tier"] = ordinal % 3 == 1 ? "small_scenic" : "micro_scenic";
+		footprint["source"] = "uploaded HoMM3 small-map other-object category translated to original scenic object footprint";
 	} else if (kind == "decorative_obstacle") {
 		Dictionary decoration_template = decoration_template_record(terrain_id, ordinal);
 		footprint["width"] = decoration_template.get("width", 4);
@@ -4316,7 +4339,7 @@ Dictionary object_pipeline_type_metadata_for_kind(const String &kind) {
 	metadata["type_id"] = kind;
 	metadata["category"] = kind == "reward_reference" ? "reward" : (kind == "special_guard_gate" ? "connection_gate" : kind);
 	metadata["primary_placement_gate"] = kind != "decorative_obstacle";
-	metadata["wide_placement_footprint"] = kind == "mine" || kind == "neutral_dwelling" || kind == "decorative_obstacle" || kind == "special_guard_gate";
+	metadata["wide_placement_footprint"] = kind == "mine" || kind == "neutral_dwelling" || kind == "decorative_obstacle" || kind == "special_guard_gate" || kind == "scenic_object";
 	metadata["secondary_placement_gate"] = kind != "resource_site";
 	metadata["definition_serialization_pass"] = true;
 	Dictionary limits;
@@ -4335,6 +4358,9 @@ Dictionary object_pipeline_type_metadata_for_kind(const String &kind) {
 	} else if (kind == "resource_site") {
 		limits["global"] = 512;
 		limits["per_zone"] = 12;
+	} else if (kind == "scenic_object") {
+		limits["global"] = 512;
+		limits["per_zone"] = 64;
 	} else {
 		limits["global"] = 1024;
 		limits["per_zone"] = 96;
@@ -4356,6 +4382,11 @@ Dictionary object_pipeline_definition_for_kind(const String &kind, int32_t ordin
 	Dictionary passability;
 	Dictionary action;
 	if (kind == "decorative_obstacle") {
+		passability["class"] = "blocking_non_visitable";
+		passability["mask"] = Array::make("body_blocked");
+		action["class"] = "none";
+		action["mask"] = Array();
+	} else if (kind == "scenic_object") {
 		passability["class"] = "blocking_non_visitable";
 		passability["mask"] = Array::make("body_blocked");
 		action["class"] = "none";
@@ -4398,6 +4429,9 @@ Dictionary object_pipeline_definition_for_kind(const String &kind, int32_t ordin
 	if (kind == "decorative_obstacle") {
 		value_density["density"] = "late_rand_trn_fill";
 		value_density["value_bands"] = Array::make(Dictionary());
+	} else if (kind == "scenic_object") {
+		value_density["density"] = "owner_uploaded_h3m_other_object_mix";
+		value_density["value_source"] = "non_reward_non_guard_non_town_other_object_category";
 	} else if (kind == "reward_reference") {
 		value_density["density"] = "phase_10_zone_treasure_band_weight";
 		value_density["value_source"] = "low_high_density_triplets";
@@ -4419,7 +4453,7 @@ Dictionary object_pipeline_definition_for_kind(const String &kind, int32_t ordin
 	}
 	definition["value_density"] = value_density;
 	Dictionary writeout;
-	writeout["record_kind"] = kind == "decorative_obstacle" ? "decorative_map_object" : (kind == "special_guard_gate" ? "connection_gate" : "map_object");
+	writeout["record_kind"] = kind == "decorative_obstacle" ? "decorative_map_object" : (kind == "special_guard_gate" ? "connection_gate" : (kind == "scenic_object" ? "scenic_map_object" : "map_object"));
 	writeout["serialization_state"] = "definition_and_instance_staged_package_record";
 	writeout["no_authored_content_writeback"] = true;
 	writeout["payload_fields"] = Array::make("object_id", "family_id", "zone_id", "body_tiles", "occupancy_keys", "passability", "action");
@@ -4867,6 +4901,43 @@ bool native_rmg_owner_like_small_land_density_case(const Dictionary &normalized)
 			&& template_id.begins_with("translated_rmg_template_")
 			&& profile_id.begins_with("translated_rmg_profile_")
 			&& player_count == 3;
+}
+
+bool native_rmg_owner_uploaded_small_049_case(const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	return width == 36
+			&& height == 36
+			&& level_count == 1
+			&& String(normalized.get("size_class_id", "")) == "homm3_small"
+			&& String(normalized.get("water_mode", "")) == "land"
+			&& String(normalized.get("template_id", "")) == "translated_rmg_template_049_v1"
+			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_049_v1"
+			&& player_count == 3;
+}
+
+int32_t owner_uploaded_small_049_object_target(const Dictionary &normalized, const String &kind) {
+	if (!native_rmg_owner_uploaded_small_049_case(normalized)) {
+		return -1;
+	}
+	if (kind == "mine") {
+		return 31;
+	}
+	if (kind == "resource_site") {
+		return 42;
+	}
+	if (kind == "reward_reference") {
+		return 3;
+	}
+	if (kind == "neutral_dwelling") {
+		return 0;
+	}
+	if (kind == "scenic_object") {
+		return 30;
+	}
+	return -1;
 }
 
 int32_t decoration_target_for_zone(const Dictionary &normalized, const Dictionary &zone) {
@@ -5428,6 +5499,14 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 		if (point.has("decoration_fit_fallback")) {
 			placement["decoration_fit_fallback"] = point.get("decoration_fit_fallback", "");
 		}
+	} else if (kind == "scenic_object") {
+		placement["approach_tiles"] = Array();
+		placement["blocking_body"] = true;
+		placement["visitable"] = false;
+		placement["interaction"] = "none";
+		placement["approach_policy"] = "non_visitable_other_map_object_equivalent";
+		placement["occupancy_metadata"] = "blocking_body_tiles_reserved_in_native_object_occupancy";
+		placement["homm3_re_phase"] = "owner_uploaded_small_other_object_category";
 	}
 	for (int64_t key_index = 0; key_index < family.keys().size(); ++key_index) {
 		const String key = String(family.keys()[key_index]);
@@ -5620,7 +5699,7 @@ Dictionary object_fill_coverage_summary(const Array &placements, const Dictionar
 }
 
 Dictionary object_placement_pipeline_summary(const Dictionary &normalized, const Dictionary &zone_layout, const Array &placements, const Dictionary &occupancy_index, int64_t elapsed_usec, const Dictionary &runtime_phase_profile) {
-	static constexpr const char *SUPPORTED_KINDS[] = {"resource_site", "mine", "neutral_dwelling", "reward_reference", "decorative_obstacle", "town", "route_guard", "special_guard_gate"};
+	static constexpr const char *SUPPORTED_KINDS[] = {"resource_site", "mine", "neutral_dwelling", "reward_reference", "decorative_obstacle", "scenic_object", "town", "route_guard", "special_guard_gate"};
 	Dictionary definitions;
 	Dictionary global_counts;
 	Dictionary per_zone_counts;
@@ -6527,6 +6606,19 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	int32_t mine_density_placed_count = 0;
 	int32_t adjacent_resource_support_count = 0;
 	int32_t adjacent_resource_object_count = 0;
+	const int32_t uploaded_small_mine_target = owner_uploaded_small_049_object_target(normalized, "mine");
+	const int32_t uploaded_small_resource_target = owner_uploaded_small_049_object_target(normalized, "resource_site");
+	const int32_t uploaded_small_dwelling_target = owner_uploaded_small_049_object_target(normalized, "neutral_dwelling");
+	const int32_t uploaded_small_reward_target = owner_uploaded_small_049_object_target(normalized, "reward_reference");
+	const int32_t uploaded_small_scenic_target = owner_uploaded_small_049_object_target(normalized, "scenic_object");
+	int32_t uploaded_small_mine_count = 0;
+	int32_t uploaded_small_resource_count = 0;
+	int32_t uploaded_small_dwelling_count = 0;
+	int32_t uploaded_small_reward_count = 0;
+	int32_t uploaded_small_scenic_count = 0;
+	auto target_reached = [](int32_t target, int32_t count) {
+		return target >= 0 && count >= target;
+	};
 
 	if (!parity_targets.is_empty()) {
 		const auto parity_started_at = std::chrono::steady_clock::now();
@@ -6571,8 +6663,14 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 			const int32_t sy = int32_t(start.get("y", 0));
 			static constexpr int32_t OFFSETS[3][2] = {{2, 0}, {0, 2}, {-2, 0}};
 			for (int32_t resource_index = 0; resource_index < 3; ++resource_index) {
+				if (target_reached(uploaded_small_resource_target, uploaded_small_resource_count)) {
+					continue;
+				}
 				Dictionary point = find_object_point(sx + OFFSETS[resource_index][0], sy + OFFSETS[resource_index][1], String(start.get("zone_id", "")), owner_grid, occupied, width, height);
 				append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "resource_site", resource_index, road_cells, zone_layout);
+				if (!point.is_empty()) {
+					++uploaded_small_resource_count;
+				}
 				++ordinal;
 			}
 		}
@@ -6622,6 +6720,14 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 				diagnostic["source_phase"] = scheduled.get("source_phase", "");
 				diagnostic["source_field_offset"] = scheduled.get("source_field_offset", "");
 				diagnostic["source_field_value"] = scheduled.get("source_field_value", 0);
+				if (target_reached(uploaded_small_mine_target, uploaded_small_mine_count)) {
+					diagnostic["code"] = "mine_resource_placement_skipped_by_uploaded_small_mix_target";
+					diagnostic["severity"] = "info";
+					diagnostic["message"] = "Small template 049 is capped to the owner-uploaded single-level H3M mine/resource category mix.";
+					diagnostic["target_count"] = uploaded_small_mine_target;
+					mine_resource_diagnostics.append(diagnostic);
+					continue;
+				}
 				if (!point_available) {
 					diagnostic["code"] = "mine_resource_placement_infeasible";
 					diagnostic["severity"] = density_phase ? "warning" : "failure";
@@ -6641,6 +6747,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 				diagnostic["placement_id"] = mine_placement_id;
 				diagnostic["special_near_start_bias"] = special_near_start_bias;
 				mine_resource_diagnostics.append(diagnostic);
+				++uploaded_small_mine_count;
 				++ordinal;
 
 				Dictionary support;
@@ -6654,7 +6761,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 				++adjacent_resource_support_count;
 				if (rmg_adjacent_resource_pickup_supported(category_index)) {
 					Dictionary resource_point = adjacent_resource_point_for_mine(point, String(zone.get("id", "")), owner_grid, occupied, width, height);
-					if (!resource_point.is_empty()) {
+					if (!resource_point.is_empty() && !target_reached(uploaded_small_resource_target, uploaded_small_resource_count)) {
 						resource_point["object_family_ordinal"] = rmg_adjacent_resource_family_ordinal(category_index);
 						resource_point["adjacent_to_mine_placement_id"] = mine_placement_id;
 						resource_point["mine_category_index"] = category_index;
@@ -6662,7 +6769,15 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 						support["adjacent_resource_placement_id"] = "native_rmg_resource_site_" + String(zone.get("id", "")) + "_" + slot_id_2(ordinal + 1);
 						support["materialization_state"] = "adjacent_resource_object_materialized";
 						++adjacent_resource_object_count;
+						++uploaded_small_resource_count;
 						++ordinal;
+					} else if (target_reached(uploaded_small_resource_target, uploaded_small_resource_count)) {
+						support["materialization_state"] = "adjacent_resource_object_suppressed_by_uploaded_small_mix_target";
+						Dictionary resource_diagnostic = diagnostic.duplicate(true);
+						resource_diagnostic["code"] = "adjacent_resource_placement_skipped_by_uploaded_small_mix_target";
+						resource_diagnostic["severity"] = "info";
+						resource_diagnostic["target_count"] = uploaded_small_resource_target;
+						mine_resource_diagnostics.append(resource_diagnostic);
 					} else {
 						support["materialization_state"] = "adjacent_resource_object_infeasible_support_record_only";
 						Dictionary resource_diagnostic = diagnostic.duplicate(true);
@@ -6684,19 +6799,31 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 			mine_resource_usec += elapsed_usec_since(mine_started_at);
 			const auto dwelling_started_at = std::chrono::steady_clock::now();
 			for (int32_t dwelling_index = 0; dwelling_index < dwelling_target; ++dwelling_index) {
+				if (target_reached(uploaded_small_dwelling_target, uploaded_small_dwelling_count)) {
+					continue;
+				}
 				Dictionary point = object_point_for_zone_index_fast(zone, ordinal, 2 + dwelling_index, "neutral_dwelling", normalized, placement_context, owner_grid, occupied, road_distance_field);
 				point["native_dwelling_index"] = dwelling_index;
 				point["native_dwelling_target"] = dwelling_target;
 				append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "neutral_dwelling", ordinal, road_cells, zone_layout);
+				if (!point.is_empty()) {
+					++uploaded_small_dwelling_count;
+				}
 				++ordinal;
 			}
 			dwelling_usec += elapsed_usec_since(dwelling_started_at);
 			const auto reward_started_at = std::chrono::steady_clock::now();
 			for (int32_t reward_index = 0; reward_index < reward_target; ++reward_index) {
+				if (target_reached(uploaded_small_reward_target, uploaded_small_reward_count)) {
+					continue;
+				}
 				Dictionary point = object_point_for_zone_index_fast(zone, ordinal, 1 + reward_index / 4, "reward_reference", normalized, placement_context, owner_grid, occupied, road_distance_field);
 				point["native_reward_index"] = reward_index;
 				point["native_reward_target"] = reward_target;
 				append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "reward_reference", ordinal, road_cells, zone_layout);
+				if (!point.is_empty()) {
+					++uploaded_small_reward_count;
+				}
 				++ordinal;
 			}
 			reward_usec += elapsed_usec_since(reward_started_at);
@@ -6704,11 +6831,55 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 		append_extension_profile_elapsed(object_profile_phases, "mine_resource_placement", mine_resource_usec, top_object_phase_usec, top_object_phase_id);
 		append_extension_profile_elapsed(object_profile_phases, "neutral_dwelling_placement", dwelling_usec, top_object_phase_usec, top_object_phase_id);
 		append_extension_profile_elapsed(object_profile_phases, "reward_reference_placement", reward_usec, top_object_phase_usec, top_object_phase_id);
+
+		if (uploaded_small_resource_target >= 0 && uploaded_small_resource_count < uploaded_small_resource_target) {
+			const auto resource_supplement_started_at = std::chrono::steady_clock::now();
+			int32_t attempts = 0;
+			while (uploaded_small_resource_count < uploaded_small_resource_target && attempts < int32_t(zones.size()) * 12) {
+				if (zones.is_empty()) {
+					break;
+				}
+				Dictionary zone = zones[attempts % zones.size()];
+				Dictionary point = object_point_for_zone_index_fast(zone, ordinal, 2 + attempts / std::max<int32_t>(1, int32_t(zones.size())), "resource_site", normalized, placement_context, owner_grid, occupied, road_distance_field);
+				point["object_family_ordinal"] = uploaded_small_resource_count % 3;
+				point["placement_policy"] = "owner_uploaded_small_049_supplemental_resource_mix";
+				const int64_t before = placements.size();
+				append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "resource_site", ordinal, road_cells, zone_layout);
+				if (placements.size() > before) {
+					++uploaded_small_resource_count;
+				}
+				++ordinal;
+				++attempts;
+			}
+			append_extension_profile_elapsed(object_profile_phases, "uploaded_small_049_resource_mix_supplement", elapsed_usec_since(resource_supplement_started_at), top_object_phase_usec, top_object_phase_id);
+		}
 	}
 
 	const auto decoration_started_at = std::chrono::steady_clock::now();
 	ordinal = append_decoration_placements(placements, occupied, placement_context, normalized, zone_layout, road_cells, ordinal);
 	append_extension_profile_elapsed(object_profile_phases, "decorative_obstacle_placement", elapsed_usec_since(decoration_started_at), top_object_phase_usec, top_object_phase_id);
+
+	if (uploaded_small_scenic_target >= 0) {
+		const auto scenic_started_at = std::chrono::steady_clock::now();
+		int32_t attempts = 0;
+		while (uploaded_small_scenic_count < uploaded_small_scenic_target && attempts < int32_t(zones.size()) * 16) {
+			if (zones.is_empty()) {
+				break;
+			}
+			Dictionary zone = zones[attempts % zones.size()];
+			Dictionary point = object_point_for_zone_index_fast(zone, ordinal, 3 + attempts / std::max<int32_t>(1, int32_t(zones.size())), "scenic_object", normalized, placement_context, owner_grid, occupied, road_distance_field);
+			point["object_family_ordinal"] = uploaded_small_scenic_count;
+			point["placement_policy"] = "owner_uploaded_small_049_other_object_mix";
+			const int64_t before = placements.size();
+			append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "scenic_object", ordinal, road_cells, zone_layout);
+			if (placements.size() > before) {
+				++uploaded_small_scenic_count;
+			}
+			++ordinal;
+			++attempts;
+		}
+		append_extension_profile_elapsed(object_profile_phases, "uploaded_small_049_scenic_object_mix", elapsed_usec_since(scenic_started_at), top_object_phase_usec, top_object_phase_id);
+	}
 
 	const auto occupancy_started_at = std::chrono::steady_clock::now();
 	Dictionary primary_tile_occupancy;
@@ -7553,6 +7724,9 @@ int32_t object_guard_priority(const Dictionary &object) {
 	if (family_id == "guarded_reward_cache" || (kind == "reward_reference" && int32_t(object.get("reward_value", 0)) >= 2500)) {
 		return 3;
 	}
+	if (kind == "resource_site") {
+		return 4;
+	}
 	return 99;
 }
 
@@ -8063,8 +8237,10 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	Array edges = route_graph.get("edges", Array());
 	int32_t guard_ordinal = 0;
 	const int32_t parity_guard_limit = parity_targets.is_empty() ? -1 : int32_t(parity_targets.get("guard_count", 0));
+	const int32_t uploaded_small_guard_limit = native_rmg_owner_uploaded_small_049_case(normalized) ? 40 : -1;
+	const int32_t effective_guard_limit = parity_guard_limit >= 0 ? parity_guard_limit : uploaded_small_guard_limit;
 	for (int64_t index = 0; index < edges.size(); ++index) {
-		if (parity_guard_limit >= 0 && guard_ordinal >= parity_guard_limit) {
+		if (effective_guard_limit >= 0 && guard_ordinal >= effective_guard_limit) {
 			break;
 		}
 		Dictionary edge = edges[index];
@@ -8115,18 +8291,19 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	}
 
 	Array object_guard_candidates = sorted_object_guard_candidates(objects);
-	if (parity_targets.is_empty() || (parity_guard_limit >= 0 && guard_ordinal < parity_guard_limit)) {
+	if (parity_targets.is_empty() || (effective_guard_limit >= 0 && guard_ordinal < effective_guard_limit)) {
 		for (int64_t index = 0; index < object_guard_candidates.size(); ++index) {
-			if (parity_guard_limit >= 0 && guard_ordinal >= parity_guard_limit) {
+			if (effective_guard_limit >= 0 && guard_ordinal >= effective_guard_limit) {
 				break;
 			}
 			Dictionary object = object_guard_candidates[index];
 			const String kind = String(object.get("kind", ""));
 			const String family_id = String(object.get("family_id", ""));
-			if (kind == "town" || kind == "resource_site") {
+			const bool uploaded_small_resource_guard = uploaded_small_guard_limit >= 0 && kind == "resource_site";
+			if (kind == "town" || (kind == "resource_site" && !uploaded_small_resource_guard)) {
 				continue;
 			}
-			if (parity_targets.is_empty() && kind != "mine" && kind != "neutral_dwelling" && family_id != "guarded_reward_cache" && String(object.get("artifact_id", "")).is_empty()) {
+			if (parity_targets.is_empty() && kind != "mine" && kind != "neutral_dwelling" && !uploaded_small_resource_guard && family_id != "guarded_reward_cache" && String(object.get("artifact_id", "")).is_empty()) {
 				continue;
 			}
 			const String zone_id = String(object.get("zone_id", ""));
@@ -8136,6 +8313,9 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			const int32_t reward_value = std::max(0, int32_t(object.get("reward_value", 0)));
 			if (reward_value > 0) {
 				guard_base_value = std::max(guard_base_value, reward_value);
+			}
+			if (uploaded_small_resource_guard) {
+				guard_base_value = std::max(guard_base_value, 6000);
 			}
 			if (!String(object.get("artifact_id", "")).is_empty()) {
 				guard_base_value = std::max(guard_base_value, 6000);
@@ -8170,7 +8350,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			if (parity_targets.is_empty() && reward_value >= 2500 && reward_value < 6000 && guard_distance > 12) {
 				continue;
 			}
-			if (parity_targets.is_empty()) {
+			if (parity_targets.is_empty() && !uploaded_small_resource_guard) {
 				const bool high_value_reward = kind == "reward_reference" && reward_value >= 6000;
 				const bool medium_value_reward = kind == "reward_reference" && reward_value >= 2500;
 				const int32_t local_guard_count = local_guard_count_near_point(guards, point, 6);

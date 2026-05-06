@@ -15,7 +15,8 @@ const OWNER_SMALL_BASELINE := {
 	"object_count": 303,
 	"decoration_count": 150,
 	"guard_count": 40,
-	"reward_count": 80,
+	"reward_count": 76,
+	"other_object_count": 30,
 	"road_cell_count": 110,
 }
 
@@ -99,7 +100,9 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 	metrics["template_id"] = String(normalized.get("template_id", ""))
 	metrics["profile_id"] = String(normalized.get("profile_id", ""))
 	metrics["object_count_ratio_to_owner"] = snapped(float(int(metrics.get("object_count", 0))) / float(int(OWNER_SMALL_BASELINE.get("object_count", 1))), 0.001)
+	metrics["total_content_count_ratio_to_owner"] = snapped(float(int(metrics.get("total_content_count", 0))) / float(int(OWNER_SMALL_BASELINE.get("object_count", 1))), 0.001)
 	metrics["decoration_count_ratio_to_owner"] = snapped(float(int(metrics.get("decoration_count", 0))) / float(int(OWNER_SMALL_BASELINE.get("decoration_count", 1))), 0.001)
+	metrics["reward_count_ratio_to_owner"] = snapped(float(int(metrics.get("reward_count", 0))) / float(int(OWNER_SMALL_BASELINE.get("reward_count", 1))), 0.001)
 	metrics["road_cell_count_ratio_to_owner"] = snapped(float(int(metrics.get("road_cell_count", 0))) / float(int(OWNER_SMALL_BASELINE.get("road_cell_count", 1))), 0.001)
 	return metrics
 
@@ -121,11 +124,14 @@ func _assert_default_small_shape(summaries: Array) -> bool:
 	if int(default_summary.get("nearest_town_manhattan", 0)) < 8:
 		_fail("Small default town spacing is too tight: %s" % JSON.stringify(default_summary))
 		return false
-	if float(default_summary.get("object_count_ratio_to_owner", 0.0)) < 0.90:
-		_fail("Small default object density is still far below owner baseline: %s" % JSON.stringify(default_summary))
+	if float(default_summary.get("total_content_count_ratio_to_owner", 0.0)) < 0.90 or float(default_summary.get("total_content_count_ratio_to_owner", 0.0)) > 1.15:
+		_fail("Small default total content density drifted outside owner-like tolerance: %s" % JSON.stringify(default_summary))
 		return false
 	if float(default_summary.get("decoration_count_ratio_to_owner", 0.0)) < 0.80 or float(default_summary.get("decoration_count_ratio_to_owner", 0.0)) > 1.20:
 		_fail("Small default decoration density drifted outside owner-like tolerance: %s" % JSON.stringify(default_summary))
+		return false
+	if float(default_summary.get("reward_count_ratio_to_owner", 0.0)) < 0.85 or float(default_summary.get("reward_count_ratio_to_owner", 0.0)) > 1.15:
+		_fail("Small default reward/mine/resource density drifted outside owner-like tolerance: %s" % JSON.stringify(default_summary))
 		return false
 	if float(default_summary.get("road_cell_count_ratio_to_owner", 0.0)) < 0.90:
 		_fail("Small default road materialization is still below owner-like baseline: %s" % JSON.stringify(default_summary))
@@ -142,6 +148,7 @@ func _native_metrics(generated: Dictionary) -> Dictionary:
 	var guard_records: Array = generated.get("guard_records", []) if generated.get("guard_records", []) is Array else []
 	var road_network: Dictionary = generated.get("road_network", {}) if generated.get("road_network", {}) is Dictionary else {}
 	var zone_layout: Dictionary = generated.get("zone_layout", {}) if generated.get("zone_layout", {}) is Dictionary else {}
+	var town_guard_placement: Dictionary = generated.get("town_guard_placement", {}) if generated.get("town_guard_placement", {}) is Dictionary else {}
 	var counts := {}
 	for object in object_placements:
 		if not (object is Dictionary):
@@ -167,13 +174,16 @@ func _native_metrics(generated: Dictionary) -> Dictionary:
 		"town_count": town_records.size(),
 		"nearest_town_manhattan": _nearest_town_manhattan(town_points),
 		"object_count": object_placements.size(),
+		"total_content_count": object_placements.size() + town_records.size() + guard_records.size(),
 		"decoration_count": int(counts.get("decorative_obstacle", 0)),
 		"guard_object_count": int(counts.get("route_guard", 0)) + int(counts.get("special_guard_gate", 0)) + int(counts.get("connection_gate", 0)),
 		"guard_record_count": guard_records.size(),
 		"reward_count": int(counts.get("reward_reference", 0)) + int(counts.get("resource_site", 0)) + int(counts.get("mine", 0)) + int(counts.get("neutral_dwelling", 0)),
+		"other_object_count": int(counts.get("scenic_object", 0)),
 		"road_cell_count": road_cells.size(),
 		"road_segment_count": int(road_network.get("road_segments", []).size()) if road_network.get("road_segments", []) is Array else 0,
 		"object_counts_by_kind": counts,
+		"guard_summary": town_guard_placement.get("materialized_object_guard_summary", {}),
 	}
 
 func _nearest_town_manhattan(points: Array) -> int:
