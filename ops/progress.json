@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-uploaded-small-topology-evidence-gap-10184",
-  "currentSliceTitle": "Native RMG Uploaded Small Topology Evidence Gap",
+  "currentSliceId": "native-rmg-small-object-choke-materialization-10184",
+  "currentSliceTitle": "Native RMG Small Object Choke Materialization",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed uploaded Small topology evidence-gap report. Current native Small 049 matches owner-uploaded counts closely and blocks all town pairs, but the report exposes a remaining structural gap: native topology still relies on rock terrain barrier tiles plus object blockers instead of fully HoMM3-style object-mask and guard choke materialization.",
+  "currentSliceNotes": "Completed Small 049 object-choke materialization follow-up. Object blockers now close the uploaded Small town topology even when terrain rock barriers are ignored; remaining rock terrain serialization is still a residual warning, not a full HoMM3-style parity claim.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T03:00:58Z",
+  "updatedAt": "2026-05-06T03:09:20Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -298,6 +298,55 @@
       "updatedAt": "2026-05-06T03:00:58Z",
       "startedAt": "2026-05-06T02:55:00Z",
       "completedAt": "2026-05-06T03:00:58Z"
+    },
+    {
+      "id": "native-rmg-small-object-choke-materialization-10184",
+      "title": "Native RMG Small Object Choke Materialization",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "tests/native_random_map_homm3_uploaded_small_topology_report.gd",
+        "owner-uploaded Small 3-player H3M comparison evidence"
+      ],
+      "purpose": "Follow the uploaded Small topology audit by moving current Small 049 package choke closure from terrain-only reliance toward object-surface blocker materialization: decorative obstacle masks must close the town topology even when terrain rock barriers are ignored.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_uploaded_small_topology_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Native translated Small 049 keeps owner-like aggregate counts, road cells, town distance, and package topology gates.",
+        "The uploaded Small topology report fails if native object blockers alone allow any reachable town pair when terrain rock blockers are ignored.",
+        "Compact decorative obstacle placement is biased toward owner-grid zone-boundary choke cells, and package decorative obstacle masks materialize nearby land-boundary choke cells without adding generated object records.",
+        "Remaining terrain-rock serialization is reported as a residual warning rather than silently treated as HoMM3-style object-mask parity."
+      ],
+      "completionEvidence": [
+        "Object-only reachable town pairs moved from 6 before this slice to 0 after boundary-biased compact decoration and decorative package choke masks.",
+        "Native translated Small 049 still produces 7 towns, nearest town distance 10, 303 objects, 150 decorative obstacles, 40 guards, 105 road cells, zero empty/duplicate road records, zero unresolved reachable town pairs, and zero object-only reachable town pairs.",
+        "The topology report now hard-gates required_native_object_only_reachable_town_pairs at 0 while preserving the residual warning that terrain rock boundaries are still serialized."
+      ],
+      "remainingRisk": "This closes the Small 049 object-only topology gap only. Broader templates and full removal/replacement of terrain rock boundary serialization remain future RMG parity work.",
+      "nonGoals": [
+        "No HoMM3 art, DEF, name, text, map, or binary H3M import.",
+        "No broad removal of terrain rock boundary serialization in this slice.",
+        "No exact H3M pathing or byte parity claim."
+      ],
+      "updatedAt": "2026-05-06T03:09:20Z",
+      "startedAt": "2026-05-06T03:02:00Z",
+      "completedAt": "2026-05-06T03:09:20Z"
     },
     {
       "id": "native-rmg-small-049-owner-density-tightening-10184",
@@ -10988,6 +11037,48 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "native-rmg-small-object-choke-materialization-10184",
+      "title": "Native RMG Small Object Choke Materialization",
+      "status": "completed",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "tests/native_random_map_homm3_uploaded_small_topology_report.gd",
+        "owner-uploaded Small 3-player H3M comparison evidence"
+      ],
+      "mappedPlannedSliceIds": [
+        "native-rmg-small-object-choke-materialization-10184"
+      ],
+      "implementationRefs": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_uploaded_small_topology_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": "Small 049 compact decorative obstacles now prefer owner-grid boundary choke cells, and nearby land-boundary rock cells are materialized onto decorative package block masks. The uploaded Small topology report now includes object-only topology and hard-fails if object blockers alone leave any reachable town pair when terrain rock is ignored. Object-only reachable town pairs moved from 6 before the slice to 0 after the change without adding generated object records.",
+      "nativeMetrics": {
+        "templateId": "translated_rmg_template_049_v1",
+        "profileId": "translated_rmg_profile_049_v1",
+        "townCount": 7,
+        "nearestTownManhattan": 10,
+        "objectCount": 303,
+        "decorativeObstacleCount": 150,
+        "guardCount": 40,
+        "roadCellCount": 105,
+        "terrainBlockedTileCount": 380,
+        "objectBlockedTileCount": 967,
+        "unresolvedReachableTownPairs": 0,
+        "objectOnlyReachableTownPairs": 0
+      },
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 (pass)",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_topology_report.tscn (pass with terrain-rock and full_generation_status warnings)"
+      ],
+      "remainingGap": "This is a Small 049 corrective slice. The native generator still serializes rock terrain boundaries, broader translated templates are not proven object-only, and full HoMM3-style production RMG parity remains open.",
+      "completedAt": "2026-05-06T03:09:20Z"
+    },
+    {
       "id": "native-rmg-uploaded-small-topology-evidence-gap-10184",
       "title": "Native RMG Uploaded Small Topology Evidence Gap",
       "status": "completed",
@@ -12669,11 +12760,11 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-uploaded-small-topology-evidence-gap-10184",
-      "title": "Native RMG Uploaded Small Topology Evidence Gap",
+      "id": "native-rmg-small-object-choke-materialization-10184",
+      "title": "Native RMG Small Object Choke Materialization",
       "status": "completed",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "reason": "Completed by this run with a focused uploaded Small H3M topology parser/report. The next implementation follow-up should replace remaining rock-boundary topology reliance with HoMM3-style object-mask and guard choke materialization when selected."
+      "reason": "Completed by this run with object-only blocker topology gated for uploaded Small 049. The next implementation follow-up should broaden object-only choke materialization beyond Small 049 and remove or replace remaining rock-boundary serialization when selected."
     }
   ],
   "stoppedOrPausedTasks": [
