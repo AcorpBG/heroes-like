@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-small-object-choke-materialization-10184",
-  "currentSliceTitle": "Native RMG Small Object Choke Materialization",
+  "currentSliceId": "native-rmg-package-object-only-topology-gate-10184",
+  "currentSliceTitle": "Native RMG Package Object-Only Topology Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed Small 049 object-choke materialization follow-up. Object blockers now close the uploaded Small town topology even when terrain rock barriers are ignored; remaining rock terrain serialization is still a residual warning, not a full HoMM3-style parity claim.",
+  "currentSliceNotes": "Completed focused package-surface hardening for Small 049 object-only topology; broad RMG parity remains open.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T03:09:20Z",
+  "updatedAt": "2026-05-06T03:15:57Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -347,6 +347,51 @@
       "updatedAt": "2026-05-06T03:09:20Z",
       "startedAt": "2026-05-06T03:02:00Z",
       "completedAt": "2026-05-06T03:09:20Z"
+    },
+    {
+      "id": "native-rmg-package-object-only-topology-gate-10184",
+      "title": "Native RMG Package Object-Only Topology Gate",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "tests/native_random_map_package_surface_topology_report.gd",
+        "owner-uploaded Small 3-player H3M comparison evidence"
+      ],
+      "purpose": "Follow the Small object choke materialization by hardening the converted/saved/loaded native package surface gate: package object masks alone must close Small 049 town topology without relying on terrain rock blockers.",
+      "implementationTargets": [
+        "tests/native_random_map_package_surface_topology_report.gd",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_topology_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Converted and loaded Small 049 package surfaces still preserve recovered template provenance, owner-like counts, roads, town spacing, and no empty/duplicate road records.",
+        "The package surface report computes object-only blocker topology separately from terrain-plus-object topology.",
+        "Converted and loaded package surfaces fail if object masks alone allow any unguarded start-town or cross-zone town route.",
+        "The gate remains explicit that this proves Small 049 package topology only, not broad HoMM3 RMG parity or exact H3M byte/pathing parity."
+      ],
+      "completionEvidence": [
+        "Package surface report now computes object_only_start_town_topology and object_only_cross_zone_town_topology separately from terrain-plus-object topology for converted and loaded package surfaces.",
+        "Converted Small 049 package passes with 7 towns, 303 objects, 40 guards, 104 unique road tiles, zero empty/duplicate roads, 1000 object-only blocked tiles, 3 checked player-start town pairs, 21 checked cross-zone town pairs, and zero object-only reachable pairs.",
+        "Loaded Small 049 package preserves the same object-only topology closure after save/load, proving package serialization does not drop the materialized decorative obstacle block masks."
+      ],
+      "remainingRisk": "This gate hardens Small 049 package topology only; broader templates, exact H3M passability, and runtime-authoritative adoption remain future work.",
+      "nonGoals": [
+        "No C++ behavior change unless the strengthened package-surface gate exposes a regression.",
+        "No HoMM3 art, DEF, name, text, map, or binary .h3m import.",
+        "No runtime-authoritative package/session promotion."
+      ],
+      "updatedAt": "2026-05-06T03:15:57Z",
+      "startedAt": "2026-05-06T03:15:03Z",
+      "completedAt": "2026-05-06T03:15:57Z"
     },
     {
       "id": "native-rmg-small-049-owner-density-tightening-10184",
@@ -12760,11 +12805,11 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-small-object-choke-materialization-10184",
-      "title": "Native RMG Small Object Choke Materialization",
+      "id": "native-rmg-package-object-only-topology-gate-10184",
+      "title": "Native RMG Package Object-Only Topology Gate",
       "status": "completed",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "reason": "Completed by this run with object-only blocker topology gated for uploaded Small 049. The next implementation follow-up should broaden object-only choke materialization beyond Small 049 and remove or replace remaining rock-boundary serialization when selected."
+      "reason": "Completed in this run. Next RMG work should broaden object-only topology/owner comparison beyond Small 049 or address remaining unsupported full_generation_status scope."
     }
   ],
   "stoppedOrPausedTasks": [

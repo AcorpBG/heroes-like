@@ -133,6 +133,20 @@ func _assert_surface(surface: Dictionary) -> bool:
 	if int(cross_zone_topology.get("checked_pair_count", 0)) < 21:
 		_fail("%s did not inspect every cross-zone town pair: %s" % [label, JSON.stringify(surface)])
 		return false
+	var object_only_topology: Dictionary = surface.get("object_only_start_town_topology", {}) if surface.get("object_only_start_town_topology", {}) is Dictionary else {}
+	if not object_only_topology.get("reachable_pairs", []).is_empty():
+		_fail("%s object masks alone still allow unguarded start-town traversal: %s" % [label, JSON.stringify(surface)])
+		return false
+	if int(object_only_topology.get("checked_pair_count", 0)) < 3:
+		_fail("%s object-only topology did not inspect all player start-town pairs: %s" % [label, JSON.stringify(surface)])
+		return false
+	var object_only_cross_zone_topology: Dictionary = surface.get("object_only_cross_zone_town_topology", {}) if surface.get("object_only_cross_zone_town_topology", {}) is Dictionary else {}
+	if not object_only_cross_zone_topology.get("reachable_pairs", []).is_empty():
+		_fail("%s object masks alone still allow unguarded cross-zone town traversal: %s" % [label, JSON.stringify(surface)])
+		return false
+	if int(object_only_cross_zone_topology.get("checked_pair_count", 0)) < 21:
+		_fail("%s object-only topology did not inspect every cross-zone town pair: %s" % [label, JSON.stringify(surface)])
+		return false
 	return true
 
 func _package_surface_summary(map_document: Variant, label: String) -> Dictionary:
@@ -145,14 +159,27 @@ func _package_surface_summary(map_document: Variant, label: String) -> Dictionar
 	var object_summary := _object_summary(map_document)
 	var terrain_blocked := _terrain_blocked_tiles(map_document, terrain_layers)
 	var unresolved_blocked := _package_blocked_tiles(map_document, terrain_blocked)
+	var object_only_blocked := _package_blocked_tiles(map_document, {})
 	var topology := _start_town_topology(
 		unresolved_blocked,
 		int(map_document.get_width()),
 		int(map_document.get_height()),
 		object_summary.get("player_start_towns", [])
 	)
+	var object_only_topology := _start_town_topology(
+		object_only_blocked,
+		int(map_document.get_width()),
+		int(map_document.get_height()),
+		object_summary.get("player_start_towns", [])
+	)
 	var cross_zone_topology := _cross_zone_town_topology(
 		unresolved_blocked,
+		int(map_document.get_width()),
+		int(map_document.get_height()),
+		object_summary.get("towns", [])
+	)
+	var object_only_cross_zone_topology := _cross_zone_town_topology(
+		object_only_blocked,
 		int(map_document.get_width()),
 		int(map_document.get_height()),
 		object_summary.get("towns", [])
@@ -181,8 +208,11 @@ func _package_surface_summary(map_document: Variant, label: String) -> Dictionar
 		"object_counts_by_kind": object_summary.get("object_counts_by_kind", {}),
 		"terrain_blocked_tile_count": terrain_blocked.size(),
 		"unresolved_blocked_tile_count": unresolved_blocked.size(),
+		"object_only_blocked_tile_count": object_only_blocked.size(),
 		"unresolved_start_town_topology": topology,
 		"unresolved_cross_zone_town_topology": cross_zone_topology,
+		"object_only_start_town_topology": object_only_topology,
+		"object_only_cross_zone_town_topology": object_only_cross_zone_topology,
 	}
 
 func _road_summary(roads: Array) -> Dictionary:
