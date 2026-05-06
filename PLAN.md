@@ -1424,6 +1424,31 @@ nonGoals:
 - No broad removal of terrain rock boundary serialization in this slice.
 - No exact H3M pathing or byte parity claim.
 
+id: `native-rmg-package-object-only-topology-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Follow the Small object choke materialization by hardening the converted/saved/loaded native package surface gate: package object masks alone must close Small 049 town topology without relying on terrain rock blockers.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_package_surface_topology_report.gd`
+- owner-uploaded Small 3-player H3M comparison evidence
+implementationTargets:
+- `tests/native_random_map_package_surface_topology_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Converted and loaded Small 049 package surfaces still preserve recovered template provenance, owner-like counts, roads, town spacing, and no empty/duplicate road records.
+- The package surface report computes object-only blocker topology separately from terrain-plus-object topology.
+- Converted and loaded package surfaces fail if object masks alone allow any unguarded start-town or cross-zone town route.
+- The gate remains explicit that this proves Small 049 package topology only, not broad HoMM3 RMG parity or exact H3M byte/pathing parity.
+completionEvidence:
+- `tests/native_random_map_package_surface_topology_report.gd` now computes `object_only_start_town_topology` and `object_only_cross_zone_town_topology` separately from terrain-plus-object topology for both converted and loaded package surfaces.
+- The package surface report passes with converted and loaded Small 049 packages at 7 towns, 303 objects, 40 guards, 104 unique road tiles, zero empty/duplicate roads, 1000 object-only blocked tiles, 3 checked player-start town pairs, 21 checked cross-zone town pairs, and zero object-only reachable pairs.
+nonGoals:
+- No C++ behavior change unless the strengthened package-surface gate exposes a regression.
+- No HoMM3 art, DEF, name, text, map, or binary `.h3m` import.
+- No runtime-authoritative package/session promotion.
+
 id: `overworld-map-object-distinct-sprite-gap-fill-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`
