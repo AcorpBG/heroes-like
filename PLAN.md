@@ -1508,7 +1508,7 @@ nonGoals:
 
 id: `native-rmg-production-owner-comparison-gate-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `pending`
+status: `completed`
 purpose: Turn the owner-uploaded HoMM3 small single-level comparison and generated native small maps into a production parity gate for towns, zones, roads, obstacles, guards, and unguarded inter-zone routes.
 sourceDocs:
 - `project.md`
@@ -1525,10 +1525,39 @@ completionCriteria:
 - Native generated small maps do not allow short unguarded direct town-to-town routes between player starts or enemy towns.
 - Obstacle and guard placement blocks or guards zone boundaries in a way that is materially closer to the uploaded HoMM3 sample than the current native output.
 - The gate remains explicit that byte-level H3M parity and copyrighted asset import are out of scope.
+completionEvidence:
+- `tests/native_random_map_homm3_uploaded_small_topology_report.tscn` now compares parsed owner HoMM3 evidence with current native Small 049 on town count, expected zone count, road cells and road connected components, decoration/obstacle count, guard count, nearest town spacing, and unguarded cross-town reachability.
+- The same report optionally loads the local uploaded native `.amap` as diagnostic evidence when present. In the owner-uploaded bad package it reports compact-template provenance, 6 towns, 0 road cells, 30 zero-tile road records, 28 decorations, 35 guards, nearest town spacing 3, and 10 reachable town pairs; current generated Small 049 reports 7 zones, 7 towns, 105 road cells, 1 road component versus owner 2, 150 decorations, 40 guards, nearest town spacing 12, and 0 reachable town pairs.
+- HoMM3-side unguarded route parsing now treats monster/guard records as guard-controlled blockers so the report can reason about unguarded routes rather than raw passability only.
+- `tests/native_random_map_homm3_uploaded_small_comparison_report.tscn` and `tests/native_random_map_package_surface_topology_report.tscn` pass alongside the strengthened topology report.
+- `python3 tests/validate_repo.py`, `python3 -m json.tool ops/progress.json`, and `git diff --check` pass.
 nonGoals:
 - No HoMM3 asset import or copyrighted content cloning.
 - No broad all-template parity claim.
 - No runtime-authoritative adoption before the comparison gate passes.
+
+id: `native-rmg-production-terrain-object-choke-boundary-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `pending`
+purpose: Replace the remaining Small 049 warning-level reliance on terrain rock boundaries with object/guard-owned choke evidence, then broaden the owner-comparison topology gate beyond the single Small evidence map.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- owner objective that native RMG must become production-ready and not be treated as alpha/prototype
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- focused package/topology reports under `tests/`
+- `ops/progress.json`
+completionCriteria:
+- Current Small 049 no longer reports terrain-rock boundary reliance as a warning in the uploaded-small topology gate.
+- Object and guard package masks, not terrain-only walls, explain blocked/guarded town-zone boundaries for the default Small output.
+- The topology gate is broadened with at least one additional generated Small/Medium profile seed or size-class case that checks towns, roads, guards, obstacles, and unguarded routes.
+- Runtime adoption remains feature-gated and non-authoritative until broader production parity evidence exists.
+nonGoals:
+- No exact H3M byte parity.
+- No HoMM3 asset import.
+- No claim that all 56 recovered templates are production-ready.
 
 id: `overworld-map-object-distinct-sprite-gap-fill-10184`
 phase: `phase-3-homm3-style-rmg-rework`
