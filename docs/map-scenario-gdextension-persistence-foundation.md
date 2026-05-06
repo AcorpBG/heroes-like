@@ -1176,16 +1176,16 @@ version bump, campaign/skirmish browser adoption, and full parity claim false.
 The comparison harness now verifies this adoption conversion for its native
 fixtures and advances the readiness blocker to the final full-parity gate only.
 
-`native-rmg-full-parity-gate-10184` closes the tracked native/GDScript parity
-gate for the current comparison fixture scope: 36x36 `homm3_small` maps using
+2026-05-06 correction: `native-rmg-full-parity-gate-10184` now acts as a
+production-claim boundary gate for the current comparison fixture scope:
+36x36 `homm3_small` maps using
 the compact border-gate and translated RMG profile/template configurations,
 specifically compact three-player land, translated four-player islands, and
 translated four-player underground land coverage.
-For those supported profiles, native C++ output now reports
-`status: full_parity_supported`,
-`full_generation_status: implemented_for_supported_profile`,
-`native_runtime_authoritative: true`, and `full_parity_claim: true` while
-preserving the feature gate and leaving runtime call-site adoption false.
+For those scoped structural profiles, native C++ output reports
+`status: scoped_structural_profile_supported`, keeps
+`native_runtime_authoritative: false`, and keeps `full_parity_claim: false`
+while preserving the feature gate and leaving runtime call-site adoption false.
 
 The parity gate checks structural equality against
 `scripts/core/RandomMapGeneratorRules.gd` for dimensions/tile counts, terrain

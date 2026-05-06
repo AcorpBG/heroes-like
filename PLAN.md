@@ -1477,6 +1477,59 @@ nonGoals:
 - C++ changes are limited to concrete blockers exposed by the breadth gate: zero-value translated land guard fallback, package boundary mask coverage, close cross-zone town corridor guard coverage, edge-aware barriers, and required town materialization fallback.
 - No generated package/map evidence committed.
 
+id: `native-rmg-production-claim-boundary-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Remove misleading native RMG full-parity/authoritative claims from scoped structural profiles now that owner H3M comparisons reopened broad production parity work.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `docs/native-rmg-homm3-spec-rework-gate-report.md`
+- owner objective that native RMG must become production-ready and not be treated as alpha/prototype
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- focused native RMG claim/adoption reports under `tests/`
+- `ops/progress.json`
+completionCriteria:
+- Native generation never reports `full_parity_claim=true` or `native_runtime_authoritative=true` for scoped structural profiles.
+- Legacy supported-profile behavior remains available as scoped structural support for targeted reports, package conversion, and deterministic regression coverage.
+- Package/session conversion remains feature-gated and non-authoritative.
+- Focused reports that previously expected full parity are updated to assert truthful production-claim boundaries.
+completionEvidence:
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed after the native claim-boundary changes.
+- `tests/native_random_map_full_parity_gate_report.tscn`, `tests/native_random_map_homm3_validation_adoption_gates_report.tscn`, `tests/native_random_map_package_session_adoption_report.tscn`, `tests/native_random_map_supported_underground_terrain_count_report.tscn`, and `tests/native_random_map_gdscript_port_audit_report.tscn` passed with scoped structural support preserved and `full_parity_claim=false` / `native_runtime_authoritative=false`.
+- `tests/native_random_map_package_object_only_breadth_report.tscn` and `tests/native_random_map_homm3_uploaded_small_topology_report.tscn` still pass after the claim boundary correction.
+- `tests/native_random_map_gdscript_comparison_report.tscn` passes while reporting remaining road/object/guard/terrain gaps instead of allowing a native full-parity claim.
+nonGoals:
+- No broad RMG parity claim.
+- No generated package/map evidence committed.
+- No runtime call-site adoption or authored content writeback.
+
+id: `native-rmg-production-owner-comparison-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `pending`
+purpose: Turn the owner-uploaded HoMM3 small single-level comparison and generated native small maps into a production parity gate for towns, zones, roads, obstacles, guards, and unguarded inter-zone routes.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `maps/small3playermap-1level.h3m`
+- `maps/small3playermap.h3m`
+- owner correction that native RMG must not be treated as alpha/prototype and must approach real HoMM3-style production output
+implementationTargets:
+- native RMG topology, obstacle, guard, and road generation in `src/gdextension/src/map_package_service.cpp`
+- focused uploaded-H3M comparison reports under `tests/`
+- `ops/progress.json`
+completionCriteria:
+- A focused report compares owner HoMM3 and native small three-player single-level maps for town count, zone count, road graph shape, obstacle density, guard count, and cross-zone reachability.
+- Native generated small maps do not allow short unguarded direct town-to-town routes between player starts or enemy towns.
+- Obstacle and guard placement blocks or guards zone boundaries in a way that is materially closer to the uploaded HoMM3 sample than the current native output.
+- The gate remains explicit that byte-level H3M parity and copyrighted asset import are out of scope.
+nonGoals:
+- No HoMM3 asset import or copyrighted content cloning.
+- No broad all-template parity claim.
+- No runtime-authoritative adoption before the comparison gate passes.
+
 id: `overworld-map-object-distinct-sprite-gap-fill-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`

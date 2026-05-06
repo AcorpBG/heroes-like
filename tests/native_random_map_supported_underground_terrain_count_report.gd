@@ -26,8 +26,11 @@ func _run() -> void:
 	if not bool(generated.get("ok", false)) or String(generated.get("validation_status", "")) != "pass":
 		_fail("Supported underground generation did not validate: %s" % JSON.stringify(generated.get("validation_report", generated)))
 		return
-	if String(generated.get("status", "")) != "full_parity_supported" or String(generated.get("full_generation_status", "")) == "not_implemented":
-		_fail("Supported underground generation lost full-parity status: %s" % JSON.stringify(generated.get("report", {})))
+	if String(generated.get("status", "")) != "scoped_structural_profile_supported" or String(generated.get("full_generation_status", "")) == "not_implemented":
+		_fail("Supported underground generation lost scoped structural support status: %s" % JSON.stringify(generated.get("report", {})))
+		return
+	if bool(generated.get("full_parity_claim", false)) or bool(generated.get("native_runtime_authoritative", false)):
+		_fail("Supported underground generation falsely claimed production parity/native authority: %s" % JSON.stringify(generated.get("provenance", {})))
 		return
 	var terrain: Dictionary = generated.get("terrain_grid", {}) if generated.get("terrain_grid", {}) is Dictionary else {}
 	if int(terrain.get("tile_count", 0)) != EXPECTED_TILE_COUNT:

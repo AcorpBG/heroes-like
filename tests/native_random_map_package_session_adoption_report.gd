@@ -224,11 +224,14 @@ func _assert_native_generation(generated: Dictionary) -> void:
 	if not bool(generated.get("ok", false)):
 		_fail("Native RMG returned ok=false: %s" % JSON.stringify(generated))
 		return
-	if String(generated.get("status", "")) != "full_parity_supported" or String(generated.get("full_generation_status", "")) == "not_implemented":
-		_fail("Native RMG status did not report supported full parity: %s" % JSON.stringify(generated.get("report", {})))
+	if String(generated.get("status", "")) != "scoped_structural_profile_supported" or String(generated.get("full_generation_status", "")) == "not_implemented":
+		_fail("Native RMG status did not report scoped structural profile support: %s" % JSON.stringify(generated.get("report", {})))
 		return
-	if String(generated.get("validation_status", "")) != "pass" or not bool(generated.get("no_authored_writeback", false)) or not bool(generated.get("full_parity_claim", false)):
+	if String(generated.get("validation_status", "")) != "pass" or not bool(generated.get("no_authored_writeback", false)):
 		_fail("Native RMG validation/no-writeback boundary failed: %s" % JSON.stringify(generated.get("validation_report", {})))
+		return
+	if bool(generated.get("full_parity_claim", false)) or bool(generated.get("native_runtime_authoritative", false)):
+		_fail("Native RMG must not claim production parity or runtime authority: %s" % JSON.stringify(generated.get("provenance", {})))
 		return
 
 func _assert_adoption_shape(adoption: Dictionary, width: int, height: int, levels: int, players: int) -> void:

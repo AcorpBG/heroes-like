@@ -111,13 +111,13 @@ func _run() -> void:
 		"medium_case": medium_summary,
 		"replay_boundary": replay_boundary,
 		"adoption_status": {
-			"supported_profiles": "ready_feature_gated_not_authoritative",
+			"scoped_structural_profiles": "ready_feature_gated_not_authoritative",
 			"translated_medium_profile": "ready_feature_gated_not_authoritative",
 			"runtime_call_site_adoption": false,
 			"authored_content_writeback": false,
 			"save_version_bump": false,
 			"alpha_readiness_claim": false,
-			"remaining_follow_up": "Authoritative package/session adoption remains gated on runtime call-site adoption and exact full-generation coverage for translated profiles; validated generated components now preserve stable seed/config and full-output replay identity.",
+			"remaining_follow_up": "Authoritative package/session adoption remains gated on runtime call-site adoption and broad owner-comparison parity; validated generated components now preserve stable seed/config and full-output replay identity without claiming production parity.",
 		},
 	})])
 	get_tree().quit(0)
@@ -153,11 +153,11 @@ func _assert_template_scope(case_id: String, generated: Dictionary) -> bool:
 	if template_id == "" or profile_id == "":
 		_fail("%s missed normalized template/profile selection: %s" % [case_id, JSON.stringify(normalized)])
 		return false
-	if case_id == "supported" and String(generated.get("status", "")) != "full_parity_supported":
-		_fail("Supported gate case did not remain in supported profile scope: %s" % JSON.stringify(generated.get("provenance", {})))
+	if case_id == "supported" and String(generated.get("status", "")) != "scoped_structural_profile_supported":
+		_fail("Supported gate case did not remain in scoped structural profile support: %s" % JSON.stringify(generated.get("provenance", {})))
 		return false
-	if case_id == "medium" and bool(generated.get("full_parity_claim", false)):
-		_fail("Medium translated gate case falsely claimed full parity.")
+	if bool(generated.get("full_parity_claim", false)) or bool(generated.get("native_runtime_authoritative", false)):
+		_fail("%s falsely claimed production parity or native runtime authority." % case_id)
 		return false
 	return true
 

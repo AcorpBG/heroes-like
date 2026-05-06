@@ -64,8 +64,11 @@ func _assert_decorations(case_id: String, generated: Dictionary, expect_supporte
 	if not bool(generated.get("ok", false)):
 		_fail("%s generation failed: %s" % [case_id, JSON.stringify(generated)])
 		return {}
-	if expect_supported and String(generated.get("status", "")) != "full_parity_supported":
-		_fail("%s should remain native supported output: %s" % [case_id, JSON.stringify(generated.get("provenance", {}))])
+	if expect_supported and String(generated.get("status", "")) != "scoped_structural_profile_supported":
+		_fail("%s should remain scoped structural native output: %s" % [case_id, JSON.stringify(generated.get("provenance", {}))])
+		return {}
+	if bool(generated.get("full_parity_claim", false)) or bool(generated.get("native_runtime_authoritative", false)):
+		_fail("%s falsely claimed production parity or native authority: %s" % [case_id, JSON.stringify(generated.get("provenance", {}))])
 		return {}
 	if String(generated.get("route_reachability_proof", {}).get("status", "")) != "pass":
 		_fail("%s route reachability broke after decorations: %s" % [case_id, JSON.stringify(generated.get("route_reachability_proof", {}))])
