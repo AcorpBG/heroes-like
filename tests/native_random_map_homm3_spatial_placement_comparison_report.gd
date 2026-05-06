@@ -437,8 +437,14 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 		failures.append("native_road_land_density_too_far_from_owner")
 	if int(native.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) < max(12, int(owner.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) - 2):
 		failures.append("native_road_grid_spread_too_low")
+	if int(native.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) > int(owner.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) + 3:
+		failures.append("native_road_grid_spread_too_high")
+	if int(comparison.get("road_tile_delta", 999)) > 12:
+		failures.append("native_road_tile_count_still_over_owner_shape_target")
 	if int(native.get("largest_roadless_land_region", {}).get("largest_region_cell_count", 99)) > int(owner.get("largest_roadless_land_region", {}).get("largest_region_cell_count", 0)) + 3:
 		failures.append("native_largest_roadless_land_region_too_large")
+	if int(comparison.get("largest_roadless_land_region_delta", 99)) < -2:
+		failures.append("native_largest_roadless_land_region_overfilled_vs_owner")
 	if int(native.get("road_topology", {}).get("endpoint_count", 0)) <= 0:
 		failures.append("native_roads_have_no_branch_endpoints")
 	if int(native.get("road_topology", {}).get("branch_count", 0)) < int(owner.get("road_topology", {}).get("branch_count", 0)):
@@ -485,6 +491,8 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 		failures.append("native_rewards_still_too_evenly_spaced_vs_owner")
 	if _nested_float(native.get("distance_to_road", {}), "reward", "within_4_tiles_ratio") > _nested_float(owner.get("distance_to_road", {}), "reward", "within_4_tiles_ratio") + 0.08:
 		warnings.append("native_rewards_still_somewhat_more_road_adjacent_than_owner")
+	if float(comparison.get("road_quadrant_cv_delta", 0.0)) < -0.45:
+		warnings.append("native_roads_still_more_quadrant_even_than_owner")
 	return {
 		"status": "pass" if failures.is_empty() else "fail",
 		"failures": failures,
@@ -497,12 +505,15 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 			"native_max_abs_road_tile_delta": 24,
 			"native_max_abs_road_coverage_land_delta": 0.03,
 			"native_min_road_nonempty_6x6_cells": max(12, int(owner.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) - 2),
+			"native_max_road_nonempty_6x6_cells_over_owner": 3,
+			"native_max_positive_road_tile_delta_for_owner_shape": 12,
 			"native_min_road_branch_count": int(owner.get("road_topology", {}).get("branch_count", 0)),
 			"native_min_road_endpoint_count": int(owner.get("road_topology", {}).get("endpoint_count", 0)),
 			"native_max_road_endpoint_count_over_owner": 4,
 			"native_min_town_road_connected_count": int(owner.get("town_road_connection", {}).get("connected_count", 0)),
 			"native_max_town_road_distance_over_owner": 2,
 			"native_max_largest_roadless_land_region_over_owner": 3,
+			"native_min_largest_roadless_land_region_delta": -2,
 			"native_min_reward_nonempty_6x6_cells": 12,
 			"native_max_abs_reward_nonempty_6x6_cell_delta": 4,
 			"native_max_abs_decoration_nonempty_6x6_cell_delta": 4,
