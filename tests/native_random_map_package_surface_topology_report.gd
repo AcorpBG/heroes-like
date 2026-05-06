@@ -10,6 +10,7 @@ const OWNER_SMALL_BASELINE := {
 	"width": 36,
 	"height": 36,
 	"level_count": 1,
+	"zone_count": 7,
 	"town_count": 7,
 	"guard_count": 40,
 	"object_count": 303,
@@ -91,6 +92,9 @@ func _assert_surface(surface: Dictionary) -> bool:
 	if int(surface.get("width", 0)) != int(OWNER_SMALL_BASELINE.get("width", 0)) or int(surface.get("height", 0)) != int(OWNER_SMALL_BASELINE.get("height", 0)):
 		_fail("%s dimensions drifted from owner Small baseline: %s" % [label, JSON.stringify(surface)])
 		return false
+	if int(surface.get("zone_count", 0)) != int(OWNER_SMALL_BASELINE.get("zone_count", 0)):
+		_fail("%s zone count drifted from recovered Small template 049 structure: %s" % [label, JSON.stringify(surface)])
+		return false
 	if int(surface.get("town_count", 0)) < int(OWNER_SMALL_BASELINE.get("town_count", 0)) or int(surface.get("guard_count", 0)) < int(OWNER_SMALL_BASELINE.get("guard_count", 0)):
 		_fail("%s lost owner-like town or guard count: %s" % [label, JSON.stringify(surface)])
 		return false
@@ -122,6 +126,13 @@ func _assert_surface(surface: Dictionary) -> bool:
 	if int(topology.get("checked_pair_count", 0)) < 3:
 		_fail("%s did not inspect all player start-town pairs: %s" % [label, JSON.stringify(surface)])
 		return false
+	var cross_zone_topology: Dictionary = surface.get("unresolved_cross_zone_town_topology", {}) if surface.get("unresolved_cross_zone_town_topology", {}) is Dictionary else {}
+	if not cross_zone_topology.get("reachable_pairs", []).is_empty():
+		_fail("%s unresolved package surface still allows unguarded cross-zone town traversal: %s" % [label, JSON.stringify(surface)])
+		return false
+	if int(cross_zone_topology.get("checked_pair_count", 0)) < 21:
+		_fail("%s did not inspect every cross-zone town pair: %s" % [label, JSON.stringify(surface)])
+		return false
 	return true
 
 func _package_surface_summary(map_document: Variant, label: String) -> Dictionary:
@@ -140,11 +151,18 @@ func _package_surface_summary(map_document: Variant, label: String) -> Dictionar
 		int(map_document.get_height()),
 		object_summary.get("player_start_towns", [])
 	)
+	var cross_zone_topology := _cross_zone_town_topology(
+		unresolved_blocked,
+		int(map_document.get_width()),
+		int(map_document.get_height()),
+		object_summary.get("towns", [])
+	)
 	return {
 		"label": label,
 		"width": int(map_document.get_width()),
 		"height": int(map_document.get_height()),
 		"level_count": int(map_document.get_level_count()),
+		"zone_count": int(component_counts.get("zone_count", 0)),
 		"template_id": String(normalized.get("template_id", "")),
 		"profile_id": String(normalized.get("profile_id", "")),
 		"road_count": roads.size(),
@@ -159,10 +177,12 @@ func _package_surface_summary(map_document: Variant, label: String) -> Dictionar
 		"nearest_town_manhattan": int(object_summary.get("nearest_town_manhattan", 0)),
 		"nearest_player_start_town_manhattan": int(object_summary.get("nearest_player_start_town_manhattan", 0)),
 		"player_start_towns_by_slot": object_summary.get("player_start_towns_by_slot", {}),
+		"towns": object_summary.get("towns", []),
 		"object_counts_by_kind": object_summary.get("object_counts_by_kind", {}),
 		"terrain_blocked_tile_count": terrain_blocked.size(),
 		"unresolved_blocked_tile_count": unresolved_blocked.size(),
 		"unresolved_start_town_topology": topology,
+		"unresolved_cross_zone_town_topology": cross_zone_topology,
 	}
 
 func _road_summary(roads: Array) -> Dictionary:
@@ -268,12 +288,20 @@ func _package_blocked_tiles(map_document: Variant, base_blocked: Dictionary) -> 
 	return blocked
 
 func _start_town_topology(blocked: Dictionary, width: int, height: int, player_start_towns: Array) -> Dictionary:
+	return _town_pair_topology(blocked, width, height, player_start_towns, false)
+
+func _cross_zone_town_topology(blocked: Dictionary, width: int, height: int, towns: Array) -> Dictionary:
+	return _town_pair_topology(blocked, width, height, towns, true)
+
+func _town_pair_topology(blocked: Dictionary, width: int, height: int, towns: Array, cross_zone_only: bool) -> Dictionary:
 	var reachable_pairs := []
 	var checked_pair_count := 0
-	for left_index in range(player_start_towns.size()):
-		for right_index in range(left_index + 1, player_start_towns.size()):
-			var left: Dictionary = player_start_towns[left_index]
-			var right: Dictionary = player_start_towns[right_index]
+	for left_index in range(towns.size()):
+		for right_index in range(left_index + 1, towns.size()):
+			var left: Dictionary = towns[left_index]
+			var right: Dictionary = towns[right_index]
+			if cross_zone_only and String(left.get("zone_id", "")) == String(right.get("zone_id", "")):
+				continue
 			checked_pair_count += 1
 			var left_visits := _visit_points_for_town(left, width, height)
 			var right_visits := _visit_points_for_town(right, width, height)

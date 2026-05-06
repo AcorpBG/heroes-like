@@ -8101,6 +8101,134 @@ void append_guard_record(Array &guards, Dictionary &occupied, const Dictionary &
 	occupied[guard.get("primary_occupancy_key", "")] = guard.get("placement_id", "");
 }
 
+void append_town_boundary_opening_cell(Array &cells, Dictionary &seen, const Array &owner_grid, int32_t x, int32_t y, int32_t width, int32_t height, const String &source) {
+	if (x < 0 || y < 0 || x >= width || y >= height || !zone_boundary_barrier_cell(owner_grid, x, y, width, height)) {
+		return;
+	}
+	const String key = point_key(x, y);
+	if (seen.has(key)) {
+		return;
+	}
+	seen[key] = true;
+	Dictionary cell = cell_record(x, y, 0);
+	cell["source"] = source;
+	cells.append(cell);
+}
+
+void append_town_boundary_opening_cells_from_array(Array &cells, Dictionary &seen, const Array &owner_grid, const Array &source_cells, int32_t width, int32_t height, const String &source) {
+	for (int64_t index = 0; index < source_cells.size(); ++index) {
+		if (Variant(source_cells[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary cell = Dictionary(source_cells[index]);
+		append_town_boundary_opening_cell(cells, seen, owner_grid, int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)), width, height, source);
+	}
+}
+
+Array town_boundary_opening_cells_for_guards(const Array &towns, const Array &owner_grid, int32_t width, int32_t height) {
+	Array cells;
+	Dictionary seen;
+	for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+		if (Variant(towns[town_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary town = Dictionary(towns[town_index]);
+		append_town_boundary_opening_cell(cells, seen, owner_grid, int32_t(town.get("x", 0)), int32_t(town.get("y", 0)), width, height, "town_anchor");
+		if (Variant(town.get("primary_tile", Variant())).get_type() == Variant::DICTIONARY) {
+			Dictionary primary = Dictionary(town.get("primary_tile", Dictionary()));
+			append_town_boundary_opening_cell(cells, seen, owner_grid, int32_t(primary.get("x", 0)), int32_t(primary.get("y", 0)), width, height, "town_primary_tile");
+		}
+		append_town_boundary_opening_cells_from_array(cells, seen, owner_grid, town.get("body_tiles", Array()), width, height, "town_body_tile");
+		append_town_boundary_opening_cells_from_array(cells, seen, owner_grid, town.get("approach_tiles", Array()), width, height, "town_approach_tile");
+		if (Variant(town.get("visit_tile", Variant())).get_type() == Variant::DICTIONARY) {
+			Dictionary visit = Dictionary(town.get("visit_tile", Dictionary()));
+			append_town_boundary_opening_cell(cells, seen, owner_grid, int32_t(visit.get("x", 0)), int32_t(visit.get("y", 0)), width, height, "town_visit_tile");
+		}
+		append_town_boundary_opening_cells_from_array(cells, seen, owner_grid, town.get("required_town_access_corridor_cells", Array()), width, height, "required_town_access_corridor");
+	}
+	return cells;
+}
+
+int32_t nearest_route_guard_index_for_cell(const Array &guards, int32_t x, int32_t y) {
+	int32_t best_index = -1;
+	int32_t best_distance = std::numeric_limits<int32_t>::max();
+	for (int64_t index = 0; index < guards.size(); ++index) {
+		if (Variant(guards[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary guard = Dictionary(guards[index]);
+		if (String(guard.get("guard_kind", "")) != "route_guard") {
+			continue;
+		}
+		const int32_t distance = std::abs(x - int32_t(guard.get("x", 0))) + std::abs(y - int32_t(guard.get("y", 0)));
+		if (distance < best_distance) {
+			best_distance = distance;
+			best_index = int32_t(index);
+		}
+	}
+	return best_index;
+}
+
+Dictionary cover_town_boundary_openings_with_route_guards(Array &guards, const Array &towns, const Array &owner_grid, int32_t width, int32_t height) {
+	Array opening_cells = town_boundary_opening_cells_for_guards(towns, owner_grid, width, height);
+	Dictionary coverage_by_guard;
+	int32_t covered_count = 0;
+	Array uncovered_cells;
+	for (int64_t cell_index = 0; cell_index < opening_cells.size(); ++cell_index) {
+		if (Variant(opening_cells[cell_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary opening = Dictionary(opening_cells[cell_index]);
+		const int32_t x = int32_t(opening.get("x", 0));
+		const int32_t y = int32_t(opening.get("y", 0));
+		const int32_t guard_index = nearest_route_guard_index_for_cell(guards, x, y);
+		if (guard_index < 0) {
+			uncovered_cells.append(opening);
+			continue;
+		}
+		Dictionary guard = Dictionary(guards[guard_index]).duplicate(true);
+		Array body_tiles = guard.get("body_tiles", Array()).duplicate(true);
+		Dictionary seen;
+		for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
+			if (Variant(body_tiles[body_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary body = Dictionary(body_tiles[body_index]);
+			seen[point_key(int32_t(body.get("x", 0)), int32_t(body.get("y", 0)))] = true;
+		}
+		const String key = point_key(x, y);
+		if (!seen.has(key)) {
+			body_tiles.append(cell_record(x, y, 0));
+			++covered_count;
+		}
+		Array occupancy_keys;
+		for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
+			if (Variant(body_tiles[body_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary body = Dictionary(body_tiles[body_index]);
+			occupancy_keys.append(point_key(int32_t(body.get("x", 0)), int32_t(body.get("y", 0))));
+		}
+		guard["body_tiles"] = body_tiles;
+		guard["occupancy_keys"] = occupancy_keys;
+		guard["controlled_town_boundary_opening_tile_count"] = int32_t(guard.get("controlled_town_boundary_opening_tile_count", 0)) + 1;
+		guard["controlled_town_boundary_opening_policy"] = "town_and_required_access_corridor_boundary_openings_are_covered_by_route_guards_until_cleared";
+		guard["signature"] = hash32_hex(canonical_variant(guard));
+		guards[guard_index] = guard;
+		const String guard_id = String(guard.get("guard_id", ""));
+		coverage_by_guard[guard_id] = int32_t(coverage_by_guard.get(guard_id, 0)) + 1;
+	}
+	Dictionary summary;
+	summary["schema_id"] = "native_random_map_town_boundary_opening_guard_cover_v1";
+	summary["policy"] = "boundary openings created for towns and required town access corridors are controlled by route guard bodies rather than being free terrain cuts";
+	summary["opening_cell_count"] = opening_cells.size();
+	summary["covered_cell_count"] = covered_count;
+	summary["uncovered_cell_count"] = uncovered_cells.size();
+	summary["coverage_by_guard"] = coverage_by_guard;
+	summary["uncovered_cells"] = uncovered_cells;
+	return summary;
+}
+
 Dictionary occupancy_index_for_buckets(const Array &objects, const Array &towns, const Array &guards) {
 	Dictionary primary_tile_occupancy;
 	Array duplicates;
@@ -8955,6 +9083,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		}
 	}
 
+	Dictionary town_boundary_opening_guard_cover = cover_town_boundary_openings_with_route_guards(guards, towns, owner_grid, width, height);
 	Dictionary town_access_corridor_clearance = clear_required_town_access_gap_objects(object_placement, towns);
 	Dictionary combined_occupancy = occupancy_index_for_buckets(objects, towns, guards);
 
@@ -8966,6 +9095,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	town_payload["materialization_state"] = native_rmg_full_parity_supported(normalized) ? "staged_town_records_full_parity_no_authored_writeback" : "staged_town_records_only_no_gameplay_adoption";
 	town_payload["town_records"] = towns;
 	town_payload["town_count"] = towns.size();
+	town_payload["town_boundary_opening_guard_cover"] = town_boundary_opening_guard_cover;
 	town_payload["required_town_access_corridor_clearance"] = town_access_corridor_clearance;
 	town_payload["source_field_semantics"] = "phases_4a_4b_source_fields_plus_0x20_to_plus_0x3c";
 	town_payload["phase_order_anchor"] = "terrain_island_shape_before_towns_connections_payload_roads_rivers_after_towns";
@@ -9003,6 +9133,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	guard_payload["materialization_state"] = native_rmg_full_parity_supported(normalized) ? "staged_guard_records_full_parity_no_authored_writeback" : "staged_guard_records_only_no_gameplay_adoption";
 	guard_payload["guard_records"] = guards;
 	guard_payload["guard_count"] = guards.size();
+	guard_payload["town_boundary_opening_guard_cover"] = town_boundary_opening_guard_cover;
 	Dictionary guard_category_counts;
 	guard_category_counts["by_guard_kind"] = count_by_field(guards, "guard_kind");
 	guard_category_counts["by_zone"] = count_by_field(guards, "zone_id");
@@ -9030,6 +9161,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	payload["guard_placement"] = guard_payload;
 	payload["materialized_object_guard_summary"] = guard_payload.get("materialized_object_guard_summary", Dictionary());
 	payload["guard_reward_monster_summary"] = guard_reward_monster_summary;
+	payload["town_boundary_opening_guard_cover"] = town_boundary_opening_guard_cover;
 	payload["required_town_access_corridor_clearance"] = town_access_corridor_clearance;
 	payload["town_records"] = towns;
 	payload["guard_records"] = guards;

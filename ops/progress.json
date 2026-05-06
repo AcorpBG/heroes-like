@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-small-package-surface-topology-gate-10184",
-  "currentSliceTitle": "Native RMG Small Package Surface Topology Gate",
+  "currentSliceId": "native-rmg-small-package-cross-zone-town-topology-gate-10184",
+  "currentSliceTitle": "Native RMG Small Package Cross-Zone Town Topology Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Player-facing Small 3-player land package topology is now gated on the saved/loaded MapDocument surface: translated template 049 provenance, owner-like town/guard/object/road counts, one start town per player slot, no empty/duplicate road records, and no unresolved start-town traversal.",
+  "currentSliceNotes": "Player-facing Small 3-player land package topology is now gated on the saved/loaded MapDocument surface: translated template 049 provenance, owner-like town/guard/object/road counts, seven zones/towns, one start town per player slot, no empty/duplicate road records, no unresolved start-town traversal, no unresolved cross-zone town traversal, and town/corridor boundary openings are covered by route guard bodies until cleared.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T00:00:00Z",
+  "updatedAt": "2026-05-06T01:36:43Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,54 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "native-rmg-small-package-cross-zone-town-topology-gate-10184",
+      "title": "Native RMG Small Package Cross-Zone Town Topology Gate",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "maps/small3playermap-1level.h3m",
+        "tests/native_random_map_package_surface_topology_report.gd",
+        "tests/native_random_map_zone_choke_regression_report.gd",
+        "owner correction on 2026-05-06 that native package comparisons must focus on towns, zones, roads, obstacles, and guards so no free unguarded route reaches other zones/towns"
+      ],
+      "purpose": "Strengthen the saved/loaded Small package topology gate beyond player-start pairs by validating seven-zone/seven-town package structure and unresolved blocker/guard separation across every cross-zone town pair.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_package_surface_topology_report.gd",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionEvidence": [
+        "The saved/loaded Small 3-player package topology gate now asserts exactly seven generated zones, seven generated towns, translated template/profile 049 provenance, no empty or duplicate road records, one start town per player slot, and 21 checked cross-zone town pairs with zero unresolved reachable pairs.",
+        "Native C++ RMG now keeps town and required town-access corridor boundary openings as clearable terrain surfaces, but covers those opening cells with nearest route guard bodies until the guards are cleared. This fixes the observed free unguarded route to neighboring zones/towns without leaving cleared routes rock-blocked.",
+        "`tests/native_random_map_zone_choke_regression_report.tscn` passes for Small supported land, translated Small 049 3-player land, and translated Medium 4-player land, including unresolved-blocked and cleared-guard traversal gates.",
+        "`tests/native_random_map_homm3_uploaded_small_comparison_report.tscn` still reports the player-facing Small default at 7 towns, 40 guards, 316 package objects, translated template/profile 049, and validation pass against the uploaded single-level HoMM3 Small baseline.",
+        "Generated package files remain uncommitted; only source, test, and progress tracker files are part of this slice."
+      ],
+      "completionCriteria": [
+        "Converted and saved/loaded player-facing Small packages report exactly seven generated zones and seven generated towns.",
+        "Every cross-zone town pair is inspected on the unresolved saved package surface.",
+        "No cross-zone town pair is mutually reachable while guards/blockers remain unresolved.",
+        "Existing start-town, road, object, guard, and density assertions remain passing.",
+        "No generated .amap/.ascenario package files are committed."
+      ],
+      "nonGoals": [
+        "No HoMM3 copyrighted asset import.",
+        "No binary .h3m writeout claim.",
+        "No broad template-count or byte-level parity claim.",
+        "No change to native supported/full-parity flags until support gates no longer trigger legacy count-seeded placement paths."
+      ]
+    },
     {
       "id": "native-rmg-small-package-surface-topology-gate-10184",
       "title": "Native RMG Small Package Surface Topology Gate",
