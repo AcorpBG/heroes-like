@@ -5,10 +5,10 @@
   "currentPhase": "phase-3-homm3-style-rmg-rework",
   "currentSliceId": "native-rmg-package-session-authoritative-replay-gate-10184",
   "currentSliceTitle": "Native RMG Package Session Authoritative Replay Gate",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "Large/XL owner-status gate completed; next gap is deterministic package/session replay and runtime-authoritative adoption readiness, which remains disabled.",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Package/session authoritative replay gate completed: four promoted default translated profiles now prove stable full output, adoption replay, and disk package replay signatures while runtime call-site authority remains disabled.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T04:42:39Z",
+  "updatedAt": "2026-05-06T05:14:21Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -693,7 +693,7 @@
       "id": "native-rmg-package-session-authoritative-replay-gate-10184",
       "title": "Native RMG Package Session Authoritative Replay Gate",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "pending",
+      "status": "completed",
       "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
       "sourceDocs": [
         "project.md",
@@ -721,14 +721,24 @@
         "Nondeterministic diagnostic/profile fields are isolated from authoritative replay identity.",
         "Runtime call-site adoption remains disabled unless replay and comparison gates prove readiness."
       ],
-      "completionEvidence": [],
-      "remainingRisk": "Pending implementation; native package/session adoption remains feature-gated and non-authoritative.",
+      "completionEvidence": [
+        "Added tests/native_random_map_package_session_authoritative_replay_report.gd and .tscn to prove same-seed full output signatures, adoption replay summaries, and save/load package hashes are stable for Small 049, Medium 002, Large 042, and XL 043 while changed seeds alter the generated output.",
+        "Isolated runtime object-placement timing/profile diagnostics from replay identity by adding deterministic object placement pipeline summary/signature handling in src/gdextension/src/map_package_service.cpp; diagnostic runtime signatures remain available separately.",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 passed.",
+        "GODOT_SILENCE_ROOT_WARNING=1 NATIVE_RMG_REPLAY_CASE_ID=default_small_049 /root/.local/bin/godot --headless --path . tests/native_random_map_package_session_authoritative_replay_report.tscn passed.",
+        "GODOT_SILENCE_ROOT_WARNING=1 NATIVE_RMG_REPLAY_CASE_ID=default_medium_002 /root/.local/bin/godot --headless --path . tests/native_random_map_package_session_authoritative_replay_report.tscn passed.",
+        "GODOT_SILENCE_ROOT_WARNING=1 NATIVE_RMG_REPLAY_CASE_ID=default_large_042 /root/.local/bin/godot --headless --path . tests/native_random_map_package_session_authoritative_replay_report.tscn passed.",
+        "GODOT_SILENCE_ROOT_WARNING=1 NATIVE_RMG_REPLAY_CASE_ID=default_extra_large_043 /root/.local/bin/godot --headless --path . tests/native_random_map_package_session_authoritative_replay_report.tscn passed."
+      ],
+      "remainingRisk": "Runtime call-site adoption remains disabled and non-authoritative; this slice proves deterministic package/session replay for four promoted defaults but does not claim all-template production parity or exact HoMM3 parity.",
       "nonGoals": [
         "No exact H3M byte parity.",
         "No HoMM3 asset import.",
         "No blanket all-template production claim."
       ],
-      "updatedAt": "2026-05-06T04:42:39Z"
+      "updatedAt": "2026-05-06T05:14:21Z",
+      "startedAt": "2026-05-06T04:48:31Z",
+      "completedAt": "2026-05-06T05:14:21Z"
     },
     {
       "id": "native-rmg-small-049-owner-density-tightening-10184",
@@ -13144,9 +13154,9 @@
     {
       "id": "native-rmg-package-session-authoritative-replay-gate-10184",
       "title": "Native RMG Package Session Authoritative Replay Gate",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "reason": "Selected after Small/Medium/Large/XL owner-compared status promotion; package/session adoption is still feature-gated and non-authoritative until deterministic replay is proved."
+      "reason": "Completed after Small/Medium/Large/XL owner-compared status promotion; stable replay identity and package/session save-load replay are now proved while runtime-authoritative adoption remains disabled."
     }
   ],
   "stoppedOrPausedTasks": [

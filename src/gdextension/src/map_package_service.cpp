@@ -6477,6 +6477,25 @@ Dictionary object_placement_pipeline_summary(const Dictionary &normalized, const
 	return summary;
 }
 
+Dictionary deterministic_object_placement_pipeline_summary(const Dictionary &summary) {
+	Dictionary deterministic = summary.duplicate(true);
+	deterministic.erase("runtime_phase_profile");
+	deterministic.erase("diagnostic_signature");
+	deterministic.erase("replay_identity_signature");
+	deterministic.erase("signature");
+	Dictionary xl_cost = deterministic.get("xl_cost", Dictionary());
+	xl_cost["elapsed_usec"] = 0;
+	xl_cost["elapsed_msec"] = 0.0;
+	xl_cost["microseconds_per_tile"] = 0.0;
+	deterministic["xl_cost"] = xl_cost;
+	deterministic["signature"] = hash32_hex(canonical_variant(deterministic));
+	return deterministic;
+}
+
+String deterministic_object_placement_pipeline_signature(const Dictionary &object_placement) {
+	return String(deterministic_object_placement_pipeline_summary(Dictionary(object_placement.get("object_placement_pipeline_summary", Dictionary()))).get("signature", ""));
+}
+
 Dictionary zone_by_id(const Array &zones, const String &zone_id);
 
 int32_t sum_dictionary_int_values(const Dictionary &values) {
@@ -7687,6 +7706,11 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	const int64_t object_phase_elapsed_usec = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - object_phase_started_at).count();
 	Dictionary runtime_phase_profile = build_extension_profile(object_profile_phases, object_phase_started_at, width, height, 1, int32_t(placements.size()), int32_t(road_network.get("road_segment_count", 0)), 0, 0, top_object_phase_id, top_object_phase_usec);
 	Dictionary pipeline_summary = object_placement_pipeline_summary(normalized, zone_layout, placements, occupancy_index, object_phase_elapsed_usec, runtime_phase_profile);
+	const String diagnostic_pipeline_signature = String(pipeline_summary.get("signature", ""));
+	Dictionary deterministic_pipeline_summary = deterministic_object_placement_pipeline_summary(pipeline_summary);
+	pipeline_summary["diagnostic_signature"] = diagnostic_pipeline_signature;
+	pipeline_summary["replay_identity_signature"] = deterministic_pipeline_summary.get("signature", "");
+	pipeline_summary["signature"] = deterministic_pipeline_summary.get("signature", "");
 	payload["object_placement_pipeline_summary"] = pipeline_summary;
 	payload["object_placement_pipeline_status"] = pipeline_summary.get("validation_status", "");
 	payload["footprint_records"] = footprint_records;
@@ -7694,15 +7718,6 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	payload["related_zone_layout_signature"] = zone_layout.get("signature", "");
 	payload["related_road_network_signature"] = road_network.get("signature", "");
 	Dictionary payload_signature_source = payload.duplicate(true);
-	Dictionary deterministic_pipeline_summary = pipeline_summary.duplicate(true);
-	deterministic_pipeline_summary.erase("runtime_phase_profile");
-	deterministic_pipeline_summary.erase("signature");
-	Dictionary deterministic_xl_cost = deterministic_pipeline_summary.get("xl_cost", Dictionary());
-	deterministic_xl_cost["elapsed_usec"] = 0;
-	deterministic_xl_cost["elapsed_msec"] = 0.0;
-	deterministic_xl_cost["microseconds_per_tile"] = 0.0;
-	deterministic_pipeline_summary["xl_cost"] = deterministic_xl_cost;
-	deterministic_pipeline_summary["signature"] = hash32_hex(canonical_variant(deterministic_pipeline_summary));
 	payload_signature_source["object_placement_pipeline_summary"] = deterministic_pipeline_summary;
 	payload["signature"] = hash32_hex(canonical_variant(payload_signature_source));
 	return payload;
@@ -11322,7 +11337,7 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	report["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");
 	report["object_category_counts"] = object_placement.get("category_counts", Dictionary());
 	report["object_placement_pipeline_summary"] = object_placement.get("object_placement_pipeline_summary", Dictionary());
-	report["object_placement_pipeline_summary_signature"] = Dictionary(object_placement.get("object_placement_pipeline_summary", Dictionary())).get("signature", "");
+	report["object_placement_pipeline_summary_signature"] = deterministic_object_placement_pipeline_signature(object_placement);
 	report["mine_resource_summary"] = object_placement.get("mine_resource_summary", Dictionary());
 	report["mine_resource_summary_signature"] = Dictionary(object_placement.get("mine_resource_summary", Dictionary())).get("signature", "");
 	report["fill_coverage_summary"] = object_placement.get("fill_coverage_summary", Dictionary());
@@ -11346,7 +11361,10 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	report["supported_parity_config"] = scoped_structural_profile_supported;
 	report["scoped_structural_profile_supported"] = scoped_structural_profile_supported;
 	report["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
-	report["report_signature"] = hash32_hex(canonical_variant(report));
+	Dictionary report_signature_source = report.duplicate(true);
+	report_signature_source["object_placement_pipeline_summary"] = deterministic_object_placement_pipeline_summary(Dictionary(object_placement.get("object_placement_pipeline_summary", Dictionary())));
+	report_signature_source["object_placement_pipeline_summary_signature"] = deterministic_object_placement_pipeline_signature(object_placement);
+	report["report_signature"] = hash32_hex(canonical_variant(report_signature_source));
 	return report;
 }
 
@@ -12572,7 +12590,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["river_network_signature"] = river_network.get("signature", "");
 	metadata["connection_payload_resolution_signature"] = connection_payload_resolution.get("signature", "");
 	metadata["object_placement_signature"] = object_placement.get("signature", "");
-	metadata["object_placement_pipeline_signature"] = Dictionary(object_placement.get("object_placement_pipeline_summary", Dictionary())).get("signature", "");
+	metadata["object_placement_pipeline_signature"] = deterministic_object_placement_pipeline_signature(object_placement);
 	metadata["mine_resource_summary_signature"] = Dictionary(object_placement.get("mine_resource_summary", Dictionary())).get("signature", "");
 	metadata["reward_band_summary_signature"] = Dictionary(object_placement.get("reward_band_summary", Dictionary())).get("signature", "");
 	metadata["object_occupancy_signature"] = Dictionary(object_placement.get("occupancy_index", Dictionary())).get("signature", "");

@@ -1629,7 +1629,7 @@ nonGoals:
 
 id: `native-rmg-package-session-authoritative-replay-gate-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `pending`
+status: `completed`
 purpose: Isolate nondeterministic native RMG output fields and prove package/session replay before any native runtime-authoritative generated-skirmish adoption.
 sourceDocs:
 - `project.md`
@@ -1645,6 +1645,15 @@ completionCriteria:
 - Supported default translated profiles have stable replay-relevant output signatures across generate, convert, save, and load.
 - Nondeterministic diagnostic/profile fields are isolated from authoritative replay identity.
 - Runtime call-site adoption remains disabled unless replay and comparison gates prove readiness.
+validation:
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 NATIVE_RMG_REPLAY_CASE_ID=default_small_049 /root/.local/bin/godot --headless --path . tests/native_random_map_package_session_authoritative_replay_report.tscn` passed with stable Small 049 full/adoption/disk replay signatures.
+- `GODOT_SILENCE_ROOT_WARNING=1 NATIVE_RMG_REPLAY_CASE_ID=default_medium_002 /root/.local/bin/godot --headless --path . tests/native_random_map_package_session_authoritative_replay_report.tscn` passed with stable Medium 002 full/adoption/disk replay signatures.
+- `GODOT_SILENCE_ROOT_WARNING=1 NATIVE_RMG_REPLAY_CASE_ID=default_large_042 /root/.local/bin/godot --headless --path . tests/native_random_map_package_session_authoritative_replay_report.tscn` passed with stable Large 042 full/adoption/disk replay signatures.
+- `GODOT_SILENCE_ROOT_WARNING=1 NATIVE_RMG_REPLAY_CASE_ID=default_extra_large_043 /root/.local/bin/godot --headless --path . tests/native_random_map_package_session_authoritative_replay_report.tscn` passed with stable XL 043 full/adoption/disk replay signatures.
+remainingGaps:
+- Runtime call-site adoption remains disabled and non-authoritative.
+- All 56 recovered templates are not yet production-ready.
 nonGoals:
 - No exact H3M byte parity.
 - No HoMM3 asset import.
