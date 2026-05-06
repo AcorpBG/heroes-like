@@ -1,14 +1,14 @@
 {
   "project": "heroes-like",
   "taskId": "10184",
-  "status": "completed",
+  "status": "in_progress",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-default-size-object-only-breadth-gate-10184",
-  "currentSliceTitle": "Native RMG Default Size Object-Only Breadth Gate",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed package object-only town topology breadth report for the player-facing Small, Medium, Large, and XL default translated templates.",
+  "currentSliceId": "native-rmg-production-owner-comparison-gate-10184",
+  "currentSliceTitle": "Native RMG Production Owner Comparison Gate",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Claim-boundary slice is complete; next RMG work is an owner-H3M comparison gate for towns, zones, roads, obstacles, guards, and unguarded inter-zone routes.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T03:46:12Z",
+  "updatedAt": "2026-05-06T04:01:36Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -440,6 +440,97 @@
       "updatedAt": "2026-05-06T03:46:12Z",
       "startedAt": "2026-05-06T03:18:43Z",
       "completedAt": "2026-05-06T03:46:12Z"
+    },
+    {
+      "id": "native-rmg-production-claim-boundary-10184",
+      "title": "Native RMG Production Claim Boundary",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-homm3-parity-gap-audit.md",
+        "docs/native-rmg-homm3-spec-rework-gate-report.md",
+        "owner objective that native RMG must become production-ready and not be treated as alpha/prototype"
+      ],
+      "purpose": "Remove misleading native RMG full-parity/authoritative claims from scoped structural profiles now that owner H3M comparisons reopened broad production parity work.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "focused native RMG claim/adoption reports under tests/",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_validation_adoption_gates_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_session_adoption_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_full_parity_gate_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Native generation never reports full_parity_claim=true or native_runtime_authoritative=true for scoped structural profiles.",
+        "Legacy supported-profile behavior remains available as scoped structural support for targeted reports, package conversion, and deterministic regression coverage.",
+        "Package/session conversion remains feature-gated and non-authoritative.",
+        "Focused reports that previously expected full parity are updated to assert truthful production-claim boundaries."
+      ],
+      "completionEvidence": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 passed after the native claim-boundary changes.",
+        "tests/native_random_map_full_parity_gate_report.tscn, tests/native_random_map_homm3_validation_adoption_gates_report.tscn, tests/native_random_map_package_session_adoption_report.tscn, tests/native_random_map_supported_underground_terrain_count_report.tscn, and tests/native_random_map_gdscript_port_audit_report.tscn passed with scoped structural support preserved and full_parity_claim=false / native_runtime_authoritative=false.",
+        "tests/native_random_map_package_object_only_breadth_report.tscn and tests/native_random_map_homm3_uploaded_small_topology_report.tscn still pass after the claim boundary correction.",
+        "tests/native_random_map_gdscript_comparison_report.tscn passes while reporting remaining road/object/guard/terrain gaps instead of allowing a native full-parity claim."
+      ],
+      "remainingRisk": "This slice makes readiness claims truthful; it does not itself complete broad HoMM3 production parity. An exploratory decoration generation report still exposes XL decoration records missing body/footprint/occupancy metadata and needs a separate content/metadata slice.",
+      "nonGoals": [
+        "No broad RMG parity claim.",
+        "No generated package/map evidence committed.",
+        "No runtime call-site adoption or authored content writeback."
+      ],
+      "updatedAt": "2026-05-06T04:01:36Z",
+      "startedAt": "2026-05-06T03:49:21Z",
+      "completedAt": "2026-05-06T04:01:36Z"
+    },
+    {
+      "id": "native-rmg-production-owner-comparison-gate-10184",
+      "title": "Native RMG Production Owner Comparison Gate",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "maps/small3playermap-1level.h3m",
+        "maps/small3playermap.h3m",
+        "owner correction that native RMG must not be treated as alpha/prototype and must approach real HoMM3-style production output"
+      ],
+      "purpose": "Turn the owner-uploaded HoMM3 small single-level comparison and generated native small maps into a production parity gate for towns, zones, roads, obstacles, guards, and unguarded inter-zone routes.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "focused uploaded-H3M comparison reports under tests/",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_gdscript_comparison_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "A focused report compares owner HoMM3 and native small three-player single-level maps for town count, zone count, road graph shape, obstacle density, guard count, and cross-zone reachability.",
+        "Native generated small maps do not allow short unguarded direct town-to-town routes between player starts or enemy towns.",
+        "Obstacle and guard placement blocks or guards zone boundaries in a way that is materially closer to the uploaded HoMM3 sample than the current native output.",
+        "The gate remains explicit that byte-level H3M parity and copyrighted asset import are out of scope."
+      ],
+      "completionEvidence": [],
+      "remainingRisk": "Pending owner-comparison implementation; broad production parity remains open.",
+      "nonGoals": [
+        "No HoMM3 asset import or copyrighted content cloning.",
+        "No broad all-template parity claim.",
+        "No runtime-authoritative adoption before the comparison gate passes."
+      ],
+      "updatedAt": "2026-05-06T04:01:36Z"
     },
     {
       "id": "native-rmg-small-049-owner-density-tightening-10184",
@@ -12853,11 +12944,11 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-default-size-object-only-breadth-gate-10184",
-      "title": "Native RMG Default Size Object-Only Breadth Gate",
-      "status": "completed",
+      "id": "native-rmg-production-owner-comparison-gate-10184",
+      "title": "Native RMG Production Owner Comparison Gate",
+      "status": "pending",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "reason": "Completed after Small package object-only topology was broadened across player-facing default Small, Medium, Large, and XL package surfaces."
+      "reason": "Selected after claim-boundary cleanup; owner-uploaded HoMM3 and native small maps must drive a concrete production parity gate for towns, zones, roads, obstacles, guards, and unguarded inter-zone routes."
     }
   ],
   "stoppedOrPausedTasks": [

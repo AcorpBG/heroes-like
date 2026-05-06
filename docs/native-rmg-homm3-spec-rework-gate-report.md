@@ -23,7 +23,9 @@ The gate validates the completed Phase 3 generator slices across:
 
 Result: pass for Phase 3 closure.
 
-Supported compact profile output now reports `full_parity_supported` for the implemented native generator surface. Medium translated profiles remain `partial_foundation` where exact full generation is intentionally unsupported. This distinction is explicit in the validator and report output.
+2026-05-06 correction: owner H3M comparisons reopened broad production parity work after this gate. Supported compact profile output now reports `scoped_structural_profile_supported`, not `full_parity_supported`, and native generation must keep `native_runtime_authoritative=false` and `full_parity_claim=false` until broader owner-comparison gates prove production-ready HoMM3-style behavior.
+
+Medium translated profiles remain `partial_foundation` unless a focused corrective slice promotes a specific structural surface. This distinction is explicit in the validator and report output.
 
 Package/session adoption remains `ready_feature_gated_not_authoritative`. The package bridge can materialize structurally acceptable generated map, scenario, guard, reward, visual, and session records for supported profiles, but authoritative package/session adoption remains gated.
 
@@ -46,7 +48,7 @@ GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-a
 Observed gate summary:
 
 - `ok=true`
-- supported compact case: `status=full_parity_supported`
+- supported compact case: `status=scoped_structural_profile_supported`
 - medium translated case: `status=partial_foundation`
 - `package_session_adoption_ready=true`
 - `native_runtime_authoritative=false`
@@ -92,4 +94,4 @@ The follow-up for authoritative use is `native-rmg-package-session-authoritative
 
 ## Phase 3 Status
 
-The Phase 3 RMG rework can close because all child implementation slices are complete and this final gate passes with the adoption boundary explicit. The generator is validated for the implemented HoMM3-style structural surface, while unsupported exact byte/art/private-toolkit parity and authoritative runtime package/session adoption remain outside this phase.
+This historical Phase 3 gate remains evidence for implemented structural surfaces, but it must not be used as a broad production parity closure. The active tactical state in `PLAN.md` supersedes that interpretation: owner-uploaded H3M comparisons reopened corrective native RMG parity work, and authoritative runtime package/session adoption remains outside this gate.

@@ -242,7 +242,7 @@ func _gate(owner: Dictionary, native: Dictionary, comparison: Dictionary) -> Dic
 		failures.append("native_small_object_blockers_alone_do_not_close_town_topology")
 	if int(native.get("terrain_blocked_tile_count", 0)) > 0:
 		warnings.append("native_small_still_uses_terrain_rock_boundaries_instead_of_object_only_h3m_style_obstacle_chokes")
-	if String(native.get("full_generation_status", "")) != "implemented_for_supported_profile":
+	if String(native.get("full_generation_status", "")) == "not_implemented":
 		warnings.append("native_small_translated_profile_full_generation_status_not_implemented")
 	return {
 		"status": "pass" if failures.is_empty() else "fail",

@@ -80,8 +80,11 @@ func _assert_supported_native_surfaces(generated: Dictionary) -> void:
 	if not bool(generated.get("ok", false)):
 		_fail("Supported native generation returned ok=false: %s" % JSON.stringify(generated))
 		return
-	if String(generated.get("status", "")) != "full_parity_supported" or not bool(generated.get("supported_parity_config", false)):
-		_fail("Supported audit config did not stay in native full-parity scope: %s" % JSON.stringify(generated))
+	if String(generated.get("status", "")) != "scoped_structural_profile_supported" or not bool(generated.get("supported_parity_config", false)):
+		_fail("Supported audit config did not stay in scoped structural native scope: %s" % JSON.stringify(generated))
+		return
+	if bool(generated.get("full_parity_claim", false)) or bool(generated.get("native_runtime_authoritative", false)):
+		_fail("Supported audit config falsely claimed production parity/native authority: %s" % JSON.stringify(generated.get("provenance", {})))
 		return
 
 	var road_controls: Dictionary = generated.get("connection_road_controls", {}) if generated.get("connection_road_controls", {}) is Dictionary else {}
