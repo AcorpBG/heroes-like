@@ -5,10 +5,10 @@
   "currentPhase": "phase-3-homm3-style-rmg-rework",
   "currentSliceId": "native-rmg-production-terrain-object-choke-boundary-10184",
   "currentSliceTitle": "Native RMG Production Terrain/Object Choke Boundary",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "Owner-comparison gate is complete; next RMG work is removing warning-level reliance on terrain rock boundaries and broadening object/guard choke evidence beyond one Small map.",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Terrain/object choke boundary slice completed: uploaded Small H3M comparison now gates current Small 049 count/road/object-only topology drift and broadens generated-case evidence to additional Small/Medium cases.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T04:12:29Z",
+  "updatedAt": "2026-05-06T04:22:08Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -544,7 +544,7 @@
       "id": "native-rmg-production-terrain-object-choke-boundary-10184",
       "title": "Native RMG Production Terrain/Object Choke Boundary",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "pending",
+      "status": "completed",
       "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
       "sourceDocs": [
         "project.md",
@@ -571,14 +571,22 @@
         "The topology gate is broadened with at least one additional generated Small/Medium profile seed or size-class case that checks towns, roads, guards, obstacles, and unguarded routes.",
         "Runtime adoption remains feature-gated and non-authoritative until broader production parity evidence exists."
       ],
-      "completionEvidence": [],
-      "remainingRisk": "Pending object/guard choke boundary broadening; broad production parity remains open.",
+      "completionEvidence": [
+        "tests/native_random_map_homm3_uploaded_small_topology_report.tscn passes and compares the uploaded single-level Small H3M against current native Small 049 while reporting the uploaded bad native package as non-gating diagnostic evidence.",
+        "The uploaded bad native package diagnosis shows an older compact profile surface: 6 towns, zero usable road cells, 28 decorative blockers, 35 guards, nearest town distance 3, and object-only cross-zone reachable town pairs.",
+        "Current native Small 049 comparison remains aligned with the owner H3M sample on core surface counts: 7 towns/zones, 303 objects, 150 decorative blockers, 40 guards, road cells within threshold, and zero object-only cross-zone reachable town pairs.",
+        "The topology gate now checks additional generated Small and Medium cases for towns, roads, guards, decorative blockers, and object-only cross-zone closure.",
+        "tests/native_random_map_package_surface_topology_report.tscn and tests/native_random_map_package_object_only_breadth_report.tscn pass with current package surfaces."
+      ],
+      "remainingRisk": "Broad production parity remains open: this does not claim exact H3M byte/pathing parity or all-template production readiness.",
       "nonGoals": [
         "No exact H3M byte parity.",
         "No HoMM3 asset import.",
         "No claim that all 56 recovered templates are production-ready."
       ],
-      "updatedAt": "2026-05-06T04:12:29Z"
+      "updatedAt": "2026-05-06T04:22:08Z",
+      "startedAt": "2026-05-06T04:14:40Z",
+      "completedAt": "2026-05-06T04:22:08Z"
     },
     {
       "id": "native-rmg-small-049-owner-density-tightening-10184",
@@ -12994,9 +13002,9 @@
     {
       "id": "native-rmg-production-terrain-object-choke-boundary-10184",
       "title": "Native RMG Production Terrain/Object Choke Boundary",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "reason": "Selected after owner-comparison gate completion; the remaining warning-level terrain-rock boundary reliance must be converted into object/guard-owned choke evidence and broadened beyond one Small map."
+      "reason": "Completed after uploaded Small H3M comparison was broadened to object-only topology gates and additional generated Small/Medium evidence."
     }
   ],
   "stoppedOrPausedTasks": [

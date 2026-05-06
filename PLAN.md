@@ -1538,7 +1538,7 @@ nonGoals:
 
 id: `native-rmg-production-terrain-object-choke-boundary-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `pending`
+status: `completed`
 purpose: Replace the remaining Small 049 warning-level reliance on terrain rock boundaries with object/guard-owned choke evidence, then broaden the owner-comparison topology gate beyond the single Small evidence map.
 sourceDocs:
 - `project.md`
@@ -1554,6 +1554,10 @@ completionCriteria:
 - Object and guard package masks, not terrain-only walls, explain blocked/guarded town-zone boundaries for the default Small output.
 - The topology gate is broadened with at least one additional generated Small/Medium profile seed or size-class case that checks towns, roads, guards, obstacles, and unguarded routes.
 - Runtime adoption remains feature-gated and non-authoritative until broader production parity evidence exists.
+completionEvidence:
+- `tests/native_random_map_homm3_uploaded_small_topology_report.tscn` now compares the uploaded single-level Small H3M to current native Small 049 and records the uploaded bad native package as non-gating diagnostic evidence.
+- The gate now fails on Small count/road/topology drift and checks additional Small and Medium generated cases for towns, roads, guards, decorative blockers, and object-only cross-zone routes.
+- `tests/native_random_map_package_surface_topology_report.tscn` and `tests/native_random_map_package_object_only_breadth_report.tscn` passed with current package surfaces.
 nonGoals:
 - No exact H3M byte parity.
 - No HoMM3 asset import.
