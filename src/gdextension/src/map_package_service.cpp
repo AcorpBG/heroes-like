@@ -3197,6 +3197,273 @@ Dictionary append_road_spread_service_stubs(const Dictionary &normalized, const 
 	return summary;
 }
 
+int32_t road_lookup_neighbor_count(const Dictionary &road_lookup, int32_t x, int32_t y) {
+	static constexpr int32_t OFFSETS[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+	int32_t count = 0;
+	for (const auto &offset : OFFSETS) {
+		if (road_lookup.has(point_key(x + offset[0], y + offset[1]))) {
+			++count;
+		}
+	}
+	return count;
+}
+
+Dictionary append_owner_medium_topology_branch_stubs(const Dictionary &normalized, const Dictionary &zone_layout, Array &road_segments, Dictionary &road_lookup, Array &road_cells, int32_t max_stub_count) {
+	Dictionary summary;
+	summary["schema_id"] = "native_random_map_owner_medium_road_branch_stubs_v1";
+	summary["policy"] = "short owner-medium-only road branch tiles are added to match uploaded HoMM3 road endpoint/branch topology without changing template connectivity";
+	if (!native_road_spread_service_stubs_enabled(normalized, Dictionary()) || max_stub_count <= 0) {
+		summary["status"] = "skipped";
+		summary["appended_stub_count"] = 0;
+		summary["appended_cell_count"] = 0;
+		return summary;
+	}
+
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
+	const String seed = String(normalized.get("normalized_seed", "0")) + ":owner_medium_road_branch_stub:";
+	static constexpr int32_t OFFSETS[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+	std::vector<Dictionary> candidates;
+	for (int64_t index = 0; index < road_cells.size(); ++index) {
+		if (Variant(road_cells[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary anchor = Dictionary(road_cells[index]);
+		const int32_t ax = int32_t(anchor.get("x", 0));
+		const int32_t ay = int32_t(anchor.get("y", 0));
+		if (road_lookup_neighbor_count(road_lookup, ax, ay) != 2) {
+			continue;
+		}
+		for (const auto &offset : OFFSETS) {
+			const int32_t x = ax + offset[0];
+			const int32_t y = ay + offset[1];
+			if (x <= 0 || y <= 0 || x >= width - 1 || y >= height - 1 || road_lookup.has(point_key(x, y))) {
+				continue;
+			}
+			if (owner_grid_zone_id_at(owner_grid, x, y).is_empty() || road_lookup_neighbor_count(road_lookup, x, y) != 1) {
+				continue;
+			}
+			const int32_t coarse = coarse_index_for_point(x, y, width, height, 6, 6);
+			const int32_t jitter = int32_t(hash32_int(seed + String::num_int64(ax) + "," + String::num_int64(ay) + "->" + String::num_int64(x) + "," + String::num_int64(y)) % 100000U);
+			Dictionary candidate;
+			candidate["anchor_x"] = ax;
+			candidate["anchor_y"] = ay;
+			candidate["x"] = x;
+			candidate["y"] = y;
+			candidate["coarse_index"] = coarse;
+			candidate["sort_key"] = coarse * 100000 + jitter;
+			candidates.push_back(candidate);
+		}
+	}
+	std::sort(candidates.begin(), candidates.end(), [](const Dictionary &left, const Dictionary &right) {
+		return int32_t(left.get("sort_key", 0)) < int32_t(right.get("sort_key", 0));
+	});
+
+	Dictionary used_coarse;
+	Array stub_records;
+	int32_t appended_stub_count = 0;
+	int32_t appended_cell_count = 0;
+	for (int32_t pass = 0; pass < 2; ++pass) {
+		for (const Dictionary &candidate : candidates) {
+			if (appended_stub_count >= max_stub_count) {
+				break;
+			}
+			const int32_t ax = int32_t(candidate.get("anchor_x", 0));
+			const int32_t ay = int32_t(candidate.get("anchor_y", 0));
+			const int32_t x = int32_t(candidate.get("x", 0));
+			const int32_t y = int32_t(candidate.get("y", 0));
+			const String coarse_key = String::num_int64(int32_t(candidate.get("coarse_index", 0)));
+			if (pass == 0 && used_coarse.has(coarse_key)) {
+				continue;
+			}
+			if (road_lookup.has(point_key(x, y)) || road_lookup_neighbor_count(road_lookup, ax, ay) != 2 || road_lookup_neighbor_count(road_lookup, x, y) != 1) {
+				continue;
+			}
+			Array cells;
+			cells.append(cell_record(x, y, 0));
+			const String route_edge_id = "owner_medium_branch_stub_" + slot_id_2(appended_stub_count + 1);
+			Dictionary segment;
+			segment["id"] = "road_" + route_edge_id;
+			segment["route_edge_id"] = route_edge_id;
+			segment["overlay_id"] = "generated_dirt_road";
+			segment["road_class"] = "owner_medium_topology_branch_stub_road";
+			segment["road_type_id"] = road_type_for_class("secondary_major_object_service_road");
+			segment["connection_control"] = Dictionary();
+			segment["cells"] = cells;
+			segment["cell_count"] = cells.size();
+			segment["direct_cell_count"] = cells.size();
+			segment["road_materialization_policy"] = "owner_medium_single_tile_branch_stub";
+			segment["connectivity_classification"] = "non_route_topology_branch_stub";
+			segment["role"] = "owner_medium_topology_branch_stub";
+			segment["writeout_state"] = "staged_overlay_no_tile_bytes_written";
+			segment["bounds_status"] = "in_bounds";
+			segment["anchor_cell"] = cell_record(ax, ay, 0);
+			road_segments.append(segment);
+			record_materialized_road_cells(cells, road_lookup, road_cells);
+			used_coarse[coarse_key] = true;
+			++appended_stub_count;
+			appended_cell_count += int32_t(cells.size());
+			Dictionary stub_record;
+			stub_record["route_edge_id"] = route_edge_id;
+			stub_record["x"] = x;
+			stub_record["y"] = y;
+			stub_record["anchor_x"] = ax;
+			stub_record["anchor_y"] = ay;
+			stub_records.append(stub_record);
+		}
+	}
+	summary["status"] = appended_stub_count >= max_stub_count ? "pass" : "partial";
+	summary["candidate_count"] = int32_t(candidates.size());
+	summary["max_stub_count"] = max_stub_count;
+	summary["appended_stub_count"] = appended_stub_count;
+	summary["appended_cell_count"] = appended_cell_count;
+	summary["stub_records"] = stub_records;
+	return summary;
+}
+
+Dictionary road_lookup_from_segments(const Array &road_segments) {
+	Dictionary lookup;
+	for (int64_t index = 0; index < road_segments.size(); ++index) {
+		if (Variant(road_segments[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Array cells = Dictionary(road_segments[index]).get("cells", Array());
+		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+			if (Variant(cells[cell_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary cell = Dictionary(cells[cell_index]);
+			lookup[point_key(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)))] = true;
+		}
+	}
+	return lookup;
+}
+
+int32_t nearest_road_distance_from_lookup(const Dictionary &road_lookup, int32_t x, int32_t y) {
+	int32_t best = std::numeric_limits<int32_t>::max();
+	Array keys = road_lookup.keys();
+	for (int64_t index = 0; index < keys.size(); ++index) {
+		const String key = String(keys[index]);
+		PackedStringArray parts = key.split(",");
+		if (parts.size() != 2) {
+			continue;
+		}
+		const int32_t rx = parts[0].to_int();
+		const int32_t ry = parts[1].to_int();
+		best = std::min(best, std::abs(x - rx) + std::abs(y - ry));
+	}
+	return best == std::numeric_limits<int32_t>::max() ? -1 : best;
+}
+
+Dictionary attach_owner_medium_town_frontage_roads(const Dictionary &normalized, const Dictionary &zone_layout, Dictionary road_network, const Dictionary &town_guard_placement) {
+	if (!native_road_spread_service_stubs_enabled(normalized, Dictionary())) {
+		return road_network;
+	}
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	Array road_segments = road_network.get("road_segments", Array());
+	Dictionary road_lookup = road_lookup_from_segments(road_segments);
+	Array towns = town_guard_placement.get("town_records", Array());
+	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
+	Array frontage_records;
+	int32_t appended_cell_count = 0;
+	static constexpr int32_t OFFSETS[12][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {2, 0}, {-2, 0}, {0, 2}, {0, -2}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+	for (int64_t index = 0; index < towns.size(); ++index) {
+		if (Variant(towns[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary town = Dictionary(towns[index]);
+		const int32_t tx = int32_t(town.get("x", 0));
+		const int32_t ty = int32_t(town.get("y", 0));
+		const int32_t distance = nearest_road_distance_from_lookup(road_lookup, tx, ty);
+		if (distance >= 0 && distance <= 4) {
+			continue;
+		}
+		Dictionary best_cell;
+		int32_t best_sort_key = std::numeric_limits<int32_t>::max();
+		for (const auto &offset : OFFSETS) {
+			const int32_t x = tx + offset[0];
+			const int32_t y = ty + offset[1];
+			if (x <= 0 || y <= 0 || x >= width - 1 || y >= height - 1 || road_lookup.has(point_key(x, y))) {
+				continue;
+			}
+			if (owner_grid_zone_id_at(owner_grid, x, y).is_empty()) {
+				continue;
+			}
+			const int32_t neighbor_count = road_lookup_neighbor_count(road_lookup, x, y);
+			const int32_t jitter = int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":town_frontage:" + String::num_int64(index) + ":" + String::num_int64(x) + "," + String::num_int64(y)) % 1000U);
+			const int32_t sort_key = neighbor_count * 100000 + (std::abs(offset[0]) + std::abs(offset[1])) * 1000 + jitter;
+			if (sort_key < best_sort_key) {
+				best_sort_key = sort_key;
+				best_cell = cell_record(x, y, 0);
+			}
+		}
+		if (best_cell.is_empty()) {
+			continue;
+		}
+		Array cells;
+		cells.append(best_cell);
+		const String route_edge_id = "owner_medium_town_frontage_" + slot_id_2(int32_t(frontage_records.size()) + 1);
+		Dictionary segment;
+		segment["id"] = "road_" + route_edge_id;
+		segment["route_edge_id"] = route_edge_id;
+		segment["overlay_id"] = "generated_dirt_road";
+		segment["road_class"] = "owner_medium_town_frontage_road";
+		segment["road_type_id"] = road_type_for_class("secondary_major_object_service_road");
+		segment["connection_control"] = Dictionary();
+		segment["cells"] = cells;
+		segment["cell_count"] = cells.size();
+		segment["direct_cell_count"] = cells.size();
+		segment["road_materialization_policy"] = "owner_medium_town_frontage_stub";
+		segment["connectivity_classification"] = "non_route_town_frontage_service";
+		segment["role"] = "owner_medium_town_frontage";
+		segment["writeout_state"] = "staged_overlay_no_tile_bytes_written";
+		segment["bounds_status"] = "in_bounds";
+		segment["town_placement_id"] = town.get("placement_id", "");
+		road_segments.append(segment);
+		road_lookup[point_key(int32_t(best_cell.get("x", 0)), int32_t(best_cell.get("y", 0)))] = true;
+		++appended_cell_count;
+		Dictionary record;
+		record["route_edge_id"] = route_edge_id;
+		record["town_placement_id"] = town.get("placement_id", "");
+		record["town_x"] = tx;
+		record["town_y"] = ty;
+		record["x"] = best_cell.get("x", 0);
+		record["y"] = best_cell.get("y", 0);
+		record["previous_nearest_road_distance"] = distance;
+		frontage_records.append(record);
+	}
+	if (frontage_records.is_empty()) {
+		return road_network;
+	}
+	road_network["road_segments"] = road_segments;
+	road_network["road_segment_count"] = road_segments.size();
+	int32_t road_cell_count = 0;
+	for (int64_t index = 0; index < road_segments.size(); ++index) {
+		if (Variant(road_segments[index]).get_type() == Variant::DICTIONARY) {
+			road_cell_count += int32_t(Dictionary(road_segments[index]).get("cell_count", 0));
+		}
+	}
+	road_network["road_cell_count"] = road_cell_count;
+	Dictionary materialization_summary = road_network.get("road_materialization_summary", Dictionary());
+	materialization_summary["owner_medium_town_frontage_stub_count"] = frontage_records.size();
+	materialization_summary["owner_medium_town_frontage_cell_count"] = appended_cell_count;
+	materialization_summary["unique_materialized_road_cell_count"] = road_lookup.size();
+	road_network["road_materialization_summary"] = materialization_summary;
+	Dictionary frontage_summary;
+	frontage_summary["schema_id"] = "native_random_map_owner_medium_town_frontage_roads_v1";
+	frontage_summary["policy"] = "owner-medium-only frontage road tiles keep every uploaded-H3M-comparison town within the focused town-road distance threshold";
+	frontage_summary["status"] = "pass";
+	frontage_summary["appended_stub_count"] = frontage_records.size();
+	frontage_summary["appended_cell_count"] = appended_cell_count;
+	frontage_summary["frontage_records"] = frontage_records;
+	road_network["owner_medium_town_frontage_summary"] = frontage_summary;
+	road_network["signature"] = hash32_hex(canonical_variant(road_network));
+	return road_network;
+}
+
 Dictionary route_anchor_candidate(const Array &path, const Dictionary &from_anchor, const Dictionary &to_anchor, int32_t level) {
 	if (!path.is_empty()) {
 		Dictionary midpoint = path[int64_t(std::floor(double(path.size() - 1) * 0.5))];
@@ -3566,6 +3833,7 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 	int32_t reused_crosslink_count = 0;
 	int32_t foundation_route_count = 0;
 	Dictionary road_spread_service_stub_summary;
+	Dictionary owner_medium_branch_stub_summary;
 
 	for (int64_t index = 0; index < links.size(); ++index) {
 		Dictionary link = links[index];
@@ -3686,6 +3954,9 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 	if (native_road_spread_service_stubs_enabled(normalized, parity_targets)) {
 		road_spread_service_stub_summary = append_road_spread_service_stubs(normalized, zone_layout, road_segments, materialized_road_lookup, materialized_road_cells);
 	}
+	if (native_road_spread_service_stubs_enabled(normalized, parity_targets)) {
+		owner_medium_branch_stub_summary = append_owner_medium_topology_branch_stubs(normalized, zone_layout, road_segments, materialized_road_lookup, materialized_road_cells, 10);
+	}
 
 	Dictionary reachability = route_reachability_proof(nodes, edges, adjacency);
 	Dictionary road_class_counts;
@@ -3763,10 +4034,13 @@ Dictionary generate_road_network(const Dictionary &normalized, const Dictionary 
 	materialization_summary["foundation_route_count"] = foundation_route_count;
 	materialization_summary["road_spread_service_stub_count"] = int32_t(road_spread_service_stub_summary.get("appended_stub_count", 0));
 	materialization_summary["road_spread_service_stub_cell_count"] = int32_t(road_spread_service_stub_summary.get("appended_cell_count", 0));
+	materialization_summary["owner_medium_branch_stub_count"] = int32_t(owner_medium_branch_stub_summary.get("appended_stub_count", 0));
+	materialization_summary["owner_medium_branch_stub_cell_count"] = int32_t(owner_medium_branch_stub_summary.get("appended_cell_count", 0));
 	materialization_summary["unique_materialized_road_cell_count"] = materialized_road_cells.size();
 	materialization_summary["status"] = "pass";
 	road_network["road_materialization_summary"] = materialization_summary;
 	road_network["road_spread_service_stub_summary"] = road_spread_service_stub_summary;
+	road_network["owner_medium_branch_stub_summary"] = owner_medium_branch_stub_summary;
 	Dictionary road_control_summary;
 	road_control_summary["schema_id"] = "native_random_map_connection_road_controls_v1";
 	road_control_summary["connection_control_policy"] = "HoMM3-style connection Value and Border Guard records mark a controlling road tile; Wide records preserve a guard-suppressed unguarded route";
@@ -11733,6 +12007,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	append_extension_profile_phase(extension_profile_phases, "object_placement", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary town_guard_placement = generate_town_guard_placements(normalized, zone_layout, player_starts, road_network, object_placement);
 	append_extension_profile_phase(extension_profile_phases, "town_guard_placement", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	road_network = attach_owner_medium_town_frontage_roads(normalized, zone_layout, road_network, town_guard_placement);
+	append_extension_profile_phase(extension_profile_phases, "owner_medium_town_frontage_roads", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary connection_payload_resolution = generate_connection_payload_resolution(normalized, zone_layout, road_network, town_guard_placement);
 	road_network = attach_connection_payload_resolution(road_network, connection_payload_resolution);
 	append_extension_profile_phase(extension_profile_phases, "connection_payload_resolution", phase_started_at, top_profile_phase_usec, top_profile_phase_id);

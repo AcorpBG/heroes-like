@@ -440,6 +440,16 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 		failures.append("native_largest_roadless_land_region_too_large")
 	if int(native.get("road_topology", {}).get("endpoint_count", 0)) <= 0:
 		failures.append("native_roads_have_no_branch_endpoints")
+	if int(native.get("road_topology", {}).get("branch_count", 0)) < int(owner.get("road_topology", {}).get("branch_count", 0)):
+		failures.append("native_road_branch_count_below_owner")
+	if int(native.get("road_topology", {}).get("endpoint_count", 0)) < int(owner.get("road_topology", {}).get("endpoint_count", 0)):
+		failures.append("native_road_endpoint_count_below_owner")
+	if int(native.get("road_topology", {}).get("endpoint_count", 0)) > int(owner.get("road_topology", {}).get("endpoint_count", 0)) + 4:
+		failures.append("native_road_endpoint_count_overshot_owner")
+	if int(native.get("town_road_connection", {}).get("connected_count", 0)) < int(owner.get("town_road_connection", {}).get("connected_count", 0)):
+		failures.append("native_town_road_connections_below_owner")
+	if int(native.get("town_road_connection", {}).get("max", 999)) > int(owner.get("town_road_connection", {}).get("max", 0)) + 2:
+		failures.append("native_town_road_connection_distance_too_high")
 	if _nested_int(native.get("coarse_grid_6x6", {}), "reward", "nonempty_cell_count") < 12:
 		failures.append("native_rewards_too_spatially_collapsed")
 	if _nested_float(native.get("distance_to_road", {}), "reward", "average_distance_to_road") < 5.0:
@@ -474,6 +484,11 @@ func _gate_summary(owner: Dictionary, native: Dictionary, comparison: Dictionary
 			"native_max_abs_road_tile_delta": 24,
 			"native_max_abs_road_coverage_land_delta": 0.03,
 			"native_min_road_nonempty_6x6_cells": max(12, int(owner.get("road_grid_6x6", {}).get("nonempty_cell_count", 0)) - 2),
+			"native_min_road_branch_count": int(owner.get("road_topology", {}).get("branch_count", 0)),
+			"native_min_road_endpoint_count": int(owner.get("road_topology", {}).get("endpoint_count", 0)),
+			"native_max_road_endpoint_count_over_owner": 4,
+			"native_min_town_road_connected_count": int(owner.get("town_road_connection", {}).get("connected_count", 0)),
+			"native_max_town_road_distance_over_owner": 2,
 			"native_max_largest_roadless_land_region_over_owner": 3,
 			"native_min_reward_nonempty_6x6_cells": 12,
 			"native_min_reward_average_distance_to_road": 5.0,
