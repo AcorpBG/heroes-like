@@ -11334,7 +11334,43 @@
         "python3 tests/validate_repo.py",
         "git diff --check"
       ],
-      "remainingGap": "Exact HoMM3 parity is still not claimed: translated profile full_generation_status remains not_implemented, reward/mine mix is still high versus the uploaded baseline, and runtime authoritative call-site adoption remains gated."
+      "remainingGap": "Exact HoMM3 parity is still not claimed: translated profile full_generation_status remains not_implemented, this slice left a reward/mine mix gap that is addressed by native-rmg-uploaded-small-object-mix-correction-10184, and runtime authoritative call-site adoption remains gated."
+    },
+    {
+      "id": "native-rmg-uploaded-small-object-mix-correction-10184",
+      "title": "Native RMG Uploaded Small Object Mix Correction",
+      "status": "completed",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "owner-uploaded small 3-player single-level HoMM3 map comparison on 2026-05-05"
+      ],
+      "mappedPlannedSliceIds": [
+        "native-rmg-uploaded-small-object-mix-correction-10184",
+        "native-rmg-uploaded-small-default-parity-correction-10184"
+      ],
+      "implementationRefs": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Uploaded small H3M object category parse was corrected to 76 reward/mine/resource objects and 30 other map objects.",
+        "Template 049 native small output now caps uploaded-small mine/resource/reward mix to 31 mines, 42 resource sites, 3 reward references, and 0 neutral dwellings.",
+        "Native output now materializes 30 scenic_object records for the uploaded baseline's non-reward, non-decoration, non-town, non-guard other object category.",
+        "Player-facing small default comparison now passes with 7 towns, nearest town distance 9, 163 decorations, 76 reward/mine/resource objects, 30 scenic/other objects, 40 guard records, 105 road cells, and total content 316 versus the uploaded baseline's 303."
+      ],
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "godot --headless --path . tests/native_random_map_homm3_validation_adoption_gates_report.tscn",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "remainingGap": "Exact HoMM3 parity is still not claimed: translated profile full_generation_status remains not_implemented, native scenic_object records are original proxies for the uploaded H3M other-object category, and runtime authoritative call-site adoption remains gated."
     }
   ],
   "docsReadyEvidence": [
