@@ -4494,6 +4494,29 @@ Array cardinal_approach_tiles(int32_t x, int32_t y, int32_t width, int32_t heigh
 	return result;
 }
 
+Array cardinal_approach_tiles_in_zone(int32_t x, int32_t y, int32_t width, int32_t height, const Dictionary &occupied, const Array &owner_grid, const String &zone_id) {
+	Array result;
+	static constexpr int32_t OFFSETS[4][2] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+	for (const auto &offset : OFFSETS) {
+		const int32_t nx = x + offset[0];
+		const int32_t ny = y + offset[1];
+		if (nx < 0 || ny < 0 || nx >= width || ny >= height || occupied.has(point_key(nx, ny))) {
+			continue;
+		}
+		if (!zone_id.is_empty()) {
+			if (ny < 0 || ny >= owner_grid.size()) {
+				continue;
+			}
+			Array row = owner_grid[ny];
+			if (nx < 0 || nx >= row.size() || String(row[nx]) != zone_id) {
+				continue;
+			}
+		}
+		result.append(point_record(nx, ny));
+	}
+	return result;
+}
+
 struct NativeRoadCell {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -4859,12 +4882,14 @@ void mark_native_placement(NativeObjectPlacementContext &context, const Dictiona
 	context.placements.push_back(native_placement);
 }
 
-void append_object_placement_fast(Array &placements, Dictionary &occupied, NativeObjectPlacementContext &context, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const std::vector<NativeRoadCell> &road_cells, const Dictionary &zone_layout) {
+bool append_object_placement_fast(Array &placements, Dictionary &occupied, NativeObjectPlacementContext &context, const Dictionary &normalized, const Dictionary &zone, const Dictionary &point, const String &kind, int32_t ordinal, const std::vector<NativeRoadCell> &road_cells, const Dictionary &zone_layout) {
 	const int64_t previous_size = placements.size();
 	append_object_placement(placements, occupied, normalized, zone, point, kind, ordinal, road_cells, zone_layout);
 	if (placements.size() > previous_size) {
 		mark_native_placement(context, Dictionary(placements[placements.size() - 1]));
+		return true;
 	}
+	return false;
 }
 
 bool zone_needs_future_town_anchor_reservation(const Dictionary &zone) {
@@ -5030,13 +5055,13 @@ int32_t owner_like_islands_compact_decoration_target_for_zone(const Dictionary &
 		return 0;
 	}
 	const String role = String(zone.get("role", ""));
-	double ratio = small_land_density ? 0.095 : 0.052;
+	double ratio = small_land_density ? 0.086 : 0.052;
 	if (role.find("start") >= 0) {
-		ratio = small_land_density ? 0.090 : 0.044;
+		ratio = small_land_density ? 0.081 : 0.044;
 	} else if (role == "treasure") {
-		ratio = small_land_density ? 0.105 : 0.060;
+		ratio = small_land_density ? 0.095 : 0.060;
 	} else if (role == "junction") {
-		ratio = small_land_density ? 0.098 : 0.054;
+		ratio = small_land_density ? 0.089 : 0.054;
 	}
 	const int32_t raw_target = int32_t(std::ceil(double(cell_count) * ratio));
 	const int32_t max_per_zone = small_land_density
@@ -5045,9 +5070,9 @@ int32_t owner_like_islands_compact_decoration_target_for_zone(const Dictionary &
 	return std::max(1, std::min(max_per_zone, raw_target));
 }
 
-Dictionary compact_density_decoration_footprint(int32_t ordinal) {
+Dictionary compact_density_decoration_footprint(int32_t ordinal, bool small_land_density = false) {
 	Dictionary footprint;
-	footprint["width"] = ordinal % 5 == 0 ? 2 : 1;
+	footprint["width"] = small_land_density ? (ordinal % 2 == 0 ? 2 : 1) : (ordinal % 5 == 0 ? 2 : 1);
 	footprint["height"] = 1;
 	footprint["tier"] = "compact_owner_like_islands_density_marker";
 	footprint["source"] = "bounded owner-like islands land-normalized decoration instance density supplement";
@@ -5141,7 +5166,7 @@ Dictionary find_compact_decoration_density_point(const Dictionary &zone, int32_t
 	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
 	const int32_t ax = int32_t(anchor.get("x", width / 2));
 	const int32_t ay = int32_t(anchor.get("y", height / 2));
-	const Dictionary footprint = compact_density_decoration_footprint(ordinal);
+	const Dictionary footprint = compact_density_decoration_footprint(ordinal, native_rmg_owner_like_small_land_density_case(normalized));
 	const String seed_text = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":compact_density_decor:" + String::num_int64(ordinal);
 	const int32_t coarse_cols = 8;
 	const int32_t coarse_rows = 8;
@@ -5288,7 +5313,7 @@ Dictionary find_compact_decoration_density_point_fast(const Dictionary &zone, in
 	Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
 	const int32_t ax = int32_t(anchor.get("x", placement_context.width / 2));
 	const int32_t ay = int32_t(anchor.get("y", placement_context.height / 2));
-	const Dictionary footprint = compact_density_decoration_footprint(ordinal);
+	const Dictionary footprint = compact_density_decoration_footprint(ordinal, native_rmg_owner_like_small_land_density_case(normalized));
 	const String seed_text = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":compact_density_decor:" + String::num_int64(ordinal);
 	const int32_t coarse_cols = 8;
 	const int32_t coarse_rows = 8;
@@ -5345,8 +5370,7 @@ int32_t append_decoration_placements(Array &placements, Dictionary &occupied, Na
 			bool placed = false;
 			for (int32_t attempt = 0; attempt < 8; ++attempt) {
 				Dictionary point = find_decoration_point_fast(zone, ordinal, normalized, placement_context);
-				if (!point.is_empty()) {
-					append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "decorative_obstacle", ordinal, road_cells, zone_layout);
+				if (!point.is_empty() && append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "decorative_obstacle", ordinal, road_cells, zone_layout)) {
 					++ordinal;
 					placed = true;
 					break;
@@ -5362,8 +5386,7 @@ int32_t append_decoration_placements(Array &placements, Dictionary &occupied, Na
 			bool placed = false;
 			for (int32_t attempt = 0; attempt < 8; ++attempt) {
 				Dictionary point = find_compact_decoration_density_point_fast(zone, ordinal, normalized, placement_context);
-				if (!point.is_empty()) {
-					append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "decorative_obstacle", ordinal, road_cells, zone_layout);
+				if (!point.is_empty() && append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "decorative_obstacle", ordinal, road_cells, zone_layout)) {
 					++ordinal;
 					placed = true;
 					break;
@@ -5429,6 +5452,9 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 			body_unoccupied = false;
 			break;
 		}
+	}
+	if (!body_unoccupied) {
+		return;
 	}
 
 	Dictionary predicate_results;
@@ -7857,7 +7883,7 @@ Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &
 	record["footprint"] = footprint;
 	record["runtime_footprint"] = runtime_footprint;
 	record["footprint_deferred"] = true;
-	record["approach_tiles"] = cardinal_approach_tiles(x, y, width, height, occupied);
+	record["approach_tiles"] = cardinal_approach_tiles_in_zone(x, y, width, height, occupied, zone_layout.get("surface_owner_grid", Array()), zone_id);
 	record["visit_tile"] = body;
 	Array predicates;
 	predicates.append("in_bounds");
@@ -7940,6 +7966,7 @@ Array route_guard_body_tiles_for_edge(int32_t x, int32_t y, int32_t width, int32
 			Dictionary cell = cells[cell_index];
 			const int32_t cell_x = int32_t(cell.get("x", 0));
 			const int32_t cell_y = int32_t(cell.get("y", 0));
+			append_unique(cell_x, cell_y);
 			if (zone_boundary_barrier_cell(owner_grid, cell_x, cell_y, width, height)) {
 				for (int32_t dy = -1; dy <= 1; ++dy) {
 					for (int32_t dx = -1; dx <= 1; ++dx) {
@@ -9819,7 +9846,7 @@ Dictionary land_boundary_opening_lookup(const Dictionary &normalized, const Dict
 	Array road_segments = road_network.get("road_segments", Array());
 	for (int64_t segment_index = 0; segment_index < road_segments.size(); ++segment_index) {
 		Dictionary segment = road_segments[segment_index];
-		mark_land_cells_from_array(openings, segment.get("cells", Array()), width, height, 1);
+		mark_land_cells_from_array(openings, segment.get("cells", Array()), width, height);
 	}
 	Dictionary route_graph = road_network.get("route_graph", Dictionary());
 	Array edges = route_graph.get("edges", Array());
@@ -9844,7 +9871,6 @@ Dictionary land_boundary_opening_lookup(const Dictionary &normalized, const Dict
 	for (int64_t index = 0; index < towns.size(); ++index) {
 		Dictionary town = Dictionary(towns[index]);
 		mark_land_record_surfaces(openings, town, width, height);
-		mark_land_cells_from_array(openings, town.get("required_town_access_corridor_cells", Array()), width, height);
 	}
 	Array guards = town_guard_placement.get("guard_records", Array());
 	for (int64_t index = 0; index < guards.size(); ++index) {
