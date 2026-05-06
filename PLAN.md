@@ -1371,6 +1371,33 @@ nonGoals:
 - No broad generator rewrite outside this owner-medium road-shape correction.
 - No save-version bump or runtime-authoritative package/session promotion.
 
+id: `native-rmg-uploaded-small-topology-evidence-gap-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Convert the owner-uploaded single-level Small 3-player H3M comparison into a repeatable local topology audit that parses the uploaded H3M evidence when present and compares it to current native translated Small 049 package output beyond aggregate counts.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `maps/small3playermap-1level.h3m` local untracked owner evidence
+- `tests/native_random_map_homm3_uploaded_small_comparison_report.gd`
+- `tests/native_random_map_zone_choke_regression_report.gd`
+implementationTargets:
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.tscn`
+- `ops/progress.json`
+completionCriteria:
+- The audit parses the local uploaded H3M object templates, placed object records, passability/action masks, town positions, guard records, and road cells without committing the uploaded `.h3m`.
+- Current native Small 049 package output is compared against the parsed owner evidence for town count, nearest-town distance, object categories, guard count, road cells, blocker surfaces, and unresolved town-pair topology.
+- The report distinguishes hard regression gates from remaining HoMM3-style parity gaps, especially native reliance on terrain rock barriers rather than object-mask-only obstacle chokes.
+completionEvidence:
+- Uploaded Small parses as 36x36x1 SoD, 7 towns, 303 objects, 150 decorations, 40 guard records, 76 reward/resource records, 30 other objects, 110 road cells, and 722 object-mask blocked tiles.
+- Current native translated Small 049 with the comparison seed produces 7 towns, nearest town distance 10, 303 objects, 150 decorative obstacles, 40 guards, 76 mine/resource/reward objects, 30 scenic objects, 105 road cells, zero duplicate/empty road records, and zero unresolved reachable town pairs.
+- Remaining gap is explicit: native currently needs 375 rock terrain barrier tiles plus object blockers to close the topology, so it is not yet an object-mask/guard-only HoMM3-style choke materialization.
+nonGoals:
+- No HoMM3 art, DEF, name, text, map, or binary `.h3m` import.
+- No generator behavior change in this evidence slice.
+- No exact H3M pathing/byte parity claim from the local parser.
+
 id: `overworld-map-object-distinct-sprite-gap-fill-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`

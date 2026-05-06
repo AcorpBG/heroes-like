@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-owner-medium-001-road-shape-correction-10184",
-  "currentSliceTitle": "Native RMG Owner Medium 001 Road Shape Correction",
+  "currentSliceId": "native-rmg-uploaded-small-topology-evidence-gap-10184",
+  "currentSliceTitle": "Native RMG Uploaded Small Topology Evidence Gap",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed owner-medium 001 road-shape correction slice. Native roads now stay within the owner-relative road tile, coarse spread, largest-roadless-region, endpoint, and branch gates after reducing owner-medium service stubs, but roads remain more quadrant-even than the uploaded H3M and broad RMG parity remains open.",
+  "currentSliceNotes": "Completed uploaded Small topology evidence-gap report. Current native Small 049 matches owner-uploaded counts closely and blocks all town pairs, but the report exposes a remaining structural gap: native topology still relies on rock terrain barrier tiles plus object blockers instead of fully HoMM3-style object-mask and guard choke materialization.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T02:49:32Z",
+  "updatedAt": "2026-05-06T03:00:58Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -253,6 +253,51 @@
       "updatedAt": "2026-05-06T02:49:32Z",
       "startedAt": "2026-05-06T02:34:27Z",
       "completedAt": "2026-05-06T02:49:32Z"
+    },
+    {
+      "id": "native-rmg-uploaded-small-topology-evidence-gap-10184",
+      "title": "Native RMG Uploaded Small Topology Evidence Gap",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "report_and_planning_gate",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "maps/small3playermap-1level.h3m local untracked owner evidence",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd",
+        "tests/native_random_map_zone_choke_regression_report.gd"
+      ],
+      "purpose": "Convert the owner-uploaded single-level Small 3-player H3M comparison into a repeatable local topology audit that parses the uploaded H3M evidence when present and compares it to current native translated Small 049 package output beyond aggregate counts.",
+      "implementationTargets": [
+        "tests/native_random_map_homm3_uploaded_small_topology_report.gd",
+        "tests/native_random_map_homm3_uploaded_small_topology_report.tscn",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_topology_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "The audit parses the local uploaded H3M object templates, placed object records, passability/action masks, town positions, guard records, and road cells without committing the uploaded .h3m.",
+        "Current native Small 049 package output is compared against parsed owner evidence for town count, nearest-town distance, object categories, guard count, road cells, blocker surfaces, and unresolved town-pair topology.",
+        "The report distinguishes hard regression gates from remaining HoMM3-style parity gaps, especially native reliance on terrain rock barriers rather than object-mask-only obstacle chokes."
+      ],
+      "completionEvidence": [
+        "Uploaded Small parses as 36x36x1 SoD, 7 towns, 303 objects, 150 decorations, 40 guard records, 76 reward/resource records, 30 other objects, 110 road cells, 722 object-mask blocked tiles, and 127 action tiles.",
+        "Current native translated Small 049 with the existing comparison seed produces 7 towns, nearest town manhattan 10, 303 objects, 150 decorative obstacles, 40 guards, 31 mines, 42 resource sites, 3 reward references, 30 scenic objects, 105 road cells, zero duplicate/empty road records, and zero unresolved reachable town pairs.",
+        "Remaining gap is explicit: native currently needs 375 rock terrain barrier tiles plus object blockers to close the topology, so it is not yet object-mask/guard-only HoMM3-style choke materialization. The translated profile still reports full_generation_status not_implemented."
+      ],
+      "nonGoals": [
+        "No HoMM3 art, DEF, name, text, map, or binary H3M import.",
+        "No generator behavior change in this evidence slice.",
+        "No exact H3M pathing or byte parity claim from the local parser."
+      ],
+      "updatedAt": "2026-05-06T03:00:58Z",
+      "startedAt": "2026-05-06T02:55:00Z",
+      "completedAt": "2026-05-06T03:00:58Z"
     },
     {
       "id": "native-rmg-small-049-owner-density-tightening-10184",
@@ -10943,6 +10988,66 @@
   ],
   "completedImplementationEvidence": [
     {
+      "id": "native-rmg-uploaded-small-topology-evidence-gap-10184",
+      "title": "Native RMG Uploaded Small Topology Evidence Gap",
+      "status": "completed",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "maps/small3playermap-1level.h3m local untracked owner evidence",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd",
+        "tests/native_random_map_zone_choke_regression_report.gd"
+      ],
+      "mappedPlannedSliceIds": [
+        "native-rmg-uploaded-small-topology-evidence-gap-10184"
+      ],
+      "implementationRefs": [
+        "tests/native_random_map_homm3_uploaded_small_topology_report.gd",
+        "tests/native_random_map_homm3_uploaded_small_topology_report.tscn",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "evidence": "Added a repeatable uploaded Small topology report that parses the local owner H3M evidence when present and compares it to current native translated Small 049 package output. The report confirms the current native output is close on aggregate counts and road cells, and has zero unresolved reachable town pairs when package terrain/object blockers are included. It also exposes the remaining structural parity gap: native still relies on 375 rock terrain barrier tiles plus object blockers instead of fully HoMM3-style object-mask and guard choke materialization.",
+      "ownerMetrics": {
+        "width": 36,
+        "height": 36,
+        "levelCount": 1,
+        "townCount": 7,
+        "nearestTownManhattan": 10,
+        "objectCount": 303,
+        "decorationCount": 150,
+        "guardRecordCount": 40,
+        "rewardResourceRecordCount": 76,
+        "otherObjectCount": 30,
+        "roadCellCount": 110,
+        "maskBlockedTileCount": 722,
+        "actionTileCount": 127
+      },
+      "nativeMetrics": {
+        "templateId": "translated_rmg_template_049_v1",
+        "profileId": "translated_rmg_profile_049_v1",
+        "townCount": 7,
+        "nearestTownManhattan": 10,
+        "objectCount": 303,
+        "decorativeObstacleCount": 150,
+        "guardCount": 40,
+        "mineCount": 31,
+        "resourceSiteCount": 42,
+        "rewardReferenceCount": 3,
+        "scenicObjectCount": 30,
+        "roadCellCount": 105,
+        "terrainBlockedTileCount": 375,
+        "objectBlockedTileCount": 839,
+        "unresolvedReachableTownPairs": 0
+      },
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_topology_report.tscn (pass with rock-barrier and full_generation_status warnings)"
+      ],
+      "remainingGap": "The current native result is not object-mask/guard-only HoMM3-style choke materialization; rock terrain boundaries still do important route-blocking work, and translated profile full_generation_status remains not_implemented.",
+      "completedAt": "2026-05-06T03:00:58Z"
+    },
+    {
       "id": "native-rmg-owner-medium-001-road-shape-correction-10184",
       "title": "Native RMG Owner Medium 001 Road Shape Correction",
       "status": "completed",
@@ -12564,11 +12669,11 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-homm3-object-placement-pipeline-10184",
-      "title": "Native RMG HoMM3 Object Placement Pipeline",
+      "id": "native-rmg-uploaded-small-topology-evidence-gap-10184",
+      "title": "Native RMG Uploaded Small Topology Evidence Gap",
       "status": "completed",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "reason": "Completed by this run with focused native object-placement report evidence and required validation pass."
+      "reason": "Completed by this run with a focused uploaded Small H3M topology parser/report. The next implementation follow-up should replace remaining rock-boundary topology reliance with HoMM3-style object-mask and guard choke materialization when selected."
     }
   ],
   "stoppedOrPausedTasks": [
