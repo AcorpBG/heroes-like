@@ -9908,7 +9908,7 @@ Dictionary generate_terrain_grid(const Dictionary &normalized, const Dictionary 
 	grid["width"] = width;
 	grid["height"] = height;
 	grid["level_count"] = level_count;
-	grid["tile_count"] = parity_targets.is_empty() ? width * height * level_count : int32_t(parity_targets.get("terrain_tile_count", width * height));
+	grid["tile_count"] = (parity_targets.is_empty() || use_land_boundary_shape) ? width * height * level_count : int32_t(parity_targets.get("terrain_tile_count", width * height));
 	grid["terrain_id_by_code"] = ids_by_code;
 	grid["biome_id_by_terrain_id"] = biome_by_terrain;
 	grid["terrain_palette_ids"] = terrain_pool;
@@ -10033,7 +10033,8 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = int32_t(normalized.get("level_count", 1));
 	const bool full_parity_supported = native_rmg_full_parity_supported(normalized);
-	const int32_t expected_tile_count = full_parity_supported ? width * height : width * height * level_count;
+	const bool all_native_levels_materialized = String(terrain_grid.get("level_count_semantics", "")) == "all_native_levels_materialized";
+	const int32_t expected_tile_count = (!full_parity_supported || all_native_levels_materialized) ? width * height * level_count : width * height;
 	const String generation_status = native_rmg_generation_status_for_config(normalized);
 	const String full_generation_status = native_rmg_full_generation_status_for_config(normalized);
 
