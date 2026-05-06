@@ -8005,6 +8005,7 @@ bool point_far_from_towns(const Array &towns, int32_t x, int32_t y, int32_t mini
 }
 
 bool point_owned_by_zone(const Array &owner_grid, int32_t x, int32_t y, const String &zone_id);
+bool zone_boundary_barrier_cell(const Array &owner_grid, int32_t x, int32_t y, int32_t width, int32_t height);
 Array in_zone_access_path_cells(int32_t start_x, int32_t start_y, int32_t goal_x, int32_t goal_y, const String &zone_id, const Array &owner_grid, int32_t width, int32_t height);
 
 Dictionary find_spaced_object_point(int32_t x, int32_t y, const String &preferred_zone_id, const Array &owner_grid, const Dictionary &occupied, int32_t width, int32_t height, const Array &towns, int32_t minimum_distance) {
@@ -8045,6 +8046,9 @@ Dictionary find_spaced_in_zone_object_point(int32_t x, int32_t y, const String &
 				const int32_t cx = std::max(1, std::min(std::max(1, width - 2), x + dx));
 				const int32_t cy = std::max(1, std::min(std::max(1, height - 2), y + dy));
 				if (!point_owned_by_zone(owner_grid, cx, cy, zone_id) || occupied.has(point_key(cx, cy)) || !point_far_from_towns(towns, cx, cy, minimum_distance)) {
+					continue;
+				}
+				if (zone_boundary_barrier_cell(owner_grid, cx, cy, width, height) && radius < std::max(width, height)) {
 					continue;
 				}
 				Dictionary point = point_record(cx, cy);
@@ -8298,6 +8302,9 @@ Dictionary find_spaced_accessible_town_point(int32_t x, int32_t y, const String 
 				const int32_t cx = std::max(1, std::min(std::max(1, width - 2), x + dx));
 				const int32_t cy = std::max(1, std::min(std::max(1, height - 2), y + dy));
 				if (!point_owned_by_zone(owner_grid, cx, cy, preferred_zone_id) || occupied.has(point_key(cx, cy)) || !point_far_from_towns(towns, cx, cy, minimum_distance)) {
+					continue;
+				}
+				if (zone_boundary_barrier_cell(owner_grid, cx, cy, width, height) && radius < std::max(width, height)) {
 					continue;
 				}
 				if (!in_zone_path_exists(cx, cy, anchor_x, anchor_y, preferred_zone_id, owner_grid, blocking_occupied, width, height)) {
@@ -8737,6 +8744,19 @@ void append_town_boundary_opening_cells_from_array(Array &cells, Dictionary &see
 Array town_boundary_opening_cells_for_guards(const Array &towns, const Array &owner_grid, int32_t width, int32_t height) {
 	Array cells;
 	Dictionary seen;
+	auto append_direct_cell = [&](int32_t x, int32_t y, const String &source) {
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			return;
+		}
+		const String key = point_key(x, y);
+		if (seen.has(key)) {
+			return;
+		}
+		seen[key] = true;
+		Dictionary cell = cell_record(x, y, 0);
+		cell["source"] = source;
+		cells.append(cell);
+	};
 	for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
 		if (Variant(towns[town_index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -8754,6 +8774,44 @@ Array town_boundary_opening_cells_for_guards(const Array &towns, const Array &ow
 			append_town_boundary_opening_cell(cells, seen, owner_grid, int32_t(visit.get("x", 0)), int32_t(visit.get("y", 0)), width, height, "town_visit_tile");
 		}
 		append_town_boundary_opening_cells_from_array(cells, seen, owner_grid, town.get("required_town_access_corridor_cells", Array()), width, height, "required_town_access_corridor");
+	}
+	for (int64_t left_index = 0; left_index < towns.size(); ++left_index) {
+		if (Variant(towns[left_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary left = Dictionary(towns[left_index]);
+		const String left_zone_id = String(left.get("zone_id", ""));
+		const int32_t left_x = int32_t(left.get("x", 0));
+		const int32_t left_y = int32_t(left.get("y", 0));
+		for (int64_t right_index = left_index + 1; right_index < towns.size(); ++right_index) {
+			if (Variant(towns[right_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary right = Dictionary(towns[right_index]);
+			if (left_zone_id.is_empty() || left_zone_id == String(right.get("zone_id", ""))) {
+				continue;
+			}
+			const int32_t right_x = int32_t(right.get("x", 0));
+			const int32_t right_y = int32_t(right.get("y", 0));
+			const int32_t chebyshev_distance = std::max(std::abs(left_x - right_x), std::abs(left_y - right_y));
+			if (chebyshev_distance > 40) {
+				continue;
+			}
+			Array path = direct_access_path_cells(left_x, left_y, right_x, right_y, width, height);
+			for (int64_t path_index = 0; path_index < path.size(); ++path_index) {
+				if (Variant(path[path_index]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				Dictionary cell = Dictionary(path[path_index]);
+				const int32_t path_x = int32_t(cell.get("x", 0));
+				const int32_t path_y = int32_t(cell.get("y", 0));
+				for (int32_t dy = -1; dy <= 1; ++dy) {
+					for (int32_t dx = -1; dx <= 1; ++dx) {
+						append_direct_cell(path_x + dx, path_y + dy, "close_cross_zone_town_corridor");
+					}
+				}
+			}
+		}
 	}
 	return cells;
 }
@@ -9147,6 +9205,43 @@ int32_t neutral_town_target_count(const Dictionary &normalized, const Array &zon
 	return std::max(0, std::min(eligible, std::max(2, scaled + start_count / 3)));
 }
 
+bool zone_has_player_or_town_source(const Dictionary &zone) {
+	if (zone.get("player_slot", Variant()).get_type() != Variant::NIL) {
+		return true;
+	}
+	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+	Dictionary player_towns = metadata.get("player_towns", zone.get("player_towns", Dictionary()));
+	Dictionary neutral_towns = metadata.get("neutral_towns", zone.get("neutral_towns", Dictionary()));
+	return int32_t(player_towns.get("min_towns", 0)) > 0
+			|| int32_t(player_towns.get("min_castles", 0)) > 0
+			|| int32_t(player_towns.get("town_density", 0)) > 0
+			|| int32_t(player_towns.get("castle_density", 0)) > 0
+			|| int32_t(neutral_towns.get("min_towns", 0)) > 0
+			|| int32_t(neutral_towns.get("min_castles", 0)) > 0
+			|| int32_t(neutral_towns.get("town_density", 0)) > 0
+			|| int32_t(neutral_towns.get("castle_density", 0)) > 0;
+}
+
+bool translated_land_zero_guard_connection_needs_fallback(const Dictionary &normalized, const Dictionary &edge, const Array &zones) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	if (width < 72 || height < 72) {
+		return false;
+	}
+	if (String(normalized.get("water_mode", "")) != "land" || String(normalized.get("template_id", "")).begins_with("translated_rmg_template_") == false) {
+		return false;
+	}
+	if (int32_t(edge.get("guard_value", 0)) > 0 || bool(edge.get("wide", false)) || bool(edge.get("border_guard", false))) {
+		return false;
+	}
+	Dictionary from_zone = zone_by_id(zones, String(edge.get("from", "")));
+	Dictionary to_zone = zone_by_id(zones, String(edge.get("to", "")));
+	if (from_zone.is_empty() || to_zone.is_empty()) {
+		return false;
+	}
+	return zone_has_player_or_town_source(from_zone) || zone_has_player_or_town_source(to_zone);
+}
+
 Dictionary town_rules_for_zone(const Dictionary &zone, const String &field) {
 	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
 	Variant rules_value = metadata.get(field, Variant());
@@ -9350,6 +9445,8 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		const int32_t preferred_spacing = town_spacing_radius_for_size(normalized);
 		const int32_t hard_spacing = town_hard_spacing_radius_for_size(normalized);
 		const int32_t access_fallback_spacing = town_access_fallback_spacing_radius_for_size(normalized);
+		const int32_t required_spacing_floor = std::min(width, height) >= 120 ? 16 : 12;
+		const int32_t required_materialization_spacing = std::max(4, std::min(required_spacing_floor, access_fallback_spacing));
 		int32_t applied_spacing = preferred_spacing;
 		Dictionary point = find_spaced_accessible_town_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, occupied, blocking_occupied, width, height, towns, preferred_spacing, access_anchor);
 		if (point.is_empty() && hard_spacing < preferred_spacing) {
@@ -9361,9 +9458,15 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			point = find_spaced_accessible_town_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, occupied, blocking_occupied, width, height, towns, access_fallback_spacing, access_anchor);
 		}
 		bool used_required_spacing_fallback = false;
+		bool used_required_materialization_fallback = false;
+		if (point.is_empty() && !density && required_materialization_spacing < applied_spacing) {
+			applied_spacing = required_materialization_spacing;
+			point = find_spaced_accessible_town_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, occupied, blocking_occupied, width, height, towns, required_materialization_spacing, access_anchor);
+			used_required_materialization_fallback = !point.is_empty();
+		}
 		if (point.is_empty() && !density) {
-			applied_spacing = preferred_spacing;
-			point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, occupied, width, height, towns, preferred_spacing);
+			applied_spacing = required_materialization_spacing;
+			point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, occupied, width, height, towns, required_materialization_spacing);
 			used_required_spacing_fallback = !point.is_empty();
 		}
 		Dictionary diagnostic;
@@ -9378,10 +9481,11 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		diagnostic["preferred_town_spacing"] = preferred_spacing;
 		diagnostic["hard_town_spacing"] = hard_spacing;
 		diagnostic["access_fallback_town_spacing"] = access_fallback_spacing;
+		diagnostic["required_materialization_town_spacing"] = required_materialization_spacing;
 		diagnostic["applied_town_spacing"] = applied_spacing;
 		diagnostic["town_access_anchor"] = access_anchor;
 		diagnostic["town_spacing_distance_model"] = "direct_tile_route_chebyshev_distance";
-		diagnostic["town_accessibility_policy"] = used_required_spacing_fallback ? "required_town_legacy_spacing_fallback_subject_to_cross_zone_route_regression" : "town_anchor_must_have_in_zone_path_to_start_or_zone_anchor_through_existing_blocking_objects_even_when_spacing_relaxes";
+		diagnostic["town_accessibility_policy"] = used_required_spacing_fallback ? "required_town_legacy_spacing_fallback_subject_to_cross_zone_route_regression" : (used_required_materialization_fallback ? "required_town_materialization_spacing_fallback_preserves_in_zone_access" : "town_anchor_must_have_in_zone_path_to_start_or_zone_anchor_through_existing_blocking_objects_even_when_spacing_relaxes");
 		if (point.is_empty()) {
 			diagnostic["code"] = density ? "town_castle_density_placement_infeasible" : "town_castle_placement_infeasible";
 			diagnostic["severity"] = density ? "warning" : "failure";
@@ -9571,8 +9675,9 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		Dictionary edge = edges[index];
 		const int32_t raw_guard_value = int32_t(edge.get("guard_value", 0));
 		const int32_t scaled_guard_value = rmg_connection_guard_scaled_value(normalized, raw_guard_value);
-		const int32_t guard_value = scaled_guard_value > 0 ? scaled_guard_value : std::max(450, raw_guard_value);
-		if (raw_guard_value <= 0 || bool(edge.get("wide", false)) || bool(edge.get("border_guard", false))) {
+		const bool zero_guard_fallback = translated_land_zero_guard_connection_needs_fallback(normalized, edge, zones);
+		const int32_t guard_value = zero_guard_fallback ? 450 : (scaled_guard_value > 0 ? scaled_guard_value : std::max(450, raw_guard_value));
+		if (!zero_guard_fallback && (raw_guard_value <= 0 || bool(edge.get("wide", false)) || bool(edge.get("border_guard", false)))) {
 			if (raw_guard_value > 0 && guard_value <= 0 && !bool(edge.get("wide", false)) && !bool(edge.get("border_guard", false))) {
 				Dictionary diagnostic;
 				diagnostic["code"] = "connection_guard_value_scaled_to_zero";
@@ -9600,7 +9705,19 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		target["raw_connection_guard_value"] = raw_guard_value;
 		target["scaled_connection_guard_value"] = scaled_guard_value;
 		target["materialized_connection_guard_value"] = guard_value;
-		target["guard_reward_relation_source"] = "connection_value_scaled_by_recovered_0x4a65a5_global_monster_strength";
+		target["zero_guard_fallback_materialized"] = zero_guard_fallback;
+		target["guard_reward_relation_source"] = zero_guard_fallback ? "zero_value_translated_land_connection_guarded_to_prevent_free_cross_player_town_routes" : "connection_value_scaled_by_recovered_0x4a65a5_global_monster_strength";
+		if (zero_guard_fallback) {
+			Dictionary diagnostic;
+			diagnostic["code"] = "zero_value_translated_land_connection_guard_fallback_materialized";
+			diagnostic["severity"] = "info";
+			diagnostic["route_edge_id"] = edge.get("id", "");
+			diagnostic["from_zone_id"] = edge.get("from", "");
+			diagnostic["to_zone_id"] = edge.get("to", "");
+			diagnostic["guard_value"] = guard_value;
+			diagnostic["fallback_behavior"] = "materialized_guard_body_blocks_zero_value_translated_land_connection_touching_player_or_town_zone";
+			guard_diagnostics.append(diagnostic);
+		}
 		if (point.is_empty()) {
 			Dictionary diagnostic;
 			diagnostic["code"] = "connection_guard_placement_infeasible";
@@ -10428,7 +10545,7 @@ bool zone_boundary_barrier_cell(const Array &owner_grid, int32_t x, int32_t y, i
 		const int32_t nx = x + DX[index];
 		const int32_t ny = y + DY[index];
 		if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
-			continue;
+			return true;
 		}
 		const String other_zone_id = owner_grid_value_at(owner_grid, nx, ny);
 		if (!other_zone_id.is_empty() && other_zone_id != zone_id) {
@@ -11452,7 +11569,9 @@ void apply_land_boundary_choke_masks_to_decorative_package_objects(Array &object
 	}
 	int32_t assigned_count = 0;
 	Dictionary assigned_lookup;
-	static constexpr int32_t MAX_MASK_RADIUS = 4;
+	const int32_t width = int32_t(Dictionary(generated_map.get("terrain_grid", Dictionary())).get("width", generated_map.get("width", 36)));
+	const int32_t height = int32_t(Dictionary(generated_map.get("terrain_grid", Dictionary())).get("height", generated_map.get("height", 36)));
+	const int32_t max_mask_radius = std::max(4, std::max(width, height) / 4);
 	for (int64_t cell_index = 0; cell_index < boundary_cells.size(); ++cell_index) {
 		Dictionary cell = Dictionary(boundary_cells[cell_index]);
 		const int32_t x = int32_t(cell.get("x", 0));
@@ -11471,7 +11590,7 @@ void apply_land_boundary_choke_masks_to_decorative_package_objects(Array &object
 				best_object_index = decorative_index;
 			}
 		}
-		if (best_object_index < 0 || best_distance > MAX_MASK_RADIUS) {
+		if (best_object_index < 0 || best_distance > max_mask_radius) {
 			continue;
 		}
 		Dictionary object = Dictionary(objects[best_object_index]);
@@ -11486,7 +11605,7 @@ void apply_land_boundary_choke_masks_to_decorative_package_objects(Array &object
 		}
 		append_unique_package_block_tile(object, block_seen, cell);
 		object["package_boundary_choke_mask_source"] = "land_boundary_rock_cells_materialized_on_nearby_decorative_obstacle_masks";
-		object["package_boundary_choke_max_mask_radius"] = MAX_MASK_RADIUS;
+		object["package_boundary_choke_max_mask_radius"] = max_mask_radius;
 		object["package_boundary_choke_tile_count"] = int32_t(object.get("package_boundary_choke_tile_count", 0)) + 1;
 		object["package_pathing_materialization_state"] = "body_visit_and_boundary_choke_masks_materialized_for_generated_package_surface";
 		objects[best_object_index] = object;

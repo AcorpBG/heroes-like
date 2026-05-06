@@ -260,7 +260,7 @@ func _object_summary(map_document: Variant) -> Dictionary:
 		towns.append(brief)
 		town_points.append(Vector2i(int(object.get("x", 0)), int(object.get("y", 0))))
 		var player_slot := _int_value(object.get("player_slot", 0), 0)
-		if player_slot <= 0:
+		if player_slot <= 0 or String(object.get("record_type", "")) != "player_start_town":
 			continue
 		var slot_key := str(player_slot)
 		if not player_start_towns_by_slot.has(slot_key):
@@ -452,6 +452,7 @@ func _terrain_id_for_code(ids_by_code: Variant, code: int) -> String:
 func _brief_town(town: Dictionary) -> Dictionary:
 	return {
 		"placement_id": String(town.get("placement_id", "")),
+		"record_type": String(town.get("record_type", "")),
 		"zone_id": String(town.get("zone_id", "")),
 		"player_slot": _int_value(town.get("player_slot", 0), 0),
 		"x": _int_value(town.get("x", 0), 0),

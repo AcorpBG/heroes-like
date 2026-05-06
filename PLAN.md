@@ -1449,6 +1449,34 @@ nonGoals:
 - No HoMM3 art, DEF, name, text, map, or binary `.h3m` import.
 - No runtime-authoritative package/session promotion.
 
+id: `native-rmg-default-size-object-only-breadth-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Broaden object-only package topology validation from the uploaded Small 049 case to the player-facing default translated templates for Small, Medium, Large, and Extra Large maps.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `scripts/core/ScenarioSelectRules.gd`
+- `tests/native_random_map_package_surface_topology_report.gd`
+implementationTargets:
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+- `tests/native_random_map_package_object_only_breadth_report.tscn`
+- `ops/progress.json`
+completionCriteria:
+- The report generates, converts, saves, and reloads each player-facing default size-class template.
+- Converted and loaded package surfaces fail if object masks alone allow unguarded cross-zone town traversal.
+- Each case preserves at least the expected player-start towns, package object records, guard records, and non-empty roads.
+- Any unsupported or still-not-HoMM3-equivalent status remains reported rather than promoted to broad production parity.
+completionEvidence:
+- `tests/native_random_map_package_object_only_breadth_report.tscn` passes for the player-facing default Small 049, Medium 002, Large 042, and Extra Large 043 translated templates through generate, package convert, save, and reload.
+- Converted and loaded package surfaces report zero object-only reachable cross-zone town pairs for all four default size-class templates.
+- Small 049 package surface still passes the focused package topology report at 7 towns, 303 objects, 40 guards, and no empty or duplicate road records.
+- Uploaded Small H3M comparison topology remains passing while reporting that the gate is topology/comparison evidence, not exact H3M byte/pathing parity.
+nonGoals:
+- No exact H3M byte/pathing parity claim.
+- C++ changes are limited to concrete blockers exposed by the breadth gate: zero-value translated land guard fallback, package boundary mask coverage, close cross-zone town corridor guard coverage, edge-aware barriers, and required town materialization fallback.
+- No generated package/map evidence committed.
+
 id: `overworld-map-object-distinct-sprite-gap-fill-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`
