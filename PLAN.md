@@ -21,9 +21,9 @@ Rules:
 
 ## Current Tactical State
 
-Current phase: **Phase 3 - HoMM3-Style Random Map Generator Rework complete**.
+Current phase: **Phase 3 - HoMM3-Style Random Map Generator Rework corrective parity queue reopened**.
 
-Current tactical chain: the accepted Phase 3 goal `native-rmg-homm3-spec-rework-parent-10184` and its child slices are complete through validation/adoption gates. Native package/session adoption remains feature-gated and non-authoritative until a later replay gate proves stable full-output package/session identity for supported profiles.
+Current tactical chain: owner-uploaded H3M comparisons reopened focused native RMG corrective work after the accepted Phase 3 goal `native-rmg-homm3-spec-rework-parent-10184`. Completed child slices remain valid evidence for their specific gates, but they do not close broad HoMM3-style production parity. Native package/session adoption remains feature-gated and non-authoritative until later replay and owner-comparison gates prove stable full-output package/session identity, road topology, object density, guard placement, and town separation across supported profiles.
 
 Do not infer product readiness from the completed queue. Completed Phase 2/RMG/performance/tooling evidence means those specific slices passed their gates; it does not mean playable alpha, campaign breadth, release readiness, broad faction completion, asset parity, or HoMM3 byte-level cloning.
 
