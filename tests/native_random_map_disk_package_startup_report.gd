@@ -26,8 +26,8 @@ func _run() -> void:
 	var authored_item_count := int(authored_before.get("items", []).size())
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
 		"native-rmg-disk-package-startup-10184",
-		"border_gate_compact_v1",
-		"border_gate_compact_profile_v1",
+		"",
+		"",
 		3,
 		"land",
 		false,
@@ -140,6 +140,20 @@ func _run() -> void:
 	if not bool(loaded_map.get("ok", false)) or not bool(loaded_scenario.get("ok", false)):
 		_fail("Independent package load failed after startup.")
 		return
+	var loaded_document: Variant = loaded_map.get("map_document", null)
+	if loaded_document == null:
+		_fail("Independent package load missed map_document.")
+		return
+	var package_surface := _package_surface_summary(loaded_document)
+	if String(package_surface.get("template_id", "")) != "translated_rmg_template_049_v1":
+		_fail("Player-facing Small package startup did not use the recovered translated template: %s" % JSON.stringify(package_surface))
+		return
+	if int(package_surface.get("town_count", 0)) < 7 or int(package_surface.get("guard_count", 0)) < 40:
+		_fail("Player-facing Small package startup lost owner-like towns or guards: %s" % JSON.stringify(package_surface))
+		return
+	if int(package_surface.get("road_tile_count", 0)) <= 0 or int(package_surface.get("zero_tile_road_count", 0)) != 0:
+		_fail("Player-facing Small package startup serialized empty road records: %s" % JSON.stringify(package_surface))
+		return
 	DirAccess.remove_absolute(map_path)
 	DirAccess.remove_absolute(scenario_path)
 
@@ -152,10 +166,44 @@ func _run() -> void:
 		"session_id": session.session_id,
 		"map_ref": session.overworld.get("map_package_ref", {}),
 		"scenario_ref": session.overworld.get("scenario_package_ref", {}),
+		"package_surface": package_surface,
 		"content_scenarios_json_used_for_startup": false,
 		"generated_draft_registry_used": false,
 	})])
 	get_tree().quit(0)
+
+func _package_surface_summary(map_document: Variant) -> Dictionary:
+	var terrain_layers: Dictionary = map_document.get_terrain_layers()
+	var roads: Array = terrain_layers.get("roads", []) if terrain_layers.get("roads", []) is Array else []
+	var road_tile_count := 0
+	var zero_tile_road_count := 0
+	for road in roads:
+		if not (road is Dictionary):
+			continue
+		var tile_count := int(road.get("tile_count", road.get("cell_count", 0)))
+		road_tile_count += tile_count
+		if tile_count <= 0:
+			zero_tile_road_count += 1
+	var counts := {}
+	for index in range(int(map_document.get_object_count())):
+		var object: Dictionary = map_document.get_object_by_index(index)
+		var kind := String(object.get("kind", object.get("native_record_kind", object.get("category_id", "object"))))
+		counts[kind] = int(counts.get(kind, 0)) + 1
+	var metadata: Dictionary = map_document.get_metadata()
+	var normalized: Dictionary = metadata.get("normalized_config", {}) if metadata.get("normalized_config", {}) is Dictionary else {}
+	return {
+		"width": int(map_document.get_width()),
+		"height": int(map_document.get_height()),
+		"template_id": String(normalized.get("template_id", "")),
+		"profile_id": String(normalized.get("profile_id", "")),
+		"road_count": roads.size(),
+		"road_tile_count": road_tile_count,
+		"zero_tile_road_count": zero_tile_road_count,
+		"object_count": int(map_document.get_object_count()),
+		"town_count": int(counts.get("town", 0)),
+		"guard_count": int(counts.get("guard", 0)),
+		"object_counts_by_kind": counts,
+	}
 
 func _package_filename_is_clean(filename: String) -> bool:
 	var regex := RegEx.new()
