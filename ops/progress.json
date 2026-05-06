@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-supported-underground-terrain-count-10184",
-  "currentSliceTitle": "Native RMG Supported Underground Terrain Count",
+  "currentSliceId": "native-rmg-small-package-surface-topology-gate-10184",
+  "currentSliceTitle": "Native RMG Small Package Surface Topology Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Supported 2-level Small land generation now validates terrain tile/count semantics against all native materialized levels; stale GDScript full-parity comparison still reports broader HoMM3-readiness gaps and is not accepted as completion evidence.",
+  "currentSliceNotes": "Player-facing Small 3-player land package topology is now gated on the saved/loaded MapDocument surface: translated template 049 provenance, owner-like town/guard/object/road counts, one start town per player slot, no empty/duplicate road records, and no unresolved start-town traversal.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
   "updatedAt": "2026-05-06T00:00:00Z",
   "statusTaxonomy": {
@@ -39,6 +39,56 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "native-rmg-small-package-surface-topology-gate-10184",
+      "title": "Native RMG Small Package Surface Topology Gate",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "maps/small3playermap-1level.h3m",
+        "maps/small-hollow-road-bend-5838fad4.amap",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd",
+        "tests/native_random_map_zone_choke_regression_report.gd",
+        "owner correction on 2026-05-06 that uploaded native Small output is much worse than the HoMM3 sample and must be audited on the actual package surface"
+      ],
+      "purpose": "Add a focused saved/loaded MapDocument topology regression gate for player-facing Small 3-player land generation so stale package outputs with duplicate start towns, empty road overlays, insufficient owner-like density, or unguarded start-town traversal are rejected directly.",
+      "implementationTargets": [
+        "tests/native_random_map_package_surface_topology_report.gd",
+        "tests/native_random_map_package_surface_topology_report.tscn",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_disk_package_startup_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Player-facing Small 3-player land package surface resolves to translated_rmg_template_049_v1 and translated_rmg_profile_049_v1.",
+        "Converted and saved/loaded MapDocument surfaces preserve owner-like town, guard, object, and road counts with zero empty or duplicate road records.",
+        "Exactly one start town is materialized for each player slot 1 through 3, preventing stale duplicate player-slot town packages.",
+        "Player start towns retain HoMM3-like spacing and are not mutually reachable on the unresolved package surface while guards/blockers remain in place.",
+        "No generated .amap/.ascenario package files are committed."
+      ],
+      "nonGoals": [
+        "No HoMM3 copyrighted asset import.",
+        "No binary .h3m writeout claim.",
+        "No broad template-count or byte-level parity claim.",
+        "No generated package file commit."
+      ],
+      "completionEvidence": [
+        "Added tests/native_random_map_package_surface_topology_report.gd/.tscn to generate the player-facing Small 3-player land default, convert it to a MapDocument, save/load the package, and validate both converted and loaded package surfaces.",
+        "The new gate rejects stale symptoms found in the uploaded native package: non-049 template provenance, duplicate or missing player-slot start towns, too-close towns, empty/duplicate road overlays, weak owner-like density, and reachable player start towns while guards/blockers remain unresolved.",
+        "Focused package-surface evidence: translated_rmg_template_049_v1, translated_rmg_profile_049_v1, 7 towns, 40 guards, 316 package objects, 104 unique package road tiles matching 104 source road cells, 0 empty road records, 0 duplicate road tiles, one start town each for slots 1/2/3, nearest all-town distance 11, nearest start-town distance 25, and 0 unresolved reachable start-town pairs across 3 checked pairs.",
+        "Existing uploaded-small comparison, disk package startup, and generated-zone choke reports still pass after adding the package-surface topology gate."
+      ]
+    },
     {
       "id": "native-rmg-supported-underground-terrain-count-10184",
       "title": "Native RMG Supported Underground Terrain Count",
