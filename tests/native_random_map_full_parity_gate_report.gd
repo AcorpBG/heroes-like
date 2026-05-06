@@ -16,7 +16,9 @@ const CASES := [
 		"underground": false,
 		"size_class_id": "homm3_small",
 		"expected_status": "scoped_structural_profile_supported",
+		"expected_full_generation_status": "scoped_structural_profile_not_full_parity",
 		"expected_scoped_support": true,
+		"expected_owner_compared_support": false,
 	},
 	{
 		"id": "translated_small_049_default",
@@ -27,8 +29,10 @@ const CASES := [
 		"water_mode": "land",
 		"underground": false,
 		"size_class_id": "homm3_small",
-		"expected_status": "partial_foundation",
+		"expected_status": "owner_compared_translated_profile_supported",
+		"expected_full_generation_status": "owner_compared_translated_profile_not_full_parity",
 		"expected_scoped_support": false,
+		"expected_owner_compared_support": true,
 	},
 	{
 		"id": "translated_medium_002_default",
@@ -39,8 +43,10 @@ const CASES := [
 		"water_mode": "land",
 		"underground": false,
 		"size_class_id": "homm3_medium",
-		"expected_status": "partial_foundation",
+		"expected_status": "owner_compared_translated_profile_supported",
+		"expected_full_generation_status": "owner_compared_translated_profile_not_full_parity",
 		"expected_scoped_support": false,
+		"expected_owner_compared_support": true,
 	},
 ]
 
@@ -106,8 +112,14 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 	if String(generated.get("status", "")) != String(case_record.get("expected_status", "")):
 		_fail("%s status drifted: %s" % [String(case_record.get("id", "case")), JSON.stringify(_claim_summary(generated))])
 		return {}
+	if String(generated.get("full_generation_status", "")) != String(case_record.get("expected_full_generation_status", "")):
+		_fail("%s full generation status drifted: %s" % [String(case_record.get("id", "case")), JSON.stringify(_claim_summary(generated))])
+		return {}
 	if bool(generated.get("supported_parity_config", false)) != bool(case_record.get("expected_scoped_support", false)):
 		_fail("%s scoped support flag drifted: %s" % [String(case_record.get("id", "case")), JSON.stringify(_claim_summary(generated))])
+		return {}
+	if bool(generated.get("owner_compared_translated_profile_supported", false)) != bool(case_record.get("expected_owner_compared_support", false)):
+		_fail("%s owner-compared support flag drifted: %s" % [String(case_record.get("id", "case")), JSON.stringify(_claim_summary(generated))])
 		return {}
 	if bool(generated.get("full_parity_claim", false)) or bool(generated.get("native_runtime_authoritative", false)):
 		_fail("%s falsely claimed full parity or native runtime authority: %s" % [String(case_record.get("id", "case")), JSON.stringify(_claim_summary(generated))])
@@ -146,6 +158,7 @@ func _claim_summary(generated: Dictionary) -> Dictionary:
 		"profile_id": normalized.get("profile_id", ""),
 		"supported_parity_config": generated.get("supported_parity_config", false),
 		"scoped_structural_profile_supported": generated.get("scoped_structural_profile_supported", false),
+		"owner_compared_translated_profile_supported": generated.get("owner_compared_translated_profile_supported", false),
 		"full_parity_claim": generated.get("full_parity_claim", false),
 		"native_runtime_authoritative": generated.get("native_runtime_authoritative", false),
 		"provenance_full_parity_claim": provenance.get("full_parity_claim", false),

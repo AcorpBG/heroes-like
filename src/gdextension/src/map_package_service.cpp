@@ -73,6 +73,7 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_homm3_land_water_shape");
 	result.append("native_random_map_homm3_zone_aware_terrain_island_shape");
 	result.append("native_random_map_scoped_structural_profile_support");
+	result.append("native_random_map_owner_compared_translated_profile_support");
 	result.append("native_random_map_extension_profile");
 	result.append("native_rmg_homm3_generator_data_model_report");
 	result.append("native_package_save_load");
@@ -3653,17 +3654,47 @@ bool native_rmg_scoped_structural_profile_supported(const Dictionary &normalized
 	return false;
 }
 
+bool native_rmg_owner_compared_translated_profile_supported(const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	const String template_id = String(normalized.get("template_id", ""));
+	const String profile_id = String(normalized.get("profile_id", ""));
+	const String size_class_id = String(normalized.get("size_class_id", ""));
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	if (template_id == "translated_rmg_template_049_v1" && profile_id == "translated_rmg_profile_049_v1") {
+		return width == 36 && height == 36 && size_class_id == "homm3_small" && player_count == 3 && water_mode == "land" && level_count == 1;
+	}
+	if (template_id == "translated_rmg_template_002_v1" && profile_id == "translated_rmg_profile_002_v1") {
+		return width == 72 && height == 72 && size_class_id == "homm3_medium" && player_count == 4 && water_mode == "land" && level_count == 1;
+	}
+	return false;
+}
+
 bool native_rmg_full_parity_supported(const Dictionary &normalized) {
 	(void)normalized;
 	return false;
 }
 
 String native_rmg_generation_status_for_config(const Dictionary &normalized) {
-	return native_rmg_scoped_structural_profile_supported(normalized) ? String("scoped_structural_profile_supported") : String("partial_foundation");
+	if (native_rmg_scoped_structural_profile_supported(normalized)) {
+		return String("scoped_structural_profile_supported");
+	}
+	if (native_rmg_owner_compared_translated_profile_supported(normalized)) {
+		return String("owner_compared_translated_profile_supported");
+	}
+	return String("partial_foundation");
 }
 
 String native_rmg_full_generation_status_for_config(const Dictionary &normalized) {
-	return native_rmg_scoped_structural_profile_supported(normalized) ? String("scoped_structural_profile_not_full_parity") : String("not_implemented");
+	if (native_rmg_scoped_structural_profile_supported(normalized)) {
+		return String("scoped_structural_profile_not_full_parity");
+	}
+	if (native_rmg_owner_compared_translated_profile_supported(normalized)) {
+		return String("owner_compared_translated_profile_not_full_parity");
+	}
+	return String("not_implemented");
 }
 
 Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized) {
@@ -10914,6 +10945,7 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = int32_t(normalized.get("level_count", 1));
 	const bool scoped_structural_profile_supported = native_rmg_scoped_structural_profile_supported(normalized);
+	const bool owner_compared_translated_profile_supported = native_rmg_owner_compared_translated_profile_supported(normalized);
 	const bool all_native_levels_materialized = String(terrain_grid.get("level_count_semantics", "")) == "all_native_levels_materialized";
 	const int32_t expected_tile_count = (!scoped_structural_profile_supported || all_native_levels_materialized) ? width * height * level_count : width * height;
 	const String generation_status = native_rmg_generation_status_for_config(normalized);
@@ -11296,13 +11328,18 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	report["town_guard_occupancy_signature"] = Dictionary(town_guard_placement.get("combined_occupancy_index", Dictionary())).get("signature", "");
 	report["town_guard_category_counts"] = town_guard_placement.get("category_counts", Dictionary());
 	Array remaining_parity_slices;
-	remaining_parity_slices.append("native-rmg-production-owner-comparison-gate-10184");
+	if (owner_compared_translated_profile_supported || scoped_structural_profile_supported) {
+		remaining_parity_slices.append("native-rmg-package-session-authoritative-replay-gate-10184");
+	} else {
+		remaining_parity_slices.append("native-rmg-production-owner-comparison-gate-10184");
+	}
 	report["remaining_parity_slices"] = remaining_parity_slices;
 	report["no_authored_writeback"] = true;
 	report["full_parity_claim"] = false;
 	report["native_runtime_authoritative"] = false;
 	report["supported_parity_config"] = scoped_structural_profile_supported;
 	report["scoped_structural_profile_supported"] = scoped_structural_profile_supported;
+	report["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	report["report_signature"] = hash32_hex(canonical_variant(report));
 	return report;
 }
@@ -11329,12 +11366,13 @@ Dictionary build_native_random_map_provenance(const Dictionary &normalized, cons
 	provenance["full_output_signature"] = validation_report.get("full_output_signature", "");
 	provenance["full_generation_status"] = native_rmg_full_generation_status_for_config(normalized);
 	const bool scoped_structural_profile_supported = native_rmg_scoped_structural_profile_supported(normalized);
+	const bool owner_compared_translated_profile_supported = native_rmg_owner_compared_translated_profile_supported(normalized);
 	Dictionary boundaries;
 	boundaries["authored_content_writeback"] = false;
 	boundaries["authored_tile_writeback"] = false;
 	boundaries["save_schema_write"] = false;
 	boundaries["runtime_call_site_adoption"] = false;
-	boundaries["package_session_adoption"] = scoped_structural_profile_supported;
+	boundaries["package_session_adoption"] = scoped_structural_profile_supported || owner_compared_translated_profile_supported;
 	boundaries["native_runtime_authoritative"] = false;
 	boundaries["full_parity_claim"] = false;
 	boundaries["content_provenance"] = "native_generated_records_only_original_placeholder_ids_no_authored_json_mutation";
@@ -11342,6 +11380,7 @@ Dictionary build_native_random_map_provenance(const Dictionary &normalized, cons
 	provenance["full_parity_claim"] = false;
 	provenance["native_runtime_authoritative"] = false;
 	provenance["scoped_structural_profile_supported"] = scoped_structural_profile_supported;
+	provenance["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	provenance["signature"] = hash32_hex(canonical_variant(provenance));
 	return provenance;
 }
@@ -11800,12 +11839,13 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 		return native_conversion_fail("native_generation_not_ok", "Native RMG output must be ok=true before package/session adoption.");
 	}
 	const String generated_status = String(generated_map.get("status", ""));
-	if (generated_status != "partial_foundation" && generated_status != "scoped_structural_profile_supported") {
-		return native_conversion_fail("unsupported_native_generation_status", "Native package/session adoption accepts partial foundation or scoped structural native output only.");
+	if (generated_status != "partial_foundation" && generated_status != "scoped_structural_profile_supported" && generated_status != "owner_compared_translated_profile_supported") {
+		return native_conversion_fail("unsupported_native_generation_status", "Native package/session adoption accepts partial foundation, scoped structural, or owner-compared translated native output only.");
 	}
 
 	Dictionary normalized = generated_map.get("normalized_config", Dictionary());
 	const bool structurally_supported_profile = bool(generated_map.get("supported_parity_config", native_rmg_scoped_structural_profile_supported(normalized))) || bool(generated_map.get("scoped_structural_profile_supported", false));
+	const bool owner_compared_translated_profile_supported = bool(generated_map.get("owner_compared_translated_profile_supported", native_rmg_owner_compared_translated_profile_supported(normalized)));
 	const bool adoption_authoritative = false;
 	Dictionary identity = generated_map.get("deterministic_identity", Dictionary());
 	Dictionary validation_report = generated_map.get("validation_report", generated_map.get("report", Dictionary()));
@@ -11841,6 +11881,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	map_metadata["save_version_bump"] = false;
 	map_metadata["native_runtime_authoritative"] = adoption_authoritative;
 	map_metadata["structurally_supported_profile"] = structurally_supported_profile;
+	map_metadata["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	map_metadata["full_parity_claim"] = adoption_authoritative;
 	map_metadata["component_counts"] = generated_map.get("component_counts", Dictionary());
 
@@ -11991,6 +12032,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	session_boundary_record["gdscript_fallback_untouched"] = true;
 	session_boundary_record["native_runtime_authoritative"] = adoption_authoritative;
 	session_boundary_record["structurally_supported_profile"] = structurally_supported_profile;
+	session_boundary_record["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	session_boundary_record["full_parity_claim"] = adoption_authoritative;
 
 	Dictionary metrics;
@@ -12025,6 +12067,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	report["adoption_status"] = "ready_feature_gated_not_authoritative";
 	report["native_runtime_authoritative"] = adoption_authoritative;
 	report["structurally_supported_profile"] = structurally_supported_profile;
+	report["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	report["runtime_call_site_adoption"] = false;
 	report["gdscript_source_of_truth"] = true;
 	report["gdscript_fallback_untouched"] = true;
@@ -12035,6 +12078,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	readiness["gdscript_source_of_truth"] = true;
 	readiness["native_runtime_authoritative"] = adoption_authoritative;
 	readiness["structurally_supported_profile"] = structurally_supported_profile;
+	readiness["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	readiness["package_session_adoption_ready"] = true;
 	readiness["adoption_gate_status"] = "package_session_bridge_ready_feature_gated_authoritative_replay_still_pending";
 	readiness["full_parity_claim"] = adoption_authoritative;
@@ -12063,6 +12107,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	result["save_version_bump"] = false;
 	result["native_runtime_authoritative"] = adoption_authoritative;
 	result["structurally_supported_profile"] = structurally_supported_profile;
+	result["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	result["full_parity_claim"] = adoption_authoritative;
 	return result;
 }
@@ -12445,6 +12490,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	Dictionary normalized = normalize_random_map_config(config);
 	append_extension_profile_phase(extension_profile_phases, "normalize_config", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	const bool scoped_structural_profile_supported = native_rmg_scoped_structural_profile_supported(normalized);
+	const bool owner_compared_translated_profile_supported = native_rmg_owner_compared_translated_profile_supported(normalized);
 	const String generation_status = native_rmg_generation_status_for_config(normalized);
 	const String full_generation_status = native_rmg_full_generation_status_for_config(normalized);
 	Dictionary identity = random_map_config_identity(config);
@@ -12499,6 +12545,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["full_generation_status"] = full_generation_status;
 	metadata["supported_parity_config"] = scoped_structural_profile_supported;
 	metadata["scoped_structural_profile_supported"] = scoped_structural_profile_supported;
+	metadata["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	metadata["terrain_generation_status"] = terrain_grid.get("generation_status", "terrain_grid_generated");
 	metadata["zone_generation_status"] = zone_layout.get("generation_status", "zones_generated_foundation");
 	metadata["runtime_zone_graph_signature"] = Dictionary(zone_layout.get("runtime_zone_graph", Dictionary())).get("signature", "");
@@ -12548,7 +12595,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	append_extension_profile_phase(extension_profile_phases, "map_document_initial_configure", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 
 	Array warnings;
-	if (!scoped_structural_profile_supported) {
+	if (!scoped_structural_profile_supported && !owner_compared_translated_profile_supported) {
 		Dictionary warning;
 		warning["code"] = "full_generation_not_implemented";
 		warning["severity"] = "warning";
@@ -12607,6 +12654,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["full_generation_status"] = full_generation_status;
 	result["supported_parity_config"] = scoped_structural_profile_supported;
 	result["scoped_structural_profile_supported"] = scoped_structural_profile_supported;
+	result["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	result["validation_status"] = report.get("validation_status", "");
 	result["normalized_config"] = normalized;
 	result["deterministic_identity"] = identity;

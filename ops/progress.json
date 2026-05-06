@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-production-terrain-object-choke-boundary-10184",
-  "currentSliceTitle": "Native RMG Production Terrain/Object Choke Boundary",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Terrain/object choke boundary slice completed: uploaded Small H3M comparison now gates current Small 049 count/road/object-only topology drift and broadens generated-case evidence to additional Small/Medium cases.",
+  "currentSliceId": "native-rmg-production-large-xl-owner-status-gate-10184",
+  "currentSliceTitle": "Native RMG Production Large/XL Owner Status Gate",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Owner-comparison gate completed for translated Small 049 and Medium 002; next gap is Large 042 and XL 043, which still report full_generation_status not_implemented.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T04:22:08Z",
+  "updatedAt": "2026-05-06T04:32:05Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -587,6 +587,100 @@
       "updatedAt": "2026-05-06T04:22:08Z",
       "startedAt": "2026-05-06T04:14:40Z",
       "completedAt": "2026-05-06T04:22:08Z"
+    },
+    {
+      "id": "native-rmg-production-owner-comparison-gate-10184",
+      "title": "Native RMG Production Owner Comparison Gate",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "tests/native_random_map_full_parity_gate_report.gd",
+        "tests/native_random_map_homm3_uploaded_small_topology_report.gd",
+        "tests/native_random_map_package_object_only_breadth_report.gd",
+        "owner objective that native RMG must become production-ready, usable, and not alpha/prototype"
+      ],
+      "purpose": "Move the owner-compared translated default profiles out of partial_foundation/not_implemented status without claiming full HoMM3 parity or native runtime authority.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_full_parity_gate_report.gd",
+        "focused package/topology reports under tests/",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_full_parity_gate_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_object_only_breadth_report.tscn",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Translated Small 049 and Medium 002 default native generation no longer report status partial_foundation or full_generation_status not_implemented.",
+        "The promoted status remains bounded to owner-comparison/topology-supported translated defaults and does not expose full_parity_claim, native_runtime_authoritative, or runtime call-site adoption.",
+        "Full parity, uploaded-H3M topology, package-surface topology, and object-only breadth reports pass after a Linux native rebuild.",
+        "python3 tests/validate_repo.py, python3 -m json.tool ops/progress.json, and git diff --check pass."
+      ],
+      "completionEvidence": [
+        "Native C++ generation now classifies translated Small 049 and Medium 002 defaults as owner_compared_translated_profile_supported with full_generation_status owner_compared_translated_profile_not_full_parity.",
+        "tests/native_random_map_full_parity_gate_report.tscn passes and proves translated Small/Medium moved off partial_foundation/not_implemented while full_parity_claim and native_runtime_authoritative remain false.",
+        "tests/native_random_map_homm3_uploaded_small_topology_report.tscn, tests/native_random_map_package_surface_topology_report.tscn, and tests/native_random_map_package_object_only_breadth_report.tscn pass after a Linux native rebuild.",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2, python3 tests/validate_repo.py, python3 -m json.tool ops/progress.json, and git diff --check pass."
+      ],
+      "remainingRisk": "Broad production parity remains open: Large 042 and XL 043 still report full_generation_status not_implemented, all 56 recovered templates are not production-ready, and runtime-authoritative generated skirmish adoption remains disabled.",
+      "nonGoals": [
+        "No exact H3M byte parity.",
+        "No HoMM3 asset import.",
+        "No claim that all 56 recovered templates are production-ready.",
+        "No runtime-authoritative generated skirmish adoption."
+      ],
+      "updatedAt": "2026-05-06T04:32:05Z",
+      "startedAt": "2026-05-06T04:25:59Z",
+      "completedAt": "2026-05-06T04:32:05Z"
+    },
+    {
+      "id": "native-rmg-production-large-xl-owner-status-gate-10184",
+      "title": "Native RMG Production Large/XL Owner Status Gate",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "pending",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "tests/native_random_map_package_object_only_breadth_report.gd",
+        "docs/random-map-homm3-parity-visual-inspection-gaps.md",
+        "owner objective that native RMG must become production-ready, usable, and not alpha/prototype"
+      ],
+      "purpose": "Build owner-comparison/topology evidence for translated Large 042 and XL 043 defaults so they can be moved off full_generation_status not_implemented without overclaiming full parity.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "focused Large/XL topology and package-surface reports under tests/",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_object_only_breadth_report.tscn",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Large 042 and XL 043 default translated profiles have bounded topology evidence comparable to the Small/Medium owner-comparison gates.",
+        "If evidence passes, Large/XL no longer report full_generation_status not_implemented.",
+        "Full parity, runtime authority, and all-56-template production claims remain false until broader audit coverage exists."
+      ],
+      "completionEvidence": [],
+      "remainingRisk": "Pending implementation; Large/XL still report not_implemented in the object-only breadth report.",
+      "nonGoals": [
+        "No exact H3M byte parity.",
+        "No HoMM3 asset import.",
+        "No blanket all-template promotion."
+      ],
+      "updatedAt": "2026-05-06T04:32:05Z"
     },
     {
       "id": "native-rmg-small-049-owner-density-tightening-10184",
@@ -13000,11 +13094,11 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-production-terrain-object-choke-boundary-10184",
-      "title": "Native RMG Production Terrain/Object Choke Boundary",
-      "status": "completed",
+      "id": "native-rmg-production-large-xl-owner-status-gate-10184",
+      "title": "Native RMG Production Large/XL Owner Status Gate",
+      "status": "pending",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "reason": "Completed after uploaded Small H3M comparison was broadened to object-only topology gates and additional generated Small/Medium evidence."
+      "reason": "Selected after Small/Medium owner-comparison status promotion; object-only breadth report still shows translated Large 042 and XL 043 default profiles with full_generation_status not_implemented."
     }
   ],
   "stoppedOrPausedTasks": [
