@@ -94,6 +94,9 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 		return {}
 	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
 	var metrics := _native_metrics(generated)
+	var package_surface := _package_surface_metrics(service, generated, String(case_record.get("id", "case")))
+	if package_surface.is_empty():
+		return {}
 	metrics["id"] = String(case_record.get("id", "case"))
 	metrics["validation_status"] = String(generated.get("validation_status", ""))
 	metrics["full_generation_status"] = String(generated.get("full_generation_status", ""))
@@ -104,6 +107,8 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 	metrics["decoration_count_ratio_to_owner"] = snapped(float(int(metrics.get("decoration_count", 0))) / float(int(OWNER_SMALL_BASELINE.get("decoration_count", 1))), 0.001)
 	metrics["reward_count_ratio_to_owner"] = snapped(float(int(metrics.get("reward_count", 0))) / float(int(OWNER_SMALL_BASELINE.get("reward_count", 1))), 0.001)
 	metrics["road_cell_count_ratio_to_owner"] = snapped(float(int(metrics.get("road_cell_count", 0))) / float(int(OWNER_SMALL_BASELINE.get("road_cell_count", 1))), 0.001)
+	metrics["package_surface"] = package_surface.get("package_surface", {})
+	metrics["loaded_package_surface"] = package_surface.get("loaded_package_surface", {})
 	return metrics
 
 func _assert_default_small_shape(summaries: Array) -> bool:
@@ -139,7 +144,104 @@ func _assert_default_small_shape(summaries: Array) -> bool:
 	if int(default_summary.get("guard_record_count", 0)) < int(OWNER_SMALL_BASELINE.get("guard_count", 0)):
 		_fail("Small default guard count is below owner baseline: %s" % JSON.stringify(default_summary))
 		return false
+	if not _assert_default_package_surface(default_summary):
+		return false
 	return true
+
+func _assert_default_package_surface(default_summary: Dictionary) -> bool:
+	var package_surface: Dictionary = default_summary.get("package_surface", {}) if default_summary.get("package_surface", {}) is Dictionary else {}
+	var loaded_surface: Dictionary = default_summary.get("loaded_package_surface", {}) if default_summary.get("loaded_package_surface", {}) is Dictionary else {}
+	if package_surface.is_empty() or loaded_surface.is_empty():
+		_fail("Small default did not report package save/load surface metrics: %s" % JSON.stringify(default_summary))
+		return false
+	for surface in [package_surface, loaded_surface]:
+		var label := String(surface.get("label", "package"))
+		if String(surface.get("template_id", "")) != "translated_rmg_template_049_v1":
+			_fail("Small default %s did not preserve translated template provenance: %s" % [label, JSON.stringify(surface)])
+			return false
+		if int(surface.get("road_tile_count", 0)) < int(default_summary.get("road_cell_count", 0)):
+			_fail("Small default %s dropped road cells during package conversion/save/load: %s" % [label, JSON.stringify(surface)])
+			return false
+		if int(surface.get("zero_tile_road_count", 0)) != 0:
+			_fail("Small default %s serialized empty road records: %s" % [label, JSON.stringify(surface)])
+			return false
+		if int(surface.get("town_count", 0)) < int(OWNER_SMALL_BASELINE.get("town_count", 0)):
+			_fail("Small default %s did not preserve owner-like town count: %s" % [label, JSON.stringify(surface)])
+			return false
+		if int(surface.get("guard_count", 0)) < int(OWNER_SMALL_BASELINE.get("guard_count", 0)):
+			_fail("Small default %s did not preserve owner-like guard count: %s" % [label, JSON.stringify(surface)])
+			return false
+		if int(surface.get("object_count", 0)) < int(default_summary.get("total_content_count", 0)):
+			_fail("Small default %s lost generated package objects: %s" % [label, JSON.stringify(surface)])
+			return false
+	return true
+
+func _package_surface_metrics(service: Variant, generated: Dictionary, case_id: String) -> Dictionary:
+	var adoption: Dictionary = service.convert_generated_payload(generated, {
+		"feature_gate": "native_rmg_uploaded_small_package_surface_report",
+		"session_save_version": 9,
+		"scenario_id": "native_uploaded_small_%s" % case_id,
+	})
+	if not bool(adoption.get("ok", false)):
+		_fail("%s package conversion failed: %s" % [case_id, JSON.stringify(adoption)])
+		return {}
+	var map_document: Variant = adoption.get("map_document", null)
+	if map_document == null:
+		_fail("%s package conversion missed map_document." % case_id)
+		return {}
+	var package_surface := _map_document_surface_summary(map_document, "converted_package")
+	var map_path := "user://native_uploaded_small_%s.amap" % case_id
+	var save_result: Dictionary = service.save_map_package(map_document, map_path)
+	if not bool(save_result.get("ok", false)):
+		_fail("%s save_map_package failed: %s" % [case_id, JSON.stringify(save_result)])
+		return {}
+	var load_result: Dictionary = service.load_map_package(map_path)
+	DirAccess.remove_absolute(map_path)
+	if not bool(load_result.get("ok", false)):
+		_fail("%s load_map_package failed: %s" % [case_id, JSON.stringify(load_result)])
+		return {}
+	var loaded_document: Variant = load_result.get("map_document", null)
+	if loaded_document == null:
+		_fail("%s load_map_package missed map_document." % case_id)
+		return {}
+	return {
+		"package_surface": package_surface,
+		"loaded_package_surface": _map_document_surface_summary(loaded_document, "loaded_package"),
+	}
+
+func _map_document_surface_summary(map_document: Variant, label: String) -> Dictionary:
+	var terrain_layers: Dictionary = map_document.get_terrain_layers()
+	var roads: Array = terrain_layers.get("roads", []) if terrain_layers.get("roads", []) is Array else []
+	var road_tile_count := 0
+	var zero_tile_road_count := 0
+	for road in roads:
+		if not (road is Dictionary):
+			continue
+		var tile_count := int(road.get("tile_count", road.get("cell_count", 0)))
+		road_tile_count += tile_count
+		if tile_count <= 0:
+			zero_tile_road_count += 1
+	var counts := {}
+	for index in range(int(map_document.get_object_count())):
+		var object: Dictionary = map_document.get_object_by_index(index)
+		var kind := String(object.get("kind", object.get("native_record_kind", object.get("category_id", "object"))))
+		counts[kind] = int(counts.get(kind, 0)) + 1
+	var metadata: Dictionary = map_document.get_metadata()
+	var normalized: Dictionary = metadata.get("normalized_config", {}) if metadata.get("normalized_config", {}) is Dictionary else {}
+	return {
+		"label": label,
+		"width": int(map_document.get_width()),
+		"height": int(map_document.get_height()),
+		"template_id": String(normalized.get("template_id", "")),
+		"profile_id": String(normalized.get("profile_id", "")),
+		"road_count": roads.size(),
+		"road_tile_count": road_tile_count,
+		"zero_tile_road_count": zero_tile_road_count,
+		"object_count": int(map_document.get_object_count()),
+		"town_count": int(counts.get("town", 0)),
+		"guard_count": int(counts.get("guard", 0)),
+		"object_counts_by_kind": counts,
+	}
 
 func _native_metrics(generated: Dictionary) -> Dictionary:
 	var terrain_grid: Dictionary = generated.get("terrain_grid", {}) if generated.get("terrain_grid", {}) is Dictionary else {}

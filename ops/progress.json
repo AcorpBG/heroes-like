@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-required-town-access-corridor-correction-10184",
-  "currentSliceTitle": "Native RMG Required Town Access Corridor Correction",
+  "currentSliceId": "native-rmg-player-facing-small-package-parity-regression-10184",
+  "currentSliceTitle": "Native RMG Player-Facing Small Package Parity Regression",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Required/neutral towns now materialize deterministic access corridors to road/start anchors; decorative/scenic blockers on those corridors become nonblocking while mines/rewards/guards remain non-clearable, preserving uploaded-small 7-town reachability after guard clearing.",
+  "currentSliceNotes": "Player-facing Small default package regression now proves translated template 049 is selected and converted/saved/loaded package surfaces preserve non-empty roads, 7 towns, 40 guards, and 316 package objects; the uploaded stale compact package remains untracked comparison evidence.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
   "updatedAt": "2026-05-06T00:00:00Z",
   "statusTaxonomy": {
@@ -39,6 +39,61 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "native-rmg-player-facing-small-package-parity-regression-10184",
+      "title": "Native RMG Player-Facing Small Package Parity Regression",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "maps/small3playermap-1level.h3m",
+        "maps/small-hollow-road-bend-5838fad4.amap",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd",
+        "tests/native_random_map_zone_choke_regression_report.gd",
+        "owner correction on 2026-05-06 that native RMG output is still far from real HoMM3 examples and must become production usable"
+      ],
+      "purpose": "Close the gap between in-memory native RMG parity reports and the player-facing saved/loaded package surface by validating that a default Small 3-player land map uses the recovered translated template and persists non-empty roads, towns, guards, and owner-like density after package save/load.",
+      "implementationTargets": [
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "tests/native_random_map_disk_package_startup_report.gd",
+        "src/gdextension/src/map_package_service.cpp",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_disk_package_startup_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Player-facing Small 3-player land config resolves to translated_rmg_template_049_v1 and translated_rmg_profile_049_v1, not border_gate_compact_v1.",
+        "The saved and loaded .amap package surface for that default contains owner-like town count, guard count, object density, and non-empty serialized road tiles.",
+        "Package startup validation fails if any generated road record has zero tiles while the in-memory road network has materialized cells.",
+        "Existing in-memory town-choke validation still proves no unguarded cross-zone town traversal before guards/gates are cleared and restored traversal after clearing.",
+        "No generated .amap/.ascenario package files are committed."
+      ],
+      "nonGoals": [
+        "No HoMM3 copyrighted asset import.",
+        "No binary .h3m writeout claim.",
+        "No broad generated-art ingestion or renderer redesign.",
+        "No claim that all HoMM3 templates have final byte-level parity."
+      ],
+      "completionEvidence": [
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd now converts each generated case to a MapDocument, saves/loads the .amap through MapPackageService, and reports converted plus loaded package surfaces.",
+        "The uploaded-small report now fails if player-facing Small default does not preserve translated_rmg_template_049_v1 provenance, if any package road record has zero tiles, if package road tiles drop below in-memory road cells, or if package towns/guards/objects fall below the owner-like baseline.",
+        "Focused report evidence for player_facing_small_default: translated_rmg_template_049_v1, translated_rmg_profile_049_v1, 7 towns, 40 guards, 269 native object placements, 316 total/package objects, 105 in-memory road cells, and 169 converted/loaded package road tiles with zero empty road records.",
+        "tests/native_random_map_disk_package_startup_report.gd now builds the player-facing Small default with internal size-derived template/profile selection instead of explicit border_gate_compact_v1 and validates the saved/loaded package surface before deleting generated package files.",
+        "Disk startup report evidence: translated_rmg_template_049_v1, translated_rmg_profile_049_v1, 7 towns, 40 guards, 316 package objects, non-empty road tiles, and zero empty road records.",
+        "Zone choke regression still passes for translated Small 049: 21 cross-zone town pairs remain blocked while guards/gates are unresolved and restored after connection clearing.",
+        "Validation passed: cmake native build, uploaded-small comparison report, zone-choke regression report, disk package startup report, python3 tests/validate_repo.py, python3 -m json.tool ops/progress.json, and git diff --check."
+      ]
+    },
     {
       "id": "generated-skirmish-homm3-size-default-template-ux-10184",
       "title": "Generated Skirmish HoMM3 Size Default Template UX",
