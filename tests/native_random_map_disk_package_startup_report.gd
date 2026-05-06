@@ -151,8 +151,11 @@ func _run() -> void:
 	if int(package_surface.get("town_count", 0)) < 7 or int(package_surface.get("guard_count", 0)) < 40:
 		_fail("Player-facing Small package startup lost owner-like towns or guards: %s" % JSON.stringify(package_surface))
 		return
-	if int(package_surface.get("road_tile_count", 0)) <= 0 or int(package_surface.get("zero_tile_road_count", 0)) != 0:
-		_fail("Player-facing Small package startup serialized empty road records: %s" % JSON.stringify(package_surface))
+	if int(package_surface.get("road_unique_tile_count", 0)) != int(package_surface.get("source_road_cell_count", 0)):
+		_fail("Player-facing Small package startup saved road overlays that do not match native road cells: %s" % JSON.stringify(package_surface))
+		return
+	if int(package_surface.get("road_tile_count", 0)) <= 0 or int(package_surface.get("zero_tile_road_count", 0)) != 0 or int(package_surface.get("road_duplicate_tile_count", 0)) != 0:
+		_fail("Player-facing Small package startup serialized empty or duplicate road records: %s" % JSON.stringify(package_surface))
 		return
 	DirAccess.remove_absolute(map_path)
 	DirAccess.remove_absolute(scenario_path)
@@ -177,6 +180,8 @@ func _package_surface_summary(map_document: Variant) -> Dictionary:
 	var roads: Array = terrain_layers.get("roads", []) if terrain_layers.get("roads", []) is Array else []
 	var road_tile_count := 0
 	var zero_tile_road_count := 0
+	var road_duplicate_tile_count := 0
+	var road_tile_lookup := {}
 	for road in roads:
 		if not (road is Dictionary):
 			continue
@@ -184,6 +189,15 @@ func _package_surface_summary(map_document: Variant) -> Dictionary:
 		road_tile_count += tile_count
 		if tile_count <= 0:
 			zero_tile_road_count += 1
+		var road_tiles: Array = road.get("tiles", road.get("cells", [])) if road.get("tiles", road.get("cells", [])) is Array else []
+		for tile in road_tiles:
+			if not (tile is Dictionary):
+				continue
+			var key := "%d:%d,%d" % [int(tile.get("level", 0)), int(tile.get("x", 0)), int(tile.get("y", 0))]
+			if road_tile_lookup.has(key):
+				road_duplicate_tile_count += 1
+			else:
+				road_tile_lookup[key] = true
 	var counts := {}
 	for index in range(int(map_document.get_object_count())):
 		var object: Dictionary = map_document.get_object_by_index(index)
@@ -191,6 +205,7 @@ func _package_surface_summary(map_document: Variant) -> Dictionary:
 		counts[kind] = int(counts.get(kind, 0)) + 1
 	var metadata: Dictionary = map_document.get_metadata()
 	var normalized: Dictionary = metadata.get("normalized_config", {}) if metadata.get("normalized_config", {}) is Dictionary else {}
+	var component_counts: Dictionary = metadata.get("component_counts", {}) if metadata.get("component_counts", {}) is Dictionary else {}
 	return {
 		"width": int(map_document.get_width()),
 		"height": int(map_document.get_height()),
@@ -198,6 +213,9 @@ func _package_surface_summary(map_document: Variant) -> Dictionary:
 		"profile_id": String(normalized.get("profile_id", "")),
 		"road_count": roads.size(),
 		"road_tile_count": road_tile_count,
+		"road_unique_tile_count": road_tile_lookup.size(),
+		"road_duplicate_tile_count": road_duplicate_tile_count,
+		"source_road_cell_count": int(component_counts.get("road_cell_count", 0)),
 		"zero_tile_road_count": zero_tile_road_count,
 		"object_count": int(map_document.get_object_count()),
 		"town_count": int(counts.get("town", 0)),

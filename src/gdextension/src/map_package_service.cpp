@@ -483,6 +483,9 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 
 	Array roads;
 	Array road_segments = road_network.get("road_segments", Array());
+	Dictionary serialized_road_tile_lookup;
+	int32_t duplicate_road_tile_count = 0;
+	int32_t source_road_tile_count = 0;
 	for (int64_t index = 0; index < road_segments.size(); ++index) {
 		if (Variant(road_segments[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -495,11 +498,24 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 				continue;
 			}
 			Dictionary cell = Dictionary(cells[cell_index]);
+			const int32_t x = int32_t(cell.get("x", 0));
+			const int32_t y = int32_t(cell.get("y", 0));
+			const int32_t level = int32_t(cell.get("level", 0));
+			++source_road_tile_count;
+			const String road_tile_key = String::num_int64(level) + String(":") + String::num_int64(x) + String(",") + String::num_int64(y);
+			if (serialized_road_tile_lookup.has(road_tile_key)) {
+				++duplicate_road_tile_count;
+				continue;
+			}
+			serialized_road_tile_lookup[road_tile_key] = true;
 			Dictionary tile;
-			tile["x"] = int32_t(cell.get("x", 0));
-			tile["y"] = int32_t(cell.get("y", 0));
-			tile["level"] = int32_t(cell.get("level", 0));
+			tile["x"] = x;
+			tile["y"] = y;
+			tile["level"] = level;
 			tiles.append(tile);
+		}
+		if (tiles.is_empty()) {
+			continue;
 		}
 		Dictionary road;
 		road["id"] = segment.get("id", "road_" + String::num_int64(index + 1));
@@ -518,6 +534,9 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	}
 	terrain_layers["roads"] = roads;
 	terrain_layers["road_count"] = roads.size();
+	terrain_layers["road_source_tile_count"] = source_road_tile_count;
+	terrain_layers["road_duplicate_tile_count"] = duplicate_road_tile_count;
+	terrain_layers["road_unique_tile_count"] = serialized_road_tile_lookup.size();
 
 	Array rivers;
 	Array river_segments = river_network.get("river_segments", Array());
@@ -9976,7 +9995,12 @@ Dictionary build_component_counts(const Dictionary &normalized, const Dictionary
 	counts["player_start_count"] = player_starts.get("start_count", 0);
 	counts["route_edge_count"] = Dictionary(road_network.get("route_graph", Dictionary())).get("route_edge_count", 0);
 	counts["road_segment_count"] = road_network.get("road_segment_count", 0);
-	counts["road_cell_count"] = road_network.get("road_cell_count", 0);
+	Dictionary road_materialization_summary = road_network.get("road_materialization_summary", Dictionary());
+	const int32_t road_segment_cell_count = int32_t(road_network.get("road_cell_count", 0));
+	const int32_t unique_road_cell_count = int32_t(road_materialization_summary.get("unique_materialized_road_cell_count", road_segment_cell_count));
+	counts["road_cell_count"] = unique_road_cell_count;
+	counts["road_segment_cell_count"] = road_segment_cell_count;
+	counts["road_duplicate_cell_count"] = road_segment_cell_count > unique_road_cell_count ? road_segment_cell_count - unique_road_cell_count : 0;
 	counts["connection_gate_count"] = road_network.get("connection_gate_count", 0);
 	counts["river_segment_count"] = river_network.get("river_segment_count", 0);
 	counts["river_cell_count"] = river_network.get("river_cell_count", 0);
@@ -10796,6 +10820,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	map_metadata["native_runtime_authoritative"] = adoption_authoritative;
 	map_metadata["structurally_supported_profile"] = structurally_supported_profile;
 	map_metadata["full_parity_claim"] = adoption_authoritative;
+	map_metadata["component_counts"] = generated_map.get("component_counts", Dictionary());
 
 	Array package_surface_objects = combined_native_map_objects(generated_map);
 	Dictionary guard_reward_adoption = guard_reward_package_adoption_summary(package_surface_objects);
