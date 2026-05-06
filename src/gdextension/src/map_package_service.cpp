@@ -3669,6 +3669,12 @@ bool native_rmg_owner_compared_translated_profile_supported(const Dictionary &no
 	if (template_id == "translated_rmg_template_002_v1" && profile_id == "translated_rmg_profile_002_v1") {
 		return width == 72 && height == 72 && size_class_id == "homm3_medium" && player_count == 4 && water_mode == "land" && level_count == 1;
 	}
+	if (template_id == "translated_rmg_template_042_v1" && profile_id == "translated_rmg_profile_042_v1") {
+		return width == 108 && height == 108 && size_class_id == "homm3_large" && player_count == 4 && water_mode == "land" && level_count == 1;
+	}
+	if (template_id == "translated_rmg_template_043_v1" && profile_id == "translated_rmg_profile_043_v1") {
+		return width == 144 && height == 144 && size_class_id == "homm3_extra_large" && player_count == 4 && water_mode == "land" && level_count == 1;
+	}
 	return false;
 }
 
