@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-package-road-overlay-deduplication-10184",
-  "currentSliceTitle": "Native RMG Package Road Overlay Deduplication",
+  "currentSliceId": "native-rmg-supported-underground-terrain-count-10184",
+  "currentSliceTitle": "Native RMG Supported Underground Terrain Count",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Player-facing Small package roads now serialize one unique overlay tile per x/y/level, package metadata carries unique road component counts, and direct plus disk package regressions reject duplicate or empty road records.",
+  "currentSliceNotes": "Supported 2-level Small land generation now validates terrain tile/count semantics against all native materialized levels; stale GDScript full-parity comparison still reports broader HoMM3-readiness gaps and is not accepted as completion evidence.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
   "updatedAt": "2026-05-06T00:00:00Z",
   "statusTaxonomy": {
@@ -39,6 +39,51 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "native-rmg-supported-underground-terrain-count-10184",
+      "title": "Native RMG Supported Underground Terrain Count",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "tests/native_random_map_full_parity_gate_report.gd",
+        "tests/fixtures/native_random_map_comparison_cases.json",
+        "owner correction on 2026-05-06 that native RMG must become production usable rather than prototype status"
+      ],
+      "purpose": "Fix the supported 2-level Small land terrain-count validation bug exposed while auditing why the native RMG still cannot be treated as production complete; land-boundary-shaped supported underground maps materialize both native levels and must validate against that full tile stream.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_supported_underground_terrain_count_report.gd",
+        "tests/native_random_map_supported_underground_terrain_count_report.tscn",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_supported_underground_terrain_count_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Supported translated_rmg_template_001_v1 Small land underground generation validates successfully instead of failing terrain_count_sum_mismatch.",
+        "Terrain grid tile_count and terrain_counts sum include both materialized native levels when level_count_semantics is all_native_levels_materialized.",
+        "The focused regression proves full_parity_supported status, implemented full_generation_status, 2 materialized levels, and 2592 terrain tiles for the 36x36x2 case.",
+        "This slice does not claim the broader RMG production objective is complete; stale GDScript full-parity comparison gaps remain tracked as evidence for additional work."
+      ],
+      "nonGoals": [
+        "No claim of full HoMM3 map-generation parity.",
+        "No adoption-authoritative status change.",
+        "No object, guard, road, or town distribution retuning."
+      ],
+      "completionEvidence": [
+        "src/gdextension/src/map_package_service.cpp now sets terrain_grid.tile_count to width * height * level_count when land-boundary shaping materializes all native levels, even for supported parity configs.",
+        "Native validation now derives expected terrain tile count from terrain_grid.level_count_semantics, so all_native_levels_materialized supported configs validate against the full native level stream.",
+        "tests/native_random_map_supported_underground_terrain_count_report.gd/.tscn assert the supported 36x36x2 translated template 001 land case returns full_parity_supported, implemented_for_supported_profile, materialized_level_count 2, tile_count 2592, terrain_counts sum 2592, and no terrain_count_sum_mismatch.",
+        "The existing tests/native_random_map_full_parity_gate_report.tscn still fails on stale GDScript comparison gaps for roads, objects, guards, and tile-stream expectations; that failure is not treated as completion, only as evidence that more HoMM3-readiness work remains."
+      ]
+    },
     {
       "id": "native-rmg-package-road-overlay-deduplication-10184",
       "title": "Native RMG Package Road Overlay Deduplication",
