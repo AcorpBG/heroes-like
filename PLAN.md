@@ -1598,7 +1598,7 @@ nonGoals:
 
 id: `native-rmg-production-large-xl-owner-status-gate-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `pending`
+status: `completed`
 purpose: Build owner-comparison/topology evidence for translated Large 042 and XL 043 defaults so they can be moved off `full_generation_status: not_implemented` without overclaiming full parity.
 sourceDocs:
 - `project.md`
@@ -1614,10 +1614,41 @@ completionCriteria:
 - Large 042 and XL 043 default translated profiles have bounded topology evidence comparable to the Small/Medium owner-comparison gates.
 - If evidence passes, Large/XL no longer report `full_generation_status: not_implemented`.
 - Full parity, runtime authority, and all-56-template production claims remain false until broader audit coverage exists.
+completionEvidence:
+- Native C++ generation now classifies translated Large 042 and Extra Large 043 defaults as `owner_compared_translated_profile_supported` with `full_generation_status: owner_compared_translated_profile_not_full_parity`.
+- `tests/native_random_map_package_object_only_breadth_report.gd` asserts Small 049, Medium 002, Large 042, and XL 043 status promotion, owner-compared support, no full parity claim, no runtime authority, materialized roads, guards, package save/load, and zero object-only reachable start/cross-zone town pairs.
+- `tests/native_random_map_package_object_only_breadth_report.tscn` passed after a Linux native rebuild with Large 042 at 108x108/25 zones/16 towns/1332 objects/335 guards and XL 043 at 144x144/25 zones/17 towns/1786 objects/405 guards.
+remainingGaps:
+- Package/session adoption is still feature-gated and non-authoritative.
+- All 56 recovered templates are not yet production-ready.
 nonGoals:
 - No exact H3M byte parity.
 - No HoMM3 asset import.
 - No blanket all-template promotion.
+- No runtime-authoritative generated skirmish adoption.
+
+id: `native-rmg-package-session-authoritative-replay-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `pending`
+purpose: Isolate nondeterministic native RMG output fields and prove package/session replay before any native runtime-authoritative generated-skirmish adoption.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_full_parity_gate_report.gd`
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+- owner objective that native RMG must become production-ready, usable, and not alpha/prototype
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- package/session adoption and replay reports under `tests/`
+- `ops/progress.json`
+completionCriteria:
+- Supported default translated profiles have stable replay-relevant output signatures across generate, convert, save, and load.
+- Nondeterministic diagnostic/profile fields are isolated from authoritative replay identity.
+- Runtime call-site adoption remains disabled unless replay and comparison gates prove readiness.
+nonGoals:
+- No exact H3M byte parity.
+- No HoMM3 asset import.
+- No blanket all-template production claim.
 
 id: `overworld-map-object-distinct-sprite-gap-fill-10184`
 phase: `phase-3-homm3-style-rmg-rework`

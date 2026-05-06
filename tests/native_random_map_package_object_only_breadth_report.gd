@@ -7,10 +7,30 @@ const REPORT_ID := "NATIVE_RANDOM_MAP_PACKAGE_OBJECT_ONLY_BREADTH_REPORT"
 const REPORT_SCHEMA_ID := "native_random_map_package_object_only_breadth_report_v1"
 
 const CASES := [
-	{"id": "default_small_049", "size_class_id": "homm3_small"},
-	{"id": "default_medium_002", "size_class_id": "homm3_medium"},
-	{"id": "default_large_042", "size_class_id": "homm3_large"},
-	{"id": "default_extra_large_043", "size_class_id": "homm3_extra_large"},
+	{
+		"id": "default_small_049",
+		"size_class_id": "homm3_small",
+		"expected_status": "owner_compared_translated_profile_supported",
+		"expected_full_generation_status": "owner_compared_translated_profile_not_full_parity",
+	},
+	{
+		"id": "default_medium_002",
+		"size_class_id": "homm3_medium",
+		"expected_status": "owner_compared_translated_profile_supported",
+		"expected_full_generation_status": "owner_compared_translated_profile_not_full_parity",
+	},
+	{
+		"id": "default_large_042",
+		"size_class_id": "homm3_large",
+		"expected_status": "owner_compared_translated_profile_supported",
+		"expected_full_generation_status": "owner_compared_translated_profile_not_full_parity",
+	},
+	{
+		"id": "default_extra_large_043",
+		"size_class_id": "homm3_extra_large",
+		"expected_status": "owner_compared_translated_profile_supported",
+		"expected_full_generation_status": "owner_compared_translated_profile_not_full_parity",
+	},
 ]
 
 func _ready() -> void:
@@ -69,6 +89,18 @@ func _run_case(service: Variant, helper: Node, case_record: Dictionary) -> Dicti
 	if String(normalized.get("template_id", "")) != String(defaults.get("template_id", "")) or String(normalized.get("profile_id", "")) != String(defaults.get("profile_id", "")):
 		_fail("%s did not use the size-class default translated template/profile: %s defaults=%s" % [case_id, JSON.stringify(normalized), JSON.stringify(defaults)])
 		return {}
+	if String(generated.get("status", "")) != String(case_record.get("expected_status", "")):
+		_fail("%s generation status drifted: %s" % [case_id, JSON.stringify(_generation_status_summary(generated))])
+		return {}
+	if String(generated.get("full_generation_status", "")) != String(case_record.get("expected_full_generation_status", "")):
+		_fail("%s full generation status drifted: %s" % [case_id, JSON.stringify(_generation_status_summary(generated))])
+		return {}
+	if not bool(generated.get("owner_compared_translated_profile_supported", false)):
+		_fail("%s missed owner-compared translated profile support: %s" % [case_id, JSON.stringify(_generation_status_summary(generated))])
+		return {}
+	if bool(generated.get("full_parity_claim", false)) or bool(generated.get("native_runtime_authoritative", false)):
+		_fail("%s falsely claimed full parity or runtime authority: %s" % [case_id, JSON.stringify(_generation_status_summary(generated))])
+		return {}
 
 	var adoption: Dictionary = service.convert_generated_payload(generated, {
 		"feature_gate": "native_rmg_package_object_only_breadth_report",
@@ -109,7 +141,11 @@ func _run_case(service: Variant, helper: Node, case_record: Dictionary) -> Dicti
 		"size_class_id": size_class_id,
 		"template_id": String(normalized.get("template_id", "")),
 		"profile_id": String(normalized.get("profile_id", "")),
+		"status": String(generated.get("status", "")),
 		"full_generation_status": String(generated.get("full_generation_status", "")),
+		"owner_compared_translated_profile_supported": bool(generated.get("owner_compared_translated_profile_supported", false)),
+		"full_parity_claim": bool(generated.get("full_parity_claim", false)),
+		"native_runtime_authoritative": bool(generated.get("native_runtime_authoritative", false)),
 		"validation_status": String(generated.get("validation_status", "")),
 		"converted_package": _surface_brief(converted_surface),
 		"loaded_package": _surface_brief(loaded_surface),
@@ -167,6 +203,19 @@ func _surface_brief(surface: Dictionary) -> Dictionary:
 		"object_only_blocked_tile_count": int(surface.get("object_only_blocked_tile_count", 0)),
 		"object_only_start_checked_pair_count": int(surface.get("object_only_start_town_topology", {}).get("checked_pair_count", 0)),
 		"object_only_cross_zone_checked_pair_count": int(surface.get("object_only_cross_zone_town_topology", {}).get("checked_pair_count", 0)),
+	}
+
+func _generation_status_summary(generated: Dictionary) -> Dictionary:
+	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
+	return {
+		"status": String(generated.get("status", "")),
+		"full_generation_status": String(generated.get("full_generation_status", "")),
+		"template_id": String(normalized.get("template_id", "")),
+		"profile_id": String(normalized.get("profile_id", "")),
+		"size_class_id": String(normalized.get("size_class_id", "")),
+		"owner_compared_translated_profile_supported": bool(generated.get("owner_compared_translated_profile_supported", false)),
+		"full_parity_claim": bool(generated.get("full_parity_claim", false)),
+		"native_runtime_authoritative": bool(generated.get("native_runtime_authoritative", false)),
 	}
 
 func _fail(message: String) -> void:
