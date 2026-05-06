@@ -138,6 +138,17 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 	if not cross_zone_town_failures.get("unresolved_reachable_pairs", []).is_empty():
 		_fail("%s unresolved guards/obstacles still allow cross-zone town traversal: %s; guards=%s" % [case_id, JSON.stringify(cross_zone_town_failures.get("unresolved_reachable_pairs", [])), JSON.stringify(_guard_brief(generated))])
 		return {}
+	if not cross_zone_town_failures.get("cleared_blocked_pairs", []).is_empty():
+		var object_placement: Dictionary = generated.get("object_placement", {}) if generated.get("object_placement", {}) is Dictionary else {}
+		_fail("%s cleared connection guards/gates do not restore all cross-zone town traversal: %s; corridor_clearance=%s; corridor_blockers=%s; town_corridors=%s; guards=%s" % [
+			case_id,
+			JSON.stringify(cross_zone_town_failures.get("cleared_blocked_pairs", [])),
+			JSON.stringify(object_placement.get("required_town_access_corridor_clearance", {})),
+			JSON.stringify(_corridor_blockers(generated, towns)),
+			JSON.stringify(_town_corridor_brief(towns)),
+			JSON.stringify(_guard_brief(generated)),
+		])
+		return {}
 	return {
 		"id": case_id,
 		"town_count": start_towns.size(),
@@ -255,6 +266,64 @@ func _brief_town(town: Dictionary) -> Dictionary:
 		"x": int(town.get("x", 0)),
 		"y": int(town.get("y", 0)),
 	}
+
+func _town_corridor_brief(towns: Array) -> Array:
+	var result := []
+	for town in towns:
+		if town is Dictionary:
+			var corridor: Array = town.get("required_town_access_corridor_cells", []) if town.get("required_town_access_corridor_cells", []) is Array else []
+			result.append({
+				"placement_id": String(town.get("placement_id", "")),
+				"zone_id": String(town.get("zone_id", "")),
+				"x": int(town.get("x", 0)),
+				"y": int(town.get("y", 0)),
+				"access_anchor": town.get("required_town_access_anchor", {}),
+				"corridor_cell_count": corridor.size(),
+			})
+	return result
+
+func _corridor_blockers(generated: Dictionary, towns: Array) -> Array:
+	var corridor_tiles := {}
+	for town in towns:
+		if not (town is Dictionary):
+			continue
+		for cell in town.get("required_town_access_corridor_cells", []):
+			if cell is Dictionary:
+				corridor_tiles["%d,%d" % [int(cell.get("x", 0)), int(cell.get("y", 0))]] = String(town.get("placement_id", ""))
+	var result := []
+	var terrain_grid: Dictionary = generated.get("terrain_grid", {}) if generated.get("terrain_grid", {}) is Dictionary else {}
+	var ids_by_code: Variant = terrain_grid.get("terrain_id_by_code", [])
+	var levels: Array = terrain_grid.get("levels", []) if terrain_grid.get("levels", []) is Array else []
+	var level: Dictionary = levels[0] if not levels.is_empty() and levels[0] is Dictionary else {}
+	var width := int(terrain_grid.get("width", 0))
+	var codes: PackedInt32Array = level.get("terrain_code_u16", PackedInt32Array())
+	for key in corridor_tiles.keys():
+		var parts := String(key).split(",")
+		var x := int(parts[0])
+		var y := int(parts[1])
+		var index := y * width + x
+		var terrain_id := _terrain_id_for_code(ids_by_code, int(codes[index]) if index >= 0 and index < codes.size() else 0)
+		if terrain_id in ["rock", "water"]:
+			result.append({"kind": "terrain", "terrain_id": terrain_id, "x": x, "y": y, "town": corridor_tiles[key]})
+	for object in generated.get("object_placements", []):
+		if not (object is Dictionary):
+			continue
+		var passability: Dictionary = object.get("passability", {}) if object.get("passability", {}) is Dictionary else {}
+		if not (String(passability.get("class", "")) in ["blocking_non_visitable", "blocking_visitable", "edge_blocker"]):
+			continue
+		for body in object.get("body_tiles", []):
+			if body is Dictionary:
+				var key := "%d,%d" % [int(body.get("x", 0)), int(body.get("y", 0))]
+				if corridor_tiles.has(key):
+					result.append({
+						"kind": String(object.get("kind", "")),
+						"placement_id": String(object.get("placement_id", "")),
+						"passability": passability,
+						"x": int(body.get("x", 0)),
+						"y": int(body.get("y", 0)),
+						"town": corridor_tiles[key],
+					})
+	return result
 
 func _guard_brief(generated: Dictionary) -> Array:
 	var result := []
