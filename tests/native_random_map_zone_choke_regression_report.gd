@@ -16,6 +16,17 @@ const CASES := [
 		"size_class_id": "homm3_small",
 	},
 	{
+		"id": "small_translated_049_3p_land",
+		"seed": "uploaded-small-comparison-10184",
+		"template_id": "translated_rmg_template_049_v1",
+		"profile_id": "translated_rmg_profile_049_v1",
+		"player_count": 3,
+		"expected_start_towns": 3,
+		"expected_total_towns": 7,
+		"water_mode": "land",
+		"size_class_id": "homm3_small",
+	},
+	{
 		"id": "medium_translated_4p_land",
 		"seed": "zone-choke-medium-translated-10184",
 		"template_id": "translated_rmg_template_002_v1",
@@ -61,7 +72,13 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 	var case_id := String(case_record.get("id", "case"))
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "zone_choke_%s" % case_id})
 	if not bool(generated.get("ok", false)) or String(generated.get("validation_status", "")) != "pass":
-		_fail("%s generation failed validation: %s" % [case_id, JSON.stringify(generated.get("validation_report", generated))])
+		var town_guard_placement: Dictionary = generated.get("town_guard_placement", {}) if generated.get("town_guard_placement", {}) is Dictionary else {}
+		var town_placement: Dictionary = town_guard_placement.get("town_placement", {}) if town_guard_placement.get("town_placement", {}) is Dictionary else {}
+		_fail("%s generation failed validation: %s" % [case_id, JSON.stringify({
+			"validation_report": generated.get("validation_report", generated),
+			"town_records": generated.get("town_records", []),
+			"town_diagnostics": town_placement.get("diagnostics", []),
+		})])
 		return {}
 	var terrain_grid: Dictionary = generated.get("terrain_grid", {}) if generated.get("terrain_grid", {}) is Dictionary else {}
 	var boundary_shape: Dictionary = terrain_grid.get("land_boundary_shape", {}) if terrain_grid.get("land_boundary_shape", {}) is Dictionary else {}
@@ -83,6 +100,11 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 	if start_towns.size() < 2:
 		_fail("%s needs at least two player start towns for choke traversal validation: %s" % [case_id, JSON.stringify(towns)])
 		return {}
+	if case_record.has("expected_total_towns"):
+		var expected_total_towns := int(case_record.get("expected_total_towns", 0))
+		if towns.size() != expected_total_towns:
+			_fail("%s expected exactly %d total towns, got %d: %s" % [case_id, expected_total_towns, towns.size(), JSON.stringify(towns)])
+			return {}
 	var unresolved_reachable_pairs := []
 	var cleared_blocked_pairs := []
 	for left_index in range(start_towns.size()):
@@ -101,13 +123,57 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 	if not cleared_blocked_pairs.is_empty():
 		_fail("%s cleared connection guards/gates do not restore start-town traversal: %s; guards=%s" % [case_id, JSON.stringify(cleared_blocked_pairs), JSON.stringify(_guard_brief(generated))])
 		return {}
+	var cross_zone_town_failures := _cross_zone_town_route_failures(towns, unresolved_blocked, cleared_connection_blocked, terrain_grid)
+	if not case_record.has("expected_total_towns"):
+		return {
+			"id": case_id,
+			"town_count": start_towns.size(),
+			"total_town_count": towns.size(),
+			"cross_zone_town_pair_count": int(cross_zone_town_failures.get("cross_zone_pair_count", 0)),
+			"guard_count": int(generated.get("guard_records", []).size()),
+			"unresolved_blocked_tile_count": unresolved_blocked.size(),
+			"cleared_connection_blocked_tile_count": cleared_connection_blocked.size(),
+			"land_boundary_shape": boundary_shape,
+		}
+	if not cross_zone_town_failures.get("unresolved_reachable_pairs", []).is_empty():
+		_fail("%s unresolved guards/obstacles still allow cross-zone town traversal: %s; guards=%s" % [case_id, JSON.stringify(cross_zone_town_failures.get("unresolved_reachable_pairs", [])), JSON.stringify(_guard_brief(generated))])
+		return {}
 	return {
 		"id": case_id,
 		"town_count": start_towns.size(),
+		"total_town_count": towns.size(),
+		"cross_zone_town_pair_count": int(cross_zone_town_failures.get("cross_zone_pair_count", 0)),
 		"guard_count": int(generated.get("guard_records", []).size()),
 		"unresolved_blocked_tile_count": unresolved_blocked.size(),
 		"cleared_connection_blocked_tile_count": cleared_connection_blocked.size(),
 		"land_boundary_shape": boundary_shape,
+	}
+
+func _cross_zone_town_route_failures(towns: Array, unresolved_blocked: Dictionary, cleared_connection_blocked: Dictionary, terrain_grid: Dictionary) -> Dictionary:
+	var unresolved_reachable_pairs := []
+	var cleared_blocked_pairs := []
+	var cross_zone_pair_count := 0
+	for left_index in range(towns.size()):
+		if not (towns[left_index] is Dictionary):
+			continue
+		for right_index in range(left_index + 1, towns.size()):
+			if not (towns[right_index] is Dictionary):
+				continue
+			var left: Dictionary = towns[left_index]
+			var right: Dictionary = towns[right_index]
+			if String(left.get("zone_id", "")) == String(right.get("zone_id", "")):
+				continue
+			cross_zone_pair_count += 1
+			var left_point := Vector2i(int(left.get("x", 0)), int(left.get("y", 0)))
+			var right_point := Vector2i(int(right.get("x", 0)), int(right.get("y", 0)))
+			if _has_path(unresolved_blocked.duplicate(true), terrain_grid, left_point, right_point):
+				unresolved_reachable_pairs.append([_brief_town(left), _brief_town(right)])
+			if not _has_path(cleared_connection_blocked.duplicate(true), terrain_grid, left_point, right_point):
+				cleared_blocked_pairs.append([_brief_town(left), _brief_town(right)])
+	return {
+		"cross_zone_pair_count": cross_zone_pair_count,
+		"unresolved_reachable_pairs": unresolved_reachable_pairs,
+		"cleared_blocked_pairs": cleared_blocked_pairs,
 	}
 
 func _blocked_tiles(generated: Dictionary, include_connection_blockers: bool) -> Dictionary:

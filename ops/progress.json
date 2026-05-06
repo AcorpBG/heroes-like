@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-uploaded-small-default-parity-correction-10184",
-  "currentSliceTitle": "Native RMG Uploaded Small Default Parity Correction",
+  "currentSliceId": "native-rmg-uploaded-small-town-spacing-choke-correction-10184",
+  "currentSliceTitle": "Native RMG Uploaded Small Town Spacing Choke Correction",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Exact HoMM3 parity is still not claimed: translated profile full_generation_status remains not_implemented, reward/mine mix is still high versus the uploaded baseline, and runtime authoritative call-site adoption remains gated.",
+  "currentSliceNotes": "Some neutral fallback-town cleared-route reachability remains a follow-up parity issue; this slice specifically closes the owner-reported close-town and unguarded-route regression for uploaded small comparison output.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-05T23:51:33Z",
+  "updatedAt": "2026-05-06T00:00:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -10335,6 +10335,46 @@
       "updatedAt": "2026-05-05T23:51:33Z",
       "startedAt": "2026-05-05T23:51:33Z",
       "completedAt": "2026-05-05T23:51:33Z"
+    },
+    {
+      "id": "native-rmg-uploaded-small-town-spacing-choke-correction-10184",
+      "title": "Native RMG Uploaded Small Town Spacing Choke Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "owner-uploaded native and Heroes III small 3-player map comparison request on 2026-05-06"
+      ],
+      "purpose": "Correct the native small translated-template town placement regression where required inactive/source towns could be skipped or placed too close while decorative/blocking filler and route guards controlled cross-zone access.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_zone_choke_regression_report.gd",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "godot --headless --path . tests/native_random_map_homm3_validation_adoption_gates_report.tscn",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Player-facing small default/template 049 preserves the owner-like 7-town count and avoids close stacked towns with nearest town distance at least 8.",
+        "Required town placement reserves future anchors before object filler and uses blocking-object-aware accessible search before any required spacing fallback.",
+        "Small translated-template cross-zone town pairs remain blocked while guards/obstacles are unresolved.",
+        "Density town infeasibility is reported as a warning rather than failing required-generation validation."
+      ],
+      "completionEvidence": [
+        "Uploaded-small comparison passes with 7 towns, nearest town manhattan 9 versus owner baseline 10, 163 decorations, 76 reward/mine/resource objects, 30 scenic/other objects, 40 guards, and 105 road cells.",
+        "Zone choke regression covers small translated template 049 with 21 cross-zone town pairs and proves unresolved guards/obstacles do not allow cross-zone town traversal.",
+        "Medium translated 4-player land generation remains validation-pass with density placement misses downgraded to warnings."
+      ],
+      "remainingRisk": "Some neutral fallback-town cleared-route reachability remains a follow-up parity issue; this slice specifically closes the owner-reported close-town and unguarded-route regression for uploaded small comparison output.",
+      "updatedAt": "2026-05-06T00:00:00Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -11371,6 +11411,42 @@
         "git diff --check"
       ],
       "remainingGap": "Exact HoMM3 parity is still not claimed: translated profile full_generation_status remains not_implemented, native scenic_object records are original proxies for the uploaded H3M other-object category, and runtime authoritative call-site adoption remains gated."
+    },
+    {
+      "id": "native-rmg-uploaded-small-town-spacing-choke-correction-10184",
+      "title": "Native RMG Uploaded Small Town Spacing Choke Correction",
+      "status": "completed",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "sourceRefs": [
+        "project.md",
+        "PLAN.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "owner-uploaded native and Heroes III small 3-player map comparison request on 2026-05-06"
+      ],
+      "mappedPlannedSliceIds": [
+        "native-rmg-uploaded-small-town-spacing-choke-correction-10184",
+        "native-rmg-uploaded-small-default-parity-correction-10184",
+        "native-rmg-zone-choke-topology-correction-10184"
+      ],
+      "implementationRefs": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_zone_choke_regression_report.gd",
+        "ops/progress.json"
+      ],
+      "evidence": [
+        "Uploaded-small comparison passes with 7 towns, nearest town manhattan 9 versus owner baseline 10, 163 decorations, 76 reward/mine/resource objects, 30 scenic/other objects, 40 guards, and 105 road cells.",
+        "Zone choke regression covers small translated template 049 with 21 cross-zone town pairs and proves unresolved guards/obstacles do not allow cross-zone town traversal.",
+        "Medium translated 4-player land generation remains validation-pass with density placement misses downgraded to warnings."
+      ],
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "godot --headless --path . tests/native_random_map_homm3_validation_adoption_gates_report.tscn",
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "remainingGap": "Some neutral fallback-town cleared-route reachability remains a follow-up parity issue; this slice specifically closes the owner-reported close-town and unguarded-route regression for uploaded small comparison output."
     }
   ],
   "docsReadyEvidence": [
