@@ -312,10 +312,13 @@ func _town_pair_topology(blocked: Dictionary, width: int, height: int, towns: Ar
 					"right": _brief_town(right),
 				})
 				continue
-			if _has_any_path(blocked.duplicate(true), width, height, left_visits, right_visits):
+			var reachable_path := _find_any_path(blocked.duplicate(true), width, height, left_visits, right_visits)
+			if not reachable_path.is_empty():
 				reachable_pairs.append({
 					"left": _brief_town(left),
 					"right": _brief_town(right),
+					"path_length": reachable_path.size(),
+					"path_sample": _path_sample(reachable_path),
 				})
 	return {
 		"checked_pair_count": checked_pair_count,
@@ -340,7 +343,7 @@ func _visit_points_for_town(town: Dictionary, width: int, height: int) -> Array:
 			points.append(candidate)
 	return points
 
-func _has_any_path(blocked: Dictionary, width: int, height: int, starts: Array, goals: Array) -> bool:
+func _find_any_path(blocked: Dictionary, width: int, height: int, starts: Array, goals: Array) -> Array:
 	var goal_lookup := {}
 	for goal in goals:
 		if goal is Vector2i:
@@ -348,6 +351,7 @@ func _has_any_path(blocked: Dictionary, width: int, height: int, starts: Array, 
 			blocked.erase("0:%d,%d" % [goal.x, goal.y])
 	var queue := []
 	var seen := {}
+	var previous_by_key := {}
 	for start in starts:
 		if not (start is Vector2i):
 			continue
@@ -367,7 +371,7 @@ func _has_any_path(blocked: Dictionary, width: int, height: int, starts: Array, 
 		cursor += 1
 		var current_key := "0:%d,%d" % [current.x, current.y]
 		if goal_lookup.has(current_key):
-			return true
+			return _reconstruct_path(previous_by_key, current)
 		for dir_value in dirs:
 			var dir: Vector2i = dir_value
 			var next: Vector2i = current + dir
@@ -377,8 +381,38 @@ func _has_any_path(blocked: Dictionary, width: int, height: int, starts: Array, 
 			if seen.has(key) or blocked.has(key):
 				continue
 			seen[key] = true
+			previous_by_key[key] = current
 			queue.append(next)
-	return false
+	return []
+
+func _reconstruct_path(previous_by_key: Dictionary, goal: Vector2i) -> Array:
+	var path: Array = [goal]
+	var current := goal
+	var guard := 0
+	while guard < 4096:
+		guard += 1
+		var current_key := "0:%d,%d" % [current.x, current.y]
+		if not previous_by_key.has(current_key):
+			break
+		current = previous_by_key[current_key]
+		path.push_front(current)
+	return path
+
+func _path_sample(path: Array) -> Array:
+	if path.size() <= 24:
+		return _path_points(path)
+	var sample := []
+	sample.append_array(_path_points(path.slice(0, 12)))
+	sample.append({"omitted": path.size() - 24})
+	sample.append_array(_path_points(path.slice(path.size() - 12, path.size())))
+	return sample
+
+func _path_points(path: Array) -> Array:
+	var points := []
+	for point in path:
+		if point is Vector2i:
+			points.append({"x": point.x, "y": point.y})
+	return points
 
 func _terrain_id_for_code(ids_by_code: Variant, code: int) -> String:
 	if (ids_by_code is Array or ids_by_code is PackedStringArray) and code >= 0 and code < ids_by_code.size():

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-small-package-cross-zone-town-topology-gate-10184",
-  "currentSliceTitle": "Native RMG Small Package Cross-Zone Town Topology Gate",
+  "currentSliceId": "native-rmg-small-049-owner-density-tightening-10184",
+  "currentSliceTitle": "Native RMG Small 049 Owner Density Tightening",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Player-facing Small 3-player land package topology is now gated on the saved/loaded MapDocument surface: translated template 049 provenance, owner-like town/guard/object/road counts, seven zones/towns, one start town per player slot, no empty/duplicate road records, no unresolved start-town traversal, no unresolved cross-zone town traversal, and town/corridor boundary openings are covered by route guard bodies until cleared.",
+  "currentSliceNotes": "Player-facing translated Small 049 now matches the uploaded HoMM3 Small sample's headline density at 303 package objects and 150 decorative obstacles, keeps 7 towns/40 guards/package save-load integrity, and blocks all 21 unresolved cross-zone town pairs by making unresolved route guards control their protected road segments.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T01:36:43Z",
+  "updatedAt": "2026-05-06T01:59:09Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,56 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "native-rmg-small-049-owner-density-tightening-10184",
+      "title": "Native RMG Small 049 Owner Density Tightening",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "maps/small3playermap-1level.h3m",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd",
+        "tests/native_random_map_package_surface_topology_report.gd",
+        "owner correction on 2026-05-06 that Small was only a fast comparison example and native RMG must move toward real HoMM3-like production output"
+      ],
+      "purpose": "Tighten the player-facing translated Small 049 native output against the uploaded HoMM3 Small sample by correcting the decoration/content-density surplus while preserving the topology, package, road, guard, and validation gates.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.gd",
+        "tests/native_random_map_package_surface_topology_report.gd",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_comparison_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Player-facing Small 049 default keeps seven towns, forty guards, translated template/profile provenance, package save/load integrity, and no unresolved cross-zone town traversal.",
+        "Native Small 049 decorative-obstacle count is tightened from the previous 163 toward the uploaded owner sample's 150 instead of only relying on broad 0.80-1.20 density tolerance.",
+        "Native Small 049 total content count is tightened from the previous 316 toward the uploaded owner sample's 303.",
+        "Road materialization and package road serialization remain stable with no empty or duplicate road records.",
+        "No uploaded .h3m or generated .amap/.ascenario evidence files are committed."
+      ],
+      "completionEvidence": [
+        "tests/native_random_map_homm3_uploaded_small_comparison_report.tscn passed with player-facing and translated Small 049 at 303 total content, 150 decorations, 7 towns, 40 guards, and package object_count 303 after save/load.",
+        "tests/native_random_map_package_surface_topology_report.tscn passed with converted and loaded packages checking 21 cross-zone town pairs and 3 player start-town pairs with no unresolved reachable pairs.",
+        "tests/native_random_map_zone_choke_regression_report.tscn passed for small supported land, Small translated 049 3-player land, and medium translated 4-player land.",
+        "tests/native_random_map_disk_package_startup_report.tscn passed with a generated disk package at 303 objects, 150 decorations, 7 towns, and 40 guards.",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2, python3 tests/validate_repo.py, python3 -m json.tool ops/progress.json, and git diff --check passed."
+      ],
+      "nonGoals": [
+        "No HoMM3 copyrighted asset import.",
+        "No full byte-level HoMM3 parity claim.",
+        "No broad template support expansion beyond translated Small 049 density tightening.",
+        "No runtime-authoritative adoption or save-version bump."
+      ]
+    },
     {
       "id": "native-rmg-small-package-cross-zone-town-topology-gate-10184",
       "title": "Native RMG Small Package Cross-Zone Town Topology Gate",

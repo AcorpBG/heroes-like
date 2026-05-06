@@ -129,11 +129,11 @@ func _assert_default_small_shape(summaries: Array) -> bool:
 	if int(default_summary.get("nearest_town_manhattan", 0)) < 8:
 		_fail("Small default town spacing is too tight: %s" % JSON.stringify(default_summary))
 		return false
-	if float(default_summary.get("total_content_count_ratio_to_owner", 0.0)) < 0.90 or float(default_summary.get("total_content_count_ratio_to_owner", 0.0)) > 1.15:
-		_fail("Small default total content density drifted outside owner-like tolerance: %s" % JSON.stringify(default_summary))
+	if int(default_summary.get("total_content_count", 0)) != int(OWNER_SMALL_BASELINE.get("object_count", 0)):
+		_fail("Small default total content density drifted from uploaded owner count: %s" % JSON.stringify(default_summary))
 		return false
-	if float(default_summary.get("decoration_count_ratio_to_owner", 0.0)) < 0.80 or float(default_summary.get("decoration_count_ratio_to_owner", 0.0)) > 1.20:
-		_fail("Small default decoration density drifted outside owner-like tolerance: %s" % JSON.stringify(default_summary))
+	if int(default_summary.get("decoration_count", 0)) != int(OWNER_SMALL_BASELINE.get("decoration_count", 0)):
+		_fail("Small default decoration density drifted from uploaded owner count: %s" % JSON.stringify(default_summary))
 		return false
 	if float(default_summary.get("reward_count_ratio_to_owner", 0.0)) < 0.85 or float(default_summary.get("reward_count_ratio_to_owner", 0.0)) > 1.15:
 		_fail("Small default reward/mine/resource density drifted outside owner-like tolerance: %s" % JSON.stringify(default_summary))
@@ -170,6 +170,9 @@ func _assert_default_package_surface(default_summary: Dictionary) -> bool:
 			return false
 		if int(surface.get("guard_count", 0)) < int(OWNER_SMALL_BASELINE.get("guard_count", 0)):
 			_fail("Small default %s did not preserve owner-like guard count: %s" % [label, JSON.stringify(surface)])
+			return false
+		if int(surface.get("object_count", 0)) != int(OWNER_SMALL_BASELINE.get("object_count", 0)):
+			_fail("Small default %s package object count drifted from uploaded owner count: %s" % [label, JSON.stringify(surface)])
 			return false
 		if int(surface.get("object_count", 0)) < int(default_summary.get("total_content_count", 0)):
 			_fail("Small default %s lost generated package objects: %s" % [label, JSON.stringify(surface)])
