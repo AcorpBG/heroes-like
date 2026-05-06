@@ -1,14 +1,14 @@
 {
   "project": "heroes-like",
   "taskId": "10184",
-  "status": "in_progress",
+  "status": "completed",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-package-object-only-topology-gate-10184",
-  "currentSliceTitle": "Native RMG Package Object-Only Topology Gate",
+  "currentSliceId": "native-rmg-default-size-object-only-breadth-gate-10184",
+  "currentSliceTitle": "Native RMG Default Size Object-Only Breadth Gate",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed focused package-surface hardening for Small 049 object-only topology; broad RMG parity remains open.",
+  "currentSliceNotes": "Completed package object-only town topology breadth report for the player-facing Small, Medium, Large, and XL default translated templates.",
   "nextActionGuardrailNote": "Generated PNG ingestion for the overworld map object distinct sprite gap-fill slice is closed; future generated-art ingestion needs a new tracked slice with provenance and validation.",
-  "updatedAt": "2026-05-06T03:15:57Z",
+  "updatedAt": "2026-05-06T03:46:12Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -392,6 +392,54 @@
       "updatedAt": "2026-05-06T03:15:57Z",
       "startedAt": "2026-05-06T03:15:03Z",
       "completedAt": "2026-05-06T03:15:57Z"
+    },
+    {
+      "id": "native-rmg-default-size-object-only-breadth-gate-10184",
+      "title": "Native RMG Default Size Object-Only Breadth Gate",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/core/ScenarioSelectRules.gd",
+        "tests/native_random_map_package_surface_topology_report.gd"
+      ],
+      "purpose": "Broaden object-only package topology validation from the uploaded Small 049 case to the player-facing default translated templates for Small, Medium, Large, and Extra Large maps.",
+      "implementationTargets": [
+        "tests/native_random_map_package_object_only_breadth_report.gd",
+        "tests/native_random_map_package_object_only_breadth_report.tscn",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_object_only_breadth_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "The report generates, converts, saves, and reloads each player-facing default size-class template.",
+        "Converted and loaded package surfaces fail if object masks alone allow unguarded cross-zone town traversal.",
+        "Each case preserves at least the expected player-start towns, package object records, guard records, and non-empty roads.",
+        "Any unsupported or still-not-HoMM3-equivalent status remains reported rather than promoted to broad production parity."
+      ],
+      "completionEvidence": [
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_object_only_breadth_report.tscn passed for default Small 049, Medium 002, Large 042, and Extra Large 043 templates through generate, package convert, save, and reload.",
+        "Converted and loaded package surfaces reported zero object-only reachable cross-zone town pairs for all four default size-class templates.",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_package_surface_topology_report.tscn passed for focused Small 049 package topology with 7 towns, 303 objects, 40 guards, and no empty or duplicate road records.",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_homm3_uploaded_small_topology_report.tscn passed against the uploaded Small H3M comparison topology.",
+        "GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tests/native_random_map_zone_choke_regression_report.tscn passed after package boundary/corridor guard hardening."
+      ],
+      "remainingRisk": "This breadth gate covers the four player-facing default size templates only; it does not prove all 56 recovered templates or exact HoMM3 engine pathing. Close cross-zone town corridor masks are intentionally conservative and may need optimization if broader template sweeps expose runtime cost.",
+      "nonGoals": [
+        "No exact H3M byte/pathing parity claim.",
+        "C++ changes are limited to concrete blockers exposed by the breadth gate: zero-value translated land guard fallback, package boundary mask coverage, close cross-zone town corridor guard coverage, edge-aware barriers, and required town materialization fallback.",
+        "No generated package/map evidence committed."
+      ],
+      "updatedAt": "2026-05-06T03:46:12Z",
+      "startedAt": "2026-05-06T03:18:43Z",
+      "completedAt": "2026-05-06T03:46:12Z"
     },
     {
       "id": "native-rmg-small-049-owner-density-tightening-10184",
@@ -12805,11 +12853,11 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "native-rmg-package-object-only-topology-gate-10184",
-      "title": "Native RMG Package Object-Only Topology Gate",
+      "id": "native-rmg-default-size-object-only-breadth-gate-10184",
+      "title": "Native RMG Default Size Object-Only Breadth Gate",
       "status": "completed",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "reason": "Completed in this run. Next RMG work should broaden object-only topology/owner comparison beyond Small 049 or address remaining unsupported full_generation_status scope."
+      "reason": "Completed after Small package object-only topology was broadened across player-facing default Small, Medium, Large, and XL package surfaces."
     }
   ],
   "stoppedOrPausedTasks": [
