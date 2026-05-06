@@ -5040,9 +5040,9 @@ NativeObjectPlacementContext build_native_object_placement_context(const Array &
 		cache.zone_id = String(zone.get("id", ""));
 		context.zones.push_back(cache);
 	}
-	for (int32_t y = 1; y < height - 1 && y < owner_grid.size(); ++y) {
+	for (int32_t y = 0; y < height && y < owner_grid.size(); ++y) {
 		Array row = owner_grid[y];
-		for (int32_t x = 1; x < width - 1 && x < row.size(); ++x) {
+		for (int32_t x = 0; x < width && x < row.size(); ++x) {
 			const String zone_id = String(row[x]);
 			const int32_t zone_index = native_zone_index_for_id(context, zone_id);
 			if (zone_index < 0) {
@@ -5050,7 +5050,9 @@ NativeObjectPlacementContext build_native_object_placement_context(const Array &
 			}
 			const int32_t tile_index = native_tile_index(context, x, y);
 			context.zone_index_by_tile[tile_index] = zone_index;
-			context.zones[zone_index].candidates.push_back({x, y});
+			if (x > 0 && y > 0 && x < width - 1 && y < height - 1) {
+				context.zones[zone_index].candidates.push_back({x, y});
+			}
 		}
 	}
 	if (seed_road_occupied) {
@@ -5085,6 +5087,30 @@ bool object_body_fits_in_zone_native(const NativeObjectPlacementContext &context
 		}
 	}
 	return true;
+}
+
+bool native_context_zone_boundary_cell(const NativeObjectPlacementContext &context, int32_t x, int32_t y) {
+	const int32_t tile_index = native_tile_index(context, x, y);
+	if (tile_index < 0 || tile_index >= int32_t(context.zone_index_by_tile.size())) {
+		return false;
+	}
+	const int32_t zone_index = context.zone_index_by_tile[tile_index];
+	if (zone_index < 0) {
+		return false;
+	}
+	static constexpr int32_t DX[8] = { 1, -1, 0, 0, 1, 1, -1, -1 };
+	static constexpr int32_t DY[8] = { 0, 0, 1, -1, 1, -1, 1, -1 };
+	for (int32_t index = 0; index < 8; ++index) {
+		const int32_t neighbor_index = native_tile_index(context, x + DX[index], y + DY[index]);
+		if (neighbor_index < 0 || neighbor_index >= int32_t(context.zone_index_by_tile.size())) {
+			continue;
+		}
+		const int32_t other_zone_index = context.zone_index_by_tile[neighbor_index];
+		if (other_zone_index >= 0 && other_zone_index != zone_index) {
+			return true;
+		}
+	}
+	return false;
 }
 
 int32_t interactive_spacing_penalty_native(const NativeObjectPlacementContext &context, int32_t x, int32_t y, const String &kind, const String &zone_id) {
@@ -5548,6 +5574,8 @@ Dictionary compact_density_decoration_footprint(int32_t ordinal, bool small_land
 	return footprint;
 }
 
+bool zone_boundary_barrier_cell(const Array &owner_grid, int32_t x, int32_t y, int32_t width, int32_t height);
+
 Dictionary find_decoration_point(const Dictionary &zone, int32_t ordinal, const Dictionary &normalized, const Array &owner_grid, const Dictionary &occupied, const Dictionary &blocked, int32_t width, int32_t height) {
 	const String zone_id = String(zone.get("id", ""));
 	const String terrain_id = terrain_id_for_zone(zone);
@@ -5660,13 +5688,14 @@ Dictionary find_compact_decoration_density_point(const Dictionary &zone, int32_t
 			const int32_t preferred_anchor_distance = 6 + (ordinal % 17);
 			const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
 			const int32_t owner_grid_penalty = owner_attached_medium_001_grid_distribution_penalty(normalized, owner_medium_category, x, y, width, height);
+			const int32_t boundary_choke_bonus = native_rmg_owner_like_small_land_density_case(normalized) && zone_boundary_barrier_cell(owner_grid, x, y, width, height) ? -900 : 0;
 			const int32_t jitter = int32_t(hash32_int(seed_text + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 10000U);
 			Dictionary point = point_record(x, y);
-			const int64_t sort_key = int64_t(owner_grid_penalty) * int64_t(1000000000) + int64_t(coarse_distance) * int64_t(100000000) + int64_t(anchor_penalty) * int64_t(10000) + int64_t(jitter);
+			const int64_t sort_key = int64_t(owner_grid_penalty + boundary_choke_bonus) * int64_t(1000000000) + int64_t(coarse_distance) * int64_t(100000000) + int64_t(anchor_penalty) * int64_t(10000) + int64_t(jitter);
 			point["sort_key"] = sort_key;
 			point["decoration_footprint_override"] = footprint;
 			point["decoration_fit_fallback"] = "compact_owner_like_islands_density_marker";
-			point["spatial_placement_policy"] = "owner_like_islands_compact_decoration_density_scatter";
+			point["spatial_placement_policy"] = boundary_choke_bonus < 0 ? "owner_like_small_boundary_choke_compact_decoration_density" : "owner_like_islands_compact_decoration_density_scatter";
 			candidates.push_back(point);
 		}
 	}
@@ -5814,8 +5843,9 @@ Dictionary find_compact_decoration_density_point_fast(const Dictionary &zone, in
 		const int32_t anchor_penalty = std::abs(anchor_distance - preferred_anchor_distance);
 		const int32_t owner_grid_penalty = owner_attached_medium_001_grid_distribution_penalty(normalized, owner_medium_category, x, y, placement_context.width, placement_context.height);
 		const int32_t owner_cluster_penalty = owner_attached_medium_001_existing_cluster_penalty(normalized, placement_context, owner_medium_category, x, y);
+		const int32_t boundary_choke_bonus = native_rmg_owner_like_small_land_density_case(normalized) && native_context_zone_boundary_cell(placement_context, x, y) ? -900 : 0;
 		const int32_t jitter = int32_t(hash32_int(seed_text + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 10000U);
-		const int64_t sort_key = int64_t(owner_grid_penalty + owner_cluster_penalty) * int64_t(1000000000) + int64_t(coarse_distance) * int64_t(100000000) + int64_t(anchor_penalty) * int64_t(10000) + int64_t(jitter);
+		const int64_t sort_key = int64_t(owner_grid_penalty + owner_cluster_penalty + boundary_choke_bonus) * int64_t(1000000000) + int64_t(coarse_distance) * int64_t(100000000) + int64_t(anchor_penalty) * int64_t(10000) + int64_t(jitter);
 		if (sort_key < best_sort_key) {
 			best_sort_key = sort_key;
 			best_x = x;
@@ -5826,7 +5856,9 @@ Dictionary find_compact_decoration_density_point_fast(const Dictionary &zone, in
 		Dictionary result = point_record(best_x, best_y);
 		result["decoration_footprint_override"] = footprint;
 		result["decoration_fit_fallback"] = "compact_owner_like_islands_density_marker";
-		result["spatial_placement_policy"] = "native_cached_owner_like_islands_compact_decoration_density_scatter";
+		result["spatial_placement_policy"] = native_rmg_owner_like_small_land_density_case(normalized) && native_context_zone_boundary_cell(placement_context, best_x, best_y)
+				? "native_cached_owner_like_small_boundary_choke_compact_decoration_density"
+				: "native_cached_owner_like_islands_compact_decoration_density_scatter";
 		return result;
 	}
 	return Dictionary();
@@ -11346,6 +11378,134 @@ void apply_package_guard_link(Dictionary &record, const Dictionary &guard) {
 	record["package_guard_adoption_state"] = "guard_link_materialized_on_protected_object_package_surface";
 }
 
+Array land_boundary_rock_cells_from_generated_map(const Dictionary &generated_map) {
+	Array cells;
+	Dictionary terrain_grid = generated_map.get("terrain_grid", Dictionary());
+	Dictionary boundary_shape = terrain_grid.get("land_boundary_shape", Dictionary());
+	if (!bool(boundary_shape.get("enabled", false))) {
+		return cells;
+	}
+	Array levels = terrain_grid.get("levels", Array());
+	if (levels.is_empty() || Variant(levels[0]).get_type() != Variant::DICTIONARY) {
+		return cells;
+	}
+	Dictionary level = Dictionary(levels[0]);
+	PackedInt32Array terrain_codes = level.get("terrain_code_u16", PackedInt32Array());
+	const int32_t width = int32_t(terrain_grid.get("width", generated_map.get("width", 36)));
+	const int32_t height = int32_t(terrain_grid.get("height", generated_map.get("height", 36)));
+	const int32_t rock_code = terrain_code_for_id("rock");
+	for (int32_t y = 0; y < height; ++y) {
+		for (int32_t x = 0; x < width; ++x) {
+			const int32_t index = y * width + x;
+			if (index >= 0 && index < terrain_codes.size() && terrain_codes[index] == rock_code) {
+				cells.append(cell_record(x, y, 0));
+			}
+		}
+	}
+	return cells;
+}
+
+int32_t nearest_body_distance_to_cell(const Array &body_tiles, int32_t x, int32_t y) {
+	int32_t best = std::numeric_limits<int32_t>::max();
+	for (int64_t index = 0; index < body_tiles.size(); ++index) {
+		if (Variant(body_tiles[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary body = Dictionary(body_tiles[index]);
+		const int32_t bx = int32_t(body.get("x", 0));
+		const int32_t by = int32_t(body.get("y", 0));
+		best = std::min(best, std::max(std::abs(x - bx), std::abs(y - by)));
+	}
+	return best;
+}
+
+void append_unique_package_block_tile(Dictionary &record, Dictionary &seen, const Dictionary &cell) {
+	const String key = point_key(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)));
+	if (seen.has(key)) {
+		return;
+	}
+	Array block_tiles = record.get("package_block_tiles", Array());
+	block_tiles.append(cell);
+	record["package_block_tiles"] = block_tiles;
+	record["package_block_tile_count"] = block_tiles.size();
+	seen[key] = true;
+}
+
+void apply_land_boundary_choke_masks_to_decorative_package_objects(Array &objects, const Dictionary &generated_map) {
+	Array boundary_cells = land_boundary_rock_cells_from_generated_map(generated_map);
+	if (boundary_cells.is_empty()) {
+		return;
+	}
+	std::vector<int64_t> decorative_indices;
+	decorative_indices.reserve(objects.size());
+	for (int64_t index = 0; index < objects.size(); ++index) {
+		if (Variant(objects[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = Dictionary(objects[index]);
+		if (String(object.get("kind", "")) == "decorative_obstacle") {
+			decorative_indices.push_back(index);
+		}
+	}
+	if (decorative_indices.empty()) {
+		return;
+	}
+	int32_t assigned_count = 0;
+	Dictionary assigned_lookup;
+	static constexpr int32_t MAX_MASK_RADIUS = 4;
+	for (int64_t cell_index = 0; cell_index < boundary_cells.size(); ++cell_index) {
+		Dictionary cell = Dictionary(boundary_cells[cell_index]);
+		const int32_t x = int32_t(cell.get("x", 0));
+		const int32_t y = int32_t(cell.get("y", 0));
+		const String key = point_key(x, y);
+		if (assigned_lookup.has(key)) {
+			continue;
+		}
+		int64_t best_object_index = -1;
+		int32_t best_distance = std::numeric_limits<int32_t>::max();
+		for (int64_t decorative_index : decorative_indices) {
+			Dictionary object = Dictionary(objects[decorative_index]);
+			const int32_t distance = nearest_body_distance_to_cell(object.get("package_body_tiles", Array()), x, y);
+			if (distance < best_distance) {
+				best_distance = distance;
+				best_object_index = decorative_index;
+			}
+		}
+		if (best_object_index < 0 || best_distance > MAX_MASK_RADIUS) {
+			continue;
+		}
+		Dictionary object = Dictionary(objects[best_object_index]);
+		Dictionary block_seen;
+		Array block_tiles = object.get("package_block_tiles", Array());
+		for (int64_t block_index = 0; block_index < block_tiles.size(); ++block_index) {
+			if (Variant(block_tiles[block_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary block = Dictionary(block_tiles[block_index]);
+			block_seen[point_key(int32_t(block.get("x", 0)), int32_t(block.get("y", 0)))] = true;
+		}
+		append_unique_package_block_tile(object, block_seen, cell);
+		object["package_boundary_choke_mask_source"] = "land_boundary_rock_cells_materialized_on_nearby_decorative_obstacle_masks";
+		object["package_boundary_choke_max_mask_radius"] = MAX_MASK_RADIUS;
+		object["package_boundary_choke_tile_count"] = int32_t(object.get("package_boundary_choke_tile_count", 0)) + 1;
+		object["package_pathing_materialization_state"] = "body_visit_and_boundary_choke_masks_materialized_for_generated_package_surface";
+		objects[best_object_index] = object;
+		assigned_lookup[key] = true;
+		++assigned_count;
+	}
+	for (int64_t index = 0; index < objects.size(); ++index) {
+		if (Variant(objects[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = Dictionary(objects[index]);
+		if (String(object.get("kind", "")) == "decorative_obstacle") {
+			object["package_boundary_choke_materialized_tile_total"] = assigned_count;
+			object["package_boundary_choke_materialization_policy"] = "nearby_decorative_obstacle_masks_cover_land_boundary_choke_cells_so_package_pathing_does_not_depend_only_on_terrain_rock";
+			objects[index] = object;
+		}
+	}
+}
+
 Array combined_native_map_objects(const Dictionary &generated_map) {
 	Array result;
 	Array objects = tagged_record_snapshots(generated_map.get("object_placements", Variant()), "object_placement");
@@ -11405,6 +11565,15 @@ Array combined_native_map_objects(const Dictionary &generated_map) {
 		record["passability"] = passability;
 		record["signature"] = hash32_hex(canonical_variant(record));
 		result.append(record);
+	}
+	apply_land_boundary_choke_masks_to_decorative_package_objects(result, generated_map);
+	for (int64_t index = 0; index < result.size(); ++index) {
+		if (Variant(result[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary record = Dictionary(result[index]);
+		record["signature"] = hash32_hex(canonical_variant(record));
+		result[index] = record;
 	}
 	return result;
 }

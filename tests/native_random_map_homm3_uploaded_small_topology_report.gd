@@ -180,6 +180,7 @@ func _native_small_package_topology(service: Variant) -> Dictionary:
 	var unresolved_blocked := terrain_blocked.duplicate(true)
 	for key in object_blocked.keys():
 		unresolved_blocked[key] = true
+	var object_only_topology := _town_pair_topology(object_blocked.duplicate(true), int(map_document.get_width()), int(map_document.get_height()), object_summary.get("towns", []))
 	var topology := _town_pair_topology(unresolved_blocked, int(map_document.get_width()), int(map_document.get_height()), object_summary.get("towns", []))
 	return {
 		"width": int(map_document.get_width()),
@@ -202,6 +203,7 @@ func _native_small_package_topology(service: Variant) -> Dictionary:
 		"object_blocked_tile_count": object_blocked.size(),
 		"unresolved_blocked_tile_count": unresolved_blocked.size(),
 		"towns": object_summary.get("towns", []),
+		"object_only_town_topology": object_only_topology,
 		"town_topology": topology,
 	}
 
@@ -214,6 +216,7 @@ func _compare(owner: Dictionary, native: Dictionary) -> Dictionary:
 		"nearest_town_manhattan_delta": int(native.get("nearest_town_manhattan", 0)) - int(owner.get("nearest_town_manhattan", 0)),
 		"native_terrain_blocked_vs_owner_mask_blocked_delta": int(native.get("terrain_blocked_tile_count", 0)) - int(owner.get("mask_blocked_tile_count", 0)),
 		"native_unresolved_reachable_town_pairs": int(native.get("town_topology", {}).get("reachable_pair_count", 0)),
+		"native_object_only_reachable_town_pairs": int(native.get("object_only_town_topology", {}).get("reachable_pair_count", 0)),
 		"owner_rough_unresolved_reachable_town_pairs": int(owner.get("rough_town_topology", {}).get("reachable_pair_count", 0)),
 		"interpretation": "Counts compare exact parsed/package surfaces; owner rough topology is not used as a hard gate because exact H3M passability/pathing semantics are not fully implemented in this local parser.",
 	}
@@ -235,6 +238,8 @@ func _gate(owner: Dictionary, native: Dictionary, comparison: Dictionary) -> Dic
 		failures.append("native_small_package_serialized_empty_or_duplicate_roads")
 	if int(comparison.get("native_unresolved_reachable_town_pairs", 0)) != 0:
 		failures.append("native_small_has_unresolved_reachable_town_pairs")
+	if int(comparison.get("native_object_only_reachable_town_pairs", 0)) != 0:
+		failures.append("native_small_object_blockers_alone_do_not_close_town_topology")
 	if int(native.get("terrain_blocked_tile_count", 0)) > 0:
 		warnings.append("native_small_still_uses_terrain_rock_boundaries_instead_of_object_only_h3m_style_obstacle_chokes")
 	if String(native.get("full_generation_status", "")) != "implemented_for_supported_profile":
@@ -246,6 +251,7 @@ func _gate(owner: Dictionary, native: Dictionary, comparison: Dictionary) -> Dic
 		"thresholds": {
 			"max_abs_road_cell_delta": 8,
 			"required_native_unresolved_reachable_town_pairs": 0,
+			"required_native_object_only_reachable_town_pairs": 0,
 			"required_zero_tile_road_count": 0,
 		},
 	}

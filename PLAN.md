@@ -1398,6 +1398,32 @@ nonGoals:
 - No generator behavior change in this evidence slice.
 - No exact H3M pathing/byte parity claim from the local parser.
 
+id: `native-rmg-small-object-choke-materialization-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Follow the uploaded Small topology audit by moving current Small 049 package choke closure from terrain-only reliance toward object-surface blocker materialization: decorative obstacle masks must close the town topology even when terrain rock barriers are ignored.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- owner-uploaded Small 3-player H3M comparison evidence
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Native translated Small 049 keeps owner-like aggregate counts, road cells, town distance, and package topology gates.
+- The uploaded Small topology report fails if native object blockers alone allow any reachable town pair when terrain rock blockers are ignored.
+- Compact decorative obstacle placement is biased toward owner-grid zone-boundary choke cells, and package decorative obstacle masks materialize nearby land-boundary choke cells without adding generated object records.
+- Remaining terrain-rock serialization is reported as a residual warning rather than silently treated as HoMM3-style object-mask parity.
+completionEvidence:
+- Object-only reachable town pairs moved from 6 before this slice to 0 after boundary-biased compact decoration and decorative package choke masks.
+- Native Small 049 still produces 7 towns, nearest town distance 10, 303 objects, 150 decorative obstacles, 40 guards, 105 road cells, zero empty/duplicate road records, and zero unresolved reachable town pairs.
+nonGoals:
+- No HoMM3 art, DEF, name, text, map, or binary `.h3m` import.
+- No broad removal of terrain rock boundary serialization in this slice.
+- No exact H3M pathing or byte parity claim.
+
 id: `overworld-map-object-distinct-sprite-gap-fill-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`
