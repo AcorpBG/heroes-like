@@ -1563,6 +1563,62 @@ nonGoals:
 - No HoMM3 asset import.
 - No claim that all 56 recovered templates are production-ready.
 
+id: `native-rmg-production-owner-comparison-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Move the owner-compared translated default profiles out of `partial_foundation` / `not_implemented` status without claiming full HoMM3 parity or native runtime authority.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_full_parity_gate_report.gd`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+- owner objective that native RMG must become production-ready, usable, and not alpha/prototype
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_full_parity_gate_report.gd`
+- focused package/topology reports under `tests/`
+- `ops/progress.json`
+completionCriteria:
+- Translated Small 049 and Medium 002 default native generation no longer report `status: partial_foundation` or `full_generation_status: not_implemented`.
+- The promoted status remains bounded to owner-comparison/topology-supported translated defaults and does not expose `full_parity_claim`, `native_runtime_authoritative`, or runtime call-site adoption.
+- Full parity, uploaded-H3M topology, package-surface topology, and object-only breadth reports pass after a Linux native rebuild.
+- `python3 tests/validate_repo.py`, `python3 -m json.tool ops/progress.json`, and `git diff --check` pass.
+completionEvidence:
+- Native C++ generation now classifies translated Small 049 and Medium 002 defaults as `owner_compared_translated_profile_supported` with `full_generation_status: owner_compared_translated_profile_not_full_parity`.
+- Full parity and runtime authority remain false, and package/session adoption remains feature-gated and non-authoritative.
+- `tests/native_random_map_full_parity_gate_report.tscn`, uploaded-H3M topology, package-surface topology, and object-only breadth reports passed after a Linux native rebuild.
+remainingGaps:
+- Large 042 and XL 043 still report `full_generation_status: not_implemented`; they need separate owner-comparison/topology evidence before promotion.
+nonGoals:
+- No exact H3M byte parity.
+- No HoMM3 asset import.
+- No claim that all 56 recovered templates are production-ready.
+- No runtime-authoritative generated skirmish adoption.
+
+id: `native-rmg-production-large-xl-owner-status-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `pending`
+purpose: Build owner-comparison/topology evidence for translated Large 042 and XL 043 defaults so they can be moved off `full_generation_status: not_implemented` without overclaiming full parity.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+- `docs/random-map-homm3-parity-visual-inspection-gaps.md`
+- owner objective that native RMG must become production-ready, usable, and not alpha/prototype
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- focused Large/XL topology and package-surface reports under `tests/`
+- `ops/progress.json`
+completionCriteria:
+- Large 042 and XL 043 default translated profiles have bounded topology evidence comparable to the Small/Medium owner-comparison gates.
+- If evidence passes, Large/XL no longer report `full_generation_status: not_implemented`.
+- Full parity, runtime authority, and all-56-template production claims remain false until broader audit coverage exists.
+nonGoals:
+- No exact H3M byte parity.
+- No HoMM3 asset import.
+- No blanket all-template promotion.
+
 id: `overworld-map-object-distinct-sprite-gap-fill-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`
