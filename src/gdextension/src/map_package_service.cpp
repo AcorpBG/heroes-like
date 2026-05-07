@@ -6591,6 +6591,9 @@ int32_t owner_xl_land_category_target(const Dictionary &normalized, const String
 	if (category == "guard") {
 		return 619;
 	}
+	if (category == "town") {
+		return 12;
+	}
 	return -1;
 }
 
@@ -9430,6 +9433,9 @@ Dictionary point_bounds_record(int32_t x, int32_t y) {
 }
 
 	int32_t town_spacing_radius_for_size(const Dictionary &normalized) {
+		if (native_rmg_owner_xl_land_density_case(normalized)) {
+			return 33;
+		}
 		if (native_rmg_owner_like_islands_density_case(normalized)) {
 			return 17;
 		}
@@ -9439,6 +9445,9 @@ Dictionary point_bounds_record(int32_t x, int32_t y) {
 	}
 
 	int32_t town_hard_spacing_radius_for_size(const Dictionary &normalized) {
+		if (native_rmg_owner_xl_land_density_case(normalized)) {
+			return town_spacing_radius_for_size(normalized);
+		}
 		if (native_rmg_owner_like_islands_density_case(normalized)) {
 			return town_spacing_radius_for_size(normalized);
 		}
@@ -11559,7 +11568,8 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
 	const int32_t parity_town_limit = parity_targets.is_empty() ? -1 : int32_t(parity_targets.get("town_count", 0));
 	const int32_t owner_medium_town_limit = owner_attached_medium_001_category_target(normalized, "town");
-	const int32_t effective_town_limit = parity_town_limit >= 0 ? parity_town_limit : owner_medium_town_limit;
+	const int32_t owner_xl_town_limit = owner_xl_land_category_target(normalized, "town");
+	const int32_t effective_town_limit = parity_town_limit >= 0 ? parity_town_limit : (owner_medium_town_limit >= 0 ? owner_medium_town_limit : owner_xl_town_limit);
 	append_extension_profile_phase(town_guard_profile_phases, "setup", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	int32_t town_ordinal = 0;
 	int32_t required_attempt_count = 0;
@@ -11621,42 +11631,63 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		const int32_t jitter = int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":town_point:" + zone_id + ":" + record_type + ":" + String::num_int64(local_ordinal)) % 5U) - 2;
 		const int32_t access_anchor_x = int32_t(access_anchor.get("x", width / 2));
 		const int32_t access_anchor_y = int32_t(access_anchor.get("y", height / 2));
+		Dictionary town_search_occupied = occupied;
+		if (owner_xl_town_limit >= 0 && record_type == "owner_xl_land_spacing_supplement_town") {
+			town_search_occupied = non_clearable_blocking_occupied.duplicate(true);
+			for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
+				if (Variant(objects[object_index]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				Dictionary object = Dictionary(objects[object_index]);
+				const String primary_key = String(object.get("primary_occupancy_key", ""));
+				if (!primary_key.is_empty()) {
+					town_search_occupied[primary_key] = object.get("placement_id", "");
+				}
+			}
+			for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+				if (Variant(towns[town_index]).get_type() == Variant::DICTIONARY) {
+					mark_record_blocking_occupancy(town_search_occupied, Dictionary(towns[town_index]));
+				}
+			}
+		}
 		Dictionary access_reachable_lookup = in_zone_access_reachable_lookup(access_anchor_x, access_anchor_y, zone_id, owner_grid, blocking_occupied, width, height);
 			const int32_t preferred_spacing = town_spacing_radius_for_size(normalized);
 			const int32_t hard_spacing = town_hard_spacing_radius_for_size(normalized);
 			const int32_t access_fallback_spacing = town_access_fallback_spacing_radius_for_size(normalized);
 			const int32_t required_spacing_floor = std::min(width, height) >= 120 ? 16 : 12;
 			const bool owner_medium_islands_spacing_floor_enforced = native_rmg_owner_like_islands_density_case(normalized);
-			const int32_t required_materialization_spacing = owner_medium_islands_spacing_floor_enforced ? preferred_spacing : std::max(4, std::min(required_spacing_floor, access_fallback_spacing));
+			const bool owner_xl_land_spacing_floor_enforced = native_rmg_owner_xl_land_density_case(normalized);
+			const bool owner_strict_spacing_floor_enforced = owner_medium_islands_spacing_floor_enforced || owner_xl_land_spacing_floor_enforced;
+			const int32_t required_materialization_spacing = owner_strict_spacing_floor_enforced ? preferred_spacing : std::max(4, std::min(required_spacing_floor, access_fallback_spacing));
 			const bool launchable_spacing_floor_enforced = native_rmg_scoped_structural_profile_supported(normalized) || native_rmg_owner_compared_translated_profile_supported(normalized);
 			const int32_t owner_small_underground_required_spacing = native_rmg_owner_uploaded_small_027_underground_case(normalized) ? std::max(4, std::min(6, required_materialization_spacing)) : required_materialization_spacing;
-			const int32_t owner_medium_required_spacing = owner_medium_islands_spacing_floor_enforced ? preferred_spacing : owner_small_underground_required_spacing;
-			const int32_t required_last_resort_spacing = launchable_spacing_floor_enforced ? owner_medium_required_spacing : std::max(4, std::min(8, required_materialization_spacing));
+			const int32_t owner_compared_required_spacing = owner_strict_spacing_floor_enforced ? preferred_spacing : owner_small_underground_required_spacing;
+			const int32_t required_last_resort_spacing = launchable_spacing_floor_enforced ? owner_compared_required_spacing : std::max(4, std::min(8, required_materialization_spacing));
 		int32_t applied_spacing = preferred_spacing;
-		Dictionary point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, occupied, width, height, towns, preferred_spacing, access_anchor, access_reachable_lookup);
+		Dictionary point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, preferred_spacing, access_anchor, access_reachable_lookup);
 		if (point.is_empty() && hard_spacing < preferred_spacing) {
 			applied_spacing = hard_spacing;
-			point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, occupied, width, height, towns, hard_spacing, access_anchor, access_reachable_lookup);
+			point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, hard_spacing, access_anchor, access_reachable_lookup);
 		}
 		if (point.is_empty() && access_fallback_spacing < applied_spacing) {
 			applied_spacing = access_fallback_spacing;
-			point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, occupied, width, height, towns, access_fallback_spacing, access_anchor, access_reachable_lookup);
+			point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, access_fallback_spacing, access_anchor, access_reachable_lookup);
 		}
 		bool used_required_spacing_fallback = false;
 		bool used_required_materialization_fallback = false;
 		if (point.is_empty() && !density && required_materialization_spacing < applied_spacing) {
 			applied_spacing = required_materialization_spacing;
-			point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, occupied, width, height, towns, required_materialization_spacing, access_anchor, access_reachable_lookup);
+			point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, required_materialization_spacing, access_anchor, access_reachable_lookup);
 			used_required_materialization_fallback = !point.is_empty();
 		}
 		if (point.is_empty() && !density) {
 			applied_spacing = required_materialization_spacing;
-			point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, occupied, width, height, towns, required_materialization_spacing);
+			point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, required_materialization_spacing);
 			used_required_spacing_fallback = !point.is_empty();
 		}
 		if (point.is_empty() && !density && required_last_resort_spacing < applied_spacing) {
 			applied_spacing = required_last_resort_spacing;
-			point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, occupied, width, height, towns, required_last_resort_spacing);
+			point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, required_last_resort_spacing);
 			used_required_spacing_fallback = !point.is_empty();
 		}
 		Dictionary diagnostic;
@@ -11675,14 +11706,16 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			diagnostic["required_last_resort_town_spacing"] = required_last_resort_spacing;
 			diagnostic["launchable_spacing_floor_enforced"] = launchable_spacing_floor_enforced;
 			diagnostic["owner_medium_islands_spacing_floor_enforced"] = owner_medium_islands_spacing_floor_enforced;
+			diagnostic["owner_xl_land_spacing_floor_enforced"] = owner_xl_land_spacing_floor_enforced;
 		diagnostic["applied_town_spacing"] = applied_spacing;
 		diagnostic["town_access_anchor"] = access_anchor;
 		diagnostic["town_spacing_distance_model"] = "direct_tile_route_chebyshev_distance";
 		diagnostic["town_accessibility_policy"] = used_required_spacing_fallback ? "required_town_legacy_spacing_fallback_subject_to_cross_zone_route_regression" : (used_required_materialization_fallback ? "required_town_materialization_spacing_fallback_preserves_in_zone_access" : "town_anchor_must_have_in_zone_path_to_start_or_zone_anchor_through_existing_blocking_objects_even_when_spacing_relaxes");
 		if (point.is_empty()) {
-			diagnostic["code"] = density ? "town_castle_density_placement_infeasible" : "town_castle_placement_infeasible";
-			diagnostic["severity"] = density ? "warning" : "failure";
-			diagnostic["message"] = density ? "No unoccupied in-zone tile satisfied the optional density town/castle spacing and access-to-anchor contract." : "No unoccupied in-zone tile satisfied the required town/castle spacing and access-to-anchor contract.";
+			const bool owner_xl_neutral_required_deferred = owner_xl_town_limit >= 0 && owner_scope == "neutral" && !density;
+			diagnostic["code"] = density ? "town_castle_density_placement_infeasible" : (owner_xl_neutral_required_deferred ? "owner_xl_neutral_required_town_deferred_to_global_spacing_supplement" : "town_castle_placement_infeasible");
+			diagnostic["severity"] = (density || owner_xl_neutral_required_deferred) ? "warning" : "failure";
+			diagnostic["message"] = density ? "No unoccupied in-zone tile satisfied the optional density town/castle spacing and access-to-anchor contract." : (owner_xl_neutral_required_deferred ? "Owner XL neutral source-zone town could not satisfy the owner spacing floor and is deferred to the global owner-count supplement." : "No unoccupied in-zone tile satisfied the required town/castle spacing and access-to-anchor contract.");
 			town_diagnostics.append(diagnostic);
 			return;
 		}
@@ -11727,7 +11760,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		semantics["required_town_access_corridor_policy"] = used_cross_component_access_corridor ? "runtime_zone_component_gap_materializes_explicit_access_corridor_to_road_anchor" : (used_required_spacing_fallback ? "legacy_required_town_spacing_fallback_materializes_explicit_in_zone_access_corridor" : "accessible_town_anchor_preserves_explicit_in_zone_access_corridor");
 		diagnostic["required_town_access_corridor_cell_count"] = access_corridor_cells.size();
 		diagnostic["used_cross_component_access_corridor"] = used_cross_component_access_corridor;
-		append_town_record(towns, occupied, town_record_at_point(normalized, zone, point, start, record_type, town_ordinal, road_network, zone_layout, occupied, semantics));
+		append_town_record(towns, occupied, town_record_at_point(normalized, zone, point, start, record_type, town_ordinal, road_network, zone_layout, town_search_occupied, semantics));
 		mark_record_blocking_occupancy(blocking_occupied, Dictionary(towns[towns.size() - 1]));
 		++town_ordinal;
 		diagnostic["code"] = "town_castle_placement_materialized";
@@ -11850,6 +11883,28 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			++density_attempt_count;
 			append_town_attempt(zone, Dictionary(), "neutral", "town", true, owner_medium_town_limit, "owner_attached_medium_001_density_town", "owner_attached_h3m_town_density_supplement", attempts);
 			++attempts;
+		}
+	}
+	if (owner_xl_town_limit >= 0) {
+		int32_t attempts = 0;
+		while (towns.size() < owner_xl_town_limit && attempts < int32_t(zones.size()) * 100) {
+			if (zones.is_empty()) {
+				break;
+			}
+			Dictionary zone = zones[attempts % zones.size()];
+			++density_attempt_count;
+			append_town_attempt(zone, Dictionary(), "neutral", "town", false, owner_xl_town_limit, "owner_xl_land_spacing_supplement_town", "owner_xl_land_h3m_town_count_spacing_supplement", attempts);
+			++attempts;
+		}
+		if (towns.size() < owner_xl_town_limit) {
+			Dictionary diagnostic;
+			diagnostic["code"] = "owner_xl_land_town_count_spacing_supplement_partial";
+			diagnostic["severity"] = "warning";
+			diagnostic["target_town_count"] = owner_xl_town_limit;
+			diagnostic["final_town_count"] = towns.size();
+			diagnostic["attempt_count"] = attempts;
+			diagnostic["source"] = "owner_discovered_xl_nowater_town_count";
+			town_diagnostics.append(diagnostic);
 		}
 	}
 	append_extension_profile_phase(town_guard_profile_phases, "town_placement_attempts", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
@@ -13184,6 +13239,9 @@ Array build_phase_pipeline(const Dictionary &terrain_grid, const Dictionary &zon
 
 int32_t native_rmg_town_spacing_floor_for_config(const Dictionary &normalized) {
 	const String size_class_id = String(normalized.get("size_class_id", ""));
+	if (native_rmg_owner_xl_land_density_case(normalized)) {
+		return 36;
+	}
 	if (size_class_id == "homm3_extra_large") {
 		return 12;
 	}

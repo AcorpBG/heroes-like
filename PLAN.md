@@ -31,6 +31,41 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-owner-xl-land-town-layout-correction-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Use the XL no-water owner diagnostic to correct native Extra Large land town count and town-spacing semantics after the density pass exposed native towns at 14 versus owner 12 and nearest-town Manhattan 23 versus owner 39.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `src/gdextension/src/map_package_service.cpp`
+- local evidence under `maps/h3m-maps/XL-nowater.h3m`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Native Extra Large land default applies the owner XL town-count target without dropping player starts.
+- The XL land diagnostic no longer reports `native_xl_semantic_layout_gap` solely because native towns are closer than the owner spacing floor.
+- Object, decoration, scenic, guard, road, and route-closure evidence from the density correction remains passing.
+- Production audit still refuses `production_ready` until broad exact owner-H3M parity and remaining corpus/parser gaps are closed.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No exact XL H3M byte/object-art parity claim.
+- No broad all-template town-layout parity claim.
+- No HoMM3 copyrighted asset/DEF import.
+validationResults:
+- Native XL land diagnostic validation now passes with native town count 12/12, nearest-town Manhattan 38 versus owner 39, semantic_layout_match, and no actionable gaps.
+- Density/passability evidence from the previous slice remains intact: decoration 3,413/3,413, scenic/object 629/629, guards 619/619, native object-route reachable town pairs 0, and native guarded-route reachable town pairs 0.
+- Remaining XL category delta is reward count only: native reward 952 versus owner 692; this stays explicit parity debt.
+- Production parity audit passed with `production_ready false` and `missing_requirement_count 4`, preserving the no-overclaim boundary.
+- Uploaded `.h3m`, generated `.amap`, and generated `.ascenario` evidence remains uncommitted.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-owner-xl-land-density-correction-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`
