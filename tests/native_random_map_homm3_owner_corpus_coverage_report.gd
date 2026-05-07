@@ -3,7 +3,7 @@ extends Node
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 
 const REPORT_ID := "NATIVE_RANDOM_MAP_HOMM3_OWNER_CORPUS_COVERAGE_REPORT"
-const REPORT_SCHEMA_ID := "native_random_map_homm3_owner_corpus_coverage_report_v5"
+const REPORT_SCHEMA_ID := "native_random_map_homm3_owner_corpus_coverage_report_v6"
 const HOMM3_RE_OBJECT_METADATA := "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json"
 
 const HOMM3_VERSION_ROE := 14
@@ -70,6 +70,7 @@ func _run() -> void:
 		_fail("No owner H3M evidence samples are readable.")
 		return
 	var comparison_gate := _comparison_gate_summary(samples)
+	var generalized_policy_failure_summary := _generalized_policy_failure_summary(samples, comparison_gate)
 	var gate_self_check := _comparison_gate_self_check()
 	var large_land_density_diagnostic := _owner_large_land_density_diagnostic(service, samples)
 	var xl_land_density_diagnostic := _owner_xl_land_density_diagnostic(service, samples)
@@ -82,6 +83,7 @@ func _run() -> void:
 		"samples": samples,
 		"coverage": coverage,
 		"comparison_gate": comparison_gate,
+		"generalized_policy_failure_summary": generalized_policy_failure_summary,
 		"comparison_gate_self_check": gate_self_check,
 		"large_land_density_diagnostic": large_land_density_diagnostic,
 		"xl_land_density_diagnostic": xl_land_density_diagnostic,
@@ -433,6 +435,168 @@ func _mapped_comparison_failures(sample: Dictionary, comparison: Dictionary) -> 
 			"guard_control_ratio": float(semantic_layout.get("guard_control_ratio", 0.0)),
 		})
 	return failures
+
+func _generalized_policy_failure_summary(samples: Array, comparison_gate: Dictionary) -> Dictionary:
+	var by_sample := {}
+	for sample_value in samples:
+		if not (sample_value is Dictionary):
+			continue
+		var sample: Dictionary = sample_value
+		by_sample[String(sample.get("id", ""))] = sample
+	var subsystem_records := {}
+	var failures: Array = comparison_gate.get("failures", []) if comparison_gate.get("failures", []) is Array else []
+	for failure_record_value in failures:
+		if not (failure_record_value is Dictionary):
+			continue
+		var failure_record: Dictionary = failure_record_value
+		var sample_id := String(failure_record.get("sample_id", ""))
+		var sample: Dictionary = by_sample.get(sample_id, {}) if by_sample.get(sample_id, {}) is Dictionary else {}
+		var nested_failures: Array = failure_record.get("failures", []) if failure_record.get("failures", []) is Array else []
+		for failure_value in nested_failures:
+			if not (failure_value is Dictionary):
+				continue
+			var failure: Dictionary = failure_value
+			for subsystem in _subsystems_for_failure(failure):
+				var key := String(subsystem)
+				if not subsystem_records.has(key):
+					subsystem_records[key] = {
+						"subsystem": key,
+						"failure_count": 0,
+						"sample_ids": [],
+						"failure_codes": [],
+						"size_class_ids": [],
+						"water_modes": [],
+						"level_counts": [],
+						"evidence": [],
+						"implementation_direction": _implementation_direction_for_subsystem(key),
+					}
+				var record: Dictionary = subsystem_records[key]
+				record["failure_count"] = int(record.get("failure_count", 0)) + 1
+				_append_unique_string(record["sample_ids"], sample_id)
+				_append_unique_string(record["failure_codes"], String(failure.get("code", "")))
+				_append_unique_string(record["size_class_ids"], String(sample.get("size_class_id", sample.get("expected_size_class_id", ""))))
+				_append_unique_string(record["water_modes"], String(sample.get("water_mode", sample.get("expected_water_mode", ""))))
+				_append_unique_string(record["level_counts"], str(int(sample.get("level_count", 0))))
+				var evidence := {
+					"sample_id": sample_id,
+					"path": String(sample.get("path", "")),
+					"code": String(failure.get("code", "")),
+					"size_class_id": String(sample.get("size_class_id", sample.get("expected_size_class_id", ""))),
+					"water_mode": String(sample.get("water_mode", sample.get("expected_water_mode", ""))),
+					"level_count": int(sample.get("level_count", 0)),
+				}
+				for field in ["delta", "absolute_delta_total", "status", "failure_codes", "component_size_abs_delta_total", "component_count_abs_delta_total", "guard_control_ratio"]:
+					if failure.has(field):
+						evidence[field] = failure[field]
+				record["evidence"].append(evidence)
+	var subsystem_list := []
+	for key in subsystem_records.keys():
+		subsystem_list.append(subsystem_records[key])
+	subsystem_list.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
+		if int(left.get("failure_count", 0)) == int(right.get("failure_count", 0)):
+			return String(left.get("subsystem", "")) < String(right.get("subsystem", ""))
+		return int(left.get("failure_count", 0)) > int(right.get("failure_count", 0))
+	)
+	var top_subsystems := []
+	for record in subsystem_list:
+		if record is Dictionary:
+			top_subsystems.append(String(record.get("subsystem", "")))
+	return {
+		"schema_id": "native_random_map_homm3_owner_corpus_generalized_policy_failure_summary_v1",
+		"status": "pass" if subsystem_list.is_empty() else "fail",
+		"policy": "Owner H3M exact deltas are diagnostics only; this summary groups mapped comparison failures by reusable native RMG subsystem so fixes target generalized recovered-template policy instead of individual sample ids.",
+		"subsystem_count": subsystem_list.size(),
+		"top_subsystems": top_subsystems,
+		"subsystems": subsystem_list,
+	}
+
+func _append_unique_string(values: Array, value: String) -> void:
+	if value.is_empty():
+		return
+	if not values.has(value):
+		values.append(value)
+
+func _subsystems_for_failure(failure: Dictionary) -> Array:
+	var code := String(failure.get("code", ""))
+	if code in ["native_comparison_status_not_compared", "native_validation_status_not_pass", "native_generation_not_implemented"]:
+		return ["generation_validation_policy"]
+	if code == "object_count_delta":
+		return ["object_density_policy"]
+	if code == "town_count_delta":
+		return ["town_policy"]
+	if code == "guard_count_delta":
+		return ["guard_policy"]
+	if code == "road_cell_count_delta" or code == "road_topology_gap":
+		return ["road_materialization_policy"]
+	if code == "category_count_gap":
+		return _subsystems_for_category_gap(failure)
+	if code == "semantic_layout_gap":
+		return _subsystems_for_semantic_layout_gap(failure)
+	return ["unclassified_policy"]
+
+func _subsystems_for_category_gap(failure: Dictionary) -> Array:
+	var result := []
+	var by_category: Dictionary = failure.get("by_category", {}) if failure.get("by_category", {}) is Dictionary else {}
+	for category in by_category.keys():
+		var record: Dictionary = by_category[category] if by_category[category] is Dictionary else {}
+		if int(record.get("delta", 0)) == 0:
+			continue
+		match String(category):
+			"decoration":
+				_append_unique_string(result, "decoration_blocker_policy")
+			"guard":
+				_append_unique_string(result, "guard_policy")
+			"town":
+				_append_unique_string(result, "town_policy")
+			"reward", "object":
+				_append_unique_string(result, "object_reward_policy")
+			_:
+				_append_unique_string(result, "object_density_policy")
+	if result.is_empty():
+		result.append("object_density_policy")
+	return result
+
+func _subsystems_for_semantic_layout_gap(failure: Dictionary) -> Array:
+	var result := []
+	var failure_codes: Array = failure.get("failure_codes", []) if failure.get("failure_codes", []) is Array else []
+	for failure_code_value in failure_codes:
+		match String(failure_code_value):
+			"native_town_spacing_below_owner_floor":
+				_append_unique_string(result, "town_spacing_policy")
+			"native_object_route_leak":
+				_append_unique_string(result, "decoration_blocker_route_closure_policy")
+			"native_guarded_route_leak", "native_guard_footprint_below_owner_floor":
+				_append_unique_string(result, "guard_route_closure_policy")
+			_:
+				_append_unique_string(result, "semantic_layout_policy")
+	if result.is_empty():
+		result.append("semantic_layout_policy")
+	return result
+
+func _implementation_direction_for_subsystem(subsystem: String) -> String:
+	match subsystem:
+		"generation_validation_policy":
+			return "Move unsupported or failing native configurations into explicit template/profile validation and retry policy before package conversion."
+		"object_density_policy":
+			return "Derive object density from recovered zone/template fields and size/water/level policy; keep exact owner counts in fixtures only."
+		"object_reward_policy":
+			return "Implement phase-ordered reward/object placement from treasure bands, object metadata, and value budgets instead of post-hoc category shaping."
+		"decoration_blocker_policy":
+			return "Implement terrain-biased decoration and blocker filler from object footprints/passability masks with required-access preservation."
+		"decoration_blocker_route_closure_policy":
+			return "Treat blockers as route-closure geometry: close unguarded zone/town routes while preserving required access corridors."
+		"town_policy":
+			return "Derive player/neutral town counts and placement from template zone town fields, ownership, same-type rules, and size-scaled spacing."
+		"town_spacing_policy":
+			return "Make town spacing a generalized validation/retry invariant by size, water mode, and zone graph role."
+		"guard_policy":
+			return "Materialize guards from connection payloads, guarded objects, reward values, and monster strength rules rather than sample count caps."
+		"guard_route_closure_policy":
+			return "Use guards as route-control objects that close cross-zone/town access leaks and satisfy guard-footprint thresholds."
+		"road_materialization_policy":
+			return "Generate road trunks/branches from recovered links and route graph semantics instead of patching per-sample component sizes."
+		_:
+			return "Classify this failure into a recovered RMG phase before adding runtime logic."
 
 func _comparison_gate_self_check() -> Dictionary:
 	var synthetic_samples := [

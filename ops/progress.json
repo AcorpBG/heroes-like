@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-owner-small-islands-underground-corpus-road-checkpoint-10184",
-  "currentSliceTitle": "native rmg owner small islands underground corpus road checkpoint 10184",
+  "currentSliceId": "native-rmg-generalized-policy-regate-10184",
+  "currentSliceTitle": "native rmg generalized policy re-gate 10184",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Checkpointed owner_discovered_s_randomnumberofplayers_islands_2level into the hard owner-corpus native comparison path for manual review. Native Small islands two-level road cells/topology now match owner evidence exactly: 147 total road cells, surface component sizes [45, 37, 15, 11, 10], underground [29]. The mapped comparison gate intentionally remains failing at 8/9 while object/category/town/guard parity is unfinished: object delta +4, town delta -1, guard delta +4, category absolute delta total 118. No uploaded .h3m, generated .amap, or generated .ascenario evidence files are part of this checkpoint.",
+  "currentSliceNotes": "Re-scoped active RMG work away from owner-H3M sample-by-sample exact-count fitting. Added docs/native-rmg-generalized-policy-regate-audit.md, which records exact counts as diagnostics only, identifies owner-specific runtime branches as temporary fixture/diagnostic debt, and defines the next implementation direction around generalized template/profile policy, zone graph semantics, town/guard/blocker route closure, road materialization, water/underground policy, and corpus subsystem grouping. Local Small-islands count-fitting edits were abandoned before commit; uploaded/generated map evidence remains untracked. Owner-corpus report schema v6 now emits generalized_policy_failure_summary alongside raw exact deltas; after native rebuild, the raw mapped gate remains 8/9 while the active Small islands failure is grouped into guard_policy, town_policy, decoration_blocker_policy, object_density_policy, and object_reward_policy. Owner-requested map-editor generated-package inspection hotfix completed: editor index now includes loadable generated packages rejected by skirmish launch validation as Inspect Only; skirmish launch filtering remains strict.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-07T10:17:36Z",
+  "updatedAt": "2026-05-07T11:07:17Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -40,10 +40,58 @@
   },
   "plannedSlices": [
     {
+      "id": "native-rmg-generalized-policy-regate-10184",
+      "title": "Native RMG Generalized Policy Re-Gate",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "in_progress",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/random-map-homm3-parity-gap-audit.md",
+        "docs/native-rmg-generalized-policy-regate-audit.md",
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_owner_corpus_coverage_report.gd"
+      ],
+      "purpose": "Stop the owner-H3M sample-by-sample exact-count fitting loop and re-gate native RMG around generalized recovered-template policy stages that owner corpus samples validate instead of selecting.",
+      "implementationTargets": [
+        "docs/native-rmg-generalized-policy-regate-audit.md",
+        "PLAN.md",
+        "ops/progress.json",
+        "tests/native_random_map_homm3_owner_corpus_coverage_report.gd",
+        "src/gdextension/src/map_package_service.cpp"
+      ],
+      "baselineChecks": [
+        "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "The corrective audit clearly distinguishes owner-H3M exact-count diagnostics from production RMG policy.",
+        "Current sample-specific runtime branches are identified as temporary fixture/diagnostic debt, not the desired architecture.",
+        "The next implementation direction is defined around generalized template/profile policy, zone graph semantics, town/guard/blocker route closure, road materialization, and corpus subsystem grouping.",
+        "No uploaded .h3m, generated .amap, or generated .ascenario evidence is committed.",
+        "The owner-corpus report groups mapped comparison failures by generalized subsystem in addition to preserving raw exact deltas."
+      ],
+      "nonGoals": [
+        "No production-ready RMG claim.",
+        "No new one-off owner sample count fitting as runtime policy.",
+        "No HoMM3 copyrighted asset or DEF import."
+      ],
+      "validationResults": [
+        "Local overfit Small-islands count-fitting changes were abandoned before commit; the code worktree returned to the pushed checkpoint state.",
+        "docs/native-rmg-generalized-policy-regate-audit.md records why the exact-count loop is diagnostic-only and why the next implementation must generalize.",
+        "tests/native_random_map_homm3_owner_corpus_coverage_report.tscn emitted schema native_random_map_homm3_owner_corpus_coverage_report_v6; the raw gate remains 8/9 mapped pass, while generalized_policy_failure_summary groups the active Small islands failure into guard_policy, town_policy, decoration_blocker_policy, object_density_policy, and object_reward_policy."
+      ],
+      "updatedAt": "2026-05-07T10:46:48Z",
+      "startedAt": "2026-05-07T10:46:48Z",
+      "notes": "Re-scoped active RMG work away from owner-H3M sample-by-sample exact-count fitting. Added docs/native-rmg-generalized-policy-regate-audit.md, which records exact counts as diagnostics only, identifies owner-specific runtime branches as temporary fixture/diagnostic debt, and defines the next implementation direction around generalized template/profile policy, zone graph semantics, town/guard/blocker route closure, road materialization, water/underground policy, and corpus subsystem grouping. Local Small-islands count-fitting edits were abandoned before commit; uploaded/generated map evidence remains untracked. Owner-corpus report schema v6 now emits generalized_policy_failure_summary alongside raw exact deltas; after native rebuild, the raw mapped gate remains 8/9 while the active Small islands failure is grouped into guard_policy, town_policy, decoration_blocker_policy, object_density_policy, and object_reward_policy."
+    },
+    {
       "id": "native-rmg-owner-small-islands-underground-corpus-road-checkpoint-10184",
       "title": "Native RMG Owner Small Islands Underground Corpus Road Checkpoint",
       "phase": "phase-3-homm3-style-rmg-rework",
-      "status": "in_progress",
+      "status": "paused",
       "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
       "sourceDocs": [
         "project.md",
@@ -77,11 +125,14 @@
       "validationResults": [
         "Native GDExtension rebuilt successfully with cmake --build .artifacts/map_persistence_native_build --parallel 2.",
         "tests/native_random_map_homm3_owner_corpus_coverage_report.tscn ran and remains failing as expected for this checkpoint: mapped comparisons are 8/9, the Small islands two-level sample has matching road cells/topology (147, surface [45, 37, 15, 11, 10], underground [29]) but still reports object delta +4, town delta -1, guard delta +4, and category delta total 118.",
-        "git diff --check passed."
+        "git diff --check passed.",
+        "Paused because continued owner-H3M sample-by-sample exact-count fitting is not a production RMG path. The Small islands two-level sample remains useful as corpus evidence: road topology matched in the checkpoint, while object/town/guard/category gaps should now drive generalized policy work rather than new sample-count runtime branches."
       ],
-      "updatedAt": "2026-05-07T10:17:36Z",
+      "updatedAt": "2026-05-07T10:46:48Z",
       "startedAt": "2026-05-07T10:17:36Z",
-      "notes": "Checkpointed owner_discovered_s_randomnumberofplayers_islands_2level into the hard owner-corpus native comparison path for manual review. Native Small islands two-level road cells/topology now match owner evidence exactly: 147 total road cells, surface component sizes [45, 37, 15, 11, 10], underground [29]. The mapped comparison gate intentionally remains failing at 8/9 while object/category/town/guard parity is unfinished: object delta +4, town delta -1, guard delta +4, category absolute delta total 118. No uploaded .h3m, generated .amap, or generated .ascenario evidence files are part of this checkpoint."
+      "notes": "Paused because continued owner-H3M sample-by-sample exact-count fitting is not a production RMG path. The Small islands two-level sample remains useful as corpus evidence: road topology matched in the checkpoint, while object/town/guard/category gaps should now drive generalized policy work rather than new sample-count runtime branches.",
+      "pausedAt": "2026-05-07T10:46:48Z",
+      "deferredReason": "Replaced as active work by generalized RMG policy re-gate; do not continue one-off count fitting."
     },
     {
       "id": "native-rmg-owner-small-normal-water-underground-corpus-shape-gate-10184",
@@ -14129,6 +14180,51 @@
       "startedAt": "2026-05-07T05:51:51Z",
       "completedAt": "2026-05-07T05:51:51Z",
       "notes": "Medium normal-water validation now reports compact land-water shape pressure. After normal-water quota tuning and non-visit decorative approach relaxation, medium_normal_water_seed_a still validates and converts with 1,610 package water tiles versus 2,083 owner water tiles; shape metrics show requested_land_count, protected_land_cell_count, and generated_land_cell_count all equal 3,574, proving protected already-placed surfaces cap water generation and the next fix needs water-aware placement/order rather than only quota changes."
+    },
+    {
+      "id": "map-editor-generated-package-inspection-index-10184",
+      "title": "Map Editor Generated Package Inspection Index",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_rmg_menu_ux_correction_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "scripts/core/ScenarioSelectRules.gd",
+        "scenes/editor/MapEditorShell.gd",
+        "tests/maps_folder_package_browser_integration_report.gd"
+      ],
+      "purpose": "Fix the built-in map editor package picker so generated .amap/.ascenario pairs that load cleanly remain available for inspection even when the stricter skirmish-launch gate rejects them.",
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "scenes/editor/MapEditorShell.gd",
+        "tests/maps_folder_package_browser_integration_report.gd"
+      ],
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 tests/maps_folder_package_browser_integration_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 tests/map_editor_load_map_package_report.tscn",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Skirmish/package browser still hides generated packages rejected by launch validation.",
+        "Map editor package selection includes loadable generated package pairs rejected by launch validation as inspection-only entries.",
+        "Map editor can load those inspection-only generated package pairs into a mutable working copy.",
+        "No uploaded .h3m, generated .amap, or generated .ascenario evidence is committed."
+      ],
+      "nonGoals": [
+        "No RMG parity claim.",
+        "No generated map evidence committed.",
+        "No loosening of skirmish-launch validation."
+      ],
+      "validationResults": [
+        "tests/maps_folder_package_browser_integration_report.tscn passed with launch-rejected compact package hidden from skirmish but listed and loadable through the map-editor inspection index.",
+        "tests/map_editor_load_map_package_report.tscn passed with the Load Map picker including generated package ids and package-backed editor working-copy loading."
+      ],
+      "updatedAt": "2026-05-07T11:07:17Z",
+      "startedAt": "2026-05-07T11:07:17Z",
+      "completedAt": "2026-05-07T11:07:17Z",
+      "notes": "Added an include_non_launchable_generated_packages index mode for map-editor consumers. Skirmish/browser entries keep the strict launchable-only path, while MapEditorShell requests the inspection index and labels non-launchable generated pairs as Inspect Only. Focused Godot package-browser/editor reports passed."
     }
   ],
   "completedImplementationEvidence": [

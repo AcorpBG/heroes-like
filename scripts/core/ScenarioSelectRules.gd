@@ -470,11 +470,13 @@ static func build_maps_folder_package_browser_entries(options: Dictionary = {}) 
 static func maps_folder_package_index(options: Dictionary = {}) -> Dictionary:
 	var service: Variant = _native_map_package_service()
 	var package_dir := String(options.get("package_dir", _generated_map_package_dir()))
+	var include_non_launchable := bool(options.get("include_non_launchable_generated_packages", false))
 	var result := {
 		"ok": true,
 		"schema_id": "aurelion_maps_folder_package_index_v1",
 		"package_dir": package_dir,
 		"directory_policy": generated_map_package_directory_policy(),
+		"include_non_launchable_generated_packages": include_non_launchable,
 		"entries": [],
 		"warnings": [],
 		"message": "",
@@ -497,7 +499,7 @@ static func maps_folder_package_index(options: Dictionary = {}) -> Dictionary:
 			stems.append(String(stem))
 	stems.sort()
 	for stem in stems:
-		var entry := _maps_folder_package_record(service, package_dir, stem)
+		var entry := _maps_folder_package_record(service, package_dir, stem, options)
 		if bool(entry.get("ok", false)):
 			result["entries"].append(entry)
 		else:
@@ -1055,7 +1057,7 @@ static func _maps_folder_package_stems(dir: DirAccess) -> Dictionary:
 	dir.list_dir_end()
 	return {"map_stems": map_stems, "scenario_stems": scenario_stems}
 
-static func _maps_folder_package_record(service: Variant, package_dir: String, package_stem: String) -> Dictionary:
+static func _maps_folder_package_record(service: Variant, package_dir: String, package_stem: String, options: Dictionary = {}) -> Dictionary:
 	var map_path := "%s/%s.amap" % [package_dir, package_stem]
 	var scenario_path := "%s/%s.ascenario" % [package_dir, package_stem]
 	var map_inspect: Dictionary = service.inspect_package(map_path)
@@ -1095,11 +1097,6 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 	var metadata := _map_document_metadata(map_document)
 	var map_ref: Dictionary = map_load.get("map_ref", {}) if map_load.get("map_ref", {}) is Dictionary else {}
 	var scenario_ref: Dictionary = scenario_load.get("scenario_ref", {}) if scenario_load.get("scenario_ref", {}) is Dictionary else {}
-	var package_id := maps_folder_package_id_for_stem(package_stem)
-	var display_name := _maps_folder_display_name(package_stem, metadata, scenario_document)
-	var width: int = map_document.get_width() if map_document != null else 0
-	var height: int = map_document.get_height() if map_document != null else 0
-	var level_count: int = map_document.get_level_count() if map_document != null else 1
 	var player_count := _scenario_document_player_count(scenario_document)
 	var generated := String(map_ref.get("source_kind", metadata.get("source_kind", "generated"))) == "generated"
 	if not generated:
@@ -1112,6 +1109,20 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 		}
 	var launch_validation := _maps_folder_package_launch_validation(metadata, map_ref, player_count)
 	if not bool(launch_validation.get("ok", false)):
+		if bool(options.get("include_non_launchable_generated_packages", false)):
+			return _maps_folder_package_entry_payload(
+				package_stem,
+				map_path,
+				scenario_path,
+				map_document,
+				scenario_document,
+				metadata,
+				map_ref,
+				scenario_ref,
+				player_count,
+				launch_validation,
+				false
+			)
 		return {
 			"ok": false,
 			"package_stem": package_stem,
@@ -1120,12 +1131,45 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 			"error_code": String(launch_validation.get("error_code", "generated_package_launch_validation_failed")),
 			"validation": launch_validation,
 		}
+	return _maps_folder_package_entry_payload(
+		package_stem,
+		map_path,
+		scenario_path,
+		map_document,
+		scenario_document,
+		metadata,
+		map_ref,
+		scenario_ref,
+		player_count,
+		launch_validation,
+		true
+	)
+
+static func _maps_folder_package_entry_payload(
+	package_stem: String,
+	map_path: String,
+	scenario_path: String,
+	map_document: Variant,
+	scenario_document: Variant,
+	metadata: Dictionary,
+	map_ref: Dictionary,
+	scenario_ref: Dictionary,
+	player_count: int,
+	launch_validation: Dictionary,
+	launchable: bool
+) -> Dictionary:
+	var width: int = map_document.get_width() if map_document != null else 0
+	var height: int = map_document.get_height() if map_document != null else 0
+	var level_count: int = map_document.get_level_count() if map_document != null else 1
+	var package_id := maps_folder_package_id_for_stem(package_stem)
+	var display_name := _maps_folder_display_name(package_stem, metadata, scenario_document)
 	var map_size_label := "%dx%d L%d" % [width, height, max(1, level_count)]
 	var summary := "Generated package | %s | Players %d | %s" % [
 		map_size_label,
 		max(1, player_count),
 		_maps_folder_metadata_summary(metadata),
 	]
+	var launch_status := "launchable" if launchable else "editor_inspection_only"
 	return {
 		"ok": true,
 		"package_id": package_id,
@@ -1145,6 +1189,9 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 		"player_count": max(1, player_count),
 		"metadata": metadata,
 		"maps_folder_launch_validation": launch_validation,
+		"launchable": launchable,
+		"editor_inspection_only": not launchable,
+		"editor_index_policy": launch_status,
 		"source_kind": "generated",
 		"startup_source": "maps_folder_package",
 		"legacy_json_scenario_record": false,

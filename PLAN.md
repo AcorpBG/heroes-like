@@ -29,11 +29,70 @@ Do not infer product readiness from the completed queue. Completed Phase 2/RMG/p
 
 Persistent guardrail: do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.
 
-Current owner-directed RMG corrective checkpoint:
+Current owner-directed RMG corrective slice:
+
+id: `native-rmg-generalized-policy-regate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `in_progress`
+purpose: Stop the owner-H3M sample-by-sample exact-count fitting loop and re-gate native RMG around generalized recovered-template policy stages that owner corpus samples validate instead of selecting.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `docs/native-rmg-generalized-policy-regate-audit.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+implementationTargets:
+- `docs/native-rmg-generalized-policy-regate-audit.md`
+- `PLAN.md`
+- `ops/progress.json`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- follow-up implementation in `src/gdextension/src/map_package_service.cpp`
+completionCriteria:
+- The corrective audit clearly distinguishes owner-H3M exact-count diagnostics from production RMG policy.
+- Current sample-specific runtime branches are identified as temporary fixture/diagnostic debt, not the desired architecture.
+- The next implementation direction is defined around generalized template/profile policy, zone graph semantics, town/guard/blocker route closure, road materialization, and corpus subsystem grouping.
+- The owner-corpus report groups mapped comparison failures by generalized subsystem in addition to preserving raw exact deltas.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No production-ready RMG claim.
+- No new one-off owner sample count fitting as runtime policy.
+- No HoMM3 copyrighted asset/DEF import.
+validationResults:
+- Local overfit Small-islands count-fitting changes were abandoned before commit; the code worktree returned to the pushed checkpoint state.
+- `docs/native-rmg-generalized-policy-regate-audit.md` records why the exact-count loop is diagnostic-only and why the next implementation must generalize.
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` emitted schema `native_random_map_homm3_owner_corpus_coverage_report_v6`; the raw gate remains `8/9` mapped pass, while `generalized_policy_failure_summary` groups the active Small islands failure into `guard_policy`, `town_policy`, `decoration_blocker_policy`, `object_density_policy`, and `object_reward_policy`.
+
+Completed owner-requested editor inspection hotfix:
+
+id: `map-editor-generated-package-inspection-index-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Fix the built-in map editor package picker so generated `.amap`/`.ascenario` pairs that load cleanly remain available for inspection even when the stricter skirmish-launch gate rejects them.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `scripts/core/ScenarioSelectRules.gd`
+- `scenes/editor/MapEditorShell.gd`
+- `tests/maps_folder_package_browser_integration_report.gd`
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `scenes/editor/MapEditorShell.gd`
+- `tests/maps_folder_package_browser_integration_report.gd`
+completionCriteria:
+- Skirmish/package browser still hides generated packages rejected by launch validation.
+- Map editor package selection includes loadable generated package pairs rejected by launch validation as inspection-only entries.
+- Map editor can load those inspection-only generated package pairs into a mutable working copy.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+validationResults:
+- `tests/maps_folder_package_browser_integration_report.tscn` passed with launch-rejected compact package hidden from skirmish but listed and loadable through the map-editor inspection index.
+- `tests/map_editor_load_map_package_report.tscn` passed with the Load Map picker including generated package ids and package-backed editor working-copy loading.
+
+Paused owner-directed RMG corrective checkpoint:
 
 id: `native-rmg-owner-small-islands-underground-corpus-road-checkpoint-10184`
 phase: `phase-3-homm3-style-rmg-rework`
-status: `in_progress`
+status: `paused`
 purpose: Promote the uploaded Small islands two-level owner sample into the hard owner-corpus native comparison path and checkpoint the first road-topology correction for manual review before finishing object/category, town, and guard parity.
 sourceDocs:
 - `project.md`
@@ -57,6 +116,7 @@ nonGoals:
 validationResults:
 - Native GDExtension rebuilt successfully with `cmake --build .artifacts/map_persistence_native_build --parallel 2`.
 - `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` ran and remains failing as expected for this checkpoint: mapped comparisons are `8/9`, the Small islands two-level sample has matching road cells/topology (`147`, surface `[45, 37, 15, 11, 10]`, underground `[29]`) but still reports object delta `+4`, town delta `-1`, guard delta `+4`, and category delta total `118`.
+- Paused on 2026-05-07 because continued sample-by-sample count fitting is the wrong production path; use this sample as corpus evidence for generalized policy work instead.
 
 Recently completed owner-directed RMG corrective slice:
 
