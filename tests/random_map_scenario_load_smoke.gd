@@ -3,6 +3,7 @@ extends Node
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
+const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const REPORT_ID := "RANDOM_MAP_SCENARIO_LOAD_SMOKE"
@@ -23,15 +24,11 @@ func _run() -> void:
 		false,
 		"homm3_small"
 	)
-	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
-		config,
-		"normal",
-		{"max_attempts": 3, "mode": "seed_salt"}
-	)
-	if not bool(setup.get("ok", false)):
-		_fail("Generated payload validation failed: %s" % JSON.stringify(setup.get("validation", {})))
+	var generated: Dictionary = RandomMapGeneratorRulesScript.generate(config)
+	if not bool(generated.get("ok", false)):
+		_fail("Generated payload validation failed: %s" % JSON.stringify(generated.get("report", {})))
 		return
-	var payload: Dictionary = setup.get("generated_map", {})
+	var payload: Dictionary = generated.get("generated_map", {}) if generated.get("generated_map", {}) is Dictionary else {}
 	if not _assert_catalog_backed(payload):
 		return
 
@@ -100,9 +97,12 @@ func _assert_native_domains_archived() -> bool:
 	if String(campaigns.get("domain_status", "")) != "archived_native_campaign_set_disabled":
 		_fail("Native campaign domain is not archived/disabled.")
 		return false
-	if not ScenarioSelectRulesScript.build_skirmish_browser_entries().is_empty():
-		_fail("Archived native scenarios still appear in the skirmish browser.")
-		return false
+	for entry in ScenarioSelectRulesScript.build_skirmish_browser_entries():
+		if not (entry is Dictionary):
+			continue
+		if not ScenarioSelectRulesScript.maps_folder_package_id_is_valid(String(entry.get("scenario_id", ""))):
+			_fail("Archived native scenarios still appear in the skirmish browser.")
+			return false
 	if not _campaign_rules().build_campaign_browser_entries({}).is_empty():
 		_fail("Archived native campaigns still appear in the campaign browser.")
 		return false

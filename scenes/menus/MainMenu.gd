@@ -374,6 +374,9 @@ func _on_generated_size_selected(index: int) -> void:
 	if index < 0 or index >= _generated_size_picker.get_item_count():
 		return
 	_generated_size_class_id = String(_generated_size_picker.get_item_metadata(index))
+	if _generated_water_mode == "islands" and _generated_size_class_id != "homm3_medium":
+		_generated_water_mode = "land"
+		_select_generated_picker_metadata(_generated_water_picker, _generated_water_mode)
 	var size_defaults := ScenarioSelectRulesScript.random_map_size_class_default(_generated_size_class_id)
 	_generated_template_id = String(size_defaults.get("template_id", _generated_template_id))
 	_generated_profile_id = String(size_defaults.get("profile_id", _generated_profile_id))
@@ -409,6 +412,9 @@ func _on_generated_player_count_selected(index: int) -> void:
 	if index < 0 or index >= _generated_player_count_picker.get_item_count():
 		return
 	_generated_player_count = int(_generated_player_count_picker.get_item_metadata(index))
+	if _generated_water_mode == "islands" and _generated_player_count != 4:
+		_generated_player_count = 4
+		_select_generated_player_count_picker(_generated_player_count)
 	_refresh_generated_random_map_setup()
 
 func _on_generated_water_selected(index: int) -> void:
@@ -418,9 +424,16 @@ func _on_generated_water_selected(index: int) -> void:
 	if _generated_water_mode == "islands" and _generated_underground:
 		_generated_underground = false
 		_generated_underground_toggle.button_pressed = false
+	if _generated_water_mode == "islands":
+		_apply_generated_medium_islands_selection()
 	_refresh_generated_random_map_setup()
 
 func _on_generated_underground_toggled(enabled: bool) -> void:
+	if enabled and not _generated_underground_supported():
+		_generated_underground = false
+		_generated_underground_toggle.button_pressed = false
+		_refresh_generated_random_map_setup()
+		return
 	_generated_underground = enabled
 	if _generated_underground and _generated_water_mode == "islands":
 		_generated_water_mode = "land"
@@ -982,9 +995,9 @@ func _configure_generated_random_map_controls() -> void:
 	if _generated_size_class_id == "":
 		_generated_size_class_id = String(options.get("default_size_class_id", "homm3_small"))
 	if _generated_template_id == "":
-		_generated_template_id = String(options.get("default_template_id", "border_gate_compact_v1"))
+		_generated_template_id = String(options.get("default_template_id", "translated_rmg_template_049_v1"))
 	if _generated_profile_id == "":
-		_generated_profile_id = String(options.get("default_profile_id", "border_gate_compact_profile_v1"))
+		_generated_profile_id = String(options.get("default_profile_id", "translated_rmg_profile_049_v1"))
 	if _generated_player_count <= 0:
 		_generated_player_count = int(options.get("default_player_count", 3))
 	_clamp_generated_player_count_to_template()
@@ -999,8 +1012,8 @@ func _configure_generated_random_map_controls() -> void:
 	_rebuild_generated_profile_picker()
 	_generated_template_picker.visible = false
 	_generated_profile_picker.visible = false
-	_generated_template_picker.tooltip_text = "Internal provenance: chosen from the selected HoMM3 size default."
-	_generated_profile_picker.tooltip_text = "Internal provenance: chosen from the selected HoMM3 size default."
+	_generated_template_picker.tooltip_text = "Internal provenance: native generation selects a supported catalog template from seed and size."
+	_generated_profile_picker.tooltip_text = "Internal provenance: native generation resolves the catalog profile for the selected template."
 
 	_rebuild_generated_player_count_picker()
 
@@ -1014,12 +1027,23 @@ func _configure_generated_random_map_controls() -> void:
 		_generated_water_picker.set_item_metadata(index, String(water_option.get("id", "land")))
 		if String(water_option.get("id", "land")) == _generated_water_mode:
 			water_selected = index
+	if water_selected < 0:
+		_generated_water_mode = String(options.get("default_water_mode", "land"))
+		for index in range(_generated_water_picker.get_item_count()):
+			if String(_generated_water_picker.get_item_metadata(index)) == _generated_water_mode:
+				water_selected = index
+				break
 	if water_selected >= 0:
 		_generated_water_picker.select(water_selected)
-	_generated_water_picker.tooltip_text = "Water: land or islands generation policy."
+	_generated_water_picker.tooltip_text = "Water policy."
 
+	var underground_supported := _generated_underground_supported()
+	if not underground_supported:
+		_generated_underground = false
 	_generated_underground_toggle.button_pressed = _generated_underground
-	_generated_underground_toggle.tooltip_text = "Underground: include a second generated level when supported by the selected size profile."
+	_generated_underground_toggle.visible = underground_supported
+	_generated_underground_toggle.disabled = not underground_supported
+	_generated_underground_toggle.tooltip_text = "Underground generation is blocked until native RMG has production-ready underground parity."
 
 func _rebuild_generated_option_picker(picker: OptionButton, options: Array, selected_id: String, label_key: String) -> void:
 	picker.clear()
@@ -1393,8 +1417,10 @@ func _generated_random_map_preview_setup() -> Dictionary:
 		"scenario_name": "Generated Skirmish",
 		"size_class_id": _generated_size_class_id,
 		"size_class_label": ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
-		"template_id": _generated_template_id,
-		"profile_id": _generated_profile_id,
+		"template_id": "native_catalog_auto",
+		"profile_id": "native_catalog_auto",
+		"preview_template_id": _generated_template_id,
+		"preview_profile_id": _generated_profile_id,
 		"normalized_seed": seed,
 		"seed_source": seed_source,
 		"retry_status": {
@@ -1421,12 +1447,13 @@ func _generated_random_map_config() -> Dictionary:
 	var seed := ScenarioSelectRulesScript.random_map_fresh_auto_seed() if seed_source == "auto_on_launch" else raw_seed
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
 		seed,
-		_generated_template_id,
-		_generated_profile_id,
+		"",
+		"",
 		_generated_player_count,
 		_generated_water_mode,
 		_generated_underground,
-		_generated_size_class_id
+		_generated_size_class_id,
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
 	)
 	config["seed_source"] = seed_source
 	config["seed_input"] = raw_seed
@@ -1447,6 +1474,22 @@ func _select_generated_player_count_picker(player_count: int) -> bool:
 		_generated_player_count_picker.select(index)
 		return true
 	return false
+
+func _apply_generated_medium_islands_selection() -> void:
+	if _generated_size_class_id != "homm3_medium":
+		_generated_size_class_id = "homm3_medium"
+		_select_generated_picker_metadata(_generated_size_picker, _generated_size_class_id)
+		var size_defaults := ScenarioSelectRulesScript.random_map_size_class_default(_generated_size_class_id)
+		_generated_template_id = String(size_defaults.get("template_id", _generated_template_id))
+		_generated_profile_id = String(size_defaults.get("profile_id", _generated_profile_id))
+		_select_generated_picker_metadata(_generated_template_picker, _generated_template_id)
+		_rebuild_generated_profile_picker()
+	_generated_player_count = 4
+	_rebuild_generated_player_count_picker()
+	for index in range(_generated_player_count_picker.get_item_count()):
+		if int(_generated_player_count_picker.get_item_metadata(index)) == _generated_player_count:
+			_generated_player_count_picker.select(index)
+			break
 
 func _rebuild_generated_player_count_picker() -> void:
 	_generated_player_count_picker.clear()
@@ -1885,6 +1928,15 @@ func _skirmish_browser_item_tooltips() -> Array:
 	return tooltips
 
 func _generated_random_map_control_snapshot() -> Dictionary:
+	var visible_controls := [
+		"seed",
+		"size_class",
+		"player_count",
+		"water_mode",
+		"launch_generated",
+	]
+	if _generated_underground_supported():
+		visible_controls.insert(4, "underground")
 	return {
 		"seed": _generated_seed,
 		"size_class_id": _generated_size_class_id,
@@ -1897,28 +1949,29 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"player_count_options": _picker_item_labels(_generated_player_count_picker),
 		"player_count_values": _picker_item_metadata_ints(_generated_player_count_picker),
 		"water_options": _picker_item_labels(_generated_water_picker),
-		"visible_player_controls": [
-			"seed",
-			"size_class",
-			"player_count",
-			"water_mode",
-			"underground",
-			"launch_generated",
-		],
+		"visible_player_controls": visible_controls,
 		"internal_template_provenance": _generated_random_map_internal_template_provenance(),
 	}
+
+func _generated_underground_supported() -> bool:
+	return false
 
 func _generated_random_map_internal_template_provenance() -> Dictionary:
 	var size_defaults := ScenarioSelectRulesScript.random_map_size_class_default(_generated_size_class_id)
 	return {
-		"selection_source": "homm3_size_class_default",
-		"template_id": _generated_template_id,
-		"profile_id": _generated_profile_id,
+		"selection_source": "native_catalog_auto_on_launch",
+		"template_id": "native_catalog_auto",
+		"profile_id": "native_catalog_auto",
+		"preview_template_id": _generated_template_id,
+		"preview_profile_id": _generated_profile_id,
 		"size_class_id": _generated_size_class_id,
 		"size_class_default_template_id": String(size_defaults.get("template_id", "")),
 		"size_class_default_profile_id": String(size_defaults.get("profile_id", "")),
+		"launch_selection_deferred_to_native": true,
 		"template_picker_visible": _generated_template_picker.visible,
 		"profile_picker_visible": _generated_profile_picker.visible,
+		"underground_player_control_visible": _generated_underground_toggle.visible,
+		"underground_supported": _generated_underground_supported(),
 		"manual_template_player_control": false,
 		"manual_profile_player_control": false,
 	}
@@ -2054,6 +2107,9 @@ func validation_select_generated_water_mode(water_mode: String) -> bool:
 	return false
 
 func validation_set_generated_underground(enabled: bool) -> bool:
+	if enabled and not _generated_underground_supported():
+		_on_generated_underground_toggled(enabled)
+		return false
 	_generated_underground_toggle.button_pressed = enabled
 	_on_generated_underground_toggled(enabled)
 	return _generated_underground == enabled

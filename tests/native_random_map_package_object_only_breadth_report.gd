@@ -31,6 +31,32 @@ const CASES := [
 		"expected_status": "owner_compared_translated_profile_supported",
 		"expected_full_generation_status": "owner_compared_translated_profile_not_full_parity",
 	},
+	{
+		"id": "owner_medium_islands_001",
+		"size_class_id": "homm3_medium",
+		"template_id": "translated_rmg_template_001_v1",
+		"profile_id": "translated_rmg_profile_001_v1",
+		"player_count": 4,
+		"water_mode": "islands",
+		"underground": false,
+		"expected_status": "owner_compared_translated_profile_supported",
+		"expected_full_generation_status": "owner_compared_translated_profile_not_full_parity",
+	},
+	{
+		"id": "owner_small_underground_027",
+		"seed": "owner-corpus-small-underground-10184",
+		"size_class_id": "homm3_small",
+		"requested_template_id": "",
+		"requested_profile_id": "",
+		"template_selection_mode": ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
+		"expected_template_id": "translated_rmg_template_027_v1",
+		"expected_profile_id": "translated_rmg_profile_027_v1",
+		"player_count": 3,
+		"water_mode": "land",
+		"underground": true,
+		"expected_status": "owner_compared_translated_profile_supported",
+		"expected_full_generation_status": "owner_compared_translated_profile_not_full_parity",
+	},
 ]
 
 func _ready() -> void:
@@ -71,23 +97,36 @@ func _run_case(service: Variant, helper: Node, case_record: Dictionary) -> Dicti
 	var case_id := String(case_record.get("id", "case"))
 	var size_class_id := String(case_record.get("size_class_id", "homm3_small"))
 	var defaults := ScenarioSelectRulesScript.random_map_size_class_default(size_class_id)
-	var expected_player_count := int(defaults.get("player_count", 3))
+	var expected_player_count := int(case_record.get("player_count", defaults.get("player_count", 3)))
+	var expected_template_id := String(case_record.get("expected_template_id", case_record.get("template_id", defaults.get("template_id", ""))))
+	var expected_profile_id := String(case_record.get("expected_profile_id", case_record.get("profile_id", defaults.get("profile_id", ""))))
+	var requested_template_id := String(case_record.get("requested_template_id", expected_template_id))
+	var requested_profile_id := String(case_record.get("requested_profile_id", expected_profile_id))
+	var template_selection_mode := String(case_record.get("template_selection_mode", ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT))
+	var water_mode := String(case_record.get("water_mode", "land"))
+	var underground := bool(case_record.get("underground", false))
+	var seed := String(case_record.get("seed", "package-object-only-breadth-%s-10184" % size_class_id))
+	var expected_provenance := {
+		"template_id": expected_template_id,
+		"profile_id": expected_profile_id,
+	}
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
-		"package-object-only-breadth-%s-10184" % size_class_id,
-		"",
-		"",
+		seed,
+		requested_template_id,
+		requested_profile_id,
 		expected_player_count,
-		"land",
-		false,
-		size_class_id
+		water_mode,
+		underground,
+		size_class_id,
+		template_selection_mode
 	)
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "package_object_only_breadth_%s" % case_id})
 	if not bool(generated.get("ok", false)) or String(generated.get("validation_status", "")) != "pass":
 		_fail("%s generation failed validation: %s" % [case_id, JSON.stringify(generated.get("validation_report", generated))])
 		return {}
 	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
-	if String(normalized.get("template_id", "")) != String(defaults.get("template_id", "")) or String(normalized.get("profile_id", "")) != String(defaults.get("profile_id", "")):
-		_fail("%s did not use the size-class default translated template/profile: %s defaults=%s" % [case_id, JSON.stringify(normalized), JSON.stringify(defaults)])
+	if String(normalized.get("template_id", "")) != expected_template_id or String(normalized.get("profile_id", "")) != expected_profile_id:
+		_fail("%s did not use the expected translated template/profile: %s expected=%s" % [case_id, JSON.stringify(normalized), JSON.stringify(expected_provenance)])
 		return {}
 	if String(generated.get("status", "")) != String(case_record.get("expected_status", "")):
 		_fail("%s generation status drifted: %s" % [case_id, JSON.stringify(_generation_status_summary(generated))])
@@ -115,7 +154,7 @@ func _run_case(service: Variant, helper: Node, case_record: Dictionary) -> Dicti
 		_fail("%s package conversion missed map_document." % case_id)
 		return {}
 	var converted_surface: Dictionary = helper._package_surface_summary(map_document, "converted_package")
-	if not _assert_surface(case_id, converted_surface, defaults, expected_player_count):
+	if not _assert_surface(case_id, converted_surface, expected_provenance, expected_player_count):
 		return {}
 
 	var map_path := "user://native_package_object_only_breadth_%s.amap" % case_id
@@ -133,7 +172,7 @@ func _run_case(service: Variant, helper: Node, case_record: Dictionary) -> Dicti
 		_fail("%s load_map_package missed map_document." % case_id)
 		return {}
 	var loaded_surface: Dictionary = helper._package_surface_summary(loaded_document, "loaded_package")
-	if not _assert_surface(case_id, loaded_surface, defaults, expected_player_count):
+	if not _assert_surface(case_id, loaded_surface, expected_provenance, expected_player_count):
 		return {}
 
 	return {
@@ -189,6 +228,15 @@ func _assert_surface(case_id: String, surface: Dictionary, defaults: Dictionary,
 	if int(object_only_cross_zone.get("checked_pair_count", 0)) < required_start_pairs:
 		_fail("%s %s object-only cross-zone topology inspected too few pairs: %s" % [case_id, label, JSON.stringify(surface)])
 		return false
+	var object_only_all: Dictionary = surface.get("object_only_town_topology", {}) if surface.get("object_only_town_topology", {}) is Dictionary else {}
+	if not object_only_all.get("reachable_pairs", []).is_empty():
+		_fail("%s %s object masks alone allow unguarded all-town traversal: %s" % [case_id, label, JSON.stringify(surface)])
+		return false
+	var town_count := int(surface.get("town_count", 0))
+	var required_all_pairs := town_count * (town_count - 1) / 2
+	if int(object_only_all.get("checked_pair_count", 0)) < required_all_pairs:
+		_fail("%s %s object-only all-town topology inspected too few pairs: %s" % [case_id, label, JSON.stringify(surface)])
+		return false
 	return true
 
 func _surface_brief(surface: Dictionary) -> Dictionary:
@@ -202,6 +250,8 @@ func _surface_brief(surface: Dictionary) -> Dictionary:
 		"road_unique_tile_count": int(surface.get("road_unique_tile_count", 0)),
 		"object_only_blocked_tile_count": int(surface.get("object_only_blocked_tile_count", 0)),
 		"object_only_start_checked_pair_count": int(surface.get("object_only_start_town_topology", {}).get("checked_pair_count", 0)),
+		"object_only_all_town_checked_pair_count": int(surface.get("object_only_town_topology", {}).get("checked_pair_count", 0)),
+		"object_only_all_town_reachable_pair_count": int(surface.get("object_only_town_topology", {}).get("reachable_pair_count", 0)),
 		"object_only_cross_zone_checked_pair_count": int(surface.get("object_only_cross_zone_town_topology", {}).get("checked_pair_count", 0)),
 	}
 

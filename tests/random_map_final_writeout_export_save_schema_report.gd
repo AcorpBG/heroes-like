@@ -1,6 +1,7 @@
 extends Node
 
 const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
+const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const REPORT_ID := "RANDOM_MAP_FINAL_WRITEOUT_EXPORT_SAVE_SCHEMA_REPORT"
@@ -19,13 +20,34 @@ func _run() -> void:
 	if not _assert_final_export(payload):
 		return
 
-	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(config, "normal")
+	var setup := _legacy_generated_export_setup(config, payload, generated.get("report", {}) if generated.get("report", {}) is Dictionary else {})
 	if not _assert_setup_contract(setup, payload):
 		return
 	var scenario_id := String(setup.get("scenario_id", ""))
 	if not _assert_no_authored_writeback(scenario_id, "before launch"):
 		return
-	var session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session(config, "normal")
+	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_generated_skirmish_session(
+		payload,
+		"normal",
+		{
+			"provenance": setup.get("provenance", {}),
+			"replay_metadata": setup.get("replay_metadata", {}),
+			"validation": setup.get("validation", {}),
+			"retry_status": setup.get("retry_status", {}),
+			"generated_identity": setup.get("generated_identity", {}),
+			"boundary": {
+				"authored_content_writeback": false,
+				"campaign_adoption": false,
+				"skirmish_browser_authored_listing": false,
+				"alpha_parity_claim": false,
+				"legacy_compatibility_only": true,
+			},
+		}
+	)
+	session.flags["generated_random_map_provenance"] = setup.get("provenance", {})
+	session.flags["generated_random_map_replay_metadata"] = setup.get("replay_metadata", {})
+	session.flags["generated_random_map_validation"] = setup.get("validation", {})
+	session.flags["generated_random_map_retry_status"] = setup.get("retry_status", {})
 	if session == null or session.scenario_id != scenario_id:
 		_fail("Generated skirmish session did not launch with the expected scenario id.")
 		return
@@ -80,6 +102,39 @@ func _config(seed: String) -> Dictionary:
 			"guard_strength_profile": "core_low",
 			"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
 		},
+	}
+
+func _legacy_generated_export_setup(config: Dictionary, payload: Dictionary, report: Dictionary) -> Dictionary:
+	var retry_status := {
+		"schema_id": "generated_random_map_retry_status_v1",
+		"status": "pass",
+		"attempt_count": 1,
+		"max_attempts": 1,
+		"retry_count": 0,
+		"attempts": [],
+	}
+	var identity: Dictionary = ScenarioSelectRulesScript._random_map_generated_identity(payload)
+	var provenance: Dictionary = ScenarioSelectRulesScript._random_map_provenance(config, payload, report, retry_status)
+	return {
+		"ok": true,
+		"setup_kind": "generated_random_map_skirmish",
+		"startup_source": "legacy_generated_export_contract_fixture",
+		"launch_mode": SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
+		"difficulty": "normal",
+		"generated_map": payload,
+		"scenario_id": String(identity.get("scenario_id", "")),
+		"scenario_name": String(identity.get("scenario_id", "")),
+		"template_id": String(identity.get("template_id", "")),
+		"profile_id": String(identity.get("profile_id", "")),
+		"normalized_seed": String(identity.get("normalized_seed", "")),
+		"content_manifest_fingerprint": String(identity.get("content_manifest_fingerprint", "")),
+		"generated_identity": identity,
+		"validation": report,
+		"retry_status": retry_status,
+		"provenance": provenance,
+		"replay_metadata": ScenarioSelectRulesScript._random_map_replay_metadata(provenance, identity, retry_status),
+		"campaign_adoption": false,
+		"alpha_parity_claim": false,
 	}
 
 func _assert_final_export(payload: Dictionary) -> bool:

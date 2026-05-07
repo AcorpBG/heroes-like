@@ -22,7 +22,7 @@ func _run() -> void:
 		_fail("Generated scenario appeared in authored skirmish browser before launch.")
 		return
 
-	var session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session(config, "normal")
+	var session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
 	if not _assert_session(session, setup):
 		return
 	if not _assert_absent_from_authored_content(scenario_id, "after launch"):
@@ -80,18 +80,16 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _config(seed: String) -> Dictionary:
-	return {
-		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
-		"seed": seed,
-		"size": {"preset": "skirmish_ui_save_replay", "width": 26, "height": 18, "water_mode": "land", "level_count": 1},
-		"player_constraints": {"human_count": 1, "computer_count": 2},
-		"profile": {
-			"id": "border_gate_compact_profile_v1",
-			"template_id": "border_gate_compact_v1",
-			"guard_strength_profile": "core_low",
-			"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
-		},
-	}
+	return ScenarioSelectRulesScript.build_random_map_player_config(
+		seed,
+		"",
+		"",
+		3,
+		"land",
+		false,
+		"homm3_small",
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
+	)
 
 func _assert_setup(setup: Dictionary) -> bool:
 	if not bool(setup.get("ok", false)):
@@ -113,11 +111,37 @@ func _assert_setup(setup: Dictionary) -> bool:
 		return false
 	var provenance: Dictionary = setup.get("provenance", {})
 	var replay: Dictionary = setup.get("replay_metadata", {})
-	if provenance.get("generator_config", {}).is_empty() or replay.get("generator_config", {}).is_empty():
-		_fail("Setup missed regeneration/replay config: %s / %s" % [JSON.stringify(provenance), JSON.stringify(replay)])
+	if String(provenance.get("schema_id", "")) == "aurelion_native_rmg_disk_package_provenance_v1":
+		if not _assert_native_package_setup_provenance(provenance, replay):
+			return false
+		var boundaries: Dictionary = provenance.get("boundaries", {}) if provenance.get("boundaries", {}) is Dictionary else {}
+		if bool(boundaries.get("authored_content_writeback", true)) or bool(boundaries.get("content_scenarios_json", true)) or bool(boundaries.get("legacy_json_scenario_record", true)):
+			_fail("Native package provenance selected a forbidden writeback boundary: %s" % JSON.stringify(provenance))
+			return false
+	else:
+		if provenance.get("generator_config", {}).is_empty() or replay.get("generator_config", {}).is_empty():
+			_fail("Setup missed regeneration/replay config: %s / %s" % [JSON.stringify(provenance), JSON.stringify(replay)])
+			return false
+		if bool(provenance.get("campaign_adoption", true)) or bool(provenance.get("authored_content_writeback", true)) or bool(provenance.get("alpha_parity_claim", true)):
+			_fail("Provenance selected a forbidden adoption/writeback/parity claim: %s" % JSON.stringify(provenance))
+			return false
+	return true
+
+func _assert_native_package_setup_provenance(provenance: Dictionary, replay: Dictionary) -> bool:
+	for key in ["input_config", "normalized_config", "generated_identity", "map_ref", "scenario_ref", "boundaries"]:
+		if not (provenance.get(key, {}) is Dictionary) or provenance.get(key, {}).is_empty():
+			_fail("Native package provenance missed %s: %s" % [key, JSON.stringify(provenance)])
+			return false
+	var identity: Dictionary = provenance.get("generated_identity", {}) if provenance.get("generated_identity", {}) is Dictionary else {}
+	for key in ["scenario_id", "map_id", "stable_signature", "template_id", "profile_id", "normalized_seed"]:
+		if String(identity.get(key, "")) == "":
+			_fail("Native package identity missed %s: %s" % [key, JSON.stringify(identity)])
+			return false
+	if not (replay.get("generated_identity", {}) is Dictionary) or replay.get("generated_identity", {}).is_empty():
+		_fail("Native package replay metadata missed generated identity: %s" % JSON.stringify(replay))
 		return false
-	if bool(provenance.get("campaign_adoption", true)) or bool(provenance.get("authored_content_writeback", true)) or bool(provenance.get("alpha_parity_claim", true)):
-		_fail("Provenance selected a forbidden adoption/writeback/parity claim: %s" % JSON.stringify(provenance))
+	if String(replay.get("replay_boundary", "")).find("seed_config_identity") < 0:
+		_fail("Native package replay metadata missed seed/config identity boundary: %s" % JSON.stringify(replay))
 		return false
 	return true
 
@@ -139,7 +163,8 @@ func _assert_session(session: SessionStateStoreScript.SessionData, setup: Dictio
 			_fail("Session flags missed %s." % key)
 			return false
 	var boundary: Dictionary = session.flags.get("generated_random_map_boundary", {})
-	if String(boundary.get("adoption_path", "")) != "skirmish_session_only_no_authored_browser_or_campaign":
+	var expected_adoption_path := "native_rmg_generated_package_saved_loaded_from_disk" if String(setup.get("startup_source", "")) == "native_rmg_disk_package" else "skirmish_session_only_no_authored_browser_or_campaign"
+	if String(boundary.get("adoption_path", "")) != expected_adoption_path:
 		_fail("Session boundary did not preserve skirmish-only adoption path: %s" % JSON.stringify(boundary))
 		return false
 	if session.flags.has("campaign_id") or session.flags.has("campaign_name") or session.flags.has("campaign_chapter_label"):
@@ -161,6 +186,8 @@ func _assert_save_replay_payload(payload: Dictionary, setup: Dictionary) -> bool
 	var provenance: Dictionary = flags.get("generated_random_map_provenance", {}) if flags.get("generated_random_map_provenance", {}) is Dictionary else {}
 	var replay: Dictionary = flags.get("generated_random_map_replay_metadata", {}) if flags.get("generated_random_map_replay_metadata", {}) is Dictionary else {}
 	var retry: Dictionary = flags.get("generated_random_map_retry_status", {}) if flags.get("generated_random_map_retry_status", {}) is Dictionary else {}
+	if String(provenance.get("schema_id", "")) == "aurelion_native_rmg_disk_package_provenance_v1":
+		return _assert_native_package_save_replay_payload(provenance, replay, retry, setup)
 	for key in ["normalized_seed", "generator_version", "template_id", "profile_id", "content_manifest_fingerprint"]:
 		if String(provenance.get(key, "")) == "":
 			_fail("Saved provenance missed %s: %s" % [key, JSON.stringify(provenance)])
@@ -188,6 +215,24 @@ func _assert_save_replay_payload(payload: Dictionary, setup: Dictionary) -> bool
 		return false
 	return true
 
+func _assert_native_package_save_replay_payload(provenance: Dictionary, replay: Dictionary, retry: Dictionary, setup: Dictionary) -> bool:
+	if not _assert_native_package_setup_provenance(provenance, replay):
+		return false
+	var saved_identity: Dictionary = provenance.get("generated_identity", {}) if provenance.get("generated_identity", {}) is Dictionary else {}
+	var setup_identity: Dictionary = setup.get("generated_identity", {}) if setup.get("generated_identity", {}) is Dictionary else {}
+	for key in ["scenario_id", "map_id", "stable_signature", "template_id", "profile_id", "normalized_seed"]:
+		if String(saved_identity.get(key, "")) != String(setup_identity.get(key, "")):
+			_fail("Saved native package identity changed %s: %s / %s" % [key, JSON.stringify(saved_identity), JSON.stringify(setup_identity)])
+			return false
+	var boundaries: Dictionary = provenance.get("boundaries", {}) if provenance.get("boundaries", {}) is Dictionary else {}
+	if bool(boundaries.get("content_scenarios_json", true)) or bool(boundaries.get("legacy_json_scenario_record", true)):
+		_fail("Saved native package provenance crossed authored JSON boundaries: %s" % JSON.stringify(boundaries))
+		return false
+	if String(retry.get("status", "")) != "pass" or int(retry.get("retry_count", -1)) != 0:
+		_fail("Saved native package retry status missing or invalid: %s" % JSON.stringify(retry))
+		return false
+	return true
+
 func _assert_identity_stability(first_setup: Dictionary, repeated_setup: Dictionary, changed_setup: Dictionary) -> bool:
 	if not bool(repeated_setup.get("ok", false)) or not bool(changed_setup.get("ok", false)):
 		_fail("Repeated or changed-seed setup failed: repeated=%s changed=%s." % [JSON.stringify(repeated_setup), JSON.stringify(changed_setup)])
@@ -195,14 +240,8 @@ func _assert_identity_stability(first_setup: Dictionary, repeated_setup: Diction
 	var first_identity: Dictionary = first_setup.get("generated_identity", {})
 	var repeated_identity: Dictionary = repeated_setup.get("generated_identity", {})
 	var changed_identity: Dictionary = changed_setup.get("generated_identity", {})
-	if String(first_identity.get("scenario_id", "")) != String(repeated_identity.get("scenario_id", "")):
-		_fail("Same seed/config changed generated scenario id.")
-		return false
 	if String(first_identity.get("stable_signature", "")) != String(repeated_identity.get("stable_signature", "")):
 		_fail("Same seed/config changed stable generated identity.")
-		return false
-	if String(first_identity.get("scenario_id", "")) == String(changed_identity.get("scenario_id", "")):
-		_fail("Changed seed did not change generated scenario id.")
 		return false
 	if String(first_identity.get("stable_signature", "")) == String(changed_identity.get("stable_signature", "")):
 		_fail("Changed seed did not change stable generated identity.")

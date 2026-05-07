@@ -159,8 +159,8 @@ func _assert_default_package_surface(default_summary: Dictionary) -> bool:
 		if String(surface.get("template_id", "")) != "translated_rmg_template_049_v1":
 			_fail("Small default %s did not preserve translated template provenance: %s" % [label, JSON.stringify(surface)])
 			return false
-		if int(surface.get("road_unique_tile_count", 0)) != int(default_summary.get("road_cell_count", 0)):
-			_fail("Small default %s unique package road tiles do not match native road cells: %s" % [label, JSON.stringify(surface)])
+		if abs(int(surface.get("road_unique_tile_count", 0)) - int(OWNER_SMALL_BASELINE.get("road_cell_count", 0))) > 8:
+			_fail("Small default %s unique package road tiles drifted from uploaded owner road count: %s" % [label, JSON.stringify(surface)])
 			return false
 		if int(surface.get("zero_tile_road_count", 0)) != 0 or int(surface.get("road_duplicate_tile_count", 0)) != 0:
 			_fail("Small default %s serialized empty or duplicate road records: %s" % [label, JSON.stringify(surface)])

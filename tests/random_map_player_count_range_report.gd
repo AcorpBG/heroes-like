@@ -12,11 +12,12 @@ func _ready() -> void:
 func _run() -> void:
 	var setup_options := ScenarioSelectRulesScript.random_map_player_setup_options()
 	var by_template: Dictionary = setup_options.get("player_count_options_by_template", {}) if setup_options.get("player_count_options_by_template", {}) is Dictionary else {}
-	if not _arrays_equal(by_template.get("border_gate_compact_v1", []), [3]):
-		_fail("Small compact template did not preserve catalog player range [3]: %s" % JSON.stringify(by_template.get("border_gate_compact_v1", [])))
+	var compact_player_counts := ScenarioSelectRulesScript.random_map_player_count_options_for_template("border_gate_compact_v1")
+	if not _arrays_equal(compact_player_counts, [3]):
+		_fail("Small compact template did not preserve catalog player range [3]: %s" % JSON.stringify(compact_player_counts))
 		return
-	if not _arrays_equal(by_template.get("translated_rmg_template_043_v1", []), [2, 3, 4, 5, 6, 7, 8]):
-		_fail("XL translated template did not expose catalog player range 2..8: %s" % JSON.stringify(by_template.get("translated_rmg_template_043_v1", [])))
+	if not _arrays_equal(by_template.get("translated_rmg_template_043_v1", []), [5, 6, 7, 8]):
+		_fail("XL translated template did not expose connected player range 5..8: %s" % JSON.stringify(by_template.get("translated_rmg_template_043_v1", [])))
 		return
 
 	var small_defaults := ScenarioSelectRulesScript.random_map_size_class_default("homm3_small")
@@ -27,8 +28,11 @@ func _run() -> void:
 		_fail("Small recovered template did not expose translated player range 2..7: %s" % JSON.stringify(small_defaults))
 		return
 	var xl_defaults := ScenarioSelectRulesScript.random_map_size_class_default("homm3_extra_large")
-	if not _arrays_equal(xl_defaults.get("player_counts", []), [2, 3, 4, 5, 6, 7, 8]):
-		_fail("XL size defaults did not expose translated 2..8 player counts: %s" % JSON.stringify(xl_defaults))
+	if int(xl_defaults.get("player_count", 0)) != 5:
+		_fail("XL size default did not use the minimum connected translated player count 5: %s" % JSON.stringify(xl_defaults))
+		return
+	if not _arrays_equal(xl_defaults.get("player_counts", []), [5, 6, 7, 8]):
+		_fail("XL size defaults did not expose connected translated 5..8 player counts: %s" % JSON.stringify(xl_defaults))
 		return
 
 	var compact_over_request := ScenarioSelectRulesScript.build_random_map_player_config(
@@ -64,8 +68,9 @@ func _run() -> void:
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
-		"compact_player_counts": by_template.get("border_gate_compact_v1", []),
+		"compact_player_counts": compact_player_counts,
 		"xl_player_counts": by_template.get("translated_rmg_template_043_v1", []),
+		"xl_default_player_count": int(xl_defaults.get("player_count", 0)),
 		"accepted_xl_player_counts": accepted,
 		"template_id": "translated_rmg_template_043_v1",
 		"profile_id": "translated_rmg_profile_043_v1",

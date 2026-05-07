@@ -5,6 +5,7 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const REPORT_ID := "RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT"
 const SMALL_DEFAULT_TEMPLATE_ID := "translated_rmg_template_049_v1"
 const SMALL_DEFAULT_PROFILE_ID := "translated_rmg_profile_049_v1"
+const AUTO_TEMPLATE_ID := "native_catalog_auto"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -34,6 +35,12 @@ func _run() -> void:
 	if not bool(shell.call("validation_set_generated_underground", false)):
 		_fail("Underground control hook did not disable underground.")
 		return
+	if bool(shell.call("validation_set_generated_underground", true)):
+		_fail("Underground control hook allowed unsupported underground generation.")
+		return
+	if not bool(shell.call("validation_set_generated_underground", false)):
+		_fail("Underground control hook did not restore disabled underground.")
+		return
 
 	var setup_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
 	if not _assert_player_setup_snapshot(setup_snapshot):
@@ -51,6 +58,29 @@ func _run() -> void:
 	var over_cap_setup: Dictionary = shell.call("validation_force_generated_random_map_config", _over_cap_config())
 	if not _assert_over_cap_size_surface(shell, over_cap_setup):
 		return
+	var medium_islands_setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		_medium_islands_auto_config(),
+		"normal",
+		{"max_attempts": 1, "mode": "none"}
+	)
+	if not _assert_medium_islands_auto_supported(medium_islands_setup):
+		return
+	if not bool(shell.call("validation_select_generated_water_mode", "islands")):
+		_fail("Water control hook did not select supported islands.")
+		return
+	var islands_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
+	if not _assert_medium_islands_player_surface(islands_snapshot):
+		return
+	if not bool(shell.call("validation_select_generated_water_mode", "land")):
+		_fail("Water control hook did not restore land.")
+		return
+	var legacy_compact_setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		_legacy_compact_launch_config(),
+		"normal",
+		{"max_attempts": 1, "mode": "none"}
+	)
+	if not _assert_legacy_compact_launch_blocked(legacy_compact_setup):
+		return
 
 	shell.call("validation_set_generated_seed", "player-facing-setup-retry-ux-10184")
 	shell.call("validation_select_generated_size_class", "homm3_small")
@@ -59,11 +89,8 @@ func _run() -> void:
 	shell.call("validation_set_generated_underground", false)
 	var launch_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
 	var launch_setup: Dictionary = launch_snapshot.get("setup", {}) if launch_snapshot.get("setup", {}) is Dictionary else {}
-	if String(launch_setup.get("template_id", "")) == "" or String(launch_setup.get("profile_id", "")) == "":
-		_fail("Generated UI setup did not expose template/profile provenance before launch: %s" % JSON.stringify(launch_setup))
-		return
-		if String(launch_setup.get("template_id", "")) != SMALL_DEFAULT_TEMPLATE_ID or String(launch_setup.get("profile_id", "")) != SMALL_DEFAULT_PROFILE_ID:
-			_fail("Small UI setup did not select the recovered default topology: %s" % JSON.stringify(launch_setup))
+	if String(launch_setup.get("template_id", "")) != AUTO_TEMPLATE_ID or String(launch_setup.get("profile_id", "")) != AUTO_TEMPLATE_ID:
+		_fail("Generated UI setup did not expose native catalog auto-selection provenance before launch: %s" % JSON.stringify(launch_setup))
 		return
 
 	var launch_result: Dictionary = shell.call("validation_start_generated_skirmish")
@@ -117,30 +144,42 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 		_fail("Generated size-class control did not persist in snapshot: %s" % JSON.stringify(controls))
 		return false
 	var internal_provenance: Dictionary = controls.get("internal_template_provenance", {}) if controls.get("internal_template_provenance", {}) is Dictionary else {}
-	if String(internal_provenance.get("selection_source", "")) != "homm3_size_class_default":
-		_fail("Generated template/profile provenance did not identify size-default derivation: %s" % JSON.stringify(internal_provenance))
+	if String(internal_provenance.get("selection_source", "")) != "native_catalog_auto_on_launch":
+		_fail("Generated template/profile provenance did not identify native catalog auto-selection: %s" % JSON.stringify(internal_provenance))
 		return false
-	if String(internal_provenance.get("template_id", "")) != SMALL_DEFAULT_TEMPLATE_ID or String(internal_provenance.get("profile_id", "")) != SMALL_DEFAULT_PROFILE_ID:
+	if String(internal_provenance.get("template_id", "")) != AUTO_TEMPLATE_ID or String(internal_provenance.get("profile_id", "")) != AUTO_TEMPLATE_ID:
 		_fail("Generated internal template/profile provenance did not persist in snapshot: %s" % JSON.stringify(internal_provenance))
+		return false
+	if String(internal_provenance.get("preview_template_id", "")) != SMALL_DEFAULT_TEMPLATE_ID or String(internal_provenance.get("preview_profile_id", "")) != SMALL_DEFAULT_PROFILE_ID:
+		_fail("Generated internal preview default provenance did not persist in snapshot: %s" % JSON.stringify(internal_provenance))
+		return false
+	if not bool(internal_provenance.get("launch_selection_deferred_to_native", false)):
+		_fail("Generated internal provenance did not defer launch selection to native: %s" % JSON.stringify(internal_provenance))
 		return false
 	if bool(internal_provenance.get("template_picker_visible", true)) or bool(internal_provenance.get("profile_picker_visible", true)):
 		_fail("Generated manual template/profile pickers were visible: %s" % JSON.stringify(internal_provenance))
+		return false
+	if bool(internal_provenance.get("underground_supported", true)) or bool(internal_provenance.get("underground_player_control_visible", true)):
+		_fail("Generated setup still exposed unsupported underground control: %s" % JSON.stringify(internal_provenance))
 		return false
 	if int(controls.get("player_count", 0)) != 3 or String(controls.get("water_mode", "")) != "land" or bool(controls.get("underground", true)):
 		_fail("Generated player/water/underground controls did not persist in snapshot: %s" % JSON.stringify(controls))
 		return false
 	var visible_controls: Array = controls.get("visible_player_controls", []) if controls.get("visible_player_controls", []) is Array else []
-	for expected_control in ["seed", "size_class", "player_count", "water_mode", "underground", "launch_generated"]:
+	for expected_control in ["seed", "size_class", "player_count", "water_mode", "launch_generated"]:
 		if expected_control not in visible_controls:
 			_fail("Generated visible player controls missed %s: %s" % [expected_control, JSON.stringify(visible_controls)])
 			return false
+	if "underground" in visible_controls:
+		_fail("Generated visible player controls still exposed unsupported underground: %s" % JSON.stringify(visible_controls))
+		return false
 	for forbidden_key in ["template_options", "template_option_ids", "profile_options", "profile_option_ids"]:
 		if controls.has(forbidden_key):
 			_fail("Generated player-facing controls still exposed %s: %s" % [forbidden_key, JSON.stringify(controls)])
 			return false
 	var water_options: Array = controls.get("water_options", []) if controls.get("water_options", []) is Array else []
-	if "Islands" not in water_options:
-		_fail("Generated water option list did not expose islands mode: %s" % JSON.stringify(water_options))
+	if "Land" not in water_options or "Islands" not in water_options:
+		_fail("Generated water option list did not expose bounded land/islands support: %s" % JSON.stringify(water_options))
 		return false
 	var size_options: Array = controls.get("size_options", []) if controls.get("size_options", []) is Array else []
 	for size_label in ["Small 36x36", "Medium 72x72", "Large 108x108", "Extra Large 144x144"]:
@@ -198,13 +237,16 @@ func _assert_extra_large_size_surface(snapshot: Dictionary) -> bool:
 	if not bool(setup.get("ok", false)):
 		_fail("Extra Large generated size class preview failed validation: %s" % JSON.stringify(setup))
 		return false
-	if String(setup.get("template_id", "")) != "translated_rmg_template_043_v1" or String(setup.get("profile_id", "")) != "translated_rmg_profile_043_v1":
-		_fail("Extra Large preview did not use translated XL template/profile defaults: %s" % JSON.stringify(setup))
+	if String(setup.get("template_id", "")) != AUTO_TEMPLATE_ID or String(setup.get("profile_id", "")) != AUTO_TEMPLATE_ID:
+		_fail("Extra Large preview did not expose native catalog auto-selection: %s" % JSON.stringify(setup))
+		return false
+	if String(setup.get("preview_template_id", "")) != "translated_rmg_template_043_v1" or String(setup.get("preview_profile_id", "")) != "translated_rmg_profile_043_v1":
+		_fail("Extra Large preview did not preserve translated XL default provenance: %s" % JSON.stringify(setup))
 		return false
 	var controls: Dictionary = snapshot.get("controls", {}) if snapshot.get("controls", {}) is Dictionary else {}
 	var provenance: Dictionary = controls.get("internal_template_provenance", {}) if controls.get("internal_template_provenance", {}) is Dictionary else {}
-	if String(provenance.get("selection_source", "")) != "homm3_size_class_default" or bool(provenance.get("template_picker_visible", true)) or bool(provenance.get("profile_picker_visible", true)):
-		_fail("Extra Large internal provenance did not remain size-default and hidden: %s" % JSON.stringify(provenance))
+	if String(provenance.get("selection_source", "")) != "native_catalog_auto_on_launch" or bool(provenance.get("template_picker_visible", true)) or bool(provenance.get("profile_picker_visible", true)):
+		_fail("Extra Large internal provenance did not remain native-auto and hidden: %s" % JSON.stringify(provenance))
 		return false
 	return true
 
@@ -235,6 +277,52 @@ func _assert_over_cap_size_surface(shell: Node, setup: Dictionary) -> bool:
 		return false
 	return true
 
+func _assert_medium_islands_auto_supported(setup: Dictionary) -> bool:
+	if not bool(setup.get("ok", false)):
+		_fail("Medium Islands generated setup did not produce a launchable package: %s" % JSON.stringify(setup))
+		return false
+	var attempts: Array = setup.get("retry_attempts", []) if setup.get("retry_attempts", []) is Array else []
+	if attempts.is_empty() or not (attempts[0] is Dictionary):
+		_fail("Medium Islands generated setup did not preserve retry attempt evidence: %s" % JSON.stringify(setup))
+		return false
+	var attempt: Dictionary = attempts[0]
+	if String(attempt.get("template_id", "")) != "translated_rmg_template_001_v1" or String(attempt.get("profile_id", "")) != "translated_rmg_profile_001_v1":
+		_fail("Medium Islands native auto-selection did not use owner-compared translated 001: %s" % JSON.stringify(attempt))
+		return false
+	if String(attempt.get("full_generation_status", "")) == "not_implemented":
+		_fail("Medium Islands native auto-selection remained not_implemented: %s" % JSON.stringify(attempt))
+		return false
+	return true
+
+func _assert_medium_islands_player_surface(snapshot: Dictionary) -> bool:
+	var controls: Dictionary = snapshot.get("controls", {}) if snapshot.get("controls", {}) is Dictionary else {}
+	if String(controls.get("size_class_id", "")) != "homm3_medium" or int(controls.get("player_count", 0)) != 4 or String(controls.get("water_mode", "")) != "islands":
+		_fail("Islands player-facing selection did not coerce to supported Medium/4-player setup: %s" % JSON.stringify(controls))
+		return false
+	if bool(controls.get("underground", true)):
+		_fail("Islands player-facing selection re-enabled underground: %s" % JSON.stringify(controls))
+		return false
+	var setup: Dictionary = snapshot.get("setup", {}) if snapshot.get("setup", {}) is Dictionary else {}
+	if not bool(setup.get("ok", false)):
+		_fail("Islands player-facing setup failed validation: %s" % JSON.stringify(setup))
+		return false
+	return true
+
+func _assert_legacy_compact_launch_blocked(setup: Dictionary) -> bool:
+	if bool(setup.get("ok", false)):
+		_fail("Legacy compact generated setup unexpectedly produced a launchable package: %s" % JSON.stringify(setup))
+		return false
+	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
+	if String(setup.get("error_code", validation.get("error_code", ""))) != "native_rmg_legacy_compact_launch_blocked":
+		_fail("Legacy compact setup did not report the compact launch blocker: %s" % JSON.stringify(setup))
+		return false
+	var failures: Array = validation.get("failures", []) if validation.get("failures", []) is Array else []
+	for failure in failures:
+		if failure is Dictionary and String(failure.get("code", "")) == "native_rmg_legacy_compact_launch_blocked":
+			return true
+	_fail("Legacy compact setup did not preserve failure evidence: %s" % JSON.stringify(validation))
+	return false
+
 func _assert_session_boundary(launch_result: Dictionary) -> bool:
 	if String(launch_result.get("active_launch_mode", "")) != SessionState.LAUNCH_MODE_SKIRMISH:
 		_fail("Generated UI launch left skirmish launch mode: %s" % JSON.stringify(launch_result))
@@ -246,8 +334,13 @@ func _assert_session_boundary(launch_result: Dictionary) -> bool:
 			return false
 	var normalized: Dictionary = provenance.get("normalized_config", {}) if provenance.get("normalized_config", {}) is Dictionary else {}
 	var identity: Dictionary = provenance.get("generated_identity", {}) if provenance.get("generated_identity", {}) is Dictionary else {}
-	if String(normalized.get("template_id", identity.get("template_id", ""))) != SMALL_DEFAULT_TEMPLATE_ID or String(normalized.get("profile_id", identity.get("profile_id", ""))) != SMALL_DEFAULT_PROFILE_ID:
-		_fail("Generated UI launch provenance did not preserve recovered size-default template/profile: %s" % JSON.stringify(provenance))
+	var normalized_template_id := String(normalized.get("template_id", identity.get("template_id", "")))
+	var normalized_profile_id := String(normalized.get("profile_id", identity.get("profile_id", "")))
+	if normalized_template_id == "" or normalized_profile_id == "" or normalized_template_id == AUTO_TEMPLATE_ID or normalized_profile_id == AUTO_TEMPLATE_ID:
+		_fail("Generated UI launch provenance did not resolve native catalog template/profile: %s" % JSON.stringify(provenance))
+		return false
+	if String(normalized.get("template_selection_mode", "")) != "native_catalog_auto" or String(normalized.get("profile_selection_mode", "")) != "template_catalog_first_profile":
+		_fail("Generated UI launch provenance did not record native catalog selection modes: %s" % JSON.stringify(normalized))
 		return false
 	var boundaries: Dictionary = provenance.get("boundaries", {}) if provenance.get("boundaries", {}) is Dictionary else {}
 	if bool(boundaries.get("authored_content_writeback", true)) or bool(boundaries.get("content_scenarios_json", true)) or bool(boundaries.get("generated_scenario_draft_registry", true)) or bool(boundaries.get("legacy_json_scenario_record", true)):
@@ -290,6 +383,29 @@ func _over_cap_config() -> Dictionary:
 		"player_constraints": {"human_count": 1, "player_count": 3, "team_mode": "free_for_all"},
 		"profile": {"id": "border_gate_compact_profile_v1", "template_id": "border_gate_compact_v1"},
 	}
+
+func _medium_islands_auto_config() -> Dictionary:
+	return ScenarioSelectRulesScript.build_random_map_player_config(
+		"player-facing-setup-retry-ux-10184-medium-islands",
+		"",
+		"",
+		4,
+		"islands",
+		false,
+		"homm3_medium",
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
+	)
+
+func _legacy_compact_launch_config() -> Dictionary:
+	return ScenarioSelectRulesScript.build_random_map_player_config(
+		"player-facing-setup-retry-ux-10184-legacy-compact",
+		"border_gate_compact_v1",
+		"border_gate_compact_profile_v1",
+		3,
+		"land",
+		false,
+		"homm3_small"
+	)
 
 func _assert_no_authored_writeback(scenario_id: String, phase: String) -> bool:
 	if scenario_id == "":

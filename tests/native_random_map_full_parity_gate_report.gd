@@ -3,7 +3,13 @@ extends Node
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 
 const REPORT_ID := "NATIVE_RANDOM_MAP_FULL_PARITY_GATE_REPORT"
-const REPORT_SCHEMA_ID := "native_random_map_full_parity_claim_boundary_report_v2"
+const REPORT_SCHEMA_ID := "native_random_map_full_parity_claim_boundary_report_v3"
+
+const OWNER_COMPARED_REMAINING_PARITY_SLICES := [
+	"native-rmg-full-homm3-parity-gate-10184",
+	"native-rmg-islands-owner-compared-runtime-support-10184",
+	"native-rmg-broad-template-owner-comparison-gate-10184",
+]
 
 const CASES := [
 	{
@@ -19,6 +25,9 @@ const CASES := [
 		"expected_full_generation_status": "scoped_structural_profile_not_full_parity",
 		"expected_scoped_support": true,
 		"expected_owner_compared_support": false,
+		"expected_runtime_authoritative": false,
+		"expected_runtime_call_site_adoption": false,
+		"expected_package_adoption_status": "ready_feature_gated_not_authoritative",
 	},
 	{
 		"id": "translated_small_049_default",
@@ -33,6 +42,9 @@ const CASES := [
 		"expected_full_generation_status": "owner_compared_translated_profile_not_full_parity",
 		"expected_scoped_support": false,
 		"expected_owner_compared_support": true,
+		"expected_runtime_authoritative": true,
+		"expected_runtime_call_site_adoption": true,
+		"expected_package_adoption_status": "runtime_authoritative_owner_compared_not_full_parity",
 	},
 	{
 		"id": "translated_medium_002_default",
@@ -47,6 +59,26 @@ const CASES := [
 		"expected_full_generation_status": "owner_compared_translated_profile_not_full_parity",
 		"expected_scoped_support": false,
 		"expected_owner_compared_support": true,
+		"expected_runtime_authoritative": true,
+		"expected_runtime_call_site_adoption": true,
+		"expected_package_adoption_status": "runtime_authoritative_owner_compared_not_full_parity",
+	},
+	{
+		"id": "translated_medium_001_islands_owner_compared",
+		"seed": "1777897383",
+		"template_id": "translated_rmg_template_001_v1",
+		"profile_id": "translated_rmg_profile_001_v1",
+		"player_count": 4,
+		"water_mode": "islands",
+		"underground": false,
+		"size_class_id": "homm3_medium",
+		"expected_status": "owner_compared_translated_profile_supported",
+		"expected_full_generation_status": "owner_compared_translated_profile_not_full_parity",
+		"expected_scoped_support": false,
+		"expected_owner_compared_support": true,
+		"expected_runtime_authoritative": true,
+		"expected_runtime_call_site_adoption": true,
+		"expected_package_adoption_status": "runtime_authoritative_owner_compared_not_full_parity",
 	},
 ]
 
@@ -86,9 +118,9 @@ func _run() -> void:
 		"case_count": summaries.size(),
 		"cases": summaries,
 		"readiness": {
-			"native_runtime_authoritative": false,
+			"owner_compared_runtime_authoritative_without_full_parity": true,
 			"full_parity_claim": false,
-			"runtime_call_site_adoption": false,
+			"runtime_call_site_adoption_limited_to_owner_compared_defaults": true,
 			"scoped_structural_profiles_preserved": true,
 			"production_parity_remaining": true,
 		},
@@ -121,16 +153,16 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 	if bool(generated.get("owner_compared_translated_profile_supported", false)) != bool(case_record.get("expected_owner_compared_support", false)):
 		_fail("%s owner-compared support flag drifted: %s" % [String(case_record.get("id", "case")), JSON.stringify(_claim_summary(generated))])
 		return {}
-	if bool(generated.get("full_parity_claim", false)) or bool(generated.get("native_runtime_authoritative", false)):
-		_fail("%s falsely claimed full parity or native runtime authority: %s" % [String(case_record.get("id", "case")), JSON.stringify(_claim_summary(generated))])
+	if bool(generated.get("full_parity_claim", false)):
+		_fail("%s falsely claimed full parity at generation time: %s" % [String(case_record.get("id", "case")), JSON.stringify(_claim_summary(generated))])
 		return {}
 	var provenance: Dictionary = generated.get("provenance", {}) if generated.get("provenance", {}) is Dictionary else {}
 	var boundaries: Dictionary = provenance.get("boundaries", {}) if provenance.get("boundaries", {}) is Dictionary else {}
-	if bool(provenance.get("full_parity_claim", false)) or bool(provenance.get("native_runtime_authoritative", false)):
-		_fail("%s provenance falsely claimed full parity or native runtime authority: %s" % [String(case_record.get("id", "case")), JSON.stringify(provenance)])
+	if bool(provenance.get("full_parity_claim", false)):
+		_fail("%s provenance falsely claimed full parity: %s" % [String(case_record.get("id", "case")), JSON.stringify(provenance)])
 		return {}
-	if bool(boundaries.get("full_parity_claim", false)) or bool(boundaries.get("native_runtime_authoritative", false)) or bool(boundaries.get("runtime_call_site_adoption", true)):
-		_fail("%s provenance boundaries crossed claim/adoption limits: %s" % [String(case_record.get("id", "case")), JSON.stringify(boundaries)])
+	if bool(boundaries.get("full_parity_claim", false)):
+		_fail("%s provenance boundaries crossed the full-parity claim limit: %s" % [String(case_record.get("id", "case")), JSON.stringify(boundaries)])
 		return {}
 	var adoption: Dictionary = service.convert_generated_payload(generated, {
 		"feature_gate": "native_rmg_full_parity_claim_boundary_report",
@@ -140,13 +172,35 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 		_fail("%s package conversion failed: %s" % [String(case_record.get("id", "case")), JSON.stringify(adoption)])
 		return {}
 	var report: Dictionary = adoption.get("report", {}) if adoption.get("report", {}) is Dictionary else {}
-	if bool(report.get("native_runtime_authoritative", true)) or bool(report.get("full_parity_claim", true)) or bool(report.get("runtime_call_site_adoption", true)):
-		_fail("%s package adoption falsely claimed authority/parity/runtime adoption: %s" % [String(case_record.get("id", "case")), JSON.stringify(report)])
+	if bool(report.get("full_parity_claim", true)):
+		_fail("%s package adoption falsely claimed full parity: %s" % [String(case_record.get("id", "case")), JSON.stringify(report)])
+		return {}
+	if bool(report.get("native_runtime_authoritative", false)) != bool(case_record.get("expected_runtime_authoritative", false)):
+		_fail("%s package adoption runtime-authority boundary drifted: %s" % [String(case_record.get("id", "case")), JSON.stringify(report)])
+		return {}
+	if bool(report.get("runtime_call_site_adoption", false)) != bool(case_record.get("expected_runtime_call_site_adoption", false)):
+		_fail("%s package adoption call-site boundary drifted: %s" % [String(case_record.get("id", "case")), JSON.stringify(report)])
+		return {}
+	if String(report.get("adoption_status", "")) != String(case_record.get("expected_package_adoption_status", "")):
+		_fail("%s package adoption status drifted: %s" % [String(case_record.get("id", "case")), JSON.stringify(report)])
+		return {}
+	if bool(case_record.get("expected_owner_compared_support", false)) and not _contains_all_remaining_parity_slices(report.get("remaining_parity_slices", [])):
+		_fail("%s package adoption omitted owner-compared remaining parity slices: %s" % [String(case_record.get("id", "case")), JSON.stringify(report)])
 		return {}
 	var summary := _claim_summary(generated)
 	summary["package_session_adoption_ready"] = report.get("package_session_adoption_ready", false)
 	summary["package_adoption_status"] = report.get("adoption_status", "")
+	summary["package_native_runtime_authoritative"] = report.get("native_runtime_authoritative", false)
+	summary["package_runtime_call_site_adoption"] = report.get("runtime_call_site_adoption", false)
+	summary["package_remaining_parity_slices"] = report.get("remaining_parity_slices", [])
 	return summary
+
+func _contains_all_remaining_parity_slices(value: Variant) -> bool:
+	var slices: Array = value if value is Array else []
+	for expected in OWNER_COMPARED_REMAINING_PARITY_SLICES:
+		if not slices.has(expected):
+			return false
+	return true
 
 func _claim_summary(generated: Dictionary) -> Dictionary:
 	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}

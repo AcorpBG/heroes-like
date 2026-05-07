@@ -1179,6 +1179,8 @@ func _ensure_generated_random_map_scenario_registered(normalized_payload: Dictio
 	if provenance.is_empty():
 		var setup: Dictionary = flags.get("generated_random_map_setup", {}) if flags.get("generated_random_map_setup", {}) is Dictionary else {}
 		provenance = setup.get("provenance", {}) if setup.get("provenance", {}) is Dictionary else {}
+	if String(provenance.get("schema_id", "")) == "aurelion_native_rmg_disk_package_provenance_v1":
+		return _register_native_generated_random_map_scenario_from_payload(normalized_payload, provenance)
 	var config: Dictionary = provenance.get("generator_config", {}) if provenance.get("generator_config", {}) is Dictionary else {}
 	if config.is_empty():
 		return {"ok": false, "registered": false, "message": "Generated random-map save is missing regeneration config provenance."}
@@ -1229,6 +1231,82 @@ func _ensure_generated_random_map_scenario_registered(normalized_payload: Dictio
 		"registered": true,
 		"message": "Generated random-map scenario restored from saved seed/config provenance.",
 	}
+
+func _register_native_generated_random_map_scenario_from_payload(normalized_payload: Dictionary, provenance: Dictionary) -> Dictionary:
+	var scenario_id := String(normalized_payload.get("scenario_id", ""))
+	if scenario_id == "":
+		return {"ok": false, "registered": false, "message": "Native generated random-map save is missing a scenario id."}
+	if not ContentService.get_scenario(scenario_id).is_empty():
+		return {"ok": true, "registered": false}
+	var overworld: Dictionary = normalized_payload.get("overworld", {}) if normalized_payload.get("overworld", {}) is Dictionary else {}
+	var map_size: Dictionary = overworld.get("map_size", {}) if overworld.get("map_size", {}) is Dictionary else {}
+	var terrain_layers: Dictionary = overworld.get("terrain_layers", {}) if overworld.get("terrain_layers", {}) is Dictionary else {}
+	var generated_identity: Dictionary = provenance.get("generated_identity", {}) if provenance.get("generated_identity", {}) is Dictionary else {}
+	var normalized_config: Dictionary = provenance.get("normalized_config", {}) if provenance.get("normalized_config", {}) is Dictionary else {}
+	var scenario_ref: Dictionary = provenance.get("scenario_ref", {}) if provenance.get("scenario_ref", {}) is Dictionary else {}
+	var start := _native_generated_restore_start(overworld)
+	var scenario_record := {
+		"id": scenario_id,
+		"name": String(scenario_ref.get("name", scenario_id)),
+		"generated": true,
+		"source": "native_rmg_disk_package_save_restore",
+		"selection": {"availability": {"campaign": false, "skirmish": false}},
+		"map_size": map_size,
+		"map": overworld.get("map", []) if overworld.get("map", []) is Array else [],
+		"player_faction_id": _native_generated_restore_player_faction(overworld),
+		"starting_hero_id": String(normalized_payload.get("hero_id", "hero_lyra")),
+		"starting_position": start,
+		"towns": overworld.get("towns", []) if overworld.get("towns", []) is Array else [],
+		"resource_nodes": overworld.get("resource_nodes", []) if overworld.get("resource_nodes", []) is Array else [],
+		"encounters": overworld.get("encounters", []) if overworld.get("encounters", []) is Array else [],
+		"map_objects": overworld.get("map_objects", []) if overworld.get("map_objects", []) is Array else [],
+		"native_generated_package": {
+			"schema_id": "aurelion_native_rmg_disk_package_restore_record_v1",
+			"template_id": String(generated_identity.get("template_id", normalized_config.get("template_id", ""))),
+			"profile_id": String(generated_identity.get("profile_id", normalized_config.get("profile_id", ""))),
+			"normalized_seed": String(generated_identity.get("normalized_seed", normalized_config.get("normalized_seed", ""))),
+			"map_ref": provenance.get("map_ref", {}) if provenance.get("map_ref", {}) is Dictionary else {},
+			"scenario_ref": scenario_ref,
+			"boundaries": provenance.get("boundaries", {}) if provenance.get("boundaries", {}) is Dictionary else {},
+		},
+	}
+	var registration: Dictionary = ContentService.register_generated_scenario_draft(scenario_record, terrain_layers)
+	if not bool(registration.get("ok", false)):
+		return {
+			"ok": false,
+			"registered": false,
+			"message": "Native generated random-map save could not register package-backed scenario: %s" % String(registration.get("message", "")),
+		}
+	return {
+		"ok": true,
+		"registered": true,
+		"message": "Native generated random-map scenario restored from saved package provenance.",
+	}
+
+func _native_generated_restore_start(overworld: Dictionary) -> Dictionary:
+	var position: Dictionary = overworld.get("hero_position", {}) if overworld.get("hero_position", {}) is Dictionary else {}
+	if not position.is_empty():
+		return {"x": int(position.get("x", 0)), "y": int(position.get("y", 0))}
+	var hero: Dictionary = overworld.get("hero", {}) if overworld.get("hero", {}) is Dictionary else {}
+	var hero_pos: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
+	if not hero_pos.is_empty():
+		return {"x": int(hero_pos.get("x", 0)), "y": int(hero_pos.get("y", 0))}
+	return {"x": 0, "y": 0}
+
+func _native_generated_restore_player_faction(overworld: Dictionary) -> String:
+	var hero: Dictionary = overworld.get("hero", {}) if overworld.get("hero", {}) is Dictionary else {}
+	var faction_id := String(hero.get("faction_id", ""))
+	if faction_id != "":
+		return faction_id
+	var heroes: Array = overworld.get("player_heroes", []) if overworld.get("player_heroes", []) is Array else []
+	for hero_entry in heroes:
+		if hero_entry is Dictionary and String(hero_entry.get("faction_id", "")) != "":
+			return String(hero_entry.get("faction_id", ""))
+	var towns: Array = overworld.get("towns", []) if overworld.get("towns", []) is Array else []
+	for town in towns:
+		if town is Dictionary and String(town.get("owner", "")) == "player" and String(town.get("faction_id", "")) != "":
+			return String(town.get("faction_id", ""))
+	return "faction_embercourt"
 
 func _populate_summary_from_payload(summary: Dictionary, payload: Dictionary) -> Dictionary:
 	var scenario_id := String(payload.get("scenario_id", ""))
