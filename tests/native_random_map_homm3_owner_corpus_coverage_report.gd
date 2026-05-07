@@ -640,6 +640,7 @@ func _owner_xl_land_density_diagnostic(service: Variant, samples: Array) -> Dict
 			"profile_id": String(normalized.get("profile_id", "")),
 			"full_generation_status": String(generated.get("full_generation_status", "")),
 			"validation_status": String(generated.get("validation_status", "")),
+			"generation_validation_report": generated.get("validation_report", {}),
 			"error": adoption,
 			"comparison_policy": "diagnostic_only_not_exact_parity_gate",
 		}
