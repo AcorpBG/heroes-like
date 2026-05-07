@@ -428,6 +428,18 @@ func _normalized_terrain_pool(requested: Array) -> Array:
 			result.append(terrain_id)
 	return result if not result.is_empty() else CORE_TERRAIN_POOL.duplicate()
 
+func _surface_terrain_pool(terrain_pool: Array) -> Array:
+	var result := []
+	for terrain_id_value in terrain_pool:
+		var terrain_id := String(terrain_id_value)
+		if terrain_id == "underground":
+			continue
+		if terrain_id not in result:
+			result.append(terrain_id)
+	if result.is_empty():
+		result.append("grass")
+	return result
+
 func _is_supported_terrain_id(terrain_id: String) -> bool:
 	return terrain_id in TERRAIN_ID_BY_CODE
 
@@ -474,10 +486,10 @@ func _terrain_seed_records(normalized: Dictionary, terrain_pool: Array) -> Array
 func _terrain_for_cell(x: int, y: int, level: int, terrain_pool: Array, seeds: Array, normalized: Dictionary) -> String:
 	var width := int(normalized.get("width", 36))
 	var height := int(normalized.get("height", 36))
+	if level > 0:
+		return "underground"
 	if level == 0 and String(normalized.get("water_mode", "land")) == "islands" and (x == 0 or y == 0 or x == width - 1 or y == height - 1):
 		return "water"
-	if level > 0 and "underground" in terrain_pool:
-		return "underground"
 	var best_terrain := String(terrain_pool[0])
 	var best_score := 9223372036854775807
 	var seed := String(normalized.get("normalized_seed", "0"))
@@ -497,7 +509,8 @@ func _generate_terrain_grid(normalized: Dictionary) -> Dictionary:
 	var height := int(normalized.get("height", 36))
 	var level_count := int(normalized.get("level_count", 1))
 	var terrain_pool := _normalized_terrain_pool(normalized.get("terrain_ids", CORE_TERRAIN_POOL))
-	var seeds := _terrain_seed_records(normalized, terrain_pool)
+	var surface_pool := _surface_terrain_pool(terrain_pool)
+	var seeds := _terrain_seed_records(normalized, surface_pool)
 	var levels := []
 	var aggregate_counts := {}
 	for level in range(level_count):
@@ -507,7 +520,7 @@ func _generate_terrain_grid(normalized: Dictionary) -> Dictionary:
 		var biome_counts := {}
 		for y in range(height):
 			for x in range(width):
-				var terrain_id := _terrain_for_cell(x, y, level, terrain_pool, seeds, normalized)
+				var terrain_id := _terrain_for_cell(x, y, level, surface_pool if level == 0 else terrain_pool, seeds, normalized)
 				var biome_id := _biome_for_terrain(terrain_id)
 				var flat_index := y * width + x
 				terrain_codes[flat_index] = _terrain_code_for_id(terrain_id)
@@ -541,6 +554,8 @@ func _generate_terrain_grid(normalized: Dictionary) -> Dictionary:
 		"terrain_id_by_code": TERRAIN_ID_BY_CODE,
 		"biome_id_by_terrain_id": biome_by_terrain,
 		"terrain_palette_ids": terrain_pool,
+		"surface_terrain_palette_ids": surface_pool,
+		"underground_terrain_policy": "reserved_for_subterranean_levels" if level_count > 1 else "not_materialized_for_surface_only_maps",
 		"zone_seed_model": "deterministic_terrain_palette_voronoi_seed_grid",
 		"terrain_seed_records": seeds,
 		"terrain_counts": aggregate_counts,
@@ -1261,7 +1276,8 @@ func _town_record_at_point(normalized: Dictionary, zone: Dictionary, point: Dict
 	if faction_id == "":
 		var faction_ids: Array = normalized.get("faction_ids", DEFAULT_FACTIONS)
 		faction_id = String(faction_ids[ordinal % faction_ids.size()])
-	var player_slot := int(start.get("player_slot", zone.get("player_slot", 0)))
+	var player_slot_value = start.get("player_slot", zone.get("player_slot", 0))
+	var player_slot := int(player_slot_value) if player_slot_value != null else 0
 	var runtime_owner := "neutral"
 	if start_town:
 		runtime_owner = "player" if player_slot == 1 or String(start.get("player_type", zone.get("player_type", ""))) == "human" else "enemy"
