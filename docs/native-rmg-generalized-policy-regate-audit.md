@@ -206,6 +206,13 @@ Focused Small islands two-level validation still uses a narrow Godot smoke becau
 
 This is a focused integration validation, not a reason to return to the slow Godot owner-corpus parser loop.
 
+The same tool now supports batch scans for corpus-level policy evidence:
+
+- `python3 tools/rmg_fast_audit.py --h3m-dir maps/h3m-maps --allow-failures` parsed all `18` uploaded owner `.h3m` files in about `5.236s` with `0` parse failures. The scan covered Small, Medium, Large, and XL maps across one-level and two-level variants.
+- `python3 tools/rmg_fast_audit.py --amap-dir maps --allow-failures` parsed all `5` local native `.amap` evidence packages in about `0.204s` with `0` parse failures.
+- Owner H3M group densities now provide a fast policy baseline instead of sample-by-sample Godot startup: for example, owner 36x36 one-level evidence is about `229.167` objects / 1000 tiles and `70.216` road cells / 1000 tiles, while owner 144x144 one-level evidence averages about `196.856` objects / 1000 tiles and `34.658` road cells / 1000 tiles.
+- The local native AMAP batch is not a matched corpus; it is evidence that parsed package inspection can run quickly and should be fed by future generated package batches.
+
 ## Implemented Explicit Level Label Correction
 
 Owner review showed the previous player-facing level selector still read like an ambiguous internal toggle. The level options are now centralized in `ScenarioSelectRules` and rendered by the generated-map menu as literal map-depth choices:
