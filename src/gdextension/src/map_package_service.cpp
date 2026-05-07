@@ -13302,17 +13302,29 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 				continue;
 			}
 			Dictionary previous_town = Dictionary(previous_towns[index]);
-			Dictionary target = Dictionary(reflow_targets[index % reflow_targets.size()]);
-			Dictionary point = find_spaced_object_point(
-					int32_t(target.get("x", 0)),
-					int32_t(target.get("y", 0)),
-					String(),
-					owner_grid,
-					reflow_occupied,
-					width,
-					height,
-					reflowed_towns,
-					town_spacing_radius_for_size(normalized));
+			Dictionary start_anchor = Dictionary(previous_town.get("start_anchor", Dictionary()));
+			const bool start_town = bool(previous_town.get("is_start_town", false)) && !start_anchor.is_empty();
+			Dictionary point;
+			if (start_town) {
+				const int32_t start_x = int32_t(start_anchor.get("x", -1));
+				const int32_t start_y = int32_t(start_anchor.get("y", -1));
+				const String start_key = point_key(start_x, start_y);
+				if (start_x >= 0 && start_y >= 0 && start_x < width && start_y < height && !reflow_occupied.has(start_key)) {
+					point = point_record(start_x, start_y);
+				}
+			} else {
+				Dictionary target = Dictionary(reflow_targets[index % reflow_targets.size()]);
+				point = find_spaced_object_point(
+						int32_t(target.get("x", 0)),
+						int32_t(target.get("y", 0)),
+						String(),
+						owner_grid,
+						reflow_occupied,
+						width,
+						height,
+						reflowed_towns,
+						town_spacing_radius_for_size(normalized));
+			}
 			++reflow_attempt_count;
 			if (point.is_empty()) {
 				reflow_complete = false;
@@ -13336,9 +13348,9 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			semantics["same_type_semantics"] = previous_town.get("same_type_semantics", "not_applicable");
 			semantics["faction_selection_source"] = previous_town.get("faction_selection_source", "allowed_faction_weighted_draw");
 			semantics["town_assignment_semantics"] = previous_town.get("town_assignment_semantics", "neutral_owner_minus_one_town_castle_from_source_fields_0x30_to_0x3c");
-			semantics["required_town_access_anchor"] = point;
+			semantics["required_town_access_anchor"] = start_town ? start_anchor : point;
 			semantics["required_town_access_corridor_cells"] = Array();
-			semantics["required_town_access_corridor_policy"] = "owner_small_normal_water_2level_surface_reflow_town_anchor_preserves_spacing_floor";
+			semantics["required_town_access_corridor_policy"] = start_town ? "owner_small_normal_water_2level_reflow_preserves_player_start_town_anchor" : "owner_small_normal_water_2level_surface_reflow_town_anchor_preserves_spacing_floor";
 			append_town_record(
 					reflowed_towns,
 					reflow_occupied,
@@ -13346,7 +13358,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 							normalized,
 							zone,
 							point,
-							Dictionary(previous_town.get("start_anchor", Dictionary())),
+							start_anchor,
 							String(previous_town.get("record_type", "neutral_minimum_town")),
 							int32_t(index),
 							road_network,
