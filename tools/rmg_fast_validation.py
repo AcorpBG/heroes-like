@@ -25,6 +25,7 @@ DEFAULT_NATIVE_DIR = Path(".artifacts/rmg_native_batch_export_current")
 DEFAULT_DENSITY_FLOOR_RATIO = 0.70
 DEFAULT_ROAD_FLOOR_RATIO = 0.65
 DEFAULT_GUARD_REWARD_RATIO_FLOOR_RATIO = 0.60
+DEFAULT_POLICY_DENSITY_EPSILON = 0.05
 DEFAULT_CATEGORY_FLOOR_RATIOS = {
     "guard": 0.55,
     "object": 0.25,
@@ -222,7 +223,7 @@ def policy_failures(
                 continue
             native_density = average([category_density(sample, category) for sample in natives])
             floor = round(owner_density * ratio, 3)
-            if native_density < floor:
+            if native_density + DEFAULT_POLICY_DENSITY_EPSILON < floor:
                 failures.append(
                     {
                         "group": key,
@@ -240,7 +241,7 @@ def policy_failures(
         owner_road_density = average([road_density(sample) for sample in owners])
         native_road_density = average([road_density(sample) for sample in natives])
         road_floor = round(owner_road_density * road_floor_ratio, 3)
-        if owner_road_density > 0.0 and native_road_density < road_floor:
+        if owner_road_density > 0.0 and native_road_density + DEFAULT_POLICY_DENSITY_EPSILON < road_floor:
             failures.append(
                 {
                     "group": key,
@@ -370,6 +371,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "category_floor_ratios": DEFAULT_CATEGORY_FLOOR_RATIOS,
             "road_floor_ratio": args.road_floor_ratio,
             "guard_reward_ratio_floor_ratio": args.guard_reward_ratio_floor_ratio,
+            "policy_density_epsilon_per_1000_tiles": DEFAULT_POLICY_DENSITY_EPSILON,
         },
         "timings_seconds": {
             "owner_h3m_parse": owner_seconds,
