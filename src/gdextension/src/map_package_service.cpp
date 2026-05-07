@@ -15723,14 +15723,22 @@ Dictionary protected_island_land_lookup(const Dictionary &normalized, const Dict
 	}
 
 	Array objects = object_placement.get("object_placements", Array());
-	const bool normal_water_mode = String(normalized.get("water_mode", "land")) == "normal_water";
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	const String size_class_id = String(normalized.get("size_class_id", ""));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const bool sparse_islands_surface_profile =
+			water_mode == "islands"
+			&& ((size_class_id == "homm3_extra_large" && level_count > 1)
+					|| (size_class_id == "homm3_large" && level_count <= 1)
+					|| size_class_id == "homm3_medium");
+	const bool water_surface_mode = water_mode == "normal_water" || sparse_islands_surface_profile;
 	for (int64_t index = 0; index < objects.size(); ++index) {
 		Dictionary object = Dictionary(objects[index]);
 		const String kind = String(object.get("kind", ""));
-		if (normal_water_mode && (kind == "decorative_obstacle" || kind == "scenic_object")) {
+		if (water_surface_mode && (kind == "decorative_obstacle" || kind == "scenic_object")) {
 			continue;
 		}
-		const bool protect_approaches = !normal_water_mode || (kind != "decorative_obstacle" && kind != "scenic_object");
+		const bool protect_approaches = !water_surface_mode || (kind != "decorative_obstacle" && kind != "scenic_object");
 		mark_land_record_surfaces(land_lookup, object, width, height, protect_approaches);
 	}
 	Array towns = town_guard_placement.get("town_records", Array());
@@ -15807,20 +15815,41 @@ double island_land_fraction_for_zone(const Dictionary &zone) {
 }
 
 double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Dictionary &zone) {
-	if (String(normalized.get("water_mode", "land")) != "normal_water") {
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	const String size_class_id = String(normalized.get("size_class_id", ""));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const bool sparse_islands_surface_profile =
+			water_mode == "islands"
+			&& ((size_class_id == "homm3_extra_large" && level_count > 1)
+					|| (size_class_id == "homm3_large" && level_count <= 1)
+					|| size_class_id == "homm3_medium");
+	if (water_mode != "normal_water" && !sparse_islands_surface_profile) {
 		return island_land_fraction_for_zone(zone);
+	}
+	if (water_mode == "normal_water" && level_count <= 1) {
+		const String role = String(zone.get("role", ""));
+		if (role.contains("start")) {
+			return 0.65;
+		}
+		if (role == "junction") {
+			return 0.60;
+		}
+		if (role == "treasure" || role == "neutral") {
+			return 0.53;
+		}
+		return 0.57;
 	}
 	const String role = String(zone.get("role", ""));
 	if (role.contains("start")) {
-		return 0.65;
+		return 0.50;
 	}
 	if (role == "junction") {
-		return 0.60;
+		return 0.45;
 	}
 	if (role == "treasure" || role == "neutral") {
-		return 0.53;
+		return 0.39;
 	}
-	return 0.57;
+	return 0.42;
 }
 
 int32_t count_lookup_cells_for_zone(const Dictionary &lookup, const Array &owner_grid, const String &zone_id) {
@@ -16230,7 +16259,7 @@ void mark_level_open_record_surfaces(Dictionary &open_lookup, const Dictionary &
 		}
 	}
 	mark_level_open_cells_from_array(open_lookup, record.get("body_tiles", Array()), level, width, height, radius);
-	mark_level_open_cells_from_array(open_lookup, record.get("approach_tiles", Array()), level, width, height, std::max(1, radius));
+	mark_level_open_cells_from_array(open_lookup, record.get("approach_tiles", Array()), level, width, height, std::max(0, radius));
 	if (Variant(record.get("visit_tile", Variant())).get_type() == Variant::DICTIONARY) {
 		Dictionary visit = record.get("visit_tile", Dictionary());
 		if (int32_t(visit.get("level", level)) == level) {
@@ -16248,26 +16277,25 @@ Dictionary protected_underground_open_lookup(const Dictionary &normalized, const
 	for (int64_t segment_index = 0; segment_index < road_segments.size(); ++segment_index) {
 		Dictionary segment = Dictionary(road_segments[segment_index]);
 		for (int32_t level = 1; level < level_count; ++level) {
-			mark_level_open_cells_from_array(open_lookup, segment.get("cells", Array()), level, width, height, 1);
+			mark_level_open_cells_from_array(open_lookup, segment.get("cells", Array()), level, width, height, 0);
 		}
 	}
 	Array objects = object_placement.get("object_placements", Array());
 	for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
 		Dictionary object = Dictionary(objects[object_index]);
-		mark_level_open_record_surfaces(open_lookup, object, int32_t(object.get("level", 0)), width, height, 2);
+		mark_level_open_record_surfaces(open_lookup, object, int32_t(object.get("level", 0)), width, height, 0);
 	}
 	Array towns = town_guard_placement.get("town_records", Array());
 	for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
 		Dictionary town = Dictionary(towns[town_index]);
 		const int32_t level = int32_t(town.get("level", 0));
-		mark_level_open_record_surfaces(open_lookup, town, level, width, height, 4);
-		mark_level_open_cells_from_array(open_lookup, town.get("required_town_access_corridor_cells", Array()), level, width, height, 2);
+		mark_level_open_record_surfaces(open_lookup, town, level, width, height, 2);
+		mark_level_open_cells_from_array(open_lookup, town.get("required_town_access_corridor_cells", Array()), level, width, height, 1);
 	}
 	Array guards = town_guard_placement.get("guard_records", Array());
 	for (int64_t guard_index = 0; guard_index < guards.size(); ++guard_index) {
 		Dictionary guard = Dictionary(guards[guard_index]);
-		mark_level_open_record_surfaces(open_lookup, guard, int32_t(guard.get("level", 0)), width, height, 2);
-		mark_level_open_cells_from_array(open_lookup, guard.get("route_closure_block_tiles", Array()), int32_t(guard.get("level", 0)), width, height, 1);
+		mark_level_open_record_surfaces(open_lookup, guard, int32_t(guard.get("level", 0)), width, height, 0);
 	}
 	return open_lookup;
 }
