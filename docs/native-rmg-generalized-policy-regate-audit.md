@@ -679,3 +679,19 @@ Validation evidence:
 - `python3 tools/rmg_production_gap_audit.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_no_land_boundary_rock_land_combined --summary --gap-limit 10` passed as an audit while preserving `production_ready=false`. It now reports `6` missing production requirements, including terrain-blocker shape, with `15` terrain-shape gap cases. The top blockers remain broad XL/Large two-level, water, and islands cases.
 
 This keeps the owner-requested testing split strict: Godot is used only to produce fresh native packages through the current extension/export path or to smoke actual editor/runtime behavior. H3M parsing, AMAP parsing, correctness validation, owner comparison, timing summary, and production-gap ranking are Python work.
+
+## Implemented Two-Level Underground Distribution And Route Closure
+
+The Large/XL production-gap audit exposed a material two-level defect after the land-boundary correction: generated two-level packages had underground roads but not enough underground towns, rewards, guards, and ordinary objects. A first distribution pass moved those records underground, but it also exposed the real route-closure problem: newly materialized underground town pairs could still have free town-to-town routes after guard masks were considered.
+
+The native generator now rebalances normal catalog-auto two-level object records by category instead of copying only decorative/scenic filler underground. Two-level town floors also reserve an underground share before filling remaining neutral towns on the surface. Package conversion now cuts decorative/scenic corridor masks, then iteratively rechecks object-only and guarded town routes and expands nearby guard closure masks until the guarded route topology is closed or the bounded closure pass limit is reached.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- A focused five-case export for the previously failing Large/XL two-level cases wrote `5/5` packages in about `193.493s`; the follow-up `xl_water_2levels` export wrote `1/1` package in about `44.793s`.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_two_level_distribution_closure_fix_probe --closure-shape-gate --allow-failures --summary --failure-limit 12` passed on the focused failing set with `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- Replacing the six affected two-level packages into the 18-case evidence set, `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_two_level_distribution_closure_fix_combined --failure-limit 6 --skip-timing-summary` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `13.736s` parse time.
+- `python3 tools/rmg_production_gap_audit.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_two_level_distribution_closure_fix_combined --summary --gap-limit 12` passed as an audit while preserving `production_ready=false`. It still reports `6` missing production requirements and ranks broad XL/Large terrain, road, route-shape, and category gaps as the top production blockers.
+
+This is a correctness repair for normal generated two-level package materialization and guard-mediated route closure. It is not a full HoMM3 production-parity claim, and it reinforces the workflow split: Godot exports fresh packages; Python validates H3M/AMAP structure, comparison, and production-gap status.

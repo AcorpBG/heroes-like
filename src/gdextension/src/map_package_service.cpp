@@ -8457,10 +8457,10 @@ int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized)
 	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
 	const int32_t area = std::max(1, width * height * level_count);
 	if (size_class_id == "homm3_extra_large") {
-		return level_count > 1 ? std::max(330, (area * 8) / 1000) : std::max(420, (area * 20) / 1000);
+		return level_count > 1 ? std::max(620, (area * 15) / 1000) : std::max(420, (area * 20) / 1000);
 	}
 	if (size_class_id == "homm3_large") {
-		return level_count > 1 ? std::max(360, (area * 16) / 1000) : std::max(180, (area * 16) / 1000);
+		return level_count > 1 ? std::max(720, (area * 31) / 1000) : std::max(180, (area * 16) / 1000);
 	}
 	if (size_class_id == "homm3_medium") {
 		return level_count > 1 ? std::max(125, (area * 12) / 1000) : std::max(105, (area * 20) / 1000);
@@ -8508,11 +8508,21 @@ int32_t native_catalog_auto_generated_town_floor(const Dictionary &normalized, i
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
 	const int32_t area = std::max(1, width * height * level_count);
+	const String water_mode = String(normalized.get("water_mode", "land"));
 	if (size_class_id == "homm3_small") {
 		return std::max(std::max(5, start_count + 2), int32_t(std::ceil(double(area) * 1.75 / 1000.0)));
 	}
 	if (size_class_id == "homm3_large") {
-		return std::max(std::max(10, start_count + 5), int32_t(std::ceil(double(area) * 0.43 / 1000.0)));
+		return std::max(std::max(14, start_count + 10), int32_t(std::ceil(double(area) * 0.56 / 1000.0)));
+	}
+	if (size_class_id == "homm3_extra_large") {
+		if (water_mode == "islands") {
+			return std::max(std::max(18, start_count + 13), int32_t(std::ceil(double(area) * 0.43 / 1000.0)));
+		}
+		if (water_mode == "normal_water") {
+			return std::max(std::max(16, start_count + 11), int32_t(std::ceil(double(area) * 0.39 / 1000.0)));
+		}
+		return std::max(std::max(10, start_count + 5), int32_t(std::ceil(double(area) * 0.24 / 1000.0)));
 	}
 	return 0;
 }
@@ -8691,61 +8701,94 @@ Dictionary apply_native_catalog_auto_two_level_object_distribution(Array &placem
 		summary["status"] = "no_placements";
 		return summary;
 	}
+	const String size_class_id = String(normalized.get("size_class_id", ""));
 	const String seed = String(normalized.get("normalized_seed", "0"));
-	const int32_t desired_underground_count = std::max<int32_t>(1, (int32_t(placements.size()) * 35) / 100);
-	Array selected;
-	Dictionary selected_lookup;
-	for (int64_t pass = 0; pass < 2 && selected.size() < desired_underground_count; ++pass) {
-		for (int64_t index = 0; index < placements.size() && selected.size() < desired_underground_count; ++index) {
-			if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
-				continue;
-			}
-			Dictionary record = Dictionary(placements[index]);
-			const String kind = String(record.get("kind", ""));
-			const bool underground_copy_eligible = kind == "decorative_obstacle" || kind == "scenic_object";
-			if (!underground_copy_eligible) {
-				continue;
-			}
-			const String placement_id = String(record.get("placement_id", ""));
-			if (selected_lookup.has(placement_id)) {
-				continue;
-			}
-			const uint32_t bucket = hash32_int(seed + String(":two_level_object_distribution:") + placement_id + String(":") + kind);
-			const bool preferred = kind == "decorative_obstacle" || kind == "scenic_object";
-			if (pass == 0 && (!preferred || bucket % 100U >= 45U)) {
-				continue;
-			}
-			selected_lookup[placement_id] = true;
-			selected.append(index);
+	std::vector<int64_t> decoration_indices;
+	std::vector<int64_t> object_indices;
+	std::vector<int64_t> reward_indices;
+	for (int64_t index = 0; index < placements.size(); ++index) {
+		if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary record = Dictionary(placements[index]);
+		const String kind = String(record.get("kind", ""));
+		if (kind == "decorative_obstacle") {
+			decoration_indices.push_back(index);
+		} else if (kind == "scenic_object") {
+			object_indices.push_back(index);
+		} else if (placement_kind_is_reward_category(kind)) {
+			reward_indices.push_back(index);
 		}
 	}
+	auto sort_by_seed = [&](std::vector<int64_t> &indices, const String &salt) {
+		std::sort(indices.begin(), indices.end(), [&](int64_t left, int64_t right) {
+			Dictionary left_record = Dictionary(placements[left]);
+			Dictionary right_record = Dictionary(placements[right]);
+			const String left_id = String(left_record.get("placement_id", "")) + String(":") + String::num_int64(left);
+			const String right_id = String(right_record.get("placement_id", "")) + String(":") + String::num_int64(right);
+			const uint32_t left_bucket = hash32_int(seed + String(":two_level_distribution:") + salt + String(":") + left_id);
+			const uint32_t right_bucket = hash32_int(seed + String(":two_level_distribution:") + salt + String(":") + right_id);
+			if (left_bucket != right_bucket) {
+				return left_bucket < right_bucket;
+			}
+			return left < right;
+		});
+	};
+	sort_by_seed(decoration_indices, "decoration");
+	sort_by_seed(object_indices, "object");
+	sort_by_seed(reward_indices, "reward");
+	const int32_t decoration_target = int32_t(decoration_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(decoration_indices.size()) * 8) / 100);
+	const int32_t object_target = int32_t(object_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(object_indices.size()) * (size_class_id == "homm3_large" ? 45 : 35)) / 100);
+	const int32_t reward_target = int32_t(reward_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(reward_indices.size()) * (size_class_id == "homm3_large" ? 45 : 30)) / 100);
+	Dictionary underground_lookup;
+	auto mark_underground = [&](const std::vector<int64_t> &indices, int32_t target, const String &category) {
+		const int32_t count = std::min<int32_t>(target, int32_t(indices.size()));
+		for (int32_t index = 0; index < count; ++index) {
+			underground_lookup[String::num_int64(indices[index])] = category;
+		}
+	};
+	mark_underground(decoration_indices, decoration_target, "decoration");
+	mark_underground(object_indices, object_target, "object");
+	mark_underground(reward_indices, reward_target, "reward");
 	Array redistributed;
-	int32_t copied_count = 0;
+	int32_t moved_decoration_count = 0;
+	int32_t moved_object_count = 0;
+	int32_t moved_reward_count = 0;
 	for (int64_t index = 0; index < placements.size(); ++index) {
 		if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
 			redistributed.append(placements[index]);
 			continue;
 		}
 		Dictionary record = Dictionary(placements[index]).duplicate(true);
-		const String placement_id = String(record.get("placement_id", ""));
-		redistributed.append(record);
-		if (selected_lookup.has(placement_id)) {
-			Dictionary underground = record.duplicate(true);
-			underground["placement_id"] = placement_id + String("_underground_") + slot_id_2(copied_count + 1);
-			set_object_record_level(underground, 1);
-			underground["two_level_distribution_policy"] = "native_catalog_auto_generalized_underground_object_copy";
-			underground["surface_source_placement_id"] = placement_id;
-			underground["signature"] = hash32_hex(canonical_variant(underground));
-			redistributed.append(underground);
-			++copied_count;
+		const String category = String(underground_lookup.get(String::num_int64(index), ""));
+		if (!category.is_empty()) {
+			set_object_record_level(record, 1);
+			record["two_level_distribution_policy"] = "native_catalog_auto_generalized_underground_object_rebalance";
+			record["two_level_distribution_category"] = category;
+			if (category == "decoration") {
+				++moved_decoration_count;
+			} else if (category == "object") {
+				++moved_object_count;
+			} else if (category == "reward") {
+				++moved_reward_count;
+			}
+		} else {
+			set_object_record_level(record, 0);
 		}
+		record["signature"] = hash32_hex(canonical_variant(record));
+		redistributed.append(record);
 	}
 	placements = redistributed;
 	summary["applied"] = true;
-	summary["target_underground_object_count"] = desired_underground_count;
-	summary["copied_to_underground_count"] = copied_count;
+	summary["target_underground_decoration_count"] = decoration_target;
+	summary["target_underground_object_count"] = object_target;
+	summary["target_underground_reward_count"] = reward_target;
+	summary["moved_underground_decoration_count"] = moved_decoration_count;
+	summary["moved_underground_object_count"] = moved_object_count;
+	summary["moved_underground_reward_count"] = moved_reward_count;
 	summary["final_counts_by_level"] = count_by_field(placements, "level");
-	summary["status"] = copied_count > 0 ? "pass" : "no_eligible_objects";
+	summary["final_counts_by_kind"] = count_by_field(placements, "kind");
+	summary["status"] = moved_decoration_count + moved_object_count + moved_reward_count > 0 ? "pass" : "no_eligible_objects";
 	summary["signature"] = hash32_hex(canonical_variant(summary));
 	return summary;
 }
@@ -13794,6 +13837,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	String top_town_guard_phase_id;
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
 	Array zones = zone_layout.get("zones", Array());
 	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
 	Array starts = player_starts.get("starts", Array());
@@ -14419,11 +14463,11 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		int32_t attempts = 0;
 		const int32_t max_attempts = std::max(generated_catalog_town_floor * 220, int32_t(zones.size()) * 256);
 		const int32_t spacing = town_spacing_radius_for_size(normalized);
-		const String generated_catalog_town_size_class_id = String(normalized.get("size_class_id", ""));
 		const int32_t margin = std::max(4, std::min(width / 3, std::max(4, spacing / 2)));
 		const int32_t span_x = std::max(1, width - margin * 2);
 		const int32_t span_y = std::max(1, height - margin * 2);
 		const uint32_t seed_bucket = hash32_int(String(normalized.get("normalized_seed", "0")) + String(":native_catalog_auto_two_level_town_floor"));
+		const int32_t desired_underground_town_count = level_count > 1 ? std::max<int32_t>(1, (generated_catalog_town_floor * 35) / 100) : 0;
 		Dictionary town_floor_used_zones;
 		for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
 			if (Variant(towns[town_index]).get_type() != Variant::DICTIONARY) {
@@ -14434,6 +14478,15 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 				town_floor_used_zones[town_zone_id] = true;
 			}
 		}
+		auto current_underground_town_count = [&]() {
+			int32_t count = 0;
+			for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+				if (Variant(towns[town_index]).get_type() == Variant::DICTIONARY && int32_t(Dictionary(towns[town_index]).get("level", 0)) > 0) {
+					++count;
+				}
+			}
+			return count;
+		};
 		while (towns.size() < generated_catalog_town_floor && attempts < max_attempts) {
 			Dictionary zone;
 			for (int64_t zone_scan = 0; zone_scan < zones.size(); ++zone_scan) {
@@ -14455,7 +14508,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			const int32_t jitter_y = int32_t(((seed_bucket / 7U) + uint32_t(attempts * 53)) % uint32_t(span_y)) - span_y / 2;
 			const int32_t target_x = std::clamp(anchor_x + jitter_x, margin, width - margin - 1);
 			const int32_t target_y = std::clamp(anchor_y + jitter_y, margin, height - margin - 1);
-			const int32_t target_level = generated_catalog_town_size_class_id == "homm3_large" ? 0 : 1;
+			const int32_t target_level = current_underground_town_count() < desired_underground_town_count ? 1 : 0;
 			if (occupied.has(level_point_key(target_x, target_y, target_level))) {
 				++attempts;
 				continue;
@@ -17778,6 +17831,39 @@ int32_t add_package_guard_closure_cluster(Array &objects, int32_t guard_index, i
 	return added;
 }
 
+int32_t add_package_guard_closure_clusters_along_path(Array &objects, const Array &path, int32_t level, int32_t width, int32_t height, const String &source, int32_t max_clusters) {
+	if (path.size() <= 2 || max_clusters <= 0) {
+		return 0;
+	}
+	const int32_t midpoint = int32_t(path.size() / 2);
+	Dictionary used_centers;
+	int32_t added = 0;
+	int32_t cluster_count = 0;
+	for (int32_t distance = 0; distance < path.size() && cluster_count < max_clusters; distance += 2) {
+		const int32_t candidates[2] = { midpoint - distance, midpoint + distance };
+		for (const int32_t candidate : candidates) {
+			if (cluster_count >= max_clusters || candidate <= 0 || candidate >= path.size() - 1 || Variant(path[candidate]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary cell = Dictionary(path[candidate]);
+			const int32_t x = int32_t(cell.get("x", 0));
+			const int32_t y = int32_t(cell.get("y", 0));
+			const String key = level_point_key(x, y, level);
+			if (used_centers.has(key)) {
+				continue;
+			}
+			used_centers[key] = true;
+			const int32_t guard_index = nearest_package_guard_index_for_cell(objects, x, y, level);
+			const int32_t added_for_cluster = add_package_guard_closure_cluster(objects, guard_index, x, y, level, width, height, source);
+			if (added_for_cluster > 0) {
+				added += added_for_cluster;
+				++cluster_count;
+			}
+		}
+	}
+	return added;
+}
+
 Dictionary package_object_route_blocked_lookup_for_level(const Array &objects, const Dictionary &terrain_blocked, int32_t level, bool include_guard_closure) {
 	Dictionary blocked;
 	Array terrain_keys = terrain_blocked.keys();
@@ -17824,6 +17910,9 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 	Dictionary cleared_lookup;
 	int32_t corridor_count = 0;
 	int32_t guard_closure_tile_count = 0;
+	int32_t guard_closure_pass_count = 0;
+	int32_t final_guarded_route_pair_count = 0;
+	int32_t observed_guarded_route_pair_count = 0;
 	for (int32_t level = 0; level < level_count; ++level) {
 		Array towns;
 		for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
@@ -17848,18 +17937,57 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 					continue;
 				}
 				remove_package_block_cells_from_clearable_objects(objects, path, cleared_lookup, level);
-				const int32_t midpoint = int32_t(path.size() / 2);
-				if (midpoint <= 0 || midpoint >= path.size() || Variant(path[midpoint]).get_type() != Variant::DICTIONARY) {
-					continue;
-				}
-				Dictionary midpoint_cell = Dictionary(path[midpoint]);
-				const int32_t mid_x = int32_t(midpoint_cell.get("x", 0));
-				const int32_t mid_y = int32_t(midpoint_cell.get("y", 0));
-				const int32_t guard_index = nearest_package_guard_index_for_cell(objects, mid_x, mid_y, level);
-				guard_closure_tile_count += add_package_guard_closure_cluster(objects, guard_index, mid_x, mid_y, level, width, height, "guard_mediated_town_route_corridor_closure_mask");
 				++corridor_count;
 			}
 		}
+		static constexpr int32_t MAX_GUARDED_CLOSURE_PASSES = 24;
+		static constexpr int32_t MAX_CLOSURE_CLUSTERS_PER_PATH = 96;
+		Dictionary object_blocked = package_object_route_blocked_lookup_for_level(objects, terrain_blocked, level, false);
+		for (int32_t pass = 0; pass < MAX_GUARDED_CLOSURE_PASSES; ++pass) {
+			bool added_this_pass = false;
+			int32_t reachable_pair_count = 0;
+			for (int64_t left_index = 0; left_index < towns.size(); ++left_index) {
+				Dictionary left = Dictionary(towns[left_index]);
+				for (int64_t right_index = left_index + 1; right_index < towns.size(); ++right_index) {
+					Dictionary right = Dictionary(towns[right_index]);
+					Array object_path = direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, object_blocked);
+					if (object_path.is_empty()) {
+						continue;
+					}
+					Dictionary guarded_blocked = package_object_route_blocked_lookup_for_level(objects, terrain_blocked, level, true);
+					Array guarded_path = direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, guarded_blocked);
+					if (guarded_path.is_empty()) {
+						continue;
+					}
+					++reachable_pair_count;
+					const int32_t added_for_path = add_package_guard_closure_clusters_along_path(objects, guarded_path, level, width, height, "iterative_guard_mediated_town_route_closure_mask", MAX_CLOSURE_CLUSTERS_PER_PATH);
+					if (added_for_path > 0) {
+						guard_closure_tile_count += added_for_path;
+						added_this_pass = true;
+					}
+				}
+			}
+			observed_guarded_route_pair_count += reachable_pair_count;
+			guard_closure_pass_count = std::max(guard_closure_pass_count, pass + 1);
+			if (reachable_pair_count <= 0 || !added_this_pass) {
+				break;
+			}
+		}
+		int32_t remaining_level_pairs = 0;
+		for (int64_t left_index = 0; left_index < towns.size(); ++left_index) {
+			Dictionary left = Dictionary(towns[left_index]);
+			for (int64_t right_index = left_index + 1; right_index < towns.size(); ++right_index) {
+				Dictionary right = Dictionary(towns[right_index]);
+				if (direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, object_blocked).is_empty()) {
+					continue;
+				}
+				Dictionary guarded_blocked = package_object_route_blocked_lookup_for_level(objects, terrain_blocked, level, true);
+				if (!direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, guarded_blocked).is_empty()) {
+					++remaining_level_pairs;
+				}
+			}
+		}
+		final_guarded_route_pair_count += remaining_level_pairs;
 	}
 	if (corridor_count <= 0 && cleared_lookup.is_empty() && guard_closure_tile_count <= 0) {
 		return;
@@ -17873,6 +18001,9 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 		object["package_guarded_corridor_count"] = corridor_count;
 		object["package_guarded_corridor_cleared_tile_total"] = cleared_lookup.size();
 		object["package_guarded_corridor_guard_closure_tile_total"] = guard_closure_tile_count;
+		object["package_guarded_corridor_guard_closure_pass_count"] = guard_closure_pass_count;
+		object["package_guarded_corridor_observed_guarded_route_pair_count"] = observed_guarded_route_pair_count;
+		object["package_guarded_corridor_remaining_guarded_route_pair_count"] = final_guarded_route_pair_count;
 		object["package_guarded_corridor_materialization_policy"] = "town routes are allowed through decorative/scenic filler and then closed by guard package masks so permanent blockers do not replace HoMM3-style guard-mediated crossings";
 		objects[object_index] = object;
 	}
