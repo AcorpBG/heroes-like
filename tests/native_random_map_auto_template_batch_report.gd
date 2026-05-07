@@ -26,6 +26,7 @@ const OWNER_MEDIUM_NORMAL_WATER_PACKAGE_OBJECTS := 754
 const OWNER_MEDIUM_NORMAL_WATER_GENERATED_OBJECTS := 667
 const OWNER_MEDIUM_NORMAL_WATER_TOWNS := 7
 const OWNER_MEDIUM_NORMAL_WATER_GUARDS := 80
+const OWNER_MEDIUM_NORMAL_WATER_PACKAGE_ROADS := 221
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -180,8 +181,9 @@ func _run_case(service: Variant, catalog: Dictionary, case_record: Dictionary) -
 		if object_count != OWNER_MEDIUM_NORMAL_WATER_PACKAGE_OBJECTS \
 				or generated_object_count != OWNER_MEDIUM_NORMAL_WATER_GENERATED_OBJECTS \
 				or int(generated.get("town_records", []).size()) != OWNER_MEDIUM_NORMAL_WATER_TOWNS \
-				or int(generated.get("guard_records", []).size()) != OWNER_MEDIUM_NORMAL_WATER_GUARDS:
-			_fail("%s normal-water owner count targets drifted: package_objects=%d/%d generated_objects=%d/%d towns=%d/%d guards=%d/%d." % [
+				or int(generated.get("guard_records", []).size()) != OWNER_MEDIUM_NORMAL_WATER_GUARDS \
+				or road_cells != OWNER_MEDIUM_NORMAL_WATER_PACKAGE_ROADS:
+			_fail("%s normal-water owner count targets drifted: package_objects=%d/%d generated_objects=%d/%d towns=%d/%d guards=%d/%d roads=%d/%d." % [
 				String(case_record.get("id", "")),
 				object_count,
 				OWNER_MEDIUM_NORMAL_WATER_PACKAGE_OBJECTS,
@@ -191,6 +193,8 @@ func _run_case(service: Variant, catalog: Dictionary, case_record: Dictionary) -
 				OWNER_MEDIUM_NORMAL_WATER_TOWNS,
 				int(generated.get("guard_records", []).size()),
 				OWNER_MEDIUM_NORMAL_WATER_GUARDS,
+				road_cells,
+				OWNER_MEDIUM_NORMAL_WATER_PACKAGE_ROADS,
 			])
 			return {}
 	var generated_floor := _generated_object_density_floor(String(case_record.get("size_class_id", "")))

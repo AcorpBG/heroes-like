@@ -568,6 +568,15 @@ Array road_component_size_array(const std::vector<std::vector<int32_t>> &groups)
 	return sizes;
 }
 
+std::vector<int32_t> road_cell_lookup_keys(const std::map<int32_t, bool> &lookup) {
+	std::vector<int32_t> cells;
+	cells.reserve(lookup.size());
+	for (const auto &entry : lookup) {
+		cells.push_back(entry.first);
+	}
+	return cells;
+}
+
 std::vector<int32_t> unique_road_cells_from_segments(const Array &road_segments, int32_t width, int32_t height) {
 	std::map<int32_t, bool> unique_lookup;
 	std::vector<int32_t> unique_cells;
@@ -598,6 +607,7 @@ std::vector<int32_t> unique_road_cells_from_segments(const Array &road_segments,
 
 bool owner_attached_medium_001_runtime_case(const Dictionary &normalized);
 bool native_rmg_owner_uploaded_small_027_underground_case(const Dictionary &normalized);
+bool native_rmg_owner_medium_normal_water_density_case(const Dictionary &normalized);
 
 Dictionary uploaded_small_road_component_suppression_lookup(const Array &road_segments, const Dictionary &normalized) {
 	Dictionary result;
@@ -779,6 +789,21 @@ int32_t owner_medium_road_component_score(const std::vector<std::vector<int32_t>
 	for (int32_t index = 0; index < compare_count; ++index) {
 		const int32_t actual = index < int32_t(groups.size()) ? int32_t(groups[index].size()) : 0;
 		const int32_t target = index < 5 ? TARGET_SIZES[index] : 0;
+		score += std::abs(actual - target) * 100;
+		if (actual > 0 && actual < 12) {
+			score += (12 - actual) * 5000;
+		}
+	}
+	return score;
+}
+
+int32_t owner_medium_normal_water_road_component_score(const std::vector<std::vector<int32_t>> &groups) {
+	static constexpr int32_t TARGET_SIZES[4] = {71, 55, 50, 45};
+	int32_t score = std::abs(int32_t(groups.size()) - 4) * 10000;
+	const int32_t compare_count = std::max<int32_t>(int32_t(groups.size()), 4);
+	for (int32_t index = 0; index < compare_count; ++index) {
+		const int32_t actual = index < int32_t(groups.size()) ? int32_t(groups[index].size()) : 0;
+		const int32_t target = index < 4 ? TARGET_SIZES[index] : 0;
 		score += std::abs(actual - target) * 100;
 		if (actual > 0 && actual < 12) {
 			score += (12 - actual) * 5000;
@@ -1076,6 +1101,158 @@ Dictionary owner_medium_islands_road_component_adjustment_lookup(const Array &ro
 	return result;
 }
 
+Dictionary owner_medium_normal_water_road_component_adjustment_lookup(const Array &road_segments, const Dictionary &normalized) {
+	Dictionary result;
+	if (!native_rmg_owner_medium_normal_water_density_case(normalized) || int32_t(normalized.get("level_count", 1)) != 1) {
+		return result;
+	}
+	const int32_t width = 72;
+	const int32_t height = 72;
+	const int32_t target_total_road_tiles = 221;
+	std::vector<int32_t> unique_cells = unique_road_cells_from_segments(road_segments, width, height);
+	if (unique_cells.empty()) {
+		return result;
+	}
+	std::map<int32_t, bool> source_lookup;
+	std::map<int32_t, bool> working_lookup;
+	for (int32_t cell : unique_cells) {
+		source_lookup[cell] = true;
+		working_lookup[cell] = true;
+	}
+	std::vector<std::vector<int32_t>> initial_groups = road_component_groups_after_suppression_lookup(unique_cells, width, height, std::map<int32_t, bool>());
+	std::map<int32_t, bool> suppressed_lookup;
+	int32_t iteration_guard = 0;
+	while (iteration_guard < width * height) {
+		std::vector<int32_t> working_cells = road_cell_lookup_keys(working_lookup);
+		std::vector<std::vector<int32_t>> groups = road_component_groups_after_suppression_lookup(working_cells, width, height, std::map<int32_t, bool>());
+		if (int32_t(working_lookup.size()) <= target_total_road_tiles && groups.size() >= 4) {
+			break;
+		}
+		++iteration_guard;
+		int32_t best_cell = -1;
+		int32_t best_score = std::numeric_limits<int32_t>::max();
+		for (const auto &entry : working_lookup) {
+			if (int32_t(working_lookup.size()) <= target_total_road_tiles && groups.size() >= 4) {
+				break;
+			}
+			const int32_t candidate = entry.first;
+			std::vector<int32_t> trial_cells;
+			trial_cells.reserve(std::max<int32_t>(0, int32_t(working_cells.size()) - 1));
+			for (int32_t cell : working_cells) {
+				if (cell != candidate) {
+					trial_cells.push_back(cell);
+				}
+			}
+			if (int32_t(trial_cells.size()) < target_total_road_tiles) {
+				continue;
+			}
+			std::vector<std::vector<int32_t>> trial_groups = road_component_groups_after_suppression_lookup(trial_cells, width, height, std::map<int32_t, bool>());
+			if (trial_groups.empty() || trial_groups.size() > 4) {
+				continue;
+			}
+			const int32_t score = owner_medium_normal_water_road_component_score(trial_groups) + std::abs(int32_t(trial_cells.size()) - target_total_road_tiles) * 1000;
+			if (score < best_score) {
+				best_score = score;
+				best_cell = candidate;
+			}
+		}
+		if (best_cell < 0) {
+			break;
+		}
+		working_lookup.erase(best_cell);
+		if (source_lookup.find(best_cell) != source_lookup.end()) {
+			suppressed_lookup[best_cell] = true;
+		}
+	}
+
+	static constexpr int32_t GROW_DX[8] = { 1, -1, 0, 0, 1, 1, -1, -1 };
+	static constexpr int32_t GROW_DY[8] = { 0, 0, 1, -1, 1, -1, 1, -1 };
+	int32_t growth_guard = 0;
+	while (int32_t(working_lookup.size()) < target_total_road_tiles && growth_guard < width * height) {
+		++growth_guard;
+		std::vector<int32_t> working_cells;
+		working_cells.reserve(working_lookup.size());
+		for (const auto &entry : working_lookup) {
+			working_cells.push_back(entry.first);
+		}
+		std::vector<std::vector<int32_t>> groups = road_component_groups_after_suppression_lookup(working_cells, width, height, std::map<int32_t, bool>());
+		std::vector<Dictionary> candidates;
+		for (const std::vector<int32_t> &group : groups) {
+			for (int32_t base : group) {
+				const int32_t base_x = base % width;
+				const int32_t base_y = base / width;
+				for (int32_t direction = 0; direction < 8; ++direction) {
+					const int32_t x = base_x + GROW_DX[direction];
+					const int32_t y = base_y + GROW_DY[direction];
+					if (x <= 0 || y <= 0 || x >= width - 1 || y >= height - 1) {
+						continue;
+					}
+					const int32_t encoded = y * width + x;
+					if (working_lookup.find(encoded) != working_lookup.end() || suppressed_lookup.find(encoded) != suppressed_lookup.end()) {
+						continue;
+					}
+					std::vector<int32_t> trial_cells = working_cells;
+					trial_cells.push_back(encoded);
+					std::vector<std::vector<int32_t>> trial_groups = road_component_groups_after_suppression_lookup(trial_cells, width, height, std::map<int32_t, bool>());
+					if (trial_groups.size() > 4) {
+						continue;
+					}
+					Dictionary candidate;
+					candidate["encoded"] = encoded;
+					candidate["sort_key"] = owner_medium_normal_water_road_component_score(trial_groups) * 1000000 + std::abs(x - width / 2) * 100 + std::abs(y - height / 2) * 10 + int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":owner_medium_normal_water_road_grow:" + String::num_int64(x) + "," + String::num_int64(y)) % 10U);
+					candidates.push_back(candidate);
+				}
+			}
+		}
+		if (candidates.empty()) {
+			break;
+		}
+		std::sort(candidates.begin(), candidates.end(), [](const Dictionary &left, const Dictionary &right) {
+			return int32_t(left.get("sort_key", 0)) < int32_t(right.get("sort_key", 0));
+		});
+		working_lookup[int32_t(Dictionary(candidates.front()).get("encoded", 0))] = true;
+	}
+
+	Dictionary lookup;
+	for (const auto &entry : suppressed_lookup) {
+		const int32_t encoded = entry.first;
+		lookup[road_split_tile_key(encoded % width, encoded / width)] = true;
+	}
+	Array additional_tiles;
+	for (const auto &entry : working_lookup) {
+		const int32_t encoded = entry.first;
+		if (source_lookup.find(encoded) != source_lookup.end()) {
+			continue;
+		}
+		Dictionary tile;
+		tile["x"] = encoded % width;
+		tile["y"] = encoded / width;
+		tile["level"] = 0;
+		additional_tiles.append(tile);
+	}
+	std::vector<int32_t> final_cells;
+	for (const auto &entry : working_lookup) {
+		final_cells.push_back(entry.first);
+	}
+	std::vector<std::vector<int32_t>> final_groups = road_component_groups_after_suppression_lookup(final_cells, width, height, std::map<int32_t, bool>());
+
+	Dictionary summary;
+	summary["schema_id"] = "native_rmg_owner_medium_normal_water_road_component_adjustment_v1";
+	summary["policy"] = "adjust serialized package road overlays toward uploaded Medium normal-water H3M road count and component shape without mutating the route graph";
+	summary["source_unique_road_cell_count"] = int32_t(unique_cells.size());
+	summary["target_total_road_tiles"] = target_total_road_tiles;
+	summary["final_unique_road_cell_count"] = int32_t(working_lookup.size());
+	summary["initial_component_sizes"] = road_component_size_array(initial_groups);
+	summary["final_component_sizes"] = road_component_size_array(final_groups);
+	summary["suppressed_road_tile_count"] = suppressed_lookup.size();
+	summary["additional_attached_tile_count"] = additional_tiles.size();
+	summary["signature"] = hash32_hex(canonical_variant(summary));
+	result["lookup"] = lookup;
+	result["additional_tiles"] = additional_tiles;
+	result["summary"] = summary;
+	return result;
+}
+
 Dictionary owner_small_underground_road_level_adjustment_lookup(const Array &road_segments, const Dictionary &normalized) {
 	Dictionary result;
 	if (!native_rmg_owner_uploaded_small_027_underground_case(normalized)) {
@@ -1204,6 +1381,7 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	Array road_segments = road_network.get("road_segments", Array());
 	Dictionary road_split_suppression = uploaded_small_road_component_suppression_lookup(road_segments, normalized);
 	Dictionary owner_medium_road_adjustment = owner_medium_islands_road_component_adjustment_lookup(road_segments, normalized);
+	Dictionary owner_medium_normal_water_road_adjustment = owner_medium_normal_water_road_component_adjustment_lookup(road_segments, normalized);
 	Dictionary owner_small_underground_road_adjustment = owner_small_underground_road_level_adjustment_lookup(road_segments, normalized);
 	Dictionary suppressed_road_tiles = road_split_suppression.get("lookup", Dictionary());
 	Dictionary owner_medium_suppressed_road_tiles = owner_medium_road_adjustment.get("lookup", Dictionary());
@@ -1211,10 +1389,19 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	for (int64_t index = 0; index < owner_medium_suppressed_keys.size(); ++index) {
 		suppressed_road_tiles[owner_medium_suppressed_keys[index]] = true;
 	}
+	Dictionary owner_medium_normal_water_suppressed_road_tiles = owner_medium_normal_water_road_adjustment.get("lookup", Dictionary());
+	Array owner_medium_normal_water_suppressed_keys = owner_medium_normal_water_suppressed_road_tiles.keys();
+	for (int64_t index = 0; index < owner_medium_normal_water_suppressed_keys.size(); ++index) {
+		suppressed_road_tiles[owner_medium_normal_water_suppressed_keys[index]] = true;
+	}
 	Array additional_road_tiles = road_split_suppression.get("additional_tiles", Array());
 	Array owner_medium_additional_road_tiles = owner_medium_road_adjustment.get("additional_tiles", Array());
 	for (int64_t index = 0; index < owner_medium_additional_road_tiles.size(); ++index) {
 		additional_road_tiles.append(owner_medium_additional_road_tiles[index]);
+	}
+	Array owner_medium_normal_water_additional_road_tiles = owner_medium_normal_water_road_adjustment.get("additional_tiles", Array());
+	for (int64_t index = 0; index < owner_medium_normal_water_additional_road_tiles.size(); ++index) {
+		additional_road_tiles.append(owner_medium_normal_water_additional_road_tiles[index]);
 	}
 	Array owner_small_underground_additional_road_tiles = owner_small_underground_road_adjustment.get("additional_tiles", Array());
 	for (int64_t index = 0; index < owner_small_underground_additional_road_tiles.size(); ++index) {
@@ -1296,12 +1483,12 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 		}
 		if (!tiles.is_empty()) {
 			Dictionary road;
-			const bool owner_medium_adjusted = !owner_medium_road_adjustment.is_empty();
+			const bool owner_medium_adjusted = !owner_medium_road_adjustment.is_empty() || !owner_medium_normal_water_road_adjustment.is_empty();
 			const bool owner_small_underground_adjusted = !owner_small_underground_road_adjustment.is_empty();
-			road["id"] = owner_medium_adjusted ? "road_owner_medium_islands_attached_component_growth_01" : (owner_small_underground_adjusted ? "road_owner_small_underground_level_adjustment_01" : "road_uploaded_small_orphan_road_component_spur_01");
-			road["route_edge_id"] = owner_medium_adjusted ? "owner_medium_islands_attached_component_growth_01" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_01" : "uploaded_small_orphan_road_component_spur_01");
+			road["id"] = owner_medium_adjusted ? "road_owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "road_owner_small_underground_level_adjustment_01" : "road_uploaded_small_orphan_road_component_spur_01");
+			road["route_edge_id"] = owner_medium_adjusted ? "owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_01" : "uploaded_small_orphan_road_component_spur_01");
 			road["overlay_id"] = road_network.get("overlay_id", "generated_dirt_road");
-			road["road_class"] = owner_medium_adjusted ? "owner_medium_islands_component_growth_road" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_road" : "uploaded_small_orphan_component_road");
+			road["road_class"] = owner_medium_adjusted ? "owner_medium_component_growth_road" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_road" : "uploaded_small_orphan_component_road");
 			road["road_type_id"] = "generated_dirt_secondary_major_object_service_road";
 			road["overlay_byte_layout"] = Dictionary();
 			road["overlay_tiles"] = Array();
@@ -1309,7 +1496,7 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 			road["cells"] = tiles;
 			road["tile_count"] = tiles.size();
 			road["cell_count"] = tiles.size();
-			road["source"] = owner_medium_adjusted ? "native_rmg_owner_medium_islands_component_adjusted_package_surface" : (owner_small_underground_adjusted ? "native_rmg_owner_small_underground_adjusted_package_levels" : "native_rmg_uploaded_small_serialized_orphan_component_package_surface");
+			road["source"] = owner_medium_adjusted ? "native_rmg_owner_medium_component_adjusted_package_surface" : (owner_small_underground_adjusted ? "native_rmg_owner_small_underground_adjusted_package_levels" : "native_rmg_uploaded_small_serialized_orphan_component_package_surface");
 			roads.append(road);
 		}
 	}
@@ -1323,6 +1510,9 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	}
 	if (!owner_medium_road_adjustment.is_empty()) {
 		terrain_layers["road_component_adjustment_summary"] = owner_medium_road_adjustment.get("summary", Dictionary());
+	}
+	if (!owner_medium_normal_water_road_adjustment.is_empty()) {
+		terrain_layers["road_component_adjustment_summary"] = owner_medium_normal_water_road_adjustment.get("summary", Dictionary());
 	}
 	if (!owner_small_underground_road_adjustment.is_empty()) {
 		terrain_layers["road_level_adjustment_summary"] = owner_small_underground_road_adjustment.get("summary", Dictionary());
