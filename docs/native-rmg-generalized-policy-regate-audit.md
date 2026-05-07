@@ -625,3 +625,19 @@ Validation evidence:
 - The remaining five owner cases exported `5/5` packages. Combined with the 13-case set into `.artifacts/rmg_native_batch_export_guard_body_full`, `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_guard_body_full --failure-limit 8` passed with `18/18` owner H3Ms, `18/18` native AMAPs, `18` matched comparisons, total parse time about `11.414s`, and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
 
 This clears the current fast guard-mediated closure blocker. It does not close full production RMG parity: visual quality, exact game-feel parity, generated-object semantics, performance, and broader owner corpus coverage remain active production work.
+
+## Tightened Python Validation And Timing Workflow
+
+The owner-requested testing split is now one workflow instead of a loose convention:
+
+- `tools/rmg_python_validation_gate.py` remains the full post-export correctness command. It compiles the Python RMG tooling, validates owner H3M and native AMAP packages directly, requires full owner/native coverage by default, and keeps the guard-mediated closure-shape gate enabled by default.
+- The same command now summarizes native export timing manifests when available. If the selected validation AMAP directory is a manually combined evidence set without a manifest, it reports that fact and falls back to the newest manifest-bearing export artifact for timing only.
+- `tools/rmg_export_timing_summary.py --latest-amap-artifact` now selects the newest export artifact that actually contains `manifest.json`, instead of failing when the newest validation evidence directory has AMAP files but no timing manifest.
+
+Validation evidence:
+
+- `python3 -m py_compile tools/rmg_fast_audit.py tools/rmg_fast_validation.py tools/rmg_python_validation_gate.py tools/rmg_export_timing_summary.py` passed.
+- `python3 tools/rmg_export_timing_summary.py --latest-amap-artifact --limit 4` passed using `.artifacts/rmg_native_batch_export_guard_body_remaining_cases/manifest.json`, reporting `5/5` exported, `0` failed, and `95576ms` total wall time.
+- `python3 tools/rmg_python_validation_gate.py --failure-limit 4 --timing-limit 4 --require-timing-summary` passed without starting Godot. It validated `.artifacts/rmg_native_batch_export_guard_body_full` with `18/18` owner H3Ms, `18/18` native AMAPs, `18` matched comparisons, and `0` parse/native/density/policy/topology/coverage/closure-shape gaps, then reported timing from the newest manifest-bearing export as a clearly labeled fallback because the validated combined AMAP directory has no manifest.
+
+This keeps Godot out of H3M/AMAP parsing, validation, comparison, and timing summaries. Godot remains necessary only to create fresh native packages through the extension/export path and for actual editor/runtime smoke coverage.
