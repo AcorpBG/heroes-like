@@ -31,6 +31,42 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-owner-medium-normal-water-corpus-structural-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Promote the uploaded Medium normal-water owner sample into the hard owner-corpus native comparison gate and correct the remaining structural road, town-spacing, and guard-count gaps exposed by that gate.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- local owner evidence under `maps/h3m-maps/M-NormalW-4players.h3m`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- `owner_discovered_m_normalw_4players` is mapped to the player-facing native catalog-auto Medium normal-water comparison path.
+- The owner-corpus hard mapped comparison increases from three to four passing mapped samples, with unmapped parsed samples reduced to 17.
+- Native Medium normal-water package counts match owner evidence for package objects, towns, guards, and road cells.
+- Native Medium normal-water road component sizes match owner topology for the uploaded sample: `[71, 55, 50, 45]`.
+- Native Medium normal-water nearest town spacing meets or exceeds the owner sample spacing while preserving the owner-count target.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No broad normal-water parity claim across the remaining uploaded samples.
+- No full HoMM3 production parity claim; 17 parsed uploaded samples remain unmapped.
+- No HoMM3 copyrighted asset/DEF import.
+validationResults:
+- Native GDExtension rebuilt successfully with `cmake --build .artifacts/map_persistence_native_build --parallel 2`.
+- `tests/native_random_map_auto_template_batch_report.tscn` passed after the structural fix; `medium_normal_water_seed_a` reports 754 package objects, 667 generated objects, 7 towns, 80 guards, 221 road cells, 2,163 water tiles, and nearest town distance 25.
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` passed with four mapped comparisons passing; the Medium normal-water mapped comparison reports zero deltas for object, town, guard, and road counts, road component sizes `[71, 55, 50, 45]`, and `semantic_layout_match`.
+- `tests/native_random_map_production_parity_completion_audit_report.tscn` passed with `production_ready false`, preserving the broad parity gap while proving representative defaults still pass.
+- `python3 tests/validate_repo.py` passed.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-owner-medium-normal-water-road-count-correction-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`

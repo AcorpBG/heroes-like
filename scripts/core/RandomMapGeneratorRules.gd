@@ -13173,8 +13173,8 @@ static func _water_cells_for_level(width: int, height: int, water_mode: String, 
 	if water_mode == "normal_water":
 		for y in range(height):
 			for x in range(width):
-				var centered_x := abs(float(x) - float(width - 1) * 0.5) / max(1.0, float(width))
-				var centered_y := abs(float(y) - float(height - 1) * 0.5) / max(1.0, float(height))
+				var centered_x: float = abs(float(x) - float(width - 1) * 0.5) / max(1.0, float(width))
+				var centered_y: float = abs(float(y) - float(height - 1) * 0.5) / max(1.0, float(height))
 				if centered_x + centered_y > 0.42 and ((x * 37 + y * 53 + width * 11 + height * 7) % 5) < 2:
 					cells.append(_point_dict(x, y))
 		return cells
