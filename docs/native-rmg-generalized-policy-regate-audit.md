@@ -641,3 +641,19 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --failure-limit 4 --timing-limit 4 --require-timing-summary` passed without starting Godot. It validated `.artifacts/rmg_native_batch_export_guard_body_full` with `18/18` owner H3Ms, `18/18` native AMAPs, `18` matched comparisons, and `0` parse/native/density/policy/topology/coverage/closure-shape gaps, then reported timing from the newest manifest-bearing export as a clearly labeled fallback because the validated combined AMAP directory has no manifest.
 
 This keeps Godot out of H3M/AMAP parsing, validation, comparison, and timing summaries. Godot remains necessary only to create fresh native packages through the extension/export path and for actual editor/runtime smoke coverage.
+
+## Python Production Gap Audit Boundary
+
+The green fast gate is a structural correctness signal, not a production-ready claim. To keep that distinction visible without running a slow Godot report, `tools/rmg_production_gap_audit.py` now builds a prompt-to-artifact checklist from the same owner H3M and native AMAP evidence:
+
+- owner H3M parsing, native AMAP coverage, generalized structural gates, owner diagnostic similarity, road-shape similarity, town distribution similarity, object/guard/reward category similarity, route-shape similarity, and full export timing evidence;
+- a ranked case list by diagnostic severity, combining object-count deltas, road-cell deltas, route-shape deltas, and category absolute deltas;
+- `production_ready: false` whenever the audit finds uncovered or weakly verified requirements.
+
+Validation evidence:
+
+- `python3 -m py_compile tools/rmg_production_gap_audit.py tools/rmg_fast_validation.py tools/rmg_fast_audit.py tools/rmg_export_timing_summary.py` passed.
+- `python3 tools/rmg_production_gap_audit.py --summary --gap-limit 10` passed as an audit and reported `production_ready=false`, `18/18` owner/native matches, fast gate `pass`, and `5` missing production requirements: owner diagnostic similarity, road-shape similarity, town density/distribution similarity, object/guard/reward category similarity, and route-shape similarity.
+- The top current diagnostic blockers are XL and Large cases, led by `xl_islands_2levels`, `xl_nowater`, `xl_water_2levels`, and `l_nowater_randomplayers_nounder`.
+
+The next production work should use this audit as the no-overclaim boundary. The immediate highest-value implementation target is broad Large/XL object/category and route/road shape, not more Godot parser/report infrastructure.

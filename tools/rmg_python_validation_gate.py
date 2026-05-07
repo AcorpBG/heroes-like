@@ -26,6 +26,7 @@ PYTHON_GATE_MODULES = [
     ROOT / "tools" / "rmg_fast_audit.py",
     ROOT / "tools" / "rmg_fast_validation.py",
     ROOT / "tools" / "rmg_export_timing_summary.py",
+    ROOT / "tools" / "rmg_production_gap_audit.py",
 ]
 
 
