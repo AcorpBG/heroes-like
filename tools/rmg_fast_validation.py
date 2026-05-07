@@ -22,6 +22,7 @@ import rmg_fast_audit
 
 DEFAULT_OWNER_DIR = Path("maps/h3m-maps")
 DEFAULT_NATIVE_DIR = Path(".artifacts/rmg_native_batch_export_current")
+DEFAULT_ARTIFACT_ROOT = Path(".artifacts")
 DEFAULT_DENSITY_FLOOR_RATIO = 0.70
 DEFAULT_ROAD_FLOOR_RATIO = 0.65
 DEFAULT_GUARD_REWARD_RATIO_FLOOR_RATIO = 0.60
@@ -37,6 +38,7 @@ DEFAULT_CATEGORY_FLOOR_RATIOS = {
     "town": 0.65,
 }
 CASE_ID_PATTERN = re.compile(r"[^a-z0-9]+")
+NATIVE_EXPORT_DIR_PREFIX = "rmg_native_batch_export"
 
 
 def case_id_from_path(path: Path) -> str:
@@ -50,6 +52,20 @@ def parse_paths(paths: list[Path], parser_fn: Any) -> tuple[list[dict[str, Any]]
     start = time.perf_counter()
     parsed = rmg_fast_audit.parse_many(paths, parser_fn)
     return parsed, round(time.perf_counter() - start, 3)
+
+
+def latest_native_export_dir(artifact_root: Path) -> Path | None:
+    if not artifact_root.exists() or not artifact_root.is_dir():
+        return None
+    candidates: list[Path] = []
+    for path in artifact_root.iterdir():
+        if not path.is_dir() or not path.name.startswith(NATIVE_EXPORT_DIR_PREFIX):
+            continue
+        if any(path.glob("*.amap")):
+            candidates.append(path)
+    if not candidates:
+        return None
+    return max(candidates, key=lambda path: path.stat().st_mtime)
 
 
 def group_key(metrics: dict[str, Any]) -> str:
@@ -437,12 +453,32 @@ def sample_group_summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def build_report(args: argparse.Namespace) -> dict[str, Any]:
+    requested_native_dir = args.amap_dir
+    native_dir = args.amap_dir
+    native_artifact_autodiscovered = False
+    native_artifact_discovery_error = ""
+    if args.latest_amap_artifact:
+        latest_dir = latest_native_export_dir(args.artifact_root)
+        if latest_dir is None:
+            native_artifact_discovery_error = "no_native_batch_export_with_amap_files"
+            native_dir = None
+        else:
+            native_dir = latest_dir
+            native_artifact_autodiscovered = True
     owner_paths = list(args.h3m_dir.rglob("*.h3m")) if args.h3m_dir and args.h3m_dir.exists() else []
-    native_paths = list(args.amap_dir.rglob("*.amap")) if args.amap_dir and args.amap_dir.exists() else []
+    native_paths = list(native_dir.rglob("*.amap")) if native_dir and native_dir.exists() else []
     owner_samples, owner_seconds = parse_paths(owner_paths, rmg_fast_audit.parse_h3m)
     native_samples, native_seconds = parse_paths(native_paths, rmg_fast_audit.load_amap)
 
     parse_failures = compact_parse_failures(owner_samples) + compact_parse_failures(native_samples)
+    if native_artifact_discovery_error:
+        parse_failures.append(
+            {
+                "path": str(args.artifact_root),
+                "status": "missing_native_artifact",
+                "error": native_artifact_discovery_error,
+            }
+        )
     owners_by_case = {
         case_id_from_path(Path(str(sample.get("path", "")))): sample
         for sample in owner_samples
@@ -477,7 +513,12 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         "status": status,
         "inputs": {
             "h3m_dir": str(args.h3m_dir) if args.h3m_dir else "",
-            "amap_dir": str(args.amap_dir) if args.amap_dir else "",
+            "amap_dir": str(native_dir) if native_dir else "",
+            "requested_amap_dir": str(requested_native_dir) if requested_native_dir else "",
+            "latest_amap_artifact": bool(args.latest_amap_artifact),
+            "artifact_root": str(args.artifact_root),
+            "native_artifact_autodiscovered": native_artifact_autodiscovered,
+            "native_artifact_discovery_error": native_artifact_discovery_error,
             "density_floor_ratio": args.density_floor_ratio,
             "density_gate_enabled": not args.no_density_gate,
             "policy_gate_enabled": not args.no_policy_gate,
@@ -523,6 +564,51 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+def compact_summary(report: dict[str, Any], failure_limit: int) -> str:
+    summary = report.get("summary", {})
+    timings = report.get("timings_seconds", {})
+    inputs = report.get("inputs", {})
+    failures = report.get("failures", {})
+    lines = [
+        "RMG_FAST_VALIDATION status=%s" % report.get("status", "unknown"),
+        "inputs owner=%s native=%s" % (inputs.get("h3m_dir", ""), inputs.get("amap_dir", "")),
+        "samples owner=%s/%s native=%s/%s matched=%s" % (
+            summary.get("owner_parsed_count", 0),
+            summary.get("owner_sample_count", 0),
+            summary.get("native_parsed_count", 0),
+            summary.get("native_sample_count", 0),
+            summary.get("matched_comparison_count", 0),
+        ),
+        "timings owner_h3m=%ss native_amap=%ss total_parse=%ss" % (
+            timings.get("owner_h3m_parse", 0),
+            timings.get("native_amap_parse", 0),
+            timings.get("total_parse", 0),
+        ),
+        "gaps parse=%s native_rules=%s density=%s policy=%s topology=%s" % (
+            summary.get("parse_failure_count", 0),
+            summary.get("native_rule_failure_count", 0),
+            summary.get("density_gap_count", 0),
+            summary.get("policy_gap_count", 0),
+            summary.get("topology_gap_count", 0),
+        ),
+    ]
+    if inputs.get("native_artifact_autodiscovered", False):
+        lines.append("artifact autodiscovered=true root=%s" % inputs.get("artifact_root", ""))
+    elif inputs.get("latest_amap_artifact", False):
+        lines.append("artifact autodiscovered=false error=%s" % inputs.get("native_artifact_discovery_error", ""))
+
+    remaining = max(0, failure_limit)
+    for bucket_id in ["parse", "native_rules", "density_gaps", "policy_gaps", "topology_gaps"]:
+        bucket = failures.get(bucket_id, [])
+        if not isinstance(bucket, list) or not bucket or remaining <= 0:
+            continue
+        lines.append("%s:" % bucket_id)
+        for failure in bucket[:remaining]:
+            lines.append("  %s" % json.dumps(failure, sort_keys=True))
+        remaining -= min(remaining, len(bucket))
+    return "\n".join(lines)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--h3m-dir", "--owner-dir", dest="h3m_dir", type=Path, default=DEFAULT_OWNER_DIR, help="Owner H3M evidence directory")
@@ -536,12 +622,19 @@ def main() -> int:
     parser.add_argument("--no-density-gate", action="store_true", help="Report density metrics but do not fail on owner-density underfill")
     parser.add_argument("--no-policy-gate", action="store_true", help="Report policy metrics but do not fail on category, road, and guard/reward underfill")
     parser.add_argument("--no-topology-gate", action="store_true", help="Report road topology metrics but do not fail on road component shape gaps")
+    parser.add_argument("--latest-amap-artifact", action="store_true", help="Validate against the newest .artifacts/rmg_native_batch_export* directory containing .amap files")
+    parser.add_argument("--artifact-root", type=Path, default=DEFAULT_ARTIFACT_ROOT, help="Artifact root searched by --latest-amap-artifact")
     parser.add_argument("--allow-failures", action="store_true", help="Return success while still reporting parse/rule/density/policy failures")
+    parser.add_argument("--summary", action="store_true", help="Print a compact human-readable summary instead of JSON")
+    parser.add_argument("--failure-limit", type=int, default=8, help="Maximum individual failures to include in --summary output")
     parser.add_argument("--pretty", action="store_true", help="Pretty-print JSON")
     args = parser.parse_args()
 
     result = build_report(args)
-    print(json.dumps(result, indent=2 if args.pretty else None, sort_keys=True))
+    if args.summary:
+        print(compact_summary(result, args.failure_limit))
+    else:
+        print(json.dumps(result, indent=2 if args.pretty else None, sort_keys=True))
     if result.get("status") == "pass" or args.allow_failures:
         return 0
     return 1

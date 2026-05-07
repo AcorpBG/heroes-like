@@ -463,3 +463,23 @@ Validation evidence:
 - `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_auto_template_batch_report.tscn` passed with `seed_specific_runtime_override_case_count: 0`.
 
 The full export now takes about eight and a half minutes with the denser XL object placement, so the next performance target should profile and optimize native placement loops without moving correctness comparison back into Godot.
+
+## Implemented Fast Validation Workflow Tightening
+
+The fast validator now supports the intended default loop directly:
+
+- `--latest-amap-artifact` selects the newest `.artifacts/rmg_native_batch_export*` directory that contains `.amap` packages.
+- `--summary` prints a compact pass/fail report instead of a large JSON blob.
+
+This keeps the normal RMG comparison command Python-only after a package export:
+
+```bash
+python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --latest-amap-artifact --summary
+```
+
+Validation evidence:
+
+- `python3 -m py_compile tools/rmg_fast_validation.py` passed.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --latest-amap-artifact --summary` selected `.artifacts/rmg_native_batch_export_after_object_category_floor`, parsed `18/18` owner H3Ms and `18/18` native AMAPs, matched `18` comparisons, completed parsing in about `8.458s`, and reported `status=pass` with `0` parse/native/density/policy/topology gaps.
+
+The remaining slow step is fresh native generation/export, which still needs Godot while the generator is exposed only through `MapPackageService`. The next performance work should optimize native placement loops and, if needed, add a non-Godot native CLI/export boundary; it should not move H3M/AMAP parsing or structural comparison back into Godot.
