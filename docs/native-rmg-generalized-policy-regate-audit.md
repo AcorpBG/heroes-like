@@ -224,6 +224,28 @@ The generated-native batch confirms the broad production gap:
 
 This is the next generalized policy target: native RMG needs level-aware object/reward/guard/decoration distribution and road density scaling across the whole generated package, not more hand-tuned exact matching for individual samples.
 
+## Implemented Fast Validation Loop
+
+`tools/rmg_fast_validation.py` now makes the Python path the default RMG evidence loop instead of only a parser utility. It wraps `tools/rmg_fast_audit.py` and applies correctness gates directly to generated `.amap` packages:
+
+- owner `.h3m` parse failures;
+- native `.amap` parse failures;
+- missing objects, towns, roads, guards for reward-bearing maps;
+- near-stacked towns using size-aware spacing floors;
+- unguarded town-route regressions against owner evidence;
+- empty materialized levels and levels without roads on two-level maps;
+- owner-group object-density underfill using a configurable density floor.
+
+This tool intentionally reports exact owner/native deltas as diagnostics. The pass/fail gate is about generated-map rules and broad policy gaps, not byte-identical HoMM3 clone output.
+
+Validation evidence:
+
+- `python3 -m py_compile tools/rmg_fast_audit.py tools/rmg_fast_validation.py` passed.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir /tmp/no-native-amap-dir --no-density-gate` parsed all `18` owner H3M files in about `5.199s` with `0` parse failures.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_current --allow-failures --pretty` parsed `18` owner H3Ms and `18` native AMAP packages in about `8.118s` total. It correctly reports the current generated-native batch as `fail` with `32` native rule failures and `6` density gaps. The most important failures are empty underground levels/levels without roads in two-level outputs, near-stacked towns in several Medium/Large/XL outputs, and object-density underfill against owner group baselines.
+
+This replaces the old habit of re-running a full Godot owner-corpus parser scene for every comparison iteration. The expected RMG loop is now: run Godot once only when fresh native packages are needed, then run Python validation/comparison repeatedly while fixing policy.
+
 ## Implemented Explicit Level Label Correction
 
 Owner review showed the previous player-facing level selector still read like an ambiguous internal toggle. The level options are now centralized in `ScenarioSelectRules` and rendered by the generated-map menu as literal map-depth choices:
