@@ -213,6 +213,17 @@ The same tool now supports batch scans for corpus-level policy evidence:
 - Owner H3M group densities now provide a fast policy baseline instead of sample-by-sample Godot startup: for example, owner 36x36 one-level evidence is about `229.167` objects / 1000 tiles and `70.216` road cells / 1000 tiles, while owner 144x144 one-level evidence averages about `196.856` objects / 1000 tiles and `34.658` road cells / 1000 tiles.
 - The local native AMAP batch is not a matched corpus; it is evidence that parsed package inspection can run quickly and should be fed by future generated package batches.
 
+`tools/rmg_native_batch_export.tscn` now performs the remaining Godot-only step: one batch generation/export pass through `MapPackageService.generate_random_map`, `convert_generated_payload`, and `save_map_package`. The exported `.amap` files can then be audited by Python. A full owner-file-derived export run wrote `18` generated native packages with `0` export failures; `python3 tools/rmg_fast_audit.py --amap-dir .artifacts/rmg_native_batch_export_current --allow-failures` parsed those `18` packages in about `3.208s` with `0` parse failures.
+
+The generated-native batch confirms the broad production gap:
+
+- 108x108 two-level owner H3M evidence averages `169.725` objects / 1000 tiles; native generated packages average `45.882`.
+- 144x144 two-level owner H3M evidence averages `93.195` objects / 1000 tiles; native generated packages average `44.456`.
+- 108x108 one-level owner H3M evidence averages `156.150` objects / 1000 tiles; native generated packages average `93.421`.
+- 144x144 one-level owner H3M evidence averages `196.856` objects / 1000 tiles; native generated packages average `131.623`.
+
+This is the next generalized policy target: native RMG needs level-aware object/reward/guard/decoration distribution and road density scaling across the whole generated package, not more hand-tuned exact matching for individual samples.
+
 ## Implemented Explicit Level Label Correction
 
 Owner review showed the previous player-facing level selector still read like an ambiguous internal toggle. The level options are now centralized in `ScenarioSelectRules` and rendered by the generated-map menu as literal map-depth choices:
