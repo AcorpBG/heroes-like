@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-normal-water-mode-support-10184",
-  "currentSliceTitle": "native rmg normal water mode support 10184",
+  "currentSliceId": "native-rmg-normal-water-protected-land-diagnostic-10184",
+  "currentSliceTitle": "native rmg normal water protected land diagnostic 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Normal-water random map requests now remain distinct from land in player-facing setup, GDScript normalization, native normalization, catalog support, and terrain shaping. Validation passed with native auto-template batch including medium_normal_water_seed_a: normal_water preserved, translated_rmg_template_039_v1/profile_039_v1 selected, package conversion passed, and 1,582 package water tiles materialized. Production parity remains unclaimed until owner normal-water comparison/tuning is added.",
+  "currentSliceNotes": "Medium normal-water validation now reports compact land-water shape pressure. After quota tuning and non-visit decorative approach relaxation, medium_normal_water_seed_a still validates and converts with 1,610 package water tiles versus 2,083 owner water tiles; shape metrics show requested_land_count, protected_land_cell_count, and generated_land_cell_count all equal 3,574, proving protected already-placed surfaces cap water generation and the next fix needs water-aware placement/order rather than only quota changes.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-07T05:38:12Z",
+  "updatedAt": "2026-05-07T05:51:51Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -13715,9 +13715,37 @@
       "startedAt": "2026-05-07T05:38:12Z",
       "completedAt": "2026-05-07T05:38:12Z",
       "notes": "Normal-water random map requests now remain distinct from land across player-facing setup, GDScript normalization, native normalization, catalog support, and native terrain shaping. Validation passed with native auto-template batch including medium_normal_water_seed_a: normal_water preserved, translated_rmg_template_039_v1/profile_039_v1 selected, validation/package conversion passed, and 1,582 package water tiles materialized. This does not claim normal-water owner-H3M parity; direct owner comparison/tuning remains pending."
+    },
+    {
+      "id": "native-rmg-normal-water-protected-land-diagnostic-10184",
+      "title": "native rmg normal water protected land diagnostic 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-07T05:51:51Z",
+      "startedAt": "2026-05-07T05:51:51Z",
+      "completedAt": "2026-05-07T05:51:51Z",
+      "notes": "Medium normal-water validation now reports compact land-water shape pressure. After normal-water quota tuning and non-visit decorative approach relaxation, medium_normal_water_seed_a still validates and converts with 1,610 package water tiles versus 2,083 owner water tiles; shape metrics show requested_land_count, protected_land_cell_count, and generated_land_cell_count all equal 3,574, proving protected already-placed surfaces cap water generation and the next fix needs water-aware placement/order rather than only quota changes."
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-normal-water-protected-land-diagnostic-10184",
+      "title": "Native RMG Normal Water Protected Land Diagnostic",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "completedAt": "2026-05-07T05:51:51Z",
+      "evidence": [
+        "Normal-water terrain shaping now reports compact requested/protected/generated land-water shape metrics in the native auto-template batch.",
+        "Lowering normal-water land quota fractions and relaxing non-visit decorative/scenic approach protection did not materially increase water tiles, moving only from 1,582 to 1,610.",
+        "The Medium normal-water case reports requested_land_count 3,574, protected_land_cell_count 3,574, generated_land_cell_count 3,574, and generated_water_cell_count 1,610.",
+        "The owner M-NormalW-4players sample has 2,083 water tiles, 754 parsed objects, 221 road cells, 7 towns, and 80 guards; native still has 1,610 water tiles, 499 package objects, 254 road cells, 8 towns, and 111 guards.",
+        "The next corrective step is water-aware placement/order or protected-surface reduction, not more quota-only tuning."
+      ],
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 passed.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_auto_template_batch_report.tscn passed with medium_normal_water_seed_a validation/package conversion passing and compact land_water_shape output.",
+        "python3 tests/validate_repo.py passed."
+      ]
+    },
     {
       "id": "native-rmg-normal-water-mode-support-10184",
       "title": "Native RMG Normal Water Mode Support",
