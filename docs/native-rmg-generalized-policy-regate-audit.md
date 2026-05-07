@@ -246,6 +246,26 @@ Validation evidence:
 
 This replaces the old habit of re-running a full Godot owner-corpus parser scene for every comparison iteration. The expected RMG loop is now: run Godot once only when fresh native packages are needed, then run Python validation/comparison repeatedly while fixing policy.
 
+## Implemented Generated Batch Rule Fixes
+
+The first generated-native batch exposed three generalized rule failures rather than a need to exact-match owner counts:
+
+- object density was too low on Large/XL and two-level outputs;
+- two-level catalog-auto maps could serialize roads underground while leaving the underground level empty of generated objects;
+- optional/density towns could stack into the same zone or fall below the size-aware town-spacing floor.
+
+Native catalog-auto generation now uses size/level-aware object density floors, copies an eligible subset of decoration/scenic/reward-reference objects onto underground levels, adds deterministic underground road cells for two-level generated packages, and applies the same size-aware town spacing floor used by the Python validator. Extra generated towns are skipped for a zone that already has a town until explicit guarded same-zone settlement regions are modeled.
+
+The underground copy pass deliberately excludes towns, guards, mines, resources, and dwellings. That keeps economy/settlement-site per-zone limits valid while still preventing empty underground levels.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_limit_fix_limit4 --limit 4` exported `4/4` Large islands/normal-water one-level and two-level native packages.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_limit_fix_limit4 --pretty` parsed `18` owner H3Ms and `4` native AMAPs in about `5.945s`, with `0` parse failures, `0` density gaps, and `0` native rule failures.
+
+The exact owner comparison rows still show count/topology deltas. Those remain diagnostics for future policy work, not production pass/fail targets.
+
 ## Implemented Explicit Level Label Correction
 
 Owner review showed the previous player-facing level selector still read like an ambiguous internal toggle. The level options are now centralized in `ScenarioSelectRules` and rendered by the generated-map menu as literal map-depth choices:
