@@ -8352,7 +8352,7 @@ Dictionary apply_native_catalog_auto_two_level_object_distribution(Array &placem
 			}
 			Dictionary record = Dictionary(placements[index]);
 			const String kind = String(record.get("kind", ""));
-			const bool underground_copy_eligible = kind == "decorative_obstacle" || kind == "scenic_object" || kind == "reward_reference";
+			const bool underground_copy_eligible = kind == "decorative_obstacle" || kind == "scenic_object";
 			if (!underground_copy_eligible) {
 				continue;
 			}
@@ -8361,7 +8361,7 @@ Dictionary apply_native_catalog_auto_two_level_object_distribution(Array &placem
 				continue;
 			}
 			const uint32_t bucket = hash32_int(seed + String(":two_level_object_distribution:") + placement_id + String(":") + kind);
-			const bool preferred = kind == "reward_reference" || kind == "decorative_obstacle" || kind == "scenic_object";
+			const bool preferred = kind == "decorative_obstacle" || kind == "scenic_object";
 			if (pass == 0 && (!preferred || bucket % 100U >= 45U)) {
 				continue;
 			}
@@ -13537,9 +13537,10 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 				const bool owner_xl_neutral_required_deferred = owner_xl_town_limit >= 0 && owner_scope == "neutral" && !density;
 				const bool owner_medium_normal_water_neutral_required_deferred = native_rmg_owner_medium_normal_water_density_case(normalized) && owner_scope == "neutral" && !density;
 				const bool owner_small_normal_water_2level_required_deferred = native_rmg_owner_small_normal_water_2level_case(normalized) && !density;
-				diagnostic["code"] = density ? "town_castle_density_placement_infeasible" : (owner_xl_neutral_required_deferred ? "owner_xl_neutral_required_town_deferred_to_global_spacing_supplement" : (owner_medium_normal_water_neutral_required_deferred ? "owner_medium_normal_water_required_town_deferred_by_owner_spacing_floor" : (owner_small_normal_water_2level_required_deferred ? "owner_small_normal_water_2level_required_town_deferred_by_owner_spacing_floor" : "town_castle_placement_infeasible")));
-				diagnostic["severity"] = (density || owner_xl_neutral_required_deferred || owner_medium_normal_water_neutral_required_deferred || owner_small_normal_water_2level_required_deferred) ? "warning" : "failure";
-				diagnostic["message"] = density ? "No unoccupied in-zone tile satisfied the optional density town/castle spacing and access-to-anchor contract." : (owner_xl_neutral_required_deferred ? "Owner XL neutral source-zone town could not satisfy the owner spacing floor and is deferred to the global owner-count supplement." : (owner_medium_normal_water_neutral_required_deferred ? "Owner Medium normal-water neutral source-zone town could not satisfy the owner spacing floor; the owner-count target is preserved by the supported owner profile town set." : (owner_small_normal_water_2level_required_deferred ? "Owner Small normal-water two-level required town could not satisfy the owner spacing floor; the owner-count target is preserved by the supported owner profile town set." : "No unoccupied in-zone tile satisfied the required town/castle spacing and access-to-anchor contract.")));
+				const bool generalized_non_player_required_deferred = generalized_catalog_auto_spacing_enforced && owner_scope != "player" && !density && towns.size() >= starts.size();
+				diagnostic["code"] = density ? "town_castle_density_placement_infeasible" : (owner_xl_neutral_required_deferred ? "owner_xl_neutral_required_town_deferred_to_global_spacing_supplement" : (owner_medium_normal_water_neutral_required_deferred ? "owner_medium_normal_water_required_town_deferred_by_owner_spacing_floor" : (owner_small_normal_water_2level_required_deferred ? "owner_small_normal_water_2level_required_town_deferred_by_owner_spacing_floor" : (generalized_non_player_required_deferred ? "generalized_catalog_auto_non_player_town_deferred_by_spacing_floor" : "town_castle_placement_infeasible"))));
+				diagnostic["severity"] = (density || owner_xl_neutral_required_deferred || owner_medium_normal_water_neutral_required_deferred || owner_small_normal_water_2level_required_deferred || generalized_non_player_required_deferred) ? "warning" : "failure";
+				diagnostic["message"] = density ? "No unoccupied in-zone tile satisfied the optional density town/castle spacing and access-to-anchor contract." : (owner_xl_neutral_required_deferred ? "Owner XL neutral source-zone town could not satisfy the owner spacing floor and is deferred to the global owner-count supplement." : (owner_medium_normal_water_neutral_required_deferred ? "Owner Medium normal-water neutral source-zone town could not satisfy the owner spacing floor; the owner-count target is preserved by the supported owner profile town set." : (owner_small_normal_water_2level_required_deferred ? "Owner Small normal-water two-level required town could not satisfy the owner spacing floor; the owner-count target is preserved by the supported owner profile town set." : (generalized_non_player_required_deferred ? "Generalized native-catalog-auto non-player town/castle candidate could not satisfy the strict spacing and access floor; player start towns are already materialized, so the candidate is deferred instead of failing generation." : "No unoccupied in-zone tile satisfied the required town/castle spacing and access-to-anchor contract."))));
 				town_diagnostics.append(diagnostic);
 				return;
 			}
