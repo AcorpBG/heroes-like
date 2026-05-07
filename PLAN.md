@@ -31,6 +31,41 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-owner-corpus-terrain-water-mode-audit-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Add parsed H3M terrain water/rock ratios and terrain-inferred water-mode evidence to the owner corpus so uploaded samples can be audited by actual map contents, not only filename labels.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- local evidence under `maps/h3m-maps/*.h3m`
+implementationTargets:
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Owner-corpus samples expose compact water-mode resolution plus terrain water/rock counts and ratios parsed from H3M tile data.
+- Samples with no explicit filename water mode can resolve from terrain inference without changing explicit owner labels.
+- Production-audit parsed sample coverage surfaces compact terrain ratios without embedding the full terrain-count payload.
+- The audit does not overclaim production readiness; missing corpus/template/tail-parse gaps remain explicit.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No native generator tuning for water/islands profiles in this slice.
+- No exact H3M byte/object-art parity claim.
+- No synthetic Medium land owner evidence.
+validationResults:
+- Owner-corpus report passed with schema `native_random_map_homm3_owner_corpus_coverage_report_v5`, `ok true`, 21 readable/parsed samples, and `corpus_ready false`.
+- `owner_discovered_s_randomnumberofplayers` now resolves from unknown filename label to terrain-inferred land with surface water ratio 0.0.
+- `owner_discovered_m_normalw_4players` remains normal-water with surface water ratio 0.402, confirming it is not the missing Medium land/no-water owner sample.
+- `owner_discovered_xl_water_2levels` remains explicitly labeled normal-water but now records a terrain conflict because the parsed surface water ratio is 0.560 and terrain inference classifies it as islands.
+- Corpus gaps remain `template_breadth_corpus` and `object_instance_tail_count_mismatch_samples`; production readiness remains unclaimed.
+- Production parity audit passed with `ok true`, `production_ready false`, `missing_requirement_count 4`, and compact terrain coverage records.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-owner-large-land-density-correction-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`

@@ -720,13 +720,23 @@ func _owner_sample_coverage_records(samples: Array) -> Array:
 		var sample: Dictionary = sample_value
 		if not bool(sample.get("readable", false)) or String(sample.get("metric_parse_status", "")) != "parsed":
 			continue
+		var terrain_summary: Dictionary = sample.get("terrain_summary", {}) if sample.get("terrain_summary", {}) is Dictionary else {}
 		result.append({
 			"id": String(sample.get("id", "")),
 			"path": String(sample.get("path", "")),
 			"size_class_id": String(sample.get("size_class_id", sample.get("expected_size_class_id", ""))),
 			"water_mode": String(sample.get("water_mode", sample.get("expected_water_mode", ""))),
+			"expected_water_mode": String(sample.get("expected_water_mode", "")),
+			"water_mode_source": String(sample.get("water_mode_source", "")),
+			"terrain_inferred_water_mode": String(sample.get("terrain_inferred_water_mode", "")),
+			"terrain_water_mode_conflict": bool(sample.get("terrain_water_mode_conflict", false)),
 			"level_count": int(sample.get("level_count", 0)),
 			"has_underground": bool(sample.get("has_underground", false)),
+			"terrain_water_tile_count": int(terrain_summary.get("water_tile_count", 0)),
+			"terrain_rock_tile_count": int(terrain_summary.get("rock_tile_count", 0)),
+			"terrain_water_ratio": float(terrain_summary.get("water_ratio", 0.0)),
+			"terrain_surface_water_ratio": float(terrain_summary.get("surface_water_ratio", 0.0)),
+			"terrain_rock_ratio": float(terrain_summary.get("rock_ratio", 0.0)),
 			"object_count": int(sample.get("object_count", 0)),
 			"declared_object_count": int(sample.get("declared_object_count", sample.get("object_count", 0))),
 			"parsed_object_count": int(sample.get("parsed_object_count", sample.get("object_count", 0))),
