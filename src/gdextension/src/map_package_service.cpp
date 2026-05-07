@@ -16890,6 +16890,14 @@ Dictionary package_surface_record(Dictionary record) {
 	const bool blocking_body = record_blocks_package_pathing(record);
 	const bool visitable = record_is_visitable_package_object(record);
 	Array body_tiles = body_tiles_for_package_surface(record);
+	Array package_body_tiles = body_tiles.duplicate(true);
+	if (String(record.get("kind", "")) == "guard") {
+		Dictionary primary = record.get("primary_tile", Dictionary());
+		if (primary.is_empty()) {
+			primary = cell_record(int32_t(record.get("x", 0)), int32_t(record.get("y", 0)), int32_t(record.get("level", 0)));
+		}
+		package_body_tiles = Array::make(primary);
+	}
 	Array block_tiles = blocking_body ? body_tiles.duplicate(true) : Array();
 	Array visit_tiles = visitable ? visit_tiles_for_package_surface(record, blocking_body) : Array();
 	Dictionary block_seen;
@@ -16917,10 +16925,10 @@ Dictionary package_surface_record(Dictionary record) {
 	record["package_surface_adoption_version"] = 1;
 	record["package_surface_adoption_state"] = "native_generated_record_materialized_for_package_editor_runtime_surface";
 	record["package_pathing_materialization_state"] = "body_visit_block_masks_materialized_for_generated_package_surface";
-	record["package_body_tiles"] = body_tiles;
+	record["package_body_tiles"] = package_body_tiles;
 	record["package_block_tiles"] = block_tiles;
 	record["package_visit_tiles"] = visit_tiles;
-	record["package_body_tile_count"] = body_tiles.size();
+	record["package_body_tile_count"] = package_body_tiles.size();
 	record["package_block_tile_count"] = block_tiles.size();
 	record["package_visit_tile_count"] = visit_tiles.size();
 	if (!route_closure_tiles.is_empty()) {
@@ -17609,6 +17617,264 @@ void apply_land_boundary_choke_masks_to_decorative_package_objects(Array &object
 	}
 }
 
+bool package_record_clearable_for_guarded_corridor(const Dictionary &record) {
+	const String kind = String(record.get("kind", ""));
+	return kind == "decorative_obstacle" || kind == "scenic_object";
+}
+
+Dictionary package_terrain_blocked_lookup(const Dictionary &generated_map) {
+	Dictionary blocked;
+	Dictionary terrain_grid = generated_map.get("terrain_grid", Dictionary());
+	const int32_t width = int32_t(terrain_grid.get("width", generated_map.get("width", 36)));
+	const int32_t height = int32_t(terrain_grid.get("height", generated_map.get("height", 36)));
+	const int32_t rock_code = terrain_code_for_id("rock");
+	const int32_t water_code = terrain_code_for_id("water");
+	Array levels = terrain_grid.get("levels", Array());
+	for (int64_t level_index = 0; level_index < levels.size(); ++level_index) {
+		if (Variant(levels[level_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary level = Dictionary(levels[level_index]);
+		const int32_t level_id = int32_t(level.get("level_index", level_index));
+		PackedInt32Array terrain_codes = level.get("terrain_code_u16", PackedInt32Array());
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				const int32_t index = y * width + x;
+				if (index < 0 || index >= terrain_codes.size()) {
+					continue;
+				}
+				const int32_t code = terrain_codes[index];
+				if (code == rock_code || code == water_code) {
+					blocked[level_point_key(x, y, level_id)] = true;
+				}
+			}
+		}
+	}
+	return blocked;
+}
+
+void remove_package_block_cells_from_clearable_objects(Array &objects, const Array &path_cells, Dictionary &cleared_lookup, int32_t level) {
+	Dictionary path_lookup;
+	for (int64_t path_index = 0; path_index < path_cells.size(); ++path_index) {
+		if (Variant(path_cells[path_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary cell = Dictionary(path_cells[path_index]);
+		if (int32_t(cell.get("level", level)) != level) {
+			continue;
+		}
+		path_lookup[point_key(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)))] = true;
+	}
+	if (path_lookup.is_empty()) {
+		return;
+	}
+	for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
+		if (Variant(objects[object_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = Dictionary(objects[object_index]);
+		if (!package_record_clearable_for_guarded_corridor(object) || int32_t(object.get("level", 0)) != level) {
+			continue;
+		}
+		Array block_tiles = object.get("package_block_tiles", Array());
+		if (block_tiles.is_empty()) {
+			continue;
+		}
+		Array filtered;
+		int32_t removed_count = 0;
+		for (int64_t block_index = 0; block_index < block_tiles.size(); ++block_index) {
+			if (Variant(block_tiles[block_index]).get_type() != Variant::DICTIONARY) {
+				filtered.append(block_tiles[block_index]);
+				continue;
+			}
+			Dictionary block = Dictionary(block_tiles[block_index]);
+			const String key = point_key(int32_t(block.get("x", 0)), int32_t(block.get("y", 0)));
+			if (path_lookup.has(key)) {
+				cleared_lookup[level_point_key(int32_t(block.get("x", 0)), int32_t(block.get("y", 0)), level)] = object.get("placement_id", "");
+				++removed_count;
+				continue;
+			}
+			filtered.append(block);
+		}
+		if (removed_count <= 0) {
+			continue;
+		}
+		object["package_block_tiles"] = filtered;
+		object["package_block_tile_count"] = filtered.size();
+		object["package_guarded_corridor_cleared_tile_count"] = int32_t(object.get("package_guarded_corridor_cleared_tile_count", 0)) + removed_count;
+		object["package_guarded_corridor_policy"] = "decorative_scenic_masks_are_cut_on_town_routes_so_nearby_guards_rather_than_permanent_fillers_close_cross_zone_travel";
+		object["package_pathing_materialization_state"] = "body_visit_block_masks_with_guarded_town_route_corridor_cuts_materialized_for_generated_package_surface";
+		objects[object_index] = object;
+	}
+}
+
+int32_t nearest_package_guard_index_for_cell(const Array &objects, int32_t x, int32_t y, int32_t level) {
+	int32_t best_index = -1;
+	int32_t best_distance = std::numeric_limits<int32_t>::max();
+	for (int64_t index = 0; index < objects.size(); ++index) {
+		if (Variant(objects[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = Dictionary(objects[index]);
+		if (String(object.get("kind", "")) != "guard" || int32_t(object.get("level", 0)) != level) {
+			continue;
+		}
+		const int32_t distance = std::abs(x - int32_t(object.get("x", 0))) + std::abs(y - int32_t(object.get("y", 0)));
+		if (distance < best_distance) {
+			best_distance = distance;
+			best_index = int32_t(index);
+		}
+	}
+	return best_index;
+}
+
+int32_t add_package_guard_closure_cluster(Array &objects, int32_t guard_index, int32_t center_x, int32_t center_y, int32_t level, int32_t width, int32_t height, const String &source) {
+	if (guard_index < 0 || guard_index >= objects.size() || Variant(objects[guard_index]).get_type() != Variant::DICTIONARY) {
+		return 0;
+	}
+	Dictionary guard = Dictionary(objects[guard_index]);
+	Dictionary seen;
+	Array block_tiles = guard.get("package_block_tiles", Array());
+	for (int64_t block_index = 0; block_index < block_tiles.size(); ++block_index) {
+		if (Variant(block_tiles[block_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary block = Dictionary(block_tiles[block_index]);
+		seen[level_point_key(
+				int32_t(block.get("x", 0)),
+				int32_t(block.get("y", 0)),
+				int32_t(block.get("level", level)))] = true;
+	}
+	int32_t added = 0;
+	for (int32_t dy = -1; dy <= 1; ++dy) {
+		for (int32_t dx = -1; dx <= 1; ++dx) {
+			const int32_t x = center_x + dx;
+			const int32_t y = center_y + dy;
+			if (x < 0 || y < 0 || x >= width || y >= height) {
+				continue;
+			}
+			const String key = level_point_key(x, y, level);
+			if (seen.has(key)) {
+				continue;
+			}
+			seen[key] = true;
+			Array updated = guard.get("package_block_tiles", Array());
+			updated.append(cell_record(x, y, level));
+			guard["package_block_tiles"] = updated;
+			++added;
+		}
+	}
+	if (added <= 0) {
+		return 0;
+	}
+	guard["package_block_tile_count"] = Array(guard.get("package_block_tiles", Array())).size();
+	guard["package_guarded_corridor_closure_mask_source"] = source;
+	guard["package_guarded_corridor_closure_tile_count"] = int32_t(guard.get("package_guarded_corridor_closure_tile_count", 0)) + added;
+	guard["package_pathing_materialization_state"] = "body_visit_guard_control_zone_and_guarded_town_route_corridor_closure_masks_materialized_for_generated_package_surface";
+	objects[guard_index] = guard;
+	return added;
+}
+
+Dictionary package_object_route_blocked_lookup_for_level(const Array &objects, const Dictionary &terrain_blocked, int32_t level, bool include_guard_closure) {
+	Dictionary blocked;
+	Array terrain_keys = terrain_blocked.keys();
+	for (int64_t key_index = 0; key_index < terrain_keys.size(); ++key_index) {
+		const String key = String(terrain_keys[key_index]);
+		const bool same_level_key = level <= 0 ? !key.contains(":") : key.begins_with(String::num_int64(level) + String(":"));
+		if (same_level_key) {
+			blocked[key] = terrain_blocked.get(key, true);
+		}
+	}
+	for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
+		if (Variant(objects[object_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = Dictionary(objects[object_index]);
+		if (int32_t(object.get("level", 0)) != level) {
+			continue;
+		}
+		const String kind = String(object.get("kind", ""));
+		if (package_record_clearable_for_guarded_corridor(object)) {
+			continue;
+		}
+		Array block_tiles = kind == "guard" && !include_guard_closure ? object.get("package_body_tiles", object.get("body_tiles", Array())) : object.get("package_block_tiles", object.get("body_tiles", Array()));
+		for (int64_t block_index = 0; block_index < block_tiles.size(); ++block_index) {
+			if (Variant(block_tiles[block_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary block = Dictionary(block_tiles[block_index]);
+			blocked[level_point_key(
+					int32_t(block.get("x", 0)),
+					int32_t(block.get("y", 0)),
+					int32_t(block.get("level", level)))] = object.get("placement_id", "");
+		}
+	}
+	return blocked;
+}
+
+void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects, const Dictionary &generated_map) {
+	Dictionary terrain_grid = generated_map.get("terrain_grid", Dictionary());
+	const int32_t width = int32_t(terrain_grid.get("width", generated_map.get("width", 36)));
+	const int32_t height = int32_t(terrain_grid.get("height", generated_map.get("height", 36)));
+	const int32_t level_count = int32_t(terrain_grid.get("level_count", generated_map.get("level_count", 1)));
+	Dictionary terrain_blocked = package_terrain_blocked_lookup(generated_map);
+	Dictionary cleared_lookup;
+	int32_t corridor_count = 0;
+	int32_t guard_closure_tile_count = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		Array towns;
+		for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
+			if (Variant(objects[object_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary object = Dictionary(objects[object_index]);
+			if (String(object.get("kind", "")) == "town" && int32_t(object.get("level", 0)) == level) {
+				towns.append(object);
+			}
+		}
+		if (towns.size() < 2) {
+			continue;
+		}
+		for (int64_t left_index = 0; left_index < towns.size(); ++left_index) {
+			Dictionary left = Dictionary(towns[left_index]);
+			for (int64_t right_index = left_index + 1; right_index < towns.size(); ++right_index) {
+				Dictionary right = Dictionary(towns[right_index]);
+				Dictionary blocked = package_object_route_blocked_lookup_for_level(objects, terrain_blocked, level, false);
+				Array path = direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, blocked);
+				if (path.is_empty()) {
+					continue;
+				}
+				remove_package_block_cells_from_clearable_objects(objects, path, cleared_lookup, level);
+				const int32_t midpoint = int32_t(path.size() / 2);
+				if (midpoint <= 0 || midpoint >= path.size() || Variant(path[midpoint]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				Dictionary midpoint_cell = Dictionary(path[midpoint]);
+				const int32_t mid_x = int32_t(midpoint_cell.get("x", 0));
+				const int32_t mid_y = int32_t(midpoint_cell.get("y", 0));
+				const int32_t guard_index = nearest_package_guard_index_for_cell(objects, mid_x, mid_y, level);
+				guard_closure_tile_count += add_package_guard_closure_cluster(objects, guard_index, mid_x, mid_y, level, width, height, "guard_mediated_town_route_corridor_closure_mask");
+				++corridor_count;
+			}
+		}
+	}
+	if (corridor_count <= 0 && cleared_lookup.is_empty() && guard_closure_tile_count <= 0) {
+		return;
+	}
+	for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
+		if (Variant(objects[object_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = Dictionary(objects[object_index]);
+		object["package_guarded_corridor_materialization_schema_id"] = "native_rmg_package_guard_mediated_town_route_corridors_v1";
+		object["package_guarded_corridor_count"] = corridor_count;
+		object["package_guarded_corridor_cleared_tile_total"] = cleared_lookup.size();
+		object["package_guarded_corridor_guard_closure_tile_total"] = guard_closure_tile_count;
+		object["package_guarded_corridor_materialization_policy"] = "town routes are allowed through decorative/scenic filler and then closed by guard package masks so permanent blockers do not replace HoMM3-style guard-mediated crossings";
+		objects[object_index] = object;
+	}
+}
+
 Array combined_native_map_objects(const Dictionary &generated_map) {
 	Array result;
 	Dictionary terrain_grid = generated_map.get("terrain_grid", Dictionary());
@@ -17680,6 +17946,7 @@ Array combined_native_map_objects(const Dictionary &generated_map) {
 			result[index] = record;
 		}
 	}
+	apply_guard_mediated_town_route_corridors_to_package_objects(result, generated_map);
 	for (int64_t index = 0; index < result.size(); ++index) {
 		if (Variant(result[index]).get_type() != Variant::DICTIONARY) {
 			continue;
