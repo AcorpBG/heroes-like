@@ -542,6 +542,122 @@ def semantic_summary(states: dict[str, dict[str, Any]], width: int, height: int)
     }
 
 
+def density_per_1000(metrics: dict[str, Any], value: int) -> float:
+    area = max(1, int(metrics.get("width", 0)) * int(metrics.get("height", 0)) * int(metrics.get("level_count", 1)))
+    return round((float(value) * 1000.0) / float(area), 3)
+
+
+def compact_metrics(metrics: dict[str, Any]) -> dict[str, Any]:
+    semantic = metrics.get("semantic_layout", {}) if isinstance(metrics.get("semantic_layout", {}), dict) else {}
+    category_counts = metrics.get("counts_by_category", {}) if isinstance(metrics.get("counts_by_category", {}), dict) else {}
+    object_count = int(metrics.get("object_count", 0))
+    road_count = int(metrics.get("road_cell_count_total", 0))
+    result: dict[str, Any] = {
+        "status": metrics.get("status", ""),
+        "format": metrics.get("format", ""),
+        "path": metrics.get("path", ""),
+        "width": int(metrics.get("width", 0)),
+        "height": int(metrics.get("height", 0)),
+        "level_count": int(metrics.get("level_count", 1)),
+        "object_count": object_count,
+        "counts_by_category": category_counts,
+        "counts_by_level": metrics.get("counts_by_level", {}),
+        "road_cell_count_total": road_count,
+        "road_component_sizes_by_level": metrics.get("road_component_sizes_by_level", {}),
+        "object_density_per_1000_tiles": density_per_1000(metrics, object_count),
+        "road_density_per_1000_tiles": density_per_1000(metrics, road_count),
+        "guarded_route_reachable_pair_count_total": int(semantic.get("guarded_route_reachable_pair_count_total", 0)),
+        "object_route_reachable_pair_count_total": int(semantic.get("object_route_reachable_pair_count_total", 0)),
+        "nearest_town_manhattan_min": int(semantic.get("nearest_town_manhattan_min", 0)),
+    }
+    reward_count = int(category_counts.get("reward", 0))
+    guard_count = int(category_counts.get("guard", 0))
+    town_count = int(category_counts.get("town", 0))
+    result["guard_to_reward_ratio"] = round(float(guard_count) / float(max(1, reward_count)), 3)
+    result["town_density_per_1000_tiles"] = density_per_1000(metrics, town_count)
+    return result
+
+
+def corpus_group_key(metrics: dict[str, Any]) -> str:
+    return "%s_%sx%s_l%s" % (
+        metrics.get("format", "unknown"),
+        int(metrics.get("width", 0)),
+        int(metrics.get("height", 0)),
+        int(metrics.get("level_count", 1)),
+    )
+
+
+def average(values: list[float]) -> float:
+    if not values:
+        return 0.0
+    return round(sum(values) / float(len(values)), 3)
+
+
+def summarize_compact_samples(samples: list[dict[str, Any]]) -> dict[str, Any]:
+    parsed = [sample for sample in samples if sample.get("status") == "parsed"]
+    failed = [sample for sample in samples if sample.get("status") != "parsed"]
+    groups: dict[str, list[dict[str, Any]]] = {}
+    for sample in parsed:
+        groups.setdefault(corpus_group_key(sample), []).append(sample)
+    by_group: dict[str, Any] = {}
+    for key, group_samples in sorted(groups.items()):
+        compact = [compact_metrics(sample) for sample in group_samples]
+        category_totals: Counter[str] = Counter()
+        for sample in group_samples:
+            category_totals.update(sample.get("counts_by_category", {}))
+        by_group[key] = {
+            "sample_count": len(group_samples),
+            "object_density_per_1000_tiles_avg": average([float(item["object_density_per_1000_tiles"]) for item in compact]),
+            "road_density_per_1000_tiles_avg": average([float(item["road_density_per_1000_tiles"]) for item in compact]),
+            "town_density_per_1000_tiles_avg": average([float(item["town_density_per_1000_tiles"]) for item in compact]),
+            "guard_to_reward_ratio_avg": average([float(item["guard_to_reward_ratio"]) for item in compact]),
+            "guarded_route_reachable_pair_count_total": sum(int(item["guarded_route_reachable_pair_count_total"]) for item in compact),
+            "object_route_reachable_pair_count_total": sum(int(item["object_route_reachable_pair_count_total"]) for item in compact),
+            "category_totals": dict(sorted(category_totals.items())),
+            "sample_paths": [str(item.get("path", "")) for item in compact],
+        }
+    return {
+        "sample_count": len(samples),
+        "parsed_count": len(parsed),
+        "failed_count": len(failed),
+        "by_group": by_group,
+        "failed_samples": [
+            {"path": sample.get("path", ""), "status": sample.get("status", ""), "error": sample.get("error", "")}
+            for sample in failed
+        ],
+    }
+
+
+def parse_many(paths: list[Path], parser_fn: Any) -> list[dict[str, Any]]:
+    samples: list[dict[str, Any]] = []
+    for path in sorted(paths, key=lambda value: str(value)):
+        try:
+            samples.append(parser_fn(path))
+        except Exception as exc:  # pragma: no cover - CLI resilience path
+            samples.append({"status": "error", "path": str(path), "error": f"{type(exc).__name__}: {exc}"})
+    return samples
+
+
+def batch_report(h3m_dir: Path | None, amap_dir: Path | None, full: bool) -> dict[str, Any]:
+    samples: list[dict[str, Any]] = []
+    inputs: dict[str, str] = {}
+    if h3m_dir:
+        inputs["h3m_dir"] = str(h3m_dir)
+        samples.extend(parse_many(list(h3m_dir.rglob("*.h3m")), parse_h3m))
+    if amap_dir:
+        inputs["amap_dir"] = str(amap_dir)
+        samples.extend(parse_many(list(amap_dir.rglob("*.amap")), load_amap))
+    summary = summarize_compact_samples(samples)
+    status = "parsed" if summary["parsed_count"] > 0 and summary["failed_count"] == 0 else ("partial" if summary["parsed_count"] > 0 else "fail")
+    return {
+        "schema_id": "rmg_fast_audit_batch_v1",
+        "status": status,
+        "inputs": inputs,
+        "summary": summary,
+        "samples": samples if full else [compact_metrics(sample) if sample.get("status") == "parsed" else sample for sample in samples],
+    }
+
+
 def compare(owner: dict[str, Any], native: dict[str, Any]) -> dict[str, Any]:
     categories = sorted(set(owner.get("counts_by_category", {})) | set(native.get("counts_by_category", {})))
     category_delta = {
@@ -578,7 +694,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--h3m", type=Path, help="Owner H3M evidence file to parse")
     parser.add_argument("--amap", type=Path, help="Native .amap package to parse")
+    parser.add_argument("--h3m-dir", type=Path, help="Recursively parse owner H3M evidence files")
+    parser.add_argument("--amap-dir", type=Path, help="Recursively parse native .amap package files")
     parser.add_argument("--compare", action="store_true", help="Compare --h3m and --amap metrics")
+    parser.add_argument("--full", action="store_true", help="Include full per-file metrics in batch mode")
+    parser.add_argument("--allow-failures", action="store_true", help="Return success for partial batch scans with parse failures")
     parser.add_argument("--pretty", action="store_true", help="Pretty-print JSON")
     args = parser.parse_args()
 
@@ -586,14 +706,20 @@ def main() -> int:
         parser.error("--compare requires --h3m and --amap")
     if args.compare:
         result = compare(parse_h3m(args.h3m), load_amap(args.amap))
+    elif args.h3m_dir or args.amap_dir:
+        result = batch_report(args.h3m_dir, args.amap_dir, args.full)
     elif args.h3m:
         result = parse_h3m(args.h3m)
     elif args.amap:
         result = load_amap(args.amap)
     else:
-        parser.error("provide --h3m, --amap, or --compare")
+        parser.error("provide --h3m, --amap, --h3m-dir, --amap-dir, or --compare")
     print(json.dumps(result, indent=2 if args.pretty else None, sort_keys=True))
-    return 0 if result.get("status") in {"parsed", "pass"} else 1
+    if result.get("status") in {"parsed", "pass"}:
+        return 0
+    if args.allow_failures and result.get("status") == "partial":
+        return 0
+    return 1
 
 
 if __name__ == "__main__":
