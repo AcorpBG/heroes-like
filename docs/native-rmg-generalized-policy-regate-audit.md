@@ -443,3 +443,23 @@ Validation evidence:
 - `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_auto_template_batch_report.tscn` passed with `seed_specific_runtime_override_case_count: 0`; this remains an integration smoke, not the default parser/comparison loop.
 
 The slow `tests/native_random_map_production_parity_completion_audit_report.tscn` run was stopped after more than seven minutes with no useful output. That is intentional for the current testing posture: H3M parsing, native AMAP inspection, road topology, density policy, town/guard/blocker route closure, and owner comparison belong in the Python CLI validation path. Godot should be used for the native generation/export boundary and editor/runtime behavior.
+
+## Implemented Generalized Object-Category Floor
+
+The road/topology pass left a major broad parity weakness: native generated packages were still filling total object density with decorative obstacles and rewards while underproducing the recovered HoMM3 "other object" category. In the 18-package evidence before this pass, native object-category density was only about `27-53%` of the owner group density across most size/level groups, even though the broader gate passed because the object floor was only `25%`.
+
+Normal native catalog-auto scenic/other-object floors are now size- and level-aware:
+
+- Small/Medium/Large/XL one-level maps materialize more scenic/other objects before decorative filler.
+- Two-level maps raise the surface scenic floor enough that the existing level distribution copy produces real underground/surface object-category mass instead of mostly decoration copies.
+- The Python policy gate now requires native object-category density to reach at least `60%` of the matched owner group baseline.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 900 tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_object_category_floor` exported `18/18` packages with `0` failures.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_object_category_floor --allow-failures --pretty` reports `status: pass`, `18` matched comparisons, `0` parse/native/density/policy/topology gaps, and the stricter `object: 0.6` category floor.
+- The native object-category totals improved materially in the generated batch: `108x108_l1 243 -> 558`, `108x108_l2 955 -> 1624`, `144x144_l1 540 -> 1260`, `144x144_l2 1097 -> 1441`, `72x72_l1 44 -> 105`, `72x72_l2 211 -> 364`, `36x36_l1 26 -> 32`, and `36x36_l2 57 -> 96`.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_auto_template_batch_report.tscn` passed with `seed_specific_runtime_override_case_count: 0`.
+
+The full export now takes about eight and a half minutes with the denser XL object placement, so the next performance target should profile and optimize native placement loops without moving correctness comparison back into Godot.
