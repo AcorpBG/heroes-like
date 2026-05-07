@@ -31,6 +31,38 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-owner-large-land-tail-parse-coverage-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Make the uploaded Large no-water surface owner H3M usable as representative coverage while preserving an explicit parser-debt warning for its near-EOF object-instance count mismatch.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- local evidence under `maps/h3m-maps/L-NoWater-RandomPlayers-nounder.h3m`
+implementationTargets:
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- The Large no-water surface uploaded H3M no longer disappears from parsed representative owner-sample coverage solely because the strict parser reaches EOF with a small declared object-count tail mismatch.
+- The parser reports declared count, parsed count, missing tail count, parse quality, and warning metadata for that sample.
+- Corpus readiness remains false while the tail-count mismatch and template-breadth corpus gaps remain unresolved.
+- Production audit representative owner sample coverage now has Small land, Small underground, Medium islands, Large land, and XL land evidence, while Medium land remains explicitly missing.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No exact Large H3M byte/object-art parity claim.
+- No native Large land tuning or mapped native comparison for the Large sample.
+- No HoMM3 copyrighted asset/DEF import.
+validationResults:
+- Owner-corpus report passed with 21 readable samples and 21 parsed metric records; `owner_discovered_l_nowater_randomplayers_nounder` reports `tail_count_mismatch`, 2,917 parsed objects out of 2,933 declared, and 16 missing tail instances.
+- Owner-corpus readiness remains false with `missing_coverage` containing `template_breadth_corpus` and `object_instance_tail_count_mismatch_samples`.
+- Production parity audit passed with `production_ready false`, `missing_requirement_count 4`, Large land representative coverage matched to `owner_discovered_l_nowater_randomplayers_nounder`, and Medium land still the only missing representative owner sample.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-owner-xl-land-reward-count-correction-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`
