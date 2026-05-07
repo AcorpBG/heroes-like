@@ -42,6 +42,7 @@ sourceDocs:
 - `docs/native-rmg-generalized-policy-regate-audit.md`
 - `src/gdextension/src/map_package_service.cpp`
 - `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tools/rmg_fast_audit.py`
 implementationTargets:
 - `docs/native-rmg-generalized-policy-regate-audit.md`
 - `PLAN.md`
@@ -53,6 +54,7 @@ implementationTargets:
 - `scenes/menus/MainMenu.tscn`
 - `tests/native_random_map_terrain_grid_report.gd`
 - `tests/native_random_map_owner_normal_water_underground_package_report.gd`
+- `tools/rmg_fast_audit.py`
 completionCriteria:
 - The corrective audit clearly distinguishes owner-H3M exact-count diagnostics from production RMG policy.
 - Current sample-specific runtime branches are identified as temporary fixture/diagnostic debt, not the desired architecture.
@@ -73,7 +75,9 @@ validationResults:
 - Native terrain policy no longer injects underground terrain into one-level scoped islands surface maps; the terrain-grid report also covers a scoped two-level request to prove the underground layer is materialized only when requested.
 - The Small normal-water two-level owner-corpus package path now preserves player start towns on their generated start anchors during owner spacing reflow, keeping player starts and owned towns colocated while still materializing a two-level map.
 - Native town records now carry level-aware primary occupancy and spacing semantics, allowing the Small normal-water two-level owner-corpus path to keep four towns on the surface and place the supplemental fifth town underground instead of violating the surface spacing floor.
-- `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` emitted schema `native_random_map_homm3_owner_corpus_coverage_report_v6`; the mapped gate remains failing overall but improved to `7/9` mapped pass. The previous Small normal-water two-level failure is gone; remaining mapped failures are Small islands two-level and XL no-water.
+- `tools/rmg_fast_audit.py` now provides the fast non-Godot audit path for owner `.h3m` parsing and native `.amap` package inspection: category/level counts, road component topology, and semantic town-route summaries run directly in Python. Godot owner-corpus scenes stay as final integration gates for native generation/package adoption/editor runtime, not the default parser/comparison loop.
+- The focused Small islands two-level diagnostic found a real two-level materialization defect: the native package had underground roads but no underground town/object/guard/reward distribution. Native object and guard records now preserve `point.level` with level-aware occupancy keys, town-pair route closure now paths with level-aware keys, and the Small islands two-level focused comparison now matches owner counts, road topology, and guarded route closure.
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` emitted schema `native_random_map_homm3_owner_corpus_coverage_report_v6` before the focused Small islands fix; the mapped gate remained failing overall at `7/9` mapped pass. After the focused fix, `.artifacts/focused_owner_small_islands_debug.tscn` passed for `owner_discovered_s_randomnumberofplayers_islands_2level` with object/town/guard/road deltas `0`, category deltas `0`, road topology surface `[45, 37, 15, 11, 10]`, underground `[29]`, and semantic layout match. A full owner-corpus Godot rerun is intentionally not part of the tight parser/comparison loop.
 - `tests/random_map_player_setup_retry_ux_report.tscn` passed after the explicit label correction and reported level options `Surface Only (1 Level)` and `Surface + Underground (2 Levels)`.
 - `tests/native_random_map_owner_normal_water_underground_package_report.tscn` passed with `map_level_count: 2`; `tests/native_random_map_terrain_grid_report.tscn`, `tests/validate_repo.py`, `git diff --check`, and `jq empty ops/progress.json` also passed.
 
