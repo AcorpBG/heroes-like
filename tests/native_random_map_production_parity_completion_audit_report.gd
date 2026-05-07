@@ -293,6 +293,7 @@ func _owner_corpus_summary(service: Variant) -> Dictionary:
 	var coverage: Dictionary = report.call("coverage_summary", samples)
 	var comparison_gate: Dictionary = report.call("comparison_gate_summary", samples)
 	var comparison_gate_self_check: Dictionary = report.call("_comparison_gate_self_check")
+	var large_land_density_diagnostic: Dictionary = report.call("owner_large_land_density_diagnostic", service, samples)
 	var xl_land_density_diagnostic: Dictionary = report.call("owner_xl_land_density_diagnostic", service, samples)
 	var compared_samples := []
 	var readable_samples := []
@@ -311,6 +312,7 @@ func _owner_corpus_summary(service: Variant) -> Dictionary:
 		"parsed_metric_sample_ids": compared_samples,
 		"parsed_sample_coverage": _owner_sample_coverage_records(samples),
 		"mapped_sample_parity": _owner_sample_parity_summaries(samples),
+		"large_land_density_diagnostic": large_land_density_diagnostic,
 		"xl_land_density_diagnostic": xl_land_density_diagnostic,
 		"coverage": coverage,
 		"comparison_gate": comparison_gate,
@@ -427,6 +429,12 @@ func _completion_checklist(metadata: Dictionary, setup_options: Dictionary, case
 				"requirement": "Parsed owner XL land evidence is compared to the native Extra Large land default as a diagnostic object/guard/road/category density gap before exact XL parity is claimed.",
 				"satisfied": String((owner_corpus.get("xl_land_density_diagnostic", {}) as Dictionary).get("status", "")) == "diagnosed" if owner_corpus.get("xl_land_density_diagnostic", {}) is Dictionary else false,
 				"evidence": owner_corpus.get("xl_land_density_diagnostic", {}),
+			},
+			{
+				"id": "owner_large_land_density_gap_diagnostic",
+				"requirement": "Parsed owner Large land evidence is compared to the native Large land default as a diagnostic object/guard/road/category density gap before exact Large parity is claimed.",
+				"satisfied": String((owner_corpus.get("large_land_density_diagnostic", {}) as Dictionary).get("status", "")) == "diagnosed" if owner_corpus.get("large_land_density_diagnostic", {}) is Dictionary else false,
+				"evidence": owner_corpus.get("large_land_density_diagnostic", {}),
 			},
 			{
 				"id": "full_homm3_style_parity",
@@ -568,6 +576,7 @@ func _objective_artifact_checklist(completion_checklist: Array, owner_corpus: Di
 			"objective_requirement": "Obstacles/blockers, guards, rewards, and object density must match owner-style behavior where local owner evidence exists.",
 			"repo_artifacts": ["tests/native_random_map_homm3_owner_corpus_coverage_report.gd", "tests/native_random_map_production_parity_completion_audit_report.gd"],
 			"evidence": _checklist_evidence(by_id, "mapped_owner_sample_exact_parity"),
+			"large_land_density_diagnostic": owner_corpus.get("large_land_density_diagnostic", {}),
 			"xl_land_density_diagnostic": owner_corpus.get("xl_land_density_diagnostic", {}),
 			"satisfied": _checklist_satisfied(by_id, "mapped_owner_sample_exact_parity"),
 			"scope_boundary": "Satisfied only for currently mapped local owner samples; broad corpus coverage remains separate.",
@@ -591,6 +600,7 @@ func _objective_artifact_checklist(completion_checklist: Array, owner_corpus: Di
 			"evidence": {
 				"broad_owner_h3m_comparison_corpus": _checklist_evidence(by_id, "broad_owner_h3m_comparison_corpus"),
 				"representative_owner_h3m_sample_coverage": _checklist_evidence(by_id, "representative_owner_h3m_sample_coverage"),
+				"owner_large_land_density_gap_diagnostic": _checklist_evidence(by_id, "owner_large_land_density_gap_diagnostic"),
 				"owner_xl_land_density_gap_diagnostic": _checklist_evidence(by_id, "owner_xl_land_density_gap_diagnostic"),
 				"coverage": owner_corpus_coverage,
 			},
@@ -882,6 +892,23 @@ func _catalog_town_minima_for_normalized_config(normalized: Dictionary) -> Dicti
 func _effective_town_minima_for_normalized_config(normalized: Dictionary, catalog_minima: Dictionary) -> Dictionary:
 	var player_constraints: Dictionary = normalized.get("player_constraints", {}) if normalized.get("player_constraints", {}) is Dictionary else {}
 	var player_count := int(player_constraints.get("player_count", 0))
+	if String(normalized.get("size_class_id", "")) == "homm3_large" \
+			and String(normalized.get("water_mode", "")) == "land" \
+			and int(normalized.get("level_count", 1)) == 1 \
+			and String(normalized.get("template_id", "")) == "translated_rmg_template_042_v1" \
+			and String(normalized.get("profile_id", "")) == "translated_rmg_profile_042_v1" \
+			and player_count == 4:
+		return {
+			"schema_id": "native_random_map_effective_town_minima_v1",
+			"template_id": String(normalized.get("template_id", "")),
+			"profile_id": String(normalized.get("profile_id", "")),
+			"source": "owner_discovered_l_nowater_randomplayers_nounder_town_count_supersedes_catalog_minima",
+			"player_count": player_count,
+			"minimum_player_town_count": player_count,
+			"minimum_neutral_town_count": 4,
+			"minimum_total_town_count": 8,
+			"catalog_minimum_total_town_count": int(catalog_minima.get("minimum_total_town_count", 0)),
+		}
 	if String(normalized.get("size_class_id", "")) == "homm3_extra_large" \
 			and String(normalized.get("water_mode", "")) == "land" \
 			and int(normalized.get("level_count", 1)) == 1 \

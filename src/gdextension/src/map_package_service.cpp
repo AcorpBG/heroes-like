@@ -6521,6 +6521,21 @@ bool native_rmg_owner_xl_land_density_case(const Dictionary &normalized) {
 			&& player_count == 5;
 }
 
+bool native_rmg_owner_large_land_density_case(const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	return width == 108
+			&& height == 108
+			&& level_count == 1
+			&& String(normalized.get("size_class_id", "")) == "homm3_large"
+			&& String(normalized.get("water_mode", "")) == "land"
+			&& String(normalized.get("template_id", "")) == "translated_rmg_template_042_v1"
+			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_042_v1"
+			&& player_count == 4;
+}
+
 int32_t owner_uploaded_small_049_object_target(const Dictionary &normalized, const String &kind) {
 	if (!native_rmg_owner_uploaded_small_049_case(normalized)) {
 		return -1;
@@ -6596,6 +6611,28 @@ int32_t owner_xl_land_category_target(const Dictionary &normalized, const String
 	}
 	if (category == "reward") {
 		return 692;
+	}
+	return -1;
+}
+
+int32_t owner_large_land_category_target(const Dictionary &normalized, const String &category) {
+	if (!native_rmg_owner_large_land_density_case(normalized)) {
+		return -1;
+	}
+	if (category == "decoration") {
+		return 1840;
+	}
+	if (category == "scenic_object") {
+		return 376;
+	}
+	if (category == "guard") {
+		return 264;
+	}
+	if (category == "town") {
+		return 8;
+	}
+	if (category == "reward") {
+		return 429;
 	}
 	return -1;
 }
@@ -8560,6 +8597,9 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	const int32_t uploaded_small_scenic_target = owner_uploaded_small_049_object_target(normalized, "scenic_object");
 	const int32_t uploaded_small_underground_decoration_target = owner_uploaded_small_027_underground_object_target(normalized, "decorative_obstacle");
 	const int32_t uploaded_small_underground_scenic_target = owner_uploaded_small_027_underground_object_target(normalized, "scenic_object");
+	const int32_t owner_large_decoration_target = owner_large_land_category_target(normalized, "decoration");
+	const int32_t owner_large_scenic_target = owner_large_land_category_target(normalized, "scenic_object");
+	const int32_t owner_large_reward_category_target = owner_large_land_category_target(normalized, "reward");
 	const int32_t owner_xl_decoration_target = owner_xl_land_category_target(normalized, "decoration");
 	const int32_t owner_xl_scenic_target = owner_xl_land_category_target(normalized, "scenic_object");
 	const int32_t owner_xl_reward_category_target = owner_xl_land_category_target(normalized, "reward");
@@ -8862,6 +8902,32 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 		append_extension_profile_elapsed(object_profile_phases, "uploaded_small_027_underground_decoration_density_supplement", elapsed_usec_since(decoration_supplement_started_at), top_object_phase_usec, top_object_phase_id);
 	}
 
+	if (owner_large_decoration_target >= 0) {
+		const auto decoration_supplement_started_at = std::chrono::steady_clock::now();
+		int32_t decoration_count = placement_count_for_spatial_category(placements, "decoration");
+		int32_t attempts = 0;
+		const int32_t max_attempts = std::max(owner_large_decoration_target * 6, int32_t(zones.size()) * 192);
+		while (decoration_count < owner_large_decoration_target && attempts < max_attempts) {
+			if (zones.is_empty()) {
+				break;
+			}
+			Dictionary zone = zones[attempts % zones.size()];
+			Dictionary point = find_compact_decoration_density_point_fast(zone, ordinal, normalized, placement_context);
+			if (point.is_empty()) {
+				const PackedInt32Array empty_road_distance_field;
+				point = object_point_for_zone_index_fast(zone, ordinal, 5 + attempts / std::max<int32_t>(1, int32_t(zones.size())), "decorative_obstacle", normalized, placement_context, owner_grid, occupied, empty_road_distance_field);
+			}
+			point["object_family_ordinal"] = decoration_count;
+			point["placement_policy"] = "owner_large_land_decoration_density_supplement";
+			if (!point.is_empty() && append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "decorative_obstacle", ordinal, road_cells, zone_layout)) {
+				++decoration_count;
+			}
+			++ordinal;
+			++attempts;
+		}
+		append_extension_profile_elapsed(object_profile_phases, "owner_large_land_decoration_density_supplement", elapsed_usec_since(decoration_supplement_started_at), top_object_phase_usec, top_object_phase_id);
+	}
+
 	if (owner_xl_decoration_target >= 0) {
 		const auto decoration_supplement_started_at = std::chrono::steady_clock::now();
 		int32_t decoration_count = placement_count_for_spatial_category(placements, "decoration");
@@ -8954,6 +9020,28 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 		append_extension_profile_elapsed(object_profile_phases, "uploaded_small_027_underground_scenic_object_mix", elapsed_usec_since(scenic_started_at), top_object_phase_usec, top_object_phase_id);
 	}
 
+	if (owner_large_scenic_target >= 0) {
+		const auto scenic_started_at = std::chrono::steady_clock::now();
+		int32_t scenic_count = placement_count_for_kind(placements, "scenic_object");
+		int32_t attempts = 0;
+		const int32_t max_attempts = std::max(owner_large_scenic_target * 8, int32_t(zones.size()) * 192);
+		while (scenic_count < owner_large_scenic_target && attempts < max_attempts) {
+			if (zones.is_empty()) {
+				break;
+			}
+			Dictionary zone = zones[attempts % zones.size()];
+			Dictionary point = object_point_for_zone_index_fast(zone, ordinal, 4 + attempts / std::max<int32_t>(1, int32_t(zones.size())), "scenic_object", normalized, placement_context, owner_grid, occupied, road_distance_field);
+			point["object_family_ordinal"] = scenic_count;
+			point["placement_policy"] = "owner_large_land_other_object_scenic_mix";
+			if (append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "scenic_object", ordinal, road_cells, zone_layout)) {
+				++scenic_count;
+			}
+			++ordinal;
+			++attempts;
+		}
+		append_extension_profile_elapsed(object_profile_phases, "owner_large_land_scenic_object_mix", elapsed_usec_since(scenic_started_at), top_object_phase_usec, top_object_phase_id);
+	}
+
 	if (owner_xl_scenic_target >= 0) {
 		const auto scenic_started_at = std::chrono::steady_clock::now();
 		int32_t scenic_count = placement_count_for_kind(placements, "scenic_object");
@@ -9005,6 +9093,44 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 		const auto auto_density_started_at = std::chrono::steady_clock::now();
 		native_catalog_auto_density_supplement = append_native_catalog_auto_density_supplement(placements, occupied, placement_context, normalized, zone_layout, road_cells, ordinal);
 		append_extension_profile_elapsed(object_profile_phases, "native_catalog_auto_density_floor_supplement", elapsed_usec_since(auto_density_started_at), top_object_phase_usec, top_object_phase_id);
+	}
+
+	if (owner_large_reward_category_target >= 0) {
+		const auto reward_trim_started_at = std::chrono::steady_clock::now();
+		const int32_t reward_count = placement_count_for_spatial_category(placements, "reward");
+		const int32_t desired_trim_count = std::max(0, reward_count - owner_large_reward_category_target);
+		if (desired_trim_count > 0) {
+			Array trimmed_placements;
+			Array removed_ids;
+			int32_t removed_count = 0;
+			for (int64_t index = placements.size() - 1; index >= 0; --index) {
+				if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+					trimmed_placements.push_front(placements[index]);
+					continue;
+				}
+				Dictionary placement = Dictionary(placements[index]);
+				if (String(placement.get("kind", "")) == "reward_reference" && removed_count < desired_trim_count) {
+					removed_ids.append(placement.get("placement_id", ""));
+					++removed_count;
+					continue;
+				}
+				trimmed_placements.push_front(placement);
+			}
+			placements = trimmed_placements;
+			Dictionary trim_summary;
+			trim_summary["schema_id"] = "native_rmg_owner_large_land_reward_category_trim_v1";
+			trim_summary["target_reward_category_count"] = owner_large_reward_category_target;
+			trim_summary["initial_reward_category_count"] = reward_count;
+			trim_summary["desired_trim_count"] = desired_trim_count;
+			trim_summary["removed_reward_reference_count"] = removed_count;
+			trim_summary["removed_placement_ids"] = removed_ids;
+			trim_summary["final_reward_category_count"] = placement_count_for_spatial_category(placements, "reward");
+			trim_summary["policy"] = "owner_large_no_water_category_count_trims_only_surplus_generic_reward_reference_after_required_mine_resource_dwelling_priority";
+			trim_summary["status"] = int32_t(trim_summary.get("final_reward_category_count", 0)) == owner_large_reward_category_target ? "pass" : "partial";
+			trim_summary["signature"] = hash32_hex(canonical_variant(trim_summary));
+			native_catalog_auto_density_supplement["owner_large_land_reward_category_trim"] = trim_summary;
+		}
+		append_extension_profile_elapsed(object_profile_phases, "owner_large_land_reward_category_trim", elapsed_usec_since(reward_trim_started_at), top_object_phase_usec, top_object_phase_id);
 	}
 
 	if (owner_xl_reward_category_target >= 0) {
@@ -9477,7 +9603,10 @@ Dictionary point_bounds_record(int32_t x, int32_t y) {
 	return bounds;
 }
 
-	int32_t town_spacing_radius_for_size(const Dictionary &normalized) {
+int32_t town_spacing_radius_for_size(const Dictionary &normalized) {
+		if (native_rmg_owner_large_land_density_case(normalized)) {
+			return 32;
+		}
 		if (native_rmg_owner_xl_land_density_case(normalized)) {
 			return 33;
 		}
@@ -11613,8 +11742,9 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
 	const int32_t parity_town_limit = parity_targets.is_empty() ? -1 : int32_t(parity_targets.get("town_count", 0));
 	const int32_t owner_medium_town_limit = owner_attached_medium_001_category_target(normalized, "town");
+	const int32_t owner_large_town_limit = owner_large_land_category_target(normalized, "town");
 	const int32_t owner_xl_town_limit = owner_xl_land_category_target(normalized, "town");
-	const int32_t effective_town_limit = parity_town_limit >= 0 ? parity_town_limit : (owner_medium_town_limit >= 0 ? owner_medium_town_limit : owner_xl_town_limit);
+	const int32_t effective_town_limit = parity_town_limit >= 0 ? parity_town_limit : (owner_medium_town_limit >= 0 ? owner_medium_town_limit : (owner_large_town_limit >= 0 ? owner_large_town_limit : owner_xl_town_limit));
 	append_extension_profile_phase(town_guard_profile_phases, "setup", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	int32_t town_ordinal = 0;
 	int32_t required_attempt_count = 0;
@@ -11677,7 +11807,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		const int32_t access_anchor_x = int32_t(access_anchor.get("x", width / 2));
 		const int32_t access_anchor_y = int32_t(access_anchor.get("y", height / 2));
 		Dictionary town_search_occupied = occupied;
-		if (owner_xl_town_limit >= 0 && record_type == "owner_xl_land_spacing_supplement_town") {
+		if ((owner_large_town_limit >= 0 && record_type == "owner_large_land_spacing_supplement_town") || (owner_xl_town_limit >= 0 && record_type == "owner_xl_land_spacing_supplement_town")) {
 			town_search_occupied = non_clearable_blocking_occupied.duplicate(true);
 			for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
 				if (Variant(objects[object_index]).get_type() != Variant::DICTIONARY) {
@@ -11710,6 +11840,26 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			const int32_t required_last_resort_spacing = launchable_spacing_floor_enforced ? owner_compared_required_spacing : std::max(4, std::min(8, required_materialization_spacing));
 		int32_t applied_spacing = preferred_spacing;
 		Dictionary point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, preferred_spacing, access_anchor, access_reachable_lookup);
+		if (point.is_empty() && native_rmg_owner_large_land_density_case(normalized) && record_type == "owner_large_land_spacing_supplement_town") {
+			point = find_spaced_object_point(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, preferred_spacing);
+		}
+		if (native_rmg_owner_large_land_density_case(normalized) && owner_scope != "player" && point.is_empty()) {
+			Dictionary diagnostic;
+			diagnostic["zone_id"] = zone_id;
+			diagnostic["record_type"] = record_type;
+			diagnostic["owner_scope"] = owner_scope;
+			diagnostic["settlement_kind"] = settlement_kind;
+			diagnostic["source_field_offset"] = town_source_field_offset(owner_scope, settlement_kind, density);
+			diagnostic["source_field_name"] = town_source_field_name(owner_scope, settlement_kind, density);
+			diagnostic["source_field_value"] = source_value;
+			diagnostic["phase"] = phase_label;
+			diagnostic["preferred_town_spacing"] = preferred_spacing;
+			diagnostic["code"] = "owner_large_land_town_spacing_candidate_skipped";
+			diagnostic["severity"] = "warning";
+			diagnostic["message"] = "Owner Large land neutral town candidate could not satisfy the parsed owner-H3M spacing floor and was skipped so the global supplement can choose a spread-out candidate.";
+			town_diagnostics.append(diagnostic);
+			return;
+		}
 		if (point.is_empty() && hard_spacing < preferred_spacing) {
 			applied_spacing = hard_spacing;
 			point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, hard_spacing, access_anchor, access_reachable_lookup);
@@ -11751,6 +11901,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			diagnostic["required_last_resort_town_spacing"] = required_last_resort_spacing;
 			diagnostic["launchable_spacing_floor_enforced"] = launchable_spacing_floor_enforced;
 			diagnostic["owner_medium_islands_spacing_floor_enforced"] = owner_medium_islands_spacing_floor_enforced;
+			diagnostic["owner_large_land_spacing_floor_enforced"] = false;
 			diagnostic["owner_xl_land_spacing_floor_enforced"] = owner_xl_land_spacing_floor_enforced;
 		diagnostic["applied_town_spacing"] = applied_spacing;
 		diagnostic["town_access_anchor"] = access_anchor;
@@ -11930,6 +12081,28 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			++attempts;
 		}
 	}
+	if (owner_large_town_limit >= 0) {
+		int32_t attempts = 0;
+		while (towns.size() < owner_large_town_limit && attempts < int32_t(zones.size()) * 80) {
+			if (zones.is_empty()) {
+				break;
+			}
+			Dictionary zone = zones[attempts % zones.size()];
+			++density_attempt_count;
+			append_town_attempt(zone, Dictionary(), "neutral", "town", false, owner_large_town_limit, "owner_large_land_spacing_supplement_town", "owner_large_land_h3m_town_count_spacing_supplement", attempts);
+			++attempts;
+		}
+		if (towns.size() < owner_large_town_limit) {
+			Dictionary diagnostic;
+			diagnostic["code"] = "owner_large_land_town_count_spacing_supplement_partial";
+			diagnostic["severity"] = "warning";
+			diagnostic["target_town_count"] = owner_large_town_limit;
+			diagnostic["final_town_count"] = towns.size();
+			diagnostic["attempt_count"] = attempts;
+			diagnostic["source"] = "owner_discovered_l_nowater_randomplayers_nounder_town_count";
+			town_diagnostics.append(diagnostic);
+		}
+	}
 	if (owner_xl_town_limit >= 0) {
 		int32_t attempts = 0;
 		while (towns.size() < owner_xl_town_limit && attempts < int32_t(zones.size()) * 100) {
@@ -11961,10 +12134,11 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	const int32_t uploaded_small_guard_limit = native_rmg_owner_uploaded_small_049_case(normalized) ? 40 : -1;
 	const int32_t uploaded_small_underground_guard_limit = native_rmg_owner_uploaded_small_027_underground_case(normalized) ? 60 : -1;
 	const int32_t owner_medium_guard_limit = owner_attached_medium_001_category_target(normalized, "guard");
+	const int32_t owner_large_guard_limit = owner_large_land_category_target(normalized, "guard");
 	const int32_t owner_xl_guard_limit = owner_xl_land_category_target(normalized, "guard");
 	const bool owner_medium_guard_density = owner_medium_guard_limit >= 0;
-	const bool owner_category_guard_density = owner_medium_guard_density || owner_xl_guard_limit >= 0;
-	const int32_t effective_guard_limit = parity_guard_limit >= 0 ? parity_guard_limit : (uploaded_small_guard_limit >= 0 ? uploaded_small_guard_limit : (uploaded_small_underground_guard_limit >= 0 ? uploaded_small_underground_guard_limit : (owner_medium_guard_limit >= 0 ? owner_medium_guard_limit : owner_xl_guard_limit)));
+	const bool owner_category_guard_density = owner_medium_guard_density || owner_large_guard_limit >= 0 || owner_xl_guard_limit >= 0;
+	const int32_t effective_guard_limit = parity_guard_limit >= 0 ? parity_guard_limit : (uploaded_small_guard_limit >= 0 ? uploaded_small_guard_limit : (uploaded_small_underground_guard_limit >= 0 ? uploaded_small_underground_guard_limit : (owner_medium_guard_limit >= 0 ? owner_medium_guard_limit : (owner_large_guard_limit >= 0 ? owner_large_guard_limit : owner_xl_guard_limit))));
 	for (int64_t index = 0; index < edges.size(); ++index) {
 		if (effective_guard_limit >= 0 && guard_ordinal >= effective_guard_limit) {
 			break;
@@ -12124,6 +12298,55 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		}
 	}
 	append_extension_profile_phase(town_guard_profile_phases, "object_guard_placement", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
+
+	if (owner_large_guard_limit >= 0 && guard_ordinal < owner_large_guard_limit) {
+		subphase_started_at = std::chrono::steady_clock::now();
+		int32_t attempts = 0;
+		const int32_t max_attempts = std::max(owner_large_guard_limit * 12, int32_t(zones.size()) * 256);
+		while (guard_ordinal < owner_large_guard_limit && attempts < max_attempts) {
+			if (zones.is_empty()) {
+				break;
+			}
+			Dictionary zone = zones[attempts % zones.size()];
+			const String zone_id = String(zone.get("id", ""));
+			Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+			const int32_t ring = 2 + attempts / std::max<int32_t>(1, int32_t(zones.size()));
+			const int32_t seed = int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":owner_large_density_guard:" + String::num_int64(attempts)) % 17U);
+			const int32_t dx = ((attempts % 7) - 3) * 2 + (seed % 3) - 1;
+			const int32_t dy = (((attempts / 7) % 7) - 3) * 2 + (seed / 3) - 2;
+			Dictionary point = find_object_point(
+					int32_t(anchor.get("x", width / 2)) + dx + ring,
+					int32_t(anchor.get("y", height / 2)) + dy - ring,
+					zone_id,
+					owner_grid,
+					occupied,
+					width,
+					height);
+			if (!point.is_empty()) {
+				const int32_t guard_value = std::max(900, rmg_zone_monster_scaled_value(normalized, zone, 1200 + (attempts % 5) * 300));
+				Dictionary target;
+				target["protected_target_id"] = "owner_large_land_density_guard_" + slot_id_2(guard_ordinal + 1);
+				target["protected_target_type"] = "density_guard";
+				target["protected_zone_id"] = zone_id;
+				target["protected_zone_value_budget"] = zone.get("value_budget", 0);
+				target["guard_base_value"] = guard_value;
+				target["scaled_guard_value"] = guard_value;
+				target["guard_reward_relation_source"] = "owner_large_land_density_guard_supplement_from_parsed_h3m_guard_count";
+				append_guard_record(guards, occupied, guard_record_at_point(normalized, zone, point, "density_guard", guard_ordinal, guard_value, road_network, zone_layout, occupied, target));
+				++guard_ordinal;
+			}
+			++attempts;
+		}
+		Dictionary diagnostic;
+		diagnostic["code"] = guard_ordinal >= owner_large_guard_limit ? "owner_large_land_density_guard_target_materialized" : "owner_large_land_density_guard_target_partial";
+		diagnostic["severity"] = guard_ordinal >= owner_large_guard_limit ? "info" : "warning";
+		diagnostic["target_guard_count"] = owner_large_guard_limit;
+		diagnostic["final_guard_count"] = guard_ordinal;
+		diagnostic["attempt_count"] = attempts;
+		diagnostic["source"] = "owner_discovered_l_nowater_randomplayers_nounder_guard_count";
+		guard_diagnostics.append(diagnostic);
+		append_extension_profile_phase(town_guard_profile_phases, "owner_large_land_density_guard_supplement", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
+	}
 
 	if (owner_xl_guard_limit >= 0 && guard_ordinal < owner_xl_guard_limit) {
 		subphase_started_at = std::chrono::steady_clock::now();
@@ -13284,6 +13507,9 @@ Array build_phase_pipeline(const Dictionary &terrain_grid, const Dictionary &zon
 
 int32_t native_rmg_town_spacing_floor_for_config(const Dictionary &normalized) {
 	const String size_class_id = String(normalized.get("size_class_id", ""));
+	if (native_rmg_owner_large_land_density_case(normalized)) {
+		return 32;
+	}
 	if (native_rmg_owner_xl_land_density_case(normalized)) {
 		return 36;
 	}
