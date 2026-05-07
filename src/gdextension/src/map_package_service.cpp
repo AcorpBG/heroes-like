@@ -614,6 +614,7 @@ bool native_rmg_owner_medium_normal_water_density_case(const Dictionary &normali
 bool native_rmg_owner_large_land_density_case(const Dictionary &normalized);
 bool native_rmg_owner_xl_land_density_case(const Dictionary &normalized);
 Dictionary native_rmg_runtime_policy_classification(const Dictionary &normalized);
+Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized);
 
 Dictionary uploaded_small_road_component_suppression_lookup(const Array &road_segments, const Dictionary &normalized) {
 	Dictionary result;
@@ -1879,6 +1880,138 @@ Array native_catalog_auto_two_level_underground_road_tiles(const Array &road_seg
 	return tiles;
 }
 
+int32_t catalog_auto_road_component_target_count(const Dictionary &normalized, int32_t total_target) {
+	const String size_class = String(normalized.get("size_class_id", ""));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	int32_t target = level_count > 1 ? 8 : 4;
+	if (size_class == "homm3_small") {
+		target = level_count > 1 ? 6 : 3;
+	} else if (size_class == "homm3_medium") {
+		target = level_count > 1 ? 8 : 4;
+	} else if (size_class == "homm3_large") {
+		target = level_count > 1 ? 12 : 8;
+	} else if (size_class == "homm3_extra_large") {
+		target = level_count > 1 ? 16 : 10;
+	}
+	return std::max<int32_t>(1, std::min<int32_t>(target, std::max<int32_t>(1, total_target / 4)));
+}
+
+Array append_catalog_auto_road_component_clusters(Array &tiles, Dictionary &lookup, const Dictionary &normalized, int32_t level, int32_t component_count, int32_t total_target, int32_t map_width, int32_t map_height) {
+	Array component_sizes;
+	if (component_count <= 0 || total_target <= 0) {
+		return component_sizes;
+	}
+	const int32_t cols = std::max<int32_t>(1, int32_t(std::ceil(std::sqrt(double(component_count)))));
+	const int32_t rows = std::max<int32_t>(1, int32_t(std::ceil(double(component_count) / double(cols))));
+	const int32_t usable_width = std::max<int32_t>(1, map_width - 4);
+	const int32_t usable_height = std::max<int32_t>(1, map_height - 4);
+	const int32_t slot_width = std::max<int32_t>(4, usable_width / cols);
+	const int32_t slot_height = std::max<int32_t>(4, usable_height / rows);
+	const String seed = String(normalized.get("normalized_seed", "0")) + ":catalog_auto_road_components:l" + String::num_int64(level);
+	for (int32_t component_index = 0; component_index < component_count; ++component_index) {
+		const int32_t component_target = total_target / component_count + (component_index < (total_target % component_count) ? 1 : 0);
+		if (component_target <= 0) {
+			component_sizes.append(0);
+			continue;
+		}
+		const int32_t col = component_index % cols;
+		const int32_t row = component_index / cols;
+		const int32_t cell_min_x = 2 + col * slot_width;
+		const int32_t cell_min_y = 2 + row * slot_height;
+		const int32_t cell_max_x = std::min<int32_t>(map_width - 2, 2 + (col + 1) * slot_width - 2);
+		const int32_t cell_max_y = std::min<int32_t>(map_height - 2, 2 + (row + 1) * slot_height - 2);
+		const int32_t max_cluster_width = std::max<int32_t>(3, cell_max_x - cell_min_x + 1);
+		const int32_t max_cluster_height = std::max<int32_t>(3, cell_max_y - cell_min_y + 1);
+		int32_t cluster_width = std::min<int32_t>(max_cluster_width, std::max<int32_t>(3, int32_t(std::ceil(std::sqrt(double(component_target) * 1.35)))));
+		int32_t cluster_height = std::min<int32_t>(max_cluster_height, std::max<int32_t>(3, (component_target + cluster_width - 1) / cluster_width));
+		while (cluster_width * cluster_height < component_target && cluster_width < max_cluster_width) {
+			++cluster_width;
+			cluster_height = std::min<int32_t>(max_cluster_height, std::max<int32_t>(3, (component_target + cluster_width - 1) / cluster_width));
+		}
+		while (cluster_width * cluster_height < component_target && cluster_height < max_cluster_height) {
+			++cluster_height;
+		}
+		const int32_t jitter_x_range = std::max<int32_t>(1, max_cluster_width - cluster_width + 1);
+		const int32_t jitter_y_range = std::max<int32_t>(1, max_cluster_height - cluster_height + 1);
+		const uint32_t jitter = hash32_int(seed + String(":") + String::num_int64(component_index));
+		const int32_t start_x = std::min<int32_t>(map_width - 2, cell_min_x + int32_t(jitter % uint32_t(jitter_x_range)));
+		const int32_t start_y = std::min<int32_t>(map_height - 2, cell_min_y + int32_t((jitter / 17U) % uint32_t(jitter_y_range)));
+		const int32_t emitted = append_catalog_auto_unique_cluster_tiles_at_level(tiles, lookup, level, start_x, start_y, cluster_width, cluster_height, component_target, map_width, map_height);
+		component_sizes.append(emitted);
+	}
+	return component_sizes;
+}
+
+Dictionary native_catalog_auto_road_component_adjustment_lookup(const Array &road_segments, const Dictionary &normalized) {
+	Dictionary result;
+	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto") {
+		return result;
+	}
+	const String normalized_seed = String(normalized.get("normalized_seed", ""));
+	if (normalized_seed.begins_with("owner-corpus-") || normalized_seed.begins_with("owner_discovered_")) {
+		return result;
+	}
+	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
+	if (!parity_targets.is_empty()) {
+		return result;
+	}
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	std::vector<int32_t> source_cells = unique_road_cells_from_segments(road_segments, width, height);
+	if (source_cells.empty()) {
+		return result;
+	}
+
+	Dictionary suppressed_lookup;
+	for (const int32_t encoded : source_cells) {
+		suppressed_lookup[road_split_tile_key(encoded % width, encoded / width)] = true;
+	}
+
+	const int32_t source_count = int32_t(source_cells.size());
+	int32_t total_target = source_count;
+	if (level_count > 1) {
+		total_target += std::max<int32_t>(12, source_count / 3);
+	}
+	if (String(normalized.get("size_class_id", "")) == "homm3_small" && level_count > 1) {
+		const int32_t area = std::max(1, width * height * level_count);
+		total_target = std::max<int32_t>(total_target, std::max<int32_t>(82, (area * 45) / 1000));
+	}
+
+	const int32_t component_target = catalog_auto_road_component_target_count(normalized, total_target);
+	const int32_t surface_component_count = level_count > 1 ? std::max<int32_t>(1, (component_target * 2 + 2) / 3) : component_target;
+	const int32_t underground_component_count = level_count > 1 ? std::max<int32_t>(1, component_target - surface_component_count) : 0;
+	const int32_t surface_target = level_count > 1 ? (total_target * 2) / 3 : total_target;
+	const int32_t underground_target = std::max<int32_t>(0, total_target - surface_target);
+
+	Array additional_tiles;
+	Dictionary road_lookup;
+	Array surface_component_sizes = append_catalog_auto_road_component_clusters(additional_tiles, road_lookup, normalized, 0, surface_component_count, surface_target, width, height);
+	Array underground_component_sizes;
+	if (level_count > 1 && underground_target > 0) {
+		underground_component_sizes = append_catalog_auto_road_component_clusters(additional_tiles, road_lookup, normalized, 1, underground_component_count, underground_target, width, height);
+	}
+
+	Dictionary summary;
+	summary["schema_id"] = "native_rmg_catalog_auto_generalized_road_component_materialization_v1";
+	summary["policy"] = "replace the serialized all-routes trunk overlay for normal catalog-auto generation with deterministic separated road components while keeping route graph reachability and guard controls authoritative";
+	summary["source_unique_surface_road_cell_count"] = source_count;
+	summary["target_total_road_cell_count"] = total_target;
+	summary["target_surface_road_cell_count"] = surface_target;
+	summary["target_underground_road_cell_count"] = underground_target;
+	summary["target_component_count"] = component_target;
+	summary["surface_component_sizes"] = surface_component_sizes;
+	summary["underground_component_sizes"] = underground_component_sizes;
+	summary["additional_tile_count"] = additional_tiles.size();
+	summary["suppressed_tile_count"] = suppressed_lookup.size();
+	summary["signature"] = hash32_hex(canonical_variant(summary));
+
+	result["lookup"] = suppressed_lookup;
+	result["additional_tiles"] = additional_tiles;
+	result["summary"] = summary;
+	return result;
+}
+
 Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictionary &road_network = Dictionary(), const Dictionary &river_network = Dictionary(), const Dictionary &normalized = Dictionary()) {
 	Dictionary terrain_layers;
 	terrain_layers["schema_id"] = "aurelion_map_terrain_layers";
@@ -1909,6 +2042,15 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	Dictionary owner_small_random_land_road_adjustment = owner_small_random_land_road_component_adjustment_lookup(road_segments, normalized);
 	Dictionary owner_small_normal_water_2level_road_adjustment = owner_small_normal_water_2level_road_component_adjustment_lookup(road_segments, normalized);
 	Dictionary owner_small_islands_2level_road_adjustment = owner_small_islands_2level_road_component_adjustment_lookup(road_segments, normalized);
+	const bool owner_road_adjustment_active = !owner_medium_road_adjustment.is_empty()
+			|| !owner_medium_normal_water_road_adjustment.is_empty()
+			|| !owner_small_underground_road_adjustment.is_empty()
+			|| !owner_large_land_road_adjustment.is_empty()
+			|| !owner_xl_land_road_adjustment.is_empty()
+			|| !owner_small_random_land_road_adjustment.is_empty()
+			|| !owner_small_normal_water_2level_road_adjustment.is_empty()
+			|| !owner_small_islands_2level_road_adjustment.is_empty();
+	Dictionary native_catalog_auto_road_component_adjustment = owner_road_adjustment_active ? Dictionary() : native_catalog_auto_road_component_adjustment_lookup(road_segments, normalized);
 	Dictionary suppressed_road_tiles = road_split_suppression.get("lookup", Dictionary());
 	Dictionary owner_medium_suppressed_road_tiles = owner_medium_road_adjustment.get("lookup", Dictionary());
 	Array owner_medium_suppressed_keys = owner_medium_suppressed_road_tiles.keys();
@@ -1945,6 +2087,11 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	for (int64_t index = 0; index < owner_small_islands_2level_suppressed_keys.size(); ++index) {
 		suppressed_road_tiles[owner_small_islands_2level_suppressed_keys[index]] = true;
 	}
+	Dictionary native_catalog_auto_component_suppressed_road_tiles = native_catalog_auto_road_component_adjustment.get("lookup", Dictionary());
+	Array native_catalog_auto_component_suppressed_keys = native_catalog_auto_component_suppressed_road_tiles.keys();
+	for (int64_t index = 0; index < native_catalog_auto_component_suppressed_keys.size(); ++index) {
+		suppressed_road_tiles[native_catalog_auto_component_suppressed_keys[index]] = true;
+	}
 	Array additional_road_tiles = road_split_suppression.get("additional_tiles", Array());
 	Array owner_medium_additional_road_tiles = owner_medium_road_adjustment.get("additional_tiles", Array());
 	for (int64_t index = 0; index < owner_medium_additional_road_tiles.size(); ++index) {
@@ -1978,7 +2125,11 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	for (int64_t index = 0; index < owner_small_islands_2level_additional_road_tiles.size(); ++index) {
 		additional_road_tiles.append(owner_small_islands_2level_additional_road_tiles[index]);
 	}
-	Array native_catalog_auto_two_level_additional_road_tiles = native_catalog_auto_two_level_underground_road_tiles(road_segments, normalized);
+	Array native_catalog_auto_component_additional_road_tiles = native_catalog_auto_road_component_adjustment.get("additional_tiles", Array());
+	for (int64_t index = 0; index < native_catalog_auto_component_additional_road_tiles.size(); ++index) {
+		additional_road_tiles.append(native_catalog_auto_component_additional_road_tiles[index]);
+	}
+	Array native_catalog_auto_two_level_additional_road_tiles = native_catalog_auto_road_component_adjustment.is_empty() ? native_catalog_auto_two_level_underground_road_tiles(road_segments, normalized) : Array();
 	for (int64_t index = 0; index < native_catalog_auto_two_level_additional_road_tiles.size(); ++index) {
 		additional_road_tiles.append(native_catalog_auto_two_level_additional_road_tiles[index]);
 	}
@@ -2065,11 +2216,12 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 			const bool owner_small_random_land_adjusted = !owner_small_random_land_road_adjustment.is_empty();
 			const bool owner_small_normal_water_2level_adjusted = !owner_small_normal_water_2level_road_adjustment.is_empty();
 			const bool owner_small_islands_2level_adjusted = !owner_small_islands_2level_road_adjustment.is_empty();
+			const bool native_catalog_auto_component_adjusted = !native_catalog_auto_road_component_adjustment.is_empty();
 			const bool native_catalog_auto_two_level_adjusted = !native_catalog_auto_two_level_additional_road_tiles.is_empty();
-			road["id"] = owner_medium_adjusted ? "road_owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "road_owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "road_owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "road_owner_xl_land_component_layout_01" : (owner_small_random_land_adjusted ? "road_owner_small_random_land_component_layout_01" : (owner_small_normal_water_2level_adjusted ? "road_owner_small_normal_water_2level_component_layout_01" : (owner_small_islands_2level_adjusted ? "road_owner_small_islands_2level_component_layout_01" : (native_catalog_auto_two_level_adjusted ? "road_native_catalog_auto_two_level_underground_01" : "road_uploaded_small_orphan_road_component_spur_01")))))));
-			road["route_edge_id"] = owner_medium_adjusted ? "owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_01" : (owner_small_random_land_adjusted ? "owner_small_random_land_component_layout_01" : (owner_small_normal_water_2level_adjusted ? "owner_small_normal_water_2level_component_layout_01" : (owner_small_islands_2level_adjusted ? "owner_small_islands_2level_component_layout_01" : (native_catalog_auto_two_level_adjusted ? "native_catalog_auto_two_level_underground_01" : "uploaded_small_orphan_road_component_spur_01")))))));
+			road["id"] = owner_medium_adjusted ? "road_owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "road_owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "road_owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "road_owner_xl_land_component_layout_01" : (owner_small_random_land_adjusted ? "road_owner_small_random_land_component_layout_01" : (owner_small_normal_water_2level_adjusted ? "road_owner_small_normal_water_2level_component_layout_01" : (owner_small_islands_2level_adjusted ? "road_owner_small_islands_2level_component_layout_01" : (native_catalog_auto_component_adjusted ? "road_native_catalog_auto_component_layout_01" : (native_catalog_auto_two_level_adjusted ? "road_native_catalog_auto_two_level_underground_01" : "road_uploaded_small_orphan_road_component_spur_01"))))))));
+			road["route_edge_id"] = owner_medium_adjusted ? "owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_01" : (owner_small_random_land_adjusted ? "owner_small_random_land_component_layout_01" : (owner_small_normal_water_2level_adjusted ? "owner_small_normal_water_2level_component_layout_01" : (owner_small_islands_2level_adjusted ? "owner_small_islands_2level_component_layout_01" : (native_catalog_auto_component_adjusted ? "native_catalog_auto_component_layout_01" : (native_catalog_auto_two_level_adjusted ? "native_catalog_auto_two_level_underground_01" : "uploaded_small_orphan_road_component_spur_01"))))))));
 			road["overlay_id"] = road_network.get("overlay_id", "generated_dirt_road");
-			road["road_class"] = owner_medium_adjusted ? "owner_medium_component_growth_road" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_road" : (owner_large_land_adjusted ? "owner_large_land_component_layout_road" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_road" : (owner_small_random_land_adjusted ? "owner_small_random_land_component_layout_road" : (owner_small_normal_water_2level_adjusted ? "owner_small_normal_water_2level_component_layout_road" : (owner_small_islands_2level_adjusted ? "owner_small_islands_2level_component_layout_road" : (native_catalog_auto_two_level_adjusted ? "native_catalog_auto_two_level_underground_road" : "uploaded_small_orphan_component_road")))))));
+			road["road_class"] = owner_medium_adjusted ? "owner_medium_component_growth_road" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_road" : (owner_large_land_adjusted ? "owner_large_land_component_layout_road" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_road" : (owner_small_random_land_adjusted ? "owner_small_random_land_component_layout_road" : (owner_small_normal_water_2level_adjusted ? "owner_small_normal_water_2level_component_layout_road" : (owner_small_islands_2level_adjusted ? "owner_small_islands_2level_component_layout_road" : (native_catalog_auto_component_adjusted ? "native_catalog_auto_component_layout_road" : (native_catalog_auto_two_level_adjusted ? "native_catalog_auto_two_level_underground_road" : "uploaded_small_orphan_component_road"))))))));
 			road["road_type_id"] = "generated_dirt_secondary_major_object_service_road";
 			road["overlay_byte_layout"] = Dictionary();
 			road["overlay_tiles"] = Array();
@@ -2077,7 +2229,7 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 			road["cells"] = tiles;
 			road["tile_count"] = tiles.size();
 			road["cell_count"] = tiles.size();
-			road["source"] = owner_medium_adjusted ? "native_rmg_owner_medium_component_adjusted_package_surface" : (owner_small_underground_adjusted ? "native_rmg_owner_small_underground_adjusted_package_levels" : (owner_large_land_adjusted ? "native_rmg_owner_large_land_component_adjusted_package_surface" : (owner_xl_land_adjusted ? "native_rmg_owner_xl_land_component_adjusted_package_surface" : (owner_small_random_land_adjusted ? "native_rmg_owner_small_random_land_component_adjusted_package_surface" : (owner_small_normal_water_2level_adjusted ? "native_rmg_owner_small_normal_water_2level_component_adjusted_package_levels" : (owner_small_islands_2level_adjusted ? "native_rmg_owner_small_islands_2level_component_adjusted_package_levels" : (native_catalog_auto_two_level_adjusted ? "native_rmg_catalog_auto_two_level_underground_package_roads" : "native_rmg_uploaded_small_serialized_orphan_component_package_surface")))))));
+			road["source"] = owner_medium_adjusted ? "native_rmg_owner_medium_component_adjusted_package_surface" : (owner_small_underground_adjusted ? "native_rmg_owner_small_underground_adjusted_package_levels" : (owner_large_land_adjusted ? "native_rmg_owner_large_land_component_adjusted_package_surface" : (owner_xl_land_adjusted ? "native_rmg_owner_xl_land_component_adjusted_package_surface" : (owner_small_random_land_adjusted ? "native_rmg_owner_small_random_land_component_adjusted_package_surface" : (owner_small_normal_water_2level_adjusted ? "native_rmg_owner_small_normal_water_2level_component_adjusted_package_levels" : (owner_small_islands_2level_adjusted ? "native_rmg_owner_small_islands_2level_component_adjusted_package_levels" : (native_catalog_auto_component_adjusted ? "native_rmg_catalog_auto_generalized_component_package_roads" : (native_catalog_auto_two_level_adjusted ? "native_rmg_catalog_auto_two_level_underground_package_roads" : "native_rmg_uploaded_small_serialized_orphan_component_package_surface"))))))));
 			roads.append(road);
 		}
 	}
@@ -2112,6 +2264,9 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	}
 	if (!owner_small_islands_2level_road_adjustment.is_empty()) {
 		terrain_layers["road_component_adjustment_summary"] = owner_small_islands_2level_road_adjustment.get("summary", Dictionary());
+	}
+	if (!native_catalog_auto_road_component_adjustment.is_empty()) {
+		terrain_layers["road_component_adjustment_summary"] = native_catalog_auto_road_component_adjustment.get("summary", Dictionary());
 	}
 
 	Array rivers;

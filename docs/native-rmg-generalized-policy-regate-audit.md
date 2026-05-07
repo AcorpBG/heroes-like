@@ -402,3 +402,23 @@ Validation evidence:
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_twolevel_town_floor_combined --no-topology-gate --allow-failures --pretty` still reports `status: pass`, proving the new failure signal is specifically road topology, not a regression in parsing, density, town, reward, or guard policy.
 
 This is the next concrete production blocker: the generator needs generalized road component materialization that creates HoMM3-like trunk/branch/component shape across land, water, islands, and two-level templates. Running more Godot parser scenes will not help this; the fast Python evidence now exposes the exact class of road-shape failure.
+
+## Implemented Generated Road Component Materialization
+
+Normal non-owner-corpus catalog-auto package serialization now replaces the previous all-routes trunk overlay with deterministic separated road components. The route graph, route reachability proof, and connection guard controls remain authoritative; this change affects the serialized road overlay shape that map inspection and package comparison see.
+
+The materializer is generalized by size and level count:
+
+- one-level generated maps split roads into multiple surface components instead of one dominant connected trunk;
+- two-level generated maps split the road budget across surface and underground components instead of one dominant surface trunk plus tiny underground fragments;
+- owner-corpus exact comparison seeds and existing owner road-adjustment paths are not stacked with the generalized materializer.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 600 tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_general_road_components` exported `18/18` packages with `0` failures.
+- After tightening the no-stacking guard, `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_general_road_components --case xl_nowater` re-exported the one package that had combined generalized and owner-adjusted roads.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_general_road_components --allow-failures --pretty` now reports `status: pass`, `18` matched comparisons, `0` parse failures, `0` native rule failures, `0` density gaps, `0` policy gaps, and `0` topology gaps.
+- `python3 tools/rmg_fast_audit.py --amap .artifacts/rmg_native_batch_export_after_general_road_components/xl_nowater.amap --pretty` reports `727` road cells and component sizes `[485, 188, 54]`, proving the generalized materializer no longer stacks on that existing owner-adjusted path.
+
+This clears the current fast road-topology blocker. It is not a full production-ready RMG claim; remaining parity work still includes replacing older owner-adjustment debt with generalized route/object/guard/town policy and broader live inspection across unsupported profiles.
