@@ -29,7 +29,43 @@ Do not infer product readiness from the completed queue. Completed Phase 2/RMG/p
 
 Persistent guardrail: do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.
 
-Active owner-directed RMG corrective slice:
+Recently completed owner-directed RMG corrective slice:
+
+id: `native-rmg-owner-xl-land-density-correction-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Use the XL no-water owner diagnostic to raise native Extra Large land default decoration, scenic-object, and guard density toward owner-H3M scale instead of leaving the generator at roughly one-third owner object density.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `src/gdextension/src/map_package_service.cpp`
+- local evidence under `maps/h3m-maps/XL-nowater.h3m`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Native Extra Large land default adds deterministic owner-informed density targets for decoration, scenic-object, and guards.
+- The XL land diagnostic object-density ratio improves materially from the baseline 0.349 and no longer reports decoration/scenic category as effectively absent.
+- Representative package route closure and road integrity remain passing after denser blockers/objects are added.
+- Production audit still refuses `production_ready` until broad exact owner-H3M parity and remaining corpus/parser gaps are closed.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No exact XL H3M parity claim from a potentially different HoMM3 template/player-count sample.
+- No broad Large/no-water parser repair.
+- No HoMM3 copyrighted asset/DEF import.
+validationResults:
+- Native XL land diagnostic validation now passes with package_object_count 5,627 versus owner 5,365, object density ratio 1.049, decoration 3,413/3,413, scenic/object 629/629, guard 619/619, and road cells 764 versus 727.
+- Route closure remains intact in the diagnostic: native object-route reachable town pairs 0 and native guarded-route reachable town pairs 0.
+- Remaining explicit diagnostic gap is semantic town layout spacing: native nearest town Manhattan 23 versus owner 39, with native town count 14 versus owner 12 and reward count 952 versus owner 692.
+- Production parity audit passed with `production_ready false` and `missing_requirement_count 4`, preserving the no-overclaim boundary.
+- Uploaded `.h3m`, generated `.amap`, and generated `.ascenario` evidence remains uncommitted.
+
+Recently completed owner-directed RMG corrective slice:
 
 id: `native-rmg-owner-xl-land-density-gap-diagnostic-10184`
 phase: `phase-3-homm3-style-rmg-rework`
