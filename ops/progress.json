@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-owner-h3m-variation-corpus-discovery-10184",
-  "currentSliceTitle": "native rmg owner h3m variation corpus discovery 10184",
+  "currentSliceId": "native-rmg-owner-h3m-xl-nowater-parser-cap-10184",
+  "currentSliceTitle": "native rmg owner h3m xl nowater parser cap 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Owner-corpus audit now discovers maps/h3m-maps as evidence-only input, parses 18 of 21 readable local owner H3M samples across Small/Medium/Large/XL and land/normal-water/islands, and reports 15 newly parsed variation samples as unmapped next-work evidence while production_ready remains false.",
+  "currentSliceNotes": "Owner-corpus parser now accepts XL no-water samples above 5,000 placed objects; the expanded corpus parses 20 of 21 readable local samples and production audit now matches Extra Large land representative coverage to owner_discovered_xl_nowater while keeping Medium/Large land and the Large no-water alignment parser gap explicit.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-07T01:50:35Z",
+  "updatedAt": "2026-05-07T01:58:33Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -13625,6 +13625,16 @@
       "startedAt": "2026-05-07T01:43:21Z",
       "completedAt": "2026-05-07T01:50:35Z",
       "notes": "Owner-H3M corpus discovery now includes local maps/h3m-maps variation evidence without committing uploaded maps. The report passed with 21 readable samples, 18 parsed metric samples, Small/Medium/Large/XL coverage, land/normal-water/islands coverage, and 15 newly parsed samples explicitly reported as unmapped next-work evidence; production audit still reports production_ready false."
+    },
+    {
+      "id": "native-rmg-owner-h3m-xl-nowater-parser-cap-10184",
+      "title": "native rmg owner h3m xl nowater parser cap 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-07T01:58:33Z",
+      "startedAt": "2026-05-07T01:54:13Z",
+      "completedAt": "2026-05-07T01:58:33Z",
+      "notes": "Raised the owner-H3M placed-object parser cap so XL no-water local evidence parses above 5,000 objects. Validation passed with 20 parsed metric samples out of 21 readable samples; owner_discovered_xl_nowater parses at 5,365 objects, 12 towns, 619 guards, and 727 road cells, and production audit now uses it as Extra Large land representative coverage while keeping Medium/Large land gaps explicit."
     }
   ],
   "completedImplementationEvidence": [

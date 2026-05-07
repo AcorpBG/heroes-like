@@ -61,6 +61,38 @@ completionEvidence:
 - The mapped exact comparison gate remains limited to the three already-mapped owner samples and reports 15 newly parsed samples as unmapped next-work evidence.
 - Production parity audit consumes the expanded corpus and still reports `production_ready: false`; remaining blockers include full template-breadth corpus/parser completion, unmapped variation comparisons, and representative Medium/Large/XL land owner sample gaps.
 
+Active owner-directed RMG corrective slice:
+
+id: `native-rmg-owner-h3m-xl-nowater-parser-cap-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Remove the owner-corpus parser's too-low placed-object cap so uploaded XL no-water samples with more than 5,000 objects become usable local evidence for XL land comparison coverage.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- local evidence under `maps/h3m-maps/XL-nowater*.h3m`
+implementationTargets:
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- XL no-water single-level and two-level uploaded H3M samples metric-parse instead of failing `invalid_object_instance_count`.
+- Production audit representative owner sample coverage no longer reports Extra Large land default as missing when the single-level XL no-water sample is present locally.
+- The remaining Large single-level no-water parser gap is still explicit rather than hidden.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No HoMM3 copyrighted asset/DEF import.
+- No exact H3M byte/art parity claim.
+- No Large no-water variable-payload parser repair in this slice.
+completionEvidence:
+- Owner-corpus parser now accepts uploaded H3Ms with up to 12,000 placed objects instead of rejecting valid XL no-water samples above 5,000.
+- Expanded corpus report passed with 20 parsed metric samples out of 21 readable samples; `owner_discovered_xl_nowater` parses at 5,365 objects, 12 towns, 619 guards, and 727 road cells.
+- `owner_discovered_xl_nowater_2levels` parses at 5,239 objects, 10 towns, 405 guards, and 879 road cells.
+- Production audit now matches `extra_large_land_default` to `owner_discovered_xl_nowater` for representative owner-sample coverage while still reporting `production_ready: false`.
+- Remaining representative owner-sample coverage gaps are Medium land and Large land; the Large single-level no-water H3M still exposes a separate `next_object_instance_not_found` variable-payload parser gap.
+
 Recently completed owner-directed RMG corrective slice:
 
 id: `native-rmg-production-audit-owner-sample-coverage-matrix-10184`
