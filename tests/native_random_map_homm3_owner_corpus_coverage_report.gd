@@ -3,7 +3,7 @@ extends Node
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 
 const REPORT_ID := "NATIVE_RANDOM_MAP_HOMM3_OWNER_CORPUS_COVERAGE_REPORT"
-const REPORT_SCHEMA_ID := "native_random_map_homm3_owner_corpus_coverage_report_v4"
+const REPORT_SCHEMA_ID := "native_random_map_homm3_owner_corpus_coverage_report_v5"
 const HOMM3_RE_OBJECT_METADATA := "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json"
 
 const HOMM3_VERSION_ROE := 14
@@ -179,6 +179,13 @@ func _expected_water_mode_from_name(file_name: String) -> String:
 		return "normal_water"
 	return "unknown"
 
+func _resolved_water_mode(expected_water_mode: String, terrain_inferred_water_mode: String) -> String:
+	if expected_water_mode != "unknown":
+		return expected_water_mode
+	if terrain_inferred_water_mode != "unknown":
+		return terrain_inferred_water_mode
+	return "unknown"
+
 func _sample_header(candidate: Dictionary) -> Dictionary:
 	var path := String(candidate.get("path", ""))
 	if not FileAccess.file_exists(path):
@@ -215,6 +222,10 @@ func _sample_header(candidate: Dictionary) -> Dictionary:
 	var has_underground := int(bytes[9]) != 0
 	var level_count := 2 if has_underground else 1
 	var metrics := _sample_metrics(bytes, width, level_count)
+	var expected_water_mode := String(candidate.get("expected_water_mode", "unknown"))
+	var terrain_summary: Dictionary = metrics.get("terrain_summary", {}) if metrics.get("terrain_summary", {}) is Dictionary else {}
+	var terrain_inferred_water_mode := String(terrain_summary.get("inferred_water_mode", "unknown"))
+	var resolved_water_mode := _resolved_water_mode(expected_water_mode, terrain_inferred_water_mode)
 	var readable := version in [HOMM3_VERSION_ROE, HOMM3_VERSION_AB, HOMM3_VERSION_SOD] and width > 0
 	return {
 		"id": String(candidate.get("id", "")),
@@ -228,7 +239,11 @@ func _sample_header(candidate: Dictionary) -> Dictionary:
 		"has_underground": has_underground,
 		"size_class_id": _size_class_for_width(width),
 		"expected_size_class_id": String(candidate.get("expected_size_class_id", "")),
-		"expected_water_mode": String(candidate.get("expected_water_mode", "unknown")),
+		"expected_water_mode": expected_water_mode,
+		"water_mode": resolved_water_mode,
+		"water_mode_source": "terrain_inference" if expected_water_mode == "unknown" and terrain_inferred_water_mode != "unknown" else "candidate_label",
+		"terrain_inferred_water_mode": terrain_inferred_water_mode,
+		"terrain_water_mode_conflict": expected_water_mode != "unknown" and terrain_inferred_water_mode != "unknown" and expected_water_mode != terrain_inferred_water_mode,
 		"gzip_bytes": compressed.size(),
 		"decompressed_h3m_bytes": bytes.size(),
 		"metric_parse_status": String(metrics.get("status", "not_attempted")),
@@ -243,6 +258,7 @@ func _sample_header(candidate: Dictionary) -> Dictionary:
 		"object_count": int(metrics.get("object_count", 0)),
 		"counts_by_category": metrics.get("counts_by_category", {}),
 		"counts_by_level": metrics.get("counts_by_level", {}),
+		"terrain_summary": terrain_summary,
 		"road_cell_count_by_level": metrics.get("road_cell_count_by_level", {}),
 			"road_cell_count_total": int(metrics.get("road_cell_count_total", 0)),
 			"road_component_count_by_level": metrics.get("road_component_count_by_level", {}),
@@ -269,7 +285,7 @@ func _coverage_summary(samples: Array) -> Dictionary:
 		readable.append(sample)
 		var size_class_id := String(sample.get("size_class_id", "unknown"))
 		size_classes[size_class_id] = int(size_classes.get(size_class_id, 0)) + 1
-		var water_mode := String(sample.get("expected_water_mode", "unknown"))
+		var water_mode := String(sample.get("water_mode", sample.get("expected_water_mode", "unknown")))
 		water_modes[water_mode] = int(water_modes.get(water_mode, 0)) + 1
 		var level_key := str(int(sample.get("level_count", 0)))
 		level_counts[level_key] = int(level_counts.get(level_key, 0)) + 1
@@ -1406,6 +1422,7 @@ func _sample_metrics_for_definition_offset(bytes: PackedByteArray, width: int, l
 	var road_component_count_by_level := {}
 	var road_component_sizes_by_level := {}
 	var road_total := 0
+	var terrain_summary := _h3m_terrain_summary(bytes, tile_offset, width, level_count)
 	for level in range(level_count):
 		var road_lookup := _h3m_road_lookup(bytes, tile_offset, width, level)
 		var sizes := _lookup_component_sizes(road_lookup, width)
@@ -1427,6 +1444,7 @@ func _sample_metrics_for_definition_offset(bytes: PackedByteArray, width: int, l
 		"parse_warning": String(objects.get("parse_warning", "")),
 		"counts_by_category": counts_by_category,
 		"counts_by_level": counts_by_level,
+		"terrain_summary": terrain_summary,
 		"road_cell_count_by_level": road_cell_count_by_level,
 		"road_cell_count_total": road_total,
 		"road_component_count_by_level": road_component_count_by_level,
@@ -1572,6 +1590,68 @@ func _load_homm3_object_metadata() -> Dictionary:
 		if entry is Dictionary:
 			result[str(int(entry.get("type_id", -1)))] = String(entry.get("type_name", ""))
 	return result
+
+func _h3m_terrain_summary(bytes: PackedByteArray, tile_offset: int, width: int, level_count: int) -> Dictionary:
+	var total_tile_count := width * width * level_count
+	var terrain_counts := {}
+	var by_level := {}
+	var water_tile_count := 0
+	var rock_tile_count := 0
+	for level in range(level_count):
+		var level_counts := {}
+		var level_water_count := 0
+		var level_rock_count := 0
+		var level_tile_count := width * width
+		var level_offset := tile_offset + level * width * width * H3M_TILE_BYTES_PER_CELL
+		for y in range(width):
+			for x in range(width):
+				var offset := level_offset + (y * width + x) * H3M_TILE_BYTES_PER_CELL
+				if offset < 0 or offset >= bytes.size():
+					continue
+				var terrain_id := int(bytes[offset])
+				var terrain_key := str(terrain_id)
+				level_counts[terrain_key] = int(level_counts.get(terrain_key, 0)) + 1
+				terrain_counts[terrain_key] = int(terrain_counts.get(terrain_key, 0)) + 1
+				if terrain_id == 8:
+					level_water_count += 1
+					water_tile_count += 1
+				elif terrain_id == 9:
+					level_rock_count += 1
+					rock_tile_count += 1
+		by_level[str(level)] = {
+			"tile_count": level_tile_count,
+			"water_tile_count": level_water_count,
+			"rock_tile_count": level_rock_count,
+			"water_ratio": _safe_ratio(level_water_count, level_tile_count),
+			"rock_ratio": _safe_ratio(level_rock_count, level_tile_count),
+			"terrain_counts": level_counts,
+		}
+	var surface: Dictionary = by_level.get("0", {}) if by_level.get("0", {}) is Dictionary else {}
+	var surface_water_ratio := float(surface.get("water_ratio", _safe_ratio(water_tile_count, total_tile_count)))
+	return {
+		"schema_id": "native_random_map_h3m_terrain_summary_v1",
+		"tile_count": total_tile_count,
+		"water_tile_count": water_tile_count,
+		"rock_tile_count": rock_tile_count,
+		"water_ratio": _safe_ratio(water_tile_count, total_tile_count),
+		"rock_ratio": _safe_ratio(rock_tile_count, total_tile_count),
+		"surface_water_ratio": surface_water_ratio,
+		"inferred_water_mode": _inferred_water_mode_from_surface_ratio(surface_water_ratio),
+		"terrain_counts": terrain_counts,
+		"by_level": by_level,
+	}
+
+func _inferred_water_mode_from_surface_ratio(surface_water_ratio: float) -> String:
+	if surface_water_ratio <= 0.01:
+		return "land"
+	if surface_water_ratio >= 0.55:
+		return "islands"
+	return "normal_water"
+
+func _safe_ratio(numerator: int, denominator: int) -> float:
+	if denominator <= 0:
+		return 0.0
+	return float(numerator) / float(denominator)
 
 func _h3m_road_lookup(bytes: PackedByteArray, tile_offset: int, width: int, level: int) -> Dictionary:
 	var lookup := {}

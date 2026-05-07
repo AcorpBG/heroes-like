@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-owner-large-land-density-correction-10184",
-  "currentSliceTitle": "native rmg owner large land density correction 10184",
+  "currentSliceId": "native-rmg-owner-corpus-terrain-water-mode-audit-10184",
+  "currentSliceTitle": "native rmg owner corpus terrain water mode audit 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Native Large land default now has owner-informed density/count correction from owner_discovered_l_nowater_randomplayers_nounder. Validation passed with native package object count 2,917/2,917, decoration 1,840/1,840, scenic/object 376/376, reward 429/429, town 8/8, guard 264/264, road cells 365 versus owner 366, semantic layout passing with nearest-town Manhattan 34 versus owner 35, and production_ready remains false with missing_requirement_count 4.",
+  "currentSliceNotes": "Owner-corpus schema v5 now records parsed terrain water/rock ratios, terrain-inferred water mode, and explicit label/inference conflicts for uploaded H3M samples. Validation passed with 21 readable/parsed samples; S-RandomNumberofplayers resolves to land from terrain, M-NormalW-4players remains normal_water with 0.402 surface water ratio, XL-water-2levels records a normal_water label versus islands terrain conflict, and corpus_ready remains false for template_breadth_corpus plus object_instance_tail_count_mismatch_samples.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-07T04:56:00Z",
+  "updatedAt": "2026-05-07T05:16:17Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -13695,9 +13695,37 @@
       "startedAt": "2026-05-07T04:56:00Z",
       "completedAt": "2026-05-07T04:56:00Z",
       "notes": "Native Large land default now has owner-informed density/count correction from owner_discovered_l_nowater_randomplayers_nounder. Validation passed with native package object count 2,917/2,917, decoration 1,840/1,840, scenic/object 376/376, reward 429/429, town 8/8, guard 264/264, road cells 365 versus owner 366, semantic layout passing with nearest-town Manhattan 34 versus owner 35, and production_ready remains false with missing_requirement_count 4."
+    },
+    {
+      "id": "native-rmg-owner-corpus-terrain-water-mode-audit-10184",
+      "title": "native rmg owner corpus terrain water mode audit 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-07T05:16:17Z",
+      "startedAt": "2026-05-07T05:16:17Z",
+      "completedAt": "2026-05-07T05:16:17Z",
+      "notes": "Owner-corpus schema v5 now exposes parsed H3M terrain water/rock ratios, terrain-inferred water mode, and label/inference conflicts while preserving explicit filename labels. Validation passed with 21 readable/parsed samples; owner_discovered_s_randomnumberofplayers resolves to terrain-inferred land, owner_discovered_m_normalw_4players remains normal_water with 0.402 surface water ratio, owner_discovered_xl_water_2levels records a normal_water label versus islands terrain conflict, and corpus_ready remains false for template_breadth_corpus plus object_instance_tail_count_mismatch_samples."
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-owner-corpus-terrain-water-mode-audit-10184",
+      "title": "Native RMG Owner Corpus Terrain Water Mode Audit",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "completedAt": "2026-05-07T05:16:17Z",
+      "evidence": [
+        "Owner-corpus schema v5 records H3M terrain water/rock counts, water ratios, surface-water ratio, terrain-inferred water mode, and explicit conflicts between filename labels and terrain inference.",
+        "Unknown filename water mode now resolves from terrain when possible; owner_discovered_s_randomnumberofplayers resolves to land with surface water ratio 0.0.",
+        "The uploaded Medium normal-water surface sample remains normal_water with surface water ratio 0.402, so it does not satisfy the missing Medium land/no-water representative evidence case.",
+        "owner_discovered_xl_water_2levels remains explicitly labeled normal_water but now records a terrain conflict because its parsed surface water ratio is 0.560 and terrain inference classifies it as islands.",
+        "Corpus readiness remains false for template_breadth_corpus and object_instance_tail_count_mismatch_samples; production readiness remains unclaimed."
+      ],
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_homm3_owner_corpus_coverage_report.tscn passed with ok true, schema native_random_map_homm3_owner_corpus_coverage_report_v5, 21 readable/parsed samples, and corpus_ready false.",
+        "GODOT_SILENCE_ROOT_WARNING=1 timeout 420s godot --headless --path . tests/native_random_map_production_parity_completion_audit_report.tscn passed with ok true, production_ready false, missing_requirement_count 4, and compact terrain coverage records.",
+        "python3 tests/validate_repo.py passed."
+      ]
+    },
     {
       "id": "native-rmg-owner-xl-land-reward-count-correction-10184",
       "title": "Native RMG Owner XL Land Reward Count Correction",
