@@ -31,6 +31,9 @@ func _run() -> void:
 			_fail("Missing capability %s in %s." % [required, JSON.stringify(Array(capabilities))])
 			return
 
+	if not _assert_gdscript_fallback_surface_underground_terrain_policy():
+		return
+
 	var terrain_codes := []
 	for _index in range(12):
 		terrain_codes.append(1)
@@ -179,6 +182,55 @@ func _run() -> void:
 		"missing_map_validation_status": missing_map_validation.get("status", ""),
 	})])
 	get_tree().quit(0)
+
+func _assert_gdscript_fallback_surface_underground_terrain_policy() -> bool:
+	var fallback_service := MapPackageServiceScript.new()
+	var surface_config := {
+		"seed": "gdscript-fallback-surface-underground-policy-10184",
+		"size": {"width": 12, "height": 10, "level_count": 1, "water_mode": "land"},
+		"profile": {
+			"id": "gdscript_fallback_surface_policy",
+			"terrain_ids": ["grass", "dirt", "underground"],
+			"faction_ids": ["faction_embercourt", "faction_mireclaw"],
+		},
+	}
+	var surface: Dictionary = fallback_service.generate_random_map(surface_config)
+	if not bool(surface.get("ok", false)):
+		_fail("GDScript fallback surface terrain policy generation failed: %s" % JSON.stringify(surface))
+		return false
+	var surface_grid: Dictionary = surface.get("terrain_grid", {}) if surface.get("terrain_grid", {}) is Dictionary else {}
+	var surface_counts: Dictionary = surface_grid.get("terrain_counts", {}) if surface_grid.get("terrain_counts", {}) is Dictionary else {}
+	if int(surface_counts.get("underground", 0)) != 0:
+		_fail("GDScript fallback surface-only map materialized underground terrain: %s" % JSON.stringify(surface_counts))
+		return false
+	if String(surface_grid.get("underground_terrain_policy", "")) != "not_materialized_for_surface_only_maps":
+		_fail("GDScript fallback surface-only map missed terrain policy metadata: %s" % JSON.stringify(surface_grid))
+		return false
+
+	var two_level_config := surface_config.duplicate(true)
+	two_level_config["seed"] = "gdscript-fallback-two-level-underground-policy-10184"
+	two_level_config["size"] = surface_config.get("size", {}).duplicate(true)
+	two_level_config["size"]["level_count"] = 2
+	var two_level: Dictionary = fallback_service.generate_random_map(two_level_config)
+	if not bool(two_level.get("ok", false)):
+		_fail("GDScript fallback two-level terrain policy generation failed: %s" % JSON.stringify(two_level))
+		return false
+	var two_level_grid: Dictionary = two_level.get("terrain_grid", {}) if two_level.get("terrain_grid", {}) is Dictionary else {}
+	var levels: Array = two_level_grid.get("levels", []) if two_level_grid.get("levels", []) is Array else []
+	if levels.size() != 2:
+		_fail("GDScript fallback two-level map did not materialize two levels: %s" % JSON.stringify(two_level_grid))
+		return false
+	var level0: Dictionary = levels[0] if levels[0] is Dictionary else {}
+	var level1: Dictionary = levels[1] if levels[1] is Dictionary else {}
+	var level0_counts: Dictionary = level0.get("terrain_counts", {}) if level0.get("terrain_counts", {}) is Dictionary else {}
+	var level1_counts: Dictionary = level1.get("terrain_counts", {}) if level1.get("terrain_counts", {}) is Dictionary else {}
+	if int(level0_counts.get("underground", 0)) != 0:
+		_fail("GDScript fallback two-level map used underground terrain on level 0: %s" % JSON.stringify(level0_counts))
+		return false
+	if int(level1_counts.get("underground", 0)) != 12 * 10:
+		_fail("GDScript fallback two-level map did not reserve underground terrain for level 1: %s" % JSON.stringify(level1_counts))
+		return false
+	return true
 
 func _create_service() -> Variant:
 	if ClassDB.class_exists("MapPackageService"):
