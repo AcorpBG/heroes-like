@@ -1043,7 +1043,7 @@ func _configure_generated_random_map_controls() -> void:
 	_generated_underground_toggle.button_pressed = _generated_underground
 	_generated_underground_toggle.visible = underground_supported
 	_generated_underground_toggle.disabled = not underground_supported
-	_generated_underground_toggle.tooltip_text = "Underground generation is blocked until native RMG has production-ready underground parity."
+	_generated_underground_toggle.tooltip_text = "Generate a second underground level for supported native random-map templates."
 
 func _rebuild_generated_option_picker(picker: OptionButton, options: Array, selected_id: String, label_key: String) -> void:
 	picker.clear()
@@ -1928,6 +1928,7 @@ func _skirmish_browser_item_tooltips() -> Array:
 	return tooltips
 
 func _generated_random_map_control_snapshot() -> Dictionary:
+	var level_count := 2 if _generated_underground else 1
 	var visible_controls := [
 		"seed",
 		"size_class",
@@ -1944,6 +1945,8 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"player_count": _generated_player_count,
 		"water_mode": _generated_water_mode,
 		"underground": _generated_underground,
+		"level_count": level_count,
+		"level_options": ["Surface only", "Surface + Underground"],
 		"retry_policy": ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"size_options": _picker_item_labels(_generated_size_picker),
 		"player_count_options": _picker_item_labels(_generated_player_count_picker),
@@ -1954,7 +1957,7 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 	}
 
 func _generated_underground_supported() -> bool:
-	return false
+	return _generated_water_mode != "islands"
 
 func _generated_random_map_internal_template_provenance() -> Dictionary:
 	var size_defaults := ScenarioSelectRulesScript.random_map_size_class_default(_generated_size_class_id)

@@ -2152,6 +2152,20 @@ Array normalized_terrain_pool(const Array &requested) {
 	return result;
 }
 
+Array surface_terrain_pool(const Array &terrain_pool) {
+	Array result;
+	for (int64_t index = 0; index < terrain_pool.size(); ++index) {
+		const String terrain_id = String(terrain_pool[index]);
+		if (terrain_id != "underground" && !array_has_string(result, terrain_id)) {
+			result.append(terrain_id);
+		}
+	}
+	if (result.is_empty()) {
+		result.append("grass");
+	}
+	return result;
+}
+
 int32_t terrain_code_for_id(const String &terrain_id) {
 	if (terrain_id == "grass") {
 		return 0;
@@ -2219,6 +2233,9 @@ String choose_terrain_for_cell(int32_t x, int32_t y, int32_t level, const Array 
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const String water_mode = String(normalized.get("water_mode", "land"));
+	if (level > 0) {
+		return "underground";
+	}
 	if (level == 0 && water_mode == "islands" && (x == 0 || y == 0 || x == width - 1 || y == height - 1)) {
 		return "water";
 	}
@@ -2231,9 +2248,6 @@ String choose_terrain_for_cell(int32_t x, int32_t y, int32_t level, const Array 
 				return "water";
 			}
 		}
-	}
-	if (level > 0 && array_has_string(terrain_pool, "underground")) {
-		return "underground";
 	}
 	String best_terrain = String(terrain_pool[0]);
 	int64_t best_score = std::numeric_limits<int64_t>::max();
@@ -3302,7 +3316,7 @@ String catalog_profile_id_for_template(const String &template_id) {
 Dictionary catalog_zone_to_native_zone(const Dictionary &source_zone, const Dictionary &normalized, const Dictionary &player_assignment, int64_t zone_index) {
 	Dictionary constraints = normalized.get("player_constraints", Dictionary());
 	const int32_t player_count = int32_t(constraints.get("player_count", 2));
-	Array terrain_pool = normalized_terrain_pool(normalized.get("terrain_ids", default_terrain_pool()));
+	Array terrain_pool = surface_terrain_pool(normalized_terrain_pool(normalized.get("terrain_ids", default_terrain_pool())));
 	Dictionary by_owner_slot = player_assignment.get("player_slot_by_owner_slot", Dictionary());
 
 	const String zone_id = normalized_text(source_zone, "id", "zone_" + slot_id_2(int32_t(zone_index + 1)));
@@ -3323,7 +3337,7 @@ Dictionary catalog_zone_to_native_zone(const Dictionary &source_zone, const Dict
 	Variant terrain_value = source_zone.get("terrain", Variant());
 	if (terrain_value.get_type() == Variant::DICTIONARY) {
 		Dictionary terrain = terrain_value;
-		Array allowed = normalized_terrain_pool(terrain.get("allowed", Array()));
+		Array allowed = surface_terrain_pool(normalized_terrain_pool(terrain.get("allowed", Array())));
 		if (!allowed.is_empty()) {
 			const String terrain_id = String(allowed[int64_t(hash32_int(String(normalized.get("normalized_seed", "0")) + zone_id + ":terrain") % uint32_t(allowed.size()))]);
 			palette["normalized_terrain_id"] = terrain_id;
@@ -3402,7 +3416,7 @@ Array build_foundation_zones(const Dictionary &normalized, const Dictionary &pla
 
 	Dictionary constraints = normalized.get("player_constraints", Dictionary());
 	const int32_t player_count = int32_t(constraints.get("player_count", 2));
-	Array terrain_pool = normalized_terrain_pool(normalized.get("terrain_ids", default_terrain_pool()));
+	Array terrain_pool = surface_terrain_pool(normalized_terrain_pool(normalized.get("terrain_ids", default_terrain_pool())));
 	Dictionary by_owner_slot = player_assignment.get("player_slot_by_owner_slot", Dictionary());
 	Array zones;
 	for (int32_t index = 0; index < player_count; ++index) {
@@ -14580,7 +14594,8 @@ Dictionary generate_terrain_grid(const Dictionary &normalized, const Dictionary 
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = int32_t(normalized.get("level_count", 1));
 	Array terrain_pool = normalized_terrain_pool(normalized.get("terrain_ids", default_terrain_pool()));
-	Array seeds = terrain_seed_records(normalized, terrain_pool);
+	Array surface_pool = surface_terrain_pool(terrain_pool);
+	Array seeds = terrain_seed_records(normalized, surface_pool);
 	Array levels;
 	Dictionary aggregate_counts;
 	const PackedStringArray ids_by_code = terrain_id_by_code();
@@ -14646,11 +14661,11 @@ Dictionary generate_terrain_grid(const Dictionary &normalized, const Dictionary 
 			for (int32_t x = 0; x < width; ++x) {
 				String terrain_id;
 				if (use_island_shape && level == 0) {
-					terrain_id = island_land_lookup.has(point_key(x, y)) ? island_land_terrain_for_cell(x, y, level, terrain_pool, seeds, normalized, zone_layout, zone_terrain_by_id) : String("water");
+					terrain_id = island_land_lookup.has(point_key(x, y)) ? island_land_terrain_for_cell(x, y, level, surface_pool, seeds, normalized, zone_layout, zone_terrain_by_id) : String("water");
 				} else if (use_land_boundary_shape && level == 0) {
-					terrain_id = land_boundary_terrain_for_cell(x, y, level, terrain_pool, seeds, normalized, zone_layout, zone_terrain_by_id, land_boundary_openings);
+					terrain_id = land_boundary_terrain_for_cell(x, y, level, surface_pool, seeds, normalized, zone_layout, zone_terrain_by_id, land_boundary_openings);
 				} else {
-					terrain_id = choose_terrain_for_cell(x, y, level, terrain_pool, seeds, normalized);
+					terrain_id = choose_terrain_for_cell(x, y, level, level == 0 ? surface_pool : terrain_pool, seeds, normalized);
 				}
 				const String biome_id = biome_for_terrain(terrain_id);
 				const int32_t terrain_code = terrain_code_for_id(terrain_id);
@@ -14693,6 +14708,8 @@ Dictionary generate_terrain_grid(const Dictionary &normalized, const Dictionary 
 	grid["terrain_id_by_code"] = ids_by_code;
 	grid["biome_id_by_terrain_id"] = biome_by_terrain;
 	grid["terrain_palette_ids"] = terrain_pool;
+	grid["surface_terrain_palette_ids"] = surface_pool;
+	grid["underground_terrain_policy"] = level_count > 1 ? String("reserved_for_subterranean_levels") : String("not_materialized_for_surface_only_maps");
 	grid["zone_seed_model"] = "deterministic_terrain_palette_voronoi_seed_grid";
 	grid["terrain_seed_records"] = seeds;
 	grid["terrain_counts"] = aggregate_counts;
