@@ -55,6 +55,25 @@ func _run() -> void:
 	two_level_config["size"] = surface_only_config.get("size", {}).duplicate(true)
 	two_level_config["size"]["level_count"] = 2
 	var two_level: Dictionary = service.generate_random_map(two_level_config)
+	var scoped_islands_config := {
+		"seed": "native-rmg-terrain-grid-scoped-islands-surface-10184",
+		"size": {
+			"width": 36,
+			"height": 36,
+			"level_count": 1,
+			"size_class_id": "homm3_small",
+			"water_mode": "islands",
+		},
+		"player_constraints": {"human_count": 1, "player_count": 4, "team_mode": "free_for_all"},
+		"profile": {"id": "translated_rmg_profile_001_v1", "template_id": "translated_rmg_template_001_v1"},
+	}
+	var scoped_islands: Dictionary = service.generate_random_map(scoped_islands_config)
+	var scoped_two_level_config := scoped_islands_config.duplicate(true)
+	scoped_two_level_config["seed"] = "native-rmg-terrain-grid-scoped-two-level-10184"
+	scoped_two_level_config["size"] = scoped_islands_config.get("size", {}).duplicate(true)
+	scoped_two_level_config["size"]["water_mode"] = "land"
+	scoped_two_level_config["size"]["level_count"] = 2
+	var scoped_two_level: Dictionary = service.generate_random_map(scoped_two_level_config)
 
 	_assert_generated_shape(first, 36, 36)
 	_assert_generated_shape(second, 36, 36)
@@ -62,6 +81,14 @@ func _run() -> void:
 	_assert_generated_shape(surface_only, 36, 36)
 	_assert_generated_shape(two_level, 36, 36, 2)
 	if not _assert_surface_underground_terrain_policy(surface_only, two_level):
+		return
+	if not _assert_supported_generated_shape(scoped_islands, 36, 36, 1):
+		return
+	if not _assert_supported_generated_shape(scoped_two_level, 36, 36, 2):
+		return
+	if not _assert_surface_no_underground(scoped_islands, "scoped islands surface"):
+		return
+	if not _assert_surface_underground_terrain_policy(scoped_islands, scoped_two_level):
 		return
 
 	var first_grid: Dictionary = first.get("terrain_grid", {})
@@ -113,6 +140,8 @@ func _run() -> void:
 		"terrain_counts": first_grid.get("terrain_counts", {}),
 		"surface_only_counts": surface_only.get("terrain_grid", {}).get("terrain_counts", {}),
 		"two_level_counts": two_level.get("terrain_grid", {}).get("terrain_counts", {}),
+		"scoped_islands_counts": scoped_islands.get("terrain_grid", {}).get("terrain_counts", {}),
+		"scoped_two_level_counts": scoped_two_level.get("terrain_grid", {}).get("terrain_counts", {}),
 		"signature": first_signature,
 		"changed_seed_signature": changed_signature,
 	})])
@@ -161,11 +190,9 @@ func _assert_generated_shape(generated: Dictionary, expected_width: int, expecte
 		return
 
 func _assert_surface_underground_terrain_policy(surface_only: Dictionary, two_level: Dictionary) -> bool:
-	var surface_grid: Dictionary = surface_only.get("terrain_grid", {}) if surface_only.get("terrain_grid", {}) is Dictionary else {}
-	var surface_counts: Dictionary = surface_grid.get("terrain_counts", {}) if surface_grid.get("terrain_counts", {}) is Dictionary else {}
-	if int(surface_counts.get("underground", 0)) != 0:
-		_fail("Surface-only map materialized underground terrain on level 0: %s" % JSON.stringify(surface_counts))
+	if not _assert_surface_no_underground(surface_only, "surface-only map"):
 		return false
+	var surface_grid: Dictionary = surface_only.get("terrain_grid", {}) if surface_only.get("terrain_grid", {}) is Dictionary else {}
 	if String(surface_grid.get("underground_terrain_policy", "")) != "not_materialized_for_surface_only_maps":
 		_fail("Surface-only terrain grid missed underground terrain policy: %s" % JSON.stringify(surface_grid))
 		return false
@@ -183,6 +210,39 @@ func _assert_surface_underground_terrain_policy(surface_only: Dictionary, two_le
 		return false
 	if int(underground_level_counts.get("underground", 0)) != 36 * 36:
 		_fail("Two-level map did not reserve underground terrain for level 1: %s" % JSON.stringify(underground_level_counts))
+		return false
+	return true
+
+func _assert_supported_generated_shape(generated: Dictionary, expected_width: int, expected_height: int, expected_level_count: int) -> bool:
+	if not bool(generated.get("ok", false)):
+		_fail("Supported native terrain-grid generation returned ok=false: %s" % JSON.stringify(generated))
+		return false
+	var grid: Dictionary = generated.get("terrain_grid", {})
+	if int(grid.get("width", 0)) != expected_width or int(grid.get("height", 0)) != expected_height:
+		_fail("Supported terrain grid dimensions were wrong: %s" % JSON.stringify(grid))
+		return false
+	var levels: Array = grid.get("levels", []) if grid.get("levels", []) is Array else []
+	if levels.size() != expected_level_count or int(grid.get("materialized_level_count", 0)) != expected_level_count:
+		_fail("Supported terrain grid did not materialize %d level(s): %s" % [expected_level_count, JSON.stringify(grid)])
+		return false
+	if int(grid.get("tile_count", 0)) != expected_width * expected_height * expected_level_count:
+		_fail("Supported terrain grid tile count mismatch: %s" % JSON.stringify(grid))
+		return false
+	return true
+
+func _assert_surface_no_underground(generated: Dictionary, label: String) -> bool:
+	var grid: Dictionary = generated.get("terrain_grid", {}) if generated.get("terrain_grid", {}) is Dictionary else {}
+	var levels: Array = grid.get("levels", []) if grid.get("levels", []) is Array else []
+	if levels.is_empty() or not (levels[0] is Dictionary):
+		_fail("%s missed surface level terrain data: %s" % [label, JSON.stringify(grid)])
+		return false
+	var surface_counts: Dictionary = levels[0].get("terrain_counts", {}) if levels[0].get("terrain_counts", {}) is Dictionary else {}
+	if int(surface_counts.get("underground", 0)) != 0:
+		_fail("%s materialized underground terrain on level 0: %s" % [label, JSON.stringify(surface_counts)])
+		return false
+	var aggregate_counts: Dictionary = grid.get("terrain_counts", {}) if grid.get("terrain_counts", {}) is Dictionary else {}
+	if int(grid.get("level_count", 1)) == 1 and int(aggregate_counts.get("underground", 0)) != 0:
+		_fail("%s materialized underground terrain in one-level aggregate counts: %s" % [label, JSON.stringify(aggregate_counts)])
 		return false
 	return true
 

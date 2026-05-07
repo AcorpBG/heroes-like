@@ -6,9 +6,9 @@
   "currentSliceId": "native-rmg-generalized-policy-regate-10184",
   "currentSliceTitle": "native rmg generalized policy re-gate 10184",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Re-scoped active RMG work away from owner-H3M sample-by-sample exact-count fitting. Added docs/native-rmg-generalized-policy-regate-audit.md, which records exact counts as diagnostics only, identifies owner-specific runtime branches as temporary fixture/diagnostic debt, and defines the next implementation direction around generalized template/profile policy, zone graph semantics, town/guard/blocker route closure, road materialization, water/underground policy, and corpus subsystem grouping. Local Small-islands count-fitting edits were abandoned before commit; uploaded/generated map evidence remains untracked. Owner-corpus report schema v6 now emits generalized_policy_failure_summary alongside raw exact deltas; after native rebuild, the raw mapped gate remains 8/9 while the active Small islands failure is grouped into guard_policy, town_policy, decoration_blocker_policy, object_density_policy, and object_reward_policy. Owner-requested map-editor generated-package inspection hotfix completed: editor index now includes loadable generated packages rejected by skirmish launch validation as Inspect Only; skirmish launch filtering remains strict.",
+  "currentSliceNotes": "Re-scoped active RMG work away from owner-H3M sample-by-sample exact-count fitting. Added docs/native-rmg-generalized-policy-regate-audit.md, which records exact counts as diagnostics only, identifies owner-specific runtime branches as temporary fixture/diagnostic debt, and defines the next implementation direction around generalized template/profile policy, zone graph semantics, town/guard/blocker route closure, road materialization, water/underground policy, and corpus subsystem grouping. Local Small-islands count-fitting edits were abandoned before commit; uploaded/generated map evidence remains untracked. Owner-corpus report schema v6 now emits generalized_policy_failure_summary alongside raw exact deltas; after native rebuild, the raw mapped gate remains 8/9 while the active Small islands failure is grouped into guard_policy, town_policy, decoration_blocker_policy, object_density_policy, and object_reward_policy. Owner-requested map-editor generated-package inspection hotfix completed: editor index now includes loadable generated packages rejected by skirmish launch validation as Inspect Only; skirmish launch filtering remains strict. Runtime policy classification now exposes generalized policy keys plus owner-runtime override debt in generated output/report/provenance/metadata; auto-template batch schema v2 passed with zero seed-specific override activation for normal generated seeds. Generated-map setup now exposes an explicit surface-only versus surface-plus-underground level picker, islands no longer hide the two-level option, and one-level scoped islands terrain no longer injects underground terrain onto the surface.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-07T11:07:17Z",
+  "updatedAt": "2026-05-07T12:13:42Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -51,7 +51,9 @@
         "docs/random-map-homm3-parity-gap-audit.md",
         "docs/native-rmg-generalized-policy-regate-audit.md",
         "src/gdextension/src/map_package_service.cpp",
-        "tests/native_random_map_homm3_owner_corpus_coverage_report.gd"
+        "tests/native_random_map_homm3_owner_corpus_coverage_report.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/native_random_map_terrain_grid_report.gd"
       ],
       "purpose": "Stop the owner-H3M sample-by-sample exact-count fitting loop and re-gate native RMG around generalized recovered-template policy stages that owner corpus samples validate instead of selecting.",
       "implementationTargets": [
@@ -59,12 +61,20 @@
         "PLAN.md",
         "ops/progress.json",
         "tests/native_random_map_homm3_owner_corpus_coverage_report.gd",
-        "src/gdextension/src/map_package_service.cpp"
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_auto_template_batch_report.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/native_random_map_terrain_grid_report.gd"
       ],
       "baselineChecks": [
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like",
         "jq empty ops/progress.json",
-        "git diff --check"
+        "git diff --check",
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_auto_template_batch_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/random_map_player_setup_retry_ux_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_terrain_grid_report.tscn"
       ],
       "completionCriteria": [
         "The corrective audit clearly distinguishes owner-H3M exact-count diagnostics from production RMG policy.",
@@ -81,11 +91,15 @@
       "validationResults": [
         "Local overfit Small-islands count-fitting changes were abandoned before commit; the code worktree returned to the pushed checkpoint state.",
         "docs/native-rmg-generalized-policy-regate-audit.md records why the exact-count loop is diagnostic-only and why the next implementation must generalize.",
-        "tests/native_random_map_homm3_owner_corpus_coverage_report.tscn emitted schema native_random_map_homm3_owner_corpus_coverage_report_v6; the raw gate remains 8/9 mapped pass, while generalized_policy_failure_summary groups the active Small islands failure into guard_policy, town_policy, decoration_blocker_policy, object_density_policy, and object_reward_policy."
+        "tests/native_random_map_homm3_owner_corpus_coverage_report.tscn emitted schema native_random_map_homm3_owner_corpus_coverage_report_v6; the raw gate remains 8/9 mapped pass, while generalized_policy_failure_summary groups the active Small islands failure into guard_policy, town_policy, decoration_blocker_policy, object_density_policy, and object_reward_policy.",
+        "MapPackageService.generate_random_map now emits runtime_policy_classification in generated output, validation reports, provenance, and map metadata, exposing generalized policy keys and active owner-runtime override debt.",
+        "tests/native_random_map_auto_template_batch_report.tscn passed with schema native_random_map_auto_template_batch_report_v2; representative generated cases carry runtime policy classification and seed_specific_runtime_override_case_count is 0 for normal generated seeds.",
+        "Generated-map setup now exposes an explicit surface-only versus surface-plus-underground level picker; random_map_player_setup_retry_ux_report passed with visible level_count control data.",
+        "Native one-level scoped islands terrain no longer injects underground terrain onto the surface, while scoped two-level requests materialize an underground layer; native_random_map_terrain_grid_report passed with both checks."
       ],
-      "updatedAt": "2026-05-07T10:46:48Z",
+      "updatedAt": "2026-05-07T12:13:42Z",
       "startedAt": "2026-05-07T10:46:48Z",
-      "notes": "Re-scoped active RMG work away from owner-H3M sample-by-sample exact-count fitting. Added docs/native-rmg-generalized-policy-regate-audit.md, which records exact counts as diagnostics only, identifies owner-specific runtime branches as temporary fixture/diagnostic debt, and defines the next implementation direction around generalized template/profile policy, zone graph semantics, town/guard/blocker route closure, road materialization, water/underground policy, and corpus subsystem grouping. Local Small-islands count-fitting edits were abandoned before commit; uploaded/generated map evidence remains untracked. Owner-corpus report schema v6 now emits generalized_policy_failure_summary alongside raw exact deltas; after native rebuild, the raw mapped gate remains 8/9 while the active Small islands failure is grouped into guard_policy, town_policy, decoration_blocker_policy, object_density_policy, and object_reward_policy."
+      "notes": "Re-scoped active RMG work away from owner-H3M sample-by-sample exact-count fitting. Added docs/native-rmg-generalized-policy-regate-audit.md, which records exact counts as diagnostics only, identifies owner-specific runtime branches as temporary fixture/diagnostic debt, and defines the next implementation direction around generalized template/profile policy, zone graph semantics, town/guard/blocker route closure, road materialization, water/underground policy, and corpus subsystem grouping. Local Small-islands count-fitting edits were abandoned before commit; uploaded/generated map evidence remains untracked. Owner-corpus report schema v6 now emits generalized_policy_failure_summary alongside raw exact deltas; after native rebuild, the raw mapped gate remains 8/9 while the active Small islands failure is grouped into guard_policy, town_policy, decoration_blocker_policy, object_density_policy, and object_reward_policy. Added runtime_policy_classification to native RMG output/report/provenance/metadata and updated the auto-template batch report to require it while guarding normal generated seeds against seed-specific owner overrides. Added explicit generated-map level selection and corrected one-level scoped islands terrain so underground terrain appears only on requested two-level maps."
     },
     {
       "id": "native-rmg-owner-small-islands-underground-corpus-road-checkpoint-10184",

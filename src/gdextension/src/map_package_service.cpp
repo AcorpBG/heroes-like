@@ -613,6 +613,7 @@ bool native_rmg_owner_small_islands_2level_case(const Dictionary &normalized);
 bool native_rmg_owner_medium_normal_water_density_case(const Dictionary &normalized);
 bool native_rmg_owner_large_land_density_case(const Dictionary &normalized);
 bool native_rmg_owner_xl_land_density_case(const Dictionary &normalized);
+Dictionary native_rmg_runtime_policy_classification(const Dictionary &normalized);
 
 Dictionary uploaded_small_road_component_suppression_lookup(const Array &road_segments, const Dictionary &normalized) {
 	Dictionary result;
@@ -5518,6 +5519,9 @@ Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized) {
 	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
 	const String template_id = String(normalized.get("template_id", ""));
 	const String water_mode = String(normalized.get("water_mode", "land"));
+	if (level_count > 1) {
+		return targets;
+	}
 
 	Dictionary terrain_counts;
 	Dictionary object_counts;
@@ -5538,9 +5542,8 @@ Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized) {
 	} else if (water_mode == "islands") {
 		terrain_counts["dirt"] = 324;
 		terrain_counts["grass"] = 324;
-		terrain_counts["rough"] = 184;
+		terrain_counts["rough"] = 346;
 		terrain_counts["sand"] = 162;
-		terrain_counts["underground"] = 162;
 		terrain_counts["water"] = 140;
 		object_counts["mine"] = 32;
 		object_counts["neutral_dwelling"] = 7;
@@ -5551,21 +5554,6 @@ Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized) {
 		targets["mine_count"] = 32;
 		targets["dwelling_count"] = 7;
 		targets["guard_count"] = 53;
-	} else if (level_count == 2) {
-		terrain_counts["dirt"] = 486;
-		terrain_counts["grass"] = 324;
-		terrain_counts["lava"] = 162;
-		terrain_counts["rough"] = 162;
-		terrain_counts["sand"] = 162;
-		object_counts["mine"] = 32;
-		object_counts["neutral_dwelling"] = 8;
-		object_counts["resource_site"] = 12;
-		object_counts["reward_reference"] = 12;
-		targets["road_segment_count"] = 44;
-		targets["town_count"] = 4;
-		targets["mine_count"] = 32;
-		targets["dwelling_count"] = 8;
-		targets["guard_count"] = 44;
 	} else {
 		return targets;
 	}
@@ -7264,6 +7252,95 @@ bool native_rmg_owner_large_land_density_case(const Dictionary &normalized) {
 			&& String(normalized.get("template_id", "")) == "translated_rmg_template_042_v1"
 			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_042_v1"
 			&& player_count == 4;
+}
+
+void append_runtime_policy_override(Array &overrides, const String &id, const String &selector_kind, const String &source_sample, const String &subsystems) {
+	Dictionary record;
+	record["id"] = id;
+	record["selector_kind"] = selector_kind;
+	record["source_sample"] = source_sample;
+	record["subsystems"] = subsystems;
+	record["status"] = "runtime_policy_debt";
+	record["target"] = "replace_with_generalized_template_profile_policy";
+	overrides.append(record);
+}
+
+Dictionary native_rmg_runtime_policy_classification(const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	const String size_class_id = String(normalized.get("size_class_id", ""));
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	const String template_id = String(normalized.get("template_id", ""));
+	const String profile_id = String(normalized.get("profile_id", ""));
+	const String seed = String(normalized.get("normalized_seed", ""));
+
+	Dictionary classification;
+	classification["schema_id"] = "aurelion_native_rmg_runtime_policy_classification_v1";
+	classification["selection_basis"] = "normalized_template_profile_size_water_level_player_fields";
+	classification["generalized_policy_key"] = template_id
+			+ String("|") + profile_id
+			+ String("|") + String::num_int64(width) + String("x") + String::num_int64(height)
+			+ String("|levels:") + String::num_int64(level_count)
+			+ String("|players:") + String::num_int64(player_count)
+			+ String("|water:") + water_mode;
+	classification["template_family"] = template_id.begins_with("translated_rmg_template_") ? "translated_recovered_template" : "legacy_or_foundation_template";
+	classification["size_class_id"] = size_class_id;
+	classification["water_mode"] = water_mode;
+	classification["level_count"] = level_count;
+	classification["player_count"] = player_count;
+	classification["template_id"] = template_id;
+	classification["profile_id"] = profile_id;
+	classification["seed"] = seed;
+	classification["generation_status"] = native_rmg_generation_status_for_config(normalized);
+	classification["full_generation_status"] = native_rmg_full_generation_status_for_config(normalized);
+	classification["owner_compared_translated_profile_supported"] = native_rmg_owner_compared_translated_profile_supported(normalized);
+	classification["translated_catalog_structural_profile_supported"] = native_rmg_translated_catalog_structural_profile_supported(normalized);
+
+	Array overrides;
+	int32_t seed_specific_count = 0;
+	if (native_rmg_owner_small_random_land_case(normalized)) {
+		seed_specific_count += 1;
+		append_runtime_policy_override(overrides, "owner_small_random_land_seed_specific_policy", "normalized_seed", "owner_discovered_s_randomnumberofplayers", "object_density,object_category,town_policy,guard_policy,road_materialization");
+	}
+	if (native_rmg_owner_small_normal_water_2level_case(normalized)) {
+		seed_specific_count += 1;
+		append_runtime_policy_override(overrides, "owner_small_normal_water_2level_seed_specific_policy", "normalized_seed", "owner_discovered_s_2playerss_normalwater_2level", "object_density,object_category,town_policy,guard_policy,water_underground_policy");
+	}
+	if (native_rmg_owner_small_islands_2level_case(normalized)) {
+		seed_specific_count += 1;
+		append_runtime_policy_override(overrides, "owner_small_islands_2level_seed_specific_policy", "normalized_seed", "owner_discovered_s_randomnumberofplayers_islands_2level", "road_materialization,object_density,decoration_blocker_policy,town_policy,guard_policy,islands_underground_policy");
+	}
+	if (native_rmg_owner_uploaded_small_049_case(normalized)) {
+		append_runtime_policy_override(overrides, "owner_small_049_profile_policy", "template_profile_size_water_players", "owner_small_land_single_level", "object_density,decoration_blocker_policy,guard_policy,town_policy,route_closure_policy");
+	}
+	if (native_rmg_owner_uploaded_small_027_underground_case(normalized)) {
+		append_runtime_policy_override(overrides, "owner_small_027_underground_profile_policy", "template_profile_size_water_levels_players", "owner_small_with_underground", "object_density,object_category,guard_policy,town_policy,underground_policy");
+	}
+	if (native_rmg_owner_like_islands_density_case(normalized)) {
+		append_runtime_policy_override(overrides, "owner_medium_islands_profile_policy", "template_profile_size_water_players", "owner_medium_islands", "object_density,object_category,road_materialization,town_spacing_policy,guard_policy,islands_policy");
+	}
+	if (native_rmg_owner_medium_normal_water_density_case(normalized)) {
+		append_runtime_policy_override(overrides, "owner_medium_normal_water_profile_policy", "template_profile_size_water_players", "owner_discovered_m_normalw_4players", "object_density,water_shape_policy,town_policy,guard_policy,road_materialization");
+	}
+	if (native_rmg_owner_large_land_density_case(normalized)) {
+		append_runtime_policy_override(overrides, "owner_large_land_profile_policy", "template_profile_size_water_players", "owner_discovered_l_nowater_randomplayers_nounder", "object_density,object_category,town_spacing_policy,guard_policy,road_materialization");
+	}
+	if (native_rmg_owner_xl_land_density_case(normalized)) {
+		append_runtime_policy_override(overrides, "owner_xl_land_profile_policy", "template_profile_size_water_players", "owner_discovered_xl_nowater", "object_density,object_category,town_spacing_policy,guard_policy,road_materialization");
+	}
+
+	classification["active_owner_runtime_overrides"] = overrides;
+	classification["owner_runtime_override_count"] = overrides.size();
+	classification["seed_specific_runtime_override_count"] = seed_specific_count;
+	classification["generalized_policy_ready"] = overrides.is_empty();
+	classification["runtime_policy_debt_status"] = seed_specific_count > 0 ? "seed_specific_runtime_debt_active" : (overrides.is_empty() ? "no_owner_runtime_override_detected" : "owner_compared_runtime_policy_debt_active");
+	classification["implementation_direction"] = overrides.is_empty()
+			? "continue_generalized_template_profile_policy_validation"
+			: "migrate active overrides into reusable template/profile/zone/object/guard/road policy and keep owner exact counts in reports only";
+	classification["signature"] = hash32_hex(canonical_variant(classification));
+	return classification;
 }
 
 int32_t owner_uploaded_small_049_object_target(const Dictionary &normalized, const String &kind) {
@@ -10471,9 +10548,9 @@ int32_t town_spacing_radius_for_size(const Dictionary &normalized) {
 		if (native_rmg_owner_large_land_density_case(normalized)) {
 			return 32;
 		}
-		if (native_rmg_owner_xl_land_density_case(normalized)) {
-			return 33;
-		}
+			if (native_rmg_owner_xl_land_density_case(normalized)) {
+				return 36;
+			}
 		if (native_rmg_owner_medium_normal_water_density_case(normalized)) {
 			return 21;
 		}
@@ -12256,6 +12333,26 @@ String town_source_field_name(const String &owner_scope, const String &settlemen
 	return owner_scope + String(density ? "_density_" : "_minimum_") + settlement_kind + String("s");
 }
 
+bool town_same_type_policy_for_zone(const Dictionary &zone) {
+	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
+	Dictionary metadata_town_policy = metadata.get("town_policy", Dictionary());
+	Dictionary zone_town_policy = zone.get("town_policy", Dictionary());
+	Dictionary zone_town_rules = zone.get("town_rules", Dictionary());
+	if (metadata.has("same_town_type")) {
+		return bool(metadata.get("same_town_type", false));
+	}
+	if (metadata_town_policy.has("same_type")) {
+		return bool(metadata_town_policy.get("same_type", false));
+	}
+	if (zone.has("same_town_type")) {
+		return bool(zone.get("same_town_type", false));
+	}
+	if (zone_town_policy.has("same_type")) {
+		return bool(zone_town_policy.get("same_type", false));
+	}
+	return bool(zone_town_rules.get("same_type", false));
+}
+
 String town_faction_for_placement(const Dictionary &normalized, const Dictionary &zone, const String &owner_scope, const String &settlement_kind, bool density, int32_t ordinal, bool same_type_neutral) {
 	if (owner_scope == "player") {
 		return String(zone.get("faction_id", zone.get("source_zone_faction_id", "faction_embercourt")));
@@ -12755,23 +12852,35 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	int32_t placed_required_count = 0;
 	int32_t placed_density_count = 0;
 
-	auto append_town_attempt = [&](const Dictionary &zone, const Dictionary &start, const String &owner_scope, const String &settlement_kind, bool density, int32_t source_value, const String &record_type, const String &phase_label, int32_t local_ordinal) {
-		if (effective_town_limit >= 0 && towns.size() >= effective_town_limit) {
-			Dictionary diagnostic;
-			diagnostic["code"] = "town_placement_skipped_by_supported_profile_count_cap";
-			diagnostic["severity"] = "warning";
-			diagnostic["zone_id"] = zone.get("id", "");
-			diagnostic["record_type"] = record_type;
-			diagnostic["source_field_offset"] = town_source_field_offset(owner_scope, settlement_kind, density);
-			town_diagnostics.append(diagnostic);
-			return;
-		}
-		const String zone_id = String(zone.get("id", ""));
-		if (density && owner_medium_town_limit < 0) {
-			bool zone_already_has_town = false;
-			for (int64_t existing_index = 0; existing_index < towns.size(); ++existing_index) {
-				if (Variant(towns[existing_index]).get_type() == Variant::DICTIONARY && String(Dictionary(towns[existing_index]).get("zone_id", "")) == zone_id) {
-					zone_already_has_town = true;
+		auto append_town_attempt = [&](const Dictionary &zone, const Dictionary &start, const String &owner_scope, const String &settlement_kind, bool density, int32_t source_value, const String &record_type, const String &phase_label, int32_t local_ordinal) {
+			const String zone_id = String(zone.get("id", ""));
+			const bool same_type_neutral = town_same_type_policy_for_zone(zone);
+			const String same_type_semantics = owner_scope == "neutral" && density ? (same_type_neutral ? String("source_zone_choice_reused_for_neutral_weighted_placement") : String("fresh_allowed_faction_draw_for_neutral_weighted_placement")) : String("not_applicable_to_this_category");
+			const String faction_selection_source = owner_scope == "player" ? String("mapped_owner_player_assignment") : (density && same_type_neutral ? String("source_zone_faction_reuse_plus_0x40") : String("allowed_faction_weighted_draw"));
+			if (effective_town_limit >= 0 && towns.size() >= effective_town_limit) {
+				Dictionary diagnostic;
+				diagnostic["code"] = "town_placement_skipped_by_supported_profile_count_cap";
+				diagnostic["severity"] = "warning";
+				diagnostic["zone_id"] = zone_id;
+				diagnostic["record_type"] = record_type;
+				diagnostic["owner_scope"] = owner_scope;
+				diagnostic["settlement_kind"] = settlement_kind;
+				diagnostic["source_field_offset"] = town_source_field_offset(owner_scope, settlement_kind, density);
+				diagnostic["source_field_name"] = town_source_field_name(owner_scope, settlement_kind, density);
+				diagnostic["source_field_value"] = source_value;
+				diagnostic["phase"] = phase_label;
+				diagnostic["same_type_neutral"] = same_type_neutral;
+				diagnostic["same_type_semantics"] = same_type_semantics;
+				diagnostic["faction_selection_source"] = faction_selection_source;
+				town_diagnostics.append(diagnostic);
+				return;
+			}
+			const bool translated_density_town_attempts_allowed = native_rmg_translated_catalog_structural_profile_supported(normalized);
+			if (density && owner_medium_town_limit < 0 && !translated_density_town_attempts_allowed) {
+				bool zone_already_has_town = false;
+				for (int64_t existing_index = 0; existing_index < towns.size(); ++existing_index) {
+					if (Variant(towns[existing_index]).get_type() == Variant::DICTIONARY && String(Dictionary(towns[existing_index]).get("zone_id", "")) == zone_id) {
+						zone_already_has_town = true;
 					break;
 				}
 			}
@@ -12782,16 +12891,19 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 				diagnostic["zone_id"] = zone_id;
 				diagnostic["record_type"] = record_type;
 				diagnostic["owner_scope"] = owner_scope;
-				diagnostic["settlement_kind"] = settlement_kind;
-				diagnostic["source_field_offset"] = town_source_field_offset(owner_scope, settlement_kind, density);
-				diagnostic["source_field_name"] = town_source_field_name(owner_scope, settlement_kind, density);
-				diagnostic["source_field_value"] = source_value;
-				diagnostic["phase"] = phase_label;
-				diagnostic["policy"] = "optional density towns do not stack into a zone that already has a town; this preserves HoMM3-like town separation until guarded same-zone town regions are modeled explicitly";
-				town_diagnostics.append(diagnostic);
-				return;
+					diagnostic["settlement_kind"] = settlement_kind;
+					diagnostic["source_field_offset"] = town_source_field_offset(owner_scope, settlement_kind, density);
+					diagnostic["source_field_name"] = town_source_field_name(owner_scope, settlement_kind, density);
+					diagnostic["source_field_value"] = source_value;
+					diagnostic["phase"] = phase_label;
+					diagnostic["same_type_neutral"] = same_type_neutral;
+					diagnostic["same_type_semantics"] = same_type_semantics;
+					diagnostic["faction_selection_source"] = faction_selection_source;
+					diagnostic["policy"] = "optional density towns do not stack into a zone that already has a town; this preserves HoMM3-like town separation until guarded same-zone town regions are modeled explicitly";
+					town_diagnostics.append(diagnostic);
+					return;
+				}
 			}
-		}
 		Dictionary anchor = !start.is_empty() ? Dictionary(start) : Dictionary(zone.get("anchor", zone.get("center", Dictionary())));
 		Dictionary access_anchor = anchor;
 		if (!zone_id.is_empty() && !point_owned_by_zone(owner_grid, int32_t(access_anchor.get("x", width / 2)), int32_t(access_anchor.get("y", height / 2)), zone_id)) {
@@ -12827,9 +12939,9 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 					mark_record_blocking_occupancy(town_search_occupied, Dictionary(towns[town_index]));
 				}
 			}
-		}
-		const bool player_start_town_anchor_locked = record_type == "player_start_town" && !start.is_empty();
-		Dictionary access_reachable_lookup = in_zone_access_reachable_lookup(access_anchor_x, access_anchor_y, zone_id, owner_grid, blocking_occupied, width, height);
+			}
+			const bool player_start_town_anchor_locked = record_type == "player_start_town" && !start.is_empty();
+			Dictionary access_reachable_lookup = in_zone_access_reachable_lookup(access_anchor_x, access_anchor_y, zone_id, owner_grid, blocking_occupied, width, height);
 			const int32_t preferred_spacing = town_spacing_radius_for_size(normalized);
 			const int32_t hard_spacing = town_hard_spacing_radius_for_size(normalized);
 			const int32_t access_fallback_spacing = town_access_fallback_spacing_radius_for_size(normalized);
@@ -12893,28 +13005,28 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, required_materialization_spacing, access_anchor, access_reachable_lookup);
 			used_required_materialization_fallback = !point.is_empty();
 		}
-		if (point.is_empty() && !player_start_town_anchor_locked && !density) {
-			applied_spacing = required_materialization_spacing;
-			point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, required_materialization_spacing);
-			used_required_spacing_fallback = !point.is_empty();
-		}
-		if (point.is_empty() && !player_start_town_anchor_locked && !density && required_last_resort_spacing < applied_spacing) {
-			applied_spacing = required_last_resort_spacing;
-			point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, required_last_resort_spacing);
-			used_required_spacing_fallback = !point.is_empty();
-		}
-		Dictionary diagnostic;
-		diagnostic["zone_id"] = zone_id;
-		diagnostic["record_type"] = record_type;
-		diagnostic["owner_scope"] = owner_scope;
-		diagnostic["settlement_kind"] = settlement_kind;
-		diagnostic["source_field_offset"] = town_source_field_offset(owner_scope, settlement_kind, density);
-		diagnostic["source_field_name"] = town_source_field_name(owner_scope, settlement_kind, density);
-		diagnostic["source_field_value"] = source_value;
-		diagnostic["phase"] = phase_label;
-		diagnostic["preferred_town_spacing"] = preferred_spacing;
-		diagnostic["hard_town_spacing"] = hard_spacing;
-		diagnostic["access_fallback_town_spacing"] = access_fallback_spacing;
+			if (point.is_empty() && !player_start_town_anchor_locked && !density) {
+				applied_spacing = required_materialization_spacing;
+				point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, required_materialization_spacing);
+				used_required_spacing_fallback = !point.is_empty();
+			}
+			if (point.is_empty() && !player_start_town_anchor_locked && !density && required_last_resort_spacing < applied_spacing) {
+				applied_spacing = required_last_resort_spacing;
+				point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, required_last_resort_spacing);
+				used_required_spacing_fallback = !point.is_empty();
+			}
+			Dictionary diagnostic;
+			diagnostic["zone_id"] = zone_id;
+			diagnostic["record_type"] = record_type;
+			diagnostic["owner_scope"] = owner_scope;
+			diagnostic["settlement_kind"] = settlement_kind;
+			diagnostic["source_field_offset"] = town_source_field_offset(owner_scope, settlement_kind, density);
+			diagnostic["source_field_name"] = town_source_field_name(owner_scope, settlement_kind, density);
+			diagnostic["source_field_value"] = source_value;
+			diagnostic["phase"] = phase_label;
+			diagnostic["preferred_town_spacing"] = preferred_spacing;
+			diagnostic["hard_town_spacing"] = hard_spacing;
+			diagnostic["access_fallback_town_spacing"] = access_fallback_spacing;
 			diagnostic["required_materialization_town_spacing"] = required_materialization_spacing;
 			diagnostic["required_last_resort_town_spacing"] = required_last_resort_spacing;
 			diagnostic["launchable_spacing_floor_enforced"] = launchable_spacing_floor_enforced;
@@ -12923,23 +13035,25 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			diagnostic["owner_small_normal_water_2level_spacing_floor_enforced"] = owner_small_normal_water_2level_spacing_floor_enforced;
 			diagnostic["owner_large_land_spacing_floor_enforced"] = false;
 			diagnostic["owner_xl_land_spacing_floor_enforced"] = owner_xl_land_spacing_floor_enforced;
-		diagnostic["applied_town_spacing"] = applied_spacing;
-		diagnostic["town_access_anchor"] = access_anchor;
-		diagnostic["town_spacing_distance_model"] = "direct_tile_route_chebyshev_distance";
-		diagnostic["town_accessibility_policy"] = used_required_spacing_fallback ? "required_town_legacy_spacing_fallback_subject_to_cross_zone_route_regression" : (used_required_materialization_fallback ? "required_town_materialization_spacing_fallback_preserves_in_zone_access" : "town_anchor_must_have_in_zone_path_to_start_or_zone_anchor_through_existing_blocking_objects_even_when_spacing_relaxes");
-		if (point.is_empty()) {
-			const bool owner_xl_neutral_required_deferred = owner_xl_town_limit >= 0 && owner_scope == "neutral" && !density;
-			const bool owner_medium_normal_water_neutral_required_deferred = native_rmg_owner_medium_normal_water_density_case(normalized) && owner_scope == "neutral" && !density;
-			const bool owner_small_normal_water_2level_required_deferred = native_rmg_owner_small_normal_water_2level_case(normalized) && !density;
-			diagnostic["code"] = density ? "town_castle_density_placement_infeasible" : (owner_xl_neutral_required_deferred ? "owner_xl_neutral_required_town_deferred_to_global_spacing_supplement" : (owner_medium_normal_water_neutral_required_deferred ? "owner_medium_normal_water_required_town_deferred_by_owner_spacing_floor" : (owner_small_normal_water_2level_required_deferred ? "owner_small_normal_water_2level_required_town_deferred_by_owner_spacing_floor" : "town_castle_placement_infeasible")));
-			diagnostic["severity"] = (density || owner_xl_neutral_required_deferred || owner_medium_normal_water_neutral_required_deferred || owner_small_normal_water_2level_required_deferred) ? "warning" : "failure";
-			diagnostic["message"] = density ? "No unoccupied in-zone tile satisfied the optional density town/castle spacing and access-to-anchor contract." : (owner_xl_neutral_required_deferred ? "Owner XL neutral source-zone town could not satisfy the owner spacing floor and is deferred to the global owner-count supplement." : (owner_medium_normal_water_neutral_required_deferred ? "Owner Medium normal-water neutral source-zone town could not satisfy the owner spacing floor; the owner-count target is preserved by the supported owner profile town set." : (owner_small_normal_water_2level_required_deferred ? "Owner Small normal-water two-level required town could not satisfy the owner spacing floor; the owner-count target is preserved by the supported owner profile town set." : "No unoccupied in-zone tile satisfied the required town/castle spacing and access-to-anchor contract.")));
-			town_diagnostics.append(diagnostic);
-			return;
-		}
-		const bool same_type_neutral = bool(Dictionary(zone.get("catalog_metadata", Dictionary())).get("same_town_type", Dictionary(zone.get("town_rules", Dictionary())).get("same_type", false)));
-		const String faction_id = town_faction_for_placement(normalized, zone, owner_scope, settlement_kind, density, local_ordinal, same_type_neutral);
-		Dictionary semantics;
+			diagnostic["applied_town_spacing"] = applied_spacing;
+			diagnostic["town_access_anchor"] = access_anchor;
+			diagnostic["town_spacing_distance_model"] = "direct_tile_route_chebyshev_distance";
+			diagnostic["town_accessibility_policy"] = used_required_spacing_fallback ? "required_town_legacy_spacing_fallback_subject_to_cross_zone_route_regression" : (used_required_materialization_fallback ? "required_town_materialization_spacing_fallback_preserves_in_zone_access" : "town_anchor_must_have_in_zone_path_to_start_or_zone_anchor_through_existing_blocking_objects_even_when_spacing_relaxes");
+			diagnostic["same_type_neutral"] = same_type_neutral;
+			diagnostic["same_type_semantics"] = same_type_semantics;
+			diagnostic["faction_selection_source"] = faction_selection_source;
+			if (point.is_empty()) {
+				const bool owner_xl_neutral_required_deferred = owner_xl_town_limit >= 0 && owner_scope == "neutral" && !density;
+				const bool owner_medium_normal_water_neutral_required_deferred = native_rmg_owner_medium_normal_water_density_case(normalized) && owner_scope == "neutral" && !density;
+				const bool owner_small_normal_water_2level_required_deferred = native_rmg_owner_small_normal_water_2level_case(normalized) && !density;
+				diagnostic["code"] = density ? "town_castle_density_placement_infeasible" : (owner_xl_neutral_required_deferred ? "owner_xl_neutral_required_town_deferred_to_global_spacing_supplement" : (owner_medium_normal_water_neutral_required_deferred ? "owner_medium_normal_water_required_town_deferred_by_owner_spacing_floor" : (owner_small_normal_water_2level_required_deferred ? "owner_small_normal_water_2level_required_town_deferred_by_owner_spacing_floor" : "town_castle_placement_infeasible")));
+				diagnostic["severity"] = (density || owner_xl_neutral_required_deferred || owner_medium_normal_water_neutral_required_deferred || owner_small_normal_water_2level_required_deferred) ? "warning" : "failure";
+				diagnostic["message"] = density ? "No unoccupied in-zone tile satisfied the optional density town/castle spacing and access-to-anchor contract." : (owner_xl_neutral_required_deferred ? "Owner XL neutral source-zone town could not satisfy the owner spacing floor and is deferred to the global owner-count supplement." : (owner_medium_normal_water_neutral_required_deferred ? "Owner Medium normal-water neutral source-zone town could not satisfy the owner spacing floor; the owner-count target is preserved by the supported owner profile town set." : (owner_small_normal_water_2level_required_deferred ? "Owner Small normal-water two-level required town could not satisfy the owner spacing floor; the owner-count target is preserved by the supported owner profile town set." : "No unoccupied in-zone tile satisfied the required town/castle spacing and access-to-anchor contract.")));
+				town_diagnostics.append(diagnostic);
+				return;
+			}
+			const String faction_id = town_faction_for_placement(normalized, zone, owner_scope, settlement_kind, density, local_ordinal, same_type_neutral);
+			Dictionary semantics;
 		semantics["source_phase"] = phase_label;
 		semantics["source_field_offset"] = diagnostic["source_field_offset"];
 		semantics["source_field_name"] = diagnostic["source_field_name"];
@@ -15243,6 +15357,7 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	Dictionary signatures = build_component_signatures(terrain_grid, zone_layout, player_starts, road_network, river_network, object_placement, town_guard_placement);
 	Dictionary counts = build_component_counts(normalized, terrain_grid, zone_layout, player_starts, road_network, river_network, object_placement, town_guard_placement);
 	Array phases = build_phase_pipeline(terrain_grid, zone_layout, player_starts, road_network, river_network, object_placement, town_guard_placement);
+	Dictionary runtime_policy_classification = native_rmg_runtime_policy_classification(normalized);
 	const String phase_signature = hash32_hex(canonical_variant(phases));
 
 	Dictionary component_summaries;
@@ -15261,6 +15376,7 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	output_identity["map_id"] = identity.get("map_id", "");
 	output_identity["component_signatures"] = signatures;
 	output_identity["component_counts"] = counts;
+	output_identity["runtime_policy_classification_signature"] = runtime_policy_classification.get("signature", "");
 	output_identity["phase_signature"] = phase_signature;
 	output_identity["write_policy"] = "generated_records_only_no_authored_writeback";
 	output_identity["full_generation_status"] = full_generation_status;
@@ -15285,6 +15401,7 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 	report["component_signatures"] = signatures;
 	report["component_counts"] = counts;
 	report["component_summaries"] = component_summaries;
+	report["runtime_policy_classification"] = runtime_policy_classification;
 	report["town_spacing"] = town_spacing_summary;
 	report["phase_pipeline"] = phases;
 	report["phase_signature"] = phase_signature;
@@ -15367,6 +15484,7 @@ Dictionary build_native_random_map_provenance(const Dictionary &normalized, cons
 	provenance["map_id"] = identity.get("map_id", "");
 	provenance["component_signatures"] = validation_report.get("component_signatures", Dictionary());
 	provenance["component_counts"] = validation_report.get("component_counts", Dictionary());
+	provenance["runtime_policy_classification"] = validation_report.get("runtime_policy_classification", Dictionary());
 	provenance["phase_signature"] = validation_report.get("phase_signature", "");
 	provenance["validation_status"] = validation_report.get("validation_status", "");
 	provenance["validation_report_signature"] = validation_report.get("report_signature", "");
@@ -17257,6 +17375,7 @@ Dictionary MapPackageService::random_map_config_identity(Dictionary config) cons
 	result["supported_parity_config"] = native_rmg_scoped_structural_profile_supported(normalized);
 	result["scoped_structural_profile_supported"] = native_rmg_scoped_structural_profile_supported(normalized);
 	result["translated_catalog_structural_profile_supported"] = native_rmg_translated_catalog_structural_profile_supported(normalized);
+	result["runtime_policy_classification"] = native_rmg_runtime_policy_classification(normalized);
 	return result;
 }
 
@@ -17273,6 +17392,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	const bool translated_catalog_structural_profile_supported = native_rmg_translated_catalog_structural_profile_supported(normalized);
 	const String generation_status = native_rmg_generation_status_for_config(normalized);
 	const String full_generation_status = native_rmg_full_generation_status_for_config(normalized);
+	Dictionary runtime_policy_classification = native_rmg_runtime_policy_classification(normalized);
 	Dictionary identity = random_map_config_identity(config);
 	append_extension_profile_phase(extension_profile_phases, "config_identity", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary player_assignment = player_assignment_for_config(normalized);
@@ -17333,6 +17453,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["scoped_structural_profile_supported"] = scoped_structural_profile_supported;
 	metadata["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	metadata["translated_catalog_structural_profile_supported"] = translated_catalog_structural_profile_supported;
+	metadata["runtime_policy_classification"] = runtime_policy_classification;
 	metadata["terrain_generation_status"] = terrain_grid.get("generation_status", "terrain_grid_generated");
 	metadata["zone_generation_status"] = zone_layout.get("generation_status", "zones_generated_foundation");
 	metadata["runtime_zone_graph_signature"] = Dictionary(zone_layout.get("runtime_zone_graph", Dictionary())).get("signature", "");
@@ -17443,6 +17564,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["scoped_structural_profile_supported"] = scoped_structural_profile_supported;
 	result["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	result["translated_catalog_structural_profile_supported"] = translated_catalog_structural_profile_supported;
+	result["runtime_policy_classification"] = runtime_policy_classification;
 	result["validation_status"] = report.get("validation_status", "");
 	result["normalized_config"] = normalized;
 	result["deterministic_identity"] = identity;
