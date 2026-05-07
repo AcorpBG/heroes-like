@@ -8141,6 +8141,19 @@ int32_t decoration_target_for_zone(const Dictionary &normalized, const Dictionar
 	} else if (role == "junction") {
 		ratio = 0.280;
 	}
+	if (native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& String(normalized.get("water_mode", "land")) == "islands"
+			&& String(normalized.get("size_class_id", "")) == "homm3_large"
+			&& int32_t(normalized.get("level_count", 1)) <= 1) {
+		ratio = 0.140;
+		if (role.find("start") >= 0) {
+			ratio = 0.105;
+		} else if (role == "treasure") {
+			ratio = 0.170;
+		} else if (role == "junction") {
+			ratio = 0.150;
+		}
+	}
 	const double expected_body_tiles_per_record = 12.0;
 	const int32_t max_per_zone = std::max(8, std::min(96, std::max(1, cell_count / 5)));
 	const int32_t raw_target = int32_t(std::ceil(double(cell_count) * ratio / expected_body_tiles_per_record));
@@ -8701,6 +8714,7 @@ int32_t native_catalog_auto_generated_object_floor(const Dictionary &normalized)
 		return 0;
 	}
 	const String size_class_id = String(normalized.get("size_class_id", ""));
+	const String water_mode = String(normalized.get("water_mode", "land"));
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
@@ -8711,6 +8725,10 @@ int32_t native_catalog_auto_generated_object_floor(const Dictionary &normalized)
 		return std::max(1100, (area * density_floor_per_1000) / 1000);
 	}
 	if (size_class_id == "homm3_large") {
+		if (water_mode == "islands" && level_count <= 1) {
+			density_floor_per_1000 = 75;
+			return std::max(880, (area * density_floor_per_1000) / 1000);
+		}
 		density_floor_per_1000 = 120;
 		return std::max(900, (area * density_floor_per_1000) / 1000);
 	}
@@ -8788,6 +8806,12 @@ int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, 
 	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
 	const int32_t area = std::max(1, width * height * level_count);
 	int32_t density_floor = 0;
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	if (size_class_id == "homm3_large" && water_mode == "islands" && level_count <= 1) {
+		density_floor = (area * 7) / 1000;
+		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.30));
+		return std::max(density_floor, reward_ratio_floor);
+	}
 	if (size_class_id == "homm3_large" && level_count > 1) {
 		density_floor = (area * 13) / 1000;
 	} else if (size_class_id == "homm3_medium" && level_count > 1) {
@@ -16119,6 +16143,9 @@ double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Di
 			&& ((size_class_id == "homm3_extra_large" && level_count > 1)
 					|| (size_class_id == "homm3_large" && level_count <= 1)
 					|| size_class_id == "homm3_medium");
+	if (water_mode == "islands" && size_class_id == "homm3_large" && level_count <= 1) {
+		return island_land_fraction_for_zone(zone);
+	}
 	if (water_mode == "islands" && size_class_id == "homm3_extra_large" && level_count <= 1) {
 		const String role = String(zone.get("role", ""));
 		if (role.contains("start")) {

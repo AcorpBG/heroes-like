@@ -776,3 +776,19 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_normal_water_profile_merged --require-timing-summary` passed with `18/18` owner/native matches. The timing manifest still reports the inherited full-batch export baseline of `392420ms` total wall time, generation `234334ms`, conversion `106447ms`, and save `46418ms`.
 
 This is a generalized size/water/level profile correction, not a per-seed exact-count claim. Production parity remains blocked by road-component shape, route-shape similarity, and object/guard/reward category similarity. The Large normal-water two-level case now ranks as a category/road problem instead of a terrain/town-layer problem.
+
+## Large One-Level Islands Object And Terrain Profile Cleanup
+
+The next one-level Large islands probe showed a different failure mode than Large land and Large normal-water. Native output was close on total object count only because decoration, guard, and reward categories were inflated while the island terrain profile was still under-blocked compared with owner evidence. A neutral-town-floor experiment was rejected before commit because it only raised the native town count from `8` to `9` while still asking for `16`, worsening route diagnostics without solving the actual island town-layout problem.
+
+Normal generated catalog-auto Large one-level islands now use a lower islands-specific decoration target, a lower object-density floor, and a lower guard floor. The profile also keeps the classic island land-fraction path instead of the extra one-level shaping used by other size classes. This is intentionally scoped to `homm3_large`, `water_mode == islands`, and `level_count <= 1`.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `l_islands_randomplayers` export wrote `1/1` package in about `10.912s`.
+- `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_islands_profile_clean_probe --allow-partial-native-batch --summary --failure-limit 8 --gap-limit 8` preserved `0` parse/native/policy/topology/coverage/closure-shape gaps. The expected partial-batch density gap remains because one 108x108 sample alone is below the broad group floor.
+- The focused production-gap audit improved `l_islands_randomplayers` from the previous merged baseline severity `4111` to `1122`: object delta `+631 -> +38`, terrain delta `-2093 -> +62`, route delta stayed `17/-11`, and category absolute delta moved to `282`.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_islands_profile_clean_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+
+This is not a town-distribution fix. Large one-level islands still need a generalized island-town/zone-layout pass before they can match owner town density and guarded route shape.
