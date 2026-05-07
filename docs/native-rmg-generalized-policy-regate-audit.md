@@ -265,6 +265,26 @@ Validation evidence:
 
 The current native RMG therefore remains not production-ready: it now has a fast, non-Godot gate proving the next generalized work must improve guard/reward/town/object/road policy shape, not simply make packages export successfully.
 
+## Implemented Scenic And Guard Policy Floors
+
+The first policy-gate run showed that total object density was not enough: the native generator was using decorative filler where HoMM3-like outputs also need ordinary scenic/other objects, and several two-level generated maps had too few guards relative to rewards.
+
+Native catalog-auto generation now adds:
+
+- a size/level-aware `scenic_object` floor before decorative density filler;
+- a size/level/reward-aware guard floor for non-owner-comparison catalog-auto maps;
+- diagnostics that keep these floors separate from owner exact-count branches.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Targeted exports for Large/Medium/Small/XL policy-gap cases exported successfully with `0` failures.
+- A combined `18` package evidence set from the partial full export plus targeted remaining XL exports parsed in Python with `0` parse failures, `0` native rule failures, and `0` density gaps.
+- The broader policy gate now reports `5` policy gaps instead of `14`, with `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_scenic_guard_floor_combined --allow-failures --pretty` completing owner/native parsing in about `8.829s`.
+- All object/scenic category-density gaps are gone in that combined evidence. The remaining broad policy gaps are town density on `108x108_l2` and `36x36_l2`, road density on `36x36_l2` plus a near-threshold `144x144_l1` road floor, and guard/reward ratio on the owner-compared `36x36_l1` case.
+
+The full Godot export path is still too slow for the tight loop; a broad run was stopped after producing `15/18` packages in over six minutes, then the remaining XL cases were generated with `--case`. That reinforces the testing split: use Godot only for fresh package generation, and keep policy comparison in Python.
+
 ## Implemented Generated Batch Rule Fixes
 
 The first generated-native batch exposed three generalized rule failures rather than a need to exact-match owner counts:
