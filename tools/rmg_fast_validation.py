@@ -32,7 +32,7 @@ DEFAULT_ROAD_LARGEST_SHARE_EPSILON = 0.05
 DEFAULT_ROAD_COMPONENT_COUNT_FLOOR_RATIO = 0.50
 DEFAULT_CATEGORY_FLOOR_RATIOS = {
     "guard": 0.55,
-    "object": 0.25,
+    "object": 0.60,
     "reward": 0.55,
     "town": 0.65,
 }

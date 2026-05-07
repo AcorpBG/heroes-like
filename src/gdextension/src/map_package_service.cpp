@@ -8409,18 +8409,18 @@ int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized)
 	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
 	const int32_t area = std::max(1, width * height * level_count);
 	if (size_class_id == "homm3_extra_large") {
-		return level_count > 1 ? std::max(240, (area * 6) / 1000) : std::max(180, (area * 8) / 1000);
+		return level_count > 1 ? std::max(330, (area * 8) / 1000) : std::max(420, (area * 20) / 1000);
 	}
 	if (size_class_id == "homm3_large") {
-		return level_count > 1 ? std::max(220, (area * 9) / 1000) : std::max(80, (area * 7) / 1000);
+		return level_count > 1 ? std::max(360, (area * 16) / 1000) : std::max(180, (area * 16) / 1000);
 	}
 	if (size_class_id == "homm3_medium") {
-		return level_count > 1 ? std::max(70, (area * 7) / 1000) : std::max(44, (area * 8) / 1000);
+		return level_count > 1 ? std::max(125, (area * 12) / 1000) : std::max(105, (area * 20) / 1000);
 	}
 	if (size_class_id == "homm3_small") {
-		return level_count > 1 ? std::max(18, (area * 7) / 1000) : std::max(12, (area * 8) / 1000);
+		return level_count > 1 ? std::max(32, (area * 12) / 1000) : std::max(32, (area * 25) / 1000);
 	}
-	return std::max(40, (area * 7) / 1000);
+	return std::max(80, (area * 14) / 1000);
 }
 
 int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, int32_t reward_count) {
