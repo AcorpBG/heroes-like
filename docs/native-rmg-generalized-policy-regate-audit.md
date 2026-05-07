@@ -759,3 +759,20 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_recovered_filler_land_town_merged --require-timing-summary` passed while preserving `production_ready=false`.
 
 The remaining top production blockers are still two-level water/islands, road-component shape, route-shape similarity, and object/guard/reward category shape. This checkpoint moves the land placement pipeline away from raw count fitting, but it does not complete HoMM3-style RMG parity.
+
+## Large Normal-Water Two-Level Surface And Underground Policy
+
+The Large normal-water two-level owner sample exposed a different profile than the XL water sample. XL normal-water remains a water-heavy surface profile, but Large normal-water owner evidence has an effectively all-land surface and a heavily blocked underground layer. Native was previously mixing those two behaviors: it produced surface water like XL, but it did not reserve normal-water underground neutral towns.
+
+Normal generated catalog-auto two-level normal-water maps now reserve an underground neutral-town share. Zone reuse for generated town floors is tracked by `(zone, level)` instead of by zone alone, so underground towns do not incorrectly consume the corresponding surface zone slot. Large normal-water two-level terrain now keeps the surface land-dominant while applying deterministic underground rock shape; XL normal-water keeps the water-heavy surface profile.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused Large normal-water two-level export wrote `1/1` package in about `34.766s`.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/L-NormalWater-RandomPlayers-2level.h3m --amap .artifacts/rmg_native_batch_export_large_normal_water_surface_policy_probe/l_normalwater_randomplayers_2level.amap --compare --pretty --allow-failures` shows the native town count now matches owner `14`, with `10` surface towns and `4` underground towns. Terrain-blocked delta improved to `+2`: native surface `0` vs owner `1`, and native underground `6713` vs owner `6710`.
+- Focused XL normal-water two-level export retained the owner-like `9` surface / `5` underground native split and improved underground terrain shape versus the previous checkpoint while preserving the XL water-heavy surface profile.
+- Replacing the Large and XL normal-water two-level packages into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_normal_water_profile_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_normal_water_profile_merged --require-timing-summary` passed with `18/18` owner/native matches. The timing manifest still reports the inherited full-batch export baseline of `392420ms` total wall time, generation `234334ms`, conversion `106447ms`, and save `46418ms`.
+
+This is a generalized size/water/level profile correction, not a per-seed exact-count claim. Production parity remains blocked by road-component shape, route-shape similarity, and object/guard/reward category similarity. The Large normal-water two-level case now ranks as a category/road problem instead of a terrain/town-layer problem.
