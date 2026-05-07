@@ -31,6 +31,42 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-owner-xl-land-reward-count-correction-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Use the XL no-water owner diagnostic to correct native Extra Large land reward-category overproduction after the town-layout pass left native rewards at 952 versus owner 692.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `src/gdextension/src/map_package_service.cpp`
+- local evidence under `maps/h3m-maps/XL-nowater.h3m`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Native Extra Large land default caps reward-category placement at the parsed owner XL count without suppressing mine/resource/dwelling priority placement.
+- The XL land diagnostic reward category moves from native 952 versus owner 692 to exact owner count or an explicit validated residual if infeasible.
+- Decoration, scenic/object, guard, town count, town spacing, road, and route-closure evidence from previous XL corrections remains passing.
+- Production audit still refuses `production_ready` until broad exact owner-H3M parity and remaining corpus/parser gaps are closed.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No exact reward-value distribution parity claim beyond count/category shape.
+- No broad all-template reward tuning.
+- No HoMM3 copyrighted asset/DEF import.
+validationResults:
+- Native XL land diagnostic validation now passes with exact owner-category counts: package object count 5,365/5,365, decoration 3,413/3,413, scenic/object 629/629, reward 692/692, town 12/12, and guard 619/619.
+- Native reward by-kind breakdown is mine 168, neutral_dwelling 57, resource_site 133, and reward_reference 334 after trimming only surplus generic reward references.
+- Semantic layout and route closure remain passing: nearest-town Manhattan 41 versus owner 39, native object-route reachable town pairs 0, and native guarded-route reachable town pairs 0.
+- Production parity audit passed with `production_ready false` and `missing_requirement_count 4`, preserving the no-overclaim boundary.
+- Uploaded `.h3m`, generated `.amap`, and generated `.ascenario` evidence remains uncommitted.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-owner-xl-land-town-layout-correction-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`

@@ -6594,6 +6594,9 @@ int32_t owner_xl_land_category_target(const Dictionary &normalized, const String
 	if (category == "town") {
 		return 12;
 	}
+	if (category == "reward") {
+		return 692;
+	}
 	return -1;
 }
 
@@ -8559,6 +8562,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	const int32_t uploaded_small_underground_scenic_target = owner_uploaded_small_027_underground_object_target(normalized, "scenic_object");
 	const int32_t owner_xl_decoration_target = owner_xl_land_category_target(normalized, "decoration");
 	const int32_t owner_xl_scenic_target = owner_xl_land_category_target(normalized, "scenic_object");
+	const int32_t owner_xl_reward_category_target = owner_xl_land_category_target(normalized, "reward");
 	int32_t uploaded_small_mine_count = 0;
 	int32_t uploaded_small_resource_count = 0;
 	int32_t uploaded_small_dwelling_count = 0;
@@ -8763,6 +8767,9 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 			const auto reward_started_at = std::chrono::steady_clock::now();
 			for (int32_t reward_index = 0; reward_index < reward_target; ++reward_index) {
 				if (target_reached(uploaded_small_reward_target, uploaded_small_reward_count)) {
+					continue;
+				}
+				if (target_reached(owner_xl_reward_category_target, placement_count_for_spatial_category(placements, "reward"))) {
 					continue;
 				}
 				Dictionary point = object_point_for_zone_index_fast(zone, ordinal, 1 + reward_index / 4, "reward_reference", normalized, placement_context, owner_grid, occupied, road_distance_field);
@@ -8998,6 +9005,44 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 		const auto auto_density_started_at = std::chrono::steady_clock::now();
 		native_catalog_auto_density_supplement = append_native_catalog_auto_density_supplement(placements, occupied, placement_context, normalized, zone_layout, road_cells, ordinal);
 		append_extension_profile_elapsed(object_profile_phases, "native_catalog_auto_density_floor_supplement", elapsed_usec_since(auto_density_started_at), top_object_phase_usec, top_object_phase_id);
+	}
+
+	if (owner_xl_reward_category_target >= 0) {
+		const auto reward_trim_started_at = std::chrono::steady_clock::now();
+		const int32_t reward_count = placement_count_for_spatial_category(placements, "reward");
+		const int32_t desired_trim_count = std::max(0, reward_count - owner_xl_reward_category_target);
+		if (desired_trim_count > 0) {
+			Array trimmed_placements;
+			Array removed_ids;
+			int32_t removed_count = 0;
+			for (int64_t index = placements.size() - 1; index >= 0; --index) {
+				if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+					trimmed_placements.push_front(placements[index]);
+					continue;
+				}
+				Dictionary placement = Dictionary(placements[index]);
+				if (String(placement.get("kind", "")) == "reward_reference" && removed_count < desired_trim_count) {
+					removed_ids.append(placement.get("placement_id", ""));
+					++removed_count;
+					continue;
+				}
+				trimmed_placements.push_front(placement);
+			}
+			placements = trimmed_placements;
+			Dictionary trim_summary;
+			trim_summary["schema_id"] = "native_rmg_owner_xl_land_reward_category_trim_v1";
+			trim_summary["target_reward_category_count"] = owner_xl_reward_category_target;
+			trim_summary["initial_reward_category_count"] = reward_count;
+			trim_summary["desired_trim_count"] = desired_trim_count;
+			trim_summary["removed_reward_reference_count"] = removed_count;
+			trim_summary["removed_placement_ids"] = removed_ids;
+			trim_summary["final_reward_category_count"] = placement_count_for_spatial_category(placements, "reward");
+			trim_summary["policy"] = "owner_xl_no_water_category_count_trims_only_surplus_generic_reward_reference_after_required_mine_resource_dwelling_priority";
+			trim_summary["status"] = int32_t(trim_summary.get("final_reward_category_count", 0)) == owner_xl_reward_category_target ? "pass" : "partial";
+			trim_summary["signature"] = hash32_hex(canonical_variant(trim_summary));
+			native_catalog_auto_density_supplement["owner_xl_land_reward_category_trim"] = trim_summary;
+		}
+		append_extension_profile_elapsed(object_profile_phases, "owner_xl_land_reward_category_trim", elapsed_usec_since(reward_trim_started_at), top_object_phase_usec, top_object_phase_id);
 	}
 
 	const auto occupancy_started_at = std::chrono::steady_clock::now();
