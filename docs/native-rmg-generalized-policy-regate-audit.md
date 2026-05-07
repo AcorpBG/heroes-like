@@ -810,3 +810,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_2level_profile_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is a profile cleanup, not a completed island-zone parity pass. The top merged blockers now move to `xl_water_2levels`, `xl_nowater_2levels`, and Large two-level water/land cases. XL two-level islands still needs a generalized town-capacity and route-shape correction before it can match owner town density and object-only route shape.
+
+## XL Two-Level Normal-Water Object, Guard, And Underground Profile Cleanup
+
+The next merged top-gap case was `xl_water_2levels`, which maps to the normal-water translated profile. Its road totals and component shape were already close to owner evidence, but the native object-placement payload was inflated by the generic XL two-level floor: native wrote `3829` total objects versus owner `3178`, with guard `498` versus `196` and reward `857` versus `482`. Underground terrain was also under-blocked by `1465` tiles.
+
+Normal generated catalog-auto XL two-level normal-water maps now use a scoped object-placement floor, reward target scale, guard floor, and underground rock fraction. This keeps the already close road profile intact while reducing the category inflation that made the map feel unlike the owner H3M sample.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `xl_water_2levels` export wrote `1/1` package in about `41.231s` with native validation `pass`.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/XL-water-2levels.h3m --amap .artifacts/rmg_native_batch_export_xl_water_2level_profile_probe/xl_water_2levels.amap --compare --pretty --allow-failures` improved total object delta from `+651` to `+28`, guard delta from `+302` to `+11`, reward delta from `+375` to `+150`, and terrain-blocked delta from `-1465` to `-462`.
+- The focused production-gap severity for `xl_water_2levels` improved from `3593` to `1550`. Remaining deltas are mostly reward/category shape and route shape: object-route reachable pairs remain `36` versus owner `16`, while guarded-route reachable pairs remain `0` versus owner `10`.
+- `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_2level_profile_probe --allow-partial-native-batch --summary --failure-limit 8 --gap-limit 8` passed with `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_2level_profile_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_2level_profile_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blocker moves to `xl_nowater_2levels`, followed by Large two-level normal-water/land/islands route and category-shape gaps. The next production correction should address terrain/route shape and town/object-route structure instead of continuing to tune object totals alone.
