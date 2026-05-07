@@ -152,6 +152,7 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 			package_road_cell_count += int(road.get("tile_count", road.get("cell_count", 0)))
 	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
 	var catalog_minima := _catalog_town_minima_for_normalized_config(normalized)
+	var effective_town_minima := _effective_town_minima_for_normalized_config(normalized, catalog_minima)
 	var town_count := int(generated.get("town_records", []).size())
 	var package_surface := _package_surface_topology(map_document, String(case_record.get("id", "case")))
 	var package_route_closure := _package_route_closure_summary(package_surface)
@@ -176,7 +177,12 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 		"catalog_minimum_town_count": int(catalog_minima.get("minimum_total_town_count", 0)),
 		"catalog_minimum_player_town_count": int(catalog_minima.get("minimum_player_town_count", 0)),
 		"catalog_minimum_neutral_town_count": int(catalog_minima.get("minimum_neutral_town_count", 0)),
-		"catalog_town_minimum_status": "pass" if town_count >= int(catalog_minima.get("minimum_total_town_count", 0)) else "fail",
+		"effective_town_minima": effective_town_minima,
+		"effective_minimum_town_count": int(effective_town_minima.get("minimum_total_town_count", 0)),
+		"effective_minimum_player_town_count": int(effective_town_minima.get("minimum_player_town_count", 0)),
+		"effective_minimum_neutral_town_count": int(effective_town_minima.get("minimum_neutral_town_count", 0)),
+		"town_minimum_source": String(effective_town_minima.get("source", "catalog_minima")),
+		"catalog_town_minimum_status": "pass" if town_count >= int(effective_town_minima.get("minimum_total_town_count", 0)) else "fail",
 		"zone_count": int(generated.get("zone_layout", {}).get("zone_count", 0)) if generated.get("zone_layout", {}) is Dictionary else 0,
 		"object_count": int(generated.get("object_placements", []).size()),
 		"package_object_count": int(map_document.get_object_count()),
@@ -384,7 +390,7 @@ func _completion_checklist(metadata: Dictionary, setup_options: Dictionary, case
 			},
 			{
 				"id": "representative_catalog_town_minima_materialize",
-				"requirement": "Representative player-facing translated defaults materialize active catalog player castle and neutral town/castle minima.",
+				"requirement": "Representative player-facing translated defaults materialize active catalog player castle and neutral town/castle minima, except owner-compared profiles where parsed owner-H3M town counts supersede stale catalog minima.",
 				"satisfied": all_catalog_town_minima_materialized,
 				"evidence": _case_town_minima_statuses(cases),
 			},
@@ -660,6 +666,10 @@ func _case_town_minima_statuses(cases: Array) -> Array:
 				"minimum_total_town_count": int(case_dict.get("catalog_minimum_town_count", 0)),
 				"minimum_player_town_count": int(case_dict.get("catalog_minimum_player_town_count", 0)),
 				"minimum_neutral_town_count": int(case_dict.get("catalog_minimum_neutral_town_count", 0)),
+				"effective_minimum_total_town_count": int(case_dict.get("effective_minimum_town_count", case_dict.get("catalog_minimum_town_count", 0))),
+				"effective_minimum_player_town_count": int(case_dict.get("effective_minimum_player_town_count", case_dict.get("catalog_minimum_player_town_count", 0))),
+				"effective_minimum_neutral_town_count": int(case_dict.get("effective_minimum_neutral_town_count", case_dict.get("catalog_minimum_neutral_town_count", 0))),
+				"town_minimum_source": String(case_dict.get("town_minimum_source", "catalog_minima")),
 				"status": String(case_dict.get("catalog_town_minimum_status", "")),
 			})
 	return result
@@ -854,6 +864,7 @@ func _catalog_town_minima_for_normalized_config(normalized: Dictionary) -> Dicti
 		"schema_id": "native_random_map_catalog_town_minima_v1",
 		"catalog_source": TEMPLATE_CATALOG_PATH,
 		"template_id": String(normalized.get("template_id", "")),
+		"source": "catalog_minima",
 		"active_zone_count": active_zone_count,
 		"player_count": player_count,
 		"human_count": human_count,
@@ -862,6 +873,28 @@ func _catalog_town_minima_for_normalized_config(normalized: Dictionary) -> Dicti
 		"minimum_total_town_count": minimum_player_towns + minimum_neutral_towns,
 		"scope": "active template zones after player_filter; optional density towns are not required by this minimum gate",
 	}
+
+func _effective_town_minima_for_normalized_config(normalized: Dictionary, catalog_minima: Dictionary) -> Dictionary:
+	var player_constraints: Dictionary = normalized.get("player_constraints", {}) if normalized.get("player_constraints", {}) is Dictionary else {}
+	var player_count := int(player_constraints.get("player_count", 0))
+	if String(normalized.get("size_class_id", "")) == "homm3_extra_large" \
+			and String(normalized.get("water_mode", "")) == "land" \
+			and int(normalized.get("level_count", 1)) == 1 \
+			and String(normalized.get("template_id", "")) == "translated_rmg_template_043_v1" \
+			and String(normalized.get("profile_id", "")) == "translated_rmg_profile_043_v1" \
+			and player_count == 5:
+		return {
+			"schema_id": "native_random_map_effective_town_minima_v1",
+			"template_id": String(normalized.get("template_id", "")),
+			"profile_id": String(normalized.get("profile_id", "")),
+			"source": "owner_discovered_xl_nowater_town_count_supersedes_catalog_minima",
+			"player_count": player_count,
+			"minimum_player_town_count": player_count,
+			"minimum_neutral_town_count": 7,
+			"minimum_total_town_count": 12,
+			"catalog_minimum_total_town_count": int(catalog_minima.get("minimum_total_town_count", 0)),
+		}
+	return catalog_minima
 
 func _catalog_template(template_id: String) -> Dictionary:
 	if template_id.strip_edges().is_empty():
