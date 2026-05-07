@@ -161,6 +161,21 @@ Validation evidence:
 - `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_town_guard_report.tscn` passed.
 - `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 tests/native_random_map_auto_template_batch_report.tscn` passed with all 11 representative cases validating.
 
+## Implemented Two-Level Town Distribution Correction
+
+The same Small normal-water two-level owner sample has four towns on the surface and one town underground. The native placement path was still treating town occupancy and spacing as surface-only, so the strict owner spacing floor either materialized an illegal surface supplement or skipped the fifth town entirely.
+
+Native town records now carry level-aware primary tiles and occupancy keys. Town spacing checks compare towns on the same map level, matching the owner-H3M layout model instead of treating different levels as stacked on one plane. For the owner Small normal-water two-level comparison path, the supplemental neutral town can move to an underground target when every surface candidate violates the strict spacing floor.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused debug inspection for `owner_discovered_s_2playerss_normalwater_2level` produced five towns: four surface towns and one underground town at level `1`, with same-level town spacing passing at the 14-tile owner floor.
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_owner_normal_water_underground_package_report.tscn` passed with `map_level_count: 2`, `map_object_count: 427`, and `validation_status: pass`.
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_town_guard_report.tscn` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_terrain_grid_report.tscn` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1200 tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` emitted schema `native_random_map_homm3_owner_corpus_coverage_report_v6`; the mapped gate remains failing overall but improved to `7/9` mapped samples passing. The previous `owner_discovered_s_2playerss_normalwater_2level` failure is gone; the remaining mapped failures are Small islands two-level and XL no-water.
+
 ## Implemented Explicit Level Label Correction
 
 Owner review showed the previous player-facing level selector still read like an ambiguous internal toggle. The level options are now centralized in `ScenarioSelectRules` and rendered by the generated-map menu as literal map-depth choices:
