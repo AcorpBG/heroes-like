@@ -8613,6 +8613,28 @@ int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized)
 	return std::max(80, (area * 14) / 1000);
 }
 
+int32_t native_catalog_auto_generated_decoration_floor(const Dictionary &normalized) {
+	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto") {
+		return 0;
+	}
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	if (water_mode != "land") {
+		return 0;
+	}
+	const String size_class_id = String(normalized.get("size_class_id", ""));
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
+	const int32_t area = std::max(1, width * height * level_count);
+	if (size_class_id == "homm3_extra_large") {
+		return level_count > 1 ? std::max(3200, (area * 78) / 1000) : std::max(3300, (area * 160) / 1000);
+	}
+	if (size_class_id == "homm3_large") {
+		return level_count > 1 ? std::max(2050, (area * 88) / 1000) : std::max(1750, (area * 150) / 1000);
+	}
+	return 0;
+}
+
 int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, int32_t reward_count) {
 	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto") {
 		return 0;
@@ -9025,6 +9047,55 @@ Dictionary append_native_catalog_auto_scenic_supplement(Array &placements, Dicti
 	summary["attempt_count"] = attempts;
 	summary["final_scenic_object_count"] = scenic_count;
 	summary["status"] = scenic_count >= target ? String("pass") : String("below_target_after_attempts");
+	return summary;
+}
+
+Dictionary append_native_catalog_auto_decoration_supplement(Array &placements, Dictionary &occupied, NativeObjectPlacementContext &placement_context, const Dictionary &normalized, const Dictionary &zone_layout, const std::vector<NativeRoadCell> &road_cells, int32_t &ordinal) {
+	Dictionary summary;
+	summary["schema_id"] = "native_rmg_catalog_auto_decoration_floor_supplement_v1";
+	summary["policy"] = "land_profile_size_level_decorative_blocker_floor_after_base_decoration_pass";
+	const int32_t target = native_catalog_auto_generated_decoration_floor(normalized);
+	int32_t decoration_count = placement_count_for_kind(placements, "decorative_obstacle");
+	summary["target_decoration_count"] = target;
+	summary["initial_decoration_count"] = decoration_count;
+	summary["applied"] = false;
+	summary["placed_count"] = 0;
+	if (target <= 0 || decoration_count >= target) {
+		summary["final_decoration_count"] = decoration_count;
+		summary["status"] = target <= 0 ? String("not_land_catalog_auto") : String("already_decorated_enough");
+		return summary;
+	}
+	Array zones = zone_layout.get("zones", Array());
+	if (zones.is_empty()) {
+		summary["final_decoration_count"] = decoration_count;
+		summary["status"] = "no_zones_available";
+		return summary;
+	}
+	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
+	const PackedInt32Array empty_road_distance_field;
+	int32_t placed = 0;
+	int32_t attempts = 0;
+	const int32_t max_attempts = std::max(target * 6, int32_t(zones.size()) * 384);
+	while (decoration_count < target && attempts < max_attempts) {
+		Dictionary zone = Dictionary(zones[attempts % zones.size()]);
+		Dictionary point = find_compact_decoration_density_point_fast(zone, ordinal, normalized, placement_context);
+		if (point.is_empty()) {
+			point = object_point_for_zone_index_fast(zone, ordinal, 5 + attempts / std::max<int32_t>(1, int32_t(zones.size())), "decorative_obstacle", normalized, placement_context, owner_grid, occupied, empty_road_distance_field);
+		}
+		point["object_family_ordinal"] = decoration_count;
+		point["placement_policy"] = "native_catalog_auto_land_profile_decoration_floor";
+		if (!point.is_empty() && append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "decorative_obstacle", ordinal, road_cells, zone_layout)) {
+			++decoration_count;
+			++placed;
+		}
+		++ordinal;
+		++attempts;
+	}
+	summary["applied"] = true;
+	summary["placed_count"] = placed;
+	summary["attempt_count"] = attempts;
+	summary["final_decoration_count"] = decoration_count;
+	summary["status"] = decoration_count >= target ? String("pass") : String("below_target_after_attempts");
 	return summary;
 }
 
@@ -10625,6 +10696,15 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	ordinal = append_decoration_placements(placements, occupied, placement_context, normalized, zone_layout, road_cells, ordinal);
 	append_extension_profile_elapsed(object_profile_phases, "decorative_obstacle_placement", elapsed_usec_since(decoration_started_at), top_object_phase_usec, top_object_phase_id);
 
+	Dictionary native_catalog_auto_decoration_supplement;
+	if (parity_targets.is_empty()
+			&& String(normalized.get("template_selection_mode", "")) == "native_catalog_auto"
+			&& !native_rmg_owner_discovered_comparison_seed(normalized)) {
+		const auto auto_decoration_started_at = std::chrono::steady_clock::now();
+		native_catalog_auto_decoration_supplement = append_native_catalog_auto_decoration_supplement(placements, occupied, placement_context, normalized, zone_layout, road_cells, ordinal);
+		append_extension_profile_elapsed(object_profile_phases, "native_catalog_auto_decoration_floor_supplement", elapsed_usec_since(auto_decoration_started_at), top_object_phase_usec, top_object_phase_id);
+	}
+
 	const int32_t owner_medium_decoration_target = owner_attached_medium_001_category_target(normalized, "decoration");
 	if (owner_medium_decoration_target >= 0) {
 		const auto decoration_supplement_started_at = std::chrono::steady_clock::now();
@@ -10943,6 +11023,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 		const auto auto_density_started_at = std::chrono::steady_clock::now();
 		native_catalog_auto_density_supplement = append_native_catalog_auto_density_supplement(placements, occupied, placement_context, normalized, zone_layout, road_cells, ordinal);
 		native_catalog_auto_density_supplement["native_catalog_auto_scenic_supplement"] = native_catalog_auto_scenic_supplement;
+		native_catalog_auto_density_supplement["native_catalog_auto_decoration_supplement"] = native_catalog_auto_decoration_supplement;
 		append_extension_profile_elapsed(object_profile_phases, "native_catalog_auto_density_floor_supplement", elapsed_usec_since(auto_density_started_at), top_object_phase_usec, top_object_phase_id);
 	}
 
