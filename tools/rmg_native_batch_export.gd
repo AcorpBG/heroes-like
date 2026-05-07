@@ -166,6 +166,8 @@ func _export_case(service: Variant, case: Dictionary, output_dir: String, absolu
 	if not bool(adoption.get("ok", false)):
 		record["status"] = "conversion_failed"
 		record["error"] = adoption
+		record["generated_validation_report"] = generated.get("validation_report", {})
+		record["generated_validation_failures"] = (generated.get("validation_report", {}) as Dictionary).get("failures", []) if generated.get("validation_report", {}) is Dictionary else []
 		return record
 	var map_document: Variant = adoption.get("map_document", null)
 	if map_document == null:
