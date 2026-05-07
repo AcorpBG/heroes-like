@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import rmg_export_timing_summary
 import rmg_fast_validation
 
 
@@ -67,6 +68,90 @@ def write_report(path: Path, report: dict[str, Any]) -> None:
     path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
 
 
+def build_timing_summary(manifest_path: Path, limit: int, status: str = "pass") -> dict[str, Any]:
+    try:
+        manifest = rmg_export_timing_summary.load_manifest(manifest_path)
+        summary = rmg_export_timing_summary.build_summary(manifest, limit)
+    except Exception as exc:
+        return {
+            "enabled": True,
+            "status": "fail",
+            "manifest_path": str(manifest_path),
+            "error": str(exc),
+        }
+    return {
+        "enabled": True,
+        "status": status if str(summary.get("status", "unknown")) == "pass" else str(summary.get("status", "unknown")),
+        "manifest_path": str(manifest_path),
+        "summary": summary,
+    }
+
+
+def timing_summary_for_validation(report: dict[str, Any], limit: int, enabled: bool) -> dict[str, Any]:
+    if not enabled:
+        return {"enabled": False, "status": "skipped"}
+    inputs = report.get("inputs", {})
+    native_dir = Path(str(inputs.get("amap_dir", "")))
+    artifact_root = Path(str(inputs.get("artifact_root", DEFAULT_REPORT_JSON.parents[1] / ".artifacts")))
+    manifest_path = native_dir / "manifest.json"
+    if not native_dir or not manifest_path.exists():
+        fallback_dir = rmg_export_timing_summary.latest_manifest_export_dir(artifact_root)
+        if fallback_dir is not None:
+            fallback_manifest = fallback_dir / "manifest.json"
+            timing = build_timing_summary(fallback_manifest, limit, "fallback")
+            timing["validated_amap_dir"] = str(native_dir)
+            timing["reason"] = "selected_native_amap_dir_has_no_manifest"
+            return timing
+        return {
+            "enabled": True,
+            "status": "missing",
+            "manifest_path": str(manifest_path),
+            "reason": "native_amap_manifest_not_found",
+        }
+    return build_timing_summary(manifest_path, limit)
+
+
+def timing_summary_lines(timing: dict[str, Any]) -> list[str]:
+    if not timing.get("enabled", False):
+        return ["timing_summary=skipped"]
+    if timing.get("status") == "missing":
+        return ["timing_summary=missing manifest=%s" % timing.get("manifest_path", "")]
+    if timing.get("status") == "fail":
+        return [
+            "timing_summary=fail manifest=%s error=%s"
+            % (timing.get("manifest_path", ""), timing.get("error", ""))
+        ]
+    summary = timing.get("summary", {})
+    totals = summary.get("phase_wall_msec_totals", {}) if isinstance(summary, dict) else {}
+    lines = [
+        "timing_summary=%s manifest=%s" % (timing.get("status", "unknown"), timing.get("manifest_path", "")),
+        "timing cases=%s exported=%s failed=%s total_wall_msec=%s"
+        % (
+            summary.get("case_count", 0),
+            summary.get("exported_count", 0),
+            summary.get("failed_count", 0),
+            summary.get("total_wall_msec", 0),
+        ),
+        "timing_phase_totals generation=%sms conversion=%sms save=%sms"
+        % (totals.get("generation", 0), totals.get("conversion", 0), totals.get("save", 0)),
+    ]
+    top_cases = summary.get("top_cases", []) if isinstance(summary, dict) else []
+    if top_cases:
+        lines.append("timing_top_cases:")
+        for case in top_cases:
+            lines.append(
+                "  {id} case={case_wall_msec}ms gen={generation_wall_msec}ms conv={conversion_wall_msec}ms save={save_wall_msec}ms ext={extension_top} conv_top={conversion_top} obj={object_top} town_guard={town_guard_top}".format(
+                    **case
+                )
+            )
+    if timing.get("status") == "fallback":
+        lines.append(
+            "timing_note=validated_amap_dir_has_no_manifest validated_amap_dir=%s"
+            % timing.get("validated_amap_dir", "")
+        )
+    return lines
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--h3m-dir", "--owner-dir", dest="h3m_dir", type=Path, default=rmg_fast_validation.DEFAULT_OWNER_DIR)
@@ -86,6 +171,9 @@ def main() -> int:
     parser.add_argument("--guard-closure-min-owner-open-pair-count", type=int, default=rmg_fast_validation.DEFAULT_GUARD_CLOSURE_MIN_OWNER_OPEN_PAIR_COUNT)
     parser.add_argument("--allow-partial-native-batch", action="store_true", help="Allow targeted native AMAP batches that do not cover every parsed owner H3M")
     parser.add_argument("--skip-py-compile", action="store_true", help="Skip parser/gate syntax compilation")
+    parser.add_argument("--skip-timing-summary", action="store_true", help="Do not summarize the native batch export manifest")
+    parser.add_argument("--require-timing-summary", action="store_true", help="Fail if no readable native export timing summary can be found")
+    parser.add_argument("--timing-limit", type=int, default=6, help="Number of slowest cases to include from the export timing manifest")
     parser.add_argument("--report-json", type=Path, default=DEFAULT_REPORT_JSON, help="Write full JSON report here")
     parser.add_argument("--failure-limit", type=int, default=8)
     parser.add_argument("--allow-failures", action="store_true", help="Return success while still reporting failures")
@@ -94,15 +182,19 @@ def main() -> int:
     compile_results = [] if args.skip_py_compile else compile_gate_modules()
     compile_ok = all(result.get("status") == "pass" for result in compile_results)
     report = rmg_fast_validation.build_report(validation_args(args))
+    timing = timing_summary_for_validation(report, args.timing_limit, not args.skip_timing_summary)
+    timing_required_ok = not args.require_timing_summary or timing.get("status") in {"pass", "fallback"}
+    timing_ok = timing.get("status") != "fail" and timing_required_ok
     combined = {
         "schema_id": "rmg_python_validation_gate_v1",
-        "status": "pass" if compile_ok and report.get("status") == "pass" else "fail",
+        "status": "pass" if compile_ok and report.get("status") == "pass" and timing_ok else "fail",
         "compile": {
             "enabled": not args.skip_py_compile,
             "status": "pass" if compile_ok else "fail",
             "modules": compile_results,
         },
         "fast_validation": report,
+        "timing": timing,
     }
     write_report(args.report_json, combined)
 
@@ -110,6 +202,8 @@ def main() -> int:
     print("checks python_compile=%s fast_validation=%s" % (combined["compile"]["status"], report.get("status", "unknown")))
     print("report_json=%s" % args.report_json)
     print(rmg_fast_validation.compact_summary(report, args.failure_limit))
+    for line in timing_summary_lines(timing):
+        print(line)
 
     if combined["status"] == "pass" or args.allow_failures:
         return 0

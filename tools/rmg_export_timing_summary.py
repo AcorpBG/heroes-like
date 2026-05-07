@@ -11,6 +11,20 @@ from typing import Any
 import rmg_fast_validation
 
 
+def latest_manifest_export_dir(artifact_root: Path) -> Path | None:
+    if not artifact_root.exists() or not artifact_root.is_dir():
+        return None
+    candidates: list[Path] = []
+    for path in artifact_root.iterdir():
+        if not path.is_dir() or not path.name.startswith(rmg_fast_validation.NATIVE_EXPORT_DIR_PREFIX):
+            continue
+        if (path / "manifest.json").exists():
+            candidates.append(path)
+    if not candidates:
+        return None
+    return max(candidates, key=lambda path: (path / "manifest.json").stat().st_mtime)
+
+
 def load_manifest(path: Path) -> dict[str, Any]:
     if path.is_dir():
         path = path / "manifest.json"
@@ -101,7 +115,7 @@ def print_summary(summary: dict[str, Any], manifest_path: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("manifest", nargs="?", type=Path, help="Manifest path or native batch export directory")
-    parser.add_argument("--latest-amap-artifact", action="store_true", help="Use the newest .artifacts/rmg_native_batch_export* directory containing AMAP files")
+    parser.add_argument("--latest-amap-artifact", action="store_true", help="Use the newest .artifacts/rmg_native_batch_export* directory containing a timing manifest")
     parser.add_argument("--artifact-root", type=Path, default=rmg_fast_validation.DEFAULT_ARTIFACT_ROOT)
     parser.add_argument("--limit", type=int, default=8)
     parser.add_argument("--json", action="store_true", help="Print JSON instead of compact text")
@@ -109,9 +123,9 @@ def main() -> int:
 
     manifest_path = args.manifest
     if args.latest_amap_artifact:
-        latest = rmg_fast_validation.latest_native_export_dir(args.artifact_root)
+        latest = latest_manifest_export_dir(args.artifact_root)
         if latest is None:
-            raise SystemExit("No native batch export artifact with AMAP files found under %s" % args.artifact_root)
+            raise SystemExit("No native batch export artifact with a manifest found under %s" % args.artifact_root)
         manifest_path = latest / "manifest.json"
     if manifest_path is None:
         raise SystemExit("Provide a manifest path/directory or --latest-amap-artifact")
