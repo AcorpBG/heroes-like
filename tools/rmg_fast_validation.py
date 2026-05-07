@@ -23,6 +23,14 @@ import rmg_fast_audit
 DEFAULT_OWNER_DIR = Path("maps/h3m-maps")
 DEFAULT_NATIVE_DIR = Path(".artifacts/rmg_native_batch_export_current")
 DEFAULT_DENSITY_FLOOR_RATIO = 0.70
+DEFAULT_ROAD_FLOOR_RATIO = 0.65
+DEFAULT_GUARD_REWARD_RATIO_FLOOR_RATIO = 0.60
+DEFAULT_CATEGORY_FLOOR_RATIOS = {
+    "guard": 0.55,
+    "object": 0.25,
+    "reward": 0.55,
+    "town": 0.65,
+}
 CASE_ID_PATTERN = re.compile(r"[^a-z0-9]+")
 
 
@@ -64,6 +72,18 @@ def level_category_count(metrics: dict[str, Any], level: int, category: str | No
 
 def object_density(metrics: dict[str, Any]) -> float:
     return rmg_fast_audit.density_per_1000(metrics, int(metrics.get("object_count", 0)))
+
+
+def category_density(metrics: dict[str, Any], category: str) -> float:
+    return rmg_fast_audit.density_per_1000(metrics, category_count(metrics, category))
+
+
+def road_density(metrics: dict[str, Any]) -> float:
+    return rmg_fast_audit.density_per_1000(metrics, int(metrics.get("road_cell_count_total", 0)))
+
+
+def guard_reward_ratio(metrics: dict[str, Any]) -> float:
+    return round(float(category_count(metrics, "guard")) / float(max(1, category_count(metrics, "reward"))), 3)
 
 
 def average(values: list[float]) -> float:
@@ -176,6 +196,83 @@ def density_failures(
     return failures
 
 
+def policy_failures(
+    owner_samples: list[dict[str, Any]],
+    native_samples: list[dict[str, Any]],
+    category_floor_ratios: dict[str, float],
+    road_floor_ratio: float,
+    guard_reward_ratio_floor_ratio: float,
+) -> list[dict[str, Any]]:
+    owner_by_group: dict[str, list[dict[str, Any]]] = {}
+    native_by_group: dict[str, list[dict[str, Any]]] = {}
+    for sample in owner_samples:
+        if sample.get("status") == "parsed":
+            owner_by_group.setdefault(group_key(sample), []).append(sample)
+    for sample in native_samples:
+        if sample.get("status") == "parsed":
+            native_by_group.setdefault(group_key(sample), []).append(sample)
+
+    failures: list[dict[str, Any]] = []
+    for key in sorted(set(owner_by_group) & set(native_by_group)):
+        owners = owner_by_group[key]
+        natives = native_by_group[key]
+        for category, ratio in sorted(category_floor_ratios.items()):
+            owner_density = average([category_density(sample, category) for sample in owners])
+            if owner_density <= 0.0:
+                continue
+            native_density = average([category_density(sample, category) for sample in natives])
+            floor = round(owner_density * ratio, 3)
+            if native_density < floor:
+                failures.append(
+                    {
+                        "group": key,
+                        "rule": "category_density_under_owner_baseline",
+                        "category": category,
+                        "owner_category_density_per_1000_tiles_avg": owner_density,
+                        "native_category_density_per_1000_tiles_avg": native_density,
+                        "floor_ratio": ratio,
+                        "floor_density_per_1000_tiles": floor,
+                        "owner_sample_count": len(owners),
+                        "native_sample_count": len(natives),
+                    }
+                )
+
+        owner_road_density = average([road_density(sample) for sample in owners])
+        native_road_density = average([road_density(sample) for sample in natives])
+        road_floor = round(owner_road_density * road_floor_ratio, 3)
+        if owner_road_density > 0.0 and native_road_density < road_floor:
+            failures.append(
+                {
+                    "group": key,
+                    "rule": "road_density_under_owner_baseline",
+                    "owner_road_density_per_1000_tiles_avg": owner_road_density,
+                    "native_road_density_per_1000_tiles_avg": native_road_density,
+                    "floor_ratio": road_floor_ratio,
+                    "floor_density_per_1000_tiles": road_floor,
+                    "owner_sample_count": len(owners),
+                    "native_sample_count": len(natives),
+                }
+            )
+
+        owner_guard_reward_ratio = average([guard_reward_ratio(sample) for sample in owners])
+        native_guard_reward_ratio = average([guard_reward_ratio(sample) for sample in natives])
+        ratio_floor = round(owner_guard_reward_ratio * guard_reward_ratio_floor_ratio, 3)
+        if owner_guard_reward_ratio > 0.0 and native_guard_reward_ratio < ratio_floor:
+            failures.append(
+                {
+                    "group": key,
+                    "rule": "guard_reward_ratio_under_owner_baseline",
+                    "owner_guard_reward_ratio_avg": owner_guard_reward_ratio,
+                    "native_guard_reward_ratio_avg": native_guard_reward_ratio,
+                    "floor_ratio": guard_reward_ratio_floor_ratio,
+                    "floor_guard_reward_ratio": ratio_floor,
+                    "owner_sample_count": len(owners),
+                    "native_sample_count": len(natives),
+                }
+            )
+    return failures
+
+
 def compact_parse_failures(samples: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [
         {
@@ -224,8 +321,9 @@ def sample_group_summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
             "sample_count": len(group_samples),
             "object_density_per_1000_tiles_avg": average([object_density(sample) for sample in group_samples]),
             "road_density_per_1000_tiles_avg": average(
-                [rmg_fast_audit.density_per_1000(sample, int(sample.get("road_cell_count_total", 0))) for sample in group_samples]
+                [road_density(sample) for sample in group_samples]
             ),
+            "guard_reward_ratio_avg": average([guard_reward_ratio(sample) for sample in group_samples]),
             "category_totals": dict(sorted(categories.items())),
         }
     return result
@@ -250,9 +348,16 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         owner = owners_by_case.get(case_id_from_path(Path(str(sample.get("path", "")))))
         native_failures.extend(native_rule_failures(sample, owner))
     density_gaps = [] if args.no_density_gate else density_failures(owner_samples, native_samples, args.density_floor_ratio)
+    policy_gaps = [] if args.no_policy_gate else policy_failures(
+        owner_samples,
+        native_samples,
+        DEFAULT_CATEGORY_FLOOR_RATIOS,
+        args.road_floor_ratio,
+        args.guard_reward_ratio_floor_ratio,
+    )
     comparisons = matched_comparisons(owner_samples, native_samples)
 
-    status = "pass" if not parse_failures and not native_failures and not density_gaps else "fail"
+    status = "pass" if not parse_failures and not native_failures and not density_gaps and not policy_gaps else "fail"
     return {
         "schema_id": "rmg_fast_validation_v1",
         "status": status,
@@ -261,6 +366,10 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "amap_dir": str(args.amap_dir) if args.amap_dir else "",
             "density_floor_ratio": args.density_floor_ratio,
             "density_gate_enabled": not args.no_density_gate,
+            "policy_gate_enabled": not args.no_policy_gate,
+            "category_floor_ratios": DEFAULT_CATEGORY_FLOOR_RATIOS,
+            "road_floor_ratio": args.road_floor_ratio,
+            "guard_reward_ratio_floor_ratio": args.guard_reward_ratio_floor_ratio,
         },
         "timings_seconds": {
             "owner_h3m_parse": owner_seconds,
@@ -275,12 +384,14 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "parse_failure_count": len(parse_failures),
             "native_rule_failure_count": len(native_failures),
             "density_gap_count": len(density_gaps),
+            "policy_gap_count": len(policy_gaps),
             "matched_comparison_count": len(comparisons),
         },
         "failures": {
             "parse": parse_failures,
             "native_rules": native_failures,
             "density_gaps": density_gaps,
+            "policy_gaps": policy_gaps,
         },
         "groups": {
             "owner": sample_group_summary(owner_samples),
@@ -295,8 +406,11 @@ def main() -> int:
     parser.add_argument("--h3m-dir", "--owner-dir", dest="h3m_dir", type=Path, default=DEFAULT_OWNER_DIR, help="Owner H3M evidence directory")
     parser.add_argument("--amap-dir", "--native-dir", dest="amap_dir", type=Path, default=DEFAULT_NATIVE_DIR, help="Native .amap package directory")
     parser.add_argument("--density-floor-ratio", type=float, default=DEFAULT_DENSITY_FLOOR_RATIO, help="Minimum native object-density ratio against owner group baselines")
+    parser.add_argument("--road-floor-ratio", type=float, default=DEFAULT_ROAD_FLOOR_RATIO, help="Minimum native road-density ratio against owner group baselines")
+    parser.add_argument("--guard-reward-ratio-floor-ratio", type=float, default=DEFAULT_GUARD_REWARD_RATIO_FLOOR_RATIO, help="Minimum native guard/reward ratio against owner group baselines")
     parser.add_argument("--no-density-gate", action="store_true", help="Report density metrics but do not fail on owner-density underfill")
-    parser.add_argument("--allow-failures", action="store_true", help="Return success while still reporting parse/rule/density failures")
+    parser.add_argument("--no-policy-gate", action="store_true", help="Report policy metrics but do not fail on category, road, and guard/reward underfill")
+    parser.add_argument("--allow-failures", action="store_true", help="Return success while still reporting parse/rule/density/policy failures")
     parser.add_argument("--pretty", action="store_true", help="Pretty-print JSON")
     args = parser.parse_args()
 

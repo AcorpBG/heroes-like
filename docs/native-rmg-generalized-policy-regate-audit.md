@@ -246,6 +246,25 @@ Validation evidence:
 
 This replaces the old habit of re-running a full Godot owner-corpus parser scene for every comparison iteration. The expected RMG loop is now: run Godot once only when fresh native packages are needed, then run Python validation/comparison repeatedly while fixing policy.
 
+## Implemented Fast Policy Gate
+
+The generated-rule gate was still too weak: after the first generated-batch fixes, it could pass packages that were structurally valid but still far from owner-H3M group behavior in guard density, object/scenic density, town density, road density, and guard-to-reward shape.
+
+`tools/rmg_fast_validation.py` now includes a Python-only policy gate that fails on broad group-level underfill without requiring exact sample-by-sample count matching:
+
+- category density floors for guard, object, reward, and town groups;
+- road-density floors against owner group baselines;
+- guard-to-reward ratio floors, so reward-heavy maps cannot pass with too few guards;
+- `--no-policy-gate` for the narrower generated-rule-only smoke when needed.
+
+Validation evidence:
+
+- `python3 -m py_compile tools/rmg_fast_validation.py` passed.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_full_after_export_failure_fix --pretty` exits `1` and reports `status: fail` with `0` parse failures, `0` native rule failures, `0` density gaps, and `14` policy gaps. The reported gaps are broad category/road/guard-reward policy gaps, not exact-count failures.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_full_after_export_failure_fix --no-policy-gate --pretty` still reports `status: pass` with `0` parse failures, `0` native rule failures, and `0` density gaps. This proves the new failure signal comes from the broader policy gate, not a regression in package parsing or generated-rule validity.
+
+The current native RMG therefore remains not production-ready: it now has a fast, non-Godot gate proving the next generalized work must improve guard/reward/town/object/road policy shape, not simply make packages export successfully.
+
 ## Implemented Generated Batch Rule Fixes
 
 The first generated-native batch exposed three generalized rule failures rather than a need to exact-match owner counts:
