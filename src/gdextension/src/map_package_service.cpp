@@ -16015,6 +16015,134 @@ String land_boundary_terrain_for_cell(int32_t x, int32_t y, int32_t level, const
 	return terrain_pool.is_empty() ? String("grass") : String(terrain_pool[0]);
 }
 
+double native_catalog_auto_underground_rock_fraction(const Dictionary &normalized) {
+	if (!native_rmg_generalized_native_catalog_auto_policy(normalized) || int32_t(normalized.get("level_count", 1)) <= 1) {
+		return 0.0;
+	}
+	const String size_class_id = String(normalized.get("size_class_id", ""));
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	if (water_mode == "land") {
+		if (size_class_id == "homm3_extra_large") {
+			return 0.81;
+		}
+		if (size_class_id == "homm3_large") {
+			return 0.60;
+		}
+		return 0.55;
+	}
+	if (water_mode == "islands") {
+		if (size_class_id == "homm3_extra_large" || size_class_id == "homm3_medium") {
+			return 0.84;
+		}
+		if (size_class_id == "homm3_large") {
+			return 0.58;
+		}
+		return 0.54;
+	}
+	if (water_mode == "normal_water" && size_class_id == "homm3_extra_large") {
+		return 0.90;
+	}
+	return 0.0;
+}
+
+void mark_level_open_cell(Dictionary &open_lookup, int32_t x, int32_t y, int32_t level, int32_t width, int32_t height) {
+	if (x < 0 || y < 0 || x >= width || y >= height) {
+		return;
+	}
+	open_lookup[level_point_key(x, y, level)] = true;
+}
+
+void mark_level_open_radius(Dictionary &open_lookup, int32_t x, int32_t y, int32_t level, int32_t width, int32_t height, int32_t radius) {
+	for (int32_t dy = -radius; dy <= radius; ++dy) {
+		for (int32_t dx = -radius; dx <= radius; ++dx) {
+			if (std::abs(dx) + std::abs(dy) > radius) {
+				continue;
+			}
+			mark_level_open_cell(open_lookup, x + dx, y + dy, level, width, height);
+		}
+	}
+}
+
+void mark_level_open_cells_from_array(Dictionary &open_lookup, const Array &cells, int32_t level, int32_t width, int32_t height, int32_t radius) {
+	for (int64_t index = 0; index < cells.size(); ++index) {
+		if (Variant(cells[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary cell = Dictionary(cells[index]);
+		if (int32_t(cell.get("level", level)) != level) {
+			continue;
+		}
+		mark_level_open_radius(open_lookup, int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)), level, width, height, radius);
+	}
+}
+
+void mark_level_open_record_surfaces(Dictionary &open_lookup, const Dictionary &record, int32_t level, int32_t width, int32_t height, int32_t radius) {
+	if (int32_t(record.get("level", 0)) != level) {
+		return;
+	}
+	mark_level_open_radius(open_lookup, int32_t(record.get("x", 0)), int32_t(record.get("y", 0)), level, width, height, radius);
+	if (Variant(record.get("primary_tile", Variant())).get_type() == Variant::DICTIONARY) {
+		Dictionary primary = record.get("primary_tile", Dictionary());
+		if (int32_t(primary.get("level", level)) == level) {
+			mark_level_open_radius(open_lookup, int32_t(primary.get("x", 0)), int32_t(primary.get("y", 0)), level, width, height, radius);
+		}
+	}
+	mark_level_open_cells_from_array(open_lookup, record.get("body_tiles", Array()), level, width, height, radius);
+	mark_level_open_cells_from_array(open_lookup, record.get("approach_tiles", Array()), level, width, height, std::max(1, radius));
+	if (Variant(record.get("visit_tile", Variant())).get_type() == Variant::DICTIONARY) {
+		Dictionary visit = record.get("visit_tile", Dictionary());
+		if (int32_t(visit.get("level", level)) == level) {
+			mark_level_open_radius(open_lookup, int32_t(visit.get("x", 0)), int32_t(visit.get("y", 0)), level, width, height, radius);
+		}
+	}
+}
+
+Dictionary protected_underground_open_lookup(const Dictionary &normalized, const Dictionary &road_network, const Dictionary &object_placement, const Dictionary &town_guard_placement) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	Dictionary open_lookup;
+	Array road_segments = road_network.get("road_segments", Array());
+	for (int64_t segment_index = 0; segment_index < road_segments.size(); ++segment_index) {
+		Dictionary segment = Dictionary(road_segments[segment_index]);
+		for (int32_t level = 1; level < level_count; ++level) {
+			mark_level_open_cells_from_array(open_lookup, segment.get("cells", Array()), level, width, height, 1);
+		}
+	}
+	Array objects = object_placement.get("object_placements", Array());
+	for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
+		Dictionary object = Dictionary(objects[object_index]);
+		mark_level_open_record_surfaces(open_lookup, object, int32_t(object.get("level", 0)), width, height, 2);
+	}
+	Array towns = town_guard_placement.get("town_records", Array());
+	for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+		Dictionary town = Dictionary(towns[town_index]);
+		const int32_t level = int32_t(town.get("level", 0));
+		mark_level_open_record_surfaces(open_lookup, town, level, width, height, 4);
+		mark_level_open_cells_from_array(open_lookup, town.get("required_town_access_corridor_cells", Array()), level, width, height, 2);
+	}
+	Array guards = town_guard_placement.get("guard_records", Array());
+	for (int64_t guard_index = 0; guard_index < guards.size(); ++guard_index) {
+		Dictionary guard = Dictionary(guards[guard_index]);
+		mark_level_open_record_surfaces(open_lookup, guard, int32_t(guard.get("level", 0)), width, height, 2);
+		mark_level_open_cells_from_array(open_lookup, guard.get("route_closure_block_tiles", Array()), int32_t(guard.get("level", 0)), width, height, 1);
+	}
+	return open_lookup;
+}
+
+String underground_rock_shape_terrain_for_cell(int32_t x, int32_t y, int32_t level, const Dictionary &normalized, const Dictionary &open_lookup, double rock_fraction) {
+	if (level <= 0 || rock_fraction <= 0.0) {
+		return "underground";
+	}
+	if (open_lookup.has(level_point_key(x, y, level))) {
+		return "underground";
+	}
+	const int32_t threshold = std::max(0, std::min(10000, int32_t(std::llround(rock_fraction * 10000.0))));
+	const String seed = String(normalized.get("normalized_seed", "0"));
+	const uint32_t bucket = hash32_int(seed + String(":underground_rock_shape:") + String::num_int64(level) + String(":") + String::num_int64(x) + String(":") + String::num_int64(y)) % 10000U;
+	return int32_t(bucket) < threshold ? String("rock") : String("underground");
+}
+
 void add_generated_cell_terrain_fields(Dictionary &level_record, const PackedInt32Array &terrain_codes, int32_t width, int32_t height) {
 	const int32_t tile_count = std::max(0, width * height);
 	level_record["generated_cell_field_model"] = "terrain_id_art_index_flip_h_flip_v";
@@ -16084,6 +16212,8 @@ Dictionary generate_terrain_grid(const Dictionary &normalized, const Dictionary 
 	Dictionary island_land_lookup = island_shape.get("land_lookup", Dictionary());
 	Dictionary land_boundary_openings = use_land_boundary_shape ? land_boundary_opening_lookup(normalized, zone_layout, player_starts, road_network, town_guard_placement) : Dictionary();
 	Dictionary zone_terrain_by_id = (use_island_shape || use_land_boundary_shape) ? zone_terrain_lookup(zone_layout) : Dictionary();
+	const double underground_rock_fraction = native_catalog_auto_underground_rock_fraction(normalized);
+	Dictionary underground_open_lookup = underground_rock_fraction > 0.0 ? protected_underground_open_lookup(normalized, road_network, object_placement, town_guard_placement) : Dictionary();
 	if (!parity_targets.is_empty() && !use_land_boundary_shape) {
 		Dictionary counts = parity_targets.get("terrain_counts", Dictionary());
 		Dictionary biome_counts;
@@ -16141,6 +16271,8 @@ Dictionary generate_terrain_grid(const Dictionary &normalized, const Dictionary 
 					terrain_id = island_land_lookup.has(point_key(x, y)) ? island_land_terrain_for_cell(x, y, level, surface_pool, seeds, normalized, zone_layout, zone_terrain_by_id) : String("water");
 				} else if (use_land_boundary_shape && level == 0) {
 					terrain_id = land_boundary_terrain_for_cell(x, y, level, surface_pool, seeds, normalized, zone_layout, zone_terrain_by_id, land_boundary_openings);
+				} else if (level > 0 && underground_rock_fraction > 0.0) {
+					terrain_id = underground_rock_shape_terrain_for_cell(x, y, level, normalized, underground_open_lookup, underground_rock_fraction);
 				} else {
 					terrain_id = choose_terrain_for_cell(x, y, level, level == 0 ? surface_pool : terrain_pool, seeds, normalized);
 				}
@@ -16203,6 +16335,16 @@ Dictionary generate_terrain_grid(const Dictionary &normalized, const Dictionary 
 		boundary_shape["opening_count"] = land_boundary_openings.size();
 		boundary_shape["policy"] = "land maps materialize impassable zone borders so route guards and gates control crossings instead of acting as cosmetic road markers";
 		grid["land_boundary_shape"] = boundary_shape;
+	}
+	if (underground_rock_fraction > 0.0) {
+		Dictionary underground_shape;
+		underground_shape["schema_id"] = "native_random_map_underground_rock_shape_v1";
+		underground_shape["enabled"] = true;
+		underground_shape["rock_fraction"] = underground_rock_fraction;
+		underground_shape["protected_open_cell_count"] = underground_open_lookup.size();
+		underground_shape["terrain_id"] = "rock";
+		underground_shape["policy"] = "two-level generated maps reserve underground open cells around roads, towns, guards, and objects, then fill remaining cavern space with deterministic rock to match HoMM3-style underground blocking shape";
+		grid["underground_rock_shape"] = underground_shape;
 	}
 	grid["levels"] = levels;
 	grid["materialized_level_count"] = levels.size();

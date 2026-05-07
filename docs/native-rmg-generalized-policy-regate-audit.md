@@ -695,3 +695,19 @@ Validation evidence:
 - `python3 tools/rmg_production_gap_audit.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_two_level_distribution_closure_fix_combined --summary --gap-limit 12` passed as an audit while preserving `production_ready=false`. It still reports `6` missing production requirements and ranks broad XL/Large terrain, road, route-shape, and category gaps as the top production blockers.
 
 This is a correctness repair for normal generated two-level package materialization and guard-mediated route closure. It is not a full HoMM3 production-parity claim, and it reinforces the workflow split: Godot exports fresh packages; Python validates H3M/AMAP structure, comparison, and production-gap status.
+
+## Implemented Underground Rock Shape For Two-Level Maps
+
+The next production-gap ranking showed that generated two-level underground maps were still mostly open terrain. Owner H3M evidence uses substantial underground rock/water blocking, especially on Large/XL land and islands maps, while native packages had roads, objects, towns, and guards underground but almost no impassable underground terrain.
+
+Normal generated catalog-auto two-level maps now add deterministic underground rock shape for land/islands profiles and XL normal-water profiles. The policy preserves open cells around underground roads, towns, guards, object bodies, visit/approach tiles, and town access corridors, then fills the remaining underground space with size/water-mode-specific rock density. This changes terrain shape without covering already placed gameplay surfaces.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- A focused six-case export for Large/XL land/islands plus XL water wrote `6/6` packages with `0` export failures in about `206.214s`.
+- The targeted partial batch had no parse/native/density/topology/coverage/closure-shape gaps; its one policy gap was a partial-batch `72x72_l2` group-density artifact.
+- Replacing those six packages into the 18-case evidence set, `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_underground_rock_shape_combined --failure-limit 8 --skip-timing-summary` passed with `18/18` owner/native matches, `0` parse/native/density/policy/topology/coverage/closure-shape gaps, and about `12.937s` parse time.
+- `python3 tools/rmg_production_gap_audit.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_underground_rock_shape_combined --summary --gap-limit 12` passed as an audit while preserving `production_ready=false`. Top severity improved materially, for example `xl_islands_2levels` `26912 -> 18396`, `xl_water_2levels` `24032 -> 14136`, and `xl_nowater_2levels` `21003 -> 12389`.
+
+This reduces the terrain-shape gap but does not close production parity. The next remaining blockers are still road component similarity, route-shape similarity, and object/guard/reward category similarity across broad Large/XL cases.
