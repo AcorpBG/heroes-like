@@ -54,7 +54,7 @@ def validation_args(args: argparse.Namespace) -> argparse.Namespace:
         no_density_gate=args.no_density_gate,
         no_policy_gate=args.no_policy_gate,
         no_topology_gate=args.no_topology_gate,
-        closure_shape_gate=args.closure_shape_gate,
+        closure_shape_gate=not args.no_closure_shape_gate,
         guard_closure_min_owner_open_pair_count=args.guard_closure_min_owner_open_pair_count,
         latest_amap_artifact=not args.no_latest_amap_artifact,
         artifact_root=args.artifact_root,
@@ -82,7 +82,7 @@ def main() -> int:
     parser.add_argument("--no-density-gate", action="store_true")
     parser.add_argument("--no-policy-gate", action="store_true")
     parser.add_argument("--no-topology-gate", action="store_true")
-    parser.add_argument("--closure-shape-gate", action="store_true", help="Enable the optional guard-mediated town-route closure shape gate")
+    parser.add_argument("--no-closure-shape-gate", action="store_true", help="Disable the default guard-mediated town-route closure shape gate for targeted diagnostics")
     parser.add_argument("--guard-closure-min-owner-open-pair-count", type=int, default=rmg_fast_validation.DEFAULT_GUARD_CLOSURE_MIN_OWNER_OPEN_PAIR_COUNT)
     parser.add_argument("--allow-partial-native-batch", action="store_true", help="Allow targeted native AMAP batches that do not cover every parsed owner H3M")
     parser.add_argument("--skip-py-compile", action="store_true", help="Skip parser/gate syntax compilation")
