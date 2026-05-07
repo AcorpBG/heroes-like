@@ -4770,6 +4770,9 @@ bool native_rmg_owner_compared_translated_profile_supported(const Dictionary &no
 	if (template_id == "translated_rmg_template_002_v1" && profile_id == "translated_rmg_profile_002_v1") {
 		return width == 72 && height == 72 && size_class_id == "homm3_medium" && player_count == 4 && water_mode == "land" && level_count == 1;
 	}
+	if (template_id == "translated_rmg_template_039_v1" && profile_id == "translated_rmg_profile_039_v1") {
+		return width == 72 && height == 72 && size_class_id == "homm3_medium" && player_count == 4 && water_mode == "normal_water" && level_count == 1;
+	}
 	if (template_id == "translated_rmg_template_042_v1" && profile_id == "translated_rmg_profile_042_v1") {
 		return width == 108 && height == 108 && size_class_id == "homm3_large" && player_count == 4 && water_mode == "land" && level_count == 1;
 	}
@@ -6469,6 +6472,21 @@ bool native_rmg_owner_like_islands_density_case(const Dictionary &normalized) {
 			&& player_count == 4;
 }
 
+bool native_rmg_owner_medium_normal_water_density_case(const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	return width == 72
+			&& height == 72
+			&& level_count == 1
+			&& String(normalized.get("size_class_id", "")) == "homm3_medium"
+			&& String(normalized.get("water_mode", "")) == "normal_water"
+			&& String(normalized.get("template_id", "")) == "translated_rmg_template_039_v1"
+			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_039_v1"
+			&& player_count == 4;
+}
+
 bool native_rmg_owner_like_small_land_density_case(const Dictionary &normalized) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -6586,6 +6604,24 @@ int32_t owner_uploaded_small_027_underground_object_target(const Dictionary &nor
 }
 
 int32_t owner_attached_medium_001_category_target(const Dictionary &normalized, const String &category) {
+	if (native_rmg_owner_medium_normal_water_density_case(normalized)) {
+		if (category == "decoration") {
+			return 335;
+		}
+		if (category == "reward") {
+			return 172;
+		}
+		if (category == "scenic_object") {
+			return 160;
+		}
+		if (category == "town") {
+			return 7;
+		}
+		if (category == "guard") {
+			return 80;
+		}
+		return -1;
+	}
 	if (!native_rmg_owner_like_islands_density_case(normalized)) {
 		return -1;
 	}
@@ -9107,6 +9143,44 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 		const auto auto_density_started_at = std::chrono::steady_clock::now();
 		native_catalog_auto_density_supplement = append_native_catalog_auto_density_supplement(placements, occupied, placement_context, normalized, zone_layout, road_cells, ordinal);
 		append_extension_profile_elapsed(object_profile_phases, "native_catalog_auto_density_floor_supplement", elapsed_usec_since(auto_density_started_at), top_object_phase_usec, top_object_phase_id);
+	}
+
+	if (owner_medium_reward_target >= 0) {
+		const auto reward_trim_started_at = std::chrono::steady_clock::now();
+		const int32_t reward_count = placement_count_for_spatial_category(placements, "reward");
+		const int32_t desired_trim_count = std::max(0, reward_count - owner_medium_reward_target);
+		if (desired_trim_count > 0) {
+			Array trimmed_placements;
+			Array removed_ids;
+			int32_t removed_count = 0;
+			for (int64_t index = placements.size() - 1; index >= 0; --index) {
+				if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+					trimmed_placements.push_front(placements[index]);
+					continue;
+				}
+				Dictionary placement = Dictionary(placements[index]);
+				if (String(placement.get("kind", "")) == "reward_reference" && removed_count < desired_trim_count) {
+					removed_ids.append(placement.get("placement_id", ""));
+					++removed_count;
+					continue;
+				}
+				trimmed_placements.push_front(placement);
+			}
+			placements = trimmed_placements;
+			Dictionary trim_summary;
+			trim_summary["schema_id"] = "native_rmg_owner_medium_reward_category_trim_v1";
+			trim_summary["target_reward_category_count"] = owner_medium_reward_target;
+			trim_summary["initial_reward_category_count"] = reward_count;
+			trim_summary["desired_trim_count"] = desired_trim_count;
+			trim_summary["removed_reward_reference_count"] = removed_count;
+			trim_summary["removed_placement_ids"] = removed_ids;
+			trim_summary["final_reward_category_count"] = placement_count_for_spatial_category(placements, "reward");
+			trim_summary["policy"] = "owner_medium_category_count_trims_only_surplus_generic_reward_reference_after_required_mine_resource_dwelling_priority";
+			trim_summary["status"] = int32_t(trim_summary.get("final_reward_category_count", 0)) == owner_medium_reward_target ? "pass" : "partial";
+			trim_summary["signature"] = hash32_hex(canonical_variant(trim_summary));
+			native_catalog_auto_density_supplement["owner_medium_reward_category_trim"] = trim_summary;
+		}
+		append_extension_profile_elapsed(object_profile_phases, "owner_medium_reward_category_trim", elapsed_usec_since(reward_trim_started_at), top_object_phase_usec, top_object_phase_id);
 	}
 
 	if (owner_large_reward_category_target >= 0) {
