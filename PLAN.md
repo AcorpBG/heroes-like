@@ -31,6 +31,39 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-owner-medium-normal-water-road-count-correction-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Correct the uploaded Medium normal-water owner sample package road count after the object/town/guard count correction.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- local owner evidence under `maps/h3m-maps/M-NormalW-4players.h3m`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Medium normal-water package road overlays serialize 221 road cells, matching the uploaded owner H3M evidence instead of the previous 254-cell native output.
+- The correction is scoped to the owner-compared Medium normal-water translated profile and does not claim broad normal-water road parity.
+- Object, generated-object, town, guard, and water gates remain passing for `medium_normal_water_seed_a`.
+- The auto-template batch hard-gates the corrected Medium normal-water package road target.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No full route-graph topology rewrite; the underlying generated route graph still reports 16 route edges and this slice adjusts serialized package road overlays only.
+- No broad normal-water parity claim across Small/Large/XL samples.
+- No HoMM3 copyrighted asset/DEF import.
+validationResults:
+- Native GDExtension rebuilt successfully with `cmake --build .artifacts/map_persistence_native_build --parallel 2`.
+- `tests/native_random_map_auto_template_batch_report.tscn` passed after adding the Medium normal-water road-count gate.
+- `medium_normal_water_seed_a` now reports 221 package road cells, matching owner `M-NormalW-4players.h3m`; it still reports 754 package objects, 667 generated object placements, 7 towns, and 80 guards.
+- The same case reports 2,144 package water tiles against the owner 2,083 target, still inside the existing 96-tile tolerance.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-owner-medium-normal-water-count-correction-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`

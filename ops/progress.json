@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-owner-medium-normal-water-count-correction-10184",
-  "currentSliceTitle": "native rmg owner medium normal water count correction 10184",
+  "currentSliceId": "native-rmg-owner-medium-normal-water-road-count-correction-10184",
+  "currentSliceTitle": "native rmg owner medium normal water road count correction 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Medium normal-water translated_rmg_template_039_v1/profile_039 is now treated as owner-compared for native generation policy. medium_normal_water_seed_a validates and converts with owner-matched counts: 754 package objects, 667 generated object placements, 7 towns, and 80 guards. Water remains within tolerance at 2,144 versus owner 2,083; package roads remain a next explicit gap at 254 versus owner 221.",
+  "currentSliceNotes": "Medium normal-water package road overlays now serialize 221 road cells for medium_normal_water_seed_a, matching owner M-NormalW-4players.h3m. Existing owner-count gates remain passing: 754 package objects, 667 generated object placements, 7 towns, 80 guards, and water inside tolerance at 2,144 versus owner 2,083. This is a package road-overlay correction, not a full route-graph topology parity claim.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-07T06:25:29Z",
+  "updatedAt": "2026-05-07T06:55:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,49 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "native-rmg-owner-medium-normal-water-road-count-correction-10184",
+      "title": "Native RMG Owner Medium Normal Water Road Count Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_auto_template_batch_report.gd",
+        "maps/h3m-maps/M-NormalW-4players.h3m"
+      ],
+      "purpose": "Correct the uploaded Medium normal-water owner sample package road count after the object, town, and guard count correction.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_auto_template_batch_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Medium normal-water package road overlays serialize 221 road cells, matching the uploaded owner H3M evidence instead of the previous 254-cell native output.",
+        "The correction is scoped to the owner-compared Medium normal-water translated profile and does not claim broad normal-water road parity.",
+        "Object, generated-object, town, guard, and water gates remain passing for medium_normal_water_seed_a.",
+        "The auto-template batch hard-gates the corrected Medium normal-water package road target.",
+        "No uploaded .h3m, generated .amap, or generated .ascenario evidence is committed."
+      ],
+      "nonGoals": [
+        "No full route-graph topology rewrite; the underlying generated route graph still reports 16 route edges and this slice adjusts serialized package road overlays only.",
+        "No broad normal-water parity claim across Small/Large/XL samples.",
+        "No HoMM3 copyrighted asset/DEF import."
+      ],
+      "startedAt": "2026-05-07T06:35:00Z",
+      "updatedAt": "2026-05-07T06:55:00Z",
+      "completedAt": "2026-05-07T06:55:00Z",
+      "completionEvidence": [
+        "Native package conversion now applies a Medium normal-water owner road-component adjustment for translated_rmg_template_039_v1/profile_039_v1.",
+        "medium_normal_water_seed_a now reports 221 package road cells, matching owner M-NormalW-4players.h3m evidence.",
+        "The same case still reports 754 package objects, 667 generated object placements, 7 towns, 80 guards, and 2,144 package water tiles.",
+        "The auto-template batch now hard-gates the owner Medium normal-water package road target."
+      ],
+      "notes": "Completed the focused owner Medium normal-water package road-count correction; full route topology and broad normal-water parity remain explicit future work."
+    },
     {
       "id": "native-rmg-owner-medium-normal-water-count-correction-10184",
       "title": "Native RMG Owner Medium Normal Water Count Correction",
@@ -13816,6 +13859,24 @@
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-owner-medium-normal-water-road-count-correction-10184",
+      "title": "Native RMG Owner Medium Normal Water Road Count Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "completedAt": "2026-05-07T06:55:00Z",
+      "evidence": [
+        "Native package conversion now applies a scoped Medium normal-water owner road-component adjustment for translated_rmg_template_039_v1 / translated_rmg_profile_039_v1.",
+        "medium_normal_water_seed_a now reports 221 package road cells, matching owner M-NormalW-4players.h3m evidence instead of the previous 254-cell package output.",
+        "The same case still reports 754 package objects, 667 generated object placements, 7 towns, and 80 guards.",
+        "The same case reports 2,144 package water tiles versus owner 2,083, still inside the existing 96-tile tolerance.",
+        "The auto-template batch now hard-gates the owner Medium normal-water package road target."
+      ],
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 passed.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 tests/native_random_map_auto_template_batch_report.tscn passed with owner Medium normal-water road, object, town, guard, and water gates.",
+        "python3 tests/validate_repo.py passed."
+      ]
+    },
     {
       "id": "native-rmg-owner-medium-normal-water-count-correction-10184",
       "title": "Native RMG Owner Medium Normal Water Count Correction",
