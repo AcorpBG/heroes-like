@@ -15871,6 +15871,9 @@ bool land_boundary_barriers_enabled(const Dictionary &normalized, const Dictiona
 	if (String(normalized.get("water_mode", "land")) != "land") {
 		return false;
 	}
+	if (native_rmg_generalized_native_catalog_auto_policy(normalized)) {
+		return false;
+	}
 	Dictionary runtime_graph = zone_layout.get("runtime_zone_graph", Dictionary());
 	return int32_t(runtime_graph.get("link_count", 0)) > 0;
 }

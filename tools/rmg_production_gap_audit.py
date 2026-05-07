@@ -78,11 +78,13 @@ def diagnostic_case_summaries(comparisons: list[dict[str, Any]], category_gap_ra
         category_summary = category_gap_summary(comparison, category_gap_ratio)
         object_delta = int(deltas.get("object_count_delta", 0)) if isinstance(deltas, dict) else 0
         road_delta = int(deltas.get("road_cell_count_delta", 0)) if isinstance(deltas, dict) else 0
+        terrain_delta = int(deltas.get("terrain_blocked_tile_count_delta", 0)) if isinstance(deltas, dict) else 0
         object_route_delta = int(deltas.get("object_route_reachable_pair_delta", 0)) if isinstance(deltas, dict) else 0
         guarded_route_delta = int(deltas.get("guarded_route_reachable_pair_delta", 0)) if isinstance(deltas, dict) else 0
         severity = (
             abs(object_delta)
             + abs(road_delta)
+            + abs(terrain_delta)
             + abs(object_route_delta) * 25
             + abs(guarded_route_delta) * 25
             + int(category_summary.get("absolute_delta_total", 0))
@@ -94,6 +96,7 @@ def diagnostic_case_summaries(comparisons: list[dict[str, Any]], category_gap_ra
                 "severity_score": severity,
                 "object_count_delta": object_delta,
                 "road_cell_count_delta": road_delta,
+                "terrain_blocked_tile_count_delta": terrain_delta,
                 "object_route_reachable_pair_delta": object_route_delta,
                 "guarded_route_reachable_pair_delta": guarded_route_delta,
                 "road_component_sizes_match": bool(comparison.get("road_component_sizes_match", False)),
@@ -157,6 +160,10 @@ def build_checklist(
         if int(case.get("object_route_reachable_pair_delta", 0)) != 0
         or int(case.get("guarded_route_reachable_pair_delta", 0)) != 0
     ]
+    terrain_shape_gap_cases = [
+        case for case in diagnostic_cases
+        if abs(int(case.get("terrain_blocked_tile_count_delta", 0))) > 50
+    ]
     full_timing_summary = timing.get("summary", {}) if isinstance(timing.get("summary", {}), dict) else {}
     return [
         checklist_item(
@@ -211,6 +218,15 @@ def build_checklist(
                 "matched_comparison_count": summary.get("matched_comparison_count", 0),
             },
             "Road topology passes the loose generalized gate but still differs in exact component shape across matched owner samples.",
+        ),
+        checklist_item(
+            "terrain_blocker_shape_similarity",
+            len(terrain_shape_gap_cases) == 0,
+            {
+                "terrain_shape_gap_case_count": len(terrain_shape_gap_cases),
+                "case_ids": [case.get("case_id", "") for case in terrain_shape_gap_cases],
+            },
+            "Terrain blocker counts still diverge materially from owner evidence in some matched cases.",
         ),
         checklist_item(
             "town_density_and_distribution_similarity",
@@ -270,10 +286,11 @@ def compact_summary(report: dict[str, Any], limit: int) -> str:
             summary.get("fast_validation_status", ""),
         ),
         "missing_requirements=%s" % summary.get("missing_requirement_count", 0),
-        "diagnostics exact_failures=%s road_shape_mismatches=%s severe_category_gap_cases=%s route_shape_gap_cases=%s"
+        "diagnostics exact_failures=%s road_shape_mismatches=%s terrain_shape_gap_cases=%s severe_category_gap_cases=%s route_shape_gap_cases=%s"
         % (
             summary.get("diagnostic_failure_count", 0),
             summary.get("road_component_size_mismatch_count", 0),
+            summary.get("terrain_shape_gap_case_count", 0),
             summary.get("severe_category_gap_case_count", 0),
             summary.get("route_shape_gap_case_count", 0),
         ),
@@ -281,7 +298,7 @@ def compact_summary(report: dict[str, Any], limit: int) -> str:
     ]
     for case in report.get("top_gap_cases", [])[: max(0, limit)]:
         lines.append(
-            "  {case_id} severity={severity_score} object_delta={object_count_delta} road_delta={road_cell_count_delta} route_delta={object_route_reachable_pair_delta}/{guarded_route_reachable_pair_delta} category_abs_delta={category_absolute_delta_total}".format(
+            "  {case_id} severity={severity_score} object_delta={object_count_delta} road_delta={road_cell_count_delta} terrain_delta={terrain_blocked_tile_count_delta} route_delta={object_route_reachable_pair_delta}/{guarded_route_reachable_pair_delta} category_abs_delta={category_absolute_delta_total}".format(
                 **case
             )
         )
@@ -316,6 +333,10 @@ def main() -> int:
         if int(case.get("object_route_reachable_pair_delta", 0)) != 0
         or int(case.get("guarded_route_reachable_pair_delta", 0)) != 0
     ])
+    terrain_shape_gap_count = len([
+        case for case in diagnostic_cases
+        if abs(int(case.get("terrain_blocked_tile_count_delta", 0))) > 50
+    ])
     timing = latest_full_timing_summary(
         args.artifact_root,
         int(fast_report.get("summary", {}).get("owner_parsed_count", 0)),
@@ -330,6 +351,7 @@ def main() -> int:
             "road_component_size_mismatch_count": len([case for case in diagnostic_cases if not bool(case.get("road_component_sizes_match", False))]),
             "severe_category_gap_case_count": severe_category_case_count,
             "route_shape_gap_case_count": route_shape_gap_count,
+            "terrain_shape_gap_case_count": terrain_shape_gap_count,
             "missing_requirement_count": len(missing),
         }
     )
