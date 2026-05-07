@@ -1498,6 +1498,31 @@ void append_owner_cluster_tiles_at_level(Array &tiles, int32_t level, int32_t st
 	}
 }
 
+int32_t append_catalog_auto_unique_cluster_tiles_at_level(Array &tiles, Dictionary &lookup, int32_t level, int32_t start_x, int32_t start_y, int32_t width, int32_t height, int32_t limit, int32_t map_width, int32_t map_height) {
+	int32_t emitted = 0;
+	for (int32_t y = 0; y < height && emitted < limit; ++y) {
+		for (int32_t x = 0; x < width && emitted < limit; ++x) {
+			const int32_t tile_x = start_x + x;
+			const int32_t tile_y = start_y + y;
+			if (tile_x < 1 || tile_y < 1 || tile_x >= map_width - 1 || tile_y >= map_height - 1) {
+				continue;
+			}
+			const String key = String::num_int64(level) + String(":") + String::num_int64(tile_x) + String(",") + String::num_int64(tile_y);
+			if (lookup.has(key)) {
+				continue;
+			}
+			lookup[key] = true;
+			Dictionary tile;
+			tile["x"] = tile_x;
+			tile["y"] = tile_y;
+			tile["level"] = level;
+			tiles.append(tile);
+			++emitted;
+		}
+	}
+	return emitted;
+}
+
 Dictionary owner_large_land_road_component_adjustment_lookup(const Array &road_segments, const Dictionary &normalized) {
 	Dictionary result;
 	if (!native_rmg_owner_large_land_density_case(normalized) || int32_t(normalized.get("level_count", 1)) != 1) {
@@ -1805,6 +1830,50 @@ Array native_catalog_auto_two_level_underground_road_tiles(const Array &road_seg
 			underground_cell["y"] = y;
 			underground_cell["level"] = 1;
 			tiles.append(underground_cell);
+		}
+	}
+	const bool small_two_level_generated_floor = String(normalized.get("size_class_id", "")) == "homm3_small"
+			&& !native_rmg_owner_small_normal_water_2level_case(normalized)
+			&& !native_rmg_owner_small_islands_2level_case(normalized);
+	if (small_two_level_generated_floor) {
+		Dictionary road_lookup;
+		for (int64_t index = 0; index < surface_cells.size(); ++index) {
+			Dictionary cell = Dictionary(surface_cells[index]);
+			const String key = String("0:") + String::num_int64(int32_t(cell.get("x", 0))) + String(",") + String::num_int64(int32_t(cell.get("y", 0)));
+			road_lookup[key] = true;
+		}
+		int32_t underground_count = 0;
+		for (int64_t index = 0; index < tiles.size(); ++index) {
+			if (Variant(tiles[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary cell = Dictionary(tiles[index]);
+			if (int32_t(cell.get("level", 0)) == 1) {
+				++underground_count;
+			}
+			const String key = String::num_int64(int32_t(cell.get("level", 0))) + String(":") + String::num_int64(int32_t(cell.get("x", 0))) + String(",") + String::num_int64(int32_t(cell.get("y", 0)));
+			road_lookup[key] = true;
+		}
+		const int32_t area = std::max(1, width * height * int32_t(normalized.get("level_count", 2)));
+		const int32_t total_floor = std::max<int32_t>(82, (area * 45) / 1000);
+		const int32_t surface_floor = std::max<int32_t>(int32_t(surface_cells.size()), (total_floor * 3) / 4);
+		const int32_t underground_floor = std::max<int32_t>(underground_count, total_floor - surface_floor);
+		int32_t surface_needed = std::max<int32_t>(0, surface_floor - int32_t(surface_cells.size()));
+		int32_t underground_needed = std::max<int32_t>(0, underground_floor - underground_count);
+		const uint32_t seed_bucket = hash32_int(seed + String(":small_two_level_road_density_floor"));
+		const int32_t surface_start_a_x = 2 + int32_t(seed_bucket % 4U);
+		const int32_t surface_start_a_y = 2 + int32_t((seed_bucket / 5U) % 4U);
+		const int32_t surface_start_b_x = std::max(2, width - 14 - int32_t((seed_bucket / 11U) % 5U));
+		const int32_t surface_start_b_y = std::max(2, height - 9 - int32_t((seed_bucket / 17U) % 5U));
+		surface_needed -= append_catalog_auto_unique_cluster_tiles_at_level(tiles, road_lookup, 0, surface_start_a_x, surface_start_a_y, 10, 5, surface_needed, width, height);
+		if (surface_needed > 0) {
+			surface_needed -= append_catalog_auto_unique_cluster_tiles_at_level(tiles, road_lookup, 0, surface_start_b_x, surface_start_b_y, 12, 5, surface_needed, width, height);
+		}
+		const int32_t underground_start_x = std::max(2, (width / 2) - 4 + int32_t((seed_bucket / 23U) % 3U));
+		const int32_t underground_start_y = std::max(2, (height / 2) - 4 + int32_t((seed_bucket / 29U) % 3U));
+		underground_needed -= append_catalog_auto_unique_cluster_tiles_at_level(tiles, road_lookup, 1, underground_start_x, underground_start_y, 9, 4, underground_needed, width, height);
+		if (underground_needed > 0) {
+			append_catalog_auto_unique_cluster_tiles_at_level(tiles, road_lookup, 1, 3, std::max(2, height - 9), 10, 4, underground_needed, width, height);
 		}
 	}
 	return tiles;
