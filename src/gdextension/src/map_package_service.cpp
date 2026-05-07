@@ -1898,11 +1898,129 @@ int32_t catalog_auto_road_component_target_count(const Dictionary &normalized, i
 	return std::max<int32_t>(1, std::min<int32_t>(target, std::max<int32_t>(1, total_target / 4)));
 }
 
+int32_t catalog_auto_road_component_count_for_level(const Dictionary &normalized, int32_t level, int32_t fallback_count, int32_t total_target) {
+	const String size_class = String(normalized.get("size_class_id", ""));
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	int32_t target = fallback_count;
+	if (level_count > 1 && size_class == "homm3_extra_large") {
+		if (water_mode == "islands") {
+			target = level == 0 ? 17 : 12;
+		} else if (water_mode == "normal_water") {
+			target = level == 0 ? 6 : 5;
+		} else {
+			target = level == 0 ? 7 : 4;
+		}
+	} else if (level_count > 1 && size_class == "homm3_large") {
+		if (water_mode == "islands") {
+			target = level == 0 ? 11 : 8;
+		} else if (water_mode == "normal_water") {
+			target = level == 0 ? 8 : 6;
+		} else {
+			target = level == 0 ? 7 : 4;
+		}
+	}
+	return std::max<int32_t>(1, std::min<int32_t>(target, std::max<int32_t>(1, total_target / 6)));
+}
+
+int32_t catalog_auto_road_surface_share_per_thousand(const Dictionary &normalized) {
+	const String size_class = String(normalized.get("size_class_id", ""));
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	if (size_class == "homm3_extra_large") {
+		if (water_mode == "normal_water") {
+			return 795;
+		}
+		if (water_mode == "islands") {
+			return 615;
+		}
+		return 470;
+	}
+	if (size_class == "homm3_large") {
+		if (water_mode == "normal_water") {
+			return 720;
+		}
+		if (water_mode == "islands") {
+			return 625;
+		}
+		return 560;
+	}
+	return 670;
+}
+
+double catalog_auto_road_component_weight(const Dictionary &normalized, int32_t level, int32_t component_index, int32_t component_count) {
+	const String size_class = String(normalized.get("size_class_id", ""));
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	double exponent = 1.05;
+	if (water_mode == "normal_water") {
+		exponent = level_count <= 1 ? 1.45 : (level == 0 ? 1.65 : 1.15);
+	} else if (water_mode == "islands") {
+		exponent = size_class == "homm3_extra_large" ? 0.82 : 0.95;
+	} else if (level > 0) {
+		exponent = size_class == "homm3_extra_large" ? 1.25 : 1.10;
+	} else if (size_class == "homm3_extra_large" || size_class == "homm3_large") {
+		exponent = 1.20;
+	}
+	const double rank = double(std::max<int32_t>(1, component_count - component_index));
+	return std::pow(rank, exponent);
+}
+
+std::vector<int32_t> catalog_auto_road_component_size_targets(const Dictionary &normalized, int32_t level, int32_t component_count, int32_t total_target) {
+	std::vector<int32_t> targets;
+	if (component_count <= 0 || total_target <= 0) {
+		return targets;
+	}
+	targets.resize(component_count, 0);
+	const int32_t min_component = total_target >= component_count * 8 ? 8 : 1;
+	int32_t assigned = 0;
+	for (int32_t index = 0; index < component_count && assigned < total_target; ++index) {
+		const int32_t floor_size = std::min<int32_t>(min_component, total_target - assigned);
+		targets[index] = floor_size;
+		assigned += floor_size;
+	}
+	const int32_t remaining = total_target - assigned;
+	if (remaining <= 0) {
+		return targets;
+	}
+	std::vector<double> weights;
+	std::vector<double> remainders;
+	weights.resize(component_count, 1.0);
+	remainders.resize(component_count, 0.0);
+	double weight_total = 0.0;
+	for (int32_t index = 0; index < component_count; ++index) {
+		weights[index] = catalog_auto_road_component_weight(normalized, level, index, component_count);
+		weight_total += weights[index];
+	}
+	int32_t added = 0;
+	for (int32_t index = 0; index < component_count; ++index) {
+		const double raw = weight_total > 0.0 ? (double(remaining) * weights[index]) / weight_total : 0.0;
+		const int32_t whole = int32_t(std::floor(raw));
+		targets[index] += whole;
+		added += whole;
+		remainders[index] = raw - double(whole);
+	}
+	while (added < remaining) {
+		int32_t best_index = 0;
+		double best_remainder = remainders[0];
+		for (int32_t index = 1; index < component_count; ++index) {
+			if (remainders[index] > best_remainder) {
+				best_remainder = remainders[index];
+				best_index = index;
+			}
+		}
+		++targets[best_index];
+		remainders[best_index] = -1.0;
+		++added;
+	}
+	return targets;
+}
+
 Array append_catalog_auto_road_component_clusters(Array &tiles, Dictionary &lookup, const Dictionary &normalized, int32_t level, int32_t component_count, int32_t total_target, int32_t map_width, int32_t map_height) {
 	Array component_sizes;
 	if (component_count <= 0 || total_target <= 0) {
 		return component_sizes;
 	}
+	const std::vector<int32_t> component_targets = catalog_auto_road_component_size_targets(normalized, level, component_count, total_target);
 	const int32_t cols = std::max<int32_t>(1, int32_t(std::ceil(std::sqrt(double(component_count)))));
 	const int32_t rows = std::max<int32_t>(1, int32_t(std::ceil(double(component_count) / double(cols))));
 	const int32_t usable_width = std::max<int32_t>(1, map_width - 4);
@@ -1911,7 +2029,7 @@ Array append_catalog_auto_road_component_clusters(Array &tiles, Dictionary &look
 	const int32_t slot_height = std::max<int32_t>(4, usable_height / rows);
 	const String seed = String(normalized.get("normalized_seed", "0")) + ":catalog_auto_road_components:l" + String::num_int64(level);
 	for (int32_t component_index = 0; component_index < component_count; ++component_index) {
-		const int32_t component_target = total_target / component_count + (component_index < (total_target % component_count) ? 1 : 0);
+		const int32_t component_target = component_index < int32_t(component_targets.size()) ? component_targets[component_index] : 0;
 		if (component_target <= 0) {
 			component_sizes.append(0);
 			continue;
@@ -1979,15 +2097,39 @@ Dictionary native_catalog_auto_road_component_adjustment_lookup(const Array &roa
 		const int32_t area = std::max(1, width * height * level_count);
 		total_target = std::max<int32_t>(total_target, std::max<int32_t>(82, (area * 45) / 1000));
 	}
+	if (level_count > 1) {
+		const int32_t area = std::max(1, width * height * level_count);
+		const String size_class = String(normalized.get("size_class_id", ""));
+		const String water_mode = String(normalized.get("water_mode", "land"));
+		if (size_class == "homm3_extra_large") {
+			if (water_mode == "islands") {
+				total_target = std::max<int32_t>(total_target, (area * 20) / 1000);
+			} else if (water_mode == "normal_water") {
+				total_target = std::max<int32_t>(total_target, (area * 20) / 1000);
+			} else {
+				total_target = std::max<int32_t>(total_target, (area * 21) / 1000);
+			}
+		} else if (size_class == "homm3_large") {
+			if (water_mode == "islands") {
+				total_target = std::max<int32_t>(total_target, (area * 31) / 1000);
+			} else if (water_mode == "normal_water") {
+				total_target = std::max<int32_t>(total_target, (area * 32) / 1000);
+			} else {
+				total_target = std::max<int32_t>(total_target, (area * 27) / 1000);
+			}
+		}
+	}
 	if (String(normalized.get("size_class_id", "")) == "homm3_extra_large" && level_count == 1) {
 		const int32_t area = std::max(1, width * height);
 		total_target = std::max<int32_t>(total_target, (area * 30) / 1000);
 	}
 
 	const int32_t component_target = catalog_auto_road_component_target_count(normalized, total_target);
-	const int32_t surface_component_count = level_count > 1 ? std::max<int32_t>(1, (component_target * 2 + 2) / 3) : component_target;
-	const int32_t underground_component_count = level_count > 1 ? std::max<int32_t>(1, component_target - surface_component_count) : 0;
-	const int32_t surface_target = level_count > 1 ? (total_target * 2) / 3 : total_target;
+	const int32_t fallback_surface_component_count = level_count > 1 ? std::max<int32_t>(1, (component_target * 2 + 2) / 3) : component_target;
+	const int32_t fallback_underground_component_count = level_count > 1 ? std::max<int32_t>(1, component_target - fallback_surface_component_count) : 0;
+	const int32_t surface_component_count = level_count > 1 ? catalog_auto_road_component_count_for_level(normalized, 0, fallback_surface_component_count, total_target) : component_target;
+	const int32_t underground_component_count = level_count > 1 ? catalog_auto_road_component_count_for_level(normalized, 1, fallback_underground_component_count, total_target) : 0;
+	const int32_t surface_target = level_count > 1 ? (total_target * catalog_auto_road_surface_share_per_thousand(normalized)) / 1000 : total_target;
 	const int32_t underground_target = std::max<int32_t>(0, total_target - surface_target);
 
 	Array additional_tiles;
@@ -8463,10 +8605,10 @@ int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized)
 		return level_count > 1 ? std::max(720, (area * 31) / 1000) : std::max(180, (area * 16) / 1000);
 	}
 	if (size_class_id == "homm3_medium") {
-		return level_count > 1 ? std::max(125, (area * 12) / 1000) : std::max(105, (area * 20) / 1000);
+		return level_count > 1 ? std::max(150, (area * 15) / 1000) : std::max(105, (area * 20) / 1000);
 	}
 	if (size_class_id == "homm3_small") {
-		return level_count > 1 ? std::max(32, (area * 12) / 1000) : std::max(32, (area * 25) / 1000);
+		return level_count > 1 ? std::max(36, (area * 14) / 1000) : std::max(32, (area * 25) / 1000);
 	}
 	return std::max(80, (area * 14) / 1000);
 }
