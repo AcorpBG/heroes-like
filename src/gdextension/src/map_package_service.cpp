@@ -8167,6 +8167,55 @@ int32_t native_catalog_auto_generated_object_floor(const Dictionary &normalized)
 	return std::max(250, (area * 105) / 1000);
 }
 
+int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized) {
+	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto") {
+		return 0;
+	}
+	const String size_class_id = String(normalized.get("size_class_id", ""));
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
+	const int32_t area = std::max(1, width * height * level_count);
+	if (size_class_id == "homm3_extra_large") {
+		return level_count > 1 ? std::max(240, (area * 6) / 1000) : std::max(180, (area * 8) / 1000);
+	}
+	if (size_class_id == "homm3_large") {
+		return level_count > 1 ? std::max(220, (area * 9) / 1000) : std::max(80, (area * 7) / 1000);
+	}
+	if (size_class_id == "homm3_medium") {
+		return level_count > 1 ? std::max(70, (area * 7) / 1000) : std::max(44, (area * 8) / 1000);
+	}
+	if (size_class_id == "homm3_small") {
+		return level_count > 1 ? std::max(18, (area * 7) / 1000) : std::max(12, (area * 8) / 1000);
+	}
+	return std::max(40, (area * 7) / 1000);
+}
+
+int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, int32_t reward_count) {
+	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto") {
+		return 0;
+	}
+	const String size_class_id = String(normalized.get("size_class_id", ""));
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
+	const int32_t area = std::max(1, width * height * level_count);
+	int32_t density_floor = 0;
+	if (size_class_id == "homm3_large" && level_count > 1) {
+		density_floor = (area * 13) / 1000;
+	} else if (size_class_id == "homm3_medium" && level_count > 1) {
+		density_floor = (area * 7) / 1000;
+	} else if (size_class_id == "homm3_extra_large" && level_count > 1) {
+		density_floor = (area * 9) / 1000;
+	} else if (size_class_id == "homm3_small" && level_count <= 1) {
+		density_floor = (area * 34) / 1000;
+	} else {
+		density_floor = (area * 8) / 1000;
+	}
+	const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.58));
+	return std::max(density_floor, reward_ratio_floor);
+}
+
 Dictionary count_by_field(const Array &placements, const String &field);
 
 Array relabeled_record_tiles(const Array &tiles, int32_t level) {
@@ -8444,6 +8493,52 @@ Dictionary append_native_catalog_auto_density_supplement(Array &placements, Dict
 	summary["attempt_count"] = attempts;
 	summary["final_generated_object_count"] = int32_t(placements.size());
 	summary["status"] = int32_t(placements.size()) >= target ? String("pass") : String("below_target_after_attempts");
+	return summary;
+}
+
+Dictionary append_native_catalog_auto_scenic_supplement(Array &placements, Dictionary &occupied, NativeObjectPlacementContext &placement_context, const Dictionary &normalized, const Dictionary &zone_layout, const std::vector<NativeRoadCell> &road_cells, int32_t &ordinal) {
+	Dictionary summary;
+	summary["schema_id"] = "native_rmg_catalog_auto_scenic_floor_supplement_v1";
+	summary["policy"] = "size_and_level_aware_original_other_object_scenic_floor_before_decorative_density_fill";
+	const int32_t target = native_catalog_auto_generated_scenic_floor(normalized);
+	int32_t scenic_count = placement_count_for_kind(placements, "scenic_object");
+	summary["target_scenic_object_count"] = target;
+	summary["initial_scenic_object_count"] = scenic_count;
+	summary["applied"] = false;
+	summary["placed_count"] = 0;
+	if (target <= 0 || scenic_count >= target) {
+		summary["final_scenic_object_count"] = scenic_count;
+		summary["status"] = target <= 0 ? String("not_catalog_auto") : String("already_scenic_enough");
+		return summary;
+	}
+	Array zones = zone_layout.get("zones", Array());
+	if (zones.is_empty()) {
+		summary["final_scenic_object_count"] = scenic_count;
+		summary["status"] = "no_zones_available";
+		return summary;
+	}
+	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
+	PackedInt32Array road_distance_field = road_distance_field_for_cells(road_cells, int32_t(normalized.get("width", 36)), int32_t(normalized.get("height", 36)));
+	int32_t placed = 0;
+	int32_t attempts = 0;
+	const int32_t max_attempts = std::max(target * 8, int32_t(zones.size()) * 192);
+	while (scenic_count < target && attempts < max_attempts) {
+		Dictionary zone = Dictionary(zones[attempts % zones.size()]);
+		Dictionary point = object_point_for_zone_index_fast(zone, ordinal, 4 + attempts / std::max<int32_t>(1, int32_t(zones.size())), "scenic_object", normalized, placement_context, owner_grid, occupied, road_distance_field);
+		point["object_family_ordinal"] = scenic_count;
+		point["placement_policy"] = "native_catalog_auto_size_level_scenic_object_floor";
+		if (!point.is_empty() && append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "scenic_object", ordinal, road_cells, zone_layout)) {
+			++scenic_count;
+			++placed;
+		}
+		++ordinal;
+		++attempts;
+	}
+	summary["applied"] = true;
+	summary["placed_count"] = placed;
+	summary["attempt_count"] = attempts;
+	summary["final_scenic_object_count"] = scenic_count;
+	summary["status"] = scenic_count >= target ? String("pass") : String("below_target_after_attempts");
 	return summary;
 }
 
@@ -10335,12 +10430,22 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 		append_extension_profile_elapsed(object_profile_phases, "uploaded_small_049_scenic_object_mix", elapsed_usec_since(scenic_started_at), top_object_phase_usec, top_object_phase_id);
 	}
 
+	Dictionary native_catalog_auto_scenic_supplement;
+	if (parity_targets.is_empty()
+			&& String(normalized.get("template_selection_mode", "")) == "native_catalog_auto"
+			&& !native_rmg_owner_discovered_comparison_seed(normalized)) {
+		const auto auto_scenic_started_at = std::chrono::steady_clock::now();
+		native_catalog_auto_scenic_supplement = append_native_catalog_auto_scenic_supplement(placements, occupied, placement_context, normalized, zone_layout, road_cells, ordinal);
+		append_extension_profile_elapsed(object_profile_phases, "native_catalog_auto_scenic_floor_supplement", elapsed_usec_since(auto_scenic_started_at), top_object_phase_usec, top_object_phase_id);
+	}
+
 	Dictionary native_catalog_auto_density_supplement;
 	if (parity_targets.is_empty()
 			&& String(normalized.get("template_selection_mode", "")) == "native_catalog_auto"
 			&& !native_rmg_owner_discovered_comparison_seed(normalized)) {
 		const auto auto_density_started_at = std::chrono::steady_clock::now();
 		native_catalog_auto_density_supplement = append_native_catalog_auto_density_supplement(placements, occupied, placement_context, normalized, zone_layout, road_cells, ordinal);
+		native_catalog_auto_density_supplement["native_catalog_auto_scenic_supplement"] = native_catalog_auto_scenic_supplement;
 		append_extension_profile_elapsed(object_profile_phases, "native_catalog_auto_density_floor_supplement", elapsed_usec_since(auto_density_started_at), top_object_phase_usec, top_object_phase_id);
 	}
 
@@ -14139,6 +14244,61 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		}
 	}
 	append_extension_profile_phase(town_guard_profile_phases, "object_guard_placement", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
+
+	if (parity_targets.is_empty()
+			&& effective_guard_limit < 0
+			&& native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& !native_rmg_owner_discovered_comparison_seed(normalized)) {
+		subphase_started_at = std::chrono::steady_clock::now();
+		const int32_t reward_count = placement_count_for_spatial_category(objects, "reward");
+		const int32_t guard_floor = native_catalog_auto_generated_guard_floor(normalized, reward_count);
+		int32_t attempts = 0;
+		const int32_t max_attempts = std::max(guard_floor * 12, int32_t(zones.size()) * 256);
+		while (guard_ordinal < guard_floor && attempts < max_attempts) {
+			if (zones.is_empty()) {
+				break;
+			}
+			Dictionary zone = zones[attempts % zones.size()];
+			const String zone_id = String(zone.get("id", ""));
+			Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+			const int32_t ring = 1 + attempts / std::max<int32_t>(1, int32_t(zones.size()));
+			const int32_t seed = int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":native_catalog_auto_guard_floor:" + String::num_int64(attempts)) % 17U);
+			const int32_t dx = ((attempts % 7) - 3) * 2 + (seed % 3) - 1;
+			const int32_t dy = (((attempts / 7) % 7) - 3) * 2 + (seed / 3) - 2;
+			Dictionary point = find_object_point(
+					int32_t(anchor.get("x", width / 2)) + dx + ring,
+					int32_t(anchor.get("y", height / 2)) + dy - ring,
+					zone_id,
+					owner_grid,
+					occupied,
+					width,
+					height);
+			if (!point.is_empty()) {
+				const int32_t guard_value = std::max(900, rmg_zone_monster_scaled_value(normalized, zone, 1200 + (attempts % 5) * 300));
+				Dictionary target;
+				target["protected_target_id"] = "native_catalog_auto_guard_floor_" + slot_id_2(guard_ordinal + 1);
+				target["protected_target_type"] = "density_guard";
+				target["protected_zone_id"] = zone_id;
+				target["protected_zone_value_budget"] = zone.get("value_budget", 0);
+				target["guard_base_value"] = guard_value;
+				target["scaled_guard_value"] = guard_value;
+				target["guard_reward_relation_source"] = "native_catalog_auto_size_level_reward_ratio_guard_floor";
+				append_guard_record(guards, occupied, guard_record_at_point(normalized, zone, point, "density_guard", guard_ordinal, guard_value, road_network, zone_layout, occupied, target));
+				++guard_ordinal;
+			}
+			++attempts;
+		}
+		Dictionary diagnostic;
+		diagnostic["code"] = guard_ordinal >= guard_floor ? "native_catalog_auto_guard_floor_materialized" : "native_catalog_auto_guard_floor_partial";
+		diagnostic["severity"] = guard_ordinal >= guard_floor ? "info" : "warning";
+		diagnostic["target_guard_count"] = guard_floor;
+		diagnostic["final_guard_count"] = guard_ordinal;
+		diagnostic["reward_count"] = reward_count;
+		diagnostic["attempt_count"] = attempts;
+		diagnostic["source"] = "native_catalog_auto_generalized_guard_policy_floor";
+		guard_diagnostics.append(diagnostic);
+		append_extension_profile_phase(town_guard_profile_phases, "native_catalog_auto_guard_floor_supplement", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
+	}
 
 	if (native_rmg_owner_small_random_land_case(normalized) && uploaded_small_guard_limit >= 0 && guard_ordinal < uploaded_small_guard_limit) {
 		subphase_started_at = std::chrono::steady_clock::now();
