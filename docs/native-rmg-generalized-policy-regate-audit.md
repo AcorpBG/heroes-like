@@ -792,3 +792,21 @@ Validation evidence:
 - Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_islands_profile_clean_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
 
 This is not a town-distribution fix. Large one-level islands still need a generalized island-town/zone-layout pass before they can match owner town density and guarded route shape.
+
+## XL Two-Level Islands Object, Guard, And Underground Profile Cleanup
+
+The next worst merged evidence case was `xl_islands_2levels`. Native output was much too object-heavy and guard-heavy compared with the owner H3M sample, while the underground layer was still not blocked enough. The first cleanup pass lowered the two-level XL islands object floor, reward target, and guard floor, increased underground rock shape for that profile, and used a lower island land fraction by zone role.
+
+That exposed a second defect: the generated two-level town floor could place two neutral towns into the same logical island zone across different levels, which created a one-step town-to-town route that no normal guard insertion could close. XL two-level islands now reserve generated town-floor zones across both levels for this profile, and the existing-guard closure helper can reuse a guard mask on very short paths instead of treating those paths as impossible.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `xl_islands_2levels` export wrote `1/1` package in about `47.448s` with native validation `pass`.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/XL-islands-2levels.h3m --amap .artifacts/rmg_native_batch_export_xl_islands_2level_profile_probe/xl_islands_2levels.amap --compare --pretty --allow-failures` improved total object delta from the previous `+665` to `+43`, terrain-blocked delta from `-1429` to `+626`, guard category delta from `+374` to `+43`, and reward category delta from `+311` to `+136`.
+- The focused production-gap severity for `xl_islands_2levels` improved from `3879` to `1668`; the remaining native deltas are town count `14` vs owner `20`, reward count `706` vs owner `570`, object-route reachable pairs `28` vs owner `3`, and guarded-route reachable pairs `0` vs owner `2`.
+- `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_2level_profile_probe --allow-partial-native-batch --summary --failure-limit 8 --gap-limit 8` passed with `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_2level_profile_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_2level_profile_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is a profile cleanup, not a completed island-zone parity pass. The top merged blockers now move to `xl_water_2levels`, `xl_nowater_2levels`, and Large two-level water/land cases. XL two-level islands still needs a generalized town-capacity and route-shape correction before it can match owner town density and object-only route shape.
