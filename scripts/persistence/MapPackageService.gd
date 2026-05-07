@@ -1262,11 +1262,14 @@ func _town_record_at_point(normalized: Dictionary, zone: Dictionary, point: Dict
 		var faction_ids: Array = normalized.get("faction_ids", DEFAULT_FACTIONS)
 		faction_id = String(faction_ids[ordinal % faction_ids.size()])
 	var player_slot := int(start.get("player_slot", zone.get("player_slot", 0)))
+	var runtime_owner := "neutral"
+	if start_town:
+		runtime_owner = "player" if player_slot == 1 or String(start.get("player_type", zone.get("player_type", ""))) == "human" else "enemy"
 	var town_id := String(start.get("town_id", _town_for_faction(faction_id))) if start_town else _town_for_faction(faction_id)
 	var placement_id := "native_rmg_town_start_%02d" % player_slot if start_town else "native_rmg_town_neutral_%s_%02d" % [zone_id, ordinal + 1]
 	var body := _cell_dict(x, y, 0)
 	var anchor: Dictionary = zone.get("anchor", zone.get("center", {}))
-	var record := {"placement_id": placement_id, "record_type": record_type, "kind": "town", "town_id": town_id, "family_id": "town_primary", "object_family_id": "town_primary", "type_id": "town", "faction_id": faction_id, "owner": "player_%d" % player_slot if start_town else "neutral", "owner_slot": start.get("owner_slot", player_slot) if start_town else null, "player_slot": player_slot if start_town else null, "player_type": String(start.get("player_type", "human")) if start_town else "neutral", "team_id": String(start.get("team_id", "")) if start_town else "", "zone_id": zone_id, "zone_role": String(zone.get("role", "")), "terrain_id": terrain_id, "biome_id": _biome_for_terrain(terrain_id), "x": x, "y": y, "level": 0, "primary_tile": body, "primary_occupancy_key": _point_key(x, y), "bounds": {"min_x": x, "min_y": y, "max_x": x, "max_y": y}, "body_tiles": [body], "occupancy_keys": [_point_key(x, y)], "footprint": {"width": 3, "height": 2, "anchor": "bottom_middle", "visit_mask_contract": "inside_intended_3x2_body_outside_current_1x1_runtime_body_until_multitile_town_runtime_slice", "tier": "town"}, "runtime_footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "anchor_tile"}, "footprint_deferred": true, "approach_tiles": _approach_tiles_for_object(x, y, int(normalized.get("width", 36)), int(normalized.get("height", 36)), occupied), "visit_tile": body, "placement_predicates": ["in_bounds", "terrain_allowed", "primary_tile_unoccupied_before_town", "zone_associated", "road_proximity_recorded"], "placement_predicate_results": {"in_bounds": x >= 0 and y >= 0 and x < int(normalized.get("width", 36)) and y < int(normalized.get("height", 36)), "terrain_allowed": _is_passable_terrain_id(terrain_id), "primary_tile_unoccupied_before_town": not occupied.has(_point_key(x, y)), "zone_associated": zone_id != "", "start_anchor_linked": start_town and not start.is_empty(), "road_proximity_recorded": true}, "road_proximity": _nearest_road_proximity(x, y, road_network), "zone_proximity": {"zone_anchor": anchor, "manhattan_distance_to_anchor": abs(x - int(anchor.get("x", x))) + abs(y - int(anchor.get("y", y))), "owner_grid_signature": zone_layout.get("signature", "")}, "start_anchor": start, "is_start_town": start_town, "is_capital": start_town, "capital_role": "player_capital_and_starting_town" if start_town else "neutral_expansion_town", "town_assignment_semantics": "player_start_town_from_native_player_assignment" if start_town else "neutral_zone_town_from_native_foundation_zone", "bounds_status": "in_bounds", "occupancy_status": "primary_tile_reserved", "materialization_state": "staged_town_record_only_no_gameplay_adoption", "writeout_state": "staged_no_authored_content_writeback"}
+	var record := {"placement_id": placement_id, "record_type": record_type, "kind": "town", "town_id": town_id, "family_id": "town_primary", "object_family_id": "town_primary", "type_id": "town", "faction_id": faction_id, "owner": runtime_owner, "owner_slot": start.get("owner_slot", player_slot) if start_town else null, "player_slot": player_slot if start_town else null, "player_type": String(start.get("player_type", "human")) if start_town else "neutral", "team_id": String(start.get("team_id", "")) if start_town else "", "zone_id": zone_id, "zone_role": String(zone.get("role", "")), "terrain_id": terrain_id, "biome_id": _biome_for_terrain(terrain_id), "x": x, "y": y, "level": 0, "primary_tile": body, "primary_occupancy_key": _point_key(x, y), "bounds": {"min_x": x, "min_y": y, "max_x": x, "max_y": y}, "body_tiles": [body], "occupancy_keys": [_point_key(x, y)], "footprint": {"width": 3, "height": 2, "anchor": "bottom_middle", "visit_mask_contract": "inside_intended_3x2_body_outside_current_1x1_runtime_body_until_multitile_town_runtime_slice", "tier": "town"}, "runtime_footprint": {"width": 1, "height": 1, "anchor": "center", "tier": "anchor_tile"}, "footprint_deferred": true, "approach_tiles": _approach_tiles_for_object(x, y, int(normalized.get("width", 36)), int(normalized.get("height", 36)), occupied), "visit_tile": body, "placement_predicates": ["in_bounds", "terrain_allowed", "primary_tile_unoccupied_before_town", "zone_associated", "road_proximity_recorded"], "placement_predicate_results": {"in_bounds": x >= 0 and y >= 0 and x < int(normalized.get("width", 36)) and y < int(normalized.get("height", 36)), "terrain_allowed": _is_passable_terrain_id(terrain_id), "primary_tile_unoccupied_before_town": not occupied.has(_point_key(x, y)), "zone_associated": zone_id != "", "start_anchor_linked": start_town and not start.is_empty(), "road_proximity_recorded": true}, "road_proximity": _nearest_road_proximity(x, y, road_network), "zone_proximity": {"zone_anchor": anchor, "manhattan_distance_to_anchor": abs(x - int(anchor.get("x", x))) + abs(y - int(anchor.get("y", y))), "owner_grid_signature": zone_layout.get("signature", "")}, "start_anchor": start, "is_start_town": start_town, "is_capital": start_town, "capital_role": "player_capital_and_starting_town" if start_town else "neutral_expansion_town", "town_assignment_semantics": "player_start_town_from_native_player_assignment" if start_town else "neutral_zone_town_from_native_foundation_zone", "bounds_status": "in_bounds", "occupancy_status": "primary_tile_reserved", "materialization_state": "staged_town_record_only_no_gameplay_adoption", "writeout_state": "staged_no_authored_content_writeback"}
 	record["signature"] = _hash32_hex(_stable_stringify(record))
 	return record
 
@@ -1520,6 +1523,50 @@ func _combined_native_map_objects(generated_map: Dictionary) -> Array:
 	result.append_array(_tagged_record_snapshots(generated_map.get("guard_records", []), "guard"))
 	return result
 
+func _player_start_town_records_for_start_contract(generated_map: Dictionary) -> Array:
+	var player_starts: Dictionary = generated_map.get("player_starts", {}) if generated_map.get("player_starts", {}) is Dictionary else {}
+	var start_count := int(player_starts.get("start_count", 0))
+	var by_slot := {}
+	for town in generated_map.get("town_records", []):
+		if town is Dictionary and bool(town.get("is_start_town", false)):
+			by_slot[int(town.get("player_slot", 0))] = town.duplicate(true)
+	var result := []
+	for slot in range(1, start_count + 1):
+		if by_slot.has(slot):
+			result.append(by_slot[slot])
+	return result
+
+func _synchronized_player_starts_for_start_contract(generated_map: Dictionary) -> Array:
+	var player_starts: Dictionary = generated_map.get("player_starts", {}) if generated_map.get("player_starts", {}) is Dictionary else {}
+	var start_towns := _player_start_town_records_for_start_contract(generated_map)
+	var town_by_slot := {}
+	for town in start_towns:
+		if town is Dictionary:
+			town_by_slot[int(town.get("player_slot", 0))] = town
+	var result := []
+	var starts: Array = player_starts.get("starts", []) if player_starts.get("starts", []) is Array else []
+	for start_value in starts:
+		if not (start_value is Dictionary):
+			continue
+		var start: Dictionary = start_value.duplicate(true)
+		var slot := int(start.get("player_slot", 0))
+		if town_by_slot.has(slot):
+			var town: Dictionary = town_by_slot[slot]
+			start["x"] = int(town.get("x", start.get("x", 0)))
+			start["y"] = int(town.get("y", start.get("y", 0)))
+			start["level"] = int(town.get("level", start.get("level", 0)))
+			start["town_id"] = String(town.get("town_id", start.get("town_id", "")))
+			start["faction_id"] = String(town.get("faction_id", start.get("faction_id", "")))
+			start["owner"] = String(town.get("owner", ""))
+			start["owner_slot"] = town.get("owner_slot", start.get("owner_slot", 0))
+			start["player_type"] = String(town.get("player_type", start.get("player_type", "")))
+			start["team_id"] = String(town.get("team_id", start.get("team_id", "")))
+			start["town_placement_id"] = String(town.get("placement_id", ""))
+			start["primary_town_anchor_status"] = "materialized_as_player_start_town"
+			start["start_contract_source"] = "materialized_player_start_town_record"
+		result.append(start)
+	return result
+
 func _build_native_package_session_adoption(generated_map: Dictionary, options: Dictionary) -> Dictionary:
 	if not bool(generated_map.get("ok", false)):
 		return _conversion_fail("native_generation_not_ok", "Native RMG output must be ok=true before package/session adoption.")
@@ -1614,10 +1661,16 @@ func _build_native_package_session_adoption(generated_map: Dictionary, options: 
 				"team_id": String(slot_value.get("team_id", "")),
 			})
 	var player_starts: Dictionary = generated_map.get("player_starts", {}) if generated_map.get("player_starts", {}) is Dictionary else {}
+	var contract_player_starts := _synchronized_player_starts_for_start_contract(generated_map)
+	var contract_player_start_towns := _player_start_town_records_for_start_contract(generated_map)
 	var start_contract := {
 		"schema_id": "aurelion_native_rmg_start_contract_v1",
-		"player_starts": player_starts.get("starts", []) if player_starts.get("starts", []) is Array else [],
-		"start_count": int(player_starts.get("start_count", 0)),
+		"player_starts": contract_player_starts,
+		"player_start_towns": contract_player_start_towns,
+		"start_count": contract_player_starts.size(),
+		"start_town_count": contract_player_start_towns.size(),
+		"start_contract_source": "materialized_player_start_town_records",
+		"source_player_start_signature": player_starts.get("signature", ""),
 		"primary_hero_id": String(options.get("hero_id", "hero_lyra")),
 	}
 	var selection := {

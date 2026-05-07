@@ -273,6 +273,23 @@ func _assert_adoption_shape(adoption: Dictionary, width: int, height: int, level
 	if scenario_document.get_player_slots().size() != players or scenario_document.get_start_contract().is_empty():
 		_fail("ScenarioDocument missed player slots/start contract.")
 		return
+	var start_contract: Dictionary = scenario_document.get_start_contract()
+	if String(start_contract.get("start_contract_source", "")) != "materialized_player_start_town_records":
+		_fail("Start contract did not derive starts from materialized start towns: %s" % JSON.stringify(start_contract))
+		return
+	var contract_starts: Array = start_contract.get("player_starts", []) if start_contract.get("player_starts", []) is Array else []
+	var contract_towns: Array = start_contract.get("player_start_towns", []) if start_contract.get("player_start_towns", []) is Array else []
+	if contract_starts.size() != players or contract_towns.size() != players:
+		_fail("Start contract did not expose one start town per player: %s" % JSON.stringify(start_contract))
+		return
+	var player_start := _player_owned_start_town(contract_towns)
+	if player_start.is_empty():
+		_fail("Start contract did not expose a player-owned starting town: %s" % JSON.stringify(start_contract))
+		return
+	var matching_contract_start := _contract_start_for_slot(contract_starts, int(player_start.get("player_slot", 0)))
+	if matching_contract_start.is_empty() or int(matching_contract_start.get("x", -1)) != int(player_start.get("x", -2)) or int(matching_contract_start.get("y", -1)) != int(player_start.get("y", -2)):
+		_fail("Contract player start is not anchored to the materialized player-owned town: start=%s town=%s" % [JSON.stringify(matching_contract_start), JSON.stringify(player_start)])
+		return
 	var map_package: Dictionary = adoption.get("map_package_record", {})
 	var scenario_package: Dictionary = adoption.get("scenario_package_record", {})
 	var session_boundary: Dictionary = adoption.get("session_boundary_record", {})
@@ -286,6 +303,18 @@ func _assert_adoption_shape(adoption: Dictionary, width: int, height: int, level
 	if int(session_boundary.get("save_version", 0)) != SessionStateStoreScript.SAVE_VERSION:
 		_fail("Session boundary did not preserve current save version.")
 		return
+
+func _player_owned_start_town(start_towns: Array) -> Dictionary:
+	for town in start_towns:
+		if town is Dictionary and String(town.get("owner", "")) == "player":
+			return town
+	return {}
+
+func _contract_start_for_slot(starts: Array, player_slot: int) -> Dictionary:
+	for start in starts:
+		if start is Dictionary and int(start.get("player_slot", 0)) == player_slot:
+			return start
+	return {}
 
 func _assert_session_shape(session: SessionStateStoreScript.SessionData, adoption: Dictionary) -> void:
 	if session == null or session.session_id == "":
@@ -314,6 +343,16 @@ func _assert_session_shape(session: SessionStateStoreScript.SessionData, adoptio
 		return
 	if session.overworld.get("map_package_ref", {}) != adoption.get("map_ref", {}) or session.overworld.get("scenario_package_ref", {}) != adoption.get("scenario_ref", {}):
 		_fail("Session did not carry map/scenario package refs.")
+		return
+	var scenario_document_for_session: Variant = adoption.get("scenario_document", null)
+	var session_start_towns := []
+	if scenario_document_for_session != null:
+		var session_start_contract: Dictionary = scenario_document_for_session.get_start_contract()
+		session_start_towns = session_start_contract.get("player_start_towns", []) if session_start_contract.get("player_start_towns", []) is Array else []
+	var owned_start_town := _player_owned_start_town(session_start_towns)
+	var hero_position: Dictionary = session.overworld.get("hero_position", {}) if session.overworld.get("hero_position", {}) is Dictionary else {}
+	if owned_start_town.is_empty() or int(hero_position.get("x", -1)) != int(owned_start_town.get("x", -2)) or int(hero_position.get("y", -1)) != int(owned_start_town.get("y", -2)):
+		_fail("Session hero start is not anchored to the player-owned starting town: hero=%s town=%s" % [JSON.stringify(hero_position), JSON.stringify(owned_start_town)])
 		return
 	var map_document: Variant = adoption.get("map_document", null)
 	var expected_guard_count := 0
