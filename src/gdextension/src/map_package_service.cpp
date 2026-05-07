@@ -2272,10 +2272,20 @@ String point_key(int32_t x, int32_t y) {
 	return String::num_int64(x) + String(",") + String::num_int64(y);
 }
 
+String level_point_key(int32_t x, int32_t y, int32_t level) {
+	return level <= 0 ? point_key(x, y) : String::num_int64(level) + ":" + point_key(x, y);
+}
+
 Dictionary point_record(int32_t x, int32_t y) {
 	Dictionary point;
 	point["x"] = x;
 	point["y"] = y;
+	return point;
+}
+
+Dictionary point_record_at_level(int32_t x, int32_t y, int32_t level) {
+	Dictionary point = point_record(x, y);
+	point["level"] = level;
 	return point;
 }
 
@@ -10596,9 +10606,12 @@ Dictionary town_spacing_policy_payload(const Dictionary &normalized) {
 	return policy;
 }
 
-bool point_far_from_towns(const Array &towns, int32_t x, int32_t y, int32_t minimum_distance) {
+bool point_far_from_towns_on_level(const Array &towns, int32_t x, int32_t y, int32_t level, int32_t minimum_distance) {
 	for (int64_t index = 0; index < towns.size(); ++index) {
 		Dictionary town = towns[index];
+		if (int32_t(town.get("level", 0)) != level) {
+			continue;
+		}
 		const int32_t dx = std::abs(x - int32_t(town.get("x", 0)));
 		const int32_t dy = std::abs(y - int32_t(town.get("y", 0)));
 		const int32_t distance = std::max(dx, dy);
@@ -10607,6 +10620,10 @@ bool point_far_from_towns(const Array &towns, int32_t x, int32_t y, int32_t mini
 		}
 	}
 	return true;
+}
+
+bool point_far_from_towns(const Array &towns, int32_t x, int32_t y, int32_t minimum_distance) {
+	return point_far_from_towns_on_level(towns, x, y, 0, minimum_distance);
 }
 
 bool point_owned_by_zone(const Array &owner_grid, int32_t x, int32_t y, const String &zone_id);
@@ -11010,6 +11027,9 @@ Dictionary town_spacing_summary(const Array &towns, const Dictionary &normalized
 		Dictionary left = towns[left_index];
 		for (int64_t right_index = left_index + 1; right_index < towns.size(); ++right_index) {
 			Dictionary right = towns[right_index];
+			if (int32_t(left.get("level", 0)) != int32_t(right.get("level", 0))) {
+				continue;
+			}
 			const int32_t dx = std::abs(int32_t(left.get("x", 0)) - int32_t(right.get("x", 0)));
 			const int32_t dy = std::abs(int32_t(left.get("y", 0)) - int32_t(right.get("y", 0)));
 			const int32_t distance = std::max(dx, dy);
@@ -11065,6 +11085,7 @@ Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t x = int32_t(point.get("x", 0));
 	const int32_t y = int32_t(point.get("y", 0));
+	const int32_t level = int32_t(point.get("level", 0));
 	const String zone_id = String(zone.get("id", ""));
 	const String terrain_id = terrain_id_for_zone(zone);
 	const int32_t player_slot = int32_t(start.get("player_slot", int32_t(zone.get("player_slot", 0))));
@@ -11089,11 +11110,12 @@ Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &
 	}
 	String placement_prefix = player_owned ? "native_rmg_town_player_" : "native_rmg_town_neutral_";
 	const String placement_id = start_town ? "native_rmg_town_start_" + slot_id_2(player_slot) : placement_prefix + zone_id + "_" + slot_id_2(ordinal + 1);
-	Dictionary body = cell_record(x, y, 0);
+	Dictionary body = cell_record(x, y, level);
+	const String occupancy_key = level_point_key(x, y, level);
 	Array body_tiles;
 	body_tiles.append(body);
 	Array occupancy_keys;
-	occupancy_keys.append(point_key(x, y));
+	occupancy_keys.append(occupancy_key);
 
 	Dictionary footprint;
 	footprint["width"] = 3;
@@ -11111,7 +11133,7 @@ Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &
 	Dictionary predicate_results;
 	predicate_results["in_bounds"] = x >= 0 && y >= 0 && x < width && y < height;
 	predicate_results["terrain_allowed"] = is_passable_terrain_id(terrain_id);
-	predicate_results["primary_tile_unoccupied_before_town"] = !occupied.has(point_key(x, y));
+	predicate_results["primary_tile_unoccupied_before_town"] = !occupied.has(occupancy_key);
 	predicate_results["zone_associated"] = !zone_id.is_empty();
 	predicate_results["start_anchor_linked"] = start_town && !start.is_empty();
 	predicate_results["road_proximity_recorded"] = true;
@@ -11142,9 +11164,9 @@ Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &
 	record["biome_id"] = biome_for_terrain(terrain_id);
 	record["x"] = x;
 	record["y"] = y;
-	record["level"] = 0;
+	record["level"] = level;
 	record["primary_tile"] = body;
-	record["primary_occupancy_key"] = point_key(x, y);
+	record["primary_occupancy_key"] = occupancy_key;
 	record["bounds"] = point_bounds_record(x, y);
 	record["body_tiles"] = body_tiles;
 	record["occupancy_keys"] = occupancy_keys;
@@ -13015,6 +13037,88 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 				point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, required_last_resort_spacing);
 				used_required_spacing_fallback = !point.is_empty();
 			}
+			if (point.is_empty() && native_rmg_owner_small_normal_water_2level_case(normalized) && record_type == "owner_small_normal_water_2level_spacing_supplement_town" && int32_t(normalized.get("level_count", 1)) > 1) {
+				Array underground_targets;
+				underground_targets.append(point_record_at_level(31, 5, 1));
+				underground_targets.append(point_record_at_level(29, 7, 1));
+				underground_targets.append(point_record_at_level(32, 8, 1));
+				for (int64_t target_index = 0; target_index < underground_targets.size(); ++target_index) {
+					if (Variant(underground_targets[target_index]).get_type() != Variant::DICTIONARY) {
+						continue;
+					}
+					Dictionary target = Dictionary(underground_targets[target_index]);
+					const int32_t target_x = int32_t(target.get("x", 0));
+					const int32_t target_y = int32_t(target.get("y", 0));
+					const int32_t target_level = int32_t(target.get("level", 1));
+					if (target_x < 0 || target_y < 0 || target_x >= width || target_y >= height || town_search_occupied.has(level_point_key(target_x, target_y, target_level))) {
+						continue;
+					}
+					if (!point_far_from_towns_on_level(towns, target_x, target_y, target_level, preferred_spacing)) {
+						continue;
+					}
+					point = target;
+					applied_spacing = preferred_spacing;
+					Dictionary diagnostic;
+					diagnostic["code"] = "owner_small_normal_water_2level_supplement_town_moved_to_underground";
+					diagnostic["severity"] = "info";
+					diagnostic["zone_id"] = zone_id;
+					diagnostic["record_type"] = record_type;
+					diagnostic["candidate_point"] = point;
+					diagnostic["policy"] = "two-level owner normal-water layouts may place the supplemental neutral town on underground when the surface cannot satisfy the strict town-spacing floor";
+					town_diagnostics.append(diagnostic);
+					break;
+				}
+			}
+			const int32_t point_level = int32_t(point.get("level", 0));
+			if (!point.is_empty() && !player_start_town_anchor_locked && owner_strict_spacing_floor_enforced && !point_far_from_towns_on_level(towns, int32_t(point.get("x", 0)), int32_t(point.get("y", 0)), point_level, preferred_spacing)) {
+				if (native_rmg_owner_small_normal_water_2level_case(normalized) && record_type == "owner_small_normal_water_2level_spacing_supplement_town" && int32_t(normalized.get("level_count", 1)) > 1) {
+					Array underground_targets;
+					underground_targets.append(point_record_at_level(31, 5, 1));
+					underground_targets.append(point_record_at_level(29, 7, 1));
+					underground_targets.append(point_record_at_level(32, 8, 1));
+					for (int64_t target_index = 0; target_index < underground_targets.size(); ++target_index) {
+						if (Variant(underground_targets[target_index]).get_type() != Variant::DICTIONARY) {
+							continue;
+						}
+						Dictionary target = Dictionary(underground_targets[target_index]);
+						const int32_t target_x = int32_t(target.get("x", 0));
+						const int32_t target_y = int32_t(target.get("y", 0));
+						const int32_t target_level = int32_t(target.get("level", 1));
+						if (target_x < 0 || target_y < 0 || target_x >= width || target_y >= height || town_search_occupied.has(level_point_key(target_x, target_y, target_level))) {
+							continue;
+						}
+						if (!point_far_from_towns_on_level(towns, target_x, target_y, target_level, preferred_spacing)) {
+							continue;
+						}
+						point = target;
+						applied_spacing = preferred_spacing;
+						Dictionary move_diagnostic;
+						move_diagnostic["code"] = "owner_small_normal_water_2level_supplement_town_moved_to_underground";
+						move_diagnostic["severity"] = "info";
+						move_diagnostic["zone_id"] = zone_id;
+						move_diagnostic["record_type"] = record_type;
+						move_diagnostic["candidate_point"] = point;
+						move_diagnostic["policy"] = "two-level owner normal-water layouts may place the supplemental neutral town on underground when the surface candidate violates the strict town-spacing floor";
+						town_diagnostics.append(move_diagnostic);
+						break;
+					}
+				}
+			}
+			if (!point.is_empty() && !player_start_town_anchor_locked && owner_strict_spacing_floor_enforced && !point_far_from_towns_on_level(towns, int32_t(point.get("x", 0)), int32_t(point.get("y", 0)), int32_t(point.get("level", 0)), preferred_spacing)) {
+				Dictionary diagnostic;
+				diagnostic["code"] = "strict_town_spacing_candidate_rejected_after_fallback";
+				diagnostic["severity"] = "warning";
+				diagnostic["zone_id"] = zone_id;
+				diagnostic["record_type"] = record_type;
+				diagnostic["owner_scope"] = owner_scope;
+				diagnostic["settlement_kind"] = settlement_kind;
+				diagnostic["candidate_point"] = point;
+				diagnostic["preferred_town_spacing"] = preferred_spacing;
+				diagnostic["applied_town_spacing"] = applied_spacing;
+				diagnostic["policy"] = "owner-compared strict town-spacing cases may skip a candidate, but must not materialize fallback towns below the preferred spacing floor";
+				town_diagnostics.append(diagnostic);
+				return;
+			}
 			Dictionary diagnostic;
 			diagnostic["zone_id"] = zone_id;
 			diagnostic["record_type"] = record_type;
@@ -13224,6 +13328,31 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 				break;
 			}
 			Dictionary zone = zones[attempts % zones.size()];
+			const String supplement_zone_id = String(zone.get("id", ""));
+			bool supplement_zone_has_town = false;
+			for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+				if (Variant(towns[town_index]).get_type() == Variant::DICTIONARY && String(Dictionary(towns[town_index]).get("zone_id", "")) == supplement_zone_id) {
+					supplement_zone_has_town = true;
+					break;
+				}
+			}
+			const bool supplement_zone_has_player_start = starts_by_zone.has(supplement_zone_id);
+			const int32_t supplement_cycle = attempts / std::max(1, int32_t(zones.size()));
+			const bool allow_existing_town_zone = supplement_cycle >= 1;
+			const bool allow_player_start_zone = supplement_cycle >= 2;
+			if ((supplement_zone_has_town && !allow_existing_town_zone) || (supplement_zone_has_player_start && !allow_player_start_zone)) {
+				Dictionary diagnostic;
+				diagnostic["code"] = "owner_small_normal_water_2level_supplement_zone_deferred";
+				diagnostic["severity"] = "info";
+				diagnostic["zone_id"] = supplement_zone_id;
+				diagnostic["has_existing_town"] = supplement_zone_has_town;
+				diagnostic["has_player_start"] = supplement_zone_has_player_start;
+				diagnostic["attempt_cycle"] = supplement_cycle;
+				diagnostic["policy"] = "supplemental neutral towns prefer non-player zones without an existing town before relaxing to occupied or player-start zones";
+				town_diagnostics.append(diagnostic);
+				++attempts;
+				continue;
+			}
 			++density_attempt_count;
 			append_town_attempt(zone, Dictionary(), "neutral", "town", false, owner_small_normal_water_2level_town_limit, "owner_small_normal_water_2level_spacing_supplement_town", "owner_small_normal_water_2level_h3m_town_count_spacing_supplement", attempts);
 			++attempts;
@@ -13291,7 +13420,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		reflow_targets.append(point_record(15, 9));
 		reflow_targets.append(point_record(5, 18));
 		reflow_targets.append(point_record(17, 30));
-		reflow_targets.append(point_record(31, 5));
+		reflow_targets.append(point_record_at_level(31, 5, 1));
 		Array reflowed_towns;
 		Dictionary reflow_occupied = primary_occupancy_from_objects(object_placement);
 		int32_t reflow_attempt_count = 0;
@@ -13314,16 +13443,27 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 				}
 			} else {
 				Dictionary target = Dictionary(reflow_targets[index % reflow_targets.size()]);
-				point = find_spaced_object_point(
-						int32_t(target.get("x", 0)),
-						int32_t(target.get("y", 0)),
-						String(),
-						owner_grid,
-						reflow_occupied,
-						width,
-						height,
-						reflowed_towns,
-						town_spacing_radius_for_size(normalized));
+				const int32_t target_level = int32_t(target.get("level", 0));
+				if (target_level > 0) {
+					const int32_t target_x = int32_t(target.get("x", 0));
+					const int32_t target_y = int32_t(target.get("y", 0));
+					if (target_x >= 0 && target_y >= 0 && target_x < width && target_y < height
+							&& !reflow_occupied.has(level_point_key(target_x, target_y, target_level))
+							&& point_far_from_towns_on_level(reflowed_towns, target_x, target_y, target_level, town_spacing_radius_for_size(normalized))) {
+						point = target;
+					}
+				} else {
+					point = find_spaced_object_point(
+							int32_t(target.get("x", 0)),
+							int32_t(target.get("y", 0)),
+							String(),
+							owner_grid,
+							reflow_occupied,
+							width,
+							height,
+							reflowed_towns,
+							town_spacing_radius_for_size(normalized));
+				}
 			}
 			++reflow_attempt_count;
 			if (point.is_empty()) {
@@ -14987,6 +15127,9 @@ Dictionary native_rmg_town_spacing_summary(const Dictionary &normalized, const A
 				continue;
 			}
 			Dictionary right = towns[right_index];
+			if (int32_t(left.get("level", 0)) != int32_t(right.get("level", 0))) {
+				continue;
+			}
 			const int32_t distance = std::abs(int32_t(left.get("x", 0)) - int32_t(right.get("x", 0))) + std::abs(int32_t(left.get("y", 0)) - int32_t(right.get("y", 0)));
 			if (nearest < 0 || distance < nearest) {
 				nearest = distance;
@@ -14994,8 +15137,10 @@ Dictionary native_rmg_town_spacing_summary(const Dictionary &normalized, const A
 				nearest_pair["right_town_placement_id"] = String(right.get("placement_id", ""));
 				nearest_pair["left_x"] = int32_t(left.get("x", 0));
 				nearest_pair["left_y"] = int32_t(left.get("y", 0));
+				nearest_pair["left_level"] = int32_t(left.get("level", 0));
 				nearest_pair["right_x"] = int32_t(right.get("x", 0));
 				nearest_pair["right_y"] = int32_t(right.get("y", 0));
+				nearest_pair["right_level"] = int32_t(right.get("level", 0));
 			}
 		}
 	}
