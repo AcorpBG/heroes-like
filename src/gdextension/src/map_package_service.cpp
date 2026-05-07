@@ -14087,8 +14087,15 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	const int32_t owner_xl_town_limit = owner_xl_land_category_target(normalized, "town");
 	const int32_t generated_catalog_town_floor = native_catalog_auto_generated_town_floor(normalized, starts.size());
 	const int32_t effective_town_limit = parity_town_limit >= 0 ? parity_town_limit : (owner_small_random_land_town_limit >= 0 ? owner_small_random_land_town_limit : (owner_small_normal_water_2level_town_limit >= 0 ? owner_small_normal_water_2level_town_limit : (owner_small_islands_2level_town_limit >= 0 ? owner_small_islands_2level_town_limit : (owner_medium_town_limit >= 0 ? owner_medium_town_limit : (owner_large_town_limit >= 0 ? owner_large_town_limit : (owner_xl_town_limit >= 0 ? owner_xl_town_limit : (generated_catalog_town_floor > 0 ? generated_catalog_town_floor : -1)))))));
-	const int32_t generated_catalog_underground_town_floor = generated_catalog_town_floor > 0 && level_count > 1 && String(normalized.get("water_mode", "land")) == "land"
-			? std::max<int32_t>(1, (generated_catalog_town_floor * 30) / 100)
+	const String town_water_mode = String(normalized.get("water_mode", "land"));
+	const String town_size_class_id = String(normalized.get("size_class_id", ""));
+	const int32_t generated_catalog_underground_town_percent = town_water_mode == "land"
+			? 30
+			: (town_water_mode == "islands"
+							? (town_size_class_id == "homm3_extra_large" ? 35 : (town_size_class_id == "homm3_large" ? 30 : 17))
+							: 0);
+	const int32_t generated_catalog_underground_town_floor = generated_catalog_town_floor > 0 && level_count > 1 && generated_catalog_underground_town_percent > 0
+			? std::max<int32_t>(1, (generated_catalog_town_floor * generated_catalog_underground_town_percent) / 100)
 			: 0;
 	append_extension_profile_phase(town_guard_profile_phases, "setup", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	int32_t town_ordinal = 0;
@@ -16077,6 +16084,33 @@ int32_t expand_zone_land(Dictionary &land_lookup, const Dictionary &protected_la
 	return land_count;
 }
 
+int32_t prune_island_boundary_land(Dictionary &land_lookup, const Dictionary &protected_land, const Array &owner_grid, int32_t width, int32_t height) {
+	Array keys = land_lookup.keys();
+	int32_t pruned_count = 0;
+	for (int64_t index = 0; index < keys.size(); ++index) {
+		const String key = String(keys[index]);
+		if (protected_land.has(key)) {
+			continue;
+		}
+		const int32_t comma = key.find(",");
+		if (comma < 0) {
+			continue;
+		}
+		const int32_t x = key.substr(0, comma).to_int();
+		const int32_t y = key.substr(comma + 1).to_int();
+		const String zone_id = owner_grid_value_at(owner_grid, x, y);
+		if (zone_id.is_empty()) {
+			continue;
+		}
+		if (zone_cell_is_interior(owner_grid, x, y, width, height, zone_id)) {
+			continue;
+		}
+		land_lookup.erase(key);
+		++pruned_count;
+	}
+	return pruned_count;
+}
+
 Dictionary island_land_water_shape(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, const Dictionary &object_placement, const Dictionary &town_guard_placement) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -16084,6 +16118,9 @@ Dictionary island_land_water_shape(const Dictionary &normalized, const Dictionar
 	Array zones = zone_layout.get("zones", Array());
 	Array owner_grid = zone_layout.get("surface_owner_grid", Array());
 	const int32_t map_tiles = std::max(1, width * height);
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	const String size_class_id = String(normalized.get("size_class_id", ""));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
 
 	Dictionary land_lookup = protected_land.duplicate(true);
 	Array diagnostics;
@@ -16172,6 +16209,18 @@ Dictionary island_land_water_shape(const Dictionary &normalized, const Dictionar
 				diagnostics.append(diagnostic);
 			}
 			zone_targets[index] = target;
+		}
+		if (water_mode == "islands" && level_count > 1 && size_class_id != "homm3_large") {
+			const int32_t before_prune_count = land_lookup.size();
+			const int32_t pruned_count = prune_island_boundary_land(land_lookup, protected_land, owner_grid, width, height);
+			Dictionary diagnostic;
+			diagnostic["severity"] = "info";
+			diagnostic["code"] = "two_level_island_boundary_land_pruned";
+			diagnostic["pruned_land_cell_count"] = pruned_count;
+			diagnostic["land_count_before"] = before_prune_count;
+			diagnostic["land_count_after"] = land_lookup.size();
+			diagnostic["policy"] = "two-level island profiles keep required generated surfaces loadable but remove non-required zone-boundary land so neighboring island zones do not merge into broad unguarded town-route surfaces";
+			diagnostics.append(diagnostic);
 		}
 	}
 
@@ -16310,13 +16359,16 @@ double native_catalog_auto_underground_rock_fraction(const Dictionary &normalize
 		return 0.55;
 	}
 	if (water_mode == "islands") {
-		if (size_class_id == "homm3_extra_large" || size_class_id == "homm3_medium") {
-			return 0.84;
+		if (size_class_id == "homm3_extra_large") {
+			return 0.93;
+		}
+		if (size_class_id == "homm3_medium") {
+			return 0.90;
 		}
 		if (size_class_id == "homm3_large") {
 			return 0.58;
 		}
-		return 0.54;
+		return 0.78;
 	}
 	if (water_mode == "normal_water" && size_class_id == "homm3_extra_large") {
 		return 0.90;
