@@ -31,6 +31,44 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-normal-water-mode-support-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Stop collapsing HoMM3 normal-water requests to land and add first-class native normal-water generation/package support as a prerequisite for owner-H3M normal-water comparison tuning.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `scripts/core/ScenarioSelectRules.gd`
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- local owner evidence under `maps/h3m-maps/M-NormalW-4players.h3m`
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `scripts/core/RandomMapGeneratorRules.gd`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Player-facing random-map setup exposes `normal_water` separately from `land` and `islands`.
+- GDScript and native config normalization preserve `normal_water` instead of coercing it to `land`.
+- Native catalog support accepts `normal_water` for water-capable translated templates without treating it as islands score halving.
+- Native terrain generation materializes mixed surface water for normal-water maps while preserving land around roads, towns, objects, guards, and starts.
+- Focused native auto-template validation covers a Medium normal-water package and proves it has nonzero water tiles.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No exact normal-water owner-H3M parity claim yet.
+- No tuning to match `M-NormalW-4players.h3m` object, road, town, guard, and terrain ratios in this slice.
+- No broad all-template water-mode parity claim.
+validationResults:
+- Native GDExtension rebuilt successfully with `cmake --build .artifacts/map_persistence_native_build --parallel 2`.
+- `tests/native_random_map_auto_template_batch_report.tscn` passed with 11 cases; `medium_normal_water_seed_a` preserved `normal_water`, selected `translated_rmg_template_039_v1` / `translated_rmg_profile_039_v1`, validated, converted to a package, and reported 1,582 package water tiles.
+- `python3 tests/validate_repo.py` passed.
+- `tests/random_map_player_setup_retry_ux_report.tscn` was attempted and still fails on an existing generated-session launch handoff nil path in `ScenarioSelectRules.gd`, outside the normal-water mode selection path.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-owner-corpus-terrain-water-mode-audit-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`
