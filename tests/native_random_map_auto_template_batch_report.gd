@@ -169,6 +169,7 @@ func _run_case(service: Variant, catalog: Dictionary, case_record: Dictionary) -
 	if not owner_compared_auto_candidate and object_count < package_floor:
 		_fail("%s auto-template package object density stayed sparse: %d min %d." % [String(case_record.get("id", "")), object_count, package_floor])
 		return {}
+	var land_water_shape: Dictionary = generated.get("terrain_grid", {}).get("land_water_shape", {}) if generated.get("terrain_grid", {}) is Dictionary and generated.get("terrain_grid", {}).get("land_water_shape", {}) is Dictionary else {}
 	return {
 		"id": String(case_record.get("id", "")),
 		"size_class_id": String(case_record.get("size_class_id", "")),
@@ -195,6 +196,20 @@ func _run_case(service: Variant, catalog: Dictionary, case_record: Dictionary) -
 		"package_object_density_floor": package_floor,
 		"package_road_cell_count": road_cells,
 		"package_water_tile_count": water_tile_count,
+		"land_water_shape": _compact_land_water_shape_summary(land_water_shape),
+	}
+
+func _compact_land_water_shape_summary(shape: Dictionary) -> Dictionary:
+	if shape.is_empty():
+		return {}
+	return {
+		"water_mode": String(shape.get("water_mode", "")),
+		"requested_land_count": int(shape.get("requested_land_count", 0)),
+		"protected_land_cell_count": int(shape.get("protected_land_cell_count", 0)),
+		"generated_land_cell_count": int(shape.get("generated_land_cell_count", 0)),
+		"generated_water_cell_count": int(shape.get("generated_water_cell_count", 0)),
+		"generated_land_ratio": float(shape.get("generated_land_ratio", 0.0)),
+		"diagnostic_count": int(shape.get("diagnostic_count", 0)),
 	}
 
 func _package_water_tile_count(map_document: Variant) -> int:

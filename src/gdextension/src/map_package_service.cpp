@@ -12800,14 +12800,16 @@ void mark_land_cells_from_array(Dictionary &land_lookup, const Array &cells, int
 	}
 }
 
-void mark_land_record_surfaces(Dictionary &land_lookup, const Dictionary &record, int32_t width, int32_t height) {
+void mark_land_record_surfaces(Dictionary &land_lookup, const Dictionary &record, int32_t width, int32_t height, bool protect_approach_tiles = true) {
 	mark_land_cell(land_lookup, int32_t(record.get("x", 0)), int32_t(record.get("y", 0)), width, height);
 	if (Variant(record.get("primary_tile", Variant())).get_type() == Variant::DICTIONARY) {
 		Dictionary primary = record.get("primary_tile", Dictionary());
 		mark_land_cell(land_lookup, int32_t(primary.get("x", 0)), int32_t(primary.get("y", 0)), width, height);
 	}
 	mark_land_cells_from_array(land_lookup, record.get("body_tiles", Array()), width, height);
-	mark_land_cells_from_array(land_lookup, record.get("approach_tiles", Array()), width, height);
+	if (protect_approach_tiles) {
+		mark_land_cells_from_array(land_lookup, record.get("approach_tiles", Array()), width, height);
+	}
 	if (Variant(record.get("visit_tile", Variant())).get_type() == Variant::DICTIONARY) {
 		Dictionary visit = record.get("visit_tile", Dictionary());
 		mark_land_cell(land_lookup, int32_t(visit.get("x", 0)), int32_t(visit.get("y", 0)), width, height);
@@ -12832,8 +12834,12 @@ Dictionary protected_island_land_lookup(const Dictionary &normalized, const Dict
 	}
 
 	Array objects = object_placement.get("object_placements", Array());
+	const bool normal_water_mode = String(normalized.get("water_mode", "land")) == "normal_water";
 	for (int64_t index = 0; index < objects.size(); ++index) {
-		mark_land_record_surfaces(land_lookup, Dictionary(objects[index]), width, height);
+		Dictionary object = Dictionary(objects[index]);
+		const String kind = String(object.get("kind", ""));
+		const bool protect_approaches = !normal_water_mode || (kind != "decorative_obstacle" && kind != "scenic_object");
+		mark_land_record_surfaces(land_lookup, object, width, height, protect_approaches);
 	}
 	Array towns = town_guard_placement.get("town_records", Array());
 	for (int64_t index = 0; index < towns.size(); ++index) {
@@ -12914,15 +12920,15 @@ double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Di
 	}
 	const String role = String(zone.get("role", ""));
 	if (role.contains("start")) {
-		return 0.70;
+		return 0.60;
 	}
 	if (role == "junction") {
-		return 0.64;
+		return 0.55;
 	}
 	if (role == "treasure" || role == "neutral") {
-		return 0.56;
+		return 0.48;
 	}
-	return 0.60;
+	return 0.52;
 }
 
 int32_t count_lookup_cells_for_zone(const Dictionary &lookup, const Array &owner_grid, const String &zone_id) {

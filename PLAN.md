@@ -31,6 +31,39 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-normal-water-protected-land-diagnostic-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Expose why Medium normal-water still underproduces water versus the uploaded HoMM3 owner sample after first-class normal-water support.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- local owner evidence under `maps/h3m-maps/M-NormalW-4players.h3m`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Native normal-water terrain shaping records compact requested/protected/generated land-water shape metrics in focused validation output.
+- The focused Medium normal-water validation compares native water/object/road/town/guard counts against the owner sample enough to identify the next tuning blocker.
+- Normal-water land quota tuning and non-visit decorative approach relaxation are attempted, with evidence preserved if they are not the limiting factor.
+- No production parity overclaim is made while water/object density still differs from owner H3M.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No full object-placement-before-water refactor in this slice.
+- No exact normal-water owner-H3M parity claim.
+- No broad normal-water template sweep.
+validationResults:
+- Native GDExtension rebuilt successfully with `cmake --build .artifacts/map_persistence_native_build --parallel 2`.
+- `tests/native_random_map_auto_template_batch_report.tscn` passed; `medium_normal_water_seed_a` still validates and converts with 1,610 package water tiles, 499 package objects, 254 road cells, 8 towns, and 111 guards.
+- The focused shape summary reports `requested_land_count 3574`, `protected_land_cell_count 3574`, `generated_land_cell_count 3574`, and `generated_water_cell_count 1610`, proving protected land surfaces, not the normal-water quota target, are currently capping water generation below the owner sample's 2,083 water tiles.
+- `python3 tests/validate_repo.py` passed.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-normal-water-mode-support-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`
