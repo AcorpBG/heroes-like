@@ -717,6 +717,17 @@ func _native_comparison_for_sample(service: Variant, sample: Dictionary) -> Dict
 			"homm3_small",
 			ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
 		)
+	elif sample_id == "owner_discovered_s_2playerss_normalwater_2level":
+		config = ScenarioSelectRulesScript.build_random_map_player_config(
+			"owner-corpus-small-normal-water-underground-10184",
+			"",
+			"",
+			2,
+			"normal_water",
+			true,
+			"homm3_small",
+			ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
+		)
 	else:
 		return {"status": "not_compared", "reason": "no_native_case_mapping"}
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "owner_corpus_native_compare_%s" % sample_id})
