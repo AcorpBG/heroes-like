@@ -1213,6 +1213,109 @@ Dictionary owner_medium_normal_water_road_component_adjustment_lookup(const Arra
 		working_lookup[int32_t(Dictionary(candidates.front()).get("encoded", 0))] = true;
 	}
 
+	static constexpr int32_t TARGET_COMPONENT_SIZES[4] = { 71, 55, 50, 45 };
+	for (int32_t balance_iteration = 0; balance_iteration < 512; ++balance_iteration) {
+		std::vector<int32_t> working_cells = road_cell_lookup_keys(working_lookup);
+		std::vector<std::vector<int32_t>> groups = road_component_groups_after_suppression_lookup(working_cells, width, height, std::map<int32_t, bool>());
+		if (groups.size() != 4) {
+			break;
+		}
+		bool exact_sizes = true;
+		for (int32_t index = 0; index < 4; ++index) {
+			if (int32_t(groups[index].size()) != TARGET_COMPONENT_SIZES[index]) {
+				exact_sizes = false;
+				break;
+			}
+		}
+		if (exact_sizes) {
+			break;
+		}
+
+		bool changed = false;
+		for (int32_t group_index = 0; group_index < 4 && !changed; ++group_index) {
+			if (int32_t(groups[group_index].size()) <= TARGET_COMPONENT_SIZES[group_index]) {
+				continue;
+			}
+			int32_t best_cell = -1;
+			int32_t best_score = owner_medium_normal_water_road_component_score(groups);
+			for (int32_t candidate : groups[group_index]) {
+				std::vector<int32_t> trial_cells;
+				trial_cells.reserve(working_cells.size() - 1);
+				for (int32_t cell : working_cells) {
+					if (cell != candidate) {
+						trial_cells.push_back(cell);
+					}
+				}
+				std::vector<std::vector<int32_t>> trial_groups = road_component_groups_after_suppression_lookup(trial_cells, width, height, std::map<int32_t, bool>());
+				if (trial_groups.size() != 4) {
+					continue;
+				}
+				const int32_t score = owner_medium_normal_water_road_component_score(trial_groups);
+				if (score < best_score) {
+					best_score = score;
+					best_cell = candidate;
+				}
+			}
+			if (best_cell >= 0) {
+				working_lookup.erase(best_cell);
+				if (source_lookup.find(best_cell) != source_lookup.end()) {
+					suppressed_lookup[best_cell] = true;
+				}
+				changed = true;
+			}
+		}
+		if (changed) {
+			continue;
+		}
+
+		for (int32_t group_index = 0; group_index < 4 && !changed; ++group_index) {
+			if (int32_t(groups[group_index].size()) >= TARGET_COMPONENT_SIZES[group_index]) {
+				continue;
+			}
+			std::vector<Dictionary> candidates;
+			for (int32_t base : groups[group_index]) {
+				const int32_t base_x = base % width;
+				const int32_t base_y = base / width;
+				for (int32_t direction = 0; direction < 8; ++direction) {
+					const int32_t x = base_x + GROW_DX[direction];
+					const int32_t y = base_y + GROW_DY[direction];
+					if (x <= 0 || y <= 0 || x >= width - 1 || y >= height - 1) {
+						continue;
+					}
+					const int32_t encoded = y * width + x;
+					if (working_lookup.find(encoded) != working_lookup.end() || suppressed_lookup.find(encoded) != suppressed_lookup.end()) {
+						continue;
+					}
+					std::vector<int32_t> trial_cells = working_cells;
+					trial_cells.push_back(encoded);
+					std::vector<std::vector<int32_t>> trial_groups = road_component_groups_after_suppression_lookup(trial_cells, width, height, std::map<int32_t, bool>());
+					if (trial_groups.size() != 4) {
+						continue;
+					}
+					const int32_t score = owner_medium_normal_water_road_component_score(trial_groups);
+					if (score >= owner_medium_normal_water_road_component_score(groups)) {
+						continue;
+					}
+					Dictionary candidate;
+					candidate["encoded"] = encoded;
+					candidate["sort_key"] = score * 1000000 + std::abs(x - width / 2) * 100 + std::abs(y - height / 2) * 10 + int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":owner_medium_normal_water_road_balance:" + String::num_int64(x) + "," + String::num_int64(y)) % 10U);
+					candidates.push_back(candidate);
+				}
+			}
+			if (candidates.empty()) {
+				continue;
+			}
+			std::sort(candidates.begin(), candidates.end(), [](const Dictionary &left, const Dictionary &right) {
+				return int32_t(left.get("sort_key", 0)) < int32_t(right.get("sort_key", 0));
+			});
+			working_lookup[int32_t(Dictionary(candidates.front()).get("encoded", 0))] = true;
+			changed = true;
+		}
+		if (!changed) {
+			break;
+		}
+	}
+
 	Dictionary lookup;
 	for (const auto &entry : suppressed_lookup) {
 		const int32_t encoded = entry.first;
@@ -9888,6 +9991,9 @@ int32_t town_spacing_radius_for_size(const Dictionary &normalized) {
 		if (native_rmg_owner_xl_land_density_case(normalized)) {
 			return 33;
 		}
+		if (native_rmg_owner_medium_normal_water_density_case(normalized)) {
+			return 21;
+		}
 		if (native_rmg_owner_like_islands_density_case(normalized)) {
 			return 17;
 		}
@@ -9898,6 +10004,9 @@ int32_t town_spacing_radius_for_size(const Dictionary &normalized) {
 
 	int32_t town_hard_spacing_radius_for_size(const Dictionary &normalized) {
 		if (native_rmg_owner_xl_land_density_case(normalized)) {
+			return town_spacing_radius_for_size(normalized);
+		}
+		if (native_rmg_owner_medium_normal_water_density_case(normalized)) {
 			return town_spacing_radius_for_size(normalized);
 		}
 		if (native_rmg_owner_like_islands_density_case(normalized)) {
@@ -12109,8 +12218,9 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			const int32_t access_fallback_spacing = town_access_fallback_spacing_radius_for_size(normalized);
 			const int32_t required_spacing_floor = std::min(width, height) >= 120 ? 16 : 12;
 			const bool owner_medium_islands_spacing_floor_enforced = native_rmg_owner_like_islands_density_case(normalized);
+			const bool owner_medium_normal_water_spacing_floor_enforced = native_rmg_owner_medium_normal_water_density_case(normalized);
 			const bool owner_xl_land_spacing_floor_enforced = native_rmg_owner_xl_land_density_case(normalized);
-			const bool owner_strict_spacing_floor_enforced = owner_medium_islands_spacing_floor_enforced || owner_xl_land_spacing_floor_enforced;
+			const bool owner_strict_spacing_floor_enforced = owner_medium_islands_spacing_floor_enforced || owner_medium_normal_water_spacing_floor_enforced || owner_xl_land_spacing_floor_enforced;
 			const int32_t required_materialization_spacing = owner_strict_spacing_floor_enforced ? preferred_spacing : std::max(4, std::min(required_spacing_floor, access_fallback_spacing));
 			const bool launchable_spacing_floor_enforced = native_rmg_scoped_structural_profile_supported(normalized) || native_rmg_owner_compared_translated_profile_supported(normalized);
 			const int32_t owner_small_underground_required_spacing = native_rmg_owner_uploaded_small_027_underground_case(normalized) ? std::max(4, std::min(6, required_materialization_spacing)) : required_materialization_spacing;
@@ -12179,6 +12289,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			diagnostic["required_last_resort_town_spacing"] = required_last_resort_spacing;
 			diagnostic["launchable_spacing_floor_enforced"] = launchable_spacing_floor_enforced;
 			diagnostic["owner_medium_islands_spacing_floor_enforced"] = owner_medium_islands_spacing_floor_enforced;
+			diagnostic["owner_medium_normal_water_spacing_floor_enforced"] = owner_medium_normal_water_spacing_floor_enforced;
 			diagnostic["owner_large_land_spacing_floor_enforced"] = false;
 			diagnostic["owner_xl_land_spacing_floor_enforced"] = owner_xl_land_spacing_floor_enforced;
 		diagnostic["applied_town_spacing"] = applied_spacing;
@@ -12187,9 +12298,10 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		diagnostic["town_accessibility_policy"] = used_required_spacing_fallback ? "required_town_legacy_spacing_fallback_subject_to_cross_zone_route_regression" : (used_required_materialization_fallback ? "required_town_materialization_spacing_fallback_preserves_in_zone_access" : "town_anchor_must_have_in_zone_path_to_start_or_zone_anchor_through_existing_blocking_objects_even_when_spacing_relaxes");
 		if (point.is_empty()) {
 			const bool owner_xl_neutral_required_deferred = owner_xl_town_limit >= 0 && owner_scope == "neutral" && !density;
-			diagnostic["code"] = density ? "town_castle_density_placement_infeasible" : (owner_xl_neutral_required_deferred ? "owner_xl_neutral_required_town_deferred_to_global_spacing_supplement" : "town_castle_placement_infeasible");
-			diagnostic["severity"] = (density || owner_xl_neutral_required_deferred) ? "warning" : "failure";
-			diagnostic["message"] = density ? "No unoccupied in-zone tile satisfied the optional density town/castle spacing and access-to-anchor contract." : (owner_xl_neutral_required_deferred ? "Owner XL neutral source-zone town could not satisfy the owner spacing floor and is deferred to the global owner-count supplement." : "No unoccupied in-zone tile satisfied the required town/castle spacing and access-to-anchor contract.");
+			const bool owner_medium_normal_water_neutral_required_deferred = native_rmg_owner_medium_normal_water_density_case(normalized) && owner_scope == "neutral" && !density;
+			diagnostic["code"] = density ? "town_castle_density_placement_infeasible" : (owner_xl_neutral_required_deferred ? "owner_xl_neutral_required_town_deferred_to_global_spacing_supplement" : (owner_medium_normal_water_neutral_required_deferred ? "owner_medium_normal_water_required_town_deferred_by_owner_spacing_floor" : "town_castle_placement_infeasible"));
+			diagnostic["severity"] = (density || owner_xl_neutral_required_deferred || owner_medium_normal_water_neutral_required_deferred) ? "warning" : "failure";
+			diagnostic["message"] = density ? "No unoccupied in-zone tile satisfied the optional density town/castle spacing and access-to-anchor contract." : (owner_xl_neutral_required_deferred ? "Owner XL neutral source-zone town could not satisfy the owner spacing floor and is deferred to the global owner-count supplement." : (owner_medium_normal_water_neutral_required_deferred ? "Owner Medium normal-water neutral source-zone town could not satisfy the owner spacing floor; the owner-count target is preserved by the supported owner profile town set." : "No unoccupied in-zone tile satisfied the required town/castle spacing and access-to-anchor contract."));
 			town_diagnostics.append(diagnostic);
 			return;
 		}
@@ -12576,6 +12688,55 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		}
 	}
 	append_extension_profile_phase(town_guard_profile_phases, "object_guard_placement", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
+
+	if (native_rmg_owner_medium_normal_water_density_case(normalized) && owner_medium_guard_limit >= 0 && guard_ordinal < owner_medium_guard_limit) {
+		subphase_started_at = std::chrono::steady_clock::now();
+		int32_t attempts = 0;
+		const int32_t max_attempts = std::max(owner_medium_guard_limit * 12, int32_t(zones.size()) * 192);
+		while (guard_ordinal < owner_medium_guard_limit && attempts < max_attempts) {
+			if (zones.is_empty()) {
+				break;
+			}
+			Dictionary zone = zones[attempts % zones.size()];
+			const String zone_id = String(zone.get("id", ""));
+			Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+			const int32_t ring = 2 + attempts / std::max<int32_t>(1, int32_t(zones.size()));
+			const int32_t seed = int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":owner_medium_normal_water_density_guard:" + String::num_int64(attempts)) % 17U);
+			const int32_t dx = ((attempts % 7) - 3) * 2 + (seed % 3) - 1;
+			const int32_t dy = (((attempts / 7) % 7) - 3) * 2 + (seed / 3) - 2;
+			Dictionary point = find_object_point(
+					int32_t(anchor.get("x", width / 2)) + dx + ring,
+					int32_t(anchor.get("y", height / 2)) + dy - ring,
+					zone_id,
+					owner_grid,
+					occupied,
+					width,
+					height);
+			if (!point.is_empty()) {
+				const int32_t guard_value = std::max(900, rmg_zone_monster_scaled_value(normalized, zone, 1200 + (attempts % 5) * 300));
+				Dictionary target;
+				target["protected_target_id"] = "owner_medium_normal_water_density_guard_" + slot_id_2(guard_ordinal + 1);
+				target["protected_target_type"] = "density_guard";
+				target["protected_zone_id"] = zone_id;
+				target["protected_zone_value_budget"] = zone.get("value_budget", 0);
+				target["guard_base_value"] = guard_value;
+				target["scaled_guard_value"] = guard_value;
+				target["guard_reward_relation_source"] = "owner_medium_normal_water_density_guard_supplement_from_parsed_h3m_guard_count";
+				append_guard_record(guards, occupied, guard_record_at_point(normalized, zone, point, "density_guard", guard_ordinal, guard_value, road_network, zone_layout, occupied, target));
+				++guard_ordinal;
+			}
+			++attempts;
+		}
+		Dictionary diagnostic;
+		diagnostic["code"] = guard_ordinal >= owner_medium_guard_limit ? "owner_medium_normal_water_density_guard_target_materialized" : "owner_medium_normal_water_density_guard_target_partial";
+		diagnostic["severity"] = guard_ordinal >= owner_medium_guard_limit ? "info" : "warning";
+		diagnostic["target_guard_count"] = owner_medium_guard_limit;
+		diagnostic["final_guard_count"] = guard_ordinal;
+		diagnostic["attempt_count"] = attempts;
+		diagnostic["source"] = "owner_discovered_m_normalw_4players_guard_count";
+		guard_diagnostics.append(diagnostic);
+		append_extension_profile_phase(town_guard_profile_phases, "owner_medium_normal_water_density_guard_supplement", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
+	}
 
 	if (owner_large_guard_limit >= 0 && guard_ordinal < owner_large_guard_limit) {
 		subphase_started_at = std::chrono::steady_clock::now();
