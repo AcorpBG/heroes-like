@@ -69,9 +69,11 @@ validationResults:
 - `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` emitted schema `native_random_map_homm3_owner_corpus_coverage_report_v6`; the raw gate remains `8/9` mapped pass, while `generalized_policy_failure_summary` groups the active Small islands failure into `guard_policy`, `town_policy`, `decoration_blocker_policy`, `object_density_policy`, and `object_reward_policy`.
 - `MapPackageService.generate_random_map` now emits `runtime_policy_classification` in generated output, validation reports, provenance, and map metadata, making generalized policy keys and active owner-runtime override debt visible.
 - `tests/native_random_map_auto_template_batch_report.tscn` passed with schema `native_random_map_auto_template_batch_report_v2`, representative generated cases carrying runtime policy classification, and `seed_specific_runtime_override_case_count: 0` for normal generated seeds.
-- The generated-map setup now exposes an explicit level picker with surface-only and surface-plus-underground options instead of a vague checkbox, and water-mode changes no longer hide the underground option for islands.
+- The generated-map setup now exposes an explicit level picker with `Surface Only (1 Level)` and `Surface + Underground (2 Levels)` options instead of a vague checkbox, and water-mode changes no longer hide the underground option for islands.
 - Native terrain policy no longer injects underground terrain into one-level scoped islands surface maps; the terrain-grid report also covers a scoped two-level request to prove the underground layer is materialized only when requested.
 - The Small normal-water two-level owner-corpus package path now preserves player start towns on their generated start anchors during owner spacing reflow, keeping player starts and owned towns colocated while still materializing a two-level map.
+- `tests/random_map_player_setup_retry_ux_report.tscn` passed after the explicit label correction and reported level options `Surface Only (1 Level)` and `Surface + Underground (2 Levels)`.
+- `tests/native_random_map_owner_normal_water_underground_package_report.tscn` passed with `map_level_count: 2`; `tests/native_random_map_terrain_grid_report.tscn`, `tests/validate_repo.py`, `git diff --check`, and `jq empty ops/progress.json` also passed.
 
 Completed owner-requested editor inspection hotfix:
 

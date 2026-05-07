@@ -168,6 +168,11 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 	if int(controls.get("player_count", 0)) != 3 or String(controls.get("water_mode", "")) != "land" or bool(controls.get("underground", true)) or int(controls.get("level_count", 0)) != 1:
 		_fail("Generated player/water/underground controls did not persist in snapshot: %s" % JSON.stringify(controls))
 		return false
+	var level_options: Array = controls.get("level_options", []) if controls.get("level_options", []) is Array else []
+	for level_label in ["Surface Only (1 Level)", "Surface + Underground (2 Levels)"]:
+		if level_label not in level_options:
+			_fail("Generated level option list did not expose %s: %s" % [level_label, JSON.stringify(level_options)])
+			return false
 	var visible_controls: Array = controls.get("visible_player_controls", []) if controls.get("visible_player_controls", []) is Array else []
 	for expected_control in ["seed", "size_class", "player_count", "water_mode", "launch_generated"]:
 		if expected_control not in visible_controls:
@@ -215,6 +220,10 @@ func _assert_underground_player_surface(snapshot: Dictionary) -> bool:
 	var controls: Dictionary = snapshot.get("controls", {}) if snapshot.get("controls", {}) is Dictionary else {}
 	if not bool(controls.get("underground", false)) or int(controls.get("level_count", 0)) != 2:
 		_fail("Generated underground toggle did not produce a two-level setup snapshot: %s" % JSON.stringify(controls))
+		return false
+	var level_options: Array = controls.get("level_options", []) if controls.get("level_options", []) is Array else []
+	if "Surface + Underground (2 Levels)" not in level_options:
+		_fail("Generated two-level setup did not expose the two-level underground label: %s" % JSON.stringify(level_options))
 		return false
 	var visible_controls: Array = controls.get("visible_player_controls", []) if controls.get("visible_player_controls", []) is Array else []
 	if "underground" not in visible_controls:
