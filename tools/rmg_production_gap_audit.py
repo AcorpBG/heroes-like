@@ -39,7 +39,7 @@ def validation_args(args: argparse.Namespace) -> argparse.Namespace:
         guard_closure_min_owner_open_pair_count=args.guard_closure_min_owner_open_pair_count,
         latest_amap_artifact=not args.no_latest_amap_artifact,
         artifact_root=args.artifact_root,
-        require_all_owner_matches=True,
+        require_all_owner_matches=not args.allow_partial_native_batch,
     )
 
 
@@ -319,6 +319,7 @@ def main() -> int:
     parser.add_argument("--road-component-count-floor-ratio", type=float, default=rmg_fast_validation.DEFAULT_ROAD_COMPONENT_COUNT_FLOOR_RATIO)
     parser.add_argument("--guard-closure-min-owner-open-pair-count", type=int, default=rmg_fast_validation.DEFAULT_GUARD_CLOSURE_MIN_OWNER_OPEN_PAIR_COUNT)
     parser.add_argument("--severe-category-gap-ratio", type=float, default=0.20)
+    parser.add_argument("--allow-partial-native-batch", action="store_true", help="Audit a targeted native AMAP batch without failing the fast gate for missing unrelated owner cases")
     parser.add_argument("--report-json", type=Path, default=DEFAULT_REPORT_JSON)
     parser.add_argument("--summary", action="store_true")
     parser.add_argument("--gap-limit", type=int, default=8)
