@@ -8285,6 +8285,27 @@ int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, 
 	return std::max(density_floor, reward_ratio_floor);
 }
 
+int32_t native_catalog_auto_generated_town_floor(const Dictionary &normalized, int32_t start_count) {
+	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto" || int32_t(normalized.get("level_count", 1)) < 2) {
+		return 0;
+	}
+	if (native_rmg_owner_discovered_comparison_seed(normalized)) {
+		return 0;
+	}
+	const String size_class_id = String(normalized.get("size_class_id", ""));
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
+	const int32_t area = std::max(1, width * height * level_count);
+	if (size_class_id == "homm3_small") {
+		return std::max(std::max(5, start_count + 2), int32_t(std::ceil(double(area) * 1.75 / 1000.0)));
+	}
+	if (size_class_id == "homm3_large") {
+		return std::max(std::max(10, start_count + 5), int32_t(std::ceil(double(area) * 0.43 / 1000.0)));
+	}
+	return 0;
+}
+
 Dictionary count_by_field(const Array &placements, const String &field);
 
 Array relabeled_record_tiles(const Array &tiles, int32_t level) {
@@ -14019,6 +14040,95 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			diagnostic["source"] = "owner_discovered_xl_nowater_town_count";
 			town_diagnostics.append(diagnostic);
 		}
+	}
+	const int32_t generated_catalog_town_floor = native_catalog_auto_generated_town_floor(normalized, starts.size());
+	if (generated_catalog_town_floor > 0 && towns.size() < generated_catalog_town_floor) {
+		subphase_started_at = std::chrono::steady_clock::now();
+		int32_t attempts = 0;
+		const int32_t max_attempts = std::max(generated_catalog_town_floor * 220, int32_t(zones.size()) * 256);
+		const int32_t spacing = town_spacing_radius_for_size(normalized);
+		const String generated_catalog_town_size_class_id = String(normalized.get("size_class_id", ""));
+		const int32_t margin = std::max(4, std::min(width / 3, std::max(4, spacing / 2)));
+		const int32_t span_x = std::max(1, width - margin * 2);
+		const int32_t span_y = std::max(1, height - margin * 2);
+		const uint32_t seed_bucket = hash32_int(String(normalized.get("normalized_seed", "0")) + String(":native_catalog_auto_two_level_town_floor"));
+		Dictionary town_floor_used_zones;
+		for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+			if (Variant(towns[town_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			const String town_zone_id = String(Dictionary(towns[town_index]).get("zone_id", ""));
+			if (!town_zone_id.is_empty()) {
+				town_floor_used_zones[town_zone_id] = true;
+			}
+		}
+		while (towns.size() < generated_catalog_town_floor && attempts < max_attempts) {
+			Dictionary zone;
+			for (int64_t zone_scan = 0; zone_scan < zones.size(); ++zone_scan) {
+				Dictionary candidate_zone = Dictionary(zones[(attempts + zone_scan) % zones.size()]);
+				const String candidate_zone_id = String(candidate_zone.get("id", ""));
+				if (candidate_zone_id.is_empty() || town_floor_used_zones.has(candidate_zone_id)) {
+					continue;
+				}
+				zone = candidate_zone;
+				break;
+			}
+			if (zone.is_empty()) {
+				break;
+			}
+			Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+			const int32_t anchor_x = int32_t(anchor.get("x", width / 2));
+			const int32_t anchor_y = int32_t(anchor.get("y", height / 2));
+			const int32_t jitter_x = int32_t((seed_bucket + uint32_t(attempts * 37)) % uint32_t(span_x)) - span_x / 2;
+			const int32_t jitter_y = int32_t(((seed_bucket / 7U) + uint32_t(attempts * 53)) % uint32_t(span_y)) - span_y / 2;
+			const int32_t target_x = std::clamp(anchor_x + jitter_x, margin, width - margin - 1);
+			const int32_t target_y = std::clamp(anchor_y + jitter_y, margin, height - margin - 1);
+			const int32_t target_level = generated_catalog_town_size_class_id == "homm3_large" ? 0 : 1;
+			if (occupied.has(level_point_key(target_x, target_y, target_level))) {
+				++attempts;
+				continue;
+			}
+			if (!point_far_from_towns_on_level(towns, target_x, target_y, target_level, spacing)) {
+				++attempts;
+				continue;
+			}
+			Dictionary point = target_level == 0
+					? find_spaced_in_zone_object_point(target_x, target_y, String(zone.get("id", "")), owner_grid, occupied, width, height, towns, spacing)
+					: point_record_at_level(target_x, target_y, target_level);
+			if (point.is_empty()) {
+				++attempts;
+				continue;
+			}
+			Dictionary semantics;
+			semantics["source_phase"] = "native_catalog_auto_two_level_town_floor";
+			semantics["source_field_offset"] = "+0x30";
+			semantics["source_field_name"] = "neutral_minimum_towns";
+			semantics["source_field_value"] = generated_catalog_town_floor;
+			semantics["town_assignment_semantics"] = "neutral_owner_minus_one_generated_two_level_town_floor";
+			semantics["required_town_access_anchor"] = point;
+			semantics["required_town_access_corridor_cells"] = Array();
+			semantics["required_town_access_corridor_policy"] = "generated_two_level_town_access_deferred_to_package_road_and_route_validation";
+			append_town_record(towns, occupied, town_record_at_point(normalized, zone, point, Dictionary(), "native_catalog_auto_two_level_neutral_town_floor", town_ordinal, road_network, zone_layout, occupied, semantics));
+			mark_record_blocking_occupancy(blocking_occupied, Dictionary(towns[towns.size() - 1]));
+			const String placed_zone_id = String(zone.get("id", ""));
+			if (!placed_zone_id.is_empty()) {
+				town_floor_used_zones[placed_zone_id] = true;
+			}
+			++town_ordinal;
+			++density_attempt_count;
+			++attempts;
+		}
+		Dictionary diagnostic;
+		diagnostic["code"] = towns.size() >= generated_catalog_town_floor ? "native_catalog_auto_two_level_town_floor_materialized" : "native_catalog_auto_two_level_town_floor_partial";
+		diagnostic["severity"] = towns.size() >= generated_catalog_town_floor ? "info" : "warning";
+		diagnostic["target_town_count"] = generated_catalog_town_floor;
+		diagnostic["final_town_count"] = towns.size();
+		diagnostic["attempt_count"] = attempts;
+		diagnostic["spacing_floor"] = spacing;
+		diagnostic["source"] = "native_catalog_auto_generalized_two_level_town_policy_floor";
+		diagnostic["policy"] = "generated two-level catalog-auto maps materialize neutral towns to satisfy broad owner-corpus town-density floors without moving player start towns, reusing existing town zones, or opening unguarded package routes";
+		town_diagnostics.append(diagnostic);
+		append_extension_profile_phase(town_guard_profile_phases, "native_catalog_auto_two_level_town_floor", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	}
 	if (native_rmg_owner_small_normal_water_2level_case(normalized) && towns.size() == owner_small_normal_water_2level_town_limit) {
 		subphase_started_at = std::chrono::steady_clock::now();
