@@ -8372,6 +8372,52 @@ int32_t append_decoration_placements(Array &placements, Dictionary &occupied, Na
 	return ordinal;
 }
 
+String object_placement_record_signature(
+		const String &placement_id,
+		const String &kind,
+		const String &family_id,
+		const String &object_id,
+		const String &zone_id,
+		const String &terrain_id,
+		int32_t x,
+		int32_t y,
+		int32_t level,
+		const Dictionary &footprint,
+		const Array &occupancy_keys) {
+	String source = placement_id
+			+ String("|") + kind
+			+ String("|") + family_id
+			+ String("|") + object_id
+			+ String("|") + zone_id
+			+ String("|") + terrain_id
+			+ String("|") + String::num_int64(x)
+			+ String(",") + String::num_int64(y)
+			+ String(",") + String::num_int64(level)
+			+ String("|") + String::num_int64(int64_t(footprint.get("width", 1)))
+			+ String("x") + String::num_int64(int64_t(footprint.get("height", 1)));
+	for (int64_t key_index = 0; key_index < occupancy_keys.size(); ++key_index) {
+		source += String("|") + String(occupancy_keys[key_index]);
+	}
+	return hash32_hex(source);
+}
+
+String object_placement_record_signature_from_record(const Dictionary &placement) {
+	Dictionary footprint = placement.get("footprint", placement.get("runtime_footprint", Dictionary()));
+	Array occupancy_keys = placement.get("occupancy_keys", Array());
+	return object_placement_record_signature(
+			String(placement.get("placement_id", "")),
+			String(placement.get("kind", "")),
+			String(placement.get("family_id", "")),
+			String(placement.get("object_id", "")),
+			String(placement.get("zone_id", "")),
+			String(placement.get("terrain_id", "")),
+			int32_t(placement.get("x", 0)),
+			int32_t(placement.get("y", 0)),
+			int32_t(placement.get("level", 0)),
+			footprint,
+			occupancy_keys);
+}
+
 int32_t native_catalog_auto_generated_object_floor(const Dictionary &normalized) {
 	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto") {
 		return 0;
@@ -8998,7 +9044,18 @@ void append_object_placement(Array &placements, Dictionary &occupied, const Dict
 			placement[key] = family[key];
 		}
 	}
-	placement["signature"] = hash32_hex(canonical_variant(placement));
+	placement["signature"] = object_placement_record_signature(
+			placement_id,
+			kind,
+			String(placement.get("family_id", "")),
+			String(placement.get("object_id", "")),
+			zone_id,
+			terrain_id,
+			x,
+			y,
+			level,
+			footprint,
+			occupancy_keys);
 
 	placements.append(placement);
 	for (int64_t key_index = 0; key_index < occupancy_keys.size(); ++key_index) {
@@ -12829,21 +12886,26 @@ Dictionary cover_town_boundary_openings_with_route_guards(Array &guards, const A
 Dictionary occupancy_index_for_buckets(const Array &objects, const Array &towns, const Array &guards) {
 	Dictionary primary_tile_occupancy;
 	Array duplicates;
-	auto add_record = [&primary_tile_occupancy, &duplicates](const Dictionary &record, const String &bucket) {
+	String signature_source = "native_rmg_combined_primary_occupancy_v1";
+	auto add_record = [&primary_tile_occupancy, &duplicates, &signature_source](const Dictionary &record, const String &bucket) {
 		const String key = String(record.get("primary_occupancy_key", ""));
 		if (key.is_empty()) {
 			return;
 		}
+		const String placement_id = String(record.get("placement_id", record.get("guard_id", "")));
+		const String kind = String(record.get("kind", bucket));
+		signature_source += String("|") + bucket + String(":") + key + String(":") + placement_id + String(":") + kind;
 		Dictionary entry;
 		entry["bucket"] = bucket;
-		entry["placement_id"] = record.get("placement_id", record.get("guard_id", ""));
-		entry["kind"] = record.get("kind", bucket);
+		entry["placement_id"] = placement_id;
+		entry["kind"] = kind;
 		if (primary_tile_occupancy.has(key)) {
 			Dictionary duplicate;
 			duplicate["primary_occupancy_key"] = key;
 			duplicate["existing"] = primary_tile_occupancy.get(key, Dictionary());
 			duplicate["duplicate"] = entry;
 			duplicates.append(duplicate);
+			signature_source += String(":duplicate");
 		} else {
 			primary_tile_occupancy[key] = entry;
 		}
@@ -12866,7 +12928,12 @@ Dictionary occupancy_index_for_buckets(const Array &objects, const Array &towns,
 	occupancy["town_count"] = towns.size();
 	occupancy["guard_count"] = guards.size();
 	occupancy["status"] = duplicates.is_empty() ? "pass" : "duplicate_primary_tiles";
-	occupancy["signature"] = hash32_hex(canonical_variant(occupancy));
+	signature_source += String("|objects=") + String::num_int64(objects.size())
+			+ String("|towns=") + String::num_int64(towns.size())
+			+ String("|guards=") + String::num_int64(guards.size())
+			+ String("|occupied=") + String::num_int64(primary_tile_occupancy.size())
+			+ String("|duplicates=") + String::num_int64(duplicates.size());
+	occupancy["signature"] = hash32_hex(signature_source);
 	return occupancy;
 }
 
@@ -13279,7 +13346,10 @@ Dictionary town_access_corridor_lookup(const Array &towns) {
 				continue;
 			}
 			Dictionary cell = Dictionary(cells[cell_index]);
-			lookup[point_key(int32_t(cell.get("x", 0)), int32_t(cell.get("y", 0)))] = true;
+			lookup[level_point_key(
+					int32_t(cell.get("x", 0)),
+					int32_t(cell.get("y", 0)),
+					int32_t(cell.get("level", town.get("level", 0))))] = true;
 		}
 	}
 	return lookup;
@@ -13306,7 +13376,10 @@ Dictionary clear_required_town_access_gap_objects(Dictionary &object_placement, 
 				continue;
 			}
 			Dictionary body = Dictionary(body_tiles[body_index]);
-			if (corridor_lookup.has(point_key(int32_t(body.get("x", 0)), int32_t(body.get("y", 0))))) {
+			if (corridor_lookup.has(level_point_key(
+						int32_t(body.get("x", 0)),
+						int32_t(body.get("y", 0)),
+						int32_t(body.get("level", placement.get("level", 0)))))) {
 				intersects_corridor = true;
 				++cleared_body_tile_count;
 			}
@@ -13323,11 +13396,10 @@ Dictionary clear_required_town_access_gap_objects(Dictionary &object_placement, 
 		placement["blocking_body"] = false;
 		placement["town_access_corridor_gap"] = true;
 		placement["access_corridor_policy"] = "decorative_or_scenic_body_overlaps_required_town_access_corridor_and_is_rendered_nonblocking";
-		placement["signature"] = hash32_hex(canonical_variant(placement));
+		placement["signature"] = object_placement_record_signature_from_record(placement);
 		placements[index] = placement;
 		cleared_ids.append(placement.get("placement_id", ""));
 	}
-	object_placement["object_placements"] = placements;
 	Dictionary summary;
 	summary["schema_id"] = "native_rmg_required_town_access_corridor_clearance_v1";
 	summary["corridor_cell_count"] = corridor_lookup.size();
@@ -13337,6 +13409,10 @@ Dictionary clear_required_town_access_gap_objects(Dictionary &object_placement, 
 	summary["policy"] = "required towns reserve an in-zone path to their road/start access anchor; overlapping decorative/scenic blockers become nonblocking without weakening guards, towns, rewards, mines, or gates";
 	summary["signature"] = hash32_hex(canonical_variant(summary));
 	object_placement["required_town_access_corridor_clearance"] = summary;
+	if (cleared_ids.is_empty()) {
+		return summary;
+	}
+	object_placement["object_placements"] = placements;
 	Dictionary signature_source;
 	signature_source["pre_corridor_object_signature"] = object_placement.get("signature", "");
 	signature_source["object_placements"] = placements;
@@ -13376,7 +13452,6 @@ Dictionary clear_connection_guard_choke_objects(Dictionary &object_placement, co
 		}
 		displaced_ids.append(placement.get("placement_id", ""));
 	}
-	object_placement["object_placements"] = filtered_placements;
 	Dictionary summary;
 	summary["schema_id"] = "native_rmg_connection_guard_choke_clearance_v1";
 	summary["route_guard_choke_count"] = route_guard_primary_keys.size();
@@ -13385,6 +13460,10 @@ Dictionary clear_connection_guard_choke_objects(Dictionary &object_placement, co
 	summary["policy"] = "normal connection guards own route choke primary tiles; decorative and scenic fillers on those tiles are removed from generated placements";
 	summary["signature"] = hash32_hex(canonical_variant(summary));
 	object_placement["connection_guard_choke_clearance"] = summary;
+	if (displaced_ids.is_empty()) {
+		return summary;
+	}
+	object_placement["object_placements"] = filtered_placements;
 	Dictionary signature_source;
 	signature_source["pre_connection_guard_choke_object_signature"] = object_placement.get("signature", "");
 	signature_source["object_placements"] = filtered_placements;
@@ -15032,10 +15111,12 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	Dictionary town_boundary_opening_guard_cover = cover_town_boundary_openings_with_route_guards(guards, towns, owner_grid, width, height, !native_rmg_owner_uploaded_small_049_case(normalized));
 	append_extension_profile_phase(town_guard_profile_phases, "town_boundary_opening_guard_cover", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	Dictionary town_access_corridor_clearance = clear_required_town_access_gap_objects(object_placement, towns);
+	append_extension_profile_phase(town_guard_profile_phases, "town_access_corridor_clearance", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	Dictionary connection_guard_choke_clearance = clear_connection_guard_choke_objects(object_placement, guards);
+	append_extension_profile_phase(town_guard_profile_phases, "connection_guard_choke_clearance", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	objects = object_placement.get("object_placements", Array());
 	Dictionary combined_occupancy = occupancy_index_for_buckets(objects, towns, guards);
-	append_extension_profile_phase(town_guard_profile_phases, "clearance_and_occupancy", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
+	append_extension_profile_phase(town_guard_profile_phases, "combined_occupancy_index", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	Dictionary town_guard_runtime_phase_profile = build_extension_profile(town_guard_profile_phases, town_guard_started_at, width, height, 1, int32_t(objects.size()), int32_t(Dictionary(road_network.get("route_graph", Dictionary())).get("edge_count", 0)), int32_t(towns.size()), int32_t(guards.size()), top_town_guard_phase_id, top_town_guard_phase_usec);
 
 	Dictionary town_payload;

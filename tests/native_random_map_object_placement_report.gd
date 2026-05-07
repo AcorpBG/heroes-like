@@ -164,8 +164,20 @@ func _assert_object_shape(generated: Dictionary, expected_width: int, expected_h
 		return
 
 	var map_document: Variant = generated.get("map_document")
-	if map_document == null or map_document.get_object_count() != placements.size():
-		_fail("MapDocument object count did not match placement payload.")
+	if map_document == null:
+		_fail("Generated output missed MapDocument.")
+		return
+	var map_document_object_count := int(map_document.get_object_count())
+	if map_document_object_count < placements.size():
+		_fail("MapDocument object count was smaller than placement payload.")
+		return
+	var map_document_placement_count := 0
+	for object_index in range(map_document_object_count):
+		var object_record: Dictionary = map_document.get_object_by_index(object_index)
+		if String(object_record.get("native_record_kind", "")) == "object_placement":
+			map_document_placement_count += 1
+	if map_document_placement_count != placements.size():
+		_fail("MapDocument object-placement count did not match placement payload.")
 		return
 	var sample: Dictionary = map_document.get_object_by_index(0)
 	if sample.is_empty() or String(map_document.get_object_by_placement_id(String(sample.get("placement_id", ""))).get("placement_id", "")) != String(sample.get("placement_id", "")):
