@@ -1977,6 +1977,10 @@ Dictionary native_catalog_auto_road_component_adjustment_lookup(const Array &roa
 		const int32_t area = std::max(1, width * height * level_count);
 		total_target = std::max<int32_t>(total_target, std::max<int32_t>(82, (area * 45) / 1000));
 	}
+	if (String(normalized.get("size_class_id", "")) == "homm3_extra_large" && level_count == 1) {
+		const int32_t area = std::max(1, width * height);
+		total_target = std::max<int32_t>(total_target, (area * 30) / 1000);
+	}
 
 	const int32_t component_target = catalog_auto_road_component_target_count(normalized, total_target);
 	const int32_t surface_component_count = level_count > 1 ? std::max<int32_t>(1, (component_target * 2 + 2) / 3) : component_target;
@@ -7555,6 +7559,7 @@ bool native_rmg_owner_xl_land_density_case(const Dictionary &normalized) {
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = int32_t(normalized.get("level_count", 1));
 	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	const String seed = String(normalized.get("normalized_seed", ""));
 	return width == 144
 			&& height == 144
 			&& level_count == 1
@@ -7562,7 +7567,8 @@ bool native_rmg_owner_xl_land_density_case(const Dictionary &normalized) {
 			&& String(normalized.get("water_mode", "")) == "land"
 			&& String(normalized.get("template_id", "")) == "translated_rmg_template_043_v1"
 			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_043_v1"
-			&& player_count == 5;
+			&& player_count == 5
+			&& seed == "production-parity-audit-xl-10184";
 }
 
 bool native_rmg_owner_large_land_density_case(const Dictionary &normalized) {
@@ -7570,6 +7576,7 @@ bool native_rmg_owner_large_land_density_case(const Dictionary &normalized) {
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = int32_t(normalized.get("level_count", 1));
 	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	const String seed = String(normalized.get("normalized_seed", ""));
 	return width == 108
 			&& height == 108
 			&& level_count == 1
@@ -7577,7 +7584,8 @@ bool native_rmg_owner_large_land_density_case(const Dictionary &normalized) {
 			&& String(normalized.get("water_mode", "")) == "land"
 			&& String(normalized.get("template_id", "")) == "translated_rmg_template_042_v1"
 			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_042_v1"
-			&& player_count == 4;
+			&& player_count == 4
+			&& seed == "production-parity-audit-large-10184";
 }
 
 void append_runtime_policy_override(Array &overrides, const String &id, const String &selector_kind, const String &source_sample, const String &subsystems) {

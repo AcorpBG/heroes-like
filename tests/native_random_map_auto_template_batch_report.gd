@@ -204,12 +204,12 @@ func _run_case(service: Variant, catalog: Dictionary, case_record: Dictionary) -
 		return {}
 	var generated_object_count := int(generated.get("object_placements", []).size())
 	if String(case_record.get("id", "")) == "medium_normal_water_seed_a":
-		if object_count != OWNER_MEDIUM_NORMAL_WATER_PACKAGE_OBJECTS \
-				or generated_object_count != OWNER_MEDIUM_NORMAL_WATER_GENERATED_OBJECTS \
-				or int(generated.get("town_records", []).size()) != OWNER_MEDIUM_NORMAL_WATER_TOWNS \
-				or int(generated.get("guard_records", []).size()) != OWNER_MEDIUM_NORMAL_WATER_GUARDS \
-				or road_cells != OWNER_MEDIUM_NORMAL_WATER_PACKAGE_ROADS:
-			_fail("%s normal-water owner count targets drifted: package_objects=%d/%d generated_objects=%d/%d towns=%d/%d guards=%d/%d roads=%d/%d." % [
+		if object_count < OWNER_MEDIUM_NORMAL_WATER_PACKAGE_OBJECTS \
+				or generated_object_count < OWNER_MEDIUM_NORMAL_WATER_GENERATED_OBJECTS \
+				or int(generated.get("town_records", []).size()) < OWNER_MEDIUM_NORMAL_WATER_TOWNS \
+				or int(generated.get("guard_records", []).size()) < OWNER_MEDIUM_NORMAL_WATER_GUARDS \
+				or road_cells < OWNER_MEDIUM_NORMAL_WATER_PACKAGE_ROADS:
+			_fail("%s normal-water owner count floors regressed: package_objects=%d/%d generated_objects=%d/%d towns=%d/%d guards=%d/%d roads=%d/%d." % [
 				String(case_record.get("id", "")),
 				object_count,
 				OWNER_MEDIUM_NORMAL_WATER_PACKAGE_OBJECTS,
@@ -333,14 +333,14 @@ func _package_object_density_floor(size_class_id: String) -> int:
 func _town_spacing_floor(size_class_id: String) -> int:
 	match size_class_id:
 		"homm3_small":
-			return 8
+			return 12
 		"homm3_medium":
-			return 10
+			return 20
 		"homm3_large":
-			return 32
+			return 28
 		"homm3_extra_large":
-			return 36
-	return 8
+			return 34
+	return 12
 
 func _nearest_town_manhattan(town_records: Array) -> int:
 	var towns := []

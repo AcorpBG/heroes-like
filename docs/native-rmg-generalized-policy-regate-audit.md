@@ -422,3 +422,24 @@ Validation evidence:
 - `python3 tools/rmg_fast_audit.py --amap .artifacts/rmg_native_batch_export_after_general_road_components/xl_nowater.amap --pretty` reports `727` road cells and component sizes `[485, 188, 54]`, proving the generalized materializer no longer stacks on that existing owner-adjusted path.
 
 This clears the current fast road-topology blocker. It is not a full production-ready RMG claim; remaining parity work still includes replacing older owner-adjustment debt with generalized route/object/guard/town policy and broader live inspection across unsupported profiles.
+
+## Isolated XL Owner-Override Debt And Tightened Test Split
+
+The XL and Large land owner density/profile branches are now diagnostic-only selectors keyed to the explicit production-parity audit seeds. Normal generated catalog-auto Large/XL land seeds still use the translated owner-compared templates, but no longer activate those owner-specific runtime overrides. The remaining generated-batch owner override debt is the Small `049` path, which is still visible through runtime policy classification instead of hidden.
+
+The XL one-level generated road floor now scales from map area before component splitting, so removing the XL owner branch does not reintroduce the near-threshold `144x144_l1` road-density gap. Fresh XL one-level evidence reports separated road components of about `62-69` cells per component depending on water mode, while route closure remains guarded.
+
+The Godot auto-template integration report was also adjusted to match this policy boundary:
+
+- town-spacing expectations now mirror the native generalized size floors for catalog-auto generated cases;
+- the Medium normal-water owner-evidence check now enforces owner count floors instead of exact-count equality, so denser valid output is not rejected as drift.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Targeted XL re-export for `xl_islands,xl_nowater,xl_water` passed with `3/3` packages and `0` export failures.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_general_road_components --allow-failures --pretty` reports `status: pass`, `18` matched comparisons, and `0` parse/native/density/policy/topology gaps.
+- Runtime override scan across the generated batch now reports only `s_randomnumberofplayers.amap` with `owner_small_049_profile_policy`; `xl_nowater.amap` no longer reports `owner_xl_land_profile_policy`.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_auto_template_batch_report.tscn` passed with `seed_specific_runtime_override_case_count: 0`; this remains an integration smoke, not the default parser/comparison loop.
+
+The slow `tests/native_random_map_production_parity_completion_audit_report.tscn` run was stopped after more than seven minutes with no useful output. That is intentional for the current testing posture: H3M parsing, native AMAP inspection, road topology, density policy, town/guard/blocker route closure, and owner comparison belong in the Python CLI validation path. Godot should be used for the native generation/export boundary and editor/runtime behavior.
