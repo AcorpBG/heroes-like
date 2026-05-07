@@ -711,3 +711,25 @@ Validation evidence:
 - `python3 tools/rmg_production_gap_audit.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_underground_rock_shape_combined --summary --gap-limit 12` passed as an audit while preserving `production_ready=false`. Top severity improved materially, for example `xl_islands_2levels` `26912 -> 18396`, `xl_water_2levels` `24032 -> 14136`, and `xl_nowater_2levels` `21003 -> 12389`.
 
 This reduces the terrain-shape gap but does not close production parity. The next remaining blockers are still road component similarity, route-shape similarity, and object/guard/reward category similarity across broad Large/XL cases.
+
+## Recovered H3MapEd Decorative Filler Evidence And XL Islands Barrier Fix
+
+The correct executable for this recovery pass is `/root/Downloads/h3maped.exe`, not `h3mapedit.exe`. Direct disassembly of that binary confirms the recovered final decorative filler phase:
+
+- `0x49eb8d` counts cells with bit 26 set after occupancy/object normalization, computes a per-cell work budget from `0x4374c / flagged_count`, and calls `0x49e700(x, y, z, budget)` for each valid flagged cell.
+- `0x49e700` rejects invalid/free-cell states, rejects terrain type `9`, iterates the terrain-object type table at `0x54092c..0x5409e0`, rejects `-5000` terrain scores, applies map-level object guards, checks the object footprint through `0x41e951`, scores adjacency/overlap through `0x49e1bf`, chooses by weighted random, and stamps the selected decorative obstacle object.
+
+The important current delta is therefore not just "more objects". HoMM3's editor keeps a late physical decorative-obstacle layer after route/object normalization. Native conversion was clearing package decorative/scenic blocker cells along town-to-town guard corridors, which made the object counts look close while still leaving too many physically open object routes on XL one-level islands.
+
+The native package conversion now preserves XL one-level islands decorative/scenic object barriers for normal generated catalog-auto packages. Guard masks still close guarded routes, but the conversion no longer cuts corridor holes through the physical obstacle layer for that profile.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- A focused `xl_islands` export wrote `1/1` package in about `35s`.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/XL-islands.h3m --amap .artifacts/rmg_native_batch_export_xl_islands_barrier_probe/xl_islands.amap --compare --pretty --allow-failures` passed as an audit and improved object-route reachable pairs from the previous native `45` to `2`, compared with owner `1`.
+- `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_barrier_probe --allow-partial-native-batch --summary --failure-limit 6 --gap-limit 8` passed for the focused partial batch.
+- Replacing `xl_islands.amap` into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_barrier_merged --summary --failure-limit 6 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_barrier_merged --require-timing-summary` passed. The manifest-backed native export timing summary reported `18/18` exported, `0` failed, `392420ms` total wall time, with generation `234334ms`, conversion `106447ms`, and save `46418ms`.
+
+This is not full production parity. It is a binary-backed correction to the most visible XL one-level islands blocker leak. The remaining missing implementation should replace native count/ring-style decorative filling with a `rand_trn`-style flagged-cell placement phase using the same algorithmic structure recovered from `h3maped.exe`, without committing raw HoMM3 copyrighted data tables into this repository.
