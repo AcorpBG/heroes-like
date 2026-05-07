@@ -31,6 +31,40 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-owner-large-land-density-correction-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Use the parsed Large no-water owner diagnostic to correct native Large land default object density, town count/spacing, reward category count, and guard count toward owner-H3M scale.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `src/gdextension/src/map_package_service.cpp`
+- local evidence under `maps/h3m-maps/L-NoWater-RandomPlayers-nounder.h3m`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Native Large land default has a Large diagnostic against the parsed owner no-water surface sample.
+- Native Large land default matches the parsed owner sample on package object count, decoration, scenic/object, reward, town, and guard categories, allowing only explicitly validated residuals such as one road-cell delta.
+- Large town count uses parsed owner evidence instead of stale catalog minima, and semantic layout remains passing with no native unguarded/object-only town route leaks.
+- Production audit still refuses `production_ready` until Medium land owner evidence, broad corpus/template parity, parser tail debt, full parity, and underground readiness are closed.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No exact Large H3M byte/object-art parity claim while the owner sample still carries a 16-object tail-count parser warning.
+- No Medium land synthetic owner evidence.
+- No HoMM3 copyrighted asset/DEF import.
+validationResults:
+- Owner-corpus Large land diagnostic passed with native package object count 2,917/2,917, decoration 1,840/1,840, scenic/object 376/376, reward 429/429, town 8/8, guard 264/264, and road cells 365 versus owner 366.
+- Large semantic layout comparison passes: native nearest-town Manhattan 34 versus owner 35, native object-route reachable town pairs 0 versus owner 28, and native guarded-route reachable town pairs 0/0.
+- Production parity audit passed with `production_ready false` and `missing_requirement_count 4`; remaining missing requirements are representative owner coverage for Medium land, full HoMM3-style parity, broad owner-H3M comparison corpus, and underground production parity.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-owner-large-land-tail-parse-coverage-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`

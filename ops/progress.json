@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-owner-large-land-tail-parse-coverage-10184",
-  "currentSliceTitle": "native rmg owner large land tail parse coverage 10184",
+  "currentSliceId": "native-rmg-owner-large-land-density-correction-10184",
+  "currentSliceTitle": "native rmg owner large land density correction 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Owner-corpus parser now exposes the Large no-water surface uploaded H3M as a parsed representative sample with explicit tail-count warning metadata. Validation passed with 21 readable/21 parsed metric records; owner_discovered_l_nowater_randomplayers_nounder reports 2,917 parsed objects out of 2,933 declared, missing 16 tail instances, corpus_ready remains false for template_breadth_corpus and object_instance_tail_count_mismatch_samples, and production_ready remains false with Medium land still the only missing representative owner sample.",
+  "currentSliceNotes": "Native Large land default now has owner-informed density/count correction from owner_discovered_l_nowater_randomplayers_nounder. Validation passed with native package object count 2,917/2,917, decoration 1,840/1,840, scenic/object 376/376, reward 429/429, town 8/8, guard 264/264, road cells 365 versus owner 366, semantic layout passing with nearest-town Manhattan 34 versus owner 35, and production_ready remains false with missing_requirement_count 4.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-07T04:01:20Z",
+  "updatedAt": "2026-05-07T04:56:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -13685,6 +13685,16 @@
       "startedAt": "2026-05-07T04:01:20Z",
       "completedAt": "2026-05-07T04:01:20Z",
       "notes": "Owner-corpus parser now exposes the Large no-water surface uploaded H3M as a parsed representative sample with explicit tail-count warning metadata. Validation passed with 21 readable/21 parsed metric records; owner_discovered_l_nowater_randomplayers_nounder reports 2,917 parsed objects out of 2,933 declared, missing 16 tail instances, corpus_ready remains false for template_breadth_corpus and object_instance_tail_count_mismatch_samples, and production_ready remains false with Medium land still the only missing representative owner sample."
+    },
+    {
+      "id": "native-rmg-owner-large-land-density-correction-10184",
+      "title": "native rmg owner large land density correction 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-07T04:56:00Z",
+      "startedAt": "2026-05-07T04:56:00Z",
+      "completedAt": "2026-05-07T04:56:00Z",
+      "notes": "Native Large land default now has owner-informed density/count correction from owner_discovered_l_nowater_randomplayers_nounder. Validation passed with native package object count 2,917/2,917, decoration 1,840/1,840, scenic/object 376/376, reward 429/429, town 8/8, guard 264/264, road cells 365 versus owner 366, semantic layout passing with nearest-town Manhattan 34 versus owner 35, and production_ready remains false with missing_requirement_count 4."
     }
   ],
   "completedImplementationEvidence": [
