@@ -12838,6 +12838,9 @@ Dictionary protected_island_land_lookup(const Dictionary &normalized, const Dict
 	for (int64_t index = 0; index < objects.size(); ++index) {
 		Dictionary object = Dictionary(objects[index]);
 		const String kind = String(object.get("kind", ""));
+		if (normal_water_mode && (kind == "decorative_obstacle" || kind == "scenic_object")) {
+			continue;
+		}
 		const bool protect_approaches = !normal_water_mode || (kind != "decorative_obstacle" && kind != "scenic_object");
 		mark_land_record_surfaces(land_lookup, object, width, height, protect_approaches);
 	}
@@ -12920,15 +12923,15 @@ double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Di
 	}
 	const String role = String(zone.get("role", ""));
 	if (role.contains("start")) {
-		return 0.60;
+		return 0.65;
 	}
 	if (role == "junction") {
-		return 0.55;
+		return 0.60;
 	}
 	if (role == "treasure" || role == "neutral") {
-		return 0.48;
+		return 0.53;
 	}
-	return 0.52;
+	return 0.57;
 }
 
 int32_t count_lookup_cells_for_zone(const Dictionary &lookup, const Array &owner_grid, const String &zone_id) {
