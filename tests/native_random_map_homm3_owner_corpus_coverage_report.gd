@@ -1100,7 +1100,7 @@ func _parse_h3m_object_templates(bytes: PackedByteArray, offset: int, object_met
 
 func _parse_h3m_object_instances(bytes: PackedByteArray, offset: int, templates: Array, width: int, level_count: int) -> Dictionary:
 	var count := _u32(bytes, offset)
-	if count <= 0 or count > 5000:
+	if count <= 0 or count > 12000:
 		return {"status": "not_attempted", "error": "invalid_object_instance_count", "object_instance_offset": offset, "count": count}
 	var pos := offset + 4
 	var records := []
