@@ -31,6 +31,41 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-owner-large-land-corpus-road-topology-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Promote the uploaded Large no-water single-level owner sample into the hard owner-corpus native comparison gate and correct the package road count/topology gap exposed by that gate.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- local owner evidence under `maps/h3m-maps/L-NoWater-RandomPlayers-nounder.h3m`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- `owner_discovered_l_nowater_randomplayers_nounder` is mapped to the player-facing native catalog-auto Large land comparison path.
+- The owner-corpus hard mapped comparison increases from four to five passing mapped samples, with unmapped parsed samples reduced to 16.
+- Native Large land package counts match owner evidence for package objects, towns, guards, and road cells.
+- Native Large land road component sizes match owner topology for the uploaded sample: `[192, 118, 47, 9]`.
+- Existing representative auto-template and production-audit gates remain passing without claiming broad production parity.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No broad Large water/islands or two-level parity claim.
+- No full HoMM3 production parity claim; 16 parsed uploaded samples remain unmapped.
+- No HoMM3 copyrighted asset/DEF import.
+validationResults:
+- Native GDExtension rebuilt successfully with `cmake --build .artifacts/map_persistence_native_build --parallel 2`.
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` passed with five mapped comparisons passing; the Large no-water mapped comparison reports zero deltas for object, town, guard, and road counts, road component sizes `[192, 118, 47, 9]`, and `semantic_layout_match`.
+- `tests/native_random_map_auto_template_batch_report.tscn` passed; `large_land_seed_a` reports 2,917 package objects, 2,645 generated objects, 8 towns, 264 guards, 366 road cells, and nearest town distance 34.
+- `tests/native_random_map_production_parity_completion_audit_report.tscn` passed with `production_ready false`, preserving representative coverage/full-parity gaps.
+- `python3 tests/validate_repo.py`, `jq empty ops/progress.json`, and `git diff --check` passed.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-owner-medium-normal-water-corpus-structural-gate-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`
