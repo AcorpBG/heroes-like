@@ -193,6 +193,7 @@ func _export_case(service: Variant, case: Dictionary, output_dir: String, absolu
 		"scenario_id": "rmg_native_batch_export_%s" % case_id,
 	})
 	record["conversion_wall_msec"] = Time.get_ticks_msec() - conversion_started_msec
+	record["conversion_profile"] = _profile_brief(adoption.get("conversion_profile", {}) if adoption.get("conversion_profile", {}) is Dictionary else {})
 	if not bool(adoption.get("ok", false)):
 		record["status"] = "conversion_failed"
 		record["error"] = adoption
@@ -208,7 +209,7 @@ func _export_case(service: Variant, case: Dictionary, output_dir: String, absolu
 		return record
 	var native_path := absolute_output_dir.path_join("%s.amap" % case_id)
 	var save_started_msec := Time.get_ticks_msec()
-	var save_result: Dictionary = service.save_map_package(map_document, native_path, {"path_policy": "artifact_rmg_native_batch_export"})
+	var save_result: Dictionary = service.save_map_package(map_document, native_path, {"path_policy": "artifact_rmg_native_batch_export", "return_package": false})
 	record["save_wall_msec"] = Time.get_ticks_msec() - save_started_msec
 	record["native_path"] = native_path
 	record["native_project_relative_path"] = output_dir.path_join("%s.amap" % case_id)

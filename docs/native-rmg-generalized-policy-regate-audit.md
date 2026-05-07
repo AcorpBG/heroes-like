@@ -523,6 +523,8 @@ Two Python helpers make the intended loop direct:
 - `tools/rmg_python_validation_gate.py` runs the Python parser syntax check plus `rmg_fast_validation` against the latest generated AMAP batch by default. It does not start Godot.
 - `tools/rmg_export_timing_summary.py` summarizes a batch manifest and ranks worst cases by wall time. It does not start Godot.
 
+The Python validation path now distinguishes targeted diagnosis from the full correctness gate. `tools/rmg_fast_validation.py` can still validate a partial batch by default, but `--require-all-owner-matches` fails unless every parsed owner H3M has a matching parsed native AMAP. `tools/rmg_python_validation_gate.py` enables that coverage check by default, with `--allow-partial-native-batch` reserved for explicit targeted investigations.
+
 Validation evidence:
 
 - `python3 -m py_compile tools/rmg_export_timing_summary.py tools/rmg_python_validation_gate.py tools/rmg_fast_audit.py tools/rmg_fast_validation.py` passed.
@@ -532,3 +534,34 @@ Validation evidence:
 - `python3 tools/rmg_export_timing_summary.py .artifacts/rmg_native_batch_export_timing_full --limit 8` reported phase totals of `268716ms` generation, `142418ms` conversion, and `58620ms` save. The worst case is `xl_nowater_2levels` at `74628ms`, with `29890ms` generation, `37880ms` conversion, `6858ms` save, and native `object_placement` as the top generation phase at about `15579ms`.
 
 This changes the default correctness workflow, not the generator boundary. A fresh package export still needs Godot until a separate native CLI/export boundary exists, but map correctness and owner comparison now stay in the fast Python loop.
+
+## Implemented Package Conversion Profiling And Boundary Mask Fast Path
+
+The first full timing manifest showed `xl_nowater_2levels` spending more time in package conversion than generation. That was not map parsing and it was not a reason to run more Godot report scenes: it was a native package-adoption hotspot inside `combined_native_map_objects`.
+
+The package conversion path now records its own compact profile phases so future manifests can separate generation cost from package-adoption cost:
+
+- terrain-layer extraction;
+- map metadata assembly;
+- combined package object construction;
+- guard/reward adoption summary;
+- map and scenario document configuration;
+- start contract and readiness assembly.
+
+The measured hotspot was broad land-boundary choke mask adoption. The old path assigned every boundary cell through a helper that repeatedly duplicated and updated individual decorative object dictionaries. Broad land package adoption now groups boundary cells by nearest decorative object and writes each target object's block-mask array once.
+
+Batch export also now calls `save_map_package(..., {"return_package": false})`. That keeps the normal API behavior unchanged while avoiding a large deep-duplicate of the written package when the batch tool only needs status, hash, and path.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed after each native change.
+- Targeted `xl_nowater_2levels` profiling identified `combined_native_map_objects` as the conversion top phase at about `34.667s` before optimization.
+- Removing redundant pre-mutation record signatures reduced `xl_nowater_2levels` conversion from about `35.140s` to about `31.405s`.
+- Batched broad boundary-cell assignment reduced targeted `xl_nowater_2levels` conversion to about `5.585s`, with total case time about `42.021s`.
+- With batch save return payload disabled, targeted `xl_nowater_2levels` exported in `real 45.79s`, with manifest `case_wall_msec: 40907`, `generation_wall_msec: 29663`, `conversion_wall_msec: 5569`, and `save_wall_msec: 5673`.
+- Focused Large/XL land export for `xl_nowater`, `xl_nowater_2levels`, `l_nowater_randomplayers_2level`, and `l_nowater_randomplayers_nounder` exported `4/4` packages with `0` failures in `real 118.88s`.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_conversion_perf_land_cases --summary` passed in about `6.238s` total parse time with `0` parse/native/density/policy/topology gaps.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_conversion_perf_land_cases --summary --require-all-owner-matches --allow-failures --failure-limit 2` correctly reports `status=fail` with one coverage gap for the `14` owner cases absent from the targeted batch. This keeps partial performance batches useful without letting them masquerade as full-corpus gates.
+- `python3 tools/rmg_export_timing_summary.py .artifacts/rmg_native_batch_export_conversion_perf_land_cases --limit 8` reported the focused set at `115230ms` total wall time, with phase totals `81816ms` generation, `15272ms` conversion, and `15837ms` save. `xl_nowater_2levels` is now `40982ms` total with `5567ms` conversion; the remaining top phase is native generation `object_placement` at about `15553ms`.
+
+This changes the performance bottleneck. Package conversion is no longer the worst offender for the XL two-level land case; native object placement is again the dominant cost to optimize. The testing policy remains the same: use Godot only to generate/export fresh packages or to test editor/runtime behavior, then use Python for H3M/AMAP parsing, comparison, and rule validation.

@@ -369,7 +369,7 @@ Dictionary read_package_dictionary(const String &operation, const String &path) 
 	return result;
 }
 
-Dictionary write_package_dictionary(const String &operation, const String &path, const Dictionary &package) {
+Dictionary write_package_dictionary(const String &operation, const String &path, const Dictionary &package, bool return_package = true) {
 	if (!ensure_parent_dir(path)) {
 		return package_failure(operation, path, "create_directory_failed", "Package parent directory could not be created.");
 	}
@@ -379,7 +379,9 @@ Dictionary write_package_dictionary(const String &operation, const String &path,
 	}
 	file->store_string(JSON::stringify(package, "\t", true, false));
 	Dictionary payload;
-	payload["package"] = package.duplicate(true);
+	if (return_package) {
+		payload["package"] = package.duplicate(true);
+	}
 	payload["package_hash"] = package.get("package_hash", "");
 	return package_success(operation, path, payload);
 }
@@ -17114,6 +17116,102 @@ void apply_land_boundary_choke_masks_to_decorative_package_objects(Array &object
 		}
 		return added;
 	};
+	auto assign_boundary_cells_batched = [&](const Array &cells, const String &source) -> int32_t {
+		struct DecorativePoint {
+			int64_t object_index = -1;
+			int32_t x = 0;
+			int32_t y = 0;
+		};
+		std::vector<DecorativePoint> decorative_points;
+		decorative_points.reserve(decorative_indices.size());
+		for (int64_t decorative_index : decorative_indices) {
+			Dictionary object = Dictionary(objects[decorative_index]);
+			Array body_tiles = object.get("package_body_tiles", Array());
+			if (body_tiles.is_empty()) {
+				DecorativePoint point;
+				point.object_index = decorative_index;
+				point.x = int32_t(object.get("x", 0));
+				point.y = int32_t(object.get("y", 0));
+				decorative_points.push_back(point);
+				continue;
+			}
+			for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
+				if (Variant(body_tiles[body_index]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				Dictionary body = Dictionary(body_tiles[body_index]);
+				DecorativePoint point;
+				point.object_index = decorative_index;
+				point.x = int32_t(body.get("x", 0));
+				point.y = int32_t(body.get("y", 0));
+				decorative_points.push_back(point);
+			}
+		}
+		if (decorative_points.empty()) {
+			return 0;
+		}
+		std::map<int64_t, Array> cells_by_object;
+		for (int64_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+			if (Variant(cells[cell_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary cell = Dictionary(cells[cell_index]);
+			const int32_t x = int32_t(cell.get("x", 0));
+			const int32_t y = int32_t(cell.get("y", 0));
+			const String key = point_key(x, y);
+			if (assigned_lookup.has(key)) {
+				continue;
+			}
+			int64_t best_object_index = -1;
+			int32_t best_distance = std::numeric_limits<int32_t>::max();
+			for (const DecorativePoint &point : decorative_points) {
+				const int32_t distance = std::max(std::abs(x - point.x), std::abs(y - point.y));
+				if (distance < best_distance) {
+					best_distance = distance;
+					best_object_index = point.object_index;
+				}
+			}
+			if (best_object_index < 0 || best_distance > max_mask_radius) {
+				continue;
+			}
+			cells_by_object[best_object_index].append(cell);
+			assigned_lookup[key] = true;
+			selective_blocked_lookup[key] = true;
+		}
+		int32_t appended_total = 0;
+		for (auto &entry : cells_by_object) {
+			Dictionary object = Dictionary(objects[entry.first]);
+			Dictionary block_seen;
+			Array block_tiles = object.get("package_block_tiles", Array());
+			for (int64_t block_index = 0; block_index < block_tiles.size(); ++block_index) {
+				if (Variant(block_tiles[block_index]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				Dictionary block = Dictionary(block_tiles[block_index]);
+				block_seen[point_key(int32_t(block.get("x", 0)), int32_t(block.get("y", 0)))] = true;
+			}
+			const int32_t before_count = Array(object.get("package_block_tiles", Array())).size();
+			Array object_cells = entry.second;
+			for (int64_t object_cell_index = 0; object_cell_index < object_cells.size(); ++object_cell_index) {
+				if (Variant(object_cells[object_cell_index]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				append_unique_package_block_tile(object, block_seen, Dictionary(object_cells[object_cell_index]));
+			}
+			const int32_t after_count = Array(object.get("package_block_tiles", Array())).size();
+			const int32_t appended = std::max(0, after_count - before_count);
+			if (appended <= 0) {
+				continue;
+			}
+			object["package_boundary_choke_mask_source"] = source;
+			object["package_boundary_choke_max_mask_radius"] = max_mask_radius;
+			object["package_boundary_choke_tile_count"] = int32_t(object.get("package_boundary_choke_tile_count", 0)) + appended;
+			object["package_pathing_materialization_state"] = "body_visit_and_boundary_choke_masks_materialized_for_generated_package_surface";
+			objects[entry.first] = object;
+			appended_total += appended;
+		}
+		return appended_total;
+	};
 	auto assign_route_guard_closure_cell = [&](const Dictionary &cell, const String &source) -> bool {
 		if (route_guard_indices.empty()) {
 			return false;
@@ -17361,11 +17459,7 @@ void apply_land_boundary_choke_masks_to_decorative_package_objects(Array &object
 			}
 		}
 	} else {
-		for (int64_t cell_index = 0; cell_index < boundary_cells.size(); ++cell_index) {
-			if (Variant(boundary_cells[cell_index]).get_type() == Variant::DICTIONARY) {
-				assign_boundary_cell(Dictionary(boundary_cells[cell_index]), "land_boundary_rock_cells_materialized_on_nearby_decorative_obstacle_masks");
-			}
-		}
+		assigned_count += assign_boundary_cells_batched(boundary_cells, "land_boundary_rock_cells_materialized_on_nearby_decorative_obstacle_masks");
 		Array towns;
 		for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
 			if (Variant(objects[object_index]).get_type() != Variant::DICTIONARY) {
@@ -17459,14 +17553,12 @@ Array combined_native_map_objects(const Dictionary &generated_map) {
 			record["protected_by_guard"] = false;
 			record["package_guard_adoption_state"] = "no_guard_link_for_package_surface";
 		}
-		record["signature"] = hash32_hex(canonical_variant(record));
 		result.append(record);
 	}
 	Array towns = tagged_record_snapshots(generated_map.get("town_records", Variant()), "town");
 	for (int64_t index = 0; index < towns.size(); ++index) {
 		Dictionary record = package_surface_record(Dictionary(towns[index]).duplicate(true));
 		record["package_guard_adoption_state"] = "town_record_not_reward_guard_target";
-		record["signature"] = hash32_hex(canonical_variant(record));
 		result.append(record);
 	}
 	for (int64_t index = 0; index < guards.size(); ++index) {
@@ -17481,7 +17573,6 @@ Array combined_native_map_objects(const Dictionary &generated_map) {
 		passability["protected_object_placement_id"] = record.get("protected_object_placement_id", "");
 		passability["route_edge_id"] = record.get("route_edge_id", "");
 		record["passability"] = passability;
-		record["signature"] = hash32_hex(canonical_variant(record));
 		result.append(record);
 	}
 	Array gates = tagged_record_snapshots(generated_map.get("connection_gate_records", Variant()), "connection_gate");
@@ -17495,7 +17586,6 @@ Array combined_native_map_objects(const Dictionary &generated_map) {
 		passability["route_edge_id"] = record.get("route_edge_id", "");
 		passability["unlock_required"] = record.get("unlock_required", true);
 		record["passability"] = passability;
-		record["signature"] = hash32_hex(canonical_variant(record));
 		result.append(record);
 	}
 	apply_land_boundary_choke_masks_to_decorative_package_objects(result, generated_map);
@@ -17712,6 +17802,12 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	const String session_key = scenario_id + String("|") + map_hash + String("|") + String::num_int64(session_save_version);
 	const String session_id = String("native_rmg_session_") + hash32_hex(session_key);
 
+	const auto conversion_started_at = std::chrono::steady_clock::now();
+	auto conversion_phase_started_at = conversion_started_at;
+	Array conversion_profile_phases;
+	int64_t conversion_top_phase_usec = 0;
+	String conversion_top_phase_id;
+
 	Dictionary terrain_layers = terrain_layers_from_grid(Dictionary(generated_map.get("terrain_grid", Dictionary())), Dictionary(generated_map.get("road_network", Dictionary())), Dictionary(), normalized);
 	Dictionary package_component_counts = generated_map.get("component_counts", Dictionary()).duplicate(true);
 	if (terrain_layers.has("road_unique_tile_count")) {
@@ -17720,6 +17816,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 		package_component_counts["package_road_source_tile_count"] = terrain_layers.get("road_source_tile_count", package_component_counts.get("road_segment_cell_count", 0));
 		package_component_counts["package_road_duplicate_tile_count"] = terrain_layers.get("road_duplicate_tile_count", package_component_counts.get("road_duplicate_cell_count", 0));
 	}
+	append_extension_profile_phase(conversion_profile_phases, "terrain_layers_from_grid", conversion_phase_started_at, conversion_top_phase_usec, conversion_top_phase_id);
 
 	Dictionary map_metadata = generated_map.get("map_metadata", Dictionary()).duplicate(true);
 	map_metadata["schema_id"] = MAP_SCHEMA_ID;
@@ -17738,11 +17835,14 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	map_metadata["owner_compared_translated_profile_supported"] = owner_compared_translated_profile_supported;
 	map_metadata["full_parity_claim"] = full_parity_claim;
 	map_metadata["component_counts"] = package_component_counts;
+	append_extension_profile_phase(conversion_profile_phases, "map_metadata_assembly", conversion_phase_started_at, conversion_top_phase_usec, conversion_top_phase_id);
 
 	Array package_surface_objects = combined_native_map_objects(generated_map);
+	append_extension_profile_phase(conversion_profile_phases, "combined_native_map_objects", conversion_phase_started_at, conversion_top_phase_usec, conversion_top_phase_id);
 	Dictionary guard_reward_adoption = guard_reward_package_adoption_summary(package_surface_objects);
 	map_metadata["guard_reward_package_adoption"] = guard_reward_adoption;
 	map_metadata["guard_reward_package_adoption_signature"] = guard_reward_adoption.get("signature", "");
+	append_extension_profile_phase(conversion_profile_phases, "guard_reward_adoption_summary", conversion_phase_started_at, conversion_top_phase_usec, conversion_top_phase_id);
 
 	Dictionary map_state;
 	map_state["map_id"] = map_id;
@@ -17759,6 +17859,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	Ref<MapDocument> map_document;
 	map_document.instantiate();
 	map_document->configure(map_state);
+	append_extension_profile_phase(conversion_profile_phases, "map_document_configure", conversion_phase_started_at, conversion_top_phase_usec, conversion_top_phase_id);
 
 	Dictionary map_package_record;
 	map_package_record["schema_id"] = "aurelion_generated_map_package_record";
@@ -17821,6 +17922,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	start_contract["start_contract_source"] = "materialized_player_start_town_records";
 	start_contract["source_player_start_signature"] = player_starts.get("signature", "");
 	start_contract["primary_hero_id"] = String(options.get("hero_id", "hero_lyra"));
+	append_extension_profile_phase(conversion_profile_phases, "start_contract_assembly", conversion_phase_started_at, conversion_top_phase_usec, conversion_top_phase_id);
 
 	Dictionary selection;
 	Dictionary availability;
@@ -17846,6 +17948,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	Ref<ScenarioDocument> scenario_document;
 	scenario_document.instantiate();
 	scenario_document->configure(scenario_state);
+	append_extension_profile_phase(conversion_profile_phases, "scenario_document_configure", conversion_phase_started_at, conversion_top_phase_usec, conversion_top_phase_id);
 
 	Dictionary scenario_package_record;
 	scenario_package_record["schema_id"] = "aurelion_generated_scenario_package_record";
@@ -17964,6 +18067,9 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	readiness["full_parity_claim"] = full_parity_claim;
 	readiness["full_parity_gate_pending"] = true;
 	readiness["next_required_slices"] = remaining;
+	append_extension_profile_phase(conversion_profile_phases, "report_readiness_assembly", conversion_phase_started_at, conversion_top_phase_usec, conversion_top_phase_id);
+
+	Dictionary conversion_profile = build_extension_profile(conversion_profile_phases, conversion_started_at, width, height, level_count, package_surface_objects.size(), int32_t(package_component_counts.get("road_segment_count", 0)), int32_t(contract_player_start_towns.size()), int32_t(guard_reward_adoption.get("guard_count", 0)), conversion_top_phase_id, conversion_top_phase_usec);
 
 	Dictionary result;
 	result["ok"] = true;
@@ -17986,6 +18092,7 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 	result["provenance"] = provenance;
 	result["report"] = report;
 	result["readiness"] = readiness;
+	result["conversion_profile"] = conversion_profile;
 	result["authored_content_writeback"] = false;
 	result["save_version_bump"] = false;
 	result["native_runtime_authoritative"] = native_runtime_authoritative;
@@ -18429,7 +18536,7 @@ Dictionary MapPackageService::save_map_package(Ref<MapDocument> map_document, St
 	Dictionary final_map_ref = map_ref.duplicate(true);
 	final_map_ref["package_hash"] = package.get("package_hash", "");
 	package["map_ref"] = final_map_ref;
-	return write_package_dictionary(operation, path, package);
+	return write_package_dictionary(operation, path, package, bool(options.get("return_package", true)));
 }
 
 Dictionary MapPackageService::save_scenario_package(Ref<ScenarioDocument> scenario_document, String path, Dictionary options) const {
@@ -18468,7 +18575,7 @@ Dictionary MapPackageService::save_scenario_package(Ref<ScenarioDocument> scenar
 	Dictionary final_scenario_ref = scenario_ref.duplicate(true);
 	final_scenario_ref["package_hash"] = package.get("package_hash", "");
 	package["scenario_ref"] = final_scenario_ref;
-	return write_package_dictionary(operation, path, package);
+	return write_package_dictionary(operation, path, package, bool(options.get("return_package", true)));
 }
 Dictionary MapPackageService::migrate_map_package(String source_path, String target_path, int32_t target_version, Dictionary options) const { return not_implemented("migrate_map_package", source_path, options); }
 Dictionary MapPackageService::migrate_scenario_package(String source_path, String target_path, int32_t target_version, Dictionary options) const { return not_implemented("migrate_scenario_package", source_path, options); }
