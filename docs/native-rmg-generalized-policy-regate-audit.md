@@ -657,3 +657,25 @@ Validation evidence:
 - The top current diagnostic blockers are XL and Large cases, led by `xl_islands_2levels`, `xl_nowater`, `xl_water_2levels`, and `l_nowater_randomplayers_nounder`.
 
 The next production work should use this audit as the no-overclaim boundary. The immediate highest-value implementation target is broad Large/XL object/category and route/road shape, not more Godot parser/report infrastructure.
+
+## Land Terrain Boundary Barrier Correction
+
+The guard-mediated closure fix exposed a second shape problem on normal generated land maps: catalog-auto land packages could still inherit broad zone-boundary rock terrain barriers. That made no-water maps structurally pass route closure while visually and mechanically resembling terrain-walled zones instead of HoMM3-style object/guard-controlled crossings.
+
+Normal generated `native_catalog_auto` land maps now disable the land-boundary terrain barrier fallback. Owner/diagnostic paths that are not normal generated catalog-auto policy are left untouched. The intended normal generated closure stack is now:
+
+- terrain stays broadly passable except for water/island policy and explicit terrain shape;
+- decorative/scenic package blocker masks shape crossings and obstacles;
+- route guards own the final closure masks that turn object-only reachable routes into guarded blocked routes.
+
+The Python audit now also carries `terrain_blocked_tile_count_delta` through owner/native comparisons. `tools/rmg_production_gap_audit.py` includes a `terrain_blocker_shape_similarity` checklist item and adds terrain-blocker deltas to severity ranking, so removing land-wall fallback cannot be mistaken for production readiness when two-level, islands, water, or broader terrain-shape gaps remain.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- A targeted land export for `s_randomnumberofplayers`, `l_nowater_randomplayers_nounder`, `l_nowater_randomplayers_2level`, `xl_nowater`, and `xl_nowater_2levels` exported `5/5` packages.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_no_land_boundary_rock_land_cases --closure-shape-gate --allow-failures --summary --failure-limit 8` passed with `5` matched cases, total parse time about `8.198s`, and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- Replacing those five land packages into the full 18-case evidence set, `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_no_land_boundary_rock_land_combined --failure-limit 4 --skip-timing-summary` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `12.219s` parse time.
+- `python3 tools/rmg_production_gap_audit.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_no_land_boundary_rock_land_combined --summary --gap-limit 10` passed as an audit while preserving `production_ready=false`. It now reports `6` missing production requirements, including terrain-blocker shape, with `15` terrain-shape gap cases. The top blockers remain broad XL/Large two-level, water, and islands cases.
+
+This keeps the owner-requested testing split strict: Godot is used only to produce fresh native packages through the current extension/export path or to smoke actual editor/runtime behavior. H3M parsing, AMAP parsing, correctness validation, owner comparison, timing summary, and production-gap ranking are Python work.

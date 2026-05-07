@@ -674,6 +674,16 @@ def compare(owner: dict[str, Any], native: dict[str, Any]) -> dict[str, Any]:
     }
     owner_sem = owner.get("semantic_layout", {})
     native_sem = native.get("semantic_layout", {})
+    owner_terrain_blocked = sum(
+        int(level.get("terrain_blocked_tile_count", 0))
+        for level in owner_sem.get("by_level", {}).values()
+        if isinstance(level, dict)
+    ) if isinstance(owner_sem.get("by_level", {}), dict) else 0
+    native_terrain_blocked = sum(
+        int(level.get("terrain_blocked_tile_count", 0))
+        for level in native_sem.get("by_level", {}).values()
+        if isinstance(level, dict)
+    ) if isinstance(native_sem.get("by_level", {}), dict) else 0
     return {
         "status": "pass"
         if int(native.get("object_count", 0)) == int(owner.get("object_count", 0))
@@ -684,6 +694,7 @@ def compare(owner: dict[str, Any], native: dict[str, Any]) -> dict[str, Any]:
         "deltas_vs_owner": {
             "object_count_delta": int(native.get("object_count", 0)) - int(owner.get("object_count", 0)),
             "road_cell_count_delta": int(native.get("road_cell_count_total", 0)) - int(owner.get("road_cell_count_total", 0)),
+            "terrain_blocked_tile_count_delta": native_terrain_blocked - owner_terrain_blocked,
             "guarded_route_reachable_pair_delta": int(native_sem.get("guarded_route_reachable_pair_count_total", 0)) - int(owner_sem.get("guarded_route_reachable_pair_count_total", 0)),
             "object_route_reachable_pair_delta": int(native_sem.get("object_route_reachable_pair_count_total", 0)) - int(owner_sem.get("object_route_reachable_pair_count_total", 0)),
         },
