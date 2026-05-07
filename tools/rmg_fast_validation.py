@@ -26,6 +26,10 @@ DEFAULT_DENSITY_FLOOR_RATIO = 0.70
 DEFAULT_ROAD_FLOOR_RATIO = 0.65
 DEFAULT_GUARD_REWARD_RATIO_FLOOR_RATIO = 0.60
 DEFAULT_POLICY_DENSITY_EPSILON = 0.05
+DEFAULT_ROAD_LARGEST_SHARE_MULTIPLIER = 1.25
+DEFAULT_ROAD_LARGEST_SHARE_ABSOLUTE_CAP = 0.92
+DEFAULT_ROAD_LARGEST_SHARE_EPSILON = 0.05
+DEFAULT_ROAD_COMPONENT_COUNT_FLOOR_RATIO = 0.50
 DEFAULT_CATEGORY_FLOOR_RATIOS = {
     "guard": 0.55,
     "object": 0.25,
@@ -81,6 +85,31 @@ def category_density(metrics: dict[str, Any], category: str) -> float:
 
 def road_density(metrics: dict[str, Any]) -> float:
     return rmg_fast_audit.density_per_1000(metrics, int(metrics.get("road_cell_count_total", 0)))
+
+
+def road_component_sizes(metrics: dict[str, Any]) -> list[int]:
+    by_level = metrics.get("road_component_sizes_by_level", {})
+    if not isinstance(by_level, dict):
+        return []
+    sizes: list[int] = []
+    for values in by_level.values():
+        if not isinstance(values, list):
+            continue
+        sizes.extend(int(value) for value in values)
+    return [size for size in sizes if size > 0]
+
+
+def road_topology(metrics: dict[str, Any]) -> dict[str, Any]:
+    sizes = road_component_sizes(metrics)
+    total = sum(sizes)
+    largest = max(sizes) if sizes else 0
+    return {
+        "road_component_count": len(sizes),
+        "road_component_size_avg": round(float(total) / float(max(1, len(sizes))), 3),
+        "road_largest_component_size": largest,
+        "road_largest_component_share": round(float(largest) / float(total), 3) if total > 0 else 0.0,
+        "road_cell_count_total": total,
+    }
 
 
 def guard_reward_ratio(metrics: dict[str, Any]) -> float:
@@ -274,6 +303,77 @@ def policy_failures(
     return failures
 
 
+def topology_failures(
+    owner_samples: list[dict[str, Any]],
+    native_samples: list[dict[str, Any]],
+    largest_share_multiplier: float,
+    largest_share_absolute_cap: float,
+    component_count_floor_ratio: float,
+) -> list[dict[str, Any]]:
+    owners = {
+        case_id_from_path(Path(str(sample.get("path", "")))): sample
+        for sample in owner_samples
+        if sample.get("status") == "parsed"
+    }
+    natives = {
+        case_id_from_path(Path(str(sample.get("path", "")))): sample
+        for sample in native_samples
+        if sample.get("status") == "parsed"
+    }
+    failures: list[dict[str, Any]] = []
+    for case_id in sorted(set(owners) & set(natives)):
+        owner_topology = road_topology(owners[case_id])
+        native_topology = road_topology(natives[case_id])
+        owner_total = int(owner_topology["road_cell_count_total"])
+        native_total = int(native_topology["road_cell_count_total"])
+        if owner_total <= 0 or native_total <= 0:
+            continue
+
+        owner_largest_share = float(owner_topology["road_largest_component_share"])
+        native_largest_share = float(native_topology["road_largest_component_share"])
+        largest_share_ceiling = round(
+            min(
+                largest_share_absolute_cap,
+                owner_largest_share * largest_share_multiplier + DEFAULT_ROAD_LARGEST_SHARE_EPSILON,
+            ),
+            3,
+        )
+        if native_largest_share > largest_share_ceiling:
+            failures.append(
+                {
+                    "case_id": case_id,
+                    "path": natives[case_id].get("path", ""),
+                    "owner_path": owners[case_id].get("path", ""),
+                    "rule": "road_largest_component_dominance_over_owner_baseline",
+                    "owner_road_largest_component_share": owner_largest_share,
+                    "native_road_largest_component_share": native_largest_share,
+                    "ceiling": largest_share_ceiling,
+                    "owner_road_component_count": int(owner_topology["road_component_count"]),
+                    "native_road_component_count": int(native_topology["road_component_count"]),
+                }
+            )
+
+        owner_component_count = int(owner_topology["road_component_count"])
+        native_component_count = int(native_topology["road_component_count"])
+        component_floor = max(1, int(owner_component_count * component_count_floor_ratio))
+        if owner_component_count >= 3 and native_component_count < component_floor:
+            failures.append(
+                {
+                    "case_id": case_id,
+                    "path": natives[case_id].get("path", ""),
+                    "owner_path": owners[case_id].get("path", ""),
+                    "rule": "road_component_count_under_owner_topology_floor",
+                    "owner_road_component_count": owner_component_count,
+                    "native_road_component_count": native_component_count,
+                    "floor_ratio": component_count_floor_ratio,
+                    "component_count_floor": component_floor,
+                    "owner_road_largest_component_share": owner_largest_share,
+                    "native_road_largest_component_share": native_largest_share,
+                }
+            )
+    return failures
+
+
 def compact_parse_failures(samples: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [
         {
@@ -324,6 +424,12 @@ def sample_group_summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
             "road_density_per_1000_tiles_avg": average(
                 [road_density(sample) for sample in group_samples]
             ),
+            "road_largest_component_share_avg": average(
+                [float(road_topology(sample)["road_largest_component_share"]) for sample in group_samples]
+            ),
+            "road_component_count_avg": average(
+                [float(road_topology(sample)["road_component_count"]) for sample in group_samples]
+            ),
             "guard_reward_ratio_avg": average([guard_reward_ratio(sample) for sample in group_samples]),
             "category_totals": dict(sorted(categories.items())),
         }
@@ -356,9 +462,16 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         args.road_floor_ratio,
         args.guard_reward_ratio_floor_ratio,
     )
+    topology_gaps = [] if args.no_topology_gate else topology_failures(
+        owner_samples,
+        native_samples,
+        args.road_largest_share_multiplier,
+        args.road_largest_share_absolute_cap,
+        args.road_component_count_floor_ratio,
+    )
     comparisons = matched_comparisons(owner_samples, native_samples)
 
-    status = "pass" if not parse_failures and not native_failures and not density_gaps and not policy_gaps else "fail"
+    status = "pass" if not parse_failures and not native_failures and not density_gaps and not policy_gaps and not topology_gaps else "fail"
     return {
         "schema_id": "rmg_fast_validation_v1",
         "status": status,
@@ -372,6 +485,11 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "road_floor_ratio": args.road_floor_ratio,
             "guard_reward_ratio_floor_ratio": args.guard_reward_ratio_floor_ratio,
             "policy_density_epsilon_per_1000_tiles": DEFAULT_POLICY_DENSITY_EPSILON,
+            "topology_gate_enabled": not args.no_topology_gate,
+            "road_largest_share_multiplier": args.road_largest_share_multiplier,
+            "road_largest_share_absolute_cap": args.road_largest_share_absolute_cap,
+            "road_largest_share_epsilon": DEFAULT_ROAD_LARGEST_SHARE_EPSILON,
+            "road_component_count_floor_ratio": args.road_component_count_floor_ratio,
         },
         "timings_seconds": {
             "owner_h3m_parse": owner_seconds,
@@ -387,6 +505,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "native_rule_failure_count": len(native_failures),
             "density_gap_count": len(density_gaps),
             "policy_gap_count": len(policy_gaps),
+            "topology_gap_count": len(topology_gaps),
             "matched_comparison_count": len(comparisons),
         },
         "failures": {
@@ -394,6 +513,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "native_rules": native_failures,
             "density_gaps": density_gaps,
             "policy_gaps": policy_gaps,
+            "topology_gaps": topology_gaps,
         },
         "groups": {
             "owner": sample_group_summary(owner_samples),
@@ -410,8 +530,12 @@ def main() -> int:
     parser.add_argument("--density-floor-ratio", type=float, default=DEFAULT_DENSITY_FLOOR_RATIO, help="Minimum native object-density ratio against owner group baselines")
     parser.add_argument("--road-floor-ratio", type=float, default=DEFAULT_ROAD_FLOOR_RATIO, help="Minimum native road-density ratio against owner group baselines")
     parser.add_argument("--guard-reward-ratio-floor-ratio", type=float, default=DEFAULT_GUARD_REWARD_RATIO_FLOOR_RATIO, help="Minimum native guard/reward ratio against owner group baselines")
+    parser.add_argument("--road-largest-share-multiplier", type=float, default=DEFAULT_ROAD_LARGEST_SHARE_MULTIPLIER, help="Maximum native largest road-component share as a multiple of the matched owner share")
+    parser.add_argument("--road-largest-share-absolute-cap", type=float, default=DEFAULT_ROAD_LARGEST_SHARE_ABSOLUTE_CAP, help="Absolute cap for native largest road-component share")
+    parser.add_argument("--road-component-count-floor-ratio", type=float, default=DEFAULT_ROAD_COMPONENT_COUNT_FLOOR_RATIO, help="Minimum native road-component count as a ratio of matched owner component count")
     parser.add_argument("--no-density-gate", action="store_true", help="Report density metrics but do not fail on owner-density underfill")
     parser.add_argument("--no-policy-gate", action="store_true", help="Report policy metrics but do not fail on category, road, and guard/reward underfill")
+    parser.add_argument("--no-topology-gate", action="store_true", help="Report road topology metrics but do not fail on road component shape gaps")
     parser.add_argument("--allow-failures", action="store_true", help="Return success while still reporting parse/rule/density/policy failures")
     parser.add_argument("--pretty", action="store_true", help="Pretty-print JSON")
     args = parser.parse_args()
