@@ -31,6 +31,41 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-owner-small-normal-water-underground-corpus-shape-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Promote the uploaded Small normal-water two-level owner sample into the hard owner-corpus native comparison gate and correct the package object/category, town, guard, road-topology, and town-spacing gaps exposed by that gate.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- local owner evidence under `maps/h3m-maps/S-2playerss-normalwater-2level.h3m`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- `owner_discovered_s_2playerss_normalwater_2level` is mapped to the player-facing native catalog-auto Small normal-water underground comparison path.
+- The owner-corpus hard mapped comparison increases from seven to eight passing mapped samples, with unmapped parsed samples reduced to 13.
+- Native Small normal-water two-level package counts match owner evidence for package objects, towns, guards, road cells, and owner object categories.
+- Native Small normal-water two-level road component sizes match owner topology by level: surface `[84]`, underground `[17]`.
+- Native town spacing satisfies the owner-derived semantic floor while preserving guarded route closure.
+- Existing representative auto-template and production-audit gates remain passing without claiming broad production parity.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No broad Small normal-water/islands parity claim beyond this uploaded sample.
+- No full HoMM3 production parity claim; 13 parsed uploaded samples remain unmapped.
+- No HoMM3 copyrighted asset/DEF import.
+validationResults:
+- Native GDExtension rebuilt successfully with `cmake --build .artifacts/map_persistence_native_build --parallel 2`.
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` passed with eight mapped comparisons passing; the Small normal-water two-level mapped comparison reports zero deltas for object, town, guard, and road counts, owner category counts `decoration 196`, `guard 62`, `object 64`, `reward 100`, `town 5`, road component sizes by level `0: [84]`, `1: [17]`, and `semantic_layout_match`.
+- `tests/native_random_map_auto_template_batch_report.tscn` passed with 11 representative cases.
+- `tests/native_random_map_production_parity_completion_audit_report.tscn` passed with `production_ready false`, preserving the broad production-parity gap.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-owner-small-random-land-corpus-shape-gate-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`

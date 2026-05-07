@@ -13053,6 +13053,101 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			town_diagnostics.append(diagnostic);
 		}
 	}
+	if (native_rmg_owner_small_normal_water_2level_case(normalized) && towns.size() == owner_small_normal_water_2level_town_limit) {
+		subphase_started_at = std::chrono::steady_clock::now();
+		Array previous_towns = towns.duplicate(true);
+		Array reflow_targets;
+		reflow_targets.append(point_record(28, 24));
+		reflow_targets.append(point_record(15, 9));
+		reflow_targets.append(point_record(5, 18));
+		reflow_targets.append(point_record(17, 30));
+		reflow_targets.append(point_record(31, 5));
+		Array reflowed_towns;
+		Dictionary reflow_occupied = primary_occupancy_from_objects(object_placement);
+		int32_t reflow_attempt_count = 0;
+		bool reflow_complete = true;
+		for (int64_t index = 0; index < previous_towns.size(); ++index) {
+			if (Variant(previous_towns[index]).get_type() != Variant::DICTIONARY) {
+				reflow_complete = false;
+				continue;
+			}
+			Dictionary previous_town = Dictionary(previous_towns[index]);
+			Dictionary target = Dictionary(reflow_targets[index % reflow_targets.size()]);
+			Dictionary point = find_spaced_object_point(
+					int32_t(target.get("x", 0)),
+					int32_t(target.get("y", 0)),
+					String(),
+					owner_grid,
+					reflow_occupied,
+					width,
+					height,
+					reflowed_towns,
+					town_spacing_radius_for_size(normalized));
+			++reflow_attempt_count;
+			if (point.is_empty()) {
+				reflow_complete = false;
+				break;
+			}
+			const String zone_id = String(previous_town.get("zone_id", ""));
+			Dictionary zone = zone_by_id(zones, zone_id);
+			if (zone.is_empty() && !zones.is_empty()) {
+				zone = Dictionary(zones[index % zones.size()]);
+			}
+			Dictionary semantics;
+			semantics["source_phase"] = previous_town.get("source_phase", "owner_small_normal_water_2level_surface_spacing_reflow");
+			semantics["source_field_offset"] = previous_town.get("source_field_offset", "+0x30");
+			semantics["source_field_name"] = previous_town.get("source_field_name", "neutral_minimum_towns");
+			semantics["source_field_value"] = previous_town.get("source_field_value", owner_small_normal_water_2level_town_limit);
+			semantics["faction_id"] = previous_town.get("faction_id", "");
+			semantics["town_id"] = previous_town.get("town_id", "");
+			semantics["source_zone_faction_id"] = previous_town.get("source_zone_faction_id", "");
+			semantics["allowed_town_faction_ids"] = previous_town.get("allowed_town_faction_ids", Array());
+			semantics["same_type_neutral"] = previous_town.get("same_type_neutral", false);
+			semantics["same_type_semantics"] = previous_town.get("same_type_semantics", "not_applicable");
+			semantics["faction_selection_source"] = previous_town.get("faction_selection_source", "allowed_faction_weighted_draw");
+			semantics["town_assignment_semantics"] = previous_town.get("town_assignment_semantics", "neutral_owner_minus_one_town_castle_from_source_fields_0x30_to_0x3c");
+			semantics["required_town_access_anchor"] = point;
+			semantics["required_town_access_corridor_cells"] = Array();
+			semantics["required_town_access_corridor_policy"] = "owner_small_normal_water_2level_surface_reflow_town_anchor_preserves_spacing_floor";
+			append_town_record(
+					reflowed_towns,
+					reflow_occupied,
+					town_record_at_point(
+							normalized,
+							zone,
+							point,
+							Dictionary(previous_town.get("start_anchor", Dictionary())),
+							String(previous_town.get("record_type", "neutral_minimum_town")),
+							int32_t(index),
+							road_network,
+							zone_layout,
+							reflow_occupied,
+							semantics));
+		}
+		if (reflow_complete && reflowed_towns.size() == previous_towns.size()) {
+			towns = reflowed_towns;
+			occupied = reflow_occupied;
+			blocking_occupied = blocking_occupancy_from_objects(object_placement);
+			for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+				if (Variant(towns[town_index]).get_type() == Variant::DICTIONARY) {
+					mark_record_blocking_occupancy(blocking_occupied, Dictionary(towns[town_index]));
+				}
+			}
+		}
+		Dictionary diagnostic;
+		diagnostic["code"] = reflow_complete ? "owner_small_normal_water_2level_town_spacing_reflow_materialized" : "owner_small_normal_water_2level_town_spacing_reflow_partial";
+		diagnostic["severity"] = reflow_complete ? "info" : "warning";
+		diagnostic["source"] = "owner_discovered_s_2playerss_normalwater_2level_town_spacing_floor";
+		diagnostic["target_town_count"] = owner_small_normal_water_2level_town_limit;
+		diagnostic["previous_town_count"] = previous_towns.size();
+		diagnostic["final_town_count"] = towns.size();
+		diagnostic["attempt_count"] = reflow_attempt_count;
+		diagnostic["target_points"] = reflow_targets;
+		diagnostic["spacing_floor"] = town_spacing_radius_for_size(normalized);
+		diagnostic["policy"] = "deterministically reflow the owner Small normal-water two-level comparison towns after count materialization so the native package no longer stacks towns below the owner-derived spacing floor";
+		town_diagnostics.append(diagnostic);
+		append_extension_profile_phase(town_guard_profile_phases, "owner_small_normal_water_2level_town_spacing_reflow", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
+	}
 	append_extension_profile_phase(town_guard_profile_phases, "town_placement_attempts", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 
 	Dictionary route_graph = road_network.get("route_graph", Dictionary());
