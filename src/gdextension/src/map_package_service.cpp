@@ -12364,14 +12364,113 @@ Dictionary close_unguarded_town_pair_routes_with_guards(const Dictionary &normal
 	int32_t checked_pair_count = 0;
 	int32_t added_guard_count = 0;
 	int32_t reused_guard_closure_tile_count = 0;
+	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
+	Array town_visit_cells_cache;
+	for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+		if (Variant(towns[town_index]).get_type() == Variant::DICTIONARY) {
+			town_visit_cells_cache.append(town_pair_route_visit_cells(Dictionary(towns[town_index])));
+		} else {
+			town_visit_cells_cache.append(Array());
+		}
+	}
+	auto build_pass_components = [&](int32_t level) -> std::vector<int32_t> {
+		const int32_t tile_count = std::max(0, width * height);
+		std::vector<int32_t> components(tile_count, -1);
+		if (tile_count <= 0) {
+			return components;
+		}
+		auto blocked_at = [&](int32_t x, int32_t y) -> bool {
+			return blocked.has(level_point_key(x, y, level)) || blocked.has(point_key(x, y));
+		};
+		static constexpr int32_t DX[8] = { 1, -1, 0, 0, 1, 1, -1, -1 };
+		static constexpr int32_t DY[8] = { 0, 0, 1, -1, 1, -1, 1, -1 };
+		int32_t component_id = 0;
+		std::vector<int32_t> queue;
+		queue.reserve(std::max(1, tile_count));
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				const int32_t start_index = y * width + x;
+				if (components[start_index] >= 0 || blocked_at(x, y)) {
+					continue;
+				}
+				components[start_index] = component_id;
+				queue.clear();
+				queue.push_back(start_index);
+				size_t cursor = 0;
+				while (cursor < queue.size()) {
+					const int32_t current = queue[cursor++];
+					const int32_t cx = current % width;
+					const int32_t cy = current / width;
+					for (int32_t direction = 0; direction < 8; ++direction) {
+						const int32_t nx = cx + DX[direction];
+						const int32_t ny = cy + DY[direction];
+						if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+							continue;
+						}
+						const int32_t next_index = ny * width + nx;
+						if (components[next_index] >= 0 || blocked_at(nx, ny)) {
+							continue;
+						}
+						components[next_index] = component_id;
+						queue.push_back(next_index);
+					}
+				}
+				++component_id;
+			}
+		}
+		return components;
+	};
+	auto component_precheck_reachable = [&](const Array &starts, const Array &goals, const std::vector<std::vector<int32_t>> &components_by_level) -> bool {
+		for (int64_t start_index = 0; start_index < starts.size(); ++start_index) {
+			if (Variant(starts[start_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary start = Dictionary(starts[start_index]);
+			const int32_t start_x = int32_t(start.get("x", 0));
+			const int32_t start_y = int32_t(start.get("y", 0));
+			const int32_t level = int32_t(start.get("level", 0));
+			if (level < 0 || level >= int32_t(components_by_level.size()) || start_x < 0 || start_y < 0 || start_x >= width || start_y >= height) {
+				return true;
+			}
+			const int32_t start_component = components_by_level[level][start_y * width + start_x];
+			if (start_component < 0) {
+				return true;
+			}
+			for (int64_t goal_index = 0; goal_index < goals.size(); ++goal_index) {
+				if (Variant(goals[goal_index]).get_type() != Variant::DICTIONARY) {
+					continue;
+				}
+				Dictionary goal = Dictionary(goals[goal_index]);
+				if (level != int32_t(goal.get("level", level))) {
+					continue;
+				}
+				const int32_t goal_x = int32_t(goal.get("x", 0));
+				const int32_t goal_y = int32_t(goal.get("y", 0));
+				if (goal_x < 0 || goal_y < 0 || goal_x >= width || goal_y >= height) {
+					return true;
+				}
+				const int32_t goal_component = components_by_level[level][goal_y * width + goal_x];
+				if (goal_component < 0 || goal_component == start_component) {
+					return true;
+				}
+			}
+		}
+		return false;
+	};
 	static constexpr int32_t MAX_PASSES = 20;
 	for (int32_t pass = 0; pass < MAX_PASSES; ++pass) {
 		bool added_this_pass = false;
+		std::vector<std::vector<int32_t>> components_by_level;
+		components_by_level.reserve(level_count);
+		for (int32_t level = 0; level < level_count; ++level) {
+			components_by_level.push_back(build_pass_components(level));
+		}
 		for (int64_t left_index = 0; left_index < towns.size(); ++left_index) {
 			if (Variant(towns[left_index]).get_type() != Variant::DICTIONARY) {
 				continue;
 			}
 			Dictionary left = Dictionary(towns[left_index]);
+			Array left_visit_cells = town_visit_cells_cache[left_index];
 			for (int64_t right_index = left_index + 1; right_index < towns.size(); ++right_index) {
 				if (Variant(towns[right_index]).get_type() != Variant::DICTIONARY) {
 					continue;
@@ -12380,7 +12479,11 @@ Dictionary close_unguarded_town_pair_routes_with_guards(const Dictionary &normal
 					++checked_pair_count;
 				}
 				Dictionary right = Dictionary(towns[right_index]);
-				Array path = direct_access_path_between_cell_sets(town_pair_route_visit_cells(left), town_pair_route_visit_cells(right), width, height, blocked);
+				Array right_visit_cells = town_visit_cells_cache[right_index];
+				if (!component_precheck_reachable(left_visit_cells, right_visit_cells, components_by_level)) {
+					continue;
+				}
+				Array path = direct_access_path_between_cell_sets(left_visit_cells, right_visit_cells, width, height, blocked);
 				if (path.is_empty()) {
 					continue;
 				}
@@ -12641,6 +12744,7 @@ Dictionary cover_town_boundary_openings_with_route_guards(Array &guards, const A
 		summary["signature"] = hash32_hex(canonical_variant(summary));
 		return summary;
 	}
+	Dictionary opening_cells_by_guard_index;
 	for (int64_t cell_index = 0; cell_index < opening_cells.size(); ++cell_index) {
 		if (Variant(opening_cells[cell_index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -12652,38 +12756,62 @@ Dictionary cover_town_boundary_openings_with_route_guards(Array &guards, const A
 		if (guard_index < 0) {
 			uncovered_cells.append(opening);
 			continue;
+		}
+		const String guard_index_key = String::num_int64(guard_index);
+		Array guard_cells = opening_cells_by_guard_index.get(guard_index_key, Array());
+		guard_cells.append(opening);
+		opening_cells_by_guard_index[guard_index_key] = guard_cells;
+	}
+	Array guard_index_keys = opening_cells_by_guard_index.keys();
+	for (int64_t key_index = 0; key_index < guard_index_keys.size(); ++key_index) {
+		const String guard_index_key = String(guard_index_keys[key_index]);
+		const int64_t guard_index = guard_index_key.to_int();
+		if (guard_index < 0 || guard_index >= guards.size() || Variant(guards[guard_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary guard = Dictionary(guards[guard_index]).duplicate(true);
+		Array body_tiles = guard.get("body_tiles", Array()).duplicate(true);
+		Dictionary seen;
+		for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
+			if (Variant(body_tiles[body_index]).get_type() != Variant::DICTIONARY) {
+				continue;
 			}
-			Dictionary guard = Dictionary(guards[guard_index]).duplicate(true);
-			Array body_tiles = guard.get("body_tiles", Array()).duplicate(true);
-			Dictionary seen;
-			for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
-				if (Variant(body_tiles[body_index]).get_type() != Variant::DICTIONARY) {
-					continue;
-				}
-				Dictionary body = Dictionary(body_tiles[body_index]);
-				seen[point_key(int32_t(body.get("x", 0)), int32_t(body.get("y", 0)))] = true;
+			Dictionary body = Dictionary(body_tiles[body_index]);
+			seen[point_key(int32_t(body.get("x", 0)), int32_t(body.get("y", 0)))] = true;
+		}
+		Array guard_cells = opening_cells_by_guard_index.get(guard_index_key, Array());
+		int32_t assigned_count = 0;
+		for (int64_t cell_index = 0; cell_index < guard_cells.size(); ++cell_index) {
+			if (Variant(guard_cells[cell_index]).get_type() != Variant::DICTIONARY) {
+				continue;
 			}
+			Dictionary opening = Dictionary(guard_cells[cell_index]);
+			const int32_t x = int32_t(opening.get("x", 0));
+			const int32_t y = int32_t(opening.get("y", 0));
 			const String key = point_key(x, y);
 			if (!seen.has(key)) {
 				body_tiles.append(cell_record(x, y, 0));
+				seen[key] = true;
 				++covered_count;
 			}
-			Array occupancy_keys;
-			for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
-				if (Variant(body_tiles[body_index]).get_type() != Variant::DICTIONARY) {
+			++assigned_count;
+		}
+		Array occupancy_keys;
+		for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
+			if (Variant(body_tiles[body_index]).get_type() != Variant::DICTIONARY) {
 				continue;
 			}
 			Dictionary body = Dictionary(body_tiles[body_index]);
 			occupancy_keys.append(point_key(int32_t(body.get("x", 0)), int32_t(body.get("y", 0))));
-			}
-			guard["body_tiles"] = body_tiles;
-			guard["occupancy_keys"] = occupancy_keys;
-			guard["controlled_town_boundary_opening_tile_count"] = int32_t(guard.get("controlled_town_boundary_opening_tile_count", 0)) + 1;
-			guard["controlled_town_boundary_opening_policy"] = "town_and_required_access_corridor_boundary_openings_are_covered_by_route_guards_until_cleared";
+		}
+		guard["body_tiles"] = body_tiles;
+		guard["occupancy_keys"] = occupancy_keys;
+		guard["controlled_town_boundary_opening_tile_count"] = int32_t(guard.get("controlled_town_boundary_opening_tile_count", 0)) + assigned_count;
+		guard["controlled_town_boundary_opening_policy"] = "town_and_required_access_corridor_boundary_openings_are_covered_by_route_guards_until_cleared";
 		guard["signature"] = hash32_hex(canonical_variant(guard));
 		guards[guard_index] = guard;
 		const String guard_id = String(guard.get("guard_id", ""));
-		coverage_by_guard[guard_id] = int32_t(coverage_by_guard.get(guard_id, 0)) + 1;
+		coverage_by_guard[guard_id] = int32_t(coverage_by_guard.get(guard_id, 0)) + assigned_count;
 	}
 	Dictionary summary;
 	summary["schema_id"] = "native_random_map_town_boundary_opening_guard_cover_v1";

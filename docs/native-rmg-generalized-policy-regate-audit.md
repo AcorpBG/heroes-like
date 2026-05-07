@@ -483,3 +483,22 @@ Validation evidence:
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --latest-amap-artifact --summary` selected `.artifacts/rmg_native_batch_export_after_object_category_floor`, parsed `18/18` owner H3Ms and `18/18` native AMAPs, matched `18` comparisons, completed parsing in about `8.458s`, and reported `status=pass` with `0` parse/native/density/policy/topology gaps.
 
 The remaining slow step is fresh native generation/export, which still needs Godot while the generator is exposed only through `MapPackageService`. The next performance work should optimize native placement loops and, if needed, add a non-Godot native CLI/export boundary; it should not move H3M/AMAP parsing or structural comparison back into Godot.
+
+## Implemented Town/Guard Placement Profiling And Fast Path
+
+The native extension profile report now surfaces town/guard subphase timings in addition to object-placement subphases. The added evidence showed the slow cases were not generic Godot overhead: they were dominated by `town_boundary_opening_guard_cover` and `town_pair_route_guard_closure`.
+
+Native town/guard placement now avoids two avoidable costs:
+
+- town boundary opening cover batches opening cells by nearest route guard and updates each guard record once, instead of duplicating/signing guard dictionaries once per opening cell;
+- town-pair route closure caches town visit cells and builds per-pass connected components, skipping full pathfinding for town pairs already disconnected by current blockers/guards.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_extension_profile_report.tscn` passed. Representative wall times improved from about `13.2s -> 6.4s` for `medium_default_002`, `9.5s -> 4.3s` for `medium_validation_gate_005`, and `9.7s -> 7.4s` for `xl_islands_012`.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_auto_template_batch_report.tscn` passed with `11/11` cases and `seed_specific_runtime_override_case_count: 0`.
+- `/usr/bin/time -p env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 900 tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_town_guard_perf` exported `18/18` packages with `0` failures in `real 476.65s`.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_town_guard_perf --summary` reported `status=pass`, `18` matched comparisons, and `0` parse/native/density/policy/topology gaps in about `8.649s`.
+
+This does not make generation fast enough yet. It removes a major avoidable town/guard cost while leaving object placement and full XL export time as active performance targets.

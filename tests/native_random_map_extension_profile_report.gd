@@ -110,6 +110,12 @@ func _run_case(service: Variant, case_id: String, config: Dictionary, require_va
 	if object_phases.is_empty():
 		_fail("%s object placement profile missed subphases: %s" % [case_id, JSON.stringify(object_summary)])
 		return {}
+	var town_guard_summary: Dictionary = generated.get("town_guard_placement", {}) if generated.get("town_guard_placement", {}) is Dictionary else {}
+	var town_guard_profile: Dictionary = town_guard_summary.get("runtime_phase_profile", {}) if town_guard_summary.get("runtime_phase_profile", {}) is Dictionary else {}
+	var town_guard_phases: Array = town_guard_profile.get("phases", []) if town_guard_profile.get("phases", []) is Array else []
+	if town_guard_phases.is_empty():
+		_fail("%s town/guard placement profile missed subphases: %s" % [case_id, JSON.stringify(town_guard_summary)])
+		return {}
 	return {
 		"case_id": case_id,
 		"template_id": String(generated.get("normalized_config", {}).get("template_id", "")),
@@ -126,9 +132,12 @@ func _run_case(service: Variant, case_id: String, config: Dictionary, require_va
 		"object_pipeline_elapsed_msec": float(object_cost.get("elapsed_msec", 0.0)),
 		"object_top_phase_id": String(object_profile.get("top_phase_id", "")),
 		"object_top_phase_elapsed_msec": float(object_profile.get("top_phase_elapsed_msec", 0.0)),
+		"town_guard_top_phase_id": String(town_guard_profile.get("top_phase_id", "")),
+		"town_guard_top_phase_elapsed_msec": float(town_guard_profile.get("top_phase_elapsed_msec", 0.0)),
 		"phase_msec": _phase_summary(phases),
 		"top_phases": _top_phases(phases, 5),
 		"object_top_phases": _top_phases(object_phases, 5),
+		"town_guard_top_phases": _top_phases(town_guard_phases, 5),
 		"object_count": int(generated.get("component_counts", {}).get("object_count", 0)),
 		"road_segment_count": int(generated.get("component_counts", {}).get("road_segment_count", 0)),
 		"town_count": int(generated.get("component_counts", {}).get("town_count", 0)),
