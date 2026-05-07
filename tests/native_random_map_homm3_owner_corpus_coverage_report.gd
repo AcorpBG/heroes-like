@@ -3,7 +3,7 @@ extends Node
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 
 const REPORT_ID := "NATIVE_RANDOM_MAP_HOMM3_OWNER_CORPUS_COVERAGE_REPORT"
-const REPORT_SCHEMA_ID := "native_random_map_homm3_owner_corpus_coverage_report_v1"
+const REPORT_SCHEMA_ID := "native_random_map_homm3_owner_corpus_coverage_report_v2"
 const HOMM3_RE_OBJECT_METADATA := "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json"
 
 const HOMM3_VERSION_ROE := 14
@@ -44,7 +44,7 @@ const OWNER_H3M_CANDIDATES := [
 		"local_evidence_policy": "uploaded_owner_evidence_not_committed",
 	},
 ]
-const OWNER_H3M_DISCOVERY_DIRS := ["res://maps", "/root/.openclaw/media/inbound"]
+const OWNER_H3M_DISCOVERY_DIRS := ["res://maps", "res://maps/h3m-maps", "/root/.openclaw/media/inbound"]
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -145,22 +145,26 @@ func _discovered_candidate_for_path(path: String) -> Dictionary:
 
 func _expected_size_class_from_name(file_name: String) -> String:
 	var lower_name := file_name.to_lower()
-	if "extra_large" in lower_name or "extra-large" in lower_name or "_xl" in lower_name or "-xl" in lower_name:
+	var stem := lower_name.get_basename().replace(" ", "_")
+	if stem.begins_with("xl_") or stem.begins_with("xl-") or stem == "xl" \
+			or "extra_large" in lower_name or "extra-large" in lower_name or "_xl" in lower_name or "-xl" in lower_name:
 		return "homm3_extra_large"
-	if "large" in lower_name:
+	if stem.begins_with("l_") or stem.begins_with("l-") or stem == "l" or "large" in lower_name:
 		return "homm3_large"
-	if "medium" in lower_name:
+	if stem.begins_with("m_") or stem.begins_with("m-") or stem == "m" or "medium" in lower_name:
 		return "homm3_medium"
-	if "small" in lower_name:
+	if stem.begins_with("s_") or stem.begins_with("s-") or stem == "s" or "small" in lower_name:
 		return "homm3_small"
 	return "unknown"
 
 func _expected_water_mode_from_name(file_name: String) -> String:
 	var lower_name := file_name.to_lower()
-	if "island" in lower_name or "water" in lower_name:
+	if "island" in lower_name:
 		return "islands"
-	if "land" in lower_name:
+	if "nowater" in lower_name or "no_water" in lower_name or "no-water" in lower_name or "land" in lower_name:
 		return "land"
+	if "normalwater" in lower_name or "normalw" in lower_name or "normal_water" in lower_name or "normal-water" in lower_name or "water" in lower_name:
+		return "normal_water"
 	return "unknown"
 
 func _sample_header(candidate: Dictionary) -> Dictionary:
@@ -284,6 +288,7 @@ func _comparison_gate_summary(samples: Array) -> Dictionary:
 	var failures := []
 	var mapped_sample_count := 0
 	var mapped_pass_count := 0
+	var unmapped_sample_ids := []
 	for sample_value in samples:
 		if not (sample_value is Dictionary):
 			continue
@@ -292,6 +297,7 @@ func _comparison_gate_summary(samples: Array) -> Dictionary:
 			continue
 		var comparison: Dictionary = sample.get("native_comparison", {}) if sample.get("native_comparison", {}) is Dictionary else {}
 		if comparison.is_empty() or String(comparison.get("status", "")) == "not_compared":
+			unmapped_sample_ids.append(String(sample.get("id", "")))
 			continue
 		mapped_sample_count += 1
 		var sample_failures := _mapped_comparison_failures(sample, comparison)
@@ -319,6 +325,8 @@ func _comparison_gate_summary(samples: Array) -> Dictionary:
 		"status": "pass" if failures.is_empty() else "fail",
 		"mapped_sample_count": mapped_sample_count,
 		"mapped_pass_count": mapped_pass_count,
+		"unmapped_parsed_sample_count": unmapped_sample_ids.size(),
+		"unmapped_parsed_sample_ids": unmapped_sample_ids,
 		"failure_count": failures.size(),
 		"failures": failures,
 			"policy": "mapped owner H3M samples are hard-gated on native generation/package conversion, validation, object/town/guard/road deltas, owner category counts, per-level road component topology, town spacing, guard footprint, and unguarded/object-only town route closure",
@@ -992,18 +1000,32 @@ func _size_class_for_width(width: int) -> String:
 func _sample_metrics(bytes: PackedByteArray, width: int, level_count: int) -> Dictionary:
 	if width <= 0 or level_count <= 0:
 		return {"status": "not_attempted", "error": "invalid_dimensions"}
-	var def_offset := _find_object_definition_offset(bytes)
-	if def_offset <= 0:
+	var candidate_offsets := _find_object_definition_offsets(bytes)
+	if candidate_offsets.is_empty():
 		return {"status": "not_attempted", "error": "object_definition_offset_not_found"}
+	var first_error := {}
+	for offset_value in candidate_offsets:
+		var result := _sample_metrics_for_definition_offset(bytes, width, level_count, int(offset_value), candidate_offsets.size())
+		if String(result.get("status", "")) == "parsed":
+			return result
+		if first_error.is_empty():
+			first_error = result
+	first_error["candidate_object_definition_offset_count"] = candidate_offsets.size()
+	return first_error
+
+func _sample_metrics_for_definition_offset(bytes: PackedByteArray, width: int, level_count: int, def_offset: int, candidate_count: int) -> Dictionary:
 	var tile_offset := def_offset - width * width * level_count * H3M_TILE_BYTES_PER_CELL
 	if tile_offset <= 0:
-		return {"status": "not_attempted", "error": "invalid_tile_offset", "object_definition_offset": def_offset}
+		return {"status": "not_attempted", "error": "invalid_tile_offset", "object_definition_offset": def_offset, "candidate_object_definition_offset_count": candidate_count}
 	var object_metadata := _load_homm3_object_metadata()
 	var templates := _parse_h3m_object_templates(bytes, def_offset, object_metadata)
 	if String(templates.get("status", "")) != "parsed":
+		templates["candidate_object_definition_offset_count"] = candidate_count
 		return templates
 	var objects := _parse_h3m_object_instances(bytes, int(templates.get("next_offset", 0)), templates.get("templates", []), width, level_count)
 	if String(objects.get("status", "")) != "parsed":
+		objects["object_definition_offset"] = def_offset
+		objects["candidate_object_definition_offset_count"] = candidate_count
 		return objects
 	var records: Array = objects.get("records", []) if objects.get("records", []) is Array else []
 	var counts_by_category := {}
@@ -1032,6 +1054,8 @@ func _sample_metrics(bytes: PackedByteArray, width: int, level_count: int) -> Di
 	return {
 		"status": "parsed",
 		"object_definition_count": int(templates.get("template_count", 0)),
+		"object_definition_offset": def_offset,
+		"candidate_object_definition_offset_count": candidate_count,
 		"object_count": records.size(),
 		"counts_by_category": counts_by_category,
 		"counts_by_level": counts_by_level,
@@ -1095,7 +1119,7 @@ func _parse_h3m_object_instances(bytes: PackedByteArray, offset: int, templates:
 			pos = next_min
 			break
 		var found := -1
-		for extra in range(0, 320):
+		for extra in range(0, 4096):
 			var candidate := next_min + extra
 			if _is_h3m_object_instance_start(bytes, candidate, templates.size(), width, level_count):
 				found = candidate
@@ -1320,18 +1344,19 @@ func _min_positive(values: Array) -> int:
 			result = number
 	return result
 
-func _find_object_definition_offset(bytes: PackedByteArray) -> int:
+func _find_object_definition_offsets(bytes: PackedByteArray) -> Array:
+	var result := []
 	for offset in range(0, bytes.size() - 32):
 		var count := _u32(bytes, offset)
-		if count < 10 or count > 1000:
+		if count < 10 or count > 2000:
 			continue
 		var name_len := _u32(bytes, offset + 4)
 		if name_len < 4 or name_len > 32:
 			continue
 		var name := _ascii(bytes, offset + 8, name_len)
 		if name.to_lower().ends_with(".def"):
-			return offset
-	return -1
+			result.append(offset)
+	return result
 
 func _point_key(x: int, y: int) -> String:
 	return "%d,%d" % [x, y]

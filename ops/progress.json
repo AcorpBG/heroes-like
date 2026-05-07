@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-production-audit-owner-sample-coverage-matrix-10184",
-  "currentSliceTitle": "native rmg production audit owner sample coverage matrix 10184",
+  "currentSliceId": "native-rmg-owner-h3m-variation-corpus-discovery-10184",
+  "currentSliceTitle": "native rmg owner h3m variation corpus discovery 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Production parity audit schema v6 now records parsed owner-H3M sample coverage and representative default coverage, making missing matching owner samples explicit instead of conflating translated profile support with owner-proven parity.",
+  "currentSliceNotes": "Owner-corpus audit now discovers maps/h3m-maps as evidence-only input, parses 18 of 21 readable local owner H3M samples across Small/Medium/Large/XL and land/normal-water/islands, and reports 15 newly parsed variation samples as unmapped next-work evidence while production_ready remains false.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-06T23:32:55Z",
+  "updatedAt": "2026-05-07T01:50:35Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -13615,6 +13615,16 @@
       "updatedAt": "2026-05-06T23:32:55Z",
       "completedAt": "2026-05-06T23:32:55Z",
       "notes": "Production parity audit schema v6 now records parsed owner-H3M sample coverage and representative default coverage, making missing matching owner samples explicit instead of conflating translated profile support with owner-proven parity."
+    },
+    {
+      "id": "native-rmg-owner-h3m-variation-corpus-discovery-10184",
+      "title": "native rmg owner h3m variation corpus discovery 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-07T01:50:35Z",
+      "startedAt": "2026-05-07T01:43:21Z",
+      "completedAt": "2026-05-07T01:50:35Z",
+      "notes": "Owner-H3M corpus discovery now includes local maps/h3m-maps variation evidence without committing uploaded maps. The report passed with 21 readable samples, 18 parsed metric samples, Small/Medium/Large/XL coverage, land/normal-water/islands coverage, and 15 newly parsed samples explicitly reported as unmapped next-work evidence; production audit still reports production_ready false."
     }
   ],
   "completedImplementationEvidence": [

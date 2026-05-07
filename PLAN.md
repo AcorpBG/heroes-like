@@ -29,6 +29,38 @@ Do not infer product readiness from the completed queue. Completed Phase 2/RMG/p
 
 Persistent guardrail: do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.
 
+Active owner-directed RMG corrective slice:
+
+id: `native-rmg-owner-h3m-variation-corpus-discovery-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Ingest the newly uploaded local H3M variation directory into the owner-corpus audit as evidence-only comparison input so Large/XL, water, island, and underground coverage gaps become measurable instead of hidden by the previous three-sample corpus.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- local evidence under `maps/h3m-maps/*.h3m`
+implementationTargets:
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Owner-corpus discovery includes `maps/h3m-maps` without committing uploaded `.h3m` evidence.
+- Filename-derived size/water hints correctly classify S/M/L/XL, no-water/land, normal-water, islands, and two-level samples.
+- The corpus report summarizes parsed variation coverage and exposes unmapped or mismatched native comparisons as explicit next-work evidence.
+- Production audit consumes the expanded owner-corpus coverage without claiming `production_ready`.
+nonGoals:
+- No HoMM3 copyrighted asset/DEF import.
+- No exact H3M byte/art parity claim.
+- No generated `.amap`/`.ascenario` or uploaded `.h3m` evidence files committed.
+completionEvidence:
+- Owner-corpus discovery now includes `res://maps/h3m-maps` as local evidence-only input and does not stage or commit uploaded `.h3m` files.
+- Filename hints classify `S/M/L/XL`, `nowater` as land, `normalwater`/`normalw` as normal-water, and `islands` as islands; the only remaining unknown parsed sample is the ambiguous `S-RandomNumberofplayers.h3m`.
+- Expanded local corpus audit passed with 21 readable samples, 18 parsed metric samples, size coverage across Small/Medium/Large/XL, level coverage across 1 and 2 levels, and water coverage across land/normal-water/islands.
+- The mapped exact comparison gate remains limited to the three already-mapped owner samples and reports 15 newly parsed samples as unmapped next-work evidence.
+- Production parity audit consumes the expanded corpus and still reports `production_ready: false`; remaining blockers include full template-breadth corpus/parser completion, unmapped variation comparisons, and representative Medium/Large/XL land owner sample gaps.
+
 Recently completed owner-directed RMG corrective slice:
 
 id: `native-rmg-production-audit-owner-sample-coverage-matrix-10184`
