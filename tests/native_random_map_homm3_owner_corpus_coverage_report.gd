@@ -3,7 +3,7 @@ extends Node
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 
 const REPORT_ID := "NATIVE_RANDOM_MAP_HOMM3_OWNER_CORPUS_COVERAGE_REPORT"
-const REPORT_SCHEMA_ID := "native_random_map_homm3_owner_corpus_coverage_report_v3"
+const REPORT_SCHEMA_ID := "native_random_map_homm3_owner_corpus_coverage_report_v4"
 const HOMM3_RE_OBJECT_METADATA := "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json"
 
 const HOMM3_VERSION_ROE := 14
@@ -11,6 +11,8 @@ const HOMM3_VERSION_AB := 21
 const HOMM3_VERSION_SOD := 28
 const OBJECT_TEMPLATE_RECORD_BYTES_AFTER_NAME := 42
 const H3M_TILE_BYTES_PER_CELL := 7
+const OBJECT_INSTANCE_TAIL_PARSE_MISSING_COUNT_TOLERANCE := 32
+const OBJECT_INSTANCE_TAIL_PARSE_BYTE_TOLERANCE := 64
 const H3M_BLOCKING_TERRAIN_TYPE_IDS := {8: true, 9: true}
 const DECORATION_TYPE_IDS := {
 	118: true, 119: true, 120: true, 134: true, 135: true, 136: true,
@@ -226,6 +228,12 @@ func _sample_header(candidate: Dictionary) -> Dictionary:
 		"decompressed_h3m_bytes": bytes.size(),
 		"metric_parse_status": String(metrics.get("status", "not_attempted")),
 		"metric_parse_error": String(metrics.get("error", "")),
+		"object_instance_parse_quality": String(metrics.get("parse_quality", "")),
+		"object_instance_parse_warning": String(metrics.get("parse_warning", "")),
+		"declared_object_count": int(metrics.get("declared_object_count", metrics.get("object_count", 0))),
+		"parsed_object_count": int(metrics.get("parsed_object_count", metrics.get("object_count", 0))),
+		"object_instance_missing_count": int(metrics.get("missing_object_instance_count", 0)),
+		"object_instance_tail_bytes": int(metrics.get("tail_bytes", 0)),
 		"object_definition_count": int(metrics.get("object_definition_count", 0)),
 		"object_count": int(metrics.get("object_count", 0)),
 		"counts_by_category": metrics.get("counts_by_category", {}),
@@ -246,6 +254,7 @@ func _coverage_summary(samples: Array) -> Dictionary:
 	var has_large_or_xl := false
 	var has_underground := false
 	var parsed_metric_count := 0
+	var tail_count_mismatch_sample_ids := []
 	for sample_value in samples:
 		if not (sample_value is Dictionary):
 			continue
@@ -263,6 +272,8 @@ func _coverage_summary(samples: Array) -> Dictionary:
 		has_underground = has_underground or bool(sample.get("has_underground", false))
 		if String(sample.get("metric_parse_status", "")) == "parsed":
 			parsed_metric_count += 1
+			if int(sample.get("object_instance_missing_count", 0)) > 0:
+				tail_count_mismatch_sample_ids.append(String(sample.get("id", "")))
 	var missing := []
 	if not size_classes.has("homm3_small"):
 		missing.append("small_h3m_sample")
@@ -277,6 +288,8 @@ func _coverage_summary(samples: Array) -> Dictionary:
 	missing.append("template_breadth_corpus")
 	if parsed_metric_count < readable.size():
 		missing.append("full_object_road_guard_reward_metric_parser_for_all_corpus_samples")
+	if not tail_count_mismatch_sample_ids.is_empty():
+		missing.append("object_instance_tail_count_mismatch_samples")
 	return {
 		"readable_sample_count": readable.size(),
 		"parsed_metric_sample_count": parsed_metric_count,
@@ -284,6 +297,7 @@ func _coverage_summary(samples: Array) -> Dictionary:
 		"water_mode_counts": water_modes,
 		"level_count_counts": level_counts,
 		"has_underground_sample": has_underground,
+		"object_instance_tail_count_mismatch_sample_ids": tail_count_mismatch_sample_ids,
 		"missing_coverage": missing,
 		"missing_coverage_count": missing.size(),
 		"corpus_ready": missing.is_empty(),
@@ -1246,6 +1260,12 @@ func _sample_metrics_for_definition_offset(bytes: PackedByteArray, width: int, l
 		"object_definition_offset": def_offset,
 		"candidate_object_definition_offset_count": candidate_count,
 		"object_count": records.size(),
+		"declared_object_count": int(objects.get("declared_object_count", records.size())),
+		"parsed_object_count": int(objects.get("parsed_object_count", records.size())),
+		"missing_object_instance_count": int(objects.get("missing_object_instance_count", 0)),
+		"tail_bytes": int(objects.get("tail_bytes", 0)),
+		"parse_quality": String(objects.get("parse_quality", "complete")),
+		"parse_warning": String(objects.get("parse_warning", "")),
 		"counts_by_category": counts_by_category,
 		"counts_by_level": counts_by_level,
 		"road_cell_count_by_level": road_cell_count_by_level,
@@ -1314,13 +1334,37 @@ func _parse_h3m_object_instances(bytes: PackedByteArray, offset: int, templates:
 				found = candidate
 				break
 		if found < 0:
+			var missing_count := count - records.size()
+			var tail_bytes := bytes.size() - next_min
+			if missing_count > 0 \
+					and missing_count <= OBJECT_INSTANCE_TAIL_PARSE_MISSING_COUNT_TOLERANCE \
+					and tail_bytes >= 0 \
+					and tail_bytes <= OBJECT_INSTANCE_TAIL_PARSE_BYTE_TOLERANCE:
+				return {
+					"status": "parsed",
+					"records": records,
+					"object_count": records.size(),
+					"declared_object_count": count,
+					"parsed_object_count": records.size(),
+					"missing_object_instance_count": missing_count,
+					"next_offset": next_min,
+					"tail_bytes": tail_bytes,
+					"parse_quality": "tail_count_mismatch",
+					"parse_warning": "object_instance_declared_count_exceeds_strict_tail_parse",
+				}
 			return {"status": "not_attempted", "error": "next_object_instance_not_found", "index": index, "offset": pos}
 		pos = found
 	return {
 		"status": "parsed",
 		"records": records,
 		"object_count": records.size(),
+		"declared_object_count": count,
+		"parsed_object_count": records.size(),
+		"missing_object_instance_count": 0,
 		"next_offset": pos,
+		"tail_bytes": bytes.size() - pos,
+		"parse_quality": "complete",
+		"parse_warning": "",
 	}
 
 func _is_h3m_object_instance_start(bytes: PackedByteArray, pos: int, template_count: int, width: int, level_count: int) -> bool:
