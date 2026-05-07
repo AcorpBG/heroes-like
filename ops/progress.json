@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-owner-medium-normal-water-corpus-structural-gate-10184",
-  "currentSliceTitle": "native rmg owner medium normal water corpus structural gate 10184",
+  "currentSliceId": "native-rmg-owner-large-land-corpus-road-topology-gate-10184",
+  "currentSliceTitle": "native rmg owner large land corpus road topology gate 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Mapped owner_discovered_m_normalw_4players into the hard owner-corpus native comparison gate and corrected the Medium normal-water structural gaps it exposed: 754 package objects, 7 towns, 80 guards, 221 road cells, road component sizes [71, 55, 50, 45], nearest town distance 25, and semantic layout match. This is scoped to the uploaded Medium normal-water sample; 17 parsed uploaded samples remain unmapped and broad HoMM3 production parity remains unclaimed.",
+  "currentSliceNotes": "Mapped owner_discovered_l_nowater_randomplayers_nounder into the hard owner-corpus native comparison gate and corrected the Large no-water package road topology gap it exposed: 2,917 package objects, 8 towns, 264 guards, 366 road cells, road component sizes [192, 118, 47, 9], nearest town distance 34, and semantic layout match. This is scoped to the uploaded Large single-level no-water sample; 16 parsed uploaded samples remain unmapped and broad HoMM3 production parity remains unclaimed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-07T07:15:31Z",
+  "updatedAt": "2026-05-07T07:55:30Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,51 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "native-rmg-owner-large-land-corpus-road-topology-gate-10184",
+      "title": "Native RMG Owner Large Land Corpus Road Topology Gate",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_owner_corpus_coverage_report.gd",
+        "maps/h3m-maps/L-NoWater-RandomPlayers-nounder.h3m"
+      ],
+      "purpose": "Promote the uploaded Large no-water single-level owner sample into the hard owner-corpus native comparison gate and correct the package road count/topology gap exposed by that gate.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_owner_corpus_coverage_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "owner_discovered_l_nowater_randomplayers_nounder is mapped to the player-facing native catalog-auto Large land comparison path.",
+        "The owner-corpus hard mapped comparison increases from four to five passing mapped samples, with unmapped parsed samples reduced to 16.",
+        "Native Large land package counts match owner evidence for package objects, towns, guards, and road cells.",
+        "Native Large land road component sizes match owner topology for the uploaded sample: [192, 118, 47, 9].",
+        "Existing representative auto-template and production-audit gates remain passing without claiming broad production parity.",
+        "No uploaded .h3m, generated .amap, or generated .ascenario evidence is committed."
+      ],
+      "nonGoals": [
+        "No broad Large water/islands or two-level parity claim.",
+        "No full HoMM3 production parity claim; 16 parsed uploaded samples remain unmapped.",
+        "No HoMM3 copyrighted asset/DEF import."
+      ],
+      "startedAt": "2026-05-07T07:24:00Z",
+      "updatedAt": "2026-05-07T07:55:30Z",
+      "completedAt": "2026-05-07T07:55:30Z",
+      "completionEvidence": [
+        "owner_discovered_l_nowater_randomplayers_nounder now runs through the hard owner-corpus native comparison gate using the player-facing catalog-auto Large land path.",
+        "The owner-corpus hard comparison now reports five mapped samples, five mapped passes, and 16 unmapped parsed uploaded samples.",
+        "The mapped Large no-water comparison reports zero deltas for object, town, guard, and road counts.",
+        "The native Large land package road topology matches owner component sizes [192, 118, 47, 9].",
+        "The native Large land nearest town distance is 34 against the owner sample's 35 and remains inside the semantic layout gate."
+      ],
+      "notes": "Completed a focused owner-corpus road topology gate for the uploaded Large single-level no-water sample. Remaining uploaded samples are evidence for future mapped comparison slices and are intentionally not committed."
+    },
     {
       "id": "native-rmg-owner-medium-normal-water-corpus-structural-gate-10184",
       "title": "Native RMG Owner Medium Normal Water Corpus Structural Gate",
@@ -13906,6 +13951,28 @@
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-owner-large-land-corpus-road-topology-gate-10184",
+      "title": "Native RMG Owner Large Land Corpus Road Topology Gate",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "completedAt": "2026-05-07T07:55:30Z",
+      "evidence": [
+        "owner_discovered_l_nowater_randomplayers_nounder now runs through the hard owner-corpus native comparison gate using the player-facing catalog-auto Large land path.",
+        "The owner-corpus comparison gate now reports mapped_sample_count 5, mapped_pass_count 5, failure_count 0, and unmapped_parsed_sample_count 16.",
+        "The mapped Large no-water comparison reports object_count_delta 0, town_count_delta 0, guard_count_delta 0, and road_cell_count_delta 0.",
+        "Native Large land road component sizes match owner component sizes [192, 118, 47, 9].",
+        "large_land_seed_a still passes the auto-template batch with 2,917 package objects, 2,645 generated object placements, 8 towns, 264 guards, 366 package road cells, and nearest town distance 34."
+      ],
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 passed.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 tests/native_random_map_homm3_owner_corpus_coverage_report.tscn passed with five mapped owner comparisons.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 tests/native_random_map_auto_template_batch_report.tscn passed after the Large road topology correction.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 tests/native_random_map_production_parity_completion_audit_report.tscn passed with production_ready false preserved.",
+        "python3 tests/validate_repo.py passed.",
+        "jq empty ops/progress.json and git diff --check passed.",
+        "No uploaded .h3m, generated .amap, or generated .ascenario evidence files were staged."
+      ]
+    },
     {
       "id": "native-rmg-owner-medium-normal-water-corpus-structural-gate-10184",
       "title": "Native RMG Owner Medium Normal Water Corpus Structural Gate",
