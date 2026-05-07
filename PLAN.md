@@ -23,11 +23,1669 @@ Rules:
 
 Current phase: **Phase 3 - HoMM3-Style Random Map Generator Rework corrective parity queue reopened**.
 
-Current tactical chain: owner-uploaded H3M comparisons reopened focused native RMG corrective work after the accepted Phase 3 goal `native-rmg-homm3-spec-rework-parent-10184`. Completed child slices remain valid evidence for their specific gates, but they do not close broad HoMM3-style production parity. Native package/session adoption remains feature-gated and non-authoritative until later replay and owner-comparison gates prove stable full-output package/session identity, road topology, object density, guard placement, and town separation across supported profiles.
+Current tactical chain: owner-uploaded H3M comparisons reopened focused native RMG corrective work after the accepted Phase 3 goal `native-rmg-homm3-spec-rework-parent-10184`. Completed child slices remain valid evidence for their specific gates, but they do not close broad HoMM3-style production parity. Owner-compared translated land packages are now runtime-authoritative for package/session inputs after adoption/replay evidence, and the broad land/surface/underground template generation gate now covers every currently eligible recovered template structurally with level-aware package route-closure verification. Exact HoMM3 full parity, byte/object-art parity, islands support, and full gameplay parity remain gated.
 
 Do not infer product readiness from the completed queue. Completed Phase 2/RMG/performance/tooling evidence means those specific slices passed their gates; it does not mean playable alpha, campaign breadth, release readiness, broad faction completion, asset parity, or HoMM3 byte-level cloning.
 
 Persistent guardrail: do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.
+
+Recently completed owner-directed RMG corrective slice:
+
+id: `native-rmg-production-audit-owner-sample-coverage-matrix-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Expose owner-H3M sample coverage per representative default so translated-profile support cannot be mistaken for owner-proven production parity when matching H3M evidence is absent.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+implementationTargets:
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Production audit records parsed owner sample coverage with size class, water mode, underground/surface level shape, object/town/guard counts, and road-cell totals.
+- The audit adds a representative owner-H3M sample coverage checklist item.
+- Representative cases without a matching owner sample are visible as explicit missing coverage rather than hidden behind generic corpus readiness.
+- The broad owner corpus objective checklist consumes this coverage item and remains unsatisfied when representative evidence is incomplete.
+nonGoals:
+- No synthetic owner-H3M samples or guessed coverage.
+- No HoMM3 asset/DEF import or exact byte parity claim.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Production audit schema v6 adds `parsed_sample_coverage` and `representative_owner_h3m_sample_coverage`.
+- Parsed owner sample coverage currently includes Small land single-level, Small land underground, and Medium Islands single-level samples.
+- The audit still passes as a no-overclaim audit while `production_ready: false` remains, with missing representative owner evidence for unsupported size/water/level combinations and the broader Large/XL/template-breadth corpus blocker.
+
+Recently completed owner-directed RMG corrective slice:
+
+id: `native-rmg-production-audit-objective-artifact-checklist-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Add an explicit prompt-to-artifact completion checklist to the production audit so the owner objective maps to concrete repo evidence and remaining blockers before any production-ready claim.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+implementationTargets:
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Production audit restates the native GDExtension RMG production objective as concrete checklist requirements.
+- Each requirement maps to repo artifacts and real evidence from the audit completion checklist or owner corpus summary.
+- The checklist distinguishes satisfied local evidence from broad parity blockers instead of treating passing reports as full completion.
+- The audit still refuses production readiness while broad owner-H3M corpus, broad underground readiness, or full HoMM3-style parity remain missing.
+nonGoals:
+- No HoMM3 asset/DEF import or exact byte parity claim.
+- No synthetic owner-corpus evidence or broad production-ready claim.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Production audit schema v5 adds `objective_artifact_checklist` with entries for native GDExtension activation, player-facing defaults, towns/zones/routes, roads, obstacles/guards/rewards/object density, translated template breadth, broad owner-H3M corpus, broad underground readiness, and full production-ready claim.
+- Checklist entries cite concrete repo artifacts and consume real completion-checklist/owner-corpus evidence.
+- The audit passes while preserving `production_ready: false`; broad owner-H3M corpus coverage still reports missing Large/XL H3M samples and template-breadth corpus evidence.
+
+Recently completed owner-directed RMG corrective slice:
+
+id: `native-rmg-production-audit-package-road-integrity-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Gate representative player-facing defaults on player-visible package road integrity, clarifying the distinction between diagnostic generated road segment totals and unique serialized package road tiles.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `tests/native_random_map_package_surface_topology_report.gd`
+implementationTargets:
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Production audit records package-road integrity for every representative player-facing default.
+- The gate fails empty road packages, zero-tile road records, duplicate serialized road tiles, or package metadata that does not match unique serialized road tiles.
+- Raw generated `road_network.road_cell_count` remains visible as diagnostic data and is not confused with player-loaded package roads.
+- The audit still reports production not ready while broad owner corpus and broad underground readiness remain unproven.
+nonGoals:
+- No HoMM3 asset/DEF import or exact byte parity claim.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+- No broad production-ready claim from representative road integrity evidence.
+completionEvidence:
+- Production audit adds `package_road_integrity` to each representative case and a satisfied `representative_package_road_integrity` checklist item.
+- All representative defaults serialize non-empty package roads with zero duplicate road tiles, zero zero-tile road records, and package component metadata matching unique serialized road tiles.
+- The audit explicitly records generated road segment totals as diagnostic because they can include pre-dedup/materialization segment counts, while package road integrity is gated on the actual loaded map surface.
+- Production audit still reports `production_ready: false` with broad owner-H3M corpus coverage, broad underground production readiness, and full HoMM3-style parity remaining open.
+
+Recently completed owner-directed RMG corrective slice:
+
+id: `native-rmg-production-audit-mapped-owner-parity-evidence-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Make exact mapped owner-H3M parity evidence first-class in the production audit, separating passing local owner comparisons from the remaining broad corpus blocker.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+implementationTargets:
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Production audit reports concise mapped-owner sample parity summaries for each compared local H3M sample.
+- The audit has a hard satisfied checklist item for exact currently mapped owner-sample parity.
+- The checklist requires zero object/town/guard/road deltas, category-count match, per-level road-component match, semantic layout match, and zero native object-only/guarded route leaks.
+- Broad owner corpus readiness still fails when Large/XL or template-breadth H3M evidence is absent.
+nonGoals:
+- No synthesized or guessed owner-H3M corpus coverage.
+- No HoMM3 asset/DEF import or exact byte parity claim.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Production audit now includes `mapped_sample_parity` in the owner corpus summary for Small single-level, Small underground, and Medium Islands owner samples.
+- The new `mapped_owner_sample_exact_parity` checklist item passes only when the mapped comparison gate passes and each summarized sample has zero object/town/guard/road deltas, matching owner categories, matching per-level road topology, semantic layout match, and zero native route leaks.
+- Local evidence inventory confirmed only three owner map samples are available: two Small land variants and one Medium Islands sample; no Large/XL `.h3m` or broader template corpus exists in `maps/`, inbound media, or recovered artifacts.
+- Production audit still reports `production_ready: false` because broad owner-H3M corpus coverage and broad underground production readiness remain unproven.
+
+Recently completed owner-directed RMG corrective slice:
+
+id: `native-rmg-production-audit-representative-route-closure-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Promote level-aware package route-closure evidence into the production parity audit for every representative player-facing default, so the audit directly fails start-town, cross-zone, or all-town leaks instead of relying on a separate topology report by implication.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `tests/native_random_map_package_surface_topology_report.gd`
+implementationTargets:
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Production audit reports package-level route-closure metrics for each representative default.
+- The representative route gate covers object-only and unresolved blockers for start-town, cross-zone, and all-town pairs.
+- The gate is level-aware through the shared package topology helper and covers the representative Small underground case on two levels.
+- The audit still reports production not ready while broad owner corpus, full parity, and broad underground readiness remain unproven.
+nonGoals:
+- No HoMM3 asset/DEF import or exact byte parity claim.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+- No broad production-ready claim from representative route-closure evidence.
+completionEvidence:
+- Production parity audit schema v4 adds `package_route_closure` per representative case and a satisfied `representative_package_route_closure` checklist item.
+- The representative defaults pass package route closure with zero object-only and unresolved reachable pairs for start-town, cross-zone, and all-town checks: Small land, Small underground, Medium land, Medium Islands, Large land, and Extra Large land.
+- The Small underground representative records 2 levels, 8 towns, 28 all-town pairs checked, and zero reachable object-only or unresolved pairs.
+- The audit still reports `production_ready: false` with `full_homm3_style_parity`, `broad_owner_h3m_comparison_corpus`, and `underground_production_parity` as explicit missing requirements.
+
+Recently completed owner-directed RMG corrective slice:
+
+id: `native-rmg-package-topology-level-aware-route-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Close a verifier gap where package object-only route-closure checks only searched level 0, so two-level/underground package leaks could be missed despite serialized level data.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_package_surface_topology_report.gd`
+- `tests/native_random_map_broad_translated_catalog_underground_route_closure_sweep_report.gd`
+implementationTargets:
+- `tests/native_random_map_package_surface_topology_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Package topology helper builds town visit points with their actual package/map level.
+- Object-only player-start, cross-zone, and all-town path searches stay within the same level and use level-aware blocked-tile keys.
+- Broad translated land/underground catalog sweep passes under the stricter level-aware route-closure helper.
+- The result does not claim exact HoMM3 byte/object-art parity or full underground production readiness.
+nonGoals:
+- No HoMM3 asset/DEF import or exact byte parity claim.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+- No broad production-ready claim from structural route-closure evidence alone.
+completionEvidence:
+- `tests/native_random_map_package_surface_topology_report.gd` now computes package topology paths with `Vector3i(level, x, y)` visit/start/goal points and level-aware blocked keys.
+- The focused package surface topology report passed after the stricter helper change.
+- The broad translated catalog underground route-closure sweep passed for 47 eligible land/underground translated templates with zero object-only player-start, cross-zone, or all-town package route leaks.
+- The strengthened evidence confirms current translated packages keep guarded/blocked route closure on actual package levels; production parity audit still keeps full HoMM3 parity, broad owner corpus, and broad underground production readiness as blockers.
+
+Recently completed owner-directed RMG corrective slice:
+
+id: `native-rmg-production-audit-small-underground-representative-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Promote the mapped owner Small underground native-auto path into the production parity audit as explicit representative evidence without overclaiming broad underground production readiness.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- local uploaded owner Small underground H3M evidence under `maps/` and `/root/.openclaw/media/inbound`
+implementationTargets:
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Production parity audit includes a representative native-auto Small underground case.
+- The representative underground case selects `translated_rmg_template_027_v1` / `translated_rmg_profile_027_v1`, validates, materializes two levels, and passes active catalog town/castle minima.
+- Audit adds a satisfied representative underground checklist item while keeping broad underground production exposure blocked until owner-H3M corpus breadth expands.
+- Production audit still reports `production_ready: false` and keeps full parity, broad owner corpus, and broad underground production parity as missing requirements.
+nonGoals:
+- No broad underground production-ready claim.
+- No HoMM3 asset/DEF import or exact byte parity claim.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Production parity audit now includes `small_underground_default`, which selects `translated_rmg_template_027_v1` / `translated_rmg_profile_027_v1`, validates with `owner_compared_translated_profile_not_full_parity`, materializes 2 levels, and passes active catalog town minima with 8 towns against 8 required.
+- The representative Small underground output reports 12 zones, 60 guards, 436 package objects, and 157 package road cells.
+- A new satisfied `representative_owner_compared_underground_support` checklist item records the representative case and owner corpus underground-sample presence.
+- The audit still reports `production_ready: false`; broad owner-H3M corpus breadth, broad underground production exposure, and full HoMM3-style parity remain explicit blockers.
+
+Recently completed owner-directed RMG corrective slice:
+
+id: `native-rmg-template-town-minima-materialization-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Add a hard production-audit gate for active recovered catalog player castle and neutral town minima, disambiguating active player-filtered zones from inactive source zones so real under-materialization fails without false-counting disabled template branches.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/random_map_template_catalog.json`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+implementationTargets:
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Production audit records catalog-derived minimum town/castle expectations for representative defaults.
+- Player-facing Large/XL defaults materialize at least the active player castle minima plus neutral town/castle minima from their translated catalog zones.
+- The fix does not reintroduce close-town stacking below the current launchable town-spacing floor or route leaks in mapped owner samples.
+- Production audit still does not claim full HoMM3 parity or broad owner-corpus readiness.
+nonGoals:
+- No HoMM3 asset/DEF import or exact byte parity claim.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+- No broad corpus/product-ready claim from this single town-minima correction.
+completionEvidence:
+- Production parity audit schema v3 now records `catalog_town_minima` for representative player-facing defaults, including active-zone count, player-count, active player town/castle minima, neutral town/castle minima, generated town count, and pass/fail status.
+- The active filtered defaults pass the minima gate: Small `049` generates 7 towns against 7 required; Medium land `002` generates 6 against 4 required; Medium Islands `001` generates 8 against 4 required; Large `042` generates 16 against 16 required; XL `043` generates 14 against 14 required.
+- The XL default was audited as active-filtered 5 player towns plus 9 neutral towns, not the larger inactive source-zone total; this prevents false-positive town-count corrections while still failing real active catalog under-materialization.
+- Production parity audit still reports `production_ready: false` with full HoMM3-style parity, broad owner-H3M corpus breadth, and underground production parity remaining as explicit blockers.
+
+Recently completed owner-directed RMG corrective slice:
+
+id: `native-rmg-owner-corpus-semantic-layout-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Extend mapped owner-H3M comparisons beyond object/road/category counts so owner-corpus gates catch town-spacing, guard-footprint, and unguarded/object-only route-closure layout failures.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- local uploaded owner H3M evidence under `maps/` and `/root/.openclaw/media/inbound`
+implementationTargets:
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Mapped owner-H3M comparisons include semantic layout metrics for owner and native outputs: nearest-town spacing, object-only town-route closure, unguarded/guard-controlled route closure, and guard-control footprint by level.
+- The owner-corpus comparison gate fails mapped samples with native town spacing materially below the owner sample, object-only/unguarded reachable town pairs, or guard-control footprints materially below owner evidence.
+- The comparison gate self-check proves synthetic semantic-layout failures are detected.
+- Production parity audit consumes the strengthened owner-corpus summary without claiming full HoMM3 parity or broad corpus readiness.
+nonGoals:
+- No HoMM3 asset/DEF import or exact byte parity claim.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+- No full production-readiness claim from the current three mapped samples.
+completionEvidence:
+- Owner-corpus H3M comparisons now include semantic layout metrics for mapped owner/native samples: nearest-town spacing, object-only town-route closure, guard-controlled route closure, terrain/object/guard blocking footprint, and per-level guard-control totals.
+- The mapped comparison gate now fails semantic-layout gaps and its self-check proves synthetic `semantic_layout_gap` failures are detected alongside object, guard, road-cell, category, and road-topology gaps.
+- Medium Islands native spacing was corrected for the owner-compared translated profile while preserving zero unguarded/object-only reachable town pairs; the uploaded Small single-level native default remains at 7 towns, 150 decorative obstacles, 40 guards, 303 package objects, and closed town topology.
+- Production parity audit consumes the strengthened owner-corpus gate and still reports `production_ready: false` with broad owner corpus, full parity, and underground production parity remaining as explicit blockers.
+- Validation passed native build plus owner-corpus coverage, uploaded Small comparison, uploaded Small topology, and production parity completion audit reports.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-map-package-document-validation-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Replace native map/scenario package validation stubs with bounded structural validators so generated package adoption is not relying on a `validation_not_implemented` API surface.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `src/gdextension/src/map_document.cpp`
+- `src/gdextension/src/scenario_document.cpp`
+- `tests/map_package_api_skeleton_report.gd`
+- `tests/native_random_map_package_session_authoritative_replay_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/map_package_api_skeleton_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- `MapPackageService.validate_map_document` returns a real `aurelion_map_validation_report` with `status: pass` for structurally valid package map documents and `status: fail` with concrete failures for missing/null/invalid documents.
+- `MapPackageService.validate_scenario_document` returns a real `aurelion_scenario_validation_report` with `status: pass` for structurally valid scenario documents bound to a valid map document and concrete failures for null/invalid/mismatched documents.
+- Validation checks include document identity, dimensions/levels, object bounds, duplicate placement ids, terrain layer sizing, road payload sanity, scenario identity, map_ref consistency, and player-slot/objective metrics.
+- Existing package save/load and generated package adoption reports pass against the native validator.
+nonGoals:
+- No exact HoMM3 byte/art/DEF import or cloning.
+- No broad semantic parity claim from structural document validation alone.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Native `MapPackageService.validate_map_document` and `validate_scenario_document` now return concrete structural pass/fail reports for valid, invalid, null, and mismatched package documents instead of `validation_not_implemented`.
+- Structural validation covers document identity, dimensions/levels, object bounds, duplicate placement ids, terrain layer sizing, road payload sanity, scenario identity, map references, player slots, and objective metrics.
+- Package API, package adoption, package replay, map-editor load, and maps-folder package browser reports passed against the native validator while preserving the no-full-parity boundary.
+
+Current owner-directed RMG corrective slice:
+
+id: `native-rmg-owner-corpus-comparison-hard-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Harden the dynamic owner-H3M corpus report so mapped owner/native comparisons with category, object, town, guard, road-cell, road-topology, generation, validation, or package-conversion gaps fail the report instead of returning `ok: true` as a loose inventory.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- local uploaded owner H3M evidence under `maps/` and `/root/.openclaw/media/inbound`
+implementationTargets:
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- The owner-corpus report computes explicit comparison gate failures for mapped readable samples.
+- The report exits nonzero if a mapped sample has native generation/conversion failure, native `not_implemented`, generation validation failure, object/town/guard/road-cell deltas, category-count gaps, or road-topology gaps.
+- The current three mapped owner samples still pass after the hard gate: Small single-level, Small underground, and Medium Islands.
+- The production parity audit continues to consume the owner-corpus summary without claiming full HoMM3 production parity or corpus readiness.
+nonGoals:
+- No new HoMM3 art/object import or exact byte parity claim.
+- No broad owner-corpus readiness claim beyond the currently mapped samples.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Owner-corpus coverage report now emits `comparison_gate` with hard-gated mapped sample failures for native generation/conversion status, validation status, object/town/guard/road-cell deltas, owner category gaps, and per-level road component topology gaps.
+- Owner-corpus report exits nonzero when the real mapped comparison gate or synthetic gate self-check fails; the self-check proves synthetic object, guard, road-cell, category, and road-topology mismatches are detected.
+- Current mapped owner samples pass with `mapped_sample_count: 3`, `mapped_pass_count: 3`, and `failure_count: 0` for Small single-level, Small underground, and Medium Islands.
+- Production parity audit now rebuilds the owner-corpus native comparisons, fails if the mapped comparison gate fails, and includes the `mapped_comparison_gate` evidence under the broad owner-H3M corpus missing requirement.
+- Validation passed owner-corpus coverage, production parity completion audit, progress JSON validation, and diff whitespace checks.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-production-audit-structural-matrix-evidence-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Update the production parity audit so it separately records the now-passing translated-catalog structural route-closure matrix while preserving the remaining owner-H3M corpus and underground production blockers.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `tests/native_random_map_broad_translated_catalog_route_closure_sweep_report.gd`
+- `tests/native_random_map_broad_translated_catalog_islands_route_closure_sweep_report.gd`
+- `tests/native_random_map_broad_translated_catalog_underground_route_closure_sweep_report.gd`
+implementationTargets:
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Production audit still reports `production_ready: false`.
+- Audit includes a satisfied checklist item for translated-catalog structural route-closure matrix evidence across land/surface, Islands/surface, and land/underground.
+- Remaining broad owner-H3M corpus blocker no longer ambiguously treats structural route-closure matrix coverage as missing; it specifically names missing owner-H3M corpus coverage for larger sizes and broader recovered-template/water/underground samples.
+- Audit still does not claim exact HoMM3 byte/art parity or player-facing underground production readiness.
+nonGoals:
+- No generator behavior changes.
+- No exact HoMM3 byte/art/DEF import or cloning.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Production parity audit schema advanced to v2 and now includes a satisfied `translated_catalog_structural_route_closure_matrix` checklist item for land/surface, Islands/surface, and land/underground translated-catalog structural sweeps.
+- Audit evidence records the dedicated full-sweep scenes and their passed counts: 51 land/surface, 45 Islands/surface, and 47 land/underground eligible translated templates, all with zero translated `not_implemented`, zero zero-tile roads, and zero object-only route leaks.
+- Broad owner-H3M corpus missing scope now specifically names missing Large/XL owner sample coverage, owner-H3M recovered-template breadth corpus, and owner-H3M water/underground matrix coverage, avoiding ambiguity with the now-passing structural matrix.
+- Production audit still reports `production_ready: false` with three missing requirements: full HoMM3-style parity, broad owner-H3M comparison corpus, and underground production parity.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-broad-translated-catalog-water-underground-route-closure-sweeps-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Add dedicated full translated-catalog route-closure sweeps for Islands/surface and land/underground lanes so non-land structural coverage is repeatable without environment-variable setup.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/random_map_template_catalog.json`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_broad_template_generation_report.gd`
+- `tests/native_random_map_broad_translated_catalog_route_closure_sweep_report.gd`
+implementationTargets:
+- `tests/native_random_map_broad_translated_catalog_islands_route_closure_sweep_report.gd`
+- `tests/native_random_map_broad_translated_catalog_islands_route_closure_sweep_report.tscn`
+- `tests/native_random_map_broad_translated_catalog_underground_route_closure_sweep_report.gd`
+- `tests/native_random_map_broad_translated_catalog_underground_route_closure_sweep_report.tscn`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- A dedicated Islands/surface full-sweep report runs eligible recovered translated templates with the default cap disabled and translated-template filtering enabled.
+- A dedicated land/underground full-sweep report runs eligible recovered translated templates with the default cap disabled and translated-template filtering enabled.
+- Both reports fail if an eligible translated template reports `not_implemented`, lacks roads/towns/guards/objects, contains zero-tile roads, or exposes object-only player-start, cross-zone, or all-town reachable town pairs.
+- Passing evidence remains structural coverage only and does not claim exact HoMM3 byte/art parity, broad owner-H3M corpus parity, or player-facing underground production readiness.
+nonGoals:
+- No exact HoMM3 byte/art/DEF import or cloning.
+- No player-facing exposure of Islands or underground as full production parity.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Added dedicated Islands/surface and land/underground full-sweep scenes that inherit the translated-catalog full-sweep wrapper and force the relevant water/underground lane without environment variables.
+- Islands/surface full sweep passed with 45 eligible translated templates attempted, zero translated `not_implemented` statuses, zero zero-tile roads, and zero object-only player-start, cross-zone, or all-town package route leaks.
+- Land/underground full sweep passed with 47 eligible translated two-level templates attempted, zero translated `not_implemented` statuses, zero zero-tile roads, and zero object-only player-start, cross-zone, or all-town package route leaks.
+- Skips are now explicit per lane for translated templates that do not have a supported size/profile plan, while local fixture templates are excluded by the translated-template filter.
+- Evidence remains structural route-closure coverage and does not claim exact HoMM3 byte/art parity, broad owner-H3M corpus parity, or player-facing underground production readiness.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-broad-translated-catalog-route-closure-sweep-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Add an explicit full translated-catalog route-closure sweep so the capped broad-template smoke report cannot be mistaken for all-template production evidence.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/random_map_template_catalog.json`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_broad_template_generation_report.gd`
+implementationTargets:
+- `tests/native_random_map_broad_translated_catalog_route_closure_sweep_report.gd`
+- `tests/native_random_map_broad_translated_catalog_route_closure_sweep_report.tscn`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- A dedicated full-sweep report runs the broad translated catalog without the default 12-template cap.
+- The report fails if any eligible translated template is skipped by a bounded default limit, reports `not_implemented`, lacks roads/towns/guards/objects, or exposes object-only player-start, cross-zone, or all-town reachable town pairs.
+- The existing capped broad-template report remains available for faster smoke coverage.
+- Passing evidence is explicitly structural route-closure coverage and does not claim exact HoMM3 byte/art parity, broad owner-H3M corpus parity, or underground production readiness.
+nonGoals:
+- No exact HoMM3 byte/art/DEF import or cloning.
+- No player-facing exposure of every recovered template as production parity.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Added a dedicated full translated-catalog land/surface sweep report that inherits the broad-template generation/package/route-closure checks, filters to recovered translated templates, and disables the default 12-template cap.
+- The full sweep passed with 51 eligible translated templates attempted, zero translated `not_implemented` statuses, zero object-only player-start, cross-zone, or all-town package route leaks, and zero zero-tile roads.
+- Only translated templates `009` and `044` were skipped for the land/surface lane because they have no supported land/surface size/profile plan; local fixture templates were excluded by the translated-template filter.
+- The existing capped broad-template report remains unchanged for faster smoke coverage, and the new evidence remains structural route-closure coverage rather than exact HoMM3 byte/art parity or underground production readiness.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-owner-small-single-level-auto-density-parity-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Fix the remaining uploaded owner Small single-level corpus mismatch where `native_catalog_auto` selects owner-compared template `049` but still applies the broad structural auto density supplement, producing extra decorative objects compared with the owner H3M sample.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `maps/small3playermap-1level.h3m`
+- `scripts/core/ScenarioSelectRules.gd`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `tests/native_random_map_auto_template_batch_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Owner-compared translated profiles selected through `native_catalog_auto` do not receive the broad structural catalog density-floor decoration supplement.
+- Uploaded Small single-level owner corpus comparison matches native `049` on total object count and owner categories: decoration 150, guard 40, object 30, reward 76, town 7.
+- Uploaded Small topology report continues to pass with route closure, road topology, town count, guard count, and legacy compact diagnostic evidence intact.
+- Auto-template, package replay, and production audit reports still pass and still do not claim full HoMM3 production parity.
+nonGoals:
+- No exact HoMM3 byte/art/DEF import or cloning.
+- No broad owner-corpus readiness claim beyond the currently uploaded samples.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Native C++ object generation now skips the broad `native_catalog_auto` density-floor supplement when the normalized config is an owner-compared translated profile.
+- Owner corpus coverage report now compares the uploaded Small single-level H3M and native auto-selected `translated_rmg_template_049_v1` at exact owner counts: 303 objects, decoration 150, guard 40, object 30, reward 76, town 7, 110 road cells, and road components `[96, 14]`.
+- The same owner corpus report still matches the uploaded Small underground and Medium Islands samples exactly on extracted object, town, guard, owner-category, and road metrics.
+- Uploaded Small topology report, native auto-template batch, package session authoritative replay, production parity completion audit, full-parity boundary report, and menu wiring report all passed after the density exemption.
+- Production audit remains explicitly `production_ready: false`, with full parity, broad owner corpus, and underground production readiness still missing.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-broad-auto-catalog-launch-selection-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Correct player-facing native catalog auto-selection so it prefers owner-compared translated production defaults when available, while keeping broader launchable translated recovered catalog candidates available only as internal/fallback coverage instead of exposing them as HoMM3-like parity.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/random_map_template_catalog.json`
+- `scripts/core/ScenarioSelectRules.gd`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `tests/random_map_all_template_menu_wiring_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `scripts/core/ScenarioSelectRules.gd`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `tests/random_map_all_template_menu_wiring_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Native catalog auto-selection rejects `not_implemented`, legacy compact, and foundation templates for normal generated-skirmish startup and prefers owner-compared translated defaults for current size, water, underground, and player-count lanes.
+- Representative player-facing auto-selection cases generate, validate, package, and replay through owner-compared templates `049`, `027`, `002`, `001`, `042`, and `043` without reopening the town-stacking or unguarded route regressions.
+- Menu setup keeps manual template/profile pickers hidden while documenting that native catalog auto uses an owner-compared default policy plus a broad internal launch gate.
+- Production parity audit no longer treats broad structural template exposure as product readiness; it still preserves no full HoMM3 parity, broad owner-corpus, and underground-production overclaim boundaries.
+nonGoals:
+- No exact HoMM3 byte/art/DEF import or cloning.
+- No claim that broad structural or owner-compared auto-selected templates are full parity.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Native catalog auto-selection now prefers owner-compared translated candidates before broad launchable translated catalog fallbacks.
+- Random-map menu wiring passed with manual template/profile controls hidden and policy `native_catalog_auto_prefers_owner_compared_defaults_with_broad_internal_launch_gate`.
+- Native auto-template batch passed across representative Small, Small underground, Medium, Medium Islands, Large, and XL cases, selecting `translated_rmg_template_049_v1`, `027`, `002`, `001`, `042`, and `043` respectively.
+- Package session authoritative replay passed for the owner-compared defaults with runtime call-site adoption and replay identity stable.
+- Uploaded Small single-level topology comparison passed for the owner-like native `049` package with 7 towns, 40 guards, 110 road cells, matching `[96, 14]` road components, and zero object-only reachable town pairs; the legacy compact fixture remains correctly diagnosed as bad and launch-blocked.
+- Production parity completion audit remains explicitly `production_ready: false` with missing full parity, broad owner corpus, and underground production readiness requirements.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-broad-underground-template-structural-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Reduce the underground production-parity blocker by adding a broad translated-template underground structural generation gate and allowing supported two-level translated catalog configs to generate as structural not-full-parity outputs instead of `not_implemented`.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/random_map_template_catalog.json`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_broad_template_generation_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_broad_template_generation_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Broad template generation report can run with an underground/two-level option against translated templates that declare `supported_counts` containing `2`.
+- Supported two-level translated catalog configs report `translated_catalog_structural_profile_not_full_parity`, not `not_implemented`, without claiming full parity or runtime production readiness.
+- The broad underground gate validates generation, package conversion, non-empty surfaces, road materialization, and object-only route closure for attempted coherent two-level translated-template cases.
+- Existing land and Islands broad structural gates remain passing.
+nonGoals:
+- No exact HoMM3 byte/art/DEF import or cloning.
+- No full HoMM3 production parity claim.
+- No player-facing underground exposure.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Native translated catalog structural support now accepts `level_count` 1 or 2 while preserving structural-not-full-parity status boundaries.
+- Broad land/surface generation passed 54 eligible/attempted templates, with zero translated `not_implemented` statuses and zero object-only player-start, cross-zone, or all-town package route leaks.
+- Broad Islands/surface generation passed 45 eligible/attempted translated templates, with zero translated `not_implemented` statuses and zero object-only player-start, cross-zone, or all-town package route leaks.
+- Broad land/underground generation passed 47 eligible/attempted coherent two-level translated templates, all reported `translated_catalog_structural_profile_not_full_parity`, with zero `not_implemented` statuses and zero object-only route leaks.
+- Dense two-level translated cases in the 026/027/035/037 range now select roomier structural sizes and pass generation/package validation.
+- Production parity audit remains explicitly not production-ready with four missing requirements, and the full-parity gate still reports no full HoMM3 parity claim.
+
+id: `native-rmg-production-parity-audit-owner-corpus-refresh-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Refresh the production-parity completion audit so its broad owner-corpus missing-requirement evidence reflects the current three exact uploaded owner comparisons instead of stale Small/Medium wording.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+implementationTargets:
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Production parity audit still reports `production_ready: false`.
+- Broad owner-H3M corpus missing requirement names the current three compared owner samples and the remaining missing corpus scope.
+- No full-parity or broad underground/player-facing template support claim is introduced.
+nonGoals:
+- No generator behavior changes.
+- No exact H3M byte/art/DEF import or cloning.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Production parity completion audit still reports `production_ready: false` and `missing_requirement_count: 4`.
+- Broad owner-H3M corpus missing requirement now names the three exact current uploaded owner comparisons: `owner_small_land_single_level`, `owner_small_with_underground`, and `owner_medium_islands`.
+- Remaining corpus blocker is explicit: missing Large/XL owner sample coverage, recovered-template breadth corpus, and broad water/underground matrix coverage.
+- No full HoMM3-style parity, broad player-facing 56-template support, or underground production parity claim was introduced.
+
+Previous recently completed owner-directed implementation slice:
+
+id: `native-rmg-owner-medium-islands-category-shape-parity-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Correct the uploaded owner Medium Islands category-shape comparison so native output no longer hides a 7-object reward/object swap behind matched total object, town, guard, and road counts.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Owner corpus coverage report shows the Medium Islands native owner-category comparison matching decoration 252, guard 61, object 72, reward 103, and town 8.
+- Total object count, town count, guard count, road count, and level 0 road component sizes remain matched for the Medium Islands owner comparison.
+- Package object-only route validation remains closed for all town and cross-zone pairs.
+- Full-generation status remains owner-compared not-full-parity and does not claim broad exact HoMM3 production parity.
+nonGoals:
+- No exact H3M byte/art/DEF import or cloning.
+- No broad Islands production parity claim beyond the uploaded owner-compared sample.
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Owner corpus coverage report now shows the uploaded Medium Islands sample and native `translated_rmg_template_001_v1` / `translated_rmg_profile_001_v1` comparison matching category counts exactly: decoration 252, guard 61, object 72, reward 103, and town 8.
+- The same comparison preserves total and road parity for the bounded sample: 496 objects, 8 towns, 61 guards, 184 road cells, and level 0 road component sizes `[82, 52, 19, 16, 15]`.
+- Package object-only breadth report passed after save/load with the `owner_medium_islands_001` case at 496 objects, 8 towns, 61 guards, 184 road tiles, and zero object-only all-town or cross-zone reachable pairs.
+- Full-generation status remains explicitly `owner_compared_translated_profile_not_full_parity`; remaining production parity debt includes missing Large/XL owner corpus samples, full recovered-template owner comparison, and no exact HoMM3 production parity claim.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-owner-small-single-level-road-exact-parity-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Correct the uploaded owner Small single-level road comparison so native package output matches the owner road-cell count and component sizes instead of only matching the broad two-component shape.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Owner corpus coverage report shows the uploaded Small single-level native road comparison at 110 road cells with level 0 road component sizes `[96, 14]`.
+- Total object count, town count, guard count, and owner category counts remain matched for the Small single-level owner comparison.
+- Package object-only route validation remains closed for all town and cross-zone pairs.
+- Full-generation status remains owner-compared not-full-parity and does not claim broad exact HoMM3 production parity.
+nonGoals:
+- No exact H3M byte/art/DEF import or cloning.
+- No broad all-template road topology parity claim.
+- No committing uploaded owner `.h3m` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Owner corpus coverage report now shows the uploaded Small single-level sample and native `translated_rmg_template_049_v1` / `translated_rmg_profile_049_v1` comparison both at 110 road cells with level 0 road component sizes `[96, 14]`.
+- The same comparison preserves exact object, town, guard, and owner-category counts: 303 objects, 7 towns, 40 guards, decoration 150, object 30, reward 76, and town 7.
+- Package object-only breadth report passed after save/load with zero object-only all-town and cross-zone reachable pairs for the Small default and all other covered owner-compared defaults.
+- Full-generation status remains explicitly `owner_compared_translated_profile_not_full_parity`; remaining production parity debt includes Medium Islands category-shape mismatch, missing Large/XL owner corpus samples, full recovered-template owner comparison, and no exact HoMM3 production parity claim.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-owner-small-underground-category-shape-parity-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Correct the uploaded owner Small underground category-shape comparison so native output no longer hides a 52-object reward/object swap behind matching total object counts.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Owner corpus coverage report shows the Small underground native owner-category comparison matching decoration, guard, object, reward, and town counts for the uploaded sample.
+- Total object count, town count, guard count, level count, and all-level road topology remain matched for the Small underground owner comparison.
+- Package object-only route validation remains closed for all town and cross-zone pairs.
+- Full-generation status remains owner-compared not-full-parity and does not claim broad underground or exact HoMM3 production parity.
+nonGoals:
+- No broad underground support claim for all recovered templates.
+- No exact H3M byte/art/DEF import or cloning.
+- No committing uploaded owner `.h3m` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Owner corpus coverage report now shows the uploaded Small underground sample and native `translated_rmg_template_027_v1` / `translated_rmg_profile_027_v1` comparison matching category counts exactly: decoration 151, guard 60, object 100, reward 117, and town 8.
+- The same comparison preserves total parity for the bounded sample: 436 objects, 8 towns, 60 guards, 157 road cells, and all-level road topology status `all_level_component_sizes_match`.
+- Package object-only breadth report passed the `owner_small_underground_027` case after save/load with 436 objects, 60 guards, 8 towns, 157 unique road tiles, 12 zones, and zero object-only all-town or cross-zone reachable pairs.
+- Full-generation status remains explicitly `owner_compared_translated_profile_not_full_parity`; remaining production parity debt includes the Small single-level road-cell delta, Medium Islands category-shape delta, missing Large/XL owner corpus samples, and no full 56-template exact HoMM3 parity claim.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-owner-small-underground-object-density-parity-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Close the next owner-uploaded Small underground comparison gap by bringing native package object density up to the owner H3M sample while preserving the already-matched town, guard, level, road, and route-closure behavior.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Owner corpus coverage report shows the Small underground native comparison at the uploaded owner object-count target or records a precise residual density gap.
+- Town count, guard count, level count, and all-level road topology remain matched for the Small underground owner comparison.
+- Package object-only route validation remains closed for all town and cross-zone pairs.
+- Full-generation status remains owner-compared not-full-parity and does not claim broad underground or exact HoMM3 production parity.
+nonGoals:
+- No broad underground support claim for all recovered templates.
+- No exact H3M byte/art/DEF import or cloning.
+- No committing uploaded owner `.h3m` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Owner corpus coverage report now shows the uploaded Small underground sample and native `translated_rmg_template_027_v1` / `translated_rmg_profile_027_v1` comparison both at 436 total objects, 8 towns, 60 guards, 157 road cells, and all-level road topology status `all_level_component_sizes_match`.
+- Native Small underground decoration count now matches the owner H3M sample at 151 while preserving package route closure.
+- Package object-only breadth report passed the `owner_small_underground_027` case after save/load with 436 objects, 60 guards, 8 towns, 157 unique road tiles, 12 zones, and zero object-only all-town or cross-zone reachable pairs.
+- Full-generation status remains explicitly `owner_compared_translated_profile_not_full_parity`; the owner-category comparison still reports a category-shape gap with native object category 48 versus owner 100 and native reward category 169 versus owner 117.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-owner-small-underground-runtime-support-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Promote the uploaded owner Small two-level land comparison from `not_implemented` into bounded owner-compared native package generation so the corpus can measure its actual town, guard, road, level, and route-closure parity gaps.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Owner corpus coverage report compares the uploaded Small underground H3M sample against native output instead of reporting `native_not_implemented`.
+- Native package conversion preserves two materialized levels and exposes road metrics for both surface and underground levels.
+- Package object-only route validation remains closed for all town and cross-zone pairs.
+- Full-generation status remains owner-compared not-full-parity and does not claim broad underground or exact HoMM3 production parity.
+nonGoals:
+- No broad underground support claim for all recovered templates.
+- No exact H3M byte/art/DEF import or cloning.
+- No committing uploaded owner `.h3m` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Owner corpus coverage report now compares the uploaded Small underground sample with native `translated_rmg_template_027_v1` / `translated_rmg_profile_027_v1` output instead of reporting `native_not_implemented`.
+- Native package conversion preserves two levels and exactly matches uploaded owner road metrics for this sample: surface `[116]`, underground `[23, 18]`, total road cells `157`, and all-level road topology status `all_level_component_sizes_match`.
+- Package object-only breadth report passed the new `owner_small_underground_027` case after save/load with 8 towns, 60 guards, 318 package objects, 157 unique road tiles, 12 zones, and zero object-only all-town or cross-zone reachable pairs.
+- The comparison remains explicitly not full parity: native object density is still 318 objects versus 436 in the owner H3M sample, and full-generation status remains `owner_compared_translated_profile_not_full_parity`.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-owner-medium-islands-road-component-parity-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Correct the owner-compared Medium Islands road topology so native output no longer collapses the uploaded owner H3M comparison into one giant surface road component plus one-tile stubs.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Owner corpus coverage report shows the Medium Islands native comparison with a HoMM3-like multi-component road shape, not one giant connected road component and one-tile artifacts.
+- Native object, town, and guard counts for the owner Medium Islands comparison remain matched to the uploaded H3M sample.
+- Package object-only route and spatial comparison gates remain valid; roads do not create unguarded gameplay bypasses between zones or towns.
+- Full-generation status remains owner-compared not-full-parity and does not claim exact HoMM3 production parity.
+nonGoals:
+- No exact H3M byte/art/DEF import or cloning.
+- No broad all-template road topology parity claim.
+- No committing uploaded owner `.h3m` evidence or generated `.amap`/`.ascenario` samples.
+completionEvidence:
+- Owner corpus coverage report now compares road topology directly; Medium Islands native output remains 496 objects, 8 towns, 61 guards, and 184 road cells against the owner H3M sample.
+- Medium Islands package road components changed from one 181-cell component plus seven one-tile fragments to the owner H3M five-component shape `[82, 52, 19, 16, 15]` with `component_size_abs_delta: 0` for this owner sample.
+- Native C++ rebuild, owner corpus coverage, spatial placement comparison, package object-only breadth, repository validation, progress JSON validation, plan sync dry-run, and diff whitespace checks passed.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-owner-medium-islands-runtime-support-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Promote the exact owner-attached Medium islands template/profile `translated_rmg_template_001_v1` / `translated_rmg_profile_001_v1` to owner-compared runtime support after fixing same-zone town-pair closure without increasing the owner-observed guard count.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_spatial_placement_comparison_report.gd`
+- `tests/native_random_map_full_parity_gate_report.gd`
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_spatial_placement_comparison_report.gd`
+- `tests/native_random_map_full_parity_gate_report.gd`
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Exact Medium islands template/profile 001 is `owner_compared_translated_profile_supported` while still reporting `owner_compared_translated_profile_not_full_parity`.
+- Same-zone town-pair route closure reuses existing guard closure masks when the owner guard cap is reached, preserving owner-like guard/object counts.
+- Package conversion, save, and load preserve closure masks and leave zero object-only town traversal routes.
+- Full-parity and player-facing UI gates keep islands support bounded and do not expose a broad islands/full-parity claim.
+nonGoals:
+- No broad islands or underground parity claim.
+- No exposure of islands as a general player-facing random-map option.
+- No HoMM3 art, DEF, names, text, map, or binary `.h3m` import.
+- No all-56-template production parity claim.
+completionEvidence:
+- Medium islands spatial comparison passed for profile 001 with 8 towns, 4 zones, 496 objects, 61 guards, owner-compared support enabled, and full parity still false.
+- Package object-only breadth report passed the new `owner_medium_islands_001` case with 8 towns, 61 guards, 496 objects, 206 loaded road tiles, and zero object-only all-town or cross-zone town routes.
+- Full parity gate passed with the new Medium islands case runtime-adopted only as owner-compared not-full-parity output.
+- Package adoption and authoritative replay reports passed after excluding diagnostic runtime phase timing from replay identity signatures.
+- Random-map menu wiring and skirmish UI save/replay reports passed, preserving the four-template player-facing surface and not exposing islands globally.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-player-facing-template-surface-restriction-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Keep the full recovered 56-template catalog available for internal validation while restricting player-facing random-map setup options to the four owner-compared translated size defaults until broad recovered-template production parity exists.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `scripts/core/ScenarioSelectRules.gd`
+- `tests/random_map_all_template_menu_wiring_report.gd`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `tests/random_map_all_template_menu_wiring_report.gd`
+- `tests/random_map_skirmish_ui_save_replay_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- `random_map_player_setup_options()` reports full internal catalog counts but returns only production-facing size-default template/profile options.
+- Main menu generated-map controls remain native catalog auto with manual template/profile pickers hidden.
+- Internal validation still builds all 56 catalog template/profile configs.
+- Explicit unsupported template launches remain blocked by `full_generation_status: not_implemented` rather than silently falling back to legacy compact output.
+nonGoals:
+- No broad all-56 production parity claim.
+- No runtime-authoritative adoption for unsupported templates.
+- No HoMM3 art, DEF, names, text, map, or binary `.h3m` import.
+completionEvidence:
+- Random-map menu wiring report passed with catalog counts 56/56, internal built config count 56, player-facing template/profile counts 4/4, and manual template/profile controls hidden.
+- Random-map retry UX report passed, preserving native catalog auto launch provenance and not-implemented launch blocking.
+- Random-map skirmish UI save/replay report passed after launching from the asserted setup and checking stable generated identity rather than a regenerated package scenario id.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-broad-template-default-selection-repair-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Repair the broad recovered-template generation report so it evaluates player-facing Small/Medium/Large/XL translated defaults with the same size-class/player-count selection used by runtime setup, instead of misclassifying supported defaults as arbitrary minimum-template `not_implemented` cases.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `scripts/core/ScenarioSelectRules.gd`
+- `tests/native_random_map_broad_template_generation_report.gd`
+implementationTargets:
+- `tests/native_random_map_broad_template_generation_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Broad template planning prefers `ScenarioSelectRules.random_map_size_class_default()` when the catalog template/profile is the runtime default for a size class.
+- Broad report case summaries record the selection policy used for each attempted template.
+- Focused Small/Medium/Large/XL default translated templates report `owner_compared_translated_profile_not_full_parity`, not `not_implemented`.
+- Full unbounded broad sweep still attempts every eligible land/surface template with zero skips and keeps unsupported templates explicitly marked as parity debt.
+nonGoals:
+- No broad all-56 production parity claim.
+- No runtime-authoritative generated-skirmish adoption.
+- No HoMM3 art, DEF, names, text, map, or binary `.h3m` import.
+completionEvidence:
+- Focused broad sweep for translated defaults `049`, `002`, `042`, and `043` passed with all four using `selection_policy: player_facing_size_default` and `not_implemented_status_count: 0`.
+- Full unbounded broad sweep passed 56/56 eligible templates with zero skipped templates, status counts `{not_implemented: 51, owner_compared_translated_profile_not_full_parity: 4, scoped_structural_profile_not_full_parity: 1}`, and selection-policy counts `{minimum_supported_land_surface: 52, player_facing_size_default: 4}`.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-town-placement-reachability-cache-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Cache per-zone access-anchor reachability during native town placement so recovered translated templates avoid repeated per-candidate BFS while preserving the uploaded Small H3M town/zone/road/object route gates.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `maps/small3playermap-1level.h3m` (local evidence only, not committed)
+- `tests/native_random_map_homm3_uploaded_small_comparison_report.gd`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `tests/native_random_map_broad_template_generation_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_uploaded_small_comparison_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Native town placement computes one access-reachable lookup per zone/access anchor and uses it for spaced accessible candidate checks instead of running an in-zone path search for each town candidate.
+- Serialized package component counts report the actual package road surface count so comparison gates compare owner H3M road counts against loaded package semantics.
+- Uploaded Small H3M comparison and topology reports keep the player-facing translated Small default at owner-like town, zone, road, decorative obstacle, and guard counts with zero object-only town routes.
+- Focused worst-offender translated template `052` no longer spends most of generation time in repeated town-placement BFS and the unbounded broad template gate remains green for all eligible land/surface templates.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No islands/underground parity implementation.
+- No production-complete RMG claim.
+completionEvidence:
+- Uploaded Small comparison report passed with player-facing translated Small default at 7 towns, 7 zones, 303 package objects, 150 decorative obstacles, 40 guards, 113 serialized package road tiles, and zero package road gaps.
+- Uploaded Small topology report passed with current translated package at 7 towns, 7 zones, 110 road cells, two road components, 150 decorative obstacles, 40 guards, and zero object-only town or cross-zone town routes; the stale compact map still demonstrates the bad baseline with 6 towns, 0 zones, 0 roads, and 10 reachable town pairs.
+- Focused `translated_rmg_template_052_v1` broad generation passed in 14.638s after the reachability cache, with generation at 9.564s and no skipped focused case.
+- Full unbounded broad template report passed all 56 eligible land/surface templates with zero skipped templates and 55 templates still honestly marked `full_generation_status: not_implemented`.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-broad-template-all-town-route-closure-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Correct the broad recovered-template package topology gate so all-town route checks use package visit-tile semantics and every eligible land/surface package proves object-only town routes are closed.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `tests/native_random_map_broad_template_generation_report.gd`
+- `tests/native_random_map_package_surface_topology_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_broad_template_generation_report.gd`
+- `tests/native_random_map_package_surface_topology_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Package surface topology preserves town `package_visit_tiles` for all-town and cross-zone route checks instead of falling back to adjacent anchor cells.
+- Broad template report fails on object-only all-town route leaks, not just player-start and cross-zone leaks.
+- Native package conversion materializes guard control-zone, boundary-choke, and route guard/decorative closure masks before signatures so package topology does not depend on terrain-only barriers.
+- Full unbounded sweep covers all currently eligible land/surface templates with zero object-only player-start, cross-zone, or all-town reachable town pairs.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No islands/underground parity implementation.
+- No production-complete RMG claim.
+completionEvidence:
+- Focused broad report passed for the two previously leaking templates `translated_rmg_template_006_v1` and `translated_rmg_template_010_v1`.
+- Unbounded broad template report passed all 56 eligible land/surface templates with zero skipped templates and zero object-only player-start, cross-zone, or all-town reachable town pairs under package visit-tile semantics.
+- The unbounded report still honestly reports 55 templates with `full_generation_status: not_implemented`.
+
+Recently completed owner-directed validation follow-up:
+
+id: `native-rmg-runtime-authority-parity-gate-repair-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Repair the full-parity boundary gate so owner-compared translated packages may be runtime-authoritative without implying full HoMM3 parity.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_full_parity_gate_report.gd`
+implementationTargets:
+- `tests/native_random_map_full_parity_gate_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- The full-parity gate still fails any `full_parity_claim=true` at generation, provenance, or package-adoption boundaries.
+- Owner-compared translated Small 049 and Medium 002 package/session adoption may report runtime authority and call-site adoption only with `full_parity_claim=false`.
+- Owner-compared package-adoption reports keep explicit remaining parity slices for full parity, islands support, and broad owner comparison.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No islands/underground parity implementation.
+- No production-complete RMG claim.
+completionEvidence:
+- Full parity gate report passed with legacy compact non-authoritative and owner-compared translated defaults runtime-authoritative without full parity.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-legacy-compact-launch-block-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Close the remaining production launch path for the legacy compact random-map generator after uploaded-map comparison showed that compact lineage can produce near-stacked, un-HoMM3-like maps.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `maps/small3playermap-1level.h3m` (local evidence only, not committed)
+- `tests/random_map_player_setup_retry_ux_report.gd`
+- `tests/maps_folder_package_browser_integration_report.gd`
+- `tests/random_map_skirmish_ui_save_replay_report.gd`
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `scripts/autoload/SaveService.gd`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+- `tests/maps_folder_package_browser_integration_report.gd`
+- `tests/random_map_skirmish_ui_save_replay_report.gd`
+- `tests/random_map_final_writeout_export_save_schema_report.gd`
+- `tests/random_map_scenario_load_smoke.gd`
+- `ops/progress.json`
+completionCriteria:
+- Generated-skirmish startup rejects explicit `border_gate_compact_v1` / `border_gate_compact_profile_v1` requests with `native_rmg_legacy_compact_launch_blocked`.
+- Legacy compact output remains available only as internal historical/export test fixture data, not as a production generated-skirmish launch path.
+- Maps-folder stale-package rejection still creates a compact package fixture directly through native package service APIs.
+- Native package-backed generated skirmish save/restore preserves package provenance and can re-register its transient generated scenario from saved package provenance.
+nonGoals:
+- No deletion of local uploaded `.h3m`, `.amap`, or `.ascenario` comparison evidence.
+- No removal of compact generator component/export fixtures.
+- No exact HoMM3 byte/object-art parity claim.
+completionEvidence:
+- Player setup retry UX report passed after asserting explicit compact launch is blocked with `native_rmg_legacy_compact_launch_blocked`.
+- Maps-folder package browser integration report passed with compact fixture rejected and translated package accepted.
+- Random-map skirmish UI save/replay report passed on native package provenance and package-backed restore.
+- Final writeout export/save schema report passed while keeping compact generation as a legacy export fixture outside production launch.
+- Random-map scenario load smoke passed after treating maps-folder package entries separately from archived authored scenarios.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-broad-template-object-only-route-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Extend the broad recovered-template generation gate beyond non-empty package surfaces so every eligible land/surface template proves object-only player-start and cross-zone town routes are closed.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `tests/native_random_map_broad_template_generation_report.gd`
+- `tests/native_random_map_package_surface_topology_report.gd`
+implementationTargets:
+- `tests/native_random_map_broad_template_generation_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Broad template report reuses package-surface topology analysis for converted packages.
+- Attempted recovered land/surface templates fail if object-only masks allow unguarded player-start town traversal.
+- Attempted recovered land/surface templates fail if object-only masks allow unguarded cross-zone town traversal.
+- Full unbounded sweep covers all currently eligible land/surface templates.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No same-zone multi-settlement route hard failure; same-zone all-town reachability remains diagnostic because some recovered templates place multiple settlements in one source zone.
+- No islands/underground parity implementation.
+completionEvidence:
+- Bounded broad template report passed after adding object-only start/cross-zone topology gates.
+- Unbounded broad template report passed all 56 eligible land/surface templates with zero skipped templates and no object-only start/cross-zone reachable town pairs.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-uploaded-small-guard-control-footprint-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Materialize HoMM3-style monster/guard control zones into generated package blocking so the owner-uploaded Small comparison no longer understates guarded route closure.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `maps/small3playermap-1level.h3m` (local evidence only, not committed)
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `tests/native_random_map_package_surface_topology_report.gd`
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Package guard objects include a bounded one-tile control-zone blocking footprint for generated package pathing.
+- Uploaded Small comparison fails if native guard blocking falls below the owner H3M parsed guard-control footprint floor.
+- Current Small 049 generated package keeps owner-like town/zone/object/road counts and zero object-only town routes.
+- Player-facing translated Small/Medium/Large/Extra Large package breadth keeps zero object-only reachable town pairs.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No H3M import/runtime adoption.
+- No deletion or committing of uploaded local `.h3m`, `.amap`, or `.ascenario` evidence.
+completionEvidence:
+- Native build passed after adding package guard control-zone materialization.
+- Uploaded Small H3M topology report passed with native guard unique blocked tiles above the owner guard-control lower-bound gate and zero object-only reachable town pairs.
+- Package surface topology report passed for converted and saved/loaded Small 049 packages.
+- Package object-only breadth report passed for translated Small, Medium, Large, and Extra Large defaults.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-maps-folder-stale-package-rejection-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Prevent stale legacy compact generated packages in `maps/` from being exposed as valid skirmish/editor choices after owner-uploaded H3M comparison proved that topology is not HoMM3-like.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `maps/small3playermap-1level.h3m` (local evidence only, not committed)
+- `tests/maps_folder_package_browser_integration_report.gd`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `tests/maps_folder_package_browser_integration_report.gd`
+- `tests/map_editor_load_map_package_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Maps-folder package index rejects generated packages that are not runtime-authoritative translated RMG outputs.
+- Legacy `border_gate_compact_v1` / `border_gate_compact_profile_v1` packages are not exposed in the maps-folder skirmish browser.
+- Accepted generated maps-folder packages still load through the native package/session path and editor working-copy path.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No deletion or committing of uploaded local `.h3m`, `.amap`, or `.ascenario` evidence.
+completionEvidence:
+- Maps-folder package browser integration report passed with a translated native-catalog-auto package accepted and a generated legacy compact package rejected from the index/browser.
+- Map editor Load Map package report passed after moving its positive fixture to the translated native-catalog-auto package path.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-runtime-town-spacing-validation-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Move the near-stacked town protection from report-only coverage into native RMG runtime validation so launchable generated maps fail validation if towns are below the size-aware spacing floor.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `maps/small3playermap-1level.h3m` (local evidence only, not committed)
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Native validation emits a town-spacing summary with nearest town Manhattan distance and size-aware floor.
+- Launchable native RMG profiles fail validation if nearest town spacing is below the floor.
+- Auto-template report verifies its spacing metric agrees with native runtime validation.
+- Existing package object-only closure and supported translated broad cases remain green.
+nonGoals:
+- No exact HoMM3 town-coordinate parity claim.
+- No islands/water/underground parity implementation.
+completionEvidence:
+- Native build passed after adding runtime town-spacing validation.
+- Auto-template batch passed with runtime town-spacing validation matching report metrics.
+- Package object-only breadth passed with zero object-only reachable town pairs for Small, Medium, Large, and Extra Large defaults.
+- Focused broad translated cases 049, 002, 042, and 043 passed generation/package conversion after the validation change.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-auto-template-town-spacing-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Add player-facing native-catalog-auto town-spacing evidence so representative generated maps cannot regress to near-stacked towns without failing validation.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `maps/small3playermap-1level.h3m` (local evidence only, not committed)
+- `tests/native_random_map_auto_template_batch_report.gd`
+implementationTargets:
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Auto-template batch reports nearest town Manhattan distance for each representative generated case.
+- Launchable land defaults fail if nearest towns fall below size-aware spacing floors.
+- Existing auto-template generation/package coverage remains green.
+nonGoals:
+- No exact HoMM3 town-coordinate parity claim.
+- No generator algorithm change in this slice.
+- No islands/water/underground parity implementation.
+completionEvidence:
+- Auto-template batch report passed with nearest town distances Small 11/14, Medium 17, Large 12, and Extra Large 24 against floors 8/8, 10, 12, and 12.
+- The Medium islands not-implemented case remains internally inspectable and launch-blocked.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-hide-unsupported-underground-control-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Remove unsupported underground generation from the player-facing generated-map setup surface until native RMG has production-ready underground parity.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+- `tests/random_map_all_template_menu_wiring_report.gd`
+implementationTargets:
+- `scenes/menus/MainMenu.gd`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- The player-facing generated-map snapshot no longer lists underground as a visible control.
+- The validation hook rejects attempts to enable unsupported underground generation.
+- Internal provenance records underground as unsupported and hidden.
+- Existing generated setup retry and menu wiring gates remain green.
+nonGoals:
+- No underground parity implementation.
+- No exact HoMM3 byte/object-art parity claim.
+completionEvidence:
+- Player setup retry UX report passed with `underground_supported: false`, `underground_player_control_visible: false`, and no `underground` visible control.
+- Menu wiring report still passed with native catalog auto defaults and hidden manual template/profile controls.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-retry-attempt-native-provenance-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Ensure generated-map retry attempt records report the native-selected normalized template/profile ids, especially for blocked not-implemented native-catalog-auto modes.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+- `tests/native_random_map_auto_template_batch_report.gd`
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Retry attempt records prefer native normalized config from setup provenance, validation failure evidence, or deterministic validation identity before falling back to legacy GDScript normalization.
+- Blocked not-implemented setup attempts report the same template/profile ids as the native validation failure evidence.
+- Existing generated setup retry and auto-template batch gates remain green.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No change to generated map topology or islands parity implementation.
+completionEvidence:
+- Player setup retry UX report passed after asserting blocked not-implemented attempt ids match native normalized failure config.
+- Auto-template batch report passed after the retry attempt provenance correction.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-not-implemented-launch-block-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Prevent generated-skirmish startup from converting native RMG configurations whose recovered-template mode still reports `full_generation_status: not_implemented` into launchable packages.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+- `tests/native_random_map_auto_template_batch_report.gd`
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Generated-skirmish startup blocks not-implemented native RMG modes before package conversion/loading.
+- Failure evidence is surfaced through the existing validation/retry boundary with no session/save/campaign startup.
+- Representative auto-template islands coverage remains available for internal inspection but is marked blocked for launch while land defaults still launch.
+nonGoals:
+- No islands/water/underground parity implementation.
+- No exact HoMM3 byte/object-art parity claim.
+- No removal of internal broad-template inspection for not-implemented recovered templates.
+completionEvidence:
+- Player setup retry UX report passed after proving a Medium islands native-catalog-auto setup fails with `native_rmg_full_generation_not_implemented` evidence.
+- Auto-template batch report passed with Small/Medium/Large/XL land defaults still generating and packaging, while the Medium islands case reports `not_implemented_launch_blocked: true`.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-player-facing-compact-fallback-removal-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Remove the old compact template from live generated-map fallback behavior so player-facing setup and invalid-template recovery do not silently produce the bad compact topology found in the owner-uploaded native map comparison.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `maps/small3playermap-1level.h3m` (local evidence only, not committed)
+- `tests/random_map_all_template_menu_wiring_report.gd`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+- `tests/native_random_map_auto_template_batch_report.gd`
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `scenes/menus/MainMenu.gd`
+- `tests/random_map_all_template_menu_wiring_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Player-facing generated-map setup keeps manual template/profile controls hidden and launches through native catalog auto-selection.
+- Empty/default Small setup previews translated Small 049 instead of compact legacy ids.
+- Invalid manual template fallback resolves to translated Small 049 instead of `border_gate_compact_v1`.
+- Representative auto-selection cases generate/package through translated owner-compared land templates for Small, Medium, Large, and Extra Large.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No islands/water/underground parity implementation; islands still remain explicit not-implemented follow-up.
+- No removal of explicit legacy compact fixtures used by old package/schema compatibility tests.
+completionEvidence:
+- Menu wiring report passed with 56 catalog templates/profiles, hidden manual template/profile controls, and default template `translated_rmg_template_049_v1`.
+- Player setup retry UX report passed with native auto launch provenance and translated Small 049 preview/default.
+- Auto-template batch report passed; owner-compared land defaults selected translated templates 049, 002, 042, and 043.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-all-template-structural-breadth-correction-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Close the hard generation/package failures exposed by running the broad native RMG report across every eligible recovered land/surface template after the uploaded Small map comparison reopened structural parity work.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `tests/native_random_map_broad_template_generation_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `ops/progress.json`
+completionCriteria:
+- All eligible recovered land/surface templates generate, validate, convert to packages, expose non-empty package objects/roads, and serialize zero zero-tile roads.
+- Town-pair route closure guards do not collide with existing generated object occupancy.
+- Dense required town/castle placement has a bounded last-resort spacing fallback instead of failing package generation.
+- Active player-start zones isolated by recovered link player-count filters receive a guarded runtime repair route.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No islands/water/underground full-parity implementation.
+- No claim that all `not_implemented` recovered-template statuses are resolved.
+completionEvidence:
+- Full broad native RMG template report passed all 56 eligible templates with 0 skipped and no case failures.
+- Focused recovery gates passed translated templates 010/052 for guard occupancy collisions, 041/044 for dense required town placement, and 043 for active player-start connectivity repair.
+- Native build passed after the generator corrections.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-uploaded-small-road-component-split-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Correct the uploaded-Small native package road component shape by adding a bounded orphan side-road component and suppressing one deterministic articulation road overlay tile when it splits Small 049 roads into two owner-like package components.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `maps/small3playermap-1level.h3m` (local evidence only, not committed)
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Uploaded Small report exposes road component sizes for owner and native package roads.
+- Native Small 049 package road component count moves from one component to the owner-uploaded two-component shape.
+- Native Small 049 smaller road component matches the uploaded owner H3M smaller road component size.
+- Road-cell count remains within the uploaded Small tolerance and no zero-tile roads are serialized.
+- Object-only town closure remains green after the road overlay split.
+nonGoals:
+- No exact road byte/art parity.
+- No exact large road component shape or byte-level road-art parity; the native large component remains 99 cells versus owner 96.
+- No broad all-template road-shape parity claim.
+completionEvidence:
+- Uploaded Small report now shows owner H3M road components `[96, 14]` and native generated Small road components changed from `[105]` through `[99, 5]` to `[99, 14]`.
+- Native generated Small road cells changed from 105 to 113 versus owner 110, keeping road-cell delta at +3 and reducing road-component delta from -1 to 0.
+- Uploaded Small topology still passed with 7 towns, 7 zones, 303 objects, zero unresolved/object-only town reachable pairs, road small-component delta 0, and object-blocked delta +24 versus owner parsed mask blockers.
+- Package object-only breadth still passed Small 049, Medium 002, Large 042, and Extra Large 043 with zero all-town reachable pairs.
+- Bounded broad template generation still passed 12 representative land/surface templates.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-selective-small-boundary-mask-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Replace uploaded-Small full terrain-rock boundary/route-guard mask materialization with selective package-object town-route closure masks, reducing decorative and guard blocker overcoverage while preserving object-only town isolation.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `maps/small3playermap-1level.h3m` (local evidence only, not committed)
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Uploaded Small generated native package keeps 7 towns, 7 zones, 303 objects, 150 decorative obstacles, 40 guards, and zero object-only town routes.
+- Decorative boundary choke and Small route-guard closure materialization become path-driven for Small 049 instead of copying every land-boundary rock/opening cell into package blocker masks.
+- Uploaded Small object-blocked overage warning clears without reintroducing unresolved or object-only town reachability.
+- Package object-only breadth and bounded broad template generation remain green after the selective mask change.
+nonGoals:
+- No exact HoMM3 full parity or byte/object-art parity claim.
+- No claim that older already-exported native `.amap` packages are corrected in place.
+- No islands/water/underground parity implementation.
+completionEvidence:
+- Uploaded Small topology report passed with native object-blocked tiles reduced from 1043 to 747, native-vs-owner mask-blocked delta reduced from +321 to +25, decorative unique block tiles reduced from 640 to 441, guard unique block tiles reduced from 420 to 95, and decorative boundary choke tiles reduced from 343 to 42.
+- Uploaded Small topology report still showed 7 towns, 7 zones, 303 objects, 105 road cells, 40 guards, and zero unresolved/object-only town reachable pairs; the prior object-blocked overage warning cleared.
+- The report now emits both uploaded native packages: the newer translated-template package closes object-only cross-zone town routes, while the legacy compact package remains diagnostic evidence of the old bad output.
+- Package object-only breadth passed Small 049, Medium 002, Large 042, and Extra Large 043 with zero all-town reachable pairs.
+- Bounded broad template generation passed after the selective Small mask change.
+
+Previously completed owner-directed implementation slice:
+
+id: `native-rmg-size-scaled-corridor-guard-footprint-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Reduce Small-map route-guard blocker overreach by replacing full close-town corridor guard walls with size-scaled corridor choke coverage while preserving Medium/Large/XL object-only town-route closure gates.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `ops/progress.json`
+completionCriteria:
+- Small translated-template town corridor coverage no longer assigns every close cross-zone town-pair path cell to route guard bodies.
+- Uploaded Small comparison keeps zero unresolved and zero object-only reachable town pairs after guard-footprint reduction.
+- Package object-only breadth still keeps zero all-town and cross-zone town reachable pairs for Small 049, Medium 002, Large 042, and Extra Large 043.
+- Broad land/surface template generation still validates representative catalog templates after the size-scaled guard policy.
+nonGoals:
+- No exact HoMM3 full parity claim.
+- No elimination of all native object-blocked overage versus the uploaded owner map.
+- No islands/water/underground parity implementation.
+completionEvidence:
+- Uploaded Small comparison passed with guard unique block tiles reduced from the prior 615 to 420, clearing the guard-footprint warning while preserving 7 towns, 7 zones, 150 decorations, 40 guards, and zero object-only town routes.
+- Uploaded Small object-blocked total improved from 1147 to 1043 in the topology report, with the remaining object-blocked overage still explicitly warned for follow-up.
+- Package object-only breadth passed Small 049, Medium 002, Large 042, and Extra Large 043 with zero all-town/cross-zone reachable town pairs; Small package object-only blocked tiles are now 1031 instead of the earlier 1158.
+- The rebuilt bounded 12-template broad generation report passed with non-empty package surfaces and zero zero-tile roads.
+- Validation passed native build, uploaded Small topology report, package object-only breadth report, bounded 12-template broad generation report, repo validation, JSON validation, progress helper, and diff whitespace check.
+
+Recently completed owner-directed audit/implementation slice:
+
+id: `native-rmg-uploaded-small-blocker-footprint-audit-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Compare the uploaded Small 3-player single-level HoMM3 map against the current native translated Small package with explicit blocker/guard footprint metrics, and reduce one route-guard overreach without reopening town routes.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `maps/small3playermap-1level.h3m` (local evidence only, not committed)
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Uploaded Small HoMM3 comparison reports native-vs-owner object, road, town, guard, zone, and blocked/controlled tile deltas.
+- Native report distinguishes object blocker coverage from terrain-blocked coverage and exposes per-kind package blocker footprints.
+- Route-guard body generation no longer uses every road segment cell as a guard blocker body.
+- Existing object-only package closure gates remain green after the guard-footprint adjustment.
+nonGoals:
+- No claim that native blocker footprint now matches HoMM3.
+- No removal of required town-boundary guard coverage until explicit obstacle/choke blockers replace it.
+- No uploaded `.h3m`/`.amap`/`.ascenario` evidence files committed.
+completionEvidence:
+- Uploaded Small HoMM3 parse remains 7 towns, 7 zones, 150 decorations, 40 guards, 110 road cells, 722 parsed mask-blocked tiles, and 258 parsed guard-controlled tiles.
+- Current native Small 049 package matches headline town/zone/object/decor/guard counts and still has zero object-only reachable town pairs.
+- The comparison now warns that native object blockers cover 1147 tiles versus the owner parsed 722 mask-blocked tiles, and native guard blockers cover 615 unique tiles versus the owner parsed 258 guard-controlled tiles.
+- Route-guard segment body coverage was narrowed to the guard tile, nearby boundary cells, and immediate neighboring road cells instead of every road segment cell.
+- Validation passed native build, uploaded Small comparison, package object-only breadth, bounded 12-template broad generation, repo validation, JSON validation, progress helper, and diff whitespace check.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-broad-template-choke-guard-correction-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Correct the translated-template town/zone and route-guard blocker issues exposed by uploaded Small HoMM3/native map comparison and add a bounded broad generation/package gate.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `tests/native_random_map_broad_template_generation_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_broad_template_generation_report.gd`
+- `tests/native_random_map_broad_template_generation_report.tscn`
+- `ops/progress.json`
+completionCriteria:
+- Uploaded Small HoMM3/native comparison findings are reflected in native RMG fixes instead of relying on the old compact fallback template behavior.
+- Translated catalog zones only become active player-start zones when their source role is a start zone, preventing treasure zones from becoming extra players/towns.
+- Route guards own unique choke primary tiles and may displace decorative/scenic filler on the choke instead of duplicating guard occupancy or leaving malformed objects.
+- A bounded broad-template report validates generation, output validation, package conversion, non-empty package objects/roads, and zero zero-tile roads for representative land/surface templates.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No islands/water/underground full-parity implementation.
+- No uploaded `.h3m`/`.amap`/`.ascenario` evidence files committed.
+completionEvidence:
+- Uploaded HoMM3 Small single-level comparison showed 7 towns, 7 zones, 150 decorations, 40 guards, 110 road cells, and no near-stacked towns; the bad native upload was identified as old compact-template output with 6 towns, no zone metadata, zero usable road cells, and unguarded town routes.
+- Native translated zone conversion now keeps non-start owned source zones neutral/non-player for player-start purposes while preserving owned faction context where applicable.
+- Route guard placement no longer falls back onto an occupied guard tile; it can take a neighboring decorative/scenic choke tile and the choke-clearance pass removes displaced filler from generated object placements.
+- Broad template generation report passed 12 bounded land/surface cases: legacy small templates plus translated templates 001 through 009, each with validation OK, non-empty package surfaces, roads, and zero zero-tile roads.
+- Validation passed native build and targeted translated template 008/009 broad reports plus bounded 12-case broad report.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-owner-compared-runtime-authority-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Mark owner-compared translated native RMG packages as runtime-authoritative package/session inputs while keeping exact HoMM3/full-parity claims false.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_package_session_adoption_report.gd`
+- `tests/native_random_map_package_session_authoritative_replay_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_package_session_adoption_report.gd`
+- `tests/native_random_map_package_session_authoritative_replay_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Native adoption reports `native_runtime_authoritative: true` for owner-compared translated land templates after package/session conversion.
+- Runtime authority no longer implies `full_parity_claim`; full parity remains false until exact HoMM3 parity is proven.
+- Package/session adoption and replay reports prove stable package/session identity for the owner-compared translated path.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No runtime authority for `not_implemented` islands or unsupported broad catalog templates.
+- No uploaded `.h3m`/`.amap`/`.ascenario` evidence files committed.
+completionEvidence:
+- Owner-compared translated package/session adoption now reports `runtime_authoritative_owner_compared_not_full_parity`, with `native_runtime_authoritative: true` and `full_parity_claim: false`.
+- Package/session replay evidence for the Medium 002 owner-compared profile preserves stable adoption, changed-map, and disk package replay signatures while keeping full HoMM3 parity pending.
+- Package object-only breadth still reports zero object-only unguarded all-town reachable pairs for Small 049, Medium 002, Large 042, and Extra Large 043.
+- Validation passed native build, package/session adoption report, Medium 002 authoritative replay report, package object-only breadth report, repo validation, JSON validation, progress helper, and diff whitespace check.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-player-facing-water-support-guard-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Remove unsupported islands generation from the player-facing generated-map setup until native islands templates have owner-compared parity evidence instead of `not_implemented` fallback status.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `scenes/menus/MainMenu.gd`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Player-facing random-map water options expose only implemented native land generation.
+- Main menu generated-map controls fall back to land if a stale unsupported islands selection is present.
+- Menu retry UX and auto-template tests pass without exposing unsupported islands as a production option.
+nonGoals:
+- No native islands/water parity implementation in this slice.
+- No removal of catalog metadata or lower-level explicit test coverage for islands templates.
+- No uploaded `.h3m`/`.amap`/`.ascenario` evidence files committed.
+completionEvidence:
+- Player-facing random-map setup now exposes only the implemented native Land water option.
+- Main menu generated-map controls fall back to Land when stale state references an unsupported water option.
+- Retry UX report now proves water options are `["Land"]`, while auto-template batch retains lower-level islands coverage as non-player-facing `not_implemented` evidence.
+- Validation passed menu retry UX report, all-template menu wiring report, auto-template batch report, repo validation, JSON validation, progress helper, and diff whitespace check.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-auto-template-production-filter-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Stop player-facing native catalog auto-selection from choosing broad translated templates whose native generation status is still `not_implemented` when an owner-compared translated land template exists for the requested size.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `tests/native_random_map_auto_template_batch_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Native catalog auto-selection prefers owner-compared translated templates for supported land size classes instead of random runtime-valid but not-implemented broad catalog templates.
+- Auto-template batch report fails if a supported land size auto-selects a template with `full_generation_status: not_implemented`.
+- Existing uploaded Small H3M topology, auto-template batch, package breadth, and replay gates remain green.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No islands/water full-parity implementation in this slice.
+- No uploaded `.h3m`/`.amap`/`.ascenario` evidence files committed.
+completionEvidence:
+- Native catalog auto-selection now builds a preferred owner-compared translated-template pool for supported land sizes before falling back to the wider catalog.
+- Auto-template batch now fails if Small/Medium/Large/XL land auto-selection chooses a broad catalog template instead of the owner-compared translated template/profile.
+- Auto-template batch passed with land selections pinned to Small 049, Medium 002, Large 042, and XL 043; the Medium auto density floor was raised to keep owner-compared Medium 002 above package density minimums.
+- Validation passed native build, auto-template batch, uploaded Small H3M topology report, default package object-only breadth report, medium replay report, repo validation, JSON validation, progress helper, and diff whitespace check.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-auto-template-density-floor-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Correct the sparse-map failure exposed by native catalog auto-selection where broader translated templates can generate valid but underfilled maps, especially Medium land and XL land cases.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `tests/native_random_map_auto_template_batch_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Auto-template batch report enforces size-aware generated/package object density floors, not only non-empty surfaces.
+- Native broad catalog auto-selection supplements sparse templates with deterministic in-zone decorative/object fill without touching uploaded evidence files.
+- The previously sparse Medium land and XL land auto-selected cases clear the new density floors while preserving validation/package conversion.
+- Existing default translated package breadth and replay gates remain green.
+nonGoals:
+- No exact HoMM3 object-table, art, or byte parity claim.
+- No exhaustive all-template density sweep in this slice.
+- No generated `.amap`/`.ascenario` or uploaded `.h3m` evidence files committed.
+completionEvidence:
+- Tightened the auto-template batch report with size-aware generated/package object density floors; the new gate caught Medium land template 029 at 264 generated objects against a 340 floor before the fix.
+- Added deterministic native catalog auto-selection density supplementation for underfilled auto-selected maps.
+- Post-fix auto-template batch passed six seeded cases, including Medium 029 at 340 generated / 426 packaged objects and XL 051 at 1100 generated / 1196 packaged objects.
+- Validation passed native build, auto-template batch report, default package object-only breadth report, medium authoritative replay report, repo validation, JSON validation, progress helper, and diff whitespace check.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-auto-template-batch-validation-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Prove the new player-facing native catalog auto-selection path does not pick templates that only pass metadata filters but fail real native generation, package conversion, or replay-relevant surface checks across seeded size/water/player cases.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `content/random_map_template_catalog.json`
+implementationTargets:
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `tests/native_random_map_auto_template_batch_report.tscn`
+- `src/gdextension/src/map_package_service.cpp`
+- `ops/progress.json`
+completionCriteria:
+- Auto-selection batch report uses empty template/profile generated configs with `native_catalog_auto` mode, not explicit size defaults.
+- The batch proves selected template/profile ids are resolved, deterministic, supported by catalog metadata, and diverse across representative seeds.
+- Every selected auto-template case passes native generation validation and package conversion surface sanity checks.
+- If a selected catalog template fails runtime validation, selector/generator filtering is tightened instead of weakening the test.
+nonGoals:
+- No exact HoMM3 byte/output parity claim.
+- No exhaustive 53-template CI sweep in this slice.
+- No uploaded `.h3m`/`.amap`/`.ascenario` evidence files committed.
+completionEvidence:
+- Added `NATIVE_RANDOM_MAP_AUTO_TEMPLATE_BATCH_REPORT`, which uses empty template/profile player configs with `native_catalog_auto` mode.
+- Six representative seeded cases selected six distinct catalog templates: Small 049, Small 045, Medium 029, Medium Islands 001, Large 042, and XL 051.
+- Every selected case resolved deterministic concrete template/profile ids, passed native generation validation, converted to a map package, and produced non-empty package object/road surfaces.
+- The report records a remaining parity gap: several runtime-valid auto-selected templates still have `full_generation_status: not_implemented`, so future slices must harden broader translated-template behavior rather than treating this as production parity.
+- Validation passed native build, auto-template batch report, repo validation, JSON validation, progress helper, and diff whitespace check.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-player-facing-auto-template-selection-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Stop player-facing generated maps from pinning one hardcoded recovered template/profile per size class. Wire launch-time generation to native catalog auto-selection so the imported HoMM3-style template catalog participates in seeded skirmish generation.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `docs/random-map-homm3-parity-gap-audit.md`
+- `tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `content/random_map_template_catalog.json`
+implementationTargets:
+- `scripts/core/ScenarioSelectRules.gd`
+- `scenes/menus/MainMenu.gd`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+- `tests/random_map_all_template_menu_wiring_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Player-facing generated skirmish configs can request native catalog auto-selection without forcing the size-class default template/profile.
+- Native normalization resolves an empty auto-selection config to a supported catalog template and coherent profile id, deterministically from seed/config.
+- UI provenance clearly distinguishes preview defaults from launch-time native catalog auto-selection while keeping manual template/profile controls hidden.
+- Existing explicit-template tests keep their pinned-template behavior for targeted regression cases.
+- Validation proves auto-selection is used by the player-facing generated launch path and that generated maps still pass package/session adoption gates.
+nonGoals:
+- No claim that all 53 translated templates are fully HoMM3-equivalent.
+- No manual template picker exposure in the first-view generated setup UI.
+- No HoMM3 copyrighted asset/DEF import.
+- No uploaded `.h3m`/`.amap`/`.ascenario` evidence files committed.
+completionEvidence:
+- Player-facing generated launch config now requests `native_catalog_auto` selection while hidden preview controls still preserve size-class default provenance.
+- Native config normalization resolves empty auto-selection configs to a deterministic supported catalog template and first matching catalog profile id.
+- Generated setup/retry UX report proves the UI keeps manual template/profile controls hidden and launch provenance resolves a concrete native catalog template/profile.
+- Explicit-template paths remain intact for size-default package replay/object-only breadth gates and all-template menu config construction.
+- Validation passed native build, generated setup/retry UX, all-template menu wiring, package session replay, package object-only breadth, repo validation, JSON validation, progress helper, and diff whitespace check.
+
+Recently completed owner-directed implementation slice:
+
+id: `native-rmg-all-town-unguarded-route-correction-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Use the uploaded Small H3M/native-package comparison to close the current generator gap where package gates protect player-start and cross-zone town routes but allow same-zone town pairs to remain reachable by short unguarded object-only paths.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+- owner-uploaded Small 3-player H3M and native package evidence from 2026-05-06
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_package_surface_topology_report.gd`
+- `tests/native_random_map_package_object_only_breadth_report.gd`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Package topology reports expose all-town object-only reachable-pair counts, not only player-start and cross-zone town topology.
+- Player-facing default translated Small, Medium, Large, and Extra Large package cases reject unguarded object-only town-to-town traversal across all town pairs.
+- The uploaded Small H3M comparison continues to report the owner sample, the uploaded old native package, and current native Small 049 without committing uploaded evidence files.
+- Generator changes preserve existing object count, guard count, road materialization, package replay, and validation gates for supported translated profiles.
+nonGoals:
+- No HoMM3 copyrighted asset/DEF import.
+- No exact H3M byte/pathing parity claim.
+- No broad recovered-template catalog sweep or runtime-authoritative promotion.
+- No generated `.amap`/`.ascenario` or uploaded `.h3m` evidence files committed.
+completionEvidence:
+- Uploaded Small H3M comparison reports the owner sample, the old uploaded native package, and current native Small 049; current Small 049 has 7 towns, 7 zones, 303 objects, 150 decorative obstacles, 40 guards, and zero object-only all-town reachable pairs.
+- Package topology and breadth gates now expose and reject all-town object-only reachable pairs; the pre-fix Medium default case exposed 18 towns and 4 same-zone unguarded reachable town pairs.
+- Default translated Medium now avoids optional density town stacking in already-towned zones and reports 6 towns with zero object-only all-town reachable pairs while preserving the owner Medium 001 comparison exemption.
+- Validation passed native build, uploaded H3M topology report, package breadth/surface topology reports, full parity gate, owner spatial placement comparison, medium replay gate, repo validation, JSON validation, and diff whitespace check.
 
 ## Slice Status Model
 
@@ -1344,10 +3002,41 @@ Goal: rework native random map generation around the recovered HoMM3 RMG executi
 
 Active tactical slices:
 
+id: `native-rmg-broad-translated-catalog-structural-support-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Stop treating recovered translated land/surface catalog templates that already pass generation, validation, package conversion, route-closure, and package-surface topology gates as `not_implemented`; give them a bounded structural-support status that remains non-authoritative and explicitly not full HoMM3 parity.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_broad_template_generation_report.gd`
+- `src/gdextension/src/map_package_service.cpp`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_broad_template_generation_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Eligible recovered translated land/surface templates report a non-`not_implemented` structural-support full-generation status only when generated through catalog template/profile ids, land water mode, and one native surface level.
+- Broad template generation/package report fails if any attempted eligible translated land/surface template remains `not_implemented`.
+- Package/session adoption stays feature-gated and non-runtime-authoritative for broad structurally supported templates.
+- Owner-compared defaults keep their stronger owner-compared statuses and full-parity gates continue to reject full HoMM3 parity claims.
+- Legacy compact foundation tests and unsupported islands/underground controls remain blocked or scoped as before.
+nonGoals:
+- No broad owner-H3M comparison claim.
+- No exact HoMM3 byte/art/DEF parity.
+- No runtime-authoritative promotion for broad catalog templates.
+- No underground or general islands production support.
+completionEvidence:
+- Full unbounded broad template generation report passed all 56 eligible land/surface templates with zero skipped templates, zero translated `not_implemented` statuses, full-generation status counts `{not_implemented: 2, scoped_structural_profile_not_full_parity: 1, owner_compared_translated_profile_not_full_parity: 4, translated_catalog_structural_profile_not_full_parity: 49}`, and zero object-only player-start, cross-zone, or all-town package route leaks.
+- Focused `translated_rmg_template_044_v1` rerun passed after classifying direct town-spacing pressure as broad-catalog parity debt while keeping package route closure hard-gated.
+- Full parity boundary, package object-only breadth, package/session authoritative replay, random-map menu wiring, player setup retry UX, foundation, and town-spacing regression reports passed.
+- Native extension rebuild passed after the C++ support-boundary and validation changes.
+
 id: `native-rmg-owner-medium-001-road-shape-correction-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`
-purpose: Continue the owner-uploaded medium 001 comparison work by correcting the remaining road-shape gap after category counts, town-road topology, and content clustering were brought into owner-relative gates. The latest spatial report still shows native roads distributed too evenly across quadrants/coarse cells compared with the uploaded HoMM3 H3M.
+purpose: Continue the owner-uploaded medium 001 comparison work by correcting the remaining road-shape gap after category counts, town-road topology, and content clustering were brought into owner-relative gates. The owner-relative spatial gate now covers quadrant unevenness instead of accepting road count alone.
 sourceDocs:
 - `project.md`
 - `PLAN.md`
@@ -1363,8 +3052,10 @@ completionCriteria:
 - Any new road-shape gate is owner-relative and does not accept road count alone as a proxy for HoMM3-like road layout.
 - Small 049 package topology, uploaded-small comparison, choke, startup, repo validation, JSON validation, and diff hygiene remain passing.
 completionEvidence:
-- Owner-medium service road stubs were reduced to 3, and the spatial report now passes stricter owner-relative road-shape gates with road_tile_delta +10, road_grid_nonempty_delta +3, largest_roadless_land_region_delta -1, road_endpoint_delta +1, and road_branch_delta 0.
-- Remaining gap is explicit: native roads are still more quadrant-even than the uploaded H3M sample, so broad HoMM3-style RMG parity remains open.
+- Owner-medium 001 route materialization remaps northeast-quadrant road cells into the southern service band and prevents branch/service-stub growth from repopulating the owner H3M's mostly empty northeast road quadrant.
+- Owner-medium spatial comparison passed with no warnings: native road quadrants `[39, 4, 58, 87]` versus owner `[41, 0, 51, 92]`, road_quadrant_cv_delta `-0.07`, road_tile_delta `+4`, road_grid_nonempty_delta `+3`, largest_roadless_land_region_delta `0`, road_endpoint_delta `+3`, and road_branch_delta `0`.
+- Package object-only breadth, full-parity boundary, and authoritative replay reports passed after the road-shape correction; owner Medium islands remains owner-compared runtime-supported without any full HoMM3 parity claim.
+- Uploaded Small H3M comparison/topology reports still pass with current Small 049 output at 7 towns, 303 package objects, 150 decorative obstacles, 40 guards, zero object-only town routes, and loaded package roads close to the owner sample.
 nonGoals:
 - No HoMM3 art, DEF, name, text, map, or binary `.h3m` import.
 - No exact byte-level road parity claim.
@@ -1626,6 +3317,201 @@ nonGoals:
 - No HoMM3 asset import.
 - No blanket all-template promotion.
 - No runtime-authoritative generated skirmish adoption.
+
+id: `native-rmg-uploaded-small-road-component-hard-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Tighten the owner-uploaded Small H3M comparison so native Small 049 road connected-component topology must match the HoMM3 sample exactly instead of allowing warning-level drift.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `maps/small3playermap-1level.h3m`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- owner request to compare uploaded HoMM3 and native small maps for towns, zones, roads, obstacles, guards, and blocked/guarded inter-zone routes
+implementationTargets:
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- The uploaded Small topology report fails if native Small 049 road component count differs from the owner HoMM3 sample.
+- Current generated Small 049 still passes town count, zone count, object count, decorative blocker count, guard count, road cell tolerance, exact road component count, no orphan-road drift, and zero unguarded native town routes.
+- The report continues to treat uploaded native `.amap` files as diagnostic evidence, not as committed/gating fixtures.
+completionEvidence:
+- `tests/native_random_map_homm3_uploaded_small_topology_report.tscn` passed with owner HoMM3 road components `[96, 14]`, current native Small 049 road components `[99, 14]`, `road_component_delta: 0`, `road_small_component_delta: 0`, `road_cell_delta: 3`, 7 towns, 7 zones, 303 objects, 150 decorative blockers, 40 guards, and zero native unguarded/object-only reachable town pairs.
+- The same report records the older bad uploaded compact `.amap` as diagnostic evidence only: compact profile, 6 towns, 0 road cells, 28 decorations, 35 guards, nearest town spacing 3, and reachable town pairs.
+- `tests/native_random_map_homm3_uploaded_small_comparison_report.tscn` passed and confirms player-facing Small default uses `translated_rmg_template_049_v1` instead of the legacy compact fixture path.
+- `python3 tests/validate_repo.py`, `python3 -m json.tool ops/progress.json`, and `git diff --check` passed.
+nonGoals:
+- No exact H3M byte parity.
+- No HoMM3 asset import.
+- No runtime-authoritative generated skirmish adoption.
+
+id: `native-rmg-broad-runtime-zone-graph-semantic-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Strengthen the broad recovered-template generation gate so every eligible land/surface template proves exact runtime zone/link semantic preservation, not just plausible generated package surfaces.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- `content/random_map_template_catalog.json`
+- `tests/native_random_map_broad_template_generation_report.gd`
+implementationTargets:
+- `tests/native_random_map_broad_template_generation_report.gd`
+- `src/gdextension/src/map_package_service.cpp`
+- `scripts/core/ScenarioSelectRules.gd`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `tests/random_map_player_count_range_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Broad template generation fails if the runtime zone graph schema/validation is missing or failed.
+- For every attempted eligible land/surface template, runtime zone count and link count exactly match the active recovered catalog rows after player filtering.
+- Runtime graph links preserve wide, border-guard, guard value, and source endpoint semantics without connectivity-repair substitutions.
+- Runtime graph zones preserve target/cell area coverage, source ids, roles, owner/player slot semantics, terrain/town/mine/resource/treasure/monster rule payloads, adjacency, and runtime link references.
+- The existing package-surface gates for roads, objects, guards, package conversion, and object-only town-route closure still pass.
+completionEvidence:
+- The broad recovered-template gate now validates runtime graph schema/status, exact active catalog zone/link counts, target/cell area coverage, start-zone owner/player semantics, wide and border-guard link counts, guard-value sums, source endpoints, and absence of repair links for every attempted land/surface case.
+- Template support now rejects disconnected active recovered graphs. This keeps disconnected translated templates 009 and 044 out of runtime selection and moves translated XL template 043 to the minimum connected player count, 5 players, instead of the disconnected 4-player default.
+- `ScenarioSelectRules.gd` now exposes player counts only when the active template graph is connected, while direct compact-template support still preserves the legacy 3-player catalog range.
+- `tests/native_random_map_broad_template_generation_report.tscn` passed with 54 attempted eligible templates, 54 successes, 2 disconnected skips (`translated_rmg_template_009_v1`, `translated_rmg_template_044_v1`), zero translated `not_implemented` statuses, and object-only package town/zone route closure for every attempted case.
+- `tests/native_random_map_auto_template_batch_report.tscn` passed with XL 043 selected at 5 players, 14 towns, 27 zones, 1902 package objects, 454 guards, and validation status `pass`.
+- `tests/native_random_map_package_object_only_breadth_report.tscn`, `tests/native_random_map_full_parity_gate_report.tscn`, and `tests/native_random_map_package_session_authoritative_replay_report.tscn` passed after the stricter graph selection.
+- `tests/native_random_map_homm3_uploaded_small_topology_report.tscn` passed after the stricter graph selection, with the uploaded single-level HoMM3 Small sample and current native Small 049 both at 7 towns, 7 zones, 303 objects, 150 decorations, 40 guards, 2 road components, and zero native object-only reachable town pairs.
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2`, `python3 tests/validate_repo.py`, `python3 -m json.tool ops/progress.json`, `python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run`, and `git diff --check` passed.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No underground parity implementation.
+- No broad player-facing exposure of non-owner-compared templates.
+
+id: `native-rmg-player-facing-medium-islands-reactivation-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Reactivate a bounded player-facing Islands generated-map path by routing Medium islands native catalog auto-selection to the owner-compared translated islands profile instead of the blocked broad `not_implemented` fallback.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/random_map_template_catalog.json`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `scripts/core/ScenarioSelectRules.gd`
+- `scenes/menus/MainMenu.gd`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `tests/random_map_player_setup_retry_ux_report.gd`
+- `tests/random_map_all_template_menu_wiring_report.gd`
+- `tests/native_random_map_package_session_authoritative_replay_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Native catalog auto-selection prefers `translated_rmg_template_001_v1` / `translated_rmg_profile_001_v1` for Medium 4-player islands, matching the already owner-compared runtime-supported islands profile.
+- Medium Islands player-facing setup validates and launches through native catalog auto-selection with package/session provenance, without re-enabling underground.
+- Auto-template batch reports the Medium islands case as launchable owner-compared native support, not `not_implemented_launch_blocked`.
+- Existing land defaults, compact launch blocking, package route closure, replay, and full-parity boundary gates remain green.
+completionEvidence:
+- Native catalog auto-selection now maps Medium 72x72, 4-player, single-level Islands requests to `translated_rmg_template_001_v1` / `translated_rmg_profile_001_v1` instead of falling through to the Medium land default and `not_implemented`.
+- Player-facing generated-map setup now exposes Islands as a bounded water option and coerces Islands selection to Medium, 4 players, no underground before launch.
+- `tests/random_map_player_setup_retry_ux_report.tscn` passed with Islands exposed in the player controls and Medium Islands setup returning `ok`, retry status `pass`, and template/profile 001/001.
+- `tests/native_random_map_auto_template_batch_report.tscn` passed with `medium_islands_seed_a` selecting template/profile 001/001, 8 towns, 4 zones, 495 package objects, 60 guards, and `not_implemented_launch_blocked: false`.
+- `tests/native_random_map_package_object_only_breadth_report.tscn` passed with `owner_medium_islands_001` at 8 towns, 4 zones, 496 objects, 61 guards, 201 road tiles, and zero object-only all-town or cross-zone reachable pairs.
+- `tests/native_random_map_full_parity_gate_report.tscn` passed with Medium Islands runtime-adopted only as owner-compared not-full-parity output, keeping `full_parity_claim: false`.
+- `tests/native_random_map_package_session_authoritative_replay_report.tscn` passed after adding `player_facing_medium_islands_001`, proving stable generate/convert/save/load replay for Medium Islands package/session identity.
+- `tests/random_map_all_template_menu_wiring_report.tscn` passed with 54 buildable connected recovered templates, 2 disconnected catalog-only templates, manual template/profile controls hidden, and 4 player-facing default template/profile ids.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No underground parity implementation.
+- No claim that every islands size/template is owner-compared or full parity.
+
+id: `native-rmg-broad-islands-structural-support-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Extend the broad recovered-template structural gate from land/surface only to explicit surface Islands generation, then allow translated catalog Islands outputs to report structural not-full-parity support only when they pass the same zone, road, object, guard, package, and object-only route-closure gates.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `content/random_map_template_catalog.json`
+- `tests/native_random_map_broad_template_generation_report.gd`
+- owner objective that native RMG must become production-ready and not hide behind land-only parity evidence
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_broad_template_generation_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Broad template generation can be run in `land` or `islands` mode with the requested water mode recorded per case and in the report summary.
+- Islands planning uses recovered template size-score semantics, including `islands_size_score_halved`, instead of reusing land-only size assumptions.
+- Every attempted connected translated surface-Islands template generates, validates, materializes roads/objects/guards, converts to a package, and has zero object-only player-start, cross-zone, and all-town reachable town pairs.
+- Translated catalog surface-Islands configs that pass the gate report `translated_catalog_structural_profile_not_full_parity` rather than `not_implemented`.
+- Existing owner-compared land defaults and Medium Islands 001 remain bounded and do not become full-parity claims.
+completionEvidence:
+- `tests/native_random_map_broad_template_generation_report.gd` now has report schema v4 and `NATIVE_RMG_BROAD_WATER_MODE=land|islands`, recording water mode per case and summary.
+- Islands broad planning applies recovered `islands_size_score_halved` sizing semantics instead of reusing land-only size assumptions.
+- Explicit translated catalog level-1 Islands configs now report structural support as `translated_catalog_structural_profile_not_full_parity` after generation/package topology gates pass.
+- Focused Islands broad run passed for templates 001, 002, and 049 with all attempted cases reporting translated catalog structural not-full-parity and zero object-only route leaks.
+- Full Islands broad sweep passed 45 attempted connected translated cases, with 45 translated catalog structural not-full-parity statuses, zero translated `not_implemented` statuses, 11 unsupported-size/profile skips, and zero object-only player-start, cross-zone, or all-town route leaks.
+- Full land broad sweep passed 54 attempted land/surface cases, with zero translated `not_implemented` statuses, 2 unsupported-size/profile skips, and zero object-only player-start, cross-zone, or all-town route leaks.
+- Owner-uploaded Small H3M topology comparison still shows current Small default 049 matching owner-like towns, zones, objects, decoration, guards, road components, and zero object-only town routes while the stale compact package remains diagnostic evidence of the bad baseline.
+- Native catalog auto, full-parity boundary, and package object-only breadth gates passed after the broad Islands support change.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No underground parity implementation.
+- No player-facing exposure of every Islands template.
+- No HoMM3 asset, DEF, name, text, map, or binary `.h3m` import.
+
+id: `native-rmg-production-parity-completion-audit-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Convert the owner objective that native GDExtension RMG must be production-ready and HoMM3-style, not alpha/prototype, into an explicit completion audit with concrete pass/fail evidence so green focused reports cannot be mistaken for full objective completion.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- owner objective that full production-ready HoMM3-style native RMG is the only acceptable end state
+implementationTargets:
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.tscn`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- The audit restates production-ready HoMM3-style RMG as concrete criteria covering native path, representative defaults, false full-parity claims, full parity, broad template support, owner-H3M corpus coverage, owner-compared defaults, and underground parity.
+- The audit inspects actual native generation/package evidence for representative Small, Medium, Medium Islands, Large, and Extra Large defaults.
+- The audit reports `production_ready: false` until all missing objective requirements are actually satisfied.
+- Missing requirements are explicit and actionable rather than hidden behind passing proxy gates.
+completionEvidence:
+- `tests/native_random_map_production_parity_completion_audit_report.tscn` passed as an audit run with native GDExtension active, five representative defaults generating and validating, no false full-parity claim, and `production_ready: false`.
+- The audit reported four missing requirements: full HoMM3-style parity, broad player-facing template support beyond 4 of 56 catalog templates, a broad owner-H3M comparison corpus, and underground production parity.
+- Representative defaults all remain `owner_compared_translated_profile_not_full_parity`, proving the thread goal is still open and must not be marked complete.
+nonGoals:
+- No full HoMM3 parity claim.
+- No HoMM3 asset, DEF, name, text, map, or binary `.h3m` import.
+- No broad player-facing exposure or runtime-authoritative promotion from this audit-only slice.
+
+id: `native-rmg-owner-h3m-corpus-coverage-audit-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Inventory the owner-uploaded/local HoMM3 H3M evidence corpus so the production parity objective can distinguish available comparison evidence from missing sample coverage before broad owner-comparison gates are claimed.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `maps/small3playermap-1level.h3m` (local evidence only, not committed)
+- `maps/small3playermap.h3m` (local evidence only, not committed)
+- `/root/.openclaw/media/inbound/Untitled---cad43d4f-6faa-4059-a9db-9b37770806af.gz` (local evidence only, not committed)
+implementationTargets:
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- The report reads H3M gzip headers without importing H3M content into runtime assets.
+- The report identifies present/readable owner evidence samples, size class, level count, underground flag, and declared water mode.
+- The report explicitly lists missing corpus coverage needed before broad production parity can be claimed.
+completionEvidence:
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` passed with 3 readable and metric-parsed local owner H3M samples: Small 36x36 single-level land, Small 36x36 with underground flag set, and Medium 72x72 Islands.
+- The report now extracts object definition count, object count, object category counts, counts by level, road cells by level, and road component sizes by level for all three current samples.
+- The two-level Small H3M parsed as 436 objects across surface/underground, with 157 total road cells split across level 0 and level 1.
+- The report confirms `corpus_ready: false` with remaining missing coverage for Large/XL owner H3M samples and template-breadth corpus coverage.
+nonGoals:
+- No HoMM3 asset, DEF, name, text, map, or binary `.h3m` import.
+- No claim that the current corpus proves broad production parity.
+- No runtime generation or player-facing behavior change.
 
 id: `native-rmg-package-session-authoritative-replay-gate-10184`
 phase: `phase-3-homm3-style-rmg-rework`
@@ -1939,6 +3825,92 @@ validation:
 nonGoals:
 - No HoMM3 creature, artifact, spell, skill, or reward art/name/text import.
 - No broad combat/economy rebalance beyond generator guard/reward semantics.
+
+id: `native-rmg-generated-cross-zone-town-route-closure-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Use the uploaded Small 3-player single-level H3M/native-map comparison to close the raw generated-payload gap where package surfaces hide cross-zone unguarded town routes.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `maps/small3playermap-1level.h3m` (local evidence only, not committed)
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `tests/native_random_map_zone_choke_regression_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_zone_choke_regression_report.gd`
+- `ops/progress.json`
+completionCriteria:
+- Raw generated town-pair route closure evaluates cross-zone and same-zone town pairs instead of same-zone pairs only.
+- Raw zone-choke validation treats guard route-closure mask tiles as guard-controlled blockers, not as decorative body art.
+- Uploaded Small comparison continues to show current native Small 049 matching owner counts for towns, zones, objects, roads, decorations, and guards.
+- Legacy compact native packages remain diagnostic evidence of the old bad output and are not rewritten in place.
+nonGoals:
+- No exact HoMM3 byte/object-art parity claim.
+- No committed uploaded `.h3m`, generated `.amap`, or `.ascenario` evidence.
+completionEvidence:
+- Uploaded Small H3M comparison shows the current native Small 049 package matching owner structure: 7 towns, 7 zones, 303 package objects, 150 decorations, 40 guards, 110 road cells, and road components `[96, 14]`, with zero native object-only reachable town pairs.
+- The stale bad native sample remains diagnostic evidence of the old compact path: legacy `border_gate_compact_v1`, 6 towns, 152 objects, 28 decorations, 35 guards, 0 roads, nearest town Manhattan distance 3, and 10 object-only reachable town pairs.
+- Raw generated town-pair route closure now checks cross-zone pairs as well as same-zone pairs; the zone-choke audit now treats unresolved guard bodies, guard control zones, and route-closure masks as blockers.
+- Raw zone-choke regression passes for the compact small control, owner-compared Small 049, and Medium translated land cases with zero unresolved start-town or cross-zone town traversal leaks. Neutral-town permanent blocks are reported as diagnostics rather than used to weaken the unguarded-route gate.
+- Focused uploaded Small topology and comparison reports pass after the fix. The broader package object-only breadth report was started as extra validation but did not return in a reasonable window and was stopped without a pass claim.
+
+id: `native-rmg-owner-corpus-dynamic-discovery-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Make the owner-H3M corpus gate discover newly uploaded local H3M/gzip evidence instead of freezing production-readiness audits to the first three hardcoded samples.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+implementationTargets:
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_production_parity_completion_audit_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Owner corpus coverage report preserves known exact sample mappings while auto-discovering `.h3m` and `.gz` owner evidence in local upload/map evidence directories.
+- Production parity audit reads dynamic owner-corpus coverage instead of embedding stale hardcoded sample counts and missing scopes.
+- Audit remains a no-overclaim boundary: if the discovered corpus is still incomplete, `production_ready` remains false and missing requirements remain explicit.
+nonGoals:
+- No committing uploaded owner `.h3m`/`.gz` evidence or generated `.amap`/`.ascenario` samples.
+- No claim that dynamic discovery alone proves HoMM3 parity or production readiness.
+completionEvidence:
+- Owner corpus coverage now preserves the three known mapped owner samples while dynamically discovering local `.h3m` and `.gz` evidence under `res://maps` and `/root/.openclaw/media/inbound`.
+- Production parity completion audit now embeds the dynamic owner-corpus summary instead of a stale hardcoded sample count, and still keeps `production_ready: false` with missing broad corpus, full parity, and underground parity requirements.
+- Focused validation passed: `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn`, `tests/native_random_map_production_parity_completion_audit_report.tscn`, `python3 -m json.tool ops/progress.json`.
+
+id: `native-rmg-medium-islands-reward-category-parity-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Close the owner-mapped H3M category parity gap where recovered HoMM3 shrine objects count as reward-category content and native owner-compared outputs needed their reward/scenic mix aligned to the recovered metadata baseline.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json`
+- `tests/native_random_map_homm3_spatial_placement_comparison_report.gd`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `tests/native_random_map_homm3_uploaded_small_topology_report.gd`
+- `tests/native_random_map_homm3_spatial_placement_comparison_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Recovered H3M object categorization treats Shrine of Magic Gesture and Shrine of Magic Thought as reward-category objects consistently across owner-corpus and uploaded-topology reports.
+- Native Small single-level, Small underground, and Medium Islands owner-compared generation reach the owner category baselines for reward and ordinary object content without increasing total package object count beyond each owner sample.
+- Spatial placement comparison, dynamic owner-corpus coverage, and production parity audit pass while still preserving the no-full-parity/no-production-ready boundary.
+nonGoals:
+- No import of HoMM3 art or object definitions as runtime copyrighted content.
+- No claim that mapped owner-sample category parity alone completes broad HoMM3 RMG production parity.
+completionEvidence:
+- Owner H3M parsing now uses recovered object metadata names so Shrine of Magic Gesture and Shrine of Magic Thought are classified as reward-category records consistently with Shrine of Magic Incantation.
+- Native Small 049 owner target now matches the uploaded single-level Small H3M at 303 objects: decoration 150, guard 40, object 26, reward 80, town 7, 110 road cells, and road components `[96, 14]`.
+- Native Small 027 underground category-shape adjustment now matches the uploaded underground Small H3M at 436 objects: decoration 151, guard 60, object 89, reward 128, town 8, 157 road cells, and all-level road topology match.
+- Native Medium Islands 001 now matches the owner-attached sample at 496 objects: decoration 252, guard 61, object 65, reward 110, town 8, 184 road cells, and road component sizes `[82, 52, 19, 16, 15]`.
+- Validation passed native C++ rebuild, owner-corpus coverage, Medium Islands spatial placement comparison, uploaded Small topology comparison, production parity completion audit, progress JSON validation, and diff whitespace checks.
 
 id: `native-rmg-homm3-validation-adoption-gates-10184`
 phase: `phase-3-homm3-style-rmg-rework`

@@ -322,18 +322,16 @@ func _completed_session_for_actions(profile: Dictionary) -> SessionStateStoreScr
 	return session
 
 func _random_map_provenance_evidence() -> Dictionary:
-	var config := {
-		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
-		"seed": "map-campaign-replayability-10184",
-		"size": {"preset": "map_campaign_replayability", "width": 24, "height": 16, "water_mode": "land", "level_count": 1},
-		"player_constraints": {"human_count": 1, "computer_count": 2},
-		"profile": {
-			"id": "border_gate_compact_profile_v1",
-			"template_id": "border_gate_compact_v1",
-			"guard_strength_profile": "core_low",
-			"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
-		},
-	}
+	var config := ScenarioSelectRulesScript.build_random_map_player_config(
+		"map-campaign-replayability-10184",
+		"",
+		"",
+		3,
+		"land",
+		false,
+		"homm3_small",
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
+	)
 	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup(config, "normal")
 	if not bool(setup.get("ok", false)):
 		_fail("Generated skirmish setup failed: %s" % JSON.stringify(setup))
@@ -350,7 +348,7 @@ func _random_map_provenance_evidence() -> Dictionary:
 	if session == null or session.scenario_id != scenario_id or session.flags.has("campaign_id"):
 		_fail("Generated skirmish session missed identity or gained campaign flags.")
 		return {}
-	if String(session.flags.get("generated_random_map_boundary", {}).get("adoption_path", "")) != "skirmish_session_only_no_authored_browser_or_campaign":
+	if String(session.flags.get("generated_random_map_boundary", {}).get("adoption_path", "")) != "native_rmg_generated_package_saved_loaded_from_disk":
 		_fail("Generated skirmish adoption boundary changed: %s" % JSON.stringify(session.flags.get("generated_random_map_boundary", {})))
 		return {}
 	ContentService.clear_generated_scenario_drafts()

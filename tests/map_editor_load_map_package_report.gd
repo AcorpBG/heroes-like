@@ -15,12 +15,13 @@ func _run() -> void:
 	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup(
 		ScenarioSelectRulesScript.build_random_map_player_config(
 			"map-editor-load-map-package-10184",
-			"border_gate_compact_v1",
-			"border_gate_compact_profile_v1",
+			"",
+			"",
 			3,
 			"land",
 			false,
-			"homm3_small"
+			"homm3_small",
+			ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
 		),
 		"normal"
 	)

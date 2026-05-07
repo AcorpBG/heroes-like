@@ -33,7 +33,7 @@ const DECORATION_TYPE_IDS = {
 }
 const GUARD_TYPE_IDS = {54: true, 71: true}
 const TOWN_TYPE_IDS = {98: true}
-const RESOURCE_REWARD_TYPE_IDS = {5: true, 53: true, 79: true, 83: true, 88: true, 93: true, 101: true}
+const RESOURCE_REWARD_TYPE_IDS = {5: true, 53: true, 79: true, 83: true, 88: true, 89: true, 90: true, 93: true, 101: true}
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -91,6 +91,12 @@ func _generate_native_owner_like(service: Variant) -> Dictionary:
 	if not bool(generated.get("ok", false)) or String(generated.get("validation_status", "")) != "pass":
 		_fail("Native owner-like generation failed validation: %s" % JSON.stringify(generated.get("validation_report", generated)))
 		return {}
+	if String(generated.get("status", "")) != "owner_compared_translated_profile_supported" \
+			or String(generated.get("full_generation_status", "")) != "owner_compared_translated_profile_not_full_parity" \
+			or not bool(generated.get("owner_compared_translated_profile_supported", false)) \
+			or bool(generated.get("full_parity_claim", false)):
+		_fail("Native owner-like islands generation did not preserve the owner-compared/non-full-parity boundary: %s" % JSON.stringify(_generation_status_summary(generated)))
+		return {}
 	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
 	var width = int(normalized.get("width", 0))
 	var height = int(normalized.get("height", 0))
@@ -100,6 +106,10 @@ func _generate_native_owner_like(service: Variant) -> Dictionary:
 	var metrics = _spatial_metrics("native_owner_like", width, height, land_lookup, road_points, object_records)
 	metrics["template_id"] = String(normalized.get("template_id", ""))
 	metrics["profile_id"] = String(normalized.get("profile_id", ""))
+	metrics["status"] = String(generated.get("status", ""))
+	metrics["full_generation_status"] = String(generated.get("full_generation_status", ""))
+	metrics["owner_compared_translated_profile_supported"] = bool(generated.get("owner_compared_translated_profile_supported", false))
+	metrics["full_parity_claim"] = bool(generated.get("full_parity_claim", false))
 	metrics["seed"] = String(normalized.get("normalized_seed", ""))
 	metrics["water_mode"] = String(normalized.get("water_mode", ""))
 	metrics["zone_count"] = int(generated.get("zone_layout", {}).get("zone_count", 0))
@@ -110,6 +120,20 @@ func _generate_native_owner_like(service: Variant) -> Dictionary:
 	metrics["fill_coverage_summary"] = generated.get("fill_coverage_summary", {})
 	metrics["decoration_route_shaping_summary"] = generated.get("decoration_route_shaping_summary", {})
 	return metrics
+
+func _generation_status_summary(generated: Dictionary) -> Dictionary:
+	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
+	return {
+		"status": String(generated.get("status", "")),
+		"full_generation_status": String(generated.get("full_generation_status", "")),
+		"template_id": String(normalized.get("template_id", "")),
+		"profile_id": String(normalized.get("profile_id", "")),
+		"size_class_id": String(normalized.get("size_class_id", "")),
+		"water_mode": String(normalized.get("water_mode", "")),
+		"level_count": int(normalized.get("level_count", 0)),
+		"owner_compared_translated_profile_supported": bool(generated.get("owner_compared_translated_profile_supported", false)),
+		"full_parity_claim": bool(generated.get("full_parity_claim", false)),
+	}
 
 func _parse_owner_h3m(object_metadata: Dictionary) -> Dictionary:
 	var compressed = FileAccess.get_file_as_bytes(ATTACHED_H3M_GZ)

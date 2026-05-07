@@ -12,6 +12,14 @@ const EXPECTED_FULL_STATUS := "owner_compared_translated_profile_not_full_parity
 const CASES := [
 	{"id": "default_small_049", "size_class_id": "homm3_small"},
 	{"id": "default_medium_002", "size_class_id": "homm3_medium"},
+	{
+		"id": "player_facing_medium_islands_001",
+		"size_class_id": "homm3_medium",
+		"water_mode": "islands",
+		"player_count": 4,
+		"template_id": "translated_rmg_template_001_v1",
+		"profile_id": "translated_rmg_profile_001_v1",
+	},
 	{"id": "default_large_042", "size_class_id": "homm3_large"},
 	{"id": "default_extra_large_043", "size_class_id": "homm3_extra_large"},
 ]
@@ -53,9 +61,9 @@ func _run() -> void:
 		"cases": summaries,
 		"readiness": {
 			"replay_identity_stable": true,
-			"native_runtime_authoritative": false,
-			"runtime_call_site_adoption": false,
-			"remaining_authority_gap": "runtime_call_site_adoption_still_disabled",
+			"native_runtime_authoritative": true,
+			"runtime_call_site_adoption": true,
+			"remaining_authority_gap": "full_homm3_parity_still_pending",
 		},
 	})])
 	get_tree().quit(0)
@@ -63,16 +71,23 @@ func _run() -> void:
 func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 	var case_id := String(case_record.get("id", "case"))
 	var size_class_id := String(case_record.get("size_class_id", "homm3_small"))
+	var water_mode := String(case_record.get("water_mode", "land"))
 	var defaults := ScenarioSelectRulesScript.random_map_size_class_default(size_class_id)
-	var player_count := int(defaults.get("player_count", 3))
+	var expected_defaults := defaults.duplicate(true)
+	if case_record.has("template_id"):
+		expected_defaults["template_id"] = String(case_record.get("template_id", ""))
+	if case_record.has("profile_id"):
+		expected_defaults["profile_id"] = String(case_record.get("profile_id", ""))
+	var player_count := int(case_record.get("player_count", defaults.get("player_count", 3)))
 	var base_config := ScenarioSelectRulesScript.build_random_map_player_config(
-		"package-session-authoritative-replay-%s-10184" % size_class_id,
+		"package-session-authoritative-replay-%s-%s-10184" % [size_class_id, water_mode],
 		"",
 		"",
 		player_count,
-		"land",
+		water_mode,
 		false,
-		size_class_id
+		size_class_id,
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
 	)
 	var changed_config: Dictionary = base_config.duplicate(true)
 	changed_config["seed"] = "%s-changed" % String(base_config.get("seed", ""))
@@ -80,11 +95,11 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 	var first: Dictionary = service.generate_random_map(base_config, {"startup_path": "authoritative_replay_first_%s" % case_id})
 	var repeat: Dictionary = service.generate_random_map(base_config.duplicate(true), {"startup_path": "authoritative_replay_repeat_%s" % case_id})
 	var changed: Dictionary = service.generate_random_map(changed_config, {"startup_path": "authoritative_replay_changed_%s" % case_id})
-	if not _assert_generation(case_id, first, defaults):
+	if not _assert_generation(case_id, first, expected_defaults):
 		return {}
-	if not _assert_generation(case_id, repeat, defaults):
+	if not _assert_generation(case_id, repeat, expected_defaults):
 		return {}
-	if not _assert_generation(case_id, changed, defaults):
+	if not _assert_generation(case_id, changed, expected_defaults):
 		return {}
 
 	var first_signature := String(first.get("full_output_signature", ""))
@@ -138,8 +153,8 @@ func _run_case(service: Variant, case_record: Dictionary) -> Dictionary:
 		"adoption_replay": first_replay,
 		"changed_map_hash": changed_replay.get("map_hash", ""),
 		"disk_replay": disk_replay,
-		"native_runtime_authoritative": false,
-		"runtime_call_site_adoption": false,
+		"native_runtime_authoritative": true,
+		"runtime_call_site_adoption": true,
 	}
 
 func _assert_generation(case_id: String, generated: Dictionary, defaults: Dictionary) -> bool:
@@ -174,11 +189,11 @@ func _assert_adoption(case_id: String, adoption: Dictionary) -> bool:
 		_fail("%s adoption failed: %s" % [case_id, JSON.stringify(adoption)])
 		return false
 	var report: Dictionary = adoption.get("report", {}) if adoption.get("report", {}) is Dictionary else {}
-	if not bool(report.get("package_session_adoption_ready", false)) or String(report.get("adoption_status", "")) != "ready_feature_gated_not_authoritative":
+	if not bool(report.get("package_session_adoption_ready", false)) or String(report.get("adoption_status", "")) != "runtime_authoritative_owner_compared_not_full_parity":
 		_fail("%s adoption readiness/status drifted: %s" % [case_id, JSON.stringify(report)])
 		return false
-	if bool(report.get("native_runtime_authoritative", true)) or bool(report.get("runtime_call_site_adoption", true)) or bool(report.get("full_parity_claim", true)):
-		_fail("%s adoption crossed authority/runtime/parity boundary: %s" % [case_id, JSON.stringify(report)])
+	if not bool(report.get("native_runtime_authoritative", false)) or not bool(report.get("runtime_call_site_adoption", false)) or bool(report.get("full_parity_claim", true)):
+		_fail("%s adoption must be runtime-authoritative without full parity: %s" % [case_id, JSON.stringify(report)])
 		return false
 	return true
 

@@ -33,8 +33,8 @@ func _run() -> void:
 	ContentService.clear_generated_scenario_drafts()
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
 		"native-rmg-gdscript-comparison-10184-small-land",
-		"border_gate_compact_v1",
-		"border_gate_compact_profile_v1",
+		"translated_rmg_template_049_v1",
+		"translated_rmg_profile_049_v1",
 		3,
 		"land",
 		false,
@@ -224,8 +224,8 @@ func _assert_native_generation(generated: Dictionary) -> void:
 	if not bool(generated.get("ok", false)):
 		_fail("Native RMG returned ok=false: %s" % JSON.stringify(generated))
 		return
-	if String(generated.get("status", "")) != "scoped_structural_profile_supported" or String(generated.get("full_generation_status", "")) == "not_implemented":
-		_fail("Native RMG status did not report scoped structural profile support: %s" % JSON.stringify(generated.get("report", {})))
+	if String(generated.get("status", "")) != "owner_compared_translated_profile_supported" or String(generated.get("full_generation_status", "")) == "not_implemented":
+		_fail("Native RMG status did not report owner-compared translated profile support: %s" % JSON.stringify(generated.get("report", {})))
 		return
 	if String(generated.get("validation_status", "")) != "pass" or not bool(generated.get("no_authored_writeback", false)):
 		_fail("Native RMG validation/no-writeback boundary failed: %s" % JSON.stringify(generated.get("validation_report", {})))
@@ -242,11 +242,15 @@ func _assert_adoption_shape(adoption: Dictionary, width: int, height: int, level
 	if String(report.get("schema_id", "")) != "aurelion_native_random_map_package_session_adoption_report_v1" or not bool(report.get("package_session_adoption_ready", false)):
 		_fail("Adoption report did not prove package/session readiness: %s" % JSON.stringify(report))
 		return
-	if bool(report.get("native_runtime_authoritative", true)) or bool(report.get("runtime_call_site_adoption", true)) or bool(report.get("full_parity_claim", true)):
-		_fail("Adoption report must keep package/session adoption feature-gated and non-authoritative: %s" % JSON.stringify(report))
+	if not bool(report.get("native_runtime_authoritative", false)) or not bool(report.get("runtime_call_site_adoption", false)) or bool(report.get("full_parity_claim", true)):
+		_fail("Adoption report must mark owner-compared packages runtime-authoritative without claiming full parity: %s" % JSON.stringify(report))
 		return
-	if String(report.get("adoption_status", "")) != "ready_feature_gated_not_authoritative":
-		_fail("Adoption report status must remain non-authoritative until replay/package identity is proven: %s" % JSON.stringify(report))
+	if String(report.get("adoption_status", "")) != "runtime_authoritative_owner_compared_not_full_parity":
+		_fail("Adoption report status must distinguish runtime authority from full parity: %s" % JSON.stringify(report))
+		return
+	var remaining: Array = report.get("remaining_parity_slices", []) if report.get("remaining_parity_slices", []) is Array else []
+	if remaining.has("native-rmg-package-session-authoritative-replay-gate-10184") or not remaining.has("native-rmg-full-homm3-parity-gate-10184"):
+		_fail("Adoption report kept stale replay-gate parity requirements after runtime authority: %s" % JSON.stringify(remaining))
 		return
 	var metrics: Dictionary = report.get("metrics", {})
 	if int(metrics.get("width", 0)) != width or int(metrics.get("height", 0)) != height or int(metrics.get("level_count", 0)) != levels:
@@ -305,8 +309,8 @@ func _assert_session_shape(session: SessionStateStoreScript.SessionData, adoptio
 	if not bool(boundary_flags.get("runtime_call_site_adoption", false)):
 		_fail("Session boundary did not mark active runtime call-site adoption: %s" % JSON.stringify(boundary_flags))
 		return
-	if bool(boundary_flags.get("native_runtime_authoritative", true)) or bool(boundary_flags.get("full_parity_claim", true)):
-		_fail("Session boundary should keep native authority/full parity gated: %s" % JSON.stringify(boundary_flags))
+	if not bool(boundary_flags.get("native_runtime_authoritative", false)) or bool(boundary_flags.get("full_parity_claim", true)):
+		_fail("Session boundary should mark native runtime authority while keeping full parity gated: %s" % JSON.stringify(boundary_flags))
 		return
 	if session.overworld.get("map_package_ref", {}) != adoption.get("map_ref", {}) or session.overworld.get("scenario_package_ref", {}) != adoption.get("scenario_ref", {}):
 		_fail("Session did not carry map/scenario package refs.")

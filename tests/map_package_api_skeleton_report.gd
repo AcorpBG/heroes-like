@@ -31,6 +31,9 @@ func _run() -> void:
 			_fail("Missing capability %s in %s." % [required, JSON.stringify(Array(capabilities))])
 			return
 
+	var terrain_codes := []
+	for _index in range(12):
+		terrain_codes.append(1)
 	var map_doc: Variant = service.create_map_document_stub({
 		"map_id": "slice1_fixture_map",
 		"map_hash": "sha256:slice1-map-placeholder",
@@ -38,6 +41,14 @@ func _run() -> void:
 		"height": 3,
 		"level_count": 1,
 		"metadata": {"display_name": "Slice 1 Fixture Map"},
+		"terrain_layers": {
+			"base": {"levels": [terrain_codes]},
+			"roads": [{"id": "fixture_road", "tile_count": 2}],
+		},
+		"objects": [
+			{"placement_id": "fixture_object_1", "object_id": "object_fixture_marker", "x": 1, "y": 1, "level": 0},
+		],
+		"route_graph": {"nodes": [], "edges": []},
 	})
 	if map_doc.get_schema_version() != 1 or map_doc.get_map_id() != "slice1_fixture_map":
 		_fail("MapDocument identity getters failed.")
@@ -51,6 +62,8 @@ func _run() -> void:
 		"scenario_hash": "sha256:slice1-scenario-placeholder",
 		"map_ref": {"map_id": map_doc.get_map_id(), "map_hash": map_doc.get_map_hash(), "map_schema_version": map_doc.get_schema_version()},
 		"selection": {"title": "Slice 1 Fixture Scenario"},
+		"player_slots": [{"slot_index": 0, "controller": "human", "faction_id": "faction_embercourt"}],
+		"objectives": {"primary": "survive_fixture_validation"},
 	})
 	if scenario_doc.get_schema_version() != 1 or scenario_doc.get_scenario_id() != "slice1_fixture_scenario":
 		_fail("ScenarioDocument identity getters failed.")
@@ -72,11 +85,79 @@ func _run() -> void:
 	DirAccess.remove_absolute(fixture_path)
 
 	var validation_result: Dictionary = service.validate_map_document(map_doc)
-	if bool(validation_result.get("ok", true)) or String(validation_result.get("error_code", "")) != "not_implemented":
-		_fail("validate_map_document did not return the stable stub failure shape: %s" % JSON.stringify(validation_result))
+	if not bool(validation_result.get("ok", false)) or String(validation_result.get("status", "")) != "pass":
+		_fail("validate_map_document did not pass a structurally valid map: %s" % JSON.stringify(validation_result))
 		return
 	if String(validation_result.get("report", {}).get("schema_id", "")) != "aurelion_map_validation_report":
-		_fail("validate_map_document did not return a map validation report skeleton.")
+		_fail("validate_map_document did not return a map validation report.")
+		return
+	if int(validation_result.get("report", {}).get("metrics", {}).get("terrain_layer_count", 0)) <= 0:
+		_fail("validate_map_document did not report terrain layer metrics: %s" % JSON.stringify(validation_result))
+		return
+
+	var bad_map: Variant = service.create_map_document_stub({
+		"map_id": "bad_fixture_map",
+		"map_hash": "sha256:bad-map-placeholder",
+		"width": 4,
+		"height": 3,
+		"level_count": 1,
+		"terrain_layers": {
+			"base": {"levels": [[1, 2]]},
+			"roads": [{"id": "bad_road", "tile_count": 0}],
+		},
+		"objects": [
+			{"placement_id": "bad_object", "x": 99, "y": 99, "level": 0},
+			{"placement_id": "bad_object", "x": 1, "y": 1, "level": 0},
+		],
+	})
+	var bad_validation: Dictionary = service.validate_map_document(bad_map)
+	if bool(bad_validation.get("ok", true)) or String(bad_validation.get("status", "")) != "fail":
+		_fail("validate_map_document did not reject an invalid map: %s" % JSON.stringify(bad_validation))
+		return
+	if int(bad_validation.get("report", {}).get("failure_count", 0)) < 4:
+		_fail("invalid map validation did not report concrete failures: %s" % JSON.stringify(bad_validation))
+		return
+	var bad_map_codes := _failure_codes(bad_validation)
+	for required_code in ["terrain_layer_tile_count_mismatch", "invalid_road_tile_count", "object_out_of_bounds", "duplicate_object_placement_id"]:
+		if not bad_map_codes.has(required_code):
+			_fail("invalid map validation missed %s: %s" % [required_code, JSON.stringify(bad_validation)])
+			return
+
+	var null_map_validation: Dictionary = service.validate_map_document(null)
+	if bool(null_map_validation.get("ok", true)) or not _failure_codes(null_map_validation).has("missing_map_document"):
+		_fail("validate_map_document did not reject a null map document: %s" % JSON.stringify(null_map_validation))
+		return
+
+	var scenario_validation: Dictionary = service.validate_scenario_document(scenario_doc, map_doc)
+	if not bool(scenario_validation.get("ok", false)) or String(scenario_validation.get("status", "")) != "pass":
+		_fail("validate_scenario_document did not pass a structurally valid scenario/map pair: %s" % JSON.stringify(scenario_validation))
+		return
+	if int(scenario_validation.get("report", {}).get("metrics", {}).get("objective_key_count", -1)) <= 0:
+		_fail("validate_scenario_document did not report objective metrics: %s" % JSON.stringify(scenario_validation))
+		return
+
+	var bad_scenario: Variant = service.create_scenario_document_stub({
+		"scenario_id": "bad_fixture_scenario",
+		"scenario_hash": "sha256:bad-scenario-placeholder",
+		"map_ref": {"map_id": "different_map", "map_hash": map_doc.get_map_hash()},
+		"player_slots": [{"slot_index": 0}],
+	})
+	var bad_scenario_validation: Dictionary = service.validate_scenario_document(bad_scenario, map_doc)
+	if bool(bad_scenario_validation.get("ok", true)) or String(bad_scenario_validation.get("status", "")) != "fail":
+		_fail("validate_scenario_document did not reject a mismatched map_ref: %s" % JSON.stringify(bad_scenario_validation))
+		return
+	if not _failure_codes(bad_scenario_validation).has("map_ref_id_mismatch"):
+		_fail("bad scenario validation did not report map_ref_id_mismatch: %s" % JSON.stringify(bad_scenario_validation))
+		return
+
+	var null_scenario_validation: Dictionary = service.validate_scenario_document(null, map_doc)
+	if bool(null_scenario_validation.get("ok", true)) or not _failure_codes(null_scenario_validation).has("missing_scenario_document"):
+		_fail("validate_scenario_document did not reject a null scenario document: %s" % JSON.stringify(null_scenario_validation))
+		return
+
+	var missing_map_validation: Dictionary = service.validate_scenario_document(scenario_doc, null)
+	if bool(missing_map_validation.get("ok", true)) or not _failure_codes(missing_map_validation).has("missing_map_document"):
+		_fail("validate_scenario_document did not reject a missing referenced map document: %s" % JSON.stringify(missing_map_validation))
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
@@ -89,6 +170,13 @@ func _run() -> void:
 		"scenario_schema_version": scenario_doc.get_schema_version(),
 		"saved_package_path": fixture_path,
 		"loaded_package_hash": load_result.get("package_hash", ""),
+		"map_validation_status": validation_result.get("status", ""),
+		"scenario_validation_status": scenario_validation.get("status", ""),
+		"invalid_map_failure_count": bad_validation.get("report", {}).get("failure_count", 0),
+		"invalid_scenario_failure_count": bad_scenario_validation.get("report", {}).get("failure_count", 0),
+		"null_map_validation_status": null_map_validation.get("status", ""),
+		"null_scenario_validation_status": null_scenario_validation.get("status", ""),
+		"missing_map_validation_status": missing_map_validation.get("status", ""),
 	})])
 	get_tree().quit(0)
 
@@ -96,6 +184,15 @@ func _create_service() -> Variant:
 	if ClassDB.class_exists("MapPackageService"):
 		return ClassDB.instantiate("MapPackageService")
 	return MapPackageServiceScript.new()
+
+func _failure_codes(validation_result: Dictionary) -> Dictionary:
+	var result := {}
+	var report: Dictionary = validation_result.get("report", {}) if validation_result.get("report", {}) is Dictionary else {}
+	var failures: Array = report.get("failures", []) if report.get("failures", []) is Array else []
+	for failure in failures:
+		if failure is Dictionary:
+			result[String(failure.get("code", ""))] = true
+	return result
 
 func _fail(message: String) -> void:
 	push_error("%s failed: %s" % [REPORT_ID, message])

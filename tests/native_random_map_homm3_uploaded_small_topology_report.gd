@@ -5,7 +5,10 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const REPORT_ID := "NATIVE_RANDOM_MAP_HOMM3_UPLOADED_SMALL_TOPOLOGY_REPORT"
 const REPORT_SCHEMA_ID := "native_random_map_homm3_uploaded_small_topology_report_v1"
 const OWNER_SMALL_H3M_PATH := "res://maps/small3playermap-1level.h3m"
-const UPLOADED_NATIVE_SMALL_AMAP_PATH := "res://maps/small-hollow-road-bend-5838fad4.amap"
+const UPLOADED_NATIVE_SMALL_AMAP_PATHS := [
+	"res://maps/small-fallow-pass-fen-6bedd8f0.amap",
+	"res://maps/small-hollow-road-bend-5838fad4.amap",
+]
 
 const HOMM3_VERSION_ROE := 14
 const HOMM3_VERSION_AB := 21
@@ -19,7 +22,7 @@ const DECORATION_TYPE_IDS := {
 }
 const GUARD_TYPE_IDS := {54: true, 71: true}
 const TOWN_TYPE_IDS := {98: true}
-const RESOURCE_REWARD_TYPE_IDS := {5: true, 53: true, 79: true, 83: true, 88: true, 93: true, 101: true}
+const RESOURCE_REWARD_TYPE_IDS := {5: true, 53: true, 79: true, 83: true, 88: true, 89: true, 90: true, 93: true, 101: true}
 const OWNER_SMALL_EXPECTED_ZONE_COUNT := 7
 const BROADENED_NATIVE_CASES := [
 	{
@@ -59,10 +62,17 @@ func _run() -> void:
 	var native := _native_small_package_topology(service)
 	if native.is_empty():
 		return
-	var uploaded_native := _uploaded_native_small_package_topology(service)
+	var uploaded_native_packages := _uploaded_native_small_package_topologies(service)
+	var uploaded_native: Dictionary = {}
+	if not uploaded_native_packages.is_empty() and uploaded_native_packages[0] is Dictionary:
+		uploaded_native = uploaded_native_packages[0]
 	var breadth_cases := _broadened_native_topology_cases(service)
 	var comparison := _compare(owner, native)
 	var uploaded_native_comparison := _compare(owner, uploaded_native) if not uploaded_native.is_empty() else {}
+	var uploaded_native_comparisons := []
+	for uploaded_native_package in uploaded_native_packages:
+		if uploaded_native_package is Dictionary and not Dictionary(uploaded_native_package).is_empty():
+			uploaded_native_comparisons.append(_compare(owner, uploaded_native_package))
 	var gate := _gate(owner, native, comparison, breadth_cases)
 	if String(gate.get("status", "")) != "pass":
 		_fail("Uploaded Small topology comparison failed: %s" % JSON.stringify({
@@ -70,9 +80,11 @@ func _run() -> void:
 			"owner_h3m": owner,
 			"native_small_049": native,
 			"uploaded_native_package": uploaded_native,
+			"uploaded_native_packages": uploaded_native_packages,
 			"breadth_cases": breadth_cases,
 			"comparison": comparison,
 			"uploaded_native_comparison": uploaded_native_comparison,
+			"uploaded_native_comparisons": uploaded_native_comparisons,
 		}))
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({
@@ -81,9 +93,11 @@ func _run() -> void:
 		"owner_h3m": owner,
 		"native_small_049": native,
 		"uploaded_native_package": uploaded_native,
+		"uploaded_native_packages": uploaded_native_packages,
 		"breadth_cases": breadth_cases,
 		"comparison": comparison,
 		"uploaded_native_comparison": uploaded_native_comparison,
+		"uploaded_native_comparisons": uploaded_native_comparisons,
 		"gate": gate,
 		"remaining_gap": "This report parses the local uploaded Small H3M as evidence and compares it with current native Small 049 package topology. When the owner-uploaded native .amap is present locally, it is reported as non-gating diagnostic evidence. This does not claim exact H3M byte/object-art parity.",
 	})])
@@ -130,6 +144,7 @@ func _parse_owner_small_h3m() -> Dictionary:
 	var unguarded_route_blocked := {}
 	var guard_controlled := {}
 	var road_lookup := _h3m_road_lookup(bytes, tile_offset, width, height)
+	var road_component_sizes := _lookup_component_sizes(road_lookup, width, height)
 	var effective_guard_count := 0
 	for record_value in records:
 		if not (record_value is Dictionary):
@@ -175,7 +190,8 @@ func _parse_owner_small_h3m() -> Dictionary:
 			"zone_count": OWNER_SMALL_EXPECTED_ZONE_COUNT,
 			"nearest_town_manhattan": _nearest_manhattan(town_points),
 			"road_cell_count": road_lookup.size(),
-			"road_component_count": _lookup_component_count(road_lookup, width, height),
+			"road_component_count": road_component_sizes.size(),
+			"road_component_sizes": road_component_sizes,
 			"mask_blocked_tile_count": blocked.size(),
 		"action_tile_count": action_blocked.size(),
 		"guard_controlled_tile_count": guard_controlled.size(),
@@ -262,17 +278,23 @@ func _broadened_native_topology_cases(service: Variant) -> Array:
 		cases.append(summary)
 	return cases
 
-func _uploaded_native_small_package_topology(service: Variant) -> Dictionary:
-	if not FileAccess.file_exists(UPLOADED_NATIVE_SMALL_AMAP_PATH):
+func _uploaded_native_small_package_topologies(service: Variant) -> Array:
+	var packages := []
+	for path in UPLOADED_NATIVE_SMALL_AMAP_PATHS:
+		packages.append(_uploaded_native_small_package_topology(service, String(path)))
+	return packages
+
+func _uploaded_native_small_package_topology(service: Variant, path: String) -> Dictionary:
+	if not FileAccess.file_exists(path):
 		return {
-			"source_path": UPLOADED_NATIVE_SMALL_AMAP_PATH,
+			"source_path": path,
 			"present": false,
 			"diagnostic_status": "uploaded_native_package_not_present",
 		}
-	var load_result: Dictionary = service.load_map_package(UPLOADED_NATIVE_SMALL_AMAP_PATH)
+	var load_result: Dictionary = service.load_map_package(path)
 	if not bool(load_result.get("ok", false)):
 		return {
-			"source_path": UPLOADED_NATIVE_SMALL_AMAP_PATH,
+			"source_path": path,
 			"present": true,
 			"diagnostic_status": "load_failed",
 			"error": load_result,
@@ -280,13 +302,13 @@ func _uploaded_native_small_package_topology(service: Variant) -> Dictionary:
 	var map_document: Variant = load_result.get("map_document", null)
 	if map_document == null:
 		return {
-			"source_path": UPLOADED_NATIVE_SMALL_AMAP_PATH,
+			"source_path": path,
 			"present": true,
 			"diagnostic_status": "missing_map_document",
 		}
 	var metadata: Dictionary = map_document.get_metadata()
 	var summary := _map_document_topology(map_document, metadata)
-	summary["source_path"] = UPLOADED_NATIVE_SMALL_AMAP_PATH
+	summary["source_path"] = path
 	summary["present"] = true
 	summary["diagnostic_status"] = "loaded"
 	return summary
@@ -315,10 +337,16 @@ func _map_document_topology(map_document: Variant, metadata: Dictionary) -> Dict
 			"zone_count": int(component_counts.get("zone_count", 0)),
 			"road_cell_count": int(road_summary.get("road_unique_tile_count", 0)),
 			"road_component_count": int(road_summary.get("road_component_count", 0)),
+			"road_component_sizes": road_summary.get("road_component_sizes", []),
 			"zero_tile_road_count": int(road_summary.get("zero_tile_road_count", 0)),
 			"road_duplicate_tile_count": int(road_summary.get("road_duplicate_tile_count", 0)),
 			"object_count": int(map_document.get_object_count()),
 			"counts_by_kind": object_summary.get("counts_by_kind", {}),
+			"block_tile_counts_by_kind": object_summary.get("block_tile_counts_by_kind", {}),
+			"unique_block_tile_counts_by_kind": object_summary.get("unique_block_tile_counts_by_kind", {}),
+			"guard_block_tile_counts_by_guard_kind": object_summary.get("guard_block_tile_counts_by_guard_kind", {}),
+			"guard_unique_block_tile_counts_by_guard_kind": object_summary.get("guard_unique_block_tile_counts_by_guard_kind", {}),
+			"package_boundary_choke_tile_counts_by_kind": object_summary.get("package_boundary_choke_tile_counts_by_kind", {}),
 			"decorative_obstacle_count": int(object_summary.get("decorative_obstacle_count", 0)),
 			"town_count": int(object_summary.get("town_count", 0)),
 		"guard_count": int(object_summary.get("guard_count", 0)),
@@ -333,17 +361,32 @@ func _map_document_topology(map_document: Variant, metadata: Dictionary) -> Dict
 		"cross_zone_town_topology": cross_zone_topology,
 	}
 
+func _smallest_component_size(component_sizes: Array) -> int:
+	if component_sizes.is_empty():
+		return 0
+	var smallest := 2147483647
+	for value in component_sizes:
+		smallest = min(smallest, int(value))
+	return smallest
+
 func _compare(owner: Dictionary, native: Dictionary) -> Dictionary:
-		return {
-			"object_count_delta": int(native.get("object_count", 0)) - int(owner.get("object_count", 0)),
-			"town_count_delta": int(native.get("town_count", 0)) - int(owner.get("town_count", 0)),
-			"zone_count_delta": int(native.get("zone_count", 0)) - int(owner.get("zone_count", OWNER_SMALL_EXPECTED_ZONE_COUNT)),
-			"decoration_count_delta": int(native.get("decorative_obstacle_count", 0)) - int(owner.get("decoration_count", 0)),
-			"guard_count_delta_including_type_71": int(native.get("guard_count", 0)) - int(owner.get("guard_count_including_type_71_records", 0)),
-			"road_cell_delta": int(native.get("road_cell_count", 0)) - int(owner.get("road_cell_count", 0)),
-			"road_component_delta": int(native.get("road_component_count", 0)) - int(owner.get("road_component_count", 0)),
-			"nearest_town_manhattan_delta": int(native.get("nearest_town_manhattan", 0)) - int(owner.get("nearest_town_manhattan", 0)),
+	var owner_road_component_sizes: Array = owner.get("road_component_sizes", []) if owner.get("road_component_sizes", []) is Array else []
+	var native_road_component_sizes: Array = native.get("road_component_sizes", []) if native.get("road_component_sizes", []) is Array else []
+	return {
+		"object_count_delta": int(native.get("object_count", 0)) - int(owner.get("object_count", 0)),
+		"town_count_delta": int(native.get("town_count", 0)) - int(owner.get("town_count", 0)),
+		"zone_count_delta": int(native.get("zone_count", 0)) - int(owner.get("zone_count", OWNER_SMALL_EXPECTED_ZONE_COUNT)),
+		"decoration_count_delta": int(native.get("decorative_obstacle_count", 0)) - int(owner.get("decoration_count", 0)),
+		"guard_count_delta_including_type_71": int(native.get("guard_count", 0)) - int(owner.get("guard_count_including_type_71_records", 0)),
+		"road_cell_delta": int(native.get("road_cell_count", 0)) - int(owner.get("road_cell_count", 0)),
+		"road_component_delta": int(native.get("road_component_count", 0)) - int(owner.get("road_component_count", 0)),
+		"road_small_component_delta": _smallest_component_size(native_road_component_sizes) - _smallest_component_size(owner_road_component_sizes),
+		"owner_road_component_sizes": owner_road_component_sizes,
+		"native_road_component_sizes": native_road_component_sizes,
+		"nearest_town_manhattan_delta": int(native.get("nearest_town_manhattan", 0)) - int(owner.get("nearest_town_manhattan", 0)),
 		"native_terrain_blocked_vs_owner_mask_blocked_delta": int(native.get("terrain_blocked_tile_count", 0)) - int(owner.get("mask_blocked_tile_count", 0)),
+		"native_object_blocked_vs_owner_mask_blocked_delta": int(native.get("object_blocked_tile_count", 0)) - int(owner.get("mask_blocked_tile_count", 0)),
+		"native_guard_unique_blocked_vs_owner_guard_controlled_delta": int(Dictionary(native.get("unique_block_tile_counts_by_kind", {})).get("guard", 0)) - int(owner.get("guard_controlled_tile_count", 0)),
 		"native_unresolved_reachable_town_pairs": int(native.get("town_topology", {}).get("reachable_pair_count", 0)),
 		"native_object_only_reachable_town_pairs": int(native.get("object_only_town_topology", {}).get("reachable_pair_count", 0)),
 		"owner_rough_unresolved_reachable_town_pairs": int(owner.get("rough_town_topology", {}).get("reachable_pair_count", 0)),
@@ -368,8 +411,10 @@ func _gate(owner: Dictionary, native: Dictionary, comparison: Dictionary, breadt
 		failures.append("native_small_guard_count_below_owner_upload")
 	if abs(int(comparison.get("road_cell_delta", 999))) > 8:
 		failures.append("native_small_road_cell_count_too_far_from_owner_upload")
-	if abs(int(comparison.get("road_component_delta", 999))) > 2:
-		failures.append("native_small_road_component_shape_too_far_from_owner_upload")
+	if int(comparison.get("road_component_delta", 999)) != 0:
+		failures.append("native_small_road_component_count_drifted_from_owner_upload")
+	if int(comparison.get("road_small_component_delta", 999)) != 0:
+		failures.append("native_small_orphan_road_component_size_drifted_from_owner_upload")
 	if int(native.get("zero_tile_road_count", 0)) != 0 or int(native.get("road_duplicate_tile_count", 0)) != 0:
 		failures.append("native_small_package_serialized_empty_or_duplicate_roads")
 	if int(comparison.get("native_unresolved_reachable_town_pairs", 0)) != 0:
@@ -378,6 +423,15 @@ func _gate(owner: Dictionary, native: Dictionary, comparison: Dictionary, breadt
 		failures.append("native_small_object_blockers_alone_do_not_close_town_topology")
 	if int(comparison.get("native_object_only_reachable_town_pairs", 0)) > 0 and int(comparison.get("native_unresolved_reachable_town_pairs", 0)) == 0:
 		warnings.append("native_small_still_relies_on_terrain_rock_boundaries_to_close_town_topology")
+	var owner_mask_blocked: int = max(1, int(owner.get("mask_blocked_tile_count", 0)))
+	if int(native.get("object_blocked_tile_count", 0)) > int(float(owner_mask_blocked) * 1.35):
+		warnings.append("native_small_object_blocked_tile_count_substantially_above_owner_upload")
+	var owner_guard_controlled: int = max(1, int(owner.get("guard_controlled_tile_count", 0)))
+	var native_guard_unique: int = int(Dictionary(native.get("unique_block_tile_counts_by_kind", {})).get("guard", 0))
+	if native_guard_unique < int(float(owner_guard_controlled) * 0.75):
+		failures.append("native_small_guard_control_footprint_below_owner_upload")
+	if native_guard_unique > int(float(owner_guard_controlled) * 1.75):
+		warnings.append("native_small_guard_block_footprint_substantially_above_owner_guard_controlled_tiles")
 	if breadth_cases.is_empty():
 		failures.append("native_small_topology_breadth_cases_missing")
 	for case_record in breadth_cases:
@@ -390,11 +444,15 @@ func _gate(owner: Dictionary, native: Dictionary, comparison: Dictionary, breadt
 		"warnings": warnings,
 		"thresholds": {
 			"max_abs_road_cell_delta": 8,
-			"max_abs_road_component_delta": 2,
+			"required_road_component_delta": 0,
+			"required_road_small_component_delta": 0,
 			"required_native_unresolved_reachable_town_pairs": 0,
 			"required_native_object_only_reachable_town_pairs": 0,
 			"required_zero_tile_road_count": 0,
 			"required_breadth_case_count": BROADENED_NATIVE_CASES.size(),
+			"warning_object_blocked_tile_ratio_floor": 1.35,
+			"min_guard_block_tile_ratio_floor": 0.75,
+			"warning_guard_block_tile_ratio_floor": 1.75,
 		},
 	}
 
@@ -411,6 +469,9 @@ func _assert_breadth_case(case_record: Dictionary, failures: Array) -> void:
 	var topology: Dictionary = case_record.get("object_only_cross_zone_town_topology", {}) if case_record.get("object_only_cross_zone_town_topology", {}) is Dictionary else {}
 	if int(topology.get("reachable_pair_count", 0)) != 0:
 		failures.append("%s_object_only_cross_zone_town_pairs_reachable" % case_id)
+	var all_town_topology: Dictionary = case_record.get("object_only_town_topology", {}) if case_record.get("object_only_town_topology", {}) is Dictionary else {}
+	if int(all_town_topology.get("reachable_pair_count", 0)) != 0:
+		failures.append("%s_object_only_all_town_pairs_reachable" % case_id)
 
 func _parse_h3m_object_templates(bytes: PackedByteArray, offset: int) -> Dictionary:
 	var count := _u32(bytes, offset)
@@ -578,18 +639,44 @@ func _native_road_summary(roads: Array) -> Dictionary:
 	return {
 		"road_unique_tile_count": road_tile_lookup.size(),
 		"road_component_count": _lookup_component_count(road_tile_lookup, 0, 0),
+		"road_component_sizes": _lookup_component_sizes(road_tile_lookup, 0, 0),
 		"road_duplicate_tile_count": duplicate_count,
 		"zero_tile_road_count": zero_count,
 	}
 
 func _native_object_summary(map_document: Variant) -> Dictionary:
 	var counts := {}
+	var block_tile_counts_by_kind := {}
+	var unique_block_tiles_by_kind := {}
+	var guard_block_tile_counts_by_guard_kind := {}
+	var guard_unique_block_tiles_by_guard_kind := {}
+	var package_boundary_choke_tile_counts_by_kind := {}
 	var towns := []
 	var town_points := []
 	for index in range(int(map_document.get_object_count())):
 		var object: Dictionary = map_document.get_object_by_index(index)
 		var kind := String(object.get("kind", object.get("native_record_kind", object.get("category_id", "object"))))
 		counts[kind] = int(counts.get(kind, 0)) + 1
+		package_boundary_choke_tile_counts_by_kind[kind] = int(package_boundary_choke_tile_counts_by_kind.get(kind, 0)) + int(object.get("package_boundary_choke_tile_count", 0))
+		if not unique_block_tiles_by_kind.has(kind):
+			unique_block_tiles_by_kind[kind] = {}
+		var unique_for_kind: Dictionary = unique_block_tiles_by_kind[kind]
+		var block_tiles: Array = object.get("package_block_tiles", []) if object.get("package_block_tiles", []) is Array else []
+		block_tile_counts_by_kind[kind] = int(block_tile_counts_by_kind.get(kind, 0)) + block_tiles.size()
+		var guard_kind := String(object.get("guard_kind", ""))
+		if kind == "guard":
+			guard_block_tile_counts_by_guard_kind[guard_kind] = int(guard_block_tile_counts_by_guard_kind.get(guard_kind, 0)) + block_tiles.size()
+			if not guard_unique_block_tiles_by_guard_kind.has(guard_kind):
+				guard_unique_block_tiles_by_guard_kind[guard_kind] = {}
+		var unique_for_guard_kind: Dictionary = guard_unique_block_tiles_by_guard_kind.get(guard_kind, {}) if guard_unique_block_tiles_by_guard_kind.has(guard_kind) else {}
+		for tile in block_tiles:
+			if tile is Dictionary:
+				var tile_key := _point_key(int(tile.get("x", 0)), int(tile.get("y", 0)))
+				unique_for_kind[tile_key] = true
+				if kind == "guard":
+					unique_for_guard_kind[tile_key] = true
+		if kind == "guard":
+			guard_unique_block_tiles_by_guard_kind[guard_kind] = unique_for_guard_kind
 		if kind == "town":
 			var town := {
 				"id": String(object.get("placement_id", "")),
@@ -600,8 +687,19 @@ func _native_object_summary(map_document: Variant) -> Dictionary:
 			}
 			towns.append(town)
 			town_points.append(Vector2i(int(object.get("x", 0)), int(object.get("y", 0))))
+	var unique_block_tile_counts_by_kind := {}
+	for kind in unique_block_tiles_by_kind.keys():
+		unique_block_tile_counts_by_kind[String(kind)] = Dictionary(unique_block_tiles_by_kind[kind]).size()
+	var guard_unique_block_tile_counts_by_guard_kind := {}
+	for guard_kind in guard_unique_block_tiles_by_guard_kind.keys():
+		guard_unique_block_tile_counts_by_guard_kind[String(guard_kind)] = Dictionary(guard_unique_block_tiles_by_guard_kind[guard_kind]).size()
 	return {
 		"counts_by_kind": counts,
+		"block_tile_counts_by_kind": block_tile_counts_by_kind,
+		"unique_block_tile_counts_by_kind": unique_block_tile_counts_by_kind,
+		"guard_block_tile_counts_by_guard_kind": guard_block_tile_counts_by_guard_kind,
+		"guard_unique_block_tile_counts_by_guard_kind": guard_unique_block_tile_counts_by_guard_kind,
+		"package_boundary_choke_tile_counts_by_kind": package_boundary_choke_tile_counts_by_kind,
 		"decorative_obstacle_count": int(counts.get("decorative_obstacle", 0)),
 		"towns": towns,
 		"town_count": towns.size(),
@@ -743,10 +841,13 @@ func _path_points(path: Array) -> Array:
 	return points
 
 func _lookup_component_count(lookup: Dictionary, width: int, height: int) -> int:
+	return _lookup_component_sizes(lookup, width, height).size()
+
+func _lookup_component_sizes(lookup: Dictionary, width: int, height: int) -> Array:
 	var remaining := {}
 	for key in lookup.keys():
 		remaining[String(key)] = true
-	var component_count := 0
+	var component_sizes := []
 	var dirs := [
 		Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1),
 		Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1),
@@ -756,7 +857,6 @@ func _lookup_component_count(lookup: Dictionary, width: int, height: int) -> int
 		remaining.erase(start_key)
 		var queue := [_point_from_key(start_key)]
 		var cursor := 0
-		component_count += 1
 		while cursor < queue.size():
 			var current: Vector2i = queue[cursor]
 			cursor += 1
@@ -769,7 +869,10 @@ func _lookup_component_count(lookup: Dictionary, width: int, height: int) -> int
 					continue
 				remaining.erase(key)
 				queue.append(next)
-	return component_count
+		component_sizes.append(queue.size())
+	component_sizes.sort()
+	component_sizes.reverse()
+	return component_sizes
 
 func _point_from_key(key: String) -> Vector2i:
 	var parts := key.split(",")

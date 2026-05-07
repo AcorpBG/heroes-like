@@ -22,17 +22,45 @@ func _run() -> void:
 	var exposed_template_ids := _ids(exposed_templates)
 	var catalog_profile_ids := _ids(catalog_profiles)
 	var exposed_profile_ids := _ids(exposed_profiles)
-	if catalog_template_ids != exposed_template_ids:
-		_fail("Rules setup template ids did not match catalog ids: missing=%s extra=%s" % [JSON.stringify(_difference(catalog_template_ids, exposed_template_ids)), JSON.stringify(_difference(exposed_template_ids, catalog_template_ids))])
+	var expected_player_template_ids := _size_default_template_ids(setup_options)
+	var expected_player_profile_ids := _size_default_profile_ids(setup_options)
+	if exposed_template_ids != expected_player_template_ids:
+		_fail("Rules setup exposed non-production template ids: expected=%s actual=%s" % [JSON.stringify(expected_player_template_ids), JSON.stringify(exposed_template_ids)])
 		return
-	if catalog_profile_ids != exposed_profile_ids:
-		_fail("Rules setup profile ids did not match catalog ids.")
+	if exposed_profile_ids != expected_player_profile_ids:
+		_fail("Rules setup exposed non-production profile ids: expected=%s actual=%s" % [JSON.stringify(expected_player_profile_ids), JSON.stringify(exposed_profile_ids)])
+		return
+	if int(setup_options.get("catalog_template_count", 0)) != catalog_template_ids.size() or int(setup_options.get("catalog_profile_count", 0)) != catalog_profile_ids.size():
+		_fail("Rules setup did not report full internal catalog counts.")
+		return
+	var auto_selection: Dictionary = setup_options.get("player_facing_auto_selection", {}) if setup_options.get("player_facing_auto_selection", {}) is Dictionary else {}
+	if String(setup_options.get("player_facing_template_policy", "")) != "native_catalog_auto_prefers_owner_compared_defaults_with_broad_internal_launch_gate":
+		_fail("Rules setup did not publish the production default native auto-selection policy: %s" % JSON.stringify(setup_options))
+		return
+	if String(auto_selection.get("mode", "")) != ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO or bool(auto_selection.get("manual_template_picker_visible", true)) or bool(auto_selection.get("manual_profile_picker_visible", true)):
+		_fail("Rules setup did not keep template selection behind native auto provenance: %s" % JSON.stringify(auto_selection))
 		return
 	var size_defaults: Dictionary = setup_options.get("size_class_defaults", {}) if setup_options.get("size_class_defaults", {}) is Dictionary else {}
 	for size_class_id in ["homm3_small", "homm3_medium", "homm3_large", "homm3_extra_large"]:
 		if not (size_defaults.get(size_class_id, {}) is Dictionary):
 			_fail("Rules setup missed internal size default for %s." % size_class_id)
 			return
+	var invalid_template_config := ScenarioSelectRulesScript.build_random_map_player_config(
+		"invalid-template-fallback-menu-wiring-10184",
+		"missing_template_should_not_use_compact_v1",
+		"",
+		3,
+		"land",
+		false,
+		"homm3_small"
+	)
+	var invalid_profile: Dictionary = invalid_template_config.get("profile", {}) if invalid_template_config.get("profile", {}) is Dictionary else {}
+	if String(invalid_profile.get("template_id", "")) != "translated_rmg_template_049_v1" or String(invalid_profile.get("id", "")) != "translated_rmg_profile_049_v1":
+		_fail("Invalid generated-template fallback still avoided the translated Small default: %s" % JSON.stringify(invalid_profile))
+		return
+	if String(invalid_profile.get("template_id", "")) == "border_gate_compact_v1" or String(invalid_profile.get("id", "")) == "border_gate_compact_profile_v1":
+		_fail("Invalid generated-template fallback still selected compact legacy ids: %s" % JSON.stringify(invalid_profile))
+		return
 
 	var shell = load("res://scenes/menus/MainMenu.tscn").instantiate()
 	add_child(shell)
@@ -52,6 +80,7 @@ func _run() -> void:
 
 	var built_count := 0
 	var profile_coherence_failures := []
+	var disconnected_template_count := 0
 	for template in catalog_templates:
 		if not (template is Dictionary):
 			continue
@@ -70,8 +99,8 @@ func _run() -> void:
 		var size_class_id := _size_class_for_template(template)
 		var player_counts := ScenarioSelectRulesScript.random_map_player_count_options_for_template(template_id)
 		if player_counts.is_empty():
-			_fail("Template %s did not expose player counts." % template_id)
-			return
+			disconnected_template_count += 1
+			continue
 		var config := ScenarioSelectRulesScript.build_random_map_player_config(
 			"all-template-menu-wiring-%s" % template_id,
 			template_id,
@@ -98,7 +127,19 @@ func _run() -> void:
 		var size_controls: Dictionary = size_snapshot.get("controls", {}) if size_snapshot.get("controls", {}) is Dictionary else {}
 		var provenance: Dictionary = size_controls.get("internal_template_provenance", {}) if size_controls.get("internal_template_provenance", {}) is Dictionary else {}
 		var defaults := ScenarioSelectRulesScript.random_map_size_class_default(size_class_id)
-		if String(provenance.get("template_id", "")) != String(defaults.get("template_id", "")) or String(provenance.get("profile_id", "")) != String(defaults.get("profile_id", "")):
+		if String(provenance.get("selection_source", "")) != "native_catalog_auto_on_launch":
+			size_default_failures.append({
+				"size_class_id": size_class_id,
+				"provenance": provenance,
+				"expected_selection_source": "native_catalog_auto_on_launch",
+			})
+		if String(provenance.get("template_id", "")) != "native_catalog_auto" or String(provenance.get("profile_id", "")) != "native_catalog_auto":
+			size_default_failures.append({
+				"size_class_id": size_class_id,
+				"provenance": provenance,
+				"expected_template_profile": "native_catalog_auto",
+			})
+		if String(provenance.get("preview_template_id", "")) != String(defaults.get("template_id", "")) or String(provenance.get("preview_profile_id", "")) != String(defaults.get("profile_id", "")):
 			size_default_failures.append({
 				"size_class_id": size_class_id,
 				"provenance": provenance,
@@ -131,6 +172,11 @@ func _run() -> void:
 		"manual_template_player_controls_visible": bool(internal_provenance.get("template_picker_visible", true)),
 		"manual_profile_player_controls_visible": bool(internal_provenance.get("profile_picker_visible", true)),
 		"built_config_count": built_count,
+		"disconnected_template_count": disconnected_template_count,
+		"player_facing_template_count": exposed_template_ids.size(),
+		"player_facing_profile_count": exposed_profile_ids.size(),
+		"player_facing_template_policy": String(setup_options.get("player_facing_template_policy", "")),
+		"player_facing_auto_selection": auto_selection,
 		"default_template_id": setup_options.get("default_template_id", ""),
 		"player_count_options_by_template_count": counts_by_template.size(),
 	})])
@@ -152,6 +198,28 @@ func _difference(left: Array, right: Array) -> Array:
 	for value in left:
 		if not right_lookup.has(String(value)):
 			result.append(String(value))
+	return result
+
+func _size_default_template_ids(setup_options: Dictionary) -> Array:
+	var result := []
+	var defaults: Dictionary = setup_options.get("size_class_defaults", {}) if setup_options.get("size_class_defaults", {}) is Dictionary else {}
+	for size_class_id in defaults.keys():
+		var record: Dictionary = defaults.get(size_class_id, {}) if defaults.get(size_class_id, {}) is Dictionary else {}
+		var template_id := String(record.get("template_id", ""))
+		if template_id != "" and not result.has(template_id):
+			result.append(template_id)
+	result.sort()
+	return result
+
+func _size_default_profile_ids(setup_options: Dictionary) -> Array:
+	var result := []
+	var defaults: Dictionary = setup_options.get("size_class_defaults", {}) if setup_options.get("size_class_defaults", {}) is Dictionary else {}
+	for size_class_id in defaults.keys():
+		var record: Dictionary = defaults.get(size_class_id, {}) if defaults.get(size_class_id, {}) is Dictionary else {}
+		var profile_id := String(record.get("profile_id", ""))
+		if profile_id != "" and not result.has(profile_id):
+			result.append(profile_id)
+	result.sort()
 	return result
 
 func _profile_by_id(profiles: Array, profile_id: String) -> Dictionary:

@@ -147,6 +147,15 @@ func _assert_surface(surface: Dictionary) -> bool:
 	if int(object_only_cross_zone_topology.get("checked_pair_count", 0)) < 21:
 		_fail("%s object-only topology did not inspect every cross-zone town pair: %s" % [label, JSON.stringify(surface)])
 		return false
+	var object_only_all_town_topology: Dictionary = surface.get("object_only_town_topology", {}) if surface.get("object_only_town_topology", {}) is Dictionary else {}
+	if not object_only_all_town_topology.get("reachable_pairs", []).is_empty():
+		_fail("%s object masks alone still allow unguarded all-town traversal: %s" % [label, JSON.stringify(surface)])
+		return false
+	var town_count := int(surface.get("town_count", 0))
+	var required_all_town_pairs := town_count * (town_count - 1) / 2
+	if int(object_only_all_town_topology.get("checked_pair_count", 0)) < required_all_town_pairs:
+		_fail("%s object-only topology did not inspect every town pair: %s" % [label, JSON.stringify(surface)])
+		return false
 	return true
 
 func _package_surface_summary(map_document: Variant, label: String) -> Dictionary:
@@ -164,24 +173,44 @@ func _package_surface_summary(map_document: Variant, label: String) -> Dictionar
 		unresolved_blocked,
 		int(map_document.get_width()),
 		int(map_document.get_height()),
+		int(map_document.get_level_count()),
 		object_summary.get("player_start_towns", [])
 	)
 	var object_only_topology := _start_town_topology(
 		object_only_blocked,
 		int(map_document.get_width()),
 		int(map_document.get_height()),
+		int(map_document.get_level_count()),
 		object_summary.get("player_start_towns", [])
+	)
+	var all_town_topology := _town_pair_topology(
+		unresolved_blocked,
+		int(map_document.get_width()),
+		int(map_document.get_height()),
+		int(map_document.get_level_count()),
+		object_summary.get("towns", []),
+		false
+	)
+	var object_only_all_town_topology := _town_pair_topology(
+		object_only_blocked,
+		int(map_document.get_width()),
+		int(map_document.get_height()),
+		int(map_document.get_level_count()),
+		object_summary.get("towns", []),
+		false
 	)
 	var cross_zone_topology := _cross_zone_town_topology(
 		unresolved_blocked,
 		int(map_document.get_width()),
 		int(map_document.get_height()),
+		int(map_document.get_level_count()),
 		object_summary.get("towns", [])
 	)
 	var object_only_cross_zone_topology := _cross_zone_town_topology(
 		object_only_blocked,
 		int(map_document.get_width()),
 		int(map_document.get_height()),
+		int(map_document.get_level_count()),
 		object_summary.get("towns", [])
 	)
 	return {
@@ -210,8 +239,10 @@ func _package_surface_summary(map_document: Variant, label: String) -> Dictionar
 		"unresolved_blocked_tile_count": unresolved_blocked.size(),
 		"object_only_blocked_tile_count": object_only_blocked.size(),
 		"unresolved_start_town_topology": topology,
+		"unresolved_town_topology": all_town_topology,
 		"unresolved_cross_zone_town_topology": cross_zone_topology,
 		"object_only_start_town_topology": object_only_topology,
+		"object_only_town_topology": object_only_all_town_topology,
 		"object_only_cross_zone_town_topology": object_only_cross_zone_topology,
 	}
 
@@ -257,6 +288,7 @@ func _object_summary(map_document: Variant) -> Dictionary:
 		if kind != "town":
 			continue
 		var brief := _brief_town(object)
+		brief["package_visit_tiles"] = object.get("package_visit_tiles", [])
 		towns.append(brief)
 		town_points.append(Vector2i(int(object.get("x", 0)), int(object.get("y", 0))))
 		var player_slot := _int_value(object.get("player_slot", 0), 0)
@@ -317,13 +349,13 @@ func _package_blocked_tiles(map_document: Variant, base_blocked: Dictionary) -> 
 				blocked["%d:%d,%d" % [int(tile.get("level", 0)), int(tile.get("x", 0)), int(tile.get("y", 0))]] = true
 	return blocked
 
-func _start_town_topology(blocked: Dictionary, width: int, height: int, player_start_towns: Array) -> Dictionary:
-	return _town_pair_topology(blocked, width, height, player_start_towns, false)
+func _start_town_topology(blocked: Dictionary, width: int, height: int, level_count: int, player_start_towns: Array) -> Dictionary:
+	return _town_pair_topology(blocked, width, height, level_count, player_start_towns, false)
 
-func _cross_zone_town_topology(blocked: Dictionary, width: int, height: int, towns: Array) -> Dictionary:
-	return _town_pair_topology(blocked, width, height, towns, true)
+func _cross_zone_town_topology(blocked: Dictionary, width: int, height: int, level_count: int, towns: Array) -> Dictionary:
+	return _town_pair_topology(blocked, width, height, level_count, towns, true)
 
-func _town_pair_topology(blocked: Dictionary, width: int, height: int, towns: Array, cross_zone_only: bool) -> Dictionary:
+func _town_pair_topology(blocked: Dictionary, width: int, height: int, level_count: int, towns: Array, cross_zone_only: bool) -> Dictionary:
 	var reachable_pairs := []
 	var checked_pair_count := 0
 	for left_index in range(towns.size()):
@@ -333,8 +365,8 @@ func _town_pair_topology(blocked: Dictionary, width: int, height: int, towns: Ar
 			if cross_zone_only and String(left.get("zone_id", "")) == String(right.get("zone_id", "")):
 				continue
 			checked_pair_count += 1
-			var left_visits := _visit_points_for_town(left, width, height)
-			var right_visits := _visit_points_for_town(right, width, height)
+			var left_visits := _visit_points_for_town(left, width, height, level_count)
+			var right_visits := _visit_points_for_town(right, width, height, level_count)
 			if left_visits.is_empty() or right_visits.is_empty():
 				reachable_pairs.append({
 					"reason": "missing_visit_tiles",
@@ -342,7 +374,7 @@ func _town_pair_topology(blocked: Dictionary, width: int, height: int, towns: Ar
 					"right": _brief_town(right),
 				})
 				continue
-			var reachable_path := _find_any_path(blocked.duplicate(true), width, height, left_visits, right_visits)
+			var reachable_path := _find_any_path(blocked.duplicate(true), width, height, level_count, left_visits, right_visits)
 			if not reachable_path.is_empty():
 				reachable_pairs.append({
 					"left": _brief_town(left),
@@ -353,39 +385,40 @@ func _town_pair_topology(blocked: Dictionary, width: int, height: int, towns: Ar
 	return {
 		"checked_pair_count": checked_pair_count,
 		"reachable_pairs": reachable_pairs,
+		"reachable_pair_count": reachable_pairs.size(),
 	}
 
-func _visit_points_for_town(town: Dictionary, width: int, height: int) -> Array:
+func _visit_points_for_town(town: Dictionary, width: int, height: int, level_count: int) -> Array:
 	var points := []
 	var visit_tiles: Array = town.get("package_visit_tiles", []) if town.get("package_visit_tiles", []) is Array else []
 	for tile in visit_tiles:
 		if not (tile is Dictionary):
 			continue
-		var point := Vector2i(int(tile.get("x", 0)), int(tile.get("y", 0)))
-		if point.x >= 0 and point.y >= 0 and point.x < width and point.y < height:
+		var point := Vector3i(int(tile.get("level", town.get("level", 0))), int(tile.get("x", 0)), int(tile.get("y", 0)))
+		if point.x >= 0 and point.x < max(1, level_count) and point.y >= 0 and point.z >= 0 and point.y < width and point.z < height:
 			points.append(point)
 	if not points.is_empty():
 		return points
-	var anchor := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+	var anchor := Vector3i(clampi(int(town.get("level", 0)), 0, max(1, level_count) - 1), int(town.get("x", 0)), int(town.get("y", 0)))
 	for dir_value in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-		var candidate: Vector2i = anchor + dir_value
-		if candidate.x >= 0 and candidate.y >= 0 and candidate.x < width and candidate.y < height:
+		var candidate := Vector3i(anchor.x, anchor.y + dir_value.x, anchor.z + dir_value.y)
+		if candidate.y >= 0 and candidate.z >= 0 and candidate.y < width and candidate.z < height:
 			points.append(candidate)
 	return points
 
-func _find_any_path(blocked: Dictionary, width: int, height: int, starts: Array, goals: Array) -> Array:
+func _find_any_path(blocked: Dictionary, width: int, height: int, level_count: int, starts: Array, goals: Array) -> Array:
 	var goal_lookup := {}
 	for goal in goals:
-		if goal is Vector2i:
-			goal_lookup["0:%d,%d" % [goal.x, goal.y]] = true
-			blocked.erase("0:%d,%d" % [goal.x, goal.y])
+		if goal is Vector3i:
+			goal_lookup["%d:%d,%d" % [goal.x, goal.y, goal.z]] = true
+			blocked.erase("%d:%d,%d" % [goal.x, goal.y, goal.z])
 	var queue := []
 	var seen := {}
 	var previous_by_key := {}
 	for start in starts:
-		if not (start is Vector2i):
+		if not (start is Vector3i):
 			continue
-		var start_key := "0:%d,%d" % [start.x, start.y]
+		var start_key := "%d:%d,%d" % [start.x, start.y, start.z]
 		blocked.erase(start_key)
 		if seen.has(start_key):
 			continue
@@ -397,17 +430,17 @@ func _find_any_path(blocked: Dictionary, width: int, height: int, starts: Array,
 		Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1),
 	]
 	while cursor < queue.size():
-		var current: Vector2i = queue[cursor]
+		var current: Vector3i = queue[cursor]
 		cursor += 1
-		var current_key := "0:%d,%d" % [current.x, current.y]
+		var current_key := "%d:%d,%d" % [current.x, current.y, current.z]
 		if goal_lookup.has(current_key):
 			return _reconstruct_path(previous_by_key, current)
 		for dir_value in dirs:
 			var dir: Vector2i = dir_value
-			var next: Vector2i = current + dir
-			if next.x < 0 or next.y < 0 or next.x >= width or next.y >= height:
+			var next := Vector3i(current.x, current.y + dir.x, current.z + dir.y)
+			if next.x < 0 or next.x >= max(1, level_count) or next.y < 0 or next.z < 0 or next.y >= width or next.z >= height:
 				continue
-			var key := "0:%d,%d" % [next.x, next.y]
+			var key := "%d:%d,%d" % [next.x, next.y, next.z]
 			if seen.has(key) or blocked.has(key):
 				continue
 			seen[key] = true
@@ -415,13 +448,13 @@ func _find_any_path(blocked: Dictionary, width: int, height: int, starts: Array,
 			queue.append(next)
 	return []
 
-func _reconstruct_path(previous_by_key: Dictionary, goal: Vector2i) -> Array:
+func _reconstruct_path(previous_by_key: Dictionary, goal: Vector3i) -> Array:
 	var path: Array = [goal]
 	var current := goal
 	var guard := 0
 	while guard < 4096:
 		guard += 1
-		var current_key := "0:%d,%d" % [current.x, current.y]
+		var current_key := "%d:%d,%d" % [current.x, current.y, current.z]
 		if not previous_by_key.has(current_key):
 			break
 		current = previous_by_key[current_key]
@@ -440,8 +473,8 @@ func _path_sample(path: Array) -> Array:
 func _path_points(path: Array) -> Array:
 	var points := []
 	for point in path:
-		if point is Vector2i:
-			points.append({"x": point.x, "y": point.y})
+		if point is Vector3i:
+			points.append({"level": point.x, "x": point.y, "y": point.z})
 	return points
 
 func _terrain_id_for_code(ids_by_code: Variant, code: int) -> String:
@@ -455,6 +488,7 @@ func _brief_town(town: Dictionary) -> Dictionary:
 		"record_type": String(town.get("record_type", "")),
 		"zone_id": String(town.get("zone_id", "")),
 		"player_slot": _int_value(town.get("player_slot", 0), 0),
+		"level": _int_value(town.get("level", 0), 0),
 		"x": _int_value(town.get("x", 0), 0),
 		"y": _int_value(town.get("y", 0), 0),
 	}

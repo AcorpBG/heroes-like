@@ -31,6 +31,14 @@ const DIFFICULTY_OPTIONS := [
 ]
 const RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS := [
 	{
+		"id": "translated_rmg_template_049_v1",
+		"label": "Translated Small",
+		"profile_id": "translated_rmg_profile_049_v1",
+		"player_count": 3,
+		"water_modes": ["land"],
+		"supports_underground": false,
+	},
+	{
 		"id": "border_gate_compact_v1",
 		"label": "Border Gate Compact",
 		"profile_id": "border_gate_compact_profile_v1",
@@ -74,12 +82,19 @@ const RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS := [
 		"id": "translated_rmg_template_043_v1",
 		"label": "Translated Extra Large Mesh",
 		"profile_id": "translated_rmg_profile_043_v1",
-		"player_count": 4,
+		"player_count": 5,
 		"water_modes": ["land"],
 		"supports_underground": true,
 	},
 ]
 const RANDOM_MAP_PLAYER_PROFILE_OPTIONS := [
+	{
+		"id": "translated_rmg_profile_049_v1",
+		"label": "Translated Small",
+		"template_id": "translated_rmg_template_049_v1",
+		"guard_strength_profile": "preserve_source_guard_values",
+		"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
+	},
 	{
 		"id": "border_gate_compact_profile_v1",
 		"label": "Border Gate",
@@ -129,7 +144,7 @@ const RANDOM_MAP_SIZE_CLASS_DEFAULTS := {
 	"homm3_small": {"template_id": "translated_rmg_template_049_v1", "profile_id": "translated_rmg_profile_049_v1", "player_count": 3},
 	"homm3_medium": {"template_id": "translated_rmg_template_002_v1", "profile_id": "translated_rmg_profile_002_v1", "player_count": 4},
 	"homm3_large": {"template_id": "translated_rmg_template_042_v1", "profile_id": "translated_rmg_profile_042_v1", "player_count": 4},
-	"homm3_extra_large": {"template_id": "translated_rmg_template_043_v1", "profile_id": "translated_rmg_profile_043_v1", "player_count": 4},
+	"homm3_extra_large": {"template_id": "translated_rmg_template_043_v1", "profile_id": "translated_rmg_profile_043_v1", "player_count": 5},
 }
 const RANDOM_MAP_SIZE_OPTIONS := [
 	{
@@ -181,6 +196,8 @@ const RANDOM_MAP_PLAYER_RETRY_POLICY := {
 	"max_attempts": 2,
 	"mode": "seed_salt",
 }
+const RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT := "size_default"
+const RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO := "native_catalog_auto"
 const RANDOM_MAP_DEFAULT_SEED := "aurelion-random-skirmish-10184"
 const RANDOM_MAP_AUTO_SEED_PREFIX := "aurelion-auto-random-skirmish"
 const GENERATED_MAP_DEV_DIR := "res://maps"
@@ -385,8 +402,8 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 	}
 
 static func random_map_player_setup_options() -> Dictionary:
-	var template_options := _random_map_template_options_with_player_counts()
-	var profile_options := _random_map_profile_options()
+	var template_options := _random_map_player_facing_template_options_with_player_counts()
+	var profile_options := _random_map_player_facing_profile_options()
 	return {
 		"templates": template_options,
 		"profiles": profile_options,
@@ -394,7 +411,7 @@ static func random_map_player_setup_options() -> Dictionary:
 		"player_counts": _random_map_all_player_count_options(template_options),
 		"player_count_options_by_template": _random_map_player_count_options_by_template(template_options),
 		"profile_options_by_template": _random_map_profile_options_by_template(profile_options),
-		"water_modes": RANDOM_MAP_WATER_OPTIONS.duplicate(true),
+		"water_modes": _random_map_player_facing_water_options(),
 		"retry_policy": RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"default_seed": RANDOM_MAP_DEFAULT_SEED,
 		"default_size_class_id": "homm3_small",
@@ -405,7 +422,25 @@ static func random_map_player_setup_options() -> Dictionary:
 		"default_water_mode": "land",
 		"default_underground": false,
 		"package_directory_policy": generated_map_package_directory_policy(),
+		"catalog_template_count": _random_map_template_options().size(),
+		"catalog_profile_count": _random_map_profile_options().size(),
+		"player_facing_template_policy": "native_catalog_auto_prefers_owner_compared_defaults_with_broad_internal_launch_gate",
+		"player_facing_auto_selection": {
+			"mode": RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
+			"manual_template_picker_visible": false,
+			"manual_profile_picker_visible": false,
+			"catalog_template_count": _random_map_template_options().size(),
+			"catalog_profile_count": _random_map_profile_options().size(),
+			"launch_filter": "native prefers owner-compared translated defaults for production-facing startup and falls back to launchable translated catalog candidates only when no owner-compared candidate exists for the requested size, water, underground, and player constraints",
+		},
 	}
+
+static func _random_map_player_facing_water_options() -> Array:
+	var options := []
+	for option in RANDOM_MAP_WATER_OPTIONS:
+		if option is Dictionary and String(option.get("id", "")) in ["land", "islands"]:
+			options.append(option.duplicate(true))
+	return options
 
 static func generated_map_package_directory_policy() -> Dictionary:
 	return {
@@ -573,7 +608,7 @@ static func random_map_size_class_default(size_class_id: String) -> Dictionary:
 	var normalized_id := String(size_option.get("id", "homm3_small"))
 	var defaults: Dictionary = RANDOM_MAP_SIZE_CLASS_DEFAULTS.get(normalized_id, RANDOM_MAP_SIZE_CLASS_DEFAULTS.get("homm3_small", {}))
 	var normalized_defaults := defaults.duplicate(true)
-	var template_id := String(normalized_defaults.get("template_id", "border_gate_compact_v1"))
+	var template_id := String(normalized_defaults.get("template_id", "translated_rmg_template_049_v1"))
 	normalized_defaults["player_count"] = _random_map_normalize_player_count_for_template(
 		template_id,
 		int(normalized_defaults.get("player_count", 3)),
@@ -589,28 +624,34 @@ static func build_random_map_player_config(
 	player_count: int,
 	water_mode: String,
 	underground_enabled: bool,
-	size_class_id: String = "homm3_small"
+	size_class_id: String = "homm3_small",
+	template_selection_mode: String = RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT
 ) -> Dictionary:
 	var size_option := _random_map_size_option(size_class_id)
 	var size_defaults := random_map_size_class_default(String(size_option.get("id", "homm3_small")))
+	var auto_catalog_selection := template_selection_mode == RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO and template_id.strip_edges() == "" and profile_id.strip_edges() == ""
 	var normalized_template_id := template_id.strip_edges()
-	if normalized_template_id == "":
-		normalized_template_id = String(size_defaults.get("template_id", "border_gate_compact_v1"))
+	if normalized_template_id == "" and not auto_catalog_selection:
+		normalized_template_id = String(size_defaults.get("template_id", "translated_rmg_template_049_v1"))
 	var template_option := _random_map_template_option(normalized_template_id)
+	if not auto_catalog_selection and String(template_option.get("id", "")) != "" and String(template_option.get("id", "")) != normalized_template_id:
+		normalized_template_id = String(template_option.get("id", normalized_template_id))
 	var normalized_profile_id := profile_id.strip_edges()
-	if normalized_profile_id == "":
-		normalized_profile_id = String(size_defaults.get("profile_id", template_option.get("profile_id", "border_gate_compact_profile_v1")))
+	if normalized_profile_id == "" and not auto_catalog_selection:
+		normalized_profile_id = String(size_defaults.get("profile_id", template_option.get("profile_id", "translated_rmg_profile_049_v1")))
 	var profile_option := _random_map_profile_option(normalized_profile_id)
-	if String(profile_option.get("template_id", normalized_template_id)) != normalized_template_id:
-		normalized_profile_id = String(template_option.get("profile_id", size_defaults.get("profile_id", "border_gate_compact_profile_v1")))
+	if not auto_catalog_selection and String(profile_option.get("template_id", normalized_template_id)) != normalized_template_id:
+		normalized_profile_id = String(template_option.get("profile_id", size_defaults.get("profile_id", "translated_rmg_profile_049_v1")))
 		profile_option = _random_map_profile_option(normalized_profile_id)
 	var source_width := int(size_option.get("source_width", 36))
 	var source_height := int(size_option.get("source_height", 36))
-	var normalized_player_count := _random_map_normalize_player_count_for_template(
-		normalized_template_id,
-		player_count,
-		int(size_defaults.get("player_count", template_option.get("player_count", 3)))
-	)
+	var normalized_player_count := clampi(player_count if player_count > 0 else int(size_defaults.get("player_count", 3)), 2, 8)
+	if not auto_catalog_selection:
+		normalized_player_count = _random_map_normalize_player_count_for_template(
+			normalized_template_id,
+			player_count,
+			int(size_defaults.get("player_count", template_option.get("player_count", 3)))
+		)
 	var normalized_water_mode := "islands" if water_mode == "islands" else "land"
 	var level_count := 2 if underground_enabled else 1
 	var materialization_available := bool(size_option.get("materialization_available", false))
@@ -648,10 +689,16 @@ static func build_random_map_player_config(
 			"team_mode": "free_for_all",
 		},
 		"profile": {
-			"id": String(profile_option.get("id", normalized_profile_id)),
+			"id": "" if auto_catalog_selection else String(profile_option.get("id", normalized_profile_id)),
 			"template_id": normalized_template_id,
-			"guard_strength_profile": String(profile_option.get("guard_strength_profile", "core_low")),
-			"faction_ids": profile_option.get("faction_ids", []),
+			"guard_strength_profile": "core_low" if auto_catalog_selection else String(profile_option.get("guard_strength_profile", "core_low")),
+			"faction_ids": [] if auto_catalog_selection else profile_option.get("faction_ids", []),
+		},
+		"template_selection": {
+			"mode": RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO if auto_catalog_selection else RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
+			"selection_deferred_to_native": auto_catalog_selection,
+			"fallback_template_id": String(size_defaults.get("template_id", "")),
+			"fallback_profile_id": String(size_defaults.get("profile_id", "")),
 		},
 	}
 
@@ -754,6 +801,23 @@ static func build_random_map_skirmish_setup(input_config: Dictionary, difficulty
 			"campaign_adoption": false,
 			"alpha_parity_claim": false,
 		}
+	if String(generated.get("full_generation_status", "")) == "not_implemented":
+		var unsupported_report := _random_map_not_implemented_launch_report(generated, report)
+		return _native_package_setup_failure(
+			"native_rmg_full_generation_not_implemented",
+			"Native generated-map startup does not launch configurations whose recovered-template parity is still marked not implemented.",
+			normalized_difficulty,
+			unsupported_report
+		)
+	var normalized_config: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
+	if _is_legacy_compact_rmg_config(normalized_config):
+		var legacy_report := _random_map_legacy_compact_launch_report(generated, report)
+		return _native_package_setup_failure(
+			"native_rmg_legacy_compact_launch_blocked",
+			"The legacy compact random-map generator is retained only as an internal historical fixture and cannot launch as a generated skirmish map.",
+			normalized_difficulty,
+			legacy_report
+		)
 
 	var adoption: Dictionary = service.convert_generated_payload(generated, {
 		"feature_gate": GENERATED_MAP_PACKAGE_FEATURE_GATE,
@@ -951,6 +1015,25 @@ static func _random_map_retry_status(generated: Dictionary, report: Dictionary) 
 		"warning_count": int(report.get("warning_count", 0)),
 	}
 
+static func _random_map_not_implemented_launch_report(generated: Dictionary, report: Dictionary) -> Dictionary:
+	var blocked := report.duplicate(true)
+	blocked["schema_id"] = String(blocked.get("schema_id", "generated_random_map_launch_validation_v1"))
+	blocked["status"] = "fail"
+	blocked["validation_status"] = "fail"
+	blocked["failure_count"] = int(blocked.get("failure_count", 0)) + 1
+	var failures: Array = blocked.get("failures", []) if blocked.get("failures", []) is Array else []
+	failures = failures.duplicate(true)
+	failures.append({
+		"code": "native_rmg_full_generation_not_implemented",
+		"severity": "error",
+		"path": "generated_random_map_skirmish_setup.full_generation_status",
+		"message": "Generated skirmish startup is blocked until this recovered-template mode has production-ready native RMG support.",
+		"full_generation_status": String(generated.get("full_generation_status", "")),
+		"normalized_config": generated.get("normalized_config", {}),
+	})
+	blocked["failures"] = failures
+	return blocked
+
 static func _native_map_package_service() -> Variant:
 	if not ClassDB.class_exists("MapPackageService"):
 		return null
@@ -1026,6 +1109,16 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 			"scenario_path": scenario_path,
 			"error_code": "non_generated_package_rejected",
 		}
+	var launch_validation := _maps_folder_package_launch_validation(metadata, map_ref, player_count)
+	if not bool(launch_validation.get("ok", false)):
+		return {
+			"ok": false,
+			"package_stem": package_stem,
+			"map_path": map_path,
+			"scenario_path": scenario_path,
+			"error_code": String(launch_validation.get("error_code", "generated_package_launch_validation_failed")),
+			"validation": launch_validation,
+		}
 	var map_size_label := "%dx%d L%d" % [width, height, max(1, level_count)]
 	var summary := "Generated package | %s | Players %d | %s" % [
 		map_size_label,
@@ -1050,11 +1143,123 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 		"map_size": {"width": width, "height": height, "x": width, "y": height, "level_count": max(1, level_count)},
 		"player_count": max(1, player_count),
 		"metadata": metadata,
+		"maps_folder_launch_validation": launch_validation,
 		"source_kind": "generated",
 		"startup_source": "maps_folder_package",
 		"legacy_json_scenario_record": false,
 		"authored_json_scenarios_used": false,
 	}
+
+static func _maps_folder_package_launch_validation(metadata: Dictionary, map_ref: Dictionary, player_count: int) -> Dictionary:
+	var normalized: Dictionary = metadata.get("normalized_config", {}) if metadata.get("normalized_config", {}) is Dictionary else {}
+	if normalized.is_empty():
+		var identity: Dictionary = metadata.get("deterministic_identity", {}) if metadata.get("deterministic_identity", {}) is Dictionary else {}
+		normalized = identity.get("normalized_config", {}) if identity.get("normalized_config", {}) is Dictionary else {}
+	var template_id := String(normalized.get("template_id", metadata.get("template_id", map_ref.get("template_id", "")))).strip_edges()
+	var profile_id := String(normalized.get("profile_id", metadata.get("profile_id", map_ref.get("profile_id", "")))).strip_edges()
+	var full_generation_status := String(metadata.get("full_generation_status", normalized.get("full_generation_status", ""))).strip_edges()
+	var validation_status := String(metadata.get("validation_status", "pass")).strip_edges()
+	var component_counts: Dictionary = metadata.get("component_counts", {}) if metadata.get("component_counts", {}) is Dictionary else {}
+	var failures := []
+	if not bool(metadata.get("native_runtime_authoritative", false)):
+		failures.append({
+			"code": "maps_folder_package_not_runtime_authoritative",
+			"path": "map.metadata.native_runtime_authoritative",
+			"message": "Generated maps-folder packages must come from the runtime-authoritative native RMG package path.",
+		})
+	if template_id == "" or not template_id.begins_with("translated_rmg_template_"):
+		failures.append({
+			"code": "maps_folder_package_template_not_translated_rmg",
+			"path": "map.metadata.normalized_config.template_id",
+			"message": "Generated maps-folder packages must use a translated recovered RMG template, not legacy compact/foundation templates.",
+			"template_id": template_id,
+		})
+	if profile_id == "border_gate_compact_profile_v1" or template_id == "border_gate_compact_v1":
+		failures.append({
+			"code": "maps_folder_package_legacy_compact_rejected",
+			"path": "map.metadata.normalized_config.template_id",
+			"message": "The legacy compact generator output is rejected because it does not preserve HoMM3-style towns, zones, roads, blockers, and guarded route closure.",
+			"template_id": template_id,
+			"profile_id": profile_id,
+		})
+	if full_generation_status in ["", "not_implemented", "implemented_for_supported_profile"]:
+		failures.append({
+			"code": "maps_folder_package_generation_status_not_launchable",
+			"path": "map.metadata.full_generation_status",
+			"message": "Generated maps-folder packages must carry a current launchable native RMG generation status.",
+			"full_generation_status": full_generation_status,
+		})
+	if validation_status != "" and validation_status != "pass":
+		failures.append({
+			"code": "maps_folder_package_validation_not_pass",
+			"path": "map.metadata.validation_status",
+			"message": "Generated maps-folder packages must have passed native validation before browser launch.",
+			"validation_status": validation_status,
+		})
+	if int(component_counts.get("zone_count", 0)) <= 0:
+		failures.append({
+			"code": "maps_folder_package_missing_zones",
+			"path": "map.metadata.component_counts.zone_count",
+			"message": "Generated maps-folder packages must preserve non-empty recovered-template zones.",
+		})
+	if int(component_counts.get("road_cell_count", 0)) <= 0:
+		failures.append({
+			"code": "maps_folder_package_missing_roads",
+			"path": "map.metadata.component_counts.road_cell_count",
+			"message": "Generated maps-folder packages must preserve materialized road cells.",
+		})
+	if int(component_counts.get("town_count", 0)) < max(1, player_count):
+		failures.append({
+			"code": "maps_folder_package_town_count_below_players",
+			"path": "map.metadata.component_counts.town_count",
+			"message": "Generated maps-folder packages must provide at least one town per player slot.",
+		})
+	return {
+		"ok": failures.is_empty(),
+		"schema_id": "aurelion_maps_folder_package_launch_validation_v1",
+		"status": "pass" if failures.is_empty() else "fail",
+		"error_code": "generated_package_launch_validation_failed" if not failures.is_empty() else "",
+		"template_id": template_id,
+		"profile_id": profile_id,
+		"full_generation_status": full_generation_status,
+		"native_runtime_authoritative": bool(metadata.get("native_runtime_authoritative", false)),
+		"validation_status": validation_status,
+		"component_counts": component_counts.duplicate(true),
+		"failure_count": failures.size(),
+		"failures": failures,
+	}
+
+static func _is_legacy_compact_rmg_config(normalized: Dictionary) -> bool:
+	return String(normalized.get("template_id", "")) == "border_gate_compact_v1" \
+			or String(normalized.get("profile_id", "")) == "border_gate_compact_profile_v1"
+
+static func _random_map_legacy_compact_launch_report(generated: Dictionary, report: Dictionary) -> Dictionary:
+	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
+	var legacy_report := report.duplicate(true)
+	legacy_report["schema_id"] = "native_rmg_legacy_compact_launch_block_report_v1"
+	legacy_report["status"] = "fail"
+	legacy_report["validation_status"] = "fail"
+	legacy_report["error_code"] = "native_rmg_legacy_compact_launch_blocked"
+	legacy_report["template_id"] = String(normalized.get("template_id", ""))
+	legacy_report["profile_id"] = String(normalized.get("profile_id", ""))
+	legacy_report["generation_status"] = String(generated.get("status", ""))
+	legacy_report["full_generation_status"] = String(generated.get("full_generation_status", ""))
+	legacy_report["launch_boundary"] = "legacy_compact_internal_fixture_only"
+	legacy_report["message"] = "Legacy compact generator output lacks recovered HoMM3-style zone, road, object, town, and guarded route topology and is blocked from generated-skirmish launch."
+	var failures: Array = legacy_report.get("failures", []) if legacy_report.get("failures", []) is Array else []
+	failures = failures.duplicate(true)
+	failures.append({
+		"code": "native_rmg_legacy_compact_launch_blocked",
+		"severity": "error",
+		"path": "generated_random_map_skirmish_setup.normalized_config.template_id",
+		"message": legacy_report["message"],
+		"template_id": String(normalized.get("template_id", "")),
+		"profile_id": String(normalized.get("profile_id", "")),
+		"normalized_config": normalized,
+	})
+	legacy_report["failures"] = failures
+	legacy_report["failure_count"] = failures.size()
+	return legacy_report
 
 static func _load_maps_folder_package_session_from_entry(entry: Dictionary, difficulty_id: String, options: Dictionary = {}) -> SessionStateStoreScript.SessionData:
 	var service: Variant = _native_map_package_service()
@@ -1502,7 +1707,7 @@ static func _random_map_template_option(template_id: String) -> Dictionary:
 		if String(option.get("id", "")) == template_id:
 			return option.duplicate(true)
 	for option in options:
-		if String(option.get("id", "")) == "border_gate_compact_v1":
+		if String(option.get("id", "")) == "translated_rmg_template_049_v1":
 			return option.duplicate(true)
 	return options[0].duplicate(true) if not options.is_empty() else RANDOM_MAP_PLAYER_TEMPLATE_OPTIONS[0].duplicate(true)
 
@@ -1518,6 +1723,47 @@ static func _random_map_template_options_with_player_counts() -> Array:
 		option["player_count_max"] = int(player_counts[player_counts.size() - 1]) if not player_counts.is_empty() else int(option.get("player_count", 3))
 		options.append(option)
 	return options
+
+static func _random_map_player_facing_template_options_with_player_counts() -> Array:
+	var allowed_ids := _random_map_size_default_template_ids()
+	var options := []
+	for raw_option in _random_map_template_options():
+		if not (raw_option is Dictionary):
+			continue
+		if not allowed_ids.has(String(raw_option.get("id", ""))):
+			continue
+		var option: Dictionary = raw_option.duplicate(true)
+		var player_counts := _random_map_template_player_count_options(String(option.get("id", "")), option)
+		option["player_counts"] = player_counts
+		option["player_count_min"] = int(player_counts[0]) if not player_counts.is_empty() else int(option.get("player_count", 3))
+		option["player_count_max"] = int(player_counts[player_counts.size() - 1]) if not player_counts.is_empty() else int(option.get("player_count", 3))
+		option["player_facing_policy"] = "size_default_owner_compared_not_full_parity"
+		options.append(option)
+	return options
+
+static func _random_map_player_facing_profile_options() -> Array:
+	var allowed_ids := _random_map_size_default_profile_ids()
+	var options := []
+	for option in _random_map_profile_options():
+		if option is Dictionary and allowed_ids.has(String(option.get("id", ""))):
+			var item: Dictionary = option.duplicate(true)
+			item["player_facing_policy"] = "size_default_owner_compared_not_full_parity"
+			options.append(item)
+	return options
+
+static func _random_map_size_default_template_ids() -> Dictionary:
+	var result := {}
+	for defaults_value in RANDOM_MAP_SIZE_CLASS_DEFAULTS.values():
+		if defaults_value is Dictionary:
+			result[String(defaults_value.get("template_id", ""))] = true
+	return result
+
+static func _random_map_size_default_profile_ids() -> Dictionary:
+	var result := {}
+	for defaults_value in RANDOM_MAP_SIZE_CLASS_DEFAULTS.values():
+		if defaults_value is Dictionary:
+			result[String(defaults_value.get("profile_id", ""))] = true
+	return result
 
 static func _random_map_all_player_count_options(template_options: Array) -> Array:
 	var counts := {}
@@ -1570,9 +1816,8 @@ static func _random_map_template_player_count_options(template_id: String, fallb
 		min_count = max_count
 	var counts := []
 	for count in range(min_count, max_count + 1):
-		counts.append(count)
-	if counts.is_empty():
-		counts.append(clampi(fallback_count, 2, 8))
+		if _random_map_template_active_graph_connected(template, count):
+			counts.append(count)
 	return counts
 
 static func _random_map_normalize_player_count_for_template(template_id: String, player_count: int, fallback_count: int = 3) -> int:
@@ -1666,10 +1911,55 @@ static func _player_counts_from_catalog_template(template: Dictionary, fallback_
 		min_count = max_count
 	var counts := []
 	for count in range(min_count, max_count + 1):
-		counts.append(count)
-	if counts.is_empty():
-		counts.append(clampi(fallback_count, 2, 8))
+		if _random_map_template_active_graph_connected(template, count):
+			counts.append(count)
 	return counts
+
+static func _random_map_template_active_graph_connected(template: Dictionary, player_count: int) -> bool:
+	var active_zone_ids := {}
+	for zone in template.get("zones", []):
+		if zone is Dictionary and _template_player_filter_allows(zone, player_count):
+			var zone_id := String(zone.get("id", ""))
+			if not zone_id.is_empty():
+				active_zone_ids[zone_id] = true
+	if active_zone_ids.is_empty():
+		return false
+	var adjacency := {}
+	for zone_id in active_zone_ids.keys():
+		adjacency[String(zone_id)] = []
+	for link in template.get("links", []):
+		if not (link is Dictionary) or not _template_player_filter_allows(link, player_count):
+			continue
+		var from_zone := String(link.get("from", ""))
+		var to_zone := String(link.get("to", ""))
+		if not active_zone_ids.has(from_zone) or not active_zone_ids.has(to_zone):
+			continue
+		if not adjacency[from_zone].has(to_zone):
+			adjacency[from_zone].append(to_zone)
+		if not adjacency[to_zone].has(from_zone):
+			adjacency[to_zone].append(from_zone)
+	var start_zone := String(active_zone_ids.keys()[0])
+	var visited := {start_zone: true}
+	var queue := [start_zone]
+	var cursor := 0
+	while cursor < queue.size():
+		var current := String(queue[cursor])
+		cursor += 1
+		for next_value in adjacency.get(current, []):
+			var next := String(next_value)
+			if visited.has(next):
+				continue
+			visited[next] = true
+			queue.append(next)
+	return visited.size() == active_zone_ids.size()
+
+static func _template_player_filter_allows(record: Dictionary, player_count: int) -> bool:
+	var player_filter: Dictionary = record.get("player_filter", {}) if record.get("player_filter", {}) is Dictionary else {}
+	if player_filter.is_empty():
+		return true
+	var min_total := int(player_filter.get("min_total", 1))
+	var max_total := int(player_filter.get("max_total", 8))
+	return player_count >= min_total and player_count <= max_total
 
 static func _water_modes_from_catalog_template(template: Dictionary) -> Array:
 	var result := {}
@@ -1732,7 +2022,7 @@ static func _random_map_profile_option(profile_id: String) -> Dictionary:
 		if String(option.get("id", "")) == profile_id:
 			return option.duplicate(true)
 	for option in options:
-		if String(option.get("id", "")) == "border_gate_compact_profile_v1":
+		if String(option.get("id", "")) == "translated_rmg_profile_049_v1":
 			return option.duplicate(true)
 	return options[0].duplicate(true) if not options.is_empty() else RANDOM_MAP_PLAYER_PROFILE_OPTIONS[0].duplicate(true)
 
@@ -1761,7 +2051,7 @@ static func _random_map_setup_attempt_record(
 ) -> Dictionary:
 	var ok := bool(setup.get("ok", false))
 	var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
-	var normalized := RandomMapGeneratorRulesScript.normalize_config(input_config)
+	var normalized := _random_map_attempt_native_normalized_config(setup, input_config)
 	var retryable := not ok and attempt_number < max_attempts
 	return {
 		"attempt": attempt_number,
@@ -1769,7 +2059,7 @@ static func _random_map_setup_attempt_record(
 		"ok": ok,
 		"seed": String(normalized.get("seed", "")),
 		"template_id": String(normalized.get("template_id", "")),
-		"profile_id": String(normalized.get("profile", {}).get("id", "")),
+		"profile_id": String(normalized.get("profile_id", normalized.get("profile", {}).get("id", ""))),
 		"scenario_id": String(setup.get("scenario_id", "")),
 		"validation_status": String(validation.get("status", "pass" if ok else "fail")),
 		"failure_count": int(validation.get("failure_count", 0)),
@@ -1781,6 +2071,24 @@ static func _random_map_setup_attempt_record(
 			"next_attempt": attempt_number + 1 if retryable else 0,
 		},
 	}
+
+static func _random_map_attempt_native_normalized_config(setup: Dictionary, input_config: Dictionary) -> Dictionary:
+	var provenance: Dictionary = setup.get("provenance", {}) if setup.get("provenance", {}) is Dictionary else {}
+	var normalized: Dictionary = provenance.get("normalized_config", {}) if provenance.get("normalized_config", {}) is Dictionary else {}
+	if normalized.is_empty():
+		var validation: Dictionary = setup.get("validation", {}) if setup.get("validation", {}) is Dictionary else {}
+		var failures: Array = validation.get("failures", []) if validation.get("failures", []) is Array else []
+		for failure in failures:
+			if failure is Dictionary and failure.get("normalized_config", {}) is Dictionary:
+				normalized = failure.get("normalized_config", {})
+				break
+		if normalized.is_empty() and validation.get("deterministic_identity", {}) is Dictionary:
+			var identity: Dictionary = validation.get("deterministic_identity", {})
+			if identity.get("normalized_config", {}) is Dictionary:
+				normalized = identity.get("normalized_config", {})
+	if normalized.is_empty():
+		normalized = RandomMapGeneratorRulesScript.normalize_config(input_config)
+	return normalized
 
 static func _random_map_retry_status_from_attempts(attempts: Array, ok: bool, retry_policy: Dictionary) -> Dictionary:
 	var status := "pass"
