@@ -4,7 +4,7 @@ const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGener
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 
 const REPORT_ID := "NATIVE_RANDOM_MAP_AUTO_TEMPLATE_BATCH_REPORT"
-const REPORT_SCHEMA_ID := "native_random_map_auto_template_batch_report_v1"
+const REPORT_SCHEMA_ID := "native_random_map_auto_template_batch_report_v2"
 
 const CASES := [
 	{"id": "small_land_seed_a", "seed": "auto-template-batch-small-land-a-10184", "size_class_id": "homm3_small", "player_count": 3, "water_mode": "land", "underground": false},
@@ -43,12 +43,18 @@ func _run() -> void:
 	var catalog: Dictionary = ContentService.load_json(RandomMapGeneratorRulesScript.TEMPLATE_CATALOG_PATH)
 	var summaries := []
 	var selected_templates := {}
+	var owner_runtime_override_case_count := 0
+	var seed_specific_runtime_override_case_count := 0
 	for case_record in CASES:
 		var summary := _run_case(service, catalog, case_record)
 		if summary.is_empty():
 			return
 		summaries.append(summary)
 		selected_templates[String(summary.get("template_id", ""))] = true
+		if int(summary.get("owner_runtime_override_count", 0)) > 0:
+			owner_runtime_override_case_count += 1
+		if int(summary.get("seed_specific_runtime_override_count", 0)) > 0:
+			seed_specific_runtime_override_case_count += 1
 	if selected_templates.size() < 6:
 		_fail("Auto-template selection did not cover every current owner-compared production default lane: %s" % JSON.stringify(summaries))
 		return
@@ -59,8 +65,10 @@ func _run() -> void:
 		"native_extension_loaded": metadata.get("native_extension_loaded", false),
 		"case_count": summaries.size(),
 		"unique_selected_template_count": selected_templates.size(),
+		"owner_runtime_override_case_count": owner_runtime_override_case_count,
+		"seed_specific_runtime_override_case_count": seed_specific_runtime_override_case_count,
 		"cases": summaries,
-		"remaining_gap": "This proves representative seeded native catalog auto-selection cases prefer current owner-compared production defaults when available and package successfully; it is not an exhaustive 53-template or exact HoMM3 output parity sweep.",
+		"remaining_gap": "This proves representative seeded native catalog auto-selection cases prefer current owner-compared production defaults, package successfully, and expose runtime policy override debt. It is not an exhaustive 53-template or exact HoMM3 output parity sweep.",
 	})])
 	get_tree().quit(0)
 
@@ -120,6 +128,24 @@ func _run_case(service: Variant, catalog: Dictionary, case_record: Dictionary) -
 		_fail("%s native auto-selection selected a not_implemented template: %s" % [String(case_record.get("id", "")), JSON.stringify(generated.get("normalized_config", {}))])
 		return {}
 	var report: Dictionary = generated.get("report", generated.get("validation_report", {})) if generated.get("report", generated.get("validation_report", {})) is Dictionary else {}
+	var runtime_policy: Dictionary = generated.get("runtime_policy_classification", {}) if generated.get("runtime_policy_classification", {}) is Dictionary else {}
+	var report_runtime_policy: Dictionary = report.get("runtime_policy_classification", {}) if report.get("runtime_policy_classification", {}) is Dictionary else {}
+	if runtime_policy.is_empty() or String(runtime_policy.get("schema_id", "")) != "aurelion_native_rmg_runtime_policy_classification_v1":
+		_fail("%s missed native runtime policy classification: %s" % [String(case_record.get("id", "")), JSON.stringify(generated.keys())])
+		return {}
+	if String(runtime_policy.get("generalized_policy_key", "")) == "" or String(runtime_policy.get("selection_basis", "")) != "normalized_template_profile_size_water_level_player_fields":
+		_fail("%s runtime policy classification missed generalized key/basis: %s" % [String(case_record.get("id", "")), JSON.stringify(runtime_policy)])
+		return {}
+	if String(runtime_policy.get("signature", "")) == "" or String(runtime_policy.get("signature", "")) != String(report_runtime_policy.get("signature", "")):
+		_fail("%s runtime policy classification did not round-trip through validation report: generated=%s report=%s" % [
+			String(case_record.get("id", "")),
+			JSON.stringify(runtime_policy),
+			JSON.stringify(report_runtime_policy),
+		])
+		return {}
+	if int(runtime_policy.get("seed_specific_runtime_override_count", 0)) > 0 and not String(case_record.get("seed", "")).begins_with("owner-corpus-"):
+		_fail("%s auto-template runtime policy activated seed-specific owner debt for a normal generated seed: %s" % [String(case_record.get("id", "")), JSON.stringify(runtime_policy)])
+		return {}
 	var nearest_town_manhattan := _nearest_town_manhattan(generated.get("town_records", []))
 	var town_spacing_floor := _town_spacing_floor(String(case_record.get("size_class_id", "")))
 	if String(generated.get("full_generation_status", "")) != "not_implemented" and nearest_town_manhattan >= 0 and nearest_town_manhattan < town_spacing_floor:
@@ -221,6 +247,10 @@ func _run_case(service: Variant, catalog: Dictionary, case_record: Dictionary) -
 		"validation_status": String(generated.get("validation_status", "")),
 		"full_generation_status": String(generated.get("full_generation_status", "")),
 		"not_implemented_launch_blocked": not_implemented_launch_blocked,
+		"runtime_policy_debt_status": String(runtime_policy.get("runtime_policy_debt_status", "")),
+		"owner_runtime_override_count": int(runtime_policy.get("owner_runtime_override_count", 0)),
+		"seed_specific_runtime_override_count": int(runtime_policy.get("seed_specific_runtime_override_count", 0)),
+		"generalized_policy_key": String(runtime_policy.get("generalized_policy_key", "")),
 		"zone_count": int(generated.get("zone_layout", {}).get("zone_count", 0)),
 		"route_edge_count": int(generated.get("route_graph", {}).get("route_edge_count", 0)),
 		"town_count": int(generated.get("town_records", []).size()),

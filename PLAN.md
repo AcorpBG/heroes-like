@@ -48,6 +48,10 @@ implementationTargets:
 - `ops/progress.json`
 - `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
 - follow-up implementation in `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `scenes/menus/MainMenu.gd`
+- `scenes/menus/MainMenu.tscn`
+- `tests/native_random_map_terrain_grid_report.gd`
 completionCriteria:
 - The corrective audit clearly distinguishes owner-H3M exact-count diagnostics from production RMG policy.
 - Current sample-specific runtime branches are identified as temporary fixture/diagnostic debt, not the desired architecture.
@@ -62,6 +66,10 @@ validationResults:
 - Local overfit Small-islands count-fitting changes were abandoned before commit; the code worktree returned to the pushed checkpoint state.
 - `docs/native-rmg-generalized-policy-regate-audit.md` records why the exact-count loop is diagnostic-only and why the next implementation must generalize.
 - `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` emitted schema `native_random_map_homm3_owner_corpus_coverage_report_v6`; the raw gate remains `8/9` mapped pass, while `generalized_policy_failure_summary` groups the active Small islands failure into `guard_policy`, `town_policy`, `decoration_blocker_policy`, `object_density_policy`, and `object_reward_policy`.
+- `MapPackageService.generate_random_map` now emits `runtime_policy_classification` in generated output, validation reports, provenance, and map metadata, making generalized policy keys and active owner-runtime override debt visible.
+- `tests/native_random_map_auto_template_batch_report.tscn` passed with schema `native_random_map_auto_template_batch_report_v2`, representative generated cases carrying runtime policy classification, and `seed_specific_runtime_override_case_count: 0` for normal generated seeds.
+- The generated-map setup now exposes an explicit level picker with surface-only and surface-plus-underground options instead of a vague checkbox, and water-mode changes no longer hide the underground option for islands.
+- Native terrain policy no longer injects underground terrain into one-level scoped islands surface maps; the terrain-grid report also covers a scoped two-level request to prove the underground layer is materialized only when requested.
 
 Completed owner-requested editor inspection hotfix:
 

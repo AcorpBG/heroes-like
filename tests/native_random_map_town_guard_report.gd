@@ -192,6 +192,13 @@ func _assert_town_guard_shape(generated: Dictionary, expected_width: int, expect
 		if String(town.get("town_id", "")) != String(start.get("town_id", "")) or String(town.get("faction_id", "")) != String(start.get("faction_id", "")):
 			_fail("Start town does not preserve player faction/town assignment: %s vs %s" % [JSON.stringify(town), JSON.stringify(start)])
 			return
+		if int(town.get("x", -1)) != int(start.get("x", -2)) or int(town.get("y", -1)) != int(start.get("y", -2)):
+			_fail("Player start town is not materialized on the generated player start tile: %s vs %s" % [JSON.stringify(town), JSON.stringify(start)])
+			return
+		var expected_owner := "player" if player_slot == 1 or String(start.get("player_type", "")) == "human" else "enemy"
+		if String(town.get("owner", "")) != expected_owner:
+			_fail("Player start town owner is not a runtime owner value: expected=%s town=%s start=%s" % [expected_owner, JSON.stringify(town), JSON.stringify(start)])
+			return
 	if faction_ids.size() < 3 or zone_ids.size() < 4:
 		_fail("Town placement did not expose useful faction/zone spread.")
 		return
@@ -280,8 +287,18 @@ func _assert_translated_town_castle_semantics(generated: Dictionary, expected_wi
 			if String(town.get("faction_id", "")) != String(town.get("source_zone_faction_id", "")):
 				_fail("Same-type neutral weighted town did not reuse source-zone faction: %s" % JSON.stringify(town))
 				return
-	if not source_offsets.has("+0x24") or not source_offsets.has("+0x2c") or not source_offsets.has("+0x34") or not source_offsets.has("+0x38"):
-		_fail("Translated town/castle config did not exercise required source fields: %s" % JSON.stringify(source_offsets))
+	var translated_offsets := source_offsets.duplicate(true)
+	for diagnostic in town_payload.get("diagnostics", []):
+		if not (diagnostic is Dictionary):
+			continue
+		translated_offsets[String(diagnostic.get("source_field_offset", ""))] = true
+		if String(diagnostic.get("same_type_semantics", "")).find("source_zone_choice_reused_for_neutral_weighted_placement") >= 0:
+			same_type_weighted_seen = true
+	if not source_offsets.has("+0x24") or not source_offsets.has("+0x34"):
+		_fail("Translated town/castle config did not materialize required minimum source fields: %s" % JSON.stringify(source_offsets))
+		return
+	if not translated_offsets.has("+0x2c") or not translated_offsets.has("+0x38"):
+		_fail("Translated town/castle config did not attempt density source fields in records or diagnostics: %s" % JSON.stringify(translated_offsets))
 		return
 	if not neutral_seen:
 		_fail("Translated town/castle config did not produce neutral owner -1 towns.")
@@ -313,6 +330,11 @@ func _assert_guard_valid(guard: Dictionary, width: int, height: int, object_ids:
 	elif target_type == "object_placement":
 		if not object_ids.has(String(guard.get("protected_object_placement_id", ""))):
 			_fail("Site guard references invalid object placement: %s" % JSON.stringify(guard))
+			return
+	elif target_type == "town_pair":
+		var target: Dictionary = guard.get("protected_target", {}) if guard.get("protected_target", {}) is Dictionary else {}
+		if String(target.get("left_town_placement_id", "")) == "" or String(target.get("right_town_placement_id", "")) == "":
+			_fail("Town-pair guard missed paired town ids: %s" % JSON.stringify(guard))
 			return
 	else:
 		_fail("Guard has unsupported protected target type: %s" % JSON.stringify(guard))

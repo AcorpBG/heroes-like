@@ -76,7 +76,7 @@ const TAB_HELP_TOPIC := {
 @onready var _generated_profile_picker: OptionButton = %GeneratedProfilePicker
 @onready var _generated_player_count_picker: OptionButton = %GeneratedPlayerCountPicker
 @onready var _generated_water_picker: OptionButton = %GeneratedWaterPicker
-@onready var _generated_underground_toggle: CheckButton = %GeneratedUndergroundToggle
+@onready var _generated_underground_toggle: OptionButton = %GeneratedUndergroundToggle
 @onready var _generated_status_label: Label = %GeneratedMapStatus
 @onready var _generated_progress_bar: ProgressBar = %GeneratedMapProgress
 @onready var _generated_provenance_label: Label = %GeneratedMapProvenance
@@ -421,23 +421,24 @@ func _on_generated_water_selected(index: int) -> void:
 	if index < 0 or index >= _generated_water_picker.get_item_count():
 		return
 	_generated_water_mode = String(_generated_water_picker.get_item_metadata(index))
-	if _generated_water_mode == "islands" and _generated_underground:
-		_generated_underground = false
-		_generated_underground_toggle.button_pressed = false
 	if _generated_water_mode == "islands":
 		_apply_generated_medium_islands_selection()
+	_refresh_generated_random_map_setup()
+
+func _on_generated_level_selected(index: int) -> void:
+	if index < 0 or index >= _generated_underground_toggle.get_item_count():
+		return
+	_generated_underground = int(_generated_underground_toggle.get_item_metadata(index)) > 1
 	_refresh_generated_random_map_setup()
 
 func _on_generated_underground_toggled(enabled: bool) -> void:
 	if enabled and not _generated_underground_supported():
 		_generated_underground = false
-		_generated_underground_toggle.button_pressed = false
+		_select_generated_level_count(1)
 		_refresh_generated_random_map_setup()
 		return
 	_generated_underground = enabled
-	if _generated_underground and _generated_water_mode == "islands":
-		_generated_water_mode = "land"
-		_select_generated_picker_metadata(_generated_water_picker, _generated_water_mode)
+	_select_generated_level_count(2 if _generated_underground else 1)
 	_refresh_generated_random_map_setup()
 
 func _on_start_generated_skirmish_pressed() -> void:
@@ -1037,13 +1038,14 @@ func _configure_generated_random_map_controls() -> void:
 		_generated_water_picker.select(water_selected)
 	_generated_water_picker.tooltip_text = "Water policy."
 
+	_rebuild_generated_level_picker()
 	var underground_supported := _generated_underground_supported()
 	if not underground_supported:
 		_generated_underground = false
-	_generated_underground_toggle.button_pressed = _generated_underground
+	_select_generated_level_count(2 if _generated_underground else 1)
 	_generated_underground_toggle.visible = underground_supported
 	_generated_underground_toggle.disabled = not underground_supported
-	_generated_underground_toggle.tooltip_text = "Generate a second underground level for supported native random-map templates."
+	_generated_underground_toggle.tooltip_text = "Level count: choose a surface-only map or add a second underground level."
 
 func _rebuild_generated_option_picker(picker: OptionButton, options: Array, selected_id: String, label_key: String) -> void:
 	picker.clear()
@@ -1166,7 +1168,7 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 			ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
 			_generated_player_count,
 			_generated_water_mode,
-			"on" if _generated_underground else "off",
+			"on, 2 levels" if _generated_underground else "off, 1 level",
 			String(setup.get("template_id", "")),
 			String(setup.get("profile_id", "")),
 		]
@@ -1464,6 +1466,23 @@ func _select_generated_picker_metadata(picker: OptionButton, metadata: String) -
 		if String(picker.get_item_metadata(index)) != metadata:
 			continue
 		picker.select(index)
+		return true
+	return false
+
+func _rebuild_generated_level_picker() -> void:
+	_generated_underground_toggle.clear()
+	_generated_underground_toggle.add_item("1 Level", 0)
+	_generated_underground_toggle.set_item_metadata(0, 1)
+	_generated_underground_toggle.add_item("2 Levels (Underground)", 1)
+	_generated_underground_toggle.set_item_metadata(1, 2)
+	_select_generated_level_count(2 if _generated_underground else 1)
+
+func _select_generated_level_count(level_count: int) -> bool:
+	var normalized_level_count := 2 if level_count > 1 else 1
+	for index in range(_generated_underground_toggle.get_item_count()):
+		if int(_generated_underground_toggle.get_item_metadata(index)) != normalized_level_count:
+			continue
+		_generated_underground_toggle.select(index)
 		return true
 	return false
 
@@ -1934,10 +1953,11 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"size_class",
 		"player_count",
 		"water_mode",
+		"level_count",
 		"launch_generated",
 	]
 	if _generated_underground_supported():
-		visible_controls.insert(4, "underground")
+		visible_controls.insert(5, "underground")
 	return {
 		"seed": _generated_seed,
 		"size_class_id": _generated_size_class_id,
@@ -1953,11 +1973,12 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"player_count_values": _picker_item_metadata_ints(_generated_player_count_picker),
 		"water_options": _picker_item_labels(_generated_water_picker),
 		"visible_player_controls": visible_controls,
+		"level_picker_visible": _generated_underground_toggle.visible,
 		"internal_template_provenance": _generated_random_map_internal_template_provenance(),
 	}
 
 func _generated_underground_supported() -> bool:
-	return _generated_water_mode != "islands"
+	return true
 
 func _generated_random_map_internal_template_provenance() -> Dictionary:
 	var size_defaults := ScenarioSelectRulesScript.random_map_size_class_default(_generated_size_class_id)
@@ -2113,8 +2134,8 @@ func validation_set_generated_underground(enabled: bool) -> bool:
 	if enabled and not _generated_underground_supported():
 		_on_generated_underground_toggled(enabled)
 		return false
-	_generated_underground_toggle.button_pressed = enabled
-	_on_generated_underground_toggled(enabled)
+	_select_generated_level_count(2 if enabled else 1)
+	_on_generated_level_selected(_generated_underground_toggle.selected)
 	return _generated_underground == enabled
 
 func validation_force_generated_random_map_config(config: Dictionary) -> Dictionary:
@@ -2468,12 +2489,13 @@ func _apply_visual_theme() -> void:
 		_generated_profile_picker,
 		_generated_player_count_picker,
 		_generated_water_picker,
+		_generated_underground_toggle,
 		_presentation_mode_picker,
 		_resolution_picker,
 	]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
 
-	for toggle in [_generated_underground_toggle, _large_text_toggle, _reduce_motion_toggle]:
+	for toggle in [_large_text_toggle, _reduce_motion_toggle]:
 		FrontierVisualKit.apply_button(toggle, "secondary", 180.0, 34.0, 13)
 
 	for slider in [_master_volume_slider, _music_volume_slider]:
