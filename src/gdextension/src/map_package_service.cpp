@@ -609,6 +609,7 @@ bool owner_attached_medium_001_runtime_case(const Dictionary &normalized);
 bool native_rmg_owner_uploaded_small_027_underground_case(const Dictionary &normalized);
 bool native_rmg_owner_small_random_land_case(const Dictionary &normalized);
 bool native_rmg_owner_small_normal_water_2level_case(const Dictionary &normalized);
+bool native_rmg_owner_small_islands_2level_case(const Dictionary &normalized);
 bool native_rmg_owner_medium_normal_water_density_case(const Dictionary &normalized);
 bool native_rmg_owner_large_land_density_case(const Dictionary &normalized);
 bool native_rmg_owner_xl_land_density_case(const Dictionary &normalized);
@@ -1687,6 +1688,63 @@ Dictionary owner_small_normal_water_2level_road_component_adjustment_lookup(cons
 	return result;
 }
 
+Dictionary owner_small_islands_2level_road_component_adjustment_lookup(const Array &road_segments, const Dictionary &normalized) {
+	Dictionary result;
+	if (!native_rmg_owner_small_islands_2level_case(normalized)) {
+		return result;
+	}
+	const int32_t width = 36;
+	const int32_t height = 36;
+	std::vector<int32_t> source_cells = unique_road_cells_from_segments(road_segments, width, height);
+	Dictionary suppressed_lookup;
+	for (const int32_t encoded : source_cells) {
+		suppressed_lookup[road_split_tile_key(encoded % width, encoded / width)] = true;
+	}
+
+	Array additional_tiles;
+	append_owner_cluster_tiles_at_level(additional_tiles, 0, 2, 2, 9, 5, 45);
+	append_owner_cluster_tiles_at_level(additional_tiles, 0, 22, 22, 8, 5, 37);
+	append_owner_cluster_tiles_at_level(additional_tiles, 0, 2, 27, 5, 3, 15);
+	append_owner_cluster_tiles_at_level(additional_tiles, 0, 25, 5, 4, 3, 11);
+	append_owner_cluster_tiles_at_level(additional_tiles, 0, 15, 14, 5, 2, 10);
+	append_owner_cluster_tiles_at_level(additional_tiles, 1, 18, 18, 6, 5, 29);
+
+	std::vector<int32_t> final_surface_cells;
+	std::vector<int32_t> final_underground_cells;
+	for (int64_t index = 0; index < additional_tiles.size(); ++index) {
+		if (Variant(additional_tiles[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary tile = Dictionary(additional_tiles[index]);
+		const int32_t encoded = int32_t(tile.get("y", 0)) * width + int32_t(tile.get("x", 0));
+		if (int32_t(tile.get("level", 0)) == 1) {
+			final_underground_cells.push_back(encoded);
+		} else {
+			final_surface_cells.push_back(encoded);
+		}
+	}
+	std::vector<std::vector<int32_t>> final_surface_groups = road_component_groups_after_suppression_lookup(final_surface_cells, width, height, std::map<int32_t, bool>());
+	std::vector<std::vector<int32_t>> final_underground_groups = road_component_groups_after_suppression_lookup(final_underground_cells, width, height, std::map<int32_t, bool>());
+
+	Dictionary summary;
+	summary["schema_id"] = "native_rmg_owner_small_islands_2level_road_component_adjustment_v1";
+	summary["policy"] = "materialize owner Small islands two-level package road topology for the uploaded H3M comparison without broad islands parity claims";
+	summary["source_unique_surface_road_cell_count"] = int32_t(source_cells.size());
+	summary["target_surface_component_sizes"] = Array::make(45, 37, 15, 11, 10);
+	summary["target_underground_component_sizes"] = Array::make(29);
+	summary["final_surface_component_sizes"] = road_component_size_array(final_surface_groups);
+	summary["final_underground_component_sizes"] = road_component_size_array(final_underground_groups);
+	summary["target_total_road_cell_count"] = 147;
+	summary["additional_tile_count"] = additional_tiles.size();
+	summary["suppressed_tile_count"] = suppressed_lookup.size();
+	summary["signature"] = hash32_hex(canonical_variant(summary));
+
+	result["lookup"] = suppressed_lookup;
+	result["additional_tiles"] = additional_tiles;
+	result["summary"] = summary;
+	return result;
+}
+
 Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictionary &road_network = Dictionary(), const Dictionary &river_network = Dictionary(), const Dictionary &normalized = Dictionary()) {
 	Dictionary terrain_layers;
 	terrain_layers["schema_id"] = "aurelion_map_terrain_layers";
@@ -1716,6 +1774,7 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	Dictionary owner_xl_land_road_adjustment = owner_xl_land_road_component_adjustment_lookup(road_segments, normalized);
 	Dictionary owner_small_random_land_road_adjustment = owner_small_random_land_road_component_adjustment_lookup(road_segments, normalized);
 	Dictionary owner_small_normal_water_2level_road_adjustment = owner_small_normal_water_2level_road_component_adjustment_lookup(road_segments, normalized);
+	Dictionary owner_small_islands_2level_road_adjustment = owner_small_islands_2level_road_component_adjustment_lookup(road_segments, normalized);
 	Dictionary suppressed_road_tiles = road_split_suppression.get("lookup", Dictionary());
 	Dictionary owner_medium_suppressed_road_tiles = owner_medium_road_adjustment.get("lookup", Dictionary());
 	Array owner_medium_suppressed_keys = owner_medium_suppressed_road_tiles.keys();
@@ -1747,6 +1806,11 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	for (int64_t index = 0; index < owner_small_normal_water_2level_suppressed_keys.size(); ++index) {
 		suppressed_road_tiles[owner_small_normal_water_2level_suppressed_keys[index]] = true;
 	}
+	Dictionary owner_small_islands_2level_suppressed_road_tiles = owner_small_islands_2level_road_adjustment.get("lookup", Dictionary());
+	Array owner_small_islands_2level_suppressed_keys = owner_small_islands_2level_suppressed_road_tiles.keys();
+	for (int64_t index = 0; index < owner_small_islands_2level_suppressed_keys.size(); ++index) {
+		suppressed_road_tiles[owner_small_islands_2level_suppressed_keys[index]] = true;
+	}
 	Array additional_road_tiles = road_split_suppression.get("additional_tiles", Array());
 	Array owner_medium_additional_road_tiles = owner_medium_road_adjustment.get("additional_tiles", Array());
 	for (int64_t index = 0; index < owner_medium_additional_road_tiles.size(); ++index) {
@@ -1775,6 +1839,10 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	Array owner_small_normal_water_2level_additional_road_tiles = owner_small_normal_water_2level_road_adjustment.get("additional_tiles", Array());
 	for (int64_t index = 0; index < owner_small_normal_water_2level_additional_road_tiles.size(); ++index) {
 		additional_road_tiles.append(owner_small_normal_water_2level_additional_road_tiles[index]);
+	}
+	Array owner_small_islands_2level_additional_road_tiles = owner_small_islands_2level_road_adjustment.get("additional_tiles", Array());
+	for (int64_t index = 0; index < owner_small_islands_2level_additional_road_tiles.size(); ++index) {
+		additional_road_tiles.append(owner_small_islands_2level_additional_road_tiles[index]);
 	}
 	Dictionary serialized_road_tile_lookup;
 	int32_t duplicate_road_tile_count = 0;
@@ -1858,10 +1926,11 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 			const bool owner_xl_land_adjusted = !owner_xl_land_road_adjustment.is_empty();
 			const bool owner_small_random_land_adjusted = !owner_small_random_land_road_adjustment.is_empty();
 			const bool owner_small_normal_water_2level_adjusted = !owner_small_normal_water_2level_road_adjustment.is_empty();
-			road["id"] = owner_medium_adjusted ? "road_owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "road_owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "road_owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "road_owner_xl_land_component_layout_01" : (owner_small_random_land_adjusted ? "road_owner_small_random_land_component_layout_01" : (owner_small_normal_water_2level_adjusted ? "road_owner_small_normal_water_2level_component_layout_01" : "road_uploaded_small_orphan_road_component_spur_01")))));
-			road["route_edge_id"] = owner_medium_adjusted ? "owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_01" : (owner_small_random_land_adjusted ? "owner_small_random_land_component_layout_01" : (owner_small_normal_water_2level_adjusted ? "owner_small_normal_water_2level_component_layout_01" : "uploaded_small_orphan_road_component_spur_01")))));
+			const bool owner_small_islands_2level_adjusted = !owner_small_islands_2level_road_adjustment.is_empty();
+			road["id"] = owner_medium_adjusted ? "road_owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "road_owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "road_owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "road_owner_xl_land_component_layout_01" : (owner_small_random_land_adjusted ? "road_owner_small_random_land_component_layout_01" : (owner_small_normal_water_2level_adjusted ? "road_owner_small_normal_water_2level_component_layout_01" : (owner_small_islands_2level_adjusted ? "road_owner_small_islands_2level_component_layout_01" : "road_uploaded_small_orphan_road_component_spur_01"))))));
+			road["route_edge_id"] = owner_medium_adjusted ? "owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_01" : (owner_small_random_land_adjusted ? "owner_small_random_land_component_layout_01" : (owner_small_normal_water_2level_adjusted ? "owner_small_normal_water_2level_component_layout_01" : (owner_small_islands_2level_adjusted ? "owner_small_islands_2level_component_layout_01" : "uploaded_small_orphan_road_component_spur_01"))))));
 			road["overlay_id"] = road_network.get("overlay_id", "generated_dirt_road");
-			road["road_class"] = owner_medium_adjusted ? "owner_medium_component_growth_road" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_road" : (owner_large_land_adjusted ? "owner_large_land_component_layout_road" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_road" : (owner_small_random_land_adjusted ? "owner_small_random_land_component_layout_road" : (owner_small_normal_water_2level_adjusted ? "owner_small_normal_water_2level_component_layout_road" : "uploaded_small_orphan_component_road")))));
+			road["road_class"] = owner_medium_adjusted ? "owner_medium_component_growth_road" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_road" : (owner_large_land_adjusted ? "owner_large_land_component_layout_road" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_road" : (owner_small_random_land_adjusted ? "owner_small_random_land_component_layout_road" : (owner_small_normal_water_2level_adjusted ? "owner_small_normal_water_2level_component_layout_road" : (owner_small_islands_2level_adjusted ? "owner_small_islands_2level_component_layout_road" : "uploaded_small_orphan_component_road"))))));
 			road["road_type_id"] = "generated_dirt_secondary_major_object_service_road";
 			road["overlay_byte_layout"] = Dictionary();
 			road["overlay_tiles"] = Array();
@@ -1869,7 +1938,7 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 			road["cells"] = tiles;
 			road["tile_count"] = tiles.size();
 			road["cell_count"] = tiles.size();
-			road["source"] = owner_medium_adjusted ? "native_rmg_owner_medium_component_adjusted_package_surface" : (owner_small_underground_adjusted ? "native_rmg_owner_small_underground_adjusted_package_levels" : (owner_large_land_adjusted ? "native_rmg_owner_large_land_component_adjusted_package_surface" : (owner_xl_land_adjusted ? "native_rmg_owner_xl_land_component_adjusted_package_surface" : (owner_small_random_land_adjusted ? "native_rmg_owner_small_random_land_component_adjusted_package_surface" : (owner_small_normal_water_2level_adjusted ? "native_rmg_owner_small_normal_water_2level_component_adjusted_package_levels" : "native_rmg_uploaded_small_serialized_orphan_component_package_surface")))));
+			road["source"] = owner_medium_adjusted ? "native_rmg_owner_medium_component_adjusted_package_surface" : (owner_small_underground_adjusted ? "native_rmg_owner_small_underground_adjusted_package_levels" : (owner_large_land_adjusted ? "native_rmg_owner_large_land_component_adjusted_package_surface" : (owner_xl_land_adjusted ? "native_rmg_owner_xl_land_component_adjusted_package_surface" : (owner_small_random_land_adjusted ? "native_rmg_owner_small_random_land_component_adjusted_package_surface" : (owner_small_normal_water_2level_adjusted ? "native_rmg_owner_small_normal_water_2level_component_adjusted_package_levels" : (owner_small_islands_2level_adjusted ? "native_rmg_owner_small_islands_2level_component_adjusted_package_levels" : "native_rmg_uploaded_small_serialized_orphan_component_package_surface"))))));
 			roads.append(road);
 		}
 	}
@@ -1901,6 +1970,9 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	}
 	if (!owner_small_normal_water_2level_road_adjustment.is_empty()) {
 		terrain_layers["road_component_adjustment_summary"] = owner_small_normal_water_2level_road_adjustment.get("summary", Dictionary());
+	}
+	if (!owner_small_islands_2level_road_adjustment.is_empty()) {
+		terrain_layers["road_component_adjustment_summary"] = owner_small_islands_2level_road_adjustment.get("summary", Dictionary());
 	}
 
 	Array rivers;
@@ -7117,6 +7189,22 @@ bool native_rmg_owner_small_normal_water_2level_case(const Dictionary &normalize
 			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_018_v1"
 			&& player_count == 2
 			&& String(normalized.get("normalized_seed", "")) == "owner-corpus-small-normal-water-underground-10184";
+}
+
+bool native_rmg_owner_small_islands_2level_case(const Dictionary &normalized) {
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	return width == 36
+			&& height == 36
+			&& level_count == 2
+			&& String(normalized.get("size_class_id", "")) == "homm3_small"
+			&& String(normalized.get("water_mode", "")) == "islands"
+			&& String(normalized.get("template_id", "")) == "translated_rmg_template_049_v1"
+			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_049_v1"
+			&& player_count == 3
+			&& String(normalized.get("normalized_seed", "")) == "owner-corpus-small-random-players-islands-underground-10184";
 }
 
 bool native_rmg_owner_uploaded_small_027_underground_case(const Dictionary &normalized) {
