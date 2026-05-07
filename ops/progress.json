@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-normal-water-protected-land-diagnostic-10184",
-  "currentSliceTitle": "native rmg normal water protected land diagnostic 10184",
+  "currentSliceId": "native-rmg-normal-water-decoration-land-pressure-correction-10184",
+  "currentSliceTitle": "native rmg normal water decoration land pressure correction 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Medium normal-water validation now reports compact land-water shape pressure. After quota tuning and non-visit decorative approach relaxation, medium_normal_water_seed_a still validates and converts with 1,610 package water tiles versus 2,083 owner water tiles; shape metrics show requested_land_count, protected_land_cell_count, and generated_land_cell_count all equal 3,574, proving protected already-placed surfaces cap water generation and the next fix needs water-aware placement/order rather than only quota changes.",
+  "currentSliceNotes": "Medium normal-water validation now keeps decorative/scenic objects from forcing protected land during terrain shaping and retunes normal-water land fractions. medium_normal_water_seed_a validates and converts with 2,097 package water tiles versus 2,083 owner water tiles; shape metrics show protected_land_cell_count 2,213, requested_land_count 3,087, generated_land_cell_count 3,087, and generated_water_cell_count 2,097.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-07T05:51:51Z",
+  "updatedAt": "2026-05-07T06:09:01Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,50 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "native-rmg-normal-water-decoration-land-pressure-correction-10184",
+      "title": "Native RMG Normal Water Decoration Land Pressure Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "completed",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_auto_template_batch_report.gd",
+        "maps/h3m-maps/M-NormalW-4players.h3m"
+      ],
+      "purpose": "Correct the Medium normal-water terrain shape regression where decorative/scenic objects placed before terrain forced too much land versus the uploaded owner HoMM3 sample.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_auto_template_batch_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Normal-water terrain shaping no longer lets decorative and scenic object bodies force protected land before the water/land shape is chosen.",
+        "Medium normal-water land fractions are retuned after that protected-surface reduction so generated water stays close to the owner sample rather than overshooting.",
+        "The auto-template batch hard-gates the Medium normal-water package water count against the uploaded owner sample evidence.",
+        "Native generation, package conversion, road/object/town/guard validation, and repository validation still pass.",
+        "No uploaded .h3m, generated .amap, or generated .ascenario evidence is committed."
+      ],
+      "nonGoals": [
+        "No claim of full normal-water parity across every owner sample.",
+        "No broad water-aware object-placement pipeline reorder in this slice.",
+        "No HoMM3 copyrighted asset/DEF import."
+      ],
+      "startedAt": "2026-05-07T05:55:00Z",
+      "updatedAt": "2026-05-07T06:09:01Z",
+      "completedAt": "2026-05-07T06:09:01Z",
+      "completionEvidence": [
+        "Decorative and scenic object placements are no longer inserted into the normal-water protected land lookup before water/land shaping.",
+        "Normal-water land fractions were retuned after removing decorative/scenic protected pressure.",
+        "medium_normal_water_seed_a now reports 2,097 package water tiles against the owner M-NormalW-4players.h3m 2,083 water tiles, compared with 1,610 before this slice.",
+        "The same case reports protected_land_cell_count 2,213, requested_land_count 3,087, generated_land_cell_count 3,087, and generated_water_cell_count 2,097.",
+        "The auto-template batch now hard-gates the Medium normal-water owner water-tile target with a 96-tile tolerance."
+      ],
+      "notes": "Completed the focused Medium normal-water terrain-shape correction exposed by the protected-land diagnostic."
+    },
     {
       "id": "native-rmg-owner-small-single-level-auto-density-parity-10184",
       "title": "Native RMG Owner Small Single-Level Auto Density Parity",
@@ -13728,6 +13772,25 @@
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-normal-water-decoration-land-pressure-correction-10184",
+      "title": "Native RMG Normal Water Decoration Land Pressure Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "completedAt": "2026-05-07T06:09:01Z",
+      "evidence": [
+        "Normal-water terrain shaping no longer lets decorative and scenic object placements force protected land before water/land shaping.",
+        "Medium normal-water land fractions were retuned after reducing decorative/scenic protected-surface pressure.",
+        "medium_normal_water_seed_a now reports 2,097 package water tiles against the owner M-NormalW-4players.h3m 2,083 water tiles, compared with 1,610 before this correction.",
+        "The compact shape summary reports protected_land_cell_count 2,213, requested_land_count 3,087, generated_land_cell_count 3,087, and generated_water_cell_count 2,097.",
+        "The auto-template batch now hard-gates the owner Medium normal-water surface water target with a 96-tile tolerance."
+      ],
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 passed.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 tests/native_random_map_auto_template_batch_report.tscn passed.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 tests/native_random_map_homm3_owner_corpus_coverage_report.tscn passed with 21 parsed owner samples and the existing 18 unmapped parsed-sample comparison gap still explicit.",
+        "python3 tests/validate_repo.py passed."
+      ]
+    },
     {
       "id": "native-rmg-normal-water-protected-land-diagnostic-10184",
       "title": "Native RMG Normal Water Protected Land Diagnostic",

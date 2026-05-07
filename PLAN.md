@@ -31,6 +31,41 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-normal-water-decoration-land-pressure-correction-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Correct the Medium normal-water terrain shape regression where decorative/scenic objects placed before terrain forced too much land versus the uploaded owner HoMM3 sample.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- local owner evidence under `maps/h3m-maps/M-NormalW-4players.h3m`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_auto_template_batch_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- Normal-water terrain shaping no longer lets decorative and scenic object bodies force protected land before the water/land shape is chosen.
+- Medium normal-water land fractions are retuned after that protected-surface reduction so generated water stays close to the owner sample rather than overshooting.
+- The auto-template batch hard-gates the Medium normal-water package water count against the uploaded owner sample evidence.
+- Native generation, package conversion, road/object/town/guard validation, and repository validation still pass.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No claim of full normal-water parity across every owner sample.
+- No broad water-aware object-placement pipeline reorder in this slice.
+- No HoMM3 copyrighted asset/DEF import.
+validationResults:
+- Native GDExtension rebuilt successfully with `cmake --build .artifacts/map_persistence_native_build --parallel 2`.
+- `tests/native_random_map_auto_template_batch_report.tscn` passed after the correction.
+- `medium_normal_water_seed_a` now reports 2,097 package water tiles against the owner `M-NormalW-4players.h3m` 2,083 water tiles, compared with 1,610 before this slice.
+- The same case reports `protected_land_cell_count 2,213`, `requested_land_count 3,087`, `generated_land_cell_count 3,087`, and `generated_water_cell_count 2,097`, proving decorative/scenic protected land was the previous water cap.
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` passed with 21 parsed owner samples, 7 land, 7 normal-water, 7 islands, and the existing 18 unmapped parsed-sample comparison gap still explicit.
+- `python3 tests/validate_repo.py` passed.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-normal-water-protected-land-diagnostic-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`

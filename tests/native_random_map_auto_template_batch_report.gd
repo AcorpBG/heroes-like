@@ -20,6 +20,9 @@ const CASES := [
 	{"id": "xl_land_seed_a", "seed": "auto-template-batch-xl-land-a-10184", "size_class_id": "homm3_extra_large", "player_count": 5, "water_mode": "land", "underground": false},
 ]
 
+const OWNER_MEDIUM_NORMAL_WATER_SURFACE_WATER_TILES := 2083
+const OWNER_MEDIUM_NORMAL_WATER_WATER_TILE_TOLERANCE := 96
+
 func _ready() -> void:
 	call_deferred("_run")
 
@@ -158,6 +161,15 @@ func _run_case(service: Variant, catalog: Dictionary, case_record: Dictionary) -
 	var water_tile_count := _package_water_tile_count(map_document)
 	if String(case_record.get("water_mode", "land")) == "normal_water" and water_tile_count <= 0:
 		_fail("%s normal-water auto-template package produced no water tiles." % String(case_record.get("id", "")))
+		return {}
+	if String(case_record.get("id", "")) == "medium_normal_water_seed_a" \
+			and abs(water_tile_count - OWNER_MEDIUM_NORMAL_WATER_SURFACE_WATER_TILES) > OWNER_MEDIUM_NORMAL_WATER_WATER_TILE_TOLERANCE:
+		_fail("%s normal-water water count drifted away from owner H3M evidence: native=%d owner=%d tolerance=%d." % [
+			String(case_record.get("id", "")),
+			water_tile_count,
+			OWNER_MEDIUM_NORMAL_WATER_SURFACE_WATER_TILES,
+			OWNER_MEDIUM_NORMAL_WATER_WATER_TILE_TOLERANCE,
+		])
 		return {}
 	var generated_object_count := int(generated.get("object_placements", []).size())
 	var generated_floor := _generated_object_density_floor(String(case_record.get("size_class_id", "")))
