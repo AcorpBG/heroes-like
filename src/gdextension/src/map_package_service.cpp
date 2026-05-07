@@ -10980,6 +10980,7 @@ Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &
 	const bool start_town = record_type == "player_start_town";
 	const bool player_owned = start_town || record_type.begins_with("player_");
 	const bool castle_record = record_type.contains("castle");
+	const String runtime_owner = player_owned ? ((player_slot == 1 || String(start.get("player_type", zone.get("player_type", ""))) == "human") ? String("player") : String("enemy")) : String("neutral");
 	String faction_id = String(semantics.get("faction_id", ""));
 	if (faction_id.is_empty()) {
 		faction_id = player_owned ? String(start.get("faction_id", zone.get("faction_id", ""))) : String(zone.get("faction_id", ""));
@@ -11039,7 +11040,7 @@ Dictionary town_record_at_point(const Dictionary &normalized, const Dictionary &
 	record["object_family_id"] = "town_primary";
 	record["type_id"] = "town";
 	record["faction_id"] = faction_id;
-	record["owner"] = player_owned ? "player_" + String::num_int64(player_slot) : "neutral";
+	record["owner"] = runtime_owner;
 	record["owner_slot"] = player_owned ? start.get("owner_slot", zone.get("owner_slot", player_slot)) : Variant(-1);
 	record["player_slot"] = player_owned ? Variant(player_slot) : Variant();
 	record["player_type"] = player_owned ? start.get("player_type", zone.get("player_type", "computer")) : Variant("neutral");
@@ -12813,6 +12814,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 				}
 			}
 		}
+		const bool player_start_town_anchor_locked = record_type == "player_start_town" && !start.is_empty();
 		Dictionary access_reachable_lookup = in_zone_access_reachable_lookup(access_anchor_x, access_anchor_y, zone_id, owner_grid, blocking_occupied, width, height);
 			const int32_t preferred_spacing = town_spacing_radius_for_size(normalized);
 			const int32_t hard_spacing = town_hard_spacing_radius_for_size(normalized);
@@ -12829,7 +12831,19 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			const int32_t owner_compared_required_spacing = owner_strict_spacing_floor_enforced ? preferred_spacing : owner_small_underground_required_spacing;
 			const int32_t required_last_resort_spacing = launchable_spacing_floor_enforced ? owner_compared_required_spacing : std::max(4, std::min(8, required_materialization_spacing));
 		int32_t applied_spacing = preferred_spacing;
-		Dictionary point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, preferred_spacing, access_anchor, access_reachable_lookup);
+		Dictionary point;
+		if (player_start_town_anchor_locked) {
+			const int32_t start_x = int32_t(start.get("x", access_anchor_x));
+			const int32_t start_y = int32_t(start.get("y", access_anchor_y));
+			const bool start_anchor_valid = start_x >= 0 && start_y >= 0 && start_x < width && start_y < height
+					&& point_owned_by_zone(owner_grid, start_x, start_y, zone_id)
+					&& !town_search_occupied.has(point_key(start_x, start_y));
+			if (start_anchor_valid) {
+				point = point_record(start_x, start_y);
+			}
+		} else {
+			point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, preferred_spacing, access_anchor, access_reachable_lookup);
+		}
 		if (point.is_empty() && native_rmg_owner_large_land_density_case(normalized) && record_type == "owner_large_land_spacing_supplement_town") {
 			point = find_spaced_object_point(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, preferred_spacing);
 		}
@@ -12850,27 +12864,27 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			town_diagnostics.append(diagnostic);
 			return;
 		}
-		if (point.is_empty() && hard_spacing < preferred_spacing) {
+		if (point.is_empty() && !player_start_town_anchor_locked && hard_spacing < preferred_spacing) {
 			applied_spacing = hard_spacing;
 			point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, hard_spacing, access_anchor, access_reachable_lookup);
 		}
-		if (point.is_empty() && access_fallback_spacing < applied_spacing) {
+		if (point.is_empty() && !player_start_town_anchor_locked && access_fallback_spacing < applied_spacing) {
 			applied_spacing = access_fallback_spacing;
 			point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, access_fallback_spacing, access_anchor, access_reachable_lookup);
 		}
 		bool used_required_spacing_fallback = false;
 		bool used_required_materialization_fallback = false;
-		if (point.is_empty() && !density && required_materialization_spacing < applied_spacing) {
+		if (point.is_empty() && !player_start_town_anchor_locked && !density && required_materialization_spacing < applied_spacing) {
 			applied_spacing = required_materialization_spacing;
 			point = find_spaced_accessible_town_point_with_reachability(access_anchor_x + jitter, access_anchor_y - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, required_materialization_spacing, access_anchor, access_reachable_lookup);
 			used_required_materialization_fallback = !point.is_empty();
 		}
-		if (point.is_empty() && !density) {
+		if (point.is_empty() && !player_start_town_anchor_locked && !density) {
 			applied_spacing = required_materialization_spacing;
 			point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, required_materialization_spacing);
 			used_required_spacing_fallback = !point.is_empty();
 		}
-		if (point.is_empty() && !density && required_last_resort_spacing < applied_spacing) {
+		if (point.is_empty() && !player_start_town_anchor_locked && !density && required_last_resort_spacing < applied_spacing) {
 			applied_spacing = required_last_resort_spacing;
 			point = find_spaced_in_zone_object_point(int32_t(access_anchor.get("x", width / 2)) + jitter, int32_t(access_anchor.get("y", height / 2)) - jitter, zone_id, owner_grid, town_search_occupied, width, height, towns, required_last_resort_spacing);
 			used_required_spacing_fallback = !point.is_empty();
@@ -14946,6 +14960,7 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 		append_validation_issue(failures, "fail", "player_start_count_mismatch", "player_starts.starts", "Player start count did not match expected player count.");
 	}
 	Dictionary starts_by_zone;
+	Dictionary starts_by_player_slot;
 	for (int64_t index = 0; index < starts.size(); ++index) {
 		Dictionary start = starts[index];
 		const String zone_id = String(start.get("zone_id", ""));
@@ -14956,6 +14971,7 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 			append_validation_issue(failures, "fail", "player_start_unknown_zone", "player_starts.starts.zone_id", "Player start referenced an unknown zone.");
 		}
 		starts_by_zone[zone_id] = true;
+		starts_by_player_slot[String::num_int64(int32_t(start.get("player_slot", 0)))] = start;
 	}
 
 	Dictionary route_graph = road_network.get("route_graph", Dictionary());
@@ -15115,6 +15131,19 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 		}
 		if (bool(town.get("is_start_town", false)) && !starts_by_zone.has(String(town.get("zone_id", "")))) {
 			append_validation_issue(failures, "fail", "start_town_missing_start_reference", "town_guard_placement.town_records.start_anchor", "Start town must reference a generated player start.");
+		}
+		if (bool(town.get("is_start_town", false))) {
+			const int32_t player_slot = int32_t(town.get("player_slot", 0));
+			Dictionary start = starts_by_player_slot.get(String::num_int64(player_slot), Dictionary());
+			if (start.is_empty()) {
+				append_validation_issue(failures, "fail", "start_town_missing_player_start_slot", "town_guard_placement.town_records.player_slot", "Start town must reference a generated player start slot.");
+			} else if (int32_t(start.get("x", -1)) != int32_t(town.get("x", -2)) || int32_t(start.get("y", -1)) != int32_t(town.get("y", -2)) || int32_t(start.get("level", 0)) != int32_t(town.get("level", 0))) {
+				append_validation_issue(failures, "fail", "start_town_not_on_player_start", "town_guard_placement.town_records.primary_tile", "Player start towns must be materialized on the generated player start tile.");
+			}
+			const String expected_owner = (player_slot == 1 || String(town.get("player_type", "")) == "human") ? String("player") : String("enemy");
+			if (String(town.get("owner", "")) != expected_owner) {
+				append_validation_issue(failures, "fail", "start_town_runtime_owner_invalid", "town_guard_placement.town_records.owner", "Player start town owner must use runtime ownership values: player for the human start, enemy for AI starts.");
+			}
 		}
 		const String source_field_offset = String(town.get("source_field_offset", ""));
 		if (source_field_offset.is_empty() || !(source_field_offset == "+0x20" || source_field_offset == "+0x24" || source_field_offset == "+0x28" || source_field_offset == "+0x2c" || source_field_offset == "+0x30" || source_field_offset == "+0x34" || source_field_offset == "+0x38" || source_field_offset == "+0x3c")) {
@@ -16124,6 +16153,69 @@ Array combined_native_map_objects(const Dictionary &generated_map) {
 	return result;
 }
 
+Array player_start_town_records_for_start_contract(const Dictionary &generated_map) {
+	Array towns = generated_map.get("town_records", Array());
+	Dictionary by_slot;
+	for (int64_t index = 0; index < towns.size(); ++index) {
+		if (Variant(towns[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary town = Dictionary(towns[index]);
+		if (!bool(town.get("is_start_town", false))) {
+			continue;
+		}
+		by_slot[String::num_int64(int32_t(town.get("player_slot", 0)))] = town.duplicate(true);
+	}
+	Dictionary player_starts = generated_map.get("player_starts", Dictionary());
+	const int32_t start_count = int32_t(player_starts.get("start_count", 0));
+	Array result;
+	for (int32_t slot = 1; slot <= start_count; ++slot) {
+		Dictionary town = by_slot.get(String::num_int64(slot), Dictionary());
+		if (!town.is_empty()) {
+			result.append(town);
+		}
+	}
+	return result;
+}
+
+Array synchronized_player_starts_for_start_contract(const Dictionary &generated_map) {
+	Dictionary player_starts = generated_map.get("player_starts", Dictionary());
+	Array starts = player_starts.get("starts", Array());
+	Array start_towns = player_start_town_records_for_start_contract(generated_map);
+	Dictionary town_by_slot;
+	for (int64_t index = 0; index < start_towns.size(); ++index) {
+		if (Variant(start_towns[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary town = Dictionary(start_towns[index]);
+		town_by_slot[String::num_int64(int32_t(town.get("player_slot", 0)))] = town;
+	}
+	Array result;
+	for (int64_t index = 0; index < starts.size(); ++index) {
+		if (Variant(starts[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary start = Dictionary(starts[index]).duplicate(true);
+		Dictionary town = town_by_slot.get(String::num_int64(int32_t(start.get("player_slot", 0))), Dictionary());
+		if (!town.is_empty()) {
+			start["x"] = town.get("x", start.get("x", 0));
+			start["y"] = town.get("y", start.get("y", 0));
+			start["level"] = town.get("level", start.get("level", 0));
+			start["town_id"] = town.get("town_id", start.get("town_id", ""));
+			start["faction_id"] = town.get("faction_id", start.get("faction_id", ""));
+			start["owner"] = town.get("owner", "");
+			start["owner_slot"] = town.get("owner_slot", start.get("owner_slot", 0));
+			start["player_type"] = town.get("player_type", start.get("player_type", ""));
+			start["team_id"] = town.get("team_id", start.get("team_id", ""));
+			start["town_placement_id"] = town.get("placement_id", "");
+			start["primary_town_anchor_status"] = "materialized_as_player_start_town";
+			start["start_contract_source"] = "materialized_player_start_town_record";
+		}
+		result.append(start);
+	}
+	return result;
+}
+
 Dictionary guard_reward_package_adoption_summary(const Array &objects) {
 	int32_t reward_count = 0;
 	int32_t valuable_reward_count = 0;
@@ -16352,9 +16444,15 @@ Dictionary build_native_package_session_adoption(const Dictionary &generated_map
 
 	Dictionary start_contract;
 	Dictionary player_starts = generated_map.get("player_starts", Dictionary());
+	Array contract_player_starts = synchronized_player_starts_for_start_contract(generated_map);
+	Array contract_player_start_towns = player_start_town_records_for_start_contract(generated_map);
 	start_contract["schema_id"] = "aurelion_native_rmg_start_contract_v1";
-	start_contract["player_starts"] = player_starts.get("starts", Array());
-	start_contract["start_count"] = player_starts.get("start_count", 0);
+	start_contract["player_starts"] = contract_player_starts;
+	start_contract["player_start_towns"] = contract_player_start_towns;
+	start_contract["start_count"] = contract_player_starts.size();
+	start_contract["start_town_count"] = contract_player_start_towns.size();
+	start_contract["start_contract_source"] = "materialized_player_start_town_records";
+	start_contract["source_player_start_signature"] = player_starts.get("signature", "");
 	start_contract["primary_hero_id"] = String(options.get("hero_id", "hero_lyra"));
 
 	Dictionary selection;

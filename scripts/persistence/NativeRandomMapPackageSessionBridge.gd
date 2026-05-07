@@ -126,6 +126,10 @@ static func _primary_start(adoption: Dictionary) -> Dictionary:
 	var scenario_document: Variant = adoption.get("scenario_document", null)
 	if scenario_document != null and scenario_document.has_method("get_start_contract"):
 		var start_contract: Dictionary = scenario_document.get_start_contract()
+		var start_towns: Array = start_contract.get("player_start_towns", []) if start_contract.get("player_start_towns", []) is Array else []
+		for town_value in start_towns:
+			if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
+				return {"x": int(town_value.get("x", 0)), "y": int(town_value.get("y", 0))}
 		var starts: Array = start_contract.get("player_starts", []) if start_contract.get("player_starts", []) is Array else []
 		if not starts.is_empty() and starts[0] is Dictionary:
 			return {"x": int(starts[0].get("x", 0)), "y": int(starts[0].get("y", 0))}
