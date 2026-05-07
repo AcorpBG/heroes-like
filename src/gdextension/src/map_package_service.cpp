@@ -8709,6 +8709,13 @@ String object_placement_record_signature_from_record(const Dictionary &placement
 			occupancy_keys);
 }
 
+bool native_catalog_auto_xl_two_level_islands_profile(const Dictionary &normalized) {
+	return native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& String(normalized.get("water_mode", "land")) == "islands"
+			&& String(normalized.get("size_class_id", "")) == "homm3_extra_large"
+			&& int32_t(normalized.get("level_count", 1)) > 1;
+}
+
 int32_t native_catalog_auto_generated_object_floor(const Dictionary &normalized) {
 	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto") {
 		return 0;
@@ -8721,6 +8728,10 @@ int32_t native_catalog_auto_generated_object_floor(const Dictionary &normalized)
 	const int32_t area = std::max(1, width * height * level_count);
 	int32_t density_floor_per_1000 = 0;
 	if (size_class_id == "homm3_extra_large") {
+		if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
+			density_floor_per_1000 = 73;
+			return std::max(2900, (area * density_floor_per_1000) / 1000);
+		}
 		density_floor_per_1000 = level_count > 1 ? 80 : 140;
 		return std::max(1100, (area * density_floor_per_1000) / 1000);
 	}
@@ -8807,6 +8818,11 @@ int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, 
 	const int32_t area = std::max(1, width * height * level_count);
 	int32_t density_floor = 0;
 	const String water_mode = String(normalized.get("water_mode", "land"));
+	if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
+		density_floor = std::max(180, (area * 3) / 1000);
+		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.24));
+		return std::max(density_floor, reward_ratio_floor);
+	}
 	if (size_class_id == "homm3_large" && water_mode == "islands" && level_count <= 1) {
 		density_floor = (area * 7) / 1000;
 		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.30));
@@ -10298,7 +10314,11 @@ int32_t catalog_zone_reward_target(const Dictionary &normalized, const Dictionar
 	const double scale = std::sqrt(double(map_area_scale(normalized)));
 	const int32_t fallback = role.contains("start") ? 3 : (role == "treasure" ? 5 : 2);
 	const int32_t cap = std::max(5, 8 + map_area_scale(normalized));
-	return std::max(fallback, std::min(cap, int32_t(std::ceil(double(density_total) * scale / 3.0))));
+	int32_t target = int32_t(std::ceil(double(density_total) * scale / 3.0));
+	if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
+		target = int32_t(std::ceil(double(target) * 0.65));
+	}
+	return std::max(fallback, std::min(cap, target));
 }
 
 int32_t catalog_zone_dwelling_target(const Dictionary &normalized, const Dictionary &zone) {
@@ -12748,14 +12768,15 @@ Dictionary guard_point_from_town_pair_path(const Array &path, const Dictionary &
 }
 
 int32_t assign_existing_guard_town_pair_closure_tile(Array &guards, Dictionary &blocked, const Array &path, const String &preferred_zone_id, const String &source, int32_t width, int32_t height) {
-	if (guards.is_empty() || path.size() <= 2) {
+	if (guards.is_empty() || path.is_empty()) {
 		return 0;
 	}
 	const int32_t midpoint = int32_t(path.size() / 2);
 	for (int32_t distance = 0; distance < path.size(); ++distance) {
 		const int32_t candidates[2] = { midpoint - distance, midpoint + distance };
 		for (const int32_t candidate : candidates) {
-			if (candidate <= 0 || candidate >= path.size() - 1 || Variant(path[candidate]).get_type() != Variant::DICTIONARY) {
+			const bool short_path = path.size() <= 2;
+			if (candidate < 0 || candidate >= path.size() || (!short_path && (candidate <= 0 || candidate >= path.size() - 1)) || Variant(path[candidate]).get_type() != Variant::DICTIONARY) {
 				continue;
 			}
 			Dictionary cell = Dictionary(path[candidate]);
@@ -14923,7 +14944,11 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		const int32_t span_y = std::max(1, height - margin * 2);
 		const uint32_t seed_bucket = hash32_int(String(normalized.get("normalized_seed", "0")) + String(":native_catalog_auto_two_level_town_floor"));
 		Dictionary town_floor_used_zones;
-		auto town_floor_zone_level_key = [](const String &zone_id, int32_t level) {
+		const bool town_floor_reserves_zone_across_levels = native_catalog_auto_xl_two_level_islands_profile(normalized);
+		auto town_floor_zone_level_key = [&](const String &zone_id, int32_t level) {
+			if (town_floor_reserves_zone_across_levels) {
+				return zone_id;
+			}
 			return zone_id + String(":L") + String::num_int64(level);
 		};
 		for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
@@ -16178,6 +16203,19 @@ double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Di
 		}
 		return 0.57;
 	}
+	if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
+		const String role = String(zone.get("role", ""));
+		if (role.contains("start")) {
+			return 0.47;
+		}
+		if (role == "junction") {
+			return 0.42;
+		}
+		if (role == "treasure" || role == "neutral") {
+			return 0.36;
+		}
+		return 0.39;
+	}
 	const String role = String(zone.get("role", ""));
 	if (role.contains("start")) {
 		return 0.50;
@@ -16584,7 +16622,7 @@ double native_catalog_auto_underground_rock_fraction(const Dictionary &normalize
 	}
 	if (water_mode == "islands") {
 		if (size_class_id == "homm3_extra_large") {
-			return 0.93;
+			return 0.97;
 		}
 		if (size_class_id == "homm3_medium") {
 			return 0.90;
