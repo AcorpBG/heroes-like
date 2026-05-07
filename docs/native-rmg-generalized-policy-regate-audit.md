@@ -299,6 +299,21 @@ Validation evidence:
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_guard_floor_cap_fix --allow-failures --pretty` reports the targeted `36x36_l1` package as `pass`, with guard/reward ratio `0.588` and `0` policy gaps.
 - A combined `18` package evidence set with that targeted package replacing the prior `s_randomnumberofplayers.amap` reports `0` parse failures, `0` native rule failures, `0` density gaps, and `4` policy gaps instead of `5`. Remaining gaps are town density on `108x108_l2` and `36x36_l2`, road density on `36x36_l2`, and a near-threshold `144x144_l1` road floor.
 
+## Implemented Small Two-Level Road Floor
+
+The Small two-level generated batch cases still had too few roads after the underground-road copy pass. Owner evidence averaged `124` road cells across the Small two-level samples, while generated packages averaged about `61`; the policy gate only required about `81`, so this was a material route-density gap rather than an exact-count issue.
+
+Normal generated Small two-level catalog-auto packages now add a generalized road-density floor that grows connected road clusters on the surface and underground. The floor excludes exact owner comparison cases and does not try to clone the owner component lists; it only prevents sparse two-level packages from passing with underbuilt roads.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_small_twolevel_road_floor --case s_2playerss_normalwater_2level,s_randomnumberofplayers_islands_2level` exported `2/2` targeted packages with `0` failures.
+- `python3 tools/rmg_fast_audit.py --amap .artifacts/rmg_native_batch_export_after_small_twolevel_road_floor/s_2playerss_normalwater_2level.amap --pretty` reports `116` road cells: `87` surface and `29` underground, with guarded reachable town pairs `0`.
+- `python3 tools/rmg_fast_audit.py --amap .artifacts/rmg_native_batch_export_after_small_twolevel_road_floor/s_randomnumberofplayers_islands_2level.amap --pretty` reports `116` road cells: `87` surface and `29` underground, with guarded reachable town pairs `0`.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_small_twolevel_road_floor --allow-failures --pretty` reports the targeted `36x36_l2` road-density policy gap is gone; the targeted remaining policy gap is town density.
+- A combined `18` package evidence set with both Small two-level packages replaced reports `0` parse failures, `0` native rule failures, `0` density gaps, and `3` policy gaps instead of `4`. Remaining gaps are town density on `108x108_l2` and `36x36_l2`, plus a near-threshold `144x144_l1` road floor.
+
 ## Implemented Generated Batch Rule Fixes
 
 The first generated-native batch exposed three generalized rule failures rather than a need to exact-match owner counts:
