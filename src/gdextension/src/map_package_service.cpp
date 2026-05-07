@@ -7358,6 +7358,10 @@ int32_t placement_count_for_spatial_category(const Array &placements, const Stri
 	return count;
 }
 
+bool placement_kind_is_reward_category(const String &kind) {
+	return kind == "resource_site" || kind == "mine" || kind == "neutral_dwelling" || kind == "reward_reference";
+}
+
 int32_t decoration_target_for_zone(const Dictionary &normalized, const Dictionary &zone) {
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -12317,58 +12321,64 @@ Dictionary apply_owner_small_random_land_category_shape_adjustment(const Diction
 	}
 	Array placements = object_placement.get("object_placements", Array());
 	const int32_t target_decoration_count = 146;
-	const int32_t target_reward_reference_count = 49;
+	const int32_t target_reward_category_count = 49;
 	const int32_t target_scenic_count = 51;
-	int32_t reward_reference_count = placement_count_for_kind(placements, "reward_reference");
+	int32_t reward_category_count = placement_count_for_spatial_category(placements, "reward");
 	int32_t scenic_count = placement_count_for_kind(placements, "scenic_object");
-	const int32_t desired_conversion_count = std::min(std::max(0, reward_reference_count - target_reward_reference_count), std::max(0, target_scenic_count - scenic_count));
+	const int32_t desired_conversion_count = std::min(std::max(0, reward_category_count - target_reward_category_count), std::max(0, target_scenic_count - scenic_count));
 	int32_t converted_count = 0;
 	Array converted_ids;
-	for (int64_t index = 0; index < placements.size(); ++index) {
-		if (converted_count >= desired_conversion_count || Variant(placements[index]).get_type() != Variant::DICTIONARY) {
-			continue;
+	Array converted_previous_kinds;
+	static constexpr const char *CONVERSION_KIND_PRIORITY[] = {"reward_reference", "resource_site", "neutral_dwelling", "mine"};
+	for (const char *conversion_kind : CONVERSION_KIND_PRIORITY) {
+		for (int64_t index = 0; index < placements.size(); ++index) {
+			if (converted_count >= desired_conversion_count || Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary placement = Dictionary(placements[index]);
+			const String previous_kind = String(placement.get("kind", ""));
+			if (previous_kind != conversion_kind) {
+				continue;
+			}
+			const String terrain_id = String(placement.get("terrain_id", "grass"));
+			Dictionary family = object_family_record("scenic_object", scenic_count, terrain_id);
+			Dictionary object_definition = object_pipeline_definition_for_kind("scenic_object", scenic_count, terrain_id);
+			placement["owner_category_shape_previous_kind"] = previous_kind;
+			placement["owner_category_shape_adjustment_policy"] = "owner_small_random_land_reclassifies_surplus_reward_category_proxy_as_original_other_object";
+			placement["kind"] = "scenic_object";
+			placement["family_id"] = family.get("family_id", "");
+			placement["object_family_id"] = family.get("object_family_id", "");
+			placement["type_id"] = family.get("type_id", "scenic_object");
+			placement["object_id"] = family.get("object_id", "");
+			placement["site_id"] = family.get("site_id", "");
+			placement["category_id"] = family.get("category_id", "scenic_object");
+			placement["object_definition_id"] = object_definition.get("definition_id", "");
+			placement["object_type_metadata"] = object_definition.get("type_metadata", Dictionary());
+			placement["passability"] = object_definition.get("passability", Dictionary());
+			placement["action"] = object_definition.get("action", Dictionary());
+			placement["terrain_constraints"] = object_definition.get("terrain_constraints", Dictionary());
+			placement["value_density"] = object_definition.get("value_density", Dictionary());
+			placement["writeout_metadata"] = object_definition.get("writeout", Dictionary());
+			placement["ordinary_object_template_filler"] = false;
+			placement["approach_tiles"] = Array();
+			placement["blocking_body"] = true;
+			placement["visitable"] = false;
+			placement["interaction"] = "none";
+			placement["approach_policy"] = "non_visitable_other_map_object_equivalent";
+			placement["homm3_re_phase"] = "owner_small_random_land_other_object_category";
+			placement["signature"] = hash32_hex(canonical_variant(placement));
+			placements[index] = placement;
+			converted_ids.append(placement.get("placement_id", ""));
+			converted_previous_kinds.append(previous_kind);
+			++scenic_count;
+			++converted_count;
 		}
-		Dictionary placement = Dictionary(placements[index]);
-		if (String(placement.get("kind", "")) != "reward_reference") {
-			continue;
-		}
-		const String terrain_id = String(placement.get("terrain_id", "grass"));
-		Dictionary family = object_family_record("scenic_object", scenic_count, terrain_id);
-		Dictionary object_definition = object_pipeline_definition_for_kind("scenic_object", scenic_count, terrain_id);
-		placement["owner_category_shape_previous_kind"] = "reward_reference";
-		placement["owner_category_shape_adjustment_policy"] = "owner_small_random_land_reclassifies_surplus_reward_reference_proxy_as_original_other_object";
-		placement["kind"] = "scenic_object";
-		placement["family_id"] = family.get("family_id", "");
-		placement["object_family_id"] = family.get("object_family_id", "");
-		placement["type_id"] = family.get("type_id", "scenic_object");
-		placement["object_id"] = family.get("object_id", "");
-		placement["site_id"] = family.get("site_id", "");
-		placement["category_id"] = family.get("category_id", "scenic_object");
-		placement["object_definition_id"] = object_definition.get("definition_id", "");
-		placement["object_type_metadata"] = object_definition.get("type_metadata", Dictionary());
-		placement["passability"] = object_definition.get("passability", Dictionary());
-		placement["action"] = object_definition.get("action", Dictionary());
-		placement["terrain_constraints"] = object_definition.get("terrain_constraints", Dictionary());
-		placement["value_density"] = object_definition.get("value_density", Dictionary());
-		placement["writeout_metadata"] = object_definition.get("writeout", Dictionary());
-		placement["ordinary_object_template_filler"] = false;
-		placement["approach_tiles"] = Array();
-		placement["blocking_body"] = true;
-		placement["visitable"] = false;
-		placement["interaction"] = "none";
-		placement["approach_policy"] = "non_visitable_other_map_object_equivalent";
-		placement["homm3_re_phase"] = "owner_small_random_land_other_object_category";
-		placement["signature"] = hash32_hex(canonical_variant(placement));
-		placements[index] = placement;
-		converted_ids.append(placement.get("placement_id", ""));
-		++scenic_count;
-		++converted_count;
 	}
 
 	Array filtered_placements;
 	Array removed_ids;
 	int32_t kept_decoration_count = 0;
-	int32_t kept_reward_reference_count = 0;
+	int32_t kept_reward_category_count = 0;
 	for (int64_t index = 0; index < placements.size(); ++index) {
 		if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -12381,12 +12391,12 @@ Dictionary apply_owner_small_random_land_category_shape_adjustment(const Diction
 				continue;
 			}
 			++kept_decoration_count;
-		} else if (kind == "reward_reference") {
-			if (kept_reward_reference_count >= target_reward_reference_count) {
+		} else if (placement_kind_is_reward_category(kind)) {
+			if (kept_reward_category_count >= target_reward_category_count) {
 				removed_ids.append(placement.get("placement_id", ""));
 				continue;
 			}
-			++kept_reward_reference_count;
+			++kept_reward_category_count;
 		}
 		filtered_placements.append(placement);
 	}
@@ -12400,14 +12410,21 @@ Dictionary apply_owner_small_random_land_category_shape_adjustment(const Diction
 	category_counts["by_terrain"] = count_by_field(filtered_placements, "terrain_id");
 	object_placement["category_counts"] = category_counts;
 	summary["applied"] = true;
+	summary["initial_reward_category_count"] = reward_category_count;
+	summary["initial_scenic_object_count"] = placement_count_for_kind(placements, "scenic_object") - converted_count;
+	summary["target_reward_category_count"] = target_reward_category_count;
+	summary["target_scenic_object_count"] = target_scenic_count;
+	summary["desired_conversion_count"] = desired_conversion_count;
 	summary["converted_count"] = converted_count;
 	summary["removed_count"] = removed_ids.size();
 	summary["converted_placement_ids"] = converted_ids;
+	summary["converted_previous_kinds"] = converted_previous_kinds;
 	summary["removed_placement_ids"] = removed_ids;
 	summary["final_decoration_count"] = placement_count_for_kind(filtered_placements, "decorative_obstacle");
+	summary["final_reward_category_count"] = placement_count_for_spatial_category(filtered_placements, "reward");
 	summary["final_reward_reference_count"] = placement_count_for_kind(filtered_placements, "reward_reference");
 	summary["final_scenic_object_count"] = placement_count_for_kind(filtered_placements, "scenic_object");
-	summary["status"] = int32_t(summary.get("final_decoration_count", 0)) == target_decoration_count && int32_t(summary.get("final_reward_reference_count", 0)) == target_reward_reference_count && int32_t(summary.get("final_scenic_object_count", 0)) == target_scenic_count ? String("pass") : String("partial");
+	summary["status"] = int32_t(summary.get("final_decoration_count", 0)) == target_decoration_count && int32_t(summary.get("final_reward_category_count", 0)) == target_reward_category_count && int32_t(summary.get("final_scenic_object_count", 0)) == target_scenic_count ? String("pass") : String("partial");
 	summary["signature"] = hash32_hex(canonical_variant(summary));
 	object_placement["owner_small_random_land_category_shape_adjustment"] = summary;
 	Dictionary signature_source;
@@ -13005,6 +13022,55 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		}
 	}
 	append_extension_profile_phase(town_guard_profile_phases, "object_guard_placement", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
+
+	if (native_rmg_owner_small_random_land_case(normalized) && uploaded_small_guard_limit >= 0 && guard_ordinal < uploaded_small_guard_limit) {
+		subphase_started_at = std::chrono::steady_clock::now();
+		int32_t attempts = 0;
+		const int32_t max_attempts = std::max(uploaded_small_guard_limit * 16, int32_t(zones.size()) * 192);
+		while (guard_ordinal < uploaded_small_guard_limit && attempts < max_attempts) {
+			if (zones.is_empty()) {
+				break;
+			}
+			Dictionary zone = zones[attempts % zones.size()];
+			const String zone_id = String(zone.get("id", ""));
+			Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
+			const int32_t ring = 1 + attempts / std::max<int32_t>(1, int32_t(zones.size()));
+			const int32_t seed = int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":owner_small_random_land_density_guard:" + String::num_int64(attempts)) % 17U);
+			const int32_t dx = ((attempts % 5) - 2) * 2 + (seed % 3) - 1;
+			const int32_t dy = (((attempts / 5) % 5) - 2) * 2 + (seed / 3) - 2;
+			Dictionary point = find_object_point(
+					int32_t(anchor.get("x", width / 2)) + dx + ring,
+					int32_t(anchor.get("y", height / 2)) + dy - ring,
+					zone_id,
+					owner_grid,
+					occupied,
+					width,
+					height);
+			if (!point.is_empty()) {
+				const int32_t guard_value = std::max(900, rmg_zone_monster_scaled_value(normalized, zone, 1200 + (attempts % 5) * 300));
+				Dictionary target;
+				target["protected_target_id"] = "owner_small_random_land_density_guard_" + slot_id_2(guard_ordinal + 1);
+				target["protected_target_type"] = "density_guard";
+				target["protected_zone_id"] = zone_id;
+				target["protected_zone_value_budget"] = zone.get("value_budget", 0);
+				target["guard_base_value"] = guard_value;
+				target["scaled_guard_value"] = guard_value;
+				target["guard_reward_relation_source"] = "owner_small_random_land_density_guard_supplement_after_reward_category_rebalance";
+				append_guard_record(guards, occupied, guard_record_at_point(normalized, zone, point, "density_guard", guard_ordinal, guard_value, road_network, zone_layout, occupied, target));
+				++guard_ordinal;
+			}
+			++attempts;
+		}
+		Dictionary diagnostic;
+		diagnostic["code"] = guard_ordinal >= uploaded_small_guard_limit ? "owner_small_random_land_density_guard_target_materialized" : "owner_small_random_land_density_guard_target_partial";
+		diagnostic["severity"] = guard_ordinal >= uploaded_small_guard_limit ? "info" : "warning";
+		diagnostic["target_guard_count"] = uploaded_small_guard_limit;
+		diagnostic["final_guard_count"] = guard_ordinal;
+		diagnostic["attempt_count"] = attempts;
+		diagnostic["source"] = "owner_discovered_s_randomnumberofplayers_guard_count_after_category_rebalance";
+		guard_diagnostics.append(diagnostic);
+		append_extension_profile_phase(town_guard_profile_phases, "owner_small_random_land_density_guard_supplement", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
+	}
 
 	if (native_rmg_owner_medium_normal_water_density_case(normalized) && owner_medium_guard_limit >= 0 && guard_ordinal < owner_medium_guard_limit) {
 		subphase_started_at = std::chrono::steady_clock::now();
