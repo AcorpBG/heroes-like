@@ -56,6 +56,7 @@ def validation_args(args: argparse.Namespace) -> argparse.Namespace:
         no_topology_gate=args.no_topology_gate,
         latest_amap_artifact=not args.no_latest_amap_artifact,
         artifact_root=args.artifact_root,
+        require_all_owner_matches=not args.allow_partial_native_batch,
     )
 
 
@@ -79,6 +80,7 @@ def main() -> int:
     parser.add_argument("--no-density-gate", action="store_true")
     parser.add_argument("--no-policy-gate", action="store_true")
     parser.add_argument("--no-topology-gate", action="store_true")
+    parser.add_argument("--allow-partial-native-batch", action="store_true", help="Allow targeted native AMAP batches that do not cover every parsed owner H3M")
     parser.add_argument("--skip-py-compile", action="store_true", help="Skip parser/gate syntax compilation")
     parser.add_argument("--report-json", type=Path, default=DEFAULT_REPORT_JSON, help="Write full JSON report here")
     parser.add_argument("--failure-limit", type=int, default=8)

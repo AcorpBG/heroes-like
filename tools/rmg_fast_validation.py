@@ -452,6 +452,31 @@ def sample_group_summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
     return result
 
 
+def coverage_failures(owner_samples: list[dict[str, Any]], native_samples: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    owner_cases = {
+        case_id_from_path(Path(str(sample.get("path", "")))): sample
+        for sample in owner_samples
+        if sample.get("status") == "parsed"
+    }
+    native_cases = {
+        case_id_from_path(Path(str(sample.get("path", "")))): sample
+        for sample in native_samples
+        if sample.get("status") == "parsed"
+    }
+    missing = sorted(case_id for case_id in owner_cases if case_id not in native_cases)
+    if not missing:
+        return []
+    return [
+        {
+            "rule": "missing_native_owner_match",
+            "owner_parsed_count": len(owner_cases),
+            "native_parsed_count": len(native_cases),
+            "missing_count": len(missing),
+            "missing_case_ids": missing,
+        }
+    ]
+
+
 def build_report(args: argparse.Namespace) -> dict[str, Any]:
     requested_native_dir = args.amap_dir
     native_dir = args.amap_dir
@@ -506,8 +531,9 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         args.road_component_count_floor_ratio,
     )
     comparisons = matched_comparisons(owner_samples, native_samples)
+    coverage_gaps = coverage_failures(owner_samples, native_samples) if bool(getattr(args, "require_all_owner_matches", False)) else []
 
-    status = "pass" if not parse_failures and not native_failures and not density_gaps and not policy_gaps and not topology_gaps else "fail"
+    status = "pass" if not parse_failures and not native_failures and not density_gaps and not policy_gaps and not topology_gaps and not coverage_gaps else "fail"
     return {
         "schema_id": "rmg_fast_validation_v1",
         "status": status,
@@ -531,6 +557,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "road_largest_share_absolute_cap": args.road_largest_share_absolute_cap,
             "road_largest_share_epsilon": DEFAULT_ROAD_LARGEST_SHARE_EPSILON,
             "road_component_count_floor_ratio": args.road_component_count_floor_ratio,
+            "require_all_owner_matches": bool(getattr(args, "require_all_owner_matches", False)),
         },
         "timings_seconds": {
             "owner_h3m_parse": owner_seconds,
@@ -547,6 +574,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "density_gap_count": len(density_gaps),
             "policy_gap_count": len(policy_gaps),
             "topology_gap_count": len(topology_gaps),
+            "coverage_gap_count": len(coverage_gaps),
             "matched_comparison_count": len(comparisons),
         },
         "failures": {
@@ -555,6 +583,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "density_gaps": density_gaps,
             "policy_gaps": policy_gaps,
             "topology_gaps": topology_gaps,
+            "coverage_gaps": coverage_gaps,
         },
         "groups": {
             "owner": sample_group_summary(owner_samples),
@@ -584,12 +613,13 @@ def compact_summary(report: dict[str, Any], failure_limit: int) -> str:
             timings.get("native_amap_parse", 0),
             timings.get("total_parse", 0),
         ),
-        "gaps parse=%s native_rules=%s density=%s policy=%s topology=%s" % (
+        "gaps parse=%s native_rules=%s density=%s policy=%s topology=%s coverage=%s" % (
             summary.get("parse_failure_count", 0),
             summary.get("native_rule_failure_count", 0),
             summary.get("density_gap_count", 0),
             summary.get("policy_gap_count", 0),
             summary.get("topology_gap_count", 0),
+            summary.get("coverage_gap_count", 0),
         ),
     ]
     if inputs.get("native_artifact_autodiscovered", False):
@@ -598,7 +628,7 @@ def compact_summary(report: dict[str, Any], failure_limit: int) -> str:
         lines.append("artifact autodiscovered=false error=%s" % inputs.get("native_artifact_discovery_error", ""))
 
     remaining = max(0, failure_limit)
-    for bucket_id in ["parse", "native_rules", "density_gaps", "policy_gaps", "topology_gaps"]:
+    for bucket_id in ["parse", "native_rules", "density_gaps", "policy_gaps", "topology_gaps", "coverage_gaps"]:
         bucket = failures.get(bucket_id, [])
         if not isinstance(bucket, list) or not bucket or remaining <= 0:
             continue
@@ -624,6 +654,7 @@ def main() -> int:
     parser.add_argument("--no-topology-gate", action="store_true", help="Report road topology metrics but do not fail on road component shape gaps")
     parser.add_argument("--latest-amap-artifact", action="store_true", help="Validate against the newest .artifacts/rmg_native_batch_export* directory containing .amap files")
     parser.add_argument("--artifact-root", type=Path, default=DEFAULT_ARTIFACT_ROOT, help="Artifact root searched by --latest-amap-artifact")
+    parser.add_argument("--require-all-owner-matches", action="store_true", help="Fail unless every parsed owner H3M has a matching parsed native AMAP")
     parser.add_argument("--allow-failures", action="store_true", help="Return success while still reporting parse/rule/density/policy failures")
     parser.add_argument("--summary", action="store_true", help="Print a compact human-readable summary instead of JSON")
     parser.add_argument("--failure-limit", type=int, default=8, help="Maximum individual failures to include in --summary output")

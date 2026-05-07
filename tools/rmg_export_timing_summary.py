@@ -46,6 +46,7 @@ def case_summary(record: dict[str, Any]) -> dict[str, Any]:
         "conversion_wall_msec": msec(record.get("conversion_wall_msec", 0)),
         "save_wall_msec": msec(record.get("save_wall_msec", 0)),
         "extension_top": profile_label(record.get("extension_profile", {})),
+        "conversion_top": profile_label(record.get("conversion_profile", {})),
         "object_top": profile_label(record.get("object_runtime_profile", {})),
         "town_guard_top": profile_label(record.get("town_guard_runtime_profile", {})),
     }
@@ -91,7 +92,7 @@ def print_summary(summary: dict[str, Any], manifest_path: Path) -> None:
     print("top_cases:")
     for case in summary.get("top_cases", []):
         print(
-            "  {id} case={case_wall_msec}ms gen={generation_wall_msec}ms conv={conversion_wall_msec}ms save={save_wall_msec}ms ext={extension_top} obj={object_top} town_guard={town_guard_top}".format(
+            "  {id} case={case_wall_msec}ms gen={generation_wall_msec}ms conv={conversion_wall_msec}ms save={save_wall_msec}ms ext={extension_top} conv_top={conversion_top} obj={object_top} town_guard={town_guard_top}".format(
                 **case
             )
         )
