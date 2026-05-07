@@ -145,3 +145,18 @@ Validation evidence:
 - `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
 - `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_terrain_grid_report.tscn` passed with `scoped_islands_counts` containing no `underground` terrain and `scoped_two_level_counts` containing an `underground` layer count.
 - `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_town_guard_report.tscn` passed after the same native rebuild.
+
+## Implemented Start-Town Reflow Correction
+
+The Small normal-water two-level owner-corpus path exposed a real regression after the level-selection correction: the owner spacing reflow moved `player_start_town` records away from their generated player start tiles. That produced valid-looking town spacing but broke the stronger production contract that every player starts on an owned town.
+
+The native owner Small normal-water two-level reflow now locks start towns to their `start_anchor` and only reflows the neutral/supplemental towns around those reserved anchors. The focused package test covers generation, validation, package conversion, and confirms the adopted map document has two levels.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_owner_normal_water_underground_package_report.tscn` passed with `map_level_count: 2` and `validation_status: pass`.
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/random_map_player_setup_retry_ux_report.tscn` passed and reported visible `level_count` control data with `Surface only` and `Surface + Underground`.
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_terrain_grid_report.tscn` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_town_guard_report.tscn` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 tests/native_random_map_auto_template_batch_report.tscn` passed with all 11 representative cases validating.
