@@ -502,3 +502,33 @@ Validation evidence:
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_town_guard_perf --summary` reported `status=pass`, `18` matched comparisons, and `0` parse/native/density/policy/topology gaps in about `8.649s`.
 
 This does not make generation fast enough yet. It removes a major avoidable town/guard cost while leaving object placement and full XL export time as active performance targets.
+
+## Implemented Python RMG Gate And Export Timing Manifest
+
+Owner review correctly called out that RMG correctness validation should not require a full Godot engine run. The testing split is now explicit:
+
+- Godot is used when the native GDExtension must generate/export fresh packages, or when editor/runtime behavior is under test.
+- Python is used for H3M parsing, AMAP parsing, owner/native comparison, density/policy/topology checks, and batch timing summary.
+
+`tools/rmg_native_batch_export.gd` now records per-case timings in the export `manifest.json`:
+
+- generation wall time;
+- package conversion wall time;
+- save wall time;
+- total case wall time;
+- compact extension/object/town-guard top-phase profiles.
+
+Two Python helpers make the intended loop direct:
+
+- `tools/rmg_python_validation_gate.py` runs the Python parser syntax check plus `rmg_fast_validation` against the latest generated AMAP batch by default. It does not start Godot.
+- `tools/rmg_export_timing_summary.py` summarizes a batch manifest and ranks worst cases by wall time. It does not start Godot.
+
+Validation evidence:
+
+- `python3 -m py_compile tools/rmg_export_timing_summary.py tools/rmg_python_validation_gate.py tools/rmg_fast_audit.py tools/rmg_fast_validation.py` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 240 tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_timing_smoke --limit 2` exported `2/2` packages and wrote timing fields.
+- `/usr/bin/time -p env GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 900 tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_timing_full` exported `18/18` packages with `0` failures in `real 480.73s`; the manifest reports `total_wall_msec: 476985`.
+- `python3 tools/rmg_python_validation_gate.py --failure-limit 2` selected `.artifacts/rmg_native_batch_export_timing_full`, parsed `18/18` owner H3Ms plus `18/18` native AMAPs, matched `18` comparisons, completed parsing in about `8.865s`, and reported `status=pass` with `0` parse/native/density/policy/topology gaps.
+- `python3 tools/rmg_export_timing_summary.py .artifacts/rmg_native_batch_export_timing_full --limit 8` reported phase totals of `268716ms` generation, `142418ms` conversion, and `58620ms` save. The worst case is `xl_nowater_2levels` at `74628ms`, with `29890ms` generation, `37880ms` conversion, `6858ms` save, and native `object_placement` as the top generation phase at about `15579ms`.
+
+This changes the default correctness workflow, not the generator boundary. A fresh package export still needs Godot until a separate native CLI/export boundary exists, but map correctness and owner comparison now stay in the fast Python loop.

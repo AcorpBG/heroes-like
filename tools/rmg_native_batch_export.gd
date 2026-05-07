@@ -9,6 +9,7 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var run_started_msec := Time.get_ticks_msec()
 	var output_dir := _output_dir_from_args()
 	var limit := _limit_from_args()
 	var case_filter := _case_filter_from_args()
@@ -47,6 +48,7 @@ func _run() -> void:
 		"case_count": cases.size(),
 		"exported_count": 0,
 		"failed_count": 0,
+		"timing_policy": "per_case_generation_conversion_save_wall_msec_with_compact_native_profile",
 		"cases": [],
 	}
 	for case in cases:
@@ -58,6 +60,7 @@ func _run() -> void:
 			manifest["failed_count"] = int(manifest.get("failed_count", 0)) + 1
 	if int(manifest.get("failed_count", 0)) > 0:
 		manifest["status"] = "partial"
+	manifest["total_wall_msec"] = Time.get_ticks_msec() - run_started_msec
 	var manifest_path := absolute_output_dir.path_join("manifest.json")
 	var file := FileAccess.open(manifest_path, FileAccess.WRITE)
 	if file == null:
@@ -152,10 +155,15 @@ func _player_count_for_file(lower_name: String, size_class_id: String) -> int:
 	return 5
 
 func _export_case(service: Variant, case: Dictionary, output_dir: String, absolute_output_dir: String) -> Dictionary:
+	var case_started_msec := Time.get_ticks_msec()
 	var config: Dictionary = case.get("config", {})
 	var case_id := String(case.get("id", "case"))
+	var generation_started_msec := Time.get_ticks_msec()
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "rmg_native_batch_export_%s" % case_id})
+	var generation_wall_msec := Time.get_ticks_msec() - generation_started_msec
 	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
+	var object_summary: Dictionary = generated.get("object_placement_pipeline_summary", {}) if generated.get("object_placement_pipeline_summary", {}) is Dictionary else {}
+	var town_guard_summary: Dictionary = generated.get("town_guard_placement", {}) if generated.get("town_guard_placement", {}) is Dictionary else {}
 	var record := {
 		"id": case_id,
 		"owner_path": String(case.get("owner_path", "")),
@@ -168,29 +176,40 @@ func _export_case(service: Variant, case: Dictionary, output_dir: String, absolu
 		"generation_ok": bool(generated.get("ok", false)),
 		"generation_status": String(generated.get("full_generation_status", "")),
 		"validation_status": String(generated.get("validation_status", "")),
+		"generation_wall_msec": generation_wall_msec,
+		"extension_profile": _profile_brief(generated.get("extension_profile", {}) if generated.get("extension_profile", {}) is Dictionary else {}),
+		"object_runtime_profile": _profile_brief(object_summary.get("runtime_phase_profile", {}) if object_summary.get("runtime_phase_profile", {}) is Dictionary else {}),
+		"town_guard_runtime_profile": _profile_brief(town_guard_summary.get("runtime_phase_profile", {}) if town_guard_summary.get("runtime_phase_profile", {}) is Dictionary else {}),
 	}
 	if not bool(generated.get("ok", false)):
 		record["status"] = "generation_failed"
 		record["error"] = generated.get("validation_report", generated)
+		record["case_wall_msec"] = Time.get_ticks_msec() - case_started_msec
 		return record
+	var conversion_started_msec := Time.get_ticks_msec()
 	var adoption: Dictionary = service.convert_generated_payload(generated, {
 		"feature_gate": "rmg_native_batch_export",
 		"session_save_version": 9,
 		"scenario_id": "rmg_native_batch_export_%s" % case_id,
 	})
+	record["conversion_wall_msec"] = Time.get_ticks_msec() - conversion_started_msec
 	if not bool(adoption.get("ok", false)):
 		record["status"] = "conversion_failed"
 		record["error"] = adoption
 		record["generated_validation_report"] = generated.get("validation_report", {})
 		record["generated_validation_failures"] = (generated.get("validation_report", {}) as Dictionary).get("failures", []) if generated.get("validation_report", {}) is Dictionary else []
+		record["case_wall_msec"] = Time.get_ticks_msec() - case_started_msec
 		return record
 	var map_document: Variant = adoption.get("map_document", null)
 	if map_document == null:
 		record["status"] = "conversion_failed"
 		record["error"] = "missing_map_document"
+		record["case_wall_msec"] = Time.get_ticks_msec() - case_started_msec
 		return record
 	var native_path := absolute_output_dir.path_join("%s.amap" % case_id)
+	var save_started_msec := Time.get_ticks_msec()
 	var save_result: Dictionary = service.save_map_package(map_document, native_path, {"path_policy": "artifact_rmg_native_batch_export"})
+	record["save_wall_msec"] = Time.get_ticks_msec() - save_started_msec
 	record["native_path"] = native_path
 	record["native_project_relative_path"] = output_dir.path_join("%s.amap" % case_id)
 	record["save"] = {
@@ -200,7 +219,19 @@ func _export_case(service: Variant, case: Dictionary, output_dir: String, absolu
 		"path": String(save_result.get("path", native_path)),
 	}
 	record["status"] = "exported" if bool(save_result.get("ok", false)) else "save_failed"
+	record["case_wall_msec"] = Time.get_ticks_msec() - case_started_msec
 	return record
+
+func _profile_brief(profile: Dictionary) -> Dictionary:
+	if profile.is_empty():
+		return {}
+	return {
+		"schema_id": String(profile.get("schema_id", "")),
+		"total_elapsed_msec": float(profile.get("total_elapsed_msec", 0.0)),
+		"top_phase_id": String(profile.get("top_phase_id", "")),
+		"top_phase_elapsed_msec": float(profile.get("top_phase_elapsed_msec", 0.0)),
+		"microseconds_per_tile": float(profile.get("microseconds_per_tile", 0.0)),
+	}
 
 func _case_id_from_file_name(file_name: String) -> String:
 	var id := file_name.get_basename().to_lower()
