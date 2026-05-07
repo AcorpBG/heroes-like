@@ -565,3 +565,25 @@ Validation evidence:
 - `python3 tools/rmg_export_timing_summary.py .artifacts/rmg_native_batch_export_conversion_perf_land_cases --limit 8` reported the focused set at `115230ms` total wall time, with phase totals `81816ms` generation, `15272ms` conversion, and `15837ms` save. `xl_nowater_2levels` is now `40982ms` total with `5567ms` conversion; the remaining top phase is native generation `object_placement` at about `15553ms`.
 
 This changes the performance bottleneck. Package conversion is no longer the worst offender for the XL two-level land case; native object placement is again the dominant cost to optimize. The testing policy remains the same: use Godot only to generate/export fresh packages or to test editor/runtime behavior, then use Python for H3M/AMAP parsing, comparison, and rule validation.
+
+## Implemented Object Placement And Occupancy Profiling Fast Path
+
+The follow-up XL profile showed that object-placement record signing and the final town/guard occupancy assembly were still doing avoidable rich `Variant` canonicalization work. That cost belongs in native generation, not in the Python correctness loop, so the fix stayed inside the GDExtension path:
+
+- object placement records now use a compact deterministic signature from stable placement identity fields, coordinates, footprint, and occupancy keys instead of canonical-hashing the full rich placement dictionary for every placed object;
+- combined object/town/guard occupancy signatures now hash compact record keys and counts instead of canonical-hashing the full occupancy dictionary;
+- no-op town access corridor and connection guard choke clearance passes attach their summaries without rehashing the full object-placement payload;
+- town access corridor clearance now uses level-aware keys, preventing two-level maps from treating surface and underground corridor cells as the same tile;
+- `tools/rmg_native_batch_export.gd` now records the top six native profile phases per profile in the manifest, making single-case performance runs useful without digging through full generation payloads.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed after the native changes.
+- Targeted `xl_nowater_2levels` export after compact object signatures reported `case_wall_msec: 38504`, `generation_wall_msec: 27384`, `conversion_wall_msec: 5492`, and `save_wall_msec: 5628`.
+- After compact combined occupancy and level-aware corridor clearance, targeted `xl_nowater_2levels` reported `case_wall_msec: 36115`, `generation_wall_msec: 24484`, `conversion_wall_msec: 5879`, and `save_wall_msec: 5752`. The original timed baseline for this case was `74628ms` total with `37880ms` spent in conversion.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_level_aware_corridor_xl_nowater_2levels --summary` passed with `0` parse/native/density/policy/topology gaps and total parse time about `5.632s`.
+- `python3 tools/rmg_export_timing_summary.py .artifacts/rmg_native_batch_export_compact_occupancy_xl_nowater_2levels --limit 8` passed and showed the remaining XL bottleneck is native generation, not parser/comparison work.
+- `tests/native_random_map_object_placement_report.gd` now validates the generated `MapDocument` by counting records tagged `native_record_kind == "object_placement"`, because the document correctly contains object placements plus towns, guards, and gates. The focused object-placement report passed after that assertion was corrected.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_auto_template_batch_report.tscn` passed as the broader native generator integration smoke.
+
+This reinforces the testing split: correctness validation and owner comparison remain Python-only once `.amap` packages exist. Godot is still only needed for fresh package generation/export through the current `MapPackageService` boundary and for actual editor/runtime smokes.

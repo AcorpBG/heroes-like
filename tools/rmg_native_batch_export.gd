@@ -232,7 +232,31 @@ func _profile_brief(profile: Dictionary) -> Dictionary:
 		"top_phase_id": String(profile.get("top_phase_id", "")),
 		"top_phase_elapsed_msec": float(profile.get("top_phase_elapsed_msec", 0.0)),
 		"microseconds_per_tile": float(profile.get("microseconds_per_tile", 0.0)),
+		"top_phases": _top_profile_phases(profile.get("phases", []) if profile.get("phases", []) is Array else [], 6),
 	}
+
+func _top_profile_phases(phases: Array, count: int) -> Array:
+	var remaining := phases.duplicate(true)
+	var result := []
+	for _index in range(count):
+		var best_index := -1
+		var best_elapsed := -1.0
+		for phase_index in range(remaining.size()):
+			var phase: Dictionary = remaining[phase_index] if remaining[phase_index] is Dictionary else {}
+			var elapsed := float(phase.get("elapsed_msec", 0.0))
+			if elapsed > best_elapsed:
+				best_elapsed = elapsed
+				best_index = phase_index
+		if best_index < 0:
+			break
+		var best: Dictionary = remaining[best_index] if remaining[best_index] is Dictionary else {}
+		result.append({
+			"phase_id": String(best.get("phase_id", "")),
+			"elapsed_msec": float(best.get("elapsed_msec", 0.0)),
+			"percent_total": float(best.get("percent_total", 0.0)),
+		})
+		remaining.remove_at(best_index)
+	return result
 
 func _case_id_from_file_name(file_name: String) -> String:
 	var id := file_name.get_basename().to_lower()
