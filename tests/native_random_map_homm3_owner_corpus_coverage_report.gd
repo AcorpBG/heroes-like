@@ -3,7 +3,7 @@ extends Node
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 
 const REPORT_ID := "NATIVE_RANDOM_MAP_HOMM3_OWNER_CORPUS_COVERAGE_REPORT"
-const REPORT_SCHEMA_ID := "native_random_map_homm3_owner_corpus_coverage_report_v2"
+const REPORT_SCHEMA_ID := "native_random_map_homm3_owner_corpus_coverage_report_v3"
 const HOMM3_RE_OBJECT_METADATA := "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/object-metadata-by-type.json"
 
 const HOMM3_VERSION_ROE := 14
@@ -69,6 +69,7 @@ func _run() -> void:
 		return
 	var comparison_gate := _comparison_gate_summary(samples)
 	var gate_self_check := _comparison_gate_self_check()
+	var xl_land_density_diagnostic := _owner_xl_land_density_diagnostic(service, samples)
 	var ok := String(comparison_gate.get("status", "")) == "pass" and String(gate_self_check.get("status", "")) == "pass"
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"schema_id": REPORT_SCHEMA_ID,
@@ -79,6 +80,7 @@ func _run() -> void:
 		"coverage": coverage,
 		"comparison_gate": comparison_gate,
 		"comparison_gate_self_check": gate_self_check,
+		"xl_land_density_diagnostic": xl_land_density_diagnostic,
 		"remaining_gap": "This report inventories readable owner H3M sample coverage and compares available samples against corresponding native outputs where supported. It does not import H3M data into runtime content and does not prove broad production parity.",
 	})])
 	get_tree().quit(0 if ok else 1)
@@ -111,6 +113,9 @@ func coverage_summary(samples: Array) -> Dictionary:
 
 func comparison_gate_summary(samples: Array) -> Dictionary:
 	return _comparison_gate_summary(samples)
+
+func owner_xl_land_density_diagnostic(service: Variant, samples: Array) -> Dictionary:
+	return _owner_xl_land_density_diagnostic(service, samples)
 
 func _discover_h3m_paths(directory_path: String) -> Array:
 	var result := []
@@ -587,6 +592,188 @@ func _native_comparison_for_sample(service: Variant, sample: Dictionary) -> Dict
 		"road_topology_comparison_by_level": road_topology_by_level,
 		"semantic_layout_comparison": semantic_layout,
 	}
+
+func _owner_xl_land_density_diagnostic(service: Variant, samples: Array) -> Dictionary:
+	var owner_sample := _xl_land_owner_sample(samples)
+	if owner_sample.is_empty():
+		return {
+			"schema_id": "native_random_map_homm3_owner_xl_land_density_diagnostic_v1",
+			"status": "no_matching_owner_sample",
+			"expected_sample": "parsed owner Extra Large land surface H3M, preferring owner_discovered_xl_nowater",
+			"comparison_policy": "diagnostic_only_not_exact_parity_gate",
+		}
+	var config := ScenarioSelectRulesScript.build_random_map_player_config(
+		"production-parity-audit-xl-10184",
+		"",
+		"",
+		5,
+		"land",
+		false,
+		"homm3_extra_large",
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
+	)
+	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "owner_xl_land_density_diagnostic"})
+	var normalized: Dictionary = generated.get("normalized_config", {}) if generated.get("normalized_config", {}) is Dictionary else {}
+	if not bool(generated.get("ok", false)):
+		return {
+			"schema_id": "native_random_map_homm3_owner_xl_land_density_diagnostic_v1",
+			"status": "native_generation_failed",
+			"owner_sample_id": String(owner_sample.get("id", "")),
+			"template_id": String(normalized.get("template_id", "")),
+			"profile_id": String(normalized.get("profile_id", "")),
+			"full_generation_status": String(generated.get("full_generation_status", "")),
+			"validation_status": String(generated.get("validation_status", "")),
+			"error": generated.get("validation_report", generated),
+			"comparison_policy": "diagnostic_only_not_exact_parity_gate",
+		}
+	var adoption: Dictionary = service.convert_generated_payload(generated, {
+		"feature_gate": "native_rmg_owner_xl_land_density_diagnostic",
+		"session_save_version": 9,
+		"scenario_id": "native_rmg_owner_xl_land_density_diagnostic",
+	})
+	if not bool(adoption.get("ok", false)):
+		return {
+			"schema_id": "native_random_map_homm3_owner_xl_land_density_diagnostic_v1",
+			"status": "native_package_conversion_failed",
+			"owner_sample_id": String(owner_sample.get("id", "")),
+			"template_id": String(normalized.get("template_id", "")),
+			"profile_id": String(normalized.get("profile_id", "")),
+			"full_generation_status": String(generated.get("full_generation_status", "")),
+			"validation_status": String(generated.get("validation_status", "")),
+			"error": adoption,
+			"comparison_policy": "diagnostic_only_not_exact_parity_gate",
+		}
+	var map_document: Variant = adoption.get("map_document", null)
+	if map_document == null:
+		return {
+			"schema_id": "native_random_map_homm3_owner_xl_land_density_diagnostic_v1",
+			"status": "native_package_conversion_failed",
+			"reason": "missing_map_document",
+			"owner_sample_id": String(owner_sample.get("id", "")),
+			"template_id": String(normalized.get("template_id", "")),
+			"profile_id": String(normalized.get("profile_id", "")),
+			"comparison_policy": "diagnostic_only_not_exact_parity_gate",
+		}
+	var native := _native_package_metrics(map_document)
+	var owner_counts: Dictionary = owner_sample.get("counts_by_category", {}) if owner_sample.get("counts_by_category", {}) is Dictionary else {}
+	var native_counts: Dictionary = native.get("counts_by_owner_category", {}) if native.get("counts_by_owner_category", {}) is Dictionary else {}
+	var owner_object_count := int(owner_sample.get("object_count", 0))
+	var native_object_count := int(native.get("object_count", 0))
+	var owner_guard_count := int(owner_counts.get("guard", 0))
+	var native_guard_count := int(native.get("guard_count", 0))
+	var owner_town_count := int(owner_counts.get("town", 0))
+	var native_town_count := int(native.get("town_count", 0))
+	var owner_road_count := int(owner_sample.get("road_cell_count_total", 0))
+	var native_road_count := int(native.get("road_cell_count_total", 0))
+	var category_density := _category_density_comparison(owner_counts, native_counts)
+	var semantic_comparison := _semantic_layout_comparison(
+		owner_sample.get("semantic_layout", {}) if owner_sample.get("semantic_layout", {}) is Dictionary else {},
+		native.get("semantic_layout", {}) if native.get("semantic_layout", {}) is Dictionary else {}
+	)
+	var density_ratios := {
+		"object_count_ratio": _count_ratio(native_object_count, owner_object_count),
+		"guard_count_ratio": _count_ratio(native_guard_count, owner_guard_count),
+		"town_count_ratio": _count_ratio(native_town_count, owner_town_count),
+		"road_cell_count_ratio": _count_ratio(native_road_count, owner_road_count),
+	}
+	var actionable_gaps := _xl_density_actionable_gaps(density_ratios, category_density, semantic_comparison)
+	return {
+		"schema_id": "native_random_map_homm3_owner_xl_land_density_diagnostic_v1",
+		"status": "diagnosed",
+		"comparison_policy": "diagnostic_only_not_exact_parity_gate",
+		"scope_boundary": "The owner XL no-water sample may come from a different HoMM3 template/player-count setup than the native Extra Large default; use this to target density and guard/obstacle work, not as exact parity proof.",
+		"owner_sample_id": String(owner_sample.get("id", "")),
+		"owner_sample_path": String(owner_sample.get("path", "")),
+		"template_id": String(normalized.get("template_id", "")),
+		"profile_id": String(normalized.get("profile_id", "")),
+		"size_class_id": String(normalized.get("size_class_id", "")),
+		"water_mode": String(normalized.get("water_mode", "")),
+		"level_count": int(normalized.get("level_count", 0)),
+		"player_count": int((normalized.get("player_constraints", {}) as Dictionary).get("player_count", 0)) if normalized.get("player_constraints", {}) is Dictionary else 0,
+		"full_generation_status": String(generated.get("full_generation_status", "")),
+		"validation_status": String(generated.get("validation_status", "")),
+		"owner": {
+			"object_count": owner_object_count,
+			"town_count": owner_town_count,
+			"guard_count": owner_guard_count,
+			"road_cell_count_total": owner_road_count,
+			"counts_by_category": owner_counts,
+		},
+		"native": {
+			"package_object_count": native_object_count,
+			"generated_object_count": (generated.get("object_placements", []) as Array).size() if generated.get("object_placements", []) is Array else 0,
+			"town_count": native_town_count,
+			"guard_count": native_guard_count,
+			"road_cell_count_total": native_road_count,
+			"counts_by_owner_category": native_counts,
+		},
+		"deltas_vs_owner": {
+			"object_count_delta": native_object_count - owner_object_count,
+			"town_count_delta": native_town_count - owner_town_count,
+			"guard_count_delta": native_guard_count - owner_guard_count,
+			"road_cell_count_delta": native_road_count - owner_road_count,
+		},
+		"density_ratios": density_ratios,
+		"category_density_comparison": category_density,
+		"semantic_layout_comparison": semantic_comparison,
+		"actionable_gap_count": actionable_gaps.size(),
+		"actionable_gaps": actionable_gaps,
+	}
+
+func _xl_land_owner_sample(samples: Array) -> Dictionary:
+	var fallback := {}
+	for sample_value in samples:
+		if not (sample_value is Dictionary):
+			continue
+		var sample: Dictionary = sample_value
+		if not bool(sample.get("readable", false)) or String(sample.get("metric_parse_status", "")) != "parsed":
+			continue
+		if String(sample.get("size_class_id", "")) != "homm3_extra_large":
+			continue
+		if String(sample.get("expected_water_mode", "")) != "land":
+			continue
+		if int(sample.get("level_count", 0)) != 1:
+			continue
+		if String(sample.get("id", "")) == "owner_discovered_xl_nowater":
+			return sample
+		if fallback.is_empty() or int(sample.get("object_count", 0)) > int(fallback.get("object_count", 0)):
+			fallback = sample
+	return fallback
+
+func _category_density_comparison(owner_counts: Dictionary, native_counts: Dictionary) -> Dictionary:
+	var category_comparison := _category_count_comparison(owner_counts, native_counts)
+	var by_category: Dictionary = category_comparison.get("by_category", {}) if category_comparison.get("by_category", {}) is Dictionary else {}
+	for category_value in by_category.keys():
+		var category := String(category_value)
+		var record: Dictionary = by_category.get(category, {}) if by_category.get(category, {}) is Dictionary else {}
+		record["native_to_owner_ratio"] = _count_ratio(int(record.get("native_count", 0)), int(record.get("owner_count", 0)))
+		by_category[category] = record
+	category_comparison["by_category"] = by_category
+	return category_comparison
+
+func _xl_density_actionable_gaps(density_ratios: Dictionary, category_density: Dictionary, semantic_comparison: Dictionary) -> Array:
+	var gaps := []
+	if float(density_ratios.get("object_count_ratio", 1.0)) < 0.75:
+		gaps.append("native_xl_package_object_density_below_owner_floor")
+	if float(density_ratios.get("guard_count_ratio", 1.0)) < 0.75:
+		gaps.append("native_xl_guard_density_below_owner_floor")
+	if float(density_ratios.get("road_cell_count_ratio", 1.0)) < 0.75:
+		gaps.append("native_xl_road_density_below_owner_floor")
+	var by_category: Dictionary = category_density.get("by_category", {}) if category_density.get("by_category", {}) is Dictionary else {}
+	for category_value in ["decoration", "object", "reward"]:
+		var category := String(category_value)
+		var record: Dictionary = by_category.get(category, {}) if by_category.get(category, {}) is Dictionary else {}
+		if int(record.get("owner_count", 0)) > 0 and float(record.get("native_to_owner_ratio", 1.0)) < 0.75:
+			gaps.append("native_xl_%s_density_below_owner_floor" % category)
+	var semantic_status := String(semantic_comparison.get("status", ""))
+	if semantic_status != "semantic_layout_match":
+		gaps.append("native_xl_semantic_layout_gap")
+	return gaps
+
+func _count_ratio(native_count: int, owner_count: int) -> float:
+	if owner_count <= 0:
+		return 1.0 if native_count <= 0 else 999.0
+	return float(native_count) / float(owner_count)
 
 func _category_count_comparison(owner_counts: Dictionary, native_counts: Dictionary) -> Dictionary:
 	var category_lookup := {}
