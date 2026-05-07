@@ -31,6 +31,41 @@ Persistent guardrail: do not import generated PNGs or generated-study derivative
 
 Recently completed owner-directed RMG corrective slice:
 
+id: `native-rmg-owner-xl-land-corpus-road-topology-gate-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `completed`
+purpose: Promote the uploaded XL no-water single-level owner sample into the hard owner-corpus native comparison gate and correct the package road count/topology gap exposed by that gate.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- local owner evidence under `maps/h3m-maps/XL-nowater.h3m`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- `owner_discovered_xl_nowater` is mapped to the player-facing native catalog-auto XL land comparison path.
+- The owner-corpus hard mapped comparison increases from five to six passing mapped samples, with unmapped parsed samples reduced to 15.
+- Native XL land package counts match owner evidence for package objects, towns, guards, and road cells.
+- Native XL land road component sizes match owner topology for the uploaded sample: `[485, 188, 54]`.
+- Existing representative auto-template and production-audit gates remain passing without claiming broad production parity.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No broad XL water/islands or two-level parity claim.
+- No full HoMM3 production parity claim; 15 parsed uploaded samples remain unmapped.
+- No HoMM3 copyrighted asset/DEF import.
+validationResults:
+- Native GDExtension rebuilt successfully with `cmake --build .artifacts/map_persistence_native_build --parallel 2`.
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` passed with six mapped comparisons passing; the XL no-water mapped comparison reports zero deltas for object, town, guard, and road counts, road component sizes `[485, 188, 54]`, and `semantic_layout_match`.
+- `tests/native_random_map_auto_template_batch_report.tscn` passed; `xl_land_seed_a` reports 5,365 package objects, 4,734 generated objects, 12 towns, 619 guards, 727 road cells, and nearest town distance 41.
+- `tests/native_random_map_production_parity_completion_audit_report.tscn` passed with `production_ready false`, `mapped_owner_sample_exact_parity true`, `full_homm3_style_parity false`, and `broad_owner_h3m_comparison_corpus false`.
+- `python3 tests/validate_repo.py`, `jq empty ops/progress.json`, and `git diff --check` passed.
+
+Recently completed owner-directed RMG corrective slice:
+
 id: `native-rmg-owner-large-land-corpus-road-topology-gate-10184`
 phase: `phase-3-homm3-style-rmg-rework`
 status: `completed`
