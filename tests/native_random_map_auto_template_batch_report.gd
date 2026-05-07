@@ -13,6 +13,7 @@ const CASES := [
 	{"id": "small_underground_seed_a", "seed": "auto-template-batch-small-underground-a-10184", "size_class_id": "homm3_small", "player_count": 3, "water_mode": "land", "underground": true},
 	{"id": "medium_land_seed_a", "seed": "auto-template-batch-medium-land-a-10184", "size_class_id": "homm3_medium", "player_count": 4, "water_mode": "land", "underground": false},
 	{"id": "medium_land_seed_b", "seed": "auto-template-batch-medium-land-b-10184", "size_class_id": "homm3_medium", "player_count": 4, "water_mode": "land", "underground": false},
+	{"id": "medium_normal_water_seed_a", "seed": "auto-template-batch-medium-normal-water-a-10184", "size_class_id": "homm3_medium", "player_count": 4, "water_mode": "normal_water", "underground": false},
 	{"id": "medium_islands_seed_a", "seed": "auto-template-batch-medium-islands-a-10184", "size_class_id": "homm3_medium", "player_count": 4, "water_mode": "islands", "underground": false},
 	{"id": "medium_islands_seed_b", "seed": "auto-template-batch-medium-islands-b-10184", "size_class_id": "homm3_medium", "player_count": 4, "water_mode": "islands", "underground": false},
 	{"id": "large_land_seed_a", "seed": "auto-template-batch-large-land-a-10184", "size_class_id": "homm3_large", "player_count": 4, "water_mode": "land", "underground": false},
@@ -154,6 +155,10 @@ func _run_case(service: Variant, catalog: Dictionary, case_record: Dictionary) -
 	if object_count <= 0 or road_cells <= 0:
 		_fail("%s auto-template package surface was empty: objects=%d road_cells=%d." % [String(case_record.get("id", "")), object_count, road_cells])
 		return {}
+	var water_tile_count := _package_water_tile_count(map_document)
+	if String(case_record.get("water_mode", "land")) == "normal_water" and water_tile_count <= 0:
+		_fail("%s normal-water auto-template package produced no water tiles." % String(case_record.get("id", "")))
+		return {}
 	var generated_object_count := int(generated.get("object_placements", []).size())
 	var generated_floor := _generated_object_density_floor(String(case_record.get("size_class_id", "")))
 	var package_floor := _package_object_density_floor(String(case_record.get("size_class_id", "")))
@@ -189,7 +194,35 @@ func _run_case(service: Variant, catalog: Dictionary, case_record: Dictionary) -
 		"package_object_count": object_count,
 		"package_object_density_floor": package_floor,
 		"package_road_cell_count": road_cells,
+		"package_water_tile_count": water_tile_count,
 	}
+
+func _package_water_tile_count(map_document: Variant) -> int:
+	var terrain_layers: Dictionary = map_document.get_terrain_layers()
+	var terrain: Dictionary = terrain_layers.get("terrain", {}) if terrain_layers.get("terrain", {}) is Dictionary else {}
+	var levels: Array = terrain.get("levels", []) if terrain.get("levels", []) is Array else []
+	var ids_by_code: Variant = terrain_layers.get("terrain_id_by_code", [])
+	var water_count := 0
+	for level in levels:
+		var codes := _terrain_codes_for_level(level)
+		for code_value in codes:
+			var code := int(code_value)
+			if (ids_by_code is Array or ids_by_code is PackedStringArray) and code >= 0 and code < ids_by_code.size() and String(ids_by_code[code]) == "water":
+				water_count += 1
+	return water_count
+
+func _terrain_codes_for_level(level: Variant) -> Array:
+	if level is Dictionary:
+		var value: Variant = level.get("terrain_code_u16", [])
+		if value is PackedInt32Array:
+			return Array(value)
+		if value is Array:
+			return value
+	if level is PackedInt32Array:
+		return Array(level)
+	if level is Array:
+		return level
+	return []
 
 func _generated_object_density_floor(size_class_id: String) -> int:
 	match size_class_id:
@@ -222,9 +255,9 @@ func _town_spacing_floor(size_class_id: String) -> int:
 		"homm3_medium":
 			return 10
 		"homm3_large":
-			return 12
+			return 32
 		"homm3_extra_large":
-			return 12
+			return 36
 	return 8
 
 func _nearest_town_manhattan(town_records: Array) -> int:
@@ -295,6 +328,8 @@ func _catalog_constraints_allow(case_record: Dictionary, template: Dictionary) -
 	var water_mode := String(case_record.get("water_mode", "land"))
 	if water_mode == "islands":
 		return "islands" in water_modes or "islands_size_score_halved" in water_modes
+	if water_mode == "normal_water":
+		return "normal_water" in water_modes or "islands_size_score_halved" in water_modes
 	return water_modes.is_empty() or "land" in water_modes
 
 func _setup_has_not_implemented_failure(setup: Dictionary) -> bool:

@@ -190,6 +190,7 @@ const RANDOM_MAP_SIZE_OPTIONS := [
 ]
 const RANDOM_MAP_WATER_OPTIONS := [
 	{"id": "land", "label": "Land"},
+	{"id": "normal_water", "label": "Normal Water"},
 	{"id": "islands", "label": "Islands"},
 ]
 const RANDOM_MAP_PLAYER_RETRY_POLICY := {
@@ -438,7 +439,7 @@ static func random_map_player_setup_options() -> Dictionary:
 static func _random_map_player_facing_water_options() -> Array:
 	var options := []
 	for option in RANDOM_MAP_WATER_OPTIONS:
-		if option is Dictionary and String(option.get("id", "")) in ["land", "islands"]:
+		if option is Dictionary and String(option.get("id", "")) in ["land", "normal_water", "islands"]:
 			options.append(option.duplicate(true))
 	return options
 
@@ -652,7 +653,7 @@ static func build_random_map_player_config(
 			player_count,
 			int(size_defaults.get("player_count", template_option.get("player_count", 3)))
 		)
-	var normalized_water_mode := "islands" if water_mode == "islands" else "land"
+	var normalized_water_mode := "normal_water" if water_mode == "normal_water" else ("islands" if water_mode == "islands" else "land")
 	var level_count := 2 if underground_enabled else 1
 	var materialization_available := bool(size_option.get("materialization_available", false))
 	var runtime_policy_status := String(size_option.get("runtime_policy", "blocked_source_size_exceeds_current_144x144x2_cap"))
@@ -1968,8 +1969,11 @@ static func _water_modes_from_catalog_template(template: Dictionary) -> Array:
 		var mode := String(mode_value)
 		if mode == "land":
 			result["land"] = true
+		elif mode == "normal_water":
+			result["normal_water"] = true
 		elif mode.contains("islands"):
 			result["islands"] = true
+			result["normal_water"] = true
 	if result.is_empty():
 		result["land"] = true
 	return _sorted_string_keys(result)

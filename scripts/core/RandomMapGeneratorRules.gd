@@ -12755,6 +12755,8 @@ static func _water_mode_supported(requested_water_mode: String, supported_water_
 		return true
 	if requested_water_mode == "islands" and "islands_size_score_halved" in supported_water_modes:
 		return true
+	if requested_water_mode == "normal_water" and "islands_size_score_halved" in supported_water_modes:
+		return true
 	return false
 
 static func _normalize_water_mode(value: Variant) -> String:
@@ -12762,6 +12764,8 @@ static func _normalize_water_mode(value: Variant) -> String:
 	match mode:
 		"land", "none", "dry":
 			return "land"
+		"normal_water", "normalwater", "normal-water", "normal water":
+			return "normal_water"
 		"island", "islands", "water", "mixed":
 			return "islands"
 		_:
@@ -13164,7 +13168,15 @@ static func _seeds_for_layout_level(seeds: Dictionary, width: int, height: int, 
 
 static func _water_cells_for_level(width: int, height: int, water_mode: String, level_index: int) -> Array:
 	var cells := []
-	if water_mode != "islands" or level_index != 0:
+	if water_mode not in ["islands", "normal_water"] or level_index != 0:
+		return cells
+	if water_mode == "normal_water":
+		for y in range(height):
+			for x in range(width):
+				var centered_x := abs(float(x) - float(width - 1) * 0.5) / max(1.0, float(width))
+				var centered_y := abs(float(y) - float(height - 1) * 0.5) / max(1.0, float(height))
+				if centered_x + centered_y > 0.42 and ((x * 37 + y * 53 + width * 11 + height * 7) % 5) < 2:
+					cells.append(_point_dict(x, y))
 		return cells
 	for y in range(height):
 		for x in range(width):
@@ -13173,6 +13185,14 @@ static func _water_cells_for_level(width: int, height: int, water_mode: String, 
 	return cells
 
 static func _water_policy_payload(water_mode: String, water_cell_count: int) -> Dictionary:
+	if water_mode == "normal_water":
+		return {
+			"requested": true,
+			"mode": "normal_water",
+			"supported_now": true,
+			"surface_water_cell_count": water_cell_count,
+			"implementation_state": "surface_mixed_water_marks broad lakes while preserving land route materialization records",
+		}
 	if water_mode == "islands":
 		return {
 			"requested": true,

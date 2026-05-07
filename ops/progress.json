@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-owner-corpus-terrain-water-mode-audit-10184",
-  "currentSliceTitle": "native rmg owner corpus terrain water mode audit 10184",
+  "currentSliceId": "native-rmg-normal-water-mode-support-10184",
+  "currentSliceTitle": "native rmg normal water mode support 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Owner-corpus schema v5 now records parsed terrain water/rock ratios, terrain-inferred water mode, and explicit label/inference conflicts for uploaded H3M samples. Validation passed with 21 readable/parsed samples; S-RandomNumberofplayers resolves to land from terrain, M-NormalW-4players remains normal_water with 0.402 surface water ratio, XL-water-2levels records a normal_water label versus islands terrain conflict, and corpus_ready remains false for template_breadth_corpus plus object_instance_tail_count_mismatch_samples.",
+  "currentSliceNotes": "Normal-water random map requests now remain distinct from land in player-facing setup, GDScript normalization, native normalization, catalog support, and terrain shaping. Validation passed with native auto-template batch including medium_normal_water_seed_a: normal_water preserved, translated_rmg_template_039_v1/profile_039_v1 selected, package conversion passed, and 1,582 package water tiles materialized. Production parity remains unclaimed until owner normal-water comparison/tuning is added.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-07T05:16:17Z",
+  "updatedAt": "2026-05-07T05:38:12Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -13705,9 +13705,38 @@
       "startedAt": "2026-05-07T05:16:17Z",
       "completedAt": "2026-05-07T05:16:17Z",
       "notes": "Owner-corpus schema v5 now exposes parsed H3M terrain water/rock ratios, terrain-inferred water mode, and label/inference conflicts while preserving explicit filename labels. Validation passed with 21 readable/parsed samples; owner_discovered_s_randomnumberofplayers resolves to terrain-inferred land, owner_discovered_m_normalw_4players remains normal_water with 0.402 surface water ratio, owner_discovered_xl_water_2levels records a normal_water label versus islands terrain conflict, and corpus_ready remains false for template_breadth_corpus plus object_instance_tail_count_mismatch_samples."
+    },
+    {
+      "id": "native-rmg-normal-water-mode-support-10184",
+      "title": "native rmg normal water mode support 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-07T05:38:12Z",
+      "startedAt": "2026-05-07T05:38:12Z",
+      "completedAt": "2026-05-07T05:38:12Z",
+      "notes": "Normal-water random map requests now remain distinct from land across player-facing setup, GDScript normalization, native normalization, catalog support, and native terrain shaping. Validation passed with native auto-template batch including medium_normal_water_seed_a: normal_water preserved, translated_rmg_template_039_v1/profile_039_v1 selected, validation/package conversion passed, and 1,582 package water tiles materialized. This does not claim normal-water owner-H3M parity; direct owner comparison/tuning remains pending."
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-normal-water-mode-support-10184",
+      "title": "Native RMG Normal Water Mode Support",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "completedAt": "2026-05-07T05:38:12Z",
+      "evidence": [
+        "Player-facing setup now exposes Normal Water as a separate water mode.",
+        "GDScript and native config normalization preserve normal_water instead of coercing it to land.",
+        "Native catalog support accepts normal_water for water-capable translated templates, and native terrain shaping uses mixed-water land fractions distinct from islands.",
+        "The native auto-template batch now includes medium_normal_water_seed_a and proves it generated a package with 1,582 water tiles.",
+        "Normal-water owner-H3M parity remains pending; this slice only creates the first-class mode needed for comparison/tuning."
+      ],
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 passed.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_auto_template_batch_report.tscn passed with 11 cases and medium_normal_water_seed_a validation/package conversion passing.",
+        "python3 tests/validate_repo.py passed.",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn was attempted and still fails on an existing generated-session launch handoff nil path in ScenarioSelectRules.gd."
+      ]
+    },
     {
       "id": "native-rmg-owner-corpus-terrain-water-mode-audit-10184",
       "title": "Native RMG Owner Corpus Terrain Water Mode Audit",

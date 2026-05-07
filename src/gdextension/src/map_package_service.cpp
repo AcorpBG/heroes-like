@@ -1575,6 +1575,16 @@ String choose_terrain_for_cell(int32_t x, int32_t y, int32_t level, const Array 
 	if (level == 0 && water_mode == "islands" && (x == 0 || y == 0 || x == width - 1 || y == height - 1)) {
 		return "water";
 	}
+	if (level == 0 && water_mode == "normal_water") {
+		const double centered_x = std::abs(double(x) - double(width - 1) * 0.5) / double(std::max(1, width));
+		const double centered_y = std::abs(double(y) - double(height - 1) * 0.5) / double(std::max(1, height));
+		if (centered_x + centered_y > 0.42) {
+			const uint32_t water_jitter = hash32_int(String(normalized.get("normalized_seed", "0")) + String(":normal_water:") + String::num_int64(x) + String(":") + String::num_int64(y));
+			if ((water_jitter % 5U) < 2U) {
+				return "water";
+			}
+		}
+	}
 	if (level > 0 && array_has_string(terrain_pool, "underground")) {
 		return "underground";
 	}
@@ -2463,7 +2473,11 @@ bool catalog_template_supports_config(const Dictionary &template_record, const D
 	Dictionary map_support = template_record.get("map_support", Dictionary());
 	Array water_modes = map_support.get("water_modes", Array());
 	const String water_mode = String(normalized.get("water_mode", "land"));
-	const bool water_supported = water_mode == "islands" ? array_has_string(water_modes, "islands") || array_has_string(water_modes, "islands_size_score_halved") : array_has_string(water_modes, "land");
+	const bool water_supported = water_mode == "islands"
+		? array_has_string(water_modes, "islands") || array_has_string(water_modes, "islands_size_score_halved")
+		: (water_mode == "normal_water"
+				  ? array_has_string(water_modes, "normal_water") || array_has_string(water_modes, "islands_size_score_halved")
+				  : array_has_string(water_modes, "land"));
 	if (!water_modes.is_empty() && !water_supported) {
 		Dictionary diagnostic;
 		diagnostic["code"] = "template_water_mode_unsupported";
@@ -4774,7 +4788,7 @@ bool native_rmg_translated_catalog_structural_profile_supported(const Dictionary
 	const String profile_id = String(normalized.get("profile_id", ""));
 	const String size_class_id = String(normalized.get("size_class_id", ""));
 	const String water_mode = String(normalized.get("water_mode", "land"));
-	if ((water_mode != "land" && water_mode != "islands") || level_count < 1 || level_count > 2 || player_count < 2 || player_count > 8) {
+	if ((water_mode != "land" && water_mode != "normal_water" && water_mode != "islands") || level_count < 1 || level_count > 2 || player_count < 2 || player_count > 8) {
 		return false;
 	}
 	if (!template_id.begins_with("translated_rmg_template_") || !profile_id.begins_with("translated_rmg_profile_")) {
@@ -12894,6 +12908,23 @@ double island_land_fraction_for_zone(const Dictionary &zone) {
 	return 0.22;
 }
 
+double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Dictionary &zone) {
+	if (String(normalized.get("water_mode", "land")) != "normal_water") {
+		return island_land_fraction_for_zone(zone);
+	}
+	const String role = String(zone.get("role", ""));
+	if (role.contains("start")) {
+		return 0.70;
+	}
+	if (role == "junction") {
+		return 0.64;
+	}
+	if (role == "treasure" || role == "neutral") {
+		return 0.56;
+	}
+	return 0.60;
+}
+
 int32_t count_lookup_cells_for_zone(const Dictionary &lookup, const Array &owner_grid, const String &zone_id) {
 	int32_t count = 0;
 	Array keys = lookup.keys();
@@ -13035,7 +13066,7 @@ Dictionary island_land_water_shape(const Dictionary &normalized, const Dictionar
 			const String zone_id = String(zone.get("id", ""));
 			const int32_t cell_count = std::max(0, int32_t(zone.get("cell_count", 0)));
 			const int32_t target_area = std::max(1, int32_t(zone.get("target_area", cell_count)));
-			const double land_fraction = island_land_fraction_for_zone(zone);
+			const double land_fraction = water_shape_land_fraction_for_zone(normalized, zone);
 			const int32_t required_land = count_lookup_cells_for_zone(protected_land, owner_grid, zone_id);
 			int32_t requested_quota = std::max(1, int32_t(std::llround(double(target_area) * land_fraction)));
 			requested_quota = std::min(std::max(1, cell_count), requested_quota);
@@ -13126,7 +13157,9 @@ Dictionary island_land_water_shape(const Dictionary &normalized, const Dictionar
 	shape["zone_targets"] = zone_targets;
 	shape["diagnostics"] = diagnostics;
 	shape["diagnostic_count"] = diagnostics.size();
-	shape["policy"] = "water-dominant islands derive land from runtime zone semantics while preserving already-generated load-bearing surfaces as explicit required land";
+	shape["policy"] = String(normalized.get("water_mode", "land")) == "normal_water"
+		? "normal-water maps derive mixed water from runtime zone semantics while preserving broad connected land around starts, roads, objects, and guards"
+		: "water-dominant islands derive land from runtime zone semantics while preserving already-generated load-bearing surfaces as explicit required land";
 	shape["land_lookup"] = land_lookup;
 	return shape;
 }
@@ -13284,7 +13317,8 @@ Dictionary generate_terrain_grid(const Dictionary &normalized, const Dictionary 
 	Dictionary aggregate_counts;
 	const PackedStringArray ids_by_code = terrain_id_by_code();
 	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
-	const bool use_island_shape = parity_targets.is_empty() && String(normalized.get("water_mode", "land")) == "islands" && !zone_layout.is_empty() && !road_network.is_empty();
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	const bool use_island_shape = parity_targets.is_empty() && (water_mode == "islands" || water_mode == "normal_water") && !zone_layout.is_empty() && !road_network.is_empty();
 	const bool use_land_boundary_shape = land_boundary_barriers_enabled(normalized, zone_layout);
 	Dictionary island_shape = use_island_shape ? island_land_water_shape(normalized, zone_layout, player_starts, road_network, object_placement, town_guard_placement) : Dictionary();
 	Dictionary island_land_lookup = island_shape.get("land_lookup", Dictionary());
@@ -15761,7 +15795,10 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	}
 	String profile_id = normalized_text(profile, "id", normalized_text(config, "profile_id", ""));
 	String water_mode = normalized_text(size, "water_mode", normalized_text(config, "water_mode", "land"));
-	if (water_mode != "islands") {
+	if (water_mode == "normalwater" || water_mode == "normal-water" || water_mode == "normal water") {
+		water_mode = "normal_water";
+	}
+	if (water_mode != "islands" && water_mode != "normal_water") {
 		water_mode = "land";
 	}
 	Dictionary player_constraints = normalized_player_constraints(config);
