@@ -603,3 +603,25 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_timing_full --allow-failures --failure-limit 2` now reports the same closure-shape blocker through the Python-only full gate without starting Godot.
 
 This is not a parser problem and not a reason to go back to Godot report scenes. It shows that the next generator work should open guarded crossings in terrain/blocker shape and let route guards close those openings, instead of relying on permanent blocker/terrain over-closure.
+
+## Implemented Guard-Mediated Package Route Shape
+
+The closure-shape gap had two package-materialization causes:
+
+- route guards were exporting broad route-edge coverage as `package_body_tiles`, so the Python object-only topology correctly treated guard bodies as permanent blockers before guard control mattered;
+- decorative/scenic package block masks could still occupy the viable town-route corridor, leaving no object-only path for guards to close.
+
+Package adoption now separates those roles:
+
+- guard `package_body_tiles` are narrowed to the primary stack tile, while the wider guard route/control mask remains in `package_block_tiles`;
+- generated package conversion materializes town-pair corridors by cutting only decorative/scenic block masks along terrain-valid paths;
+- nearby guards receive package-only closure masks on those corridors, so object-only paths are reachable and guarded paths close.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- A focused two-case probe for `s_2playerss_normalwater_2level` and `l_nowater_randomplayers_nounder` exported `2/2` packages. Python validation with `--closure-shape-gate` passed with `0` closure-shape gaps. The native semantic summaries changed to object-only/guarded reachable pairs of `6/0` and `15/0`.
+- The known 13-case closure failure set exported `13/13` packages, and `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_guard_body_closure_cases --closure-shape-gate --allow-failures --summary --failure-limit 8` passed with `0` parse/native/density/policy/topology/closure gaps.
+- The remaining five owner cases exported `5/5` packages. Combined with the 13-case set into `.artifacts/rmg_native_batch_export_guard_body_full`, `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_guard_body_full --failure-limit 8` passed with `18/18` owner H3Ms, `18/18` native AMAPs, `18` matched comparisons, total parse time about `11.414s`, and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+
+This clears the current fast guard-mediated closure blocker. It does not close full production RMG parity: visual quality, exact game-feel parity, generated-object semantics, performance, and broader owner corpus coverage remain active production work.
