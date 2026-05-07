@@ -14085,13 +14085,26 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	const int32_t owner_medium_town_limit = owner_attached_medium_001_category_target(normalized, "town");
 	const int32_t owner_large_town_limit = owner_large_land_category_target(normalized, "town");
 	const int32_t owner_xl_town_limit = owner_xl_land_category_target(normalized, "town");
-	const int32_t effective_town_limit = parity_town_limit >= 0 ? parity_town_limit : (owner_small_random_land_town_limit >= 0 ? owner_small_random_land_town_limit : (owner_small_normal_water_2level_town_limit >= 0 ? owner_small_normal_water_2level_town_limit : (owner_small_islands_2level_town_limit >= 0 ? owner_small_islands_2level_town_limit : (owner_medium_town_limit >= 0 ? owner_medium_town_limit : (owner_large_town_limit >= 0 ? owner_large_town_limit : owner_xl_town_limit)))));
+	const int32_t generated_catalog_town_floor = native_catalog_auto_generated_town_floor(normalized, starts.size());
+	const int32_t effective_town_limit = parity_town_limit >= 0 ? parity_town_limit : (owner_small_random_land_town_limit >= 0 ? owner_small_random_land_town_limit : (owner_small_normal_water_2level_town_limit >= 0 ? owner_small_normal_water_2level_town_limit : (owner_small_islands_2level_town_limit >= 0 ? owner_small_islands_2level_town_limit : (owner_medium_town_limit >= 0 ? owner_medium_town_limit : (owner_large_town_limit >= 0 ? owner_large_town_limit : (owner_xl_town_limit >= 0 ? owner_xl_town_limit : (generated_catalog_town_floor > 0 ? generated_catalog_town_floor : -1)))))));
+	const int32_t generated_catalog_underground_town_floor = generated_catalog_town_floor > 0 && level_count > 1 && String(normalized.get("water_mode", "land")) == "land"
+			? std::max<int32_t>(1, (generated_catalog_town_floor * 30) / 100)
+			: 0;
 	append_extension_profile_phase(town_guard_profile_phases, "setup", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	int32_t town_ordinal = 0;
 	int32_t required_attempt_count = 0;
 	int32_t density_attempt_count = 0;
 	int32_t placed_required_count = 0;
 	int32_t placed_density_count = 0;
+	auto current_underground_town_count = [&]() {
+		int32_t count = 0;
+		for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+			if (Variant(towns[town_index]).get_type() == Variant::DICTIONARY && int32_t(Dictionary(towns[town_index]).get("level", 0)) > 0) {
+				++count;
+			}
+		}
+		return count;
+	};
 
 		auto append_town_attempt = [&](const Dictionary &zone, const Dictionary &start, const String &owner_scope, const String &settlement_kind, bool density, int32_t source_value, const String &record_type, const String &phase_label, int32_t local_ordinal) {
 			const String zone_id = String(zone.get("id", ""));
@@ -14288,6 +14301,31 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 					diagnostic["policy"] = "two-level owner normal-water layouts may place the supplemental neutral town on underground when the surface cannot satisfy the strict town-spacing floor";
 					town_diagnostics.append(diagnostic);
 					break;
+				}
+			}
+			if (!point.is_empty()
+					&& generated_catalog_underground_town_floor > 0
+					&& owner_scope != "player"
+					&& int32_t(point.get("level", 0)) == 0
+					&& current_underground_town_count() < generated_catalog_underground_town_floor) {
+				const int32_t target_x = int32_t(point.get("x", 0));
+				const int32_t target_y = int32_t(point.get("y", 0));
+				if (!town_search_occupied.has(level_point_key(target_x, target_y, 1))
+						&& !occupied.has(level_point_key(target_x, target_y, 1))
+						&& point_far_from_towns_on_level(towns, target_x, target_y, 1, preferred_spacing)) {
+					Dictionary underground_point = point.duplicate(true);
+					underground_point["level"] = 1;
+					point = underground_point;
+					Dictionary move_diagnostic;
+					move_diagnostic["code"] = "native_catalog_auto_land_neutral_town_moved_to_underground_share";
+					move_diagnostic["severity"] = "info";
+					move_diagnostic["zone_id"] = zone_id;
+					move_diagnostic["record_type"] = record_type;
+					move_diagnostic["candidate_point"] = point;
+					move_diagnostic["target_underground_town_count"] = generated_catalog_underground_town_floor;
+					move_diagnostic["current_underground_town_count_before"] = current_underground_town_count();
+					move_diagnostic["policy"] = "two-level land catalog-auto maps reserve a neutral-town share underground so surface town-pair topology does not absorb the whole template";
+					town_diagnostics.append(move_diagnostic);
 				}
 			}
 			const int32_t point_level = int32_t(point.get("level", 0));
@@ -14680,7 +14718,6 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			town_diagnostics.append(diagnostic);
 		}
 	}
-	const int32_t generated_catalog_town_floor = native_catalog_auto_generated_town_floor(normalized, starts.size());
 	if (generated_catalog_town_floor > 0 && towns.size() < generated_catalog_town_floor) {
 		subphase_started_at = std::chrono::steady_clock::now();
 		int32_t attempts = 0;
@@ -14690,7 +14727,6 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		const int32_t span_x = std::max(1, width - margin * 2);
 		const int32_t span_y = std::max(1, height - margin * 2);
 		const uint32_t seed_bucket = hash32_int(String(normalized.get("normalized_seed", "0")) + String(":native_catalog_auto_two_level_town_floor"));
-		const int32_t desired_underground_town_count = level_count > 1 ? std::max<int32_t>(1, (generated_catalog_town_floor * 35) / 100) : 0;
 		Dictionary town_floor_used_zones;
 		for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
 			if (Variant(towns[town_index]).get_type() != Variant::DICTIONARY) {
@@ -14701,15 +14737,6 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 				town_floor_used_zones[town_zone_id] = true;
 			}
 		}
-		auto current_underground_town_count = [&]() {
-			int32_t count = 0;
-			for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
-				if (Variant(towns[town_index]).get_type() == Variant::DICTIONARY && int32_t(Dictionary(towns[town_index]).get("level", 0)) > 0) {
-					++count;
-				}
-			}
-			return count;
-		};
 		while (towns.size() < generated_catalog_town_floor && attempts < max_attempts) {
 			Dictionary zone;
 			for (int64_t zone_scan = 0; zone_scan < zones.size(); ++zone_scan) {
@@ -14731,7 +14758,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			const int32_t jitter_y = int32_t(((seed_bucket / 7U) + uint32_t(attempts * 53)) % uint32_t(span_y)) - span_y / 2;
 			const int32_t target_x = std::clamp(anchor_x + jitter_x, margin, width - margin - 1);
 			const int32_t target_y = std::clamp(anchor_y + jitter_y, margin, height - margin - 1);
-			const int32_t target_level = current_underground_town_count() < desired_underground_town_count ? 1 : 0;
+			const int32_t target_level = current_underground_town_count() < generated_catalog_underground_town_floor ? 1 : 0;
 			if (occupied.has(level_point_key(target_x, target_y, target_level))) {
 				++attempts;
 				continue;
