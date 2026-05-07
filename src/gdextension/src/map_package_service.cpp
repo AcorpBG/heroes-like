@@ -8599,6 +8599,9 @@ int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized)
 	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
 	const int32_t area = std::max(1, width * height * level_count);
 	if (size_class_id == "homm3_extra_large") {
+		if (String(normalized.get("water_mode", "land")) == "islands" && level_count <= 1) {
+			return std::max(790, (area * 38) / 1000);
+		}
 		return level_count > 1 ? std::max(620, (area * 15) / 1000) : std::max(420, (area * 20) / 1000);
 	}
 	if (size_class_id == "homm3_large") {
@@ -8618,15 +8621,19 @@ int32_t native_catalog_auto_generated_decoration_floor(const Dictionary &normali
 		return 0;
 	}
 	const String water_mode = String(normalized.get("water_mode", "land"));
-	if (water_mode != "land") {
+	const String size_class_id = String(normalized.get("size_class_id", ""));
+	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
+	const bool xl_single_level_islands = water_mode == "islands" && size_class_id == "homm3_extra_large" && level_count <= 1;
+	if (water_mode != "land" && !xl_single_level_islands) {
 		return 0;
 	}
-	const String size_class_id = String(normalized.get("size_class_id", ""));
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
-	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
 	const int32_t area = std::max(1, width * height * level_count);
 	if (size_class_id == "homm3_extra_large") {
+		if (xl_single_level_islands) {
+			return std::max(2280, (area * 110) / 1000);
+		}
 		return level_count > 1 ? std::max(3200, (area * 78) / 1000) : std::max(3300, (area * 160) / 1000);
 	}
 	if (size_class_id == "homm3_large") {
@@ -15938,6 +15945,19 @@ double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Di
 			&& ((size_class_id == "homm3_extra_large" && level_count > 1)
 					|| (size_class_id == "homm3_large" && level_count <= 1)
 					|| size_class_id == "homm3_medium");
+	if (water_mode == "islands" && size_class_id == "homm3_extra_large" && level_count <= 1) {
+		const String role = String(zone.get("role", ""));
+		if (role.contains("start")) {
+			return 0.70;
+		}
+		if (role == "junction") {
+			return 0.62;
+		}
+		if (role == "treasure" || role == "neutral") {
+			return 0.55;
+		}
+		return 0.58;
+	}
 	if (water_mode != "normal_water" && !sparse_islands_surface_profile) {
 		return island_land_fraction_for_zone(zone);
 	}
@@ -18375,9 +18395,15 @@ Dictionary package_object_route_blocked_lookup_for_level(const Array &objects, c
 
 void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects, const Dictionary &generated_map) {
 	Dictionary terrain_grid = generated_map.get("terrain_grid", Dictionary());
+	Dictionary normalized = generated_map.get("normalized_config", Dictionary());
 	const int32_t width = int32_t(terrain_grid.get("width", generated_map.get("width", 36)));
 	const int32_t height = int32_t(terrain_grid.get("height", generated_map.get("height", 36)));
 	const int32_t level_count = int32_t(terrain_grid.get("level_count", generated_map.get("level_count", 1)));
+	const bool preserve_xl_surface_islands_object_barriers =
+			native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& String(normalized.get("water_mode", "land")) == "islands"
+			&& String(normalized.get("size_class_id", "")) == "homm3_extra_large"
+			&& int32_t(normalized.get("level_count", 1)) <= 1;
 	Dictionary terrain_blocked = package_terrain_blocked_lookup(generated_map);
 	Dictionary cleared_lookup;
 	int32_t corridor_count = 0;
@@ -18408,8 +18434,10 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 				if (path.is_empty()) {
 					continue;
 				}
-				remove_package_block_cells_from_clearable_objects(objects, path, cleared_lookup, level);
-				++corridor_count;
+				if (!preserve_xl_surface_islands_object_barriers) {
+					remove_package_block_cells_from_clearable_objects(objects, path, cleared_lookup, level);
+					++corridor_count;
+				}
 			}
 		}
 		static constexpr int32_t MAX_GUARDED_CLOSURE_PASSES = 24;
