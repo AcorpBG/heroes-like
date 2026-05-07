@@ -73,6 +73,19 @@ func _run() -> void:
 		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
 		_fail("Legacy compact package was not reported as a rejected maps-folder package: %s" % JSON.stringify(index))
 		return
+	var editor_index := ScenarioSelectRulesScript.maps_folder_package_index({
+		"include_non_launchable_generated_packages": true,
+		"consumer": "map_editor_validation",
+	})
+	var compact_editor_entry := _find_package_entry(editor_index.get("entries", []), compact_package_id)
+	if not compact_package_id.is_empty() and compact_editor_entry.is_empty():
+		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+		_fail("Map-editor package index did not expose a loadable generated package rejected by launch validation: %s" % JSON.stringify(editor_index))
+		return
+	if not compact_editor_entry.is_empty() and (bool(compact_editor_entry.get("launchable", true)) or not bool(compact_editor_entry.get("editor_inspection_only", false))):
+		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+		_fail("Map-editor package index did not mark rejected launch packages as inspection-only: %s" % JSON.stringify(compact_editor_entry))
+		return
 
 	var browser_entry := _find_package_entry(ScenarioSelectRulesScript.build_skirmish_browser_entries(), package_id)
 	if browser_entry.is_empty():
@@ -115,6 +128,21 @@ func _run() -> void:
 		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
 		_fail("Map editor did not expose maps-folder package validation loader.")
 		return
+	var initial_editor_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not compact_package_id.is_empty() and compact_package_id not in initial_editor_snapshot.get("map_package_picker_metadata", []):
+		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+		_fail("Map editor picker hid an inspection-only generated package: %s" % JSON.stringify(initial_editor_snapshot))
+		return
+	if not compact_package_id.is_empty() and int(initial_editor_snapshot.get("map_package_index_status", {}).get("editor_inspection_only_count", 0)) <= 0:
+		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+		_fail("Map editor picker did not report inspection-only package entries: %s" % JSON.stringify(initial_editor_snapshot.get("map_package_index_status", {})))
+		return
+	if not compact_package_id.is_empty():
+		var compact_editor_snapshot: Dictionary = shell.call("validation_load_maps_folder_package", compact_package_id)
+		if not bool(compact_editor_snapshot.get("ok", false)):
+			_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+			_fail("Map editor could not inspect-load a generated package rejected by launch validation: %s" % JSON.stringify(compact_editor_snapshot))
+			return
 	var editor_snapshot: Dictionary = shell.call("validation_load_maps_folder_package", package_id)
 	if not bool(editor_snapshot.get("ok", false)):
 		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])

@@ -147,7 +147,10 @@ func _connect_ui() -> void:
 		_map_view.tile_hovered.connect(_on_map_tile_hovered)
 
 func _rebuild_map_package_picker() -> void:
-	_map_package_index_status = ScenarioSelectRulesScript.maps_folder_package_index()
+	_map_package_index_status = ScenarioSelectRulesScript.maps_folder_package_index({
+		"include_non_launchable_generated_packages": true,
+		"consumer": "map_editor",
+	})
 	_map_package_entries = _map_package_index_status.get("entries", []) if _map_package_index_status.get("entries", []) is Array else []
 	_map_package_picker.clear()
 	var selected_index := -1
@@ -160,6 +163,8 @@ func _rebuild_map_package_picker() -> void:
 			int(map_size.get("width", 0)),
 			int(map_size.get("height", 0)),
 		]
+		if bool(entry.get("editor_inspection_only", false)):
+			label = "%s | Inspect Only" % label
 		_map_package_picker.add_item(label, index)
 		_map_package_picker.set_item_metadata(index, package_id)
 		if package_id == _selected_map_package_id:
@@ -2786,7 +2791,12 @@ func _load_maps_folder_package_working_copy(package_id: String) -> bool:
 	var session = ScenarioSelectRulesScript.load_maps_folder_package_session(
 		package_id,
 		"normal",
-		{"startup_source": "map_editor_maps_folder", "session_id_prefix": "editor_maps_folder_package"}
+		{
+			"startup_source": "map_editor_maps_folder",
+			"session_id_prefix": "editor_maps_folder_package",
+			"include_non_launchable_generated_packages": true,
+			"consumer": "map_editor",
+		}
 	)
 	if session == null or session.scenario_id == "":
 		_last_message = "Unable to load generated package %s into the editor." % package_id
@@ -6702,11 +6712,17 @@ func _map_package_picker_metadata() -> Array:
 
 func _public_map_package_index_status() -> Dictionary:
 	var warnings: Array = _map_package_index_status.get("warnings", []) if _map_package_index_status.get("warnings", []) is Array else []
+	var inspection_only_count := 0
+	for entry in _map_package_entries:
+		if entry is Dictionary and bool(entry.get("editor_inspection_only", false)):
+			inspection_only_count += 1
 	return {
 		"ok": bool(_map_package_index_status.get("ok", true)),
 		"schema_id": String(_map_package_index_status.get("schema_id", "")),
 		"package_dir": String(_map_package_index_status.get("package_dir", "")),
+		"include_non_launchable_generated_packages": bool(_map_package_index_status.get("include_non_launchable_generated_packages", false)),
 		"entry_count": _map_package_entries.size(),
+		"editor_inspection_only_count": inspection_only_count,
 		"message": String(_map_package_index_status.get("message", "")),
 		"warning_count": warnings.size(),
 		"unpaired_map_count": int(_map_package_index_status.get("unpaired_map_count", 0)),
