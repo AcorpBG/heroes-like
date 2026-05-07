@@ -14084,7 +14084,13 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	const int32_t owner_xl_guard_limit = owner_xl_land_category_target(normalized, "guard");
 	const bool owner_medium_guard_density = owner_medium_guard_limit >= 0;
 	const bool owner_category_guard_density = owner_medium_guard_density || owner_small_normal_water_2level_guard_limit >= 0 || owner_small_islands_2level_guard_limit >= 0 || owner_large_guard_limit >= 0 || owner_xl_guard_limit >= 0;
-	const int32_t effective_guard_limit = parity_guard_limit >= 0 ? parity_guard_limit : (owner_small_islands_2level_guard_limit >= 0 ? owner_small_islands_2level_guard_limit : (uploaded_small_guard_limit >= 0 ? uploaded_small_guard_limit : (uploaded_small_underground_guard_limit >= 0 ? uploaded_small_underground_guard_limit : (owner_small_normal_water_2level_guard_limit >= 0 ? owner_small_normal_water_2level_guard_limit : (owner_medium_guard_limit >= 0 ? owner_medium_guard_limit : (owner_large_guard_limit >= 0 ? owner_large_guard_limit : owner_xl_guard_limit))))));
+	const bool generated_catalog_guard_floor_enabled = parity_targets.is_empty()
+			&& native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& !native_rmg_owner_discovered_comparison_seed(normalized);
+	const int32_t generated_catalog_guard_floor_reward_count = generated_catalog_guard_floor_enabled ? placement_count_for_spatial_category(objects, "reward") : 0;
+	const int32_t generated_catalog_guard_floor = generated_catalog_guard_floor_enabled ? native_catalog_auto_generated_guard_floor(normalized, generated_catalog_guard_floor_reward_count) : -1;
+	const int32_t fixture_guard_limit = parity_guard_limit >= 0 ? parity_guard_limit : (owner_small_islands_2level_guard_limit >= 0 ? owner_small_islands_2level_guard_limit : (uploaded_small_guard_limit >= 0 ? uploaded_small_guard_limit : (uploaded_small_underground_guard_limit >= 0 ? uploaded_small_underground_guard_limit : (owner_small_normal_water_2level_guard_limit >= 0 ? owner_small_normal_water_2level_guard_limit : (owner_medium_guard_limit >= 0 ? owner_medium_guard_limit : (owner_large_guard_limit >= 0 ? owner_large_guard_limit : owner_xl_guard_limit))))));
+	const int32_t effective_guard_limit = generated_catalog_guard_floor > 0 ? std::max(fixture_guard_limit, generated_catalog_guard_floor) : fixture_guard_limit;
 	for (int64_t index = 0; index < edges.size(); ++index) {
 		if (effective_guard_limit >= 0 && guard_ordinal >= effective_guard_limit) {
 			break;
@@ -14246,12 +14252,13 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	append_extension_profile_phase(town_guard_profile_phases, "object_guard_placement", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 
 	if (parity_targets.is_empty()
-			&& effective_guard_limit < 0
+			&& generated_catalog_guard_floor > 0
+			&& guard_ordinal < generated_catalog_guard_floor
 			&& native_rmg_generalized_native_catalog_auto_policy(normalized)
 			&& !native_rmg_owner_discovered_comparison_seed(normalized)) {
 		subphase_started_at = std::chrono::steady_clock::now();
-		const int32_t reward_count = placement_count_for_spatial_category(objects, "reward");
-		const int32_t guard_floor = native_catalog_auto_generated_guard_floor(normalized, reward_count);
+		const int32_t reward_count = generated_catalog_guard_floor_reward_count;
+		const int32_t guard_floor = generated_catalog_guard_floor;
 		int32_t attempts = 0;
 		const int32_t max_attempts = std::max(guard_floor * 12, int32_t(zones.size()) * 256);
 		while (guard_ordinal < guard_floor && attempts < max_attempts) {

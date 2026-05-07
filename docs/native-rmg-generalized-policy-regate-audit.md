@@ -285,6 +285,20 @@ Validation evidence:
 
 The full Godot export path is still too slow for the tight loop; a broad run was stopped after producing `15/18` packages in over six minutes, then the remaining XL cases were generated with `--case`. That reinforces the testing split: use Godot only for fresh package generation, and keep policy comparison in Python.
 
+## Implemented Generated Guard Cap Floor
+
+The Small one-level generated batch case showed a guard/reward policy gap even after the generalized guard floor existed. The generated package had `40` guards for `80` rewards because the older translated-template fixture cap still stopped placement before the reward-ratio floor could run. That was not a Python false positive: the package really had too few guards for its reward volume.
+
+Normal generated catalog-auto packages now let the generalized guard floor raise the effective guard cap when reward volume requires it. Owner-discovered exact comparison seeds remain excluded, so this does not mutate the historical owner-corpus exact-count fixtures.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_guard_floor_cap_fix --case s_randomnumberofplayers` exported `1/1` targeted package with `0` failures.
+- `python3 tools/rmg_fast_audit.py --amap .artifacts/rmg_native_batch_export_after_guard_floor_cap_fix/s_randomnumberofplayers.amap --pretty` reports category counts `decoration 169`, `guard 47`, `object 26`, `reward 80`, `town 6`, with guarded reachable town pairs still `0`.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_guard_floor_cap_fix --allow-failures --pretty` reports the targeted `36x36_l1` package as `pass`, with guard/reward ratio `0.588` and `0` policy gaps.
+- A combined `18` package evidence set with that targeted package replacing the prior `s_randomnumberofplayers.amap` reports `0` parse failures, `0` native rule failures, `0` density gaps, and `4` policy gaps instead of `5`. Remaining gaps are town density on `108x108_l2` and `36x36_l2`, road density on `36x36_l2`, and a near-threshold `144x144_l1` road floor.
+
 ## Implemented Generated Batch Rule Fixes
 
 The first generated-native batch exposed three generalized rule failures rather than a need to exact-match owner counts:
