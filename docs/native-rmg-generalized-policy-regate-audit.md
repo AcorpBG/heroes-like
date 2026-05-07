@@ -384,3 +384,21 @@ Validation evidence:
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_twolevel_town_floor_combined --allow-failures --pretty` reports `status: pass` across the combined `18` package evidence set, with `0` parse failures, `0` native rule failures, `0` density gaps, and `0` policy gaps in about `8.796s`.
 
 This closes the current broad fast-policy gate without changing the testing posture: Godot is still only needed when fresh native packages must be generated/exported or when editor/runtime integration is under test. H3M parsing, AMAP inspection, category/road/town/guard comparison, route summaries, and policy gates belong in the Python CLI loop.
+
+## Implemented Fast Road Topology Gate
+
+The density and category policy pass was still too weak. The matched comparison rows showed that `17/18` native packages still had road component mismatches: single-level maps often serialized one dominant road component, while two-level maps often had one dominant surface trunk plus many tiny underground fragments. That shape is not HoMM3-like even when total road density clears the owner floor.
+
+`tools/rmg_fast_validation.py` now adds a Python-only topology gate:
+
+- `road_largest_component_dominance_over_owner_baseline` fails when the native largest road component occupies too much of the road network compared with the matched owner evidence, with a bounded multiplier and absolute cap.
+- `road_component_count_under_owner_topology_floor` fails when a native map collapses too many owner road components into too few serialized components.
+- `--no-topology-gate` preserves the prior density/category policy pass for narrower debugging.
+
+Validation evidence:
+
+- `python3 -m py_compile tools/rmg_fast_validation.py` passed.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_twolevel_town_floor_combined --allow-failures --pretty` now reports `status: fail` with `0` parse failures, `0` native rule failures, `0` density gaps, `0` policy gaps, and `19` topology gaps.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_twolevel_town_floor_combined --no-topology-gate --allow-failures --pretty` still reports `status: pass`, proving the new failure signal is specifically road topology, not a regression in parsing, density, town, reward, or guard policy.
+
+This is the next concrete production blocker: the generator needs generalized road component materialization that creates HoMM3-like trunk/branch/component shape across land, water, islands, and two-level templates. Running more Godot parser scenes will not help this; the fast Python evidence now exposes the exact class of road-shape failure.
