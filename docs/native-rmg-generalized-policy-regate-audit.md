@@ -176,6 +176,36 @@ Validation evidence:
 - `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_terrain_grid_report.tscn` passed.
 - `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1200 tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` emitted schema `native_random_map_homm3_owner_corpus_coverage_report_v6`; the mapped gate remains failing overall but improved to `7/9` mapped samples passing. The previous `owner_discovered_s_2playerss_normalwater_2level` failure is gone; the remaining mapped failures are Small islands two-level and XL no-water.
 
+## Fast Audit Loop Correction
+
+Owner review correctly identified that the RMG comparison loop was using Godot for work that is not Godot-specific. H3M parsing, native `.amap` JSON inspection, object/category/level counts, road component topology, and route-closure summaries should be a fast CLI path. Godot should stay on the boundary where it adds real coverage: native GDExtension generation, package conversion/adoption, editor loading, and runtime smoke tests.
+
+`tools/rmg_fast_audit.py` now provides that fast path:
+
+- parses gzip or raw owner `.h3m` files directly;
+- reads native `.amap` package JSON directly;
+- reports category and per-level object distribution;
+- reports road cell totals and component sizes per level;
+- reports semantic town-route summaries for object-blocked and guard-blocked paths;
+- supports direct owner/native comparison with `--compare`.
+
+Validation evidence:
+
+- `python3 -m py_compile tools/rmg_fast_audit.py` passed.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/S-RandomNumberofplayers-islands-2level.h3m` parsed the owner sample in about `0.067s` and returned the expected counts: decoration `116`, guard `37`, object `56`, reward `102`, town `8`, road cells `147`, and road topology surface `[45, 37, 15, 11, 10]`, underground `[29]`.
+- `python3 tools/rmg_fast_audit.py --amap maps/medium-cinder-lantern-bend-34a14dd4.amap` parsed a native package in about `0.086s` and returned the expected owner-medium category counts: decoration `252`, guard `61`, object `65`, reward `110`, town `8`, road cells `184`.
+
+The remaining architectural gap is native generation itself: as long as generation only exists behind the Godot GDExtension API, one Godot invocation is still needed to create fresh packages. The audit/comparison pass after package creation no longer needs Godot.
+
+Focused Small islands two-level validation still uses a narrow Godot smoke because fresh native package generation currently lives behind `MapPackageService`. That smoke now passes after the level-aware object/guard/town pathing correction:
+
+- native object/town/guard/road deltas are all `0`;
+- owner category counts match exactly: decoration `116`, guard `37`, object `56`, reward `102`, town `8`;
+- road topology matches by level: surface `[45, 37, 15, 11, 10]`, underground `[29]`;
+- semantic layout comparison is `semantic_layout_match`, with guarded reachable town-pair count `0`.
+
+This is a focused integration validation, not a reason to return to the slow Godot owner-corpus parser loop.
+
 ## Implemented Explicit Level Label Correction
 
 Owner review showed the previous player-facing level selector still read like an ambiguous internal toggle. The level options are now centralized in `ScenarioSelectRules` and rendered by the generated-map menu as literal map-depth choices:
