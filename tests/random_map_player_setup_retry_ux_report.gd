@@ -35,8 +35,11 @@ func _run() -> void:
 	if not bool(shell.call("validation_set_generated_underground", false)):
 		_fail("Underground control hook did not disable underground.")
 		return
-	if bool(shell.call("validation_set_generated_underground", true)):
-		_fail("Underground control hook allowed unsupported underground generation.")
+	if not bool(shell.call("validation_set_generated_underground", true)):
+		_fail("Underground control hook did not enable supported two-level land generation.")
+		return
+	var underground_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
+	if not _assert_underground_player_surface(underground_snapshot):
 		return
 	if not bool(shell.call("validation_set_generated_underground", false)):
 		_fail("Underground control hook did not restore disabled underground.")
@@ -133,7 +136,7 @@ func _assert_hooks(shell: Node) -> bool:
 
 func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 	var controls: Dictionary = snapshot.get("controls", {}) if snapshot.get("controls", {}) is Dictionary else {}
-	for key in ["seed", "size_class_id", "size_class_label", "player_count", "water_mode", "underground", "retry_policy", "visible_player_controls", "internal_template_provenance"]:
+	for key in ["seed", "size_class_id", "size_class_label", "player_count", "water_mode", "underground", "level_count", "level_options", "retry_policy", "visible_player_controls", "internal_template_provenance"]:
 		if not controls.has(key):
 			_fail("Generated setup controls missed %s: %s" % [key, JSON.stringify(controls)])
 			return false
@@ -159,10 +162,10 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 	if bool(internal_provenance.get("template_picker_visible", true)) or bool(internal_provenance.get("profile_picker_visible", true)):
 		_fail("Generated manual template/profile pickers were visible: %s" % JSON.stringify(internal_provenance))
 		return false
-	if bool(internal_provenance.get("underground_supported", true)) or bool(internal_provenance.get("underground_player_control_visible", true)):
-		_fail("Generated setup still exposed unsupported underground control: %s" % JSON.stringify(internal_provenance))
+	if not bool(internal_provenance.get("underground_supported", false)) or not bool(internal_provenance.get("underground_player_control_visible", false)):
+		_fail("Generated setup did not expose supported underground control: %s" % JSON.stringify(internal_provenance))
 		return false
-	if int(controls.get("player_count", 0)) != 3 or String(controls.get("water_mode", "")) != "land" or bool(controls.get("underground", true)):
+	if int(controls.get("player_count", 0)) != 3 or String(controls.get("water_mode", "")) != "land" or bool(controls.get("underground", true)) or int(controls.get("level_count", 0)) != 1:
 		_fail("Generated player/water/underground controls did not persist in snapshot: %s" % JSON.stringify(controls))
 		return false
 	var visible_controls: Array = controls.get("visible_player_controls", []) if controls.get("visible_player_controls", []) is Array else []
@@ -170,8 +173,8 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 		if expected_control not in visible_controls:
 			_fail("Generated visible player controls missed %s: %s" % [expected_control, JSON.stringify(visible_controls)])
 			return false
-	if "underground" in visible_controls:
-		_fail("Generated visible player controls still exposed unsupported underground: %s" % JSON.stringify(visible_controls))
+	if "underground" not in visible_controls:
+		_fail("Generated visible player controls did not expose underground: %s" % JSON.stringify(visible_controls))
 		return false
 	for forbidden_key in ["template_options", "template_option_ids", "profile_options", "profile_option_ids"]:
 		if controls.has(forbidden_key):
@@ -205,6 +208,24 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 			return false
 	if not bool(snapshot.get("start_enabled", false)):
 		_fail("Generated launch button was disabled for a valid generated setup.")
+		return false
+	return true
+
+func _assert_underground_player_surface(snapshot: Dictionary) -> bool:
+	var controls: Dictionary = snapshot.get("controls", {}) if snapshot.get("controls", {}) is Dictionary else {}
+	if not bool(controls.get("underground", false)) or int(controls.get("level_count", 0)) != 2:
+		_fail("Generated underground toggle did not produce a two-level setup snapshot: %s" % JSON.stringify(controls))
+		return false
+	var visible_controls: Array = controls.get("visible_player_controls", []) if controls.get("visible_player_controls", []) is Array else []
+	if "underground" not in visible_controls:
+		_fail("Generated two-level setup hid the underground control: %s" % JSON.stringify(visible_controls))
+		return false
+	var combined_text := "\n".join([
+		String(snapshot.get("provenance_full", "")),
+		String(snapshot.get("start_tooltip", "")),
+	])
+	if combined_text.find("Underground on") < 0:
+		_fail("Generated two-level setup did not reflect underground in visible provenance: %s" % combined_text)
 		return false
 	return true
 

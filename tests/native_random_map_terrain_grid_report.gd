@@ -42,10 +42,27 @@ func _run() -> void:
 	var first: Dictionary = service.generate_random_map(config)
 	var second: Dictionary = service.generate_random_map(config.duplicate(true))
 	var changed: Dictionary = service.generate_random_map(changed_seed_config)
+	var surface_only_config := config.duplicate(true)
+	surface_only_config["seed"] = "native-rmg-terrain-grid-surface-only-10184"
+	surface_only_config["profile"] = {
+		"id": "native_terrain_grid_surface_only_profile",
+		"terrain_ids": ["grass", "dirt", "rough", "snow", "underground"],
+		"faction_ids": ["faction_embercourt", "faction_mireclaw"],
+	}
+	var surface_only: Dictionary = service.generate_random_map(surface_only_config)
+	var two_level_config := surface_only_config.duplicate(true)
+	two_level_config["seed"] = "native-rmg-terrain-grid-two-level-10184"
+	two_level_config["size"] = surface_only_config.get("size", {}).duplicate(true)
+	two_level_config["size"]["level_count"] = 2
+	var two_level: Dictionary = service.generate_random_map(two_level_config)
 
 	_assert_generated_shape(first, 36, 36)
 	_assert_generated_shape(second, 36, 36)
 	_assert_generated_shape(changed, 36, 36)
+	_assert_generated_shape(surface_only, 36, 36)
+	_assert_generated_shape(two_level, 36, 36, 2)
+	if not _assert_surface_underground_terrain_policy(surface_only, two_level):
+		return
 
 	var first_grid: Dictionary = first.get("terrain_grid", {})
 	var second_grid: Dictionary = second.get("terrain_grid", {})
@@ -94,12 +111,14 @@ func _run() -> void:
 		"tile_count": first_grid.get("tile_count", 0),
 		"terrain_palette_ids": first_grid.get("terrain_palette_ids", []),
 		"terrain_counts": first_grid.get("terrain_counts", {}),
+		"surface_only_counts": surface_only.get("terrain_grid", {}).get("terrain_counts", {}),
+		"two_level_counts": two_level.get("terrain_grid", {}).get("terrain_counts", {}),
 		"signature": first_signature,
 		"changed_seed_signature": changed_signature,
 	})])
 	get_tree().quit(0)
 
-func _assert_generated_shape(generated: Dictionary, expected_width: int, expected_height: int) -> void:
+func _assert_generated_shape(generated: Dictionary, expected_width: int, expected_height: int, expected_level_count: int = 1) -> void:
 	if not bool(generated.get("ok", false)):
 		_fail("Native RMG terrain-grid generation returned ok=false: %s" % JSON.stringify(generated))
 		return
@@ -119,11 +138,11 @@ func _assert_generated_shape(generated: Dictionary, expected_width: int, expecte
 	if int(grid.get("width", 0)) != expected_width or int(grid.get("height", 0)) != expected_height:
 		_fail("Terrain grid dimensions were %dx%d, expected %dx%d." % [int(grid.get("width", 0)), int(grid.get("height", 0)), expected_width, expected_height])
 		return
-	if int(grid.get("tile_count", 0)) != expected_width * expected_height:
+	if int(grid.get("tile_count", 0)) != expected_width * expected_height * expected_level_count:
 		_fail("Terrain grid tile count mismatch: %s" % JSON.stringify(grid))
 		return
 	var levels: Array = grid.get("levels", [])
-	if levels.size() != 1:
+	if levels.size() != expected_level_count:
 		_fail("Terrain grid level count mismatch: %s" % JSON.stringify(grid))
 		return
 	var level: Dictionary = levels[0]
@@ -133,13 +152,39 @@ func _assert_generated_shape(generated: Dictionary, expected_width: int, expecte
 	var counted := 0
 	for value in grid.get("terrain_counts", {}).values():
 		counted += int(value)
-	if counted != expected_width * expected_height:
-		_fail("Terrain counts summed to %d instead of %d." % [counted, expected_width * expected_height])
+	if counted != expected_width * expected_height * expected_level_count:
+		_fail("Terrain counts summed to %d instead of %d." % [counted, expected_width * expected_height * expected_level_count])
 		return
 	var report: Dictionary = generated.get("report", {})
 	if String(report.get("terrain_grid_status", "")) != "terrain_grid_generated":
 		_fail("Terrain grid report status missing: %s" % JSON.stringify(report))
 		return
+
+func _assert_surface_underground_terrain_policy(surface_only: Dictionary, two_level: Dictionary) -> bool:
+	var surface_grid: Dictionary = surface_only.get("terrain_grid", {}) if surface_only.get("terrain_grid", {}) is Dictionary else {}
+	var surface_counts: Dictionary = surface_grid.get("terrain_counts", {}) if surface_grid.get("terrain_counts", {}) is Dictionary else {}
+	if int(surface_counts.get("underground", 0)) != 0:
+		_fail("Surface-only map materialized underground terrain on level 0: %s" % JSON.stringify(surface_counts))
+		return false
+	if String(surface_grid.get("underground_terrain_policy", "")) != "not_materialized_for_surface_only_maps":
+		_fail("Surface-only terrain grid missed underground terrain policy: %s" % JSON.stringify(surface_grid))
+		return false
+	var two_level_grid: Dictionary = two_level.get("terrain_grid", {}) if two_level.get("terrain_grid", {}) is Dictionary else {}
+	var levels: Array = two_level_grid.get("levels", []) if two_level_grid.get("levels", []) is Array else []
+	if levels.size() != 2:
+		_fail("Two-level map did not materialize two terrain levels: %s" % JSON.stringify(two_level_grid))
+		return false
+	var surface_level: Dictionary = levels[0] if levels[0] is Dictionary else {}
+	var underground_level: Dictionary = levels[1] if levels[1] is Dictionary else {}
+	var surface_level_counts: Dictionary = surface_level.get("terrain_counts", {}) if surface_level.get("terrain_counts", {}) is Dictionary else {}
+	var underground_level_counts: Dictionary = underground_level.get("terrain_counts", {}) if underground_level.get("terrain_counts", {}) is Dictionary else {}
+	if int(surface_level_counts.get("underground", 0)) != 0:
+		_fail("Two-level map used underground terrain on the surface layer: %s" % JSON.stringify(surface_level_counts))
+		return false
+	if int(underground_level_counts.get("underground", 0)) != 36 * 36:
+		_fail("Two-level map did not reserve underground terrain for level 1: %s" % JSON.stringify(underground_level_counts))
+		return false
+	return true
 
 func _fail(message: String) -> void:
 	push_error("%s failed: %s" % [REPORT_ID, message])
