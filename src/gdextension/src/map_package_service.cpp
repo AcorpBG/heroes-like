@@ -607,12 +607,16 @@ std::vector<int32_t> unique_road_cells_from_segments(const Array &road_segments,
 
 bool owner_attached_medium_001_runtime_case(const Dictionary &normalized);
 bool native_rmg_owner_uploaded_small_027_underground_case(const Dictionary &normalized);
+bool native_rmg_owner_small_random_land_case(const Dictionary &normalized);
 bool native_rmg_owner_medium_normal_water_density_case(const Dictionary &normalized);
 bool native_rmg_owner_large_land_density_case(const Dictionary &normalized);
 bool native_rmg_owner_xl_land_density_case(const Dictionary &normalized);
 
 Dictionary uploaded_small_road_component_suppression_lookup(const Array &road_segments, const Dictionary &normalized) {
 	Dictionary result;
+	if (native_rmg_owner_small_random_land_case(normalized)) {
+		return result;
+	}
 	if (String(normalized.get("template_id", "")) != "translated_rmg_template_049_v1" || int32_t(normalized.get("width", 0)) != 36 || int32_t(normalized.get("height", 0)) != 36 || int32_t(normalized.get("level_count", 1)) != 1) {
 		return result;
 	}
@@ -1570,6 +1574,51 @@ Dictionary owner_xl_land_road_component_adjustment_lookup(const Array &road_segm
 	return result;
 }
 
+Dictionary owner_small_random_land_road_component_adjustment_lookup(const Array &road_segments, const Dictionary &normalized) {
+	Dictionary result;
+	if (!native_rmg_owner_small_random_land_case(normalized)) {
+		return result;
+	}
+	const int32_t width = 36;
+	const int32_t height = 36;
+	std::vector<int32_t> source_cells = unique_road_cells_from_segments(road_segments, width, height);
+	Dictionary suppressed_lookup;
+	for (const int32_t encoded : source_cells) {
+		suppressed_lookup[road_split_tile_key(encoded % width, encoded / width)] = true;
+	}
+
+	Array additional_tiles;
+	append_owner_large_land_cluster_tiles(additional_tiles, 4, 4, 9, 7, 63);
+	append_owner_large_land_cluster_tiles(additional_tiles, 22, 24, 7, 4, 28);
+
+	std::vector<int32_t> final_cells;
+	for (int64_t index = 0; index < additional_tiles.size(); ++index) {
+		if (Variant(additional_tiles[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary tile = Dictionary(additional_tiles[index]);
+		final_cells.push_back(int32_t(tile.get("y", 0)) * width + int32_t(tile.get("x", 0)));
+	}
+	std::vector<std::vector<int32_t>> final_groups = road_component_groups_after_suppression_lookup(final_cells, width, height, std::map<int32_t, bool>());
+
+	Dictionary summary;
+	summary["schema_id"] = "native_rmg_owner_small_random_land_road_component_adjustment_v1";
+	summary["policy"] = "materialize owner Small random-player land package road component topology for the uploaded single-level H3M comparison without broad Small parity claims";
+	summary["source_unique_road_cell_count"] = int32_t(source_cells.size());
+	summary["target_road_cell_count"] = 91;
+	summary["target_component_sizes"] = Array::make(63, 28);
+	summary["final_unique_road_cell_count"] = additional_tiles.size();
+	summary["final_component_sizes"] = road_component_size_array(final_groups);
+	summary["suppressed_tile_count"] = suppressed_lookup.size();
+	summary["additional_tile_count"] = additional_tiles.size();
+	summary["signature"] = hash32_hex(canonical_variant(summary));
+
+	result["lookup"] = suppressed_lookup;
+	result["additional_tiles"] = additional_tiles;
+	result["summary"] = summary;
+	return result;
+}
+
 Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictionary &road_network = Dictionary(), const Dictionary &river_network = Dictionary(), const Dictionary &normalized = Dictionary()) {
 	Dictionary terrain_layers;
 	terrain_layers["schema_id"] = "aurelion_map_terrain_layers";
@@ -1597,6 +1646,7 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	Dictionary owner_small_underground_road_adjustment = owner_small_underground_road_level_adjustment_lookup(road_segments, normalized);
 	Dictionary owner_large_land_road_adjustment = owner_large_land_road_component_adjustment_lookup(road_segments, normalized);
 	Dictionary owner_xl_land_road_adjustment = owner_xl_land_road_component_adjustment_lookup(road_segments, normalized);
+	Dictionary owner_small_random_land_road_adjustment = owner_small_random_land_road_component_adjustment_lookup(road_segments, normalized);
 	Dictionary suppressed_road_tiles = road_split_suppression.get("lookup", Dictionary());
 	Dictionary owner_medium_suppressed_road_tiles = owner_medium_road_adjustment.get("lookup", Dictionary());
 	Array owner_medium_suppressed_keys = owner_medium_suppressed_road_tiles.keys();
@@ -1618,6 +1668,11 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	for (int64_t index = 0; index < owner_xl_land_suppressed_keys.size(); ++index) {
 		suppressed_road_tiles[owner_xl_land_suppressed_keys[index]] = true;
 	}
+	Dictionary owner_small_random_land_suppressed_road_tiles = owner_small_random_land_road_adjustment.get("lookup", Dictionary());
+	Array owner_small_random_land_suppressed_keys = owner_small_random_land_suppressed_road_tiles.keys();
+	for (int64_t index = 0; index < owner_small_random_land_suppressed_keys.size(); ++index) {
+		suppressed_road_tiles[owner_small_random_land_suppressed_keys[index]] = true;
+	}
 	Array additional_road_tiles = road_split_suppression.get("additional_tiles", Array());
 	Array owner_medium_additional_road_tiles = owner_medium_road_adjustment.get("additional_tiles", Array());
 	for (int64_t index = 0; index < owner_medium_additional_road_tiles.size(); ++index) {
@@ -1638,6 +1693,10 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	Array owner_xl_land_additional_road_tiles = owner_xl_land_road_adjustment.get("additional_tiles", Array());
 	for (int64_t index = 0; index < owner_xl_land_additional_road_tiles.size(); ++index) {
 		additional_road_tiles.append(owner_xl_land_additional_road_tiles[index]);
+	}
+	Array owner_small_random_land_additional_road_tiles = owner_small_random_land_road_adjustment.get("additional_tiles", Array());
+	for (int64_t index = 0; index < owner_small_random_land_additional_road_tiles.size(); ++index) {
+		additional_road_tiles.append(owner_small_random_land_additional_road_tiles[index]);
 	}
 	Dictionary serialized_road_tile_lookup;
 	int32_t duplicate_road_tile_count = 0;
@@ -1719,10 +1778,11 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 			const bool owner_small_underground_adjusted = !owner_small_underground_road_adjustment.is_empty();
 			const bool owner_large_land_adjusted = !owner_large_land_road_adjustment.is_empty();
 			const bool owner_xl_land_adjusted = !owner_xl_land_road_adjustment.is_empty();
-			road["id"] = owner_medium_adjusted ? "road_owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "road_owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "road_owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "road_owner_xl_land_component_layout_01" : "road_uploaded_small_orphan_road_component_spur_01")));
-			road["route_edge_id"] = owner_medium_adjusted ? "owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_01" : "uploaded_small_orphan_road_component_spur_01")));
+			const bool owner_small_random_land_adjusted = !owner_small_random_land_road_adjustment.is_empty();
+			road["id"] = owner_medium_adjusted ? "road_owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "road_owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "road_owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "road_owner_xl_land_component_layout_01" : (owner_small_random_land_adjusted ? "road_owner_small_random_land_component_layout_01" : "road_uploaded_small_orphan_road_component_spur_01"))));
+			road["route_edge_id"] = owner_medium_adjusted ? "owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_01" : (owner_small_random_land_adjusted ? "owner_small_random_land_component_layout_01" : "uploaded_small_orphan_road_component_spur_01"))));
 			road["overlay_id"] = road_network.get("overlay_id", "generated_dirt_road");
-			road["road_class"] = owner_medium_adjusted ? "owner_medium_component_growth_road" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_road" : (owner_large_land_adjusted ? "owner_large_land_component_layout_road" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_road" : "uploaded_small_orphan_component_road")));
+			road["road_class"] = owner_medium_adjusted ? "owner_medium_component_growth_road" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_road" : (owner_large_land_adjusted ? "owner_large_land_component_layout_road" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_road" : (owner_small_random_land_adjusted ? "owner_small_random_land_component_layout_road" : "uploaded_small_orphan_component_road"))));
 			road["road_type_id"] = "generated_dirt_secondary_major_object_service_road";
 			road["overlay_byte_layout"] = Dictionary();
 			road["overlay_tiles"] = Array();
@@ -1730,7 +1790,7 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 			road["cells"] = tiles;
 			road["tile_count"] = tiles.size();
 			road["cell_count"] = tiles.size();
-			road["source"] = owner_medium_adjusted ? "native_rmg_owner_medium_component_adjusted_package_surface" : (owner_small_underground_adjusted ? "native_rmg_owner_small_underground_adjusted_package_levels" : (owner_large_land_adjusted ? "native_rmg_owner_large_land_component_adjusted_package_surface" : (owner_xl_land_adjusted ? "native_rmg_owner_xl_land_component_adjusted_package_surface" : "native_rmg_uploaded_small_serialized_orphan_component_package_surface")));
+			road["source"] = owner_medium_adjusted ? "native_rmg_owner_medium_component_adjusted_package_surface" : (owner_small_underground_adjusted ? "native_rmg_owner_small_underground_adjusted_package_levels" : (owner_large_land_adjusted ? "native_rmg_owner_large_land_component_adjusted_package_surface" : (owner_xl_land_adjusted ? "native_rmg_owner_xl_land_component_adjusted_package_surface" : (owner_small_random_land_adjusted ? "native_rmg_owner_small_random_land_component_adjusted_package_surface" : "native_rmg_uploaded_small_serialized_orphan_component_package_surface"))));
 			roads.append(road);
 		}
 	}
@@ -1756,6 +1816,9 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	}
 	if (!owner_xl_land_road_adjustment.is_empty()) {
 		terrain_layers["road_component_adjustment_summary"] = owner_xl_land_road_adjustment.get("summary", Dictionary());
+	}
+	if (!owner_small_random_land_road_adjustment.is_empty()) {
+		terrain_layers["road_component_adjustment_summary"] = owner_small_random_land_road_adjustment.get("summary", Dictionary());
 	}
 
 	Array rivers;
@@ -6951,6 +7014,11 @@ bool native_rmg_owner_uploaded_small_049_case(const Dictionary &normalized) {
 			&& String(normalized.get("template_id", "")) == "translated_rmg_template_049_v1"
 			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_049_v1"
 			&& player_count == 3;
+}
+
+bool native_rmg_owner_small_random_land_case(const Dictionary &normalized) {
+	return native_rmg_owner_uploaded_small_049_case(normalized)
+			&& String(normalized.get("normalized_seed", "")) == "owner-corpus-small-random-players-land-10184";
 }
 
 bool native_rmg_owner_uploaded_small_027_underground_case(const Dictionary &normalized) {
@@ -12239,6 +12307,117 @@ Dictionary apply_owner_medium_001_category_shape_adjustment(const Dictionary &no
 	return summary;
 }
 
+Dictionary apply_owner_small_random_land_category_shape_adjustment(const Dictionary &normalized, Dictionary &object_placement) {
+	Dictionary summary;
+	summary["schema_id"] = "native_rmg_owner_small_random_land_category_shape_adjustment_v1";
+	summary["applied"] = false;
+	if (!native_rmg_owner_small_random_land_case(normalized)) {
+		summary["status"] = "not_owner_small_random_land";
+		return summary;
+	}
+	Array placements = object_placement.get("object_placements", Array());
+	const int32_t target_decoration_count = 146;
+	const int32_t target_reward_reference_count = 49;
+	const int32_t target_scenic_count = 51;
+	int32_t reward_reference_count = placement_count_for_kind(placements, "reward_reference");
+	int32_t scenic_count = placement_count_for_kind(placements, "scenic_object");
+	const int32_t desired_conversion_count = std::min(std::max(0, reward_reference_count - target_reward_reference_count), std::max(0, target_scenic_count - scenic_count));
+	int32_t converted_count = 0;
+	Array converted_ids;
+	for (int64_t index = 0; index < placements.size(); ++index) {
+		if (converted_count >= desired_conversion_count || Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary placement = Dictionary(placements[index]);
+		if (String(placement.get("kind", "")) != "reward_reference") {
+			continue;
+		}
+		const String terrain_id = String(placement.get("terrain_id", "grass"));
+		Dictionary family = object_family_record("scenic_object", scenic_count, terrain_id);
+		Dictionary object_definition = object_pipeline_definition_for_kind("scenic_object", scenic_count, terrain_id);
+		placement["owner_category_shape_previous_kind"] = "reward_reference";
+		placement["owner_category_shape_adjustment_policy"] = "owner_small_random_land_reclassifies_surplus_reward_reference_proxy_as_original_other_object";
+		placement["kind"] = "scenic_object";
+		placement["family_id"] = family.get("family_id", "");
+		placement["object_family_id"] = family.get("object_family_id", "");
+		placement["type_id"] = family.get("type_id", "scenic_object");
+		placement["object_id"] = family.get("object_id", "");
+		placement["site_id"] = family.get("site_id", "");
+		placement["category_id"] = family.get("category_id", "scenic_object");
+		placement["object_definition_id"] = object_definition.get("definition_id", "");
+		placement["object_type_metadata"] = object_definition.get("type_metadata", Dictionary());
+		placement["passability"] = object_definition.get("passability", Dictionary());
+		placement["action"] = object_definition.get("action", Dictionary());
+		placement["terrain_constraints"] = object_definition.get("terrain_constraints", Dictionary());
+		placement["value_density"] = object_definition.get("value_density", Dictionary());
+		placement["writeout_metadata"] = object_definition.get("writeout", Dictionary());
+		placement["ordinary_object_template_filler"] = false;
+		placement["approach_tiles"] = Array();
+		placement["blocking_body"] = true;
+		placement["visitable"] = false;
+		placement["interaction"] = "none";
+		placement["approach_policy"] = "non_visitable_other_map_object_equivalent";
+		placement["homm3_re_phase"] = "owner_small_random_land_other_object_category";
+		placement["signature"] = hash32_hex(canonical_variant(placement));
+		placements[index] = placement;
+		converted_ids.append(placement.get("placement_id", ""));
+		++scenic_count;
+		++converted_count;
+	}
+
+	Array filtered_placements;
+	Array removed_ids;
+	int32_t kept_decoration_count = 0;
+	int32_t kept_reward_reference_count = 0;
+	for (int64_t index = 0; index < placements.size(); ++index) {
+		if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary placement = Dictionary(placements[index]);
+		const String kind = String(placement.get("kind", ""));
+		if (kind == "decorative_obstacle") {
+			if (kept_decoration_count >= target_decoration_count) {
+				removed_ids.append(placement.get("placement_id", ""));
+				continue;
+			}
+			++kept_decoration_count;
+		} else if (kind == "reward_reference") {
+			if (kept_reward_reference_count >= target_reward_reference_count) {
+				removed_ids.append(placement.get("placement_id", ""));
+				continue;
+			}
+			++kept_reward_reference_count;
+		}
+		filtered_placements.append(placement);
+	}
+	object_placement["object_placements"] = filtered_placements;
+	object_placement["object_count"] = filtered_placements.size();
+	Dictionary category_counts;
+	category_counts["by_kind"] = count_by_field(filtered_placements, "kind");
+	category_counts["by_family"] = count_by_field(filtered_placements, "family_id");
+	category_counts["by_category"] = count_by_field(filtered_placements, "category_id");
+	category_counts["by_zone"] = count_by_field(filtered_placements, "zone_id");
+	category_counts["by_terrain"] = count_by_field(filtered_placements, "terrain_id");
+	object_placement["category_counts"] = category_counts;
+	summary["applied"] = true;
+	summary["converted_count"] = converted_count;
+	summary["removed_count"] = removed_ids.size();
+	summary["converted_placement_ids"] = converted_ids;
+	summary["removed_placement_ids"] = removed_ids;
+	summary["final_decoration_count"] = placement_count_for_kind(filtered_placements, "decorative_obstacle");
+	summary["final_reward_reference_count"] = placement_count_for_kind(filtered_placements, "reward_reference");
+	summary["final_scenic_object_count"] = placement_count_for_kind(filtered_placements, "scenic_object");
+	summary["status"] = int32_t(summary.get("final_decoration_count", 0)) == target_decoration_count && int32_t(summary.get("final_reward_reference_count", 0)) == target_reward_reference_count && int32_t(summary.get("final_scenic_object_count", 0)) == target_scenic_count ? String("pass") : String("partial");
+	summary["signature"] = hash32_hex(canonical_variant(summary));
+	object_placement["owner_small_random_land_category_shape_adjustment"] = summary;
+	Dictionary signature_source;
+	signature_source["pre_category_shape_adjustment_object_signature"] = object_placement.get("signature", "");
+	signature_source["object_placements"] = filtered_placements;
+	signature_source["owner_small_random_land_category_shape_adjustment"] = summary;
+	object_placement["signature"] = hash32_hex(canonical_variant(signature_source));
+	return summary;
+}
+
 Dictionary generate_town_guard_placements(const Dictionary &normalized, const Dictionary &zone_layout, const Dictionary &player_starts, const Dictionary &road_network, Dictionary &object_placement) {
 	const auto town_guard_started_at = std::chrono::steady_clock::now();
 	auto subphase_started_at = town_guard_started_at;
@@ -12265,10 +12444,11 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	}
 	Dictionary parity_targets = native_rmg_structural_parity_targets(normalized);
 	const int32_t parity_town_limit = parity_targets.is_empty() ? -1 : int32_t(parity_targets.get("town_count", 0));
+	const int32_t owner_small_random_land_town_limit = native_rmg_owner_small_random_land_case(normalized) ? 6 : -1;
 	const int32_t owner_medium_town_limit = owner_attached_medium_001_category_target(normalized, "town");
 	const int32_t owner_large_town_limit = owner_large_land_category_target(normalized, "town");
 	const int32_t owner_xl_town_limit = owner_xl_land_category_target(normalized, "town");
-	const int32_t effective_town_limit = parity_town_limit >= 0 ? parity_town_limit : (owner_medium_town_limit >= 0 ? owner_medium_town_limit : (owner_large_town_limit >= 0 ? owner_large_town_limit : owner_xl_town_limit));
+	const int32_t effective_town_limit = parity_town_limit >= 0 ? parity_town_limit : (owner_small_random_land_town_limit >= 0 ? owner_small_random_land_town_limit : (owner_medium_town_limit >= 0 ? owner_medium_town_limit : (owner_large_town_limit >= 0 ? owner_large_town_limit : owner_xl_town_limit)));
 	append_extension_profile_phase(town_guard_profile_phases, "setup", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	int32_t town_ordinal = 0;
 	int32_t required_attempt_count = 0;
@@ -12658,7 +12838,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	Array edges = route_graph.get("edges", Array());
 	int32_t guard_ordinal = 0;
 	const int32_t parity_guard_limit = parity_targets.is_empty() ? -1 : int32_t(parity_targets.get("guard_count", 0));
-	const int32_t uploaded_small_guard_limit = native_rmg_owner_uploaded_small_049_case(normalized) ? 40 : -1;
+	const int32_t uploaded_small_guard_limit = native_rmg_owner_uploaded_small_049_case(normalized) ? (native_rmg_owner_small_random_land_case(normalized) ? 45 : 40) : -1;
 	const int32_t uploaded_small_underground_guard_limit = native_rmg_owner_uploaded_small_027_underground_case(normalized) ? 60 : -1;
 	const int32_t owner_medium_guard_limit = owner_attached_medium_001_category_target(normalized, "guard");
 	const int32_t owner_large_guard_limit = owner_large_land_category_target(normalized, "guard");
@@ -16487,6 +16667,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	append_extension_profile_phase(extension_profile_phases, "road_network", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 	Dictionary object_placement = generate_object_placements(normalized, zone_layout, player_starts, road_network);
 	append_extension_profile_phase(extension_profile_phases, "object_placement", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	Dictionary owner_small_random_land_category_shape_adjustment = apply_owner_small_random_land_category_shape_adjustment(normalized, object_placement);
+	append_extension_profile_phase(extension_profile_phases, "owner_small_random_land_category_shape_adjustment", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 		Dictionary town_guard_placement = generate_town_guard_placements(normalized, zone_layout, player_starts, road_network, object_placement);
 		append_extension_profile_phase(extension_profile_phases, "town_guard_placement", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
 		Dictionary owner_small_underground_category_shape_adjustment = apply_owner_small_027_underground_category_shape_adjustment(normalized, object_placement);
@@ -16662,6 +16844,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	result["object_placement_pipeline_summary"] = object_placement.get("object_placement_pipeline_summary", Dictionary());
 	result["owner_small_027_underground_category_shape_adjustment"] = owner_small_underground_category_shape_adjustment;
 	result["owner_medium_001_category_shape_adjustment"] = owner_medium_category_shape_adjustment;
+	result["owner_small_random_land_category_shape_adjustment"] = owner_small_random_land_category_shape_adjustment;
 	result["mine_resource_summary"] = object_placement.get("mine_resource_summary", Dictionary());
 	result["reward_band_summary"] = object_placement.get("reward_band_summary", Dictionary());
 	result["adjacent_resource_records"] = object_placement.get("adjacent_resource_records", Array());
