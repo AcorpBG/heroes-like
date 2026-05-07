@@ -733,3 +733,29 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_barrier_merged --require-timing-summary` passed. The manifest-backed native export timing summary reported `18/18` exported, `0` failed, `392420ms` total wall time, with generation `234334ms`, conversion `106447ms`, and save `46418ms`.
 
 This is not full production parity. It is a binary-backed correction to the most visible XL one-level islands blocker leak. The remaining missing implementation should replace native count/ring-style decorative filling with a `rand_trn`-style flagged-cell placement phase using the same algorithmic structure recovered from `h3maped.exe`, without committing raw HoMM3 copyrighted data tables into this repository.
+
+## Land-Only Recovered-Style Decorative Filler And Town Anchor Reservation
+
+The next native correction ports the recovered filler structure into the normal generated land path without copying raw HoMM3 `rand_trn.txt` rows or object names. For one-level Large/XL land catalog-auto maps, the late decorative blocker floor now uses a recovered-style scored placement pass:
+
+- reject invalid terrain classes;
+- require native object footprint fit;
+- score terrain compatibility;
+- prefer zone-boundary/choke cells;
+- score nearby decorative adjacency;
+- avoid crowding interactive objects;
+- keep deterministic hash jitter for repeatability.
+
+This remains an original-content approximation. It is intentionally scoped to `water_mode == land`; the first island attempt over-closed the owner-visible object route and was not kept.
+
+The town-density repair is tied to the same phase-order problem. Native decorative objects are generated before supplemental neutral towns, while HoMM3's recovered flow reserves/normalizes occupancy before the final filler. Normal one-level Large/XL land maps now reserve future neutral town anchors before object placement, and the generated catalog-auto town floor uses those reserved anchors instead of random jitter. This prevents the late decorative filler from consuming all neutral town slots.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `l_nowater_randomplayers_nounder` export wrote `1/1` package. `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_recovered_filler_land_town_anchor_retry_probe --allow-partial-native-batch --summary --failure-limit 8 --gap-limit 8` passed with `0` parse/native/density/policy/topology/coverage/closure-shape gaps. The native town count moved from the previous `5` player-start-only result to `6`, closing the partial-batch town-density policy gap.
+- Focused `xl_nowater` export wrote `1/1` package. `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_recovered_filler_xl_land_probe --allow-partial-native-batch --summary --failure-limit 8 --gap-limit 8` passed with `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- Replacing `l_nowater_randomplayers_nounder.amap` and `xl_nowater.amap` into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_recovered_filler_land_town_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_recovered_filler_land_town_merged --require-timing-summary` passed while preserving `production_ready=false`.
+
+The remaining top production blockers are still two-level water/islands, road-component shape, route-shape similarity, and object/guard/reward category shape. This checkpoint moves the land placement pipeline away from raw count fitting, but it does not complete HoMM3-style RMG parity.

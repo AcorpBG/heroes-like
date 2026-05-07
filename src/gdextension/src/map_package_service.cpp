@@ -7518,9 +7518,17 @@ bool append_object_placement_fast(Array &placements, Dictionary &occupied, Nativ
 	return false;
 }
 
-bool zone_needs_future_town_anchor_reservation(const Dictionary &zone) {
+bool zone_needs_future_town_anchor_reservation(const Dictionary &normalized, const Dictionary &zone) {
 	const String role = String(zone.get("role", ""));
 	if (role.find("start") >= 0) {
+		return true;
+	}
+	const bool generated_one_level_land_town_floor =
+			native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& String(normalized.get("water_mode", "land")) == "land"
+			&& int32_t(normalized.get("level_count", 1)) <= 1
+			&& (String(normalized.get("size_class_id", "")) == "homm3_large" || String(normalized.get("size_class_id", "")) == "homm3_extra_large");
+	if (generated_one_level_land_town_floor && (role == "treasure" || role == "junction" || role == "neutral")) {
 		return true;
 	}
 	Dictionary metadata = zone.get("catalog_metadata", Dictionary());
@@ -7536,13 +7544,13 @@ bool zone_needs_future_town_anchor_reservation(const Dictionary &zone) {
 			|| int32_t(neutral_towns.get("castle_density", 0)) > 0;
 }
 
-void reserve_future_town_anchors(const Array &zones, const Array &owner_grid, Dictionary &occupied, NativeObjectPlacementContext &context, int32_t width, int32_t height) {
+void reserve_future_town_anchors(const Dictionary &normalized, const Array &zones, const Array &owner_grid, Dictionary &occupied, NativeObjectPlacementContext &context, int32_t width, int32_t height) {
 	for (int64_t index = 0; index < zones.size(); ++index) {
 		if (Variant(zones[index]).get_type() != Variant::DICTIONARY) {
 			continue;
 		}
 		Dictionary zone = Dictionary(zones[index]);
-		if (!zone_needs_future_town_anchor_reservation(zone)) {
+		if (!zone_needs_future_town_anchor_reservation(normalized, zone)) {
 			continue;
 		}
 		Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
@@ -8409,6 +8417,134 @@ Dictionary find_decoration_point_fast(const Dictionary &zone, int32_t ordinal, c
 	return Dictionary();
 }
 
+bool recovered_rand_trn_like_decoration_filler_enabled(const Dictionary &normalized) {
+	return native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& String(normalized.get("water_mode", "land")) == "land"
+			&& !native_rmg_owner_discovered_comparison_seed(normalized);
+}
+
+int32_t recovered_rand_trn_like_terrain_score(const String &terrain_id) {
+	if (terrain_id == "water" || terrain_id == "ocean") {
+		return -5000;
+	}
+	if (terrain_id == "grass" || terrain_id == "dirt" || terrain_id == "rough") {
+		return 110;
+	}
+	if (terrain_id == "subterranean" || terrain_id == "lava") {
+		return 96;
+	}
+	if (terrain_id == "snow" || terrain_id == "swamp" || terrain_id == "sand") {
+		return 84;
+	}
+	return 72;
+}
+
+int32_t recovered_rand_trn_like_adjacency_score(const NativeObjectPlacementContext &placement_context, int32_t x, int32_t y, const String &zone_id) {
+	int32_t score = 0;
+	for (const NativePlacedObject &placement : placement_context.placements) {
+		const int32_t dx = std::abs(x - placement.x);
+		const int32_t dy = std::abs(y - placement.y);
+		const int32_t chebyshev = std::max(dx, dy);
+		if (chebyshev > 12) {
+			continue;
+		}
+		if (placement.decorative) {
+			if (chebyshev <= 2) {
+				score += 72;
+			} else if (chebyshev <= 4) {
+				score += 34;
+			} else if (chebyshev <= 8) {
+				score += 12;
+			} else {
+				score += 3;
+			}
+			if (placement.zone_id == zone_id) {
+				score += 4;
+			}
+		} else if (chebyshev <= 2) {
+			score -= 120;
+		} else if (chebyshev <= 4) {
+			score -= 30;
+		}
+	}
+	return score;
+}
+
+Dictionary find_recovered_rand_trn_like_decoration_filler_point_fast(const Dictionary &zone, int32_t ordinal, const Dictionary &normalized, NativeObjectPlacementContext &placement_context) {
+	const String zone_id = String(zone.get("id", ""));
+	const int32_t zone_index = native_zone_index_for_id(placement_context, zone_id);
+	if (zone_index < 0 || zone_index >= int32_t(placement_context.zones.size())) {
+		return Dictionary();
+	}
+	const String terrain_id = terrain_id_for_zone(zone);
+	const int32_t terrain_score = recovered_rand_trn_like_terrain_score(terrain_id);
+	if (terrain_score <= -5000) {
+		return Dictionary();
+	}
+	Dictionary footprint = object_footprint_for_kind("decorative_obstacle", ordinal, terrain_id);
+	const String seed_text = String(normalized.get("normalized_seed", "0")) + ":" + zone_id + ":recovered_rand_trn_filler:" + String::num_int64(ordinal);
+	const std::vector<NativePlacementTile> &candidates = placement_context.zones[zone_index].candidates;
+	const int32_t sample_stride = candidates.size() > 2400 ? std::max<int32_t>(1, int32_t(candidates.size() / 2400)) : 1;
+	const int32_t sample_offset = sample_stride > 1 ? int32_t(hash32_int(seed_text + String(":sample")) % uint32_t(sample_stride)) : 0;
+	const String role = String(zone.get("role", ""));
+	int64_t best_sort_key = std::numeric_limits<int64_t>::max();
+	int32_t best_x = -1;
+	int32_t best_y = -1;
+	Dictionary best_footprint;
+	for (int32_t pass = 0; pass < 3; ++pass) {
+		Dictionary active_footprint = footprint.duplicate();
+		if (pass == 1) {
+			active_footprint["width"] = 3;
+			active_footprint["height"] = 2;
+			active_footprint["tier"] = "recovered_compact_blocker";
+		} else if (pass == 2) {
+			active_footprint["width"] = 2;
+			active_footprint["height"] = 2;
+			active_footprint["tier"] = "recovered_micro_blocker";
+		}
+		for (int32_t candidate_index = 0; candidate_index < int32_t(candidates.size()); ++candidate_index) {
+			if (sample_stride > 1 && ((candidate_index + sample_offset) % sample_stride) != 0) {
+				continue;
+			}
+			const NativePlacementTile &candidate = candidates[candidate_index];
+			const int32_t x = candidate.x;
+			const int32_t y = candidate.y;
+			if (!object_body_fits_in_zone_native(placement_context, x, y, zone_index, active_footprint)) {
+				continue;
+			}
+			int32_t score = terrain_score;
+			if (native_context_zone_boundary_cell(placement_context, x, y)) {
+				score += 78;
+			}
+			if (role == "junction") {
+				score += 20;
+			} else if (role.find("start") >= 0) {
+				score -= 12;
+			}
+			score += recovered_rand_trn_like_adjacency_score(placement_context, x, y, zone_id);
+			const int32_t jitter = int32_t(hash32_int(seed_text + String(":") + String::num_int64(pass) + String(":") + String::num_int64(x) + String(",") + String::num_int64(y)) % 100000U);
+			const int64_t sort_key = -int64_t(score) * 100000LL + int64_t(jitter);
+			if (sort_key < best_sort_key) {
+				best_sort_key = sort_key;
+				best_x = x;
+				best_y = y;
+				best_footprint = active_footprint;
+			}
+		}
+		if (best_x >= 0 && best_y >= 0) {
+			break;
+		}
+	}
+	if (best_x < 0 || best_y < 0) {
+		return Dictionary();
+	}
+	Dictionary result = point_record(best_x, best_y);
+	result["decoration_footprint_override"] = best_footprint;
+	result["decoration_fit_fallback"] = "recovered_rand_trn_flagged_cell_scored_fit";
+	result["spatial_placement_policy"] = "recovered_h3maped_rand_trn_like_flagged_cell_filler";
+	return result;
+}
+
 Dictionary find_compact_decoration_density_point_fast(const Dictionary &zone, int32_t ordinal, const Dictionary &normalized, NativeObjectPlacementContext &placement_context) {
 	const String zone_id = String(zone.get("id", ""));
 	const int32_t zone_index = native_zone_index_for_id(placement_context, zone_id);
@@ -8668,7 +8804,7 @@ int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, 
 }
 
 int32_t native_catalog_auto_generated_town_floor(const Dictionary &normalized, int32_t start_count) {
-	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto" || int32_t(normalized.get("level_count", 1)) < 2) {
+	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto") {
 		return 0;
 	}
 	if (native_rmg_owner_discovered_comparison_seed(normalized)) {
@@ -8680,6 +8816,15 @@ int32_t native_catalog_auto_generated_town_floor(const Dictionary &normalized, i
 	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
 	const int32_t area = std::max(1, width * height * level_count);
 	const String water_mode = String(normalized.get("water_mode", "land"));
+	if (level_count <= 1) {
+		if (size_class_id == "homm3_large" && water_mode == "land") {
+			return std::max(std::max(8, start_count + 3), int32_t(std::ceil(double(area) * 0.68 / 1000.0)));
+		}
+		if (size_class_id == "homm3_extra_large" && water_mode == "land") {
+			return std::max(std::max(12, start_count + 7), int32_t(std::ceil(double(area) * 0.58 / 1000.0)));
+		}
+		return 0;
+	}
 	if (size_class_id == "homm3_small") {
 		return std::max(std::max(5, start_count + 2), int32_t(std::ceil(double(area) * 1.75 / 1000.0)));
 	}
@@ -9059,8 +9204,10 @@ Dictionary append_native_catalog_auto_scenic_supplement(Array &placements, Dicti
 
 Dictionary append_native_catalog_auto_decoration_supplement(Array &placements, Dictionary &occupied, NativeObjectPlacementContext &placement_context, const Dictionary &normalized, const Dictionary &zone_layout, const std::vector<NativeRoadCell> &road_cells, int32_t &ordinal) {
 	Dictionary summary;
-	summary["schema_id"] = "native_rmg_catalog_auto_decoration_floor_supplement_v1";
-	summary["policy"] = "land_profile_size_level_decorative_blocker_floor_after_base_decoration_pass";
+	summary["schema_id"] = "native_rmg_catalog_auto_decoration_floor_supplement_v2";
+	summary["policy"] = recovered_rand_trn_like_decoration_filler_enabled(normalized)
+			? String("recovered_h3maped_rand_trn_like_flagged_cell_decorative_blocker_floor")
+			: String("land_profile_size_level_decorative_blocker_floor_after_base_decoration_pass");
 	const int32_t target = native_catalog_auto_generated_decoration_floor(normalized);
 	int32_t decoration_count = placement_count_for_kind(placements, "decorative_obstacle");
 	summary["target_decoration_count"] = target;
@@ -9085,12 +9232,20 @@ Dictionary append_native_catalog_auto_decoration_supplement(Array &placements, D
 	const int32_t max_attempts = std::max(target * 6, int32_t(zones.size()) * 384);
 	while (decoration_count < target && attempts < max_attempts) {
 		Dictionary zone = Dictionary(zones[attempts % zones.size()]);
-		Dictionary point = find_compact_decoration_density_point_fast(zone, ordinal, normalized, placement_context);
+		Dictionary point;
+		if (recovered_rand_trn_like_decoration_filler_enabled(normalized)) {
+			point = find_recovered_rand_trn_like_decoration_filler_point_fast(zone, ordinal, normalized, placement_context);
+		}
+		if (point.is_empty()) {
+			point = find_compact_decoration_density_point_fast(zone, ordinal, normalized, placement_context);
+		}
 		if (point.is_empty()) {
 			point = object_point_for_zone_index_fast(zone, ordinal, 5 + attempts / std::max<int32_t>(1, int32_t(zones.size())), "decorative_obstacle", normalized, placement_context, owner_grid, occupied, empty_road_distance_field);
 		}
 		point["object_family_ordinal"] = decoration_count;
-		point["placement_policy"] = "native_catalog_auto_land_profile_decoration_floor";
+		point["placement_policy"] = recovered_rand_trn_like_decoration_filler_enabled(normalized)
+				? String("native_catalog_auto_recovered_rand_trn_like_decoration_floor")
+				: String("native_catalog_auto_land_profile_decoration_floor");
 		if (!point.is_empty() && append_object_placement_fast(placements, occupied, placement_context, normalized, zone, point, "decorative_obstacle", ordinal, road_cells, zone_layout)) {
 			++decoration_count;
 			++placed;
@@ -10424,7 +10579,7 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 	const std::vector<NativeRoadCell> road_cells = native_road_cells_for_network(road_network);
 	const PackedInt32Array road_distance_field = road_distance_field_for_cells(road_cells, width, height);
 	NativeObjectPlacementContext placement_context = build_native_object_placement_context(zones, owner_grid, road_network, width, height, true);
-	reserve_future_town_anchors(zones, owner_grid, occupied, placement_context, width, height);
+	reserve_future_town_anchors(normalized, zones, owner_grid, occupied, placement_context, width, height);
 	append_extension_profile_elapsed(object_profile_phases, "prepare_inputs_and_road_distance", elapsed_usec_since(object_phase_started_at), top_object_phase_usec, top_object_phase_id);
 	int32_t ordinal = 0;
 	Array mine_resource_diagnostics;
@@ -14765,19 +14920,27 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			if (zone.is_empty()) {
 				break;
 			}
+			const String selected_zone_id = String(zone.get("id", ""));
 			Dictionary anchor = zone.get("anchor", zone.get("center", Dictionary()));
 			const int32_t anchor_x = int32_t(anchor.get("x", width / 2));
 			const int32_t anchor_y = int32_t(anchor.get("y", height / 2));
-			const int32_t jitter_x = int32_t((seed_bucket + uint32_t(attempts * 37)) % uint32_t(span_x)) - span_x / 2;
-			const int32_t jitter_y = int32_t(((seed_bucket / 7U) + uint32_t(attempts * 53)) % uint32_t(span_y)) - span_y / 2;
+			const bool use_reserved_surface_anchor = level_count <= 1;
+			const int32_t jitter_x = use_reserved_surface_anchor ? 0 : int32_t((seed_bucket + uint32_t(attempts * 37)) % uint32_t(span_x)) - span_x / 2;
+			const int32_t jitter_y = use_reserved_surface_anchor ? 0 : int32_t(((seed_bucket / 7U) + uint32_t(attempts * 53)) % uint32_t(span_y)) - span_y / 2;
 			const int32_t target_x = std::clamp(anchor_x + jitter_x, margin, width - margin - 1);
 			const int32_t target_y = std::clamp(anchor_y + jitter_y, margin, height - margin - 1);
 			const int32_t target_level = current_underground_town_count() < generated_catalog_underground_town_floor ? 1 : 0;
 			if (occupied.has(level_point_key(target_x, target_y, target_level))) {
+				if (use_reserved_surface_anchor && !selected_zone_id.is_empty()) {
+					town_floor_used_zones[selected_zone_id] = true;
+				}
 				++attempts;
 				continue;
 			}
 			if (!point_far_from_towns_on_level(towns, target_x, target_y, target_level, spacing)) {
+				if (use_reserved_surface_anchor && !selected_zone_id.is_empty()) {
+					town_floor_used_zones[selected_zone_id] = true;
+				}
 				++attempts;
 				continue;
 			}
@@ -14785,6 +14948,9 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 					? find_spaced_in_zone_object_point(target_x, target_y, String(zone.get("id", "")), owner_grid, occupied, width, height, towns, spacing)
 					: point_record_at_level(target_x, target_y, target_level);
 			if (point.is_empty()) {
+				if (use_reserved_surface_anchor && !selected_zone_id.is_empty()) {
+					town_floor_used_zones[selected_zone_id] = true;
+				}
 				++attempts;
 				continue;
 			}
@@ -14814,8 +14980,10 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		diagnostic["final_town_count"] = towns.size();
 		diagnostic["attempt_count"] = attempts;
 		diagnostic["spacing_floor"] = spacing;
-		diagnostic["source"] = "native_catalog_auto_generalized_two_level_town_policy_floor";
-		diagnostic["policy"] = "generated two-level catalog-auto maps materialize neutral towns to satisfy broad owner-corpus town-density floors without moving player start towns, reusing existing town zones, or opening unguarded package routes";
+		diagnostic["source"] = level_count <= 1 ? String("native_catalog_auto_generalized_one_level_land_town_policy_floor") : String("native_catalog_auto_generalized_two_level_town_policy_floor");
+		diagnostic["policy"] = level_count <= 1
+				? String("generated one-level catalog-auto land maps materialize neutral towns on anchors reserved before the late decorative filler, preserving player starts and avoiding town/object overlap")
+				: String("generated two-level catalog-auto maps materialize neutral towns to satisfy broad owner-corpus town-density floors without moving player start towns, reusing existing town zones, or opening unguarded package routes");
 		town_diagnostics.append(diagnostic);
 		append_extension_profile_phase(town_guard_profile_phases, "native_catalog_auto_two_level_town_floor", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	}
