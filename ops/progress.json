@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-owner-xl-land-town-layout-correction-10184",
-  "currentSliceTitle": "native rmg owner xl land town layout correction 10184",
+  "currentSliceId": "native-rmg-owner-xl-land-reward-count-correction-10184",
+  "currentSliceTitle": "native rmg owner xl land reward count correction 10184",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Native Extra Large land default now applies the owner XL town-count target and spacing floor. Owner diagnostic validation passes with town count 12/12, nearest-town Manhattan 38 versus owner 39, semantic_layout_match, no actionable gaps, and route closure intact; reward count remains explicit parity debt.",
+  "currentSliceNotes": "Native Extra Large land default now trims surplus generic reward references after required mine/resource/dwelling placement. Owner diagnostic validation passes with package object count 5,365/5,365 and exact owner-category counts for decoration, object, reward, town, and guards; production_ready remains false with missing_requirement_count 4.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-07T03:19:38Z",
+  "updatedAt": "2026-05-07T03:38:48Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -13665,9 +13665,37 @@
       "startedAt": "2026-05-07T02:34:20Z",
       "completedAt": "2026-05-07T03:19:38Z",
       "notes": "Native Extra Large land default now applies the owner XL town-count target and spacing floor. Owner diagnostic validation passes with native town count 12/12, nearest-town Manhattan 38 versus owner 39, semantic_layout_match, no actionable gaps, object-route and guarded-route reachable town pairs both 0, and production_ready remains false with missing_requirement_count 4."
+    },
+    {
+      "id": "native-rmg-owner-xl-land-reward-count-correction-10184",
+      "title": "native rmg owner xl land reward count correction 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-05-07T03:38:48Z",
+      "startedAt": "2026-05-07T03:22:27Z",
+      "completedAt": "2026-05-07T03:38:48Z",
+      "notes": "Native Extra Large land default now trims surplus generic reward_reference objects after required mine/resource/dwelling placement. Owner diagnostic validation passes with package object count 5,365/5,365, reward 692/692, all owner categories exact, native object-route and guarded-route reachable town pairs both 0, and production_ready remains false with missing_requirement_count 4."
     }
   ],
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-owner-xl-land-reward-count-correction-10184",
+      "title": "Native RMG Owner XL Land Reward Count Correction",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "completedAt": "2026-05-07T03:38:48Z",
+      "evidence": [
+        "Native Extra Large land default now caps the owner XL reward category by trimming only surplus generic reward_reference objects after required mine/resource/dwelling priority placement.",
+        "The XL diagnostic now validates with package object count 5,365/5,365 and exact owner-category counts: decoration 3,413/3,413, scenic/object 629/629, reward 692/692, town 12/12, and guard 619/619.",
+        "Native reward by-kind breakdown is mine 168, neutral_dwelling 57, resource_site 133, and reward_reference 334.",
+        "Semantic layout and route closure remain passing with nearest-town Manhattan 41 versus owner 39, native object-route reachable town pairs 0, and native guarded-route reachable town pairs 0.",
+        "The production audit still refuses production readiness with missing_requirement_count 4, preserving the no-overclaim boundary."
+      ],
+      "validation": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2 passed.",
+        "GODOT_SILENCE_ROOT_WARNING=1 timeout 420 godot --headless --path . tests/native_random_map_homm3_owner_corpus_coverage_report.tscn passed with XL land diagnostic validation_status pass and category_counts_match.",
+        "GODOT_SILENCE_ROOT_WARNING=1 timeout 420 godot --headless --path . tests/native_random_map_production_parity_completion_audit_report.tscn passed with ok true, production_ready false, and missing_requirement_count 4."
+      ]
+    },
     {
       "id": "native-rmg-owner-xl-land-town-layout-correction-10184",
       "title": "Native RMG Owner XL Land Town Layout Correction",

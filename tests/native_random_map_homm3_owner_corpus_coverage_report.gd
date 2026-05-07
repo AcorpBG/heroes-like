@@ -706,6 +706,7 @@ func _owner_xl_land_density_diagnostic(service: Variant, samples: Array) -> Dict
 			"town_count": native_town_count,
 			"guard_count": native_guard_count,
 			"road_cell_count_total": native_road_count,
+			"counts_by_kind": native.get("counts_by_kind", {}),
 			"counts_by_owner_category": native_counts,
 		},
 		"deltas_vs_owner": {
