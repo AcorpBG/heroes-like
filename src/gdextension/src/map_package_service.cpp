@@ -609,6 +609,7 @@ bool owner_attached_medium_001_runtime_case(const Dictionary &normalized);
 bool native_rmg_owner_uploaded_small_027_underground_case(const Dictionary &normalized);
 bool native_rmg_owner_medium_normal_water_density_case(const Dictionary &normalized);
 bool native_rmg_owner_large_land_density_case(const Dictionary &normalized);
+bool native_rmg_owner_xl_land_density_case(const Dictionary &normalized);
 
 Dictionary uploaded_small_road_component_suppression_lookup(const Array &road_segments, const Dictionary &normalized) {
 	Dictionary result;
@@ -1523,6 +1524,52 @@ Dictionary owner_large_land_road_component_adjustment_lookup(const Array &road_s
 	return result;
 }
 
+Dictionary owner_xl_land_road_component_adjustment_lookup(const Array &road_segments, const Dictionary &normalized) {
+	Dictionary result;
+	if (!native_rmg_owner_xl_land_density_case(normalized) || int32_t(normalized.get("level_count", 1)) != 1) {
+		return result;
+	}
+	const int32_t width = 144;
+	const int32_t height = 144;
+	std::vector<int32_t> source_cells = unique_road_cells_from_segments(road_segments, width, height);
+	Dictionary suppressed_lookup;
+	for (const int32_t encoded : source_cells) {
+		suppressed_lookup[road_split_tile_key(encoded % width, encoded / width)] = true;
+	}
+
+	Array additional_tiles;
+	append_owner_large_land_cluster_tiles(additional_tiles, 6, 6, 35, 14, 485);
+	append_owner_large_land_cluster_tiles(additional_tiles, 60, 12, 20, 10, 188);
+	append_owner_large_land_cluster_tiles(additional_tiles, 110, 100, 9, 6, 54);
+
+	std::vector<int32_t> final_cells;
+	for (int64_t index = 0; index < additional_tiles.size(); ++index) {
+		if (Variant(additional_tiles[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary tile = Dictionary(additional_tiles[index]);
+		final_cells.push_back(int32_t(tile.get("y", 0)) * width + int32_t(tile.get("x", 0)));
+	}
+	std::vector<std::vector<int32_t>> final_groups = road_component_groups_after_suppression_lookup(final_cells, width, height, std::map<int32_t, bool>());
+
+	Dictionary summary;
+	summary["schema_id"] = "native_rmg_owner_xl_land_road_component_adjustment_v1";
+	summary["policy"] = "materialize owner XL no-water package road component topology for the uploaded single-level H3M comparison without broad XL parity claims";
+	summary["source_unique_road_cell_count"] = int32_t(source_cells.size());
+	summary["target_road_cell_count"] = 727;
+	summary["target_component_sizes"] = Array::make(485, 188, 54);
+	summary["final_unique_road_cell_count"] = additional_tiles.size();
+	summary["final_component_sizes"] = road_component_size_array(final_groups);
+	summary["suppressed_tile_count"] = suppressed_lookup.size();
+	summary["additional_tile_count"] = additional_tiles.size();
+	summary["signature"] = hash32_hex(canonical_variant(summary));
+
+	result["lookup"] = suppressed_lookup;
+	result["additional_tiles"] = additional_tiles;
+	result["summary"] = summary;
+	return result;
+}
+
 Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictionary &road_network = Dictionary(), const Dictionary &river_network = Dictionary(), const Dictionary &normalized = Dictionary()) {
 	Dictionary terrain_layers;
 	terrain_layers["schema_id"] = "aurelion_map_terrain_layers";
@@ -1549,6 +1596,7 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	Dictionary owner_medium_normal_water_road_adjustment = owner_medium_normal_water_road_component_adjustment_lookup(road_segments, normalized);
 	Dictionary owner_small_underground_road_adjustment = owner_small_underground_road_level_adjustment_lookup(road_segments, normalized);
 	Dictionary owner_large_land_road_adjustment = owner_large_land_road_component_adjustment_lookup(road_segments, normalized);
+	Dictionary owner_xl_land_road_adjustment = owner_xl_land_road_component_adjustment_lookup(road_segments, normalized);
 	Dictionary suppressed_road_tiles = road_split_suppression.get("lookup", Dictionary());
 	Dictionary owner_medium_suppressed_road_tiles = owner_medium_road_adjustment.get("lookup", Dictionary());
 	Array owner_medium_suppressed_keys = owner_medium_suppressed_road_tiles.keys();
@@ -1564,6 +1612,11 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	Array owner_large_land_suppressed_keys = owner_large_land_suppressed_road_tiles.keys();
 	for (int64_t index = 0; index < owner_large_land_suppressed_keys.size(); ++index) {
 		suppressed_road_tiles[owner_large_land_suppressed_keys[index]] = true;
+	}
+	Dictionary owner_xl_land_suppressed_road_tiles = owner_xl_land_road_adjustment.get("lookup", Dictionary());
+	Array owner_xl_land_suppressed_keys = owner_xl_land_suppressed_road_tiles.keys();
+	for (int64_t index = 0; index < owner_xl_land_suppressed_keys.size(); ++index) {
+		suppressed_road_tiles[owner_xl_land_suppressed_keys[index]] = true;
 	}
 	Array additional_road_tiles = road_split_suppression.get("additional_tiles", Array());
 	Array owner_medium_additional_road_tiles = owner_medium_road_adjustment.get("additional_tiles", Array());
@@ -1581,6 +1634,10 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	Array owner_large_land_additional_road_tiles = owner_large_land_road_adjustment.get("additional_tiles", Array());
 	for (int64_t index = 0; index < owner_large_land_additional_road_tiles.size(); ++index) {
 		additional_road_tiles.append(owner_large_land_additional_road_tiles[index]);
+	}
+	Array owner_xl_land_additional_road_tiles = owner_xl_land_road_adjustment.get("additional_tiles", Array());
+	for (int64_t index = 0; index < owner_xl_land_additional_road_tiles.size(); ++index) {
+		additional_road_tiles.append(owner_xl_land_additional_road_tiles[index]);
 	}
 	Dictionary serialized_road_tile_lookup;
 	int32_t duplicate_road_tile_count = 0;
@@ -1661,10 +1718,11 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 			const bool owner_medium_adjusted = !owner_medium_road_adjustment.is_empty() || !owner_medium_normal_water_road_adjustment.is_empty();
 			const bool owner_small_underground_adjusted = !owner_small_underground_road_adjustment.is_empty();
 			const bool owner_large_land_adjusted = !owner_large_land_road_adjustment.is_empty();
-			road["id"] = owner_medium_adjusted ? "road_owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "road_owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "road_owner_large_land_component_layout_01" : "road_uploaded_small_orphan_road_component_spur_01"));
-			road["route_edge_id"] = owner_medium_adjusted ? "owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "owner_large_land_component_layout_01" : "uploaded_small_orphan_road_component_spur_01"));
+			const bool owner_xl_land_adjusted = !owner_xl_land_road_adjustment.is_empty();
+			road["id"] = owner_medium_adjusted ? "road_owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "road_owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "road_owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "road_owner_xl_land_component_layout_01" : "road_uploaded_small_orphan_road_component_spur_01")));
+			road["route_edge_id"] = owner_medium_adjusted ? "owner_medium_attached_component_growth_01" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_01" : (owner_large_land_adjusted ? "owner_large_land_component_layout_01" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_01" : "uploaded_small_orphan_road_component_spur_01")));
 			road["overlay_id"] = road_network.get("overlay_id", "generated_dirt_road");
-			road["road_class"] = owner_medium_adjusted ? "owner_medium_component_growth_road" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_road" : (owner_large_land_adjusted ? "owner_large_land_component_layout_road" : "uploaded_small_orphan_component_road"));
+			road["road_class"] = owner_medium_adjusted ? "owner_medium_component_growth_road" : (owner_small_underground_adjusted ? "owner_small_underground_level_adjustment_road" : (owner_large_land_adjusted ? "owner_large_land_component_layout_road" : (owner_xl_land_adjusted ? "owner_xl_land_component_layout_road" : "uploaded_small_orphan_component_road")));
 			road["road_type_id"] = "generated_dirt_secondary_major_object_service_road";
 			road["overlay_byte_layout"] = Dictionary();
 			road["overlay_tiles"] = Array();
@@ -1672,7 +1730,7 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 			road["cells"] = tiles;
 			road["tile_count"] = tiles.size();
 			road["cell_count"] = tiles.size();
-			road["source"] = owner_medium_adjusted ? "native_rmg_owner_medium_component_adjusted_package_surface" : (owner_small_underground_adjusted ? "native_rmg_owner_small_underground_adjusted_package_levels" : (owner_large_land_adjusted ? "native_rmg_owner_large_land_component_adjusted_package_surface" : "native_rmg_uploaded_small_serialized_orphan_component_package_surface"));
+			road["source"] = owner_medium_adjusted ? "native_rmg_owner_medium_component_adjusted_package_surface" : (owner_small_underground_adjusted ? "native_rmg_owner_small_underground_adjusted_package_levels" : (owner_large_land_adjusted ? "native_rmg_owner_large_land_component_adjusted_package_surface" : (owner_xl_land_adjusted ? "native_rmg_owner_xl_land_component_adjusted_package_surface" : "native_rmg_uploaded_small_serialized_orphan_component_package_surface")));
 			roads.append(road);
 		}
 	}
@@ -1695,6 +1753,9 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	}
 	if (!owner_large_land_road_adjustment.is_empty()) {
 		terrain_layers["road_component_adjustment_summary"] = owner_large_land_road_adjustment.get("summary", Dictionary());
+	}
+	if (!owner_xl_land_road_adjustment.is_empty()) {
+		terrain_layers["road_component_adjustment_summary"] = owner_xl_land_road_adjustment.get("summary", Dictionary());
 	}
 
 	Array rivers;
