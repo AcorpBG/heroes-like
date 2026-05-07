@@ -29,6 +29,35 @@ Do not infer product readiness from the completed queue. Completed Phase 2/RMG/p
 
 Persistent guardrail: do not import generated PNGs or generated-study derivatives into runtime/source assets until a later AcOrP-approved ingestion slice records provenance, import paths, rollback, and validation.
 
+Current owner-directed RMG corrective checkpoint:
+
+id: `native-rmg-owner-small-islands-underground-corpus-road-checkpoint-10184`
+phase: `phase-3-homm3-style-rmg-rework`
+status: `in_progress`
+purpose: Promote the uploaded Small islands two-level owner sample into the hard owner-corpus native comparison path and checkpoint the first road-topology correction for manual review before finishing object/category, town, and guard parity.
+sourceDocs:
+- `project.md`
+- `PLAN.md`
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- local owner evidence under `maps/h3m-maps/S-RandomNumberofplayers-islands-2level.h3m`
+implementationTargets:
+- `src/gdextension/src/map_package_service.cpp`
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.gd`
+- `PLAN.md`
+- `ops/progress.json`
+completionCriteria:
+- `owner_discovered_s_randomnumberofplayers_islands_2level` is mapped to the player-facing native catalog-auto Small islands underground comparison path.
+- Native Small islands two-level road cell count and per-level component topology match owner evidence: surface `[45, 37, 15, 11, 10]`, underground `[29]`.
+- Remaining package object/category, town, and guard gaps are explicitly visible in the owner-corpus gate until corrected by the next implementation pass.
+- No uploaded `.h3m`, generated `.amap`, or generated `.ascenario` evidence is committed.
+nonGoals:
+- No completion claim for the Small islands two-level owner sample yet.
+- No broad Small islands, underground, or full HoMM3 production parity claim.
+validationResults:
+- Native GDExtension rebuilt successfully with `cmake --build .artifacts/map_persistence_native_build --parallel 2`.
+- `tests/native_random_map_homm3_owner_corpus_coverage_report.tscn` ran and remains failing as expected for this checkpoint: mapped comparisons are `8/9`, the Small islands two-level sample has matching road cells/topology (`147`, surface `[45, 37, 15, 11, 10]`, underground `[29]`) but still reports object delta `+4`, town delta `-1`, guard delta `+4`, and category delta total `118`.
+
 Recently completed owner-directed RMG corrective slice:
 
 id: `native-rmg-owner-small-normal-water-underground-corpus-shape-gate-10184`

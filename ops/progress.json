@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "active",
   "currentPhase": "phase-3-homm3-style-rmg-rework",
-  "currentSliceId": "native-rmg-owner-small-normal-water-underground-corpus-shape-gate-10184",
-  "currentSliceTitle": "native rmg owner small normal water underground corpus shape gate 10184",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Mapped owner_discovered_s_2playerss_normalwater_2level into the hard owner-corpus native comparison gate and corrected the Small normal-water two-level package object/category, town, guard, road topology, and semantic town-spacing gaps it exposed: 427 package objects, 5 towns, 62 guards, 101 road cells, owner categories decoration 196 / guard 62 / object 64 / reward 100 / town 5, road component sizes by level 0: [84] and 1: [17], native nearest town distance 15 against owner floor 14, and semantic layout match. This is scoped to the uploaded Small normal-water two-level sample; 13 parsed uploaded samples remain unmapped and broad HoMM3 production parity remains unclaimed.",
+  "currentSliceId": "native-rmg-owner-small-islands-underground-corpus-road-checkpoint-10184",
+  "currentSliceTitle": "native rmg owner small islands underground corpus road checkpoint 10184",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Checkpointed owner_discovered_s_randomnumberofplayers_islands_2level into the hard owner-corpus native comparison path for manual review. Native Small islands two-level road cells/topology now match owner evidence exactly: 147 total road cells, surface component sizes [45, 37, 15, 11, 10], underground [29]. The mapped comparison gate intentionally remains failing at 8/9 while object/category/town/guard parity is unfinished: object delta +4, town delta -1, guard delta +4, category absolute delta total 118. No uploaded .h3m, generated .amap, or generated .ascenario evidence files are part of this checkpoint.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-07T09:58:40Z",
+  "updatedAt": "2026-05-07T10:17:36Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -39,6 +39,50 @@
     "activeQueueRule": "plannedSlices contains current executable parent and child slices. The active continuation is Phase 2 RMG parity recovery; completed non-RMG/future-phase slices remain evidence only and must not become the current queue."
   },
   "plannedSlices": [
+    {
+      "id": "native-rmg-owner-small-islands-underground-corpus-road-checkpoint-10184",
+      "title": "Native RMG Owner Small Islands Underground Corpus Road Checkpoint",
+      "phase": "phase-3-homm3-style-rmg-rework",
+      "status": "in_progress",
+      "classification": "owner_directed_phase3_native_rmg_corrective_implementation_slice",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_owner_corpus_coverage_report.gd",
+        "maps/h3m-maps/S-RandomNumberofplayers-islands-2level.h3m"
+      ],
+      "purpose": "Promote the uploaded Small islands two-level owner sample into the hard owner-corpus native comparison path and checkpoint the first road-topology correction for manual review before finishing object/category, town, and guard parity.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_random_map_homm3_owner_corpus_coverage_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baselineChecks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 tests/native_random_map_homm3_owner_corpus_coverage_report.tscn",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "owner_discovered_s_randomnumberofplayers_islands_2level is mapped to the player-facing native catalog-auto Small islands underground comparison path.",
+        "Native Small islands two-level road cell count and per-level component topology match owner evidence: surface [45, 37, 15, 11, 10], underground [29].",
+        "Remaining package object/category, town, and guard gaps are explicitly visible in the owner-corpus gate until corrected by the next implementation pass.",
+        "No uploaded .h3m, generated .amap, or generated .ascenario evidence is committed."
+      ],
+      "nonGoals": [
+        "No completion claim for the Small islands two-level owner sample yet.",
+        "No broad Small islands, underground, or full HoMM3 production parity claim."
+      ],
+      "validationResults": [
+        "Native GDExtension rebuilt successfully with cmake --build .artifacts/map_persistence_native_build --parallel 2.",
+        "tests/native_random_map_homm3_owner_corpus_coverage_report.tscn ran and remains failing as expected for this checkpoint: mapped comparisons are 8/9, the Small islands two-level sample has matching road cells/topology (147, surface [45, 37, 15, 11, 10], underground [29]) but still reports object delta +4, town delta -1, guard delta +4, and category delta total 118.",
+        "git diff --check passed."
+      ],
+      "updatedAt": "2026-05-07T10:17:36Z",
+      "startedAt": "2026-05-07T10:17:36Z",
+      "notes": "Checkpointed owner_discovered_s_randomnumberofplayers_islands_2level into the hard owner-corpus native comparison path for manual review. Native Small islands two-level road cells/topology now match owner evidence exactly: 147 total road cells, surface component sizes [45, 37, 15, 11, 10], underground [29]. The mapped comparison gate intentionally remains failing at 8/9 while object/category/town/guard parity is unfinished: object delta +4, town delta -1, guard delta +4, category absolute delta total 118. No uploaded .h3m, generated .amap, or generated .ascenario evidence files are part of this checkpoint."
+    },
     {
       "id": "native-rmg-owner-small-normal-water-underground-corpus-shape-gate-10184",
       "title": "Native RMG Owner Small Normal Water Underground Corpus Shape Gate",
