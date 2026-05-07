@@ -193,6 +193,10 @@ const RANDOM_MAP_WATER_OPTIONS := [
 	{"id": "normal_water", "label": "Normal Water"},
 	{"id": "islands", "label": "Islands"},
 ]
+const RANDOM_MAP_LEVEL_OPTIONS := [
+	{"id": "surface", "label": "Surface Only (1 Level)", "level_count": 1, "underground": false},
+	{"id": "surface_underground", "label": "Surface + Underground (2 Levels)", "level_count": 2, "underground": true},
+]
 const RANDOM_MAP_PLAYER_RETRY_POLICY := {
 	"max_attempts": 2,
 	"mode": "seed_salt",
@@ -413,6 +417,7 @@ static func random_map_player_setup_options() -> Dictionary:
 		"player_count_options_by_template": _random_map_player_count_options_by_template(template_options),
 		"profile_options_by_template": _random_map_profile_options_by_template(profile_options),
 		"water_modes": _random_map_player_facing_water_options(),
+		"level_options": RANDOM_MAP_LEVEL_OPTIONS.duplicate(true),
 		"retry_policy": RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"default_seed": RANDOM_MAP_DEFAULT_SEED,
 		"default_size_class_id": "homm3_small",
@@ -421,6 +426,7 @@ static func random_map_player_setup_options() -> Dictionary:
 		"size_class_defaults": RANDOM_MAP_SIZE_CLASS_DEFAULTS.duplicate(true),
 		"default_player_count": _random_map_normalize_player_count_for_template("translated_rmg_template_049_v1", 3, 3),
 		"default_water_mode": "land",
+		"default_level_count": 1,
 		"default_underground": false,
 		"package_directory_policy": generated_map_package_directory_policy(),
 		"catalog_template_count": _random_map_template_options().size(),

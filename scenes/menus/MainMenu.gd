@@ -1163,12 +1163,13 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 			int(retry.get("attempt_count", 1)),
 			int(retry.get("retry_count", 0)),
 		]
-		provenance_text = "Seed %s | Size %s | Players %d | Water %s | Underground %s | Internal profile %s/%s" % [
+		provenance_text = "Seed %s | Size %s | Players %d | Water %s | Levels %s | Underground %s | Internal profile %s/%s" % [
 			seed_label,
 			ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
 			_generated_player_count,
 			_generated_water_mode,
-			"on, 2 levels" if _generated_underground else "off, 1 level",
+			"Surface + Underground (2 Levels)" if _generated_underground else "Surface Only (1 Level)",
+			"on" if _generated_underground else "off",
 			String(setup.get("template_id", "")),
 			String(setup.get("profile_id", "")),
 		]
@@ -1471,10 +1472,18 @@ func _select_generated_picker_metadata(picker: OptionButton, metadata: String) -
 
 func _rebuild_generated_level_picker() -> void:
 	_generated_underground_toggle.clear()
-	_generated_underground_toggle.add_item("1 Level", 0)
-	_generated_underground_toggle.set_item_metadata(0, 1)
-	_generated_underground_toggle.add_item("2 Levels (Underground)", 1)
-	_generated_underground_toggle.set_item_metadata(1, 2)
+	var level_options: Array = ScenarioSelectRulesScript.random_map_player_setup_options().get("level_options", [])
+	if level_options.is_empty():
+		level_options = [
+			{"label": "Surface Only (1 Level)", "level_count": 1},
+			{"label": "Surface + Underground (2 Levels)", "level_count": 2},
+		]
+	for index in range(level_options.size()):
+		var option = level_options[index]
+		if not (option is Dictionary):
+			continue
+		_generated_underground_toggle.add_item(String(option.get("label", "%d Level" % int(option.get("level_count", 1)))), index)
+		_generated_underground_toggle.set_item_metadata(index, int(option.get("level_count", 1)))
 	_select_generated_level_count(2 if _generated_underground else 1)
 
 func _select_generated_level_count(level_count: int) -> bool:
@@ -1966,7 +1975,7 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"water_mode": _generated_water_mode,
 		"underground": _generated_underground,
 		"level_count": level_count,
-		"level_options": ["Surface only", "Surface + Underground"],
+		"level_options": _picker_item_labels(_generated_underground_toggle),
 		"retry_policy": ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY.duplicate(true),
 		"size_options": _picker_item_labels(_generated_size_picker),
 		"player_count_options": _picker_item_labels(_generated_player_count_picker),

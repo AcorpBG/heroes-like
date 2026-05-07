@@ -132,8 +132,8 @@ The classification records:
 
 The player-facing generated-map setup now exposes the generation depth as an explicit level picker:
 
-- `Surface only`;
-- `Surface + Underground`.
+- `Surface Only (1 Level)`;
+- `Surface + Underground (2 Levels)`.
 
 This replaces the previous ambiguous underground checkbox while preserving the existing internal boolean for generation calls. The islands water-mode option no longer disables or hides underground selection, so players can request one-level or two-level maps consistently across land, normal water, and islands.
 
@@ -156,7 +156,23 @@ Validation evidence:
 
 - `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
 - `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_owner_normal_water_underground_package_report.tscn` passed with `map_level_count: 2` and `validation_status: pass`.
-- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/random_map_player_setup_retry_ux_report.tscn` passed and reported visible `level_count` control data with `Surface only` and `Surface + Underground`.
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/random_map_player_setup_retry_ux_report.tscn` passed and reported visible `level_count` control data with `Surface Only (1 Level)` and `Surface + Underground (2 Levels)`.
 - `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_terrain_grid_report.tscn` passed.
 - `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_town_guard_report.tscn` passed.
 - `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 tests/native_random_map_auto_template_batch_report.tscn` passed with all 11 representative cases validating.
+
+## Implemented Explicit Level Label Correction
+
+Owner review showed the previous player-facing level selector still read like an ambiguous internal toggle. The level options are now centralized in `ScenarioSelectRules` and rendered by the generated-map menu as literal map-depth choices:
+
+- `Surface Only (1 Level)`;
+- `Surface + Underground (2 Levels)`.
+
+The generated setup provenance now reports both the explicit level label and the underground on/off state, while the config path still emits `level_count: 2` only for the two-level option. This is a UX/config contract correction, not a broad underground production-parity claim.
+
+Validation evidence:
+
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/random_map_player_setup_retry_ux_report.tscn` passed and reported `level_options: ["Surface Only (1 Level)", "Surface + Underground (2 Levels)"]`.
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_owner_normal_water_underground_package_report.tscn` passed with `map_level_count: 2`.
+- `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_terrain_grid_report.tscn` passed.
+- `python3 tests/validate_repo.py`, `git diff --check`, and `jq empty ops/progress.json` passed.
