@@ -22,6 +22,10 @@ const CASES := [
 
 const OWNER_MEDIUM_NORMAL_WATER_SURFACE_WATER_TILES := 2083
 const OWNER_MEDIUM_NORMAL_WATER_WATER_TILE_TOLERANCE := 96
+const OWNER_MEDIUM_NORMAL_WATER_PACKAGE_OBJECTS := 754
+const OWNER_MEDIUM_NORMAL_WATER_GENERATED_OBJECTS := 667
+const OWNER_MEDIUM_NORMAL_WATER_TOWNS := 7
+const OWNER_MEDIUM_NORMAL_WATER_GUARDS := 80
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -172,6 +176,23 @@ func _run_case(service: Variant, catalog: Dictionary, case_record: Dictionary) -
 		])
 		return {}
 	var generated_object_count := int(generated.get("object_placements", []).size())
+	if String(case_record.get("id", "")) == "medium_normal_water_seed_a":
+		if object_count != OWNER_MEDIUM_NORMAL_WATER_PACKAGE_OBJECTS \
+				or generated_object_count != OWNER_MEDIUM_NORMAL_WATER_GENERATED_OBJECTS \
+				or int(generated.get("town_records", []).size()) != OWNER_MEDIUM_NORMAL_WATER_TOWNS \
+				or int(generated.get("guard_records", []).size()) != OWNER_MEDIUM_NORMAL_WATER_GUARDS:
+			_fail("%s normal-water owner count targets drifted: package_objects=%d/%d generated_objects=%d/%d towns=%d/%d guards=%d/%d." % [
+				String(case_record.get("id", "")),
+				object_count,
+				OWNER_MEDIUM_NORMAL_WATER_PACKAGE_OBJECTS,
+				generated_object_count,
+				OWNER_MEDIUM_NORMAL_WATER_GENERATED_OBJECTS,
+				int(generated.get("town_records", []).size()),
+				OWNER_MEDIUM_NORMAL_WATER_TOWNS,
+				int(generated.get("guard_records", []).size()),
+				OWNER_MEDIUM_NORMAL_WATER_GUARDS,
+			])
+			return {}
 	var generated_floor := _generated_object_density_floor(String(case_record.get("size_class_id", "")))
 	var package_floor := _package_object_density_floor(String(case_record.get("size_class_id", "")))
 	var owner_compared_auto_candidate := _is_owner_compared_auto_template(case_record, template_id, profile_id)
@@ -312,6 +333,10 @@ func _expected_owner_compared_auto_template(case_record: Dictionary) -> String:
 		if String(case_record.get("size_class_id", "")) == "homm3_medium" and int(case_record.get("player_count", 0)) == 4:
 			return "translated_rmg_template_001_v1"
 		return ""
+	if String(case_record.get("water_mode", "land")) == "normal_water":
+		if String(case_record.get("size_class_id", "")) == "homm3_medium" and int(case_record.get("player_count", 0)) == 4:
+			return "translated_rmg_template_039_v1"
+		return ""
 	if String(case_record.get("water_mode", "land")) != "land":
 		return ""
 	match String(case_record.get("size_class_id", "")):
@@ -336,6 +361,8 @@ func _expected_owner_compared_auto_profile(case_record: Dictionary) -> String:
 			return "translated_rmg_profile_049_v1"
 		"translated_rmg_template_002_v1":
 			return "translated_rmg_profile_002_v1"
+		"translated_rmg_template_039_v1":
+			return "translated_rmg_profile_039_v1"
 		"translated_rmg_template_042_v1":
 			return "translated_rmg_profile_042_v1"
 		"translated_rmg_template_043_v1":
