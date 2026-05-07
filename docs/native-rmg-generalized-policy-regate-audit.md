@@ -254,15 +254,21 @@ The first generated-native batch exposed three generalized rule failures rather 
 - two-level catalog-auto maps could serialize roads underground while leaving the underground level empty of generated objects;
 - optional/density towns could stack into the same zone or fall below the size-aware town-spacing floor.
 
-Native catalog-auto generation now uses size/level-aware object density floors, copies an eligible subset of decoration/scenic/reward-reference objects onto underground levels, adds deterministic underground road cells for two-level generated packages, and applies the same size-aware town spacing floor used by the Python validator. Extra generated towns are skipped for a zone that already has a town until explicit guarded same-zone settlement regions are modeled.
+Native catalog-auto generation now uses size/level-aware object density floors, copies an eligible subset of decoration/scenic objects onto underground levels, adds deterministic underground road cells for two-level generated packages, and applies the same size-aware town spacing floor used by the Python validator. Extra generated towns are skipped for a zone that already has a town until explicit guarded same-zone settlement regions are modeled.
 
-The underground copy pass deliberately excludes towns, guards, mines, resources, and dwellings. That keeps economy/settlement-site per-zone limits valid while still preventing empty underground levels.
+The underground copy pass deliberately excludes towns, guards, mines, resources, dwellings, and reward references. That keeps economy, reward, and settlement-site per-zone limits valid while still preventing empty underground levels.
+
+`tools/rmg_native_batch_export.gd` also now accepts a comma-separated `--case` filter so failures can be regenerated through Godot only for the named cases under investigation. The expected loop is still to run Godot once to create fresh native packages, then use Python for parsing, validation, and comparison iterations.
 
 Validation evidence:
 
 - `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
 - `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_limit_fix_limit4 --limit 4` exported `4/4` Large islands/normal-water one-level and two-level native packages.
 - `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_limit_fix_limit4 --pretty` parsed `18` owner H3Ms and `4` native AMAPs in about `5.945s`, with `0` parse failures, `0` density gaps, and `0` native rule failures.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_targeted_after_full_failures --case s_randomnumberofplayers,xl_islands_2levels,xl_nowater_2levels,xl_water_2levels` exported the four previously failing cases with `0` export failures.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_targeted_after_full_failures --pretty` parsed `18` owner H3Ms and `4` targeted native AMAPs in about `6.523s`, with `0` parse failures, `0` density gaps, and `0` native rule failures.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_full_after_export_failure_fix` exported all `18/18` owner-file-derived native packages with `0` export failures.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_full_after_export_failure_fix --pretty` parsed `18` owner H3Ms and `18` native AMAPs in about `8.535s`, with `0` parse failures, `0` density gaps, and `0` native rule failures.
 
 The exact owner comparison rows still show count/topology deltas. Those remain diagnostics for future policy work, not production pass/fail targets.
 

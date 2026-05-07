@@ -11,6 +11,7 @@ func _ready() -> void:
 func _run() -> void:
 	var output_dir := _output_dir_from_args()
 	var limit := _limit_from_args()
+	var case_filter := _case_filter_from_args()
 	var absolute_output_dir := ProjectSettings.globalize_path(output_dir)
 	var mkdir_error := DirAccess.make_dir_recursive_absolute(absolute_output_dir)
 	if mkdir_error != OK:
@@ -31,6 +32,8 @@ func _run() -> void:
 		return
 	var service: Variant = ClassDB.instantiate("MapPackageService")
 	var cases := _owner_cases()
+	if not case_filter.is_empty():
+		cases = cases.filter(func(case: Dictionary) -> bool: return case_filter.has(String(case.get("id", ""))))
 	if limit > 0 and cases.size() > limit:
 		cases = cases.slice(0, limit)
 	var manifest := {
@@ -40,6 +43,7 @@ func _run() -> void:
 		"output_dir": output_dir,
 		"absolute_output_dir": absolute_output_dir,
 		"case_limit": limit,
+		"case_filter": case_filter,
 		"case_count": cases.size(),
 		"exported_count": 0,
 		"failed_count": 0,
@@ -71,6 +75,17 @@ func _output_dir_from_args() -> String:
 
 func _limit_from_args() -> int:
 	return int(_arg_value("--limit", "0"))
+
+func _case_filter_from_args() -> Array:
+	var raw := _arg_value("--case", "")
+	if raw.is_empty():
+		return []
+	var result := []
+	for value in raw.split(",", false):
+		var id := String(value).strip_edges()
+		if not id.is_empty():
+			result.append(id)
+	return result
 
 func _arg_value(name: String, fallback: String) -> String:
 	var args := OS.get_cmdline_user_args()
