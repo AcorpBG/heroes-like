@@ -587,3 +587,17 @@ Validation evidence:
 - `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . --quit-after 360 tests/native_random_map_auto_template_batch_report.tscn` passed as the broader native generator integration smoke.
 
 This reinforces the testing split: correctness validation and owner comparison remain Python-only once `.amap` packages exist. Godot is still only needed for fresh package generation/export through the current `MapPackageService` boundary and for actual editor/runtime smokes.
+
+## Implemented Guard-Mediated Closure Diagnostic Gate
+
+The existing fast validation proved that native packages avoid free town-to-town routes after guards are considered, but that was not enough to prove HoMM3-like blocker/guard shape. A map can pass that rule by sealing routes with permanent terrain/blocker masks before guards matter, which is not the same as an opening guarded by a monster stack.
+
+The Python audit now separates native guard body blocking from the guard control-zone tiles when computing object-only town-pair topology. This keeps `object_route_reachable_pair_count_total` from accidentally treating guard control as permanent object closure. `tools/rmg_fast_validation.py` also has an optional `--closure-shape-gate` that fails when owner evidence has town pairs that are reachable with terrain/objects only but closed after guards, while the native package has no equivalent guard-mediated closure.
+
+Validation evidence:
+
+- `python3 -m py_compile tools/rmg_fast_audit.py tools/rmg_fast_validation.py tools/rmg_python_validation_gate.py` passed.
+- Default full fast validation remains green: `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_timing_full --require-all-owner-matches --summary --failure-limit 4` reports `status=pass` with `0` parse/native/density/policy/topology/coverage gaps.
+- The stricter diagnostic gate exposes the next blocker: `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_timing_full --require-all-owner-matches --closure-shape-gate --allow-failures --summary --failure-limit 6` reports `13` `missing_guard_mediated_town_route_closure` gaps.
+
+This is not a parser problem and not a reason to go back to Godot report scenes. It shows that the next generator work should open guarded crossings in terrain/blocker shape and let route guards close those openings, instead of relying on permanent blocker/terrain over-closure.

@@ -31,6 +31,7 @@ DEFAULT_ROAD_LARGEST_SHARE_MULTIPLIER = 1.25
 DEFAULT_ROAD_LARGEST_SHARE_ABSOLUTE_CAP = 0.92
 DEFAULT_ROAD_LARGEST_SHARE_EPSILON = 0.05
 DEFAULT_ROAD_COMPONENT_COUNT_FLOOR_RATIO = 0.50
+DEFAULT_GUARD_CLOSURE_MIN_OWNER_OPEN_PAIR_COUNT = 1
 DEFAULT_CATEGORY_FLOOR_RATIOS = {
     "guard": 0.55,
     "object": 0.60,
@@ -390,6 +391,52 @@ def topology_failures(
     return failures
 
 
+def guard_closure_shape_failures(
+    owner_samples: list[dict[str, Any]],
+    native_samples: list[dict[str, Any]],
+    min_owner_open_pair_count: int,
+) -> list[dict[str, Any]]:
+    owners = {
+        case_id_from_path(Path(str(sample.get("path", "")))): sample
+        for sample in owner_samples
+        if sample.get("status") == "parsed"
+    }
+    natives = {
+        case_id_from_path(Path(str(sample.get("path", "")))): sample
+        for sample in native_samples
+        if sample.get("status") == "parsed"
+    }
+    failures: list[dict[str, Any]] = []
+    for case_id in sorted(set(owners) & set(natives)):
+        owner_sem = semantic(owners[case_id])
+        native_sem = semantic(natives[case_id])
+        owner_object_routes = int(owner_sem.get("object_route_reachable_pair_count_total", 0))
+        owner_guarded_routes = int(owner_sem.get("guarded_route_reachable_pair_count_total", 0))
+        native_object_routes = int(native_sem.get("object_route_reachable_pair_count_total", 0))
+        native_guarded_routes = int(native_sem.get("guarded_route_reachable_pair_count_total", 0))
+        owner_guard_closed_routes = max(0, owner_object_routes - owner_guarded_routes)
+        native_guard_closed_routes = max(0, native_object_routes - native_guarded_routes)
+        if owner_guard_closed_routes < min_owner_open_pair_count:
+            continue
+        if native_guard_closed_routes <= 0:
+            failures.append(
+                {
+                    "case_id": case_id,
+                    "path": natives[case_id].get("path", ""),
+                    "owner_path": owners[case_id].get("path", ""),
+                    "rule": "missing_guard_mediated_town_route_closure",
+                    "owner_object_route_reachable_pair_count": owner_object_routes,
+                    "owner_guarded_route_reachable_pair_count": owner_guarded_routes,
+                    "owner_guard_closed_pair_count": owner_guard_closed_routes,
+                    "native_object_route_reachable_pair_count": native_object_routes,
+                    "native_guarded_route_reachable_pair_count": native_guarded_routes,
+                    "native_guard_closed_pair_count": native_guard_closed_routes,
+                    "minimum_owner_guard_closed_pair_count": min_owner_open_pair_count,
+                }
+            )
+    return failures
+
+
 def compact_parse_failures(samples: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [
         {
@@ -530,10 +577,15 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         args.road_largest_share_absolute_cap,
         args.road_component_count_floor_ratio,
     )
+    closure_shape_gaps = guard_closure_shape_failures(
+        owner_samples,
+        native_samples,
+        args.guard_closure_min_owner_open_pair_count,
+    ) if args.closure_shape_gate else []
     comparisons = matched_comparisons(owner_samples, native_samples)
     coverage_gaps = coverage_failures(owner_samples, native_samples) if bool(getattr(args, "require_all_owner_matches", False)) else []
 
-    status = "pass" if not parse_failures and not native_failures and not density_gaps and not policy_gaps and not topology_gaps and not coverage_gaps else "fail"
+    status = "pass" if not parse_failures and not native_failures and not density_gaps and not policy_gaps and not topology_gaps and not closure_shape_gaps and not coverage_gaps else "fail"
     return {
         "schema_id": "rmg_fast_validation_v1",
         "status": status,
@@ -557,6 +609,8 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "road_largest_share_absolute_cap": args.road_largest_share_absolute_cap,
             "road_largest_share_epsilon": DEFAULT_ROAD_LARGEST_SHARE_EPSILON,
             "road_component_count_floor_ratio": args.road_component_count_floor_ratio,
+            "closure_shape_gate_enabled": args.closure_shape_gate,
+            "guard_closure_min_owner_open_pair_count": args.guard_closure_min_owner_open_pair_count,
             "require_all_owner_matches": bool(getattr(args, "require_all_owner_matches", False)),
         },
         "timings_seconds": {
@@ -574,6 +628,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "density_gap_count": len(density_gaps),
             "policy_gap_count": len(policy_gaps),
             "topology_gap_count": len(topology_gaps),
+            "closure_shape_gap_count": len(closure_shape_gaps),
             "coverage_gap_count": len(coverage_gaps),
             "matched_comparison_count": len(comparisons),
         },
@@ -583,6 +638,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "density_gaps": density_gaps,
             "policy_gaps": policy_gaps,
             "topology_gaps": topology_gaps,
+            "closure_shape_gaps": closure_shape_gaps,
             "coverage_gaps": coverage_gaps,
         },
         "groups": {
@@ -621,6 +677,7 @@ def compact_summary(report: dict[str, Any], failure_limit: int) -> str:
             summary.get("topology_gap_count", 0),
             summary.get("coverage_gap_count", 0),
         ),
+        "closure_shape_gaps=%s" % summary.get("closure_shape_gap_count", 0),
     ]
     if inputs.get("native_artifact_autodiscovered", False):
         lines.append("artifact autodiscovered=true root=%s" % inputs.get("artifact_root", ""))
@@ -628,7 +685,7 @@ def compact_summary(report: dict[str, Any], failure_limit: int) -> str:
         lines.append("artifact autodiscovered=false error=%s" % inputs.get("native_artifact_discovery_error", ""))
 
     remaining = max(0, failure_limit)
-    for bucket_id in ["parse", "native_rules", "density_gaps", "policy_gaps", "topology_gaps", "coverage_gaps"]:
+    for bucket_id in ["parse", "native_rules", "density_gaps", "policy_gaps", "topology_gaps", "closure_shape_gaps", "coverage_gaps"]:
         bucket = failures.get(bucket_id, [])
         if not isinstance(bucket, list) or not bucket or remaining <= 0:
             continue
@@ -649,6 +706,8 @@ def main() -> int:
     parser.add_argument("--road-largest-share-multiplier", type=float, default=DEFAULT_ROAD_LARGEST_SHARE_MULTIPLIER, help="Maximum native largest road-component share as a multiple of the matched owner share")
     parser.add_argument("--road-largest-share-absolute-cap", type=float, default=DEFAULT_ROAD_LARGEST_SHARE_ABSOLUTE_CAP, help="Absolute cap for native largest road-component share")
     parser.add_argument("--road-component-count-floor-ratio", type=float, default=DEFAULT_ROAD_COMPONENT_COUNT_FLOOR_RATIO, help="Minimum native road-component count as a ratio of matched owner component count")
+    parser.add_argument("--closure-shape-gate", action="store_true", help="Fail when owner evidence has guard-mediated town-route closures but native maps are closed by permanent blockers before guards matter")
+    parser.add_argument("--guard-closure-min-owner-open-pair-count", type=int, default=DEFAULT_GUARD_CLOSURE_MIN_OWNER_OPEN_PAIR_COUNT, help="Minimum owner guard-closed town-pair count before closure-shape comparison is enforced")
     parser.add_argument("--no-density-gate", action="store_true", help="Report density metrics but do not fail on owner-density underfill")
     parser.add_argument("--no-policy-gate", action="store_true", help="Report policy metrics but do not fail on category, road, and guard/reward underfill")
     parser.add_argument("--no-topology-gate", action="store_true", help="Report road topology metrics but do not fail on road component shape gaps")

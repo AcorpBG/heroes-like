@@ -439,9 +439,13 @@ def semantic_from_amap(doc: dict[str, Any]) -> dict[str, Any]:
         level_key = str(int(obj.get("level", 0)))
         state = states.setdefault(level_key, {"terrain_blocked": set(), "object_blocked": set(), "guarded_blocked": set(), "guard_controlled": set(), "towns": []})
         kind = str(obj.get("kind", obj.get("native_record_kind", obj.get("category_id", "object"))))
-        for tile in obj.get("package_block_tiles", obj.get("body_tiles", [])):
+        block_tiles = obj.get("package_block_tiles", obj.get("body_tiles", []))
+        object_block_tiles = obj.get("package_body_tiles", obj.get("body_tiles", [])) if kind == "guard" else block_tiles
+        for tile in object_block_tiles:
             key = point_key(int(tile.get("x", 0)), int(tile.get("y", 0)))
             state["object_blocked"].add(key)
+        for tile in block_tiles:
+            key = point_key(int(tile.get("x", 0)), int(tile.get("y", 0)))
             state["guarded_blocked"].add(key)
             if kind == "guard":
                 state["guard_controlled"].add(key)
