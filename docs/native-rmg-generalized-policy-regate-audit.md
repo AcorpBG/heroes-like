@@ -367,3 +367,20 @@ Validation evidence:
 - `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_owner_normal_water_underground_package_report.tscn` passed with `map_level_count: 2`.
 - `GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 tests/native_random_map_terrain_grid_report.tscn` passed.
 - `python3 tests/validate_repo.py`, `git diff --check`, and `jq empty ops/progress.json` passed.
+
+## Implemented Generated Two-Level Town Floor
+
+The remaining fast-policy failures were material town-density gaps on `108x108_l2` and `36x36_l2`. The fix stays generalized: normal non-owner-discovered catalog-auto two-level maps now materialize neutral towns to a size/level-aware floor without using uploaded owner sample ids as runtime selectors.
+
+Small two-level supplements remain on the underground layer where the existing generated shape validates. Large two-level supplements use the surface source-zone placement helper instead, because placing several neutral towns into an otherwise open underground layer created unguarded package routes that owner Large two-level examples did not have.
+
+The supplement records recovered neutral-town semantics (`+0x30`, `neutral_minimum_towns`), avoids zones that already have towns, preserves player start town ownership/anchors, and relies on the package route-closure gate to reject any free town-to-town traversal.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- `GODOT_SILENCE_ROOT_WARNING=1 /root/.local/bin/godot --headless --path . tools/rmg_native_batch_export.tscn -- --out .artifacts/rmg_native_batch_export_after_twolevel_town_floor --case s_2playerss_normalwater_2level,s_randomnumberofplayers_islands_2level,l_islands_randomplayers_2level,l_normalwater_randomplayers_2level,l_nowater_randomplayers_2level` exported `5/5` targeted packages with `0` failures.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_twolevel_town_floor --allow-failures --pretty` reports `status: pass`, `0` parse failures, `0` native rule failures, `0` density gaps, and `0` policy gaps for the targeted package set.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_after_twolevel_town_floor_combined --allow-failures --pretty` reports `status: pass` across the combined `18` package evidence set, with `0` parse failures, `0` native rule failures, `0` density gaps, and `0` policy gaps in about `8.796s`.
+
+This closes the current broad fast-policy gate without changing the testing posture: Godot is still only needed when fresh native packages must be generated/exported or when editor/runtime integration is under test. H3M parsing, AMAP inspection, category/road/town/guard comparison, route summaries, and policy gates belong in the Python CLI loop.
