@@ -77,7 +77,7 @@ func _run() -> void:
 	if int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost player-town/castle requirements: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_validity_precheck_ported_inspection_only":
+	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_pass_ported_inspection_only":
 		_fail("The clean boundary did not expose h3maped 0x4a8d2c/0x4a93a2/0x49aa93 direct town/castle candidate validity prechecking: %s" % JSON.stringify(report))
 		return
 	var town_castle_placement: Dictionary = selected_payload.get("town_castle_placement", {})
@@ -150,8 +150,20 @@ func _run() -> void:
 	if String(minimum_calls[0].get("direct_validity_precheck_status", "")) != "0x49a1d8_validity_precheck_ported_full_0x49aa93_collision_pending" or int(minimum_calls[0].get("validity_precheck_eligible_count", -1)) != int(minimum_calls[0].get("candidate_count", -2)):
 		_fail("0x49a1d8 first direct minimum castle precheck did not preserve valid free-cell candidates: %s" % JSON.stringify(town_castle_placement))
 		return
-	if String(minimum_calls[0].get("direct_full_eligibility_status", "")) != "pending_0x49a6f9_0x49a09c_bit22_and_water_match_gates":
-		_fail("0x49aa93 first direct minimum castle full gate dependencies were not reported: %s" % JSON.stringify(town_castle_placement))
+	if String(minimum_calls[0].get("direct_full_eligibility_status", "")) != "0x49aa93_0x49a09c_town_footprint_pass_ported_project_writeout_pending":
+		_fail("0x49aa93 first direct minimum castle full gate sequence drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if String(town_castle_placement.get("town_footprint_49a09c_status", "")) != "0x49a09c_town_footprint_pass_ported_for_current_generated_cell_grid":
+		_fail("0x49a09c Town footprint pass status drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if int(town_castle_placement.get("town_footprint_49a09c_pass_total", -1)) != 97 or int(town_castle_placement.get("town_footprint_49a09c_rejected_bounds_count", -1)) != 135 or int(town_castle_placement.get("town_footprint_49a09c_rejected_bit22_count", -1)) != 1:
+		_fail("0x49a09c Town footprint pass/bounds/bit22 counts drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if int(town_castle_placement.get("town_footprint_49a09c_rejected_bit25_count", -1)) != 22 or int(town_castle_placement.get("town_footprint_49a09c_rejected_owner_count", -1)) != 196 or int(town_castle_placement.get("town_footprint_49a09c_rejected_terrain9_count", -1)) != 0 or int(town_castle_placement.get("town_footprint_49a09c_rejected_water_class_count", -1)) != 0:
+		_fail("0x49a09c Town footprint terrain/owner/water rejection counts drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if String(minimum_calls[0].get("town_footprint_49a09c_status", "")) != "0x49a09c_town_body_offsets_bit22_bit25_water_owner_pass_ported":
+		_fail("0x49a09c first direct minimum castle footprint gate status drifted: %s" % JSON.stringify(town_castle_placement))
 		return
 	if String(minimum_calls[0].get("town_footprint_mask_status", "")) != "0x49a6f9_town_text_mask_body_scan_ported_object_collision_pending" or int(minimum_calls[0].get("town_footprint_mask_eligible_count", -1)) != 42 or int(minimum_calls[0].get("closest_town_footprint_mask_distance", -1)) != 5:
 		_fail("0x49a6f9 first direct minimum castle Town mask body scan drifted: %s" % JSON.stringify(town_castle_placement))
@@ -438,7 +450,7 @@ func _run() -> void:
 	if String(phase_ledger[4].get("status", "")) != "ported_schedule_and_visual_normalization_inspection_only":
 		_fail("The phase ledger did not mark the clean h3maped 0x4a3f27 terrain schedule and visual normalization as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[5].get("status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_validity_precheck_ported_inspection_only_cells_pending":
+	if String(phase_ledger[5].get("status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_pass_ported_project_writeout_pending":
 		_fail("The phase ledger did not mark only h3maped direct town/castle candidate validity prechecking as ported for the object category phase: %s" % JSON.stringify(report))
 		return
 
@@ -464,6 +476,8 @@ func _run() -> void:
 		"minimum_settlement_call_count": town_castle_placement.get("minimum_settlement_call_count", 0),
 		"town_footprint_mask_status": town_castle_placement.get("town_footprint_mask_status", ""),
 		"town_footprint_mask_eligible_total": town_castle_placement.get("town_footprint_mask_eligible_total", 0),
+		"town_footprint_49a09c_status": town_castle_placement.get("town_footprint_49a09c_status", ""),
+		"town_footprint_49a09c_pass_total": town_castle_placement.get("town_footprint_49a09c_pass_total", 0),
 		"object_cell_materialization_status": town_castle_placement.get("object_cell_materialization_status", ""),
 		"object_record_stamped_count": town_castle_placement.get("object_record_stamped_count", 0),
 		"object_record_random_tie_selection_count": town_castle_placement.get("object_record_random_tie_selection_count", 0),
