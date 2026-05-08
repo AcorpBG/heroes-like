@@ -20011,6 +20011,21 @@ int32_t count_package_town_reachable_pairs(const Array &towns, int32_t width, in
 	return reachable_pair_count;
 }
 
+bool runtime_template_zone_pair_allows_package_corridor(const Dictionary &left, const Dictionary &right, const Dictionary &runtime_zone_adjacency, bool enforce_runtime_links) {
+	if (!enforce_runtime_links) {
+		return true;
+	}
+	const String left_zone_id = String(left.get("zone_id", ""));
+	const String right_zone_id = String(right.get("zone_id", ""));
+	if (left_zone_id.is_empty() || right_zone_id.is_empty()) {
+		return false;
+	}
+	if (left_zone_id == right_zone_id) {
+		return true;
+	}
+	return array_has_string(runtime_zone_adjacency.get(left_zone_id, Array()), right_zone_id);
+}
+
 void apply_profile_object_route_masks_to_package_objects(Array &objects, const Dictionary &generated_map) {
 	Dictionary normalized = generated_map.get("normalized_config", Dictionary());
 	const int32_t object_route_target = profile_object_route_open_pair_target(normalized);
@@ -20155,6 +20170,10 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 	const bool preserve_xl_two_level_land_object_barriers = native_catalog_auto_xl_two_level_land_profile(normalized);
 	const bool preserve_large_two_level_normal_water_object_barriers = native_catalog_auto_large_two_level_normal_water_profile(normalized);
 	const bool compact_profile_guard_masks_define_corridors = native_catalog_auto_large_one_level_islands_profile(normalized);
+	Dictionary runtime_zone_graph = generated_map.get("runtime_zone_graph", Dictionary());
+	Array runtime_links = runtime_zone_graph.get("links", Array());
+	const bool enforce_runtime_template_links = !runtime_links.is_empty() && String(runtime_zone_graph.get("generation_status", "")) == "runtime_zone_graph_generated";
+	Dictionary runtime_zone_adjacency = enforce_runtime_template_links ? zone_link_adjacency(runtime_links) : Dictionary();
 	Dictionary terrain_blocked = package_terrain_blocked_lookup(generated_map);
 	Dictionary cleared_lookup;
 	int32_t corridor_count = 0;
@@ -20162,6 +20181,8 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 	int32_t guard_closure_pass_count = 0;
 	int32_t final_guarded_route_pair_count = 0;
 	int32_t observed_guarded_route_pair_count = 0;
+	int32_t runtime_nonlinked_route_pair_count = 0;
+	int32_t runtime_nonlinked_route_mask_tile_count = 0;
 	for (int32_t level = 0; level < level_count; ++level) {
 		Array towns;
 		for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
@@ -20183,6 +20204,10 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 				Dictionary blocked = package_object_route_blocked_lookup_for_level(objects, terrain_blocked, level, false);
 				Array path = direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, blocked);
 				if (path.is_empty()) {
+					continue;
+				}
+				if (!runtime_template_zone_pair_allows_package_corridor(left, right, runtime_zone_adjacency, enforce_runtime_template_links)) {
+					++runtime_nonlinked_route_pair_count;
 					continue;
 				}
 				if (!preserve_xl_surface_islands_object_barriers && !preserve_large_one_level_islands_object_barriers && !preserve_large_two_level_islands_object_barriers && !preserve_xl_two_level_islands_object_barriers && !preserve_medium_two_level_islands_object_barriers && !preserve_medium_two_level_normal_water_object_barriers && !preserve_xl_two_level_land_object_barriers && !preserve_large_two_level_normal_water_object_barriers) {
@@ -20207,6 +20232,10 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 					Dictionary right = Dictionary(towns[right_index]);
 					Array object_path = direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, object_blocked);
 					if (object_path.is_empty()) {
+						continue;
+					}
+					if (!runtime_template_zone_pair_allows_package_corridor(left, right, runtime_zone_adjacency, enforce_runtime_template_links)) {
+						++runtime_nonlinked_route_pair_count;
 						continue;
 					}
 					Dictionary guarded_blocked = package_object_route_blocked_lookup_for_level(objects, terrain_blocked, level, true);
@@ -20240,6 +20269,9 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 				if (direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, object_blocked).is_empty()) {
 					continue;
 				}
+				if (!runtime_template_zone_pair_allows_package_corridor(left, right, runtime_zone_adjacency, enforce_runtime_template_links)) {
+					continue;
+				}
 				Dictionary guarded_blocked = package_object_route_blocked_lookup_for_level(objects, terrain_blocked, level, true);
 				if (!direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, guarded_blocked).is_empty()) {
 					++remaining_level_pairs;
@@ -20248,7 +20280,7 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 		}
 		final_guarded_route_pair_count += remaining_level_pairs;
 	}
-	if (corridor_count <= 0 && cleared_lookup.is_empty() && guard_closure_tile_count <= 0) {
+	if (corridor_count <= 0 && cleared_lookup.is_empty() && guard_closure_tile_count <= 0 && runtime_nonlinked_route_pair_count <= 0) {
 		return;
 	}
 	for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
@@ -20263,7 +20295,10 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 		object["package_guarded_corridor_guard_closure_pass_count"] = guard_closure_pass_count;
 		object["package_guarded_corridor_observed_guarded_route_pair_count"] = observed_guarded_route_pair_count;
 		object["package_guarded_corridor_remaining_guarded_route_pair_count"] = final_guarded_route_pair_count;
-		object["package_guarded_corridor_materialization_policy"] = "town routes are allowed through decorative/scenic filler and then closed by guard package masks so permanent blockers do not replace HoMM3-style guard-mediated crossings";
+		object["package_guarded_corridor_runtime_link_enforced"] = enforce_runtime_template_links;
+		object["package_guarded_corridor_runtime_nonlinked_route_pair_count"] = runtime_nonlinked_route_pair_count;
+		object["package_guarded_corridor_runtime_nonlinked_route_mask_tile_total"] = runtime_nonlinked_route_mask_tile_count;
+		object["package_guarded_corridor_materialization_policy"] = "template-linked or same-zone town routes are allowed through decorative/scenic filler and then closed by guard package masks; non-linked runtime-template town pairs are not converted into guard-mediated corridors";
 		objects[object_index] = object;
 	}
 }
