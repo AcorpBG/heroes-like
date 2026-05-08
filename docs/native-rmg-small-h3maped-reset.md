@@ -68,4 +68,11 @@ Passing broad counts alone is not sufficient.
 
 The first GDExtension boundary is `MapPackageService.inspect_h3maped_small_rmg_port(config)`. It currently supports inspection for 36x36 single-level land configs only and computes the recovered accepted-template vector using the h3maped size-score formula and player-capacity filter from `0x49f0cd`.
 
-`MapPackageService.generate_random_map` routes normal small land `native_catalog_auto` requests to this boundary and returns `h3maped_small_port_generation_not_ready` instead of producing a fallback map. This is intentional until the h3maped RNG selection (`0x4e7276() % accepted_count`) and the main phase sequence (`0x4ac552`) are ported.
+The executable-backed RNG boundary is now recovered for template selection:
+
+- `0x4e7269` writes the global PRNG state.
+- `0x4e7276` advances with `state = state * 0x343fd + 0x269ec3` and returns `(state >> 16) & 0x7fff`.
+- `0x4ac597..0x4ac5a4` selects the accepted template by `0x4e7276() % accepted_template_count`.
+- `0x49d914` seeds the generator through `0x4e778d`, which derives a numeric time value. The inspection boundary therefore only selects when the config seed is already numeric and can be passed to the seed setter without custom hashing.
+
+`MapPackageService.generate_random_map` routes normal small land `native_catalog_auto` requests to this boundary and returns `h3maped_small_port_generation_not_ready` instead of producing a fallback map. This is intentional until the main phase sequence (`0x4ac552`) is ported.

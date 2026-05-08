@@ -10,8 +10,10 @@
 #include <godot_cpp/variant/packed_int32_array.hpp>
 
 #include <algorithm>
+#include <cerrno>
 #include <chrono>
 #include <cmath>
+#include <cstdlib>
 #include <cstdint>
 #include <limits>
 #include <map>
@@ -120,6 +122,12 @@ const H3MapedSmallTemplateEvidence H3MAPED_SMALL_LAND_TEMPLATE_EVIDENCE[] = {
 	{ "h3maped_template_046", 46, 1, 8, 1, 3, 2, 5, 9, 12, 0 },
 	{ "h3maped_template_047", 47, 1, 8, 1, 3, 2, 5, 7, 8, 0 },
 	{ "h3maped_template_048", 48, 1, 9, 1, 6, 2, 7, 7, 12, 0 },
+};
+
+struct H3MapedRngStep {
+	uint32_t seed = 0;
+	uint32_t next_state = 0;
+	int32_t value = 0;
 };
 
 int64_t elapsed_usec_since(const std::chrono::steady_clock::time_point &started_at) {
@@ -6037,6 +6045,48 @@ bool h3maped_small_land_scope(const Dictionary &normalized) {
 			&& String(normalized.get("water_mode", "land")) == "land";
 }
 
+bool h3maped_parse_explicit_seed(const String &seed_text, uint32_t &seed_value) {
+	const String stripped = seed_text.strip_edges();
+	if (stripped.is_empty()) {
+		return false;
+	}
+	const CharString utf8 = stripped.utf8();
+	char *end = nullptr;
+	errno = 0;
+	const long long parsed = std::strtoll(utf8.get_data(), &end, 10);
+	if (errno != 0 || end == utf8.get_data() || *end != '\0') {
+		return false;
+	}
+	seed_value = uint32_t(parsed);
+	return true;
+}
+
+H3MapedRngStep h3maped_first_rng_step(uint32_t seed) {
+	H3MapedRngStep step;
+	step.seed = seed;
+	step.next_state = seed * 0x343fdu + 0x269ec3u;
+	step.value = int32_t((step.next_state >> 16U) & 0x7fffu);
+	return step;
+}
+
+Dictionary h3maped_rng_evidence_report(const String &seed_text, uint32_t seed_value, const H3MapedRngStep &step, int32_t accepted_count) {
+	Dictionary evidence;
+	evidence["function_address"] = "0x4e7276";
+	evidence["seed_setter_address"] = "0x4e7269";
+	evidence["time_seed_source_address"] = "0x4e778d";
+	evidence["template_selection_address"] = "0x4ac597..0x4ac5a4";
+	evidence["algorithm"] = "state = state * 0x343fd + 0x269ec3; return (state >> 16) & 0x7fff";
+	evidence["seed_source"] = "explicit_numeric_config_seed_as_0x4e7269_input";
+	evidence["seed_text"] = seed_text;
+	evidence["seed_value_uint32"] = int64_t(seed_value);
+	evidence["first_state_uint32"] = int64_t(step.next_state);
+	evidence["first_value"] = step.value;
+	evidence["accepted_count"] = accepted_count;
+	evidence["selection_formula"] = "0x4e7276() % accepted_template_count";
+	evidence["selected_vector_index"] = accepted_count > 0 ? int32_t(step.value % accepted_count) : -1;
+	return evidence;
+}
+
 Dictionary h3maped_small_rmg_port_report_for_normalized(const Dictionary &normalized) {
 	Dictionary constraints = normalized.get("player_constraints", Dictionary());
 	const int32_t human_count = int32_t(constraints.get("human_count", 1));
@@ -6091,7 +6141,28 @@ Dictionary h3maped_small_rmg_port_report_for_normalized(const Dictionary &normal
 	report["player_count"] = player_count;
 	report["accepted_template_count"] = accepted_templates.size();
 	report["accepted_templates"] = accepted_templates;
-	report["selected_template_status"] = accepted_templates.size() > 0 ? String("blocked_until_h3maped_rng_ported") : String("none");
+	uint32_t seed_value = 0;
+	const String seed_text = String(normalized.get("normalized_seed", normalized.get("seed", "0")));
+	if (supported_scope && accepted_templates.size() > 0 && h3maped_parse_explicit_seed(seed_text, seed_value)) {
+		const H3MapedRngStep rng_step = h3maped_first_rng_step(seed_value);
+		const int32_t selected_index = int32_t(rng_step.value % int32_t(accepted_templates.size()));
+		report["selected_template_status"] = "h3maped_rng_selected";
+		report["selected_template_vector_index"] = selected_index;
+		report["selected_template"] = accepted_templates[selected_index];
+		report["h3maped_rng"] = h3maped_rng_evidence_report(seed_text, seed_value, rng_step, int32_t(accepted_templates.size()));
+	} else if (supported_scope && accepted_templates.size() > 0) {
+		Dictionary evidence;
+		evidence["function_address"] = "0x4e7276";
+		evidence["seed_setter_address"] = "0x4e7269";
+		evidence["time_seed_source_address"] = "0x4e778d";
+		evidence["algorithm"] = "state = state * 0x343fd + 0x269ec3; return (state >> 16) & 0x7fff";
+		evidence["seed_text"] = seed_text;
+		evidence["blocked_reason"] = "h3maped executable seeds from a numeric time-derived value; this inspection only selects when config seed is numeric and can be passed to 0x4e7269 without custom hashing";
+		report["h3maped_rng"] = evidence;
+		report["selected_template_status"] = "blocked_until_numeric_h3maped_seed";
+	} else {
+		report["selected_template_status"] = "none";
+	}
 	report["generation_phase_status"] = "blocked_until_h3maped_phase_sequence_ported";
 	report["normalized_config"] = normalized;
 	return report;
@@ -6103,9 +6174,9 @@ Dictionary h3maped_small_rmg_generation_not_ready_result(const Dictionary &norma
 	result["ok"] = false;
 	result["status"] = "h3maped_small_port_generation_not_ready";
 	result["generation_status"] = "h3maped_small_port_generation_not_ready";
-	result["full_generation_status"] = "h3maped_small_port_waiting_for_rng_and_phase_port";
-	result["error_code"] = "h3maped_rng_and_phase_port_incomplete";
-	result["message"] = "Small h3maped-derived RMG is now the active path, but generation is blocked until the h3maped RNG selection and phase sequence are ported. No fallback map is produced.";
+	result["full_generation_status"] = "h3maped_small_port_waiting_for_phase_port";
+	result["error_code"] = "h3maped_phase_port_incomplete";
+	result["message"] = "Small h3maped-derived RMG is now the active path, and the executable-backed RNG/template selection boundary is present. Generation remains blocked until the h3maped 0x4ac552 phase sequence is ported. No fallback map is produced.";
 	result["normalized_config"] = normalized;
 	result["h3maped_small_port"] = report;
 	result["replacement_slice_id"] = "native-rmg-small-h3maped-port-10184";
