@@ -325,6 +325,19 @@ func _run() -> void:
 	if int(pre_crossing_model.get("active_payload_node_count", -1)) != 28:
 		_fail("The h3maped 0x4ccdfc payload-gated node count drifted from the executable model: %s" % JSON.stringify(report))
 		return
+	if String(pre_crossing_model.get("source_node_walk_status", "")) != "0x4cca55_to_0x4a2777_source_node_cycles_recovered":
+		_fail("The h3maped polygon model did not expose the 0x4cca55 -> 0x4a2777 source-node walks: %s" % JSON.stringify(report))
+		return
+	if int(pre_crossing_model.get("source_node_walk_count", -1)) != 6 or int(pre_crossing_model.get("source_node_walk_guard_exhausted_count", -1)) != 0:
+		_fail("The h3maped source-node walk count or guard status drifted: %s" % JSON.stringify(report))
+		return
+	var source_node_walks: Array = pre_crossing_model.get("source_node_walks", [])
+	if source_node_walks.size() != 6 or not source_node_walks[0] is Dictionary:
+		_fail("The h3maped source-node walk report was malformed: %s" % JSON.stringify(report))
+		return
+	if int(source_node_walks[0].get("cycle_node_count", 0)) <= 0 or int(source_node_walks[0].get("finalized_coordinate_count", 0)) <= 0:
+		_fail("The h3maped source-node walk report did not expose finalized cycle coordinates: %s" % JSON.stringify(report))
+		return
 	var polygon_splitter: Dictionary = level_footprint_phase.get("polygon_splitter_contract", {})
 	if String(polygon_splitter.get("status", "")) != "0x4cca55_0x4ccb64_splitter_contract_recovered_mutation_not_executed":
 		_fail("The h3maped polygon splitter contract did not expose the recovered locator/splitter boundary: %s" % JSON.stringify(report))
@@ -433,6 +446,7 @@ func _run() -> void:
 		"polygon_seed_split_count": polygon_seed.get("materialized_primary_split_seed_count", 0),
 		"polygon_finalized_triplet_count": pre_crossing_model.get("finalized_triplet_count", 0),
 		"polygon_finalized_node_count": pre_crossing_model.get("finalized_node_count", 0),
+		"source_node_walk_status": pre_crossing_model.get("source_node_walk_status", ""),
 		"polygon_splitter_status": polygon_splitter.get("status", ""),
 		"initial_polygon_node_pairs": polygon_splitter.get("materialized_initial_node_pair_count", 0),
 		"phase_count": phase_sequence.size(),
