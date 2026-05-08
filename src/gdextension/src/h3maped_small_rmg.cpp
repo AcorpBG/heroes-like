@@ -91,6 +91,30 @@ struct LineWriteResult {
 	int32_t out_of_bounds_write_count = 0;
 };
 
+struct SpanRecord {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
+struct SpanFillCellWrite {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t zone_id = 0;
+	bool reserved = false;
+};
+
+struct SpanFillResult {
+	std::vector<SpanFillCellWrite> trace;
+	std::map<int64_t, bool> unique_cells;
+	int32_t pushed_span_count = 0;
+	int32_t popped_span_count = 0;
+	int32_t max_pending_span_count = 0;
+	int32_t out_of_bounds_span_count = 0;
+	int32_t blocked_initial_span_count = 0;
+};
+
 struct ClipBounds {
 	int32_t min_x = 0;
 	int32_t min_y = 0;
@@ -104,6 +128,8 @@ struct ClipResult {
 	String branch;
 	bool input_inside = false;
 };
+
+constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
 
 struct PolygonModelNode {
 	String id;
@@ -1313,6 +1339,36 @@ void merge_line_write_result_4a2777(
 	out_of_bounds_write_count += line.out_of_bounds_write_count;
 }
 
+int64_t cell_key_4a325d(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
+	return int64_t(level) * int64_t(width) * int64_t(height) + int64_t(y) * int64_t(width) + int64_t(x);
+}
+
+uint32_t zone_word_4a325d(uint32_t existing_word, int32_t zone_id) {
+	return (existing_word & 0xff00ffffU) | (uint32_t(zone_id & 0xff) << 16U);
+}
+
+void apply_line_trace_to_zone_buffer_4a2777(
+		const LineWriteResult &line,
+		std::vector<uint32_t> *zone_words,
+		std::vector<uint8_t> *cell_flags,
+		int32_t width,
+		int32_t height,
+		int32_t level_count) {
+	if (zone_words == nullptr || cell_flags == nullptr) {
+		return;
+	}
+	for (const LineCellWrite &write : line.trace) {
+		if (write.x < 0 || write.y < 0 || write.level < 0 || write.x >= width || write.y >= height || write.level >= level_count) {
+			continue;
+		}
+		const int64_t key = cell_key_4a325d(width, height, write.x, write.y, write.level);
+		(*zone_words)[size_t(key)] = zone_word_4a325d((*zone_words)[size_t(key)], write.zone_id);
+		if (write.reserved) {
+			(*cell_flags)[size_t(key)] = uint8_t((*cell_flags)[size_t(key)] | 0x10U);
+		}
+	}
+}
+
 Dictionary segment_report_4a2777(
 		const String &id,
 		const String &branch,
@@ -1352,7 +1408,9 @@ Dictionary boundary_traversal_4a2777_report(
 		const Dictionary &normalized_config,
 		const Array &runtime_zones,
 		const Dictionary &split_model,
-		uint32_t rng_state_after_coordinate_seed) {
+		uint32_t rng_state_after_coordinate_seed,
+		std::vector<uint32_t> *zone_words_out = nullptr,
+		std::vector<uint8_t> *cell_flags_out = nullptr) {
 	Dictionary report;
 	report["status"] = "0x4a2777_real_source_node_cycle_traversal_ported_boundary_materialized";
 	report["source"] = "h3maped 0x4a2777 over real 0x4cca55 source-node cycles: clip finalized +0x1c/+0x20 coordinates through 0x4a2b33 and paint boundary cells through 0x4a261a/0x4a2413";
@@ -1377,6 +1435,11 @@ Dictionary boundary_traversal_4a2777_report(
 	report["level_count"] = level_count;
 	report["h3maped_water_mode_code"] = water_code;
 	report["rng_state_before_0x4a2777_uint32"] = int64_t(rng_state_after_coordinate_seed);
+	if (zone_words_out != nullptr && cell_flags_out != nullptr) {
+		const int32_t cell_count = std::max(0, width * height * std::max(1, level_count));
+		zone_words_out->assign(size_t(cell_count), H3MAPED_UNASSIGNED_ZONE_WORD);
+		cell_flags_out->assign(size_t(cell_count), 0);
+	}
 
 	Array walks = split_model.get("source_node_walks", Array());
 	Array zone_reports;
@@ -1418,6 +1481,7 @@ Dictionary boundary_traversal_4a2777_report(
 			deterministic_writer_segment_count += 1;
 		}
 		merge_line_write_result_4a2777(line, unique_cells, trace_write_count, out_of_bounds_write_count);
+		apply_line_trace_to_zone_buffer_4a2777(line, zone_words_out, cell_flags_out, width, height, level_count);
 		segments.append(segment_report_4a2777(id, branch, randomized ? String("0x4a2413") : String("0x4a261a"), x1, y1, x2, y2, line));
 	};
 
@@ -1624,6 +1688,367 @@ Dictionary boundary_traversal_4a2777_report(
 	report["loop_guard_exhausted"] = loop_guard_exhausted;
 	report["zone_reports"] = zone_reports;
 	report["blocked_next"] = "feed these real 0x4a2777 boundary cells into 0x4a325d span fill before project terrain/object materialization";
+	return report;
+}
+
+bool span_cell_in_bounds_4a325d(int32_t width, int32_t height, int32_t level_count, const SpanRecord &span) {
+	return span.x >= 0 && span.x < width && span.y >= 0 && span.y < height && span.level >= 0 && span.level < level_count;
+}
+
+bool is_unassigned_zone_word_4a325d(const std::vector<uint32_t> &zone_words, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
+	return (zone_words[size_t(cell_key_4a325d(width, height, x, y, level))] & H3MAPED_UNASSIGNED_ZONE_WORD) == H3MAPED_UNASSIGNED_ZONE_WORD;
+}
+
+void push_span_4a325d(std::vector<SpanRecord> &pending, const SpanRecord &span, SpanFillResult &result) {
+	pending.push_back(span);
+	result.pushed_span_count += 1;
+	result.max_pending_span_count = std::max<int32_t>(result.max_pending_span_count, int32_t(pending.size()));
+}
+
+SpanFillResult span_fill_4a325d(
+		std::vector<uint32_t> &zone_words,
+		std::vector<uint8_t> &cell_flags,
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		int32_t water_code,
+		int32_t zone_id,
+		const SpanRecord &seed) {
+	SpanFillResult result;
+	std::vector<SpanRecord> pending;
+	push_span_4a325d(pending, seed, result);
+	for (int32_t guard = 0; guard < width * height * std::max(1, level_count) * 4 && !pending.empty(); ++guard) {
+		SpanRecord span = pending.back();
+		pending.pop_back();
+		result.popped_span_count += 1;
+		if (!span_cell_in_bounds_4a325d(width, height, level_count, span)) {
+			result.out_of_bounds_span_count += 1;
+			continue;
+		}
+		int32_t x = span.x;
+		while (x > 0 && is_unassigned_zone_word_4a325d(zone_words, width, height, x - 1, span.y, span.level)) {
+			x -= 1;
+		}
+		if (x >= 0 && x < width && !is_unassigned_zone_word_4a325d(zone_words, width, height, x, span.y, span.level)) {
+			result.blocked_initial_span_count += 1;
+		}
+		bool above_open = false;
+		bool below_open = false;
+		SpanRecord above_span;
+		SpanRecord below_span;
+		for (; x < width; ++x) {
+			if (!is_unassigned_zone_word_4a325d(zone_words, width, height, x, span.y, span.level)) {
+				break;
+			}
+			const int64_t key = cell_key_4a325d(width, height, x, span.y, span.level);
+			zone_words[size_t(key)] = zone_word_4a325d(zone_words[size_t(key)], zone_id);
+			const bool reserved = !(water_code == 2 && span.level == 1);
+			if (reserved) {
+				cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
+			}
+			SpanFillCellWrite write;
+			write.x = x;
+			write.y = span.y;
+			write.level = span.level;
+			write.zone_id = zone_id;
+			write.reserved = reserved;
+			result.trace.push_back(write);
+			result.unique_cells[key] = true;
+			if (span.y > 0 && is_unassigned_zone_word_4a325d(zone_words, width, height, x, span.y - 1, span.level)) {
+				if (!above_open) {
+					above_span = span;
+					above_span.x = x;
+					above_span.y = span.y - 1;
+					above_open = true;
+				}
+			} else if (above_open) {
+				push_span_4a325d(pending, above_span, result);
+				above_open = false;
+			}
+			if (span.y < height - 1 && is_unassigned_zone_word_4a325d(zone_words, width, height, x, span.y + 1, span.level)) {
+				if (!below_open) {
+					below_span = span;
+					below_span.x = x;
+					below_span.y = span.y + 1;
+					below_open = true;
+				}
+			} else if (below_open) {
+				push_span_4a325d(pending, below_span, result);
+				below_open = false;
+			}
+		}
+		if (above_open) {
+			push_span_4a325d(pending, above_span, result);
+		}
+		if (below_open) {
+			push_span_4a325d(pending, below_span, result);
+		}
+	}
+	return result;
+}
+
+Array span_trace_preview_4a325d(const std::vector<SpanFillCellWrite> &trace, int32_t limit = 12) {
+	Array preview;
+	const int32_t count = std::min<int32_t>(limit, int32_t(trace.size()));
+	for (int32_t index = 0; index < count; ++index) {
+		const SpanFillCellWrite &write = trace[size_t(index)];
+		Dictionary item;
+		item["x"] = write.x;
+		item["y"] = write.y;
+		item["level"] = write.level;
+		item["zone_id"] = write.zone_id;
+		item["reserved"] = write.reserved;
+		preview.append(item);
+	}
+	return preview;
+}
+
+Dictionary seed_relocation_4a325d_report(
+		const Dictionary &source_node_walk,
+		const SpanRecord &seed,
+		int32_t width,
+		int32_t height,
+		int32_t level_count) {
+	Dictionary report;
+	report["status"] = "0x4a325d_seed_in_bounds_relocation_not_used";
+	report["source"] = "h3maped 0x4a32b2..0x4a338e relocation branch; when runtime_zone+0x10 is outside map bounds, scan the source-node cycle for the interior node with maximum distance from all borders, then clip the original seed toward that node through 0x4a2b33";
+	report["function_address"] = "0x4a325d";
+	report["branch_address"] = "0x4a32b2..0x4a338e";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["seed_x"] = seed.x;
+	report["seed_y"] = seed.y;
+	report["seed_level"] = seed.level;
+	const bool seed_in_bounds = seed.x >= 0 && seed.x < width && seed.y >= 0 && seed.y < height && seed.level >= 0 && seed.level < level_count;
+	report["seed_in_bounds"] = seed_in_bounds;
+	Array candidates;
+	int32_t best_x = -1;
+	int32_t best_y = -1;
+	int32_t best_clearance = -1;
+	Array cycle_nodes = source_node_walk.get("cycle_nodes", Array());
+	for (int64_t node_index = 0; node_index < cycle_nodes.size(); ++node_index) {
+		if (Variant(cycle_nodes[node_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary node = Dictionary(cycle_nodes[node_index]);
+		const int32_t x = int32_t(node.get("+0x00_x", node.get("+0x1c_finalized_x", 0)));
+		const int32_t y = int32_t(node.get("+0x04_y", node.get("+0x20_finalized_y", 0)));
+		Dictionary candidate;
+		candidate["node_id"] = node.get("node_id", "");
+		candidate["x"] = x;
+		candidate["y"] = y;
+		const bool interior = x >= 1 && x < width - 1 && y >= 1 && y < height - 1;
+		candidate["interior_by_0x4a32ca"] = interior;
+		int32_t clearance = -1;
+		if (interior) {
+			clearance = std::min<int32_t>(std::min<int32_t>(x, width - x - 1), std::min<int32_t>(y, height - y - 1));
+			if (clearance > best_clearance) {
+				best_clearance = clearance;
+				best_x = x;
+				best_y = y;
+			}
+		}
+		candidate["border_clearance"] = clearance;
+		candidates.append(candidate);
+	}
+	report["candidate_count"] = candidates.size();
+	report["candidates"] = candidates;
+	report["best_candidate_x"] = best_x;
+	report["best_candidate_y"] = best_y;
+	report["best_candidate_border_clearance"] = best_clearance;
+	if (seed_in_bounds) {
+		report["relocated"] = false;
+		report["relocated_seed_x"] = seed.x;
+		report["relocated_seed_y"] = seed.y;
+		report["relocated_seed_level"] = seed.level;
+		return report;
+	}
+	if (best_x < 0 || best_y < 0) {
+		report["status"] = "0x4a325d_seed_out_of_bounds_no_relocation_candidate";
+		report["relocated"] = false;
+		report["relocated_seed_x"] = seed.x;
+		report["relocated_seed_y"] = seed.y;
+		report["relocated_seed_level"] = seed.level;
+		return report;
+	}
+	ClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = width;
+	bounds.max_y = height;
+	const ClipResult clipped = clip_point_4a2b33(seed.x, seed.y, best_x, best_y, bounds);
+	report["status"] = "0x4a325d_seed_out_of_bounds_relocated_with_0x4a2b33";
+	report["relocated"] = true;
+	report["relocated_seed_x"] = clipped.x;
+	report["relocated_seed_y"] = clipped.y;
+	report["relocated_seed_level"] = seed.level;
+	report["clip_branch"] = clipped.branch;
+	return report;
+}
+
+Dictionary span_fill_4a325d_report(
+		const Dictionary &normalized_config,
+		const Array &runtime_zones,
+		const Dictionary &split_model,
+		uint32_t rng_state_after_coordinate_seed) {
+	Dictionary report;
+	report["status"] = "0x4a325d_real_0x4a2777_boundary_span_fill_executed_terrain_pending";
+	report["source"] = "h3maped 0x4a325d footprint cell-span fill helper; consumes the real 0x4a2777 boundary buffer and fills from runtime_zone+0x10 seed coordinates";
+	report["function_address"] = "0x4a325d";
+	report["call_site_address"] = "0x4a3ee8..0x4a3eef";
+	report["polygon_locator_address"] = "0x4cca55";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["span_vector_push_address"] = "0x4ae1fd";
+	report["span_vector_pop_address"] = "0x4ae23e";
+	report["per_zone_order_helper_address"] = "0x4a3554";
+	report["map_cell_stride_bytes"] = 0x30;
+	report["unassigned_zone_word_sentinel"] = "0x00ff0000";
+	report["map_cell_zone_word_mask"] = "cell+0x20 & 0x00ff0000";
+	report["map_cell_reserved_flag"] = "cell+0x2b |= 0x10";
+
+	const int32_t width = int32_t(normalized_config.get("width", 36));
+	const int32_t height = int32_t(normalized_config.get("height", 36));
+	const int32_t level_count = int32_t(normalized_config.get("level_count", 1));
+	const int32_t water_code = water_mode_code(normalized_config);
+	std::vector<uint32_t> zone_words;
+	std::vector<uint8_t> cell_flags;
+	Dictionary boundary = boundary_traversal_4a2777_report(normalized_config, runtime_zones, split_model, rng_state_after_coordinate_seed, &zone_words, &cell_flags);
+	Array source_node_walks = split_model.get("source_node_walks", Array());
+	Array zone_fill_reports;
+	std::map<int64_t, bool> unique_filled_cells;
+	int32_t filled_zone_count = 0;
+	int32_t seed_blocked_count = 0;
+	int32_t seed_relocated_count = 0;
+	int32_t out_of_bounds_span_count = 0;
+	int32_t pushed_span_count = 0;
+	int32_t popped_span_count = 0;
+	int32_t max_pending_span_count = 0;
+	int32_t blocked_initial_span_count = 0;
+	for (int64_t runtime_index = 0; runtime_index < runtime_zones.size(); ++runtime_index) {
+		if (Variant(runtime_zones[runtime_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = Dictionary(runtime_zones[runtime_index]);
+		Dictionary zone_report;
+		const int32_t zone_index = int32_t(runtime.get("runtime_zone_index", runtime_index));
+		zone_report["runtime_zone_index"] = zone_index;
+		zone_report["source_zone_id"] = runtime.get("source_zone_id", -1);
+		zone_report["seed_source"] = "runtime_zone+0x10 copied x/y/level from 0x4a325d";
+		zone_report["seed_x"] = runtime.get("x_after_bbox_rescale", 0);
+		zone_report["seed_y"] = runtime.get("y_after_bbox_rescale", 0);
+		zone_report["seed_level"] = runtime.get("level", 0);
+		const int32_t zone_word = zone_word_id_for_runtime_zone(runtime);
+		zone_report["zone_word_id"] = zone_word;
+		SpanRecord seed;
+		seed.x = int32_t(runtime.get("x_after_bbox_rescale", 0));
+		seed.y = int32_t(runtime.get("y_after_bbox_rescale", 0));
+		seed.level = int32_t(runtime.get("level", 0));
+		Dictionary matching_walk;
+		for (int64_t walk_index = 0; walk_index < source_node_walks.size(); ++walk_index) {
+			if (Variant(source_node_walks[walk_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary walk = Dictionary(source_node_walks[walk_index]);
+			if (int32_t(walk.get("runtime_zone_index", -1)) == zone_index) {
+				matching_walk = walk;
+				break;
+			}
+		}
+		Dictionary relocation = seed_relocation_4a325d_report(matching_walk, seed, width, height, level_count);
+		zone_report["seed_relocation_status"] = relocation.get("status", "");
+		zone_report["seed_relocation"] = relocation;
+		if (bool(relocation.get("relocated", false))) {
+			seed.x = int32_t(relocation.get("relocated_seed_x", seed.x));
+			seed.y = int32_t(relocation.get("relocated_seed_y", seed.y));
+			seed.level = int32_t(relocation.get("relocated_seed_level", seed.level));
+			seed_relocated_count += 1;
+		}
+		zone_report["effective_seed_x"] = seed.x;
+		zone_report["effective_seed_y"] = seed.y;
+		zone_report["effective_seed_level"] = seed.level;
+		const bool seed_in_bounds = span_cell_in_bounds_4a325d(width, height, level_count, seed);
+		zone_report["seed_in_bounds"] = seed_in_bounds;
+		if (!seed_in_bounds) {
+			seed_blocked_count += 1;
+			zone_report["status"] = "0x4a325d_seed_out_of_bounds_no_relocation_candidate";
+			zone_fill_reports.append(zone_report);
+			continue;
+		}
+		const bool seed_unassigned = is_unassigned_zone_word_4a325d(zone_words, width, height, seed.x, seed.y, seed.level);
+		zone_report["seed_unassigned_before_fill"] = seed_unassigned;
+		if (!seed_unassigned) {
+			seed_blocked_count += 1;
+		}
+		SpanFillResult fill = span_fill_4a325d(zone_words, cell_flags, width, height, level_count, water_code, zone_word, seed);
+		for (const auto &item : fill.unique_cells) {
+			unique_filled_cells[item.first] = true;
+		}
+		if (!fill.trace.empty()) {
+			filled_zone_count += 1;
+		}
+		out_of_bounds_span_count += fill.out_of_bounds_span_count;
+		pushed_span_count += fill.pushed_span_count;
+		popped_span_count += fill.popped_span_count;
+		max_pending_span_count = std::max<int32_t>(max_pending_span_count, fill.max_pending_span_count);
+		blocked_initial_span_count += fill.blocked_initial_span_count;
+		zone_report["status"] = fill.trace.empty() ? String("0x4a325d_seed_reached_non_unassigned_boundary") : String("0x4a325d_real_boundary_span_fill_executed");
+		zone_report["filled_cell_count"] = int32_t(fill.trace.size());
+		zone_report["unique_filled_cell_count"] = int32_t(fill.unique_cells.size());
+		zone_report["pushed_span_count"] = fill.pushed_span_count;
+		zone_report["popped_span_count"] = fill.popped_span_count;
+		zone_report["max_pending_span_count"] = fill.max_pending_span_count;
+		zone_report["out_of_bounds_span_count"] = fill.out_of_bounds_span_count;
+		zone_report["blocked_initial_span_count"] = fill.blocked_initial_span_count;
+		zone_report["trace_preview"] = span_trace_preview_4a325d(fill.trace, 6);
+		zone_fill_reports.append(zone_report);
+	}
+
+	int32_t remaining_unassigned_count = 0;
+	int32_t boundary_or_filled_count = 0;
+	int32_t reserved_cell_count = 0;
+	std::map<int32_t, int32_t> cells_by_zone_word;
+	for (int32_t level = 0; level < level_count; ++level) {
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				const int64_t key = cell_key_4a325d(width, height, x, y, level);
+				if (cell_flags.size() > size_t(key) && (cell_flags[size_t(key)] & 0x10U) != 0) {
+					reserved_cell_count += 1;
+				}
+				const uint32_t zone_word = zone_words[size_t(key)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+				if (zone_word == H3MAPED_UNASSIGNED_ZONE_WORD) {
+					remaining_unassigned_count += 1;
+				} else {
+					boundary_or_filled_count += 1;
+					cells_by_zone_word[int32_t((zone_word >> 16U) & 0xffU)] += 1;
+				}
+			}
+		}
+	}
+	Array cells_by_zone_word_report;
+	for (const auto &item : cells_by_zone_word) {
+		Dictionary entry;
+		entry["zone_word_id"] = item.first;
+		entry["cell_count"] = item.second;
+		cells_by_zone_word_report.append(entry);
+	}
+
+	report["boundary_status"] = boundary.get("status", "");
+	report["boundary_unique_cell_count"] = boundary.get("unique_cell_count", 0);
+	report["runtime_zone_fill_attempt_count"] = zone_fill_reports.size();
+	report["filled_zone_count"] = filled_zone_count;
+	report["seed_blocked_count"] = seed_blocked_count;
+	report["seed_relocated_count"] = seed_relocated_count;
+	report["total_unique_filled_cell_count"] = int32_t(unique_filled_cells.size());
+	report["total_boundary_or_filled_cell_count"] = boundary_or_filled_count;
+	report["remaining_unassigned_cell_count"] = remaining_unassigned_count;
+	report["reserved_cell_count"] = reserved_cell_count;
+	report["pushed_span_count"] = pushed_span_count;
+	report["popped_span_count"] = popped_span_count;
+	report["max_pending_span_count"] = max_pending_span_count;
+	report["out_of_bounds_span_count"] = out_of_bounds_span_count;
+	report["blocked_initial_span_count"] = blocked_initial_span_count;
+	report["cells_by_zone_word"] = cells_by_zone_word_report;
+	report["zone_fills"] = zone_fill_reports;
+	report["blocked_next"] = "port h3maped 0x4a3710 adjacency finalization and 0x4a3f27 terrain fill/repaint before runtime map generation can adopt the materialized grid";
 	return report;
 }
 
@@ -1890,8 +2315,8 @@ Dictionary polygon_source_node_walks_4ccb64_report(const Dictionary &normalized_
 
 Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_config, Array &runtime_zones, int64_t rng_state_after_coordinate_seed) {
 	Dictionary report;
-	report["status"] = "0x4a3a03_0x4a2777_boundary_traversal_ported_span_fill_pending";
-	report["source"] = "h3maped 0x4a3a03 per-level runtime-zone collection, small-land synthetic branch decision, 0x4cc788 polygon seed setup, 0x4ccb64 split insertion, 0x4ccdfc finalization, 0x4cca55 source-node walks, and 0x4a2777 boundary traversal";
+	report["status"] = "0x4a3a03_0x4a325d_span_fill_ported_adjacency_terrain_pending";
+	report["source"] = "h3maped 0x4a3a03 per-level runtime-zone collection, small-land synthetic branch decision, 0x4cc788 polygon seed setup, 0x4ccb64 split insertion, 0x4ccdfc finalization, 0x4cca55 source-node walks, 0x4a2777 boundary traversal, and 0x4a325d span fill";
 	report["function_address"] = "0x4a3a03";
 	report["zone_collection_address"] = "0x4a3a2b..0x4a3a86";
 	report["synthetic_source_zone_branch_address"] = "0x4a3a9d..0x4a3e12";
@@ -1902,8 +2327,8 @@ Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_confi
 	report["second_helper_address"] = "0x4a325d";
 	report["finalizer_address"] = "0x4a3710";
 	report["rng_state_before_footprint_phase_uint32"] = rng_state_after_coordinate_seed;
-	report["cell_materialization_status"] = "0x4a2777_boundary_cells_ported_pending_0x4a325d_0x4a3710";
-	report["blocked_next"] = "execute 0x4a325d span fill and 0x4a3710 adjacency finalization before any project terrain/object materialization";
+	report["cell_materialization_status"] = "0x4a325d_span_fill_ported_pending_0x4a3710_0x4a3f27";
+	report["blocked_next"] = "execute 0x4a3710 adjacency finalization and 0x4a3f27 terrain fill/repaint before any project terrain/object materialization";
 
 	Dictionary synthetic_defaults;
 	synthetic_defaults["+0x04"] = 3;
@@ -2008,10 +2433,17 @@ Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_confi
 			runtime_zones,
 			source_walks,
 			uint32_t(rng_state_after_coordinate_seed));
+	Dictionary span_fill = span_fill_4a325d_report(
+			normalized_config,
+			runtime_zones,
+			source_walks,
+			uint32_t(rng_state_after_coordinate_seed));
 	polygon_seed["runtime_split_pre_crossing_model"] = source_walks;
 	polygon_seed["runtime_split_pre_crossing_status"] = source_walks.get("status", "");
 	polygon_seed["boundary_traversal_model"] = boundary_traversal;
 	polygon_seed["boundary_traversal_status"] = boundary_traversal.get("status", "");
+	polygon_seed["span_fill_model"] = span_fill;
+	polygon_seed["span_fill_status"] = span_fill.get("status", "");
 	report["level_count"] = level_count;
 	report["h3maped_water_mode_code"] = water_code;
 	report["total_matching_runtime_zones"] = total_matching_runtime_zones;
@@ -2028,6 +2460,14 @@ Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_confi
 	report["boundary_trace_write_count"] = boundary_traversal.get("trace_write_count", 0);
 	report["boundary_loop_guard_exhausted"] = boundary_traversal.get("loop_guard_exhausted", false);
 	report["boundary_traversal"] = boundary_traversal;
+	report["span_fill_status"] = span_fill.get("status", "");
+	report["span_fill_filled_zone_count"] = span_fill.get("filled_zone_count", 0);
+	report["span_fill_unique_filled_cell_count"] = span_fill.get("total_unique_filled_cell_count", 0);
+	report["span_fill_boundary_or_filled_cell_count"] = span_fill.get("total_boundary_or_filled_cell_count", 0);
+	report["span_fill_remaining_unassigned_cell_count"] = span_fill.get("remaining_unassigned_cell_count", 0);
+	report["span_fill_seed_relocated_count"] = span_fill.get("seed_relocated_count", 0);
+	report["span_fill_blocked_initial_span_count"] = span_fill.get("blocked_initial_span_count", 0);
+	report["span_fill"] = span_fill;
 	report["polygon_source_node_walks"] = source_walks;
 	report["levels"] = levels;
 	report["polygon_seed_evidence"] = polygon_seed;
@@ -2368,7 +2808,7 @@ Array clean_phase_ledger() {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "ported_inspection_only" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "ported_inspection_only" },
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b452, 0x49b3c1", "ported_interleaved_runtime_and_coordinate_replay_inspection_only" },
-		{ "zone_footprint_placement", "0x4a3a03, 0x4cc788, 0x4cca55, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "ported_0x4a2777_boundary_traversal_inspection_only_span_fill_pending" },
+		{ "zone_footprint_placement", "0x4a3a03, 0x4cc788, 0x4cca55, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "ported_0x4a325d_span_fill_inspection_only_adjacency_terrain_pending" },
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "pending_clean_port" },
 		{ "object_category_placement", "0x4a8d2c, 0x4a8db2, 0x4a8c15", "pending_clean_port" },
 		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4aab7e", "pending_clean_port" },
