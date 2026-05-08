@@ -36,6 +36,15 @@ struct TemplateEvidence {
 	int32_t border_guard_edge_count;
 };
 
+struct H3MapedRng {
+	uint32_t state = 0;
+
+	int32_t next() {
+		state = state * 0x343fdu + 0x269ec3u;
+		return int32_t((state >> 16U) & 0x7fffu);
+	}
+};
+
 const TemplateEvidence SMALL_LAND_TEMPLATES[] = {
 	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, 0 },
 	{ "h3maped_template_010", 10, 1, 2, 1, 2, 2, 2, 4, 4, 0 },
@@ -148,6 +157,45 @@ bool player_filter_accepts(const Dictionary &filter, int32_t human_count, int32_
 			&& human_count <= int32_t(filter.get("max_human", 8))
 			&& total_count >= int32_t(filter.get("min_total", 2))
 			&& total_count <= int32_t(filter.get("max_total", 8));
+}
+
+int32_t scale_divisor_for_water_mode(int32_t water_mode) {
+	if (water_mode == 1) {
+		return 6;
+	}
+	if (water_mode == 2) {
+		return 7;
+	}
+	return 5;
+}
+
+String string_at(const Array &values, int32_t index, const String &fallback = String()) {
+	if (index < 0 || index >= values.size()) {
+		return fallback;
+	}
+	return String(values[index]);
+}
+
+String terrain_for_faction(const String &faction_id) {
+	if (faction_id == "faction_embercourt") {
+		return "lava";
+	}
+	if (faction_id == "faction_thornwake") {
+		return "grass";
+	}
+	if (faction_id == "faction_sunvault") {
+		return "sand";
+	}
+	if (faction_id == "faction_brasshollow") {
+		return "rough";
+	}
+	if (faction_id == "faction_veilmourn") {
+		return "snow";
+	}
+	if (faction_id == "faction_mireclaw") {
+		return "swamp";
+	}
+	return String();
 }
 
 Array bool_bitmap_report(const std::array<bool, 8> &bitmap) {
@@ -268,6 +316,174 @@ Dictionary player_slot_assignment_report(
 	return report;
 }
 
+Dictionary runtime_zone_build_report(
+		const Dictionary &normalized_config,
+		const Array &active_zones,
+		const Array &active_links,
+		const Dictionary &assignment,
+		uint32_t rng_state_after_template_selection) {
+	Dictionary report;
+	const int32_t width = std::max(1, int32_t(normalized_config.get("width", 36)));
+	const int32_t height = std::max(1, int32_t(normalized_config.get("height", 36)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	const int32_t divisor = scale_divisor_for_water_mode(water_code);
+	int32_t min_base_size = 0x7d00;
+	Dictionary runtime_index_by_source_zone_id;
+	for (int64_t index = 0; index < active_zones.size(); ++index) {
+		if (Variant(active_zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = Dictionary(active_zones[index]);
+		min_base_size = std::min(min_base_size, int32_t(zone.get("base_size", 0x7d00)));
+		runtime_index_by_source_zone_id[String::num_int64(int64_t(zone.get("source_zone_id", index)))] = index;
+	}
+	if (min_base_size == 0x7d00) {
+		min_base_size = 0;
+	}
+
+	const int32_t scale_reference = divisor > 0 ? std::min(min_base_size * width, min_base_size * height) / divisor : 0;
+	H3MapedRng rng { rng_state_after_template_selection };
+	Array rng_events;
+	Array runtime_zones;
+	Array colors_by_source_owner = assignment.get("actual_colors_by_source_owner", Array());
+	Dictionary constraints = normalized_config.get("player_constraints", Dictionary());
+	Array selected_factions = constraints.get("selected_faction_ids", Array());
+
+	for (int64_t index = 0; index < active_zones.size(); ++index) {
+		if (Variant(active_zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = Dictionary(active_zones[index]);
+		Dictionary ownership = zone.get("ownership", Dictionary());
+		const int32_t source_owner_index = int32_t(ownership.get("source_owner_index", -1));
+		int32_t actual_owner_color = -1;
+		if (source_owner_index >= 0 && source_owner_index < colors_by_source_owner.size()) {
+			actual_owner_color = int32_t(colors_by_source_owner[source_owner_index]);
+		}
+
+		Dictionary town_policy = zone.get("town_policy", Dictionary());
+		Array allowed_factions = town_policy.get("allowed_faction_ids", Array());
+		int32_t town_choice_index = -1;
+		String faction_id;
+		String faction_source = "0x49b3c1_no_allowed_town_choice";
+		if (actual_owner_color >= 0 && actual_owner_color < selected_factions.size() && !String(selected_factions[actual_owner_color]).is_empty()) {
+			faction_id = String(selected_factions[actual_owner_color]);
+			faction_source = "generator+0xf24 adapted from player_constraints.selected_faction_ids";
+		} else if (!allowed_factions.is_empty()) {
+			const int32_t rng_value = rng.next();
+			town_choice_index = rng_value % int32_t(allowed_factions.size());
+			faction_id = string_at(allowed_factions, town_choice_index);
+			faction_source = "0x49b3c1 adapted allowed_faction_ids choice";
+			Dictionary event;
+			event["consumer"] = "0x49b3c1";
+			event["runtime_zone_index"] = index;
+			event["value"] = rng_value;
+			event["modulus"] = allowed_factions.size();
+			event["selected_index"] = town_choice_index;
+			rng_events.append(event);
+		}
+
+		Dictionary terrain = zone.get("terrain", Dictionary());
+		String terrain_id;
+		String terrain_source;
+		if (bool(terrain.get("match_to_faction", false)) && !faction_id.is_empty()) {
+			terrain_id = terrain_for_faction(faction_id);
+			terrain_source = "0x49b53d adapted town/faction terrain table";
+		}
+		if (terrain_id.is_empty()) {
+			Array allowed_terrain = terrain.get("allowed", Array());
+			Array surface_allowed;
+			for (int64_t terrain_index = 0; terrain_index < allowed_terrain.size(); ++terrain_index) {
+				const String candidate = String(allowed_terrain[terrain_index]);
+				if (candidate == "underground" && int32_t(normalized_config.get("level_count", 1)) == 1) {
+					continue;
+				}
+				surface_allowed.append(candidate);
+			}
+			if (!surface_allowed.is_empty()) {
+				const int32_t rng_value = rng.next();
+				const int32_t terrain_choice_index = rng_value % int32_t(surface_allowed.size());
+				terrain_id = string_at(surface_allowed, terrain_choice_index, "dirt");
+				terrain_source = "0x49b53d adapted allowed terrain choice";
+				Dictionary event;
+				event["consumer"] = "0x49b53d";
+				event["runtime_zone_index"] = index;
+				event["value"] = rng_value;
+				event["modulus"] = surface_allowed.size();
+				event["selected_index"] = terrain_choice_index;
+				rng_events.append(event);
+			} else {
+				terrain_id = "dirt";
+				terrain_source = "0x49b53d zero_allowed_terrain_default";
+			}
+		}
+
+		Dictionary runtime;
+		runtime["runtime_zone_index"] = index;
+		runtime["source_zone_id"] = zone.get("source_zone_id", index);
+		runtime["source_zone_key"] = zone.get("id", "");
+		runtime["source_pointer_offset"] = "runtime+0x00";
+		runtime["runtime_town_choice_offset"] = "runtime+0x04";
+		runtime["runtime_terrain_offset"] = "runtime+0x0c";
+		runtime["runtime_size_offset"] = "runtime+0x1c";
+		runtime["runtime_byte_3c_offset"] = "runtime+0x3c";
+		runtime["role"] = zone.get("role", zone.get("type", ""));
+		runtime["source_bucket"] = Dictionary(zone.get("grammar_source", Dictionary())).get("source_bucket", -1);
+		runtime["source_owner_index"] = source_owner_index;
+		runtime["actual_owner_color"] = actual_owner_color;
+		runtime["source_base_size"] = zone.get("base_size", 0);
+		runtime["runtime_initial_size_before_rescale"] = zone.get("base_size", 0);
+		runtime["runtime_byte_3c"] = 0;
+		runtime["faction_id"] = faction_id;
+		runtime["town_choice_index"] = town_choice_index;
+		runtime["faction_source"] = faction_source;
+		runtime["terrain_id"] = terrain_id;
+		runtime["terrain_source"] = terrain_source;
+		runtime["rectangle_status"] = "pending_0x4a1f3b_0x4a17f5_link_seed_and_0x4a3a03_footprint_placement";
+		runtime_zones.append(runtime);
+	}
+
+	Array link_seeds;
+	for (int64_t index = 0; index < active_links.size(); ++index) {
+		if (Variant(active_links[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = Dictionary(active_links[index]);
+		Dictionary endpoints = link.get("source_endpoints", Dictionary());
+		const String from_id = String::num_int64(int64_t(endpoints.get("zone1", -1)));
+		const String to_id = String::num_int64(int64_t(endpoints.get("zone2", -1)));
+		Dictionary seed;
+		seed["link_index"] = index;
+		seed["source_endpoint_a"] = endpoints.get("zone1", -1);
+		seed["source_endpoint_b"] = endpoints.get("zone2", -1);
+		seed["runtime_zone_a"] = runtime_index_by_source_zone_id.get(from_id, -1);
+		seed["runtime_zone_b"] = runtime_index_by_source_zone_id.get(to_id, -1);
+		seed["guard_value"] = link.get("guard_value", Dictionary(link.get("guard", Dictionary())).get("value", 0));
+		seed["wide"] = bool(link.get("wide", false));
+		seed["border_guard"] = bool(link.get("border_guard", false));
+		seed["early_consumer"] = "0x4a1f3b uses endpoint pointers only; payload is preserved for later guard/link consumers";
+		link_seeds.append(seed);
+	}
+
+	report["status"] = "0x4a218c_runtime_zone_records_ported_inspection_only";
+	report["source"] = "h3maped 0x4a218c with 0x49b452 runtime initializer, 0x49b3c1 town choice, 0x49b53d terrain choice";
+	report["runtime_zone_vector_offset"] = "generator+0x10e0/+0x10e4/+0x10e8";
+	report["vector_clear_status"] = "0x42bde9_semantics_represented_by_rebuilt_report_array";
+	report["water_mode_code"] = water_code;
+	report["scale_divisor"] = divisor;
+	report["min_source_base_size"] = min_base_size;
+	report["initial_scale_reference"] = scale_reference;
+	report["scale_formula"] = "min(min_source_base_size * width, min_source_base_size * height) / divisor(land=5, normal_water=6, islands=7)";
+	report["runtime_zone_count"] = runtime_zones.size();
+	report["runtime_zones"] = runtime_zones;
+	report["link_seed_count"] = link_seeds.size();
+	report["link_seeds"] = link_seeds;
+	report["rng_state_after_runtime_zone_build"] = int64_t(rng.state);
+	report["rng_events"] = rng_events;
+	report["coordinate_placement_status"] = "pending_clean_port_0x4a1f3b_0x4a17f5_0x4a19ed_and_0x4a3a03";
+	return report;
+}
+
 Dictionary adapted_template_for_source_index(int32_t source_catalog_index) {
 	Dictionary catalog = load_json_dictionary(ADAPTED_CATALOG_PATH);
 	Array templates = catalog.get("templates", Array());
@@ -285,7 +501,7 @@ Dictionary adapted_template_for_source_index(int32_t source_catalog_index) {
 	return Dictionary();
 }
 
-Dictionary selected_template_payload(const Dictionary &template_record, const Dictionary &normalized_config, int32_t source_catalog_index, int32_t human_count, int32_t player_count) {
+Dictionary selected_template_payload(const Dictionary &template_record, const Dictionary &normalized_config, int32_t source_catalog_index, int32_t human_count, int32_t player_count, uint32_t rng_state_after_template_selection) {
 	Dictionary payload;
 	payload["source"] = "adapted project catalog resolved by import_provenance.source_template_index";
 	payload["source_catalog_index_zero_based"] = source_catalog_index;
@@ -363,6 +579,9 @@ Dictionary selected_template_payload(const Dictionary &template_record, const Di
 	Dictionary assignment = player_slot_assignment_report(human_capable, player_capable, selected_color_bitmap_from_normalized(normalized_config), human_count, computer_count);
 	payload["assignment_status"] = assignment.get("status", "");
 	payload["player_slot_assignment"] = assignment;
+	Dictionary runtime_zones = runtime_zone_build_report(normalized_config, active_zones, active_links, assignment, rng_state_after_template_selection);
+	payload["runtime_zone_build_status"] = runtime_zones.get("status", "");
+	payload["runtime_zone_build"] = runtime_zones;
 	payload["zones"] = active_zones;
 	payload["links"] = active_links;
 	return payload;
@@ -378,7 +597,7 @@ Array clean_phase_ledger() {
 	const Phase PHASES[] = {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "ported_inspection_only" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "ported_inspection_only" },
-		{ "runtime_zone_build", "0x4a218c", "pending_clean_port" },
+		{ "runtime_zone_build", "0x4a218c, 0x49b452, 0x49b3c1, 0x49b53d", "ported_structure_inspection_only" },
 		{ "zone_footprint_placement", "0x4a3a03, 0x4a2777, 0x4a325d, 0x4a3710", "pending_clean_port" },
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "pending_clean_port" },
 		{ "object_category_placement", "0x4a8d2c, 0x4a8db2, 0x4a8c15", "pending_clean_port" },
@@ -489,7 +708,7 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 		report["selected_template_vector_index"] = selected_index;
 		report["selected_template"] = selected_template;
 		report["h3maped_rng"] = rng;
-		report["selected_template_payload"] = selected_template_payload(adapted_template_for_source_index(source_catalog_index), normalized_config, source_catalog_index, human_count, player_count);
+		report["selected_template_payload"] = selected_template_payload(adapted_template_for_source_index(source_catalog_index), normalized_config, source_catalog_index, human_count, player_count, next_state);
 	} else if (supported && !accepted_templates.is_empty()) {
 		Dictionary rng;
 		rng["function_address"] = "0x4e7276";

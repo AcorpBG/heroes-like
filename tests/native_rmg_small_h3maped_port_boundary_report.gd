@@ -100,6 +100,35 @@ func _run() -> void:
 		_fail("The player-slot assignment did not assign all requested players: %s" % JSON.stringify(report))
 		return
 
+	if String(selected_payload.get("runtime_zone_build_status", "")) != "0x4a218c_runtime_zone_records_ported_inspection_only":
+		_fail("The clean boundary did not port the h3maped runtime-zone record build: %s" % JSON.stringify(report))
+		return
+	var runtime_build: Dictionary = selected_payload.get("runtime_zone_build", {})
+	if int(runtime_build.get("runtime_zone_count", -1)) != 6 or int(runtime_build.get("link_seed_count", -1)) != 5:
+		_fail("The h3maped runtime-zone build lost zone/link records: %s" % JSON.stringify(report))
+		return
+	if int(runtime_build.get("min_source_base_size", -1)) != 11 or int(runtime_build.get("scale_divisor", -1)) != 5 or int(runtime_build.get("initial_scale_reference", -1)) != 79:
+		_fail("The h3maped runtime-zone build scale inputs drifted from 0x4a218c: %s" % JSON.stringify(report))
+		return
+	if String(runtime_build.get("coordinate_placement_status", "")) != "pending_clean_port_0x4a1f3b_0x4a17f5_0x4a19ed_and_0x4a3a03":
+		_fail("Runtime-zone coordinate placement must remain explicitly pending: %s" % JSON.stringify(report))
+		return
+	var runtime_zones: Array = runtime_build.get("runtime_zones", [])
+	if runtime_zones.size() != 6:
+		_fail("Runtime-zone report did not expose one record per active source zone: %s" % JSON.stringify(report))
+		return
+	var first_runtime_zone: Dictionary = runtime_zones[0]
+	if int(first_runtime_zone.get("source_zone_id", -1)) != 1 or int(first_runtime_zone.get("actual_owner_color", -1)) != 0:
+		_fail("Runtime-zone owner mapping did not preserve source zone +0x1c through generator +0xee4: %s" % JSON.stringify(report))
+		return
+	if int(first_runtime_zone.get("source_base_size", -1)) != 11 or int(first_runtime_zone.get("runtime_initial_size_before_rescale", -1)) != 11 or int(first_runtime_zone.get("runtime_byte_3c", -1)) != 0:
+		_fail("Runtime-zone initializer fields drifted from 0x49b452: %s" % JSON.stringify(report))
+		return
+	var link_seeds: Array = runtime_build.get("link_seeds", [])
+	if link_seeds.size() != 5 or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 or int(link_seeds[0].get("runtime_zone_b", -1)) != 3:
+		_fail("Runtime-zone link seed endpoint resolution drifted from source link vectors: %s" % JSON.stringify(report))
+		return
+
 	var color_config := config.duplicate(true)
 	var color_constraints: Dictionary = color_config.get("player_constraints", {}).duplicate(true)
 	color_constraints["selected_color_bitmap"] = [false, false, true, false, false, false, false, false]
@@ -123,8 +152,11 @@ func _run() -> void:
 	if String(phase_ledger[1].get("phase_id", "")) != "player_slot_assignment" or String(phase_ledger[1].get("status", "")) != "ported_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped player-slot assignment as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[2].get("status", "")) != "pending_clean_port":
-		_fail("Runtime-zone build must remain pending after the player-slot assignment port: %s" % JSON.stringify(report))
+	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_structure_inspection_only":
+		_fail("The phase ledger did not mark only the clean h3maped runtime-zone record build as ported: %s" % JSON.stringify(report))
+		return
+	if String(phase_ledger[3].get("status", "")) != "pending_clean_port":
+		_fail("Zone footprint placement must remain pending after the runtime-zone record port: %s" % JSON.stringify(report))
 		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
@@ -144,6 +176,7 @@ func _run() -> void:
 		"selected_template": selected_template.get("id", ""),
 		"accepted_template_count": report.get("accepted_template_count", 0),
 		"assignment_status": selected_payload.get("assignment_status", ""),
+		"runtime_zone_build_status": selected_payload.get("runtime_zone_build_status", ""),
 		"generation_status": generated.get("status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
