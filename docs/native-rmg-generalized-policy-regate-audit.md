@@ -1388,3 +1388,21 @@ Validation evidence:
 - The production-gap audit remains `production_ready=false` with `6` missing broad requirements. Severe category gap cases dropped from `6` to `5`, and the new top blocker is `m_normalw_4players` at severity `521`.
 
 This is still not production parity. Medium two-level islands now has exact broad counts, exact road total, exact town split, and closed town routes, but terrain-blocker shape and road component shape still differ from owner evidence.
+
+## Medium One-Level Normal-Water Profile Cleanup
+
+After the Medium two-level islands category cleanup, the top production-gap case became `m_normalw_4players`. The active defect was not an old owner-specific density branch: runtime classification showed normal generated catalog-auto policy for `translated_rmg_template_032_v1` / `translated_rmg_profile_032_v1`, Medium `72x72`, one level, normal water. Baseline native output underfilled broad categories and towns: decoration `271/335`, object `105/160`, reward `168/172`, guard `98/80`, town `6/7`, road delta `-10`, and object-route delta `-6`.
+
+The generalized Medium one-level normal-water profile now carries scoped broad floors/caps for object, scenic, decoration, reward, guard, town, and road totals. Town-floor placement can use the existing global spaced fallback after every zone already has a town, matching owner evidence that can contain more towns than high-level zones without lowering the player-start spacing safety rule. The decoration floor is raised to compensate for the later town-access clearance that removes decorative/scenic blockers overlapping the new neutral town.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `m_normalw_4players` export wrote `1/1` package with native validation `pass`. The manifest recorded about `8.035s` total wall time, including `4.688s` generation, `1.510s` package conversion, and `0.856s` save time.
+- Focused fast audit now matches every broad category exactly: decoration `335/335`, guard `80/80`, object `160/160`, reward `172/172`, town `7/7`, and total objects `754/754`.
+- Road total now matches owner at `221/221`, and object-only town-route topology now matches owner at `21/21` reachable pairs. The remaining focused differences are guarded-route openness (`0` native versus `2` owner), terrain-blocked tiles (`2020` native versus `2083` owner), and road component shape (`65/60/53/43` native versus `71/55/50/45` owner).
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_normalw_profile_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.656s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_normalw_profile_merged --skip-timing-summary --failure-limit 8` passed with `18/18` matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- The production-gap audit remains `production_ready=false` with `6` missing broad requirements. `m_normalw_4players` dropped out of the top-gap list; the new top blocker is `xl_islands_2levels` at severity `520`.
+
+This is still not production parity. Medium one-level normal-water now has exact broad counts, exact road total, and owner-like object-route openness, but guarded-route, terrain-blocker, and road-component shape still differ from owner evidence.
