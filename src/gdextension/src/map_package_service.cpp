@@ -6823,6 +6823,56 @@ Dictionary h3maped_polygon_seed_4a3a03_report(const std::vector<H3MapedRuntimeZo
 	return report;
 }
 
+Dictionary h3maped_polygon_splitter_contract_4ccb64_report() {
+	Dictionary report;
+	report["status"] = "0x4cca55_0x4ccb64_splitter_contract_recovered_mutation_not_executed";
+	report["source"] = "h3maped polygon splitter primitive contract recovered from 0x4cc5db..0x4ccdfc; boundary records exact node fields and helper roles before executing topology mutation";
+	report["locator_address"] = "0x4cca55";
+	report["splitter_address"] = "0x4ccb64";
+	report["bridge_node_address"] = "0x4ccb1f";
+	report["node_relink_address"] = "0x4cc643";
+	report["edge_swap_address"] = "0x4cc670";
+	report["edge_collapse_address"] = "0x4cc68e";
+	report["edge_side_test_address"] = "0x4cc6f2";
+	report["crossing_test_address"] = "0x4ccc7a";
+	report["intersection_writer_address"] = "0x4ccd69";
+	report["finalizer_address"] = "0x4ccdfc";
+	Dictionary container_layout;
+	container_layout["+0x000"] = "current/root polygon node pointer used by 0x4cca55 and updated by 0x4ccb64";
+	container_layout["+0x004"] = "constructor byte flag copied from caller frame by 0x4cc788";
+	container_layout["+0x008/+0x00c/+0x010"] = "vector of allocated primary and paired polygon nodes; 0x4cc955 appends both";
+	report["container_layout"] = container_layout;
+	Dictionary node_pair_layout;
+	node_pair_layout["primary+0x00/+0x04/+0x08"] = "from x/y/payload passed to 0x4cc955/0x4cc5db";
+	node_pair_layout["primary+0x0c"] = "paired node pointer allocated inside 0x4cc5db";
+	node_pair_layout["primary+0x10/+0x14"] = "circular next/previous links mutated by 0x4cc643, 0x4cc670, 0x4cc68e, and 0x4ccb64";
+	node_pair_layout["paired+0x00/+0x04/+0x08"] = "to x/y/payload passed to 0x4cc955/0x4cc5db";
+	node_pair_layout["paired+0x0c"] = "owner primary node pointer";
+	node_pair_layout["paired+0x10/+0x14"] = "paired circular next/previous links";
+	node_pair_layout["+0x18"] = "finalized flag set by 0x4ccdfc on primary and related paired nodes";
+	node_pair_layout["+0x1c/+0x20"] = "finalized intersection/output coordinates written by 0x4ccd69 through 0x4ccdfc";
+	report["node_pair_layout"] = node_pair_layout;
+	Array locator_branches;
+	locator_branches.append("0x4cca55 starts from container+0x0, compares the query point to current primary node x/y, then to current paired node x/y");
+	locator_branches.append("first orientation test compares current primary -> paired edge against the query; positive side descends to the paired node");
+	locator_branches.append("second orientation test compares current primary -> current+0x10 paired edge; non-positive side descends to current+0x10");
+	locator_branches.append("third orientation test compares paired+0x14 nested edge; positive side returns current, otherwise descends to paired");
+	locator_branches.append("returned node is used as the containing polygon edge/root for both 0x4ccb64 split insertion and later helper lookups in 0x4a2777/0x4a325d/0x4a3710");
+	report["locator_branches"] = locator_branches;
+	Array split_steps;
+	split_steps.append("0x4ccb64 calls 0x4cca55 with the requested x/y; if the point matches the returned node or paired node coordinates, no split is inserted");
+	split_steps.append("0x4cc6f2 decides whether to advance to the returned node's previous/paired edge before insertion");
+	split_steps.append("0x4cc955 allocates a new 0x24-byte primary/paired node pair from returned-node x/y/payload to requested x/y/payload");
+	split_steps.append("0x4cc643 relinks the new pair against the containing node, then container+0x0 is updated to the new primary node");
+	split_steps.append("0x4ccb1f creates bridge node pairs between the new node and neighboring nodes until the circular traversal returns to container+0x0");
+	split_steps.append("0x4ccc7a detects crossings and 0x4cc68e collapses/swaps edges while walking the circular topology");
+	split_steps.append("0x4ccdfc later iterates the container vector and fans one computed intersection coordinate into the current node, current+0x10 paired node, and a nested neighbor");
+	report["split_steps"] = split_steps;
+	report["materialized_split_node_count"] = 0;
+	report["blocked_next"] = "execute these pointer-topology mutations in a project-owned model and compare finalized 0x4ccdfc nodes before using 0x4a325d span fill";
+	return report;
+}
+
 Dictionary h3maped_footprint_runtime_layout_evidence_report() {
 	Dictionary report;
 	report["status"] = "runtime_polygon_seed_points_ported_split_algorithm_pending";
@@ -6936,6 +6986,7 @@ Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3Maped
 	report["finalizer_evidence"] = h3maped_final_footprint_helper_4a3710_report();
 	report["runtime_layout_evidence"] = h3maped_footprint_runtime_layout_evidence_report();
 	report["polygon_seed_evidence"] = h3maped_polygon_seed_4a3a03_report(zones, normalized);
+	report["polygon_splitter_contract"] = h3maped_polygon_splitter_contract_4ccb64_report();
 	return report;
 }
 

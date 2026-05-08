@@ -194,6 +194,19 @@ func _run() -> void:
 	if String(polygon_seed.get("split_algorithm_status", "")) != "0x4ccb64_pointer_topology_not_yet_ported":
 		_fail("The h3maped polygon seed-call report must still name the exact unported split algorithm: %s" % JSON.stringify(report))
 		return
+	var polygon_splitter: Dictionary = level_footprint_phase.get("polygon_splitter_contract", {})
+	if String(polygon_splitter.get("status", "")) != "0x4cca55_0x4ccb64_splitter_contract_recovered_mutation_not_executed":
+		_fail("The h3maped polygon splitter contract did not expose the recovered locator/splitter boundary: %s" % JSON.stringify(report))
+		return
+	if String(polygon_splitter.get("locator_address", "")) != "0x4cca55" or String(polygon_splitter.get("splitter_address", "")) != "0x4ccb64":
+		_fail("The h3maped polygon splitter contract lost its executable locator/splitter addresses: %s" % JSON.stringify(report))
+		return
+	if polygon_splitter.get("locator_branches", []).size() < 5 or polygon_splitter.get("split_steps", []).size() < 7:
+		_fail("The h3maped polygon splitter contract is missing recovered branch/split steps: %s" % JSON.stringify(report))
+		return
+	if int(polygon_splitter.get("materialized_split_node_count", -1)) != 0:
+		_fail("The h3maped polygon splitter contract must not fake executed topology mutation: %s" % JSON.stringify(report))
+		return
 	var phase_sequence: Array = selected_payload.get("phase_sequence", [])
 	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "assignment_and_runtime_zone_seed_ported_remaining_phases_documented_not_executed":
 		_fail("The selected h3maped payload did not report the recovered 0x4ac552 phase sequence boundary: %s" % JSON.stringify(report))
@@ -258,6 +271,7 @@ func _run() -> void:
 		"runtime_layout_status": runtime_layout.get("status", ""),
 		"polygon_seed_status": polygon_seed.get("status", ""),
 		"polygon_seed_split_count": polygon_seed.get("materialized_primary_split_seed_count", 0),
+		"polygon_splitter_status": polygon_splitter.get("status", ""),
 		"phase_count": phase_sequence.size(),
 		"generation_status": generated.get("status", ""),
 		"unsupported_scope_status": medium_report.get("status", ""),
