@@ -90,13 +90,15 @@ The clean module now also ports the inspection-only player-slot assignment step 
 
 The clean module now ports the record-construction part of runtime-zone build `0x4a218c` for inspection only. It rebuilds the runtime-zone vector report, derives the scale divisor from h3maped water mode, computes the initial scale reference as `min(min_source_base_size * width, min_source_base_size * height) / divisor`, initializes one runtime-zone record per active source zone using the `0x49b452` field semantics, applies source owner mapping through `generator+0xee4`, adapts town/faction choices through `0x49b3c1`, adapts terrain choice through `0x49b53d`, and resolves source link endpoints into runtime-zone link seeds. For the seed `1` boundary case this reports 6 runtime-zone records, 5 link seeds, minimum source base size `11`, land divisor `5`, and initial scale reference `79`.
 
-Coordinate/footprint placement is still not ported. The report explicitly leaves `0x4a1f3b`, `0x4a17f5`, `0x4a19ed`, and `0x4a3a03` pending because those functions determine actual zone rectangles/cells; this reset must not invent replacement coordinates.
+The clean module also ports the `0x4a1f3b` early endpoint-control schedule for inspection only. During runtime-zone construction, h3maped calls `0x4a1f3b` once while each zone is being allocated, when only earlier runtime zones are present in the vector, then runs two full stabilization passes over all runtime zones. The report lists available endpoint-linked runtime zones for each scheduled call and the fallback candidate count if no coordinate candidate survives. For the seed `1` boundary case this reports 18 scheduled calls, 25 endpoint attempts, and 3 possible fallback candidates across creation calls.
+
+Coordinate/footprint placement is still not ported. The report explicitly leaves `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, and `0x4a3a03` pending because those functions determine candidate coordinates, validate them, compact the candidate vector, and eventually paint actual zone rectangles/cells; this reset must not invent replacement coordinates.
 
 The boundary exposes a phase ledger and keeps every later unported phase pending:
 
 1. `template_selection` - `0x49f0cd`, `0x4ac597..0x4ac5a4`, `0x4e7276` - ported for inspection only.
 2. `player_slot_assignment` - `0x4ac62a..0x4ac6ec` - ported for inspection only.
-3. `runtime_zone_build` - `0x4a218c`, `0x49b452`, `0x49b3c1`, `0x49b53d` - runtime records ported for inspection only.
+3. `runtime_zone_build` - `0x4a218c`, `0x4a1f3b`, `0x49b452`, `0x49b3c1`, `0x49b53d` - runtime records and endpoint control flow ported for inspection only.
 4. `zone_footprint_placement` - `0x4a3a03`, `0x4a2777`, `0x4a325d`, `0x4a3710` - pending clean port.
 5. `terrain_fill_repaint` - `0x4a3f27`, `0x4bcff5`, `0x4bd099` - pending clean port.
 6. `object_category_placement` - `0x4a8d2c`, `0x4a8db2`, `0x4a8c15` - pending clean port.
