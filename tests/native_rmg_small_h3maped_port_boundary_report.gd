@@ -201,6 +201,15 @@ func _run() -> void:
 	if String(polygon_splitter.get("locator_address", "")) != "0x4cca55" or String(polygon_splitter.get("splitter_address", "")) != "0x4ccb64":
 		_fail("The h3maped polygon splitter contract lost its executable locator/splitter addresses: %s" % JSON.stringify(report))
 		return
+	if String(polygon_splitter.get("initial_container_status", "")) != "0x4cc788_initial_node_pair_allocations_ported_relink_pending":
+		_fail("The h3maped initial polygon container allocations were not materialized from 0x4cc788: %s" % JSON.stringify(report))
+		return
+	if int(polygon_splitter.get("materialized_initial_node_pair_count", -1)) != 4 or int(polygon_splitter.get("materialized_initial_node_count", -1)) != 8:
+		_fail("The h3maped 0x4cc788 initial polygon allocation counts drifted: %s" % JSON.stringify(report))
+		return
+	if int(polygon_splitter.get("initial_vector_entry_count", -1)) != 8 or String(polygon_splitter.get("initial_root_pointer", "")) != "initial_pair_0_primary":
+		_fail("The h3maped initial polygon vector/root evidence drifted: %s" % JSON.stringify(report))
+		return
 	if polygon_splitter.get("locator_branches", []).size() < 5 or polygon_splitter.get("split_steps", []).size() < 7:
 		_fail("The h3maped polygon splitter contract is missing recovered branch/split steps: %s" % JSON.stringify(report))
 		return
@@ -272,6 +281,7 @@ func _run() -> void:
 		"polygon_seed_status": polygon_seed.get("status", ""),
 		"polygon_seed_split_count": polygon_seed.get("materialized_primary_split_seed_count", 0),
 		"polygon_splitter_status": polygon_splitter.get("status", ""),
+		"initial_polygon_node_pairs": polygon_splitter.get("materialized_initial_node_pair_count", 0),
 		"phase_count": phase_sequence.size(),
 		"generation_status": generated.get("status", ""),
 		"unsupported_scope_status": medium_report.get("status", ""),
