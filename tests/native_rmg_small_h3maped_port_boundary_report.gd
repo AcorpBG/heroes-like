@@ -622,6 +622,18 @@ func _run() -> void:
 			or not bool(path_state_reset.get("preserves_cell_state_upper_word", false)):
 		_fail("Materialized h3maped payload did not expose the recovered 0x4aae2f path-state reset: %s" % JSON.stringify(path_state_reset))
 		return
+	var coordinate_vector_source: Dictionary = generated.get("road_coordinate_vector_source", {}) if generated.get("road_coordinate_vector_source", {}) is Dictionary else {}
+	if String(coordinate_vector_source.get("status", "")) != "h3maped_generator_plus_0x14b0_coordinate_vector_sources_recovered_record_materialization_incomplete" \
+			or String(coordinate_vector_source.get("vector_object_offset", "")) != "+0x14b0" \
+			or String(coordinate_vector_source.get("vector_begin_offset", "")) != "+0x14b4" \
+			or String(coordinate_vector_source.get("vector_end_offset", "")) != "+0x14b8" \
+			or String(coordinate_vector_source.get("coordinate_push_helper_address", "")) != "0x4ae1fd" \
+			or String(coordinate_vector_source.get("direct_town_append_address", "")) != "0x4a959b" \
+			or String(coordinate_vector_source.get("generic_object_append_address", "")) != "0x4a6bb4" \
+			or int(coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0)) != generated.get("town_records", []).size() + generated.get("object_placements", []).size() \
+			or bool(coordinate_vector_source.get("complete_executable_vector_claim", true)):
+		_fail("Materialized h3maped payload did not expose the recovered +0x14b0 road coordinate vector source ledger: %s" % JSON.stringify(coordinate_vector_source))
+		return
 	var road_network: Dictionary = generated.get("road_network", {}) if generated.get("road_network", {}) is Dictionary else {}
 	if int(road_network.get("road_cell_count", -1)) != 0 or road_network.get("road_segments", []).size() != 0:
 		_fail("The clean h3maped reset path must not emit fake road geometry before 0x4b4243 is ported: %s" % JSON.stringify(road_network))
@@ -690,6 +702,8 @@ func _run() -> void:
 		"generated_connection_status": generated.get("connection_generation_status", ""),
 		"road_adapter_boundary_status": road_boundary.get("generation_status", ""),
 		"path_state_reset_status": path_state_reset.get("status", ""),
+		"road_coordinate_vector_source_status": coordinate_vector_source.get("status", ""),
+		"road_coordinate_vector_partial_count": coordinate_vector_source.get("materialized_partial_coordinate_record_count", 0),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
 	get_tree().quit(0)

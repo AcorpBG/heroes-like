@@ -6045,7 +6045,45 @@ Dictionary h3maped_path_state_reset_4aae2f_report(const Dictionary &terrain_fill
 	return reset;
 }
 
-Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connection_records, const Dictionary &terrain_fill) {
+Dictionary h3maped_road_coordinate_vector_source_report(const Array &town_records, const Array &mine_records) {
+	Dictionary source;
+	source["schema_id"] = "aurelion_h3maped_small_road_coordinate_vector_source_v1";
+	source["status"] = "h3maped_generator_plus_0x14b0_coordinate_vector_sources_recovered_record_materialization_incomplete";
+	source["source"] = "Recovered from h3maped.exe: direct town placement and object placement push 12-byte coordinate records into generator+0x14b0 through 0x4ae1fd; final road phase reads begin/end from +0x14b4/+0x14b8.";
+	source["vector_object_offset"] = "+0x14b0";
+	source["vector_begin_offset"] = "+0x14b4";
+	source["vector_end_offset"] = "+0x14b8";
+	source["vector_capacity_offset"] = "+0x14bc";
+	source["coordinate_record_size_bytes"] = 12;
+	source["coordinate_push_helper_address"] = "0x4ae1fd";
+	source["direct_town_append_address"] = "0x4a959b";
+	source["generic_object_append_address"] = "0x4a6bb4";
+	source["final_reader_address"] = "0x4ab52a";
+	source["materialized_town_record_count"] = town_records.size();
+	source["materialized_mine_record_count"] = mine_records.size();
+	source["materialized_partial_coordinate_record_count"] = town_records.size() + mine_records.size();
+	source["complete_executable_vector_claim"] = false;
+	source["blocked_reason"] = "Only direct town records and selected mine records are currently adopted into the package; weighted rewards, guards, monsters, decorations, and final object passes that may also affect the executable vector are not ported.";
+	Array recovered_sources;
+	Dictionary town_source;
+	town_source["phase"] = "0x4a93a2_direct_town_placement";
+	town_source["append_address"] = "0x4a959b";
+	town_source["source_zone_writeback"] = "source_zone+0x30";
+	town_source["record_count"] = town_records.size();
+	town_source["coordinate_semantics"] = "post virtual-placement coordinate adjusted by object metadata offsets before vector push";
+	recovered_sources.append(town_source);
+	Dictionary mine_source;
+	mine_source["phase"] = "0x4a9911_0x4a9641_object_placement";
+	mine_source["append_address"] = "0x4a6bb4";
+	mine_source["record_count"] = mine_records.size();
+	mine_source["coordinate_semantics"] = "selected object coordinate adjusted by object metadata offsets before vector push";
+	recovered_sources.append(mine_source);
+	source["recovered_sources"] = recovered_sources;
+	source["signature"] = h3maped_hash32_hex(String("h3maped_road_coordinate_vector_source:") + String::num_int64(town_records.size()) + ":" + String::num_int64(mine_records.size()));
+	return source;
+}
+
+Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connection_records, const Dictionary &terrain_fill, const Dictionary &coordinate_vector_source) {
 	Dictionary boundary;
 	boundary["schema_id"] = "aurelion_h3maped_small_road_adapter_boundary_v1";
 	boundary["generation_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
@@ -6062,6 +6100,7 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["h3maped_road_toolkit_initial_vtable_address"] = "0x5419d4";
 	boundary["h3maped_road_toolkit_runtime_vtable_address"] = "0x5419f4";
 	boundary["path_state_reset"] = h3maped_path_state_reset_4aae2f_report(terrain_fill);
+	boundary["coordinate_vector_source"] = coordinate_vector_source;
 	boundary["coordinate_vector_begin_offset"] = "+0x14b4";
 	boundary["coordinate_vector_end_offset"] = "+0x14b8";
 	boundary["coordinate_record_size_bytes"] = 12;
@@ -6112,7 +6151,8 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	Array mine_records = h3maped_mine_records_from_port(normalized_config, payload);
 	Array connection_records = h3maped_connection_records_from_port(payload);
 	Dictionary connection_payload = h3maped_connection_payload_from_records(connection_records);
-	Dictionary road_adapter_boundary = h3maped_road_adapter_boundary_from_connections(connection_records, terrain_fill);
+	Dictionary road_coordinate_vector_source = h3maped_road_coordinate_vector_source_report(town_records, mine_records);
+	Dictionary road_adapter_boundary = h3maped_road_adapter_boundary_from_connections(connection_records, terrain_fill, road_coordinate_vector_source);
 	connection_payload["road_adapter_boundary"] = road_adapter_boundary;
 	connection_payload["road_materialization_status"] = road_adapter_boundary.get("road_materialization_status", "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending");
 
@@ -6139,6 +6179,7 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	road_network["schema_id"] = "aurelion_h3maped_small_road_network_v1";
 	road_network["generation_status"] = road_adapter_boundary.get("road_materialization_status", "");
 	road_network["road_adapter_boundary"] = road_adapter_boundary;
+	road_network["coordinate_vector_source"] = road_coordinate_vector_source;
 	road_network["road_segments"] = Array();
 	road_network["road_cell_count"] = 0;
 	road_network["no_synthetic_road_geometry"] = true;
@@ -6170,6 +6211,7 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	result["object_placements"] = mine_records;
 	result["connection_payload"] = connection_payload;
 	result["connection_records"] = connection_records;
+	result["road_coordinate_vector_source"] = road_coordinate_vector_source;
 	result["road_adapter_boundary"] = road_adapter_boundary;
 	result["town_guard_placement"] = town_guard_placement;
 	result["town_records"] = town_records;
