@@ -300,11 +300,17 @@ func _run() -> void:
 		_fail("The h3maped 0x4a325d real span fill escaped the map bounds: %s" % JSON.stringify(report))
 		return
 	var finalizer: Dictionary = level_footprint_phase.get("finalizer_evidence", {})
-	if String(finalizer.get("status", "")) != "0x4a3710_disassembled_adjacency_finalizer_blocked":
-		_fail("The h3maped 0x4a3710 adjacency finalizer evidence was not exposed as the concrete next runtime-layout blocker: %s" % JSON.stringify(report))
+	if String(finalizer.get("status", "")) != "0x4a3710_small_land_no_appended_zone_finalizer_ported":
+		_fail("The h3maped 0x4a3710 small-land finalizer path did not expose the no-appended-zone executable boundary: %s" % JSON.stringify(report))
 		return
 	if String(finalizer.get("adjacency_vector_offset", "")) != "runtime_zone+0xc4" or int(finalizer.get("materialized_adjacency_count", -1)) != 0:
 		_fail("The h3maped 0x4a3710 finalizer report must expose adjacency vectors without faking finalized links: %s" % JSON.stringify(report))
+		return
+	if int(finalizer.get("original_same_level_runtime_zone_count", -1)) != 6 or int(finalizer.get("appended_runtime_zone_count", -1)) != 0:
+		_fail("The h3maped 0x4a3710 finalizer should skip adjacency insertion for one-level land without appended synthetic zones: %s" % JSON.stringify(report))
+		return
+	if int(finalizer.get("zone_order_reset_call_count", -1)) != 6 or int(finalizer.get("per_zone_order_helper_call_count", -1)) != 6:
+		_fail("The h3maped 0x4a3710 finalizer did not preserve the reset/rebuild call counts for the six selected zones: %s" % JSON.stringify(report))
 		return
 	var runtime_layout: Dictionary = level_footprint_phase.get("runtime_layout_evidence", {})
 	if String(runtime_layout.get("status", "")) != "runtime_polygon_seed_points_split_cleanup_and_finalizer_ported_span_fill_pending":
@@ -483,6 +489,8 @@ func _run() -> void:
 		"real_boundary_filled_zone_count": real_span_fill.get("filled_zone_count", 0),
 		"real_boundary_seed_blocked_count": real_span_fill.get("seed_blocked_count", 0),
 		"finalizer_status": finalizer.get("status", ""),
+		"finalizer_appended_runtime_zone_count": finalizer.get("appended_runtime_zone_count", 0),
+		"finalizer_order_reset_call_count": finalizer.get("zone_order_reset_call_count", 0),
 		"runtime_layout_status": runtime_layout.get("status", ""),
 		"polygon_seed_status": polygon_seed.get("status", ""),
 		"polygon_seed_split_count": polygon_seed.get("materialized_primary_split_seed_count", 0),
