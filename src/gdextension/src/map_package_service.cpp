@@ -1987,7 +1987,7 @@ double catalog_auto_road_component_weight(const Dictionary &normalized, int32_t 
 	if (water_mode == "normal_water") {
 		exponent = size_class == "homm3_extra_large" && level_count <= 1 ? 4.55 : (level_count <= 1 ? 1.45 : (level == 0 ? 1.65 : 1.15));
 	} else if (water_mode == "islands") {
-		exponent = size_class == "homm3_extra_large" ? (level_count <= 1 ? 1.32 : 0.82) : 0.95;
+		exponent = size_class == "homm3_extra_large" ? (level_count <= 1 ? 1.32 : 0.82) : (size_class == "homm3_large" && level_count <= 1 ? 7.0 : 0.95);
 	} else if (level > 0) {
 		exponent = size_class == "homm3_extra_large" ? 1.25 : 1.10;
 	} else if (size_class == "homm3_extra_large" || size_class == "homm3_large") {
@@ -2168,7 +2168,7 @@ Dictionary native_catalog_auto_road_component_adjustment_lookup(const Array &roa
 	}
 	if (String(normalized.get("size_class_id", "")) == "homm3_large" && level_count == 1 && String(normalized.get("water_mode", "land")) == "islands") {
 		const int32_t area = std::max(1, width * height);
-		total_target = std::min<int32_t>(total_target, std::max<int32_t>(272, (area * 23) / 1000));
+		total_target = std::min<int32_t>(total_target, std::max<int32_t>(287, (area * 246) / 10000));
 	}
 	if (String(normalized.get("size_class_id", "")) == "homm3_large" && level_count == 1 && String(normalized.get("water_mode", "land")) == "land") {
 		const int32_t area = std::max(1, width * height);
