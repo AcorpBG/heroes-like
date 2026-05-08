@@ -1226,3 +1226,23 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_islands_town_split_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. Medium two-level islands now has the correct town level split, but it still overfills decoration/guard/reward categories and keeps too many surface object-only routes. The next Medium islands work should reduce category overfill and road/terrain shape without undoing the `5/1` town split.
+
+## Medium Two-Level Islands Road Split Cleanup
+
+After the town-level split cleanup, `m_4players_2levels_islands` still had a road materialization mismatch: native had the right component counts, but the total was short by `5` cells and the surface/underground split was too surface-heavy (`186/93` native versus `155/129` owner).
+
+Normal generated catalog-auto Medium two-level islands maps now use an owner-like total road target and surface share. This is scoped to Medium two-level islands; Medium normal-water and other islands sizes keep their existing road profiles.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `m_4players_2levels_islands` export wrote `1/1` package with native validation `pass`. The manifest recorded about `7.901s` total wall time, including `4.654s` generation, `1.146s` package conversion, and `0.976s` save time.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/M-4players-2levels-islands.h3m --amap .artifacts/rmg_native_batch_export_m_islands_road_split_probe/m_4players_2levels_islands.amap --compare --pretty --allow-failures` improved focused road-cell delta from `-5` to `0` and production-gap severity from `681` to `676`.
+- Road component split moved from native surface `40/35/31/27/22/18/13` and underground `59/34` to surface `32/29/26/22/19/15/12` and underground `82/47`, versus owner surface `43/25/23/21/16/15/12` and underground `90/39`.
+- The previous town-level improvement stayed intact: native and owner both have `5` surface towns and `1` underground town. Object-route delta stayed `+6`, and guarded-route delta stayed `0`.
+- A rejected category-cap probe in this same pass made category counts exact but failed the quick gate, underfilled the 72x72 two-level density/policy baselines, worsened terrain delta to `+399`, and restored route delta to `+10`; it was not kept.
+- Focused `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_islands_road_split_probe --allow-partial-native-batch --summary --failure-limit 8 --gap-limit 8` passed with `1/1` matched native package and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_islands_road_split_merged --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.336s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_islands_road_split_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. Medium two-level islands now has exact road total and correct town split, but surface route shape, terrain shape, and category overfill remain unresolved. The rejected cap probe confirms that forcing exact object counts without preserving density and blocker shape is the wrong direction.
