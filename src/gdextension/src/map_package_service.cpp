@@ -6122,6 +6122,8 @@ Dictionary h3maped_adapted_template_payload_report(const Dictionary &template_re
 	Array source_links = template_record.get("links", Array());
 	Array active_zones;
 	Array active_links;
+	Array human_capable_owner_indices;
+	Array player_capable_owner_indices;
 	int32_t player_start_zone_count = 0;
 	int32_t treasure_zone_count = 0;
 	int32_t minimum_player_castles = 0;
@@ -6136,6 +6138,18 @@ Dictionary h3maped_adapted_template_payload_report(const Dictionary &template_re
 		const String role = String(zone.get("role", zone.get("type", "")));
 		if (role == "human_start" || role == "computer_start") {
 			player_start_zone_count += 1;
+		}
+		Dictionary ownership = zone.get("ownership", Dictionary());
+		const int32_t source_owner_index = int32_t(ownership.get("source_owner_index", -1));
+		Dictionary grammar_source = zone.get("grammar_source", Dictionary());
+		const int32_t source_bucket = int32_t(grammar_source.get("source_bucket", -1));
+		if (source_owner_index >= 0) {
+			if (source_bucket == 0) {
+				human_capable_owner_indices.append(source_owner_index);
+				player_capable_owner_indices.append(source_owner_index);
+			} else if (source_bucket == 1) {
+				player_capable_owner_indices.append(source_owner_index);
+			}
 		}
 		if (role == "treasure") {
 			treasure_zone_count += 1;
@@ -6162,10 +6176,33 @@ Dictionary h3maped_adapted_template_payload_report(const Dictionary &template_re
 	payload["player_start_zone_count"] = player_start_zone_count;
 	payload["treasure_zone_count"] = treasure_zone_count;
 	payload["minimum_player_castles_before_assignment"] = minimum_player_castles;
+	payload["human_capable_source_owner_indices"] = human_capable_owner_indices;
+	payload["player_capable_source_owner_indices"] = player_capable_owner_indices;
+	payload["desired_human_count"] = human_count;
+	payload["desired_computer_count"] = std::max(0, player_count - human_count);
 	payload["assignment_status"] = "blocked_until_0x4ac552_player_slot_assignment_ported";
+	payload["assignment_blocker"] = "0x4ac62a..0x4ac6ec also consumes h3maped selected-color bitmap at generator+0xed8; current config has player counts but not that source bitmap";
 	payload["zones"] = active_zones;
 	payload["links"] = active_links;
 	payload["graph_summary"] = template_record.get("graph_summary", Dictionary());
+	Array phase_sequence;
+	phase_sequence.append("0x4ac552_pre_template_selection_and_player_slot_assignment");
+	phase_sequence.append("0x4a218c_build_and_scale_runtime_zones");
+	phase_sequence.append("0x4a3a03_per_level_zone_footprint_placement");
+	phase_sequence.append("0x4a3f27_terrain_fill_and_repaint");
+	phase_sequence.append("0x4a8d2c_per_zone_primary_object_category_placement");
+	phase_sequence.append("0x4a8db2_per_zone_weighted_object_category_placement");
+	phase_sequence.append("0x4a8c15_global_cleanup_and_zone_post_processing");
+	phase_sequence.append("0x4a89da_special_neutral_zone_clearing");
+	phase_sequence.append("0x4a9d6a_object_guard_placement_from_category_arrays");
+	phase_sequence.append("0x4aadd2_count_flagged_runtime_zones");
+	phase_sequence.append("0x4a5767_cell_occupancy_reset_and_object_anchor_normalization");
+	phase_sequence.append("0x4aab7e_per_zone_resource_band_placement");
+	phase_sequence.append("0x49eb8d_flagged_cell_final_pass");
+	phase_sequence.append("0x4ab52a_object_adjacency_value_adjustment");
+	phase_sequence.append("0x4ac4ae_final_artifact_object_neighborhood_pass");
+	payload["phase_sequence_status"] = "documented_not_executed";
+	payload["phase_sequence"] = phase_sequence;
 	payload["source"] = "content/random_map_template_catalog.json imported from recovered h3maped rmg-template-catalog provenance";
 	return payload;
 }

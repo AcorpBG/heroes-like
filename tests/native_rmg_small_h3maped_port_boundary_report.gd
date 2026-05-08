@@ -67,6 +67,19 @@ func _run() -> void:
 	if int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost player-town/castle requirements: %s" % JSON.stringify(report))
 		return
+	if selected_payload.get("human_capable_source_owner_indices", []) != [0, 1, 2, 3]:
+		_fail("The selected h3maped source template payload lost the 0x4ac552 human-capable owner bitmap: %s" % JSON.stringify(report))
+		return
+	if selected_payload.get("player_capable_source_owner_indices", []) != [0, 1, 2, 3]:
+		_fail("The selected h3maped source template payload lost the 0x4ac552 player-capable owner bitmap: %s" % JSON.stringify(report))
+		return
+	if String(selected_payload.get("assignment_status", "")) != "blocked_until_0x4ac552_player_slot_assignment_ported":
+		_fail("The selected h3maped payload claimed full player assignment before 0x4ac552 is ported: %s" % JSON.stringify(report))
+		return
+	var phase_sequence: Array = selected_payload.get("phase_sequence", [])
+	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "documented_not_executed":
+		_fail("The selected h3maped payload did not report the recovered 0x4ac552 phase sequence boundary: %s" % JSON.stringify(report))
+		return
 	var accepted_ids := _accepted_template_ids(report)
 	for required_id in ["h3maped_template_000", "h3maped_template_012", "h3maped_template_048"]:
 		if not accepted_ids.has(required_id):
@@ -105,6 +118,7 @@ func _run() -> void:
 		"adapted_template_id": selected_payload.get("adapted_template_id", ""),
 		"selected_zone_count": selected_payload.get("zone_count", 0),
 		"selected_link_count": selected_payload.get("link_count", 0),
+		"phase_count": phase_sequence.size(),
 		"generation_status": generated.get("status", ""),
 		"unsupported_scope_status": medium_report.get("status", ""),
 	})])
