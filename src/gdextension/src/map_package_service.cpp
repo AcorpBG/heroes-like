@@ -1936,7 +1936,7 @@ int32_t catalog_auto_road_component_count_for_level(const Dictionary &normalized
 		if (water_mode == "islands") {
 			target = level == 0 ? 12 : 6;
 		} else if (water_mode == "normal_water") {
-			target = level == 0 ? 8 : 6;
+			target = level == 0 ? 7 : 3;
 		} else {
 			target = level == 0 ? 10 : 9;
 		}
@@ -1951,6 +1951,7 @@ int32_t catalog_auto_road_component_count_for_level(const Dictionary &normalized
 int32_t catalog_auto_road_surface_share_per_thousand(const Dictionary &normalized) {
 	const String size_class = String(normalized.get("size_class_id", ""));
 	const String water_mode = String(normalized.get("water_mode", "land"));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
 	if (size_class == "homm3_extra_large") {
 		if (water_mode == "normal_water") {
 			return 795;
@@ -1962,6 +1963,9 @@ int32_t catalog_auto_road_surface_share_per_thousand(const Dictionary &normalize
 	}
 	if (size_class == "homm3_large") {
 		if (water_mode == "normal_water") {
+			if (level_count > 1) {
+				return 480;
+			}
 			return 720;
 		}
 		if (water_mode == "islands") {
@@ -2141,7 +2145,7 @@ Dictionary native_catalog_auto_road_component_adjustment_lookup(const Array &roa
 			if (water_mode == "islands") {
 				total_target = std::max<int32_t>(total_target, (area * 34) / 1000);
 			} else if (water_mode == "normal_water") {
-				total_target = std::max<int32_t>(total_target, (area * 32) / 1000);
+				total_target = std::max<int32_t>(total_target, (area * 34) / 1000);
 			} else {
 				total_target = std::max<int32_t>(total_target, (area * 27) / 1000);
 			}
