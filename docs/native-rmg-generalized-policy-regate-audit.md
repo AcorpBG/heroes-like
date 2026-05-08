@@ -1263,3 +1263,20 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_town_phase_order_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. `production_ready=false` remains correct with `6` missing broad requirements. The merged top blockers are now led by XL one-level land, Large one-level islands, Medium two-level islands, Large two-level land, XL water, and Medium normal-water route/terrain/category shape gaps.
+
+## XL One-Level Land Town-Floor Materialization Cleanup
+
+The next contained topology defect was `xl_nowater`. The previous XL land road pass made road cells and broad category totals close, but current-code focused evidence still under-materialized towns: native had `9` towns versus owner `12`. The generated one-level land town-floor path had a global spaced fallback for Large land only, so XL land could exhaust source-zone anchors instead of searching the full map for spread-out valid town cells.
+
+The kept correction extends that global spaced fallback to XL one-level land and changes the XL one-level land density term from `ceil` to `floor` so the generalized owner-like floor resolves to `12` towns on the 144x144 profile instead of overshooting to `13`. Anchor-occupied or anchor-too-close zones are no longer prematurely burned for one-level land; the fallback can select a valid spread-out cell in any generated zone while preserving the size-aware spacing floor.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- A pre-fix current-code `xl_nowater` probe wrote `1/1` package with native validation `pass`; focused fast audit showed native `9` towns versus owner `12`, road delta `0`, reward/object deltas `0`, and object-route delta `-19`.
+- A rejected intermediate probe confirmed the fallback direction but overshot: native `13` towns versus owner `12`, with object-route delta worsening to `+23`; the `ceil` town-floor term was not kept.
+- Focused `xl_nowater` export after the kept correction wrote `1/1` package with native validation `pass`. The manifest recorded about `52.601s` total wall time, including `23.638s` generation, `21.211s` package conversion, and `6.328s` save time.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/XL-nowater.h3m --amap .artifacts/rmg_native_batch_export_xl_nowater_town_floor_probe2/xl_nowater.amap --compare --pretty --allow-failures` now shows exact town count parity: native `12` versus owner `12`. Road total remains exact at `727` cells, reward/object counts remain exact, decoration is close at `3406` versus owner `3413`, and guard is close at `623` versus owner `619`.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_nowater_town_floor_merged --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `12.132s`.
+
+This is still not production parity. The production-gap audit remains `production_ready=false` with `6` missing broad requirements. `xl_nowater` drops out of the merged top ten, but its object-only town-route shape is still too open after adding the missing towns. The next top blockers are Large one-level islands, Medium two-level islands, Large two-level land, XL water, and Medium normal-water route/terrain/category shape gaps.
