@@ -131,6 +131,12 @@ func _run() -> void:
 	if int(town_castle_placement.get("town_footprint_mask_scan_call_count", -1)) != 3 or int(town_castle_placement.get("town_footprint_mask_eligible_total", -1)) != 97 or int(town_castle_placement.get("town_footprint_mask_missing_count", -1)) != 0:
 		_fail("0x49a6f9 Town text mask body scan candidate totals drifted from the seed-1 boundary: %s" % JSON.stringify(town_castle_placement))
 		return
+	if String(town_castle_placement.get("object_cell_materialization_status", "")) != "0x4a93a2_unique_direct_town_record_and_bit22_body_marking_ported_inspection_only":
+		_fail("0x4a93a2 unique direct town record stamping status drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if int(town_castle_placement.get("object_record_stamped_count", -1)) != 2 or int(town_castle_placement.get("object_occupied_cell_mark_count", -1)) != 26 or int(town_castle_placement.get("object_record_random_tie_pending_count", -1)) != 1:
+		_fail("0x4a93a2 unique direct town record stamping counts drifted: %s" % JSON.stringify(town_castle_placement))
+		return
 	var minimum_calls: Array = town_castle_placement.get("minimum_calls", [])
 	if minimum_calls.size() != 4 or int(minimum_calls[0].get("runtime_zone_index", -1)) != 0 or int(minimum_calls[0].get("owner_color", -1)) != 0 or not bool(minimum_calls[0].get("castle", false)):
 		_fail("0x4a8d2c first direct minimum castle call did not preserve runtime owner semantics: %s" % JSON.stringify(town_castle_placement))
@@ -146,6 +152,12 @@ func _run() -> void:
 		return
 	if String(minimum_calls[0].get("town_footprint_mask_status", "")) != "0x49a6f9_town_text_mask_body_scan_ported_object_collision_pending" or int(minimum_calls[0].get("town_footprint_mask_eligible_count", -1)) != 42 or int(minimum_calls[0].get("closest_town_footprint_mask_distance", -1)) != 5:
 		_fail("0x49a6f9 first direct minimum castle Town mask body scan drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if String(minimum_calls[0].get("selected_candidate_status", "")) != "0x4a93a2_unique_town_candidate_selected_and_bit22_body_cells_marked_inspection_only" or int(minimum_calls[0].get("selected_candidate_x", -1)) != 28 or int(minimum_calls[0].get("selected_candidate_y", -1)) != 14 or int(minimum_calls[0].get("object_occupied_cell_mark_count", -1)) != 13:
+		_fail("0x4a93a2 first direct minimum castle unique candidate stamping drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if String(minimum_calls[2].get("selected_candidate_status", "")) != "pending_0x4a93a2_random_tie_selection_before_object_record_stamping" or int(minimum_calls[2].get("closest_town_footprint_mask_candidate_count", -1)) != 3:
+		_fail("0x4a93a2 third direct minimum castle should remain blocked on recovered random tie selection: %s" % JSON.stringify(town_castle_placement))
 		return
 	if String(minimum_calls[3].get("direct_candidate_scan_status", "")) != "0x4a93a2_immediate_fail_owner_minus_one" or int(minimum_calls[3].get("owner_color", 0)) != -1:
 		_fail("0x4a93a2 fourth direct minimum castle call should expose the recovered owner-minus-one early-fail boundary for the unassigned player slot: %s" % JSON.stringify(town_castle_placement))
@@ -446,6 +458,8 @@ func _run() -> void:
 		"minimum_settlement_call_count": town_castle_placement.get("minimum_settlement_call_count", 0),
 		"town_footprint_mask_status": town_castle_placement.get("town_footprint_mask_status", ""),
 		"town_footprint_mask_eligible_total": town_castle_placement.get("town_footprint_mask_eligible_total", 0),
+		"object_cell_materialization_status": town_castle_placement.get("object_cell_materialization_status", ""),
+		"object_record_stamped_count": town_castle_placement.get("object_record_stamped_count", 0),
 		"terrain_selection_status": runtime_build.get("terrain_selection_status", ""),
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),
 		"coordinate_placement_status": runtime_build.get("coordinate_placement_status", ""),
