@@ -1172,3 +1172,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_islands_2level_mix_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The merged top blockers are still Large one-level islands, XL one-level land, Medium two-level islands, Large land two-level, Large normal-water two-level, and XL one-level water. The remaining hard problems are town/subzone topology, terrain shape, and route shape, not broad generated-package validity.
+
+## Large One-Level Islands Road-Component Shape Cleanup
+
+The Large one-level islands case still had a road-shape defect after the earlier category cleanup: total road cells were under owner evidence by `15`, and the twelve road components were too evenly distributed. Owner evidence for `l_islands_randomplayers` has the same twelve-component count but a dominant primary route cluster: `104/40/20/19/15/15/14/14/13/11/11/11`.
+
+Normal generated catalog-auto Large one-level islands maps now use a stronger skewed component weighting and a `287`-cell road target for that size/water/level profile. This keeps the profile scoped to Large one-level islands instead of changing XL islands or two-level islands road behavior.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `l_islands_randomplayers` export wrote `1/1` package with native validation `pass`. The manifest recorded about `11.087s` total wall time, including `6.511s` generation, `2.485s` package conversion, and `1.059s` save time.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/L-islands-RandomPlayers.h3m --amap .artifacts/rmg_native_batch_export_l_islands_road_shape_probe/l_islands_randomplayers.amap --compare --pretty --allow-failures` improved focused production-gap severity from `891` to `876`, and road-cell delta from `-15` to `0`.
+- Road component shape moved from `34/32/30/28/26/24/22/20/17/15/13/11` to `101/59/34/20/14/10/9/8/8/8/8/8` versus owner `104/40/20/19/15/15/14/14/13/11/11/11`.
+- The same focused audit still shows the real remaining blocker: native town count is `8` versus owner `16`, object-only town-route reachable pairs are `28` versus owner `11`, and guarded-route reachable pairs are `0` versus owner `11`.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_islands_road_shape_merged --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.455s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_islands_road_shape_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blockers remain XL one-level land, Large one-level islands, Medium two-level islands, Large two-level land, Large two-level normal-water, and XL water/islands route-shape cases. Large one-level islands now has a closer road total and component skew, but still needs the real zone/subzone/town placement model so island towns are not under-materialized and guarded routes are not over-closed.
