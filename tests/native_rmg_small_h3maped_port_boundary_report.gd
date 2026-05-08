@@ -100,7 +100,7 @@ func _run() -> void:
 		_fail("The player-slot assignment did not assign all requested players: %s" % JSON.stringify(report))
 		return
 
-	if String(selected_payload.get("runtime_zone_build_status", "")) != "0x4a218c_runtime_zone_records_ported_inspection_only":
+	if String(selected_payload.get("runtime_zone_build_status", "")) != "0x4a218c_runtime_zone_records_and_49b53d_terrain_ported_inspection_only":
 		_fail("The clean boundary did not port the h3maped runtime-zone record build: %s" % JSON.stringify(report))
 		return
 	var runtime_build: Dictionary = selected_payload.get("runtime_zone_build", {})
@@ -140,8 +140,30 @@ func _run() -> void:
 	if int(runtime_zones[3].get("x_after_bbox_rescale", -1)) != 18 or int(runtime_zones[3].get("y_after_bbox_rescale", -1)) != 4:
 		_fail("Interleaved 0x4a218c coordinate replay changed the fourth runtime-zone center: %s" % JSON.stringify(report))
 		return
-	if String(runtime_zones[2].get("terrain_source", "")) != "pending_0x4a3f27_terrain_phase":
-		_fail("Runtime-zone report must not consume terrain RNG before the h3maped terrain phase: %s" % JSON.stringify(report))
+	if String(runtime_build.get("terrain_selection_status", "")) != "0x49b53d_runtime_terrain_selector_ported_inspection_only":
+		_fail("Runtime-zone report did not expose the h3maped 0x49b53d terrain selector: %s" % JSON.stringify(report))
+		return
+	var terrain_selection: Dictionary = runtime_build.get("terrain_selection", {})
+	if int(terrain_selection.get("selection_count", -1)) != 6 or int(terrain_selection.get("match_to_town_count", -1)) != 4 or int(terrain_selection.get("allowed_flag_choice_count", -1)) != 2:
+		_fail("0x49b53d terrain selection did not cover match-to-town and allowed-flag zones: %s" % JSON.stringify(report))
+		return
+	if int(terrain_selection.get("rng_call_count", -1)) != 2:
+		_fail("0x49b53d should consume terrain RNG only for the two treasure zones in this template: %s" % JSON.stringify(report))
+		return
+	if int(terrain_selection.get("rng_state_after_0x49b53d_uint32", -1)) != 2166683160:
+		_fail("0x49b53d terrain selection did not preserve the recovered post-terrain RNG state: %s" % JSON.stringify(report))
+		return
+	if terrain_selection.get("town_choice_to_terrain_table", []) != [2, 2, 3, 7, 0, 0, 5, 4, 2]:
+		_fail("0x49b53d town-choice terrain table drifted from executable data at 0x540908: %s" % JSON.stringify(report))
+		return
+	if String(runtime_zones[2].get("terrain_selection_status", "")) != "0x49b53d_ported":
+		_fail("Runtime-zone report did not write the 0x49b53d terrain result into runtime+0x0c semantics: %s" % JSON.stringify(report))
+		return
+	if int(runtime_zones[2].get("h3maped_terrain_id", -1)) != 3 or String(runtime_zones[2].get("terrain_id", "")) != "snow":
+		_fail("0x49b53d selected the wrong allowed-flag terrain for the first treasure zone: %s" % JSON.stringify(report))
+		return
+	if int(runtime_zones[5].get("h3maped_terrain_id", -1)) != 5 or String(runtime_zones[5].get("terrain_id", "")) != "rough":
+		_fail("0x49b53d selected the wrong allowed-flag terrain for the second treasure zone: %s" % JSON.stringify(report))
 		return
 	if String(runtime_build.get("zone_footprint_placement_status", "")) != "0x4a3a03_0x4a3710_footprint_helpers_ported_terrain_pending":
 		_fail("The clean boundary did not expose the h3maped 0x4a3a03/0x4a3710 footprint helper checkpoint: %s" % JSON.stringify(report))
@@ -185,7 +207,7 @@ func _run() -> void:
 	if String(footprint_phase.get("boundary_traversal_status", "")) != "0x4a2777_real_source_node_cycle_traversal_ported_boundary_materialized":
 		_fail("0x4a2777 real source-node boundary traversal was not materialized: %s" % JSON.stringify(report))
 		return
-	if int(footprint_phase.get("boundary_runtime_zone_walk_count", -1)) <= 0 or int(footprint_phase.get("boundary_unique_cell_count", -1)) != 238:
+	if int(footprint_phase.get("boundary_runtime_zone_walk_count", -1)) <= 0 or int(footprint_phase.get("boundary_unique_cell_count", -1)) != 221:
 		_fail("0x4a2777 boundary traversal did not produce zone walks and unique boundary cells: %s" % JSON.stringify(report))
 		return
 	if bool(footprint_phase.get("boundary_loop_guard_exhausted", true)):
@@ -197,7 +219,7 @@ func _run() -> void:
 	if int(footprint_phase.get("span_fill_filled_zone_count", -1)) <= 0 or int(footprint_phase.get("span_fill_unique_filled_cell_count", -1)) <= 0:
 		_fail("0x4a325d span fill did not fill any runtime zones or cells: %s" % JSON.stringify(report))
 		return
-	if int(footprint_phase.get("span_fill_unique_filled_cell_count", -1)) != 869 or int(footprint_phase.get("span_fill_remaining_unassigned_cell_count", -1)) != 189:
+	if int(footprint_phase.get("span_fill_unique_filled_cell_count", -1)) != 890 or int(footprint_phase.get("span_fill_remaining_unassigned_cell_count", -1)) != 185:
 		_fail("0x4a325d span fill seed-1 cell counts drifted from the clean h3maped replay: %s" % JSON.stringify(report))
 		return
 	if int(footprint_phase.get("span_fill_boundary_or_filled_cell_count", -1)) <= int(footprint_phase.get("boundary_unique_cell_count", -1)):
@@ -269,7 +291,7 @@ func _run() -> void:
 	if String(phase_ledger[1].get("phase_id", "")) != "player_slot_assignment" or String(phase_ledger[1].get("status", "")) != "ported_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped player-slot assignment as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_interleaved_runtime_and_coordinate_replay_inspection_only":
+	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_interleaved_runtime_coordinate_and_terrain_selection_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped runtime-zone record build as ported: %s" % JSON.stringify(report))
 		return
 	if String(phase_ledger[3].get("phase_id", "")) != "zone_footprint_placement" or String(phase_ledger[3].get("status", "")) != "ported_0x4a3710_small_land_footprint_helpers_inspection_only_terrain_pending":
@@ -297,6 +319,7 @@ func _run() -> void:
 		"accepted_template_count": report.get("accepted_template_count", 0),
 		"assignment_status": selected_payload.get("assignment_status", ""),
 		"runtime_zone_build_status": selected_payload.get("runtime_zone_build_status", ""),
+		"terrain_selection_status": runtime_build.get("terrain_selection_status", ""),
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),
 		"coordinate_placement_status": runtime_build.get("coordinate_placement_status", ""),
 		"coordinate_rng_order_status": coordinate_seed.get("rng_order_status", ""),
