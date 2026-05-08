@@ -7994,6 +7994,66 @@ Dictionary h3maped_polygon_split_pre_crossing_model_report(const std::vector<H3M
 	report["finalized_node_count"] = finalized_node_count;
 	report["active_payload_node_count"] = active_payload_node_count;
 	report["finalized_steps"] = finalized_steps;
+	Array source_node_walks;
+	int32_t source_node_walk_count = 0;
+	int32_t source_node_walk_guard_exhausted_count = 0;
+	for (const H3MapedRuntimeZoneSeed &zone : zones) {
+		if (zone.level != 0) {
+			continue;
+		}
+		Dictionary walk;
+		walk["runtime_zone_index"] = zone.source_index;
+		walk["source_zone_record_id"] = zone.record_id;
+		walk["locator_address"] = "0x4cca55";
+		walk["consumer_address"] = "0x4a2777";
+		walk["start_x"] = zone.x;
+		walk["start_y"] = zone.y;
+		const int32_t located = blocked ? -1 : model.locate_4cca55(zone.x, zone.y);
+		walk["located_node_id"] = located >= 0 ? model.nodes[size_t(located)].id : String();
+		Array cycle_nodes;
+		bool guard_exhausted = false;
+		int32_t finalized_coordinate_count = 0;
+		if (located >= 0) {
+			int32_t current = located;
+			for (int32_t guard = 0; guard < 96; ++guard) {
+				const H3MapedPolygonModelNode &node = model.nodes[size_t(current)];
+				Dictionary node_report;
+				node_report["node_id"] = node.id;
+				node_report["+0x08_payload"] = node.payload;
+				node_report["has_payload"] = node.has_payload;
+				node_report["+0x10_next"] = node.next >= 0 ? model.nodes[size_t(node.next)].id : String();
+				node_report["+0x14_previous"] = node.previous >= 0 ? model.nodes[size_t(node.previous)].id : String();
+				node_report["+0x1c_finalized_x"] = node.finalized_x;
+				node_report["+0x20_finalized_y"] = node.finalized_y;
+				node_report["finalized"] = node.finalized;
+				node_report["active"] = node.active;
+				cycle_nodes.append(node_report);
+				if (node.finalized) {
+					finalized_coordinate_count += 1;
+				}
+				current = node.next;
+				if (current == located) {
+					break;
+				}
+				if (guard == 95) {
+					guard_exhausted = true;
+				}
+			}
+		}
+		if (guard_exhausted) {
+			source_node_walk_guard_exhausted_count += 1;
+		}
+		walk["cycle_node_count"] = cycle_nodes.size();
+		walk["finalized_coordinate_count"] = finalized_coordinate_count;
+		walk["guard_exhausted"] = guard_exhausted;
+		walk["cycle_nodes"] = cycle_nodes;
+		source_node_walks.append(walk);
+		source_node_walk_count += 1;
+	}
+	report["source_node_walk_status"] = blocked ? String("blocked_before_0x4cca55_source_node_walk") : String("0x4cca55_to_0x4a2777_source_node_cycles_recovered");
+	report["source_node_walk_count"] = source_node_walk_count;
+	report["source_node_walk_guard_exhausted_count"] = source_node_walk_guard_exhausted_count;
+	report["source_node_walks"] = source_node_walks;
 	report["blocked_next"] = "feed finalized 0x4ccdfc polygon coordinates into 0x4a325d span fill";
 	return report;
 }
