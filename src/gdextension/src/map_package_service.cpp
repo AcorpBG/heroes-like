@@ -1924,6 +1924,8 @@ int32_t catalog_auto_road_component_count_for_level(const Dictionary &normalized
 		} else {
 			target = level == 0 ? 10 : 9;
 		}
+	} else if (level_count > 1 && size_class == "homm3_medium" && water_mode == "islands") {
+		target = level == 0 ? 7 : 2;
 	}
 	return std::max<int32_t>(1, std::min<int32_t>(target, std::max<int32_t>(1, total_target / 6)));
 }
@@ -2122,6 +2124,8 @@ Dictionary native_catalog_auto_road_component_adjustment_lookup(const Array &roa
 			} else {
 				total_target = std::max<int32_t>(total_target, (area * 27) / 1000);
 			}
+		} else if (size_class == "homm3_medium" && water_mode == "islands") {
+			total_target = std::min<int32_t>(total_target, std::max<int32_t>(250, (area * 27) / 1000));
 		}
 	}
 	if (String(normalized.get("size_class_id", "")) == "homm3_extra_large" && level_count == 1) {
@@ -8757,6 +8761,13 @@ bool native_catalog_auto_large_two_level_islands_profile(const Dictionary &norma
 			&& int32_t(normalized.get("level_count", 1)) > 1;
 }
 
+bool native_catalog_auto_medium_two_level_islands_profile(const Dictionary &normalized) {
+	return native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& String(normalized.get("water_mode", "land")) == "islands"
+			&& String(normalized.get("size_class_id", "")) == "homm3_medium"
+			&& int32_t(normalized.get("level_count", 1)) > 1;
+}
+
 bool native_catalog_auto_xl_one_level_normal_water_profile(const Dictionary &normalized) {
 	return native_rmg_generalized_native_catalog_auto_policy(normalized)
 			&& String(normalized.get("water_mode", "land")) == "normal_water"
@@ -8808,6 +8819,10 @@ int32_t native_catalog_auto_generated_object_floor(const Dictionary &normalized)
 		return std::max(900, (area * density_floor_per_1000) / 1000);
 	}
 	if (size_class_id == "homm3_medium") {
+		if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
+			density_floor_per_1000 = 80;
+			return std::max(830, (area * density_floor_per_1000) / 1000);
+		}
 		density_floor_per_1000 = 105;
 		return std::max(380, (area * density_floor_per_1000) / 1000);
 	}
@@ -8849,6 +8864,9 @@ int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized)
 		return level_count > 1 ? std::max(720, (area * 31) / 1000) : std::max(180, (area * 16) / 1000);
 	}
 	if (size_class_id == "homm3_medium") {
+		if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
+			return std::max(190, (area * 18) / 1000);
+		}
 		return level_count > 1 ? std::max(150, (area * 15) / 1000) : std::max(105, (area * 20) / 1000);
 	}
 	if (size_class_id == "homm3_small") {
@@ -8926,6 +8944,11 @@ int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, 
 	if (native_catalog_auto_large_two_level_islands_profile(normalized)) {
 		density_floor = (area * 22) / 1000;
 		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.82));
+		return std::max(density_floor, reward_ratio_floor);
+	}
+	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
+		density_floor = (area * 6) / 1000;
+		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.52));
 		return std::max(density_floor, reward_ratio_floor);
 	}
 	if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
@@ -10445,6 +10468,9 @@ int32_t catalog_zone_reward_target(const Dictionary &normalized, const Dictionar
 	}
 	if (native_catalog_auto_large_two_level_islands_profile(normalized)) {
 		target = int32_t(std::ceil(double(target) * 1.42));
+	}
+	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
+		target = int32_t(std::ceil(double(target) * 0.62));
 	}
 	if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
 		target = int32_t(std::ceil(double(target) * 0.65));
@@ -16315,6 +16341,19 @@ double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Di
 		}
 		return 0.58;
 	}
+	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
+		const String role = String(zone.get("role", ""));
+		if (role.contains("start")) {
+			return 0.24;
+		}
+		if (role == "junction") {
+			return 0.18;
+		}
+		if (role == "treasure" || role == "neutral") {
+			return 0.13;
+		}
+		return 0.16;
+	}
 	if (native_catalog_auto_large_two_level_islands_profile(normalized)) {
 		const String role = String(zone.get("role", ""));
 		if (role.contains("start")) {
@@ -16781,7 +16820,7 @@ double native_catalog_auto_underground_rock_fraction(const Dictionary &normalize
 			return 0.97;
 		}
 		if (size_class_id == "homm3_medium") {
-			return 0.90;
+			return 0.95;
 		}
 		if (size_class_id == "homm3_large") {
 			return 0.72;
@@ -18808,6 +18847,7 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 			&& String(normalized.get("size_class_id", "")) == "homm3_extra_large"
 			&& int32_t(normalized.get("level_count", 1)) <= 1;
 	const bool preserve_large_two_level_islands_object_barriers = native_catalog_auto_large_two_level_islands_profile(normalized);
+	const bool preserve_medium_two_level_islands_object_barriers = native_catalog_auto_medium_two_level_islands_profile(normalized);
 	const bool preserve_xl_two_level_land_object_barriers = native_catalog_auto_xl_two_level_land_profile(normalized);
 	const bool preserve_large_two_level_normal_water_object_barriers = native_catalog_auto_large_two_level_normal_water_profile(normalized);
 	Dictionary terrain_blocked = package_terrain_blocked_lookup(generated_map);
@@ -18840,7 +18880,7 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 				if (path.is_empty()) {
 					continue;
 				}
-				if (!preserve_xl_surface_islands_object_barriers && !preserve_large_two_level_islands_object_barriers && !preserve_xl_two_level_land_object_barriers && !preserve_large_two_level_normal_water_object_barriers) {
+				if (!preserve_xl_surface_islands_object_barriers && !preserve_large_two_level_islands_object_barriers && !preserve_medium_two_level_islands_object_barriers && !preserve_xl_two_level_land_object_barriers && !preserve_large_two_level_normal_water_object_barriers) {
 					remove_package_block_cells_from_clearable_objects(objects, path, cleared_lookup, level);
 					++corridor_count;
 				}

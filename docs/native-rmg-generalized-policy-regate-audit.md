@@ -923,3 +923,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_islands_2level_profile_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The merged top blocker moves to `m_4players_2levels_islands`, followed by Medium two-level normal-water and the remaining XL route/terrain-shape cases.
+
+## Medium Two-Level Islands Road, Density, And Guarded-Route Cleanup
+
+The next merged top-gap case was `m_4players_2levels_islands`. The owner evidence has a compact Medium islands profile: `737` total objects, `284` road cells split across `7` surface and `2` underground components, fully closed guarded town routes, and `0` object-only reachable town pairs. Native previously generated `1213` objects, overfilled decoration and guards, under-blocked terrain by `724` tiles, and kept all `15` surface town pairs reachable by object-only topology.
+
+Normal generated catalog-auto Medium two-level islands now use a scoped profile with owner-like road component counts, capped road-cell materialization, lower reward/guard/object floors than generic Medium two-level maps, smaller island land fractions, stronger underground rock, and preserved decorative/scenic blockers during package adoption. The result keeps guard-mediated routes closed while avoiding the original overfilled object payload.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `m_4players_2levels_islands` export wrote `1/1` package in about `6.795s` with native validation `pass`.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/M-4players-2levels-islands.h3m --amap .artifacts/rmg_native_batch_export_medium_islands_2level_profile_probe/m_4players_2levels_islands.amap --compare --pretty --allow-failures` improved total object delta from `+476` to `+185`, road delta from `+54` to `-5`, terrain-blocked delta from `-724` to `+178`, and guarded-route delta remained `0`. Object-only reachable town pairs improved from `15` to `10`, but owner evidence remains stricter at `0`.
+- The focused production-gap severity improved from `2175` to `803`. Remaining debt is mostly decoration/category and object-only route shape: native has decoration `476` versus owner `340`, guard `86` versus owner `69`, reward `164` versus owner `132`, and all `6` towns remain on surface while owner places `5` on surface and `1` underground.
+- `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_medium_islands_2level_profile_probe --allow-partial-native-batch --summary --failure-limit 8 --gap-limit 8` passed with `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_medium_islands_2level_profile_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_medium_islands_2level_profile_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blocker moves back to `m_normalw_4players_2levels`, followed by one-level Large/XL route and terrain-shape cases. The next correction should address Medium two-level normal-water town/route/category shape and the remaining object-only islands route debt without using exact-count sample fitting as production policy.
