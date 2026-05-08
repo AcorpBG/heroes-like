@@ -887,3 +887,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_profile_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The remaining XL water debt is route shape and exact road-component distribution, while the merged top blockers now move to Large two-level land/islands and Medium two-level route/category cases.
+
+## Large Two-Level Land Town, Guard, Reward, And Underground Profile Cleanup
+
+The next merged top-gap case was `l_nowater_randomplayers_2level`. The previous native output had broadly valid structure, but it was underfilled versus the owner sample in the places that affect playability: native wrote `11` towns versus owner `16`, guard count was `-281`, reward count was `-137`, and underground terrain was under-blocked by `1427` tiles.
+
+Normal generated catalog-auto Large two-level land maps now use a scoped town floor and underground split, a higher reward scale, a higher guard-to-reward floor, a stronger underground rock fraction, and a Large-land road component split closer to the owner evidence. A first attempt to preserve decorative/scenic blockers on this profile was rejected because it erased all object-only town routes and failed the guard-mediated closure gate; package adoption continues clearing the required corridors for this profile.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused exports.
+- Focused `l_nowater_randomplayers_2level` export wrote `1/1` package with native validation `pass`. The final focused export ran in about `31.500s`; an intermediate overly-high scenic-floor attempt took about `84s` and was corrected before commit by lowering the Large two-level land scenic floor to an owner-like range.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/L-NoWater-RandomPlayers-2level.h3m --amap .artifacts/rmg_native_batch_export_large_land_2level_profile_probe3/l_nowater_randomplayers_2level.amap --compare --pretty --allow-failures` improved total object delta from `-437` to `-72`, town delta from `-5` to `0`, guard delta from `-281` to `-2`, reward delta from `-137` to `-33`, and terrain-blocked delta from `-1427` to `-78`.
+- The focused production-gap severity improved from `2455` to `588`.
+- `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_land_2level_profile_probe3 --allow-partial-native-batch --summary --failure-limit 8 --gap-limit 8` passed with `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_land_2level_profile_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_land_2level_profile_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blocker moves to `l_islands_randomplayers_2level`, followed by Medium two-level water/islands and the remaining XL island/water route-shape cases.
