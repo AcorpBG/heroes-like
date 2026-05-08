@@ -4715,6 +4715,25 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	report["mine_template_bucket_offset"] = "generator+0x388..+0x38c";
 	report["mine_template_subtype_filter_offset"] = "candidate_template_metadata+0x20";
 	report["mine_template_terrain_filter_status"] = "0x42cc99_runtime_terrain_bitset_filter_recorded_template_wrapper_execution_pending";
+	report["mine_placement_constraint_status"] = "0x4a9641_constraint_scan_sequence_recovered_candidate_execution_pending";
+	report["mine_placement_constraint_gap"] = "candidate scan/order is recovered, but it is not yet executing against real mine object wrappers and the generalized 0x49aa93 object gate";
+	Dictionary placement_constraint;
+	placement_constraint["address"] = "0x4a9641";
+	placement_constraint["pre_scan_helper_address"] = "0x49b76d";
+	placement_constraint["candidate_validity_helper_address"] = "0x49aa93";
+	placement_constraint["candidate_rng_function_address"] = "0x4e7276";
+	placement_constraint["virtual_placement_hook"] = "generator_vtable+0x04";
+	placement_constraint["owner_match"] = "generated_cell+0x20 high byte equals runtime/source zone owner byte";
+	placement_constraint["score_low_word"] = "generated_cell+0x20 low word";
+	placement_constraint["neighbor_flag_mask_required"] = "generated_cell+0x28 bit25 and bit26";
+	placement_constraint["neighbor_terrain_reject_id"] = 9;
+	placement_constraint["neighbor_count_cap"] = 5;
+	placement_constraint["special_distance_initial_best_squared"] = 0x9c40;
+	placement_constraint["special_distance_min_squared"] = 0x10;
+	placement_constraint["special_distance_floor_squared"] = 0x90;
+	placement_constraint["special_distance_source"] = "0x4a9d6a one-shot flag for wood/ore in player-capable zones when runtime+0x3c is set";
+	placement_constraint["selection_order"] = "scan footprint rectangle, require owner byte, call 0x49aa93, optionally apply zone-anchor distance ring, improve by low-word score and neighbor count, then choose random tied candidate";
+	report["mine_placement_constraint"] = placement_constraint;
 
 	struct MineField {
 		const char *resource;
@@ -4845,6 +4864,14 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 				helper_call["object_record_constructor_address"] = "0x49ba89";
 				helper_call["object_record_vtable_address"] = "0x540ab0";
 				helper_call["placement_constraint_helper_address"] = "0x4a9641";
+				helper_call["placement_constraint_status"] = "0x4a9641_constraint_scan_sequence_recovered_candidate_execution_pending";
+				helper_call["placement_constraint_owner_match"] = "cell+0x20_high_byte_matches_runtime_zone";
+				helper_call["placement_constraint_score_low_word"] = "cell+0x20_low_word";
+				helper_call["placement_constraint_neighbor_count_cap"] = 5;
+				helper_call["placement_constraint_distance_min_squared"] = 0x10;
+				helper_call["placement_constraint_distance_floor_squared"] = 0x90;
+				helper_call["placement_constraint_rng_function_address"] = "0x4e7276";
+				helper_call["placement_constraint_virtual_hook"] = "generator_vtable+0x04";
 				helper_call["guard_base_value"] = mine_guard_base_value(field.subtype);
 				helper_call["guard_adjustment_helpers"] = "0x4a960a -> 0x4a65a5";
 				helper_call["adjacent_resource_helper_address"] = "0x4a9e40";
