@@ -139,14 +139,17 @@ func _run() -> void:
 		_fail("The h3maped 0x4a3a03 helper trio was not reported as the concrete next blocker: %s" % JSON.stringify(report))
 		return
 	var first_helper: Dictionary = level_footprint_phase.get("first_helper_evidence", {})
-	if String(first_helper.get("status", "")) != "0x4a2777_disassembled_4a2b33_4a261a_4a2413_helpers_ported_runtime_layout_blocked":
-		_fail("The h3maped 0x4a2777 footprint helper evidence was not exposed with the ported dependency boundaries: %s" % JSON.stringify(report))
+	if String(first_helper.get("status", "")) != "0x4a2777_real_source_node_cycle_traversal_ported_span_fill_pending":
+		_fail("The h3maped 0x4a2777 footprint helper did not consume the recovered source-node cycles: %s" % JSON.stringify(report))
 		return
 	if String(first_helper.get("clip_helper_address", "")) != "0x4a2b33" or String(first_helper.get("line_cell_writer_address", "")) != "0x4a261a":
 		_fail("The h3maped 0x4a2777 helper lost its executable-backed clipping/cell-writer addresses: %s" % JSON.stringify(report))
 		return
-	if int(first_helper.get("map_cell_stride_bytes", -1)) != 48 or int(first_helper.get("materialized_cell_count", -1)) != 0:
-		_fail("The h3maped 0x4a2777 helper report must not fake materialized footprint cells: %s" % JSON.stringify(report))
+	if int(first_helper.get("map_cell_stride_bytes", -1)) != 48 or int(first_helper.get("project_materialized_cell_count", -1)) != 0:
+		_fail("The h3maped 0x4a2777 helper report must not fake project materialized footprint cells: %s" % JSON.stringify(report))
+		return
+	if int(first_helper.get("h3maped_boundary_cell_count", 0)) <= 0:
+		_fail("The h3maped 0x4a2777 helper did not paint any real boundary cells from source-node cycles: %s" % JSON.stringify(report))
 		return
 	if first_helper.get("recovered_operations", []).size() < 6 or first_helper.get("missing_runtime_layout", []).size() < 4:
 		_fail("The h3maped 0x4a2777 helper report does not distinguish recovered behavior from missing runtime layout: %s" % JSON.stringify(report))
@@ -246,6 +249,25 @@ func _run() -> void:
 		return
 	if bool(boundary_wrapping.get("loop_guard_exhausted", true)):
 		_fail("The h3maped 0x4a2777 boundary-wrapping continuation exhausted its standalone loop guard: %s" % JSON.stringify(report))
+		return
+	if String(first_helper.get("real_source_cycle_traversal_status", "")) != "0x4a2777_real_source_node_cycle_traversal_ported_boundary_materialized":
+		_fail("The h3maped 0x4a2777 helper did not execute the real recovered source-node cycle traversal: %s" % JSON.stringify(report))
+		return
+	var real_cycle: Dictionary = first_helper.get("real_source_cycle_traversal_evidence", {})
+	if String(real_cycle.get("status", "")) != "0x4a2777_real_source_node_cycle_traversal_ported_boundary_materialized":
+		_fail("The h3maped 0x4a2777 real source-cycle traversal report did not run: %s" % JSON.stringify(report))
+		return
+	if int(real_cycle.get("runtime_zone_walk_count", -1)) != 6 or int(real_cycle.get("connector_segment_count", 0)) <= 0:
+		_fail("The h3maped 0x4a2777 real source-cycle traversal did not consume all six runtime-zone walks: %s" % JSON.stringify(report))
+		return
+	if int(real_cycle.get("trace_write_count", 0)) <= 0 or int(real_cycle.get("unique_cell_count", 0)) <= 0 or int(real_cycle.get("out_of_bounds_write_count", -1)) != 0:
+		_fail("The h3maped 0x4a2777 real source-cycle traversal did not paint in-bounds boundary cells: %s" % JSON.stringify(report))
+		return
+	if int(real_cycle.get("flagged_writer_segment_count", 0)) <= 0 or int(real_cycle.get("randomized_rng_call_count", 0)) <= 0:
+		_fail("The h3maped 0x4a2777 real source-cycle traversal did not execute the caller-flagged 0x4a2413 path: %s" % JSON.stringify(report))
+		return
+	if bool(real_cycle.get("loop_guard_exhausted", true)):
+		_fail("The h3maped 0x4a2777 real source-cycle traversal exhausted its loop guard: %s" % JSON.stringify(report))
 		return
 	var second_helper: Dictionary = level_footprint_phase.get("second_helper_evidence", {})
 	if String(second_helper.get("status", "")) != "0x4a325d_cell_span_fill_ported_standalone_project_materialization_blocked":
@@ -439,6 +461,8 @@ func _run() -> void:
 		"rectangle_fallback_status": first_helper.get("rectangle_fallback_status", ""),
 		"connector_segment_status": first_helper.get("connector_segment_status", ""),
 		"boundary_wrapping_status": first_helper.get("boundary_wrapping_status", ""),
+		"real_source_cycle_traversal_status": real_cycle.get("status", ""),
+		"real_source_cycle_unique_cell_count": real_cycle.get("unique_cell_count", 0),
 		"second_helper_status": second_helper.get("status", ""),
 		"finalizer_status": finalizer.get("status", ""),
 		"runtime_layout_status": runtime_layout.get("status", ""),
