@@ -6289,6 +6289,120 @@ struct H3MapedRuntimeLinkSeed {
 	bool border_guard = false;
 };
 
+struct H3MapedPolygonModelNode {
+	String id;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t payload = 0;
+	int32_t pair = -1;
+	int32_t next = -1;
+	int32_t previous = -1;
+};
+
+struct H3MapedPolygonModel {
+	std::vector<H3MapedPolygonModelNode> nodes;
+	int32_t root = -1;
+
+	int32_t add_pair(const String &prefix, int32_t from_x, int32_t from_y, int32_t from_payload, int32_t to_x, int32_t to_y, int32_t to_payload) {
+		const int32_t primary_index = int32_t(nodes.size());
+		const int32_t paired_index = primary_index + 1;
+		H3MapedPolygonModelNode primary;
+		primary.id = prefix + String("_primary");
+		primary.x = from_x;
+		primary.y = from_y;
+		primary.payload = from_payload;
+		primary.pair = paired_index;
+		primary.next = primary_index;
+		primary.previous = primary_index;
+		H3MapedPolygonModelNode paired;
+		paired.id = prefix + String("_paired");
+		paired.x = to_x;
+		paired.y = to_y;
+		paired.payload = to_payload;
+		paired.pair = primary_index;
+		paired.next = paired_index;
+		paired.previous = paired_index;
+		nodes.push_back(primary);
+		nodes.push_back(paired);
+		return primary_index;
+	}
+
+	void relink_4cc643(int32_t first, int32_t second) {
+		const int32_t first_next = nodes[size_t(first)].next;
+		const int32_t second_next = nodes[size_t(second)].next;
+		std::swap(nodes[size_t(first_next)].previous, nodes[size_t(second_next)].previous);
+		std::swap(nodes[size_t(first)].next, nodes[size_t(second)].next);
+	}
+
+	int32_t bridge_4ccb1f(int32_t old_node, int32_t target_node, const String &prefix) {
+		const H3MapedPolygonModelNode &old_pair = nodes[size_t(nodes[size_t(old_node)].pair)];
+		const H3MapedPolygonModelNode &target = nodes[size_t(target_node)];
+		const int32_t bridge_primary = add_pair(prefix, old_pair.x, old_pair.y, old_pair.payload, target.x, target.y, target.payload);
+		relink_4cc643(bridge_primary, nodes[size_t(nodes[size_t(old_node)].pair)].previous);
+		relink_4cc643(nodes[size_t(bridge_primary)].pair, target_node);
+		return bridge_primary;
+	}
+
+	int64_t side_4cca55(int32_t from_node, int32_t to_node, int32_t x, int32_t y) const {
+		const H3MapedPolygonModelNode &from = nodes[size_t(from_node)];
+		const H3MapedPolygonModelNode &to = nodes[size_t(to_node)];
+		return int64_t(to.y - from.y) * int64_t(x - from.x) - int64_t(to.x - from.x) * int64_t(y - from.y);
+	}
+
+	int32_t locate_4cca55(int32_t x, int32_t y) const {
+		int32_t current = root;
+		for (int32_t guard = 0; guard < 512; ++guard) {
+			const H3MapedPolygonModelNode &current_node = nodes[size_t(current)];
+			if (current_node.x == x && current_node.y == y) {
+				return current;
+			}
+			const int32_t paired = current_node.pair;
+			const H3MapedPolygonModelNode &paired_node = nodes[size_t(paired)];
+			if (paired_node.x == x && paired_node.y == y) {
+				return paired;
+			}
+			if (side_4cca55(current, paired, x, y) > 0) {
+				current = paired;
+				continue;
+			}
+			const int32_t next = current_node.next;
+			if (side_4cca55(next, nodes[size_t(next)].pair, x, y) <= 0) {
+				current = next;
+				continue;
+			}
+			const int32_t nested = nodes[size_t(nodes[size_t(paired)].previous)].pair;
+			if (side_4cca55(nested, nodes[size_t(nested)].pair, x, y) > 0) {
+				return current;
+			}
+			current = nested;
+		}
+		return -1;
+	}
+
+	bool edge_side_test_4cc6f2(int32_t node_index, int32_t x, int32_t y) const {
+		const H3MapedPolygonModelNode &node = nodes[size_t(node_index)];
+		const H3MapedPolygonModelNode &paired = nodes[size_t(node.pair)];
+		const int64_t edge_dx = int64_t(node.x) - int64_t(paired.x);
+		const int64_t edge_dy = int64_t(node.y) - int64_t(paired.y);
+		const int64_t edge_distance_sq = edge_dx * edge_dx + edge_dy * edge_dy;
+		const int64_t node_dx = int64_t(x) - int64_t(node.x);
+		const int64_t node_dy = int64_t(y) - int64_t(node.y);
+		if (node_dx * node_dx + node_dy * node_dy > edge_distance_sq) {
+			return false;
+		}
+		const int64_t paired_dx = int64_t(x) - int64_t(paired.x);
+		const int64_t paired_dy = int64_t(y) - int64_t(paired.y);
+		if (paired_dx * paired_dx + paired_dy * paired_dy > edge_distance_sq) {
+			return false;
+		}
+		const int64_t expression = int64_t(node.y) * int64_t(paired.x - node.x)
+				- int64_t(node.x) * int64_t(paired.y - node.y)
+				- int64_t(y) * int64_t(paired.x - node.x)
+				+ int64_t(x) * int64_t(paired.y - node.y);
+		return expression == 0;
+	}
+};
+
 int32_t h3maped_ftol_truncate(double value) {
 	return int32_t(std::trunc(value));
 }
@@ -6680,6 +6794,124 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 	return report;
 }
 
+Dictionary h3maped_polygon_split_pre_crossing_model_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
+	Dictionary report;
+	report["status"] = "0x4ccb64_insertion_and_bridge_ported_crossing_collapse_pending";
+	report["source"] = "project-owned execution model for 0x4cc788, 0x4cca55, 0x4cc643, and the pre-crossing part of 0x4ccb64; stops before 0x4ccc7a/0x4cc68e crossing cleanup and 0x4ccdfc finalization";
+	report["locator_address"] = "0x4cca55";
+	report["splitter_address"] = "0x4ccb64";
+	report["bridge_address"] = "0x4ccb1f";
+	report["crossing_test_address"] = "0x4ccc7a";
+	report["crossing_collapse_address"] = "0x4cc68e";
+	report["finalizer_address"] = "0x4ccdfc";
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	if (level_count != 1) {
+		report["status"] = "unsupported_until_two_level_polygon_split_model_ported";
+		return report;
+	}
+
+	H3MapedPolygonModel model;
+	const int32_t p0 = model.add_pair("initial_pair_0", -200, -200, 0, 400, -200, 0);
+	const int32_t p1 = model.add_pair("initial_pair_1", 400, -200, 0, 400, 400, 0);
+	const int32_t p2 = model.add_pair("initial_pair_2", 400, 400, 0, -200, 400, 0);
+	const int32_t p3 = model.add_pair("initial_pair_3", -200, 400, 0, -200, -200, 0);
+	model.relink_4cc643(model.nodes[size_t(p0)].pair, p1);
+	model.relink_4cc643(model.nodes[size_t(p1)].pair, p2);
+	model.relink_4cc643(model.nodes[size_t(p2)].pair, p3);
+	model.relink_4cc643(model.nodes[size_t(p3)].pair, p0);
+	model.bridge_4ccb1f(p3, p2, "initial_bridge_pair_0");
+	model.root = p0;
+
+	Array split_steps;
+	int32_t executed_split_count = 0;
+	int32_t skipped_duplicate_count = 0;
+	int32_t edge_removal_count = 0;
+	int32_t inserted_node_pair_count = 0;
+	int32_t inserted_bridge_pair_count = 0;
+	bool blocked = false;
+	for (const H3MapedRuntimeZoneSeed &zone : zones) {
+		if (zone.level != 0) {
+			continue;
+		}
+		Dictionary step;
+		step["runtime_zone_index"] = zone.source_index;
+		step["source_zone_record_id"] = zone.record_id;
+		step["x"] = zone.x;
+		step["y"] = zone.y;
+		const int32_t located = model.locate_4cca55(zone.x, zone.y);
+		if (located < 0) {
+			step["status"] = "0x4cca55_locator_guard_failed";
+			blocked = true;
+			split_steps.append(step);
+			break;
+		}
+		step["located_node_id"] = model.nodes[size_t(located)].id;
+		step["located_pair_id"] = model.nodes[size_t(model.nodes[size_t(located)].pair)].id;
+		if ((model.nodes[size_t(located)].x == zone.x && model.nodes[size_t(located)].y == zone.y)
+				|| (model.nodes[size_t(model.nodes[size_t(located)].pair)].x == zone.x && model.nodes[size_t(model.nodes[size_t(located)].pair)].y == zone.y)) {
+			step["status"] = "0x4ccb64_duplicate_point_skipped";
+			skipped_duplicate_count += 1;
+			split_steps.append(step);
+			continue;
+		}
+		if (model.edge_side_test_4cc6f2(located, zone.x, zone.y)) {
+			step["edge_removal_branch"] = true;
+			step["edge_removal_status"] = "0x4cc9cc_vector_erase_branch_not_needed_for_seed_1_small_land";
+			edge_removal_count += 1;
+			blocked = true;
+			split_steps.append(step);
+			break;
+		}
+		step["edge_removal_branch"] = false;
+		const H3MapedPolygonModelNode &located_node = model.nodes[size_t(located)];
+		const int32_t split_primary = model.add_pair(String("split_") + String::num_int64(zone.source_index), located_node.x, located_node.y, located_node.payload, zone.x, zone.y, zone.source_index);
+		model.relink_4cc643(split_primary, located);
+		model.root = split_primary;
+		inserted_node_pair_count += 1;
+		executed_split_count += 1;
+		step["inserted_primary_node_id"] = model.nodes[size_t(split_primary)].id;
+		step["inserted_paired_node_id"] = model.nodes[size_t(model.nodes[size_t(split_primary)].pair)].id;
+		int32_t bridge_pair_count = 0;
+		int32_t current_bridge = split_primary;
+		int32_t bridge_source = located;
+		for (int32_t guard = 0; guard < 64; ++guard) {
+			current_bridge = model.bridge_4ccb1f(bridge_source, model.nodes[size_t(current_bridge)].pair, String("split_") + String::num_int64(zone.source_index) + "_bridge_" + String::num_int64(bridge_pair_count));
+			bridge_pair_count += 1;
+			inserted_bridge_pair_count += 1;
+			bridge_source = model.nodes[size_t(current_bridge)].previous;
+			const int32_t bridge_source_pair = model.nodes[size_t(bridge_source)].pair;
+			if (model.nodes[size_t(bridge_source_pair)].previous == model.root) {
+				break;
+			}
+			if (guard == 63) {
+				step["status"] = "0x4ccb64_bridge_loop_guard_failed";
+				blocked = true;
+			}
+		}
+		step["bridge_pair_count"] = bridge_pair_count;
+		step["node_pair_count_after_pre_crossing"] = int32_t(model.nodes.size() / 2);
+		step["status"] = blocked ? String("0x4ccb64_bridge_loop_guard_failed") : String("0x4ccb64_pre_crossing_inserted");
+		split_steps.append(step);
+		if (blocked) {
+			break;
+		}
+	}
+	report["split_steps"] = split_steps;
+	report["executed_split_call_count"] = executed_split_count;
+	report["duplicate_skip_count"] = skipped_duplicate_count;
+	report["edge_removal_branch_count"] = edge_removal_count;
+	report["pre_crossing_inserted_node_pair_count"] = inserted_node_pair_count;
+	report["pre_crossing_inserted_bridge_pair_count"] = inserted_bridge_pair_count;
+	report["initial_node_pair_count"] = 5;
+	report["pre_crossing_total_node_pair_count"] = int32_t(model.nodes.size() / 2);
+	report["pre_crossing_total_node_count"] = int32_t(model.nodes.size());
+	report["root_node_id_after_pre_crossing"] = model.root >= 0 ? model.nodes[size_t(model.root)].id : String();
+	report["crossing_cleanup_status"] = blocked ? String("blocked_before_crossing_cleanup") : String("0x4ccc7a_0x4cc68e_crossing_cleanup_not_yet_executed");
+	report["finalizer_status"] = "0x4ccdfc_not_yet_executed";
+	report["blocked_next"] = "port 0x4ccc7a crossing tests, 0x4cc68e collapses, and 0x4ccdfc finalized coordinates before feeding 0x4a325d span fill";
+	return report;
+}
+
 Dictionary h3maped_second_footprint_helper_4a325d_report() {
 	Dictionary report;
 	report["status"] = "0x4a325d_disassembled_cell_span_fill_blocked";
@@ -6750,7 +6982,7 @@ Dictionary h3maped_final_footprint_helper_4a3710_report() {
 
 Dictionary h3maped_polygon_seed_4a3a03_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
 	Dictionary report;
-	report["status"] = "0x4a3a03_polygon_tree_seed_calls_ported_split_algorithm_pending";
+	report["status"] = "0x4a3a03_polygon_tree_seed_calls_and_pre_crossing_split_ported_cleanup_pending";
 	report["source"] = "h3maped 0x4a3a03 builds the runtime polygon tree from current runtime-zone coordinates: 0x4cc788 initializes the enclosing polygon and 0x4ccb64 receives one split point per same-level runtime zone";
 	report["initial_polygon_constructor_address"] = "0x4cc788";
 	report["polygon_split_address"] = "0x4ccb64";
@@ -6818,8 +7050,11 @@ Dictionary h3maped_polygon_seed_4a3a03_report(const std::vector<H3MapedRuntimeZo
 	}
 	report["levels"] = levels;
 	report["materialized_primary_split_seed_count"] = total_split_calls;
-	report["split_algorithm_status"] = "0x4ccb64_pointer_topology_not_yet_ported";
-	report["blocked_next"] = "port 0x4cca55/0x4ccb64 pointer topology against these seed calls before 0x4ccdfc can produce finalized polygon nodes for cell fill";
+	Dictionary split_model = h3maped_polygon_split_pre_crossing_model_report(zones, normalized);
+	report["runtime_split_pre_crossing_model"] = split_model;
+	report["runtime_split_pre_crossing_status"] = split_model.get("status", "");
+	report["split_algorithm_status"] = split_model.get("status", "");
+	report["blocked_next"] = "port 0x4ccc7a/0x4cc68e crossing cleanup and 0x4ccdfc finalized polygon nodes before 0x4a325d can produce cell spans";
 	return report;
 }
 
