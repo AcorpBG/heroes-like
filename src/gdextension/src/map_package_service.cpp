@@ -25460,13 +25460,14 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 		metadata["full_generation_status"] = h3maped_payload.get("full_generation_status", "");
 		metadata["normalized_config"] = normalized;
 		metadata["deterministic_identity"] = identity;
-		metadata["h3maped_small_port_status"] = Dictionary(h3maped_payload.get("h3maped_small_port", Dictionary())).get("status", "");
-		metadata["terrain_generation_status"] = terrain_grid.get("generation_status", "");
-		metadata["town_generation_status"] = Dictionary(h3maped_payload.get("town_guard_placement", Dictionary())).get("town_generation_status", "");
-		metadata["object_generation_status"] = Dictionary(h3maped_payload.get("object_placement", Dictionary())).get("generation_status", "");
-		metadata["road_generation_status"] = "pending_h3maped_road_port";
-		metadata["guard_generation_status"] = "pending_h3maped_guard_port";
-		metadata["no_authored_writeback"] = true;
+			metadata["h3maped_small_port_status"] = Dictionary(h3maped_payload.get("h3maped_small_port", Dictionary())).get("status", "");
+			metadata["terrain_generation_status"] = terrain_grid.get("generation_status", "");
+			metadata["town_generation_status"] = Dictionary(h3maped_payload.get("town_guard_placement", Dictionary())).get("town_generation_status", "");
+			metadata["object_generation_status"] = Dictionary(h3maped_payload.get("object_placement", Dictionary())).get("generation_status", "");
+			metadata["connection_generation_status"] = Dictionary(h3maped_payload.get("connection_payload", Dictionary())).get("generation_status", "");
+			metadata["road_generation_status"] = Dictionary(h3maped_payload.get("connection_payload", Dictionary())).get("road_materialization_status", "pending_h3maped_road_port");
+			metadata["guard_generation_status"] = Dictionary(h3maped_payload.get("town_guard_placement", Dictionary())).get("guard_generation_status", "pending_h3maped_guard_port");
+			metadata["no_authored_writeback"] = true;
 
 		Dictionary map_state;
 		map_state["map_id"] = identity.get("map_id", "");
@@ -25495,9 +25496,10 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 		h3maped_payload["deterministic_identity"] = identity;
 		h3maped_payload["terrain_generation_status"] = terrain_grid.get("generation_status", "");
 		h3maped_payload["town_generation_status"] = metadata.get("town_generation_status", "");
-		h3maped_payload["object_generation_status"] = metadata.get("object_generation_status", "");
-		h3maped_payload["road_generation_status"] = metadata.get("road_generation_status", "");
-		h3maped_payload["guard_generation_status"] = metadata.get("guard_generation_status", "");
+			h3maped_payload["object_generation_status"] = metadata.get("object_generation_status", "");
+			h3maped_payload["connection_generation_status"] = metadata.get("connection_generation_status", "");
+			h3maped_payload["road_generation_status"] = metadata.get("road_generation_status", "");
+			h3maped_payload["guard_generation_status"] = metadata.get("guard_generation_status", "");
 		h3maped_payload["native_runtime_authoritative"] = false;
 		h3maped_payload["full_parity_claim"] = false;
 		return h3maped_payload;

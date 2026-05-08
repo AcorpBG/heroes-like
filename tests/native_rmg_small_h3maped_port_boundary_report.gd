@@ -595,8 +595,18 @@ func _run() -> void:
 			"object_count": generated.get("object_placements", []).size(),
 		}))
 		return
-	if String(generated.get("road_generation_status", "")) != "pending_h3maped_road_port" or String(generated.get("guard_generation_status", "")) != "pending_h3maped_guard_port":
-		_fail("Materialized h3maped payload must keep unported road/guard phases explicit: %s" % JSON.stringify({
+	var connection_payload: Dictionary = generated.get("connection_payload", {}) if generated.get("connection_payload", {}) is Dictionary else {}
+	if int(connection_payload.get("connection_count", 0)) != int(selected_payload.get("link_count", 0)) \
+			or String(generated.get("connection_generation_status", "")) != "h3maped_0x4a79a3_link_payload_semantics_ported_geometry_roads_guards_pending":
+		_fail("Materialized h3maped payload did not preserve recovered 0x4a79a3 link payload semantics: %s" % JSON.stringify({
+			"connection_generation_status": generated.get("connection_generation_status", ""),
+			"connection_count": connection_payload.get("connection_count", 0),
+			"link_count": selected_payload.get("link_count", 0),
+		}))
+		return
+	if String(generated.get("road_generation_status", "")) != "pending_0x4ab37f_road_adapter_path_port" \
+			or String(generated.get("guard_generation_status", "")) != "h3maped_0x4a79a3_link_guard_payload_ported_guard_object_materialization_pending":
+		_fail("Materialized h3maped payload must keep unported road/guard object phases explicit: %s" % JSON.stringify({
 			"road_generation_status": generated.get("road_generation_status", ""),
 			"guard_generation_status": generated.get("guard_generation_status", ""),
 		}))
@@ -654,6 +664,8 @@ func _run() -> void:
 		"generated_validation_status": generated.get("validation_status", ""),
 		"generated_town_count": generated.get("town_records", []).size(),
 		"generated_mine_count": generated.get("object_placements", []).size(),
+		"generated_connection_count": connection_payload.get("connection_count", 0),
+		"generated_connection_status": generated.get("connection_generation_status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
 	get_tree().quit(0)

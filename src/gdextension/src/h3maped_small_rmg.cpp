@@ -5942,6 +5942,78 @@ Array h3maped_mine_records_from_port(const Dictionary &normalized_config, const 
 	return result;
 }
 
+Array h3maped_connection_records_from_port(const Dictionary &payload) {
+	Array result;
+	Dictionary runtime_build = payload.get("runtime_zone_build", Dictionary());
+	Array link_seeds = runtime_build.get("link_seeds", Array());
+	for (int64_t index = 0; index < link_seeds.size(); ++index) {
+		if (Variant(link_seeds[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary seed = Dictionary(link_seeds[index]);
+		const int32_t raw_guard_value = int32_t(seed.get("guard_value", 0));
+		const bool wide = bool(seed.get("wide", false));
+		const bool border_guard = bool(seed.get("border_guard", false));
+		Dictionary record;
+		record["connection_id"] = String("h3maped_small_connection_") + String::num_int64(index + 1);
+		record["link_index"] = seed.get("link_index", index);
+		record["source_endpoint_a"] = seed.get("source_endpoint_a", -1);
+		record["source_endpoint_b"] = seed.get("source_endpoint_b", -1);
+		record["runtime_zone_a"] = seed.get("runtime_zone_a", -1);
+		record["runtime_zone_b"] = seed.get("runtime_zone_b", -1);
+		record["raw_guard_value"] = raw_guard_value;
+		record["wide"] = wide;
+		record["border_guard"] = border_guard;
+		record["normal_guard_value_status"] = wide ? String("suppressed_by_link_plus_0x08_wide") : String("pending_0x4a65a5_value_scaling");
+		record["normal_guard_value_before_0x4a65a5"] = wide ? 0 : raw_guard_value;
+		record["border_guard_status"] = border_guard ? String("pending_0x4a5e73_0x4a5a23_type_9_materialization") : String("not_a_border_guard_link");
+		record["geometry_status"] = "pending_0x4a61bc_0x4a696b_0x4a6cf2_0x4a7605_connection_geometry";
+		record["road_status"] = "pending_0x4ab37f_road_adapter_path_port";
+		record["h3maped_phase"] = "0x4a79a3_link_payload_semantics";
+		record["h3maped_source"] = seed;
+		record["signature"] = h3maped_hash32_hex(String(record["connection_id"]) + String(":") + String::num_int64(int32_t(record["runtime_zone_a"])) + String(":") + String::num_int64(int32_t(record["runtime_zone_b"])) + String(":") + String::num_int64(raw_guard_value) + String(":") + String::num_int64(wide ? 1 : 0) + String(":") + String::num_int64(border_guard ? 1 : 0));
+		result.append(record);
+	}
+	return result;
+}
+
+Dictionary h3maped_connection_payload_from_records(const Array &connection_records) {
+	Dictionary connection_payload;
+	connection_payload["schema_id"] = "aurelion_h3maped_small_connection_payload_v1";
+	connection_payload["generation_status"] = "h3maped_0x4a79a3_link_payload_semantics_ported_geometry_roads_guards_pending";
+	connection_payload["h3maped_phase"] = "0x4a79a3";
+	connection_payload["source"] = "Recovered h3maped link Value/Wide/Border Guard semantics from raw 0x1c link records";
+	connection_payload["connection_records"] = connection_records;
+	connection_payload["connection_count"] = connection_records.size();
+	int32_t raw_guard_link_count = 0;
+	int32_t wide_suppressed_count = 0;
+	int32_t border_guard_count = 0;
+	for (int64_t index = 0; index < connection_records.size(); ++index) {
+		if (Variant(connection_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary record = Dictionary(connection_records[index]);
+		if (int32_t(record.get("raw_guard_value", 0)) > 0) {
+			raw_guard_link_count += 1;
+		}
+		if (bool(record.get("wide", false))) {
+			wide_suppressed_count += 1;
+		}
+		if (bool(record.get("border_guard", false))) {
+			border_guard_count += 1;
+		}
+	}
+	connection_payload["raw_guard_link_count"] = raw_guard_link_count;
+	connection_payload["wide_suppressed_normal_guard_count"] = wide_suppressed_count;
+	connection_payload["border_guard_link_count"] = border_guard_count;
+	connection_payload["normal_guard_materialization_status"] = "pending_0x4a65a5_0x4a5e03";
+	connection_payload["border_guard_materialization_status"] = "pending_0x4a5e73_0x4a5a23_type_9_border_guard";
+	connection_payload["road_materialization_status"] = "pending_0x4ab37f_road_adapter_path_port";
+	connection_payload["full_generation_status"] = "h3maped_connection_payload_known_geometry_roads_guards_pending";
+	connection_payload["signature"] = h3maped_hash32_hex(String("h3maped_connection_payload:") + String::num_int64(connection_records.size()) + String(":") + String::num_int64(raw_guard_link_count) + String(":") + String::num_int64(wide_suppressed_count) + String(":") + String::num_int64(border_guard_count));
+	return connection_payload;
+}
+
 Dictionary generate_materialized_payload(const Dictionary &normalized_config, const Dictionary &extension_profile) {
 	Dictionary port = inspect_port(normalized_config);
 	Dictionary result;
@@ -5960,16 +6032,19 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	Dictionary terrain_grid = h3maped_terrain_grid_from_fill(normalized_config, terrain_fill);
 	Array town_records = h3maped_town_records_from_port(normalized_config, payload);
 	Array mine_records = h3maped_mine_records_from_port(normalized_config, payload);
+	Array connection_records = h3maped_connection_records_from_port(payload);
+	Dictionary connection_payload = h3maped_connection_payload_from_records(connection_records);
 
 	Dictionary town_guard_placement;
 	town_guard_placement["schema_id"] = "aurelion_h3maped_small_town_guard_placement_v1";
 	town_guard_placement["generation_status"] = "h3maped_0x4a93a2_towns_materialized_guards_pending";
 	town_guard_placement["town_generation_status"] = "h3maped_0x4a93a2_town_records_adopted";
-	town_guard_placement["guard_generation_status"] = "pending_h3maped_guard_ports";
+	town_guard_placement["guard_generation_status"] = "h3maped_0x4a79a3_link_guard_payload_ported_guard_object_materialization_pending";
 	town_guard_placement["town_records"] = town_records;
 	town_guard_placement["guard_records"] = Array();
 	town_guard_placement["town_count"] = town_records.size();
 	town_guard_placement["guard_count"] = 0;
+	town_guard_placement["connection_payload"] = connection_payload;
 
 	Dictionary object_placement;
 	object_placement["schema_id"] = "aurelion_h3maped_small_object_placement_v1";
@@ -5989,6 +6064,8 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	metrics["mine_count"] = mine_records.size();
 	metrics["guard_count"] = 0;
 	metrics["road_cell_count"] = 0;
+	metrics["connection_count"] = connection_records.size();
+	metrics["border_guard_link_count"] = connection_payload.get("border_guard_link_count", 0);
 
 	result["ok"] = true;
 	result["status"] = "h3maped_small_clean_restart_phase_package_adoption_partial";
@@ -6003,6 +6080,8 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	result["terrain_grid"] = terrain_grid;
 	result["object_placement"] = object_placement;
 	result["object_placements"] = mine_records;
+	result["connection_payload"] = connection_payload;
+	result["connection_records"] = connection_records;
 	result["town_guard_placement"] = town_guard_placement;
 	result["town_records"] = town_records;
 	result["guard_records"] = Array();

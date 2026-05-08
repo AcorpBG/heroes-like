@@ -104,6 +104,8 @@ The clean module now also rebinds the selected template's mine and treasure fiel
 
 The direct-placement blocker has been narrowed from an unknown condition to the recovered `0x49aa93` gate sequence. The executable first calls `0x49a6f9` for rectangle/footprint rejection, reads object metadata flags from `0x57c648 + type*0x10`, calls `0x49a09c` for footprint passability/owner/occupied/water scanning, then applies the already ported `0x49a1d8` anchor validity precheck, owner-byte match, bit-22 object collision plus metadata-secondary checks, and final water/non-water terrain matching. The boundary now binds the `0x57c648` runtime object metadata path to recovered `objects.txt`/`objnames.txt` source data for inspection: 232 object type names, 1326 object rows, Town type `98` with 9 template rows, and Random Town type `77` with 1 template row. It also ports the Town text-mask body scan used by `0x49a6f9` for inspection with 13 passability/body cells and 1 action cell. The current Town-body `0x49a09c` gate order reports 97 passes, 135 bounds rejects, 1 bit-22 reject, 22 bit-25/materialized-cell rejects, 196 owner rejects, and zero terrain-9/water-class rejects across the 3 assigned-owner scans. The same seed `1` run stamps 3 direct town records into the inspection object layer and marks 39 bit-22-style occupied body cells. The `0x4a93a2` writeout ledger records each 0x28-byte allocation, constructor `0x49ba89`, town vtable `0x540a9c`, generator+0xf44 serial, record+0x1c/+0x20/+0x24 field writes, generator virtual placement hook site, source-zone coordinate writeback site, and anchor bit27/bit26 update site. The third player-castle call now selects from 3 tied best-distance candidates through the recovered `0x4a93a2` random tie path: RNG value `12382`, selected index `1`, selected coordinate `(18,5)`. The remaining blockers are project package adoption of the virtual placement hook, generalized object/template terrain-class handling beyond the current Town body grid, weighted placement, and later guard/reward/object passes.
 
+The clean module now ports the recovered late raw-link payload semantics from `0x4a79a3` into the generated package ledger. It does not invent road geometry. For each selected template link it records endpoints, runtime-zone pair, raw `Value`, `Wide` normal-guard suppression, and `Border Guard` special-object intent. The seed `1` boundary case carries 5 connection records. The exact `0x4a61bc`/`0x4a696b`/`0x4a6cf2`/`0x4a7605` connection geometry, `0x4a65a5 -> 0x4a5e03` normal guard object placement, `0x4a5e73 -> 0x4a5a23` type-9 Border Guard materialization, and `0x4ab37f` road adapter path remain pending clean ports.
+
 The boundary exposes a phase ledger and keeps every unported materialization phase pending:
 
 1. `template_selection` - `0x49f0cd`, `0x4ac597..0x4ac5a4`, `0x4e7276` - ported for inspection only.
@@ -122,8 +124,10 @@ For the seed `1` boundary case, the package adoption path currently reports:
 - `generated_validation_status: pass`,
 - `generated_town_count: 3`,
 - `generated_mine_count: 12`,
+- `generated_connection_count: 5`,
+- `connection_generation_status: h3maped_0x4a79a3_link_payload_semantics_ported_geometry_roads_guards_pending`,
 - `terrain_generation_status: h3maped_0x4a3f27_terrain_grid_materialized_from_clean_port`,
 - `town_generation_status: h3maped_0x4a93a2_town_records_adopted`,
 - `object_generation_status: h3maped_0x4a9911_0x4a9641_mines_materialized_rewards_guards_pending`,
-- `road_generation_status: pending_h3maped_road_port`,
-- `guard_generation_status: pending_h3maped_guard_port`.
+- `road_generation_status: pending_0x4ab37f_road_adapter_path_port`,
+- `guard_generation_status: h3maped_0x4a79a3_link_guard_payload_ported_guard_object_materialization_pending`.
