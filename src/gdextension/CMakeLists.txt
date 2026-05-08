@@ -21,6 +21,7 @@ add_subdirectory("${GODOT_CPP_ROOT}" "${CMAKE_CURRENT_BINARY_DIR}/godot-cpp")
 
 add_library(aurelion_map_persistence SHARED
 	src/register_types.cpp
+	src/h3maped_small_rmg.cpp
 	src/map_document.cpp
 	src/scenario_document.cpp
 	src/map_package_service.cpp
