@@ -4604,6 +4604,208 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	return report;
 }
 
+Dictionary raw_source_zone_for_active_zone(int32_t source_catalog_index, const Dictionary &active_zone) {
+	Dictionary catalog = load_json_dictionary(CATALOG_SOURCE_PATH);
+	Array templates = catalog.get("templates", Array());
+	if (source_catalog_index < 0 || source_catalog_index >= templates.size() || Variant(templates[source_catalog_index]).get_type() != Variant::DICTIONARY) {
+		return Dictionary();
+	}
+	Dictionary source_template = Dictionary(templates[source_catalog_index]);
+	Array source_zones = source_template.get("zones", Array());
+	Dictionary grammar_source = active_zone.get("grammar_source", Dictionary());
+	const int32_t source_row = int32_t(grammar_source.get("source_row", -1));
+	const int32_t source_zone_id = int32_t(active_zone.get("source_zone_id", -1));
+	for (int64_t index = 0; index < source_zones.size(); ++index) {
+		if (Variant(source_zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary candidate = Dictionary(source_zones[index]);
+		if ((source_row >= 0 && int32_t(candidate.get("row", -1)) == source_row)
+				|| (source_row < 0 && source_zone_id >= 0 && int32_t(candidate.get("id", -1)) == source_zone_id)) {
+			return candidate;
+		}
+	}
+	return Dictionary();
+}
+
+int32_t dictionary_int(const Dictionary &dictionary, const String &key) {
+	return int32_t(dictionary.get(key, 0));
+}
+
+Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones, int32_t source_catalog_index) {
+	Dictionary report;
+	report["status"] = "0x4a9d6a_0x4aab7e_mine_and_treasure_source_fields_ported_helper_placement_pending";
+	report["source"] = "h3maped phase 7 0x4a9d6a mine minimum/density fields and phase 10 0x4aab7e treasure-band triplets rebound from recovered rmg-template-catalog source rows; 0x4a9911/0x4a9c7c/0x4aa354 physical placement remains pending";
+	report["mine_phase_address"] = "0x4a9d6a";
+	report["mine_minimum_helper_address"] = "0x4a9911";
+	report["mine_density_scheduler_address"] = "0x4a9c7c";
+	report["treasure_phase_address"] = "0x4aab7e";
+	report["treasure_helper_address"] = "0x4aa354";
+	report["source_catalog_path"] = CATALOG_SOURCE_PATH;
+	report["source_catalog_index_zero_based"] = source_catalog_index;
+	report["source_binding_status"] = "recovered_source_rows_bound_by_grammar_source_row";
+	report["adapted_catalog_gap"] = "adapted project catalog currently omits mine/reward fields, so this phase must read recovered source rows until the import is repaired";
+
+	struct MineField {
+		const char *resource;
+		int32_t subtype;
+		const char *minimum_offset;
+		const char *density_offset;
+	};
+	const MineField mine_fields[] = {
+		{ "wood", 0, "+0x4c", "+0x68" },
+		{ "mercury", 1, "+0x50", "+0x6c" },
+		{ "ore", 2, "+0x54", "+0x70" },
+		{ "sulfur", 3, "+0x58", "+0x74" },
+		{ "crystal", 4, "+0x5c", "+0x78" },
+		{ "gems", 5, "+0x60", "+0x7c" },
+		{ "gold", 6, "+0x64", "+0x80" },
+	};
+	const char *band_low_offsets[] = { "+0xa0", "+0xac", "+0xb8" };
+	const char *band_high_offsets[] = { "+0xa4", "+0xb0", "+0xbc" };
+	const char *band_density_offsets[] = { "+0xa8", "+0xb4", "+0xc0" };
+
+	Array zone_reports;
+	Array mine_minimum_fields;
+	Array mine_density_fields;
+	Array treasure_band_fields;
+	int32_t source_zone_missing_count = 0;
+	int32_t mine_minimum_field_count = 0;
+	int32_t mine_density_field_count = 0;
+	int32_t positive_mine_minimum_field_count = 0;
+	int32_t positive_mine_density_field_count = 0;
+	int32_t total_minimum_mine_count = 0;
+	int32_t total_mine_density_weight = 0;
+	int32_t treasure_band_field_count = 0;
+	int32_t positive_treasure_band_count = 0;
+	int32_t total_treasure_density_weight = 0;
+	int32_t treasure_low_below_100_count = 0;
+
+	for (int64_t index = 0; index < active_zones.size(); ++index) {
+		if (Variant(active_zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary active_zone = Dictionary(active_zones[index]);
+		Dictionary source_zone = raw_source_zone_for_active_zone(source_catalog_index, active_zone);
+		Dictionary grammar_source = active_zone.get("grammar_source", Dictionary());
+		Dictionary zone_report;
+		zone_report["runtime_zone_index"] = int32_t(index);
+		zone_report["source_zone_id"] = active_zone.get("source_zone_id", index);
+		zone_report["source_row"] = grammar_source.get("source_row", -1);
+		zone_report["source_bucket"] = grammar_source.get("source_bucket", -1);
+		zone_report["role"] = active_zone.get("role", active_zone.get("type", ""));
+		if (source_zone.is_empty()) {
+			zone_report["status"] = "missing_recovered_source_zone_row";
+			source_zone_missing_count += 1;
+			zone_reports.append(zone_report);
+			continue;
+		}
+
+		zone_report["status"] = "recovered_source_zone_row_bound";
+		Dictionary minimum_mines = source_zone.get("minimum_mines", Dictionary());
+		Dictionary mine_density = source_zone.get("mine_density", Dictionary());
+		int32_t zone_minimum_mine_count = 0;
+		int32_t zone_mine_density_weight = 0;
+		for (const MineField &field : mine_fields) {
+			const int32_t minimum_count = dictionary_int(minimum_mines, field.resource);
+			const int32_t density_weight = dictionary_int(mine_density, field.resource);
+			mine_minimum_field_count += 1;
+			mine_density_field_count += 1;
+			total_minimum_mine_count += minimum_count;
+			total_mine_density_weight += density_weight;
+			zone_minimum_mine_count += minimum_count;
+			zone_mine_density_weight += density_weight;
+			if (minimum_count > 0) {
+				positive_mine_minimum_field_count += 1;
+			}
+			if (density_weight > 0) {
+				positive_mine_density_field_count += 1;
+			}
+
+			Dictionary minimum_record;
+			minimum_record["phase"] = "0x4a9d6a_mine_minimum";
+			minimum_record["runtime_zone_index"] = int32_t(index);
+			minimum_record["source_row"] = zone_report.get("source_row", -1);
+			minimum_record["resource"] = field.resource;
+			minimum_record["mine_subtype"] = field.subtype;
+			minimum_record["source_field_offset"] = field.minimum_offset;
+			minimum_record["count"] = minimum_count;
+			minimum_record["helper_address"] = "0x4a9911";
+			minimum_record["placement_status"] = minimum_count > 0 ? String("pending_0x4a9911_mine_object_template_selection_and_0x4a9641_placement") : String("skipped_zero_minimum");
+			mine_minimum_fields.append(minimum_record);
+
+			Dictionary density_record;
+			density_record["phase"] = "0x4a9c7c_mine_density";
+			density_record["runtime_zone_index"] = int32_t(index);
+			density_record["source_row"] = zone_report.get("source_row", -1);
+			density_record["resource"] = field.resource;
+			density_record["mine_subtype"] = field.subtype;
+			density_record["source_field_offset"] = field.density_offset;
+			density_record["weight"] = density_weight;
+			density_record["helper_address"] = "0x4a9c7c";
+			density_record["placement_status"] = density_weight > 0 ? String("pending_0x4a9c7c_density_scheduling_and_0x4a9911_helper") : String("skipped_zero_density");
+			mine_density_fields.append(density_record);
+		}
+
+		Array treasure_bands = source_zone.get("treasure_bands", Array());
+		int32_t zone_treasure_density_weight = 0;
+		for (int32_t band = 0; band < 3; ++band) {
+			Dictionary band_source = band < treasure_bands.size() && Variant(treasure_bands[band]).get_type() == Variant::DICTIONARY
+					? Dictionary(treasure_bands[band])
+					: Dictionary();
+			const int32_t low = int32_t(band_source.get("low", 0));
+			const int32_t high = int32_t(band_source.get("high", 0));
+			const int32_t density = int32_t(band_source.get("density", 0));
+			treasure_band_field_count += 1;
+			total_treasure_density_weight += density;
+			zone_treasure_density_weight += density;
+			if (density > 0 && low >= 100) {
+				positive_treasure_band_count += 1;
+			}
+			if (density > 0 && low < 100) {
+				treasure_low_below_100_count += 1;
+			}
+			Dictionary band_record;
+			band_record["phase"] = "0x4aab7e_treasure_band";
+			band_record["runtime_zone_index"] = int32_t(index);
+			band_record["source_row"] = zone_report.get("source_row", -1);
+			band_record["band_index"] = band;
+			band_record["low_offset"] = band_low_offsets[band];
+			band_record["high_offset"] = band_high_offsets[band];
+			band_record["density_offset"] = band_density_offsets[band];
+			band_record["low"] = low;
+			band_record["high"] = high;
+			band_record["density"] = density;
+			band_record["helper_address"] = "0x4aa354";
+			band_record["placement_status"] = density > 0 && low >= 100 ? String("pending_0x4aa354_reward_object_value_selection_and_guarding") : String("skipped_ineligible_band");
+			treasure_band_fields.append(band_record);
+		}
+		zone_report["minimum_mine_count"] = zone_minimum_mine_count;
+		zone_report["mine_density_weight_total"] = zone_mine_density_weight;
+		zone_report["treasure_density_weight_total"] = zone_treasure_density_weight;
+		zone_reports.append(zone_report);
+	}
+
+	report["zone_count"] = zone_reports.size();
+	report["source_zone_missing_count"] = source_zone_missing_count;
+	report["zones"] = zone_reports;
+	report["mine_minimum_field_count"] = mine_minimum_field_count;
+	report["mine_density_field_count"] = mine_density_field_count;
+	report["positive_mine_minimum_field_count"] = positive_mine_minimum_field_count;
+	report["positive_mine_density_field_count"] = positive_mine_density_field_count;
+	report["total_minimum_mine_count"] = total_minimum_mine_count;
+	report["total_mine_density_weight"] = total_mine_density_weight;
+	report["mine_minimum_fields"] = mine_minimum_fields;
+	report["mine_density_fields"] = mine_density_fields;
+	report["treasure_band_field_count"] = treasure_band_field_count;
+	report["positive_treasure_band_count"] = positive_treasure_band_count;
+	report["total_treasure_density_weight"] = total_treasure_density_weight;
+	report["treasure_low_below_100_count"] = treasure_low_below_100_count;
+	report["treasure_band_fields"] = treasure_band_fields;
+	report["guard_reward_monster_generation_status"] = "pending_0x4a9911_0x4a9641_0x4aa354_object_placement_and_guarding";
+	return report;
+}
+
 Dictionary adapted_template_for_source_index(int32_t source_catalog_index) {
 	Dictionary catalog = load_json_dictionary(ADAPTED_CATALOG_PATH);
 	Array templates = catalog.get("templates", Array());
@@ -4705,6 +4907,9 @@ Dictionary selected_template_payload(const Dictionary &template_record, const Di
 	Dictionary town_castle_placement = town_castle_placement_4a8d2c_4a8db2_report(active_zones, runtime_zones);
 	payload["object_category_placement_status"] = town_castle_placement.get("status", "");
 	payload["town_castle_placement"] = town_castle_placement;
+	Dictionary mine_reward_placement = mine_reward_placement_4a9d6a_4aab7e_report(active_zones, source_catalog_index);
+	payload["guard_reward_monster_placement_status"] = mine_reward_placement.get("status", "");
+	payload["guard_reward_monster_placement"] = mine_reward_placement;
 	payload["zones"] = active_zones;
 	payload["links"] = active_links;
 	return payload;
@@ -4724,7 +4929,7 @@ Array clean_phase_ledger() {
 		{ "zone_footprint_placement", "0x4a3a03, 0x4cc788, 0x4cca55, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "ported_0x4a3710_small_land_footprint_helpers_and_terrain_visual_inspection_only" },
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "ported_schedule_and_visual_normalization_inspection_only" },
 		{ "object_category_placement", "0x4a8d2c, 0x4a93a2, 0x49a1d8, 0x49aa93, 0x49a6f9, 0x49a09c, 0x4a8db2, 0x4a8c15", "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_project_adoption_pending" },
-		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4aab7e", "pending_clean_port" },
+		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4aab7e", "0x4a9d6a_0x4aab7e_source_field_ledgers_ported_helper_placement_pending" },
 		{ "final_cell_object_passes", "0x49eb8d, 0x4ab52a, 0x4ac4ae", "pending_clean_port" },
 	};
 	for (const Phase &phase : PHASES) {
