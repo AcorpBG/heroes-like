@@ -94,7 +94,9 @@ The clean module also ports the `0x4a1f3b` early endpoint-control schedule for i
 
 The clean module now replays the one-level `0x4a218c` runtime/coordinate RNG order for inspection only. The report exposes `0x49b452`/`0x49b3c1` town RNG, `0x4a17f5` 32-angle candidates from tables `0x58dc28/0x58dd28`, `0x4a1701` spacing validation, `0x4a1ad8` single-level candidate pruning, and `0x4a19ed` bounding-box rescale. For the seed `1` boundary case this produces 4 town RNG calls, 18 coordinate RNG calls, 22 interleaved replay events, 18 candidate-selection steps, and a rescale span of `84` onto the 36-tile small map.
 
-The clean module now ports `0x49b53d` runtime terrain selection before the `0x4a3a03` footprint phase. For the seed `1` boundary case it consumes two terrain RNG calls for the treasure zones, uses the recovered town-choice terrain table at `0x540908`, and selects dirt/dirt/snow/grass/dirt/rough across the 6 runtime zones. Because those RNG calls happen before footprint placement in the executable order, the same seed now reports `0x4a2777` real source-node boundary traversal with 221 unique boundary cells, `0x4a325d` real boundary span fill with 890 unique filled cells and 185 remaining unassigned cells. Runtime map generation is still blocked because `0x4a3f27` terrain fill/repaint and later object/guard/reward phases are still pending.
+The clean module now ports `0x49b53d` runtime terrain selection before the `0x4a3a03` footprint phase. For the seed `1` boundary case it consumes two terrain RNG calls for the treasure zones, uses the recovered town-choice terrain table at `0x540908`, and selects dirt/dirt/snow/grass/dirt/rough across the 6 runtime zones. Because those RNG calls happen before footprint placement in the executable order, the same seed now reports `0x4a2777` real source-node boundary traversal with 221 unique boundary cells, `0x4a325d` real boundary span fill with 890 unique filled cells and 185 remaining unassigned cells.
+
+The clean module also ports the `0x4a3f27` terrain fill/repaint schedule for inspection over the real `0x4a325d` zone-word buffer. It records the full-map terrain-8 water fill, scans owner bytes and repaint-member bits, and schedules 1111 per-cell `0x4bd099` repaint calls for seed `1`, producing terrain counts dirt 492, grass 165, snow 222, rough 232, and water 185 before TerrainPlacement art/index/flip normalization. Runtime map generation is still blocked because TerrainPlacement art/index/flip adoption and later object/guard/reward phases are still pending.
 
 The boundary exposes a phase ledger and keeps every unported materialization phase pending:
 
@@ -102,7 +104,7 @@ The boundary exposes a phase ledger and keeps every unported materialization pha
 2. `player_slot_assignment` - `0x4ac62a..0x4ac6ec` - ported for inspection only.
 3. `runtime_zone_build` - `0x4a218c`, `0x4a1f3b`, `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, `0x4a19ed`, `0x49b452`, `0x49b3c1`, `0x49b53d` - runtime records, endpoint control flow, interleaved coordinate-candidate replay, and runtime terrain selection ported for inspection only.
 4. `zone_footprint_placement` - `0x4a3a03`, `0x4cc788`, `0x4cca55`, `0x4ccb64`, `0x4ccdfc`, `0x4a2777`, `0x4a325d`, `0x4a3710` - level collection, polygon source-node walks, `0x4a2777` boundary traversal, `0x4a325d` span fill, and small-land `0x4a3710` no-appended-zone finalizer ported for inspection only; terrain/repaint pending clean port.
-5. `terrain_fill_repaint` - `0x4a3f27`, `0x4bcff5`, `0x4bd099` - pending clean port.
+5. `terrain_fill_repaint` - `0x4a3f27`, `0x4bcff5`, `0x4bd099` - terrain fill/repaint schedule ported for inspection only; TerrainPlacement art/index/flip normalization pending.
 6. `object_category_placement` - `0x4a8d2c`, `0x4a8db2`, `0x4a8c15` - pending clean port.
 7. `guard_reward_monster_placement` - `0x4a9d6a`, `0x4aab7e` - pending clean port.
 8. `final_cell_object_passes` - `0x49eb8d`, `0x4ab52a`, `0x4ac4ae` - pending clean port.

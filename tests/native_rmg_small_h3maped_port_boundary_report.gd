@@ -231,6 +231,23 @@ func _run() -> void:
 	if int(footprint_phase.get("adjacency_finalizer_appended_runtime_zone_count", -1)) != 0 or int(footprint_phase.get("adjacency_finalizer_materialized_adjacency_count", -1)) != 0:
 		_fail("0x4a3710 small-land branch should not append synthetic-zone adjacency: %s" % JSON.stringify(report))
 		return
+	if String(footprint_phase.get("terrain_fill_repaint_status", "")) != "0x4a3f27_terrain_fill_repaint_schedule_ported_inspection_only":
+		_fail("0x4a3f27 terrain fill/repaint schedule was not ported over the real span-fill buffer: %s" % JSON.stringify(report))
+		return
+	if int(footprint_phase.get("terrain_repaint_call_count", -1)) != 1111:
+		_fail("0x4a3f27 terrain repaint call count drifted from the seed-1 owned repaint cells: %s" % JSON.stringify(report))
+		return
+	var terrain_counts: Dictionary = footprint_phase.get("terrain_repaint_counts_after_repaint", {})
+	if int(terrain_counts.get("dirt", -1)) != 492 or int(terrain_counts.get("grass", -1)) != 165 or int(terrain_counts.get("snow", -1)) != 222 or int(terrain_counts.get("rough", -1)) != 232 or int(terrain_counts.get("water", -1)) != 185:
+		_fail("0x4a3f27 terrain counts after water fill and per-zone repaint drifted: %s" % JSON.stringify(report))
+		return
+	var terrain_fill: Dictionary = footprint_phase.get("terrain_fill_repaint", {})
+	if int(terrain_fill.get("assigned_owner_cell_count", -1)) != 1111 or int(terrain_fill.get("zone_repaint_member_cell_count", -1)) != 1111 or int(terrain_fill.get("unresolved_cell_count", -1)) != 185:
+		_fail("0x4a3f27 terrain fill/repaint did not consume the real 0x4a325d owner-byte buffer: %s" % JSON.stringify(report))
+		return
+	if int(terrain_fill.get("owner_basis_mismatch_count", -1)) != 0 or String(terrain_fill.get("terrain_art_index_flip_status", "")) != "pending_TerrainPlacement_adapter_art_index_flip_normalization":
+		_fail("0x4a3f27 terrain fill/repaint owner basis or remaining TerrainPlacement gap drifted: %s" % JSON.stringify(report))
+		return
 	var link_seeds: Array = runtime_build.get("link_seeds", [])
 	if link_seeds.size() != 5 or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 or int(link_seeds[0].get("runtime_zone_b", -1)) != 3:
 		_fail("Runtime-zone link seed endpoint resolution drifted from source link vectors: %s" % JSON.stringify(report))
@@ -297,8 +314,8 @@ func _run() -> void:
 	if String(phase_ledger[3].get("phase_id", "")) != "zone_footprint_placement" or String(phase_ledger[3].get("status", "")) != "ported_0x4a3710_small_land_footprint_helpers_inspection_only_terrain_pending":
 		_fail("The phase ledger did not expose only the clean h3maped 0x4a3710 footprint checkpoint as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[4].get("status", "")) != "pending_clean_port":
-		_fail("Terrain placement must remain pending until h3maped 0x4a3f27 is ported: %s" % JSON.stringify(report))
+	if String(phase_ledger[4].get("status", "")) != "ported_schedule_inspection_only_art_pending":
+		_fail("The phase ledger did not mark the clean h3maped 0x4a3f27 terrain schedule as ported with art/index/flip still pending: %s" % JSON.stringify(report))
 		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
@@ -330,6 +347,8 @@ func _run() -> void:
 		"span_fill_unique_filled_cell_count": footprint_phase.get("span_fill_unique_filled_cell_count", 0),
 		"span_fill_remaining_unassigned_cell_count": footprint_phase.get("span_fill_remaining_unassigned_cell_count", 0),
 		"adjacency_finalizer_status": footprint_phase.get("adjacency_finalizer_status", ""),
+		"terrain_fill_repaint_status": footprint_phase.get("terrain_fill_repaint_status", ""),
+		"terrain_repaint_call_count": footprint_phase.get("terrain_repaint_call_count", 0),
 		"generation_status": generated.get("status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])

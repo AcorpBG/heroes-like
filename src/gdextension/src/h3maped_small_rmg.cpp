@@ -115,6 +115,26 @@ struct SpanFillResult {
 	int32_t blocked_initial_span_count = 0;
 };
 
+struct TerrainCellStats {
+	int32_t cell_count = 0;
+	int32_t repaint_member_count = 0;
+	int32_t min_x = 0x7fffffff;
+	int32_t min_y = 0x7fffffff;
+	int32_t max_x = -1;
+	int32_t max_y = -1;
+
+	void add(int32_t x, int32_t y, bool repaint_member) {
+		cell_count += 1;
+		if (repaint_member) {
+			repaint_member_count += 1;
+		}
+		min_x = std::min(min_x, x);
+		min_y = std::min(min_y, y);
+		max_x = std::max(max_x, x);
+		max_y = std::max(max_y, y);
+	}
+};
+
 struct ClipBounds {
 	int32_t min_x = 0;
 	int32_t min_y = 0;
@@ -1253,7 +1273,7 @@ Dictionary runtime_terrain_selection_49b53d_report(Array &runtime_zones, uint32_
 	report["forced_subterranean_count"] = forced_subterranean_count;
 	report["rng_call_count"] = rng_call_count;
 	report["rng_state_after_0x49b53d_uint32"] = int64_t(rng.state);
-	report["blocked_next"] = "execute 0x4a3f27 terrain fill/repaint using selected runtime+0x0c terrain ids and the TerrainPlacement adapter";
+	report["blocked_next"] = "the selected runtime+0x0c terrain ids now feed the 0x4a3f27 schedule; next recover TerrainPlacement art/index/flip normalization";
 	return report;
 }
 
@@ -2053,7 +2073,9 @@ Dictionary span_fill_4a325d_report(
 		const Dictionary &normalized_config,
 		const Array &runtime_zones,
 		const Dictionary &split_model,
-		uint32_t rng_state_after_coordinate_seed) {
+		uint32_t rng_state_after_coordinate_seed,
+		std::vector<uint32_t> *zone_words_out = nullptr,
+		std::vector<uint8_t> *cell_flags_out = nullptr) {
 	Dictionary report;
 	report["status"] = "0x4a325d_real_0x4a2777_boundary_span_fill_executed_terrain_pending";
 	report["source"] = "h3maped 0x4a325d footprint cell-span fill helper; consumes the real 0x4a2777 boundary buffer and fills from runtime_zone+0x10 seed coordinates";
@@ -2212,7 +2234,157 @@ Dictionary span_fill_4a325d_report(
 	report["blocked_initial_span_count"] = blocked_initial_span_count;
 	report["cells_by_zone_word"] = cells_by_zone_word_report;
 	report["zone_fills"] = zone_fill_reports;
-	report["blocked_next"] = "feed the 0x4a325d span fill through the small-land 0x4a3710 finalizer, then port h3maped 0x4a3f27 terrain fill/repaint before runtime map generation can adopt the materialized grid";
+	report["blocked_next"] = "feed the 0x4a325d span fill through the small-land 0x4a3710 finalizer and 0x4a3f27 terrain schedule before TerrainPlacement art/index/flip adoption";
+	if (zone_words_out != nullptr) {
+		*zone_words_out = zone_words;
+	}
+	if (cell_flags_out != nullptr) {
+		*cell_flags_out = cell_flags;
+	}
+	return report;
+}
+
+Dictionary terrain_fill_repaint_4a3f27_report(
+		const Dictionary &normalized_config,
+		const Array &runtime_zones,
+		const std::vector<uint32_t> &zone_words,
+		const std::vector<uint8_t> &cell_flags) {
+	Dictionary report;
+	report["status"] = "0x4a3f27_terrain_fill_repaint_schedule_ported_inspection_only";
+	report["source"] = "h3maped 0x4a3f27 terrain fill/repaint schedule over the real 0x4a325d zone-word buffer; TerrainPlacement art index/flip normalization remains the next adapter step";
+	report["function_address"] = "0x4a3f27";
+	report["prepass_helper_address"] = "0x4a2105";
+	report["runtime_zone_recenter_helper_address"] = "0x4a2ffa";
+	report["islands_connector_helper_address"] = "0x4a30c2";
+	report["terrain_placement_constructor_address"] = "0x4bcff5";
+	report["terrain_repaint_address"] = "0x4bd099";
+	report["terrain_placement_destructor_address"] = "0x4bd077";
+	report["terrain_adapter_vtable"] = "0x540a14";
+	report["generated_cell_stride_bytes"] = 0x30;
+	report["owner_byte_source"] = "cell+0x20 bits 16..23";
+	report["zone_repaint_member_bit"] = "cell+0x28 bit 28 / cell+0x2b bit 0x10";
+	report["runtime_repaint_compare"] = "0x4a4142..0x4a4163 compares signed owner byte to runtime-zone loop index";
+
+	const int32_t width = int32_t(normalized_config.get("width", 36));
+	const int32_t height = int32_t(normalized_config.get("height", 36));
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	const int32_t tile_count = width * height * level_count;
+	report["width"] = width;
+	report["height"] = height;
+	report["level_count"] = level_count;
+	report["tile_count"] = tile_count;
+	report["h3maped_water_mode_code"] = water_code;
+	report["whole_map_fill_terrain_id"] = 8;
+	report["whole_map_fill_project_terrain_id"] = terrain_for_h3maped_id(8);
+	report["whole_map_fill_cell_count"] = tile_count;
+	report["whole_map_fill_call"] = "0x4bcff5(adapter=generator+0x0c, terrain=8, arg=4) then 0x4bd099(0,0,width,height)";
+	report["multi_level_generated_slice_adapter_status"] = level_count > 1 ? String("scheduled") : String("skipped_one_level_map");
+	report["islands_connector_repaint_status"] = water_code == 2 ? String("scheduled_for_level_zero_runtime_zones") : String("skipped_non_islands_water_mode");
+
+	std::map<int32_t, TerrainCellStats> stats_by_owner_byte;
+	int32_t assigned_owner_cell_count = 0;
+	int32_t repaint_member_cell_count = 0;
+	int32_t unresolved_cell_count = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				const int64_t key = cell_key_4a325d(width, height, x, y, level);
+				if (key < 0 || size_t(key) >= zone_words.size()) {
+					continue;
+				}
+				const uint32_t zone_word_bits = zone_words[size_t(key)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+				if (zone_word_bits == H3MAPED_UNASSIGNED_ZONE_WORD) {
+					unresolved_cell_count += 1;
+					continue;
+				}
+				const bool repaint_member = cell_flags.size() > size_t(key) && (cell_flags[size_t(key)] & 0x10U) != 0;
+				const int32_t owner_byte = int32_t((zone_word_bits >> 16U) & 0xffU);
+				stats_by_owner_byte[owner_byte].add(x, y, repaint_member);
+				assigned_owner_cell_count += 1;
+				if (repaint_member) {
+					repaint_member_cell_count += 1;
+				}
+			}
+		}
+	}
+	report["assigned_owner_cell_count"] = assigned_owner_cell_count;
+	report["zone_repaint_member_cell_count"] = repaint_member_cell_count;
+	report["unresolved_cell_count"] = unresolved_cell_count;
+	report["bbox_update_scan_status"] = "0x4a2105_scans_owned_cells_and_updates_runtime_zone_bbox_via_0x49b66d";
+	report["bbox_update_scan_cell_count"] = assigned_owner_cell_count;
+	report["runtime_zone_recenter_call_count"] = runtime_zones.size();
+
+	Dictionary terrain_counts_after_repaint;
+	terrain_counts_after_repaint[terrain_for_h3maped_id(8)] = tile_count;
+	Array zone_reports;
+	int32_t owner_basis_mismatch_count = 0;
+	int32_t skipped_water_zone_count = 0;
+	int32_t terrain_repaint_call_count = 0;
+	int32_t runtime_index_repaint_member_cell_count = 0;
+	int32_t source_zone_repaint_member_cell_count = 0;
+	for (int64_t runtime_index = 0; runtime_index < runtime_zones.size(); ++runtime_index) {
+		if (Variant(runtime_zones[runtime_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = Dictionary(runtime_zones[runtime_index]);
+		const int32_t runtime_zone_index = int32_t(runtime.get("runtime_zone_index", runtime_index));
+		const int32_t source_zone_id = int32_t(runtime.get("source_zone_id", -1));
+		const int32_t source_owner_byte = zone_word_id_for_runtime_zone(runtime);
+		const int32_t h3maped_terrain_id = int32_t(runtime.get("h3maped_terrain_id", h3maped_id_for_terrain(String(runtime.get("terrain_id", "")))));
+		const String project_terrain_id = terrain_for_h3maped_id(h3maped_terrain_id);
+		const TerrainCellStats source_stats = stats_by_owner_byte[source_owner_byte];
+		const TerrainCellStats runtime_stats = stats_by_owner_byte[runtime_zone_index];
+		source_zone_repaint_member_cell_count += source_stats.repaint_member_count;
+		runtime_index_repaint_member_cell_count += runtime_stats.repaint_member_count;
+		if (source_owner_byte != runtime_zone_index) {
+			owner_basis_mismatch_count += 1;
+		}
+		Dictionary zone_report;
+		zone_report["runtime_zone_index"] = runtime_zone_index;
+		zone_report["source_zone_id"] = source_zone_id;
+		zone_report["source_owner_byte"] = source_owner_byte;
+		zone_report["owner_byte_basis_matches_runtime_index"] = source_owner_byte == runtime_zone_index;
+		zone_report["source_zone_owner_cell_count"] = source_stats.cell_count;
+		zone_report["source_zone_repaint_member_cell_count"] = source_stats.repaint_member_count;
+		zone_report["runtime_index_owner_cell_count"] = runtime_stats.cell_count;
+		zone_report["runtime_index_repaint_member_cell_count"] = runtime_stats.repaint_member_count;
+		zone_report["seed_before_0x4a2ffa_x"] = runtime.get("x_after_bbox_rescale", 0);
+		zone_report["seed_before_0x4a2ffa_y"] = runtime.get("y_after_bbox_rescale", 0);
+		zone_report["seed_level"] = runtime.get("level", 0);
+		if (source_stats.cell_count > 0) {
+			zone_report["bbox_min_x_after_0x4a2105"] = source_stats.min_x;
+			zone_report["bbox_min_y_after_0x4a2105"] = source_stats.min_y;
+			zone_report["bbox_max_x_after_0x4a2105_exclusive"] = source_stats.max_x + 1;
+			zone_report["bbox_max_y_after_0x4a2105_exclusive"] = source_stats.max_y + 1;
+		}
+		zone_report["h3maped_terrain_id"] = h3maped_terrain_id;
+		zone_report["project_terrain_id"] = project_terrain_id;
+		if (h3maped_terrain_id == 8) {
+			zone_report["repaint_status"] = "0x4a40b0_skip_runtime_zone_with_terrain_8";
+			skipped_water_zone_count += 1;
+		} else {
+			zone_report["repaint_status"] = "0x4a410d_0x4bd099_per_cell_repaint_scheduled";
+			zone_report["terrain_repaint_call_count"] = runtime_stats.repaint_member_count;
+			terrain_repaint_call_count += runtime_stats.repaint_member_count;
+			if (!project_terrain_id.is_empty()) {
+				terrain_counts_after_repaint[terrain_for_h3maped_id(8)] = int32_t(terrain_counts_after_repaint.get(terrain_for_h3maped_id(8), 0)) - runtime_stats.repaint_member_count;
+				terrain_counts_after_repaint[project_terrain_id] = int32_t(terrain_counts_after_repaint.get(project_terrain_id, 0)) + runtime_stats.repaint_member_count;
+			}
+		}
+		zone_reports.append(zone_report);
+	}
+	report["zones"] = zone_reports;
+	report["zone_count"] = zone_reports.size();
+	report["skipped_water_zone_count"] = skipped_water_zone_count;
+	report["terrain_repaint_call_count"] = terrain_repaint_call_count;
+	report["owner_basis_mismatch_count"] = owner_basis_mismatch_count;
+	report["source_zone_repaint_member_cell_count"] = source_zone_repaint_member_cell_count;
+	report["runtime_index_repaint_member_cell_count"] = runtime_index_repaint_member_cell_count;
+	report["runtime_index_unmatched_repaint_member_cell_count"] = std::max(0, source_zone_repaint_member_cell_count - runtime_index_repaint_member_cell_count);
+	report["terrain_counts_after_repaint"] = terrain_counts_after_repaint;
+	report["terrain_art_index_flip_status"] = "pending_TerrainPlacement_adapter_art_index_flip_normalization";
+	report["blocked_next"] = "port TerrainPlacement art/index/flip normalization and then feed terrain cells into the clean runtime map adoption path";
 	return report;
 }
 
@@ -2295,7 +2467,7 @@ Dictionary adjacency_finalizer_4a3710_report(const Dictionary &normalized_config
 	report["per_zone_order_helper_call_count"] = original_same_level_runtime_zone_count;
 	report["materialized_adjacency_count"] = 0;
 	report["blocked_next"] = appended_runtime_zone_count == 0
-			? String("continue after the completed small-land 0x4a3710 no-appended-zone path into h3maped 0x4a3f27 terrain fill/repaint")
+			? String("continue after the completed small-land 0x4a3710 no-appended-zone path into TerrainPlacement art/index/flip normalization")
 			: String("recover adjacency record and ordering-vector schemas before translating appended-zone 0x4a3710 output into project zone links");
 	return report;
 }
@@ -2575,8 +2747,8 @@ Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_confi
 	report["second_helper_address"] = "0x4a325d";
 	report["finalizer_address"] = "0x4a3710";
 	report["rng_state_before_footprint_phase_uint32"] = rng_state_after_coordinate_seed;
-	report["cell_materialization_status"] = "0x4a3710_small_land_finalizer_ported_pending_0x4a3f27";
-	report["blocked_next"] = "execute 0x4a3f27 terrain fill/repaint before any project terrain/object materialization";
+	report["cell_materialization_status"] = "0x4a3710_small_land_finalizer_and_0x4a3f27_terrain_schedule_ported_art_pending";
+	report["blocked_next"] = "port TerrainPlacement art/index/flip normalization before any project terrain/object materialization";
 
 	Dictionary synthetic_defaults;
 	synthetic_defaults["+0x04"] = 3;
@@ -2681,12 +2853,17 @@ Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_confi
 			runtime_zones,
 			source_walks,
 			uint32_t(rng_state_after_coordinate_seed));
+	std::vector<uint32_t> zone_words;
+	std::vector<uint8_t> cell_flags;
 	Dictionary span_fill = span_fill_4a325d_report(
 			normalized_config,
 			runtime_zones,
 			source_walks,
-			uint32_t(rng_state_after_coordinate_seed));
+			uint32_t(rng_state_after_coordinate_seed),
+			&zone_words,
+			&cell_flags);
 	Dictionary adjacency_finalizer = adjacency_finalizer_4a3710_report(normalized_config, runtime_zones);
+	Dictionary terrain_fill_repaint = terrain_fill_repaint_4a3f27_report(normalized_config, runtime_zones, zone_words, cell_flags);
 	polygon_seed["runtime_split_pre_crossing_model"] = source_walks;
 	polygon_seed["runtime_split_pre_crossing_status"] = source_walks.get("status", "");
 	polygon_seed["boundary_traversal_model"] = boundary_traversal;
@@ -2695,6 +2872,8 @@ Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_confi
 	polygon_seed["span_fill_status"] = span_fill.get("status", "");
 	polygon_seed["adjacency_finalizer_model"] = adjacency_finalizer;
 	polygon_seed["adjacency_finalizer_status"] = adjacency_finalizer.get("status", "");
+	polygon_seed["terrain_fill_repaint_model"] = terrain_fill_repaint;
+	polygon_seed["terrain_fill_repaint_status"] = terrain_fill_repaint.get("status", "");
 	report["level_count"] = level_count;
 	report["h3maped_water_mode_code"] = water_code;
 	report["total_matching_runtime_zones"] = total_matching_runtime_zones;
@@ -2723,6 +2902,10 @@ Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_confi
 	report["adjacency_finalizer_appended_runtime_zone_count"] = adjacency_finalizer.get("appended_runtime_zone_count", 0);
 	report["adjacency_finalizer_materialized_adjacency_count"] = adjacency_finalizer.get("materialized_adjacency_count", 0);
 	report["adjacency_finalizer"] = adjacency_finalizer;
+	report["terrain_fill_repaint_status"] = terrain_fill_repaint.get("status", "");
+	report["terrain_repaint_call_count"] = terrain_fill_repaint.get("terrain_repaint_call_count", 0);
+	report["terrain_repaint_counts_after_repaint"] = terrain_fill_repaint.get("terrain_counts_after_repaint", Dictionary());
+	report["terrain_fill_repaint"] = terrain_fill_repaint;
 	report["polygon_source_node_walks"] = source_walks;
 	report["levels"] = levels;
 	report["polygon_seed_evidence"] = polygon_seed;
@@ -3071,7 +3254,7 @@ Array clean_phase_ledger() {
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "ported_inspection_only" },
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b452, 0x49b3c1, 0x49b53d", "ported_interleaved_runtime_coordinate_and_terrain_selection_inspection_only" },
 		{ "zone_footprint_placement", "0x4a3a03, 0x4cc788, 0x4cca55, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "ported_0x4a3710_small_land_footprint_helpers_inspection_only_terrain_pending" },
-		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "pending_clean_port" },
+		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "ported_schedule_inspection_only_art_pending" },
 		{ "object_category_placement", "0x4a8d2c, 0x4a8db2, 0x4a8c15", "pending_clean_port" },
 		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4aab7e", "pending_clean_port" },
 		{ "final_cell_object_passes", "0x49eb8d, 0x4ab52a, 0x4ac4ae", "pending_clean_port" },
