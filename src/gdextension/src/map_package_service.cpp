@@ -19301,6 +19301,60 @@ int32_t nearest_package_guard_index_for_cell(const Array &objects, int32_t x, in
 	return best_index;
 }
 
+int32_t nearest_package_decorative_index_for_cell(const Array &objects, int32_t x, int32_t y, int32_t level) {
+	int32_t best_index = -1;
+	int32_t best_distance = std::numeric_limits<int32_t>::max();
+	for (int64_t index = 0; index < objects.size(); ++index) {
+		if (Variant(objects[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = Dictionary(objects[index]);
+		if (String(object.get("kind", "")) != "decorative_obstacle" || int32_t(object.get("level", 0)) != level) {
+			continue;
+		}
+		const int32_t distance = nearest_body_distance_to_cell(object.get("package_body_tiles", object.get("body_tiles", Array())), x, y);
+		if (distance < best_distance) {
+			best_distance = distance;
+			best_index = int32_t(index);
+		}
+	}
+	return best_index;
+}
+
+bool add_package_decorative_route_mask_cell(Array &objects, int32_t object_index, int32_t x, int32_t y, int32_t level, int32_t width, int32_t height, const String &source) {
+	if (object_index < 0 || object_index >= objects.size() || Variant(objects[object_index]).get_type() != Variant::DICTIONARY || x < 0 || y < 0 || x >= width || y >= height) {
+		return false;
+	}
+	Dictionary object = Dictionary(objects[object_index]);
+	Dictionary seen;
+	Array block_tiles = object.get("package_block_tiles", Array());
+	for (int64_t block_index = 0; block_index < block_tiles.size(); ++block_index) {
+		if (Variant(block_tiles[block_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary block = Dictionary(block_tiles[block_index]);
+		seen[level_point_key(
+				int32_t(block.get("x", 0)),
+				int32_t(block.get("y", 0)),
+				int32_t(block.get("level", level)))] = true;
+	}
+	const String key = level_point_key(x, y, level);
+	if (seen.has(key)) {
+		return false;
+	}
+	Dictionary cell = cell_record(x, y, level);
+	cell["source"] = source;
+	Array updated = object.get("package_block_tiles", Array());
+	updated.append(cell);
+	object["package_block_tiles"] = updated;
+	object["package_block_tile_count"] = updated.size();
+	object["package_route_decorative_closure_mask_source"] = source;
+	object["package_route_decorative_closure_tile_count"] = int32_t(object.get("package_route_decorative_closure_tile_count", 0)) + 1;
+	object["package_pathing_materialization_state"] = "body_visit_and_profile_route_closure_masks_materialized_for_generated_package_surface";
+	objects[object_index] = object;
+	return true;
+}
+
 int32_t add_package_guard_closure_cluster(Array &objects, int32_t guard_index, int32_t center_x, int32_t center_y, int32_t level, int32_t width, int32_t height, const String &source) {
 	if (guard_index < 0 || guard_index >= objects.size() || Variant(objects[guard_index]).get_type() != Variant::DICTIONARY) {
 		return 0;
@@ -19416,6 +19470,119 @@ Dictionary package_object_route_blocked_lookup_for_level(const Array &objects, c
 		}
 	}
 	return blocked;
+}
+
+Dictionary package_object_route_blocked_lookup_with_decorative_for_level(const Array &objects, const Dictionary &terrain_blocked, int32_t level) {
+	Dictionary blocked;
+	Array terrain_keys = terrain_blocked.keys();
+	for (int64_t key_index = 0; key_index < terrain_keys.size(); ++key_index) {
+		const String key = String(terrain_keys[key_index]);
+		const bool same_level_key = level <= 0 ? !key.contains(":") : key.begins_with(String::num_int64(level) + String(":"));
+		if (same_level_key) {
+			blocked[key] = terrain_blocked.get(key, true);
+		}
+	}
+	for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
+		if (Variant(objects[object_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = Dictionary(objects[object_index]);
+		if (int32_t(object.get("level", 0)) != level) {
+			continue;
+		}
+		const String kind = String(object.get("kind", ""));
+		Array block_tiles = kind == "guard" ? object.get("package_body_tiles", object.get("body_tiles", Array())) : object.get("package_block_tiles", object.get("body_tiles", Array()));
+		for (int64_t block_index = 0; block_index < block_tiles.size(); ++block_index) {
+			if (Variant(block_tiles[block_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary block = Dictionary(block_tiles[block_index]);
+			blocked[level_point_key(
+					int32_t(block.get("x", 0)),
+					int32_t(block.get("y", 0)),
+					int32_t(block.get("level", level)))] = object.get("placement_id", "");
+		}
+	}
+	return blocked;
+}
+
+void apply_profile_object_route_masks_to_package_objects(Array &objects, const Dictionary &generated_map) {
+	Dictionary normalized = generated_map.get("normalized_config", Dictionary());
+	if (!native_catalog_auto_medium_two_level_islands_profile(normalized)) {
+		return;
+	}
+	Dictionary terrain_grid = generated_map.get("terrain_grid", Dictionary());
+	const int32_t width = int32_t(terrain_grid.get("width", generated_map.get("width", 36)));
+	const int32_t height = int32_t(terrain_grid.get("height", generated_map.get("height", 36)));
+	const int32_t level_count = int32_t(terrain_grid.get("level_count", generated_map.get("level_count", 1)));
+	Dictionary terrain_blocked = package_terrain_blocked_lookup(generated_map);
+	static constexpr int32_t MAX_ROUTE_MASK_PASSES = 8;
+	int32_t added_total = 0;
+	int32_t pass_count = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		Array towns;
+		for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
+			if (Variant(objects[object_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary object = Dictionary(objects[object_index]);
+			if (String(object.get("kind", "")) == "town" && int32_t(object.get("level", 0)) == level) {
+				towns.append(object);
+			}
+		}
+		if (towns.size() < 2) {
+			continue;
+		}
+		for (int32_t pass = 0; pass < MAX_ROUTE_MASK_PASSES; ++pass) {
+			bool added_this_pass = false;
+			Dictionary blocked = package_object_route_blocked_lookup_with_decorative_for_level(objects, terrain_blocked, level);
+			for (int64_t left_index = 0; left_index < towns.size(); ++left_index) {
+				Dictionary left = Dictionary(towns[left_index]);
+				for (int64_t right_index = left_index + 1; right_index < towns.size(); ++right_index) {
+					Dictionary right = Dictionary(towns[right_index]);
+					Array path = direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, blocked);
+					if (path.is_empty()) {
+						continue;
+					}
+					const int32_t midpoint = int32_t(path.size() / 2);
+					if (midpoint < 0 || midpoint >= path.size() || Variant(path[midpoint]).get_type() != Variant::DICTIONARY) {
+						continue;
+					}
+					Dictionary midpoint_cell = Dictionary(path[midpoint]);
+					const int32_t x = int32_t(midpoint_cell.get("x", 0));
+					const int32_t y = int32_t(midpoint_cell.get("y", 0));
+					const int32_t decorative_index = nearest_package_decorative_index_for_cell(objects, x, y, level);
+					if (add_package_decorative_route_mask_cell(objects, decorative_index, x, y, level, width, height, "medium_two_level_islands_town_route_decorative_closure_mask")) {
+						blocked[level_point_key(x, y, level)] = true;
+						++added_total;
+						added_this_pass = true;
+					}
+				}
+			}
+			if (added_this_pass) {
+				pass_count = std::max(pass_count, pass + 1);
+			} else {
+				break;
+			}
+		}
+	}
+	if (added_total <= 0) {
+		return;
+	}
+	for (int64_t object_index = 0; object_index < objects.size(); ++object_index) {
+		if (Variant(objects[object_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary object = Dictionary(objects[object_index]);
+		if (String(object.get("kind", "")) != "decorative_obstacle") {
+			continue;
+		}
+		object["package_profile_route_mask_schema_id"] = "native_rmg_profile_object_route_masks_v1";
+		object["package_profile_route_mask_tile_total"] = added_total;
+		object["package_profile_route_mask_pass_count"] = pass_count;
+		object["package_profile_route_mask_policy"] = "medium_two_level_islands_adds_compact_existing_decorative_masks_to_close_owner_like_object_only_town_routes_without_changing_object_counts";
+		objects[object_index] = object;
+	}
 }
 
 void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects, const Dictionary &generated_map) {
@@ -19625,6 +19792,7 @@ Array combined_native_map_objects(const Dictionary &generated_map) {
 		}
 	}
 	apply_guard_mediated_town_route_corridors_to_package_objects(result, generated_map);
+	apply_profile_object_route_masks_to_package_objects(result, generated_map);
 	for (int64_t index = 0; index < result.size(); ++index) {
 		if (Variant(result[index]).get_type() != Variant::DICTIONARY) {
 			continue;
