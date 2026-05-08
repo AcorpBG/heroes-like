@@ -17763,6 +17763,9 @@ double native_catalog_auto_underground_rock_fraction(const Dictionary &normalize
 		if (size_class_id == "homm3_extra_large") {
 			return 0.94;
 		}
+		if (native_rmg_owner_small_islands_2level_case(normalized)) {
+			return 0.89;
+		}
 		if (size_class_id == "homm3_medium") {
 			return 0.932;
 		}
@@ -20021,6 +20024,7 @@ void apply_profile_object_route_masks_to_package_objects(Array &objects, const D
 	Dictionary terrain_blocked = package_terrain_blocked_lookup(generated_map);
 	const String route_mask_source = profile_object_route_mask_source(normalized);
 	const bool preserve_requires_guard_open = profile_object_route_preserve_requires_guard_open(normalized);
+	const bool enforce_route_floor_during_masks = preserve_requires_guard_open;
 	static constexpr int32_t MAX_ROUTE_MASK_PASSES = 8;
 	int32_t added_total = 0;
 	int32_t pass_count = 0;
@@ -20043,9 +20047,9 @@ void apply_profile_object_route_masks_to_package_objects(Array &objects, const D
 			int32_t preserved_open_pairs = 0;
 			Dictionary blocked = package_object_route_blocked_lookup_with_decorative_for_level(objects, terrain_blocked, level, false);
 			Dictionary guarded_blocked = package_object_route_blocked_lookup_with_decorative_for_level(objects, terrain_blocked, level, true);
-			int32_t current_object_pairs = object_route_target > 0 ? count_package_town_reachable_pairs(towns, width, height, blocked) : 0;
-			int32_t current_guarded_pairs = object_route_target > 0 && preserve_requires_guard_open ? count_package_town_reachable_pairs(towns, width, height, guarded_blocked) : current_object_pairs;
-			if (object_route_target > 0 && current_object_pairs <= object_route_target) {
+			int32_t current_object_pairs = enforce_route_floor_during_masks && object_route_target > 0 ? count_package_town_reachable_pairs(towns, width, height, blocked) : 0;
+			int32_t current_guarded_pairs = enforce_route_floor_during_masks && object_route_target > 0 && preserve_requires_guard_open ? count_package_town_reachable_pairs(towns, width, height, guarded_blocked) : current_object_pairs;
+			if (enforce_route_floor_during_masks && object_route_target > 0 && current_object_pairs <= object_route_target) {
 				break;
 			}
 			for (int64_t left_index = 0; left_index < towns.size(); ++left_index) {
@@ -20072,7 +20076,7 @@ void apply_profile_object_route_masks_to_package_objects(Array &objects, const D
 					const int32_t decorative_index = nearest_package_decorative_index_for_cell(objects, x, y, level);
 					int32_t accepted_object_pairs = current_object_pairs;
 					int32_t accepted_guarded_pairs = current_guarded_pairs;
-					if (object_route_target > 0) {
+					if (enforce_route_floor_during_masks && object_route_target > 0) {
 						if (current_object_pairs <= object_route_target || (preserve_requires_guard_open && current_guarded_pairs <= object_route_target)) {
 							continue;
 						}
