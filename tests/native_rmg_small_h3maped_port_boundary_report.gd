@@ -228,6 +228,25 @@ func _run() -> void:
 	if int(connector_segment.get("randomized_rng_call_count", 0)) <= 0 or int(connector_segment.get("randomized_inserted_midpoint_count", 0)) <= 0:
 		_fail("The h3maped 0x4a2777 connector randomized branch did not exercise midpoint jitter: %s" % JSON.stringify(report))
 		return
+	if String(first_helper.get("boundary_wrapping_status", "")) != "0x4a2777_boundary_wrapping_continuation_ported_standalone":
+		_fail("The h3maped 0x4a2777 helper did not expose the ported boundary-wrapping continuation: %s" % JSON.stringify(report))
+		return
+	var boundary_wrapping: Dictionary = first_helper.get("boundary_wrapping_evidence", {})
+	if String(boundary_wrapping.get("status", "")) != "0x4a2777_boundary_wrapping_continuation_ported_standalone":
+		_fail("The h3maped 0x4a2777 boundary-wrapping continuation report did not run: %s" % JSON.stringify(report))
+		return
+	if int(boundary_wrapping.get("wrap_segment_count", 0)) <= 0 or int(boundary_wrapping.get("final_segment_count", 0)) != 1:
+		_fail("The h3maped 0x4a2777 boundary-wrapping continuation did not expose wrap and final segment painting: %s" % JSON.stringify(report))
+		return
+	if int(boundary_wrapping.get("sample_appended_vertex_count", 0)) < 2:
+		_fail("The h3maped 0x4a2777 boundary-wrapping continuation did not append intermediate footprint vertices: %s" % JSON.stringify(report))
+		return
+	if int(boundary_wrapping.get("trace_write_count", 0)) <= 0 or int(boundary_wrapping.get("out_of_bounds_write_count", -1)) != 0:
+		_fail("The h3maped 0x4a2777 boundary-wrapping continuation did not materialize in-bounds cells: %s" % JSON.stringify(report))
+		return
+	if bool(boundary_wrapping.get("loop_guard_exhausted", true)):
+		_fail("The h3maped 0x4a2777 boundary-wrapping continuation exhausted its standalone loop guard: %s" % JSON.stringify(report))
+		return
 	var second_helper: Dictionary = level_footprint_phase.get("second_helper_evidence", {})
 	if String(second_helper.get("status", "")) != "0x4a325d_cell_span_fill_ported_standalone_project_materialization_blocked":
 		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed with the standalone port boundary: %s" % JSON.stringify(report))
@@ -406,6 +425,7 @@ func _run() -> void:
 		"randomized_line_writer_status": first_helper.get("randomized_line_writer_status", ""),
 		"rectangle_fallback_status": first_helper.get("rectangle_fallback_status", ""),
 		"connector_segment_status": first_helper.get("connector_segment_status", ""),
+		"boundary_wrapping_status": first_helper.get("boundary_wrapping_status", ""),
 		"second_helper_status": second_helper.get("status", ""),
 		"finalizer_status": finalizer.get("status", ""),
 		"runtime_layout_status": runtime_layout.get("status", ""),
