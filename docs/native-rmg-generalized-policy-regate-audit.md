@@ -1014,3 +1014,20 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_2level_profile_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The merged top blocker moves to `l_nowater_randomplayers_nounder`, followed by XL two-level water and XL/Large one-level route/category-shape cases. The next correction should continue structural route and terrain-shape work rather than lowering town-spacing safety just to hit an owner count.
+
+## Large One-Level Land Road, Reward, Guard, And Blocker Density Cleanup
+
+The next merged top-gap case was `l_nowater_randomplayers_nounder`. The owner sample is a one-level Large land map with `2917` parsed objects, `8` towns, `366` road cells, no terrain-blocked tiles, and guard-mediated town-route closure. Native previously had `2314` objects, `6` towns, `270` road cells, and broad category underfill across decoration, guards, objects, and rewards.
+
+Normal generated catalog-auto Large one-level land maps now use a scoped road-cell floor with four road components, owner-like decoration/scenic/reward/guard category floors, and a pre-decoration reward supplement. The reward floor now runs before late dense decorative/scenic filler for this profile, which keeps reward placement from spending tens of seconds searching a saturated map. The generated neutral-town floor also recognizes pre-object future-town reservations and has a strict-spacing global fallback for Large one-level land, but it does not lower the town-spacing safety rule just to hit the owner sample's exact town count.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused exports.
+- Focused `l_nowater_randomplayers_nounder` export wrote `1/1` package in about `17.647s` with native validation `pass`. The prior probe for this same profile took about `55.970s`; the reward supplement itself dropped from about `39.188s` to about `0.608s`.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/L-NoWater-RandomPlayers-nounder.h3m --amap .artifacts/rmg_native_batch_export_large_land_1level_profile_probe6/l_nowater_randomplayers_nounder.amap --compare --pretty --allow-failures` improved total object delta from `-603` to `-2`, road delta from `-96` to `0`, terrain-blocked delta stayed `0`, and category absolute delta from `603` to `2`.
+- Category counts are now near-exact: decoration `1840` versus owner `1840`, guard `264` versus `264`, object `376` versus `376`, reward `429` versus `429`, and town `6` versus owner `8`. Guarded route closure remains valid at `0` reachable pairs; nearest town spacing remains safe at `36` versus owner `35`.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_land_1level_profile_merged --summary --failure-limit 8 --gap-limit 8` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_land_1level_profile_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The remaining debt for this sample is town count and route/road-component shape, not broad category density or guard closure. The merged top blockers move to XL two-level water, XL one-level land, XL two-level islands, Large one-level islands, and XL one-level water; production audit still reports `production_ready=false`.
