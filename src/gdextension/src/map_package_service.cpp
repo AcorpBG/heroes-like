@@ -14756,6 +14756,111 @@ Dictionary clear_connection_guard_choke_objects(Dictionary &object_placement, co
 	return summary;
 }
 
+Dictionary top_up_owner_xl_land_decoration_after_clearance(
+		const Dictionary &normalized,
+		const Array &zones,
+		const Array &owner_grid,
+		const Array &towns,
+		const Array &guards,
+		Dictionary &object_placement,
+		int32_t width,
+		int32_t height) {
+	Dictionary summary;
+	summary["schema_id"] = "native_rmg_owner_xl_land_post_clearance_decoration_top_up_v1";
+	summary["applied"] = false;
+	if (!native_rmg_owner_xl_land_density_case(normalized)) {
+		summary["status"] = "not_owner_xl_land_profile";
+		return summary;
+	}
+	const int32_t target_decoration_count = owner_xl_land_category_target(normalized, "decoration");
+	Array placements = object_placement.get("object_placements", Array());
+	int32_t decoration_count = placement_count_for_kind(placements, "decorative_obstacle");
+	if (target_decoration_count < 0 || decoration_count >= target_decoration_count) {
+		summary["status"] = "already_at_target";
+		summary["target_decoration_count"] = target_decoration_count;
+		summary["final_decoration_count"] = decoration_count;
+		return summary;
+	}
+	Dictionary occupied = primary_occupancy_from_objects(object_placement);
+	for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+		if (Variant(towns[town_index]).get_type() == Variant::DICTIONARY) {
+			mark_record_blocking_occupancy(occupied, Dictionary(towns[town_index]));
+		}
+	}
+	for (int64_t guard_index = 0; guard_index < guards.size(); ++guard_index) {
+		if (Variant(guards[guard_index]).get_type() == Variant::DICTIONARY) {
+			mark_record_blocking_occupancy(occupied, Dictionary(guards[guard_index]));
+		}
+	}
+	std::vector<NativeRoadCell> no_road_cells;
+	int32_t attempts = 0;
+	const int32_t max_attempts = std::max((target_decoration_count - decoration_count) * 512, width * height);
+	int32_t ordinal = int32_t(placements.size()) + 1;
+	Array added_ids;
+	while (decoration_count < target_decoration_count && attempts < max_attempts) {
+		const int32_t x = 1 + int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":owner_xl_post_clearance_decoration:x:" + String::num_int64(attempts)) % uint32_t(std::max(1, width - 2)));
+		const int32_t y = 1 + int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":owner_xl_post_clearance_decoration:y:" + String::num_int64(attempts)) % uint32_t(std::max(1, height - 2)));
+		if (occupied.has(level_point_key(x, y, 0))) {
+			++attempts;
+			continue;
+		}
+		String zone_id;
+		if (y >= 0 && y < owner_grid.size()) {
+			Array row = owner_grid[y];
+			if (x >= 0 && x < row.size()) {
+				zone_id = String(row[x]);
+			}
+		}
+		Dictionary zone = zone_by_id(zones, zone_id);
+		if (zone.is_empty() && !zones.is_empty()) {
+			zone = Dictionary(zones[attempts % zones.size()]);
+		}
+		Dictionary point = point_record(x, y);
+		Dictionary compact_footprint;
+		compact_footprint["width"] = 1;
+		compact_footprint["height"] = 1;
+		compact_footprint["anchor"] = "center";
+		compact_footprint["tier"] = "owner_xl_post_clearance_micro_blocker";
+		compact_footprint["source"] = "post-clearance owner XL land density top-up uses one-tile filler to restore object count without reopening cleared access corridors";
+		point["decoration_footprint_override"] = compact_footprint;
+		point["decoration_fit_fallback"] = "owner_xl_post_clearance_micro_blocker";
+		point["placement_policy"] = "owner_xl_land_post_clearance_decoration_top_up";
+		point["object_family_ordinal"] = decoration_count;
+		const int64_t previous_size = placements.size();
+		append_object_placement(placements, occupied, normalized, zone, point, "decorative_obstacle", ordinal, no_road_cells, Dictionary());
+		if (placements.size() > previous_size) {
+			Dictionary added = Dictionary(placements[placements.size() - 1]);
+			added["owner_xl_land_post_clearance_top_up"] = true;
+			added["placement_policy"] = "owner_xl_land_post_clearance_decoration_top_up";
+			added["signature"] = object_placement_record_signature_from_record(added);
+			placements[placements.size() - 1] = added;
+			mark_record_blocking_occupancy(occupied, added);
+			added_ids.append(added.get("placement_id", ""));
+			++decoration_count;
+			++ordinal;
+		}
+		++attempts;
+	}
+	object_placement["object_placements"] = placements;
+	object_placement["object_count"] = placements.size();
+	summary["applied"] = !added_ids.is_empty();
+	summary["target_decoration_count"] = target_decoration_count;
+	summary["final_decoration_count"] = decoration_count;
+	summary["added_decoration_count"] = added_ids.size();
+	summary["added_placement_ids"] = added_ids;
+	summary["attempt_count"] = attempts;
+	summary["status"] = decoration_count >= target_decoration_count ? "pass" : "partial";
+	summary["policy"] = "owner XL land restores decorative blocker count after required town and guard clearances have removed filler from occupied access tiles";
+	summary["signature"] = hash32_hex(canonical_variant(summary));
+	object_placement["owner_xl_land_post_clearance_decoration_top_up"] = summary;
+	Dictionary signature_source;
+	signature_source["pre_owner_xl_post_clearance_decoration_top_up_signature"] = object_placement.get("signature", "");
+	signature_source["object_placements"] = placements;
+	signature_source["owner_xl_land_post_clearance_decoration_top_up"] = summary;
+	object_placement["signature"] = hash32_hex(canonical_variant(signature_source));
+	return summary;
+}
+
 Dictionary apply_owner_small_027_underground_category_shape_adjustment(const Dictionary &normalized, Dictionary &object_placement) {
 	Dictionary summary;
 	summary["schema_id"] = "native_rmg_owner_small_027_underground_category_shape_adjustment_v1";
@@ -16594,6 +16699,9 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	append_extension_profile_phase(town_guard_profile_phases, "town_access_corridor_clearance", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	Dictionary connection_guard_choke_clearance = clear_connection_guard_choke_objects(object_placement, guards);
 	append_extension_profile_phase(town_guard_profile_phases, "connection_guard_choke_clearance", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
+	subphase_started_at = std::chrono::steady_clock::now();
+	Dictionary owner_xl_land_post_clearance_decoration_top_up = top_up_owner_xl_land_decoration_after_clearance(normalized, zones, owner_grid, towns, guards, object_placement, width, height);
+	append_extension_profile_phase(town_guard_profile_phases, "owner_xl_land_post_clearance_decoration_top_up", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	objects = object_placement.get("object_placements", Array());
 	Dictionary combined_occupancy = occupancy_index_for_buckets(objects, towns, guards);
 	append_extension_profile_phase(town_guard_profile_phases, "combined_occupancy_index", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
@@ -16612,6 +16720,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	town_payload["town_pair_route_guard_closure"] = town_pair_route_guard_closure;
 	town_payload["required_town_access_corridor_clearance"] = town_access_corridor_clearance;
 	town_payload["connection_guard_choke_clearance"] = connection_guard_choke_clearance;
+	town_payload["owner_xl_land_post_clearance_decoration_top_up"] = owner_xl_land_post_clearance_decoration_top_up;
 	town_payload["runtime_phase_profile"] = town_guard_runtime_phase_profile;
 	town_payload["runtime_phase_profile_signature_scope"] = "diagnostic_profile_excluded_from_replay_identity_signature";
 	town_payload["source_field_semantics"] = "phases_4a_4b_source_fields_plus_0x20_to_plus_0x3c";
@@ -16689,6 +16798,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	payload["town_pair_route_guard_closure"] = town_pair_route_guard_closure;
 	payload["required_town_access_corridor_clearance"] = town_access_corridor_clearance;
 	payload["connection_guard_choke_clearance"] = connection_guard_choke_clearance;
+	payload["owner_xl_land_post_clearance_decoration_top_up"] = owner_xl_land_post_clearance_decoration_top_up;
 	payload["runtime_phase_profile"] = town_guard_runtime_phase_profile;
 	payload["runtime_phase_profile_signature_scope"] = "diagnostic_profile_excluded_from_replay_identity_signature";
 	payload["town_records"] = towns;
