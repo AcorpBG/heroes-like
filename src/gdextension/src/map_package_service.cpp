@@ -14387,20 +14387,52 @@ Dictionary town_access_corridor_lookup(const Array &towns) {
 	return lookup;
 }
 
+Dictionary town_primary_occupancy_lookup(const Array &towns) {
+	Dictionary lookup;
+	for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+		if (Variant(towns[town_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary town = Dictionary(towns[town_index]);
+		Array keys = town.get("occupancy_keys", Array());
+		if (keys.is_empty()) {
+			const String key = String(town.get("primary_occupancy_key", ""));
+			if (!key.is_empty()) {
+				lookup[key] = town.get("placement_id", "");
+			}
+			continue;
+		}
+		for (int64_t key_index = 0; key_index < keys.size(); ++key_index) {
+			const String key = String(keys[key_index]);
+			if (!key.is_empty()) {
+				lookup[key] = town.get("placement_id", "");
+			}
+		}
+	}
+	return lookup;
+}
+
 Dictionary clear_required_town_access_gap_objects(Dictionary &object_placement, const Array &towns) {
 	Dictionary corridor_lookup = town_access_corridor_lookup(towns);
+	Dictionary town_primary_lookup = town_primary_occupancy_lookup(towns);
 	Array placements = object_placement.get("object_placements", Array());
+	Array filtered_placements;
 	Array cleared_ids;
+	Array displaced_ids;
 	int32_t cleared_body_tile_count = 0;
+	int32_t displaced_body_tile_count = 0;
 	for (int64_t index = 0; index < placements.size(); ++index) {
 		if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+			filtered_placements.append(placements[index]);
 			continue;
 		}
 		Dictionary placement = Dictionary(placements[index]);
 		const String kind = String(placement.get("kind", ""));
 		if (kind != "decorative_obstacle" && kind != "scenic_object") {
+			filtered_placements.append(placement);
 			continue;
 		}
+		bool intersects_town_primary = false;
 		bool intersects_corridor = false;
 		Array body_tiles = placement.get("body_tiles", Array());
 		for (int64_t body_index = 0; body_index < body_tiles.size(); ++body_index) {
@@ -14415,8 +14447,20 @@ Dictionary clear_required_town_access_gap_objects(Dictionary &object_placement, 
 				intersects_corridor = true;
 				++cleared_body_tile_count;
 			}
+			if (town_primary_lookup.has(level_point_key(
+						int32_t(body.get("x", 0)),
+						int32_t(body.get("y", 0)),
+						int32_t(body.get("level", placement.get("level", 0)))))) {
+				intersects_town_primary = true;
+				++displaced_body_tile_count;
+			}
+		}
+		if (intersects_town_primary) {
+			displaced_ids.append(placement.get("placement_id", ""));
+			continue;
 		}
 		if (!intersects_corridor) {
+			filtered_placements.append(placement);
 			continue;
 		}
 		Dictionary passability = placement.get("passability", Dictionary());
@@ -14429,25 +14473,30 @@ Dictionary clear_required_town_access_gap_objects(Dictionary &object_placement, 
 		placement["town_access_corridor_gap"] = true;
 		placement["access_corridor_policy"] = "decorative_or_scenic_body_overlaps_required_town_access_corridor_and_is_rendered_nonblocking";
 		placement["signature"] = object_placement_record_signature_from_record(placement);
-		placements[index] = placement;
+		filtered_placements.append(placement);
 		cleared_ids.append(placement.get("placement_id", ""));
 	}
 	Dictionary summary;
 	summary["schema_id"] = "native_rmg_required_town_access_corridor_clearance_v1";
 	summary["corridor_cell_count"] = corridor_lookup.size();
+	summary["town_primary_cell_count"] = town_primary_lookup.size();
 	summary["cleared_object_count"] = cleared_ids.size();
 	summary["cleared_body_tile_count"] = cleared_body_tile_count;
 	summary["cleared_placement_ids"] = cleared_ids;
-	summary["policy"] = "required towns reserve an in-zone path to their road/start access anchor; overlapping decorative/scenic blockers become nonblocking without weakening guards, towns, rewards, mines, or gates";
+	summary["displaced_town_body_object_count"] = displaced_ids.size();
+	summary["displaced_town_body_tile_count"] = displaced_body_tile_count;
+	summary["displaced_town_body_placement_ids"] = displaced_ids;
+	summary["policy"] = "required towns reserve primary tiles and in-zone paths before late decorative filler; overlapping decorative/scenic blockers are removed from town bodies or rendered nonblocking on access corridors without weakening guards, towns, rewards, mines, or gates";
 	summary["signature"] = hash32_hex(canonical_variant(summary));
 	object_placement["required_town_access_corridor_clearance"] = summary;
-	if (cleared_ids.is_empty()) {
+	if (cleared_ids.is_empty() && displaced_ids.is_empty()) {
 		return summary;
 	}
-	object_placement["object_placements"] = placements;
+	object_placement["object_placements"] = filtered_placements;
+	object_placement["object_count"] = filtered_placements.size();
 	Dictionary signature_source;
 	signature_source["pre_corridor_object_signature"] = object_placement.get("signature", "");
-	signature_source["object_placements"] = placements;
+	signature_source["object_placements"] = filtered_placements;
 	signature_source["required_town_access_corridor_clearance"] = summary;
 	object_placement["signature"] = hash32_hex(canonical_variant(signature_source));
 	return summary;
@@ -14963,11 +15012,19 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 					town_search_occupied[primary_key] = object.get("placement_id", "");
 				}
 			}
-			for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
-				if (Variant(towns[town_index]).get_type() == Variant::DICTIONARY) {
-					mark_record_blocking_occupancy(town_search_occupied, Dictionary(towns[town_index]));
+				for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+					if (Variant(towns[town_index]).get_type() == Variant::DICTIONARY) {
+						mark_record_blocking_occupancy(town_search_occupied, Dictionary(towns[town_index]));
+					}
 				}
 			}
+			if (generalized_catalog_auto_spacing_enforced && record_type != "player_start_town") {
+				town_search_occupied = non_clearable_blocking_occupied.duplicate(true);
+				for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+					if (Variant(towns[town_index]).get_type() == Variant::DICTIONARY) {
+						mark_record_blocking_occupancy(town_search_occupied, Dictionary(towns[town_index]));
+					}
+				}
 			}
 			const bool player_start_town_anchor_locked = record_type == "player_start_town" && !start.is_empty();
 			Dictionary access_reachable_lookup = in_zone_access_reachable_lookup(access_anchor_x, access_anchor_y, zone_id, owner_grid, blocking_occupied, width, height);
@@ -15503,6 +15560,9 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		const int32_t span_y = std::max(1, height - margin * 2);
 		const uint32_t seed_bucket = hash32_int(String(normalized.get("normalized_seed", "0")) + String(":native_catalog_auto_two_level_town_floor"));
 		Dictionary town_floor_used_zones;
+		Dictionary town_floor_search_occupied = native_rmg_generalized_native_catalog_auto_policy(normalized)
+				? non_clearable_blocking_occupied.duplicate(true)
+				: occupied.duplicate(true);
 		const bool town_floor_reserves_zone_across_levels = false;
 		auto town_floor_zone_level_key = [&](const String &zone_id, int32_t level) {
 			if (town_floor_reserves_zone_across_levels) {
@@ -15516,6 +15576,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			}
 			Dictionary existing_town = Dictionary(towns[town_index]);
 			const String town_zone_id = String(existing_town.get("zone_id", ""));
+			mark_record_blocking_occupancy(town_floor_search_occupied, existing_town);
 			if (!town_zone_id.is_empty()) {
 				town_floor_used_zones[town_floor_zone_level_key(town_zone_id, int32_t(existing_town.get("level", 0)))] = true;
 			}
@@ -15550,9 +15611,9 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			const String target_key = level_point_key(target_x, target_y, target_level);
 			const bool uses_reserved_future_town_anchor = use_reserved_surface_anchor
 					&& target_level == 0
-					&& occupied.has(target_key)
-					&& String(occupied.get(target_key, "")).begins_with("reserved_future_town_anchor_" + selected_zone_id);
-			if (occupied.has(target_key) && !uses_reserved_future_town_anchor) {
+					&& town_floor_search_occupied.has(target_key)
+					&& String(town_floor_search_occupied.get(target_key, "")).begins_with("reserved_future_town_anchor_" + selected_zone_id);
+			if (town_floor_search_occupied.has(target_key) && !uses_reserved_future_town_anchor) {
 				if (use_reserved_surface_anchor && !selected_zone_id.is_empty()) {
 					town_floor_used_zones[town_floor_zone_level_key(selected_zone_id, target_level)] = true;
 				}
@@ -15572,7 +15633,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 				point["town_anchor_reservation_policy"] = "pre_object_future_town_anchor_materialized_by_generated_town_floor";
 			} else {
 				point = target_level == 0
-						? find_spaced_in_zone_object_point(target_x, target_y, String(zone.get("id", "")), owner_grid, occupied, width, height, towns, spacing)
+						? find_spaced_in_zone_object_point(target_x, target_y, String(zone.get("id", "")), owner_grid, town_floor_search_occupied, width, height, towns, spacing)
 						: point_record_at_level(target_x, target_y, target_level);
 			}
 			Dictionary placement_zone = zone;
@@ -15586,7 +15647,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 					const int32_t slot = int32_t((global_seed + uint32_t(scan * 37)) % uint32_t(scan_area));
 					const int32_t point_x = 1 + (slot % scan_width);
 					const int32_t point_y = 1 + (slot / scan_width);
-					if (occupied.has(point_key(point_x, point_y)) || !point_far_from_towns_on_level(towns, point_x, point_y, 0, spacing)) {
+					if (town_floor_search_occupied.has(point_key(point_x, point_y)) || !point_far_from_towns_on_level(towns, point_x, point_y, 0, spacing)) {
 						continue;
 					}
 					String point_zone_id;
@@ -15624,7 +15685,8 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			semantics["required_town_access_anchor"] = point;
 			semantics["required_town_access_corridor_cells"] = Array();
 			semantics["required_town_access_corridor_policy"] = "generated_two_level_town_access_deferred_to_package_road_and_route_validation";
-			append_town_record(towns, occupied, town_record_at_point(normalized, placement_zone, point, Dictionary(), "native_catalog_auto_two_level_neutral_town_floor", town_ordinal, road_network, zone_layout, occupied, semantics));
+			append_town_record(towns, occupied, town_record_at_point(normalized, placement_zone, point, Dictionary(), "native_catalog_auto_two_level_neutral_town_floor", town_ordinal, road_network, zone_layout, town_floor_search_occupied, semantics));
+			mark_record_blocking_occupancy(town_floor_search_occupied, Dictionary(towns[towns.size() - 1]));
 			mark_record_blocking_occupancy(blocking_occupied, Dictionary(towns[towns.size() - 1]));
 			const String placed_zone_id = placement_zone_id;
 			if (!placed_zone_id.is_empty()) {
