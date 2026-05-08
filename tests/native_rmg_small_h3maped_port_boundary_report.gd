@@ -89,8 +89,28 @@ func _run() -> void:
 	if int(assignment.get("assigned_player_count", -1)) != 3:
 		_fail("The selected h3maped payload did not assign all requested players: %s" % JSON.stringify(report))
 		return
+	if String(selected_payload.get("runtime_zone_seed_status", "")) != "0x4a218c_runtime_zone_vector_seed_ported":
+		_fail("The selected h3maped payload did not port the 0x4a218c runtime-zone seed boundary: %s" % JSON.stringify(report))
+		return
+	var runtime_zone_seed: Dictionary = selected_payload.get("runtime_zone_seed", {})
+	if int(runtime_zone_seed.get("runtime_zone_count", -1)) != 6 or int(runtime_zone_seed.get("runtime_link_seed_count", -1)) != 5:
+		_fail("The 0x4a218c runtime-zone seed boundary lost zone/link cardinality: %s" % JSON.stringify(report))
+		return
+	if int(runtime_zone_seed.get("min_source_zone_size", -1)) != 11:
+		_fail("The 0x4a218c runtime-zone seed boundary did not preserve the source +0x08 min-size scan: %s" % JSON.stringify(report))
+		return
+	if int(runtime_zone_seed.get("scale_divisor", -1)) != 5 or int(runtime_zone_seed.get("link_seed_scale_argument", -1)) != 79:
+		_fail("The 0x4a218c runtime-zone seed boundary drifted from the executable land scale argument: %s" % JSON.stringify(report))
+		return
+	var runtime_zones: Array = runtime_zone_seed.get("runtime_zones", [])
+	if runtime_zones.size() < 3:
+		_fail("The 0x4a218c runtime-zone seed boundary did not expose runtime zones: %s" % JSON.stringify(report))
+		return
+	if int(runtime_zones[0].get("actual_player_color", -1)) != 0 or int(runtime_zones[1].get("actual_player_color", -1)) != 1 or int(runtime_zones[2].get("actual_player_color", 99)) != -1:
+		_fail("The 0x4a218c runtime-zone seed boundary did not carry player-slot assignment into runtime zones: %s" % JSON.stringify(report))
+		return
 	var phase_sequence: Array = selected_payload.get("phase_sequence", [])
-	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "assignment_ported_remaining_phases_documented_not_executed":
+	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "assignment_and_runtime_zone_seed_ported_remaining_phases_documented_not_executed":
 		_fail("The selected h3maped payload did not report the recovered 0x4ac552 phase sequence boundary: %s" % JSON.stringify(report))
 		return
 	var accepted_ids := _accepted_template_ids(report)
@@ -100,6 +120,19 @@ func _run() -> void:
 			return
 	if accepted_ids.has("h3maped_template_010"):
 		_fail("Recovered accepted-template vector included a 2-player-only template for 3 players: %s" % JSON.stringify(report))
+		return
+
+	var color_config := config.duplicate(true)
+	var color_constraints: Dictionary = color_config.get("player_constraints", {}).duplicate(true)
+	color_constraints["selected_color_bitmap"] = [false, false, true, false, false, false, false, false]
+	color_config["player_constraints"] = color_constraints
+	var color_report: Dictionary = service.inspect_h3maped_small_rmg_port(color_config)
+	var color_assignment: Dictionary = color_report.get("selected_template_payload", {}).get("player_slot_assignment", {})
+	if color_assignment.get("selected_color_order", []) != [2, 0, 1, 3, 4, 5, 6, 7]:
+		_fail("Explicit h3maped selected-color bitmap did not control 0x4ac63f..0x4ac66e order: %s" % JSON.stringify(color_report))
+		return
+	if color_assignment.get("actual_colors_by_source_owner", []) != [2, 0, 1, -1, -1, -1, -1, -1]:
+		_fail("Explicit h3maped selected-color bitmap did not flow into 0x4ac552 player assignment: %s" % JSON.stringify(color_report))
 		return
 
 	var generated: Dictionary = service.generate_random_map(config)

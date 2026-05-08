@@ -2631,6 +2631,24 @@ Array normalized_string_array(const Variant &value, const Array &fallback) {
 	return result;
 }
 
+Array normalized_bool_array(const Variant &value, const Array &fallback, int32_t fixed_size) {
+	Array result;
+	if (value.get_type() == Variant::ARRAY) {
+		Array source = value;
+		const int64_t limit = fixed_size > 0 ? std::min<int64_t>(source.size(), fixed_size) : source.size();
+		for (int64_t index = 0; index < limit; ++index) {
+			result.append(bool(source[index]));
+		}
+	}
+	if (result.is_empty()) {
+		return fallback.duplicate();
+	}
+	while (fixed_size > 0 && result.size() < fixed_size) {
+		result.append(false);
+	}
+	return result;
+}
+
 Array ensure_repeated_to_count(const Array &source, const Array &fallback, int32_t count) {
 	Array base = source.is_empty() ? fallback.duplicate() : source.duplicate();
 	Array result;
@@ -2883,6 +2901,9 @@ Dictionary normalized_player_constraints(const Dictionary &config) {
 	result["computer_count"] = computer_count;
 	result["player_count"] = player_count;
 	result["team_mode"] = team_mode;
+	if (constraints.has("selected_color_bitmap")) {
+		result["selected_color_bitmap"] = normalized_bool_array(constraints.get("selected_color_bitmap", Array()), Array(), 8);
+	}
 	return result;
 }
 
@@ -6229,6 +6250,92 @@ Dictionary h3maped_player_slot_assignment_report(
 	return report;
 }
 
+Dictionary h3maped_runtime_zone_seed_report(const Array &active_zones, const Array &active_links, const Dictionary &assignment, const Dictionary &normalized) {
+	Dictionary report;
+	Dictionary zone_index_by_id;
+	Array runtime_zones;
+	int32_t min_source_zone_size = 0x7d00;
+	Array colors_by_source_owner = assignment.get("actual_colors_by_source_owner", Array());
+	for (int64_t index = 0; index < active_zones.size(); ++index) {
+		if (Variant(active_zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = Dictionary(active_zones[index]);
+		const String zone_id = String(zone.get("id", ""));
+		zone_index_by_id[zone_id] = runtime_zones.size();
+		const int32_t base_size = int32_t(zone.get("base_size", 0));
+		if (base_size < min_source_zone_size) {
+			min_source_zone_size = base_size;
+		}
+		Dictionary ownership = zone.get("ownership", Dictionary());
+		const int32_t source_owner_index = int32_t(ownership.get("source_owner_index", -1));
+		int32_t actual_player_color = -1;
+		if (source_owner_index >= 0 && source_owner_index < colors_by_source_owner.size()) {
+			actual_player_color = int32_t(colors_by_source_owner[source_owner_index]);
+		}
+		Dictionary runtime_zone;
+		runtime_zone["runtime_zone_index"] = runtime_zones.size();
+		runtime_zone["source_zone_id"] = int32_t(zone.get("source_zone_id", -1));
+		runtime_zone["source_zone_record_id"] = zone_id;
+		runtime_zone["role"] = String(zone.get("role", zone.get("type", "")));
+		Dictionary grammar_source = zone.get("grammar_source", Dictionary());
+		runtime_zone["source_bucket"] = int32_t(grammar_source.get("source_bucket", -1));
+		runtime_zone["source_owner_index"] = source_owner_index;
+		runtime_zone["actual_player_color"] = actual_player_color;
+		runtime_zone["source_base_size"] = base_size;
+		runtime_zone["runtime_size_before_bbox_rescale"] = base_size;
+		runtime_zone["terrain_policy"] = zone.get("terrain", Dictionary());
+		runtime_zones.append(runtime_zone);
+	}
+	if (min_source_zone_size == 0x7d00) {
+		min_source_zone_size = 0;
+	}
+
+	Array runtime_links;
+	for (int64_t index = 0; index < active_links.size(); ++index) {
+		if (Variant(active_links[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = Dictionary(active_links[index]);
+		const String from_id = String(link.get("from", ""));
+		const String to_id = String(link.get("to", ""));
+		Dictionary runtime_link;
+		runtime_link["from"] = from_id;
+		runtime_link["to"] = to_id;
+		runtime_link["from_runtime_zone_index"] = int32_t(zone_index_by_id.get(from_id, -1));
+		runtime_link["to_runtime_zone_index"] = int32_t(zone_index_by_id.get(to_id, -1));
+		runtime_link["guard_value"] = int32_t(link.get("guard_value", link.get("guard", Dictionary()).get("value", 0)));
+		runtime_link["wide"] = bool(link.get("wide", false));
+		runtime_link["border_guard"] = bool(link.get("border_guard", false));
+		runtime_links.append(runtime_link);
+	}
+
+	const int32_t width = int32_t(normalized.get("width", 0));
+	const int32_t height = int32_t(normalized.get("height", 0));
+	const int32_t water_code = h3maped_water_mode_code(normalized);
+	const int32_t divisor = water_code == 0 ? 5 : (water_code == 1 ? 6 : 7);
+	const int32_t scale_product = std::min(width * min_source_zone_size, height * min_source_zone_size);
+	const int32_t link_seed_scale_argument = divisor > 0 ? scale_product / divisor : 0;
+	report["status"] = "0x4a218c_runtime_zone_vector_seed_ported";
+	report["source"] = "h3maped 0x4a218c and 0x49b452 high-confidence runtime-zone setup; link coordinate seeding helpers are not materialized yet";
+	report["runtime_zone_vector_offset"] = "generator+0x10e0/+0x10e4/+0x10e8";
+	report["source_zone_size_offset"] = "source_zone+0x08";
+	report["source_owner_offset"] = "source_zone+0x1c";
+	report["player_mapping_offset"] = "generator+0xee4";
+	report["min_source_zone_size"] = min_source_zone_size;
+	report["map_width"] = width;
+	report["map_height"] = height;
+	report["h3maped_water_mode_code"] = water_code;
+	report["scale_divisor"] = divisor;
+	report["link_seed_scale_argument"] = link_seed_scale_argument;
+	report["runtime_zone_count"] = runtime_zones.size();
+	report["runtime_zones"] = runtime_zones;
+	report["runtime_link_seed_count"] = runtime_links.size();
+	report["runtime_link_seeds"] = runtime_links;
+	report["blocked_next"] = "0x4a1f3b/0x4a19ed coordinate seeding and bounding-box rescale not ported";
+	return report;
+}
+
 Dictionary h3maped_adapted_template_payload_report(const Dictionary &template_record, const Dictionary &normalized, int32_t source_catalog_index, int32_t human_count, int32_t player_count) {
 	Dictionary payload;
 	if (template_record.is_empty()) {
@@ -6311,6 +6418,9 @@ Dictionary h3maped_adapted_template_payload_report(const Dictionary &template_re
 	Dictionary assignment = h3maped_player_slot_assignment_report(human_capable, player_capable, h3maped_selected_color_bitmap_from_normalized(normalized), human_count, computer_count);
 	payload["assignment_status"] = assignment.get("status", "");
 	payload["player_slot_assignment"] = assignment;
+	Dictionary runtime_zone_seed = h3maped_runtime_zone_seed_report(active_zones, active_links, assignment, normalized);
+	payload["runtime_zone_seed_status"] = runtime_zone_seed.get("status", "");
+	payload["runtime_zone_seed"] = runtime_zone_seed;
 	payload["zones"] = active_zones;
 	payload["links"] = active_links;
 	payload["graph_summary"] = template_record.get("graph_summary", Dictionary());
@@ -6330,7 +6440,7 @@ Dictionary h3maped_adapted_template_payload_report(const Dictionary &template_re
 	phase_sequence.append("0x49eb8d_flagged_cell_final_pass");
 	phase_sequence.append("0x4ab52a_object_adjacency_value_adjustment");
 	phase_sequence.append("0x4ac4ae_final_artifact_object_neighborhood_pass");
-	payload["phase_sequence_status"] = "assignment_ported_remaining_phases_documented_not_executed";
+	payload["phase_sequence_status"] = "assignment_and_runtime_zone_seed_ported_remaining_phases_documented_not_executed";
 	payload["phase_sequence"] = phase_sequence;
 	payload["source"] = "content/random_map_template_catalog.json imported from recovered h3maped rmg-template-catalog provenance";
 	return payload;
