@@ -165,6 +165,21 @@ func _run() -> void:
 	if String(finalizer.get("adjacency_vector_offset", "")) != "runtime_zone+0xc4" or int(finalizer.get("materialized_adjacency_count", -1)) != 0:
 		_fail("The h3maped 0x4a3710 finalizer report must expose adjacency vectors without faking finalized links: %s" % JSON.stringify(report))
 		return
+	var runtime_layout: Dictionary = level_footprint_phase.get("runtime_layout_evidence", {})
+	if String(runtime_layout.get("status", "")) != "runtime_polygon_layout_partially_recovered_catalog_payload_missing":
+		_fail("The h3maped runtime polygon layout evidence did not expose the current executable-backed boundary: %s" % JSON.stringify(report))
+		return
+	if int(runtime_layout.get("polygon_node_size_bytes", -1)) != 36:
+		_fail("The recovered h3maped polygon node size drifted from the 0x4cc5db allocation size: %s" % JSON.stringify(report))
+		return
+	var runtime_offsets: Dictionary = runtime_layout.get("runtime_zone_offsets", {})
+	if String(runtime_offsets.get("+0x3e4", "")).find("short ordering") < 0 or String(runtime_offsets.get("+0x3f4", "")).find("footprint vertices") < 0:
+		_fail("The recovered h3maped runtime-zone vector offsets are missing ordering/footprint evidence: %s" % JSON.stringify(report))
+		return
+	var polygon_offsets: Dictionary = runtime_layout.get("polygon_node_offsets", {})
+	if String(polygon_offsets.get("+0x18", "")).find("finalized") < 0 or String(polygon_offsets.get("+0x1c", "")).find("intersection") < 0:
+		_fail("The recovered h3maped polygon-node finalized/intersection offsets are missing: %s" % JSON.stringify(report))
+		return
 	var phase_sequence: Array = selected_payload.get("phase_sequence", [])
 	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "assignment_and_runtime_zone_seed_ported_remaining_phases_documented_not_executed":
 		_fail("The selected h3maped payload did not report the recovered 0x4ac552 phase sequence boundary: %s" % JSON.stringify(report))
@@ -226,6 +241,7 @@ func _run() -> void:
 		"first_helper_status": first_helper.get("status", ""),
 		"second_helper_status": second_helper.get("status", ""),
 		"finalizer_status": finalizer.get("status", ""),
+		"runtime_layout_status": runtime_layout.get("status", ""),
 		"phase_count": phase_sequence.size(),
 		"generation_status": generated.get("status", ""),
 		"unsupported_scope_status": medium_report.get("status", ""),
