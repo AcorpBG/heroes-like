@@ -1138,3 +1138,20 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_2level_barrier_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The merged top blockers are now `l_islands_randomplayers`, `xl_nowater`, `m_4players_2levels_islands`, Large normal-water two-level, and Large land two-level. The next correction should target island one-level road/town topology or broad town/guard route-shape behavior.
+
+## Large Two-Level Normal-Water Road Split Cleanup
+
+The next contained road-shape defect was `l_normalwater_randomplayers_2level`. Category and route gaps remain, but the road materialization was visibly using the wrong level split: native roads were surface-heavy with too many underground fragments, while owner evidence uses a near-even surface/underground split and fewer underground components.
+
+Normal generated catalog-auto Large two-level normal-water maps now use a lower surface road share, a slightly higher total road target, and profile-specific component counts of `7` surface components and `3` underground components. This changes road materialization only for Large normal-water two-level maps.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `l_normalwater_randomplayers_2level` export wrote `1/1` package with native validation `pass`. The manifest recorded about `36.615s` total wall time, including `21.637s` generation, `9.053s` package conversion, and `4.606s` save time.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/L-NormalWater-RandomPlayers-2level.h3m --amap .artifacts/rmg_native_batch_export_l_normalwater_2level_road_probe/l_normalwater_randomplayers_2level.amap --compare --pretty --allow-failures` improved focused production-gap severity from `628` to `583`, and road-cell delta from `-46` to `+1`.
+- Road component shape is now closer to owner evidence: native surface/underground components are `111/87/67/49/33/21/12` and `212/136/65`, versus owner `102/94/68/48/39/19/10` and `191/137/84`. The remaining debt is terrain, category, and route shape: terrain-blocked delta stays `-203`, object-route delta stays `+9`, and category absolute delta stays `149`.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_normalwater_2level_road_merged --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.063s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_normalwater_2level_road_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blockers remain dominated by Large one-level islands, XL one-level land, Medium two-level islands, and route/terrain shape cases. The rejected probes in this pass showed that naive same-zone town stuffing and simple category caps can improve counts while worsening route or terrain shape; the next substantial fix needs island subzone/barrier topology rather than more count-only tuning.
