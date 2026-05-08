@@ -166,7 +166,7 @@ func _run() -> void:
 		_fail("The h3maped 0x4a3710 finalizer report must expose adjacency vectors without faking finalized links: %s" % JSON.stringify(report))
 		return
 	var runtime_layout: Dictionary = level_footprint_phase.get("runtime_layout_evidence", {})
-	if String(runtime_layout.get("status", "")) != "runtime_polygon_layout_partially_recovered_catalog_payload_missing":
+	if String(runtime_layout.get("status", "")) != "runtime_polygon_seed_points_ported_split_algorithm_pending":
 		_fail("The h3maped runtime polygon layout evidence did not expose the current executable-backed boundary: %s" % JSON.stringify(report))
 		return
 	if int(runtime_layout.get("polygon_node_size_bytes", -1)) != 36:
@@ -179,6 +179,20 @@ func _run() -> void:
 	var polygon_offsets: Dictionary = runtime_layout.get("polygon_node_offsets", {})
 	if String(polygon_offsets.get("+0x18", "")).find("finalized") < 0 or String(polygon_offsets.get("+0x1c", "")).find("intersection") < 0:
 		_fail("The recovered h3maped polygon-node finalized/intersection offsets are missing: %s" % JSON.stringify(report))
+		return
+	var polygon_seed: Dictionary = level_footprint_phase.get("polygon_seed_evidence", {})
+	if String(polygon_seed.get("status", "")) != "0x4a3a03_polygon_tree_seed_calls_ported_split_algorithm_pending":
+		_fail("The h3maped 0x4a3a03 polygon seed-call schedule was not exposed: %s" % JSON.stringify(report))
+		return
+	if int(polygon_seed.get("materialized_primary_split_seed_count", -1)) != 6:
+		_fail("The h3maped 0x4a3a03 polygon seed-call count drifted for the selected small template: %s" % JSON.stringify(report))
+		return
+	var polygon_levels: Array = polygon_seed.get("levels", [])
+	if polygon_levels.size() != 1 or int(polygon_levels[0].get("split_call_count", -1)) != 6:
+		_fail("The h3maped polygon seed-call report did not match the one-level six-zone selected template: %s" % JSON.stringify(report))
+		return
+	if String(polygon_seed.get("split_algorithm_status", "")) != "0x4ccb64_pointer_topology_not_yet_ported":
+		_fail("The h3maped polygon seed-call report must still name the exact unported split algorithm: %s" % JSON.stringify(report))
 		return
 	var phase_sequence: Array = selected_payload.get("phase_sequence", [])
 	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "assignment_and_runtime_zone_seed_ported_remaining_phases_documented_not_executed":
@@ -242,6 +256,8 @@ func _run() -> void:
 		"second_helper_status": second_helper.get("status", ""),
 		"finalizer_status": finalizer.get("status", ""),
 		"runtime_layout_status": runtime_layout.get("status", ""),
+		"polygon_seed_status": polygon_seed.get("status", ""),
+		"polygon_seed_split_count": polygon_seed.get("materialized_primary_split_seed_count", 0),
 		"phase_count": phase_sequence.size(),
 		"generation_status": generated.get("status", ""),
 		"unsupported_scope_status": medium_report.get("status", ""),

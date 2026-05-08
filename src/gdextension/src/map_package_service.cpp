@@ -6748,9 +6748,84 @@ Dictionary h3maped_final_footprint_helper_4a3710_report() {
 	return report;
 }
 
+Dictionary h3maped_polygon_seed_4a3a03_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
+	Dictionary report;
+	report["status"] = "0x4a3a03_polygon_tree_seed_calls_ported_split_algorithm_pending";
+	report["source"] = "h3maped 0x4a3a03 builds the runtime polygon tree from current runtime-zone coordinates: 0x4cc788 initializes the enclosing polygon and 0x4ccb64 receives one split point per same-level runtime zone";
+	report["initial_polygon_constructor_address"] = "0x4cc788";
+	report["polygon_split_address"] = "0x4ccb64";
+	report["primary_split_call_site_address"] = "0x4a3a79";
+	report["synthetic_branch_split_call_site_address"] = "0x4a3dc8";
+	report["finalize_address"] = "0x4ccdfc";
+	Dictionary bounds;
+	bounds["min_x"] = -200;
+	bounds["min_y"] = -200;
+	bounds["max_x"] = 400;
+	bounds["max_y"] = 400;
+	bounds["source"] = "0x4cc788 constants 0xffffff38 and 0x190";
+	report["initial_bounds"] = bounds;
+	Array initial_edges;
+	auto append_edge = [&](int32_t ax, int32_t ay, int32_t bx, int32_t by) {
+		Dictionary edge;
+		edge["from_x"] = ax;
+		edge["from_y"] = ay;
+		edge["from_payload"] = 0;
+		edge["to_x"] = bx;
+		edge["to_y"] = by;
+		edge["to_payload"] = 0;
+		initial_edges.append(edge);
+	};
+	append_edge(-200, -200, 400, -200);
+	append_edge(400, -200, 400, 400);
+	append_edge(400, 400, -200, 400);
+	append_edge(-200, 400, -200, -200);
+	report["initial_edges"] = initial_edges;
+	report["initial_edge_count"] = initial_edges.size();
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t water_code = h3maped_water_mode_code(normalized);
+	Array levels;
+	int32_t total_split_calls = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		Array split_calls;
+		for (const H3MapedRuntimeZoneSeed &zone : zones) {
+			if (zone.level != level) {
+				continue;
+			}
+			Dictionary split_call;
+			split_call["call_site_address"] = "0x4a3a79";
+			split_call["runtime_zone_index"] = zone.source_index;
+			split_call["source_zone_id"] = zone.source_zone_id;
+			split_call["source_zone_record_id"] = zone.record_id;
+			split_call["x"] = zone.x;
+			split_call["y"] = zone.y;
+			split_call["level"] = zone.level;
+			split_call["payload"] = "runtime_zone_pointer";
+			split_call["source_fields"] = "runtime_zone+0x10 copied into stack rectangle, then x/y pushed to 0x4ccb64";
+			split_calls.append(split_call);
+		}
+		total_split_calls += split_calls.size();
+		Dictionary level_report;
+		level_report["level_index"] = level;
+		level_report["split_call_count"] = split_calls.size();
+		level_report["split_calls"] = split_calls;
+		const bool synthetic_branch_allowed = level == 1 || water_code != 0;
+		level_report["synthetic_branch_allowed_by_0x4a3a9d"] = synthetic_branch_allowed;
+		level_report["synthetic_branch_split_calls_ported"] = false;
+		level_report["synthetic_branch_status"] = synthetic_branch_allowed
+				? String("blocked_until_0x4a3b48_direction_scan_and_synthetic_runtime_zone_creation_are_ported")
+				: String("skipped for one-level land, matching 0x4a3a9d..0x4a3aa9");
+		levels.append(level_report);
+	}
+	report["levels"] = levels;
+	report["materialized_primary_split_seed_count"] = total_split_calls;
+	report["split_algorithm_status"] = "0x4ccb64_pointer_topology_not_yet_ported";
+	report["blocked_next"] = "port 0x4cca55/0x4ccb64 pointer topology against these seed calls before 0x4ccdfc can produce finalized polygon nodes for cell fill";
+	return report;
+}
+
 Dictionary h3maped_footprint_runtime_layout_evidence_report() {
 	Dictionary report;
-	report["status"] = "runtime_polygon_layout_partially_recovered_catalog_payload_missing";
+	report["status"] = "runtime_polygon_seed_points_ported_split_algorithm_pending";
 	report["runtime_zone_constructor_address"] = "0x49b452";
 	report["polygon_tree_constructor_address"] = "0x4cc788";
 	report["polygon_node_constructor_address"] = "0x4cc5db";
@@ -6783,14 +6858,15 @@ Dictionary h3maped_footprint_runtime_layout_evidence_report() {
 	polygon_node_offsets["+0x20"] = "finalized intersection/output y written by 0x4ccdfc";
 	report["polygon_node_offsets"] = polygon_node_offsets;
 	Array recovered_operations;
-	recovered_operations.append("0x4cc788 builds an initial polygon/list structure from four allocated 0x24-byte nodes before level-zone splitting");
+	recovered_operations.append("0x4cc788 builds an initial enclosing polygon/list structure from four allocated 0x24-byte node pairs using -200 and 400 bounds");
 	recovered_operations.append("0x4cc5db initializes node coordinates/payload, owner pointer, circular next/previous links, unset finalized coordinates, and clear flags");
+	recovered_operations.append("0x4a3a03 calls 0x4ccb64 once per same-level runtime zone, passing the runtime_zone+0x10 x/y and the runtime-zone pointer as split payload");
 	recovered_operations.append("0x4ccb64 locates the containing polygon node with 0x4cca55, then splits/inserts nodes around a requested point");
 	recovered_operations.append("0x4ccdfc finalizes unprocessed nodes by computing and writing intersection/output coordinates into +0x1c/+0x20 and setting +0x18");
-	recovered_operations.append("the imported project template catalog carries zone/link grammar and source provenance but not this executable polygon tree payload");
+	recovered_operations.append("the imported project template catalog carries zone/link grammar and source provenance; the polygon tree itself is runtime-emitted by 0x4a3a03/0x4cc788/0x4ccb64");
 	report["recovered_operations"] = recovered_operations;
 	Array missing_payloads;
-	missing_payloads.append("template/runtime source polygon tree emitted by 0x4cc788/0x4ccb64 for selected source template 19");
+	missing_payloads.append("exact 0x4cca55/0x4ccb64 pointer-topology mutations after primary split seed calls");
 	missing_payloads.append("semantic mapping for runtime_zone+0x3e4 short ordering/depth values");
 	missing_payloads.append("semantic mapping for runtime_zone+0xc4 adjacency records inserted by 0x4a3710");
 	missing_payloads.append("project data structure for h3maped cell zone-word state before terrain/object placement");
@@ -6859,6 +6935,7 @@ Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3Maped
 	report["second_helper_evidence"] = h3maped_second_footprint_helper_4a325d_report();
 	report["finalizer_evidence"] = h3maped_final_footprint_helper_4a3710_report();
 	report["runtime_layout_evidence"] = h3maped_footprint_runtime_layout_evidence_report();
+	report["polygon_seed_evidence"] = h3maped_polygon_seed_4a3a03_report(zones, normalized);
 	return report;
 }
 
