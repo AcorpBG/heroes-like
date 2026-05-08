@@ -13,7 +13,10 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
+#include <fstream>
 #include <map>
+#include <sstream>
+#include <string>
 #include <vector>
 
 namespace godot::h3maped_small_rmg {
@@ -25,6 +28,14 @@ constexpr int64_t BINARY_SIZE_BYTES = 2134016;
 constexpr const char *SPEC_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md";
 constexpr const char *CATALOG_SOURCE_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json";
 constexpr const char *ADAPTED_CATALOG_PATH = "res://content/random_map_template_catalog.json";
+constexpr const char *H3_OBJECTS_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3bitmap/raw/objects.txt";
+constexpr const char *H3_OBJECT_NAMES_PATH = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3bitmap/raw/objnames.txt";
+constexpr int32_t H3_OBJECT_METADATA_ENTRY_COUNT = 232;
+constexpr int32_t H3_OBJECT_METADATA_ENTRY_SIZE = 0x10;
+constexpr int32_t H3_OBJECT_METADATA_POINTER_ADDRESS = 0x57c648;
+constexpr int32_t H3_OBJECT_METADATA_RUNTIME_ADDRESS = 0x598300;
+constexpr int32_t H3_RANDOM_TOWN_TYPE_ID = 77;
+constexpr int32_t H3_TOWN_TYPE_ID = 98;
 
 struct TemplateEvidence {
 	const char *id;
@@ -165,6 +176,19 @@ struct ClipResult {
 	int32_t y = 0;
 	String branch;
 	bool input_inside = false;
+};
+
+struct H3ObjectRow {
+	int32_t source_line = 0;
+	String def_name;
+	String passability_mask;
+	String action_mask;
+	String terrain_mask_primary;
+	String terrain_mask_secondary;
+	int32_t type_id = -1;
+	int32_t subtype_id = -1;
+	int32_t group_id = -1;
+	int32_t final_flag = 0;
 };
 
 constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
@@ -517,6 +541,152 @@ Dictionary load_json_dictionary(const String &path) {
 		return Dictionary();
 	}
 	return Dictionary(parser->get_data());
+}
+
+String object_type_name_from_names_file(int32_t type_id, int32_t *line_count = nullptr) {
+	std::ifstream input(H3_OBJECT_NAMES_PATH);
+	if (!input.is_open()) {
+		if (line_count != nullptr) {
+			*line_count = 0;
+		}
+		return String();
+	}
+	std::string line;
+	int32_t index = 0;
+	String result;
+	while (std::getline(input, line)) {
+		if (index == type_id) {
+			result = String(line.c_str()).strip_edges();
+		}
+		index += 1;
+	}
+	if (line_count != nullptr) {
+		*line_count = index;
+	}
+	return result;
+}
+
+Array h3_object_rows_to_array(const std::vector<H3ObjectRow> &rows) {
+	Array result;
+	for (const H3ObjectRow &row : rows) {
+		Dictionary record;
+		record["source_line"] = row.source_line;
+		record["def_name"] = row.def_name;
+		record["passability_mask"] = row.passability_mask;
+		record["action_mask"] = row.action_mask;
+		record["terrain_mask_primary"] = row.terrain_mask_primary;
+		record["terrain_mask_secondary"] = row.terrain_mask_secondary;
+		record["type_id"] = row.type_id;
+		record["subtype_id"] = row.subtype_id;
+		record["group_id"] = row.group_id;
+		record["final_flag"] = row.final_flag;
+		result.append(record);
+	}
+	return result;
+}
+
+Dictionary h3maped_object_metadata_table_report() {
+	Dictionary report;
+	report["status"] = "0x57c648_runtime_object_metadata_table_bound_to_text_sources_inspection_only";
+	report["source"] = "h3maped loads object metadata from extracted H3 object text tables at runtime; 0x49aa93 indexes the runtime metadata table by object type";
+	report["objects_source_path"] = H3_OBJECTS_PATH;
+	report["object_names_source_path"] = H3_OBJECT_NAMES_PATH;
+	report["metadata_pointer_global_address"] = "0x57c648";
+	report["metadata_runtime_table_address"] = "0x598300";
+	report["metadata_entry_size_bytes"] = H3_OBJECT_METADATA_ENTRY_SIZE;
+	report["metadata_entry_count"] = H3_OBJECT_METADATA_ENTRY_COUNT;
+	report["metadata_index_formula"] = "runtime_table + object_type_id * 0x10";
+	Array metadata_fields;
+	metadata_fields.append("entry+0x01 wide/secondary placement flag");
+	metadata_fields.append("entry+0x02 collision-secondary flag");
+	metadata_fields.append("object template wrapper +0x14 footprint vector");
+	metadata_fields.append("object template +0x1c type id");
+	metadata_fields.append("object template +0x24 land/water class");
+	metadata_fields.append("object template +0x29 anchored footprint flag");
+	metadata_fields.append("object template +0x2c/+0x30 anchor offsets");
+	metadata_fields.append("object template +0x34/+0x38 dimensions");
+	report["metadata_fields_used_by_0x49aa93"] = metadata_fields;
+
+	int32_t object_type_name_count = 0;
+	const String random_town_name = object_type_name_from_names_file(H3_RANDOM_TOWN_TYPE_ID, &object_type_name_count);
+	const String town_name = object_type_name_from_names_file(H3_TOWN_TYPE_ID);
+	report["object_type_name_count"] = object_type_name_count;
+	report["random_town_type_id"] = H3_RANDOM_TOWN_TYPE_ID;
+	report["random_town_type_name"] = random_town_name;
+	report["town_type_id"] = H3_TOWN_TYPE_ID;
+	report["town_type_name"] = town_name;
+
+	std::ifstream input(H3_OBJECTS_PATH);
+	if (!input.is_open()) {
+		report["objects_table_status"] = "missing_or_unreadable";
+		report["objects_table_declared_row_count"] = 0;
+		report["objects_table_loaded_row_count"] = 0;
+		report["town_template_row_count"] = 0;
+		report["random_town_template_row_count"] = 0;
+		report["town_or_random_template_row_count"] = 0;
+		return report;
+	}
+
+	std::string line;
+	int32_t source_line = 0;
+	int32_t declared_row_count = 0;
+	int32_t loaded_row_count = 0;
+	std::vector<H3ObjectRow> town_rows;
+	std::vector<H3ObjectRow> random_town_rows;
+	if (std::getline(input, line)) {
+		source_line = 1;
+		std::stringstream header(line);
+		header >> declared_row_count;
+	}
+	while (std::getline(input, line)) {
+		source_line += 1;
+		if (line.empty()) {
+			continue;
+		}
+		std::stringstream row_stream(line);
+		std::string def_name;
+		std::string passability_mask;
+		std::string action_mask;
+		std::string terrain_mask_primary;
+		std::string terrain_mask_secondary;
+		int32_t type_id = -1;
+		int32_t subtype_id = -1;
+		int32_t group_id = -1;
+		int32_t final_flag = 0;
+		if (!(row_stream >> def_name >> passability_mask >> action_mask >> terrain_mask_primary >> terrain_mask_secondary >> type_id >> subtype_id >> group_id >> final_flag)) {
+			continue;
+		}
+		loaded_row_count += 1;
+		if (type_id != H3_TOWN_TYPE_ID && type_id != H3_RANDOM_TOWN_TYPE_ID) {
+			continue;
+		}
+		H3ObjectRow row;
+		row.source_line = source_line;
+		row.def_name = String(def_name.c_str());
+		row.passability_mask = String(passability_mask.c_str());
+		row.action_mask = String(action_mask.c_str());
+		row.terrain_mask_primary = String(terrain_mask_primary.c_str());
+		row.terrain_mask_secondary = String(terrain_mask_secondary.c_str());
+		row.type_id = type_id;
+		row.subtype_id = subtype_id;
+		row.group_id = group_id;
+		row.final_flag = final_flag;
+		if (type_id == H3_TOWN_TYPE_ID) {
+			town_rows.push_back(row);
+		} else {
+			random_town_rows.push_back(row);
+		}
+	}
+	report["objects_table_status"] = "loaded";
+	report["objects_table_declared_row_count"] = declared_row_count;
+	report["objects_table_loaded_row_count"] = loaded_row_count;
+	report["town_template_row_count"] = int32_t(town_rows.size());
+	report["random_town_template_row_count"] = int32_t(random_town_rows.size());
+	report["town_or_random_template_row_count"] = int32_t(town_rows.size() + random_town_rows.size());
+	report["town_template_rows"] = h3_object_rows_to_array(town_rows);
+	report["random_town_template_rows"] = h3_object_rows_to_array(random_town_rows);
+	report["template_binding_status"] = "town_and_random_town_rows_loaded_for_0x49aa93_gate_inputs_object_wrapper_execution_pending";
+	return report;
 }
 
 bool player_filter_accepts(const Dictionary &filter, int32_t human_count, int32_t total_count) {
@@ -3665,6 +3835,10 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	report["direct_validity_precheck_basis"] = "0x49a1d8 requires generated cell bit 25 (byte +0x2b bit 0x02) and terrain id not 9; bit-25 lifecycle is represented here by cells already materialized in the 0x4a325d/0x4a3f27 generated-cell buffer";
 	report["direct_full_eligibility_status"] = "0x49aa93_gate_sequence_recovered_data_dependencies_pending";
 	report["direct_full_eligibility_blocked_by"] = "requires object template wrapper/footprint vectors, 0x57c648 object metadata flags, 0x49a6f9 rectangle rejection, 0x49a09c footprint pass, and generated-cell bit 22/object-vector collision state";
+	Dictionary object_metadata = h3maped_object_metadata_table_report();
+	report["object_metadata_table"] = object_metadata;
+	report["object_metadata_table_status"] = object_metadata.get("status", "");
+	report["object_metadata_template_binding_status"] = object_metadata.get("template_binding_status", "");
 	Array full_eligibility_sequence;
 	{
 		Dictionary step;
