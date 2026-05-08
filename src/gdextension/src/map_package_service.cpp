@@ -6843,7 +6843,7 @@ Dictionary h3maped_polygon_splitter_contract_4ccb64_report() {
 	container_layout["+0x008/+0x00c/+0x010"] = "vector of allocated primary and paired polygon nodes; 0x4cc955 appends both";
 	report["container_layout"] = container_layout;
 	Array initial_node_pairs;
-	auto append_initial_pair = [&](int32_t pair_index, int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y) {
+	auto append_initial_pair = [&](int32_t pair_index, int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y, const String &primary_link, const String &paired_link) {
 		Dictionary pair;
 		pair["pair_index"] = pair_index;
 		pair["source"] = "0x4cc788 initial enclosing polygon call to 0x4cc955";
@@ -6854,8 +6854,8 @@ Dictionary h3maped_polygon_splitter_contract_4ccb64_report() {
 		primary["+0x04_y"] = from_y;
 		primary["+0x08_payload"] = 0;
 		primary["+0x0c_pair"] = pair["paired_node_id"];
-		primary["+0x10_next"] = "self_before_0x4cc788_relink";
-		primary["+0x14_previous"] = "self_before_0x4cc788_relink";
+		primary["+0x10_next"] = primary_link;
+		primary["+0x14_previous"] = primary_link;
 		primary["+0x18_finalized"] = false;
 		primary["+0x1c_final_x"] = -1;
 		primary["+0x20_final_y"] = -1;
@@ -6864,8 +6864,8 @@ Dictionary h3maped_polygon_splitter_contract_4ccb64_report() {
 		paired["+0x04_y"] = to_y;
 		paired["+0x08_payload"] = 0;
 		paired["+0x0c_owner"] = pair["primary_node_id"];
-		paired["+0x10_next"] = "self_before_0x4cc788_relink";
-		paired["+0x14_previous"] = "self_before_0x4cc788_relink";
+		paired["+0x10_next"] = paired_link;
+		paired["+0x14_previous"] = paired_link;
 		paired["+0x18_finalized"] = false;
 		paired["+0x1c_final_x"] = -1;
 		paired["+0x20_final_y"] = -1;
@@ -6873,17 +6873,19 @@ Dictionary h3maped_polygon_splitter_contract_4ccb64_report() {
 		pair["paired"] = paired;
 		initial_node_pairs.append(pair);
 	};
-	append_initial_pair(0, -200, -200, 400, -200);
-	append_initial_pair(1, 400, -200, 400, 400);
-	append_initial_pair(2, 400, 400, -200, 400);
-	append_initial_pair(3, -200, 400, -200, -200);
-	report["initial_container_status"] = "0x4cc788_initial_node_pair_allocations_ported_relink_pending";
+	append_initial_pair(0, -200, -200, 400, -200, "initial_pair_3_paired", "initial_pair_1_primary");
+	append_initial_pair(1, 400, -200, 400, 400, "initial_pair_0_paired", "initial_pair_2_primary");
+	append_initial_pair(2, 400, 400, -200, 400, "initial_pair_1_paired", "initial_pair_3_primary");
+	append_initial_pair(3, -200, 400, -200, -200, "initial_pair_2_paired", "initial_pair_0_primary");
+	report["initial_container_status"] = "0x4cc788_initial_node_pair_allocations_and_inline_relinks_ported_bridge_pending";
 	report["initial_root_pointer"] = "initial_pair_0_primary";
 	report["initial_node_pairs"] = initial_node_pairs;
 	report["materialized_initial_node_pair_count"] = initial_node_pairs.size();
 	report["materialized_initial_node_count"] = initial_node_pairs.size() * 2;
 	report["initial_vector_entry_count"] = initial_node_pairs.size() * 2;
-	report["initial_relink_status"] = "0x4cc788_post_allocation_circular_relink_not_yet_executed";
+	report["initial_inline_relink_swap_count"] = 4;
+	report["initial_relink_status"] = "0x4cc82b_0x4cc901_inline_splices_ported_0x4ccb1f_bridge_pending";
+	report["initial_bridge_call_status"] = "0x4ccb1f_bridge_call_not_yet_executed";
 	Dictionary node_pair_layout;
 	node_pair_layout["primary+0x00/+0x04/+0x08"] = "from x/y/payload passed to 0x4cc955/0x4cc5db";
 	node_pair_layout["primary+0x0c"] = "paired node pointer allocated inside 0x4cc5db";
