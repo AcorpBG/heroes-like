@@ -1976,6 +1976,9 @@ int32_t catalog_auto_road_surface_share_per_thousand(const Dictionary &normalize
 	if (size_class == "homm3_medium" && water_mode == "normal_water") {
 		return 570;
 	}
+	if (size_class == "homm3_medium" && water_mode == "islands" && level_count > 1) {
+		return 546;
+	}
 	return 670;
 }
 
@@ -2152,7 +2155,7 @@ Dictionary native_catalog_auto_road_component_adjustment_lookup(const Array &roa
 		} else if (size_class == "homm3_medium" && water_mode == "normal_water") {
 			total_target = std::max<int32_t>(total_target, std::max<int32_t>(387, (area * 37) / 1000));
 		} else if (size_class == "homm3_medium" && water_mode == "islands") {
-			total_target = std::min<int32_t>(total_target, std::max<int32_t>(250, (area * 27) / 1000));
+			total_target = std::min<int32_t>(total_target, std::max<int32_t>(284, (area * 274) / 10000));
 		}
 	}
 	if (String(normalized.get("size_class_id", "")) == "homm3_extra_large" && level_count == 1) {
