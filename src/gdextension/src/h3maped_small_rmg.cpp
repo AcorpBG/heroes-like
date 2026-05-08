@@ -9,8 +9,10 @@
 #include <algorithm>
 #include <array>
 #include <cerrno>
+#include <cmath>
 #include <cstdint>
 #include <cstdlib>
+#include <vector>
 
 namespace godot::h3maped_small_rmg {
 namespace {
@@ -43,6 +45,30 @@ struct H3MapedRng {
 		state = state * 0x343fdu + 0x269ec3u;
 		return int32_t((state >> 16U) & 0x7fffu);
 	}
+};
+
+struct RuntimeZoneSeed {
+	int32_t runtime_index = -1;
+	int32_t source_zone_id = -1;
+	int32_t source_bucket = -1;
+	int32_t source_owner_index = -1;
+	int32_t actual_owner_color = -1;
+	int32_t source_base_size = 0;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t scaled_size = 0;
+};
+
+struct RuntimeLinkSeed {
+	int32_t runtime_a = -1;
+	int32_t runtime_b = -1;
+};
+
+struct CoordCandidate {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
 };
 
 const TemplateEvidence SMALL_LAND_TEMPLATES[] = {
@@ -216,6 +242,189 @@ std::array<bool, 8> selected_color_bitmap_from_normalized(const Dictionary &norm
 	return bitmap;
 }
 
+int32_t ftol_truncate(double value) {
+	return int32_t(std::trunc(value));
+}
+
+int32_t distance_truncate(int32_t ax, int32_t ay, int32_t bx, int32_t by) {
+	const int64_t dx = int64_t(ax) - int64_t(bx);
+	const int64_t dy = int64_t(ay) - int64_t(by);
+	return ftol_truncate(std::sqrt(double(dx * dx + dy * dy)));
+}
+
+Array coordinate_candidate_report(const std::vector<CoordCandidate> &candidates, int32_t limit = 8) {
+	Array result;
+	const int32_t capped = std::min<int32_t>(int32_t(candidates.size()), limit);
+	for (int32_t index = 0; index < capped; ++index) {
+		const CoordCandidate &candidate = candidates[size_t(index)];
+		Dictionary item;
+		item["x"] = candidate.x;
+		item["y"] = candidate.y;
+		item["level"] = candidate.level;
+		result.append(item);
+	}
+	return result;
+}
+
+bool candidate_valid_4a1701(
+		const RuntimeZoneSeed &current,
+		const CoordCandidate &candidate,
+		const std::vector<RuntimeZoneSeed> &zones,
+		const std::vector<int32_t> &visible_runtime_indices) {
+	if ((current.source_bucket == 0 || current.source_bucket == 1) && candidate.level == 1
+			&& current.actual_owner_color != 3 && current.actual_owner_color != 4 && current.actual_owner_color != 5) {
+		return false;
+	}
+	for (int32_t other_index : visible_runtime_indices) {
+		if (other_index < 0 || other_index >= int32_t(zones.size())) {
+			continue;
+		}
+		const RuntimeZoneSeed &other = zones[size_t(other_index)];
+		if (other.source_zone_id == current.source_zone_id || other.level != candidate.level) {
+			continue;
+		}
+		const int32_t distance = distance_truncate(candidate.x, candidate.y, other.x, other.y);
+		const int32_t minimum_tenths = (other.source_base_size + current.source_base_size) * 8;
+		if (distance * 10 < minimum_tenths) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool zones_connectable_49b6e2(const RuntimeZoneSeed &first, const RuntimeZoneSeed &second) {
+	const int32_t distance = distance_truncate(first.x, first.y, second.x, second.y);
+	const int32_t size_sum = first.source_base_size + second.source_base_size;
+	if (first.level != second.level) {
+		if (size_sum < distance) {
+			return false;
+		}
+		return (size_sum - distance) > (std::min(first.source_base_size, second.source_base_size) / 2);
+	}
+	return size_sum * 11 >= distance * 10;
+}
+
+int32_t link_acceptance_count_4a1967(
+		const RuntimeZoneSeed &current,
+		const std::vector<RuntimeZoneSeed> &zones,
+		const std::vector<RuntimeLinkSeed> &links) {
+	int32_t accepted = 0;
+	for (const RuntimeLinkSeed &link : links) {
+		int32_t other_index = -1;
+		if (link.runtime_a == current.runtime_index) {
+			other_index = link.runtime_b;
+		} else if (link.runtime_b == current.runtime_index) {
+			other_index = link.runtime_a;
+		}
+		if (other_index < 0 || other_index >= int32_t(zones.size())) {
+			continue;
+		}
+		if (zones_connectable_49b6e2(zones[size_t(other_index)], current)) {
+			accepted += 1;
+		}
+	}
+	return accepted;
+}
+
+void append_angle_candidates_4a17f5(
+		const RuntimeZoneSeed &base,
+		const RuntimeZoneSeed &current,
+		const std::vector<RuntimeZoneSeed> &zones,
+		const std::vector<int32_t> &visible_runtime_indices,
+		std::vector<CoordCandidate> &candidates) {
+	static constexpr double X_TABLE[32] = {
+		1.0, 0.9807852804032304, 0.9238795325112867, 0.8314696123025452,
+		0.7071067811865476, 0.5555702330196023, 0.38268343236508984, 0.19509032201612833,
+		0.0, -0.19509032201612833, -0.38268343236508984, -0.5555702330196023,
+		-0.7071067811865476, -0.8314696123025452, -0.9238795325112867, -0.9807852804032304,
+		-1.0, -0.9807852804032304, -0.9238795325112867, -0.8314696123025452,
+		-0.7071067811865476, -0.5555702330196023, -0.38268343236508984, -0.19509032201612833,
+		0.0, 0.19509032201612833, 0.38268343236508984, 0.5555702330196023,
+		0.7071067811865476, 0.8314696123025452, 0.9238795325112867, 0.9807852804032304,
+	};
+	static constexpr double Y_TABLE[32] = {
+		0.0, 0.19509032201612833, 0.38268343236508984, 0.5555702330196023,
+		0.7071067811865476, 0.8314696123025452, 0.9238795325112867, 0.9807852804032304,
+		1.0, 0.9807852804032304, 0.9238795325112867, 0.8314696123025452,
+		0.7071067811865476, 0.5555702330196023, 0.38268343236508984, 0.19509032201612833,
+		0.0, -0.19509032201612833, -0.38268343236508984, -0.5555702330196023,
+		-0.7071067811865476, -0.8314696123025452, -0.9238795325112867, -0.9807852804032304,
+		-1.0, -0.9807852804032304, -0.9238795325112867, -0.8314696123025452,
+		-0.7071067811865476, -0.5555702330196023, -0.38268343236508984, -0.19509032201612833,
+	};
+	const int32_t combined_size = base.source_base_size + current.source_base_size;
+	for (int32_t direction = 0; direction < 32; ++direction) {
+		CoordCandidate candidate;
+		candidate.x = ftol_truncate(double(combined_size) * X_TABLE[direction] + double(base.x));
+		candidate.y = ftol_truncate(double(combined_size) * Y_TABLE[direction] + double(base.y));
+		candidate.level = base.level;
+		if (candidate_valid_4a1701(current, candidate, zones, visible_runtime_indices)) {
+			candidates.push_back(candidate);
+		}
+	}
+}
+
+void prune_candidates_4a1ad8_single_level(
+		const RuntimeZoneSeed &current_template,
+		const std::vector<RuntimeZoneSeed> &zones,
+		const std::vector<int32_t> &visible_runtime_indices,
+		const std::vector<RuntimeLinkSeed> &links,
+		std::vector<CoordCandidate> &candidates) {
+	if (candidates.empty()) {
+		return;
+	}
+	int32_t best_link_count = 0;
+	for (const CoordCandidate &candidate : candidates) {
+		RuntimeZoneSeed candidate_zone = current_template;
+		candidate_zone.x = candidate.x;
+		candidate_zone.y = candidate.y;
+		candidate_zone.level = candidate.level;
+		best_link_count = std::max(best_link_count, link_acceptance_count_4a1967(candidate_zone, zones, links));
+	}
+	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const CoordCandidate &candidate) {
+		RuntimeZoneSeed candidate_zone = current_template;
+		candidate_zone.x = candidate.x;
+		candidate_zone.y = candidate.y;
+		candidate_zone.level = candidate.level;
+		return link_acceptance_count_4a1967(candidate_zone, zones, links) < best_link_count;
+	}), candidates.end());
+	if (candidates.empty()) {
+		return;
+	}
+
+	int32_t min_y = 0;
+	int32_t min_x = 0;
+	int32_t max_y = 0;
+	int32_t max_x = 0;
+	for (int32_t other_index : visible_runtime_indices) {
+		if (other_index < 0 || other_index >= int32_t(zones.size()) || other_index == current_template.runtime_index) {
+			continue;
+		}
+		const RuntimeZoneSeed &other = zones[size_t(other_index)];
+		min_y = std::min(other.y - other.source_base_size, min_y);
+		min_x = std::min(other.x - other.source_base_size, min_x);
+		max_y = std::max(other.y + other.source_base_size + 1, max_y);
+		max_x = std::max(other.x + other.source_base_size + 1, max_x);
+	}
+
+	int32_t best_metric = 0x7d00;
+	for (const CoordCandidate &candidate : candidates) {
+		const int32_t candidate_min_y = std::min(candidate.y - current_template.source_base_size, min_y);
+		const int32_t candidate_min_x = std::min(candidate.x - current_template.source_base_size, min_x);
+		const int32_t candidate_max_y = std::max(candidate.y + current_template.source_base_size + 1, max_y);
+		const int32_t candidate_max_x = std::max(candidate.x + current_template.source_base_size + 1, max_x);
+		best_metric = std::min(best_metric, std::min(candidate_max_y - candidate_min_y, candidate_max_x - candidate_min_x));
+	}
+	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const CoordCandidate &candidate) {
+		const int32_t candidate_min_y = std::min(candidate.y - current_template.source_base_size, min_y);
+		const int32_t candidate_min_x = std::min(candidate.x - current_template.source_base_size, min_x);
+		const int32_t candidate_max_y = std::max(candidate.y + current_template.source_base_size + 1, max_y);
+		const int32_t candidate_max_x = std::max(candidate.x + current_template.source_base_size + 1, max_x);
+		const int32_t metric = std::min(candidate_max_y - candidate_min_y, candidate_max_x - candidate_min_x);
+		return best_metric < metric;
+	}), candidates.end());
+}
+
 Dictionary player_slot_assignment_report(
 		const std::array<bool, 8> &human_capable,
 		const std::array<bool, 8> &player_capable_source,
@@ -313,6 +522,224 @@ Dictionary player_slot_assignment_report(
 	if (!complete) {
 		report["blocker"] = "selected template does not expose enough human/player-capable source owner slots for requested counts";
 	}
+	return report;
+}
+
+Dictionary coordinate_seed_report_4a1f3b(
+		const Dictionary &normalized_config,
+		Array &runtime_zones,
+		const Array &link_seeds,
+		uint32_t rng_state_after_runtime_zone_build) {
+	Dictionary report;
+	report["status"] = "0x4a1f3b_coordinate_candidate_math_replayed_inspection_only";
+	report["source"] = "h3maped 0x4a1f3b coordinate seeding, 0x4a17f5 angle candidates, 0x4a1701 spacing validation, 0x4a1ad8 single-level pruning, and 0x4a19ed bounding-box rescale";
+	report["angle_table_x_address"] = "0x58dc28";
+	report["angle_table_y_address"] = "0x58dd28";
+	report["distance_validation_address"] = "0x4a1701";
+	report["candidate_prune_address"] = "0x4a1ad8";
+	report["bbox_rescale_address"] = "0x4a19ed";
+	report["rng_state_before_coordinate_seed_uint32"] = int64_t(rng_state_after_runtime_zone_build);
+	report["rng_order_status"] = "pending_full_0x4a218c_interleaved_replay";
+	report["rng_order_note"] = "candidate math is executable-derived, but the clean module still replays it after the current runtime-zone choice report; exact generation must interleave 0x49b452/0x4a1f3b per zone before map emission is allowed";
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	if (level_count != 1) {
+		report["status"] = "blocked_until_two_level_coordinate_port";
+		report["blocked_reason"] = "this clean reset is scoped to one-level small land maps before underground branches are ported";
+		return report;
+	}
+
+	std::vector<RuntimeZoneSeed> zones;
+	zones.reserve(size_t(runtime_zones.size()));
+	for (int64_t index = 0; index < runtime_zones.size(); ++index) {
+		if (Variant(runtime_zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary runtime = Dictionary(runtime_zones[index]);
+		RuntimeZoneSeed zone;
+		zone.runtime_index = int32_t(runtime.get("runtime_zone_index", index));
+		zone.source_zone_id = int32_t(runtime.get("source_zone_id", index));
+		zone.source_bucket = int32_t(runtime.get("source_bucket", -1));
+		zone.source_owner_index = int32_t(runtime.get("source_owner_index", -1));
+		zone.actual_owner_color = int32_t(runtime.get("actual_owner_color", -1));
+		zone.source_base_size = int32_t(runtime.get("source_base_size", 0));
+		zone.scaled_size = zone.source_base_size;
+		zones.push_back(zone);
+	}
+
+	std::vector<RuntimeLinkSeed> links;
+	links.reserve(size_t(link_seeds.size()));
+	for (int64_t index = 0; index < link_seeds.size(); ++index) {
+		if (Variant(link_seeds[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary link = Dictionary(link_seeds[index]);
+		RuntimeLinkSeed seed;
+		seed.runtime_a = int32_t(link.get("runtime_zone_a", -1));
+		seed.runtime_b = int32_t(link.get("runtime_zone_b", -1));
+		if (seed.runtime_a >= 0 && seed.runtime_b >= 0) {
+			links.push_back(seed);
+		}
+	}
+
+	H3MapedRng rng { rng_state_after_runtime_zone_build };
+	Array placement_steps;
+	int32_t rng_calls = 0;
+	bool complete = true;
+
+	auto place_zone = [&](int32_t zone_index, const String &pass_id, const std::vector<int32_t> &visible_runtime_indices) {
+		std::vector<CoordCandidate> candidates;
+		Dictionary step;
+		step["pass"] = pass_id;
+		step["runtime_zone_index"] = zone_index;
+		step["runtime_vector_count_before_call"] = int32_t(visible_runtime_indices.size());
+		Array visible_report;
+		for (int32_t visible_index : visible_runtime_indices) {
+			visible_report.append(visible_index);
+		}
+		step["visible_runtime_zone_indices"] = visible_report;
+
+		if (visible_runtime_indices.empty()) {
+			candidates.push_back(CoordCandidate { 0, 0, 0 });
+			step["candidate_source"] = "0x4a1f7b_empty_runtime_vector_origin";
+			step["explicit_link_base_count"] = 0;
+			step["fallback_base_count"] = 0;
+		} else {
+			int32_t explicit_base_count = 0;
+			for (const RuntimeLinkSeed &link : links) {
+				int32_t other_index = -1;
+				if (link.runtime_a == zone_index) {
+					other_index = link.runtime_b;
+				} else if (link.runtime_b == zone_index) {
+					other_index = link.runtime_a;
+				}
+				if (other_index < 0 || std::find(visible_runtime_indices.begin(), visible_runtime_indices.end(), other_index) == visible_runtime_indices.end()) {
+					continue;
+				}
+				explicit_base_count += 1;
+				append_angle_candidates_4a17f5(zones[size_t(other_index)], zones[size_t(zone_index)], zones, visible_runtime_indices, candidates);
+			}
+			step["explicit_link_base_count"] = explicit_base_count;
+			if (candidates.empty()) {
+				for (int32_t other_index : visible_runtime_indices) {
+					append_angle_candidates_4a17f5(zones[size_t(other_index)], zones[size_t(zone_index)], zones, visible_runtime_indices, candidates);
+				}
+				step["candidate_source"] = "0x4a2069_existing_runtime_zone_fallback";
+				step["fallback_base_count"] = int32_t(visible_runtime_indices.size());
+			} else {
+				step["candidate_source"] = "0x4a200c_explicit_source_link_endpoint";
+				step["fallback_base_count"] = 0;
+			}
+		}
+
+		step["candidate_count_before_4a1ad8"] = int32_t(candidates.size());
+		step["candidate_preview_before_4a1ad8"] = coordinate_candidate_report(candidates);
+		prune_candidates_4a1ad8_single_level(zones[size_t(zone_index)], zones, visible_runtime_indices, links, candidates);
+		step["candidate_count_after_4a1ad8"] = int32_t(candidates.size());
+		step["candidate_preview_after_4a1ad8"] = coordinate_candidate_report(candidates);
+		if (candidates.empty()) {
+			step["blocked_reason"] = "0x4a1f3b produced no coordinate candidates";
+			complete = false;
+			placement_steps.append(step);
+			return;
+		}
+
+		const int32_t rng_value = rng.next();
+		rng_calls += 1;
+		const int32_t selected_index = rng_value % int32_t(candidates.size());
+		const CoordCandidate selected = candidates[size_t(selected_index)];
+		zones[size_t(zone_index)].x = selected.x;
+		zones[size_t(zone_index)].y = selected.y;
+		zones[size_t(zone_index)].level = selected.level;
+		step["rng_value"] = rng_value;
+		step["selected_candidate_index"] = selected_index;
+		Dictionary selected_report;
+		selected_report["x"] = selected.x;
+		selected_report["y"] = selected.y;
+		selected_report["level"] = selected.level;
+		step["selected_candidate"] = selected_report;
+		placement_steps.append(step);
+	};
+
+	for (int32_t zone_index = 0; zone_index < int32_t(zones.size()); ++zone_index) {
+		std::vector<int32_t> visible;
+		for (int32_t visible_index = 0; visible_index < zone_index; ++visible_index) {
+			visible.push_back(visible_index);
+		}
+		place_zone(zone_index, "0x4a2226_initial_runtime_zone_insertion", visible);
+	}
+	std::vector<int32_t> all_visible;
+	for (int32_t zone_index = 0; zone_index < int32_t(zones.size()); ++zone_index) {
+		all_visible.push_back(zone_index);
+	}
+	for (int32_t pass = 0; pass < 2; ++pass) {
+		for (int32_t zone_index = 0; zone_index < int32_t(zones.size()); ++zone_index) {
+			place_zone(zone_index, pass == 0 ? String("0x4a22b3_refinement_pass_1") : String("0x4a22b3_refinement_pass_2"), all_visible);
+		}
+	}
+
+	int32_t min_y = 0;
+	int32_t min_x = 0;
+	int32_t max_y = 0;
+	int32_t max_x = 0;
+	for (const RuntimeZoneSeed &zone : zones) {
+		min_y = std::min(zone.y - zone.source_base_size, min_y);
+		min_x = std::min(zone.x - zone.source_base_size, min_x);
+		max_y = std::max(zone.y + zone.source_base_size + 1, max_y);
+		max_x = std::max(zone.x + zone.source_base_size + 1, max_x);
+	}
+	const int32_t bbox_height = max_y - min_y;
+	const int32_t bbox_width = max_x - min_x;
+	const int32_t bbox_span = std::max(bbox_height, bbox_width);
+	const int32_t map_span = std::min(int32_t(normalized_config.get("width", 0)), int32_t(normalized_config.get("height", 0)));
+	const int32_t offset_y = (min_y - bbox_span + max_y) / 2;
+	const int32_t offset_x = (min_x - bbox_span + max_x) / 2;
+	Array scaled_zone_coordinates;
+	for (RuntimeZoneSeed &zone : zones) {
+		if (bbox_span > 0) {
+			zone.x = ((zone.x - offset_x) * map_span) / bbox_span;
+			zone.y = ((zone.y - offset_y) * map_span) / bbox_span;
+			zone.scaled_size = (zone.source_base_size * map_span) / bbox_span;
+		} else {
+			zone.scaled_size = zone.source_base_size;
+		}
+		Dictionary item;
+		item["runtime_zone_index"] = zone.runtime_index;
+		item["x_after_bbox_rescale"] = zone.x;
+		item["y_after_bbox_rescale"] = zone.y;
+		item["level"] = zone.level;
+		item["runtime_size_after_bbox_rescale"] = zone.scaled_size;
+		scaled_zone_coordinates.append(item);
+		if (zone.runtime_index >= 0 && zone.runtime_index < runtime_zones.size()
+				&& Variant(runtime_zones[zone.runtime_index]).get_type() == Variant::DICTIONARY) {
+			Dictionary runtime = Dictionary(runtime_zones[zone.runtime_index]);
+			runtime["x_after_bbox_rescale"] = zone.x;
+			runtime["y_after_bbox_rescale"] = zone.y;
+			runtime["level"] = zone.level;
+			runtime["runtime_size_after_bbox_rescale"] = zone.scaled_size;
+			runtime["rectangle_status"] = "pending_0x4a3a03_footprint_placement_after_coordinate_seed";
+			runtime_zones[zone.runtime_index] = runtime;
+		}
+	}
+
+	Dictionary bbox;
+	bbox["min_y_before_rescale"] = min_y;
+	bbox["min_x_before_rescale"] = min_x;
+	bbox["max_y_before_rescale"] = max_y;
+	bbox["max_x_before_rescale"] = max_x;
+	bbox["height_before_rescale"] = bbox_height;
+	bbox["width_before_rescale"] = bbox_width;
+	bbox["selected_span_before_rescale"] = bbox_span;
+	bbox["map_span"] = map_span;
+	bbox["offset_y"] = offset_y;
+	bbox["offset_x"] = offset_x;
+	report["ok"] = complete;
+	report["placement_step_count"] = placement_steps.size();
+	report["placement_steps"] = placement_steps;
+	report["rng_calls_after_runtime_zone_build"] = rng_calls;
+	report["rng_state_after_coordinate_seed_uint32"] = int64_t(rng.state);
+	report["bounding_box_rescale"] = bbox;
+	report["scaled_zone_coordinates"] = scaled_zone_coordinates;
+	report["next_materialization_status"] = "pending_clean_port_0x4a3a03_0x4a2777_0x4a325d_0x4a3710";
 	return report;
 }
 
@@ -540,10 +967,11 @@ Dictionary runtime_zone_build_report(
 	early_link_placement["explicit_endpoint_attempt_count"] = explicit_endpoint_attempts;
 	early_link_placement["fallback_attempt_count_if_no_valid_endpoint"] = fallback_attempts_if_no_valid_endpoint;
 	early_link_placement["calls"] = placement_calls;
-	early_link_placement["coordinate_candidate_status"] = "pending_clean_port_0x4a17f5_0x4a1701_0x4a1ad8";
+	Dictionary coordinate_seed = coordinate_seed_report_4a1f3b(normalized_config, runtime_zones, link_seeds, uint32_t(rng.state));
+	early_link_placement["coordinate_candidate_status"] = coordinate_seed.get("status", "");
 
 	report["status"] = "0x4a218c_runtime_zone_records_ported_inspection_only";
-	report["source"] = "h3maped 0x4a218c with 0x49b452 runtime initializer, 0x49b3c1 town choice, 0x49b53d terrain choice";
+	report["source"] = "h3maped 0x4a218c with 0x49b452 runtime initializer, 0x49b3c1 town choice, and 0x4a1f3b coordinate candidate replay";
 	report["runtime_zone_vector_offset"] = "generator+0x10e0/+0x10e4/+0x10e8";
 	report["vector_clear_status"] = "0x42bde9_semantics_represented_by_rebuilt_report_array";
 	report["water_mode_code"] = water_code;
@@ -559,7 +987,9 @@ Dictionary runtime_zone_build_report(
 	report["early_link_placement"] = early_link_placement;
 	report["rng_state_after_runtime_zone_build"] = int64_t(rng.state);
 	report["rng_events"] = rng_events;
-	report["coordinate_placement_status"] = "pending_clean_port_0x4a1f3b_0x4a17f5_0x4a19ed_and_0x4a3a03";
+	report["coordinate_placement_status"] = coordinate_seed.get("status", "");
+	report["coordinate_seed"] = coordinate_seed;
+	report["zone_footprint_placement_status"] = "pending_clean_port_0x4a3a03_0x4a2777_0x4a325d_0x4a3710";
 	return report;
 }
 
@@ -676,7 +1106,7 @@ Array clean_phase_ledger() {
 	const Phase PHASES[] = {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "ported_inspection_only" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "ported_inspection_only" },
-		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x49b452, 0x49b3c1, 0x49b53d", "ported_structure_and_endpoint_control_flow_inspection_only" },
+		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b452, 0x49b3c1", "ported_structure_and_coordinate_candidate_replay_inspection_only" },
 		{ "zone_footprint_placement", "0x4a3a03, 0x4a2777, 0x4a325d, 0x4a3710", "pending_clean_port" },
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "pending_clean_port" },
 		{ "object_category_placement", "0x4a8d2c, 0x4a8db2, 0x4a8c15", "pending_clean_port" },
