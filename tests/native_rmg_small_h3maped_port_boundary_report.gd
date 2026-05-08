@@ -604,7 +604,21 @@ func _run() -> void:
 			"link_count": selected_payload.get("link_count", 0),
 		}))
 		return
-	if String(generated.get("road_generation_status", "")) != "pending_0x4ab37f_road_adapter_path_port" \
+	var road_boundary: Dictionary = generated.get("road_adapter_boundary", {}) if generated.get("road_adapter_boundary", {}) is Dictionary else {}
+	if String(road_boundary.get("generation_status", "")) != "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending" \
+			or String(road_boundary.get("h3maped_phase_runner_address", "")) != "0x4ab52a" \
+			or String(road_boundary.get("h3maped_road_adapter_entry_address", "")) != "0x4ab37f" \
+			or String(road_boundary.get("h3maped_road_toolkit_entry_address", "")) != "0x4b4243" \
+			or int(road_boundary.get("coordinate_record_size_bytes", 0)) != 12 \
+			or int(road_boundary.get("candidate_low_word_threshold", 0)) != 0x7530 \
+			or not bool(road_boundary.get("no_synthetic_road_geometry", false)):
+		_fail("Materialized h3maped payload did not expose the recovered 0x4ab52a/0x4ab37f road adapter boundary: %s" % JSON.stringify(road_boundary))
+		return
+	var road_network: Dictionary = generated.get("road_network", {}) if generated.get("road_network", {}) is Dictionary else {}
+	if int(road_network.get("road_cell_count", -1)) != 0 or road_network.get("road_segments", []).size() != 0:
+		_fail("The clean h3maped reset path must not emit fake road geometry before 0x4b4243 is ported: %s" % JSON.stringify(road_network))
+		return
+	if String(generated.get("road_generation_status", "")) != "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending" \
 			or String(generated.get("guard_generation_status", "")) != "h3maped_0x4a79a3_link_guard_payload_ported_guard_object_materialization_pending":
 		_fail("Materialized h3maped payload must keep unported road/guard object phases explicit: %s" % JSON.stringify({
 			"road_generation_status": generated.get("road_generation_status", ""),
@@ -666,6 +680,7 @@ func _run() -> void:
 		"generated_mine_count": generated.get("object_placements", []).size(),
 		"generated_connection_count": connection_payload.get("connection_count", 0),
 		"generated_connection_status": generated.get("connection_generation_status", ""),
+		"road_adapter_boundary_status": road_boundary.get("generation_status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
 	get_tree().quit(0)

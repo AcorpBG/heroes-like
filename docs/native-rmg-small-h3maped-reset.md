@@ -106,6 +106,8 @@ The direct-placement blocker has been narrowed from an unknown condition to the 
 
 The clean module now ports the recovered late raw-link payload semantics from `0x4a79a3` into the generated package ledger. It does not invent road geometry. For each selected template link it records endpoints, runtime-zone pair, raw `Value`, `Wide` normal-guard suppression, and `Border Guard` special-object intent. The seed `1` boundary case carries 5 connection records. The exact `0x4a61bc`/`0x4a696b`/`0x4a6cf2`/`0x4a7605` connection geometry, `0x4a65a5 -> 0x4a5e03` normal guard object placement, `0x4a5e73 -> 0x4a5a23` type-9 Border Guard materialization, and `0x4ab37f` road adapter path remain pending clean ports.
 
+The road boundary is now explicit in the partial package instead of being collapsed to a generic pending flag. Disassembly of `/root/Downloads/h3maped.exe` shows `0x4ab52a` iterating generator coordinate records from `+0x14b4..+0x14b8` as 12-byte entries, selecting road type through `0x4e7276 % 3 + 1`, checking candidate cell low words against `0x7530`, then preparing path state through `0x4aae2f` and `0x4aae7b` before calling `0x4ab37f`. `0x4ab37f` constructs the terrain adapter vtable `0x540a14` and road adapter vtable `0x540a34`, then enters the road toolkit at `0x4b4243`. The clean reset path therefore reports `h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending`, emits zero road segments/cells, and records `no_synthetic_road_geometry: true` until the `0x4b4243` toolkit and path-state propagation are ported.
+
 The boundary exposes a phase ledger and keeps every unported materialization phase pending:
 
 1. `template_selection` - `0x49f0cd`, `0x4ac597..0x4ac5a4`, `0x4e7276` - ported for inspection only.
@@ -129,5 +131,5 @@ For the seed `1` boundary case, the package adoption path currently reports:
 - `terrain_generation_status: h3maped_0x4a3f27_terrain_grid_materialized_from_clean_port`,
 - `town_generation_status: h3maped_0x4a93a2_town_records_adopted`,
 - `object_generation_status: h3maped_0x4a9911_0x4a9641_mines_materialized_rewards_guards_pending`,
-- `road_generation_status: pending_0x4ab37f_road_adapter_path_port`,
+- `road_generation_status: h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending`,
 - `guard_generation_status: h3maped_0x4a79a3_link_guard_payload_ported_guard_object_materialization_pending`.
