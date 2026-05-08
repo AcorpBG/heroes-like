@@ -80,8 +80,8 @@ func _run() -> void:
 	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_inspection_only":
 		_fail("The clean boundary did not expose h3maped 0x4a8d2c/0x4a93a2/0x49aa93 direct town/castle candidate validity prechecking: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("guard_reward_monster_placement_status", "")) != "0x4a9d6a_0x4a9911_0x4aab7e_mine_template_and_treasure_ledgers_ported_placement_pending":
-		_fail("The clean boundary did not expose recovered h3maped mine/reward source field ledgers: %s" % JSON.stringify(report))
+	if String(selected_payload.get("guard_reward_monster_placement_status", "")) != "0x4a9d6a_0x4a9911_0x4a9641_0x4aab7e_mine_constraint_scan_ported_package_adoption_pending":
+		_fail("The clean boundary did not expose recovered h3maped mine/reward source fields and 0x4a9641 constraint scanning: %s" % JSON.stringify(report))
 		return
 	var town_castle_placement: Dictionary = selected_payload.get("town_castle_placement", {})
 	if int(town_castle_placement.get("player_min_castle_total", -1)) != 4 or int(town_castle_placement.get("player_min_town_total", -1)) != 0:
@@ -230,8 +230,11 @@ func _run() -> void:
 	if int(mine_reward_placement.get("mine_minimum_helper_call_count", -1)) != 18 or int(mine_reward_placement.get("mine_minimum_helper_candidate_template_total", -1)) != 116:
 		_fail("0x4a9911 mine minimum helper call/candidate ledger drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
-	if String(mine_reward_placement.get("mine_placement_constraint_status", "")) != "0x4a9641_constraint_scan_sequence_recovered_candidate_execution_pending":
-		_fail("0x4a9641 mine placement constraint sequence was not exposed as the current physical-placement blocker: %s" % JSON.stringify(mine_reward_placement))
+	if int(mine_reward_placement.get("mine_minimum_helper_terrain_filtered_candidate_template_total", -1)) <= 0:
+		_fail("0x42cc99 terrain-filtered mine template candidates were not exposed from objects.txt masks: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if String(mine_reward_placement.get("mine_placement_constraint_status", "")) != "0x4a9641_constraint_scan_executed_inspection_package_adoption_pending":
+		_fail("0x4a9641 mine placement constraint scan was not exposed as executed inspection state: %s" % JSON.stringify(mine_reward_placement))
 		return
 	var mine_constraint: Dictionary = mine_reward_placement.get("mine_placement_constraint", {})
 	if String(mine_constraint.get("address", "")) != "0x4a9641" or String(mine_constraint.get("candidate_validity_helper_address", "")) != "0x49aa93" or String(mine_constraint.get("virtual_placement_hook", "")) != "generator_vtable+0x04":
@@ -240,18 +243,27 @@ func _run() -> void:
 	if int(mine_constraint.get("neighbor_count_cap", -1)) != 5 or int(mine_constraint.get("special_distance_min_squared", -1)) != 0x10 or int(mine_constraint.get("special_distance_floor_squared", -1)) != 0x90:
 		_fail("0x4a9641 neighbor/distance ranking constants drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
+	if int(mine_reward_placement.get("mine_placement_constraint_scan_call_count", -1)) <= 0 or int(mine_reward_placement.get("mine_template_selection_rng_call_count", -1)) <= 0:
+		_fail("0x4a9911/0x4a9641 mine scan call or template RNG counts drifted: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_reward_placement.get("mine_placement_constraint_candidate_total", -1)) <= 0 or int(mine_reward_placement.get("mine_placement_constraint_selected_count", -1)) <= 0 or int(mine_reward_placement.get("mine_object_occupied_cell_mark_count", -1)) <= 0:
+		_fail("0x4a9641 mine candidate scan did not produce selected occupied body cells: %s" % JSON.stringify(mine_reward_placement))
+		return
 	var helper_calls: Array = mine_reward_placement.get("mine_minimum_helper_calls", [])
-	if helper_calls.size() != 18 or String(helper_calls[0].get("status", "")) != "0x4a9911_template_bucket_record_guard_handoff_ported_0x4a9641_placement_pending":
+	if helper_calls.size() != 18 or String(helper_calls[0].get("status", "")) != "0x4a9911_template_bucket_record_guard_handoff_and_0x4a9641_scan_ported_package_adoption_pending":
 		_fail("0x4a9911 helper calls did not expose the recovered template/record/guard handoff: %s" % JSON.stringify(mine_reward_placement))
 		return
-	if String(helper_calls[0].get("resource", "")) != "wood" or int(helper_calls[0].get("matched_template_candidate_count_before_terrain_filter", -1)) != 6 or int(helper_calls[0].get("object_record_size_bytes", -1)) != 0x1c:
+	if String(helper_calls[0].get("resource", "")) != "wood" or int(helper_calls[0].get("matched_template_candidate_count_before_terrain_filter", -1)) != 6 or int(helper_calls[0].get("matched_template_candidate_count_after_terrain_filter", -1)) <= 0 or int(helper_calls[0].get("object_record_size_bytes", -1)) != 0x1c:
 		_fail("0x4a9911 first helper call did not preserve wood mine template/record semantics: %s" % JSON.stringify(mine_reward_placement))
 		return
 	if String(helper_calls[0].get("object_record_constructor_address", "")) != "0x49ba89" or String(helper_calls[0].get("object_record_vtable_address", "")) != "0x540ab0" or String(helper_calls[0].get("placement_constraint_helper_address", "")) != "0x4a9641":
 		_fail("0x4a9911 first helper call constructor/vtable/placement helper drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
-	if String(helper_calls[0].get("placement_constraint_status", "")) != "0x4a9641_constraint_scan_sequence_recovered_candidate_execution_pending" or int(helper_calls[0].get("placement_constraint_neighbor_count_cap", -1)) != 5 or String(helper_calls[0].get("placement_constraint_virtual_hook", "")) != "generator_vtable+0x04":
+	if not String(helper_calls[0].get("placement_constraint_status", "")).begins_with("0x4a9641_candidate_scan_executed") or int(helper_calls[0].get("placement_constraint_neighbor_count_cap", -1)) != 5 or String(helper_calls[0].get("placement_constraint_virtual_hook", "")) != "generator_vtable+0x04":
 		_fail("0x4a9911 first helper call did not carry the recovered 0x4a9641 constraint boundary: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if String(helper_calls[0].get("selected_template_def_name", "")) == "":
+		_fail("0x4a9911 first helper call did not select a terrain-filtered mine template wrapper: %s" % JSON.stringify(mine_reward_placement))
 		return
 	if int(helper_calls[0].get("guard_base_value", -1)) != 1500 or String(helper_calls[0].get("adjacent_resource_helper_address", "")) != "0x4a9e40" or int(helper_calls[0].get("adjacent_resource_object_type_id", -1)) != 79:
 		_fail("0x4a9911 first helper call guard/adjacent resource handoff drifted: %s" % JSON.stringify(mine_reward_placement))
@@ -543,8 +555,8 @@ func _run() -> void:
 	if String(phase_ledger[5].get("status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_project_adoption_pending":
 		_fail("The phase ledger did not mark only h3maped direct town/castle candidate validity prechecking as ported for the object category phase: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[6].get("phase_id", "")) != "guard_reward_monster_placement" or String(phase_ledger[6].get("status", "")) != "0x4a9d6a_0x4a9911_0x4aab7e_template_ledgers_ported_helper_placement_pending":
-		_fail("The phase ledger did not mark h3maped mine/reward source field ledgers as ported with helper placement still pending: %s" % JSON.stringify(report))
+	if String(phase_ledger[6].get("phase_id", "")) != "guard_reward_monster_placement" or String(phase_ledger[6].get("status", "")) != "0x4a9d6a_0x4a9911_0x4a9641_mine_constraint_scan_ported_rewards_pending":
+		_fail("The phase ledger did not mark h3maped mine source ledgers and 0x4a9641 scan as ported with reward placement still pending: %s" % JSON.stringify(report))
 		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
