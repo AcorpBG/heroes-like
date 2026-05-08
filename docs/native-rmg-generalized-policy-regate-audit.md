@@ -1246,3 +1246,20 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_islands_road_split_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. Medium two-level islands now has exact road total and correct town split, but surface route shape, terrain shape, and category overfill remain unresolved. The rejected cap probe confirms that forcing exact object counts without preserving density and blocker shape is the wrong direction.
+
+## Large Two-Level Normal-Water Town/Decoration Phase-Order Cleanup
+
+The next contained route-shape defect was `l_normalwater_randomplayers_2level`. The earlier road split made the road total close, but the case still had an object-route delta of `+9/0` and remained a top production-gap case. A rejected anchor-reservation probe showed the failure mode clearly: reserving more town anchors before object placement without respecting route closure reduced the town count and failed native validation.
+
+The kept correction is narrower and phase-order oriented. For generalized catalog-auto town placement, supplemental towns now search against non-clearable blockers plus existing towns, allowing them to claim space over late decorative/scenic filler. Package cleanup then removes decorative/scenic objects overlapping town primary tiles and keeps the existing access-corridor nonblocking conversion. This models the recovered order more closely: town/castle placement owns its required cells before the late `rand_trn`-style filler, without moving the whole native pipeline in one risky refactor.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `l_normalwater_randomplayers_2level` export wrote `1/1` package with native validation `pass`. The manifest recorded about `40.833s` total wall time, including `25.643s` generation, `9.310s` package conversion, and `4.570s` save time.
+- Focused `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_town_phase_order_l_normalwater_probe --summary --failure-limit 8 --gap-limit 10 --allow-partial-native-batch` passed with `1/1` matched native package and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- Focused production-gap severity improved from `583` to `342`; object-route/guarded-route delta improved from `+9/0` to `0/0`. Object delta is now `-10`, road delta `+1`, terrain delta `-187`, and category absolute delta `144`.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_town_phase_order_merged --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.254s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_town_phase_order_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. `production_ready=false` remains correct with `6` missing broad requirements. The merged top blockers are now led by XL one-level land, Large one-level islands, Medium two-level islands, Large two-level land, XL water, and Medium normal-water route/terrain/category shape gaps.
