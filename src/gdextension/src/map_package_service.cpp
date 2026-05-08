@@ -9419,6 +9419,10 @@ Dictionary apply_native_catalog_auto_two_level_object_distribution(Array &placem
 		decoration_percent = 5;
 		object_percent = 13;
 		reward_percent = 28;
+	} else if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
+		decoration_percent = 7;
+		object_percent = 27;
+		reward_percent = 44;
 	}
 	const int32_t decoration_target = int32_t(decoration_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(decoration_indices.size()) * decoration_percent) / 100);
 	const int32_t object_target = int32_t(object_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(object_indices.size()) * object_percent) / 100);
@@ -17180,7 +17184,7 @@ double native_catalog_auto_underground_rock_fraction(const Dictionary &normalize
 	}
 	if (water_mode == "islands") {
 		if (size_class_id == "homm3_extra_large") {
-			return 0.97;
+			return 0.94;
 		}
 		if (size_class_id == "homm3_medium") {
 			return 0.95;
