@@ -143,8 +143,8 @@ func _run() -> void:
 	if String(runtime_zones[2].get("terrain_source", "")) != "pending_0x4a3f27_terrain_phase":
 		_fail("Runtime-zone report must not consume terrain RNG before the h3maped terrain phase: %s" % JSON.stringify(report))
 		return
-	if String(runtime_build.get("zone_footprint_placement_status", "")) != "0x4a3a03_polygon_source_node_walks_ported_boundary_span_fill_pending":
-		_fail("The clean boundary did not expose the h3maped 0x4a3a03 polygon source-node walk checkpoint: %s" % JSON.stringify(report))
+	if String(runtime_build.get("zone_footprint_placement_status", "")) != "0x4a3a03_0x4a2777_boundary_traversal_ported_span_fill_pending":
+		_fail("The clean boundary did not expose the h3maped 0x4a3a03/0x4a2777 boundary traversal checkpoint: %s" % JSON.stringify(report))
 		return
 	var footprint_phase: Dictionary = runtime_build.get("zone_footprint_placement", {})
 	if int(footprint_phase.get("total_matching_runtime_zones", -1)) != 6 or int(footprint_phase.get("total_polygon_split_calls", -1)) != 6:
@@ -179,8 +179,17 @@ func _run() -> void:
 		_fail("0x4ccdfc finalized polygon node fanout did not run before 0x4a2777: %s" % JSON.stringify(report))
 		return
 	var polygon_source_walks: Dictionary = footprint_phase.get("polygon_source_node_walks", {})
-	if String(polygon_source_walks.get("status", "")) != "0x4ccb64_insertion_bridge_crossing_cleanup_and_source_walks_ported_span_fill_pending":
+	if String(polygon_source_walks.get("status", "")) != "0x4ccb64_insertion_bridge_crossing_cleanup_and_source_walks_ported_for_0x4a2777":
 		_fail("0x4ccb64 polygon source-walk model status drifted: %s" % JSON.stringify(report))
+		return
+	if String(footprint_phase.get("boundary_traversal_status", "")) != "0x4a2777_real_source_node_cycle_traversal_ported_boundary_materialized":
+		_fail("0x4a2777 real source-node boundary traversal was not materialized: %s" % JSON.stringify(report))
+		return
+	if int(footprint_phase.get("boundary_runtime_zone_walk_count", -1)) <= 0 or int(footprint_phase.get("boundary_unique_cell_count", -1)) <= 0:
+		_fail("0x4a2777 boundary traversal did not produce zone walks and unique boundary cells: %s" % JSON.stringify(report))
+		return
+	if bool(footprint_phase.get("boundary_loop_guard_exhausted", true)):
+		_fail("0x4a2777 boundary traversal exhausted its loop guard: %s" % JSON.stringify(report))
 		return
 	var link_seeds: Array = runtime_build.get("link_seeds", [])
 	if link_seeds.size() != 5 or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 or int(link_seeds[0].get("runtime_zone_b", -1)) != 3:
@@ -245,8 +254,8 @@ func _run() -> void:
 	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_interleaved_runtime_and_coordinate_replay_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped runtime-zone record build as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[3].get("phase_id", "")) != "zone_footprint_placement" or String(phase_ledger[3].get("status", "")) != "ported_polygon_source_node_walks_inspection_only_boundary_span_fill_pending":
-		_fail("The phase ledger did not expose only the clean h3maped 0x4a3a03 source-walk checkpoint as ported: %s" % JSON.stringify(report))
+	if String(phase_ledger[3].get("phase_id", "")) != "zone_footprint_placement" or String(phase_ledger[3].get("status", "")) != "ported_0x4a2777_boundary_traversal_inspection_only_span_fill_pending":
+		_fail("The phase ledger did not expose only the clean h3maped 0x4a2777 boundary checkpoint as ported: %s" % JSON.stringify(report))
 		return
 	if String(phase_ledger[4].get("status", "")) != "pending_clean_port":
 		_fail("Terrain placement must remain pending until h3maped 0x4a3f27 is ported: %s" % JSON.stringify(report))
@@ -274,6 +283,8 @@ func _run() -> void:
 		"coordinate_placement_status": runtime_build.get("coordinate_placement_status", ""),
 		"coordinate_rng_order_status": coordinate_seed.get("rng_order_status", ""),
 		"zone_footprint_placement_status": runtime_build.get("zone_footprint_placement_status", ""),
+		"boundary_traversal_status": footprint_phase.get("boundary_traversal_status", ""),
+		"boundary_unique_cell_count": footprint_phase.get("boundary_unique_cell_count", 0),
 		"generation_status": generated.get("status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
