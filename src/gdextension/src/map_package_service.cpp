@@ -8558,6 +8558,145 @@ Dictionary h3maped_polygon_split_pre_crossing_model_report(const std::vector<H3M
 	return report;
 }
 
+String h3maped_project_terrain_for_runtime_zone(const H3MapedRuntimeZoneSeed &zone, const Dictionary &normalized) {
+	Dictionary terrain_policy = zone.terrain_policy;
+	Array terrain_pool = surface_terrain_pool(normalized_terrain_pool(normalized.get("terrain_ids", default_terrain_pool())));
+	Array faction_ids = normalized.get("faction_ids", Array());
+	if (bool(terrain_policy.get("match_to_faction", false)) && zone.actual_player_color >= 0 && zone.actual_player_color < faction_ids.size()) {
+		const String faction_terrain = terrain_for_faction(String(faction_ids[zone.actual_player_color]));
+		if (is_passable_terrain_id(faction_terrain)) {
+			return faction_terrain;
+		}
+	}
+	Array allowed = terrain_policy.get("allowed", Array());
+	for (int64_t index = 0; index < allowed.size(); ++index) {
+		const String terrain_id = String(allowed[index]);
+		if (is_passable_terrain_id(terrain_id)) {
+			return terrain_id;
+		}
+	}
+	if (!terrain_pool.is_empty()) {
+		const int64_t selected = std::max<int32_t>(0, zone.source_index) % terrain_pool.size();
+		const String terrain_id = String(terrain_pool[selected]);
+		if (is_passable_terrain_id(terrain_id)) {
+			return terrain_id;
+		}
+	}
+	return "grass";
+}
+
+Dictionary h3maped_project_grid_materialization_report_4a325d(
+		const std::vector<H3MapedRuntimeZoneSeed> &zones,
+		const Dictionary &normalized,
+		const std::vector<uint32_t> &zone_words,
+		const std::vector<uint8_t> &cell_flags) {
+	Dictionary report;
+	report["status"] = "h3maped_span_fill_project_grid_materialized_terrain_repaint_pending";
+	report["source"] = "project-side grid materialization from the real 0x4a325d zone-word buffer only; h3maped 0x4a3f27 terrain fill/repaint and later object phases are still not ported";
+	report["source_function_address"] = "0x4a325d";
+	report["next_required_phase_address"] = "0x4a3f27";
+	report["adoption_status"] = "report_only_not_runtime_generation";
+	report["unresolved_cell_marker"] = "__h3maped_unassigned__";
+	report["unresolved_terrain_code"] = -1;
+
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	report["width"] = width;
+	report["height"] = height;
+	report["level_count"] = level_count;
+	report["tile_count"] = width * height * level_count;
+	report["terrain_id_by_code"] = terrain_id_by_code();
+
+	std::map<int32_t, const H3MapedRuntimeZoneSeed *> zone_by_word;
+	std::map<int32_t, String> terrain_by_word;
+	for (const H3MapedRuntimeZoneSeed &zone : zones) {
+		const int32_t zone_word = zone.source_zone_id >= 0 ? zone.source_zone_id : zone.source_index;
+		zone_by_word[zone_word] = &zone;
+		terrain_by_word[zone_word] = h3maped_project_terrain_for_runtime_zone(zone, normalized);
+	}
+
+	Array levels;
+	Dictionary aggregate_terrain_counts;
+	std::map<int32_t, int32_t> cell_count_by_zone_word;
+	int32_t project_materialized_cell_count = 0;
+	int32_t unresolved_cell_count = 0;
+	int32_t reserved_cell_count = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		PackedInt32Array terrain_codes;
+		terrain_codes.resize(width * height);
+		Array owner_grid;
+		Dictionary level_terrain_counts;
+		for (int32_t y = 0; y < height; ++y) {
+			Array row;
+			for (int32_t x = 0; x < width; ++x) {
+				const int64_t key = h3maped_cell_key_4a325d(width, height, x, y, level);
+				if (cell_flags.size() > size_t(key) && (cell_flags[size_t(key)] & 0x10U) != 0) {
+					reserved_cell_count += 1;
+				}
+				const int32_t flat_index = y * width + x;
+				const uint32_t zone_word_bits = zone_words[size_t(key)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+				if (zone_word_bits == H3MAPED_UNASSIGNED_ZONE_WORD) {
+					row.append(String("__h3maped_unassigned__"));
+					terrain_codes.set(flat_index, -1);
+					unresolved_cell_count += 1;
+					continue;
+				}
+				const int32_t zone_word_id = int32_t((zone_word_bits >> 16U) & 0xffU);
+				auto zone_found = zone_by_word.find(zone_word_id);
+				const String zone_record_id = zone_found != zone_by_word.end() ? zone_found->second->record_id : String("zone_word_") + String::num_int64(zone_word_id);
+				const String terrain_id = terrain_by_word.find(zone_word_id) != terrain_by_word.end() ? terrain_by_word[zone_word_id] : String("grass");
+				row.append(zone_record_id);
+				terrain_codes.set(flat_index, terrain_code_for_id(terrain_id));
+				level_terrain_counts[terrain_id] = int32_t(level_terrain_counts.get(terrain_id, 0)) + 1;
+				aggregate_terrain_counts[terrain_id] = int32_t(aggregate_terrain_counts.get(terrain_id, 0)) + 1;
+				cell_count_by_zone_word[zone_word_id] += 1;
+				project_materialized_cell_count += 1;
+			}
+			owner_grid.append(row);
+		}
+		Dictionary level_record;
+		level_record["level_index"] = level;
+		level_record["level_kind"] = level == 0 ? String("surface") : String("underground");
+		level_record["width"] = width;
+		level_record["height"] = height;
+		level_record["tile_count"] = width * height;
+		level_record["terrain_code_u16"] = terrain_codes;
+		level_record["terrain_counts"] = level_terrain_counts;
+		level_record["owner_grid"] = owner_grid;
+		level_record["signature"] = hash32_hex(canonical_variant(level_record));
+		levels.append(level_record);
+	}
+
+	Array zone_reports;
+	for (const H3MapedRuntimeZoneSeed &zone : zones) {
+		const int32_t zone_word = zone.source_zone_id >= 0 ? zone.source_zone_id : zone.source_index;
+		Dictionary zone_report;
+		zone_report["runtime_zone_index"] = zone.source_index;
+		zone_report["source_zone_record_id"] = zone.record_id;
+		zone_report["zone_word_id"] = zone_word;
+		zone_report["role"] = zone.role;
+		zone_report["actual_player_color"] = zone.actual_player_color;
+		zone_report["terrain_id"] = terrain_by_word[zone_word];
+		zone_report["cell_count"] = cell_count_by_zone_word[zone_word];
+		zone_report["seed_x"] = zone.x;
+		zone_report["seed_y"] = zone.y;
+		zone_report["seed_level"] = zone.level;
+		zone_reports.append(zone_report);
+	}
+	report["levels"] = levels;
+	report["materialized_level_count"] = levels.size();
+	report["zones"] = zone_reports;
+	report["zone_count"] = int32_t(zones.size());
+	report["project_materialized_cell_count"] = project_materialized_cell_count;
+	report["unresolved_cell_count"] = unresolved_cell_count;
+	report["reserved_cell_count"] = reserved_cell_count;
+	report["terrain_counts"] = aggregate_terrain_counts;
+	report["materialization_policy"] = "map assigned h3maped zone words to project zone ids and terrain ids without using archived catalog-auto placement; unresolved cells remain explicit until 0x4a3f27 is ported";
+	report["signature"] = hash32_hex(canonical_variant(report));
+	return report;
+}
+
 Dictionary h3maped_second_footprint_helper_4a325d_report(
 		const std::vector<H3MapedRuntimeZoneSeed> &zones,
 		const Dictionary &normalized,
@@ -8589,7 +8728,7 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 	report["recovered_operations"] = recovered_operations;
 	Array missing_layout;
 	missing_layout.append("exact interaction between h3maped zone-word writes and this project's terrain/object occupancy buffers");
-	missing_layout.append("remaining real span-fill mismatch: seed 1 still has one copied seed on a non-unassigned boundary cell and 348 unassigned cells");
+	missing_layout.append("h3maped 0x4a3f27 terrain fill/repaint is not ported; seed 1 still has 272 explicit unassigned cells after 0x4a325d");
 	report["missing_runtime_layout"] = missing_layout;
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -8799,8 +8938,12 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 	report["real_boundary_remaining_unassigned_cell_count"] = real_remaining_unassigned_count;
 	report["real_boundary_seed_relocated_count"] = real_seed_relocated_count;
 	report["real_boundary_blocked_initial_span_count"] = real_blocked_initial_span_count;
-	report["project_materialized_cell_count"] = 0;
-	report["blocked_next"] = "finish the remaining real 0x4a325d zone-fill mismatch before mapping the h3maped zone-word buffer into project terrain";
+	Dictionary project_materialization = h3maped_project_grid_materialization_report_4a325d(zones, normalized, real_zone_words, real_cell_flags);
+	report["project_materialization"] = project_materialization;
+	report["project_materialization_status"] = project_materialization.get("status", "");
+	report["project_materialized_cell_count"] = project_materialization.get("project_materialized_cell_count", 0);
+	report["project_unresolved_cell_count"] = project_materialization.get("unresolved_cell_count", 0);
+	report["blocked_next"] = "port h3maped 0x4a3f27 terrain fill/repaint before runtime map generation can adopt the materialized project grid";
 	return report;
 }
 
