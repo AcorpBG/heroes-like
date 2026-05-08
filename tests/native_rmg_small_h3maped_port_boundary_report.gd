@@ -151,6 +151,20 @@ func _run() -> void:
 	if first_helper.get("recovered_operations", []).size() < 6 or first_helper.get("missing_runtime_layout", []).size() < 4:
 		_fail("The h3maped 0x4a2777 helper report does not distinguish recovered behavior from missing runtime layout: %s" % JSON.stringify(report))
 		return
+	if String(first_helper.get("clip_helper_status", "")) != "0x4a2b33_clip_helper_ported":
+		_fail("The h3maped 0x4a2777 helper did not expose the ported 0x4a2b33 clip helper: %s" % JSON.stringify(report))
+		return
+	var clip_helper: Dictionary = first_helper.get("clip_helper_evidence", {})
+	if String(clip_helper.get("status", "")) != "0x4a2b33_clip_helper_ported":
+		_fail("The h3maped 0x4a2b33 clip-helper report did not run: %s" % JSON.stringify(report))
+		return
+	if int(clip_helper.get("sample_clip_count", -1)) != 5:
+		_fail("The h3maped 0x4a2b33 clip-helper report lost sample coverage: %s" % JSON.stringify(report))
+		return
+	var sample_clips: Array = clip_helper.get("sample_clips", [])
+	if sample_clips.size() != 5 or not sample_clips[0] is Dictionary or not bool(sample_clips[0].get("input_inside", false)):
+		_fail("The h3maped 0x4a2b33 clip-helper inside sample drifted: %s" % JSON.stringify(report))
+		return
 	if String(first_helper.get("line_writer_status", "")) != "0x4a261a_cell_line_writer_ported":
 		_fail("The h3maped 0x4a2777 helper did not expose the ported 0x4a261a line writer: %s" % JSON.stringify(report))
 		return
@@ -332,6 +346,7 @@ func _run() -> void:
 		"coordinate_step_count": coordinate_seed.get("placement_step_count", 0),
 		"level_footprint_phase_status": runtime_zone_seed.get("level_footprint_phase_status", ""),
 		"first_helper_status": first_helper.get("status", ""),
+		"clip_helper_status": first_helper.get("clip_helper_status", ""),
 		"line_writer_status": first_helper.get("line_writer_status", ""),
 		"second_helper_status": second_helper.get("status", ""),
 		"finalizer_status": finalizer.get("status", ""),

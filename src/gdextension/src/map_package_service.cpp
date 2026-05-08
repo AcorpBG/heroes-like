@@ -6303,6 +6303,20 @@ struct H3MapedLineWriteResult {
 	int32_t out_of_bounds_write_count = 0;
 };
 
+struct H3MapedClipBounds {
+	int32_t min_x = 0;
+	int32_t min_y = 0;
+	int32_t max_x = 0;
+	int32_t max_y = 0;
+};
+
+struct H3MapedClipResult {
+	int32_t x = 0;
+	int32_t y = 0;
+	String branch;
+	bool input_inside = false;
+};
+
 struct H3MapedPolygonModelNode {
 	String id;
 	int32_t x = 0;
@@ -6892,6 +6906,131 @@ Array h3maped_runtime_zone_seed_array(const std::vector<H3MapedRuntimeZoneSeed> 
 	return result;
 }
 
+H3MapedClipResult h3maped_clip_point_4a2b33(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const H3MapedClipBounds &bounds) {
+	H3MapedClipResult result;
+	result.x = x1;
+	result.y = y1;
+	result.branch = "0x4a2b5d_input_or_fallback";
+	if (x1 >= bounds.min_x && x1 < bounds.max_x && y1 >= bounds.min_y && y1 < bounds.max_y) {
+		result.input_inside = true;
+		result.branch = "0x4a2b5d_input_inside";
+		return result;
+	}
+
+	int32_t clipped_x = x1;
+	int32_t clipped_y = y1;
+	const int32_t dx = x2 - x1;
+	const int32_t dy = y2 - y1;
+	auto accept_with_original_x = [&](const String &branch) {
+		result.x = x1;
+		result.y = clipped_y;
+		result.branch = branch;
+		return result;
+	};
+	auto accept_current = [&](const String &branch) {
+		result.x = clipped_x;
+		result.y = clipped_y;
+		result.branch = branch;
+		return result;
+	};
+
+	if (x1 < bounds.min_x && dx != 0) {
+		const int32_t delta = bounds.min_x - x1;
+		clipped_x = x1 + int32_t((int64_t(dx) * int64_t(delta)) / int64_t(dx));
+		clipped_y = y1 + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dx));
+		if (y1 >= bounds.min_y && clipped_y < bounds.min_y) {
+			return accept_with_original_x("0x4a2bb5_left_edge_crosses_min_y");
+		}
+		if (y1 < bounds.max_y && clipped_y >= bounds.max_y) {
+			return accept_with_original_x("0x4a2bb5_left_edge_crosses_max_y");
+		}
+	}
+
+	if (clipped_y < bounds.min_y && dy != 0) {
+		const int32_t delta = bounds.min_y - clipped_y;
+		const int32_t next_x = clipped_x + int32_t((int64_t(delta) * int64_t(dx)) / int64_t(dy));
+		const int32_t next_y = clipped_y + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dy));
+		clipped_x = next_x;
+		clipped_y = next_y;
+		if (x1 >= bounds.min_x && clipped_x < bounds.min_x) {
+			return accept_with_original_x("0x4a2bb5_min_y_crosses_min_x");
+		}
+		if (x1 < bounds.max_x && clipped_x >= bounds.max_x) {
+			return accept_with_original_x("0x4a2bb5_min_y_crosses_max_x");
+		}
+	}
+
+	if (clipped_x >= bounds.max_x && dx != 0) {
+		const int32_t delta = bounds.max_x - clipped_x - 1;
+		clipped_x = clipped_x + int32_t((int64_t(delta) * int64_t(dx)) / int64_t(dx));
+		clipped_y = clipped_y + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dx));
+		if (y1 >= bounds.min_y && clipped_y < bounds.min_y) {
+			return accept_with_original_x("0x4a2bb5_max_x_crosses_min_y");
+		}
+		if (y1 < bounds.max_y && clipped_y >= bounds.max_y) {
+			return accept_with_original_x("0x4a2bb5_max_x_crosses_max_y");
+		}
+	}
+
+	if (clipped_y >= bounds.max_y && dy != 0) {
+		const int32_t delta = bounds.max_y - clipped_y - 1;
+		clipped_x = clipped_x + int32_t((int64_t(delta) * int64_t(dx)) / int64_t(dy));
+		clipped_y = clipped_y + int32_t((int64_t(dy) * int64_t(delta)) / int64_t(dy));
+		if (x1 >= bounds.min_x && clipped_x < bounds.min_x) {
+			return accept_current("0x4a2ccf_max_y_crosses_min_x");
+		}
+		if (x1 < bounds.max_x && clipped_x >= bounds.max_x) {
+			return accept_current("0x4a2ccf_max_y_crosses_max_x");
+		}
+	}
+
+	return accept_current("0x4a2b5d_fallback_current");
+}
+
+Dictionary h3maped_clip_result_report(const char *id, int32_t x1, int32_t y1, int32_t x2, int32_t y2, const H3MapedClipBounds &bounds) {
+	const H3MapedClipResult clipped = h3maped_clip_point_4a2b33(x1, y1, x2, y2, bounds);
+	Dictionary item;
+	item["id"] = id;
+	item["from_x"] = x1;
+	item["from_y"] = y1;
+	item["to_x"] = x2;
+	item["to_y"] = y2;
+	item["out_x"] = clipped.x;
+	item["out_y"] = clipped.y;
+	item["input_inside"] = clipped.input_inside;
+	item["branch"] = clipped.branch;
+	item["output_in_bounds"] = clipped.x >= bounds.min_x && clipped.x < bounds.max_x && clipped.y >= bounds.min_y && clipped.y < bounds.max_y;
+	return item;
+}
+
+Dictionary h3maped_clip_helper_4a2b33_report(const Dictionary &normalized) {
+	Dictionary report;
+	report["status"] = "0x4a2b33_clip_helper_ported";
+	report["source"] = "h3maped 0x4a2b33 point/segment clip helper; port preserves integer division truncation, max-bound minus-one clipping, and the early in-bounds return";
+	report["function_address"] = "0x4a2b33";
+	H3MapedClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = int32_t(normalized.get("width", 36));
+	bounds.max_y = int32_t(normalized.get("height", 36));
+	Dictionary bounds_report;
+	bounds_report["min_x"] = bounds.min_x;
+	bounds_report["min_y"] = bounds.min_y;
+	bounds_report["max_x"] = bounds.max_x;
+	bounds_report["max_y"] = bounds.max_y;
+	report["sample_bounds"] = bounds_report;
+	Array samples;
+	samples.append(h3maped_clip_result_report("inside", 10, 10, 30, 30, bounds));
+	samples.append(h3maped_clip_result_report("left_to_inside", -5, 10, 20, 10, bounds));
+	samples.append(h3maped_clip_result_report("top_to_inside", 10, -5, 10, 20, bounds));
+	samples.append(h3maped_clip_result_report("right_to_inside", bounds.max_x + 5, 12, 20, 12, bounds));
+	samples.append(h3maped_clip_result_report("bottom_to_inside", 12, bounds.max_y + 5, 12, 20, bounds));
+	report["sample_clip_count"] = samples.size();
+	report["sample_clips"] = samples;
+	report["blocked_next"] = "wire 0x4a2b33 and 0x4a261a through the full 0x4a2777 polygon-boundary traversal, then port 0x4a2413";
+	return report;
+}
+
 int32_t h3maped_sign_for_line_4a261a(int32_t value) {
 	return value > 0 ? 1 : -1;
 }
@@ -7071,6 +7210,8 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 	missing_layout.append("source-zone adjacency/list payload used through source_zone+0x0c/+0x10");
 	missing_layout.append("exact mapping from h3maped cell zone ids to our terrain/object/materialization buffers");
 	report["missing_runtime_layout"] = missing_layout;
+	report["clip_helper_status"] = "0x4a2b33_clip_helper_ported";
+	report["clip_helper_evidence"] = h3maped_clip_helper_4a2b33_report(normalized);
 	report["line_writer_status"] = "0x4a261a_cell_line_writer_ported";
 	report["line_writer_evidence"] = h3maped_line_writer_4a261a_report(normalized);
 	Array available_inputs;
