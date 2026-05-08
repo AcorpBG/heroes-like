@@ -196,6 +196,19 @@ func _run() -> void:
 	if int(randomized_line_writer.get("sample_trace_write_count", 0)) <= 0 or int(randomized_line_writer.get("sample_out_of_bounds_write_count", -1)) != 0:
 		_fail("The h3maped 0x4a2413 randomized line-writer report did not materialize in-bounds cells: %s" % JSON.stringify(report))
 		return
+	if String(first_helper.get("rectangle_fallback_status", "")) != "0x4a2777_rectangle_fallback_branch_ported_standalone":
+		_fail("The h3maped 0x4a2777 helper did not expose the ported rectangle fallback branch: %s" % JSON.stringify(report))
+		return
+	var rectangle_fallback: Dictionary = first_helper.get("rectangle_fallback_evidence", {})
+	if String(rectangle_fallback.get("status", "")) != "0x4a2777_rectangle_fallback_branch_ported_standalone":
+		_fail("The h3maped 0x4a2777 rectangle fallback report did not run: %s" % JSON.stringify(report))
+		return
+	if int(rectangle_fallback.get("edge_count", 0)) != 4 or int(rectangle_fallback.get("footprint_vertex_count", 0)) != 4:
+		_fail("The h3maped 0x4a2777 rectangle fallback did not expose the four executable-painted edges and vertices: %s" % JSON.stringify(report))
+		return
+	if int(rectangle_fallback.get("unique_cell_count", 0)) <= 0 or int(rectangle_fallback.get("out_of_bounds_write_count", -1)) != 0:
+		_fail("The h3maped 0x4a2777 rectangle fallback did not materialize in-bounds boundary cells: %s" % JSON.stringify(report))
+		return
 	var second_helper: Dictionary = level_footprint_phase.get("second_helper_evidence", {})
 	if String(second_helper.get("status", "")) != "0x4a325d_cell_span_fill_ported_standalone_project_materialization_blocked":
 		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed with the standalone port boundary: %s" % JSON.stringify(report))
@@ -372,6 +385,7 @@ func _run() -> void:
 		"clip_helper_status": first_helper.get("clip_helper_status", ""),
 		"line_writer_status": first_helper.get("line_writer_status", ""),
 		"randomized_line_writer_status": first_helper.get("randomized_line_writer_status", ""),
+		"rectangle_fallback_status": first_helper.get("rectangle_fallback_status", ""),
 		"second_helper_status": second_helper.get("status", ""),
 		"finalizer_status": finalizer.get("status", ""),
 		"runtime_layout_status": runtime_layout.get("status", ""),

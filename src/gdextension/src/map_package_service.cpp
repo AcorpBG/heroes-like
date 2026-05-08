@@ -7206,6 +7206,82 @@ Dictionary h3maped_line_writer_4a261a_report(const Dictionary &normalized) {
 	return report;
 }
 
+Dictionary h3maped_rectangle_fallback_4a2777_report(const Dictionary &normalized) {
+	Dictionary report;
+	report["status"] = "0x4a2777_rectangle_fallback_branch_ported_standalone";
+	report["source"] = "h3maped 0x4a2777 fallback branch at 0x4a2847..0x4a290c; paints right/top/left/bottom bounds through 0x4a261a and appends four footprint vertices";
+	report["function_address"] = "0x4a2777";
+	report["branch_address"] = "0x4a2847..0x4a290c";
+	report["line_writer_address"] = "0x4a261a";
+	report["vertex_vector_offset"] = "runtime_zone+0x3f4";
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t water_code = h3maped_water_mode_code(normalized);
+	const int32_t min_x = 0;
+	const int32_t min_y = 0;
+	const int32_t max_x = std::max(0, width - 1);
+	const int32_t max_y = std::max(0, height - 1);
+	struct Edge {
+		const char *id;
+		int32_t x1;
+		int32_t y1;
+		int32_t x2;
+		int32_t y2;
+	};
+	const std::array<Edge, 4> edges = {{
+			{"right", max_x, max_y, max_x, min_y},
+			{"top", max_x, min_y, min_x, min_y},
+			{"left", min_x, min_y, min_x, max_y},
+			{"bottom", min_x, max_y, max_x, max_y},
+	}};
+	Array edge_reports;
+	std::map<int64_t, bool> unique_cells;
+	int32_t total_trace_count = 0;
+	int32_t total_out_of_bounds_count = 0;
+	for (const Edge &edge : edges) {
+		H3MapedLineWriteResult line = h3maped_line_writer_4a261a(width, height, level_count, water_code, edge.x1, edge.y1, edge.x2, edge.y2, 5, 0);
+		for (const auto &item : line.unique_cells) {
+			unique_cells[item.first] = true;
+		}
+		total_trace_count += int32_t(line.trace.size());
+		total_out_of_bounds_count += line.out_of_bounds_write_count;
+		Dictionary edge_report;
+		edge_report["id"] = edge.id;
+		edge_report["from_x"] = edge.x1;
+		edge_report["from_y"] = edge.y1;
+		edge_report["to_x"] = edge.x2;
+		edge_report["to_y"] = edge.y2;
+		edge_report["trace_write_count"] = int32_t(line.trace.size());
+		edge_report["unique_cell_count"] = int32_t(line.unique_cells.size());
+		edge_report["out_of_bounds_write_count"] = line.out_of_bounds_write_count;
+		edge_reports.append(edge_report);
+	}
+	Array vertices;
+	auto append_vertex = [&](int32_t x, int32_t y) {
+		Dictionary vertex;
+		vertex["x"] = x;
+		vertex["y"] = y;
+		vertices.append(vertex);
+	};
+	append_vertex(max_x, max_y);
+	append_vertex(max_x, min_y);
+	append_vertex(min_x, min_y);
+	append_vertex(min_x, max_y);
+	report["map_width"] = width;
+	report["map_height"] = height;
+	report["h3maped_water_mode_code"] = water_code;
+	report["edge_count"] = edge_reports.size();
+	report["edges"] = edge_reports;
+	report["trace_write_count"] = total_trace_count;
+	report["unique_cell_count"] = int32_t(unique_cells.size());
+	report["out_of_bounds_write_count"] = total_out_of_bounds_count;
+	report["footprint_vertex_count"] = vertices.size();
+	report["footprint_vertices"] = vertices;
+	report["blocked_next"] = "wire this branch into full 0x4a2777 source polygon traversal instead of standalone bounds";
+	return report;
+}
+
 constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
 
 int64_t h3maped_cell_key_4a325d(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
@@ -7473,6 +7549,8 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 	report["line_writer_evidence"] = h3maped_line_writer_4a261a_report(normalized);
 	report["randomized_line_writer_status"] = "0x4a2413_randomized_line_writer_ported_standalone";
 	report["randomized_line_writer_evidence"] = h3maped_randomized_line_writer_4a2413_report(normalized);
+	report["rectangle_fallback_status"] = "0x4a2777_rectangle_fallback_branch_ported_standalone";
+	report["rectangle_fallback_evidence"] = h3maped_rectangle_fallback_4a2777_report(normalized);
 	Array available_inputs;
 	for (const H3MapedRuntimeZoneSeed &zone : zones) {
 		Dictionary item;
