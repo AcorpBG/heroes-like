@@ -83,6 +83,35 @@ func _run() -> void:
 	if selected_payload.get("player_capable_source_owner_indices", []) != [0, 1, 2, 3]:
 		_fail("The selected h3maped source template payload lost player-capable owner slots: %s" % JSON.stringify(report))
 		return
+	if String(selected_payload.get("assignment_status", "")) != "0x4ac62a_player_slot_assignment_ported_inspection_only":
+		_fail("The clean boundary did not port h3maped player-slot assignment: %s" % JSON.stringify(report))
+		return
+	var assignment: Dictionary = selected_payload.get("player_slot_assignment", {})
+	if assignment.get("selected_color_bitmap", []) != [false, false, false, false, false, false, false, false]:
+		_fail("Default selected-color bitmap must preserve constructor-zeroed generator+0xed8 state: %s" % JSON.stringify(report))
+		return
+	if assignment.get("selected_color_order", []) != [0, 1, 2, 3, 4, 5, 6, 7]:
+		_fail("Default h3maped selected-color order drifted from 0x4ac62a..0x4ac6ec: %s" % JSON.stringify(report))
+		return
+	if assignment.get("actual_colors_by_source_owner", []) != [0, 1, 2, -1, -1, -1, -1, -1]:
+		_fail("Default h3maped player assignment wrote the wrong mapped owner colors: %s" % JSON.stringify(report))
+		return
+	if int(assignment.get("assigned_player_count", -1)) != 3:
+		_fail("The player-slot assignment did not assign all requested players: %s" % JSON.stringify(report))
+		return
+
+	var color_config := config.duplicate(true)
+	var color_constraints: Dictionary = color_config.get("player_constraints", {}).duplicate(true)
+	color_constraints["selected_color_bitmap"] = [false, false, true, false, false, false, false, false]
+	color_config["player_constraints"] = color_constraints
+	var color_report: Dictionary = service.inspect_h3maped_small_rmg_port(color_config)
+	var color_assignment: Dictionary = color_report.get("selected_template_payload", {}).get("player_slot_assignment", {})
+	if color_assignment.get("selected_color_order", []) != [2, 0, 1, 3, 4, 5, 6, 7]:
+		_fail("Explicit selected-color bitmap did not control h3maped color order: %s" % JSON.stringify(color_report))
+		return
+	if color_assignment.get("actual_colors_by_source_owner", []) != [2, 0, 1, -1, -1, -1, -1, -1]:
+		_fail("Explicit selected-color bitmap did not flow into h3maped owner-color mapping: %s" % JSON.stringify(color_report))
+		return
 
 	var phase_ledger: Array = report.get("phase_ledger", [])
 	if phase_ledger.size() < 8:
@@ -91,8 +120,11 @@ func _run() -> void:
 	if String(phase_ledger[0].get("phase_id", "")) != "template_selection" or String(phase_ledger[0].get("status", "")) != "ported_inspection_only":
 		_fail("The phase ledger lost the h3maped template-selection anchor: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[1].get("status", "")) != "pending_clean_port":
-		_fail("Unported phases must stay pending instead of reusing the old partial port: %s" % JSON.stringify(report))
+	if String(phase_ledger[1].get("phase_id", "")) != "player_slot_assignment" or String(phase_ledger[1].get("status", "")) != "ported_inspection_only":
+		_fail("The phase ledger did not mark only the clean h3maped player-slot assignment as ported: %s" % JSON.stringify(report))
+		return
+	if String(phase_ledger[2].get("status", "")) != "pending_clean_port":
+		_fail("Runtime-zone build must remain pending after the player-slot assignment port: %s" % JSON.stringify(report))
 		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
@@ -111,6 +143,7 @@ func _run() -> void:
 		"archive_status": report.get("archive_status", ""),
 		"selected_template": selected_template.get("id", ""),
 		"accepted_template_count": report.get("accepted_template_count", 0),
+		"assignment_status": selected_payload.get("assignment_status", ""),
 		"generation_status": generated.get("status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])

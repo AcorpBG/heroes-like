@@ -86,10 +86,12 @@ For seed `1`, 1 human, and 3 total players, the boundary reports:
 - adapted template `translated_rmg_template_019_v1`,
 - 6 active zones, 5 links, 4 player-start zones, 2 treasure zones, and 4 minimum player castles.
 
+The clean module now also ports the inspection-only player-slot assignment step from `0x4ac62a..0x4ac6ec`. It builds human/player capability bitmaps from source zone `+0x04/+0x1c`, reads the selected-color bitmap as `generator+0xed8`, fills assignment slots as `generator+0xee0`, and reports mapped owner colors as `generator+0xee4`. With the default constructor-zeroed selected-color bitmap, seed `1` assigns source owners `[0, 1, 2]` to actual colors `[0, 1, 2]`; with color `2` preselected, the reported color order becomes `[2, 0, 1, 3, 4, 5, 6, 7]` and source owners map to `[2, 0, 1]`.
+
 The boundary exposes a phase ledger and keeps every unported phase pending:
 
 1. `template_selection` - `0x49f0cd`, `0x4ac597..0x4ac5a4`, `0x4e7276` - ported for inspection only.
-2. `player_slot_assignment` - `0x4ac62a..0x4ac6ec` - pending clean port.
+2. `player_slot_assignment` - `0x4ac62a..0x4ac6ec` - ported for inspection only.
 3. `runtime_zone_build` - `0x4a218c` - pending clean port.
 4. `zone_footprint_placement` - `0x4a3a03`, `0x4a2777`, `0x4a325d`, `0x4a3710` - pending clean port.
 5. `terrain_fill_repaint` - `0x4a3f27`, `0x4bcff5`, `0x4bd099` - pending clean port.
