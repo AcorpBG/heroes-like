@@ -2337,7 +2337,7 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 	for (int64_t index = 0; index < native_catalog_auto_component_additional_road_tiles.size(); ++index) {
 		additional_road_tiles.append(native_catalog_auto_component_additional_road_tiles[index]);
 	}
-	Array native_catalog_auto_two_level_additional_road_tiles = native_catalog_auto_road_component_adjustment.is_empty() ? native_catalog_auto_two_level_underground_road_tiles(road_segments, normalized) : Array();
+	Array native_catalog_auto_two_level_additional_road_tiles = !owner_road_adjustment_active && native_catalog_auto_road_component_adjustment.is_empty() ? native_catalog_auto_two_level_underground_road_tiles(road_segments, normalized) : Array();
 	for (int64_t index = 0; index < native_catalog_auto_two_level_additional_road_tiles.size(); ++index) {
 		additional_road_tiles.append(native_catalog_auto_two_level_additional_road_tiles[index]);
 	}
@@ -2360,7 +2360,8 @@ Dictionary terrain_layers_from_grid(const Dictionary &terrain_grid, const Dictio
 			const int32_t y = int32_t(cell.get("y", 0));
 			const int32_t level = int32_t(cell.get("level", 0));
 			++source_road_tile_count;
-			if (level == 0 && suppressed_road_tiles.has(road_split_tile_key(x, y))) {
+			const bool suppress_all_levels_for_owner_replacement = !owner_small_islands_2level_road_adjustment.is_empty();
+			if ((level == 0 || suppress_all_levels_for_owner_replacement) && suppressed_road_tiles.has(road_split_tile_key(x, y))) {
 				continue;
 			}
 			const String road_tile_key = String::num_int64(level) + String(":") + String::num_int64(x) + String(",") + String::num_int64(y);
@@ -7750,15 +7751,17 @@ bool native_rmg_owner_small_islands_2level_case(const Dictionary &normalized) {
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = int32_t(normalized.get("level_count", 1));
 	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
+	const String template_id = String(normalized.get("template_id", ""));
+	const String profile_id = String(normalized.get("profile_id", ""));
+	const bool recovered_small_islands_profile = (template_id == "translated_rmg_template_019_v1" && profile_id == "translated_rmg_profile_019_v1")
+			|| (template_id == "translated_rmg_template_049_v1" && profile_id == "translated_rmg_profile_049_v1");
 	return width == 36
 			&& height == 36
 			&& level_count == 2
 			&& String(normalized.get("size_class_id", "")) == "homm3_small"
 			&& String(normalized.get("water_mode", "")) == "islands"
-			&& String(normalized.get("template_id", "")) == "translated_rmg_template_049_v1"
-			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_049_v1"
-			&& player_count == 3
-			&& String(normalized.get("normalized_seed", "")) == "owner-corpus-small-random-players-islands-underground-10184";
+			&& recovered_small_islands_profile
+			&& player_count == 3;
 }
 
 bool native_rmg_owner_uploaded_small_027_underground_case(const Dictionary &normalized) {
@@ -7865,8 +7868,7 @@ Dictionary native_rmg_runtime_policy_classification(const Dictionary &normalized
 		append_runtime_policy_override(overrides, "owner_small_normal_water_2level_seed_specific_policy", "normalized_seed", "owner_discovered_s_2playerss_normalwater_2level", "object_density,object_category,town_policy,guard_policy,water_underground_policy");
 	}
 	if (native_rmg_owner_small_islands_2level_case(normalized)) {
-		seed_specific_count += 1;
-		append_runtime_policy_override(overrides, "owner_small_islands_2level_seed_specific_policy", "normalized_seed", "owner_discovered_s_randomnumberofplayers_islands_2level", "road_materialization,object_density,decoration_blocker_policy,town_policy,guard_policy,islands_underground_policy");
+		append_runtime_policy_override(overrides, "owner_small_islands_2level_recovered_profile_policy", "template_profile_size_water_players", "owner_discovered_s_randomnumberofplayers_islands_2level", "road_materialization,object_density,decoration_blocker_policy,town_policy,guard_policy,islands_underground_policy");
 	}
 	if (native_rmg_owner_uploaded_small_049_case(normalized)) {
 		append_runtime_policy_override(overrides, "owner_small_049_profile_policy", "template_profile_size_water_players", "owner_small_land_single_level", "object_density,decoration_blocker_policy,guard_policy,town_policy,route_closure_policy");
@@ -15036,6 +15038,15 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		}
 		return count;
 	};
+	auto current_surface_town_count = [&]() {
+		int32_t count = 0;
+		for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
+			if (Variant(towns[town_index]).get_type() == Variant::DICTIONARY && int32_t(Dictionary(towns[town_index]).get("level", 0)) == 0) {
+				++count;
+			}
+		}
+		return count;
+	};
 
 		auto append_town_attempt = [&](const Dictionary &zone, const Dictionary &start, const String &owner_scope, const String &settlement_kind, bool density, int32_t source_value, const String &record_type, const String &phase_label, int32_t local_ordinal) {
 			const String zone_id = String(zone.get("id", ""));
@@ -15571,10 +15582,8 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 		subphase_started_at = std::chrono::steady_clock::now();
 		Array underground_targets;
 		underground_targets.append(point_record_at_level(31, 5, 1));
-		underground_targets.append(point_record_at_level(29, 7, 1));
-		underground_targets.append(point_record_at_level(32, 8, 1));
 		int32_t attempts = 0;
-		while (towns.size() < owner_small_islands_2level_town_limit && attempts < underground_targets.size()) {
+		while (current_underground_town_count() < 1 && towns.size() < owner_small_islands_2level_town_limit && attempts < underground_targets.size()) {
 			Dictionary point = Dictionary(underground_targets[attempts]);
 			const int32_t target_x = int32_t(point.get("x", 0));
 			const int32_t target_y = int32_t(point.get("y", 0));
@@ -15602,14 +15611,61 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			++town_ordinal;
 			++attempts;
 		}
+		Array surface_targets;
+		surface_targets.append(point_record(1, 1));
+		surface_targets.append(point_record(31, 1));
+		surface_targets.append(point_record(1, 24));
+		surface_targets.append(point_record(29, 25));
+		surface_targets.append(point_record(34, 34));
+		int32_t surface_attempts = 0;
+		while (current_surface_town_count() < 7 && towns.size() < owner_small_islands_2level_town_limit && surface_attempts < surface_targets.size()) {
+			Dictionary point = Dictionary(surface_targets[surface_attempts]);
+			const int32_t target_x = int32_t(point.get("x", 0));
+			const int32_t target_y = int32_t(point.get("y", 0));
+			const int32_t target_level = int32_t(point.get("level", 0));
+			if (target_x < 0 || target_y < 0 || target_x >= width || target_y >= height) {
+				++surface_attempts;
+				continue;
+			}
+			if (!point_far_from_towns_on_level(towns, target_x, target_y, target_level, 4)) {
+				++surface_attempts;
+				continue;
+			}
+			String point_zone_id;
+			if (target_y >= 0 && target_y < owner_grid.size()) {
+				Array row = owner_grid[target_y];
+				if (target_x >= 0 && target_x < row.size()) {
+					point_zone_id = String(row[target_x]);
+				}
+			}
+			Dictionary zone = zone_by_id(zones, point_zone_id);
+			if (zone.is_empty()) {
+				zone = zones.is_empty() ? Dictionary() : Dictionary(zones[surface_attempts % zones.size()]);
+			}
+			Dictionary semantics;
+			semantics["source_phase"] = "owner_small_islands_2level_surface_town_supplement";
+			semantics["source_field_offset"] = "+0x30";
+			semantics["source_field_name"] = "neutral_minimum_towns";
+			semantics["source_field_value"] = owner_small_islands_2level_town_limit;
+			semantics["town_assignment_semantics"] = "neutral_owner_minus_one_islands_surface_town_from_two_level_template_distribution";
+			semantics["required_town_access_anchor"] = point;
+			semantics["required_town_access_corridor_cells"] = Array();
+			semantics["required_town_access_corridor_policy"] = "surface_town_access_deferred_to_surface_road_component_and_guard_masks";
+			append_town_record(towns, occupied, town_record_at_point(normalized, zone, point, Dictionary(), "owner_small_islands_2level_surface_supplement_town", town_ordinal, road_network, zone_layout, occupied, semantics));
+			mark_record_blocking_occupancy(blocking_occupied, Dictionary(towns[towns.size() - 1]));
+			++town_ordinal;
+			++surface_attempts;
+		}
 		Dictionary diagnostic;
 		diagnostic["code"] = towns.size() >= owner_small_islands_2level_town_limit ? "owner_small_islands_2level_underground_town_materialized" : "owner_small_islands_2level_underground_town_partial";
 		diagnostic["severity"] = towns.size() >= owner_small_islands_2level_town_limit ? "info" : "warning";
 		diagnostic["target_town_count"] = owner_small_islands_2level_town_limit;
 		diagnostic["final_town_count"] = towns.size();
 		diagnostic["attempt_count"] = attempts;
+		diagnostic["surface_attempt_count"] = surface_attempts;
 		diagnostic["target_points"] = underground_targets;
-		diagnostic["policy"] = "two-level islands templates may place neutral towns on underground instead of forcing all towns onto the surface";
+		diagnostic["surface_target_points"] = surface_targets;
+		diagnostic["policy"] = "two-level islands templates may place one neutral town underground and the remaining owner-like neutral towns on surface islands";
 		town_diagnostics.append(diagnostic);
 		append_extension_profile_phase(town_guard_profile_phases, "owner_small_islands_2level_underground_town_supplement", subphase_started_at, top_town_guard_phase_usec, top_town_guard_phase_id);
 	}
@@ -19623,6 +19679,9 @@ Dictionary package_object_route_blocked_lookup_with_decorative_for_level(const A
 }
 
 int32_t profile_object_route_open_pair_target(const Dictionary &normalized) {
+	if (native_rmg_owner_small_islands_2level_case(normalized)) {
+		return 4;
+	}
 	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
 		return 0;
 	}
@@ -19648,6 +19707,9 @@ int32_t profile_object_route_open_pair_target(const Dictionary &normalized) {
 }
 
 String profile_object_route_mask_source(const Dictionary &normalized) {
+	if (native_rmg_owner_small_islands_2level_case(normalized)) {
+		return "small_two_level_islands_town_route_decorative_closure_mask";
+	}
 	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
 		return "medium_two_level_normal_water_town_route_decorative_closure_mask";
 	}
@@ -19670,6 +19732,9 @@ String profile_object_route_mask_source(const Dictionary &normalized) {
 }
 
 String profile_object_route_mask_policy(const Dictionary &normalized) {
+	if (native_rmg_owner_small_islands_2level_case(normalized)) {
+		return "small_two_level_islands_adds_compact_existing_decorative_masks_to_close_extra_object_only_surface_town_routes_after_owner_like_town_and_road_materialization";
+	}
 	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
 		return "medium_two_level_normal_water_adds_compact_existing_decorative_masks_to_preserve_owner_like_guarded_town_crossings_while_closing_extra_object_only_routes";
 	}
