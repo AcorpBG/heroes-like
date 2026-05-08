@@ -77,8 +77,8 @@ func _run() -> void:
 	if int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost player-town/castle requirements: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a93a2_direct_candidate_scan_ported_inspection_only":
-		_fail("The clean boundary did not expose h3maped 0x4a8d2c/0x4a93a2 direct town/castle candidate scanning: %s" % JSON.stringify(report))
+	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_validity_precheck_ported_inspection_only":
+		_fail("The clean boundary did not expose h3maped 0x4a8d2c/0x4a93a2/0x49aa93 direct town/castle candidate validity prechecking: %s" % JSON.stringify(report))
 		return
 	var town_castle_placement: Dictionary = selected_payload.get("town_castle_placement", {})
 	if int(town_castle_placement.get("player_min_castle_total", -1)) != 4 or int(town_castle_placement.get("player_min_town_total", -1)) != 0:
@@ -93,12 +93,18 @@ func _run() -> void:
 	if int(town_castle_placement.get("direct_candidate_scan_call_count", -1)) != 4 or int(town_castle_placement.get("direct_candidate_missing_count", -1)) != 1 or int(town_castle_placement.get("direct_owner_minus_one_fail_count", -1)) != 1:
 		_fail("0x4a93a2 direct candidate scan did not preserve assigned-owner versus owner-minus-one helper semantics: %s" % JSON.stringify(town_castle_placement))
 		return
+	if int(town_castle_placement.get("direct_validity_precheck_call_count", -1)) != 3 or int(town_castle_placement.get("direct_validity_precheck_eligible_total", -1)) != 451 or int(town_castle_placement.get("direct_validity_precheck_missing_count", -1)) != 0:
+		_fail("0x49a1d8 validity precheck did not preserve the assigned-owner candidate set before full 0x49aa93 collision handling: %s" % JSON.stringify(town_castle_placement))
+		return
 	var minimum_calls: Array = town_castle_placement.get("minimum_calls", [])
 	if minimum_calls.size() != 4 or int(minimum_calls[0].get("runtime_zone_index", -1)) != 0 or int(minimum_calls[0].get("owner_color", -1)) != 0 or not bool(minimum_calls[0].get("castle", false)):
 		_fail("0x4a8d2c first direct minimum castle call did not preserve runtime owner semantics: %s" % JSON.stringify(town_castle_placement))
 		return
 	if String(minimum_calls[0].get("direct_candidate_scan_status", "")) != "0x4a93a2_owner_byte_candidate_scan_ported_eligibility_pending" or int(minimum_calls[0].get("candidate_count", -1)) <= 0 or int(minimum_calls[0].get("closest_distance", -1)) < 0:
 		_fail("0x4a93a2 first direct minimum castle call did not expose owner-byte closest-cell candidates: %s" % JSON.stringify(town_castle_placement))
+		return
+	if String(minimum_calls[0].get("direct_validity_precheck_status", "")) != "0x49a1d8_validity_precheck_ported_full_0x49aa93_collision_pending" or int(minimum_calls[0].get("validity_precheck_eligible_count", -1)) != int(minimum_calls[0].get("candidate_count", -2)):
+		_fail("0x49a1d8 first direct minimum castle precheck did not preserve valid free-cell candidates: %s" % JSON.stringify(town_castle_placement))
 		return
 	if String(minimum_calls[3].get("direct_candidate_scan_status", "")) != "0x4a93a2_immediate_fail_owner_minus_one" or int(minimum_calls[3].get("owner_color", 0)) != -1:
 		_fail("0x4a93a2 fourth direct minimum castle call should expose the recovered owner-minus-one early-fail boundary for the unassigned player slot: %s" % JSON.stringify(town_castle_placement))
@@ -373,8 +379,8 @@ func _run() -> void:
 	if String(phase_ledger[4].get("status", "")) != "ported_schedule_and_visual_normalization_inspection_only":
 		_fail("The phase ledger did not mark the clean h3maped 0x4a3f27 terrain schedule and visual normalization as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[5].get("status", "")) != "0x4a8d2c_0x4a93a2_direct_town_candidate_scan_ported_inspection_only_cells_pending":
-		_fail("The phase ledger did not mark only h3maped direct town/castle candidate scanning as ported for the object category phase: %s" % JSON.stringify(report))
+	if String(phase_ledger[5].get("status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_validity_precheck_ported_inspection_only_cells_pending":
+		_fail("The phase ledger did not mark only h3maped direct town/castle candidate validity prechecking as ported for the object category phase: %s" % JSON.stringify(report))
 		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
