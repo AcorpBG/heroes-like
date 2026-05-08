@@ -8883,6 +8883,9 @@ int32_t native_catalog_auto_guarded_route_open_pair_target(const Dictionary &nor
 	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
 		return 11;
 	}
+	if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
+		return 3;
+	}
 	return 0;
 }
 
@@ -13602,7 +13605,6 @@ Dictionary close_unguarded_town_pair_routes_with_guards(const Dictionary &normal
 	static constexpr int32_t MAX_PASSES = 20;
 	for (int32_t pass = 0; pass < MAX_PASSES; ++pass) {
 		bool added_this_pass = false;
-		int32_t allowed_open_pair_count_this_pass = 0;
 		std::vector<std::vector<int32_t>> components_by_level;
 		components_by_level.reserve(level_count);
 		for (int32_t level = 0; level < level_count; ++level) {
@@ -13639,14 +13641,6 @@ Dictionary close_unguarded_town_pair_routes_with_guards(const Dictionary &normal
 				diagnostic["right_zone_id"] = right.get("zone_id", "");
 				diagnostic["same_zone"] = String(left.get("zone_id", "")) == String(right.get("zone_id", ""));
 				diagnostic["path_length"] = path.size();
-				if (allowed_remaining_reachable_pair_count > 0 && allowed_open_pair_count_this_pass < allowed_remaining_reachable_pair_count) {
-					diagnostic["code"] = "unguarded_town_pair_route_left_open_by_profile_guarded_route_target";
-					diagnostic["severity"] = "info";
-					diagnostic["allowed_remaining_reachable_pair_count"] = allowed_remaining_reachable_pair_count;
-					++allowed_open_pair_count_this_pass;
-					diagnostics.append(diagnostic);
-					continue;
-				}
 				if (effective_guard_limit >= 0 && guard_ordinal >= effective_guard_limit) {
 					const int32_t closure_tile_count = assign_existing_guard_town_pair_closure_tile(guards, blocked, path, String(left.get("zone_id", "")), "owner_count_preserving_town_pair_route_guard_closure_mask", width, height);
 					if (closure_tile_count > 0) {
@@ -15649,6 +15643,8 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 					&& (native_catalog_auto_large_one_level_land_profile(normalized)
 							|| native_catalog_auto_xl_one_level_land_profile(normalized)
 							|| native_catalog_auto_medium_one_level_normal_water_profile(normalized));
+			const bool surface_global_town_floor = one_level_global_town_floor
+					|| (target_level == 0 && native_catalog_auto_xl_two_level_islands_profile(normalized));
 			Dictionary zone;
 			for (int64_t zone_scan = 0; zone_scan < zones.size(); ++zone_scan) {
 				Dictionary candidate_zone = Dictionary(zones[(attempts + zone_scan) % zones.size()]);
@@ -15663,7 +15659,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 				break;
 			}
 			if (zone.is_empty()) {
-				if (!one_level_global_town_floor || zones.is_empty()) {
+				if (!surface_global_town_floor || zones.is_empty()) {
 					break;
 				}
 				zone = Dictionary(zones[attempts % zones.size()]);
@@ -15682,14 +15678,14 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 					&& target_level == 0
 					&& town_floor_search_occupied.has(target_key)
 					&& String(town_floor_search_occupied.get(target_key, "")).begins_with("reserved_future_town_anchor_" + selected_zone_id);
-			if (town_floor_search_occupied.has(target_key) && !uses_reserved_future_town_anchor && !one_level_global_town_floor) {
+			if (town_floor_search_occupied.has(target_key) && !uses_reserved_future_town_anchor && !surface_global_town_floor) {
 				if (use_reserved_surface_anchor && !selected_zone_id.is_empty()) {
 					town_floor_used_zones[town_floor_zone_level_key(selected_zone_id, target_level)] = true;
 				}
 				++attempts;
 				continue;
 			}
-			if (!point_far_from_towns_on_level(towns, target_x, target_y, target_level, spacing) && !one_level_global_town_floor) {
+			if (!point_far_from_towns_on_level(towns, target_x, target_y, target_level, spacing) && !surface_global_town_floor) {
 				if (use_reserved_surface_anchor && !selected_zone_id.is_empty()) {
 					town_floor_used_zones[town_floor_zone_level_key(selected_zone_id, target_level)] = true;
 				}
@@ -15707,11 +15703,12 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			}
 			Dictionary placement_zone = zone;
 			String placement_zone_id = selected_zone_id;
-			if (point.is_empty() && one_level_global_town_floor) {
+			if (point.is_empty() && surface_global_town_floor) {
 				const int32_t scan_width = std::max(1, width - 2);
 				const int32_t scan_height = std::max(1, height - 2);
 				const int32_t scan_area = std::max(1, scan_width * scan_height);
-				const uint32_t global_seed = hash32_int(String(normalized.get("normalized_seed", "0")) + String(":one_level_land_global_town_floor:") + String::num_int64(attempts));
+				const String global_seed_salt = one_level_global_town_floor ? String(":one_level_land_global_town_floor:") : String(":two_level_surface_global_town_floor:");
+				const uint32_t global_seed = hash32_int(String(normalized.get("normalized_seed", "0")) + global_seed_salt + String::num_int64(attempts));
 				for (int32_t scan = 0; scan < scan_area; ++scan) {
 					const int32_t slot = int32_t((global_seed + uint32_t(scan * 37)) % uint32_t(scan_area));
 					const int32_t point_x = 1 + (slot % scan_width);
@@ -19566,6 +19563,9 @@ int32_t profile_object_route_open_pair_target(const Dictionary &normalized) {
 	if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
 		return 35;
 	}
+	if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
+		return 2;
+	}
 	return -1;
 }
 
@@ -19579,6 +19579,9 @@ String profile_object_route_mask_source(const Dictionary &normalized) {
 	if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
 		return "xl_one_level_normal_water_town_route_decorative_closure_mask";
 	}
+	if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
+		return "xl_two_level_islands_town_route_decorative_closure_mask";
+	}
 	return "medium_two_level_islands_town_route_decorative_closure_mask";
 }
 
@@ -19591,6 +19594,9 @@ String profile_object_route_mask_policy(const Dictionary &normalized) {
 	}
 	if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
 		return "xl_one_level_normal_water_adds_compact_existing_decorative_masks_to_close_extra_object_only_town_routes_while_preserving_owner_like_object_open_crossings";
+	}
+	if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
+		return "xl_two_level_islands_adds_compact_existing_decorative_masks_to_close_extra_surface_object_only_town_routes_while_preserving_owner_like_island_crossings";
 	}
 	return "medium_two_level_islands_adds_compact_existing_decorative_masks_to_close_owner_like_object_only_town_routes_without_changing_object_counts";
 }
