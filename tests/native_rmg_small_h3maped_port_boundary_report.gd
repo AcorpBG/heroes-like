@@ -139,7 +139,7 @@ func _run() -> void:
 		_fail("The h3maped 0x4a3a03 helper trio was not reported as the concrete next blocker: %s" % JSON.stringify(report))
 		return
 	var first_helper: Dictionary = level_footprint_phase.get("first_helper_evidence", {})
-	if String(first_helper.get("status", "")) != "0x4a2777_real_source_node_cycle_traversal_ported_span_fill_pending":
+	if String(first_helper.get("status", "")) != "0x4a2777_real_source_node_cycle_traversal_ported_boundary_buffer_available":
 		_fail("The h3maped 0x4a2777 footprint helper did not consume the recovered source-node cycles: %s" % JSON.stringify(report))
 		return
 	if String(first_helper.get("clip_helper_address", "")) != "0x4a2b33" or String(first_helper.get("line_cell_writer_address", "")) != "0x4a261a":
@@ -270,8 +270,8 @@ func _run() -> void:
 		_fail("The h3maped 0x4a2777 real source-cycle traversal exhausted its loop guard: %s" % JSON.stringify(report))
 		return
 	var second_helper: Dictionary = level_footprint_phase.get("second_helper_evidence", {})
-	if String(second_helper.get("status", "")) != "0x4a325d_cell_span_fill_ported_standalone_project_materialization_blocked":
-		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed with the standalone port boundary: %s" % JSON.stringify(report))
+	if String(second_helper.get("status", "")) != "0x4a325d_real_boundary_span_fill_ported_project_materialization_pending":
+		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed with the real boundary-buffer port boundary: %s" % JSON.stringify(report))
 		return
 	if String(second_helper.get("unassigned_zone_word_sentinel", "")) != "0x00ff0000" or int(second_helper.get("project_materialized_cell_count", -1)) != 0:
 		_fail("The h3maped 0x4a325d helper report must expose the unassigned cell sentinel without faking project cells: %s" % JSON.stringify(report))
@@ -285,6 +285,19 @@ func _run() -> void:
 		return
 	if int(span_sample.get("boundary_overwrite_count", -1)) != 0 or int(span_sample.get("out_of_bounds_span_count", -1)) != 0:
 		_fail("The h3maped 0x4a325d standalone span-fill sample crossed its boundary or escaped bounds: %s" % JSON.stringify(report))
+		return
+	var real_span_fill: Dictionary = second_helper.get("real_boundary_span_fill", {})
+	if String(real_span_fill.get("status", "")) != "0x4a325d_real_0x4a2777_boundary_span_fill_executed":
+		_fail("The h3maped 0x4a325d helper did not consume the real 0x4a2777 boundary buffer: %s" % JSON.stringify(report))
+		return
+	if int(real_span_fill.get("boundary_unique_cell_count", -1)) != int(real_cycle.get("unique_cell_count", -2)):
+		_fail("The h3maped 0x4a325d real span fill did not inherit the 0x4a2777 boundary cells: %s" % JSON.stringify(report))
+		return
+	if int(real_span_fill.get("filled_zone_count", 0)) <= 0 or int(second_helper.get("real_boundary_filled_cell_count", 0)) <= 0:
+		_fail("The h3maped 0x4a325d real span fill did not paint any cells inside the 0x4a2777 boundary buffer: %s" % JSON.stringify(report))
+		return
+	if int(real_span_fill.get("out_of_bounds_span_count", -1)) != 0:
+		_fail("The h3maped 0x4a325d real span fill escaped the map bounds: %s" % JSON.stringify(report))
 		return
 	var finalizer: Dictionary = level_footprint_phase.get("finalizer_evidence", {})
 	if String(finalizer.get("status", "")) != "0x4a3710_disassembled_adjacency_finalizer_blocked":
@@ -464,6 +477,11 @@ func _run() -> void:
 		"real_source_cycle_traversal_status": real_cycle.get("status", ""),
 		"real_source_cycle_unique_cell_count": real_cycle.get("unique_cell_count", 0),
 		"second_helper_status": second_helper.get("status", ""),
+		"real_boundary_span_fill_status": real_span_fill.get("status", ""),
+		"real_boundary_filled_cell_count": second_helper.get("real_boundary_filled_cell_count", 0),
+		"real_boundary_remaining_unassigned_cell_count": second_helper.get("real_boundary_remaining_unassigned_cell_count", 0),
+		"real_boundary_filled_zone_count": real_span_fill.get("filled_zone_count", 0),
+		"real_boundary_seed_blocked_count": real_span_fill.get("seed_blocked_count", 0),
 		"finalizer_status": finalizer.get("status", ""),
 		"runtime_layout_status": runtime_layout.get("status", ""),
 		"polygon_seed_status": polygon_seed.get("status", ""),
