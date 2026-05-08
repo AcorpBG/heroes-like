@@ -165,7 +165,7 @@ func _run() -> void:
 	if int(runtime_zones[5].get("h3maped_terrain_id", -1)) != 5 or String(runtime_zones[5].get("terrain_id", "")) != "rough":
 		_fail("0x49b53d selected the wrong allowed-flag terrain for the second treasure zone: %s" % JSON.stringify(report))
 		return
-	if String(runtime_build.get("zone_footprint_placement_status", "")) != "0x4a3a03_0x4a3710_footprint_helpers_ported_terrain_pending":
+	if String(runtime_build.get("zone_footprint_placement_status", "")) != "0x4a3a03_0x4a3710_footprint_helpers_ported_terrain_visual_ready":
 		_fail("The clean boundary did not expose the h3maped 0x4a3a03/0x4a3710 footprint helper checkpoint: %s" % JSON.stringify(report))
 		return
 	var footprint_phase: Dictionary = runtime_build.get("zone_footprint_placement", {})
@@ -213,7 +213,7 @@ func _run() -> void:
 	if bool(footprint_phase.get("boundary_loop_guard_exhausted", true)):
 		_fail("0x4a2777 boundary traversal exhausted its loop guard: %s" % JSON.stringify(report))
 		return
-	if String(footprint_phase.get("span_fill_status", "")) != "0x4a325d_real_0x4a2777_boundary_span_fill_executed_terrain_pending":
+	if String(footprint_phase.get("span_fill_status", "")) != "0x4a325d_real_0x4a2777_boundary_span_fill_executed_terrain_schedule_ready":
 		_fail("0x4a325d real boundary span fill was not executed: %s" % JSON.stringify(report))
 		return
 	if int(footprint_phase.get("span_fill_filled_zone_count", -1)) <= 0 or int(footprint_phase.get("span_fill_unique_filled_cell_count", -1)) <= 0:
@@ -245,8 +245,34 @@ func _run() -> void:
 	if int(terrain_fill.get("assigned_owner_cell_count", -1)) != 1111 or int(terrain_fill.get("zone_repaint_member_cell_count", -1)) != 1111 or int(terrain_fill.get("unresolved_cell_count", -1)) != 185:
 		_fail("0x4a3f27 terrain fill/repaint did not consume the real 0x4a325d owner-byte buffer: %s" % JSON.stringify(report))
 		return
-	if int(terrain_fill.get("owner_basis_mismatch_count", -1)) != 0 or String(terrain_fill.get("terrain_art_index_flip_status", "")) != "pending_TerrainPlacement_adapter_art_index_flip_normalization":
-		_fail("0x4a3f27 terrain fill/repaint owner basis or remaining TerrainPlacement gap drifted: %s" % JSON.stringify(report))
+	if int(terrain_fill.get("owner_basis_mismatch_count", -1)) != 0 or String(terrain_fill.get("terrain_art_index_flip_status", "")) != "TerrainPlacement_visual_selection_ported_inspection_only":
+		_fail("0x4a3f27 terrain fill/repaint owner basis or TerrainPlacement visual normalization status drifted: %s" % JSON.stringify(terrain_fill))
+		return
+	var terrain_codes: PackedInt32Array = terrain_fill.get("terrain_code_u16", PackedInt32Array())
+	var terrain_art_indices: PackedInt32Array = terrain_fill.get("terrain_art_index_u8", PackedInt32Array())
+	var terrain_flip_h: PackedInt32Array = terrain_fill.get("terrain_flip_h", PackedInt32Array())
+	var terrain_flip_v: PackedInt32Array = terrain_fill.get("terrain_flip_v", PackedInt32Array())
+	var terrain_shape_classes: PackedInt32Array = terrain_fill.get("terrain_shape_class_u8", PackedInt32Array())
+	if terrain_codes.size() != 1296 or terrain_art_indices.size() != 1296 or terrain_flip_h.size() != 1296 or terrain_flip_v.size() != 1296 or terrain_shape_classes.size() != 1296:
+		_fail("TerrainPlacement visual arrays must cover every small-map cell: %s" % JSON.stringify({
+			"terrain_code_u16": terrain_codes.size(),
+			"terrain_art_index_u8": terrain_art_indices.size(),
+			"terrain_flip_h": terrain_flip_h.size(),
+			"terrain_flip_v": terrain_flip_v.size(),
+			"terrain_shape_class_u8": terrain_shape_classes.size(),
+		}))
+		return
+	var terrain_code_counts: Dictionary = terrain_fill.get("terrain_code_counts_after_repaint", {})
+	if int(terrain_code_counts.get(0, -1)) != 492 or int(terrain_code_counts.get(2, -1)) != 165 or int(terrain_code_counts.get(3, -1)) != 222 or int(terrain_code_counts.get(5, -1)) != 232 or int(terrain_code_counts.get(8, -1)) != 185:
+		_fail("0x4a3f27 terrain code grid counts drifted from terrain-id counts: %s" % JSON.stringify(terrain_code_counts))
+		return
+	var terrain_shape_counts: Dictionary = terrain_fill.get("terrain_visual_shape_class_counts", {})
+	if int(terrain_fill.get("terrain_visual_transition_cell_count", -1)) != 413 or int(terrain_fill.get("terrain_visual_fallback_count", -1)) != 20 or int(terrain_shape_counts.get(0, -1)) != 883:
+		_fail("TerrainPlacement visual class/fallback counts drifted: %s" % JSON.stringify({
+			"transition": terrain_fill.get("terrain_visual_transition_cell_count", -1),
+			"fallback": terrain_fill.get("terrain_visual_fallback_count", -1),
+			"class_counts": terrain_shape_counts,
+		}))
 		return
 	var link_seeds: Array = runtime_build.get("link_seeds", [])
 	if link_seeds.size() != 5 or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 or int(link_seeds[0].get("runtime_zone_b", -1)) != 3:
@@ -311,11 +337,11 @@ func _run() -> void:
 	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_interleaved_runtime_coordinate_and_terrain_selection_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped runtime-zone record build as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[3].get("phase_id", "")) != "zone_footprint_placement" or String(phase_ledger[3].get("status", "")) != "ported_0x4a3710_small_land_footprint_helpers_inspection_only_terrain_pending":
+	if String(phase_ledger[3].get("phase_id", "")) != "zone_footprint_placement" or String(phase_ledger[3].get("status", "")) != "ported_0x4a3710_small_land_footprint_helpers_and_terrain_visual_inspection_only":
 		_fail("The phase ledger did not expose only the clean h3maped 0x4a3710 footprint checkpoint as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[4].get("status", "")) != "ported_schedule_inspection_only_art_pending":
-		_fail("The phase ledger did not mark the clean h3maped 0x4a3f27 terrain schedule as ported with art/index/flip still pending: %s" % JSON.stringify(report))
+	if String(phase_ledger[4].get("status", "")) != "ported_schedule_and_visual_normalization_inspection_only":
+		_fail("The phase ledger did not mark the clean h3maped 0x4a3f27 terrain schedule and visual normalization as ported: %s" % JSON.stringify(report))
 		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
@@ -349,6 +375,9 @@ func _run() -> void:
 		"adjacency_finalizer_status": footprint_phase.get("adjacency_finalizer_status", ""),
 		"terrain_fill_repaint_status": footprint_phase.get("terrain_fill_repaint_status", ""),
 		"terrain_repaint_call_count": footprint_phase.get("terrain_repaint_call_count", 0),
+		"terrain_art_index_flip_status": terrain_fill.get("terrain_art_index_flip_status", ""),
+		"terrain_visual_transition_cell_count": terrain_fill.get("terrain_visual_transition_cell_count", 0),
+		"terrain_visual_fallback_count": terrain_fill.get("terrain_visual_fallback_count", 0),
 		"generation_status": generated.get("status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
