@@ -197,11 +197,21 @@ func _run() -> void:
 		_fail("The h3maped 0x4a2413 randomized line-writer report did not materialize in-bounds cells: %s" % JSON.stringify(report))
 		return
 	var second_helper: Dictionary = level_footprint_phase.get("second_helper_evidence", {})
-	if String(second_helper.get("status", "")) != "0x4a325d_disassembled_cell_span_fill_blocked":
-		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed as the concrete next runtime-layout blocker: %s" % JSON.stringify(report))
+	if String(second_helper.get("status", "")) != "0x4a325d_cell_span_fill_ported_standalone_project_materialization_blocked":
+		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed with the standalone port boundary: %s" % JSON.stringify(report))
 		return
-	if String(second_helper.get("unassigned_zone_word_sentinel", "")) != "0x00ff0000" or int(second_helper.get("materialized_cell_count", -1)) != 0:
-		_fail("The h3maped 0x4a325d helper report must expose the unassigned cell sentinel without faking filled cells: %s" % JSON.stringify(report))
+	if String(second_helper.get("unassigned_zone_word_sentinel", "")) != "0x00ff0000" or int(second_helper.get("project_materialized_cell_count", -1)) != 0:
+		_fail("The h3maped 0x4a325d helper report must expose the unassigned cell sentinel without faking project cells: %s" % JSON.stringify(report))
+		return
+	var span_sample: Dictionary = second_helper.get("sample_span_fill", {})
+	if int(second_helper.get("sample_materialized_cell_count", 0)) <= 0 or int(span_sample.get("filled_cell_count", 0)) <= 0:
+		_fail("The h3maped 0x4a325d standalone span-fill sample did not paint cells: %s" % JSON.stringify(report))
+		return
+	if int(span_sample.get("pushed_span_count", 0)) <= 0 or int(span_sample.get("popped_span_count", 0)) <= 0:
+		_fail("The h3maped 0x4a325d standalone span-fill sample did not exercise span queue semantics: %s" % JSON.stringify(report))
+		return
+	if int(span_sample.get("boundary_overwrite_count", -1)) != 0 or int(span_sample.get("out_of_bounds_span_count", -1)) != 0:
+		_fail("The h3maped 0x4a325d standalone span-fill sample crossed its boundary or escaped bounds: %s" % JSON.stringify(report))
 		return
 	var finalizer: Dictionary = level_footprint_phase.get("finalizer_evidence", {})
 	if String(finalizer.get("status", "")) != "0x4a3710_disassembled_adjacency_finalizer_blocked":
