@@ -3653,13 +3653,16 @@ Dictionary runtime_zone_build_report(
 
 Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones, const Dictionary &runtime_build) {
 	Dictionary report;
-	report["status"] = "0x4a8d2c_0x4a93a2_direct_candidate_scan_ported_inspection_only";
-	report["source"] = "h3maped 0x4a8d2c direct minimum town/castle placement fields and the candidate-scan boundary of direct helper 0x4a93a2; 0x49aa93 eligibility, random tie choice, object stamping, and 0x4a901a weighted continuation remain pending";
+	report["status"] = "0x4a8d2c_0x4a93a2_0x49aa93_validity_precheck_ported_inspection_only";
+	report["source"] = "h3maped 0x4a8d2c direct minimum town/castle placement fields, the candidate-scan boundary of direct helper 0x4a93a2, and the recovered 0x49a1d8 validity precheck used by 0x49aa93; full 0x49aa93 footprint/collision eligibility, random tie choice, object stamping, and 0x4a901a weighted continuation remain pending";
 	report["direct_minimum_function_address"] = "0x4a8d2c";
 	report["weighted_density_function_address"] = "0x4a8db2";
 	report["direct_placement_helper_address"] = "0x4a93a2";
+	report["direct_validity_precheck_address"] = "0x49a1d8";
+	report["direct_eligibility_helper_address"] = "0x49aa93";
 	report["weighted_placement_helper_address"] = "0x4a901a";
-	report["direct_candidate_scan_basis"] = "0x4a93a2 scans the generated cell buffer for matching cell+0x20 owner byte and then selects the closest eligible cell to the runtime-zone anchor; this report exposes the owner-byte/repaint candidate boundary before 0x49aa93 eligibility is ported";
+	report["direct_candidate_scan_basis"] = "0x4a93a2 scans the generated cell buffer for matching cell+0x20 owner byte and then selects the closest eligible cell to the runtime-zone anchor; this report exposes owner-byte/repaint candidates plus the 0x49a1d8 terrain validity precheck before full 0x49aa93 footprint collision is ported";
+	report["direct_validity_precheck_basis"] = "0x49a1d8 requires generated cell bit 25 (byte +0x2b bit 0x02) and terrain id not 9; bit-25 lifecycle is represented here by cells already materialized in the 0x4a325d/0x4a3f27 generated-cell buffer";
 	report["player_min_towns_offset"] = "source_zone+0x20";
 	report["player_min_castles_offset"] = "source_zone+0x24";
 	report["player_town_density_offset"] = "source_zone+0x28";
@@ -3680,6 +3683,7 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	const int32_t expected_grid_size = width * height * level_count;
 	PackedInt32Array owner_grid = terrain_fill.get("owner_byte_grid_u8", PackedInt32Array());
 	PackedInt32Array repaint_grid = terrain_fill.get("zone_repaint_member_grid_u8", PackedInt32Array());
+	PackedInt32Array terrain_codes = terrain_fill.get("terrain_code_u16", PackedInt32Array());
 	Array terrain_zone_reports = terrain_fill.get("zones", Array());
 	Array minimum_calls;
 	Array density_fields;
@@ -3693,6 +3697,10 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	int32_t direct_candidate_missing_count = 0;
 	int32_t direct_owner_minus_one_fail_count = 0;
 	int32_t direct_grid_unavailable_count = 0;
+	int32_t direct_validity_precheck_call_count = 0;
+	int32_t direct_validity_precheck_eligible_total = 0;
+	int32_t direct_validity_precheck_missing_count = 0;
+	int32_t direct_validity_precheck_grid_unavailable_count = 0;
 	for (int64_t index = 0; index < active_zones.size(); ++index) {
 		if (Variant(active_zones[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -3758,11 +3766,12 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 					minimum_calls.append(call);
 					continue;
 				}
-				if (width <= 0 || height <= 0 || owner_grid.size() != expected_grid_size || repaint_grid.size() != expected_grid_size) {
+				if (width <= 0 || height <= 0 || owner_grid.size() != expected_grid_size || repaint_grid.size() != expected_grid_size || terrain_codes.size() != expected_grid_size) {
 					call["direct_candidate_scan_status"] = "blocked_missing_terrain_owner_grid";
 					call["candidate_count"] = 0;
 					call["closest_candidate_count"] = 0;
 					direct_grid_unavailable_count += 1;
+					direct_validity_precheck_grid_unavailable_count += 1;
 					direct_candidate_missing_count += 1;
 					minimum_calls.append(call);
 					continue;
@@ -3792,8 +3801,14 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 				int32_t candidate_count = 0;
 				int32_t closest_distance = 0x7fffffff;
 				int32_t closest_candidate_count = 0;
+				int32_t validity_precheck_eligible_count = 0;
+				int32_t validity_precheck_rejected_terrain_count = 0;
+				int32_t closest_eligible_distance = 0x7fffffff;
+				int32_t closest_eligible_candidate_count = 0;
 				Array candidate_preview;
 				Array closest_candidate_preview;
+				Array eligibility_preview;
+				Array closest_eligible_candidate_preview;
 				for (int32_t level = 0; level < level_count; ++level) {
 					for (int32_t y = min_y; y < max_y_exclusive; ++y) {
 						for (int32_t x = min_x; x < max_x_exclusive; ++x) {
@@ -3804,6 +3819,8 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 							if (owner_grid[int32_t(key)] != runtime_zone_index || repaint_grid[int32_t(key)] == 0) {
 								continue;
 							}
+							const int32_t terrain_code = terrain_codes[int32_t(key)];
+							const bool passes_49a1d8_precheck = terrain_code != 9;
 							const int32_t distance = distance_truncate(anchor_x, anchor_y, x, y);
 							candidate_count += 1;
 							if (candidate_preview.size() < 8) {
@@ -3812,31 +3829,73 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 								candidate["y"] = y;
 								candidate["level"] = level;
 								candidate["distance_to_runtime_anchor"] = distance;
+								candidate["terrain_code_u16"] = terrain_code;
+								candidate["passes_0x49a1d8_validity_precheck"] = passes_49a1d8_precheck;
 								candidate_preview.append(candidate);
 							}
+							bool closest_candidate = false;
 							if (distance < closest_distance) {
 								closest_distance = distance;
 								closest_candidate_count = 1;
 								closest_candidate_preview.clear();
+								closest_candidate = true;
 							} else if (distance == closest_distance) {
 								closest_candidate_count += 1;
-							} else {
-								continue;
+								closest_candidate = true;
 							}
-							if (closest_candidate_preview.size() < 8) {
+							if (closest_candidate && closest_candidate_preview.size() < 8) {
 								Dictionary candidate;
 								candidate["x"] = x;
 								candidate["y"] = y;
 								candidate["level"] = level;
 								candidate["distance_to_runtime_anchor"] = distance;
+								candidate["terrain_code_u16"] = terrain_code;
+								candidate["passes_0x49a1d8_validity_precheck"] = passes_49a1d8_precheck;
 								closest_candidate_preview.append(candidate);
+							}
+							if (!passes_49a1d8_precheck) {
+								validity_precheck_rejected_terrain_count += 1;
+								continue;
+							}
+							validity_precheck_eligible_count += 1;
+							if (eligibility_preview.size() < 8) {
+								Dictionary candidate;
+								candidate["x"] = x;
+								candidate["y"] = y;
+								candidate["level"] = level;
+								candidate["distance_to_runtime_anchor"] = distance;
+								candidate["terrain_code_u16"] = terrain_code;
+								eligibility_preview.append(candidate);
+							}
+							bool closest_eligible_candidate = false;
+							if (distance < closest_eligible_distance) {
+								closest_eligible_distance = distance;
+								closest_eligible_candidate_count = 1;
+								closest_eligible_candidate_preview.clear();
+								closest_eligible_candidate = true;
+							} else if (distance == closest_eligible_distance) {
+								closest_eligible_candidate_count += 1;
+								closest_eligible_candidate = true;
+							}
+							if (closest_eligible_candidate && closest_eligible_candidate_preview.size() < 8) {
+								Dictionary candidate;
+								candidate["x"] = x;
+								candidate["y"] = y;
+								candidate["level"] = level;
+								candidate["distance_to_runtime_anchor"] = distance;
+								candidate["terrain_code_u16"] = terrain_code;
+								closest_eligible_candidate_preview.append(candidate);
 							}
 						}
 					}
 				}
+				direct_validity_precheck_call_count += 1;
 				call["direct_candidate_scan_status"] = candidate_count > 0
 						? String("0x4a93a2_owner_byte_candidate_scan_ported_eligibility_pending")
 						: String("0x4a93a2_owner_byte_candidate_scan_no_candidates");
+				call["direct_validity_precheck_status"] = validity_precheck_eligible_count > 0
+						? String("0x49a1d8_validity_precheck_ported_full_0x49aa93_collision_pending")
+						: String("0x49a1d8_validity_precheck_no_eligible_candidates");
 				call["candidate_owner_byte"] = runtime_zone_index;
 				call["candidate_grid_width"] = width;
 				call["candidate_grid_height"] = height;
@@ -3853,10 +3912,22 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 				call["closest_distance"] = candidate_count > 0 ? closest_distance : -1;
 				call["closest_candidate_count"] = closest_candidate_count;
 				call["closest_candidate_preview"] = closest_candidate_preview;
-				call["selected_candidate_status"] = "pending_0x49aa93_eligibility_and_0x4a93a2_random_tie_selection";
+				call["validity_precheck_eligible_count"] = validity_precheck_eligible_count;
+				call["validity_precheck_rejected_terrain_count"] = validity_precheck_rejected_terrain_count;
+				call["validity_precheck_eligible_preview"] = eligibility_preview;
+				call["closest_eligible_distance"] = validity_precheck_eligible_count > 0 ? closest_eligible_distance : -1;
+				call["closest_eligible_candidate_count"] = closest_eligible_candidate_count;
+				call["closest_eligible_candidate_preview"] = closest_eligible_candidate_preview;
+				call["selected_candidate_status"] = closest_eligible_candidate_count == 1
+						? String("pending_full_0x49aa93_collision_then_0x4a93a2_object_record_stamping_no_rng_tie_for_current_precheck")
+						: String("pending_full_0x49aa93_collision_and_0x4a93a2_random_tie_selection");
 				direct_candidate_total += candidate_count;
+				direct_validity_precheck_eligible_total += validity_precheck_eligible_count;
 				if (candidate_count == 0) {
 					direct_candidate_missing_count += 1;
+				}
+				if (validity_precheck_eligible_count == 0) {
+					direct_validity_precheck_missing_count += 1;
 				}
 				minimum_calls.append(call);
 			}
@@ -3905,6 +3976,10 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	report["direct_candidate_missing_count"] = direct_candidate_missing_count;
 	report["direct_owner_minus_one_fail_count"] = direct_owner_minus_one_fail_count;
 	report["direct_grid_unavailable_count"] = direct_grid_unavailable_count;
+	report["direct_validity_precheck_call_count"] = direct_validity_precheck_call_count;
+	report["direct_validity_precheck_eligible_total"] = direct_validity_precheck_eligible_total;
+	report["direct_validity_precheck_missing_count"] = direct_validity_precheck_missing_count;
+	report["direct_validity_precheck_grid_unavailable_count"] = direct_validity_precheck_grid_unavailable_count;
 	report["positive_density_field_count"] = positive_density_field_count;
 	report["density_field_count"] = density_fields.size();
 	report["minimum_calls"] = minimum_calls;
@@ -4031,7 +4106,7 @@ Array clean_phase_ledger() {
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b452, 0x49b3c1, 0x49b53d", "ported_interleaved_runtime_coordinate_and_terrain_selection_inspection_only" },
 		{ "zone_footprint_placement", "0x4a3a03, 0x4cc788, 0x4cca55, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "ported_0x4a3710_small_land_footprint_helpers_and_terrain_visual_inspection_only" },
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "ported_schedule_and_visual_normalization_inspection_only" },
-		{ "object_category_placement", "0x4a8d2c, 0x4a93a2, 0x4a8db2, 0x4a8c15", "0x4a8d2c_0x4a93a2_direct_town_candidate_scan_ported_inspection_only_cells_pending" },
+		{ "object_category_placement", "0x4a8d2c, 0x4a93a2, 0x49a1d8, 0x49aa93, 0x4a8db2, 0x4a8c15", "0x4a8d2c_0x4a93a2_0x49aa93_validity_precheck_ported_inspection_only_cells_pending" },
 		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4aab7e", "pending_clean_port" },
 		{ "final_cell_object_passes", "0x49eb8d, 0x4ab52a, 0x4ac4ae", "pending_clean_port" },
 	};
