@@ -1981,7 +1981,7 @@ double catalog_auto_road_component_weight(const Dictionary &normalized, int32_t 
 	const int32_t level_count = int32_t(normalized.get("level_count", 1));
 	double exponent = 1.05;
 	if (water_mode == "normal_water") {
-		exponent = level_count <= 1 ? 1.45 : (level == 0 ? 1.65 : 1.15);
+		exponent = size_class == "homm3_extra_large" && level_count <= 1 ? 4.55 : (level_count <= 1 ? 1.45 : (level == 0 ? 1.65 : 1.15));
 	} else if (water_mode == "islands") {
 		exponent = size_class == "homm3_extra_large" ? (level_count <= 1 ? 1.32 : 0.82) : 0.95;
 	} else if (level > 0) {
@@ -2155,7 +2155,7 @@ Dictionary native_catalog_auto_road_component_adjustment_lookup(const Array &roa
 		const int32_t area = std::max(1, width * height);
 		const String water_mode = String(normalized.get("water_mode", "land"));
 		const int32_t profile_target = water_mode == "islands" ? std::max<int32_t>(674, (area * 325) / 10000)
-															   : (water_mode == "normal_water" ? (area * 36) / 1000 : std::max<int32_t>(727, (area * 35) / 1000));
+															   : (water_mode == "normal_water" ? std::max<int32_t>(755, (area * 36) / 1000) : std::max<int32_t>(727, (area * 35) / 1000));
 		total_target = std::max<int32_t>(total_target, profile_target);
 	}
 	if (String(normalized.get("size_class_id", "")) == "homm3_large" && level_count == 1 && String(normalized.get("water_mode", "land")) == "normal_water") {
@@ -8994,10 +8994,11 @@ int32_t native_catalog_auto_generated_decoration_floor(const Dictionary &normali
 	const bool xl_single_level_islands = water_mode == "islands" && size_class_id == "homm3_extra_large" && level_count <= 1;
 	const bool xl_two_level_islands = native_catalog_auto_xl_two_level_islands_profile(normalized);
 	const bool xl_two_level_normal_water = native_catalog_auto_xl_two_level_normal_water_profile(normalized);
+	const bool xl_one_level_normal_water = native_catalog_auto_xl_one_level_normal_water_profile(normalized);
 	const bool large_two_level_islands = native_catalog_auto_large_two_level_islands_profile(normalized);
 	const bool large_one_level_islands = native_catalog_auto_large_one_level_islands_profile(normalized);
 	const bool large_one_level_normal_water = native_catalog_auto_large_one_level_normal_water_profile(normalized);
-	if (water_mode != "land" && !xl_single_level_islands && !xl_two_level_islands && !xl_two_level_normal_water && !large_two_level_islands && !large_one_level_islands && !large_one_level_normal_water) {
+	if (water_mode != "land" && !xl_single_level_islands && !xl_two_level_islands && !xl_two_level_normal_water && !xl_one_level_normal_water && !large_two_level_islands && !large_one_level_islands && !large_one_level_normal_water) {
 		return 0;
 	}
 	const int32_t width = int32_t(normalized.get("width", 36));
@@ -9012,6 +9013,9 @@ int32_t native_catalog_auto_generated_decoration_floor(const Dictionary &normali
 		}
 		if (xl_two_level_normal_water) {
 			return std::max(1834, (area * 44) / 1000);
+		}
+		if (xl_one_level_normal_water) {
+			return std::max(1813, (area * 87) / 1000);
 		}
 		if (native_catalog_auto_xl_one_level_land_profile(normalized)) {
 			return std::max(3413, (area * 164) / 1000);
@@ -9163,6 +9167,9 @@ int32_t native_catalog_auto_generated_reward_cap(const Dictionary &normalized) {
 	}
 	if (native_catalog_auto_xl_two_level_normal_water_profile(normalized)) {
 		return 482;
+	}
+	if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
+		return 409;
 	}
 	if (native_catalog_auto_xl_one_level_land_profile(normalized)) {
 		return 692;
@@ -16761,15 +16768,15 @@ double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Di
 		const String role = String(zone.get("role", ""));
 		if (size_class_id == "homm3_extra_large") {
 			if (role.contains("start")) {
-				return 0.60;
+				return 0.59;
 			}
 			if (role == "junction") {
-				return 0.55;
+				return 0.54;
 			}
 			if (role == "treasure" || role == "neutral") {
-				return 0.49;
+				return 0.48;
 			}
-			return 0.52;
+			return 0.51;
 		}
 		if (size_class_id == "homm3_large") {
 			if (role.contains("start")) {
