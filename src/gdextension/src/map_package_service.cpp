@@ -19472,7 +19472,7 @@ Dictionary package_object_route_blocked_lookup_for_level(const Array &objects, c
 	return blocked;
 }
 
-Dictionary package_object_route_blocked_lookup_with_decorative_for_level(const Array &objects, const Dictionary &terrain_blocked, int32_t level) {
+Dictionary package_object_route_blocked_lookup_with_decorative_for_level(const Array &objects, const Dictionary &terrain_blocked, int32_t level, bool include_guard_closure = false) {
 	Dictionary blocked;
 	Array terrain_keys = terrain_blocked.keys();
 	for (int64_t key_index = 0; key_index < terrain_keys.size(); ++key_index) {
@@ -19491,7 +19491,7 @@ Dictionary package_object_route_blocked_lookup_with_decorative_for_level(const A
 			continue;
 		}
 		const String kind = String(object.get("kind", ""));
-		Array block_tiles = kind == "guard" ? object.get("package_body_tiles", object.get("body_tiles", Array())) : object.get("package_block_tiles", object.get("body_tiles", Array()));
+		Array block_tiles = kind == "guard" && !include_guard_closure ? object.get("package_body_tiles", object.get("body_tiles", Array())) : object.get("package_block_tiles", object.get("body_tiles", Array()));
 		for (int64_t block_index = 0; block_index < block_tiles.size(); ++block_index) {
 			if (Variant(block_tiles[block_index]).get_type() != Variant::DICTIONARY) {
 				continue;
@@ -19506,9 +19506,34 @@ Dictionary package_object_route_blocked_lookup_with_decorative_for_level(const A
 	return blocked;
 }
 
+int32_t profile_object_route_open_pair_target(const Dictionary &normalized) {
+	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
+		return 0;
+	}
+	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
+		return 11;
+	}
+	return -1;
+}
+
+String profile_object_route_mask_source(const Dictionary &normalized) {
+	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
+		return "large_one_level_islands_town_route_decorative_closure_mask";
+	}
+	return "medium_two_level_islands_town_route_decorative_closure_mask";
+}
+
+String profile_object_route_mask_policy(const Dictionary &normalized) {
+	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
+		return "large_one_level_islands_adds_compact_existing_decorative_masks_to_close_extra_object_only_town_routes_while_preserving_owner_like_guard_open_crossings";
+	}
+	return "medium_two_level_islands_adds_compact_existing_decorative_masks_to_close_owner_like_object_only_town_routes_without_changing_object_counts";
+}
+
 void apply_profile_object_route_masks_to_package_objects(Array &objects, const Dictionary &generated_map) {
 	Dictionary normalized = generated_map.get("normalized_config", Dictionary());
-	if (!native_catalog_auto_medium_two_level_islands_profile(normalized)) {
+	const int32_t object_route_target = profile_object_route_open_pair_target(normalized);
+	if (object_route_target < 0) {
 		return;
 	}
 	Dictionary terrain_grid = generated_map.get("terrain_grid", Dictionary());
@@ -19516,6 +19541,7 @@ void apply_profile_object_route_masks_to_package_objects(Array &objects, const D
 	const int32_t height = int32_t(terrain_grid.get("height", generated_map.get("height", 36)));
 	const int32_t level_count = int32_t(terrain_grid.get("level_count", generated_map.get("level_count", 1)));
 	Dictionary terrain_blocked = package_terrain_blocked_lookup(generated_map);
+	const String route_mask_source = profile_object_route_mask_source(normalized);
 	static constexpr int32_t MAX_ROUTE_MASK_PASSES = 8;
 	int32_t added_total = 0;
 	int32_t pass_count = 0;
@@ -19535,13 +19561,20 @@ void apply_profile_object_route_masks_to_package_objects(Array &objects, const D
 		}
 		for (int32_t pass = 0; pass < MAX_ROUTE_MASK_PASSES; ++pass) {
 			bool added_this_pass = false;
-			Dictionary blocked = package_object_route_blocked_lookup_with_decorative_for_level(objects, terrain_blocked, level);
+			int32_t preserved_open_pairs = 0;
+			Dictionary blocked = package_object_route_blocked_lookup_with_decorative_for_level(objects, terrain_blocked, level, false);
+			Dictionary guarded_blocked = package_object_route_blocked_lookup_with_decorative_for_level(objects, terrain_blocked, level, true);
 			for (int64_t left_index = 0; left_index < towns.size(); ++left_index) {
 				Dictionary left = Dictionary(towns[left_index]);
 				for (int64_t right_index = left_index + 1; right_index < towns.size(); ++right_index) {
 					Dictionary right = Dictionary(towns[right_index]);
 					Array path = direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, blocked);
 					if (path.is_empty()) {
+						continue;
+					}
+					Array guarded_path = direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, guarded_blocked);
+					if (object_route_target > 0 && !guarded_path.is_empty() && preserved_open_pairs < object_route_target) {
+						++preserved_open_pairs;
 						continue;
 					}
 					const int32_t midpoint = int32_t(path.size() / 2);
@@ -19552,8 +19585,9 @@ void apply_profile_object_route_masks_to_package_objects(Array &objects, const D
 					const int32_t x = int32_t(midpoint_cell.get("x", 0));
 					const int32_t y = int32_t(midpoint_cell.get("y", 0));
 					const int32_t decorative_index = nearest_package_decorative_index_for_cell(objects, x, y, level);
-					if (add_package_decorative_route_mask_cell(objects, decorative_index, x, y, level, width, height, "medium_two_level_islands_town_route_decorative_closure_mask")) {
+					if (add_package_decorative_route_mask_cell(objects, decorative_index, x, y, level, width, height, route_mask_source)) {
 						blocked[level_point_key(x, y, level)] = true;
+						guarded_blocked[level_point_key(x, y, level)] = true;
 						++added_total;
 						added_this_pass = true;
 					}
@@ -19580,7 +19614,7 @@ void apply_profile_object_route_masks_to_package_objects(Array &objects, const D
 		object["package_profile_route_mask_schema_id"] = "native_rmg_profile_object_route_masks_v1";
 		object["package_profile_route_mask_tile_total"] = added_total;
 		object["package_profile_route_mask_pass_count"] = pass_count;
-		object["package_profile_route_mask_policy"] = "medium_two_level_islands_adds_compact_existing_decorative_masks_to_close_owner_like_object_only_town_routes_without_changing_object_counts";
+		object["package_profile_route_mask_policy"] = profile_object_route_mask_policy(normalized);
 		objects[object_index] = object;
 	}
 }

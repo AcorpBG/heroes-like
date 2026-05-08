@@ -1317,3 +1317,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_islands_route_mask_merged --skip-timing-summary --failure-limit 8` passed with `18/18` matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
 
 This is still not production parity. The production-gap audit remains `production_ready=false` with `6` missing broad requirements. Medium two-level islands now has owner-like town-route closure, exact town split, and exact road total, but it still overfills decoration/reward/guard categories and needs terrain/road component shape cleanup.
+
+## Large One-Level Islands Object-Route Mask Cleanup
+
+After the compact guard-mask cleanup, `l_islands_randomplayers` had exact decoration/object/reward/road totals and owner-like guarded-route openness, but object-only route shape was still wrong. Native exposed every town pair through terrain plus physical blockers (`28/28`) while owner evidence exposed only `11/120`. The missing town count remains a separate island subzone/materialization defect, but the package blocker shape still needed to preserve the same `11` open crossings before guard evaluation instead of leaving all current native towns mutually open.
+
+The route-mask helper now has profile-specific open-pair targets. Medium two-level islands still closes to `0` object-only town routes, while Large one-level islands preserves the owner-like `11` object-open/guard-open crossings and adds compact single-cell masks to existing decorative obstacles only for the extra object-open routes. Guard control zones are not treated as permanent object blockers for this decision.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `l_islands_randomplayers` export wrote `1/1` package with native validation `pass`. Focused fast audit improved object-route delta from `+17` to `0`: native and owner both now expose `11` object-only town-route pairs and `11` guarded town-route pairs.
+- Exact road and broad category totals stayed intact for the focused case: road delta `0`, decoration delta `0`, object-category delta `0`, reward delta `0`, guard delta `+1`, and town delta `-8`.
+- Focused `m_4players_2levels_islands` export with the same helper still reports object-route delta `0`, guarded-route delta `0`, road delta `0`, and terrain-blocked delta `+158`, confirming the previous Medium route-mask fix did not regress.
+- Replacing the Large and Medium focused AMAPs into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_route_mask_profiles_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.828s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_route_mask_profiles_merged --skip-timing-summary --failure-limit 8` passed with `18/18` matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- The production-gap audit remains `production_ready=false` with `6` missing broad requirements. Large one-level islands dropped out of the top-gap list; route-shape gap cases dropped from `15` to `14`. The new top blocker is `l_nowater_randomplayers_2level` at severity `588`.
+
+This is still not production parity. Large one-level islands still has a real town/subzone materialization gap (`8` native towns versus `16` owner towns) and terrain shape debt. The correction only makes current package blocker route shape owner-like for the generated town set while preserving the existing broad count gates.
