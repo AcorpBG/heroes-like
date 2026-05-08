@@ -9311,6 +9311,9 @@ int32_t native_catalog_auto_generated_town_floor(const Dictionary &normalized, i
 		if (native_catalog_auto_large_one_level_normal_water_profile(normalized)) {
 			return std::max(1, start_count);
 		}
+		if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
+			return std::max(std::max(16, start_count + 11), int32_t(std::ceil(double(area) * 1.37 / 1000.0)));
+		}
 		if (native_catalog_auto_medium_one_level_normal_water_profile(normalized)) {
 			return std::max(std::max(7, start_count + 3), int32_t(std::ceil(double(area) * 1.35 / 1000.0)));
 		}
@@ -14771,13 +14774,15 @@ Dictionary top_up_owner_xl_land_decoration_after_clearance(
 		int32_t width,
 		int32_t height) {
 	Dictionary summary;
-	summary["schema_id"] = "native_rmg_owner_xl_land_post_clearance_decoration_top_up_v1";
+	summary["schema_id"] = "native_rmg_post_clearance_decoration_top_up_v1";
 	summary["applied"] = false;
-	if (!native_rmg_owner_xl_land_density_case(normalized)) {
-		summary["status"] = "not_owner_xl_land_profile";
+	const bool large_one_level_islands = native_catalog_auto_large_one_level_islands_profile(normalized);
+	const bool owner_xl_land = native_rmg_owner_xl_land_density_case(normalized);
+	if (!large_one_level_islands && !owner_xl_land) {
+		summary["status"] = "not_post_clearance_decoration_profile";
 		return summary;
 	}
-	const int32_t target_decoration_count = owner_xl_land_category_target(normalized, "decoration");
+	const int32_t target_decoration_count = large_one_level_islands ? 542 : owner_xl_land_category_target(normalized, "decoration");
 	Array placements = object_placement.get("object_placements", Array());
 	int32_t decoration_count = placement_count_for_kind(placements, "decorative_obstacle");
 	if (target_decoration_count < 0 || decoration_count >= target_decoration_count) {
@@ -14803,8 +14808,9 @@ Dictionary top_up_owner_xl_land_decoration_after_clearance(
 	int32_t ordinal = int32_t(placements.size()) + 1;
 	Array added_ids;
 	while (decoration_count < target_decoration_count && attempts < max_attempts) {
-		const int32_t x = 1 + int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":owner_xl_post_clearance_decoration:x:" + String::num_int64(attempts)) % uint32_t(std::max(1, width - 2)));
-		const int32_t y = 1 + int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + ":owner_xl_post_clearance_decoration:y:" + String::num_int64(attempts)) % uint32_t(std::max(1, height - 2)));
+		const String salt = large_one_level_islands ? String(":large_one_level_islands_post_clearance_decoration:") : String(":owner_xl_post_clearance_decoration:");
+		const int32_t x = 1 + int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + salt + "x:" + String::num_int64(attempts)) % uint32_t(std::max(1, width - 2)));
+		const int32_t y = 1 + int32_t(hash32_int(String(normalized.get("normalized_seed", "0")) + salt + "y:" + String::num_int64(attempts)) % uint32_t(std::max(1, height - 2)));
 		if (occupied.has(level_point_key(x, y, 0))) {
 			++attempts;
 			continue;
@@ -14825,18 +14831,19 @@ Dictionary top_up_owner_xl_land_decoration_after_clearance(
 		compact_footprint["width"] = 1;
 		compact_footprint["height"] = 1;
 		compact_footprint["anchor"] = "center";
-		compact_footprint["tier"] = "owner_xl_post_clearance_micro_blocker";
-		compact_footprint["source"] = "post-clearance owner XL land density top-up uses one-tile filler to restore object count without reopening cleared access corridors";
+		compact_footprint["tier"] = large_one_level_islands ? "large_one_level_islands_post_clearance_micro_blocker" : "owner_xl_post_clearance_micro_blocker";
+		compact_footprint["source"] = large_one_level_islands ? "post-clearance Large one-level islands top-up uses one-tile filler to restore blocker count without reopening cleared access corridors" : "post-clearance owner XL land density top-up uses one-tile filler to restore object count without reopening cleared access corridors";
 		point["decoration_footprint_override"] = compact_footprint;
-		point["decoration_fit_fallback"] = "owner_xl_post_clearance_micro_blocker";
-		point["placement_policy"] = "owner_xl_land_post_clearance_decoration_top_up";
+		point["decoration_fit_fallback"] = compact_footprint.get("tier", "");
+		point["placement_policy"] = large_one_level_islands ? "large_one_level_islands_post_clearance_decoration_top_up" : "owner_xl_land_post_clearance_decoration_top_up";
 		point["object_family_ordinal"] = decoration_count;
 		const int64_t previous_size = placements.size();
 		append_object_placement(placements, occupied, normalized, zone, point, "decorative_obstacle", ordinal, no_road_cells, Dictionary());
 		if (placements.size() > previous_size) {
 			Dictionary added = Dictionary(placements[placements.size() - 1]);
-			added["owner_xl_land_post_clearance_top_up"] = true;
-			added["placement_policy"] = "owner_xl_land_post_clearance_decoration_top_up";
+			added["owner_post_clearance_decoration_top_up"] = true;
+			added["owner_xl_land_post_clearance_top_up"] = owner_xl_land;
+			added["placement_policy"] = point.get("placement_policy", "");
 			added["signature"] = object_placement_record_signature_from_record(added);
 			placements[placements.size() - 1] = added;
 			mark_record_blocking_occupancy(occupied, added);
@@ -14855,7 +14862,7 @@ Dictionary top_up_owner_xl_land_decoration_after_clearance(
 	summary["added_placement_ids"] = added_ids;
 	summary["attempt_count"] = attempts;
 	summary["status"] = decoration_count >= target_decoration_count ? "pass" : "partial";
-	summary["policy"] = "owner XL land restores decorative blocker count after required town and guard clearances have removed filler from occupied access tiles";
+	summary["policy"] = large_one_level_islands ? "Large one-level islands restores decorative blocker count after supplemental town clearance removes filler from occupied access tiles" : "owner XL land restores decorative blocker count after required town and guard clearances have removed filler from occupied access tiles";
 	summary["signature"] = hash32_hex(canonical_variant(summary));
 	object_placement["owner_xl_land_post_clearance_decoration_top_up"] = summary;
 	Dictionary signature_source;
@@ -15953,6 +15960,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			const bool one_level_global_town_floor = target_level == 0
 					&& (native_catalog_auto_large_one_level_land_profile(normalized)
 							|| native_catalog_auto_xl_one_level_land_profile(normalized)
+							|| native_catalog_auto_large_one_level_islands_profile(normalized)
 							|| native_catalog_auto_medium_one_level_normal_water_profile(normalized));
 			const bool surface_global_town_fallback = one_level_global_town_floor
 					|| (target_level == 0
@@ -17149,7 +17157,17 @@ Dictionary protected_island_land_lookup(const Dictionary &normalized, const Dict
 	}
 	Array guards = town_guard_placement.get("guard_records", Array());
 	for (int64_t index = 0; index < guards.size(); ++index) {
-		mark_land_record_surfaces(land_lookup, Dictionary(guards[index]), width, height);
+		Dictionary guard = Dictionary(guards[index]);
+		if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
+			mark_land_cell(land_lookup, int32_t(guard.get("x", 0)), int32_t(guard.get("y", 0)), width, height);
+			if (Variant(guard.get("primary_tile", Variant())).get_type() == Variant::DICTIONARY) {
+				Dictionary primary = guard.get("primary_tile", Dictionary());
+				mark_land_cell(land_lookup, int32_t(primary.get("x", 0)), int32_t(primary.get("y", 0)), width, height);
+			}
+			mark_land_cells_from_array(land_lookup, guard.get("route_closure_block_tiles", Array()), width, height);
+			continue;
+		}
+		mark_land_record_surfaces(land_lookup, guard, width, height);
 	}
 	return land_lookup;
 }
@@ -19970,6 +19988,26 @@ bool profile_object_route_preserve_requires_guard_open(const Dictionary &normali
 	return native_catalog_auto_large_one_level_islands_profile(normalized);
 }
 
+int32_t count_package_town_reachable_pairs(const Array &towns, int32_t width, int32_t height, const Dictionary &blocked) {
+	int32_t reachable_pair_count = 0;
+	for (int64_t left_index = 0; left_index < towns.size(); ++left_index) {
+		if (Variant(towns[left_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary left = Dictionary(towns[left_index]);
+		for (int64_t right_index = left_index + 1; right_index < towns.size(); ++right_index) {
+			if (Variant(towns[right_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary right = Dictionary(towns[right_index]);
+			if (!direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, blocked).is_empty()) {
+				++reachable_pair_count;
+			}
+		}
+	}
+	return reachable_pair_count;
+}
+
 void apply_profile_object_route_masks_to_package_objects(Array &objects, const Dictionary &generated_map) {
 	Dictionary normalized = generated_map.get("normalized_config", Dictionary());
 	const int32_t object_route_target = profile_object_route_open_pair_target(normalized);
@@ -20005,6 +20043,11 @@ void apply_profile_object_route_masks_to_package_objects(Array &objects, const D
 			int32_t preserved_open_pairs = 0;
 			Dictionary blocked = package_object_route_blocked_lookup_with_decorative_for_level(objects, terrain_blocked, level, false);
 			Dictionary guarded_blocked = package_object_route_blocked_lookup_with_decorative_for_level(objects, terrain_blocked, level, true);
+			int32_t current_object_pairs = object_route_target > 0 ? count_package_town_reachable_pairs(towns, width, height, blocked) : 0;
+			int32_t current_guarded_pairs = object_route_target > 0 && preserve_requires_guard_open ? count_package_town_reachable_pairs(towns, width, height, guarded_blocked) : current_object_pairs;
+			if (object_route_target > 0 && current_object_pairs <= object_route_target) {
+				break;
+			}
 			for (int64_t left_index = 0; left_index < towns.size(); ++left_index) {
 				Dictionary left = Dictionary(towns[left_index]);
 				for (int64_t right_index = left_index + 1; right_index < towns.size(); ++right_index) {
@@ -20027,9 +20070,36 @@ void apply_profile_object_route_masks_to_package_objects(Array &objects, const D
 					const int32_t x = int32_t(midpoint_cell.get("x", 0));
 					const int32_t y = int32_t(midpoint_cell.get("y", 0));
 					const int32_t decorative_index = nearest_package_decorative_index_for_cell(objects, x, y, level);
+					int32_t accepted_object_pairs = current_object_pairs;
+					int32_t accepted_guarded_pairs = current_guarded_pairs;
+					if (object_route_target > 0) {
+						if (current_object_pairs <= object_route_target || (preserve_requires_guard_open && current_guarded_pairs <= object_route_target)) {
+							continue;
+						}
+						const String candidate_key = level_point_key(x, y, level);
+						Dictionary candidate_blocked = blocked.duplicate(true);
+						candidate_blocked[candidate_key] = true;
+						const int32_t candidate_object_pairs = count_package_town_reachable_pairs(towns, width, height, candidate_blocked);
+						if (candidate_object_pairs < object_route_target || candidate_object_pairs >= current_object_pairs) {
+							continue;
+						}
+						int32_t candidate_guarded_pairs = current_guarded_pairs;
+						if (preserve_requires_guard_open) {
+							Dictionary candidate_guarded_blocked = guarded_blocked.duplicate(true);
+							candidate_guarded_blocked[candidate_key] = true;
+							candidate_guarded_pairs = count_package_town_reachable_pairs(towns, width, height, candidate_guarded_blocked);
+							if (candidate_guarded_pairs < object_route_target) {
+								continue;
+							}
+						}
+						accepted_object_pairs = candidate_object_pairs;
+						accepted_guarded_pairs = candidate_guarded_pairs;
+					}
 					if (add_package_decorative_route_mask_cell(objects, decorative_index, x, y, level, width, height, route_mask_source)) {
 						blocked[level_point_key(x, y, level)] = true;
 						guarded_blocked[level_point_key(x, y, level)] = true;
+						current_object_pairs = accepted_object_pairs;
+						current_guarded_pairs = accepted_guarded_pairs;
 						++added_total;
 						added_this_pass = true;
 					}
