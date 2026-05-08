@@ -1991,7 +1991,7 @@ double catalog_auto_road_component_weight(const Dictionary &normalized, int32_t 
 	} else if (level > 0) {
 		exponent = size_class == "homm3_extra_large" ? 1.25 : 1.10;
 	} else if (size_class == "homm3_extra_large" || size_class == "homm3_large") {
-		exponent = 1.20;
+		exponent = size_class == "homm3_extra_large" ? 2.30 : 1.20;
 	}
 	const double rank = double(std::max<int32_t>(1, component_count - component_index));
 	return std::pow(rank, exponent);
