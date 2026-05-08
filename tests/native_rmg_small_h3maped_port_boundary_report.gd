@@ -201,7 +201,7 @@ func _run() -> void:
 	if String(polygon_splitter.get("locator_address", "")) != "0x4cca55" or String(polygon_splitter.get("splitter_address", "")) != "0x4ccb64":
 		_fail("The h3maped polygon splitter contract lost its executable locator/splitter addresses: %s" % JSON.stringify(report))
 		return
-	if String(polygon_splitter.get("initial_container_status", "")) != "0x4cc788_initial_node_pair_allocations_ported_relink_pending":
+	if String(polygon_splitter.get("initial_container_status", "")) != "0x4cc788_initial_node_pair_allocations_and_inline_relinks_ported_bridge_pending":
 		_fail("The h3maped initial polygon container allocations were not materialized from 0x4cc788: %s" % JSON.stringify(report))
 		return
 	if int(polygon_splitter.get("materialized_initial_node_pair_count", -1)) != 4 or int(polygon_splitter.get("materialized_initial_node_count", -1)) != 8:
@@ -209,6 +209,13 @@ func _run() -> void:
 		return
 	if int(polygon_splitter.get("initial_vector_entry_count", -1)) != 8 or String(polygon_splitter.get("initial_root_pointer", "")) != "initial_pair_0_primary":
 		_fail("The h3maped initial polygon vector/root evidence drifted: %s" % JSON.stringify(report))
+		return
+	if int(polygon_splitter.get("initial_inline_relink_swap_count", -1)) != 4 or String(polygon_splitter.get("initial_bridge_call_status", "")) != "0x4ccb1f_bridge_call_not_yet_executed":
+		_fail("The h3maped initial polygon inline relink/bridge boundary drifted: %s" % JSON.stringify(report))
+		return
+	var initial_pairs: Array = polygon_splitter.get("initial_node_pairs", [])
+	if initial_pairs.size() != 4 or String(initial_pairs[0].get("primary", {}).get("+0x10_next", "")) != "initial_pair_3_paired":
+		_fail("The h3maped initial polygon inline next/previous links were not exposed: %s" % JSON.stringify(report))
 		return
 	if polygon_splitter.get("locator_branches", []).size() < 5 or polygon_splitter.get("split_steps", []).size() < 7:
 		_fail("The h3maped polygon splitter contract is missing recovered branch/split steps: %s" % JSON.stringify(report))
