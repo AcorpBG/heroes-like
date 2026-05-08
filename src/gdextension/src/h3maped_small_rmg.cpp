@@ -3638,6 +3638,135 @@ Dictionary runtime_zone_build_report(
 	return report;
 }
 
+Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones, const Dictionary &runtime_build) {
+	Dictionary report;
+	report["status"] = "0x4a8d2c_0x4a8db2_town_castle_field_consumption_ported_inspection_only";
+	report["source"] = "h3maped 0x4a8d2c direct minimum town/castle placement fields and 0x4a8db2 weighted density continuation fields; object-cell placement through 0x4a93a2/0x4a901a remains pending";
+	report["direct_minimum_function_address"] = "0x4a8d2c";
+	report["weighted_density_function_address"] = "0x4a8db2";
+	report["direct_placement_helper_address"] = "0x4a93a2";
+	report["weighted_placement_helper_address"] = "0x4a901a";
+	report["player_min_towns_offset"] = "source_zone+0x20";
+	report["player_min_castles_offset"] = "source_zone+0x24";
+	report["player_town_density_offset"] = "source_zone+0x28";
+	report["player_castle_density_offset"] = "source_zone+0x2c";
+	report["neutral_min_towns_offset"] = "source_zone+0x30";
+	report["neutral_min_castles_offset"] = "source_zone+0x34";
+	report["neutral_town_density_offset"] = "source_zone+0x38";
+	report["neutral_castle_density_offset"] = "source_zone+0x3c";
+	report["same_town_type_offset"] = "source_zone+0x40";
+	report["object_cell_materialization_status"] = "pending_0x4a93a2_0x4a901a_object_template_footprint_port";
+
+	Array runtime_zones = runtime_build.get("runtime_zones", Array());
+	Array minimum_calls;
+	Array density_fields;
+	int32_t player_min_town_total = 0;
+	int32_t player_min_castle_total = 0;
+	int32_t neutral_min_town_total = 0;
+	int32_t neutral_min_castle_total = 0;
+	int32_t positive_density_field_count = 0;
+	for (int64_t index = 0; index < active_zones.size(); ++index) {
+		if (Variant(active_zones[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary zone = Dictionary(active_zones[index]);
+		Dictionary runtime = index < runtime_zones.size() && Variant(runtime_zones[index]).get_type() == Variant::DICTIONARY
+				? Dictionary(runtime_zones[index])
+				: Dictionary();
+		const int32_t runtime_zone_index = int32_t(runtime.get("runtime_zone_index", index));
+		const int32_t source_zone_id = int32_t(zone.get("source_zone_id", index));
+		const int32_t actual_owner_color = int32_t(runtime.get("actual_owner_color", -1));
+		const int32_t source_bucket = int32_t(Dictionary(zone.get("grammar_source", Dictionary())).get("source_bucket", -1));
+		Dictionary player_towns = zone.get("player_towns", Dictionary());
+		Dictionary neutral_towns = zone.get("neutral_towns", Dictionary());
+		const int32_t player_min_towns = int32_t(player_towns.get("min_towns", 0));
+		const int32_t player_min_castles = int32_t(player_towns.get("min_castles", 0));
+		const int32_t neutral_min_towns = int32_t(neutral_towns.get("min_towns", 0));
+		const int32_t neutral_min_castles = int32_t(neutral_towns.get("min_castles", 0));
+		const int32_t player_town_density = int32_t(player_towns.get("town_density", 0));
+		const int32_t player_castle_density = int32_t(player_towns.get("castle_density", 0));
+		const int32_t neutral_town_density = int32_t(neutral_towns.get("town_density", 0));
+		const int32_t neutral_castle_density = int32_t(neutral_towns.get("castle_density", 0));
+		player_min_town_total += player_min_towns;
+		player_min_castle_total += player_min_castles;
+		neutral_min_town_total += neutral_min_towns;
+		neutral_min_castle_total += neutral_min_castles;
+
+		struct MinimumField {
+			const char *kind;
+			const char *offset;
+			int32_t count;
+			int32_t owner_color;
+			bool castle;
+		};
+		const MinimumField minimum_fields[] = {
+			{ "player_town", "+0x20", player_min_towns, actual_owner_color, false },
+			{ "player_castle", "+0x24", player_min_castles, actual_owner_color, true },
+			{ "neutral_town", "+0x30", neutral_min_towns, -1, false },
+			{ "neutral_castle", "+0x34", neutral_min_castles, -1, true },
+		};
+		for (const MinimumField &field : minimum_fields) {
+			for (int32_t ordinal = 0; ordinal < field.count; ++ordinal) {
+				Dictionary call;
+				call["phase"] = "0x4a8d2c_direct_minimum";
+				call["runtime_zone_index"] = runtime_zone_index;
+				call["source_zone_id"] = source_zone_id;
+				call["source_bucket"] = source_bucket;
+				call["field_kind"] = field.kind;
+				call["source_field_offset"] = field.offset;
+				call["owner_color"] = field.owner_color;
+				call["castle"] = field.castle;
+				call["ordinal"] = ordinal;
+				call["placement_status"] = "pending_0x4a93a2_object_cell_materialization";
+				minimum_calls.append(call);
+			}
+		}
+
+		struct DensityField {
+			const char *kind;
+			const char *offset;
+			int32_t weight;
+			int32_t owner_color;
+			bool castle;
+		};
+		const DensityField density[] = {
+			{ "player_town_density", "+0x28", player_town_density, actual_owner_color, false },
+			{ "player_castle_density", "+0x2c", player_castle_density, actual_owner_color, true },
+			{ "neutral_town_density", "+0x38", neutral_town_density, -1, false },
+			{ "neutral_castle_density", "+0x3c", neutral_castle_density, -1, true },
+		};
+		for (const DensityField &field : density) {
+			if (field.weight > 0) {
+				positive_density_field_count += 1;
+			}
+			Dictionary density_record;
+			density_record["phase"] = "0x4a8db2_weighted_continuation";
+			density_record["runtime_zone_index"] = runtime_zone_index;
+			density_record["source_zone_id"] = source_zone_id;
+			density_record["source_bucket"] = source_bucket;
+			density_record["field_kind"] = field.kind;
+			density_record["source_field_offset"] = field.offset;
+			density_record["weight"] = field.weight;
+			density_record["owner_color"] = field.owner_color;
+			density_record["castle"] = field.castle;
+			density_record["same_town_type"] = bool(zone.get("same_town_type", false));
+			density_record["placement_status"] = field.weight > 0 ? String("pending_0x4a901a_weighted_object_cell_materialization") : String("skipped_zero_density");
+			density_fields.append(density_record);
+		}
+	}
+
+	report["player_min_town_total"] = player_min_town_total;
+	report["player_min_castle_total"] = player_min_castle_total;
+	report["neutral_min_town_total"] = neutral_min_town_total;
+	report["neutral_min_castle_total"] = neutral_min_castle_total;
+	report["minimum_settlement_call_count"] = minimum_calls.size();
+	report["positive_density_field_count"] = positive_density_field_count;
+	report["density_field_count"] = density_fields.size();
+	report["minimum_calls"] = minimum_calls;
+	report["density_fields"] = density_fields;
+	return report;
+}
+
 Dictionary adapted_template_for_source_index(int32_t source_catalog_index) {
 	Dictionary catalog = load_json_dictionary(ADAPTED_CATALOG_PATH);
 	Array templates = catalog.get("templates", Array());
@@ -3736,6 +3865,9 @@ Dictionary selected_template_payload(const Dictionary &template_record, const Di
 	Dictionary runtime_zones = runtime_zone_build_report(normalized_config, active_zones, active_links, assignment, rng_state_after_template_selection);
 	payload["runtime_zone_build_status"] = runtime_zones.get("status", "");
 	payload["runtime_zone_build"] = runtime_zones;
+	Dictionary town_castle_placement = town_castle_placement_4a8d2c_4a8db2_report(active_zones, runtime_zones);
+	payload["object_category_placement_status"] = town_castle_placement.get("status", "");
+	payload["town_castle_placement"] = town_castle_placement;
 	payload["zones"] = active_zones;
 	payload["links"] = active_links;
 	return payload;
@@ -3754,7 +3886,7 @@ Array clean_phase_ledger() {
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b452, 0x49b3c1, 0x49b53d", "ported_interleaved_runtime_coordinate_and_terrain_selection_inspection_only" },
 		{ "zone_footprint_placement", "0x4a3a03, 0x4cc788, 0x4cca55, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "ported_0x4a3710_small_land_footprint_helpers_and_terrain_visual_inspection_only" },
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "ported_schedule_and_visual_normalization_inspection_only" },
-		{ "object_category_placement", "0x4a8d2c, 0x4a8db2, 0x4a8c15", "pending_clean_port" },
+		{ "object_category_placement", "0x4a8d2c, 0x4a8db2, 0x4a8c15", "0x4a8d2c_0x4a8db2_town_castle_fields_ported_inspection_only_cells_pending" },
 		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4aab7e", "pending_clean_port" },
 		{ "final_cell_object_passes", "0x49eb8d, 0x4ab52a, 0x4ac4ae", "pending_clean_port" },
 	};

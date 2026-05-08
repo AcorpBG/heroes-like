@@ -77,6 +77,23 @@ func _run() -> void:
 	if int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost player-town/castle requirements: %s" % JSON.stringify(report))
 		return
+	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a8db2_town_castle_field_consumption_ported_inspection_only":
+		_fail("The clean boundary did not expose h3maped 0x4a8d2c/0x4a8db2 town/castle field consumption: %s" % JSON.stringify(report))
+		return
+	var town_castle_placement: Dictionary = selected_payload.get("town_castle_placement", {})
+	if int(town_castle_placement.get("player_min_castle_total", -1)) != 4 or int(town_castle_placement.get("player_min_town_total", -1)) != 0:
+		_fail("0x4a8d2c player settlement minimum totals drifted from the selected source fields: %s" % JSON.stringify(town_castle_placement))
+		return
+	if int(town_castle_placement.get("neutral_min_castle_total", -1)) != 0 or int(town_castle_placement.get("neutral_min_town_total", -1)) != 0:
+		_fail("0x4a8d2c neutral settlement minimum totals drifted from the selected source fields: %s" % JSON.stringify(town_castle_placement))
+		return
+	if int(town_castle_placement.get("minimum_settlement_call_count", -1)) != 4 or int(town_castle_placement.get("density_field_count", -1)) != 24 or int(town_castle_placement.get("positive_density_field_count", -1)) != 0:
+		_fail("0x4a8d2c/0x4a8db2 settlement call and density field counts drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	var minimum_calls: Array = town_castle_placement.get("minimum_calls", [])
+	if minimum_calls.size() != 4 or int(minimum_calls[0].get("runtime_zone_index", -1)) != 0 or int(minimum_calls[0].get("owner_color", -1)) != 0 or not bool(minimum_calls[0].get("castle", false)):
+		_fail("0x4a8d2c first direct minimum castle call did not preserve runtime owner semantics: %s" % JSON.stringify(town_castle_placement))
+		return
 	if selected_payload.get("human_capable_source_owner_indices", []) != [0, 1, 2, 3]:
 		_fail("The selected h3maped source template payload lost human-capable owner slots: %s" % JSON.stringify(report))
 		return
@@ -343,6 +360,9 @@ func _run() -> void:
 	if String(phase_ledger[4].get("status", "")) != "ported_schedule_and_visual_normalization_inspection_only":
 		_fail("The phase ledger did not mark the clean h3maped 0x4a3f27 terrain schedule and visual normalization as ported: %s" % JSON.stringify(report))
 		return
+	if String(phase_ledger[5].get("status", "")) != "0x4a8d2c_0x4a8db2_town_castle_fields_ported_inspection_only_cells_pending":
+		_fail("The phase ledger did not mark only h3maped town/castle field consumption as ported for the object category phase: %s" % JSON.stringify(report))
+		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
 	if bool(generated.get("ok", true)) or String(generated.get("status", "")) != "h3maped_small_clean_restart_generation_not_ready":
@@ -362,6 +382,8 @@ func _run() -> void:
 		"accepted_template_count": report.get("accepted_template_count", 0),
 		"assignment_status": selected_payload.get("assignment_status", ""),
 		"runtime_zone_build_status": selected_payload.get("runtime_zone_build_status", ""),
+		"object_category_placement_status": selected_payload.get("object_category_placement_status", ""),
+		"minimum_settlement_call_count": town_castle_placement.get("minimum_settlement_call_count", 0),
 		"terrain_selection_status": runtime_build.get("terrain_selection_status", ""),
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),
 		"coordinate_placement_status": runtime_build.get("coordinate_placement_status", ""),

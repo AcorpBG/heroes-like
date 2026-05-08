@@ -98,6 +98,8 @@ The clean module now ports `0x49b53d` runtime terrain selection before the `0x4a
 
 The clean module also ports the `0x4a3f27` terrain fill/repaint schedule for inspection over the real `0x4a325d` zone-word buffer. It records the full-map terrain-8 water fill, scans owner bytes and repaint-member bits, and schedules 1111 per-cell `0x4bd099` repaint calls for seed `1`, producing terrain counts dirt 492, grass 165, snow 222, rough 232, and water 185. It now also normalizes one-level terrain art/index/flip fields through the ported TerrainPlacement relation-ring/class/row/flip model, exposing 1296-cell `terrain_code_u16`, `terrain_art_index_u8`, `terrain_flip_h`, `terrain_flip_v`, and `terrain_shape_class_u8` arrays with 413 transition cells and 20 visual fallback cells for the seed `1` boundary case. Runtime map generation is still blocked because clean runtime map adoption and later object/guard/reward phases are still pending.
 
+The clean module now ports the field-consumption boundary for the `0x4a8d2c` direct settlement minimum pass and the `0x4a8db2` weighted settlement continuation pass. For the seed `1` boundary case the selected template reports four required player castles, zero required player towns, zero neutral towns/castles, 24 density fields, and no positive settlement density weights. Actual `0x4a93a2`/`0x4a901a` object-cell placement, town object templates, footprints, ownership writeout, and later cleanup/link processing remain pending.
+
 The boundary exposes a phase ledger and keeps every unported materialization phase pending:
 
 1. `template_selection` - `0x49f0cd`, `0x4ac597..0x4ac5a4`, `0x4e7276` - ported for inspection only.
@@ -105,7 +107,7 @@ The boundary exposes a phase ledger and keeps every unported materialization pha
 3. `runtime_zone_build` - `0x4a218c`, `0x4a1f3b`, `0x4a17f5`, `0x4a1701`, `0x4a1ad8`, `0x4a19ed`, `0x49b452`, `0x49b3c1`, `0x49b53d` - runtime records, endpoint control flow, interleaved coordinate-candidate replay, and runtime terrain selection ported for inspection only.
 4. `zone_footprint_placement` - `0x4a3a03`, `0x4cc788`, `0x4cca55`, `0x4ccb64`, `0x4ccdfc`, `0x4a2777`, `0x4a325d`, `0x4a3710` - level collection, polygon source-node walks, `0x4a2777` boundary traversal, `0x4a325d` span fill, and small-land `0x4a3710` no-appended-zone finalizer ported for inspection only.
 5. `terrain_fill_repaint` - `0x4a3f27`, `0x4bcff5`, `0x4bd099` - terrain fill/repaint schedule and one-level TerrainPlacement art/index/flip normalization ported for inspection only.
-6. `object_category_placement` - `0x4a8d2c`, `0x4a8db2`, `0x4a8c15` - pending clean port.
+6. `object_category_placement` - `0x4a8d2c`, `0x4a8db2`, `0x4a8c15` - town/castle field consumption ported for inspection only; object-cell materialization and cleanup still pending.
 7. `guard_reward_monster_placement` - `0x4a9d6a`, `0x4aab7e` - pending clean port.
 8. `final_cell_object_passes` - `0x49eb8d`, `0x4ab52a`, `0x4ac4ae` - pending clean port.
 
