@@ -59,6 +59,9 @@
       ],
       "terrain_source_mask_count": 8
     },
+    "compatibility_notes": {
+      "monster_mask_forge_header": "source Forge header is mapped to the elemental/conflux-compatible original faction slot"
+    },
     "creative_name_policy": "source_names_are_not_retained_in_original_catalog_labels"
   },
   "catalog_record_counts": {

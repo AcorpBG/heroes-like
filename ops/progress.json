@@ -120,6 +120,7 @@
         "No HoMM3 copyrighted asset or DEF import."
       ],
       "validationResults": [
+        "/root/Downloads/h3maped.exe was re-verified as the PE32 MapEd binary and the recovered random-map-generation-h3maped-full-spec.md was audited against the translated template catalog. The concrete translation drift found was the known rmg.txt monster-mask Forge header quirk: scripts/tools/import_random_map_template_catalog.py now maps that source header to the elemental/conflux-compatible original faction slot and records the compatibility note in generated catalog metadata. tests/random_map_template_catalog_grammar_report.tscn, tests/validate_repo.py, git diff --check, and jq empty content/random_map_template_catalog.json content/random_map_template_import_summary.json passed.",
         "Local overfit Small-islands count-fitting changes were abandoned before commit; the code worktree returned to the pushed checkpoint state.",
         "docs/native-rmg-generalized-policy-regate-audit.md records why the exact-count loop is diagnostic-only and why the next implementation must generalize.",
         "tests/native_random_map_homm3_owner_corpus_coverage_report.tscn emitted schema native_random_map_homm3_owner_corpus_coverage_report_v6; the raw gate remains 8/9 mapped pass, while generalized_policy_failure_summary groups the active Small islands failure into guard_policy, town_policy, decoration_blocker_policy, object_density_policy, and object_reward_policy.",

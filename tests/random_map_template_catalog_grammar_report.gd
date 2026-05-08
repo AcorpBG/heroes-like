@@ -28,6 +28,8 @@ func _run() -> void:
 		return
 	if not _assert_import_breadth(catalog_report):
 		return
+	if not _assert_monster_mask_compatibility(catalog_report):
+		return
 	if not _assert_catalog_label_policy(catalog_report):
 		return
 	if int(catalog_report.get("template_count", 0)) < 2 or int(catalog_report.get("profile_count", 0)) < 2:
@@ -118,6 +120,35 @@ func _assert_import_breadth(catalog_report: Dictionary) -> bool:
 			_fail("Source field coverage missed link field %s: %s" % [required_link_field, JSON.stringify(coverage)])
 			return false
 	return true
+
+func _assert_monster_mask_compatibility(catalog_report: Dictionary) -> bool:
+	var source_summary: Dictionary = catalog_report.get("source_catalog_summary", {})
+	var compatibility_notes: Dictionary = source_summary.get("compatibility_notes", {}) if source_summary.get("compatibility_notes", {}) is Dictionary else {}
+	if String(compatibility_notes.get("monster_mask_forge_header", "")) == "":
+		_fail("Catalog did not preserve the recovered Forge-header monster-mask compatibility note: %s" % JSON.stringify(source_summary))
+		return false
+	var catalog := _load_template_catalog_fixture()
+	for template in catalog.get("templates", []):
+		if not (template is Dictionary):
+			continue
+		if not String(template.get("id", "")).begins_with("translated_rmg_template_"):
+			continue
+		for zone in template.get("zones", []):
+			if not (zone is Dictionary):
+				continue
+			var policy: Dictionary = zone.get("monster_policy", {}) if zone.get("monster_policy", {}) is Dictionary else {}
+			var allowed: Array = policy.get("allowed_faction_ids", []) if policy.get("allowed_faction_ids", []) is Array else []
+			if int(policy.get("source_mask_count", 0)) >= 10 and "faction_sunvault" not in allowed:
+				_fail("Full monster mask did not map the recovered Forge header to the elemental-compatible faction slot: %s" % JSON.stringify(zone))
+				return false
+	return true
+
+func _load_template_catalog_fixture() -> Dictionary:
+	var file := FileAccess.open(RandomMapGeneratorRulesScript.TEMPLATE_CATALOG_PATH, FileAccess.READ)
+	if file == null:
+		return {"templates": []}
+	var parsed = JSON.parse_string(file.get_as_text())
+	return parsed if parsed is Dictionary else {"templates": []}
 
 func _assert_catalog_label_policy(catalog_report: Dictionary) -> bool:
 	var source_summary: Dictionary = catalog_report.get("source_catalog_summary", {})
