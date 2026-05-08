@@ -7380,6 +7380,149 @@ Dictionary h3maped_connector_segment_branch_4a2777_report(const Dictionary &norm
 	return report;
 }
 
+Dictionary h3maped_boundary_wrapping_continuation_4a2777_report(const Dictionary &normalized) {
+	Dictionary report;
+	report["status"] = "0x4a2777_boundary_wrapping_continuation_ported_standalone";
+	report["source"] = "h3maped 0x4a2777 continuation at 0x4a29f9..0x4a2b23; walks following source nodes, clips the next endpoint, wraps along rectangle borders through 0x4a2a5b..0x4a2af2, appends intermediate vertices, and paints the final segment through 0x4a261a";
+	report["function_address"] = "0x4a2777";
+	report["continuation_address"] = "0x4a29f9..0x4a2b23";
+	report["boundary_wrap_address"] = "0x4a2a5b..0x4a2af2";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["line_writer_address"] = "0x4a261a";
+	report["vertex_vector_offset"] = "runtime_zone+0x3f4";
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t water_code = h3maped_water_mode_code(normalized);
+	H3MapedClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = width;
+	bounds.max_y = height;
+	const int32_t min_x = bounds.min_x;
+	const int32_t min_y = bounds.min_y;
+	const int32_t max_x = bounds.max_x;
+	const int32_t max_y = bounds.max_y;
+	const int32_t right_x = std::max<int32_t>(min_x, max_x - 1);
+	const int32_t bottom_y = std::max<int32_t>(min_y, max_y - 1);
+	const int32_t source_x = min_x - 6;
+	const int32_t source_y = std::max<int32_t>(min_y, height / 2);
+	const int32_t next_source_x = max_x + 6;
+	const int32_t next_source_y = std::max<int32_t>(min_y, height - 7);
+	const H3MapedClipResult clipped_current = h3maped_clip_point_4a2b33(source_x, source_y, next_source_x, next_source_y, bounds);
+	const H3MapedClipResult clipped_target = h3maped_clip_point_4a2b33(next_source_x, next_source_y, source_x, source_y, bounds);
+	int32_t current_x = clipped_current.x;
+	int32_t current_y = clipped_current.y;
+	const int32_t target_x = clipped_target.x;
+	const int32_t target_y = clipped_target.y;
+	Array segment_reports;
+	Array vertices;
+	std::map<int64_t, bool> unique_cells;
+	int32_t total_trace_count = 0;
+	int32_t total_out_of_bounds_count = 0;
+	int32_t wrap_segment_count = 0;
+	int32_t final_segment_count = 0;
+	auto append_unique_cells = [&](const H3MapedLineWriteResult &line) {
+		for (const auto &item : line.unique_cells) {
+			unique_cells[item.first] = true;
+		}
+		total_trace_count += int32_t(line.trace.size());
+		total_out_of_bounds_count += line.out_of_bounds_write_count;
+	};
+	auto append_vertex = [&](int32_t x, int32_t y) {
+		Dictionary vertex;
+		vertex["x"] = x;
+		vertex["y"] = y;
+		vertices.append(vertex);
+	};
+	auto append_segment = [&](const char *id, const char *branch, int32_t x1, int32_t y1, int32_t x2, int32_t y2, bool is_wrap_segment) {
+		H3MapedLineWriteResult line = h3maped_line_writer_4a261a(width, height, level_count, water_code, x1, y1, x2, y2, 6, 0);
+		append_unique_cells(line);
+		Dictionary segment;
+		segment["id"] = id;
+		segment["branch"] = branch;
+		segment["from_x"] = x1;
+		segment["from_y"] = y1;
+		segment["to_x"] = x2;
+		segment["to_y"] = y2;
+		segment["trace_write_count"] = int32_t(line.trace.size());
+		segment["unique_cell_count"] = int32_t(line.unique_cells.size());
+		segment["out_of_bounds_write_count"] = line.out_of_bounds_write_count;
+		segment_reports.append(segment);
+		append_vertex(x1, y1);
+		if (is_wrap_segment) {
+			wrap_segment_count += 1;
+		} else {
+			final_segment_count += 1;
+		}
+	};
+
+	bool loop_guard_exhausted = false;
+	for (int32_t guard = 0; guard < 8 && current_x != target_x && current_y != target_y; ++guard) {
+		int32_t next_x = current_x;
+		int32_t next_y = current_y;
+		const char *branch = "0x4a2aa7_bottom_edge_to_min_x";
+		if (current_x == min_x) {
+			if (current_y == min_y) {
+				next_x = right_x;
+				next_y = min_y;
+				branch = "0x4a2a91_top_edge_to_max_x_minus_one";
+			} else {
+				next_x = min_x;
+				next_y = min_y;
+				branch = "0x4a2a81_left_edge_to_min_y";
+			}
+		} else if (current_y == min_y) {
+			next_x = right_x;
+			next_y = min_y;
+			branch = "0x4a2a89_top_edge_to_max_x_minus_one";
+		} else if (current_x == right_x && current_y != bottom_y) {
+			next_x = right_x;
+			next_y = bottom_y;
+			branch = "0x4a2a98_right_edge_to_max_y_minus_one";
+		} else {
+			next_x = min_x;
+			next_y = bottom_y;
+			branch = "0x4a2aa7_bottom_edge_to_min_x";
+		}
+		append_segment("wrap", branch, current_x, current_y, next_x, next_y, true);
+		current_x = next_x;
+		current_y = next_y;
+		if (guard == 7 && current_x != target_x && current_y != target_y) {
+			loop_guard_exhausted = true;
+		}
+	}
+	if (current_x != target_x || current_y != target_y) {
+		append_segment("final", "0x4a2af2_final_segment_to_clipped_endpoint", current_x, current_y, target_x, target_y, false);
+	}
+
+	Dictionary input;
+	input["source_x"] = source_x;
+	input["source_y"] = source_y;
+	input["next_source_x"] = next_source_x;
+	input["next_source_y"] = next_source_y;
+	report["sample_input"] = input;
+	Dictionary clipped;
+	clipped["current_x"] = clipped_current.x;
+	clipped["current_y"] = clipped_current.y;
+	clipped["current_branch"] = clipped_current.branch;
+	clipped["target_x"] = clipped_target.x;
+	clipped["target_y"] = clipped_target.y;
+	clipped["target_branch"] = clipped_target.branch;
+	report["sample_clipped_continuation"] = clipped;
+	report["wrap_segment_count"] = wrap_segment_count;
+	report["final_segment_count"] = final_segment_count;
+	report["segments"] = segment_reports;
+	report["sample_appended_vertex_count"] = vertices.size();
+	report["sample_appended_vertices"] = vertices;
+	report["trace_write_count"] = total_trace_count;
+	report["unique_cell_count"] = int32_t(unique_cells.size());
+	report["out_of_bounds_write_count"] = total_out_of_bounds_count;
+	report["loop_guard_exhausted"] = loop_guard_exhausted;
+	report["blocked_next"] = "replace the deterministic sample with the real 0x4a2777 source-node walk from phase item +0x10 and source-zone list payloads";
+	return report;
+}
+
 constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
 
 int64_t h3maped_cell_key_4a325d(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
@@ -7651,6 +7794,8 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 	report["rectangle_fallback_evidence"] = h3maped_rectangle_fallback_4a2777_report(normalized);
 	report["connector_segment_status"] = "0x4a2777_connector_segment_branch_ported_standalone";
 	report["connector_segment_evidence"] = h3maped_connector_segment_branch_4a2777_report(normalized);
+	report["boundary_wrapping_status"] = "0x4a2777_boundary_wrapping_continuation_ported_standalone";
+	report["boundary_wrapping_evidence"] = h3maped_boundary_wrapping_continuation_4a2777_report(normalized);
 	Array available_inputs;
 	for (const H3MapedRuntimeZoneSeed &zone : zones) {
 		Dictionary item;
