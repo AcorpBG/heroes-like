@@ -110,15 +110,17 @@ func _run() -> void:
 	if int(runtime_build.get("min_source_base_size", -1)) != 11 or int(runtime_build.get("scale_divisor", -1)) != 5 or int(runtime_build.get("initial_scale_reference", -1)) != 79:
 		_fail("The h3maped runtime-zone build scale inputs drifted from 0x4a218c: %s" % JSON.stringify(report))
 		return
-	if String(runtime_build.get("coordinate_placement_status", "")) != "0x4a1f3b_coordinate_candidate_math_replayed_inspection_only":
+	if String(runtime_build.get("coordinate_placement_status", "")) != "0x4a218c_interleaved_runtime_and_coordinate_replay_inspection_only":
 		_fail("Runtime-zone coordinate candidate replay did not expose the clean h3maped status: %s" % JSON.stringify(report))
 	var coordinate_seed: Dictionary = runtime_build.get("coordinate_seed", {})
-	if String(coordinate_seed.get("rng_order_status", "")) != "pending_full_0x4a218c_interleaved_replay":
-		_fail("Coordinate replay must keep the remaining 0x4a218c RNG interleaving gap explicit: %s" % JSON.stringify(report))
-	if int(coordinate_seed.get("placement_step_count", -1)) != 18 or int(coordinate_seed.get("rng_calls_after_runtime_zone_build", -1)) != 18:
+	if String(coordinate_seed.get("rng_order_status", "")) != "0x4a218c_interleaved_replay_ported_inspection_only":
+		_fail("Coordinate replay must expose the exact 0x4a218c runtime/coordinate RNG interleaving checkpoint: %s" % JSON.stringify(report))
+	if int(coordinate_seed.get("placement_step_count", -1)) != 18 or int(coordinate_seed.get("coordinate_rng_calls_during_0x4a1f3b", -1)) != 18:
 		_fail("Coordinate replay must expose one candidate-selection step for each 0x4a1f3b call: %s" % JSON.stringify(report))
+	if int(coordinate_seed.get("town_rng_calls_during_0x49b452", -1)) != 4 or int(coordinate_seed.get("rng_event_count", -1)) != 22:
+		_fail("Runtime-zone replay must expose interleaved town and coordinate RNG events from 0x4a218c: %s" % JSON.stringify(report))
 	var bbox: Dictionary = coordinate_seed.get("bounding_box_rescale", {})
-	if int(bbox.get("selected_span_before_rescale", -1)) != 82 or int(bbox.get("map_span", -1)) != 36:
+	if int(bbox.get("selected_span_before_rescale", -1)) != 84 or int(bbox.get("map_span", -1)) != 36:
 		_fail("Coordinate replay bbox rescale drifted from the executable-derived 0x4a19ed path: %s" % JSON.stringify(report))
 		return
 	var runtime_zones: Array = runtime_build.get("runtime_zones", [])
@@ -129,8 +131,17 @@ func _run() -> void:
 	if int(first_runtime_zone.get("source_zone_id", -1)) != 1 or int(first_runtime_zone.get("actual_owner_color", -1)) != 0:
 		_fail("Runtime-zone owner mapping did not preserve source zone +0x1c through generator +0xee4: %s" % JSON.stringify(report))
 		return
+	if int(first_runtime_zone.get("x_after_bbox_rescale", -1)) != 23 or int(first_runtime_zone.get("y_after_bbox_rescale", -1)) != 11:
+		_fail("Interleaved 0x4a218c coordinate replay changed the first runtime-zone center: %s" % JSON.stringify(report))
+		return
 	if int(first_runtime_zone.get("source_base_size", -1)) != 11 or int(first_runtime_zone.get("runtime_initial_size_before_rescale", -1)) != 11 or int(first_runtime_zone.get("runtime_byte_3c", -1)) != 0:
 		_fail("Runtime-zone initializer fields drifted from 0x49b452: %s" % JSON.stringify(report))
+		return
+	if int(runtime_zones[3].get("x_after_bbox_rescale", -1)) != 18 or int(runtime_zones[3].get("y_after_bbox_rescale", -1)) != 4:
+		_fail("Interleaved 0x4a218c coordinate replay changed the fourth runtime-zone center: %s" % JSON.stringify(report))
+		return
+	if String(runtime_zones[2].get("terrain_source", "")) != "pending_0x4a3f27_terrain_phase":
+		_fail("Runtime-zone report must not consume terrain RNG before the h3maped terrain phase: %s" % JSON.stringify(report))
 		return
 	var link_seeds: Array = runtime_build.get("link_seeds", [])
 	if link_seeds.size() != 5 or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 or int(link_seeds[0].get("runtime_zone_b", -1)) != 3:
@@ -152,7 +163,7 @@ func _run() -> void:
 	if int(early_link_placement.get("fallback_attempt_count_if_no_valid_endpoint", -1)) != 3:
 		_fail("The h3maped early link-placement fallback schedule drifted for the selected template: %s" % JSON.stringify(report))
 		return
-	if String(early_link_placement.get("coordinate_candidate_status", "")) != "0x4a1f3b_coordinate_candidate_math_replayed_inspection_only":
+	if String(early_link_placement.get("coordinate_candidate_status", "")) != "0x4a218c_interleaved_runtime_and_coordinate_replay_inspection_only":
 		_fail("Coordinate candidate replay status did not flow back into the early link placement report: %s" % JSON.stringify(report))
 		return
 	var early_calls: Array = early_link_placement.get("calls", [])
@@ -192,7 +203,7 @@ func _run() -> void:
 	if String(phase_ledger[1].get("phase_id", "")) != "player_slot_assignment" or String(phase_ledger[1].get("status", "")) != "ported_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped player-slot assignment as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_structure_and_coordinate_candidate_replay_inspection_only":
+	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_interleaved_runtime_and_coordinate_replay_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped runtime-zone record build as ported: %s" % JSON.stringify(report))
 		return
 	if String(phase_ledger[3].get("status", "")) != "pending_clean_port":
