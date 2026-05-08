@@ -9156,6 +9156,9 @@ int32_t native_catalog_auto_generated_reward_floor(const Dictionary &normalized)
 	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
 		return std::max(410, (area * 40) / 1000);
 	}
+	if (native_catalog_auto_large_two_level_islands_profile(normalized)) {
+		return std::max(630, (area * 27) / 1000);
+	}
 	if (native_catalog_auto_xl_one_level_islands_profile(normalized)) {
 		return std::max(649, (area * 31) / 1000);
 	}
@@ -9183,6 +9186,13 @@ int32_t native_catalog_auto_generated_reward_cap(const Dictionary &normalized) {
 	}
 	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
 		return 185;
+	}
+	return -1;
+}
+
+int32_t native_catalog_auto_generated_decoration_cap(const Dictionary &normalized) {
+	if (native_catalog_auto_large_two_level_islands_profile(normalized)) {
+		return 1797;
 	}
 	return -1;
 }
@@ -11733,6 +11743,47 @@ Dictionary generate_object_placements(const Dictionary &normalized, const Dictio
 			native_catalog_auto_density_supplement["native_catalog_auto_reward_category_cap_trim"] = trim_summary;
 		}
 		append_extension_profile_elapsed(object_profile_phases, "native_catalog_auto_reward_category_cap_trim", elapsed_usec_since(reward_trim_started_at), top_object_phase_usec, top_object_phase_id);
+	}
+
+	const int32_t native_catalog_auto_decoration_cap = native_catalog_auto_generated_decoration_cap(normalized);
+	if (parity_targets.is_empty()
+			&& native_catalog_auto_decoration_cap >= 0
+			&& !native_rmg_owner_discovered_comparison_seed(normalized)) {
+		const auto decoration_trim_started_at = std::chrono::steady_clock::now();
+		const int32_t decoration_count = placement_count_for_kind(placements, "decorative_obstacle");
+		const int32_t desired_trim_count = std::max(0, decoration_count - native_catalog_auto_decoration_cap);
+		if (desired_trim_count > 0) {
+			Array trimmed_placements;
+			Array removed_ids;
+			int32_t removed_count = 0;
+			for (int64_t index = placements.size() - 1; index >= 0; --index) {
+				if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
+					trimmed_placements.push_front(placements[index]);
+					continue;
+				}
+				Dictionary placement = Dictionary(placements[index]);
+				if (String(placement.get("kind", "")) == "decorative_obstacle" && removed_count < desired_trim_count) {
+					removed_ids.append(placement.get("placement_id", ""));
+					++removed_count;
+					continue;
+				}
+				trimmed_placements.push_front(placement);
+			}
+			placements = trimmed_placements;
+			Dictionary trim_summary;
+			trim_summary["schema_id"] = "native_rmg_catalog_auto_decoration_category_cap_trim_v1";
+			trim_summary["target_decoration_category_count"] = native_catalog_auto_decoration_cap;
+			trim_summary["initial_decoration_category_count"] = decoration_count;
+			trim_summary["desired_trim_count"] = desired_trim_count;
+			trim_summary["removed_decorative_obstacle_count"] = removed_count;
+			trim_summary["removed_placement_ids"] = removed_ids;
+			trim_summary["final_decoration_category_count"] = placement_count_for_kind(placements, "decorative_obstacle");
+			trim_summary["policy"] = "generated catalog-auto trims surplus decorative obstacles for profiles whose owner group shows lower decorative-blocker density";
+			trim_summary["status"] = int32_t(trim_summary.get("final_decoration_category_count", 0)) <= native_catalog_auto_decoration_cap ? "pass" : "partial";
+			trim_summary["signature"] = hash32_hex(canonical_variant(trim_summary));
+			native_catalog_auto_density_supplement["native_catalog_auto_decoration_category_cap_trim"] = trim_summary;
+		}
+		append_extension_profile_elapsed(object_profile_phases, "native_catalog_auto_decoration_category_cap_trim", elapsed_usec_since(decoration_trim_started_at), top_object_phase_usec, top_object_phase_id);
 	}
 
 	if (owner_medium_reward_target >= 0) {
