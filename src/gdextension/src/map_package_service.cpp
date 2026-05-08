@@ -9221,7 +9221,7 @@ int32_t native_catalog_auto_generated_town_floor(const Dictionary &normalized, i
 			return std::max(std::max(8, start_count + 3), int32_t(std::ceil(double(area) * 0.68 / 1000.0)));
 		}
 		if (size_class_id == "homm3_extra_large" && water_mode == "land") {
-			return std::max(std::max(12, start_count + 7), int32_t(std::ceil(double(area) * 0.58 / 1000.0)));
+			return std::max(std::max(12, start_count + 7), int32_t(std::floor(double(area) * 0.58 / 1000.0)));
 		}
 		return 0;
 	}
@@ -15613,14 +15613,16 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 					&& target_level == 0
 					&& town_floor_search_occupied.has(target_key)
 					&& String(town_floor_search_occupied.get(target_key, "")).begins_with("reserved_future_town_anchor_" + selected_zone_id);
-			if (town_floor_search_occupied.has(target_key) && !uses_reserved_future_town_anchor) {
+			const bool one_level_land_global_town_floor = target_level == 0
+					&& (native_catalog_auto_large_one_level_land_profile(normalized) || native_catalog_auto_xl_one_level_land_profile(normalized));
+			if (town_floor_search_occupied.has(target_key) && !uses_reserved_future_town_anchor && !one_level_land_global_town_floor) {
 				if (use_reserved_surface_anchor && !selected_zone_id.is_empty()) {
 					town_floor_used_zones[town_floor_zone_level_key(selected_zone_id, target_level)] = true;
 				}
 				++attempts;
 				continue;
 			}
-			if (!point_far_from_towns_on_level(towns, target_x, target_y, target_level, spacing)) {
+			if (!point_far_from_towns_on_level(towns, target_x, target_y, target_level, spacing) && !one_level_land_global_town_floor) {
 				if (use_reserved_surface_anchor && !selected_zone_id.is_empty()) {
 					town_floor_used_zones[town_floor_zone_level_key(selected_zone_id, target_level)] = true;
 				}
@@ -15638,11 +15640,11 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			}
 			Dictionary placement_zone = zone;
 			String placement_zone_id = selected_zone_id;
-			if (point.is_empty() && target_level == 0 && native_catalog_auto_large_one_level_land_profile(normalized)) {
+			if (point.is_empty() && one_level_land_global_town_floor) {
 				const int32_t scan_width = std::max(1, width - 2);
 				const int32_t scan_height = std::max(1, height - 2);
 				const int32_t scan_area = std::max(1, scan_width * scan_height);
-				const uint32_t global_seed = hash32_int(String(normalized.get("normalized_seed", "0")) + String(":large_land_global_town_floor:") + String::num_int64(attempts));
+				const uint32_t global_seed = hash32_int(String(normalized.get("normalized_seed", "0")) + String(":one_level_land_global_town_floor:") + String::num_int64(attempts));
 				for (int32_t scan = 0; scan < scan_area; ++scan) {
 					const int32_t slot = int32_t((global_seed + uint32_t(scan * 37)) % uint32_t(scan_area));
 					const int32_t point_x = 1 + (slot % scan_width);
@@ -15663,7 +15665,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 							placement_zone = point_zone;
 							placement_zone_id = point_zone_id;
 							point = point_record(point_x, point_y);
-							point["town_anchor_reservation_policy"] = "large_one_level_land_global_spaced_supplement_after_reserved_anchor_infeasible";
+							point["town_anchor_reservation_policy"] = "one_level_land_global_spaced_supplement_after_reserved_anchor_infeasible";
 							break;
 						}
 					}
