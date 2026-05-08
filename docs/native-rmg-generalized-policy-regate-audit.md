@@ -1067,3 +1067,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_nowater_profile_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The merged top blocker moves back to `xl_islands_2levels`, followed by Large one-level islands, XL one-level water, XL two-level water, and XL one-level land. The next correction should target route/town topology or the remaining island terrain/category shape gaps instead of adding more broad volume floors.
+
+## XL Two-Level Islands Terrain And Level-Distribution Cleanup
+
+The next merged top-gap case was again `xl_islands_2levels`, but the broad category counts were already close. The remaining large error was shape: native over-blocked underground terrain by hundreds of tiles, pushed too many scenic objects underground, kept too few rewards underground, and left surface object-only town routes much more open than the owner sample.
+
+Normal generated catalog-auto XL two-level islands now use a profile-specific underground distribution split for decoration, scenic objects, and rewards, and a lower XL islands underground rock fraction. This targets level/terrain shape without changing broad category totals.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `xl_islands_2levels` export wrote `1/1` package in about `44.224s` with native validation `pass`.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/XL-islands-2levels.h3m --amap .artifacts/rmg_native_batch_export_xl_islands_2level_profile_probe2/xl_islands_2levels.amap --compare --pretty --allow-failures` improved focused production-gap severity from `1281` to `520` and terrain-blocked delta from `+764` to `+3` while preserving total object delta `-4`, road delta `-9`, and category absolute delta `4`.
+- Level split is now close for the object categories: native surface/underground decoration `1596/120` versus owner `1598/118`, scenic/object `537/198` versus `537/198`, and rewards `320/250` versus `317/253`. Guard split remains imperfect at `101/36` versus owner `90/47`, and towns remain `9/7` versus owner `13/7`.
+- The remaining debt is route/town topology: native surface object-only reachable town pairs remain `21` versus owner `2`, guarded reachable pairs are `0` versus owner `2`, and surface town count remains short by four.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_2level_profile_merged2 --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.432s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_islands_2level_profile_merged2 --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blocker moves to `l_islands_randomplayers`, followed by XL one-level water, XL two-level water, XL one-level land, and Medium/Large route-shape cases. The next correction should focus on island one-level road/category shape or the remaining town/route topology gap.
