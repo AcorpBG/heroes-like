@@ -9435,42 +9435,133 @@ Dictionary apply_owner_small_islands_2level_object_distribution(Array &placement
 	Dictionary summary;
 	summary["schema_id"] = "native_rmg_owner_small_islands_2level_object_distribution_v1";
 	summary["applied"] = false;
-	summary["policy"] = "two-level islands comparison materializes underground reward/object/decoration mix instead of leaving level 1 as road-only";
+	summary["policy"] = "two-level islands comparison shapes owner-like decoration/object/reward category totals and level split before town guard placement";
 	if (placements.is_empty()) {
 		summary["status"] = "no_placements";
 		return summary;
 	}
-	int32_t decoration_to_scenic_remaining = 30;
-	int32_t reward_to_scenic_remaining = 26;
-	int32_t reward_trim_remaining = 1;
-	int32_t underground_decoration_remaining = 18;
-	int32_t underground_scenic_remaining = 21;
-	int32_t underground_reward_remaining = 63;
-	Array redistributed;
-	Array converted_ids;
-	Array trimmed_ids;
+	static constexpr int32_t TARGET_DECORATION_COUNT = 116;
+	static constexpr int32_t TARGET_OBJECT_COUNT = 56;
+	static constexpr int32_t TARGET_REWARD_COUNT = 102;
+	static constexpr int32_t TARGET_UNDERGROUND_DECORATION_COUNT = 18;
+	static constexpr int32_t TARGET_UNDERGROUND_OBJECT_COUNT = 21;
+	static constexpr int32_t TARGET_UNDERGROUND_REWARD_COUNT = 63;
+
+	Array shaped;
 	for (int64_t index = 0; index < placements.size(); ++index) {
-		if (Variant(placements[index]).get_type() != Variant::DICTIONARY) {
-			redistributed.append(placements[index]);
+		if (Variant(placements[index]).get_type() == Variant::DICTIONARY) {
+			shaped.append(Dictionary(placements[index]).duplicate(true));
+		} else {
+			shaped.append(placements[index]);
+		}
+	}
+
+	int32_t decoration_count = placement_count_for_kind(shaped, "decorative_obstacle");
+	int32_t object_count = placement_count_for_kind(shaped, "scenic_object");
+	int32_t reward_count = placement_count_for_spatial_category(shaped, "reward");
+	Array converted_to_reward_ids;
+	Array converted_to_object_ids;
+	Array trimmed_ids;
+
+	auto decrement_count_for_kind = [&](const String &kind) {
+		if (kind == "decorative_obstacle") {
+			--decoration_count;
+		} else if (kind == "scenic_object") {
+			--object_count;
+		} else if (placement_kind_is_reward_category(kind)) {
+			--reward_count;
+		}
+	};
+	auto increment_count_for_kind = [&](const String &kind) {
+		if (kind == "decorative_obstacle") {
+			++decoration_count;
+		} else if (kind == "scenic_object") {
+			++object_count;
+		} else if (placement_kind_is_reward_category(kind)) {
+			++reward_count;
+		}
+	};
+	auto retarget_shaped_record = [&](int64_t index, const String &new_kind, Array &converted_ids) {
+		Dictionary record = Dictionary(shaped[index]).duplicate(true);
+		const String old_kind = String(record.get("kind", ""));
+		if (old_kind == new_kind) {
+			return;
+		}
+		decrement_count_for_kind(old_kind);
+		record = retarget_object_record_kind(record, new_kind, int32_t(index));
+		record["owner_small_islands_2level_previous_kind"] = old_kind;
+		record["owner_small_islands_2level_category_shape_policy"] = "owner_small_islands_2level_category_totals_116_decoration_56_object_102_reward";
+		record["signature"] = hash32_hex(canonical_variant(record));
+		shaped[index] = record;
+		increment_count_for_kind(new_kind);
+		converted_ids.append(record.get("placement_id", ""));
+	};
+
+	for (int64_t index = 0; index < shaped.size(); ++index) {
+		if (Variant(shaped[index]).get_type() != Variant::DICTIONARY) {
 			continue;
 		}
-		Dictionary record = Dictionary(placements[index]).duplicate(true);
-		String kind = String(record.get("kind", ""));
-		if (kind == "decorative_obstacle" && decoration_to_scenic_remaining > 0) {
-			record = retarget_object_record_kind(record, "scenic_object", int32_t(index));
-			kind = "scenic_object";
-			--decoration_to_scenic_remaining;
-			converted_ids.append(record.get("placement_id", ""));
-		} else if (placement_kind_is_reward_category(kind) && reward_to_scenic_remaining > 0) {
-			record = retarget_object_record_kind(record, "scenic_object", int32_t(index));
-			kind = "scenic_object";
-			--reward_to_scenic_remaining;
-			converted_ids.append(record.get("placement_id", ""));
-		} else if (placement_kind_is_reward_category(kind) && reward_trim_remaining > 0) {
-			--reward_trim_remaining;
+		const String kind = String(Dictionary(shaped[index]).get("kind", ""));
+		if (kind == "scenic_object" && object_count > TARGET_OBJECT_COUNT && reward_count < TARGET_REWARD_COUNT) {
+			retarget_shaped_record(index, "reward_reference", converted_to_reward_ids);
+		}
+	}
+	for (int64_t index = 0; index < shaped.size(); ++index) {
+		if (Variant(shaped[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		const String kind = String(Dictionary(shaped[index]).get("kind", ""));
+		if (kind == "decorative_obstacle" && decoration_count > TARGET_DECORATION_COUNT && reward_count < TARGET_REWARD_COUNT) {
+			retarget_shaped_record(index, "reward_reference", converted_to_reward_ids);
+		}
+	}
+	for (int64_t index = 0; index < shaped.size(); ++index) {
+		if (Variant(shaped[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		const String kind = String(Dictionary(shaped[index]).get("kind", ""));
+		if (kind == "decorative_obstacle" && decoration_count > TARGET_DECORATION_COUNT && object_count < TARGET_OBJECT_COUNT) {
+			retarget_shaped_record(index, "scenic_object", converted_to_object_ids);
+		}
+	}
+
+	Array trimmed;
+	for (int64_t index = shaped.size() - 1; index >= 0; --index) {
+		if (Variant(shaped[index]).get_type() != Variant::DICTIONARY) {
+			trimmed.push_front(shaped[index]);
+			continue;
+		}
+		Dictionary record = Dictionary(shaped[index]);
+		const String kind = String(record.get("kind", ""));
+		if (kind == "decorative_obstacle" && decoration_count > TARGET_DECORATION_COUNT) {
+			--decoration_count;
 			trimmed_ids.append(record.get("placement_id", ""));
 			continue;
 		}
+		if (kind == "scenic_object" && object_count > TARGET_OBJECT_COUNT) {
+			--object_count;
+			trimmed_ids.append(record.get("placement_id", ""));
+			continue;
+		}
+		if (kind == "reward_reference" && reward_count > TARGET_REWARD_COUNT) {
+			--reward_count;
+			trimmed_ids.append(record.get("placement_id", ""));
+			continue;
+		}
+		trimmed.push_front(record);
+	}
+
+	int32_t underground_decoration_remaining = TARGET_UNDERGROUND_DECORATION_COUNT;
+	int32_t underground_scenic_remaining = TARGET_UNDERGROUND_OBJECT_COUNT;
+	int32_t underground_reward_remaining = TARGET_UNDERGROUND_REWARD_COUNT;
+	Array redistributed;
+	for (int64_t index = 0; index < trimmed.size(); ++index) {
+		if (Variant(trimmed[index]).get_type() != Variant::DICTIONARY) {
+			redistributed.append(trimmed[index]);
+			continue;
+		}
+		Dictionary record = Dictionary(trimmed[index]).duplicate(true);
+		const String kind = String(record.get("kind", ""));
 		if (kind == "decorative_obstacle" && underground_decoration_remaining > 0) {
 			set_object_record_level(record, 1);
 			--underground_decoration_remaining;
@@ -9488,20 +9579,25 @@ Dictionary apply_owner_small_islands_2level_object_distribution(Array &placement
 	}
 	placements = redistributed;
 	summary["applied"] = true;
-	summary["converted_to_scenic_count"] = converted_ids.size();
-	summary["converted_to_scenic_ids"] = converted_ids;
-	summary["trimmed_reward_count"] = trimmed_ids.size();
-	summary["trimmed_reward_ids"] = trimmed_ids;
-	summary["remaining_decoration_to_scenic"] = decoration_to_scenic_remaining;
-	summary["remaining_reward_to_scenic"] = reward_to_scenic_remaining;
-	summary["remaining_reward_trim"] = reward_trim_remaining;
+	summary["target_decoration_count"] = TARGET_DECORATION_COUNT;
+	summary["target_object_count"] = TARGET_OBJECT_COUNT;
+	summary["target_reward_count"] = TARGET_REWARD_COUNT;
+	summary["converted_to_reward_count"] = converted_to_reward_ids.size();
+	summary["converted_to_reward_ids"] = converted_to_reward_ids;
+	summary["converted_to_object_count"] = converted_to_object_ids.size();
+	summary["converted_to_object_ids"] = converted_to_object_ids;
+	summary["trimmed_count"] = trimmed_ids.size();
+	summary["trimmed_ids"] = trimmed_ids;
 	summary["remaining_underground_decoration"] = underground_decoration_remaining;
 	summary["remaining_underground_scenic"] = underground_scenic_remaining;
 	summary["remaining_underground_reward"] = underground_reward_remaining;
 	summary["final_counts_by_kind"] = count_by_field(placements, "kind");
-	summary["status"] = decoration_to_scenic_remaining == 0
-			&& reward_to_scenic_remaining == 0
-			&& reward_trim_remaining == 0
+	summary["final_decoration_count"] = placement_count_for_kind(placements, "decorative_obstacle");
+	summary["final_object_count"] = placement_count_for_kind(placements, "scenic_object");
+	summary["final_reward_count"] = placement_count_for_spatial_category(placements, "reward");
+	summary["status"] = int32_t(summary.get("final_decoration_count", 0)) == TARGET_DECORATION_COUNT
+			&& int32_t(summary.get("final_object_count", 0)) == TARGET_OBJECT_COUNT
+			&& int32_t(summary.get("final_reward_count", 0)) == TARGET_REWARD_COUNT
 			&& underground_decoration_remaining == 0
 			&& underground_scenic_remaining == 0
 			&& underground_reward_remaining == 0 ? "pass" : "partial";
@@ -16022,7 +16118,8 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	const bool owner_category_guard_density = owner_medium_guard_density || owner_small_normal_water_2level_guard_limit >= 0 || owner_small_islands_2level_guard_limit >= 0 || owner_large_guard_limit >= 0 || owner_xl_guard_limit >= 0;
 	const bool generated_catalog_guard_floor_enabled = parity_targets.is_empty()
 			&& native_rmg_generalized_native_catalog_auto_policy(normalized)
-			&& !native_rmg_owner_discovered_comparison_seed(normalized);
+			&& !native_rmg_owner_discovered_comparison_seed(normalized)
+			&& owner_small_islands_2level_guard_limit < 0;
 	const int32_t generated_catalog_guard_floor_reward_count = generated_catalog_guard_floor_enabled ? placement_count_for_spatial_category(objects, "reward") : 0;
 	const int32_t generated_catalog_guard_floor = generated_catalog_guard_floor_enabled ? native_catalog_auto_generated_guard_floor(normalized, generated_catalog_guard_floor_reward_count) : -1;
 	const int32_t fixture_guard_limit = parity_guard_limit >= 0 ? parity_guard_limit : (owner_small_islands_2level_guard_limit >= 0 ? owner_small_islands_2level_guard_limit : (uploaded_small_guard_limit >= 0 ? uploaded_small_guard_limit : (uploaded_small_underground_guard_limit >= 0 ? uploaded_small_underground_guard_limit : (owner_small_normal_water_2level_guard_limit >= 0 ? owner_small_normal_water_2level_guard_limit : (owner_medium_guard_limit >= 0 ? owner_medium_guard_limit : (owner_large_guard_limit >= 0 ? owner_large_guard_limit : owner_xl_guard_limit))))));
