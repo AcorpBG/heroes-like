@@ -138,6 +138,19 @@ func _run() -> void:
 	if level_zero.get("helper_call_sequence", []) != ["0x4a2777", "0x4a325d", "0x4a3710"]:
 		_fail("The h3maped 0x4a3a03 helper trio was not reported as the concrete next blocker: %s" % JSON.stringify(report))
 		return
+	var first_helper: Dictionary = level_footprint_phase.get("first_helper_evidence", {})
+	if String(first_helper.get("status", "")) != "0x4a2777_disassembled_runtime_layout_blocked":
+		_fail("The h3maped 0x4a2777 footprint helper evidence was not exposed as the concrete next runtime-layout blocker: %s" % JSON.stringify(report))
+		return
+	if String(first_helper.get("clip_helper_address", "")) != "0x4a2b33" or String(first_helper.get("line_cell_writer_address", "")) != "0x4a261a":
+		_fail("The h3maped 0x4a2777 helper lost its executable-backed clipping/cell-writer addresses: %s" % JSON.stringify(report))
+		return
+	if int(first_helper.get("map_cell_stride_bytes", -1)) != 48 or int(first_helper.get("materialized_cell_count", -1)) != 0:
+		_fail("The h3maped 0x4a2777 helper report must not fake materialized footprint cells: %s" % JSON.stringify(report))
+		return
+	if first_helper.get("recovered_operations", []).size() < 6 or first_helper.get("missing_runtime_layout", []).size() < 4:
+		_fail("The h3maped 0x4a2777 helper report does not distinguish recovered behavior from missing runtime layout: %s" % JSON.stringify(report))
+		return
 	var phase_sequence: Array = selected_payload.get("phase_sequence", [])
 	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "assignment_and_runtime_zone_seed_ported_remaining_phases_documented_not_executed":
 		_fail("The selected h3maped payload did not report the recovered 0x4ac552 phase sequence boundary: %s" % JSON.stringify(report))
@@ -196,6 +209,7 @@ func _run() -> void:
 		"coordinate_seed_status": runtime_zone_seed.get("coordinate_seed_status", ""),
 		"coordinate_step_count": coordinate_seed.get("placement_step_count", 0),
 		"level_footprint_phase_status": runtime_zone_seed.get("level_footprint_phase_status", ""),
+		"first_helper_status": first_helper.get("status", ""),
 		"phase_count": phase_sequence.size(),
 		"generation_status": generated.get("status", ""),
 		"unsupported_scope_status": medium_report.get("status", ""),

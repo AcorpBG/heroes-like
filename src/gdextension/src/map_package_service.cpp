@@ -6636,6 +6636,50 @@ Array h3maped_runtime_zone_seed_array(const std::vector<H3MapedRuntimeZoneSeed> 
 	return result;
 }
 
+Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3MapedRuntimeZoneSeed> &zones) {
+	Dictionary report;
+	report["status"] = "0x4a2777_disassembled_runtime_layout_blocked";
+	report["source"] = "h3maped 0x4a2777 footprint connector helper; executable behavior recovered, project materialization still blocked on exact runtime link-node/source-rect layout";
+	report["function_address"] = "0x4a2777";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["line_cell_writer_address"] = "0x4a261a";
+	report["randomized_line_cell_writer_address"] = "0x4a2413";
+	report["runtime_vertex_vector_offset"] = "runtime_zone+0x3f4";
+	report["runtime_vertex_count_helper_address"] = "0x4a3244";
+	report["map_cell_stride_bytes"] = 0x30;
+	report["map_cell_zone_word_mask"] = "cell+0x20 & 0x00ff0000";
+	report["map_cell_reserved_flag"] = "cell+0x2b |= 0x10";
+	Array recovered_operations;
+	recovered_operations.append("copies the current runtime zone source rectangle from runtime_zone+0x10");
+	recovered_operations.append("walks the level runtime-zone/link node chain from the phase item +0x10 field");
+	recovered_operations.append("clips connector endpoints to the active rectangle with 0x4a2b33");
+	recovered_operations.append("writes connector/border pixels into the generator map cell buffer with 0x4a261a");
+	recovered_operations.append("uses 0x4a2413 only on the flagged branch to jitter/interpolate a polyline through existing vertices");
+	recovered_operations.append("appends accepted footprint vertices into runtime_zone+0x3f4 via vector append 0x40bb15");
+	report["recovered_operations"] = recovered_operations;
+	Array missing_layout;
+	missing_layout.append("phase item node fields at +0x08/+0x10/+0x1c/+0x20");
+	missing_layout.append("runtime zone source rectangle payload copied from runtime_zone+0x10");
+	missing_layout.append("source-zone adjacency/list payload used through source_zone+0x0c/+0x10");
+	missing_layout.append("exact mapping from h3maped cell zone ids to our terrain/object/materialization buffers");
+	report["missing_runtime_layout"] = missing_layout;
+	Array available_inputs;
+	for (const H3MapedRuntimeZoneSeed &zone : zones) {
+		Dictionary item;
+		item["runtime_zone_index"] = zone.source_index;
+		item["source_zone_record_id"] = zone.record_id;
+		item["x_after_bbox_rescale"] = zone.x;
+		item["y_after_bbox_rescale"] = zone.y;
+		item["level"] = zone.level;
+		item["runtime_size_after_bbox_rescale"] = zone.scaled_size > 0 ? zone.scaled_size : zone.source_base_size;
+		available_inputs.append(item);
+	}
+	report["available_runtime_zone_inputs"] = available_inputs;
+	report["materialized_cell_count"] = 0;
+	report["blocked_next"] = "recover phase node/link/source rectangle layout well enough to execute 0x4a2777 without inventing connector geometry";
+	return report;
+}
+
 Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
 	Dictionary report;
 	report["status"] = "0x4a3a03_level_collection_ported_helpers_blocked";
@@ -6693,6 +6737,7 @@ Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3Maped
 	report["levels"] = levels;
 	report["synthetic_source_zone_size"] = "0xd4";
 	report["synthetic_source_zone_defaults"] = synthetic_defaults;
+	report["first_helper_evidence"] = h3maped_first_footprint_helper_4a2777_report(zones);
 	return report;
 }
 
