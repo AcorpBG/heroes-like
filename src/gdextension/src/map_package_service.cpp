@@ -76,12 +76,51 @@ PackedStringArray capabilities() {
 	result.append("native_random_map_owner_compared_translated_profile_support");
 	result.append("native_random_map_extension_profile");
 	result.append("native_rmg_homm3_generator_data_model_report");
+	result.append("native_rmg_small_h3maped_port_boundary");
 	result.append("native_package_save_load");
 	result.append("native_map_package_document_validation");
 	result.append("generated_map_package_disk_startup");
 	result.append("headless_binding_smoke");
 	return result;
 }
+
+struct H3MapedSmallTemplateEvidence {
+	const char *id;
+	int32_t catalog_index;
+	int32_t min_size_score;
+	int32_t max_size_score;
+	int32_t min_humans;
+	int32_t max_humans;
+	int32_t min_total_players;
+	int32_t max_total_players;
+	int32_t zone_count;
+	int32_t connection_count;
+	int32_t border_guard_edge_count;
+};
+
+const H3MapedSmallTemplateEvidence H3MAPED_SMALL_LAND_TEMPLATE_EVIDENCE[] = {
+	{ "h3maped_template_000", 0, 1, 2, 1, 8, 2, 8, 8, 12, 0 },
+	{ "h3maped_template_010", 10, 1, 2, 1, 2, 2, 2, 4, 4, 0 },
+	{ "h3maped_template_011", 11, 1, 8, 1, 2, 2, 2, 6, 6, 0 },
+	{ "h3maped_template_012", 12, 1, 8, 1, 4, 2, 4, 6, 6, 0 },
+	{ "h3maped_template_013", 13, 1, 2, 1, 2, 2, 2, 6, 10, 0 },
+	{ "h3maped_template_014", 14, 1, 18, 1, 2, 2, 2, 10, 15, 0 },
+	{ "h3maped_template_017", 17, 1, 9, 1, 2, 2, 2, 6, 5, 0 },
+	{ "h3maped_template_018", 18, 1, 9, 1, 4, 2, 4, 6, 5, 0 },
+	{ "h3maped_template_019", 19, 1, 8, 1, 2, 2, 2, 5, 8, 0 },
+	{ "h3maped_template_020", 20, 1, 8, 1, 4, 2, 4, 5, 8, 0 },
+	{ "h3maped_template_021", 21, 1, 8, 1, 2, 2, 2, 5, 6, 0 },
+	{ "h3maped_template_022", 22, 1, 8, 1, 4, 2, 4, 5, 6, 0 },
+	{ "h3maped_template_023", 23, 1, 8, 1, 2, 2, 2, 8, 8, 0 },
+	{ "h3maped_template_024", 24, 1, 18, 1, 4, 2, 4, 9, 12, 0 },
+	{ "h3maped_template_027", 27, 1, 4, 1, 4, 2, 4, 8, 8, 0 },
+	{ "h3maped_template_028", 28, 1, 4, 1, 4, 2, 4, 8, 11, 0 },
+	{ "h3maped_template_031", 31, 1, 8, 1, 6, 2, 6, 6, 7, 0 },
+	{ "h3maped_template_044", 44, 1, 8, 1, 2, 2, 3, 8, 8, 0 },
+	{ "h3maped_template_046", 46, 1, 8, 1, 3, 2, 5, 9, 12, 0 },
+	{ "h3maped_template_047", 47, 1, 8, 1, 3, 2, 5, 7, 8, 0 },
+	{ "h3maped_template_048", 48, 1, 9, 1, 6, 2, 7, 7, 12, 0 },
+};
 
 int64_t elapsed_usec_since(const std::chrono::steady_clock::time_point &started_at) {
 	return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - started_at).count();
@@ -5967,6 +6006,111 @@ bool native_rmg_generalized_native_catalog_auto_policy(const Dictionary &normali
 
 bool native_rmg_archived_legacy_catalog_auto_output(const Dictionary &normalized) {
 	return native_rmg_generalized_native_catalog_auto_policy(normalized);
+}
+
+int32_t h3maped_water_mode_code(const Dictionary &normalized) {
+	const String water_mode = String(normalized.get("water_mode", "land"));
+	if (water_mode == "normal_water") {
+		return 1;
+	}
+	if (water_mode == "islands") {
+		return 2;
+	}
+	return 0;
+}
+
+int32_t h3maped_size_score(const Dictionary &normalized) {
+	const int32_t width = std::max(1, int32_t(normalized.get("width", 36)));
+	const int32_t height = std::max(1, int32_t(normalized.get("height", 36)));
+	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
+	int32_t score = int32_t((int64_t(width) * int64_t(height) * int64_t(level_count)) / 0x510);
+	if (h3maped_water_mode_code(normalized) == 2) {
+		score = std::max(1, score / 2);
+	}
+	return score;
+}
+
+bool h3maped_small_land_scope(const Dictionary &normalized) {
+	return int32_t(normalized.get("width", 0)) == 36
+			&& int32_t(normalized.get("height", 0)) == 36
+			&& int32_t(normalized.get("level_count", 1)) == 1
+			&& String(normalized.get("water_mode", "land")) == "land";
+}
+
+Dictionary h3maped_small_rmg_port_report_for_normalized(const Dictionary &normalized) {
+	Dictionary constraints = normalized.get("player_constraints", Dictionary());
+	const int32_t human_count = int32_t(constraints.get("human_count", 1));
+	const int32_t player_count = int32_t(constraints.get("player_count", 2));
+	const int32_t computer_count = int32_t(constraints.get("computer_count", std::max(0, player_count - human_count)));
+	const int32_t score = h3maped_size_score(normalized);
+	const bool supported_scope = h3maped_small_land_scope(normalized);
+	Array accepted_templates;
+	if (supported_scope) {
+		for (const H3MapedSmallTemplateEvidence &candidate : H3MAPED_SMALL_LAND_TEMPLATE_EVIDENCE) {
+			const bool size_accepted = score >= candidate.min_size_score && score <= candidate.max_size_score;
+			const bool player_accepted = human_count >= candidate.min_humans && human_count <= candidate.max_humans
+					&& player_count >= candidate.min_total_players && player_count <= candidate.max_total_players
+					&& player_count >= human_count;
+			if (!size_accepted || !player_accepted) {
+				continue;
+			}
+			Dictionary item;
+			item["id"] = candidate.id;
+			item["source_catalog_index"] = candidate.catalog_index;
+			item["min_size_score"] = candidate.min_size_score;
+			item["max_size_score"] = candidate.max_size_score;
+			item["min_humans"] = candidate.min_humans;
+			item["max_humans"] = candidate.max_humans;
+			item["min_total_players"] = candidate.min_total_players;
+			item["max_total_players"] = candidate.max_total_players;
+			item["zone_count"] = candidate.zone_count;
+			item["connection_count"] = candidate.connection_count;
+			item["border_guard_edge_count"] = candidate.border_guard_edge_count;
+			accepted_templates.append(item);
+		}
+	}
+
+	Dictionary report;
+	report["ok"] = supported_scope && accepted_templates.size() > 0;
+	report["schema_id"] = "aurelion_native_rmg_small_h3maped_port_boundary_v1";
+	report["schema_version"] = 1;
+	report["status"] = supported_scope ? (accepted_templates.size() > 0 ? String("h3maped_small_template_vector_recovered") : String("h3maped_small_no_accepted_templates")) : String("unsupported_scope");
+	report["scope"] = "small_36x36_surface_land_only";
+	report["h3maped_binary_path"] = "/root/Downloads/h3maped.exe";
+	report["h3maped_binary_sha256"] = "4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37";
+	report["spec_path"] = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md";
+	report["catalog_path"] = "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json";
+	report["template_loader_address"] = "0x49f0cd";
+	report["main_phase_runner_address"] = "0x4ac552";
+	report["rng_function_address"] = "0x4e7276";
+	report["size_score_formula"] = "width * height * levels / 0x510; islands halves with minimum 1";
+	report["size_score"] = score;
+	report["h3maped_water_mode_code"] = h3maped_water_mode_code(normalized);
+	report["human_count"] = human_count;
+	report["computer_count"] = computer_count;
+	report["player_count"] = player_count;
+	report["accepted_template_count"] = accepted_templates.size();
+	report["accepted_templates"] = accepted_templates;
+	report["selected_template_status"] = accepted_templates.size() > 0 ? String("blocked_until_h3maped_rng_ported") : String("none");
+	report["generation_phase_status"] = "blocked_until_h3maped_phase_sequence_ported";
+	report["normalized_config"] = normalized;
+	return report;
+}
+
+Dictionary h3maped_small_rmg_generation_not_ready_result(const Dictionary &normalized, const std::chrono::steady_clock::time_point &profile_started_at, const Array &extension_profile_phases, const String &top_profile_phase_id, int64_t top_profile_phase_usec) {
+	Dictionary report = h3maped_small_rmg_port_report_for_normalized(normalized);
+	Dictionary result;
+	result["ok"] = false;
+	result["status"] = "h3maped_small_port_generation_not_ready";
+	result["generation_status"] = "h3maped_small_port_generation_not_ready";
+	result["full_generation_status"] = "h3maped_small_port_waiting_for_rng_and_phase_port";
+	result["error_code"] = "h3maped_rng_and_phase_port_incomplete";
+	result["message"] = "Small h3maped-derived RMG is now the active path, but generation is blocked until the h3maped RNG selection and phase sequence are ported. No fallback map is produced.";
+	result["normalized_config"] = normalized;
+	result["h3maped_small_port"] = report;
+	result["replacement_slice_id"] = "native-rmg-small-h3maped-port-10184";
+	result["extension_profile"] = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
+	return result;
 }
 
 int32_t native_rmg_generalized_town_spacing_floor_for_size(const Dictionary &normalized) {
@@ -21166,6 +21310,7 @@ void MapPackageService::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("compute_document_hash", "document", "options"), &MapPackageService::compute_document_hash, DEFVAL(Dictionary()));
 	ClassDB::bind_method(D_METHOD("inspect_package", "path", "options"), &MapPackageService::inspect_package, DEFVAL(Dictionary()));
 	ClassDB::bind_method(D_METHOD("inspect_random_map_generator_data_model", "options"), &MapPackageService::inspect_random_map_generator_data_model, DEFVAL(Dictionary()));
+	ClassDB::bind_method(D_METHOD("inspect_h3maped_small_rmg_port", "config"), &MapPackageService::inspect_h3maped_small_rmg_port);
 	ClassDB::bind_method(D_METHOD("normalize_random_map_config", "config"), &MapPackageService::normalize_random_map_config);
 	ClassDB::bind_method(D_METHOD("random_map_config_identity", "config"), &MapPackageService::random_map_config_identity);
 	ClassDB::bind_method(D_METHOD("generate_random_map", "config", "options"), &MapPackageService::generate_random_map, DEFVAL(Dictionary()));
@@ -21388,6 +21533,10 @@ Dictionary MapPackageService::inspect_random_map_generator_data_model(Dictionary
 	return rmg_data_model::inspect_generator_data_model(options);
 }
 
+Dictionary MapPackageService::inspect_h3maped_small_rmg_port(Dictionary config) const {
+	return h3maped_small_rmg_port_report_for_normalized(normalize_random_map_config(config));
+}
+
 Dictionary MapPackageService::normalize_random_map_config(Dictionary config) const {
 	Variant size_value = config.get("size", Variant());
 	Dictionary size = size_value.get_type() == Variant::DICTIONARY ? Dictionary(size_value) : Dictionary();
@@ -21508,6 +21657,11 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	String top_profile_phase_id;
 	Dictionary normalized = normalize_random_map_config(config);
 	append_extension_profile_phase(extension_profile_phases, "normalize_config", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
+	if (h3maped_small_land_scope(normalized)
+			&& native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& !bool(options.get("allow_archived_legacy_native_rmg", false))) {
+		return h3maped_small_rmg_generation_not_ready_result(normalized, profile_started_at, extension_profile_phases, top_profile_phase_id, top_profile_phase_usec);
+	}
 	if (native_rmg_archived_legacy_catalog_auto_output(normalized)
 			&& !bool(options.get("allow_archived_legacy_native_rmg", false))) {
 		Dictionary result;
