@@ -19258,6 +19258,7 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 	const bool preserve_medium_two_level_normal_water_object_barriers = native_catalog_auto_medium_two_level_normal_water_profile(normalized);
 	const bool preserve_xl_two_level_land_object_barriers = native_catalog_auto_xl_two_level_land_profile(normalized);
 	const bool preserve_large_two_level_normal_water_object_barriers = native_catalog_auto_large_two_level_normal_water_profile(normalized);
+	const bool preserve_xl_two_level_normal_water_object_barriers = native_catalog_auto_xl_two_level_normal_water_profile(normalized);
 	Dictionary terrain_blocked = package_terrain_blocked_lookup(generated_map);
 	Dictionary cleared_lookup;
 	int32_t corridor_count = 0;
@@ -19288,7 +19289,7 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 				if (path.is_empty()) {
 					continue;
 				}
-				if (!preserve_xl_surface_islands_object_barriers && !preserve_large_two_level_islands_object_barriers && !preserve_xl_two_level_islands_object_barriers && !preserve_medium_two_level_islands_object_barriers && !preserve_medium_two_level_normal_water_object_barriers && !preserve_xl_two_level_land_object_barriers && !preserve_large_two_level_normal_water_object_barriers) {
+				if (!preserve_xl_surface_islands_object_barriers && !preserve_large_two_level_islands_object_barriers && !preserve_xl_two_level_islands_object_barriers && !preserve_medium_two_level_islands_object_barriers && !preserve_medium_two_level_normal_water_object_barriers && !preserve_xl_two_level_land_object_barriers && !preserve_large_two_level_normal_water_object_barriers && !preserve_xl_two_level_normal_water_object_barriers) {
 					remove_package_block_cells_from_clearable_objects(objects, path, cleared_lookup, level);
 					++corridor_count;
 				}
