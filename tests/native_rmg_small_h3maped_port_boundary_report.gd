@@ -143,8 +143,8 @@ func _run() -> void:
 	if String(runtime_zones[2].get("terrain_source", "")) != "pending_0x4a3f27_terrain_phase":
 		_fail("Runtime-zone report must not consume terrain RNG before the h3maped terrain phase: %s" % JSON.stringify(report))
 		return
-	if String(runtime_build.get("zone_footprint_placement_status", "")) != "0x4a3a03_level_collection_and_polygon_seed_ported_helpers_pending":
-		_fail("The clean boundary did not expose the h3maped 0x4a3a03 level collection checkpoint: %s" % JSON.stringify(report))
+	if String(runtime_build.get("zone_footprint_placement_status", "")) != "0x4a3a03_polygon_source_node_walks_ported_boundary_span_fill_pending":
+		_fail("The clean boundary did not expose the h3maped 0x4a3a03 polygon source-node walk checkpoint: %s" % JSON.stringify(report))
 		return
 	var footprint_phase: Dictionary = runtime_build.get("zone_footprint_placement", {})
 	if int(footprint_phase.get("total_matching_runtime_zones", -1)) != 6 or int(footprint_phase.get("total_polygon_split_calls", -1)) != 6:
@@ -168,6 +168,19 @@ func _run() -> void:
 	var polygon_bounds: Dictionary = polygon_seed.get("initial_bounds", {})
 	if int(polygon_bounds.get("min_x", 0)) != -200 or int(polygon_bounds.get("max_x", 0)) != 400 or int(polygon_seed.get("initial_edge_count", 0)) != 4:
 		_fail("0x4cc788 polygon seed bounds drifted from recovered h3maped constants: %s" % JSON.stringify(report))
+		return
+	if String(footprint_phase.get("source_node_walk_status", "")) != "0x4cca55_to_0x4a2777_source_node_cycles_recovered":
+		_fail("0x4cca55 source-node walks for 0x4a2777 were not recovered in the clean module: %s" % JSON.stringify(report))
+		return
+	if int(footprint_phase.get("source_node_walk_count", -1)) != 6 or int(footprint_phase.get("source_node_walk_guard_exhausted_count", -1)) != 0:
+		_fail("0x4cca55 source-node walks must cover each runtime zone without exhausting guards: %s" % JSON.stringify(report))
+		return
+	if String(footprint_phase.get("finalizer_status", "")) != "0x4ccdfc_finalized_node_fanout_ported" or int(footprint_phase.get("finalized_node_count", 0)) <= 0:
+		_fail("0x4ccdfc finalized polygon node fanout did not run before 0x4a2777: %s" % JSON.stringify(report))
+		return
+	var polygon_source_walks: Dictionary = footprint_phase.get("polygon_source_node_walks", {})
+	if String(polygon_source_walks.get("status", "")) != "0x4ccb64_insertion_bridge_crossing_cleanup_and_source_walks_ported_span_fill_pending":
+		_fail("0x4ccb64 polygon source-walk model status drifted: %s" % JSON.stringify(report))
 		return
 	var link_seeds: Array = runtime_build.get("link_seeds", [])
 	if link_seeds.size() != 5 or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 or int(link_seeds[0].get("runtime_zone_b", -1)) != 3:
@@ -232,8 +245,8 @@ func _run() -> void:
 	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_interleaved_runtime_and_coordinate_replay_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped runtime-zone record build as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[3].get("phase_id", "")) != "zone_footprint_placement" or String(phase_ledger[3].get("status", "")) != "ported_level_collection_and_polygon_seed_inspection_only_helpers_pending":
-		_fail("The phase ledger did not expose only the clean h3maped 0x4a3a03 checkpoint as ported: %s" % JSON.stringify(report))
+	if String(phase_ledger[3].get("phase_id", "")) != "zone_footprint_placement" or String(phase_ledger[3].get("status", "")) != "ported_polygon_source_node_walks_inspection_only_boundary_span_fill_pending":
+		_fail("The phase ledger did not expose only the clean h3maped 0x4a3a03 source-walk checkpoint as ported: %s" % JSON.stringify(report))
 		return
 	if String(phase_ledger[4].get("status", "")) != "pending_clean_port":
 		_fail("Terrain placement must remain pending until h3maped 0x4a3f27 is ported: %s" % JSON.stringify(report))
