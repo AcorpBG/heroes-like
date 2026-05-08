@@ -19513,12 +19513,18 @@ int32_t profile_object_route_open_pair_target(const Dictionary &normalized) {
 	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
 		return 11;
 	}
+	if (native_catalog_auto_large_two_level_land_profile(normalized)) {
+		return 23;
+	}
 	return -1;
 }
 
 String profile_object_route_mask_source(const Dictionary &normalized) {
 	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
 		return "large_one_level_islands_town_route_decorative_closure_mask";
+	}
+	if (native_catalog_auto_large_two_level_land_profile(normalized)) {
+		return "large_two_level_land_town_route_decorative_closure_mask";
 	}
 	return "medium_two_level_islands_town_route_decorative_closure_mask";
 }
@@ -19527,7 +19533,14 @@ String profile_object_route_mask_policy(const Dictionary &normalized) {
 	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
 		return "large_one_level_islands_adds_compact_existing_decorative_masks_to_close_extra_object_only_town_routes_while_preserving_owner_like_guard_open_crossings";
 	}
+	if (native_catalog_auto_large_two_level_land_profile(normalized)) {
+		return "large_two_level_land_adds_compact_existing_decorative_masks_to_close_extra_object_only_town_routes_while_preserving_owner_like_object_open_crossings";
+	}
 	return "medium_two_level_islands_adds_compact_existing_decorative_masks_to_close_owner_like_object_only_town_routes_without_changing_object_counts";
+}
+
+bool profile_object_route_preserve_requires_guard_open(const Dictionary &normalized) {
+	return native_catalog_auto_large_one_level_islands_profile(normalized);
 }
 
 void apply_profile_object_route_masks_to_package_objects(Array &objects, const Dictionary &generated_map) {
@@ -19542,6 +19555,7 @@ void apply_profile_object_route_masks_to_package_objects(Array &objects, const D
 	const int32_t level_count = int32_t(terrain_grid.get("level_count", generated_map.get("level_count", 1)));
 	Dictionary terrain_blocked = package_terrain_blocked_lookup(generated_map);
 	const String route_mask_source = profile_object_route_mask_source(normalized);
+	const bool preserve_requires_guard_open = profile_object_route_preserve_requires_guard_open(normalized);
 	static constexpr int32_t MAX_ROUTE_MASK_PASSES = 8;
 	int32_t added_total = 0;
 	int32_t pass_count = 0;
@@ -19573,7 +19587,8 @@ void apply_profile_object_route_masks_to_package_objects(Array &objects, const D
 						continue;
 					}
 					Array guarded_path = direct_access_path_between_cell_sets(left.get("package_visit_tiles", Array()), right.get("package_visit_tiles", Array()), width, height, guarded_blocked);
-					if (object_route_target > 0 && !guarded_path.is_empty() && preserved_open_pairs < object_route_target) {
+					const bool preserve_open_pair = preserve_requires_guard_open ? !guarded_path.is_empty() : true;
+					if (object_route_target > 0 && preserve_open_pair && preserved_open_pairs < object_route_target) {
 						++preserved_open_pairs;
 						continue;
 					}

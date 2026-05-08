@@ -1335,3 +1335,21 @@ Validation evidence:
 - The production-gap audit remains `production_ready=false` with `6` missing broad requirements. Large one-level islands dropped out of the top-gap list; route-shape gap cases dropped from `15` to `14`. The new top blocker is `l_nowater_randomplayers_2level` at severity `588`.
 
 This is still not production parity. Large one-level islands still has a real town/subzone materialization gap (`8` native towns versus `16` owner towns) and terrain shape debt. The correction only makes current package blocker route shape owner-like for the generated town set while preserving the existing broad count gates.
+
+## Large Two-Level Land Object-Route Mask Cleanup
+
+The next top blocker after the Large islands route cleanup was `l_nowater_randomplayers_2level`. Its town total and broad category totals were already close enough for the fast structural gate, and guarded town routes were correctly closed, but the object-only topology was too open: native exposed `37` object-only town-route pairs versus owner `23`.
+
+The compact decorative route-mask helper now also supports Large two-level land with a profile-specific object-open target of `23`. Unlike Large one-level islands, this profile does not require preserved object-open pairs to also remain guard-open, because owner evidence has `23` object-open routes and `0` guarded-open routes. The helper therefore masks only the extra object-only routes while preserving an owner-like count of physical blocker openings.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `l_nowater_randomplayers_2level` export wrote `1/1` package with native validation `pass`. The manifest recorded about `35.789s` total wall time, including `20.605s` generation, `9.171s` package conversion, and `4.729s` save time.
+- Focused fast audit improved object-route delta from `+14` to `-1`, kept guarded-route delta at `0`, and kept road delta at `+16`. Focused production-gap severity improved from `588` to `281`.
+- The focused package now has `15` towns versus owner `16`, so town/materialization debt remains and this is not a completion claim for the profile.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_land_2level_object_route_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.645s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_land_2level_object_route_merged --skip-timing-summary --failure-limit 8` passed with `18/18` matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- The production-gap audit remains `production_ready=false` with `6` missing broad requirements. The new top blocker is `xl_water` at severity `555`.
+
+This is still not production parity. Large two-level land still has road, terrain, category, and town materialization debt. The correction only brings object-route openness close to owner evidence while preserving the current generated-map validity gates.
