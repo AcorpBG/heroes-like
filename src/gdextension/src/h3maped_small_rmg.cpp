@@ -3868,7 +3868,7 @@ Dictionary runtime_zone_build_report(
 Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones, const Dictionary &runtime_build) {
 	Dictionary report;
 	report["status"] = "0x4a8d2c_0x4a93a2_0x49aa93_validity_precheck_ported_inspection_only";
-	report["source"] = "h3maped 0x4a8d2c direct minimum town/castle placement fields, the candidate-scan boundary of direct helper 0x4a93a2, and the recovered 0x49a1d8 validity precheck used by 0x49aa93; full 0x49aa93 footprint/collision eligibility, random tie choice, object stamping, and 0x4a901a weighted continuation remain pending";
+	report["source"] = "h3maped 0x4a8d2c direct minimum town/castle placement fields, the candidate-scan boundary of direct helper 0x4a93a2, and the recovered 0x49a1d8 validity precheck used by 0x49aa93; full 0x49aa93 footprint/collision eligibility, project object writeout, and 0x4a901a weighted continuation remain pending";
 	report["direct_minimum_function_address"] = "0x4a8d2c";
 	report["weighted_density_function_address"] = "0x4a8db2";
 	report["direct_placement_helper_address"] = "0x4a93a2";
@@ -3876,6 +3876,7 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	report["direct_eligibility_helper_address"] = "0x49aa93";
 	report["weighted_placement_helper_address"] = "0x4a901a";
 	report["direct_candidate_scan_basis"] = "0x4a93a2 scans the generated cell buffer for matching cell+0x20 owner byte and then selects the closest eligible cell to the runtime-zone anchor; this report exposes owner-byte/repaint candidates plus the 0x49a1d8 terrain validity precheck before full 0x49aa93 footprint collision is ported";
+	report["direct_random_tie_basis"] = "0x4a93a2 clears the coordinate vector when a smaller squared distance is found, appends every equal-distance eligible coordinate, then calls 0x4e7276 once and selects rng % tied_candidate_count";
 	report["direct_validity_precheck_basis"] = "0x49a1d8 requires generated cell bit 25 (byte +0x2b bit 0x02) and terrain id not 9; bit-25 lifecycle is represented here by cells already materialized in the 0x4a325d/0x4a3f27 generated-cell buffer";
 	report["direct_full_eligibility_status"] = "0x49aa93_gate_sequence_recovered_data_dependencies_pending";
 	report["direct_full_eligibility_blocked_by"] = "requires object template wrapper/footprint vectors, 0x57c648 object metadata flags, 0x49a6f9 rectangle rejection, 0x49a09c footprint pass, and generated-cell bit 22/object-vector collision state";
@@ -3977,6 +3978,9 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	Array minimum_calls;
 	Array density_fields;
 	Array direct_town_records;
+	Array random_tie_events;
+	H3MapedRng object_rng { uint32_t(int64_t(runtime_build.get("rng_state_after_runtime_zone_build", 0))) };
+	const uint32_t object_rng_state_before = object_rng.state;
 	int32_t player_min_town_total = 0;
 	int32_t player_min_castle_total = 0;
 	int32_t neutral_min_town_total = 0;
@@ -3997,6 +4001,8 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	int32_t object_record_stamped_count = 0;
 	int32_t object_occupied_cell_mark_count = 0;
 	int32_t object_record_random_tie_pending_count = 0;
+	int32_t object_record_random_tie_selection_count = 0;
+	int32_t object_record_random_tie_rng_call_count = 0;
 	for (int64_t index = 0; index < active_zones.size(); ++index) {
 		if (Variant(active_zones[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -4111,6 +4117,13 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 				int32_t selected_footprint_mask_x = -1;
 				int32_t selected_footprint_mask_y = -1;
 				int32_t selected_footprint_mask_level = -1;
+				struct FootprintCandidate {
+					int32_t x = -1;
+					int32_t y = -1;
+					int32_t level = -1;
+					int32_t distance = 0;
+				};
+				std::vector<FootprintCandidate> closest_footprint_candidates;
 				Array candidate_preview;
 				Array closest_candidate_preview;
 				Array eligibility_preview;
@@ -4219,6 +4232,7 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 									closest_footprint_mask_distance = distance;
 									closest_footprint_mask_candidate_count = 1;
 									closest_footprint_mask_candidate_preview.clear();
+									closest_footprint_candidates.clear();
 									selected_footprint_mask_x = x;
 									selected_footprint_mask_y = y;
 									selected_footprint_mask_level = level;
@@ -4226,6 +4240,14 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 								} else if (distance == closest_footprint_mask_distance) {
 									closest_footprint_mask_candidate_count += 1;
 									closest_footprint_candidate = true;
+								}
+								if (closest_footprint_candidate) {
+									FootprintCandidate tied;
+									tied.x = x;
+									tied.y = y;
+									tied.level = level;
+									tied.distance = distance;
+									closest_footprint_candidates.push_back(tied);
 								}
 								if (closest_footprint_candidate && closest_footprint_mask_candidate_preview.size() < 8) {
 									Dictionary candidate;
@@ -4315,7 +4337,35 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 				call["closest_town_footprint_mask_distance"] = footprint_mask_eligible_count > 0 ? closest_footprint_mask_distance : -1;
 				call["closest_town_footprint_mask_candidate_count"] = closest_footprint_mask_candidate_count;
 				call["closest_town_footprint_mask_candidate_preview"] = closest_footprint_mask_candidate_preview;
-				if (closest_footprint_mask_candidate_count == 1 && selected_footprint_mask_x >= 0) {
+				String selection_status;
+				String stamping_status;
+				bool selected_from_random_tie = false;
+				int32_t random_tie_rng_value = -1;
+				int32_t random_tie_selected_index = -1;
+				if (closest_footprint_candidates.size() > 1) {
+					random_tie_rng_value = object_rng.next();
+					object_record_random_tie_rng_call_count += 1;
+					random_tie_selected_index = random_tie_rng_value % int32_t(closest_footprint_candidates.size());
+					const FootprintCandidate &selected = closest_footprint_candidates[size_t(random_tie_selected_index)];
+					selected_footprint_mask_x = selected.x;
+					selected_footprint_mask_y = selected.y;
+					selected_footprint_mask_level = selected.level;
+					selected_from_random_tie = true;
+					object_record_random_tie_selection_count += 1;
+					Dictionary tie_event;
+					tie_event["runtime_zone_index"] = runtime_zone_index;
+					tie_event["source_zone_id"] = source_zone_id;
+					tie_event["field_kind"] = field.kind;
+					tie_event["rng_function_address"] = "0x4e7276";
+					tie_event["rng_value"] = random_tie_rng_value;
+					tie_event["tied_candidate_count"] = int32_t(closest_footprint_candidates.size());
+					tie_event["selected_index"] = random_tie_selected_index;
+					tie_event["selected_x"] = selected_footprint_mask_x;
+					tie_event["selected_y"] = selected_footprint_mask_y;
+					tie_event["selected_level"] = selected_footprint_mask_level;
+					random_tie_events.append(tie_event);
+				}
+				if (selected_footprint_mask_x >= 0) {
 					int32_t marked_cells = 0;
 					Array stamped_body_cells;
 					for (const H3MaskPoint &point : town_body_points) {
@@ -4339,11 +4389,20 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 					}
 					object_record_stamped_count += 1;
 					object_occupied_cell_mark_count += marked_cells;
-					call["selected_candidate_status"] = "0x4a93a2_unique_town_candidate_selected_and_bit22_body_cells_marked_inspection_only";
+					selection_status = selected_from_random_tie
+							? String("0x4a93a2_random_tie_town_candidate_selected_and_bit22_body_cells_marked_inspection_only")
+							: String("0x4a93a2_unique_town_candidate_selected_and_bit22_body_cells_marked_inspection_only");
+					stamping_status = selected_from_random_tie
+							? String("0x4a93a2_random_tie_record_and_bit22_body_marking_ported_inspection_only_project_writeout_pending")
+							: String("0x4a93a2_record_and_bit22_body_marking_ported_inspection_only_project_writeout_pending");
+					call["selected_candidate_status"] = selection_status;
 					call["selected_candidate_x"] = selected_footprint_mask_x;
 					call["selected_candidate_y"] = selected_footprint_mask_y;
 					call["selected_candidate_level"] = selected_footprint_mask_level;
-					call["object_record_stamping_status"] = "0x4a93a2_record_and_bit22_body_marking_ported_inspection_only_project_writeout_pending";
+					call["object_record_stamping_status"] = stamping_status;
+					call["random_tie_rng_value"] = random_tie_rng_value;
+					call["random_tie_selected_index"] = random_tie_selected_index;
+					call["random_tie_selected"] = selected_from_random_tie;
 					call["object_occupied_cell_mark_count"] = marked_cells;
 					call["object_occupied_body_cell_preview"] = stamped_body_cells;
 					Dictionary town_record;
@@ -4356,6 +4415,9 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 					town_record["level"] = selected_footprint_mask_level;
 					town_record["body_cell_count"] = int32_t(town_body_points.size());
 					town_record["marked_body_cell_count"] = marked_cells;
+					town_record["selected_from_random_tie"] = selected_from_random_tie;
+					town_record["random_tie_rng_value"] = random_tie_rng_value;
+					town_record["random_tie_selected_index"] = random_tie_selected_index;
 					town_record["status"] = "inspection_only_project_town_writeout_pending";
 					direct_town_records.append(town_record);
 				} else {
@@ -4435,11 +4497,16 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	report["town_footprint_mask_eligible_total"] = town_footprint_mask_eligible_total;
 	report["town_footprint_mask_missing_count"] = town_footprint_mask_missing_count;
 	report["object_cell_materialization_status"] = object_record_stamped_count > 0
-			? String("0x4a93a2_unique_direct_town_record_and_bit22_body_marking_ported_inspection_only")
+			? String("0x4a93a2_direct_town_record_random_tie_and_bit22_body_marking_ported_inspection_only")
 			: String("pending_0x49aa93_eligibility_random_tie_and_object_template_footprint_port");
 	report["object_record_stamped_count"] = object_record_stamped_count;
 	report["object_occupied_cell_mark_count"] = object_occupied_cell_mark_count;
 	report["object_record_random_tie_pending_count"] = object_record_random_tie_pending_count;
+	report["object_record_random_tie_selection_count"] = object_record_random_tie_selection_count;
+	report["object_record_random_tie_rng_call_count"] = object_record_random_tie_rng_call_count;
+	report["object_rng_state_before_0x4a93a2_uint32"] = int64_t(object_rng_state_before);
+	report["object_rng_state_after_0x4a93a2_uint32"] = int64_t(object_rng.state);
+	report["random_tie_events"] = random_tie_events;
 	report["direct_town_records"] = direct_town_records;
 	report["positive_density_field_count"] = positive_density_field_count;
 	report["density_field_count"] = density_fields.size();
