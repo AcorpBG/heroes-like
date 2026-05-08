@@ -1121,3 +1121,20 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_profile_merged2 --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The merged top blockers are now `xl_water_2levels`, `l_islands_randomplayers`, `xl_nowater`, Medium four-player two-level islands, and Large/Medium route-shape cases. The next correction should continue broad route/barrier/town topology and two-level profile shape, not exact-count fitting.
+
+## XL Two-Level Normal-Water Barrier Preservation
+
+The next top-gap case was again `xl_water_2levels`, but the remaining issue was no longer category volume. Package adoption was cutting decorative/scenic blocker masks along every town-to-town object route for this profile, then relying on guard closure masks to block travel. That made the physical object-route topology too open while making guarded topology too closed.
+
+Normal generated catalog-auto XL two-level normal-water packages now preserve decorative/scenic object barriers during guarded corridor materialization, matching the already scoped behavior for Large two-level normal-water, Medium two-level normal-water, XL/Large two-level islands, and XL two-level land profiles. Guard masks still materialize, but physical blockers are no longer cleared out of the route shape for this profile.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `xl_water_2levels` export wrote `1/1` package with native validation `pass`. The manifest recorded about `38.572s` total wall time, including `23.372s` generation, `10.141s` package conversion, and `3.828s` save time.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/XL-water-2levels.h3m --amap .artifacts/rmg_native_batch_export_xl_water_2level_barrier_probe/xl_water_2levels.amap --compare --pretty --allow-failures` improved focused production-gap severity from `892` to `417`. Object-route delta improved from `+20` to `-1`, while object delta stayed `+11`, road delta stayed `+16`, terrain-blocked delta stayed `+100`, guarded-route delta stayed `-10`, and category absolute delta stayed `15`.
+- Surface physical route shape is now close: native surface object-only reachable town pairs are `15` versus owner `16`. Native still over-closes guarded routes at `0` versus owner `10`, so the remaining topology debt is guard-mask strength and town/road/terrain shape, not physical blocker clearing.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_2level_barrier_merged --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.160s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_2level_barrier_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blockers are now `l_islands_randomplayers`, `xl_nowater`, `m_4players_2levels_islands`, Large normal-water two-level, and Large land two-level. The next correction should target island one-level road/town topology or broad town/guard route-shape behavior.
