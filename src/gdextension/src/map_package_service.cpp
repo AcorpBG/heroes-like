@@ -9228,6 +9228,9 @@ int32_t native_catalog_auto_generated_town_floor(const Dictionary &normalized, i
 	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
 		return std::max(std::max(8, start_count + 4), int32_t(std::ceil(double(area) * 0.77 / 1000.0)));
 	}
+	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
+		return std::max(std::max(6, start_count + 2), int32_t(std::ceil(double(area) * 0.55 / 1000.0)));
+	}
 	if (size_class_id == "homm3_large") {
 		if (native_catalog_auto_large_two_level_land_profile(normalized)) {
 			return std::max(std::max(16, start_count + 11), int32_t(std::ceil(double(area) * 0.68 / 1000.0)));

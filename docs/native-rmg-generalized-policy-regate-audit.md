@@ -1208,3 +1208,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_nowater_road_shape_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. `xl_nowater` now has close road count and component shape, but town/subzone materialization and route openness remain wrong: the native map has too few towns and too few object-only town routes compared with owner evidence. The next substantial fix should model the town/subzone and guarded crossing behavior instead of continuing count-only tuning.
+
+## Medium Two-Level Islands Town-Level Split Cleanup
+
+The next contained town-topology defect was `m_4players_2levels_islands`. Total town count already matched owner evidence at `6`, but native placed all six towns on the surface while owner evidence has `5` surface towns and `1` underground town. That wrong split also contributed to surface object-route over-openness.
+
+Normal generated catalog-auto Medium two-level islands maps now materialize a generated town floor. This activates the existing two-level islands underground-town share for Medium islands without changing one-level islands or Large/XL two-level town floors.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `m_4players_2levels_islands` export wrote `1/1` package with native validation `pass`. The manifest recorded about `7.857s` total wall time, including `4.643s` generation, `1.175s` package conversion, and `1.019s` save time.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/M-4players-2levels-islands.h3m --amap .artifacts/rmg_native_batch_export_m_islands_town_split2_probe/m_4players_2levels_islands.amap --compare --pretty --allow-failures` improved focused production-gap severity from `803` to `681`.
+- Town split now matches owner evidence: native surface/underground town counts are `5/1` versus owner `5/1`. Total town delta is `0`.
+- Object-route delta improved from `+10` to `+6`. Guarded-route delta stayed correct at `0`. Remaining focused debt is category/object overfill (`+185` total objects, category absolute delta `185`), road shape (`-5` road cells), and terrain shape (`+156` blocked tiles).
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_islands_town_split_merged --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.397s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_islands_town_split_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. Medium two-level islands now has the correct town level split, but it still overfills decoration/guard/reward categories and keeps too many surface object-only routes. The next Medium islands work should reduce category overfill and road/terrain shape without undoing the `5/1` town split.
