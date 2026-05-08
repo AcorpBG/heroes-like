@@ -1896,6 +1896,8 @@ int32_t catalog_auto_road_component_target_count(const Dictionary &normalized, i
 	} else if (size_class == "homm3_extra_large") {
 		if (level_count <= 1 && water_mode == "normal_water") {
 			target = 3;
+		} else if (level_count <= 1 && water_mode == "islands") {
+			target = 6;
 		} else {
 			target = level_count > 1 ? 16 : 10;
 		}
@@ -1967,7 +1969,7 @@ double catalog_auto_road_component_weight(const Dictionary &normalized, int32_t 
 	if (water_mode == "normal_water") {
 		exponent = level_count <= 1 ? 1.45 : (level == 0 ? 1.65 : 1.15);
 	} else if (water_mode == "islands") {
-		exponent = size_class == "homm3_extra_large" ? 0.82 : 0.95;
+		exponent = size_class == "homm3_extra_large" ? (level_count <= 1 ? 1.32 : 0.82) : 0.95;
 	} else if (level > 0) {
 		exponent = size_class == "homm3_extra_large" ? 1.25 : 1.10;
 	} else if (size_class == "homm3_extra_large" || size_class == "homm3_large") {
@@ -2138,7 +2140,9 @@ Dictionary native_catalog_auto_road_component_adjustment_lookup(const Array &roa
 	if (String(normalized.get("size_class_id", "")) == "homm3_extra_large" && level_count == 1) {
 		const int32_t area = std::max(1, width * height);
 		const String water_mode = String(normalized.get("water_mode", "land"));
-		total_target = std::max<int32_t>(total_target, (area * (water_mode == "normal_water" ? 36 : 30)) / 1000);
+		const int32_t profile_target = water_mode == "islands" ? std::max<int32_t>(674, (area * 325) / 10000)
+															   : (area * (water_mode == "normal_water" ? 36 : 30)) / 1000;
+		total_target = std::max<int32_t>(total_target, profile_target);
 	}
 
 	const int32_t component_target = catalog_auto_road_component_target_count(normalized, total_target);
@@ -8794,6 +8798,13 @@ bool native_catalog_auto_xl_one_level_normal_water_profile(const Dictionary &nor
 			&& int32_t(normalized.get("level_count", 1)) <= 1;
 }
 
+bool native_catalog_auto_xl_one_level_islands_profile(const Dictionary &normalized) {
+	return native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& String(normalized.get("water_mode", "land")) == "islands"
+			&& String(normalized.get("size_class_id", "")) == "homm3_extra_large"
+			&& int32_t(normalized.get("level_count", 1)) <= 1;
+}
+
 int32_t native_catalog_auto_generated_object_floor(const Dictionary &normalized) {
 	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto") {
 		return 0;
@@ -8987,6 +8998,11 @@ int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, 
 		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.49));
 		return std::max(density_floor, reward_ratio_floor);
 	}
+	if (native_catalog_auto_xl_one_level_islands_profile(normalized)) {
+		density_floor = std::max(200, (area * 9) / 1000);
+		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.32));
+		return std::max(density_floor, reward_ratio_floor);
+	}
 	if (size_class_id == "homm3_large" && water_mode == "islands" && level_count <= 1) {
 		density_floor = (area * 7) / 1000;
 		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.30));
@@ -9017,6 +9033,9 @@ int32_t native_catalog_auto_generated_reward_floor(const Dictionary &normalized)
 	const int32_t area = std::max(1, width * height * level_count);
 	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
 		return std::max(410, (area * 40) / 1000);
+	}
+	if (native_catalog_auto_xl_one_level_islands_profile(normalized)) {
+		return std::max(649, (area * 31) / 1000);
 	}
 	return 0;
 }
@@ -16417,15 +16436,15 @@ double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Di
 	if (water_mode == "islands" && size_class_id == "homm3_extra_large" && level_count <= 1) {
 		const String role = String(zone.get("role", ""));
 		if (role.contains("start")) {
-			return 0.70;
+			return 0.81;
 		}
 		if (role == "junction") {
-			return 0.62;
+			return 0.76;
 		}
 		if (role == "treasure" || role == "neutral") {
-			return 0.55;
+			return 0.70;
 		}
-		return 0.58;
+		return 0.73;
 	}
 	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
 		const String role = String(zone.get("role", ""));
