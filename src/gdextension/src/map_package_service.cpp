@@ -9180,6 +9180,9 @@ int32_t native_catalog_auto_generated_reward_floor(const Dictionary &normalized)
 }
 
 int32_t native_catalog_auto_generated_reward_cap(const Dictionary &normalized) {
+	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
+		return 132;
+	}
 	if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
 		return 570;
 	}
@@ -9202,6 +9205,9 @@ int32_t native_catalog_auto_generated_reward_cap(const Dictionary &normalized) {
 }
 
 int32_t native_catalog_auto_generated_decoration_cap(const Dictionary &normalized) {
+	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
+		return 340;
+	}
 	if (native_catalog_auto_large_two_level_islands_profile(normalized)) {
 		return 1797;
 	}

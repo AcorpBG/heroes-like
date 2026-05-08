@@ -1370,3 +1370,21 @@ Validation evidence:
 - The production-gap audit remains `production_ready=false` with `6` missing broad requirements. `xl_water` dropped out of the top six gap cases; the remaining top blockers are Medium two-level islands category overfill, Medium normal-water shape, XL two-level islands, Medium normal-water two-level, XL two-level normal-water, and XL two-level land.
 
 This is still not production parity. XL one-level normal-water still has terrain/object/category and guarded-route shape debt. The correction only reduces object-only town-route over-openness while preserving the current generated-map validity gates.
+
+## Medium Two-Level Islands Category-Cap Cleanup
+
+After XL one-level normal-water route masking, the top production-gap case became `m_4players_2levels_islands`. The remaining route defects were already closed: native and owner both exposed `0` object-only town-route pairs, `0` guarded town-route pairs, exact road total, exact town count, and exact 5 surface / 1 underground town split. The active defect was category overfill: native had `+136` decorations, `+32` rewards, and `+17` guards, for `+185` total objects.
+
+The generated catalog-auto caps now include Medium two-level islands reward and decoration caps. Capping rewards also brings guard count into line because the profile guard floor is reward-ratio based. This keeps the existing route masks and town/road shape intact while preventing the generic density floors from overfilling this compact islands profile.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `m_4players_2levels_islands` export wrote `1/1` package with native validation `pass`. The manifest recorded about `7.390s` total wall time, including `4.291s` generation, `1.297s` package conversion, and `0.806s` save time.
+- Focused fast audit now matches every broad category exactly: decoration `340/340`, reward `132/132`, guard `69/69`, object `190/190`, town `6/6`, and total objects `737/737`. Object-route delta, guarded-route delta, and road delta all remain `0`.
+- Focused production-gap severity improved from `528` to `391`, and severe category gap status cleared for this case. The remaining focused debt is terrain-blocker shape and road component shape.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_islands_category_cap_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.657s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_islands_category_cap_merged --skip-timing-summary --failure-limit 8` passed with `18/18` matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- The production-gap audit remains `production_ready=false` with `6` missing broad requirements. Severe category gap cases dropped from `6` to `5`, and the new top blocker is `m_normalw_4players` at severity `521`.
+
+This is still not production parity. Medium two-level islands now has exact broad counts, exact road total, exact town split, and closed town routes, but terrain-blocker shape and road component shape still differ from owner evidence.
