@@ -96,6 +96,13 @@ func _run() -> void:
 	if int(town_castle_placement.get("direct_validity_precheck_call_count", -1)) != 3 or int(town_castle_placement.get("direct_validity_precheck_eligible_total", -1)) != 451 or int(town_castle_placement.get("direct_validity_precheck_missing_count", -1)) != 0:
 		_fail("0x49a1d8 validity precheck did not preserve the assigned-owner candidate set before full 0x49aa93 collision handling: %s" % JSON.stringify(town_castle_placement))
 		return
+	if String(town_castle_placement.get("direct_full_eligibility_status", "")) != "0x49aa93_gate_sequence_recovered_data_dependencies_pending":
+		_fail("0x49aa93 recovered gate sequence status was not exposed before object stamping: %s" % JSON.stringify(town_castle_placement))
+		return
+	var full_eligibility_sequence: Array = town_castle_placement.get("direct_full_eligibility_sequence", [])
+	if full_eligibility_sequence.size() != 7 or String(full_eligibility_sequence[0].get("address", "")) != "0x49a6f9" or String(full_eligibility_sequence[2].get("address", "")) != "0x49a09c":
+		_fail("0x49aa93 recovered gate sequence drifted from executable disassembly: %s" % JSON.stringify(town_castle_placement))
+		return
 	var minimum_calls: Array = town_castle_placement.get("minimum_calls", [])
 	if minimum_calls.size() != 4 or int(minimum_calls[0].get("runtime_zone_index", -1)) != 0 or int(minimum_calls[0].get("owner_color", -1)) != 0 or not bool(minimum_calls[0].get("castle", false)):
 		_fail("0x4a8d2c first direct minimum castle call did not preserve runtime owner semantics: %s" % JSON.stringify(town_castle_placement))
@@ -105,6 +112,9 @@ func _run() -> void:
 		return
 	if String(minimum_calls[0].get("direct_validity_precheck_status", "")) != "0x49a1d8_validity_precheck_ported_full_0x49aa93_collision_pending" or int(minimum_calls[0].get("validity_precheck_eligible_count", -1)) != int(minimum_calls[0].get("candidate_count", -2)):
 		_fail("0x49a1d8 first direct minimum castle precheck did not preserve valid free-cell candidates: %s" % JSON.stringify(town_castle_placement))
+		return
+	if String(minimum_calls[0].get("direct_full_eligibility_status", "")) != "pending_0x49a6f9_0x49a09c_bit22_and_water_match_gates":
+		_fail("0x49aa93 first direct minimum castle full gate dependencies were not reported: %s" % JSON.stringify(town_castle_placement))
 		return
 	if String(minimum_calls[3].get("direct_candidate_scan_status", "")) != "0x4a93a2_immediate_fail_owner_minus_one" or int(minimum_calls[3].get("owner_color", 0)) != -1:
 		_fail("0x4a93a2 fourth direct minimum castle call should expose the recovered owner-minus-one early-fail boundary for the unassigned player slot: %s" % JSON.stringify(town_castle_placement))
