@@ -152,6 +152,14 @@ def town_spacing_floor(metrics: dict[str, Any]) -> int:
     if (
         template_selection_mode == "native_catalog_auto"
         and not seed.startswith("owner_discovered_")
+        and size_class_id == "homm3_large"
+        and water_mode == "islands"
+        and level_count <= 1
+    ):
+        return 15
+    if (
+        template_selection_mode == "native_catalog_auto"
+        and not seed.startswith("owner_discovered_")
         and size_class_id == "homm3_extra_large"
         and water_mode == "normal_water"
         and level_count > 1
