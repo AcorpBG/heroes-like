@@ -128,6 +128,38 @@ func _run() -> void:
 	if link_seeds.size() != 5 or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 or int(link_seeds[0].get("runtime_zone_b", -1)) != 3:
 		_fail("Runtime-zone link seed endpoint resolution drifted from source link vectors: %s" % JSON.stringify(report))
 		return
+	if String(runtime_build.get("early_link_placement_status", "")) != "0x4a1f3b_endpoint_control_flow_ported_inspection_only":
+		_fail("The clean boundary did not expose the h3maped early link-placement control flow: %s" % JSON.stringify(report))
+		return
+	var early_link_placement: Dictionary = runtime_build.get("early_link_placement", {})
+	if int(early_link_placement.get("creation_pass_count", -1)) != 6 or int(early_link_placement.get("stabilization_pass_count", -1)) != 2:
+		_fail("The h3maped early link-placement pass schedule drifted from 0x4a218c/0x4a1f3b: %s" % JSON.stringify(report))
+		return
+	if int(early_link_placement.get("call_count", -1)) != 18:
+		_fail("The h3maped early link-placement call count should be creation pass plus two stabilization passes: %s" % JSON.stringify(report))
+		return
+	if int(early_link_placement.get("explicit_endpoint_attempt_count", -1)) != 25:
+		_fail("The h3maped early link-placement endpoint attempt count drifted for the selected template: %s" % JSON.stringify(report))
+		return
+	if int(early_link_placement.get("fallback_attempt_count_if_no_valid_endpoint", -1)) != 3:
+		_fail("The h3maped early link-placement fallback schedule drifted for the selected template: %s" % JSON.stringify(report))
+		return
+	if String(early_link_placement.get("coordinate_candidate_status", "")) != "pending_clean_port_0x4a17f5_0x4a1701_0x4a1ad8":
+		_fail("Coordinate candidate math must remain explicitly pending after endpoint control-flow port: %s" % JSON.stringify(report))
+		return
+	var early_calls: Array = early_link_placement.get("calls", [])
+	if early_calls.size() != 18:
+		_fail("The h3maped early link-placement report did not expose all scheduled calls: %s" % JSON.stringify(report))
+		return
+	if early_calls[0].get("available_endpoint_runtime_zones", []) != [] or int(early_calls[0].get("fallback_candidate_count_if_no_valid_endpoint", -1)) != 0:
+		_fail("The first runtime zone should enter 0x4a1f3b with an empty runtime vector: %s" % JSON.stringify(report))
+		return
+	if early_calls[3].get("available_endpoint_runtime_zones", []) != [0]:
+		_fail("Creation pass endpoint availability for source zone 4 drifted from the selected template graph: %s" % JSON.stringify(report))
+		return
+	if early_calls[6].get("available_endpoint_runtime_zones", []) != [3]:
+		_fail("First stabilization pass endpoint availability for source zone 1 drifted from the selected template graph: %s" % JSON.stringify(report))
+		return
 
 	var color_config := config.duplicate(true)
 	var color_constraints: Dictionary = color_config.get("player_constraints", {}).duplicate(true)
@@ -152,7 +184,7 @@ func _run() -> void:
 	if String(phase_ledger[1].get("phase_id", "")) != "player_slot_assignment" or String(phase_ledger[1].get("status", "")) != "ported_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped player-slot assignment as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_structure_inspection_only":
+	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_structure_and_endpoint_control_flow_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped runtime-zone record build as ported: %s" % JSON.stringify(report))
 		return
 	if String(phase_ledger[3].get("status", "")) != "pending_clean_port":
@@ -177,6 +209,7 @@ func _run() -> void:
 		"accepted_template_count": report.get("accepted_template_count", 0),
 		"assignment_status": selected_payload.get("assignment_status", ""),
 		"runtime_zone_build_status": selected_payload.get("runtime_zone_build_status", ""),
+		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),
 		"generation_status": generated.get("status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])

@@ -444,6 +444,10 @@ Dictionary runtime_zone_build_report(
 	}
 
 	Array link_seeds;
+	Array adjacency;
+	for (int64_t index = 0; index < runtime_zones.size(); ++index) {
+		adjacency.append(Array());
+	}
 	for (int64_t index = 0; index < active_links.size(); ++index) {
 		if (Variant(active_links[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -463,7 +467,80 @@ Dictionary runtime_zone_build_report(
 		seed["border_guard"] = bool(link.get("border_guard", false));
 		seed["early_consumer"] = "0x4a1f3b uses endpoint pointers only; payload is preserved for later guard/link consumers";
 		link_seeds.append(seed);
+
+		const int32_t runtime_a = int32_t(seed.get("runtime_zone_a", -1));
+		const int32_t runtime_b = int32_t(seed.get("runtime_zone_b", -1));
+		if (runtime_a >= 0 && runtime_a < adjacency.size() && runtime_b >= 0 && runtime_b < adjacency.size()) {
+			Array links_a = adjacency[runtime_a];
+			links_a.append(runtime_b);
+			adjacency[runtime_a] = links_a;
+			Array links_b = adjacency[runtime_b];
+			links_b.append(runtime_a);
+			adjacency[runtime_b] = links_b;
+		}
 	}
+
+	Array placement_calls;
+	int32_t explicit_endpoint_attempts = 0;
+	int32_t fallback_attempts_if_no_valid_endpoint = 0;
+	for (int64_t runtime_index = 0; runtime_index < runtime_zones.size(); ++runtime_index) {
+		Array available_links;
+		Array linked = runtime_index < adjacency.size() ? Array(adjacency[runtime_index]) : Array();
+		for (int64_t link_index = 0; link_index < linked.size(); ++link_index) {
+			const int32_t linked_runtime = int32_t(linked[link_index]);
+			if (linked_runtime >= 0 && linked_runtime < runtime_index) {
+				available_links.append(linked_runtime);
+			}
+		}
+		explicit_endpoint_attempts += available_links.size();
+		if (available_links.is_empty()) {
+			fallback_attempts_if_no_valid_endpoint += int32_t(runtime_index);
+		}
+		Dictionary call;
+		call["pass"] = "creation";
+		call["runtime_zone_index"] = runtime_index;
+		call["runtime_vector_count_before_call"] = runtime_index;
+		call["available_endpoint_runtime_zones"] = available_links;
+		call["fallback_candidate_count_if_no_valid_endpoint"] = available_links.is_empty() ? runtime_index : 0;
+		call["coordinate_status"] = "pending_0x4a17f5_candidate_math_and_0x4a1701_validation";
+		placement_calls.append(call);
+	}
+	for (int32_t repeat = 0; repeat < 2; ++repeat) {
+		for (int64_t runtime_index = 0; runtime_index < runtime_zones.size(); ++runtime_index) {
+			Array available_links;
+			Array linked = runtime_index < adjacency.size() ? Array(adjacency[runtime_index]) : Array();
+			for (int64_t link_index = 0; link_index < linked.size(); ++link_index) {
+				const int32_t linked_runtime = int32_t(linked[link_index]);
+				if (linked_runtime >= 0 && linked_runtime < runtime_zones.size()) {
+					available_links.append(linked_runtime);
+				}
+			}
+			explicit_endpoint_attempts += available_links.size();
+			if (available_links.is_empty()) {
+				fallback_attempts_if_no_valid_endpoint += int32_t(runtime_zones.size());
+			}
+			Dictionary call;
+			call["pass"] = repeat == 0 ? String("stabilization_1") : String("stabilization_2");
+			call["runtime_zone_index"] = runtime_index;
+			call["runtime_vector_count_before_call"] = runtime_zones.size();
+			call["available_endpoint_runtime_zones"] = available_links;
+			call["fallback_candidate_count_if_no_valid_endpoint"] = available_links.is_empty() ? runtime_zones.size() : 0;
+			call["coordinate_status"] = "pending_0x4a17f5_candidate_math_and_0x4a1701_validation";
+			placement_calls.append(call);
+		}
+	}
+
+	Dictionary early_link_placement;
+	early_link_placement["status"] = "0x4a1f3b_endpoint_control_flow_ported_inspection_only";
+	early_link_placement["source"] = "h3maped 0x4a1f3b walks source zone +0xc8..+0xcc endpoint records, then falls back to all existing runtime zones if no coordinate candidates survive";
+	early_link_placement["payload_policy"] = "link value/wide/border_guard are not consumed by 0x4a1f3b/0x4a17f5; they are preserved for later 0x4a79a3 connection guard consumers";
+	early_link_placement["creation_pass_count"] = runtime_zones.size();
+	early_link_placement["stabilization_pass_count"] = 2;
+	early_link_placement["call_count"] = placement_calls.size();
+	early_link_placement["explicit_endpoint_attempt_count"] = explicit_endpoint_attempts;
+	early_link_placement["fallback_attempt_count_if_no_valid_endpoint"] = fallback_attempts_if_no_valid_endpoint;
+	early_link_placement["calls"] = placement_calls;
+	early_link_placement["coordinate_candidate_status"] = "pending_clean_port_0x4a17f5_0x4a1701_0x4a1ad8";
 
 	report["status"] = "0x4a218c_runtime_zone_records_ported_inspection_only";
 	report["source"] = "h3maped 0x4a218c with 0x49b452 runtime initializer, 0x49b3c1 town choice, 0x49b53d terrain choice";
@@ -478,6 +555,8 @@ Dictionary runtime_zone_build_report(
 	report["runtime_zones"] = runtime_zones;
 	report["link_seed_count"] = link_seeds.size();
 	report["link_seeds"] = link_seeds;
+	report["early_link_placement_status"] = early_link_placement.get("status", "");
+	report["early_link_placement"] = early_link_placement;
 	report["rng_state_after_runtime_zone_build"] = int64_t(rng.state);
 	report["rng_events"] = rng_events;
 	report["coordinate_placement_status"] = "pending_clean_port_0x4a1f3b_0x4a17f5_0x4a19ed_and_0x4a3a03";
@@ -597,7 +676,7 @@ Array clean_phase_ledger() {
 	const Phase PHASES[] = {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "ported_inspection_only" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "ported_inspection_only" },
-		{ "runtime_zone_build", "0x4a218c, 0x49b452, 0x49b3c1, 0x49b53d", "ported_structure_inspection_only" },
+		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x49b452, 0x49b3c1, 0x49b53d", "ported_structure_and_endpoint_control_flow_inspection_only" },
 		{ "zone_footprint_placement", "0x4a3a03, 0x4a2777, 0x4a325d, 0x4a3710", "pending_clean_port" },
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "pending_clean_port" },
 		{ "object_category_placement", "0x4a8d2c, 0x4a8db2, 0x4a8c15", "pending_clean_port" },
