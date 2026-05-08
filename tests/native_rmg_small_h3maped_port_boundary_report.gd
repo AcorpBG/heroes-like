@@ -26,10 +26,21 @@ func _run() -> void:
 	}
 	var report: Dictionary = service.inspect_h3maped_small_rmg_port(config)
 	if not bool(report.get("ok", false)):
-		_fail("Small h3maped port inspection did not accept the supported scope: %s" % JSON.stringify(report))
+		_fail("Small h3maped clean-restart inspection did not accept the supported scope: %s" % JSON.stringify(report))
 		return
-	if String(report.get("status", "")) != "h3maped_small_template_vector_recovered":
-		_fail("Unexpected small h3maped inspection status: %s" % JSON.stringify(report))
+	if String(report.get("status", "")) != "h3maped_small_clean_restart_template_selection_ready":
+		_fail("Unexpected small h3maped clean-restart status: %s" % JSON.stringify(report))
+		return
+	if String(report.get("archive_status", "")) != "previous_native_catalog_auto_generator_archived_debug_only":
+		_fail("The previous native catalog-auto generator was not explicitly archived: %s" % JSON.stringify(report))
+		return
+	if bool(report.get("runtime_generation_allowed", true)):
+		_fail("Runtime generation must stay blocked until clean executable phase ports materialize map cells: %s" % JSON.stringify(report))
+		return
+
+	var binary: Dictionary = report.get("h3maped_binary", {})
+	if not bool(binary.get("ok", false)) or String(binary.get("status", "")) != "verified_reset_anchor":
+		_fail("The reset boundary did not verify the local h3maped.exe anchor: %s" % JSON.stringify(report))
 		return
 	if int(report.get("size_score", -1)) != 1 or int(report.get("h3maped_water_mode_code", -1)) != 0:
 		_fail("Small land size score/water code did not follow the recovered formula: %s" % JSON.stringify(report))
@@ -37,23 +48,22 @@ func _run() -> void:
 	if int(report.get("accepted_template_count", -1)) != 13:
 		_fail("Small 1-human/3-player accepted-template vector drifted from recovered catalog evidence: %s" % JSON.stringify(report))
 		return
-	if String(report.get("selected_template_status", "")) != "h3maped_rng_selected":
-		_fail("The port did not select a template through the recovered h3maped RNG: %s" % JSON.stringify(report))
+	if String(report.get("selected_template_status", "")) != "h3maped_rng_selected" or int(report.get("selected_template_vector_index", -1)) != 2:
+		_fail("The port did not select through the recovered h3maped RNG: %s" % JSON.stringify(report))
 		return
-	if int(report.get("selected_template_vector_index", -1)) != 2:
-		_fail("The recovered h3maped RNG selected an unexpected vector index for seed 1: %s" % JSON.stringify(report))
-		return
+
 	var rng: Dictionary = report.get("h3maped_rng", {})
 	if int(rng.get("first_value", -1)) != 41 or int(rng.get("selected_vector_index", -1)) != 2:
-		_fail("The recovered h3maped RNG first step drifted from the executable formula: %s" % JSON.stringify(report))
+		_fail("The recovered h3maped RNG first step drifted from 0x4e7276: %s" % JSON.stringify(report))
 		return
 	var selected_template: Dictionary = report.get("selected_template", {})
 	if String(selected_template.get("id", "")) != "h3maped_template_018":
 		_fail("The recovered h3maped RNG selected the wrong accepted template for seed 1: %s" % JSON.stringify(report))
 		return
+
 	var selected_payload: Dictionary = report.get("selected_template_payload", {})
 	if String(selected_payload.get("status", "")) != "adapted_template_found":
-		_fail("The selected h3maped source template was not resolved through the adapted catalog provenance: %s" % JSON.stringify(report))
+		_fail("The selected h3maped source template was not resolved through adapted-catalog provenance: %s" % JSON.stringify(report))
 		return
 	if String(selected_payload.get("adapted_template_id", "")) != "translated_rmg_template_019_v1":
 		_fail("The selected h3maped source template resolved to the wrong adapted template id: %s" % JSON.stringify(report))
@@ -68,577 +78,44 @@ func _run() -> void:
 		_fail("The selected h3maped source template payload lost player-town/castle requirements: %s" % JSON.stringify(report))
 		return
 	if selected_payload.get("human_capable_source_owner_indices", []) != [0, 1, 2, 3]:
-		_fail("The selected h3maped source template payload lost the 0x4ac552 human-capable owner bitmap: %s" % JSON.stringify(report))
+		_fail("The selected h3maped source template payload lost human-capable owner slots: %s" % JSON.stringify(report))
 		return
 	if selected_payload.get("player_capable_source_owner_indices", []) != [0, 1, 2, 3]:
-		_fail("The selected h3maped source template payload lost the 0x4ac552 player-capable owner bitmap: %s" % JSON.stringify(report))
-		return
-	if String(selected_payload.get("assignment_status", "")) != "0x4ac552_player_slot_assignment_ported":
-		_fail("The selected h3maped payload did not port the 0x4ac552 player-slot assignment step: %s" % JSON.stringify(report))
-		return
-	var assignment: Dictionary = selected_payload.get("player_slot_assignment", {})
-	if assignment.get("selected_color_bitmap", []) != [false, false, false, false, false, false, false, false]:
-		_fail("Default h3maped selected-color bitmap must follow the constructor-zeroed generator+0xed8 state: %s" % JSON.stringify(report))
-		return
-	if assignment.get("selected_color_order", []) != [0, 1, 2, 3, 4, 5, 6, 7]:
-		_fail("Default h3maped color order drifted from 0x4ac63f..0x4ac66e: %s" % JSON.stringify(report))
-		return
-	if assignment.get("actual_colors_by_source_owner", []) != [0, 1, 2, -1, -1, -1, -1, -1]:
-		_fail("The selected h3maped payload assigned the wrong source-owner to player-color mapping: %s" % JSON.stringify(report))
-		return
-	if int(assignment.get("assigned_player_count", -1)) != 3:
-		_fail("The selected h3maped payload did not assign all requested players: %s" % JSON.stringify(report))
-		return
-	if String(selected_payload.get("runtime_zone_seed_status", "")) != "0x4a218c_runtime_zone_vector_seed_ported":
-		_fail("The selected h3maped payload did not port the 0x4a218c runtime-zone seed boundary: %s" % JSON.stringify(report))
-		return
-	var runtime_zone_seed: Dictionary = selected_payload.get("runtime_zone_seed", {})
-	if int(runtime_zone_seed.get("runtime_zone_count", -1)) != 6 or int(runtime_zone_seed.get("runtime_link_seed_count", -1)) != 5:
-		_fail("The 0x4a218c runtime-zone seed boundary lost zone/link cardinality: %s" % JSON.stringify(report))
-		return
-	if int(runtime_zone_seed.get("min_source_zone_size", -1)) != 11:
-		_fail("The 0x4a218c runtime-zone seed boundary did not preserve the source +0x08 min-size scan: %s" % JSON.stringify(report))
-		return
-	if int(runtime_zone_seed.get("scale_divisor", -1)) != 5 or int(runtime_zone_seed.get("link_seed_scale_argument", -1)) != 79:
-		_fail("The 0x4a218c runtime-zone seed boundary drifted from the executable land scale argument: %s" % JSON.stringify(report))
-		return
-	var runtime_zones: Array = runtime_zone_seed.get("runtime_zones", [])
-	if runtime_zones.size() < 3:
-		_fail("The 0x4a218c runtime-zone seed boundary did not expose runtime zones: %s" % JSON.stringify(report))
-		return
-	if int(runtime_zones[0].get("actual_player_color", -1)) != 0 or int(runtime_zones[1].get("actual_player_color", -1)) != 1 or int(runtime_zones[2].get("actual_player_color", 99)) != -1:
-		_fail("The 0x4a218c runtime-zone seed boundary did not carry player-slot assignment into runtime zones: %s" % JSON.stringify(report))
-		return
-	if String(runtime_zone_seed.get("coordinate_seed_status", "")) != "0x4a1f3b_0x4a17f5_0x4a1ad8_0x4a19ed_single_level_ported":
-		_fail("The 0x4a218c boundary did not port the single-level h3maped coordinate seed and bbox rescale path: %s" % JSON.stringify(report))
-		return
-	var coordinate_seed: Dictionary = runtime_zone_seed.get("coordinate_seed", {})
-	if int(coordinate_seed.get("placement_step_count", -1)) != 18 or int(coordinate_seed.get("rng_calls_after_template_selection", -1)) != 18:
-		_fail("The h3maped coordinate seed path did not execute the initial insertion plus two refinement passes: %s" % JSON.stringify(report))
-		return
-	var bbox: Dictionary = coordinate_seed.get("bounding_box_rescale", {})
-	if int(bbox.get("map_span", -1)) != 36 or int(bbox.get("selected_span_before_rescale", 0)) <= 0:
-		_fail("The h3maped 0x4a19ed bbox rescale evidence is missing or invalid: %s" % JSON.stringify(report))
-		return
-	if not runtime_zones[0].has("x_after_bbox_rescale") or not runtime_zones[0].has("y_after_bbox_rescale") or int(runtime_zones[0].get("runtime_size_after_bbox_rescale", 0)) <= 0:
-		_fail("Runtime zones did not expose post-0x4a19ed coordinate and size evidence: %s" % JSON.stringify(report))
-		return
-	if String(runtime_zone_seed.get("level_footprint_phase_status", "")) != "0x4a3a03_level_collection_ported_helpers_blocked":
-		_fail("The h3maped 0x4a3a03 level-collection boundary did not run or did not expose the real helper blocker: %s" % JSON.stringify(report))
-		return
-	var level_footprint_phase: Dictionary = runtime_zone_seed.get("level_footprint_phase", {})
-	var levels: Array = level_footprint_phase.get("levels", [])
-	if int(level_footprint_phase.get("level_count", -1)) != 1 or levels.size() != 1:
-		_fail("The h3maped 0x4a3a03 level loop did not match the small one-level scope: %s" % JSON.stringify(report))
-		return
-	var level_zero: Dictionary = levels[0]
-	if int(level_zero.get("matching_runtime_zone_count", -1)) != 6 or bool(level_zero.get("synthetic_fallback_zone_allowed_by_0x4a3a9d", true)):
-		_fail("The h3maped 0x4a3a03 level collection or land synthetic-zone branch drifted from the executable: %s" % JSON.stringify(report))
-		return
-	if level_zero.get("helper_call_sequence", []) != ["0x4a2777", "0x4a325d", "0x4a3710"]:
-		_fail("The h3maped 0x4a3a03 helper trio was not reported as the concrete next blocker: %s" % JSON.stringify(report))
-		return
-	var first_helper: Dictionary = level_footprint_phase.get("first_helper_evidence", {})
-	if String(first_helper.get("status", "")) != "0x4a2777_real_source_node_cycle_traversal_ported_boundary_buffer_available":
-		_fail("The h3maped 0x4a2777 footprint helper did not consume the recovered source-node cycles: %s" % JSON.stringify(report))
-		return
-	if String(first_helper.get("clip_helper_address", "")) != "0x4a2b33" or String(first_helper.get("line_cell_writer_address", "")) != "0x4a261a":
-		_fail("The h3maped 0x4a2777 helper lost its executable-backed clipping/cell-writer addresses: %s" % JSON.stringify(report))
-		return
-	if int(first_helper.get("map_cell_stride_bytes", -1)) != 48 or int(first_helper.get("project_materialized_cell_count", -1)) != 0:
-		_fail("The h3maped 0x4a2777 helper report must not fake project materialized footprint cells: %s" % JSON.stringify(report))
-		return
-	if int(first_helper.get("h3maped_boundary_cell_count", 0)) <= 0:
-		_fail("The h3maped 0x4a2777 helper did not paint any real boundary cells from source-node cycles: %s" % JSON.stringify(report))
-		return
-	if first_helper.get("recovered_operations", []).size() < 6 or first_helper.get("missing_runtime_layout", []).size() < 4:
-		_fail("The h3maped 0x4a2777 helper report does not distinguish recovered behavior from missing runtime layout: %s" % JSON.stringify(report))
-		return
-	if String(first_helper.get("clip_helper_status", "")) != "0x4a2b33_clip_helper_ported":
-		_fail("The h3maped 0x4a2777 helper did not expose the ported 0x4a2b33 clip helper: %s" % JSON.stringify(report))
-		return
-	var clip_helper: Dictionary = first_helper.get("clip_helper_evidence", {})
-	if String(clip_helper.get("status", "")) != "0x4a2b33_clip_helper_ported":
-		_fail("The h3maped 0x4a2b33 clip-helper report did not run: %s" % JSON.stringify(report))
-		return
-	if int(clip_helper.get("sample_clip_count", -1)) != 5:
-		_fail("The h3maped 0x4a2b33 clip-helper report lost sample coverage: %s" % JSON.stringify(report))
-		return
-	var sample_clips: Array = clip_helper.get("sample_clips", [])
-	if sample_clips.size() != 5 or not sample_clips[0] is Dictionary or not bool(sample_clips[0].get("input_inside", false)):
-		_fail("The h3maped 0x4a2b33 clip-helper inside sample drifted: %s" % JSON.stringify(report))
-		return
-	if String(first_helper.get("line_writer_status", "")) != "0x4a261a_cell_line_writer_ported":
-		_fail("The h3maped 0x4a2777 helper did not expose the ported 0x4a261a line writer: %s" % JSON.stringify(report))
-		return
-	var line_writer: Dictionary = first_helper.get("line_writer_evidence", {})
-	if String(line_writer.get("status", "")) != "0x4a261a_cell_line_writer_ported":
-		_fail("The h3maped 0x4a261a line-writer report did not run: %s" % JSON.stringify(report))
-		return
-	if int(line_writer.get("sample_line_count", -1)) != 5:
-		_fail("The h3maped 0x4a261a line-writer report lost sample coverage: %s" % JSON.stringify(report))
-		return
-	var sample_lines: Array = line_writer.get("sample_lines", [])
-	for sample in sample_lines:
-		if not sample is Dictionary:
-			_fail("The h3maped 0x4a261a sample line report was malformed: %s" % JSON.stringify(report))
-			return
-		if int(sample.get("trace_write_count", 0)) <= 0 or int(sample.get("unique_cell_count", 0)) <= 0 or int(sample.get("out_of_bounds_write_count", -1)) != 0:
-			_fail("The h3maped 0x4a261a sample line did not materialize in-bounds cells: %s" % JSON.stringify(report))
-			return
-	if String(first_helper.get("randomized_line_writer_status", "")) != "0x4a2413_randomized_line_writer_ported_standalone":
-		_fail("The h3maped 0x4a2777 helper did not expose the ported 0x4a2413 randomized line writer: %s" % JSON.stringify(report))
-		return
-	var randomized_line_writer: Dictionary = first_helper.get("randomized_line_writer_evidence", {})
-	if String(randomized_line_writer.get("status", "")) != "0x4a2413_randomized_line_writer_ported_standalone":
-		_fail("The h3maped 0x4a2413 randomized line-writer report did not run: %s" % JSON.stringify(report))
-		return
-	if int(randomized_line_writer.get("sample_rng_call_count", 0)) <= 0 or int(randomized_line_writer.get("sample_inserted_midpoint_count", 0)) <= 0:
-		_fail("The h3maped 0x4a2413 randomized line-writer report did not exercise midpoint jitter: %s" % JSON.stringify(report))
-		return
-	if int(randomized_line_writer.get("sample_trace_write_count", 0)) <= 0 or int(randomized_line_writer.get("sample_out_of_bounds_write_count", -1)) != 0:
-		_fail("The h3maped 0x4a2413 randomized line-writer report did not materialize in-bounds cells: %s" % JSON.stringify(report))
-		return
-	if String(first_helper.get("rectangle_fallback_status", "")) != "0x4a2777_rectangle_fallback_branch_ported_standalone":
-		_fail("The h3maped 0x4a2777 helper did not expose the ported rectangle fallback branch: %s" % JSON.stringify(report))
-		return
-	var rectangle_fallback: Dictionary = first_helper.get("rectangle_fallback_evidence", {})
-	if String(rectangle_fallback.get("status", "")) != "0x4a2777_rectangle_fallback_branch_ported_standalone":
-		_fail("The h3maped 0x4a2777 rectangle fallback report did not run: %s" % JSON.stringify(report))
-		return
-	if int(rectangle_fallback.get("edge_count", 0)) != 4 or int(rectangle_fallback.get("footprint_vertex_count", 0)) != 4:
-		_fail("The h3maped 0x4a2777 rectangle fallback did not expose the four executable-painted edges and vertices: %s" % JSON.stringify(report))
-		return
-	if int(rectangle_fallback.get("unique_cell_count", 0)) <= 0 or int(rectangle_fallback.get("out_of_bounds_write_count", -1)) != 0:
-		_fail("The h3maped 0x4a2777 rectangle fallback did not materialize in-bounds boundary cells: %s" % JSON.stringify(report))
-		return
-	if String(first_helper.get("connector_segment_status", "")) != "0x4a2777_connector_segment_branch_ported_standalone":
-		_fail("The h3maped 0x4a2777 helper did not expose the ported connector segment branch: %s" % JSON.stringify(report))
-		return
-	var connector_segment: Dictionary = first_helper.get("connector_segment_evidence", {})
-	if String(connector_segment.get("status", "")) != "0x4a2777_connector_segment_branch_ported_standalone":
-		_fail("The h3maped 0x4a2777 connector segment branch report did not run: %s" % JSON.stringify(report))
-		return
-	if int(connector_segment.get("sample_appended_vertex_count", 0)) != 1:
-		_fail("The h3maped 0x4a2777 connector segment did not expose the runtime_zone+0x3f4 vertex append: %s" % JSON.stringify(report))
-		return
-	if int(connector_segment.get("deterministic_trace_write_count", 0)) <= 0 or int(connector_segment.get("deterministic_out_of_bounds_write_count", -1)) != 0:
-		_fail("The h3maped 0x4a2777 connector deterministic branch did not materialize in-bounds cells: %s" % JSON.stringify(report))
-		return
-	if int(connector_segment.get("randomized_trace_write_count", 0)) <= 0 or int(connector_segment.get("randomized_out_of_bounds_write_count", -1)) != 0:
-		_fail("The h3maped 0x4a2777 connector randomized branch did not materialize in-bounds cells: %s" % JSON.stringify(report))
-		return
-	if int(connector_segment.get("randomized_rng_call_count", 0)) <= 0 or int(connector_segment.get("randomized_inserted_midpoint_count", 0)) <= 0:
-		_fail("The h3maped 0x4a2777 connector randomized branch did not exercise midpoint jitter: %s" % JSON.stringify(report))
-		return
-	if String(first_helper.get("boundary_wrapping_status", "")) != "0x4a2777_boundary_wrapping_continuation_ported_standalone":
-		_fail("The h3maped 0x4a2777 helper did not expose the ported boundary-wrapping continuation: %s" % JSON.stringify(report))
-		return
-	var boundary_wrapping: Dictionary = first_helper.get("boundary_wrapping_evidence", {})
-	if String(boundary_wrapping.get("status", "")) != "0x4a2777_boundary_wrapping_continuation_ported_standalone":
-		_fail("The h3maped 0x4a2777 boundary-wrapping continuation report did not run: %s" % JSON.stringify(report))
-		return
-	if int(boundary_wrapping.get("wrap_segment_count", 0)) <= 0 or int(boundary_wrapping.get("final_segment_count", 0)) != 1:
-		_fail("The h3maped 0x4a2777 boundary-wrapping continuation did not expose wrap and final segment painting: %s" % JSON.stringify(report))
-		return
-	if int(boundary_wrapping.get("sample_appended_vertex_count", 0)) < 2:
-		_fail("The h3maped 0x4a2777 boundary-wrapping continuation did not append intermediate footprint vertices: %s" % JSON.stringify(report))
-		return
-	if int(boundary_wrapping.get("trace_write_count", 0)) <= 0 or int(boundary_wrapping.get("out_of_bounds_write_count", -1)) != 0:
-		_fail("The h3maped 0x4a2777 boundary-wrapping continuation did not materialize in-bounds cells: %s" % JSON.stringify(report))
-		return
-	if bool(boundary_wrapping.get("loop_guard_exhausted", true)):
-		_fail("The h3maped 0x4a2777 boundary-wrapping continuation exhausted its standalone loop guard: %s" % JSON.stringify(report))
-		return
-	if String(first_helper.get("real_source_cycle_traversal_status", "")) != "0x4a2777_real_source_node_cycle_traversal_ported_boundary_materialized":
-		_fail("The h3maped 0x4a2777 helper did not execute the real recovered source-node cycle traversal: %s" % JSON.stringify(report))
-		return
-	var real_cycle: Dictionary = first_helper.get("real_source_cycle_traversal_evidence", {})
-	if String(real_cycle.get("status", "")) != "0x4a2777_real_source_node_cycle_traversal_ported_boundary_materialized":
-		_fail("The h3maped 0x4a2777 real source-cycle traversal report did not run: %s" % JSON.stringify(report))
-		return
-	if int(real_cycle.get("runtime_zone_walk_count", -1)) != 6 or int(real_cycle.get("connector_segment_count", 0)) <= 0:
-		_fail("The h3maped 0x4a2777 real source-cycle traversal did not consume all six runtime-zone walks: %s" % JSON.stringify(report))
-		return
-	if int(real_cycle.get("trace_write_count", 0)) <= 0 or int(real_cycle.get("unique_cell_count", 0)) <= 0 or int(real_cycle.get("out_of_bounds_write_count", -1)) != 0:
-		_fail("The h3maped 0x4a2777 real source-cycle traversal did not paint in-bounds boundary cells: %s" % JSON.stringify(report))
-		return
-	if int(real_cycle.get("flagged_writer_segment_count", 0)) <= 0 or int(real_cycle.get("randomized_rng_call_count", 0)) <= 0:
-		_fail("The h3maped 0x4a2777 real source-cycle traversal did not execute the caller-flagged 0x4a2413 path: %s" % JSON.stringify(report))
-		return
-	if bool(real_cycle.get("loop_guard_exhausted", true)):
-		_fail("The h3maped 0x4a2777 real source-cycle traversal exhausted its loop guard: %s" % JSON.stringify(report))
-		return
-	if int(real_cycle.get("unique_cell_count", -1)) != 262:
-		_fail("The h3maped 0x4a2777 real source-cycle traversal drifted from the executable runtime-zone size limit: %s" % JSON.stringify(report))
-		return
-	var real_cycle_zone_reports: Array = real_cycle.get("zone_reports", [])
-	if real_cycle_zone_reports.size() != 6:
-		_fail("The h3maped 0x4a2777 real source-cycle traversal did not expose six runtime-zone reports: %s" % JSON.stringify(report))
-		return
-	for zone_report in real_cycle_zone_reports:
-		if not zone_report is Dictionary:
-			_fail("The h3maped 0x4a2777 real source-cycle zone report was malformed: %s" % JSON.stringify(report))
-			return
-		if String(zone_report.get("random_span_limit_source", "")) != "runtime_zone+0x1c":
-			_fail("The h3maped 0x4a2777 randomized span limit must come from runtime_zone+0x1c: %s" % JSON.stringify(report))
-			return
-		if int(zone_report.get("random_span_limit_runtime_size", -1)) != 4 or int(zone_report.get("random_span_limit_source_base_size", -1)) != 11:
-			_fail("The h3maped 0x4a2777 randomized span limit lost runtime-size versus source-base evidence: %s" % JSON.stringify(report))
-			return
-	var second_helper: Dictionary = level_footprint_phase.get("second_helper_evidence", {})
-	if String(second_helper.get("status", "")) != "0x4a325d_real_boundary_span_fill_and_seed_relocation_ported_project_materialization_pending":
-		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed with the real boundary-buffer port boundary: %s" % JSON.stringify(report))
-		return
-	if String(second_helper.get("unassigned_zone_word_sentinel", "")) != "0x00ff0000":
-		_fail("The h3maped 0x4a325d helper report must expose the unassigned cell sentinel: %s" % JSON.stringify(report))
-		return
-	var span_sample: Dictionary = second_helper.get("sample_span_fill", {})
-	if int(second_helper.get("sample_materialized_cell_count", 0)) <= 0 or int(span_sample.get("filled_cell_count", 0)) <= 0:
-		_fail("The h3maped 0x4a325d standalone span-fill sample did not paint cells: %s" % JSON.stringify(report))
-		return
-	if int(span_sample.get("pushed_span_count", 0)) <= 0 or int(span_sample.get("popped_span_count", 0)) <= 0:
-		_fail("The h3maped 0x4a325d standalone span-fill sample did not exercise span queue semantics: %s" % JSON.stringify(report))
-		return
-	if int(span_sample.get("boundary_overwrite_count", -1)) != 0 or int(span_sample.get("out_of_bounds_span_count", -1)) != 0:
-		_fail("The h3maped 0x4a325d standalone span-fill sample crossed its boundary or escaped bounds: %s" % JSON.stringify(report))
-		return
-	var real_span_fill: Dictionary = second_helper.get("real_boundary_span_fill", {})
-	if String(real_span_fill.get("status", "")) != "0x4a325d_real_0x4a2777_boundary_span_fill_executed":
-		_fail("The h3maped 0x4a325d helper did not consume the real 0x4a2777 boundary buffer: %s" % JSON.stringify(report))
-		return
-	if int(real_span_fill.get("boundary_unique_cell_count", -1)) != int(real_cycle.get("unique_cell_count", -2)):
-		_fail("The h3maped 0x4a325d real span fill did not inherit the 0x4a2777 boundary cells: %s" % JSON.stringify(report))
-		return
-	if int(real_span_fill.get("filled_zone_count", 0)) <= 0 or int(second_helper.get("real_boundary_filled_cell_count", 0)) <= 0:
-		_fail("The h3maped 0x4a325d real span fill did not paint any cells inside the 0x4a2777 boundary buffer: %s" % JSON.stringify(report))
-		return
-	if int(real_span_fill.get("out_of_bounds_span_count", -1)) != 0:
-		_fail("The h3maped 0x4a325d real span fill escaped the map bounds: %s" % JSON.stringify(report))
-		return
-	if int(real_span_fill.get("seed_relocated_count", -1)) != 0:
-		_fail("The selected small-land fixture should expose the 0x4a325d relocation branch without using it for in-bounds seeds: %s" % JSON.stringify(report))
-		return
-	if int(real_span_fill.get("blocked_initial_span_count", -1)) != 0 or int(real_span_fill.get("seed_blocked_count", -1)) != 0:
-		_fail("The selected small-land fixture should not block copied in-bounds seeds after the executable runtime-size limit is used: %s" % JSON.stringify(report))
-		return
-	if int(real_span_fill.get("filled_zone_count", -1)) != 6 or int(second_helper.get("real_boundary_filled_cell_count", -1)) != 762:
-		_fail("The h3maped 0x4a325d real span fill did not fill all six selected zones with the executable runtime-size limit: %s" % JSON.stringify(report))
-		return
-	if int(second_helper.get("real_boundary_remaining_unassigned_cell_count", -1)) != 272:
-		_fail("The h3maped 0x4a325d real span fill remaining-unassigned count drifted: %s" % JSON.stringify(report))
-		return
-	var project_materialization: Dictionary = second_helper.get("project_materialization", {})
-	if String(project_materialization.get("status", "")) != "h3maped_span_fill_project_grid_materialized_terrain_repaint_pending":
-		_fail("The h3maped 0x4a325d project grid materialization report was not exposed: %s" % JSON.stringify(report))
-		return
-	if String(project_materialization.get("adoption_status", "")) != "report_only_not_runtime_generation" or String(project_materialization.get("next_required_phase_address", "")) != "0x4a3f27":
-		_fail("The h3maped 0x4a325d project grid materialization must stay report-only until 0x4a3f27 is ported: %s" % JSON.stringify(report))
-		return
-	if int(second_helper.get("project_materialized_cell_count", -1)) != 1024 or int(second_helper.get("project_unresolved_cell_count", -1)) != 272:
-		_fail("The h3maped 0x4a325d project grid materialized/unresolved counts drifted: %s" % JSON.stringify(report))
-		return
-	if int(project_materialization.get("project_materialized_cell_count", -1)) != 1024 or int(project_materialization.get("unresolved_cell_count", -1)) != 272:
-		_fail("The h3maped 0x4a325d nested project grid materialized/unresolved counts drifted: %s" % JSON.stringify(report))
-		return
-	if int(project_materialization.get("zone_count", -1)) != 6 or int(project_materialization.get("materialized_level_count", -1)) != 1:
-		_fail("The h3maped 0x4a325d project grid materialization lost the selected small one-level shape: %s" % JSON.stringify(report))
-		return
-	var materialized_levels: Array = project_materialization.get("levels", [])
-	if materialized_levels.size() != 1 or not materialized_levels[0] is Dictionary:
-		_fail("The h3maped 0x4a325d project grid materialization level report was malformed: %s" % JSON.stringify(report))
-		return
-	var materialized_level: Dictionary = materialized_levels[0]
-	var terrain_codes: PackedInt32Array = materialized_level.get("terrain_code_u16", PackedInt32Array())
-	var owner_grid: Array = materialized_level.get("owner_grid", [])
-	if terrain_codes.size() != 1296 or owner_grid.size() != 36 or not owner_grid[0] is Array or owner_grid[0].size() != 36:
-		_fail("The h3maped 0x4a325d project grid materialization did not expose a 36x36 project grid: %s" % JSON.stringify(report))
-		return
-	var materialized_zones: Array = project_materialization.get("zones", [])
-	var materialized_zone_counts: Array[int] = []
-	for zone in materialized_zones:
-		if not zone is Dictionary:
-			_fail("The h3maped 0x4a325d project grid materialized zone report was malformed: %s" % JSON.stringify(report))
-			return
-		materialized_zone_counts.append(int(zone.get("cell_count", -1)))
-	if materialized_zone_counts != [266, 227, 204, 58, 152, 117]:
-		_fail("The h3maped 0x4a325d project grid materialized zone counts drifted: %s" % JSON.stringify(report))
-		return
-	var terrain_phase: Dictionary = second_helper.get("terrain_phase_4a3f27", {})
-	if String(terrain_phase.get("status", "")) != "0x4a3f27_schedule_ported_owner_byte_basis_resolved_terrain_adoption_pending":
-		_fail("The h3maped 0x4a3f27 terrain phase report did not resolve the owner-byte basis before terrain adoption: %s" % JSON.stringify(report))
-		return
-	if String(terrain_phase.get("terrain_adapter_vtable", "")) != "0x540a14" or String(terrain_phase.get("terrain_repaint_address", "")) != "0x4bd099":
-		_fail("The h3maped 0x4a3f27 terrain phase report lost its TerrainPlacement adapter evidence: %s" % JSON.stringify(report))
-		return
-	if int(terrain_phase.get("whole_map_fill_terrain_id", -1)) != 8 or int(terrain_phase.get("whole_map_fill_cell_count", -1)) != 1296:
-		_fail("The h3maped 0x4a3f27 whole-map fill evidence drifted from the executable schedule: %s" % JSON.stringify(report))
-		return
-	if int(terrain_phase.get("runtime_zone_recenter_call_count", -1)) != 6 or int(terrain_phase.get("bbox_update_scan_cell_count", -1)) != 1024:
-		_fail("The h3maped 0x4a3f27 prepass/recenter evidence drifted from the materialized owner buffer: %s" % JSON.stringify(report))
-		return
-	if int(terrain_phase.get("owner_byte_basis_mismatch_count", -1)) != 0:
-		_fail("The h3maped 0x4a3f27 owner-byte mismatch count drifted; the translated one-based ids must not be written into the executable zone word: %s" % JSON.stringify(report))
-		return
-	if int(terrain_phase.get("source_zone_repaint_member_cell_count", -1)) != 1024 or int(terrain_phase.get("runtime_index_repaint_member_cell_count", -1)) != 1024:
-		_fail("The h3maped 0x4a3f27 source-zone/runtime-index repaint counts drifted: %s" % JSON.stringify(report))
-		return
-	if int(terrain_phase.get("runtime_index_unmatched_repaint_member_cell_count", -1)) != 0:
-		_fail("The h3maped 0x4a3f27 unmatched runtime-index repaint count drifted: %s" % JSON.stringify(report))
-		return
-	var zone_fills: Array = real_span_fill.get("zone_fills", [])
-	if zone_fills.size() != 6 or not zone_fills[0] is Dictionary:
-		_fail("The h3maped 0x4a325d real span fill did not expose per-zone fill reports: %s" % JSON.stringify(report))
-		return
-	var saw_seed_relocation_report := false
-	for zone_fill in zone_fills:
-		if not zone_fill is Dictionary:
-			continue
-		if String(zone_fill.get("seed_relocation_status", "")) == "0x4a325d_seed_in_bounds_relocation_not_used":
-			saw_seed_relocation_report = true
-			var relocation: Dictionary = zone_fill.get("seed_relocation", {})
-			if int(relocation.get("candidate_count", 0)) <= 0 or not relocation.has("best_candidate_border_clearance"):
-				_fail("The h3maped 0x4a325d relocation branch did not expose source-node clearance candidates: %s" % JSON.stringify(report))
-				return
-	if not saw_seed_relocation_report:
-		_fail("The h3maped 0x4a325d relocation branch evidence was missing from per-zone reports: %s" % JSON.stringify(report))
-		return
-	var finalizer: Dictionary = level_footprint_phase.get("finalizer_evidence", {})
-	if String(finalizer.get("status", "")) != "0x4a3710_small_land_no_appended_zone_finalizer_ported":
-		_fail("The h3maped 0x4a3710 small-land finalizer path did not expose the no-appended-zone executable boundary: %s" % JSON.stringify(report))
-		return
-	if String(finalizer.get("adjacency_vector_offset", "")) != "runtime_zone+0xc4" or int(finalizer.get("materialized_adjacency_count", -1)) != 0:
-		_fail("The h3maped 0x4a3710 finalizer report must expose adjacency vectors without faking finalized links: %s" % JSON.stringify(report))
-		return
-	if int(finalizer.get("original_same_level_runtime_zone_count", -1)) != 6 or int(finalizer.get("appended_runtime_zone_count", -1)) != 0:
-		_fail("The h3maped 0x4a3710 finalizer should skip adjacency insertion for one-level land without appended synthetic zones: %s" % JSON.stringify(report))
-		return
-	if int(finalizer.get("zone_order_reset_call_count", -1)) != 6 or int(finalizer.get("per_zone_order_helper_call_count", -1)) != 6:
-		_fail("The h3maped 0x4a3710 finalizer did not preserve the reset/rebuild call counts for the six selected zones: %s" % JSON.stringify(report))
-		return
-	var runtime_layout: Dictionary = level_footprint_phase.get("runtime_layout_evidence", {})
-	if String(runtime_layout.get("status", "")) != "runtime_polygon_seed_points_split_cleanup_and_finalizer_ported_span_fill_pending":
-		_fail("The h3maped runtime polygon layout evidence did not expose the current executable-backed boundary: %s" % JSON.stringify(report))
-		return
-	if int(runtime_layout.get("polygon_node_size_bytes", -1)) != 36:
-		_fail("The recovered h3maped polygon node size drifted from the 0x4cc5db allocation size: %s" % JSON.stringify(report))
-		return
-	var runtime_offsets: Dictionary = runtime_layout.get("runtime_zone_offsets", {})
-	if String(runtime_offsets.get("+0x3e4", "")).find("short ordering") < 0 or String(runtime_offsets.get("+0x3f4", "")).find("footprint vertices") < 0:
-		_fail("The recovered h3maped runtime-zone vector offsets are missing ordering/footprint evidence: %s" % JSON.stringify(report))
-		return
-	var polygon_offsets: Dictionary = runtime_layout.get("polygon_node_offsets", {})
-	if String(polygon_offsets.get("+0x18", "")).find("finalized") < 0 or String(polygon_offsets.get("+0x1c", "")).find("intersection") < 0:
-		_fail("The recovered h3maped polygon-node finalized/intersection offsets are missing: %s" % JSON.stringify(report))
-		return
-	var polygon_seed: Dictionary = level_footprint_phase.get("polygon_seed_evidence", {})
-	if String(polygon_seed.get("status", "")) != "0x4a3a03_polygon_tree_seed_calls_split_cleanup_and_finalizer_ported_span_fill_pending":
-		_fail("The h3maped 0x4a3a03 polygon seed-call schedule was not exposed: %s" % JSON.stringify(report))
-		return
-	if int(polygon_seed.get("materialized_primary_split_seed_count", -1)) != 6:
-		_fail("The h3maped 0x4a3a03 polygon seed-call count drifted for the selected small template: %s" % JSON.stringify(report))
-		return
-	var polygon_levels: Array = polygon_seed.get("levels", [])
-	if polygon_levels.size() != 1 or int(polygon_levels[0].get("split_call_count", -1)) != 6:
-		_fail("The h3maped polygon seed-call report did not match the one-level six-zone selected template: %s" % JSON.stringify(report))
-		return
-	if String(polygon_seed.get("split_algorithm_status", "")) != "0x4ccb64_insertion_bridge_crossing_cleanup_and_finalizer_ported_span_fill_pending":
-		_fail("The h3maped polygon seed-call report must expose the ported split cleanup/finalizer model and remaining span-fill blocker: %s" % JSON.stringify(report))
-		return
-	var pre_crossing_model: Dictionary = polygon_seed.get("runtime_split_pre_crossing_model", {})
-	if int(pre_crossing_model.get("executed_split_call_count", -1)) != 6 or int(pre_crossing_model.get("pre_crossing_inserted_node_pair_count", -1)) != 6:
-		_fail("The h3maped pre-crossing split model did not execute the six primary insertions: %s" % JSON.stringify(report))
-		return
-	if int(pre_crossing_model.get("pre_crossing_inserted_bridge_pair_count", -1)) != 13 or int(pre_crossing_model.get("post_crossing_cleanup_active_node_pair_count", -1)) != 23:
-		_fail("The h3maped pre-crossing bridge/node-pair counts drifted from the executable model: %s" % JSON.stringify(report))
-		return
-	if int(pre_crossing_model.get("post_crossing_cleanup_allocated_node_pair_count", -1)) != 24 or int(pre_crossing_model.get("edge_removal_branch_count", -1)) != 1:
-		_fail("The h3maped edge-removal/vector allocation counts drifted from the executable model: %s" % JSON.stringify(report))
-		return
-	if int(pre_crossing_model.get("duplicate_skip_count", -1)) != 0 or int(pre_crossing_model.get("crossing_test_count", -1)) != 24 or int(pre_crossing_model.get("crossing_collapse_count", -1)) != 6:
-		_fail("The h3maped crossing cleanup counts drifted from the executable model: %s" % JSON.stringify(report))
-		return
-	if String(pre_crossing_model.get("crossing_cleanup_status", "")) != "0x4ccc7a_0x4cc68e_crossing_cleanup_ported":
-		_fail("The h3maped split model did not port crossing cleanup: %s" % JSON.stringify(report))
-		return
-	if String(pre_crossing_model.get("finalizer_status", "")) != "0x4ccdfc_finalized_node_fanout_ported":
-		_fail("The h3maped split model did not port the 0x4ccdfc finalized-node fanout: %s" % JSON.stringify(report))
-		return
-	if int(pre_crossing_model.get("finalized_triplet_count", -1)) != 14 or int(pre_crossing_model.get("finalized_node_count", -1)) != 42:
-		_fail("The h3maped 0x4ccdfc finalized-node fanout counts drifted from the executable model: %s" % JSON.stringify(report))
-		return
-	if int(pre_crossing_model.get("active_payload_node_count", -1)) != 28:
-		_fail("The h3maped 0x4ccdfc payload-gated node count drifted from the executable model: %s" % JSON.stringify(report))
-		return
-	if String(pre_crossing_model.get("source_node_walk_status", "")) != "0x4cca55_to_0x4a2777_source_node_cycles_recovered":
-		_fail("The h3maped polygon model did not expose the 0x4cca55 -> 0x4a2777 source-node walks: %s" % JSON.stringify(report))
-		return
-	if int(pre_crossing_model.get("source_node_walk_count", -1)) != 6 or int(pre_crossing_model.get("source_node_walk_guard_exhausted_count", -1)) != 0:
-		_fail("The h3maped source-node walk count or guard status drifted: %s" % JSON.stringify(report))
-		return
-	var source_node_walks: Array = pre_crossing_model.get("source_node_walks", [])
-	if source_node_walks.size() != 6 or not source_node_walks[0] is Dictionary:
-		_fail("The h3maped source-node walk report was malformed: %s" % JSON.stringify(report))
-		return
-	if int(source_node_walks[0].get("cycle_node_count", 0)) <= 0 or int(source_node_walks[0].get("finalized_coordinate_count", 0)) <= 0:
-		_fail("The h3maped source-node walk report did not expose finalized cycle coordinates: %s" % JSON.stringify(report))
-		return
-	var first_cycle_nodes: Array = source_node_walks[0].get("cycle_nodes", [])
-	if first_cycle_nodes.is_empty() or not first_cycle_nodes[0] is Dictionary or not first_cycle_nodes[0].has("+0x00_x") or not first_cycle_nodes[0].has("+0x04_y"):
-		_fail("The h3maped source-node walk report did not expose raw node coordinates needed by 0x4a325d seed relocation: %s" % JSON.stringify(report))
-		return
-	var polygon_splitter: Dictionary = level_footprint_phase.get("polygon_splitter_contract", {})
-	if String(polygon_splitter.get("status", "")) != "0x4cca55_0x4ccb64_splitter_contract_recovered_mutation_not_executed":
-		_fail("The h3maped polygon splitter contract did not expose the recovered locator/splitter boundary: %s" % JSON.stringify(report))
-		return
-	if String(polygon_splitter.get("locator_address", "")) != "0x4cca55" or String(polygon_splitter.get("splitter_address", "")) != "0x4ccb64":
-		_fail("The h3maped polygon splitter contract lost its executable locator/splitter addresses: %s" % JSON.stringify(report))
-		return
-	if String(polygon_splitter.get("initial_container_status", "")) != "0x4cc788_initial_node_pair_allocations_inline_relinks_and_bridge_ported_splitter_pending":
-		_fail("The h3maped initial polygon container allocations were not materialized from 0x4cc788: %s" % JSON.stringify(report))
-		return
-	if int(polygon_splitter.get("materialized_initial_boundary_node_pair_count", -1)) != 4 or int(polygon_splitter.get("materialized_initial_bridge_node_pair_count", -1)) != 1:
-		_fail("The h3maped 0x4cc788 initial boundary/bridge pair counts drifted: %s" % JSON.stringify(report))
-		return
-	if int(polygon_splitter.get("materialized_initial_node_pair_count", -1)) != 5 or int(polygon_splitter.get("materialized_initial_node_count", -1)) != 10:
-		_fail("The h3maped 0x4cc788 initial polygon allocation counts drifted: %s" % JSON.stringify(report))
-		return
-	if int(polygon_splitter.get("initial_vector_entry_count", -1)) != 10 or String(polygon_splitter.get("initial_root_pointer", "")) != "initial_pair_0_primary":
-		_fail("The h3maped initial polygon vector/root evidence drifted: %s" % JSON.stringify(report))
-		return
-	if int(polygon_splitter.get("initial_inline_relink_swap_count", -1)) != 4 or String(polygon_splitter.get("initial_bridge_call_status", "")) != "0x4ccb1f_initial_constructor_bridge_ported":
-		_fail("The h3maped initial polygon inline relink/bridge boundary drifted: %s" % JSON.stringify(report))
-		return
-	var initial_pairs: Array = polygon_splitter.get("initial_node_pairs", [])
-	var initial_bridge_pair: Dictionary = polygon_splitter.get("initial_bridge_node_pair", {})
-	if initial_pairs.size() != 4 or String(initial_pairs[0].get("primary", {}).get("+0x10_next", "")) != "initial_bridge_pair_0_primary":
-		_fail("The h3maped initial polygon inline next/previous links were not exposed: %s" % JSON.stringify(report))
-		return
-	if String(initial_bridge_pair.get("primary_node_id", "")) != "initial_bridge_pair_0_primary" or String(initial_bridge_pair.get("paired", {}).get("+0x10_next", "")) != "initial_pair_1_paired":
-		_fail("The h3maped 0x4ccb1f initial bridge node pair was not exposed: %s" % JSON.stringify(report))
-		return
-	if polygon_splitter.get("locator_branches", []).size() < 5 or polygon_splitter.get("split_steps", []).size() < 7:
-		_fail("The h3maped polygon splitter contract is missing recovered branch/split steps: %s" % JSON.stringify(report))
-		return
-	if int(polygon_splitter.get("materialized_split_node_count", -1)) != 0:
-		_fail("The h3maped polygon splitter contract must not fake executed topology mutation: %s" % JSON.stringify(report))
-		return
-	var phase_sequence: Array = selected_payload.get("phase_sequence", [])
-	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "assignment_and_runtime_zone_seed_ported_remaining_phases_documented_not_executed":
-		_fail("The selected h3maped payload did not report the recovered 0x4ac552 phase sequence boundary: %s" % JSON.stringify(report))
-		return
-	var accepted_ids := _accepted_template_ids(report)
-	for required_id in ["h3maped_template_000", "h3maped_template_012", "h3maped_template_048"]:
-		if not accepted_ids.has(required_id):
-			_fail("Recovered accepted-template vector missed %s: %s" % [required_id, JSON.stringify(report)])
-			return
-	if accepted_ids.has("h3maped_template_010"):
-		_fail("Recovered accepted-template vector included a 2-player-only template for 3 players: %s" % JSON.stringify(report))
+		_fail("The selected h3maped source template payload lost player-capable owner slots: %s" % JSON.stringify(report))
 		return
 
-	var color_config := config.duplicate(true)
-	var color_constraints: Dictionary = color_config.get("player_constraints", {}).duplicate(true)
-	color_constraints["selected_color_bitmap"] = [false, false, true, false, false, false, false, false]
-	color_config["player_constraints"] = color_constraints
-	var color_report: Dictionary = service.inspect_h3maped_small_rmg_port(color_config)
-	var color_assignment: Dictionary = color_report.get("selected_template_payload", {}).get("player_slot_assignment", {})
-	if color_assignment.get("selected_color_order", []) != [2, 0, 1, 3, 4, 5, 6, 7]:
-		_fail("Explicit h3maped selected-color bitmap did not control 0x4ac63f..0x4ac66e order: %s" % JSON.stringify(color_report))
+	var phase_ledger: Array = report.get("phase_ledger", [])
+	if phase_ledger.size() < 8:
+		_fail("The clean restart report must expose the executable phase ledger before implementation continues: %s" % JSON.stringify(report))
 		return
-	if color_assignment.get("actual_colors_by_source_owner", []) != [2, 0, 1, -1, -1, -1, -1, -1]:
-		_fail("Explicit h3maped selected-color bitmap did not flow into 0x4ac552 player assignment: %s" % JSON.stringify(color_report))
+	if String(phase_ledger[0].get("phase_id", "")) != "template_selection" or String(phase_ledger[0].get("status", "")) != "ported_inspection_only":
+		_fail("The phase ledger lost the h3maped template-selection anchor: %s" % JSON.stringify(report))
+		return
+	if String(phase_ledger[1].get("status", "")) != "pending_clean_port":
+		_fail("Unported phases must stay pending instead of reusing the old partial port: %s" % JSON.stringify(report))
 		return
 
-	var generated: Dictionary = service.generate_random_map(config)
-	if bool(generated.get("ok", true)) or String(generated.get("status", "")) != "h3maped_small_port_generation_not_ready":
-		_fail("Small native_catalog_auto generation did not route to the h3maped boundary: %s" % JSON.stringify(generated))
+	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
+	if bool(generated.get("ok", true)) or String(generated.get("status", "")) != "h3maped_small_clean_restart_generation_not_ready":
+		_fail("Small native catalog-auto generation must be blocked until clean h3maped phase ports materialize the map: %s" % JSON.stringify(generated))
 		return
-	if String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete":
-		_fail("Small h3maped boundary did not expose the concrete missing port step: %s" % JSON.stringify(generated))
-		return
-	var text_seed_config := config.duplicate(true)
-	text_seed_config["seed"] = "small-h3maped-boundary-10184"
-	var text_seed_report: Dictionary = service.inspect_h3maped_small_rmg_port(text_seed_config)
-	if String(text_seed_report.get("selected_template_status", "")) != "blocked_until_numeric_h3maped_seed":
-		_fail("Non-numeric seeds must not be mapped through a custom hash in the h3maped port: %s" % JSON.stringify(text_seed_report))
-		return
-
 	var medium_config := config.duplicate(true)
 	medium_config["size"] = {"width": 72, "height": 72, "level_count": 1, "water_mode": "land", "size_class_id": "homm3_medium"}
-	var medium_report: Dictionary = service.inspect_h3maped_small_rmg_port(medium_config)
-	if bool(medium_report.get("ok", true)) or String(medium_report.get("status", "")) != "unsupported_scope":
-		_fail("Small h3maped port inspection accepted an out-of-scope medium config: %s" % JSON.stringify(medium_report))
-		return
-	var medium_generated: Dictionary = service.generate_random_map(medium_config)
-	if bool(medium_generated.get("ok", true)) or String(medium_generated.get("status", "")) != "archived_legacy_native_rmg_disabled":
-		_fail("Out-of-scope catalog-auto generation must stay archived instead of falling through to legacy native RMG: %s" % JSON.stringify(medium_generated))
+	var medium: Dictionary = service.generate_random_map(medium_config, {"startup_path": "h3maped_medium_archived_gate"})
+	if bool(medium.get("ok", true)) or String(medium.get("status", "")) != "archived_legacy_native_rmg_disabled":
+		_fail("Out-of-scope native catalog-auto generation must route to archived legacy disabled: %s" % JSON.stringify(medium))
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
-		"ok": true,
 		"status": report.get("status", ""),
-		"accepted_template_count": report.get("accepted_template_count", 0),
+		"archive_status": report.get("archive_status", ""),
 		"selected_template": selected_template.get("id", ""),
-		"adapted_template_id": selected_payload.get("adapted_template_id", ""),
-		"selected_zone_count": selected_payload.get("zone_count", 0),
-		"selected_link_count": selected_payload.get("link_count", 0),
-		"coordinate_seed_status": runtime_zone_seed.get("coordinate_seed_status", ""),
-		"coordinate_step_count": coordinate_seed.get("placement_step_count", 0),
-		"level_footprint_phase_status": runtime_zone_seed.get("level_footprint_phase_status", ""),
-		"first_helper_status": first_helper.get("status", ""),
-		"clip_helper_status": first_helper.get("clip_helper_status", ""),
-		"line_writer_status": first_helper.get("line_writer_status", ""),
-		"randomized_line_writer_status": first_helper.get("randomized_line_writer_status", ""),
-		"rectangle_fallback_status": first_helper.get("rectangle_fallback_status", ""),
-		"connector_segment_status": first_helper.get("connector_segment_status", ""),
-		"boundary_wrapping_status": first_helper.get("boundary_wrapping_status", ""),
-		"real_source_cycle_traversal_status": real_cycle.get("status", ""),
-		"real_source_cycle_unique_cell_count": real_cycle.get("unique_cell_count", 0),
-		"real_source_cycle_random_span_limit_source": real_cycle_zone_reports[0].get("random_span_limit_source", ""),
-		"real_source_cycle_random_span_limit_runtime_size": real_cycle_zone_reports[0].get("random_span_limit_runtime_size", 0),
-		"second_helper_status": second_helper.get("status", ""),
-		"real_boundary_span_fill_status": real_span_fill.get("status", ""),
-		"real_boundary_filled_cell_count": second_helper.get("real_boundary_filled_cell_count", 0),
-		"real_boundary_remaining_unassigned_cell_count": second_helper.get("real_boundary_remaining_unassigned_cell_count", 0),
-		"real_boundary_filled_zone_count": real_span_fill.get("filled_zone_count", 0),
-		"real_boundary_seed_blocked_count": real_span_fill.get("seed_blocked_count", 0),
-		"real_boundary_seed_relocated_count": real_span_fill.get("seed_relocated_count", 0),
-		"real_boundary_blocked_initial_span_count": real_span_fill.get("blocked_initial_span_count", 0),
-		"project_materialization_status": second_helper.get("project_materialization_status", ""),
-		"project_materialized_cell_count": second_helper.get("project_materialized_cell_count", 0),
-		"project_unresolved_cell_count": second_helper.get("project_unresolved_cell_count", 0),
-		"project_materialized_zone_counts": materialized_zone_counts,
-		"terrain_phase_status": second_helper.get("terrain_phase_status", ""),
-		"terrain_owner_byte_basis_mismatch_count": terrain_phase.get("owner_byte_basis_mismatch_count", 0),
-		"terrain_source_zone_repaint_member_cell_count": terrain_phase.get("source_zone_repaint_member_cell_count", 0),
-		"terrain_runtime_index_repaint_member_cell_count": terrain_phase.get("runtime_index_repaint_member_cell_count", 0),
-		"terrain_runtime_index_unmatched_repaint_member_cell_count": terrain_phase.get("runtime_index_unmatched_repaint_member_cell_count", 0),
-		"finalizer_status": finalizer.get("status", ""),
-		"finalizer_appended_runtime_zone_count": finalizer.get("appended_runtime_zone_count", 0),
-		"finalizer_order_reset_call_count": finalizer.get("zone_order_reset_call_count", 0),
-		"runtime_layout_status": runtime_layout.get("status", ""),
-		"polygon_seed_status": polygon_seed.get("status", ""),
-		"polygon_seed_split_count": polygon_seed.get("materialized_primary_split_seed_count", 0),
-		"polygon_finalized_triplet_count": pre_crossing_model.get("finalized_triplet_count", 0),
-		"polygon_finalized_node_count": pre_crossing_model.get("finalized_node_count", 0),
-		"source_node_walk_status": pre_crossing_model.get("source_node_walk_status", ""),
-		"polygon_splitter_status": polygon_splitter.get("status", ""),
-		"initial_polygon_node_pairs": polygon_splitter.get("materialized_initial_node_pair_count", 0),
-		"phase_count": phase_sequence.size(),
+		"accepted_template_count": report.get("accepted_template_count", 0),
 		"generation_status": generated.get("status", ""),
-		"out_of_scope_generation_status": medium_generated.get("status", ""),
-		"unsupported_scope_status": medium_report.get("status", ""),
+		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
 	get_tree().quit(0)
 
-func _accepted_template_ids(report: Dictionary) -> Array:
-	var result := []
-	for item in report.get("accepted_templates", []):
-		if item is Dictionary:
-			result.append(String(item.get("id", "")))
-	return result
-
 func _fail(message: String) -> void:
-	push_error(message)
-	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": false, "error": message})])
+	push_error("%s failed: %s" % [REPORT_ID, message])
 	get_tree().quit(1)

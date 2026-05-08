@@ -1,5 +1,6 @@
 #include "map_package_service.hpp"
 
+#include "h3maped_small_rmg.hpp"
 #include "rmg_data_model.hpp"
 
 #include <godot_cpp/classes/dir_access.hpp>
@@ -25306,7 +25307,7 @@ Dictionary MapPackageService::inspect_random_map_generator_data_model(Dictionary
 }
 
 Dictionary MapPackageService::inspect_h3maped_small_rmg_port(Dictionary config) const {
-	return h3maped_small_rmg_port_report_for_normalized(normalize_random_map_config(config));
+	return h3maped_small_rmg::inspect_port(normalize_random_map_config(config));
 }
 
 Dictionary MapPackageService::normalize_random_map_config(Dictionary config) const {
@@ -25429,28 +25430,16 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	String top_profile_phase_id;
 	Dictionary normalized = normalize_random_map_config(config);
 	append_extension_profile_phase(extension_profile_phases, "normalize_config", phase_started_at, top_profile_phase_usec, top_profile_phase_id);
-	if (h3maped_small_land_scope(normalized)
+	if (h3maped_small_rmg::supports_scope(normalized)
 			&& native_rmg_generalized_native_catalog_auto_policy(normalized)
 			&& !bool(options.get("allow_archived_legacy_native_rmg", false))) {
-		return h3maped_small_rmg_generation_not_ready_result(normalized, profile_started_at, extension_profile_phases, top_profile_phase_id, top_profile_phase_usec);
+		Dictionary extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
+		return h3maped_small_rmg::generation_not_ready_result(normalized, extension_profile);
 	}
 	if (native_rmg_archived_legacy_catalog_auto_output(normalized)
 			&& !bool(options.get("allow_archived_legacy_native_rmg", false))) {
-		Dictionary result;
-		result["ok"] = false;
-		result["status"] = "archived_legacy_native_rmg_disabled";
-		result["generation_status"] = "archived_legacy_native_rmg_disabled";
-		result["full_generation_status"] = "archived_current_native_rmg_replaced_by_small_h3maped_port";
-		result["error_code"] = "archived_legacy_native_rmg_disabled";
-		result["message"] = "The current catalog-auto native RMG path is archived. Production RMG work must use the small h3maped-derived port; pass allow_archived_legacy_native_rmg only for local evidence/debug.";
-		result["normalized_config"] = normalized;
-		result["runtime_policy_classification"] = native_rmg_runtime_policy_classification(normalized);
-		result["native_rmg_archive_status"] = "archived_legacy_catalog_auto";
-		result["replacement_slice_id"] = "native-rmg-small-h3maped-port-10184";
-		result["h3maped_binary_path"] = "/root/Downloads/h3maped.exe";
-		result["h3maped_binary_sha256"] = "4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37";
-		result["extension_profile"] = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
-		return result;
+		Dictionary extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
+		return h3maped_small_rmg::archived_legacy_disabled_result(normalized, extension_profile, native_rmg_runtime_policy_classification(normalized));
 	}
 	const bool scoped_structural_profile_supported = native_rmg_scoped_structural_profile_supported(normalized);
 	const bool owner_compared_translated_profile_supported = native_rmg_owner_compared_translated_profile_supported(normalized);
