@@ -1425,3 +1425,22 @@ Validation evidence:
 - The production-gap audit remains `production_ready=false` with `6` missing broad requirements. `xl_islands_2levels` dropped out of the top-gap list; the new top blockers are `m_normalw_4players_2levels`, `xl_water_2levels`, `m_4players_2levels_islands`, `xl_nowater_2levels`, and `l_normalwater_randomplayers_2level`.
 
 This is still not production parity. XL two-level islands now has owner-parity town count and passes the generalized/closure-shape gates, but road, terrain, object-route, and guarded-route shape deltas remain visible, and the route-closure loop is still too slow for XL production use.
+
+## Medium Two-Level Normal-Water Route And Terrain Cleanup
+
+After the XL two-level islands checkpoint, `m_normalw_4players_2levels` became the largest merged production-gap case. The baseline focused profile was already close on road total and broad object count, but it still exposed too many object-only town routes and had a poor surface/underground shape: native object-route openness was `15` versus owner `2`, guarded-route openness was `0` versus owner `2`, and terrain-blocked delta was `-40`.
+
+Normal generated catalog-auto Medium two-level normal-water now uses the Python native-rule town-spacing floor of `20`, scoped broad category floors/caps for scenic, reward, guard, and decoration counts, a profile-specific surface/underground object distribution, a compact decorative object-route mask target of `2`, and a stronger underground rock fraction. The town placement fallback can search the surface globally for this profile, but unlike the XL islands relaxed fallback it does not bypass occupancy or spacing rules.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `m_normalw_4players_2levels` export wrote `1/1` package with native validation `pass`. The manifest recorded about `17.399s` total wall time, including `9.615s` generation, `4.430s` package conversion, and `2.194s` save time.
+- Focused fast validation passed with `0` parse, native-rule, density, policy, topology, coverage, and closure-shape gaps.
+- Focused fast audit improved production-gap severity from `429` to `96`. Terrain-blocked delta improved from `-40` to `+15`, object-route delta improved from `+13` to `+1`, and broad category absolute delta improved from `10` to `5`.
+- The focused package remains short one town (`7/8`) because the stricter spacing floor is now enforced; this avoids the earlier near-stacked town placement tradeoff. Guarded-route openness also remains over-closed at `0` versus owner `2`, and road component shape still differs.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_normalwater_2level_route_merged --summary` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.743s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_m_normalwater_2level_route_merged --skip-timing-summary --failure-limit 8` passed with `18/18` matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- The production-gap audit remains `production_ready=false` with `6` missing broad requirements. `m_normalw_4players_2levels` dropped out of the top eight gap cases; the new top blocker is `xl_water_2levels` at severity `417`.
+
+This is still not production parity. Medium two-level normal-water now has close terrain shape, close broad object/category counts, exact road total, and much closer object-route openness, but it still needs generalized town capacity, guarded-route, and road-component shape work.

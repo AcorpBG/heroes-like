@@ -5969,7 +5969,7 @@ int32_t native_rmg_generalized_town_spacing_floor_for_size(const Dictionary &nor
 	if (String(normalized.get("size_class_id", "")) == "homm3_medium"
 			&& String(normalized.get("water_mode", "land")) == "normal_water"
 			&& int32_t(normalized.get("level_count", 1)) > 1) {
-		return 17;
+		return 20;
 	}
 	if (shortest <= 36) {
 		return 12;
@@ -8886,6 +8886,9 @@ int32_t native_catalog_auto_guarded_route_open_pair_target(const Dictionary &nor
 	if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
 		return 3;
 	}
+	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
+		return 2;
+	}
 	return 0;
 }
 
@@ -9004,7 +9007,7 @@ int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized)
 	}
 	if (size_class_id == "homm3_medium") {
 		if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
-			return std::max(300, (area * 29) / 1000);
+			return std::max(301, (area * 29) / 1000);
 		}
 		if (native_catalog_auto_medium_one_level_normal_water_profile(normalized)) {
 			return std::max(160, (area * 30) / 1000);
@@ -9129,8 +9132,8 @@ int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, 
 		return std::max(density_floor, reward_ratio_floor);
 	}
 	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
-		density_floor = (area * 18) / 1000;
-		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.46));
+		density_floor = std::max(194, (area * 18) / 1000);
+		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.47));
 		return std::max(density_floor, reward_ratio_floor);
 	}
 	if (native_catalog_auto_medium_one_level_normal_water_profile(normalized)) {
@@ -9195,7 +9198,7 @@ int32_t native_catalog_auto_generated_reward_floor(const Dictionary &normalized)
 	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
 	const int32_t area = std::max(1, width * height * level_count);
 	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
-		return std::max(410, (area * 40) / 1000);
+		return std::max(416, (area * 40) / 1000);
 	}
 	if (native_catalog_auto_medium_one_level_normal_water_profile(normalized)) {
 		return std::max(172, (area * 33) / 1000);
@@ -9215,6 +9218,9 @@ int32_t native_catalog_auto_generated_reward_floor(const Dictionary &normalized)
 int32_t native_catalog_auto_generated_reward_cap(const Dictionary &normalized) {
 	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
 		return 132;
+	}
+	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
+		return 416;
 	}
 	if (native_catalog_auto_medium_one_level_normal_water_profile(normalized)) {
 		return 172;
@@ -9243,6 +9249,9 @@ int32_t native_catalog_auto_generated_reward_cap(const Dictionary &normalized) {
 int32_t native_catalog_auto_generated_decoration_cap(const Dictionary &normalized) {
 	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
 		return 340;
+	}
+	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
+		return 943;
 	}
 	if (native_catalog_auto_large_two_level_islands_profile(normalized)) {
 		return 1797;
@@ -9532,6 +9541,10 @@ Dictionary apply_native_catalog_auto_two_level_object_distribution(Array &placem
 		decoration_percent = 7;
 		object_percent = 27;
 		reward_percent = 44;
+	} else if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
+		decoration_percent = 14;
+		object_percent = 46;
+		reward_percent = 42;
 	}
 	const int32_t decoration_target = int32_t(decoration_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(decoration_indices.size()) * decoration_percent) / 100);
 	const int32_t object_target = int32_t(object_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(object_indices.size()) * object_percent) / 100);
@@ -15643,7 +15656,11 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 					&& (native_catalog_auto_large_one_level_land_profile(normalized)
 							|| native_catalog_auto_xl_one_level_land_profile(normalized)
 							|| native_catalog_auto_medium_one_level_normal_water_profile(normalized));
-			const bool surface_global_town_floor = one_level_global_town_floor
+			const bool surface_global_town_fallback = one_level_global_town_floor
+					|| (target_level == 0
+							&& (native_catalog_auto_xl_two_level_islands_profile(normalized)
+									|| native_catalog_auto_medium_two_level_normal_water_profile(normalized)));
+			const bool surface_global_town_relaxed = one_level_global_town_floor
 					|| (target_level == 0 && native_catalog_auto_xl_two_level_islands_profile(normalized));
 			Dictionary zone;
 			for (int64_t zone_scan = 0; zone_scan < zones.size(); ++zone_scan) {
@@ -15659,7 +15676,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 				break;
 			}
 			if (zone.is_empty()) {
-				if (!surface_global_town_floor || zones.is_empty()) {
+				if (!surface_global_town_fallback || zones.is_empty()) {
 					break;
 				}
 				zone = Dictionary(zones[attempts % zones.size()]);
@@ -15678,14 +15695,14 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 					&& target_level == 0
 					&& town_floor_search_occupied.has(target_key)
 					&& String(town_floor_search_occupied.get(target_key, "")).begins_with("reserved_future_town_anchor_" + selected_zone_id);
-			if (town_floor_search_occupied.has(target_key) && !uses_reserved_future_town_anchor && !surface_global_town_floor) {
+			if (town_floor_search_occupied.has(target_key) && !uses_reserved_future_town_anchor && !surface_global_town_relaxed) {
 				if (use_reserved_surface_anchor && !selected_zone_id.is_empty()) {
 					town_floor_used_zones[town_floor_zone_level_key(selected_zone_id, target_level)] = true;
 				}
 				++attempts;
 				continue;
 			}
-			if (!point_far_from_towns_on_level(towns, target_x, target_y, target_level, spacing) && !surface_global_town_floor) {
+			if (!point_far_from_towns_on_level(towns, target_x, target_y, target_level, spacing) && !surface_global_town_relaxed) {
 				if (use_reserved_surface_anchor && !selected_zone_id.is_empty()) {
 					town_floor_used_zones[town_floor_zone_level_key(selected_zone_id, target_level)] = true;
 				}
@@ -15703,7 +15720,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 			}
 			Dictionary placement_zone = zone;
 			String placement_zone_id = selected_zone_id;
-			if (point.is_empty() && surface_global_town_floor) {
+			if (point.is_empty() && surface_global_town_fallback) {
 				const int32_t scan_width = std::max(1, width - 2);
 				const int32_t scan_height = std::max(1, height - 2);
 				const int32_t scan_area = std::max(1, scan_width * scan_height);
@@ -17427,7 +17444,7 @@ double native_catalog_auto_underground_rock_fraction(const Dictionary &normalize
 			return 0.70;
 		}
 		if (size_class_id == "homm3_medium") {
-			return 0.65;
+			return 0.74;
 		}
 	}
 	return 0.0;
@@ -19554,6 +19571,9 @@ int32_t profile_object_route_open_pair_target(const Dictionary &normalized) {
 	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
 		return 0;
 	}
+	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
+		return 2;
+	}
 	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
 		return 11;
 	}
@@ -19570,6 +19590,9 @@ int32_t profile_object_route_open_pair_target(const Dictionary &normalized) {
 }
 
 String profile_object_route_mask_source(const Dictionary &normalized) {
+	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
+		return "medium_two_level_normal_water_town_route_decorative_closure_mask";
+	}
 	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
 		return "large_one_level_islands_town_route_decorative_closure_mask";
 	}
@@ -19586,6 +19609,9 @@ String profile_object_route_mask_source(const Dictionary &normalized) {
 }
 
 String profile_object_route_mask_policy(const Dictionary &normalized) {
+	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
+		return "medium_two_level_normal_water_adds_compact_existing_decorative_masks_to_preserve_owner_like_guarded_town_crossings_while_closing_extra_object_only_routes";
+	}
 	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
 		return "large_one_level_islands_adds_compact_existing_decorative_masks_to_close_extra_object_only_town_routes_while_preserving_owner_like_guard_open_crossings";
 	}
