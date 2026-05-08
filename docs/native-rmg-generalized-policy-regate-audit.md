@@ -1155,3 +1155,20 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_normalwater_2level_road_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The merged top blockers remain dominated by Large one-level islands, XL one-level land, Medium two-level islands, and route/terrain shape cases. The rejected probes in this pass showed that naive same-zone town stuffing and simple category caps can improve counts while worsening route or terrain shape; the next substantial fix needs island subzone/barrier topology rather than more count-only tuning.
+
+## Large Two-Level Islands Category Mix Cleanup
+
+The Large two-level islands case had already reached valid route closure and near-matching road totals, but category mix was still wrong: decorations were overfilled while rewards were underfilled. Because total object count was already close, this pass paired the reward correction with a decoration cap instead of simply adding more objects.
+
+Normal generated catalog-auto Large two-level islands maps now use a profile reward floor and a decoration cap. This preserves the existing route-closure behavior while shifting object mix toward the owner evidence.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `l_islands_randomplayers_2level` export wrote `1/1` package with native validation `pass`. The manifest recorded about `31.751s` total wall time, including `19.554s` generation, `6.406s` package conversion, and `4.437s` save time.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/L-islands-RandomPlayers-2level.h3m --amap .artifacts/rmg_native_batch_export_l_islands_2level_mix_probe/l_islands_randomplayers_2level.amap --compare --pretty --allow-failures` improved focused production-gap severity from `538` to `203`, category absolute delta from `193` to `5`, and object delta from `+5` to `-1`.
+- Route closure stayed correct: object-route and guarded-route deltas remain `0/0`. Road delta remains near exact at `+1`. The remaining focused debt is terrain shape (`+196`) and town count (`11` native versus `14` owner).
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_islands_2level_mix_merged --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.232s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_islands_2level_mix_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blockers are still Large one-level islands, XL one-level land, Medium two-level islands, Large land two-level, Large normal-water two-level, and XL one-level water. The remaining hard problems are town/subzone topology, terrain shape, and route shape, not broad generated-package validity.
