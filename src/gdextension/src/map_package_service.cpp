@@ -5966,6 +5966,11 @@ bool native_rmg_generalized_native_catalog_auto_policy(const Dictionary &normali
 
 int32_t native_rmg_generalized_town_spacing_floor_for_size(const Dictionary &normalized) {
 	const int32_t shortest = std::max(1, std::min(int32_t(normalized.get("width", 36)), int32_t(normalized.get("height", 36))));
+	if (String(normalized.get("size_class_id", "")) == "homm3_extra_large"
+			&& String(normalized.get("water_mode", "land")) == "normal_water"
+			&& int32_t(normalized.get("level_count", 1)) > 1) {
+		return 24;
+	}
 	if (String(normalized.get("size_class_id", "")) == "homm3_medium"
 			&& String(normalized.get("water_mode", "land")) == "normal_water"
 			&& int32_t(normalized.get("level_count", 1)) > 1) {
@@ -16990,6 +16995,19 @@ double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Di
 	if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
 		return 0.99;
 	}
+	if (native_catalog_auto_xl_two_level_normal_water_profile(normalized)) {
+		const String role = String(zone.get("role", ""));
+		if (role.contains("start")) {
+			return 0.475;
+		}
+		if (role == "junction") {
+			return 0.425;
+		}
+		if (role == "treasure" || role == "neutral") {
+			return 0.37;
+		}
+		return 0.395;
+	}
 	if (water_mode == "normal_water" && level_count <= 1) {
 		const String role = String(zone.get("role", ""));
 		if (size_class_id == "homm3_extra_large") {
@@ -17458,7 +17476,7 @@ double native_catalog_auto_underground_rock_fraction(const Dictionary &normalize
 	}
 	if (water_mode == "normal_water") {
 		if (size_class_id == "homm3_extra_large") {
-			return 0.985;
+			return 0.979;
 		}
 		if (size_class_id == "homm3_large") {
 			return 0.70;
@@ -19774,8 +19792,7 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 	const bool preserve_medium_two_level_normal_water_object_barriers = native_catalog_auto_medium_two_level_normal_water_profile(normalized);
 	const bool preserve_xl_two_level_land_object_barriers = native_catalog_auto_xl_two_level_land_profile(normalized);
 	const bool preserve_large_two_level_normal_water_object_barriers = native_catalog_auto_large_two_level_normal_water_profile(normalized);
-	const bool preserve_xl_two_level_normal_water_object_barriers = native_catalog_auto_xl_two_level_normal_water_profile(normalized);
-	const bool compact_profile_guard_masks_define_corridors = native_catalog_auto_large_one_level_islands_profile(normalized) || native_catalog_auto_xl_two_level_normal_water_profile(normalized);
+	const bool compact_profile_guard_masks_define_corridors = native_catalog_auto_large_one_level_islands_profile(normalized);
 	Dictionary terrain_blocked = package_terrain_blocked_lookup(generated_map);
 	Dictionary cleared_lookup;
 	int32_t corridor_count = 0;
@@ -19806,19 +19823,19 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 				if (path.is_empty()) {
 					continue;
 				}
-				if (!preserve_xl_surface_islands_object_barriers && !preserve_large_one_level_islands_object_barriers && !preserve_large_two_level_islands_object_barriers && !preserve_xl_two_level_islands_object_barriers && !preserve_medium_two_level_islands_object_barriers && !preserve_medium_two_level_normal_water_object_barriers && !preserve_xl_two_level_land_object_barriers && !preserve_large_two_level_normal_water_object_barriers && !preserve_xl_two_level_normal_water_object_barriers) {
+				if (!preserve_xl_surface_islands_object_barriers && !preserve_large_one_level_islands_object_barriers && !preserve_large_two_level_islands_object_barriers && !preserve_xl_two_level_islands_object_barriers && !preserve_medium_two_level_islands_object_barriers && !preserve_medium_two_level_normal_water_object_barriers && !preserve_xl_two_level_land_object_barriers && !preserve_large_two_level_normal_water_object_barriers) {
 					remove_package_block_cells_from_clearable_objects(objects, path, cleared_lookup, level);
 					++corridor_count;
 				}
 			}
 		}
-		static constexpr int32_t MAX_GUARDED_CLOSURE_PASSES = 24;
-		static constexpr int32_t MAX_CLOSURE_CLUSTERS_PER_PATH = 96;
+		const int32_t max_guarded_closure_passes = native_catalog_auto_xl_two_level_normal_water_profile(normalized) ? 1 : 24;
+		const int32_t max_closure_clusters_per_path = native_catalog_auto_xl_two_level_normal_water_profile(normalized) ? 1 : 96;
 		Dictionary object_blocked = package_object_route_blocked_lookup_for_level(objects, terrain_blocked, level, false);
 		if (compact_profile_guard_masks_define_corridors) {
 			continue;
 		}
-		for (int32_t pass = 0; pass < MAX_GUARDED_CLOSURE_PASSES; ++pass) {
+		for (int32_t pass = 0; pass < max_guarded_closure_passes; ++pass) {
 			bool added_this_pass = false;
 			int32_t reachable_pair_count = 0;
 			int32_t allowed_open_pair_count_this_pass = 0;
@@ -19840,7 +19857,7 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 						++allowed_open_pair_count_this_pass;
 						continue;
 					}
-					const int32_t added_for_path = add_package_guard_closure_clusters_along_path(objects, guarded_path, level, width, height, "iterative_guard_mediated_town_route_closure_mask", MAX_CLOSURE_CLUSTERS_PER_PATH);
+					const int32_t added_for_path = add_package_guard_closure_clusters_along_path(objects, guarded_path, level, width, height, "iterative_guard_mediated_town_route_closure_mask", max_closure_clusters_per_path);
 					if (added_for_path > 0) {
 						guard_closure_tile_count += added_for_path;
 						added_this_pass = true;

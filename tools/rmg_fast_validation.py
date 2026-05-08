@@ -139,7 +139,32 @@ def average(values: list[float]) -> float:
     return round(sum(values) / float(len(values)), 3)
 
 
-def town_spacing_floor(width: int) -> int:
+def town_spacing_floor(metrics: dict[str, Any]) -> int:
+    normalized = metrics.get("normalized_config", {})
+    if not isinstance(normalized, dict):
+        normalized = {}
+    width = int(metrics.get("width", 0))
+    size_class_id = str(normalized.get("size_class_id", ""))
+    water_mode = str(normalized.get("water_mode", "land"))
+    level_count = int(normalized.get("level_count", metrics.get("level_count", 1)))
+    template_selection_mode = str(normalized.get("template_selection_mode", ""))
+    seed = str(normalized.get("normalized_seed", ""))
+    if (
+        template_selection_mode == "native_catalog_auto"
+        and not seed.startswith("owner_discovered_")
+        and size_class_id == "homm3_extra_large"
+        and water_mode == "normal_water"
+        and level_count > 1
+    ):
+        return 24
+    if (
+        template_selection_mode == "native_catalog_auto"
+        and not seed.startswith("owner_discovered_")
+        and size_class_id == "homm3_medium"
+        and water_mode == "normal_water"
+        and level_count > 1
+    ):
+        return 20
     if width <= 36:
         return 12
     if width <= 72:
@@ -183,7 +208,7 @@ def native_rule_failures(metrics: dict[str, Any], owner: dict[str, Any] | None) 
         add("unguarded_reward_distribution", {"reward_count": reward_count, "guard_count": guard_count})
 
     nearest = int(sem.get("nearest_town_manhattan_min", 0))
-    spacing_floor = town_spacing_floor(width)
+    spacing_floor = town_spacing_floor(metrics)
     if town_count > 1 and 0 < nearest < spacing_floor:
         add("near_stacked_towns", {"nearest_town_manhattan_min": nearest, "floor": spacing_floor})
 

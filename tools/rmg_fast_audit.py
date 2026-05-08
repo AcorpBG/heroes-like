@@ -380,6 +380,7 @@ def load_amap(path: Path) -> dict[str, Any]:
         "width": int(doc.get("width", 0)),
         "height": int(doc.get("height", 0)),
         "level_count": int(doc.get("level_count", 1)),
+        "normalized_config": doc.get("metadata", {}).get("normalized_config", {}),
         "object_count": len(objects),
         "counts_by_kind": dict(sorted(counts_by_kind.items())),
         "counts_by_category": dict(sorted(counts_by_category.items())),
