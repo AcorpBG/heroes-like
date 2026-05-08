@@ -166,7 +166,7 @@ func _run() -> void:
 		_fail("The h3maped 0x4a3710 finalizer report must expose adjacency vectors without faking finalized links: %s" % JSON.stringify(report))
 		return
 	var runtime_layout: Dictionary = level_footprint_phase.get("runtime_layout_evidence", {})
-	if String(runtime_layout.get("status", "")) != "runtime_polygon_seed_points_ported_split_algorithm_pending":
+	if String(runtime_layout.get("status", "")) != "runtime_polygon_seed_points_split_cleanup_and_finalizer_ported_span_fill_pending":
 		_fail("The h3maped runtime polygon layout evidence did not expose the current executable-backed boundary: %s" % JSON.stringify(report))
 		return
 	if int(runtime_layout.get("polygon_node_size_bytes", -1)) != 36:
@@ -181,7 +181,7 @@ func _run() -> void:
 		_fail("The recovered h3maped polygon-node finalized/intersection offsets are missing: %s" % JSON.stringify(report))
 		return
 	var polygon_seed: Dictionary = level_footprint_phase.get("polygon_seed_evidence", {})
-	if String(polygon_seed.get("status", "")) != "0x4a3a03_polygon_tree_seed_calls_and_split_cleanup_ported_finalizer_pending":
+	if String(polygon_seed.get("status", "")) != "0x4a3a03_polygon_tree_seed_calls_split_cleanup_and_finalizer_ported_span_fill_pending":
 		_fail("The h3maped 0x4a3a03 polygon seed-call schedule was not exposed: %s" % JSON.stringify(report))
 		return
 	if int(polygon_seed.get("materialized_primary_split_seed_count", -1)) != 6:
@@ -191,8 +191,8 @@ func _run() -> void:
 	if polygon_levels.size() != 1 or int(polygon_levels[0].get("split_call_count", -1)) != 6:
 		_fail("The h3maped polygon seed-call report did not match the one-level six-zone selected template: %s" % JSON.stringify(report))
 		return
-	if String(polygon_seed.get("split_algorithm_status", "")) != "0x4ccb64_insertion_bridge_and_crossing_cleanup_ported_finalizer_pending":
-		_fail("The h3maped polygon seed-call report must expose the ported split cleanup model and remaining finalizer blocker: %s" % JSON.stringify(report))
+	if String(polygon_seed.get("split_algorithm_status", "")) != "0x4ccb64_insertion_bridge_crossing_cleanup_and_finalizer_ported_span_fill_pending":
+		_fail("The h3maped polygon seed-call report must expose the ported split cleanup/finalizer model and remaining span-fill blocker: %s" % JSON.stringify(report))
 		return
 	var pre_crossing_model: Dictionary = polygon_seed.get("runtime_split_pre_crossing_model", {})
 	if int(pre_crossing_model.get("executed_split_call_count", -1)) != 6 or int(pre_crossing_model.get("pre_crossing_inserted_node_pair_count", -1)) != 6:
@@ -210,8 +210,14 @@ func _run() -> void:
 	if String(pre_crossing_model.get("crossing_cleanup_status", "")) != "0x4ccc7a_0x4cc68e_crossing_cleanup_ported":
 		_fail("The h3maped split model did not port crossing cleanup: %s" % JSON.stringify(report))
 		return
-	if String(pre_crossing_model.get("finalizer_status", "")) != "0x4ccdfc_not_yet_executed":
-		_fail("The h3maped split model must still leave polygon finalization unclaimed: %s" % JSON.stringify(report))
+	if String(pre_crossing_model.get("finalizer_status", "")) != "0x4ccdfc_finalized_node_fanout_ported":
+		_fail("The h3maped split model did not port the 0x4ccdfc finalized-node fanout: %s" % JSON.stringify(report))
+		return
+	if int(pre_crossing_model.get("finalized_triplet_count", -1)) != 14 or int(pre_crossing_model.get("finalized_node_count", -1)) != 42:
+		_fail("The h3maped 0x4ccdfc finalized-node fanout counts drifted from the executable model: %s" % JSON.stringify(report))
+		return
+	if int(pre_crossing_model.get("active_payload_node_count", -1)) != 28:
+		_fail("The h3maped 0x4ccdfc payload-gated node count drifted from the executable model: %s" % JSON.stringify(report))
 		return
 	var polygon_splitter: Dictionary = level_footprint_phase.get("polygon_splitter_contract", {})
 	if String(polygon_splitter.get("status", "")) != "0x4cca55_0x4ccb64_splitter_contract_recovered_mutation_not_executed":
@@ -313,6 +319,8 @@ func _run() -> void:
 		"runtime_layout_status": runtime_layout.get("status", ""),
 		"polygon_seed_status": polygon_seed.get("status", ""),
 		"polygon_seed_split_count": polygon_seed.get("materialized_primary_split_seed_count", 0),
+		"polygon_finalized_triplet_count": pre_crossing_model.get("finalized_triplet_count", 0),
+		"polygon_finalized_node_count": pre_crossing_model.get("finalized_node_count", 0),
 		"polygon_splitter_status": polygon_splitter.get("status", ""),
 		"initial_polygon_node_pairs": polygon_splitter.get("materialized_initial_node_pair_count", 0),
 		"phase_count": phase_sequence.size(),
