@@ -6748,6 +6748,56 @@ Dictionary h3maped_final_footprint_helper_4a3710_report() {
 	return report;
 }
 
+Dictionary h3maped_footprint_runtime_layout_evidence_report() {
+	Dictionary report;
+	report["status"] = "runtime_polygon_layout_partially_recovered_catalog_payload_missing";
+	report["runtime_zone_constructor_address"] = "0x49b452";
+	report["polygon_tree_constructor_address"] = "0x4cc788";
+	report["polygon_node_constructor_address"] = "0x4cc5db";
+	report["polygon_insert_split_address"] = "0x4ccb64";
+	report["polygon_finalize_address"] = "0x4ccdfc";
+	report["polygon_node_size_bytes"] = 0x24;
+	Dictionary runtime_zone_offsets;
+	runtime_zone_offsets["+0x000"] = "source zone pointer";
+	runtime_zone_offsets["+0x004"] = "source-derived terrain/town helper result from 0x49b3c1";
+	runtime_zone_offsets["+0x01c"] = "source+0x08 copied at construction; later coordinate/rectangle helpers reuse this object";
+	runtime_zone_offsets["+0x020"] = "initialized to 0x7d00";
+	runtime_zone_offsets["+0x024"] = "initialized to 0x7d00";
+	runtime_zone_offsets["+0x028"] = "initialized to -0x7d00";
+	runtime_zone_offsets["+0x02c"] = "initialized to -0x7d00";
+	runtime_zone_offsets["+0x03c"] = "constructor-cleared byte flag";
+	runtime_zone_offsets["+0x044..+0x3e3"] = "0x3a0 bytes zeroed by constructor";
+	runtime_zone_offsets["+0x3e4"] = "vector header initialized by constructor; later used by 0x49b61b/0x4a3554 as short ordering/depth vector";
+	runtime_zone_offsets["+0x3f4"] = "vector header initialized by constructor; 0x4a2777 appends footprint vertices here";
+	runtime_zone_offsets["+0x404"] = "vector header initialized by constructor; destroyed with the other runtime vectors";
+	report["runtime_zone_offsets"] = runtime_zone_offsets;
+	Dictionary polygon_node_offsets;
+	polygon_node_offsets["+0x00"] = "x coordinate or split/node payload";
+	polygon_node_offsets["+0x04"] = "y coordinate or split/node payload";
+	polygon_node_offsets["+0x08"] = "third constructor payload; used by later polygon/list consumers";
+	polygon_node_offsets["+0x0c"] = "owner/list pointer established by 0x4cc5db";
+	polygon_node_offsets["+0x10"] = "circular next/link pointer";
+	polygon_node_offsets["+0x14"] = "circular previous/link pointer";
+	polygon_node_offsets["+0x18"] = "finalized byte flag set by 0x4ccdfc";
+	polygon_node_offsets["+0x1c"] = "finalized intersection/output x written by 0x4ccdfc";
+	polygon_node_offsets["+0x20"] = "finalized intersection/output y written by 0x4ccdfc";
+	report["polygon_node_offsets"] = polygon_node_offsets;
+	Array recovered_operations;
+	recovered_operations.append("0x4cc788 builds an initial polygon/list structure from four allocated 0x24-byte nodes before level-zone splitting");
+	recovered_operations.append("0x4cc5db initializes node coordinates/payload, owner pointer, circular next/previous links, unset finalized coordinates, and clear flags");
+	recovered_operations.append("0x4ccb64 locates the containing polygon node with 0x4cca55, then splits/inserts nodes around a requested point");
+	recovered_operations.append("0x4ccdfc finalizes unprocessed nodes by computing and writing intersection/output coordinates into +0x1c/+0x20 and setting +0x18");
+	recovered_operations.append("the imported project template catalog carries zone/link grammar and source provenance but not this executable polygon tree payload");
+	report["recovered_operations"] = recovered_operations;
+	Array missing_payloads;
+	missing_payloads.append("template/runtime source polygon tree emitted by 0x4cc788/0x4ccb64 for selected source template 19");
+	missing_payloads.append("semantic mapping for runtime_zone+0x3e4 short ordering/depth values");
+	missing_payloads.append("semantic mapping for runtime_zone+0xc4 adjacency records inserted by 0x4a3710");
+	missing_payloads.append("project data structure for h3maped cell zone-word state before terrain/object placement");
+	report["missing_payloads"] = missing_payloads;
+	return report;
+}
+
 Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
 	Dictionary report;
 	report["status"] = "0x4a3a03_level_collection_ported_helpers_blocked";
@@ -6808,6 +6858,7 @@ Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3Maped
 	report["first_helper_evidence"] = h3maped_first_footprint_helper_4a2777_report(zones);
 	report["second_helper_evidence"] = h3maped_second_footprint_helper_4a325d_report();
 	report["finalizer_evidence"] = h3maped_final_footprint_helper_4a3710_report();
+	report["runtime_layout_evidence"] = h3maped_footprint_runtime_layout_evidence_report();
 	return report;
 }
 
