@@ -2763,6 +2763,62 @@ int32_t terrain_code_for_id(const String &terrain_id) {
 	return 8;
 }
 
+int32_t h3maped_terrain_id_for_project_terrain(const String &terrain_id) {
+	if (terrain_id == "dirt") {
+		return 0;
+	}
+	if (terrain_id == "sand") {
+		return 1;
+	}
+	if (terrain_id == "grass") {
+		return 2;
+	}
+	if (terrain_id == "snow") {
+		return 3;
+	}
+	if (terrain_id == "swamp" || terrain_id == "mire") {
+		return 4;
+	}
+	if (terrain_id == "rough") {
+		return 5;
+	}
+	if (terrain_id == "underground" || terrain_id == "subterranean" || terrain_id == "cave") {
+		return 6;
+	}
+	if (terrain_id == "lava") {
+		return 7;
+	}
+	if (terrain_id == "water") {
+		return 8;
+	}
+	return 9;
+}
+
+String h3maped_terrain_name_for_id(int32_t terrain_id) {
+	switch (terrain_id) {
+		case 0:
+			return "dirt";
+		case 1:
+			return "sand";
+		case 2:
+			return "grass";
+		case 3:
+			return "snow";
+		case 4:
+			return "swamp";
+		case 5:
+			return "rough";
+		case 6:
+			return "subterranean";
+		case 7:
+			return "lava";
+		case 8:
+			return "water";
+		default:
+			return "rock";
+	}
+}
+
 PackedStringArray terrain_id_by_code() {
 	PackedStringArray result;
 	result.append("grass");
@@ -6327,6 +6383,30 @@ struct H3MapedSpanFillResult {
 	int32_t blocked_initial_span_count = 0;
 };
 
+struct H3MapedTerrainCellStats {
+	int32_t cell_count = 0;
+	int32_t repaint_member_count = 0;
+	int64_t sum_x = 0;
+	int64_t sum_y = 0;
+	int32_t min_x = 0x7fffffff;
+	int32_t min_y = 0x7fffffff;
+	int32_t max_x = -1;
+	int32_t max_y = -1;
+
+	void add(int32_t x, int32_t y, bool repaint_member) {
+		cell_count += 1;
+		if (repaint_member) {
+			repaint_member_count += 1;
+		}
+		sum_x += x;
+		sum_y += y;
+		min_x = std::min(min_x, x);
+		min_y = std::min(min_y, y);
+		max_x = std::max(max_x, x);
+		max_y = std::max(max_y, y);
+	}
+};
+
 struct H3MapedClipBounds {
 	int32_t min_x = 0;
 	int32_t min_y = 0;
@@ -8697,6 +8777,129 @@ Dictionary h3maped_project_grid_materialization_report_4a325d(
 	return report;
 }
 
+Dictionary h3maped_terrain_phase_4a3f27_report(
+		const std::vector<H3MapedRuntimeZoneSeed> &zones,
+		const Dictionary &normalized,
+		const std::vector<uint32_t> &zone_words,
+		const std::vector<uint8_t> &cell_flags) {
+	Dictionary report;
+	report["status"] = "0x4a3f27_schedule_ported_owner_byte_basis_blocked";
+	report["source"] = "h3maped 0x4a3f27 terrain fill/repaint schedule from disassembly; report-only because current 0x4a325d owner bytes are source-zone ids while the repaint loop compares against runtime-zone indices";
+	report["function_address"] = "0x4a3f27";
+	report["prepass_helper_address"] = "0x4a2105";
+	report["runtime_zone_recenter_helper_address"] = "0x4a2ffa";
+	report["islands_connector_helper_address"] = "0x4a30c2";
+	report["terrain_placement_constructor_address"] = "0x4bcff5";
+	report["terrain_repaint_address"] = "0x4bd099";
+	report["terrain_placement_destructor_address"] = "0x4bd077";
+	report["terrain_adapter_vtable"] = "0x540a14";
+	report["generated_cell_stride_bytes"] = 0x30;
+	report["owner_byte_source"] = "cell+0x20 bits 16..23";
+	report["zone_repaint_member_bit"] = "cell+0x28 bit 28 / cell+0x2b bit 0x10";
+	report["runtime_repaint_compare"] = "0x4a4142..0x4a4163 compares signed owner byte to runtime-zone loop index";
+	report["project_runtime_adoption_status"] = "report_only_not_runtime_generation";
+
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t water_code = h3maped_water_mode_code(normalized);
+	const int32_t tile_count = width * height * std::max(1, level_count);
+	report["width"] = width;
+	report["height"] = height;
+	report["level_count"] = level_count;
+	report["tile_count"] = tile_count;
+	report["h3maped_water_mode_code"] = water_code;
+	report["whole_map_fill_terrain_id"] = 8;
+	report["whole_map_fill_terrain_name"] = h3maped_terrain_name_for_id(8);
+	report["whole_map_fill_project_terrain_id"] = "water";
+	report["whole_map_fill_cell_count"] = tile_count;
+	report["whole_map_fill_call"] = "0x4bcff5(adapter=generator+0x0c, terrain=8, arg=4) then 0x4bd099(0,0,width,height)";
+	report["multi_level_generated_slice_adapter_status"] = level_count > 1 ? String("scheduled") : String("skipped_one_level_map");
+	report["islands_connector_repaint_status"] = water_code == 2 ? String("scheduled_for_level_zero_runtime_zones") : String("skipped_non_islands_water_mode");
+
+	std::map<int32_t, H3MapedTerrainCellStats> stats_by_zone_word;
+	int32_t assigned_cell_count = 0;
+	int32_t repaint_member_cell_count = 0;
+	int32_t unresolved_cell_count = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				const int64_t key = h3maped_cell_key_4a325d(width, height, x, y, level);
+				const uint32_t zone_word_bits = zone_words[size_t(key)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+				if (zone_word_bits == H3MAPED_UNASSIGNED_ZONE_WORD) {
+					unresolved_cell_count += 1;
+					continue;
+				}
+				const bool repaint_member = cell_flags.size() > size_t(key) && (cell_flags[size_t(key)] & 0x10U) != 0;
+				const int32_t zone_word_id = int32_t((zone_word_bits >> 16U) & 0xffU);
+				stats_by_zone_word[zone_word_id].add(x, y, repaint_member);
+				assigned_cell_count += 1;
+				if (repaint_member) {
+					repaint_member_cell_count += 1;
+				}
+			}
+		}
+	}
+	report["assigned_owner_cell_count"] = assigned_cell_count;
+	report["zone_repaint_member_cell_count"] = repaint_member_cell_count;
+	report["unresolved_cell_count"] = unresolved_cell_count;
+	report["bbox_update_scan_status"] = "0x4a2105_scans_owned_cells_and_updates_runtime_zone_bbox_via_0x49b66d";
+	report["bbox_update_scan_cell_count"] = assigned_cell_count;
+	report["runtime_zone_recenter_call_count"] = int32_t(zones.size());
+
+	Array zone_reports;
+	int32_t owner_basis_mismatch_count = 0;
+	int32_t source_zone_repaint_member_cell_count = 0;
+	int32_t runtime_index_repaint_member_cell_count = 0;
+	for (const H3MapedRuntimeZoneSeed &zone : zones) {
+		const int32_t source_zone_id = zone.source_zone_id >= 0 ? zone.source_zone_id : zone.source_index;
+		const int32_t runtime_index = zone.source_index;
+		const H3MapedTerrainCellStats source_stats = stats_by_zone_word[source_zone_id];
+		const H3MapedTerrainCellStats runtime_stats = stats_by_zone_word[runtime_index];
+		source_zone_repaint_member_cell_count += source_stats.repaint_member_count;
+		runtime_index_repaint_member_cell_count += runtime_stats.repaint_member_count;
+		if (source_zone_id != runtime_index) {
+			owner_basis_mismatch_count += 1;
+		}
+		const String project_terrain = h3maped_project_terrain_for_runtime_zone(zone, normalized);
+		const int32_t h3maped_terrain_id = h3maped_terrain_id_for_project_terrain(project_terrain);
+		Dictionary zone_report;
+		zone_report["runtime_zone_index"] = runtime_index;
+		zone_report["source_zone_record_id"] = zone.record_id;
+		zone_report["source_zone_id"] = source_zone_id;
+		zone_report["owner_byte_basis_matches_runtime_index"] = source_zone_id == runtime_index;
+		zone_report["source_zone_owner_cell_count"] = source_stats.cell_count;
+		zone_report["source_zone_repaint_member_cell_count"] = source_stats.repaint_member_count;
+		zone_report["runtime_index_repaint_member_cell_count"] = runtime_stats.repaint_member_count;
+		zone_report["seed_before_0x4a2ffa_x"] = zone.x;
+		zone_report["seed_before_0x4a2ffa_y"] = zone.y;
+		zone_report["seed_level"] = zone.level;
+		if (source_stats.cell_count > 0) {
+			zone_report["bbox_min_x_after_0x4a2105"] = source_stats.min_x;
+			zone_report["bbox_min_y_after_0x4a2105"] = source_stats.min_y;
+			zone_report["bbox_max_x_after_0x4a2105"] = source_stats.max_x + 1;
+			zone_report["bbox_max_y_after_0x4a2105"] = source_stats.max_y + 1;
+			zone_report["seed_after_0x4a2ffa_x"] = int32_t(source_stats.sum_x / source_stats.cell_count);
+			zone_report["seed_after_0x4a2ffa_y"] = int32_t(source_stats.sum_y / source_stats.cell_count);
+		}
+		zone_report["project_terrain_id"] = project_terrain;
+		zone_report["h3maped_terrain_id"] = h3maped_terrain_id;
+		zone_report["h3maped_terrain_name"] = h3maped_terrain_name_for_id(h3maped_terrain_id);
+		zone_reports.append(zone_report);
+	}
+	report["zones"] = zone_reports;
+	report["zone_count"] = int32_t(zones.size());
+	report["owner_byte_basis_mismatch_count"] = owner_basis_mismatch_count;
+	report["source_zone_repaint_member_cell_count"] = source_zone_repaint_member_cell_count;
+	report["runtime_index_repaint_member_cell_count"] = runtime_index_repaint_member_cell_count;
+	report["runtime_index_unmatched_repaint_member_cell_count"] = std::max(0, source_zone_repaint_member_cell_count - runtime_index_repaint_member_cell_count);
+	report["blocked_next"] = owner_basis_mismatch_count > 0
+			? String("resolve 0x4a325d owner-byte basis against the 0x4a3f27 runtime-index repaint compare before executing TerrainPlacement-backed terrain adoption")
+			: String("port TerrainPlacement art/index/flip normalization before runtime map adoption");
+	report["signature"] = hash32_hex(canonical_variant(report));
+	return report;
+}
+
 Dictionary h3maped_second_footprint_helper_4a325d_report(
 		const std::vector<H3MapedRuntimeZoneSeed> &zones,
 		const Dictionary &normalized,
@@ -8943,6 +9146,9 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 	report["project_materialization_status"] = project_materialization.get("status", "");
 	report["project_materialized_cell_count"] = project_materialization.get("project_materialized_cell_count", 0);
 	report["project_unresolved_cell_count"] = project_materialization.get("unresolved_cell_count", 0);
+	Dictionary terrain_phase = h3maped_terrain_phase_4a3f27_report(zones, normalized, real_zone_words, real_cell_flags);
+	report["terrain_phase_4a3f27"] = terrain_phase;
+	report["terrain_phase_status"] = terrain_phase.get("status", "");
 	report["blocked_next"] = "port h3maped 0x4a3f27 terrain fill/repaint before runtime map generation can adopt the materialized project grid";
 	return report;
 }
