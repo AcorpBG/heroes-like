@@ -869,3 +869,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_normalwater_2level_profile_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The merged top blocker moves to `xl_water`, followed by Large two-level land/islands and Medium two-level route/category cases. The remaining work is now less about broad category floors and more about road/route/terrain shape across each water and level profile.
+
+## XL One-Level Normal-Water Road, Terrain, And Category Profile Cleanup
+
+The next merged top-gap case was `xl_water`. Its previous native output was close enough to pass the broad generated-rule gate, but the production-shape audit still exposed a classic one-level normal-water mismatch: roads were fragmented into too many components, terrain water/blocking was under-shaped, total objects were inflated, and reward/guard floors were too high for the owner profile.
+
+Normal generated catalog-auto XL one-level normal-water maps now use a scoped road component target, a higher road total floor, a lower object/reward/guard profile, a higher scenic-object floor, and lower land fractions by zone role. This keeps the map valid while moving the generated XL water profile toward the recovered owner sample instead of relying on generic XL land/water defaults.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `xl_water` export wrote `1/1` package in about `30.302s` with native validation `pass`.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/XL-water.h3m --amap .artifacts/rmg_native_batch_export_xl_water_profile_probe/xl_water.amap --compare --pretty --allow-failures` improved total object delta from `+321` to `+49`, road delta from `-133` to `-9`, terrain-blocked delta from `-1029` to `-151`, and category absolute delta from `499` to `223`. Road components moved from `10` native components toward the owner `3` component profile, now materializing as `419/236/91` versus owner `637/96/22`.
+- The focused production-gap severity improved from `2707` to `907`.
+- `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_profile_probe --allow-partial-native-batch --summary --failure-limit 8 --gap-limit 8` passed with `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_profile_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_profile_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The remaining XL water debt is route shape and exact road-component distribution, while the merged top blockers now move to Large two-level land/islands and Medium two-level route/category cases.
