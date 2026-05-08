@@ -1500,3 +1500,23 @@ Validation evidence:
 - The production-gap audit remains `production_ready=false` with `6` missing broad requirements. Current top blockers are `xl_nowater_2levels` at severity `367`, `xl_water_2levels` at severity `356`, `l_normalwater_randomplayers_2level`, and `l_nowater_randomplayers_nounder`.
 
 This is still not production parity. XL two-level normal-water now has exact physical object-route openness and a less over-closed guarded-route surface, but it still needs owner-like guarded-route opening placement, road component shape, town distribution, and terrain/object-category shape work across adjacent XL/Large profiles.
+
+## XL Two-Level Land Category And Underground Shape Cleanup
+
+After the XL two-level normal-water package guard checkpoint, `xl_nowater_2levels` was the next merged top blocker. Its guarded route topology and town split were already close, but the package was still structurally off: native underfilled total object count by `86`, underfilled scenic/object category by `62`, underfilled decoration by `29`, overfilled reward by `4`, and misplaced too much scenic/reward/decoration mass underground. The terrain volume was also still under-blocked by `151` tiles.
+
+Normal generated catalog-auto XL two-level land now has a scoped category and level-distribution profile: owner-scale scenic and decoration floors, a reward cap, a lower underground object/reward/decoration share, and a lower underground rock fraction to offset the newly preserved underground object openings. This targets the size/water/level profile instead of exact seed-specific placement.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `xl_nowater_2levels` export wrote `1/1` package with native validation `pass`. The manifest recorded about `45.942s` total wall time for the retained distribution/rock probe, including about `28.620s` generation, `9.475s` package conversion, and `6.376s` save time.
+- Focused fast audit improved production-gap severity from `367` to `47`. Total object delta improved from `-86` to `-3`, terrain-blocked delta improved from `-151` to `-7`, and broad category absolute delta improved from `96` to `3`.
+- Broad category counts are now near exact: decoration `3261/3263`, guard `404/405`, object `684/684`, reward `877/877`, and town `10/10`.
+- Level split now closely matches owner evidence: surface decoration/object/reward/town/guard is `3066/561/658/7/315` versus owner `3075/563/654/7/315`; underground is `195/123/219/3/89` versus owner `188/121/223/3/90`.
+- Focused fast validation passed with `0` parse, native-rule, density, policy, topology, coverage, and closure-shape gaps.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_nowater_2level_shape_merged --summary` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `9.963s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_nowater_2level_shape_merged --skip-timing-summary --failure-limit 8` passed with `18/18` matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- The production-gap audit remains `production_ready=false` with `6` missing broad requirements. `xl_nowater_2levels` dropped out of the top-gap list; current top blockers are led by `xl_water_2levels`, `l_normalwater_randomplayers_2level`, `l_nowater_randomplayers_nounder`, and one-level XL land/water shape cases.
+
+This is still not production parity. XL two-level land now has near-exact broad category and level distribution plus near-exact terrain volume, but road component shape and one extra object-only route still differ from owner evidence, and other profile families remain out of parity.

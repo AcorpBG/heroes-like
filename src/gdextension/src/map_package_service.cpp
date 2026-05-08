@@ -8980,6 +8980,9 @@ int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized)
 		if (native_catalog_auto_xl_two_level_normal_water_profile(normalized)) {
 			return std::max(650, (area * 16) / 1000);
 		}
+		if (native_catalog_auto_xl_two_level_land_profile(normalized)) {
+			return std::max(684, (area * 16) / 1000);
+		}
 		if (String(normalized.get("water_mode", "land")) == "islands" && level_count <= 1) {
 			return std::max(790, (area * 38) / 1000);
 		}
@@ -9060,6 +9063,9 @@ int32_t native_catalog_auto_generated_decoration_floor(const Dictionary &normali
 		}
 		if (xl_two_level_normal_water) {
 			return std::max(1834, (area * 44) / 1000);
+		}
+		if (native_catalog_auto_xl_two_level_land_profile(normalized)) {
+			return std::max(3263, (area * 78) / 1000);
 		}
 		if (xl_one_level_normal_water) {
 			return std::max(1813, (area * 87) / 1000);
@@ -9237,6 +9243,9 @@ int32_t native_catalog_auto_generated_reward_cap(const Dictionary &normalized) {
 	}
 	if (native_catalog_auto_xl_two_level_normal_water_profile(normalized)) {
 		return 482;
+	}
+	if (native_catalog_auto_xl_two_level_land_profile(normalized)) {
+		return 877;
 	}
 	if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
 		return 409;
@@ -9544,6 +9553,10 @@ Dictionary apply_native_catalog_auto_two_level_object_distribution(Array &placem
 		decoration_percent = 5;
 		object_percent = 13;
 		reward_percent = 28;
+	} else if (native_catalog_auto_xl_two_level_land_profile(normalized)) {
+		decoration_percent = 6;
+		object_percent = 18;
+		reward_percent = 25;
 	} else if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
 		decoration_percent = 7;
 		object_percent = 27;
@@ -17424,7 +17437,7 @@ double native_catalog_auto_underground_rock_fraction(const Dictionary &normalize
 	const String water_mode = String(normalized.get("water_mode", "land"));
 	if (water_mode == "land") {
 		if (size_class_id == "homm3_extra_large") {
-			return 0.94;
+			return 0.915;
 		}
 		if (size_class_id == "homm3_large") {
 			return 0.75;
