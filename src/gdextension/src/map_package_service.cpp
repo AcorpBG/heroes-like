@@ -6324,6 +6324,7 @@ struct H3MapedSpanFillResult {
 	int32_t popped_span_count = 0;
 	int32_t max_pending_span_count = 0;
 	int32_t out_of_bounds_span_count = 0;
+	int32_t blocked_initial_span_count = 0;
 };
 
 struct H3MapedClipBounds {
@@ -7553,7 +7554,7 @@ Dictionary h3maped_real_source_node_cycle_traversal_4a2777_report(
 	report["out_of_bounds_write_count"] = out_of_bounds_write_count;
 	report["loop_guard_exhausted"] = loop_guard_exhausted;
 	report["zone_reports"] = zone_reports;
-	report["blocked_next"] = "feed these real 0x4a2777 boundary cells into 0x4a325d span fill and 0x4a3710 adjacency ordering before project terrain/object materialization";
+	report["blocked_next"] = "feed these real 0x4a2777 boundary cells into 0x4a325d span fill before project terrain/object materialization";
 	return report;
 }
 
@@ -7973,6 +7974,9 @@ H3MapedSpanFillResult h3maped_span_fill_4a325d(
 		while (x > 0 && h3maped_is_unassigned_zone_word_4a325d(zone_words, width, height, x - 1, span.y, span.level)) {
 			x -= 1;
 		}
+		if (x >= 0 && x < width && !h3maped_is_unassigned_zone_word_4a325d(zone_words, width, height, x, span.y, span.level)) {
+			result.blocked_initial_span_count += 1;
+		}
 		bool above_open = false;
 		bool below_open = false;
 		H3MapedSpanRecord above_span;
@@ -8026,6 +8030,88 @@ H3MapedSpanFillResult h3maped_span_fill_4a325d(
 		}
 	}
 	return result;
+}
+
+Dictionary h3maped_seed_relocation_4a325d_report(
+		const Dictionary &source_node_walk,
+		const H3MapedSpanRecord &seed,
+		int32_t width,
+		int32_t height,
+		int32_t level_count) {
+	Dictionary report;
+	report["status"] = "0x4a325d_seed_in_bounds_relocation_not_used";
+	report["source"] = "h3maped 0x4a32b2..0x4a338e relocation branch; when runtime_zone+0x10 is outside map bounds, scan the source-node cycle for the interior node with maximum distance from all borders, then clip the original seed toward that node through 0x4a2b33";
+	report["function_address"] = "0x4a325d";
+	report["branch_address"] = "0x4a32b2..0x4a338e";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["seed_x"] = seed.x;
+	report["seed_y"] = seed.y;
+	report["seed_level"] = seed.level;
+	const bool seed_in_bounds = seed.x >= 0 && seed.x < width && seed.y >= 0 && seed.y < height && seed.level >= 0 && seed.level < level_count;
+	report["seed_in_bounds"] = seed_in_bounds;
+	Array candidates;
+	int32_t best_x = -1;
+	int32_t best_y = -1;
+	int32_t best_clearance = -1;
+	Array cycle_nodes = source_node_walk.get("cycle_nodes", Array());
+	for (int64_t node_index = 0; node_index < cycle_nodes.size(); ++node_index) {
+		if (Variant(cycle_nodes[node_index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary node = Dictionary(cycle_nodes[node_index]);
+		const int32_t x = int32_t(node.get("+0x00_x", node.get("+0x1c_finalized_x", 0)));
+		const int32_t y = int32_t(node.get("+0x04_y", node.get("+0x20_finalized_y", 0)));
+		Dictionary candidate;
+		candidate["node_id"] = node.get("node_id", "");
+		candidate["x"] = x;
+		candidate["y"] = y;
+		const bool interior = x >= 1 && x < width - 1 && y >= 1 && y < height - 1;
+		candidate["interior_by_0x4a32ca"] = interior;
+		int32_t clearance = -1;
+		if (interior) {
+			clearance = std::min<int32_t>(std::min<int32_t>(x, width - x - 1), std::min<int32_t>(y, height - y - 1));
+			if (clearance > best_clearance) {
+				best_clearance = clearance;
+				best_x = x;
+				best_y = y;
+			}
+		}
+		candidate["border_clearance"] = clearance;
+		candidates.append(candidate);
+	}
+	report["candidate_count"] = candidates.size();
+	report["candidates"] = candidates;
+	report["best_candidate_x"] = best_x;
+	report["best_candidate_y"] = best_y;
+	report["best_candidate_border_clearance"] = best_clearance;
+	if (seed_in_bounds) {
+		report["relocated"] = false;
+		report["relocated_seed_x"] = seed.x;
+		report["relocated_seed_y"] = seed.y;
+		report["relocated_seed_level"] = seed.level;
+		return report;
+	}
+	if (best_x < 0 || best_y < 0) {
+		report["status"] = "0x4a325d_seed_out_of_bounds_no_relocation_candidate";
+		report["relocated"] = false;
+		report["relocated_seed_x"] = seed.x;
+		report["relocated_seed_y"] = seed.y;
+		report["relocated_seed_level"] = seed.level;
+		return report;
+	}
+	H3MapedClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = width;
+	bounds.max_y = height;
+	const H3MapedClipResult clipped = h3maped_clip_point_4a2b33(seed.x, seed.y, best_x, best_y, bounds);
+	report["status"] = "0x4a325d_seed_out_of_bounds_relocated_with_0x4a2b33";
+	report["relocated"] = true;
+	report["relocated_seed_x"] = clipped.x;
+	report["relocated_seed_y"] = clipped.y;
+	report["relocated_seed_level"] = seed.level;
+	report["clip_branch"] = clipped.branch;
+	return report;
 }
 
 Array h3maped_span_trace_preview(const std::vector<H3MapedSpanFillCellWrite> &trace, int32_t limit = 12) {
@@ -8219,7 +8305,7 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(
 	report["available_runtime_zone_inputs"] = available_inputs;
 	report["project_materialized_cell_count"] = 0;
 	report["h3maped_boundary_cell_count"] = int32_t(real_cycle.get("unique_cell_count", 0));
-	report["blocked_next"] = "complete 0x4a325d seed relocation/remaining-zone fill behavior and then 0x4a3710 adjacency/ordering-vector semantics before project terrain materialization";
+	report["blocked_next"] = "complete the remaining 0x4a325d real-zone fill mismatch before project terrain materialization";
 	return report;
 }
 
@@ -8429,6 +8515,8 @@ Dictionary h3maped_polygon_split_pre_crossing_model_report(const std::vector<H3M
 				const H3MapedPolygonModelNode &node = model.nodes[size_t(current)];
 				Dictionary node_report;
 				node_report["node_id"] = node.id;
+				node_report["+0x00_x"] = node.x;
+				node_report["+0x04_y"] = node.y;
 				node_report["+0x08_payload"] = node.payload;
 				node_report["has_payload"] = node.has_payload;
 				node_report["+0x10_next"] = node.next >= 0 ? model.nodes[size_t(node.next)].id : String();
@@ -8474,8 +8562,8 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 		const Dictionary &split_model,
 		uint32_t rng_state_after_coordinate_seed) {
 	Dictionary report;
-	report["status"] = "0x4a325d_real_boundary_span_fill_ported_project_materialization_pending";
-	report["source"] = "h3maped 0x4a325d footprint cell-span fill helper; standalone sentinel fill remains exposed, and the real 0x4a2777 boundary buffer is now consumed from runtime_zone+0x10 seed coordinates";
+	report["status"] = "0x4a325d_real_boundary_span_fill_and_seed_relocation_ported_project_materialization_pending";
+	report["source"] = "h3maped 0x4a325d footprint cell-span fill helper; standalone sentinel fill remains exposed, the out-of-bounds seed relocation branch is ported, and the real 0x4a2777 boundary buffer is consumed from runtime_zone+0x10 seed coordinates";
 	report["function_address"] = "0x4a325d";
 	report["call_site_address"] = "0x4a3ee8..0x4a3eef";
 	report["polygon_locator_address"] = "0x4cca55";
@@ -8498,9 +8586,8 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 	recovered_operations.append("updates per-zone short ordering/depth vectors through helper 0x4a3554 after fill preparation");
 	report["recovered_operations"] = recovered_operations;
 	Array missing_layout;
-	missing_layout.append("source polygon/list traversal fallback used when runtime_zone+0x10 x/y is outside the map");
 	missing_layout.append("exact interaction between h3maped zone-word writes and this project's terrain/object occupancy buffers");
-	missing_layout.append("0x4a3710 adjacency/order vectors required before project link materialization");
+	missing_layout.append("remaining real span-fill mismatch: seed 1 still has one copied seed on a non-unassigned boundary cell and 348 unassigned cells");
 	report["missing_runtime_layout"] = missing_layout;
 	const int32_t width = int32_t(normalized.get("width", 36));
 	const int32_t height = int32_t(normalized.get("height", 36));
@@ -8568,6 +8655,7 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 	sample_report["popped_span_count"] = sample.popped_span_count;
 	sample_report["max_pending_span_count"] = sample.max_pending_span_count;
 	sample_report["out_of_bounds_span_count"] = sample.out_of_bounds_span_count;
+	sample_report["blocked_initial_span_count"] = sample.blocked_initial_span_count;
 	sample_report["remaining_unassigned_cell_count"] = remaining_unassigned_count;
 	sample_report["boundary_overwrite_count"] = boundary_overwrite_count;
 	sample_report["trace_preview"] = h3maped_span_trace_preview(sample.trace);
@@ -8577,14 +8665,17 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 	std::vector<uint32_t> real_zone_words;
 	std::vector<uint8_t> real_cell_flags;
 	Dictionary real_boundary = h3maped_real_source_node_cycle_traversal_4a2777_report(zones, normalized, split_model, rng_state_after_coordinate_seed, &real_zone_words, &real_cell_flags);
+	Array source_node_walks = split_model.get("source_node_walks", Array());
 	Array zone_fill_reports;
 	std::map<int64_t, bool> real_unique_filled_cells;
 	int32_t real_filled_zone_count = 0;
 	int32_t real_seed_blocked_count = 0;
+	int32_t real_seed_relocated_count = 0;
 	int32_t real_out_of_bounds_span_count = 0;
 	int32_t real_pushed_span_count = 0;
 	int32_t real_popped_span_count = 0;
 	int32_t real_max_pending_span_count = 0;
+	int32_t real_blocked_initial_span_count = 0;
 	for (const H3MapedRuntimeZoneSeed &zone : zones) {
 		Dictionary zone_report;
 		zone_report["runtime_zone_index"] = zone.source_index;
@@ -8595,23 +8686,46 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 		zone_report["seed_level"] = zone.level;
 		const int32_t zone_word = zone.source_zone_id >= 0 ? zone.source_zone_id : zone.source_index;
 		zone_report["zone_word_id"] = zone_word;
-		const bool seed_in_bounds = zone.x >= 0 && zone.x < width && zone.y >= 0 && zone.y < height && zone.level >= 0 && zone.level < level_count;
-		zone_report["seed_in_bounds"] = seed_in_bounds;
-		if (!seed_in_bounds) {
-			real_seed_blocked_count += 1;
-			zone_report["status"] = "blocked_seed_out_of_bounds_relocation_loop_not_ported";
-			zone_fill_reports.append(zone_report);
-			continue;
-		}
-		const bool seed_unassigned = h3maped_is_unassigned_zone_word_4a325d(real_zone_words, width, height, zone.x, zone.y, zone.level);
-		zone_report["seed_unassigned_before_fill"] = seed_unassigned;
-		if (!seed_unassigned) {
-			real_seed_blocked_count += 1;
-		}
 		H3MapedSpanRecord real_seed;
 		real_seed.x = zone.x;
 		real_seed.y = zone.y;
 		real_seed.level = zone.level;
+		Dictionary matching_walk;
+		for (int64_t walk_index = 0; walk_index < source_node_walks.size(); ++walk_index) {
+			if (Variant(source_node_walks[walk_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary walk = Dictionary(source_node_walks[walk_index]);
+			if (int32_t(walk.get("runtime_zone_index", -1)) == zone.source_index) {
+				matching_walk = walk;
+				break;
+			}
+		}
+		Dictionary relocation = h3maped_seed_relocation_4a325d_report(matching_walk, real_seed, width, height, level_count);
+		zone_report["seed_relocation_status"] = relocation.get("status", "");
+		zone_report["seed_relocation"] = relocation;
+		if (bool(relocation.get("relocated", false))) {
+			real_seed.x = int32_t(relocation.get("relocated_seed_x", real_seed.x));
+			real_seed.y = int32_t(relocation.get("relocated_seed_y", real_seed.y));
+			real_seed.level = int32_t(relocation.get("relocated_seed_level", real_seed.level));
+			real_seed_relocated_count += 1;
+		}
+		zone_report["effective_seed_x"] = real_seed.x;
+		zone_report["effective_seed_y"] = real_seed.y;
+		zone_report["effective_seed_level"] = real_seed.level;
+		const bool seed_in_bounds = real_seed.x >= 0 && real_seed.x < width && real_seed.y >= 0 && real_seed.y < height && real_seed.level >= 0 && real_seed.level < level_count;
+		zone_report["seed_in_bounds"] = seed_in_bounds;
+		if (!seed_in_bounds) {
+			real_seed_blocked_count += 1;
+			zone_report["status"] = "0x4a325d_seed_out_of_bounds_no_relocation_candidate";
+			zone_fill_reports.append(zone_report);
+			continue;
+		}
+		const bool seed_unassigned = h3maped_is_unassigned_zone_word_4a325d(real_zone_words, width, height, real_seed.x, real_seed.y, real_seed.level);
+		zone_report["seed_unassigned_before_fill"] = seed_unassigned;
+		if (!seed_unassigned) {
+			real_seed_blocked_count += 1;
+		}
 		H3MapedSpanFillResult fill = h3maped_span_fill_4a325d(real_zone_words, real_cell_flags, width, height, level_count, water_code, zone_word, real_seed);
 		for (const auto &item : fill.unique_cells) {
 			real_unique_filled_cells[item.first] = true;
@@ -8623,6 +8737,7 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 		real_pushed_span_count += fill.pushed_span_count;
 		real_popped_span_count += fill.popped_span_count;
 		real_max_pending_span_count = std::max<int32_t>(real_max_pending_span_count, fill.max_pending_span_count);
+		real_blocked_initial_span_count += fill.blocked_initial_span_count;
 		zone_report["status"] = fill.trace.empty() ? String("0x4a325d_seed_reached_non_unassigned_boundary") : String("0x4a325d_real_boundary_span_fill_executed");
 		zone_report["filled_cell_count"] = int32_t(fill.trace.size());
 		zone_report["unique_filled_cell_count"] = int32_t(fill.unique_cells.size());
@@ -8630,6 +8745,7 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 		zone_report["popped_span_count"] = fill.popped_span_count;
 		zone_report["max_pending_span_count"] = fill.max_pending_span_count;
 		zone_report["out_of_bounds_span_count"] = fill.out_of_bounds_span_count;
+		zone_report["blocked_initial_span_count"] = fill.blocked_initial_span_count;
 		zone_report["trace_preview"] = h3maped_span_trace_preview(fill.trace, 6);
 		zone_fill_reports.append(zone_report);
 	}
@@ -8664,6 +8780,7 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 	real_report["runtime_zone_fill_attempt_count"] = zone_fill_reports.size();
 	real_report["filled_zone_count"] = real_filled_zone_count;
 	real_report["seed_blocked_count"] = real_seed_blocked_count;
+	real_report["seed_relocated_count"] = real_seed_relocated_count;
 	real_report["total_unique_filled_cell_count"] = int32_t(real_unique_filled_cells.size());
 	real_report["total_boundary_or_filled_cell_count"] = real_boundary_or_filled_count;
 	real_report["remaining_unassigned_cell_count"] = real_remaining_unassigned_count;
@@ -8671,14 +8788,17 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 	real_report["popped_span_count"] = real_popped_span_count;
 	real_report["max_pending_span_count"] = real_max_pending_span_count;
 	real_report["out_of_bounds_span_count"] = real_out_of_bounds_span_count;
+	real_report["blocked_initial_span_count"] = real_blocked_initial_span_count;
 	real_report["cells_by_zone_word"] = cells_by_zone_word_report;
 	real_report["zone_fills"] = zone_fill_reports;
 	report["real_boundary_span_fill"] = real_report;
 	report["real_boundary_span_fill_status"] = real_report.get("status", "");
 	report["real_boundary_filled_cell_count"] = int32_t(real_unique_filled_cells.size());
 	report["real_boundary_remaining_unassigned_cell_count"] = real_remaining_unassigned_count;
+	report["real_boundary_seed_relocated_count"] = real_seed_relocated_count;
+	report["real_boundary_blocked_initial_span_count"] = real_blocked_initial_span_count;
 	report["project_materialized_cell_count"] = 0;
-	report["blocked_next"] = "map the h3maped zone-word buffer into project terrain only after 0x4a3710 adjacency/order vectors are ported";
+	report["blocked_next"] = "finish the remaining real 0x4a325d zone-fill mismatch before mapping the h3maped zone-word buffer into project terrain";
 	return report;
 }
 
