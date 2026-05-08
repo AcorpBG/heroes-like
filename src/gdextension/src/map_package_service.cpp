@@ -16117,7 +16117,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	const bool generated_catalog_guard_floor_enabled = parity_targets.is_empty()
 			&& native_rmg_generalized_native_catalog_auto_policy(normalized)
 			&& !native_rmg_owner_discovered_comparison_seed(normalized)
-			&& owner_small_islands_2level_guard_limit < 0;
+			&& !owner_category_guard_density;
 	const int32_t generated_catalog_guard_floor_reward_count = generated_catalog_guard_floor_enabled ? placement_count_for_spatial_category(objects, "reward") : 0;
 	const int32_t generated_catalog_guard_floor = generated_catalog_guard_floor_enabled ? native_catalog_auto_generated_guard_floor(normalized, generated_catalog_guard_floor_reward_count) : -1;
 	const int32_t fixture_guard_limit = parity_guard_limit >= 0 ? parity_guard_limit : (owner_small_islands_2level_guard_limit >= 0 ? owner_small_islands_2level_guard_limit : (uploaded_small_guard_limit >= 0 ? uploaded_small_guard_limit : (uploaded_small_underground_guard_limit >= 0 ? uploaded_small_underground_guard_limit : (owner_small_normal_water_2level_guard_limit >= 0 ? owner_small_normal_water_2level_guard_limit : (owner_medium_guard_limit >= 0 ? owner_medium_guard_limit : (owner_large_guard_limit >= 0 ? owner_large_guard_limit : owner_xl_guard_limit))))));
