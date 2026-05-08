@@ -529,18 +529,18 @@ Dictionary coordinate_seed_report_4a1f3b(
 		const Dictionary &normalized_config,
 		Array &runtime_zones,
 		const Array &link_seeds,
-		uint32_t rng_state_after_runtime_zone_build) {
+		uint32_t rng_state_after_template_selection) {
 	Dictionary report;
-	report["status"] = "0x4a1f3b_coordinate_candidate_math_replayed_inspection_only";
-	report["source"] = "h3maped 0x4a1f3b coordinate seeding, 0x4a17f5 angle candidates, 0x4a1701 spacing validation, 0x4a1ad8 single-level pruning, and 0x4a19ed bounding-box rescale";
+	report["status"] = "0x4a218c_interleaved_runtime_and_coordinate_replay_inspection_only";
+	report["source"] = "h3maped 0x4a218c interleaved 0x49b452 runtime init, 0x49b3c1 town choice, 0x4a1f3b coordinate seeding, 0x4a17f5 angle candidates, 0x4a1701 spacing validation, 0x4a1ad8 single-level pruning, and 0x4a19ed bounding-box rescale";
 	report["angle_table_x_address"] = "0x58dc28";
 	report["angle_table_y_address"] = "0x58dd28";
 	report["distance_validation_address"] = "0x4a1701";
 	report["candidate_prune_address"] = "0x4a1ad8";
 	report["bbox_rescale_address"] = "0x4a19ed";
-	report["rng_state_before_coordinate_seed_uint32"] = int64_t(rng_state_after_runtime_zone_build);
-	report["rng_order_status"] = "pending_full_0x4a218c_interleaved_replay";
-	report["rng_order_note"] = "candidate math is executable-derived, but the clean module still replays it after the current runtime-zone choice report; exact generation must interleave 0x49b452/0x4a1f3b per zone before map emission is allowed";
+	report["rng_state_before_0x4a218c_replay_uint32"] = int64_t(rng_state_after_template_selection);
+	report["rng_order_status"] = "0x4a218c_interleaved_replay_ported_inspection_only";
+	report["rng_order_note"] = "town-choice RNG and coordinate-choice RNG are replayed in 0x4a218c creation/refinement order; map emission remains blocked until 0x4a3a03 footprint cells and later materialization phases are ported";
 	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
 	if (level_count != 1) {
 		report["status"] = "blocked_until_two_level_coordinate_port";
@@ -581,10 +581,45 @@ Dictionary coordinate_seed_report_4a1f3b(
 		}
 	}
 
-	H3MapedRng rng { rng_state_after_runtime_zone_build };
+	H3MapedRng rng { rng_state_after_template_selection };
 	Array placement_steps;
+	Array rng_events;
 	int32_t rng_calls = 0;
+	int32_t town_rng_calls = 0;
 	bool complete = true;
+
+	auto apply_runtime_initializer_rng = [&](int32_t zone_index) {
+		if (zone_index < 0 || zone_index >= runtime_zones.size()
+				|| Variant(runtime_zones[zone_index]).get_type() != Variant::DICTIONARY) {
+			return;
+		}
+		Dictionary runtime = Dictionary(runtime_zones[zone_index]);
+		String faction_id = String(runtime.get("faction_id", ""));
+		if (faction_id.is_empty()) {
+			Array allowed_factions = runtime.get("allowed_faction_ids_for_49b3c1", Array());
+			if (!allowed_factions.is_empty()) {
+				const int32_t rng_value = rng.next();
+				const int32_t town_choice_index = rng_value % int32_t(allowed_factions.size());
+				faction_id = string_at(allowed_factions, town_choice_index);
+				runtime["faction_id"] = faction_id;
+				runtime["town_choice_index"] = town_choice_index;
+				runtime["faction_source"] = "0x49b3c1 adapted allowed_faction_ids choice";
+				town_rng_calls += 1;
+				Dictionary event;
+				event["consumer"] = "0x49b3c1";
+				event["runtime_zone_index"] = zone_index;
+				event["value"] = rng_value;
+				event["modulus"] = allowed_factions.size();
+				event["selected_index"] = town_choice_index;
+				rng_events.append(event);
+			}
+		}
+		if (bool(runtime.get("terrain_match_to_faction", false)) && !faction_id.is_empty()) {
+			runtime["terrain_id"] = terrain_for_faction(faction_id);
+			runtime["terrain_source"] = "terrain table preview after 0x49b3c1; authoritative 0x49b53d terrain phase still pending";
+		}
+		runtime_zones[zone_index] = runtime;
+	};
 
 	auto place_zone = [&](int32_t zone_index, const String &pass_id, const std::vector<int32_t> &visible_runtime_indices) {
 		std::vector<CoordCandidate> candidates;
@@ -651,6 +686,14 @@ Dictionary coordinate_seed_report_4a1f3b(
 		zones[size_t(zone_index)].y = selected.y;
 		zones[size_t(zone_index)].level = selected.level;
 		step["rng_value"] = rng_value;
+		Dictionary event;
+		event["consumer"] = "0x4a1f3b_candidate_selection";
+		event["runtime_zone_index"] = zone_index;
+		event["pass"] = pass_id;
+		event["value"] = rng_value;
+		event["modulus"] = candidates.size();
+		event["selected_index"] = selected_index;
+		rng_events.append(event);
 		step["selected_candidate_index"] = selected_index;
 		Dictionary selected_report;
 		selected_report["x"] = selected.x;
@@ -665,6 +708,7 @@ Dictionary coordinate_seed_report_4a1f3b(
 		for (int32_t visible_index = 0; visible_index < zone_index; ++visible_index) {
 			visible.push_back(visible_index);
 		}
+		apply_runtime_initializer_rng(zone_index);
 		place_zone(zone_index, "0x4a2226_initial_runtime_zone_insertion", visible);
 	}
 	std::vector<int32_t> all_visible;
@@ -735,8 +779,11 @@ Dictionary coordinate_seed_report_4a1f3b(
 	report["ok"] = complete;
 	report["placement_step_count"] = placement_steps.size();
 	report["placement_steps"] = placement_steps;
-	report["rng_calls_after_runtime_zone_build"] = rng_calls;
-	report["rng_state_after_coordinate_seed_uint32"] = int64_t(rng.state);
+	report["town_rng_calls_during_0x49b452"] = town_rng_calls;
+	report["coordinate_rng_calls_during_0x4a1f3b"] = rng_calls;
+	report["rng_event_count"] = rng_events.size();
+	report["rng_events"] = rng_events;
+	report["rng_state_after_0x4a218c_replay_uint32"] = int64_t(rng.state);
 	report["bounding_box_rescale"] = bbox;
 	report["scaled_zone_coordinates"] = scaled_zone_coordinates;
 	report["next_materialization_status"] = "pending_clean_port_0x4a3a03_0x4a2777_0x4a325d_0x4a3710";
@@ -797,52 +844,15 @@ Dictionary runtime_zone_build_report(
 			faction_id = String(selected_factions[actual_owner_color]);
 			faction_source = "generator+0xf24 adapted from player_constraints.selected_faction_ids";
 		} else if (!allowed_factions.is_empty()) {
-			const int32_t rng_value = rng.next();
-			town_choice_index = rng_value % int32_t(allowed_factions.size());
-			faction_id = string_at(allowed_factions, town_choice_index);
-			faction_source = "0x49b3c1 adapted allowed_faction_ids choice";
-			Dictionary event;
-			event["consumer"] = "0x49b3c1";
-			event["runtime_zone_index"] = index;
-			event["value"] = rng_value;
-			event["modulus"] = allowed_factions.size();
-			event["selected_index"] = town_choice_index;
-			rng_events.append(event);
+			faction_source = "pending_0x49b3c1_interleaved_runtime_initializer";
 		}
 
 		Dictionary terrain = zone.get("terrain", Dictionary());
 		String terrain_id;
-		String terrain_source;
+		String terrain_source = "pending_0x4a3f27_terrain_phase";
 		if (bool(terrain.get("match_to_faction", false)) && !faction_id.is_empty()) {
 			terrain_id = terrain_for_faction(faction_id);
-			terrain_source = "0x49b53d adapted town/faction terrain table";
-		}
-		if (terrain_id.is_empty()) {
-			Array allowed_terrain = terrain.get("allowed", Array());
-			Array surface_allowed;
-			for (int64_t terrain_index = 0; terrain_index < allowed_terrain.size(); ++terrain_index) {
-				const String candidate = String(allowed_terrain[terrain_index]);
-				if (candidate == "underground" && int32_t(normalized_config.get("level_count", 1)) == 1) {
-					continue;
-				}
-				surface_allowed.append(candidate);
-			}
-			if (!surface_allowed.is_empty()) {
-				const int32_t rng_value = rng.next();
-				const int32_t terrain_choice_index = rng_value % int32_t(surface_allowed.size());
-				terrain_id = string_at(surface_allowed, terrain_choice_index, "dirt");
-				terrain_source = "0x49b53d adapted allowed terrain choice";
-				Dictionary event;
-				event["consumer"] = "0x49b53d";
-				event["runtime_zone_index"] = index;
-				event["value"] = rng_value;
-				event["modulus"] = surface_allowed.size();
-				event["selected_index"] = terrain_choice_index;
-				rng_events.append(event);
-			} else {
-				terrain_id = "dirt";
-				terrain_source = "0x49b53d zero_allowed_terrain_default";
-			}
+			terrain_source = "terrain table preview from fixed selected faction; authoritative 0x49b53d terrain phase still pending";
 		}
 
 		Dictionary runtime;
@@ -864,8 +874,10 @@ Dictionary runtime_zone_build_report(
 		runtime["faction_id"] = faction_id;
 		runtime["town_choice_index"] = town_choice_index;
 		runtime["faction_source"] = faction_source;
+		runtime["allowed_faction_ids_for_49b3c1"] = allowed_factions;
 		runtime["terrain_id"] = terrain_id;
 		runtime["terrain_source"] = terrain_source;
+		runtime["terrain_match_to_faction"] = bool(terrain.get("match_to_faction", false));
 		runtime["rectangle_status"] = "pending_0x4a1f3b_0x4a17f5_link_seed_and_0x4a3a03_footprint_placement";
 		runtime_zones.append(runtime);
 	}
@@ -967,11 +979,11 @@ Dictionary runtime_zone_build_report(
 	early_link_placement["explicit_endpoint_attempt_count"] = explicit_endpoint_attempts;
 	early_link_placement["fallback_attempt_count_if_no_valid_endpoint"] = fallback_attempts_if_no_valid_endpoint;
 	early_link_placement["calls"] = placement_calls;
-	Dictionary coordinate_seed = coordinate_seed_report_4a1f3b(normalized_config, runtime_zones, link_seeds, uint32_t(rng.state));
+	Dictionary coordinate_seed = coordinate_seed_report_4a1f3b(normalized_config, runtime_zones, link_seeds, rng_state_after_template_selection);
 	early_link_placement["coordinate_candidate_status"] = coordinate_seed.get("status", "");
 
 	report["status"] = "0x4a218c_runtime_zone_records_ported_inspection_only";
-	report["source"] = "h3maped 0x4a218c with 0x49b452 runtime initializer, 0x49b3c1 town choice, and 0x4a1f3b coordinate candidate replay";
+	report["source"] = "h3maped 0x4a218c with interleaved 0x49b452 runtime initializer, 0x49b3c1 town choice, and 0x4a1f3b coordinate replay";
 	report["runtime_zone_vector_offset"] = "generator+0x10e0/+0x10e4/+0x10e8";
 	report["vector_clear_status"] = "0x42bde9_semantics_represented_by_rebuilt_report_array";
 	report["water_mode_code"] = water_code;
@@ -985,8 +997,8 @@ Dictionary runtime_zone_build_report(
 	report["link_seeds"] = link_seeds;
 	report["early_link_placement_status"] = early_link_placement.get("status", "");
 	report["early_link_placement"] = early_link_placement;
-	report["rng_state_after_runtime_zone_build"] = int64_t(rng.state);
-	report["rng_events"] = rng_events;
+	report["rng_state_after_runtime_zone_build"] = coordinate_seed.get("rng_state_after_0x4a218c_replay_uint32", int64_t(rng_state_after_template_selection));
+	report["rng_events"] = coordinate_seed.get("rng_events", rng_events);
 	report["coordinate_placement_status"] = coordinate_seed.get("status", "");
 	report["coordinate_seed"] = coordinate_seed;
 	report["zone_footprint_placement_status"] = "pending_clean_port_0x4a3a03_0x4a2777_0x4a325d_0x4a3710";
@@ -1106,7 +1118,7 @@ Array clean_phase_ledger() {
 	const Phase PHASES[] = {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "ported_inspection_only" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "ported_inspection_only" },
-		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b452, 0x49b3c1", "ported_structure_and_coordinate_candidate_replay_inspection_only" },
+		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b452, 0x49b3c1", "ported_interleaved_runtime_and_coordinate_replay_inspection_only" },
 		{ "zone_footprint_placement", "0x4a3a03, 0x4a2777, 0x4a325d, 0x4a3710", "pending_clean_port" },
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "pending_clean_port" },
 		{ "object_category_placement", "0x4a8d2c, 0x4a8db2, 0x4a8c15", "pending_clean_port" },
