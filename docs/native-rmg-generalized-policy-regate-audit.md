@@ -1406,3 +1406,22 @@ Validation evidence:
 - The production-gap audit remains `production_ready=false` with `6` missing broad requirements. `m_normalw_4players` dropped out of the top-gap list; the new top blocker is `xl_islands_2levels` at severity `520`.
 
 This is still not production parity. Medium one-level normal-water now has exact broad counts, exact road total, and owner-like object-route openness, but guarded-route, terrain-blocker, and road-component shape still differ from owner evidence.
+
+## XL Two-Level Islands Town And Route Closure Cleanup
+
+After the Medium one-level normal-water cleanup, the top production-gap case returned to `xl_islands_2levels`. Broad category and terrain level split were already close, but native still under-materialized surface towns and left too many unguarded package town routes open before package adoption. The generated route-closure loop also treated the profile's allowed open route count as a per-pass skip budget, which let the open route set drift upward instead of closing every feasible route and applying the allowance only as a final validation threshold.
+
+Normal generated catalog-auto XL two-level islands now uses the existing global spaced supplemental-town fallback on the surface for this profile, bringing the focused town count to owner parity at `20/20` while preserving the XL spacing safety floor. The generated town-pair closure loop now closes all feasible direct town routes during each pass and uses the profile allowance only for final validation. The compact decorative route-mask helper also has an XL two-level islands target so package adoption closes excess object-only town routes using existing decorative masks instead of cutting corridors through the blocker layer.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `xl_islands_2levels` export wrote `1/1` package with native validation `pass`. The manifest recorded about `78.262s` total wall time, including `49.369s` generation, `23.642s` package conversion, and `3.960s` save time.
+- The focused generated profile now reaches `20` towns. The dominant runtime cost remains `town_pair_route_guard_closure`, which took about `29.610s` inside the focused generation profile and is the next performance hotspot for this case.
+- `python3 tools/rmg_fast_validation.py --h3m-dir maps/h3m-maps --amap-dir .artifacts/rmg_native_batch_export_xl_islands_2level_probe --closure-shape-gate --summary --failure-limit 20` passed for the focused package with `0` parse, native-rule, density, policy, topology, coverage, and closure-shape gaps.
+- Focused production-gap severity improved from `520` to `233`. Broad categories remain close with total object delta `-3` and category absolute delta `3`; remaining focused debt is road delta `-9`, terrain-blocked delta `-143`, object-route delta `-1`, and guarded-route delta `-2`.
+- A regression probe for `l_islands_randomplayers`, the other profile using a bounded open guarded-route target, also exported `1/1` package with native validation `pass`.
+- Replacing `xl_islands_2levels` and `l_islands_randomplayers` into the previous 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_route_closure_merged --summary` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.661s`.
+- The production-gap audit remains `production_ready=false` with `6` missing broad requirements. `xl_islands_2levels` dropped out of the top-gap list; the new top blockers are `m_normalw_4players_2levels`, `xl_water_2levels`, `m_4players_2levels_islands`, `xl_nowater_2levels`, and `l_normalwater_randomplayers_2level`.
+
+This is still not production parity. XL two-level islands now has owner-parity town count and passes the generalized/closure-shape gates, but road, terrain, object-route, and guarded-route shape deltas remain visible, and the route-closure loop is still too slow for XL production use.
