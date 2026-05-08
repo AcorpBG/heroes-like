@@ -6636,6 +6636,66 @@ Array h3maped_runtime_zone_seed_array(const std::vector<H3MapedRuntimeZoneSeed> 
 	return result;
 }
 
+Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
+	Dictionary report;
+	report["status"] = "0x4a3a03_level_collection_ported_helpers_blocked";
+	report["source"] = "h3maped 0x4a3a03 per-level runtime-zone collection and branch scheduling; footprint helper trio remains unported";
+	report["function_address"] = "0x4a3a03";
+	report["zone_collection_address"] = "0x4a3a2b..0x4a3a86";
+	report["synthetic_source_zone_branch_address"] = "0x4a3a9d..0x4a3e12";
+	report["first_helper_address"] = "0x4a2777";
+	report["second_helper_address"] = "0x4a325d";
+	report["finalizer_address"] = "0x4a3710";
+	report["blocked_next"] = "0x4a2777/0x4a325d/0x4a3710 footprint geometry helpers are not ported";
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t water_code = h3maped_water_mode_code(normalized);
+	Array levels;
+	int32_t total_matching_runtime_zones = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		Array matching_indices;
+		for (const H3MapedRuntimeZoneSeed &zone : zones) {
+			if (zone.level == level) {
+				matching_indices.append(zone.source_index);
+			}
+		}
+		total_matching_runtime_zones += matching_indices.size();
+		const bool synthetic_branch_allowed = level == 1 || water_code != 0;
+		Dictionary level_report;
+		level_report["level_index"] = level;
+		level_report["matching_runtime_zone_count"] = matching_indices.size();
+		level_report["matching_runtime_zone_indices"] = matching_indices;
+		level_report["synthetic_fallback_zone_allowed_by_0x4a3a9d"] = synthetic_branch_allowed;
+		level_report["synthetic_fallback_zone_created"] = false;
+		level_report["synthetic_fallback_zone_reason"] = synthetic_branch_allowed
+				? String("requires candidate from 0x4a3b48 direction scan before source-zone allocation")
+				: String("skipped because level != 1 and water mode is land, matching 0x4a3a9d..0x4a3aa9");
+		level_report["helper_call_sequence"] = Array();
+		Array helper_sequence;
+		helper_sequence.append("0x4a2777");
+		helper_sequence.append("0x4a325d");
+		helper_sequence.append("0x4a3710");
+		level_report["helper_call_sequence"] = helper_sequence;
+		level_report["helper_call_status"] = "scheduled_not_executed";
+		levels.append(level_report);
+	}
+	Dictionary synthetic_defaults;
+	synthetic_defaults["+0x04"] = 3;
+	synthetic_defaults["+0x1c"] = -1;
+	synthetic_defaults["+0xa0"] = 100;
+	synthetic_defaults["+0xa4"] = 1000;
+	synthetic_defaults["+0xa8"] = 5;
+	synthetic_defaults["+0xac"] = 2000;
+	synthetic_defaults["+0xb0"] = 6000;
+	synthetic_defaults["+0xb4"] = 1;
+	report["level_count"] = level_count;
+	report["h3maped_water_mode_code"] = water_code;
+	report["total_matching_runtime_zones"] = total_matching_runtime_zones;
+	report["levels"] = levels;
+	report["synthetic_source_zone_size"] = "0xd4";
+	report["synthetic_source_zone_defaults"] = synthetic_defaults;
+	return report;
+}
+
 Dictionary h3maped_runtime_zone_seed_report(const Array &active_zones, const Array &active_links, const Dictionary &assignment, const Dictionary &normalized, uint32_t rng_state_after_template_selection) {
 	Dictionary report;
 	Dictionary zone_index_by_id;
@@ -6728,7 +6788,10 @@ Dictionary h3maped_runtime_zone_seed_report(const Array &active_zones, const Arr
 	report["runtime_link_seeds"] = runtime_links;
 	report["coordinate_seed_status"] = coordinate_seed.get("status", "");
 	report["coordinate_seed"] = coordinate_seed;
-	report["blocked_next"] = "0x4a3a03 per-level zone footprint placement and later terrain/object phases not ported";
+	Dictionary footprint_phase = h3maped_level_footprint_phase_4a3a03_report(runtime_zone_models, normalized);
+	report["level_footprint_phase_status"] = footprint_phase.get("status", "");
+	report["level_footprint_phase"] = footprint_phase;
+	report["blocked_next"] = "0x4a2777/0x4a325d/0x4a3710 footprint geometry helpers and later terrain/object phases not ported";
 	return report;
 }
 

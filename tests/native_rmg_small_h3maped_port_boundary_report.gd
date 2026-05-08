@@ -123,6 +123,21 @@ func _run() -> void:
 	if not runtime_zones[0].has("x_after_bbox_rescale") or not runtime_zones[0].has("y_after_bbox_rescale") or int(runtime_zones[0].get("runtime_size_after_bbox_rescale", 0)) <= 0:
 		_fail("Runtime zones did not expose post-0x4a19ed coordinate and size evidence: %s" % JSON.stringify(report))
 		return
+	if String(runtime_zone_seed.get("level_footprint_phase_status", "")) != "0x4a3a03_level_collection_ported_helpers_blocked":
+		_fail("The h3maped 0x4a3a03 level-collection boundary did not run or did not expose the real helper blocker: %s" % JSON.stringify(report))
+		return
+	var level_footprint_phase: Dictionary = runtime_zone_seed.get("level_footprint_phase", {})
+	var levels: Array = level_footprint_phase.get("levels", [])
+	if int(level_footprint_phase.get("level_count", -1)) != 1 or levels.size() != 1:
+		_fail("The h3maped 0x4a3a03 level loop did not match the small one-level scope: %s" % JSON.stringify(report))
+		return
+	var level_zero: Dictionary = levels[0]
+	if int(level_zero.get("matching_runtime_zone_count", -1)) != 6 or bool(level_zero.get("synthetic_fallback_zone_allowed_by_0x4a3a9d", true)):
+		_fail("The h3maped 0x4a3a03 level collection or land synthetic-zone branch drifted from the executable: %s" % JSON.stringify(report))
+		return
+	if level_zero.get("helper_call_sequence", []) != ["0x4a2777", "0x4a325d", "0x4a3710"]:
+		_fail("The h3maped 0x4a3a03 helper trio was not reported as the concrete next blocker: %s" % JSON.stringify(report))
+		return
 	var phase_sequence: Array = selected_payload.get("phase_sequence", [])
 	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "assignment_and_runtime_zone_seed_ported_remaining_phases_documented_not_executed":
 		_fail("The selected h3maped payload did not report the recovered 0x4ac552 phase sequence boundary: %s" % JSON.stringify(report))
@@ -180,6 +195,7 @@ func _run() -> void:
 		"selected_link_count": selected_payload.get("link_count", 0),
 		"coordinate_seed_status": runtime_zone_seed.get("coordinate_seed_status", ""),
 		"coordinate_step_count": coordinate_seed.get("placement_step_count", 0),
+		"level_footprint_phase_status": runtime_zone_seed.get("level_footprint_phase_status", ""),
 		"phase_count": phase_sequence.size(),
 		"generation_status": generated.get("status", ""),
 		"unsupported_scope_status": medium_report.get("status", ""),
