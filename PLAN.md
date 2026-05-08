@@ -74,9 +74,9 @@ validationResults:
 - Verified `/root/Downloads/h3maped.exe` as a PE32 GUI Intel 80386 Windows executable with SHA-256 `4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37`.
 - Added `docs/native-rmg-small-h3maped-reset.md` to define the reset contract, hard no-fallback rules, small-map scope, and first acceptance target.
 - `MapPackageService.generate_random_map` now returns `archived_legacy_native_rmg_disabled` for normal native catalog-auto requests unless `allow_archived_legacy_native_rmg` is explicitly passed for local evidence/debug.
-- `MapPackageService.inspect_h3maped_small_rmg_port` now exposes the first fresh GDExtension boundary for 36x36 one-level land maps. It computes the recovered h3maped accepted-template vector from the size-score/player-capacity rules and reports `blocked_until_h3maped_rng_ported` instead of choosing by a custom RNG.
-- Normal small land `native_catalog_auto` generation now routes to `h3maped_small_port_generation_not_ready` rather than the archived generator, so no fake fallback map is produced while the h3maped RNG/phase sequence is still missing.
-- `tests/native_rmg_small_h3maped_port_boundary_report.tscn` passed with `accepted_template_count: 13`, `generation_status: h3maped_small_port_generation_not_ready`, and `unsupported_scope_status: unsupported_scope`.
+- `MapPackageService.inspect_h3maped_small_rmg_port` now exposes the first fresh GDExtension boundary for 36x36 one-level land maps. It computes the recovered h3maped accepted-template vector from the size-score/player-capacity rules and selects from that vector with the executable-backed `0x4e7276` LCG when the config seed is numeric.
+- Normal small land `native_catalog_auto` generation now routes to `h3maped_small_port_generation_not_ready` rather than the archived generator, so no fake fallback map is produced while the h3maped `0x4ac552` phase sequence is still missing.
+- `tests/native_rmg_small_h3maped_port_boundary_report.tscn` passed with `accepted_template_count: 13`, `selected_template: h3maped_template_018` for seed `1`, `generation_status: h3maped_small_port_generation_not_ready`, and `unsupported_scope_status: unsupported_scope`.
 - `jq empty ops/progress.json`, progress helper status, `git diff --check`, `python3 tests/validate_repo.py`, and `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
 
 Completed owner-requested editor inspection hotfix:

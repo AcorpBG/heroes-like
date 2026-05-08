@@ -20,7 +20,7 @@ func _run() -> void:
 		return
 
 	var config := {
-		"seed": "small-h3maped-boundary-10184",
+		"seed": "1",
 		"size": {"width": 36, "height": 36, "level_count": 1, "water_mode": "land", "size_class_id": "homm3_small"},
 		"player_constraints": {"human_count": 1, "player_count": 3, "team_mode": "free_for_all"},
 	}
@@ -37,8 +37,19 @@ func _run() -> void:
 	if int(report.get("accepted_template_count", -1)) != 13:
 		_fail("Small 1-human/3-player accepted-template vector drifted from recovered catalog evidence: %s" % JSON.stringify(report))
 		return
-	if String(report.get("selected_template_status", "")) != "blocked_until_h3maped_rng_ported":
-		_fail("The port selected a template before the h3maped RNG is ported: %s" % JSON.stringify(report))
+	if String(report.get("selected_template_status", "")) != "h3maped_rng_selected":
+		_fail("The port did not select a template through the recovered h3maped RNG: %s" % JSON.stringify(report))
+		return
+	if int(report.get("selected_template_vector_index", -1)) != 2:
+		_fail("The recovered h3maped RNG selected an unexpected vector index for seed 1: %s" % JSON.stringify(report))
+		return
+	var rng: Dictionary = report.get("h3maped_rng", {})
+	if int(rng.get("first_value", -1)) != 41 or int(rng.get("selected_vector_index", -1)) != 2:
+		_fail("The recovered h3maped RNG first step drifted from the executable formula: %s" % JSON.stringify(report))
+		return
+	var selected_template: Dictionary = report.get("selected_template", {})
+	if String(selected_template.get("id", "")) != "h3maped_template_018":
+		_fail("The recovered h3maped RNG selected the wrong accepted template for seed 1: %s" % JSON.stringify(report))
 		return
 	var accepted_ids := _accepted_template_ids(report)
 	for required_id in ["h3maped_template_000", "h3maped_template_012", "h3maped_template_048"]:
@@ -53,8 +64,14 @@ func _run() -> void:
 	if bool(generated.get("ok", true)) or String(generated.get("status", "")) != "h3maped_small_port_generation_not_ready":
 		_fail("Small native_catalog_auto generation did not route to the h3maped boundary: %s" % JSON.stringify(generated))
 		return
-	if String(generated.get("error_code", "")) != "h3maped_rng_and_phase_port_incomplete":
+	if String(generated.get("error_code", "")) != "h3maped_phase_port_incomplete":
 		_fail("Small h3maped boundary did not expose the concrete missing port step: %s" % JSON.stringify(generated))
+		return
+	var text_seed_config := config.duplicate(true)
+	text_seed_config["seed"] = "small-h3maped-boundary-10184"
+	var text_seed_report: Dictionary = service.inspect_h3maped_small_rmg_port(text_seed_config)
+	if String(text_seed_report.get("selected_template_status", "")) != "blocked_until_numeric_h3maped_seed":
+		_fail("Non-numeric seeds must not be mapped through a custom hash in the h3maped port: %s" % JSON.stringify(text_seed_report))
 		return
 
 	var medium_config := config.duplicate(true)
@@ -68,6 +85,7 @@ func _run() -> void:
 		"ok": true,
 		"status": report.get("status", ""),
 		"accepted_template_count": report.get("accepted_template_count", 0),
+		"selected_template": selected_template.get("id", ""),
 		"generation_status": generated.get("status", ""),
 		"unsupported_scope_status": medium_report.get("status", ""),
 	})])
