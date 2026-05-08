@@ -6014,7 +6014,38 @@ Dictionary h3maped_connection_payload_from_records(const Array &connection_recor
 	return connection_payload;
 }
 
-Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connection_records) {
+Dictionary h3maped_path_state_reset_4aae2f_report(const Dictionary &terrain_fill) {
+	const int32_t width = std::max(1, int32_t(terrain_fill.get("width", 36)));
+	const int32_t height = std::max(1, int32_t(terrain_fill.get("height", 36)));
+	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", 1)));
+	const int32_t tile_count = width * height * level_count;
+	Dictionary reset;
+	reset["schema_id"] = "aurelion_h3maped_small_road_path_state_reset_v1";
+	reset["status"] = "h3maped_0x4aae2f_path_state_reset_ported_road_seed_and_toolkit_pending";
+	reset["function_address"] = "0x4aae2f";
+	reset["source"] = "Recovered from h3maped.exe: loop width*height*levels over generated cells, write -1 to cell+0x10/+0x14/+0x18, and force cell+0x1c low word to 0x7d00 while preserving the upper word.";
+	reset["generated_cell_base_offset"] = "generator+0x14";
+	reset["generated_cell_stride_bytes"] = 0x30;
+	reset["generated_cell_count_source"] = "generator+0x18 * generator+0x1c * generator+0x20";
+	reset["width"] = width;
+	reset["height"] = height;
+	reset["level_count"] = level_count;
+	reset["reset_cell_count"] = tile_count;
+	reset["coordinate_chain_offsets"] = Array::make("+0x10", "+0x14", "+0x18");
+	reset["coordinate_chain_after_reset"] = Array::make(-1, -1, -1);
+	reset["cell_state_offset"] = "+0x1c";
+	reset["cell_state_low_word_and_mask_hex"] = "0x7d00";
+	reset["cell_state_high_byte_or_hex"] = "0x7d";
+	reset["cell_state_low_word_after_reset_hex"] = "0x7d00";
+	reset["cell_state_low_word_after_reset"] = 0x7d00;
+	reset["preserves_cell_state_upper_word"] = true;
+	reset["path_seed_status_after_reset"] = "pending_0x4aae7b_coordinate_vector_seed";
+	reset["road_toolkit_status_after_reset"] = "pending_0x4b4243_road_toolkit_port";
+	reset["signature"] = h3maped_hash32_hex(String("h3maped_4aae2f_path_state_reset:") + String::num_int64(width) + ":" + String::num_int64(height) + ":" + String::num_int64(level_count));
+	return reset;
+}
+
+Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connection_records, const Dictionary &terrain_fill) {
 	Dictionary boundary;
 	boundary["schema_id"] = "aurelion_h3maped_small_road_adapter_boundary_v1";
 	boundary["generation_status"] = "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending";
@@ -6030,6 +6061,7 @@ Dictionary h3maped_road_adapter_boundary_from_connections(const Array &connectio
 	boundary["h3maped_road_adapter_vtable_address"] = "0x540a34";
 	boundary["h3maped_road_toolkit_initial_vtable_address"] = "0x5419d4";
 	boundary["h3maped_road_toolkit_runtime_vtable_address"] = "0x5419f4";
+	boundary["path_state_reset"] = h3maped_path_state_reset_4aae2f_report(terrain_fill);
 	boundary["coordinate_vector_begin_offset"] = "+0x14b4";
 	boundary["coordinate_vector_end_offset"] = "+0x14b8";
 	boundary["coordinate_record_size_bytes"] = 12;
@@ -6080,7 +6112,7 @@ Dictionary generate_materialized_payload(const Dictionary &normalized_config, co
 	Array mine_records = h3maped_mine_records_from_port(normalized_config, payload);
 	Array connection_records = h3maped_connection_records_from_port(payload);
 	Dictionary connection_payload = h3maped_connection_payload_from_records(connection_records);
-	Dictionary road_adapter_boundary = h3maped_road_adapter_boundary_from_connections(connection_records);
+	Dictionary road_adapter_boundary = h3maped_road_adapter_boundary_from_connections(connection_records, terrain_fill);
 	connection_payload["road_adapter_boundary"] = road_adapter_boundary;
 	connection_payload["road_materialization_status"] = road_adapter_boundary.get("road_materialization_status", "h3maped_0x4ab52a_0x4ab37f_road_adapter_boundary_recovered_toolkit_pending");
 
