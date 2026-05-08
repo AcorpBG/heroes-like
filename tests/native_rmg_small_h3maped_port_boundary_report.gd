@@ -614,6 +614,14 @@ func _run() -> void:
 			or not bool(road_boundary.get("no_synthetic_road_geometry", false)):
 		_fail("Materialized h3maped payload did not expose the recovered 0x4ab52a/0x4ab37f road adapter boundary: %s" % JSON.stringify(road_boundary))
 		return
+	var path_state_reset: Dictionary = road_boundary.get("path_state_reset", {}) if road_boundary.get("path_state_reset", {}) is Dictionary else {}
+	if String(path_state_reset.get("status", "")) != "h3maped_0x4aae2f_path_state_reset_ported_road_seed_and_toolkit_pending" \
+			or int(path_state_reset.get("reset_cell_count", 0)) != 36 * 36 \
+			or int(path_state_reset.get("generated_cell_stride_bytes", 0)) != 0x30 \
+			or int(path_state_reset.get("cell_state_low_word_after_reset", 0)) != 0x7d00 \
+			or not bool(path_state_reset.get("preserves_cell_state_upper_word", false)):
+		_fail("Materialized h3maped payload did not expose the recovered 0x4aae2f path-state reset: %s" % JSON.stringify(path_state_reset))
+		return
 	var road_network: Dictionary = generated.get("road_network", {}) if generated.get("road_network", {}) is Dictionary else {}
 	if int(road_network.get("road_cell_count", -1)) != 0 or road_network.get("road_segments", []).size() != 0:
 		_fail("The clean h3maped reset path must not emit fake road geometry before 0x4b4243 is ported: %s" % JSON.stringify(road_network))
@@ -681,6 +689,7 @@ func _run() -> void:
 		"generated_connection_count": connection_payload.get("connection_count", 0),
 		"generated_connection_status": generated.get("connection_generation_status", ""),
 		"road_adapter_boundary_status": road_boundary.get("generation_status", ""),
+		"path_state_reset_status": path_state_reset.get("status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
 	get_tree().quit(0)
