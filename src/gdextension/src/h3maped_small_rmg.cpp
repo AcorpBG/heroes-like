@@ -3663,6 +3663,59 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	report["weighted_placement_helper_address"] = "0x4a901a";
 	report["direct_candidate_scan_basis"] = "0x4a93a2 scans the generated cell buffer for matching cell+0x20 owner byte and then selects the closest eligible cell to the runtime-zone anchor; this report exposes owner-byte/repaint candidates plus the 0x49a1d8 terrain validity precheck before full 0x49aa93 footprint collision is ported";
 	report["direct_validity_precheck_basis"] = "0x49a1d8 requires generated cell bit 25 (byte +0x2b bit 0x02) and terrain id not 9; bit-25 lifecycle is represented here by cells already materialized in the 0x4a325d/0x4a3f27 generated-cell buffer";
+	report["direct_full_eligibility_status"] = "0x49aa93_gate_sequence_recovered_data_dependencies_pending";
+	report["direct_full_eligibility_blocked_by"] = "requires object template wrapper/footprint vectors, 0x57c648 object metadata flags, 0x49a6f9 rectangle rejection, 0x49a09c footprint pass, and generated-cell bit 22/object-vector collision state";
+	Array full_eligibility_sequence;
+	{
+		Dictionary step;
+		step["address"] = "0x49a6f9";
+		step["name"] = "rectangle_or_footprint_reject_precheck";
+		step["status"] = "recovered_from_executable_pending_data_model";
+		full_eligibility_sequence.append(step);
+	}
+	{
+		Dictionary step;
+		step["address"] = "0x57c648 + type*0x10";
+		step["name"] = "object_metadata_secondary_and_wide_flags";
+		step["status"] = "recovered_from_executable_pending_template_metadata_binding";
+		full_eligibility_sequence.append(step);
+	}
+	{
+		Dictionary step;
+		step["address"] = "0x49a09c";
+		step["name"] = "footprint_passability_owner_occupied_and_water_match_scan";
+		step["status"] = "recovered_from_executable_pending_footprint_vector_model";
+		full_eligibility_sequence.append(step);
+	}
+	{
+		Dictionary step;
+		step["address"] = "0x49a1d8";
+		step["name"] = "anchor_validity_precheck_bit25_and_not_terrain9";
+		step["status"] = "ported_for_current_generated_cell_grid";
+		full_eligibility_sequence.append(step);
+	}
+	{
+		Dictionary step;
+		step["address"] = "0x49ab66..0x49ab81";
+		step["name"] = "anchor_owner_byte_matches_runtime_zone";
+		step["status"] = "ported_by_owner_byte_candidate_scan";
+		full_eligibility_sequence.append(step);
+	}
+	{
+		Dictionary step;
+		step["address"] = "0x49ab87..0x49abb2";
+		step["name"] = "bit22_object_collision_metadata_secondary_gate";
+		step["status"] = "recovered_from_executable_pending_object_vector_collision_state";
+		full_eligibility_sequence.append(step);
+	}
+	{
+		Dictionary step;
+		step["address"] = "0x49abb2..0x49abcc";
+		step["name"] = "terrain_water_match_against_object_template";
+		step["status"] = "recovered_from_executable_pending_object_template_terrain_class";
+		full_eligibility_sequence.append(step);
+	}
+	report["direct_full_eligibility_sequence"] = full_eligibility_sequence;
 	report["player_min_towns_offset"] = "source_zone+0x20";
 	report["player_min_castles_offset"] = "source_zone+0x24";
 	report["player_town_density_offset"] = "source_zone+0x28";
@@ -3896,6 +3949,9 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 				call["direct_validity_precheck_status"] = validity_precheck_eligible_count > 0
 						? String("0x49a1d8_validity_precheck_ported_full_0x49aa93_collision_pending")
 						: String("0x49a1d8_validity_precheck_no_eligible_candidates");
+				call["direct_full_eligibility_status"] = validity_precheck_eligible_count > 0
+						? String("pending_0x49a6f9_0x49a09c_bit22_and_water_match_gates")
+						: String("blocked_no_0x49a1d8_valid_candidates");
 				call["candidate_owner_byte"] = runtime_zone_index;
 				call["candidate_grid_width"] = width;
 				call["candidate_grid_height"] = height;
