@@ -25434,7 +25434,73 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 			&& native_rmg_generalized_native_catalog_auto_policy(normalized)
 			&& !bool(options.get("allow_archived_legacy_native_rmg", false))) {
 		Dictionary extension_profile = build_extension_profile(extension_profile_phases, profile_started_at, int32_t(normalized.get("width", 0)), int32_t(normalized.get("height", 0)), int32_t(normalized.get("level_count", 1)), 0, 0, 0, 0, top_profile_phase_id, top_profile_phase_usec);
-		return h3maped_small_rmg::generation_not_ready_result(normalized, extension_profile);
+		Dictionary h3maped_payload = h3maped_small_rmg::generate_materialized_payload(normalized, extension_profile);
+		if (!bool(h3maped_payload.get("ok", false))) {
+			return h3maped_payload;
+		}
+		Dictionary identity = random_map_config_identity(config);
+		Dictionary terrain_grid = h3maped_payload.get("terrain_grid", Dictionary());
+		Dictionary road_network = h3maped_payload.get("road_network", Dictionary());
+		Dictionary river_network = h3maped_payload.get("river_network", Dictionary());
+		Array map_objects;
+		Array tagged_objects = tagged_record_snapshots(h3maped_payload.get("object_placements", Array()), "object_placement");
+		for (int64_t index = 0; index < tagged_objects.size(); ++index) {
+			map_objects.append(tagged_objects[index]);
+		}
+		Array tagged_towns = tagged_record_snapshots(h3maped_payload.get("town_records", Array()), "town");
+		for (int64_t index = 0; index < tagged_towns.size(); ++index) {
+			map_objects.append(tagged_towns[index]);
+		}
+		Dictionary metadata;
+		metadata["schema_id"] = NATIVE_RMG_SCHEMA_ID;
+		metadata["schema_version"] = 1;
+		metadata["generated"] = true;
+		metadata["generator_version"] = NATIVE_RMG_VERSION;
+		metadata["generation_status"] = h3maped_payload.get("generation_status", "");
+		metadata["full_generation_status"] = h3maped_payload.get("full_generation_status", "");
+		metadata["normalized_config"] = normalized;
+		metadata["deterministic_identity"] = identity;
+		metadata["h3maped_small_port_status"] = Dictionary(h3maped_payload.get("h3maped_small_port", Dictionary())).get("status", "");
+		metadata["terrain_generation_status"] = terrain_grid.get("generation_status", "");
+		metadata["town_generation_status"] = Dictionary(h3maped_payload.get("town_guard_placement", Dictionary())).get("town_generation_status", "");
+		metadata["object_generation_status"] = Dictionary(h3maped_payload.get("object_placement", Dictionary())).get("generation_status", "");
+		metadata["road_generation_status"] = "pending_h3maped_road_port";
+		metadata["guard_generation_status"] = "pending_h3maped_guard_port";
+		metadata["no_authored_writeback"] = true;
+
+		Dictionary map_state;
+		map_state["map_id"] = identity.get("map_id", "");
+		map_state["map_hash"] = identity.get("config_hash", "");
+		map_state["source_kind"] = "generated";
+		map_state["width"] = int32_t(normalized.get("width", 36));
+		map_state["height"] = int32_t(normalized.get("height", 36));
+		map_state["level_count"] = int32_t(normalized.get("level_count", 1));
+		map_state["metadata"] = metadata;
+		map_state["terrain_layers"] = terrain_layers_from_grid(terrain_grid, road_network, river_network, normalized);
+		map_state["route_graph"] = Dictionary();
+		map_state["objects"] = map_objects;
+
+		Ref<MapDocument> document;
+		document.instantiate();
+		document->configure(map_state);
+		Dictionary validation_report = validate_map_document_structural_report(document);
+		metadata["validation_status"] = validation_report.get("status", "");
+		map_state["metadata"] = metadata;
+		document->configure(map_state);
+		h3maped_payload["map_document"] = document;
+		h3maped_payload["map_metadata"] = metadata;
+		h3maped_payload["map_objects"] = map_objects;
+		h3maped_payload["validation_status"] = validation_report.get("status", "");
+		h3maped_payload["validation_report"] = validation_report;
+		h3maped_payload["deterministic_identity"] = identity;
+		h3maped_payload["terrain_generation_status"] = terrain_grid.get("generation_status", "");
+		h3maped_payload["town_generation_status"] = metadata.get("town_generation_status", "");
+		h3maped_payload["object_generation_status"] = metadata.get("object_generation_status", "");
+		h3maped_payload["road_generation_status"] = metadata.get("road_generation_status", "");
+		h3maped_payload["guard_generation_status"] = metadata.get("guard_generation_status", "");
+		h3maped_payload["native_runtime_authoritative"] = false;
+		h3maped_payload["full_parity_claim"] = false;
+		return h3maped_payload;
 	}
 	if (native_rmg_archived_legacy_catalog_auto_output(normalized)
 			&& !bool(options.get("allow_archived_legacy_native_rmg", false))) {

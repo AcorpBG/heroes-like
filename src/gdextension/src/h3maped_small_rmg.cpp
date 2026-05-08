@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
+#include <godot_cpp/variant/packed_string_array.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/variant.hpp>
 
@@ -5546,6 +5547,476 @@ Dictionary inspect_port(const Dictionary &normalized_config) {
 		report["selected_template_status"] = "none";
 	}
 	return report;
+}
+
+uint32_t h3maped_hash32_int(const String &text) {
+	uint64_t value = 2166136261ULL;
+	for (int64_t index = 0; index < text.length(); ++index) {
+		value = (value ^ uint64_t(text.unicode_at(index))) % 0x100000000ULL;
+		value = (value * 16777619ULL) % 0x100000000ULL;
+	}
+	return uint32_t(value);
+}
+
+String h3maped_hash32_hex(const String &text) {
+	static constexpr const char *HEX_DIGITS = "0123456789abcdef";
+	const uint32_t value = h3maped_hash32_int(text);
+	String result;
+	for (int index = 7; index >= 0; --index) {
+		const uint32_t nibble = (value >> (index * 4)) & 0xfU;
+		result += String::chr(HEX_DIGITS[nibble]);
+	}
+	return result;
+}
+
+String h3maped_level_point_key(int32_t x, int32_t y, int32_t level) {
+	return String::num_int64(level) + ":" + String::num_int64(x) + "," + String::num_int64(y);
+}
+
+Dictionary h3maped_cell_record(int32_t x, int32_t y, int32_t level) {
+	Dictionary cell;
+	cell["x"] = x;
+	cell["y"] = y;
+	cell["level"] = level;
+	return cell;
+}
+
+PackedStringArray h3maped_terrain_id_by_code() {
+	PackedStringArray ids;
+	ids.append("dirt");
+	ids.append("sand");
+	ids.append("grass");
+	ids.append("snow");
+	ids.append("swamp");
+	ids.append("rough");
+	ids.append("underground");
+	ids.append("lava");
+	ids.append("water");
+	ids.append("rock");
+	return ids;
+}
+
+String h3maped_biome_for_terrain_code(int32_t terrain_code) {
+	const String terrain_id = terrain_for_h3maped_id(terrain_code);
+	return terrain_id.is_empty() ? String("biome_unknown") : String("biome_") + terrain_id;
+}
+
+String h3maped_faction_for_owner(const Dictionary &normalized_config, int32_t owner_color) {
+	Array faction_ids = normalized_config.get("faction_ids", Array());
+	if (owner_color >= 0 && owner_color < faction_ids.size()) {
+		return String(faction_ids[owner_color]);
+	}
+	static const char *DEFAULTS[] = {
+		"faction_embercourt",
+		"faction_mireclaw",
+		"faction_sunvault",
+		"faction_thornwake",
+		"faction_brasshollow",
+		"faction_veilmourn",
+	};
+	if (owner_color >= 0 && owner_color < int32_t(sizeof(DEFAULTS) / sizeof(DEFAULTS[0]))) {
+		return DEFAULTS[owner_color];
+	}
+	return "faction_embercourt";
+}
+
+String h3maped_town_for_faction(const String &faction_id) {
+	if (faction_id == "faction_mireclaw") {
+		return "town_duskfen";
+	}
+	if (faction_id == "faction_sunvault") {
+		return "town_prismhearth";
+	}
+	if (faction_id == "faction_thornwake") {
+		return "town_thornwake_graftroot_caravan";
+	}
+	if (faction_id == "faction_brasshollow") {
+		return "town_brasshollow_orevein_gantry";
+	}
+	if (faction_id == "faction_veilmourn") {
+		return "town_veilmourn_bellwake_harbor";
+	}
+	return "town_riverwatch";
+}
+
+String h3maped_mine_object_id_for_subtype(int32_t subtype) {
+	switch (subtype) {
+		case 0:
+			return "object_brightwood_sawmill";
+		case 2:
+			return "object_ironstep_ore_pit";
+		case 4:
+			return "object_marsh_peat_yard";
+		case 6:
+			return "object_cinder_ore_face";
+		default:
+			return "object_ridge_quarry";
+	}
+}
+
+String h3maped_mine_category_for_subtype(int32_t subtype) {
+	switch (subtype) {
+		case 0:
+			return "wood";
+		case 1:
+			return "mercury";
+		case 2:
+			return "ore";
+		case 3:
+			return "sulfur";
+		case 4:
+			return "crystal";
+		case 5:
+			return "gems";
+		case 6:
+			return "gold";
+		default:
+			return "unknown";
+	}
+}
+
+Array h3maped_body_tiles_from_points(int32_t anchor_x, int32_t anchor_y, int32_t level, const std::vector<H3MaskPoint> &points, int32_t width, int32_t height) {
+	Array tiles;
+	for (const H3MaskPoint &point : points) {
+		const int32_t x = anchor_x + point.dx;
+		const int32_t y = anchor_y + point.dy;
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			continue;
+		}
+		tiles.append(h3maped_cell_record(x, y, level));
+	}
+	if (tiles.is_empty() && anchor_x >= 0 && anchor_y >= 0 && anchor_x < width && anchor_y < height) {
+		tiles.append(h3maped_cell_record(anchor_x, anchor_y, level));
+	}
+	return tiles;
+}
+
+Dictionary h3maped_bounds_from_tiles(const Array &tiles, int32_t fallback_x, int32_t fallback_y) {
+	int32_t min_x = fallback_x;
+	int32_t min_y = fallback_y;
+	int32_t max_x = fallback_x;
+	int32_t max_y = fallback_y;
+	bool initialized = false;
+	for (int64_t index = 0; index < tiles.size(); ++index) {
+		if (Variant(tiles[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary tile = Dictionary(tiles[index]);
+		const int32_t x = int32_t(tile.get("x", fallback_x));
+		const int32_t y = int32_t(tile.get("y", fallback_y));
+		if (!initialized) {
+			min_x = max_x = x;
+			min_y = max_y = y;
+			initialized = true;
+		} else {
+			min_x = std::min(min_x, x);
+			min_y = std::min(min_y, y);
+			max_x = std::max(max_x, x);
+			max_y = std::max(max_y, y);
+		}
+	}
+	Dictionary bounds;
+	bounds["min_x"] = min_x;
+	bounds["min_y"] = min_y;
+	bounds["max_x"] = max_x;
+	bounds["max_y"] = max_y;
+	return bounds;
+}
+
+Array h3maped_occupancy_keys_for_tiles(const Array &tiles) {
+	Array keys;
+	for (int64_t index = 0; index < tiles.size(); ++index) {
+		if (Variant(tiles[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary tile = Dictionary(tiles[index]);
+		keys.append(h3maped_level_point_key(
+				int32_t(tile.get("x", 0)),
+				int32_t(tile.get("y", 0)),
+				int32_t(tile.get("level", 0))));
+	}
+	return keys;
+}
+
+Dictionary h3maped_terrain_grid_from_fill(const Dictionary &normalized_config, const Dictionary &terrain_fill) {
+	const int32_t width = int32_t(terrain_fill.get("width", normalized_config.get("width", 36)));
+	const int32_t height = int32_t(terrain_fill.get("height", normalized_config.get("height", 36)));
+	const int32_t level_count = std::max(1, int32_t(terrain_fill.get("level_count", normalized_config.get("level_count", 1))));
+	PackedInt32Array terrain_codes = terrain_fill.get("terrain_code_u16", PackedInt32Array());
+	if (terrain_codes.size() != width * height) {
+		terrain_codes.resize(width * height);
+		for (int32_t index = 0; index < width * height; ++index) {
+			terrain_codes.set(index, 8);
+		}
+	}
+	Dictionary terrain_counts;
+	Dictionary biome_counts;
+	for (int32_t index = 0; index < terrain_codes.size(); ++index) {
+		const int32_t code = terrain_codes[index] & 0x3f;
+		const String terrain_id = terrain_for_h3maped_id(code);
+		if (!terrain_id.is_empty()) {
+			terrain_counts[terrain_id] = int32_t(terrain_counts.get(terrain_id, 0)) + 1;
+		}
+		const String biome_id = h3maped_biome_for_terrain_code(code);
+		biome_counts[biome_id] = int32_t(biome_counts.get(biome_id, 0)) + 1;
+	}
+	Dictionary level_record;
+	level_record["level_index"] = 0;
+	level_record["level_kind"] = "surface";
+	level_record["width"] = width;
+	level_record["height"] = height;
+	level_record["tile_count"] = width * height;
+	level_record["terrain_code_u16"] = terrain_codes;
+	level_record["terrain_counts"] = terrain_counts;
+	level_record["biome_counts"] = biome_counts;
+	level_record["h3maped_source_status"] = terrain_fill.get("status", "");
+	level_record["signature"] = h3maped_hash32_hex(String("h3maped_terrain_level:") + String::num_int64(width) + ":" + String::num_int64(height) + ":" + String::num_int64(terrain_codes.size()) + ":" + String::num_int64(int32_t(terrain_counts.keys().size())));
+	Array levels;
+	levels.append(level_record);
+
+	Dictionary grid;
+	grid["schema_id"] = "aurelion_native_rmg_terrain_grid_v1";
+	grid["schema_version"] = 1;
+	grid["generation_status"] = "h3maped_0x4a3f27_terrain_grid_materialized_from_clean_port";
+	grid["full_generation_status"] = "h3maped_small_phase_materialized_partial_roads_rewards_guards_pending";
+	grid["width"] = width;
+	grid["height"] = height;
+	grid["level_count"] = level_count;
+	grid["tile_count"] = width * height * level_count;
+	grid["terrain_id_by_code"] = h3maped_terrain_id_by_code();
+	grid["terrain_palette_ids"] = Array();
+	grid["terrain_counts"] = terrain_counts;
+	grid["levels"] = levels;
+	grid["materialized_level_count"] = levels.size();
+	grid["level_count_semantics"] = "h3maped_small_surface_level_materialized_only";
+	grid["signature"] = h3maped_hash32_hex(String("h3maped_terrain_grid:") + String::num_int64(width) + ":" + String::num_int64(height) + ":" + String::num_int64(level_count) + ":" + String(level_record["signature"]));
+	return grid;
+}
+
+Array h3maped_town_records_from_port(const Dictionary &normalized_config, const Dictionary &payload) {
+	Array result;
+	Dictionary town_castle = payload.get("town_castle_placement", Dictionary());
+	Array source_records = town_castle.get("direct_town_records", Array());
+	Dictionary object_metadata = town_castle.get("object_metadata_table", Dictionary());
+	Array town_template_rows = object_metadata.get("town_template_rows", Array());
+	std::vector<H3MaskPoint> town_body_points;
+	if (!town_template_rows.is_empty() && Variant(town_template_rows[0]).get_type() == Variant::DICTIONARY) {
+		town_body_points = h3_text_mask_points(String(Dictionary(town_template_rows[0]).get("passability_mask", "")), false);
+	}
+	const int32_t width = int32_t(normalized_config.get("width", 36));
+	const int32_t height = int32_t(normalized_config.get("height", 36));
+	for (int64_t index = 0; index < source_records.size(); ++index) {
+		if (Variant(source_records[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary source = Dictionary(source_records[index]);
+		const int32_t owner_color = int32_t(source.get("owner_color", -1));
+		const int32_t owner_slot = owner_color >= 0 ? owner_color + 1 : -1;
+		const int32_t x = int32_t(source.get("x", 0));
+		const int32_t y = int32_t(source.get("y", 0));
+		const int32_t level = int32_t(source.get("level", 0));
+		const int32_t runtime_zone_index = int32_t(source.get("runtime_zone_index", -1));
+		const String faction_id = h3maped_faction_for_owner(normalized_config, owner_color);
+		const String placement_id = owner_color >= 0
+				? String("h3maped_small_town_player_") + String::num_int64(owner_slot)
+				: String("h3maped_small_town_neutral_") + String::num_int64(index + 1);
+		Array body_tiles = h3maped_body_tiles_from_points(x, y, level, town_body_points, width, height);
+		Array occupancy_keys = h3maped_occupancy_keys_for_tiles(body_tiles);
+		Dictionary record;
+		record["placement_id"] = placement_id;
+		record["record_type"] = bool(source.get("castle", false)) ? "h3maped_player_minimum_castle" : "h3maped_player_minimum_town";
+		record["kind"] = "town";
+		record["town_id"] = h3maped_town_for_faction(faction_id);
+		record["family_id"] = "town_primary";
+		record["object_family_id"] = "town_primary";
+		record["type_id"] = "town";
+		record["faction_id"] = faction_id;
+		record["owner"] = owner_color < 0 ? String("neutral") : (owner_color == 0 ? String("player") : String("enemy"));
+		record["owner_color"] = owner_color;
+		record["owner_slot"] = owner_slot;
+		record["player_slot"] = owner_slot;
+		record["player_type"] = owner_color < 0 ? String("neutral") : (owner_color == 0 ? String("human") : String("computer"));
+		record["zone_id"] = String("runtime_zone_") + String::num_int64(runtime_zone_index);
+		record["runtime_zone_index"] = runtime_zone_index;
+		record["source_zone_id"] = source.get("source_zone_id", -1);
+		record["x"] = x;
+		record["y"] = y;
+		record["level"] = level;
+		record["primary_tile"] = h3maped_cell_record(x, y, level);
+		record["primary_occupancy_key"] = h3maped_level_point_key(x, y, level);
+		record["bounds"] = h3maped_bounds_from_tiles(body_tiles, x, y);
+		record["body_tiles"] = body_tiles;
+		record["occupancy_keys"] = occupancy_keys;
+		Dictionary footprint;
+		footprint["width"] = 6;
+		footprint["height"] = 6;
+		footprint["anchor"] = "h3_object_mask_anchor";
+		footprint["tier"] = "town";
+		footprint["source"] = "h3maped objects.txt passability mask";
+		record["footprint"] = footprint;
+		record["runtime_footprint"] = footprint;
+		record["footprint_deferred"] = false;
+		record["visit_tile"] = h3maped_cell_record(x, y, level);
+		record["approach_tiles"] = Array();
+		record["is_start_town"] = owner_color >= 0;
+		record["is_castle"] = bool(source.get("castle", false));
+		record["is_capital"] = owner_color >= 0;
+		record["settlement_category"] = bool(source.get("castle", false)) ? "castle" : "town";
+		record["owner_semantics"] = owner_color >= 0 ? "mapped_h3maped_player_owner_color" : "neutral_owner_minus_one";
+		record["h3maped_source"] = source;
+		record["materialization_state"] = "h3maped_0x4a93a2_town_record_adopted_to_package";
+		record["writeout_state"] = "staged_no_authored_content_writeback";
+		record["signature"] = h3maped_hash32_hex(placement_id + String(":") + String::num_int64(x) + String(":") + String::num_int64(y) + String(":") + String::num_int64(level));
+		result.append(record);
+	}
+	return result;
+}
+
+Array h3maped_mine_records_from_port(const Dictionary &normalized_config, const Dictionary &payload) {
+	Array result;
+	Dictionary mine_reward = payload.get("guard_reward_monster_placement", Dictionary());
+	Array helper_calls = mine_reward.get("mine_minimum_helper_calls", Array());
+	const int32_t width = int32_t(normalized_config.get("width", 36));
+	const int32_t height = int32_t(normalized_config.get("height", 36));
+	for (int64_t index = 0; index < helper_calls.size(); ++index) {
+		if (Variant(helper_calls[index]).get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		Dictionary helper = Dictionary(helper_calls[index]);
+		if (!helper.has("placement_constraint_selected_x")) {
+			continue;
+		}
+		const int32_t x = int32_t(helper.get("placement_constraint_selected_x", 0));
+		const int32_t y = int32_t(helper.get("placement_constraint_selected_y", 0));
+		const int32_t level = int32_t(helper.get("placement_constraint_selected_level", 0));
+		const int32_t subtype = int32_t(helper.get("mine_subtype", -1));
+		Array body_tiles = helper.get("placement_constraint_marked_body_cell_preview", Array());
+		if (body_tiles.is_empty()) {
+			body_tiles.append(h3maped_cell_record(std::clamp(x, 0, width - 1), std::clamp(y, 0, height - 1), level));
+		}
+		const String placement_id = String("h3maped_small_mine_") + String::num_int64(index + 1);
+		Dictionary record;
+		record["placement_id"] = placement_id;
+		record["kind"] = "mine";
+		record["family_id"] = "mine";
+		record["object_family_id"] = "mine";
+		record["type_id"] = "mine";
+		record["object_id"] = h3maped_mine_object_id_for_subtype(subtype);
+		record["site_id"] = record["object_id"];
+		record["category_id"] = "mine";
+		record["zone_id"] = String("runtime_zone_") + String::num_int64(int32_t(helper.get("runtime_zone_index", -1)));
+		record["runtime_zone_index"] = helper.get("runtime_zone_index", -1);
+		record["source_zone_id"] = helper.get("source_zone_id", -1);
+		record["mine_subtype"] = subtype;
+		record["mine_category_id"] = h3maped_mine_category_for_subtype(subtype);
+		record["terrain_id"] = terrain_for_h3maped_id(int32_t(helper.get("runtime_h3maped_terrain_id", -1)));
+		record["x"] = x;
+		record["y"] = y;
+		record["level"] = level;
+		record["primary_tile"] = h3maped_cell_record(x, y, level);
+		record["primary_occupancy_key"] = h3maped_level_point_key(x, y, level);
+		record["bounds"] = h3maped_bounds_from_tiles(body_tiles, x, y);
+		record["body_tiles"] = body_tiles;
+		record["occupancy_keys"] = h3maped_occupancy_keys_for_tiles(body_tiles);
+		Dictionary footprint;
+		footprint["width"] = 6;
+		footprint["height"] = 6;
+		footprint["anchor"] = "h3_object_mask_anchor";
+		footprint["tier"] = "mine";
+		footprint["source"] = "selected h3maped objects.txt mine template mask";
+		record["footprint"] = footprint;
+		record["runtime_footprint"] = footprint;
+		record["footprint_deferred"] = false;
+		record["visit_tile"] = h3maped_cell_record(x, y, level);
+		record["approach_tiles"] = Array();
+		record["selected_template_def_name"] = helper.get("selected_template_def_name", "");
+		record["selected_template_source_line"] = helper.get("selected_template_source_line", -1);
+		record["h3maped_phase"] = "0x4a9911_0x4a9641";
+		record["h3maped_placement_status"] = helper.get("placement_constraint_status", "");
+		record["h3maped_helper_record"] = helper;
+		record["materialization_state"] = "h3maped_0x4a9911_0x4a9641_mine_record_adopted_to_package";
+		record["writeout_state"] = "staged_no_authored_content_writeback";
+		record["signature"] = h3maped_hash32_hex(placement_id + String(":") + String::num_int64(x) + String(":") + String::num_int64(y) + String(":") + String::num_int64(level) + String(":") + String::num_int64(subtype));
+		result.append(record);
+	}
+	return result;
+}
+
+Dictionary generate_materialized_payload(const Dictionary &normalized_config, const Dictionary &extension_profile) {
+	Dictionary port = inspect_port(normalized_config);
+	Dictionary result;
+	if (!bool(port.get("ok", false))) {
+		result["ok"] = false;
+		result["status"] = "h3maped_small_materialization_blocked_by_inspection";
+		result["generation_status"] = "h3maped_small_materialization_blocked_by_inspection";
+		result["h3maped_small_port"] = port;
+		result["extension_profile"] = extension_profile;
+		return result;
+	}
+	Dictionary payload = port.get("selected_template_payload", Dictionary());
+	Dictionary runtime_build = payload.get("runtime_zone_build", Dictionary());
+	Dictionary footprint = runtime_build.get("zone_footprint_placement", Dictionary());
+	Dictionary terrain_fill = footprint.get("terrain_fill_repaint", Dictionary());
+	Dictionary terrain_grid = h3maped_terrain_grid_from_fill(normalized_config, terrain_fill);
+	Array town_records = h3maped_town_records_from_port(normalized_config, payload);
+	Array mine_records = h3maped_mine_records_from_port(normalized_config, payload);
+
+	Dictionary town_guard_placement;
+	town_guard_placement["schema_id"] = "aurelion_h3maped_small_town_guard_placement_v1";
+	town_guard_placement["generation_status"] = "h3maped_0x4a93a2_towns_materialized_guards_pending";
+	town_guard_placement["town_generation_status"] = "h3maped_0x4a93a2_town_records_adopted";
+	town_guard_placement["guard_generation_status"] = "pending_h3maped_guard_ports";
+	town_guard_placement["town_records"] = town_records;
+	town_guard_placement["guard_records"] = Array();
+	town_guard_placement["town_count"] = town_records.size();
+	town_guard_placement["guard_count"] = 0;
+
+	Dictionary object_placement;
+	object_placement["schema_id"] = "aurelion_h3maped_small_object_placement_v1";
+	object_placement["generation_status"] = "h3maped_0x4a9911_0x4a9641_mines_materialized_rewards_guards_pending";
+	object_placement["object_placements"] = mine_records;
+	object_placement["object_count"] = mine_records.size();
+	Dictionary category_counts;
+	category_counts["mine"] = mine_records.size();
+	object_placement["category_counts"] = category_counts;
+
+	Dictionary metrics;
+	metrics["width"] = terrain_grid.get("width", normalized_config.get("width", 36));
+	metrics["height"] = terrain_grid.get("height", normalized_config.get("height", 36));
+	metrics["level_count"] = terrain_grid.get("level_count", normalized_config.get("level_count", 1));
+	metrics["tile_count"] = terrain_grid.get("tile_count", 0);
+	metrics["town_count"] = town_records.size();
+	metrics["mine_count"] = mine_records.size();
+	metrics["guard_count"] = 0;
+	metrics["road_cell_count"] = 0;
+
+	result["ok"] = true;
+	result["status"] = "h3maped_small_clean_restart_phase_package_adoption_partial";
+	result["generation_status"] = "h3maped_small_clean_restart_phase_package_adoption_partial";
+	result["full_generation_status"] = "h3maped_small_phase_materialized_partial_roads_rewards_guards_pending";
+	result["adoption_status"] = "h3maped_terrain_town_and_mine_records_adopted_to_generated_package";
+	result["schema_id"] = "aurelion_h3maped_small_materialized_payload_v1";
+	result["schema_version"] = 1;
+	result["normalized_config"] = normalized_config;
+	result["h3maped_small_port"] = port;
+	result["selected_template_payload"] = payload;
+	result["terrain_grid"] = terrain_grid;
+	result["object_placement"] = object_placement;
+	result["object_placements"] = mine_records;
+	result["town_guard_placement"] = town_guard_placement;
+	result["town_records"] = town_records;
+	result["guard_records"] = Array();
+	result["road_network"] = Dictionary();
+	result["river_network"] = Dictionary();
+	result["route_graph"] = Dictionary();
+	result["metrics"] = metrics;
+	result["runtime_generation_allowed"] = true;
+	result["native_runtime_authoritative"] = false;
+	result["full_parity_claim"] = false;
+	result["no_authored_writeback"] = true;
+	result["extension_profile"] = extension_profile;
+	result["materialization_gap"] = "Roads, connection blockers, rewards through 0x4aa354, guard stacks, monsters, and final h3maped writeout phases remain pending.";
+	return result;
 }
 
 Dictionary generation_not_ready_result(const Dictionary &normalized_config, const Dictionary &extension_profile) {

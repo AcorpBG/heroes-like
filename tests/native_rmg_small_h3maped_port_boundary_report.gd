@@ -560,8 +560,46 @@ func _run() -> void:
 		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
-	if bool(generated.get("ok", true)) or String(generated.get("status", "")) != "h3maped_small_clean_restart_generation_not_ready":
-		_fail("Small native catalog-auto generation must be blocked until clean h3maped phase ports materialize the map: %s" % JSON.stringify(generated))
+	if not bool(generated.get("ok", false)) or String(generated.get("status", "")) != "h3maped_small_clean_restart_phase_package_adoption_partial":
+		_fail("Small native catalog-auto generation must adopt only the currently ported h3maped phases: %s" % JSON.stringify({
+			"ok": generated.get("ok", false),
+			"status": generated.get("status", ""),
+			"generation_status": generated.get("generation_status", ""),
+			"error_code": generated.get("error_code", ""),
+		}))
+		return
+	if String(generated.get("validation_status", "")) != "pass" or not bool(generated.get("no_authored_writeback", false)):
+		_fail("Materialized h3maped small payload must validate as a package document without authored writeback: %s" % JSON.stringify({
+			"validation_status": generated.get("validation_status", ""),
+			"no_authored_writeback": generated.get("no_authored_writeback", false),
+			"validation_report": generated.get("validation_report", {}),
+		}))
+		return
+	if bool(generated.get("native_runtime_authoritative", true)) or bool(generated.get("full_parity_claim", true)):
+		_fail("Partial h3maped materialization must not claim runtime authority or full parity before roads/rewards/guards are ported: %s" % JSON.stringify({
+			"native_runtime_authoritative": generated.get("native_runtime_authoritative", true),
+			"full_parity_claim": generated.get("full_parity_claim", true),
+			"full_generation_status": generated.get("full_generation_status", ""),
+		}))
+		return
+	var generated_terrain: Dictionary = generated.get("terrain_grid", {})
+	if int(generated_terrain.get("tile_count", 0)) != 36 * 36 or String(generated_terrain.get("generation_status", "")) != "h3maped_0x4a3f27_terrain_grid_materialized_from_clean_port":
+		_fail("Materialized h3maped terrain grid did not come from the clean 0x4a3f27 port: %s" % JSON.stringify({
+			"tile_count": generated_terrain.get("tile_count", 0),
+			"generation_status": generated_terrain.get("generation_status", ""),
+		}))
+		return
+	if generated.get("town_records", []).size() != 3 or generated.get("object_placements", []).size() <= 0:
+		_fail("Materialized h3maped payload did not adopt town and mine records: %s" % JSON.stringify({
+			"town_count": generated.get("town_records", []).size(),
+			"object_count": generated.get("object_placements", []).size(),
+		}))
+		return
+	if String(generated.get("road_generation_status", "")) != "pending_h3maped_road_port" or String(generated.get("guard_generation_status", "")) != "pending_h3maped_guard_port":
+		_fail("Materialized h3maped payload must keep unported road/guard phases explicit: %s" % JSON.stringify({
+			"road_generation_status": generated.get("road_generation_status", ""),
+			"guard_generation_status": generated.get("guard_generation_status", ""),
+		}))
 		return
 	var medium_config := config.duplicate(true)
 	medium_config["size"] = {"width": 72, "height": 72, "level_count": 1, "water_mode": "land", "size_class_id": "homm3_medium"}
@@ -613,6 +651,9 @@ func _run() -> void:
 		"terrain_visual_transition_cell_count": terrain_fill.get("terrain_visual_transition_cell_count", 0),
 		"terrain_visual_fallback_count": terrain_fill.get("terrain_visual_fallback_count", 0),
 		"generation_status": generated.get("status", ""),
+		"generated_validation_status": generated.get("validation_status", ""),
+		"generated_town_count": generated.get("town_records", []).size(),
+		"generated_mine_count": generated.get("object_placements", []).size(),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
 	get_tree().quit(0)
