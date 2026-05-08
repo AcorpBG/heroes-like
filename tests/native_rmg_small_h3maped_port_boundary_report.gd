@@ -230,6 +230,16 @@ func _run() -> void:
 	if int(mine_reward_placement.get("mine_minimum_helper_call_count", -1)) != 18 or int(mine_reward_placement.get("mine_minimum_helper_candidate_template_total", -1)) != 116:
 		_fail("0x4a9911 mine minimum helper call/candidate ledger drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
+	if String(mine_reward_placement.get("mine_placement_constraint_status", "")) != "0x4a9641_constraint_scan_sequence_recovered_candidate_execution_pending":
+		_fail("0x4a9641 mine placement constraint sequence was not exposed as the current physical-placement blocker: %s" % JSON.stringify(mine_reward_placement))
+		return
+	var mine_constraint: Dictionary = mine_reward_placement.get("mine_placement_constraint", {})
+	if String(mine_constraint.get("address", "")) != "0x4a9641" or String(mine_constraint.get("candidate_validity_helper_address", "")) != "0x49aa93" or String(mine_constraint.get("virtual_placement_hook", "")) != "generator_vtable+0x04":
+		_fail("0x4a9641 helper addresses drifted from recovered executable evidence: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_constraint.get("neighbor_count_cap", -1)) != 5 or int(mine_constraint.get("special_distance_min_squared", -1)) != 0x10 or int(mine_constraint.get("special_distance_floor_squared", -1)) != 0x90:
+		_fail("0x4a9641 neighbor/distance ranking constants drifted: %s" % JSON.stringify(mine_reward_placement))
+		return
 	var helper_calls: Array = mine_reward_placement.get("mine_minimum_helper_calls", [])
 	if helper_calls.size() != 18 or String(helper_calls[0].get("status", "")) != "0x4a9911_template_bucket_record_guard_handoff_ported_0x4a9641_placement_pending":
 		_fail("0x4a9911 helper calls did not expose the recovered template/record/guard handoff: %s" % JSON.stringify(mine_reward_placement))
@@ -239,6 +249,9 @@ func _run() -> void:
 		return
 	if String(helper_calls[0].get("object_record_constructor_address", "")) != "0x49ba89" or String(helper_calls[0].get("object_record_vtable_address", "")) != "0x540ab0" or String(helper_calls[0].get("placement_constraint_helper_address", "")) != "0x4a9641":
 		_fail("0x4a9911 first helper call constructor/vtable/placement helper drifted: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if String(helper_calls[0].get("placement_constraint_status", "")) != "0x4a9641_constraint_scan_sequence_recovered_candidate_execution_pending" or int(helper_calls[0].get("placement_constraint_neighbor_count_cap", -1)) != 5 or String(helper_calls[0].get("placement_constraint_virtual_hook", "")) != "generator_vtable+0x04":
+		_fail("0x4a9911 first helper call did not carry the recovered 0x4a9641 constraint boundary: %s" % JSON.stringify(mine_reward_placement))
 		return
 	if int(helper_calls[0].get("guard_base_value", -1)) != 1500 or String(helper_calls[0].get("adjacent_resource_helper_address", "")) != "0x4a9e40" or int(helper_calls[0].get("adjacent_resource_object_type_id", -1)) != 79:
 		_fail("0x4a9911 first helper call guard/adjacent resource handoff drifted: %s" % JSON.stringify(mine_reward_placement))
