@@ -80,6 +80,9 @@ func _run() -> void:
 	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_inspection_only":
 		_fail("The clean boundary did not expose h3maped 0x4a8d2c/0x4a93a2/0x49aa93 direct town/castle candidate validity prechecking: %s" % JSON.stringify(report))
 		return
+	if String(selected_payload.get("guard_reward_monster_placement_status", "")) != "0x4a9d6a_0x4aab7e_mine_and_treasure_source_fields_ported_helper_placement_pending":
+		_fail("The clean boundary did not expose recovered h3maped mine/reward source field ledgers: %s" % JSON.stringify(report))
+		return
 	var town_castle_placement: Dictionary = selected_payload.get("town_castle_placement", {})
 	if int(town_castle_placement.get("player_min_castle_total", -1)) != 4 or int(town_castle_placement.get("player_min_town_total", -1)) != 0:
 		_fail("0x4a8d2c player settlement minimum totals drifted from the selected source fields: %s" % JSON.stringify(town_castle_placement))
@@ -203,6 +206,33 @@ func _run() -> void:
 		return
 	if String(minimum_calls[3].get("direct_candidate_scan_status", "")) != "0x4a93a2_immediate_fail_owner_minus_one" or int(minimum_calls[3].get("owner_color", 0)) != -1:
 		_fail("0x4a93a2 fourth direct minimum castle call should expose the recovered owner-minus-one early-fail boundary for the unassigned player slot: %s" % JSON.stringify(town_castle_placement))
+		return
+	var mine_reward_placement: Dictionary = selected_payload.get("guard_reward_monster_placement", {})
+	if int(mine_reward_placement.get("source_zone_missing_count", -1)) != 0 or int(mine_reward_placement.get("zone_count", -1)) != 6:
+		_fail("0x4a9d6a/0x4aab7e recovered source-row binding missed selected template zones: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_reward_placement.get("mine_minimum_field_count", -1)) != 42 or int(mine_reward_placement.get("mine_density_field_count", -1)) != 42:
+		_fail("0x4a9d6a mine field ledger did not expose seven resources per active zone: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_reward_placement.get("positive_mine_minimum_field_count", -1)) != 18 or int(mine_reward_placement.get("positive_mine_density_field_count", -1)) != 18:
+		_fail("0x4a9d6a positive mine minimum/density fields drifted from recovered source rows: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_reward_placement.get("total_minimum_mine_count", -1)) != 18 or int(mine_reward_placement.get("total_mine_density_weight", -1)) != 18:
+		_fail("0x4a9d6a total mine minimum count/density weight drifted from recovered source rows: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_reward_placement.get("treasure_band_field_count", -1)) != 18 or int(mine_reward_placement.get("positive_treasure_band_count", -1)) != 18:
+		_fail("0x4aab7e treasure band field ledger did not expose three eligible bands per active zone: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_reward_placement.get("total_treasure_density_weight", -1)) != 96 or int(mine_reward_placement.get("treasure_low_below_100_count", -1)) != 0:
+		_fail("0x4aab7e treasure density/low-value eligibility drifted from recovered source rows: %s" % JSON.stringify(mine_reward_placement))
+		return
+	var mine_minimum_fields: Array = mine_reward_placement.get("mine_minimum_fields", [])
+	if mine_minimum_fields.size() != 42 or String(mine_minimum_fields[0].get("resource", "")) != "wood" or String(mine_minimum_fields[0].get("source_field_offset", "")) != "+0x4c" or int(mine_minimum_fields[0].get("count", -1)) != 1:
+		_fail("0x4a9d6a first mine minimum field drifted from source +0x4c wood semantics: %s" % JSON.stringify(mine_reward_placement))
+		return
+	var treasure_band_fields: Array = mine_reward_placement.get("treasure_band_fields", [])
+	if treasure_band_fields.size() != 18 or int(treasure_band_fields[0].get("low", -1)) != 10000 or int(treasure_band_fields[0].get("high", -1)) != 15000 or int(treasure_band_fields[0].get("density", -1)) != 1:
+		_fail("0x4aab7e first treasure band drifted from recovered low/high/density triplet: %s" % JSON.stringify(mine_reward_placement))
 		return
 	if selected_payload.get("human_capable_source_owner_indices", []) != [0, 1, 2, 3]:
 		_fail("The selected h3maped source template payload lost human-capable owner slots: %s" % JSON.stringify(report))
@@ -477,6 +507,9 @@ func _run() -> void:
 	if String(phase_ledger[5].get("status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_project_adoption_pending":
 		_fail("The phase ledger did not mark only h3maped direct town/castle candidate validity prechecking as ported for the object category phase: %s" % JSON.stringify(report))
 		return
+	if String(phase_ledger[6].get("phase_id", "")) != "guard_reward_monster_placement" or String(phase_ledger[6].get("status", "")) != "0x4a9d6a_0x4aab7e_source_field_ledgers_ported_helper_placement_pending":
+		_fail("The phase ledger did not mark h3maped mine/reward source field ledgers as ported with helper placement still pending: %s" % JSON.stringify(report))
+		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
 	if bool(generated.get("ok", true)) or String(generated.get("status", "")) != "h3maped_small_clean_restart_generation_not_ready":
@@ -497,6 +530,7 @@ func _run() -> void:
 		"assignment_status": selected_payload.get("assignment_status", ""),
 		"runtime_zone_build_status": selected_payload.get("runtime_zone_build_status", ""),
 		"object_category_placement_status": selected_payload.get("object_category_placement_status", ""),
+		"guard_reward_monster_placement_status": selected_payload.get("guard_reward_monster_placement_status", ""),
 		"minimum_settlement_call_count": town_castle_placement.get("minimum_settlement_call_count", 0),
 		"town_footprint_mask_status": town_castle_placement.get("town_footprint_mask_status", ""),
 		"town_footprint_mask_eligible_total": town_castle_placement.get("town_footprint_mask_eligible_total", 0),
@@ -509,6 +543,9 @@ func _run() -> void:
 		"project_town_writeout_generator_f44_next": town_castle_placement.get("project_town_writeout_generator_f44_next", 0),
 		"object_record_random_tie_selection_count": town_castle_placement.get("object_record_random_tie_selection_count", 0),
 		"object_record_random_tie_rng_call_count": town_castle_placement.get("object_record_random_tie_rng_call_count", 0),
+		"minimum_mine_count": mine_reward_placement.get("total_minimum_mine_count", 0),
+		"mine_density_weight": mine_reward_placement.get("total_mine_density_weight", 0),
+		"treasure_band_density_weight": mine_reward_placement.get("total_treasure_density_weight", 0),
 		"terrain_selection_status": runtime_build.get("terrain_selection_status", ""),
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),
 		"coordinate_placement_status": runtime_build.get("coordinate_placement_status", ""),
