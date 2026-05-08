@@ -6319,6 +6319,7 @@ struct H3MapedRuntimeZoneSeed {
 	String record_id;
 	int32_t source_zone_id = -1;
 	int32_t source_index = -1;
+	int32_t h3maped_zone_word_id = -1;
 	int32_t source_bucket = -1;
 	int32_t source_owner_index = -1;
 	int32_t actual_player_color = -1;
@@ -6330,6 +6331,19 @@ struct H3MapedRuntimeZoneSeed {
 	int32_t level = 0;
 	int32_t scaled_size = 0;
 };
+
+int32_t h3maped_zone_word_id_for_runtime_zone(const H3MapedRuntimeZoneSeed &zone) {
+	if (zone.h3maped_zone_word_id >= 0) {
+		return zone.h3maped_zone_word_id;
+	}
+	if (zone.source_zone_id > 0 && zone.source_index >= 0 && zone.source_zone_id == zone.source_index + 1) {
+		return zone.source_index;
+	}
+	if (zone.source_zone_id >= 0) {
+		return zone.source_zone_id;
+	}
+	return zone.source_index;
+}
 
 struct H3MapedCoordCandidate {
 	int32_t x = 0;
@@ -6993,6 +7007,7 @@ Array h3maped_runtime_zone_seed_array(const std::vector<H3MapedRuntimeZoneSeed> 
 		Dictionary runtime_zone;
 		runtime_zone["runtime_zone_index"] = zone.source_index;
 		runtime_zone["source_zone_id"] = zone.source_zone_id;
+		runtime_zone["h3maped_zone_word_id"] = h3maped_zone_word_id_for_runtime_zone(zone);
 		runtime_zone["source_zone_record_id"] = zone.record_id;
 		runtime_zone["role"] = zone.role;
 		runtime_zone["source_bucket"] = zone.source_bucket;
@@ -7433,7 +7448,7 @@ Dictionary h3maped_real_source_node_cycle_traversal_4a2777_report(
 			continue;
 		}
 		const H3MapedRuntimeZoneSeed &zone = zones[size_t(runtime_zone_index)];
-		const int32_t zone_word = zone.source_zone_id >= 0 ? zone.source_zone_id : runtime_zone_index;
+		const int32_t zone_word = h3maped_zone_word_id_for_runtime_zone(zone);
 		const int32_t level = zone.level;
 		const bool flagged_branch = runtime_zone_index < int32_t(zones.size()) && !(level_count == 2 && level != 1);
 		const int32_t random_span_limit = std::max<int32_t>(1, zone.scaled_size > 0 ? zone.scaled_size : zone.source_base_size);
@@ -8691,7 +8706,7 @@ Dictionary h3maped_project_grid_materialization_report_4a325d(
 	std::map<int32_t, const H3MapedRuntimeZoneSeed *> zone_by_word;
 	std::map<int32_t, String> terrain_by_word;
 	for (const H3MapedRuntimeZoneSeed &zone : zones) {
-		const int32_t zone_word = zone.source_zone_id >= 0 ? zone.source_zone_id : zone.source_index;
+		const int32_t zone_word = h3maped_zone_word_id_for_runtime_zone(zone);
 		zone_by_word[zone_word] = &zone;
 		terrain_by_word[zone_word] = h3maped_project_terrain_for_runtime_zone(zone, normalized);
 	}
@@ -8750,7 +8765,7 @@ Dictionary h3maped_project_grid_materialization_report_4a325d(
 
 	Array zone_reports;
 	for (const H3MapedRuntimeZoneSeed &zone : zones) {
-		const int32_t zone_word = zone.source_zone_id >= 0 ? zone.source_zone_id : zone.source_index;
+		const int32_t zone_word = h3maped_zone_word_id_for_runtime_zone(zone);
 		Dictionary zone_report;
 		zone_report["runtime_zone_index"] = zone.source_index;
 		zone_report["source_zone_record_id"] = zone.record_id;
@@ -8783,8 +8798,8 @@ Dictionary h3maped_terrain_phase_4a3f27_report(
 		const std::vector<uint32_t> &zone_words,
 		const std::vector<uint8_t> &cell_flags) {
 	Dictionary report;
-	report["status"] = "0x4a3f27_schedule_ported_owner_byte_basis_blocked";
-	report["source"] = "h3maped 0x4a3f27 terrain fill/repaint schedule from disassembly; report-only because current 0x4a325d owner bytes are source-zone ids while the repaint loop compares against runtime-zone indices";
+	report["status"] = "0x4a3f27_schedule_ported_owner_byte_basis_resolved_terrain_adoption_pending";
+	report["source"] = "h3maped 0x4a3f27 terrain fill/repaint schedule from disassembly; report-only because TerrainPlacement art/index/flip adoption is not ported yet";
 	report["function_address"] = "0x4a3f27";
 	report["prepass_helper_address"] = "0x4a2105";
 	report["runtime_zone_recenter_helper_address"] = "0x4a2ffa";
@@ -8794,7 +8809,7 @@ Dictionary h3maped_terrain_phase_4a3f27_report(
 	report["terrain_placement_destructor_address"] = "0x4bd077";
 	report["terrain_adapter_vtable"] = "0x540a14";
 	report["generated_cell_stride_bytes"] = 0x30;
-	report["owner_byte_source"] = "cell+0x20 bits 16..23";
+	report["owner_byte_source"] = "cell+0x20 bits 16..23; h3maped writes source_zone[0], adapted here as the executable/runtime zero-based zone word id rather than the translated one-based catalog source_zone_id";
 	report["zone_repaint_member_bit"] = "cell+0x28 bit 28 / cell+0x2b bit 0x10";
 	report["runtime_repaint_compare"] = "0x4a4142..0x4a4163 compares signed owner byte to runtime-zone loop index";
 	report["project_runtime_adoption_status"] = "report_only_not_runtime_generation";
@@ -8854,11 +8869,12 @@ Dictionary h3maped_terrain_phase_4a3f27_report(
 	for (const H3MapedRuntimeZoneSeed &zone : zones) {
 		const int32_t source_zone_id = zone.source_zone_id >= 0 ? zone.source_zone_id : zone.source_index;
 		const int32_t runtime_index = zone.source_index;
-		const H3MapedTerrainCellStats source_stats = stats_by_zone_word[source_zone_id];
+		const int32_t h3maped_zone_word_id = h3maped_zone_word_id_for_runtime_zone(zone);
+		const H3MapedTerrainCellStats source_stats = stats_by_zone_word[h3maped_zone_word_id];
 		const H3MapedTerrainCellStats runtime_stats = stats_by_zone_word[runtime_index];
 		source_zone_repaint_member_cell_count += source_stats.repaint_member_count;
 		runtime_index_repaint_member_cell_count += runtime_stats.repaint_member_count;
-		if (source_zone_id != runtime_index) {
+		if (h3maped_zone_word_id != runtime_index) {
 			owner_basis_mismatch_count += 1;
 		}
 		const String project_terrain = h3maped_project_terrain_for_runtime_zone(zone, normalized);
@@ -8867,7 +8883,9 @@ Dictionary h3maped_terrain_phase_4a3f27_report(
 		zone_report["runtime_zone_index"] = runtime_index;
 		zone_report["source_zone_record_id"] = zone.record_id;
 		zone_report["source_zone_id"] = source_zone_id;
-		zone_report["owner_byte_basis_matches_runtime_index"] = source_zone_id == runtime_index;
+		zone_report["h3maped_zone_word_id"] = h3maped_zone_word_id;
+		zone_report["translated_source_zone_id"] = source_zone_id;
+		zone_report["owner_byte_basis_matches_runtime_index"] = h3maped_zone_word_id == runtime_index;
 		zone_report["source_zone_owner_cell_count"] = source_stats.cell_count;
 		zone_report["source_zone_repaint_member_cell_count"] = source_stats.repaint_member_count;
 		zone_report["runtime_index_repaint_member_cell_count"] = runtime_stats.repaint_member_count;
@@ -9028,7 +9046,7 @@ Dictionary h3maped_second_footprint_helper_4a325d_report(
 		zone_report["seed_x"] = zone.x;
 		zone_report["seed_y"] = zone.y;
 		zone_report["seed_level"] = zone.level;
-		const int32_t zone_word = zone.source_zone_id >= 0 ? zone.source_zone_id : zone.source_index;
+		const int32_t zone_word = h3maped_zone_word_id_for_runtime_zone(zone);
 		zone_report["zone_word_id"] = zone_word;
 		H3MapedSpanRecord real_seed;
 		real_seed.x = zone.x;
@@ -9583,6 +9601,7 @@ Dictionary h3maped_runtime_zone_seed_report(const Array &active_zones, const Arr
 		runtime_zone.record_id = zone_id;
 		runtime_zone.source_zone_id = int32_t(zone.get("source_zone_id", -1));
 		runtime_zone.source_index = int32_t(runtime_zone_models.size());
+		runtime_zone.h3maped_zone_word_id = runtime_zone.source_index;
 		runtime_zone.role = String(zone.get("role", zone.get("type", "")));
 		Dictionary grammar_source = zone.get("grammar_source", Dictionary());
 		runtime_zone.source_bucket = int32_t(grammar_source.get("source_bucket", -1));
