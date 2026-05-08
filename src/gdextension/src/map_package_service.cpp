@@ -6680,6 +6680,74 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 	return report;
 }
 
+Dictionary h3maped_second_footprint_helper_4a325d_report() {
+	Dictionary report;
+	report["status"] = "0x4a325d_disassembled_cell_span_fill_blocked";
+	report["source"] = "h3maped 0x4a325d footprint cell-span fill helper; executable behavior recovered, project materialization still blocked on exact polygon/list and cell-buffer layout";
+	report["function_address"] = "0x4a325d";
+	report["call_site_address"] = "0x4a3ee8..0x4a3eef";
+	report["polygon_locator_address"] = "0x4cca55";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["span_vector_push_address"] = "0x4ae1fd";
+	report["span_vector_pop_address"] = "0x4ae23e";
+	report["per_zone_order_helper_address"] = "0x4a3554";
+	report["map_cell_stride_bytes"] = 0x30;
+	report["unassigned_zone_word_sentinel"] = "0x00ff0000";
+	report["map_cell_zone_word_mask"] = "cell+0x20 & 0x00ff0000";
+	report["map_cell_reserved_flag"] = "cell+0x2b |= 0x10";
+	Array recovered_operations;
+	recovered_operations.append("copies a runtime zone source rectangle from runtime_zone+0x10 and validates or relocates an initial fill point inside map bounds");
+	recovered_operations.append("uses source polygon/list nodes to choose an in-bounds seed point with maximum clearance when the copied point is out of bounds");
+	recovered_operations.append("pushes 12-byte candidate span records, then repeatedly pops the last span record for processing");
+	recovered_operations.append("walks horizontally over contiguous cells whose zone word is the unassigned 0x00ff0000 sentinel");
+	recovered_operations.append("writes the current runtime zone id into cell+0x20 while preserving the non-zone bits");
+	recovered_operations.append("marks reserved/passability state through cell+0x2b unless the executable two-level special case suppresses it");
+	recovered_operations.append("detects unassigned runs above and below each filled row and pushes them as follow-up spans");
+	recovered_operations.append("updates per-zone short ordering/depth vectors through helper 0x4a3554 after fill preparation");
+	report["recovered_operations"] = recovered_operations;
+	Array missing_layout;
+	missing_layout.append("12-byte span record field meanings beyond copied x/y/level rectangle values");
+	missing_layout.append("source polygon/list traversal payload used by 0x4cca55 and the 0x4a325d seed relocation loop");
+	missing_layout.append("exact project equivalent for h3maped 0x00ff0000 unassigned zone-word cells");
+	missing_layout.append("exact interaction between zone-word writes and this project's terrain/object occupancy buffers");
+	report["missing_runtime_layout"] = missing_layout;
+	report["materialized_cell_count"] = 0;
+	report["blocked_next"] = "recover the source polygon/span records and map-cell zone-word representation before executing the 0x4a325d fill";
+	return report;
+}
+
+Dictionary h3maped_final_footprint_helper_4a3710_report() {
+	Dictionary report;
+	report["status"] = "0x4a3710_disassembled_adjacency_finalizer_blocked";
+	report["source"] = "h3maped 0x4a3710 footprint adjacency finalizer; executable behavior recovered, project materialization still blocked on exact runtime adjacency/vector layout";
+	report["function_address"] = "0x4a3710";
+	report["call_site_address"] = "0x4a3efc..0x4a3f05";
+	report["polygon_locator_address"] = "0x4cca55";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["zone_order_reset_address"] = "0x49b61b";
+	report["per_zone_order_helper_address"] = "0x4a3554";
+	report["adjacency_vector_offset"] = "runtime_zone+0xc4";
+	report["ordering_vector_offset"] = "runtime_zone+0x3e8";
+	Array recovered_operations;
+	recovered_operations.append("iterates runtime zones at generator+0x10e4 from the level's original collected count to the current runtime-zone count");
+	recovered_operations.append("finds the source polygon/list node containing each runtime zone rectangle origin through 0x4cca55");
+	recovered_operations.append("compares same-level runtime zone rectangles and searches source adjacency/list nodes for matching neighbor references");
+	recovered_operations.append("clips candidate source edges through 0x4a2b33 and rejects endpoints outside the map bounds");
+	recovered_operations.append("adds bidirectional adjacency records into runtime_zone+0xc4 vectors through vector insert 0x4ae166");
+	recovered_operations.append("resets each runtime zone ordering vector with 0x49b61b, then rebuilds per-zone ordering/depth state with 0x4a3554");
+	recovered_operations.append("uses runtime_zone+0x3e8 short order values to avoid adding adjacency before existing earlier links are ordered");
+	report["recovered_operations"] = recovered_operations;
+	Array missing_layout;
+	missing_layout.append("runtime_zone+0xc4 adjacency record schema written by 0x4ae166");
+	missing_layout.append("runtime_zone+0x3e8 short ordering vector semantics used for link ordering");
+	missing_layout.append("source polygon/list node fields at +0x0c/+0x10/+0x14 and nested +0x08 references");
+	missing_layout.append("project-side representation for finalized physical zone links and guarded pass points");
+	report["missing_runtime_layout"] = missing_layout;
+	report["materialized_adjacency_count"] = 0;
+	report["blocked_next"] = "recover adjacency record and ordering-vector schemas before translating 0x4a3710 output into project zone links";
+	return report;
+}
+
 Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
 	Dictionary report;
 	report["status"] = "0x4a3a03_level_collection_ported_helpers_blocked";
@@ -6738,6 +6806,8 @@ Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3Maped
 	report["synthetic_source_zone_size"] = "0xd4";
 	report["synthetic_source_zone_defaults"] = synthetic_defaults;
 	report["first_helper_evidence"] = h3maped_first_footprint_helper_4a2777_report(zones);
+	report["second_helper_evidence"] = h3maped_second_footprint_helper_4a325d_report();
+	report["finalizer_evidence"] = h3maped_final_footprint_helper_4a3710_report();
 	return report;
 }
 

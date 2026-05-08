@@ -151,6 +151,20 @@ func _run() -> void:
 	if first_helper.get("recovered_operations", []).size() < 6 or first_helper.get("missing_runtime_layout", []).size() < 4:
 		_fail("The h3maped 0x4a2777 helper report does not distinguish recovered behavior from missing runtime layout: %s" % JSON.stringify(report))
 		return
+	var second_helper: Dictionary = level_footprint_phase.get("second_helper_evidence", {})
+	if String(second_helper.get("status", "")) != "0x4a325d_disassembled_cell_span_fill_blocked":
+		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed as the concrete next runtime-layout blocker: %s" % JSON.stringify(report))
+		return
+	if String(second_helper.get("unassigned_zone_word_sentinel", "")) != "0x00ff0000" or int(second_helper.get("materialized_cell_count", -1)) != 0:
+		_fail("The h3maped 0x4a325d helper report must expose the unassigned cell sentinel without faking filled cells: %s" % JSON.stringify(report))
+		return
+	var finalizer: Dictionary = level_footprint_phase.get("finalizer_evidence", {})
+	if String(finalizer.get("status", "")) != "0x4a3710_disassembled_adjacency_finalizer_blocked":
+		_fail("The h3maped 0x4a3710 adjacency finalizer evidence was not exposed as the concrete next runtime-layout blocker: %s" % JSON.stringify(report))
+		return
+	if String(finalizer.get("adjacency_vector_offset", "")) != "runtime_zone+0xc4" or int(finalizer.get("materialized_adjacency_count", -1)) != 0:
+		_fail("The h3maped 0x4a3710 finalizer report must expose adjacency vectors without faking finalized links: %s" % JSON.stringify(report))
+		return
 	var phase_sequence: Array = selected_payload.get("phase_sequence", [])
 	if phase_sequence.size() != 15 or String(selected_payload.get("phase_sequence_status", "")) != "assignment_and_runtime_zone_seed_ported_remaining_phases_documented_not_executed":
 		_fail("The selected h3maped payload did not report the recovered 0x4ac552 phase sequence boundary: %s" % JSON.stringify(report))
@@ -210,6 +224,8 @@ func _run() -> void:
 		"coordinate_step_count": coordinate_seed.get("placement_step_count", 0),
 		"level_footprint_phase_status": runtime_zone_seed.get("level_footprint_phase_status", ""),
 		"first_helper_status": first_helper.get("status", ""),
+		"second_helper_status": second_helper.get("status", ""),
+		"finalizer_status": finalizer.get("status", ""),
 		"phase_count": phase_sequence.size(),
 		"generation_status": generated.get("status", ""),
 		"unsupported_scope_status": medium_report.get("status", ""),
