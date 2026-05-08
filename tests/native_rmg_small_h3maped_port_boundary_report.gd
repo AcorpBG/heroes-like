@@ -80,7 +80,7 @@ func _run() -> void:
 	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_inspection_only":
 		_fail("The clean boundary did not expose h3maped 0x4a8d2c/0x4a93a2/0x49aa93 direct town/castle candidate validity prechecking: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("guard_reward_monster_placement_status", "")) != "0x4a9d6a_0x4aab7e_mine_and_treasure_source_fields_ported_helper_placement_pending":
+	if String(selected_payload.get("guard_reward_monster_placement_status", "")) != "0x4a9d6a_0x4a9911_0x4aab7e_mine_template_and_treasure_ledgers_ported_placement_pending":
 		_fail("The clean boundary did not expose recovered h3maped mine/reward source field ledgers: %s" % JSON.stringify(report))
 		return
 	var town_castle_placement: Dictionary = selected_payload.get("town_castle_placement", {})
@@ -219,6 +219,29 @@ func _run() -> void:
 		return
 	if int(mine_reward_placement.get("total_minimum_mine_count", -1)) != 18 or int(mine_reward_placement.get("total_mine_density_weight", -1)) != 18:
 		_fail("0x4a9d6a total mine minimum count/density weight drifted from recovered source rows: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_reward_placement.get("mine_template_row_count", -1)) != 46 or int(mine_reward_placement.get("adjacent_resource_template_row_count", -1)) != 7:
+		_fail("0x4a9911/0x4a9e40 object template bucket row counts drifted from recovered objects.txt: %s" % JSON.stringify(mine_reward_placement))
+		return
+	var mine_template_counts: Dictionary = mine_reward_placement.get("mine_template_counts_by_subtype", {})
+	if int(mine_template_counts.get("0", -1)) != 6 or int(mine_template_counts.get("2", -1)) != 8 or int(mine_template_counts.get("4", -1)) != 9 or int(mine_template_counts.get("6", -1)) != 9:
+		_fail("0x4a9911 mine template subtype counts drifted from objects.txt type 53: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(mine_reward_placement.get("mine_minimum_helper_call_count", -1)) != 18 or int(mine_reward_placement.get("mine_minimum_helper_candidate_template_total", -1)) != 116:
+		_fail("0x4a9911 mine minimum helper call/candidate ledger drifted: %s" % JSON.stringify(mine_reward_placement))
+		return
+	var helper_calls: Array = mine_reward_placement.get("mine_minimum_helper_calls", [])
+	if helper_calls.size() != 18 or String(helper_calls[0].get("status", "")) != "0x4a9911_template_bucket_record_guard_handoff_ported_0x4a9641_placement_pending":
+		_fail("0x4a9911 helper calls did not expose the recovered template/record/guard handoff: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if String(helper_calls[0].get("resource", "")) != "wood" or int(helper_calls[0].get("matched_template_candidate_count_before_terrain_filter", -1)) != 6 or int(helper_calls[0].get("object_record_size_bytes", -1)) != 0x1c:
+		_fail("0x4a9911 first helper call did not preserve wood mine template/record semantics: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if String(helper_calls[0].get("object_record_constructor_address", "")) != "0x49ba89" or String(helper_calls[0].get("object_record_vtable_address", "")) != "0x540ab0" or String(helper_calls[0].get("placement_constraint_helper_address", "")) != "0x4a9641":
+		_fail("0x4a9911 first helper call constructor/vtable/placement helper drifted: %s" % JSON.stringify(mine_reward_placement))
+		return
+	if int(helper_calls[0].get("guard_base_value", -1)) != 1500 or String(helper_calls[0].get("adjacent_resource_helper_address", "")) != "0x4a9e40" or int(helper_calls[0].get("adjacent_resource_object_type_id", -1)) != 79:
+		_fail("0x4a9911 first helper call guard/adjacent resource handoff drifted: %s" % JSON.stringify(mine_reward_placement))
 		return
 	if int(mine_reward_placement.get("treasure_band_field_count", -1)) != 18 or int(mine_reward_placement.get("positive_treasure_band_count", -1)) != 18:
 		_fail("0x4aab7e treasure band field ledger did not expose three eligible bands per active zone: %s" % JSON.stringify(mine_reward_placement))
@@ -507,7 +530,7 @@ func _run() -> void:
 	if String(phase_ledger[5].get("status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_project_adoption_pending":
 		_fail("The phase ledger did not mark only h3maped direct town/castle candidate validity prechecking as ported for the object category phase: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[6].get("phase_id", "")) != "guard_reward_monster_placement" or String(phase_ledger[6].get("status", "")) != "0x4a9d6a_0x4aab7e_source_field_ledgers_ported_helper_placement_pending":
+	if String(phase_ledger[6].get("phase_id", "")) != "guard_reward_monster_placement" or String(phase_ledger[6].get("status", "")) != "0x4a9d6a_0x4a9911_0x4aab7e_template_ledgers_ported_helper_placement_pending":
 		_fail("The phase ledger did not mark h3maped mine/reward source field ledgers as ported with helper placement still pending: %s" % JSON.stringify(report))
 		return
 
@@ -545,6 +568,8 @@ func _run() -> void:
 		"object_record_random_tie_rng_call_count": town_castle_placement.get("object_record_random_tie_rng_call_count", 0),
 		"minimum_mine_count": mine_reward_placement.get("total_minimum_mine_count", 0),
 		"mine_density_weight": mine_reward_placement.get("total_mine_density_weight", 0),
+		"mine_template_row_count": mine_reward_placement.get("mine_template_row_count", 0),
+		"mine_minimum_helper_call_count": mine_reward_placement.get("mine_minimum_helper_call_count", 0),
 		"treasure_band_density_weight": mine_reward_placement.get("total_treasure_density_weight", 0),
 		"terrain_selection_status": runtime_build.get("terrain_selection_status", ""),
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),

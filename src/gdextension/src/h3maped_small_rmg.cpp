@@ -34,6 +34,8 @@ constexpr int32_t H3_OBJECT_METADATA_ENTRY_COUNT = 232;
 constexpr int32_t H3_OBJECT_METADATA_ENTRY_SIZE = 0x10;
 constexpr int32_t H3_OBJECT_METADATA_POINTER_ADDRESS = 0x57c648;
 constexpr int32_t H3_OBJECT_METADATA_RUNTIME_ADDRESS = 0x598300;
+constexpr int32_t H3_MINE_TYPE_ID = 53;
+constexpr int32_t H3_RESOURCE_TYPE_ID = 79;
 constexpr int32_t H3_RANDOM_TOWN_TYPE_ID = 77;
 constexpr int32_t H3_TOWN_TYPE_ID = 98;
 
@@ -617,6 +619,54 @@ Array h3_mask_points_to_array(const std::vector<H3MaskPoint> &points) {
 		result.append(record);
 	}
 	return result;
+}
+
+std::vector<H3ObjectRow> h3_object_rows_by_type(int32_t wanted_type_id) {
+	std::vector<H3ObjectRow> rows;
+	std::ifstream input(H3_OBJECTS_PATH);
+	if (!input.is_open()) {
+		return rows;
+	}
+	std::string line;
+	int32_t source_line = 0;
+	if (std::getline(input, line)) {
+		source_line = 1;
+	}
+	while (std::getline(input, line)) {
+		source_line += 1;
+		if (line.empty()) {
+			continue;
+		}
+		std::stringstream row_stream(line);
+		std::string def_name;
+		std::string passability_mask;
+		std::string action_mask;
+		std::string terrain_mask_primary;
+		std::string terrain_mask_secondary;
+		int32_t type_id = -1;
+		int32_t subtype_id = -1;
+		int32_t group_id = -1;
+		int32_t final_flag = 0;
+		if (!(row_stream >> def_name >> passability_mask >> action_mask >> terrain_mask_primary >> terrain_mask_secondary >> type_id >> subtype_id >> group_id >> final_flag)) {
+			continue;
+		}
+		if (type_id != wanted_type_id) {
+			continue;
+		}
+		H3ObjectRow row;
+		row.source_line = source_line;
+		row.def_name = String(def_name.c_str());
+		row.passability_mask = String(passability_mask.c_str());
+		row.action_mask = String(action_mask.c_str());
+		row.terrain_mask_primary = String(terrain_mask_primary.c_str());
+		row.terrain_mask_secondary = String(terrain_mask_secondary.c_str());
+		row.type_id = type_id;
+		row.subtype_id = subtype_id;
+		row.group_id = group_id;
+		row.final_flag = final_flag;
+		rows.push_back(row);
+	}
+	return rows;
 }
 
 Dictionary h3maped_object_metadata_table_report() {
@@ -4632,19 +4682,39 @@ int32_t dictionary_int(const Dictionary &dictionary, const String &key) {
 	return int32_t(dictionary.get(key, 0));
 }
 
+int32_t mine_guard_base_value(int32_t subtype) {
+	if (subtype == 0 || subtype == 2) {
+		return 1500;
+	}
+	if (subtype == 6) {
+		return 7000;
+	}
+	return 3500;
+}
+
 Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones, int32_t source_catalog_index) {
 	Dictionary report;
-	report["status"] = "0x4a9d6a_0x4aab7e_mine_and_treasure_source_fields_ported_helper_placement_pending";
-	report["source"] = "h3maped phase 7 0x4a9d6a mine minimum/density fields and phase 10 0x4aab7e treasure-band triplets rebound from recovered rmg-template-catalog source rows; 0x4a9911/0x4a9c7c/0x4aa354 physical placement remains pending";
+	report["status"] = "0x4a9d6a_0x4a9911_0x4aab7e_mine_template_and_treasure_ledgers_ported_placement_pending";
+	report["source"] = "h3maped phase 7 0x4a9d6a mine minimum/density fields, 0x4a9911 mine template bucket selection/record/guard handoff, and phase 10 0x4aab7e treasure-band triplets rebound from recovered rmg-template-catalog and objects.txt source rows; 0x4a9641/0x4aa354 physical placement remains pending";
 	report["mine_phase_address"] = "0x4a9d6a";
 	report["mine_minimum_helper_address"] = "0x4a9911";
 	report["mine_density_scheduler_address"] = "0x4a9c7c";
+	report["mine_record_constructor_address"] = "0x49ba89";
+	report["mine_object_record_size_bytes"] = 0x1c;
+	report["mine_object_record_vtable_address"] = "0x540ab0";
+	report["mine_placement_constraint_helper_address"] = "0x4a9641";
+	report["mine_guard_adjustment_helpers"] = "0x4a960a -> 0x4a65a5";
+	report["mine_adjacent_resource_helper_address"] = "0x4a9e40";
 	report["treasure_phase_address"] = "0x4aab7e";
 	report["treasure_helper_address"] = "0x4aa354";
 	report["source_catalog_path"] = CATALOG_SOURCE_PATH;
 	report["source_catalog_index_zero_based"] = source_catalog_index;
 	report["source_binding_status"] = "recovered_source_rows_bound_by_grammar_source_row";
 	report["adapted_catalog_gap"] = "adapted project catalog currently omits mine/reward fields, so this phase must read recovered source rows until the import is repaired";
+	report["mine_template_bucket_status"] = "0x4a9911_generator_plus_0x388_0x38c_bucket_bound_to_objects_txt_type_53_inspection_only";
+	report["mine_template_bucket_offset"] = "generator+0x388..+0x38c";
+	report["mine_template_subtype_filter_offset"] = "candidate_template_metadata+0x20";
+	report["mine_template_terrain_filter_status"] = "0x42cc99_runtime_terrain_bitset_filter_recorded_template_wrapper_execution_pending";
 
 	struct MineField {
 		const char *resource;
@@ -4661,6 +4731,27 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 		{ "gems", 5, "+0x60", "+0x7c" },
 		{ "gold", 6, "+0x64", "+0x80" },
 	};
+	std::vector<H3ObjectRow> mine_template_rows = h3_object_rows_by_type(H3_MINE_TYPE_ID);
+	std::vector<H3ObjectRow> adjacent_resource_rows = h3_object_rows_by_type(H3_RESOURCE_TYPE_ID);
+	Dictionary mine_template_counts_by_subtype;
+	for (const H3ObjectRow &row : mine_template_rows) {
+		const String key = String::num_int64(row.subtype_id);
+		mine_template_counts_by_subtype[key] = int32_t(mine_template_counts_by_subtype.get(key, 0)) + 1;
+	}
+	Dictionary adjacent_resource_counts_by_subtype;
+	for (const H3ObjectRow &row : adjacent_resource_rows) {
+		const String key = String::num_int64(row.subtype_id);
+		adjacent_resource_counts_by_subtype[key] = int32_t(adjacent_resource_counts_by_subtype.get(key, 0)) + 1;
+	}
+	report["mine_object_type_id"] = H3_MINE_TYPE_ID;
+	report["mine_object_type_name"] = object_type_name_from_names_file(H3_MINE_TYPE_ID);
+	report["mine_template_row_count"] = int32_t(mine_template_rows.size());
+	report["mine_template_counts_by_subtype"] = mine_template_counts_by_subtype;
+	report["mine_template_rows_preview"] = h3_object_rows_to_array(mine_template_rows);
+	report["adjacent_resource_object_type_id"] = H3_RESOURCE_TYPE_ID;
+	report["adjacent_resource_object_type_name"] = object_type_name_from_names_file(H3_RESOURCE_TYPE_ID);
+	report["adjacent_resource_template_row_count"] = int32_t(adjacent_resource_rows.size());
+	report["adjacent_resource_counts_by_subtype"] = adjacent_resource_counts_by_subtype;
 	const char *band_low_offsets[] = { "+0xa0", "+0xac", "+0xb8" };
 	const char *band_high_offsets[] = { "+0xa4", "+0xb0", "+0xbc" };
 	const char *band_density_offsets[] = { "+0xa8", "+0xb4", "+0xc0" };
@@ -4668,6 +4759,7 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	Array zone_reports;
 	Array mine_minimum_fields;
 	Array mine_density_fields;
+	Array mine_minimum_helper_calls;
 	Array treasure_band_fields;
 	int32_t source_zone_missing_count = 0;
 	int32_t mine_minimum_field_count = 0;
@@ -4676,6 +4768,7 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	int32_t positive_mine_density_field_count = 0;
 	int32_t total_minimum_mine_count = 0;
 	int32_t total_mine_density_weight = 0;
+	int32_t mine_minimum_helper_candidate_template_total = 0;
 	int32_t treasure_band_field_count = 0;
 	int32_t positive_treasure_band_count = 0;
 	int32_t total_treasure_density_weight = 0;
@@ -4733,6 +4826,35 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 			minimum_record["helper_address"] = "0x4a9911";
 			minimum_record["placement_status"] = minimum_count > 0 ? String("pending_0x4a9911_mine_object_template_selection_and_0x4a9641_placement") : String("skipped_zero_minimum");
 			mine_minimum_fields.append(minimum_record);
+			for (int32_t ordinal = 0; ordinal < minimum_count; ++ordinal) {
+				const int32_t matching_template_count = int32_t(mine_template_counts_by_subtype.get(String::num_int64(field.subtype), 0));
+				mine_minimum_helper_candidate_template_total += matching_template_count;
+				Dictionary helper_call;
+				helper_call["phase"] = "0x4a9911_mine_minimum_helper";
+				helper_call["runtime_zone_index"] = int32_t(index);
+				helper_call["source_row"] = zone_report.get("source_row", -1);
+				helper_call["resource"] = field.resource;
+				helper_call["mine_subtype"] = field.subtype;
+				helper_call["ordinal"] = ordinal;
+				helper_call["generator_template_bucket_offset"] = "generator+0x388..+0x38c";
+				helper_call["candidate_subtype_filter_offset"] = "candidate_template_metadata+0x20";
+				helper_call["matched_template_candidate_count_before_terrain_filter"] = matching_template_count;
+				helper_call["terrain_filter_status"] = "0x42cc99_runtime_terrain_bitset_filter_recorded_template_wrapper_execution_pending";
+				helper_call["selection_rng_function_address"] = "0x4e7276";
+				helper_call["object_record_size_bytes"] = 0x1c;
+				helper_call["object_record_constructor_address"] = "0x49ba89";
+				helper_call["object_record_vtable_address"] = "0x540ab0";
+				helper_call["placement_constraint_helper_address"] = "0x4a9641";
+				helper_call["guard_base_value"] = mine_guard_base_value(field.subtype);
+				helper_call["guard_adjustment_helpers"] = "0x4a960a -> 0x4a65a5";
+				helper_call["adjacent_resource_helper_address"] = "0x4a9e40";
+				helper_call["adjacent_resource_object_type_id"] = H3_RESOURCE_TYPE_ID;
+				helper_call["adjacent_resource_subtype"] = field.subtype;
+				helper_call["status"] = matching_template_count > 0
+						? String("0x4a9911_template_bucket_record_guard_handoff_ported_0x4a9641_placement_pending")
+						: String("blocked_no_matching_mine_template_rows");
+				mine_minimum_helper_calls.append(helper_call);
+			}
 
 			Dictionary density_record;
 			density_record["phase"] = "0x4a9c7c_mine_density";
@@ -4797,6 +4919,11 @@ Dictionary mine_reward_placement_4a9d6a_4aab7e_report(const Array &active_zones,
 	report["total_mine_density_weight"] = total_mine_density_weight;
 	report["mine_minimum_fields"] = mine_minimum_fields;
 	report["mine_density_fields"] = mine_density_fields;
+	report["mine_minimum_helper_call_count"] = mine_minimum_helper_calls.size();
+	report["mine_minimum_helper_candidate_template_total"] = mine_minimum_helper_candidate_template_total;
+	report["mine_minimum_helper_calls"] = mine_minimum_helper_calls;
+	report["mine_density_scheduler_zone_call_count"] = zone_reports.size() - source_zone_missing_count;
+	report["mine_density_scheduler_status"] = "0x4a9c7c_positive_weight_schedule_recorded_actual_iterations_pending";
 	report["treasure_band_field_count"] = treasure_band_field_count;
 	report["positive_treasure_band_count"] = positive_treasure_band_count;
 	report["total_treasure_density_weight"] = total_treasure_density_weight;
@@ -4929,7 +5056,7 @@ Array clean_phase_ledger() {
 		{ "zone_footprint_placement", "0x4a3a03, 0x4cc788, 0x4cca55, 0x4ccb64, 0x4ccdfc, 0x4a2777, 0x4a325d, 0x4a3710", "ported_0x4a3710_small_land_footprint_helpers_and_terrain_visual_inspection_only" },
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "ported_schedule_and_visual_normalization_inspection_only" },
 		{ "object_category_placement", "0x4a8d2c, 0x4a93a2, 0x49a1d8, 0x49aa93, 0x49a6f9, 0x49a09c, 0x4a8db2, 0x4a8c15", "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_project_adoption_pending" },
-		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4aab7e", "0x4a9d6a_0x4aab7e_source_field_ledgers_ported_helper_placement_pending" },
+		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4a9911, 0x4a9c7c, 0x4aab7e", "0x4a9d6a_0x4a9911_0x4aab7e_template_ledgers_ported_helper_placement_pending" },
 		{ "final_cell_object_passes", "0x49eb8d, 0x4ab52a, 0x4ac4ae", "pending_clean_port" },
 	};
 	for (const Phase &phase : PHASES) {
