@@ -139,8 +139,8 @@ func _run() -> void:
 		_fail("The h3maped 0x4a3a03 helper trio was not reported as the concrete next blocker: %s" % JSON.stringify(report))
 		return
 	var first_helper: Dictionary = level_footprint_phase.get("first_helper_evidence", {})
-	if String(first_helper.get("status", "")) != "0x4a2777_disassembled_runtime_layout_blocked":
-		_fail("The h3maped 0x4a2777 footprint helper evidence was not exposed as the concrete next runtime-layout blocker: %s" % JSON.stringify(report))
+	if String(first_helper.get("status", "")) != "0x4a2777_disassembled_4a261a_line_writer_ported_runtime_layout_blocked":
+		_fail("The h3maped 0x4a2777 footprint helper evidence was not exposed with the ported 0x4a261a line-writer boundary: %s" % JSON.stringify(report))
 		return
 	if String(first_helper.get("clip_helper_address", "")) != "0x4a2b33" or String(first_helper.get("line_cell_writer_address", "")) != "0x4a261a":
 		_fail("The h3maped 0x4a2777 helper lost its executable-backed clipping/cell-writer addresses: %s" % JSON.stringify(report))
@@ -151,6 +151,24 @@ func _run() -> void:
 	if first_helper.get("recovered_operations", []).size() < 6 or first_helper.get("missing_runtime_layout", []).size() < 4:
 		_fail("The h3maped 0x4a2777 helper report does not distinguish recovered behavior from missing runtime layout: %s" % JSON.stringify(report))
 		return
+	if String(first_helper.get("line_writer_status", "")) != "0x4a261a_cell_line_writer_ported":
+		_fail("The h3maped 0x4a2777 helper did not expose the ported 0x4a261a line writer: %s" % JSON.stringify(report))
+		return
+	var line_writer: Dictionary = first_helper.get("line_writer_evidence", {})
+	if String(line_writer.get("status", "")) != "0x4a261a_cell_line_writer_ported":
+		_fail("The h3maped 0x4a261a line-writer report did not run: %s" % JSON.stringify(report))
+		return
+	if int(line_writer.get("sample_line_count", -1)) != 5:
+		_fail("The h3maped 0x4a261a line-writer report lost sample coverage: %s" % JSON.stringify(report))
+		return
+	var sample_lines: Array = line_writer.get("sample_lines", [])
+	for sample in sample_lines:
+		if not sample is Dictionary:
+			_fail("The h3maped 0x4a261a sample line report was malformed: %s" % JSON.stringify(report))
+			return
+		if int(sample.get("trace_write_count", 0)) <= 0 or int(sample.get("unique_cell_count", 0)) <= 0 or int(sample.get("out_of_bounds_write_count", -1)) != 0:
+			_fail("The h3maped 0x4a261a sample line did not materialize in-bounds cells: %s" % JSON.stringify(report))
+			return
 	var second_helper: Dictionary = level_footprint_phase.get("second_helper_evidence", {})
 	if String(second_helper.get("status", "")) != "0x4a325d_disassembled_cell_span_fill_blocked":
 		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed as the concrete next runtime-layout blocker: %s" % JSON.stringify(report))
@@ -314,6 +332,7 @@ func _run() -> void:
 		"coordinate_step_count": coordinate_seed.get("placement_step_count", 0),
 		"level_footprint_phase_status": runtime_zone_seed.get("level_footprint_phase_status", ""),
 		"first_helper_status": first_helper.get("status", ""),
+		"line_writer_status": first_helper.get("line_writer_status", ""),
 		"second_helper_status": second_helper.get("status", ""),
 		"finalizer_status": finalizer.get("status", ""),
 		"runtime_layout_status": runtime_layout.get("status", ""),
