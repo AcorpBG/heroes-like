@@ -6303,6 +6303,29 @@ struct H3MapedLineWriteResult {
 	int32_t out_of_bounds_write_count = 0;
 };
 
+struct H3MapedSpanRecord {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
+struct H3MapedSpanFillCellWrite {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t zone_id = 0;
+	bool reserved = false;
+};
+
+struct H3MapedSpanFillResult {
+	std::vector<H3MapedSpanFillCellWrite> trace;
+	std::map<int64_t, bool> unique_cells;
+	int32_t pushed_span_count = 0;
+	int32_t popped_span_count = 0;
+	int32_t max_pending_span_count = 0;
+	int32_t out_of_bounds_span_count = 0;
+};
+
 struct H3MapedClipBounds {
 	int32_t min_x = 0;
 	int32_t min_y = 0;
@@ -7183,6 +7206,125 @@ Dictionary h3maped_line_writer_4a261a_report(const Dictionary &normalized) {
 	return report;
 }
 
+constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
+
+int64_t h3maped_cell_key_4a325d(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
+	return int64_t(level) * int64_t(width) * int64_t(height) + int64_t(y) * int64_t(width) + int64_t(x);
+}
+
+bool h3maped_span_cell_in_bounds_4a325d(int32_t width, int32_t height, int32_t level_count, const H3MapedSpanRecord &span) {
+	return span.x >= 0 && span.x < width && span.y >= 0 && span.y < height && span.level >= 0 && span.level < level_count;
+}
+
+uint32_t h3maped_zone_word_4a325d(uint32_t existing_word, int32_t zone_id) {
+	return (existing_word & 0xff00ffffU) | (uint32_t(zone_id & 0xff) << 16U);
+}
+
+bool h3maped_is_unassigned_zone_word_4a325d(const std::vector<uint32_t> &zone_words, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
+	return (zone_words[size_t(h3maped_cell_key_4a325d(width, height, x, y, level))] & H3MAPED_UNASSIGNED_ZONE_WORD) == H3MAPED_UNASSIGNED_ZONE_WORD;
+}
+
+void h3maped_push_span_4a325d(std::vector<H3MapedSpanRecord> &pending, const H3MapedSpanRecord &span, H3MapedSpanFillResult &result) {
+	pending.push_back(span);
+	result.pushed_span_count += 1;
+	result.max_pending_span_count = std::max<int32_t>(result.max_pending_span_count, int32_t(pending.size()));
+}
+
+H3MapedSpanFillResult h3maped_span_fill_4a325d(
+		std::vector<uint32_t> &zone_words,
+		std::vector<uint8_t> &cell_flags,
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		int32_t water_code,
+		int32_t zone_id,
+		const H3MapedSpanRecord &seed) {
+	H3MapedSpanFillResult result;
+	std::vector<H3MapedSpanRecord> pending;
+	h3maped_push_span_4a325d(pending, seed, result);
+	for (int32_t guard = 0; guard < width * height * std::max(1, level_count) * 4 && !pending.empty(); ++guard) {
+		H3MapedSpanRecord span = pending.back();
+		pending.pop_back();
+		result.popped_span_count += 1;
+		if (!h3maped_span_cell_in_bounds_4a325d(width, height, level_count, span)) {
+			result.out_of_bounds_span_count += 1;
+			continue;
+		}
+		int32_t x = span.x;
+		while (x > 0 && h3maped_is_unassigned_zone_word_4a325d(zone_words, width, height, x - 1, span.y, span.level)) {
+			x -= 1;
+		}
+		bool above_open = false;
+		bool below_open = false;
+		H3MapedSpanRecord above_span;
+		H3MapedSpanRecord below_span;
+		for (; x < width; ++x) {
+			if (!h3maped_is_unassigned_zone_word_4a325d(zone_words, width, height, x, span.y, span.level)) {
+				break;
+			}
+			const int64_t key = h3maped_cell_key_4a325d(width, height, x, span.y, span.level);
+			zone_words[size_t(key)] = h3maped_zone_word_4a325d(zone_words[size_t(key)], zone_id);
+			const bool reserved = !(water_code == 2 && span.level == 1);
+			if (reserved) {
+				cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
+			}
+			H3MapedSpanFillCellWrite write;
+			write.x = x;
+			write.y = span.y;
+			write.level = span.level;
+			write.zone_id = zone_id;
+			write.reserved = reserved;
+			result.trace.push_back(write);
+			result.unique_cells[key] = true;
+			if (span.y > 0 && h3maped_is_unassigned_zone_word_4a325d(zone_words, width, height, x, span.y - 1, span.level)) {
+				if (!above_open) {
+					above_span = span;
+					above_span.x = x;
+					above_span.y = span.y - 1;
+					above_open = true;
+				}
+			} else if (above_open) {
+				h3maped_push_span_4a325d(pending, above_span, result);
+				above_open = false;
+			}
+			if (span.y < height - 1 && h3maped_is_unassigned_zone_word_4a325d(zone_words, width, height, x, span.y + 1, span.level)) {
+				if (!below_open) {
+					below_span = span;
+					below_span.x = x;
+					below_span.y = span.y + 1;
+					below_open = true;
+				}
+			} else if (below_open) {
+				h3maped_push_span_4a325d(pending, below_span, result);
+				below_open = false;
+			}
+		}
+		if (above_open) {
+			h3maped_push_span_4a325d(pending, above_span, result);
+		}
+		if (below_open) {
+			h3maped_push_span_4a325d(pending, below_span, result);
+		}
+	}
+	return result;
+}
+
+Array h3maped_span_trace_preview(const std::vector<H3MapedSpanFillCellWrite> &trace, int32_t limit = 12) {
+	Array preview;
+	const int32_t count = std::min<int32_t>(limit, int32_t(trace.size()));
+	for (int32_t index = 0; index < count; ++index) {
+		const H3MapedSpanFillCellWrite &write = trace[size_t(index)];
+		Dictionary item;
+		item["x"] = write.x;
+		item["y"] = write.y;
+		item["level"] = write.level;
+		item["zone_id"] = write.zone_id;
+		item["reserved"] = write.reserved;
+		preview.append(item);
+	}
+	return preview;
+}
+
 H3MapedLineWriteResult h3maped_randomized_line_writer_4a2413(
 		int32_t width,
 		int32_t height,
@@ -7533,10 +7675,10 @@ Dictionary h3maped_polygon_split_pre_crossing_model_report(const std::vector<H3M
 	return report;
 }
 
-Dictionary h3maped_second_footprint_helper_4a325d_report() {
+Dictionary h3maped_second_footprint_helper_4a325d_report(const Dictionary &normalized) {
 	Dictionary report;
-	report["status"] = "0x4a325d_disassembled_cell_span_fill_blocked";
-	report["source"] = "h3maped 0x4a325d footprint cell-span fill helper; executable behavior recovered, project materialization still blocked on exact polygon/list and cell-buffer layout";
+	report["status"] = "0x4a325d_cell_span_fill_ported_standalone_project_materialization_blocked";
+	report["source"] = "h3maped 0x4a325d footprint cell-span fill helper; standalone executable-backed sentinel scanline fill is ported, while project materialization still waits for full 0x4a2777 footprint traversal and source polygon/list wiring";
 	report["function_address"] = "0x4a325d";
 	report["call_site_address"] = "0x4a3ee8..0x4a3eef";
 	report["polygon_locator_address"] = "0x4cca55";
@@ -7561,11 +7703,81 @@ Dictionary h3maped_second_footprint_helper_4a325d_report() {
 	Array missing_layout;
 	missing_layout.append("12-byte span record field meanings beyond copied x/y/level rectangle values");
 	missing_layout.append("source polygon/list traversal payload used by 0x4cca55 and the 0x4a325d seed relocation loop");
-	missing_layout.append("exact project equivalent for h3maped 0x00ff0000 unassigned zone-word cells");
 	missing_layout.append("exact interaction between zone-word writes and this project's terrain/object occupancy buffers");
 	report["missing_runtime_layout"] = missing_layout;
-	report["materialized_cell_count"] = 0;
-	report["blocked_next"] = "recover the source polygon/span records and map-cell zone-word representation before executing the 0x4a325d fill";
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t water_code = h3maped_water_mode_code(normalized);
+	const int32_t cell_count = std::max(0, width * height * std::max(1, level_count));
+	std::vector<uint32_t> zone_words(size_t(cell_count), H3MAPED_UNASSIGNED_ZONE_WORD);
+	std::vector<uint8_t> cell_flags(size_t(cell_count), 0);
+	const int32_t min_x = std::min<int32_t>(6, std::max(0, width - 1));
+	const int32_t min_y = std::min<int32_t>(5, std::max(0, height - 1));
+	const int32_t max_x = std::max<int32_t>(min_x, width - 7);
+	const int32_t max_y = std::max<int32_t>(min_y, height - 6);
+	int32_t boundary_cell_count = 0;
+	auto mark_boundary = [&](int32_t x, int32_t y) {
+		const int64_t key = h3maped_cell_key_4a325d(width, height, x, y, 0);
+		if ((zone_words[size_t(key)] & H3MAPED_UNASSIGNED_ZONE_WORD) == H3MAPED_UNASSIGNED_ZONE_WORD) {
+			boundary_cell_count += 1;
+		}
+		zone_words[size_t(key)] = h3maped_zone_word_4a325d(zone_words[size_t(key)], 12);
+		cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
+	};
+	for (int32_t x = min_x; x <= max_x; ++x) {
+		mark_boundary(x, min_y);
+		mark_boundary(x, max_y);
+	}
+	for (int32_t y = min_y; y <= max_y; ++y) {
+		mark_boundary(min_x, y);
+		mark_boundary(max_x, y);
+	}
+	H3MapedSpanRecord seed;
+	seed.x = std::min<int32_t>(std::max<int32_t>(min_x + 1, 0), std::max(0, max_x - 1));
+	seed.y = std::min<int32_t>(std::max<int32_t>(min_y + 1, 0), std::max(0, max_y - 1));
+	seed.level = 0;
+	H3MapedSpanFillResult sample = h3maped_span_fill_4a325d(zone_words, cell_flags, width, height, level_count, water_code, 9, seed);
+	int32_t remaining_unassigned_count = 0;
+	int32_t boundary_overwrite_count = 0;
+	for (int32_t y = 0; y < height; ++y) {
+		for (int32_t x = 0; x < width; ++x) {
+			const int64_t key = h3maped_cell_key_4a325d(width, height, x, y, 0);
+			const uint32_t zone_word = zone_words[size_t(key)] & H3MAPED_UNASSIGNED_ZONE_WORD;
+			if (zone_word == H3MAPED_UNASSIGNED_ZONE_WORD) {
+				remaining_unassigned_count += 1;
+			}
+			const bool boundary = (x == min_x || x == max_x || y == min_y || y == max_y) && x >= min_x && x <= max_x && y >= min_y && y <= max_y;
+			if (boundary && zone_word != (uint32_t(12) << 16U)) {
+				boundary_overwrite_count += 1;
+			}
+		}
+	}
+	Dictionary sample_report;
+	sample_report["map_width"] = width;
+	sample_report["map_height"] = height;
+	sample_report["h3maped_water_mode_code"] = water_code;
+	sample_report["seed_x"] = seed.x;
+	sample_report["seed_y"] = seed.y;
+	sample_report["seed_level"] = seed.level;
+	sample_report["boundary_min_x"] = min_x;
+	sample_report["boundary_min_y"] = min_y;
+	sample_report["boundary_max_x"] = max_x;
+	sample_report["boundary_max_y"] = max_y;
+	sample_report["boundary_cell_count"] = boundary_cell_count;
+	sample_report["filled_cell_count"] = int32_t(sample.trace.size());
+	sample_report["unique_filled_cell_count"] = int32_t(sample.unique_cells.size());
+	sample_report["pushed_span_count"] = sample.pushed_span_count;
+	sample_report["popped_span_count"] = sample.popped_span_count;
+	sample_report["max_pending_span_count"] = sample.max_pending_span_count;
+	sample_report["out_of_bounds_span_count"] = sample.out_of_bounds_span_count;
+	sample_report["remaining_unassigned_cell_count"] = remaining_unassigned_count;
+	sample_report["boundary_overwrite_count"] = boundary_overwrite_count;
+	sample_report["trace_preview"] = h3maped_span_trace_preview(sample.trace);
+	report["sample_span_fill"] = sample_report;
+	report["sample_materialized_cell_count"] = int32_t(sample.trace.size());
+	report["project_materialized_cell_count"] = 0;
+	report["blocked_next"] = "feed real 0x4a2777 footprint boundaries and source polygon/list traversal into 0x4a325d before project terrain cells can be painted";
 	return report;
 }
 
@@ -7912,7 +8124,7 @@ Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3Maped
 	report["synthetic_source_zone_size"] = "0xd4";
 	report["synthetic_source_zone_defaults"] = synthetic_defaults;
 	report["first_helper_evidence"] = h3maped_first_footprint_helper_4a2777_report(zones, normalized);
-	report["second_helper_evidence"] = h3maped_second_footprint_helper_4a325d_report();
+	report["second_helper_evidence"] = h3maped_second_footprint_helper_4a325d_report(normalized);
 	report["finalizer_evidence"] = h3maped_final_footprint_helper_4a3710_report();
 	report["runtime_layout_evidence"] = h3maped_footprint_runtime_layout_evidence_report();
 	report["polygon_seed_evidence"] = h3maped_polygon_seed_4a3a03_report(zones, normalized);
