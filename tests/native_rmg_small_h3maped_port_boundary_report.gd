@@ -270,7 +270,7 @@ func _run() -> void:
 		_fail("The h3maped 0x4a2777 real source-cycle traversal exhausted its loop guard: %s" % JSON.stringify(report))
 		return
 	var second_helper: Dictionary = level_footprint_phase.get("second_helper_evidence", {})
-	if String(second_helper.get("status", "")) != "0x4a325d_real_boundary_span_fill_ported_project_materialization_pending":
+	if String(second_helper.get("status", "")) != "0x4a325d_real_boundary_span_fill_and_seed_relocation_ported_project_materialization_pending":
 		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed with the real boundary-buffer port boundary: %s" % JSON.stringify(report))
 		return
 	if String(second_helper.get("unassigned_zone_word_sentinel", "")) != "0x00ff0000" or int(second_helper.get("project_materialized_cell_count", -1)) != 0:
@@ -298,6 +298,29 @@ func _run() -> void:
 		return
 	if int(real_span_fill.get("out_of_bounds_span_count", -1)) != 0:
 		_fail("The h3maped 0x4a325d real span fill escaped the map bounds: %s" % JSON.stringify(report))
+		return
+	if int(real_span_fill.get("seed_relocated_count", -1)) != 0:
+		_fail("The selected small-land fixture should expose the 0x4a325d relocation branch without using it for in-bounds seeds: %s" % JSON.stringify(report))
+		return
+	if int(real_span_fill.get("blocked_initial_span_count", -1)) != 1:
+		_fail("The selected small-land fixture should still expose the one copied seed that starts on a non-unassigned boundary cell: %s" % JSON.stringify(report))
+		return
+	var zone_fills: Array = real_span_fill.get("zone_fills", [])
+	if zone_fills.size() != 6 or not zone_fills[0] is Dictionary:
+		_fail("The h3maped 0x4a325d real span fill did not expose per-zone fill reports: %s" % JSON.stringify(report))
+		return
+	var saw_seed_relocation_report := false
+	for zone_fill in zone_fills:
+		if not zone_fill is Dictionary:
+			continue
+		if String(zone_fill.get("seed_relocation_status", "")) == "0x4a325d_seed_in_bounds_relocation_not_used":
+			saw_seed_relocation_report = true
+			var relocation: Dictionary = zone_fill.get("seed_relocation", {})
+			if int(relocation.get("candidate_count", 0)) <= 0 or not relocation.has("best_candidate_border_clearance"):
+				_fail("The h3maped 0x4a325d relocation branch did not expose source-node clearance candidates: %s" % JSON.stringify(report))
+				return
+	if not saw_seed_relocation_report:
+		_fail("The h3maped 0x4a325d relocation branch evidence was missing from per-zone reports: %s" % JSON.stringify(report))
 		return
 	var finalizer: Dictionary = level_footprint_phase.get("finalizer_evidence", {})
 	if String(finalizer.get("status", "")) != "0x4a3710_small_land_no_appended_zone_finalizer_ported":
@@ -378,6 +401,10 @@ func _run() -> void:
 		return
 	if int(source_node_walks[0].get("cycle_node_count", 0)) <= 0 or int(source_node_walks[0].get("finalized_coordinate_count", 0)) <= 0:
 		_fail("The h3maped source-node walk report did not expose finalized cycle coordinates: %s" % JSON.stringify(report))
+		return
+	var first_cycle_nodes: Array = source_node_walks[0].get("cycle_nodes", [])
+	if first_cycle_nodes.is_empty() or not first_cycle_nodes[0] is Dictionary or not first_cycle_nodes[0].has("+0x00_x") or not first_cycle_nodes[0].has("+0x04_y"):
+		_fail("The h3maped source-node walk report did not expose raw node coordinates needed by 0x4a325d seed relocation: %s" % JSON.stringify(report))
 		return
 	var polygon_splitter: Dictionary = level_footprint_phase.get("polygon_splitter_contract", {})
 	if String(polygon_splitter.get("status", "")) != "0x4cca55_0x4ccb64_splitter_contract_recovered_mutation_not_executed":
@@ -488,6 +515,8 @@ func _run() -> void:
 		"real_boundary_remaining_unassigned_cell_count": second_helper.get("real_boundary_remaining_unassigned_cell_count", 0),
 		"real_boundary_filled_zone_count": real_span_fill.get("filled_zone_count", 0),
 		"real_boundary_seed_blocked_count": real_span_fill.get("seed_blocked_count", 0),
+		"real_boundary_seed_relocated_count": real_span_fill.get("seed_relocated_count", 0),
+		"real_boundary_blocked_initial_span_count": real_span_fill.get("blocked_initial_span_count", 0),
 		"finalizer_status": finalizer.get("status", ""),
 		"finalizer_appended_runtime_zone_count": finalizer.get("appended_runtime_zone_count", 0),
 		"finalizer_order_reset_call_count": finalizer.get("zone_order_reset_call_count", 0),
