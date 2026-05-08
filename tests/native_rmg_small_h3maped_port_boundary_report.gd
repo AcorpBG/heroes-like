@@ -77,7 +77,7 @@ func _run() -> void:
 	if int(selected_payload.get("minimum_player_castles_before_assignment", -1)) != 4:
 		_fail("The selected h3maped source template payload lost player-town/castle requirements: %s" % JSON.stringify(report))
 		return
-	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_pass_ported_inspection_only":
+	if String(selected_payload.get("object_category_placement_status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_inspection_only":
 		_fail("The clean boundary did not expose h3maped 0x4a8d2c/0x4a93a2/0x49aa93 direct town/castle candidate validity prechecking: %s" % JSON.stringify(report))
 		return
 	var town_castle_placement: Dictionary = selected_payload.get("town_castle_placement", {})
@@ -140,6 +140,18 @@ func _run() -> void:
 	if int(town_castle_placement.get("object_record_random_tie_selection_count", -1)) != 1 or int(town_castle_placement.get("object_record_random_tie_rng_call_count", -1)) != 1:
 		_fail("0x4a93a2 random tie selection counts drifted: %s" % JSON.stringify(town_castle_placement))
 		return
+	if String(town_castle_placement.get("project_town_writeout_status", "")) != "0x4a93a2_object_record_writeout_ledger_ported_project_adoption_pending":
+		_fail("0x4a93a2 project town writeout ledger status drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if int(town_castle_placement.get("project_town_writeout_record_count", -1)) != 3 or int(town_castle_placement.get("project_town_writeout_record_size_bytes", -1)) != 0x28:
+		_fail("0x4a93a2 project town writeout record count/size drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if int(town_castle_placement.get("project_town_writeout_generator_f44_start", -1)) != 0 or int(town_castle_placement.get("project_town_writeout_generator_f44_next", -1)) != 3:
+		_fail("0x4a93a2 generator+0xf44 town serial ledger drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if String(town_castle_placement.get("project_town_writeout_constructor_address", "")) != "0x49ba89" or String(town_castle_placement.get("project_town_writeout_town_vtable_address", "")) != "0x540a9c":
+		_fail("0x4a93a2 project town writeout constructor/vtable addresses drifted: %s" % JSON.stringify(town_castle_placement))
+		return
 	var minimum_calls: Array = town_castle_placement.get("minimum_calls", [])
 	if minimum_calls.size() != 4 or int(minimum_calls[0].get("runtime_zone_index", -1)) != 0 or int(minimum_calls[0].get("owner_color", -1)) != 0 or not bool(minimum_calls[0].get("castle", false)):
 		_fail("0x4a8d2c first direct minimum castle call did not preserve runtime owner semantics: %s" % JSON.stringify(town_castle_placement))
@@ -171,11 +183,23 @@ func _run() -> void:
 	if String(minimum_calls[0].get("selected_candidate_status", "")) != "0x4a93a2_unique_town_candidate_selected_and_bit22_body_cells_marked_inspection_only" or int(minimum_calls[0].get("selected_candidate_x", -1)) != 28 or int(minimum_calls[0].get("selected_candidate_y", -1)) != 14 or int(minimum_calls[0].get("object_occupied_cell_mark_count", -1)) != 13:
 		_fail("0x4a93a2 first direct minimum castle unique candidate stamping drifted: %s" % JSON.stringify(town_castle_placement))
 		return
+	if String(minimum_calls[0].get("project_town_writeout_status", "")) != "0x4a93a2_object_record_writeout_ledger_ported_project_adoption_pending" or int(minimum_calls[0].get("h3maped_object_record_size_bytes", -1)) != 0x28 or int(minimum_calls[0].get("h3maped_generator_f44_serial_before_increment", -1)) != 0:
+		_fail("0x4a93a2 first direct minimum castle object record writeout ledger drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if String(minimum_calls[0].get("h3maped_object_record_constructor_address", "")) != "0x49ba89" or String(minimum_calls[0].get("h3maped_town_object_record_vtable_address", "")) != "0x540a9c":
+		_fail("0x4a93a2 first direct minimum castle object record constructor/vtable drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if int(minimum_calls[0].get("h3maped_record_offset_0x1c_generator_object_index", -1)) != 0 or int(minimum_calls[0].get("h3maped_record_offset_0x20_owner_color", -1)) != 0 or not bool(minimum_calls[0].get("h3maped_record_offset_0x24_castle_flag", false)):
+		_fail("0x4a93a2 first direct minimum castle object record field offsets drifted: %s" % JSON.stringify(town_castle_placement))
+		return
 	if String(minimum_calls[2].get("selected_candidate_status", "")) != "0x4a93a2_random_tie_town_candidate_selected_and_bit22_body_cells_marked_inspection_only" or int(minimum_calls[2].get("closest_town_footprint_mask_candidate_count", -1)) != 3:
 		_fail("0x4a93a2 third direct minimum castle should select through the recovered random tie: %s" % JSON.stringify(town_castle_placement))
 		return
 	if int(minimum_calls[2].get("random_tie_rng_value", -1)) != 12382 or int(minimum_calls[2].get("random_tie_selected_index", -1)) != 1 or int(minimum_calls[2].get("selected_candidate_x", -1)) != 18 or int(minimum_calls[2].get("selected_candidate_y", -1)) != 5 or int(minimum_calls[2].get("object_occupied_cell_mark_count", -1)) != 13:
 		_fail("0x4a93a2 third direct minimum castle random tie result drifted: %s" % JSON.stringify(town_castle_placement))
+		return
+	if int(minimum_calls[2].get("h3maped_generator_f44_serial_before_increment", -1)) != 2 or int(minimum_calls[2].get("h3maped_record_offset_0x1c_generator_object_index", -1)) != 2:
+		_fail("0x4a93a2 third direct minimum castle random-tie object serial drifted: %s" % JSON.stringify(town_castle_placement))
 		return
 	if String(minimum_calls[3].get("direct_candidate_scan_status", "")) != "0x4a93a2_immediate_fail_owner_minus_one" or int(minimum_calls[3].get("owner_color", 0)) != -1:
 		_fail("0x4a93a2 fourth direct minimum castle call should expose the recovered owner-minus-one early-fail boundary for the unassigned player slot: %s" % JSON.stringify(town_castle_placement))
@@ -450,7 +474,7 @@ func _run() -> void:
 	if String(phase_ledger[4].get("status", "")) != "ported_schedule_and_visual_normalization_inspection_only":
 		_fail("The phase ledger did not mark the clean h3maped 0x4a3f27 terrain schedule and visual normalization as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[5].get("status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_pass_ported_project_writeout_pending":
+	if String(phase_ledger[5].get("status", "")) != "0x4a8d2c_0x4a93a2_0x49aa93_town_49a09c_and_writeout_ledger_ported_project_adoption_pending":
 		_fail("The phase ledger did not mark only h3maped direct town/castle candidate validity prechecking as ported for the object category phase: %s" % JSON.stringify(report))
 		return
 
@@ -480,6 +504,9 @@ func _run() -> void:
 		"town_footprint_49a09c_pass_total": town_castle_placement.get("town_footprint_49a09c_pass_total", 0),
 		"object_cell_materialization_status": town_castle_placement.get("object_cell_materialization_status", ""),
 		"object_record_stamped_count": town_castle_placement.get("object_record_stamped_count", 0),
+		"project_town_writeout_status": town_castle_placement.get("project_town_writeout_status", ""),
+		"project_town_writeout_record_count": town_castle_placement.get("project_town_writeout_record_count", 0),
+		"project_town_writeout_generator_f44_next": town_castle_placement.get("project_town_writeout_generator_f44_next", 0),
 		"object_record_random_tie_selection_count": town_castle_placement.get("object_record_random_tie_selection_count", 0),
 		"object_record_random_tie_rng_call_count": town_castle_placement.get("object_record_random_tie_rng_call_count", 0),
 		"terrain_selection_status": runtime_build.get("terrain_selection_status", ""),
