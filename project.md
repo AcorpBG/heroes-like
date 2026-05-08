@@ -198,9 +198,11 @@ Exit criteria:
 
 ## Current Strategic Focus
 
-Current phase: Phase 3 — HoMM3-Style Random Map Generator Rework corrective parity queue is reopened by owner-uploaded H3M comparisons.
+Current phase: Phase 3 — HoMM3-Style Random Map Generator Rework is reset around a small-map-only h3maped-derived port.
 
-Completed RMG slices are evidence for their focused gates, not broad HoMM3-style production parity. Native package/session adoption remains feature-gated and non-authoritative until later replay and owner-comparison gates prove stable full-output package/session identity, road topology, object density, guard placement, and town separation across supported profiles.
+Completed RMG slices and the archived native catalog-auto path are evidence/debug material only, not broad HoMM3-style production parity. The next production path must be isolated from the archived implementation, scoped to 36x36 maps first, and derived from `/root/Downloads/h3maped.exe` behavior plus the recovered h3maped spec before adapting output to our runtime assets and registries.
+
+Native package/session adoption remains feature-gated and non-authoritative until the small-map port proves stable full-output package/session identity, physical zone separation, road topology, object density, guard placement, and town separation across the supported small-map profiles.
 
 ## Non-Goals
 
