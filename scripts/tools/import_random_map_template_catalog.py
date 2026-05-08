@@ -60,7 +60,10 @@ SOURCE_TOWN_TO_ORIGINAL_FACTION = {
     "stronghold": "faction_embercourt",
     "fortress": "faction_mireclaw",
     "elemental": "faction_sunvault",
-    "forge": "faction_brasshollow",
+    # The recovered rmg.txt monster header uses "Forge" for the ninth town
+    # mask, but h3maped semantics treat that slot as the elemental/conflux-era
+    # town family rather than a separate Forge faction.
+    "forge": "faction_sunvault",
     "neutral": "neutral",
 }
 DEFAULT_TERRAINS = ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"]
@@ -584,6 +587,9 @@ def build_catalog(source: dict[str, Any]) -> dict[str, Any]:
             if not bool(template.get("graph_all_rows", {}).get("connected", False))
         ],
         "field_coverage": collect_field_coverage(source_templates),
+        "compatibility_notes": {
+            "monster_mask_forge_header": "source Forge header is mapped to the elemental/conflux-compatible original faction slot",
+        },
         "creative_name_policy": "source_names_are_not_retained_in_original_catalog_labels",
     }
     return {
