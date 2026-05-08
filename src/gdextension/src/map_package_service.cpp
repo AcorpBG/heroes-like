@@ -16938,15 +16938,15 @@ double water_shape_land_fraction_for_zone(const Dictionary &normalized, const Di
 	if (native_catalog_auto_medium_two_level_islands_profile(normalized)) {
 		const String role = String(zone.get("role", ""));
 		if (role.contains("start")) {
-			return 0.24;
+			return 0.38;
 		}
 		if (role == "junction") {
-			return 0.18;
+			return 0.32;
 		}
 		if (role == "treasure" || role == "neutral") {
-			return 0.13;
+			return 0.27;
 		}
-		return 0.16;
+		return 0.30;
 	}
 	if (native_catalog_auto_large_two_level_islands_profile(normalized)) {
 		const String role = String(zone.get("role", ""));
@@ -17429,7 +17429,7 @@ double native_catalog_auto_underground_rock_fraction(const Dictionary &normalize
 			return 0.94;
 		}
 		if (size_class_id == "homm3_medium") {
-			return 0.95;
+			return 0.932;
 		}
 		if (size_class_id == "homm3_large") {
 			return 0.72;
