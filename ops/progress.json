@@ -6,9 +6,9 @@
   "currentSliceId": "native-rmg-small-h3maped-port-10184",
   "currentSliceTitle": "Native RMG Small h3maped Port 10184",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Owner-directed reset: archive the current native catalog-auto RMG path as legacy evidence/debug code and start a small 36x36 map port derived from /root/Downloads/h3maped.exe plus the recovered h3maped spec. No production fallback to hash template selection, per-case exact-count fitting, fake road clusters, metadata-only zone links, or owner repair passes. First acceptance focuses on owned starts, neutral towns, physical zones, real roads, guarded links, blockers, mines, and rewards on small maps only.",
+  "currentSliceNotes": "Owner-directed reset continues: current native catalog-auto RMG remains archived. Added the first fresh GDExtension boundary, MapPackageService.inspect_h3maped_small_rmg_port, for 36x36 one-level land configs. It computes the recovered h3maped accepted-template vector from the 0x49f0cd size-score/player-capacity rules and explicitly blocks template selection until the h3maped RNG and 0x4ac552 phase sequence are ported. Normal small land native_catalog_auto generation now returns h3maped_small_port_generation_not_ready instead of falling back to archived output. Focused native report tests/native_rmg_small_h3maped_port_boundary_report.tscn passed with accepted_template_count 13 and h3maped_small_port_generation_not_ready; validate_repo, jq, diff-check, and native build passed.",
   "nextActionGuardrailNote": "Do not commit uploaded .h3m/.amap/.ascenario evidence files; use them only as local comparison inputs.",
-  "updatedAt": "2026-05-08T14:13:41Z",
+  "updatedAt": "2026-05-08T14:36:25Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -49,11 +49,12 @@
         "project.md",
         "PLAN.md",
         "docs/native-rmg-small-h3maped-reset.md",
-        "tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md",
         "/root/Downloads/h3maped.exe",
         "src/gdextension/src/map_package_service.cpp",
         "tools/rmg_fast_audit.py",
-        "tools/rmg_fast_validation.py"
+        "tools/rmg_fast_validation.py",
+        "tests/native_rmg_small_h3maped_port_boundary_report.gd"
       ],
       "purpose": "Archive the current native catalog-auto RMG path and start a small-map-only h3maped-derived port with no production fallback to hash selection, per-case fitting, or fake road/zone materialization.",
       "implementationTargets": [
@@ -61,13 +62,18 @@
         "src/gdextension/src/map_package_service.cpp",
         "PLAN.md",
         "ops/progress.json",
-        "follow-up isolated small-map generator modules/tests/tools"
+        "follow-up isolated small-map generator modules/tests/tools",
+        "tests/native_rmg_small_h3maped_port_boundary_report.gd",
+        "tests/native_rmg_small_h3maped_port_boundary_report.tscn",
+        "scripts/persistence/MapPackageService.gd"
       ],
       "baselineChecks": [
         "bash /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like",
         "jq empty ops/progress.json",
         "git diff --check",
-        "cmake --build .artifacts/map_persistence_native_build --parallel 2"
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_rmg_small_h3maped_port_boundary_report.tscn",
+        "python3 tests/validate_repo.py"
       ],
       "completionCriteria": [
         "Current catalog-auto native RMG output is archived and disabled by default for production generation.",
@@ -76,7 +82,8 @@
         "Roads serialize real route geometry, not disconnected visual clusters.",
         "Zone links are physically guarded/blocked on the produced grid.",
         "Player starts are placed at owned player towns.",
-        "No uploaded .h3m, generated .amap, or generated .ascenario evidence is committed."
+        "No uploaded .h3m, generated .amap, or generated .ascenario evidence is committed.",
+        "Small land native_catalog_auto generation routes to the h3maped boundary and refuses fallback output until the h3maped RNG and phase sequence are ported."
       ],
       "nonGoals": [
         "No medium, large, or XL production generator work in this reset slice.",
@@ -84,8 +91,8 @@
         "No one-off owner-corpus exact-count fitting as runtime logic.",
         "No production-ready broad RMG claim."
       ],
-      "updatedAt": "2026-05-08T14:13:41Z",
-      "notes": "Reset slice opened after owner rejected the catalog-auto/generalized policy path. Verified h3maped binary SHA-256 4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37."
+      "updatedAt": "2026-05-08T14:36:25Z",
+      "notes": "Owner-directed reset continues: current native catalog-auto RMG remains archived. Added the first fresh GDExtension boundary, MapPackageService.inspect_h3maped_small_rmg_port, for 36x36 one-level land configs. It computes the recovered h3maped accepted-template vector from the 0x49f0cd size-score/player-capacity rules and explicitly blocks template selection until the h3maped RNG and 0x4ac552 phase sequence are ported. Normal small land native_catalog_auto generation now returns h3maped_small_port_generation_not_ready instead of falling back to archived output. Focused native report tests/native_rmg_small_h3maped_port_boundary_report.tscn passed with accepted_template_count 13 and h3maped_small_port_generation_not_ready; validate_repo, jq, diff-check, and native build passed."
     },
     {
       "id": "native-rmg-generalized-policy-regate-10184",

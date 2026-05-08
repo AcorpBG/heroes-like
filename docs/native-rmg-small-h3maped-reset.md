@@ -11,7 +11,7 @@ The replacement slice is scoped to the verified local Heroes III map editor exec
 - Binary: `/root/Downloads/h3maped.exe`
 - Format: PE32 GUI Intel 80386 Windows executable
 - SHA-256: `4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37`
-- Recovered spec reference: `tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
+- Recovered spec reference: `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/random-map-generation-h3maped-full-spec.md`
 
 If an implementation detail is not supported by executable-derived behavior, recovered spec evidence, or direct generated-map comparison, it is not allowed into the production path.
 
@@ -63,3 +63,9 @@ The first target comparison is a 36x36 single-level land map from the local owne
 - mine and reward distribution.
 
 Passing broad counts alone is not sufficient.
+
+## Current Boundary
+
+The first GDExtension boundary is `MapPackageService.inspect_h3maped_small_rmg_port(config)`. It currently supports inspection for 36x36 single-level land configs only and computes the recovered accepted-template vector using the h3maped size-score formula and player-capacity filter from `0x49f0cd`.
+
+`MapPackageService.generate_random_map` routes normal small land `native_catalog_auto` requests to this boundary and returns `h3maped_small_port_generation_not_ready` instead of producing a fallback map. This is intentional until the h3maped RNG selection (`0x4e7276() % accepted_count`) and the main phase sequence (`0x4ac552`) are ported.

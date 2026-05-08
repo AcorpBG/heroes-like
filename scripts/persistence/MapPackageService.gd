@@ -27,6 +27,7 @@ const CAPABILITIES := [
 	"native_random_map_validation_provenance_foundation",
 	"native_random_map_package_session_adoption_bridge",
 	"headless_binding_smoke",
+	"native_rmg_small_h3maped_port_boundary",
 ]
 
 const CORE_TERRAIN_POOL := ["grass", "snow", "sand", "dirt", "rough", "lava", "underground"]
@@ -110,6 +111,17 @@ func compute_document_hash(document: Variant, options: Dictionary = {}) -> Dicti
 
 func inspect_package(path: String, options: Dictionary = {}) -> Dictionary:
 	return _not_implemented("inspect_package", "not_implemented", path, options)
+
+func inspect_h3maped_small_rmg_port(config: Dictionary) -> Dictionary:
+	var normalized := normalize_random_map_config(config)
+	return {
+		"ok": false,
+		"schema_id": "aurelion_native_rmg_small_h3maped_port_boundary_v1",
+		"schema_version": 1,
+		"status": "native_gdextension_required",
+		"scope": "small_36x36_surface_land_only",
+		"normalized_config": normalized,
+	}
 
 func normalize_random_map_config(config: Dictionary) -> Dictionary:
 	var size: Dictionary = config.get("size", {}) if config.get("size", {}) is Dictionary else {}
