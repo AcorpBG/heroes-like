@@ -1922,7 +1922,7 @@ int32_t catalog_auto_road_component_count_for_level(const Dictionary &normalized
 		} else if (water_mode == "normal_water") {
 			target = level == 0 ? 8 : 6;
 		} else {
-			target = level == 0 ? 7 : 4;
+			target = level == 0 ? 10 : 9;
 		}
 	}
 	return std::max<int32_t>(1, std::min<int32_t>(target, std::max<int32_t>(1, total_target / 6)));
@@ -8743,6 +8743,13 @@ bool native_catalog_auto_large_two_level_normal_water_profile(const Dictionary &
 			&& int32_t(normalized.get("level_count", 1)) > 1;
 }
 
+bool native_catalog_auto_large_two_level_land_profile(const Dictionary &normalized) {
+	return native_rmg_generalized_native_catalog_auto_policy(normalized)
+			&& String(normalized.get("water_mode", "land")) == "land"
+			&& String(normalized.get("size_class_id", "")) == "homm3_large"
+			&& int32_t(normalized.get("level_count", 1)) > 1;
+}
+
 bool native_catalog_auto_xl_one_level_normal_water_profile(const Dictionary &normalized) {
 	return native_rmg_generalized_native_catalog_auto_policy(normalized)
 			&& String(normalized.get("water_mode", "land")) == "normal_water"
@@ -8822,6 +8829,9 @@ int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized)
 		if (native_catalog_auto_large_two_level_normal_water_profile(normalized)) {
 			return std::max(820, (area * 35) / 1000);
 		}
+		if (native_catalog_auto_large_two_level_land_profile(normalized)) {
+			return std::max(700, (area * 30) / 1000);
+		}
 		return level_count > 1 ? std::max(720, (area * 31) / 1000) : std::max(180, (area * 16) / 1000);
 	}
 	if (size_class_id == "homm3_medium") {
@@ -8890,6 +8900,11 @@ int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, 
 		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.70));
 		return std::max(density_floor, reward_ratio_floor);
 	}
+	if (native_catalog_auto_large_two_level_land_profile(normalized)) {
+		density_floor = (area * 25) / 1000;
+		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.88));
+		return std::max(density_floor, reward_ratio_floor);
+	}
 	if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
 		density_floor = std::max(200, (area * 8) / 1000);
 		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.49));
@@ -8941,6 +8956,9 @@ int32_t native_catalog_auto_generated_town_floor(const Dictionary &normalized, i
 		return std::max(std::max(5, start_count + 2), int32_t(std::ceil(double(area) * 1.75 / 1000.0)));
 	}
 	if (size_class_id == "homm3_large") {
+		if (native_catalog_auto_large_two_level_land_profile(normalized)) {
+			return std::max(std::max(16, start_count + 11), int32_t(std::ceil(double(area) * 0.68 / 1000.0)));
+		}
 		return std::max(std::max(14, start_count + 10), int32_t(std::ceil(double(area) * 0.56 / 1000.0)));
 	}
 	if (size_class_id == "homm3_extra_large") {
@@ -10395,6 +10413,9 @@ int32_t catalog_zone_reward_target(const Dictionary &normalized, const Dictionar
 	}
 	if (native_catalog_auto_large_two_level_normal_water_profile(normalized)) {
 		target = int32_t(std::ceil(double(target) * 1.38));
+	}
+	if (native_catalog_auto_large_two_level_land_profile(normalized)) {
+		target = int32_t(std::ceil(double(target) * 1.28));
 	}
 	if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
 		target = int32_t(std::ceil(double(target) * 0.65));
@@ -14378,7 +14399,7 @@ Dictionary generate_town_guard_placements(const Dictionary &normalized, const Di
 	const String town_water_mode = String(normalized.get("water_mode", "land"));
 	const String town_size_class_id = String(normalized.get("size_class_id", ""));
 	const int32_t generated_catalog_underground_town_percent = town_water_mode == "land"
-			? 30
+			? (native_catalog_auto_large_two_level_land_profile(normalized) ? 44 : 30)
 			: (town_water_mode == "normal_water"
 							? (town_size_class_id == "homm3_extra_large" ? 32 : (town_size_class_id == "homm3_large" ? 29 : 25))
 							: (town_water_mode == "islands"
@@ -16709,7 +16730,7 @@ double native_catalog_auto_underground_rock_fraction(const Dictionary &normalize
 			return 0.94;
 		}
 		if (size_class_id == "homm3_large") {
-			return 0.60;
+			return 0.75;
 		}
 		return 0.55;
 	}
