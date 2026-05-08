@@ -6297,6 +6297,7 @@ struct H3MapedPolygonModelNode {
 	int32_t pair = -1;
 	int32_t next = -1;
 	int32_t previous = -1;
+	bool active = true;
 };
 
 struct H3MapedPolygonModel {
@@ -6332,6 +6333,47 @@ struct H3MapedPolygonModel {
 		const int32_t second_next = nodes[size_t(second)].next;
 		std::swap(nodes[size_t(first_next)].previous, nodes[size_t(second_next)].previous);
 		std::swap(nodes[size_t(first)].next, nodes[size_t(second)].next);
+	}
+
+	void edge_swap_4cc670(int32_t node_index) {
+		const int32_t paired = nodes[size_t(node_index)].pair;
+		const int32_t paired_previous = nodes[size_t(paired)].previous;
+		relink_4cc643(node_index, nodes[size_t(node_index)].previous);
+		relink_4cc643(paired, paired_previous);
+	}
+
+	void crossing_collapse_4cc68e(int32_t node_index) {
+		const int32_t paired = nodes[size_t(node_index)].pair;
+		const int32_t previous = nodes[size_t(node_index)].previous;
+		const int32_t paired_previous = nodes[size_t(paired)].previous;
+		edge_swap_4cc670(node_index);
+		const int32_t previous_pair = nodes[size_t(previous)].pair;
+		nodes[size_t(node_index)].payload = nodes[size_t(previous_pair)].payload;
+		nodes[size_t(node_index)].x = nodes[size_t(previous_pair)].x;
+		nodes[size_t(node_index)].y = nodes[size_t(previous_pair)].y;
+		const int32_t paired_previous_pair = nodes[size_t(paired_previous)].pair;
+		nodes[size_t(paired)].payload = nodes[size_t(paired_previous_pair)].payload;
+		nodes[size_t(paired)].x = nodes[size_t(paired_previous_pair)].x;
+		nodes[size_t(paired)].y = nodes[size_t(paired_previous_pair)].y;
+		relink_4cc643(node_index, nodes[size_t(previous_pair)].previous);
+		relink_4cc643(paired, nodes[size_t(paired_previous_pair)].previous);
+	}
+
+	void erase_edge_4cc9cc(int32_t node_index) {
+		edge_swap_4cc670(node_index);
+		const int32_t paired = nodes[size_t(node_index)].pair;
+		nodes[size_t(node_index)].active = false;
+		nodes[size_t(paired)].active = false;
+	}
+
+	int32_t active_node_pair_count() const {
+		int32_t count = 0;
+		for (int32_t index = 0; index < int32_t(nodes.size()); index += 2) {
+			if (nodes[size_t(index)].active || nodes[size_t(index + 1)].active) {
+				count += 1;
+			}
+		}
+		return count;
 	}
 
 	int32_t bridge_4ccb1f(int32_t old_node, int32_t target_node, const String &prefix) {
@@ -6400,6 +6442,27 @@ struct H3MapedPolygonModel {
 				- int64_t(y) * int64_t(paired.x - node.x)
 				+ int64_t(x) * int64_t(paired.y - node.y);
 		return expression == 0;
+	}
+
+	bool crossing_test_4ccc7a(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, int32_t x4, int32_t y4) const {
+		const __int128 v1 = __int128(y4 - y2) * __int128(x3 - x2) - __int128(x4 - x2) * __int128(y3 - y2);
+		const __int128 v2 = __int128(x2 - x1) * __int128(y3 - y1) - __int128(y2 - y1) * __int128(x3 - x1);
+		const __int128 v3 = __int128(y4 - y1) * __int128(x3 - x1) - __int128(x4 - x1) * __int128(y3 - y1);
+		const __int128 v4 = __int128(y4 - y1) * __int128(x2 - x1) - __int128(x4 - x1) * __int128(y2 - y1);
+		const __int128 p1 = __int128(x1) * __int128(x1) + __int128(y1) * __int128(y1);
+		const __int128 p2 = __int128(x2) * __int128(x2) + __int128(y2) * __int128(y2);
+		const __int128 p3 = __int128(x3) * __int128(x3) + __int128(y3) * __int128(y3);
+		const __int128 p4 = __int128(x4) * __int128(x4) + __int128(y4) * __int128(y4);
+		return (p1 * v1 - p4 * v2 - p2 * v3 + p3 * v4) > 0;
+	}
+
+	bool crossing_orientation_gate_4ccb64(int32_t node_index) const {
+		const H3MapedPolygonModelNode &node = nodes[size_t(node_index)];
+		const H3MapedPolygonModelNode &paired = nodes[size_t(node.pair)];
+		const H3MapedPolygonModelNode &previous_pair = nodes[size_t(nodes[size_t(node.previous)].pair)];
+		const int64_t value = int64_t(paired.y - node.y) * int64_t(previous_pair.x - node.x)
+				- int64_t(paired.x - node.x) * int64_t(previous_pair.y - node.y);
+		return value > 0;
 	}
 };
 
@@ -6796,8 +6859,8 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 
 Dictionary h3maped_polygon_split_pre_crossing_model_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
 	Dictionary report;
-	report["status"] = "0x4ccb64_insertion_and_bridge_ported_crossing_collapse_pending";
-	report["source"] = "project-owned execution model for 0x4cc788, 0x4cca55, 0x4cc643, and the pre-crossing part of 0x4ccb64; stops before 0x4ccc7a/0x4cc68e crossing cleanup and 0x4ccdfc finalization";
+	report["status"] = "0x4ccb64_insertion_bridge_and_crossing_cleanup_ported_finalizer_pending";
+	report["source"] = "project-owned execution model for 0x4cc788, 0x4cca55, 0x4cc643, 0x4cc9cc, 0x4ccc7a, 0x4cc68e, and the split-loop part of 0x4ccb64; stops before 0x4ccdfc finalization";
 	report["locator_address"] = "0x4cca55";
 	report["splitter_address"] = "0x4ccb64";
 	report["bridge_address"] = "0x4ccb1f";
@@ -6828,6 +6891,9 @@ Dictionary h3maped_polygon_split_pre_crossing_model_report(const std::vector<H3M
 	int32_t edge_removal_count = 0;
 	int32_t inserted_node_pair_count = 0;
 	int32_t inserted_bridge_pair_count = 0;
+	int32_t crossing_scan_count = 0;
+	int32_t crossing_test_count = 0;
+	int32_t crossing_collapse_count = 0;
 	bool blocked = false;
 	for (const H3MapedRuntimeZoneSeed &zone : zones) {
 		if (zone.level != 0) {
@@ -6838,7 +6904,7 @@ Dictionary h3maped_polygon_split_pre_crossing_model_report(const std::vector<H3M
 		step["source_zone_record_id"] = zone.record_id;
 		step["x"] = zone.x;
 		step["y"] = zone.y;
-		const int32_t located = model.locate_4cca55(zone.x, zone.y);
+		int32_t located = model.locate_4cca55(zone.x, zone.y);
 		if (located < 0) {
 			step["status"] = "0x4cca55_locator_guard_failed";
 			blocked = true;
@@ -6856,13 +6922,16 @@ Dictionary h3maped_polygon_split_pre_crossing_model_report(const std::vector<H3M
 		}
 		if (model.edge_side_test_4cc6f2(located, zone.x, zone.y)) {
 			step["edge_removal_branch"] = true;
-			step["edge_removal_status"] = "0x4cc9cc_vector_erase_branch_not_needed_for_seed_1_small_land";
+			located = model.nodes[size_t(located)].previous;
+			const int32_t erased = model.nodes[size_t(located)].next;
+			step["edge_removal_status"] = "0x4cc9cc_vector_erase_branch_ported";
+			step["edge_removal_anchor_node_id"] = model.nodes[size_t(located)].id;
+			step["edge_removed_node_id"] = model.nodes[size_t(erased)].id;
+			model.erase_edge_4cc9cc(erased);
 			edge_removal_count += 1;
-			blocked = true;
-			split_steps.append(step);
-			break;
+		} else {
+			step["edge_removal_branch"] = false;
 		}
-		step["edge_removal_branch"] = false;
 		const H3MapedPolygonModelNode &located_node = model.nodes[size_t(located)];
 		const int32_t split_primary = model.add_pair(String("split_") + String::num_int64(zone.source_index), located_node.x, located_node.y, located_node.payload, zone.x, zone.y, zone.source_index);
 		model.relink_4cc643(split_primary, located);
@@ -6889,7 +6958,44 @@ Dictionary h3maped_polygon_split_pre_crossing_model_report(const std::vector<H3M
 			}
 		}
 		step["bridge_pair_count"] = bridge_pair_count;
-		step["node_pair_count_after_pre_crossing"] = int32_t(model.nodes.size() / 2);
+		step["allocated_node_pair_count_after_pre_crossing"] = int32_t(model.nodes.size() / 2);
+		step["active_node_pair_count_after_pre_crossing"] = model.active_node_pair_count();
+		int32_t cleanup_scan_count = 0;
+		int32_t cleanup_test_count = 0;
+		int32_t cleanup_collapse_count = 0;
+		int32_t cleanup_cursor = bridge_source;
+		for (int32_t guard = 0; guard < 256; ++guard) {
+			cleanup_scan_count += 1;
+			crossing_scan_count += 1;
+			if (model.crossing_orientation_gate_4ccb64(cleanup_cursor)) {
+				const H3MapedPolygonModelNode &cursor = model.nodes[size_t(cleanup_cursor)];
+				const H3MapedPolygonModelNode &previous_pair = model.nodes[size_t(model.nodes[size_t(cursor.previous)].pair)];
+				const H3MapedPolygonModelNode &paired = model.nodes[size_t(cursor.pair)];
+				cleanup_test_count += 1;
+				crossing_test_count += 1;
+				if (model.crossing_test_4ccc7a(cursor.x, cursor.y, previous_pair.x, previous_pair.y, paired.x, paired.y, zone.x, zone.y)) {
+					model.crossing_collapse_4cc68e(cleanup_cursor);
+					cleanup_collapse_count += 1;
+					crossing_collapse_count += 1;
+					cleanup_cursor = model.nodes[size_t(cleanup_cursor)].previous;
+					continue;
+				}
+			}
+			cleanup_cursor = model.nodes[size_t(cleanup_cursor)].next;
+			if (cleanup_cursor == model.root) {
+				break;
+			}
+			cleanup_cursor = model.nodes[size_t(model.nodes[size_t(cleanup_cursor)].next)].pair;
+			if (guard == 255) {
+				step["status"] = "0x4ccb64_crossing_cleanup_guard_failed";
+				blocked = true;
+			}
+		}
+		step["crossing_cleanup_scan_count"] = cleanup_scan_count;
+		step["crossing_test_count"] = cleanup_test_count;
+		step["crossing_collapse_count"] = cleanup_collapse_count;
+		step["allocated_node_pair_count_after_crossing_cleanup"] = int32_t(model.nodes.size() / 2);
+		step["active_node_pair_count_after_crossing_cleanup"] = model.active_node_pair_count();
 		step["status"] = blocked ? String("0x4ccb64_bridge_loop_guard_failed") : String("0x4ccb64_pre_crossing_inserted");
 		split_steps.append(step);
 		if (blocked) {
@@ -6902,13 +7008,18 @@ Dictionary h3maped_polygon_split_pre_crossing_model_report(const std::vector<H3M
 	report["edge_removal_branch_count"] = edge_removal_count;
 	report["pre_crossing_inserted_node_pair_count"] = inserted_node_pair_count;
 	report["pre_crossing_inserted_bridge_pair_count"] = inserted_bridge_pair_count;
+	report["crossing_cleanup_scan_count"] = crossing_scan_count;
+	report["crossing_test_count"] = crossing_test_count;
+	report["crossing_collapse_count"] = crossing_collapse_count;
 	report["initial_node_pair_count"] = 5;
-	report["pre_crossing_total_node_pair_count"] = int32_t(model.nodes.size() / 2);
-	report["pre_crossing_total_node_count"] = int32_t(model.nodes.size());
-	report["root_node_id_after_pre_crossing"] = model.root >= 0 ? model.nodes[size_t(model.root)].id : String();
-	report["crossing_cleanup_status"] = blocked ? String("blocked_before_crossing_cleanup") : String("0x4ccc7a_0x4cc68e_crossing_cleanup_not_yet_executed");
+	report["post_crossing_cleanup_allocated_node_pair_count"] = int32_t(model.nodes.size() / 2);
+	report["post_crossing_cleanup_allocated_node_count"] = int32_t(model.nodes.size());
+	report["post_crossing_cleanup_active_node_pair_count"] = model.active_node_pair_count();
+	report["post_crossing_cleanup_active_node_count"] = model.active_node_pair_count() * 2;
+	report["root_node_id_after_crossing_cleanup"] = model.root >= 0 ? model.nodes[size_t(model.root)].id : String();
+	report["crossing_cleanup_status"] = blocked ? String("blocked_during_crossing_cleanup") : String("0x4ccc7a_0x4cc68e_crossing_cleanup_ported");
 	report["finalizer_status"] = "0x4ccdfc_not_yet_executed";
-	report["blocked_next"] = "port 0x4ccc7a crossing tests, 0x4cc68e collapses, and 0x4ccdfc finalized coordinates before feeding 0x4a325d span fill";
+	report["blocked_next"] = "port 0x4ccdfc finalized coordinates before feeding 0x4a325d span fill";
 	return report;
 }
 
@@ -6982,7 +7093,7 @@ Dictionary h3maped_final_footprint_helper_4a3710_report() {
 
 Dictionary h3maped_polygon_seed_4a3a03_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
 	Dictionary report;
-	report["status"] = "0x4a3a03_polygon_tree_seed_calls_and_pre_crossing_split_ported_cleanup_pending";
+	report["status"] = "0x4a3a03_polygon_tree_seed_calls_and_split_cleanup_ported_finalizer_pending";
 	report["source"] = "h3maped 0x4a3a03 builds the runtime polygon tree from current runtime-zone coordinates: 0x4cc788 initializes the enclosing polygon and 0x4ccb64 receives one split point per same-level runtime zone";
 	report["initial_polygon_constructor_address"] = "0x4cc788";
 	report["polygon_split_address"] = "0x4ccb64";
