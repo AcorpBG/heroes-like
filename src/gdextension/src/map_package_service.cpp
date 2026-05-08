@@ -19516,6 +19516,9 @@ int32_t profile_object_route_open_pair_target(const Dictionary &normalized) {
 	if (native_catalog_auto_large_two_level_land_profile(normalized)) {
 		return 23;
 	}
+	if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
+		return 35;
+	}
 	return -1;
 }
 
@@ -19526,6 +19529,9 @@ String profile_object_route_mask_source(const Dictionary &normalized) {
 	if (native_catalog_auto_large_two_level_land_profile(normalized)) {
 		return "large_two_level_land_town_route_decorative_closure_mask";
 	}
+	if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
+		return "xl_one_level_normal_water_town_route_decorative_closure_mask";
+	}
 	return "medium_two_level_islands_town_route_decorative_closure_mask";
 }
 
@@ -19535,6 +19541,9 @@ String profile_object_route_mask_policy(const Dictionary &normalized) {
 	}
 	if (native_catalog_auto_large_two_level_land_profile(normalized)) {
 		return "large_two_level_land_adds_compact_existing_decorative_masks_to_close_extra_object_only_town_routes_while_preserving_owner_like_object_open_crossings";
+	}
+	if (native_catalog_auto_xl_one_level_normal_water_profile(normalized)) {
+		return "xl_one_level_normal_water_adds_compact_existing_decorative_masks_to_close_extra_object_only_town_routes_while_preserving_owner_like_object_open_crossings";
 	}
 	return "medium_two_level_islands_adds_compact_existing_decorative_masks_to_close_owner_like_object_only_town_routes_without_changing_object_counts";
 }

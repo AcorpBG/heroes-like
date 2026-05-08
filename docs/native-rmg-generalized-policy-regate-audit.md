@@ -1353,3 +1353,20 @@ Validation evidence:
 - The production-gap audit remains `production_ready=false` with `6` missing broad requirements. The new top blocker is `xl_water` at severity `555`.
 
 This is still not production parity. Large two-level land still has road, terrain, category, and town materialization debt. The correction only brings object-route openness close to owner evidence while preserving the current generated-map validity gates.
+
+## XL One-Level Normal-Water Object-Route Mask Cleanup
+
+The next contained blocker after the Large two-level land route cleanup was `xl_water`. Its broad package shape was already close enough for the fast structural gate, with exact road total and exact town count, but object-only town-route topology was too open: native exposed `45` object-open town pairs versus owner evidence `28`.
+
+The compact decorative route-mask helper now also supports XL one-level normal-water. This profile preserves owner-like physical blocker openings without requiring preserved object-open pairs to remain guard-open, because the owner sample has `28` object-open town pairs but only `2` guarded-open pairs. A rejected first probe using an exact target of `28` over-closed the map to `13` object-open pairs; the kept profile uses a higher preserve target that settles the current topology at `29`, close to owner, while avoiding the bad over-closure.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `xl_water` export wrote `1/1` package with native validation `pass`. The manifest recorded about `37.847s` total wall time, including `20.666s` generation, `12.418s` package conversion, and `3.551s` save time.
+- Focused fast audit improved object-route delta from `+17` to `+1`, kept road delta at `0`, and kept exact town count at `10/10`. The remaining guarded-route delta is `-2`, matching the pre-existing guard-closure difference for this profile.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_object_route_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.706s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_object_route_merged --skip-timing-summary --failure-limit 8` passed with `18/18` matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- The production-gap audit remains `production_ready=false` with `6` missing broad requirements. `xl_water` dropped out of the top six gap cases; the remaining top blockers are Medium two-level islands category overfill, Medium normal-water shape, XL two-level islands, Medium normal-water two-level, XL two-level normal-water, and XL two-level land.
+
+This is still not production parity. XL one-level normal-water still has terrain/object/category and guarded-route shape debt. The correction only reduces object-only town-route over-openness while preserving the current generated-map validity gates.
