@@ -269,6 +269,23 @@ func _run() -> void:
 	if bool(real_cycle.get("loop_guard_exhausted", true)):
 		_fail("The h3maped 0x4a2777 real source-cycle traversal exhausted its loop guard: %s" % JSON.stringify(report))
 		return
+	if int(real_cycle.get("unique_cell_count", -1)) != 262:
+		_fail("The h3maped 0x4a2777 real source-cycle traversal drifted from the executable runtime-zone size limit: %s" % JSON.stringify(report))
+		return
+	var real_cycle_zone_reports: Array = real_cycle.get("zone_reports", [])
+	if real_cycle_zone_reports.size() != 6:
+		_fail("The h3maped 0x4a2777 real source-cycle traversal did not expose six runtime-zone reports: %s" % JSON.stringify(report))
+		return
+	for zone_report in real_cycle_zone_reports:
+		if not zone_report is Dictionary:
+			_fail("The h3maped 0x4a2777 real source-cycle zone report was malformed: %s" % JSON.stringify(report))
+			return
+		if String(zone_report.get("random_span_limit_source", "")) != "runtime_zone+0x1c":
+			_fail("The h3maped 0x4a2777 randomized span limit must come from runtime_zone+0x1c: %s" % JSON.stringify(report))
+			return
+		if int(zone_report.get("random_span_limit_runtime_size", -1)) != 4 or int(zone_report.get("random_span_limit_source_base_size", -1)) != 11:
+			_fail("The h3maped 0x4a2777 randomized span limit lost runtime-size versus source-base evidence: %s" % JSON.stringify(report))
+			return
 	var second_helper: Dictionary = level_footprint_phase.get("second_helper_evidence", {})
 	if String(second_helper.get("status", "")) != "0x4a325d_real_boundary_span_fill_and_seed_relocation_ported_project_materialization_pending":
 		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed with the real boundary-buffer port boundary: %s" % JSON.stringify(report))
@@ -302,8 +319,14 @@ func _run() -> void:
 	if int(real_span_fill.get("seed_relocated_count", -1)) != 0:
 		_fail("The selected small-land fixture should expose the 0x4a325d relocation branch without using it for in-bounds seeds: %s" % JSON.stringify(report))
 		return
-	if int(real_span_fill.get("blocked_initial_span_count", -1)) != 1:
-		_fail("The selected small-land fixture should still expose the one copied seed that starts on a non-unassigned boundary cell: %s" % JSON.stringify(report))
+	if int(real_span_fill.get("blocked_initial_span_count", -1)) != 0 or int(real_span_fill.get("seed_blocked_count", -1)) != 0:
+		_fail("The selected small-land fixture should not block copied in-bounds seeds after the executable runtime-size limit is used: %s" % JSON.stringify(report))
+		return
+	if int(real_span_fill.get("filled_zone_count", -1)) != 6 or int(second_helper.get("real_boundary_filled_cell_count", -1)) != 762:
+		_fail("The h3maped 0x4a325d real span fill did not fill all six selected zones with the executable runtime-size limit: %s" % JSON.stringify(report))
+		return
+	if int(second_helper.get("real_boundary_remaining_unassigned_cell_count", -1)) != 272:
+		_fail("The h3maped 0x4a325d real span fill remaining-unassigned count drifted: %s" % JSON.stringify(report))
 		return
 	var zone_fills: Array = real_span_fill.get("zone_fills", [])
 	if zone_fills.size() != 6 or not zone_fills[0] is Dictionary:
@@ -488,6 +511,10 @@ func _run() -> void:
 	if bool(medium_report.get("ok", true)) or String(medium_report.get("status", "")) != "unsupported_scope":
 		_fail("Small h3maped port inspection accepted an out-of-scope medium config: %s" % JSON.stringify(medium_report))
 		return
+	var medium_generated: Dictionary = service.generate_random_map(medium_config)
+	if bool(medium_generated.get("ok", true)) or String(medium_generated.get("status", "")) != "archived_legacy_native_rmg_disabled":
+		_fail("Out-of-scope catalog-auto generation must stay archived instead of falling through to legacy native RMG: %s" % JSON.stringify(medium_generated))
+		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
@@ -509,6 +536,8 @@ func _run() -> void:
 		"boundary_wrapping_status": first_helper.get("boundary_wrapping_status", ""),
 		"real_source_cycle_traversal_status": real_cycle.get("status", ""),
 		"real_source_cycle_unique_cell_count": real_cycle.get("unique_cell_count", 0),
+		"real_source_cycle_random_span_limit_source": real_cycle_zone_reports[0].get("random_span_limit_source", ""),
+		"real_source_cycle_random_span_limit_runtime_size": real_cycle_zone_reports[0].get("random_span_limit_runtime_size", 0),
 		"second_helper_status": second_helper.get("status", ""),
 		"real_boundary_span_fill_status": real_span_fill.get("status", ""),
 		"real_boundary_filled_cell_count": second_helper.get("real_boundary_filled_cell_count", 0),
@@ -530,6 +559,7 @@ func _run() -> void:
 		"initial_polygon_node_pairs": polygon_splitter.get("materialized_initial_node_pair_count", 0),
 		"phase_count": phase_sequence.size(),
 		"generation_status": generated.get("status", ""),
+		"out_of_scope_generation_status": medium_generated.get("status", ""),
 		"unsupported_scope_status": medium_report.get("status", ""),
 	})])
 	get_tree().quit(0)

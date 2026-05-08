@@ -7356,7 +7356,7 @@ Dictionary h3maped_real_source_node_cycle_traversal_4a2777_report(
 		const int32_t zone_word = zone.source_zone_id >= 0 ? zone.source_zone_id : runtime_zone_index;
 		const int32_t level = zone.level;
 		const bool flagged_branch = runtime_zone_index < int32_t(zones.size()) && !(level_count == 2 && level != 1);
-		const int32_t random_span_limit = std::max<int32_t>(1, zone.source_base_size);
+		const int32_t random_span_limit = std::max<int32_t>(1, zone.scaled_size > 0 ? zone.scaled_size : zone.source_base_size);
 		Array cycle_nodes = walk.get("cycle_nodes", Array());
 		std::vector<Vector2i> finalized_points;
 		Array point_reports;
@@ -7381,7 +7381,9 @@ Dictionary h3maped_real_source_node_cycle_traversal_4a2777_report(
 		zone_report["finalized_point_count"] = int32_t(finalized_points.size());
 		zone_report["finalized_points"] = point_reports;
 		zone_report["flagged_branch_from_0x4a3e69"] = flagged_branch;
-		zone_report["random_span_limit_source_base_size"] = random_span_limit;
+		zone_report["random_span_limit_source"] = "runtime_zone+0x1c";
+		zone_report["random_span_limit_runtime_size"] = random_span_limit;
+		zone_report["random_span_limit_source_base_size"] = zone.source_base_size;
 		if (finalized_points.size() < 2) {
 			blocked_zone_count += 1;
 			zone_report["status"] = "blocked_no_finalized_cycle_segments";
