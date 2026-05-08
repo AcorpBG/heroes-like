@@ -364,6 +364,28 @@ func _run() -> void:
 	if materialized_zone_counts != [266, 227, 204, 58, 152, 117]:
 		_fail("The h3maped 0x4a325d project grid materialized zone counts drifted: %s" % JSON.stringify(report))
 		return
+	var terrain_phase: Dictionary = second_helper.get("terrain_phase_4a3f27", {})
+	if String(terrain_phase.get("status", "")) != "0x4a3f27_schedule_ported_owner_byte_basis_blocked":
+		_fail("The h3maped 0x4a3f27 terrain phase report did not expose the current owner-byte basis blocker: %s" % JSON.stringify(report))
+		return
+	if String(terrain_phase.get("terrain_adapter_vtable", "")) != "0x540a14" or String(terrain_phase.get("terrain_repaint_address", "")) != "0x4bd099":
+		_fail("The h3maped 0x4a3f27 terrain phase report lost its TerrainPlacement adapter evidence: %s" % JSON.stringify(report))
+		return
+	if int(terrain_phase.get("whole_map_fill_terrain_id", -1)) != 8 or int(terrain_phase.get("whole_map_fill_cell_count", -1)) != 1296:
+		_fail("The h3maped 0x4a3f27 whole-map fill evidence drifted from the executable schedule: %s" % JSON.stringify(report))
+		return
+	if int(terrain_phase.get("runtime_zone_recenter_call_count", -1)) != 6 or int(terrain_phase.get("bbox_update_scan_cell_count", -1)) != 1024:
+		_fail("The h3maped 0x4a3f27 prepass/recenter evidence drifted from the materialized owner buffer: %s" % JSON.stringify(report))
+		return
+	if int(terrain_phase.get("owner_byte_basis_mismatch_count", -1)) != 6:
+		_fail("The h3maped 0x4a3f27 owner-byte mismatch count drifted; this must stay explicit until resolved: %s" % JSON.stringify(report))
+		return
+	if int(terrain_phase.get("source_zone_repaint_member_cell_count", -1)) != 1024 or int(terrain_phase.get("runtime_index_repaint_member_cell_count", -1)) != 907:
+		_fail("The h3maped 0x4a3f27 source-zone/runtime-index repaint counts drifted: %s" % JSON.stringify(report))
+		return
+	if int(terrain_phase.get("runtime_index_unmatched_repaint_member_cell_count", -1)) != 117:
+		_fail("The h3maped 0x4a3f27 unmatched runtime-index repaint count drifted: %s" % JSON.stringify(report))
+		return
 	var zone_fills: Array = real_span_fill.get("zone_fills", [])
 	if zone_fills.size() != 6 or not zone_fills[0] is Dictionary:
 		_fail("The h3maped 0x4a325d real span fill did not expose per-zone fill reports: %s" % JSON.stringify(report))
@@ -586,6 +608,11 @@ func _run() -> void:
 		"project_materialized_cell_count": second_helper.get("project_materialized_cell_count", 0),
 		"project_unresolved_cell_count": second_helper.get("project_unresolved_cell_count", 0),
 		"project_materialized_zone_counts": materialized_zone_counts,
+		"terrain_phase_status": second_helper.get("terrain_phase_status", ""),
+		"terrain_owner_byte_basis_mismatch_count": terrain_phase.get("owner_byte_basis_mismatch_count", 0),
+		"terrain_source_zone_repaint_member_cell_count": terrain_phase.get("source_zone_repaint_member_cell_count", 0),
+		"terrain_runtime_index_repaint_member_cell_count": terrain_phase.get("runtime_index_repaint_member_cell_count", 0),
+		"terrain_runtime_index_unmatched_repaint_member_cell_count": terrain_phase.get("runtime_index_unmatched_repaint_member_cell_count", 0),
 		"finalizer_status": finalizer.get("status", ""),
 		"finalizer_appended_runtime_zone_count": finalizer.get("appended_runtime_zone_count", 0),
 		"finalizer_order_reset_call_count": finalizer.get("zone_order_reset_call_count", 0),
