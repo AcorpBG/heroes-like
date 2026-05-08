@@ -7784,7 +7784,6 @@ bool native_rmg_owner_xl_land_density_case(const Dictionary &normalized) {
 	const int32_t height = int32_t(normalized.get("height", 36));
 	const int32_t level_count = int32_t(normalized.get("level_count", 1));
 	const int32_t player_count = int32_t(Dictionary(normalized.get("player_constraints", Dictionary())).get("player_count", 0));
-	const String seed = String(normalized.get("normalized_seed", ""));
 	return width == 144
 			&& height == 144
 			&& level_count == 1
@@ -7792,8 +7791,7 @@ bool native_rmg_owner_xl_land_density_case(const Dictionary &normalized) {
 			&& String(normalized.get("water_mode", "")) == "land"
 			&& String(normalized.get("template_id", "")) == "translated_rmg_template_043_v1"
 			&& String(normalized.get("profile_id", "")) == "translated_rmg_profile_043_v1"
-			&& player_count == 5
-			&& seed == "production-parity-audit-xl-10184";
+			&& player_count == 5;
 }
 
 bool native_rmg_owner_large_land_density_case(const Dictionary &normalized) {
