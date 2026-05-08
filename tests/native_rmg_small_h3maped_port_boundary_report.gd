@@ -209,6 +209,25 @@ func _run() -> void:
 	if int(rectangle_fallback.get("unique_cell_count", 0)) <= 0 or int(rectangle_fallback.get("out_of_bounds_write_count", -1)) != 0:
 		_fail("The h3maped 0x4a2777 rectangle fallback did not materialize in-bounds boundary cells: %s" % JSON.stringify(report))
 		return
+	if String(first_helper.get("connector_segment_status", "")) != "0x4a2777_connector_segment_branch_ported_standalone":
+		_fail("The h3maped 0x4a2777 helper did not expose the ported connector segment branch: %s" % JSON.stringify(report))
+		return
+	var connector_segment: Dictionary = first_helper.get("connector_segment_evidence", {})
+	if String(connector_segment.get("status", "")) != "0x4a2777_connector_segment_branch_ported_standalone":
+		_fail("The h3maped 0x4a2777 connector segment branch report did not run: %s" % JSON.stringify(report))
+		return
+	if int(connector_segment.get("sample_appended_vertex_count", 0)) != 1:
+		_fail("The h3maped 0x4a2777 connector segment did not expose the runtime_zone+0x3f4 vertex append: %s" % JSON.stringify(report))
+		return
+	if int(connector_segment.get("deterministic_trace_write_count", 0)) <= 0 or int(connector_segment.get("deterministic_out_of_bounds_write_count", -1)) != 0:
+		_fail("The h3maped 0x4a2777 connector deterministic branch did not materialize in-bounds cells: %s" % JSON.stringify(report))
+		return
+	if int(connector_segment.get("randomized_trace_write_count", 0)) <= 0 or int(connector_segment.get("randomized_out_of_bounds_write_count", -1)) != 0:
+		_fail("The h3maped 0x4a2777 connector randomized branch did not materialize in-bounds cells: %s" % JSON.stringify(report))
+		return
+	if int(connector_segment.get("randomized_rng_call_count", 0)) <= 0 or int(connector_segment.get("randomized_inserted_midpoint_count", 0)) <= 0:
+		_fail("The h3maped 0x4a2777 connector randomized branch did not exercise midpoint jitter: %s" % JSON.stringify(report))
+		return
 	var second_helper: Dictionary = level_footprint_phase.get("second_helper_evidence", {})
 	if String(second_helper.get("status", "")) != "0x4a325d_cell_span_fill_ported_standalone_project_materialization_blocked":
 		_fail("The h3maped 0x4a325d span-fill helper evidence was not exposed with the standalone port boundary: %s" % JSON.stringify(report))
@@ -386,6 +405,7 @@ func _run() -> void:
 		"line_writer_status": first_helper.get("line_writer_status", ""),
 		"randomized_line_writer_status": first_helper.get("randomized_line_writer_status", ""),
 		"rectangle_fallback_status": first_helper.get("rectangle_fallback_status", ""),
+		"connector_segment_status": first_helper.get("connector_segment_status", ""),
 		"second_helper_status": second_helper.get("status", ""),
 		"finalizer_status": finalizer.get("status", ""),
 		"runtime_layout_status": runtime_layout.get("status", ""),

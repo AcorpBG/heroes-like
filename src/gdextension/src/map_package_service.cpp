@@ -7282,6 +7282,104 @@ Dictionary h3maped_rectangle_fallback_4a2777_report(const Dictionary &normalized
 	return report;
 }
 
+H3MapedLineWriteResult h3maped_randomized_line_writer_4a2413(
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		int32_t water_code,
+		int32_t x1,
+		int32_t y1,
+		int32_t x2,
+		int32_t y2,
+		int32_t zone_id,
+		int32_t level,
+		int32_t random_span_limit,
+		H3MapedRng &rng,
+		int32_t *rng_call_count,
+		int32_t *inserted_midpoint_count,
+		int32_t *max_pending_point_count);
+
+Dictionary h3maped_connector_segment_branch_4a2777_report(const Dictionary &normalized) {
+	Dictionary report;
+	report["status"] = "0x4a2777_connector_segment_branch_ported_standalone";
+	report["source"] = "h3maped 0x4a2777 non-fallback branch at 0x4a2911..0x4a29f9; clips one connector segment, appends the first clipped endpoint to runtime_zone+0x3f4, then dispatches to 0x4a261a or flagged 0x4a2413";
+	report["function_address"] = "0x4a2777";
+	report["branch_address"] = "0x4a2911..0x4a29f9";
+	report["clip_helper_address"] = "0x4a2b33";
+	report["line_writer_address"] = "0x4a261a";
+	report["randomized_line_writer_address"] = "0x4a2413";
+	report["vertex_vector_offset"] = "runtime_zone+0x3f4";
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t water_code = h3maped_water_mode_code(normalized);
+	H3MapedClipBounds bounds;
+	bounds.min_x = 0;
+	bounds.min_y = 0;
+	bounds.max_x = width;
+	bounds.max_y = height;
+	const int32_t from_x = -4;
+	const int32_t from_y = 7;
+	const int32_t to_x = width - 3;
+	const int32_t to_y = height - 9;
+	const H3MapedClipResult clipped_from = h3maped_clip_point_4a2b33(from_x, from_y, to_x, to_y, bounds);
+	const H3MapedClipResult clipped_to = h3maped_clip_point_4a2b33(to_x, to_y, from_x, from_y, bounds);
+	H3MapedLineWriteResult deterministic = h3maped_line_writer_4a261a(width, height, level_count, water_code, clipped_from.x, clipped_from.y, clipped_to.x, clipped_to.y, 6, 0);
+	H3MapedRng rng;
+	rng.state = 1;
+	int32_t rng_call_count = 0;
+	int32_t inserted_midpoint_count = 0;
+	int32_t max_pending_point_count = 0;
+	H3MapedLineWriteResult randomized = h3maped_randomized_line_writer_4a2413(
+			width,
+			height,
+			level_count,
+			water_code,
+			clipped_from.x,
+			clipped_from.y,
+			clipped_to.x,
+			clipped_to.y,
+			6,
+			0,
+			8,
+			rng,
+			&rng_call_count,
+			&inserted_midpoint_count,
+			&max_pending_point_count);
+	Dictionary input;
+	input["from_x"] = from_x;
+	input["from_y"] = from_y;
+	input["to_x"] = to_x;
+	input["to_y"] = to_y;
+	report["sample_input"] = input;
+	Dictionary clipped;
+	clipped["from_x"] = clipped_from.x;
+	clipped["from_y"] = clipped_from.y;
+	clipped["from_branch"] = clipped_from.branch;
+	clipped["to_x"] = clipped_to.x;
+	clipped["to_y"] = clipped_to.y;
+	clipped["to_branch"] = clipped_to.branch;
+	report["sample_clipped_segment"] = clipped;
+	Array vertices;
+	Dictionary vertex;
+	vertex["x"] = clipped_from.x;
+	vertex["y"] = clipped_from.y;
+	vertices.append(vertex);
+	report["sample_appended_vertex_count"] = vertices.size();
+	report["sample_appended_vertices"] = vertices;
+	report["deterministic_trace_write_count"] = int32_t(deterministic.trace.size());
+	report["deterministic_unique_cell_count"] = int32_t(deterministic.unique_cells.size());
+	report["deterministic_out_of_bounds_write_count"] = deterministic.out_of_bounds_write_count;
+	report["randomized_trace_write_count"] = int32_t(randomized.trace.size());
+	report["randomized_unique_cell_count"] = int32_t(randomized.unique_cells.size());
+	report["randomized_out_of_bounds_write_count"] = randomized.out_of_bounds_write_count;
+	report["randomized_rng_call_count"] = rng_call_count;
+	report["randomized_inserted_midpoint_count"] = inserted_midpoint_count;
+	report["randomized_max_pending_point_count"] = max_pending_point_count;
+	report["blocked_next"] = "wire this segment branch into the real 0x4a2777 source-node traversal and boundary-wrapping loop";
+	return report;
+}
+
 constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
 
 int64_t h3maped_cell_key_4a325d(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level) {
@@ -7551,6 +7649,8 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 	report["randomized_line_writer_evidence"] = h3maped_randomized_line_writer_4a2413_report(normalized);
 	report["rectangle_fallback_status"] = "0x4a2777_rectangle_fallback_branch_ported_standalone";
 	report["rectangle_fallback_evidence"] = h3maped_rectangle_fallback_4a2777_report(normalized);
+	report["connector_segment_status"] = "0x4a2777_connector_segment_branch_ported_standalone";
+	report["connector_segment_evidence"] = h3maped_connector_segment_branch_4a2777_report(normalized);
 	Array available_inputs;
 	for (const H3MapedRuntimeZoneSeed &zone : zones) {
 		Dictionary item;
