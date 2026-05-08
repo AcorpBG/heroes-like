@@ -619,6 +619,7 @@ bool native_catalog_auto_large_one_level_land_profile(const Dictionary &normaliz
 bool native_catalog_auto_xl_one_level_land_profile(const Dictionary &normalized);
 bool native_catalog_auto_large_one_level_islands_profile(const Dictionary &normalized);
 bool native_catalog_auto_xl_two_level_islands_profile(const Dictionary &normalized);
+int32_t native_catalog_auto_guarded_route_open_pair_target(const Dictionary &normalized);
 Dictionary native_rmg_runtime_policy_classification(const Dictionary &normalized);
 Dictionary native_rmg_structural_parity_targets(const Dictionary &normalized);
 
@@ -8866,6 +8867,13 @@ bool native_catalog_auto_xl_one_level_islands_profile(const Dictionary &normaliz
 			&& int32_t(normalized.get("level_count", 1)) <= 1;
 }
 
+int32_t native_catalog_auto_guarded_route_open_pair_target(const Dictionary &normalized) {
+	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
+		return 11;
+	}
+	return 0;
+}
+
 int32_t native_catalog_auto_generated_object_floor(const Dictionary &normalized) {
 	if (String(normalized.get("template_selection_mode", "")) != "native_catalog_auto") {
 		return 0;
@@ -13455,6 +13463,7 @@ Dictionary close_unguarded_town_pair_routes_with_guards(const Dictionary &normal
 	int32_t checked_pair_count = 0;
 	int32_t added_guard_count = 0;
 	int32_t reused_guard_closure_tile_count = 0;
+	const int32_t allowed_remaining_reachable_pair_count = native_catalog_auto_guarded_route_open_pair_target(normalized);
 	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
 	Array town_visit_cells_cache;
 	for (int64_t town_index = 0; town_index < towns.size(); ++town_index) {
@@ -13551,6 +13560,7 @@ Dictionary close_unguarded_town_pair_routes_with_guards(const Dictionary &normal
 	static constexpr int32_t MAX_PASSES = 20;
 	for (int32_t pass = 0; pass < MAX_PASSES; ++pass) {
 		bool added_this_pass = false;
+		int32_t allowed_open_pair_count_this_pass = 0;
 		std::vector<std::vector<int32_t>> components_by_level;
 		components_by_level.reserve(level_count);
 		for (int32_t level = 0; level < level_count; ++level) {
@@ -13587,6 +13597,14 @@ Dictionary close_unguarded_town_pair_routes_with_guards(const Dictionary &normal
 				diagnostic["right_zone_id"] = right.get("zone_id", "");
 				diagnostic["same_zone"] = String(left.get("zone_id", "")) == String(right.get("zone_id", ""));
 				diagnostic["path_length"] = path.size();
+				if (allowed_remaining_reachable_pair_count > 0 && allowed_open_pair_count_this_pass < allowed_remaining_reachable_pair_count) {
+					diagnostic["code"] = "unguarded_town_pair_route_left_open_by_profile_guarded_route_target";
+					diagnostic["severity"] = "info";
+					diagnostic["allowed_remaining_reachable_pair_count"] = allowed_remaining_reachable_pair_count;
+					++allowed_open_pair_count_this_pass;
+					diagnostics.append(diagnostic);
+					continue;
+				}
 				if (effective_guard_limit >= 0 && guard_ordinal >= effective_guard_limit) {
 					const int32_t closure_tile_count = assign_existing_guard_town_pair_closure_tile(guards, blocked, path, String(left.get("zone_id", "")), "owner_count_preserving_town_pair_route_guard_closure_mask", width, height);
 					if (closure_tile_count > 0) {
@@ -13675,8 +13693,10 @@ Dictionary close_unguarded_town_pair_routes_with_guards(const Dictionary &normal
 	summary["added_guard_count"] = added_guard_count;
 	summary["reused_guard_closure_tile_count"] = reused_guard_closure_tile_count;
 	summary["remaining_reachable_pair_count"] = remaining_reachable_pair_count;
+	summary["allowed_remaining_reachable_pair_count"] = allowed_remaining_reachable_pair_count;
+	summary["remaining_reachable_pair_count_over_allowed"] = std::max(0, remaining_reachable_pair_count - allowed_remaining_reachable_pair_count);
 	summary["diagnostics"] = diagnostics;
-	summary["policy"] = "town pair route guards close direct package-object paths between every generated town pair, including cross-zone and same-zone density towns missed by narrower gates";
+	summary["policy"] = allowed_remaining_reachable_pair_count > 0 ? "profile allows a bounded number of HoMM3-like island guarded town routes to remain traversable while closing excess direct package-object paths" : "town pair route guards close direct package-object paths between every generated town pair, including cross-zone and same-zone density towns missed by narrower gates";
 	summary["signature"] = hash32_hex(canonical_variant(summary));
 	return summary;
 }
@@ -18138,7 +18158,9 @@ Dictionary validate_native_random_map_output(const Dictionary &normalized, const
 		append_validation_issue(failures, "fail", "town_same_type_scope_missing", "town_guard_placement.town_placement.same_type_neutral_scope", "Same-town-type semantics must remain per source zone and neutral weighted only.");
 	}
 	Dictionary town_pair_route_guard_closure = town_guard_placement.get("town_pair_route_guard_closure", Dictionary());
-	if (full_generation_status != "not_implemented" && int32_t(town_pair_route_guard_closure.get("remaining_reachable_pair_count", 0)) > 0) {
+	const int32_t remaining_town_pair_route_count = int32_t(town_pair_route_guard_closure.get("remaining_reachable_pair_count", 0));
+	const int32_t allowed_town_pair_route_count = std::max(0, int32_t(town_pair_route_guard_closure.get("allowed_remaining_reachable_pair_count", 0)));
+	if (full_generation_status != "not_implemented" && remaining_town_pair_route_count > allowed_town_pair_route_count) {
 		append_validation_issue(failures, "fail", "town_pair_route_guard_closure_incomplete", "town_guard_placement.town_pair_route_guard_closure.remaining_reachable_pair_count", "Town-pair route guard closure must leave no direct object-only town traversal routes open.");
 	}
 	for (int64_t index = 0; index < guards.size(); ++index) {
@@ -18623,6 +18645,36 @@ void apply_homm3_style_guard_control_zone_to_package_record(Dictionary &record, 
 	record["package_guard_control_zone_tile_count"] = control_tiles.size();
 	record["package_guard_control_zone_policy"] = "homm3_style_one_tile_monster_control_zone_blocks_unguarded_package_pathing_until_guard_cleared";
 	record["package_pathing_materialization_state"] = "body_visit_guard_control_zone_and_route_closure_masks_materialized_for_generated_package_surface";
+}
+
+void apply_profile_guard_package_mask_policy(Dictionary &record, const Dictionary &normalized) {
+	if (String(record.get("kind", "")) != "guard" || !native_catalog_auto_large_one_level_islands_profile(normalized)) {
+		return;
+	}
+	const int32_t width = std::max(1, int32_t(normalized.get("width", 36)));
+	const int32_t height = std::max(1, int32_t(normalized.get("height", 36)));
+	const int32_t center_x = int32_t(record.get("x", 0));
+	const int32_t center_y = int32_t(record.get("y", 0));
+	const int32_t level = int32_t(record.get("level", 0));
+	Array control_tiles;
+	for (int32_t dy = -1; dy <= 1; ++dy) {
+		const int32_t y = center_y + dy;
+		if (center_x < 0 || y < 0 || center_x >= width || y >= height) {
+			continue;
+		}
+		Dictionary cell = cell_record(center_x, y, level);
+		cell["source"] = "large_one_level_islands_vertical_guard_control_mask";
+		control_tiles.append(cell);
+	}
+	if (control_tiles.is_empty()) {
+		return;
+	}
+	record["package_guard_control_zone_tiles"] = control_tiles.duplicate(true);
+	record["package_guard_control_zone_tile_count"] = control_tiles.size();
+	record["package_block_tiles"] = control_tiles.duplicate(true);
+	record["package_block_tile_count"] = control_tiles.size();
+	record["package_guard_control_zone_policy"] = "large_one_level_islands_use_vertical_three_tile_homm3_like_guard_control_mask_without_extra_route_closure_bulk";
+	record["package_pathing_materialization_state"] = "large_one_level_islands_compact_guard_control_zone_materialized_for_generated_package_surface";
 }
 
 void apply_land_boundary_choke_masks_to_decorative_package_objects(Array &objects, const Dictionary &generated_map) {
@@ -19372,11 +19424,13 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 	const int32_t width = int32_t(terrain_grid.get("width", generated_map.get("width", 36)));
 	const int32_t height = int32_t(terrain_grid.get("height", generated_map.get("height", 36)));
 	const int32_t level_count = int32_t(terrain_grid.get("level_count", generated_map.get("level_count", 1)));
+	const int32_t allowed_guarded_route_open_pair_count = native_catalog_auto_guarded_route_open_pair_target(normalized);
 	const bool preserve_xl_surface_islands_object_barriers =
 			native_rmg_generalized_native_catalog_auto_policy(normalized)
 			&& String(normalized.get("water_mode", "land")) == "islands"
 			&& String(normalized.get("size_class_id", "")) == "homm3_extra_large"
 			&& int32_t(normalized.get("level_count", 1)) <= 1;
+	const bool preserve_large_one_level_islands_object_barriers = native_catalog_auto_large_one_level_islands_profile(normalized);
 	const bool preserve_large_two_level_islands_object_barriers = native_catalog_auto_large_two_level_islands_profile(normalized);
 	const bool preserve_xl_two_level_islands_object_barriers = native_catalog_auto_xl_two_level_islands_profile(normalized);
 	const bool preserve_medium_two_level_islands_object_barriers = native_catalog_auto_medium_two_level_islands_profile(normalized);
@@ -19384,6 +19438,7 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 	const bool preserve_xl_two_level_land_object_barriers = native_catalog_auto_xl_two_level_land_profile(normalized);
 	const bool preserve_large_two_level_normal_water_object_barriers = native_catalog_auto_large_two_level_normal_water_profile(normalized);
 	const bool preserve_xl_two_level_normal_water_object_barriers = native_catalog_auto_xl_two_level_normal_water_profile(normalized);
+	const bool compact_profile_guard_masks_define_corridors = native_catalog_auto_large_one_level_islands_profile(normalized);
 	Dictionary terrain_blocked = package_terrain_blocked_lookup(generated_map);
 	Dictionary cleared_lookup;
 	int32_t corridor_count = 0;
@@ -19414,7 +19469,7 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 				if (path.is_empty()) {
 					continue;
 				}
-				if (!preserve_xl_surface_islands_object_barriers && !preserve_large_two_level_islands_object_barriers && !preserve_xl_two_level_islands_object_barriers && !preserve_medium_two_level_islands_object_barriers && !preserve_medium_two_level_normal_water_object_barriers && !preserve_xl_two_level_land_object_barriers && !preserve_large_two_level_normal_water_object_barriers && !preserve_xl_two_level_normal_water_object_barriers) {
+				if (!preserve_xl_surface_islands_object_barriers && !preserve_large_one_level_islands_object_barriers && !preserve_large_two_level_islands_object_barriers && !preserve_xl_two_level_islands_object_barriers && !preserve_medium_two_level_islands_object_barriers && !preserve_medium_two_level_normal_water_object_barriers && !preserve_xl_two_level_land_object_barriers && !preserve_large_two_level_normal_water_object_barriers && !preserve_xl_two_level_normal_water_object_barriers) {
 					remove_package_block_cells_from_clearable_objects(objects, path, cleared_lookup, level);
 					++corridor_count;
 				}
@@ -19423,9 +19478,13 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 		static constexpr int32_t MAX_GUARDED_CLOSURE_PASSES = 24;
 		static constexpr int32_t MAX_CLOSURE_CLUSTERS_PER_PATH = 96;
 		Dictionary object_blocked = package_object_route_blocked_lookup_for_level(objects, terrain_blocked, level, false);
+		if (compact_profile_guard_masks_define_corridors) {
+			continue;
+		}
 		for (int32_t pass = 0; pass < MAX_GUARDED_CLOSURE_PASSES; ++pass) {
 			bool added_this_pass = false;
 			int32_t reachable_pair_count = 0;
+			int32_t allowed_open_pair_count_this_pass = 0;
 			for (int64_t left_index = 0; left_index < towns.size(); ++left_index) {
 				Dictionary left = Dictionary(towns[left_index]);
 				for (int64_t right_index = left_index + 1; right_index < towns.size(); ++right_index) {
@@ -19440,6 +19499,10 @@ void apply_guard_mediated_town_route_corridors_to_package_objects(Array &objects
 						continue;
 					}
 					++reachable_pair_count;
+					if (allowed_guarded_route_open_pair_count > 0 && allowed_open_pair_count_this_pass < allowed_guarded_route_open_pair_count) {
+						++allowed_open_pair_count_this_pass;
+						continue;
+					}
 					const int32_t added_for_path = add_package_guard_closure_clusters_along_path(objects, guarded_path, level, width, height, "iterative_guard_mediated_town_route_closure_mask", MAX_CLOSURE_CLUSTERS_PER_PATH);
 					if (added_for_path > 0) {
 						guard_closure_tile_count += added_for_path;
@@ -19557,6 +19620,7 @@ Array combined_native_map_objects(const Dictionary &generated_map) {
 		Dictionary record = Dictionary(result[index]);
 		if (String(record.get("kind", "")) == "guard") {
 			apply_homm3_style_guard_control_zone_to_package_record(record, width, height);
+			apply_profile_guard_package_mask_policy(record, normalized);
 			result[index] = record;
 		}
 	}

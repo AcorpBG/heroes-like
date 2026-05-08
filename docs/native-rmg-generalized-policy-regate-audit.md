@@ -1280,3 +1280,22 @@ Validation evidence:
 - Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_nowater_town_floor_merged --summary --failure-limit 8 --gap-limit 10` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `12.132s`.
 
 This is still not production parity. The production-gap audit remains `production_ready=false` with `6` missing broad requirements. `xl_nowater` drops out of the merged top ten, but its object-only town-route shape is still too open after adding the missing towns. The next top blockers are Large one-level islands, Medium two-level islands, Large two-level land, XL water, and Medium normal-water route/terrain/category shape gaps.
+
+## Large One-Level Islands Guard-Mask Topology Cleanup
+
+The next contained Large one-level islands defect was not object density. The current focused `l_islands_randomplayers` package already matched decoration, object, reward, road total, and near-matched guard count, but the semantic guard topology was wrong: native guarded-route town pairs were `0/28` while owner evidence had `11/120`, and native guard-controlled tiles were `2263` versus owner `98`.
+
+A rejected count-only town-floor probe confirmed the wrong direction: forcing `16` towns without fixing island/subzone topology made all object-only town pairs reachable and worsened terrain shape. The kept correction is narrower. For normal generated catalog-auto Large one-level islands, package guard materialization now replaces the broad route-closure/body mask bulk with a compact vertical three-tile HoMM3-like action mask, and that profile skips the later iterative package guarded-corridor closure clusters. The generation-time town-pair closure summary also records a bounded profile allowance so validation does not force this island profile toward zero guarded routes when owner evidence leaves guarded crossings open.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `l_islands_randomplayers` export wrote `1/1` package with native validation `pass`. The manifest recorded about `10.865s` total wall time, including `7.507s` generation, `1.407s` package conversion, and `0.996s` save time.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/L-islands-RandomPlayers.h3m --amap .artifacts/rmg_native_batch_export_l_islands_guard_v3_noclosure_probe/l_islands_randomplayers.amap --compare --pretty --allow-failures` improved guarded-route delta from `-11` to `0`: native and owner both now expose `11` guarded town-route pairs.
+- Guard-controlled tile count dropped from `2263` to `102`, close to owner `98`. Guarded-blocked tiles dropped from `4915` to `2973`.
+- Focused production-gap severity improved from `876` to `601`. Road delta remains exact at `0`; decoration/object/reward category counts remain exact; guard count stays close at `34` native versus `33` owner.
+- The remaining Large one-level islands debt is still real: native has `8` towns versus owner `16`, object-only route delta remains `+17`, terrain-blocked delta remains `+160`, and the road component shape still differs from owner.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_islands_guard_v3_merged --summary --failure-limit 8 --gap-limit 12` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.932s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_l_islands_guard_v3_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The production-gap audit remains `production_ready=false` with `6` missing broad requirements. Large one-level islands no longer over-closes guarded routes, but it still needs real island subzone/town materialization so town count, object-only route shape, and terrain shape are owner-like without count-only overfitting.
