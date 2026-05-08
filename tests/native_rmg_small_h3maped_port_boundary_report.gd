@@ -110,8 +110,16 @@ func _run() -> void:
 	if int(runtime_build.get("min_source_base_size", -1)) != 11 or int(runtime_build.get("scale_divisor", -1)) != 5 or int(runtime_build.get("initial_scale_reference", -1)) != 79:
 		_fail("The h3maped runtime-zone build scale inputs drifted from 0x4a218c: %s" % JSON.stringify(report))
 		return
-	if String(runtime_build.get("coordinate_placement_status", "")) != "pending_clean_port_0x4a1f3b_0x4a17f5_0x4a19ed_and_0x4a3a03":
-		_fail("Runtime-zone coordinate placement must remain explicitly pending: %s" % JSON.stringify(report))
+	if String(runtime_build.get("coordinate_placement_status", "")) != "0x4a1f3b_coordinate_candidate_math_replayed_inspection_only":
+		_fail("Runtime-zone coordinate candidate replay did not expose the clean h3maped status: %s" % JSON.stringify(report))
+	var coordinate_seed: Dictionary = runtime_build.get("coordinate_seed", {})
+	if String(coordinate_seed.get("rng_order_status", "")) != "pending_full_0x4a218c_interleaved_replay":
+		_fail("Coordinate replay must keep the remaining 0x4a218c RNG interleaving gap explicit: %s" % JSON.stringify(report))
+	if int(coordinate_seed.get("placement_step_count", -1)) != 18 or int(coordinate_seed.get("rng_calls_after_runtime_zone_build", -1)) != 18:
+		_fail("Coordinate replay must expose one candidate-selection step for each 0x4a1f3b call: %s" % JSON.stringify(report))
+	var bbox: Dictionary = coordinate_seed.get("bounding_box_rescale", {})
+	if int(bbox.get("selected_span_before_rescale", -1)) != 82 or int(bbox.get("map_span", -1)) != 36:
+		_fail("Coordinate replay bbox rescale drifted from the executable-derived 0x4a19ed path: %s" % JSON.stringify(report))
 		return
 	var runtime_zones: Array = runtime_build.get("runtime_zones", [])
 	if runtime_zones.size() != 6:
@@ -144,8 +152,8 @@ func _run() -> void:
 	if int(early_link_placement.get("fallback_attempt_count_if_no_valid_endpoint", -1)) != 3:
 		_fail("The h3maped early link-placement fallback schedule drifted for the selected template: %s" % JSON.stringify(report))
 		return
-	if String(early_link_placement.get("coordinate_candidate_status", "")) != "pending_clean_port_0x4a17f5_0x4a1701_0x4a1ad8":
-		_fail("Coordinate candidate math must remain explicitly pending after endpoint control-flow port: %s" % JSON.stringify(report))
+	if String(early_link_placement.get("coordinate_candidate_status", "")) != "0x4a1f3b_coordinate_candidate_math_replayed_inspection_only":
+		_fail("Coordinate candidate replay status did not flow back into the early link placement report: %s" % JSON.stringify(report))
 		return
 	var early_calls: Array = early_link_placement.get("calls", [])
 	if early_calls.size() != 18:
@@ -184,7 +192,7 @@ func _run() -> void:
 	if String(phase_ledger[1].get("phase_id", "")) != "player_slot_assignment" or String(phase_ledger[1].get("status", "")) != "ported_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped player-slot assignment as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_structure_and_endpoint_control_flow_inspection_only":
+	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_structure_and_coordinate_candidate_replay_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped runtime-zone record build as ported: %s" % JSON.stringify(report))
 		return
 	if String(phase_ledger[3].get("status", "")) != "pending_clean_port":
@@ -210,6 +218,8 @@ func _run() -> void:
 		"assignment_status": selected_payload.get("assignment_status", ""),
 		"runtime_zone_build_status": selected_payload.get("runtime_zone_build_status", ""),
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),
+		"coordinate_placement_status": runtime_build.get("coordinate_placement_status", ""),
+		"coordinate_rng_order_status": coordinate_seed.get("rng_order_status", ""),
 		"generation_status": generated.get("status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
