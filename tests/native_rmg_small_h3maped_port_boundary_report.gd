@@ -143,8 +143,8 @@ func _run() -> void:
 	if String(runtime_zones[2].get("terrain_source", "")) != "pending_0x4a3f27_terrain_phase":
 		_fail("Runtime-zone report must not consume terrain RNG before the h3maped terrain phase: %s" % JSON.stringify(report))
 		return
-	if String(runtime_build.get("zone_footprint_placement_status", "")) != "0x4a3a03_0x4a325d_span_fill_ported_adjacency_terrain_pending":
-		_fail("The clean boundary did not expose the h3maped 0x4a3a03/0x4a325d span-fill checkpoint: %s" % JSON.stringify(report))
+	if String(runtime_build.get("zone_footprint_placement_status", "")) != "0x4a3a03_0x4a3710_footprint_helpers_ported_terrain_pending":
+		_fail("The clean boundary did not expose the h3maped 0x4a3a03/0x4a3710 footprint helper checkpoint: %s" % JSON.stringify(report))
 		return
 	var footprint_phase: Dictionary = runtime_build.get("zone_footprint_placement", {})
 	if int(footprint_phase.get("total_matching_runtime_zones", -1)) != 6 or int(footprint_phase.get("total_polygon_split_calls", -1)) != 6:
@@ -202,6 +202,12 @@ func _run() -> void:
 		return
 	if int(footprint_phase.get("span_fill_boundary_or_filled_cell_count", -1)) <= int(footprint_phase.get("boundary_unique_cell_count", -1)):
 		_fail("0x4a325d span fill did not expand beyond the 0x4a2777 boundary cells: %s" % JSON.stringify(report))
+		return
+	if String(footprint_phase.get("adjacency_finalizer_status", "")) != "0x4a3710_small_land_no_appended_zone_finalizer_ported":
+		_fail("0x4a3710 small-land no-appended-zone finalizer was not ported: %s" % JSON.stringify(report))
+		return
+	if int(footprint_phase.get("adjacency_finalizer_appended_runtime_zone_count", -1)) != 0 or int(footprint_phase.get("adjacency_finalizer_materialized_adjacency_count", -1)) != 0:
+		_fail("0x4a3710 small-land branch should not append synthetic-zone adjacency: %s" % JSON.stringify(report))
 		return
 	var link_seeds: Array = runtime_build.get("link_seeds", [])
 	if link_seeds.size() != 5 or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 or int(link_seeds[0].get("runtime_zone_b", -1)) != 3:
@@ -266,8 +272,8 @@ func _run() -> void:
 	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_interleaved_runtime_and_coordinate_replay_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped runtime-zone record build as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[3].get("phase_id", "")) != "zone_footprint_placement" or String(phase_ledger[3].get("status", "")) != "ported_0x4a325d_span_fill_inspection_only_adjacency_terrain_pending":
-		_fail("The phase ledger did not expose only the clean h3maped 0x4a325d span-fill checkpoint as ported: %s" % JSON.stringify(report))
+	if String(phase_ledger[3].get("phase_id", "")) != "zone_footprint_placement" or String(phase_ledger[3].get("status", "")) != "ported_0x4a3710_small_land_footprint_helpers_inspection_only_terrain_pending":
+		_fail("The phase ledger did not expose only the clean h3maped 0x4a3710 footprint checkpoint as ported: %s" % JSON.stringify(report))
 		return
 	if String(phase_ledger[4].get("status", "")) != "pending_clean_port":
 		_fail("Terrain placement must remain pending until h3maped 0x4a3f27 is ported: %s" % JSON.stringify(report))
@@ -300,6 +306,7 @@ func _run() -> void:
 		"span_fill_status": footprint_phase.get("span_fill_status", ""),
 		"span_fill_unique_filled_cell_count": footprint_phase.get("span_fill_unique_filled_cell_count", 0),
 		"span_fill_remaining_unassigned_cell_count": footprint_phase.get("span_fill_remaining_unassigned_cell_count", 0),
+		"adjacency_finalizer_status": footprint_phase.get("adjacency_finalizer_status", ""),
 		"generation_status": generated.get("status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
