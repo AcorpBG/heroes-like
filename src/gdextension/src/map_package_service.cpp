@@ -9224,6 +9224,9 @@ int32_t native_catalog_auto_generated_reward_floor(const Dictionary &normalized)
 	if (native_catalog_auto_large_two_level_islands_profile(normalized)) {
 		return std::max(630, (area * 27) / 1000);
 	}
+	if (native_catalog_auto_large_two_level_normal_water_profile(normalized)) {
+		return std::max(722, (area * 31) / 1000);
+	}
 	if (native_catalog_auto_xl_one_level_islands_profile(normalized)) {
 		return std::max(649, (area * 31) / 1000);
 	}
@@ -9261,6 +9264,9 @@ int32_t native_catalog_auto_generated_reward_cap(const Dictionary &normalized) {
 	if (native_catalog_auto_large_one_level_normal_water_profile(normalized)) {
 		return 197;
 	}
+	if (native_catalog_auto_large_two_level_normal_water_profile(normalized)) {
+		return 722;
+	}
 	if (native_catalog_auto_large_one_level_islands_profile(normalized)) {
 		return 185;
 	}
@@ -9276,6 +9282,9 @@ int32_t native_catalog_auto_generated_decoration_cap(const Dictionary &normalize
 	}
 	if (native_catalog_auto_large_two_level_islands_profile(normalized)) {
 		return 1797;
+	}
+	if (native_catalog_auto_large_two_level_normal_water_profile(normalized)) {
+		return 1915;
 	}
 	return -1;
 }
@@ -9566,6 +9575,10 @@ Dictionary apply_native_catalog_auto_two_level_object_distribution(Array &placem
 		decoration_percent = 7;
 		object_percent = 27;
 		reward_percent = 44;
+	} else if (native_catalog_auto_large_two_level_normal_water_profile(normalized)) {
+		decoration_percent = 10;
+		object_percent = 32;
+		reward_percent = 49;
 	} else if (native_catalog_auto_medium_two_level_normal_water_profile(normalized)) {
 		decoration_percent = 14;
 		object_percent = 46;
@@ -17479,7 +17492,7 @@ double native_catalog_auto_underground_rock_fraction(const Dictionary &normalize
 			return 0.979;
 		}
 		if (size_class_id == "homm3_large") {
-			return 0.70;
+			return native_catalog_auto_large_two_level_normal_water_profile(normalized) ? 0.733 : 0.70;
 		}
 		if (size_class_id == "homm3_medium") {
 			return 0.74;
