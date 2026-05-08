@@ -8910,6 +8910,9 @@ int32_t native_catalog_auto_generated_scenic_floor(const Dictionary &normalized)
 		if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
 			return std::max(735, (area * 17) / 1000);
 		}
+		if (native_catalog_auto_xl_two_level_normal_water_profile(normalized)) {
+			return std::max(650, (area * 16) / 1000);
+		}
 		if (String(normalized.get("water_mode", "land")) == "islands" && level_count <= 1) {
 			return std::max(790, (area * 38) / 1000);
 		}
@@ -8960,9 +8963,10 @@ int32_t native_catalog_auto_generated_decoration_floor(const Dictionary &normali
 	const int32_t level_count = std::max(1, int32_t(normalized.get("level_count", 1)));
 	const bool xl_single_level_islands = water_mode == "islands" && size_class_id == "homm3_extra_large" && level_count <= 1;
 	const bool xl_two_level_islands = native_catalog_auto_xl_two_level_islands_profile(normalized);
+	const bool xl_two_level_normal_water = native_catalog_auto_xl_two_level_normal_water_profile(normalized);
 	const bool large_two_level_islands = native_catalog_auto_large_two_level_islands_profile(normalized);
 	const bool large_one_level_normal_water = native_catalog_auto_large_one_level_normal_water_profile(normalized);
-	if (water_mode != "land" && !xl_single_level_islands && !xl_two_level_islands && !large_two_level_islands && !large_one_level_normal_water) {
+	if (water_mode != "land" && !xl_single_level_islands && !xl_two_level_islands && !xl_two_level_normal_water && !large_two_level_islands && !large_one_level_normal_water) {
 		return 0;
 	}
 	const int32_t width = int32_t(normalized.get("width", 36));
@@ -8974,6 +8978,9 @@ int32_t native_catalog_auto_generated_decoration_floor(const Dictionary &normali
 		}
 		if (xl_two_level_islands) {
 			return std::max(1716, (area * 41) / 1000);
+		}
+		if (xl_two_level_normal_water) {
+			return std::max(1834, (area * 44) / 1000);
 		}
 		return level_count > 1 ? std::max(3200, (area * 78) / 1000) : std::max(3300, (area * 160) / 1000);
 	}
@@ -9009,8 +9016,8 @@ int32_t native_catalog_auto_generated_guard_floor(const Dictionary &normalized, 
 		return std::max(density_floor, reward_ratio_floor);
 	}
 	if (native_catalog_auto_xl_two_level_normal_water_profile(normalized)) {
-		density_floor = std::max(205, (area * 5) / 1000);
-		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.32));
+		density_floor = std::max(196, (area * 4) / 1000);
+		const int32_t reward_ratio_floor = int32_t(std::ceil(double(std::max(0, reward_count)) * 0.30));
 		return std::max(density_floor, reward_ratio_floor);
 	}
 	if (native_catalog_auto_xl_two_level_land_profile(normalized)) {
@@ -9107,6 +9114,9 @@ int32_t native_catalog_auto_generated_reward_cap(const Dictionary &normalized) {
 	if (native_catalog_auto_xl_two_level_islands_profile(normalized)) {
 		return 570;
 	}
+	if (native_catalog_auto_xl_two_level_normal_water_profile(normalized)) {
+		return 482;
+	}
 	if (native_catalog_auto_large_one_level_normal_water_profile(normalized)) {
 		return 197;
 	}
@@ -9161,7 +9171,7 @@ int32_t native_catalog_auto_generated_town_floor(const Dictionary &normalized, i
 			return std::max(std::max(18, start_count + 13), int32_t(std::ceil(double(area) * 0.43 / 1000.0)));
 		}
 		if (water_mode == "normal_water") {
-			return std::max(std::max(16, start_count + 11), int32_t(std::ceil(double(area) * 0.39 / 1000.0)));
+			return std::max(16, start_count + 11);
 		}
 		return std::max(std::max(10, start_count + 5), int32_t(std::ceil(double(area) * 0.24 / 1000.0)));
 	}
@@ -9378,9 +9388,17 @@ Dictionary apply_native_catalog_auto_two_level_object_distribution(Array &placem
 	sort_by_seed(decoration_indices, "decoration");
 	sort_by_seed(object_indices, "object");
 	sort_by_seed(reward_indices, "reward");
-	const int32_t decoration_target = int32_t(decoration_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(decoration_indices.size()) * 8) / 100);
-	const int32_t object_target = int32_t(object_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(object_indices.size()) * (size_class_id == "homm3_large" ? 45 : 35)) / 100);
-	const int32_t reward_target = int32_t(reward_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(reward_indices.size()) * (size_class_id == "homm3_large" ? 45 : 30)) / 100);
+	int32_t decoration_percent = 8;
+	int32_t object_percent = size_class_id == "homm3_large" ? 45 : 35;
+	int32_t reward_percent = size_class_id == "homm3_large" ? 45 : 30;
+	if (native_catalog_auto_xl_two_level_normal_water_profile(normalized)) {
+		decoration_percent = 5;
+		object_percent = 13;
+		reward_percent = 28;
+	}
+	const int32_t decoration_target = int32_t(decoration_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(decoration_indices.size()) * decoration_percent) / 100);
+	const int32_t object_target = int32_t(object_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(object_indices.size()) * object_percent) / 100);
+	const int32_t reward_target = int32_t(reward_indices.size()) <= 0 ? 0 : std::max<int32_t>(1, (int32_t(reward_indices.size()) * reward_percent) / 100);
 	Dictionary underground_lookup;
 	auto mark_underground = [&](const std::vector<int64_t> &indices, int32_t target, const String &category) {
 		const int32_t count = std::min<int32_t>(target, int32_t(indices.size()));

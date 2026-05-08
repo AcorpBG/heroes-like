@@ -1031,3 +1031,21 @@ Validation evidence:
 - `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_large_land_1level_profile_merged --skip-timing-summary --failure-limit 8` passed.
 
 This is still not production parity. The remaining debt for this sample is town count and route/road-component shape, not broad category density or guard closure. The merged top blockers move to XL two-level water, XL one-level land, XL two-level islands, Large one-level islands, and XL one-level water; production audit still reports `production_ready=false`.
+
+## XL Two-Level Normal-Water Category And Underground Split Cleanup
+
+The next merged top-gap case was `xl_water_2levels`. The earlier XL normal-water pass improved broad totals but still overfilled rewards, underfilled blockers, and distributed too much object mass underground. A probe that lowered XL town spacing to force the owner town count was rejected before commit because it made route-shape severity worse: the extra surface towns increased object-only reachable town pairs from the previous `+20` delta to `+39` without solving physical barrier topology.
+
+Normal generated catalog-auto XL two-level normal-water maps now use scoped scenic, decoration, reward-cap, and guard floors plus a profile-specific two-level object distribution split. The split keeps surface/underground category distribution close to owner evidence while preserving the existing XL town-spacing safety rule instead of lowering spacing for exact-count fitting.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed as part of the focused export.
+- Focused `xl_water_2levels` export wrote `1/1` package in about `37.771s` with native validation `pass`.
+- `python3 tools/rmg_fast_audit.py --h3m maps/h3m-maps/XL-water-2levels.h3m --amap .artifacts/rmg_native_batch_export_xl_water_2level_profile_probe/xl_water_2levels.amap --compare --pretty --allow-failures` improved focused production-gap severity from `1550` to `892`, total object delta from `+28` to `+11`, category absolute delta from `294` to `15`, and terrain-blocked delta from `-462` to `+100`.
+- Category counts are now close: decoration `1834/1834`, guard `196/196`, reward `482/482`, object `663/650`, and town `14/16`. Level split is also close for object categories: native surface/underground decoration `1743/91` versus owner `1750/84`, scenic/object `577/86` versus `567/83`, and rewards `348/134` versus `346/136`.
+- The remaining debt is structural route shape, not category volume: native surface object-only reachable town pairs are `36` versus owner `16`, guarded reachable pairs are `0` versus owner `10`, and road components remain shape-similar but not exact (`227/170/120/78/44/20` surface and `54/43/34/24/15` underground versus owner `250/143/104/62/48/39` and `59/42/25/21/20`).
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_2level_profile_merged --summary --failure-limit 8 --gap-limit 8` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `11.275s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_2level_profile_merged --skip-timing-summary --failure-limit 8` passed.
+
+This is still not production parity. The merged top blocker moves to `xl_nowater`, followed by XL two-level islands, Large one-level islands, XL one-level water, and XL two-level water. The next correction should continue route/barrier topology and road-component shape work rather than lowering town spacing to match exact owner town counts.
