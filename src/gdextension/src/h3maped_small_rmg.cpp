@@ -790,6 +790,130 @@ Dictionary coordinate_seed_report_4a1f3b(
 	return report;
 }
 
+Dictionary zone_footprint_phase_4a3a03_report(const Dictionary &normalized_config, Array &runtime_zones, int64_t rng_state_after_coordinate_seed) {
+	Dictionary report;
+	report["status"] = "0x4a3a03_level_collection_and_polygon_seed_ported_helpers_pending";
+	report["source"] = "h3maped 0x4a3a03 per-level runtime-zone collection, small-land synthetic branch decision, 0x4cc788 polygon seed setup, and 0x4ccb64 split-call scheduling";
+	report["function_address"] = "0x4a3a03";
+	report["zone_collection_address"] = "0x4a3a2b..0x4a3a86";
+	report["synthetic_source_zone_branch_address"] = "0x4a3a9d..0x4a3e12";
+	report["polygon_constructor_address"] = "0x4cc788";
+	report["polygon_split_address"] = "0x4ccb64";
+	report["polygon_finalize_address"] = "0x4ccdfc";
+	report["first_helper_address"] = "0x4a2777";
+	report["second_helper_address"] = "0x4a325d";
+	report["finalizer_address"] = "0x4a3710";
+	report["rng_state_before_footprint_phase_uint32"] = rng_state_after_coordinate_seed;
+	report["cell_materialization_status"] = "pending_clean_port_0x4a2777_0x4a325d_0x4a3710";
+	report["blocked_next"] = "execute 0x4a2777 boundary traversal and 0x4a325d span fill before any project terrain/object materialization";
+
+	Dictionary synthetic_defaults;
+	synthetic_defaults["+0x04"] = 3;
+	synthetic_defaults["+0x1c"] = -1;
+	synthetic_defaults["+0xa0"] = 100;
+	synthetic_defaults["+0xa4"] = 1000;
+	synthetic_defaults["+0xa8"] = 5;
+	synthetic_defaults["+0xac"] = 2000;
+	synthetic_defaults["+0xb0"] = 6000;
+	synthetic_defaults["+0xb4"] = 1;
+	report["synthetic_source_zone_size"] = "0xd4";
+	report["synthetic_source_zone_defaults"] = synthetic_defaults;
+
+	Dictionary polygon_seed;
+	polygon_seed["status"] = "0x4cc788_initial_bounds_and_0x4ccb64_split_calls_scheduled";
+	Dictionary bounds;
+	bounds["min_x"] = -200;
+	bounds["min_y"] = -200;
+	bounds["max_x"] = 400;
+	bounds["max_y"] = 400;
+	bounds["source"] = "0x4cc788 constants 0xffffff38 and 0x190";
+	polygon_seed["initial_bounds"] = bounds;
+	Array initial_edges;
+	auto append_edge = [&](int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y) {
+		Dictionary edge;
+		edge["from_x"] = from_x;
+		edge["from_y"] = from_y;
+		edge["to_x"] = to_x;
+		edge["to_y"] = to_y;
+		edge["payload"] = 0;
+		initial_edges.append(edge);
+	};
+	append_edge(-200, -200, 400, -200);
+	append_edge(400, -200, 400, 400);
+	append_edge(400, 400, -200, 400);
+	append_edge(-200, 400, -200, -200);
+	polygon_seed["initial_edges"] = initial_edges;
+	polygon_seed["initial_edge_count"] = initial_edges.size();
+
+	const int32_t level_count = std::max(1, int32_t(normalized_config.get("level_count", 1)));
+	const int32_t water_code = water_mode_code(normalized_config);
+	Array levels;
+	int32_t total_matching_runtime_zones = 0;
+	int32_t total_split_calls = 0;
+	int32_t appended_synthetic_runtime_zones = 0;
+	for (int32_t level = 0; level < level_count; ++level) {
+		Array matching_indices;
+		Array split_calls;
+		for (int64_t runtime_index = 0; runtime_index < runtime_zones.size(); ++runtime_index) {
+			if (Variant(runtime_zones[runtime_index]).get_type() != Variant::DICTIONARY) {
+				continue;
+			}
+			Dictionary runtime = Dictionary(runtime_zones[runtime_index]);
+			if (int32_t(runtime.get("level", 0)) != level) {
+				continue;
+			}
+			matching_indices.append(runtime.get("runtime_zone_index", runtime_index));
+			Dictionary split_call;
+			split_call["call_site_address"] = "0x4a3a79";
+			split_call["runtime_zone_index"] = runtime.get("runtime_zone_index", runtime_index);
+			split_call["source_zone_id"] = runtime.get("source_zone_id", -1);
+			split_call["x"] = runtime.get("x_after_bbox_rescale", 0);
+			split_call["y"] = runtime.get("y_after_bbox_rescale", 0);
+			split_call["level"] = level;
+			split_call["payload"] = "runtime_zone_pointer";
+			split_call["source_fields"] = "runtime_zone+0x10 x/y copied after 0x4a19ed rescale, then pushed to 0x4ccb64";
+			split_calls.append(split_call);
+
+			runtime["footprint_collection_status"] = "0x4a3a03_collected_for_level";
+			runtime["polygon_split_seed_index"] = split_calls.size() - 1;
+			runtime["rectangle_status"] = "pending_0x4a2777_0x4a325d_0x4a3710_cell_materialization";
+			runtime_zones[runtime_index] = runtime;
+		}
+		total_matching_runtime_zones += matching_indices.size();
+		total_split_calls += split_calls.size();
+		const bool synthetic_branch_allowed = level == 1 || water_code != 0;
+		Dictionary level_report;
+		level_report["level_index"] = level;
+		level_report["matching_runtime_zone_count"] = matching_indices.size();
+		level_report["matching_runtime_zone_indices"] = matching_indices;
+		level_report["synthetic_fallback_zone_allowed_by_0x4a3a9d"] = synthetic_branch_allowed;
+		level_report["synthetic_fallback_zone_created"] = false;
+		level_report["synthetic_fallback_zone_reason"] = synthetic_branch_allowed
+				? String("requires 0x4a3b48 direction scan before source-zone allocation")
+				: String("skipped because level != 1 and water mode is land, matching 0x4a3a9d..0x4a3aa9");
+		Array helper_sequence;
+		helper_sequence.append("0x4a2777");
+		helper_sequence.append("0x4a325d");
+		helper_sequence.append("0x4a3710");
+		level_report["helper_call_sequence"] = helper_sequence;
+		level_report["helper_call_status"] = "scheduled_not_executed";
+		level_report["polygon_split_call_count"] = split_calls.size();
+		level_report["polygon_split_calls"] = split_calls;
+		levels.append(level_report);
+	}
+
+	polygon_seed["levels"] = levels;
+	polygon_seed["materialized_primary_split_seed_count"] = total_split_calls;
+	report["level_count"] = level_count;
+	report["h3maped_water_mode_code"] = water_code;
+	report["total_matching_runtime_zones"] = total_matching_runtime_zones;
+	report["total_polygon_split_calls"] = total_split_calls;
+	report["appended_synthetic_runtime_zone_count"] = appended_synthetic_runtime_zones;
+	report["levels"] = levels;
+	report["polygon_seed_evidence"] = polygon_seed;
+	return report;
+}
+
 Dictionary runtime_zone_build_report(
 		const Dictionary &normalized_config,
 		const Array &active_zones,
@@ -981,6 +1105,10 @@ Dictionary runtime_zone_build_report(
 	early_link_placement["calls"] = placement_calls;
 	Dictionary coordinate_seed = coordinate_seed_report_4a1f3b(normalized_config, runtime_zones, link_seeds, rng_state_after_template_selection);
 	early_link_placement["coordinate_candidate_status"] = coordinate_seed.get("status", "");
+	Dictionary zone_footprint = zone_footprint_phase_4a3a03_report(
+			normalized_config,
+			runtime_zones,
+			int64_t(coordinate_seed.get("rng_state_after_0x4a218c_replay_uint32", int64_t(rng_state_after_template_selection))));
 
 	report["status"] = "0x4a218c_runtime_zone_records_ported_inspection_only";
 	report["source"] = "h3maped 0x4a218c with interleaved 0x49b452 runtime initializer, 0x49b3c1 town choice, and 0x4a1f3b coordinate replay";
@@ -1001,7 +1129,8 @@ Dictionary runtime_zone_build_report(
 	report["rng_events"] = coordinate_seed.get("rng_events", rng_events);
 	report["coordinate_placement_status"] = coordinate_seed.get("status", "");
 	report["coordinate_seed"] = coordinate_seed;
-	report["zone_footprint_placement_status"] = "pending_clean_port_0x4a3a03_0x4a2777_0x4a325d_0x4a3710";
+	report["zone_footprint_placement_status"] = zone_footprint.get("status", "");
+	report["zone_footprint_placement"] = zone_footprint;
 	return report;
 }
 
@@ -1119,7 +1248,7 @@ Array clean_phase_ledger() {
 		{ "template_selection", "0x49f0cd, 0x4ac597..0x4ac5a4, 0x4e7276", "ported_inspection_only" },
 		{ "player_slot_assignment", "0x4ac62a..0x4ac6ec", "ported_inspection_only" },
 		{ "runtime_zone_build", "0x4a218c, 0x4a1f3b, 0x4a17f5, 0x4a1701, 0x4a1ad8, 0x4a19ed, 0x49b452, 0x49b3c1", "ported_interleaved_runtime_and_coordinate_replay_inspection_only" },
-		{ "zone_footprint_placement", "0x4a3a03, 0x4a2777, 0x4a325d, 0x4a3710", "pending_clean_port" },
+		{ "zone_footprint_placement", "0x4a3a03, 0x4cc788, 0x4ccb64, 0x4a2777, 0x4a325d, 0x4a3710", "ported_level_collection_and_polygon_seed_inspection_only_helpers_pending" },
 		{ "terrain_fill_repaint", "0x4a3f27, 0x4bcff5, 0x4bd099", "pending_clean_port" },
 		{ "object_category_placement", "0x4a8d2c, 0x4a8db2, 0x4a8c15", "pending_clean_port" },
 		{ "guard_reward_monster_placement", "0x4a9d6a, 0x4aab7e", "pending_clean_port" },

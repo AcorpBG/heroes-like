@@ -143,6 +143,32 @@ func _run() -> void:
 	if String(runtime_zones[2].get("terrain_source", "")) != "pending_0x4a3f27_terrain_phase":
 		_fail("Runtime-zone report must not consume terrain RNG before the h3maped terrain phase: %s" % JSON.stringify(report))
 		return
+	if String(runtime_build.get("zone_footprint_placement_status", "")) != "0x4a3a03_level_collection_and_polygon_seed_ported_helpers_pending":
+		_fail("The clean boundary did not expose the h3maped 0x4a3a03 level collection checkpoint: %s" % JSON.stringify(report))
+		return
+	var footprint_phase: Dictionary = runtime_build.get("zone_footprint_placement", {})
+	if int(footprint_phase.get("total_matching_runtime_zones", -1)) != 6 or int(footprint_phase.get("total_polygon_split_calls", -1)) != 6:
+		_fail("0x4a3a03 must schedule one polygon split call per same-level runtime zone: %s" % JSON.stringify(report))
+		return
+	if int(footprint_phase.get("appended_synthetic_runtime_zone_count", -1)) != 0:
+		_fail("Small one-level land 0x4a3a03 must not append a synthetic fallback zone: %s" % JSON.stringify(report))
+		return
+	var footprint_levels: Array = footprint_phase.get("levels", [])
+	if footprint_levels.size() != 1:
+		_fail("Small one-level land 0x4a3a03 report must expose exactly one level: %s" % JSON.stringify(report))
+		return
+	var footprint_level_0: Dictionary = footprint_levels[0]
+	if int(footprint_level_0.get("matching_runtime_zone_count", -1)) != 6 or bool(footprint_level_0.get("synthetic_fallback_zone_allowed_by_0x4a3a9d", true)):
+		_fail("Small land 0x4a3a03 level collection or synthetic branch decision drifted: %s" % JSON.stringify(report))
+		return
+	if footprint_level_0.get("helper_call_sequence", []) != ["0x4a2777", "0x4a325d", "0x4a3710"]:
+		_fail("0x4a3a03 helper sequence drifted from the executable phase order: %s" % JSON.stringify(report))
+		return
+	var polygon_seed: Dictionary = footprint_phase.get("polygon_seed_evidence", {})
+	var polygon_bounds: Dictionary = polygon_seed.get("initial_bounds", {})
+	if int(polygon_bounds.get("min_x", 0)) != -200 or int(polygon_bounds.get("max_x", 0)) != 400 or int(polygon_seed.get("initial_edge_count", 0)) != 4:
+		_fail("0x4cc788 polygon seed bounds drifted from recovered h3maped constants: %s" % JSON.stringify(report))
+		return
 	var link_seeds: Array = runtime_build.get("link_seeds", [])
 	if link_seeds.size() != 5 or int(link_seeds[0].get("runtime_zone_a", -1)) != 0 or int(link_seeds[0].get("runtime_zone_b", -1)) != 3:
 		_fail("Runtime-zone link seed endpoint resolution drifted from source link vectors: %s" % JSON.stringify(report))
@@ -206,8 +232,11 @@ func _run() -> void:
 	if String(phase_ledger[2].get("phase_id", "")) != "runtime_zone_build" or String(phase_ledger[2].get("status", "")) != "ported_interleaved_runtime_and_coordinate_replay_inspection_only":
 		_fail("The phase ledger did not mark only the clean h3maped runtime-zone record build as ported: %s" % JSON.stringify(report))
 		return
-	if String(phase_ledger[3].get("status", "")) != "pending_clean_port":
-		_fail("Zone footprint placement must remain pending after the runtime-zone record port: %s" % JSON.stringify(report))
+	if String(phase_ledger[3].get("phase_id", "")) != "zone_footprint_placement" or String(phase_ledger[3].get("status", "")) != "ported_level_collection_and_polygon_seed_inspection_only_helpers_pending":
+		_fail("The phase ledger did not expose only the clean h3maped 0x4a3a03 checkpoint as ported: %s" % JSON.stringify(report))
+		return
+	if String(phase_ledger[4].get("status", "")) != "pending_clean_port":
+		_fail("Terrain placement must remain pending until h3maped 0x4a3f27 is ported: %s" % JSON.stringify(report))
 		return
 
 	var generated: Dictionary = service.generate_random_map(config, {"startup_path": "h3maped_small_clean_restart_gate"})
@@ -231,6 +260,7 @@ func _run() -> void:
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),
 		"coordinate_placement_status": runtime_build.get("coordinate_placement_status", ""),
 		"coordinate_rng_order_status": coordinate_seed.get("rng_order_status", ""),
+		"zone_footprint_placement_status": runtime_build.get("zone_footprint_placement_status", ""),
 		"generation_status": generated.get("status", ""),
 		"out_of_scope_generation_status": medium.get("status", ""),
 	})])
