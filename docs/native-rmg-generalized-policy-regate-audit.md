@@ -1481,3 +1481,22 @@ Validation evidence:
 - The production-gap audit remains `production_ready=false` with `6` missing broad requirements. Current top blockers are still led by `xl_water_2levels`, `xl_nowater_2levels`, `l_normalwater_randomplayers_2level`, and `l_nowater_randomplayers_nounder`.
 
 This is still not production parity. Large two-level islands now has a smaller terrain-volume gap without reopening town routes, but road component shape, town distribution, guard footprint, and broader Large/XL profile families remain out of parity.
+
+## XL Two-Level Normal-Water Package Guard Shape Cleanup
+
+After the Large two-level islands terrain checkpoint, `xl_water_2levels` was the merged top blocker. The previous package adoption pass preserved physical decorative/scenic barriers well enough to reduce object-only route openness, but it left guarded route topology fully over-closed: native had `15` object-open town pairs versus owner `16`, then `0` guarded-open pairs versus owner `10`. The package guard masks were too broad for the normal-water XL two-level profile, so guard records closed nearly every candidate crossing even when the physical blocker shape was close.
+
+Normal generated catalog-auto XL two-level normal-water package adoption now uses a package-only guarded-route allowance, a compact vertical three-tile guard control mask for guard records, and a profile object-route mask target. This keeps generation-time town spacing/closure policy intact while making exported package blocker/guard semantics closer to owner evidence.
+
+Validation evidence:
+
+- `cmake --build .artifacts/map_persistence_native_build --parallel 2` passed.
+- Focused `xl_water_2levels` export wrote `1/1` package with native validation `pass`. The manifest recorded about `48.833s` total wall time, including `37.352s` generation, `6.696s` package conversion, and `3.578s` save time.
+- Focused fast audit improved production-gap severity from `417` to `356`. Object-route openness now matches owner evidence exactly at `16/16`; guarded-route openness improved from `0/10` to `2/10`.
+- The compact guard package masks reduced generated guard package footprint to `196` guards with `588` block/control tiles, `297` route-closure tiles, and `0` corridor-closure tiles. The native semantic audit now reports `573` guard-controlled tiles versus owner `1327`.
+- Focused fast validation passed with `0` parse, native-rule, density, policy, topology, coverage, and closure-shape gaps.
+- Replacing the focused AMAP into the 18-case evidence set, `python3 tools/rmg_quick_validation.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_guard_open_merged --summary` passed with `18/18` owner/native matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps in about `10.041s`.
+- `python3 tools/rmg_python_validation_gate.py --no-latest-amap-artifact --amap-dir .artifacts/rmg_native_batch_export_xl_water_guard_open_merged --skip-timing-summary --failure-limit 8` passed with `18/18` matches and `0` parse/native/density/policy/topology/coverage/closure-shape gaps.
+- The production-gap audit remains `production_ready=false` with `6` missing broad requirements. Current top blockers are `xl_nowater_2levels` at severity `367`, `xl_water_2levels` at severity `356`, `l_normalwater_randomplayers_2level`, and `l_nowater_randomplayers_nounder`.
+
+This is still not production parity. XL two-level normal-water now has exact physical object-route openness and a less over-closed guarded-route surface, but it still needs owner-like guarded-route opening placement, road component shape, town distribution, and terrain/object-category shape work across adjacent XL/Large profiles.
