@@ -191,6 +191,11 @@ struct H3ObjectRow {
 	int32_t final_flag = 0;
 };
 
+struct H3MaskPoint {
+	int32_t dx = 0;
+	int32_t dy = 0;
+};
+
 constexpr uint32_t H3MAPED_UNASSIGNED_ZONE_WORD = 0x00ff0000U;
 
 struct PolygonModelNode {
@@ -585,6 +590,35 @@ Array h3_object_rows_to_array(const std::vector<H3ObjectRow> &rows) {
 	return result;
 }
 
+std::vector<H3MaskPoint> h3_text_mask_points(const String &mask_text, bool action_mask) {
+	std::vector<H3MaskPoint> points;
+	if (mask_text.length() < 48) {
+		return points;
+	}
+	for (int32_t row = 0; row < 6; ++row) {
+		for (int32_t text_col = 0; text_col < 8; ++text_col) {
+			const bool bit_set = mask_text[row * 8 + text_col] == '1';
+			const bool include = action_mask ? bit_set : !bit_set;
+			if (!include) {
+				continue;
+			}
+			points.push_back(H3MaskPoint { -text_col, -(5 - row) });
+		}
+	}
+	return points;
+}
+
+Array h3_mask_points_to_array(const std::vector<H3MaskPoint> &points) {
+	Array result;
+	for (const H3MaskPoint &point : points) {
+		Dictionary record;
+		record["dx"] = point.dx;
+		record["dy"] = point.dy;
+		result.append(record);
+	}
+	return result;
+}
+
 Dictionary h3maped_object_metadata_table_report() {
 	Dictionary report;
 	report["status"] = "0x57c648_runtime_object_metadata_table_bound_to_text_sources_inspection_only";
@@ -685,6 +719,16 @@ Dictionary h3maped_object_metadata_table_report() {
 	report["town_or_random_template_row_count"] = int32_t(town_rows.size() + random_town_rows.size());
 	report["town_template_rows"] = h3_object_rows_to_array(town_rows);
 	report["random_town_template_rows"] = h3_object_rows_to_array(random_town_rows);
+	if (!town_rows.empty()) {
+		const std::vector<H3MaskPoint> town_body_points = h3_text_mask_points(town_rows[0].passability_mask, false);
+		const std::vector<H3MaskPoint> town_action_points = h3_text_mask_points(town_rows[0].action_mask, true);
+		report["town_mask_model_status"] = "objects_txt_text_mask_offsets_ported_for_0x49a6f9_inspection";
+		report["town_mask_text_order"] = "objects.txt expands the six H3 object mask bytes as MSB-to-LSB text rows; anchor-relative offsets are x-text_col and y-(5-row), matching the recovered H3M parser semantics";
+		report["town_passability_body_cell_count"] = int32_t(town_body_points.size());
+		report["town_action_cell_count"] = int32_t(town_action_points.size());
+		report["town_passability_body_offsets"] = h3_mask_points_to_array(town_body_points);
+		report["town_action_offsets"] = h3_mask_points_to_array(town_action_points);
+	}
 	report["template_binding_status"] = "town_and_random_town_rows_loaded_for_0x49aa93_gate_inputs_object_wrapper_execution_pending";
 	return report;
 }
@@ -3839,6 +3883,21 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	report["object_metadata_table"] = object_metadata;
 	report["object_metadata_table_status"] = object_metadata.get("status", "");
 	report["object_metadata_template_binding_status"] = object_metadata.get("template_binding_status", "");
+	Array town_template_rows = object_metadata.get("town_template_rows", Array());
+	String town_passability_mask;
+	String town_action_mask;
+	if (!town_template_rows.is_empty() && Variant(town_template_rows[0]).get_type() == Variant::DICTIONARY) {
+		Dictionary first_town_template = Dictionary(town_template_rows[0]);
+		town_passability_mask = String(first_town_template.get("passability_mask", ""));
+		town_action_mask = String(first_town_template.get("action_mask", ""));
+	}
+	const std::vector<H3MaskPoint> town_body_points = h3_text_mask_points(town_passability_mask, false);
+	const std::vector<H3MaskPoint> town_action_points = h3_text_mask_points(town_action_mask, true);
+	report["town_footprint_mask_status"] = town_body_points.empty()
+			? String("blocked_missing_town_passability_mask")
+			: String("0x49a6f9_town_text_mask_body_scan_ported_inspection_only_object_collision_pending");
+	report["town_footprint_body_cell_count"] = int32_t(town_body_points.size());
+	report["town_footprint_action_cell_count"] = int32_t(town_action_points.size());
 	Array full_eligibility_sequence;
 	{
 		Dictionary step;
@@ -3928,6 +3987,9 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	int32_t direct_validity_precheck_eligible_total = 0;
 	int32_t direct_validity_precheck_missing_count = 0;
 	int32_t direct_validity_precheck_grid_unavailable_count = 0;
+	int32_t town_footprint_mask_scan_call_count = 0;
+	int32_t town_footprint_mask_eligible_total = 0;
+	int32_t town_footprint_mask_missing_count = 0;
 	for (int64_t index = 0; index < active_zones.size(); ++index) {
 		if (Variant(active_zones[index]).get_type() != Variant::DICTIONARY) {
 			continue;
@@ -4032,10 +4094,18 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 				int32_t validity_precheck_rejected_terrain_count = 0;
 				int32_t closest_eligible_distance = 0x7fffffff;
 				int32_t closest_eligible_candidate_count = 0;
+				int32_t footprint_mask_eligible_count = 0;
+				int32_t footprint_mask_rejected_bounds_count = 0;
+				int32_t footprint_mask_rejected_owner_count = 0;
+				int32_t footprint_mask_rejected_terrain_count = 0;
+				int32_t closest_footprint_mask_distance = 0x7fffffff;
+				int32_t closest_footprint_mask_candidate_count = 0;
 				Array candidate_preview;
 				Array closest_candidate_preview;
 				Array eligibility_preview;
 				Array closest_eligible_candidate_preview;
+				Array footprint_mask_preview;
+				Array closest_footprint_mask_candidate_preview;
 				for (int32_t level = 0; level < level_count; ++level) {
 					for (int32_t y = min_y; y < max_y_exclusive; ++y) {
 						for (int32_t x = min_x; x < max_x_exclusive; ++x) {
@@ -4094,6 +4164,67 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 								candidate["terrain_code_u16"] = terrain_code;
 								eligibility_preview.append(candidate);
 							}
+							bool footprint_mask_passes = !town_body_points.empty();
+							String footprint_reject_reason;
+							for (const H3MaskPoint &point : town_body_points) {
+								const int32_t body_x = x + point.dx;
+								const int32_t body_y = y + point.dy;
+								const int64_t body_key = cell_key_4a325d(width, height, body_x, body_y, level);
+								if (body_key < 0 || body_key >= expected_grid_size) {
+									footprint_mask_passes = false;
+									footprint_reject_reason = "out_of_bounds";
+									break;
+								}
+								if (owner_grid[int32_t(body_key)] != runtime_zone_index || repaint_grid[int32_t(body_key)] == 0) {
+									footprint_mask_passes = false;
+									footprint_reject_reason = "owner_or_repaint_mismatch";
+									break;
+								}
+								if (terrain_codes[int32_t(body_key)] == 9) {
+									footprint_mask_passes = false;
+									footprint_reject_reason = "terrain_9";
+									break;
+								}
+							}
+							if (footprint_mask_passes) {
+								footprint_mask_eligible_count += 1;
+								if (footprint_mask_preview.size() < 8) {
+									Dictionary candidate;
+									candidate["x"] = x;
+									candidate["y"] = y;
+									candidate["level"] = level;
+									candidate["distance_to_runtime_anchor"] = distance;
+									candidate["body_cell_count"] = int32_t(town_body_points.size());
+									candidate["action_cell_count"] = int32_t(town_action_points.size());
+									footprint_mask_preview.append(candidate);
+								}
+								bool closest_footprint_candidate = false;
+								if (distance < closest_footprint_mask_distance) {
+									closest_footprint_mask_distance = distance;
+									closest_footprint_mask_candidate_count = 1;
+									closest_footprint_mask_candidate_preview.clear();
+									closest_footprint_candidate = true;
+								} else if (distance == closest_footprint_mask_distance) {
+									closest_footprint_mask_candidate_count += 1;
+									closest_footprint_candidate = true;
+								}
+								if (closest_footprint_candidate && closest_footprint_mask_candidate_preview.size() < 8) {
+									Dictionary candidate;
+									candidate["x"] = x;
+									candidate["y"] = y;
+									candidate["level"] = level;
+									candidate["distance_to_runtime_anchor"] = distance;
+									candidate["body_cell_count"] = int32_t(town_body_points.size());
+									candidate["action_cell_count"] = int32_t(town_action_points.size());
+									closest_footprint_mask_candidate_preview.append(candidate);
+								}
+							} else if (footprint_reject_reason == "out_of_bounds") {
+								footprint_mask_rejected_bounds_count += 1;
+							} else if (footprint_reject_reason == "terrain_9") {
+								footprint_mask_rejected_terrain_count += 1;
+							} else {
+								footprint_mask_rejected_owner_count += 1;
+							}
 							bool closest_eligible_candidate = false;
 							if (distance < closest_eligible_distance) {
 								closest_eligible_distance = distance;
@@ -4117,6 +4248,7 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 					}
 				}
 				direct_validity_precheck_call_count += 1;
+				town_footprint_mask_scan_call_count += 1;
 				call["direct_candidate_scan_status"] = candidate_count > 0
 						? String("0x4a93a2_owner_byte_candidate_scan_ported_eligibility_pending")
 						: String("0x4a93a2_owner_byte_candidate_scan_no_candidates");
@@ -4148,16 +4280,33 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 				call["closest_eligible_distance"] = validity_precheck_eligible_count > 0 ? closest_eligible_distance : -1;
 				call["closest_eligible_candidate_count"] = closest_eligible_candidate_count;
 				call["closest_eligible_candidate_preview"] = closest_eligible_candidate_preview;
+				call["town_footprint_mask_status"] = footprint_mask_eligible_count > 0
+						? String("0x49a6f9_town_text_mask_body_scan_ported_object_collision_pending")
+						: String("0x49a6f9_town_text_mask_body_scan_no_eligible_candidates");
+				call["town_footprint_body_cell_count"] = int32_t(town_body_points.size());
+				call["town_footprint_action_cell_count"] = int32_t(town_action_points.size());
+				call["town_footprint_mask_eligible_count"] = footprint_mask_eligible_count;
+				call["town_footprint_mask_rejected_bounds_count"] = footprint_mask_rejected_bounds_count;
+				call["town_footprint_mask_rejected_owner_count"] = footprint_mask_rejected_owner_count;
+				call["town_footprint_mask_rejected_terrain_count"] = footprint_mask_rejected_terrain_count;
+				call["town_footprint_mask_preview"] = footprint_mask_preview;
+				call["closest_town_footprint_mask_distance"] = footprint_mask_eligible_count > 0 ? closest_footprint_mask_distance : -1;
+				call["closest_town_footprint_mask_candidate_count"] = closest_footprint_mask_candidate_count;
+				call["closest_town_footprint_mask_candidate_preview"] = closest_footprint_mask_candidate_preview;
 				call["selected_candidate_status"] = closest_eligible_candidate_count == 1
 						? String("pending_full_0x49aa93_collision_then_0x4a93a2_object_record_stamping_no_rng_tie_for_current_precheck")
 						: String("pending_full_0x49aa93_collision_and_0x4a93a2_random_tie_selection");
 				direct_candidate_total += candidate_count;
 				direct_validity_precheck_eligible_total += validity_precheck_eligible_count;
+				town_footprint_mask_eligible_total += footprint_mask_eligible_count;
 				if (candidate_count == 0) {
 					direct_candidate_missing_count += 1;
 				}
 				if (validity_precheck_eligible_count == 0) {
 					direct_validity_precheck_missing_count += 1;
+				}
+				if (footprint_mask_eligible_count == 0) {
+					town_footprint_mask_missing_count += 1;
 				}
 				minimum_calls.append(call);
 			}
@@ -4210,6 +4359,9 @@ Dictionary town_castle_placement_4a8d2c_4a8db2_report(const Array &active_zones,
 	report["direct_validity_precheck_eligible_total"] = direct_validity_precheck_eligible_total;
 	report["direct_validity_precheck_missing_count"] = direct_validity_precheck_missing_count;
 	report["direct_validity_precheck_grid_unavailable_count"] = direct_validity_precheck_grid_unavailable_count;
+	report["town_footprint_mask_scan_call_count"] = town_footprint_mask_scan_call_count;
+	report["town_footprint_mask_eligible_total"] = town_footprint_mask_eligible_total;
+	report["town_footprint_mask_missing_count"] = town_footprint_mask_missing_count;
 	report["positive_density_field_count"] = positive_density_field_count;
 	report["density_field_count"] = density_fields.size();
 	report["minimum_calls"] = minimum_calls;

@@ -122,6 +122,15 @@ func _run() -> void:
 	if int(object_metadata.get("random_town_type_id", -1)) != 77 or String(object_metadata.get("random_town_type_name", "")) != "Random Town" or int(object_metadata.get("random_town_template_row_count", -1)) != 1:
 		_fail("Recovered Random Town object template binding drifted: %s" % JSON.stringify(object_metadata))
 		return
+	if String(object_metadata.get("town_mask_model_status", "")) != "objects_txt_text_mask_offsets_ported_for_0x49a6f9_inspection" or int(object_metadata.get("town_passability_body_cell_count", -1)) != 13 or int(object_metadata.get("town_action_cell_count", -1)) != 1:
+		_fail("Recovered Town passability/action mask model drifted from objects.txt semantics: %s" % JSON.stringify(object_metadata))
+		return
+	if String(town_castle_placement.get("town_footprint_mask_status", "")) != "0x49a6f9_town_text_mask_body_scan_ported_inspection_only_object_collision_pending":
+		_fail("0x49a6f9 Town text mask body scan was not exposed at the town/castle placement boundary: %s" % JSON.stringify(town_castle_placement))
+		return
+	if int(town_castle_placement.get("town_footprint_mask_scan_call_count", -1)) != 3 or int(town_castle_placement.get("town_footprint_mask_eligible_total", -1)) != 97 or int(town_castle_placement.get("town_footprint_mask_missing_count", -1)) != 0:
+		_fail("0x49a6f9 Town text mask body scan candidate totals drifted from the seed-1 boundary: %s" % JSON.stringify(town_castle_placement))
+		return
 	var minimum_calls: Array = town_castle_placement.get("minimum_calls", [])
 	if minimum_calls.size() != 4 or int(minimum_calls[0].get("runtime_zone_index", -1)) != 0 or int(minimum_calls[0].get("owner_color", -1)) != 0 or not bool(minimum_calls[0].get("castle", false)):
 		_fail("0x4a8d2c first direct minimum castle call did not preserve runtime owner semantics: %s" % JSON.stringify(town_castle_placement))
@@ -134,6 +143,9 @@ func _run() -> void:
 		return
 	if String(minimum_calls[0].get("direct_full_eligibility_status", "")) != "pending_0x49a6f9_0x49a09c_bit22_and_water_match_gates":
 		_fail("0x49aa93 first direct minimum castle full gate dependencies were not reported: %s" % JSON.stringify(town_castle_placement))
+		return
+	if String(minimum_calls[0].get("town_footprint_mask_status", "")) != "0x49a6f9_town_text_mask_body_scan_ported_object_collision_pending" or int(minimum_calls[0].get("town_footprint_mask_eligible_count", -1)) != 42 or int(minimum_calls[0].get("closest_town_footprint_mask_distance", -1)) != 5:
+		_fail("0x49a6f9 first direct minimum castle Town mask body scan drifted: %s" % JSON.stringify(town_castle_placement))
 		return
 	if String(minimum_calls[3].get("direct_candidate_scan_status", "")) != "0x4a93a2_immediate_fail_owner_minus_one" or int(minimum_calls[3].get("owner_color", 0)) != -1:
 		_fail("0x4a93a2 fourth direct minimum castle call should expose the recovered owner-minus-one early-fail boundary for the unassigned player slot: %s" % JSON.stringify(town_castle_placement))
@@ -432,6 +444,8 @@ func _run() -> void:
 		"runtime_zone_build_status": selected_payload.get("runtime_zone_build_status", ""),
 		"object_category_placement_status": selected_payload.get("object_category_placement_status", ""),
 		"minimum_settlement_call_count": town_castle_placement.get("minimum_settlement_call_count", 0),
+		"town_footprint_mask_status": town_castle_placement.get("town_footprint_mask_status", ""),
+		"town_footprint_mask_eligible_total": town_castle_placement.get("town_footprint_mask_eligible_total", 0),
 		"terrain_selection_status": runtime_build.get("terrain_selection_status", ""),
 		"early_link_placement_status": runtime_build.get("early_link_placement_status", ""),
 		"coordinate_placement_status": runtime_build.get("coordinate_placement_status", ""),
