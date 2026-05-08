@@ -6289,6 +6289,20 @@ struct H3MapedRuntimeLinkSeed {
 	bool border_guard = false;
 };
 
+struct H3MapedLineCellWrite {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t zone_id = 0;
+	bool reserved = false;
+};
+
+struct H3MapedLineWriteResult {
+	std::vector<H3MapedLineCellWrite> trace;
+	std::map<int64_t, bool> unique_cells;
+	int32_t out_of_bounds_write_count = 0;
+};
+
 struct H3MapedPolygonModelNode {
 	String id;
 	int32_t x = 0;
@@ -6878,10 +6892,162 @@ Array h3maped_runtime_zone_seed_array(const std::vector<H3MapedRuntimeZoneSeed> 
 	return result;
 }
 
-Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3MapedRuntimeZoneSeed> &zones) {
+int32_t h3maped_sign_for_line_4a261a(int32_t value) {
+	return value > 0 ? 1 : -1;
+}
+
+void h3maped_write_line_cell_4a261a(
+		H3MapedLineWriteResult &result,
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		int32_t water_code,
+		int32_t x,
+		int32_t y,
+		int32_t zone_id,
+		int32_t level) {
+	if (x < 0 || y < 0 || level < 0 || x >= width || y >= height || level >= level_count) {
+		result.out_of_bounds_write_count += 1;
+		return;
+	}
+	H3MapedLineCellWrite write;
+	write.x = x;
+	write.y = y;
+	write.level = level;
+	write.zone_id = zone_id & 0xff;
+	write.reserved = !(water_code == 2 && level != 1);
+	result.trace.push_back(write);
+	const int64_t key = (int64_t(level) * int64_t(height) + int64_t(y)) * int64_t(width) + int64_t(x);
+	result.unique_cells[key] = true;
+}
+
+H3MapedLineWriteResult h3maped_line_writer_4a261a(
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		int32_t water_code,
+		int32_t x1,
+		int32_t y1,
+		int32_t x2,
+		int32_t y2,
+		int32_t zone_id,
+		int32_t level) {
+	H3MapedLineWriteResult result;
+	if (x1 > x2) {
+		std::swap(x1, x2);
+		std::swap(y1, y2);
+	}
+
+	const int32_t dx = x2 - x1;
+	const int32_t dy = y2 - y1;
+	const int32_t abs_dy = std::abs(dy);
+	int32_t major = 0;
+	int32_t minor = 0;
+	int32_t simple_step_x = 0;
+	int32_t simple_step_y = 0;
+	int32_t diagonal_step_y = h3maped_sign_for_line_4a261a(dy);
+	if (dx > abs_dy) {
+		major = dx;
+		minor = abs_dy;
+		simple_step_x = 1;
+		simple_step_y = 0;
+	} else {
+		major = abs_dy;
+		minor = dx;
+		simple_step_x = 0;
+		simple_step_y = h3maped_sign_for_line_4a261a(dy);
+	}
+
+	int32_t error = major / 2;
+	int32_t x = x1;
+	int32_t y = y1;
+	while (x != x2 || y != y2) {
+		h3maped_write_line_cell_4a261a(result, width, height, level_count, water_code, x, y, zone_id, level);
+		error += minor;
+		if (error < major) {
+			x += simple_step_x;
+			y += simple_step_y;
+		} else {
+			error -= major;
+			x += 1;
+			y += diagonal_step_y;
+		}
+	}
+	h3maped_write_line_cell_4a261a(result, width, height, level_count, water_code, x, y, zone_id, level);
+	return result;
+}
+
+Array h3maped_line_trace_preview(const std::vector<H3MapedLineCellWrite> &trace, int32_t limit = 12) {
+	Array result;
+	const int32_t capped = std::min<int32_t>(int32_t(trace.size()), limit);
+	for (int32_t index = 0; index < capped; ++index) {
+		const H3MapedLineCellWrite &write = trace[size_t(index)];
+		Dictionary cell;
+		cell["x"] = write.x;
+		cell["y"] = write.y;
+		cell["level"] = write.level;
+		cell["zone_id"] = write.zone_id;
+		cell["reserved"] = write.reserved;
+		result.append(cell);
+	}
+	return result;
+}
+
+Dictionary h3maped_line_writer_4a261a_report(const Dictionary &normalized) {
 	Dictionary report;
-	report["status"] = "0x4a2777_disassembled_runtime_layout_blocked";
-	report["source"] = "h3maped 0x4a2777 footprint connector helper; executable behavior recovered, project materialization still blocked on exact runtime link-node/source-rect layout";
+	report["status"] = "0x4a261a_cell_line_writer_ported";
+	report["source"] = "h3maped 0x4a261a Bresenham-style map-cell zone-word writer; writes current cell before stepping and writes the final endpoint";
+	report["function_address"] = "0x4a261a";
+	report["map_cell_stride_bytes"] = 0x30;
+	report["zone_word_write"] = "cell+0x20 = (cell+0x20 & 0xff00ffff) | ((zone_id & 0xff) << 16)";
+	report["reserved_flag_write"] = "cell+0x2b |= 0x10 unless water_mode_code == 2 and level != 1";
+	const int32_t width = int32_t(normalized.get("width", 36));
+	const int32_t height = int32_t(normalized.get("height", 36));
+	const int32_t level_count = int32_t(normalized.get("level_count", 1));
+	const int32_t water_code = h3maped_water_mode_code(normalized);
+	report["map_width"] = width;
+	report["map_height"] = height;
+	report["level_count"] = level_count;
+	report["h3maped_water_mode_code"] = water_code;
+	struct SampleLine {
+		const char *id;
+		int32_t x1;
+		int32_t y1;
+		int32_t x2;
+		int32_t y2;
+	};
+	const std::array<SampleLine, 5> samples = {{
+			{"horizontal", 0, 0, width - 1, 0},
+			{"vertical", width / 2, 0, width / 2, height - 1},
+			{"diagonal_down", 0, 0, std::min(width, height) - 1, std::min(width, height) - 1},
+			{"diagonal_up", 0, height - 1, std::min(width, height) - 1, height - std::min(width, height)},
+			{"steep", 0, 0, std::max<int32_t>(0, width / 4), height - 1},
+	}};
+	Array sample_reports;
+	for (const SampleLine &sample : samples) {
+		H3MapedLineWriteResult line = h3maped_line_writer_4a261a(width, height, level_count, water_code, sample.x1, sample.y1, sample.x2, sample.y2, 7, 0);
+		Dictionary item;
+		item["id"] = sample.id;
+		item["from_x"] = sample.x1;
+		item["from_y"] = sample.y1;
+		item["to_x"] = sample.x2;
+		item["to_y"] = sample.y2;
+		item["trace_write_count"] = int32_t(line.trace.size());
+		item["unique_cell_count"] = int32_t(line.unique_cells.size());
+		item["out_of_bounds_write_count"] = line.out_of_bounds_write_count;
+		item["trace_preview"] = h3maped_line_trace_preview(line.trace);
+		sample_reports.append(item);
+	}
+	report["sample_line_count"] = sample_reports.size();
+	report["sample_lines"] = sample_reports;
+	report["blocked_next"] = "wire 0x4a261a into full 0x4a2777 polygon-boundary traversal, including the flagged 0x4a2413 randomized/interpolated branch";
+	return report;
+}
+
+Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3MapedRuntimeZoneSeed> &zones, const Dictionary &normalized) {
+	Dictionary report;
+	report["status"] = "0x4a2777_disassembled_4a261a_line_writer_ported_runtime_layout_blocked";
+	report["source"] = "h3maped 0x4a2777 footprint connector helper; 0x4a261a cell-line writer is ported, while full helper materialization is still blocked on exact runtime link-node/source-rect layout and 0x4a2413";
 	report["function_address"] = "0x4a2777";
 	report["clip_helper_address"] = "0x4a2b33";
 	report["line_cell_writer_address"] = "0x4a261a";
@@ -6905,6 +7071,8 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 	missing_layout.append("source-zone adjacency/list payload used through source_zone+0x0c/+0x10");
 	missing_layout.append("exact mapping from h3maped cell zone ids to our terrain/object/materialization buffers");
 	report["missing_runtime_layout"] = missing_layout;
+	report["line_writer_status"] = "0x4a261a_cell_line_writer_ported";
+	report["line_writer_evidence"] = h3maped_line_writer_4a261a_report(normalized);
 	Array available_inputs;
 	for (const H3MapedRuntimeZoneSeed &zone : zones) {
 		Dictionary item;
@@ -6918,7 +7086,7 @@ Dictionary h3maped_first_footprint_helper_4a2777_report(const std::vector<H3Mape
 	}
 	report["available_runtime_zone_inputs"] = available_inputs;
 	report["materialized_cell_count"] = 0;
-	report["blocked_next"] = "recover phase node/link/source rectangle layout well enough to execute 0x4a2777 without inventing connector geometry";
+	report["blocked_next"] = "recover phase node/link/source rectangle traversal plus 0x4a2413 well enough to execute 0x4a2777 without inventing connector geometry";
 	return report;
 }
 
@@ -7485,7 +7653,7 @@ Dictionary h3maped_level_footprint_phase_4a3a03_report(const std::vector<H3Maped
 	report["levels"] = levels;
 	report["synthetic_source_zone_size"] = "0xd4";
 	report["synthetic_source_zone_defaults"] = synthetic_defaults;
-	report["first_helper_evidence"] = h3maped_first_footprint_helper_4a2777_report(zones);
+	report["first_helper_evidence"] = h3maped_first_footprint_helper_4a2777_report(zones, normalized);
 	report["second_helper_evidence"] = h3maped_second_footprint_helper_4a325d_report();
 	report["finalizer_evidence"] = h3maped_final_footprint_helper_4a3710_report();
 	report["runtime_layout_evidence"] = h3maped_footprint_runtime_layout_evidence_report();
