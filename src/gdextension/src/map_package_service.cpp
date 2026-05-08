@@ -5977,6 +5977,11 @@ int32_t native_rmg_generalized_town_spacing_floor_for_size(const Dictionary &nor
 			&& int32_t(normalized.get("level_count", 1)) > 1) {
 		return 20;
 	}
+	if (String(normalized.get("size_class_id", "")) == "homm3_large"
+			&& String(normalized.get("water_mode", "land")) == "islands"
+			&& int32_t(normalized.get("level_count", 1)) <= 1) {
+		return 15;
+	}
 	if (shortest <= 36) {
 		return 12;
 	}
